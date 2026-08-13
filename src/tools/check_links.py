@@ -12,6 +12,7 @@ Example:
 """
 
 import logging
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__, format_string="%(message)s")
 SCANNED_EXTENSIONS = {".qmd", ".html"}
+QUARTO_INCLUDE_PATTERN = re.compile(r"\{\{<\s*include\s+([^\s>]+)\s*>\}\}")
 SKIP_FILES = {
     "WEBSITE_ENHANCEMENT_RECOMMENDATIONS.md",
     "WEBSITE_MANAGEMENT.md",
@@ -163,11 +165,41 @@ def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
     return not _path_exists_in_search_roots(root_path=root_path, target_path=target_path)
 
 
+def _find_include_parents(root_path: Path) -> dict[Path, tuple[Path, ...]]:
+    """Map Quarto include fragments to documents that establish link context."""
+    parents: dict[Path, list[Path]] = {}
+    for source_file in root_path.rglob("*.qmd"):
+        if not _should_scan_file(source_file):
+            continue
+        content = source_file.read_text(encoding="utf-8", errors="ignore")
+        for raw_path in QUARTO_INCLUDE_PATTERN.findall(content):
+            include_path = raw_path.strip("\"'")
+            fragment = (source_file.parent / include_path).resolve()
+            parents.setdefault(fragment, []).append(source_file)
+    return {fragment: tuple(sources) for fragment, sources in parents.items()}
+
+
+def _is_broken_in_context(
+    root_path: Path,
+    file_path: Path,
+    link: str,
+    include_parents: dict[Path, tuple[Path, ...]],
+) -> bool:
+    """Resolve a normal page locally and an include fragment through its parent."""
+    if not _is_broken_link(root_path=root_path, file_path=file_path, link=link):
+        return False
+    parents = include_parents.get(file_path.resolve(), ())
+    return all(
+        _is_broken_link(root_path=root_path, file_path=parent, link=link) for parent in parents
+    )
+
+
 def check_links(root_dir: str) -> list[tuple[str, int, str]]:
     """Check for broken internal links in the project."""
     require(len(root_dir) > 0, "root_dir must not be empty")
     root_path = Path(root_dir)
     broken_links: list[tuple[str, int, str]] = []
+    include_parents = _find_include_parents(root_path)
 
     logger.info(f"Scanning {root_path}...")
 
@@ -182,7 +214,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             continue
 
         for link, line_num in links:
-            if _is_broken_link(root_path=root_path, file_path=file_path, link=link):
+            if _is_broken_in_context(root_path, file_path, link, include_parents):
                 broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
     return unique_broken(broken_links)

@@ -1,0 +1,256 @@
+# Counterfactuals Are Scientific Scissors {#sec-lay-ch11}
+
+## A Concrete Picture
+
+A baker wants to know what yeast contributed to a loaf. Removing yeast from the
+finished loaf is impossible. Baking a second loaf without yeast changes the rise,
+temperature history, moisture, and structure. Comparing one instant of the two
+doughs answers a different question from comparing the finished loaves.
+
+Models let us make cleaner cuts, but each cut has a meaning. We can remove a
+torque at one frozen state and recompute acceleration. We can continue that
+altered branch forward. We can rerun the entire swing with a different schedule.
+Or we can remove gravity, damping, shaft flex, or a contact moment arm. These are
+not interchangeable “what ifs.” They are scientific scissors with different
+blade shapes.
+
+![Four Counterfactual Branches Separate Instantaneous Attribution, Short-Horizon Persistence, Full Resimulation, and Mechanism Ablation.](figures/proximal_distal_companion/fig_companion_counterfactual_fork.svg){#fig-lay-counterfactual-fork width=98% fig-alt="A common baseline state branches into pointwise attribution, matched-state forward continuation, full resimulation, and mechanism-ablation experiments, each labeled with the question it can answer."}
+
+## How the Mechanism Works
+
+A pointwise counterfactual holds configuration and velocity fixed, changes one
+input or term, and resolves acceleration or reaction force. Because the state is
+identical, the difference isolates an instantaneous modeled contribution. It
+does not say what a complete no-input trajectory would have looked like.
+
+A matched-state forward counterfactual begins both branches at the same state
+and integrates with different future inputs. At the cut, attribution is clean.
+As time passes, states diverge. The difference now includes direct input effect,
+changed geometry, changed velocity coupling, and changed impact time. This
+answers whether the consequence persists over a declared horizon.
+
+A full resimulation changes an input schedule from the beginning. It answers a
+strategy question: what trajectory and outcome follow if the entire command
+program changes? It cannot by itself attribute the outcome to one instant or
+mechanism because every later state changes.
+
+An ablation removes a modeled mechanism such as gravity, damping, compliance,
+or contact separation. If the claimed effect remains when the proposed mechanism
+is absent, that mechanism is not necessary within the model. If it disappears,
+necessity is supported only for the declared family; another unmodeled mechanism
+could still produce a similar observation in humans.
+
+### Cut Time and Horizon Are Part of the Experiment
+
+Choosing a cut after seeing the largest difference can exaggerate a result.
+The technical work therefore registers cut times, event definitions, and
+horizons. It repeats tests across nearby cuts and timesteps. A result that exists
+for one numerical sample but vanishes under refinement is not a mechanism.
+
+Impact creates another trap. One branch may hit the impact criterion earlier.
+Comparing both at the baseline impact clock time may evaluate one branch after
+its own impact. Comparing each at its own first valid impact changes the state
+being compared. Both variants can be reported, but the distinction must be
+visible.
+
+### Decomposition and Intervention
+
+An algebraic decomposition divides the acceleration at one state among gravity,
+velocity terms, controls, and constraints. An intervention modifies the model
+or input and observes the outcome. Decomposition says how the equation balances
+now; intervention says what changes under a defined alteration. Confusing them
+turns a bookkeeping term into a causal claim.
+
+The zero-torque counterfactual force is a decomposition tool when computed at a
+fixed state. Integrating a zero-torque branch is an intervention. The technical
+paper reports both so readers can see where the instantaneous contribution
+continues and where trajectory divergence takes over.
+
+### Negative Controls Challenge the Story
+
+Good experiments include cases where the mechanism should vanish or reverse.
+Coincident hand contacts remove a force-generated couple. Reversing moment arms
+should reverse its sign. Setting a dead zone to zero should remove any advantage
+attributed specifically to crossing that dead zone. Equalizing shaft stiffness
+should remove differences attributed only to flexibility.
+
+Negative controls are more persuasive than a baseline-versus-favored comparison
+because they ask the mechanism to predict its own failure. A model that always
+produces the preferred result, regardless of geometry or removed mechanism, is
+describing an outcome rather than explaining it.
+
+### Counterfactuals Need Common Observables
+
+Every branch should report the same quantities in the same frames: club speed,
+face/path proxy, forces, moments, powers, work, constraint residual, energy
+closure, and event timing. Otherwise one model can appear better merely because
+it reports a convenient metric.
+
+This common-observable contract also connects model tiers. A double pendulum and
+a spatial contact model have different coordinates, but both can report an
+equivalent club wrench and interface power. Mechanisms that survive this ladder
+earn broader confidence.
+
+**Model Result:** Pointwise wrist-force attribution, matched-state persistence,
+driver killswitches, geometry controls, zero-dead-zone controls, and stiffness
+ablations form a linked counterfactual program in the technical release.
+
+**Hypothesis:** If delayed transfer depends on a particular preload or interaction
+mechanism, its advantage should disappear when that mechanism is removed while
+the task and state are appropriately matched.
+
+**Practical Interpretation:** A fair “what if” must say what stayed identical,
+what changed, when the change occurred, and how long the altered branch was
+allowed to become a different motion.
+
+### Four Different Meanings of “Take It Away”
+
+The phrase “remove wrist torque” can hide several experiments. A pointwise
+removal changes the torque only in the acceleration calculation at one copied
+state. A forward killswitch removes it from that state onward while other
+controls follow their original schedules. A reoptimized branch removes it but
+lets other controls compensate. A human perturbation asks a person to change a
+strategy and inevitably changes feedback, intent, and perhaps the starting
+state. These are not interchangeable.
+
+Pointwise removal is best for decomposition. Forward removal is best for
+persistence within the declared model. Reoptimization asks whether another
+control route can substitute. Human manipulation tests whether the mechanism
+appears in an adaptive biological system. A complete research program uses the
+first three to sharpen predictions before attempting the fourth.
+
+### The Matched-State Rule
+
+At the branch instant, copy every modeled state: positions, velocities, shaft
+modes, activation or transmission states, and controller memory. Change only
+the declared intervention. If one branch begins with a different club angle or
+force history, later divergence cannot be assigned cleanly to the removed input.
+
+This rule is particularly important for preload. Comparing a continuously
+loaded backswing with a role-reversed downswing naturally produces different
+transition states. That comparison answers a strategy-level question but not
+the narrow causal question “what does the transmission state do?” A second
+matched-state experiment should equalize geometry and motion while manipulating
+only the declared gap or activation state. Both comparisons are informative
+when labeled correctly.
+
+### Pointwise Decomposition Does Not Add Like Percentages
+
+At a fixed state, the acceleration equation may be decomposed into gravity,
+velocity, applied-control, external-load, and constraint contributions. These
+terms can oppose. One positive component can exceed total acceleration because
+another is negative. Dividing each by total and calling the result a percentage
+creates values below zero or above one hundred, which are mathematically
+possible but easy to misread.
+
+Report signed components in physical units, cancellation indices, and residual
+closure instead. For nonlinear forward branches, effects generally do not add
+because each intervention changes the future state. A combined removal can
+differ from the sum of separate removals. That interaction is part of the result,
+not an accounting error.
+
+### A Counterfactual Sequence for the Negative-Couple Claim
+
+Begin with baseline forward simulation. At selected late-downswing states,
+reconstruct bilateral contact and compute swing-normal couple. Next perform a
+pointwise removal of the relevant actuator or driver and observe the changed
+constraint reaction. Then run a short forward killswitch. Reverse hand geometry
+and force direction in separate negative controls. Finally repeat across model
+rungs and parameter samples.
+
+The mechanism is strengthened if sign, timing, and geometric response remain
+coherent while magnitude varies. It is weakened if the couple persists when
+hand separation collapses, changes sign under a mere coordinate relabeling, or
+depends on one integration step. Human data must then test the predicted wrench,
+not merely reproduce the club trajectory.
+
+### Counterfactuals About Timing
+
+To study onset, branch from several candidate states and apply identical command
+shapes shifted in state or time. Include finite rise time. Compare terminal
+speed, face/path proxies, peak loads, and sensitivity. The preferred command by
+one objective may be poor by another. Repeat under parameter uncertainty and on
+held-out samples.
+
+A clock-shift experiment asks how a command schedule performs at different
+times. A state-trigger experiment asks whether activation at a geometric or
+dynamic event is more robust to tempo. These interventions can produce different
+answers. The study should expose both rather than translate one into a universal
+instruction.
+
+### Compensation Is a Separate Scientific Question
+
+If wrist torque is removed and an optimizer increases arm torque to recover the
+same club motion, the result demonstrates redundancy. It does not show wrist
+torque was irrelevant in baseline. Compare internal loads, power routes, and
+robustness between baseline and compensated solutions. Multiple feasible routes
+are expected in a redundant biological system.
+
+Conversely, failure to compensate within a restricted controller does not prove
+humans cannot. It establishes a limit of that control family. Expanding the
+family is a model-ladder step and should be preregistered enough to prevent the
+optimizer from becoming an explanation that can fit anything.
+
+### From Model Intervention to Human Falsifier
+
+A safe human experiment cannot instantaneously remove a muscle torque. It can
+manipulate grip spacing, club inertia or stiffness, instruction, or perturbation
+while measuring the predicted mediators. The model must say which observable
+should change and in what direction. If a grip-spacing reduction should shrink
+a differential couple, that is more testable than asking a participant to “use
+less wrist.”
+
+The final evidentiary bridge is therefore indirect but disciplined: model
+intervention, robust observable prediction, physical manipulation, synchronized
+measurement, and a predeclared result that counts against the mechanism.
+
+### Reader Lab: Build a Branch Manifest
+
+For one intervention, write a small manifest containing source run, copied state
+hash, branch time, removed input, retained inputs, controller memory, solver,
+tolerance, horizon, and primary outcomes. Generate baseline and branch from that
+manifest. A third party should be able to confirm that no hidden state changed.
+
+Plot zero difference at the branch instant for all states and the expected
+nonzero difference in acceleration or reaction. Then show divergence through
+time. Repeat with half timestep and a second engine. Store both successes and any
+failed closure. This turns a counterfactual from a narrative choice into a
+reproducible intervention.
+
+Run the same design pointwise, forward, and with compensation. The pointwise
+effect identifies local contribution; forward effect identifies persistence;
+compensation identifies redundancy. If conclusions differ, report why rather
+than choosing the most favorable version.
+
+### Counterfactual Etiquette
+
+Never describe an artificial zero-velocity calculation as a motion a golfer
+could perform. Never call a reoptimized trajectory “the effect of removal”
+without noting compensation. Never compare branches with different initial
+states as though only control changed. Never turn nonlinear component differences
+into percentages assumed to sum.
+
+These rules do not make causal modeling timid. They allow strong statements
+within scope: “At this exact modeled state, removing this driver changed this
+reaction by this amount,” or “Over this forward branch, retaining the negative
+couple produced this later outcome.” Precision makes the result easier to
+challenge and reuse.
+
+## Where the Picture Breaks
+
+The baking analogy suggests one ingredient can be removed without changing the
+meaning of the recipe. In nonlinear dynamics, interventions change the state
+trajectory, and mechanisms interact. Removing damping can alter phase and impact
+time, not just energy loss. Counterfactual design reduces ambiguity but does not
+make coupled systems separable.
+
+Human counterfactuals are harder. A golfer cannot repeat an identical internal
+state while one muscle command is magically removed. Randomized cues, perturbations,
+and participant holdout approximate interventions but include adaptation and
+measurement noise. Model results should guide experimental design, not substitute
+for it.
+
+**Go Deeper:** Read the
+[matched-state counterfactual chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch04_counterfactual_ensemble.qmd),
+the [same-state spatial killswitch](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06cc_spatial_forward_contact.qmd),
+and the registered [experimental negative controls](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06e_experimental_protocol.qmd).

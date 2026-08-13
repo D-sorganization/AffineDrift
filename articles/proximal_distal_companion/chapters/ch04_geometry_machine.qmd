@@ -1,0 +1,255 @@
+# Geometry Is Part of the Machine {#sec-lay-ch04}
+
+## A Concrete Picture
+
+Open a heavy door by pushing near the hinge. Then push with the same effort near
+the handle. Your muscles may feel the same force, but the door does not. The
+distance from the hinge changes the turning effect. Now push the handle directly
+toward the hinge. The force may be large and the handle may hurt your palm, yet
+the door scarcely rotates because the force line passes close to the axis.
+
+Nothing about the door's motor changed; there is no motor. Geometry changed how
+force mapped into rotation. A golf swing is full of moving versions of that
+door. The hand path, club angle, arm orientation, grip separation, joint axes,
+and shaft bend change moment arms continuously. The same muscle or joint torque
+can assist one coordinate, oppose another, or mostly create internal load as the
+configuration evolves.
+
+Geometry is therefore not a picture drawn after the dynamics calculation. It is
+inside the calculation.
+
+![Force Direction, Moment Arm, and the Chosen Reference Point Determine the Turning Effect on the Club.](figures/proximal_distal_companion/fig_companion_moment_arm_geometry.svg){#fig-lay-moment-arm width=95% fig-alt="A club diagram compares a force whose line of action passes near the reference point with a perpendicular force having a long moment arm, illustrating how geometry changes torque without changing force magnitude."}
+
+## How the Mechanism Works
+
+For a force $\mathbf F$ applied at position $\mathbf r$ relative to a reference
+point, the moment is
+
+$$
+\boldsymbol\tau = \mathbf r \times \mathbf F.
+$$
+
+The cross product contains both magnitude and direction. Its magnitude is
+$rF\sin\theta$, where $\theta$ is the angle between the position vector and the
+force. A force along the radius has $\sin\theta=0$ and creates no moment about
+that point. A perpendicular force has the largest moment for fixed $r$ and $F$.
+This simple relation powers much of the later two-hand argument.
+
+In a planar model, the cross product becomes a signed scalar. If the club points
+along unit vector $\hat{\mathbf e}_r$ and its swing-normal direction is
+$\hat{\mathbf e}_t$, a hand force can be decomposed as
+
+$$
+\mathbf F = F_r\hat{\mathbf e}_r + F_t\hat{\mathbf e}_t.
+$$
+
+$F_r$ acts along the club. It contributes to axial tension or compression and
+may strongly constrain the path, but about a point on the same club line it has
+little moment. $F_t$ acts across the club and creates a turning effect with a
+moment arm set by distance along the shaft. As the club rotates, the global
+horizontal and vertical components change even if $F_r$ and $F_t$ do not. That
+is why frame declarations matter.
+
+### Coordinate Frames Are Different Viewpoints
+
+Imagine giving directions in a city. “North” belongs to a fixed map frame.
+“Forward” belongs to the car and changes as the car turns. Neither is wrong, but
+mixing them mid-sentence creates confusion. Swing mechanics commonly uses a
+laboratory frame fixed to the room, a body or segment frame rotating with each
+link, a club frame aligned with the shaft, and a swing-plane frame chosen from
+the motion.
+
+A physical force is the same interaction in all frames, but its numerical
+components change through rotation. A positive global vertical force may have a
+negative club-tangential component at one orientation and a positive one later.
+A report that calls a force “negative” without naming axis and frame leaves the
+reader unable to tell whether the physics reversed or only the coordinate
+description changed.
+
+Moments add another reference. A wrench expressed about the lead hand differs
+from the wrench about the club center because moving the reference point adds
+the moment of the resultant force. When two hands apply nearly opposed forces,
+the resultant may be small while the couple remains large and nearly independent
+of reference point. When the resultant is not small, the reference transformation
+is essential.
+
+### The Jacobian Is a Geometry Translator
+
+In multibody mechanics, a Jacobian maps generalized velocities to the velocity
+of a point or body. If $\dot{\mathbf q}$ contains joint rates and $\mathbf v_H$
+is hand velocity, then
+
+$$
+\mathbf v_H = \mathbf J_H(\mathbf q)\dot{\mathbf q}.
+$$
+
+The transpose maps a hand force back to generalized joint forces:
+
+$$
+\boldsymbol\tau_q = \mathbf J_H(\mathbf q)^\mathsf T\mathbf F_H.
+$$
+
+The matrix depends on configuration. It is the moving collection of moment arms
+that translates between joint-space and Cartesian-space descriptions. Near a
+singular configuration, a small Cartesian task may require large joint motion
+or force, and some internal directions may become poorly identifiable. A model
+that ignores this geometry can mistake a difficult posture for weak actuation or
+an easy posture for better timing.
+
+### Inertia Also Changes With Geometry
+
+The mass matrix $\mathbf M(\mathbf q)$ describes how generalized acceleration
+relates to generalized force at a configuration. Its off-diagonal terms are the
+mathematical signature of inertial coupling. In a double pendulum, accelerating
+the arm affects the club coordinate even with zero direct wrist torque. The
+strength and sign of that effect change with relative angle.
+
+This is the deeper reason the linked system is not two separate motors. One
+joint's torque can cause acceleration at another coordinate because the bodies
+share mass and constraints. At one relative angle, proximal acceleration may
+help uncock the club. At another, the same command may resist it. Velocity terms
+change too, so geometry and momentum work together rather than taking separate
+turns.
+
+### Grip Separation Creates a Lever for a Couple
+
+Two hands introduce a short but important distance. Suppose the lead and trail
+hands apply equal and opposite swing-normal forces $+F$ and $-F$ separated by
+distance $d$ along the grip. Their net force is zero, but their net couple has
+magnitude
+
+$$
+M = Fd.
+$$
+
+Double the separation and the same forces create twice the moment. Reverse
+which hand pushes in which direction and the moment changes sign. Make the two
+contact points coincide and the force-generated couple must vanish. These are
+powerful geometric negative controls: if a simulated couple survives coincident
+contacts or reversed moment arms without the expected change, something is
+wrong in the implementation or interpretation.
+
+The real hands do more than apply two ideal point forces. Pressure spreads over
+the grip, wrists can apply direct free moments, and the shaft deforms. The
+equivalent wrench still lets us compare the net effect at a declared reference.
+It separates what is observable at the club level from how the biological
+system allocated forces internally.
+
+### Geometry Can Change the Best Allocation
+
+The arm-wrist allocation study holds an $8$ N m club-moment task fixed while
+varying club angle and the fraction assigned to direct wrist moment versus a
+force-generated two-hand couple. Every allocation closes the same task within
+numerical precision, yet RMS hand force and generalized joint-torque norm vary
+widely. The allocation minimizing one metric shifts with club angle and differs
+from the allocation minimizing another metric.
+
+That result is modest but important. There is no geometry-free answer to “use
+the arms or use the wrists.” Even within a reduced model, the internal cost
+depends on orientation and on which cost is valued: hand force, joint torque,
+work, stability, accuracy, or discomfort. Human anatomy adds more moving axes
+and constraints, not fewer.
+
+**Model Result:** Same-state force and torque mappings change with club angle,
+hand separation, and moment-arm direction. Reversing or collapsing those
+geometries provides exact negative controls in the two-hand studies.
+
+**Human Evidence:** Golf kinematics shows meaningful variation in hand path,
+shaft plane, wrist angles, and body orientation across golfers. Those
+measurements establish geometric diversity but do not by themselves identify
+the forces or muscle allocations producing it [@mcphee2022].
+
+**Hypothesis:** Late-downswing negative coupling may arise in part because the
+two-hand force geometry projects interaction forces into a negative club moment
+near the impact zone. That mechanism should change predictably when moment arms
+or contact geometry are reversed.
+
+**Practical Interpretation:** Direction and leverage can matter as much as
+effort. Before asking how hard a force is, ask where it acts, which way it points,
+and about which point its turning effect is being measured.
+
+### Read a Force Vector in Three Passes
+
+First read its line of action. A force parallel to the club shaft mainly loads
+the shaft and grip axially in a simple planar picture; a perpendicular component
+has more immediate turning leverage about the club's center of mass or a chosen
+joint. Second read the moment arm: the perpendicular distance from the reference
+point to the force line. Third read the motion: power depends on whether the
+contact point moves along or against the force. Magnitude alone answers none of
+these questions.
+
+Consider a 100-newton force acting with a perpendicular moment arm of 0.04
+metres. Its turning effect is 4 newton-metres. If posture changes the moment arm
+to 0.08 metres without changing the force, the moment doubles. If the force line
+passes through the reference point, the moment becomes zero. If the hand order
+or force direction reverses, the moment changes sign. These simple controls are
+why geometry reversal is a strong falsifier of a proposed two-hand mechanism.
+
+### Geometry Changes During the Swing
+
+The relevant moment arm is not fixed on a diagram. Arm--club angle, hand
+separation, wrist orientation, swing-plane normal, and shaft deflection all
+evolve. A force that is mostly radial early can acquire a tangential projection
+later. A pair of forces that makes a negative swing-normal couple in one state
+may make a smaller couple, no couple, or the opposite couple after the contact
+frame rotates. Consequently, a statement such as “the trail hand pushes” is
+mechanically incomplete until direction, point, coordinate frame, and phase are
+specified.
+
+The mass matrix carries another form of geometry. Its off-diagonal terms encode
+how acceleration of one coordinate affects generalized momentum associated with
+another. Those terms vary with joint angle. Velocity-dependent terms contain
+products of speeds and trigonometric factors, so both state and geometry decide
+their sign. Interaction is not a mysterious extra force inserted by a modeler;
+it is what the equations require when linked bodies move in changing geometry.
+
+### A Two-Hand Thought Experiment
+
+Place two contact points on a rigid handle, separated by distance $d$. Apply
+equal opposite forces of magnitude $F$ perpendicular to their separation. Net
+force is zero, yet the couple magnitude is approximately $Fd$. Halve the
+separation and the couple halves. Rotate the forces until they become parallel
+to the separation vector and the couple collapses. Swap the force directions
+and its sign reverses. These are not coaching claims. They are geometric
+predictions any correct reconstruction must satisfy.
+
+Now add a common force to both hands. That common mode translates the club and
+can also create a moment depending on its line of action. The measured club
+wrench combines common and differential modes. Without individual hand sensing,
+many allocations reproduce it. Geometry tells us what each proposed allocation
+would do, but net motion cannot select the biological one.
+
+### Geometry as Strategy Constraint, Not Prescription
+
+For speed, one might seek states where proximal motion and constraint forces
+project favorably onto club motion. For control, one might prefer states with
+less sensitivity to small timing or force errors. For comfort, the preferred
+geometry may avoid extreme joint positions. These objectives can conflict. A
+scientific strategy study therefore maps a surface—speed, face/path, internal
+load, and robustness—rather than announcing one aesthetically pleasing pose.
+
+## Where the Picture Breaks
+
+The door analogy has one fixed hinge and one obvious plane. Human joints have
+multiple axes that can move relative to one another. The scapula glides and
+rotates on the thorax; the shoulder center is not a nailed hinge; forearm
+pronation changes wrist-axis orientation; the grip is distributed and compliant.
+A planar moment arm can reveal a mechanism without reproducing this anatomy.
+
+Jacobian and mass-matrix descriptions also depend on coordinates. Their entries
+can change dramatically under a reparameterization even when physical motion is
+unchanged. Conclusions should therefore be tied to frame-invariant observables
+such as reconstructed wrenches, power, work, and trajectory, not to the apparent
+size of one matrix term alone.
+
+Finally, geometry does not dictate a unique strategy. It constrains and weights
+possibilities. A posture that improves mechanical advantage might reduce range
+of motion, increase tissue load, or worsen face control. Selecting a human
+technique requires objectives and evidence beyond one moment arm.
+
+**Go Deeper:** Read the technical
+[two-hand wrench derivation](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
+the
+[matched allocation surface](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06bc_torque_allocation_preload.qmd),
+and the
+[three-dimensional frame audit](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch07_model_ladder.qmd).

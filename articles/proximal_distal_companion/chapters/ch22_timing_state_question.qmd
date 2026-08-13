@@ -1,0 +1,274 @@
+# Timing Is a State Question, Not Just a Clock Question {#sec-lay-ch22}
+
+## A Concrete Picture
+
+A cook does not remove bread from an oven simply because twelve minutes passed.
+The timer is useful, but color, temperature, and structure tell whether the loaf
+reached the intended state. Two ovens or loaf sizes reach that state at different
+times.
+
+Swing instructions often use clock language: start the release later, apply a
+torque earlier, wait until a position. A model can define these precisely, but
+the useful trigger may be a club angle, relative velocity, hand-speed event,
+shaft state, or predicted time to impact rather than elapsed milliseconds.
+
+![Clock-Time Triggers and State-Based Triggers Select Different Command Onsets When Two Swings Progress at Different Rates.](figures/proximal_distal_companion/fig_companion_clock_vs_state.svg){#fig-lay-clock-state width=97% fig-alt="Two swing trajectories progress at different rates; a vertical clock-time trigger cuts them at different states while a state-event trigger aligns them at the same club configuration."}
+
+## How the Mechanism Works
+
+A torque program needs amplitude, sign, onset, rise time, duration, and shutdown.
+An onset can be fixed in time or defined by an event function
+$g(\mathbf x)=0$. Event-based timing can align mechanisms across parameter
+variations, but the event must be observable and chosen before outcomes.
+
+### Early Drive and Retain-Then-Drive
+
+The simple comparison applies positive wrist torque immediately after transition
+or uses zero/negative early torque followed by positive late torque. Optimization
+over onset shows late drive can outperform early drive under declared actuator
+bounds. This supports a timing mechanism, not a universal delay number.
+
+The early opposing program tests a different idea: retaining state and preload
+may improve robust speed under delay. In the held-out ensemble it improves one
+lower-tail speed comparison while worsening face/path proxy. Timing has multiple
+objectives.
+
+### Command Timing Is Not Force Timing
+
+Activation and transmission dynamics delay force after command. A $35$ ms rise
+time means the actuator does not jump to its requested level. A preloaded channel
+may transmit immediately even when desired magnitude changes. Complete sign
+reversal may pass through low force. Distinguishing command, internal state,
+transmitted torque, and resulting motion prevents false timing claims.
+
+### Impact Definition Changes Optimization
+
+If impact is defined by a club-angle crossing, a strategy altering trajectory
+also alters impact time. A fixed terminal clock time can compare different club
+positions. Robust studies repeat plausible impact criteria and reject schedules
+that never reach a valid event.
+
+### State Feedback Versus Open-Loop Schedules
+
+An open-loop program plays the same command versus time regardless of deviation.
+A feedback strategy responds to state. Humans use sensory and predictive control,
+though delays limit rapid correction near impact. The model workbench lets
+readers compare clock and state triggers without calling either a complete neural
+controller.
+
+**Model Result:** Preferred onsets move with parameters, rise time, and objective;
+the qualitative late-drive ordering survives declared command filters.
+
+**Human Evidence:** Observed timing varies across golfers and measurement
+definitions. Kinematic events do not directly reveal command onset.
+
+Computer simulations of delayed release show why timing claims must be stated
+against a declared model, objective, and state [@sprigings2002].
+
+**Hypothesis:** Preparation and early downswing arrange a state in which late
+coupling and distal power become favorable; event-based triggers may generalize
+better than fixed clock delays.
+
+**Practical Interpretation:** “Late” should mean late relative to a mechanical
+state or event, not a mystical timestamp copied across swings.
+
+### Clock Time Is Easy to Measure and Easy to Misread
+
+Researchers commonly express events as milliseconds before impact or percentage
+of downswing. This supports averaging, but impact alignment stretches or
+compresses mechanically different trajectories onto one axis. Two golfers at
+the same normalized time may have different arm--club angles, velocities, shaft
+states, and force directions.
+
+Clock timing remains useful when fully defined. Report event detection,
+normalization, uncertainty, and absolute duration alongside normalized phase.
+Do not treat a population mean as the command time used by any participant.
+
+### State Timing
+
+A state trigger activates when a measurable condition is met: an arm--club-angle
+range, sign change in relative angular velocity, handle radial velocity, shaft
+mode phase, or interaction-term threshold. Such triggers can adapt to tempo and
+parameter differences. They also risk being difficult to measure or overly
+tuned.
+
+Candidate triggers should come from mechanism, then be frozen before held-out
+testing. A trigger based on a hidden model variable may be useful for simulation
+but cannot guide an experiment until an observable proxy is validated.
+
+### Command, Force, Motion, and Outcome Events
+
+Neural command onset, EMG onset, muscle force rise, joint torque, hand wrench,
+shaft response, angular acceleration, velocity peak, and impact occur at
+different times. Delay and filtering separate them. Seeing a club event does
+not reveal when control began.
+
+This chain matters for preload. Continuous loading may shorten the interval from
+command to useful wrench, but the expected signature is a changed force-rise or
+stiffness state—not merely an earlier club release. Measuring several links
+allows mediation tests and prevents outcome timing from being mistaken for
+cause.
+
+### A Command-Shape Experiment
+
+Compare an ideal step, a ramp, and a first-order activation filter with identical
+nominal onset and steady amplitude. The step supplies force immediately. The
+ramp and filter delay effective torque and can move the preferred nominal onset
+earlier. If a result exists only with an impossible step, it has limited human
+relevance.
+
+Vary rise time across plausible bounds and optimize on training samples. Then
+freeze schedule or trigger for held-out cases. Report speed, face/path, peak load,
+and lower-tail outcomes. A robust timing claim survives command dynamics rather
+than hiding them.
+
+### Timing the Negative Couple
+
+Define the couple interval by sign and swing-normal projection, then report its
+relation to state variables and impact. Test whether it consistently occurs
+over a state region across tempo changes. Compare direct torque, contact couple,
+shaft power, and relative release on aligned plots.
+
+If the couple appears after the relevant state change, it cannot be its cause.
+If its onset precedes the change but varies too widely for prediction, the
+mechanism may be present without being a useful control target. Causal branches
+within the model and intervention data are still needed.
+
+### Timing Across the Two Allocation Extremes
+
+The continuous arm-dominant strategy predicts continuity in one generalized
+drive or load mode across transition. The role-reversal strategy predicts a
+clearer allocation change, perhaps with continued co-contraction. Both may yield
+similar club event timing if activation and transmission histories differ.
+
+Compare not just onset but duration, rise rate, impulse, and cumulative work.
+Align by transition, state trigger, and impact. A finding that only appears under
+one alignment should be described accordingly.
+
+### Robust Timing Is a Region
+
+An optimum at 112 milliseconds before impact can be misleading if 108–125
+milliseconds perform nearly as well while a narrow peak at 112 collapses under
+small errors. Map the objective surface and identify a plateau satisfying speed,
+control, and load constraints. Plateaus are more actionable than isolated
+maxima.
+
+Uncertainty in event detection, sensor delay, and golfer variability should be
+shown on the same scale. If experimental timing uncertainty exceeds the width
+of a simulated optimum, the optimum is not currently testable at that precision.
+
+### Feedback Changes the Question
+
+Open-loop schedules prescribe control by time. Humans use sensory feedback,
+feedforward preparation, and task-level corrections, although feedback delays
+limit rapid late changes. A state-triggered model approximates one aspect of
+feedback but is not a neural model.
+
+Add bounded feedback controllers on later model rungs and ask whether the
+mechanism remains. A strategy that works only open loop may be fragile; a policy
+that relies on unrealistically instantaneous feedback is also suspect. Control
+assumptions belong beside mechanical ones.
+
+### Experimental Reporting
+
+Publish synchronized raw and processed time bases, latency corrections, event
+definitions, and confidence intervals. Preregister primary windows and permit
+exploratory state alignments with clear labels. Provide code that reconstructs
+events from released signals. This lets reviewers decide whether a timing claim
+is mechanical, measurement-driven, or an artifact of normalization.
+
+### Reader Lab: Compare Three Alignments
+
+Take repeated trials and align them by impact, by transition, and by a preregistered
+state event such as an arm--club-angle crossing. Plot direct torque, hand couple,
+shaft power, and club acceleration with uncertainty. A feature that sharpens only
+under state alignment may be organized by mechanics rather than absolute clock.
+
+Next fit a timing policy on part of the data and freeze it. Evaluate fixed-clock,
+normalized-phase, and state-trigger versions on held-out participants. Include
+sensor and command delay. Compare distributional outcomes and trigger failures,
+not only means.
+
+Finally shift event detection within its confidence interval. If the claimed
+ordering reverses, the evidence cannot support fine timing language. State that
+the events overlap within resolution.
+
+### Timing as Preparation Plus Opportunity
+
+A useful late action requires preparation: the system must arrive with suitable
+geometry, velocities, load, and shaft state. It also requires opportunity:
+enough remaining time and motion for force or work to affect impact. Acting
+earlier can spoil geometry; acting later can miss the window.
+
+This two-part view unifies delayed transfer and preload. Backswing and early
+downswing arrange state; later dynamics determine which control channels are
+effective. It explains why one timestamp cannot be detached from the trajectory
+that created it.
+
+### A Minimum Timing Report
+
+State event definitions, time base, normalization, sampling rate, latency,
+filtering, and confidence intervals. Show raw-time and normalized-time plots,
+then one preregistered state alignment. Distinguish command, EMG, force, torque,
+motion, and outcome events. Report the full response surface around any optimum.
+
+If the preferred region is narrower than measurement or execution uncertainty,
+say that the current experiment cannot resolve it. If a broad plateau survives
+held-out testing, report the plateau rather than a false-precision timestamp.
+
+### Timing and the Two-Hands Mechanism
+
+The contact couple depends on both state and bilateral force. Its onset may be
+better described by a region of hand separation, club orientation, and force
+projection than by a single millisecond. The model can propose this region;
+instrumented data can test whether it recurs.
+
+Continuous loading and role reversal make different predictions about the
+events preceding it. One predicts force-mode continuity; the other predicts a
+sign change with retained or recovered stiffness. Aligning only at impact can
+blur these transition signatures. The protocol should preserve both transition
+and state views.
+
+### What a Timing Cue Cannot Establish
+
+A cue such as “wait” or “hold the angle” may change several variables and may be
+implemented differently by each golfer. Its success does not validate a modeled
+torque schedule unless the predicted mediator changes. Conversely, a mechanism
+can be real without a conscious cue.
+
+The distinction protects both scientific timing and practical interpretation.
+
+This keeps practical experiments open but bounded. Measure what the cue changed,
+compare it with the model, and avoid treating subjective intent as a control
+input known to the equations.
+
+### Chapter Checkpoint
+
+Every timing claim should answer five questions: which event, measured how, in
+which frame or state, with what uncertainty, and related to which later outcome?
+It should also distinguish command from force and motion. If a state trigger is
+proposed, the observable proxy and held-out performance must be shown.
+
+The key lesson is not that clock time is useless. Clock and state are two views.
+Agreement across them is strong; disagreement is information about tempo,
+preparation, or measurement. Publishing both prevents an exact timestamp from
+becoming a universal myth.
+
+For the allocation comparison, transition is the critical bridge. Measure load,
+stiffness, activation, and wrench through it. The timing hypothesis succeeds only
+if those mediators explain the later difference.
+
+## Where the Picture Breaks
+
+The oven has a small set of observable states. A golfer's relevant state includes
+uncertain internal loads and activation. A convenient club angle may correlate
+with, but not cause, the favorable mechanism.
+
+Optimization can exploit unrealistic switches or measurement-perfect feedback.
+Rate limits, delays, noise, and held-out tests are required before interpreting
+a schedule biologically.
+
+**Go Deeper:** Read the
+[timing counterfactual framework](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch04_counterfactuals.qmd),
+[torque-program methods](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06_methods.qmd),
+and [robust delayed-command study](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd).

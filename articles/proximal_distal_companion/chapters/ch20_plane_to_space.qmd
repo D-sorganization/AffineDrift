@@ -1,0 +1,286 @@
+# From a Plane to Three Dimensions and Independent Engines {#sec-lay-ch20}
+
+## A Concrete Picture
+
+A shadow puppet can reveal a hinge mechanism while hiding motion toward the
+wall. A planar golf model is a carefully chosen shadow. It can expose swing-
+normal force and torque mechanisms, but it cannot see out-of-plane clubface
+moments, changing swing plane, or spatial joint axes.
+
+Moving to three dimensions is not merely drawing the same links with perspective.
+Rotations no longer commute, moments require declared frames, contacts have six-
+axis wrenches, and constraints can contain new internal modes.
+
+![A Planar Shadow Captures Swing-Normal Mechanics While a Spatial View Adds Out-of-Plane Force, Twist, and Changing Axes.](figures/proximal_distal_companion/fig_companion_planar_to_spatial.svg){#fig-lay-plane-space width=98% fig-alt="A planar stick model is shown as the shadow of a three-dimensional golfer-club system, with additional arrows for out-of-plane force, shaft twist, and changing joint axes."}
+
+## How the Mechanism Works
+
+In a plane, one angle and one signed moment describe each hinge. In space, body
+orientation belongs to the rotation group $SO(3)$. Angular velocity is a vector,
+and a moment's components depend on frame. Applying rotations in different
+orders can yield different orientations.
+
+### Spatial Wrenches Preserve the Physical Contract
+
+A three-dimensional wrench combines three force and three moment components.
+When moved to another reference point, its moment changes by the cross product
+of offset and force. Power combines force with linear velocity and moment with
+angular velocity. Consistent spatial algebra preserves power under frame change.
+
+This frame-explicit contract is the bridge from the planar negative couple to a
+spatial test. The swing-normal component can be compared while additional
+components reveal whether the mechanism creates undesirable twist or bending.
+
+### Full Body Adds Redundancy
+
+A spatial full-body model has many coordinates capable of producing similar
+club motion. Inverse dynamics may estimate a net generalized-force vector for a
+prescribed trajectory, but two-hand contact and muscle redundancy remain. More
+coordinates do not automatically identify more biology.
+
+The common-state spatial model therefore emphasizes action-reaction, wrench
+closure, and matched interventions rather than claiming a unique human strategy.
+It reports what survives and what remains open.
+
+### Independent Engines Test Implementation Dependence
+
+Running the same conceptual experiment in two engines is useful only if the
+implementations are genuinely independent and observables are transformed to a
+common convention. Matching screenshots prove little. Matching trajectories,
+wrenches, powers, constraint residuals, and negative controls is stronger.
+
+MuJoCo and Pinocchio differ in their numerical and contact machinery. The
+project's finite-mass hand-carriage experiment uses paired compliant interfaces
+and no direct club actuation in both. Its same-state driver killswitch and moment-
+arm controls make the comparison mechanistic.
+
+### Agreement Has a Boundary
+
+If two engines agree on a reduced spatial mechanism, code-specific error becomes
+less likely. Shared parameter errors, oversimplified contact, and missing anatomy
+remain possible. Cross-engine agreement is verification evidence, not human
+validation.
+
+### Three-Dimensional Measurement Is Hard
+
+Marker-based motion capture suffers soft-tissue artifact, especially around the
+scapula and forearm. Joint centers and axes are estimated. Clubface orientation
+requires careful rigid-body tracking. Bilateral grip sensors must be registered
+to the club frame. These uncertainties should enter the model-data comparison.
+
+**Model Result:** A reduced spatial mechanism retains the late negative contact
+couple across two independent engine realizations for the declared interval and
+passes sign-changing controls.
+
+**Human Evidence:** Three-dimensional golf motion is clearly not planar, but
+  existing heterogeneous datasets do not validate the specific spatial contact
+  mechanism [@meister2011; @joyce2013; @mcphee2022].
+
+**Hypothesis:** The planar swing-normal couple is one projection of a spatial
+wrench pattern that should be measurable without requiring a unique muscle
+allocation.
+
+**Practical Interpretation:** A planar model can explain a shadow mechanism; a
+spatial model must show which parts remain when the lights move.
+
+### What the Plane Captures
+
+A planar model captures rotation in one chosen swing plane and forces projected
+into it. It can represent link inertia, relative release, radial/tangential
+reaction, and an out-of-plane moment. Because signs and geometry are easy to
+see, it is an excellent place to derive and falsify the basic negative-couple
+mechanism.
+
+The plane is not a claim that a golf swing is flat. It is a controlled slice.
+The key question is whether a spatial extension retains the corresponding
+physical projection when out-of-plane motion and extra axes are admitted.
+
+### What Three Dimensions Add
+
+Each rigid body now has spatial orientation and angular velocity. The club's
+moment is a vector. Hand forces and moments have six components per contact.
+Swing-plane normal can vary with time and must be defined operationally. Forearm
+rotation, wrist deviation, shaft droop, torso side bend, and shoulder-girdle
+motion introduce pathways absent from the plane.
+
+These freedoms can redistribute a planar effect rather than merely add to it.
+A moment that looked entirely negative in one axis may split across changing
+axes. The invariant quantity is the complete wrench and its power; the chosen
+swing-normal projection remains useful if its construction is reported and
+tested for sensitivity.
+
+### Frames Must Be Registered
+
+Laboratory, pelvis, trunk, arm, hand, club, sensor, and swing frames all move
+differently. Every spatial wrench transform includes rotation and moment shift.
+Angular velocities require consistent representation; Euler-angle derivatives
+are not the angular-velocity vector. These are common sources of plausible but
+wrong signs.
+
+Frame tests use known loads and orientations, action--reaction at contacts,
+reference-point invariance of power, and round-trip transforms. Coordinate
+conventions should be machine-readable. A reviewer should be able to reproduce
+the swing-normal axis from released kinematics.
+
+### Defining the Late Impact Zone
+
+“Near impact” can be a clock window, a range of club position, a state-space
+region, or a phase normalized between events. A spatial study should declare
+the primary definition and test alternatives. If the negative-couple interval
+appears only under one post hoc window, confidence is low.
+
+State-based regions may include clubhead height, hand path, shaft orientation,
+and arm--club geometry. They allow comparisons across tempo but can introduce
+selection bias if tuned on outcomes. Freeze them before participant holdout.
+
+### Independent Engines
+
+Implement the same spatial mechanism in two dynamics engines or formulations.
+Share model parameters, initial state, control histories, and output schema.
+Compare trajectories, hand wrenches, constraints, energy, and the projected
+couple within tolerances. Differences should be investigated, not averaged.
+
+Independence is strongest when implementations do not share derivative code or
+hidden convention helpers. Agreement then reduces the chance that one algebraic
+or frame error created the result. The released comparison should include both
+successful agreement and known deviations.
+
+### A Spatial Geometry-Control Suite
+
+Reverse the defined swing-normal axis and verify only the reported projection
+changes sign, not physical power. Swap hand positions in the model and verify
+the differential couple responds. Collapse separation, align forces with the
+separation vector, and rotate the swing plane. Perturb sensor-frame orientation
+to quantify sign confidence.
+
+These tests distinguish coordinate behavior from physical mechanism. If a
+purported negative couple disappears whenever the reporting plane shifts a few
+degrees, its interpretation should include that uncertainty rather than a binary
+label.
+
+### Moving Anatomy Without Overclaiming It
+
+Spatial arm segments permit richer kinematics, but a ball joint at the shoulder
+does not represent scapulothoracic motion or muscle recruitment automatically.
+Marker-based shoulder centers and scapular orientation have substantial
+measurement uncertainty. A generalized shoulder driver remains an abstraction.
+
+The model can predict a required hand wrench or joint-level generalized load.
+Mapping that to scapular retraction, protraction, or named muscle action requires
+additional kinematics, EMG, and a biological model. Keeping that boundary
+explicit protects the very hypothesis the work aims to test.
+
+### Quantities That Should Survive the Extension
+
+Whole-system energy balance, contact action--reaction, wrench power invariance,
+and geometric control responses should survive exactly or within numerical
+tolerance. Qualitative timing and sign of the proposed contact contribution may
+survive over a declared region. Exact optimal controls and magnitudes are
+expected to change.
+
+The spatial model earns its complexity if it makes new falsifiable predictions:
+out-of-plane force components, axis-dependent couple timing, or conditions under
+which the planar mechanism fails. If it merely draws a more realistic golfer
+while hiding the causal tests, it has moved away from science.
+
+### Human Validation Path
+
+Use synchronized full-body and club motion, bilateral grip wrenches, separate
+force plates, and shaft deformation. Calibrate every frame and report soft-
+tissue and sensor uncertainty. Evaluate participants held out from parameter
+tuning. Compare predicted three-dimensional wrench trajectories, not only
+clubhead speed.
+
+Residuals should be inspected by phase and direction. A systematic out-of-plane
+residual may identify missing wrist, shaft, or shoulder-girdle physics. Updating
+the model in response should be declared as a new rung and retested on untouched
+participants.
+
+### Reader Lab: Rotate the World
+
+Take one spatial state and rigidly rotate every position, orientation, force,
+moment, and gravity vector into a new laboratory frame. Recompute dynamics. The
+rotated physical trajectory, energy, and wrench power should match. A quantity
+tied to the declared swing frame should transform predictably. Failure reveals a
+frame-dependent implementation error.
+
+Next project the same contact moment onto several plausible swing-plane normals.
+Report sign confidence and angular sensitivity. If all definitions agree over
+the late interval, the negative-couple claim is robust to plane construction. If
+they disagree, publish the dependence and prefer the complete vector result.
+
+Finally compare two independent spatial engines on geometry-reversal and hand-
+separation controls. Match initial state and input at high precision. Differences
+in constraint stabilization or quaternion handling should remain below declared
+observable tolerances.
+
+### Spatial Visualization Without Illusion
+
+A three-dimensional rendering can make a model look biologically authoritative.
+Include visible joint definitions, hand contact frames, force-vector scale,
+uncertainty, and model-rung label. Let readers rotate the scene and inspect the
+numeric state. Do not use a detailed human mesh to imply anatomical fidelity not
+present in the equations.
+
+The best spatial figure pairs an intuitive view with invariant plots: wrench
+power, projected couple with axis sensitivity, and closure residual. Beauty
+should make the mechanism easier to audit, not harder to question.
+
+### A Minimal Spatial Report
+
+Publish body and joint frames, orientation representation, state definition,
+inertias, constraints, controls, solver, and swing-plane construction. Report
+complete three-dimensional hand wrenches before selected projections. Include
+energy, constraint, and engine-agreement residuals. Provide geometry-control
+animations with fixed vector scales and downloadable data.
+
+For the negative couple, show the moment vector in club, laboratory, and swing
+frames, the angle between vector and plane normal, and sign probability under
+frame uncertainty. Report the interval by both time and state. This makes a
+spatial claim reviewable rather than visually persuasive only.
+
+### When the Planar Result Fails in Space
+
+Failure can occur because out-of-plane motion redirects the contact wrench,
+because a different axis dominates, because hand geometry changes, or because
+the planar constraint created an artificial reaction. Diagnose which term
+changes. A spatial failure is not proof that coupling is irrelevant; it narrows
+the specific projection or validity region.
+
+The revised explanation might say that a negative total swing-normal couple is
+not robust, while one component or state-dependent regulation effect remains.
+Such refinement is exactly why the model ladder exists.
+
+### Accessibility of a Three-Dimensional Result
+
+Pair an interactive scene with two-dimensional explanatory slices and textual
+alt descriptions. A phone reader should understand hand positions, arrows, and
+sign without rotating a model. A specialist can open the interactive view and
+data. Providing both prevents visual sophistication from becoming an access
+barrier.
+
+### Chapter Checkpoint
+
+The spatial extension succeeds when it preserves invariant balances, survives
+frame and engine tests, and either confirms or precisely narrows the planar
+mechanism. More degrees of freedom alone are not progress. New, measurable
+predictions and exposed failure regions are.
+
+For a reviewer, the full wrench vector remains primary. A convenient negative
+projection should never conceal uncertainty in the axis used to define it.
+
+## Where the Picture Breaks
+
+The shadow analogy makes spatial extension look visually obvious. In fact,
+coordinate conventions, rotation representations, and contact frames can create
+subtle sign errors. Every comparison needs automated transformation and power
+checks.
+
+Engine agreement can also become false reassurance if one result is tuned to
+the other. Parameters and tolerances should be registered before comparison,
+with held-out cases and negative controls.
+
+**Go Deeper:** Read the
+[spatial common-state formulation](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06c_spatial_cross_formulation.qmd),
+the [independent forward-contact chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06cc_spatial_forward_contact.qmd),
+and the project's [reproduction boundary](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).

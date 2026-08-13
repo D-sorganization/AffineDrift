@@ -1,0 +1,281 @@
+# A Ladder of Models, Not One Final Model {#sec-lay-ch19}
+
+## A Concrete Picture
+
+A map can show a continent, a city, a building, or the pipes inside one room.
+The city map is not false because it omits plumbing. The plumbing drawing is not
+better for planning a cross-country trip. Scale and detail should match the
+question.
+
+The proximal-distal project uses a model ladder for the same reason. A double
+pendulum isolates coupling. A two-hand model exposes wrench redundancy. A
+flexible shaft adds storage. A moving base adds back-reaction. Spatial and
+full-body tiers add frames, contacts, and independent engine realizations. Each
+rung should answer a declared question and preserve common observables.
+
+![A Model Ladder Adds Two Hands, Flexibility, Moving Base, Spatial Motion, and Full-Body Structure While Keeping Common Wrench and Power Observables.](figures/proximal_distal_companion/fig_companion_evidence_ladder.svg){#fig-lay-model-ladder width=98% fig-alt="A ladder rises from double pendulum through two-hand, flexible-shaft, moving-base, spatial-contact, and full-body models, with a common wrench-power contract running alongside every rung."}
+
+## How the Mechanism Works
+
+The bottom rung should be analytically transparent. Exact equations, limiting
+cases, and pointwise decompositions reveal why a mechanism appears. Higher rungs
+ask whether it survives added realism. If the sign reverses or effect vanishes,
+the model boundary becomes a scientific result rather than an embarrassment.
+
+### Common Observables Are the Handrail
+
+Coordinates differ across tiers. A planar wrist angle has no one-to-one match in
+a spatial model with two wrists and a flexible shaft. Comparing raw coordinates
+would confuse model architecture with mechanism.
+
+Instead, every tier reports a club wrench at a declared reference, interface
+power, club motion, relevant work integrals, and closure residuals. These are the
+handrail connecting rungs. Added internal detail can be reported without losing
+the shared comparison.
+
+### Complexity Must Pay Rent
+
+Adding degrees of freedom increases parameter uncertainty and nonuniqueness. A
+full-body model can look lifelike while allowing many internal solutions. If it
+does not improve a relevant observable, falsifier, or uncertainty estimate, its
+complexity has not paid rent.
+
+The distributed shaft is justified when higher modes change the impact-window
+wrench or energy beyond tolerance. The moving base is justified when back-
+reaction changes the mechanism. Spatial contact is justified when out-of-plane
+geometry or wrench components matter. The question comes first.
+
+### Surviving and Changing Claims
+
+Some statements are structural. Action-reaction, wrench transformation, and
+work-energy closure should survive every tier. Some are model-specific: the
+exact duration of a negative couple, optimal torque onset, or numerical force
+magnitude can change with parameters and degrees of freedom.
+
+The release matrix labels what each tier supports, omits, and must not claim.
+This prevents a result from climbing the ladder merely because a later model
+exists elsewhere in the repository.
+
+### Cross-Formulation Agreement
+
+Inverse, forward, reduced, and spatial formulations can share a common state or
+observable. Agreement under independently implemented equations reduces the
+chance that one code path created the effect. Disagreement helps locate hidden
+assumptions.
+
+The independently executed spatial contact test is especially useful because
+MuJoCo and Pinocchio do not share one dynamics implementation. Their agreement
+on bounded mechanism observables strengthens numerical credibility, though both
+still represent the same reduced physical idea.
+
+### The Ladder Ends at an Open Gate
+
+No model rung becomes a human trial. The top computational tier still needs
+measured kinematics, bilateral hand wrenches, ground reactions, shaft behavior,
+and activation. The experimental protocol is not an optional future decoration;
+it is the next rung.
+
+**Model Result:** The negative-couple and interaction-force mechanisms survive
+several rungs with changing quantitative values and explicit failures under
+geometry controls.
+
+**Human Evidence:** Available golf measurements constrain motion and some net
+kinetics but do not yet supply the synchronized dataset needed to validate every
+common observable.
+
+Optimization with higher-degree-of-freedom golf models illustrates how rapidly
+the design space grows as anatomical and club freedoms are added [@mcnally2018].
+
+**Practical Interpretation:** Ask for the smallest model that can answer today's
+question and the next larger model capable of proving that the answer was not an
+artifact of the simplification.
+
+### Why No Single Model Is “the Model”
+
+Every model answers a question by omitting something. A double pendulum isolates
+linked inertia. A two-hand constraint model exposes force allocation. A flexible
+shaft adds stored energy and phase. A whole-body spatial model adds moving base
+and ground interaction. A musculoskeletal model asks about candidate muscle
+allocations. None supersedes all earlier models; each changes the balance between
+interpretability, fidelity, and identifiability.
+
+The ladder works when observables and interventions remain aligned across rungs.
+If every model uses a different definition of transfer, comparison is impossible.
+This project carries forward hand wrench, swing-normal couple, interface power,
+work, club state, energy closure, and declared counterfactuals.
+
+### Rung Zero: Algebra and Geometry
+
+Before integrating motion, test wrench arithmetic, sign conventions, moment-arm
+dependencies, and coordinate transforms. Symbolic or static examples should
+recover known limits exactly. This rung catches errors that a complex animation
+can conceal.
+
+It also states propositions clearly: collapsing hand separation collapses a pure
+differential couple; a consistent reference-point transform preserves wrench
+power; equal-and-opposite contacts can have zero net force and nonzero moment.
+These are mechanics identities, not human findings.
+
+### Rung One: The Planar Double Pendulum
+
+The fixed-base two-link model tests interaction dynamics, carried motion,
+relative release, and torque timing. Its small state permits dense parameter
+sweeps, analytic checks, and transparent pointwise decompositions. It cannot
+represent bilateral hands, spatial axes, ground contact, or shaft deformation.
+
+A result promoted from this rung should be qualitative and mechanism-focused.
+Exact speed gains or optimal milliseconds are provisional. Negative controls
+and sensitivity maps determine which signs or orderings are stable enough to
+carry upward.
+
+### Rung Two: Two Hands and a Moving Base
+
+Add separated contact points and either prescribed or dynamic proximal motion.
+Now the model can reconstruct common and differential hand modes and test the
+geometric negative-couple hypothesis. A finite-mass base restores reaction from
+club to body. Contact remains idealized and anatomy generalized.
+
+This rung asks whether the mechanism survives when the very feature it concerns
+—two hands—is represented explicitly. It also reveals nonuniqueness: the same
+club wrench can correspond to many internal contact allocations.
+
+### Rung Three: Flexible Club
+
+Add one or more shaft modes, damping, and calibrated boundary coupling. Repeat
+the same counterfactuals while including modal state and energy. This rung asks
+whether rigid-club conclusions were artifacts of omitting deformation and
+whether negative coupling interacts with shaft return.
+
+Modal convergence and independent beam checks matter. A single arbitrary spring
+can generate an attractive delay without representing a club. Parameters should
+come from measured or explicitly synthetic sources and remain qualified.
+
+### Rung Four: Spatial Whole-Body Dynamics
+
+Add three-dimensional pelvis, trunk, shoulder/arm, hand, and club motion with
+ground contact. Spatial frames permit out-of-plane moments and full wrenches.
+The number of parameters and controls grows sharply, so identifiability becomes
+a central result rather than an inconvenience.
+
+Independent engine agreement is valuable here. Matching trajectories is not
+enough; constraint reactions, energy, and wrench projections should also agree.
+A mechanism surviving only one software stack remains suspect.
+
+### Rung Five: Biological Allocation
+
+A musculoskeletal or activation-aware model proposes how generalized loads might
+be shared among muscles and passive tissues. It can study co-contraction,
+stiffness, and internal load, but it needs EMG, strength, anatomy, and optimization
+assumptions. Multiple allocations usually fit the same motion.
+
+This rung should not retroactively turn earlier generalized arm and wrist drivers
+into named muscles. Instead it tests candidate mappings and reports their
+nonuniqueness. Scapular action, in particular, requires adequate kinematics and
+measurement-aware shoulder-girdle representation.
+
+### Promotion and Demotion Rules
+
+A claim is promoted when it passes implementation verification, negative
+controls, uncertainty tests, and the next rung's relevant physics while retaining
+a coherent observable prediction. It is demoted when sign or mechanism depends
+on a removed assumption, fails closure, or cannot be distinguished with
+available measurements.
+
+Demotion is not failure of the project. It locates a boundary: “this effect is
+specific to a fixed-base rigid planar model” is scientifically useful. The
+reader can then see what remains established, what is model-conditional, and
+what human evidence still owes.
+
+### Cross-Rung Tables and Figures
+
+For each mechanism, a comparison table should list degrees of freedom, contact
+model, shaft model, controls, identified parameters, pass/fail gates, and common
+outcomes. Figures should overlay normalized time histories with consistent
+signs, not juxtapose unrelated axes. Differences in magnitude should remain
+visible rather than normalized away when magnitude is the question.
+
+Machine-readable manifests make this comparison reproducible. Each row links to
+input, output, code commit, and generated figure. Reviewers can rerun one rung or
+replace it with an independent implementation without adopting the whole
+software ecosystem.
+
+### Deciding When Complexity Is Worth It
+
+Add a degree of freedom or state when it changes a target observable, explains a
+structured residual, enables a discriminating experiment, or removes an
+unacceptable assumption. Do not add complexity merely for visual realism.
+Unidentifiable complexity can make a model less falsifiable by allowing it to fit
+anything.
+
+The final modeling product should therefore remain modular: a transparent core,
+optional higher-fidelity rungs, shared contracts, and explicit qualification.
+That architecture invites criticism and extension as an open resource rather
+than presenting one branded engine as final authority.
+
+### Reader Lab: Write a Promotion Matrix
+
+Choose one claim, such as a late negative swing-normal contact couple. Across
+rows list algebraic geometry, planar double pendulum, two-hand moving base,
+flexible shaft, spatial whole-body, and biological allocation. Across columns
+list sign, onset, duration, magnitude, work, outcome effect, negative controls,
+uncertainty, and human evidence. Populate every cell with result, not applicable,
+or unresolved.
+
+The matrix makes a common error obvious: a claim may be well verified in early
+rungs but unresolved in humans. It also reveals where complexity changes the
+result. Link each cell to machine-readable evidence and tests.
+
+Now define promotion criteria before looking at the next rung. Perhaps sign must
+hold in 95 percent of a declared ensemble and geometry controls must pass, while
+magnitude can vary. If criteria fail, narrow the claim. This avoids silently
+moving the goalposts as realism increases.
+
+### Independent Extension
+
+Invite a second implementation to reproduce one rung using the published
+contracts. If it disagrees, preserve both outputs and reconcile specification,
+frames, and numerics. The goal is not to defend an engine. It is to discover
+which physical conclusion survives independent expression.
+
+A modular open resource makes such extension inexpensive. Shared schemas and
+benchmarks let a contributor add a contact or anatomical rung without rewriting
+the manuscript's conceptual core.
+
+### A Claim Can Live at More Than One Rung
+
+The identity that wrench power is reference-point invariant belongs to the
+mechanics rung and should hold everywhere. The finding that a particular
+negative-couple interval appears belongs to specific model rungs. The hypothesis
+that golfers use it belongs to the human-evidence rung. Separating them prevents
+a human null result from invalidating an identity or a verified identity from
+being offered as human validation.
+
+Each public statement should therefore carry rung and status. Readers can see
+which parts are durable foundations and which remain contingent. New evidence
+updates the appropriate layer without rewriting the entire framework.
+
+### Completion Is a Maintained Ladder
+
+The ladder is complete enough for release when every rung has a specification,
+verification, shared observables, limitations, and a documented route to the
+next test. It does not require maximal anatomical detail. Future rungs can be
+added when evidence and questions justify them.
+
+Maintaining simple benchmarks alongside rich models prevents regression and
+keeps the project teachable. The lay book, technical monograph, simulator, and
+evidence register should all reference the same ladder identifiers.
+
+## Where the Picture Breaks
+
+The map analogy suggests clean nested scales. Model families are not always
+nested; a spatial engine may use different contact or damping laws rather than
+simply adding detail. Common observables and negative controls are needed to
+compare them fairly.
+
+More agreement also does not guarantee truth if all tiers share a wrong premise.
+Independent measurement remains decisive.
+
+**Go Deeper:** Explore the monograph's
+[common-observable ladder](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch07_model_ladder.qmd),
+[model completion matrix](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/MODEL_COMPLETION_FALSIFICATION_MATRIX.md),
+and [reviewer workbench](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md).

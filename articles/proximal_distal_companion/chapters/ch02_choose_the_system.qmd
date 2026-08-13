@@ -1,0 +1,227 @@
+# Choose the System Before Counting {#sec-lay-ch02}
+
+## A Concrete Picture
+
+Picture a household checking its monthly finances. If the “system” is one
+person's wallet, a payment to a spouse is money leaving the system. If the
+system is the whole household, the same payment is an internal transfer: one
+account falls while another rises, but household wealth does not change. Rent
+paid to a landlord is external under either household boundary. A loan adds
+cash now and an obligation later. The accounting only becomes meaningful after
+we say what is inside the boundary and what quantities the ledger tracks.
+
+Mechanical accounting works the same way. A statement such as “the arms gave
+energy to the club” quietly draws a boundary around the club. A statement such
+as “the golfer-club system gained energy from the ground” draws a larger
+boundary. Both can be useful. Trouble begins when numbers computed for one
+boundary are interpreted as though they belonged to another.
+
+The choice is not philosophical decoration. It decides which forces are
+external, which interactions are internal, which energies appear in the ledger,
+and what conservation statement should close. Before counting transfer, we
+must choose the system.
+
+![Nested Boundaries Separate Club, Golfer-Club, and Golfer-Club-Earth Energy Accounts.](figures/proximal_distal_companion/fig_companion_system_boundaries.svg){#fig-lay-system-boundaries width=96% fig-alt="Three nested boundaries surround the club, then golfer and club, then golfer, club, and Earth, showing how hand forces and gravity change from external interactions to internal terms as the chosen system grows."}
+
+## How the Mechanism Works
+
+Start with the club alone. Its rigid-body kinetic energy includes translation
+of its center of mass and rotation about that center. If the shaft is flexible,
+the club system also has elastic strain energy and possibly energy in several
+vibration modes. The hands exert external forces and moments on this chosen
+system. Gravity is external. Aerodynamic drag is external. If the club strikes
+the ball, contact with the ball is external. A club-only balance can therefore
+answer: how much mechanical work entered through the grip, how much gravity
+added, how much drag removed, how much remained stored in flex, and how much
+appeared as club kinetic energy?
+
+Now enlarge the boundary to include the golfer and club. Hand-grip forces are
+internal action-reaction pairs. They still matter because they redistribute
+energy among body segments and the club, but they do not appear as net external
+work on the combined idealized system. Ground reactions, gravity, air drag, and
+metabolic-to-mechanical conversion remain relevant at or beyond the boundary.
+This larger balance can answer a different question: how did external work and
+internal actuation change the mechanical energy of the entire moving system?
+
+Enlarge the boundary again to include Earth. Gravitational potential energy is
+now stored within the chosen system rather than supplied by an external gravity
+force. Ground contact becomes an internal interaction with Earth, although the
+Earth's change in kinetic energy is ordinarily negligible because its mass is
+enormous. The equations have not contradicted one another. The labels have
+changed because the boundary changed.
+
+### Internal Forces Can Still Transfer Energy Between Parts
+
+Readers sometimes hear that internal forces “do no work.” That phrase is only
+safe for particular idealized whole-system sums. An internal force can do
+positive work on one subsystem and negative work on another. Consider two
+skaters pushing apart. The contact forces are internal to the pair, but each
+skater gains kinetic energy because biological chemical energy is converted by
+muscle action during the push. If we examine one skater, the other's contact
+force is external and plainly does work.
+
+For the arm and club, the wrist reaction force can carry power across the
+arm-club boundary. Let $\mathbf F_{H\to C}$ be the hand force on the club and
+$\mathbf v_H$ the velocity of the grip point on the club. The club-side power
+through that contact is $\mathbf F_{H\to C}\cdot\mathbf v_H$ plus any direct
+moment power. The equal and opposite club force on the hand participates in the
+body-side balance. With perfectly coincident rigid contact points, the pair's
+translational contact powers cancel in the combined-system sum. With compliance,
+relative motion, or a different partition, energy can temporarily enter stored
+interface states.
+
+This is why words like *source*, *transfer*, and *storage* need care. Muscles are
+sources of mechanical work only by converting biochemical energy. The hand-club
+interface is usually a transfer boundary, not an independent energy source. A
+shaft spring stores energy but does not create it. Damping removes recoverable
+mechanical energy from the modeled degrees of freedom. Gravity exchanges kinetic
+and potential energy. Each verb belongs to a declared boundary and model.
+
+### Reference Points Matter for Moments and Power
+
+A force is a vector that can be expressed in different coordinate frames
+without changing the physical interaction. A moment is always about a point.
+Move the reference point, and the force moment changes according to
+
+$$
+\mathbf M_B = \mathbf M_A + (\mathbf r_A-\mathbf r_B)\times\mathbf F.
+$$
+
+The combined force-moment pair is called a **wrench**. Its power is invariant
+when the force, moment, translational velocity, and angular velocity are all
+transformed consistently. But comparing a moment about the lead hand with a
+moment about the club center without performing the transformation can create a
+false difference. The two-hand chapters will return to this point because a
+pair of separated forces may have nearly zero resultant force yet a substantial
+moment about the club.
+
+Reference levels also matter for potential energy. We may choose the ground as
+zero gravitational potential or choose the club's address height. Only changes
+in potential energy affect the balance, so either reference is valid if applied
+consistently. Absolute numbers without a declared zero are not comparable.
+
+### The Boundary Decides the Question, Not the Answer
+
+Suppose a simulation reports that the club gains $40$ joules during a phase,
+while the arm loses $12$ joules. It would be wrong to conclude that exactly
+$12$ joules were “transferred from arm to club” and the remaining $28$ appeared
+mysteriously. Shoulder and wrist actuators may do work, gravity may contribute,
+the shaft may release stored energy, and other body segments may exchange power
+through the arm. A valid attribution needs interface powers and the complete
+ledger for the chosen partition.
+
+Conversely, a whole-system balance can hide the internal route. If total
+mechanical energy rises by $50$ joules and the numerical residual is tiny, we
+still do not know whether hip, shoulder, wrist, or elastic mechanisms delivered
+the work. Conservation is a consistency condition, not an anatomical diagnosis.
+To locate pathways, we deliberately draw subsystem boundaries and compute power
+through each interface.
+
+**Model Result:** The technical work reports grip power, shaft-interface power,
+actuator work, gravitational work, damping loss, stored elastic energy, and
+whole-system residuals for multiple model tiers. Agreement of those ledgers is
+evidence that the implemented partitions are mechanically consistent.
+
+**Human Evidence:** Inverse-dynamics studies can estimate net joint moments and
+powers from measured kinematics and external forces, but results depend on body
+segment parameters, filtering, joint definitions, and the treatment of two-hand
+contact. Net joint power is not a direct measurement of a particular muscle's
+work [@nesbit2005work; @winter2009].
+
+**Hypothesis:** A boundary placed around the club and shaft may expose transfer
+pathways that are invisible in segment-speed plots, particularly when a negative
+grip couple coexists with positive power arriving through another channel.
+
+**Practical Interpretation:** Whenever someone says energy was “generated,”
+“stored,” or “transferred,” ask three quiet questions: what system was chosen,
+what crossed its boundary, and did the ledger close?
+
+### The Same Swing Under Four Boundaries
+
+Imagine drawing four outlines on the same video frame. The smallest outline
+contains only the club. Every force and moment applied by the hands crosses that
+boundary, so hand power is external to this system. Shaft strain energy is
+internal if the flexible shaft remains inside the outline. Aerodynamic drag and
+the impact force are external. This boundary is excellent for asking how the
+club acquires and loses mechanical energy, but it says almost nothing about how
+the body produced the hand wrench.
+
+The next outline contains both hands and the club. Grip contact becomes an
+internal exchange; wrist and forearm loads cross the new boundary. This view is
+useful for separating a two-hand internal couple from the net wrench delivered
+by the arms. The third outline adds the upper body. Shoulder, trunk, and lower-
+body interfaces now matter. The final outline contains golfer, club, and ground
+contact. Muscle work is internal, while gravity and environmental contacts are
+external. Each outline describes the same physical event, yet the words
+“source” and “transfer” refer to different terms.
+
+This explains why two apparently contradictory papers can both balance. One may
+call power at a joint a transfer between rigid segments; another may treat the
+same joint and its spanning muscles as internal to a larger system. A useful
+comparison first translates both analyses to a common boundary and reference
+point. Without that translation, disagreement may be bookkeeping rather than
+mechanics.
+
+### A Boundary Audit in Plain Language
+
+For any claimed transfer, write a one-line sentence: “The system is ___; energy
+crosses through ___; positive points ___.” Next list the stored forms. For a
+rigid club those might be translational and rotational kinetic energy plus
+gravitational potential. For a flexible club, add modal or strain energy. Then
+list external ports: hands, gravity, air, and ball contact. The balance should
+read like a bank statement in which the change in account value equals deposits
+minus withdrawals, with a small numerical residual.
+
+Reference points deserve equal care. A force applied away from the club's
+center of mass creates both translation and rotation. Moving the reporting
+point changes the force--moment pair, although the physical wrench is the same.
+Power remains consistent only when force, moment, linear velocity, and angular
+velocity are transformed together. Mixing a force from one point with a moment
+from another is the mechanical equivalent of combining dollars and euros
+without an exchange rate.
+
+### Why the Choice Matters for the Two-Hands Question
+
+When the hands exert equal and opposite forces, their net force can be nearly
+zero while their couple is not. For the club-only system, that couple is an
+external moment and can do rotational work. For a hands-plus-club system, the
+same contact forces are internal, and the energetic question moves to the
+wrist/arm boundary. Neither description makes the couple disappear. It changes
+where the accounting line is drawn.
+
+The distinction is essential when comparing an arm-dominant allocation with a
+wrist-dominant allocation. If both produce the same net club wrench, club-level
+motion cannot identify which internal route was used. Expanding the system may
+make the hidden route explicit, but it also demands more measurements and more
+anatomical assumptions. A good model chooses the smallest boundary capable of
+answering its declared question and refuses to imply more.
+
+## Where the Picture Breaks
+
+The household-budget analogy suggests that every transfer has a unique payer
+and recipient. Multibody mechanics is less tidy. Coordinate choices can move
+terms between what is called inertial coupling and what is called a generalized
+force. Segmental energy methods can partition joint power in more than one way,
+especially at multi-degree-of-freedom joints. Soft tissues span several joints,
+and biarticular muscles can move energy between segments without fitting a
+single-joint wallet.
+
+Rigid-body boundaries also cut through biological structures. A modeled “wrist
+joint” may stand in for carpal motion, forearm rotation, grip deformation, and
+small translations. A “shoulder torque” may aggregate glenohumeral action,
+scapulothoracic motion, and trunk coupling. The boundary remains useful if its
+meaning is explicit, but it should not be mistaken for a direct anatomical
+measurement.
+
+Finally, work and energy say nothing by themselves about comfort, accuracy,
+injury risk, neural control effort, or repeatability. Two allocations can have
+the same club energy and very different internal loads. The later chapters add
+those objectives rather than letting one ledger pretend to answer them all.
+
+**Go Deeper:** The scientific monograph's
+[whole-system and interface-power treatment](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06_shaft_contributions.qmd)
+shows the balance for rigid and flexible cases. Its
+[two-hand wrench chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd)
+defines reference points and action-reaction explicitly. For the broader
+biomechanics convention, see Winter's treatment of segment and joint energetics
+[@winter2009].

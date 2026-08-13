@@ -1,0 +1,267 @@
+# When the Base Moves, Every Shortcut Changes {#sec-lay-ch17}
+
+## A Concrete Picture
+
+Stand on a stable floor and swing a pendulum from your hand. Then repeat while
+standing on a rolling board. The pendulum pulls you; your motion changes its
+path; the board moves beneath both. Prescribing your hand path from the first
+experiment and replaying it on the board would erase this feedback.
+
+Many simple golf models prescribe a hub, shoulder, or hand trajectory. That is
+useful for asking what club forces are compatible with a measured path. It is
+less useful for asking how club reactions alter the body. A moving-base forward
+model turns the prescribed support into a dynamical participant.
+
+![A Prescribed Base Follows a Fixed Path While a Coupled Moving Base Responds to the Club Reaction.](figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.svg){#fig-lay-moving-base width=97% fig-alt="Side-by-side diagrams compare a hand hub forced along a predetermined path with a finite-mass moving hub whose acceleration changes under equal-and-opposite club reactions."}
+
+## How the Mechanism Works
+
+In the simplest double pendulum, the shoulder may be fixed. In a prescribed-
+motion model, shoulder or hub kinematics are supplied as known functions of time.
+The solver computes joint reactions needed to realize them. In a coupled model,
+base coordinates join $\mathbf q$ and their accelerations emerge from force and
+inertia.
+
+### Prescribed Motion Is an Infinite-Authority Driver
+
+A perfectly prescribed trajectory occurs regardless of reaction. Mathematically,
+the driver supplies whatever force and power are needed. This can hide a large
+back-reaction from the club. The computed wrench is still useful, but the model
+cannot predict how the body would deviate under finite strength or mass.
+
+Calling prescribed motion “measured” does not remove this limitation. It makes
+the model an inverse or hybrid analysis of that trial. Causal strategy comparison
+needs a forward tier where changes in control can change the base state.
+
+### Coupled Inertia Creates Feedback
+
+When base and club coordinates share one mass matrix, off-diagonal terms connect
+their accelerations. A club reaction can slow, redirect, or translate the base.
+Base motion changes hand velocity and therefore club power. The whole-system
+balance must include both.
+
+The coupled base-flex model separates grip and shaft moments, includes convective
+terms, and uses a constrained solve. Same-state interventions remove selected
+drivers or reverse geometry while preserving the instant. Sensitivity sweeps
+ask whether the negative-couple mechanism survives plausible parameters.
+
+### Finite Mass Matters
+
+An infinite-mass base barely responds; a light base moves strongly. Human body
+segments have finite, distributed mass and active control. A reduced moving hub
+does not become a torso, but it tests whether a mechanism depends on an immovable
+support.
+
+The independent spatial test uses finite-mass hand carriages rather than direct
+club actuation. Paired compliant contacts transmit action-reaction. The late
+negative couple survives for a bounded interval in both engine realizations.
+This broadens the mechanism beyond one prescribed planar driver.
+
+### Whole-System Power Prevents Hidden Work
+
+A prescribed base can inject or remove power implicitly. A forward base requires
+explicit drivers or external forces. Summing actuator work, gravity, damping,
+contact power, shaft storage, and kinetic-energy change exposes hidden sources.
+Timestep refinement distinguishes physical residual from numerical error.
+
+### A Hierarchy of Questions
+
+Use fixed-base models for clean local coupling. Use prescribed motion to attribute
+forces along a measured path. Use a moving reduced base to test back-reaction.
+Use full-body models to represent spatial mass distribution and joint structure.
+Each tier should inherit common observables so the mechanism can be compared.
+
+**Model Result:** The negative-couple and transfer findings survive a finite-base,
+forward constrained tier under registered controls, while quantitative values
+change.
+
+**Human Evidence:** Measured hub paths and the modeled effect of inward hand-path
+motion show why base and handle translation cannot be treated as decorative
+details [@nesbit2009hub; @miura2001].
+
+**Hypothesis:** Human proximal control may arrange a moving base whose reaction
+with the club supports late transfer, but the reduced hub cannot identify the
+specific body coordination.
+
+**Practical Interpretation:** If the club can push back on the golfer, a model
+that forces the hands along an unchangeable path answers only part of the story.
+
+### Why a Fixed Pivot Is Both Useful and Dangerous
+
+Fixing the proximal joint makes the double pendulum easy to interpret. It
+removes translational base work and exposes arm--club coupling. Yet a golfer's
+hands travel because pelvis, trunk, shoulder girdle, arms, and wrists all move.
+The hand path has curvature, inward motion, elevation change, and out-of-plane
+components. Once those are important to the question, a fixed pivot can distort
+both force direction and energy flow.
+
+The danger is not that every fixed-base result is false. It is that a mechanism
+may rely on compensation for an omitted base motion. The correct response is a
+model ladder: preserve the same observable definitions and controls while
+releasing the base in stages.
+
+### Prescribed Motion Versus Dynamic Motion
+
+A prescribed base follows a measured or designed path regardless of reaction
+from the club. This is computationally convenient and can test how hand-path
+geometry influences club motion. Work needed to enforce the path is an external
+input and must be included in the energy ledger. The club cannot feed back to
+change the prescribed body trajectory.
+
+A dynamic base has mass and equations of motion. Applied forces and torques,
+ground constraints, and club reactions determine its acceleration. Energy and
+momentum exchange are reciprocal. This is more physical but introduces control,
+contact, and parameter questions. Comparing prescribed and dynamic versions
+reveals which findings depend on one-way forcing.
+
+### The Moving-Handle Contribution
+
+Clubhead velocity equals handle velocity plus the contribution of club rotation
+and deformation. Accelerating the handle can raise clubhead speed even before
+relative release. Pulling the handle inward can change angular momentum and
+effective geometry, a mechanism explored in golf models as parametric
+acceleration. Whether it helps depends on timing and the rest of the state.
+
+Handle power can be calculated from the grip wrench and handle twist. A moving
+base adds translational power channels that a fixed hinge cannot represent. The
+negative-couple question must therefore be revisited: a locally negative
+rotational channel can coexist with substantial positive translational hand
+power.
+
+### Releasing the Base in Rungs
+
+Rung one prescribes planar pivot translation. Rung two adds a finite-mass planar
+base driven by declared controls. Rung three adds pelvis and trunk rotation with
+ground constraints. Rung four introduces three-dimensional shoulder-girdle and
+arm motion. At each rung, calculate the same hand wrench, swing-normal couple,
+club power, work, and terminal outcomes.
+
+The sign of a physical wrench projection should transform consistently. Exact
+magnitude and preferred onset can change. If the mechanism reverses under a
+small plausible base motion, the fixed-base conclusion is fragile. If it
+persists across a broad ensemble, it becomes a stronger candidate for human
+testing.
+
+### A Counterfactual Base Test
+
+Copy one state from a dynamic simulation. In one branch retain proximal driver;
+in another remove it while retaining distal control. Observe immediate changes
+in base reaction, handle acceleration, club constraint force, and club angular
+acceleration. Then integrate both branches briefly. This traces a causal path
+from proximal input through moving base to distal response within the model.
+
+Repeat with a prescribed base using the baseline path. If the club effect remains
+despite removal of dynamic feedback, it is mostly kinematic forcing. If it
+changes, reciprocity matters. Neither result is “more true” automatically; the
+comparison identifies the assumption carrying the conclusion.
+
+### Moving Bases and Timing
+
+A clock-based wrist command can meet different geometry when base motion changes.
+A state trigger based on arm--club angle, handle radial velocity, or a coupling
+term may be more portable. But a trigger chosen after inspecting results can
+overfit. Candidate triggers and outcome windows should be declared before held-
+out evaluation.
+
+Base motion also changes the location and orientation of the late impact zone.
+Alignment by impact alone can hide meaningful differences earlier. Reports
+should show both absolute time and state-space trajectories, with uncertainty in
+event detection.
+
+### Human Measurements Required
+
+Whole-body motion should include pelvis, trunk, scapular/shoulder proxies, arms,
+hands, and club. Separate force plates and instrumented grips constrain external
+and interface wrenches. Segment inertias and joint centers carry uncertainty.
+High-speed club tracking and shaft strain add the distal state.
+
+Soft-tissue artifact is especially important at the shoulder girdle. A moving-
+base model should not claim anatomical precision beyond its measurement. It can
+use a generalized handle driver for mechanism testing while explicitly reserving
+muscle and scapular interpretation.
+
+### Practical Meaning
+
+The useful lesson is not a command to pull the handle along a particular path.
+It is that club release cannot be optimized independently of how the hand base
+moves. Geometry, speed, and force at the handle jointly determine club response.
+A strategy should be evaluated across realistic base variations and control
+objectives rather than on one fixed-pivot animation.
+
+### Reader Lab: Prescribe, Then Release
+
+Record or design one handle path and drive a club model with it as a prescribed
+boundary. Calculate the external work needed to enforce that motion. Then build
+a finite-mass base driven to approximate the path. Compare club trajectory,
+handle wrench, body reaction, and energy. Differences reveal the effect of
+dynamic reciprocity.
+
+Run an inward-handle-path perturbation at matched state. Hold distal torque fixed
+and observe radial/tangential reaction, relative release, and clubhead speed.
+Repeat with changed club inertia. If the outcome reverses, the proposed path
+effect is parameter-dependent and should be mapped, not prescribed.
+
+Finally compare a clock-scheduled distal command with a state-triggered one
+across varied base tempo. A state policy may retain performance better, or it may
+overfit an unobservable model variable. Report both the performance and whether
+the trigger has a measurable proxy.
+
+### Common Modeling Trap
+
+Prescribing a measured body path while also assigning body torques can double-
+count control: the path is already enforced by whatever unreported force is
+needed. Decide whether motion is input or outcome. If prescribed, report its
+constraint wrench and work. If dynamic, show how controls and ground contact
+produce it.
+
+This distinction is crucial when attributing energy to proximal drivers. A
+prescribed path can inject exactly the energy required and make distal transfer
+look inevitable. A dynamic base exposes the energetic cost and feedback.
+
+### A Minimal Moving-Base Benchmark
+
+Use one finite-mass base translating in a plane, one arm link, and one club link.
+Publish mass and inertia, applied base force, joint torques, initial state, and
+constraints. Verify momentum and energy. Compare with a prescribed trajectory
+that matches baseline base motion. This small benchmark can be implemented in
+multiple engines and isolates reciprocity before a whole human model is added.
+
+Run the two-hand geometry controls on both versions. The physical contact-couple
+sign should respond consistently even if reaction magnitudes differ. Run
+proximal killswitches and show how base, hand, and club variables diverge. These
+tests create a clear bridge from the fixed double pendulum to spatial whole-body
+dynamics.
+
+### Why This Matters for Strategy
+
+An arm or scapular action changes both force and the moving base from which the
+club is carried. A wrist-focused model that prescribes hand path may hide the
+work needed to create that path; an arm-focused model may underrepresent distal
+regulation. A balanced comparison includes both controls and their reaction on
+the base.
+
+The useful strategy question becomes: which allocation produces a favorable
+handle state and club interaction across realistic body variability, with
+acceptable load and control? The moving-base rung makes that question computable
+without pretending it is already answered for a golfer.
+
+### Chapter Checkpoint
+
+Ask whether the base motion is prescribed or dynamically produced, where its
+work enters, and whether club reaction can feed back. Compare both formulations
+on shared observables. A mechanism that survives this comparison has moved
+beyond the most consequential fixed-pivot shortcut.
+
+## Where the Picture Breaks
+
+The rolling board has one translation. A human base has pelvis and trunk motion,
+joint limits, balance, ground contact, and active feedback. A finite carriage is
+a falsification bridge, not anatomy.
+
+Forward models also require control choices. A wrong controller can make a good
+mechanism look poor. Comparisons must separate mechanism failure from controller
+failure and report both.
+
+**Go Deeper:** See the
+[coupled base and compliance chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06b_coupled_base_flex.qmd)
+and the [independent spatial contact test](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06cc_spatial_forward_contact.qmd).

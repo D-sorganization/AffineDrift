@@ -89,6 +89,8 @@
 
   /* Distinct from --color-primary-light (#3282b8): the legal-pad chrome blue. */
   --color-accent: #205d86;
+  --color-link: #205d86;
+  --color-link-hover: #0f4c75;
 
   /* Legal-pad yellow family (page paper / highlight). */
   --color-highlight-yellow: #fef9e7;
@@ -104,9 +106,9 @@
   --bg-alt: #f8f9fa;
   --bg-sidebar: #fcfcfc;
   --text-primary: #212529;
-  --text-secondary: #6c757d;
+  --text-secondary: #5f6670;
   --text-main: #212529;
-  --text-muted: #6c757d;
+  --text-muted: #5f6670;
   --text-dark: #1a1a2e;
   --text-light: #f8f9fa;
   --text-inverse: #fff;
@@ -120,6 +122,16 @@
 
   /* ========== Special Colors ========== */
   --color-white-transparent: rgb(255, 255, 255, 0.9);
+
+  /* Syntax highlighting on an opaque, accessible code surface. */
+  --code-bg: #f1f3f5;
+  --code-text: #212529;
+  --code-alert: #a31324;
+  --code-comment: #5f6670;
+  --code-number: #745100;
+  --code-keyword: #005f87;
+  --code-string: #17653c;
+  --code-function: #7b2e83;
 
   /* Legacy aliases for the highlight family (kept for existing consumers). */
   --legal-pad-yellow: var(--color-highlight-yellow);
@@ -175,9 +187,19 @@
 
   /* Brand lightest / highlight tuned for dark. */
   --color-primary-lightest: #0a2a40;
+  --color-link: #8bd3ff;
+  --color-link-hover: #b9e6ff;
   --color-highlight-yellow: #1a1810;
   --color-highlight-yellow-accent: #6b6b2a;
   --color-highlight-yellow-border: #8b8b3a;
+  --code-bg: #151827;
+  --code-text: #e6edf3;
+  --code-alert: #ff9aa2;
+  --code-comment: #b8c0cc;
+  --code-number: #ffd580;
+  --code-keyword: #8bd5ff;
+  --code-string: #8fe3b0;
+  --code-function: #f0b7ff;
 }
 
 /* OS preference (no-JS path). Guarded so an explicit light choice wins. */
@@ -211,9 +233,19 @@
 
     /* Brand lightest / highlight tuned for dark. */
     --color-primary-lightest: #0a2a40;
+    --color-link: #8bd3ff;
+    --color-link-hover: #b9e6ff;
     --color-highlight-yellow: #1a1810;
     --color-highlight-yellow-accent: #6b6b2a;
     --color-highlight-yellow-border: #8b8b3a;
+    --code-bg: #151827;
+    --code-text: #e6edf3;
+    --code-alert: #ff9aa2;
+    --code-comment: #b8c0cc;
+    --code-number: #ffd580;
+    --code-keyword: #8bd5ff;
+    --code-string: #8fe3b0;
+    --code-function: #f0b7ff;
   }
 }
 /* ===== end css/tokens/colors.css ===== */
@@ -1319,10 +1351,10 @@ Dark mode (separate concern):
 
   /* ========== Link States ========== */
   --link-color: var(--color-primary-light);
-  --link-hover-color: var(--color-primary-main);
-  --link-visited-color: var(--color-primary-main);
+  --link-hover-color: var(--color-link-hover);
+  --link-visited-color: var(--color-link);
   --link-active-color: var(--color-primary-dark);
-  --link-focus-color: var(--color-primary-main);
+  --link-focus-color: var(--color-link);
 }
 
 /* ========== Dark Mode Overrides ========== */
@@ -1458,7 +1490,7 @@ Dark mode (separate concern):
 .bib-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin: 0;
   flex: 1;
 }
@@ -1547,7 +1579,7 @@ Dark mode (separate concern):
 .detail-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin-bottom: 1rem;
   line-height: 1.4;
 }
@@ -1564,7 +1596,7 @@ Dark mode (separate concern):
 
 .detail-section strong {
   display: block;
-  color: var(--primary-blue);
+  color: var(--color-link);
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1587,12 +1619,12 @@ Dark mode (separate concern):
 }
 
 .detail-section a {
-  color: var(--accent-blue);
+  color: var(--color-link);
   text-decoration: none;
 }
 
 .detail-section a:hover {
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   text-decoration: underline;
 }
 
@@ -1968,7 +2000,7 @@ Dark mode (separate concern):
   font-size: 1.25rem;
   margin-top: 0;
   margin-bottom: 0.75rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   line-height: 1.3;
 }
 
@@ -1980,7 +2012,7 @@ Dark mode (separate concern):
 }
 
 .resource-link {
-  color: var(--accent-blue);
+  color: var(--color-link);
   font-weight: 600;
   font-size: 0.9rem;
   display: inline-flex;
@@ -2000,7 +2032,7 @@ Dark mode (separate concern):
 }
 
 .resource-link:hover {
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
 }
 
 /* Page section heading */
@@ -2010,7 +2042,7 @@ Dark mode (separate concern):
 
 .section-heading {
   font-size: 2rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin: 0;
   padding-bottom: 0.75rem;
   border-bottom: 3px solid var(--accent-blue);
@@ -2082,7 +2114,7 @@ Dark mode (separate concern):
 .resources-nav-links a:hover,
 .resources-nav-links a.active {
   background: var(--light-blue);
-  color: var(--primary-blue);
+  color: var(--color-link);
 }
 
 .resources-main {
@@ -2248,13 +2280,13 @@ Dark mode (separate concern):
 /* Ghost variant — transparent fill, primary border */
 .site-button--ghost {
   background: transparent;
-  color: var(--color-primary-main);
+  color: var(--color-link);
 }
 
 .site-button--ghost:hover,
 .site-button--ghost:focus-visible {
   background: var(--bg-secondary);
-  color: var(--color-primary-dark);
+  color: var(--color-link-hover);
 }
 
 /* On-brand variants: usable when a .site-button sits on top of a
@@ -2347,13 +2379,13 @@ Dark mode (separate concern):
 
 .page-sidebar__list a:hover,
 .page-sidebar__list a:focus-visible {
-  color: var(--color-primary-main);
+  color: var(--color-link-hover);
   border-left-color: var(--color-primary-light);
 }
 
 .page-sidebar__list a[aria-current="page"],
 .page-sidebar__list a.is-active {
-  color: var(--color-primary-main);
+  color: var(--color-link);
   border-left-color: var(--color-primary-main);
   font-weight: 600;
 }
@@ -2394,7 +2426,7 @@ Dark mode (separate concern):
 
 .entry-list__title:hover,
 .entry-list__title:focus-visible {
-  color: var(--color-primary-main);
+  color: var(--color-link-hover);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -2438,7 +2470,7 @@ Dark mode (separate concern):
 }
 
 .provenance-note a {
-  color: var(--color-primary-main);
+  color: var(--color-link);
 }
 /* ===== end css/components/provenance-note.css ===== */
 /* ===== begin css/components/home-hero.css ===== */
@@ -2536,7 +2568,7 @@ Dark mode (separate concern):
 .status-pill--exploratory { background: var(--color-neutral-100); }
 .status-pill--info {
   background: var(--color-primary-lightest);
-  color: var(--color-primary-main);
+  color: var(--color-link);
 }
 .status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }
 /* ===== end css/components/status-banner.css ===== */
@@ -2638,10 +2670,37 @@ Dark mode (separate concern):
   color: var(--text-primary);
 }
 
+/* Quarto's built-in callout headers use fixed light fills. Without this
+ * override, dark mode renders near-white text on pale blue, pink, or orange
+ * headers. Keep the semantic border/icon color and use a themed surface. */
+[data-theme="dark"] .callout.callout-style-default .callout-header {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+[data-theme="dark"] .callout.callout-style-default .callout-body {
+  color: var(--text-primary);
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .abstract-section,
   :root:not([data-theme="light"]) .keypoint-box {
     background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+
+  :root:not([data-theme="light"])
+    .callout.callout-style-default
+    .callout-header {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    opacity: 1;
+  }
+
+  :root:not([data-theme="light"])
+    .callout.callout-style-default
+    .callout-body {
     color: var(--text-primary);
   }
 }
@@ -2676,6 +2735,75 @@ Dark mode (separate concern):
   }
 }
 /* ===== end css/components/callouts.css ===== */
+/* ===== begin css/components/code-theme.css ===== */
+/* Accessible Quarto/Pandoc syntax highlighting in both color schemes. */
+
+/* stylelint-disable selector-class-pattern -- Quarto emits sourceCode. */
+
+div.sourceCode,
+pre.sourceCode,
+code.sourceCode {
+  background: var(--code-bg);
+  color: var(--code-text);
+}
+
+pre > code.sourceCode > span,
+code.sourceCode > span,
+code.sourceCode span:not([class]) {
+  color: var(--code-text) !important;
+}
+
+code span.al,
+code span.er {
+  color: var(--code-alert);
+}
+
+code span.an,
+code span.co,
+code span.cv,
+code span.do,
+code span.in {
+  color: var(--code-comment);
+}
+
+code span.at,
+code span.bn,
+code span.cn,
+code span.dv,
+code span.fl {
+  color: var(--code-number);
+}
+
+code span.bu,
+code span.cf,
+code span.dt,
+code span.im,
+code span.kw,
+code span.pp {
+  color: var(--code-keyword);
+}
+
+code span.ch,
+code span.sc,
+code span.ss,
+code span.st,
+code span.vs {
+  color: var(--code-string);
+}
+
+code span.ex,
+code span.fu {
+  color: var(--code-function);
+}
+
+code span.op,
+code span.ot,
+code span.va {
+  color: var(--code-text);
+}
+
+/* stylelint-enable selector-class-pattern */
+/* ===== end css/components/code-theme.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the
@@ -2891,6 +3019,19 @@ Dark mode (separate concern):
   border-radius: 6px;
   box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
 }
+
+/* Screen Reader Only - Visually hides content while keeping it accessible to screen readers */
+.sr-only,
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  border: 0;
+}
 /* ===== end css/utilities/spacing.css ===== */
 
 /* Native cross-document view transitions (issue #3334): a free same-origin
@@ -3022,7 +3163,7 @@ h6 {
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-weight: 700;
   line-height: 1.25;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -3040,7 +3181,7 @@ h2 {
 h3 {
   font-size: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
   margin-top: 1.5rem;
-  color: var(--primary-blue);
+  color: var(--color-link);
 }
 
 h4 {
@@ -3048,14 +3189,28 @@ h4 {
 }
 
 a {
-  color: var(--accent-blue);
+  color: var(--color-link);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   text-decoration: underline;
+}
+
+.quarto-title-block .reading-time-estimate,
+.quarto-title-block .reading-time-estimate span,
+#title-block-header .reading-time-estimate,
+#title-block-header .reading-time-estimate span {
+  color: var(--text-inverse) !important;
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a.active,
+.sidebar nav[role="doc-toc"] ul > li > ul > li > a.active,
+.sidebar nav[role="doc-toc"] a:hover,
+.sidebar nav[role="doc-toc"] a:focus-visible {
+  color: var(--color-link) !important;
 }
 
 /* ---
@@ -3459,7 +3614,7 @@ nav .container {
 
 #quarto-header .dropdown-item:hover {
   background: var(--light-blue);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
 }
 
 /* Search box styling */
@@ -3600,13 +3755,13 @@ nav .container {
 
 .sidebar-links a:hover {
   background-color: var(--bg-alt);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   text-decoration: none;
 }
 
 .sidebar-links a.active {
   background-color: var(--light-blue);
-  color: var(--primary-blue);
+  color: var(--color-link);
   border-left-color: var(--primary-blue);
   font-weight: 500;
 }
@@ -3619,7 +3774,7 @@ nav .container {
 
 .toc-nav .sidebar-links a:hover,
 .toc-nav .sidebar-links a.active {
-  color: var(--primary-blue);
+  color: var(--color-link);
 }
 
 /* ---
@@ -3633,7 +3788,7 @@ nav .container {
   border-bottom: 2px solid var(--border-color);
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
 }
 
 .accordion-item {
@@ -3664,7 +3819,7 @@ nav .container {
   text-align: left;
   font-size: var(--fs-base);
   font-weight: 600;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   font-family: "Playfair Display", serif;
 }
 
@@ -3791,8 +3946,8 @@ nav .container {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: rgb(255, 255, 255, 0.1);
-  border: 1px solid rgb(255, 255, 255, 0.2);
+  background: #1a1a2e;
+  border: 1px solid #1a1a2e;
   color: #fff;
   padding: 0.5rem 0.75rem;
   min-height: 44px;
@@ -3807,6 +3962,11 @@ nav .container {
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s;
+}
+
+blockquote,
+.blockquote {
+  color: var(--text-secondary);
 }
 
 .code-wrapper:hover .copy-btn,
@@ -4065,7 +4225,7 @@ h3:hover .anchor-link,
 }
 
 .anchor-link:hover {
-  color: var(--accent-blue);
+  color: var(--color-link-hover);
 }
 
 /* Back to Top */
@@ -4229,7 +4389,7 @@ h3:hover .anchor-link,
 }
 
 .copy-email-btn:hover {
-  color: var(--accent-blue);
+  color: var(--color-link-hover);
   background-color: var(--light-blue);
 }
 
@@ -4239,7 +4399,7 @@ h3:hover .anchor-link,
 }
 
 .copy-email-btn.success {
-  color: var(--primary-blue);
+  color: var(--color-link);
   background-color: var(--light-blue);
   border-color: var(--accent-blue);
 }
@@ -4383,7 +4543,7 @@ h3:hover .anchor-link,
 
 .laymans-item h3 {
   font-size: var(--fs-base);
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin: 0 0 0.75rem;
   display: flex;
   align-items: center;
@@ -4540,7 +4700,7 @@ form.contact-form .form-group label {
   width: 100%;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   font-family: "Playfair Display", serif;
 }
 
@@ -4631,7 +4791,7 @@ form.contact-form .form-group textarea {
 
 .contact-info .social-link:hover {
   border-color: var(--accent-blue);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   background: var(--light-blue);
 }
 
@@ -4663,7 +4823,7 @@ form.contact-form .form-group textarea {
    --- */
 
 .home-sidebar h3 {
-  color: var(--primary-blue);
+  color: var(--color-link);
   font-size: var(--fs-small);
   font-weight: 600;
   text-transform: uppercase;
@@ -4702,7 +4862,7 @@ form.contact-form .form-group textarea {
 
 .home-sidebar .resource-links a:hover {
   background-color: var(--light-blue);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   padding-left: 0.9rem;
 }
 
@@ -4723,7 +4883,7 @@ form.contact-form .form-group textarea {
 }
 
 .welcome-header h1 {
-  color: var(--primary-blue);
+  color: var(--color-link);
   font-size: 3rem;
   margin-bottom: 0.5rem;
   margin-top: 0;
@@ -5144,7 +5304,7 @@ h1.title,
 .critic-perspective h3 {
   margin: 0;
   font-size: var(--fs-base);
-  color: var(--primary-dark);
+  color: var(--text-primary);
 }
 
 .critic-argument {
@@ -5271,7 +5431,7 @@ h1.title,
 
 .home-toc .toc-links a:hover,
 .home-toc .toc-links a.active {
-  color: var(--primary-blue);
+  color: var(--color-link);
   border-left-color: var(--primary-blue);
   background-color: var(--light-blue);
 }
@@ -5342,7 +5502,7 @@ h1.title,
 
 .featured-section h2 {
   margin-bottom: 1.5rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
 }
 
 .featured-grid {
@@ -5369,7 +5529,7 @@ h1.title,
 }
 
 .featured-card-content h3 {
-  color: var(--primary-dark);
+  color: var(--text-primary);
   font-size: var(--fs-base);
   margin: 0 0 0.75rem;
 }
@@ -5571,7 +5731,7 @@ h1.title,
 }
 
 .coming-soon-notice h2 {
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 

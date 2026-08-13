@@ -1,0 +1,271 @@
+# The Ground Is Part of the Conversation {#sec-lay-ch16}
+
+## A Concrete Picture
+
+Jump from a small boat and the boat slides backward. Push against a wall and the
+wall returns a force through your body. Walking, throwing, and swinging all rely
+on external contact with the environment. The ground is not merely a stage; it
+is one boundary through which force and sometimes power enter the body.
+
+Force plates make this interaction visible, but their curves are easy to
+overinterpret. A vertical-force peak does not identify which muscle created it.
+A center-of-pressure shift does not prove a unique segment sequence. The ground
+reaction is the net contact required by the whole measured motion and dynamics.
+
+![Ground Reaction Is Decomposed Into State-Dependent, Control-Dependent, and Unresolved Contact-Allocation Contributions.](figures/proximal_distal_companion/fig_companion_ground_reaction_ledger.svg){#fig-lay-ground-ledger width=97% fig-alt="A force-plate diagram shows net ground reaction split into configuration, velocity, control, and external-load contributions while individual foot allocation remains partly hidden."}
+
+## How the Mechanism Works
+
+In constrained dynamics, ground reactions appear as multipliers enforcing foot
+contact. Solving the equations can decompose reaction at a fixed state into
+configuration/gravity, velocity-dependent, control, and external-load terms.
+The technical study defines ground-reaction versions of zero-torque and zero-
+velocity counterfactual forces.
+
+### The Reaction Reflects the Whole System
+
+Accelerating the club changes body reactions. Body motion changes required foot
+forces. Gravity contributes. If the feet are constrained, the solver finds a
+reaction satisfying both motion and contact. A large ground force is not a
+separate motor delivering energy directly to the club; it is part of the
+coupled external interaction.
+
+Ground power depends on contact-point velocity. An ideal stationary foot contact
+has zero mechanical power despite large force. Real feet deform, center of
+pressure moves, and segments rotate, so joint and soft-tissue work still occurs.
+The force plate measures wrench, not metabolic source.
+
+### ZTCF and ZVCF Ask Narrow Questions
+
+At one fixed state, a zero-torque counterfactual sets selected controls to zero
+and recomputes the reaction. A zero-velocity counterfactual sets velocity terms
+to zero while holding configuration. Differences reveal modeled contributions
+to reaction. They do not describe a human who instantaneously stopped all motion
+or muscle torque.
+
+In a fixed-support double-pendulum benchmark, pointwise ZTCF predicts the general
+reaction waveform but retains substantial amplitude error. Opposing control can
+make one ZTCF impulse exceed the total because contributions cancel. This is a
+useful warning against treating a component as a measured fraction.
+
+### Two Feet Add Allocation Ambiguity
+
+A single net wrench under the body may be distributed across left and right feet
+in many ways, especially if both contact regions can support moments. Separate
+plates reduce ambiguity. Pressure insoles add spatial information. Yet foot
+models, friction, and coordinate transforms remain.
+
+The same common/differential logic used for hands applies: net external wrench is
+observable; internal allocation and co-contraction require more data.
+
+### What Ground Data Can Test
+
+Synchronized whole-body kinematics, separate force plates, club motion, and
+bilateral grip wrenches can test whether model-predicted reaction components align
+in timing and direction. Residual forces and moments reveal inconsistencies in
+segment parameters or filtering. Participant holdout tests whether a fitted
+pattern generalizes.
+
+**Model Result:** The fixed-support benchmark establishes a reproducible reaction
+decomposition with partial waveform agreement and explicit amplitude limitations.
+
+**Human Evidence:** Golfers exhibit phase-dependent vertical, shear, center-of-
+pressure, and free-moment patterns, but these net observations do not uniquely
+  identify the proximal-distal mechanism [@han2019; @ballbest2007;
+  @watson2026grf].
+
+**Hypothesis:** State-dependent reaction components may explain part of observed
+ground-force timing without requiring each peak to be directly commanded, but
+full-body human data must test the prediction.
+
+**Practical Interpretation:** The ground tells us what net external conversation
+occurred at the feet. It does not provide a transcript assigning every sentence
+to a muscle.
+
+### Force Plates Measure a Net External Wrench
+
+A force plate reports three force components and three moments at its origin.
+From these, with assumptions, researchers derive center of pressure and free
+moment. Separate plates under each foot preserve left--right allocation better
+than one plate under both. Pressure insoles add spatial distribution but usually
+with different accuracy and shear limitations.
+
+The plate does not report muscle force, joint torque, or energy “from the ground.”
+It reports the reaction required at the contact boundary. To understand how that
+reaction relates to the club, synchronize it with body and club motion and solve
+the dynamics with uncertainty.
+
+### Large Force Does Not Necessarily Mean Large Power
+
+Power at an ideal stationary contact point is force dotted with zero velocity,
+so it is zero even when force is large. The body can still gain mechanical
+energy because muscles do work internally while the ground supplies external
+constraint. Real foot deformation and rolling complicate the point, but the
+distinction remains: force magnitude is not an energy-flow rate.
+
+This is similar to pushing a locked wall during a squat. The wall or ground
+provides a reaction that permits body acceleration, while chemical energy in
+muscle supplies work. Saying the golfer “gets energy from the ground” can be a
+useful cue, but it is not a precise mechanical ledger unless contact work is
+actually calculated.
+
+### A Whole-Body Reaction Walkthrough
+
+Early in the downswing, changes in pelvis and trunk motion require horizontal,
+vertical, and rotational ground reactions. As arms and club accelerate, their
+momentum changes alter the reaction needed by the rest of the system. Late club
+acceleration can therefore appear in foot-force features even when no new foot
+command specifically targets the club.
+
+The influence is reciprocal. Ground reaction enables changes in whole-body
+momentum that shape proximal motion, and distal acceleration changes the
+reaction required for balance and constraint. Cross-correlation of peaks cannot
+determine direction of causation. A forward model and perturbations are needed.
+
+### Pointwise Ground-Reaction Decomposition
+
+At a copied state, solve the constrained equations normally, then with selected
+torque drivers removed. The difference in constraint multiplier is the modeled
+control-dependent contribution to ground reaction. Set velocities to zero in a
+separate calculation to isolate velocity-dependent terms. Keep gravity and
+configuration unchanged.
+
+Components can cancel, so a counterfactual reaction may exceed total in one
+direction. That does not mean it contributed more than one hundred percent of a
+measured force. It means another component opposed it. Report signed waveforms,
+impulses, cancellation, and residual rather than forcing an additive percentage
+story.
+
+### Two Feet Create an Allocation Problem
+
+The same net body wrench may be supported by different left and right contact
+wrenches within friction and balance constraints. Separate plates observe much
+of this allocation. If both feet occupy one plate, a model or pressure data must
+supply the split, and nonuniqueness should be shown.
+
+Foot models also need contact assumptions. A fixed point, rolling contact,
+distributed pressure, and compliant shoe produce different reaction paths. The
+choice should match the measurement question. A mechanism that depends on an
+unrealistic fixed foot may not survive a richer contact rung.
+
+### Connecting Ground and Hand Ledgers
+
+Whole-system analysis links external ground and gravity wrenches to momentum
+change. Segment and joint analyses trace how internal powers and reactions
+relate to the hand--club interface. The links must close simultaneously: body
+plus club energy, body momentum, hand action--reaction, and foot reaction.
+
+This creates powerful error checks. If measured hand and ground loads combined
+with motion leave large residuals, segment inertias, filtering, synchronization,
+or unmeasured contacts may be wrong. A polished transfer story should wait until
+those residuals are bounded.
+
+### What Ground Manipulations Could Test
+
+Researchers can compare stance width, lead/trail pressure constraints, surface
+friction within safe limits, or externally paced tempo while measuring the
+predicted hand and club mediators. The mechanism should specify whether changing
+a ground variable shifts proximal state, hand wrench, negative-couple interval,
+or only balance strategy.
+
+A finding that ground-force peaks change without the predicted hand or club
+change would weaken a simple ground-to-club transfer narrative. A finding that
+hand-wrench timing mediates the relation would strengthen the chain. Participant-
+held-out analysis is essential because people may adopt different compensations.
+
+### Practical Boundary
+
+Force-plate patterns can characterize an individual and expose constraints, but
+they should not become universal target traces. Similar club outcomes can arise
+from different foot allocations, and larger peaks can reflect braking or balance
+as readily as useful propulsion. The valuable question is how the measured
+external wrench fits the complete system ledger and whether a proposed change
+improves robust outcomes without unacceptable load.
+
+### Reader Lab: Close the External Wrench
+
+Take synchronized body and club kinematics, segment parameters, separate foot
+wrenches, gravity, and hand/club loads. Compute whole-system linear and angular
+momentum change and compare with integrated external wrench. Plot residual by
+direction and phase. A large residual near peak club acceleration may reflect
+synchronization, filtering, inertia, or omitted contact—not a new force.
+
+Next sum the two foot plates and verify the result against a single combined
+wrench calculation. Shift reference point consistently. Compute center of
+pressure only when vertical force and moment assumptions make it well defined.
+Flag low-force intervals rather than allowing unstable ratios.
+
+Finally, run pointwise zero-torque and zero-velocity model decompositions at the
+measured state. Compare predicted component timing with observed reaction but do
+not call the components measured. Their mismatch becomes a validation residual
+and a guide to missing dynamics.
+
+### Competing Explanations for a Force Peak
+
+A vertical peak can reflect accelerating the body center of mass, resisting
+downward motion, club reaction, balance, or a combination. A horizontal peak can
+turn or translate the system. A free moment can relate to rotational balance but
+does not map uniquely to pelvis or club torque.
+
+Test proposed pathways with mediation and intervention. If a stance manipulation
+changes ground force but neither proximal state nor hand wrench as predicted,
+the simple transfer chain is unsupported. If all links change in order and a
+forward model predicts them on held-out trials, the explanation strengthens.
+
+### From an Observation to a Causal Claim
+
+Suppose higher club speed is associated with a larger lead-side vertical impulse.
+That is an observation. A causal hypothesis might say the impulse changes pelvis
+and trunk state, which changes hand wrench and later club acceleration. The
+hypothesis requires each mediator and its timing. A model can predict the chain;
+a manipulation and synchronized data can test it.
+
+Alternative explanations include stronger golfers producing both variables,
+different stance or club, balance response to the faster club, or processing
+choices. Randomized safe manipulations, within-person contrasts, and held-out
+prediction reduce these alternatives. The ground trace alone cannot.
+
+### What the Product Should Display
+
+Show separate and summed foot wrenches, center of pressure only in valid
+intervals, whole-system momentum residual, predicted reaction components, and
+uncertainty. Link peaks to concurrent body, hand, and club state. Let readers
+toggle pointwise ZTCF and ZVCF components while explaining that they are model
+counterfactuals.
+
+Do not rank a golfer from force magnitude alone. Normalize only when the
+scientific comparison justifies it and retain dimensional values. A transparent
+display should make cancellation, allocation ambiguity, and residuals as visible
+as the headline pattern.
+
+### A Final Ground Check
+
+If an ideal fixed foot does zero work, positive whole-system energy must come
+from modeled internal actuation and other external ports, not be credited to the
+stationary ground. If compliant foot contact does work, define the moving
+contact point and material energy. This distinction keeps everyday “use the
+ground” language from corrupting the energy ledger.
+
+### Chapter Checkpoint
+
+Ground reaction is external force evidence, not a muscle transcript or automatic
+energy source. Use it to close momentum, test contact models, and constrain the
+causal chain through body and hands. Report left/right allocation and model
+components without converting them into additive percentages.
+
+A practical pattern becomes mechanistically meaningful only when its predicted
+mediators and outcome survive within-person manipulation and participant holdout.
+
+## Where the Picture Breaks
+
+The wall and boat pictures use simple rigid contacts. Feet roll, deform, slip
+microscopically, and distribute pressure. Fixed-support pendulums omit balance,
+pelvis translation, and bilateral contact.
+
+Correlation between force peaks and segment motion cannot establish causation.
+Timing can reflect shared state, feedback, or filtering. Reaction decomposition
+must be validated against synchronized data before becoming a human claim.
+
+**Go Deeper:** Read the monograph's
+[ground-reaction drift attribution](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03c_ground_reaction_drift.qmd)
+and its [human falsification protocol](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06e_experimental_protocol.qmd).

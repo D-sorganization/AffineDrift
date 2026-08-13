@@ -40,6 +40,7 @@ def _style() -> None:
             "axes.spines.right": False,
             "figure.facecolor": "white",
             "savefig.bbox": "tight",
+            "svg.hashsalt": "proximal-distal-companion-v1",
         }
     )
 

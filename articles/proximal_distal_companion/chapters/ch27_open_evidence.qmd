@@ -1,0 +1,297 @@
+# Open Evidence and the Reviewer Path {#sec-lay-ch27}
+
+## A Concrete Picture
+
+A museum label can say a vase is ancient. A serious catalog adds provenance,
+material analysis, restoration history, photographs, and access rules. Reviewers
+can trace the claim instead of trusting presentation.
+
+An open scientific resource needs the same layers. A polished PDF is the label,
+not the entire evidence. Source equations, scripts, parameters, generated data,
+figures, checksums, tests, and limitations let another person reconstruct the
+claim.
+
+![A Reviewer Path Runs From Claim to Figure, Data, Script, Test, Manifest, and Reproduction Result.](figures/proximal_distal_companion/fig_companion_reviewer_path.svg){#fig-lay-reviewer-path width=98% fig-alt="A linked chain begins with a publication claim and proceeds through figure, machine-readable data, generating script, focused test, hash manifest, and independent reproduction outcome."}
+
+## How the Mechanism Works
+
+Each quantitative figure should point to machine-readable JSON or NPZ evidence.
+That evidence records parameters, conventions, software identity, outcomes, and
+residuals. A generating script rebuilds the figure. A test checks its invariants.
+A manifest lists hashes so reviewers know which artifact belongs to the release.
+
+### Determinism and Provenance
+
+Random ensembles use fixed declared seeds and preserve sampled inputs. Build
+metadata records source commit and tool versions. Determinism does not mean the
+model is true; it means disagreements can be investigated rather than blamed on
+an unrecoverable run.
+
+### Live Links Are Part of Utility
+
+This book links directly to technical source chapters, evidence directories,
+and cited literature. PDF URI annotations and HTML links are checked. A reader
+can move from a casual explanation to equations without searching a repository
+by filename.
+
+### Qualification Is More Than File Presence
+
+The release validator checks hashes, required artifacts, PDF signature, link and
+outline counts, and generated-source freshness. Scientific tests check action-
+reaction, work-energy, constraints, limiting cases, counterfactual closure, and
+timestep behavior. Visual inspection catches clipped captions or unreadable
+plots that structural tests cannot.
+
+### A Reviewer Workbench
+
+The reviewer path groups evidence by claim: interaction forces, hand-path work,
+two-hand couple, shaft, preload, spatial contact, uncertainty, and experiment.
+It states what each artifact supports and what remains unvalidated. Commands are
+copyable and fail closed on mismatches.
+
+### Open Does Not Mean Ungoverned
+
+Code and synthetic evidence can be public. Human data may require controlled
+access. An open resource can publish schemas, derived deidentified results,
+analysis code, and provenance without exposing identities or licensed data.
+
+**Model Result:** The current technical release is hash-bound and reproducible
+through a documented validator; paired figures and data expose the calculations.
+
+**Human Evidence:** Release qualification does not add human evidence. It makes
+the absence and future path auditable.
+
+**Practical Interpretation:** Trust should be able to travel backward from the
+sentence you read to the numbers, code, assumptions, and test that produced it.
+
+### The Reader Path Should Be Continuous
+
+A casual reader begins with a figure and plain-language mechanism. A technical
+reader follows “Go Deeper” to equations and methods. A reviewer follows a figure
+to its source table, generator, model manifest, tests, and exact commit. These
+are not separate products. They are views of one evidence graph.
+
+Links should target specific chapters, files, records, or DOI pages rather than
+generic repository roots. Stable anchors and release tags protect review from
+later navigation changes. The PDF must preserve clickable links and accessible
+bookmarks.
+
+### Canonical Source and Generated Artifacts
+
+Text, data, figure scripts, and model configuration are canonical inputs.
+HTML, PDF, SVG, and rendered tables are generated outputs. Generated artifacts
+can be versioned for convenient review, but edits belong in canonical source.
+Build checks verify that public copies match source outputs byte for byte where
+that is the contract.
+
+Every artifact should record or link to source commit, generation command,
+toolchain version, and content hash. A reviewer can then reproduce it or detect
+drift without trusting a filename such as “final.”
+
+### Evidence Manifests
+
+A machine-readable manifest lists claim ID, evidence level, model rung, input
+files, outputs, units, frames, qualification status, limitations, and citations.
+Unknown or provisional fields fail closed. Synthetic data are labeled so they
+cannot be mistaken for participant evidence.
+
+The manuscript cites claim IDs or linked artifacts. When new human evidence
+arrives, updating the manifest and affected passages becomes traceable. This is
+more maintainable than burying qualification in a long disclaimer.
+
+### Reproducible Environments
+
+Lock runtime and dependencies, record operating-system assumptions, and provide
+one command for each primary analysis. Tests cover physics contracts, schema,
+citation integrity, title convention, rendering, and public artifact identity.
+Random processes use recorded seeds.
+
+Reproduction should not depend on a proprietary graphical interface. Optional
+GUIs and workbenches call canonical libraries. A reviewer can use command-line
+tools and open formats to inspect every scientific result.
+
+### Figure Provenance
+
+Each figure has a descriptive caption and alt text, paired vector formats for
+web and print, and source data. The plotting script freezes units, signs, colors,
+and accessibility choices. Multi-panel figures label model result, human
+evidence, and hypothesis where applicable.
+
+Screenshots may document a three-dimensional model or interactive view, but they
+should link to the run and camera settings. A screenshot is illustration unless
+its data and generation path are auditable.
+
+### Live References
+
+Bibliography entries should contain DOI, PubMed, publisher, or stable repository
+links where available. Claims in the lay text link to primary sources and to the
+technical treatment. Automated checks verify citation keys and URLs, while
+periodic review handles redirects or changed access.
+
+Links do not replace a bibliography. The rendered PDF should contain complete
+reference metadata so it remains useful offline, while hyperlinks improve
+reviewer utility on phones and computers.
+
+### Issue and Epic Traceability
+
+Each chapter and cross-cutting requirement has a subissue with explicit
+acceptance criteria. Pull requests link the issues, explain evidence and
+limitations, and include local and CI verification. The parent epic summarizes
+completion only after merged artifacts are publicly reachable.
+
+Issue count is not proof of scientific quality. It is a way to prevent thin
+coverage, preserve decisions, and let later contributors see why a chapter or
+control exists. Duplicate or obsolete work is closed transparently.
+
+### Open Review Without Software Promotion
+
+The product should be described as an open research resource. Examples may use
+repository implementations, but conclusions are expressed in physical
+quantities and portable contracts. Independent implementations are welcomed and
+their disagreements retained.
+
+Avoid framing every result as a benefit of one package. A reviewer should be able
+to reproduce equations in another tool and still participate. Scientific value
+comes from testable definitions, evidence, and criticism—not platform adoption.
+
+### Qualification Status
+
+Each release states which models are numerically verified, which predictions are
+synthetic, which human studies provide bounded context, and which hypotheses
+remain untested. Unresolved publication pins, missing calibration, or failed
+gates block promotion to a stronger status.
+
+Status should appear near the relevant claim and in a consolidated register.
+Readers should never need to infer qualification from repository history.
+
+### Long-Term Preservation
+
+Release source and artifacts under appropriate open licenses, archive stable
+versions, and preserve metadata. Large PDFs and graphics need storage policies
+that support review without weakening integrity checks. Content hashes and
+release assets can handle files larger than ordinary source limits.
+
+Migration plans should keep links resolvable. If an external source disappears,
+retain its citation metadata and a lawful archival pointer where available.
+
+### A Reviewer Exercise
+
+Choose one figure. Follow its link to data, rerun the generator, compare hash,
+inspect the model manifest, and trace the claim to a test and source. Then alter
+one parameter or negative control. A healthy evidence product makes this path
+short and explains changed results.
+
+The ability to disagree reproducibly is the central deliverable. A book that is
+easy to read and easy to challenge can serve both newcomers and specialists.
+
+### Reader Lab: Perform a Ten-Minute Trace
+
+Open one chapter figure on a phone. Follow its caption link to the exact source
+data, inspect units and qualification, then open the generator and model manifest.
+The path should not require repository expertise. Back in the PDF, follow the
+primary citation and the deeper technical chapter. Record any dead end.
+
+On a development machine, rerun the figure from the documented command. Compare
+output hash or numeric tolerance. Change one parameter and verify the artifact is
+visibly and semantically marked as exploratory. Then run the physics and
+publication gates.
+
+If this path takes hours, the evidence may be open in principle but inaccessible
+in practice. Improving navigation, schemas, and small reproducible examples can
+advance review more than adding another framework layer.
+
+### Versioning a Living Scientific Book
+
+Each release should state what changed in claims, evidence, model, and
+qualification. Stable chapter and claim identifiers let external reviews point
+to exact content. Corrections remain visible; old releases are archived rather
+than overwritten without trace.
+
+Large artifacts can live in release assets or suitable large-file storage while
+source, manifests, and hashes remain in version control. The public URL should
+resolve without authentication and return the intended content type. A local PDF
+and deployed copy should be compared before completion is claimed.
+
+### Contribution Contract
+
+Contributors can add a model rung, dataset, replication, or critique by satisfying
+shared schemas and tests. They need not adopt one engine or endorse the theory.
+New claims name falsifiers and evidence level; new figures include source and alt
+text; new human data retain consent and identity safeguards.
+
+This contract makes disagreement composable. A contradictory implementation can
+sit beside baseline and change qualification through evidence rather than being
+treated as a software bug to hide.
+
+### A Minimum Release Bundle
+
+The release should contain canonical chapter source, bibliography, figure data
+and generators, paired web/print vectors, PDF and HTML, model and run manifests,
+schemas, tests, exact commit, licenses, and qualification register. Public URLs
+are checked anonymously. The PDF is checked for bookmarks, live links, readable
+figures, and mobile-scale text.
+
+Large artifacts should use an explicit storage route rather than an arbitrary
+small-file gate. Integrity comes from hashes, provenance, and reproducible
+generation, not from keeping scientific documents under one megabyte. Source
+review remains practical because generated binaries are separated from canonical
+edits and compared by contract.
+
+### Keeping the Resource Scientifically Neutral
+
+Lead with questions, definitions, and evidence. Mention implementation only when
+it enables reproduction. Use generic physical terms in conclusions and link to
+portable schemas. Compare independent engines and preserve disagreement.
+
+Avoid page labels that describe the production request, promotional claims, or
+repetition of repository branding. The reader should experience a scientific
+book backed by open resources, not a brochure about the resources themselves.
+
+### The Maintenance Loop
+
+New issue proposes a falsifiable change. Tests define the contract. Canonical
+source or engine changes. Local numerical and visual gates run. Protected review
+and CI merge the change. Public artifacts are verified. Evidence status and
+chapter links update. Obsolete issues and outputs are reconciled.
+
+This loop is deliberately mundane. It is how a large living document remains
+trustworthy after the initial authoring effort.
+
+### Chapter Checkpoint
+
+Open evidence is not a folder of files. It is a navigable, versioned chain from
+claim to source, model, run, data, figure, test, limitation, and public artifact.
+The chain must work for a phone reader and an independent technical reviewer.
+
+When a link breaks, a model fails, or new evidence contradicts a claim, status
+updates at every view. Protected review and reproducible builds preserve the
+history. This is how a large publication stays scientifically neutral after its
+first release.
+
+The ultimate test is whether an independent person can reproduce a result,
+change an assumption, disagree, and contribute the disagreement without needing
+permission from one software implementation.
+
+The repository should also publish a compact reviewer index. For every major
+claim it names the accessible explanation, technical derivation, model rung,
+data output, figure, tests, qualification, and open issue. A static PDF can link
+to this evolving index while release tags preserve the reviewed version.
+
+Automated link checks cannot prove a source supports a claim. Human review still
+verifies relevance, study design, and wording. Automation catches broken routes,
+missing keys, stale artifacts, and inconsistent titles so reviewers can spend
+time on scientific judgment.
+
+## Where the Picture Breaks
+
+The museum catalog can preserve a stable object. Software dependencies and web
+links change. Exact hashes improve traceability but long-term preservation also
+needs archived releases and documented environments.
+
+Reproducibility can reproduce a systematic mistake. Independent formulation,
+adversarial review, and new data remain necessary.
+
+**Go Deeper:** Start with the
+[reviewer workbench](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md),
+[open release qualification](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md),
+and [data dictionary](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/DATA_DICTIONARY.md).
