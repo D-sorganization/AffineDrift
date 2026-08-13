@@ -8,7 +8,7 @@ aliases:
 
 ## The Linearization-Based Control Principle
 
-If nonlinear dynamics are exactly linear at each instant, then we can use linear control tools — LQR, Riccati equations, all the machinery of linear systems theory — at each instant along a trajectory. **This is the key insight behind DDP, iLQR, and virtually every practical nonlinear control method.**
+If nonlinear dynamics are exactly linear at each instant, then we can use linear control tools — LQR, Riccati equations, all the machinery of linear systems theory — at each instant along a trajectory. **This is the key insight behind differential dynamic programming (DDP), the iterative linear-quadratic regulator (iLQR), and virtually every practical nonlinear control method.**
 
 The logic is elegant: linearize around a nominal trajectory, solve a linear optimal control problem to get a feedback gain, apply that gain, and repeat. Each iteration refines the trajectory. Eventually — if the problem is well-conditioned — the iterations converge to a solution of the nonlinear optimal control problem.
 
@@ -50,7 +50,7 @@ The matrix $S(t)$ is the **value function Hessian** — it encodes the cost-to-g
 
 ## Differential Dynamic Programming (DDP) and iLQR
 
-The power of linearization becomes clear in DDP (Differential Dynamic Programming) and iLQR (iterative Linear-Quadratic Regulator). These algorithms work as follows:
+The power of linearization becomes clear in DDP and iLQR. These algorithms work as follows:
 
 1. **Start with a nominal trajectory** $(x̄(t), ū(t))$ — perhaps from some heuristic or previous iteration.
 
@@ -69,9 +69,9 @@ This procedure is called **successive approximation** or **shooting.** Each iter
 
 **LQR is exact for the linearized system.** That is: if you solve the Riccati equation and apply the feedback control to the linear system $\delta\dot{x} = A(t)\delta x + B(t)\delta u$, you will get the optimal trajectory for that linear system, to machine precision.
 
-Residuals from nonlinearity — the $O(\|\delta x\|^2)$ terms we dropped — are not captured by the linearized LQR solution. However, these residuals are *handled by iteration.* You apply the control, integrate the nonlinear system forward, see what trajectory you get, linearize around it, solve LQR again, and repeat. Each iteration accounts for the mismatch between linear and nonlinear dynamics.
+The linearized LQR solution does not capture residuals from nonlinearity — the $O(\|\delta x\|^2)$ terms we dropped. Iteration *handles* those residuals instead. You apply the control, integrate the nonlinear system forward, see what trajectory you get, linearize around it, solve LQR again, and repeat. Each iteration accounts for the mismatch between linear and nonlinear dynamics.
 
-This is why DDP/iLQR works so well: it is not trying to solve the nonlinear problem in one shot. Instead, it leverages the fact that linearization is exact infinitesimally, and uses iteration to handle the nonlinear corrections systematically.
+This is why DDP/iLQR works so well: it is not trying to solve the nonlinear problem in one shot. Instead, it leverages the infinitesimal exactness of linearization and uses iteration to handle the nonlinear corrections systematically.
 
 ## Connection to Stability and Optimality
 

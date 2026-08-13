@@ -3493,7 +3493,7 @@ Crucially, *the exact clock time that impact occurs does not matter*. A golfer h
   \end{align}
 
 
-In the golf downswing, the terminal cost $\phi(\state(t_f))$ might be negative clubhead speed (to maximize speed), the integral cost $L$ might penalize excessive joint torques to ensure repeatability, and the terminal manifold constraint $\psi(\state(t_f)) = \bm{0}$ forces the clubhead to be geometrically located at the ball with a squared face. Notice that $t_f$ is a *free parameter* in the optimization.
+In the golf downswing, the terminal cost $\phi(\state(t_f))$ might be negative clubhead speed (to maximize speed), and the integral cost $L$ might penalize excessive joint torques to ensure repeatability. The terminal manifold constraint $\psi(\state(t_f)) = \bm{0}$ forces the clubhead to be geometrically located at the ball with a squared face. Notice that $t_f$ is a *free parameter* in the optimization.
 
 
 ## Transcribing the Continuous Problem
@@ -3735,7 +3735,7 @@ As $y \to 0$, the system converges toward the virtual constraints. Crucially, th
 
 When the virtual constraints are satisfied exactly ($y = 0$), the $n$-dimensional state space collapses into a much smaller dynamical system that evolves strictly along the manifold $\mathcal{Z}$. This is the **Zero Dynamics** of the system.
 
-For systems that undergo discrete impacts (a foot hitting the ground, or a golf club striking a ball), the system evolves via continuous differential equations until an impact surface is triggered, followed by an instantaneous jump map (a reset) dictated by conservation of momentum.
+For systems that undergo discrete impacts (a foot hitting the ground, or a golf club striking a ball), the system evolves via continuous differential equations until an impact surface is triggered. An instantaneous jump map---a reset dictated by conservation of momentum---then applies.
 
 
   A control architecture achieves Hybrid Zero Dynamics if the invariant manifold $\mathcal{Z}$ (the zero dynamics surface) is invariant not just under the continuous flow of the differential equations, but also invariant under the discrete impact map. That is, an impact starting on the manifold $\mathcal{Z}$ must immediately map to a new state that is also on $\mathcal{Z}$.

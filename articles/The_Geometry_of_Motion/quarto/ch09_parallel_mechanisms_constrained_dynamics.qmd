@@ -10,7 +10,7 @@ title: "Parallel Mechanisms, Constrained Dynamics, and Geometric Control"
 
 A golf club held in both hands, a parallel robot gripping an object, or legs pushing against the ground are all systems with **constraints**: physical connections that remove degrees of freedom and couple subsystems. Rather than treating constraints as annoying algebraic equations to eliminate, we view them as **geometric structures**—reductions of the configuration manifold, decompositions of force space, and sources of null-space redundancy.
 
-This chapter unifies the mathematical treatment of configuration manifolds, Lagrangian mechanics on submanifolds, and optimal control in the presence of constraints. The geometry reveals why and how complex motions can be decomposed, where redundancy lives, and how to design controls that respect the hidden structure [@briot2015parallel_robots; @roithmayr2016kanes_method].
+This chapter unifies configuration manifolds, Lagrangian mechanics on submanifolds, and optimal control under constraints. The geometry reveals why and how complex motions decompose, where redundancy lives, and how to design controls that respect the hidden structure [@briot2015parallel_robots; @roithmayr2016kanes_method].
 
 :::
 
@@ -78,7 +78,7 @@ $$(\kern-0.2em T_q Q_c)^{\perp_M} = \text{span}\{\nabla_{q} \phi_1(q), \ldots, \
 
 ### Worked Example: Planar Two-Link Closed Chain
 
-Consider a planar four-bar–style closed chain: a two-link serial arm (link lengths $\ell_1, \ell_2$, joint angles $\theta_1, \theta_2$) whose tip must coincide with the tip of a single grounded link (length $\ell_3$, angle $\theta_3$) pinned at a base point offset $(\Delta x, \Delta y)$ away. To leave the mechanism *movable* we must keep enough free coordinates: with $c = 2$ scalar loop-closure equations, a movable chain needs $n \geq 3$ free angles.
+Consider a planar four-bar–style closed chain. A two-link serial arm (link lengths $\ell_1, \ell_2$, joint angles $\theta_1, \theta_2$) has a tip that must coincide with the tip of a single grounded link (length $\ell_3$, angle $\theta_3$), pinned at a base point offset $(\Delta x, \Delta y)$ away. To leave the mechanism *movable* we must keep enough free coordinates: with $c = 2$ scalar loop-closure equations, a movable chain needs $n \geq 3$ free angles.
 
 The configuration space is therefore $Q_{\text{free}} = [0, 2\pi)^3$ (the triple $(\theta_1, \theta_2, \theta_3)$), $n = 3$. The constraint is that the serial-arm tip equals the grounded-link tip:
 
@@ -87,7 +87,7 @@ The configuration space is therefore $Q_{\text{free}} = [0, 2\pi)^3$ (the triple
   \ell_1 \sin\theta_1 + \ell_2 \sin\theta_2 &= \ell_3 \sin\theta_3 + \Delta y.
 \end{align}
 
-Here $c = 2$, so by $\dim Q_c = n - c$ the constraint manifold has dimension $3 - 2 = 1$: the mechanism is a **one-DOF** closed chain (a single input fully determines the configuration, as expected of a planar four-bar linkage). Had we used only the two angles $(\theta_1, \theta_2)$ with these two constraints, $\dim Q_c = 2 - 2 = 0$ would give isolated assembly configurations — a rigid structure, not a mechanism. The constraint Jacobian (w.r.t. the three angles) is:
+Here $c = 2$, so by $\dim Q_c = n - c$ the constraint manifold has dimension $3 - 2 = 1$: the mechanism is a **one-DOF** closed chain (a single input fully determines the configuration, as expected of a planar four-bar linkage). Had we used only the two angles $(\theta_1, \theta_2)$ with these two constraints, $\dim Q_c = 2 - 2 = 0$ would give isolated assembly configurations—a rigid structure, not a mechanism. The constraint Jacobian (w.r.t. the three angles) is:
 
 $$J_c = \begin{bmatrix}
   -\ell_1 \sin\theta_1 & -\ell_2 \sin\theta_2 & \ell_3 \sin\theta_3 \\
@@ -141,7 +141,7 @@ $$\Gamma^k_{ij} = \frac{1}{2} M^{kl} \left( \frac{\partial M_{lj}}{\partial q_i}
 
 where $M^{kl}$ is the $(k,l)$-entry of $M^{-1}$.
 
-The Coriolis-centrifugal acceleration can be expressed in terms of Christoffel symbols:
+The Christoffel symbols express the Coriolis-centrifugal acceleration:
 
 $$(C(q,\dot{q})\dot{q})_k = \sum_{i,j} \Gamma^k_{ij}\dot{q}_i\dot{q}_j.$$
 
@@ -169,7 +169,7 @@ The **Routhian** is constructed by eliminating the cyclic velocity:
 
 $$R(q_{\text{shape}}, \dot{q}_{\text{shape}}, p_{\text{cyc}}) := \dot{q}_{\text{cyc}} p_{\text{cyc}} - L(q_{\text{shape}}, \dot{q}_{\text{shape}}, \dot{q}_{\text{cyc}}(p_{\text{cyc}})),$$
 
-The dynamics of the shape variables reduce to a system of lower dimension. This is crucial for understanding the golf swing: the total angular momentum is conserved (cyclic coordinate), and the swing dynamics can be reduced to the shape changes of the arms, with the rotation of the torso following deterministically.
+The dynamics of the shape variables reduce to a system of lower dimension. This matters for the golf swing: the total angular momentum is conserved (a cyclic coordinate). The swing dynamics then reduce to the shape changes of the arms, with the rotation of the torso following deterministically.
 
 ### Index-3 DAE Formulation and Stabilization
 
@@ -190,7 +190,7 @@ To solve this numerically, the **Baumgarte stabilization** method augments the a
 
 $$J_c(q)\ddot{q} + \dot{J}_c(q,\dot{q})\dot{q} + 2\alpha \dot{\Phi}(q,\dot{q}) + \beta^2 \Phi(q) = 0,$$
 
-where $\alpha, \beta > 0$ are tuning parameters. The correction terms can be interpreted as a feedback law: if the constraint is violated, the correction grows to drive the state back onto the manifold. This reduces the effective index to 1 and suppresses exponential growth of constraint violations due to numerical integration error.
+where $\alpha, \beta > 0$ are tuning parameters. The correction terms act as a feedback law: when the constraint is violated, the correction grows and drives the state back onto the manifold. This reduces the effective index to 1 and suppresses exponential growth of constraint violations due to numerical integration error.
 
 ## Control-Affine Systems on Configuration Manifolds
 
@@ -243,7 +243,7 @@ In our constrained system with gravity, the equation of motion becomes:
 
 $$\ddot{q}^k + \Gamma^k_{ij}(q) \dot{q}^i \dot{q}^j = -M^{-1}(q) \nabla V(q) + M^{-1}(q) B(q) u.$$
 
-The drift field $f(q, \dot{q})$ encapsulates both the Christoffel symbols (geodesic curvature) and the gradient of the potential. This connection reveals that the Coriolis and centrifugal terms, though appearing as "fictitious forces" in a coordinate-dependent view, are actually manifestations of the curvature of the configuration manifold.
+The drift field $f(q, \dot{q})$ encapsulates both the Christoffel symbols (geodesic curvature) and the gradient of the potential. This connection reveals that the Coriolis and centrifugal terms, though they appear as "fictitious forces" in a coordinate-dependent view, are manifestations of the curvature of the configuration manifold.
 
 ### Null Spaces, Redundancy, and Families of Solutions
 
@@ -326,7 +326,7 @@ where $Q$ is a state weight and $R$ is a control weight, the optimal control is:
 
 $$u^* = -\frac{1}{2} R^{-1} G(q)^\top \lambda_{\dot{q}}.$$
 
-This is a linear feedback law in terms of the costate. For a golf swing with bounded actuation (e.g., $u_i \in [0, 1]$ for muscle activation), the control clips at the boundaries, giving a mixed bang-singular control.
+This is a linear feedback law in the costate. For a golf swing with bounded actuation (e.g., $u_i \in [0, 1]$ for muscle activation), the control clips at the boundaries, giving a mixed bang-singular control.
 
 ### Hamilton-Jacobi-Bellman Equation
 

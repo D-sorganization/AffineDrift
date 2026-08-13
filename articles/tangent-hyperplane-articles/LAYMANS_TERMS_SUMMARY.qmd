@@ -31,7 +31,7 @@ Most real-world systems are like this: robot arms, aircraft, golf swings, chemic
 
 ## The Key Insight: Freeze Frame Analysis
 
-Here's the trick: **While the system is nonlinear globally (over time), it has an *exact linear approximation* at any single instant.** (The system itself is still nonlinear — the derivative that defines the tangent hyperplane is the exact first-order structure, but the tangent hyperplane only matches the true dynamics to first order.)
+Here's the trick: **While the system is nonlinear globally (over time), it has an *exact linear approximation* at any single instant.** (The system itself is still nonlinear. The derivative that defines the tangent hyperplane is the exact first-order structure, but the hyperplane matches the true dynamics only to first order.)
 
 Think of it like this:
 
@@ -65,7 +65,7 @@ Linear systems are easy to work with. Engineers have powerful tools (like "LQR c
 - Recompute those local models as the system moves
 - Track residuals before treating the assembled local predictions as a controller for the nonlinear system
 
-It is like solving many local problems while checking how much error is introduced when those local pieces are assembled.
+It is like solving many local problems while tracking the error that appears when you assemble those local pieces.
 
 ### 2. **We Can Predict Errors**
 
@@ -127,18 +127,18 @@ This isn't just intuition—it's **mathematically justified** by the tangent spa
 
 ### Part I: **Geometry** (Why It Works)
 
-Explains what is exact about the tangent construction and what remains approximate when it is used over a finite step. Uses pictures and analogies to show:
+Explains what is exact about the tangent construction and what remains approximate once you use it over a finite step. Uses pictures and analogies to show:
 - A tangent plane is the "best flat approximation" to a curvy surface
 - At a point, the derivative is the exact first-order object for a smooth map
 - Finite displacements still have residual terms that depend on curvature and step size
 
-**Takeaway:** Linearization is not merely a hack; it is the local first-order structure of smooth systems, and its finite-step use must be checked against residuals.
+**Takeaway:** Linearization is not a hack; it is the local first-order structure of smooth systems. Whenever you use it over a finite step, check it against residuals.
 
 ### Part II: **Integration** (Accumulating Over Time)
 
 Shows what happens when you **add up** lots of tiny linear steps to get a full trajectory.
 
-**Key point:** Even though each local effect is linearized at its moment, integrating over time produces nonlinear behavior. The residuals can be estimated or bounded only when the required smoothness, curvature, and step-size assumptions are stated.
+**Key point:** Even though each local effect is linear at its own moment, integrating over time produces nonlinear behavior. You can estimate or bound the residuals only after stating the required smoothness, curvature, and step-size assumptions.
 
 **Takeaway:** You can use superposition locally, then account for the residual terms introduced by moving along a nonlinear trajectory.
 
@@ -157,7 +157,7 @@ Provides concrete algorithms for:
 
 ### **"But Linearization Is an Approximation!"**
 
-**Answer:** The derivative is the exact first-order object at the point. What is approximate is using that tangent description to predict behavior away from the point. Small steps and frequent re-linearization can reduce the error, but "negligible" must be justified by residual estimates for the system being studied.
+**Answer:** The derivative is the exact first-order object at the point. What is approximate is using that tangent description to predict behavior away from the point. Small steps and frequent re-linearization can reduce the error, but only a residual estimate for the system you are studying can justify calling that error "negligible."
 
 Think of it like a map: A flat map of the Earth is "wrong" globally, but a street map of your neighborhood is "exact enough" for walking around the block.
 
@@ -201,7 +201,7 @@ The thesis is clear about this limit.
 
 ## The Bottom Line
 
-**Nonlinear systems are only nonlinear globally.** At every instant, they're perfectly linear. By exploiting this local linearity—linearize, optimize, move, repeat—we can control systems that seemed impossibly complex.
+**Nonlinear systems are only nonlinear globally.** At every instant, their first-order behavior is exactly linear. By exploiting this local linearity—linearize, optimize, move, repeat—we can control systems that seemed impossibly complex.
 
 This isn't magic. It's geometry. And geometry, once you see it, makes everything clearer.
 

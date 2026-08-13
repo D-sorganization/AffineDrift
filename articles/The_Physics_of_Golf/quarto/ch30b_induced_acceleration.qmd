@@ -10,7 +10,7 @@ It is not enough to know what forces are present; one must know what each force 
 ::: {.callout-note}
 ## The Question Behind This Chapter
 
-In the previous chapter, we described the kinetic chain as a sequential cascade of energy from proximal segments (hips, torso) to distal segments (arms, wrists, club). But that description, powerful as it is, leaves a question unanswered: *how much* of the clubhead's acceleration at any given instant is caused by the hip torque, how much by the shoulder torque, how much by gravity, and how much is a lingering consequence of forces applied earlier in the swing?
+In the previous chapter, we described the kinetic chain as a sequential cascade of energy from proximal segments (hips, torso) to distal segments (arms, wrists, club). But that description, powerful as it is, leaves a question unanswered. *How much* of the clubhead's acceleration at any given instant is caused by the hip torque, how much by the shoulder torque, how much by gravity, and how much is a lingering consequence of forces applied earlier in the swing?
 
 This chapter introduces a technique from biomechanics research called **induced acceleration analysis** (IAA). The key idea is mathematically simple: because the equations of motion are linear in the forces at each instant, we can apply each force *one at a time* and compute the acceleration it would produce if it acted alone. The sum of these individual contributions exactly equals the total acceleration. This is the principle of **superposition** applied to multi-body dynamics.
 
@@ -36,7 +36,7 @@ $$
 \boxed{\ddot{\boldsymbol{q}} = \boldsymbol{M}^{-1}(\boldsymbol{q}) \left[ \boldsymbol{\tau}_{\text{muscle}} + \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}}) + \boldsymbol{g}(\boldsymbol{q}) \right]}
 $$ {#eq-iaa_forward}
 
-Because the mass matrix $\boldsymbol{M}(\boldsymbol{q})$ is symmetric and positive definite (a consequence of the fact that kinetic energy is always positive for any nonzero velocity), its inverse always exists. Moreover, the multiplication $\boldsymbol{M}^{-1} \boldsymbol{\tau}$ is a *linear* operation in $\boldsymbol{\tau}$. This linearity is the mathematical basis for superposition in induced acceleration analysis.
+Because the mass matrix $\boldsymbol{M}(\boldsymbol{q})$ is symmetric and positive definite (a consequence of kinetic energy being positive for any nonzero velocity), its inverse always exists. The multiplication $\boldsymbol{M}^{-1} \boldsymbol{\tau}$ is a *linear* operation in $\boldsymbol{\tau}$. This linearity is the mathematical basis for superposition in induced acceleration analysis.
 
 ::: {.callout-important}
 ## Instantaneous Superposition of Accelerations
@@ -47,7 +47,7 @@ $$
 \ddot{\boldsymbol{q}} = \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{\tau}_{\text{muscle}}}_{\text{muscle-induced}} + \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})}_{\text{velocity-induced}} + \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{g}(\boldsymbol{q})}_{\text{gravity-induced}}
 $$ {#eq-iaa_superposition}
 
-Each term can be computed independently. Furthermore, the muscle torque vector can itself be decomposed into contributions from individual muscles or individual joints:
+Each term can be computed independently. The muscle torque vector can itself be decomposed into contributions from individual muscles or individual joints:
 
 $$
 \boldsymbol{\tau}_{\text{muscle}} = \sum_{k=1}^{m} \boldsymbol{\tau}_k
@@ -118,7 +118,7 @@ $$ {#eq-iaa_coupling}
 
 where $A_{ij}$ denotes the $(i,j)$ element of $\boldsymbol{M}^{-1}(\boldsymbol{q})$. The shoulder experiences an acceleration $A_{11} \tau_1$ (the *direct* effect), but the elbow also experiences an acceleration $A_{21} \tau_1$ (the *remote* or *induced* effect). The off-diagonal element $A_{21}$ is generally nonzero because the segments are physically linked: applying a torque at the shoulder creates a reaction force at the elbow joint, which accelerates the forearm.
 
-This phenomenon was clearly articulated by @ZajacGordon1989 in their foundational review: in multi-articular movement, determining the action of a muscle requires accounting for the constraint forces that propagate through the entire chain. A muscle crossing only the shoulder can accelerate the elbow, the wrist, and the club---not through direct contact, but through the mechanical coupling embedded in $\boldsymbol{M}^{-1}(\boldsymbol{q})$.
+@ZajacGordon1989 articulated this phenomenon in their foundational review: in multi-articular movement, determining the action of a muscle requires accounting for the constraint forces that propagate through the entire chain. A muscle crossing only the shoulder can accelerate the elbow, the wrist, and the club---not through direct contact, but through the mechanical coupling embedded in $\boldsymbol{M}^{-1}(\boldsymbol{q})$.
 
 ### Posture Dependence: The Same Torque, Different Results
 
@@ -156,7 +156,7 @@ In the golf swing, similar asymmetries exist. During the early downswing, the la
 
 ## Instantaneous Effects Versus Cumulative Effects {#sec-instantaneous_cumulative}
 
-One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between **instantaneous effects** and **cumulative effects**. This distinction was developed most clearly in the work of @Hirashima2008kinetic and @Hirashima2011application in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in @sec-05_affine_structure.
+One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between **instantaneous effects** and **cumulative effects**. @Hirashima2008kinetic and @Hirashima2011application developed this distinction most fully in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in @sec-05_affine_structure.
 
 ### Instantaneous Effects: What the Current Torques Produce Right Now
 
@@ -209,7 +209,7 @@ Using a 13-degree-of-freedom model of the trunk and upper limb, @Hirashima2008ki
 
 - **Shoulder internal rotation** was produced by a combination of the shoulder joint torque (instantaneous direct effect) and the velocity-dependent torque (cumulative effect), with the velocity-dependent contribution becoming important near ball release.
 
-- **Elbow extension** was produced predominantly by the *velocity-dependent torque*, not by the elbow joint torque. The elbow joint torque actually *decelerated* elbow extension in the final 20 milliseconds before ball release (acting as a brake, likely to protect the joint). The elbow extension acceleration came from the angular velocities of the trunk and upper arm that had accumulated earlier in the throw.
+- **Elbow extension** was produced predominantly by the *velocity-dependent torque*, not by the elbow joint torque. The elbow joint torque *decelerated* elbow extension in the final 20 milliseconds before ball release (acting as a brake, likely to protect the joint). The elbow extension acceleration came from the angular velocities of the trunk and upper arm that had accumulated earlier in the throw.
 
 - **Wrist flexion** was also driven primarily by velocity-dependent torques, originating from the forearm angular velocity that was itself a consequence of trunk and shoulder torques applied earlier.
 
@@ -241,7 +241,7 @@ The comprehensive two-part review by @Zajac2002, @Zajac2003 established the mode
 
 1. **Clarifying energy flow:** Joint powers and segmental angular velocities alone cannot determine how energy flows between segments, because constraint forces redistribute energy in ways that are not visible in inverse dynamics. Forward dynamics simulation, coupled with induced acceleration analysis, is required to identify causal relationships between muscle forces and movement outcomes.
 
-2. **Separating individual muscle contributions:** By driving a musculoskeletal model with individual muscle forces and computing the resulting segment accelerations, it becomes possible to determine each muscle's contribution to whole-body tasks such as support (vertical center-of-mass acceleration) and forward progression (horizontal center-of-mass acceleration).
+2. **Separating individual muscle contributions:** Driving a musculoskeletal model with individual muscle forces and computing the resulting segment accelerations reveals each muscle's contribution to whole-body tasks such as support (vertical center-of-mass acceleration) and forward progression (horizontal center-of-mass acceleration).
 
 3. **Demonstrating counterintuitive muscle functions:** Muscles often accelerate segments and joints they do not cross, and their contributions to whole-body function can differ substantially from what anatomy alone would predict.
 
@@ -267,7 +267,7 @@ This patient-specific diagnostic capability is a direct consequence of superposi
 
 ### Sit-to-Stand Transfers
 
-@Caruthers2016 used a three-dimensional musculoskeletal model with 46 degrees of freedom and 194 muscle-tendon actuators to study sit-to-stand transfers. Their induced acceleration analysis revealed that the gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass, while the quadriceps---despite generating large forces---actually *opposed* forward center-of-mass acceleration. This finding was counterintuitive to the quadriceps' anatomical function and to naive kinematic reasoning, but was entirely consistent with the dynamic coupling embedded in $\boldsymbol{M}^{-1}(\boldsymbol{q})$ given the body's configuration during the task.
+@Caruthers2016 used a three-dimensional musculoskeletal model with 46 degrees of freedom and 194 muscle-tendon actuators to study sit-to-stand transfers. Their induced acceleration analysis revealed that the gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass, while the quadriceps---despite generating large forces---*opposed* forward center-of-mass acceleration. This finding was counterintuitive to the quadriceps' anatomical function and to naive kinematic reasoning, but was entirely consistent with the dynamic coupling embedded in $\boldsymbol{M}^{-1}(\boldsymbol{q})$ given the body's configuration during the task.
 
 ## Implications for the Golf Swing {#sec-golf_implications}
 
@@ -275,13 +275,13 @@ This patient-specific diagnostic capability is a direct consequence of superposi
 
 The results reviewed in this chapter frame the golf swing as a **superposition problem**: at each instant, the clubhead acceleration is the sum of contributions from every torque source in the body, weighted by the current configuration of the kinematic chain. This framing provides several actionable insights:
 
-1. **Proximal muscles are the primary energy source.** Consistent with the kinetic chain analysis in @sec-kinetic_chain, induced acceleration research confirms that the large muscles of the lower body and trunk generate the initial kinetic energy that is subsequently transferred to the distal segments through cumulative effects. Attempting to "muscle" the club with the hands and forearms during the late downswing is not only ineffective (because the drift field already dominates) but may actually be counterproductive (because inappropriate distal torques can disrupt the velocity-dependent acceleration cascade).
+1. **Proximal muscles are the primary energy source.** Consistent with the kinetic chain analysis in @sec-kinetic_chain, induced acceleration research confirms that the large muscles of the lower body and trunk generate the initial kinetic energy that is subsequently transferred to the distal segments through cumulative effects. Attempting to "muscle" the club with the hands and forearms during the late downswing is not only ineffective (because the drift field already dominates) but may be counterproductive (because inappropriate distal torques can disrupt the velocity-dependent acceleration cascade).
 
-2. **The effectiveness of any torque depends on the current posture.** Two golfers applying the same hip torque at the same moment in the downswing may produce very different club accelerations if their postures differ, because $\boldsymbol{M}^{-1}(\boldsymbol{q})$ changes with configuration. This provides a physics-based explanation for why "form" matters: proper sequencing and posture optimize the coupling matrix $\boldsymbol{M}^{-1}$ to maximize the transfer of proximal effort to distal acceleration.
+2. **The effectiveness of any torque depends on the current posture.** Two golfers applying the same hip torque at the same moment in the downswing may produce markedly different club accelerations if their postures differ, because $\boldsymbol{M}^{-1}(\boldsymbol{q})$ changes with configuration. This provides a physics-based explanation for why "form" matters: proper sequencing and posture optimize the coupling matrix $\boldsymbol{M}^{-1}$ to maximize the transfer of proximal effort to distal acceleration.
 
 3. **Late-downswing club acceleration is dominated by velocity-dependent torques.** The velocity-dependent torques (Coriolis and centrifugal) are the primary drivers of club acceleration during the critical impact-approach phase. These torques are the cumulative consequence of forces applied earlier in the swing. This is the induced acceleration community's version of the statement that drift dominates control in the late downswing.
 
-4. **Muscles at one joint can accelerate (or decelerate) distant segments.** Through dynamic coupling ($\boldsymbol{M}^{-1}$ off-diagonal elements), a hip torque can directly affect club acceleration. This means that the kinetic chain is not simply a sequential hand-off; rather, every active muscle contributes to every joint's acceleration simultaneously, with the relative contributions determined by the current configuration.
+4. **Muscles at one joint can accelerate (or decelerate) distant segments.** Through dynamic coupling ($\boldsymbol{M}^{-1}$ off-diagonal elements), a hip torque can directly affect club acceleration. This means that the kinetic chain is not merely a sequential hand-off; rather, every active muscle contributes to every joint's acceleration simultaneously, with the relative contributions determined by the current configuration.
 
 ### A Unified Framework
 
