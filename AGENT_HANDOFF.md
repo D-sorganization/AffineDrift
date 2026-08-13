@@ -12,6 +12,18 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8513 / AffineDrift reader length parity follow-up** — the
+  completion audit after merged PR #3816 found that the 196-page lay PDF still
+  trailed the current 181-page scientific artifact by 584 extracted words.
+  Branch `docs/proximal-distal-reader-length-parity` adds full worked
+  conversations rather than padding and updates the regression baseline to the
+  reviewed 181-page/69,257-word artifact. The rerendered lay PDF now contains
+  199 pages and 70,570 whitespace-extracted words, with 62 outline entries and
+  142 live URI annotations; its SHA-256 is
+  `945e1f2d367230ec8096c0db9be8916a850af7798ad45dfd01c9874a17bc079a`.
+  The new pages and transitions were visually inspected without clipping or
+  layout defects. Merge this follow-up before closing any #8513 subissue.
+
 - **UpstreamDrift #8513 full-length lay-reader proximal--distal book** — branch
   `docs/proximal-distal-lay-book-expansion` expands _How a Golf Swing Carries
   Energy_ from a short visual companion into 30 substantive chapters. The
@@ -22,7 +34,7 @@ Active epics/PRs:
   figure pairs for 30 total, recurring model/human/hypothesis/practical claim
   labels, reader labs, falsifiers, a continuous whole-swing ledger, and a
   skeptical-reviewer dialogue. The final PDF contract requires at least the
-  scientific monograph's 169 pages and 64,333 extracted words, at least 50
+  scientific monograph's 181 pages and 69,257 extracted words, at least 50
   outline entries, and at least 60 live PDF URI annotations. Before protected
   publication, rerender PDF/HTML, copy the canonical PDF to the stable source
   path, run focused and repository gates, visually inspect the final render,
@@ -30,9 +42,10 @@ Active epics/PRs:
   figure generator now fixes its SVG hash salt for byte-stable regeneration;
   `src/tools/check_links.py` also maps included chapter fragments to the master
   Quarto document so its relative figure and workbench links are validated in
-  the same context used by the renderer. The final inspected PDF is 196 pages,
-  66,875 extracted words, 62 outline entries, 142 URI annotations, and SHA-256
-  `d9865fb79c20ddd07255a0fa9a980819721ad1c528abbf59b8936d706502fa1a`;
+  the same context used by the renderer. The parity follow-up PDF is 199 pages,
+  70,570 whitespace-extracted words, 62 outline entries, 142 URI annotations,
+  and SHA-256
+  `945e1f2d367230ec8096c0db9be8916a850af7798ad45dfd01c9874a17bc079a`;
   its tracked source and `docs/articles/` copy are identical. Focused companion,
   link-checker, title-case, Ruff, Black, bibliography, citation, CSS-bundle,
   HTML-structure, and figure-regeneration gates pass. The full 3,000-plus-test

@@ -14,8 +14,10 @@ PDF_SOURCE = ROOT / "articles/proximal-distal-a-journey-through-the-swing.pdf"
 PDF_OUTPUT = ROOT / "docs/articles/proximal-distal-a-journey-through-the-swing.pdf"
 WORKBENCH = ROOT / "articles/proximal-distal-model-workbench.qmd"
 CHAPTERS = ROOT / "articles/proximal_distal_companion/chapters"
-TECHNICAL_MONOGRAPH_PAGE_COUNT = 169
-TECHNICAL_MONOGRAPH_EXTRACTED_WORD_COUNT = 64_333
+# UpstreamDrift main artifact at merge b6a64e174423870f341991a7b8ba9465c84209b9.
+# This records the reviewed publication rather than the obsolete first-pass floor.
+TECHNICAL_MONOGRAPH_PAGE_COUNT = 181
+TECHNICAL_MONOGRAPH_EXTRACTED_WORD_COUNT = 69_257
 
 
 def _source() -> str:
@@ -187,7 +189,9 @@ def test_expanded_companion_pdf_is_at_least_as_long_as_the_technical_monograph()
     reader = PdfReader(PDF_SOURCE)
     assert len(reader.pages) >= TECHNICAL_MONOGRAPH_PAGE_COUNT
     extracted_text = "\n".join(page.extract_text() or "" for page in reader.pages)
-    extracted_words = re.findall(r"\b[\w'-]+\b", extracted_text)
+    # Use the same whitespace-token extraction recorded for the comparison PDF.
+    # A regex tokenizer produces a different count for equations and punctuation.
+    extracted_words = extracted_text.split()
     assert len(extracted_words) >= TECHNICAL_MONOGRAPH_EXTRACTED_WORD_COUNT
     assert len(reader.outline) >= 50
     uri_count = sum(
