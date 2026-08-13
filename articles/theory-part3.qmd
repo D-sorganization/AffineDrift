@@ -377,9 +377,9 @@ acting on the **full** drift acceleration (rigid and flexible), matching the Par
 
 By construction, $\tau_{\mathrm{input}}$ contains the modeled mechanical effect of applied torques. It is a net mechanical quantity, not a unique muscle-force, activation, or effort estimate.
 
-This subtraction is valid precisely because of the affine structure derived in Part I. Recall that the input acceleration is given by $A_{\text{input}}(x)u$. The 'Input Force' defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix [@featherstone2008rigid]. Crucially, it captures not just the direct drive on the joints, but also the forces induced by the coupling ratio ($\Gamma$) acting on the flexible shaft. Thus, $\tau_{\text{input}}$ represents the complete mechanical footprint of the active control.
+This subtraction is valid precisely because of the affine structure derived in Part 1. Recall that the input acceleration is given by $A_{\text{input}}(x)u$. The 'Input Force' defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix [@featherstone2008rigid]. It captures not just the direct drive on the joints, but also the forces induced by the inertial coupling ratio ($\Gamma$) acting on the flexible shaft. Thus, $\tau_{\text{input}}$ represents the complete mechanical footprint of the active control.
 
-### Category 4: Mixed Forces (Interaction Effects)
+### Category 4: Trajectory-Mediated Differences
 
 Although drift and input contributions add at the same state in the equations of motion,
 
@@ -415,7 +415,7 @@ The taxonomy provides a framework for interpreting joint torques, hand forces, o
 - Comparing $\tau_{\mathrm{input}}$ to $\tau_{\mathrm{ZTCF}}$ reveals torque effectiveness.
 - Trajectory-mediated differences help diagnose how earlier input changes the later drift landscape without being relabeled as a third force.
 
-In simulation (as developed in [Theory Part 4](theory-part4.html) and [Theory Part 5](theory-part5.html)), these categories enable:
+In simulation (as developed in [Part 4](theory-part4.html) and [Part 5](theory-part5.html)), these categories enable:
 
 - decomposition of power flow,
 - isolation of passive shaft recoil,
@@ -541,7 +541,7 @@ This distinction is critical for coaching: if a player's negative torque is genu
 
 ## Relationship to Existing Methods
 
-The drift/input decomposition developed here is related to—but distinct from—**induced acceleration analysis** (IAA), introduced by Zajac and Gordon [@zajac1989determining; @zajac1993muscle] and widely used in musculoskeletal simulation (see also the OpenSim literature [@seth2018opensim; @anderson2001dynamic]). IAA asks what acceleration a given muscle force (or net joint moment) would produce on a segment, treating the dynamic equations block-by-block. The method's computations are mechanically equivalent to reading off rows of $M^{-1}(q)$, which is exactly the structure exploited in our Schur-complement derivation of $H_{qq}$ and $\Gamma$ in Part I.
+The drift--input decomposition developed here is related to—but distinct from—**induced acceleration analysis** (IAA), introduced by Zajac and Gordon [@zajac1989determining; @zajac1993muscle] and widely used in musculoskeletal simulation (see also the OpenSim literature [@seth2018opensim; @anderson2001dynamic]). IAA asks what acceleration a given muscle force (or net joint moment) would produce on a segment, treating the dynamic equations block-by-block. The method's computations are mechanically equivalent to reading off rows of $M^{-1}(q)$, which is exactly the structure exploited in our Schur-complement derivation of $H_{qq}$ and $\Gamma$ in Part I.
 
 Two distinctions are worth noting. First, IAA is typically applied to isolate the contribution of a single muscle, whereas our decomposition aggregates all muscular torques into the vector $u$ and isolates the collective "drift versus input" split. Second, IAA does not require, and does not emphasize, the control-affine structure of the full state equation $\dot{x} = f(x) + g(x) u$; it works with accelerations at a single instant. Our formulation is closer in spirit to the geometric control literature [@isidori1995nonlinear; @bullo2004geometric], where drift invariance is a structural property of the vector field rather than a per-muscle computation.
 
@@ -553,19 +553,19 @@ This manuscript developed a theoretical framework for decomposing the forces of 
 
 $$\dot{x} = f(x) + g(x)u,$$
 
-we derived a clean separation between passive drift forces and torque-driven input forces. The model's affine structure enabled two mathematically rigorous counterfactual tools—the Zero Torque Counterfactual (ZTCF) and the Zero Velocity Counterfactual (ZVCF)—which isolate the contributions of inertia, configuration, shaft deformation, and applied torques.
+we derived a clean separation between passive drift forces and torque-driven input forces. The model's affine structure enabled two mathematically rigorous counterfactual tools—the ZTCF and the ZVCF—which isolate the contributions of inertia, configuration, shaft deformation, and applied torques.
 
-The resulting taxonomy classifies generalized forces into configuration drift, velocity drift, input forces, and nonlinear interaction effects. This provides a principled basis for interpreting torques and hand forces at any instant of the swing. Within the modeling assumptions stated earlier, the decomposition is analytically exact and reproducible. It offers a mechanical explanation of how the swing evolves over time, distinguishing forces that arise "on their own" from those produced directly by applied torques.
+The resulting taxonomy classifies generalized forces into configuration drift, velocity drift, input forces, and trajectory-mediated differences. This provides a principled basis for interpreting torques and hand forces at any instant of the swing. Within the modeling assumptions stated earlier, the decomposition is analytically exact and reproducible. It offers a mechanical explanation of how the swing evolves over time, distinguishing forces that arise "on their own" from those produced directly by applied torques.
 
 This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. However, the theoretical structure developed here is not self-validating. It relies on complex subtraction operations $\tau_{input} = \tau_{total} - \tau_{drift}$ which are analytically exact but potentially unstable in practice. To address this, the subsequent components of this series provide the necessary verification:
 
-- **Part IV: Mathematical Appendices.**
+- **Part 4: Mathematical Appendices.**
   These appendices provide the supporting derivations. They contain the detailed block matrix inversion proofs and modal approximation steps that justify the affine separation for flexible multibody systems.
 
-- **Part V: Numerical Validation (Simulink).**
-  This section provides the **numerical stress test**. By implementing the full forward dynamics in a stiff solver environment, Part V tests whether the delicate counterfactual subtractions remain stable under integration error and whether the implementation preserves the algebraic separation developed on the page.
+- **Part 5: Numerical Validation (Simulink).**
+  This section provides the **numerical stress test**. By implementing the full forward dynamics in a stiff solver environment, Part 5 tests whether the delicate counterfactual subtractions remain stable under integration error and whether the implementation preserves the algebraic separation developed on the page.
 
-Beyond these verifications, future work will focus on experimental application...
+Beyond these verifications, future work will focus on experimental application:
 
 - **Modeling extensions.**  
   Incorporating foot-ground shear forces, aerodynamic loading, and non-smooth impact dynamics will generalize the framework to capture more phases of the swing.
@@ -586,7 +586,7 @@ In summary, this manuscript establishes the mathematical foundation for a causal
 
 ## Application of Research
 
-The framework developed in this manuscript provides a new mechanical viewpoint for interpreting forces in the golf swing. While the technical details are presented for scientific completeness, the practical impact is straightforward: the approach separates forces that arise naturally from the motion of the body and club (passive drift forces) from forces the golfer must actively create through muscular torque (input forces). This distinction is essential for understanding how players produce clubhead speed, how they sequence their movements, and why some patterns are more efficient than others.
+The framework developed in this manuscript provides a new mechanical viewpoint for interpreting forces in the golf swing. The technical details are presented for scientific completeness, but the practical impact is straightforward. The approach separates forces that arise naturally from the motion of the body and club (passive drift forces) from forces the golfer must actively create through muscular torque (input forces). This distinction is essential for understanding how players produce clubhead speed, how they sequence their movements, and why some patterns are more efficient than others.
 
 For coaches, the decomposition clarifies several long-standing questions:
 
@@ -603,7 +603,7 @@ For researchers, the approach offers a reproducible method for quantifying torqu
 
 Overall, the framework enables clearer interpretation of how golfers generate speed, control the club, and use their bodies efficiently—supporting more targeted coaching, equipment fitting, and player development.
 
-For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, we refer to the detailed derivations collected in the Appendices (Part IV). These appendices specifically provide the **block matrix inversion proofs** that justify the clean separation of rigid and flexible dynamics, and demonstrate that the modal approximation of the shaft does not violate the linearity of the torque input—a critical condition for the validity of the Force Taxonomy presented above.
+For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, we refer to the detailed derivations collected in the Appendices (Part 4). Those appendices provide the **block matrix inversion proofs** that justify the clean separation of rigid and flexible dynamics. They also show that the modal approximation of the shaft preserves the linearity of the torque input—the condition on which the Force Taxonomy above depends.
 
 
 ## Related Articles
