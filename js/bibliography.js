@@ -78,9 +78,11 @@
       .map((s) => s.trim())
       .filter(Boolean);
 
+    // ⚡ Bolt Optimization: Eliminate redundant string inclusion checks
+    // When not sorting by relevance, avoid the expensive O(N) string inclusion checks entirely
     const scored = entries.map((entry) => ({
       entry,
-      score: scoreEntry(entry, queryTerms),
+      score: state.sort === "relevance" ? scoreEntry(entry, queryTerms) : 0,
     }));
 
     scored.sort((a, b) => {
