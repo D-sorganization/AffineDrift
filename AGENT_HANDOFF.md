@@ -10,8 +10,10 @@ Epic [#3834](https://github.com/D-sorganization/AffineDrift/issues/3834)
 tracks the repository-wide definitional-integrity migration. Work is isolated in
 `AffineDrift-worktrees/terminology-3834` on
 `docs/3834-definitional-integrity`, based on remote main `8c706a77`.
-The completed local implementation is commit `fcbe8806`; publish it as a ready
-PR linked to #3834 after updating this handoff with the PR number.
+Ready PR [#3845](https://github.com/D-sorganization/AffineDrift/pull/3845)
+publishes commits `fcbe8806` and `ea2e11d2`. Preserve protected checks and
+reviews; do not close #3834 until the conforming UpstreamDrift migration also
+merges and both remote-main states are verified.
 
 ### Ratified Contract
 
