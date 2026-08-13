@@ -3,7 +3,7 @@
 ## Concept Map
 
 - **Inverse Dynamics (ID)**: The computational process of determining the forces and torques required to produce a given motion.
-- **Control-Affine System**: A dynamical system where the control input enters linearly: $\dot{x} = f(x) + g(x)u$.
+- **Control-Affine System**: A dynamical system where the control input enters linearly: $\dot{x} = f(x) + G(x)u$.
 - **Recursive Newton-Euler Algorithm (RNEA)**: An efficient $O(n)$ algorithm for computing inverse dynamics in kinematic chains.
 - **Drift Vector Field**: The unforced dynamics ($f(x)$) representing passive evolution under gravity, inertia, and constraints.
 - **Mass Matrix ($M(q)$)**: The symmetric, positive-definite matrix representing the inertial coupling between generalized coordinates.
@@ -163,7 +163,7 @@ bibliography:
 
 ### Path 2: Deep Technical (The Math of Affine Systems)
 
-1.  **Murray1994**: Establishes the $\dot{x} = f(x) + g(x)u$ framework used in the AffineDrift theory.
+1.  **Murray1994**: Establishes the $\dot{x} = f(x) + G(x)u$ framework used in the AffineDrift theory.
 2.  **Lynch2017**: A modern, geometric treatment of multibody dynamics (Screw Theory).
 3.  **Slotine1991**: How to control these systems (Feedback Linearization, Sliding Modes).
 4.  **Bullo2005**: Advanced geometric mechanics for underactuated systems.

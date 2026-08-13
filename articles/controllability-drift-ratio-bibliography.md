@@ -4,8 +4,8 @@
 
 ## Concept Map
 
-- **Drift–Control Ratio (DCR)**: The scalar metric $\|f(x)\| / \|g(x)u\|$ quantifying the dominance of passive dynamics over active control authority.
-- **Control-Affine System**: A dynamical system of the form $\dot{x} = f(x) + g(x)u$, separating passive drift $f(x)$ from input channels $g(x)$.
+- **Drift–Control Ratio (DCR)**: The scalar metric $\|f(x)\| / \|G(x)u\|$ quantifying the dominance of passive dynamics over active control authority.
+- **Control-Affine System**: A dynamical system of the form $\dot{x} = f(x) + G(x)u$, separating passive drift $f(x)$ from input channels $G(x)$.
 - **Lie Bracket**: The geometric operation $[f,g]$ that measures how the drift field alters the direction of the control vector field.
 - **Control Cone**: The set of reachable future states, analogous to the relativistic light cone, which narrows as drift velocity increases.
 - **Small-Time Local Controllability (STLC)**: The mathematical condition (typically LARC) determining if a system can move in any direction from a point $x$.
@@ -226,7 +226,7 @@ bibliography:
 
 ### Deep technical (Control theory & Physics)
 
-1. [isidori1995nonlinear] - The bible of nonlinear control systems; defines the affine structure $\dot{x}=f(x)+g(x)u$.
+1. [isidori1995nonlinear] - The bible of nonlinear control systems; defines the affine structure $\dot{x}=f(x)+G(x)u$.
 2. [bullo2005geometric] - Rigorous treatment of mechanical systems on manifolds and their controllability.
 3. [sussmann1987general] - Foundational theorem on Small-Time Local Controllability (STLC).
 4. [murray1994mathematical] - Essential for understanding the Lagrangian dynamics and constraints.

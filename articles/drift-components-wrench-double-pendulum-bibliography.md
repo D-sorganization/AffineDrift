@@ -4,7 +4,7 @@
 
 ## Concept Map
 
-- **Affine Control System**: Modeling the system as $\dot{x} = f(x) + g(x)u$, separating drift from input.
+- **Affine Control System**: Modeling the system as $\dot{x} = f(x) + G(x)u$, separating drift from input.
 - **Natural Torque Field**: The set of forces arising purely from system state (inertia, Coriolis, gravity, damping) and environment.
 - **Active Torque**: Forces generated specifically by the control inputs (muscles/motors).
 - **Mechanical Identity**: The axiomatic equality between internal active torques and the natural torque field for a given trajectory.
@@ -224,7 +224,7 @@ bibliography:
 2.  [cochran1968search] - The "bible" of golf science, establishing the planar double pendulum model.
 3.  [murray1994mathematical] - (Chapter 4) Formal introduction to Lagrangian dynamics for robotic manipulators.
 4.  [nesbit2005work] - Application of work-energy principles to the golf swing, critical for understanding "active" vs "natural" contributions.
-5.  [isidori1995nonlinear] - (Introduction) The rigorous definition of affine control systems ($\dot{x} = f(x) + g(x)u$).
+5.  [isidori1995nonlinear] - (Introduction) The rigorous definition of affine control systems ($\dot{x} = f(x) + G(x)u$).
 
 ### Deep technical (Advanced Mechanics)
 

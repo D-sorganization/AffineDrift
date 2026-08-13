@@ -2,298 +2,109 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-12
+Last updated: 2026-08-13
 
-## Where This Repo Is Heading
+## Current Work
 
-AffineDrift is the educational textbook + companion website (Quarto → GitHub Pages)
-for engineering mathematics, plus a growing set of AffineDrift-relevant research
-articles that support a fleet-wide "Shared Web Tools" program.
+Epic [#3834](https://github.com/D-sorganization/AffineDrift/issues/3834)
+tracks the repository-wide definitional-integrity migration. Work is isolated in
+`AffineDrift-worktrees/terminology-3834` on
+`docs/3834-definitional-integrity`, based on remote main `8c706a77`.
+Ready PR [#3845](https://github.com/D-sorganization/AffineDrift/pull/3845)
+publishes commits `fcbe8806` and `ea2e11d2`. Preserve protected checks and
+reviews; do not close #3834 until the conforming UpstreamDrift migration also
+merges and both remote-main states are verified.
 
-Active epics/PRs:
+### Ratified Contract
 
-- **AffineDrift deployment follow-up after #3818** — the first current-main
-  Pages build completed rendering but failed its post-build health gate because
-  two reusable chapter fragments linked to the workbench relative to the
-  assembled book. Branch `fix/proximal-distal-fragment-workbench-links` uses
-  site-root-relative links that resolve in both the book and independently
-  rendered chapter pages, with a regression contract. Merge and verify a green
-  Pages deployment before closing UpstreamDrift #8513.
+- `NOTATION.md` is the normative public semantic authority.
+- Drift is the complete autonomous vector field of the declared effective
+  plant, including every retained state-dependent, shaft, passive, contact,
+  and constraint term.
+- The ZTCF family contains pointwise samples, stitched pointwise traces,
+  forward trajectories, and achieved-state branched trajectories. First use
+  must state the construction.
+- Zero declared generalized control does not mean zero activation, EMG,
+  co-contraction, reflex activity, or effort.
+- ZVCF is an instantaneous zero-velocity, zero-control acceleration. A
+  control-preserved zero-velocity calculation uses a different name.
+- DCR compares drift with bounded control capacity in the same declared
+  acceleration or task-projected space and reports `W`, `U(x)`, and epsilon.
+- Use `f(x)` for drift, `G(x)` for the input map, `g(q)` for gravity, and `u`
+  for declared control.
 
-- **UpstreamDrift #8513 / AffineDrift reader length parity follow-up** — the
-  completion audit after merged PR #3816 found that the 196-page lay PDF still
-  trailed the current 181-page scientific artifact by 584 extracted words.
-  Branch `docs/proximal-distal-reader-length-parity` adds full worked
-  conversations rather than padding and updates the regression baseline to the
-  reviewed 181-page/69,257-word artifact. The rerendered lay PDF now contains
-  199 pages and 70,570 whitespace-extracted words, with 62 outline entries and
-  142 live URI annotations; its SHA-256 is
-  `945e1f2d367230ec8096c0db9be8916a850af7798ad45dfd01c9874a17bc079a`.
-  The new pages and transitions were visually inspected without clipping or
-  layout defects. Merge this follow-up before closing any #8513 subissue.
+The reasoning and rejected alternatives are in
+`docs/development/terminology-decision-record.md`.
 
-- **UpstreamDrift #8513 full-length lay-reader proximal--distal book** — branch
-  `docs/proximal-distal-lay-book-expansion` expands _How a Golf Swing Carries
-  Energy_ from a short visual companion into 30 substantive chapters. The
-  epic has 36 linked chapter/concept subissues (#8514--#8537, #8539--#8550;
-  #8538 is a closed duplicate). Each chapter must contain at least 2,000 words,
-  a concrete picture, sustained mechanism treatment, an explicit boundary,
-  and live deeper-reading paths. The book now adds 16 reproducible SVG/PDF
-  figure pairs for 30 total, recurring model/human/hypothesis/practical claim
-  labels, reader labs, falsifiers, a continuous whole-swing ledger, and a
-  skeptical-reviewer dialogue. The final PDF contract requires at least the
-  scientific monograph's 181 pages and 69,257 extracted words, at least 50
-  outline entries, and at least 60 live PDF URI annotations. Before protected
-  publication, rerender PDF/HTML, copy the canonical PDF to the stable source
-  path, run focused and repository gates, visually inspect the final render,
-  and exclude Quarto's untracked full-site render byproducts from staging. The
-  figure generator now fixes its SVG hash salt for byte-stable regeneration;
-  `src/tools/check_links.py` also maps included chapter fragments to the master
-  Quarto document so its relative figure and workbench links are validated in
-  the same context used by the renderer. The parity follow-up PDF is 199 pages,
-  70,570 whitespace-extracted words, 62 outline entries, 142 URI annotations,
-  and SHA-256
-  `945e1f2d367230ec8096c0db9be8916a850af7798ad45dfd01c9874a17bc079a`;
-  its tracked source and `docs/articles/` copy are identical. Focused companion,
-  link-checker, title-case, Ruff, Black, bibliography, citation, CSS-bundle,
-  HTML-structure, and figure-regeneration gates pass. The full 3,000-plus-test
-  suite reaches 92.62% coverage and has one confirmed `origin/main` baseline
-  failure: `Read` already contains 11 navbar items against the legacy budget
-  of 10, with no branch diff in `_quarto.yml` or `tests/test_navbar_ia.py`.
-  PR #3816 CI initially exposed two clean-environment defects: `pypdf` was not
-  installed for the PDF contract, and the quality checker interpreted the
-  wrist-node layout coordinate `9.8` as gravity. The follow-up pins
-  `pypdf==6.15.0` and names the layout coordinate; rerun the exact tests and
-  quality command before pushing the follow-up commit. The follow-up also
-  reconciles the legacy 10-item navbar budget with the intentional 11-item
-  `Read` menu already present on `origin/main`, preserving direct access to the
-  reader and model workbench. Squash auto-merge is already enabled and must
-  remain enabled.
+### Implemented on This Branch
 
-- **UpstreamDrift #8511 interactive proximal--distal dynamics workbench** —
-  branch `docs/proximal-distal-workbench` adds a mobile-readable reader page,
-  navigation, and book cross-link for the canonical Tools PyQt6 and
-  React/Tauri workbench. AffineDrift does not copy physics or glossary data;
-  it links the shared catalog and keeps interactive output explicitly
-  exploratory. Focused content-contract and title-case gates must pass before
-  the protected PR is opened.
+- Added a machine-readable terminology contract to `NOTATION.md`.
+- Extended `scripts/check_terminology.py` to fail closed when authority rows
+  are absent, reject previously unseen expansions, and require a ZTCF
+  construction qualifier on first use.
+- Added RED/GREEN regression coverage in `tests/test_check_terminology.py`.
+- Reconciled the Quarto and LaTeX article trees for ZTCF, ZVCF, DCR, DgCR, and
+  input-map/gravity notation.
+- Rewrote the Physics of Golf counterfactual chapter and glossaries to remove
+  zero-muscle claims and compare drift/control in a common acceleration space.
+- Corrected the Geometry of Motion chapter to distinguish canonical ZVCF from
+  a zero-velocity control-preserved evaluation.
+- Replaced invalid convergence and counterfactual identities in the manifesto
+  with falsifiable reconstruction, held-out prediction, and sensitivity tests.
+- Updated `SPEC.md` to 1.0.190.
 
-- **UpstreamDrift #8509 accessible proximal--distal companion** — branch
-  `docs/proximal-distal-companion-book` adds _How a Golf Swing Carries Energy_,
-  a visual, book-like companion with fourteen reproducible figures, a pinned
-  model-evidence snapshot, live source paths, explicit inferential boundaries,
-  and HTML/PDF publication. Validate the focused companion contract, regenerate
-  figures, render both formats, and visually inspect the PDF before publication.
-  PR #3812 merged as `adb06e0d`; the follow-up publication branch
-  `fix/proximal-distal-companion-pdf` declares the tracked PDF as a Quarto
-  resource. PR #3813 exposed that a resource rooted inside the clean output
-  directory was nested under `docs/docs/`; the final path correction keeps the
-  canonical PDF under `articles/` and copies it to `docs/articles/`.
+### Verified Locally
 
-- **UpstreamDrift #8507 adversarial transmission and task robustness** — branch
-  `research/proximal-distal-transmission-robustness` adds a public synthesis of
-  paired clock/state-trigger perturbation experiments, robust speed versus
-  variability/load tradeoffs, local task-null variability, four responsive
-  figures, and explicit human-validation boundaries. All local content,
-  title-case, render, and phone/desktop layout gates pass; protected PR #3810
-  carries the publication.
+- Terminology gate: pass, zero baseline exceptions.
+- Focused content tests: 28 pass.
+- Title-case gate: 474 sources pass.
+- Tree parity: no new divergence; three main-baseline findings remain under
+  #3499.
+- Black and Ruff on changed Python: pass.
+- `git diff --check`: pass.
+- Full Python suite: pass at 93.36% coverage, with only declared skips and
+  existing mock warnings.
+- Selected Quarto notation, overview, DCR, counterfactual, and glossary pages:
+  render successfully. A single-file Physics of Golf render emits the expected
+  unresolved sibling-chapter warning; the repository cross-reference gate
+  resolves the reference in full-project context.
 
-- **Proximal--distal citation reconciliation** — branch
-  `agent/proximal-distal-citation-reconciliation` synchronizes every article
-  citation with the reader-facing Markdown bibliography, adds primary
-  delayed-release, hub-path, and Robertson--Winter references at the claims
-  they support, and adds a generic parity regression test. The external audit
-  reported seven missing summary entries; current `main` actually had nine,
-  including later ground-reaction sources. Existing Quarto bibliography
-  declarations were already correct and were not broadened. The article and
-  both textbook HTML projects render. The Physics of Golf now also renders its
-  complete PDF with LuaLaTeX: the project maps source-level `\bm` calls to
-  `unicode-math`, defines the PDF-side shared math macros, and repairs latent
-  chapter equations that the former `\bm{\tau}` failure had masked. Focused
-  regression tests protect the repaired PDF contract.
+### Remaining Before AffineDrift Publication
 
-- **UpstreamDrift #8505 advanced proximal--distal expansion** — isolated branch
-  `research/proximal-distal-advanced-expansion` adds a public-facing reference-
-  frame and biological bridge to the article: power-preserving wrench/twist
-  transport, Jacobian virtual work, matched-moment agonist--antagonist
-  redundancy, continuous activation/series-force history, five engine-role
-  boundaries, executed pose-coordinate round trips, and five new SVG figures.
-  The adapter result is representation-only; five-engine dynamics and human
-  validation remain explicit falsification tiers. Focused content tests and a
-  Quarto article render pass; full site and protected publication gates remain.
+1. Run the full repository quality gate and relevant Quarto/LaTeX renders.
+2. Inspect rendered counterfactual, glossary, DCR, and notation pages at phone
+   and desktop widths.
+3. Commit, push, open a ready PR linked to #3834, and preserve protected merge
+   requirements.
+4. After merge, verify the merge commit on remote main before closing the
+   AffineDrift child issues.
 
-- **UpstreamDrift #8493 ground-reaction drift attribution** — UpstreamDrift PR
-  #8494 merged to remote `main` at
-  `06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5`, with the SPEC follow-up #8495
-  merged at `33ec92f04ee80b5ac2200488e10a4531eecf1892`. AffineDrift PR #3802 pins the
-  scientific merge and replaces universal or uniquely biological
-  interpretations with a constrained-wrench treatment, cancellation-safe
-  impulses, and participant-held-out falsifiers.
+## Cross-Repository Follow-Up
 
-- **UpstreamDrift #8497 — arm--wrist torque allocation and preload** — the
-  finite-history completion PR #8501 merged at
-  `e96a585a41f2d7659864e478db3de829e710e622`. The
-  reviewer article now distinguishes direct wrist moment, two-hand force
-  couple, proximal generalized control, activation, and scapular motion. It
-  reports the exact same-state 8 N m allocation surface and the separately
-  declared dead-zone transmission sensitivity. The modeled persistent-direction
-  advantage is conditional; no human technique or biological slack claim is
-  made. Bilateral wrench, grip-pressure, stiffness/force-rise, EMG, shaft, and
-  participant-holdout falsifiers are explicit.
-  The final finite-history extension starts from zero internal deflection,
-  integrates 180 ms of preparation, and carries transmission state through the
-  command transition without reset. AffineDrift now states this executable
-  continuity check explicitly while withholding anatomical-backswing and
-  muscle-action interpretations.
+UpstreamDrift work is isolated in
+`UpstreamDrift-worktrees/terminology-3834` on
+`docs/3834-cross-repo-terminology`, based on remote main `ad71c1fbe`.
 
-- **#8458 / UpstreamDrift #8470 — hand-path force attribution** (publication
-  integration complete on this branch). UpstreamDrift PR #8473 merged to remote
-  `main` at `69eb7e9db32ccd17e45824619315b1d04b400c27`. AffineDrift pins that
-  exact commit, compact three-tier results, and eight SHA-256-verified SVGs;
-  reports force, impulse, power, work, every-joint/time-window, two-hand-mode,
-  and bounded-preview findings; and preserves the model-only/biological-effort
-  boundary. The affected Quarto article renders successfully; all image paths
-  resolve, the evidence figures were visually inspected, 3,015 full-suite tests
-  and 44 content-lint tests pass, and measured coverage is 93.35%. Remaining
-  PR #3799 merged to remote `main` at
-  `f9a5dee8a21838c87202bd3be405c4b977e9ed8c`. Post-merge Linux CI exposed one
-  CRLF-derived preactivation-SVG manifest digest; the current hotfix pins the
-  canonical LF Git-blob digest without changing figure content or scientific
-  results.
-- **UpstreamDrift #8499 adversarial review adjudication** — isolated branch
-  `research/proximal-distal-adversarial-review` synchronizes the public article
-  with the verified numerical corrections and present model ladder. It removes
-  global-optimum, physiological negative-work, and coaching-cue implications;
-  separates pointwise ZTCF from forward killswitches; reports all 92 impact
-  candidates and threshold counts; adds 20--50 ms command-rise sensitivity;
-  corrects phase-work values and the analytic interface-power label; and no
-  longer describes already-executed moving-base, shaft, spatial, and coupled
-  uncertainty work as absent. Local article gates and the site render pass;
-  protected publication remains pending.
+The current implementation uses “ZVCF” for a calculation that preserves
+applied control. Migrate it as follows after the AffineDrift authority merges:
 
-- **Document title capitalization** — this branch extends the established
-  Quarto gate to LaTeX structural titles, normalizes the tracked canonical
-  LaTeX corpus, preserves technical literals such as `A/S`, `et al.`, and
-  `mph`, and records the fleet convention in `AGENTS.md` and `SPEC.md`.
+1. Add failing tests for zero-control canonical ZVCF and a separately named
+   zero-velocity control-preserved acceleration.
+2. Change shared helpers and engine adapters without silently deleting the old
+   diagnostic.
+3. Relabel or regenerate proximal–distal data fields, figures, and prose so
+   existing control-preserved evidence is not misrepresented as canonical
+   ZVCF.
+4. Add an UpstreamDrift conformance profile linking the exact AffineDrift main
+   commit and declaring coordinates, units, loads, contact mode, and tolerance.
+5. Run focused numerical tests, full gates, publication render/inspection, and
+   protected merge verification.
 
-- **#3792 / PR #3793 — repair the local-only runner guard** (in progress). Removes raw
-  Actions-expression delimiters from the workflow's embedded Python so GitHub
-  can parse push events, with a deployment-integrity regression test. The same
-  recovery PR corrects eight proximal-to-distal figure paths identified by the
-  post-merge Pages pre-build link gate.
-- **#3791 — proximal-to-distal open research refinement** — MERGED
-  (`7b1a06c7`). Removes meta and software-promotion framing, clarifies evidence
-  boundaries, and adds the 13-case parameter-sensitivity result from merged
-  UpstreamDrift PR #8428. The remaining validation roadmap stays open in
-  UpstreamDrift epic #8426.
-- **#3777 — EPIC: Sharable Web Tools Program** (open). Converts AffineDrift-relevant
-  analysis tools (Tools repo) into GitHub-Pages-hosted web models with a parity
-  process against the canonical PyQt6 implementations. Workstreams: simulation
-  platform web release, WASM parity upgrade, parity review checklist, candidate
-  tool selection, shared mirror-repo infra, executables track. Cross-refs:
-  D-sorganization/Tools#4103, D-sorganization/UpstreamDrift#8339,
-  D-sorganization/Repository_Management#1387.
-- **#3778 — putting research articles (H4, Tools#4125)** — MERGED (PR #3778,
-  commit ada43cd3). Added `articles/putting-roll-models.qmd` and
-  `articles/green-simulation.qmd`. No longer in flight; kept here as recent
-  context since #3777 references the same putting vertical.
+## Safety Boundaries
 
-## Must-Read Architecture Pointers
-
-1. `AGENTS.md` (repo root) — authoritative agent directives: coding standards,
-   TDD, network/API hygiene, fleet-managed sections (do not hand-edit blocks
-   marked `<!-- BEGIN FLEET-MANAGED -->`; edit the source in
-   Repository_Management/AGENTS.md instead).
-2. `CLAUDE.md` (repo root) — condensed dev-commands + CI-requirements summary;
-   also points at `.gaai/core/GAAI.md` for the GAAI fleet framework.
-3. `SPEC.md` — specification of record; `spec-check.yml` CI requires it be
-   updated alongside changes to `src/`, `tests/`, `config/`, `pyproject.toml`,
-   `Cargo.toml`, `CMakeLists.txt`, `package.json`, or `requirements.txt`
-   (label `spec-exempt` to bypass when genuinely not applicable).
-4. `.github/workflows/ci-standard.yml` — the real quality-gate job list (article
-   content: title case, single-title, display-math, LaTeX quotes/environments,
-   terminology, bibliography, frontmatter, plus Python/JS budgets and tests).
-5. `.github/workflows/deploy-website.yml` — the Pages build/deploy pipeline;
-   its `scripts/check_*.py` steps are the closest thing to "docs governance"
-   but are scoped to `.qmd`/`articles/` content, not root-level markdown.
-
-## In-Flight Branches
-
-- `research/shoulder-velocity-drift-transfer` — active AffineDrift #3817 under
-  UpstreamDrift epic #8551. Adds the 90-case phase-resolved proximal-link
-  velocity study, two matched-velocity counterfactuals, three generated vector
-  figures, explicit braking/power falsifiers, and the Tools #4406 PyQt Drift
-  Transfer workflow. Do not describe the reduced coordinate as anatomical
-  shoulder or thorax velocity. Final evidence pin must use the protected
-  UpstreamDrift merge commit before numerical claims are declared immutable.
-- `research/hand-path-force-attribution-8470` (this branch) — consumer-side
-  schema, validator, tests, pinned evidence, and article/theory integration for
-  epic #8458. Exact upstream pin: `69eb7e9db32ccd17e45824619315b1d04b400c27`.
-- `fix/affine-runner-guard-expression-8426` (this branch) — based on merged
-  PR #3791 at `7b1a06c7`; fixes AffineDrift issue #3792.
-- `docs/agent-handoff-1390` (legacy handoff-policy branch) — stacks on `origin/main`
-  (b2e98ae3). Adds this file and the AGENTS.md policy section. No other
-  branch currently stacks on it.
-- Other open remote branches exist (see `git branch -r`) but none were found
-  stacked on this work; treat each as independent unless its own PR says
-  otherwise.
-
-## Gate Commands (run before pushing)
-
-```bash
-python3 -m ruff check .                               # lint
-python3 -m black --check --line-length 100 .           # format check (Black, not ruff format)
-python3 -m pytest --cov --cov-fail-under=65 --timeout=120   # Python tests, 65% min coverage
-npx jest --coverage                                     # JavaScript tests
-npx playwright test                                     # E2E (needs `npx playwright install` first)
-quarto render                                           # build the site (Quarto 1.6.39 in CI)
-python3 scripts/check_quarto_render_coverage.py
-python3 scripts/check_title_case.py
-python3 scripts/check_single_title.py
-python3 scripts/check_dependency_boundaries.py
-python3 scripts/check_js_dependency_boundaries.py
-python3 scripts/check_module_size_budget.py
-python3 scripts/check_changed_file_size_budget.py
-python3 scripts/check_tech_debt_budget.py
-python3 scripts/check_dry_adoption.py
-```
-
-Full authoritative list: `.github/workflows/ci-standard.yml` (`quality-gate` and
-`tests` jobs) and `.github/workflows/deploy-website.yml` (`build` job, main-only).
-
-## Do-Not List
-
-- Do not edit `docs/` HTML/CSS directly — it is Quarto-generated output; edit
-  `css/` (canonical) and let CI mirror-check `docs/css/`.
-- Do not run `ruff format` in this repo — formatting is Black, 100-char lines.
-- Do not add cross-repo imports — AffineDrift is standalone by design
-  (`AGENTS.md` "Cross-Repo Dependencies").
-- Do not hand-edit `<!-- BEGIN FLEET-MANAGED -->…<!-- END FLEET-MANAGED -->`
-  blocks in `AGENTS.md` — they sync from Repository_Management/AGENTS.md.
-- Do not commit `.codemap/` or `.codemap/index.db` (cache/artifact data).
-- Do not use `git commit --no-verify` / `--push --no-verify` as a routine
-  workaround — see `CLAUDE.md` "Hook bypass policy".
-- Do not change source files without updating `SPEC.md` in the same PR
-  (`spec-check.yml` blocks on staleness; use `spec-exempt` label only when
-  genuinely inapplicable).
-- Do not open PRs as drafts — this epic requires full, ready-for-review PRs.
-- Self-approval is blocked (`block-self-merge.yml`); a PR still needs a
-  human/other-agent review before `gh pr merge --auto` will complete.
-
-## Short-Term Roadmap (ordered)
-
-1. After UpstreamDrift #8470 merges, copy only its compact publication
-   artifacts, pin the full merged SHA and SHA-256 values in
-   `data/proximal_distal_energy_transfer/hand_path_attribution_snapshot.json`,
-   populate the declared tiers/quantities, run
-   `python3 scripts/check_proximal_distal_evidence.py --require-pinned`, render,
-   and visually inspect the article before publishing numerical claims.
-2. Land this handoff-policy PR (Repository_Management#1390) for AffineDrift.
-3. Progress #3777 workstreams: candidate-tool selection and the first formal
-   parity review (Rate of Closure tool, PyQt6 vs web).
-4. Track Tools PR #4119 (consolidated Swing–Impact–Ball-Flight platform) and
-   update the mirror/Pages deployment + article links once it merges.
-5. Begin the WASM parity upgrade to retire interim TS ports (P7 of Tools
-   epic #4103).
-6. Write and apply the per-tool parity review checklist as a repeatable
-   process for future tool releases.
+- Do not infer muscle activation or a coaching prescription from a mechanical
+  counterfactual alone.
+- Do not compare vectors with different units or spaces under DCR.
+- Do not call stitched pointwise samples an integrated trajectory.
+- Do not rewrite existing evidence labels until the underlying diagnostic has
+  been identified and, where necessary, regenerated.

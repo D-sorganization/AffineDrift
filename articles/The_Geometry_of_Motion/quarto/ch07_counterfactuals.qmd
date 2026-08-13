@@ -70,14 +70,14 @@ superposition principle: the passive dynamics are a fixed "background" on which 
 input is superposed.
 
 
-## The Zero Torque Counterfactual (ZTCF)
+## The Zero-Torque Counterfactual (ZTCF) Family
 
 
 ::: {.callout-note}
 
 \label{def:ch7:ZTCF}
-Given a system in state $\x_0$ at time $t_0$, the **Zero Torque Counterfactual**
-(ZTCF) is the trajectory $\x^{(0)}(t)$ obtained by setting $\uvec\equiv 0$ for all
+Given a system in state $\x_0$ at time $t_0$, the **forward Zero-Torque Counterfactual**
+(ZTCF) trajectory is $\x^{(0)}(t)$ obtained by setting the declared applied control $\uvec\equiv 0$ for all
 $t\geq t_0$:
 \begin{equation}
 \dot{\x}^{(0)} = f\!\left(\x^{(0)}\right), \quad \x^{(0)}(t_0) = \x_0.
@@ -88,13 +88,14 @@ This is the integral curve of the drift vector field starting from the current s
 :::
 
 
-The ZTCF answers the question: *What would happen if all active control were
-removed at this instant?*
+The forward ZTCF trajectory answers the question: *What would the declared effective
+plant do if its declared applied-control channel were removed at this instant?* This
+does not imply zero muscle activation or removal of retained passive impedance.
 
 ::: {.callout-important}
 ## Implementation Note: Pointwise vs. Trajectory Semantics
 
-In shipped computational implementations (e.g., `UpstreamDrift` and the applied study [Proximal-to-Distal Energy Transfer](/articles/proximal-distal-energy-transfer.html)), **ZTCF** is evaluated *pointwise* at each sample $(\mathbf{q}, \dot{\mathbf{q}})$ along a trajectory as the instantaneous drift acceleration $\ddot{\mathbf{q}}_{\text{ZTCF}} = f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$, alongside forward-integrated counterfactual rollouts.
+The ZTCF family contains four objects that must not be conflated: a **pointwise ZTCF sample** evaluates drift at one achieved state; a **stitched pointwise ZTCF trace** collects such samples without integrating them; a **forward ZTCF trajectory** integrates drift from a specified initial state; and an **achieved-state branched ZTCF trajectory** switches the declared control to zero at a branch time and integrates from the achieved state. The retained effective-plant terms, loads, contact mode, parameters, and horizon must be declared.
 :::
 
 For a mechanical system with state $\x=(\q,\dot{\q})$, the ZTCF represents the "passive
@@ -145,7 +146,7 @@ this sequence converges uniformly to the unique solution on a sufficiently small
 ::: {.callout-important}
 ## Smoothness of ZTCF
 
-\label{cor:ch7:ztcf-smooth}
+\label{cor:ch7:ZTCF-smooth}
 If $f\in C^k$ (i.e., $f$ is $k$ times continuously differentiable), then the ZTCF trajectory
 $\x^{(0)}(t)$ is also $C^k$ in both $t$ and the initial condition $\x_0$.
 :::
@@ -217,19 +218,19 @@ exactly recovers the active input contribution at each instant.
 
 \label{def:ch7:ZVCF}
 The **Zero Velocity Counterfactual** (ZVCF) evaluates the drift at the current
-configuration $\q$ but with all velocities set to zero:
+configuration $\q$ and declared internal state but with velocity and declared control set to zero:
 \begin{equation}
-a_{\text{ZVCF}} := \left.a_{\text{drift}}\right|_{\dot{\q}=0}
-= -M(\q)^{-1}\vec{g}(\q).
+a_{\text{ZVCF}} := -M(\q)^{-1}h(\q,0,z_0;p),
+\qquad \uvec=0.
 \label{eq:ch7:ZVCF}
 \end{equation}
-This reveals the static baseline: the acceleration due to gravity (and elastic
-preloads) without any velocity-dependent effects.
+This instantaneous evaluation retains configuration-dependent gravity, elastic
+preloads, and other declared loads while excluding velocity-dependent effects.
 
 ::: {.callout-important}
-## Implementation Note: Static Gravity Baseline vs. Applied Torque Formulation
+## Zero-Velocity Control-Preserved Evaluation
 
-Equation \eqref{eq:ch7:ZVCF} defines the ZVCF as the *static gravity baseline* acceleration $a_{\text{grav}}(\mathbf{q}) = -M(\mathbf{q})^{-1}\mathbf{g}(\mathbf{q})$ when all velocities and control inputs are zero. Shipped simulation packages (such as `UpstreamDrift`'s `ztcf_zvcf` module and the [Proximal-to-Distal Energy Transfer](/articles/proximal-distal-energy-transfer.html) study) define the full pointwise zero-velocity acceleration including applied joint torque $\boldsymbol{\tau}$ as $\ddot{\mathbf{q}}_{\text{ZVCF}} = M(\mathbf{q})^{-1}(\boldsymbol{\tau} - \mathbf{g}(\mathbf{q}))$. The static gravity baseline corresponds to the zero-input case $\boldsymbol{\tau}=0$.
+A different diagnostic may evaluate $M(q)^{-1}(u-h(q,0,z_0;p))$ while preserving an applied control. It must be named a **zero-velocity control-preserved evaluation**, not ZVCF. This distinction keeps configuration-dependent drift separate from realized input.
 :::
 
 :::
@@ -327,10 +328,12 @@ For now, we show a schematic table of how the decomposition looks at various sta
 ::: {.callout-note}
 
 \label{def:ch7:DCR}
-At state $\x$ with maximum available input $\uvec_{\max}$, the **drift--control
-ratio** is
+At state $\x$, in a declared acceleration or task-projected space, the **Drift-Control
+Ratio (DCR)** is
 \begin{equation}
-\rho(\x) := \frac{\norm{f(\x)}}{\norm{G(\x)\uvec_{\max}}}.
+\mathrm{DCR}_{W,\mathcal U}(\x) :=
+\frac{\norm{W a_{\mathrm{drift}}(\x)}}
+{\sup_{u\in\mathcal U(\x)}\norm{W B_a(\x)u}+\varepsilon}.
 \label{eq:ch7:DCR}
 \end{equation}
 
@@ -693,7 +696,7 @@ E(\q,\dot{\q}) = T(\q,\dot{\q}) + V(\q).
 Along the ZTCF trajectory $(\q^{(0)}(t), \dot{\q}^{(0)}(t))$, the energy is:
 \begin{equation}
 E_{\text{ZTCF}}(t) = T(\q^{(0)}(t), \dot{\q}^{(0)}(t)) + V(\q^{(0)}(t)).
-\label{eq:ch7:ztcf-energy}
+\label{eq:ch7:ZTCF-energy}
 \end{equation}
 
 
@@ -1114,7 +1117,7 @@ is minimal.
 ::: {.proposition}
 **ZTCF Stability Implies Easy Stabilization**
 
-\label{prop:ch7:ztcf-stability}
+\label{prop:ch7:ZTCF-stability}
 If the ZTCF is exponentially stable (all drift Jacobian eigenvalues in the left half-plane),
 then any feedback law $\uvec = K[\x - \x^*]$ with $K$ sufficiently small will stabilize the
 closed-loop system.

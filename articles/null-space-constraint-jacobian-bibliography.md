@@ -16,7 +16,7 @@
 
 - **Control Theory**
 
-  - **Control-Affine Systems**: Formulating the constrained dynamics as $\dot{x} = f(x) + g(x)u$.
+  - **Control-Affine Systems**: Formulating the constrained dynamics as $\dot{x} = f(x) + G(x)u$.
   - **Drift Vector Field**: The natural evolution of the system (passive dynamics) projected onto the feasible manifold.
   - **Controllability**: The ability to steer the system using available inputs within the null space.
 

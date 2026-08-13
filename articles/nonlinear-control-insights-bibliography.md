@@ -4,9 +4,9 @@
 
 - **Nonlinear Control Foundations**
 
-  - **Affine Systems**: Structure of $\dot{x} = f(x) + g(x)u$.
+  - **Affine Systems**: Structure of $\dot{x} = f(x) + G(x)u$.
   - **Drift Vector Field (**$f(x)$): Passive dynamics as a causal "memory" of the system (inertia + elasticity).
-  - **Input Vector Field (**$g(x)$): State-dependent effectiveness of actuation.
+  - **Input Vector Field (**$G(x)$): State-dependent effectiveness of actuation.
   - **Lie Brackets**: Commutation $[f, g]$ to generate motion in unactuated directions (Sequencing).
 
 - **Geometric Mechanics**

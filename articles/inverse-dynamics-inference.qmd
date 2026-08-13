@@ -19,7 +19,7 @@ But here's the detective's dilemma: imagine you see a car accelerating downhill 
 
 The same problem haunts inverse dynamics in biomechanics. You see the club accelerating. But that acceleration comes from two modeled sources: drift (state-dependent mechanics) and applied input. Classical inverse dynamics gives you a model-consistent net load, not muscle activation, metabolic cost, or conscious intent. A drift/control split can clarify mechanical attribution while leaving those physiological quantities unidentified.
 
-This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) solve the detective's dilemma by separating passive from active contributions.
+This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) family and Zero Velocity Counterfactual (ZVCF) solve the detective's dilemma by separating passive from active contributions.
 
 ## Classical Inverse Dynamics and Its Limitations
 
@@ -227,7 +227,7 @@ The ZTCF and ZVCF framework, while powerful, operates within several constraints
           <h3>The Static Fallacy of ZVCF</h3>
         </div>
         <p class="critic-argument">
-          The Zero Velocity Counterfactual (ZVCF) isolates input forces by holding the state fixed (zero velocity). However, biological actuators (muscles) have intrinsic force-velocity properties (Hill-type mechanics) where force capacity drops significantly with contraction speed. Estimating input contributions based on a static context may grossly misrepresent the actual force-generating capacity of muscles during a high-velocity movement like the golf swing, confusing "theoretical input" with "biologically feasible input."
+          The instantaneous Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent drift by evaluating zero velocity and zero declared control at fixed configuration. It does not isolate input force or estimate biological capacity. Hill-type force--velocity mechanics instead constrain the admissible control set $\mathcal U(x)$; ignoring them can overstate control capacity in a high-velocity movement.
         </p>
         <div class="author-response">
           <strong>Our Response:</strong> This is a valid limitation. The ZVCF isolates the <em>control signal contribution</em> to the generalized force, not the maximal muscular capacity. We assume the control input $u$ enters linearly ($G(x)u$). Future work must integrate muscle dynamics into $f(x)$ so that "drift" includes passive muscle properties, but for rigid-body analysis, ZVCF correctly identifies the component of force attributable to the controller's command at that instant.

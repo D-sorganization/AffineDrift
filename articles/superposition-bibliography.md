@@ -4,7 +4,7 @@
 
 - **Mathematical Foundations**
 
-  - **Control-Affine Systems**: $\dot{x} = f(x) + g(x)u$. Linearity of input mapping.
+  - **Control-Affine Systems**: $\dot{x} = f(x) + G(x)u$. Linearity of input mapping.
   - **Tangent Bundle Geometry**: State $x \in TQ$. Fiber-linearity of the tangent bundle.
   - **Superposition Principle**: Input contributions superpose linearly at a fixed state; trajectories do not.
 

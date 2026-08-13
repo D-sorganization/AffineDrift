@@ -18,7 +18,7 @@ Every swing is the result of two competing forces:
 
 Most golfers think they're creating the swing through muscular effort. In reality, the opposite is closer to the truth: \emph{you're preventing the swing from happening too fast}.
 
-The \textbf{Zero-Torque Counterfactual (ZTCF)} is a thought experiment that isolates the second effect. It asks: \textbf{If I eliminate all the torques my muscles produce, what trajectory does my body follow?}
+The \textbf{forward Zero-Torque Counterfactual (ZTCF) trajectory} is a model intervention. It asks: \textbf{What trajectory follows when the declared applied generalized-control channel is set to zero while the declared effective plant is retained?}
 
 The answer is counterintuitive. The ZTCF trajectory---what would happen if your muscles vanished---explains most of the shape of the downswing. Your muscles spend most of the swing \emph{restraining} the physics, not driving it.
 \end{laymansbox}
@@ -30,17 +30,18 @@ The answer is counterintuitive. The ZTCF trajectory---what would happen if your 
 The concept of analyzing passive motion is foundational in biomechanics. By studying what a system does without active control, researchers can isolate and understand the contribution of passive forces \citep{Nesbit2005, MacKenzie2009}.
 
 \begin{definition}{The Zero-Torque Counterfactual}{ztcf}
-The \textbf{Zero-Torque Counterfactual} is the trajectory $\bm{q}_{\text{ZTCF}}(t)$ obtained by solving the equations of motion from the current state $(\bm{q}(t_0), \dot{\bm{q}}(t_0))$ with all muscle torques set to zero:
+The \textbf{forward Zero-Torque Counterfactual trajectory} is $\bm{q}_{\text{ZTCF}}(t)$ obtained by solving the declared effective-plant equations from the current state $(\bm{q}(t_0), \dot{\bm{q}}(t_0),\bm{z}(t_0))$ with the declared applied generalized control set to zero:
 \begin{equation}
-\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \mathbf{0} \quad \text{with} \quad \bm{u} = \mathbf{0}
+\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}},\bm{z};\bm{p}) = \mathbf{0},
+\qquad \bm{u}(t) \equiv \mathbf{0}
 \label{eq:ztcf_eom}
 \end{equation}
 
-The state evolves from the current configuration and velocities as if the muscles produce no torque whatsoever. No external forces besides gravity are applied; the system is purely passive.
+The retained term $\bm{h}$ must be declared and may include Coriolis/centrifugal effects, gravity, passive joint impedance, shaft dynamics, damping, and modeled contact or constraint reactions. Exogenous loads and contact modes follow the stated protocol. Zero declared control does not imply zero muscle activation, zero co-contraction, or a flaccid body.
 \end{definition}
 
 \begin{laymansbox}{Understanding the ZTCF}{inplain:ztcf_meaning}
-Think of it this way: Imagine you're in the middle of your downswing, and suddenly every muscle in your body freezes and produces zero force. You're not paralyzed—your joints still move because your limbs are swinging. But once frozen, there's no active muscular torque. What happens?
+Think of this as a software intervention rather than a physiological event. At a selected state, the simulator sets the declared applied generalized-control vector to zero while retaining the effective plant and protocol-specified loads. It then evaluates either an instantaneous sample or a forward rollout.
 
 The answer: the system undergoes \emph{passive dynamics}—motion driven purely by gravity, by the momentum already stored in your limbs, and by the couplings between segments.
 
@@ -51,16 +52,16 @@ This is not a realistic scenario. Your muscles are always active. But it's an in
 \item \textbf{Where control is critical} (where ZTCF diverges badly from the actual swing).
 \end{itemize}
 
-If the ZTCF trajectory matches your actual swing, then at that moment, gravity and physics are doing the work, and your muscles can relax. If the ZTCF trajectory diverges wildly, then you must be applying significant active torques to control the motion.
+Agreement with measured motion supports the adequacy of that model and intervention over the tested interval; it does not establish low EMG or relaxation. Divergence can reflect control input, parameter error, omitted forces, contact mismatch, or numerical error.
 \end{laymansbox}
 
 %============================================================================
 \section{The Decomposition: What the ZTCF Reveals}
 \label{sec:ztcf_decomposition}
 
-The fundamental insight is that the total torque at any joint can be decomposed:
+At a fixed state, the acceleration block admits the pointwise decomposition
 \begin{equation}
-\bm{\tau}_{\text{total}} = \bm{\tau}_{\text{ZTCF}} + \bm{\tau}_{\text{input}}
+\bm{a}(\bm{x},\bm{u}) = \bm{a}_{\text{drift}}(\bm{x}) + \bm{B}_{a}(\bm{x})\bm{u}
 \label{eq:torque_decomposition}
 \end{equation}
 
@@ -114,9 +115,11 @@ The fundamental insight is that the total torque at any joint can be decomposed:
 
 where:
 \begin{itemize}
-\item $\bm{\tau}_{\text{ZTCF}}$ is the torque that would arise from passive dynamics (gravity, Coriolis, centrifugal, and constraint forces).
-\item $\bm{\tau}_{\text{input}}$ is the active muscular torque—the \emph{control signal}.
+\item $\bm{a}_{\text{drift}}$ is the acceleration induced by the declared autonomous effective plant.
+\item $\bm{B}_{a}\bm{u}$ is the acceleration induced by the declared applied generalized-control channel.
 \end{itemize}
+
+Calling a drift term a ``ZTCF torque'' is avoided because generalized force and acceleration are different representations. Any force-space decomposition must declare its mass matrix, Jacobian, projection, and constraint treatment.
 
 \begin{principle}{The Control Signal is Not the Total Torque}{principle:control_vs_total}
 Novice biomechanics assumes that what the muscles produce \emph{is} the motion. This is wrong. The muscles produce a \emph{control signal}, an adjustment to the passive dynamics. The actual motion arises from the interplay of both.
@@ -202,35 +205,31 @@ In Simulink, this is literally a switch block in the control signal path, allowi
 \label{sec:zvcf}
 
 \begin{definition}{The Zero-Velocity Counterfactual}{zvcf}
-The \textbf{Zero-Velocity Counterfactual (ZVCF)} is a further decomposition that isolates \emph{configuration-dependent forces}. It is the acceleration that would result from gravity and Coriolis torques if all velocities were set to zero:
+The \textbf{instantaneous Zero-Velocity Counterfactual (ZVCF)} is the zero-velocity, zero-control acceleration at the current configuration and declared internal state. It is an evaluation, not a trajectory:
 \begin{equation}
-\bm{M}(\bm{q})\ddot{\bm{q}}_{\text{ZVCF}} + \bm{g}(\bm{q}) = \mathbf{0}
+\bm{a}_{\text{ZVCF}}(\bm{q},\bm{z};\bm{p})
+=-\bm{M}(\bm{q})^{-1}\bm{h}(\bm{q},\mathbf{0},\bm{z}_0;\bm{p}),
+\qquad \bm{u}=\mathbf{0}
 \label{eq:zvcf_eom}
 \end{equation}
 
-This equation contains only gravity ($\bm{g}$) and the inertial mass matrix. It excludes Coriolis/centrifugal terms, which depend on $\dot{\bm{q}}$.
+In a gravity-only rigid model this reduces to $-\bm{M}^{-1}\bm{g}$. A richer effective plant can retain configuration-dependent elasticity and other protocol-specified loads.
 \end{definition}
 
-\begin{laymansbox}{ZVCF vs ZTCF: What's the Difference?}{inplain:zvcf_vs_ztcf}
-The ZTCF assumes: ``No muscles. Physics takes over.''
+\begin{laymansbox}{ZVCF vs. ZTCF: What's the Difference?}{inplain:zvcf_vs_ztcf}
+The ZTCF sets the declared control channel to zero. A pointwise ZTCF sample retains measured velocity; a forward or branched ZTCF trajectory integrates the resulting autonomous dynamics.
 
-The ZVCF assumes: ``No muscles \emph{and} no momentum. Only gravity acts.''
-
-The ZVCF is even more passive than the ZTCF. It tells you what would happen if you could somehow freeze all motion in the middle of the swing (stopping all rotation) and then release. The system would fall under gravity alone, with no centrifugal whipping.
+The ZVCF evaluates one instantaneous acceleration with both velocity and declared control set to zero. It is not a frozen-and-released trajectory, because the next state would generally have nonzero velocity and cease to satisfy the defining intervention.
 
 This is useful because it isolates a clean decomposition:
 \begin{equation}
-\bm{\tau}_{\text{drift}} = \bm{\tau}_{\text{ZVCF}} + \bm{\tau}_{\text{velocity drift}}
+\bm{a}_{\text{drift}}(\bm{q},\dot{\bm{q}},\bm{z})
+= \bm{a}_{\text{ZVCF}}(\bm{q},\bm{z})
++ \bm{a}_{\text{velocity}}(\bm{q},\dot{\bm{q}},\bm{z})
 \label{eq:drift_decomposition}
 \end{equation}
 
-The total ``drift'' torque (what the system produces passively) is split into:
-\begin{itemize}
-\item \textbf{Gravity-driven (ZVCF):} the torque from gravity acting on the current configuration.
-\item \textbf{Velocity-driven:} the Coriolis and centrifugal effects that arise from the motion itself.
-\end{itemize}
-
-For a golfer, this distinction matters because gravity is always present (and predictable), while Coriolis effects depend on how fast you're moving. A faster downswing creates stronger Coriolis whipping.
+This difference isolates velocity-dependent drift only when both evaluations use identical parameters, internal state, load protocol, and contact mode.
 \end{laymansbox}
 
 %============================================================================
@@ -238,15 +237,15 @@ For a golfer, this distinction matters because gravity is always present (and pr
 \label{sec:dcr_blowup}
 
 \begin{definition}{Drift-Control Ratio (DCR)}{dcr}
-At any time during the swing, the \textbf{Drift-Control Ratio (DCR)} compares modeled drift against bounded modeled control under an explicit norm or weighting. Consistent with Chapter~\ref{ch:05_affine_structure}, use
+At any time during the swing, the \textbf{Drift-Control Ratio (DCR)} compares modeled drift against bounded modeled control in the same acceleration or task-projected space under an explicit norm or weighting. Consistent with Chapter~\ref{ch:05_affine_structure}, use
 \begin{equation}
-\mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
+\mathrm{DCR}_{\bm{W},\mathcal{U}}(\bm{x})
 =
-\frac{\lVert \bm{W}\bm{f}(\bm{x}) \rVert}
-{\max_{\lVert \bm{u}\rVert \le u_{\max}} \lVert \bm{W}\bm{G}(\bm{x})\bm{u} \rVert + \varepsilon},
+\frac{\lVert \bm{W}\bm{a}_{\mathrm{drift}}(\bm{x}) \rVert}
+{\sup_{\bm{u}\in\mathcal{U}(\bm{x})} \lVert \bm{W}\bm{B}_a(\bm{x})\bm{u} \rVert + \varepsilon},
 \label{eq:dcr_definition}
 \end{equation}
-where $\bm{W}$ states which coordinates or acceleration block are being compared, $u_{\max}$ states the admissible torque bound, and $\varepsilon$ prevents division by zero. A single-joint torque ratio is a useful special case only after those modeling choices are fixed.
+where $\bm{W}$ states which coordinates or task directions are compared, $\mathcal{U}(\bm{x})$ is the admissible control set, and $\varepsilon$ is a declared regularizer. A single-joint torque ratio is a useful special case only after those modeling choices are fixed.
 
 When DCR $\approx 1$, modeled drift and bounded control have comparable magnitude under the chosen weighting. When DCR $\gg 1$, modeled drift dominates that comparison; it does not imply that the golfer is passive or that muscle activation is absent.
 \end{definition}

@@ -33,7 +33,7 @@ format:
           We built a digital model of a golfer and club (using a tool called Simulink) to act as a proving ground. It allows us to perform model-based experiments that would be impossible in real life—like instantaneously turning off the simulated driving torques to see what happens.
         </p>
         <div class="analogy">
-          <strong>Analogy:</strong> Before a pilot flies a new plane, they test it in a simulator. We simulate the "crash" scenarios (like the ZTCF) here to ensure the math holds up under stress.
+          <strong>Analogy:</strong> Before a pilot flies a new plane, they test it in a simulator. We simulate the "crash" scenarios (like the ZTCF family) here to ensure the math holds up under stress.
         </div>
       </div>
 
@@ -56,7 +56,7 @@ format:
 ## Novelty Status
 
 - **Established:** Numerical simulation of multibody dynamics (Simulink/MATLAB); validation against analytical solutions.
-- **Novel application:** Implementing the specific control-affine golf swing model numerically; deriving numerical consistency checks for the ZTCF/ZVCF counterfactuals. (Site-wide canonical ZTCF glossary: [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ztcf-canonical).)
+- **Novel application:** Implementing the specific control-affine golf swing model numerically; deriving numerical consistency checks for the ZTCF/ZVCF counterfactuals. (Site-wide canonical ZTCF glossary: [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ZTCF-canonical).)
 - **Status:** The numerical implementations described here support the theoretical results in Parts 1–4; the validation methodology is standard numerical analysis.
 :::
 
@@ -67,7 +67,7 @@ This numerical validation is restricted to planar motion and cannot verify 3D gy
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
-Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, where $f$ encodes drift and $g$ encodes control directions [@isidori1995nonlinear]. The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness [@hairer1996solving]. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.
+Recall the control-affine form $\dot{x} = f(x) + G(x)u$ established in Part 1, where $f$ encodes drift and $G$ encodes control directions [@isidori1995nonlinear]. The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness [@hairer1996solving]. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.
 
 Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ is algebraically exact, its numerical implementation involves subtracting two large, noisy vectors to recover a smaller residual. If the integration of the ZTCF trajectory diverges due to solver tolerances or discrete sampling artifacts, the model-internal attribution becomes numerically unreliable.
 
@@ -166,7 +166,7 @@ The specific numerical algorithms employed to enforce the "kill switches" and co
 
 This appendix documents the numerical procedures used to compute the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) in simulation. The algorithms described here were developed using MATLAB and Simulink [@hairer1996solving] and apply to any multibody system that can be expressed in the control-affine form
 
-$$\dot{x} = f(x) + g(x)u,$$
+$$\dot{x} = f(x) + G(x)u,$$
 
 with inverse dynamics available for evaluating generalized forces from kinematic states and accelerations.
 
@@ -341,7 +341,7 @@ The algorithms in this appendix show how ZTCF and ZVCF are computed numerically 
 
 ## Final Remarks on the AffineDrift Framework
 
-This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part I by constructing the control-affine state space $\dot{x} = f(x) + g(x)u$, proving that the mechanical structure of the golfer--club system inherently separates passive drift from active input. In Part II, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part III validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts IV and V provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.
+This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part I by constructing the control-affine state space $\dot{x} = f(x) + G(x)u$, proving that the mechanical structure of the golfer--club system inherently separates passive drift from active input. In Part II, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part III validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts IV and V provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.
 
 The framework is now complete. It stands as a quantitative mechanical model of the golf swing that admits empirical testing—one that replaces the monolithic "net moment" of inverse dynamics with a causally articulated decomposition of the observed interaction forces. The next phase of this project leaves the page and the simulator to confront the noisy, variable reality of human motion capture.
 

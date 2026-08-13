@@ -87,7 +87,7 @@ format:
           <h3>Input-Dependent Dynamics</h3>
         </div>
         <p class="critic-argument">
-          The Affine Control framework assumes $\dot{x} = f(x) + g(x)u$, where drift $f(x)$ is independent of input. If "Constraint Collapse" means the input $u$ alters the constraint structure (manifold topology), then $f(x)$ becomes $f(x,u)$, violating the **Drift Invariance** assumption required for the Zero Torque Counterfactual (ZTCF) baseline.
+          The Affine Control framework assumes $\dot{x} = f(x) + G(x)u$, where drift $f(x)$ is independent of input. If "Constraint Collapse" means the input $u$ alters the constraint structure (manifold topology), then $f(x)$ becomes $f(x,u)$, violating the **Drift Invariance** assumption required for the Zero Torque Counterfactual (ZTCF) family baseline.
         </p>
         <div class="author-response">
           <strong>Our Response:</strong> This is a critical nuance. We view the high-impedance state as a temporary "Effective Plant." The collapse is a parametric reconfiguration of stiffness within $f(x)$ rather than a topological change. For the short impact duration, the affine approximation holds, but we accept that the ZTCF must be interpreted as a "Parametric Counterfactual" in this regime.
@@ -296,11 +296,11 @@ This timing constraint connects directly to the Drift-Control Ratio analysis: th
 From an affine control perspective:
 
 $$
-\dot{x} = f(x) + g(x)u
+\dot{x} = f(x) + G(x)u
 $$
 
 - The **drift** term $f(x)$ dominates the high-speed motion of the club,
-- The **control** term $g(x)u$ is primarily used to shape constraints, not drive speed.
+- The **control** term $G(x)u$ is primarily used to shape constraints, not drive speed.
 
 Constraint collapse is therefore not about “powering” the club through impact.
 It is about **controlling how drift-generated momentum is delivered**.
@@ -364,7 +364,7 @@ The apparent violation of “drift invariance” (the claim that $f(x)$ is indep
 
 The switched affine model may appear to violate Drift Invariance, because the nervous system (an “input”) selects the impedance regime. We resolve this by distinguishing two types of control authority:
 
-**Continuous control** $u(t)$: Joint torques that enter linearly through $g(x)u$. Drift invariance holds: $\partial f/\partial u \equiv 0$.
+**Continuous control** $u(t)$: Joint torques that enter linearly through $G(x)u$. Drift invariance holds: $\partial f/\partial u \equiv 0$.
 
 **Discrete control** $\sigma(t)$: Impedance regime selection (e.g., compliant vs. stiff). This modifies the plant parameters but does NOT enter through the continuous channel.
 
@@ -441,7 +441,7 @@ Understanding it requires moving beyond kinematics alone—and taking constraint
 ## 12. Synthesis: The AffineDrift Context
 
 **The "Effective Plant" and Drift Invariance**
-This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
+This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($G(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
 
 ::: {.callout-important}
 ## Limitation: The Stiffness Pulse Paradox

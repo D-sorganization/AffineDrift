@@ -61,7 +61,7 @@
 
 \item[Cortical bone] The dense, hard outer layer of bone. Cortical bone is much stiffer (higher elastic modulus) than cancellous (spongy) bone.
 
-\item[DCR] Abbreviation for drift-to-control ratio. The raw textbook usage is the ratio of passive to active torques or, more generally, drift magnitude to control magnitude. In the late downswing, DCR can be much greater than 1.
+\item[DCR] Abbreviation for Drift-Control Ratio. DCR compares modeled drift with bounded modeled control in the same acceleration or task-projected space. A reproducible value declares the weighting matrix and norm, admissible control set, regularizer, effective plant, and state. A ratio using realized input rather than available control capacity is a different, policy-dependent diagnostic.
 
 \item[Normalized drift fraction] A separate normalized quantity, defined as drift / (drift + control), ranging from 0 (pure control) to 1 (pure drift).
 
@@ -73,7 +73,7 @@
 
 \item[Drift] Passive dynamics driven by gravity, inertia, and constraint forces, independent of active muscle control. Drift increases in importance as the swing accelerates, dominating the late downswing.
 
-\item[Drift coefficient ratio (DCR)] See DCR.
+\item[Drift-Control Ratio (DCR)] See DCR.
 
 \item[Drift field] The vector field $f(\state)$ that describes how the state evolves in the absence of control inputs. The drift field encodes gravity, Coriolis forces, elastic restoring forces, and damping.
 
@@ -329,7 +329,7 @@
 
 \item[Natural frequency] The frequency at which a system oscillates freely (without external driving). The natural frequency of a driver shaft's first bending mode is typically about 3--5 Hz ($\omega_n \approx 20$--$30$ rad/s).
 
-\item[Natural motion] The motion a system exhibits in the absence of control inputs. In golf, the natural motion is the ZTCF (zero-torque counterfactual).
+\item[Natural motion] The motion a declared effective plant exhibits after the declared control input is removed. A forward ZTCF trajectory is one precisely specified construction of this motion.
 
 \item[Neuroscience] The scientific study of the nervous system, including the brain, spinal cord, and peripheral nerves. Neuroscience provides insight into how the golf swing is controlled.
 
@@ -843,11 +843,11 @@
 
 \item[Zero] Absence of something. Zero control means drift dominates.
 
-\item[Zero-torque counterfactual (ZTCF)] The trajectory the clubhead would follow if all muscle torques were set to zero. The ZTCF is the autopilot trajectory determined by gravity, inertia, and constraints.
+\item[Zero-Torque Counterfactual (ZTCF) family] Model interventions that set the declared applied generalized-control channel to zero while retaining the declared effective plant and protocol-specified loads. The family contains pointwise samples, stitched pointwise traces, forward trajectories, and achieved-state branched trajectories. Zero declared control does not imply zero muscle activation.
 
 \item[Zone] An area with specific characteristics. The zone of comfort is the range of motion where the body feels stable.
 
-\item[ZVCF] The zero-velocity counterfactual, the trajectory if velocities were set to zero while maintaining position. Related to ZTCF but not identical.
+\item[ZVCF] The instantaneous Zero-Velocity Counterfactual acceleration evaluated at the current configuration and declared internal state with both velocity and declared control set to zero. It is neither a state nor a released trajectory.
 
 \item[Zygapophysial joint] See facet joint. These small joints between vertebrae can be sources of back pain in golfers.
 

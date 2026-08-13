@@ -23,7 +23,7 @@ passive dynamics that expert athletes learn to exploit.
 emerges from the coordination of passive elements — tendons, fascial structures, gravitational
 forces, inertial effects — rather than from active muscular force production."
 
-In mathematical terms: $\dot{\mathbf{x}} = f(\mathbf{x}) + g(\mathbf{x})\mathbf{u}$, and
+In mathematical terms: $\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$, and
 expert performance means $\|\mathbf{u}\| \to 0$ (control effort approaches zero as passive
 dynamics $f(\mathbf{x})$ do the work).
 :::
@@ -172,12 +172,12 @@ multi-segment coupling, not as established fact.
 
 **Control implication:** The effective "control input" to a distal segment is not just
 the locally acting muscles but the integral of forces transmitted through the fascial chain.
-The $g(\mathbf{x})$ matrix in the control-affine model must account for these multi-segment
+The $G(\mathbf{x})$ matrix in the control-affine model must account for these multi-segment
 coupling effects.
 
 ::: {.callout-warning}
 ## Speculative Modeling Choice
-Representing fascial transmission as *off-diagonal entries in* $g(\mathbf{x})$ is a speculative extension, not a settled result. Quantitative calibration of those entries from imaging or dissection data is an open problem. Most of the passivity analysis in the rest of this article treats fascia effects conservatively --- as contributions to the mass and damping matrices $M(\mathbf{q})$ and $D(\mathbf{q}, \dot{\mathbf{q}})$ that enter the drift term $f(\mathbf{x})$, rather than as modifications to the input map $g(\mathbf{x})$. Readers adopting the off-diagonal-$g$ view should regard it as a research hypothesis.
+Representing fascial transmission as *off-diagonal entries in* $G(\mathbf{x})$ is a speculative extension, not a settled result. Quantitative calibration of those entries from imaging or dissection data is an open problem. Most of the passivity analysis in the rest of this article treats fascia effects conservatively --- as contributions to the mass and damping matrices $M(\mathbf{q})$ and $D(\mathbf{q}, \dot{\mathbf{q}})$ that enter the drift term $f(\mathbf{x})$, rather than as modifications to the input map $G(\mathbf{x})$. Readers adopting the off-diagonal-$g$ view should regard it as a research hypothesis.
 :::
 
 
@@ -278,7 +278,7 @@ The "Vol I", "Vol II", etc. references in this table point to chapters in *Geome
 | DoF exploitation | Drift dominance $\rho \gg 1$ | Vol I, Ch 8 |
 | Elastic storage | Spring element in series-elastic model | Vol II, Ch 5 |
 | Differential learning | Noise injection; covariance maintenance | Vol IV, Ch 2 |
-| Fascial transmission | Off-diagonal entries in $g(\mathbf{x})$ | Vol II, Ch 3 |
+| Fascial transmission | Off-diagonal entries in $G(\mathbf{x})$ | Vol II, Ch 3 |
 
 The Bosch framework is not a competitor to the mathematical treatment of *The Geometry
 of Motion* — it is a practitioner's intuition for the same underlying dynamics. The

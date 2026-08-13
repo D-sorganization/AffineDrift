@@ -16,7 +16,7 @@
   - **Geometric Stiffness**: Effects arising from high-speed rotation (centrifugal stiffening).
 
 - **Control Theory**
-  - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$.
+  - **Control-Affine Form**: $\dot{x} = f(x) + G(x)u$.
   - **Drift Invariance**: The property that $f(x)$ encapsulates all passive dynamics (gravity, elasticity, Coriolis) and is independent of $u$.
   - **Underactuation**: The condition where the dimension of inputs $u$ is less than the dimension of the configuration space (due to the passive shaft).
   - **Input-Output Decoupling**: Separation of active torque effects from passive drift.
@@ -237,7 +237,7 @@
 
 ### Path 1: Fast Ramp (The Theoretical Basics)
 
-_Target: Understand the equation $\dot{x} = f(x) + g(x)u$ and where it comes from._
+_Target: Understand the equation $\dot{x} = f(x) + G(x)u$ and where it comes from._
 
 1.  **Spong, Hutchinson, Vidyasagar (2005)** - _Robot Modeling and Control_. Best starting point for Lagrangian dynamics.
 2.  **Slotine & Li (1991)** - _Applied Nonlinear Control_. Explains the control-affine structure.

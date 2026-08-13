@@ -1,6 +1,6 @@
 ---
-title: "A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing"
-description: "Analysis of the drift-to-control ratio in golf swings using control theory, multibody dynamics, and relativistic analogies to understand passive dynamics exploitation."
+title: "A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift-Control Ratio in the Golf Swing"
+description: "Analysis of the drift-control ratio in golf swings using control theory, multibody dynamics, and relativistic analogies to understand passive dynamics exploitation."
 author:
   - name: "Dieter Olson"
     affiliations: "Affine Golf Swing Analysis Project"
@@ -19,10 +19,12 @@ format:
 
 # Abstract
 
-High-speed golf swings represent nonlinear biomechanical systems in which passive dynamics (drift) increasingly dominate over active torques (control) as angular velocities rise. We formalize this phenomenon using the **Drift–Control Ratio (DCR)**,
+High-speed golf swings represent nonlinear biomechanical systems in which passive dynamics (drift) increasingly dominate over active torques (control) as angular velocities rise. We formalize this phenomenon using the **Drift-Control Ratio (DCR)**,
 
 $$
-\mathrm{DCR}(t)=\frac{\|f(x(t))\|}{\|g(x(t))u(t)\|},
+\mathrm{DCR}_{W,\mathcal U}(x)=
+\frac{\|W a_{\mathrm{drift}}(x)\|}
+{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|+\varepsilon},
 $$
 
 Within the simplified planar model used here, example calculations suggest that DCR can increase by more than two orders of magnitude from the top of the backswing to impact. The resulting interpretation is a model-bounded loss of **gross path authority** during the downswing, not a direct empirical measurement of every golfer.
@@ -127,7 +129,7 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
           <h3>Stiffness vs. Torque</h3>
         </div>
         <p class="critic-argument">
-          The affine model $\dot{x} = f(x) + g(x)u$ treats control purely as torque ($u$). Critics argue that skilled golfers modulate **Mechanical Impedance** (stiffness/damping) to reject disturbances without active feedback. By stiffening the wrists ("Effective Plant"), the golfer can maintain control even when DCR suggests torque authority is lost.
+          The affine model $\dot{x} = f(x) + G(x)u$ treats control purely as torque ($u$). Critics argue that skilled golfers modulate **Mechanical Impedance** (stiffness/damping) to reject disturbances without active feedback. By stiffening the wrists ("Effective Plant"), the golfer can maintain control even when DCR suggests torque authority is lost.
         </p>
         <div class="author-response">
           <strong>Our Response:</strong> Stiffness is a critical stabilization mechanism, but it is energetically passive. It can reject small perturbations around a trajectory, but it cannot perform **net work** to redirect a massive ballistic object onto a new path. In this model, adding effective-plant stiffness does not remove the high-DCR regime; the extent to which that holds for real golfers requires subject-specific measurement.
@@ -149,7 +151,7 @@ Elite golfers routinely generate clubhead speeds exceeding $45\;\mathrm{m/s}$, w
 
 This mirrors a common theme in high-speed movement: **the system transitions from control-dominated to drift-dominated dynamics** as velocity increases.
 
-Building on the foundational framework established in *Affine Control Interpretation of the Golf Swing*, we analyze this transition not as a vague loss of coordination, but as a precise algebraic consequence of the equation of motion $\dot{x} = f(x) + g(x)u$. While the primary manuscript focused on *decomposing* these forces to identify causality, this article focuses on their *relative magnitude* to quantify controllability.
+Building on the foundational framework established in *Affine Control Interpretation of the Golf Swing*, we analyze this transition not as a vague loss of coordination, but as a precise algebraic consequence of the equation of motion $\dot{x} = f(x) + G(x)u$. While the primary manuscript focused on *decomposing* these forces to identify causality, this article focuses on their *relative magnitude* to quantify controllability.
 
 Our goal is to provide a model-bounded treatment of this phenomenon through:
 
@@ -218,7 +220,7 @@ $$
 and the control term is:
 
 $$
-g(x)u=
+G(x)u=
 \begin{bmatrix}
 0 \\
 M^{-1}\tau
@@ -247,23 +249,23 @@ $$
 Contrast with:
 
 $$
-\|g(x)u\| = \|M^{-1}\tau\| \sim \|\tau\|.
+\|G(x)u\| = \|M^{-1}\tau\| \sim \|\tau\|.
 $$
 
 The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.
 
 The full state-space norm $\|f(x)\|$ is dimensionally heterogeneous, so this scaling argument applies only to the acceleration block $a_{\text{drift}}(x)$.
 
-This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in Part 3 of the framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces ($\tau_{\text{config}}$) and the velocity-dependent Coriolis/centripetal forces ($\tau_{\text{vel.\,drift}}$). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) can become large relative to the "Current Agency" available through $g(x)u$. In this model, that scaling supports the early-delivery interpretation used by the ZTCF baseline, but it does not by itself prove a universal coaching rule.
+This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in Part 3 of the framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces ($\tau_{\text{config}}$) and the velocity-dependent Coriolis/centripetal forces ($\tau_{\text{vel.\,drift}}$). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) can become large relative to the "Current Agency" available through $G(x)u$. In this model, that scaling supports the early-delivery interpretation used by the ZTCF family baseline, but it does not by itself prove a universal coaching rule.
 
 ::: {.callout-note}
 ## Scope Limitation: Planar vs. Axial Dynamics
 It is critical to note that this planar model ($q \in \mathbb{R}^3$) captures the transport mechanics of the swing (path velocity) but excludes the axial rotation of the shaft (supination/pronation). As discussed in @sec-anisotropy, this implies our DCR analysis strictly governs **path controllability**, while **face controllability** operates in an orthogonal, lower-inertia subspace.
 :::
 
-# 3. Drift–Control Ratio (DCR)
+# 3. Drift-Control Ratio (DCR)
 
-We define the Drift–Control Ratio (DCR) as the ratio of the magnitude of the drift vector field to the control vector field.
+We define the Drift-Control Ratio (DCR) as the ratio of modeled drift to bounded modeled control capacity in the same declared acceleration or task-projected space.
 
 ::: {.callout-important}
 ## Dimensional Consistency Note
@@ -273,37 +275,38 @@ A naïve application of the Euclidean norm to the full state vector drift $\|f(x
 ::: {.callout-important}
 ## Canonical DCR Definition (Site-Wide)
 
-Across this website the **canonical** Drift–Control Ratio is the **state-dependent, inertia-weighted** ratio
+Across this website the canonical Drift-Control Ratio is
 $$
-\boxed{\;\mathrm{DCR}(x) \;:=\; \frac{\|f_{acc}(x)\|_{M(q)}}{\|G_{acc}(x)\,u_{\max}\,\mathbf{1}\|_{M(q)}}\;}
+\boxed{\;\mathrm{DCR}_{W,\mathcal U}(x) \;:=\;
+\frac{\|W a_{\mathrm{drift}}(x)\|}
+{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|+\varepsilon}\;}
 $$
-with the **mass-weighted (kinetic-energy) norm**
-$$
-\|v\|_{M(q)} \;:=\; \sqrt{v^\top M(q) v}.
-$$
-The denominator uses the **saturation torque vector** $u_{\max}\mathbf{1}$ (or, coordinate-wise, $u_{\max,i}$), i.e. the *available* physiological authority, not the instantaneous $u(t)$. This makes DCR a property of the state $x$ and the plant, not of the particular control policy in use. (The form below that uses $\|\tau(t)\|$ is a *policy-dependent* companion quantity; track both but report the canonical form first.) Alternative norms (Euclidean, $\infty$-norm) are mentioned in @sec-norms below; they are **not canonical**. Matches the definition in [Theory Part I](theory-part1.html) and the glossary in [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ztcf-canonical).
+where $a_{\mathrm{drift}}$ and $B_a u$ are expressed in the same acceleration space, $W$ selects and weights the reported coordinates or task directions, $\mathcal U(x)$ is the admissible control set, and $\varepsilon$ is a declared regularizer. A mass-weighted norm, Euclidean norm, or task projection is permitted only when reported explicitly. The denominator is available capacity, not the instantaneous policy realization. DCR is therefore conditional on the state, effective plant, projection, norm, and capacity model. The normative definition is maintained in the [Mathematical Notation Reference](/pages/notation.html).
 :::
 
 $$
-\mathrm{DCR}(t)
+\mathrm{DIR}_{W}(t)
 =
-\frac{\|f_{acc}(x(t))\|}{\|g_{acc}(x(t))u(t)\|}
+\frac{\|W a_{\mathrm{drift}}(x(t))\|}
+{\|W B_a(x(t))u(t)\|+\varepsilon}
 \approx
-\frac{\|M^{-1}(C\dot{q} + G)\|}{\|M^{-1}\tau\|}
+\frac{\|M^{-1}(C\dot{q} + g)\|}{\|M^{-1}\tau\|}
 $$
+
+This policy-dependent **drift-to-realized-input ratio** (DIR) describes what a controller actually did. It is not DCR and does not measure remaining capacity.
 
 Using approximations where drift forces scale quadratically with velocity ($C\dot{q} \sim \dot{q}^2$):
 
 $$
 \|f_{acc}\| \sim b\|\dot{q}\|^2,\quad
-\|g_{acc} u\| \sim c\|\tau\|,
+\|G_{acc} u\| \sim c\|\tau\|,
 $$
 
 we have:
 
 $$
 \boxed{
-\mathrm{DCR}(t)
+\mathrm{DIR}_{W}(t)
 \approx
 \frac{b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
 }
@@ -313,9 +316,9 @@ If available torque decreases during peak velocity because of force-velocity con
 
 **Estimated result (planar model):**
 $$
-\mathrm{DCR}(t) \text{ increases by approximately } 100\times-300\times \text{ across the downswing.}
+\mathrm{DIR}_{W}(t) \text{ increases by approximately } 100\times-300\times \text{ across the downswing.}
 $$
-*(This estimate is derived from the planar model above with typical parameter values; empirical validation against instrumented swing data is needed.)*
+*(This policy-dependent estimate is derived from the planar model above with typical parameter values; it is not a DCR capacity estimate, and empirical validation against instrumented swing data is needed.)*
 
 ### Dimensional Analysis and Norm Dependence {#sec-norms}
 
@@ -335,7 +338,7 @@ But alternative norms yield numerically different DCR values:
 
 A system with DCR$_2 = 47.3$ might have DCR$_\infty = 89.2$ or DCR$_M = 12.1$. The absolute numbers depend on the measuring stick.
 
-#### Monotonic Growth Is Norm-Independent (The Core Invariance)
+#### Proposed Monotonic Growth Across Norms
 
 Here is the key insight: while the numerical value of DCR depends on the norm, the *direction and magnitude of change* does not.
 
@@ -372,7 +375,7 @@ For practice:
 ::: {.callout-warning}
 ## Cross-Joint Comparison Caveat
 
-DCR values for different degrees of freedom (e.g., shoulder rotation vs. wrist flexion) are **not directly comparable** without normalization. Rotational DOFs (rad/s²) and translational DOFs (m/s²) have different physical units; even within the rotational subspace, joints with different inertias will exhibit different DCR magnitudes for identical mechanical situations. The inertia-weighted norm $\|f_{acc}\|_M$ partially addresses this by weighting by $M(q)$, but comparisons across subsystems should still be interpreted cautiously. DCR is most reliable as a **within-DOF, temporal** measure (tracking how a single DOF's drift-to-control ratio evolves over the swing) rather than as a cross-DOF comparison.
+DCR values for different degrees of freedom (e.g., shoulder rotation vs. wrist flexion) are **not directly comparable** without normalization. Rotational DOFs (rad/s²) and translational DOFs (m/s²) have different physical units; even within the rotational subspace, joints with different inertias will exhibit different DCR magnitudes for identical mechanical situations. The inertia-weighted norm $\|f_{acc}\|_M$ partially addresses this by weighting by $M(q)$, but comparisons across subsystems should still be interpreted cautiously. DCR is most reliable as a **within-DOF, temporal** measure (tracking how a single DOF's drift-control ratio evolves over the swing) rather than as a cross-DOF comparison.
 :::
 
 ---
@@ -386,10 +389,10 @@ While the 3-link model is technically **holonomic** and fully actuated (assuming
 Consider the **Control Hamiltonian** representing the maximum rate of change along a costate vector $p$:
 
 $$
-H(x,p) = \sup_{u \in \mathcal{U}} p^T(f(x) + g(x)u).
+H(x,p) = \sup_{u \in \mathcal{U}} p^T(f(x) + G(x)u).
 $$
 
-As velocity increases, the "Drift Component" $p^T f(x)$ scales quadratically ($\sim \dot{q}^2$), while the "Control Component" $p^T g(x) u$ remains bounded by physiological torque limits ($u_{\text{max}}$).
+As velocity increases, the "Drift Component" $p^T f(x)$ scales quadratically ($\sim \dot{q}^2$), while the "Control Component" $p^T G(x) u$ remains bounded by physiological torque limits ($u_{\text{max}}$).
 
 ## 4.1 The Anisotropy of Control Authority
 
@@ -456,7 +459,7 @@ Events outside $\mathcal{C}^+(p)$ are unreachable.
 For a control system:
 
 $$
-\dot{x}=f(x)+g(x)u
+\dot{x}=f(x)+G(x)u
 $$
 
 the **reachable set** over time $t$ from $x_0$ is:
@@ -505,7 +508,7 @@ $$
 \mathcal{V}(x)
 =
 \mathrm{span}\left\{
-g(x),\; \mathrm{Ad}_{e^{tf}} g,\;
+G(x),\; \mathrm{Ad}_{e^{tf}} g,\;
 \mathrm{Ad}_{e^{tf}}[f,g], \dots
 \right\}.
 $$
@@ -709,7 +712,7 @@ To place this analysis within the broader AffineDrift framework:
     *   **Torque Saturation**: The DCR analysis assumes physiological limits on $\tau$, treating the golfer as an underactuated system during the ballistic phase.
 
 2.  **Cross-References**:
-    *   **The Drifter Manifesto**: For the foundational derivation of the affine form $\dot{x} = f(x) + g(x)u$.
+    *   **The Drifter Manifesto**: For the foundational derivation of the affine form $\dot{x} = f(x) + G(x)u$.
     *   **Theory Part 3 (Force Taxonomy)**: For the detailed breakdown of the drift components (Inertial, Coriolis, Centripetal) that drive the DCR explosion.
     *   **Intentional Constraint Collapse**: For the mechanism by which golfers "pre-shape" the control cone to manage the high-drift impact interval.
     *   **Zero Torque Counterfactual (ZTCF)**: For the baseline trajectory that represents the infinite-DCR limit.

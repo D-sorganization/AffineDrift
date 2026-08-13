@@ -5,7 +5,7 @@
 - **Theoretical Foundations**
 
   - **Drift Invariance**: The property where passive dynamics ($f(x)$) are independent of control inputs ($u$).
-  - **Affine Control Systems**: Systems linear in control input ($\dot{x} = f(x) + g(x)u$).
+  - **Affine Control Systems**: Systems linear in control input ($\dot{x} = f(x) + G(x)u$).
   - **Geometric Control**: Analyzing dynamics via vector fields on manifolds.
 
 - **Force Taxonomy (Causal Decomposition)**
@@ -324,7 +324,7 @@ _Target: Understand why "drift" matters in swinging mechanics._
 
 _Target: The advanced math of affine systems and geometric control._
 
-1.  **Bullo & Lewis (2004)** - _Geometric Control of Mechanical Systems_. The definitive reference for the $\dot{x} = f(x) + g(x)u$ structure on manifolds.
+1.  **Bullo & Lewis (2004)** - _Geometric Control of Mechanical Systems_. The definitive reference for the $\dot{x} = f(x) + G(x)u$ structure on manifolds.
 2.  **Khalil (2002)** - _Nonlinear Systems_. Standard tools for analyzing stability and properties of these systems.
 3.  **Bloch (2003)** - _Nonholonomic Mechanics and Control_. Advanced mechanics if we consider more complex constraints.
 4.  **Murray, Li, Sastry (1994)** - _Mathematical Introduction to Robotic Manipulation_. Essential for the geometric view of rigid body motion.

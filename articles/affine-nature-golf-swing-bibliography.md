@@ -5,7 +5,7 @@
 - **System Modeling**
 
   - **Multibody Dynamics**: Modeling the golfer as a kinematic chain of rigid bodies.
-  - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$. Separating dynamics into drift (passive) and input (active) vector fields.
+  - **Control-Affine Form**: $\dot{x} = f(x) + G(x)u$. Separating dynamics into drift (passive) and input (active) vector fields.
   - **Drift Invariance**: The property that passive dynamics $f(x)$ are independent of instantaneous torque inputs $u$.
   - **Flexible Multibody Dynamics**: Modeling the shaft using Assumed Modes Method (AMM) within the rigid-body framework.
 
