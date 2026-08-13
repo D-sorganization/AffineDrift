@@ -142,6 +142,20 @@ def test_check_links_integration(tmp_path: Path) -> None:
     assert link == "missing.html"
 
 
+def test_check_links_resolves_links_from_the_including_quarto_document(tmp_path: Path) -> None:
+    """Included chapter links use the master document's source directory."""
+    article = tmp_path / "articles"
+    chapter = article / "chapters" / "chapter.qmd"
+    figure = article / "figures" / "plot.svg"
+    chapter.parent.mkdir(parents=True)
+    figure.parent.mkdir(parents=True)
+    figure.write_text("<svg/>", encoding="utf-8")
+    chapter.write_text("![Plot](figures/plot.svg)", encoding="utf-8")
+    (article / "book.qmd").write_text("{{< include chapters/chapter.qmd >}}", encoding="utf-8")
+
+    assert check_links(str(tmp_path)) == []
+
+
 def test_check_links_handles_read_errors(tmp_path: Path) -> None:
     """Ensure scanner survives file read errors."""
     (tmp_path / "unreadable.qmd").write_text("content", encoding="utf-8")

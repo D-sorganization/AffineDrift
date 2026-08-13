@@ -1,0 +1,268 @@
+# Two Hands Make One Visible Wrench {#sec-lay-ch12}
+
+## A Concrete Picture
+
+Turn a steering wheel by pushing down with one hand and pulling up with the
+other. The two forces can nearly cancel as a net force on the wheel's center,
+yet together they create a clear turning effect. Now squeeze the wheel equally
+from both sides. The internal load in your hands rises while the wheel's motion
+may not change at all.
+
+Two hands on a golf grip create the same distinction. The club responds to the
+combined **wrench**: net force plus net moment about a chosen point. The arms and
+wrists may experience very different individual forces while producing the same
+club wrench. Club motion alone cannot reveal the hidden allocation.
+
+![Equal and Opposite Hand Forces Produce a Turning Couple Whose Magnitude Grows With Grip Separation.](figures/proximal_distal_companion/fig_companion_two_hand_couple.svg){#fig-lay-two-hand-couple width=96% fig-alt="Two grip diagrams show equal and opposite hand forces at narrow and wide separations, with the wider separation producing a larger turning couple despite zero resultant force."}
+
+## How the Mechanism Works
+
+Let hand forces be $\mathbf F_L$ and $\mathbf F_R$ at positions
+$\mathbf r_L$ and $\mathbf r_R$ relative to club reference $O$. Include direct
+hand or wrist moments $\mathbf M_L$ and $\mathbf M_R$. The equivalent club wrench
+is
+
+$$
+\mathbf F_O=\mathbf F_L+\mathbf F_R,
+$$
+
+$$
+\mathbf M_O=\mathbf M_L+\mathbf M_R+
+\mathbf r_L\times\mathbf F_L+
+\mathbf r_R\times\mathbf F_R.
+$$
+
+The club-level equations need this combined wrench. They do not uniquely need
+the four individual terms. Many allocations can produce the same sum.
+
+### Common and Differential Modes
+
+It is helpful to reorganize the hand forces into a common mode and a differential
+mode. The common mode resembles their average and largely determines resultant
+force. The differential mode resembles half their difference and can create a
+couple or internal squeeze.
+
+If we add $+\boldsymbol\eta$ to one hand and
+$-\boldsymbol\eta$ to the other, resultant force stays unchanged. Depending on
+contact geometry, moment may change or remain unchanged along certain null-space
+directions. This is the mathematical source of hidden internal loading.
+
+### A Wrench Is Observable; Allocation May Not Be
+
+If club motion and inertia are known well enough, inverse dynamics can estimate
+the net external wrench required. It cannot decide whether a moment came from a
+direct wrist couple or separated hand forces unless contact is measured or an
+allocation criterion is imposed.
+
+A minimum-norm allocation is a reproducible mathematical choice. It is not a
+measurement of how a golfer used the arms. A muscle-effort optimization is still
+model-dependent. Instrumented grips with force and moment sensing provide the
+most direct route to individual hand wrenches.
+
+### Internal Force Can Matter Without Moving the Club
+
+Hidden squeeze may change grip stability, friction margin, joint compression,
+muscle activation, and effective stiffness. It can increase biological cost
+while leaving club-level work nearly unchanged. Conversely, a low-squeeze
+allocation may demand larger direct wrist moment. There is no single internal
+metric called “effort” that settles the trade.
+
+This is why the technical article refuses to infer scapular recruitment from a
+club couple. A proximal generalized-torque subspace can be labeled and tested in
+the model, but the mapping to muscles, scapular motion, and hand pressure is not
+unique.
+
+### Action-Reaction Must Close
+
+The force each hand applies to the club has an equal and opposite club force on
+the hand. A two-hand forward model solves both arms and club under closure
+constraints. The summed contact wrench on the club must equal the negative of
+the wrench returned to the body side after consistent transformation. Power and
+energy residuals provide further checks.
+
+The spatial cross-engine test implements paired compliant contacts independently
+in MuJoCo and Pinocchio. Agreement on the common observables is stronger than
+repeating one code path, but it still validates a reduced mechanism rather than
+human anatomy.
+
+### Why Two Hands Can Create Negative Coupling
+
+Near the late downswing, hand reactions need not be parallel. Their separated
+swing-normal components can produce a net couple whose sign opposes club rotation.
+This negative couple may coexist with positive club kinetic-energy growth because
+other powers and inertial terms remain. The model asks where the couple comes
+from geometrically and whether it survives forward integration.
+
+Coincident-contact and reversed-moment-arm controls are decisive. Collapse the
+hand separation and the force-generated couple vanishes. Reverse the moment arms
+and its sign reverses. Those predictions distinguish a geometric mechanism from
+a plot-label artifact.
+
+**Model Result:** The two-hand reconstructions close equivalent wrenches while
+revealing nonunique internal modes. A reduced spatial forward test retains a
+negative swing-normal contact couple for a declared late interval and passes the
+geometry controls.
+
+**Human Evidence:** Bilateral grip sensors have demonstrated that individual
+forces can be measured, but the present model results are not measurements from
+golfers [@koike2020; @koike2016].
+
+**Hypothesis:** Opposed arm-chain actions can generate a useful club couple while
+wrists supply resistance or impedance, but only synchronized bilateral wrench
+and biological measurements can test that allocation.
+
+**Practical Interpretation:** The club can feel one net push and twist while the
+two hands experience a much richer internal negotiation.
+
+### From Two Contacts to One Club Load
+
+Each hand can apply three force components and three moment components at its
+contact reference frame. Transform both six-dimensional wrenches to one club
+frame, including the moment created by each position offset, then add them. The
+resultant club wrench determines rigid-body acceleration together with gravity,
+aerodynamics, shaft forces, and inertia. This sum is observable in principle,
+but its split between hands is not determined by club motion alone.
+
+In a planar simplification, the arithmetic is easier: two two-dimensional forces
+at separated points create a net force and an out-of-plane moment. Even there,
+multiple pairs yield the same resultant. Adding equal and opposite force to the
+two hands changes internal loading while leaving net force unchanged; depending
+on direction, it can change the couple. In three dimensions the unobservable
+allocation space is larger.
+
+### Common and Differential Modes
+
+Write each hand force as a common component plus or minus a differential
+component. The common mode tends to dominate net force. The differential mode
+often dominates the pure couple. This coordinate change does not claim the
+nervous system controls those modes explicitly. It is a clean way to see which
+parts of bilateral loading are visible at the club and which can cancel.
+
+The distinction also clarifies “push--pull.” Equal opposition is not required.
+One hand may supply a larger force, both may point partly in the same direction,
+and contact moments may matter. A measured push in grip-local coordinates can
+coexist with a laboratory-frame component that looks like a pull. The complete
+wrench should replace verbal labels wherever data permit.
+
+### How a Negative Couple Can Emerge
+
+Near impact, proximal motion, club inertia, grip constraints, and contact
+geometry determine the reactions required at the hands. A differential force
+component acting through hand separation may project onto the swing-plane
+normal with negative sign even when neither hand is commanded with an explicit
+negative club torque. In a model this is a passive interaction contribution:
+it follows from state, drivers, and constraints.
+
+That statement is narrower than “the scapulae passively torque the club.” The
+generalized drivers can stand for many body actions. Reconstructing a negative
+contact couple does not uniquely map it to shoulder-girdle motion, wrist action,
+or muscle activation. The model supplies an observable prediction for bilateral
+wrenches; anatomy remains a separate inference problem.
+
+### A Worked Wrench Example
+
+Let the hands be separated by 0.20 metres. Suppose they apply opposite 50-newton
+forces perpendicular to that separation. Net force is zero and couple magnitude
+is 10 newton-metres. Add a 100-newton common force and net force becomes 200
+newtons while the ideal differential couple remains 10 newton-metres. If
+separation drops to 0.10 metres, the same opposing forces make 5 newton-metres.
+
+Real force vectors are not perfectly perpendicular, contact points are
+distributed, and hand moments may contribute. The arithmetic nonetheless gives
+testable dependencies: couple scales with perpendicular separation and force;
+reversing either reverses sign; collapsing either collapses the couple. A model
+or measurement pipeline should pass those controls exactly within tolerance.
+
+### Matching the Club Task, Varying the Allocation
+
+To compare arm-dominant and wrist-dominant strategies fairly, first specify a
+club-level task: perhaps the same net wrench history or a set of terminal club
+states. Solve for distinct internal allocations that meet it. Then compare
+joint demands, individual hand power, co-contraction proxy, transmission state,
+peak load, and sensitivity. The matched task prevents one strategy from “winning”
+merely because it was asked to produce a larger club moment.
+
+Next relax the task and optimize performance under common constraints. This
+second experiment asks whether internal freedom can improve speed or robustness.
+Keeping matched-task and optimized comparisons separate avoids confusing
+mechanical equivalence with performance preference.
+
+### What Bilateral Sensors Add
+
+Separate six-axis grip sensors directly constrain each contact wrench. Pressure
+mapping can reveal distributed contact and shifts in effective application point.
+Shaft strain helps close the club load balance. Synchronized motion supplies
+velocities for contact power and transforms sensor axes to club and laboratory
+frames. Force plates and body motion support whole-system closure.
+
+Calibration needs known loads, crosstalk characterization, thermal drift checks,
+and frame registration. Grip modification can itself change behavior, so the
+instrumented club should be compared with a standard club. Uncertainty in hand
+position and sensor orientation should propagate to couple sign and magnitude.
+
+### Internal Force Is Not Wasted Force
+
+An equal-and-opposite hand mode may cancel at the club's center-of-mass force
+balance while increasing grip compression, joint load, or stiffness. It may
+help stabilize the clubface or may be needless co-contraction. Net club motion
+cannot decide. Outcomes and internal-load measurements are required.
+
+This is where the question of “slack” becomes scientific. If continuous
+bilateral loading reduces a measurable force-development delay or perturbation
+response time without excessive internal cost, preload has operational value.
+If the same club task occurs with no gap or robustness difference, the proposed
+benefit is unsupported. A feeling of connection is not yet a measured state.
+
+### Minimum Evidence for a Human Claim
+
+The model prediction should specify phase, frame, couple sign, magnitude range,
+geometry dependence, and competing explanations. A human test should measure
+bilateral wrench, motion, shaft response, and relevant activation, with
+participant-held-out analysis. Only then can researchers ask whether a modeled
+contact mechanism is commonly used, individually variable, or absent. Until
+then, it remains a falsifiable mechanical hypothesis—not a prescription.
+
+### Reader Lab: Explore the Hidden Mode
+
+Start with one pair of hand forces that produces a target club wrench. Add a
+small vector to one hand and subtract it from the other. Recompute the resultant.
+Depending on the vector and hand separation, net force stays fixed while moment
+changes. Add compensating contact moments so the full target wrench is restored.
+You have constructed a distinct internal allocation with identical rigid club
+loading.
+
+Repeat while minimizing different costs: total force squared, peak wrist moment,
+lead-hand load, or deviation from a measured pressure pattern. Each criterion
+selects a different solution. This makes the role of regularization visible.
+Without bilateral measurement, none should be called the observed allocation.
+
+Now add simulated sensor noise and contact-position uncertainty. Estimate the
+confidence interval on swing-normal couple and on each hand's contribution. A
+negative mean with an interval spanning zero is not firm evidence of sign. The
+lab links elementary wrench geometry to realistic qualification.
+
+### How This Guides Product Design
+
+The software should display net wrench and the family of compatible allocations
+when individual forces are unavailable. When bilateral data exist, it should
+show measured allocation with uncertainty and closure residual. Any optimized
+allocation should be labeled as a model solution with its cost function.
+
+This prevents the interface from converting hidden assumptions into anatomical
+facts. It also makes the tool useful for experiment design: users can see which
+sensor or manipulation would shrink the ambiguity most.
+
+## Where the Picture Breaks
+
+The steering wheel is rigid, symmetric, and fixed to one axis. A golf grip moves
+in space, the shaft bends, wrist axes rotate, pressure is distributed, and both
+arms attach to a moving body. Two point contacts are a reduction.
+
+The common/differential transformation also does not identify comfort or intent.
+The same internal wrench can arise from different muscles and co-contraction.
+Technique claims need participant-level evidence.
+
+**Go Deeper:** Read the complete
+[two-hand wrench mechanics](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
+the [forward constrained model](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
+and the instrumented-grip literature [@koike2020; @koike2016].

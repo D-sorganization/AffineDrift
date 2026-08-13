@@ -1,0 +1,307 @@
+# Design an Experiment That Can Say No {#sec-lay-ch26}
+
+## A Concrete Picture
+
+A good smoke alarm is tested with smoke, with clean air, with a weak battery, and
+with a blocked sensor. A demonstration that rings only when the manufacturer
+presses a hidden button proves little. Scientific tests should likewise include
+conditions where the proposed mechanism predicts absence, reversal, or failure.
+
+The proximal-distal hypotheses are valuable only if measurements can count
+against them. This chapter turns the model's attractive pictures into a protocol
+that can say no.
+
+![A Falsification Map Connects Each Mechanism Claim to Required Measurements, Negative Controls, and a Predeclared Failure Condition.](figures/proximal_distal_companion/fig_companion_falsification_map.svg){#fig-lay-falsification-map width=98% fig-alt="A flow map connects interaction-force, negative-couple, preload, and robustness claims to synchronized measurements, negative controls, and explicit outcomes that would falsify each claim."}
+
+## How the Mechanism Works
+
+Preregistration freezes primary hypotheses, outcomes, windows, exclusions,
+filtering, coordinate conventions, and analyses before outcome inspection. It
+does not guarantee truth; it prevents the test from quietly changing to fit the
+data.
+
+### Synchronized Measurements
+
+The protocol calls for whole-body and club kinematics, separate ground-reaction
+wrenches, bilateral six-axis grip wrenches and pressure, shaft strain or
+deformation, launch outcomes, and forearm/shoulder/scapular EMG. Shared timing is
+essential because millisecond phase differences are part of the mechanism.
+
+### Calibration Before Interpretation
+
+Force sensors need zeroing, axis checks, and reference transforms. Motion and
+force coordinate systems must be registered. Club and body inertias need
+uncertainty. Known-load trials and action-reaction checks reveal sign or scale
+errors before a biological narrative is attached.
+
+### Filtering and Residual Gates
+
+Differentiating marker positions amplifies noise. Filtering force and motion with
+incompatible cutoffs creates artificial phase shifts. The protocol freezes
+methods and checks inverse-dynamics residual force and moment. Trials failing
+closure are not used to support a mechanism.
+
+### Primary Falsifiers
+
+The interaction-force claim is weakened if measured force direction, power, and
+counterfactual predictions do not match. The two-hand couple claim fails if
+bilateral wrenches lack the predicted late sign or geometry dependence. The
+preload claim fails if role reversal produces no measurable force/stiffness gap
+or if any advantage persists after gap-related variables are equalized. The
+robust-control claim fails if held-out participants do not preserve the declared
+tradeoff.
+
+### Negative Controls
+
+Hardware or task manipulations should alter grip separation, shaft properties,
+or load direction within safe limits. Analysis controls scramble event timing,
+reverse sign conventions, or use impossible reference transforms to confirm the
+pipeline rejects them. Synthetic dry runs test code paths but never count as
+human outcomes.
+
+### Participant Holdout and Hierarchy
+
+Repeated swings from one person are not independent people. Training and test
+splits occur at participant level. Hierarchical models report individual and
+population variation. A mechanism may be supported for a subgroup without
+becoming universal.
+
+### Identity and Governance
+
+Human data require consent, privacy, controlled access, provenance, and an
+identity-safe analysis plan. Session or row order must not be used to infer
+player identity. Public releases can contain deidentified derived observables and
+qualified synthetic examples while raw authority remains governed.
+
+**Hypothesis:** The predicted force-couple, preload, and timing signatures will
+survive preregistered participant-held-out testing.
+
+**Human Evidence:** No such complete dataset has yet been analyzed by this
+project. The protocol and synthetic dry run establish readiness, not evidence.
+
+**Practical Interpretation:** The strongest version of a claim names the result
+that would make its authors change their minds.
+
+### Turn Each Mechanism Into a Prediction Table
+
+For every claim, list the model rung, intervention, primary observable, expected
+sign or ordering, uncertainty window, negative control, and failure condition.
+The table should distinguish direct measurement from derived quantity. This
+prevents a broad theory from retreating to a different outcome whenever one
+prediction fails.
+
+For interaction-force transfer, predict hand-force direction, acceleration
+contribution, and forward persistence. For the negative couple, predict bilateral
+wrench projection and geometry response. For preload, predict force-rise or
+stiffness mediation. For robustness, predict held-out distributions rather than
+one optimum.
+
+### Phase One: Bench and Instrument Qualification
+
+Before recruiting participants, calibrate force plates, grip sensors, pressure
+mapping, shaft strain, motion system, and timing hardware with known loads and
+motions. Characterize crosstalk, drift, hysteresis, range, orientation, latency,
+and repeatability. Verify action--reaction and wrench transforms on a rigid test
+fixture.
+
+Run synthetic and hardware-in-the-loop signals through the complete pipeline.
+Intentionally swap axes, shift time, and exceed ranges to confirm gates fail.
+Qualification records belong in the release and should be tied to hardware and
+software versions.
+
+### Phase Two: Feasibility and Manipulation Checks
+
+Use a small pilot to test comfort, sensor durability, event synchronization, and
+whether bounded instructions or equipment changes alter the intended mediator.
+Pilot outcomes do not confirm the primary hypothesis. They refine protocol and
+effect-size uncertainty before preregistration.
+
+If an “arm-dominant” instruction does not change measured allocation, comparing
+its club speed with a “wrist-dominant” label is meaningless. Manipulation checks
+use bilateral wrench and activation/stiffness observables, not participant
+self-report alone.
+
+### Phase Three: Confirmatory Study
+
+Freeze inclusion, exclusion, conditions, randomization, primary windows,
+outcomes, model versions, filters, transforms, residual gates, and statistical
+analysis. Power the study at participant level. Separate discovery and holdout
+participants and prevent identity leakage across splits.
+
+Randomize condition order and allow familiarization. Blind data processing to
+condition where possible. Track adverse or uncomfortable trials. Preserve raw
+authority and generate deidentified derived releases under consent and governance.
+
+### Phase Four: External Replication
+
+An independent group should receive the protocol, schemas, calibration fixtures
+or specifications, analysis container, and preregistered predictions. Replication
+with different hardware and participants tests whether findings belong to the
+mechanism rather than one laboratory pipeline.
+
+Discrepancies should be decomposed by measurement, population, model, and
+intervention. A multi-lab result need not be identical to be informative; it
+should make heterogeneity explicit.
+
+### A Negative-Control Catalog
+
+Geometric controls reverse hand positions or force directions and collapse
+separation. Temporal controls shift or scramble event alignment. Computational
+controls remove dead zone, shaft flexibility, or selected drivers. Sensor
+controls apply known loads and impossible transforms. Statistical controls test
+null data and label permutation.
+
+Each control has an expected failure signature. If the pipeline still reports a
+negative couple after separation is mathematically zero, stop. If shuffled
+timing produces the same mediation result, timing evidence is not specific.
+
+### Primary Analysis for the Two Extremes
+
+Compare continuous arm-dominant and role-reversed wrist-dominant families only
+after confirming measured allocation differs. Primary endpoints might include
+transition force-gap duration, effective stiffness, late swing-normal couple,
+club speed, and a face/path variability metric. Internal load and discomfort are
+safety outcomes.
+
+Use hierarchical models with participant-specific effects. Test whether preload
+metrics mediate outcome differences. Report the full distribution and
+participants whose response reverses. Avoid declaring one universal strategy if
+heterogeneity is substantial.
+
+### Analysis of Slack
+
+Predefine literal contact loss, near-zero differential load, force-development
+delay, and low stiffness as separate variables. Choose thresholds from sensor
+qualification or physiology, not outcome inspection. Report duration and phase,
+not only whether a gap occurred.
+
+Test whether each variable predicts or mediates speed, control, and load after
+accounting for initial state. A finding that a brief low-load interval is common
+and beneficial would directly challenge a simplistic “never allow slack” claim.
+
+### Model-to-Data Comparison
+
+Do not fit every parameter to each trial and then call the fitted trajectory a
+prediction. Estimate permissible calibration parameters on training trials,
+freeze them, and predict held-out wrench, strain, and motion time series. Use
+absolute errors, phase errors, sign accuracy, energy residuals, and coverage of
+prediction intervals.
+
+Inspect residual structure. A consistent out-of-plane error suggests missing
+spatial dynamics; a timing-dependent shaft residual suggests missing modal
+physics; participant-specific force errors suggest allocation variability. Model
+revision follows a declared version and new holdout.
+
+### Decision Rules
+
+Support is graded. A mechanism can pass geometry controls but fail human sign
+prediction; preload can alter stiffness but not performance; robustness can hold
+for a subgroup. Record each result separately. Do not collapse them into one
+“validated” label.
+
+Predeclare what triggers rejection, narrowing, or redesign. A confidence
+interval crossing a practical threshold may mean inconclusive rather than no
+effect. Repeated confirmatory failure should demote the claim in the public
+evidence register.
+
+### Publication Regardless of Outcome
+
+Register the study and commit to releasing qualified results whether supportive,
+null, or contradictory. Provide code, schemas, calibration, deviations, and
+limitations. Privacy-preserving data access can retain raw authority while
+sharing derived evidence and verification hashes.
+
+An open resource earns trust when a negative result improves it. The model,
+figures, and lay explanation should update together so obsolete claims do not
+survive in an attractive PDF.
+
+### Reader Lab: Write the Failure Sentence First
+
+Before analysis, complete this sentence for each primary claim: “We will narrow
+or reject the claim if ___ is observed under ___ qualified conditions.” Include
+effect direction, uncertainty, mediator, and negative controls. Post it with the
+registration and analysis commit.
+
+Then create synthetic data representing support, null effect, sign reversal,
+sensor failure, and participant heterogeneity. Run the frozen pipeline and check
+that it produces the intended decisions without crashing or silently excluding
+unfavorable cases. Synthetic success qualifies analysis logic, not the mechanism.
+
+After real data arrive, publish the registered result and deviations before
+exploratory refinements. If the primary claim fails but a subgroup pattern
+appears, label it exploratory and design a new held-out test. This sequence keeps
+failure scientifically productive.
+
+### Choosing a Minimal First Human Study
+
+The full synchronized protocol is ambitious. A first decisive study could focus
+on the bilateral negative-couple prediction with instrumented grip, club motion,
+and shaft strain, plus bounded grip-separation or geometry manipulation. It
+would not identify scapular strategy, but it could refute a central contact
+mechanism.
+
+A second study could add transition stiffness and EMG to compare preload
+allocations. Staging reduces burden while preserving clear qualification. Each
+study should be designed around a discriminator rather than accumulating sensors
+without a primary question.
+
+### Stopping Rules and Governance
+
+Define hardware-failure, discomfort, fatigue, and data-quality stopping rules.
+Record adverse events and protocol deviations. Protect participant identity and
+keep consent scope attached to every derived release. Scientific openness does
+not authorize disclosure of raw private data.
+
+These controls belong inside the epic and evidence manifest, not in an appendix
+read only after collection. They make the proposed falsification program
+operational and responsible.
+
+### A Public Completion Checklist
+
+Before calling an experiment ready, verify qualified hardware, frozen protocol,
+registered analysis, synthetic failure cases, participant-level power, identity
+and consent controls, calibrated time and frames, residual thresholds, adverse-
+event rules, and an outcome-independent publication plan. Each item links to an
+artifact and owner.
+
+After collection, verify provenance, exclusions, code version, blinded primary
+result, deviations, uncertainty, and negative controls before interpretation.
+After publication, connect evidence status back to model and lay text. Completion
+is a closed trace, not only a paper submission.
+
+### If the Central Claim Fails
+
+A failed negative-couple prediction would redirect attention to other contact,
+shaft, or control pathways. A failed preload mediation would remove justification
+for interpreting continuous loading through the dead-zone mechanism. A failed
+held-out policy would narrow optimization claims. None invalidates the general
+use of state, energy, and counterfactual analysis.
+
+Writing these consequences in advance makes the theory genuinely revisable. It
+also reassures reviewers that the open resource is designed to learn rather
+than to sell a predetermined answer.
+
+### Chapter Checkpoint
+
+The experimental program is credible when a reader can locate the registered
+prediction, calibration, data-quality gates, analysis, result, and consequence
+for the model. Every central mechanism has a feasible negative control and a
+result that changes its status.
+
+This standard prevents “future work” from becoming an indefinite shield. Even a
+staged study can close one important uncertainty if it chooses a decisive
+observable and preserves qualification.
+
+## Where the Picture Breaks
+
+The smoke alarm has a known target. Human strategies adapt to instrumentation
+and instructions. A manipulation intended to change preload may also change
+comfort, intent, or path. Manipulation checks and mediation analysis are needed.
+
+Preregistration cannot rescue poor measurement or an underspecified model.
+Exploratory findings remain useful when labeled and independently replicated.
+
+**Go Deeper:** Read the complete
+[experimental falsification protocol](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06e_experimental_protocol.qmd),
+the [model-falsification matrix](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/MODEL_COMPLETION_FALSIFICATION_MATRIX.md),
+and the [open qualification boundary](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).

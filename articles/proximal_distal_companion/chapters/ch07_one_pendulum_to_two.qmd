@@ -1,0 +1,255 @@
+# From One Pendulum to Two {#sec-lay-ch07}
+
+## A Concrete Picture
+
+A single playground swing has one dominant rhythm. Add a loose second link at
+the seat and the motion changes character. The outer link can trail, fold,
+accelerate relative to the first, and feed reactions back into it. There is no
+moment when the first link acts alone and then politely hands control to the
+second. Both influence one another throughout.
+
+The golf double pendulum replaces the inner link with an arm-like segment and
+the outer link with a club-like segment. It is deliberately spare. That is its
+strength: it is the smallest familiar model that contains changing geometry,
+inertial coupling, interaction force, relative-angle retention, and distal
+release.
+
+![Three Snapshots Show the Club First Carried by the Arm, Then Reoriented, Then Accelerated Relative to the Moving Hand.](figures/proximal_distal_companion/fig_companion_carry_then_handoff.svg){#fig-lay-carry-handoff width=100% fig-alt="Three double-pendulum snapshots labeled carry, reorient, and handoff show the arm moving the hand while the club changes from lagged to rapidly rotating relative to the arm."}
+
+## How the Mechanism Works
+
+Let $q_1$ describe the arm angle and $q_2$ the club angle. The equations have the
+standard multibody form
+
+$$\mathbf M(\mathbf q)\ddot{\mathbf q}+\mathbf h(\mathbf q,\dot{\mathbf q})
+=\boldsymbol\tau.$$
+
+The diagonal mass-matrix terms resemble each link's own inertia. The off-diagonal
+terms couple them. $\mathbf h$ collects gravity and velocity-dependent effects.
+Even with zero direct club torque, shoulder torque and the moving state can
+produce club angular acceleration because $\mathbf M^{-1}$ is generally not
+diagonal.
+
+### Carrying Is Not Wasted Motion
+
+Early in many downswing patterns, the arm and club rotate more nearly together
+while the wrist angle remains relatively closed. The hand translates rapidly,
+and the club's center of mass gains motion even before large relative club
+rotation. Calling this only “holding lag” misses the transport: the distal body
+is being carried by a moving base.
+
+As geometry changes, coupling can favor rapid relative rotation. The club's
+angular speed about the hand then rises and adds to hand velocity at the
+clubhead. The visible release is not energy appearing at the wrist. It is the
+outcome of earlier work, current geometry, interaction forces, direct torque,
+gravity, and possibly shaft storage.
+
+### Relative Angle Changes the Coupling
+
+When links are nearly aligned, their combined effective inertia and moment arms
+differ from when they form a right angle. The same shoulder torque can produce
+different club acceleration at those configurations. Velocity-dependent terms
+also grow with angular speed. A late release window emerges from the moving
+state, not from a universal clock time.
+
+This helps explain why early positive wrist torque can be an inefficient tool in
+some optimized double-pendulum studies. It opens the relative angle before the
+system reaches a geometry where distal rotation produces a large clubhead-speed
+benefit. The result is model- and objective-dependent, but the mechanism is
+clear enough to test.
+
+### The Club Pushes Back
+
+Action-reaction runs both ways. Accelerating the arm affects the club, and the
+club's inertia affects shoulder and wrist reactions. As the club swings outward,
+it can slow the arm or demand additional proximal torque. A description that
+calls the club “passive” must not imply it is dynamically invisible.
+
+The wrist reaction contains radial and tangential components. Radial force keeps
+the club attached to the moving hand and supports curved motion. Tangential
+force contributes more directly to angular acceleration about the hand. Their
+signs and powers change through the downswing.
+
+### A Limiting-Case Test
+
+If the club mass tends toward zero, its reaction on the arm should vanish. If
+the club length tends toward zero, its distal leverage disappears. If the links
+are decoupled, off-diagonal mass terms vanish and proximal torque no longer
+accelerates the club coordinate through inertial coupling. These limiting cases
+are more than classroom exercises; they are implementation tests.
+
+Likewise, setting direct wrist torque to zero does not freeze the wrist angle.
+The unactuated coordinate can move because coupling and gravity remain. An
+underactuated system is not an unmoving system.
+
+### Why the Model Remains Valuable
+
+A model earns its place by isolating a mechanism, not by resembling every
+surface detail. The double pendulum lets us compute exact pointwise contributions,
+integrate counterfactual branches, close work-energy balances, and sweep timing
+without the identifiability burden of hundreds of muscles. If a proposed
+mechanism fails here, adding anatomical detail will not rescue its simplest
+claim. If it succeeds, higher tiers must test whether it survives added degrees
+of freedom and measured constraints.
+
+**Model Result:** The declared double-pendulum schedules reproduce a familiar
+finding: late distal torque can improve club speed, while early drive can reduce
+the favorable release window. Zero-torque branches still show substantial
+coupled club motion.
+
+**Human Evidence:** The model's arm and club coordinates are abstractions. Human
+golfers show multi-planar shoulder, elbow, forearm, wrist, trunk, and lower-body
+  motion. The double pendulum is not an anatomical fit, although it has a long
+  and useful history as a mechanism model [@jorgensen1999; @sharp2009;
+  @mcphee2022].
+
+**Practical Interpretation:** The club can be carried before it spins rapidly
+relative to the hands. Delayed visible release need not mean delayed energy
+input; it may reflect when stored and transported energy becomes distal speed.
+
+### Building the Model One Assumption at a Time
+
+The single pendulum begins with one angle, angular velocity, inertia, gravity,
+and perhaps a driving torque. It already teaches an essential lesson: torque,
+acceleration, and velocity are different. The same torque produces different
+acceleration as inertia or configuration changes, and speed reflects everything
+that happened earlier.
+
+Add a second link and the state doubles. The club angle can be absolute or
+relative to the arm; either convention works if equations and signs are
+consistent. Kinetic energy now contains cross terms because both coordinate
+rates contribute to distal-mass motion. Those terms change with the angle
+between links. The club therefore responds even when its own applied torque is
+zero.
+
+The fixed base is deliberate. It makes coupling visible without pelvis
+translation, balance, or ground contact. Lengths, masses, centers of mass, and
+inertias are declared rather than inferred from one golfer. The model's value
+comes from traceable causal experiments, not from looking anatomically complete.
+
+### A Slow-Motion Downswing
+
+At downswing start, proximal torque accelerates the first link. The club
+initially lags because inertia and geometry resist immediate relative rotation.
+The wrist connection transmits force, so the club is already moving through
+space before a large release. This carried motion is lost if the swing is
+described only by the club's relative angle.
+
+As arm angular velocity increases, velocity-dependent interaction terms grow.
+Changing arm--club angle changes effective coupling. Later, relative club
+rotation can accelerate rapidly. Depending on schedule, distal torque can add
+positive work, regulate release, or temporarily oppose it. There is no single
+instant at which stored energy is handed over like an object; mechanisms
+overlap.
+
+Near impact, available time is short. A command with a physiological or actuator
+rise time may arrive too late even if its ideal step version looks effective.
+An earlier command can alter geometry so as to reduce later transfer. Preferred
+onset in this model is consequently a state-and-dynamics problem, not simply “as
+early as possible” or “as late as possible.”
+
+### Tests That Make a Toy Model Useful
+
+The mass matrix should remain symmetric and positive definite across the tested
+range. Zero-input conservative trials should maintain mechanical energy within
+declared numerical tolerance. Reducing timestep should converge outcomes.
+Independent formulations—for example Lagrangian and constrained Cartesian or
+spatial implementations—should agree. Known limiting cases should be recovered
+when a mass, link, or coupling is removed.
+
+Then come causal controls. At matched state, remove proximal torque, remove
+distal torque, set velocities to zero for a pointwise velocity counterfactual,
+reverse relevant geometry, and integrate killswitch branches. If the claimed
+interaction survives only one plotting convention or one solver, it cannot
+support a broader argument.
+
+### What Carries Into Higher-Order Models
+
+An exact numerical optimum rarely survives. A signed mechanism can: proximal
+acceleration changes distal reaction; geometry changes its projection; a late
+opposing moment can coexist with later speed benefit; and force allocation can
+be hidden by a net wrench. These become invariants to test on a moving base, in
+three dimensions, with shaft flexibility, and under two-hand constraints.
+
+This ladder avoids opposite mistakes. One is rejecting a simple model because
+it lacks anatomy even though it isolates a real mechanism. The other is treating
+that mechanism as proof of a human strategy. Each rung asks which conclusion
+remains and which was an artifact of earlier assumptions.
+
+### A Reader's Replication Exercise
+
+Choose one parameter set and torque schedule. Record the complete initial state,
+coordinate definitions, solver, timestep, tolerances, and output window.
+Reproduce baseline, then halve timestep. Set distal torque to zero only at a
+copied state and compare instantaneous acceleration with a short forward branch.
+Finally perturb mass and length. If the sign changes easily, the honest result
+is a sensitivity map rather than a law.
+
+### Reader Lab: Discover Coupling Yourself
+
+Begin with both links hanging and zero velocity. Apply a brief proximal pulse
+while distal torque stays zero. Plot both angles, speeds, wrist reaction, and
+energies. Repeat with the club initially aligned, lagged, and partly released.
+The distal response changes because geometry changes even though its motor input
+does not.
+
+Next copy one moving state and set all torques to zero. The links continue and
+exchange energy under inertia and gravity. Set velocities to zero in a separate
+pointwise calculation while retaining angles. The difference isolates the
+velocity-dependent part at that instant. Do not forward-integrate the artificial
+zero-velocity state as though a golfer stopped instantaneously; it is an
+attribution construct.
+
+Finally, sweep distal-torque onset and amplitude. Plot a surface rather than one
+best trace. Add finite rise time and mass uncertainty. Mark regions where speed
+improves, where face/path proxy degrades, and where the result reverses. The
+exercise turns “delayed release” from a slogan into a conditional map.
+
+### The Most Important Limiting Cases
+
+If distal mass tends to zero, its reaction on the arm should diminish. If the
+second link length tends to zero, the model approaches a different one-link
+inertia. If both links lock, they behave like one compound rigid body. If gravity
+is removed and no work enters, energy should remain constant. If initial
+velocity and inputs are zero, nothing should spontaneously accelerate except
+under gravity. These checks are simple enough that failure cannot be excused by
+biological complexity.
+
+### What a Lay Reader Can Safely Carry Forward
+
+The useful insight is that distal motion depends on the entire linked state, not
+only distal effort. Early proximal motion can create conditions for rapid later
+club motion, and direct distal action can regulate that evolution. The model
+does not tell a golfer which muscle to activate or prove one delay is ideal. It
+teaches what measurements and counterfactuals a stronger model must preserve.
+
+### A Bridge to the Rest of the Book
+
+The remaining models do not discard the double pendulum. They ask whether its
+coupling story survives separated hands, a moving base, spatial motion, and a
+flexible shaft. Whenever a later result looks complicated, returning to the
+two-link state, force, power, and counterfactual definitions provides a useful
+check. Complexity should enrich the mechanism without changing the meanings of
+its basic observables.
+
+The checkpoint is simple: if a claim cannot be reproduced in the transparent
+two-link benchmark when that benchmark contains the claimed ingredients, debug
+it before adding anatomy.
+
+## Where the Picture Breaks
+
+The two-link picture encourages the “whip” metaphor. A whip is flexible,
+distributed, and driven through waves; a rigid double pendulum has discrete
+links and joints. Both show distal speed amplification, but the mechanisms are
+not identical. Golf shafts are flexible enough to matter yet far from cloth
+whips.
+
+The model also collapses two arms and two wrists into one connection, fixes a
+plane, and often prescribes the proximal base. It cannot identify scapular
+muscle action, grip-force allocation, clubface control, or injury load. These
+questions require later tiers.
+
+**Go Deeper:** Read the monograph's
+[double-pendulum mechanics](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch02_mechanics.qmd),
+[numerical mechanism audit](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
+and Putnam's linked-segment synthesis [@putnam1993].

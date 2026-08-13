@@ -1,0 +1,250 @@
+# The State Is the Complete Snapshot {#sec-lay-ch03}
+
+## A Concrete Picture
+
+Two photographs can look identical and conceal opposite futures. In the first,
+a playground swing has reached its highest point and is about to fall. In the
+second, it is moving upward through the same angle and is about to slow. The
+seat, chains, and child occupy nearly the same places in both photographs. Yet
+one moment leads downward and the other upward because velocity is missing from
+the picture.
+
+Now imagine two bows held in the same visible shape. One bowstring has been
+drawn and carries elastic tension; the other is a decorative loose cord. Their
+geometry can match while their stored energy differs. Or imagine two muscles at
+the same joint angle: one is activated and stiff, the other relaxed. Position
+alone again fails to tell us what happens after a disturbance.
+
+A useful dynamics model gathers everything it needs to continue the motion into
+a **state**. For a rigid double pendulum, the state may consist of two angles and
+two angular velocities. For a flexible club, it also includes shaft deflection
+and deflection rate. For a delayed actuator, it may include internal command or
+activation state. For a contact model with preload, it includes the current
+interface deformation. The complete snapshot is more than a pose.
+
+![Configuration, Velocity, and Stored Internal Variables Join to Form the State Needed to Predict What Happens Next.](figures/proximal_distal_companion/fig_companion_state_snapshot.svg){#fig-lay-state-snapshot width=94% fig-alt="Three boxes labeled configuration, velocity, and stored internal state feed a single present-state box, showing why a pose alone cannot determine the future of a moving flexible system."}
+
+## How the Mechanism Works
+
+The formal state is commonly written $\mathbf x$. For a two-link planar model,
+one convenient choice is
+
+$$
+\mathbf x = [q_1, q_2, \dot q_1, \dot q_2]^\mathsf T,
+$$
+
+where $q_1$ and $q_2$ describe configuration and the dotted variables describe
+angular velocity. The equations of motion define a rule
+
+$$
+\dot{\mathbf x}=f(\mathbf x,\mathbf u,t),
+$$
+
+which says: given the present state, the present control $\mathbf u$, and any
+explicit time dependence, compute the rate at which the state changes. A
+numerical integrator advances that rule through many small steps.
+
+The word *state* has a strict purpose. If two simulations begin with the same
+state and receive the same future inputs under the same deterministic model,
+they should produce the same future. If an omitted variable allows two different
+futures, the declared state was incomplete for that model. This is why a shaft
+angle without its angular rate is insufficient, and why an interface position
+without its stored preload may be insufficient.
+
+### Configuration Is More Than a Photograph
+
+Configuration describes where the modeled bodies are within their allowed
+geometry. In a planar double pendulum, two angles may be enough. In a spatial
+golfer model, configuration can include pelvis position and orientation, spinal
+and shoulder rotations, elbow and wrist coordinates, club pose, and perhaps
+shaft modes. Rotations require care because three-dimensional orientation is not
+just three independent slider positions. Different angle sequences can describe
+the same physical orientation, and some parameterizations contain singularities.
+
+Configuration also determines mechanical advantage. The mass matrix, moment
+arms, constraint Jacobian, gravity direction, and mapping from joint torques to
+club acceleration all change with posture. The same torque vector applied at
+two configurations can produce different accelerations. State-dependent
+geometry is therefore not scenery around the mechanism; it is part of the
+mechanism.
+
+### Velocity Gives the Snapshot a Direction
+
+Velocity tells how configuration is changing. It carries both magnitude and
+direction. Two systems at the same pose with opposite velocities have different
+momentum, different convective forces, different power at their interfaces, and
+different short-term futures. In linked rotational systems, products of angular
+velocities create Coriolis and centrifugal contributions. Those terms can be
+large late in a swing even if the active torque is small.
+
+Velocity is also needed to evaluate power. A $100$-newton force at a stationary
+point delivers zero instantaneous translational power. The same force at a point
+moving $5$ metres per second in its direction delivers $500$ watts. Reverse the
+velocity and the power is $-500$ watts. Force without velocity cannot tell the
+energy story.
+
+### Stored Variables Carry History Into the Present
+
+Rigid-body coordinates and velocities are not always enough. A flexible shaft
+has modal displacement and velocity. A series-elastic actuator may have tendon
+stretch. A first-order activation model has a state that lags its neural command.
+A contact dead zone has a current deflection that decides whether the interface
+is engaged. These variables are **history summarized**: they contain just enough
+of the past to determine how the model continues.
+
+This matters directly to the proposed preload mechanism. If one simulation
+begins the downswing with an arm and wrist transmission channel already loaded,
+while another begins with both channels relaxed, those are not the same state.
+Comparing their futures cannot isolate the effect of a new command alone. The
+technical study therefore added a finite preparation interval beginning from
+zero internal deflection. It let both strategies build their own internal state
+and then carried that state continuously across the transition. No hidden reset
+was allowed.
+
+### State and Input Must Not Be Confused
+
+An input is something the model treats as externally prescribed for the future:
+a joint torque command, a desired actuator level, or a measured base trajectory.
+A state is something the model evolves. The distinction can change between
+model tiers. A prescribed hand path is an input to an inverse-dynamics model;
+the same hand path becomes an outcome in a forward model where joint torques are
+inputs. A prescribed pelvis motion can hide the reaction of the club on the
+body; a moving-base forward model lets that feedback alter the state.
+
+This difference explains why two models can answer different questions even if
+they draw the same stick figure. An inverse model asks what forces are compatible
+with measured motion. A forward model asks what motion results from forces and
+an initial state. Neither is automatically superior. They have different
+estimands and different opportunities for circular reasoning.
+
+### A Matched-State Intervention
+
+Suppose we want to ask what the current shoulder torque contributes to club
+acceleration. One useful experiment freezes the state at an instant and solves
+the acceleration twice: once with the recorded torque and once with that torque
+set to zero. Because configuration and velocity match exactly, the acceleration
+difference is an instantaneous control contribution under the model. This is a
+pointwise counterfactual.
+
+If we then integrate the zero-torque branch forward, its state begins to diverge.
+After a few milliseconds, force and power differences include both the missing
+torque and the changed trajectory it caused. That forward counterfactual answers
+a persistence question rather than a pure instantaneous attribution question.
+Both are legitimate if their state contracts are stated.
+
+### Phase Labels Are Functions of State
+
+Golf language uses phases such as transition, early downswing, delivery, and
+impact. A clock time alone may not align these phases across people or model
+runs. One swing reaches a club angle sooner; another has a different peak hand
+speed. Event-based analysis defines phase landmarks from state: a zero crossing,
+an angle, a velocity peak, or the first valid impact condition. This can make
+comparisons more meaningful, but event definitions must be frozen before looking
+at outcomes or they become another adjustable explanation.
+
+**Model Result:** The matched-state and continuous-preparation studies preserve
+the complete declared state at their intervention boundaries. Their differences
+therefore have a narrower interpretation than comparisons between unrelated
+full swings.
+
+**Human Evidence:** Motion capture estimates configuration and velocity, but
+soft-tissue artifact, differentiation noise, and unmeasured internal states
+limit state reconstruction. Shaft strain, grip pressure, EMG, and ultrasound can
+add pieces; none alone produces a complete biological state [@mcphee2022].
+
+**Hypothesis:** A golfer may use backswing loading and early-downswing motion to
+arrive at a state from which interaction dynamics assist late club acceleration.
+That is a state-arrangement hypothesis, not merely a claim about waiting a fixed
+number of milliseconds.
+
+**Practical Interpretation:** A pose is the cover of the book, not the page you
+are on. To understand what comes next, ask how everything is moving and what
+internal elements are already loaded.
+
+### Three Identical Pictures With Different Futures
+
+Picture three model snapshots in which the arm and club have exactly the same
+angles. In the first, both links are almost still. In the second, the arm is
+rotating rapidly while the club lags. In the third, the arm is slowing while the
+club is already releasing. A photograph cannot distinguish them, but the mass-
+matrix and velocity-dependent terms immediately can. If all applied torques are
+removed for the next few milliseconds, the three systems follow different
+paths because their velocities differ.
+
+Now give the club a flexible shaft. The grip and clubhead may occupy the same
+visible positions in two trials while the shaft bends in opposite modal phases.
+One is poised to return energy in the swing direction; the other may initially
+absorb it. Add muscle activation and short-range stiffness, and two outwardly
+similar states can also resist perturbation differently. “Same position” is
+therefore far weaker than “same state.”
+
+### Why Matched-State Comparisons Are Powerful
+
+Suppose we want to know what a wrist torque contributes at time $t^*$. Comparing
+two ordinary swings that happen to pass through similar poses is inconclusive:
+their velocities, shaft states, and previous controls may differ. A matched-
+state intervention takes one simulated state at $t^*$, copies it, changes only
+the selected input, and integrates both copies. The initial difference is then
+known exactly. The trajectories diverge because of the intervention and its
+later interactions with the dynamics.
+
+This is the forward counterpart to a pointwise decomposition. The pointwise
+question asks what acceleration contribution exists at the copied instant. The
+forward question asks whether that local contribution matters after the system
+evolves. A component can be large and fleeting, or small and persistent. Both
+tests are needed because a late golf downswing provides little time for a local
+effect to accumulate.
+
+### State-Based Timing Versus Clock-Based Timing
+
+A command issued 120 milliseconds before impact is not necessarily equivalent
+across golfers or clubs. One system may already have a small arm--club angle and
+high relative speed; another may still be carried with substantial lag. A state-
+based rule might instead refer to relative angle, angular velocity, shaft mode,
+or the sign of an interaction term. Such a rule is still a hypothesis, but it
+can travel across changes in overall tempo more sensibly than a fixed clock
+delay.
+
+The backswing-preload proposal belongs here. Its plausible benefit is not that
+one direction of effort is inherently superior. It is that continuous loading
+might deliver a transition state with less force-development delay than a full
+role reversal. To test that claim, the state must include the modeled
+transmission or activation variable. If the model omits it, the claimed benefit
+cannot appear except by assumption hidden elsewhere.
+
+### What Must Be Measured
+
+Motion capture supplies positions and derived velocities, but filtering choices
+matter greatly near transition. Shaft strain or high-speed shape reconstruction
+adds deformation state. Bilateral grip sensors add contact wrench. EMG provides
+activation timing but not muscle force directly. A defensible experimental
+state is therefore an estimated distribution with uncertainty, not a perfectly
+known row of numbers. Counterfactual conclusions should be repeated across that
+distribution to learn whether they survive plausible reconstruction error.
+
+## Where the Picture Breaks
+
+The “complete snapshot” phrase can suggest that a finite model state contains
+all physical reality. It does not. A model state is complete only relative to
+the equations chosen. A two-link rigid model omits shaft vibrations, soft tissue,
+muscle activation, grip deformation, aerodynamics, and neural feedback. Its
+four-number state can perfectly determine the future of that reduced model while
+remaining a sparse description of a human swing.
+
+Biological systems may also contain memory that simple first-order states do not
+capture: muscle history dependence, reflex delays, thixotropy, fatigue, and
+learning. Adding every possible state would make estimation impossible. The
+scientific task is to add a state when it changes the question or survives a
+falsification test, not because complexity sounds realistic.
+
+Finally, measurements never reveal state without uncertainty. Velocities are
+often derived from noisy positions. Internal force and activation states may be
+only indirectly observed. A responsible model carries those uncertainties into
+its conclusions instead of treating one reconstructed trajectory as exact.
+
+**Go Deeper:** See the monograph's
+[matched-state persistence chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch04_counterfactual_ensemble.qmd),
+the
+[continuous preparation experiment](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06bc_torque_allocation_preload.qmd),
+and the [interactive workbench](proximal-distal-model-workbench.html) for
+guided state-versus-clock interventions.

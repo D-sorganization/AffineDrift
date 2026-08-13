@@ -1,0 +1,244 @@
+# Force Direction Changes the Job {#sec-lay-ch09}
+
+## A Concrete Picture
+
+Push a shopping cart forward and it speeds up. Push sideways and it turns. Push
+down on the handle and the wheels may grip more firmly without much forward
+acceleration. The force magnitude can be identical in all three cases; direction
+changes the job.
+
+At the grip, a hand force can point along the club, across it in the swing plane,
+or out of that plane. Along-club force largely creates axial loading and curved-
+path support. Across-club force has a lever arm and tends to turn the club. An
+out-of-plane component can affect lie, face orientation, and spatial motion. As
+the club rotates, a force fixed in the room changes its components in the club
+frame. Direction is a moving relationship.
+
+![A Hand Force Is Split Into Along-Club and Across-Club Components With Different Mechanical Roles.](figures/proximal_distal_companion/fig_companion_force_direction.svg){#fig-lay-force-direction width=92% fig-alt="A force vector at the grip is decomposed into an along-club component that mainly loads the shaft and an across-club component that creates a turning moment."}
+
+## How the Mechanism Works
+
+Power begins with projection. The dot product $\mathbf F\cdot\mathbf v$ selects
+the component of force along point velocity. Moment begins with a cross product,
+$\mathbf r\times\mathbf F$, which selects the component perpendicular to the
+moment arm. The same vector can therefore do little translational work yet create
+a large moment, or deliver power through a moving base while its moment about a
+particular point is small.
+
+Define club-aligned radial and tangential unit vectors. The force components are
+$F_r=\mathbf F\cdot\hat{\mathbf e}_r$ and
+$F_t=\mathbf F\cdot\hat{\mathbf e}_t$. The tangential contribution to moment
+about the hand is approximately $L F_t$ for club length $L$. The radial component
+supports centripetal acceleration and shaft tension. Neither label says whether
+power is positive; that requires the corresponding velocity.
+
+### Vectors Rotate While Labels Stay Put
+
+Suppose the laboratory vertical force remains upward through a short interval.
+When the club is nearly horizontal, upward may be close to club-normal. When the
+club is nearly vertical, upward may be largely axial. A plot of global vertical
+force can remain positive while the club-tangential component crosses zero.
+Mechanistic claims should use the frame tied to the proposed job and provide the
+transform back to measured coordinates.
+
+The technical figures draw vectors on model snapshots because time traces alone
+hide this geometry. At each selected phase, the reader can see force origin,
+direction, scale, reference point, club orientation, and sign convention. A good
+vector figure is an argument, not decoration.
+
+### A Force Can Accelerate One Coordinate and Decelerate Another
+
+Generalized coordinates are not independent Cartesian directions. Through the
+Jacobian transpose, one hand force maps into several joint torques. A force that
+creates positive club angular acceleration may create negative arm acceleration.
+This is precisely how interaction can redistribute motion without violating
+action-reaction.
+
+The mass matrix then mixes generalized forces into accelerations. Looking only
+at the sign of $F_t$ does not guarantee the sign of $\ddot q_2$ when other terms
+are present. Exact decomposition solves the coupled equations at the same state
+and reports the contribution rather than inferring it from one arrow.
+
+### Direction Through the Downswing
+
+Early in the downswing, the hand path and club orientation can make a large
+reaction mostly radial. It carries and redirects the club. Later, as relative
+angle changes, a similar interaction can have a stronger tangential projection.
+Near the impact zone, two separated hand forces may form a negative swing-normal
+couple even while other pathways increase club kinetic energy.
+
+This phase dependence is why the scientific question is not “is hand force good
+or bad?” It is: which component, in which frame, over which interval, about which
+reference point, with what power and impulse?
+
+### Normalization Can Hide Magnitude
+
+Force arrows are often normalized for visibility. That communicates direction
+but not magnitude. Other figures use one scale across all phases so arrow length
+can be compared. Reports should say which convention is used. A tiny vector and
+a huge vector drawn at equal length can otherwise invite a false mechanism.
+
+Likewise, unit-body-mass normalization aids participant comparison but does not
+restore missing contact allocation. Directional averages can cancel when
+participants use different frames or handedness conventions. Preprocessing is
+part of the interpretation.
+
+**Model Result:** The double-pendulum audit separates radial and tangential wrist
+reaction contributions and shows that their mechanical roles change with state.
+The two-hand geometry controls reverse or remove the predicted couple when the
+moment arms are reversed or collapsed.
+
+**Human Evidence:** Instrumented grips and inverse dynamics can estimate force
+direction, but individual hand wrenches require direct measurement and careful
+  frame registration and rigid-body convention [@featherstone2008; @koike2020;
+  @koike2016].
+
+**Hypothesis:** A late negative club couple can arise passively from the evolving
+projection of two-hand interaction forces, not solely from an actively commanded
+negative wrist moment.
+
+**Practical Interpretation:** Replace “push harder” with a more scientific
+question: where does the force point relative to the club, hand path, and desired
+turning axis during that phase?
+
+### The Same Force Can Do Different Jobs
+
+Draw a force arrow at the grip. If its point of application is moving in the
+same direction, the force delivers positive power. If motion is opposite, it
+absorbs power. If motion is perpendicular, instantaneous translational power is
+zero even though the force changes momentum direction. Rotate the club and the
+same laboratory-frame force obtains different radial and tangential components.
+No arrow has a permanent mechanical job independent of state.
+
+This is why phrases such as “pulling on the handle” need coordinates. Pulling
+toward the golfer, along the shaft, along the hand path, or opposite clubhead
+motion are different vectors. A force can be inward relative to the clubhead
+path but tangential relative to a joint. The scientific treatment resolves every
+force into declared frames and also reports frame-invariant power.
+
+### Force at a Point Becomes a Wrench
+
+A rigid body's external loading is summarized by a force and a moment at a
+reference point. Move the reference point and the force remains the same while
+the reported moment changes by the cross product of offset and force. This does
+not change the physics. It changes the coordinates used to describe the wrench.
+
+With two hands, sum the two forces for net translation and sum each hand's
+moment about the chosen club point for net rotation. Equal and opposite forces
+can cancel in net force while retaining a couple. Forces in the same direction
+can add strongly yet create little couple if their combined line passes through
+the reference point. Both common and differential hand modes matter.
+
+### Following a Vector Through the Downswing
+
+Early in the downswing, a large grip reaction may point largely along the club,
+maintaining the curved path and transmitting proximal motion. Its direct
+tangential acceleration contribution can be modest. As the club changes
+orientation, the projection can rotate even if the laboratory-frame force
+changes smoothly. Late in the downswing, a smaller force with greater tangential
+projection or moment arm may have a larger effect on club rotation.
+
+At the same time, hand-point velocity changes. Positive grip force power can
+coexist with a negative swing-normal couple power because the translational and
+rotational pieces differ. A complete display therefore shows the force vector,
+moment vector, contact-point velocity, angular velocity, and their two power
+dot products. One scalar cannot represent this structure.
+
+### A Geometry-Control Experiment
+
+Take a simulated state and its predicted bilateral hand forces. Run four
+reconstructions. In the first, retain original geometry. In the second, swap the
+hand contact positions but retain forces. In the third, reverse differential
+force direction. In the fourth, collapse hand separation toward zero. The
+claimed two-hand couple should respectively retain, reverse or otherwise change,
+reverse, and approach zero according to the declared cross products.
+
+These controls are more informative than simply changing a force magnitude.
+They challenge the proposed geometric pathway. If the plotted couple stays
+unchanged when its moment arm is removed, the calculation or labeling is wrong.
+If the control behaves correctly, the model has passed a necessary mechanical
+test but has not shown that golfers use that allocation.
+
+### Measurement Frames Are Part of the Experiment
+
+Instrumented grips report forces in sensor axes. Motion capture reports markers
+in laboratory axes. The club carries a moving frame, while anatomical analysis
+may use segment or joint frames. A calibration must locate each sensor and its
+orientation relative to the club. Time-varying transforms then put force,
+moment, position, and velocity into a common frame.
+
+Small orientation errors can mix large axial forces into smaller transverse
+components. That matters when the proposed negative couple depends on a modest
+swing-normal projection. Calibration uncertainty should therefore be propagated
+into couple sign and timing, and reference transforms should be tested with
+known loads before any biological interpretation.
+
+### What a Useful Figure Should Show
+
+A publication-grade force-vector figure should include coordinate axes,
+reference point, hand locations, arrow scale, moment-arm line, phase or timestamp,
+and sign convention. If arrows from different trials use automatic scaling, the
+caption must say so. A sequence of frames should retain scale where comparison
+matters. Accompanying plots should show components and resultant, not just one
+selected direction.
+
+For reviewers, the underlying numeric table should be linked. That makes it
+possible to recalculate moments, transform frames, and verify that plotted
+arrows match reported values. Visual intuition is valuable precisely when it is
+anchored to auditable quantities.
+
+### Questions That Keep the Claim Honest
+
+Where is the force applied? About which point is moment calculated? In which
+frame is “negative” defined? Is the vector measured, inferred, or simulated?
+Does it do positive or negative power at that instant? Does reversing geometry
+reverse the effect? Can another hand-force allocation produce the same net club
+wrench? Answering these questions turns an arrow from decoration into evidence.
+
+### Reader Lab: Verify a Two-Hand Diagram
+
+Choose two three-dimensional hand positions and force vectors. Select a club
+reference point. Compute net force and moment directly. Translate the reference
+point and recompute; then verify total wrench power is unchanged when the new
+point velocity is transformed consistently. This catches the common mistake of
+moving the moment without moving the velocity term.
+
+Resolve each force in laboratory, club, and swing frames. Reconstruct the
+original vector from every component set. Perturb sensor orientation by one or
+two degrees and observe how much a large axial force leaks into the smaller
+swing-normal component. That leakage becomes part of sign uncertainty.
+
+Animate the arrows through a simulated late downswing using one fixed scale.
+Overlay moment arms and hand velocities. The visual should explain the calculated
+couple and power rather than merely make forces look dramatic. Release the
+numeric array so every arrow can be audited.
+
+### Competing Force-Direction Stories
+
+One hypothesis may say inward handle force changes club acceleration through
+parametric geometry. Another may say a differential hand force supplies a
+negative couple. A third may say shaft reaction explains the observed wrench.
+They can coexist, but each predicts a different relationship among force
+direction, hand motion, deformation, and state.
+
+Use partial interventions and measured mediators to separate them. Removing
+shaft flexibility in simulation tests the elastic route. Collapsing hand
+separation tests the differential-couple route. Preserving force while changing
+handle path tests geometric projection. A good figure places these controls
+beside baseline so the reader sees how the mechanism can fail.
+
+## Where the Picture Breaks
+
+The cart and planar arrows ignore distributed contact, three-dimensional axes,
+and deformable tissue. The real grip force acts across an area; a six-axis sensor
+reduces it to an equivalent wrench at a reference. That reduction preserves net
+effect but not pressure discomfort or local tissue load.
+
+Force direction alone also cannot identify muscle intent. The same hand wrench
+can arise from many shoulder, elbow, wrist, and co-contraction patterns. EMG adds
+activation timing but not a unique force mapping.
+
+**Go Deeper:** Use the monograph's
+[force-vector mechanism chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
+[two-hand local geometry results](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
+and the instrumented-grip studies [@koike2020; @koike2016].

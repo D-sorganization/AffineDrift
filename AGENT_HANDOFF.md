@@ -12,6 +12,34 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8513 full-length lay-reader proximal--distal book** — branch
+  `docs/proximal-distal-lay-book-expansion` expands _How a Golf Swing Carries
+  Energy_ from a short visual companion into 30 substantive chapters. The
+  epic has 36 linked chapter/concept subissues (#8514--#8537, #8539--#8550;
+  #8538 is a closed duplicate). Each chapter must contain at least 2,000 words,
+  a concrete picture, sustained mechanism treatment, an explicit boundary,
+  and live deeper-reading paths. The book now adds 16 reproducible SVG/PDF
+  figure pairs for 30 total, recurring model/human/hypothesis/practical claim
+  labels, reader labs, falsifiers, a continuous whole-swing ledger, and a
+  skeptical-reviewer dialogue. The final PDF contract requires at least the
+  scientific monograph's 169 pages and 64,333 extracted words, at least 50
+  outline entries, and at least 60 live PDF URI annotations. Before protected
+  publication, rerender PDF/HTML, copy the canonical PDF to the stable source
+  path, run focused and repository gates, visually inspect the final render,
+  and exclude Quarto's untracked full-site render byproducts from staging. The
+  figure generator now fixes its SVG hash salt for byte-stable regeneration;
+  `src/tools/check_links.py` also maps included chapter fragments to the master
+  Quarto document so its relative figure and workbench links are validated in
+  the same context used by the renderer. The final inspected PDF is 196 pages,
+  66,875 extracted words, 62 outline entries, 142 URI annotations, and SHA-256
+  `d9865fb79c20ddd07255a0fa9a980819721ad1c528abbf59b8936d706502fa1a`;
+  its tracked source and `docs/articles/` copy are identical. Focused companion,
+  link-checker, title-case, Ruff, Black, bibliography, citation, CSS-bundle,
+  HTML-structure, and figure-regeneration gates pass. The full 3,000-plus-test
+  suite reaches 92.62% coverage and has one confirmed `origin/main` baseline
+  failure: `Read` already contains 11 navbar items against the legacy budget
+  of 10, with no branch diff in `_quarto.yml` or `tests/test_navbar_ia.py`.
+
 - **UpstreamDrift #8511 interactive proximal--distal dynamics workbench** —
   branch `docs/proximal-distal-workbench` adds a mobile-readable reader page,
   navigation, and book cross-link for the canonical Tools PyQt6 and

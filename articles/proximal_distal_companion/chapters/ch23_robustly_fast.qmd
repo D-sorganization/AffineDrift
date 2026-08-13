@@ -1,0 +1,297 @@
+# Fast Once Is Not the Same as Robustly Fast {#sec-lay-ch23}
+
+## A Concrete Picture
+
+A racing setup that sets one perfect qualifying lap may be difficult to drive in
+wind, tire wear, or traffic. Another setup is slightly slower at its best but
+retains performance across disturbances. Asking which is “faster” requires a
+distribution and a task, not one number.
+
+A swing program can maximize nominal club speed while becoming sensitive to
+timing, strength, shaft stiffness, or face orientation. Robust analysis asks what
+happens across declared uncertainty and on cases not used to choose the program.
+
+![A Tradeoff Map Shows Several Nondominated Strategies Balancing Speed, Face-Path Proxy, Load, and Variability.](figures/proximal_distal_companion/fig_companion_tradeoff_map.svg){#fig-lay-tradeoff width=97% fig-alt="A scatter plot of speed versus face-path error colors strategies by load and marks a Pareto frontier, showing that no single strategy dominates every outcome."}
+
+## How the Mechanism Works
+
+An ensemble samples uncertain parameters and conditions. Each control program
+produces an outcome distribution: median, lower tail, upper tail, failures, and
+secondary metrics. Programs are selected on training samples and evaluated on a
+separate held-out ensemble.
+
+### Lower Tail Versus Best Case
+
+The fifth percentile asks how a strategy performs in difficult sampled cases.
+Improving it can matter more than raising the maximum. But the chosen percentile
+and distributions must be justified. Robustness is always robustness to something.
+
+### Pareto Fronts Preserve Tradeoffs
+
+A strategy is dominated if another is at least as good on every outcome and
+better on one. Nondominated strategies form a Pareto set. Selecting among them
+requires values or context; physics alone cannot assign the weights.
+
+In the coupled study, all eight preselected programs remain nondominated on
+held-out samples. Early opposing command improves lower-tail speed relative to
+late drive but worsens the planar face/path proxy. Declaring one globally best
+would erase the actual result.
+
+### Robustness Has Several Layers
+
+Parameter robustness covers mass, inertia, stiffness, damping, delays, and torque
+capacity. Numerical robustness covers timestep and solver choices. Structural
+robustness asks whether the result survives another model tier. Participant
+robustness asks whether it generalizes to unseen people. These layers should not
+be blended into one confidence word.
+
+### Accuracy, Load, and Stability Matter
+
+Clubhead speed is one outcome. Face, path, impact location, joint and contact
+load, actuator work, and constraint margin can oppose it. A strategy that uses
+high co-contraction may stabilize one coordinate while increasing effort. An
+allocation that minimizes hand force may increase joint torque. Reporting the
+surface is more useful than inventing a universal cost.
+
+**Model Result:** The held-out ensemble rejects a universal optimum and exposes
+an explicit speed-versus-face/path tradeoff.
+
+**Human Evidence:** Golf performance is participant-specific and variable;
+  group-average kinematics cannot establish individual robustness
+  [@glazier2011; @mcphee2022].
+
+**Hypothesis:** Preload or delayed transfer may improve robustness for some
+uncertainty families, but the benefit should be evaluated jointly with accuracy
+and load.
+
+**Practical Interpretation:** Ask not only “how fast was the best swing?” but
+“how often, under which changes, with what face and load consequences?”
+
+### Maximum and Reliable Are Different Objectives
+
+The fastest simulated trial is the maximum of one case. A robust strategy
+performs well across uncertainty in body parameters, club properties, timing,
+measurement, and execution. It may give up a small amount of nominal speed to
+avoid a large lower-tail failure. For sport, repeatable delivery and face/path
+control can matter more than a rare peak.
+
+Write the objective before optimization. Possibilities include mean speed,
+fifth-percentile speed, probability of exceeding a threshold, face/path error,
+peak load, or a multiobjective combination. Weights encode values and should
+never be hidden inside a claim of “optimal.”
+
+### Build the Uncertainty Ensemble
+
+Declare ranges and correlations for segment inertia, club properties, control
+amplitude and timing, rise time, grip geometry, shaft parameters, and initial
+state. Separate measured uncertainty from biological variability and deliberate
+design range where possible. Sample reproducibly and retain all failures.
+
+An ensemble is not human evidence if its distributions are synthetic. It is a
+stress test of the model claim. Its value depends on transparency and on whether
+future measurements replace provisional ranges.
+
+### Train, Validate, and Test
+
+Use one sample set to explore policies, another to select among them, and a final
+untouched set to estimate performance. If human data are used, split by
+participant. Repeatedly tuning after inspecting test outcomes turns the test set
+into training data.
+
+Report baseline policies, not only the winner. Include simple constant or rule-
+based controls, the two allocation extremes, and ablations. A complex optimizer
+must earn improvement beyond these references and remain interpretable enough
+to falsify.
+
+### A Speed--Control Frontier
+
+Plot terminal speed against face/path error, peak load, or sensitivity. A
+Pareto frontier contains solutions for which improving one objective worsens
+another. There may be no single best point. A user or experiment can select a
+region based on declared priorities without rewriting the mechanics.
+
+For example, an early aggressive release might maximize nominal speed but have
+steep timing sensitivity. A later regulated release might lose 0.3 metres per
+second in the nominal case yet halve lower-tail face/path error. Whether that
+trade is attractive is a task decision, not a theorem.
+
+### Robustness of the Negative-Torque Strategy
+
+Evaluate schedules with and without an opposing interval across the same
+ensemble. Compare sign persistence, terminal distribution, timing plateau,
+loads, and failure modes. If the negative interval helps only a narrow nominal
+case, describe it as a conditional mechanism rather than robust strategy.
+
+The continuous-preload and role-reversal families should receive equal tuning
+budgets and constraints. Otherwise optimization quality can be mistaken for
+mechanical superiority. Cross-validate hyperparameters and publish unsuccessful
+regions as well as the selected frontier.
+
+### Sensitivity to Execution Error
+
+Perturb torque amplitude, onset, duration, direction, and hand allocation around
+each policy. Use correlated noise and smooth command variations rather than only
+independent sample noise. Quantify outcome gradients and catastrophic boundaries.
+
+A policy can be robust to onset error but fragile to direction or initial state.
+Radar summaries are convenient, but underlying response surfaces should remain
+available. Robustness is multidimensional.
+
+### Participant Variability
+
+Different golfers can occupy different regions because of anatomy, strength,
+skill, club, and preferred coordination. A population policy may perform poorly
+for many individuals even when its average is good. Hierarchical models and
+participant-specific calibration can separate shared mechanism from individual
+control.
+
+Personalization requires data. It should fail closed when parameters are
+unidentifiable or a participant lies outside training support. The product must
+not generate confident technique prescriptions from a generic synthetic model.
+
+### Validation Under Perturbation
+
+Robustness claims are stronger when predicted responses to safe perturbations
+match measurements. Equipment property changes, constrained grip spacing,
+external timing cues, or small handle perturbations can probe sensitivity. The
+primary outcome should include recovery and variability, not only mean speed.
+
+If humans compensate in ways absent from the model, that is evidence to add
+control freedom or narrow the claim. A model need not predict every adaptation
+to remain useful, but it must identify its validity region.
+
+### A Product That Communicates Risk
+
+An open modeling product should return distributions, confidence, assumption
+flags, and out-of-domain warnings. It should show why a policy ranks well and
+which parameters can reverse it. Default views can be accessible, while
+downloadable tables and scripts support review.
+
+This approach is deliberately unlike a recommendation engine selling one swing.
+It is a laboratory for asking how conclusions change. Its quality is measured by
+how clearly it exposes failure and uncertainty.
+
+### Reader Lab: Turn an Optimum Into a Distribution
+
+Take the nominal fastest schedule and perturb initial state, inertia, shaft,
+command onset, rise time, amplitude, and direction. Plot terminal speed and
+control outcomes as distributions. Mark failure rate and lower tail. Compare
+with a slightly slower nominal schedule. The nominal winner may not be the
+reliable winner.
+
+Build a Pareto plot and identify broad plateaus. Then hold out a new sample set
+or participants and evaluate without retuning. Show calibration: when the model
+says an outcome has 80 percent probability, does that event occur at roughly
+that rate? Poorly calibrated uncertainty should block confident product output.
+
+Finally compare both allocation extremes under equal constraints and optimization
+budget. Include an intermediate family. A strategy can dominate in speed but be
+dominated in load or timing sensitivity. Preserve the frontier rather than
+compressing it into a single branded score.
+
+### Worst Case Is Not Automatically the Objective
+
+Optimizing the absolute worst sampled case can be overly conservative and
+sensitive to arbitrary range edges. Mean optimization can ignore costly tails.
+Quantiles, conditional value at risk, and probability constraints offer middle
+grounds. Choice depends on task and consequence and should be exposed to users.
+
+Robustness also differs between mechanism and policy. The negative-couple sign
+may be robust even if one command schedule is fragile. Report these separately
+so a weak controller does not prematurely reject sound mechanics—or strong
+nominal mechanics does not excuse a brittle policy.
+
+### Out-of-Domain Behavior
+
+The model should detect when a participant, club, or state lies outside its
+qualified ranges. Extrapolation can change geometry, contact feasibility, or
+torque ranking. Returning a warning or no result is better than silently applying
+population averages.
+
+Document which inputs define domain and which missing measurements prevent the
+check. An open tool can still invite exploration, but exploratory outputs should
+carry qualification labels that survive export into figures and PDF.
+
+### A Minimum Robustness Report
+
+Publish the nominal case, uncertainty sources, distributions, correlations,
+sample convergence, failure handling, objective definitions, baseline policies,
+Pareto frontier, and untouched evaluation. Report mean, median, tails, and
+probability of satisfying all constraints. A single “robust score” is not enough.
+
+Separate aleatory variability from epistemic uncertainty where possible. More
+trials may characterize execution variability; better measurements or models may
+reduce knowledge uncertainty. Combining them can be useful for risk but should
+not hide what future work can improve.
+
+### Robustness and Falsifiability
+
+A broad claim predicts a distribution, not immunity to exceptions. Predeclare
+coverage and failure rates. If observed held-out outcomes fall outside intervals
+too often or failures cluster systematically, revise distributions or mechanism.
+Good uncertainty should itself be calibrated.
+
+For the negative-torque and preload proposals, publish where the ranking reverses.
+Those boundaries guide safe experiments and prevent the product from presenting
+one strategy as universally superior.
+
+### Completion Criterion
+
+The robust-control module is complete for a release when it can reproduce
+registered ensembles, compare equal-budget policy families, surface domain
+violations, and connect every summary to raw samples. It remains a model product
+until participant-held-out prediction meets declared gates.
+
+### Chapter Checkpoint
+
+Before calling a strategy robust, name uncertainty, objective, acceptable failure
+rate, and qualified population. Show the nominal outcome, distribution, tails,
+tradeoff frontier, and held-out calibration. Preserve cases where the ranking
+reverses.
+
+Robustness is not merely a statistical decoration on an optimum. It can change
+which policy is selected and what future measurement matters. It also provides
+the right boundary for practical use: a model that cannot characterize its
+failure region should not prescribe near that region.
+
+For an open resource, this means the simulator must let users see assumptions
+and distributions rather than offering a single speed-maximizing button. A
+scientifically neutral product invites sensitivity analysis before celebration.
+
+### Comparing Robustness Across Model Rungs
+
+A policy robust in a planar fixed-base model may become sensitive once base
+motion, shaft state, spatial contact, or measurement delay is added. Carry the
+same uncertainty definitions and outcomes upward. Separate uncertainty from
+richer physics from ordinary execution variability.
+
+If a ranking changes, identify the added mechanism responsible. Shaft phase may
+narrow the timing plateau, or spatial hand geometry may reverse the couple in
+some states. These are useful discoveries. Show the cross-rung comparison rather
+than silently replacing the simple result.
+
+Robustness also needs numerical qualification. Classify failed simulations,
+refine difficult cases, and ensure tail outcomes are not solver artifacts. A
+winner based on selectively missing hard cases is not robust.
+
+### Practical Interpretation of a Distribution
+
+A broad plateau suggests several timings may work. A bimodal outcome suggests
+subgroups or competing mechanisms. A long failure tail warns against relying on
+the mean. An individual outside model support calls for measurement, not
+extrapolation. This language focuses on reliability rather than promising one
+secret motion.
+
+## Where the Picture Breaks
+
+The race-car setup has measurable repeated laps. Model ensembles are constructed
+from assumed ranges and distributions. An omitted disturbance cannot be made
+robust by sampling known parameters more densely.
+
+Pareto fronts also do not remove judgment. They display tradeoffs. Coaching,
+injury, and competition contexts would choose different regions and require
+human validation.
+
+**Go Deeper:** Read the monograph's
+[coupled uncertainty and control chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd)
+and inspect the [held-out evidence files](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer/data).
