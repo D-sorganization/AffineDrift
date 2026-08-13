@@ -77,7 +77,7 @@ In Supervised Learning, a human must constantly provide the "correct" answer to 
 
 **Reinforcement Learning (RL)** solves this by allowing the agent to explore physics entirely on its own. The network commands a torque $\control$ at state $\state$, observes the new state $\state'$, and receives a scalar **Reward** $R$ (e.g., +100 for hitting the ball, -10 for falling over). 
 
-RL algorithms seek to learn the **Value Function** $V(\state)$, which predicts the total sum of all future rewards the robot will receive if it starts in state $\state$. By maximizing the Value Function, the neural network organically discovers complex behaviors—often outperforming classical control theory because it fully exploits passive geometric dynamics instead of fighting them.
+RL algorithms seek to learn the **Value Function** $V(\state)$, which predicts the total sum of all future rewards the robot will receive if it starts in state $\state$. By maximizing the Value Function, the neural network discovers complex behaviors—often outperforming classical control theory because it exploits passive geometric dynamics instead of fighting them.
 
 
 ## Worked Example: Forward Pass in Python
@@ -135,4 +135,4 @@ print("Commanded Torque from Neural Network policy:", np.round(commanded_u[0, 0]
 
 This code block demonstrates exactly how Reinforcement Learning algorithms map physics. Millions of times per second, matrices multiply vectors and pass through ReLU functions to output physical torques inside a physics simulation (such as the companion platform's MuJoCo integration).
 
-With the mathematics of Reinforcement Learning, Spatial Algebra, Recursive Dynamics, and Configuration Manifolds securely established, you are now completely prepared to tackle the advanced control theory in Volume I and Volume II of *Tangent-Space Methods*.
+With the mathematics of Reinforcement Learning, Spatial Algebra, Recursive Dynamics, and Configuration Manifolds established, you are now prepared to tackle the advanced control theory in Volume I and Volume II of *Tangent-Space Methods*.

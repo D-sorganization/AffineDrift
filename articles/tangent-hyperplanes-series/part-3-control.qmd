@@ -67,7 +67,7 @@ This procedure is called **successive approximation** or **shooting.** Each iter
 
 ## Exactness in the Limit
 
-**LQR is exact for the linearized system.** That is: if you solve the Riccati equation and apply the feedback control to the linear system $\delta\dot{x} = A(t)\delta x + B(t)\delta u$, you will get the optimal trajectory for that linear system, to machine precision.
+**LQR is exact for the linearized system.** That is: solve the Riccati equation and apply the feedback control to the linear system $\delta\dot{x} = A(t)\delta x + B(t)\delta u$. You will get the optimal trajectory for that linear system, to machine precision.
 
 The linearized LQR solution does not capture residuals from nonlinearity — the $O(\|\delta x\|^2)$ terms we dropped. Iteration *handles* those residuals instead. You apply the control, integrate the nonlinear system forward, see what trajectory you get, linearize around it, solve LQR again, and repeat. Each iteration accounts for the mismatch between linear and nonlinear dynamics.
 

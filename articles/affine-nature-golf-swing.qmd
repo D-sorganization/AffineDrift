@@ -2466,7 +2466,7 @@ While the preceding appendices provided the analytical derivations and simplifie
 
 The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment. This serves as a necessary bridge between the idealized theory and the experimental applications, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
-To complement the theoretical framework developed in this manuscript, a forward‐dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced in @sec-ztcf–@sec-zvcf using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
+To complement the theoretical framework developed in this manuscript, we built a forward‐dynamics implementation of the golf swing in MATLAB/Simulink. The goal was not to present simulation results; those will appear in Parts II and III. It was to test and validate the counterfactual concepts introduced in @sec-ztcf–@sec-zvcf using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
 
 The model is a planar two–hand, multi–link system with a flexible beam shaft, based on the publicly released “Two Hand Golf Swing Model” (MathWorks File Exchange). The kinematics were iteratively tuned to produce a representative downswing with clubhead speed and segmental angular velocities comparable to measured professional swings. The structure of the model and its evaluation are documented in Olson (2024). 
 
@@ -2503,7 +2503,7 @@ This procedure produced a sampled version of the drift forces across the downswi
 
 ### Comparison With Total Forces
 
-For each kill‐switch instant, the interaction forces produced under drift‐only dynamics were compared to the forces produced during the corresponding instant of the full torque‐driven swing. The difference between these two represents the torque‐driven contribution.
+For each kill‐switch instant, we compared the interaction forces produced under drift‐only dynamics to the forces produced during the corresponding instant of the full torque‐driven swing. The difference between these two represents the torque‐driven contribution.
 
 The analysis showed:
 - Passive momentum contributes substantially to both normal and axial hand forces.
@@ -2514,13 +2514,13 @@ The analysis showed:
   
 - Passive momentum contributions can exceed total forces temporarily, indicating competing active and passive effects.
 
-  > **Note on Damping and Overshoot:** This "overshoot" of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While this effect may be amplified by the minimal damping in the skeletal baseline model, it correctly identifies the *net non-conservative effort* required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by $f(x)$.
+  > **Note on Damping and Overshoot:** This "overshoot" of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While the minimal damping in the skeletal baseline model may amplify this effect, it correctly identifies the *net non-conservative effort* required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by $f(x)$.
 
 These findings match the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high‐velocity phases of the swing.
 
 ### Zero Velocity Counterfactual Computation and Validation
 
-The Simulink implementation has been extended to compute the Zero Velocity Counterfactual (ZVCF) as well. For each state $x(t)$ on the simulated trajectory:
+We extended the Simulink implementation to compute the Zero Velocity Counterfactual (ZVCF) as well. For each state $x(t)$ on the simulated trajectory:
 1. generalized velocities were set to zero,
   
 2. the drift term $a_{\mathrm{drift}}(q,0,\eta,0)$ was evaluated,
@@ -2622,11 +2622,11 @@ For each time step $k$:
 In the full-scale implementation, the kill-switch approach replaces step 4 with a fully integrated natural evolution under drift dynamics.
 
 ##### Numerical Stability.
-ZTCF computation is especially sensitive during periods of large curvatures (late downswing). Stiff ODE solvers (e.g., `ode15s`, `ode23t`) or low step-size solvers are recommended to maintain trajectory fidelity.
+ZTCF computation is especially sensitive during periods of large curvatures (late downswing). Use stiff ODE solvers (e.g., `ode15s`, `ode23t`) or low step-size solvers to maintain trajectory fidelity.
 
 ### D.3 \quad Algorithm for ZVCF Computation
 
-ZVCF is computed instantaneously, not via simulation. It examines the forces that would occur if the system were held at the same configuration but with all velocities zero.
+We compute ZVCF instantaneously, not via simulation. It examines the forces that would occur if the system were held at the same configuration but with all velocities zero.
 
 ##### Procedure:
 For each time sample $t_k$:
@@ -2684,7 +2684,7 @@ $$
   - \mathrm{ID}\big(q_k,0,\eta_k,0\big).
 $$
 
-In the Simulink implementation, at the kill instant $t_k = t_0$ it was observed that:
+In the Simulink implementation, at the kill instant $t_k = t_0$, we observed that:
 $$
   \tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0)
   =
@@ -2742,4 +2742,4 @@ ZTCF trajectories require the same ODE solver, tolerances, and step sizes as the
 
 ### D.7 \quad Summary
 
-The algorithms in this appendix show how ZTCF and ZVCF are computed numerically and how they integrate with inverse dynamics to yield drift, input, and configuration torque components. These numerical procedures provide the operational backbone for validating the theoretical framework and are used extensively in the forward-dynamics modeling described in @sec-simulink.
+The algorithms in this appendix show how ZTCF and ZVCF are computed numerically and how they integrate with inverse dynamics to yield drift, input, and configuration torque components. These numerical procedures provide the operational backbone for validating the theoretical framework, and the forward-dynamics modeling described in @sec-simulink uses them extensively.

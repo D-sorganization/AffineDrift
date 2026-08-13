@@ -11,7 +11,7 @@ This collection presents an exploratory geometric framework for understanding no
 - Graduate students in control theory, robotics, biomechanics
 - Practitioners in aerospace, robotics, sports science
 - Researchers seeking geometric intuition for optimization algorithms
-- Anyone curious about why LQR, MPC, and DDP actually work
+- Anyone curious about why LQR, MPC, and DDP work
 
 **Prerequisites:**
 - Linear algebra (matrices, eigenvalues, linear maps)
@@ -298,7 +298,7 @@ For when you need to remember "what was that formula?"
 
 ### Pitfall 1: "Linearization Is Approximate, so Results Are Approximate"
 
-**Why it's wrong:** The tangent space (derivative) is **exact**. What's approximate is using it far from the linearization point. DDP/iLQR re-linearize constantly, maintaining exactness.
+**Why it's wrong:** The tangent space (derivative) is **exact**. What's approximate is using it far from the linearization point. DDP/iLQR re-linearize at every step, so each step stays near the point where the linear model holds.
 
 **Where to learn more:** Unified Thesis Ch. 1, CRITICS_CORNER.qmd Criticism #2
 
