@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-13T20:07:00Z
+Last-Updated: 2026-08-13T20:47:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-13T20:07:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.192                                          |
+| **Spec Version**        | 1.0.193                                          |
 | **Last Spec Update**    | 2026-08-13                                       |
 
 ## 2. Purpose & Mission
@@ -48,6 +48,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Maintain opt-in performance benchmarks for stable computational paths without slowing routine CI
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
 - Publish an accessible, evidence-linked companion to the proximal--distal technical treatment, with original visual explanations and explicit model, human-evidence, and hypothesis boundaries
+- Pin the complete canonical proximal--distal claim audit by exact upstream
+  merge and hashes, expose its reviewed/unadjudicated counts, and preserve
+  adverse or unexecuted findings rather than treating audit completion as
+  human validation or coaching authority
 - Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
 - Present the textbook volumes with shared algorithm and pseudocode conventions so implementation guidance is consistent across the series
 - Preserve frame, reference-point, wrench, power, and canonical-pose conventions
