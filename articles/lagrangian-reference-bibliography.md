@@ -3,9 +3,9 @@
 ## Concept Map
 
 - **Lagrangian Mechanics**: The fundamental framework deriving dynamics from energy ($\mathcal{L} = T - V$).
-- **Control-Affine Systems**: The structural form $\dot{x} = f(x) + g(x)u$ central to the AffineDrift theory.
+- **Control-Affine Systems**: The structural form $\dot{x} = f(x) + G(x)u$ central to the AffineDrift theory.
 - **Drift Field ($f(x)$)**: The passive dynamics vector field (inertia, Coriolis, gravity, potential).
-- **Input Field ($g(x)$)**: The control authority vector field mapping inputs to state evolution.
+- **Input Field ($G(x)$)**: The control authority vector field mapping inputs to state evolution.
 - **Configuration Manifold ($\mathcal{Q}$)**: The curved space describing all possible system poses.
 - **Tangent Bundle ($T\mathcal{Q}$)**: The state space of positions and velocities.
 - **Flexible Multibody Dynamics**: Extension of rigid body theory to include deformations (shaft modes).
@@ -256,7 +256,7 @@
 1.  [spong2020robot] - Accessible introduction to derivation of Euler-Lagrange equations for robots.
 2.  [murray1994mathematical] - The standard reference connecting mechanics to control theory (Chapters 4 & 6).
 3.  [goldstein2002classical] - The definitive source for the derivation of $\mathcal{L} = T - V$.
-4.  [slotine1991applied] - Explicitly bridges Lagrangian dynamics to the $\dot{x} = f(x) + g(x)u$ form.
+4.  [slotine1991applied] - Explicitly bridges Lagrangian dynamics to the $\dot{x} = f(x) + G(x)u$ form.
 5.  [sympy_lib] - Tool for verifying your manual derivations symbolically.
 
 ### Deep technical (Geometric & Flexible)

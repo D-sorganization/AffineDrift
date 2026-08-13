@@ -4,7 +4,7 @@
 
 - **Decomposition Frameworks**
 
-  - **Affine Control Systems**: The structural basis $\dot{x} = f(x) + g(x)u$.
+  - **Affine Control Systems**: The structural basis $\dot{x} = f(x) + G(x)u$.
   - **Passive vs. Active**: Separating natural dynamics ($f$) from forced response ($g$).
   - **Underactuation**: Systems where dim($u$) < dim($q$), relying on drift.
 
@@ -245,7 +245,7 @@ _Target: Understand why we separate active and passive forces._
 
 ### Path 2: Deep Technical (Geometric & Control Theory)
 
-_Target: The mathematical machinery for $\dot{x} = f(x) + g(x)u$._
+_Target: The mathematical machinery for $\dot{x} = f(x) + G(x)u$._
 
 1.  **Bullo & Lewis (2004)** - _Geometric Control of Mechanical Systems_. Rigorous treatment of mechanical drift and controllability.
 2.  **Spong (1998)** - _Underactuated Mechanical Systems_. Analyzing systems where you can't push in every direction directly.

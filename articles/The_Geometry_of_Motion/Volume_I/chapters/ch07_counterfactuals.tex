@@ -46,12 +46,12 @@ The drift does not depend on the current input. This is the differential version
 superposition principle: the passive dynamics are a fixed ``background'' on which the
 input is superposed.
 
-\section{The Zero Torque Counterfactual (ZTCF)}
+\section{The Zero-Torque Counterfactual (ZTCF) Family}
 
 \begin{definition}[Zero Torque Counterfactual]
 \label{def:ch7:ZTCF}
-Given a system in state $\x_0$ at time $t_0$, the \textbf{Zero Torque Counterfactual}
-(ZTCF) is the trajectory $\x^{(0)}(t)$ obtained by setting $\uvec\equiv 0$ for all
+Given a system in state $\x_0$ at time $t_0$, the \textbf{forward Zero-Torque Counterfactual}
+(ZTCF) trajectory is $\x^{(0)}(t)$ obtained by setting the declared applied control $\uvec\equiv 0$ for all
 $t\geq t_0$:
 \begin{equation}
 \dot\x^{(0)} = f\!\left(\x^{(0)}\right), \quad \x^{(0)}(t_0) = \x_0.
@@ -60,8 +60,9 @@ $t\geq t_0$:
 This is the integral curve of the drift vector field starting from the current state.
 \end{definition}
 
-The ZTCF answers the question: \emph{What would happen if all active control were
-removed at this instant?}
+The forward ZTCF trajectory asks what the declared effective plant would do if its
+declared applied-control channel were removed. This does not imply zero muscle activation
+or removal of retained passive impedance.
 
 For a mechanical system with state $\x=(\q,\dot\q)$, the ZTCF represents the ``passive
 shadow''---the motion that emerges purely from current velocities, gravity, elastic
@@ -123,7 +124,7 @@ starting with $\x^{(0)}(t)=\x_0$. If $f$ is Lipschitz continuous (which holds un
 this sequence converges uniformly to the unique solution on a sufficiently small interval.
 
 \begin{corollary}[Smoothness of ZTCF]
-\label{cor:ch7:ztcf-smooth}
+\label{cor:ch7:ZTCF-smooth}
 If $f\in C^k$ (i.e., $f$ is $k$ times continuously differentiable), then the ZTCF trajectory
 $\x^{(0)}(t)$ is also $C^k$ in both $t$ and the initial condition $\x_0$.
 \end{corollary}
@@ -187,10 +188,10 @@ exactly recovers the active input contribution at each instant.
 \begin{definition}[Zero Velocity Counterfactual]
 \label{def:ch7:ZVCF}
 The \textbf{Zero Velocity Counterfactual} (ZVCF) evaluates the drift at the current
-configuration $\q$ but with all velocities set to zero:
+configuration $\q$ and declared internal state but with velocity and declared control set to zero:
 \begin{equation}
-a_{\text{ZVCF}} := \left.a_{\text{drift}}\right|_{\dot\q=0}
-= -M(\q)^{-1}\vec{g}(\q).
+a_{\text{ZVCF}} := -M(\q)^{-1}h(\q,0,z_0;p),
+\qquad \uvec=0.
 \label{eq:ch7:ZVCF}
 \end{equation}
 This reveals the static baseline: the acceleration due to gravity (and elastic
@@ -309,10 +310,12 @@ with velocity, while $a_{\text{grav}}$ remains constant.}
 
 \begin{definition}[Drift--Control Ratio]
 \label{def:ch7:DCR}
-At state $\x$ with maximum available input $\uvec_{\max}$, the \textbf{drift--control
-ratio} is
+At state $\x$, in a declared acceleration or task-projected space, the \textbf{Drift-Control
+Ratio (DCR)} is
 \begin{equation}
-\rho(\x) := \frac{\norm{f(\x)}}{\norm{G(\x)\uvec_{\max}}}.
+\mathrm{DCR}_{W,\mathcal U}(\x) :=
+\frac{\norm{W a_{\mathrm{drift}}(\x)}}
+{\sup_{u\in\mathcal U(\x)}\norm{W B_a(\x)u}+\varepsilon}.
 \label{eq:ch7:DCR}
 \end{equation}
 \end{definition}
@@ -636,7 +639,7 @@ E(\q,\dot\q) = T(\q,\dot\q) + V(\q).
 Along the ZTCF trajectory $(\q^{(0)}(t), \dot\q^{(0)}(t))$, the energy is:
 \begin{equation}
 E_{\text{ZTCF}}(t) = T(\q^{(0)}(t), \dot\q^{(0)}(t)) + V(\q^{(0)}(t)).
-\label{eq:ch7:ztcf-energy}
+\label{eq:ch7:ZTCF-energy}
 \end{equation}
 
 \subsection{Conservative Drift: Energy Conservation}
@@ -908,7 +911,7 @@ at each sampled state, and $\rho(t)$ is their ratio --- the drift--control ratio
 {The ZTCF, integrated from the same initial state with $\tau_1 = 0$. The final column is the
 configuration-space separation $\lVert\q_{\text{actual}} - \q_{\text{ZTCF}}\rVert$ between
 the two trajectories at that instant.}
-\label{tab:ch7:double-pendulum-ztcf}
+\label{tab:ch7:double-pendulum-ZTCF}
 \end{table}
 
 The two trajectories part quickly and then stay apart: the separation reaches
@@ -1066,7 +1069,7 @@ is minimal.
 \subsection{Stability Without Control}
 
 \begin{proposition}[ZTCF Stability Implies Easy Stabilization]
-\label{prop:ch7:ztcf-stability}
+\label{prop:ch7:ZTCF-stability}
 If the ZTCF is exponentially stable (all drift Jacobian eigenvalues in the left half-plane),
 then any feedback law $\uvec = K[\x - \x^*]$ with $K$ sufficiently small will stabilize the
 closed-loop system.

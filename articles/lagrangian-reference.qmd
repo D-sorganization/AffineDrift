@@ -228,7 +228,7 @@ which is exactly the control-affine structure used throughout the main text.
 
 In the Lagrangian framework, gravity arises as part of the potential energy $V_{\mathrm{grav}}(q)$, and hence appears in the gravity/elastic vector $\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$. Shaft elasticity is included in $V_{\mathrm{shaft}}(x_s)$, and any associated non-conservative terms (e.g. shaft damping) appear in $\tau_{\mathrm{passive,ext}}$. Both gravity and shaft contributions enter the **drift** term $f(x)$ (via $\tau_{\mathrm{drift,ext}}$) and do not modify the linear dependence on $u$. Note this gravity vector $\mathbf{g}_{\mathrm{ext}}$ is distinct from the control **input matrix** $G(x)$ defined above: gravity is part of the passive drift, never the actuation map.
 
-## Connection to ZTCF and ZVCF
+## Connection to ZTCF Family and ZVCF
 
 From the Lagrangian viewpoint:
 
@@ -238,7 +238,7 @@ M_{\mathrm{ext}}\ddot{q}_{\mathrm{ext}} = \tau_{\mathrm{drift,ext}},
 $$
 and the motion is governed solely by the drift.
 
-- **ZVCF** evaluates the *drift* at zero velocity ($\dot{q}_{\mathrm{ext}} = 0$): the velocity-dependent terms (Coriolis, centrifugal, damping) vanish and the remaining generalized forces are the configuration-dependent passive loads $\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$ (gravity $G(q)$ plus elastic restoring forces). It is the configuration-only slice of the drift, $\tau_{\mathrm{ZVCF}} = \tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$, and contains **no input contribution** — in particular it is *not* $\tau_{\mathrm{input,ext}} = [B u;\, 0]$. It is a pointwise diagnostic, not a trajectory.
+- **ZVCF** evaluates the *drift* at zero velocity ($\dot{q}_{\mathrm{ext}} = 0$): the velocity-dependent terms (Coriolis, centrifugal, damping) vanish and the remaining generalized forces are the configuration-dependent passive loads $\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$ (gravity $g(q)$ plus elastic restoring forces). It is the configuration-only slice of the drift, $\tau_{\mathrm{ZVCF}} = \tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$, and contains **no input contribution** — in particular it is *not* $\tau_{\mathrm{input,ext}} = [B u;\, 0]$. It is a pointwise diagnostic, not a trajectory.
 Thus the Lagrangian formulation supports the same drift--input decomposition and counterfactual constructions as the Newton--Euler and screw-theoretic formulations.
 
 ## Summary

@@ -130,7 +130,7 @@ The latissimus dorsi, a major pulling muscle in the downswing, is longest (most 
 \index{concentric contraction}
 \index{eccentric contraction}
 
-Here is the critical insight that links muscle biology to the drift-to-control ratio: \emph{faster contraction produces less force}. This is the force-velocity relationship, discovered by A.V. Hill in 1938, and it remains one of the most important principles in biomechanics.
+Here is the critical insight that links muscle biology to the drift-control ratio: \emph{faster contraction produces less force}. This is the force-velocity relationship, discovered by A.V. Hill in 1938, and it remains one of the most important principles in biomechanics.
 
 \begin{laymansbox}{The Central Constraint: You Cannot Be Strong and Fast}{context:force-velocity-intuition}
 When a muscle fiber contracts, each myosin head must attach, rotate, and detach. This cycle takes finite time—roughly 1--2 milliseconds per cycle. If the muscle is shortening quickly (fast contraction velocity), the rate at which new cross-bridges can be formed lags behind the rate at which they're being broken. Fewer bridges bear the load, so total force drops. At very high speeds, the contraction is so rapid that almost no force is produced—the muscle is sliding past the load without gripping it. This is why a person can punch fast but a punch is weak, while a slow, heavy push against a wall produces more force. The golf swing experiences this limit acutely: at the fastest part of the downswing (near impact), muscle force capacity is at its minimum, yet the gravitational and inertial drift forces are at their maximum. This is the physical reason why control fails at impact.
@@ -182,7 +182,7 @@ The force-velocity relationship for eccentric contractions shows that muscle can
 \end{itemize}
 \end{minipage}
 
-\noindent\textbf{Result:} The drift-to-control ratio at impact is $\approx 5$--$10$:$1$, meaning inertial and gravitational forces dominate. No amount of muscular effort can overcome this—it is written into the physics of muscle tissue itself.
+\noindent\textbf{Result:} The drift-control ratio at impact is $\approx 5$--$10$:$1$, meaning inertial and gravitational forces dominate. No amount of muscular effort can overcome this—it is written into the physics of muscle tissue itself.
 \end{driftcontrol}
 
 \begin{example}{Numerical Estimate: Wrist Muscle Force at Impact}{wrist-fv}
@@ -409,7 +409,7 @@ G(\bm{x})\bm{u} = \sum_{i} r_{j,i}(\bm{q}) a_i(\bm{q}, \dot{\bm{q}}, u_{\mathrm{
 \end{equation}
 
 \begin{laymansbox}{Why the Control Gain Decreases at High Speed}{context:gain-decreases}
-The effective control gain is not constant. It depends on state $\bm{x}$ through muscle length, contraction velocity, activation, pennation, and moment arms. In concentric shortening, the force-velocity factor $f_V(\dot{\ell})$ usually decreases as shortening speed increases, so the available torque in a chosen direction can be smaller when the system is moving fast. Combined with inertial terms that grow with speed, this can increase a model's drift-to-control ratio near impact. The conclusion depends on the selected muscle-tendon model and should not be inferred from clubhead speed alone.
+The effective control gain is not constant. It depends on state $\bm{x}$ through muscle length, contraction velocity, activation, pennation, and moment arms. In concentric shortening, the force-velocity factor $f_V(\dot{\ell})$ usually decreases as shortening speed increases, so the available torque in a chosen direction can be smaller when the system is moving fast. Combined with inertial terms that grow with speed, this can increase a model's drift-control ratio near impact. The conclusion depends on the selected muscle-tendon model and should not be inferred from clubhead speed alone.
 \end{laymansbox}
 
 \begin{example}{Numerical Estimate: Effective Control Gain at Wrist}{control-gain}
@@ -521,7 +521,7 @@ Understanding muscle force generation reveals why certain coaching cues are effe
 
 \item \textbf{Muscles have activation delays.} From neural command to force takes 50--100 ms. The downswing is only 250--300 ms. Feedback control mid-swing is impossible; the motion must be pre-programmed.
 
-\item \textbf{The drift-to-control ratio explodes at impact.} Inertial and gravitational forces increase as $v^2$; muscle control decreases as $1 - v/V_{\max}$. Impact is inherently uncontrollable.
+\item \textbf{The drift-control ratio explodes at impact.} Inertial and gravitational forces increase as $v^2$; muscle control decreases as $1 - v/V_{\max}$. Impact is inherently uncontrollable.
 
 \item \textbf{Efficient swings exploit the activation window.} Heavy muscle recruitment in the transition and early downswing (when muscles are strong), then coasting and eccentric braking in the late swing. This is not laziness; it is physics.
 \end{enumerate}
@@ -542,7 +542,7 @@ Muscle biology sets the envelope of what is physically possible: maximum forces,
 
 \item \textbf{Muscle Torque Under Load.} The triceps has $F_0 = 350$ N, moment arm $r = 0.025$ m, and is at near-optimal length ($f_L \approx 0.95$). At elbow angular velocity $\dot{\theta} = 40$ rad/s, the muscle velocity is $\dot{\ell}^M = r \dot{\theta} = 1$ m/s. If $V_{\max} = 5$ m/s, compute the force and torque available. How much does this change if velocity doubles?
 
-\item \textbf{Drift-to-Control Ratio.} At impact, the wrist experiences an inertial drift torque of 80 N·m (from swinging the club). The wrist muscles (fully activated, $a = 1$) have maximum isometric torque of 20 N·m. At impact wrist speed, $f_V = 0.2$. What is the actual available torque? What is the drift-to-control ratio? Is control possible?
+\item \textbf{Drift-Control Ratio.} At impact, the wrist experiences an inertial drift torque of 80 N·m (from swinging the club). The wrist muscles (fully activated, $a = 1$) have maximum isometric torque of 20 N·m. At impact wrist speed, $f_V = 0.2$. What is the actual available torque? What is the drift-control ratio? Is control possible?
 
 \item \textbf{Tendon Energy Storage.} A 10 cm forearm muscle with $F_0 = 100$ N contracts fully (100 N force). The tendon has stiffness parameter $k_{\mathrm{SEE}} = 30$ and initial strain $\varepsilon_0 = 0$. If the muscle shortens by 2 cm (the SAW extends by 2 cm in the direction opposite to motion), compute the elastic energy stored: $E = \int F \, d\varepsilon$. How much energy is released during rebound?
 

@@ -56,7 +56,7 @@ If the kayaker stops paddling right now---just for this instant---what happens?
 
 The current carries them. That is all. The kayaker moves exactly as the river dictates.
 
-We call this the **Zero Torque Counterfactual**, or **ZTCF**: what the system would do, at this instant, with zero input. It is a snapshot---a photograph of the physics at one moment---not a prediction of the future. One moment later the kayaker has drifted to a new spot with a different current, and the answer changes.
+We call this the **Zero Torque Counterfactual**, or **ZTCF family**: what the system would do, at this instant, with zero input. It is a snapshot---a photograph of the physics at one moment---not a prediction of the future. One moment later the kayaker has drifted to a new spot with a different current, and the answer changes.
 
 But right now, right here, the ZTCF tells you exactly what the physics is contributing. And the difference between what is actually happening and the ZTCF tells you exactly what the controller is contributing.
 
@@ -314,7 +314,7 @@ The ZTCF is simply the drift evaluated at a specific moment in time:
 
 $$
 \ddot{q}_{\text{ZTCF},t} \coloneqq -M^{-1}\bigl(q(t)\bigr)\bigl[C\bigl(q(t),\dot{q}(t)\bigr)\dot{q}(t) + g\bigl(q(t)\bigr)\bigr]
-$$ {#eq-ztcf-def}
+$$ {#eq-ZTCF-def}
 
 It answers one question: **"If I turned off all the motors right now, what acceleration would the system experience at this instant?"**
 

@@ -377,13 +377,13 @@ Drag depends on environmental conditions:
 
 For precision inverse dynamics analysis (research or high-level coaching), these effects should be accounted for. For practical swing instruction, drag is averaged or neglected.
 
-## Drag in the Zero-Torque Counterfactual (ZTCF)
+## Drag in the Zero-Torque Counterfactual (ZTCF) Family
 
 
 Recall that the Zero-Torque Counterfactual (ZTCF) describes the natural motion of the golf swing when all control inputs are zero: $\bm{u} = 0$. The equation of motion becomes:
 $$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) + \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}}) = \bm{J}_c^T \boldsymbol{\lambda}
-$$ {#eq-ztcf-with-drag}
+$$ {#eq-ZTCF-with-drag}
 
 The ZTCF describes the *passive trajectory*—the path the swing would follow if muscles applied zero torque (after release). In this framework, drag is part of the *drift field* $f(\bm{x})$.
 
@@ -401,7 +401,7 @@ Without drag, the ZTCF is driven by gravity (pulling downward), inertial forces 
 
 - A ZTCF computed **with** drag provides a more accurate baseline, and the inferred control contribution is more realistic.
 
-- For the drift-to-control ratio, including drag slightly *reduces* the ratio (because more of the speed loss is attributed to drag, not control). However, the overall trend—that drift dominates at impact—remains unchanged.
+- For the drift-control ratio, including drag slightly *reduces* the ratio (because more of the speed loss is attributed to drag, not control). However, the overall trend—that drift dominates at impact—remains unchanged.
 
 - In research, always report whether drag is included in the ZTCF model. Comparisons between studies can be misleading if one includes drag and another does not.
 

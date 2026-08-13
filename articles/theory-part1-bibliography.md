@@ -6,7 +6,7 @@
 
   - **Multibody Dynamics**: Modeling the golfer as a chain of rigid bodies.
   - **Flexible Beam Theory**: Modeling the golf shaft using finite-dimensional modal approximations (Euler-Bernoulli/Timoshenko).
-  - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$. Separating dynamics into drift vector fields and control vector fields.
+  - **Control-Affine Form**: $\dot{x} = f(x) + G(x)u$. Separating dynamics into drift vector fields and control vector fields.
   - **State-Space Representation**: Unified state vector including rigid ($q, \dot{q}$) and flexible ($\eta, \dot{\eta}$) coordinates.
 
 - **Force Decomposition**
@@ -284,7 +284,7 @@ _Target: Master the math needed to implement the Drift/Input decomposition._
 1.  **Murray, Li, Sastry (1994)** - _Mathematical Introduction to Robotic Manipulation_. Essential for the geometric view of rigid body motion.
 2.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_. The bible for implementing efficient dynamics engines.
 3.  **Shabana (2020)** - _Dynamics of Multibody Systems_. Crucial for adding the flexible shaft (modal analysis) to the rigid golfer.
-4.  **Slotine & Li (1991)** - _Applied Nonlinear Control_. Provides the "control-affine" ($\dot{x} = f(x) + g(x)u$) framework.
+4.  **Slotine & Li (1991)** - _Applied Nonlinear Control_. Provides the "control-affine" ($\dot{x} = f(x) + G(x)u$) framework.
 5.  **Isidori (1995)** - _Nonlinear Control Systems_. Advanced reference for geometric control properties.
 6.  **Tedrake (2023)** - _Underactuated Robotics_. Modern view on exploiting passive dynamics (drift).
 7.  **Hogan (1985)** - _Impedance Control_. Foundation for passivity and interaction control.

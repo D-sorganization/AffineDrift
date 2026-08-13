@@ -4,7 +4,7 @@
 
 _(Insert after Section 0 "Vision" or Section 5 "Counterfactual Physics")_
 
-This toolkit serves as the computational engine for the **Affine Control Framework**. While the theoretical manuscripts derive the existence of the _Zero Torque Counterfactual_ (ZTCF) and _Zero Velocity Counterfactual_ (ZVCF), this software pipeline provides the operational means to simulate them. By automating the separation of passive drift dynamics ($f(x)$) from active torque inputs ($g(x)u$), the platform transforms the abstract concept of "Drift Invariance" into a tangible, explorable reality. It allows the user to experimentally "mute" the golfer's agency to visualize the inertial currents that shape the swing.
+This toolkit serves as the computational engine for the **Affine Control Framework**. While the theoretical manuscripts derive the existence of the _Zero Torque Counterfactual_ (ZTCF) and _Zero Velocity Counterfactual_ (ZVCF), this software pipeline provides the operational means to simulate them. By automating the separation of passive drift dynamics ($f(x)$) from active torque inputs ($G(x)u$), the platform transforms the abstract concept of "Drift Invariance" into a tangible, explorable reality. It allows the user to experimentally "mute" the golfer's agency to visualize the inertial currents that shape the swing.
 
 ## Context: The "Canonical Model" and the "Effective Plant"
 
@@ -25,7 +25,7 @@ The explicit handling of loop-closure constraints (e.g., the two-handed grip and
 ### Conceptual Foundation
 
 - **The Drifter Manifesto** – For the overarching vision of drift-centric mechanics.
-- **Affine Nature of the Golf Swing** – For the derivation of the control-affine structure $\dot{x} = f(x) + g(x)u$.
+- **Affine Nature of the Golf Swing** – For the derivation of the control-affine structure $\dot{x} = f(x) + G(x)u$.
 
 ### Counterfactuals & Physics
 

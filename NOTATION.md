@@ -8,13 +8,122 @@ This document serves as the authoritative reference for all mathematical symbols
 
 ## Table of Contents
 
-1. [Coordinate Systems & Rotation](#coordinate-systems--rotation)
-2. [Group Theory Notation](#group-theory-notation)
-3. [Vectors & Tensors](#vectors--tensors)
-4. [Physical Quantities](#physical-quantities)
-5. [Sign Conventions](#sign-conventions)
-6. [Symbol Overloading Reference](#symbol-overloading-reference)
-7. [Component Notation](#component-notation)
+1. [Canonical Control-Affine Terminology](#canonical-control-affine-terminology)
+2. [Coordinate Systems & Rotation](#coordinate-systems--rotation)
+3. [Group Theory Notation](#group-theory-notation)
+4. [Vectors & Tensors](#vectors--tensors)
+5. [Physical Quantities](#physical-quantities)
+6. [Sign Conventions](#sign-conventions)
+7. [Symbol Overloading Reference](#symbol-overloading-reference)
+8. [Component Notation](#component-notation)
+
+---
+
+## Canonical Control-Affine Terminology
+
+These definitions govern the site, textbooks, and terminology gate. A local
+model may use a reduced inventory only when it states the omitted terms. A
+counterfactual label never identifies muscle activation, biological effort, or
+intent by itself.
+
+<!-- TERMINOLOGY-CONTRACT:START -->
+
+| Acronym  | Canonical Expansion          | First-Use Qualifiers                           |
+| -------- | ---------------------------- | ---------------------------------------------- |
+| **ZTCF** | Zero-Torque Counterfactual   | pointwise, stitched, forward, branched, family |
+| **ZVCF** | Zero-Velocity Counterfactual | instantaneous                                  |
+| **DCR**  | Drift-Control Ratio          | ratio                                          |
+| **DgCR** | Drag-Curve Ratio             | ratio                                          |
+
+<!-- TERMINOLOGY-CONTRACT:END -->
+
+### Drift and Control
+
+For a declared control-affine effective plant,
+
+$$
+\dot{x}=f_p(x)+G_p(x)u,
+$$
+
+$p$ collects declared model parameters, contact mode, prescribed motion, and
+any frozen impedance or strategy variables. The **drift** $f_p$ is the complete
+autonomous evolution of that declared plant when the declared control $u$ is
+zero. It therefore includes every retained state-dependent term: inertia,
+gravity, Coriolis and centrifugal effects, passive elasticity and damping,
+shaft dynamics, and compatible constraint or contact reactions. A rigid,
+frictionless gravity-plus-Coriolis drift is a special model, not the general
+definition.
+
+The **control** $u$ is the input channel explicitly removed by the
+counterfactual. If activation changes impedance, then the analyst must either
+model that change as control or declare the impedance frozen in $p$; it must not
+silently move between drift and control. Exogenous disturbances that are not
+zeroed belong in a separately declared disturbance channel rather than being
+called control.
+
+### ZTCF Construction Family
+
+The **Zero-Torque Counterfactual (ZTCF) family** sets the declared applied
+generalized-control channel to zero while preserving the declared effective
+plant. The family has four distinct constructions:
+
+1. A **pointwise ZTCF sample** evaluates $f_p(x(t))$ at one achieved state.
+2. A **stitched pointwise ZTCF trace** collects pointwise samples along achieved
+   states; it is not a dynamically integrated trajectory.
+3. A **forward ZTCF trajectory** integrates $\dot{x}=f_p(x)$ from one declared
+   initial state.
+4. A **branched ZTCF trajectory** is a forward trajectory initialized at an
+   achieved state and compared with the achieved future.
+
+The construction must be qualified on first use. ZTCF does not mean “no
+muscle,” “no EMG,” or “flaccid body.” It means zero value in the declared
+applied-control channel under the stated frozen-plant assumptions.
+
+### Instantaneous ZVCF
+
+For second-order dynamics
+
+$$
+M(q)\ddot q+h(q,\dot q,z;p)=B(q)u,
+$$
+
+the **instantaneous Zero-Velocity Counterfactual (ZVCF) acceleration** is
+
+$$
+a_{\mathrm{ZVCF}}(q,z;p)
+=-M(q)^{-1}h(q,0,z_0;p),
+\qquad u=0.
+$$
+
+All generalized velocities and declared velocity-like internal states are
+zeroed; configuration, contact mode, non-velocity internal state, and frozen
+parameters are held fixed. The ZVCF is an instantaneous acceleration, not a
+state or a releasable trajectory. It includes retained configuration-dependent
+autonomous loads and excludes both velocity-dependent terms and the direct
+control contribution. A generalized-force image may be reported as a **ZVCF
+generalized-force representation**, but that representation is not the ZVCF
+itself.
+
+### DCR and DgCR
+
+The **Drift-Control Ratio (DCR)** compares drift acceleration with the maximum
+available control acceleration in the same declared space:
+
+$$
+\operatorname{DCR}_{W,\mathcal U}(x)
+=\frac{\lVert W a_d(x)\rVert_2}
+{\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon}.
+$$
+
+$a_d$ and $B_a u$ are the drift and control blocks in one acceleration or
+task-projected space; $W$ supplies the declared scaling or metric;
+$\mathcal U(x)$ is the admissible control set; and $\varepsilon$ is a reported
+regularizer. A full-state norm that mixes position and velocity units is not a
+DCR. A ratio using the realized input rather than bounded authority must be
+called a **realized drift-to-input ratio**, not DCR.
+
+The aerodynamic **Drag-Curve Ratio (DgCR)** remains
+$(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
 
 ---
 
@@ -135,16 +244,16 @@ This document serves as the authoritative reference for all mathematical symbols
 
 ### Golf-Specific Quantities
 
-| Symbol   | Quantity                       | Definition                                                                                                                                                                                               | Units                     |
-| -------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| **CoG**  | Center of gravity              | Center of mass                                                                                                                                                                                           | m (relative to reference) |
-| **COR**  | Coefficient of restitution     | (v_out - v_contact) / (v_in - v_contact)                                                                                                                                                                 | Dimensionless, 0-1        |
-| **DCR**  | Drift–Control Ratio            | $\lVert f_{\text{acc}}(x)\rVert_M / \lVert G_{\text{acc}}(x)\,u_{\max}\mathbf{1}\rVert_M$ (inertia-weighted; see [Controllability & the Drift-Control Ratio](articles/controllability-drift-ratio.html)) | Dimensionless             |
-| **DgCR** | Drag–curve ratio (aerodynamic) | (1 - COR) / (1 + COR)                                                                                                                                                                                    | Dimensionless, 0-1        |
-| **e**    | Coefficient of restitution     | Same as COR                                                                                                                                                                                              | Dimensionless             |
-| **v_0**  | Ball velocity (impact)         | Velocity immediately after impact                                                                                                                                                                        | m/s                       |
-| **α**    | Launch angle                   | Angle above horizontal                                                                                                                                                                                   | degrees (°) or radians    |
-| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                                                                                                    | RPM or rad/s              |
+| Symbol   | Quantity                       | Definition                                                                                                                    | Units                     |
+| -------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| **CoG**  | Center of gravity              | Center of mass                                                                                                                | m (relative to reference) |
+| **COR**  | Coefficient of restitution     | (v_out - v_contact) / (v_in - v_contact)                                                                                      | Dimensionless, 0-1        |
+| **DCR**  | Drift-Control Ratio            | $\lVert W a_d(x)\rVert_2 /(\sup_{u\in\mathcal U(x)}\lVert W B_a(x)u\rVert_2+\varepsilon)$; see the canonical definition above | Dimensionless             |
+| **DgCR** | Drag–curve ratio (aerodynamic) | (1 - COR) / (1 + COR)                                                                                                         | Dimensionless, 0-1        |
+| **e**    | Coefficient of restitution     | Same as COR                                                                                                                   | Dimensionless             |
+| **v_0**  | Ball velocity (impact)         | Velocity immediately after impact                                                                                             | m/s                       |
+| **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
+| **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
 
 **Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](articles/controllability-drift-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
@@ -224,6 +333,20 @@ $$R = R_Z(\psi) R_Y(\theta) R_X(\phi)$$
 ## Symbol Overloading Reference
 
 Some symbols are used for multiple meanings depending on context. Use surrounding context to disambiguate.
+
+### f, G, g, and u (Control-Affine Dynamics)
+
+| Symbol     | Meaning                                                   | Type                                          | Rule                                                                        |
+| ---------- | --------------------------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------- |
+| **$f(x)$** | Complete autonomous drift of the declared effective plant | State vector field                            | State and declared frozen parameters only; no direct $u$ contribution       |
+| **$G(x)$** | Input map                                                 | Matrix or collection of control vector fields | Uppercase $G$ throughout control-affine equations                           |
+| **$g(q)$** | Gravity generalized-force vector                          | Generalized force                             | Lowercase $g$ is reserved for gravity in mechanics equations                |
+| **$u$**    | Declared control input                                    | Input vector                                  | State its physical level, admissible set, and what the counterfactual zeros |
+
+**Disambiguation rule:** Do not use lowercase $g(x)$ for the input map. Do not
+use uppercase $G(q)$ for gravity. When a source convention must be quoted,
+identify it as source notation and translate immediately to the canonical
+symbols.
 
 ### F (Force, Frame, Frequency)
 

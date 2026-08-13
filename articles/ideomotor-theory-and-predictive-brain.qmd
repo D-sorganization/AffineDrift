@@ -133,10 +133,10 @@ module takes control. This is **mixture-of-experts** in modern machine learning 
 
 The drift-control decomposition of Volume I maps naturally onto the forward model:
 
-$$\dot{\mathbf{x}} = f(\mathbf{x}) + g(\mathbf{x})\mathbf{u}$$
+$$\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$$
 
 The **drift** $f(\mathbf{x})$ is the forward model's prediction of what happens
-**without** control (passive dynamics). The **control** $g(\mathbf{x})\mathbf{u}$
+**without** control (passive dynamics). The **control** $G(\mathbf{x})\mathbf{u}$
 is the correction term.
 
 An expert golfer's forward model has learned $f(\mathbf{x})$ so accurately that control
@@ -192,7 +192,7 @@ The "Vol I", "Vol II", etc. references in this table point to chapters in *Geome
 ## Python: Forward Model Simulation
 
 The following example uses a nonlinear damped pendulum to match the nonlinear setting of
-the control-affine framework $\dot{\mathbf{x}} = f(\mathbf{x}) + g(\mathbf{x})\mathbf{u}$,
+the control-affine framework $\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$,
 where $f(\mathbf{x})$ captures the genuinely nonlinear passive dynamics (gravity, damping)
 rather than a linearised approximation.
 
@@ -222,7 +222,7 @@ class ForwardModel:
         return np.array([dtheta, -(self.g / self.l) * np.sin(theta) - self.b * dtheta])
 
     def g_mat(self, x):
-        """Control gain matrix: g(x) — for this pendulum, control acts on acceleration"""
+        """Control gain matrix: G(x) — for this pendulum, control acts on acceleration"""
         return np.array([0.0, 1.0 / (self.m * self.l**2)])
 
     def predict(self, x, u, dt=0.01):

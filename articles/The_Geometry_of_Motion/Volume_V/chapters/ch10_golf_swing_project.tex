@@ -41,7 +41,7 @@ analysis pipeline for the golf swing. The pipeline implements:
 3. Trajectory Optimization & DDP/iLQR & Vol~I \\
 4. Contraction Analysis & Contraction theory & Vol~I \\
 5. Funnel Computation & Trajectory tubes & Vol~II \\
-6. ZTCF Decomposition & Drift vs.\ control & Vol~I \\
+6. ZTCF family Decomposition & Drift vs.\ control & Vol~I \\
 7. Muscle Force Estimation & Hill model + static opt & Vol~III \\
 8. Motor Analysis & UCM, synergies & Vol~IV \\
 9. Visualization \& Export & Companion platform tools & Vol~V \\
@@ -68,7 +68,7 @@ both gives $13.3$~m/s from the correct Jacobian against $22.5$~m/s from the scal
 a $69\%$ overestimate. The old code even accumulated \texttt{cumulative\_angle} and then
 never used it, and carried a Jacobian loop whose body was \texttt{pass}.
 
-\texttt{ztcf\_decomposition} returned a hardcoded $60/40$ split of clubhead speed. Its own
+\texttt{ZTCF\_decomposition} returned a hardcoded $60/40$ split of clubhead speed. Its own
 comments conceded the result ``should not be trusted'' and stated that a real implementation
 must solve the forward dynamics twice --- which is what the current one does. Because the
 dynamics are control-affine, the difference between the torqued and zero-torque solutions is
@@ -118,7 +118,7 @@ about the swing.
     \node[fill=green!20] (inverse) at (3, 4.5) {Inverse\\Dynamics};
 
     % Row 3: Analysis
-    \node[fill=yellow!20] (ztcf) at (0, 3) {ZTCF};
+    \node[fill=yellow!20] (ZTCF) at (0, 3) {ZTCF};
     \node[fill=yellow!20] (muscle) at (2, 3) {Muscle\\Force};
     \node[fill=yellow!20] (ucm) at (4, 3) {UCM};
 
@@ -130,10 +130,10 @@ about the swing.
     \draw[->] (motion) -- (inverse);
     \draw[->] (motion) -- (forward);
     \draw[->] (forces) -- (inverse);
-    \draw[->] (forward) -- (ztcf);
+    \draw[->] (forward) -- (ZTCF);
     \draw[->] (inverse) -- (muscle);
     \draw[->] (forward) -- (ucm);
-    \draw[->] (ztcf) -- (report);
+    \draw[->] (ZTCF) -- (report);
     \draw[->] (muscle) -- (report);
     \draw[->] (ucm) -- (report);
   \end{tikzpicture}

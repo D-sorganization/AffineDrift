@@ -341,7 +341,7 @@ are model-dependent and illustrative):
 
 #### Zero-Torque Counterfactual Trajectory
 
-The ZTCF is computed by integrating the dynamics with $u = 0$ starting from the
+The ZTCF family is computed by integrating the dynamics with $u = 0$ starting from the
 state at each swing instant. For a 0.1-second window in the downswing (say, $t \in [0.6, 0.7]$),
 we compute the ZTCF trajectory:
 
@@ -1778,7 +1778,7 @@ plt.title("LQR Pendulum Stabilization"); plt.legend(); plt.grid(True)
 ```python
 def compute_drift_control_ratio(f_drift, g_control, x_traj, u_traj, dt):
     """
-    Compute the drift-control ratio rho(t) = ||f(x,0)|| / ||g(x) * u||
+    Compute the drift-control ratio rho(t) = ||f(x,0)|| / ||G(x) * u||
     along a trajectory.
 
     Parameters
@@ -1786,7 +1786,7 @@ def compute_drift_control_ratio(f_drift, g_control, x_traj, u_traj, dt):
     f_drift : callable
         Drift vector field f(x, 0): uncontrolled dynamics
     g_control : callable
-        Control-gain field g(x): columns are control directions
+        Control-gain field G(x): columns are control directions
     x_traj : np.ndarray, shape (T, n)
         State trajectory
     u_traj : np.ndarray, shape (T, m)

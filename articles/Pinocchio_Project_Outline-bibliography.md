@@ -5,7 +5,7 @@
 ## Concept Map
 
 - **Canonical Model Specification**: A single source of truth (YAML) for kinematics and dynamics that generates backend-specific formats (URDF, MJCF).
-- **Control-Affine Dynamics**: Modeling the system as $\dot{x} = f(x) + g(x)u$ to enable counterfactual analysis.
+- **Control-Affine Dynamics**: Modeling the system as $\dot{x} = f(x) + G(x)u$ to enable counterfactual analysis.
 - **Inverse Kinematics (IK)**: Solving for joint configurations given task-space goals (e.g., clubhead trajectory) using differential IK (Pink).
 - **Inverse Dynamics (ID)**: Computing required joint torques to achieve a given motion (Pinocchio).
 - **Counterfactual Physics**:
@@ -215,7 +215,7 @@ bibliography:
 2.  **Dynamics of Multibody Systems (Shabana, 2020)** - Essential for understanding constrained systems and flexible bodies.
 3.  **Kinematic Control of Redundant Robot Manipulators (Siciliano, 1990)** - Fundamental for understanding null-space resolution in IK.
 4.  **A Unified Approach... (Khatib, 1987)** - The operational space formulation which underpins modern force control.
-5.  **Nonlinear Control Systems (Isidori, 1995)** - Theory for the affine control structure ($\dot{x} = f(x) + g(x)u$) and drift fields.
+5.  **Nonlinear Control Systems (Isidori, 1995)** - Theory for the affine control structure ($\dot{x} = f(x) + G(x)u$) and drift fields.
 6.  **Mathematical Introduction to Robotic Manipulation (Murray et al., 1994)** - Rigorous treatment of geometric mechanics.
 
 ### Path 3: Implementation (Golf Biomechanics)

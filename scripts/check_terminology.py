@@ -28,6 +28,13 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SEARCH_ROOTS = ("articles", "pages", "resources")
 SUFFIXES = {".tex", ".qmd"}
+ENFORCED_ACRONYMS = ("ZTCF", "ZVCF", "DCR", "DgCR")
+CONTRACT_START = "<!-- TERMINOLOGY-CONTRACT:START -->"
+CONTRACT_END = "<!-- TERMINOLOGY-CONTRACT:END -->"
+CONTRACT_ROW = re.compile(
+    r"^\|\s*\*\*(?P<acronym>[A-Za-z]+)\*\*\s*\|\s*"
+    r"(?P<expansion>[^|]+?)\s*\|\s*(?P<qualifiers>[^|]+?)\s*\|\s*$"
+)
 
 # (regex, human-readable rule, what to use instead)
 BANNED: tuple[tuple[str, str, str], ...] = (
@@ -87,6 +94,117 @@ BANNED: tuple[tuple[str, str, str], ...] = (
 COMPILED = tuple((re.compile(pattern), rule, fix) for pattern, rule, fix in BANNED)
 
 
+def _authority_finding(acronym: str, message: str) -> dict[str, object]:
+    """Build one fail-closed finding for a missing or malformed authority row."""
+    return {
+        "file": "NOTATION.md",
+        "line": 1,
+        "rule": "terminology authority",
+        "term": acronym,
+        "fix": message,
+    }
+
+
+def load_contract(root: Path) -> tuple[dict[str, dict[str, object]], list[dict[str, object]]]:
+    """Parse the machine-readable terminology table in ``NOTATION.md``."""
+    path = root / "NOTATION.md"
+    if not path.is_file():
+        findings = [
+            _authority_finding(acronym, "add the canonical entry to NOTATION.md")
+            for acronym in ENFORCED_ACRONYMS
+        ]
+        return {}, findings
+    text = path.read_text(encoding="utf-8")
+    if CONTRACT_START not in text or CONTRACT_END not in text:
+        findings = [
+            _authority_finding(acronym, "add the canonical terminology contract table")
+            for acronym in ENFORCED_ACRONYMS
+        ]
+        return {}, findings
+    body = text.split(CONTRACT_START, 1)[1].split(CONTRACT_END, 1)[0]
+    contract: dict[str, dict[str, object]] = {}
+    for line in body.splitlines():
+        match = CONTRACT_ROW.match(line)
+        if not match:
+            continue
+        acronym = match.group("acronym")
+        contract[acronym] = {
+            "expansion": match.group("expansion").strip(),
+            "qualifiers": tuple(
+                item.strip().lower()
+                for item in match.group("qualifiers").split(",")
+                if item.strip()
+            ),
+        }
+    findings = [
+        _authority_finding(acronym, f"add the {acronym} entry to NOTATION.md")
+        for acronym in ENFORCED_ACRONYMS
+        if acronym not in contract
+    ]
+    return contract, findings
+
+
+def _normalize_words(value: str) -> str:
+    """Normalize case and punctuation while preserving word order."""
+    return " ".join(re.findall(r"[a-z0-9]+", value.lower()))
+
+
+def _expansion_findings(
+    relative: str, text: str, contract: dict[str, dict[str, object]]
+) -> list[dict[str, object]]:
+    """Reject explicit acronym expansions that do not match the authority."""
+    findings: list[dict[str, object]] = []
+    lines = text.splitlines()
+    phrase_patterns = {
+        "ZTCF": r"Zero(?:[-\s]+[A-Za-z]+){2,7}",
+        "ZVCF": r"Zero(?:[-\s]+[A-Za-z]+){2,7}",
+        "DCR": r"Drift(?:[-\s]+[A-Za-z]+){1,5}",
+        "DgCR": r"Drag(?:[-\s]+[A-Za-z]+){1,5}",
+    }
+    for acronym, entry in contract.items():
+        canonical = _normalize_words(str(entry["expansion"]))
+        pattern = re.compile(
+            rf"(?P<phrase>{phrase_patterns[acronym]})\s*\(\s*{acronym}\s*\)",
+            flags=re.IGNORECASE,
+        )
+        for number, line in enumerate(lines, start=1):
+            for match in pattern.finditer(line):
+                phrase = _normalize_words(match.group("phrase"))
+                if not phrase.endswith(canonical):
+                    findings.append(
+                        {
+                            "file": relative,
+                            "line": number,
+                            "rule": f"{acronym} canonical expansion",
+                            "term": match.group("phrase").strip(),
+                            "fix": str(entry["expansion"]),
+                        }
+                    )
+    return findings
+
+
+def _ztcf_first_use_finding(
+    relative: str, text: str, contract: dict[str, dict[str, object]]
+) -> dict[str, object] | None:
+    """Require the first visible ZTCF use to identify the construction."""
+    match = re.search(r"\bZTCF\b", text)
+    entry = contract.get("ZTCF")
+    if match is None or entry is None:
+        return None
+    line = text.count("\n", 0, match.start()) + 1
+    window = _normalize_words(text[max(0, match.start() - 120) : match.end() + 40])
+    qualifiers = tuple(str(item) for item in entry["qualifiers"])
+    if any(re.search(rf"\b{re.escape(qualifier)}\b", window) for qualifier in qualifiers):
+        return None
+    return {
+        "file": relative,
+        "line": line,
+        "rule": "ZTCF first-use qualifier",
+        "term": "ZTCF",
+        "fix": "identify pointwise, stitched, forward, branched, or family scope",
+    }
+
+
 def iter_sources(root: Path) -> list[Path]:
     """Every .tex and .qmd file under the configured search roots."""
     found: list[Path] = []
@@ -99,13 +217,17 @@ def iter_sources(root: Path) -> list[Path]:
 
 def scan(root: Path) -> list[dict[str, object]]:
     """Return one finding per banned term occurrence."""
-    findings: list[dict[str, object]] = []
+    contract, findings = load_contract(root)
     for path in iter_sources(root):
         relative = path.relative_to(root).as_posix()
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             text = path.read_text(encoding="utf-8-sig")
+        findings.extend(_expansion_findings(relative, text, contract))
+        first_use = _ztcf_first_use_finding(relative, text, contract)
+        if first_use is not None:
+            findings.append(first_use)
         for number, line in enumerate(text.splitlines(), start=1):
             for pattern, rule, fix in COMPILED:
                 if pattern.search(line):

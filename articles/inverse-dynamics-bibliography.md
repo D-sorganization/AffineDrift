@@ -8,7 +8,7 @@ editor: source
 
 - **Inverse Dynamics Limitations**: The core theme, decomposing the ambiguity in calculating forces from motion.
 - **Equivalent Couple Problem**: The inherent spatial ambiguity of reducing distributed forces to a single force-couple pair at a reference point.
-- **Control-Affine Decomposition**: The separation of dynamics into passive drift ($f(x)$) and active input ($g(x)u$), and the inability of inverse dynamics to distinguish them without a model.
+- **Control-Affine Decomposition**: The separation of dynamics into passive drift ($f(x)$) and active input ($G(x)u$), and the inability of inverse dynamics to distinguish them without a model.
 - **Aerodynamic Drag**: The systematic error introduced by neglecting air resistance, particularly for high-speed clubhead motion.
 - **Instrumented Grips**: Experimental methods to resolve the closed-loop indeterminacy by measuring hand interaction forces directly.
 - **Alpha Torque**: A specific debate in golf biomechanics regarding the existence and sign of twisting torques about the shaft axis.
@@ -164,7 +164,7 @@ Understanding the "Interpretive Gap" requires seeing both the standard method an
 For those building the math: how to formalize the ambiguity using control theory and rigid body mechanics.
 
 - **featherstone2008rigid**: The bible of spatial vector algebra. Essential for understanding the "Equivalent Couple" problem in 6D spatial notation.
-- **bullo2004geometric**: Provides the rigorous definition of **Control-Affine Systems** ($\dot{x} = f(x) + g(x)u$) and the separation of drift and input vector fields.
+- **bullo2004geometric**: Provides the rigorous definition of **Control-Affine Systems** ($\dot{x} = f(x) + G(x)u$) and the separation of drift and input vector fields.
 - **choi2020three**: The primary source for 6-DOF instrumented grip data, attempting to resolve the spatial ambiguity experimentally.
 - **koike2016force**: Another experimental approach using strain gauges to separate left/right hand contributions.
 - **murray1994mathematical**: Foundational robotics text that treats manipulation systems as control systems, bridging the gap between mechanics and control.

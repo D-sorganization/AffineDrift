@@ -21,7 +21,7 @@ $$
 \dot{x} = f(x) + G(x)u.
 $$
 
-Here, $f(x)$ is the **drift**---the autonomous dynamics arising from gravity, momentum, elastic energy, and Coriolis/centrifugal coupling. And $G(x)u$ is the **input**---the torques the golfer actively generates through muscular contraction. The key structural property is that these two contributions are *additively separable*: the drift field and the input field combine linearly in the state derivative. This additive structure provides the mathematical justification for the **Skeletal Baseline** and validates the Zero Torque Counterfactual (ZTCF) as the system's natural trajectory from which all active deviation must be produced.
+Here, $f(x)$ is the **drift**---the autonomous dynamics arising from gravity, momentum, elastic energy, and Coriolis/centrifugal coupling. And $G(x)u$ is the **input**---the torques the golfer actively generates through muscular contraction. The key structural property is that these two contributions are *additively separable*: the drift field and the input field combine linearly in the state derivative. This additive structure provides the mathematical justification for the **Skeletal Baseline** and validates the Zero Torque Counterfactual (ZTCF) family as the system's natural trajectory from which all active deviation must be produced.
 
 This control-theoretic perspective transforms how we understand the swing. In traditional biomechanics, we measure a total force and ask: "How hard did the golfer work?" In the control-affine framework, we ask a more powerful question: "How much of this force is the golfer supplying, and how much is the system providing for free?"
 
@@ -348,7 +348,7 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
 
 ## Related Theoretical Sections
 
-*   **Part 1:** Establishes the fundamental $\dot{x} = f(x) + g(x)u$ equation.
+*   **Part 1:** Establishes the fundamental $\dot{x} = f(x) + G(x)u$ equation.
 *   **Part 2:** Defines the **ZTCF** and **ZVCF** counterfactuals derived from this structure.
 *   **Part 3:** Proves the **Drift Invariance** property essential for causal attribution.
 *   **Part 5:** Provides the numerical **Skeletal Baseline** validation of these control-theoretic concepts.
@@ -408,7 +408,7 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
       <h3>Deep Technical: Underactuated Robotics (Russ Tedrake)</h3>
       <p class="resource-description">
         The canonical introduction to "Drift-Dominated" systems. Prof. Tedrake (MIT) defines the
-        standard form $\dot{x} = f(x) + g(x)u$ and explains how to exploit passive dynamics
+        standard form $\dot{x} = f(x) + G(x)u$ and explains how to exploit passive dynamics
         rather than canceling them—the core philosophy of the Affine Drift framework.
       </p>
       <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
