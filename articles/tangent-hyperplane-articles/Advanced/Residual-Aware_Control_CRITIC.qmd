@@ -12,7 +12,7 @@ This critique is structured to identify **actionable weaknesses** that could be 
 
 ### Summary of Concern
 
-The proof of Theorem 1.1 (Quantitative Residual Bound) makes several unstated assumptions and omits critical steps in the derivation, particularly in the transition from continuous-time analysis to the discrete-time bound used in practice.
+The proof of Theorem 1.1 (Quantitative Residual Bound) makes several unstated assumptions and omits critical steps in the derivation. The omissions are concentrated in the transition from continuous-time analysis to the discrete-time bound used in practice.
 
 ### Location
 
@@ -24,7 +24,7 @@ The proof of Theorem 1.1 (Quantitative Residual Bound) makes several unstated as
 
 **Logical gaps:**
 
-1. **Step from eq. 2.7 to 2.9:** The proof claims $\|\delta u\| \leq K \|\delta x\|$ "for control-affine systems where δu is chosen via LQR," but this is only true for the *optimal* LQR controller, and only when the linearization is accurate. This is circular: we're bounding residuals assuming the controller works, but the controller's validity depends on small residuals.
+1. **Step from eq. 2.7 to 2.9:** The proof claims $\|\delta u\| \leq K \|\delta x\|$ "for control-affine systems where δu is chosen via LQR." This is only true for the *optimal* LQR controller, and only when the linearization is accurate. The argument is also circular: we're bounding residuals assuming the controller works, but the controller's validity depends on small residuals.
 
 2. **Integration argument:** The proof integrates $\|\dot{r}\| \leq C_M \|\delta x\|^2$ to get $\|r(t_1)\| \leq \int \|\dot{r}\| dt$, but $\delta x(t)$ itself depends on $r(t)$ through the coupling $\dot{\delta x} = A \delta x + \text{terms involving } r$. The proof treats $\delta x(t)$ as known, but it's part of the system state.
 
@@ -78,7 +78,7 @@ These gaps make the bound **qualitatively useful** (residuals scale as O(||δx||
 
 ### Summary of Concern
 
-Theorem 2.1 claims that "Adaptive DDP converges to a local minimum of the continuous-time cost functional" with discretization error O(εᵣ), but the proof is a hand-wave ("proof sketch") and the assumptions are vague ("standard DDP assumptions").
+Theorem 2.1 claims that "Adaptive DDP converges to a local minimum of the continuous-time cost functional" with discretization error O(εᵣ). But the proof is a hand-wave ("proof sketch"), and the assumptions are vague ("standard DDP assumptions").
 
 ### Location
 
@@ -144,7 +144,7 @@ Without a rigorous convergence proof, the adaptive timestep method is **heuristi
 
 ### Summary of Concern
 
-The article uses two methods for computing Hessian bounds (analytical and autodiff), but neither is validated against ground truth, and the bounds may be overly conservative or incorrect for complex systems.
+The article uses two methods for computing Hessian bounds (analytical and autodiff), but neither is validated against ground truth. The bounds may therefore be overly conservative or incorrect for complex systems.
 
 ### Location
 
@@ -212,7 +212,7 @@ A rigorous paper would include:
 
 ### Summary of Concern
 
-The application examples (quadrotor, humanoid, golf) present **simulated results** with suspiciously round numbers (e.g., "40% fewer nodes," "4× speedup") but no error bars, no comparison against other state-of-the-art methods, and no discussion of hyperparameter tuning.
+The application examples (quadrotor, humanoid, golf) present **simulated results** with suspiciously round numbers (e.g., "40% fewer nodes," "4× speedup"). They offer no error bars, no comparison against other state-of-the-art methods, and no discussion of hyperparameter tuning.
 
 ### Location
 

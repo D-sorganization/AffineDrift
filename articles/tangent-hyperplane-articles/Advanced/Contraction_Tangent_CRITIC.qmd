@@ -13,7 +13,7 @@
 
 This article claims a close relationship between contraction theory and tangent-space methods, asserting that the Riccati solution can serve as both a contraction metric and a value-function object. The mathematical observations are often useful in restricted settings, but the article needs clearer conditions:
 
-1. **Overstated duality claims**: The "stability ↔ optimality duality" is presented as bidirectional and universal, when it is actually unidirectional (LQR → contraction) and limited to specific problem classes.
+1. **Overstated duality claims**: The "stability ↔ optimality duality" is presented as bidirectional and universal, when it is unidirectional (LQR → contraction) and limited to specific problem classes.
 
 2. **Unjustified coordinate-free claims**: Section 6 asserts the framework is "coordinate-free" while relying heavily on coordinate-dependent linearizations and Euclidean metrics.
 
@@ -25,7 +25,7 @@ This article claims a close relationship between contraction theory and tangent-
 
 6. **Missing proofs and logical gaps**: Theorem 4.1 on "certified stability" assumes conditions that are never verified; Hypothesis 7.1 on synergies is stated as fact without evidence.
 
-**Severity**: High. Core claims exceed what the mathematics actually establishes.
+**Severity**: High. Core claims exceed what the mathematics establishes.
 
 **Recommendation**: Major revisions to narrow scope, add qualifying conditions, provide missing proofs, and separate speculative applications from validated theory.
 
@@ -63,7 +63,7 @@ The proven direction is **one-way only**:
 
 **Contraction → LQR** (NOT proven):
 - Given an arbitrary contraction metric $\mathbf{M}$ satisfying $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}$, does there exist $\mathbf{Q}$, $\mathbf{R}$ such that $\mathbf{M} = \mathbf{S}$ is the ARE solution?
-- **Answer**: Not in general! The contraction condition is a **Lyapunov inequality**, which has infinitely many solutions. Only a very specific subset corresponds to Riccati solutions.
+- **Answer**: Not in general! The contraction condition is a **Lyapunov inequality**, which has infinitely many solutions. Only a narrow subset corresponds to Riccati solutions.
 
 ### Counterexample
 
@@ -191,7 +191,7 @@ $$
 \mathbf{Q} + \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M} = 2\lambda \mathbf{M}
 $$
 
-This is a **very specific relationship** between $\mathbf{Q}$, $\mathbf{R}$, $\mathbf{M}$, and $\lambda$, not a general identity.
+This is a **narrow relationship** between $\mathbf{Q}$, $\mathbf{R}$, $\mathbf{M}$, and $\lambda$, not a general identity.
 
 **Issue 2**: For time-varying $\mathbf{M}(t) = \mathbf{S}(t)$, substitute the DRE into the contraction condition:
 $$
@@ -219,7 +219,7 @@ The article conflates:
 
 - **Constant metric** $\mathbf{M}$: The distance $\|\delta \mathbf{x}\|_{\mathbf{M}}^2 = \delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}$ is globally comparable across time.
 
-- **Time-varying metric** $\mathbf{M}(t)$: The "distance" $\|\delta \mathbf{x}(t)\|_{\mathbf{M}(t)}^2$ changes meaning over time. A trajectory could be "contracting" in this metric while actually diverging in Euclidean norm!
+- **Time-varying metric** $\mathbf{M}(t)$: The "distance" $\|\delta \mathbf{x}(t)\|_{\mathbf{M}(t)}^2$ changes meaning over time. A trajectory could be "contracting" in this metric while diverging in Euclidean norm!
 
 ### Example: Time-Varying Metric Paradox
 
@@ -694,7 +694,7 @@ The article reports:
 
 **Questions**:
 - Were PD gains optimized, or just set heuristically?
-- A well-tuned PD can achieve very low tracking error on smooth trajectories.
+- A well-tuned PD can achieve low tracking error on smooth trajectories.
 - Why not compare against **operational space control** (Khatib, 1987), which is the actual state-of-the-art for task-space tracking?
 
 **Issue 3**: **Cherry-picked metric**. "Measured $\lambda$" is computed as:

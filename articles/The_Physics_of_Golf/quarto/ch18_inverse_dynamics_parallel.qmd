@@ -84,7 +84,7 @@ But the golf swing is not a simple open chain. It is *constrained*. And that cha
 
 Imagine a robot arm: shoulder (1 DOF), elbow (1 DOF), wrist (1 DOF). Three joints, three motors. You command the motors with specific torques and watch the arm move. This is forward dynamics: you set the input (motor torques), physics tells you the output (arm trajectory).
 
-Now imagine you video the arm's motion and want to reverse-engineer the motor commands. You measure the arm's angles and angular velocities frame by frame. Then you differentiate to get accelerations. Now, the question: what motors torques caused these accelerations?
+Now imagine you video the arm's motion and want to reverse-engineer the motor commands. You measure the arm's angles and angular velocities frame by frame. Then you differentiate to get accelerations. Now, the question: what motor torques caused these accelerations?
 
 At the level of net joint torques in a fully specified open-chain model, the answer can be unambiguous. With three measurements (three joint accelerations) and three generalized torque unknowns, you solve a square linear system. Muscle-by-muscle sharing is still a separate redundancy problem.
 
@@ -393,7 +393,7 @@ $$
 d = 14 - 6 = 8
 $$ {#eq-nullspace_dim_two_arms}
 
-This means there are an 8-dimensional family of joint configurations that all result in the same club position and orientation. Some examples of these null space motions:
+This means there is an 8-dimensional family of joint configurations that all result in the same club position and orientation. Some examples of these null space motions:
 
 - Adjust right-hand grip pressure while maintaining club position.
 - Adjust left-hand grip angle without changing the club's position.
@@ -448,7 +448,7 @@ Mechanically: a force in the range of $\bm{J}_c^T$ does zero work on any velocit
 
 Internal forces (those in the null space of $\bm{J}_c^T$) are mechanically "invisible" — they don't change the kinematics. But they create real stresses in tissues.
 
-For example, a golfer might grip the club very tightly (large internal grip force) while maintaining identical club trajectory compared to a golfer with light grip. The kinematics are the same, but the internal stresses are very different. The tight-grip golfer may fatigue forearm muscles and risk injury from the excess internal force.
+For example, a golfer might grip the club tightly (large internal grip force) while maintaining identical club trajectory compared to a golfer with light grip. The kinematics are the same, but the internal stresses differ. The tight-grip golfer may fatigue forearm muscles and risk injury from the excess internal force.
 
 This is why the dual null space matters for injury-risk and coaching discussions: it identifies quantities that require force measurements, tissue models, or explicit load-sharing assumptions before the text can make applied claims.
 :::
@@ -477,7 +477,7 @@ $$ {#eq-coriolis_general}
 
 Both $\bm{\omega}$ (body rotation rate) and $\bm{v}_{\text{rel}}$ (relative velocity) are estimated from joint angles and velocities after filtering and differentiation.
 
-Moreover, Coriolis is *perpendicular* to the velocity that creates it. This perpendicularity is a kinematic fact, not dependent on forces.
+The Coriolis force is also *perpendicular* to the velocity that creates it. This perpendicularity is a kinematic fact, not dependent on forces.
 
 ### Centrifugal Force {#sec-centrifugal_inverse}
 
@@ -592,7 +592,7 @@ The left arm "load" and the right arm "load" are unobservable from kinematics al
 2. **Optimization criterion:** minimize a scalar objective such as $J = \sum_i (\tau_i / \tau_{i,\text{max}})^2$ or $J = \sum_i (\dot{E}_i)^2$ (metabolic cost), subject to the constraint $\bm{F}_L + \bm{F}_R = \bm{F}_{\text{total}}$.
 3. **Instrumented measurement:** use force plates under each hand (or each foot for lower body) to directly measure the constraint forces, breaking the ambiguity.
 
-The optimization approach has become standard in biomechanics, with the understanding that different objective functions (minimize muscle activation, minimize metabolic cost, minimize joint torques, etc.) will yield different load distributions — all of which are mechanically consistent with the measured motion.
+The optimization approach has become standard in biomechanics. Different objective functions (minimize muscle activation, minimize metabolic cost, minimize joint torques, etc.) yield different load distributions, all of which are mechanically consistent with the measured motion.
 :::
 
 ## Why Forward Works but Inverse Doesn't: The Asymmetry
@@ -649,7 +649,7 @@ Physically: knowing how the skeleton moved does not fully specify what the muscl
 ::: {.callout-note}
 ## The Glass Half Full
 
-Despite the ambiguity, inverse dynamics is not useless. Some quantities are directly measured, some are model-conditioned estimates, and some remain unidentifiable without additional data. It is important to know exactly which category each claim occupies.
+Despite the ambiguity, inverse dynamics is not useless. Some quantities are directly measured, some are model-conditioned estimates, and some remain unidentifiable without additional data. Knowing which category each claim occupies is essential.
 
 :::
 
@@ -885,7 +885,7 @@ However, this assumption—that the left arm is passive—is a modeling choice. 
 
 ## Lower Body Inverse Dynamics: GRF and Feet {#sec-lower_body_inverse_dynamics}
 
-The lower body biomechanics can be analyzed using the same inverse dynamics framework, but with the advantage that force plate data provides a known boundary condition.
+The same inverse dynamics framework applies to the lower body, with one advantage: force plate data provides a known boundary condition.
 
 ### Force Plate Boundary Condition {#sec-force_plate_bc}
 
@@ -923,7 +923,7 @@ A 100 kg golfer during the downswing:
 
 From kinematics and the force plate data, we can compute the hip torque that produced the observed acceleration.
 
-If the ground torque is $M_z = 80$ N·m (an illustrative value chosen from the scale of reported force-plate and inverse-dynamics golf-swing measurements, not a universal benchmark) [@Nesbit2005], and this is applied at the feet (roughly 0.2 m from the pelvis), the resulting pelvis torque is approximately $\tau_{\text{pelvis}} = M_z / I_{\text{hip}} \times$ (accounting for moment arms and mass distribution).
+Take the ground torque as $M_z = 80$ N·m (an illustrative value chosen from the scale of reported force-plate and inverse-dynamics golf-swing measurements, not a universal benchmark) [@Nesbit2005]. Applied at the feet, roughly 0.2 m from the pelvis, it gives a pelvis torque of approximately $\tau_{\text{pelvis}} = M_z / I_{\text{hip}} \times$ (accounting for moment arms and mass distribution).
 
 This is a better-conditioned inverse-dynamics problem because the force plate provides the boundary condition, but the numerical value is still model-dependent.
 
@@ -1074,7 +1074,7 @@ Certain body configurations have high condition numbers:
 ::: {.callout-tip}
 ## Elbow Singularity
 
-Consider a simple two-link arm (shoulder and elbow). When the arm is fully extended, the Jacobian becomes singular—the wrist can no longer move in all directions. The mass matrix at this configuration has a very high condition number.
+Consider a simple two-link arm (shoulder and elbow). When the arm is fully extended, the Jacobian becomes singular—the wrist can no longer move in all directions. The mass matrix at this configuration has a high condition number.
 
 If a motion capture system measures the arm near full extension and tries to compute the inverse dynamics, small noise in the acceleration measurement can lead to wildly oscillating torque estimates.
 

@@ -43,7 +43,7 @@ The state evolves from the current configuration and velocities as if the muscle
 :::
 
 ### Understanding the ZTCF {#inplain:ztcf_meaning}
-Think of it this way: Imagine you're in the middle of your downswing, and suddenly every muscle in your body freezes and produces zero force. You're not paralyzed—your joints still move because your limbs are swinging. But once frozen, there's no active muscular torque. What happens?
+Imagine you're in the middle of your downswing, and suddenly every muscle in your body freezes and produces zero force. You're not paralyzed—your joints still move because your limbs are swinging. But once frozen, there's no active muscular torque. What happens?
 
 The answer: the system undergoes *passive dynamics*—motion driven purely by gravity, by the momentum already stored in your limbs, and by the couplings between segments.
 
@@ -71,19 +71,19 @@ where:
 
 A simplistic analysis might assume that total joint torque is synonymous with muscular effort. The ZTCF decomposition reveals this is incomplete: muscles produce a *control signal*---an adjustment to the passive dynamics. The observed motion arises from the interplay of both passive and active contributions.
 
-This framework predicts that skilled golfers would produce smaller, more precisely-timed control signals that guide the passive dynamics, rather than generating larger total torques. Validating this prediction requires comparison of inverse-dynamics-derived muscle torques across skill levels.
+This framework predicts that skilled golfers would produce smaller, more precisely-timed control signals that guide the passive dynamics, rather than generating larger total torques. Validating this prediction requires comparing inverse-dynamics-derived muscle torques across skill levels.
 
 :::
 
 ### Why This Matters for the Swing {#inplain:ztcf_application}
-Here's a practical realization: most swing coaching teaches *active moves*—"accelerate your hips," "fire your chest," "unwind your arms." But the ZTCF shows that much of the downswing happens *automatically*, driven by the momentum and position stored during the backswing.
+Most swing coaching teaches *active moves*—"accelerate your hips," "fire your chest," "unwind your arms." But the ZTCF shows that much of the downswing happens *automatically*, driven by the momentum and position stored during the backswing.
 
 The actual skill lies in:
 1. Building the right *initial condition*: the setup and backswing position.
 2. Making *small, well-timed adjustments* during the downswing to channel that passive energy correctly.
 3. Knowing *when to relax*—when to let passive physics take over.
 
-This is why teaching golfers to "slow down their hips" often works: it's not about making the hips move slower in absolute terms, it's about *aligning* the muscles' control signal with the passive dynamics, so that passive acceleration and active muscular acceleration work together rather than against each other.
+This is why teaching golfers to "slow down their hips" often works. The cue is not about making the hips move slower in absolute terms. It is about *aligning* the muscles' control signal with the passive dynamics, so that passive acceleration and active muscular acceleration work together rather than against each other.
 
 ## Computing the ZTCF: Algorithm and Simulation
 
@@ -230,10 +230,10 @@ $$
 
 Even in this toy model, the passive term still grows quadratically with speed. In richer models and near-impact postures, published inverse-dynamics studies report wrist Coriolis torques on the order of 10--50 Nm [@Nesbit2005]. With muscular torques of $\sim10$--20 Nm, the DCR at the wrist can still become large in the late downswing.
 
-**Interpretation:** In this simplified interpretation, the main point is the quadratic scaling of passive torque with velocity. The late downswing still demands careful timing, but this toy example should not be read as a literal hundreds-of-Nm Coriolis estimate.
+**Interpretation:** In this simplified model, the main point is the quadratic scaling of passive torque with velocity. The late downswing still demands careful timing, but this toy example should not be read as a literal hundreds-of-Nm Coriolis estimate.
 
 ### Why the DCR Can Rise Quickly {#inplain:dcr_blowup_reason}
-Centrifugal and Coriolis torques scale with the *square of velocity*. Muscular torque is bounded by physiology, activation history, and force--velocity effects. So as the downswing accelerates--spinning the hips faster and extending the arm faster--the modeled drift terms can grow rapidly while late corrective torque remains bounded.
+Centrifugal and Coriolis torques scale with the *square of velocity*. Muscular torque is bounded by physiology, activation history, and force--velocity effects. So as the downswing accelerates---spinning the hips faster and extending the arm faster---the modeled drift terms can grow rapidly while late corrective torque remains bounded.
 
 This means a specified model can have a threshold beyond which late correction has little leverage. That threshold is not universal; it depends on body parameters, club parameters, the selected norm, and the torque bound.
 
@@ -422,7 +422,7 @@ Suppose your estimate of the club's moment of inertia is off by 20%. This affect
 
 This is why researchers spend so much effort on accurate biomechanical parameter estimation. The ZTCF analysis is only as good as the model underneath.
 
-However—and this is important—the ZTCF can still be *qualitatively* useful under parameter uncertainty when the sensitivity is reported. The defensible insight is not a universal DCR blow-up threshold; it is that velocity-dependent drift terms can rapidly reduce late correction authority in the specified model, so the conclusion should be checked against plausible parameter ranges.
+The ZTCF can still be *qualitatively* useful under parameter uncertainty, provided the sensitivity is reported. The defensible insight is not a universal DCR blow-up threshold; it is that velocity-dependent drift terms can rapidly reduce late correction authority in the specified model. Check that conclusion against plausible parameter ranges before relying on it.
 
 ## Implications: Late Downswing Has a Narrow Correction Window
 
@@ -431,7 +431,7 @@ However—and this is important—the ZTCF can still be *qualitatively* useful u
 
 The ZTCF analysis suggests: **the late downswing becomes strongly conditioned by the state established before impact**.
 
-As club and body speeds increase, velocity-dependent drift terms often grow faster than the late corrective authority available from bounded muscle torques. A rough illustrative speed scale such as club speed on the order of 50 mph (22 m/s) with shoulder rotation on the order of 8--10 rad/s should be treated as model input, not a universal threshold.
+As club and body speeds increase, velocity-dependent drift terms often grow faster than the late corrective authority available from bounded muscle torques. Take a rough illustrative speed scale: club speed on the order of 50 mph (22 m/s), with shoulder rotation on the order of 8--10 rad/s. Treat those figures as model input, not a universal threshold.
 
 At this point:
 - The direction and speed of the club are strongly conditioned by the kinematics and velocities already present.

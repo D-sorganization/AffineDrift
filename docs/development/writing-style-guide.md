@@ -20,7 +20,7 @@ and executable evidence.
 
 ## 1. Sentence-Level Standards
 
-### 1.1 Length and rhythm
+### 1.1 Length and Rhythm
 
 | Metric | Target | Hard ceiling |
 | --- | --- | --- |
@@ -33,7 +33,7 @@ independent claims that a reader must hold simultaneously while also parsing
 notation. Split it. Vary length deliberately: a short sentence after a long one
 lands the point.
 
-### 1.2 Put the actor in the subject slot
+### 1.2 Put the Actor in the Subject Slot
 
 Prefer the agent — a force, a model, a measurement, a researcher — as the
 grammatical subject, and a real verb as the action.
@@ -47,7 +47,7 @@ less important than the object — *the shaft was modeled as an
 Euler–Bernoulli beam* is fine. Keep passive constructions under roughly 18% of
 sentences; above that, the prose stops naming who or what is doing the work.
 
-### 1.3 Unpack nominalizations
+### 1.3 Unpack Nominalizations
 
 Verbs buried inside nouns lengthen sentences and drain them of motion.
 
@@ -59,7 +59,7 @@ Verbs buried inside nouns lengthen sentences and drain them of motion.
 | gives an indication that | indicates |
 | leads to a reduction in | reduces |
 
-### 1.4 Cut filler
+### 1.4 Cut Filler
 
 Delete on sight: *very*, *really*, *quite*, *basically*, *essentially*,
 *actually*, *simply*, *obviously*, *clearly*, *of course*, *needless to say*,
@@ -72,7 +72,7 @@ give the number or say *several*.
 *Clearly* and *obviously* are worse than padding. If a step is obvious the
 reader does not need to be told; if it is not, the word blames the reader.
 
-### 1.5 Hedge once, precisely
+### 1.5 Hedge Once, Precisely
 
 One hedge per claim. *The results may possibly suggest that transfer could
 perhaps occur* commits to nothing. Choose the hedge that names the actual
@@ -86,13 +86,13 @@ uncertainty:
 
 ## 2. Paragraph and Section Structure
 
-### 2.1 Topic sentence first
+### 2.1 Topic Sentence First
 
 Open every paragraph with the claim it defends. A reader scanning only first
 sentences should get the argument. Never open with throat-clearing
 (*It is also worth considering that…*).
 
-### 2.2 Old information before new
+### 2.2 Old Information Before New
 
 Begin a sentence with material the previous sentence established, and end it
 with what is new. The stress position — the end of the sentence — is where
@@ -105,7 +105,7 @@ qualifier.
   products across a boundary gives the ledger. What the ledger cannot fix is
   that the decomposition itself depends on the chosen coordinates.*
 
-### 2.3 One paragraph, one idea
+### 2.3 One Paragraph, One Idea
 
 Three to seven sentences. A paragraph that runs past ten sentences is usually
 two paragraphs with a missing break, or an unstructured list that should be
@@ -125,7 +125,7 @@ next. Do not restate the heading as the first sentence.
 
 ## 3. Precision and Claim Discipline
 
-### 3.1 Label the evidence class
+### 3.1 Label the Evidence Class
 
 AffineDrift distinguishes four classes; use the site's existing bold labels
 where a page already uses them, and keep the distinction in wording everywhere
@@ -136,7 +136,7 @@ else.
 - **Hypothesis** — a proposed explanation awaiting a decisive test.
 - **Practical Interpretation** — plain-language reading, not instruction.
 
-### 3.2 Never let a model become a fact
+### 3.2 Never Let a Model Become a Fact
 
 - Wrong: *The kinetic chain transfers energy distally.*
 - Right: *In the double-pendulum model, interaction power at the wrist is
@@ -146,14 +146,14 @@ Reserve *proves*, *demonstrates*, *guarantees*, and *always* for statements that
 are mathematically established. A simulation *predicts*; a measurement *shows*
 within its uncertainty.
 
-### 3.3 Quantities carry units and provenance
+### 3.3 Quantities Carry Units and Provenance
 
 Every number states its units and where it came from — measured, cited,
 assumed, or illustrative. Numbers presented without provenance read as
 measurements even when they are not, and CI blocks newly added quantitative
 claims that carry neither a citation nor a caveat word.
 
-### 3.4 Name the boundary
+### 3.4 Name the Boundary
 
 Energy, power, and work statements are meaningless without a system boundary and
 reference frame. Say which one before reporting the quantity.
@@ -172,7 +172,7 @@ Exception: never alter spelling inside a quotation, a proper noun, a
 bibliography entry, a cited work's title, a URL, a file path, or a code
 identifier.
 
-### 4.2 Terminology is fixed
+### 4.2 Terminology Is Fixed
 
 `NOTATION.md` is the single source of truth for acronyms and symbols, and
 `scripts/check_terminology.py` enforces the acronym slice of it across
@@ -214,7 +214,7 @@ Headings are noun phrases or questions, not sentences, and never end in a
 period. Do not skip levels. One `#`-level title per page, and an `articles/`
 page must not carry both a YAML `title:` and a body `# H1` with the same text.
 
-### 4.4 Voice and person
+### 4.4 Voice and Person
 
 Second person (*you*) for instructions to the reader. First person plural
 (*we*) for shared reasoning with the reader — *we draw the boundary around the
@@ -237,7 +237,7 @@ Parallel grammar across items. Introduce with a full sentence and a colon.
 Do not use a list where two sentences of connected prose would show the
 relationship between the items better.
 
-### 4.7 Figures, equations, and cross-references
+### 4.7 Figures, Equations, and Cross-References
 
 - Every figure needs a caption and `fig-alt` text that states what the figure
   shows, not that it is a figure.

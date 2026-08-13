@@ -143,7 +143,7 @@ Because it separates two different types of dynamics:
 
 This separation lets you reason about controllability, stability, optimal control, and learning.
 
-In robotics, this form is the starting point for designing controllers. In golf, it's the starting point for understanding what you actually control and what physics does for you.
+In robotics, this form is the starting point for designing controllers. In golf, it's the starting point for understanding what you control and what physics does for you.
 
 :::
 
@@ -298,7 +298,7 @@ The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ tells you the leverage.
 
 Wait, that doesn't sound right. If the arm is shorter (bent), shouldn't it be harder to accelerate?
 
-Actually, no. The **moment of inertia** is lower (because the mass is closer to the axis). So $M^{-1}$ is higher (easier to accelerate). This is why it's easier to accelerate a bent arm than an extended one.
+No. The **moment of inertia** is lower (because the mass is closer to the axis). So $M^{-1}$ is higher (easier to accelerate). This is why it's easier to accelerate a bent arm than an extended one.
 
 ## The Drift-to-Control Ratio (DCR)
 
@@ -338,7 +338,7 @@ As you initiate the downswing, you generate muscular torques. But gravity is alr
 
 During the rapid downswing, velocities are high. Gravity and centrifugal forces create large accelerations. Your muscular torques are now mostly steering, not accelerating.
 
-DCR is very high (drift is doing most of the work).
+DCR is high (drift is doing most of the work).
 
 ### Impact and Beyond: Extremely High DCR
 
@@ -408,12 +408,12 @@ A tour professional at the top of the backswing:
 
 6. **Follow-through**: after impact, gravity and momentum carry the club. No more muscular effort needed.
 
-Total muscular effort: in this illustrative summary, maybe 60–80 N m generated over the whole swing, with a nice distribution that works with physics.
+Total muscular effort: in this illustrative summary, maybe 60–80 N m generated over the whole swing, distributed in a way that works with physics.
 
 Compare to a novice:
 
 1. At the top, in this illustrative scenario, applies 40 N m to start the downswing.
-2. Applies 40 N m throughout, in this illustrative scenario, fighting the increasing drift.
+2. In the same illustrative scenario, applies 40 N m throughout, fighting the increasing drift.
 3. At impact, applies 50 N m, overaccelerating.
 4. Total muscular effort: maybe 150+ N m, much more, and inconsistent because the novice is constantly fighting the passive forces instead of working with them.
 
@@ -459,7 +459,7 @@ Instead, golfers learn through practice. Over thousands of reps, the nervous sys
 
 This is why coaching and practice are valuable: they accelerate the learning of the implicit optimal control solution.
 
-But here's the thing: the physics—the equations $\bm{M}, \bm{C}, \bm{g}$—is the same for everyone. So while individual golfers vary in strength, flexibility, and body geometry, the fundamental structure of drift and control is universal.
+The physics—the equations $\bm{M}, \bm{C}, \bm{g}$—is the same for everyone. So while individual golfers vary in strength, flexibility, and body geometry, the fundamental structure of drift and control is universal.
 
 Understanding this structure is the shortcut to improvement. Instead of endless practice, you can understand what you're optimizing (DCR) and practice the specific things that maximize it.
 

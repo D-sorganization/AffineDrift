@@ -97,7 +97,7 @@ The golf swing is a high-speed ballistic motion in which passive mechanical forc
 
 The *drift--input decomposition* of the control-affine system $\dot{x} = f(x) + G(x)u$ provides the formal separation between passive dynamics $f(x)$ and input-driven dynamics $G(x)u$. However, this separation is instantaneous: it classifies the current velocity of the state, not the trajectory over time. The golf swing is not an instant; it is a history-dependent ballistic process in which momentum generated during the backswing shapes forces throughout the downswing.
 
-To convert the instantaneous decomposition into a trajectory-level diagnostic, we integrate the drift-only equations forward from a chosen initial state. The resulting trajectory is the **Zero-Torque Counterfactual**.
+To convert the instantaneous decomposition into a trajectory-level diagnostic, we integrate the drift-only equations forward from a chosen initial state. That integrated trajectory, not the instantaneous decomposition, is the **Zero-Torque Counterfactual**.
 
 ## Formal Definition
 
@@ -157,7 +157,7 @@ Physically, this integral curve traces the "natural" path of the system under:
 - **Elastic shaft recoil** — the restoring force of the bent shaft as it tries to return to its neutral shape,
 - **Passive joint damping** — any modeled energy dissipation in the joints.
 
-What is absent from the forward ZTCF is the declared applied generalized-control input. Passive tissue, joint, shaft, contact, damping, and structural forces remain if they are included in $f$. The difference between $x(t)$ and $x^{\mathrm{ZTCF}}(t)$ captures the cumulative modeled consequence of removing that input; it does not uniquely recover muscle forces. Broadly:
+The forward ZTCF omits the declared applied generalized-control input and nothing else. Passive tissue, joint, shaft, contact, damping, and structural forces remain if they are included in $f$. The difference between $x(t)$ and $x^{\mathrm{ZTCF}}(t)$ captures the cumulative modeled consequence of removing that input; it does not uniquely recover muscle forces. Broadly:
 
 - Close paths indicate that the removed applied-control channels have a small modeled trajectory effect over that horizon.
 - Divergent paths indicate a larger modeled effect, conditional on the retained passive-force inventory and state estimate.
@@ -190,7 +190,7 @@ Under the illustrative model inventory, drift terms account for 85% of the gener
 
 ## High-DCR Regime: ZTCF as a Dominant Attractor
 
-The relative magnitudes of passive and active forces change systematically over the course of the downswing. Early in the motion — during takeaway and the initial downswing — the system has little momentum. The drift field $f(x)$ is energetically small, and the golfer retains broad authority to shape the trajectory.
+The relative magnitudes of passive and active forces change systematically over the downswing. Early in the motion — during takeaway and the initial downswing — the system has little momentum. The drift field $f(x)$ is energetically small, and the golfer retains broad authority to shape the trajectory.
 
 As the downswing accelerates, inertial and centrifugal forces grow with the square of angular velocity while physiological torque capacity remains bounded. The **Drift-Control Ratio (DCR)** — the ratio of passive drift force magnitude to available input force magnitude — rises sharply. In the high-DCR regime near impact:
 
@@ -247,7 +247,7 @@ In practice, higher-order integration should be used. The drift ODE is nonlinear
 
 ### Consistency Verification
 
-Once the ZTCF is computed, numerical implementation correctness can be verified using the identity:
+Once the ZTCF is computed, this identity verifies that the numerical implementation is correct:
 
 $$\tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0) = \tau_{\mathrm{input}}(t_0),$$
 
@@ -261,11 +261,11 @@ This identity is **exact only at $t = t_0$**. After $t_0$, the ZTCF trajectory d
 
 ### Practical Considerations
 
-**Consistent parameter sets.** All inverse-dynamics evaluations and drift field computations must use the exact same inertia, stiffness, and damping parameters to ensure numerical consistency. The recovered input $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}}$ should match the directly applied $\tau_{\mathrm{input}}$, and the configuration slice $\tau_{\mathrm{ZVCF}}$ should match $\tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$.
+**Consistent parameter sets.** All inverse-dynamics evaluations and drift field computations must use the same inertia, stiffness, and damping parameters to ensure numerical consistency. The recovered input $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}}$ should match the directly applied $\tau_{\mathrm{input}}$, and the configuration slice $\tau_{\mathrm{ZVCF}}$ should match $\tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$.
 
 **Solver matching.** ZTCF trajectories must use the same ODE solver, tolerances, and step sizes as the forward simulation. Mismatched solvers introduce artificial numerical drift between the two trajectories.
 
-**Filtering.** When applied to motion-capture data, velocities and accelerations should be computed from smoothed position data (e.g., Savitzky--Golay filter) before evaluating the drift field, to prevent amplification of measurement noise.
+**Filtering.** When the method is applied to motion-capture data, compute velocities and accelerations from smoothed position data (e.g., Savitzky--Golay filter) before evaluating the drift field, so that measurement noise is not amplified.
 
 ## Scope and Limitations
 
