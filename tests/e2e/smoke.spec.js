@@ -60,10 +60,16 @@ test.describe("PR Smoke", () => {
   });
 
   test("static assets load without errors", async ({ page }) => {
+    // Third-party font CDNs are excluded on purpose: this test is about the
+    // site's own assets, and a transient fetch failure to an external host is
+    // not a site defect. "google" alone missed fonts.gstatic.com, which serves
+    // the actual woff2 files, so a flaked font fetch failed the run (#3829).
+    const THIRD_PARTY_ASSET_HOSTS = ["google", "gstatic"];
     const failedRequests = [];
     page.on("requestfailed", (request) => {
-      if (!request.url().includes("google")) {
-        failedRequests.push(request.url());
+      const url = request.url();
+      if (!THIRD_PARTY_ASSET_HOSTS.some((host) => url.includes(host))) {
+        failedRequests.push(url);
       }
     });
     const response = await page.goto("/", { waitUntil: "load" });
