@@ -51,6 +51,15 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "ZTCF expansion",
         "Zero Torque Counterfactual",
     ),
+    # Found in ch31 during the site-wide writing-quality pass (#3821). It sat in
+    # both trees and named the framework after neither torque nor a
+    # counterfactual, so a reader met a fifth meaning for ZTCF in the one chapter
+    # that ties the whole book back to launch conditions.
+    (
+        r"zero\s+transfer\s+of\s+control\s+and\s+force",
+        "ZTCF expansion",
+        "Zero Torque Counterfactual",
+    ),
     (
         r"Drift[-\s]Correction[-\s]Response",
         "DCR expansion",
