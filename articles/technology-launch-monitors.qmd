@@ -197,7 +197,7 @@ Because the offset is $\boldsymbol{\omega}\times\mathbf{r}$, it is **not a fixed
 
 The tempting conclusion runs like this. The ball is struck by the face, and the face center's path is 3° more out-to-in. So a golfer delivering a "zero path" on radar is really delivering 3° out-to-in, with a fade built into the number they are chasing. The argument is worth taking seriously, and it is half right.
 
-**What is right:** the collision genuinely responds to the motion of the material point on the face at the contact location. The friction that drags launch direction away from the face normal and generates the spin-axis tilt acts on the tangential relative velocity *at the contact patch* — which is the face-point velocity, not the CG velocity. And because face-to-path is the difference between an orientation and a velocity direction, an offset in the path term propagates one-for-one into face-to-path. Under the face-centre convention, a delivery reported as zero-zero on radar has a face-to-path of roughly +3° — face open to path — which is a fade signature.
+**What is right:** the collision genuinely responds to the motion of the material point on the face at the contact location. The friction that drags launch direction away from the face normal and generates the spin-axis tilt acts on the tangential relative velocity *at the contact patch* — which is the face-point velocity, not the CG velocity. And because face-to-path is the difference between an orientation and a velocity direction, an offset in the path term propagates one-for-one into face-to-path. Under the face-center convention, a delivery reported as zero-zero on radar has a face-to-path of roughly +3° — face open to path — which is a fade signature.
 
 **What complicates it:** three things.
 
@@ -253,7 +253,7 @@ $$
 \dot d_i \;=\; \hat{\mathbf{u}}_i \cdot \mathbf{v}_O \;+\; (\mathbf{r}_i \times \hat{\mathbf{u}}_i)\cdot\boldsymbol{\omega}
 $$
 
-This is the **reciprocal product** of the sight line, treated as a Plücker line, with the twist — and it is *exactly linear* in the six twist coordinates. Each correctly associated detection contributes one row of a linear system. Weighted least squares is therefore a natural computational form, but a covariance is meaningful only after the observation geometry, noise correlation, data association and systematic errors have been modelled and the observable subspace has been identified.
+This is the **reciprocal product** of the sight line, treated as a Plücker line, with the twist — and it is *exactly linear* in the six twist coordinates. Each correctly associated detection contributes one row of a linear system. Weighted least squares is therefore a natural computational form, but a covariance is meaningful only after the observation geometry, noise correlation, data association and systematic errors have been modeled and the observable subspace has been identified.
 
 That is not an aesthetic observation. It means the sensor's native observable is already a linear functional of the object we want, so the observable components can be estimated without a nonlinear rigid-body parameterization. The six-degree-of-freedom problem is nevertheless generally rank-deficient in one frame and must be solved over time with regularization or smoothing. Camera systems enter the same framework from the other side: a tracked face gives a pose in $SE(3)$ per frame, and the matrix logarithm of the frame-to-frame relative pose is a finite twist. One representation serves both modalities.
 

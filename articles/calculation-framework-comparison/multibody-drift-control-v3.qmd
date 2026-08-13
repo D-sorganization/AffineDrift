@@ -526,7 +526,7 @@ The constraint extracts energy from some coordinates and injects it into others,
 
 This is the mechanism behind whip-crack dynamics, where kinetic energy migrates from the arm (proximal segments) to the tip (distal segments) through the joint reaction forces. The constraint forces can be enormous---many times larger than any applied torque---and they are invisible in the compact generalized-coordinate formulation.
 
-**A note on interpretation:** Per-coordinate power decompositions are useful diagnostic tools, but they depend on the choice of generalized coordinates. Only the total power balance is coordinate-invariant. These decompositions should be treated as bookkeeping aids, not as absolute physical partitions.
+**A note on interpretation:** Per-coordinate power decompositions are useful diagnostic tools, but they depend on the choice of generalized coordinates. Only the total power balance is coordinate-invariant. Treat these decompositions as bookkeeping aids, not as absolute physical partitions.
 
 ## Double-Pendulum: Endpoint on a Circle
 
@@ -657,7 +657,7 @@ The wrench balance for each body involves the **coadjoint map** $\text{ad}_{\mat
 
 ### Drift--Control in Screw Coordinates
 
-The ZTCF is evaluated exactly as before: freeze the state and set actuation to zero. The resulting joint-level drift acceleration is the same number as from Euler--Lagrange; the screw formulation simply expresses the spatial accelerations and wrenches in its own language.
+The ZTCF is evaluated exactly as before: freeze the state and set actuation to zero. The resulting joint-level drift acceleration is the same number as from Euler--Lagrange; the screw formulation expresses the spatial accelerations and wrenches in its own language.
 
 ### Double-Pendulum Instance
 
@@ -685,7 +685,7 @@ The space Jacobian is $J_s = [S_1 \;\; \text{Ad}_{e^{\hat{S}_1\theta_1}}S_2]$, w
 
 ### What Operational-Space Analysis Uniquely Reveals
 
-Every framework we have seen so far thinks in terms of *joints*. Operational-space analysis asks a different question entirely: **"What does the world look like from the endpoint's perspective?"**
+Every framework we have seen so far reasons about *joints*. Operational-space analysis asks a different question entirely: **"What does the world look like from the endpoint's perspective?"**
 
 When you drive a car, you think about where the car is going---speed, heading, lane position---not about individual tire rotations and engine RPM. Operational-space analysis is the driver's perspective: it translates between "what I want the task point to do" and "what the joints need to do to make that happen."
 
@@ -703,7 +703,7 @@ where:
 - $\mu(q, \dot{q}) = \Lambda(JM^{-1}C\dot{q} - \dot{J}\dot{q})$ is the task-space Coriolis/centripetal term.
 - $p(q) = \Lambda J M^{-1}g$ is the task-space gravity term.
 
-**An important subtlety:** We write $\Lambda$, $\mu$, and $p$ as if they are task-space primitives, but they are actually *induced from joint-space dynamics* through the Jacobian and mass matrix. They depend on the full joint configuration $q$, not just the task coordinates.
+**An important subtlety:** We write $\Lambda$, $\mu$, and $p$ as if they are task-space primitives, but they are *induced from joint-space dynamics* through the Jacobian and mass matrix. They depend on the full joint configuration $q$, not just the task coordinates.
 
 The mapping between task-space forces and joint torques follows virtual work: $\tau = J^T F$. In redundant systems (more joints than task dimensions), the reverse---going from joint torques to task-space effects---is not unique, because multiple joint-torque combinations can produce the same task-space force while differing in what they do in the null space.
 
@@ -994,4 +994,4 @@ And we saw that the underlying physics does not care which mathematical language
 
 The double pendulum---two links, two joints, two masses---was rich enough to illustrate every one of these ideas. The same principles extend to larger rigid-body models, including systems with many bodies, closed kinematic loops, and complex constraint topologies, provided the assumptions behind the mass matrix, constraints, and input map remain valid. The equations get bigger, but the structural question is the same.
 
-The river analogy is useful only if its limits are kept visible: current and paddling separate cleanly in the model, the train follows the modeled track, and the coordinate map should not change the physical prediction it represents.
+The river analogy is useful only if you keep its limits visible: current and paddling separate cleanly in the model, the train follows the modeled track, and the coordinate map should not change the physical prediction it represents.

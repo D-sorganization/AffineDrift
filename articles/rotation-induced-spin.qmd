@@ -52,7 +52,7 @@ The [reference treatment of impact mechanics](impact-mechanics-and-ball-flight.q
 
 A closing clubhead is a rigid body with a non-zero angular velocity at the moment of contact. Its contact patch therefore has a tangential surface velocity relative to the ball, and friction converts tangential surface motion into ball spin. That is precisely the mechanism of gear effect — but here the relative tangential motion has nothing to do with where on the face the ball was struck. It exists on a dead-center strike, and it exists in the absence of any impulse-induced head rotation at all.
 
-This article does one thing: derive how much ball spin that produces, from stated assumptions, with every step reproducible. It reaches a clean closed form, works it for the tour-median delivery in the project's closure-rate model and for the two extremes of the measured range, and then spends as much space on why the closed form is an upper bound as on the closed form itself.
+This article does one thing: derive how much ball spin that produces, from stated assumptions, with every step reproducible. It reaches a clean closed form and works it for the tour-median delivery in the project's closure-rate model, then for the two extremes of the measured range. It spends as much space on why the closed form is an upper bound as on the closed form itself.
 
 ::: {.callout-note}
 ## Conventions
@@ -84,7 +84,7 @@ $$
 
 That second term is the whole subject of this article. Read it carefully:
 
-- $\mathbf{v}_Q$ is the velocity a **non-rotating** head would deliver uniformly to the contact. It is the term every impact model already carries — it produces the ordinary spin-loft backspin and the ordinary face-to-path sidespin, and it is the quantity a point-mass treatment of the ball is implicitly using when it drives the ball's center of mass with the clubhead velocity.
+- $\mathbf{v}_Q$ is the velocity a **non-rotating** head would deliver uniformly to the contact. It is the term every impact model already carries: it produces the ordinary spin-loft backspin and the ordinary face-to-path sidespin. It is also the quantity a point-mass treatment of the ball uses implicitly, driving the ball's center of mass with the clubhead velocity.
 - $-R\,\boldsymbol{\omega}\times\hat{\mathbf{n}}$ exists **only because the contact patch is offset from the ball's center along the normal**, and only when the head is rotating. It is a pure tangential term: its dot product with $\hat{\mathbf{n}}$ is zero identically.
 
 Two structural facts fall out immediately.
@@ -265,7 +265,7 @@ $$
 
 which returns $5/7$ at $\alpha = 0.4$. Cross's measured $\alpha$ for a golf ball is 0.40, so the uniform-sphere value is well supported and the sensitivity is mild: $\alpha = 0.38$ would give $0.725$ instead of $0.714$, a 1.4% change.
 
-**And the comparison to typical driver spin is left qualitative, deliberately.** 250 rpm about the side axis is not nothing set against the couple of thousand rpm of backspin a driver produces, but converting that into a spin-axis tilt and then into yards requires an assumed backspin, an assumed launch condition and an assumed aerodynamic model, and the main article documents at length how much those choices move the answer. What can be said without those assumptions is structural: the effect is of the same order as the spin-axis changes a fraction of a degree of face-to-path produces, and therefore it is not negligible at the precision at which delivery numbers are now quoted.
+**And the comparison to typical driver spin is left qualitative, deliberately.** 250 rpm about the side axis is not nothing set against the couple of thousand rpm of backspin a driver produces. But converting that into a spin-axis tilt and then into yards requires an assumed backspin, an assumed launch condition and an assumed aerodynamic model. The main article documents at length how much those choices move the answer. What can be said without those assumptions is structural: the effect is of the same order as the spin-axis changes a fraction of a degree of face-to-path produces, and therefore it is not negligible at the precision at which delivery numbers are now quoted.
 
 For readers who want the geometry anyway, the tilt of the spin axis is $\arctan(\omega_{\text{side}}/\omega_{\text{back}})$, which for 250 rpm of side-axis spin against an **assumed** 2,500 rpm of backspin is 5.7°. The 2,500 is a stated assumption, not a measurement, and the number should not be quoted without it.
 
@@ -328,7 +328,7 @@ $$
 
 with the closing component accounting for 250 rpm of it and the remainder appearing largely as backspin.
 
-⚠️ **This is an extension, not a result.** $R_{\text{ISA}} \approx 0.77$ m is itself back-solved from a vendor path-offset figure in the main article and carries a warning there; the decomposition of the residual into pitch and other components has not been measured; and a few hundred rpm of backspin is large enough that if it were real and unaccounted for, impact models referenced to the geometric center would be under-predicting driver backspin systematically. Either that under-prediction exists and has been absorbed into fitted constants, or one of the assumptions above is wrong. **Resolving which is the single most useful thing that could be done with this article.**
+⚠️ **This is an extension, not a result.** $R_{\text{ISA}} \approx 0.77$ m is itself back-solved from a vendor path-offset figure in the main article and carries a warning there. The decomposition of the residual into pitch and other components has not been measured. And a few hundred rpm of backspin is large enough that if it were real and unaccounted for, impact models referenced to the geometric center would be under-predicting driver backspin systematically. Either that under-prediction exists and has been absorbed into fitted constants, or one of the assumptions above is wrong. **Resolving which is the single most useful thing that could be done with this article.**
 
 ## 9. Assumption Ledger
 
