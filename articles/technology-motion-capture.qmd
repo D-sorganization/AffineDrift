@@ -18,24 +18,24 @@ categories: [technology, measurement, biomechanics, kinematics]
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Motion capture looks like it measures how your body moves. What it actually measures is how some markers taped to your skin move, or where a neural network guesses your joints are in a photograph. Getting from that to a statement about your skeleton involves several modelling steps, and the errors introduced by those steps are usually larger than the errors of the cameras themselves.
+        Motion capture looks like it measures how your body moves. What it actually measures is how some markers taped to your skin move, or where a neural network guesses your joints are in a photograph. Getting from that to a statement about your skeleton involves several modeling steps, and the errors introduced by those steps are usually larger than the errors of the cameras themselves.
       </p>
 
       <div class="laymans-item">
         <h3>The camera part is the easy part</h3>
         <p>
-          Several cameras see the same reflective marker from different angles. Each camera defines a ray in space pointing at the marker; where the rays intersect is the marker's position. With good calibration this is accurate to a fraction of a millimetre. That precision is real, and it is also somewhat beside the point.
+          Several cameras see the same reflective marker from different angles. Each camera defines a ray in space pointing at the marker; where the rays intersect is the marker's position. With good calibration this is accurate to a fraction of a millimeter. That precision is real, and it is also somewhat beside the point.
         </p>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The cameras locate the markers to well under a millimetre. The markers locate the bones to roughly a centimetre, because skin slides over bone. Quoting the camera specification as the accuracy of the measurement is the most common error in this field.
+        <strong>Key Takeaway:</strong> The cameras locate the markers to well under a millimeter. The markers locate the bones to roughly a centimeter, because skin slides over bone. Quoting the camera specification as the accuracy of the measurement is the most common error in this field.
       </div>
 
       <div class="laymans-item">
         <h3>Skin is not bone</h3>
         <p>
-          Markers sit on skin, and skin moves relative to the skeleton underneath — during rapid movement, by centimetres on the thigh. This is called soft tissue artefact, and it is not noise that averaging removes: it is systematic, movement-dependent, and it looks exactly like real motion. It dominates the error budget of nearly every marker-based study.
+          Markers sit on skin, and skin moves relative to the skeleton underneath — during rapid movement, by centimeters on the thigh. This is called soft tissue artefact, and it is not noise that averaging removes: it is systematic, movement-dependent, and it looks exactly like real motion. It dominates the error budget of nearly every marker-based study.
         </p>
         <div class="analogy">
           <strong>Tracking a person by watching their coat:</strong> You can follow someone through a crowd by watching their loose overcoat, and you will get their path roughly right. But when they turn sharply, the coat swings out, and the coat's motion is briefly not the person's motion at all. Markers on skin are the coat.
@@ -57,7 +57,7 @@ categories: [technology, measurement, biomechanics, kinematics]
 
 Motion capture supplies the kinematic half of biomechanics: the positions, orientations, and their derivatives that feed every joint-angle plot, every kinematic-sequence claim, and every inverse-dynamics calculation. Its published accuracy figures are excellent and its practical accuracy is considerably worse, for reasons that have nothing to do with the cameras.
 
-This article separates the measurement chain into its stages — image formation, three-dimensional reconstruction, marker-to-bone inference, joint modelling, and rotation description — and identifies where the error actually enters. It then treats the rotation-representation problem in some depth, because the choice between Euler-angle and helical-axis descriptions has consequences for comparability that are widely underappreciated.
+This article separates the measurement chain into its stages — image formation, three-dimensional reconstruction, marker-to-bone inference, joint modeling, and rotation description — and identifies where the error actually enters. It then treats the rotation-representation problem in some depth, because the choice between Euler-angle and helical-axis descriptions has consequences for comparability that are widely underappreciated.
 
 ## Part I: Reconstruction — The Well-Posed Part
 
@@ -71,7 +71,7 @@ $$
 \tilde{\mathbf{x}} \times (P\,\mathbf{X}) = 0
 $$
 
-and stacks the resulting constraints across cameras into a linear system solved by singular value decomposition, optionally refined by minimising reprojection error. Modern systems fold calibration and reconstruction together in a bundle adjustment that simultaneously optimises camera parameters and the three-dimensional points, reporting a residual — typically a fraction of a millimetre — that is the number quoted in specifications.
+and stacks the resulting constraints across cameras into a linear system solved by singular value decomposition, optionally refined by minimizing reprojection error. Modern systems fold calibration and reconstruction together in a bundle adjustment that simultaneously optimizes camera parameters and the three-dimensional points, reporting a residual — typically a fraction of a millimeter — that is the number quoted in specifications.
 
 ### What That Number Does and Does Not Mean
 
@@ -85,13 +85,13 @@ Markers are attached to skin, and skin translates and rotates relative to the un
 2. **It is indistinguishable from signal.** The artefact's frequency content overlaps the movement's, and its spatial pattern mimics rigid-body motion of the cluster.
 3. **It is largest where the soft tissue is thickest**, which unfortunately includes the thigh and pelvis, the segments that anchor most lower-body analyses.
 
-The magnitudes are not marginal. Measured against bone tracked by fluoroscopy, skin-marker artefact runs from **3 mm to 54 mm** depending on segment and task. That produces hip angle errors of about 5.8° in internal rotation, and shrinks the measured internal-external rotation range of motion by **up to 21.8°** ([Fiorentino et al. 2017](https://doi.org/10.1016/j.gaitpost.2017.03.033)). The hip joint centre itself is displaced by **16.6 ± 8.4 mm** ([Fiorentino et al. 2016](https://doi.org/10.1016/j.gaitpost.2016.09.011)). On the scapula — the segment golf analysis most wants — median marker movement reaches **30 mm at the acromial angle, 53 mm at the root of the scapular spine, and 70 mm at the inferior angle** ([Yoshida et al. 2022](https://doi.org/10.3390/s22176502)).
+The magnitudes are not marginal. Measured against bone tracked by fluoroscopy, skin-marker artefact runs from **3 mm to 54 mm** depending on segment and task. That produces hip angle errors of about 5.8° in internal rotation, and shrinks the measured internal-external rotation range of motion by **up to 21.8°** ([Fiorentino et al. 2017](https://doi.org/10.1016/j.gaitpost.2017.03.033)). The hip joint center itself is displaced by **16.6 ± 8.4 mm** ([Fiorentino et al. 2016](https://doi.org/10.1016/j.gaitpost.2016.09.011)). On the scapula — the segment golf analysis most wants — median marker movement reaches **30 mm at the acromial angle, 53 mm at the root of the scapular spine, and 70 mm at the inferior angle** ([Yoshida et al. 2022](https://doi.org/10.3390/s22176502)).
 
-Set those numbers beside a camera system quoting 0.07 mm 3D resolution and the situation is clear: **this is precision without accuracy.** The instrument specification describes the location of a plastic sphere; the biomechanical question concerns a bone that may be several centimetres away.
+Set those numbers beside a camera system quoting 0.07 mm 3D resolution and the situation is clear: **this is precision without accuracy.** The instrument specification describes the location of a plastic sphere; the biomechanical question concerns a bone that may be several centimeters away.
 
-The consequences propagate. A 30 mm anterior mislocation of the hip joint centre produces roughly a **22% error in the flexion-extension moment** ([Stagni et al. 2000](https://doi.org/10.1016/s0021-9290(00)00093-2)) — and skin markers already misplace it by half that distance on average. Comprehensive uncertainty propagation through a musculoskeletal model gives combined bounds of **2.7–6.4° in joint kinematics, 2.7–8.1 N·m in joint moments, and 35.8–130.8 N in muscle forces** ([Myers et al. 2015](https://doi.org/10.1007/s10439-014-1181-7)).
+The consequences propagate. A 30 mm anterior mislocation of the hip joint center produces roughly a **22% error in the flexion-extension moment** ([Stagni et al. 2000](https://doi.org/10.1016/s0021-9290(00)00093-2)) — and skin markers already misplace it by half that distance on average. Comprehensive uncertainty propagation through a musculoskeletal model gives combined bounds of **2.7–6.4° in joint kinematics, 2.7–8.1 N·m in joint moments, and 35.8–130.8 N in muscle forces** ([Myers et al. 2015](https://doi.org/10.1007/s10439-014-1181-7)).
 
-The methodological responses — rigid marker clusters instead of individual markers, optimisation-based inverse kinematics that enforces joint constraints across the whole chain ([Lu and O'Connor 1999](https://doi.org/10.1016/s0021-9290(98)00158-4)), and calibration procedures relating cluster to anatomy — mitigate but do not eliminate it. One caution worth carrying: adding joint constraints is not universally an improvement, and in some model configurations it *increases* intersegmental moment error ([Pomarat et al. 2023](https://doi.org/10.1016/j.jbiomech.2023.111514)). The only techniques that avoid soft tissue artefact entirely image the bone directly.
+The methodological responses — rigid marker clusters instead of individual markers, optimization-based inverse kinematics that enforces joint constraints across the whole chain ([Lu and O'Connor 1999](https://doi.org/10.1016/s0021-9290(98)00158-4)), and calibration procedures relating cluster to anatomy — mitigate but do not eliminate it. One caution worth carrying: adding joint constraints is not universally an improvement, and in some model configurations it *increases* intersegmental moment error ([Pomarat et al. 2023](https://doi.org/10.1016/j.jbiomech.2023.111514)). The only techniques that avoid soft tissue artefact entirely image the bone directly.
 
 ## Part III: The Rotation Problem
 
@@ -101,7 +101,7 @@ Describing the orientation of one segment relative to another with three angles 
 
 Two further problems compound it. First, **gimbal lock**: at certain orientations the first and third axes align, the decomposition becomes singular, and the individual angles become ill-conditioned even though the orientation itself is perfectly well-defined. Second, **non-commutativity**: because finite rotations do not commute, angle sequences cannot be meaningfully summed or averaged, which quietly invalidates a good deal of routine data processing.
 
-Standardisation efforts exist precisely because of this, recommending specific sequences per joint so that results are comparable between laboratories. They solve the comparability problem by convention rather than by removing the underlying ambiguity.
+Standardization efforts exist precisely because of this, recommending specific sequences per joint so that results are comparable between laboratories. They solve the comparability problem by convention rather than by removing the underlying ambiguity.
 
 ### The Helical Axis Alternative
 
@@ -127,7 +127,7 @@ For golf the conditioning caveat bites precisely at transition, where the club r
 
 The honest position is therefore narrower than the enthusiasm usually allows: **use the screw representation for interpretation and for defining quantities unambiguously; do not assume it rescues the measurement.** Mitigations are gating on a minimum angular velocity, estimating over a finite interval rather than instantaneously, and maximizing cluster radius. One place the estimate *is* well-conditioned is a rigidly instrumented club, which carries no soft-tissue artefact and rotates fast. That is why screw-based description of the club has better prospects than screw-based description of the body, and why it remains largely unexplored.
 
-Woltring made the standardisation case in 1994 and it lost to the joint-coordinate-system convention on clinical familiarity rather than on correctness — a piece of history worth knowing when weighing how settled current practice actually is.
+Woltring made the standardization case in 1994 and it lost to the joint-coordinate-system convention on clinical familiarity rather than on correctness — a piece of history worth knowing when weighing how settled current practice actually is.
 
 ### How Large Is the Convention Effect?
 
@@ -139,11 +139,11 @@ Assembling the published figures into a single stack clarifies what actually lim
 
 | Error source | Magnitude |
 |---|---|
-| Camera system, static, centre of volume | 0.06–0.15 mm |
+| Camera system, static, center of volume | 0.06–0.15 mm |
 | Camera system, dynamic | < 2 mm |
 | Landmark palpation, intra-examiner | 6–21 mm |
 | Landmark palpation, inter-examiner | 13–25 mm |
-| Hip joint centre, best method in vivo | 11–17 mm |
+| Hip joint center, best method in vivo | 11–17 mm |
 | Soft tissue artefact, thigh | 25–31 mm |
 | Soft tissue artefact, scapula | up to 87 mm |
 | *Propagated:* hip rotation range compression | 21.8° |
@@ -151,9 +151,9 @@ Assembling the published figures into a single stack clarifies what actually lim
 | **Convention:** Euler sequence choice, shoulder | **up to 50°** |
 | **Convention:** X-factor segment definition | **28° vs 57°** |
 
-The ordering is the point, and it is the thesis of this article. **Instrumentation error is sub-millimetre and essentially solved.** Palpation error is an order of magnitude larger. Soft tissue artefact is another order larger again. And **convention error — which rotation sequence, which segment definitions, which reference frames — is larger still.**
+The ordering is the point, and it is the thesis of this article. **Instrumentation error is sub-millimeter and essentially solved.** Palpation error is an order of magnitude larger. Soft tissue artefact is another order larger again. And **convention error — which rotation sequence, which segment definitions, which reference frames — is larger still.**
 
-The difference between the last row and the others is that convention error costs nothing to eliminate. Buying better cameras addresses the smallest term in the budget. Standardising and reporting conventions addresses the largest, and requires only discipline. That is an unusually favourable ratio of effort to benefit, and it is the strongest practical argument for sequence-independent descriptions like the helical axis: they remove a term that no amount of hardware can touch.
+The difference between the last row and the others is that convention error costs nothing to eliminate. Buying better cameras addresses the smallest term in the budget. Standardizing and reporting conventions addresses the largest, and requires only discipline. That is an unusually favorable ratio of effort to benefit, and it is the strongest practical argument for sequence-independent descriptions like the helical axis: they remove a term that no amount of hardware can touch.
 
 ::: {.callout-note}
 ## The Connection to the Rest of This Section
@@ -165,7 +165,7 @@ The helical axis of a segment and the central axis of a ground reaction wrench a
 
 ### Optical Marker-Based
 
-The laboratory standard: an array of cameras with infrared strobes, retroreflective markers on the skin, sub-pixel centroiding, and triangulation as described in Part I. Frame rates from around 100 Hz for gait to well over 1000 Hz for impact work; reconstruction residuals typically well under a millimetre after wand calibration.
+The laboratory standard: an array of cameras with infrared strobes, retroreflective markers on the skin, sub-pixel centroiding, and triangulation as described in Part I. Frame rates from around 100 Hz for gait to well over 1000 Hz for impact work; reconstruction residuals typically well under a millimeter after wand calibration.
 
 Its strengths are geometric precision, mature software for labeling and gap-filling, and two decades of accumulated methodological convention. Its weaknesses are the ones already named: soft tissue artefact dominates the error budget regardless of camera quality. The practical costs add to that — a dedicated volume, subject preparation time measured in tens of minutes, marker occlusion whenever limbs cross the body, and the possibility that instrumenting the subject changes what the subject does.
 
@@ -181,9 +181,9 @@ The numbers bear this out. Multi-camera pipelines report typical joint-angle err
 
 Two observations matter for interpreting this. First, the comparison is against marker-based systems, which are themselves corrupted by soft tissue artefact — so "agreement with marker-based" is not the same as "accuracy," and disagreement is not automatically the markerless system's error. Note the typical markerless error (3–5°) is *comparable to marker-based capture's own artefact-driven error*, which reframes the comparison: both are dominated by the same noise floor, from different directions.
 
-Second, markerless systems remove marker-placement variability entirely — and Part IIIb showed that palpation contributes 13–25 mm of inter-examiner error. A markerless pipeline simply does not have that term, which is why it can be **more repeatable** between sessions while being less accurate in any single trial. For tracking change over time, that trade is often the right one.
+Second, markerless systems remove marker-placement variability entirely — and Part IIIb showed that palpation contributes 13–25 mm of inter-examiner error. A markerless pipeline does not have that term, which is why it can be **more repeatable** between sessions while being less accurate in any single trial. For tracking change over time, that trade is often the right one.
 
-There is also a tantalising possibility that some of the reported disagreement is not error at all. Work aligning local reference frames between systems has reduced transverse-plane knee discrepancy from about 10° to 2.5° — suggesting a substantial fraction of "markerless error" may be the convention effect of Part IIIb wearing a different hat, and therefore removable by standardisation rather than by better models.
+Some of the reported disagreement may not be error at all. Work aligning local reference frames between systems has reduced transverse-plane knee discrepancy from about 10° to 2.5°. A substantial fraction of "markerless error" may therefore be the convention effect of Part IIIb wearing a different hat, removable by standardization rather than by better models.
 
 #### Why Axial Rotation Fails: Three Independent Causes
 
@@ -197,15 +197,15 @@ The transverse-plane weakness is not a temporary engineering shortfall. Three di
 
 #### The Error Is in the Labels, Not the Network
 
-The most consequential finding in this literature is that markerless error is dominated by **systematic bias in the training annotations**, not by network noise. Public keypoint datasets were labelled by crowdworkers without anatomical training; hip joint centres in particular are systematically mislabelled, and occluded joints are frequently annotated onto biomechanically impossible points.
+The most consequential finding in this literature is that markerless error is dominated by **systematic bias in the training annotations**, not by network noise. Public keypoint datasets were labeled by crowdworkers without anatomical training; hip joint centers in particular are systematically mislabeled, and occluded joints are frequently annotated onto biomechanically impossible points.
 
-This explains an otherwise puzzling benchmark result. Comparing fifteen markerless systems against marker-based capture, moving from a monocular system to a two-camera one bought about **1.7°**, and from two cameras to a ten-camera research rig another **1.3°** — small next to a baseline error of four to six degrees. If camera count were the bottleneck, that gap would be far larger. It is small because every system inherits the same label prior. More data, larger models and higher benchmark scores converge more confidently onto the same anatomically wrong point.
+This explains an otherwise puzzling benchmark result. Fifteen markerless systems were compared against marker-based capture. Moving from a monocular system to a two-camera one bought about **1.7°**, and from two cameras to a ten-camera research rig another **1.3°** — small next to a baseline error of four to six degrees. If camera count were the bottleneck, that gap would be far larger. It is small because every system inherits the same label prior. More data, larger models and higher benchmark scores converge more confidently onto the same anatomically wrong point.
 
 #### Two Framings Worth Keeping Straight
 
-**Offset versus shape.** In a paediatric clinical validation, *all* joint-angle discrepancies fell below 8° once a constant offset was removed. Much of markerless "error" is bias, not waveform distortion — which makes these systems considerably better at detecting *change within a golfer* than at reporting absolute values comparable to published norms.
+**Offset versus shape.** In a pediatric clinical validation, *all* joint-angle discrepancies fell below 8° once a constant offset was removed. Much of markerless "error" is bias, not waveform distortion — which makes these systems considerably better at detecting *change within a golfer* than at reporting absolute values comparable to published norms.
 
-**Markerless replaces soft tissue artefact; it does not remove it.** This is worth stating plainly because the marketing implies otherwise. Removing the marker does not remove the fact that bone pose is being inferred from a deforming soft-tissue surface. What changes is that a characterised, discrete-landmark error model is exchanged for a learned, whole-surface inference whose error structure is subject-specific, pose-dependent, undocumented, and not correctable by any calibration the user can perform. Different error, not less error.
+**Markerless replaces soft tissue artefact; it does not remove it.** This is worth stating plainly because the marketing implies otherwise. Removing the marker does not stop bone pose from being inferred from a deforming soft-tissue surface. What changes is that a characterized, discrete-landmark error model is exchanged for a learned, whole-surface inference whose error structure is subject-specific, pose-dependent, undocumented, and not correctable by any calibration the user can perform. Different error, not less error.
 
 The practical caution for golf is blunt: the published golf markerless literature is nearly empty. There is a single-camera proficiency study measuring sagittal spine angle and its variability — markerless played precisely to its strengths — and no full 3D concurrent-validity study against marker-based capture. The most widely used markerless product in golf publishes no accuracy figures and has no located independent validation, while its headline metrics are exactly the transverse- and frontal-plane rotations that markerless measures worst. Baseball, which has invested more in validation, has settled on **300 Hz** multi-camera capture as the standard for a throwing skill.
 
@@ -213,19 +213,19 @@ The practical caution for golf is blunt: the published golf markerless literatur
 
 Body-worn inertial measurement units fuse accelerometer, gyroscope and magnetometer signals to estimate segment orientation, typically with a complementary or Kalman-type filter. They are portable, work outdoors, and have no volume limit or occlusion problem.
 
-Three costs follow from the physics. **Orientation drift** accumulates because angular velocity must be integrated; magnetometer readings bound the drift about the vertical axis but are corrupted by ferrous structures and electrical equipment — an indoor golf facility with a steel frame being an unhelpful environment. **Position is not measured**, only orientation, so joint centres and segment positions must be inferred from a linked-segment model rather than observed. And **sensor-to-segment alignment** must be established by a calibration procedure, since the sensor's own axes bear no fixed relation to anatomy.
+Three costs follow from the physics. **Orientation drift** accumulates because angular velocity must be integrated; magnetometer readings bound the drift about the vertical axis but are corrupted by ferrous structures and electrical equipment — an indoor golf facility with a steel frame being an unhelpful environment. **Position is not measured**, only orientation, so joint centers and segment positions must be inferred from a linked-segment model rather than observed. And **sensor-to-segment alignment** must be established by a calibration procedure, since the sensor's own axes bear no fixed relation to anatomy.
 
-The validation picture is correspondingly split: orientation and rotational summary measures can agree closely with optical systems, while absolute positions and small joint angles agree less well. For golf specifically, a three-sensor system reproduced trunk and pelvic rotation measures at correlations of 0.91 to 1.00 against optical capture (Part V), which is a strong result for the quantities it targets — and says nothing about quantities it does not measure.
+The validation picture is correspondingly split: orientation and rotational summary measures can agree closely with optical systems, while absolute positions and small joint angles agree less well. For golf specifically, a three-sensor system reproduced trunk and pelvic rotation measures at correlations of 0.91 to 1.00 against optical capture (Part V). That is a strong result for the quantities it targets, and says nothing about quantities it does not measure.
 
 ### Videoradiography — The Benchmark
 
 Biplanar videoradiography, also called dynamic stereo X-ray, images the bones themselves through two X-ray sources and image intensifiers, then registers CT- or MRI-derived bone models to the radiographic silhouettes frame by frame. Because it tracks bone rather than skin, it is not subject to soft tissue artefact at all, and its accuracy is roughly an order of magnitude better than skin-marker methods.
 
-It is the reference against which every other technique's error is ultimately calibrated, and it is unusable for most purposes: the capture volume is small, the equipment is scarce and expensive, and ionising radiation limits both trial count and participant population. Its role is to characterise the errors of the practical methods, not to replace them.
+It is the reference against which every other technique's error is ultimately calibrated, and it is unusable for most purposes. The capture volume is small, the equipment is scarce and expensive, and ionizing radiation limits both trial count and participant population. Its role is to characterize the errors of the practical methods, not to replace them.
 
 ### Emerging Modalities
 
-Depth cameras, LiDAR, millimetre-wave radar and event cameras all offer markerless capture with different trade-offs — event cameras in particular have microsecond temporal resolution and no motion blur, which is attractive for exactly the fast-movement problem golf presents. These are research instruments in this domain today rather than established measurement tools, and claims about them should be read with that status in mind.
+Depth cameras, LiDAR, millimeter-wave radar and event cameras all offer markerless capture with different trade-offs — event cameras in particular have microsecond temporal resolution and no motion blur, which is attractive for exactly the fast-movement problem golf presents. These are research instruments in this domain today rather than established measurement tools, and claims about them should be read with that status in mind.
 
 ::: {.callout-note}
 ## Choosing by Error Structure, Not by Specification Sheet
@@ -247,14 +247,14 @@ Golf is an unusually demanding motion-capture subject because the object of grea
 | 500 Hz | 2 ms | 9 cm |
 | 1000 Hz | 1 ms | 4.5 cm |
 
-A clubhead is a few centimetres across. Even at 1000 Hz it displaces by roughly its own size each frame, and at the 200–360 Hz rates typical of commercial golf systems it moves several head-widths between samples. This is the physical origin of club-marker blur and dropout, and the reason systems that track both body and club often run the club capture faster than the body capture needs.
+A clubhead is a few centimeters across. Even at 1000 Hz it displaces by roughly its own size each frame, and at the 200–360 Hz rates typical of commercial golf systems it moves several head-widths between samples. This is the physical origin of club-marker blur and dropout, and the reason systems that track both body and club often run the club capture faster than the body capture needs.
 
 The body itself is less extreme but still fast. Verified peak downswing rotational velocities in professional golfers are **415 ± 33 °/s for the pelvis and 552 ± 48 °/s for the upper torso** ([Zhou et al. 2022](https://doi.org/10.3389/fspor.2022.986281)).
 
 ::: {.callout-warning}
 ## A Figure That Does Not Survive Checking
 
-The claim that golf segment angular velocities exceed 2000 °/s circulates widely. It could not be traced to a primary source for any *body segment*; the verified pelvis and thorax values above are three to five times lower. The figure may originate as a *clubhead* angular velocity — plausible for a 45 m/s head on a roughly one-metre lever — but no peer-reviewed value was located. Similarly, the frequently quoted 0.45 ms club-ball impact duration could not be traced to peer-reviewed biomechanics literature; it appears to originate in equipment-testing documentation. Both are worth treating as unsourced until someone produces the citation.
+The claim that golf segment angular velocities exceed 2000 °/s circulates widely. It could not be traced to a primary source for any *body segment*; the verified pelvis and thorax values above are three to five times lower. The figure may originate as a *clubhead* angular velocity — plausible for a 45 m/s head on a roughly one-meter lever — but no peer-reviewed value was located. Similarly, the frequently quoted 0.45 ms club-ball impact duration could not be traced to peer-reviewed biomechanics literature; it appears to originate in equipment-testing documentation. Both are worth treating as unsourced until someone produces the citation.
 :::
 
 ### Commercial Golf Systems
@@ -265,19 +265,19 @@ The claim that golf segment angular velocities exceed 2000 °/s circulates widel
 
 **Sportsbox AI** represents the markerless frontier: monocular smartphone capture reconstructing over thirty key points into 3D. Its published accuracy — roughly 2° angular and 0.4 in linear difference against a reference system across 30 golfers — comes from the vendor's own documentation, and a literature search found no peer-reviewed validation study. The vendor's own caveat, that accuracy depends on camera placement, exposure, frame rate, lighting and background, is worth taking seriously: those are exactly the variables a coach's teaching bay does not control.
 
-Two further points of practice. Certification bodies such as TPI are educational organisations, not hardware vendors; the technology used under their protocols varies by installation. And several vendor product pages in this space are stale or offline, which makes independent specification checking harder than it should be.
+Two further points of practice. Certification bodies such as TPI are educational organizations, not hardware vendors; the technology used under their protocols varies by installation. And several vendor product pages in this space are stale or offline, which makes independent specification checking harder than it should be.
 
 ### The Kinematic Sequence, and Why It Is Less Settled Than It Appears
 
 The proximal-to-distal "kinematic sequence" — pelvis, then thorax, then arm, then club — is the most widely taught output of golf motion capture. The evidence supports it as a description of what skilled golfers tend to do: professionals show pelvis-first ordering while amateurs show earlier arm involvement and greater variability ([Zhou et al. 2022](https://doi.org/10.3389/fspor.2022.986281)).
 
-What is far less widely appreciated is that *which segment peaks first is partly a consequence of how you compute angular velocity.* [Marsan et al. (2019)](https://pubmed.ncbi.nlm.nih.gov/31741482/) tested seven methods of identifying the kinematic sequence and found that **the choice of angular velocity component significantly affected the result, with no single method emerging as a reference standard.** The sequence is therefore not a raw observation; it is an observation filtered through a definitional choice that the literature has not standardised.
+What is far less widely appreciated is that *which segment peaks first is partly a consequence of how you compute angular velocity.* [Marsan et al. (2019)](https://pubmed.ncbi.nlm.nih.gov/31741482/) tested seven methods of identifying the kinematic sequence and found that **the choice of angular velocity component significantly affected the result, with no single method emerging as a reference standard.** The sequence is therefore not a raw observation; it is an observation filtered through a definitional choice that the literature has not standardized.
 
 That finding sits inside a broader problem. A systematic review of 92 golf kinematics articles concluded that **"the lack of methodological consensus prevented generalization of the results"**, with ISB reporting guidelines inconsistently applied across studies ([Bourgain et al. 2022](https://doi.org/10.3390/sports10060091)). The X-factor literature illustrates the pattern: the construct originated in golf instruction rather than in a peer-reviewed publication, and the "X-factor stretch" refinement is a conference proceedings chapter with no indexed DOI.
 
-The measurement position is worse still. X-factor magnitude roughly **doubles** depending on which landmarks define the segments, and differs significantly across three published computation methods. Since it is a difference of two axial rotations, it also inherits the transverse-plane weakness of every modality: inertial systems reproduce single-segment orientation to within 1–7% of range but the *relative* thorax-pelvis angle only to 4–57%, because differencing two noisy orientations amplifies error rather than cancelling it.
+The measurement position is worse still. X-factor magnitude roughly **doubles** depending on which landmarks define the segments, and differs significantly across three published computation methods. Since it is a difference of two axial rotations, it also inherits the transverse-plane weakness of every modality. Inertial systems reproduce single-segment orientation to within 1–7% of range but the *relative* thorax-pelvis angle only to 4–57%, because differencing two noisy orientations amplifies error rather than canceling it.
 
-And there is a finding that ought to be better known than it is: in skilled golfers, **X-factor parameters have been reported not to correlate with maximum clubhead velocity at all.** A construct that varies twofold with definition, is measured worst by every instrument, and may not predict the outcome it is invoked to explain is a construct in some difficulty — not because the underlying separation is unreal, but because the number reported for it is doing less work than its prominence implies.
+And there is a finding that ought to be better known than it is: in skilled golfers, **X-factor parameters have been reported not to correlate with maximum clubhead velocity at all.** A construct that varies twofold with definition, is measured worst by every instrument, and may not predict the outcome it is invoked to explain is a construct in some difficulty. The trouble is not that the underlying separation is unreal; it is that the number reported for it is doing less work than its prominence implies.
 
 This is precisely where the rotation-representation problem of Part III becomes practical rather than theoretical. If segment angular velocity can be computed several defensible ways that disagree about the sequence, then a description that does not depend on the choice — the instantaneous screw axis — is not merely elegant. It is a candidate fix.
 
@@ -285,9 +285,9 @@ This is precisely where the rotation-representation problem of Part III becomes 
 
 The application of instantaneous screw axis theory to golf traces to a two-part methodological study in *Sports Engineering* ([Part 1](https://doi.org/10.1007/s12283-010-0058-8), [Part 2](https://doi.org/10.1007/s12283-010-0059-7)), which developed the computation and applied it to the swing's kinematic sequence.
 
-More recently, [Kim (2025)](https://doi.org/10.3390/jfmk10030315) computed the **pitch** of the instantaneous screw axis — the ratio of translation to rotation along the axis, $h = (\mathbf{v}\cdot\boldsymbol{\omega})/(\boldsymbol{\omega}\cdot\boldsymbol{\omega})$ — through the downswing, synchronised with vertical ground reaction force from a force plate. The reported contrast is striking: one golfer showed tightly bounded pitch oscillation of about $\pm 0.0025$ cm/rad aligned with a single well-defined force peak, while the other showed fluctuations an order of magnitude larger with multiple asynchronous force peaks.
+More recently, [Kim (2025)](https://doi.org/10.3390/jfmk10030315) computed the **pitch** of the instantaneous screw axis — the ratio of translation to rotation along the axis, $h = (\mathbf{v}\cdot\boldsymbol{\omega})/(\boldsymbol{\omega}\cdot\boldsymbol{\omega})$ — through the downswing, synchronized with vertical ground reaction force from a force plate. The reported contrast is striking: one golfer showed tightly bounded pitch oscillation of about $\pm 0.0025$ cm/rad aligned with a single well-defined force peak, while the other showed fluctuations an order of magnitude larger with multiple asynchronous force peaks.
 
-Two caveats are essential and the paper's own data supply them. The study analysed **two golfers**, which makes it a proof of concept rather than evidence of a general effect. And the participant table is internally inconsistent with its own labels: the golfer designated "proficient" carries a handicap of 32 with one year of experience, while the "novice" carries a handicap of 8 with fifteen years and 110 rounds a year. On standard skill metrics the labels are inverted. The methodological idea — that a coordinate-frame-independent invariant of the motion screw might characterise coordination quality better than sequence timing does — remains worth pursuing, but this particular result should not be cited as showing that pitch discriminates skill.
+Two caveats are essential and the paper's own data supply them. The study analyzed **two golfers**, which makes it a proof of concept rather than evidence of a general effect. And the participant table is internally inconsistent with its own labels: the golfer designated "proficient" carries a handicap of 32 with one year of experience, while the "novice" carries a handicap of 8 with fifteen years and 110 rounds a year. On standard skill metrics the labels are inverted. The methodological idea — that a coordinate-frame-independent invariant of the motion screw might characterise coordination quality better than sequence timing does — remains worth pursuing, but this particular result should not be cited as showing that pitch discriminates skill.
 
 That is a fair summary of the state of the art: the geometry is sound, the application to golf is early, and the field's larger problem is not sensor accuracy but definitional consistency.
 

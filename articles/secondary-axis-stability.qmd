@@ -46,7 +46,7 @@ The sign change in the right-hand side of the second equation (because $I_2$ lie
 
 ::: {.callout-note}
 ## Note on Magnitude and Scaling
-It is important to acknowledge that the *gyroscopic* torque term responsible for the Intermediate Axis Instability scales with $\omega^2$. In putting, angular velocities are low ($\approx 1-3 \text{ rad/s}$), making the gyroscopic instability force small (on the order of milli-Newtons).
+The *gyroscopic* torque term responsible for the Intermediate Axis Instability scales with $\omega^2$. In putting, angular velocities are low ($\approx 1-3 \text{ rad/s}$), making the gyroscopic instability force small (on the order of milli-Newtons).
 
 However, the **alignment** of principal axes remains critical even at low speeds. When principal axes are misaligned with the stroke plane, the inertia tensor contains off-diagonal terms ($I_{xy}$) in the stroke frame. This creates **Inertial Coupling** (a linear effect, $\tau = I \dot{\omega}$), where a pure rotation torque applied by the golfer creates parasitic accelerations in orthogonal directions. The "Central Spine" design thus provides two benefits: **Kinematic Decoupling** (linear, dominant in putting) and **Dynamic Stability** (quadratic, dominant in full swing).
 :::
@@ -116,7 +116,7 @@ $$
 \tau_{\text{impact}} = I_z \dot{\omega}_z.
 $$
 
-However, maximizing $I_z$ does not control the dynamic stability of rotation about other axes encountered during the stroke. Increasing separation between $I_1, I_2, I_3$ can actually sharpen the intermediate-axis instability, making the putter more sensitive to small deviations in stroke plane and lie angle.
+However, maximizing $I_z$ does not control the dynamic stability of rotation about other axes encountered during the stroke. Increasing separation between $I_1, I_2, I_3$ can sharpen the intermediate-axis instability, making the putter more sensitive to small deviations in stroke plane and lie angle.
 
 Thus, high-MOI perimeter weighting improves static impact robustness, but may degrade dynamic rotational robustness.
 
@@ -330,7 +330,7 @@ Further work involving full 3D CAD, finite element shaft modeling, and experimen
 # Synthesis: The AffineDrift Context
 
 **Stabilizing the Passive Drift Field**
-In the AffineDrift framework ($\dot{x} = f(x) + g(x)u$), the intermediate axis instability manifests as a region in the state space where the passive drift field $f(x)$ possesses positive Lyapunov exponents. While the golfer can suppress this divergence via input $u$, a 'Central Spine' mass distribution effectively pre-conditions the drift field itself. By minimizing the off-diagonal terms in the inertia tensor relative to the stroke frame, the design ensures that the **Zero Torque Counterfactual (ZTCF)**—the club’s natural trajectory under zero active input—remains homeomorphically bound to the intended planar manifold, reducing the 'Control Effort' required to maintain path coherence.
+In the AffineDrift framework ($\dot{x} = f(x) + g(x)u$), the intermediate axis instability manifests as a region in the state space where the passive drift field $f(x)$ possesses positive Lyapunov exponents. While the golfer can suppress this divergence via input $u$, a 'Central Spine' mass distribution effectively pre-conditions the drift field itself. By minimizing the off-diagonal terms in the inertia tensor relative to the stroke frame, the design ensures that the **Zero Torque Counterfactual (ZTCF)**—the club’s natural trajectory under zero active input—remains homeomorphically bound to the intended planar manifold. That in turn reduces the 'Control Effort' required to maintain path coherence.
 
 **Inertial Alignment vs. Constraint Collapse**
 This hardware-based stabilization functions as the static dual to **Intentional Constraint Collapse**. Where elite golfers use muscular co-contraction to dynamically reshape the constraint Jacobian ($J_c$) and block destabilizing degrees of freedom, the Central Spine design achieves **Tensor Diagonalization** through geometry. This minimizes **Inertial Coupling** (acceleration cross-talk), ensuring that a pure rotation torque applied by the hands does not induce parasitic twisting forces that must be actively cancelled. The design thus purifies the mapping from Intent ($u$) to Outcome ($\ddot{q}$).
