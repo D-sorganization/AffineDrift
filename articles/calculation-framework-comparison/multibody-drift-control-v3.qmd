@@ -145,7 +145,7 @@ Three kinds of pushes act on any mechanical system:
 
 ## The Mass Matrix: How Heavy Does It Feel?
 
-Here is a question that sounds simple but is actually deep: "If I push on this joint, how much does it accelerate?"
+Here is a question that sounds simple but runs deep: "If I push on this joint, how much does it accelerate?"
 
 For a single particle, the answer is just $a = F/m$---divide the force by the mass. But for a coupled multibody system, the answer depends on *which direction* you push, *what the current configuration is*, and *how the masses of all the other bodies couple to this joint*.
 
@@ -310,7 +310,7 @@ Notice that the input gain depends on the configuration. The same motor torque p
 
 ## The Zero Torque Counterfactual (ZTCF)
 
-The ZTCF is simply the drift evaluated at a specific moment in time:
+The ZTCF is the drift evaluated at a specific moment in time:
 
 $$
 \ddot{q}_{\text{ZTCF},t} \coloneqq -M^{-1}\bigl(q(t)\bigr)\bigl[C\bigl(q(t),\dot{q}(t)\bigr)\dot{q}(t) + g\bigl(q(t)\bigr)\bigr]
@@ -334,7 +334,7 @@ $$
 \dot{q}(t) = \dot{q}(t_0) + \int_{t_0}^{t} \ddot{q}(\sigma)\,d\sigma
 $$
 
-So what appears as "drift" right now is really the accumulated legacy of all past inputs, all past gravitational pulls, all past Coriolis interactions.
+So what appears as "drift" right now is the accumulated legacy of all past inputs, all past gravitational pulls, all past Coriolis interactions.
 
 Think of a savings account. The interest earned this month depends on the current balance, not on how the balance was accumulated. A high balance earns high interest whether it came from salary, inheritance, or a lottery win. Similarly, a high velocity produces large drift accelerations regardless of whether that velocity came from motors, gravity, or a push.
 
@@ -456,11 +456,11 @@ $$
 J_c(q)\ddot{q} + \dot{J}_c(q,\dot{q})\dot{q} = 0
 $$ {#eq-cel-constraint}
 
-The new term $J_c^T\lambda$ is the **generalized constraint force**---the guardrail's push, expressed in generalized coordinates. The multiplier $\lambda$ tells you the *magnitude* of the push. It is not prescribed---it is determined by requiring that the constraint equation is satisfied. The constraint force is *whatever it needs to be* to keep the system on the constraint surface.
+The new term $J_c^T\lambda$ is the **generalized constraint force**---the guardrail's push, expressed in generalized coordinates. The multiplier $\lambda$ tells you the *magnitude* of the push. You do not prescribe it---the requirement that the constraint equation hold determines it. The constraint force is *whatever it needs to be* to keep the system on the constraint surface.
 
 ## The Drift--Control Split Survives
 
-Here is the important point: the drift--control decomposition **still works** when constraints are present. It simply operates within the constrained dynamics.
+Here is the important point: the drift--control decomposition **still works** when constraints are present. It operates within the constrained dynamics.
 
 Setting $\tau = 0$, the **constrained drift** is:
 
