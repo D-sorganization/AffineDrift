@@ -4,6 +4,17 @@
 
 Last updated: 2026-08-13
 
+## Complete Proximal-to-Distal Claim Audit Pin
+
+- Branch `research/proximal-distal-complete-audit` pins the canonical complete
+  audit at UpstreamDrift merge `41befe930203f9e1c38ebb97c83e02ea6753d4d9`.
+- The public article and machine snapshot expose 925/925 reviewed candidates,
+  240 bounded claims, zero unadjudicated entries, release hashes, and the main
+  adverse scientific boundaries. The site does not promote audit completion as
+  human validation or coaching authority.
+- #8556 remains an external governed bilateral-wrench data gate. NotebookLM
+  collection mining remains blocked on manual interactive reauthentication.
+
 ## Current Work
 
 Follow-up PR [#3846](https://github.com/D-sorganization/AffineDrift/pull/3846)
