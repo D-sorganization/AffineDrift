@@ -7,21 +7,24 @@ Last updated: 2026-08-13
 ## Current Work
 
 Follow-up PR [#3846](https://github.com/D-sorganization/AffineDrift/pull/3846)
-repaired the one post-merge publication failure from the definitional-integrity migration: The Physics of
-Golf used an undefined uppercase `\ZTCF` command instead of its declared
+merged as `4542b55f` and repaired the one post-merge publication failure from
+the definitional-integrity migration: The Physics of Golf used an undefined uppercase `\ZTCF` command instead of its declared
 `\ztcf` macro. The same pass removes residual no-muscle interpretations,
 recasts ground-reaction residuals as non-identifying model diagnostics, and
 qualifies shaft/control-authority statements in the paired LaTeX and Quarto
 sources. The terminology gate now rejects direct physiological
 reinterpretations. The focused contracts, terminology scan, title-case audit,
-and a 617-page local `pdflatex` build pass.
+and a 637-page local `pdflatex` build pass. PR
+[#3847](https://github.com/D-sorganization/AffineDrift/pull/3847) records the
+final content-architecture and decision-marker acceptance evidence.
 
 Epic [#3834](https://github.com/D-sorganization/AffineDrift/issues/3834)
 tracks the repository-wide definitional-integrity migration. Protected PR
 [#3845](https://github.com/D-sorganization/AffineDrift/pull/3845) merged as
-`ee3766be`. Preserve protected checks; do not close #3834 until the conforming
-UpstreamDrift migration also merges, this publication follow-up is merged, and
-both remote-main states are verified.
+`ee3766be`. The conforming UpstreamDrift PR
+[#8588](https://github.com/D-sorganization/UpstreamDrift/pull/8588) merged as
+`1d6af73d`; close #3834 only after #3847 and both remote-main ancestry checks
+are verified.
 
 ### Ratified Contract
 
@@ -59,7 +62,7 @@ The reasoning and rejected alternatives are in
   a zero-velocity control-preserved evaluation.
 - Replaced invalid convergence and counterfactual identities in the manifesto
   with falsifiable reconstruction, held-out prediction, and sensitivity tests.
-- Updated `SPEC.md` to 1.0.190.
+- Updated `SPEC.md` through 1.0.192.
 
 ### Verified Locally
 
@@ -77,15 +80,13 @@ The reasoning and rejected alternatives are in
   unresolved sibling-chapter warning; the repository cross-reference gate
   resolves the reference in full-project context.
 
-### Remaining Before AffineDrift Publication
+### Remaining Before Epic Closure
 
-1. Run the full repository quality gate and relevant Quarto/LaTeX renders.
-2. Inspect rendered counterfactual, glossary, DCR, and notation pages at phone
-   and desktop widths.
-3. Commit, push, open a ready PR linked to #3834, and preserve protected merge
-   requirements.
-4. After merge, verify the merge commit on remote main before closing the
-   AffineDrift child issues.
+1. Preserve PR #3847's squash auto-merge and required checks.
+2. Verify #3845, #3846, #3847, and UpstreamDrift #8588 as ancestors of their
+   respective remote `main` branches.
+3. Attach acceptance evidence to and close the eight AffineDrift child issues,
+   then close #3834.
 
 ## Cross-Repository Follow-Up
 

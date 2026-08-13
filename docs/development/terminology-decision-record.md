@@ -12,7 +12,7 @@ boundaries.
 
 ## Decision 7: One Canonical Home
 
-**Decision:** `NOTATION.md` is the single normative home for published
+**DECISION:** `NOTATION.md` is the single normative home for published
 control-affine terminology. Articles may explain or specialize a definition,
 but may not declare an incompatible local definition canonical. Code and data
 schemas must identify the construction they implement.
@@ -23,7 +23,7 @@ a machine-readable table that the positive terminology gate parses.
 
 ## Decision 2: Complete Effective-Plant Drift
 
-**Decision:** Drift is the complete autonomous vector field of the declared
+**DECISION:** Drift is the complete autonomous vector field of the declared
 effective plant. It includes all retained state-dependent inertial,
 gravitational, elastic, dissipative, shaft, and compatible constraint/contact
 terms. Reduced inventories are named model specializations.
@@ -38,7 +38,7 @@ silently excludes features that the flexible and biological models retain.
 
 ## Decision 1: Preserve the Four-Construction ZTCF Family
 
-**Decision:** Retain pointwise sample, stitched pointwise trace, forward
+**DECISION:** Retain pointwise sample, stitched pointwise trace, forward
 trajectory, and achieved-state branched trajectory. Require the construction
 qualifier on first use.
 
@@ -52,7 +52,7 @@ attribution only.
 
 ## Decision 3: Zero Declared Control Is Not No Muscle
 
-**Decision:** ZTCF zeros the declared applied generalized-control channel while
+**DECISION:** ZTCF zeros the declared applied generalized-control channel while
 holding the declared effective plant fixed. It does not imply zero muscle
 activation, EMG, co-contraction, reflex activity, or biological effort.
 
@@ -61,7 +61,7 @@ activation is not identifiable from generalized mechanics alone.
 
 ## Decision 4: ZVCF Is an Instantaneous Acceleration
 
-**Decision:** ZVCF is the zero-velocity, zero-control drift acceleration at a
+**DECISION:** ZVCF is the zero-velocity, zero-control drift acceleration at a
 fixed configuration and declared internal state. It is not a state, generalized
 torque, or releasable trajectory.
 
@@ -72,7 +72,7 @@ it were the canonical object.
 
 ## Decision 5: One DCR Expansion and One Comparable Space
 
-**Decision:** DCR expands to **Drift-Control Ratio**. Its numerator and
+**DECISION:** DCR expands to **Drift-Control Ratio**. Its numerator and
 denominator must occupy the same acceleration or task-projected space, under a
 declared metric and admissible control set. The denominator is bounded control
 authority, not an unlabeled realized input.
@@ -85,7 +85,7 @@ as a competing expansion.
 
 ## Decision 6: Symbol Convention
 
-**Decision:** Use $f(x)$ for drift, uppercase $G(x)$ for the input map,
+**DECISION:** Use $f(x)$ for drift, uppercase $G(x)$ for the input map,
 lowercase $g(q)$ for gravity generalized force, and $u$ for the declared control
 input.
 
