@@ -181,9 +181,17 @@ that contrast is false, because a "Pointwise ZTCF sample" is also instantaneous.
 > level, but with the *net driving torque* removed ($u=0$). This distinguishes
 > the **Effective Plant** … from a \"flaccid\" ragdoll"
 >
-> `articles/theory-part2.qmd:85` — "inertia of all rigid segments, Coriolis and
-> centrifugal forces, gravitational torques, passive joint contributions (if
-> modeled), elastic and damping forces from shaft deformation."
+> `articles/theory-part2.qmd:82-88` — "Physically, this includes:" followed by a
+> five-item list: "inertia of all rigid segments," / "Coriolis and centrifugal
+> forces," / "gravitational torques," / "passive joint contributions
+> **(if modeled)**," / "elastic and damping forces from shaft deformation."
+
+**Note the qualifier.** `theory-part2` writes "passive joint contributions **(if
+modeled)**" — it is conditional on the model, not a commitment that passive
+impedance is always in the drift. It therefore sits closer to the middle of this
+conflict than to Inventory A, and any ratified wording should say whether the
+inclusion is unconditional or model-dependent. Shaft elasticity and damping in
+that same list carry no such qualifier.
 
 **Inventory B — Coriolis and gravity only:**
 
