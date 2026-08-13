@@ -14,9 +14,8 @@ Last updated: 2026-08-13
   human validation or coaching authority.
 - #8556 remains an external governed bilateral-wrench data gate. NotebookLM
   collection mining remains blocked on manual interactive reauthentication.
-- PR #3849 is open with protected squash auto-merge. The first SPEC freshness
-  failure was actionable and is corrected by SPEC version 1.0.193; do not
-  create a redundant rerun because the new push will supply the required run.
+- PR #3849 merged the audit pin as `745168a8`. Follow-up PR #3850 carries the
+  required SPEC version 1.0.193 freshness correction through protected merge.
 
 ## Current Work
 
