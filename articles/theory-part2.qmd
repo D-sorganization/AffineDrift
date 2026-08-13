@@ -68,9 +68,9 @@ format:
 
 ## Drift vs. Input Decomposition {#drift-vs-input-decomposition}
 
-Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, where $f$ encodes drift and $g$ encodes control directions [@isidori1995nonlinear]. In Part II, we pivot from description to **diagnostics**. We seek to transform this equation of motion into a causal map that can attribute specific features of the swing trajectory to either the golfer's intent or the club's inertia.
+Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, where $f$ encodes drift and $g$ encodes control directions [@isidori1995nonlinear]. In Part 2, we pivot from description to **diagnostics**. We seek to transform this equation of motion into a causal map that can attribute specific features of the swing trajectory to either the golfer's intent or the club's inertia.
 
-This shift is enabled by the additive separability derived in Part I, where the velocity-dependent drift is structurally distinct from the active control of the player. We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
+The additive separability derived in Part 1 enables that shift: the velocity-dependent drift is structurally distinct from the active control of the player. We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
 
 Given the control-affine form $\dot{x} = f(x) + g(x)u$, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
@@ -119,7 +119,7 @@ The decomposition is analytically exact for the chosen multibody model; in pract
 
 This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask 'what if' questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.
 
-To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).
+To operationalize this decomposition, we cannot look only at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).
 
 ### Role in Counterfactual Analysis
 
@@ -128,7 +128,7 @@ The drift--input decomposition underlies the counterfactual tools introduced lat
 - The *Zero Torque Counterfactual* (ZTCF) trajectory integrates the drift-only dynamics from a given initial state, isolating the passive evolution of the system.
 - The *Zero Velocity Counterfactual* (ZVCF) evaluates forces at the same configuration with velocities set to zero, isolating configuration-dependent contributions [@featherstone2008rigid].
 
-By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces [@nesbit2005three; @koike2019dynamic]. This process moves us from the instantaneous vector fields of Part I to the temporal domain of Part II. It allows us to simulate the **counterfactual trajectories**—the unobserved trajectories that *would* have occurred had the golfer chosen differently—exposing the contribution of inertial coupling to the observed motion.
+By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces [@nesbit2005three; @koike2019dynamic]. This process moves us from the instantaneous vector fields of Part 1 to the temporal domain of Part 2. It allows us to simulate the **counterfactual trajectories**—the unobserved swings that *would* have occurred had the golfer chosen differently—exposing the contribution of inertial coupling to the observed motion.
 
 ## Zero Torque Counterfactual (ZTCF)
 
@@ -227,7 +227,7 @@ The ZTCF trajectory is not strictly required to compute this decomposition: eval
 - Conceptually, it is the trajectory that realizes the drift dynamics in isolation.
 - Computationally, simulating $x^{\mathrm{ZTCF}}(t)$ gives a concrete motion that can be analyzed or visualized alongside the actual swing to illustrate the effect of the torque input.
 
-There is a dynamical implication in this construction. In phases of low velocity (takeaway), the ZTCF is merely one of many possible paths, and the golfer retains high authority to deviate from it. However, as swing speed increases, the passive drift field $f(x)$ grows energetically while the input authority $g(x)u$ remains bounded by physiological limits. In this high-energy regime, the ZTCF becomes a useful reference for diagnosing how much of the observed motion is passive versus controlled [@koike2019dynamic]. As the **Drift-Control Ratio** (defined in subsequent work) rises, a growing share of the observed joint acceleration is accounted for by the passive terms, so that the velocity-dependent drift contributes more of the late-swing mechanics than the active control does.
+How useful the ZTCF is as a reference depends on where in the swing it is taken. In phases of low velocity (takeaway), the ZTCF is merely one of many possible paths, and the golfer retains high authority to deviate from it. As swing speed increases, the passive drift field $f(x)$ grows energetically while the input authority $g(x)u$ remains bounded by physiological limits. In this high-energy regime, the ZTCF becomes a useful reference for diagnosing how much of the observed motion is passive versus controlled [@koike2019dynamic]. As the **Drift-Control Ratio** (defined in subsequent work) rises, the passive terms account for a growing share of the observed joint acceleration, and velocity-dependent drift contributes more of the late-swing mechanics than active control does.
 
 ### Worked Numerical Example
 

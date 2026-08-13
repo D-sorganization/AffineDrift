@@ -164,9 +164,9 @@ $$
 \Delta w_{ij} = -\eta \cdot e(t) \cdot x_i(t) \cdot y_j(t)
 $$ {#eq-ch24_cerebellar_learning}
 
-where $w_{ij}$ is the synaptic weight between parallel fiber $i$ and Purkinje cell $j$, $e(t)$ is the climbing fiber error signal, $x_i(t)$ is the firing rate of parallel fiber $i$, and $y_j(t)$ is the firing rate of the Purkinje cell. The negative sign indicates that errors drive depression of relevant synapses. Over time, this makes the forward model more accurate.
+where $w_{ij}$ is the synaptic weight between parallel fiber $i$ and Purkinje cell $j$, and $e(t)$ is the climbing fiber error signal. The remaining terms $x_i(t)$ and $y_j(t)$ are the firing rates of parallel fiber $i$ and of the Purkinje cell. The negative sign indicates that errors drive depression of relevant synapses. Over time, this makes the forward model more accurate.
 
-This is a simplified form of the Marr-Albus-Ito hypothesis. More precisely, the climbing fiber carries an error signal, and parallel fiber synapses that are co-active with climbing fiber input undergo long-term depression (LTD). The learning rule above captures the essential structure: weights decrease when error and pre-synaptic activity coincide [@wolpert1998internal; @flanagan2003control; @kawato1999internal].
+This is a simplified form of the Marr-Albus-Ito hypothesis. More precisely, the climbing fiber carries an error signal, and parallel fiber synapses that are co-active with climbing fiber input undergo LTD. The learning rule above captures the essential structure: weights decrease when error and pre-synaptic activity coincide [@wolpert1998internal; @flanagan2003control; @kawato1999internal].
 
 
 ### Why Internal Models Matter
@@ -182,7 +182,7 @@ With an internal model, the nervous system can predict likely sensory consequenc
 
 :::
 
-The forward model enables *predictive control*. The inverse model enables *planning*. Together, they enable the feedforward computation of motor commands that reliably produce desired outcomes.
+The forward model supports *predictive control*; the inverse model supports *planning*. Together they make it possible to compute motor commands in advance that reliably produce desired outcomes.
 
 ## The Predictive Processing Framework
 
@@ -206,7 +206,7 @@ For the golf swing, this framework explains several phenomena:
 
 - **Lack of time for correction:** During a 300 ms downswing, the brain has time for maybe one or two prediction error cycles. Thus, most corrections cannot happen mid-swing. The brain relies on the prior learning.
 
-This framework has profound implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the *feeling* of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
+In this framework, action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the *feeling* of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
 
 ## Ideomotor Theory: Think the Result, Not the Process
 
@@ -245,7 +245,7 @@ The ideomotor principle also connects to the drift field. In the ZTCF framework,
 ## The Nervous System Architecture: Hardware Specifications
 
 
-To understand how the brain controls movement, we need to understand its hardware architecture. The nervous system is not a single, monolithic controller. It's a hierarchy of controllers, each operating at a different timescale and with different capabilities.
+The nervous system is not a single, monolithic controller. It is a hierarchy of controllers, each operating at a different timescale and with different capabilities.
 
 ### The Motor Cortex
 

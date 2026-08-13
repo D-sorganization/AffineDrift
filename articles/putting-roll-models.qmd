@@ -154,17 +154,17 @@ The launch speed has cancelled. **The skidding share of a putt is (to this order
 | Stimp 10 | 0.549 | 0.134 | **11.9%** |
 | Stimp 12 | 0.458 | 0.112 | **10.1%** |
 
-Halving or raising $\mu_k$ moves the stimp-10 figure between 15.2% ($\mu_k=0.3$) and 9.7% ($\mu_k=0.5$). The folklore version of this result — *"a putt skids for the first 10 to 20 percent of its length"* — is therefore not folklore at all once derived: it is the statement $\tfrac{24}{25}\, a/\mu_k g \approx 0.1\text{–}0.2$, and the derivation additionally says **why** it is a fixed fraction (both distances scale as $v_0^2$) and **which way** it moves — faster greens and grabbier covers skid proportionally *less*.
+Halving or raising $\mu_k$ moves the stimp-10 figure between 15.2% ($\mu_k=0.3$) and 9.7% ($\mu_k=0.5$). The folklore version of this result — *"a putt skids for the first 10 to 20 percent of its length"* — is therefore not folklore at all once derived: it is the statement $\tfrac{24}{25}\, a/\mu_k g \approx 0.1\text{–}0.2$. The derivation also says **why** it is a fixed fraction (both distances scale as $v_0^2$) and **which way** it moves: faster greens and grabbier covers skid proportionally *less*.
 
 ## 3. Pure Roll and the Stimpmeter
 
 ### 3.1 Rolling Resistance as a Constant Deceleration
 
-A ball rolling on turf decelerates because the grass deforms: the normal pressure distribution shifts ahead of the centre, producing a retarding moment. To first order this yields a constant deceleration $a = \mu_r g$ with $\mu_r$ an effective rolling-resistance coefficient, so the roll-out from speed $v$ is $v^2/2a$ and the roll model is closed. Everything in this section is the calibration of that one constant — which is exactly what the stimpmeter is for.
+A ball rolling on turf decelerates because the grass deforms: the normal pressure distribution shifts ahead of the center, producing a retarding moment. To first order this yields a constant deceleration $a = \mu_r g$ with $\mu_r$ an effective rolling-resistance coefficient, so the roll-out from speed $v$ is $v^2/2a$ and the roll model is closed. Everything in this section is the calibration of that one constant — which is exactly what the stimpmeter is for.
 
 ### 3.2 The Stimpmeter, Derived
 
-The USGA stimpmeter is an aluminium bar 36 in long with a V-shaped groove and a ball notch 30 in from the tapered end. In use, the bar is raised slowly until, at about 20° of elevation, the ball releases from the notch and rolls down the groove onto the green; the reported "stimp" is the distance in feet the ball then rolls. All of these are openly published specification facts, and they determine the release speed with no free parameters.
+The USGA stimpmeter is an aluminum bar 36 in long with a V-shaped groove and a ball notch 30 in from the tapered end. In use, the operator raises the bar slowly until, at about 20° of elevation, the ball releases from the notch and rolls down the groove onto the green. The reported "stimp" is the distance in feet the ball then rolls. All of these are openly published specification facts, and they determine the release speed with no free parameters.
 
 Rolling from rest down the groove through a height drop $h = L\sin\theta$ with $L = 30\,\text{in} = 0.762$ m and $\theta = 20°$:
 
@@ -183,13 +183,13 @@ $$
 - **Flat-surface limit** ($r_c = R$): $v = \sqrt{2gh/1.4} = 1.91$ m/s.
 - **Grooved bar**: with the contact lines at $r_c \approx 0.87R$ — the geometry of a shallow V carrying a 42.7 mm ball — the factor becomes $1.53$ and $v = 1.83$ m/s.
 
-The widely quoted stimpmeter release speed of **about 1.83 m/s (6 ft/s)** is therefore not an empirical calibration but a two-line consequence of the published ramp geometry, and the groove is doing real work: it slows the release by 4% relative to a flat ramp, and it matters that any derivation say which case it is computing.
+The widely quoted stimpmeter release speed of **about 1.83 m/s (6 ft/s)** is therefore not an empirical calibration but a two-line consequence of the published ramp geometry. The groove is doing real work: it slows the release by 4% relative to a flat ramp, so any derivation should say which case it is computing.
 
 One refinement worth recording because simulators trip over it: because the ball rolls in the groove at $\omega = v/r_c$, it leaves the ramp **over-spinning** relative to flat-ground rolling by the factor $R/r_c \approx 1.15$. On touching the green its contact point momentarily slides backward, friction acts briefly *forward*, and the ball settles onto pure roll from above rather than below. The correction to the measured roll-out is small but its sign is fixed, and a simulation that launches the stimpmeter ball in flat-roll equilibrium is quietly measuring a slightly different instrument.
 
 ### 3.3 Stimp Feet to Deceleration
 
-With release speed $v_s = 1.83$ m/s and roll-out distance $d$ (stimp $S$ in feet, $d = 0.3048\,S$ metres), constant deceleration gives
+With release speed $v_s = 1.83$ m/s and roll-out distance $d$ (stimp $S$ in feet, $d = 0.3048\,S$ meters), constant deceleration gives
 
 $$
 a = \frac{v_s^2}{2 d} = \frac{(1.83)^2}{2 \times 0.3048\, S}
@@ -210,7 +210,7 @@ This is the single most useful conversion in putting physics: **a stimp number i
 Because the ramp delivers the ball already rolling, the stimp distance probes the **pure-roll** deceleration almost exclusively — the skid physics of §2 barely enters. That is a feature: it cleanly calibrates $a$ independent of $\mu_k$. But it also means a stimp reading says nothing about the skid phase of a real putt, which is governed by the different, larger constant $\mu_k$. Two greens with equal stimp can treat the first 30 cm of a putt differently, and the model needs both constants.
 :::
 
-## 4. Worked Numbers: A Three-Metre Putt on Three Greens
+## 4. Worked Numbers: A Three-Meter Putt on Three Greens
 
 Combining §2 and §3 for a level 3 m (about 10 ft) putt struck to finish at the hole, with $\mu_k = 0.4$ and the ball launched spinless. The launch speed solves $d_{\text{skid}} + d_{\text{roll}} = 3$ m; every column then follows from the closed forms above.
 
@@ -223,7 +223,7 @@ Combining §2 and §3 for a level 3 m (about 10 ft) putt struck to finish at the
 | Skid share of the putt | 14% | 12% | 10% |
 | Total travel time (s) | ≈ 2.9 | ≈ 3.3 | ≈ 3.6 |
 
-Three readings of that table. First, the faster green asks for a *slower* launch — 16% slower from stimp 8 to stimp 12 — which is the entire content of "pace adjustment" between courses. Second, the skid is over inside the first fifth of a second and the first half-metre; everything a player perceives as "roll quality" after that is pure-roll physics that the putter can no longer influence. Third, the total time grows on faster greens even though the ball starts slower, because the shallow deceleration stretches the tail — and time on the green is exposure to slope, which is why the same borrow breaks more on a fast green (§5).
+Three readings of that table. First, the faster green asks for a *slower* launch — 16% slower from stimp 8 to stimp 12 — which is the entire content of "pace adjustment" between courses. Second, the skid is over inside the first fifth of a second and the first half-meter; everything a player perceives as "roll quality" after that is pure-roll physics that the putter can no longer influence. Third, the total time grows on faster greens even though the ball starts slower, because the shallow deceleration stretches the tail — and time on the green is exposure to slope, which is why the same borrow breaks more on a fast green (§5).
 
 ## 5. Slope and Break as Gravity Components
 
@@ -233,7 +233,7 @@ $$
 \dot{\mathbf v} = -a\,\hat{\mathbf v} + g\sin\beta\,\hat{\mathbf d}
 $$
 
-with $\hat{\mathbf v}$ the direction of motion and $\hat{\mathbf d}$ the downhill unit vector — rolling resistance opposing the velocity, slope gravity fixed in direction. Greens are conventionally described in percent grade, $\tan\beta \times 100$; at the few-degree angles involved, $\sin\beta \approx \tan\beta$ and a "2% slope" contributes $0.02\,g = 0.196$ m/s² of in-plane acceleration. Two limits organise everything:
+with $\hat{\mathbf v}$ the direction of motion and $\hat{\mathbf d}$ the downhill unit vector — rolling resistance opposing the velocity, slope gravity fixed in direction. Greens are conventionally described in percent grade, $\tan\beta \times 100$; at the few-degree angles involved, $\sin\beta \approx \tan\beta$ and a "2% slope" contributes $0.02\,g = 0.196$ m/s² of in-plane acceleration. Two limits organize everything:
 
 **Straight uphill or downhill.** The deceleration becomes $a \pm g\sin\beta$. The uphill putt needs launch speed $\sqrt{2(a + g\sin\beta)D}$; the downhill putt exists only while $g\sin\beta < a$. At equality the ball never stops, giving the **runaway-slope condition**:
 
