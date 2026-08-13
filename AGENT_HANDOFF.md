@@ -10,6 +10,8 @@ Epic [#3834](https://github.com/D-sorganization/AffineDrift/issues/3834)
 tracks the repository-wide definitional-integrity migration. Work is isolated in
 `AffineDrift-worktrees/terminology-3834` on
 `docs/3834-definitional-integrity`, based on remote main `8c706a77`.
+The completed local implementation is commit `fcbe8806`; publish it as a ready
+PR linked to #3834 after updating this handoff with the PR number.
 
 ### Ratified Contract
 
@@ -58,6 +60,12 @@ The reasoning and rejected alternatives are in
   #3499.
 - Black and Ruff on changed Python: pass.
 - `git diff --check`: pass.
+- Full Python suite: pass at 93.36% coverage, with only declared skips and
+  existing mock warnings.
+- Selected Quarto notation, overview, DCR, counterfactual, and glossary pages:
+  render successfully. A single-file Physics of Golf render emits the expected
+  unresolved sibling-chapter warning; the repository cross-reference gate
+  resolves the reference in full-project context.
 
 ### Remaining Before AffineDrift Publication
 
