@@ -28,7 +28,7 @@ When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\t
   \begin{equation}
     \tilde{\control}(t) = \control(t) + \bm{W} \control(t) \cdot \bm{\epsilon}(t)
   \end{equation}
-  where $\bm{W}$ is a scaling matrix representing the coefficient of variation, and $\bm{\epsilon}(t) \sim \mathcal{N}(0, I)$ is white noise. That is, the variance of the applied force grows squarely with the magnitude of the ordered force: $\text{Var}(\tilde{u}) = c u^2$.
+  where $\bm{W}$ is a scaling matrix representing the coefficient of variation, and $\bm{\epsilon}(t) \sim \mathcal{N}(0, I)$ is white noise. That is, the variance of the applied force grows with the square of the ordered force: $\text{Var}(\tilde{u}) = c u^2$.
 \end{definition}
 
 This simple reality crumbles deterministic optimal control. If you compute an optimal trajectory that requires maximum muscular exertion, the trajectory will mathematically possess minimum variance only if noise is constant. Under SDN, maximum exertion guarantees maximum chaotic noise.

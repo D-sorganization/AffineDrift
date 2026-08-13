@@ -96,7 +96,7 @@ But the golf swing is not a simple open chain. It is \emph{constrained}. And tha
 \begin{laymansbox}{Intuition: Pushing a Single Stick}{context:open_chain_intuition}
 Imagine a robot arm: shoulder (1 DOF), elbow (1 DOF), wrist (1 DOF). Three joints, three motors. You command the motors with specific torques and watch the arm move. This is forward dynamics: you set the input (motor torques), physics tells you the output (arm trajectory).
 
-Now imagine you video the arm's motion and want to reverse-engineer the motor commands. You measure the arm's angles and angular velocities frame by frame. Then you differentiate to get accelerations. Now, the question: what motors torques caused these accelerations?
+Now imagine you video the arm's motion and want to reverse-engineer the motor commands. You measure the arm's angles and angular velocities frame by frame. Then you differentiate to get accelerations. Now, the question: what motor torques caused these accelerations?
 
 At the level of net joint torques in a fully specified open-chain model, the answer can be unambiguous. With three measurements (three joint accelerations) and three generalized torque unknowns, you solve a square linear system. Muscle-by-muscle sharing is still a separate redundancy problem.
 
