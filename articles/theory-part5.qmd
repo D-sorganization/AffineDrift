@@ -62,7 +62,7 @@ format:
 
 ::: {.callout-warning}
 ## Dimensionality Gap
-This numerical validation is restricted to planar motion and cannot verify 3D gyroscopic drift invariance. The planar model ($q \in \mathbb{R}^3$) lacks the three-dimensional rotational degrees of freedom required to test gyroscopic effects that rely on the cross-product terms $\omega \times I \omega$ (discussed in Part III). The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment; verification of 3D drift invariance remains a theoretical prediction until extended to full spatial simulations or experimental testing.
+This numerical validation is restricted to planar motion and cannot verify 3D gyroscopic drift invariance. The planar model ($q \in \mathbb{R}^3$) lacks the three-dimensional rotational degrees of freedom required to test gyroscopic effects that rely on the cross-product terms $\omega \times I \omega$ (discussed in Part 3). The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment; verification of 3D drift invariance remains a theoretical prediction until extended to full spatial simulations or experimental testing.
 :::
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
@@ -321,7 +321,7 @@ ZTCF trajectories require the same ODE solver, tolerances, and step sizes as the
 
 ### Worked Numerical Example: Residual Magnitude Along a Simulated Swing
 
-To make the "near-equality" claim of the subtraction identity concrete, we integrate the residual bound from Theorem 1.1 of [Residual-Aware Control](tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html) along a representative swing trajectory. For the planar 2-DOF double-pendulum + single-bending-mode model of Part IV Appendix C (parameters: $L = 1.1$ m, $m_h = 0.40$ kg, $m_c = 0.200$ kg, $m_\eta = 0.10$ kg, $k_\eta = 2500$ N/m, $c_\eta = 0.8$ N·s/m), driven by an inverse-dynamics-fitted torque profile reproducing a 110-mph clubhead release over 0.25 s, a Hessian bound $M = \sup_{t \in [t_0, t_1]} \lVert H_f(\bar x(t))\rVert_2$ evaluated by finite differencing along $\bar x$ yields $M \approx 35\ \mathrm{s}^{-2}$ during the bulk of the downswing and peaks at $M \approx 90\ \mathrm{s}^{-2}$ in the 30 ms before impact (the release corner).
+To make the "near-equality" claim of the subtraction identity concrete, we integrate the residual bound from Theorem 1.1 of [Residual-Aware Control](tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html) along a representative swing trajectory. The test case is the planar 2-DOF double-pendulum + single-bending-mode model of Part 4 Appendix C (parameters: $L = 1.1$ m, $m_h = 0.40$ kg, $m_c = 0.200$ kg, $m_\eta = 0.10$ kg, $k_\eta = 2500$ N/m, $c_\eta = 0.8$ N·s/m), driven by an inverse-dynamics-fitted torque profile that reproduces a 110-mph clubhead release over 0.25 s. A Hessian bound $M = \sup_{t \in [t_0, t_1]} \lVert H_f(\bar x(t))\rVert_2$ evaluated by finite differencing along $\bar x$ yields $M \approx 35\ \mathrm{s}^{-2}$ during the bulk of the downswing and peaks at $M \approx 90\ \mathrm{s}^{-2}$ in the 30 ms before impact (the release corner).
 
 Applying Theorem 1.1 with a state perturbation $\lVert \delta x(t_0) \rVert \leq 0.05$ (a conservative bound on typical inverse-dynamics state uncertainty in dimensionless form) propagated under the variational equation gives a residual envelope
 
@@ -331,7 +331,7 @@ Applying Theorem 1.1 with a state perturbation $\lVert \delta x(t_0) \rVert \leq
 | 50 ms | $\lVert r \rVert \leq 2\times 10^{-2}$ | $\lVert r \rVert \leq 5.6\times 10^{-2}$ |
 | 100 ms | $\lVert r \rVert \leq 8\times 10^{-2}$ | $\lVert r \rVert \leq 2.2\times 10^{-1}$ |
 
-So: for the $\sim 20$ ms counterfactual windows actually used in ZTCF-based inverse dynamics, the residual stays below $\sim 10^{-3}$ in the state norm --- consistent with the "numerical near-equality" reported empirically from the Simulink runs above. For the full 250 ms downswing, the bound exceeds 1 and Theorem 1.1 no longer certifies the subtraction identity, which matches the Part II Lyapunov-exponent analysis showing that ZTCF should not be trusted quantitatively over the full swing. These numbers close the loop between the theoretical residual bound and the empirical subtraction identity: the two agree in regime and order of magnitude.
+For the $\sim 20$ ms counterfactual windows used in ZTCF-based inverse dynamics, the residual stays below $\sim 10^{-3}$ in the state norm --- consistent with the "numerical near-equality" reported empirically from the Simulink runs above. For the full 250 ms downswing, the bound exceeds 1 and Theorem 1.1 no longer certifies the subtraction identity, which matches the Part 2 Lyapunov-exponent analysis showing that ZTCF should not be trusted quantitatively over the full swing. These numbers close the loop between the theoretical residual bound and the empirical subtraction identity: the two agree in regime and order of magnitude.
 
 The empirical program of computing $\lVert r(t) \rVert$ on real marker-data-fitted swings (rather than simulated ground-truth swings) remains an open item; it requires state-noise propagation through inverse dynamics and is deferred to a dedicated empirical paper.
 
@@ -341,7 +341,7 @@ The algorithms in this appendix show how ZTCF and ZVCF are computed numerically 
 
 ## Final Remarks on the AffineDrift Framework
 
-This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part I by constructing the control-affine state space $\dot{x} = f(x) + g(x)u$, proving that the mechanical structure of the golfer--club system inherently separates passive drift from active input. In Part II, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part III validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts IV and V provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.
+This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part 1 by constructing the control-affine state space $\dot{x} = f(x) + g(x)u$, proving that the mechanical structure of the golfer--club system inherently separates passive drift from active input. In Part 2, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part 3 validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts 4 and 5 provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.
 
 The framework is now complete. It stands as a quantitative mechanical model of the golf swing that admits empirical testing—one that replaces the monolithic "net moment" of inverse dynamics with a causally articulated decomposition of the observed interaction forces. The next phase of this project leaves the page and the simulator to confront the noisy, variable reality of human motion capture.
 
@@ -352,8 +352,8 @@ The framework is now complete. It stands as a quantitative mechanical model of t
 ## See Also
 
 - **[Part 1: Affine Control Interpretation of the Golf Swing](theory-part1.html)** — Foundational framework
-- **[Part 2: ZTCF and ZVCF Tools](theory-part2.html)** — Theoretical definition of the counterfactuals validated here numerically
-- **[Part 3: Drift Invariance](theory-part3.html)** — Proof that ZTCF/ZVCF decomposition is causally valid
+- **[Part 2: Drift/Input Decomposition and Counterfactual Diagnostics](theory-part2.html)** — Theoretical definition of the counterfactuals validated here numerically
+- **[Part 3: Drift Invariance and Force Taxonomy](theory-part3.html)** — Proof that the ZTCF/ZVCF decomposition is causally valid
 - **[Part 4: Mathematical Derivations](theory-part4.html)** — Block matrix proofs underlying the numerical algorithms
 - **[Sources of Nonlinearity](sources-of-nonlinearity.html)** — Catalog of nonlinearities and their impact on ZTCF validity
 :::

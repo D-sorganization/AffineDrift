@@ -422,7 +422,7 @@ In simulation (as developed in [Part 4](theory-part4.html) and [Part 5](theory-p
 - identification of torque timing patterns,
 - mapping of how individual torque bursts shape the club path.
 
-This taxonomy completes the theoretical framework, providing a model-based map from observed forces to the mechanical categories used here. However, the exactness of that map is bounded by the fidelity of the model itself. While the decomposition is algebraically exact within the model, its application to reality is constrained by the simplifications made in Part I. We now catalogue these limitations to define the scope of validity for the causal claims made on this site.
+This taxonomy completes the theoretical framework, providing a model-based map from observed forces to the mechanical categories used here. However, the exactness of that map is bounded by the fidelity of the model itself. While the decomposition is algebraically exact within the model, its application to reality is constrained by the simplifications made in Part 1. We now catalog these limitations to define the scope of validity for the causal claims made on this site.
 
 
 ## Limitations (Theoretical Scope)
@@ -541,7 +541,7 @@ This distinction is critical for coaching: if a player's negative torque is genu
 
 ## Relationship to Existing Methods
 
-The drift--input decomposition developed here is related to—but distinct from—**induced acceleration analysis** (IAA), introduced by Zajac and Gordon [@zajac1989determining; @zajac1993muscle] and widely used in musculoskeletal simulation (see also the OpenSim literature [@seth2018opensim; @anderson2001dynamic]). IAA asks what acceleration a given muscle force (or net joint moment) would produce on a segment, treating the dynamic equations block-by-block. The method's computations are mechanically equivalent to reading off rows of $M^{-1}(q)$, which is exactly the structure exploited in our Schur-complement derivation of $H_{qq}$ and $\Gamma$ in Part I.
+The drift--input decomposition developed here is related to—but distinct from—**induced acceleration analysis** (IAA), introduced by Zajac and Gordon [@zajac1989determining; @zajac1993muscle] and widely used in musculoskeletal simulation (see also the OpenSim literature [@seth2018opensim; @anderson2001dynamic]). IAA asks what acceleration a given muscle force (or net joint moment) would produce on a segment, treating the dynamic equations block-by-block. The method's computations are mechanically equivalent to reading off rows of $M^{-1}(q)$, which is exactly the structure exploited in our Schur-complement derivation of $H_{qq}$ and $\Gamma$ in Part 1.
 
 Two distinctions are worth noting. First, IAA is typically applied to isolate the contribution of a single muscle, whereas our decomposition aggregates all muscular torques into the vector $u$ and isolates the collective "drift versus input" split. Second, IAA does not require, and does not emphasize, the control-affine structure of the full state equation $\dot{x} = f(x) + g(x) u$; it works with accelerations at a single instant. Our formulation is closer in spirit to the geometric control literature [@isidori1995nonlinear; @bullo2004geometric], where drift invariance is a structural property of the vector field rather than a per-muscle computation.
 
