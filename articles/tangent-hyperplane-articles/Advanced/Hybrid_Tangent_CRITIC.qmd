@@ -26,7 +26,7 @@ The article "Hybrid Tangent Spaces: Beyond Smooth Dynamics" extends the Tangent 
 4. **Oversimplified complementarity treatment** (contact-implicit)
 5. **Unverified implementation claims** (JAX autodiff)
 6. **Generalization from toy examples** (bouncing ball → humanoid)
-7. **Missing failure mode analysis** (when does this actually break?)
+7. **Missing failure mode analysis** (when does this break?)
 
 ---
 
@@ -232,7 +232,7 @@ Measure theory is not a cosmetic detail—it's the **foundation** for claiming v
 
    > For a rigorous treatment of hybrid system solutions as functions of bounded variation, see Goebel, Sanfelice, and Teel (2012), Chapter 2. The key concept is the **hybrid time domain** $\mathcal{T} = \bigcup_{j=0}^N [t_j, t_{j+1}] \times \{j\}$, which explicitly separates continuous time evolution from discrete jumps.
 
-5. **Clarify when Filippov solutions are actually needed:**
+5. **Clarify when Filippov solutions are needed:**
 
    > This article focuses on **state-triggered jumps** (guard crossings), where the vector field is smooth within each mode and discontinuous only at guards. Filippov solutions are needed for **time-triggered jumps** or **sliding modes** where the system remains on the discontinuity surface for finite time. For the applications in this article (foot strikes, ball impacts), classical Carathéodory solutions suffice.
 
@@ -245,7 +245,7 @@ Chapter 6, section "Zeno Behavior and Measure Zero Jump Sets" (lines 2186-2238)
 
 ### The Problem
 
-The bouncing ball Zeno example is presented as if it **resolves** the mathematical difficulties, but it actually **illustrates why Zeno is hard**:
+The bouncing ball Zeno example is presented as if it **resolves** the mathematical difficulties, but it **illustrates why Zeno is hard**:
 
 1. **Claim (line 2200):** "The total time to rest is finite: $T_{\text{total}} = 2v_0/[g(1-e)]$"
    - True for the bouncing ball, but **this is the simplest possible case**. Most hybrid systems don't have closed-form Zeno times.
@@ -395,7 +395,7 @@ The contact-implicit section presents complementarity constraints as if they're 
 
 ### Why This Is a Problem
 
-**For roboticists:** Complementarity is the **central challenge** in contact simulation. Simply stating "enforce $\phi \lambda = 0$" is like saying "solve the Navier-Stokes equations" — technically correct, but useless without numerical methods.
+**For roboticists:** Complementarity is the **central challenge** in contact simulation. Merely stating "enforce $\phi \lambda = 0$" is like saying "solve the Navier-Stokes equations" — technically correct, but useless without numerical methods.
 
 **For optimization experts:** The article conflates **problem formulation** (complementarity constraints exist) with **solution methods** (how to solve them). Readers will be left wondering:
 - Is smoothing good enough? (Depends on $\epsilon$ and problem conditioning)
@@ -472,7 +472,7 @@ Contact-implicit is presented as an alternative to hybrid DDP, but without imple
    >
    > **Simplification:** Most implementations use a **pyramidal approximation** (piecewise linear cone) to avoid nonlinearity.
 
-6. **State when complementarity is actually solved exactly:**
+6. **State when complementarity is solved exactly:**
 
    > **Caveat:** The examples in this article (bouncing ball, golf impact) do **not use complementarity formulations**. They use **explicit guard crossings** with known reset maps. Complementarity is relevant for:
    > - Multi-contact systems (e.g., quadrupeds, hands grasping)

@@ -263,7 +263,7 @@ This is not your imagination. When the spine is flexed, the geometric axes of ro
 ### Mathematical Formulation: Euler Angles
 
 
-To formalize this, we use rotation matrices and Euler angle decompositions. The orientation of a vertebra can be described by three successive rotations, but the **order of rotations matters**. Rotations do not commute (unlike translations).
+To formalize this, we use rotation matrices and Euler angle decompositions. Three successive rotations describe the orientation of a vertebra, but the **order of rotations matters**. Rotations do not commute (unlike translations).
 
 Suppose we perform the following sequence:
 
@@ -294,13 +294,13 @@ The key observation: the orientation matrix $\bm{R}_{\mathrm{total}}$ depends on
 ### From Local to Global Coordinates
 
 
-Now, here is the critical complexity for golf biomechanics: the measurements we make are usually in the global (ground-fixed) coordinate system, but the spine's anatomy is organized in local (vertebra-fixed) coordinate systems.
+The critical complexity for golf biomechanics is a mismatch of frames. We measure in the global (ground-fixed) coordinate system, but the spine's anatomy is organized in local (vertebra-fixed) coordinate systems.
 
 A motion capture system measures the position and orientation of segments in global coordinates. A marker on the torso (say, at the T10 vertebra) moves in 3D global space. From these measurements, we can extract a total rotation matrix $\bm{R}_{\mathrm{meas}}$ that describes the torso's orientation relative to the pelvis.
 
-But what are the underlying spinal flexion, lateral bending, and rotation angles? To extract these, we must **decompose** $\bm{R}_{\mathrm{meas}}$ into Euler angles. And here is the problem: there are multiple ways to do this decomposition, depending on what order you assume for the rotations.
+But what are the underlying spinal flexion, lateral bending, and rotation angles? To extract these, we must **decompose** $\bm{R}_{\mathrm{meas}}$ into Euler angles. And here is the problem: the decomposition is not unique---it depends on the rotation order you assume.
 
-If you assume the order (flexion, lateral bend, rotation), you get one set of Euler angles. If you assume the order (lateral bend, flexion, rotation), you get a different set. Only one order is biomechanically correct (the one that matches the spine's actual anatomy and the pathways the motion can take), but from the rotation matrix alone, you cannot tell which order is correct.
+If you assume the order (flexion, lateral bend, rotation), you get one set of Euler angles. If you assume the order (lateral bend, flexion, rotation), you get a different set. Only one order is biomechanically correct: the one that matches the spine's actual anatomy and the pathways the motion can take. From the rotation matrix alone, you cannot tell which order that is.
 
 **In plain language:** when you look at motion capture data showing a golfer's torso, you see a single global rotation. But that rotation cannot be uniquely decomposed into spinal flexion, lateral bending, and rotation without assumptions. Different assumptions give different answers. This ambiguity has led to confusion and disagreement in the literature.
 
@@ -329,7 +329,7 @@ For practical swing analysis, here is the approach:
 ## Modeling Approaches---From Simple to Complex
 
 
-We have established the biomechanical challenges. Now let us discuss practical approaches to modeling the spine, ranging from very simple to very detailed.
+Four modeling approaches span the range from a single rigid block to a full finite element mesh, and each answers a different question.
 
 ### Level 1: Single Rigid Segment (Torso as One Block)
 
@@ -341,7 +341,7 @@ This is the approach used throughout most of this textbook. The entire torso (fr
 
 **Advantages:**
 
-- Very fast computationally (can run real-time biomechanical analysis)
+- Fast computationally (can run real-time biomechanical analysis)
 - Intuitive mental model (the torso "rotates")
 - Adequate for swing trajectory prediction
 - Sufficient for coaching analysis (hip turn, shoulder turn, X-factor)
@@ -419,7 +419,7 @@ This model treats each vertebra as a separate rigid body. With 24 motion segment
 
 **Disadvantages:**
 
-- Computationally very expensive (hundreds of DOF)
+- Computationally expensive (hundreds of DOF)
 - Requires detailed patient-specific spinal anatomy (from imaging)
 - Requires accurate parameter estimation for all inter-vertebral joint stiffnesses and muscle moment arms
 - Still missing information about disc internal stress (need finite element analysis for that)
@@ -430,7 +430,7 @@ This model treats each vertebra as a separate rigid body. With 24 motion segment
 ### Level 4: Finite Element Model
 
 
-At the highest level of detail, the spine is modeled using finite element analysis (FEA). Each vertebra is represented as a 3D elastic solid, the disc is modeled with its nucleus and annulus as separate material regions, ligaments are included as nonlinear elastic elements, and sometimes even the fluid behavior of the nucleus is captured.
+At the highest level of detail, the spine is modeled using finite element analysis (FEA). Each vertebra is represented as a 3D elastic solid, and the disc is modeled with its nucleus and annulus as separate material regions. Ligaments enter as nonlinear elastic elements, and some models capture even the fluid behavior of the nucleus.
 
 **Advantages:**
 
@@ -441,7 +441,7 @@ At the highest level of detail, the spine is modeled using finite element analys
 **Disadvantages:**
 
 - Millions of degrees of freedom, requiring supercomputing resources
-- Very long run times (hours or days for a single swing)
+- Long run times (hours or days for a single swing)
 - Requires high-resolution medical imaging of the spine
 - Not suitable for real-time analysis or swing optimization
 
@@ -467,7 +467,7 @@ At the highest level of detail, the spine is modeled using finite element analys
 ## Spinal Loading During the Golf Swing
 
 
-Now let us calculate the actual forces and moments on the spine during a golf swing. Understanding spinal loading is essential for injury prevention and for appreciating why the transition is so dangerous.
+Spinal loading peaks at the transition, and seeing why requires separating the four kinds of load the spine carries during the swing. Those loads are also the starting point for injury prevention.
 
 ### Types of Spinal Loading
 
@@ -484,7 +484,7 @@ The spine experiences four types of loading during the golf swing:
 ### Peak Spinal Loads During Downswing
 
 
-Research using spinal biomechanical models has estimated the peak spinal loads during the golf downswing [@hosea1990biomechanical; @McGill2007] (illustrative; depends on swing style, golfer morphology, and model assumptions). The following are illustrative typical modeled values for an approximately 80 kg male golfer; actual loads vary with swing style, flexibility, and model assumptions:
+Research using spinal biomechanical models has estimated the peak spinal loads during the golf downswing [@hosea1990biomechanical; @McGill2007]. The values below are illustrative modeled values for an approximately 80 kg male golfer; actual loads vary with swing style, golfer morphology, flexibility, and model assumptions:
 
 ::: {.callout-tip}
 ## Spinal Loads During Peak Downswing
@@ -523,7 +523,7 @@ Research using spinal biomechanical models has estimated the peak spinal loads d
 These loads are enormous. For perspective:
 
 - A healthy intervertebral disc is estimated to tolerate sustained compression up to approximately 8 times body weight without damage [@adams2000mechanics; @McGill2007] (illustrative; depends on disc health, age, and loading rate; values vary widely)
-- The disc may fail under compression alone at approximately 12--15 times body weight (illustrative; varies widely) (a rare extreme load; values vary with disc condition and age)
+- The disc may fail under compression alone at approximately 12--15 times body weight (illustrative; a rare extreme load, and values vary widely with disc condition and age)
 - However, the combination of compression + rotation + lateral bending is much more damaging than compression alone
 
 ### The Disc Herniation Mechanism
@@ -566,7 +566,7 @@ This combination of factors makes the transition a phase of particularly high sp
 
 Recall from @sec-grf the concept of the drift field: $f(\bm{x})$ represents the net "restoring" forces and torques that arise passively (without muscle action). These include gravity, ligament resistance, and tissue elasticity. The drift field describes how the system naturally "wants" to move in the absence of muscle control.
 
-The spine contributes significantly to the drift field. Let us break down the contributions:
+The spine contributes significantly to the drift field, through disc stiffness, ligament resistance, and muscle tone:
 
 ### 1. Intervertebral Disc Stiffness
 
@@ -581,7 +581,7 @@ $$
 \tau_{\mathrm{disc}} = k_{\mathrm{disc}} \cdot \theta = (10 \text{ N} \cdot \mathrm{m/deg}) \times 5^{\circ} = 50 \text{ N} \cdot \mathrm{m}
 $$
 
-Note: when multiple motion segments are arranged in *series* (as they are in the spine), the total torsional *compliance* (inverse of stiffness) increases: $1/k_{\mathrm{total}} = \sum_i 1/k_i$. This means the total spine is *less stiff* than any individual segment. However, the total *restoring torque* at a given total rotation angle increases with more segments, because each segment contributes its own restoring torque. The cumulative restoring torque from all segments resisting axial rotation is substantial, even though the total stiffness (torque per unit of *total* angle) is reduced by the series arrangement.
+Note: when multiple motion segments are arranged in *series* (as they are in the spine), the total torsional *compliance* (inverse of stiffness) increases: $1/k_{\mathrm{total}} = \sum_i 1/k_i$. This means the total spine is *less stiff* than any individual segment. However, the total *restoring torque* at a given total rotation angle increases with more segments, because each segment contributes its own restoring torque. The series arrangement reduces the total stiffness (torque per unit of *total* angle), yet the cumulative restoring torque from all segments resisting axial rotation remains substantial.
 
 ### 2. Ligament Resistance
 
@@ -598,21 +598,21 @@ $$
 
 (nonlinear, quadratic stiffening). Ligaments are "slack" (no tension) in the neutral posture, become moderately taut at moderate range of motion, and become very stiff approaching maximum range.
 
-In the golf swing, the backswing stretches the posterior ligaments (interspinous, supraspinous, and posterior longitudinal ligaments). These ligaments store elastic energy as they stretch. This is part of the mechanism of the X-factor stretch: the spinal ligaments are stretched and loaded, ready to recoil during the downswing.
+In the golf swing, the backswing stretches the posterior ligaments (interspinous, supraspinous, and posterior longitudinal ligaments). These ligaments store elastic energy as they stretch. This is part of the mechanism of the X-factor stretch: stretched and loaded, the spinal ligaments are ready to recoil during the downswing.
 
 ### 3. Muscle Tone and Co-Contraction
 
 
 Even at rest, muscles maintain a low level of activity called "muscle tone." The back extensors, abdominal muscles, and rotator muscles are never completely relaxed. This resting tone provides a baseline stiffness to the spine.
 
-During the golf swing, the muscles may be under voluntary control (actively contracting to produce torques) or may be in a passive "braced" state (tensioned to provide stiffness without large torques). Co-contraction of flexors and extensors increases overall stiffness without changing the net direction of motion.
+During the golf swing, the muscles may be under voluntary control, actively contracting to produce torques. They may instead be in a passive "braced" state, tensioned to provide stiffness without large torques. Co-contraction of flexors and extensors increases overall stiffness without changing the net direction of motion.
 
 Mathematically, if a group of muscles is braced (but not producing net torque), they contribute to the effective stiffness of the joint:
 $$
 k_{\mathrm{effective}} = k_{\mathrm{ligament}} + k_{\mathrm{muscle_tone}} + k_{\mathrm{IAP}}
 $$
 
-In particular, bracing the core (by raising intra-abdominal pressure and co-contracting the spinal stabilizers) increases $k_{\mathrm{muscle_tone}}$ significantly.
+In particular, bracing the core---raising intra-abdominal pressure (IAP) and co-contracting the spinal stabilizers---increases $k_{\mathrm{muscle_tone}}$ significantly.
 
 ### 4. The Spinal Drift Field
 
@@ -632,7 +632,7 @@ The drift field for the spine, if you release all muscle torques, is a restoring
 
 ### 5. The X-Factor Stretch in the Drift Framework
 
-The X-factor stretch mechanism can now be understood in terms of drift:
+Drift now explains the X-factor stretch mechanism in four phases:
 
 - **Backswing:** the shoulders rotate more than the hips, stretching the spinal ligaments and soft tissues. These tissues are elastic; the stretch stores elastic energy. The drift field now includes this potential energy.
 
@@ -645,7 +645,7 @@ The X-factor stretch mechanism can now be understood in terms of drift:
 ## Practical Recommendations for Golf Swing Modeling
 
 
-Let me synthesize the insights from this deep chapter into practical guidance.
+Which spinal model you should use depends on the question you are asking: coaching, swing mechanics research, or injury risk assessment.
 
 ### For Coaching and Teaching
 
@@ -715,9 +715,9 @@ If your biomechanical model predicts any of the following, it is wrong:
 ## Key Takeaways: Spine Modeling
 
 - The spine is not a single joint; it is a chain of 33 vertebrae with complex coupling between different motion directions.
-- The lumbar spine is strong in flexion-extension but very weak in axial rotation, limiting it to  5$^{\circ}$ per segment or  20--25$^{\circ}$ total.
+- The lumbar spine is strong in flexion-extension but weak in axial rotation, limiting it to  5$^{\circ}$ per segment or  20--25$^{\circ}$ total.
 - Most torso rotation during the golf swing comes from the thoracic spine, not the lumbar spine. A good swing leverages this natural anatomy.
-- The flexion-rotation coupling problem means that when the spine is bent forward (flexed), attempting to rotate creates a complex combination of actual motions that cannot be uniquely decomposed without assumptions.
+- When the spine is bent forward (flexed), attempting to rotate creates a complex combination of actual motions. That combination cannot be uniquely decomposed without assumptions---the flexion-rotation coupling problem.
 - Spinal loading peaks during the transition phase, reaching 6--10 times body weight in compression and 20--50 N$\cdot$m in torsion at the lumbar spine.
 - Cadaveric and biomechanical studies identify flexion-plus-rotation as a primary loading mode for disc herniation [@adams1985gradual]. Golfers who flex excessively and attempt heavy rotation in a flexed posture may face elevated spinal loading.
 - For coaching: use a simple model and focus on controlling X-factor, maintaining spinal angle, and bracing the core.
@@ -728,7 +728,7 @@ If your biomechanical model predicts any of the following, it is wrong:
 
 ## Chapter Exercises
 
-- **Spinal Loading Calculation:** An 75 kg golfer experiences 8 times body weight of compression force at the L4/L5 disc during downswing. What is the compression force in newtons? If the L4/L5 disc has an effective area of 1800 mm$^2$, what is the compressive stress (pressure) in MPa?
+- **Spinal Loading Calculation:** A 75 kg golfer experiences 8 times body weight of compression force at the L4/L5 disc during downswing. What is the compression force in newtons? If the L4/L5 disc has an effective area of 1800 mm$^2$, what is the compressive stress (pressure) in MPa?
 
 - **Range of Motion:** The thoracic spine has 12 motion segments. If each segment allows 25$^{\circ}$ of rotation, what is the total rotation range for the thoracic spine? If a golfer needs 70$^{\circ}$ total torso rotation and has 25$^{\circ}$ from the lumbar and cervical spine combined, is the thoracic rotation sufficient?
 
@@ -751,9 +751,9 @@ If your biomechanical model predicts any of the following, it is wrong:
 
    Justify your proposal using spinal anatomy.
 
-- **IAP and Disc Loading:** From @sec-soft_tissue_pliable, recall that IAP at 100 mmHg generates an upward force of  500 N on the diaphragm. If this force effectively reduces the compressive load on the spine, by what percentage does an IAP of 100 mmHg reduce the net compression force at the L4/L5 disc (assuming the disc bears a 6000 N compression load without IAP)?
+- **IAP and Disc Loading:** From @sec-soft_tissue_pliable, recall that IAP at 100 mmHg generates an upward force of  500 N on the diaphragm. If this force effectively reduces the compressive load on the spine, by what percentage does it reduce the net compression force at the L4/L5 disc? Assume the disc bears a 6000 N compression load without IAP.
 
-- **Flexion-Rotation Coupling Problem:** In the address posture (lumbar flexion of 40$^{\circ}$), the golfer attempts to rotate the torso 50$^{\circ}$. Using Euler angle decomposition and the fact that flexion changes the effective rotation axis, propose a spinal motion strategy that:
+- **Flexion-Rotation Coupling Problem:** In the address posture (lumbar flexion of 40$^{\circ}$), the golfer attempts to rotate the torso 50$^{\circ}$. Using Euler angle decomposition, and given that flexion changes the effective rotation axis, propose a spinal motion strategy that:
 
    - Achieves the desired 50$^{\circ}$ rotation in global coordinates
    - Minimizes lumbar rotation (keep it under 20$^{\circ}$)

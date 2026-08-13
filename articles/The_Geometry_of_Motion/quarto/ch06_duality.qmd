@@ -965,7 +965,7 @@ with $\rho = 1 - \alpha/\overline{s}$ independent of $k$.
 1. **Time-varying case (DRE)**: The Riccati matrix $\mat{S}_k$ changes at each step, reflecting the changing
    "cost-to-go" as we move backward in time from the final state. The tangent space metric is *adapted to the
    current time*: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
-   far from the terminal, the metric is influenced by asymptotic stability.
+   far from the terminal, asymptotic stability shapes the metric.
 2. **Steady-state case (ARE)**: The Riccati matrix reaches a time-invariant steady state. The metric no longer
    changes, and the contraction property is uniform in time. This is appropriate for infinite-horizon problems or
    problems where the horizon is much longer than the natural time scale of the system.
@@ -1102,7 +1102,7 @@ The duality requires several conditions:
 
 **Limitations of the Duality:**
 1. **Bounded Riccati**: If the system loses controllability near a trajectory, the Riccati matrix can become
-   unbounded or ill-conditioned. This is detected by monitoring $\kappa(\mat{S})$. If $\kappa(\mat{S}) > 10^6$ or
+   unbounded or ill-conditioned. Monitoring $\kappa(\mat{S})$ detects this. If $\kappa(\mat{S}) > 10^6$ or
    $\lambda_{\min}(\mat{S}) < 10^{-6}$, the system is nearly uncontrollable.
 2. **Meaningful weights**: The weights $\mat{Q}$ and $\mat{R}$ must reflect true performance objectives. If
    weights are chosen arbitrarily (e.g., to make the Riccati well-conditioned), the resulting controller may be

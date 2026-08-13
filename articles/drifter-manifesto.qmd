@@ -16,7 +16,7 @@ format:
 ::: {.callout-important}
 ## Canonical Version
 
-This is the **single-file edition** of the Drifter Manifesto, kept for readers who want the whole derivation on one page. The **maintained canonical version** is the multi-part series: [Theory Part 1](theory-part1.html) (state definition and affine derivation), [Part 2](theory-part2.html), [Part 3](theory-part3.html), [Part 4](theory-part4.html), and [Part 5](theory-part5.html), indexed at [The Drifter Manifesto — Series Index](../pages/drifter-manifesto.html). Where this page and the series differ, **the series is authoritative**; substantive edits should be made there and mirrored here.
+This is the **single-file edition** of the Drifter Manifesto, kept for readers who want the whole derivation on one page. The **maintained canonical version** is the multi-part series: [Theory Part 1](theory-part1.html) (state definition and affine derivation), [Part 2](theory-part2.html), [Part 3](theory-part3.html), [Part 4](theory-part4.html), and [Part 5](theory-part5.html). The series is indexed at [The Drifter Manifesto — Series Index](../pages/drifter-manifesto.html). Where this page and the series differ, **the series is authoritative**; substantive edits should be made there and mirrored here.
 :::
 
 ::: {.callout-note}
@@ -930,7 +930,7 @@ The ZTCF is a counterfactual *within the model*. It answers the question:
 
 > "Given the same initial configuration, velocities, shaft deformation, and model parameters, what motion would the system execute if all muscular torques were set to zero?"
 
-It does *not* claim that such a motion could actually be achieved by a real golfer, nor that the nervous system ever selects "zero torque" as a control policy during a swing. Instead, ZTCF is a mathematical device that:
+It does *not* claim that such a motion could be achieved by a real golfer, nor that the nervous system ever selects "zero torque" as a control policy during a swing. Instead, ZTCF is a mathematical device that:
 
 - isolates the passive mechanical contribution to the dynamics,
 - provides a baseline against which torque-driven effects can be quantified, and
@@ -960,13 +960,13 @@ These challenges mean that ZTCF-based analyses must be validated against simulat
 
 #### Decomposing the Drift
 
-The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF tells us the *total* passive tendency, but it lumps these distinct physical phenomena together.
+The ZTCF removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF tells us the *total* passive tendency, but it lumps these distinct physical phenomena together.
 
 To truly diagnose the mechanical load, we need a sharper instrument—a **Static Scalpel** that can separate the "static" weight of the club from the "dynamic" weight of its motion. This motivates the **Zero Velocity Counterfactual**.
 
 ### Zero Velocity Counterfactual (ZVCF)
 
-While the ZTCF successfully isolates the system's passive dynamics from the golfer's active input, the passive drift itself remains a composite phenomenon. It aggregates both *motion-dependent* forces (such as centrifugal, Coriolis, and inertial coupling) and *configuration-dependent* forces (such as gravity and elastic stiffness). In high-speed motions like the golf swing, velocity-driven terms often obscure the underlying static loads. To fully deconstruct the drift, we require a second analytical slice—one that freezes motion to reveal the forces arising purely from the system's instantaneous shape.
+The ZTCF isolates the system's passive dynamics from the golfer's active input, but the passive drift itself remains a composite phenomenon. It aggregates both *motion-dependent* forces (such as centrifugal, Coriolis, and inertial coupling) and *configuration-dependent* forces (such as gravity and elastic stiffness). In high-speed motions like the golf swing, velocity-driven terms often obscure the underlying static loads. To fully deconstruct the drift, we require a second analytical slice—one that freezes motion to reveal the forces arising purely from the system's instantaneous shape.
 
 The **Zero Velocity Counterfactual (ZVCF)** performs this isolation. By evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero, it functions as an "analytical tare." Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* snapshot. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), stripping away the contributions from inertial, Coriolis, and damping terms.
 
@@ -1086,7 +1086,7 @@ The ZVCF isolates configuration-dependent forces—gravity and elastic stiffness
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
-We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid.
+We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid.
 
 But is this separation scientifically valid? A skeptic might argue that in a biological system, the "passive" plant changes when the "active" input changes (e.g., via stiffness modulation). To defend our counterfactuals, we must prove the property of *Drift Invariance*—showing that the passive drift field is structurally immune to the active input. This is the subject of the next part of this series.
 
@@ -1169,14 +1169,14 @@ Both tools rely on the mathematical subtraction $\tau_{\text{input}} = \tau_{\te
 
 ::: {.callout-important}
 ### Critical Assumption: Parameter Identification and Causality
-When passive parameters (segment inertias, shaft stiffness, damping) are identified from active motion data, they may implicitly capture the effective impedance of the active system—that is, the joint stiffness when muscles are co-contracting. In this case, the "Drift" term $f(x)$ represents the dynamics of the **Effective Plant** conditioned on the task, not purely passive mechanics. All drift decompositions inherit this assumption: the passive parameters are treated as fixed for the duration of the swing, even though physiologically they may vary with activation. This does not invalidate the framework; it clarifies what the counterfactuals actually compute. The ZTCF simulates what would happen if the golfer ceased *driving* the motion while maintaining the structural *impedance* required for the swing—not a flaccid collapse.
+When passive parameters (segment inertias, shaft stiffness, damping) are identified from active motion data, they may implicitly capture the effective impedance of the active system—that is, the joint stiffness when muscles are co-contracting. In this case, the "Drift" term $f(x)$ represents the dynamics of the **Effective Plant** conditioned on the task, not purely passive mechanics. All drift decompositions inherit this assumption: the passive parameters are treated as fixed for the duration of the swing, even though physiologically they may vary with activation. This does not invalidate the framework; it clarifies what the counterfactuals compute. The ZTCF simulates what would happen if the golfer ceased *driving* the motion while maintaining the structural *impedance* required for the swing—not a flaccid collapse.
 :::
 
 In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$.
 
 However, the validity of this separation is not self-evident. A skeptic might ask: *Is this separation real?* Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the "control group" (the drift) must be immune to the "treatment" (the input).
 
-These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
+These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
 
 For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). This independence condition is not trivial. In many biological systems, active contraction changes the stiffness of the muscles, thereby altering the "plant" itself. However, by modeling the system at the skeletal level (generalized torques driving rigid bodies and a flexible shaft), we can formally prove that the drift vector field is structurally independent of the input vector field.
 
@@ -1229,7 +1229,7 @@ $$
 \frac{\partial f(x)}{\partial u} \equiv 0.
 $$
 
-The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. This orthogonality is structural: it is not an approximation but a property of the Lagrangian formulation where generalized forces are dual to generalized velocities. It guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
+The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. This independence is structural: it is not an approximation but a property of the Lagrangian formulation, in which generalized forces are dual to generalized velocities. It guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
 
 ::: {.callout-note}
 ### Assumption of Viscous-Only Damping
@@ -1450,7 +1450,7 @@ $$\tau_{\text{drift}}(t)
 
 By construction, $\tau_{\mathrm{input}}$ contains the mechanical effect of applied torques and nothing else. It is the only category that changes when the golfer changes their motor command.
 
-This subtraction is valid precisely because of the affine structure derived in Part I. Recall that the input acceleration is given by $A_{\text{input}}(x)u$. The 'Input Force' defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix. Crucially, it captures not just the direct drive on the joints, but also the forces induced by the **Inertial Coupling Ratio** ($\Gamma$) acting on the flexible shaft. Thus, $\tau_{\text{input}}$ represents the complete mechanical footprint of the golfer's agency.
+This subtraction is valid precisely because of the affine structure derived in Part I. Recall that the input acceleration is given by $A_{\text{input}}(x)u$. The 'Input Force' defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix. It captures not just the direct drive on the joints, but also the forces induced by the **Inertial Coupling Ratio** ($\Gamma$) acting on the flexible shaft. Thus, $\tau_{\text{input}}$ represents the complete mechanical footprint of the golfer's agency.
 
 #### Category 4: Mixed Forces (Interaction Effects)
 
@@ -1505,7 +1505,7 @@ In simulation (as developed in [Theory Part 4](theory-part4.html) and [Theory Pa
 - identification of torque timing patterns,
 - mapping of how individual torque bursts shape the club path.
 
-This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in Part I. We now catalogue these limitations to define the precise scope of validity for our causal claims.
+This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of that map is bounded by the fidelity of the model that generates it. The decomposition is algebraically exact within the model, but its application to reality is constrained by the simplifications made in Part I. We now catalog these limitations to define the scope of validity for our causal claims.
 
 
 ### Limitations (Theoretical Scope)
@@ -1638,7 +1638,7 @@ This paper is intentionally limited to theory. No simulation data, parameter est
   These appendices provide the **algebraic guarantee** of the theory. They contain the detailed block matrix inversion proofs and modal approximation derivations that justify the affine separation for flexible multibody systems.
 
 - **Part V: Numerical Validation (Simulink).**
-  This section provides the **numerical stress test**. By implementing the full forward dynamics in a stiff solver environment, Part V demonstrates that the delicate counterfactual subtractions remain stable under integration error, proving that the theory survives the transition from the page to the processor.
+  This section provides the **numerical stress test**. By implementing the full forward dynamics in a stiff solver environment, Part V shows that the delicate counterfactual subtractions remain stable under integration error, so the theory survives the transition from the page to the processor.
 
 Beyond these verifications, future work will focus on experimental application...
 
@@ -1678,7 +1678,7 @@ For researchers, the approach offers a reproducible method for quantifying torqu
 
 Overall, the framework enables clearer interpretation of how golfers generate speed, control the club, and use their bodies efficiently—supporting more targeted coaching, equipment fitting, and player development.
 
-For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, we refer to the detailed derivations collected in the Appendices (Part IV). These appendices specifically provide the **block matrix inversion proofs** that justify the clean separation of rigid and flexible dynamics, and demonstrate that the modal approximation of the shaft does not violate the linearity of the torque input—a critical condition for the validity of the Force Taxonomy presented above.
+For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, we refer to the detailed derivations collected in the Appendices (Part IV). These appendices provide the **block matrix inversion proofs** that justify the clean separation of rigid and flexible dynamics. They also show that the modal approximation of the shaft does not violate the linearity of the torque input—a critical condition for the validity of the Force Taxonomy presented above.
 
 
 ### Related Articles

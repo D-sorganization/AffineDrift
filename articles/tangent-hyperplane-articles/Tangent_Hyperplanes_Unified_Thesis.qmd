@@ -31,11 +31,11 @@ source-backed form.
 ::: {.callout-note appearance="minimal"}
 ## Thesis Abstract
 
-Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, arguing that it obscures a more precise mathematical fact: **at each fixed state (and fixed contact/constraint mode), the instantaneous mapping from inputs to state derivatives is exactly linear in the tangent space, and the associated variational equations accumulate perturbations linearly along a chosen reference trajectory**. We do not claim that motion trajectories superpose—nonlinear flows are generally not additive. Superposition here refers to the instantaneous tangent-space structure.
+Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, which obscures a more precise mathematical fact: **at each fixed state (and fixed contact/constraint mode), the instantaneous mapping from inputs to state derivatives is exactly linear in the tangent space. Along a chosen reference trajectory, the associated variational equations accumulate perturbations linearly**. We do not claim that motion trajectories superpose—nonlinear flows are generally not additive. Superposition here refers to the instantaneous tangent-space structure.
 
-We develop this claim across three interconnected frameworks. Part I establishes that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics—the derivative of a vector field is, by definition, a linear map operating on a linear tangent space. Part II shows how the linear variational system propagates perturbations along a reference trajectory. Part III connects these geometric foundations to optimal control through Hamiltonian structures and adjoint dynamics.
+We develop this claim across three interconnected frameworks. Part I establishes that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics. The derivative of a vector field is, by definition, a linear map operating on a linear tangent space. Part II shows how the linear variational system propagates perturbations along a reference trajectory. Part III connects these geometric foundations to optimal control through Hamiltonian structures and adjoint dynamics.
 
-This unified perspective helps explain why linear control techniques can remain useful for nonlinear plants and why linearization can yield rigorous local conclusions once the hypotheses are stated explicitly. We illustrate with worked examples including the pendulum, demonstrate connections to LQR and Lyapunov stability, and delineate scope of validity. Throughout, we distinguish between local exactness (in tangent spaces) and finite-scale approximation limits (due to curvature, mode changes, and model scope), with residuals treated as geometric terms that must still be bounded in context.
+This unified perspective helps explain why linear control techniques can remain useful for nonlinear plants and why linearization can yield rigorous local conclusions once the hypotheses are stated explicitly. We illustrate with worked examples including the pendulum, demonstrate connections to LQR and Lyapunov stability, and delineate scope of validity. Throughout, we distinguish between local exactness (in tangent spaces) and finite-scale approximation limits arising from curvature, mode changes, and model scope. We treat residuals as geometric terms that must still be bounded in context.
 
 **Keywords:** Tangent spaces, linearization, variational dynamics, state transition operator, Hamiltonian mechanics, optimal control, differential geometry
 :::
@@ -76,7 +76,7 @@ We will never claim that *motion trajectories* superpose in nonlinear systems. T
 The term "tangent hyperplane" is used colloquially throughout this series to evoke the geometric intuition of a flat structure touching a curved space. More precisely, the relevant geometric object is an **affine subspace** of the tangent space. When the input distribution $\text{span}\{g_i(x)\}$ has codimension greater than 1, the reachable set within the tangent space is an affine subspace, not strictly a hyperplane (which implies codimension 1). We retain the term for accessibility while noting this distinction for mathematical precision.
 :::
 
-The purpose of this thesis is to develop that statement rigorously. The differential-geometric core is not heuristic, but its mechanics interpretations still depend on the model class, smoothness assumptions, and contact mode being held fixed. Within that scope, the argument rests on the same calculus and variational machinery used throughout modern nonlinear dynamics.
+This thesis develops that statement rigorously. The differential-geometric core is not heuristic, but its mechanics interpretations still depend on the model class, smoothness assumptions, and contact mode being held fixed. Within that scope, the argument rests on the same calculus and variational machinery used throughout modern nonlinear dynamics.
 
 ::: {.callout-warning}
 ## What This Is **NOT**
@@ -92,7 +92,7 @@ We are **not** claiming that linearization is "good enough" for nonlinear system
 **Key distinction:** Standard linearization says "we accept error for tractability." This thesis says "we exploit exact local geometry and quantify transport costs." The exactness comes from **geometry**, not from "being close to the operating point."
 :::
 
-This perspective has profound implications:
+This perspective has several implications:
 
 1. It explains why **linear control techniques** such as LQR and pole placement succeed in practice, even when applied to inherently nonlinear plants
 2. It clarifies why **stability analysis via linearization** (Lyapunov's indirect method) yields rigorous conclusions about nonlinear behavior
@@ -277,7 +277,7 @@ $$
 \delta \dot{x} = A \, \delta x + B \, \delta u
 $$ {#eq-tangent-dynamics}
 
-This equation deserves careful attention. It states that **in the tangent space at a fixed state, the dynamics are exactly linear**. The perturbation $\delta \dot{x}$ depends linearly on $\delta x$ and $\delta u$, with coefficients given by the Jacobian matrices. Note that the **first-order differential** (linearization) is exact at the point; finite steps accumulate higher-order terms.
+This equation states that **in the tangent space at a fixed state, the dynamics are exactly linear**. The perturbation $\delta \dot{x}$ depends linearly on $\delta x$ and $\delta u$, with coefficients given by the Jacobian matrices. Note that the **first-order differential** (linearization) is exact at the point; finite steps accumulate higher-order terms.
 
 ::: {.callout-important}
 ## Not an Approximation
@@ -437,7 +437,7 @@ $$
 \delta \dot{x}_i = B \delta u_i
 $$
 
-And the total state rate change is simply the sum:
+The total state rate change is the sum:
 
 $$
 \delta \dot{x} = \sum_i \delta \dot{x}_i = B \sum_i \delta u_i
@@ -514,7 +514,7 @@ $$
 \lim_{\Delta t \to 0} \frac{\left\|x(t + \Delta t) - x(t) - f(x(t),u(t)) \, \Delta t\right\|}{\Delta t} = 0
 $$ {#eq-limit-exactness}
 
-This is the precise sense in which **linearization is exact in the limit**. The first-order evolution—governed entirely by the tangent space dynamics—captures the behavior of the nonlinear system up to terms that become arbitrarily small relative to the timestep.
+This is the precise sense in which **linearization is exact in the limit**. The first-order evolution is governed entirely by the tangent space dynamics. It captures the behavior of the nonlinear system up to terms that become arbitrarily small relative to the timestep.
 
 ::: {.callout-important}
 ## Infinitesimal Exactness
@@ -588,7 +588,7 @@ The success of LQR for nonlinear systems stems from exploiting the **exactness o
 2. Interpolate between gains during operation
 3. Controller adapts as system moves through tangent spaces
 
-This is implicit exploitation of the moving tangent space perspective.
+Gain scheduling implicitly exploits the moving tangent space perspective.
 
 ## Lyapunov Stability Analysis
 
@@ -641,7 +641,7 @@ Lyapunov stability analysis via linearization succeeds because:
 - Eigenvalues encode local growth/decay rates exactly
 - For stability, only local behavior matters (by definition)
 
-This is another manifestation of "exact superposition in the infinitesimal" enabling rigorous global conclusions.
+This is another manifestation of "exact superposition in the infinitesimal" enabling rigorous local conclusions.
 
 ## Practical Implications
 
@@ -832,7 +832,7 @@ $$
 \int_{t_0}^{t_1} \delta \dot{x}(t) \, dt = \int_{t_0}^{t_1} \left[A(t) \delta x(t) + B(t) \delta u(t)\right] dt
 $$ {#eq-integrated-variation}
 
-The left side is simply:
+The left side is:
 
 $$
 \int_{t_0}^{t_1} \delta \dot{x}(t) \, dt = \delta x(t_1) - \delta x(t_0)
@@ -1156,7 +1156,7 @@ $$
 \Psi(u_1 + u_2) = \Psi(u_1) + \Psi(u_2)
 $$
 
-**Important caveat:** This superposition holds only for variations at a fixed trajectory $x(t)$. If $x(t)$ itself depends nonlinearly on $u$ (as it generally does in closed-loop or trajectory optimization settings), then the principle does not hold globally — changing $u$ changes the trajectory, and the two contributions cannot be evaluated independently.
+**Important caveat:** This superposition holds only for variations at a fixed trajectory $x(t)$. If $x(t)$ itself depends nonlinearly on $u$ (as it generally does in closed-loop or trajectory optimization settings), then the principle does not hold globally. Changing $u$ changes the trajectory, so the two contributions cannot be evaluated independently.
 :::
 
 Impulse and work are special cases where $g = u$ and $g = u^T \dot{q}$ respectively. The linearity of integration ensures exact additivity of these quantities, even as the underlying dynamics remain nonlinear.
@@ -1210,7 +1210,7 @@ where $C$ depends on the second derivatives of $f$ (the Hessian) and the traject
 ::: {.callout-note}
 ## Practical Implication
 
-For small perturbations ($\epsilon \ll 1$) and short times, $\|r\| / \epsilon \ll 1$, so the linear approximation (integral superposition) is excellent. For large perturbations or long times, residuals become significant, indicating that nonlinear effects must be accounted for.
+For small perturbations ($\epsilon \ll 1$) and short times, $\|r\| / \epsilon \ll 1$, so the linear approximation (integral superposition) is excellent. For large perturbations or long times, residuals become significant, and the analysis must account for nonlinear effects.
 :::
 
 ## Connection to Hessian and Curvature
@@ -1286,7 +1286,7 @@ This provides a data-driven criterion for switching between linear and nonlinear
 ::: {.callout-warning}
 ## Work in Progress
 
-**Part III is a draft/incomplete section.** The following provides the conceptual framework and key equations but requires substantial expansion — detailed derivations, complete algorithms, and worked examples are not yet present. Treat this section as a preliminary outline, not a finished exposition.
+**Part III is a draft/incomplete section.** The following provides the conceptual framework and key equations, but it still requires substantial expansion. Detailed derivations, complete algorithms, and worked examples are not yet present. Treat this section as a preliminary outline, not a finished exposition.
 :::
 
 
@@ -1645,7 +1645,7 @@ The next chapter translates these continuous-time ideas into discrete numerical 
 
 ### Euler Discretization
 
-For implementation, continuous dynamics are approximated via discrete-time steps. Using Euler's method:
+For implementation, we approximate the continuous dynamics with discrete-time steps. Using Euler's method:
 
 $$
 x_{k+1} = x_k + f(x_k, u_k) \Delta t + O(\Delta t^2)
@@ -1854,7 +1854,7 @@ $$
 \|x(T) - x_N\| = O(\Delta t^p)
 $$ {#eq-fixed-horizon-error}
 
-**Takeaway**: Higher-order methods dramatically reduce error for fixed computational budget.
+**Takeaway**: Higher-order methods reduce error for a fixed computational budget.
 
 ### Discrete Tangent Space Errors
 
@@ -1949,7 +1949,7 @@ B_k = B(x_k, u_k)  # Shape: (2, 1)
 
 Key takeaways:
 
-1. **Higher-order methods** (RK4) dramatically improve accuracy for fixed timestep
+1. **Higher-order methods** (RK4) improve accuracy for a fixed timestep
 2. **Adaptive timesteps** concentrate effort where curvature is high
 3. **Implicit methods** essential for stiff systems
 4. **Convergence** guaranteed under Lipschitz conditions: $O(\Delta t^p)$ for $p$-th order method
@@ -2326,7 +2326,7 @@ This chapter presents three detailed case studies demonstrating the tangent spac
 
 ::: {.callout-important}
 ## Illustrative, Not Validated
-The code blocks in this chapter are abbreviated **sketches** (some solver bodies are stubbed), and the numeric "Results" below are **representative, hand-chosen values** illustrating the expected qualitative behavior — they are **not** the output of a validated simulation and have not been benchmarked against empirical data. Treat them as worked-example targets, not measured results.
+The code blocks in this chapter are abbreviated **sketches**, and some solver bodies are stubbed. The numeric "Results" below are **representative, hand-chosen values** illustrating the expected qualitative behavior. They are **not** the output of a validated simulation and have not been benchmarked against empirical data. Treat them as worked-example targets, not measured results.
 :::
 
 ## Case Study 1: Spacecraft Rendezvous
@@ -2636,7 +2636,7 @@ DDP succeeds by:
 2. Propagating cost backward through varying tangent spaces
 3. Computing gains $K_k$ that adapt to local geometry
 
-This is **impossible** with global linearization (fixed $M$), but natural in tangent space framework.
+This is **impossible** with global linearization (fixed $M$), but natural in the tangent space framework.
 :::
 
 ## Case Study 3: Quadrotor Stabilization
@@ -2676,7 +2676,7 @@ At hover equilibrium:
 - $u_i^* = mg/4$ (equal thrust)
 - Small perturbations: $\delta p, \delta v, \delta \theta$ (Euler angles), $\delta \omega$
 
-**Tangent space** at hover is 12D (position, velocity, attitude, rates). Away from hover, tangent space rotates with orientation—this is where framework shines.
+**Tangent space** at hover is 12D (position, velocity, attitude, rates). Away from hover, tangent space rotates with orientation—this is where the framework shines.
 
 ### DDP Implementation Sketch
 
@@ -2885,7 +2885,7 @@ Part III (control synthesis) needs substantial development:
 
 ## Final Reflection
 
-This thesis has argued that **nonlinear systems are exactly linear in the instantaneous tangent-space mapping**. This is not mere wordplay—it is a precise mathematical statement with profound implications for control theory, numerical analysis, and geometric mechanics.
+This thesis has argued that **nonlinear systems are exactly linear in the instantaneous tangent-space mapping**. This is not mere wordplay—it is a precise mathematical statement with implications for control theory, numerical analysis, and geometric mechanics.
 
 The tangent space is not an approximation we impose for convenience. It is the **exact local structure** of smooth dynamics, inherited from the definition of derivatives and limits. Superposition does not disappear in nonlinear systems—it **relocates** from global state space to local tangent spaces, where it holds exactly at each fixed state. The tangent space moves with the state, so trajectories are not additive—but the instantaneous structure is exact.
 
@@ -2893,7 +2893,7 @@ This perspective transforms how we think about nonlinearity:
 - Not as a failure of linear methods
 - But as a call to **think geometrically**: trajectories winding through manifolds, tangent spaces providing exact local snapshots, curvature encoding nonlinear coupling
 
-The practical payoff is substantial: it explains why LQR works, why Lyapunov analysis is rigorous, why MPC succeeds—all by recognizing that these methods exploit the **exact local linearity** that exists everywhere in smooth nonlinear systems.
+The practical payoff is concrete: the framework explains why LQR works, why Lyapunov analysis is rigorous, and why MPC succeeds. All three exploit the **exact local linearity** that exists everywhere in smooth nonlinear systems.
 
 **The tangent space framework is not an approximation theory. It is the geometric foundation of nonlinear mechanics.**
 
