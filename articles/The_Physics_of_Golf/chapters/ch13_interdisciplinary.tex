@@ -220,7 +220,7 @@ This learning happens at multiple timescales:
 \item \textbf{Across seasons:} Long-term adaptation to club and shaft changes, swing changes, and biomechanical constraints.
 \end{enumerate}
 
-The affine framework provides a way to understand what the nervous system must learn at each timescale. At the fastest timescale (within-swing feedback), the nervous system must learn the control authority $G(\state)$: what control inputs are available at the current state? At the slowest timescale (learning new swing patterns), the nervous system must learn a new drift field $f(\state)$: how does the body move when no muscle torques are applied?
+The affine framework provides a model for separating state-dependent plant dynamics from declared applied control. It does not establish what the nervous system learns. At each state, $G(\state)$ maps the declared control coordinates, while $f(\state)$ specifies the autonomous vector field of the effective plant.
 
 % ─────────────────────────────────────────────────────────────────
 \section{Material Science: Shaft Design and Ball Physics}
@@ -449,7 +449,7 @@ The most effective coach is one who understands the drift field structure and de
 
 How do all these disciplines fit together? Through the zero-torque counterfactual.
 
-Recall that the ZTCF is the trajectory the clubhead would follow if all muscle torques were zero. It depends entirely on the drift field $f(\state)$, the state at which zero-torque conditions are imposed, and the constraints of the body.
+Recall that a forward ZTCF trajectory integrates the effective plant after setting the declared applied generalized-control channel to zero. It depends on $f(\state)$, the branch state, parameters, contact mode, and retained constraints; it does not specify muscle activation.
 
 Now:
 

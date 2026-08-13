@@ -83,6 +83,20 @@ class TestScan:
         assert any(finding["rule"] == "ZTCF first-use qualifier" for finding in scan(tmp_path))
 
     @pytest.mark.parametrize(
+        "body",
+        [
+            "The forward ZTCF trajectory assumes no muscle torque.\n",
+            "The forward ZTCF trajectory is what happens if muscles vanished.\n",
+            "With all muscle torques zero, the forward ZTCF trajectory follows.\n",
+        ],
+    )
+    def test_ztcf_does_not_identify_a_physiological_state(self, tmp_path: Path, body: str) -> None:
+        write_authority(tmp_path)
+        write(tmp_path, "articles/ch.qmd", body)
+
+        assert any(finding["rule"] == "ZTCF physiological overclaim" for finding in scan(tmp_path))
+
+    @pytest.mark.parametrize(
         ("body", "rule"),
         [
             ("The Zero-Velocity Control Force (ZVCF) is...\n", "ZVCF canonical expansion"),

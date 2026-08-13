@@ -101,7 +101,7 @@ Given the current state $\bm{x}(t_0) = (\bm{q}(t_0), \dot{\bm{q}}(t_0))$ at time
    $$
 
    This equation gives the acceleration purely from passive forces (gravity, Coriolis).
-3. **Integrate:** Numerically integrate this ODE from $t_0$ forward in time using a standard solver (e.g., RK4). No muscle torques are applied; the system evolves under its own dynamics.
+3. **Integrate:** Numerically integrate this ODE from $t_0$ forward in time using a standard solver (e.g., RK4). The declared applied generalized-control channel is zero; the retained effective plant determines the branch.
 4. **Compare to reality:** Overlay the ZTCF trajectory with the actual measured swing. The deviation tells you where active control is required.
 
 **Example: Simulink Implementation: The "Kill-Switch" Model**
@@ -477,7 +477,7 @@ But the timing window is small: the contact lasts only approximately $0.5$ ms [@
 ::: {.callout-important}
 ## Key Takeaways: The Zero-Torque Counterfactual
 
-1. **What the ZTCF is:** A thought experiment that isolates what physics would do with zero muscle input. It's a reference trajectory showing "how much is passive."
+1. **What the ZTCF is:** A model intervention that sets the declared applied generalized-control channel to zero and integrates the retained effective plant. It does not measure muscle activation or a biological "passive fraction."
 2. **The decomposition:** Total torque = drift (passive) + control (muscular). Knowing this split is essential for understanding where effort matters.
 3. **The ZVCF refinement:** Further isolates gravity from velocity-dependent forces, revealing the role of initial momentum.
 4. **DCR growth:** As velocity increases, several passive terms grow with speed, while bounded muscular torques do not necessarily scale with the same law. The Drift-Control Ratio can become large in late downswing, but its magnitude depends on the weighting, torque bound, and model parameters.

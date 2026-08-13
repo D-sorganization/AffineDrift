@@ -20,7 +20,7 @@ Most golfers think they're creating the swing through muscular effort. In realit
 
 The \textbf{forward Zero-Torque Counterfactual (ZTCF) trajectory} is a model intervention. It asks: \textbf{What trajectory follows when the declared applied generalized-control channel is set to zero while the declared effective plant is retained?}
 
-The answer is counterintuitive. The ZTCF trajectory---what would happen if your muscles vanished---explains most of the shape of the downswing. Your muscles spend most of the swing \emph{restraining} the physics, not driving it.
+The model result is counterintuitive. Its forward ZTCF trajectory---obtained by zeroing the declared applied generalized-control channel while retaining the effective plant---reproduces part of the downswing shape. This model comparison does not identify muscle activation or establish that biological control is primarily restraining.
 \end{laymansbox}
 
 %============================================================================
@@ -170,7 +170,7 @@ Given the current state $\bm{x}(t_0) = (\bm{q}(t_0), \dot{\bm{q}}(t_0))$ at time
 \end{equation}
 This equation gives the acceleration purely from passive forces (gravity, Coriolis).
 
-\item \textbf{Integrate:} Numerically integrate this ODE from $t_0$ forward in time using a standard solver (e.g., RK4). No muscle torques are applied; the system evolves under its own dynamics.
+\item \textbf{Integrate:} Numerically integrate this ODE from $t_0$ forward in time using a standard solver (e.g., RK4). The declared applied generalized-control channel is zero; the retained effective plant determines the branch.
 
 \item \textbf{Compare to reality:} Overlay the ZTCF trajectory with the actual measured swing. The deviation tells you where active control is required.
 \end{enumerate}
@@ -548,7 +548,7 @@ But the timing window is small: the contact lasts only approximately $0.5$ ms \c
 \begin{principle}{Key Takeaways: The Zero-Torque Counterfactual}{principle:ztcf_key_takeaways}
 
 \begin{enumerate}
-\item \textbf{What the ZTCF is:} A thought experiment that isolates what physics would do with zero muscle input. It's a reference trajectory showing "how much is passive."
+\item \textbf{What the ZTCF is:} A model intervention that sets the declared applied generalized-control channel to zero and integrates the retained effective plant. It does not measure muscle activation or a biological "passive fraction."
 
 \item \textbf{The decomposition:} Total torque = drift (passive) + control (muscular). Knowing this split is essential for understanding where effort matters.
 

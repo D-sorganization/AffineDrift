@@ -347,13 +347,13 @@ Throughout this chapter, we have referred to the zero-torque counterfactual (ZTC
 
 ### The ZTCF as a Guide
 
-The ZTCF is the trajectory the clubhead would follow if all muscle torques were set to zero from the current moment onward. At each moment in the swing, the ZTCF is different, depending on the current state and the drift field.
+The forward ZTCF trajectory is obtained by setting the declared applied generalized-control channel to zero from the current state onward. It depends on that initial state and the declared effective plant; it does not identify muscle activation.
 
-1. **At address:** The ZTCF would cause the clubhead to fall straight down (gravity). The control inputs are needed to start the swing.
-2. **Early in the backswing:** The ZTCF would cause the arms to fall. The control inputs must override gravity to lift the arms.
-3. **At the top of the backswing:** The ZTCF would cause the upper body to fall backward (gravity and lack of forward motion). The control inputs must reverse this and initiate the downswing.
-4. **In the early downswing:** The ZTCF would cause a motion toward the ball, but perhaps with the wrong sequencing (arms falling independently of the body). The control inputs fine-tune the sequence.
-5. **In mid-downswing:** The ZTCF is already producing a motion quite close to the desired motion. The control inputs are small corrections.
+1. **At address:** In a fixed-contact model initialized near rest, gravity and support reactions dominate the forward ZTCF. The exact direction depends on the coordinates, constraints, and retained passive terms.
+2. **Early in the backswing:** A same-state ZTCF branch tests which motion persists after declared control is removed; it does not prescribe the control needed to produce the observed backswing.
+3. **At the top of the backswing:** Low generalized velocity suppresses velocity-dependent drift terms, but gravity, elasticity, damping, contact, and internal-state effects remain model dependent.
+4. **In the early downswing:** The forward ZTCF can test whether the declared plant alone produces, delays, or opposes a modeled sequencing feature from the achieved state.
+5. **In mid-downswing:** Proximity between ZTCF and achieved motion is an estimand, not an assumption. Report it in a declared state, task metric, time window, and uncertainty model.
 6. **In late downswing:** The ZTCF may be close to the measured trajectory in a high-DCR model. The control inputs are bounded corrections, not literally absent.
 7. **At impact:** The clubhead speed and face angle are strongly constrained by the state delivered into impact; the ball outcome is determined by that state and the impact collision model.
 

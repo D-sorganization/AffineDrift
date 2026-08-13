@@ -273,7 +273,7 @@ q_3 &= 100° \quad \dot{q}_3 = 25 \text{ rad/s} \quad \tau_3 = 0
 \end{aligned}
 $$
 
-Set $\bm{u} = \mathbf{0}$ (no muscle torques) and solve:
+Set the declared applied generalized control $\bm{u} = \mathbf{0}$ and solve:
 
 $$
 \bm{M}(\bm{q}) \ddot{\bm{q}} = -\bm{C}(\bm{q}, \dot{\bm{q}}) - \bm{g}(\bm{q})
@@ -291,7 +291,7 @@ $$
 
 **Interpretation:**
 
-With no muscle torques, the shoulder decelerates slightly (gravity slowing the rotation), while the elbow and club accelerate dramatically due to Coriolis.
+Under this declared zero-control intervention, the modeled shoulder decelerates slightly while the elbow and club accelerate through the retained inertial coupling. This result does not identify muscle activation.
 
 Integrating this trajectory forward 0.05 seconds (50 ms, roughly late downswing), the ZTCF predicts:
 
@@ -426,7 +426,7 @@ The Coriolis term at the club includes a cross term like $\frac{\partial M_{23}}
 3. Compare to a typical muscular torque at the wrist ($\sim 10$ Nm). Is the Coriolis term dominant?
 
 {Whip Effect}
-Simulate the triple pendulum ZTCF (no muscle torques) from the configuration given in @sec-triple_pendulum_ztcf.
+Simulate the triple-pendulum forward ZTCF trajectory, with the declared applied generalized-control channel set to zero, from the state given in @sec-triple_pendulum_ztcf.
 
 1. Integrate forward 50 ms and plot all three angles and angular velocities.
 2. At what time does the club angular velocity reach its maximum? Does it occur near the very end?

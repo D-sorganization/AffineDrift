@@ -91,7 +91,7 @@ The connection is direct: **the biomechanics community's "induced acceleration a
 
 **In the control-affine framework:**
 
-- **Drift** = acceleration that occurs with zero muscle input = $\boldsymbol{M}^{-1}[\boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}}) + \boldsymbol{g}(\boldsymbol{q})]$
+- **Drift** = the complete autonomous acceleration of the declared effective plant when applied generalized control is zero, including every retained inertial, gravitational, passive, contact, constraint, and internal-state term.
 - **Control** = additional acceleration from muscle torques = $\boldsymbol{M}^{-1} \boldsymbol{\tau}_{\text{muscle}}$
 
 **In induced acceleration analysis:**
@@ -293,7 +293,7 @@ The induced acceleration framework unifies the observations made throughout this
 | Control $\boldsymbol{G}(\boldsymbol{x})\boldsymbol{u}$ | Muscle-induced acceleration | Voluntary effort |
 | $\boldsymbol{M}^{-1}(\boldsymbol{q})$ | Coupling matrix | Posture-dependent transfer |
 | Drift dominance | Cumulative >> instantaneous | Physics takes over late |
-| ZTCF family (Ch. @sec-zero_torque_counterfactual) | Zero-torque induced acc. | What happens with no muscles |
+| ZTCF family (Ch. @sec-zero_torque_counterfactual) | Zero-control model counterfactual | What the declared effective plant produces under zero applied generalized control |
 
 This correspondence is not a coincidence: both frameworks start from the same equations of motion and exploit the same linearity of the inverse mass matrix. The biomechanics community and the control theory community arrived at equivalent decompositions through different paths, motivated by different questions ("what does each muscle do?" versus "what can the controller influence?"). Recognizing this equivalence strengthens both approaches and allows practitioners in either field to draw on the insights of the other.
 

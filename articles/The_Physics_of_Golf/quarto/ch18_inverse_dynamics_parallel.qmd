@@ -981,7 +981,7 @@ This asymmetry reveals the "ground-up" power transfer story: the ground actively
 ::: {.callout-note}
 ## Why Forward Simulation Is More Robust
 
-The ZTCF (Zero-Torque Counterfactual) framework asks a different question than traditional inverse dynamics. Rather than asking *What muscle torques caused this motion?*, it asks *What motion occurs if the muscles apply zero torque to the club?*
+The forward zero-torque counterfactual (ZTCF) asks a different question than inverse dynamics: *What motion does the declared effective plant produce from this state when the applied generalized-control channel is set to zero?* It does not ask what individual muscles did.
 
 This is a **forward** problem, not an inverse problem. And for forward problems, the parallel loop is not an obstacle—it is fully handled by the laws of physics.
 
@@ -1024,12 +1024,12 @@ This is the practical advantage of the ZTCF approach. It avoids muscle load-shar
 
 **Forward Simulation Approach (ZTCF):**
 
-- **Question:** What motion occurs if the muscles apply zero torque to the club?
+- **Question:** What motion occurs when the declared applied generalized-control channel is set to zero?
 - **Method:** Set $\bm{u} = \bm{0}$, integrate the constrained EOM forward from $\bm{q}(0), \dot{\bm{q}}(0)$.
 - **In parallel systems:** Well-determined under fixed model, contact, and regularity assumptions.
 - **Reliability:** Avoids load-sharing ambiguity, but still depends on the model and contact assumptions.
 
-**The Trade-Off:** Inverse dynamics tells you what actually happened (the muscles' actual commands). Forward simulation tells you what would happen under a simplified assumption (zero muscle torque on the club). Inverse is more direct but fragile; forward is more robust but less direct. The ZTCF framework sacrifices the directness of inverse inference in exchange for the robustness of forward integration.
+**The Trade-Off:** Inverse dynamics estimates net generalized loads compatible with measured motion and a declared model; it does not uniquely recover muscle commands. Forward simulation answers a different model-conditioned question under zero declared applied control. The ZTCF framework avoids muscle load-sharing ambiguity but remains sensitive to the plant, contact mode, parameters, and initial state.
 
 :::
 
