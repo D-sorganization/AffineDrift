@@ -6,9 +6,9 @@ Last updated: 2026-08-14
 
 ## Nine-Point Momentum-Transfer Reconciliation
 
-- Branch `docs/momentum-question-reconciliation` pins protected UpstreamDrift
-  merge `c0507d414fa743cddb817a01f1fe96ac4f8b7226` and exposes the handwritten
-  agenda as a compact reader-facing question map.
+- PR #3864 on branch `docs/momentum-question-reconciliation` pins protected
+  UpstreamDrift merge `c0507d414fa743cddb817a01f1fe96ac4f8b7226` and exposes
+  the handwritten agenda as a compact reader-facing question map.
 - The article distinguishes the complete 994-candidate narrative census from
   ten open release reviews and identifies MTQ-06 timing precision as the
   unresolved point. Casting remains definition-dependent, not globally open.
