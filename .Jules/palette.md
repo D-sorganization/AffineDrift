@@ -118,3 +118,7 @@
 ## 2026-08-04 - Missing Screen Reader Utility Classes
 **Learning:** Found that accessibility utility classes like `.sr-only` were being added dynamically via JavaScript (e.g., in `js/accessibility.js`) but were entirely missing from the core CSS bundles, causing the content to remain visible.
 **Action:** Ensure all dynamically applied utility classes, especially for accessibility, have explicit definitions in the design system CSS.
+
+## 2026-08-14 - Keyboard shortcut hints in native tooltips
+**Learning:** Users might not realize that components like image zoom lightboxes can be closed using the Escape key, which is standard accessibility and UX behavior. While we support the keydown listener, not showing it leaves it undiscoverable.
+**Action:** Always append keyboard shortcut hints (like "(Esc)") to the `title` and `aria-label` attributes of action buttons when standard keyboard shortcuts are supported.
