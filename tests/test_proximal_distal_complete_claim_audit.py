@@ -35,11 +35,26 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert source["commit"] in source["scapulothoracic_contact_screen_url"]
     assert audit == {
         "completion_status": "complete",
+        "completion_layer": "narrative_candidate_census",
+        "release_review_completion_status": "in_progress",
         "candidate_count": 994,
         "reviewed_candidate_count": 994,
         "unadjudicated_candidate_count": 0,
         "registered_claim_count": 266,
         "release_claim_count": 31,
+        "open_release_claim_count": 10,
+        "open_release_claim_keys": [
+            "distributed_modal_shaft_coupled_forward",
+            "distributed_shaft_modal_reduction",
+            "geometry_transfer_spatial_common_state",
+            "high_proximal_velocity_universally_beneficial",
+            "human_self_stabilization",
+            "interaction_dynamics_planar",
+            "passive_negative_couple_spatial_forward",
+            "rotating_base_torso_velocity_transfer",
+            "shoulder_velocity_control_strategy",
+            "state_triggered_model_robustness",
+        ],
     }
     assert release["pdf_pages"] == 218
     assert release["qualified_artifact_count"] == 463
@@ -51,6 +66,7 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
         "critical_point_count": 9,
         "answered_or_partly_answered": 8,
         "unresolved_or_definition_gated": 1,
+        "unresolved_point_ids": ["MTQ-06"],
         "model_plan_registered_for_all": True,
         "human_plan_registered_for_all": True,
         "human_execution_blocked": True,
@@ -145,7 +161,21 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     assert "does not validate a universal human or coaching strategy" in article
     assert "manual NotebookLM reauthentication" in article
     assert "nine independently tracked points" in article
-    assert "Casting remains unresolved as one universal construct" in normalized_article
+    assert "MTQ-06, timing precision, remains unresolved" in normalized_article
+    assert "ten of 31 release claims remain open" in normalized_article
+    assert "Casting has a bounded answer" in normalized_article
+    for label in (
+        "Drift Contribution",
+        "Geometry Dependencies",
+        "Casting",
+        "Early Proximal Acceleration",
+        "Segment Release",
+        "Timing Precision",
+        "Self-Correction and Noise",
+        "Proximal-Velocity Maximization",
+        "Slack",
+    ):
+        assert label in article
     assert "One transmitted-output channel therefore does not identify" in article
     assert "equal-and-opposite axial force mode" in article
     assert "does not identify muscle or scapular strategy" in normalized_article
