@@ -4,6 +4,19 @@
 
 Last updated: 2026-08-14
 
+## Nine-Point Momentum-Transfer Reconciliation
+
+- PR #3864 on branch `docs/momentum-question-reconciliation` pins protected
+  UpstreamDrift merge `c0507d414fa743cddb817a01f1fe96ac4f8b7226` and exposes
+  the handwritten agenda as a compact reader-facing question map.
+- The article distinguishes the complete 994-candidate narrative census from
+  ten open release reviews and identifies MTQ-06 timing precision as the
+  unresolved point. Casting remains definition-dependent, not globally open.
+- Canonical plans, falsifiers, and evidence artifacts remain in UpstreamDrift;
+  AffineDrift does not duplicate scientific authority. Governed human
+  execution remains blocked on synchronized bilateral six-axis grip-wrench
+  data.
+
 ## Paired Scapulothoracic Geometry Pin
 
 - Branch `docs/3862-scapulothoracic-review` pins UpstreamDrift PR #8646,
