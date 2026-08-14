@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-14T06:00:00Z
+Last-Updated: 2026-08-14T09:28:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-14T06:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.195                                          |
+| **Spec Version**        | 1.0.196                                          |
 | **Last Spec Update**    | 2026-08-14                                       |
 
 ## 2. Purpose & Mission
@@ -59,6 +59,11 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Pin common-phase timing-policy viability and sustained-recovery results by
   immutable upstream commit and hashes, while keeping reduced-planar policy
   ordering separate from human timing demand, self-correction, and coaching
+- Pin typed-slack dynamic and identifiability evidence by immutable upstream
+  commit and hashes; keep contact disengagement, transmission dead zone,
+  structural preload, biological series compliance, and control deadband
+  distinct, and do not infer mechanism identity from one transmitted-output
+  channel
 - Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
 - Present the textbook volumes with shared algorithm and pseudocode conventions so implementation guidance is consistent across the series
 - Preserve frame, reference-point, wrench, power, and canonical-pose conventions
