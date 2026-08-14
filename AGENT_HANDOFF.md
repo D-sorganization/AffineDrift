@@ -4,6 +4,21 @@
 
 Last updated: 2026-08-14
 
+## Subject-Scaled Spatial Contact-Closure Pin
+
+- Branch `research/spatial-contact-closure` pins UpstreamDrift PR #8637,
+  merged as `04e03b9248dc483737f7e96b7dc0523e63860284`.
+- Six deterministic de Leva engineering profiles, three grip spans, and 61
+  states per case miss the declared grip contacts by 0.171--0.616 m (median
+  0.405 m); no case meets the registered 5 mm closure tolerance.
+- Every local bilateral contact Jacobian still has rank six. This is an adverse
+  result: local correction rank does not establish geometric contact closure.
+- The article and spatial companion require bilateral closed-contact inverse
+  kinematics with joint limits/collision checks before compliant forward-contact
+  studies or anatomical, passive-timing, slack, and human-strategy claims.
+- The companion snapshot pins 982/982 reviewed candidates, 261 claims, and 448
+  qualified artifacts from the 216-page upstream publication.
+
 ## Bilateral-Wrench Sensor Qualification Pin
 
 - Branch `research/8557-sensor-qualification` pins UpstreamDrift PR #8635,
