@@ -217,6 +217,30 @@ and frame registration. Grip modification can itself change behavior, so the
 instrumented club should be compared with a standard club. Uncertainty in hand
 position and sensor orientation should propagate to couple sign and magnitude.
 
+### Why Closure Is Not Calibration
+
+A synthetic trajectory qualification makes the distinction quantitative. A
+net-wrench-only inverse can reproduce the net club wrench to numerical tolerance
+while missing the individual point-force allocation by 11.86 N RMSE and the
+invisible axial mode by 29.05 N RMSE. Closure therefore verifies the resultant,
+not the bilateral allocation.
+
+The same controlled study separates practical measurement errors. Correcting a
+declared cross-talk matrix reduces allocation RMSE from 0.94 N to 0.15 N; a 10%
+residual calibration error raises it to 0.18 N. Holding contact centers fixed
+through an 8-mm migration causes 2.02 N RMSE, whereas tracking those centers
+removes that modeled bias. The combined registered case yields 1.02 N RMSE and
+3.87 N 95th-percentile error over 32 seeded trials and 301 samples.
+
+These values come from a synthetic point-force sensor qualification, not a
+physical transducer, distributed-pressure experiment, or participant study.
+They define pre-acquisition acceptance tests: verify the augmented rank, report
+allocation error in addition to wrench closure, calibrate cross-talk, track
+effective contact centers, propagate residual calibration uncertainty, and
+fail closed when any required channel or registration is absent. Governed
+bilateral six-axis human data are still required to test the proposed hand,
+wrist, arm, or scapular mechanisms.
+
 ### Internal Force Is Not Wasted Force
 
 An equal-and-opposite hand mode may cancel at the club's center-of-mass force
