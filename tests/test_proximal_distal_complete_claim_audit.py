@@ -28,16 +28,17 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert source["commit"] in source["timing_viability_url"]
     assert source["commit"] in source["typed_slack_url"]
     assert source["commit"] in source["bilateral_wrench_identifiability_url"]
+    assert source["commit"] in source["bilateral_wrench_sensor_qualification_url"]
     assert audit == {
         "completion_status": "complete",
-        "candidate_count": 970,
-        "reviewed_candidate_count": 970,
+        "candidate_count": 975,
+        "reviewed_candidate_count": 975,
         "unadjudicated_candidate_count": 0,
-        "registered_claim_count": 255,
+        "registered_claim_count": 258,
         "release_claim_count": 26,
     }
-    assert release["pdf_pages"] == 214
-    assert release["qualified_artifact_count"] == 434
+    assert release["pdf_pages"] == 215
+    assert release["qualified_artifact_count"] == 440
     assert SHA256.fullmatch(release["claim_registry_sha256"])
     assert SHA256.fullmatch(release["pdf_sha256"])
     assert boundaries["universal_human_or_coaching_strategy"] == "not_supported"
@@ -78,6 +79,17 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert bilateral["noise_robust_practical_identifiability"] == "not_established"
     assert SHA256.fullmatch(bilateral["json_sha256"])
     assert SHA256.fullmatch(bilateral["figure_sha256"])
+    qualification = payload["bilateral_wrench_sensor_qualification"]
+    assert qualification["analysis_type"] == "synthetic_point_force_sensor_qualification"
+    assert qualification["sample_count"] == 301
+    assert qualification["trial_count"] == 32
+    assert qualification["net_wrench_only_allocation_rmse_n"] > 10.0
+    assert qualification["net_wrench_only_axial_mode_rmse_n"] > 25.0
+    assert qualification["combined_registered_allocation_rmse_n"] < 1.1
+    assert qualification["sensor_values"] == "synthetic_not_device_calibration"
+    assert qualification["human_validation"] == "untested"
+    assert SHA256.fullmatch(qualification["json_sha256"])
+    assert SHA256.fullmatch(qualification["figure_sha256"])
 
 
 def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
@@ -86,7 +98,7 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     payload = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
     assert "Complete Claim Audit" in article
     assert payload["source"]["commit"] in article
-    assert "970 of 970" in article
+    assert "975 of 975" in article
     assert "zero unadjudicated" in article
     assert "does not validate a universal human or coaching strategy" in article
     assert "manual NotebookLM reauthentication" in article
@@ -97,3 +109,7 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     assert "does not identify muscle or scapular strategy" in normalized_article
     assert "larger state-triggered timing region" in normalized_article
     assert "no sustained half-error recovery" in normalized_article
+    assert "11.86 N" in article
+    assert "29.05 N" in article
+    assert "synthetic point-force sensor qualification" in normalized_article
+    assert "not a device calibration or human validation result" in normalized_article

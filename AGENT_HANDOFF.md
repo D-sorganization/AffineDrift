@@ -4,20 +4,24 @@
 
 Last updated: 2026-08-14
 
-## Bilateral-Wrench Structural Identifiability Pin
+## Bilateral-Wrench Sensor Qualification Pin
 
-- Branch `research/bilateral-identifiability-8632` pins UpstreamDrift PR #8632,
-  merged as `0a0d83a5ba44e6b0d8717022f8144f3f0781e855`.
+- Branch `research/8557-sensor-qualification` pins UpstreamDrift PR #8635,
+  merged as `8e6fa91243f373be322624e894987fc63c9c0feb`.
 - The ideal two-point-force map has rank five and a one-dimensional invisible
   equal-and-opposite axial mode. One independent internal axial scalar restores
   full point-force rank.
 - The full 12-component bilateral-wrench map has rank six and nullity six, so
   one net club wrench cannot recover individual six-axis hand allocation.
-- The result is structural and instantaneous. Noise, cross-talk, moving contact
-  centers, anatomical action, intentionality, and human validation remain open;
-  #8556 remains the governed bilateral-wrench data gate.
-- The companion snapshot pins 970/970 reviewed candidates, 255 claims, and 434
-  qualified artifacts from the 214-page upstream publication.
+- The trajectory-level synthetic qualification shows why numerical net-wrench
+  closure is insufficient: net-only allocation has 11.86 N RMSE and 29.05 N
+  axial-mode RMSE. It separately quantifies noise, cross-talk correction,
+  residual calibration error, contact migration, and a combined registered case.
+- These are seeded synthetic point-force results, not device or human evidence.
+  Full bilateral wrenches, distributed contact, anatomy, intentionality, and
+  human validation remain open; #8556 remains the governed data gate.
+- The companion snapshot pins 975/975 reviewed candidates, 258 claims, and 440
+  qualified artifacts from the 215-page upstream publication.
 
 ## Typed-Slack Dynamics and Identifiability Pin
 
