@@ -32,16 +32,17 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert source["commit"] in source["bilateral_wrench_sensor_qualification_url"]
     assert source["commit"] in source["subject_scaled_spatial_geometry_url"]
     assert source["commit"] in source["subject_scaled_closed_contact_url"]
+    assert source["commit"] in source["scapulothoracic_contact_screen_url"]
     assert audit == {
         "completion_status": "complete",
-        "candidate_count": 987,
-        "reviewed_candidate_count": 987,
+        "candidate_count": 994,
+        "reviewed_candidate_count": 994,
         "unadjudicated_candidate_count": 0,
-        "registered_claim_count": 263,
-        "release_claim_count": 30,
+        "registered_claim_count": 266,
+        "release_claim_count": 31,
     }
-    assert release["pdf_pages"] == 217
-    assert release["qualified_artifact_count"] == 455
+    assert release["pdf_pages"] == 218
+    assert release["qualified_artifact_count"] == 463
     assert SHA256.fullmatch(release["claim_registry_sha256"])
     assert SHA256.fullmatch(release["pdf_sha256"])
     assert boundaries["universal_human_or_coaching_strategy"] == "not_supported"
@@ -118,6 +119,19 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert SHA256.fullmatch(closed_contact["json_sha256"])
     assert SHA256.fullmatch(closed_contact["npz_sha256"])
     assert SHA256.fullmatch(closed_contact["figure_svg_sha256"])
+    scapular = payload["scapulothoracic_contact_screen"]
+    assert scapular["paired_state_count"] == 54
+    assert scapular["fixed_contact_closed_count"] == 0
+    assert scapular["scapular_contact_closed_count"] == 31
+    assert scapular["scapular_qualified_contact_count"] == 16
+    assert scapular["scapular_bound_active_count"] == 28
+    assert scapular["fixed_coordinate_nullity"] == 2
+    assert scapular["scapular_coordinate_nullity"] == 10
+    assert scapular["adverse_contact_closed"] is False
+    assert scapular["human_or_coaching_inference"] == "unsupported"
+    assert SHA256.fullmatch(scapular["json_sha256"])
+    assert SHA256.fullmatch(scapular["npz_sha256"])
+    assert SHA256.fullmatch(scapular["figure_svg_sha256"])
 
 
 def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
@@ -126,7 +140,7 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     payload = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
     assert "Complete Claim Audit" in article
     assert payload["source"]["commit"] in article
-    assert "987 of 987" in article
+    assert "994 of 994" in article
     assert "zero unadjudicated" in article
     assert "does not validate a universal human or coaching strategy" in article
     assert "manual NotebookLM reauthentication" in article
@@ -147,6 +161,10 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     assert "234 of 234" in normalized_article
     assert "necessary-condition screen" in normalized_article
     assert "does not establish anatomical feasibility" in normalized_article
+    assert "Paired Scapulothoracic Geometry Screen" in article
+    assert "31 of 54" in normalized_article
+    assert "16 of 54" in normalized_article
+    assert "nullity rises from two to ten" in normalized_article
 
 
 def test_spatial_companion_exposes_contact_closure_before_contact_dynamics() -> None:
@@ -158,3 +176,6 @@ def test_spatial_companion_exposes_contact_closure_before_contact_dynamics() -> 
     assert "234 of 234" in companion
     assert "reduced-tree necessary condition" in companion
     assert "cannot answer whether a passive mechanism reduces timing demand" in companion
+    assert "Scapular Mobility Changes Reachability Without Identifying Strategy" in companion
+    assert "31 of 54" in companion
+    assert "nullity rises from two to ten" in companion

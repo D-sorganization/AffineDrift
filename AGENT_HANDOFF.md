@@ -4,6 +4,25 @@
 
 Last updated: 2026-08-14
 
+## Paired Scapulothoracic Geometry Pin
+
+- Branch `docs/3862-scapulothoracic-review` pins UpstreamDrift PR #8646,
+  merged as `9821ef9a210fb682860f49212ac88ce12b1909c5`.
+- MT-E09 holds trunk and club pose fixed across 54 paired states. Fixed
+  shoulder centers close 0/54; the reduced scapula-on-ellipsoid branch reaches
+  residual tolerance in 31/54 and passes both residual and optimizer-
+  termination gates in 16/54.
+- Twenty-eight states activate a screening bound, maximum shoulder-center
+  excursion is 0.101 m, and the 2.0 m adverse span remains open at 0.480 m.
+- Both contact Jacobians have rank six while coordinate nullity rises from two
+  to ten. Reachability therefore changes, but scapular/glenohumeral allocation
+  remains unidentified from contact position alone.
+- The companion snapshot now pins 994 reviewed candidates, 266 claims, 463
+  qualified artifacts, and the 218-page upstream publication.
+- This is not anatomical, muscular, force/work, passive-transfer, delivery, or
+  human-strategy evidence. Validated articulated anatomy, calibrated grip
+  contact, paired forward dynamics, and governed human data remain open gates.
+
 ## Subject-Scaled Closed-Contact Feasibility Pin
 
 - Branch `docs/8557-closed-contact` pins UpstreamDrift PR #8642, merged as
