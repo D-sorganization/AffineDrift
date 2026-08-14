@@ -27,16 +27,17 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert source["commit"] in source["readiness_url"]
     assert source["commit"] in source["timing_viability_url"]
     assert source["commit"] in source["typed_slack_url"]
+    assert source["commit"] in source["bilateral_wrench_identifiability_url"]
     assert audit == {
         "completion_status": "complete",
-        "candidate_count": 962,
-        "reviewed_candidate_count": 962,
+        "candidate_count": 970,
+        "reviewed_candidate_count": 970,
         "unadjudicated_candidate_count": 0,
-        "registered_claim_count": 252,
-        "release_claim_count": 24,
+        "registered_claim_count": 255,
+        "release_claim_count": 26,
     }
-    assert release["pdf_pages"] == 212
-    assert release["qualified_artifact_count"] == 428
+    assert release["pdf_pages"] == 214
+    assert release["qualified_artifact_count"] == 434
     assert SHA256.fullmatch(release["claim_registry_sha256"])
     assert SHA256.fullmatch(release["pdf_sha256"])
     assert boundaries["universal_human_or_coaching_strategy"] == "not_supported"
@@ -66,6 +67,17 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert SHA256.fullmatch(typed_slack["json_sha256"])
     assert SHA256.fullmatch(typed_slack["npz_sha256"])
     assert SHA256.fullmatch(typed_slack["figure_sha256"])
+    bilateral = payload["bilateral_wrench_identifiability"]
+    assert bilateral["point_force_map_rank"] == 5
+    assert bilateral["point_force_map_nullity"] == 1
+    assert bilateral["augmented_point_force_map_rank"] == 6
+    assert bilateral["full_bilateral_wrench_map_rank"] == 6
+    assert bilateral["full_bilateral_wrench_map_nullity"] == 6
+    assert bilateral["invisible_point_force_mode"] == "equal_and_opposite_axial"
+    assert bilateral["human_validation"] == "untested"
+    assert bilateral["noise_robust_practical_identifiability"] == "not_established"
+    assert SHA256.fullmatch(bilateral["json_sha256"])
+    assert SHA256.fullmatch(bilateral["figure_sha256"])
 
 
 def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
@@ -74,12 +86,14 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     payload = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
     assert "Complete Claim Audit" in article
     assert payload["source"]["commit"] in article
-    assert "962 of 962" in article
+    assert "970 of 970" in article
     assert "zero unadjudicated" in article
     assert "does not validate a universal human or coaching strategy" in article
     assert "manual NotebookLM reauthentication" in article
     assert "nine independently tracked points" in article
     assert "Casting remains unresolved as one universal construct" in normalized_article
     assert "One transmitted-output channel therefore does not identify" in article
+    assert "equal-and-opposite axial force mode" in article
+    assert "does not identify muscle or scapular strategy" in normalized_article
     assert "larger state-triggered timing region" in normalized_article
     assert "no sustained half-error recovery" in normalized_article

@@ -4,6 +4,21 @@
 
 Last updated: 2026-08-14
 
+## Bilateral-Wrench Structural Identifiability Pin
+
+- Branch `research/bilateral-identifiability-8632` pins UpstreamDrift PR #8632,
+  merged as `0a0d83a5ba44e6b0d8717022f8144f3f0781e855`.
+- The ideal two-point-force map has rank five and a one-dimensional invisible
+  equal-and-opposite axial mode. One independent internal axial scalar restores
+  full point-force rank.
+- The full 12-component bilateral-wrench map has rank six and nullity six, so
+  one net club wrench cannot recover individual six-axis hand allocation.
+- The result is structural and instantaneous. Noise, cross-talk, moving contact
+  centers, anatomical action, intentionality, and human validation remain open;
+  #8556 remains the governed bilateral-wrench data gate.
+- The companion snapshot pins 970/970 reviewed candidates, 255 claims, and 434
+  qualified artifacts from the 214-page upstream publication.
+
 ## Typed-Slack Dynamics and Identifiability Pin
 
 - Branch `research/typed-slack-evidence` pins UpstreamDrift PR #8626, merged as
