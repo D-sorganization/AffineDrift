@@ -2,7 +2,23 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
+
+## Common-Phase Timing Viability and Recovery Pin
+
+- Branch `research/timing-viability-8557` advances the public companion to
+  UpstreamDrift PR #8625, merged at
+  `8ccbbcc598b168905591508fe35bc58b4924ccea`.
+- The pinned study contains 60 paired policy/load/phase cases and 120
+  trajectories. Clock timing has the larger task-viability region under every
+  registered guard set; neither policy shows sustained half-error recovery.
+  This is a reduced planar model result, not a human timing or coaching result.
+- The complete audit now contains 959/959 reviewed candidates, 251 claims,
+  zero unadjudicated entries, and 423 qualified artifacts. Seven of the nine
+  handwritten-agenda points have bounded/partial/negative model answers; two
+  remain unresolved or definition-gated.
+- UpstreamDrift #8556 remains open at the governed bilateral-wrench data gate.
+  NotebookLM collection review still requires manual Google reauthentication.
 
 ## Complete Proximal-to-Distal Claim Audit and Agenda Pin
 
