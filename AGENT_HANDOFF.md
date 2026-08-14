@@ -4,18 +4,21 @@
 
 Last updated: 2026-08-13
 
-## Complete Proximal-to-Distal Claim Audit Pin
+## Complete Proximal-to-Distal Claim Audit and Agenda Pin
 
-- Branch `research/proximal-distal-complete-audit` pins the canonical complete
-  audit at UpstreamDrift merge `41befe930203f9e1c38ebb97c83e02ea6753d4d9`.
-- The public article and machine snapshot expose 925/925 reviewed candidates,
-  240 bounded claims, zero unadjudicated entries, release hashes, and the main
-  adverse scientific boundaries. The site does not promote audit completion as
-  human validation or coaching authority.
+- Branch `research/momentum-readiness-8557` pins the canonical complete audit
+  and nine-point source-agenda readiness result at UpstreamDrift merge
+  `0a0c44168194bc953990aac662d44eb1ffd0c3ff`.
+- The public article and machine snapshot expose 956/956 reviewed candidates,
+  250 bounded claims, zero unadjudicated entries, nine source questions,
+  release hashes, and the main adverse scientific boundaries. Five questions
+  have bounded/partial/negative-rule answers and four remain unresolved or
+  definition-gated. The site does not promote audit completion as human
+  validation or coaching authority.
 - #8556 remains an external governed bilateral-wrench data gate. NotebookLM
   collection mining remains blocked on manual interactive reauthentication.
-- PR #3849 merged the audit pin as `745168a8`. Follow-up PR #3850 carries the
-  required SPEC version 1.0.193 freshness correction through protected merge.
+- PR #3849 merged the prior audit pin as `745168a8`; this branch supersedes its
+  counts and exact upstream evidence pin without changing the authority split.
 
 ## Current Work
 
