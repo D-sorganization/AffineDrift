@@ -4,6 +4,20 @@
 
 Last updated: 2026-08-14
 
+## Typed-Slack Dynamics and Identifiability Pin
+
+- Branch `research/typed-slack-evidence` pins UpstreamDrift PR #8626, merged as
+  `92100115ea0be0d6744dcf7a4504ec8453fae6fa`.
+- Five declared slack classes are exercised separately under two synthetic
+  excitations. Four mechanical surrogates close their work-energy ledgers to
+  `5.13e-10 J`; the control deadband remains a nonmechanical signal map.
+- Full local sensitivity rank does not identify a class. Contact and biological
+  surrogate outputs differ by only 1.96% normalized RMSE, so global benefit,
+  necessity, intentionality, delivery, anatomical, and human claims remain open.
+- The companion snapshot now pins 962/962 reviewed candidates, 252 claims,
+  428 qualified artifacts, and an 8/9 source-agenda readiness result. #8556
+  remains the governed bilateral-wrench data gate.
+
 ## Common-Phase Timing Viability and Recovery Pin
 
 - Branch `research/timing-viability-8557` advances the public companion to
