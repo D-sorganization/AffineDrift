@@ -31,16 +31,17 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert source["commit"] in source["bilateral_wrench_identifiability_url"]
     assert source["commit"] in source["bilateral_wrench_sensor_qualification_url"]
     assert source["commit"] in source["subject_scaled_spatial_geometry_url"]
+    assert source["commit"] in source["subject_scaled_closed_contact_url"]
     assert audit == {
         "completion_status": "complete",
-        "candidate_count": 982,
-        "reviewed_candidate_count": 982,
+        "candidate_count": 987,
+        "reviewed_candidate_count": 987,
         "unadjudicated_candidate_count": 0,
-        "registered_claim_count": 261,
-        "release_claim_count": 29,
+        "registered_claim_count": 263,
+        "release_claim_count": 30,
     }
-    assert release["pdf_pages"] == 216
-    assert release["qualified_artifact_count"] == 448
+    assert release["pdf_pages"] == 217
+    assert release["qualified_artifact_count"] == 455
     assert SHA256.fullmatch(release["claim_registry_sha256"])
     assert SHA256.fullmatch(release["pdf_sha256"])
     assert boundaries["universal_human_or_coaching_strategy"] == "not_supported"
@@ -105,6 +106,18 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert SHA256.fullmatch(geometry["json_sha256"])
     assert SHA256.fullmatch(geometry["npz_sha256"])
     assert SHA256.fullmatch(geometry["figure_svg_sha256"])
+    closed_contact = payload["subject_scaled_closed_contact"]
+    assert closed_contact["total_sample_count"] == 234
+    assert closed_contact["feasible_sample_count"] == 234
+    assert closed_contact["maximum_contact_error_m"] < 1e-9
+    assert closed_contact["constraint_jacobian_rank_values"] == [6]
+    assert closed_contact["minimum_joint_limit_margin_rad"] > 0.1
+    assert closed_contact["minimum_collision_clearance_m"] > 0.03
+    assert closed_contact["anatomical_feasibility"] == "not_established"
+    assert closed_contact["human_or_coaching_inference"] == "unsupported"
+    assert SHA256.fullmatch(closed_contact["json_sha256"])
+    assert SHA256.fullmatch(closed_contact["npz_sha256"])
+    assert SHA256.fullmatch(closed_contact["figure_svg_sha256"])
 
 
 def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
@@ -113,7 +126,7 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     payload = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
     assert "Complete Claim Audit" in article
     assert payload["source"]["commit"] in article
-    assert "982 of 982" in article
+    assert "987 of 987" in article
     assert "zero unadjudicated" in article
     assert "does not validate a universal human or coaching strategy" in article
     assert "manual NotebookLM reauthentication" in article
@@ -131,6 +144,9 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     assert "local rank does not prove contact closure" in normalized_article
     assert "0.171--0.616 m" in article
     assert "closed-contact inverse kinematics" in normalized_article
+    assert "234 of 234" in normalized_article
+    assert "necessary-condition screen" in normalized_article
+    assert "does not establish anatomical feasibility" in normalized_article
 
 
 def test_spatial_companion_exposes_contact_closure_before_contact_dynamics() -> None:
@@ -139,4 +155,6 @@ def test_spatial_companion_exposes_contact_closure_before_contact_dynamics() -> 
     assert "0.171--0.616 m" in companion
     assert "rank-six bilateral contact Jacobian" in companion
     assert "respecting joint limits and collisions" in companion
+    assert "234 of 234" in companion
+    assert "reduced-tree necessary condition" in companion
     assert "cannot answer whether a passive mechanism reduces timing demand" in companion
