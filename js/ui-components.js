@@ -393,8 +393,8 @@ export function initLightbox() {
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
     closeBtn.className = "lightbox-close";
-    closeBtn.setAttribute("aria-label", "Close zoom");
-    closeBtn.setAttribute("title", "Close zoom");
+    closeBtn.setAttribute("aria-label", "Close zoom (Esc)");
+    closeBtn.setAttribute("title", "Close zoom (Esc)");
     const svgClose = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svgClose.setAttribute("width", "24"); svgClose.setAttribute("height", "24");
     svgClose.setAttribute("viewBox", "0 0 24 24"); svgClose.setAttribute("fill", "none");
