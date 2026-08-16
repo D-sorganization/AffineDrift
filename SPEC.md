@@ -824,3 +824,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-10 | 1.0.153 | fix(security): Handle JSON.parse exceptions securely from localStorage in .qmd templates. |
 | 2026-08-11 | 1.0.153 | Optimized bibliography sorting to eliminate redundant string inclusion checks when not sorting by relevance |
 | 2026-08-14 | 1.0.153 | **UX Improvement:** Added keyboard shortcut hint (Esc) to the image lightbox close button for better UX visibility. |
+| 2026-08-16 | 1.0.153 | **Bolt:** Optimized iLQR solver matrix operations and line search loops for improved performance. |
