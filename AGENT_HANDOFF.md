@@ -2,7 +2,39 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-14
+Last updated: 2026-08-16
+
+## Articulated Contact, Distributed Grip, and Passive Shaft Pin
+
+- Branch `docs/8684-companion-catchup` advances the companion pin from
+  UpstreamDrift `c0507d414fa743cddb817a01f1fe96ac4f8b7226` to
+  `6ab07a580a3b59d95b063fa4dbd5977ece64eb76`, closing a three-tier lag. It
+  covers the articulated contact children (#8677, #8679, #8681, #8683),
+  distributed grip discretization (#8696), and passive shaft bending/torsion
+  (#8715). Every pinned scalar and SHA-256 was re-derived from that commit.
+- The audit now exposes 1,047/1,047 adjudicated candidates, 291 claims, 546
+  qualified artifacts, and a 229-page publication. Release review is
+  **complete** (39/39 reviewed, zero open) where the previous pin had ten open
+  reviews — but all 39 release claims still carry a scientifically open gate.
+  The article, snapshot, and contract test all state that review completion is
+  traceability, not validation.
+- The shaft result is adverse and is published as such: only **126 of 384**
+  coupled-versus-rigid cells match on peak load and dissipated work, and their
+  final speed differences span `-0.0285` to `+0.0212` m/s. A universal
+  passive-shaft speed benefit is rejected at this tier. Two coarse-step torsion
+  probes that left the linear domain are recorded as excluded, not dropped.
+- The distributed-grip pin is a discretization-convergence result only. Total
+  stiffness/damping are held at 1800 N/m and 18 N·s/m across 1/3/5 stations, so
+  it does not identify grip pressure, finger anatomy, friction, or tissue.
+- The articulated forward-contact tier is right-censored at its registered 5 ms
+  horizon; that is a numerical qualification interval, not late downswing or
+  impact.
+- **#8719, the finite ground/free-moment child, is deliberately not pinned.**
+  It was still an open upstream PR (#8723) when this pin was cut. A follow-up
+  pin should advance the snapshot only after that merge lands on UD main.
+- Verified locally: the 5-test contract suite passes and fails closed under
+  tampered values; a cross-repo checker re-derived every hash, count, PDF
+  page/link/outline figure, and per-tier scalar from the pinned commit.
 
 ## Nine-Point Momentum-Transfer Reconciliation
 
