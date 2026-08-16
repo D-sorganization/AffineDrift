@@ -122,3 +122,6 @@
 ## 2026-08-14 - Keyboard shortcut hints in native tooltips
 **Learning:** Users might not realize that components like image zoom lightboxes can be closed using the Escape key, which is standard accessibility and UX behavior. While we support the keydown listener, not showing it leaves it undiscoverable.
 **Action:** Always append keyboard shortcut hints (like "(Esc)") to the `title` and `aria-label` attributes of action buttons when standard keyboard shortcuts are supported.
+## 2026-08-16 - Wire up orphaned accessibility features
+**Learning:** Found that advanced accessibility initialization functions (focus management, high contrast mode, and motion preferences) were defined in `js/accessibility.js` but never exported or invoked in the main execution flow, leaving those features completely inactive across the site.
+**Action:** Always verify that newly implemented global feature modules are properly hooked into the main application lifecycle or entry point scripts.
