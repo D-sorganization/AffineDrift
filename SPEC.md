@@ -29,8 +29,8 @@ Last-Updated: 2026-08-14T16:55:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.202                                          |
-| **Last Spec Update**    | 2026-08-14                                       |
+| **Spec Version**        | 1.0.203                                          |
+| **Last Spec Update**    | 2026-08-16                                       |
 
 ## 2. Purpose & Mission
 
@@ -825,3 +825,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-11 | 1.0.153 | Optimized bibliography sorting to eliminate redundant string inclusion checks when not sorting by relevance |
 | 2026-08-14 | 1.0.153 | **UX Improvement:** Added keyboard shortcut hint (Esc) to the image lightbox close button for better UX visibility. |
 | 2026-08-16 | 1.0.153 | ui(accessibility): Wired up orphaned Phase 2 accessibility functions (`initMotionPreferences`, `initHighContrastMode`, `initFocusManagement`) in `js/main.js` to actually apply them globally across the site. |
+| 2026-08-16 | 1.0.203 | docs(research): Advanced the proximal-distal companion pin from UpstreamDrift `c0507d41` to `6ab07a58`, covering the articulated contact tier (#8677, #8679, #8681, #8683), distributed grip discretization (#8696), and passive shaft bending/torsion (#8715). Records 1,047 adjudicated candidates, 291 claims, complete release review with all 39 gates still scientifically open, and the adverse 126-of-384 shaft result rejecting a universal passive-shaft speed benefit. |

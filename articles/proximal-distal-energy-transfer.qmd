@@ -70,16 +70,21 @@ strategy.
 
 ::: {.callout-important title="Complete Claim Audit"}
 The canonical paper-wide audit is pinned to
-[UpstreamDrift commit `c0507d41`](https://github.com/D-sorganization/UpstreamDrift/commit/c0507d414fa743cddb817a01f1fe96ac4f8b7226).
-It adjudicates **994 of 994** narrative candidates against 266 bounded claim
+[UpstreamDrift commit `6ab07a58`](https://github.com/D-sorganization/UpstreamDrift/commit/6ab07a580a3b59d95b063fa4dbd5977ece64eb76).
+It adjudicates **1,047 of 1,047** narrative candidates against 291 bounded claim
 records, leaving **zero unadjudicated** candidates. The local
 [audit snapshot](../data/proximal_distal_energy_transfer/complete_claim_audit_snapshot.json)
 records the exact registry and PDF hashes and the principal adverse findings.
-This is a completed narrative-candidate census, not release-level closure:
-**ten of 31 release claims remain open** for review.
+
+Release review is now complete as well: **all 39 of 39 release claims have been
+reviewed**, up from ten open reviews at the previous pin. Review completion is a
+traceability property, not a scientific verdict. It means each release claim
+carries explicit atomic support, controls, falsifiers, boundaries, and a declared
+remaining gate — and **all 39 still carry a scientifically open gate**. No claim
+here is validated by having been reviewed.
 
 The reviewed handwritten momentum-transfer agenda is also preserved as
-[nine independently tracked points](https://github.com/D-sorganization/UpstreamDrift/blob/c0507d414fa743cddb817a01f1fe96ac4f8b7226/docs/research/proximal_distal_energy_transfer/data/momentum_transfer_readiness_audit.json).
+[nine independently tracked points](https://github.com/D-sorganization/UpstreamDrift/blob/6ab07a580a3b59d95b063fa4dbd5977ece64eb76/docs/research/proximal_distal_energy_transfer/data/momentum_transfer_readiness_audit.json).
 Eight have bounded model answers, partial answers, or a supported rejection of
 a general rule. **MTQ-06, timing precision, remains unresolved** beyond an
 adverse registered planar comparison and at the human level. Casting has a
@@ -103,9 +108,10 @@ human stage.
 Audit completion means that each statement has an explicit evidence boundary;
 it does not validate a universal human or coaching strategy. In particular,
 proximal or torso speed is not a standalone transfer rule, the current coupled
-shaft baseline fails its quantitative small-deflection screen, a local
-task-Jacobian partition is not evidence of a neural synergy, and governed
-bilateral human grip-wrench validation remains unexecuted. The Biomechanics and
+shaft baseline fails its quantitative small-deflection screen, a universal
+passive-shaft speed benefit is rejected at the declared synthetic first-mode
+tier, a local task-Jacobian partition is not evidence of a neural synergy, and
+governed bilateral human grip-wrench validation remains unexecuted. The Biomechanics and
 Nonlinear Control collection review also remains blocked on manual NotebookLM reauthentication;
 collection output will not be treated as evidence without
 independent verification of the original sources.
@@ -461,6 +467,95 @@ does not establish anatomy, muscle action, contact force, power, work, passive
 transfer, club delivery, or a human strategy. Those claims require a validated
 articulated shoulder, subject-specific geometry where governed, calibrated
 distributed grip contact, paired forward dynamics, and held-out human data.
+
+### From Closed States to Bounded Articulated Forward Contact
+
+The articulated tier is qualified one rung at a time, and each rung is a
+separate registered gate rather than a step toward a foregone conclusion.
+
+First, the 20-coordinate articulated tree is checked as *dynamics*, not merely
+as geometry. Across the 234 closed common states, native MuJoCo and Pinocchio
+agree on the mass matrix, bias terms, and inverse dynamics to relative errors of
+$8.6\times10^{-13}$, $1.4\times10^{-12}$, and $1.8\times10^{-12}$; the mass
+matrix is exactly symmetric and its smallest eigenvalue stays positive at
+$1.39\times10^{-4}$. These are
+[common-state operators](https://github.com/D-sorganization/UpstreamDrift/blob/6ab07a580a3b59d95b063fa4dbd5977ece64eb76/docs/research/proximal_distal_energy_transfer/data/articulated_inertia_cross_engine.json),
+not a forward trajectory, and net joint dynamics do not identify muscle action.
+
+Second, bilateral compliant point forces are projected into that tree at the
+same states with zero integration steps. Peak contact force reaches 2.71 N,
+action--reaction residual is exactly zero, virtual-power residual is
+$3.9\times10^{-16}$ W, and contact dissipation power is negative everywhere
+(between $-0.0906$ and $-0.0892$ W), so the declared contact law removes energy
+rather than supplying it. A zero-preload control produces at most
+$2.1\times10^{-7}$ N. Initial accelerations match across engines to
+$4.9\times10^{-13}$ relative error.
+
+Third, those states are integrated through a **bounded 5 ms horizon** — 756
+trajectories over 18 states, seven variants, and three timesteps. Peak contact
+force reaches 17.76 N, maximum attachment separation stays at 1.23 mm against a
+10 mm screening threshold, and the normalized work--energy residual refines
+monotonically from 0.00738 to 0.00170 to 0.000854 as the step halves. Engine
+parity holds to $1.5\times10^{-14}$ on trajectories.
+
+The horizon is the boundary. Five milliseconds is a numerical qualification
+interval, not late downswing and not impact; absence of a registered failure
+before 5 ms is **right-censored** and establishes nothing beyond it. The
+attachments are bilateral Kelvin--Voigt points, not unilateral biological
+contact.
+
+Fourth, typed unilateral slack is exercised on the same tree: 1,944
+trajectories over 18 conditions with 0.5 mm and 1.5 mm dead zones. Opening
+events occur in 108 cells and reattachment in 216, with at most two transitions
+per cell and peak contact force of 23.64 N. Residuals again refine
+monotonically (0.01923 to 0.01097 to 0.00480) and active-set parity failures are
+zero. Contact events can therefore be *represented and compared* under matched
+states — but the
+[typed-slack evidence](https://github.com/D-sorganization/UpstreamDrift/blob/6ab07a580a3b59d95b063fa4dbd5977ece64eb76/docs/research/proximal_distal_energy_transfer/data/articulated_slack_atlas.json)
+does not identify timing economy, self-correction, biological slack, or intent.
+
+### Distributed Grip and Passive Shaft Change the Model, Not the Verdict
+
+Two further pathways replace idealized elements with distributed ones, and both
+were qualified against the same registered gates.
+
+The **distributed grip** study replaces one point per hand with one, three, or
+five tension fibers while holding total grip stiffness at 1800 N/m and damping
+at 18 N$\cdot$s/m, so station count changes without silently stiffening the
+grip. Across 288 trajectories nested at 4, 10, 25, and 50 ms, peak station force
+reaches 4.03 N and the worst station carries 77.0% of the load. No opening
+transitions occur. The time residual refines 0.03119 to 0.01560, and the
+three-versus-five-station difference at the fine step is 0.00355, so the
+discretization is converging. This establishes **discretization sensitivity**;
+it does not identify measured grip pressure, finger anatomy, friction, or
+tissue.
+
+The **passive shaft** study adds two tip-normalized first bending modes plus tip
+twist. Bending inherits a 24-element finite-element authority at 5.2399 Hz with
+zero relative error against that reference; declared tapered hollow-section
+torsion is 70.1260 Hz. Across 384 trajectories, maximum tip deflection is
+1.696 mm and maximum twist is 0.00186 rad — small, as the linear-domain screen
+requires. Two coarse-step torsion probes at 1.0 ms and 0.50 ms left the declared
+linear domain and are **excluded and reported** rather than quietly dropped; the
+atlas uses the 0.25/0.125 ms pair, whose residual refines 0.00780 to 0.00390.
+
+The headline result is adverse to the intuitive reading. Of 384
+coupled-versus-rigid cells, only **126 match** within 5% on both peak load and
+dissipated work. Among those matched cells the final club-speed difference spans
+$-0.0285$ to $+0.0212$ m/s — negative and positive. A **universal passive-shaft
+speed benefit is therefore rejected** at this tier. The
+[shaft atlas](https://github.com/D-sorganization/UpstreamDrift/blob/6ab07a580a3b59d95b063fa4dbd5977ece64eb76/docs/research/proximal_distal_energy_transfer/data/articulated_shaft_atlas.json)
+also retains its own limits: the structural values are synthetic references and
+not equipment calibration; a committed six-mode beam shows materially larger
+discrepancy under short high-frequency loading than under slow loading; ground
+reaction and free moment are absent from this tier entirely; and post-hoc
+matching is descriptive rather than a randomized identification of a causal
+shaft effect.
+
+The finite ground and free-moment pathway is the next child under
+[epic #8684](https://github.com/D-sorganization/UpstreamDrift/issues/8684) and is
+**not pinned here** — this companion advances only to evidence already merged
+upstream.
 
 # Arm--Wrist Allocation and Transmission Preload {#sec-allocation-preload}
 
