@@ -57,6 +57,9 @@ import {
     initAriaLabels,
     initReadingTime,
     initReadingProgress,
+    initMotionPreferences,
+    initHighContrastMode,
+    initFocusManagement,
 } from "./accessibility.js";
 
 import { initPDFDownload } from "./pdf.js";
@@ -83,6 +86,11 @@ runOnDomReady(function () {
     initBackToTop();
     initExportToPdf();
     initLightbox();
+
+    // --- Phase 2 Accessibility ---
+    initMotionPreferences();
+    initHighContrastMode();
+    initFocusManagement();
 
     // --- External Links ---
     initRepoLinks();
