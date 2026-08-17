@@ -70,21 +70,21 @@ strategy.
 
 ::: {.callout-important title="Complete Claim Audit"}
 The canonical paper-wide audit is pinned to
-[UpstreamDrift commit `6ab07a58`](https://github.com/D-sorganization/UpstreamDrift/commit/6ab07a580a3b59d95b063fa4dbd5977ece64eb76).
-It adjudicates **1,047 of 1,047** narrative candidates against 291 bounded claim
+[UpstreamDrift commit `a1a61399`](https://github.com/D-sorganization/UpstreamDrift/commit/a1a613999eb0c744da96caa040941955eb210a21).
+It adjudicates **1,063 of 1,063** narrative candidates against 295 bounded claim
 records, leaving **zero unadjudicated** candidates. The local
 [audit snapshot](../data/proximal_distal_energy_transfer/complete_claim_audit_snapshot.json)
 records the exact registry and PDF hashes and the principal adverse findings.
 
-Release review is now complete as well: **all 39 of 39 release claims have been
+Release review is now complete as well: **all 40 of 40 release claims have been
 reviewed**, up from ten open reviews at the previous pin. Review completion is a
 traceability property, not a scientific verdict. It means each release claim
 carries explicit atomic support, controls, falsifiers, boundaries, and a declared
-remaining gate — and **all 39 still carry a scientifically open gate**. No claim
+remaining gate — and **all 40 still carry a scientifically open gate**. No claim
 here is validated by having been reviewed.
 
 The reviewed handwritten momentum-transfer agenda is also preserved as
-[nine independently tracked points](https://github.com/D-sorganization/UpstreamDrift/blob/6ab07a580a3b59d95b063fa4dbd5977ece64eb76/docs/research/proximal_distal_energy_transfer/data/momentum_transfer_readiness_audit.json).
+[nine independently tracked points](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/momentum_transfer_readiness_audit.json).
 Eight have bounded model answers, partial answers, or a supported rejection of
 a general rule. **MTQ-06, timing precision, remains unresolved** beyond an
 adverse registered planar comparison and at the human level. Casting has a
@@ -552,10 +552,54 @@ reaction and free moment are absent from this tier entirely; and post-hoc
 matching is descriptive rather than a randomized identification of a causal
 shaft effect.
 
-The finite ground and free-moment pathway is the next child under
-[epic #8684](https://github.com/D-sorganization/UpstreamDrift/issues/8684) and is
-**not pinned here** — this companion advances only to evidence already merged
-upstream.
+### The Ground Pathway Fails Its Own Preregistered Screen
+
+The final child under [epic #8684](https://github.com/D-sorganization/UpstreamDrift/issues/8684)
+adds a finite planar base: ground translation, a separately identifiable free
+pitch moment, and a coupled pathway, each against an exact fixed-base
+comparator. The atlas runs 384 primary trajectories plus 192 rigid-shaft and
+horizontal-restraint-removed controls across two engines and two timesteps.
+Peak ground force reaches 559.09 N and peak intrinsic free moment 14.58 N$\cdot$m.
+Every registered numerical gate passes: the worst normalized energy residual
+refines 0.01986 to 0.00995, engine parity holds to $1.8\times10^{-10}$, and no
+primary or control cell fails a numerical or parity check.
+
+The preregistered estimand then returns the sharpest negative result in the
+program. Requiring a 5% match on **both** peak grip load and total dissipated
+work, coupled versus fixed, admits **0 of 384 cells**. The reason is structural
+rather than incidental: only the coupled pathway contains ground damping, so
+total dissipated work differs by a factor of 1.72--2.00 by construction. Peak
+load agrees closely — its error range is 0 to 0.49 — but the work criterion
+cannot be met. Loosening the tolerance does not rescue it at 10%, 25%, 50%, or
+100%; only a **200%** tolerance admits any cell at all, at which point every cell
+matches and the screen has stopped discriminating.
+
+A labeled post-hoc screen that redefines dissipated work as grip plus shaft only,
+excluding ground damping, admits 60 cells at 5%. Among those, club-speed
+differences run from $-0.00075$ to $+0.01394$ m/s, with 20 positive and 40
+negative. This is recorded as a **sensitivity, not a replacement estimand**; it
+was chosen after seeing the primary failure, and the upstream evidence labels it
+as such.
+
+One reading must be resisted explicitly. At the 50 ms horizon the unmatched
+translation and coupled pathways are uniformly faster than the fixed base — all
+48 cells positive, up to $+0.177$ m/s. Those cells fail the registered load and
+work match. **They are not evidence of a ground-pathway delivery benefit**, and
+reporting them as such would invert the study's actual finding.
+
+The tier also demonstrates that initialization is not innocuous. At the 0.125 ms
+step, natural-zero, gravity-only, and conditional-equilibrium starts produce peak
+ground forces of 32.8, 565.5, and 510.3 N and 4 ms club speeds of 0.264, 1.908,
+and 0.946 m/s — an order of magnitude apart from the same model. The atlas uses
+natural-zero for exact killswitch comparability, and the conditional solve is
+retained as a separate branch because it balances only base generalized forces,
+not the whole mechanism.
+
+The [ground evidence](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/articulated_ground_atlas.json)
+models a linear planar translation and free pitch moment. It is not unilateral
+normal contact, Coulomb friction, foot segmentation, or measured pressure; it is
+not force-plate calibrated; and it ends at 50 ms, so it cannot describe the whole
+downswing or impact.
 
 # Arm--Wrist Allocation and Transmission Preload {#sec-allocation-preload}
 
