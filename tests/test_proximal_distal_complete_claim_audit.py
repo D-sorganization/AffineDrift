@@ -13,6 +13,7 @@ COMPANION = ROOT / "articles/proximal_distal_companion/chapters"
 SPATIAL_COMPANION = COMPANION / "ch20_plane_to_space.qmd"
 GRIP_COMPANION = COMPANION / "ch12_two_hands_one_wrench.qmd"
 SHAFT_COMPANION = COMPANION / "ch15_shaft_memory.qmd"
+GROUND_COMPANION = COMPANION / "ch16_ground_conversation.qmd"
 SHA40 = re.compile(r"[0-9a-f]{40}\Z")
 SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 
@@ -43,27 +44,30 @@ def test_complete_claim_audit_snapshot_is_exact_and_fail_closed() -> None:
     assert source["commit"] in source["articulated_slack_atlas_url"]
     assert source["commit"] in source["articulated_distributed_grip_atlas_url"]
     assert source["commit"] in source["articulated_shaft_atlas_url"]
+    assert source["commit"] in source["articulated_ground_atlas_url"]
+    assert source["commit"] in source["articulated_ground_diagnostic_url"]
+    assert source["commit"] in source["articulated_ground_posthoc_sensitivity_url"]
     assert audit["completion_status"] == "complete"
     assert audit["completion_layer"] == "narrative_candidate_census"
-    assert audit["candidate_count"] == 1047
-    assert audit["reviewed_candidate_count"] == 1047
+    assert audit["candidate_count"] == 1063
+    assert audit["reviewed_candidate_count"] == 1063
     assert audit["unadjudicated_candidate_count"] == 0
-    assert audit["registered_claim_count"] == 291
+    assert audit["registered_claim_count"] == 295
     # Release review is complete, but completion is traceability, not validation:
     # every release claim must still carry a scientifically open gate.
     assert audit["release_review_completion_status"] == "complete"
-    assert audit["release_claim_count"] == 39
+    assert audit["release_claim_count"] == 40
     assert audit["open_release_claim_count"] == 0
     assert audit["open_release_claim_keys"] == []
     assert audit["scientifically_open_gate_count"] == audit["release_claim_count"]
     assert (
         "does not mean any claim is scientifically validated" in audit["review_completion_meaning"]
     )
-    assert release["pdf_pages"] == 229
-    assert release["pdf_bytes"] == 1733358
-    assert release["pdf_uri_links"] == 189
+    assert release["pdf_pages"] == 231
+    assert release["pdf_bytes"] == 1764016
+    assert release["pdf_uri_links"] == 192
     assert release["pdf_outline_entries"] == 246
-    assert release["qualified_artifact_count"] == 546
+    assert release["qualified_artifact_count"] == 564
     assert SHA256.fullmatch(release["claim_registry_sha256"])
     assert SHA256.fullmatch(release["pdf_sha256"])
     assert boundaries["universal_human_or_coaching_strategy"] == "not_supported"
@@ -166,6 +170,7 @@ def test_articulated_tier_blocks_are_exact_and_retain_their_boundaries() -> None
         "articulated_slack_atlas",
         "articulated_distributed_grip_atlas",
         "articulated_shaft_atlas",
+        "articulated_ground_atlas",
     ):
         block = payload[key]
         assert SHA256.fullmatch(block["json_sha256"])
@@ -245,12 +250,50 @@ def test_articulated_tier_blocks_are_exact_and_retain_their_boundaries() -> None
     assert shaft["calibration_status"] == "synthetic_reference_not_equipment_calibrated"
     assert shaft["support_boundary"] == "ground reaction and free moment are absent"
 
+    ground = payload["articulated_ground_atlas"]
+    assert ground["ground_activations"] == ["fixed", "translation", "free_moment", "coupled"]
+    assert ground["primary_trajectory_count"] == 384
+    assert ground["control_trajectory_count"] == 192
+    assert ground["all_registered_gates_passed"] is True
+    assert ground["failed_primary_numerical_cell_count"] == 0
+    assert ground["failed_control_numerical_cell_count"] == 0
+    assert ground["failed_primary_parity_cell_count"] == 0
+    assert ground["failed_control_parity_cell_count"] == 0
+    ground_residuals = ground["time_refinement_worst_normalized_residual"]
+    assert ground_residuals == sorted(ground_residuals, reverse=True)
+
+    # The preregistered estimand admits nothing. This is the primary result and it
+    # must not be softened, and the post-hoc screen must never stand in for it.
+    primary = ground["preregistered_primary"]
+    assert primary["matched_cell_count"] == 0
+    assert primary["total_cell_count"] == 384
+    assert primary["tolerance_required_for_any_match"] == 2.0
+    low_work, high_work = primary["total_dissipated_work_error_range"]
+    assert low_work > 1.0 and high_work > 1.0
+    assert "no coupled-versus-fixed cell survives" in primary["verdict"]
+
+    posthoc = ground["posthoc_nonground_dissipation_screen"]
+    assert posthoc["status"].startswith("post_hoc_sensitivity_does_not_replace")
+    assert posthoc["matched_cell_count_at_five_percent"] == 60
+    # the post-hoc screen is mostly negative; it is not a disguised win
+    assert posthoc["speed_difference_negative_count"] == 40
+    assert posthoc["speed_difference_positive_count"] == 20
+    assert posthoc["speed_difference_negative_count"] > posthoc["speed_difference_positive_count"]
+    assert "must not be read as a ground-pathway benefit" in ground["unmatched_pathway_speed_note"]
+    assert ground["ground_pathway_delivery_benefit"] == "not_established"
+
+    # initialization changes the answer by an order of magnitude; keep it visible
+    init = ground["initialization_sensitivity"]
+    assert init["atlas_initialization"] == "natural_zero"
+    assert init["gravity_only_peak_ground_force_n"] > 10 * init["natural_zero_peak_ground_force_n"]
+    assert init["gravity_only_club_speed_m_s"] > 5 * init["natural_zero_club_speed_m_s"]
+
     boundaries = payload["principal_boundaries"]
     assert boundaries["universal_passive_shaft_speed_benefit"].startswith("rejected")
     assert boundaries["distributed_grip_pressure_or_finger_anatomy"] == "not_identified"
     assert boundaries["articulated_forward_contact"].startswith("right_censored")
-    # the ground pathway is still an open upstream child and must not be pinned here
-    assert boundaries["finite_ground_reaction_and_free_moment"].startswith("not_yet_pinned")
+    assert "zero_of_384" in boundaries["finite_ground_reaction_and_free_moment"]
+    assert boundaries["ground_pathway_delivery_benefit"] == "not_established"
 
 
 def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
@@ -259,15 +302,15 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     payload = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
     assert "Complete Claim Audit" in article
     assert payload["source"]["commit"] in article
-    assert "1,047 of 1,047" in article
+    assert "1,063 of 1,063" in article
     assert "zero unadjudicated" in article
     assert "does not validate a universal human or coaching strategy" in article
     assert "manual NotebookLM reauthentication" in article
     assert "nine independently tracked points" in article
     assert "MTQ-06, timing precision, remains unresolved" in normalized_article
     # review completion must never be presented as scientific validation
-    assert "all 39 of 39 release claims have been" in normalized_article
-    assert "all 39 still carry a scientifically open gate" in normalized_article
+    assert "all 40 of 40 release claims have been" in normalized_article
+    assert "all 40 still carry a scientifically open gate" in normalized_article
     assert "Review completion is a traceability property, not a scientific verdict" in (
         normalized_article
     )
@@ -315,8 +358,13 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
     assert "126 match" in normalized_article
     assert "universal passive-shaft speed benefit is therefore rejected" in normalized_article
     assert "Both signs" in normalized_article or "negative and positive" in normalized_article
-    # the unmerged ground pathway must be declared absent, not implied
-    assert "not pinned here" in normalized_article
+    # ground: the preregistered failure is the headline, the post-hoc screen is not
+    assert "The Ground Pathway Fails Its Own Preregistered Screen" in article
+    assert "0 of 384 cells" in normalized_article
+    assert "only a **200%** tolerance admits any cell" in normalized_article
+    assert "sensitivity, not a replacement estimand" in normalized_article
+    assert "They are not evidence of a ground-pathway delivery benefit" in normalized_article
+    assert "initialization is not innocuous" in normalized_article
 
 
 def test_grip_and_shaft_companions_state_the_limits_with_the_results() -> None:
@@ -334,6 +382,16 @@ def test_grip_and_shaft_companions_state_the_limits_with_the_results() -> None:
     assert "Sometimes the flexible shaft is slower" in shaft
     assert "rejected as a universal rule" in shaft
     assert "excluded and reported" in shaft
+
+    ground = " ".join(GROUND_COMPANION.read_text(encoding="utf-8").split())
+    assert "What Happened When the Ground Was Actually Added" in ground
+    assert "Zero of 384" in ground
+    assert "a ground pathway benefit was not established" in ground
+    # the seductive misreading has to be named and defused, not omitted
+    assert "0.177 m/s" in ground
+    assert "Those are exactly the cells that failed the fairness check" in ground
+    assert "not a replacement verdict" in ground
+    assert "20 faster, 40 slower" in ground
 
 
 def test_spatial_companion_exposes_contact_closure_before_contact_dynamics() -> None:

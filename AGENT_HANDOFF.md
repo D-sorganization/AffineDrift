@@ -4,37 +4,49 @@
 
 Last updated: 2026-08-16
 
-## Articulated Contact, Distributed Grip, and Passive Shaft Pin
+## Epic #8684 Complete — Articulated Contact, Grip, Shaft, and Ground Pin
 
 - Branch `docs/8684-companion-catchup` advances the companion pin from
   UpstreamDrift `c0507d414fa743cddb817a01f1fe96ac4f8b7226` to
-  `6ab07a580a3b59d95b063fa4dbd5977ece64eb76`, closing a three-tier lag. It
-  covers the articulated contact children (#8677, #8679, #8681, #8683),
-  distributed grip discretization (#8696), and passive shaft bending/torsion
-  (#8715). Every pinned scalar and SHA-256 was re-derived from that commit.
-- The audit now exposes 1,047/1,047 adjudicated candidates, 291 claims, 546
-  qualified artifacts, and a 229-page publication. Release review is
-  **complete** (39/39 reviewed, zero open) where the previous pin had ten open
-  reviews — but all 39 release claims still carry a scientifically open gate.
+  `a1a613999eb0c744da96caa040941955eb210a21` (the #8723 merge closing #8719),
+  clearing a four-tier lag in one pass. It covers the articulated contact
+  children (#8677, #8679, #8681, #8683), distributed grip discretization
+  (#8696), passive shaft bending/torsion (#8715), and the finite ground and
+  free-moment atlas (#8719). All three children of epic #8684 are now pinned.
+- The audit exposes 1,063/1,063 adjudicated candidates, 295 claims, 564
+  qualified artifacts, and a 231-page publication. Release review is
+  **complete** (40/40 reviewed, zero open) where the previous pin had ten open
+  reviews — but all 40 release claims still carry a scientifically open gate.
   The article, snapshot, and contract test all state that review completion is
   traceability, not validation.
-- The shaft result is adverse and is published as such: only **126 of 384**
-  coupled-versus-rigid cells match on peak load and dissipated work, and their
-  final speed differences span `-0.0285` to `+0.0212` m/s. A universal
-  passive-shaft speed benefit is rejected at this tier. Two coarse-step torsion
-  probes that left the linear domain are recorded as excluded, not dropped.
-- The distributed-grip pin is a discretization-convergence result only. Total
-  stiffness/damping are held at 1800 N/m and 18 N·s/m across 1/3/5 stations, so
-  it does not identify grip pressure, finger anatomy, friction, or tissue.
-- The articulated forward-contact tier is right-censored at its registered 5 ms
-  horizon; that is a numerical qualification interval, not late downswing or
-  impact.
-- **#8719, the finite ground/free-moment child, is deliberately not pinned.**
-  It was still an open upstream PR (#8723) when this pin was cut. A follow-up
-  pin should advance the snapshot only after that merge lands on UD main.
+- **The ground result is the sharpest negative in the program.** The
+  preregistered 5% match on peak grip load _and_ total dissipated work admits
+  **0 of 384** coupled-versus-fixed cells; work error is 1.72--2.00 because only
+  the coupled path carries ground damping, and no cell matches until the
+  tolerance is loosened to 200%. A labeled post-hoc non-ground-dissipation
+  screen admits 60 cells (20 positive, 40 negative speed differences) and is
+  recorded as a sensitivity, never as a replacement estimand.
+- **Do not quote the unmatched 50 ms speed differences.** Translation and
+  coupled pathways are uniformly faster than fixed there (up to `+0.177` m/s),
+  but those cells fail the registered match. The snapshot, article, companion
+  chapter, and test all defuse this misreading explicitly.
+- Initialization is not innocuous: natural-zero, gravity-only, and conditional
+  starts give peak ground forces of 32.8/565.5/510.3 N and 4 ms club speeds of
+  0.264/1.908/0.946 m/s. The atlas uses natural-zero for killswitch
+  comparability.
+- The shaft result is likewise adverse: only **126 of 384** coupled-versus-rigid
+  cells match, speed differences span `-0.0285` to `+0.0212` m/s, and a
+  universal passive-shaft speed benefit is rejected at this tier.
+- The distributed-grip pin is a discretization-convergence result only, and the
+  articulated forward-contact tier is right-censored at its registered 5 ms
+  horizon.
 - Verified locally: the 5-test contract suite passes and fails closed under
   tampered values; a cross-repo checker re-derived every hash, count, PDF
-  page/link/outline figure, and per-tier scalar from the pinned commit.
+  page/link/outline figure, per-tier scalar, the ground post-hoc sub-blocks, and
+  the initialization-sensitivity numbers straight from the diagnostic rows.
+- Next companion gate: UpstreamDrift #8556 (governed bilateral six-axis grip
+  wrenches) remains the external data gate. Do not pin human inference without
+  it.
 
 ## Nine-Point Momentum-Transfer Reconciliation
 
