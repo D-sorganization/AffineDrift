@@ -187,9 +187,25 @@ export function initAriaLabels() {
     const resourceCards = document.getElementsByClassName("resource-card");
     labelCardsFromHeading(resourceCards, "Resource");
 
-    // Article cards
+// Article cards
     const articleCards = document.getElementsByClassName("article-card");
     labelCardsFromHeading(articleCards, "Article");
+
+    // External links opening in new tabs
+    // ⚡ Bolt Optimization: Use getElementsByTagName instead of querySelectorAll for performance
+    const links = document.getElementsByTagName("a");
+    for (const link of links) {
+        if (link.getAttribute("target") === "_blank") {
+            // Check if we already added the warning or if it has an explicit aria-label
+            // We use getElementsByClassName which is O(1) live collection access
+            if (!link.hasAttribute("aria-label") && link.getElementsByClassName("sr-only-new-tab").length === 0) {
+                const srText = document.createElement("span");
+                srText.className = "sr-only sr-only-new-tab";
+                srText.textContent = " (opens in a new tab)";
+                link.appendChild(srText);
+            }
+        }
+    }
 
     // History lists - live regions
     // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
