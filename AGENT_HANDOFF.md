@@ -2,9 +2,9 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-16
+Last updated: 2026-08-17
 
-## Epic #8684 Complete — Articulated Contact, Grip, Shaft, and Ground Pin
+## Articulated Contact, Grip, Shaft, and Ground Pin (Epic #8684 Children)
 
 - Branch `docs/8684-companion-catchup` advances the companion pin from
   UpstreamDrift `c0507d414fa743cddb817a01f1fe96ac4f8b7226` to
@@ -13,6 +13,15 @@ Last updated: 2026-08-16
   children (#8677, #8679, #8681, #8683), distributed grip discretization
   (#8696), passive shaft bending/torsion (#8715), and the finite ground and
   free-moment atlas (#8719). All three children of epic #8684 are now pinned.
+- **Upstream epic #8684 is not complete, despite every filed child being
+  merged.** Its own Required Design still lacks grip friction bounds
+  (`friction_tissue_shaft_or_ground: not_modeled`) and unilateral
+  opening/reattachment at the distributed tier
+  (`maximum_transition_count: 0`), tracked upstream as
+  [#8751](https://github.com/D-sorganization/UpstreamDrift/issues/8751) and
+  [#8752](https://github.com/D-sorganization/UpstreamDrift/issues/8752).
+  This companion pins the evidence that exists; do not describe the epic or
+  the distributed-contact question as settled.
 - The audit exposes 1,063/1,063 adjudicated candidates, 295 claims, 564
   qualified artifacts, and a 231-page publication. Release review is
   **complete** (40/40 reviewed, zero open) where the previous pin had ten open
