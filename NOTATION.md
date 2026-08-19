@@ -255,7 +255,7 @@ $(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
 | **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
 | **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
 
-**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](articles/controllability-drift-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
+**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/controllability-drift-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
 **DgCR (Drag–curve ratio) Sign Convention:** Always positive
 
