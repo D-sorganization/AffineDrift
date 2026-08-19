@@ -2,17 +2,24 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-17
+Last updated: 2026-08-19
+
+> **The `Branch …` entries below record pins that have landed on `main`**, not
+> work in flight. Their branches survive because squash merges leave the tip a
+> non-ancestor; the branch name is provenance, not a TODO. As of this update no
+> research or docs PR is open in this repo — only bot Bolt/Palette PRs. Verify
+> against `gh pr list` before assuming anything here is still in progress.
 
 ## Articulated Contact, Grip, Shaft, and Ground Pin (Epic #8684 Children)
 
-- Branch `docs/8684-companion-catchup` advances the companion pin from
-  UpstreamDrift `c0507d414fa743cddb817a01f1fe96ac4f8b7226` to
+- The companion is pinned on `main` at UpstreamDrift
   `a1a613999eb0c744da96caa040941955eb210a21` (the #8723 merge closing #8719),
-  clearing a four-tier lag in one pass. It covers the articulated contact
-  children (#8677, #8679, #8681, #8683), distributed grip discretization
-  (#8696), passive shaft bending/torsion (#8715), and the finite ground and
-  free-moment atlas (#8719). All three children of epic #8684 are now pinned.
+  advanced from `c0507d414fa743cddb817a01f1fe96ac4f8b7226` by merged PRs #3868,
+  #3869, and #3873 — a four-tier lag cleared in one pass. It covers the
+  articulated contact children (#8677, #8679, #8681, #8683), distributed grip
+  discretization (#8696), passive shaft bending/torsion (#8715), and the finite
+  ground and free-moment atlas (#8719). All three children of epic #8684 are
+  pinned; there is no companion branch left in flight.
 - **Upstream epic #8684 is not complete, despite every filed child being
   merged.** Its own Required Design still lacks grip friction bounds
   (`friction_tissue_shaft_or_ground: not_modeled`) and unilateral
