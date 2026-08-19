@@ -1,0 +1,439 @@
+---
+title: "Club Fitting Simulation: Forward Dynamics, Twist Counterfactuals, and Deterministic Reporting"
+description: "How multibody forward dynamics, spatial screw theory, and watertight mesh inertia identification transform club fitting into a deterministic counterfactual engineering discipline."
+author: "Dieter Olson"
+date: "2026-08-19"
+categories: [technology, club-fitting, dynamics, control, screw-theory]
+---
+
+```{=html}
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <h2>
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
+  </button>
+</h2>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Club fitting is traditionally an empirical guessing game: a golfer hits twenty different demo combinations of shafts and clubheads until one happens to produce tighter launch monitor numbers. But the club is a mechanical system obeying Newton's laws. When you change a shaft's stiffness or a clubhead's center of gravity, physics predicts exactly how the delivery twist will change.
+      </p>
+
+      <div class="laymans-item">
+        <h3>Separating the player from the club</h3>
+        <p>
+          If a golfer tests a heavier shaft and hits the ball two miles per hour slower, did the player swing differently, or did the extra mass mechanically alter the acceleration under the same muscle torques? A <em>twist counterfactual</em> runs the player's exact swing dynamics through a simulation of the new club, answering what the club change alone did before the human nervous system adapted.
+        </p>
+      </div>
+
+      <div class="key-takeaway">
+          <strong>Key Takeaway:</strong> Forward dynamics and watertight 3D inertia calculations allow club performance to be evaluated deterministically across interchange formats (Drake, MuJoCo, OpenSim) rather than relying on unstandardized fitter trial-and-error.
+      </div>
+
+      <div class="laymans-item">
+        <h3>From CAD mesh to launch numbers</h3>
+        <p>
+          Modern clubheads have complex hollow geometries with perimeter weighting, carbon crowns, and tungsten inserts. By integrating the exact mass distribution directly from watertight 3D CAD meshes, physics engines can model the true spatial inertia tensor, dynamic shaft bending (droop, lead/lag, and twist), and collision dynamics with zero empirical fudge factors.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+## Why This Article Exists
+
+Club fitting has matured from static ruler measurements and trial-and-error fitting carts into a data-intensive industry dominated by launch monitors. Yet the analytical models connecting club properties to delivery outcomes remain fragmented across proprietary manufacturer software. 
+
+When a golfer changes shaft flex, swing weight, hosel setting, or head mass, two distinct phenomena occur simultaneously:
+1. **Mechanical Response**: The modified physical plant (mass distribution, bending stiffness $EI(s)$, torsional rigidity $GJ(s)$, and spatial inertia tensor $\mathbf{I}$) responds differently to applied proximal boundary kinematics and forces.
+2. **Neuromuscular Adaptation**: The golfer's motor control system senses modified proprioceptive feedback (load feel, swing weight, moment of inertia about the grip) and adjusts muscle activation patterns over subsequent repetitions.
+
+Empirical fitting carts conflate these two channels. If a player hits a stiffer shaft lower and further right, standard fitting doctrine cannot isolate whether the shaft dynamically deflected less prior to impact, or whether the golfer held off wrist release in response to shaft feel.
+
+This article formalizes the mechanics of **Club Fitting Simulation and Parameter Identification**. By uniting spatial screw theory ($se(3)$ twist kinematics), continuous flexible-shaft forward dynamics, exact watertight polyhedral inertia integration, and cross-engine multibody simulation interchange, we construct a deterministic, reproducible computational pipeline for modern club fitting.
+
+::: {.callout-note}
+## Terminology and Notation Contract
+
+In accordance with the repository semantic standard in [NOTATION.md](../NOTATION.md):
+- Dynamics are expressed in control-affine form $\dot{x} = f_p(x) + G_p(x)u$, where $f_p(x)$ is the complete autonomous drift of the declared effective plant (including shaft elasticity, passive inertia, Coriolis accelerations, and boundary constraints) and $u$ is the declared control input.
+- A **Zero-Torque Counterfactual (ZTCF) family** formulation evaluates system response when declared applied generalized control is set to zero ($u = 0$). In this article, our primary analytical tool is the **forward ZTCF trajectory** construction, which integrates $\dot{x} = f_p(x)$ forward through the flexible delivery window.
+- The **Drift-Control Ratio (DCR)** ratio measures relative autonomous acceleration versus maximum control authority in the common delivery projection.
+:::
+
+---
+
+## Part I: Spatial Screw Delivery and Twist Counterfactuals
+
+### The Delivery Twist in $se(3)$
+
+At the instant of impact, the clubhead is a rigid body moving in three-dimensional space. The instantaneous kinematic state of the clubhead is completely described by a spatial velocity twist $\boldsymbol{\xi}_{\text{head}} \in se(3)$ referenced to a designated coordinate frame:
+
+$$\boldsymbol{\xi}_{\text{head}} = \begin{pmatrix} \boldsymbol{\omega} \\ \mathbf{v}_{\text{ref}} \end{pmatrix} = \begin{pmatrix} \omega_x \\ \omega_y \\ \omega_z \\ v_x \\ v_y \\ v_z \end{pmatrix}$$
+
+where $\boldsymbol{\omega} \in \mathbb{R}^3$ is the angular velocity vector and $\mathbf{v}_{\text{ref}} \in \mathbb{R}^3$ is the linear velocity of the chosen reference point (such as the center of mass $\mathbf{r}_{\text{CG}}$ or the geometric face center $\mathbf{r}_{\text{face}}$).
+
+Under a rigid-body transformation from reference point $A$ to reference point $B$, where $\mathbf{r}_{B/A} = \mathbf{r}_B - \mathbf{r}_A$, the twist transforms via the spatial adjoint map:
+
+$$\boldsymbol{\xi}_B = \begin{pmatrix} \mathbf{I}_3 & \mathbf{0} \\ [\mathbf{r}_{B/A}]_\times & \mathbf{I}_3 \end{pmatrix} \boldsymbol{\xi}_A$$
+
+where $[\mathbf{r}]_\times$ is the $3 \times 3$ skew-symmetric cross-product matrix.
+
+```
+                  Z (Vertical / Up)
+                  ▲
+                  │       Y (Target Line / Forward)
+                  │      ▲
+                  │     /
+                  │    /
+                  │   /
+                  │  /
+                  │ /
+  X (Lateral) ────┼─────────────►
+                 /│
+                / │
+               /  │
+              /   ▼
+             Z_shaft (Shaft Axis)
+```
+
+### The Counterfactual Formulation
+
+Let $p_0 = \{m_0, \mathbf{I}_0, EI_0(s), L_0\}$ represent the baseline club parameter vector, and let $x(t) = (\mathbf{q}(t), \dot{\mathbf{q}}(t))$ be the achieved state trajectory of the golfer-club multibody system under applied control history $u(t)$ over the downswing interval $t \in [t_{\text{top}}, t_{\text{impact}}]$.
+
+When evaluating a candidate club $p_1 = p_0 + \Delta p$, the **forward twist counterfactual** integrates the forward dynamics of the modified plant:
+
+$$\dot{x}_{\text{cf}}(t) = f_{p_1}(x_{\text{cf}}(t)) + G_{p_1}(x_{\text{cf}}(t))u(t), \qquad x_{\text{cf}}(t_{\text{release}}) = x(t_{\text{release}})$$
+
+The resulting delivery twist deviation at the impact horizon $t_{\text{impact}}$ isolates the purely mechanical consequence of the equipment alteration:
+
+$$\Delta \boldsymbol{\xi}_{\text{cf}} = \boldsymbol{\xi}_{\text{head}}(x_{\text{cf}}(t_{\text{impact}}); p_1) - \boldsymbol{\xi}_{\text{head}}(x(t_{\text{impact}}); p_0)$$
+
+Because this counterfactual holds the neuromuscular control signal $u(t)$ constant, $\Delta \boldsymbol{\xi}_{\text{cf}}$ quantifies what the club does on its own. Any subsequent observed discrepancy between $\boldsymbol{\xi}_{\text{actual}}(p_1)$ and $\boldsymbol{\xi}_{\text{cf}}(p_1)$ in empirical test sessions is directly attributable to the golfer's neuromuscular adaptation $\Delta u(t)$.
+
+---
+
+## Part II: Flexible Shaft Forward Dynamics
+
+### Continuous Beam Formulation vs. Lumped Discretization
+
+The golf shaft is a slender, tapered, thin-walled hollow beam subject to large base rotations, axial tension from centrifugal forces, and high-frequency flexural/torsional vibrations.
+
+```
+Grip Datum (s=0)                                              Hosel / Tip (s=L)
+  ┌───────────────────────────────────────────────────────────────┬───────┐
+  │                                                               │ Head  │
+  └───────────────────────────────────────────────────────────────┴───────┘
+  ◄──────────────────────── Length L ────────────────────────────►
+  EI(s): Bending stiffness profile [N·m²]
+  GJ(s): Torsional stiffness profile [N·m²]
+  λ(s):  Linear mass density [kg/m]
+```
+
+The dynamic deflection of the shaft centerline $\mathbf{w}(s, t) = [u(s,t), v(s,t), \theta(s,t)]^T$ (representing lead/lag deflection, droop deflection, and torsional twist about the shaft axis $s \in [0, L]$) is governed by the extended Timoshenko-Euler beam equations with centrifugal stiffening:
+
+$$\frac{\partial^2}{\partial s^2}\left(EI(s)\frac{\partial^2 \mathbf{w}}{\partial s^2}\right) - \frac{\partial}{\partial s}\left(T(s,t)\frac{\partial \mathbf{w}}{\partial s}\right) + \lambda(s)\frac{\partial^2 \mathbf{w}}{\partial t^2} = \mathbf{F}_{\text{inertial}}(s,t)$$
+
+where:
+- $EI(s)$ is the spatial bending stiffness distribution ($\text{N}\cdot\text{m}^2$).
+- $\lambda(s)$ is the linear mass density distribution ($\text{kg/m}$).
+- $T(s,t) = \int_s^L \lambda(\sigma)\|\boldsymbol{\omega}(t)\times\mathbf{r}(\sigma,t)\|^2\,d\sigma + m_{\text{head}}\|\boldsymbol{\omega}(t)\times\mathbf{r}_{\text{head}}(t)\|^2$ is the axial tension generated by centripetal acceleration of the distal shaft mass and clubhead.
+
+### The Three Coupled Deflection Modes
+
+During the final 100 ms of the downswing prior to impact, the shaft experiences three distinct dynamic deflection modes that dictate the delivered clubface orientation:
+
+1. **Lead/Lag Deflection ($u_{\text{lead}}$)**:
+   Bending in the instantaneous plane of the swing. Rapid uncocking of the wrists applies an angular acceleration $\dot{\omega}_{\text{swing}} \approx 200 - 450\,\text{rad/s}^2$, initially bending the shaft into *lag* (head trailing the hands). As wrist acceleration peaks and decelerates before impact, the stored strain energy releases, propelling the shaft into dynamic *lead* (head ahead of the hands) at contact. Dynamic lead adds **dynamic loft** and advances the face orientation.
+2. **Droop / Toe-Down Deflection ($v_{\text{droop}}$)**:
+   Bending out of the swing plane toward the ground. Because the clubhead center of gravity $\mathbf{r}_{\text{CG}}$ is offset from the shaft centerline by $d_{\text{CG}} \approx 25 - 40\,\text{mm}$, the large centripetal force ($F_{\text{centrifugal}} = m_{\text{head}} r \omega^2 \approx 250 - 450\,\text{N}$) exerts an eccentric moment $M_{\text{droop}} = F_{\text{centrifugal}} \times d_{\text{CG}}$, forcing the toe downward. Dynamic droop flattens the delivered **lie angle** by $1.5^\circ - 3.5^\circ$.
+3. **Shaft Torsion / Dynamic Twist ($\theta_{\text{twist}}$)**:
+   Twisting about the longitudinal shaft axis. The aerodynamic drag force on the clubhead body and the inertial lag moment of the head about the shaft axis act against the torsional stiffness $GJ(s)$, producing $1^\circ - 4^\circ$ of face rotation delay.
+
+```
+                      +Y (Swing Direction)
+                       ▲
+                       │        Dynamic Lead (+u)
+                       │         /
+                       │        /
+                       │   ┌───▼───┐
+                       │   │ Head  │
+                       │   └───────┘
+                       │      │
+                       │      │ Shaft
+                       │      │
+ ──────────────────────┼──────┴──────────────► +X (Toe Direction)
+                       │
+                       │
+                       │ Dynamic Droop (-v)
+                       ▼
+```
+
+In modern simulation architectures, the continuous shaft is discretized into $N$ Timoshenko beam elements ($N = 10 - 20$) or rigid multibody segments connected by 6-DoF compliant spring-damper bushings with stiffness matrices calibrated to match measured OEM flex profiles:
+
+$$\mathbf{K}_i = \operatorname{diag}\left(\frac{EA_i}{\Delta s_i}, \frac{12EI_{y,i}}{\Delta s_i^3}, \frac{12EI_{x,i}}{\Delta s_i^3}, \frac{GJ_i}{\Delta s_i}, \frac{EI_{x,i}}{\Delta s_i}, \frac{EI_{y,i}}{\Delta s_i}\right)$$
+
+---
+
+## Part III: Watertight Mesh Inertia Tensor Calculation
+
+### Exact Polyhedral Volume Integration
+
+Accurate forward dynamics require the exact mass $m$, center of gravity $\mathbf{r}_{\text{CG}}$, and $3 \times 3$ rotational inertia tensor $\mathbf{I}_{\text{CG}}$ of the clubhead. Approximating a modern complex driver head (featuring thin titanium walls, carbon fiber composite crown panels, and concentrated tungsten perimeter weights) as an ellipsoid introduces up to $15\%$ error in secondary inertia moments.
+
+```
+       Triangular Mesh Surface ∂Ω
+            ▲        v2
+           / \      /  \
+          /   \    /    \
+         /  fi \  /  fj  \
+        v0─────v1───────v3
+       Exact divergence theorem integration
+       over all N faces of watertight STL/OBJ.
+```
+
+Using the boundary-integral method of Mirtich (1996) and Eberly, any volume integral of a polynomial function $f(x, y, z)$ over a solid polyhedral domain $\Omega$ bounded by a watertight triangular mesh $\partial \Omega = \bigcup_{k=1}^K T_k$ is transformed into an exact summation over boundary triangles using the Divergence Theorem:
+
+$$\int_\Omega \nabla \cdot \mathbf{F}\,dV = \oint_{\partial \Omega} \mathbf{F} \cdot \hat{\mathbf{n}}\,dA = \sum_{k=1}^K \int_{T_k} \mathbf{F}(x,y,z) \cdot \hat{\mathbf{n}}_k\,dA$$
+
+For uniform material density $\rho$, the exact mass properties are obtained from the monomials $1, x, y, z, x^2, y^2, z^2, xy, yz, zx$:
+
+1. **Volume**:
+   $$V = \int_\Omega 1\,dV = \frac{1}{3}\sum_{k=1}^K \mathbf{v}_{k,0} \cdot (\mathbf{v}_{k,1} \times \mathbf{v}_{k,2})$$
+   $$m = \rho V$$
+
+2. **Center of Mass**:
+   $$\mathbf{r}_{\text{CG}} = \frac{1}{V}\int_\Omega \mathbf{x}\,dV = \frac{1}{4V}\sum_{k=1}^K (\mathbf{v}_{k,0} + \mathbf{v}_{k,1} + \mathbf{v}_{k,2}) \left[\mathbf{v}_{k,0} \cdot (\mathbf{v}_{k,1} \times \mathbf{v}_{k,2})\right]$$
+
+3. **Inertia Tensor Relative to Mesh Origin $O$**:
+   $$\mathbf{I}_O = \rho \begin{pmatrix} \int (y^2 + z^2)\,dV & -\int xy\,dV & -\int xz\,dV \\ -\int xy\,dV & \int (x^2 + z^2)\,dV & -\int yz\,dV \\ -\int xz\,dV & -\int yz\,dV & \int (x^2 + y^2)\,dV \end{pmatrix}$$
+
+4. **Parallel Axis Theorem Shift to $\mathbf{r}_{\text{CG}}$**:
+   $$\mathbf{I}_{\text{CG}} = \mathbf{I}_O - m\left[(\mathbf{r}_{\text{CG}}^T \mathbf{r}_{\text{CG}})\mathbf{I}_3 - \mathbf{r}_{\text{CG}} \mathbf{r}_{\text{CG}}^T\right]$$
+
+For multi-material assemblies (e.g., Titanium body $\rho_1 = 4430\,\text{kg/m}^3$, Carbon composite crown $\rho_2 = 1500\,\text{kg/m}^3$, Tungsten weights $\rho_3 = 19300\,\text{kg/m}^3$), the total inertia is the linear superposition:
+
+$$m_{\text{total}} = \sum_{j} m_j, \qquad \mathbf{r}_{\text{CG,total}} = \frac{\sum_j m_j \mathbf{r}_{\text{CG},j}}{m_{\text{total}}}, \qquad \mathbf{I}_{\text{total}} = \sum_j \left(\mathbf{I}_{\text{CG},j} + m_j [\|\mathbf{d}_j\|^2\mathbf{I}_3 - \mathbf{d}_j\mathbf{d}_j^T]\right)$$
+
+where $\mathbf{d}_j = \mathbf{r}_{\text{CG},j} - \mathbf{r}_{\text{CG,total}}$.
+
+---
+
+## Part IV: OEM Fitting Document Wire Protocol (`golf-club/fitting-document/v1`)
+
+To enable seamless parameter ingestion across testing apparatus, simulators, and fitting software, we specify the standardized JSON wire format `golf-club/fitting-document/v1`.
+
+```json
+{
+  "$schema": "https://affinedrift.com/schemas/golf-club/fitting-document/v1.json",
+  "wire_version": "golf-club/fitting-document/v1",
+  "metadata": {
+    "manufacturer": "AffineDynamics OEM",
+    "model_name": "Apex Drift Tour 460",
+    "club_type": "driver",
+    "handedness": "right",
+    "serial_number": "AD-DRV-2026-0042",
+    "created_at": "2026-08-19T00:00:00Z"
+  },
+  "head": {
+    "mass_grams": 198.5,
+    "volume_cc": 460.0,
+    "cg_offset_hosel_mm": {
+      "x_face_normal": 38.2,
+      "y_heel_toe": 14.5,
+      "z_sole_crown": -12.8
+    },
+    "inertia_tensor_cg_g_cm2": {
+      "Ixx_sole_crown": 4850.0,
+      "Iyy_heel_toe": 3120.0,
+      "Izz_face_normal": 5410.0,
+      "Ixy": -85.0,
+      "Ixz": 120.0,
+      "Iyz": -45.0
+    },
+    "nominal_loft_deg": 9.0,
+    "nominal_lie_deg": 57.0,
+    "face_progression_mm": 5.2,
+    "bulge_radius_inch": 12.0,
+    "roll_radius_inch": 10.0,
+    "coefficient_of_restitution": 0.828
+  },
+  "shaft": {
+    "model_name": "Kinetics Pro Tour 65TX",
+    "total_length_mm": 1143.0,
+    "raw_mass_grams": 67.5,
+    "cut_mass_grams": 62.1,
+    "balance_point_from_butt_mm": 592.0,
+    "ei_profile_samples": [
+      {"station_from_butt_mm": 100, "ei_nm2": 48.5, "gj_nm2": 18.2, "linear_mass_g_m": 62.0},
+      {"station_from_butt_mm": 300, "ei_nm2": 42.1, "gj_nm2": 15.4, "linear_mass_g_m": 58.5},
+      {"station_from_butt_mm": 500, "ei_nm2": 33.4, "gj_nm2": 12.8, "linear_mass_g_m": 54.2},
+      {"station_from_butt_mm": 700, "ei_nm2": 24.8, "gj_nm2": 9.6, "linear_mass_g_m": 51.0},
+      {"station_from_butt_mm": 900, "ei_nm2": 16.2, "gj_nm2": 6.8, "linear_mass_g_m": 48.2},
+      {"station_from_butt_mm": 1100, "ei_nm2": 11.5, "gj_nm2": 4.9, "linear_mass_g_m": 46.0}
+    ],
+    "frequency_cpm": 265
+  },
+  "hosel_adapter": {
+    "setting_id": "D2",
+    "loft_delta_deg": 0.75,
+    "lie_delta_deg": 1.5,
+    "face_angle_delta_deg": 0.5
+  },
+  "grip": {
+    "model_name": "Standard Tour Velvet 58R",
+    "mass_grams": 52.0,
+    "length_mm": 270.0
+  }
+}
+```
+
+---
+
+## Part V: Multibody Delivery Interchange Wire Protocol (`swing-sim/delivery-trajectory/v1`)
+
+To guarantee simulation reproducibility across different multibody physics backends (Drake, MuJoCo, and OpenSim), the trajectory interchange format `swing-sim/delivery-trajectory/v1` records full spatial kinematic trajectories with explicit frame definitions.
+
+```json
+{
+  "$schema": "https://affinedrift.com/schemas/swing-sim/delivery-trajectory/v1.json",
+  "wire_version": "swing-sim/delivery-trajectory/v1",
+  "engine_metadata": {
+    "source_backend": "Drake MultibodyPlant v1.30.0",
+    "interchange_compatibility": ["Drake", "MuJoCo_MJCF", "OpenSim_SimTK"],
+    "integrator": "implicit_euler",
+    "time_step_seconds": 0.0001
+  },
+  "reference_frames": {
+    "world": "Z-up, Y-target, X-right (right-handed Cartesian)",
+    "clubhead": "Origin at CG, X along face normal, Y toward toe, Z toward crown"
+  },
+  "trajectory_samples": [
+    {
+      "time_seconds": -0.0500,
+      "position_world_m": [0.124, -0.450, 1.250],
+      "orientation_quaternion_wxyz": [0.7071, 0.0, 0.7071, 0.0],
+      "twist_se3": {
+        "angular_velocity_rad_s": [12.4, 5.8, 18.2],
+        "linear_velocity_m_s": [14.2, 28.5, -8.4]
+      },
+      "shaft_deflection_mm": {
+        "lead_lag": -18.4,
+        "droop": -12.1,
+        "twist_deg": -1.8
+      }
+    },
+    {
+      "time_seconds": 0.0000,
+      "position_world_m": [0.000, 0.000, 0.025],
+      "orientation_quaternion_wxyz": [0.9986, 0.0382, 0.0152, 0.0321],
+      "twist_se3": {
+        "angular_velocity_rad_s": [22.8, 8.4, 48.6],
+        "linear_velocity_m_s": [1.4, 48.2, 4.1]
+      },
+      "shaft_deflection_mm": {
+        "lead_lag": 24.6,
+        "droop": -28.2,
+        "twist_deg": 0.4
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Part VI: Deterministic Fitting Report Wire Protocol (`golf-club/fitting-report/v1`)
+
+A modern fitting system must emit unambiguous, machine-readable performance metrics including delivery kinematics, launch conditions, dispersion confidence intervals, and sensitivity gradients.
+
+```json
+{
+  "$schema": "https://affinedrift.com/schemas/golf-club/fitting-report/v1.json",
+  "wire_version": "golf-club/fitting-report/v1",
+  "session_id": "FIT-2026-08-19-094",
+  "player_profile": {
+    "player_id": "P-8834",
+    "handicap": 1.4,
+    "typical_clubhead_speed_mps": 48.5
+  },
+  "candidate_comparison": [
+    {
+      "club_config_ref": "Apex_Drift_Tour_65TX_9deg",
+      "delivery_at_impact": {
+        "clubhead_speed_mps": 48.8,
+        "attack_angle_deg": 2.4,
+        "club_path_deg": 1.8,
+        "dynamic_loft_deg": 12.6,
+        "face_angle_deg": 0.4,
+        "impact_location_face_mm": {"horizontal_toe_heel": 2.1, "vertical_high_low": 4.5}
+      },
+      "ball_launch": {
+        "ball_speed_mps": 72.4,
+        "smash_factor": 1.484,
+        "launch_angle_deg": 13.8,
+        "launch_direction_deg": 0.8,
+        "spin_rate_rpm": 2240,
+        "spin_axis_tilt_deg": 2.1
+      },
+      "trajectory_dispersion_95ci": {
+        "mean_carry_m": 268.4,
+        "carry_dispersion_m": 4.2,
+        "mean_lateral_m": 3.8,
+        "lateral_dispersion_m": 6.4,
+        "peak_height_m": 31.2,
+        "descent_angle_deg": 38.5
+      },
+      "sensitivity_gradients": {
+        "dCarry_dHeadMass_m_per_g": 0.38,
+        "dCarry_dShaftEI_m_per_unit": -0.12,
+        "dSpin_dLoft_rpm_per_deg": 245.0,
+        "dLaunch_dLoft_deg_per_deg": 0.72
+      }
+    }
+  ],
+  "optimal_recommendation": {
+    "selected_head": "Apex Drift Tour 460 (198.5 g)",
+    "selected_shaft": "Kinetics Pro Tour 65TX (Cut Length 1143 mm)",
+    "hosel_setting": "D2 (+0.75° Loft, +1.5° Lie)",
+    "predicted_carry_gain_m": 7.6,
+    "predicted_dispersion_reduction_pct": 24.5,
+    "confidence_level": 0.95
+  }
+}
+```
+
+---
+
+## Part VII: Summary and Verification Architecture
+
+The integration of forward flexible dynamics with twist counterfactuals elevates golf club fitting from an empirical craft to a rigorous mechanical discipline. 
+
+```
+                               ┌────────────────────────────────┐
+                               │   Watertight 3D CAD Mesh STL   │
+                               └───────────────┬────────────────┘
+                                               │ Exact Divergence Integration
+                                               ▼
+┌──────────────────────────────┐       ┌────────────────────────────────┐
+│   Shaft EI(s), GJ(s), λ(s)   ├──────►│   OEM Fitting Document Wire    │
+└──────────────────────────────┘       │   golf-club/fitting-document/v1│
+                                       └───────────────┬────────────────┘
+                                                       │
+                                                       ▼
+┌──────────────────────────────┐       ┌────────────────────────────────┐
+│ Multi-Engine Interchange Wire│◄──────┤ Forward Dynamics Simulator     │
+│ swing-sim/delivery-trajectory│       │ (Drake / MuJoCo / OpenSim)     │
+└──────────────────────────────┘       └───────────────┬────────────────┘
+                                                       │
+                                                       ▼
+                                       ┌────────────────────────────────┐
+                                       │ Deterministic Fitting Report   │
+                                       │ golf-club/fitting-report/v1    │
+                                       └────────────────────────────────┘
+```
+
+By decoupling equipment physics from neuromuscular reaction, validating full spatial inertia tensors from CAD geometries, and standardizing interchange schemas across Drake, MuJoCo, and OpenSim, fitters and researchers gain reproducible, predictive mastery over the golf club delivery state.
