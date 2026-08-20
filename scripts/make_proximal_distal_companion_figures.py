@@ -435,7 +435,7 @@ def make_task_null() -> tuple[Path, Path]:
         path = FancyArrowPatch(
             start,
             center,
-            connectionstyle=f"arc3,rad={(start[1]-3)*.08}",
+            connectionstyle=f"arc3,rad={(start[1] - 3) * 0.08}",
             arrowstyle="-|>",
             mutation_scale=13,
             lw=2.2,
