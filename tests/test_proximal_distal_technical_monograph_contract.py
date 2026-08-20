@@ -110,7 +110,7 @@ def test_technical_monograph_declares_immutable_scientific_source() -> None:
 def test_upstream_evidence_links_use_the_published_source_commit() -> None:
     """Keep source-only evidence links on the same immutable release authority."""
     upstream_blob = re.compile(
-        r"https://github\.com/D-sorganization/UpstreamDrift/blob/([0-9a-f]{40})/"
+        r"https://github\.com/D-sorganization/UpstreamDrift/(?:blob|tree)/([^/]+)/"
     )
     linked_commits = {
         commit
