@@ -97,7 +97,7 @@ Given the current state $\bm{x}(t_0) = (\bm{q}(t_0), \dot{\bm{q}}(t_0))$ at time
 2. **Set up the passive equations:**
 
    $$
-   \ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ -\bm{C}(\bm{q}, \dot{\bm{q}}) - \bm{g}(\bm{q}) \right]
+   \ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q}) \right]
    $$
 
    This equation gives the acceleration purely from passive forces (gravity, Coriolis).
@@ -112,7 +112,7 @@ In practice, the ZTCF is computed in simulation by:
 2. Including a **"kill switch"** parameter, a binary flag $k_u$ that multiplies the input torques:
 
    $$
-   \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = k_u \cdot \bm{B}(\bm{q}) \bm{u}
+   \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = k_u \cdot \bm{B}(\bm{q}) \bm{u}
    $$
 
 3. Running the model twice:

@@ -134,7 +134,7 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 ::: {.callout-note}
 ## Canonical ZTCF Convention (This Part)
-This part uses the **Branched ZTCF**: the solution of $\dot x = f(x)$ initialized from the *observed* swing state at a branch time $t_0$, and compared against the observed swing for $t > t_0$. The full glossary (Trajectory ZTCF, drift vector $f(x)$ which is **not** ZTCF, and Branched ZTCF) is in the standalone [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ZTCF-canonical) article.
+This part uses the **Branched ZTCF trajectory**: the solution of $\dot x = f(x)$ initialized from the *observed* swing state at a branch time $t_0$, and compared against the observed swing for $t > t_0$. The canonical ZTCF family definitions (Pointwise ZTCF sample $f(x(t))$, Stitched pointwise ZTCF trace, Forward ZTCF trajectory, and Branched ZTCF trajectory) are in the standalone [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ZTCF-canonical) article and `NOTATION.md`.
 :::
 
 The drift--input decomposition separates the dynamics into a passive component $f(x)$ and a torque-driven component $G(x)u$. The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
@@ -359,7 +359,7 @@ Evaluating the drift terms at zero velocity eliminates:
 
 What remains in $\tau_{\mathrm{ZVCF}}(t)$ are:
 
-- gravitational torques $G(q)$,
+- gravitational torques $g(q)$,
 - elastic shaft restoring forces $K_s \eta(t)$,
 - configuration-dependent components of the multibody dynamics (e.g., coupling due to mass distribution),
 - geometric projection effects (due to Jacobians and inertia coupling).

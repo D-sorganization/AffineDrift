@@ -56,9 +56,9 @@ If the kayaker stops paddling right now---just for this instant---what happens?
 
 The current carries them. That is all. The kayaker moves exactly as the river dictates.
 
-We call this the **Zero Torque Counterfactual**, or **ZTCF family**: what the system would do, at this instant, with zero input. It is a snapshot---a photograph of the physics at one moment---not a prediction of the future. One moment later the kayaker has drifted to a new spot with a different current, and the answer changes.
+We call this the **Zero-Torque Counterfactual (ZTCF) family**, and in this time-local context, the **pointwise ZTCF sample**: what the system would do, at this instant, with zero applied control. It is an instantaneous snapshot---a photograph of the physics at one moment---not a prediction of the future trajectory. (To trace what happens over time under zero control, one uses a forward ZTCF trajectory instead.) One moment later the kayaker has drifted to a new spot with a different current, and the answer changes.
 
-But right now, right here, the ZTCF tells you exactly what the physics is contributing. And the difference between what is actually happening and the ZTCF tells you exactly what the controller is contributing.
+But right now, right here, the pointwise ZTCF sample tells you exactly what the physics is contributing. And the difference between what is actually happening and the ZTCF sample tells you exactly what the controller is contributing.
 
 ## Three Principles
 
@@ -308,19 +308,19 @@ The control acceleration $\ddot{q}_{\text{ctrl}} = M^{-1}\tau$ is the *additiona
 
 Notice that the input gain depends on the configuration. The same motor torque produces different accelerations depending on the arm's pose. This is like paddling in deep water versus shallow water---the same paddle stroke has different effects depending on conditions.
 
-## The Zero Torque Counterfactual (ZTCF)
+## The Pointwise ZTCF Sample
 
-The ZTCF is simply the drift evaluated at a specific moment in time:
+The pointwise ZTCF sample is simply the drift evaluated at a specific moment in time:
 
 $$
 \ddot{q}_{\text{ZTCF},t} \coloneqq -M^{-1}\bigl(q(t)\bigr)\bigl[C\bigl(q(t),\dot{q}(t)\bigr)\dot{q}(t) + g\bigl(q(t)\bigr)\bigr]
 $$ {#eq-ZTCF-def}
 
-It answers one question: **"If I turned off all the motors right now, what acceleration would the system experience at this instant?"**
+It answers one question: **"If I set declared control to zero right now, what acceleration would the system experience at this instant?"**
 
-Three things are important to understand about ZTCF:
+Three things are important to understand about the pointwise ZTCF sample:
 
-**It is time-local, not a trajectory prediction.** It tells you the *instantaneous* acceleration under zero torque, not where the system would end up if you stopped the motors. One millisecond later, the state has changed, and the ZTCF value is different. It is a photograph, not a movie.
+**It is time-local, not a trajectory prediction.** It tells you the *instantaneous* acceleration under zero torque, not where the system would end up if you stopped the motors. One millisecond later, the state has changed, and the ZTCF value is different. (To model where the system evolves over time under zero control, one computes a forward ZTCF trajectory instead.) It is a photograph, not a movie.
 
 **It reveals accumulated state effects.** A system moving fast has large drift accelerations---not because of anything the motors are doing right now, but because past motor commands built up the current velocity. Imagine our kayaker: they paddled hard for the last five minutes and are now cruising at high speed. Even if they stop paddling, the current at their location (which depends on their speed through the water) is substantial. The ZTCF captures this.
 
@@ -971,7 +971,7 @@ Any discrepancy between frameworks at the same state indicates a bug, not a fail
 
 **Dismissing constraint forces because they "do no work."** They do zero *net* generalized work. They can still be the largest forces in the system, and they are responsible for all internal energy transfer. Removing them changes everything.
 
-**Treating ZTCF as a trajectory prediction.** It is a snapshot: "what would happen this instant with zero torque." One millisecond later, the snapshot is different. It is a photograph, not a forecast.
+**Treating a pointwise ZTCF sample as a trajectory prediction.** It is an instantaneous snapshot: "what would happen this instant with zero torque." One millisecond later, the snapshot is different. To simulate future evolution under zero control, integrate a forward ZTCF trajectory.
 
 **Writing $\Lambda(x_{\text{task}})$ and forgetting the joint configuration.** Task-space inertia depends on the full joint configuration $q$, not just the task coordinates. Redundant systems have infinitely many configurations for each task point.
 
@@ -988,7 +988,7 @@ That is the drift--control decomposition. It works because the torques enter the
 
 Along the way, we saw that constraint forces---the joint reactions, the guardrails---are far more important than their "zero net work" property might suggest. They redirect motion, redistribute energy, and create the largest internal loads in the system. They deserve respect.
 
-We saw that the ZTCF---"what would happen right now with no motors?"---provides a clean, computable reference for separating physics from intent at every instant. It is a diagnostic snapshot, not a prediction, and it works identically in every framework.
+We saw that the ZTCF family---in particular the pointwise sample "what would happen right now with no motors?"---provides a clean, computable reference for separating physics from intent at every instant. It is a diagnostic snapshot, not a prediction, and it works identically in every framework.
 
 And we saw that the underlying physics does not care which mathematical language you speak. The acceleration of a mechanism is a physical fact. The energy flowing through a joint is a physical fact. The conservation of energy under passive dynamics is a physical fact. These facts are the same in every framework, and checking them across frameworks is one of the best debugging tools available.
 
