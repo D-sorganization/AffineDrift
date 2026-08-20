@@ -22,6 +22,12 @@ MONOGRAPH_CSS = MONOGRAPH_DIR / "monograph.css"
 EXPECTED_CHAPTER_COUNT = 34
 EXPECTED_MIN_PAGE_COUNT = 181
 EXPECTED_MIN_WORD_COUNT = 69_000
+EXPECTED_SOURCE_COMMIT = "6e28baef54a04da714f1120c71c49058d7d7ebee"
+EXPECTED_RELEASE_MANIFEST_SHA256 = (
+    "fcb8453af9e55bc0ad1caffe73d528a301beab085d4652eac608101086231a30"
+)
+EXPECTED_CLAIM_REGISTRY_SHA256 = "3e502309d5dfda76e4133b5b144fd971ff724da0ee91c221a7d6aa2cd6dbe313"
+EXPECTED_PDF_SHA256 = "a46ec01e6085eda7a80533ab59137b116b6bd3d0f548def792cabf3212137482"
 
 
 def test_technical_monograph_files_exist_and_are_complete() -> None:
@@ -66,15 +72,53 @@ def test_technical_monograph_declares_immutable_scientific_source() -> None:
     reader = PdfReader(PDF_FILE)
     pdf_bytes = PDF_FILE.read_bytes()
 
-    assert manifest["schema_version"] == "proximal-distal-publication-source-v1"
+    assert manifest["schema_version"] == "proximal-distal-publication-source-v2"
     assert manifest["source"]["repository"] == "D-sorganization/UpstreamDrift"
-    assert re.fullmatch(r"[0-9a-f]{40}", manifest["source"]["commit"])
+    assert manifest["source"]["commit"] == EXPECTED_SOURCE_COMMIT
+    assert manifest["source"]["release_manifest_sha256"] == EXPECTED_RELEASE_MANIFEST_SHA256
+    assert manifest["source"]["claim_registry"] == {
+        "path": "docs/research/proximal_distal_energy_transfer/data/claim_audit_registry.json",
+        "sha256": EXPECTED_CLAIM_REGISTRY_SHA256,
+        "bytes": 1_266_169,
+    }
+    assert manifest["source"]["pdf_sha256"] == EXPECTED_PDF_SHA256
     assert manifest["publication"]["repository"] == "D-sorganization/AffineDrift"
     assert manifest["publication"]["page_count"] == len(reader.pages)
     assert manifest["publication"]["bytes"] == len(pdf_bytes)
+    assert manifest["publication"]["pdf_sha256"] == EXPECTED_PDF_SHA256
     assert manifest["publication"]["pdf_sha256"] == hashlib.sha256(pdf_bytes).hexdigest()
     assert manifest["source"]["pdf_sha256"] == manifest["publication"]["pdf_sha256"]
+    assert manifest["generation_environment"] == {
+        "creator": reader.metadata.creator,
+        "producer": reader.metadata.producer,
+        "tex_banner": reader.metadata["/PTEX.FullBanner"],
+        "pdf_creation_date": reader.metadata.creation_date_raw,
+    }
+    assert manifest["qualification"] == {
+        "profile": "computational",
+        "computational_release": True,
+        "archival_publication": False,
+        "archival_gaps": [
+            "pdf-not-tagged",
+            "type3-font-resource",
+            "unembedded-font-resource",
+        ],
+    }
     assert f"({len(reader.pages)} pages," in INDEX_QMD.read_text(encoding="utf-8")
+
+
+def test_upstream_evidence_links_use_the_published_source_commit() -> None:
+    """Keep source-only evidence links on the same immutable release authority."""
+    upstream_blob = re.compile(
+        r"https://github\.com/D-sorganization/UpstreamDrift/blob/([0-9a-f]{40})/"
+    )
+    linked_commits = {
+        commit
+        for chapter in CHAPTERS_DIR.glob("*.qmd")
+        for commit in upstream_blob.findall(chapter.read_text(encoding="utf-8"))
+    }
+
+    assert linked_commits == {EXPECTED_SOURCE_COMMIT}
 
 
 def test_technical_monograph_uses_a_concise_scientific_abstract() -> None:
