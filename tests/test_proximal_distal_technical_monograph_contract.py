@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from pathlib import Path
 
@@ -14,6 +16,8 @@ CHAPTERS_DIR = MONOGRAPH_DIR / "chapters"
 FIGURES_DIR = MONOGRAPH_DIR / "figures"
 PDF_FILE = MONOGRAPH_DIR / "proximal_distal_energy_transfer.pdf"
 BIB_FILE = MONOGRAPH_DIR / "references.bib"
+SOURCE_MANIFEST = MONOGRAPH_DIR / "source_manifest.json"
+MONOGRAPH_CSS = MONOGRAPH_DIR / "monograph.css"
 
 EXPECTED_CHAPTER_COUNT = 34
 EXPECTED_MIN_PAGE_COUNT = 181
@@ -56,6 +60,37 @@ def test_technical_monograph_pdf_metrics() -> None:
     ), f"Expected at least {EXPECTED_MIN_WORD_COUNT} words, got {len(extracted_words)}"
 
 
+def test_technical_monograph_declares_immutable_scientific_source() -> None:
+    """Verify the publication identifies and matches its scientific source."""
+    manifest = json.loads(SOURCE_MANIFEST.read_text(encoding="utf-8"))
+    reader = PdfReader(PDF_FILE)
+    pdf_bytes = PDF_FILE.read_bytes()
+
+    assert manifest["schema_version"] == "proximal-distal-publication-source-v1"
+    assert manifest["source"]["repository"] == "D-sorganization/UpstreamDrift"
+    assert re.fullmatch(r"[0-9a-f]{40}", manifest["source"]["commit"])
+    assert manifest["publication"]["repository"] == "D-sorganization/AffineDrift"
+    assert manifest["publication"]["page_count"] == len(reader.pages)
+    assert manifest["publication"]["bytes"] == len(pdf_bytes)
+    assert manifest["publication"]["pdf_sha256"] == hashlib.sha256(pdf_bytes).hexdigest()
+    assert manifest["source"]["pdf_sha256"] == manifest["publication"]["pdf_sha256"]
+    assert f"({len(reader.pages)} pages," in INDEX_QMD.read_text(encoding="utf-8")
+
+
+def test_technical_monograph_uses_a_concise_scientific_abstract() -> None:
+    """Keep publication metadata readable without turning the abstract into a chapter."""
+    index_text = INDEX_QMD.read_text(encoding="utf-8")
+    abstract_match = re.search(
+        r"^abstract: \|\n(?P<body>.*?)^keywords:\n", index_text, re.MULTILINE | re.DOTALL
+    )
+
+    assert abstract_match is not None, "index.qmd must declare an abstract before keywords"
+    abstract_words = abstract_match.group("body").split()
+    assert 150 <= len(abstract_words) <= 350
+    assert "css: monograph.css" in index_text
+    assert "#title-block-header.quarto-title-block" in MONOGRAPH_CSS.read_text(encoding="utf-8")
+
+
 def test_technical_monograph_figures_exist() -> None:
     """Assert that figures referenced in the chapters exist in figures directory."""
     for chapter in CHAPTERS_DIR.glob("*.qmd"):
@@ -76,6 +111,7 @@ def test_technical_monograph_quarto_registration() -> None:
     assert (
         "articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf" in quarto_yml
     )
+    assert "articles/proximal_distal_energy_transfer/source_manifest.json" in quarto_yml
     assert "articles/proximal_distal_energy_transfer/index.html" in quarto_yml
     assert "Proximal-to-Distal Energy Transfer" in quarto_yml
 
