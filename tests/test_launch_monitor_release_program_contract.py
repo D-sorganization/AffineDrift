@@ -13,6 +13,7 @@ def test_professional_release_chapter_is_registered() -> None:
 
 def test_release_boundary_and_statistical_authority_are_explicit() -> None:
     chapter = (ARTICLE / "sections" / "11-validation-program.tex").read_text(encoding="utf-8")
+    normalized_chapter = chapter.replace(r"\allowbreak{}", "")
     required = (
         "Release A",
         "Release B",
@@ -32,6 +33,17 @@ def test_release_boundary_and_statistical_authority_are_explicit() -> None:
         "70feeb4889ef4d030bdb426bd7ecb465c36ba41b",
         "5ea0d08821ee8a1cacb93d22239abddee4813fca",
         "08b4b013d8f58feb0a788fc67add29f64750da23",
+        "fb4e6e41ac4980309e32dacceb957f4da02616b3",
+        "a7b6dc437b45857e27cd07cccb56ff665826e342",
+        "10d7f6fc38d27dd04324160090a7290f46d0cfd4",
+        "6699129037d0adf8152e73bdae3fc2b75a2e15bfb16e25a4b3cfcec2448ac00e",
+        "No expected-strokes baseline is bundled",
+        "does not independently endorse",
+        r"\path{is_strokes_gained=false}",
+        "exact lie, context, target, and distance",
+        "outside baseline support",
+        "presentation and accessibility",
+        "not statistical correctness or baseline validity",
         "1906d19fcace3284ae99d9dd8de213a0",
         "e2dabe8c062e4d63edc06c98f7eaf92e",
         "252 total",
@@ -44,7 +56,7 @@ def test_release_boundary_and_statistical_authority_are_explicit() -> None:
         "protocol readiness is not reported",
     )
     for phrase in required:
-        assert phrase in chapter
+        assert phrase in normalized_chapter
 
 
 def test_running_header_uses_compact_chapter_mark() -> None:
