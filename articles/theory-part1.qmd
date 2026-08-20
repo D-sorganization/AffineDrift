@@ -325,7 +325,7 @@ For reference, the following table summarizes the main symbols used in the manus
 | $B(q)$ | Input mapping matrix from control channels to generalized torques |
 | $M(q,\eta)$ | Inertia matrix for coupled rigid--flexible system |
 | $C(q,\dot{q},\eta,\dot{\eta})$ | Coriolis/centrifugal matrix |
-| $G(q)$ | Gravitational torque vector |
+| $g(q)$ | Gravitational torque vector |
 | $K_{s}$ | Modal stiffness matrix of the shaft |
 | $C_{s}$ | Modal damping matrix of the shaft |
 | $f(x)$ | Drift vector field (passive dynamics) |
@@ -422,7 +422,7 @@ $$
 This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the **Effective Mobility** of the joints *after* accounting for the inertial relief provided by the flexible shaft.
 
 Multiplying the equation of motion by $H$ isolates the acceleration vector. Let $h(x)$ denote the vector of all passive forces (Coriolis, gravity, stiffness, damping): $$
-h(x) = C(q,\dot{q},\eta,\dot{\eta}) \dot{q}_{\text{sys}} + G(q) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}.
+h(x) = C(q,\dot{q},\eta,\dot{\eta}) \dot{q}_{\text{sys}} + g(q) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}.
 $$ The acceleration equation is: $$
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} =
 \underbrace{-M^{-1} h(x)}_{\text{Passive Drift Acceleration } a_{\text{drift}}}

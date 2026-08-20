@@ -421,7 +421,7 @@ For reference, @tbl-notation summarizes the main symbols used in the manuscript.
 | $B(q)$ | Input mapping matrix from control channels to generalized torques |
 | $M(q,\eta)$ | Inertia matrix for coupled rigid--flexible system |
 | $C(q,\dot{q},\eta,\dot{\eta})$ | Coriolis/centrifugal matrix |
-| $G(q)$ | Gravitational torque vector |
+| $g(q)$ | Gravitational torque vector |
 | $K_{s}$ | Modal stiffness matrix of the shaft |
 | $C_{s}$ | Modal damping matrix of the shaft |
 | $f(x)$ | Drift vector field (passive dynamics) |
@@ -493,7 +493,7 @@ With the energetic scalar fields ($T, V, \mathcal{R}$) fully defined, we can now
 We substitute the block-partitioned energy terms into the Euler-Lagrange equations.
 For the rigid coordinates $q$:
 $$
-\frac{d}{dt} (M_{qq}\dot{q} + M_{q\eta}\dot{\eta}) - \frac{\partial T}{\partial q} + G(q) + D_{joint} \dot{q} = \tau.
+\frac{d}{dt} (M_{qq}\dot{q} + M_{q\eta}\dot{\eta}) - \frac{\partial T}{\partial q} + g(q) + D_{joint} \dot{q} = \tau.
 $$
 For the flexible coordinates $\eta$:
 $$
@@ -594,7 +594,7 @@ $$a_{\text{drift}}(x)
       \dot{q} \\[0.2em]
       \dot{\eta}
     \end{bmatrix}
-    + G(q) +
+    + g(q) +
     \begin{bmatrix}
       0 \\[0.2em]
       K_{s}\eta + C_{s}\dot{\eta}
@@ -763,7 +763,7 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 ## Zero Torque Counterfactual (ZTCF) {#sec-ZTCF}
 
-> **Canonical definition:** The three distinct objects informally called "ZTCF" on this site (Trajectory ZTCF, drift vector $f(x)$ — **not** ZTCF, and Branched ZTCF) are defined in the glossary of the standalone article: [Zero-Torque Counterfactual — canonical definitions](zero-torque-counterfactual.html#sec-ZTCF-canonical). The construction used in this section is the **Trajectory ZTCF** with initial condition $x_0$.
+> **Canonical definition:** The four distinct constructions in the **ZTCF family** (Pointwise ZTCF sample $f(x(t))$, Stitched pointwise ZTCF trace, Forward ZTCF trajectory, and Branched ZTCF trajectory) are defined in the glossary of the standalone article: [Zero-Torque Counterfactual — canonical definitions](zero-torque-counterfactual.html#sec-ZTCF-canonical) and `NOTATION.md`. The construction used in this section is the **Forward ZTCF trajectory** with initial condition $x_0$.
 
 The drift--input decomposition separates the dynamics into a passive component $f(x)$ and a torque-driven component $G(x)u$. The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
 
@@ -964,7 +964,7 @@ Evaluating the drift terms at zero velocity eliminates:
 - all torque input contributions.
 
 What remains in $\tau_{\mathrm{ZVCF}}(t)$ are:
-- gravitational torques $G(q)$,
+- gravitational torques $g(q)$,
   
 - elastic shaft restoring forces $K_s \eta(t)$,
   
@@ -1079,7 +1079,7 @@ $$
 By definition of the mechanical system parameters:
 1.  **Inertia:** $M(q,\eta)$ depends only on configuration, so $\frac{\partial M}{\partial u} = 0 \implies \frac{\partial M^{-1}}{\partial u} = 0$.
 2.  **Coriolis/Centrifugal:** $C(x)$ depends only on state, so $\frac{\partial C}{\partial u} = 0$.
-3.  **Potentials:** $G(q)$ and $K_s \eta$ depend only on configuration, so $\frac{\partial V}{\partial u} = 0$.
+3.  **Potentials:** $g(q)$ and $K_s \eta$ depend only on configuration, so $\frac{\partial V}{\partial u} = 0$.
 4.  **Damping:** $F_{dissip}$ depends linearly on velocity, so $\frac{\partial F_{dissip}}{\partial u} = 0$.
 
 Since none of the constituent terms contain the variable $u$, the partial derivative vanishes identically:
@@ -1614,7 +1614,7 @@ M(q,\eta)\,\dot{v}
 +
 C(q,\dot{q},\eta,\dot{\eta})\,v
 +
-G(q)
+g(q)
 +
 F_{s}(\eta,\dot{\eta})
 =
@@ -1687,7 +1687,7 @@ C
   \dot{q} \\ \dot{\eta}
 \end{bmatrix}
 -
-G(q)
+g(q)
 -
 F_s(\eta,\dot{\eta})
 +
@@ -1705,7 +1705,7 @@ $$
 =
 - M^{-1}
 \left(
-  C\,v + G + F_{s}
+  C\,v + g + F_{s}
 \right)
 +
 M^{-1}
@@ -1724,7 +1724,7 @@ a_{\mathrm{drift}}(x)
 -M^{-1}(q,\eta)
 \left(
   C(q,\dot{q},\eta,\dot{\eta})\,v
-  + G(q)
+  + g(q)
   + F_{s}(\eta,\dot{\eta})
 \right).
 $$ {#eq-appendix_drift_def}
@@ -2005,7 +2005,7 @@ All torque influence on the shaft is mediated through rigid-body acceleration.
 
 From the full equations of motion:
 $$
-  M(q,\eta)\,\ddot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + G(q) + F_s(\eta,\dot{\eta})
+  M(q,\eta)\,\ddot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + g(q) + F_s(\eta,\dot{\eta})
   =
   \begin{bmatrix}
     B(q)u \\ 0

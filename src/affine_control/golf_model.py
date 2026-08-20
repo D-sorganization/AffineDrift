@@ -201,7 +201,7 @@ class GolfModel:
         return christoffel_coriolis(self.rigid_mass_matrix, q, qd)
 
     def drift_acceleration(self, q: Array, qd: Array, gravity: float = GRAVITY_M_S2) -> Array:
-        """``qddot`` with zero applied torque -- the ZTCF acceleration.
+        """``qddot`` with zero applied torque -- the pointwise ZTCF acceleration.
 
         Uses the articulated-body inertia, so shaft inertia is accounted for
         rather than ignored.

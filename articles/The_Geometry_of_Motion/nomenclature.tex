@@ -39,6 +39,16 @@
     \item[$\boldsymbol{\gamma}$] A trajectory or flow, mapping time and initial conditions to states.
 \end{description}
 
+\section*{Affine Control and Counterfactuals}
+\begin{description}
+    \item[$f(\mathbf{x})$] Drift vector field: complete autonomous evolution of the declared effective plant when $\mathbf{u} = \mathbf{0}$.
+    \item[$G(\mathbf{x})$] Input (control) matrix field mapping control inputs to state derivatives.
+    \item[$\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$] Control-affine system equations of motion.
+    \item[$\mathbf{x}^{\mathrm{ZTCF}}(t)$] Forward Zero-Torque Counterfactual trajectory under $\mathbf{u}(t) \equiv \mathbf{0}$.
+    \item[$\mathbf{a}_{\mathrm{ZVCF}}(\mathbf{q}, \mathbf{z})$] Instantaneous Zero-Velocity Counterfactual acceleration with velocity and declared control set to zero.
+    \item[$\mathrm{DCR}_{W,\mathcal{U}}(\mathbf{x})$] Drift-Control Ratio in a declared acceleration or task-projected space: $\frac{\|W \mathbf{a}_{\mathrm{drift}}\|_2}{\sup_{\mathbf{u}\in\mathcal{U}}\|W B_a \mathbf{u}\|_2 + \varepsilon}$.
+\end{description}
+
 \section*{Biomechanics and Motor Control}
 \begin{description}
     \item[{$a_i \in [0, 1]$}] Muscle activation level.
