@@ -173,3 +173,7 @@
 ## 2026-08-02 - Eliminate redundant dataset filtering on sort updates
 **Learning:** When users trigger UI updates that do not mutate the query state (like changing sort orders), recalculating complex O(N) array filtering logic over the entire dataset is highly inefficient and blocks the main thread unnecessarily.
 **Action:** Always cache the input query, the source dataset, and the resulting filtered dataset. If a non-mutating action is triggered (e.g., sort change), bypass the filtering logic and directly reuse a shallow copy of the cached pre-filtered dataset to prevent in-place sorting mutations.
+
+## 2026-08-19 - Optimize bibliography search matching
+**Learning:** In hot loops processing thousands of bibliography entries, `String.prototype.includes` can be slightly slower than `String.prototype.indexOf(term) !== -1` across many JS engines, which compounds during search queries.
+**Action:** Replaced `.includes()` with `.indexOf(term) !== -1` in the bibliography search and scoring functions for faster keystroke responsiveness.
