@@ -44,10 +44,7 @@ __all__ = [
     "spatial_newton_euler",
 ]
 
-# Declared with the `type` keyword rather than a bare assignment. The pre-push
-# mypy hook runs with --ignore-missing-imports and without numpy stubs, so
-# NDArray resolves to Any there; given a plain assignment mypy reads `Array` as an
-# ordinary variable and rejects every use of it as "not valid as a type".
+
 type Array = NDArray[np.float64]
 
 
