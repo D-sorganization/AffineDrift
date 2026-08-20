@@ -18,11 +18,13 @@ reimplementing estimators.
 The controlled authority snapshot contains 261,666 rows from 27 traceable
 sources. Size alone is misleading. Only 13,855 rows contain finite,
 non-imputed values for all five primary launch inputs (ball speed, launch
-angle, launch direction, spin rate, and spin axis). Of these, 13,843 also
-contain carry, 13,532 lateral outcome, 9,850 descent angle, and 9,322 flight
-time. Eligibility is evaluated by source, metric, provenance, and intended
-use; a blank field is represented as \emph{unavailable}, never silently
-filled merely to increase sample size.
+angle, launch direction, spin rate, and spin axis). Before the per-source
+minimum-size gate, 13,647 rows also contain carry, 13,532 lateral outcome,
+9,850 descent angle, and 9,283 flight time. The strict model cohort contains
+13,843 rows from 15 source families because each predicted outcome has its own
+availability rule. Eligibility is evaluated by source, metric, provenance,
+and intended use; a blank field is represented as \emph{unavailable}, never
+silently filled merely to increase sample size.
 
 The largest source is a 236,590-row ShotLink-derived table. It has no
 complete five-input launch rows and no observed carry values. Its rights and
@@ -33,13 +35,17 @@ internally for provenance review and for analyses that are independently
 shown to match its permitted use. This rule prevents a large but unsuitable
 table from dominating the apparent evidence base.
 
-At the present qualification gate, only the 10,169-row Blackmore TrackMan
-source is approved for internal vendor-model training. Foresight coverage is
-too small for a defensible vendor emulator, and the corpus does not contain
-a qualified simultaneous paired-device cohort. A model trained on this
-TrackMan-labelled source is consequently described as
-\emph{TrackMan-comparable on this source}, not as a reproduction or
-certification of TrackMan's proprietary flight model.
+At the present qualification gate, no vendor-labelled surrogate is currently eligible
+for production training. The corpus contains 11,699 TrackMan-labelled
+rows and 9,298 strict launch-input rows, but it lacks a trusted repeating
+player or session grouping. Foresight has four rows (two strict); FlightScope
+has 2,794 rows but no strict five-input rows. The historical TrackMan surrogate
+used unique shot identifiers as partitions, which cannot protect against
+player, session, or source leakage; it is retained for audit with status
+\path{retired_non_group_safe} and cannot be loaded, queried, or retrained.
+A future model that passes the group-safe gate would be described as
+\emph{vendor-comparable on its qualified source}, not as a reproduction or
+certification of proprietary vendor software.
 
 \begin{keypoint}
 Every displayed statistic carries its source identity, row-selection rule,
@@ -79,6 +85,34 @@ requires a cited baseline table, a declared lie and distance state, and a
 reproducible mapping from shot outcome to expected strokes. A distance-only
 or target-error score without that backing is labelled a \emph{performance
 proxy}; it must not borrow the strokes-gained name.
+
+\section{Qualified Model-Comparison Results}
+
+The Release A campaign evaluated seven open flight-model configurations on the
+13,843-row strict cohort, producing 96,901 predictions with no execution
+failures. Its primary estimands are source-stratified error, bias, association,
+and residual relationships. Pooled metrics are retained only as descriptive
+summaries because source composition, device, venue, ball, and acquisition
+conditions are confounded.
+
+For the Blackmore TrackMan-labelled carry cohort ($n=8{,}860$), the best tested
+configuration was the Waterloo/Penner implementation: carry RMSE
+$12.256$\,m, mean error $-4.093$\,m, and strong linear association with the
+reported outcome. These are agreement statistics against the source's reported
+carry, not an absolute-accuracy result and not evidence that the proprietary
+TrackMan equations have been identified. For context, the best tested carry
+configuration on one Garmin R10 source ($n=1{,}541$) had RMSE $7.150$\,m and
+bias $-4.722$\,m, while one Garmin R50 source ($n=255$) had RMSE
+$10.238$\,m and bias $+6.554$\,m. The sign change is one reason a pooled vendor
+ranking would be scientifically unsafe.
+
+The content-addressed calculation record is the private campaign's
+\path{results/v2/model/model_campaign_manifest.json}. It binds the cohort,
+predictions, source metrics, pooled descriptive metrics, residual-correlation
+table, configuration, and source qualification outputs by SHA-256. The
+companion \path{multisource_v2_model_report.md} states row selection and
+limitations in human-readable form. Restricted rows remain in the private
+authority; the public paper reports only qualified aggregates.
 
 \section{Release B: Paired-Device Scientific Validation}
 

@@ -22,6 +22,12 @@ def test_release_boundary_and_statistical_authority_are_explicit() -> None:
         "player identity",
         "ShotLink",
         "not eligible for vendor-model training",
+        "96,901",
+        "12.256",
+        "source-stratified",
+        "model_campaign_manifest.json",
+        "retired_non_group_safe",
+        "no vendor-labelled surrogate is currently eligible",
     )
     for phrase in required:
         assert phrase in chapter
