@@ -125,3 +125,9 @@
 ## 2026-08-16 - Wire up orphaned accessibility features
 **Learning:** Found that advanced accessibility initialization functions (focus management, high contrast mode, and motion preferences) were defined in `js/accessibility.js` but never exported or invoked in the main execution flow, leaving those features completely inactive across the site.
 **Action:** Always verify that newly implemented global feature modules are properly hooked into the main application lifecycle or entry point scripts.
+## 2026-08-18 - Screen reader context for external links
+**Learning:** Links with `target="_blank"` lack native warning for screen reader users, causing unexpected and confusing context switches when a new tab opens.
+**Action:** Always append visually hidden text (e.g., `(opens in a new tab)`) using a `.sr-only` class to `target="_blank"` links to ensure users are informed before navigation.
+## 2026-08-19 - Screen reader context for external links
+**Learning:** Links with `target="_blank"` lack native warning for screen reader users, causing unexpected and confusing context switches when a new tab opens.
+**Action:** Always append visually hidden text (e.g., `<span class="sr-only">(opens in a new tab)</span>`) to `target="_blank"` links to ensure users are informed before navigation.

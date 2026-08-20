@@ -82,16 +82,24 @@ def collect_matching_files(
     require(repo_root.is_dir(), "repo_root must be an existing directory")
     require(len(include_roots) > 0, "include_roots must not be empty")
     matched: list[Path] = []
-    for path in repo_root.rglob("*"):
-        if not path.is_file():
+    for root_str in include_roots:
+        target = repo_root / root_str
+        if target.is_file():
+            candidates: list[Path] = [target]
+        elif target.is_dir():
+            candidates = list(target.rglob("*"))
+        else:
             continue
-        rel = path.relative_to(repo_root)
-        if not is_included(rel, include_roots, exclude_substrings):
-            continue
-        if allowed_extensions and path.suffix and path.suffix.lower() not in allowed_extensions:
-            continue
-        matched.append(path)
-    return sorted(matched)
+        for path in candidates:
+            if not path.is_file():
+                continue
+            rel = path.relative_to(repo_root)
+            if not is_included(rel, include_roots, exclude_substrings):
+                continue
+            if allowed_extensions and path.suffix and path.suffix.lower() not in allowed_extensions:
+                continue
+            matched.append(path)
+    return sorted(set(matched))
 
 
 def read_text_safe(path: Path) -> str | None:
