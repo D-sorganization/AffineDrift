@@ -21,6 +21,7 @@ from numpy.typing import NDArray
 
 __all__ = ["LQRSolution", "discrete_lqr"]
 
+
 type Array = NDArray[np.float64]
 type ComplexArray = NDArray[np.complex128]
 

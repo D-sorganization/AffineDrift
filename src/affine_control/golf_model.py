@@ -25,6 +25,7 @@ from numpy.typing import NDArray
 
 __all__ = ["GolfModel", "SEGMENTS"]
 
+
 type Array = NDArray[np.float64]
 
 # Standard gravity, named with its units so the magnitude cannot be mistaken for

@@ -30,6 +30,7 @@ from src.affine_control.dynamics import christoffel_coriolis
 
 __all__ = ["PlanarChain", "PlanarLink"]
 
+
 type Array = NDArray[np.float64]
 
 GRAVITY_M_S2 = 9.81
