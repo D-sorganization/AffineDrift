@@ -21,7 +21,7 @@ club/ball parameter calculations — a vendor-neutral technical reference.
 > designed to grow toward a textbook-scale reference edited by many hands.
 
 - **[main.pdf](main.pdf)** — the compiled report (~65 pages)
-- `main.tex` + `sections/` — LaTeX source (10 chapters + 5 appendices), one file per chapter
+- `main.tex` + `sections/` — LaTeX source (11 chapters + 5 appendices), one file per chapter
 - `references.bib` — the bibliography database (80 entries, grouped by source category)
 - `build.ps1` — local build; CI builds every PR via `.github/workflows/compile-textbooks.yml`
 - `research/` — the four raw research dossiers the report was synthesized from
@@ -41,6 +41,7 @@ club/ball parameter calculations — a vendor-neutral technical reference.
 8. Ball flight models — Smits–Smith / Quintavalla aerodynamics, EKF trajectory estimation
 9. Accuracy — Leach 2017 and the validation literature
 10. Design guidance for implementers — capability tiers (radar hardening → optical spin/impact module → fusion → measured club delivery)
+11. Governed analytics and validation program — qualified-corpus limits, canonical statistics, Release A analytics, and the preregistered paired-device gate for Release B
 
 Appendix A — Live reference library: every source as a clickable link, organized by category (patents, FCC filings, manufacturer docs, peer-reviewed literature, engineering references, DIY projects, comparative testing)
 

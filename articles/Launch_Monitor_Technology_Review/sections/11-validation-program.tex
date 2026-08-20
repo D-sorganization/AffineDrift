@@ -1,0 +1,125 @@
+\chapter{Governed Analytics and Validation Program}
+\label{ch:validation-program}
+
+The distinction between a useful analytics platform and a scientific
+vendor comparison is the evidence design. A large collection of launch
+records can support exploratory model checking without supporting the
+stronger claim that one device disagrees with another. The repositories
+associated with this review therefore use a two-release program with a
+versioned data contract, explicit use eligibility, and fail-closed
+statistics. The program is tracked by the public
+\href{https://github.com/D-sorganization/Tools/issues/4583}{Tools program
+epic}; the computational authority is UpstreamDrift, while the desktop and
+web interfaces in Tools consume its versioned results rather than
+reimplementing estimators.
+
+\section{Qualified Corpus Snapshot}
+
+The controlled authority snapshot contains 261,666 rows from 27 traceable
+sources. Size alone is misleading. Only 13,855 rows contain finite,
+non-imputed values for all five primary launch inputs (ball speed, launch
+angle, launch direction, spin rate, and spin axis). Of these, 13,843 also
+contain carry, 13,532 lateral outcome, 9,850 descent angle, and 9,322 flight
+time. Eligibility is evaluated by source, metric, provenance, and intended
+use; a blank field is represented as \emph{unavailable}, never silently
+filled merely to increase sample size.
+
+The largest source is a 236,590-row ShotLink-derived table. It has no
+complete five-input launch rows and no observed carry values. Its rights and
+transformation lineage also require separate approval. It is therefore
+quarantined: the source is \textbf{not eligible for vendor-model training},
+public redistribution, or vendor-performance claims. It may be retained
+internally for provenance review and for analyses that are independently
+shown to match its permitted use. This rule prevents a large but unsuitable
+table from dominating the apparent evidence base.
+
+At the present qualification gate, only the 10,169-row Blackmore TrackMan
+source is approved for internal vendor-model training. Foresight coverage is
+too small for a defensible vendor emulator, and the corpus does not contain
+a qualified simultaneous paired-device cohort. A model trained on this
+TrackMan-labelled source is consequently described as
+\emph{TrackMan-comparable on this source}, not as a reproduction or
+certification of TrackMan's proprietary flight model.
+
+\begin{keypoint}
+Every displayed statistic carries its source identity, row-selection rule,
+units, method version, and backing row references. An unavailable result is a
+valid result: it records why the requested inference is not supported.
+\end{keypoint}
+
+\section{Release A: Qualified Analytics Platform}
+
+Release A delivers the professional analysis surface on data that passes the
+declared gate. Its scope includes unit-aware scatter and distribution views,
+model residuals, arbitrary variable relationships, within-player and
+between-player covariance, session trends, uncertainty, exportable plots,
+and reproducible project files. Player-level analysis requires an explicit
+player identity column. Identity is never inferred from session, club, row
+order, filename, or directory layout; missing and whitespace-only identities
+are excluded and reported.
+
+The statistical backend resides in UpstreamDrift behind a versioned contract.
+That contract returns estimates, uncertainty, warnings, source lineage, and
+machine-readable unavailable states. Tools supplies PyQt and React/Vite
+views with parity in variable choices, units, formulas, backing-data export,
+persistence, and explanatory text. Interface parity means the two clients
+consume the same result semantics; it does not justify copying the
+statistical implementation into TypeScript.
+
+Exploratory all-pairs scans report multiplicity warnings. Within-player
+analysis separates raw pooled association, player-mean-centred association,
+between-player association, and per-player estimates; these quantities answer
+different questions and must not be substituted for one another. Correlation
+and principal-component loadings are descriptive, not causal. Predictive
+work uses grouped splits whenever a trusted player or session identity exists
+and otherwise states that leakage-resistant grouping is unavailable.
+
+Strokes gained is similarly gated. A result labelled \emph{strokes gained}
+requires a cited baseline table, a declared lie and distance state, and a
+reproducible mapping from shot outcome to expected strokes. A distance-only
+or target-error score without that backing is labelled a \emph{performance
+proxy}; it must not borrow the strokes-gained name.
+
+\section{Release B: Paired-Device Scientific Validation}
+
+Release B begins only after a preregistered paired-device protocol has been
+executed. The same physical shot must be observed simultaneously by each
+device under comparison, with device model and firmware, ball and club,
+indoor/outdoor condition, environmental state, alignment, player identity,
+shot identity, and measured-versus-estimated status recorded. Randomized
+blocks should span speed, loft, spin, launch direction, impact location, and
+representative mishits. A traceable reference system is required where a
+criterion claim is made.
+
+The primary estimands are paired bias, limits of agreement, error as a
+function of magnitude and condition, repeatability, missingness, and
+device-by-condition interaction. Bland--Altman analysis and hierarchical
+models are more informative here than correlation alone: two devices can be
+highly correlated while disagreeing systematically. Sample-size targets and
+exclusion rules must be fixed before inspecting device differences. Firmware
+changes form new strata rather than being pooled invisibly.
+
+Neural-network vendor emulators remain internal research artifacts. Their
+training manifests must pin the eligible sources, feature and target units,
+splits, random seeds, software version, and evaluation cohort. They are
+released only with held-out and out-of-distribution performance, uncertainty
+or applicability bounds, and a model card that forbids device-emulation or
+certification claims. Until the paired-device gate is satisfied, Release B
+comparisons remain unavailable rather than being approximated from unrelated
+shots.
+
+\section{Reproducibility and Claim Discipline}
+
+The repository fleet records exact Git revisions for the statistical
+authority, user interfaces, paper, public data facade, and private data
+authority. A release manifest binds those revisions to the data manifest and
+its checksums. Source files remain immutable; normalization and exclusions
+are transformations with their own lineage. Project exports contain both the
+request and complete backing rows so another analyst can reproduce the
+displayed result without relying on GUI state.
+
+These controls deliberately narrow the claims. Public launch-monitor records
+can compare an open flight model with reported outcomes under stated source
+conditions. They cannot, by themselves, identify a proprietary vendor model,
+separate sensor error from aerodynamic-model error, or establish cross-device
+agreement. Those questions belong to Release B and require paired evidence.
