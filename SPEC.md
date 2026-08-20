@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-20T08:00:51Z
+Last-Updated: 2026-08-20T09:35:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-20T08:00:51Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.210                                          |
+| **Spec Version**        | 1.0.211                                          |
 | **Last Spec Update**    | 2026-08-20                                       |
 
 ## 2. Purpose & Mission
@@ -848,3 +848,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-19 | 1.0.204 | docs(handoff): Verified remote main ancestry and closure criteria for Epic #3834 (Definitional-Integrity Migration; PRs #3845, #3846, #3847, UpstreamDrift #8588, and all 8 child issues), verified terminology gates and test suites, and audited companion articles for upcoming UpstreamDrift #8751/#8752 evidence updates. |
 | 2026-08-19 | 1.0.205 | feat(monograph): Established canonical hosting of the 34-chapter Proximal-to-Distal Energy Transfer technical monograph in AffineDrift (`articles/proximal_distal_energy_transfer/index.qmd`, `chapters/`, `figures/`, `proximal_distal_energy_transfer.pdf`). Updated `_quarto.yml` navigation, sidebar, and resources, updated `resources/articles.qmd` catalog, and added full publication contract suite verifying chapter completeness, figure resolution, and PDF metrics (181+ pages, 69,000+ words). |
 | 2026-08-19 | 1.0.206 | docs(articles, #4549 C9, #4562 H5): Published research monographs for Club Fitting Simulation (`articles/technology-club-fitting.qmd`) and Heavy Hit Multibody Impact Coupling (`articles/technology-heavy-hit-impact-coupling.qmd`) covering forward twist counterfactuals, shaft delivery forward dynamics, divergence-theorem mesh inertia, tau^2 decoupling law, and MJCF/URDF/.osim kinematic chain model interchange. |
+| 2026-08-20 | 1.0.211 | docs(content, #3830): Resolved writing-quality pass content defects across textbook chapters and companion articles: reconciled ground-reaction-force units to SI (1300-1800 N / 300-400 lbf), corrected ECRB expansion to brevis, fixed malformed impulse differential notation, restored broken list numberings/sub-items in ch05/ch06/ch14, standardized DCR/DgCR terminology, restored missing approximation tildes, aligned epistemic hedges to model-dependent framing, fixed aside closing tag in models.qmd, and added regression test coverage in test_physics_of_golf_glossary.py. |
