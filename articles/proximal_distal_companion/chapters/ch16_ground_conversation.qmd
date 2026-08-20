@@ -246,12 +246,60 @@ stationary ground. If compliant foot contact does work, define the moving
 contact point and material energy. This distinction keeps everyday “use the
 ground” language from corrupting the energy ledger.
 
+### What Happened When the Ground Was Actually Added
+
+This is no longer hypothetical. A finite planar base was added to the articulated
+model — ground translation, a free pitch moment, and a coupled pathway — each
+compared against an exact fixed-base version of the same model from the same
+state. That is 384 primary runs plus 192 control runs, on two independent physics
+engines. The numerics are clean: energy residuals halve when the timestep halves,
+the two engines agree to ten decimal places, and no run fails a check.
+
+The result is the sharpest negative in the whole program, and it is worth
+understanding rather than skipping.
+
+The test declared **in advance** that a fair comparison requires matching both
+peak grip load and total dissipated work to within 5%. **Zero of 384** cells
+passed. Peak load actually agrees well. Dissipated work does not, and cannot: only
+the version with a moving base has ground damping, so it dissipates roughly twice
+as much energy by construction. You have to loosen the tolerance to 200% before
+anything matches — at which point everything matches and the test has stopped
+meaning anything.
+
+So the honest summary is: **at this tier, a ground pathway benefit was not
+established.** Not refuted for real golfers — not established by this model.
+
+Now the part that requires discipline. If you ignore the matching requirement and
+just compare final club speed at 50 ms, the moving-base runs are faster in all 48
+cells, by up to 0.177 m/s. That looks like a clean win for "use the ground." It
+is not. Those are exactly the cells that failed the fairness check — they are
+comparing runs that dissipated different amounts of energy. Quoting that number
+as a ground benefit would invert the study's actual finding.
+
+A separate, clearly labeled follow-up asked a narrower question: if you count only
+grip and shaft dissipation and set ground damping aside, 60 cells match, and their
+speed differences run from −0.0008 to +0.0139 m/s — 20 faster, 40 slower. That is
+a sensitivity check chosen after seeing the primary failure, not a replacement
+verdict, and mostly the sign is negative.
+
+One more lesson came free. The same model, started three different ways, gave peak
+ground forces of 33, 565, and 510 N and 4 ms club speeds of 0.26, 1.91, and
+0.95 m/s. How you initialize a standing model is not a technicality; it can swing
+the answer by an order of magnitude.
+
+Keep the scope in view: this ground is a linear spring in a plane plus a pitch
+moment. It is not two feet, not friction, not pressure under the toes, and it is
+not calibrated against a force plate. It also stops at 50 ms.
+
 ### Chapter Checkpoint
 
 Ground reaction is external force evidence, not a muscle transcript or automatic
 energy source. Use it to close momentum, test contact models, and constrain the
 causal chain through body and hands. Report left/right allocation and model
 components without converting them into additive percentages.
+
+And when someone shows you a speed difference between a moving base and a fixed
+one, ask what was held equal before the comparison was made.
 
 A practical pattern becomes mechanistically meaningful only when its predicted
 mediators and outcome survive within-person manipulation and participant holdout.

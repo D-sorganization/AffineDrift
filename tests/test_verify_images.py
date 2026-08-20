@@ -17,8 +17,12 @@ def test_extract_image_urls_collects_markdown_and_html_sources() -> None:
     assert urls == ["images/chart.png", "https://example.com/plot.png"]
 
 
-def test_check_url_uses_get_when_head_is_not_allowed() -> None:
-    """405 responses should fall back from HEAD to GET."""
+def test_check_url_uses_get_when_head_is_not_allowed(stub_public_dns: str) -> None:
+    """405 responses should fall back from HEAD to GET.
+
+    ``stub_public_dns`` keeps the SSRF guard from resolving ``example.com`` for
+    real; without it this test fails whenever DNS is unavailable.
+    """
     head_response = MagicMock(status_code=405)
     get_response = MagicMock(status_code=200)
 

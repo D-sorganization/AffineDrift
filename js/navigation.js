@@ -103,7 +103,7 @@ export function initNavbarCollapse() {
         const updateToggleState = () => {
             const isOpen = navbarCollapse && navbarCollapse.classList.contains("show");
             navbarToggler.setAttribute("aria-expanded", String(isOpen));
-            const actionText = isOpen ? "Close navigation menu" : "Open navigation menu";
+            const actionText = isOpen ? "Close navigation menu (Esc)" : "Open navigation menu";
             navbarToggler.setAttribute("aria-label", actionText);
             navbarToggler.setAttribute("title", actionText);
         };
