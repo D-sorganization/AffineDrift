@@ -28,7 +28,7 @@ def test_release_boundary_and_statistical_authority_are_explicit() -> None:
         "model_campaign_manifest.json",
         "retired_non_group_safe",
         "no vendor-labelled surrogate is currently eligible",
-        "996ce08ef6d097a91cf06a0b7432ae64e2a1b13b",
+        "78f0a42540e523ac883d843394b30a636311bf9d",
         "1906d19fcace3284ae99d9dd8de213a0",
         "e2dabe8c062e4d63edc06c98f7eaf92e",
         "252 total",
