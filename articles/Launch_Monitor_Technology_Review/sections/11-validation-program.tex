@@ -1,4 +1,5 @@
-\chapter{Governed Analytics and Validation Program}
+\chapter[Governed Analytics and Validation Program]{Governed Analytics and
+\mbox{Validation Program}}
 \label{ch:validation-program}
 
 The distinction between a useful analytics platform and a scientific
@@ -9,9 +10,11 @@ associated with this review therefore use a two-release program with a
 versioned data contract, explicit use eligibility, and fail-closed
 statistics. The program is tracked by the public
 \href{https://github.com/D-sorganization/Tools/issues/4583}{Tools program
-epic}; the computational authority is UpstreamDrift, while the desktop and
-web interfaces in Tools consume its versioned results rather than
-reimplementing estimators.
+epic}. UpstreamDrift is the canonical generic contract and evidence-envelope
+authority. Tools owns the current specialized grouped estimators: Python is
+the desktop calculation authority and React is a contract-tested browser twin.
+Those grouped operations are not yet UpstreamDrift API operations, so that
+boundary is published rather than obscured by a cross-service parity claim.
 
 \section{Qualified Corpus Snapshot}
 
@@ -47,6 +50,7 @@ A future model that passes the group-safe gate would be described as
 \emph{vendor-comparable on its qualified source}, not as a reproduction or
 certification of proprietary vendor software.
 
+\newpage
 \begin{keypoint}
 Every displayed statistic carries its source identity, row-selection rule,
 units, method version, and backing row references. An unavailable result is a
@@ -64,13 +68,16 @@ player identity column. Identity is never inferred from session, club, row
 order, filename, or directory layout; missing and whitespace-only identities
 are excluded and reported.
 
-The statistical backend resides in UpstreamDrift behind a versioned contract.
-That contract returns estimates, uncertainty, warnings, source lineage, and
-machine-readable unavailable states. Tools supplies PyQt and React/Vite
+UpstreamDrift's versioned contract returns estimates, uncertainty, warnings,
+source lineage, backing-row references, and machine-readable unavailable
+states for its registered generic analyses. Tools supplies PyQt and React/Vite
 views with parity in variable choices, units, formulas, backing-data export,
-persistence, and explanatory text. Interface parity means the two clients
-consume the same result semantics; it does not justify copying the
-statistical implementation into TypeScript.
+persistence, and explanatory text. The specialized grouped estimators for
+covariation and longitudinal synthesis are currently released within Tools,
+with Python as the desktop authority and TypeScript as a tested browser twin;
+they are not yet UpstreamDrift API operations. This bounded duplication is a
+tracked architectural seam, not evidence that two independent implementations
+are automatically equivalent.
 
 Exploratory all-pairs scans report multiplicity warnings. Within-player
 analysis separates raw pooled association, player-mean-centred association,
@@ -118,13 +125,24 @@ The qualified snapshot is pinned to private authority commit and three
 independently verifiable digests:
 \begin{quote}
 \small\ttfamily
-private merge: 78f0a42540e523ac883d843394b30a636311bf9d\\
+private merge: 8cd8ad04bf2904eedd0d8f10d2aa202e437e91fd\\
 qualification: 679856edb290111a0106c0bcbd2b673f581fd6b0026409c4d643565b330709a\\
 model campaign: b70935fb4209b3f3aa18c3129ae948c4e20da74536af4d88433e5f0875960ca7\\
 capability manifest digest: 1906d19fcace3284ae99d9dd8de213a0\allowbreak{}e2dabe8c062e4d63edc06c98f7eaf92e
 \end{quote}
 These identifiers bind the reported aggregates without exposing restricted
 shot rows.
+
+The associated software and public-boundary revisions are pinned separately:
+\begin{quote}
+\small\ttfamily
+public data facade: 70feeb4889ef4d030bdb426bd7ecb465c36ba41b\\
+UpstreamDrift contract v2: 5ea0d08821ee8a1cacb93d22239abddee4813fca\\
+Tools analytics release: 08b4b013d8f58feb0a788fc67add29f64750da23
+\end{quote}
+The public facade contains capability metadata and locks, not restricted rows.
+The Tools revision supplies the PyQt/React grouped-analysis release; the
+UpstreamDrift revision supplies the generic v2 envelope and claim discipline.
 
 \section{Release B: Paired-Device Scientific Validation}
 
@@ -151,9 +169,19 @@ Each pair requires observations from two devices and exactly one independent
 reference; calibration must pass, device rows must be unique within a pair,
 serial identifiers must be SHA-256 hashes, and all members share the common
 trigger timestamp. The protocol, capture-row JSON Schema, Python validator,
-and synthetic fixture are complete, but the paired observations have not yet
-been collected. Accordingly, protocol readiness is not reported as a
-completed device-validation result.
+deterministic 252-pair schedule, immutable collection ledger, command-line
+procedure, and synthetic fixture are complete. The generated status record
+reports \path{confirmatory_ready=false}, 252 \path{not_collected} exclusions,
+and zero analyzed pairs. Its schedule and ledger are independently bound by
+SHA-256:
+\begin{quote}
+\small\ttfamily
+schedule: 72b06c034e73751dbacce8468505517a8500754d4d769cc89fed846611790173\\
+ledger: ebc1a24100b0e09ea39978127d6f1bcad3bd26bf6c4f3ae042680a833281d9c9
+\end{quote}
+Because the paired observations have not yet been collected, protocol readiness is not reported
+as a completed device-validation result; the status is a software hold point,
+not device evidence.
 
 Neural-network vendor emulators remain internal research artifacts. Their
 training manifests must pin the eligible sources, feature and target units,
