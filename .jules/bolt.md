@@ -176,3 +176,7 @@
 ## 2026-08-18 - iLQR Solver Matrix Optimizations
 **Learning:** Frequent array transposes and redundant matrix multiplications in innermost control loops (like iLQR's backward pass) create significant overhead due to memory allocation and iteration costs.
 **Action:** Always pre-compute and cache array transposes (`A.T`) and common matrix products (`V_xx @ A`) outside of innermost loops or where they are used multiple times, and vectorize per-element scaling operations when computing trajectories.
+
+## 2026-08-19 - Optimize bibliography search matching
+**Learning:** In hot loops processing thousands of bibliography entries, `String.prototype.includes` can be slightly slower than `String.prototype.indexOf(term) !== -1` across many JS engines, which compounds during search queries.
+**Action:** Replaced `.includes()` with `.indexOf(term) !== -1` in the bibliography search and scoring functions for faster keystroke responsiveness.

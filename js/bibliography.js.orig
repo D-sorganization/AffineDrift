@@ -63,9 +63,9 @@
     let score = queryTerms.length;
 
     for (const term of queryTerms) {
-      if (entry._searchTitle.indexOf(term) !== -1) score += 5;
-      if (entry._searchAuthors.indexOf(term) !== -1) score += 3;
-      if (entry._searchConcepts.indexOf(term) !== -1) score += 2;
+      if (entry._searchTitle.includes(term)) score += 5;
+      if (entry._searchAuthors.includes(term)) score += 3;
+      if (entry._searchConcepts.includes(term)) score += 2;
     }
 
     return score;
@@ -202,7 +202,7 @@
         filtered = state.entries.filter((entry) => {
             if (queryTerms.length === 0) return true;
             const haystack = entrySearchText(entry);
-            return queryTerms.every((term) => haystack.indexOf(term) !== -1);
+            return queryTerms.every((term) => haystack.includes(term));
         });
         state._lastQuery = state.query;
         state._lastEntries = state.entries;
