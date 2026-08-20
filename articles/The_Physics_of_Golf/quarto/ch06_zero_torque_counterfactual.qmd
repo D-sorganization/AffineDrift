@@ -116,8 +116,9 @@ In practice, the ZTCF is computed in simulation by:
    $$
 
 3. Running the model twice:
-
-6. Both simulations start from the *same initial condition*, so any divergence is purely due to the difference in applied torques.
+   - With $k_u = 1$: the actual (controlled) dynamics.
+   - With $k_u = 0$: the ZTCF (uncontrolled) dynamics.
+4. Both simulations start from the *same initial condition*, so any divergence is purely due to the difference in applied torques.
 
 In Simulink, this is literally a switch block in the control signal path, allowing you to toggle between reality and counterfactual with a single parameter change.
 

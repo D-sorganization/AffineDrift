@@ -521,12 +521,14 @@ All of this is encoded in understanding and exploiting the drift.
 1. **Control-affine form** separates drift and control: $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$.
 2. **Drift $\bm{f}(\bm{x})$** is what the system does without control: gravity, inertia, and velocity-dependent forces.
 3. **Control $\bm{G}(\bm{x}) \bm{u}$** is what muscles add: steering, not accelerating (mostly).
-4. **The Drift-Control Ratio (DCR)** varies through the swing.
-
-8. **Skilled golfers exploit high-DCR phases** by preparing initial conditions and transition timing that let drift assist rather than fight the intended trajectory.
-9. **The golf swing is an optimal control problem**. The nervous system implicitly solves it through learning and practice.
-10. **Technique is about riding the drift**. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
-11. **The model structure is shared** [@Featherstone2008; @Murray1994]. While individual golfers vary in geometry and strength, smooth multibody models commonly share the manipulator-equation structure $\bm{M}, \bm{C}, \bm{g}$; the numerical predictions remain individual and model-dependent.
+4. **The Drift-Control Ratio (DCR)** varies through the swing:
+   - Low at address and backswing (muscles do most of the work).
+   - Medium at transition (drift ramping up).
+   - High at impact and beyond (drift dominates).
+5. **Skilled golfers exploit high-DCR phases** by preparing initial conditions and transition timing that let drift assist rather than fight the intended trajectory.
+6. **The golf swing is an optimal control problem**. The nervous system implicitly solves it through learning and practice.
+7. **Technique is about riding the drift**. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
+8. **The model structure is shared** [@Featherstone2008; @Murray1994]. While individual golfers vary in geometry and strength, smooth multibody models commonly share the manipulator-equation structure $\bm{M}, \bm{C}, \bm{g}$; the numerical predictions remain individual and model-dependent.
 
 :::
 
@@ -536,22 +538,18 @@ All of this is encoded in understanding and exploiting the drift.
 2. **Drift at the Top**. At the top of the backswing ($\theta_1 = 150°, \theta_2 = -70°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$), compute the drift. Is the system accelerating? In which direction?
 3. **Drift During Downswing**. Compute the drift at the transition ($\theta_1 = 140°, \theta_2 = -60°, \dot{\theta}_1 = 5$ rad/s, $\dot{\theta}_2 = 0$). How much do Coriolis forces contribute compared to gravity?
 4. **DCR at Different Phases**. For each of the following states, estimate the drift magnitude and the control effect magnitude (assuming 30 N m muscular effort):
+   - Address (arm at rest, vertical)
+   - Top of backswing (arm up, at rest)
+   - Transition (arm rotating, accelerating)
+   - Impact (arm rotating fast, wrist releasing)
 
-5. Address (arm at rest, vertical)
-6. Top of backswing (arm up, at rest)
-7. Transition (arm rotating, accelerating)
-8. Impact (arm rotating fast, wrist releasing)
-
-What is the DCR in each phase?
-
-- **Optimal Control Intuition**. If you were solving the optimal control problem to maximize distance, when would you apply maximum muscular torque? Would it be early (backswing) or late (downswing)? Why?
-
-- **Weak vs. Strong Golfer**. A weak golfer has less max muscular torque (say, 30 N m vs. 50 N m for a strong golfer). How would this affect:
-1. The swing speed?
-2. The reliance on drift in the downswing?
-3. The optimal control strategy?
-
-- **Comparison to Throwing**. How is the control-affine structure of the golf swing similar to or different from the baseball throw? In both, you accelerate a mass. Are the regimes of DCR different?
+   What is the DCR in each phase?
+5. **Optimal Control Intuition**. If you were solving the optimal control problem to maximize distance, when would you apply maximum muscular torque? Would it be early (backswing) or late (downswing)? Why?
+6. **Weak vs. Strong Golfer**. A weak golfer has less max muscular torque (say, 30 N m vs. 50 N m for a strong golfer). How would this affect:
+   - The swing speed?
+   - The reliance on drift in the downswing?
+   - The optimal control strategy?
+7. **Comparison to Throwing**. How is the control-affine structure of the golf swing similar to or different from the baseball throw? In both, you accelerate a mass. Are the regimes of DCR different?
 
 ## Closing Thoughts: The Unity of Physics and Swing
 
