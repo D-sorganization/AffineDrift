@@ -254,6 +254,30 @@ response time without excessive internal cost, preload has operational value.
 If the same club task occurs with no gap or robustness difference, the proposed
 benefit is unsupported. A feeling of connection is not yet a measured state.
 
+### One Point per Hand Is Itself a Modeling Choice
+
+Treating each hand as a single contact point is convenient, and the natural
+worry is that the convenience is doing the work. That worry has been tested
+directly.
+
+Each hand was replaced by one, three, or five tension fibers spread across a
+30 mm band, while **total** grip stiffness and damping were held fixed at
+1800 N/m and 18 N$\cdot$s/m. That control matters: adding contact points without
+holding the total constant would silently stiffen the grip, and any change could
+then be blamed on stiffness rather than on distribution.
+
+Across 288 trajectories nested at 4, 10, 25, and 50 ms, the peak force on a
+single station reached 4.03 N, and the most loaded station carried **77% of the
+load** — distribution is not uniform, which is exactly why a single point can
+mislead about local loading. No contact opened during these runs. Going from
+three fibers to five changed the answer by 0.00355 at the fine timestep, so the
+description is converging rather than drifting with resolution.
+
+What this earns is narrow and worth stating precisely: grip discretization can
+now be **compared fairly**, and the comparison is stable. It does not measure
+grip pressure, identify finger anatomy, or model friction or soft tissue. A
+number of stations is not a set of fingers.
+
 ### Minimum Evidence for a Human Claim
 
 The model prediction should specify phase, frame, couple sign, magnitude range,

@@ -336,12 +336,12 @@ def convert_urls_to_html(content: str) -> str:
     r"""Convert \url{} and \href{}{} to HTML links."""
     content = re.sub(
         r"\\url\{([^}]+)\}",
-        r'<a href="\1" target="_blank" rel="noopener">\1</a>',
+        r'<a href="\1" target="_blank" rel="noopener">\1<span class="sr-only">(opens in a new tab)</span></a>',
         content,
     )
     content = re.sub(
         r"\\href\{([^}]+)\}\{([^}]+)\}",
-        r'<a href="\1" target="_blank" rel="noopener">\2</a>',
+        r'<a href="\1" target="_blank" rel="noopener">\2<span class="sr-only">(opens in a new tab)</span></a>',
         content,
     )
     return content
