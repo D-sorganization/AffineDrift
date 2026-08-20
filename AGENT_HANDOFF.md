@@ -39,6 +39,10 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 ## Launch-Monitor Professional Release Program
 
 - AffineDrift issue #3883 is the publication stream under the cross-repository Tools epic #4583.
+- Issue #3893 / `docs/3893-source-backed-sg-traceability` pins the canonical
+  source-backed SG contract (`fb4e6e41...`), Tools integration (`a7b6dc437...`),
+  and approved visual authority (`10d7f6fc...`) without treating provenance or
+  visual approval as independent statistical or baseline validation.
 - `articles/Launch_Monitor_Technology_Review/sections/11-validation-program.tex` documents the approved Release A/Release B boundary, ShotLink training quarantine, explicit-identity rule, and UpstreamDrift statistical authority.
 - The technology review may publish qualified aggregate findings and method limitations, but it must not expose private source files or describe an internal emulator as a certified vendor model.
 - Rebuild the complete PDF and inspect every rendered page whenever this chapter, the program results, or the running-header contract changes.

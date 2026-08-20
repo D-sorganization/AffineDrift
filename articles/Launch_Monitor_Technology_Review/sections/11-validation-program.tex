@@ -93,6 +93,16 @@ reproducible mapping from shot outcome to expected strokes. A distance-only
 or target-error score without that backing is labelled a \emph{performance
 proxy}; it must not borrow the strokes-gained name.
 
+The canonical scoring contract requires exact lie, context, target, and distance
+states before and after the shot. Missing states, incomplete retained rows, and
+queries outside baseline support fail closed. No expected-strokes baseline is bundled
+with the public application. A baseline's declared source URL, licence, version,
+and digest preserve provenance; that declaration does not independently endorse
+its methodology, legal suitability, or relevance to a particular player
+population. The distance/target performance proxy remains a separate yard-based
+dispersion measure whose machine-readable flag is
+\path{is_strokes_gained=false}.
+
 \section{Qualified Model-Comparison Results}
 
 The Release A campaign evaluated seven open flight-model configurations on the
@@ -137,12 +147,23 @@ The associated software and public-boundary revisions are pinned separately:
 \begin{quote}
 \small\ttfamily
 public data facade: 70feeb4889ef4d030bdb426bd7ecb465c36ba41b\\
-UpstreamDrift contract v2: 5ea0d08821ee8a1cacb93d22239abddee4813fca\\
-Tools analytics release: 08b4b013d8f58feb0a788fc67add29f64750da23
+generic UpstreamDrift contract v2: 5ea0d08821ee8a1cacb93d22239abddee4813fca\\
+Tools grouped-analytics release: 08b4b013d8f58feb0a788fc67add29f64750da23\\
+canonical source-backed SG contract: fb4e6e41ac4980309e32dacceb957f4da02616b3\\
+Tools canonical SG integration: a7b6dc437b45857e27cd07cccb56ff665826e342\\
+Tools visual approval: 10d7f6fc38d27dd04324160090a7290f46d0cfd4\\
+approved launch-monitor PNG SHA-256:\\
+6699129037d0adf8152e73bdae3fc2b7\allowbreak{}5a2e15bfb16e25a4b3cfcec2448ac00e
 \end{quote}
 The public facade contains capability metadata and locks, not restricted rows.
-The Tools revision supplies the PyQt/React grouped-analysis release; the
-UpstreamDrift revision supplies the generic v2 envelope and claim discipline.
+The older Tools revision remains the authority for the specialized grouped
+estimators, while the older UpstreamDrift revision remains the generic v2
+envelope and claim-discipline authority. The newer UpstreamDrift revision owns
+the canonical source-backed scoring contract, and the newer Tools revision is
+its PyQt/React consumer. The visual approval covers presentation and accessibility,
+not statistical correctness or baseline validity. It also does not convert an
+unbundled or user-selected expected-strokes table into endorsed scientific
+evidence.
 
 \section{Release B: Paired-Device Scientific Validation}
 
