@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-19
+Last updated: 2026-08-20
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -11,7 +11,8 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 - **Published Technical Monograph**: [`articles/proximal_distal_energy_transfer/index.qmd`](articles/proximal_distal_energy_transfer/index.qmd)
   - 34 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, exact interaction-force decompositions, multi-station Coulomb friction, and Latin Hypercube parameter sweeps.
   - Published technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (231 pages, >= 69,000 words).
-  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins the exact UpstreamDrift source release and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
+  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins UpstreamDrift protected squash `6e28baef54a04da714f1120c71c49058d7d7ebee`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
+  - The pinned profile is computational-release ready. It is not archival/PID ready: the PDF is untagged and retains Type 3 and unembedded font resources.
   - Dual web & PDF rendering registered in `_quarto.yml` (resources, `books-nav` sidebar, and `Read` navbar).
 - **Lay Companion Book**: [`articles/proximal-distal-a-journey-through-the-swing.qmd`](articles/proximal-distal-a-journey-through-the-swing.qmd) (30 chapters, PDF).
 - **Web Summary Article & Workbench**: [`articles/proximal-distal-energy-transfer.qmd`](articles/proximal-distal-energy-transfer.qmd) and [`articles/proximal-distal-model-workbench.qmd`](articles/proximal-distal-model-workbench.qmd).
@@ -25,8 +26,8 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 
 ## Research Evidence & UpstreamDrift Alignment
 
-- Source snapshot is pinned to UpstreamDrift `637f4c4158737efe6d4ba7f22f542c65bfc8c46b`. It includes preliminary #8751/#8752 work; both issues remain open against their unchanged acceptance criteria.
-- Source release: 568 artifacts, 295 atomic claims, 1,063 reviewed candidates, and 40 release claims with scientifically open gates.
+- Source release is pinned to UpstreamDrift protected squash `6e28baef54a04da714f1120c71c49058d7d7ebee`. #8751/#8752 remain open against their unchanged acceptance criteria.
+- Source release: 571 artifacts, 295 atomic claims, 2,100 evidence references, 301 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - #3882 owns the immutable publication-projection contract, portable links, generated metadata, and deployment qualification.
 - **Critical Adverse Results**:
   - Ground screen: 0/384 coupled--fixed cells admitted under registered 5% match (ground damping asymmetry). Post-hoc screen admits 60 cells with mixed signs.
