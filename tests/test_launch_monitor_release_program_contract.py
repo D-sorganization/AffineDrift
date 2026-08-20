@@ -1,0 +1,44 @@
+"""Publication contract for the governed launch-monitor research program."""
+
+from pathlib import Path
+
+ROOT = Path(__file__).parents[1]
+ARTICLE = ROOT / "articles" / "Launch_Monitor_Technology_Review"
+
+
+def test_professional_release_chapter_is_registered() -> None:
+    main = (ARTICLE / "main.tex").read_text(encoding="utf-8")
+    assert r"\input{sections/11-validation-program}" in main
+
+
+def test_release_boundary_and_statistical_authority_are_explicit() -> None:
+    chapter = (ARTICLE / "sections" / "11-validation-program.tex").read_text(encoding="utf-8")
+    required = (
+        "Release A",
+        "Release B",
+        "UpstreamDrift",
+        "paired-device",
+        "unavailable",
+        "player identity",
+        "ShotLink",
+        "not eligible for vendor-model training",
+        "96,901",
+        "12.256",
+        "source-stratified",
+        "model_campaign_manifest.json",
+        "retired_non_group_safe",
+        "no vendor-labelled surrogate is currently eligible",
+        "996ce08ef6d097a91cf06a0b7432ae64e2a1b13b",
+        "1906d19fcace3284ae99d9dd8de213a0",
+        "e2dabe8c062e4d63edc06c98f7eaf92e",
+        "252 total",
+        "protocol readiness is not reported",
+    )
+    for phrase in required:
+        assert phrase in chapter
+
+
+def test_running_header_uses_compact_chapter_mark() -> None:
+    preamble = (ARTICLE / "preamble.tex").read_text(encoding="utf-8")
+    assert r"\renewcommand{\chaptermark}[1]" in preamble
+    assert r"\chaptername\ \thechapter" in preamble
