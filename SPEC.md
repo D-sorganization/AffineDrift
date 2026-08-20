@@ -833,6 +833,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-16 | 1.0.203 | test(hermetic): Fixed three intermittently failing `verify_images` tests that reached real DNS through the `is_safe_url` SSRF guard. Added shared `dns_stub`/`stub_public_dns` fixtures in `tests/conftest.py` and direct rejection-path coverage for the guard (`TestIsSafeUrl`). Guard behaviour unchanged. |
 | 2026-08-17 | 1.0.203 | **UX Improvement:** Added keyboard shortcut hint (Esc) to the navigation and workspace close buttons for better UX visibility. |
 | 2026-08-18 | 1.0.203 | Optimized reading progress geometry calculation and DOM writes to prevent layout thrashing |
+| 2026-08-18 | 1.0.203 | **Bolt:** Optimized iLQR solver matrix operations and line search loops for improved performance. |
 | 2026-08-18 | 1.0.203 | Palette UX: Added screen reader warnings for `target="_blank"` links |
 | 2026-08-19 | 1.0.203 | Optimized bibliography search performance by replacing `.includes()` with `.indexOf(term) !== -1` in hot paths. |
 | 2026-08-19 | 1.0.203 | Added screen reader warning to target="\_blank" links |

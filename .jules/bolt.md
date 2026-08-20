@@ -173,6 +173,10 @@
 ## 2026-08-02 - Eliminate redundant dataset filtering on sort updates
 **Learning:** When users trigger UI updates that do not mutate the query state (like changing sort orders), recalculating complex O(N) array filtering logic over the entire dataset is highly inefficient and blocks the main thread unnecessarily.
 **Action:** Always cache the input query, the source dataset, and the resulting filtered dataset. If a non-mutating action is triggered (e.g., sort change), bypass the filtering logic and directly reuse a shallow copy of the cached pre-filtered dataset to prevent in-place sorting mutations.
+## 2026-08-18 - iLQR Solver Matrix Optimizations
+**Learning:** Frequent array transposes and redundant matrix multiplications in innermost control loops (like iLQR's backward pass) create significant overhead due to memory allocation and iteration costs.
+**Action:** Always pre-compute and cache array transposes (`A.T`) and common matrix products (`V_xx @ A`) outside of innermost loops or where they are used multiple times, and vectorize per-element scaling operations when computing trajectories.
+
 ## 2026-08-18 - Optimize Reading Progress Scroll Handler
 **Learning:** Recalculating document geometry (e.g., `document.documentElement.scrollHeight - window.innerHeight`) on every scroll event, even when batched via `requestAnimationFrame`, causes unnecessary layout calculations and thrashing. Additionally, unconditionally writing to the DOM (like setting `bar.style.transform`) when the value hasn't meaningfully changed wastes main thread resources.
 **Action:** Extract geometry calculations out of the scroll handler into a debounced resize observer. Cache the previous transform state and only write to the DOM when the calculated ratio actually changes.

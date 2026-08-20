@@ -169,13 +169,18 @@ class ILQRSolver:
         """Assemble Q_x, Q_u, Q_xx, Q_uu, Q_ux for one backward-pass step."""
         lx = Q @ (x_k - xf)
         lu = R @ u_k
-        lux = np.zeros((n_u, n_x))
 
-        Q_x = lx + A.T @ V_x
-        Q_u = lu + B.T @ V_x
-        Q_xx = Q + A.T @ V_xx @ A
-        Q_uu = R + B.T @ V_xx @ B
-        Q_ux = lux + B.T @ V_xx @ A
+        A_T = A.T
+        B_T = B.T
+
+        # ⚡ Bolt Optimization: Precompute matrix products to avoid redundant operations
+        V_xx_A = V_xx @ A
+
+        Q_x = lx + A_T @ V_x
+        Q_u = lu + B_T @ V_x
+        Q_xx = Q + A_T @ V_xx_A
+        Q_uu = R + B_T @ (V_xx @ B)
+        Q_ux = B_T @ V_xx_A
         return Q_x, Q_u, Q_xx, Q_uu, Q_ux
 
     @staticmethod
@@ -227,8 +232,14 @@ class ILQRSolver:
             k_traj[k_idx] = k_gain
             K_traj[k_idx] = K_gain
 
-            V_x = Q_x + K_gain.T @ Q_uu @ k_gain + K_gain.T @ Q_u + Q_ux.T @ k_gain
-            V_xx = Q_xx + K_gain.T @ Q_uu @ K_gain + K_gain.T @ Q_ux + Q_ux.T @ K_gain
+            # ⚡ Bolt Optimization: Cache transposes and precompute matrix products
+            K_gain_T = K_gain.T
+            Q_ux_T = Q_ux.T
+            Q_uu_k = Q_uu @ k_gain
+            Q_uu_K = Q_uu @ K_gain
+
+            V_x = Q_x + K_gain_T @ (Q_uu_k + Q_u) + Q_ux_T @ k_gain
+            V_xx = Q_xx + K_gain_T @ (Q_uu_K + Q_ux) + Q_ux_T @ K_gain
 
             max_k = max(max_k, np.max(np.abs(k_gain)))
 
@@ -284,12 +295,12 @@ class ILQRSolver:
             x_new = np.zeros_like(x_traj)
             u_new = np.zeros_like(u_traj)
             x_new[0] = x0
+
+            # ⚡ Bolt Optimization: Vectorize alpha scaling over the trajectory
+            u_ff = u_traj + alpha * k_traj
+
             for k_idx in range(N):
-                u_new[k_idx] = (
-                    u_traj[k_idx]
-                    + alpha * k_traj[k_idx]
-                    + K_traj[k_idx] @ (x_new[k_idx] - x_traj[k_idx])
-                )
+                u_new[k_idx] = u_ff[k_idx] + K_traj[k_idx] @ (x_new[k_idx] - x_traj[k_idx])
                 dx = self._validated_dynamics_output(
                     dynamics_fn, x_new[k_idx], u_new[k_idx], x0.shape
                 )
