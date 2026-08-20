@@ -207,7 +207,9 @@ def _read_bounded(location: str, limit: int) -> bytes:
             raise ProjectionError(f"remote resource must use HTTPS: {location}")
         request = urllib.request.Request(location, headers={"User-Agent": USER_AGENT})
         # HTTPS-only source is pinned by digest before its JSON is trusted.
-        with urllib.request.urlopen(request, timeout=30) as response:  # noqa: S310 -- HTTPS only
+        with urllib.request.urlopen(
+            request, timeout=30
+        ) as response:  # noqa: S310 -- HTTPS only  # nosec B310
             data = response.read(limit + 1)
     if len(data) > limit:
         raise ProjectionError(f"resource exceeds {limit} bytes: {location}")
