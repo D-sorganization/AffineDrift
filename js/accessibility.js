@@ -3,7 +3,7 @@
  * Handles all accessibility features and ARIA labels
  */
 
-import { runOnDomReady } from "./utils.js";
+import { runOnDomReady, debounce } from "./utils.js";
 import { registerScrollCallback } from "./ui-components.js";
 
 /**
@@ -330,19 +330,34 @@ export function initReadingProgress() {
     bar.setAttribute("aria-hidden", "true");
     document.body.appendChild(bar);
 
+    let docHeight = 0;
+    const updateGeometry = () => {
+        docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    };
+    updateGeometry();
+
+    let lastRatio = -1;
     function update(scrollTop = window.scrollY) {
-        const docHeight =
-            document.documentElement.scrollHeight - window.innerHeight;
         const ratio = docHeight > 0 ? scrollTop / docHeight : 0;
-        bar.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
+        const boundedRatio = Math.min(Math.max(ratio, 0), 1);
+        if (boundedRatio !== lastRatio) {
+            bar.style.transform = `scaleX(${boundedRatio})`;
+            lastRatio = boundedRatio;
+        }
     }
 
-    function performUpdate() {
-        update();
-    }
+    const debouncedUpdateGeometry = debounce(() => {
+        updateGeometry();
+        window.requestAnimationFrame(() => update());
+    }, 250);
 
     function handleResize() {
-        window.requestAnimationFrame(performUpdate);
+        debouncedUpdateGeometry();
+    }
+
+    if (typeof ResizeObserver !== "undefined") {
+        const resizeObserver = new ResizeObserver(debouncedUpdateGeometry);
+        resizeObserver.observe(document.body);
     }
 
     registerScrollCallback(update);
