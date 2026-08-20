@@ -114,6 +114,18 @@ companion \path{multisource_v2_model_report.md} states row selection and
 limitations in human-readable form. Restricted rows remain in the private
 authority; the public paper reports only qualified aggregates.
 
+The qualified snapshot is pinned to private authority commit and three
+independently verifiable digests:
+\begin{quote}
+\small\ttfamily
+commit: 996ce08ef6d097a91cf06a0b7432ae64e2a1b13b\\
+qualification: 679856edb290111a0106c0bcbd2b673f581fd6b0026409c4d643565b330709a\\
+model campaign: b70935fb4209b3f3aa18c3129ae948c4e20da74536af4d88433e5f0875960ca7\\
+capability manifest digest: 1906d19fcace3284ae99d9dd8de213a0\allowbreak{}e2dabe8c062e4d63edc06c98f7eaf92e
+\end{quote}
+These identifiers bind the reported aggregates without exposing restricted
+shot rows.
+
 \section{Release B: Paired-Device Scientific Validation}
 
 Release B begins only after a preregistered paired-device protocol has been
@@ -132,6 +144,16 @@ models are more informative here than correlation alone: two devices can be
 highly correlated while disagreeing systematically. Sample-size targets and
 exclusion rules must be fixed before inspecting device differences. Firmware
 changes form new strata rather than being pooled invisibly.
+
+The preregistered confirmatory design uses exactly three robot-centre,
+outdoor club/speed cells with 84 accepted shot pairs per cell (252 total).
+Each pair requires observations from two devices and exactly one independent
+reference; calibration must pass, device rows must be unique within a pair,
+serial identifiers must be SHA-256 hashes, and all members share the common
+trigger timestamp. The protocol, capture-row JSON Schema, Python validator,
+and synthetic fixture are complete, but the paired observations have not yet
+been collected. Accordingly, protocol readiness is not reported as a
+completed device-validation result.
 
 Neural-network vendor emulators remain internal research artifacts. Their
 training manifests must pin the eligible sources, feature and target units,
