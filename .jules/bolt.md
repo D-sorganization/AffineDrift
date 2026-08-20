@@ -176,3 +176,7 @@
 ## 2026-08-18 - Optimize Reading Progress Scroll Handler
 **Learning:** Recalculating document geometry (e.g., `document.documentElement.scrollHeight - window.innerHeight`) on every scroll event, even when batched via `requestAnimationFrame`, causes unnecessary layout calculations and thrashing. Additionally, unconditionally writing to the DOM (like setting `bar.style.transform`) when the value hasn't meaningfully changed wastes main thread resources.
 **Action:** Extract geometry calculations out of the scroll handler into a debounced resize observer. Cache the previous transform state and only write to the DOM when the calculated ratio actually changes.
+
+## 2026-08-19 - Optimize bibliography search matching
+**Learning:** In hot loops processing thousands of bibliography entries, `String.prototype.includes` can be slightly slower than `String.prototype.indexOf(term) !== -1` across many JS engines, which compounds during search queries.
+**Action:** Replaced `.includes()` with `.indexOf(term) !== -1` in the bibliography search and scoring functions for faster keystroke responsiveness.
