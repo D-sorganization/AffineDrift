@@ -60,3 +60,15 @@ def test_zvcf_is_an_instantaneous_zero_control_acceleration() -> None:
     assert "instantaneous acceleration" in chapter_text
     assert "with both velocity and declared control set to zero" in chapter_text
     assert "then release" not in chapter_text
+
+
+def test_ecrb_anatomical_expansion_and_grf_units() -> None:
+    """Verify ECRB is expanded as brevis and ground reaction forces use consistent SI units."""
+    ch17_qmd = (
+        ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch17_muscle_force_generation.qmd"
+    )
+    ch07_qmd = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch07_constraint_forces.qmd"
+
+    assert "extensor carpi radialis brevis (ECRB)" in ch17_qmd.read_text(encoding="utf-8")
+    assert "extensor carpi radialis longus (ECRB)" not in ch17_qmd.read_text(encoding="utf-8")
+    assert "ground reaction forces ($1300$--$1800$ N)" in ch07_qmd.read_text(encoding="utf-8")
