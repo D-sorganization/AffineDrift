@@ -24,8 +24,10 @@ changes were made in that session — the deliverable is the issue set below.
     don't resolve from the including `index.qmd`; contract-test regex masks it.
   - #3907 (P1): 30 companion chapters + `volume2_content.qmd` are include
     partials without `_` prefix — rendered twice (assembled + untitled orphans).
-  - #3908 (P1): 72 internal markdown files (governance/operations/security/
+  - #3908 (P1): 57 internal markdown files (governance/operations/security/
     issue write-ups) inside `docs/` are deployed wholesale to GitHub Pages.
+    (72 tracked non-HTML files total; the other 15 are css/js/svg/pdf assets,
+    including the intentional CI-enforced CSS mirrors — not part of the defect.)
   - #3909 (P1): sitemap generator glob is non-recursive → 82 of ~253 URLs;
     coverage CI checks only sitemap→source.
   - #3910 (P2): both textbook landing pages link zero of their own chapters;
