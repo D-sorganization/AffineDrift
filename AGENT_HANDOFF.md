@@ -45,6 +45,30 @@ changes were made in that session — the deliverable is the issue set below.
   Physics of Golf ch27 are distinct; the drifter-manifesto single-file edition
   is intentional; navbar hrefs all resolve; the `../../critiques/` link works
   via browser root-clamping (hygiene only, folded into #3897).
+- **Content-quality sweep issues (second wave, verified):**
+  - #3916 (CI): benchmark workflow fails at collection — PyYAML missing from
+    `requirements-benchmarks.txt` (pre-existing on main; noted on PR #3915).
+  - #3917 (P1): ~50 `page-layout: full` pages render with no H1 (CSS hides the
+    title block; pages author no hero heading); plus 7 multi-H1 articles.
+  - #3918 (P1): unfinished content navbar-promoted — empty Book Reviews page,
+    five self-described research-review stubs, learning-paths template
+    placeholder, Volumes II–IV advertised "Start with Chapter 1" with zero
+    readable chapters.
+  - #3919 (P2): formatting — double section numbering (4 articles), math `|`
+    breaking the rotation-converter table, 18 heading-level skips, orphan
+    "Defense" TOC headings.
+  - #3920 (P2): editorial residue — duplicate-content notice on
+    affine-nature-golf-swing, revision-history blocks, maintainer instructions,
+    tracker numbers in prose, I-vs-we voice inconsistency.
+  - #3921 (P2): internal consistency — Volume I chapter titles/sources/read
+    links disagree, phantom "Section N" references, empty cross-referenced
+    `#sec-methods`, technology page "three instruments" above ten articles.
+  - #3922 (P2): development-roadmap page stale and self-contradicting.
+  - #3923 (P2): five repository/model pages describe a repository but link none.
+- **Verified clean (from the same sweep — don't re-audit):** 0 unresolved
+  `@sec-/@fig-/@eq-` refs; 0 unresolved `[@key]` citations against the six
+  wired `.bib` files; 0 `Author1995?` artifacts; every image has alt text;
+  `description:` present on all 98 top-level pages.
 - Prose/style quality is owned by the pre-existing writing-quality program
   (#3821, children #3823–#3828) — the issues above deliberately exclude it.
 
