@@ -30,7 +30,7 @@ The Drifter Manifesto establishes the control-affine framework, introduces key c
 
 # Part 1: State Definition and Affine Derivation {#sec-part1}
 
-### Abstract
+## Abstract
 
 ::: {.callout-note}
 ### Novelty Status
@@ -749,7 +749,7 @@ Within these constraints, the affine decomposition is exact. Outside them, causa
 - **Terminology:** "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' labels for these constructions; the underlying mathematics is standard rigid-body dynamics.
 :::
 
-### Drift vs. Input Decomposition {#drift-vs-input-decomposition}
+## Drift vs. Input Decomposition {#drift-vs-input-decomposition}
 
 ::: {.callout-note}
 ### Recap of Part I
@@ -764,7 +764,7 @@ This shift is enabled by the **Mechanical Separability** derived in Part I (the 
 
 Given the control-affine form $\dot{x} = f(x) + G(x)u$, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
-#### Passive Drift Dynamics
+### Passive Drift Dynamics
 
 The *drift dynamics* are defined as the evolution of the system in the absence of all muscular torques:
 
@@ -780,7 +780,7 @@ Physically, this includes:
 
 Drift represents what the system would do "on its own" given its current configuration, velocities, and shaft deformation, under the modeling assumptions stated earlier.
 
-#### Torque-Driven Input Dynamics
+### Torque-Driven Input Dynamics
 
 The *input dynamics* are defined as the torque-driven component:
 
@@ -794,7 +794,7 @@ Key properties:
 
 This term represents the portion of the dynamics directly caused by the golfer's applied torques at the mechanical level of description.
 
-#### Total Evolution and Causal Interpretation Within the Model
+### Total Evolution and Causal Interpretation Within the Model
 
 Combining the two contributions yields
 
@@ -811,7 +811,7 @@ This analytical separation does more than simplify the equations; it provides th
 
 To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).
 
-#### Role in Counterfactual Analysis
+### Role in Counterfactual Analysis
 
 The drift--input decomposition underlies the counterfactual tools introduced later:
 
@@ -1157,7 +1157,7 @@ But is this separation scientifically valid? A skeptic might argue that in a bio
 - **Terminology:** The specific taxonomy labels are the authors' applied framing; the underlying mechanics is standard.
 :::
 
-### Drift Invariance and Input Constraints
+## Drift Invariance and Input Constraints
 
 ::: {.callout-note}
 ### Recap of Part II
@@ -1186,7 +1186,7 @@ $$\dot{x} = f(x) + G(x)u$$
 
 is therefore meaningful only if the drift term $f(x)$ is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.
 
-#### Definition of Drift Invariance
+### Definition of Drift Invariance
 
 The drift vector field $f(x)$ is said to be *input-invariant* if
 
@@ -1263,7 +1263,7 @@ is an intrinsic property of the system's geometry, inertia, shaft deformation, a
 
 This invariance is what makes ZTCF a well-defined counterfactual: setting $u=0$ removes the input term entirely, with no hidden torque dependence remaining inside $f(x)$.
 
-#### Consequences of Drift Invariance
+### Consequences of Drift Invariance
 
 Drift invariance has three key consequences for the force decomposition.
 
@@ -1300,7 +1300,7 @@ changes $f(x)$.
 
 In contrast, changing the torque profile $u(t)$ leaves $f(x)$ unchanged. This separation is the foundation for counterfactual analysis, optimization of torque profiles, and sensitivity studies.
 
-#### Velocity Dependence vs. Torque Dependence
+### Velocity Dependence vs. Torque Dependence
 
 Although the drift is independent of torque, it may depend strongly on velocity. In particular,
 
@@ -1316,7 +1316,7 @@ $$f(x) \ \text{independent of } u,
 
 This distinction motivates the role of ZVCF, which isolates the configuration-dependent subset of drift forces by removing all velocity dependence.
 
-#### Input Constraints
+### Input Constraints
 
 The affine structure admits input constraints of the form
 
@@ -1342,7 +1342,7 @@ Thus, even with realistic physiological limitations,
 - ZTCF and ZVCF remain fully defined,
 - causal attributions remain meaningful within the model.
 
-#### Interpretational Scope
+### Interpretational Scope
 
 Drift invariance enables strong causal statements, but only *within the mechanical model*. Real neuromuscular systems impose:
 
@@ -2324,7 +2324,7 @@ However, algebraic exactness in continuous time does not guarantee numerical sta
 This numerical validation is restricted to planar motion and cannot verify 3D gyroscopic drift invariance. The planar model ($q \in \mathbb{R}^3$) lacks the three-dimensional rotational degrees of freedom required to test gyroscopic effects that rely on the cross-product terms $\omega \times I \omega$ (discussed in Part III). The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment; verification of 3D drift invariance remains a theoretical prediction until extended to full spatial simulations or experimental testing.
 :::
 
-### Simulink Forward Dynamics Modeling and Counterfactual Evaluation
+## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
 The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.
 
@@ -2332,7 +2332,7 @@ Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \t
 
 To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Phase III), we require a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate the **algebraic consistency** of the affine decomposition in the planar environment described above. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
-#### Model Construction
+### Model Construction
 
 The model consists of:
 
@@ -2348,7 +2348,7 @@ Shaft flexibility was represented using modal bending dynamics, similar to Appen
 The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing. **Crucially, this simulation uses constant coefficients and therefore does not validate the "Stiffness Pulse" or "Intentional Constraint Collapse" mechanisms discussed in the theoretical articles.** It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.
 :::
 
-#### Zero-Torque Counterfactual Evaluation via "Kill Switches"
+### Zero-Torque Counterfactual Evaluation via "Kill Switches"
 
 To compute the Zero Torque Counterfactual (ZTCF) within a forward dynamics environment, the Simulink model incorporated "kill switches" at every joint. These switches instantaneously set applied joint torques to zero at a prescribed time while leaving the system state untouched.
 
@@ -2361,7 +2361,7 @@ A total of 56 kill-switch times were distributed uniformly across the downswing.
 
 This procedure produced a sampled version of the drift forces across the downswing. The resulting "counterfactual" points represent the purely passive momentum contribution to the hand--club interaction forces.
 
-#### Comparison With Total Forces
+### Comparison With Total Forces
 
 For each kill-switch instant, the interaction forces produced under drift-only dynamics were compared to the forces produced during the corresponding instant of the full torque-driven swing. The difference between these two represents the torque-driven contribution.
 
@@ -2379,7 +2379,7 @@ This "overshoot" of passive momentum—where drift forces exceed the total force
 
 These findings match the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high-velocity phases of the swing.
 
-#### Zero Velocity Counterfactual Computation and Validation
+### Zero Velocity Counterfactual Computation and Validation
 
 The Simulink implementation has been extended to compute the Zero Velocity Counterfactual (ZVCF) as well. For each state $x(t)$ on the simulated trajectory:
 
@@ -2400,7 +2400,7 @@ At $t_0$ the ZTCF run records the full drift force $\tau_{\mathrm{drift}}(x(t_0)
 This is a **Numerical Consistency Check**—a verification that discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory without introducing numerical artifacts. It does NOT validate the control-affine model itself against reality. The identity follows from the Lagrangian formulation; its numerical truth in simulation proves only that the implementation is correct, not that the model accurately predicts actual golf swings. Model validation requires comparison with experimental data from real athletes.
 :::
 
-#### Implications for Future Work
+### Implications for Future Work
 
 ::: {.callout-note}
 ### Numerical Identity ≠ Model Validation
