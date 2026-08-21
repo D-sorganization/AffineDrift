@@ -50,7 +50,7 @@ Not all muscle fibers are created equal. The human body contains three main fibe
 - Type IIx (fast-twitch glycolytic) Fastest contraction ($\sim 20$ ms), highest force production, rapid fatigue. Power from anaerobic glycolysis. Most powerful for brief bursts. About 5--15% of untrained muscles (training can increase this) [@Neumann2017].
 
 
-Powerful golf swings place high demands on fast force development, so Type II fiber recruitment and training history are relevant. This chapter does not assume a universal elite-golfer fiber profile without subject-specific measurement.
+Powerful golf swings place high demands on fast force development, so Type II fiber recruitment and training history are relevant [@Hume2005]. This chapter does not assume a universal elite-golfer fiber profile without subject-specific measurement.
 
 :::
 
@@ -67,7 +67,7 @@ Most muscles do not run straight from origin to insertion. Instead, muscle fiber
 - $\sigma_{\max}$ = specific tension (force per unit area), in this simplified illustrative range, 30--60 N/cm$^2$ for healthy muscle [@Zajac1989, @zajac1993muscle, @thelen2003adjustment]
 - Maximum isometric force: $F_0 = \sigma_{\max} \times A_{\mathrm{PCSA}}$
 
-For example, if a latissimus dorsi model uses a PCSA of $\sim 30$ cm$^2$ and $\sigma_{\max} = 35$ N/cm$^2$, the estimated maximum isometric force is about 1000 N. That estimate is parameter-dependent and should not be read as a measured value for every golfer.
+For example, the latissimus dorsi (primary force generator in the downswing) has been studied extensively in biomechanical literature [@Delp1990; @Rajagopal2016]. If a latissimus dorsi model uses a PCSA of $\sim 30$ cm$^2$ and $\sigma_{\max} = 35$ N/cm$^2$, the estimated maximum isometric force is about 1000 N. That estimate is parameter-dependent and should not be read as a measured value for every golfer.
 
 :::
 
@@ -135,9 +135,7 @@ Here is the critical insight that links muscle biology to the drift-control rati
 
 When a muscle fiber contracts, each myosin head must attach, rotate, and detach. This cycle takes finite time. If the fiber shortens quickly, fewer cross-bridges can bear load at any instant, so active force drops. In a high-speed downswing, this mechanism can reduce late-phase torque authority while inertial terms are large. Whether control "fails" at impact is therefore a model-dependent statement: it depends on the estimated joint speeds, muscle velocities, available eccentric braking, grip constraints, and contact assumptions.
 
-:::
-
-Hill's hyperbolic relationship, in its normalized form for *concentric contraction* (shortening under load), is:
+Hill's hyperbolic relationship, discovered by A.V. Hill in 1938 [@Hill1938], in its normalized form for *concentric contraction* (shortening under load), is:
 $$
 f_V(\tilde{v}) = \frac{1 - \tilde{v}/V_{\max}}{1 + \tilde{v}/(V_{\max} \cdot k)}
 $$ {#eq-hill-concentric}
@@ -148,11 +146,13 @@ where:
 - $k$ is a dimensionless parameter, typically $0.3$--$0.5$
 - $f_V$ ranges from 1 at zero velocity to 0 at $\tilde{v} = V_{\max}$
 
-For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), force *increases* beyond $F_0$. Following the formulation of Thelen (2003), the eccentric force-velocity relationship asymptotes to a finite maximum rather than diverging:
+For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), force *increases* beyond $F_0$ [@Hill1938]. Following the formulation of Thelen (2003), the eccentric force-velocity relationship asymptotes to a finite maximum rather than diverging:
 $$
 f_V^{\mathrm{ecc}}(\tilde{v}) = F_{\mathrm{asym}} - (F_{\mathrm{asym}} - 1) \cdot \frac{1 + \tilde{v}/V_{\max}}{1 - k_{\mathrm{ecc}} \tilde{v}/V_{\max}}
 $$ {#eq-hill-eccentric}
 where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fraction of $F_0$), $k_{\mathrm{ecc}} \approx 0.25$, and $\tilde{v}$ is negative for lengthening. This formulation is physiologically realistic: eccentric contractions can produce approximately 1.2--1.5 times the isometric force but plateau at a finite value [@thelen2003adjustment].
+
+:::
 
 ::: {.callout-important}
 ## Concentric vs. Eccentric: The Asymmetry
@@ -177,7 +177,7 @@ where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fr
 
 - Scales as $f_V(\tilde{v}) \approx (1 - \tilde{v}/V_{\max})$ (linear decrease)
 - At impact, muscle shortening velocity must be computed from joint kinematics and moment arms, not inferred directly from clubhead speed
-- Available force can be substantially reduced during rapid concentric shortening, while eccentric braking may preserve more force
+- Available force can be substantially reduced during rapid concentric shortening, while eccentric braking may remain important
 - Peak controllable torque is therefore an estimate from the chosen musculoskeletal model, not a universal value
 
 
@@ -187,7 +187,7 @@ where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fr
 ::: {.callout-tip}
 ## Numerical Estimate: Wrist Muscle Force at Impact
 
-Consider the extensor carpi radialis brevis (ECRB), a wrist extensor involved in club control:
+Consider the extensor carpi radialis brevis (ECRB), a wrist extensor involved in club control [@Delp1990; @Delp2007; @Thelen2006; @Rajagopal2016]:
 
 - Maximum isometric force: $F_0 \approx 50$ N (small muscle, PCSA $\approx 1.5$ cm$^2$ at $\sigma_{\max} \approx 33$ N/cm$^2$)
 - Maximum fiber velocity: $V_{\max} \approx 8$ m/s (fast-twitch dominant)
@@ -391,7 +391,7 @@ This example illustrates a possible loss of late-phase authority. It should not 
 ## Muscle Force in the Golf Swing: Realistic Numbers
 
 
-The following ranges are illustrative values used to show scale. They should be replaced by study-specific numbers when a chapter makes a quantitative claim about a measured swing.
+The following ranges are illustrative values based on biomechanical studies using motion capture, force plates, and inverse dynamics [@Nesbit2005; @Gatt1998; @McTeigue1994]. They should be replaced by study-specific numbers when a chapter makes a quantitative claim about a measured swing.
 
 ::: {.callout-important}
 ## Peak Torques at Major Golf Joints
