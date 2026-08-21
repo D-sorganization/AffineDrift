@@ -1,8 +1,52 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-20
+Last updated: 2026-08-21
 
 This is current operational state. Historical detail belongs in git/GitHub.
+
+## Website Adversarial Review & Cross-Linking Program (2026-08-21)
+
+A full adversarial review of website content, organization, and cross-article
+linking was completed and converted into tracked GitHub issues. No content
+changes were made in that session — the deliverable is the issue set below.
+
+- **Cross-Article Linking Epic #3896** with sub-issues #3897–#3905 (C1–C9).
+  Measured baseline: the link graph is a star through five hub pages; 53/98
+  top-level content pages have zero outbound content links; all models/ and
+  repositories/ pages are lateral orphans; `categories:` exists on only 12/98
+  pages. Architecture decided: one canonical Related Articles component
+  (theory-core callout style), controlled `categories:` taxonomy in `config/`,
+  CI enforcement by extending `scripts/link-checker.py` (author-curated links,
+  validated — not auto-generated), and Quarto sidebar/prev-next for series.
+  Sequencing: C1→C2→C3 are the foundation; C4–C9 are per-cluster wiring.
+- **Defect issues filed (verified, with evidence in each issue):**
+  - #3906 (P1): monograph ch03b/c/d figure paths (`data/...`, `../figures/`)
+    don't resolve from the including `index.qmd`; contract-test regex masks it.
+  - #3907 (P1): 30 companion chapters + `volume2_content.qmd` are include
+    partials without `_` prefix — rendered twice (assembled + untitled orphans).
+  - #3908 (P1): 72 internal markdown files (governance/operations/security/
+    issue write-ups) inside `docs/` are deployed wholesale to GitHub Pages.
+  - #3909 (P1): sitemap generator glob is non-recursive → 82 of ~253 URLs;
+    coverage CI checks only sitemap→source.
+  - #3910 (P2): both textbook landing pages link zero of their own chapters;
+    ch09b fully orphaned.
+  - #3911 (P2): navigation coherence (models hub links no sub-pages, resources
+    hub unreachable, canonical theory series absent from navbar, tools vs
+    software split, books-nav sidebar inconsistency, ~20 label/title mismatches).
+  - #3912 (P2): Article Index missing 9 top-level articles + 38 rendered pages.
+  - #3913 (P2): tangent-space material published as four parallel sets;
+    `_CRITIC` review memos and packaging artifacts render publicly (editorial
+    decision required before excluding).
+  - #3914 (P2): 76 rendered pages lack `title:` front matter; "Section Y"
+    placeholder title; 7 "Figure Pending" TOC headings; drifter-manifesto slug
+    collision (the single-file edition itself is deliberate and canonical-marked).
+- **Known non-defects (do not re-file):** `inverse-dynamics` vs
+  `inverse-dynamics-inference` are distinct; `passive-distributed-control` vs
+  Physics of Golf ch27 are distinct; the drifter-manifesto single-file edition
+  is intentional; navbar hrefs all resolve; the `../../critiques/` link works
+  via browser root-clamping (hygiene only, folded into #3897).
+- Prose/style quality is owned by the pre-existing writing-quality program
+  (#3821, children #3823–#3828) — the issues above deliberately exclude it.
 
 ## Publication Architecture & Proximal-to-Distal Monograph
 
