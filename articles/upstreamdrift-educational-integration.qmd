@@ -32,10 +32,10 @@ Access requires D-sorganization membership.
 
 Some code blocks below (Drift-Control Ratio analyzer, contraction-rate verifier,
 Floquet multipliers, ABA-timing benchmark) describe a **proposed** reference API
-that is not yet shipped in UpstreamDrift. Implementation is tracked in
-[UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431).
+that is in development in UpstreamDrift. Implementation is tracked in
+the [UpstreamDrift feature roadmap](https://github.com/D-sorganization/UpstreamDrift).
 
-- [ ] When UpstreamDrift#7431 lands, replace the "proposed API" banners here with runnable examples and drop the *(proposed)* / *(planned)* labels.
+- [ ] When the tooling lands, replace the "proposed API" banners here with runnable examples and drop the *(proposed)* / *(planned)* labels.
 :::
 
 
@@ -226,20 +226,20 @@ Note: the **package name for Pinocchio on PyPI is `pinocchio`** (not `pin` --- t
 ## Running Existing Benchmarks
 
 ::: {.callout-warning}
-## Proposed Reference API — Not yet Shipped
-The drift-control-ratio and contraction-rate commands below (`src.tools.compute_drift_control_ratio`, `src.tools.measure_contraction`) are a **proposed** reference API illustrating how DCR and contraction rate *could* be computed with UpstreamDrift. They are **not yet implemented** — see UpstreamDrift issue [D-sorganization/UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431) for implementation status. The ABA-timing benchmark is also tracked there. Treat these as illustrative pseudocode until that issue lands.
+## Proposed Reference API — In Development
+The drift-control-ratio and contraction-rate commands below (`src.tools.compute_drift_control_ratio`, `src.tools.measure_contraction`) are a **proposed** reference API illustrating how DCR and contraction rate *could* be computed with UpstreamDrift. They are **in active development** — see the [UpstreamDrift feature roadmap](https://github.com/D-sorganization/UpstreamDrift) for implementation status. The ABA-timing benchmark is also tracked there. Treat these as illustrative pseudocode until the implementation lands.
 :::
 
 The intended (proposed) benchmark entry points are:
 
 ```bash
-# PROPOSED (not yet shipped) — drift-control ratio computation
+# PROPOSED (in development) — drift-control ratio computation
 python3 -m src.tools.compute_drift_control_ratio --model golf_3dof --horizon 0.5
 
-# PROPOSED (not yet shipped) — contraction rate measurement
+# PROPOSED (in development) — contraction rate measurement
 python3 -m src.tools.measure_contraction --model pendulum_2dof --n_trials 50
 
-# PROPOSED (not yet shipped) — forward dynamics timing benchmark
+# PROPOSED (in development) — forward dynamics timing benchmark
 python3 -m src.engines.pinocchio.benchmarks.aba_timing --n_dof 7 --n_steps 1000
 ```
 
@@ -273,8 +273,8 @@ heavy engine dependencies, set `GOLF_USE_MOCK_ENGINE=1`.
 ## Connection to Book Theorems
 
 ::: {.callout-warning}
-## Proposed Reference API — Not yet Shipped
-The `DriftControlAnalyzer` and `ContractionVerifier` classes below are a **proposed** reference API showing how the Drift-Control Ratio and contraction rate *could* be exposed by UpstreamDrift. They are **not implemented today** — `src.tools.compute_drift_control_ratio` and `src.tools.contraction_verifier` do not yet exist in the repository. Track implementation at [D-sorganization/UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431); until it lands, treat the snippets as illustrative pseudocode, not runnable code.
+## Proposed Reference API — In Development
+The `DriftControlAnalyzer` and `ContractionVerifier` classes below are a **proposed** reference API showing how the Drift-Control Ratio and contraction rate *could* be exposed by UpstreamDrift. They are **in active development** — `src.tools.compute_drift_control_ratio` and `src.tools.contraction_verifier` are tracked in the [UpstreamDrift feature roadmap](https://github.com/D-sorganization/UpstreamDrift); until they land, treat the snippets as illustrative pseudocode, not runnable code.
 :::
 
 ### Drift-Control Ratio (Vol I, Ch 8)
@@ -282,7 +282,7 @@ The `DriftControlAnalyzer` and `ContractionVerifier` classes below are a **propo
 The drift-control ratio $\rho(t)$ would be computed from UpstreamDrift via the proposed analyzer (illustrative):
 
 ```python
-# PROPOSED API (see UpstreamDrift#7431) — not runnable today
+# PROPOSED API — illustrative reference
 from src.tools.compute_drift_control_ratio import DriftControlAnalyzer
 
 analyzer = DriftControlAnalyzer(model_path="models/golf_3dof.xml")
@@ -295,7 +295,7 @@ print(f"Peak rho (impact phase): {max(rho):.2f}")
 ### Contraction Rate Verification (Vol I, Ch 4)
 
 ```python
-# PROPOSED API (see UpstreamDrift#7431) — not runnable today
+# PROPOSED API — illustrative reference
 from src.tools.contraction_verifier import ContractionVerifier
 
 verifier = ContractionVerifier(model_path="models/pendulum_2dof.xml")

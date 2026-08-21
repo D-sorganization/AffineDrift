@@ -162,7 +162,7 @@ For these calculations to be valid, we must assume:
     
     
 4. **Known external forces:** We account for gravity but typically neglect:
-    - Air resistance (discussed in Section 4 - often significant)
+    - Air resistance (discussed below in Sources of Error — often significant)
         
 - Impact forces (only applicable during ball contact)
 
@@ -609,11 +609,11 @@ This is why examining inverse dynamics numbers in isolation can be misleading. T
 
 We have now identified three independent sources of ambiguity in inverse dynamics results:
 
-1. **Spatial ambiguity (Section 2):** Where are forces applied along the grip?
+1. **Spatial ambiguity (Spatial Distribution):** Where are forces applied along the grip?
     
-2. **Drift-input ambiguity (Section 3):** What portion of measured forces is passive vs. active?
+2. **Drift-input ambiguity (Drift vs. Control):** What portion of measured forces is passive vs. active?
     
-3. **External force ambiguity (Section 4):** How much do neglected external forces (especially air resistance) affect the results?
+3. **External force ambiguity (External Forces & Aerodynamics):** How much do neglected external forces (especially air resistance) affect the results?
 
 These ambiguities compound each other. Even perfect knowledge of one aspect leaves the others unresolved.
 
@@ -623,12 +623,12 @@ To successfully interpret inverse dynamics, we need:
 
 | Required Tool / Information | Resolves Ambiguity | Acquisition Method |
 |---|---|---|
-| **Grip force distribution** (multi-point sensors) | Spatial ambiguity (§2) | Instrumented grip or glove sensor array |
-| **Full dynamic model** (inertia, geometry, stiffness) | Drift-input ambiguity (§3) | CAD + MOCAP + system identification |
-| **Aerodynamic model** (drag coefficient, clubhead geometry) | External force ambiguity (§4) | Wind tunnel measurements or CFD |
-| **ZTCF simulation** (drift-only trajectory) | Drift-input ambiguity (§3) | Numerical integration using dynamic model |
-| **Motion capture** at ≥200 Hz | All (base data) | Standard MOCAP system |
-| **Club inertia parameters** | Drift-input ambiguity (§3) | Pendulum test or inertia measurement rig |
+| **Grip force distribution** (multi-point sensors) | Spatial ambiguity | Instrumented grip or glove sensor array |
+| **Full dynamic model** (inertia, geometry, stiffness) | Drift-input ambiguity | CAD + MOCAP + system identification |
+| **Aerodynamic model** (drag coefficient, clubhead geometry) | External force ambiguity | Wind tunnel measurements or CFD |
+| **ZTCF simulation** (drift-only trajectory) | Drift-input ambiguity | Numerical integration using dynamic model |
+| **Motion capture** at ≥200 Hz | All ambiguities (base data) | Standard MOCAP system |
+| **Club inertia parameters** | Drift-input ambiguity | Pendulum test or inertia measurement rig |
 
 ## Quantitative Examples
 
