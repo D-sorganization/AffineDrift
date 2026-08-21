@@ -139,7 +139,7 @@ def test_editorial_residue_resolved():
     about = (REPO_ROOT / "pages" / "about.qmd").read_text(encoding="utf-8")
     assert "Human in the loop: Dieter Olson." not in about
 
-    # Developer TODO comment
+    # Developer task comment
     overview = (REPO_ROOT / "pages" / "overview.qmd").read_text(encoding="utf-8")
     assert "#3338" not in overview
 
