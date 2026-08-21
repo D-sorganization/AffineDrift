@@ -29,7 +29,7 @@ Last-Updated: 2026-08-20T09:35:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.213                                          |
+| **Spec Version**        | 1.0.214                                          |
 | **Last Spec Update**    | 2026-08-21                                       |
 
 ## 2. Purpose & Mission
@@ -853,3 +853,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-20 | 1.0.211 | docs(content, #3830): Resolved writing-quality pass content defects across textbook chapters and companion articles: reconciled ground-reaction-force units to SI (1300-1800 N / 300-400 lbf), corrected ECRB expansion to brevis, fixed malformed impulse differential notation, restored broken list numberings/sub-items in ch05/ch06/ch14, standardized DCR/DgCR terminology, restored missing approximation tildes, aligned epistemic hedges to model-dependent framing, fixed aside closing tag in models.qmd, and added regression test coverage in test_physics_of_golf_glossary.py. |
 | 2026-08-20 | 1.0.212 | fix(biomechanics, #3770): Reconciled lead-hip internal rotation range of motion in ch22 (35–50°) and restored literature citations (Cheetham2001, Hume2005) consistent with stated ~40° ROM ceiling. |
 | 2026-08-21 | 1.0.213 | feat(audit, #3708): Built cross-tree figure parity audit tool (`scripts/audit_quarto_figure_parity.py`) analyzing all 34 chapters of The Physics of Golf across LaTeX and Quarto trees (identifying 31 missing TikZ figures), published formal figure inventory documentation (`docs/THE_PHYSICS_OF_GOLF_FIGURES_INVENTORY.md`), and added full unit/integration test suite. |
+| 2026-08-21 | 1.0.214 | docs(parity, #3718, #3717): Built boxed items parity audit tool (`scripts/audit_quarto_boxed_items.py`) and book citation parity audit tool (`scripts/audit_book_citations.py`), restored missing substantive callouts across abridged chapters ch09, ch18, and ch23, reconciled all book-only citations across 34 chapters achieving 0 missing citation keys, published `docs/THE_PHYSICS_OF_GOLF_BOXED_ITEMS_INVENTORY.md` and `docs/THE_PHYSICS_OF_GOLF_CITATIONS_AUDIT.md`, and added comprehensive unit test suites. |

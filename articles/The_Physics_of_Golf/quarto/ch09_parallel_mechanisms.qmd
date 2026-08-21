@@ -168,9 +168,9 @@ For a 3D mechanism, the formula is:
 
 M = 6(N - 1) - \sum_i f_i
 
-where $f_i$ is the constraint count for joint $i$ (a revolute joint constrains 5 DOF in 3D; a ball joint constrains 3 DOF, etc.).
+::: {.callout-note}
+## What Gruebler's Formula Tells You {#inplain:gruebler_interpretation}
 
-### What Gruebler's Formula Tells You {#inplain:gruebler_interpretation}
 Gruebler's criterion predicts the effective DOF of a mechanism based purely on its topology—the number and types of joints, without needing to know forces or dynamics.
 
 For example, a Stewart platform (6-legged parallel manipulator):
@@ -178,12 +178,12 @@ For example, a Stewart platform (6-legged parallel manipulator):
 - Two spherical joints per leg: $J = 12$, with $f_i = 3$ per spherical joint.
 
 Mobility:
-
+$$
 M = 6(8-1) - 12 \times 3 = 42 - 36 = 6
+$$
 
-A Stewart platform is a 6-DOF mechanism with a well-conditioned rigid platform: this is the expected baseline mobility for six-legged flight-simulator style manipulators.
-
-The same count would be different if any leg family was missing constraints, but this is the topology the platform is designed to realize.
+A Stewart platform is a 6-DOF mechanism with a well-conditioned rigid platform: this is the expected baseline mobility for six-legged flight-simulator style manipulators. Over-constrained systems can be rigid and predictable, provided the constraints are compatible and the system has sufficient elasticity to accommodate small deviations from the nominal configuration.
+:::
 
 **Example: Gruebler Applied to the Golfer**
 
@@ -1029,6 +1029,15 @@ Screw theory provides a coordinate-free, elegant way to analyze these relationsh
 
 ## GRF and Lower Body: Full Treatment {#sec-grf_lower_body}
 
+::: {.callout-note}
+## Ground Reaction Force {#definition:grf}
+
+The **ground reaction force** (GRF) is the force exerted by the ground on the golfer's feet to maintain the contact constraint. It has three orthogonal components:
+- $F_z$ (vertical): supports the golfer's body weight and accelerates the center of mass vertically.
+- $F_x$ (anterior-posterior): drives weight shift and linear acceleration forward/backward.
+- $F_y$ (medial-lateral): stabilizes the pelvis and drives rotational acceleration.
+:::
+
 So far, we've discussed GRF conceptually. Here's a complete treatment of how to measure and analyze lower body mechanics using force plate data.
 
 ### Force Plate Basics {#sec-force_plate_basics}
@@ -1047,6 +1056,12 @@ During a golf swing, a golfer typically stands on one or two force plates (one u
 Each component changes throughout the swing, revealing the golfer's weight transfer, rotational strategy, and force application pattern.
 
 ### Center of Pressure Trajectory {#sec-cop_trajectory}
+
+::: {.callout-note}
+## Center of Pressure {#definition:cop}
+
+The **center of pressure** is the point where the vertical ground reaction force can be considered to act. Its trajectory during the swing reveals the golfer's balance and weight transfer strategy.
+:::
 
 The center of pressure (COP) is computed from the force and moment data:
 
@@ -1119,6 +1134,27 @@ A key insight from force plate analysis is that the golf swing's power flow is i
 This "ground-up" perspective contrasts with the (incorrect) "upper-body-down" perspective where golfers imagine "driving from the shoulders." In fact, the shoulders are largely passive followers of the pelvis rotation initiated by ground forces.
 
 Force plate data quantifies this ground-up flow and shows that the contribution of the ground reaction torque to pelvis acceleration is often larger than the contribution of the hip muscles themselves — another example of drift dominance.
+
+## Synthesis: The Golfer's Mechanical Reality {#sec-synthesis_golfer}
+
+Bringing together all the threads of this chapter, here's a counterintuitive but mechanically accurate picture of what happens during a golf swing:
+
+::: {.callout-tip}
+## The Golfer as a Parallel Mechanism {#context:golfer_parallel_mechanism}
+
+The golfer's body is a parallel mechanism, not a serial chain. This has profound implications:
+
+1. **The grip is a hard constraint.** Both hands must move with the club. The constraint forces between the hands are enormous (hundreds of Newtons) but entirely determined by kinematics. There is no ambiguity in constraint forces, only in how the golfer distributes active muscle torques between the hands.
+2. **The ground is a hard constraint.** The feet cannot slip (if they're well-planted). The ground reaction forces and torques are determined by the pelvis's inertia and acceleration, not by hip muscle effort. The ground does mechanical work on the golfer's body.
+3. **Drift forces dominate.** Gravity, Coriolis, and centrifugal forces do far more work than muscles during the release. The golfer's "control" is largely about releasing these drift forces (removing brakes) rather than about actively powering the swing.
+4. **X-factor is a stored elastic energy mechanism.** The spine loop constraint couples hip and shoulder rotation. Large X-factor stores elastic energy in the spine. During the downswing, this energy is released, contributing to club acceleration. The constraint forces in the spine are very large, but they are necessary to maintain the loop closure.
+5. **Efficiency comes from exploiting the null space.** By using the redundancy of the parallel mechanism (the null space), the golfer can adjust club face angle, grip pressure, arm plane, etc., without changing the overall club trajectory. This allows fine-tuning of the swing while maintaining the power-generating motion.
+6. **Preparation is the key.** The actual downswing is largely determined by drift and constraints. What matters is the preparation: achieving the right backswing configuration (high X-factor, loaded position), the right flexibility (to allow loop constraints to work), and the right timing of the downswing initiation (hip drive). Once the downswing is initiated, physics takes over.
+
+These insights explain why biomechanically efficient golfers (professionals) look similar to each other: they're all exploiting the same parallel mechanism constraints and drift forces. They differ mainly in detailed control inputs (grip pressure, face angle adjustment) and in how they load the swing (X-factor magnitude, spine flexibility).
+:::
+
+**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in @sec-energy_transfer.
 
 ## Chapter Exercises: Parallel Mechanisms
 
