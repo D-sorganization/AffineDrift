@@ -29,7 +29,7 @@ Last-Updated: 2026-08-20T09:35:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.213                                          |
+| **Spec Version**        | 1.0.216                                          |
 | **Last Spec Update**    | 2026-08-21                                       |
 
 ## 2. Purpose & Mission
@@ -853,3 +853,6 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-20 | 1.0.211 | docs(content, #3830): Resolved writing-quality pass content defects across textbook chapters and companion articles: reconciled ground-reaction-force units to SI (1300-1800 N / 300-400 lbf), corrected ECRB expansion to brevis, fixed malformed impulse differential notation, restored broken list numberings/sub-items in ch05/ch06/ch14, standardized DCR/DgCR terminology, restored missing approximation tildes, aligned epistemic hedges to model-dependent framing, fixed aside closing tag in models.qmd, and added regression test coverage in test_physics_of_golf_glossary.py. |
 | 2026-08-20 | 1.0.212 | fix(biomechanics, #3770): Reconciled lead-hip internal rotation range of motion in ch22 (35–50°) and restored literature citations (Cheetham2001, Hume2005) consistent with stated ~40° ROM ceiling. |
 | 2026-08-21 | 1.0.213 | feat(audit, #3708): Built cross-tree figure parity audit tool (`scripts/audit_quarto_figure_parity.py`) analyzing all 34 chapters of The Physics of Golf across LaTeX and Quarto trees (identifying 31 missing TikZ figures), published formal figure inventory documentation (`docs/THE_PHYSICS_OF_GOLF_FIGURES_INVENTORY.md`), and added full unit/integration test suite. |
+| 2026-08-21 | 1.0.214 | docs(links, #3923, #3919): Fixed repository links, double section numbering, table pipes in rotation converter, and heading skip structure. |
+| 2026-08-21 | 1.0.215 | docs(roadmap, #3922): Updated development roadmap to Q3 2026, aligned chapter counts across all 4 volumes (8, 11, 10, 11), cleaned up legends and status tracking. |
+| 2026-08-21 | 1.0.216 | docs(consistency, #3921, #3920): Aligned Volume I chapter mapping in `books/tangent-space-methods.qmd`, eliminated phantom section references and empty targets, removed duplicate content notices, moved maintainer notes to comments, cleaned issue tracker numbers from published prose, and harmonized author voice. |
