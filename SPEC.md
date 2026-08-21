@@ -29,7 +29,7 @@ Last-Updated: 2026-08-20T09:35:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.217                                          |
+| **Spec Version**        | 1.0.218                                          |
 | **Last Spec Update**    | 2026-08-21                                       |
 
 ## 2. Purpose & Mission
@@ -856,3 +856,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-21 | 1.0.215 | docs(parity, #3923, #3919): Added canonical GitHub repository URLs and clone commands to 5 repository/model pages (`repositories-drake.qmd`, `repositories-pinocchio.qmd`, `repositories-2d-model.qmd`, `repositories-3d-model.qmd`, `models-pendulum.qmd`); resolved double section numbering in `sources-of-nonlinearity.qmd`, `superposition.qmd`, `controllability-drift-ratio.qmd`, and `intentional-constraint-collapse.qmd`; fixed table math unescaped pipes in `rotation-converter.qmd`; fixed 18 heading level skips and orphan defense headings in `affine-nature-golf-swing.qmd`, `wrist-universal-joint.qmd`, `drifter-manifesto.qmd`, and `secondary-axis-stability.qmd`; removed emoji glyphs in learning paths and roadmap; and added formatting lint regression test suite (`tests/test_formatting_lints.py`). |
 | 2026-08-21 | 1.0.216 | docs(consistency, #3922, #3921, #3920): Updated development roadmap to Q3 2026, aligned chapter counts across all 4 volumes (8, 11, 10, 11), aligned Volume I chapter mapping in `books/tangent-space-methods.qmd`, eliminated phantom section references and empty targets, removed duplicate content notices, moved maintainer notes to comments, cleaned issue tracker numbers from published prose, and harmonized author voice. |
 | 2026-08-21 | 1.0.217 | ci(benchmarks, #3916): Added PyYAML and pytest-asyncio to `requirements-benchmarks.txt` to ensure benchmark collection succeeds without import errors. |
+| 2026-08-21 | 1.0.218 | docs(polish, #3914): Added missing title frontmatter to notation.qmd, removed 'Section Y' placeholder from inverse-dynamics-inference.qmd, removed 7 'Figure Pending' H2 headings polluting TOC in inverse-dynamics.qmd, updated textbook series cross-references in passive-distributed-control.qmd, and removed duplicate callouts. |
