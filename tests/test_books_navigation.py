@@ -47,3 +47,30 @@ def test_books_series_page_links_to_each_book() -> None:
     assert "control-is-motion.html" in series_page
     assert "biomechanics-biology-to-systems.html" in series_page
     assert "human-motor-control.html" in series_page
+
+
+def test_textbook_landing_pages_contain_chapter_links() -> None:
+    """Textbook landing pages must contain tables of contents linking to their chapters."""
+    physics_index = (
+        REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "index.qmd"
+    ).read_text(encoding="utf-8")
+    assert "ch01_why_physics.html" in physics_index
+    assert "ch09b_passive_stabilization.html" in physics_index
+    assert "ch32_putting.html" in physics_index
+    assert "glossary.html" in physics_index
+
+    geom_index = (
+        REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "index.qmd"
+    ).read_text(encoding="utf-8")
+    assert "volume0.html" in geom_index
+    assert "volume1.html" in geom_index
+    assert "volume2.html" in geom_index
+    assert "vol0_ch01_linear_algebra.html" in geom_index
+    assert "ch01_foundations.html" in geom_index
+
+
+def test_article_index_includes_physics_of_golf_chapters() -> None:
+    """Article catalog in resources/articles.qmd must include all chapters including ch09b and ch32."""
+    catalog = (REPO_ROOT / "resources" / "articles.qmd").read_text(encoding="utf-8")
+    assert "ch09b_passive_stabilization.html" in catalog
+    assert "ch32_putting.html" in catalog
