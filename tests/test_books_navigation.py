@@ -14,6 +14,7 @@ EXPECTED_BOOK_PAGES = (
     "control-is-motion.qmd",
     "biomechanics-biology-to-systems.qmd",
     "human-motor-control.qmd",
+    "roadmap.qmd",
 )
 
 
@@ -74,3 +75,24 @@ def test_article_index_includes_physics_of_golf_chapters() -> None:
     catalog = (REPO_ROOT / "resources" / "articles.qmd").read_text(encoding="utf-8")
     assert "ch09b_passive_stabilization.html" in catalog
     assert "ch32_putting.html" in catalog
+
+
+def test_models_hub_links_all_companion_guides() -> None:
+    """models/models.qmd should link to all 7 companion engine guides."""
+    models_hub = (REPO_ROOT / "models" / "models.qmd").read_text(encoding="utf-8")
+    for engine_page in (
+        "models-mujoco.html",
+        "models-drake.html",
+        "models-pinocchio.html",
+        "models-opensim.html",
+        "models-myosim.html",
+        "models-simulink.html",
+        "models-pendulum.html",
+    ):
+        assert engine_page in models_hub, f"Missing {engine_page} link in models/models.qmd"
+
+
+def test_repositories_hub_links_model_repositories() -> None:
+    """repositories/repositories.qmd should link to repositories-models.html."""
+    repo_hub = (REPO_ROOT / "repositories" / "repositories.qmd").read_text(encoding="utf-8")
+    assert "repositories-models.html" in repo_hub
