@@ -139,14 +139,18 @@ def test_technical_monograph_figures_exist() -> None:
     """Assert that figures referenced in the chapters exist in figures directory."""
     for chapter in CHAPTERS_DIR.glob("*.qmd"):
         chapter_text = chapter.read_text(encoding="utf-8")
-        for match in re.finditer(r"figures/([a-zA-Z0-9_-]+)\.(?:pdf|svg|png)", chapter_text):
-            fig_stem = match.group(1)
-            svg_file = FIGURES_DIR / f"{fig_stem}.svg"
-            pdf_file = FIGURES_DIR / f"{fig_stem}.pdf"
-            png_file = FIGURES_DIR / f"{fig_stem}.png"
+        for match in re.finditer(r"\[.*?\]\(([^)]+?\.(?:pdf|svg|png))\)", chapter_text):
+            target_path = match.group(1)
+            if target_path.startswith("http://") or target_path.startswith("https://"):
+                continue
+            assert target_path.startswith(
+                "figures/"
+            ), f"Figure path '{target_path}' in {chapter.name} must start with 'figures/' convention"
+            fig_rel = target_path.removeprefix("figures/")
+            target_file = FIGURES_DIR / fig_rel
             assert (
-                svg_file.is_file() or pdf_file.is_file() or png_file.is_file()
-            ), f"Figure stem {fig_stem} referenced in {chapter.name} not found as .svg/.pdf/.png in {FIGURES_DIR}"
+                target_file.is_file()
+            ), f"Figure '{target_path}' referenced in {chapter.name} not found in {FIGURES_DIR}"
 
 
 def test_technical_monograph_quarto_registration() -> None:
