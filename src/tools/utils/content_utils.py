@@ -41,6 +41,7 @@ def is_excluded_content_path(filepath: Path) -> bool:
 
 
 def _scan_directory_files(content_dir: str, include_critiques_md: bool) -> list[Path]:
+    """Scan a content directory recursively for valid content files."""
     dir_path = Path(content_dir)
     if not dir_path.exists():
         return []
