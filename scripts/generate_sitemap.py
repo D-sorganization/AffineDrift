@@ -24,6 +24,27 @@ SITEMAP_CONTENT_DIRS = [
 ]
 
 
+def get_git_last_modified(filepath: str) -> str:
+    """Get last modified date from git history."""
+    git_cmd = shutil.which("git")
+    if not git_cmd:
+        return datetime.now().strftime("%Y-%m-%d")
+
+    try:
+        result = subprocess.run(
+            [git_cmd, "log", "-1", "--format=%cI", "--", filepath],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent,
+            check=False,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()[:10]
+    except (subprocess.SubprocessError, OSError) as e:
+        logger.warning("Failed to get git modified date for %s: %s", filepath, e)
+    return datetime.now().strftime("%Y-%m-%d")
+
+
 def get_git_last_modified_map() -> dict[str, str]:
     """Get mapping of relative filepaths to last modified date using a single git command."""
     git_cmd = shutil.which("git")
@@ -65,7 +86,7 @@ def extract_title(content: str, frontmatter: dict[str, Any], filepath: Path) -> 
         line = line.strip()
         if line.startswith("# "):
             return line[2:].strip()
-    return filepath.stem.replace("_", " ").title()
+    return ""
 
 
 def get_priority(filepath: str) -> str:
@@ -123,7 +144,9 @@ def main() -> None:
     base_url = "https://affinedrift.com"
     pages: list[dict[str, str]] = []
     git_dates = get_git_last_modified_map()
-    today = datetime.now().strftime("%Y-%m-%d")
+    now_obj = datetime.now()
+    iso_now = now_obj.isoformat()
+    today = iso_now[:10]
 
     for filepath in collect_qmd_files(SITEMAP_CONTENT_DIRS):
         if filepath.name in ["404.qmd", "offline.qmd"]:
@@ -135,7 +158,13 @@ def main() -> None:
         content, frontmatter = read_qmd_with_frontmatter(filepath)
         title = extract_title(content, frontmatter, filepath)
 
-        lastmod = git_dates.get(relative_path, today)
+        # Skip pages without titles or headings (unless root index.qmd)
+        if not title and filepath.name != "index.qmd":
+            continue
+
+        lastmod = git_dates.get(relative_path)
+        if not lastmod:
+            lastmod = get_git_last_modified(relative_path) or today
 
         pages.append(
             {
@@ -157,7 +186,7 @@ def main() -> None:
         '        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
         '        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9',
         '        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">',
-        f"  <!-- Generated: {datetime.now().isoformat()} -->",
+        f"  <!-- Generated: {iso_now} -->",
         f"  <!-- Total URLs: {len(pages)} -->",
         "",
     ]
