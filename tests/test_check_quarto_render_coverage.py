@@ -9,6 +9,7 @@ from defusedxml.common import DefusedXmlException
 
 from scripts.check_quarto_render_coverage import (
     find_missing_sitemap_sources,
+    find_unindexed_sources,
     load_sitemap_paths,
     sitemap_loc_to_source_path,
 )
@@ -24,6 +25,22 @@ def test_sitemap_loc_to_source_path_maps_root_and_html_pages(tmp_path):
         "https://affinedrift.com/articles/theory-part1.html",
         repo_root,
     ) == (repo_root / "articles" / "theory-part1.qmd")
+
+
+def test_sitemap_loc_to_source_path_maps_md_when_present(tmp_path):
+    repo_root = tmp_path
+    critiques_dir = repo_root / "critiques"
+    critiques_dir.mkdir()
+    md_file = critiques_dir / "review.md"
+    md_file.write_text("# Review\n", encoding="utf-8")
+
+    assert (
+        sitemap_loc_to_source_path(
+            "https://affinedrift.com/critiques/review.html",
+            repo_root,
+        )
+        == md_file
+    )
 
 
 def test_load_sitemap_paths_reads_all_locs(tmp_path):
@@ -81,3 +98,24 @@ def test_find_missing_sitemap_sources_reports_unbacked_urls(tmp_path):
             Path(repo_root / "articles" / "theory-part1.qmd"),
         )
     ]
+
+
+def test_find_unindexed_sources_reports_missing_from_sitemap(tmp_path, monkeypatch):
+    repo_root = tmp_path
+    (repo_root / "index.qmd").write_text("---\ntitle: Home\n---\n", encoding="utf-8")
+    (repo_root / "articles").mkdir()
+    p1 = repo_root / "articles" / "page1.qmd"
+    p1.write_text("---\ntitle: Page 1\n---\n", encoding="utf-8")
+
+    import src.tools.utils.content_utils as cu
+
+    monkeypatch.setattr(cu, "DEFAULT_CONTENT_DIRS", [str(repo_root / "articles")])
+    monkeypatch.setattr(
+        cu, "collect_qmd_files", lambda *args, **kwargs: [Path("articles/page1.qmd")]
+    )
+
+    unindexed = find_unindexed_sources(
+        ["https://affinedrift.com/"],
+        repo_root,
+    )
+    assert unindexed == [Path("articles/page1.qmd")]
