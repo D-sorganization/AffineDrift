@@ -141,6 +141,9 @@ jobs:
       - name: Post-build Health Check
         run: python3 -m src.tools.check_site_health --fail-on broken
 
+      - name: Prune internal markdown files from deploy artifact
+        run: python3 scripts/prune_internal_docs_from_deploy.py --docs-dir docs
+
       - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
 
