@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
-"""Generate comprehensive sitemap.xml with proper priorities and change frequencies."""
+from __future__ import annotations
 
 import argparse
 import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from src.tools.utils import setup_logging
 from src.tools.utils.content_utils import collect_qmd_files, read_qmd_with_frontmatter
@@ -16,6 +16,7 @@ SITEMAP_CONTENT_DIRS = [
     ".",
     "articles",
     "books",
+    "critiques",
     "models",
     "pages",
     "repositories",
@@ -23,26 +24,48 @@ SITEMAP_CONTENT_DIRS = [
 ]
 
 
-def get_git_last_modified(filepath: str) -> str:
-    """Get last modified date from git history."""
+def get_git_last_modified_map() -> dict[str, str]:
+    """Get mapping of relative filepaths to last modified date using a single git command."""
     git_cmd = shutil.which("git")
     if not git_cmd:
-        return datetime.now().strftime("%Y-%m-%d")
+        return {}
 
+    date_map: dict[str, str] = {}
     try:
         result = subprocess.run(
-            [git_cmd, "log", "-1", "--format=%cI", "--", filepath],
+            [git_cmd, "log", "--format=COMMIT:%cI", "--name-only"],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent,
             check=False,
         )
-        if result.returncode == 0 and result.stdout.strip():
-            # Convert to W3C datetime format
-            return result.stdout.strip()[:10]
+        if result.returncode == 0 and result.stdout:
+            current_date = ""
+            for line in result.stdout.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                if line.startswith("COMMIT:"):
+                    current_date = line[7:17]
+                elif current_date:
+                    norm_path = Path(line).as_posix()
+                    if norm_path not in date_map:
+                        date_map[norm_path] = current_date
     except (subprocess.SubprocessError, OSError) as e:
-        logger.warning("Failed to get git modified date for %s: %s", filepath, e)
-    return datetime.now().strftime("%Y-%m-%d")
+        logger.warning("Failed to batch get git modified dates: %s", e)
+    return date_map
+
+
+def extract_title(content: str, frontmatter: dict[str, Any], filepath: Path) -> str:
+    """Extract page title from YAML frontmatter or first markdown heading."""
+    title = frontmatter.get("title")
+    if title:
+        return str(title)
+    for line in content.splitlines():
+        line = line.strip()
+        if line.startswith("# "):
+            return line[2:].strip()
+    return filepath.stem.replace("_", " ").title()
 
 
 def get_priority(filepath: str) -> str:
@@ -99,24 +122,28 @@ def main() -> None:
 
     base_url = "https://affinedrift.com"
     pages: list[dict[str, str]] = []
+    git_dates = get_git_last_modified_map()
+    today = datetime.now().strftime("%Y-%m-%d")
 
     for filepath in collect_qmd_files(SITEMAP_CONTENT_DIRS):
-        relative_path = str(filepath)
+        if filepath.name in ["404.qmd", "offline.qmd"]:
+            continue
+
+        relative_path = filepath.as_posix()
         url_path = qmd_path_to_url_path(filepath)
 
-        _content, frontmatter = read_qmd_with_frontmatter(filepath)
+        content, frontmatter = read_qmd_with_frontmatter(filepath)
+        title = extract_title(content, frontmatter, filepath)
 
-        # Skip pages without titles (likely not standalone pages)
-        if not frontmatter.get("title") and filepath.name != "index.qmd":
-            continue
+        lastmod = git_dates.get(relative_path, today)
 
         pages.append(
             {
                 "loc": f"{base_url}/{url_path}",
-                "lastmod": get_git_last_modified(relative_path),
+                "lastmod": lastmod,
                 "changefreq": get_changefreq(relative_path),
                 "priority": get_priority(relative_path),
-                "title": frontmatter.get("title", ""),
+                "title": title,
             },
         )
 

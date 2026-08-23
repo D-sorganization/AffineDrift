@@ -38,7 +38,13 @@ def sitemap_loc_to_source_path(loc: str, repo_root: Path) -> Path:
 
     source = Path(relative)
     if source.suffix == ".html":
-        return repo_root / source.with_suffix(".qmd")
+        qmd_cand = repo_root / source.with_suffix(".qmd")
+        if qmd_cand.exists():
+            return qmd_cand
+        md_cand = repo_root / source.with_suffix(".md")
+        if md_cand.exists():
+            return md_cand
+        return qmd_cand
     return repo_root / source / "index.qmd"
 
 
@@ -62,6 +68,32 @@ def find_missing_sitemap_sources(
         if not source_path.exists():
             missing.append((loc, source_path))
     return missing
+
+
+def find_unindexed_sources(sitemap_locs: list[str], repo_root: Path) -> list[Path]:
+    """Return published source files that are missing from the sitemap."""
+    indexed_paths = {sitemap_loc_to_source_path(loc, repo_root).resolve() for loc in sitemap_locs}
+    from src.tools.utils.content_utils import collect_qmd_files
+
+    dirs = [
+        ".",
+        "articles",
+        "books",
+        "critiques",
+        "models",
+        "pages",
+        "repositories",
+        "resources",
+    ]
+    content_files = collect_qmd_files(dirs)
+    unindexed: list[Path] = []
+    for rel_path in content_files:
+        full_path = (repo_root / rel_path).resolve()
+        if full_path.name in ["404.qmd", "offline.qmd"]:
+            continue
+        if full_path not in indexed_paths:
+            unindexed.append(rel_path)
+    return unindexed
 
 
 def main() -> int:
@@ -93,7 +125,16 @@ def main() -> int:
             logger.error("- %s -> %s", loc, source_path.relative_to(repo_root))
         return 1
 
-    logger.info("Sitemap/source coverage check passed for %d URLs.", len(sitemap_locs))
+    unindexed_sources = find_unindexed_sources(sitemap_locs, repo_root)
+    if unindexed_sources:
+        logger.error("Published source pages missing from sitemap:")
+        for source_path in unindexed_sources:
+            logger.error("- %s", source_path)
+        return 1
+
+    logger.info(
+        "Bidirectional sitemap/source coverage check passed for %d URLs.", len(sitemap_locs)
+    )
     return 0
 
 

@@ -20,27 +20,57 @@ logger = logging.getLogger(__name__)
 DEFAULT_CONTENT_DIRS: list[str] = [".", "articles"]
 
 
+def is_excluded_content_path(filepath: Path) -> bool:
+    """Check if a path matches Quarto render exclusions or partial prefixes."""
+    parts = filepath.parts
+    if any(part.startswith("_") or part.startswith(".") for part in parts):
+        return True
+    posix = filepath.as_posix()
+    excluded_patterns = [
+        "articles/tangent-hyperplane-contraction",
+        "articles/tangent-hyperplane-articles/Drafts_Original_Articles",
+        "articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd",
+        "articles/proximal_distal_companion/chapters",
+        "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+        "critiques/INLINE_SUGGESTIONS.md",
+    ]
+    for pat in excluded_patterns:
+        if pat in posix:
+            return True
+    return False
+
+
+def _scan_directory_files(content_dir: str, include_critiques_md: bool) -> list[Path]:
+    dir_path = Path(content_dir)
+    if not dir_path.exists():
+        return []
+    if content_dir == ".":
+        candidates = list(dir_path.glob("*.qmd"))
+    else:
+        candidates = list(dir_path.rglob("*.qmd"))
+        if include_critiques_md and content_dir == "critiques":
+            candidates.extend(dir_path.rglob("*.md"))
+    return [p for p in candidates if not is_excluded_content_path(p)]
+
+
 def collect_qmd_files(
     content_dirs: list[str] | None = None,
+    include_critiques_md: bool = True,
 ) -> list[Path]:
-    """Collect all non-partial QMD files from content directories.
+    """Collect all non-partial, non-excluded content files from content directories.
 
     Args:
         content_dirs: Directories to scan. Defaults to DEFAULT_CONTENT_DIRS.
+        include_critiques_md: Whether to include .md files in critiques directory.
 
     Returns:
-        Sorted list of Path objects for QMD files (excluding _ prefixed).
+        Sorted list of Path objects for content files.
     """
     dirs = content_dirs or DEFAULT_CONTENT_DIRS
     files: list[Path] = []
     for content_dir in dirs:
-        dir_path = Path(content_dir)
-        if not dir_path.exists():
-            continue
-        for filepath in dir_path.glob("*.qmd"):
-            if not filepath.name.startswith("_"):
-                files.append(filepath)
-    return sorted(files)
+        files.extend(_scan_directory_files(content_dir, include_critiques_md))
+    return sorted(set(files))
 
 
 def read_qmd_with_frontmatter(
