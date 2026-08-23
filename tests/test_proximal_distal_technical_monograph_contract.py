@@ -38,9 +38,9 @@ def test_technical_monograph_files_exist_and_are_complete() -> None:
     assert BIB_FILE.is_file(), f"{BIB_FILE} is missing"
 
     chapter_files = list(CHAPTERS_DIR.glob("*.qmd"))
-    assert len(chapter_files) == EXPECTED_CHAPTER_COUNT, (
-        f"Expected {EXPECTED_CHAPTER_COUNT} chapters, found {len(chapter_files)}"
-    )
+    assert (
+        len(chapter_files) == EXPECTED_CHAPTER_COUNT
+    ), f"Expected {EXPECTED_CHAPTER_COUNT} chapters, found {len(chapter_files)}"
 
 
 def test_technical_monograph_index_includes_all_chapters() -> None:
@@ -55,15 +55,15 @@ def test_technical_monograph_pdf_metrics() -> None:
     """Assert that the compiled PDF meets the minimum page count and word density."""
     reader = PdfReader(PDF_FILE)
     page_count = len(reader.pages)
-    assert page_count >= EXPECTED_MIN_PAGE_COUNT, (
-        f"Expected at least {EXPECTED_MIN_PAGE_COUNT} pages, got {page_count}"
-    )
+    assert (
+        page_count >= EXPECTED_MIN_PAGE_COUNT
+    ), f"Expected at least {EXPECTED_MIN_PAGE_COUNT} pages, got {page_count}"
 
     extracted_text = "\n".join(page.extract_text() or "" for page in reader.pages)
     extracted_words = extracted_text.split()
-    assert len(extracted_words) >= EXPECTED_MIN_WORD_COUNT, (
-        f"Expected at least {EXPECTED_MIN_WORD_COUNT} words, got {len(extracted_words)}"
-    )
+    assert (
+        len(extracted_words) >= EXPECTED_MIN_WORD_COUNT
+    ), f"Expected at least {EXPECTED_MIN_WORD_COUNT} words, got {len(extracted_words)}"
 
 
 def test_technical_monograph_declares_immutable_scientific_source() -> None:
@@ -143,14 +143,14 @@ def test_technical_monograph_figures_exist() -> None:
             target_path = match.group(1)
             if target_path.startswith("http://") or target_path.startswith("https://"):
                 continue
-            assert target_path.startswith("figures/"), (
-                f"Figure path '{target_path}' in {chapter.name} must start with 'figures/' convention"
-            )
+            assert target_path.startswith(
+                "figures/"
+            ), f"Figure path '{target_path}' in {chapter.name} must start with 'figures/' convention"
             fig_rel = target_path.removeprefix("figures/")
             target_file = FIGURES_DIR / fig_rel
-            assert target_file.is_file(), (
-                f"Figure '{target_path}' referenced in {chapter.name} not found in {FIGURES_DIR}"
-            )
+            assert (
+                target_file.is_file()
+            ), f"Figure '{target_path}' referenced in {chapter.name} not found in {FIGURES_DIR}"
 
 
 def test_technical_monograph_quarto_registration() -> None:
