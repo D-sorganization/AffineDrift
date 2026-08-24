@@ -859,3 +859,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-21 | 1.0.217 | ci(benchmarks, #3916): Added PyYAML and pytest-asyncio to `requirements-benchmarks.txt` to ensure benchmark collection succeeds without import errors. |
 | 2026-08-21 | 1.0.218 | docs(polish, #3914): Added missing title frontmatter to notation.qmd, removed 'Section Y' placeholder from inverse-dynamics-inference.qmd, removed 7 'Figure Pending' H2 headings polluting TOC in inverse-dynamics.qmd, updated textbook series cross-references in passive-distributed-control.qmd, and removed duplicate callouts. |
 | 2026-08-21 | 1.0.219 | docs(parity, #3718, #3717): Reconciled boxed items and book citations across Quarto mirror, verified 100% syntax compliance in scan_quarto_syntax.py, and merged latest origin/main. |
+| 2026-08-24 | 1.0.220 | test(ia): Updated MAX_ITEMS_PER_DROPDOWN from 11 to 15 in test_navbar_ia.py to accommodate the navbar taxonomy expansion from #3937. |
