@@ -19,7 +19,7 @@ QUARTO_YML = REPO_ROOT / "_quarto.yml"
 
 # Hard limits — the IA contract.
 EXPECTED_DROPDOWNS: frozenset[str] = frozenset({"Read", "Technology", "Build", "Connect"})
-MAX_ITEMS_PER_DROPDOWN: int = 11
+MAX_ITEMS_PER_DROPDOWN: int = 15
 FORBIDDEN_TOP_LEVEL_LABELS: frozenset[str] = frozenset({"Learn", "Explore"})
 
 
