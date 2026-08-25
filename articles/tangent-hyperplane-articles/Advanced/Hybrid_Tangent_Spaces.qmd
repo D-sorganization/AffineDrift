@@ -20,25 +20,25 @@ bibliography: ../references.bib
 ---
 
 ::: {.callout-note appearance="minimal"}
-## Abstract
+### Abstract
 
 The Tangent Hyperplane framework, as developed in the core thesis, assumes $C^1$ smoothness of the vector field—a requirement that excludes a vast class of physically important systems. Robotic foot strikes, ball impacts, friction cone transitions, and mode-switching controllers all exhibit velocity discontinuities or derivative discontinuities that violate the smoothness assumption. This article extends the tangent space framework to hybrid dynamical systems, where dynamics evolve continuously within modes but jump discontinuously across guard surfaces. We develop the geometric machinery of tangent spaces at boundaries, introduce saltation matrices that map perturbations across jumps, and derive mode-aware trajectory optimization algorithms. The result is a unified framework encompassing both smooth and non-smooth dynamics, with rigorous treatment of the measure-theoretic subtleties that arise when differentiating through discontinuities.
 :::
 
 ---
 
-# Part I: Motivation and Theory {.unnumbered}
+## Part I: Motivation and Theory {.unnumbered}
 
 ---
 
-# Chapter 1: Why Smoothness Fails {#sec-smoothness-fails}
+## Chapter 1: Why Smoothness Fails {#sec-smoothness-fails}
 
-## The C¹ Assumption and Its Limits
+### The C¹ Assumption and Its Limits
 
 The entire Tangent Hyperplane framework rests on a single critical assumption:
 
 ::: {.callout-important}
-## Smoothness Requirement (Main Thesis)
+### Smoothness Requirement (Main Thesis)
 
 The vector field $f: \mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n$ is **continuously differentiable** ($C^1$), meaning:
 
@@ -58,7 +58,7 @@ This assumption is **physically reasonable** for most classical mechanical syste
 But consider the following scenarios:
 
 ::: {.callout-warning}
-## Where Smoothness Breaks Down
+### Where Smoothness Breaks Down
 
 **Example 1: Humanoid Foot Strike**
 
@@ -103,7 +103,7 @@ where $\lambda$ is the costate from Pontryagin's Maximum Principle. The control 
 
 These are not pathological edge cases—they are **core phenomena** in robotics, aerospace, and mechanical engineering. A framework that cannot handle them is incomplete.
 
-## The Failure of Naïve Linearization
+### The Failure of Naïve Linearization
 
 What happens if we blindly apply the tangent space framework to a system with discontinuities? Consider a simple 1D impact model:
 
@@ -150,7 +150,7 @@ where $\sigma_\epsilon(x) = \frac{1}{2}(1 + \tanh(x/\epsilon))$ is a sigmoid. Th
 2. **Loss of structure**: The sharp transition at $x = 0$ has physical meaning (guard surface), which is obscured
 3. **Parameter tuning**: Every discontinuity requires choosing $\epsilon$, with no principled method
 
-## The Need for Hybrid Formalism
+### The Need for Hybrid Formalism
 
 None of these workarounds is satisfactory. What we need is a **mathematically rigorous framework** that:
 
@@ -161,7 +161,7 @@ None of these workarounds is satisfactory. What we need is a **mathematically ri
 
 This framework already exists: **hybrid dynamical systems**. The goal of this article is to extend the tangent space perspective to hybrid systems, developing the geometric tools needed to handle impacts, switches, and discontinuities rigorously.
 
-## Chapter Summary
+### Chapter Summary
 
 The $C^1$ smoothness assumption is not a minor technicality—it is **central** to the Tangent Hyperplane framework. Without it:
 
@@ -175,7 +175,7 @@ The solution is to **extend the framework** to hybrid systems, where discontinui
 
 ---
 
-# Chapter 2: Hybrid Automata Primer {#sec-hybrid-automata}
+## Chapter 2: Hybrid Automata Primer {#sec-hybrid-automata}
 
 ## What Is a Hybrid System?
 
@@ -383,9 +383,9 @@ Next, we develop the geometry of tangent spaces at jumps, enabling linearization
 
 ---
 
-# Chapter 3: Tangent Spaces at Jumps {#sec-tangent-jumps}
+## Chapter 3: Tangent Spaces at Jumps {#sec-tangent-jumps}
 
-## Left and Right Tangent Spaces
+### Left and Right Tangent Spaces
 
 At a jump, the state $x(t)$ is discontinuous. Limits from the left and right differ:
 
@@ -406,7 +406,7 @@ where $\Phi$ satisfies $\frac{\partial}{\partial t}\Phi(t, t_0) = A(t)\Phi(t, t_
 In the hybrid case, we need a **generalized state transition** that accounts for jumps. Define:
 
 ::: {.callout-tip}
-## Definition: Left and Right Tangent Spaces at a Jump
+### Definition: Left and Right Tangent Spaces at a Jump
 
 At a guard crossing at time $t_j$:
 
@@ -435,11 +435,11 @@ $$ {#eq-perturbation-jump}
 
 **Geometric interpretation:** The reset map $R$ is a smooth function from the guard surface $G_{ij}$ to the state space $\mathcal{X}$. Its derivative $DR$ is a linear map between tangent spaces. Even though the trajectory itself jumps discontinuously, **perturbations evolve linearly** according to $P_j$.
 
-## Jump Map Jacobians
+### Jump Map Jacobians
 
 Let's compute $P_j$ for our examples.
 
-### Example 1: Bouncing Ball
+#### Example 1: Bouncing Ball
 
 The reset map is:
 $$
@@ -463,7 +463,7 @@ $$ {#eq-ball-jacobian}
 - A perturbation in velocity $\delta v^-$ scales by $-e$ (second column)
 - The matrix is **rank-deficient** (rank 1), reflecting the constraint $h^+ = 0$
 
-### Example 2: Rigid Body Impact (Poisson's Hypothesis)
+#### Example 2: Rigid Body Impact (Poisson's Hypothesis)
 
 For a rigid body colliding with a surface, conservation of momentum during impact gives:
 
@@ -491,12 +491,12 @@ $$ {#eq-impact-jacobian}
 
 This is the **impact map Jacobian**, a projection matrix that removes and reverses the normal component of velocity.
 
-## Saltation Matrices (Anitescu & Potra)
+### Saltation Matrices (Anitescu & Potra)
 
 The jump map Jacobian $P_j$ is part of a more general structure called the **saltation matrix**, which accounts for not just the jump in state but also the **variation in jump time**.
 
 ::: {.callout-important}
-## Saltation Matrix
+### Saltation Matrix
 
 Consider a trajectory that crosses a guard surface $S = \{x \mid h(x) = 0\}$ at time $t_j$. If we perturb the initial condition $x_0 \to x_0 + \delta x_0$, both the jump time and the jump state vary:
 
@@ -565,7 +565,7 @@ The saltation matrix has two contributions:
 1. **$P_j$**: The direct effect of the reset map on the state
 2. **Correction term**: Accounts for the fact that perturbed trajectories cross the guard at different times, experiencing different amounts of pre- and post-impact flow
 
-### Example: Bouncing Ball Saltation Matrix
+#### Example: Bouncing Ball Saltation Matrix
 
 For the bouncing ball:
 
@@ -612,7 +612,7 @@ $$ {#eq-ball-saltation}
 - First row: Height perturbation $\delta h^+$ depends on pre-impact velocity perturbation $\delta v^-$ via time-of-crossing variation
 - Second row: Velocity perturbation jumps by $-e$, with additional dependence on height perturbation due to gravity during the time correction
 
-## State Transition Through Multiple Jumps
+### State Transition Through Multiple Jumps
 
 For a hybrid trajectory with multiple jumps at times $t_1, \ldots, t_N$, the state transition operator is:
 
@@ -627,7 +627,7 @@ where:
 
 This product structure allows us to **propagate perturbations** through arbitrarily complex hybrid trajectories, alternating between continuous flow and discrete jumps.
 
-## Chapter Summary
+### Chapter Summary
 
 At guard crossings, states jump discontinuously, but **perturbations evolve linearly** via:
 
@@ -641,20 +641,20 @@ Next, we develop the geometric interpretation of these jumps as transformations 
 
 ---
 
-# Part II: Geometric Framework {.unnumbered}
+## Part II: Geometric Framework {.unnumbered}
 
 ---
 
-# Chapter 4: Manifolds With Boundaries {#sec-manifolds-boundaries}
+## Chapter 4: Manifolds With Boundaries {#sec-manifolds-boundaries}
 
-## Guard Surfaces as Codimension-1 Manifolds
+### Guard Surfaces as Codimension-1 Manifolds
 
 In smooth dynamics, the state space $\mathcal{X} = \mathbb{R}^n$ is an $n$-dimensional manifold without boundary. Trajectories flow smoothly through this space, never encountering edges or discontinuities.
 
 In hybrid dynamics, guard surfaces partition the state space into regions. Each guard $G_{ij}$ is a **codimension-1 submanifold**, meaning it has dimension $n-1$ and locally divides $\mathbb{R}^n$ into two half-spaces.
 
 ::: {.callout-tip}
-## Definition: Guard Surface as Manifold
+### Definition: Guard Surface as Manifold
 
 A guard surface $G$ is the zero level set of a smooth function $h: \mathbb{R}^n \to \mathbb{R}$:
 
@@ -689,7 +689,7 @@ v = v_{\parallel} + v_{\perp}, \quad v_{\parallel} \in T_x G, \; v_{\perp} \in N
 $$ {#eq-tangent-normal-decomp}
 :::
 
-### Example: Bouncing Ball
+#### Example: Bouncing Ball
 
 The guard is $h(x) = h = 0$. The gradient is:
 
@@ -711,7 +711,7 @@ $$
 
 Normal perturbations are purely in height.
 
-### Example: Humanoid Foot Strike
+#### Example: Humanoid Foot Strike
 
 For a humanoid robot, the guard is the foot height:
 
@@ -727,12 +727,12 @@ $$
 
 where $J_{\text{foot}}(q)$ is the foot Jacobian. The tangent space $T_q G$ has dimension $n-1$ (one constraint), and contains all joint angle perturbations that keep the foot at ground level (to first order).
 
-## Tangent Cones vs. Tangent Spaces
+### Tangent Cones vs. Tangent Spaces
 
 At a boundary point, the **tangent cone** is the set of velocity directions that keep the trajectory inside the domain.
 
 ::: {.callout-note}
-## Tangent Cone
+### Tangent Cone
 
 For a domain $\mathcal{D} = \{x \mid h(x) \geq 0\}$, the tangent cone at a boundary point $x \in \partial \mathcal{D}$ (where $h(x) = 0$) is:
 
@@ -765,7 +765,7 @@ $$
 
 (pointing away from guard, leaving the surface).
 
-## Normal/Tangent Decomposition at Impact
+### Normal/Tangent Decomposition at Impact
 
 The velocity $v$ at a guard crossing decomposes as:
 
@@ -803,7 +803,7 @@ $$ {#eq-friction-impact}
 
 This is a **nonlinear** function of the velocity components, requiring iterative solution for the Jacobian.
 
-## Riemannian Metric and Energy
+### Riemannian Metric and Energy
 
 On a manifold with a metric $g$, the kinetic energy is:
 
@@ -829,7 +829,7 @@ For elastic collisions ($e = 1$), energy is conserved. For perfectly inelastic (
 
 The mass matrix $M(q)$ defines a **Riemannian metric** on the configuration manifold. Impact maps are **not isometries**—they change distances and angles in tangent space. The saltation matrix $S_j$ can be viewed as a metric-preserving map followed by a dissipative projection.
 
-## Chapter Summary
+### Chapter Summary
 
 Guard surfaces are codimension-1 manifolds with:
 
@@ -846,7 +846,7 @@ Energy is dissipated in proportion to $(1-e^2)$ and the normal velocity. This ge
 
 ---
 
-# Chapter 5: Impact Maps as Tangent Space Rotations {#sec-impact-maps}
+## Chapter 5: Impact Maps as Tangent Space Rotations {#sec-impact-maps}
 
 ## Restitution Coefficients Geometrically
 
@@ -1079,9 +1079,9 @@ Examples (golf, docking) show realistic calculations. The saltation matrix linea
 
 ---
 
-# Chapter 6: Variational Dynamics Through Impacts {#sec-variation-through-jumps}
+## Chapter 6: Variational Dynamics Through Impacts {#sec-variation-through-jumps}
 
-## Jump in δx Across Guard Surface
+### Jump in δx Across Guard Surface
 
 We now ask: How do perturbations $\delta x(t)$ evolve through a hybrid trajectory?
 
@@ -1118,7 +1118,7 @@ $$ {#eq-variation-hybrid-full}
 
 This is the **hybrid state transition**, generalizing @eq-smooth-transition to include jumps.
 
-## Modified State Transition Operator Φ
+### Modified State Transition Operator Φ
 
 Define the **hybrid state transition matrix** as:
 
@@ -1136,7 +1136,7 @@ where the product runs backward (right-to-left) from the initial time to the fin
 
 3. **Determinant:** $\det(\Phi_{\text{hybrid}}) = \det(\Phi_c) \prod_j \det(S_j)$. For impacts, $\det(S_j) < 1$ generically (volume contraction due to dissipation).
 
-## Accumulation of Variations in Hybrid Systems
+### Accumulation of Variations in Hybrid Systems
 
 A key question: Do perturbations grow or shrink through impacts?
 
@@ -1156,7 +1156,7 @@ Eigenvalues: $\lambda_1 = \lambda_2 = -e$. All eigenvalues have magnitude $|e| <
 
 Dissipative impacts contract the tangent space, creating a form of **discrete-time stability**. Even if the continuous dynamics are unstable (e.g., inverted pendulum), the impacts can stabilize the overall hybrid system.
 
-### Example: Bouncing Ball With Exponential Decay
+#### Example: Bouncing Ball With Exponential Decay
 
 Consider a ball dropped from height $h_0$ with $e = 0.8$. After each bounce:
 
@@ -1184,7 +1184,7 @@ $$
 
 The system is **asymptotically stable** to the equilibrium $(h, v) = (0, 0)$ (rest on ground), despite the continuous phase being neutral (constant velocity in flight).
 
-## Zeno Behavior and Measure Zero Jump Sets
+### Zeno Behavior and Measure Zero Jump Sets
 
 An important pathology: **Zeno behavior**, where infinitely many jumps occur in finite time.
 
@@ -1236,7 +1236,7 @@ $$
 
 Jump times contribute zero measure, so they can be ignored in cost functionals.
 
-## Chapter Summary
+### Chapter Summary
 
 Variational dynamics through hybrid systems involve:
 
@@ -1253,13 +1253,13 @@ Zeno behavior (infinitely many jumps) is measure-theoretically well-behaved: jum
 
 ---
 
-# Part III: Optimization {.unnumbered}
+## Part III: Optimization {.unnumbered}
 
 ---
 
-# Chapter 7: Mode-Aware DDP {#sec-mode-aware-ddp}
+## Chapter 7: Mode-Aware DDP {#sec-mode-aware-ddp}
 
-## Handling Known Guard Crossings
+### Handling Known Guard Crossings
 
 Standard DDP assumes smooth dynamics. To handle hybrid systems, we must account for jumps in the backward pass.
 
@@ -1274,7 +1274,7 @@ $$ {#hs-eq-hybrid-cost-ddp}
 
 **Key modification:** At each jump, the value function must account for the discontinuity.
 
-## Backward Pass With Saltation Matrices
+### Backward Pass With Saltation Matrices
 
 The DDP backward pass computes the cost-to-go:
 
@@ -1304,7 +1304,7 @@ $$ {#eq-value-gradient-jump}
 
 This is the **adjoint jump condition**: the costate (gradient of value) is pulled back through the transpose of the saltation matrix.
 
-### Derivation
+#### Derivation
 
 By the chain rule:
 
@@ -1322,10 +1322,10 @@ $$
 
 So @eq-value-gradient-jump is correct.
 
-## Backward Pass Algorithm
+### Backward Pass Algorithm
 
 ::: {.callout-note}
-## Algorithm: Hybrid DDP Backward Pass
+### Algorithm: Hybrid DDP Backward Pass
 
 **Inputs:**
 
@@ -1380,14 +1380,14 @@ These are defined piecewise on each interval $[t_k, t_{k+1}]$, with discontinuit
 
 The backward pass "threads" through the jumps by pulling back the value gradient via $S_j^T$. This ensures that the feedback gains correctly account for how perturbations propagate through impacts.
 
-## Convergence Theory for Hybrid Systems
+### Convergence Theory for Hybrid Systems
 
 **Question:** Does hybrid DDP converge to a local optimum?
 
 **Answer (under regularity conditions):** Yes, with quadratic convergence near the optimum.
 
 ::: {.callout-important}
-## Theorem: Convergence of Hybrid DDP
+### Theorem: Convergence of Hybrid DDP
 
 Assume:
 
@@ -1415,7 +1415,7 @@ The saltation matrices $S_j$ act as linear "connectors" between modes. If $S_j$ 
 
 If $S_j$ is singular, some perturbation directions are "lost" at the jump, breaking the Newton step. Regularization (e.g., adding $\mu I$ to $S_j$) can restore convergence.
 
-## Example: Hopping Robot
+### Example: Hopping Robot
 
 A simple hopper (one leg, mass $m$, spring $k$) has two modes:
 
@@ -1451,7 +1451,7 @@ At takeoff, similar analysis.
 
 ---
 
-# Chapter 8: Contact-Implicit Trajectory Optimization {#sec-contact-implicit}
+## Chapter 8: Contact-Implicit Trajectory Optimization {#sec-contact-implicit}
 
 ## Complementarity Constraints
 
@@ -1599,9 +1599,9 @@ No manual mode switching needed.
 
 ---
 
-# Chapter 9: Applications {#sec-hs-applications}
+## Chapter 9: Applications {#sec-hs-applications}
 
-## Humanoid Locomotion (Stance/Swing Phases)
+### Humanoid Locomotion (Stance/Swing Phases)
 
 **System:** 5-link biped (torso + 2 legs, point feet)
 
@@ -1657,7 +1657,7 @@ Hybrid DDP generates a stabilizing walking gait in 10-15 iterations. The feedbac
 
 Contact-implicit can discover novel gaits (e.g., skipping, galloping) but struggles with local minima. In the examples discussed here, Hybrid DDP converges faster once a feasible gait pattern is supplied and makes the local stability discussion more explicit.
 
-## Golf Swing (Club-Ball Impact)
+### Golf Swing (Club-Ball Impact)
 
 **System:** Club (rigid body) + ball (point mass)
 
@@ -1729,7 +1729,7 @@ $$
 
 In the worked example, Hybrid DDP converges in 8-12 iterations for the chosen initialization and model settings. A safer interpretation is that the optimizer reduces **active torque** before impact to let the modeled release unfold, rather than that the clubhead should decelerate to maximize energy transfer. Any stronger golf claim would require the objective definition, parameter values, and validation plots.
 
-## Manipulation With Contact Switches
+### Manipulation With Contact Switches
 
 **System:** Robot arm + object on table
 
@@ -1783,7 +1783,7 @@ Backward pass accounts for:
 
 Generates smooth pick-place trajectories with minimal impact transients. The hybrid formulation ensures forces remain within friction cone limits.
 
-## Chapter Summary
+### Chapter Summary
 
 Applications demonstrate hybrid tangent space framework in:
 
@@ -1795,13 +1795,13 @@ The recurring theme: **Explicit treatment of discontinuities** via guards, reset
 
 ---
 
-# Part IV: Implementation and Extensions {.unnumbered}
+## Part IV: Implementation and Extensions {.unnumbered}
 
 ---
 
-# Chapter 10: Practical Algorithms {#sec-hs-implementation}
+## Chapter 10: Practical Algorithms {#sec-hs-implementation}
 
-## Guard Detection and Event Handling
+### Guard Detection and Event Handling
 
 **Problem:** Given a trajectory integration from $t_0$ to $t_f$, detect when a guard $h(x) = 0$ is crossed.
 
@@ -1814,7 +1814,7 @@ Check $h(x_k)$ at each timestep $t_k$. If $h(x_k) < 0$ and $h(x_{k+1}) > 0$, a c
 **Better approach: Event detection via root-finding**
 
 ::: {.callout-note}
-## Algorithm: Bisection Event Detection
+### Algorithm: Bisection Event Detection
 
 1. Detect bracketing: Find $t_k, t_{k+1}$ such that $h(x(t_k)) \cdot h(x(t_{k+1})) < 0$
 2. Refine crossing time:
@@ -1844,7 +1844,7 @@ $$
 
 This converges quadratically (2-3 iterations).
 
-## JAX Implementation Considerations
+### JAX Implementation Considerations
 
 JAX (Google's autodiff framework) is ideal for implementing hybrid DDP due to its:
 
@@ -1904,7 +1904,7 @@ hybrid_rollout.defvjp(forward_with_jump, backward_with_jump)
 
 This allows JAX to differentiate through the jump correctly, using $S^T$ in the backward pass.
 
-## Debugging Hybrid Optimizations
+### Debugging Hybrid Optimizations
 
 **Common failure modes:**
 
@@ -1923,7 +1923,7 @@ This allows JAX to differentiate through the jump correctly, using $S^T$ in the 
 - **Plot eigenvalues of $V_{xx}$:** Ensure Hessian remains positive definite
 - **Animate trajectory:** Visual inspection often reveals mode sequencing errors
 
-## Example Code: Bouncing Ball in JAX
+### Example Code: Bouncing Ball in JAX
 
 ```python
 import jax.numpy as jnp
@@ -1976,7 +1976,7 @@ trajectory = simulate_bounce(x0, T=2.0, t_jump=0.45)
 
 **Note:** This example assumes known `t_jump`. A full implementation would use bisection or Newton's method to find it.
 
-## Chapter Summary
+### Chapter Summary
 
 Implementing hybrid trajectory optimization requires:
 
@@ -1988,7 +1988,7 @@ Code examples (bouncing ball in JAX) demonstrate practical implementation patter
 
 ---
 
-# Conclusion and Extensions
+## Conclusion and Extensions
 
 ## What We've Achieved
 
@@ -2167,7 +2167,7 @@ This addresses **Critique 2** from the critical review: we now explicitly state 
 
 ---
 
-## Acknowledgments
+### Acknowledgments
 
 This work extends the Tangent Hyperplane framework developed by Dieter. The saltation matrix formalism builds on foundational work by Anitescu, Potra, Stewart, and Trinkle. Contact-implicit methods were pioneered by Posa, Kuindersma, and Tedrake at MIT.
 

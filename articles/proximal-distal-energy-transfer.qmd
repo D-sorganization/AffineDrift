@@ -117,9 +117,9 @@ collection output will not be treated as evidence without
 independent verification of the original sources.
 :::
 
-# Introduction {#sec-intro}
+## Introduction {#sec-intro}
 
-## Motivation
+### Motivation
 
 Clubhead speed at impact is the dominant controllable determinant of drive distance, and it correlates strongly with playing standard [@fradkin2004; @hellstrom2009; @hume2005]. The golf downswing is among the most-studied examples of a *sequenced* multi-segment rotation in sport biomechanics [@mcphee2022; @dillman1994]. Across measurement systems and populations, the downswing of a skilled golfer shows a characteristic order: the pelvis reaches its peak angular speed first, then the thorax, then the lead arm, and finally the club, with each successive segment peaking faster than the one before [@cheetham2008; @tinmark2010]. This *kinematic sequence*, an instance of the general proximal-to-distal sequencing observed in throwing and striking skills [@putnam1993], is routinely interpreted as a visible signature of outward mechanical-energy transfer. That interpretation has also influenced applied swing descriptions [@smith2015].
 
@@ -132,12 +132,12 @@ For experimental contrast, the finite model inputs are labeled "early drive" and
 This study approaches the question with *counterfactual dynamics*. A **pointwise ZTCF sample**, or pointwise drift vector, is the acceleration the model evaluates at one achieved state with applied control removed. A **stitched pointwise ZTCF trace** collects those same-state samples without integrating them. A **forward or branched ZTCF trajectory** integrates the drift after a torque killswitch and is required to test persistence. The **control contribution** is the same-state difference between total and drift acceleration. A **ZVCF is not the control contribution**: it is a separate zero-velocity construction used to isolate configuration-dependent terms under a declared convention.
 
 ::: {.callout-important}
-## Definition Alignment & Cross-Reference
+### Definition Alignment & Cross-Reference
 
 This article applies the canonical definitions in the [Zero-Torque Counterfactual glossary](zero-torque-counterfactual.html#sec-ztcf-canonical). The pointwise ZTCF sample is $f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$, while the same-state control contribution is $G(\mathbf{x})u$. A stitched trace evaluates $f$ at successive achieved states; it must not be used to infer persistence. A forward or branched ZTCF integrates $f$ after setting the declared applied torque channels to zero. ZVCF evaluates the declared model at zero velocity and must not be relabeled as pure control.
 :::
 
-## Research Questions
+### Research Questions
 
 The document is organized around four questions:
 
@@ -149,9 +149,9 @@ The document is organized around four questions:
 - **RQ6 — Allocation and Preload.** For an identical club-moment task, how do arm-dominant and wrist-dominant actuator allocations change internal loading, and under what declared transmission model does preload preserve torque continuity? (@sec-allocation-preload)
 - **RQ7 — Representation and Biology.** Which conclusions survive frame and reference-point changes, how does one net joint moment map to many muscle activations, and which questions belong to MuJoCo, Pinocchio, Drake, OpenSim, or MyoSuite? (@sec-advanced-bridge)
 
-# Mechanics of Sequenced Swings {#sec-mechanics}
+## Mechanics of Sequenced Swings {#sec-mechanics}
 
-## The Summation-of-Speed Principle
+### The Summation-of-Speed Principle
 
 Sequential segment motion in human movement dates to Bunn's principle of summation of speed [@bunn1972]. When segments connected in series accelerate in sequence, the distal tip speed is not merely the sum of independent segment rotation rates; it is the compound result of base rotation carrying distal axes plus distal rotation relative to those axes [@putnam1991; @putnam1993].
 
@@ -165,7 +165,7 @@ v_{\text{head}}^2 = L_1^2 \dot{\theta}_1^2 + L_2^2 (\dot{\theta}_1 + \dot{\theta
 $$
 The cross-term $2 L_1 L_2 \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos\theta_2$ reveals the geometric leverage of wrist cock $\theta_2$: when $\theta_2$ is near $-\pi/2$ (wrist cocked), the cross-term is small; as $\theta_2 \to 0$ (wrist uncocked), $\cos\theta_2 \to 1$, maximizing distal speed for given segment rates.
 
-## Interaction Dynamics and Torque Handoffs
+### Interaction Dynamics and Torque Handoffs
 
 The equations of motion for the planar double pendulum express the causal coupling between joint torques and segment accelerations:
 $$
@@ -177,7 +177,7 @@ $$
 $$
 The term $-\frac{M_{21}}{M_{22}}\ddot{\theta}_1$ is the **inertial interaction acceleration**. Because $M_{21} = m_2 L_1 L_{c2} \cos\theta_2 + I_2 > 0$ for typical geometries, accelerating the arm ($\ddot{\theta}_1 > 0$) exerts an inertial torque on the wrist that acts to *increase* wrist cock (maintain lag). Conversely, decelerating the arm ($\ddot{\theta}_1 < 0$) uncocks the wrist and transfers energy to the club without requiring applied distal generalized torque in this model [@putnam1993; @herring1992]. This does not imply zero distal muscle force because co-contraction and passive structural loads are not identified by the generalized-torque counterfactual.
 
-## Parametric Energy Transfer
+### Parametric Energy Transfer
 
 As White [@white2006] and Miura [@miura2001] demonstrated, the dominant distal energy gain late in the downswing is *parametric*: the inward centripetal force exerted by the arm on the wrist joint performs mechanical work on the club segment as the hub path tightens and the club rotates toward alignment. Measured and optimized hub-path analyses provide golf-specific context for this geometric mechanism [@nesbit2009hub; @nesbit2014hub]. The power delivered by this joint force is:
 $$
@@ -190,7 +190,7 @@ and swing phase determine the sign of interface power. The phase-resolved test
 below replaces the earlier unconditional statement with an explicit
 state-matched counterfactual.
 
-# Empirical Evidence in Golfers {#sec-evidence}
+## Empirical Evidence in Golfers {#sec-evidence}
 
 Empirical kinetic and kinematic studies confirm the P→D energy flow structure. Nesbit and Serrano [@nesbit2005work] showed that the torso and hips contribute 68.7–72.2% of total swing work, while shoulder and wrist joints contribute 24.3–28%. Power generation is concentrated early (torso), while clubhead speed conversion occurs late.
 
@@ -198,7 +198,7 @@ Recent findings by Rachnavy et al. [@frontiers2026footground] (Frontiers in Spor
 
 Segmental kinetic energy sequencing studies by Kenny et al. [@kenny2008] and Anderson et al. [@anderson2006] further document outward energy migration, showing that energy arrives late in the club after proximal peaks have passed.
 
-## Force Along the Hand Path
+### Force Along the Hand Path
 
 MacKenzie, McCourt, and Champoux [@mackenzie2020energy] analyzed 76 amateur
 golfers using three-dimensional club inverse dynamics. They reported that
@@ -232,7 +232,7 @@ impulse, signed/positive/negative/absolute tangent impulse, force and couple
 power, and cumulative work as separate estimands.
 
 ::: {.callout-important}
-## Mechanical Input Is Not Biological Effort
+### Mechanical Input Is Not Biological Effort
 
 Neither total force nor the modeled control residual identifies muscle
 activation, metabolic cost, or perceived effort. Muscle redundancy,
@@ -242,7 +242,7 @@ requires independent measurements or an explicitly declared actuator-cost
 model.
 :::
 
-# Proximal Velocity and Drift-Mediated Transfer {#sec-proximal-velocity-transfer}
+## Proximal Velocity and Drift-Mediated Transfer {#sec-proximal-velocity-transfer}
 
 The motivating observation is that releasing while the proximal system moves
 rapidly can appear to produce less grip braking and a cleaner outward fling.
@@ -333,19 +333,19 @@ dominates the speed gain, if matching distal laboratory-frame state removes the
 effect, or if a two-hand model attributes the gain to direct wrist work rather
 than interaction-force transport.
 
-# The Timing Question and Counterfactual Framework {#sec-timing-framework}
+## The Timing Question and Counterfactual Framework {#sec-timing-framework}
 
-## Formalizing the Strategies
+### Formalizing the Strategies
 
 We contrast two explicit strategies for distal energy handoff:
 - **S1 (Early Drive):** Apply positive wrist torque $\tau_2 > 0$ immediately after transition ($t_{\text{on}} = 0$).
 - **S2 (Retain Early, Release Late):** Apply zero or negative wrist torque $\tau_2 \le 0$ early (retaining wrist cock against centrifugal opening), releasing positive torque $\tau_2 > 0$ late in the downswing.
 
-## What Falsifies S2?
+### What Falsifies S2?
 
 Strategy S2 would be falsified if early distal drive produced higher clubhead speed than late drive under matched proximal torque effort $\tau_1(t)$.
 
-## Pointwise vs. Re-Simulation Counterfactuals
+### Pointwise vs. Re-Simulation Counterfactuals
 
 The same-state affine decomposition splits instantaneous acceleration into drift and control:
 $$
@@ -353,7 +353,7 @@ $$
 $$
 The Python implementation in [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/main/src/shared/python/simulation_backends/ztcf_zvcf.py) evaluates this split pointwise along sampled trajectories. It is an instantaneous tangent-field statement, not a future zero-torque trajectory. Separate matched-state forward killswitch ensembles quantify nonlinear trajectory divergence after the command is removed.
 
-## Completed Model Ladder and Reporting Contract
+### Completed Model Ladder and Reporting Contract
 
 The completed extension uses three declared tiers: an exact planar double
 pendulum, a one-arm mobile-hub/three-link point-mass model, and a mechanically
@@ -399,7 +399,7 @@ not a device calibration or human validation result; full bilateral wrenches,
 distributed pressure, anatomy, intentionality, and coaching inference remain
 untested.
 
-### Subject-Scaled Contact Closure Is an Independent Gate
+#### Subject-Scaled Contact Closure Is an Independent Gate
 
 The next spatial audit asks a more elementary question than whether a contact
 Jacobian has full local rank: do the anatomical hand points occupy the declared
@@ -440,7 +440,7 @@ The next admissible rung is calibrated compliant forward contact from these
 closed states, repeated with subject-specific anatomy and independent-engine
 reversal, killswitch, power, and work--energy controls.
 
-### Paired Scapulothoracic Geometry Screen
+#### Paired Scapulothoracic Geometry Screen
 
 The next intervention holds the trunk and all six club coordinates fixed and
 compares fixed shoulder centers with four bounded scapular coordinates per
@@ -468,7 +468,7 @@ transfer, club delivery, or a human strategy. Those claims require a validated
 articulated shoulder, subject-specific geometry where governed, calibrated
 distributed grip contact, paired forward dynamics, and held-out human data.
 
-### From Closed States to Bounded Articulated Forward Contact
+#### From Closed States to Bounded Articulated Forward Contact
 
 The articulated tier is qualified one rung at a time, and each rung is a
 separate registered gate rather than a step toward a foregone conclusion.
@@ -514,7 +514,7 @@ states — but the
 [typed-slack evidence](https://github.com/D-sorganization/UpstreamDrift/blob/6ab07a580a3b59d95b063fa4dbd5977ece64eb76/docs/research/proximal_distal_energy_transfer/data/articulated_slack_atlas.json)
 does not identify timing economy, self-correction, biological slack, or intent.
 
-### Distributed Grip and Passive Shaft Change the Model, Not the Verdict
+#### Distributed Grip and Passive Shaft Change the Model, Not the Verdict
 
 Two further pathways replace idealized elements with distributed ones, and both
 were qualified against the same registered gates.
@@ -562,7 +562,7 @@ reaction and free moment are absent from this tier entirely; and post-hoc
 matching is descriptive rather than a randomized identification of a causal
 shaft effect.
 
-### The Ground Pathway Fails Its Own Preregistered Screen
+#### The Ground Pathway Fails Its Own Preregistered Screen
 
 The final component of the ground pathway program
 adds a finite planar base: ground translation, a separately identifiable free
@@ -611,9 +611,9 @@ normal contact, Coulomb friction, foot segmentation, or measured pressure; it is
 not force-plate calibrated; and it ends at 50 ms, so it cannot describe the whole
 downswing or impact.
 
-# Arm--Wrist Allocation and Transmission Preload {#sec-allocation-preload}
+## Arm--Wrist Allocation and Transmission Preload {#sec-allocation-preload}
 
-## Same Club Task, Different Internal Loads
+### Same Club Task, Different Internal Loads
 
 A net club moment can be produced by direct wrist moments, by the moment of two
 separated hand forces about the club reference point, or by both. Club
@@ -641,7 +641,7 @@ one metric varies with geometry and need not minimize another. Consequently,
 the model supplies a tradeoff surface; it does not establish a universal
 arm-led or wrist-led technique.
 
-## What “Slack” Means in This Test
+### What “Slack” Means in This Test
 
 “Slack” can mean a grip gap, series-elastic extension, low tangent stiffness,
 activation delay, or low activation. These are not interchangeable. The
@@ -695,7 +695,7 @@ Co-contraction can increase task-relevant stiffness but has energetic and
 control costs. Neither
 zero compliance nor maximum preactivation is presumed optimal.
 
-## Relation to Scapular and Wrist Activity
+### Relation to Scapular and Wrist Activity
 
 Scapular electromyography reports phase-dependent shoulder-girdle activity
 ([Jobe et al., 1995](https://pubmed.ncbi.nlm.nih.gov/7726345/)), and wrist
@@ -720,7 +720,7 @@ documented gap or low stiffness, or any apparent advantage disappears on
 participant-level holdout.
 
 ::: {.callout-important}
-## Conditional Finding, Not Technique Advice
+### Conditional Finding, Not Technique Advice
 
 The persistent-direction case performs better only inside the declared
 phenomenological transmission family. No human allocation, biological slack,
@@ -729,9 +729,9 @@ measured. The complete equations, sensitivity grid, traces, and falsifiers are
 maintained in the [open research epic](https://github.com/D-sorganization/UpstreamDrift/issues/8497).
 :::
 
-# Reference Frames, Biological Redundancy, and Engine Roles {#sec-advanced-bridge}
+## Reference Frames, Biological Redundancy, and Engine Roles {#sec-advanced-bridge}
 
-## One Physical Interaction, Several Coordinate Descriptions
+### One Physical Interaction, Several Coordinate Descriptions
 
 A model result should not change because a reviewer expresses it in a
 laboratory frame, a club-attached frame, or about another point on the same
@@ -772,7 +772,7 @@ Reference](screw-theory-reference.html), and [cross-formalism dynamics
 treatment](calculation-framework-comparison/multibody-drift-control-v3.html#sec-cross-formalism)
 develop the underlying representation issues in greater depth.
 
-## The Same Net Moment Does Not Identify One Muscle Strategy
+### The Same Net Moment Does Not Identify One Muscle Strategy
 
 For a moment-arm matrix $\mathbf R_m(\mathbf q)$ and nonnegative muscle forces
 $\mathbf f_m$, the net modeled joint moment is
@@ -798,7 +798,7 @@ article](inverse-dynamics.html), [Constraint Forces](The_Physics_of_Golf/quarto/
 and [Induced Acceleration Analysis](The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html)
 provide complementary treatments.
 
-## Preparation History With Activation and Series-Force Dynamics
+### Preparation History With Activation and Series-Force Dynamics
 
 The earlier dead-zone study tested one operational definition of slack. A new
 reduced biological bridge instead carries neural excitation, activation,
@@ -816,7 +816,7 @@ passivity, or a preferred human technique. The [Passive and Distributed
 Control chapter](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html)
 develops the related biological-control ideas.
 
-## Use Each Engine for a Declared Question
+### Use Each Engine for a Declared Question
 
 ![Scientific Questions and the Common Cross-Engine Comparison Surface.](figures/proximal_distal_energy_transfer/fig_cross_engine_question_ladder.svg){#fig-site-engine-ladder alt="MuJoCo, Pinocchio, Drake, OpenSim, and MyoSuite roles connect to common frames, events, wrenches, moments, power, and residuals."}
 
@@ -851,7 +851,7 @@ The complete equations, evidence archives, backend boundaries, and
 falsification program are maintained in the [advanced expansion research program (UpstreamDrift/issues/8505)](https://github.com/D-sorganization/UpstreamDrift/issues/8505) and the
 [canonical research monograph](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf).
 
-# Transmission Pathways, Robust Speed, and Task Stability {#sec-transmission-robustness}
+## Transmission Pathways, Robust Speed, and Task Stability {#sec-transmission-robustness}
 
 The extended analysis separates five propositions that should not be merged:
 energy reaches the club; a particular pathway carries it; an intervention
@@ -894,7 +894,7 @@ joint variability [Morrison et al.](https://pubmed.ncbi.nlm.nih.gov/26784706/).
 
 ![Local Task-Null Variability Map.](figures/proximal_distal_energy_transfer/fig_task_null_variability_map.svg){#fig-task-null-map alt="A normalized input-outcome Jacobian and variance bars distinguish task-null from task-relevant model variability."}
 
-## Common-Phase Timing Viability and Recovery
+### Common-Phase Timing Viability and Recovery
 
 A follow-on falsification study removes a hidden comparison ambiguity by
 placing clock and state-triggered release on the same nominal phase coordinate.
@@ -932,7 +932,7 @@ The complete gap register and path forward are available in the
 [adversarial transmission review](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/ADVERSARIAL_TRANSMISSION_REVIEW.md),
 with implementation tracked in the [adversarial transmission research registry (UpstreamDrift/issues/8507)](https://github.com/D-sorganization/UpstreamDrift/issues/8507).
 
-# Computational Methods {#sec-methods}
+## Computational Methods {#sec-methods}
 
 The numerical analyses use an open-source, backend-neutral double-pendulum model. The baseline is a planar, fixed-hub arm–club chain with a rigid shaft and deterministic fixed-step integration:
 
@@ -945,11 +945,11 @@ The numerical analyses use an open-source, backend-neutral double-pendulum model
 
 The registered arm-angle rule defines the primary delivery-zone estimand; it is not an anatomical validity threshold. Every row retains its unfiltered first club-vertical crossing and a reason-coded status.
 
-# Results {#sec-results}
+## Results {#sec-results}
 
 All reported values trace to versioned JSON/NPZ data and analysis code linked in @sec-open-materials.
 
-## E1 — Timing Sweep Results
+### E1 — Timing Sweep Results
 
 ![E1 Sweep: Clubhead Speed at Impact vs. Wrist-Drive Onset Time. Dashed Line: Passive Baseline.](figures/proximal_distal_energy_transfer/fig_e1_onset_sweep.svg){#fig-sweep alt="Clubhead speed rises with later wrist-drive onset, peaking near 0.2 s before falling; early drive degrades speed by 15%."}
 
@@ -967,13 +967,13 @@ Key model-derived findings:
 2. **Identical torque applied late adds +12.4%.** Peak speed reaches 38.4 m/s at $t_{\text{on}} = 0.200$ s.
 3. **Restrain-then-drive is highest among the tested programs (+13.8%).** The grid-selected command ($R = 10$ N·m) reaches 38.9 m/s (and 46.9 m/s at $\tau_s = 100$ N·m).
 
-## E1b — Torque-Velocity Actuator Bounds
+### E1b — Torque-Velocity Actuator Bounds
 
 ![E1b: Timing Sweep With Linear Torque-Velocity Bounds on Drives.](figures/proximal_distal_energy_transfer/fig_e1b_bounded_sweep.svg){#fig-e1b alt="Under torque-velocity bounds, late drive maintains its superiority over early drive (+12.2% over passive)."}
 
 The S2 ordering survives actuator bounds intact: early drive (28.8 m/s) < passive (30.8 m/s) < selected late drive (34.6 m/s) < selected restrain-then-drive (34.8 m/s).
 
-## Kinematic Sequence & Segment Energies
+### Kinematic Sequence & Segment Energies
 
 ![Kinematic Sequence for Representative Programs.](figures/proximal_distal_energy_transfer/fig_kinematic_sequence.svg){#fig-kinseq alt="Arm speed peaks before club speed; early drive suppresses arm peak speed, while late release maximizes both."}
 
@@ -985,7 +985,7 @@ The S2 ordering survives actuator bounds intact: early drive (28.8 m/s) < passiv
 
 The energy budget shows that the grid-selected programs put the *least* energy into the club early (5.0 J vs. 23.0 J early drive) and bank energy in the arm (55.1 J shoulder work early). The selected restraint command produces −1.9 J of modeled early wrist-actuator work because its imposed torque opposes opening velocity. That sign does not identify muscle action, neural intent, eccentric physiology, or a human technique.
 
-## E4 Interface Powers & E2 Counterfactual Split
+### E4 Interface Powers & E2 Counterfactual Split
 
 ![Robertson–Winter Interface Power Accounting.](figures/proximal_distal_energy_transfer/fig_wrist_interface_power.svg){#fig-wristpower alt="Joint-force power surges late to 131.7 J, dwarfing late wrist actuator work of 25.7 J."}
 
@@ -993,7 +993,7 @@ The energy budget shows that the grid-selected programs put the *least* energy i
 
 Robertson–Winter accounting [@robertson1980] closes pointwise with analytic COM acceleration and shows that late energy transfer is dominated by joint-force power (131.7 J) rather than wrist-actuator work (25.7 J). The E2 split shows an instantaneous S2 signature: **control opposes drift early; drift dominates late.** Forward killswitch claims come from separately integrated matched-state branches.
 
-## Hand-Path Attribution Across the Model Ladder {#sec-attribution-results}
+### Hand-Path Attribution Across the Model Ladder {#sec-attribution-results}
 
 The MacKenzie-compatible primary estimand is the linear force-work delivered by
 the golfer to the club divided by achieved hand-path length, $W_{\mathrm{linear}}/L_H$.
@@ -1024,7 +1024,7 @@ loading, stabilization, or metabolic cost.
 
 ![Total, Drift, Control, and ZVCF Hand-Path Components Across the Three Model Tiers.](figures/proximal_distal_energy_transfer/fig_hand_path_components.svg){#fig-hand-path-components alt="Time histories compare total hand-path force with same-state drift, control, and separately defined zero-velocity diagnostic components for the double-pendulum, one-arm, and two-arm cases."}
 
-### Geometry and Force-Vector Mechanisms
+#### Geometry and Force-Vector Mechanisms
 
 The vector plate in @fig-hand-path-vectors makes the geometry explicit. Each
 arrow uses one declared force direction and one reference point; the tangent is
@@ -1036,7 +1036,7 @@ loading can create a couple without changing the common resultant.
 
 ![Same-State Force Vectors and Achieved Hand-Path Tangents.](figures/proximal_distal_energy_transfer/fig_hand_path_force_vectors.svg){#fig-hand-path-vectors alt="Model poses show achieved hand-path tangents and separately scaled total, drift, control, and ZVCF force vectors, including both hand contacts in the closed-loop model."}
 
-### Impulse, Work, Power, Joint, and Time-Window Structure
+#### Impulse, Work, Power, Joint, and Time-Window Structure
 
 Impulse and work answer different questions. Vector impulse retains the
 Cartesian direction of accumulated force, tangent impulse accumulates the
@@ -1062,7 +1062,7 @@ fraction when drift and control nearly cancel.
 
 ![Instantaneous Drift Power Shares With Cancellation Masking.](figures/proximal_distal_energy_transfer/fig_hand_path_power_shares.svg){#fig-hand-path-power-shares alt="Time histories report cancellation-safe drift shares of total wrench power and identify intervals where opposing drift and control make signed fractions unstable."}
 
-### Two-Hand Redundancy and the Late Negative-Couple Hypothesis
+#### Two-Hand Redundancy and the Late Negative-Couple Hypothesis
 
 The two-hand reference case separates the common contact-force mode from the
 differential mode. The common mode governs net translation; the differential
@@ -1093,7 +1093,7 @@ preactivation and not a clubhead-speed optimization.
 
 ![Bounded Residual-Couple Preview Hypothesis.](figures/proximal_distal_energy_transfer/fig_two_hand_preactivation_hypothesis.svg){#fig-two-hand-preview alt="A bounded first-order actuator analysis compares reactive and previewed tracking of the small control residual after subtracting the large pointwise drift couple."}
 
-### Closure and Sensitivity
+#### Closure and Sensitivity
 
 All reference cases close total = drift + control for force, couple, power, and
 work below $2.3\times10^{-13}$ in the exported records. The sensitivity panel
@@ -1102,23 +1102,23 @@ does not represent population uncertainty or confidence intervals.
 
 ![Numerical Closure and Local Sensitivity Evidence.](figures/proximal_distal_energy_transfer/fig_hand_path_sensitivity_closure.svg){#fig-hand-path-sensitivity-closure alt="Panels summarize force, couple, power, and work closure residuals and local parameter sensitivity for the three model tiers."}
 
-## E1c — Impact-Criterion Robustness
+### E1c — Impact-Criterion Robustness
 
 Evaluating all 92 trajectories under 5 alternative criteria (fixed hand position, ball-position sweep $v_x$, peak speed anywhere in first pass, matched arm angle $\theta_1=0.5$ rad, and registered max-arm-angle sweep $1.5–2.5$ rad) preserved the retain-early/release-late ordering. The 2.0 rad rule accepts 63 programs and places 29 first crossings outside the registered delivery zone. Across the threshold sweep, 58–69 programs are accepted and the selected winner at both shoulder torques is unchanged. This reduces sensitivity to the selected definition; it does not validate unmodeled impact physics.
 
-## E1d — Model-Parameter Sensitivity
+### E1d — Model-Parameter Sensitivity
 
 The ordering early drive < passive < selected late drive < selected restrain-then-drive persisted in all 13 one-at-a-time parameter cases. Across those cases, the selected late-drive onset shifted from 0.175 to 0.225 s and the selected restrained onset from 0.100 to 0.150 s. Speed ranges were 26.4–31.3 m/s for early drive, 32.9–35.6 m/s for passive, 36.5–40.6 m/s for selected late drive, and 36.8–41.3 m/s for selected restrain-then-drive.
 
 These are local model perturbations, not confidence intervals or a population distribution. The stable ordering supports the modeled mechanism; the shifting selection argues against a universal onset-time prescription.
 
-## E1e — Command Rise-Time Sensitivity
+### E1e — Command Rise-Time Sensitivity
 
 ![Finite Command Rise-Time Sensitivity of the Tested E1 Programs.](figures/proximal_distal_energy_transfer/fig_e1e_smooth_command_sensitivity.svg){#fig-e1e-smooth-command alt="Across 0, 20, 35, and 50 millisecond first-order command transitions, early drive remains below passive, selected late drive, and selected restrain-then-drive at both shoulder torque levels."}
 
 The registered ordering persists at both shoulder torques for 20, 35, and 50 ms post-preload command transitions. At 60 N·m, selected late drive changes from 38.40 to 38.07 m/s and selected restrain-then-drive from 38.85 to 38.66 m/s between 0 and 50 ms; the selected onset and restraint can change. This rejects a single-sample switching artifact within the declared filter family, not a muscle model or global optimum.
 
-# Ground-Reaction Drift Attribution {#sec-grf-drift}
+## Ground-Reaction Drift Attribution {#sec-grf-drift}
 
 Ground-reaction force is an external contact wrench and a constrained-dynamics
 observable, not a directly commanded input. At one measured state, a
@@ -1168,7 +1168,7 @@ it [@han2019; @watson2026grf]. It also corrects a common inference: measured GRF
 minus modeled ZTCF contains control-induced reaction, model error, measurement
 error, and omitted loads; it does not uniquely recover muscle torque.
 
-# Discussion {#sec-discussion}
+## Discussion {#sec-discussion}
 
 The numerical results support delayed distal release as a robust mechanism within the tested planar two-link model. Early wrist drive increases the system's moment of inertia about the shoulder hub before proximal speed has developed, reducing the modeled shoulder work converted into arm speed.
 
@@ -1179,7 +1179,7 @@ Qualifications and scope limits:
 - The local one-at-a-time screen does not estimate population effects. A separate 12-input Latin-hypercube/PRCC study exposes coupled effects, non-identifiability, and held-out strategy tradeoffs, but its engineering envelopes are not population distributions or Sobol variance decomposition.
 - No coaching recommendation follows from these finite model inputs.
 
-# Conclusions {#sec-conclusions}
+## Conclusions {#sec-conclusions}
 
 1. In the baseline model, early distal drive produces 15% less speed than the passive condition.
 2. Grid-selected late wrist torque produces 12% to 14% more speed than the passive baseline.
@@ -1190,9 +1190,9 @@ Qualifications and scope limits:
 
 These findings demonstrate a mechanism in a simplified model. They do not establish a universal golfer-level effect or coaching prescription.
 
-# Open Materials and Model Details {#sec-appendices}
+## Open Materials and Model Details {#sec-appendices}
 
-## Code and Data Availability {#sec-open-materials}
+### Code and Data Availability {#sec-open-materials}
 
 The currently published timing-study code, tests, figures, parameter records,
 and machine-readable outputs remain available in the [open-source research
@@ -1215,7 +1215,7 @@ depend on adopting the broader software project. The
 records each criticism, its verification status, and the implemented response.
 Work is tracked in the [upstream research registry](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer).
 
-## Reproducibility
+### Reproducibility
 
 To re-run experiments and regenerate figures from source code:
 ```bash
@@ -1233,7 +1233,7 @@ python3 -m scripts.research.proximal_distal_energy.run_transmission_robustness_s
 python3 -m scripts.research.proximal_distal_energy.make_transmission_robustness_figures
 ```
 
-## Model Parameters
+### Model Parameters
 
 | Parameter | Symbol | Value | Unit |
 |---|---|---|---|

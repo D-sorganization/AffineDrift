@@ -1,6 +1,6 @@
-# Critique: Contraction Theory Meets Tangent Spaces — Unifying Stability and Optimality
+## Critique: Contraction Theory Meets Tangent Spaces — Unifying Stability and Optimality
 
-## Meta-Information
+### Meta-Information
 
 **Article**: Contraction_Tangent_Unification.qmd
 **Date of Critique**: 2026-01-18
@@ -31,19 +31,19 @@ This article claims a close relationship between contraction theory and tangent-
 
 ---
 
-# Weakness 1: The Duality Is Unidirectional, Not Bidirectional
+## Weakness 1: The Duality Is Unidirectional, Not Bidirectional
 
-## Location
+### Location
 - **Section 3**: "The Duality Revealed"
 - **Theorem 3.1**: "Stability-Optimality Duality"
 - **Claims**: "Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction."
 
-## Nature of Issue
+### Nature of Issue
 **Logical gap / Overgeneralization**
 
-## Detailed Critique
+### Detailed Critique
 
-### What the Article Claims
+#### What the Article Claims
 The article presents the relationship between contraction and optimality as a **symmetric duality**:
 
 > "**Claim**: The Riccati solution $\mathbf{S}_t$ **is** a contraction metric!"
@@ -53,7 +53,7 @@ The abstract promises:
 
 This suggests a bidirectional equivalence: every contraction metric corresponds to some optimal control problem, and every optimal control problem yields a contraction metric.
 
-### What the Mathematics Actually Shows
+#### What the Mathematics Actually Shows
 
 The proven direction is **one-way only**:
 
@@ -65,7 +65,7 @@ The proven direction is **one-way only**:
 - Given an arbitrary contraction metric $\mathbf{M}$ satisfying $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}$, does there exist $\mathbf{Q}$, $\mathbf{R}$ such that $\mathbf{M} = \mathbf{S}$ is the ARE solution?
 - **Answer**: Not in general! The contraction condition is a **Lyapunov inequality**, which has infinitely many solutions. Only a very specific subset corresponds to Riccati solutions.
 
-### Counterexample
+#### Counterexample
 
 Consider the stable system:
 $$
@@ -101,7 +101,7 @@ Eigenvalues of this $\mathbf{Q}$: $\{9.24, 4.76\} > 0$. ✓ Positive definite.
 
 So both **can** be Riccati metrics, but only for specific $({\bf Q}, \mathbf{R})$ pairs. An arbitrary metric satisfying the contraction inequality does **not** uniquely determine an optimal control problem.
 
-### Why This Matters
+#### Why This Matters
 
 1. **Philosophical**: The article frames contraction and optimality as "dual manifestations of the same geometric structure." This is poetic but misleading—they are related but not equivalent.
 
@@ -109,7 +109,7 @@ So both **can** be Riccati metrics, but only for specific $({\bf Q}, \mathbf{R})
 
 3. **Theoretical**: The inverse optimal control problem (find $\mathbf{Q}$, $\mathbf{R}$ given $\mathbf{K}$) is notoriously non-unique. The article glosses over this.
 
-### Evidence From Literature
+#### Evidence From Literature
 
 - **Kalman (1964)**: The ARE has a unique stabilizing solution only when $(\mathbf{A}, \mathbf{B})$ is stabilizable and $(\mathbf{A}, \mathbf{Q}^{1/2})$ is detectable. These conditions are **not** automatically satisfied by arbitrary contraction metrics.
 
@@ -117,12 +117,12 @@ So both **can** be Riccati metrics, but only for specific $({\bf Q}, \mathbf{R})
 
 - **Moylan & Anderson (1973)**: "Nonlinear Regulator Theory and an Inverse Optimal Control Problem" — proves that infinitely many cost functions can yield the same stabilizing controller.
 
-## Severity
+### Severity
 **High** — This is a core claim of the paper that affects how readers interpret all subsequent results.
 
-## Suggested Remedies
+### Suggested Remedies
 
-### 1. Reframe Theorem 3.1
+#### 1. Reframe Theorem 3.1
 **Current**:
 > "Theorem 3.1 (Stability-Optimality Duality)"
 
@@ -135,7 +135,7 @@ So both **can** be Riccati metrics, but only for specific $({\bf Q}, \mathbf{R})
 >
 > **Note**: The converse (every contraction metric is a Riccati solution) is false in general. See Moylan & Anderson (1973) for inverse optimal control conditions.
 
-### 2. Add a Proposition on the Converse
+#### 2. Add a Proposition on the Converse
 
 **New Proposition 3.2 (When Contraction Implies Optimality)**:
 > Let $\mathbf{M}$ be a contraction metric for $\dot{\mathbf{x}} = (\mathbf{A} - \mathbf{B} \mathbf{K}) \mathbf{x}$. Then $\mathbf{M}$ is a Riccati solution if and only if:
@@ -144,7 +144,7 @@ So both **can** be Riccati metrics, but only for specific $({\bf Q}, \mathbf{R})
 >
 > This is the **inverse optimal control problem** (Kalman, 1964). Solutions are non-unique; additional constraints (e.g., minimizing $\text{tr}(\mathbf{Q} + \mathbf{R})$) are needed to specify a unique $(\mathbf{Q}, \mathbf{R})$ pair.
 
-### 3. Revise Abstract Claims
+#### 3. Revise Abstract Claims
 
 **Current**:
 > "Stability ↔ Optimality Duality: Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction."
@@ -152,14 +152,14 @@ So both **can** be Riccati metrics, but only for specific $({\bf Q}, \mathbf{R})
 **Revised**:
 > "LQR-Contraction Connection: We prove that LQR gains induce exponential stability via contraction metrics ($\mathbf{M} = \mathbf{S}$). Conversely, contraction metrics can sometimes be interpreted as solutions to inverse optimal control problems, though this mapping is non-unique without additional constraints."
 
-### 4. Clarify Section 3 Introduction
+#### 4. Clarify Section 3 Introduction
 
 Add:
 > **Important**: The relationship between contraction and optimality is **asymmetric**. Every LQR solution induces contraction (Theorem 3.1), but not every contracting system corresponds to an LQR controller. This distinction matters when designing controllers: starting with a desired contraction metric does not automatically yield an optimal feedback law unless that metric satisfies the Riccati equation for some $(\mathbf{Q}, \mathbf{R})$.
 
 ---
 
-# Weakness 2: Time-Varying Metrics and the Riccati Equation
+## Weakness 2: Time-Varying Metrics and the Riccati Equation
 
 ## Location
 - **Equation ([differential riccati](Contraction_Tangent_Unification.html#eq-differential-riccati))**: Differential Riccati Equation
@@ -322,19 +322,19 @@ In Section 9 (experiments), add:
 
 ---
 
-# Weakness 3: Coordinate-Free Claims vs. Coordinate-Dependent Reality
+## Weakness 3: Coordinate-Free Claims vs. Coordinate-Dependent Reality
 
-## Location
+### Location
 - **Section 6**: "Coordinate-Free Formulation"
 - **Section 6.1**: "Differential Geometry Perspective"
 - **Section 6.3**: "Gauge Freedom and Metric Choice"
 
-## Nature of Issue
+### Nature of Issue
 **Terminological ambiguity / Overgeneralization**
 
-## Detailed Critique
+### Detailed Critique
 
-### What "Coordinate-Free" Actually Means
+#### What "Coordinate-Free" Actually Means
 
 In differential geometry, a formulation is **coordinate-free** (or **intrinsic**) if:
 1. It is expressed using geometric objects (tensors, forms, connections) that exist independently of any coordinate system.
@@ -342,7 +342,7 @@ In differential geometry, a formulation is **coordinate-free** (or **intrinsic**
 
 **Example of coordinate-free**: The geodesic equation can be written as $\nabla_{\dot{\gamma}} \dot{\gamma} = 0$ (no coordinates), or in coordinates as $\ddot{x}^i + \Gamma^i_{jk} \dot{x}^j \dot{x}^k = 0$ (coordinate-dependent components).
 
-### What the Article Actually Does
+#### What the Article Actually Does
 
 The article's "coordinate-free" section:
 
@@ -362,7 +362,7 @@ The article's "coordinate-free" section:
 4. **([christoffel](Contraction_Tangent_Unification.html#eq-christoffel))**: Writes Christoffel symbols $\Gamma^i_{jk}$.
    - **Correct**: This is the coordinate expression of the Levi-Civita connection. The connection itself is coordinate-free, but the formula is not.
 
-### The Actual Coordinate Dependence
+#### The Actual Coordinate Dependence
 
 **Fact**: The contraction condition is **not** coordinate-free in general.
 
@@ -389,7 +389,7 @@ $$
 
 **But**: For **nonlinear** coordinate changes $\mathbf{z} = \boldsymbol{\phi}(\mathbf{x})$, the Jacobian $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$ is **point-dependent**, and the metric transformation is more complex. The contraction condition does **not** transform simply.
 
-### What Manchester & Slotine Actually Say
+#### What Manchester & Slotine Actually Say
 
 The article cites Manchester & Slotine (2017), which introduces **Control Contraction Metrics (CCM)**. That paper is careful to state:
 
@@ -401,7 +401,7 @@ The article cites Manchester & Slotine (2017), which introduces **Control Contra
 
 The key: **differential geometry provides the language**, but **numerical computation requires coordinates**. The article conflates the abstract geometric object (the metric tensor $g$) with its coordinate representation ($\mathbf{M}$).
 
-### Section 6.2: Pullback Metrics
+#### Section 6.2: Pullback Metrics
 
 This section correctly describes pullback metrics ([pullback metric](Contraction_Tangent_Unification.html#eq-pullback-metric)):
 $$
@@ -412,7 +412,7 @@ $$
 
 A truly coordinate-free statement would be: "The pullback of the metric $g_{\mathbf{x}}$ by the map $\mathbf{h}: Q \to X$ is the metric $g_{\mathbf{q}} = \mathbf{h}^* g_{\mathbf{x}}$." No matrices, just geometric objects.
 
-### Why This Matters
+#### Why This Matters
 
 1. **Misleading practitioners**: Readers may believe they can apply the framework to general manifolds (e.g., Lie groups, shape spaces) without modification. They cannot—additional structure (e.g., a connection, frame bundle) is needed.
 
@@ -423,29 +423,29 @@ A truly coordinate-free statement would be: "The pullback of the metric $g_{\mat
 
 3. **Section 6.3 (Gauge Freedom)**: Claims that metric choice has "gauge freedom" analogous to electromagnetism. **This is false**. In gauge theory, different gauges describe the **same physics**. Here, different metrics describe **different contraction rates and basins of attraction**—they're physically distinct choices, not equivalent descriptions.
 
-### Evidence From Literature
+#### Evidence From Literature
 
 - **Abraham, Marsden, Ratiu (1988)**: "Manifolds, Tensor Analysis, and Applications" — defines coordinate-free formulations rigorously. The contraction condition as stated in this article does not meet that standard.
 
 - **Bullo & Lewis (2005)**: "Geometric Control of Mechanical Systems" — carefully distinguishes intrinsic geometric statements from coordinate-dependent computational methods (Section 3.7).
 
-## Severity
+### Severity
 **Medium** — Does not invalidate results, but obscures assumptions and misleads about generality.
 
-## Suggested Remedies
+### Suggested Remedies
 
-### 1. Retitle Section 6
+#### 1. Retitle Section 6
 
 **Current**: "Coordinate-Free Formulation"
 
 **Revised**: "Geometric Interpretation and Metric Choices"
 
-### 2. Add a Clarifying Paragraph
+#### 2. Add a Clarifying Paragraph
 
 At the start of Section 6:
 > **Notation and Scope**: In this section, we use the language of differential geometry to provide a geometric interpretation of contraction metrics. While the **concepts** (Riemannian metric, tangent bundle, pullback) are coordinate-independent, our **computational framework** requires choosing coordinates. Throughout, we assume the state space is $\mathcal{M} = \mathbb{R}^n$ or an open subset thereof, with the standard differentiable structure. Extensions to general manifolds (e.g., Lie groups, fiber bundles) require additional machinery beyond the scope of this article. See Bullo & Lewis (2005) for geometric control on manifolds.
 
-### 3. Revise Section 6.3 on "Gauge Freedom"
+#### 3. Revise Section 6.3 on "Gauge Freedom"
 
 **Current**:
 > "Two metrics $\mathbf{M}_1$, $\mathbf{M}_2$ are **gauge equivalent** if..."
@@ -461,7 +461,7 @@ At the start of Section 6:
 > $$
 > represent the **same geometric metric** in different coordinate charts. The contraction condition is preserved under such transformations (for linear changes; nonlinear transformations require additional care).
 
-### 4. Remove or Qualify Claims About Intrinsic Geometry
+#### 4. Remove or Qualify Claims About Intrinsic Geometry
 
 **Delete** or heavily qualify statements like:
 > "The framework is coordinate-free..." (p. 16)
@@ -472,7 +472,7 @@ At the start of Section 6:
 
 ---
 
-# Weakness 4: Biomechanical Applications Rest on Unvalidated Assumptions
+## Weakness 4: Biomechanical Applications Rest on Unvalidated Assumptions
 
 ## Location
 - **Section 7**: "Biomechanical Stability"
@@ -659,20 +659,20 @@ Add a subsection:
 
 ---
 
-# Weakness 5: Experimental Comparisons Lack Statistical Rigor and Controls
+## Weakness 5: Experimental Comparisons Lack Statistical Rigor and Controls
 
-## Location
+### Location
 - **Section 8.3**: "Experimental Validation: 7-DOF Robot Arm"
 - **Section 9**: "Comparison: Classical vs. Contraction-Aware DDP"
 - **Table on p. 30** (robot experiments)
 - **Table on p. 32** (cartpole simulations)
 
-## Nature of Issue
+### Nature of Issue
 **Empirical insufficiency / Lack of statistical validation / Missing confounds**
 
-## Detailed Critique
+### Detailed Critique
 
-### Robot Experiment (Section 8.3)
+#### Robot Experiment (Section 8.3)
 
 The article reports:
 
@@ -714,7 +714,7 @@ $$
 - Model mismatch?
 - Singularities (Jacobian $\mathbf{J}$ loses rank)?
 
-### Cartpole Simulation (Section 9.1)
+#### Cartpole Simulation (Section 9.1)
 
 The article reports success rates under initial condition perturbations:
 
@@ -758,7 +758,7 @@ $$
 - Is the SDP solver converging to the same accuracy in both cases?
 - No comparison of **total** time-to-solution (iterations × time-per-iteration).
 
-### Missing Comparisons
+#### Missing Comparisons
 
 **State-of-the-art baselines**:
 1. **iLQG** (iterative LQR): Used widely in robotics (Tassa et al., 2012). How does contraction-DDP compare?
@@ -767,7 +767,7 @@ $$
 
 **None of these are mentioned.**
 
-### Why This Matters
+#### Why This Matters
 
 1. **Reproducibility**: Without error bars and procedural details, others cannot reproduce or build on these experiments.
 
@@ -775,18 +775,18 @@ $$
 
 3. **Practical adoption**: Engineers need to know **when** contraction-DDP helps (smooth dynamics? underactuated? high-DOF?) and **when** it doesn't (discrete switches? hard contacts? discontinuous dynamics?).
 
-### Evidence From Literature
+#### Evidence From Literature
 
 **Best practices in control experiments**:
 - **Berkenkamp et al. (2017)**: "Safe Model-Based Reinforcement Learning with Stability Guarantees" — reports mean ± std, statistical tests, multiple baselines.
 - **Tedrake et al. (2010)**: "LQR-Trees: Feedback Motion Planning via Sums-of-Squares Verification" — compares against multiple methods, shows phase portraits, gives code.
 
-## Severity
+### Severity
 **Medium-High** — Results may be qualitatively correct, but lack rigor to be convincing.
 
-## Suggested Remedies
+### Suggested Remedies
 
-### 1. Add Statistical Rigor to Robot Experiments
+#### 1. Add Statistical Rigor to Robot Experiments
 
 **Revised Section 8.3**:
 > **Setup**: We conducted $N = 20$ trials of circular trajectory tracking on a KUKA LWR arm. Initial conditions were randomly perturbed by $\pm 2$ cm, $\pm 0.1$ rad in each joint.
@@ -805,7 +805,7 @@ $$
 >
 > ($p$-values from paired $t$-tests.)
 
-### 2. Report Confidence Intervals for Cartpole
+#### 2. Report Confidence Intervals for Cartpole
 
 **Revised**:
 > **Success rates** (100 trials, 95% binomial CI):
@@ -816,7 +816,7 @@ $$
 > | 0.2 | 71% [61%, 80%] | 98% [93%, 100%] |
 > | 0.3 | 42% [32%, 52%] | 89% [81%, 95%] |
 
-### 3. Describe Warm Starting Algorithm
+#### 3. Describe Warm Starting Algorithm
 
 Add to Section 9.3:
 > **Warm Starting for SDP**:
@@ -826,7 +826,7 @@ Add to Section 9.3:
 > $$
 > (the converged solution from the previous DDP iteration). This reduces SDP iterations from $\sim 50$ to $\sim 15$ on average, decreasing overhead from +143% to +60%.
 
-### 4. Add a "Failure Modes" Subsection
+#### 4. Add a "Failure Modes" Subsection
 
 **New Section 9.4**:
 > **When Contraction-DDP Struggles**:
@@ -834,7 +834,7 @@ Add to Section 9.3:
 > 2. **High-dimensional systems** ($n > 50$): SDP becomes prohibitively expensive. Structured approximations (diagonal $\mathbf{M}$, block sparsity) help but sacrifice guarantees.
 > 3. **Model mismatch**: If actual dynamics differ significantly from model $\mathbf{f}$, the computed metric may not ensure contraction. Adaptive contraction (Singh et al., 2017) addresses this.
 
-### 5. Compare Against SOS/LQR-Trees
+#### 5. Compare Against SOS/LQR-Trees
 
 Add:
 > **Comparison to LQR-Trees** (Tedrake et al., 2010):
@@ -846,7 +846,7 @@ Add:
 
 ---
 
-# Weakness 6: Contraction-Constrained DDP Has Unverified Assumptions (Theorem 4.1)
+## Weakness 6: Contraction-Constrained DDP Has Unverified Assumptions (Theorem 4.1)
 
 ## Location
 - **Section 4**: "Contraction-Constrained DDP"
@@ -989,20 +989,20 @@ Add:
 
 ---
 
-# Weakness 7: Missing Proofs and Unjustified Mathematical Leaps
+## Weakness 7: Missing Proofs and Unjustified Mathematical Leaps
 
-## Location
+### Location
 - **Theorem 3.1**: "Stability-Optimality Duality" (proof incomplete)
 - **Corollary 3.1**: "LQR Induces Contraction" (contraction rate formula unjustified)
 - **Theorem 8.1**: "Task Space Contraction" (proof assumes constant $\mathbf{\Lambda}$)
 - **Theorem 8.2**: "Hybrid Contraction" (feasibility condition not proven)
 
-## Nature of Issue
+### Nature of Issue
 **Logical gaps / Missing derivations**
 
-## Detailed Critique
+### Detailed Critique
 
-### Theorem 3.1 Proof
+#### Theorem 3.1 Proof
 
 The proof computes:
 $$
@@ -1032,7 +1032,7 @@ $$
 V_{t+1} \leq \left(1 - \frac{\lambda_{\min}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\max}(\mathbf{S}_t)}\right) V_t
 $$
 
-### Corollary 3.1 Contraction Rate
+#### Corollary 3.1 Contraction Rate
 
 Claims:
 > "The contraction rate is $\lambda = \frac{1}{2} \lambda_{\min}(\mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})$."
@@ -1046,7 +1046,7 @@ $$
 
 (from the ARE: $\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} = -\mathbf{Q} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}$, which must be $\prec -2\lambda \mathbf{S}$).
 
-### Theorem 8.1 Proof
+#### Theorem 8.1 Proof
 
 The "proof" defines:
 $$
@@ -1069,7 +1069,7 @@ Since the RHS involves **both** $\dot{\mathbf{e}}$ and $\mathbf{e}$, this cannot
 
 **This invalidates the theorem for trajectory tracking.**
 
-### Theorem 8.2: Hybrid Contraction
+#### Theorem 8.2: Hybrid Contraction
 
 Claims:
 > "If there exists a common metric $\mathbf{M}$ satisfying ([common lyapunov](Contraction_Tangent_Unification.html#eq-common-lyapunov)), then the hybrid system is exponentially stable across mode switches."
@@ -1085,7 +1085,7 @@ In the robotics application (free space vs. contact), the article doesn't:
 
 **This is a claim without evidence.**
 
-### Why This Matters
+#### Why This Matters
 
 1. **Trust**: Readers expect theorems to have proofs. Hand-waving erodes credibility.
 
@@ -1093,12 +1093,12 @@ In the robotics application (free space vs. contact), the article doesn't:
 
 3. **Correctness**: Some of these gaps may hide actual **errors** (e.g., Theorem 8.1 for time-varying $\mathbf{\Lambda}$).
 
-## Severity
+### Severity
 **Medium-High** — Affects theoretical rigor, though empirical results may still hold.
 
-## Suggested Remedies
+### Suggested Remedies
 
-### 1. Complete Theorem 3.1 Proof
+#### 1. Complete Theorem 3.1 Proof
 
 **Revised Proof**:
 > Define $V_t = \delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t$. Then:
@@ -1126,7 +1126,7 @@ In the robotics application (free space vs. contact), the article doesn't:
 > $$
 > $\square$
 
-### 2. Correct Corollary 3.1
+#### 2. Correct Corollary 3.1
 
 **Revised**:
 > **Corollary 3.1 (LQR Contraction Rate)**
@@ -1136,7 +1136,7 @@ In the robotics application (free space vs. contact), the article doesn't:
 > $$
 > where the factor $1/2$ arises from the Lyapunov function $V = \mathbf{x}^\top \mathbf{S} \mathbf{x}$ having $\dot{V} \leq -2\lambda V$.
 
-### 3. Fix or Remove Theorem 8.1
+#### 3. Fix or Remove Theorem 8.1
 
 **Option A** (fix for constant $\mathbf{\Lambda}$):
 > **Theorem 8.1 (Task-Space Contraction for Regulation)**
@@ -1145,7 +1145,7 @@ In the robotics application (free space vs. contact), the article doesn't:
 **Option B** (remove for trajectory tracking):
 > **Remark**: For **trajectory tracking** with time-varying $\mathbf{x}_d(t)$, the inertia matrix $\mathbf{\Lambda}(\mathbf{x}(t))$ varies along the trajectory. Rigorous contraction analysis requires computing a time-varying metric $\mathbf{M}(t) = \mathbf{\Lambda}(\mathbf{x}(t))$ and verifying the generalized contraction condition ([generalized jacobian](Contraction_Tangent_Unification.html#eq-generalized-jacobian)). This is left to future work.
 
-### 4. Qualify Theorem 8.2
+#### 4. Qualify Theorem 8.2
 
 **Revised**:
 > **Theorem 8.2 (Hybrid Contraction via Common Lyapunov)**
@@ -1163,7 +1163,7 @@ In the robotics application (free space vs. contact), the article doesn't:
 
 ---
 
-# Weakness 8: Ambiguity in Definitions and Terminology
+## Weakness 8: Ambiguity in Definitions and Terminology
 
 ## Location
 - **"Contraction metric" vs. "Riemannian metric"** (used interchangeably without distinction)
@@ -1262,9 +1262,9 @@ In Theorem 4.1:
 
 ---
 
-# Summary of Weaknesses and Priority Remedies
+## Summary of Weaknesses and Priority Remedies
 
-## High-Severity Issues (Address First)
+### High-Severity Issues (Address First)
 
 1. **Weakness 1 (Duality claims)**: The bidirectional "stability ↔ optimality" duality is false. **Remedy**: Reframe as unidirectional (LQR → contraction), add inverse optimal control discussion.
 
@@ -1274,7 +1274,7 @@ In Theorem 4.1:
 
 4. **Weakness 6 (Theorem 4.1)**: Missing proof of "certified stability." **Remedy**: Either provide rigorous proof (with explicit $\mu_{\min}$, $\epsilon$ formulas) or downgrade to proposition/conjecture.
 
-## Medium-Severity Issues (Important but Less Central)
+### Medium-Severity Issues (Important but Less Central)
 
 5. **Weakness 3 (Coordinate-free)**: The framework is not truly coordinate-free. **Remedy**: Retitle section, clarify that geometric language is interpretive, not computational.
 
@@ -1282,13 +1282,13 @@ In Theorem 4.1:
 
 7. **Weakness 7 (Missing proofs)**: Several theorems (3.1, 8.1, 8.2) have incomplete proofs. **Remedy**: Complete proofs or qualify claims appropriately.
 
-## Low-Severity Issues (Polish)
+### Low-Severity Issues (Polish)
 
 8. **Weakness 8 (Terminology)**: Ambiguous definitions ("stability margin," "certified"). **Remedy**: Add terminology box, define nonstandard terms explicitly.
 
 ---
 
-# Final Recommendations
+## Final Recommendations
 
 ## For the Author
 
@@ -1336,7 +1336,7 @@ In Theorem 4.1:
 
 ---
 
-# Conclusion
+## Conclusion
 
 This article makes a valuable contribution by connecting contraction theory and LQR/DDP, but it **overstates the generality and bidirectionality of the relationship**. The core mathematical observations (LQR induces contraction, Riccati $\mathbf{S}$ can serve as a metric) are sound, but the framing as "duality" is misleading.
 

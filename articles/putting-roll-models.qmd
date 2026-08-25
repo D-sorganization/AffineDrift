@@ -48,7 +48,7 @@ categories: [physics, putting, friction, golf, derivation]
 
 ## Scope and Intent
 
-This article derives a complete first-order model of a putt from launch to capture, in the same spirit as the site's treatments of [impact mechanics](impact-mechanics-and-ball-flight.qmd) and [rotation-induced spin](rotation-induced-spin.qmd): every number traces to stated assumptions, every named constant is either an openly published specification or labelled a modelling choice, and the closed forms are worked before they are trusted. It is the physics companion to [Simulating the Green](green-simulation.qmd), which surveys how models of this kind are implemented numerically, and it is the reference derivation behind the putting module of the [Tools golf suite](https://github.com/D-sorganization/Tools).
+This article derives a complete first-order model of a putt from launch to capture, in the same spirit as the site's treatments of [impact mechanics](impact-mechanics-and-ball-flight.html) and [rotation-induced spin](rotation-induced-spin.html): every number traces to stated assumptions, every named constant is either an openly published specification or labelled a modelling choice, and the closed forms are worked before they are trusted. It is the physics companion to [Simulating the Green](green-simulation.html), which surveys how models of this kind are implemented numerically, and it is the reference derivation behind the putting module of the [Tools golf suite](https://github.com/D-sorganization/Tools).
 
 The model has four parts, and they are genuinely different physics:
 
@@ -62,7 +62,7 @@ The model has four parts, and they are genuinely different physics:
 
 Right-handed frame matching the rest of the site's launch-monitor and impact material: $x$ along the intended start line, $y$ vertically up, $z$ to the right of the start line looking down it. The green surface is locally a plane; slope appears as the angle $\beta$ between that plane and the horizontal.
 
-Ball constants are the governing-body specification limits, openly published equipment rules rather than measurements: mass $m = 45.93$ g (the 1.620 oz maximum) and radius $R = 21.335$ mm (half the 1.680 in minimum diameter). Ball inertia is the uniform solid sphere, $I = \tfrac25 mR^2$; the same measured inertia ratio $\alpha = I/mR^2 \approx 0.40$ that supports this idealisation in the [rotation-induced-spin supplement](rotation-induced-spin.qmd) supports it here. The hole diameter is $D_h = 4.25$ in $= 107.95$ mm, a Rules of Golf specification. $g = 9.81$ m/s².
+Ball constants are the governing-body specification limits, openly published equipment rules rather than measurements: mass $m = 45.93$ g (the 1.620 oz maximum) and radius $R = 21.335$ mm (half the 1.680 in minimum diameter). Ball inertia is the uniform solid sphere, $I = \tfrac25 mR^2$; the same measured inertia ratio $\alpha = I/mR^2 \approx 0.40$ that supports this idealisation in the [rotation-induced-spin supplement](rotation-induced-spin.html) supports it here. The hole diameter is $D_h = 4.25$ in $= 107.95$ mm, a Rules of Golf specification. $g = 9.81$ m/s².
 :::
 
 ::: {.callout-warning}
@@ -85,13 +85,13 @@ Two features of the delivery matter for the roll model:
 
 **The launch spin is small.** For the face to impart true topspin it would need to sweep upward across the ball faster than it translates through it, which a 2 m/s putting stroke does not do. What loft and a slightly upward strike actually produce is a small backspin or near-zero spin and a brief low hop: with 3° of loft the ball leaves the face at about 3° above the surface, lands within a few centimetres, and begins its ground phase **sliding**, with spin ratio $\omega_0 R / v_0$ close to zero. That is the initial condition the skid phase inherits, and the general result in §2 covers the residual-spin corrections.
 
-**The face controls the start line far more than the path does.** The same impulse partition that governs the full swing applies at putting speed, and at near-zero loft the ball leaves very close to the face normal. The site's treatment of the face-versus-path weighting is in the [impact-mechanics article](impact-mechanics-and-ball-flight.qmd); nothing about it changes at 2 m/s except that the spin consequences of face–path mismatch become negligible, leaving the direction consequence alone.
+**The face controls the start line far more than the path does.** The same impulse partition that governs the full swing applies at putting speed, and at near-zero loft the ball leaves very close to the face normal. The site's treatment of the face-versus-path weighting is in the [impact-mechanics article](impact-mechanics-and-ball-flight.html); nothing about it changes at 2 m/s except that the spin consequences of face–path mismatch become negligible, leaving the direction consequence alone.
 
 ## 2. The Skid Phase and the Five-Sevenths Transition
 
 ### 2.1 Setup
 
-At the start of the ground phase the ball translates at $v_0$ and spins at $\omega_0 \approx 0$. Its contact point therefore slides forward across the grass at $v_0 - \omega_0 R > 0$, and kinetic friction $\mu_k m g$ acts **backward** on the ball at the contact point. That single force does two things at once, exactly as in the [gripping-face analysis](rotation-induced-spin.qmd) but with the roles reversed — here the surface is fixed and the ball is the slider:
+At the start of the ground phase the ball translates at $v_0$ and spins at $\omega_0 \approx 0$. Its contact point therefore slides forward across the grass at $v_0 - \omega_0 R > 0$, and kinetic friction $\mu_k m g$ acts **backward** on the ball at the contact point. That single force does two things at once, exactly as in the [gripping-face analysis](rotation-induced-spin.html) but with the roles reversed — here the surface is fixed and the ball is the slider:
 
 $$
 \dot v = -\mu_k g,
@@ -255,7 +255,7 @@ $$
 
 **The fractional break of a dying putt is the ratio of the slope acceleration to the rolling deceleration** — again, launch speed cancels. On a 2% cross-slope this ratio is $0.196/a$: 0.29 at stimp 8, 0.36 at stimp 10, 0.43 at stimp 12. The same 3 m putt on the same 2% tilt breaks roughly 0.9 m, 1.1 m and 1.3 m as the green quickens — a first-order statement of the universal experience that fast greens break more.
 
-Two honesty flags on that formula, both of which the [simulation article](green-simulation.qmd) handles numerically rather than analytically. It is an **upper bound for the dying putt**: a ball given enough pace to arrive at capture speed spends less time on the slope and breaks less, which is precisely the speed–line trade-off a player negotiates. And it is **first-order only**: friction opposes the *net* velocity, so as the ball curves, the lateral motion begins to feel rolling resistance too and the decomposition degrades — the exact trajectory needs the vector ODE, which is a four-line numerical integration and not worth linearising past this point.
+Two honesty flags on that formula, both of which the [simulation article](green-simulation.html) handles numerically rather than analytically. It is an **upper bound for the dying putt**: a ball given enough pace to arrive at capture speed spends less time on the slope and breaks less, which is precisely the speed–line trade-off a player negotiates. And it is **first-order only**: friction opposes the *net* velocity, so as the ball curves, the lateral motion begins to feel rolling resistance too and the decomposition degrades — the exact trajectory needs the vector ODE, which is a four-line numerical integration and not worth linearising past this point.
 
 ## 6. Capture: The Hole as a Speed Filter
 
@@ -296,7 +296,7 @@ $$
 | 1.5 | 22 | 40% |
 | 1.64 | 0 | 0% |
 
-This is the quantitative form of "dying speed uses the whole hole": the hole is a low-pass filter in arrival speed, and pace control is not a separate skill from line — it *sets the target width* that the line must hit. The folklore prescription that an ideal putt should be struck to finish some fixed distance past the hole is, in this model, an optimisation trade-off rather than a physical constant: extra pace buys immunity to surface imperfection at the cost of effective hole width (and of the comeback putt), and the balance point depends on exactly the imperfection statistics that the [simulation article](green-simulation.qmd) treats stochastically. It is labelled folklore here and left to the Monte Carlo treatment there.
+This is the quantitative form of "dying speed uses the whole hole": the hole is a low-pass filter in arrival speed, and pace control is not a separate skill from line — it *sets the target width* that the line must hit. The folklore prescription that an ideal putt should be struck to finish some fixed distance past the hole is, in this model, an optimisation trade-off rather than a physical constant: extra pace buys immunity to surface imperfection at the cost of effective hole width (and of the comeback putt), and the balance point depends on exactly the imperfection statistics that the [simulation article](green-simulation.html) treats stochastically. It is labelled folklore here and left to the Monte Carlo treatment there.
 
 ::: {.callout-warning}
 ## What the Bound Ignores
@@ -346,8 +346,8 @@ Everything else in this article is algebra.
 - R&A and USGA. *Equipment Rules*, Part 4 (the ball): maximum mass 1.620 oz, minimum diameter 1.680 in.
 - R&A and USGA. *Rules of Golf*, definition of the hole: diameter 4.25 in (108 mm).
 - USGA. *Stimpmeter Instruction Booklet*: 36 in bar, ball notch 30 in from the tapered end, release at approximately 20° of elevation, green speed reported as roll-out distance.
-- Companion articles: [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.qmd) (the collision physics reused in §1), [Rotation-Induced Spin](rotation-induced-spin.qmd) (the same sphere impulse partition at the clubface), and [Simulating the Green](green-simulation.qmd) (numerical implementation and stochastic extensions of this model).
+- Companion articles: [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html) (the collision physics reused in §1), [Rotation-Induced Spin](rotation-induced-spin.html) (the same sphere impulse partition at the clubface), and [Simulating the Green](green-simulation.html) (numerical implementation and stochastic extensions of this model).
 
 ---
 
-*Physics companion to [Simulating the Green](green-simulation.qmd). The roll model derived here is the specification for the putting module of the [Tools golf suite](https://github.com/D-sorganization/Tools).*
+*Physics companion to [Simulating the Green](green-simulation.html). The roll model derived here is the specification for the putting module of the [Tools golf suite](https://github.com/D-sorganization/Tools).*

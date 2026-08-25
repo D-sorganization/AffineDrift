@@ -203,8 +203,8 @@
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
     closeBtn.dataset.action = "close";
-    closeBtn.setAttribute("aria-label", "Close notes workspace");
-    closeBtn.title = "Close notes workspace";
+    closeBtn.setAttribute("aria-label", "Close notes workspace (Esc)");
+    closeBtn.title = "Close notes workspace (Esc)";
     closeBtn.textContent = "x";
     header.appendChild(h3);
     header.appendChild(closeBtn);
@@ -337,8 +337,8 @@
       closeBtn.type = 'button';
       closeBtn.id = 'close';
       closeBtn.textContent = 'Close';
-      closeBtn.title = 'Close notes workspace';
-      closeBtn.setAttribute('aria-label', 'Close notes workspace');
+      closeBtn.title = 'Close notes workspace (Esc)';
+      closeBtn.setAttribute('aria-label', 'Close notes workspace (Esc)');
       closeBtn.addEventListener('click', function () { pop.close(); });
       btnContainer.appendChild(closeBtn);
 

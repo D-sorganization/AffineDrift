@@ -19,7 +19,7 @@ jupyter: python3
 bibliography: ../references.bib
 ---
 
-# Abstract {.unnumbered}
+## Abstract {.unnumbered}
 
 This article examines a conditional relationship between **contraction theory** (Lohmiller & Slotine, 1998) and **tangent-space methods** for trajectory optimization. In linear-quadratic and local differential settings, Riccati-type objects can be read both as value-function Hessians and as candidate metrics for perturbation dynamics. That overlap is exact only under stated regularity, boundedness, and basin assumptions; finite-time or global conclusions require separate residual and robustness analysis. The article develops three narrower claims:
 
@@ -33,9 +33,9 @@ The application sections in biomechanics and robotics should be read as modeling
 
 ---
 
-# Part I: Foundations
+## Part I: Foundations
 
-# Contraction Theory Primer
+## Contraction Theory Primer
 
 ## The Essence of Contraction
 
@@ -151,13 +151,13 @@ is contracting w.r.t. $\mathbf{u}$.
 
 ---
 
-# Tangent Spaces and Variational Dynamics
+## Tangent Spaces and Variational Dynamics
 
-## Review From Unified Thesis
+### Review From Unified Thesis
 
 In the tangent space framework, we consider a **nominal trajectory** $\mathbf{x}^*_t$ and analyze **perturbed trajectories** $\mathbf{x}_t = \mathbf{x}^*_t + \delta \mathbf{x}_t$ in the tangent bundle $T\mathcal{M}$.
 
-### The δ-Dynamics
+#### The δ-Dynamics
 
 Perturbed trajectories satisfy:
 $$
@@ -179,7 +179,7 @@ $$ {#eq-continuous-tangent}
 
 **This is precisely the virtual displacement equation** (@eq-virtual-displacement) from contraction theory!
 
-## Variational Principles
+### Variational Principles
 
 The tangent dynamics arise from the **variational principle**:
 $$
@@ -198,7 +198,7 @@ $$ {#eq-second-variation}
 
 where $\mathbf{Q}_t = \frac{\partial^2 L}{\partial \mathbf{x}^2}$, $\mathbf{R}_t = \frac{\partial^2 L}{\partial \mathbf{u}^2}$.
 
-## Differential Dynamic Programming
+### Differential Dynamic Programming
 
 DDP exploits the tangent space structure by solving a sequence of **time-varying LQR problems**:
 $$
@@ -223,7 +223,7 @@ $$ {#eq-discrete-riccati}
 
 **Key Observation**: $\mathbf{S}_t$ is a **time-varying metric** that measures the cost-to-go from state $\mathbf{x}_t$.
 
-## Connection to Virtual Displacements
+### Connection to Virtual Displacements
 
 In classical mechanics, virtual displacements $\delta \mathbf{x}$ satisfy:
 $$
@@ -240,7 +240,7 @@ where $\mathbf{F}$ are constraint forces. The tangent space $T_{\mathbf{x}} \mat
 This suggests a deep connection between variational mechanics and contraction theory.
 
 ::: {.callout-tip}
-## Instantaneous Force-Acceleration Superposition
+### Instantaneous Force-Acceleration Superposition
 While nonlinear systems do not exhibit superposition at the trajectory level, many mechanical models have an affine instantaneous map from generalized forces to generalized accelerations once the state, constraints, and contact mode are fixed:
 
 $$ \ddot{\mathbf{q}} = \mathbf{M}(\mathbf{q})^{-1} (\boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q})) $$
@@ -250,7 +250,7 @@ This instantaneous linearity is the local "Tangent Hyperplane" used here to deco
 
 ---
 
-# The Duality Revealed
+## The Duality Revealed
 
 ## Exponential Forgetting vs. Exponential Convergence
 
@@ -380,11 +380,11 @@ with $g_{ij} = (\mathbf{M})_{ij}$ the metric components.
 
 ---
 
-# Part II: Theory
+## Part II: Theory
 
-# Contraction-Constrained DDP
+## Contraction-Constrained DDP
 
-## Motivation: Stability Guarantees From Optimization
+### Motivation: Stability Guarantees From Optimization
 
 Standard DDP provides **local stability** around the nominal trajectory but no guarantees about:
 - Basin of attraction size
@@ -398,7 +398,7 @@ $$ {#eq-contraction-augmented-cost}
 
 where $\mathcal{C}(\mathbf{x}, \mathbf{u})$ measures deviation from contraction.
 
-## Contraction Metric as Soft Constraint
+### Contraction Metric as Soft Constraint
 
 Define the **contraction defect**:
 $$
@@ -414,7 +414,7 @@ $$ {#eq-contraction-penalty}
 
 This is zero when contracting, positive otherwise.
 
-## Algorithm: Contraction-DDP
+### Algorithm: Contraction-DDP
 
 **Input**: Initial trajectory $\{\mathbf{x}^*_t, \mathbf{u}^*_t\}$, desired contraction rate $\lambda$, penalty weight $\mu$
 
@@ -443,10 +443,10 @@ This is zero when contracting, positive otherwise.
 
 **Output**: Trajectory $\{\mathbf{x}^*_t, \mathbf{u}^*_t\}$ with certified contraction rate $\lambda$.
 
-## Stability Guarantees
+### Stability Guarantees
 
 ::: {.callout-important icon=false}
-## Theorem 4.1 (Certified Stability From Contraction-DDP)
+### Theorem 4.1 (Certified Stability From Contraction-DDP)
 Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contraction-DDP with penalty weight $\mu$ sufficiently large. Then:
 
 1. The closed-loop system $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}, \mathbf{u}^*_t - \mathbf{K}_t(\mathbf{x} - \mathbf{x}^*_t))$ is contracting with rate $\lambda$.
@@ -456,7 +456,7 @@ Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contract
 
 **Proof Sketch**: The penalty forces $\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) \to 0$ as $\mu \to \infty$. By continuity, there exists a neighborhood where (@eq-contraction-condition) holds. $\square$
 
-## Comparison With Classical DDP
+### Comparison With Classical DDP
 
 | Feature | Classical DDP | Contraction-DDP |
 |---------|--------------|-----------------|
@@ -467,7 +467,7 @@ Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contract
 | **Computational Cost** | $O(n^3 T)$ | $O(n^3 T + n^4 T)$ (SDP) |
 
 ::: {.callout-important}
-## Scope of Stability Claim
+### Scope of Stability Claim
 
 The "certified" stability for Contraction-DDP is **local**, not global. The proof of Theorem 4.1 relies on linearization validity: the contraction condition is enforced at $(\mathbf{x}^*_t, \mathbf{u}^*_t)$ and holds in a neighborhood whose size $\epsilon$ is limited by the validity of the first-order expansion. For strongly nonlinear systems, this basin may be small. Claiming "global" stability would require showing the contraction metric remains uniformly positive-definite across the entire state space, which is not established here.
 :::
@@ -476,7 +476,7 @@ The extra $O(n^4 T)$ cost comes from solving (@eq-metric-optimization) as an SDP
 
 ---
 
-# LQR as Contraction Design
+## LQR as Contraction Design
 
 ## Algebraic vs. Differential Riccati
 
@@ -568,11 +568,11 @@ Closed-loop eigenvalues: $\{-\tfrac{3}{2} \pm \tfrac{\sqrt{7}}{2}j\}$, implying 
 
 ---
 
-# Coordinate-Free Formulation
+## Coordinate-Free Formulation
 
-## Differential Geometry Perspective
+### Differential Geometry Perspective
 
-### Tangent Bundle Formulation
+#### Tangent Bundle Formulation
 
 The state space $\mathcal{M}$ is a smooth manifold (e.g., configuration space). The **tangent bundle** $T\mathcal{M}$ consists of pairs $(\mathbf{x}, \delta \mathbf{x})$ where:
 - $\mathbf{x} \in \mathcal{M}$ (base point)
@@ -588,7 +588,7 @@ $$ {#eq-tangent-bundle-dynamics}
 
 where $\frac{D}{dt}$ is the **covariant derivative** along the flow.
 
-### Riemannian Metric Tensor
+#### Riemannian Metric Tensor
 
 A metric $g: T\mathcal{M} \times T\mathcal{M} \to \mathbb{R}$ assigns an inner product to each tangent space:
 $$
@@ -600,9 +600,9 @@ $$
 ds^2 = g_{ij} dx^i dx^j
 $$ {#eq-line-element}
 
-## Pullback Metrics and Natural Coordinates
+### Pullback Metrics and Natural Coordinates
 
-### Configuration Space vs. Task Space
+#### Configuration Space vs. Task Space
 
 Consider a robot with configuration $\mathbf{q} \in \mathbb{R}^n$ and end-effector position $\mathbf{x} = \mathbf{h}(\mathbf{q}) \in \mathbb{R}^m$.
 
@@ -620,7 +620,7 @@ where $\mathbf{J} = \frac{\partial \mathbf{h}}{\partial \mathbf{q}}$ is the Jaco
 
 **Physical meaning**: Distances in $\mathbf{q}$-space are weighted by how much they affect $\mathbf{x}$-space (task-relevant).
 
-### Example: Planar Arm
+#### Example: Planar Arm
 
 Configuration: $\mathbf{q} = [\theta_1, \theta_2]^\top$ (joint angles).
 
@@ -647,9 +647,9 @@ $$ {#eq-planar-arm-metric}
 
 This is the **kinetic energy metric** (mass matrix with unit link masses).
 
-## Gauge Freedom and Metric Choice
+### Gauge Freedom and Metric Choice
 
-### Equivalence Classes
+#### Equivalence Classes
 
 Two metrics $\mathbf{M}_1$, $\mathbf{M}_2$ are **gauge equivalent** if there exists a diffeomorphism $\phi: \mathcal{M} \to \mathcal{M}$ such that:
 $$
@@ -663,7 +663,7 @@ $$
 \mathbf{M}_{\mathbf{z}} = \left( \frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}} \right)^\top \mathbf{M}_{\mathbf{x}} \left( \frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}} \right)
 $$ {#eq-metric-transformation}
 
-### Canonical Choices
+#### Canonical Choices
 
 Several natural metric choices:
 
@@ -679,7 +679,7 @@ Several natural metric choices:
 
 **Trade-off**: Simpler metrics (e.g., Euclidean) are easier to compute but may not respect system structure. Intrinsic metrics (e.g., kinetic energy) are more natural but computationally expensive.
 
-### Optimal Metric via Trace Minimization
+#### Optimal Metric via Trace Minimization
 
 Among all metrics satisfying the contraction condition, choose the one minimizing:
 $$
@@ -697,9 +697,9 @@ This is a **convex SDP** (linear matrix inequality).
 
 ---
 
-# Part III: Applications
+## Part III: Applications
 
-# Biomechanical Stability
+## Biomechanical Stability
 
 ## Muscle Synergies as Contraction Subspaces
 
@@ -846,11 +846,11 @@ This quantifies the **robustness** to perturbations at time $t$.
 
 ---
 
-# Robotics: Manipulation With Local Certificates
+## Robotics: Manipulation With Local Certificates
 
-## Contraction-Based Task Space Control
+### Contraction-Based Task Space Control
 
-### Operational Space Formulation
+#### Operational Space Formulation
 
 Robot dynamics:
 $$
@@ -873,7 +873,7 @@ $$
 \end{aligned}
 $$ {#eq-task-matrices}
 
-### Contraction-Based Controller
+#### Contraction-Based Controller
 
 **Objective**: Track desired trajectory $\mathbf{x}_d(t)$ with a local exponential-convergence certificate.
 
@@ -897,7 +897,7 @@ This is **critically damped** with contraction rate $\lambda$.
 **Metric**: The natural metric is $\mathbf{M} = \mathbf{\Lambda}$ (kinetic energy).
 
 ::: {.callout-note icon=false}
-## Theorem 8.1 (Task Space Contraction)
+### Theorem 8.1 (Task Space Contraction)
 The controller (@eq-task-force) renders the task-space error dynamics contracting with metric $\mathbf{M} = \mathbf{\Lambda}$ and rate $\lambda$.
 :::
 
@@ -913,9 +913,9 @@ $$ {#eq-task-lyapunov-derivative}
 
 by choice of gains. $\square$
 
-## Certified Stability During Contact
+### Certified Stability During Contact
 
-### Hybrid Dynamics
+#### Hybrid Dynamics
 
 During contact, the robot switches between:
 - **Free space**: Dynamics (@eq-ctu-robot-dynamics)
@@ -931,7 +931,7 @@ $$ {#eq-hybrid-dynamics}
 
 where $\phi(\mathbf{q}) = 0$ is the contact surface.
 
-### Contraction Across Modes
+#### Contraction Across Modes
 
 **Challenge**: Metric $\mathbf{M}$ must ensure contraction in **both modes**.
 
@@ -948,23 +948,23 @@ $$ {#eq-common-lyapunov}
 This is feasible if the **switched system** is jointly contracting.
 
 ::: {.callout-important icon=false}
-## Theorem 8.2 (Hybrid Contraction)
+### Theorem 8.2 (Hybrid Contraction)
 If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), then the hybrid system is exponentially stable across mode switches with rate $\lambda$.
 :::
 
 **Application**: Peg-in-hole insertion, where any convergence claim must account for intermittent contact and mode changes.
 
-## Simulation Study: 7-DOF Robot Arm
+### Simulation Study: 7-DOF Robot Arm
 
 > **Note**: The following numerical results are illustrative simulations, not empirical experiments. They demonstrate expected theoretical behavior but have not been validated on physical hardware. Experimental validation is a direction for future work.
 
-### Setup
+#### Setup
 
 - **Robot model**: 7-DOF arm dynamics (KUKA LWR geometry, simulated)
 - **Task**: Circular trajectory (radius 10 cm, period 2 s)
 - **Controller**: Contraction-based task space (@eq-task-force) with $\lambda = 5.0$ Hz
 
-### Metrics
+#### Metrics
 
 1. **Tracking error**: $e_{\text{pos}}(t) = \|\mathbf{x}(t) - \mathbf{x}_d(t)\|$
 2. **Contraction rate (measured)**:
@@ -972,7 +972,7 @@ If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), t
    \lambda_{\text{meas}} = -\frac{1}{\Delta t} \log \frac{\|e(t+\Delta t)\|_{\mathbf{M}}}{\|e(t)\|_{\mathbf{M}}}
    $$ {#eq-measured-contraction}
 
-### Simulated Results
+#### Simulated Results
 
 | Metric | Contraction Controller | Standard PD | Improvement |
 |--------|----------------------|-------------|-------------|
@@ -983,7 +983,7 @@ If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), t
 
 **Key finding**: In simulation, the measured contraction rate (4.87 Hz) closely matches the design value (5.0 Hz), **consistent with the theory**. Physical validation remains future work.
 
-### Robustness Test (Simulated)
+#### Robustness Test (Simulated)
 
 Applied **external disturbance** (5 N impulse) at $t = 1.0$ s:
 - **Contraction controller**: Recovers in 0.28 s (within theoretical bound $3/\lambda = 0.60$ s)
@@ -993,7 +993,7 @@ Applied **external disturbance** (5 N impulse) at $t = 1.0$ s:
 
 ---
 
-# Comparison: Classical vs. Contraction-Aware DDP
+## Comparison: Classical vs. Contraction-Aware DDP
 
 ## Numerical Experiments
 
@@ -1112,13 +1112,13 @@ With warm starting, overhead reduces to **+60%**.
 
 ---
 
-# Part IV: Implementation
+## Part IV: Implementation
 
-# Computing Contraction Metrics
+## Computing Contraction Metrics
 
-## Numerical Tools
+### Numerical Tools
 
-### SDP Formulation
+#### SDP Formulation
 
 The metric optimization (@eq-metric-optimization) is:
 $$
@@ -1140,7 +1140,7 @@ $$ {#eq-sdp-standard-form}
 
 where $\langle \mathbf{C}, \mathbf{M} \rangle = \text{tr}(\mathbf{C}^\top \mathbf{M})$.
 
-### The Metric Belongs to the *Closed Loop*
+#### The Metric Belongs to the *Closed Loop*
 
 A subtle but essential point: an LQR controller's contraction metric pertains to the
 **closed-loop** dynamics $A - BK$, **not** the open-loop $A$. Trying to solve the
@@ -1150,7 +1150,7 @@ both eigenvalues of $A$ are $0$ (not Hurwitz), so no $M \succ 0$ makes
 $A^\top M + M A \prec 0$. The correct object is the ARE solution $S$, which is a
 contraction metric for the *stabilized* system.
 
-### Example: Double Integrator (Closed-Loop ARE)
+#### Example: Double Integrator (Closed-Loop ARE)
 
 Solve the continuous-time ARE for the double integrator with $Q = \operatorname{diag}(10, 1)$,
 $R = 1$, form the LQR gain $K = R^{-1} B^\top S$, and verify that $M = S$ satisfies the
@@ -1197,9 +1197,9 @@ contraction metric for the LQR-stabilized double integrator (closed-loop eigenva
 $-1.353 \pm 1.154\,j$, both in the left half-plane). Note $K = B^\top S = [\,3.162,\ 2.706\,]$,
 i.e. $s_{12} = \sqrt{10}$ and $s_{22} = \sqrt{2\sqrt{10}+1}$ — the analytic ARE solution.
 
-## JAX Autodiff for Metric Tensors
+### JAX Autodiff for Metric Tensors
 
-### Why JAX?
+#### Why JAX?
 
 Computing (@eq-generalized-jacobian) requires:
 1. **Jacobian** $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$
@@ -1210,7 +1210,7 @@ JAX provides:
 - **JIT compilation**: Fast execution
 - **Batching**: Vectorize over time steps
 
-### Computing $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$
+#### Computing $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$
 
 ```python
 import jax
@@ -1256,7 +1256,7 @@ Jacobian A:
 ```
 (The lower-left entry is $\partial\dot\omega/\partial\theta = -g\cos\theta_0 = -9.81\cos(0.1) \approx -9.761$.)
 
-### Computing Metric Time Derivative
+#### Computing Metric Time Derivative
 
 For a trajectory $\mathbf{x}(t)$, the metric evolves:
 $$
@@ -1288,7 +1288,7 @@ def metric_time_derivative(t, x, u, S, params, Q, R):
     return riccati_derivative(S, A, B, Q, R)
 ```
 
-### Verifying Contraction Condition
+#### Verifying Contraction Condition
 
 ```python
 @jit
@@ -1326,9 +1326,9 @@ Contracting: True
 
 Success! The metric satisfies the contraction condition.
 
-## Complete Example: Contraction-DDP for Pendulum
+### Complete Example: Contraction-DDP for Pendulum
 
-### Full Implementation
+#### Full Implementation
 
 ```python
 import jax
@@ -1582,7 +1582,7 @@ plt.savefig('contraction_ddp_comparison.png', dpi=150)
 print("\nPlot saved as 'contraction_ddp_comparison.png'")
 ```
 
-### Expected Output
+#### Expected Output
 
 ```
 Solving with classical DDP...
@@ -1601,7 +1601,7 @@ Plot saved as 'contraction_ddp_comparison.png'
 
 ---
 
-# Conclusion
+## Conclusion
 
 This article established a rigorous connection between contraction theory and tangent space methods for optimal control. The key insights:
 
@@ -1762,7 +1762,7 @@ Includes:
 
 ---
 
-# References {.unnumbered}
+## References {.unnumbered}
 
 1. Lohmiller, W., & Slotine, J. J. E. (1998). On contraction analysis for non-linear systems. *Automatica*, 34(6), 683-696.
 

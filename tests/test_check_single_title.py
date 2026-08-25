@@ -10,8 +10,9 @@ shipped at some point:
     shipped `description: "If you've ever taken a golf lesson..."` as a
     chapter heading.
 
-The cases below are the real ones, reduced to the smallest form that
-reproduces them.
+Additionally, full-layout pages (`page-layout: full`) hide Quarto's title block
+in CSS and must author exactly one accessible `<h1>` in page markup (#3917).
+Standalone articles with YAML `title:` must normalize body headings to `## ` (H2).
 """
 
 from __future__ import annotations
@@ -21,8 +22,10 @@ from pathlib import Path
 from scripts.check_single_title import (
     blank_first_line,
     body_h1,
+    body_h1_list,
     fragments,
     frontmatter_title,
+    is_full_layout,
     same_heading,
 )
 
@@ -48,6 +51,19 @@ class TestFrontmatterTitle:
         assert not frontmatter_title(lines("# Just A Heading\n"))
 
 
+class TestIsFullLayout:
+    """Detecting page-layout: full in frontmatter."""
+
+    def test_finds_full_layout(self) -> None:
+        assert is_full_layout(lines('---\ntitle: "A"\npage-layout: full\n---\n'))
+
+    def test_ignores_full_layout_outside_frontmatter(self) -> None:
+        assert not is_full_layout(lines('---\ntitle: "A"\n---\npage-layout: full\n'))
+
+    def test_absent_when_default_layout(self) -> None:
+        assert not is_full_layout(lines('---\ntitle: "A"\n---\n'))
+
+
 class TestBodyH1:
     """Only a real H1 counts."""
 
@@ -60,6 +76,10 @@ class TestBodyH1:
 
     def test_ignores_a_level_two_heading(self) -> None:
         assert body_h1(lines("## A Section\n")) is None
+
+    def test_body_h1_list_returns_all_h1s(self) -> None:
+        text = "# Heading 1\n\nSome text\n\n# Heading 2\n\n```python\n# not h1\n```\n"
+        assert body_h1_list(lines(text)) == ["# Heading 1", "# Heading 2"]
 
 
 class TestBlankFirstLine:
@@ -79,13 +99,7 @@ class TestBlankFirstLine:
 
 
 class TestSameHeading:
-    """The defect is one heading rendered twice, not merely having a title.
-
-    Every standalone article on this site has a document `title:` and a first
-    H1 that is a section -- "Abstract", "Introduction", "Part 1: ...". Those are
-    two different headings and are correct. Comparing only "does a title exist"
-    flagged all eleven of them.
-    """
+    """The defect is one heading rendered twice, not merely having a title."""
 
     def test_identical_text_is_the_defect(self) -> None:
         assert same_heading("Critique: Hybrid Tangent Spaces", "# Critique: Hybrid Tangent Spaces")
@@ -108,14 +122,7 @@ class TestSameHeading:
 
 
 class TestFragments:
-    """A `{{< include >}}`d file is not a page and must not be checked as one.
-
-    Quarto discards the frontmatter of an included file, so a `title:` there is
-    dead metadata. 23 of the 27 files in the Geometry of Motion mirror are
-    fragments; checking them as pages reports a dozen duplicate titles that do
-    not exist, and an earlier pass "fixed" all twelve before the `<title>` tag
-    gave it away.
-    """
+    """A `{{< include >}}`d file is not a page and must not be checked as one."""
 
     def test_finds_an_included_file(self, tmp_path: Path) -> None:
         (tmp_path / "volume0.qmd").write_text(
@@ -134,7 +141,7 @@ class TestFragments:
 
 
 class TestTheBrokenStates:
-    """Each state the book actually shipped."""
+    """Each state the site actually shipped or guarded against."""
 
     def test_3705_state_is_rejected(self) -> None:
         """Blank line plus restored title: the frontmatter does not parse."""

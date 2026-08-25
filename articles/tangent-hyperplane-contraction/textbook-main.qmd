@@ -12,44 +12,44 @@ format:
 ---
 
 ::: {.callout-warning}
-## Draft Document
+### Draft Document
 
 This is a working draft textbook manuscript. Content is incomplete, proofs may be sketched rather than complete, and sections are actively revised. This document is published for transparency and collaborative development, not as a finished reference.
 :::
 
-## Abstract
+### Abstract
 
 This manuscript develops a unified framework for nonlinear control based on tangent-space dynamics, contraction metrics, and Riccati-based local optimal control. The central claim is that local stability certificates and local optimality recursions act on the same infinitesimal objects. The document is structured for textbook development: every major section includes qualitative framing, non-technical explanation, geometric interpretation, and mathematical details.
 
-# Roadmap and Scope
+## Roadmap and Scope
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 The purpose is to establish a mathematically coherent and physically interpretable bridge between contraction analysis and trajectory optimization. The practical objective is not only proof-level correctness but usable design guidance for complex, many-dimensional systems.
 
-## In Laymans Terms
+### In Laymans Terms
 
 We want controllers that do two things at once: make motion good and make motion reliable. This draft shows that both goals can be addressed through one set of local error equations.
 
-## Geometric Intuition
+### Geometric Intuition
 
 The dynamics evolve on a manifold, but perturbations evolve in tangent spaces. A metric defines local distances in those tangent spaces. Contraction and optimal control each shape how these tangent vectors evolve.
 
-# Contraction Theory Primer
+## Contraction Theory Primer
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 Contraction theory asks whether nearby trajectories converge to each other exponentially. This trajectory-to-trajectory perspective is especially useful for time-varying motions and underactuated tasks where equilibrium-only analysis is too narrow [@lohmiller1998contraction; @forni2014contraction].
 
-## In Laymans Terms
+### In Laymans Terms
 
 If you run the same movement twice with tiny differences, contraction says those differences should fade quickly.
 
-## Geometric Intuition
+### Geometric Intuition
 
 Contraction is local shrinking of tangent vectors under a metric, integrated along trajectories into global distance decay.
 
-## Differential Condition
+### Differential Condition
 
 For
 
@@ -71,21 +71,21 @@ $$
 
 A rigorous trajectory-distance result also requires forward invariance, geodesic regularity, and uniform bounds on $M$.
 
-# Tangent-Space Dynamics and Local Linearization
+## Tangent-Space Dynamics and Local Linearization
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 Local linearization is the exact infinitesimal description of deviation dynamics, not merely a computational trick. It separates nominal motion from perturbation behavior.
 
-## In Laymans Terms
+### In Laymans Terms
 
 At each instant, we zoom in enough that nonlinear behavior looks linear for tiny errors.
 
-## Geometric Intuition
+### Geometric Intuition
 
 Linearization defines a map between neighboring tangent spaces along a nominal trajectory.
 
-## Continuous-to-Discrete Convention
+### Continuous-to-Discrete Convention
 
 For sampled-data control, define
 
@@ -101,21 +101,21 @@ $$
 
 with Jacobians of $f_d$.
 
-# Local Optimal Control: LQR and DDP
+## Local Optimal Control: LQR and DDP
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 LQR and DDP use tangent dynamics to compute feedback corrections that balance state error and control effort.
 
-## In Laymans Terms
+### In Laymans Terms
 
 Take a hard nonlinear problem, solve a local linear-quadratic version, update, and repeat.
 
-## Geometric Intuition
+### Geometric Intuition
 
 The Riccati matrix is local curvature of cost-to-go in tangent space.
 
-## Canonical Riccati Recursion
+### Canonical Riccati Recursion
 
 Given $\delta x_{k+1}=A_k\delta x_k+B_k\delta u_k$, minimize
 
@@ -134,21 +134,21 @@ S_k &= Q_k + A_k^\top S_{k+1}A_k - A_k^\top S_{k+1}B_k(R_k+B_k^\top S_{k+1}B_k)^
 \end{aligned}
 $$
 
-# Stability-Optimality Duality
+## Stability-Optimality Duality
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 In linear-quadratic settings, the Riccati matrix can be interpreted both as value-function curvature and as a contraction metric candidate for closed-loop tangent dynamics.
 
-## In Laymans Terms
+### In Laymans Terms
 
 The same matrix that tells you future cost can also prove errors shrink.
 
-## Geometric Intuition
+### Geometric Intuition
 
 Optimization and contraction both specify a quadratic geometry on perturbations; duality occurs when those geometries coincide.
 
-## Decay Statement
+### Decay Statement
 
 For closed-loop perturbations $\delta x_{k+1}=(A_k-B_kK_k)\delta x_k$ and $V_k=\delta x_k^\top S_k\delta x_k$,
 
@@ -164,21 +164,21 @@ $$
 
 we obtain exponential decay in both $V_k$ and Euclidean norm.
 
-# Coordinate-Free and Riemannian Formulation
+## Coordinate-Free and Riemannian Formulation
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 High-dimensional mechanical and robotic systems often evolve on manifolds. Coordinate-free statements avoid misleading chart artifacts.
 
-## In Laymans Terms
+### In Laymans Terms
 
 Some state spaces are curved, and we need rulers that respect that curvature.
 
-## Geometric Intuition
+### Geometric Intuition
 
 A metric assigns an inner product to each tangent space; pullbacks transfer task-space priorities into configuration space.
 
-## Pullback Metric Caveat
+### Pullback Metric Caveat
 
 For task map $y=h(x)$,
 
@@ -188,41 +188,41 @@ $$
 
 This is positive definite only if $J$ has full column rank. Otherwise, use regularization or nullspace completion to obtain a true metric.
 
-# Contraction-Constrained Computation
+## Contraction-Constrained Computation
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 Controller synthesis can be framed as optimization under contraction inequalities, turning robustness goals into explicit constraints.
 
-## In Laymans Terms
+### In Laymans Terms
 
 Do not only optimize performance. Also require a mathematical shrinking guarantee.
 
-## Geometric Intuition
+### Geometric Intuition
 
 The optimizer selects both control action and local measurement geometry that bends perturbations toward the target trajectory.
 
-## Representative Programs
+### Representative Programs
 
 - LTI metric-gain synthesis via LMIs [@boyd1994].
 - Time-varying trajectory synthesis with stage-wise constraints.
 - Sampled nonlinear metric search with autodiff and constrained optimization.
 
-# High-Dimensional Applications
+## High-Dimensional Applications
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 Applications in biomechanics and robotics motivate the framework by coupling strong performance demands with disturbance rejection requirements.
 
-## In Laymans Terms
+### In Laymans Terms
 
 In complex motions, you need speed and precision without losing repeatability.
 
-## Geometric Intuition
+### Geometric Intuition
 
 Many-dimensional motion is a curve in a large state manifold. Metrics encode which deviation directions matter most for success.
 
-## Example Mechanical Form
+### Example Mechanical Form
 
 $$
 H(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau + J_c(q)^\top\lambda.
@@ -230,21 +230,21 @@ $$
 
 This structure supports physically grounded tangent-space analysis and task-relevant metric shaping.
 
-# Implementation and Validation Checklist
+## Implementation and Validation Checklist
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 A textbook treatment must be reproducible. This section defines minimum standards for derivation quality, numerics, and verification.
 
-## In Laymans Terms
+### In Laymans Terms
 
 Every new equation should answer: what does it mean physically, and how would we test it?
 
-## Geometric Intuition
+### Geometric Intuition
 
 For each contribution, identify the tangent object, the metric, and the claimed decay/optimality property.
 
-## Checklist
+### Checklist
 
 1. Verify linearization against finite differences.
 2. Track conditioning of Riccati factors.
@@ -252,21 +252,21 @@ For each contribution, identify the tangent object, the metric, and the claimed 
 4. Stress-test under model mismatch and contact variation.
 5. State assumptions explicitly before every theorem-level claim.
 
-# Conclusion
+## Conclusion
 
-## Introduction and Qualitative Purpose
+### Introduction and Qualitative Purpose
 
 This draft establishes the core architecture for a full textbook on nonlinear control via tangent-space and contraction perspectives.
 
-## In Laymans Terms
+### In Laymans Terms
 
 The same local error geometry can guide design and certify stability.
 
-## Geometric Intuition
+### Geometric Intuition
 
 Trajectory, tangent perturbations, and metric are the minimal geometric triad for unifying nonlinear stability and optimality.
 
-## Next Expansion Targets
+### Next Expansion Targets
 
 1. Full proof chapter for discrete and continuous duality.
 2. Worked numerical chapter with complete reproducible experiments.

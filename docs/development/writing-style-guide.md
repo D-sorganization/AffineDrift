@@ -246,6 +246,28 @@ a, an, and, as, at, but, by, for, in, nor, of, on, or, per, so, the, to, via, vs
 - **Forward references**: Every figure and equation must be introduced and analyzed in prose before or immediately adjacent to its appearance using `@fig-...` or `@eq-...`.
 - **Informative captions**: Figure captions must describe what is plotted, the axes and units, and the primary conclusion the reader should draw.
 
+### Related Articles Component
+
+Articles concluding with navigational or cross-reference reading must standardize on the canonical **Related Articles** component:
+
+````markdown
+## Related Articles
+
+::: {.callout-note}
+## See Also
+
+- **[Article Title](relative-target.html)** — One-sentence rationale describing conceptual connection
+- **[Second Article](relative-target.html)** — Another rationale with specific theoretical relevance
+:::
+````
+
+**Rules for Related Articles:**
+1. **Canonical heading**: Level-2 `## Related Articles`.
+2. **Callout container**: `::: {.callout-note}` containing `## See Also`.
+3. **Item format**: `- **[Title](relative-target.html)** — Rationale description` with an unspaced em dash (`—`).
+4. **Link targets**: Always use bare-relative or correct relative `.html` targets (never `.qmd` extensions, never root-absolute `/...` paths, never over-traversed `../../` paths).
+5. **No empty sections**: Every Related Articles component must contain curated links with clear editorial rationales.
+
 ---
 
 ## 5. Hard Constraints for Editors (CI-Enforced Rules)
