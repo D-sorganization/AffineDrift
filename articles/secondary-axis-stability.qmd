@@ -16,7 +16,7 @@ Revision History:
 - v1: Initial publication with intermediate axis theorem analysis and putter design implications.
 -->
 
-# Introduction
+## Introduction
 
 Consider a familiar rigid-body experiment. A book spun about its longest principal axis is stable. The same is true when it is spun about its shortest axis. But when it is spun about the intermediate axis, small perturbations grow and the book tumbles. This is the classical intermediate axis theorem, and it is one of the clearest demonstrations that mass distribution alone can determine whether a rotation is self-correcting or self-amplifying.
 
@@ -26,7 +26,7 @@ This article examines those effects through the framework of secondary axis stab
 
 Golf club dynamics are often described using simplified models in which the club rotates about a single, clearly defined axis. In practice, neither full-swing nor putting motions conform to this assumption. The effective rotation axis of the club is continuously influenced by shaft deflection, grip torques, changing lie angle, and off-center mass distribution in the clubhead. As a result, the angular velocity vector frequently deviates from the principal axes of inertia, producing sensitivity to perturbations that can degrade face control and path consistency.
 
-# Background: Principal Axes and Rotational Stability
+## Background: Principal Axes and Rotational Stability
 
 For any rigid body, there exist three mutually orthogonal principal axes, associated with the principal moments of inertia:
 
@@ -45,14 +45,14 @@ $$
 The sign change in the right-hand side of the second equation (because $I_2$ lies between $I_1$ and $I_3$) leads to exponential growth of perturbations when the rotation is nominally about axis 2. This is the mechanism behind the “book-flip” effect demonstrated in classical physics videos.
 
 ::: {.callout-note}
-## Note on Magnitude and Scaling
+### Note on Magnitude and Scaling
 It is important to acknowledge that the *gyroscopic* torque term responsible for the Intermediate Axis Instability scales with $\omega^2$. In putting, angular velocities are low ($\approx 1-3 \text{ rad/s}$), making the gyroscopic instability force small (on the order of milli-Newtons).
 
 However, the **alignment** of principal axes remains critical even at low speeds. When principal axes are misaligned with the stroke plane, the inertia tensor contains off-diagonal terms ($I_{xy}$) in the stroke frame. This creates **Inertial Coupling** (a linear effect, $\tau = I \dot{\omega}$), where a pure rotation torque applied by the golfer creates parasitic accelerations in orthogonal directions. The "Central Spine" design thus provides two benefits: **Kinematic Decoupling** (linear, dominant in putting) and **Dynamic Stability** (quadratic, dominant in full swing).
 :::
 
 ::: {.callout-warning}
-## Constrained vs. Free-Body Dynamics
+### Constrained vs. Free-Body Dynamics
 
 The classical intermediate axis theorem applies to **free rigid bodies** under torque-free conditions. The golf club is **not** a free body: it is held by the golfer's hands, which apply grip forces and torques throughout the swing. This changes the dynamics in important ways:
 
@@ -65,9 +65,9 @@ The analysis below should therefore be read as: "proximity to the intermediate a
 
 Although a golf club is not in torque-free flight, the same structural instability affects its forced rotational behavior, increasing the required grip torque to maintain orientation when the angular velocity vector drifts near the intermediate axis direction.
 
-# Changing Effective Rotation Axes in Golf Swings
+## Changing Effective Rotation Axes in Golf Swings
 
-## Shaft Deflection
+### Shaft Deflection
 
 Shaft bending, droop, and torsion modify the position of the clubhead center of mass and shift the inertia tensor. The principal axes of the clubhead are not fixed relative to the shaft, and the shaft itself is not a rigid extension of the head. During a dynamic motion, the effective inertia matrix becomes:
 
@@ -77,15 +77,15 @@ $$
 
 where $R(t)$ encodes time-varying orientation between shaft and head.
 
-## Off-Center Shaft Attachment
+### Off-Center Shaft Attachment
 
 The shaft connects near the heel, not through the center of mass. This creates coupling between translational and rotational dynamics, increasing the likelihood that the angular velocity vector deviates from principal directions.
 
-## Non-Uniform Golfer-Applied Torques
+### Non-Uniform Golfer-Applied Torques
 
 Human grip torques vary continuously. Small variations can produce disproportionately large changes in club orientation if the instantaneous angular velocity approaches the intermediate axis.
 
-## Consequence: Frequent Excursions Into Unstable Regions
+### Consequence: Frequent Excursions Into Unstable Regions
 
 Because the stroke axis is not fixed in orientation or magnitude, the club’s angular velocity direction often passes through neighborhoods where rotation should be considered secondarily unstable. The golfer prevents catastrophic flips, but the instability appears as:
 
@@ -96,7 +96,7 @@ Because the stroke axis is not fixed in orientation or magnitude, the club’s a
 
 This behavior is best viewed as the forced version of the intermediate-axis phenomenon.
 
-# Conventional Putter Design and Its Limitations
+## Conventional Putter Design and Its Limitations
 
 Modern putter engineering largely focuses on maximizing the vertical-axis moment of inertia:
 
@@ -120,7 +120,7 @@ However, maximizing $I_z$ does not control the dynamic stability of rotation abo
 
 Thus, high-MOI perimeter weighting improves static impact robustness, but may degrade dynamic rotational robustness.
 
-# Central-Axis Spine Concept: Mass Concentration for Stability
+## Central-Axis Spine Concept: Mass Concentration for Stability
 
 A proposed alternative is to concentrate mass along a central axis aligned with the intended stroke plane. In such a design:
 
@@ -131,7 +131,7 @@ A proposed alternative is to concentrate mass along a central axis aligned with 
 
 This reduces the magnitude and directional variation of the intermediate principal axis, mitigating secondary instability.
 
-# Quantitative Estimate of the Stability–MOI Tradeoff
+## Quantitative Estimate of the Stability–MOI Tradeoff
 
 To evaluate the design implications, two putter-head models with identical mass and footprint dimensions were constructed:
 
@@ -140,7 +140,7 @@ To evaluate the design implications, two putter-head models with identical mass 
 
 A uniform volumetric grid model was used to calculate inertia tensors for each design.
 
-## Example Normalized Results
+### Example Normalized Results
 
 | Design | $I_1$ | $I_2$ | $I_3$ |
 |--------|-------|-------|-------|
@@ -148,14 +148,14 @@ A uniform volumetric grid model was used to calculate inertia tensors for each d
 | Central spine | 0.00023 | 0.00062 | 0.00072 |
 
 ::: {.callout-note}
-## Units and Model Scope
+### Units and Model Scope
 
 All inertia values in the table above are in **kg·m²**. To convert: 1 kg·m² = 10,000,000 g·cm² (since 1 kg = 1000 g and 1 m² = 10,000 cm²). For example, the perimeter-weighted value I₃ = 0.00133 kg·m² = 0.00133 × 10,000,000 = **13,300 g·cm²**, which is approximately 1.5× the upper end of the 6,000–9,000 g·cm² range cited for manufactured high-MOI mallets.
 
 These values are derived from a **simplified uniform-geometry model** (volumetric grid, uniform density) and are intended as illustrative comparisons between mass-distribution strategies, not as specifications for a particular real putter design. Because the model geometry is larger and more idealized than a typical manufactured putter, the absolute inertia values are approximately 1.5–2× higher than those of real putters. The relative ratios between designs (the 50% reduction in ΔI) are the physically meaningful result.
 :::
 
-## Interpretation
+### Interpretation
 
 The central-axis design preserves the minimum MOI $I_1$, but reduces the maximum MOI $I_3$ by approximately:
 
@@ -165,7 +165,7 @@ $$
 
 Thus vertical-axis MOI decreases by roughly 46%, consistent with the shift from perimeter mass to central mass.
 
-## Stability Gain
+### Stability Gain
 
 The relevant measure of secondary axis stability is the closeness of the angular velocity vector to a stable inertia direction. Reducing the spread between principal moments reduces the “depth” of the intermediate-axis instability. A practical indicator is the difference:
 
@@ -191,30 +191,30 @@ The central-spine design achieves a $\Delta I$ that is half that of the perimete
 
 The combined effect is that the central-spine design allows the clubhead to retain a more predictable orientation for small stroke-plane deviations.
 
-# Practical Consequences for Putting Performance
+## Practical Consequences for Putting Performance
 
-## Advantages
+### Advantages
 
 - **Improved dynamic stability**: Reduced sensitivity to perturbations in lie angle or path.
 - **Smoother closure behavior**: Lower variation in required grip torque.
 - **Stroke-plane compliance**: The club tends to remain closer to the intended plane.
 - **Reduced off-plane wobble**: Secondary-axis excursions are damped by inertia alignment.
 
-## Disadvantages
+### Disadvantages
 
 - **Lower vertical MOI**: Reduced forgiveness on off-center impacts.
 - **Directional dependence**: Some players benefit more than others based on stroke style.
 - **Deviations from conventional performance metrics**: Traditional MOI benchmarks appear worse despite improved dynamic behavior.
 
-## Who Benefits?
+### Who Benefits?
 
 Players who produce consistent center contact but struggle with face-angle consistency or stroke-plane variability may realize significant gains. Conversely, players relying heavily on high-MOI impact forgiveness may prefer conventional perimeter-weighted mallets.
 
-# Extension to Full-Swing Clubs
+## Extension to Full-Swing Clubs
 
 Although this article focuses on putters, full-swing clubs experience even greater dynamical complexity due to higher speeds and larger shaft deflections. The same principles apply: mass distributions that produce excessively separated principal moments can amplify sensitivity to small rotational variations. Secondary axis stability is therefore relevant to analyzing face control and torque demands in drivers and irons.
 
-# Conclusion
+## Conclusion
 
 Secondary axis stability provides a rigorous mechanical framework for understanding putter behavior beyond conventional MOI metrics. When the club's instantaneous rotation axis deviates from stable principal axes — often due to shaft deformation or subtle stroke variations — the clubhead becomes sensitive to small perturbations. Perimeter-weighted mallets, while excellent for static impact forgiveness, may amplify this sensitivity.
 
@@ -327,7 +327,7 @@ Further work involving full 3D CAD, finite element shaft modeling, and experimen
   </div>
 </section>
 
-# Synthesis: The AffineDrift Context
+## Synthesis: The AffineDrift Context
 
 **Stabilizing the Passive Drift Field**
 In the AffineDrift framework ($\dot{x} = f(x) + G(x)u$), the intermediate axis instability manifests as a region in the state space where the passive drift field $f(x)$ possesses positive Lyapunov exponents. While the golfer can suppress this divergence via input $u$, a 'Central Spine' mass distribution effectively pre-conditions the drift field itself. By minimizing the off-diagonal terms in the inertia tensor relative to the stroke frame, the design ensures that the **Zero Torque Counterfactual (ZTCF) family**—the club’s natural trajectory under zero active input—remains homeomorphically bound to the intended planar manifold, reducing the 'Control Effort' required to maintain path coherence.
@@ -338,9 +338,13 @@ This hardware-based stabilization functions as the static dual to **Intentional 
 **The Cost of "Forgiveness"**
 The analysis highlights a critical tension in the **Force--Mobility** duality. High-MOI designs optimize the 'Impact Plant' (maximum resistance to collision shock) but degrade the 'Trajectory Plant' (resistance to steering). By expanding the separation between principal moments, perimeter weighting potentially destabilizes the drift field $f(x)$, forcing the golfer to treat the putter as an adversarial dynamic agent during the stroke to ensure it behaves like a compliant tool at impact.
 
+## Related Articles
+
+::: {.callout-note}
 ## See Also
 
-*   **Theory Part 2**: For the role of the ZTCF as a diagnostic baseline for stability.
-*   **Intentional Constraint Collapse**: For the dynamic biological equivalent of inertial alignment.
-*   **Force and Mobility Matrices**: For the mathematical relationship between the inertia tensor and task-space maneuverability.
-*   **Theory Part 3**: For Drift Invariance and the structure of passive dynamics.
+- **[Part 2: Counterfactual Diagnostics (ZTCF/ZVCF)](theory-part2.html)** — Role of the zero-torque counterfactual as a diagnostic baseline for rotational stability
+- **[Intentional Constraint Collapse](intentional-constraint-collapse.html)** — Dynamic biological equivalent of inertial alignment through constraint-Jacobian modulation
+- **[Force and Mobility Matrices](force-mobility-matrices.html)** — Mathematical relationship between the inertia tensor and task-space maneuverability
+- **[Part 3: Drift Invariance and Force Taxonomy](theory-part3.html)** — Drift invariance and the structural partitioning of passive dynamics
+:::

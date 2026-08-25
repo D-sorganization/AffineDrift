@@ -20,9 +20,14 @@ logger = logging.getLogger(__name__)
 DEFAULT_CONTENT_DIRS: list[str] = [".", "articles"]
 
 
-def is_excluded_content_path(filepath: Path) -> bool:
+def is_excluded_content_path(filepath: Path, base_dir: Path | None = None) -> bool:
     """Check if a path matches Quarto render exclusions or partial prefixes."""
-    parts = filepath.parts
+    try:
+        rel = filepath.relative_to(base_dir) if base_dir else filepath
+        parts = rel.parts
+    except ValueError:
+        parts = filepath.parts
+
     if any(part.startswith("_") or part.startswith(".") for part in parts):
         return True
     posix = filepath.as_posix()
@@ -51,7 +56,7 @@ def _scan_directory_files(content_dir: str, include_critiques_md: bool) -> list[
         candidates = list(dir_path.rglob("*.qmd"))
         if include_critiques_md and content_dir == "critiques":
             candidates.extend(dir_path.rglob("*.md"))
-    return [p for p in candidates if not is_excluded_content_path(p)]
+    return [p for p in candidates if not is_excluded_content_path(p, base_dir=dir_path)]
 
 
 def collect_qmd_files(

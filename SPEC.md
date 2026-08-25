@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-23T21:42:00Z
+Last-Updated: 2026-08-25T08:35:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-08-23T21:42:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.220                                          |
-| **Last Spec Update**    | 2026-08-23                                       |
+| **Spec Version**        | 1.0.221                                          |
+| **Last Spec Update**    | 2026-08-25                                       |
 
 ## 2. Purpose & Mission
 
@@ -859,3 +859,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-21 | 1.0.217 | ci(benchmarks, #3916): Added PyYAML and pytest-asyncio to `requirements-benchmarks.txt` to ensure benchmark collection succeeds without import errors. |
 | 2026-08-21 | 1.0.218 | docs(polish, #3914): Added missing title frontmatter to notation.qmd, removed 'Section Y' placeholder from inverse-dynamics-inference.qmd, removed 7 'Figure Pending' H2 headings polluting TOC in inverse-dynamics.qmd, updated textbook series cross-references in passive-distributed-control.qmd, and removed duplicate callouts. |
 | 2026-08-21 | 1.0.219 | docs(parity, #3718, #3717): Reconciled boxed items and book citations across Quarto mirror, verified 100% syntax compliance in scan_quarto_syntax.py, and merged latest origin/main. |
+| 2026-08-25 | 1.0.221 | fix(site, #3917, #3897): Restore H1 heading visibility and accessibility across all 55 full-layout pages; normalize multi-H1 standalone articles to H2 section headers; standardize Related Articles component to canonical theory-core pattern with callout-note and unspaced em-dashes; fix zero-link sections, backtick references, and over-traversal / root-absolute link paths; expand check_single_title.py and title-block-semantics.test.js with comprehensive CI checks. |
