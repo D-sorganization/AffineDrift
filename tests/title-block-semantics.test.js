@@ -27,6 +27,29 @@ function findFullLayoutFiles(dir, files = []) {
   return files;
 }
 
+function findStandaloneArticleFiles(dir, files = []) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    const relPath = path.relative(ROOT, fullPath).replace(/\\/g, '/');
+    if (entry.isDirectory()) {
+      if (['node_modules', '.git', '.quarto', 'docs', '_freeze', 'Drafts_Original_Articles', 'tangent-hyperplane-contraction', 'The_Physics_of_Golf', 'The_Geometry_of_Motion', 'proximal_distal_energy_transfer', 'proximal_distal_companion'].includes(entry.name)) {
+        continue;
+      }
+      findStandaloneArticleFiles(fullPath, files);
+    } else if (entry.name.endsWith('.qmd')) {
+      if (['volume2_content.qmd', 'CRITICS_CORNER.qmd'].includes(entry.name)) {
+        continue;
+      }
+      const content = fs.readFileSync(fullPath, 'utf8');
+      if (!/page-layout:\s*full/i.test(content) && /^title:\s*\S/m.test(content)) {
+        files.push(relPath);
+      }
+    }
+  }
+  return files;
+}
+
 describe('Quarto title semantics (#3445, #3917)', () => {
   test('uses Quarto title-block rendering instead of verbatim Pandoc title blocks', () => {
     const config = read('_quarto.yml');
@@ -58,4 +81,20 @@ describe('Quarto title semantics (#3445, #3917)', () => {
       expect(totalH1s).toBe(1);
     }
   });
+
+  test('standalone articles with YAML title do not author body H1s (#3917, #3944)', () => {
+    const standaloneFiles = findStandaloneArticleFiles(path.join(ROOT, 'articles'));
+    expect(standaloneFiles.length).toBeGreaterThan(20);
+
+    for (const relPath of standaloneFiles) {
+      const content = read(relPath);
+      const noCode = content.replace(/```[\s\S]*?```/g, '').replace(/~~~[\s\S]*?~~~/g, '');
+      const mdH1s = [...noCode.matchAll(/^#\s+\S.*/gm)];
+      const htmlH1s = [...content.matchAll(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi)];
+      const totalBodyH1s = mdH1s.length + htmlH1s.length;
+
+      expect(totalBodyH1s).toBe(0);
+    }
+  });
 });
+
