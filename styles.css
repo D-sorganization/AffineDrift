@@ -127,10 +127,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Full-layout pages own their visible H1 in custom page markup. Standard
-   content pages keep Quarto's generated title block visible and accessible. */
+/* Full-layout pages keep Quarto's generated title block visible by default so
+   every page has an accessible H1 (issue #3917). A handful of full-layout
+   pages author their own hero <h1> directly in custom markup (see the
+   opt-out selector list below); those pages suppress the redundant
+   auto-generated title so they don't end up with two H1s. */
 #quarto-content.page-layout-full #title-block-header {
-  display: none;
   margin-top: 0;
   padding-top: 0;
 }
@@ -138,6 +140,15 @@ body {
 #quarto-content.page-layout-full #title-block-header .title {
   margin-top: 0;
   padding-top: 0;
+}
+
+/* Pages that author their own hero H1 in raw HTML markup: hide Quarto's
+   auto-generated title block to avoid a duplicate H1 on the page. Mark such
+   a page by adding class="page-has-custom-h1" to the outermost element of
+   its custom markup (see 404.qmd, index.qmd, pages/collaborate.qmd,
+   pages/book-reviews.qmd, resources/resources.qmd for examples). */
+#quarto-content.page-layout-full:has(.page-has-custom-h1) #title-block-header {
+  display: none;
 }
 
 /* Typography */
@@ -222,11 +233,6 @@ a:hover {
 #quarto-content.page-layout-full main.content {
   max-width: 100%;
   width: 100%;
-}
-
-/* Hide Quarto's default title block only on designed full-layout pages. */
-#quarto-content.page-layout-full #title-block-header {
-  display: none;
 }
 
 /* Article pages: keep margins tighter and sidebars visible */
