@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Cleaned up tangent-space material parallel sets by enforcing a single canonical path in the article index and `_quarto.yml` render rules (#3913)
 - MathJax equation rendering issues
 - Footer duplication in \_quarto.yml
 

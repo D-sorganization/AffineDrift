@@ -28,8 +28,8 @@ Last-Updated: 2026-08-25T18:58:00Z
 | **Owner**               | D-sorganization                                  |
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
-| **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.223                                          |
+| **Current Version**     | 1.0.9                                            |
+| **Spec Version**        | 1.0.224                                          |
 | **Last Spec Update**    | 2026-08-25                                       |
 
 ## 2. Purpose & Mission
