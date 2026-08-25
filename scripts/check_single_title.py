@@ -14,13 +14,14 @@ author custom layout and hero elements (#3917). Such full-layout pages MUST
 author exactly one visible `<h1>` in their template markup or markdown body.
 
 Standalone articles that use YAML `title:` must start body sections at `## ` (H2)
-so they do not emit multiple document-level `<h1>` headings.
+so they do not emit multiple document-level `<h1>` headings (#3917, #3944).
 
 This script enforces:
   1. No duplicate titles between YAML `title:` and body `# Heading`.
   2. No blank first lines after opening `---` in frontmatter.
   3. Every `page-layout: full` page authors exactly one visible `<h1>` (HTML or Markdown).
-  4. Standalone articles with YAML `title:` do not emit multiple body `# ` H1 headings.
+  4. Standalone articles with YAML `title:` do not emit body `# ` or `<h1>` headings.
+  5. Standalone articles without YAML `title:` author exactly one body H1 heading.
 """
 
 from __future__ import annotations
@@ -40,6 +41,16 @@ ROOTS = (
     Path("index.qmd"),
     Path("404.qmd"),
 )
+
+EXCLUDED_PATTERNS = (
+    "articles/tangent-hyperplane-contraction",
+    "articles/tangent-hyperplane-articles/Drafts_Original_Articles",
+    "articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd",
+    "articles/proximal_distal_companion/chapters",
+    "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+    "critiques/INLINE_SUGGESTIONS.md",
+)
+
 EXEMPT: set[str] = set()
 
 INCLUDE = re.compile(r"\{\{<\s*include\s+([^\s>]+)")
@@ -127,18 +138,104 @@ def body_h1(lines: list[str]) -> str | None:
     return h1s[0] if h1s else None
 
 
+def is_book_path(path: Path) -> bool:
+    """Check if a path belongs to a book / monograph hierarchy."""
+    return any(
+        part.endswith(("_of_Golf", "_of_Motion", "proximal_distal_energy_transfer"))
+        for part in path.parts
+    )
+
+
+def validate_file_headings(path: Path, lines: list[str], text: str | None = None) -> list[str]:
+    """Validate heading structure for a single file, returning a list of error messages."""
+    errors: list[str] = []
+    if not lines:
+        return errors
+
+    if text is None:
+        text = "\n".join(lines)
+
+    if blank_first_line(lines):
+        errors.append(
+            f"{path.as_posix()}: a blank line follows the opening '---', so the "
+            f"frontmatter is not parsed at all and its keys render as page content"
+        )
+        return errors
+
+    h1_list = body_h1_list(lines)
+    heading = h1_list[0] if h1_list else None
+    html_h1s = HTML_H1.findall(text)
+    full_layout = is_full_layout(lines)
+    in_book = is_book_path(path)
+    title = frontmatter_title(lines)
+
+    if title is not None and heading is not None and same_heading(title, heading):
+        remedy = (
+            "Drop the YAML title -- in a book the heading carries the "
+            "'{#sec-...}' anchor that cross-references resolve to."
+            if in_book
+            else "Drop the duplicate body heading -- on a standalone page the "
+            "YAML title is what produces the <title> tag, and removing it "
+            "leaves the page titled after its filename."
+        )
+        errors.append(
+            f"{path.as_posix()}: the YAML 'title:' and the body heading "
+            f"'{heading[:48]}' are the same heading, so Quarto renders it twice. {remedy}"
+        )
+
+    if full_layout:
+        total_h1 = len(h1_list) + len(html_h1s)
+        if total_h1 == 0:
+            errors.append(
+                f"{path.as_posix()}: page-layout: full hides Quarto's title block in CSS, "
+                f"but authors no visible <h1> heading in page markup (#3917)."
+            )
+        elif total_h1 > 1:
+            errors.append(
+                f"{path.as_posix()}: full-layout page authors {total_h1} <h1> headings. "
+                f"Normalize to exactly one visible <h1> title."
+            )
+    else:
+        if not in_book:
+            if title is not None:
+                # Page has YAML title -> it will render as H1. Body must not have additional H1s.
+                if not (heading is not None and same_heading(title, heading)):
+                    total_body_h1 = len(h1_list) + len(html_h1s)
+                    if total_body_h1 > 0:
+                        errors.append(
+                            f"{path.as_posix()}: standalone page with YAML title emits {total_body_h1} body "
+                            f"H1 heading(s). Normalize body sections to start at '## ' (H2) (#3917, #3944)."
+                        )
+            else:
+                total_body_h1 = len(h1_list) + len(html_h1s)
+                if total_body_h1 == 0:
+                    errors.append(
+                        f"{path.as_posix()}: standalone page has no YAML title and no body <h1> heading."
+                    )
+                elif total_body_h1 > 1:
+                    errors.append(
+                        f"{path.as_posix()}: standalone page without YAML title emits {total_body_h1} body "
+                        f"H1 headings. Normalize to exactly one H1 title."
+                    )
+
+    return errors
+
+
 def collect_paths() -> list[Path]:
     """Collect all relevant .qmd files across declared roots."""
     paths: set[Path] = set()
     for root in ROOTS:
         if root.is_file() and root.suffix == ".qmd":
-            paths.add(root)
+            if not any(pat in root.as_posix() for pat in EXCLUDED_PATTERNS):
+                paths.add(root)
         elif root.is_dir():
             for p in root.rglob("*.qmd"):
                 if any(
                     x in p.parts
                     for x in [".quarto", "docs", "node_modules", ".git", "_freeze", ".pytest_temp"]
                 ):
+                    continue
+                if any(pat in p.as_posix() for pat in EXCLUDED_PATTERNS):
                     continue
                 paths.add(p)
     return sorted(paths)
@@ -160,61 +257,11 @@ def main() -> int:
         if not lines:
             continue
         checked += 1
-        h1_list = body_h1_list(lines)
-        heading = h1_list[0] if h1_list else None
-        html_h1s = HTML_H1.findall(text)
-        full_layout = is_full_layout(lines)
 
-        if blank_first_line(lines):
+        file_errors = validate_file_headings(path, lines, text)
+        for err in file_errors:
             problems += 1
-            print(
-                f"  {path.as_posix()}: a blank line follows the opening '---', so the "
-                f"frontmatter is not parsed at all and its keys render as page content"
-            )
-            continue
-
-        title = frontmatter_title(lines)
-        if title is not None and heading is not None and same_heading(title, heading):
-            problems += 1
-            in_book = any(part.endswith(("_of_Golf", "_of_Motion")) for part in path.parts)
-            remedy = (
-                "Drop the YAML title -- in a book the heading carries the "
-                "'{#sec-...}' anchor that cross-references resolve to."
-                if in_book
-                else "Drop the duplicate body heading -- on a standalone page the "
-                "YAML title is what produces the <title> tag, and removing it "
-                "leaves the page titled after its filename."
-            )
-            print(
-                f"  {path.as_posix()}: the YAML 'title:' and the body heading "
-                f"'{heading[:48]}' are the same heading, so Quarto renders it twice. {remedy}"
-            )
-
-        if full_layout:
-            total_h1 = len(h1_list) + len(html_h1s)
-            if total_h1 == 0:
-                problems += 1
-                print(
-                    f"  {path.as_posix()}: page-layout: full hides Quarto's title block in CSS, "
-                    f"but authors no visible <h1> heading in page markup (#3917)."
-                )
-            elif total_h1 > 1:
-                problems += 1
-                print(
-                    f"  {path.as_posix()}: full-layout page authors {total_h1} <h1> headings. "
-                    f"Normalize to exactly one visible <h1> title."
-                )
-        else:
-            in_book = any(
-                part.endswith(("_of_Golf", "_of_Motion", "proximal_distal_energy_transfer"))
-                for part in path.parts
-            )
-            if not in_book and title is not None and len(h1_list) > 1:
-                problems += 1
-                print(
-                    f"  {path.as_posix()}: standalone page with YAML title emits {len(h1_list)} body "
-                    f"H1 headings. Normalize body sections to start at '## ' (H2) (#3917)."
-                )
+            print(f"  {err}")
 
     if problems:
         print(f"\n  {problems} page(s) failed title / H1 validation")

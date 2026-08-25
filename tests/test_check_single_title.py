@@ -23,10 +23,14 @@ from scripts.check_single_title import (
     blank_first_line,
     body_h1,
     body_h1_list,
+    collect_paths,
     fragments,
     frontmatter_title,
+    is_book_path,
     is_full_layout,
+    main,
     same_heading,
+    validate_file_headings,
 )
 
 
@@ -162,3 +166,126 @@ class TestTheBrokenStates:
         assert not blank_first_line(lines(text))
         assert not frontmatter_title(lines(text))
         assert body_h1(lines(text)) is not None
+
+
+class TestIsBookPath:
+    """Classify book monograph paths vs standalone articles."""
+
+    def test_physics_of_golf_is_book(self) -> None:
+        assert is_book_path(Path("articles/The_Physics_of_Golf/quarto/ch01_intro.qmd"))
+
+    def test_geometry_of_motion_is_book(self) -> None:
+        assert is_book_path(Path("articles/The_Geometry_of_Motion/quarto/vol0_ch01.qmd"))
+
+    def test_proximal_distal_is_book(self) -> None:
+        assert is_book_path(Path("articles/proximal_distal_energy_transfer/index.qmd"))
+
+    def test_standalone_article_is_not_book(self) -> None:
+        assert not is_book_path(Path("articles/controllability-drift-ratio.qmd"))
+        assert not is_book_path(Path("pages/about.qmd"))
+
+
+class TestValidateFileHeadings:
+    """Verify single-file heading order validation rules (#3917, #3944)."""
+
+    def test_standalone_page_with_title_and_h2_sections_passes(self) -> None:
+        text = '---\ntitle: "Controllability-Drift Ratio"\n---\n\n## Introduction\n\nSome content\n\n## Methods\n'
+        errs = validate_file_headings(Path("articles/test.qmd"), lines(text), text)
+        assert errs == []
+
+    def test_standalone_page_with_title_and_body_h1_fails(self) -> None:
+        text = '---\ntitle: "Article Title"\n---\n\n# First Section\n\n# Second Section\n'
+        errs = validate_file_headings(Path("articles/test.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert "standalone page with YAML title emits 2 body H1 heading(s)" in errs[0]
+
+    def test_standalone_page_with_title_and_single_different_body_h1_fails(self) -> None:
+        text = '---\ntitle: "Article Title"\n---\n\n# Body Heading\n\n## Subheading\n'
+        errs = validate_file_headings(Path("articles/test.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert "standalone page with YAML title emits 1 body H1 heading(s)" in errs[0]
+
+    def test_standalone_page_with_duplicate_title_and_body_h1_fails(self) -> None:
+        text = '---\ntitle: "Article Title"\n---\n\n# Article Title\n\n## Subheading\n'
+        errs = validate_file_headings(Path("articles/test.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert (
+            "the YAML 'title:' and the body heading '# Article Title' are the same heading"
+            in errs[0]
+        )
+
+    def test_standalone_page_without_title_and_zero_h1_fails(self) -> None:
+        text = '---\ndescription: "No title"\n---\n\n## First Section\n'
+        errs = validate_file_headings(Path("articles/test.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert "standalone page has no YAML title and no body <h1> heading" in errs[0]
+
+    def test_standalone_page_without_title_and_one_h1_passes(self) -> None:
+        text = "# Article Title\n\n## Section 1\n"
+        errs = validate_file_headings(Path("articles/test.qmd"), lines(text), text)
+        assert errs == []
+
+    def test_standalone_page_without_title_and_multiple_h1s_fails(self) -> None:
+        text = "# Title 1\n\n# Title 2\n"
+        errs = validate_file_headings(Path("articles/test.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert "standalone page without YAML title emits 2 body H1 headings" in errs[0]
+
+    def test_full_layout_page_with_one_visible_h1_passes(self) -> None:
+        text = '---\ntitle: "Hub Page"\npage-layout: full\n---\n\n<div class="hero">\n<h1>Hub Title</h1>\n</div>\n\n## Section\n'
+        errs = validate_file_headings(Path("pages/hub.qmd"), lines(text), text)
+        assert errs == []
+
+    def test_full_layout_page_with_zero_h1_fails(self) -> None:
+        text = '---\ntitle: "Hub Page"\npage-layout: full\n---\n\n## Section Only\n'
+        errs = validate_file_headings(Path("pages/hub.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert "authors no visible <h1> heading in page markup" in errs[0]
+
+    def test_full_layout_page_with_multiple_h1s_fails(self) -> None:
+        text = (
+            '---\ntitle: "Hub Page"\npage-layout: full\n---\n\n# Hero Title\n\n# Secondary Title\n'
+        )
+        errs = validate_file_headings(Path("pages/hub.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert "full-layout page authors 2 <h1> headings" in errs[0]
+
+    def test_book_page_with_body_h1_and_no_title_passes(self) -> None:
+        text = (
+            '---\ndescription: "Chapter intro"\n---\n\n# Chapter Title {#sec-ch01}\n\n## Section\n'
+        )
+        errs = validate_file_headings(
+            Path("articles/The_Physics_of_Golf/quarto/ch01.qmd"), lines(text), text
+        )
+        assert errs == []
+
+    def test_blank_first_line_fails(self) -> None:
+        text = '---\n\ntitle: "Broken"\n---\n'
+        errs = validate_file_headings(Path("pages/broken.qmd"), lines(text), text)
+        assert len(errs) == 1
+        assert "a blank line follows the opening '---'" in errs[0]
+
+
+class TestCollectPaths:
+    """Path discovery and exclusion contracts."""
+
+    def test_collects_qmd_paths(self) -> None:
+        paths = collect_paths()
+        assert len(paths) > 50
+        for p in paths:
+            assert p.suffix == ".qmd"
+            assert not any(
+                excluded in p.as_posix()
+                for excluded in [
+                    "articles/tangent-hyperplane-contraction",
+                    "Drafts_Original_Articles",
+                    "CRITICS_CORNER.qmd",
+                ]
+            )
+
+
+class TestMainExecution:
+    """Execution of main entry point on current repository."""
+
+    def test_main_passes_on_clean_repository(self) -> None:
+        assert main() == 0
