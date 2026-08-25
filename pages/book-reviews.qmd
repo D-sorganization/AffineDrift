@@ -7,91 +7,39 @@ page-layout: full
 ```{=html}
 <section class="book-reviews-section page-has-custom-h1">
   <div class="container">
+    <aside class="status-banner status-banner--warning">
+      <h3 class="status-banner__title">Status: In Progress</h3>
+      <p class="status-banner__body">
+        This section is under active development. Complete reviews will be added as texts are read and analyzed.
+      </p>
+      <p class="status-banner__body">
+        Learn more in the <a href="development-roadmap.html">Development Roadmap</a>.
+      </p>
+    </aside>
+
     <div class="reviews-intro">
       <h1>Book Reviews</h1>
-      <p class="page-subtitle">Critical reviews of golf science, biomechanics, and nonlinear control literature</p>
+      <p class="page-subtitle">Critical reviews of golf science and biomechanics literature</p>
       <p>
-        In-depth reviews examining the mathematical foundations, biomechanical insights,
-        and modeling assumptions of key texts, evaluated against the control-affine AffineDrift framework.
+        This section is in preparation. No completed reviews are available yet. When published, each
+        review will examine scientific foundations, biomechanical insights, historical significance,
+        and relevance to the AffineDrift framework for a key text in golf science, biomechanics, or
+        control theory.
+      </p>
+      <p class="page-note">
+        Books under consideration for future review include <em>The Search for the Perfect Golf
+        Swing</em> (Cochran &amp; Stobbs, 1968), <em>The Physics of Golf</em> (A. Raymond Penner, 2003),
+        and <em>Underactuated Robotics</em> (Russ Tedrake, MIT OpenCourseWare). No review text exists
+        for any of these yet.
       </p>
     </div>
 
-    <section class="planned-reviews u-mt-4">
-      <h2>Foundational Literature Reviews</h2>
-      <div class="reviews-list">
-
-        <article class="review-card">
-          <div class="review-header">
-            <h2>The Search for the Perfect Swing</h2>
-            <span class="review-date">A. Cochran &amp; J. Stobbs, 1968</span>
-          </div>
-          <div class="review-content">
-            <p>
-              Cochran and Stobbs' seminal text represents the foundational quantitative investigation into golf swing mechanics.
-              Commissioned by the Golf Society of Great Britain, the study introduced the planar double-pendulum representation
-              (hub/torso segment driving a distal club segment) that established early analytical benchmarks for kinetic energy transfer
-              and clubhead speed generation.
-            </p>
-            <p>
-              <strong>AffineDrift Analysis:</strong> The classical double-pendulum model captures the dominant passive inertial coupling
-              that accelerates the distal segment during late downswing. However, modern control-affine analysis demonstrates that treating
-              the hub as a fixed axle understates the role of moving-base reaction wrenches and bilateral hand constraints.
-              While Cochran &amp; Stobbs assumed pure parametric release, the AffineDrift framework formalizes this as an underactuated drift trajectory
-              where proximal deceleration is an emergent consequence of dynamic coupling rather than active muscular braking.
-            </p>
-          </div>
-        </article>
-
-        <article class="review-card">
-          <div class="review-header">
-            <h2>The Physics of Golf</h2>
-            <span class="review-date">A. Raymond Penner, 2003 (Rep. Prog. Phys. 66:131–171)</span>
-          </div>
-          <div class="review-content">
-            <p>
-              Penner's comprehensive review provides rigorous analytical treatments spanning club-head aerodynamics, oblique impact dynamics,
-              and flexible shaft modal behavior. His parametric models established standard mathematical formulations for the launch conditions
-              resulting from normal and tangential contact compliance.
-            </p>
-            <p>
-              <strong>AffineDrift Analysis:</strong> Penner's modal expansion for shaft deflection provides crucial empirical constraints
-              for validating the elastic modes in the Zero-Torque Counterfactual (ZTCF) framework. By isolating the conservative elastic energy
-              stored during transition from active hand-applied wrench work, Penner's findings corroborate that shaft kick at impact contributes
-              a predictable, state-dependent velocity increment governed by the system's unforced natural frequencies.
-            </p>
-          </div>
-        </article>
-
-        <article class="review-card">
-          <div class="review-header">
-            <h2>Underactuated Robotics: Algorithms for Walking, Running, Swimming, Flying, and Manipulation</h2>
-            <span class="review-date">Russ Tedrake, MIT OpenCourseWare</span>
-          </div>
-          <div class="review-content">
-            <p>
-              Tedrake's course text serves as the modern authority on the mechanics and control of systems where control authority is lower
-              than the degrees of freedom ($\dim(u) < \dim(q)$). It develops dynamic programming, trajectory optimization (direct collocation),
-              time-varying LQR, transverse coordinates, and funnel mechanics.
-            </p>
-            <p>
-              <strong>AffineDrift Analysis:</strong> The mathematical machinery of AffineDrift—specifically transverse linearization along nominal
-              orbits $\delta \dot{x}_\perp = A_\perp(t)\delta x_\perp + B_\perp(t)\delta u$ and region-of-attraction computation via sums-of-squares (SOS)—is
-              directly anchored in the methods developed by Tedrake. Applying underactuated robotics to the human swing reframes technique not
-              as rigid kinematic tracking, but as stabilization of invariant manifolds in phase space.
-            </p>
-          </div>
-
-        </article>
-
-      </div>
-    </section>
-
     <div class="site-card u-mt-4">
-      <h3 class="u-mt-0">Related Resources</h3>
+      <h3 class="u-mt-0">Reading Path</h3>
       <p class="u-mb-0">
-        For complete citations and recommended texts across mathematics, robotics, and biomechanics,
-        see the <a href="../resources/resources-books.html">Reference Books catalog</a> and the
-        <a href="../resources/bibliography.html">Master Bibliography</a>.
+        For curated book recommendations (with Amazon links and previews) rather than full reviews,
+        see the <a href="../resources/resources-books.html">Reference Books resource page</a>. The review section here
+        is for critical analysis of how each text's claims relate to the AffineDrift framework.
       </p>
     </div>
 
