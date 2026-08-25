@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-21
+Last updated: 2026-08-25
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -81,6 +81,8 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 - **Published Technical Monograph**: [`articles/proximal_distal_energy_transfer/index.qmd`](articles/proximal_distal_energy_transfer/index.qmd)
   - 34 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, exact interaction-force decompositions, multi-station Coulomb friction, and Latin Hypercube parameter sweeps.
   - Published technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (231 pages, >= 69,000 words).
+  - Executable companion and monograph PDF contracts use the exact governed
+    `pypdf==6.16.1` root dependency pin.
   - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins UpstreamDrift protected squash `6e28baef54a04da714f1120c71c49058d7d7ebee`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
   - `python scripts/verify_proximal_distal_projection.py` independently downloads or reads that authority, verifies 205 byte-identical source files, 21 uniquely mapped flattened figures, 12 normalized immutable-link rewrites, 12 explicitly hashed publication adaptations, the claim registry, and the PDF. CI also pins the complete 250-file local projection tree. Unreferenced SVG derivatives absent from the protected source manifest were removed rather than promoted.
   - The pinned profile is computational-release ready. It is not archival/PID ready: the PDF is untagged and retains Type 3 and unembedded font resources.
