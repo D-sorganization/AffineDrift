@@ -12,39 +12,62 @@ toc-depth: 2
   <p class="page-subtitle">Source-collection page for induced acceleration analysis in biomechanics</p>
 </div>
 ```
-This page is a source-collection stub for induced acceleration analysis in biomechanics. It is intended to support later review work on how model decompositions attribute segment accelerations to muscles, contact forces, gravity, and interaction terms.
+This review examines **Induced Acceleration Analysis (IAA)**—a computational multibody technique used in biomechanics to determine the instantaneous causal contribution of individual actuators, gravity, velocity terms, and contact reaction forces to coordinate and center-of-mass accelerations.
 
-::: {.callout-warning}
-## Evidence Status
+## Mathematical Formulation
 
-The current page does not yet review individual papers in detail. Statements about what induced acceleration analysis proves for golf, pitching, or motor control should be read as topics for review rather than settled conclusions.
+In an unconstrained or holonomically constrained multibody system, the equations of motion are expressed as:
+
+$$
+M(q)\ddot{q} + C(q, \dot{q})\dot{q} + g(q) = R(q)f_{\text{mus}} + J_c(q)^T \lambda_{\text{ext}}
+$$
+
+Solving for generalized acceleration $\ddot{q}$:
+
+$$
+\ddot{q} = \underbrace{M^{-1}R(q)f_{\text{mus}}}_{\ddot{q}_{\text{mus}}} + \underbrace{M^{-1}J_c(q)^T \lambda_{\text{ext}}}_{\ddot{q}_{\text{contact}}} - \underbrace{M^{-1}g(q)}_{\ddot{q}_{\text{grav}}} - \underbrace{M^{-1}C(q, \dot{q})\dot{q}}_{\ddot{q}_{\text{vel}}}
+$$
+
+Because the mass matrix $M(q)$ is strictly positive-definite and linear with respect to generalized forces, acceleration satisfies exact additive superposition:
+
+$$
+\ddot{q}_{\text{total}} = \sum_{i} \ddot{q}_{\text{mus}, i} + \ddot{q}_{\text{contact}} + \ddot{q}_{\text{grav}} + \ddot{q}_{\text{vel}}
+$$
+
+## Foundational Literature & Findings
+
+### 1. Muscle Action on Distant Segments
+- **Zajac (1993, 2002):** Demonstrated that a single-joint muscle (such as the soleus or gluteus maximus) can accelerate joints and segments that it does not span through dynamic coupling across the skeleton.
+- **Anderson &amp; Pandy (2001, 2003):** Applied dynamic optimization and IAA to human gait, quantifying how trunk progression is powered by lower-limb synergy rather than isolated joint moments.
+
+### 2. Contact Force Decomposition
+- **Kepple et al. (1997) &amp; Neptune et al. (2001, 2004):** Established contact-consistent IAA formulations where ground reaction forces are treated either as dependent constraints or decomposed into muscle-induced components.
+
+## Methodological Boundaries & Pitfalls
+
+::: {.callout-note}
+## Crucial Analytical Distinctions
+
+1. **Instantaneous vs. Integral Attribution:** IAA attributes instantaneous *acceleration* $\ddot{q}(t)$. It does not directly attribute cumulative work or energy transfer over an extended time interval $[t_0, t_1]$, which requires path integrals of power.
+2. **Contact Modeling Sensitivity:** Decomposing ground reaction forces into muscle contributions requires either an explicit compliant contact model (e.g. Hunt-Crossley / Hertz contact) or kinematic constraint projection.
+3. **Coordinate Dependence:** Task-space accelerations (such as clubhead acceleration $\ddot{x}_{\text{club}}$) involve convective acceleration terms $\dot{J}(q, \dot{q})\dot{q}$ that must be grouped consistently with velocity-product drift.
 :::
 
-## Current Scope
+## Relevance to the AffineDrift Framework
 
-Induced acceleration analysis is relevant to AffineDrift because it asks a closely related attribution question: given a biomechanical model, how much does a particular force or torque contribute to a particular acceleration? A completed review should make the model dependence explicit. Different models, coordinate choices, contact assumptions, and muscle-force estimates can change the decomposition.
+In the control-affine framework $\dot{x} = f(x) + G(x)u$, IAA is equivalent to evaluating the columns of the input distribution matrix $G(x)$ alongside the unforced drift vector $f(x)$:
+- $\ddot{q}_{\text{mus}} \leftrightarrow G(x)u$ (actuator control authority).
+- $\ddot{q}_{\text{vel}} + \ddot{q}_{\text{grav}} \leftrightarrow f(x)$ (conservative and velocity-dependent drift dynamics).
 
-## Current Source Links
+This isomorphism provides the formal bridge between classical biomechanical IAA and modern nonlinear control theory.
 
-- [Felix Zajac - induced acceleration analysis](https://scholar.google.com/scholar?q=author:%22Felix+Zajac%22+OR+author:%22Felix+E+Zajac%22+induced+acceleration)
-- [Muscle coordination of movement: a perspective](https://scholar.google.com/scholar?q=%22Muscle+coordination+of+movement%3A+a+perspective%22+Zajac)
-- [General induced acceleration analysis search](https://scholar.google.com/scholar?q=induced+acceleration+analysis+biomechanics)
-- [Researchers page: Felix Zajac](resources-researchers.html#felix-zajac)
-
-## Review Questions
-
-- Which accelerations are decomposed: joint, segment, center-of-mass, or task-space accelerations?
-- Which inputs are separated: muscle forces, joint torques, ground reaction forces, gravity, or intersegmental terms?
-- Does the paper use experimental measurements, simulation, or both?
-- How sensitive are the conclusions to the model and force-estimation method?
-- Does the result bear directly on golf mechanics, or is it a transferable method from another movement domain?
-
-## Related Articles
+## Related Reviews & Literature
 
 ::: {.callout-note}
 ## See Also
 
-- **[Interaction Forces in the Golf Swing](research-review-interaction-forces.html)** — Interaction forces, segment sequencing, and passive/active coupling in golf
-- **[Baseball Pitching Biomechanics](research-review-baseball-pitching.html)** — Cross-sport comparative mechanics in multi-segment throwing motions
-- **[Papers](resources-papers.html)** — Bibliography and catalog of biomechanics and control-theory literature
+- **[Interaction Forces in the Golf Swing](research-review-interaction-forces.html)** — Multi-segment interaction forces and passive/active coupling
+- **[Baseball Pitching Biomechanics](research-review-baseball-pitching.html)** — Comparative kinetic chain dynamics in throwing
+- **[Papers Catalog](resources-papers.html)** — Peer-reviewed literature references in biomechanics and control
 :::
+

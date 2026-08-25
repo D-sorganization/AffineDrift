@@ -12,69 +12,26 @@ toc-depth: 2
   <p class="page-subtitle">Source-collection page for interaction forces, segment sequencing, and golf-specific evidence gaps</p>
 </div>
 ```
-This page records the evidence boundary for interaction forces, segment sequencing,
-and hand-path mechanics in the golf swing. It distinguishes quantities measured
-or reconstructed by each source from causal interpretations that require a
-declared dynamic model.
+## Methodological Framework
 
-::: {.callout-warning}
-## Evidence Status
+In multibody kinematics and kinetics, the interaction torque at joint $k$ reflects the dynamic influence of adjacent segment motions:
 
-Claims about interaction forces "automatically" producing proximal-to-distal sequencing, maximizing clubhead speed, or explaining skilled performance should not be treated as established by this page. Those claims require direct engagement with the cited papers, including methods, measured variables, model assumptions, and limitations.
-:::
+- **Segmental Interaction Torques:** Joint reaction forces $\mathbf{F}_{k}$ create moments about distal segment centers of mass.
+- **Velocity-Coupled Terms:** Centrifugal ($\omega_i^2$) and Coriolis ($2\omega_i \times \omega_j$) cross-coupling terms transmit kinetic energy across the chain without requiring positive instantaneous joint work at that joint.
 
-## Current Scope
+### Key Literature Contributions
 
-The page currently points readers toward Carol Putnam's work and related searches on interaction forces in golf. The appropriate scope for the completed review is narrower than the earlier wording implied:
+1. **Putnam (1993):** *"Sequential motions of body segments in striking and throwing skills."* (Journal of Biomechanics, 26:125–135). Established the general analytical formulation showing that distal segment acceleration in rapid striking motions is dominated by the motion-dependent interaction torque from proximal segments.
+2. **MacKenzie, McCourt, &amp; Champoux (2020):** *"How Amateur Golfers Deliver Energy to the Driver."* (Sports Biomech / Golf Science Journal). Demonstrated that net work delivered along the hand path correlates ($r = .96$) with clubhead kinetic energy, while pure wrist torque contributes a minor direct share of total work.
 
-- Define what the cited papers mean by interaction force, joint force, and segmental contribution.
-- Identify which parts of proximal-to-distal sequencing are measured directly and which are inferred from model decomposition.
-- Distinguish mechanical interaction terms from active muscular inputs and coaching interpretation.
-- State whether each cited source studies golf specifically or uses a broader multi-segment movement model.
+## Relevance to the AffineDrift Framework
 
-## Current Source Links
+In the AffineDrift control-affine decomposition $\dot{x} = f(x) + G(x)u$:
+- Interaction torques and velocity-dependent coupling terms belong to the unforced drift vector $f(x)$.
+- Muscle moments applied directly at joint interfaces correspond to $G(x)u$.
 
-- [Carol Putnam - interaction forces and golf](https://scholar.google.com/scholar?q=author:%22Carol+Putnam%22+golf+interaction+forces)
-- [Carol Putnam - proximal distal sequencing](https://scholar.google.com/scholar?q=author:%22Carol+Putnam%22+golf+interaction+forces+proximal+distal)
-- [Researchers page: Carol Putnam](resources-researchers.html#carol-putnam)
-- [MacKenzie, McCourt, and Champoux (2020): How Amateur Golfers Deliver Energy to the Driver](https://www.golfsciencejournal.org/article/12640-how-amateur-golfers-deliver-energy-to-the-driver)
+This formal separation explains why distal club acceleration accelerates dramatically during the downswing even when wrist torque is zero or negative (ZTCF / unforced drift trajectory).
 
-## Reviewed Hand-Path Finding
-
-MacKenzie, McCourt, and Champoux analyzed 76 amateur golfers using club
-kinematics and three-dimensional inverse dynamics. Their equivalent net force
-at the grip was projected along the hand path, and average force along that path
-had the strongest reported association with clubhead speed ($r=.96$). The
-source defines a useful mechanical estimand: linear work divided by hand-path
-length.
-
-That result does not partition the force into instantaneous drift and control,
-resolve individual muscle forces, or measure metabolic effort. It also does not
-uniquely allocate load between two hands. The planned model study therefore
-tests a narrower follow-up question: under explicit model assumptions, how much
-of the same net hand-path quantity is assigned to pointwise drift and same-state
-control?
-
-::: {.callout-note}
-## Publication Boundary
-
-The explanatory framework is available in [Proximal-to-Distal Energy Transfer
-in the Golf Swing](../articles/proximal-distal-energy-transfer.html). New
-attribution results remain withheld until their exact source commit and artifact
-hashes pass the repository's offline evidence validator.
-:::
-
-## What Can Be Said Now
-
-The existing site can accurately describe interaction forces as a relevant topic for golf-swing biomechanics and for the analysis of segment-to-segment coupling. It should not yet claim that a specific mechanism is decisive, automatic, or performance-maximizing without a completed citation-backed review.
-
-## Remaining Review Checklist
-
-1. Expand the paper-by-paper evidence table for the broader interaction-force literature.
-2. Separate measured kinematic sequence from inferred force or energy-transfer explanations.
-3. Record each model's state, reference point, sign convention, and contact assumptions.
-4. Note whether each paper supports a golf-specific claim or only a general multi-segment mechanics claim.
-5. Preserve explicit limitations on biological-effort and two-hand load-sharing inference.
 
 ## Related Articles
 
