@@ -186,11 +186,11 @@ def _verify_claim(
     review_due = _date(claim["review_due"], f"claim {claim_id} review date")
     if review_due <= as_of:
         raise CameraRegistryError(f"claim {claim_id} review is due or expired")
+    _verify_claim_state(claim, claim_id, attribute, sources)
     if attribute in PRICE_ATTRIBUTES:
         verify_price_claim(claim, sources)
     elif isinstance(claim["value"], dict):
         raise CameraRegistryError(f"claim {claim_id} non-price value must be scalar")
-    _verify_claim_state(claim, claim_id, attribute, sources)
     return claim_id, subject_id, attribute
 
 
