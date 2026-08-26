@@ -140,9 +140,20 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   `6ddc633de575dbd98fee59a144a33a4c3fa6fd5a` on approved OGLaptop runner 3 in
   Repository_Management run `33008490854` / job `98308354626`, using wrapper
   `c8fbcf6fe90a3c50d6f7813820bf7f1b717a4cd3` and explicit `-n 0`.
-  GREEN passed 20 focused contracts at exact implementation SHA
+  The first GREEN passed 20 focused contracts at exact implementation SHA
   `844a41a0a66c243af5f931c423a11e0ba7a78959` in run `33009325059` / job
   `98311192279` on approved OGLaptop runner 3 with the same fixed serial command.
+  Adversarial review then added mutation coverage at tests-only SHA
+  `1f2227d83e0ab5d338e41c502fafc13857f549ed`: run `33009685827` / job
+  `98312433390` failed exactly three contracts on approved OGLaptop runner 2
+  (v1 region/currency enums, manufacturer commercial-source enforcement, and
+  non-finite amounts). Hardened implementation SHA
+  `86aee145b7a6f7d5035033060c331abf18ea0a07` passed all 22 focused contracts
+  in run `33009974032` / job `98313408001` on approved OGLaptop runner 1. The
+  v1 price vocabulary is intentionally `US|GLOBAL` and `USD|null`; numeric
+  camera-body amounts require finite positive values and a referenced
+  `vendor_product_page`. This is a narrow validated vocabulary, not a claim of
+  general ISO-3166 or ISO-4217 validation.
   This branch intentionally does not absorb #3976's ZED synchronization change:
   merge/rebase #3976 first, retain its 15-microsecond topology statements, and
   advance this branch's spec version from 1.0.226 to 1.0.227 during resolution.
