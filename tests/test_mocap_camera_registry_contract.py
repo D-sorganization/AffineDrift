@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import math
 from collections.abc import Callable
 from datetime import date
 from pathlib import Path
@@ -158,6 +159,12 @@ def test_registry_schema_and_reader_guidance_are_versioned() -> None:
 
     assert schema["properties"]["schema"]["const"] == REGISTRY_SCHEMA_ID
     assert set(schema["$defs"]["price_observation"]["required"]) == PRICE_FIELDS
+    assert schema["$defs"]["price_observation"]["properties"]["region"]["enum"] == [
+        "US",
+        "GLOBAL",
+    ]
+    currency_schema = schema["$defs"]["price_observation"]["properties"]["currency"]
+    assert currency_schema["oneOf"][0]["enum"] == ["USD"]
     assert "Provisional Shop Recommendation" in article
     assert "buy two cameras for the pilot" in article
     assert "Camera Evidence Registry" in spec
@@ -254,6 +261,28 @@ def test_registry_rejects_untyped_price_metadata(
     claim["value"][field] = value
 
     with pytest.raises(CameraRegistryError, match=message):
+        verify_camera_registry(registry)
+
+
+def test_registry_rejects_non_vendor_camera_body_price_source(
+    registry: dict[str, Any],
+) -> None:
+    """Prevent a paper or technical page from masquerading as commercial evidence."""
+
+    claim = next(item for item in registry["claims"] if item["id"] == "flir-camera-body-price")
+    claim["source_ids"] = ["nakano-2020-openpose-multicamera"]
+
+    with pytest.raises(CameraRegistryError, match="vendor product page"):
+        verify_camera_registry(registry)
+
+
+def test_registry_rejects_non_finite_camera_body_amount(registry: dict[str, Any]) -> None:
+    """Prevent Infinity from satisfying the positive numeric amount contract."""
+
+    claim = next(item for item in registry["claims"] if item["id"] == "flir-camera-body-price")
+    claim["value"]["amount"] = math.inf
+
+    with pytest.raises(CameraRegistryError, match="finite"):
         verify_camera_registry(registry)
 
 
