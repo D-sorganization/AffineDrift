@@ -138,6 +138,21 @@ def test_qualified_sanitized_projection_is_deterministic(tmp_path: Path) -> None
         ),
         (
             lambda data: data["artifacts"][0].update(
+                source_url=(
+                    "https://github.com/D-sorganization/UpstreamDrift/blob/"
+                    f"{'1' * 40}/../main/calibration-summary.json"
+                )
+            ),
+            "normalized relative path",
+        ),
+        (
+            lambda data: data["claims"][0].update(
+                artifact_ids=["calibration-summary", "calibration-summary"]
+            ),
+            "repeats an artifact",
+        ),
+        (
+            lambda data: data["artifacts"][0].update(
                 kind="raw_video", path="capture.mp4", media_type="video/mp4"
             ),
             "raw video",

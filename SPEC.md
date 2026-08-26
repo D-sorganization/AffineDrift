@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-25T08:35:00Z
+Last-Updated: 2026-08-25T19:45:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-25T08:35:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.223                                          |
+| **Spec Version**        | 1.0.224                                          |
 | **Last Spec Update**    | 2026-08-25                                       |
 
 ## 2. Purpose & Mission
@@ -93,6 +93,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   pinning qualified aggregate results to immutable private manifests while
   keeping vendor-surrogate and paired-device claims unavailable until their
   leakage-safe and paired-observation gates are satisfied
+- Publish markerless-mocap pedagogy only from sanitized, qualified, immutable
+  Tools or UpstreamDrift evidence projections; keep capture, calibration,
+  reconstruction, private recordings, and scientific qualification outside
+  AffineDrift
 - Publish the Club Fitting Tester technology article (Epic #4549 Child C9) covering forward twist counterfactuals in $se(3)$, flexible shaft forward dynamics (lead/lag, droop, torsion), exact polyhedral mesh inertia tensor integration, and standardized wire schemas (`golf-club/fitting-document/v1`, `swing-sim/delivery-trajectory/v1`, `golf-club/fitting-report/v1`)
 - Publish the Heavy Hit / Multibody Impact Coupling research article (Epic #4562 Child H5) proving the $\tau^2$ decoupling law, acoustic and flexural wave transit horizons, physiological decoupling fraction $\eta_{\text{decouple}} > 0.99$, rigid-shaft upper bound, and runtime-free model interchange from MJCF/URDF/OpenSim
 
@@ -107,6 +111,21 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 ### System Context
 
 AffineDrift operates as a standalone research and education platform within the D-sorganization fleet. It complements but does not depend on QuatEngine (game engine) or UpstreamDrift (real-time physics simulator). The platform produces research content and optimization algorithms that can be consumed by educational institutions, biomechanics researchers, and control theory practitioners. It integrates with GitHub Pages for deployment and GitHub Actions for continuous integration, deployment, and automated quality assurance.
+
+### Markerless Mocap Publication Boundary
+
+AffineDrift owns public pedagogy, sanitized visualization, compatibility
+reporting, and immutable evidence projection for the cross-repository markerless
+mocap program. It does not own or import camera capture, synchronization,
+calibration, pose inference, reconstruction, or session orchestration runtime.
+
+The versioned `affinedrift/mocap-publication-projection/v1` contract accepts only
+qualified Tools or UpstreamDrift releases pinned by commit and SHA-256. The
+executable verifier rejects moving branch links; raw video, PII, secrets, and
+incompatible licenses; unqualified live-lab or synthetic claims; and changed or
+missing artifacts. The normative rationale is ADR 0001. Public C3D examples must
+be sanitized and pass the same privacy, security, consent, licensing, provenance,
+and qualification gates.
 
 ### Module Map
 
@@ -601,6 +620,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-25 | 1.0.224 | feat(mocap, #3954): Established AffineDrift's standalone publication boundary for markerless mocap with a versioned manifest schema, deterministic projection verifier, immutable Tools/UpstreamDrift source pins, artifact digest locks, explicit evidence classes, and fail-closed privacy, security, licensing, live-lab, and synthetic-evidence gates.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2026-08-25 | 1.0.223 | docs(monograph, #3951): Pinned the protected proximal--distal projection to UpstreamDrift squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf` with 35 technical chapters, 244 pages, and 254 governed files (208 source-identical, 21 flattened, 12 immutable-link rewrites, and 13 declared adaptations). Added coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual terms; endpoint virtual-work mappings; signed and absolute hand-path impulse; power and work attribution; and a bounded 135-program optimization study with 91 qualified programs. Reconciled merge governance with the live zero-approval ruleset so required CI, rather than a named maintainer review, is the standing release gate. Retains coordinate, model, provenance, human-validation, and protected-publication boundaries.                                                                                                                                                                                                                                                                                          |
 | 2026-08-25 | 1.0.221 | fix(publication): Reconciled the proximal--distal companion PDF contract and dependency specification with the governed `pypdf==6.16.1` Dependabot update so clean environments retain executable page, text, outline, and URI checks without downgrading the protected dependency pin.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | 2026-08-20 | 1.0.212 | docs(launch-monitor): Pinned the canonical source-backed strokes-gained contract, its PyQt/React Tools integration, and the approved launch-monitor visual baseline by immutable merge and PNG digest. Preserved the older generic-v2 and grouped-estimator authorities by role while clarifying that no expected-strokes baseline is bundled, provenance declarations are not endorsement, the distance/target metric remains a non-SG proxy, and visual approval establishes presentation/accessibility rather than statistical or baseline validity.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
