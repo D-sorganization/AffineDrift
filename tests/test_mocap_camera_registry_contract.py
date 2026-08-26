@@ -329,7 +329,7 @@ def test_reader_does_not_rank_candidates_by_camera_body_price() -> None:
     assert "does not authorize procurement" in article
 
 
-def test_registry_types_distinct_pilot_reference_and_challenger_topologies(
+def test_registry_types_distinct_pilot_reference_and_challenger_topology_records(
     registry: dict[str, Any],
 ) -> None:
     """Keep the two-camera pilot distinct from both distributed-rig hypotheses."""
