@@ -194,6 +194,12 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   because 29.3308416 Gbit/s did not equal 29.3289984 Gbit/s. The hardened
   contract now uses exact decimal arithmetic for every topology record and
   requires the article's formatted figures to match the registry.
+  Corrected implementation `4834db6ca00fcb54cf444c2108187d0e817d1587`
+  (tree `599d5acf3b72207857b814c65347ff00a42518fb`) passed all 33 contracts in
+  the bounded camera-registry module in run `33012395452` / job `98321773052`
+  on approved OGLaptop runner 2. Final wrapper
+  `18387afee869529236aa027ba59a27353ee9f628` used exact target checkout and
+  `python -m pytest -q -n 0 tests/test_mocap_camera_registry_contract.py`.
   FLIR cable distance and exact OS matrix, Allied validated cable/network
   design, LUCID Arena redistribution terms, and every complete quote remain
   unavailable. All raw bandwidth/storage values are arithmetic screens, not
