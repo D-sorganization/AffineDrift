@@ -111,6 +111,11 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   owns runtime orchestration and qualification. Use ADR 0001 and
   `affinedrift/mocap-publication-projection/v1`; never publish raw video, PII,
   secrets, AGPL components, moving links, or unqualified lab/model claims.
+  Local branch `feat/3954-mocap-authority-projection` is not pushed; it passed
+  16 focused tests, the 3,248-pass full lane, the 75.3% coverage gate, and an
+  isolated Quarto render. No protected mocap release or physical-lab
+  qualification exists yet; next pin the merged Tools #4706 and UpstreamDrift
+  #9063 authorities.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
