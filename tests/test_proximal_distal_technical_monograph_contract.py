@@ -19,19 +19,19 @@ BIB_FILE = MONOGRAPH_DIR / "references.bib"
 SOURCE_MANIFEST = MONOGRAPH_DIR / "source_manifest.json"
 MONOGRAPH_CSS = MONOGRAPH_DIR / "monograph.css"
 
-EXPECTED_CHAPTER_COUNT = 34
+EXPECTED_CHAPTER_COUNT = 35
 EXPECTED_MIN_PAGE_COUNT = 181
 EXPECTED_MIN_WORD_COUNT = 69_000
-EXPECTED_SOURCE_COMMIT = "6e28baef54a04da714f1120c71c49058d7d7ebee"
+EXPECTED_SOURCE_COMMIT = "f01d1981964f232b2c58f3b9e6fa64b35f41df67"
 EXPECTED_RELEASE_MANIFEST_SHA256 = (
-    "fcb8453af9e55bc0ad1caffe73d528a301beab085d4652eac608101086231a30"
+    "e90a7a48d6f29afd8beda4569f54b2f877962d05dd77314d06a0e2ee77b8a524"
 )
-EXPECTED_CLAIM_REGISTRY_SHA256 = "3e502309d5dfda76e4133b5b144fd971ff724da0ee91c221a7d6aa2cd6dbe313"
-EXPECTED_PDF_SHA256 = "a46ec01e6085eda7a80533ab59137b116b6bd3d0f548def792cabf3212137482"
+EXPECTED_CLAIM_REGISTRY_SHA256 = "ec4e219fec599383780e1afc5d1592fa1437a83a0e5f5bafbb212b9ce829d3cb"
+EXPECTED_PDF_SHA256 = "8d3ad31bb33ea988ddc8942802bc806c17f956689f6d476ffd774d40b4bd7e30"
 
 
 def test_technical_monograph_files_exist_and_are_complete() -> None:
-    """Verify that the master QMD, PDF, bibliography, and all 34 chapters exist."""
+    """Verify that the master QMD, PDF, bibliography, and all 35 chapters exist."""
     assert INDEX_QMD.is_file(), f"{INDEX_QMD} is missing"
     assert PDF_FILE.is_file(), f"{PDF_FILE} is missing"
     assert PDF_FILE.stat().st_size > 1_000_000, "PDF file is unexpectedly small"
@@ -44,7 +44,7 @@ def test_technical_monograph_files_exist_and_are_complete() -> None:
 
 
 def test_technical_monograph_index_includes_all_chapters() -> None:
-    """Verify that index.qmd contains Quarto includes for all 34 chapters."""
+    """Verify that index.qmd contains Quarto includes for all 35 chapters."""
     index_text = INDEX_QMD.read_text(encoding="utf-8")
     for chapter in CHAPTERS_DIR.glob("*.qmd"):
         include_tag = f"include chapters/{chapter.name}"
@@ -79,7 +79,7 @@ def test_technical_monograph_declares_immutable_scientific_source() -> None:
     assert manifest["source"]["claim_registry"] == {
         "path": "docs/research/proximal_distal_energy_transfer/data/claim_audit_registry.json",
         "sha256": EXPECTED_CLAIM_REGISTRY_SHA256,
-        "bytes": 1_266_169,
+        "bytes": 1_502_777,
     }
     assert manifest["source"]["pdf_sha256"] == EXPECTED_PDF_SHA256
     assert manifest["publication"]["repository"] == "D-sorganization/AffineDrift"

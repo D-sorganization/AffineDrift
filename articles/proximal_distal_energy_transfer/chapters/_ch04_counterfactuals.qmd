@@ -129,7 +129,7 @@ matters for interpretation.
 
 **Pointwise (instantaneous) counterfactuals.** The engine-agnostic
 Python implementation
-([`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/shared/python/simulation_backends/ztcf_zvcf.py))
+([`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/shared/python/simulation_backends/ztcf_zvcf.py))
 evaluates @eq-ztcf and @eq-zvcf at each sample of an already-measured
 trajectory — explicitly *not* a forward-integrated rollout. Each sample
 answers a local "what if"; this is the right tool for drift/control
@@ -137,21 +137,21 @@ answers a local "what if"; this is the right tool for drift/control
 @sec-results.
 
 **Legacy rerun-based pointwise sampler.** The original MATLAB/Simscape pipeline
-([`run_ztcf_simulation.m`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/simulation/run_ztcf_simulation.m))
+([`run_ztcf_simulation.m`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/simulation/run_ztcf_simulation.m))
 reruns the full model with a torque "killswitch" applied at time $t$ for a
 sweep of $t$ values, but
-[`run_single_ztcf_point.m`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/simulation/run_single_ztcf_point.m)
+[`run_single_ztcf_point.m`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/simulation/run_single_ztcf_point.m)
 retains only the first sample at killswitch activation. It therefore samples a
 state-matched instantaneous torque-removal response; it does **not** tabulate a
 future reached after evolving with torque off. The pipeline forms the
 difference table
 $\mathrm{DELTA} = \mathrm{BASE} - \mathrm{ZTCF}$
-([`process_data_tables.m`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/processing/process_data_tables.m)),
+([`process_data_tables.m`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/processing/process_data_tables.m)),
 which is an operational BASE-minus-sampled-response residual, not an isolated
 muscle or actuator contribution. A companion ZVCF model applies the measured
 torques to the
 same pose with velocities zeroed
-([`SCRIPT_ZVCF_GENERATOR.m`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab/Model%20Output/Scripts/SCRIPT_ZVCF_GENERATOR.m));
+([`SCRIPT_ZVCF_GENERATOR.m`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab/Model%20Output/Scripts/SCRIPT_ZVCF_GENERATOR.m));
 the ZVCF model may be run without gravity under its documented convention so
 gravity is not counted in both operands. This convention must be checked
 against the model configuration; the script's statement that the complete
@@ -162,8 +162,8 @@ the trajectory level because $M$ and $b$ evolve differently once their states
 diverge. The MATLAB pipeline additionally computes the
 linear work $\int \mathbf F\cdot\mathbf v\,dt$, angular work
 $\int \boldsymbol\tau\cdot\boldsymbol\omega\,dt$, and summed work and power
-([`calculate_work_impulse.m`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/processing/calculate_work_impulse.m),
-[`calculate_total_work_power.m`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/processing/calculate_total_work_power.m))
+([`calculate_work_impulse.m`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/processing/calculate_work_impulse.m),
+[`calculate_total_work_power.m`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/processing/calculate_total_work_power.m))
 for the stored tables. However, `process_data_tables.m` subtracts all BASE and
 ZTCF columns before `calculate_work_impulse.m` dots the resulting DELTA force
 with the resulting DELTA velocity. In general,
@@ -176,7 +176,7 @@ pathway partition. Valid pointwise contribution power must project force
 components onto one common achieved interface velocity, as the Python evidence
 does. The repository also contains a kinematic-sequence plot computed
 separately for the stored BASE, ZTCF, and DELTA tables
-([`SCRIPT_324_PLOT_ZTCF_KinematicSequence.m`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab/Scripts/_ZTCF%20Scripts/SCRIPT_324_PLOT_ZTCF_KinematicSequence.m)).
+([`SCRIPT_324_PLOT_ZTCF_KinematicSequence.m`](https://github.com/D-sorganization/UpstreamDrift/blob/f01d1981964f232b2c58f3b9e6fa64b35f41df67/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab/Scripts/_ZTCF%20Scripts/SCRIPT_324_PLOT_ZTCF_KinematicSequence.m)).
 
 ## The Counterfactual Form of the Timing Hypothesis {#sec-hypothesis}
 

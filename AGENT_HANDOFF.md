@@ -79,12 +79,12 @@ changes were made in that session — the deliverable is the issue set below.
 AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Geometry of Motion_, _Volumes I–IV_), articles, and scientific monographs. UpstreamDrift remains the computational, claim, and evidence authority for the proximal-to-distal program:
 
 - **Published Technical Monograph**: [`articles/proximal_distal_energy_transfer/index.qmd`](articles/proximal_distal_energy_transfer/index.qmd)
-  - 34 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, exact interaction-force decompositions, multi-station Coulomb friction, and Latin Hypercube parameter sweeps.
-  - Published technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (231 pages, >= 69,000 words).
+  - 35 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual force sources, endpoint virtual-work mappings, multi-station Coulomb friction, and bounded optimization studies.
+  - Published technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (244 pages, >= 69,000 words).
   - Executable companion and monograph PDF contracts use the exact governed
     `pypdf==6.16.1` root dependency pin.
-  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins UpstreamDrift protected squash `6e28baef54a04da714f1120c71c49058d7d7ebee`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
-  - `python scripts/verify_proximal_distal_projection.py` independently downloads or reads that authority, verifies 205 byte-identical source files, 21 uniquely mapped flattened figures, 12 normalized immutable-link rewrites, 12 explicitly hashed publication adaptations, the claim registry, and the PDF. CI also pins the complete 250-file local projection tree. Unreferenced SVG derivatives absent from the protected source manifest were removed rather than promoted.
+  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) currently pins the exact UpstreamDrift #9062 candidate head `f01d1981964f232b2c58f3b9e6fa64b35f41df67`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. This candidate pin must advance to #9062's protected squash before publication merge. Digest equality establishes provenance, not independent scientific confirmation.
+  - `python scripts/verify_proximal_distal_projection.py` independently downloads or reads that authority, verifies 208 byte-identical source files, 21 uniquely mapped flattened figures, 12 normalized immutable-link rewrites, 13 explicitly hashed publication adaptations, the claim registry, and the PDF. CI also pins the complete 254-file local projection tree. Unreferenced SVG derivatives absent from the source manifest are excluded rather than promoted.
   - The pinned profile is computational-release ready. It is not archival/PID ready: the PDF is untagged and retains Type 3 and unembedded font resources.
   - Dual web & PDF rendering registered in `_quarto.yml` (resources, `books-nav` sidebar, and `Read` navbar).
 - **Lay Companion Book**: [`articles/proximal-distal-a-journey-through-the-swing.qmd`](articles/proximal-distal-a-journey-through-the-swing.qmd) (30 chapters, PDF).
@@ -99,8 +99,9 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 
 ## Research Evidence & UpstreamDrift Alignment
 
-- Source release is pinned to UpstreamDrift protected squash `6e28baef54a04da714f1120c71c49058d7d7ebee`. #8751/#8752 remain open against their unchanged acceptance criteria.
-- Source release: 571 artifacts, 295 atomic claims, 2,100 evidence references, 301 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
+- The candidate source release is pinned to UpstreamDrift #9062 head `f01d1981964f232b2c58f3b9e6fa64b35f41df67`; AffineDrift #3951 must not merge until that pin is replaced by #9062's protected squash.
+- Candidate source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
+- The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
 - #3882's immutable publication-projection, portable-link, generated-metadata, and deployment contract is enforced by the manifest, verifier, and publication tests. External archival/PID and human-validation gates remain separate.
 - **Critical Adverse Results**:
   - Ground screen: 0/384 coupled--fixed cells admitted under registered 5% match (ground damping asymmetry). Post-hoc screen admits 60 cells with mixed signs.
