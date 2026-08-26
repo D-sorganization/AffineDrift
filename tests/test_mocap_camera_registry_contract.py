@@ -7,6 +7,7 @@ import json
 import math
 from collections.abc import Callable
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -440,16 +441,14 @@ def test_topology_payload_and_storage_screens_are_reproducible(
 
     claims = {claim["id"]: claim for claim in registry["claims"]}
     modes = {
-        "pilot_role": (1440, 1080, 226.0),
-        "reference_topology_role": (1632, 1248, 225.0),
-        "distributed_challenger_role": (1440, 1080, 166.3),
+        "pilot_role": (1440, 1080, Decimal("226")),
+        "reference_topology_role": (1632, 1248, Decimal("225")),
+        "distributed_challenger_role": (1440, 1080, Decimal("166.3")),
     }
     article = ARTICLE_PATH.read_text(encoding="utf-8")
     for evaluation in registry["topology_evaluations"]:
         width, height, frame_rate = modes[evaluation["role"]]
-        bits_per_second = (
-            evaluation["camera_count"] * width * height * frame_rate * 8
-        )
+        bits_per_second = Decimal(evaluation["camera_count"] * width * height * 8) * frame_rate
         topology_claims = [claims[claim_id] for claim_id in evaluation["claim_ids"]]
         bandwidth = next(
             claim for claim in topology_claims if claim["attribute"] == "aggregate_bandwidth"
@@ -457,8 +456,8 @@ def test_topology_payload_and_storage_screens_are_reproducible(
         storage = next(
             claim for claim in topology_claims if claim["attribute"] == "storage_budget"
         )
-        assert bandwidth["value"] == pytest.approx(bits_per_second / 1e9)
-        assert storage["value"] == pytest.approx(bits_per_second / 8e6)
+        assert Decimal(str(bandwidth["value"])) == bits_per_second / Decimal("1e9")
+        assert Decimal(str(storage["value"])) == bits_per_second / Decimal("8e6")
         assert bandwidth["status"] == "provisional"
         assert storage["status"] == "provisional"
         assert f'{bandwidth["value"]:.3f} Gbit/s' in article

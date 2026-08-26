@@ -188,8 +188,12 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   run `33012057652` / job `98320585616` on approved OGLaptop runner 2 failed
   because 5.6245248 Gbit/s did not equal the deterministic 5.6236032 Gbit/s
   result. That run is retained as product RED evidence; checkout and setup
-  passed. The corrected contract recomputes every payload/storage screen and
-  also requires the article's formatted figures to match the registry.
+  passed. Corrected SHA `d8b6a1cc0d671fe1c8abd912a13975f1a07d9637`
+  then exposed the same defect class in the Allied eight-camera screen:
+  run `33012234104` / job `98321213736` on approved OGLaptop runner 4 failed
+  because 29.3308416 Gbit/s did not equal 29.3289984 Gbit/s. The hardened
+  contract now uses exact decimal arithmetic for every topology record and
+  requires the article's formatted figures to match the registry.
   FLIR cable distance and exact OS matrix, Allied validated cable/network
   design, LUCID Arena redistribution terms, and every complete quote remain
   unavailable. All raw bandwidth/storage values are arithmetic screens, not
