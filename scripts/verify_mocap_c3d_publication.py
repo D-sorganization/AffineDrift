@@ -32,6 +32,7 @@ from scripts.mocap_c3d_publication_metadata import (
     verify_sources,
 )
 from scripts.mocap_c3d_publication_sidecar import load_and_verify_sidecar
+
 TOP_LEVEL_KEYS = {
     "schema",
     "fixture_id",
