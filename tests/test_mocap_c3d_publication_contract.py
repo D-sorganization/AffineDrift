@@ -84,9 +84,7 @@ Mutation = Callable[[dict[str, Any]], None]
             "18-event header limit",
         ),
         (
-            lambda data: data["c3d_projection"]["points"][0].update(
-                contributor_mask=255
-            ),
+            lambda data: data["c3d_projection"]["points"][0].update(contributor_mask=255),
             "seven-bit contributor mask",
         ),
     ],

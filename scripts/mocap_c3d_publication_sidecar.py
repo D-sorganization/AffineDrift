@@ -71,14 +71,11 @@ def _verify_record(
         )
     contributors = canonical[key][1]
     overflow = any(
-        cameras.index(camera_id) >= STANDARD_CAMERA_CAPACITY
-        for camera_id in contributors
+        cameras.index(camera_id) >= STANDARD_CAMERA_CAPACITY for camera_id in contributors
     )
     expected_state = "unavailable_overflow" if overflow else "representable"
     expected_mask = (
-        None
-        if overflow
-        else sum(1 << cameras.index(camera_id) for camera_id in contributors)
+        None if overflow else sum(1 << cameras.index(camera_id) for camera_id in contributors)
     )
     if record["standard_mask_state"] != expected_state:
         raise MocapC3DPublicationError("sidecar standard mask disposition differs")
@@ -118,9 +115,7 @@ def load_and_verify_sidecar(
         )
     records = array(checked["contributors"], "sidecar contributors")
     if len(records) != len(canonical):
-        raise MocapC3DPublicationError(
-            "sidecar must bind every canonical contributor record"
-        )
+        raise MocapC3DPublicationError("sidecar must bind every canonical contributor record")
     keys = [_verify_record(record, canonical, cameras) for record in records]
     if len(keys) != len(set(keys)) or set(keys) != set(canonical):
         raise MocapC3DPublicationError("sidecar contributor keys must be exact and unique")

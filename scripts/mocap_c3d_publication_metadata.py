@@ -65,10 +65,7 @@ def verify_coordinate_frame(value: object) -> None:
     _text(frame["frame_id"], "coordinate frame id")
     if frame["handedness"] not in {"right-handed", "left-handed"}:
         raise MocapC3DPublicationError("coordinate frame handedness is unsupported")
-    axes = [
-        _text(frame[name], f"coordinate frame {name}")
-        for name in ("x_axis", "y_axis", "z_axis")
-    ]
+    axes = [_text(frame[name], f"coordinate frame {name}") for name in ("x_axis", "y_axis", "z_axis")]
     if len(set(axes)) != 3:
         raise MocapC3DPublicationError("coordinate axes must have distinct meanings")
     if frame["length_unit"] != "m":

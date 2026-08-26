@@ -334,16 +334,13 @@ def _verify_projected_point(
         raise MocapC3DPublicationError("projected point has no canonical source")
     source, contributors = canonical[key]
     expected_xyz = [
-        _number(axis, "source coordinate") * 1000
-        for axis in cast(list[object], source["xyz_m"])
+        _number(axis, "source coordinate") * 1000 for axis in cast(list[object], source["xyz_m"])
     ]
     projected_xyz = [
-        _number(axis, "projected coordinate")
-        for axis in _array(point["xyz_mm"], "projected xyz")
+        _number(axis, "projected coordinate") for axis in _array(point["xyz_mm"], "projected xyz")
     ]
     if len(projected_xyz) != 3 or any(
-        not math.isclose(a, b)
-        for a, b in zip(projected_xyz, expected_xyz, strict=True)
+        not math.isclose(a, b) for a, b in zip(projected_xyz, expected_xyz, strict=True)
     ):
         raise MocapC3DPublicationError("projected coordinates must convert metres to millimetres")
     if not math.isclose(
@@ -353,8 +350,7 @@ def _verify_projected_point(
         raise MocapC3DPublicationError("projection must preserve residual semantics")
     mask = point["contributor_mask"]
     overflow = any(
-        cameras.index(camera_id) >= STANDARD_CAMERA_CAPACITY
-        for camera_id in contributors
+        cameras.index(camera_id) >= STANDARD_CAMERA_CAPACITY for camera_id in contributors
     )
     if overflow:
         if mask is not None:
@@ -407,8 +403,15 @@ def verify_publication_package(
     m1 = cast(dict[str, object], dependencies["tools_m1"])
     m9 = cast(dict[str, object], dependencies["tools_m9"])
     return PublicationSummary(
-        fixture_id, len(cameras), frame_count, len(canonical), sample_count, loss_count,
-        overflow_count, representable_mask, cast(str | None, m1["protected_revision"]),
+        fixture_id,
+        len(cameras),
+        frame_count,
+        len(canonical),
+        sample_count,
+        loss_count,
+        overflow_count,
+        representable_mask,
+        cast(str | None, m1["protected_revision"]),
         cast(str | None, m9["protected_revision"]),
     )
 
