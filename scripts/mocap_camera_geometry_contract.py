@@ -5,98 +5,27 @@ from __future__ import annotations
 
 import math
 import re
-from dataclasses import dataclass
-from typing import cast
 
-from scripts.mocap_camera_geometry_math import (
-    distort_brown_conrady,
-    euclidean_distance,
-    pixel_from_normalized,
-    project_point,
-    rectified_stereo_depth_uncertainty,
+from scripts.mocap_camera_geometry_math import project_point
+from scripts.mocap_camera_geometry_probes import verify_probes
+from scripts.mocap_camera_geometry_types import (
+    CameraGeometryFixtureError,
+    CameraGeometrySummary,
+)
+from scripts.mocap_camera_geometry_validation import (
+    finite_number as _number,
+    matrix3 as _matrix3,
+    nonempty_array as _array,
+    nonempty_text as _text,
+    numeric_vector as _vector,
+    object_with_keys as _object,
 )
 
 GEOMETRY_SCHEMA_ID = "affinedrift/mocap-camera-geometry-fixture/v1"
 DEPENDENCY_IDS = frozenset({"tools_m4_intrinsics", "tools_m5_extrinsics"})
-OBSERVABILITY_IDS = frozenset(
-    {
-        "bundle_adjustment_gauge",
-        "dlt_coplanar",
-        "intrinsic_planar_target",
-        "pnp_planar",
-        "single_view_depth",
-        "unsynchronized_multiview",
-    }
-)
 REVISION = re.compile(r"[0-9a-f]{40}")
 DIGEST = re.compile(r"[0-9a-f]{64}")
 PIXEL_TOLERANCE = 1e-9
-
-
-class CameraGeometryFixtureError(RuntimeError):
-    """Raised when camera-geometry pedagogy violates its fail-closed contract."""
-
-
-@dataclass(frozen=True)
-class CameraGeometrySummary:
-    """Deterministic evidence from one accepted synthetic fixture."""
-
-    camera_count: int
-    point_count: int
-    observation_count: int
-    dependency_count: int
-    available_dependency_count: int
-    calibration_authority_available: bool
-    maximum_projection_error_px: float
-    distortion_probe_pixel: tuple[float, float]
-    stereo_depth_m: float
-    stereo_depth_sigma_m: float
-
-
-def _object(value: object, label: str, keys: set[str]) -> dict[str, object]:
-    if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
-        raise CameraGeometryFixtureError(f"{label} must be an object")
-    result = cast(dict[str, object], value)
-    actual = set(result)
-    if actual != keys:
-        raise CameraGeometryFixtureError(
-            f"{label} fields differ: missing={sorted(keys - actual)}, "
-            f"extra={sorted(actual - keys)}"
-        )
-    return result
-
-
-def _array(value: object, label: str, length: int | None = None) -> list[object]:
-    if not isinstance(value, list) or not value:
-        raise CameraGeometryFixtureError(f"{label} must be a non-empty array")
-    result = cast(list[object], value)
-    if length is not None and len(result) != length:
-        raise CameraGeometryFixtureError(f"{label} must contain {length} values")
-    return result
-
-
-def _text(value: object, label: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise CameraGeometryFixtureError(f"{label} must be a non-empty string")
-    return value
-
-
-def _number(value: object, label: str, *, positive: bool = False) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
-        raise CameraGeometryFixtureError(f"{label} must be finite")
-    result = float(value)
-    if positive and result <= 0.0:
-        raise CameraGeometryFixtureError(f"{label} must be positive")
-    return result
-
-
-def _vector(value: object, label: str, length: int) -> tuple[float, ...]:
-    return tuple(_number(item, f"{label} item") for item in _array(value, label, length))
-
-
-def _matrix3(value: object, label: str) -> tuple[tuple[float, ...], ...]:
-    rows = _array(value, label, 3)
-    return tuple(_vector(row, f"{label} row", 3) for row in rows)
 
 
 def _verify_authority(value: object) -> None:
@@ -234,7 +163,9 @@ def _verify_observations(
     maximum_error = 0.0
     pairs: set[tuple[str, str]] = set()
     for index, item in enumerate(_array(value, "observations")):
-        observation = _object(item, f"observation {index}", {"camera_id", "point_id", "expected_pixel"})
+        observation = _object(
+            item, f"observation {index}", {"camera_id", "point_id", "expected_pixel"}
+        )
         camera_id = _text(observation["camera_id"], "observation camera id")
         point_id = _text(observation["point_id"], "observation point id")
         if camera_id not in cameras or point_id not in points:
@@ -252,111 +183,24 @@ def _verify_observations(
     return len(pairs), maximum_error
 
 
-def _verify_distortion_probe(value: object) -> tuple[float, float]:
-    probe = _object(value, "distortion probe", {"normalized_point", "K", "coefficients", "expected_pixel"})
-    normalized_raw = _vector(probe["normalized_point"], "distortion normalized point", 2)
-    normalized = (normalized_raw[0], normalized_raw[1])
-    distorted = distort_brown_conrady(
-        normalized, _vector(probe["coefficients"], "distortion coefficients", 5)
-    )
-    pixel = pixel_from_normalized(distorted, _matrix3(probe["K"], "distortion K"))
-    expected = _vector(probe["expected_pixel"], "distortion expected pixel", 2)
-    if math.hypot(pixel[0] - expected[0], pixel[1] - expected[1]) > PIXEL_TOLERANCE:
-        raise CameraGeometryFixtureError("distortion probe mismatch")
-    return pixel
-
-
-def _verify_stereo_probe(value: object) -> tuple[float, float]:
-    probe = _object(
-        value,
-        "stereo uncertainty probe",
-        {"focal_length_px", "baseline_m", "disparity_px", "pixel_sigma_px", "expected_depth_m", "expected_depth_sigma_m"},
-    )
-    focal = _number(probe["focal_length_px"], "stereo focal length", positive=True)
-    baseline = _number(probe["baseline_m"], "stereo baseline", positive=True)
-    disparity = _number(probe["disparity_px"], "stereo disparity", positive=True)
-    pixel_sigma = _number(probe["pixel_sigma_px"], "pixel sigma", positive=True)
-    depth, sigma = rectified_stereo_depth_uncertainty(focal, baseline, disparity, pixel_sigma)
-    expected_depth = _number(probe["expected_depth_m"], "expected depth", positive=True)
-    expected_sigma = _number(probe["expected_depth_sigma_m"], "expected depth sigma", positive=True)
-    if not math.isclose(depth, expected_depth, abs_tol=1e-12):
-        raise CameraGeometryFixtureError("stereo depth mismatch")
-    if not math.isclose(sigma, expected_sigma, rel_tol=1e-12):
-        raise CameraGeometryFixtureError("stereo uncertainty mismatch")
-    return depth, sigma
-
-
-def _verify_synchronization_probe(value: object) -> None:
-    probe = _object(value, "synchronization probe", {"speed_m_s", "time_skew_s", "maximum_skew_s", "expected_spatial_m", "action"})
-    speed = _number(probe["speed_m_s"], "synchronization speed", positive=True)
-    skew = _number(probe["time_skew_s"], "time skew", positive=True)
-    maximum = _number(probe["maximum_skew_s"], "maximum skew", positive=True)
-    expected = _number(probe["expected_spatial_m"], "expected spatial offset", positive=True)
-    if not math.isclose(speed * skew, expected, abs_tol=1e-12):
-        raise CameraGeometryFixtureError("synchronization spatial-offset mismatch")
-    if skew > maximum and probe["action"] != "reject":
-        raise CameraGeometryFixtureError("unsynchronized observations must be rejected")
-
-
-def _verify_movement_probe(value: object) -> None:
-    probe = _object(
-        value,
-        "movement probe",
-        {"baseline_center_m", "observed_center_m", "translation_limit_m", "rotation_delta_deg", "rotation_limit_deg", "expected_state", "action"},
-    )
-    baseline = _vector(probe["baseline_center_m"], "baseline centre", 3)
-    observed = _vector(probe["observed_center_m"], "observed centre", 3)
-    translation = euclidean_distance(baseline, observed)
-    moved = translation > _number(probe["translation_limit_m"], "translation limit", positive=True)
-    moved |= _number(probe["rotation_delta_deg"], "rotation delta") > _number(
-        probe["rotation_limit_deg"], "rotation limit", positive=True
-    )
-    state = "invalidated" if moved else "valid"
-    if probe["expected_state"] != state:
-        raise CameraGeometryFixtureError("movement state mismatch")
-    if moved and probe["action"] != "reject_and_recalibrate":
-        raise CameraGeometryFixtureError("camera movement must require rejection and recalibration")
-
-
-def _verify_observability(value: object) -> None:
-    if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
-        raise CameraGeometryFixtureError("observability probes must be an object")
-    probes = cast(dict[str, object], value)
-    if set(probes) != OBSERVABILITY_IDS:
-        raise CameraGeometryFixtureError("observability probes must be exactly the governed cases")
-    for probe_id, item in probes.items():
-        probe = _object(item, f"observability probe {probe_id}", {"status", "reason"})
-        if _text(probe["status"], f"observability probe {probe_id} status") not in {
-            "ambiguous",
-            "model_conditioned",
-            "rejected",
-            "unavailable",
-        }:
-            raise CameraGeometryFixtureError(f"observability probe {probe_id} status is unsupported")
-        _text(probe["reason"], f"observability probe {probe_id} reason")
-
-
-def _verify_probes(value: object) -> tuple[tuple[float, float], float, float]:
-    probes = _object(
-        value,
-        "probes",
-        {"distortion", "stereo_uncertainty", "synchronization", "movement", "observability"},
-    )
-    pixel = _verify_distortion_probe(probes["distortion"])
-    depth, sigma = _verify_stereo_probe(probes["stereo_uncertainty"])
-    _verify_synchronization_probe(probes["synchronization"])
-    _verify_movement_probe(probes["movement"])
-    _verify_observability(probes["observability"])
-    return pixel, depth, sigma
-
-
 def verify_camera_geometry_fixture(value: object) -> CameraGeometrySummary:
     """Validate one synthetic teaching fixture without claiming solver authority."""
 
     fixture = _object(
         value,
         "fixture",
-        {"schema", "fixture_id", "classification", "authority", "dependencies", "coordinate_convention", "cameras", "world_points", "observations", "probes"},
+        {
+            "schema",
+            "fixture_id",
+            "classification",
+            "authority",
+            "dependencies",
+            "coordinate_convention",
+            "cameras",
+            "world_points",
+            "observations",
+            "probes",
+        },
     )
     if _text(fixture["schema"], "schema") != GEOMETRY_SCHEMA_ID:
         raise CameraGeometryFixtureError(f"schema must be {GEOMETRY_SCHEMA_ID}")
@@ -371,7 +215,7 @@ def verify_camera_geometry_fixture(value: object) -> CameraGeometrySummary:
     observation_count, maximum_error = _verify_observations(
         fixture["observations"], cameras, points
     )
-    pixel, depth, sigma = _verify_probes(fixture["probes"])
+    pixel, depth, sigma = verify_probes(fixture["probes"])
     return CameraGeometrySummary(
         len(cameras),
         len(points),

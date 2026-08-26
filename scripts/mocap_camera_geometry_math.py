@@ -64,12 +64,7 @@ def rectified_stereo_depth_uncertainty(
     """Return depth and first-order sigma for independent equal pixel errors."""
 
     depth = focal_length_px * baseline_m / disparity_px
-    sigma = (
-        math.sqrt(2.0)
-        * independent_pixel_sigma_px
-        * depth**2
-        / (focal_length_px * baseline_m)
-    )
+    sigma = math.sqrt(2.0) * independent_pixel_sigma_px * depth**2 / (focal_length_px * baseline_m)
     return depth, sigma
 
 
