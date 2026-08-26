@@ -69,6 +69,33 @@ PRICE_SOURCE_HOSTS = {
     "zed-camera-body-base-price": "store.stereolabs.com",
     "zed-camera-body-wide-price": "store.stereolabs.com",
 }
+TOPOLOGY_FIELDS = {
+    "id",
+    "subject_id",
+    "manufacturer",
+    "model",
+    "role",
+    "camera_count",
+    "qualification_state",
+    "claim_ids",
+    "runtime_authority",
+    "procurement_authority",
+    "limitations",
+}
+TOPOLOGY_ATTRIBUTES = {
+    "transport",
+    "synchronization",
+    "power",
+    "cable_distance",
+    "host_controller_topology",
+    "sdk_gentl",
+    "aggregate_bandwidth",
+    "storage_budget",
+    "thermals",
+    "licensing",
+    "operating_systems",
+    "quote_scope",
+}
 
 
 @pytest.fixture
@@ -300,3 +327,47 @@ def test_reader_does_not_rank_candidates_by_camera_body_price() -> None:
     assert "do not rank the candidates" in normalized_article
     assert "Complete qualified-topology cost remains unavailable" in article
     assert "does not authorize procurement" in article
+
+
+def test_registry_types_distinct_pilot_reference_and_challenger_topologies(
+    registry: dict[str, Any],
+) -> None:
+    """Keep the two-camera pilot distinct from both distributed-rig hypotheses."""
+
+    assert "topology_evaluations" in registry
+    evaluations = {item["role"]: item for item in registry["topology_evaluations"]}
+    claims = {claim["id"]: claim for claim in registry["claims"]}
+
+    assert set(evaluations) == {
+        "pilot_role",
+        "reference_topology_role",
+        "distributed_challenger_role",
+    }
+    assert evaluations["pilot_role"]["model"] == "BFS-U3-16S2C-CS"
+    assert evaluations["pilot_role"]["camera_count"] == 2
+    assert evaluations["reference_topology_role"]["model"] == "Alvium G5-203"
+    assert evaluations["reference_topology_role"]["camera_count"] == 8
+    assert evaluations["distributed_challenger_role"]["model"] == "TRT016S-CC"
+    assert evaluations["distributed_challenger_role"]["camera_count"] == 8
+
+    for evaluation in evaluations.values():
+        assert set(evaluation) == TOPOLOGY_FIELDS
+        assert evaluation["runtime_authority"] == "none"
+        assert evaluation["procurement_authority"] is False
+        attributes = {claims[claim_id]["attribute"] for claim_id in evaluation["claim_ids"]}
+        assert attributes == TOPOLOGY_ATTRIBUTES
+
+    summary = verify_camera_registry(registry)
+    assert summary.topology_evaluation_count == 3
+
+
+def test_reader_separates_topology_decisions_and_preserves_qualification_boundary() -> None:
+    """Require the public explanation to reject camera-body-to-rig inference."""
+
+    normalized_article = " ".join(ARTICLE_PATH.read_text(encoding="utf-8").lower().split())
+
+    assert "two-camera usb pilot" in normalized_article
+    assert "eight-camera distributed reference-rig hypothesis" in normalized_article
+    assert "ethernet/ptp challenger" in normalized_article
+    assert "does not qualify the complete lab" in normalized_article
+    assert "does not authorize procurement" in normalized_article
