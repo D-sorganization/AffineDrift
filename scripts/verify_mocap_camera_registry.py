@@ -22,48 +22,13 @@ from scripts.mocap_camera_registry_contract import (
     TOP_LEVEL_KEYS,
     CameraRegistryError,
     CameraRegistrySummary,
+    require_array as _array,
+    require_date as _date,
+    require_object as _object,
+    require_text as _text,
+    require_unique_texts as _unique_texts,
 )
-
-
-def _object(value: object, label: str, keys: set[str]) -> dict[str, object]:
-    if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
-        raise CameraRegistryError(f"{label} must be an object")
-    result = cast(dict[str, object], value)
-    actual = set(result)
-    if actual != keys:
-        raise CameraRegistryError(
-            f"{label} fields differ: missing={sorted(keys - actual)}, extra={sorted(actual - keys)}"
-        )
-    return result
-
-
-def _array(value: object, label: str) -> list[object]:
-    if not isinstance(value, list) or not value:
-        raise CameraRegistryError(f"{label} must be a non-empty array")
-    return cast(list[object], value)
-
-
-def _text(value: object, label: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise CameraRegistryError(f"{label} must be a non-empty string")
-    return value
-
-
-def _date(value: object, label: str) -> date:
-    text = _text(value, label)
-    try:
-        return date.fromisoformat(text)
-    except ValueError as error:
-        raise CameraRegistryError(f"{label} must be an ISO date") from error
-
-
-def _unique_texts(value: object, label: str, *, allow_empty: bool = False) -> list[str]:
-    if not isinstance(value, list) or (not value and not allow_empty):
-        raise CameraRegistryError(f"{label} must be {'an' if allow_empty else 'a non-empty'} array")
-    texts = [_text(item, f"{label} item") for item in cast(list[object], value)]
-    if len(texts) != len(set(texts)):
-        raise CameraRegistryError(f"{label} must contain unique values")
-    return texts
+from scripts.mocap_camera_topology_contract import verify_topology_evaluations
 
 
 def _verify_authority(value: object) -> None:
@@ -334,6 +299,7 @@ def verify_camera_registry(value: object) -> CameraRegistrySummary:
     _verify_policy(registry["review_policy"])
     source_kinds = _verify_sources(registry["sources"], as_of)
     claims, unavailable = _verify_claims(registry["claims"], source_kinds, as_of)
+    topology_count = verify_topology_evaluations(registry["topology_evaluations"], claims)
     camera_ids = _verify_cameras(registry["cameras"], claims)
     recommendation_ids = _verify_recommendations(
         registry["recommendations"], camera_ids, set(claims)
@@ -343,6 +309,7 @@ def verify_camera_registry(value: object) -> CameraRegistrySummary:
         source_count=len(source_kinds),
         claim_count=len(claims),
         recommendation_count=len(recommendation_ids),
+        topology_evaluation_count=topology_count,
         unavailable_claim_count=unavailable,
         procurement_approved_count=0,
     )

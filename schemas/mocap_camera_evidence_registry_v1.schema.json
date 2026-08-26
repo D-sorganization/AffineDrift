@@ -12,7 +12,8 @@
     "sources",
     "claims",
     "cameras",
-    "recommendations"
+    "recommendations",
+    "topology_evaluations"
   ],
   "properties": {
     "schema": { "const": "affinedrift/mocap-camera-evidence-registry/v1" },
@@ -38,6 +39,12 @@
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "#/$defs/recommendation" }
+    },
+    "topology_evaluations": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/topology_evaluation" }
     }
   },
   "$defs": {
@@ -239,6 +246,48 @@
           "enum": ["adapter_required", "external_service_only"]
         },
         "purchasing_claim_ids": { "$ref": "#/$defs/unique_strings" },
+        "limitations": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "topology_evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "subject_id",
+        "manufacturer",
+        "model",
+        "role",
+        "camera_count",
+        "qualification_state",
+        "claim_ids",
+        "runtime_authority",
+        "procurement_authority",
+        "limitations"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "subject_id": { "$ref": "#/$defs/nonempty" },
+        "manufacturer": { "$ref": "#/$defs/nonempty" },
+        "model": { "$ref": "#/$defs/nonempty" },
+        "role": {
+          "enum": [
+            "pilot_role",
+            "reference_topology_role",
+            "distributed_challenger_role"
+          ]
+        },
+        "camera_count": { "enum": [2, 8] },
+        "qualification_state": {
+          "enum": [
+            "pilot_candidate_unqualified",
+            "reference_hypothesis_unqualified",
+            "challenger_unqualified"
+          ]
+        },
+        "claim_ids": { "$ref": "#/$defs/unique_strings" },
+        "runtime_authority": { "const": "none" },
+        "procurement_authority": { "const": false },
         "limitations": { "$ref": "#/$defs/nonempty" }
       }
     },

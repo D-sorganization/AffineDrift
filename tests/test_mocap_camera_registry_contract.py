@@ -361,6 +361,70 @@ def test_registry_types_distinct_pilot_reference_and_challenger_topology_records
     assert summary.topology_evaluation_count == 3
 
 
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    [
+        (
+            lambda data: data["topology_evaluations"][0].update(
+                runtime_authority="camera_model"
+            ),
+            "may not grant runtime authority",
+        ),
+        (
+            lambda data: data["topology_evaluations"][0].update(
+                procurement_authority=True
+            ),
+            "may not approve procurement",
+        ),
+        (
+            lambda data: data["topology_evaluations"][0].update(camera_count=8),
+            "camera count does not match",
+        ),
+        (
+            lambda data: data["topology_evaluations"][1].update(
+                qualification_state="qualified"
+            ),
+            "qualification state does not match",
+        ),
+        (
+            lambda data: data["topology_evaluations"][0]["claim_ids"].pop(),
+            "attributes differ",
+        ),
+        (
+            lambda data: data["topology_evaluations"][0]["claim_ids"].__setitem__(
+                0, data["topology_evaluations"][1]["claim_ids"][0]
+            ),
+            "belongs to",
+        ),
+    ],
+)
+def test_registry_rejects_topology_authority_or_coverage_drift(
+    registry: dict[str, Any], mutation: Mutation, message: str
+) -> None:
+    """Fail closed when a topology record crosses its evidence boundary."""
+
+    mutation(registry)
+
+    with pytest.raises(CameraRegistryError, match=message):
+        verify_camera_registry(registry)
+
+
+def test_topology_schema_types_roles_and_fail_closed_authority() -> None:
+    """Keep JSON-Schema consumers aligned with the executable topology contract."""
+
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    definition = schema["$defs"]["topology_evaluation"]
+
+    assert set(definition["required"]) == TOPOLOGY_FIELDS
+    assert definition["properties"]["role"]["enum"] == [
+        "pilot_role",
+        "reference_topology_role",
+        "distributed_challenger_role",
+    ]
+    assert definition["properties"]["runtime_authority"]["const"] == "none"
+    assert definition["properties"]["procurement_authority"]["const"] is False
+
+
 def test_reader_separates_topology_decisions_and_preserves_qualification_boundary() -> None:
     """Require the public explanation to reject camera-body-to-rig inference."""
 

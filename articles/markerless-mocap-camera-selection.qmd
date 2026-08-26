@@ -59,6 +59,48 @@ calibration, and interchange contracts. UpstreamDrift owns capture orchestration
 execution, reconstruction, validation, and operator workflows. This page does not implement or
 duplicate either runtime.
 
+## Topology Decision Boundary
+
+Three different decisions now have separate governed records. The FLIR
+`BFS-U3-16S2C-CS` is the **two-camera USB pilot** candidate. Allied Vision's Alvium G5-203
+is the **eight-camera distributed reference-rig hypothesis**. LUCID's Triton2 `TRT016S-CC`
+is the **Ethernet/PTP challenger** to that distributed hypothesis. A successful pilot does not
+qualify either distributed design, and an attractive camera-body specification does not qualify
+the complete lab.
+
+| Decision Role | Camera Count | Candidate | Transport and Time Feature | Qualification State |
+|---|---:|---|---|---|
+| `pilot_role` | 2 | Teledyne FLIR `BFS-U3-16S2C-CS` | USB 3.1 Gen 1; hardware trigger available | Pilot candidate; unqualified |
+| `reference_topology_role` | 8 | Allied Vision Alvium G5-203 | 5/2.5/1 GigE, PoE, and PTP support | Reference hypothesis; unqualified |
+| `distributed_challenger_role` | 8 | LUCID Triton2 `TRT016S-CC` | 2.5/1 GigE, PoE, hardware trigger, and PTP support | Challenger; unqualified |
+
+The manufacturer-primary product records are the
+[FLIR model page](https://www.teledynevisionsolutions.com/products/blackfly-s-usb3/),
+[Allied Vision model page](https://www.alliedvision.com/en/products/area-scan-cameras/alvium/alvium-g5/view/1253),
+and [LUCID model page](https://thinklucid.com/product/triton2-16-mp-imx273/).
+Their claims establish only what each manufacturer currently publishes. PTP or trigger support
+does not prove exposure alignment. PoE does not select a switch. GigE does not qualify a NIC,
+queue, or storage path. A named SDK does not become open-core runtime authority.
+
+### Complete-Topology Screen
+
+The registry requires each role to dispose transport, synchronization, power, cable distance,
+host or controller topology, SDK/GenTL, aggregate bandwidth, storage, thermals, licensing,
+operating systems, and complete quote scope. Missing manufacturer or commercial evidence stays
+`unavailable`; design assumptions stay `provisional`.
+
+| Role | Raw Eight-Bit Payload Screen | Raw Storage Screen | Important Unavailable Boundary |
+|---|---:|---:|---|
+| Two-camera FLIR USB pilot | 5.625 Gbit/s | 703.066 MB/s | Qualified cable distance, exact OS matrix, complete quote |
+| Eight-camera Allied reference hypothesis | 29.331 Gbit/s | 3,666.355 MB/s | Validated cable design, network architecture, complete quote |
+| Eight-camera LUCID challenger | 16.552 Gbit/s | 2,069.038 MB/s | Arena redistribution terms, complete quote |
+
+These are arithmetic screens from published width, height, maximum frame rate, camera count, and
+eight delivered bits per pixel. They exclude protocol overhead, packet reserve, metadata,
+filesystem behavior, buffering, and measured loss. They are neither sustained-throughput results
+nor storage procurement budgets. Model names grant no capability to Tools or UpstreamDrift; only
+an observed driver capability record can do that. This comparison does not authorize procurement.
+
 ## Candidate Matrix
 
 | Candidate | Shutter | Vendor-Specified Video Mode | Synchronization | Optics | Data Path | Current Role |

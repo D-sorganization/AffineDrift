@@ -162,6 +162,31 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   topology selection. Governed render/search derivatives remain paused by the
   DeskComputer capacity-drain directive, and no PR should open while full-PR
   rules would trigger prohibited broad jobs.
+- **Camera topology evidence maintenance (AffineDrift #3978):** branch
+  `fix/3978-camera-topology-boundary` is intentionally stacked on #3977 exact
+  head `96142ebfe91a4e9fc69001376564747243f85904`; it is not a merge authority for
+  #3976 or #3977. The registry now separates the FLIR two-camera USB pilot,
+  Allied Vision Alvium G5-203 eight-camera distributed reference hypothesis,
+  and LUCID Triton2 TRT016S-CC Ethernet/PTP challenger. Each role must dispose
+  twelve topology dimensions and remains explicitly unqualified, without
+  runtime or procurement authority. The first test-only RED
+  `34c00a801ef2ec166e2271025e5ded4d5a275c54` proved the public-article boundary
+  on approved OGLaptop runner 2 in Repository_Management run `33010905903` /
+  job `98316610479`; test naming
+  initially selected only one of the two intended contracts. The corrected
+  test-only RED `cad014f6b4fa68f61bd76ff65d2ca907b505cd1b` failed exactly the registry
+  and article topology contracts in run `33011056389` / job `98317130366` on
+  approved OGLaptop runner 3. Both runs used wrapper
+  `cc1fee104fd4c513b393bc4701ff803e14101b01` and explicit
+  `python -m pytest -q -n 0 tests/test_mocap_camera_registry_contract.py -k topology`.
+  FLIR cable distance and exact OS matrix, Allied validated cable/network
+  design, LUCID Arena redistribution terms, and every complete quote remain
+  unavailable. All raw bandwidth/storage values are arithmetic screens, not
+  measured throughput or storage procurement budgets. Rebase after #3976 and
+  #3977 protected integration, reconcile SPEC version order, retain the
+  corrected 15-microsecond ZED statement, and rerun bounded serial validation.
+  Governed render/search derivatives and a full PR remain paused by the
+  DeskComputer capacity-drain directive.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
