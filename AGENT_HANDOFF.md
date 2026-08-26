@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -129,6 +129,16 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   C3D result, or procurement approval exists. AFF-M2 must consume protected
   Tools calibration contracts after their dependency stack merges; do not copy
   runtime calculations into AffineDrift.
+- **ZED synchronization evidence maintenance (AffineDrift #3976):** branch
+  `fix/3976-zed-sync-evidence-15us` replaces the superseded 10-microsecond
+  statement with separate primary vendor documentation for supported
+  dual-camera GMSL2 rigs (15 microseconds) and configured multi-device ZED Box
+  Mini rigs (approximately 15 microseconds). The deterministic contract rejects
+  the stale value and requires registry/article agreement. These remain vendor
+  topology claims, not assembled-rig timing qualification, pose evidence, or
+  procurement authority. RED was proven on approved OGLaptop runner
+  `d-sorg-local-Oglaptop-1` with `-n 0` in run `33005976225`; rendered artifact
+  production remains paused by the fleet capacity-drain directive.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.

@@ -63,7 +63,7 @@ duplicate either runtime.
 |---|---|---|---|---|---|---|
 | Teledyne FLIR BFS-U3-16S2C-CS | Global | 1440 by 1080 at up to 226 frames per second | Hardware or software trigger; action command | CS mount; documented removable C adapter | USB 3.1 Gen 1 | Preferred fast-motion pilot candidate |
 | Basler a2A1920-160ucBAS | Global | 1920 by 1200 at up to 160 frames per second | Hardware trigger; programmable API | C mount | USB 3.0 | Higher-resolution fast-motion alternate |
-| Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 frames per second; 960 by 600 at up to 120 | External synchronization; vendor claim within 10 microseconds | Fixed narrow, wide, or model-dependent fisheye variant | GMSL2 plus capture hardware | Long-cable topology evaluation |
+| Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 frames per second; 960 by 600 at up to 120 | GMSL2 hardware synchronization; topology-specific vendor claims of 15 microseconds | Fixed narrow, wide, or model-dependent fisheye variant | GMSL2 plus capture hardware | Long-cable topology evaluation |
 
 Primary product evidence is available from the
 [FLIR product page](https://www.teledynevisionsolutions.com/en-ca/products/blackfly-s-usb3/?model=BFS-U3-16S2C-CS&segment=iis&vertical=machine+vision),
@@ -72,6 +72,13 @@ Primary product evidence is available from the
 [ZED X One product page](https://www.stereolabs.com/en-si/products/zed-x-one). These pages were
 accessed on 2026-08-26. Product pages can change; the registry therefore carries review dates and
 does not treat a URL as an immutable specification.
+
+The ZED synchronization values use the vendor's
+[dual-camera setup documentation](https://docs.stereolabs.com/docs/products/cameras/zedxone/dual-camera-stereo-vision)
+and separate
+[ZED Box Mini connectivity documentation](https://docs.stereolabs.com/docs/products/embedded/zed-box-mini/connectivity),
+also accessed on 2026-08-26. Keeping both sources explicit prevents a dual-camera statement from
+being silently generalized to a multi-device topology.
 
 ### Teledyne FLIR Fast-Motion Pilot Candidate
 
@@ -99,10 +106,17 @@ than relying on this summary.
 
 ### Stereolabs Long-Cable Evaluation
 
-The ZED X One GS offers a synchronized, locking GMSL2 topology and fixed lens variants. The vendor
-states that multiple connected cameras can be synchronized within 10 microseconds. This makes the
-system interesting where USB cable length and connector reliability dominate. It does not remove
-the need to measure exposure timing, transport drops, or model latency.
+The ZED X One GS offers a locking GMSL2 topology and fixed lens variants.
+The vendor states 15 microseconds for supported dual-camera rigs using GMSL2 and supported ZED
+Link or ZED Box hardware. It states approximately 15 microseconds for configured multi-device rigs
+using master/slave ZED Box Mini units. The multi-device document describes ZED SDK `grab` calls
+aligned to the master clock; it does not independently establish exposure-start skew across a
+complete mocap system. These topology-specific vendor statements make the system interesting where USB
+cable length and connector reliability dominate, but they do not remove the need to measure
+exposure timing, transport drops, clock drift, recovery, or model latency.
+Do not label an assembled rig synchronized until
+timing qualification records those results for its exact cameras, capture hardware, cables, modes,
+clocks, SDK, and host configuration.
 
 The comparison must preserve mode context. `120 frames per second` applies to the 960-by-600
 binned mode, while full 1920-by-1200 output is limited to 60 frames per second. A pair is required
