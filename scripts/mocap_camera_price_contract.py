@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from datetime import date, timedelta
 from typing import cast
 
@@ -20,6 +21,8 @@ PRICE_KEYS = {
     "availability",
 }
 PRICE_REVIEW_MAX_AGE = timedelta(days=31)
+PRICE_REGIONS = frozenset({"US", "GLOBAL"})
+PRICE_CURRENCIES = frozenset({"USD"})
 PRICE_SCOPES = frozenset({"camera_body_only", "complete_qualified_topology"})
 PRICE_INCLUSION_STATES = frozenset({"excluded", "included", "not_established"})
 PRICE_AVAILABILITY_STATES = frozenset(
@@ -72,12 +75,10 @@ def _validate_metadata(price: dict[str, object], claim_id: str) -> str | None:
         price["shipping_status"], f"claim {claim_id} shipping status"
     )
     availability = _required_text(price["availability"], f"claim {claim_id} availability")
-    if region != "GLOBAL" and not (len(region) == 2 and region.isalpha() and region.isupper()):
-        raise CameraRegistryError(f"claim {claim_id} region must be ISO alpha-2 or GLOBAL")
-    if currency is not None and not (
-        len(currency) == 3 and currency.isalpha() and currency.isupper()
-    ):
-        raise CameraRegistryError(f"claim {claim_id} currency must be ISO 4217 or null")
+    if region not in PRICE_REGIONS:
+        raise CameraRegistryError(f"claim {claim_id} v1 region must be US or GLOBAL")
+    if currency is not None and currency not in PRICE_CURRENCIES:
+        raise CameraRegistryError(f"claim {claim_id} v1 currency must be USD or null")
     if scope not in PRICE_SCOPES:
         raise CameraRegistryError(f"claim {claim_id} price scope is unsupported")
     if tax_status not in PRICE_INCLUSION_STATES:
@@ -100,7 +101,7 @@ def _validate_evidence_state(claim: dict[str, object], claim_id: str, attribute:
 
 
 def _validate_scope(
-    price: dict[str, object], claim_id: str, attribute: str, sources: list[str]
+    price: dict[str, object], claim_id: str, attribute: str, source_kinds: dict[str, str]
 ) -> None:
     expected_scope = {
         "camera_body_price": "camera_body_only",
@@ -111,7 +112,7 @@ def _validate_scope(
     if attribute == "complete_qualified_topology_cost":
         if any(price[field] is not None for field in ("amount", "currency", "sku")):
             raise CameraRegistryError(f"claim {claim_id} complete topology cost must be unavailable")
-        if price["availability"] != "quote_required" or sources:
+        if price["availability"] != "quote_required" or source_kinds:
             raise CameraRegistryError(f"claim {claim_id} complete topology cost requires a quote")
         return
     amount = price["amount"]
@@ -119,18 +120,26 @@ def _validate_scope(
     if amount is None:
         if currency is not None or price["availability"] != "online_shop_price_not_exposed":
             raise CameraRegistryError(f"claim {claim_id} unavailable body amount is inconsistent")
-    elif type(amount) not in {int, float} or amount <= 0 or currency is None:
-        raise CameraRegistryError(f"claim {claim_id} amount must be positive and typed with currency")
-    if not sources:
+    elif type(amount) not in {int, float}:
+        raise CameraRegistryError(f"claim {claim_id} amount must be a finite positive number")
+    else:
+        numeric_amount = cast(int | float, amount)
+        if not math.isfinite(numeric_amount) or numeric_amount <= 0 or currency is None:
+            raise CameraRegistryError(
+                f"claim {claim_id} amount must be finite, positive, and typed with currency"
+            )
+    if not source_kinds:
         raise CameraRegistryError(f"claim {claim_id} camera-body price requires a vendor source")
+    if set(source_kinds.values()) != {"vendor_product_page"}:
+        raise CameraRegistryError(f"claim {claim_id} requires a vendor product page price source")
 
 
-def verify_price_claim(claim: dict[str, object], sources: list[str]) -> None:
+def verify_price_claim(claim: dict[str, object], source_kinds: dict[str, str]) -> None:
     """Validate a typed body-price or complete-topology-cost claim.
 
     Args:
         claim: Registry claim whose attribute is in ``PRICE_ATTRIBUTES``.
-        sources: Already validated source identifiers referenced by the claim.
+        source_kinds: Validated referenced source identifiers mapped to source kinds.
 
     Raises:
         CameraRegistryError: If scope, metadata, freshness, or authority is invalid.
@@ -147,4 +156,4 @@ def verify_price_claim(claim: dict[str, object], sources: list[str]) -> None:
     price = _price_object(claim["value"], claim_id)
     _validate_metadata(price, claim_id)
     _validate_evidence_state(claim, claim_id, attribute)
-    _validate_scope(price, claim_id, attribute, sources)
+    _validate_scope(price, claim_id, attribute, source_kinds)

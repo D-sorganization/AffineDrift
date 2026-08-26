@@ -95,7 +95,7 @@ def _verify_policy(value: object) -> None:
         raise CameraRegistryError("maximum review age must be from 1 through 366 days")
 
 
-def _verify_source(value: object, index: int, as_of: date) -> str:
+def _verify_source(value: object, index: int, as_of: date) -> tuple[str, str]:
     source = _object(
         value,
         f"source {index}",
@@ -115,17 +115,17 @@ def _verify_source(value: object, index: int, as_of: date) -> str:
         _date(published, f"source {source_id} publication date")
     if _date(source["accessed_on"], f"source {source_id} access date") > as_of:
         raise CameraRegistryError(f"source {source_id} access date is after the registry date")
-    return source_id
+    return source_id, kind
 
 
-def _verify_sources(value: object, as_of: date) -> set[str]:
-    source_ids: set[str] = set()
+def _verify_sources(value: object, as_of: date) -> dict[str, str]:
+    source_kinds: dict[str, str] = {}
     for index, item in enumerate(_array(value, "sources")):
-        source_id = _verify_source(item, index, as_of)
-        if source_id in source_ids:
+        source_id, kind = _verify_source(item, index, as_of)
+        if source_id in source_kinds:
             raise CameraRegistryError(f"duplicate source id: {source_id}")
-        source_ids.add(source_id)
-    return source_ids
+        source_kinds[source_id] = kind
+    return source_kinds
 
 
 def _verify_claim_state(
@@ -150,7 +150,7 @@ def _verify_claim_state(
 
 
 def _verify_claim(
-    value: object, index: int, source_ids: set[str], as_of: date
+    value: object, index: int, source_kinds: dict[str, str], as_of: date
 ) -> tuple[str, str, str]:
     claim = _object(
         value,
@@ -175,7 +175,7 @@ def _verify_claim(
     _text(claim["unit"], f"claim {claim_id} unit")
     _text(claim["limitations"], f"claim {claim_id} limitations")
     sources = _unique_texts(claim["source_ids"], f"claim {claim_id} sources", allow_empty=True)
-    unknown_sources = set(sources) - source_ids
+    unknown_sources = set(sources) - set(source_kinds)
     if unknown_sources:
         raise CameraRegistryError(
             f"claim {claim_id} has unknown source ids: {sorted(unknown_sources)}"
@@ -188,19 +188,20 @@ def _verify_claim(
         raise CameraRegistryError(f"claim {claim_id} review is due or expired")
     _verify_claim_state(claim, claim_id, attribute, sources)
     if attribute in PRICE_ATTRIBUTES:
-        verify_price_claim(claim, sources)
+        referenced_source_kinds = {source_id: source_kinds[source_id] for source_id in sources}
+        verify_price_claim(claim, referenced_source_kinds)
     elif isinstance(claim["value"], dict):
         raise CameraRegistryError(f"claim {claim_id} non-price value must be scalar")
     return claim_id, subject_id, attribute
 
 
 def _verify_claims(
-    value: object, source_ids: set[str], as_of: date
+    value: object, source_kinds: dict[str, str], as_of: date
 ) -> tuple[dict[str, tuple[str, str]], int]:
     claims: dict[str, tuple[str, str]] = {}
     unavailable = 0
     for index, item in enumerate(_array(value, "claims")):
-        claim_id, subject_id, attribute = _verify_claim(item, index, source_ids, as_of)
+        claim_id, subject_id, attribute = _verify_claim(item, index, source_kinds, as_of)
         if claim_id in claims:
             raise CameraRegistryError(f"duplicate claim id: {claim_id}")
         claims[claim_id] = (subject_id, attribute)
@@ -331,15 +332,15 @@ def verify_camera_registry(value: object) -> CameraRegistrySummary:
     as_of = _date(registry["as_of"], "registry date")
     _verify_authority(registry["authority"])
     _verify_policy(registry["review_policy"])
-    source_ids = _verify_sources(registry["sources"], as_of)
-    claims, unavailable = _verify_claims(registry["claims"], source_ids, as_of)
+    source_kinds = _verify_sources(registry["sources"], as_of)
+    claims, unavailable = _verify_claims(registry["claims"], source_kinds, as_of)
     camera_ids = _verify_cameras(registry["cameras"], claims)
     recommendation_ids = _verify_recommendations(
         registry["recommendations"], camera_ids, set(claims)
     )
     return CameraRegistrySummary(
         camera_count=len(camera_ids),
-        source_count=len(source_ids),
+        source_count=len(source_kinds),
         claim_count=len(claims),
         recommendation_count=len(recommendation_ids),
         unavailable_claim_count=unavailable,
