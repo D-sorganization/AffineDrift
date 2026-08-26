@@ -20,6 +20,15 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = REPO_ROOT / "data" / "markerless_mocap" / "camera_evidence_registry_v1.json"
 SCHEMA_PATH = REPO_ROOT / "schemas" / "mocap_camera_evidence_registry_v1.schema.json"
 ARTICLE_PATH = REPO_ROOT / "articles" / "markerless-mocap-camera-selection.qmd"
+ZED_SYNC_CLAIM_ID = "zed-sync"
+ZED_SYNC_SOURCE_URLS = {
+    "stereolabs-zed-x-one-dual-camera-sync": (
+        "https://docs.stereolabs.com/docs/products/cameras/zedxone/dual-camera-stereo-vision"
+    ),
+    "stereolabs-zed-box-mini-connectivity": (
+        "https://docs.stereolabs.com/docs/products/embedded/zed-box-mini/connectivity"
+    ),
+}
 
 
 @pytest.fixture
@@ -113,3 +122,30 @@ def test_registry_schema_and_reader_guidance_are_versioned() -> None:
     assert "buy two cameras for the pilot" in article
     assert "Camera Evidence Registry" in spec
     assert "AffineDrift #3956" in handoff
+
+
+def test_zed_x_one_sync_evidence_matches_current_primary_documents(
+    registry: dict[str, Any],
+) -> None:
+    """Reject stale timing values and preserve the assembled-rig boundary."""
+
+    claim = next(item for item in registry["claims"] if item["id"] == ZED_SYNC_CLAIM_ID)
+    sources = {item["id"]: item for item in registry["sources"]}
+    article = ARTICLE_PATH.read_text(encoding="utf-8")
+    governed_text = f"{claim['value']}\n{article}".lower()
+
+    assert "10 microseconds" not in governed_text
+    assert claim["value"] == (
+        "GMSL2 hardware synchronization; vendor states 15 microseconds for supported "
+        "dual-camera rigs and approximately 15 microseconds for configured multi-device rigs"
+    )
+    assert set(claim["source_ids"]) == set(ZED_SYNC_SOURCE_URLS)
+    for source_id, expected_url in ZED_SYNC_SOURCE_URLS.items():
+        assert sources[source_id]["kind"] == "vendor_technical_documentation"
+        assert sources[source_id]["url"] == expected_url
+        assert sources[source_id]["accessed_on"] == registry["as_of"]
+
+    assert "not an assembled-rig timing qualification" in claim["limitations"]
+    assert "vendor states 15 microseconds for supported dual-camera rigs" in article
+    assert "approximately 15 microseconds for configured multi-device rigs" in article
+    assert "Do not label an assembled rig synchronized until" in article
