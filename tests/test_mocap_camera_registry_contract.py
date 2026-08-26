@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 from collections.abc import Callable
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,53 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 REGISTRY_PATH = REPO_ROOT / "data" / "markerless_mocap" / "camera_evidence_registry_v1.json"
 SCHEMA_PATH = REPO_ROOT / "schemas" / "mocap_camera_evidence_registry_v1.schema.json"
 ARTICLE_PATH = REPO_ROOT / "articles" / "markerless-mocap-camera-selection.qmd"
+PRICE_FIELDS = {
+    "amount",
+    "currency",
+    "region",
+    "sku",
+    "configuration",
+    "price_scope",
+    "tax_status",
+    "shipping_status",
+    "availability",
+}
+CAMERA_BODY_PRICE_IDS = {
+    "flir-camera-body-price": {
+        "amount": 371.0,
+        "currency": "USD",
+        "region": "US",
+        "sku": "BFS-U3-16S2C-CS",
+        "availability": "in_production",
+    },
+    "basler-camera-body-price": {
+        "amount": None,
+        "currency": None,
+        "region": "US",
+        "sku": "107821",
+        "availability": "online_shop_price_not_exposed",
+    },
+    "zed-camera-body-base-price": {
+        "amount": 399.0,
+        "currency": "USD",
+        "region": "GLOBAL",
+        "sku": None,
+        "availability": "dispatch_estimate_published",
+    },
+    "zed-camera-body-wide-price": {
+        "amount": 424.0,
+        "currency": "USD",
+        "region": "GLOBAL",
+        "sku": "ZED-412010",
+        "availability": "dispatch_estimate_published",
+    },
+}
+PRICE_SOURCE_HOSTS = {
+    "basler-camera-body-price": "www.baslerweb.com",
+    "flir-camera-body-price": "www.teledynevisionsolutions.com",
+    "zed-camera-body-base-price": "store.stereolabs.com",
+    "zed-camera-body-wide-price": "store.stereolabs.com",
+}
 
 
 @pytest.fixture
@@ -113,3 +161,103 @@ def test_registry_schema_and_reader_guidance_are_versioned() -> None:
     assert "buy two cameras for the pilot" in article
     assert "Camera Evidence Registry" in spec
     assert "AffineDrift #3956" in handoff
+
+
+def test_camera_body_prices_are_typed_scoped_primary_observations(
+    registry: dict[str, Any],
+) -> None:
+    """Keep list-price observations configuration-specific and non-authoritative."""
+
+    claims = {claim["id"]: claim for claim in registry["claims"]}
+    sources = {source["id"]: source for source in registry["sources"]}
+
+    for claim_id, expected in CAMERA_BODY_PRICE_IDS.items():
+        claim = claims[claim_id]
+        value = claim["value"]
+        assert set(value) == PRICE_FIELDS
+        assert value["price_scope"] == "camera_body_only"
+        assert value["tax_status"] == "not_established"
+        assert value["shipping_status"] == "not_established"
+        for field, expected_value in expected.items():
+            assert value[field] == expected_value
+        assert claim["accessed_on"] == registry["as_of"]
+        review_age = date.fromisoformat(claim["review_due"]) - date.fromisoformat(
+            claim["accessed_on"]
+        )
+        assert review_age.days <= 31
+        assert len(claim["source_ids"]) == 1
+        source = sources[claim["source_ids"][0]]
+        assert source["kind"] == "vendor_product_page"
+        assert PRICE_SOURCE_HOSTS[claim_id] in source["url"]
+
+
+def test_complete_topology_costs_remain_typed_and_unavailable(
+    registry: dict[str, Any],
+) -> None:
+    """Reject a camera-body sticker price as a complete qualified-system cost."""
+
+    cameras = {camera["id"]: camera for camera in registry["cameras"]}
+    claims = {claim["id"]: claim for claim in registry["claims"]}
+    complete_cost_ids = {
+        "basler-complete-qualified-topology-cost",
+        "flir-complete-qualified-topology-cost",
+        "zed-complete-qualified-topology-cost",
+    }
+
+    for claim_id in complete_cost_ids:
+        claim = claims[claim_id]
+        value = claim["value"]
+        assert set(value) == PRICE_FIELDS
+        assert value["amount"] is None
+        assert value["currency"] is None
+        assert value["sku"] is None
+        assert value["price_scope"] == "complete_qualified_topology"
+        assert value["availability"] == "quote_required"
+        assert claim["evidence_class"] == "unavailable"
+        assert claim["status"] == "unavailable"
+        assert claim["source_ids"] == []
+
+    for camera in cameras.values():
+        attributes = {
+            claims[claim_id]["attribute"] for claim_id in camera["purchasing_claim_ids"]
+        }
+        assert "camera_body_price" in attributes
+        assert "complete_qualified_topology_cost" in attributes
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("currency", "usd", "currency"),
+        ("region", "United States", "region"),
+        ("price_scope", "complete_rig", "price scope"),
+        ("tax_status", "probably excluded", "tax status"),
+        ("shipping_status", "free", "shipping status"),
+        ("availability", "available", "availability"),
+    ],
+)
+def test_registry_rejects_untyped_price_metadata(
+    registry: dict[str, Any], field: str, value: str, message: str
+) -> None:
+    """Fail closed when volatile price metadata loses its declared vocabulary."""
+
+    claim = next(item for item in registry["claims"] if item["id"] == "flir-camera-body-price")
+    claim["value"][field] = value
+
+    with pytest.raises(CameraRegistryError, match=message):
+        verify_camera_registry(registry)
+
+
+def test_reader_does_not_rank_candidates_by_camera_body_price() -> None:
+    """Keep incomplete sticker prices out of camera ranking and procurement authority."""
+
+    article = ARTICLE_PATH.read_text(encoding="utf-8")
+
+    assert "Camera-Body Price Observations" in article
+    assert "USD 371.00" in article
+    assert "USD 399.00" in article
+    assert "USD 424.00" in article
+    assert "Basler amount unavailable" in article
+    assert "do not rank the candidates" in article
+    assert "Complete qualified-topology cost remains unavailable" in article
+    assert "does not authorize procurement" in article
