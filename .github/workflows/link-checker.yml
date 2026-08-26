@@ -56,7 +56,7 @@ jobs:
       - name: Run focused Ruff and Black checks
         run: |
           python -m ruff check scripts/mocap_camera_geometry_contract.py scripts/mocap_camera_geometry_math.py scripts/verify_mocap_camera_geometry_fixture.py tests/test_mocap_camera_geometry_contract.py
-          python -m black --check --line-length 100 scripts/mocap_camera_geometry_contract.py scripts/mocap_camera_geometry_math.py scripts/verify_mocap_camera_geometry_fixture.py tests/test_mocap_camera_geometry_contract.py
+          python -m black --diff --check --line-length 100 scripts/mocap_camera_geometry_contract.py scripts/mocap_camera_geometry_math.py scripts/verify_mocap_camera_geometry_fixture.py tests/test_mocap_camera_geometry_contract.py
 
       - name: Run bounded camera geometry contract
         run: >-
