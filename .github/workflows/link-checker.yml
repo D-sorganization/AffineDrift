@@ -20,6 +20,8 @@ jobs:
     name: Bounded camera geometry contract (-n 0)
     runs-on: d-sorg-fleet
     timeout-minutes: 10
+    env:
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
     steps:
       - name: Validate exact target SHA
         env:
@@ -60,4 +62,4 @@ jobs:
 
       - name: Run bounded camera geometry contract
         run: >-
-          python -m pytest -q -n 0 tests/test_mocap_camera_geometry_contract.py
+          python -m pytest -q -p xdist.plugin -n 0 tests/test_mocap_camera_geometry_contract.py
