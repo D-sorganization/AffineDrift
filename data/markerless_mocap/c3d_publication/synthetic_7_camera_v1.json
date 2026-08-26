@@ -1,0 +1,185 @@
+{
+  "schema": "affinedrift/mocap-c3d-publication-compatibility/v1",
+  "fixture_id": "affinedrift-synthetic-c3d-7-camera-v1",
+  "classification": "model_scenario",
+  "authority": {
+    "repository": "D-sorganization/AffineDrift",
+    "scope": "sanitized publication compatibility and pedagogy only",
+    "runtime_authority": false,
+    "binary_c3d_present": false,
+    "unknown_metadata_policy": "reject"
+  },
+  "dependencies": {
+    "tools_m1": {
+      "issue": "https://github.com/D-sorganization/Tools/issues/4710",
+      "state": "unavailable",
+      "protected_revision": null,
+      "release": null,
+      "schema_id": null
+    },
+    "tools_m9": {
+      "issue": "https://github.com/D-sorganization/Tools/issues/4716",
+      "state": "unavailable",
+      "protected_revision": null,
+      "release": null,
+      "schema_id": null
+    }
+  },
+  "source_traceability": [
+    {
+      "id": "c3d-user-guide",
+      "title": "The C3D File Format: A Technical User Guide",
+      "url": "https://www.c3d.org/docs/C3D_User_Guide.pdf",
+      "accessed_on": "2026-08-26",
+      "applies_to": ["fixed_point_rate", "integer_analog_ratio", "event_header_limit", "point_residual_and_mask"]
+    },
+    {
+      "id": "ezc3d-primary",
+      "title": "EZC3D reader and writer documentation",
+      "url": "https://github.com/pyomeca/ezc3d",
+      "accessed_on": "2026-08-26",
+      "applies_to": ["negative_residual_invalid", "seven_camera_mask", "normalized_array_shapes"]
+    }
+  ],
+  "coordinate_frame": {
+    "frame_id": "synthetic-shop-world",
+    "handedness": "right-handed",
+    "x_axis": "subject_right",
+    "y_axis": "forward",
+    "z_axis": "up",
+    "length_unit": "m"
+  },
+  "timebase": {
+    "point_rate_hz": 200.0,
+    "analog_rate_hz": 1000.0,
+    "analog_samples_per_point_frame": 5,
+    "timestamp_origin": "synthetic_session_start",
+    "timestamp_unit": "ns"
+  },
+  "cameras": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07"],
+  "skeleton": {
+    "skeleton_id": "synthetic-two-point-v1",
+    "joint_ids": ["pelvis_center", "left_ankle"],
+    "bones": [
+      {"parent": "pelvis_center", "child": "left_ankle"}
+    ]
+  },
+  "frames": [
+    {
+      "frame_index": 0,
+      "timestamp_ns": 0,
+      "points": [
+        {
+          "point_id": "pelvis_center",
+          "xyz_m": [0.0, 0.0, 1.0],
+          "confidence": 0.99,
+          "residual": 0.2,
+          "valid": true,
+          "contributors": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07"]
+        },
+        {
+          "point_id": "left_ankle",
+          "xyz_m": [-0.1, 0.05, 0.08],
+          "confidence": 0.97,
+          "residual": 0.3,
+          "valid": true,
+          "contributors": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07"]
+        }
+      ]
+    },
+    {
+      "frame_index": 1,
+      "timestamp_ns": 5000000,
+      "points": [
+        {
+          "point_id": "pelvis_center",
+          "xyz_m": [0.001, 0.003, 1.002],
+          "confidence": 0.98,
+          "residual": 0.25,
+          "valid": true,
+          "contributors": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07"]
+        },
+        {
+          "point_id": "left_ankle",
+          "xyz_m": [-0.099, 0.056, 0.082],
+          "confidence": 0.96,
+          "residual": 0.35,
+          "valid": true,
+          "contributors": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07"]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "label": "synthetic_contact",
+      "time_seconds": 0.005,
+      "context": "Left",
+      "description": "Synthetic event; not a human observation"
+    }
+  ],
+  "analog": {
+    "channel_labels": ["Fx1", "Fy1", "Fz1", "Mx1", "My1", "Mz1"],
+    "channel_units": ["N", "N", "N", "N*m", "N*m", "N*m"],
+    "samples": [
+      [1.0, 2.0, 600.0, 0.1, 0.2, 0.3],
+      [1.1, 2.1, 601.0, 0.11, 0.21, 0.31],
+      [1.2, 2.2, 602.0, 0.12, 0.22, 0.32],
+      [1.3, 2.3, 603.0, 0.13, 0.23, 0.33],
+      [1.4, 2.4, 604.0, 0.14, 0.24, 0.34],
+      [1.5, 2.5, 605.0, 0.15, 0.25, 0.35],
+      [1.6, 2.6, 606.0, 0.16, 0.26, 0.36],
+      [1.7, 2.7, 607.0, 0.17, 0.27, 0.37],
+      [1.8, 2.8, 608.0, 0.18, 0.28, 0.38],
+      [1.9, 2.9, 609.0, 0.19, 0.29, 0.39]
+    ],
+    "force_platforms": [
+      {
+        "plate_id": "force-plate-01",
+        "type_code": 2,
+        "channel_indices_zero_based": [0, 1, 2, 3, 4, 5],
+        "corners_m": [[-0.2, -0.3, 0.0], [0.2, -0.3, 0.0], [0.2, 0.3, 0.0], [-0.2, 0.3, 0.0]],
+        "origin_m": [0.0, 0.0, -0.04]
+      }
+    ]
+  },
+  "provenance": {
+    "source_kind": "sanitized_synthetic",
+    "method_id": "affinedrift/publication-fixture-generator",
+    "method_version": "1.0.0",
+    "human_subject_data": false,
+    "claim_class": "model_scenario"
+  },
+  "c3d_projection": {
+    "state": "semantic_example_only",
+    "point_rate_hz": 200.0,
+    "point_units": "mm",
+    "timestamp_semantics": "implicit_from_first_frame_and_rate",
+    "analog_rate_hz": 1000.0,
+    "analog_samples_per_point_frame": 5,
+    "event_header_limit": 18,
+    "points": [
+      {"frame_index": 0, "point_id": "pelvis_center", "xyz_mm": [0.0, 0.0, 1000.0], "residual": 0.2, "contributor_mask": 127},
+      {"frame_index": 0, "point_id": "left_ankle", "xyz_mm": [-100.0, 50.0, 80.0], "residual": 0.3, "contributor_mask": 127},
+      {"frame_index": 1, "point_id": "pelvis_center", "xyz_mm": [1.0, 3.0, 1002.0], "residual": 0.25, "contributor_mask": 127},
+      {"frame_index": 1, "point_id": "left_ankle", "xyz_mm": [-99.0, 56.0, 82.0], "residual": 0.35, "contributor_mask": 127}
+    ],
+    "independent_reader_qualification": {
+      "state": "unavailable",
+      "readers": [],
+      "corpus": [],
+      "normalized_semantic_agreement": null
+    }
+  },
+  "loss_sidecar": {
+    "path": "synthetic_7_camera_loss_v1.json",
+    "sha256": "ecb652ef86e202c4b22725b85d36529a8e21cc85b4525cb6dee1bce4fad08ca8",
+    "bytes": 2836,
+    "required": true
+  },
+  "limitations": [
+    "No C3D binary is generated or read by this publication fixture.",
+    "No Tools schema, writer, reader parity, physical accuracy, or human-data result is claimed.",
+    "The values are sanitized synthetic model-scenario data for contract education only."
+  ]
+}

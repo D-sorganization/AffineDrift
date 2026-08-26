@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-26T04:00:00Z
+Last-Updated: 2026-08-26T23:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -146,6 +146,30 @@ fast motion, the Basler a2A1920-160ucBAS as a higher-resolution alternate, and
 the ZED X One GS only as a long-cable topology evaluation. No model is approved
 for a full rig. Tools must own optional camera adapters and canonical contracts;
 UpstreamDrift must own physical qualification and operator workflows.
+
+### Mocap C3D Publication Compatibility
+
+`affinedrift/mocap-c3d-publication-compatibility/v1` is a strict, source-only
+publication contract. It is not a runtime `MocapSession` schema, a C3D writer,
+or a replacement for Tools. The paired seven- and eight-camera sanitized
+synthetic fixtures expose coordinate frames, SI-to-C3D unit mapping, fixed-rate
+timestamps, point confidence and residuals, skeleton topology, events, analog
+and force-platform data, provenance, and explicit loss semantics. Their
+`affinedrift/mocap-c3d-loss-sidecar/v1` sidecars are bound by exact byte count
+and SHA-256.
+
+The verifier enforces the official C3D integer analog-to-point sample ratio,
+18-event header capacity, negative-residual invalidity rule, and seven-bit
+camera contributor mask. Seven contributors map to mask 127. When a point has
+an eighth contributor, the standard mask is unavailable; the complete named
+contributors and overflow are retained in the sidecar. Selecting or silently
+truncating to seven fails closed. Unknown fields are rejected.
+
+Tools issues #4710 (M1 canonical schema) and #4716 (M9 C3D exchange) remain
+unavailable with null protected revision, release, and schema pins. Therefore
+the package makes no binary C3D, runtime, schema-parity, independent-reader,
+physical-accuracy, or production claim. Those gates, rendered PDF/DOCX visual
+QA, protected AffineDrift merge, and post-merge verification remain required.
 
 ### Module Map
 
@@ -640,6 +664,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-26 | 1.0.226 | feat(mocap, #3959): Added the source-only C3D publication compatibility and loss-sidecar schemas, sanitized seven/eight-camera semantic fixtures, digest-bound explicit loss records, a deterministic verifier, and textbook interchange guidance. Tools M1/M9 pins remain unavailable/null; no binary C3D, runtime/schema authority, reader parity, physical qualification, render, or protected completion is claimed. |
 | 2026-08-26 | 1.0.225 | feat(mocap, #3956): Added the source-bounded camera evidence registry, strict schema and deterministic verifier, three fully disposed industrial-camera candidates, two fail-closed pilot recommendations, selection calculations, current primary-source links, Quarto navigation, and TDD coverage. Procurement remains default-deny; prices, exact EULA approval, adapters, physical timing, bandwidth, pose, calibration, C3D, and task qualification remain unavailable.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | 2026-08-25 | 1.0.224 | feat(mocap, #3954): Established AffineDrift's standalone publication boundary for markerless mocap with a versioned manifest schema, deterministic projection verifier, immutable Tools/UpstreamDrift source pins, artifact digest locks, explicit evidence classes, and fail-closed privacy, security, licensing, live-lab, and synthetic-evidence gates.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2026-08-25 | 1.0.223 | docs(monograph, #3951): Pinned the protected proximal--distal projection to UpstreamDrift squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf` with 35 technical chapters, 244 pages, and 254 governed files (208 source-identical, 21 flattened, 12 immutable-link rewrites, and 13 declared adaptations). Added coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual terms; endpoint virtual-work mappings; signed and absolute hand-path impulse; power and work attribution; and a bounded 135-program optimization study with 91 qualified programs. Reconciled merge governance with the live zero-approval ruleset so required CI, rather than a named maintainer review, is the standing release gate. Retains coordinate, model, provenance, human-validation, and protected-publication boundaries.                                                                                                                                                                                                                                                                                          |

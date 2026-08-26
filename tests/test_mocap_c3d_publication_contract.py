@@ -21,6 +21,7 @@ FIXTURE_DIR = REPO_ROOT / "data" / "markerless_mocap" / "c3d_publication"
 SEVEN_PATH = FIXTURE_DIR / "synthetic_7_camera_v1.json"
 EIGHT_PATH = FIXTURE_DIR / "synthetic_8_camera_v1.json"
 SCHEMA_PATH = REPO_ROOT / "schemas" / "mocap_c3d_publication_compatibility_v1.schema.json"
+SIDECAR_SCHEMA_PATH = REPO_ROOT / "schemas" / "mocap_c3d_loss_sidecar_v1.schema.json"
 ARTICLE_PATH = REPO_ROOT / "articles" / "markerless-mocap-c3d-interchange.qmd"
 
 
@@ -112,11 +113,8 @@ def test_loss_sidecar_digest_and_overflow_are_binding(
     eight_camera: dict[str, Any], tmp_path: Path
 ) -> None:
     sidecar_name = eight_camera["loss_sidecar"]["path"]
-    sidecar = json.loads((FIXTURE_DIR / sidecar_name).read_text(encoding="utf-8"))
-    sidecar["camera_overflow"][0] = "camera-selected-silently"
-    (tmp_path / sidecar_name).write_text(
-        json.dumps(sidecar, indent=2) + "\n", encoding="utf-8"
-    )
+    payload = (FIXTURE_DIR / sidecar_name).read_bytes()
+    (tmp_path / sidecar_name).write_bytes(payload.replace(b"camera-08", b"camera-99", 1))
 
     with pytest.raises(MocapC3DPublicationError, match="SHA-256"):
         verify_publication_package(eight_camera, fixture_dir=tmp_path)
@@ -124,11 +122,13 @@ def test_loss_sidecar_digest_and_overflow_are_binding(
 
 def test_publication_schema_and_reader_guidance_are_versioned() -> None:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    sidecar_schema = json.loads(SIDECAR_SCHEMA_PATH.read_text(encoding="utf-8"))
     article = ARTICLE_PATH.read_text(encoding="utf-8")
     spec = (REPO_ROOT / "SPEC.md").read_text(encoding="utf-8")
     handoff = (REPO_ROOT / "AGENT_HANDOFF.md").read_text(encoding="utf-8")
 
     assert schema["properties"]["schema"]["const"] == PUBLICATION_SCHEMA_ID
+    assert sidecar_schema["properties"]["schema"]["const"].endswith("loss-sidecar/v1")
     assert "Seven-camera contributor-mask limit" in article
     assert "normalized semantic agreement" in article
     assert "Mocap C3D Publication Compatibility" in spec

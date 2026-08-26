@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -129,6 +129,22 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   C3D result, or procurement approval exists. AFF-M2 must consume protected
   Tools calibration contracts after their dependency stack merges; do not copy
   runtime calculations into AffineDrift.
+- **Mocap/C3D publication compatibility (AffineDrift #3959 / AFF-M3):** branch
+  `docs/3959-mocap-session-c3d-publication` is a dependency-bounded source slice
+  from protected main `3feec152d9d6354ac60511d432876b0788cecda0`. It owns only
+  strict Affine publication fixtures/schemas, digest-bound loss sidecars,
+  deterministic verification, and textbook guidance. Tools #4710 and #4716
+  remain open: M1 material exists only on open PR #4734, and M9 exists only on
+  an unprotected local cumulative branch. Both dependency records therefore use
+  `unavailable` and null protected pins. The seven-camera fixture represents all
+  contributors as mask 127; the eight-camera fixture makes the standard mask
+  unavailable and preserves all identities plus overflow in its hashed sidecar.
+  There is no C3D binary, reader/writer runtime, Tools schema parity,
+  independent-reader/corpus result, physical qualification, render/visual QA,
+  PR, protected merge, or post-merge evidence. Keep #3959 open until each gate
+  exists. During the workstation capacity drain, validation is limited to
+  focused OGLaptop-1 through OGLaptop-4 jobs with explicit `pytest -n 0`; do not
+  run local tests, lint, render, or builds on DeskComputer.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.

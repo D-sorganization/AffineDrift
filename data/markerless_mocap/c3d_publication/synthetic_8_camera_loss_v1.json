@@ -1,0 +1,78 @@
+{
+  "schema": "affinedrift/mocap-c3d-loss-sidecar/v1",
+  "fixture_id": "affinedrift-synthetic-c3d-8-camera-v1",
+  "purpose": "Digest-bound disclosure of C3D camera-mask overflow and other nonrepresented semantics",
+  "camera_overflow": ["camera-08"],
+  "contributors": [
+    {
+      "frame_index": 0,
+      "point_id": "pelvis_center",
+      "canonical_camera_ids": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07", "camera-08"],
+      "standard_mask_state": "unavailable_overflow",
+      "standard_mask": null
+    },
+    {
+      "frame_index": 0,
+      "point_id": "left_ankle",
+      "canonical_camera_ids": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07", "camera-08"],
+      "standard_mask_state": "unavailable_overflow",
+      "standard_mask": null
+    },
+    {
+      "frame_index": 1,
+      "point_id": "pelvis_center",
+      "canonical_camera_ids": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07", "camera-08"],
+      "standard_mask_state": "unavailable_overflow",
+      "standard_mask": null
+    },
+    {
+      "frame_index": 1,
+      "point_id": "left_ankle",
+      "canonical_camera_ids": ["camera-01", "camera-02", "camera-03", "camera-04", "camera-05", "camera-06", "camera-07", "camera-08"],
+      "standard_mask_state": "unavailable_overflow",
+      "standard_mask": null
+    }
+  ],
+  "losses": [
+    {
+      "id": "camera-mask-capacity",
+      "path": "/frames/*/points/*/contributors",
+      "source_semantics": "eight named contributing cameras",
+      "c3d_semantics": "seven standard contributor flags",
+      "disposition": "preserved_in_sidecar",
+      "detail": "The standard mask is unavailable, not a selected or truncated seven-camera subset; all eight identities remain here."
+    },
+    {
+      "id": "absolute-timestamp-origin",
+      "path": "/frames/*/timestamp_ns",
+      "source_semantics": "integer nanoseconds from a synthetic session origin",
+      "c3d_semantics": "implicit fixed-rate time from first frame",
+      "disposition": "preserved_in_sidecar",
+      "detail": "The projection retains sample order and rate but not an absolute nanosecond clock origin."
+    },
+    {
+      "id": "point-confidence",
+      "path": "/frames/*/points/*/confidence",
+      "source_semantics": "dimensionless model confidence on [0,1]",
+      "c3d_semantics": "no standard confidence field",
+      "disposition": "preserved_in_sidecar",
+      "detail": "Confidence is not relabeled as residual because the quantities have different meanings."
+    },
+    {
+      "id": "skeleton-topology",
+      "path": "/skeleton/bones",
+      "source_semantics": "named directed parent-child topology",
+      "c3d_semantics": "point labels without a normative skeleton graph",
+      "disposition": "preserved_in_sidecar",
+      "detail": "Point labels remain projected; topology remains external."
+    },
+    {
+      "id": "processing-provenance",
+      "path": "/provenance",
+      "source_semantics": "method, software, source classification, and authority state",
+      "c3d_semantics": "no protected Tools extension is currently available",
+      "disposition": "preserved_in_sidecar",
+      "detail": "AffineDrift does not invent a vendor parameter group before Tools M9 merges."
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/mocap_c3d_loss_sidecar_v1.schema.json",
+  "title": "AffineDrift Mocap C3D Loss Sidecar Version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "fixture_id", "purpose", "camera_overflow", "contributors", "losses"],
+  "properties": {
+    "schema": {"const": "affinedrift/mocap-c3d-loss-sidecar/v1"},
+    "fixture_id": {"$ref": "#/$defs/nonempty"},
+    "purpose": {"$ref": "#/$defs/nonempty"},
+    "camera_overflow": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonempty"}
+    },
+    "contributors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/contributor"}
+    },
+    "losses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/loss"}
+    }
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "unique_strings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonempty"}
+    },
+    "contributor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame_index",
+        "point_id",
+        "canonical_camera_ids",
+        "standard_mask_state",
+        "standard_mask"
+      ],
+      "properties": {
+        "frame_index": {"type": "integer", "minimum": 0},
+        "point_id": {"$ref": "#/$defs/nonempty"},
+        "canonical_camera_ids": {"$ref": "#/$defs/unique_strings"},
+        "standard_mask_state": {"enum": ["representable", "unavailable_overflow"]},
+        "standard_mask": {"type": ["integer", "null"], "minimum": 0, "maximum": 127}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"standard_mask_state": {"const": "unavailable_overflow"}},
+            "required": ["standard_mask_state"]
+          },
+          "then": {"properties": {"standard_mask": {"type": "null"}}}
+        },
+        {
+          "if": {
+            "properties": {"standard_mask_state": {"const": "representable"}},
+            "required": ["standard_mask_state"]
+          },
+          "then": {"properties": {"standard_mask": {"type": "integer"}}}
+        }
+      ]
+    },
+    "loss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "path", "source_semantics", "c3d_semantics", "disposition", "detail"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonempty"},
+        "path": {"$ref": "#/$defs/nonempty"},
+        "source_semantics": {"$ref": "#/$defs/nonempty"},
+        "c3d_semantics": {"$ref": "#/$defs/nonempty"},
+        "disposition": {"enum": ["preserved_in_sidecar", "rejected"]},
+        "detail": {"$ref": "#/$defs/nonempty"}
+      }
+    }
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/mocap_c3d_publication_compatibility_v1.schema.json",
+  "title": "AffineDrift Mocap C3D Publication Compatibility Version 1",
+  "description": "Strict source-only publication fixture. This is not the Tools MocapSession or C3D runtime schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "fixture_id", "classification", "authority", "dependencies",
+    "source_traceability", "coordinate_frame", "timebase", "cameras", "skeleton",
+    "frames", "events", "analog", "provenance", "c3d_projection", "loss_sidecar",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {"const": "affinedrift/mocap-c3d-publication-compatibility/v1"},
+    "fixture_id": {"$ref": "#/$defs/nonempty"},
+    "classification": {"const": "model_scenario"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "dependencies": {"$ref": "#/$defs/dependencies"},
+    "source_traceability": {
+      "type": "array", "minItems": 2, "items": {"$ref": "#/$defs/source"}
+    },
+    "coordinate_frame": {"$ref": "#/$defs/coordinate_frame"},
+    "timebase": {"$ref": "#/$defs/timebase"},
+    "cameras": {"$ref": "#/$defs/unique_strings"},
+    "skeleton": {"$ref": "#/$defs/skeleton"},
+    "frames": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/frame"}},
+    "events": {"type": "array", "maxItems": 18, "items": {"$ref": "#/$defs/event"}},
+    "analog": {"$ref": "#/$defs/analog"},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "c3d_projection": {"$ref": "#/$defs/c3d_projection"},
+    "loss_sidecar": {"$ref": "#/$defs/loss_sidecar"},
+    "limitations": {"$ref": "#/$defs/unique_strings"}
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1},
+    "number": {"type": "number"},
+    "positive": {"type": "number", "exclusiveMinimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "unique_strings": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonempty"}
+    },
+    "string_array": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/nonempty"}
+    },
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["repository", "scope", "runtime_authority", "binary_c3d_present", "unknown_metadata_policy"],
+      "properties": {
+        "repository": {"const": "D-sorganization/AffineDrift"},
+        "scope": {"const": "sanitized publication compatibility and pedagogy only"},
+        "runtime_authority": {"const": false},
+        "binary_c3d_present": {"const": false},
+        "unknown_metadata_policy": {"const": "reject"}
+      }
+    },
+    "dependency": {
+      "type": "object", "additionalProperties": false,
+      "required": ["issue", "state", "protected_revision", "release", "schema_id"],
+      "properties": {
+        "issue": {"type": "string", "pattern": "^https://github.com/D-sorganization/Tools/issues/"},
+        "state": {"const": "unavailable"},
+        "protected_revision": {"type": "null"},
+        "release": {"type": "null"},
+        "schema_id": {"type": "null"}
+      }
+    },
+    "dependencies": {
+      "type": "object", "additionalProperties": false,
+      "required": ["tools_m1", "tools_m9"],
+      "properties": {
+        "tools_m1": {"$ref": "#/$defs/dependency"},
+        "tools_m9": {"$ref": "#/$defs/dependency"}
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "url", "accessed_on", "applies_to"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonempty"}, "title": {"$ref": "#/$defs/nonempty"},
+        "url": {"type": "string", "pattern": "^https://"},
+        "accessed_on": {"type": "string", "format": "date"},
+        "applies_to": {"$ref": "#/$defs/unique_strings"}
+      }
+    },
+    "coordinate_frame": {
+      "type": "object", "additionalProperties": false,
+      "required": ["frame_id", "handedness", "x_axis", "y_axis", "z_axis", "length_unit"],
+      "properties": {
+        "frame_id": {"$ref": "#/$defs/nonempty"},
+        "handedness": {"enum": ["right-handed", "left-handed"]},
+        "x_axis": {"$ref": "#/$defs/nonempty"}, "y_axis": {"$ref": "#/$defs/nonempty"},
+        "z_axis": {"$ref": "#/$defs/nonempty"}, "length_unit": {"const": "m"}
+      }
+    },
+    "timebase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["point_rate_hz", "analog_rate_hz", "analog_samples_per_point_frame", "timestamp_origin", "timestamp_unit"],
+      "properties": {
+        "point_rate_hz": {"$ref": "#/$defs/positive"},
+        "analog_rate_hz": {"$ref": "#/$defs/positive"},
+        "analog_samples_per_point_frame": {"type": "integer", "minimum": 1},
+        "timestamp_origin": {"$ref": "#/$defs/nonempty"},
+        "timestamp_unit": {"const": "ns"}
+      }
+    },
+    "skeleton": {
+      "type": "object", "additionalProperties": false,
+      "required": ["skeleton_id", "joint_ids", "bones"],
+      "properties": {
+        "skeleton_id": {"$ref": "#/$defs/nonempty"},
+        "joint_ids": {"$ref": "#/$defs/unique_strings"},
+        "bones": {"type": "array", "items": {"$ref": "#/$defs/bone"}}
+      }
+    },
+    "bone": {
+      "type": "object", "additionalProperties": false, "required": ["parent", "child"],
+      "properties": {"parent": {"$ref": "#/$defs/nonempty"}, "child": {"$ref": "#/$defs/nonempty"}}
+    },
+    "frame": {
+      "type": "object", "additionalProperties": false,
+      "required": ["frame_index", "timestamp_ns", "points"],
+      "properties": {
+        "frame_index": {"type": "integer", "minimum": 0},
+        "timestamp_ns": {"type": "integer", "minimum": 0},
+        "points": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/point"}}
+      }
+    },
+    "point": {
+      "type": "object", "additionalProperties": false,
+      "required": ["point_id", "xyz_m", "confidence", "residual", "valid", "contributors"],
+      "properties": {
+        "point_id": {"$ref": "#/$defs/nonempty"},
+        "xyz_m": {"$ref": "#/$defs/xyz"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "residual": {"type": "number"}, "valid": {"type": "boolean"},
+        "contributors": {"$ref": "#/$defs/unique_strings"}
+      }
+    },
+    "xyz": {
+      "type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/number"}
+    },
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["label", "time_seconds", "context", "description"],
+      "properties": {
+        "label": {"$ref": "#/$defs/nonempty"}, "time_seconds": {"$ref": "#/$defs/number"},
+        "context": {"type": "string"}, "description": {"type": "string"}
+      }
+    },
+    "analog": {
+      "type": "object", "additionalProperties": false,
+      "required": ["channel_labels", "channel_units", "samples", "force_platforms"],
+      "properties": {
+        "channel_labels": {"$ref": "#/$defs/unique_strings"},
+        "channel_units": {"$ref": "#/$defs/string_array"},
+        "samples": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/number"}}},
+        "force_platforms": {"type": "array", "items": {"$ref": "#/$defs/force_platform"}}
+      }
+    },
+    "force_platform": {
+      "type": "object", "additionalProperties": false,
+      "required": ["plate_id", "type_code", "channel_indices_zero_based", "corners_m", "origin_m"],
+      "properties": {
+        "plate_id": {"$ref": "#/$defs/nonempty"}, "type_code": {"type": "integer", "minimum": 1},
+        "channel_indices_zero_based": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+        "corners_m": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/xyz"}},
+        "origin_m": {"$ref": "#/$defs/xyz"}
+      }
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_kind", "method_id", "method_version", "human_subject_data", "claim_class"],
+      "properties": {
+        "source_kind": {"const": "sanitized_synthetic"}, "method_id": {"$ref": "#/$defs/nonempty"},
+        "method_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "human_subject_data": {"const": false}, "claim_class": {"const": "model_scenario"}
+      }
+    },
+    "c3d_projection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "point_rate_hz", "point_units", "timestamp_semantics", "analog_rate_hz", "analog_samples_per_point_frame", "event_header_limit", "points", "independent_reader_qualification"],
+      "properties": {
+        "state": {"const": "semantic_example_only"}, "point_rate_hz": {"$ref": "#/$defs/positive"},
+        "point_units": {"const": "mm"}, "timestamp_semantics": {"const": "implicit_from_first_frame_and_rate"},
+        "analog_rate_hz": {"$ref": "#/$defs/positive"},
+        "analog_samples_per_point_frame": {"type": "integer", "minimum": 1},
+        "event_header_limit": {"const": 18},
+        "points": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/projected_point"}},
+        "independent_reader_qualification": {"$ref": "#/$defs/reader_qualification"}
+      }
+    },
+    "projected_point": {
+      "type": "object", "additionalProperties": false,
+      "required": ["frame_index", "point_id", "xyz_mm", "residual", "contributor_mask"],
+      "properties": {
+        "frame_index": {"type": "integer", "minimum": 0}, "point_id": {"$ref": "#/$defs/nonempty"},
+        "xyz_mm": {"$ref": "#/$defs/xyz"}, "residual": {"type": "number"},
+        "contributor_mask": {"type": ["integer", "null"], "minimum": 0, "maximum": 127}
+      }
+    },
+    "reader_qualification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "readers", "corpus", "normalized_semantic_agreement"],
+      "properties": {
+        "state": {"const": "unavailable"}, "readers": {"type": "array", "maxItems": 0},
+        "corpus": {"type": "array", "maxItems": 0}, "normalized_semantic_agreement": {"type": "null"}
+      }
+    },
+    "loss_sidecar": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "bytes", "required"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+\\.json$"},
+        "sha256": {"$ref": "#/$defs/sha256"}, "bytes": {"type": "integer", "minimum": 1},
+        "required": {"const": true}
+      }
+    }
+  }
+}

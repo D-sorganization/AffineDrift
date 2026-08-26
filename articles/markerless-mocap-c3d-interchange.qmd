@@ -1,0 +1,275 @@
+---
+title: "Markerless Mocap Session and C3D Interchange"
+description: "A source-only guide to C3D semantics, explicit information loss, and future MocapSession compatibility."
+date: "2026-08-26"
+categories: [Technology, Motion Capture, Data Interchange, Biomechanics]
+toc: true
+toc-depth: 3
+---
+
+## Decision and Present Status {.unnumbered}
+
+AffineDrift can explain and test an interchange mapping today, but it cannot define the runtime
+`MocapSession` or declare a working C3D export. Those authorities belong to Tools issues
+[#4710](https://github.com/D-sorganization/Tools/issues/4710) and
+[#4716](https://github.com/D-sorganization/Tools/issues/4716). Neither dependency has a protected,
+merged release. The fixtures therefore store `unavailable` with null revision, release, and schema
+pins. They are sanitized synthetic **model scenarios**, not captured motion and not C3D binaries.
+
+::: {.callout-warning title="Publication contract, not an exporter"}
+This package does not read or write C3D, import a Tools branch, define a competing session schema,
+qualify a camera, or establish reader parity. It makes the intended publication mapping and every
+known loss executable so that future protected Tools releases can be tested without rewriting the
+lesson.
+:::
+
+The governed files are:
+
+- [strict publication schema](../schemas/mocap_c3d_publication_compatibility_v1.schema.json)
+  and [loss-sidecar schema](../schemas/mocap_c3d_loss_sidecar_v1.schema.json);
+- [seven-camera fixture](../data/markerless_mocap/c3d_publication/synthetic_7_camera_v1.json)
+  and its digest-bound
+  [loss sidecar](../data/markerless_mocap/c3d_publication/synthetic_7_camera_loss_v1.json);
+- [eight-camera fixture](../data/markerless_mocap/c3d_publication/synthetic_8_camera_v1.json)
+  and its digest-bound
+  [overflow sidecar](../data/markerless_mocap/c3d_publication/synthetic_8_camera_loss_v1.json); and
+- the deterministic verifier, `scripts/verify_mocap_c3d_publication.py`.
+
+## Vocabulary and Hover Help
+
+<abbr title="A fixed-rate frame of three-dimensional point samples plus its synchronized analog samples">point frame</abbr>,
+<abbr title="The nonnegative point reconstruction error; a negative stored residual marks a point invalid">residual</abbr>,
+<abbr title="A seven-bit C3D field identifying which of the first seven cameras contributed to a point">contributor mask</abbr>,
+and <abbr title="A digest-bound JSON record of semantics that the standard projection cannot carry">loss sidecar</abbr>
+have precise meanings here. Confidence is a model score; residual is a geometric error. They are
+never treated as interchangeable.
+
+## The Three Records
+
+It helps to separate three layers:
+
+1. The future **canonical session** owns complete camera-independent evidence: frames, clock
+   domains, point confidence, contributors, skeleton topology, analog signals, force platforms,
+   and processing provenance. Tools owns that contract.
+2. A **C3D file** is a terminal interchange representation built around fixed-rate 3D points and
+   synchronized analog samples. It has useful, established biomechanics conventions, but it
+   cannot carry every modern session semantic in a standard field.
+3. The **AffineDrift publication fixture** is a transparent teaching record. It displays canonical
+   synthetic inputs, the proposed standard projection, dependency state, and a hashed loss report.
+   It owns neither layer 1 nor the conversion implementation.
+
+This separation follows AffineDrift ADR 0001: public pedagogy may project immutable, qualified
+evidence, while capture and interchange runtime remain external.
+
+## Frames, Axes, and Units
+
+Each synthetic point is a column vector in an explicitly named right-handed shop frame:
+
+$$
+\mathbf{x}_{m} = \begin{bmatrix}x & y & z\end{bmatrix}^{\mathsf T},
+\qquad
+\mathbf{x}_{mm} = 1000\,\mathbf{x}_{m}.
+$$
+
+The source uses metres; the displayed C3D projection uses millimetres. For example,
+$[0,0,1.002]$ m becomes $[0,0,1002]$ mm. The verifier recomputes this conversion for every point.
+A label or unit declaration alone is insufficient: numeric agreement must also hold.
+
+C3D stores all points against a common coordinate system, but a file does not make an ambiguous
+lab frame meaningful. The publication record therefore names handedness and the positive meaning
+of each axis. A later Tools adapter must perform any required rigid transform before export:
+
+$$
+\mathbf{x}_{W} = \mathbf{R}_{W\leftarrow S}\mathbf{x}_{S}
+                  + \mathbf{t}_{W\leftarrow S}.
+$$
+
+`W <- S` states the direction; a generic `transform` field would be rejected. These fixtures use
+the identity mapping so they teach interchange rather than calibration.
+
+## Fixed-Rate Time and Timestamps
+
+The C3D point sequence is sampled at one `POINT:RATE`, $f_p$. If frame index $k=0$ denotes the
+first frame, its relative time is
+
+$$
+t_k = t_0 + \frac{k}{f_p}.
+$$
+
+At $f_p=200$ Hz, adjacent point frames are $0.005$ s or $5{,}000{,}000$ ns apart. The fixture
+contains both indices and integer nanosecond timestamps, and the verifier requires exact agreement
+after rounding to nanoseconds. Nonuniform timestamps cannot be represented by merely choosing a
+different C3D rate; they require resampling with a declared method or an explicit rejection/loss.
+
+The standard projection retains fixed-rate relative time. It does not claim to preserve the
+session's absolute clock origin, clock uncertainty, or device-clock history. That distinction is
+recorded as `absolute-timestamp-origin` in each loss sidecar.
+
+The [C3D technical user guide](https://www.c3d.org/docs/C3D_User_Guide.pdf) is the primary format
+reference. Its point-frame and event descriptions define elapsed time from the first recorded
+frame, rather than a general absolute timestamp system.
+
+## Analog Synchronization
+
+C3D interleaves an integer number of analog sample sets with every point frame. Let $f_a$ be the
+common analog sample rate and $n_a$ the number of analog samples per point frame. The required
+relationship is
+
+$$
+n_a = \frac{f_a}{f_p} \in \mathbb{Z}_{>0},
+\qquad
+N_a = N_p n_a,
+$$
+
+where $N_p$ and $N_a$ are the point-frame and per-channel analog-sample counts. In the fixtures,
+$f_a=1000$ Hz, $f_p=200$ Hz, $n_a=5$, and two point frames require ten analog rows. The verifier
+rejects a fractional ratio, a mismatched declared ratio, or a sample count other than ten.
+
+All analog channels share one C3D rate. Each channel still has its own label and physical unit.
+Repeating `N` or `N*m` across channels is valid and is different from repeating a channel label.
+The official [ANALOG:RATE guidance](https://www.c3d.org/HTML/Documents/analograte1.htm) and
+[analog-storage description](https://www.c3d.org/HTML/Documents/analogdatastorage.htm) document
+the integer-ratio and interleaving rules.
+
+## Residuals, Validity, and Confidence
+
+A point residual is a reconstruction-error quantity. In the EzC3D API, a negative residual marks
+an invalid point, commonly associated with occlusion; nonnegative values represent available
+residual evidence. The publication verifier enforces the same sign/validity pairing:
+
+$$
+r_{k,j} < 0 \Longrightarrow \operatorname{valid}_{k,j}=\text{false}.
+$$
+
+The synthetic points are valid and have nonnegative residuals. Model confidence $c_{k,j}\in[0,1]$
+is separately bounded. There is no standard C3D confidence field, so confidence remains in the
+publication record and the sidecar reports `point-confidence`. Replacing residual by
+$1-c_{k,j}$ would invent a calibration relationship and is forbidden.
+
+The [EzC3D project documentation](https://github.com/pyomeca/ezc3d) is used only as primary
+adapter/reference evidence at this stage. It documents residual and camera-mask array semantics;
+it is not evidence that these JSON examples have passed an EzC3D round trip.
+
+## Seven-camera contributor-mask limit
+
+The standard point contributor mask has seven boolean positions. For contributors among cameras
+1 through 7, let $b_i\in\{0,1\}$ indicate contribution from camera $i$. The integer display used by
+the fixture is
+
+$$
+m = \sum_{i=1}^{7} b_i 2^{i-1},
+\qquad 0 \le m \le 127.
+$$
+
+Seven contributing cameras produce $m=1+2+4+8+16+32+64=127$. The seven-camera fixture carries
+that value for every point and independently preserves the seven camera identities.
+
+An eighth camera has no standard bit. When any contributor lies outside the first seven positions,
+the approved provisional policy is:
+
+- set the standard-mask semantic value to `null`/unavailable;
+- retain every canonical camera identity in the publication record and sidecar;
+- list each overflow identity explicitly;
+- bind the sidecar to the fixture by SHA-256 and exact byte count; and
+- reject missing, changed, remapped, wrapped, or silently selected subsets.
+
+The eight-camera fixture therefore does **not** publish `127`. That number would falsely claim that
+only the first seven cameras supplied the evidence. The complete eight-camera contributors remain
+available for a future protected Tools extension or another lossless interchange format.
+
+## Skeletons and Events
+
+C3D point labels can name joints or markers, but point labels do not themselves define a normative
+skeleton graph. The fixture maps joint IDs to point labels while keeping directed parent-child
+bones in the sidecar. The verifier requires every bone endpoint to be a published joint and every
+published point ID to belong to the declared skeleton.
+
+The legacy C3D header provides space for at most 18 event times. Parameters may carry richer event
+information in many files, but a publication must not assume all consumers preserve an unlimited
+event collection. These fixtures contain one labeled, contextualized synthetic event. The verifier
+rejects a fixture with more than 18 events and records the header capacity explicitly. The official
+[event-time description](https://www.c3d.org/HTML/Documents/eventtimes2.htm) documents the header
+limit and elapsed-time interpretation.
+
+## Force and Analog Data
+
+The examples include six channels—three forces and three moments—and one Type 2 synthetic force
+platform. Channel references are zero-based in the publication fixture because this is a software
+data structure; a future Tools writer owns conversion to the C3D parameter convention. The
+verifier requires:
+
+- one unit entry per channel;
+- one value per channel in every analog sample;
+- unique, in-range force-platform channel indices;
+- exactly four XYZ platform corners; and
+- one XYZ platform origin.
+
+The numbers are deliberately simple and are not a calibrated plate trial. Geometry, signs,
+calibration matrices, analog scaling, offsets, ADC format, and force-plate type support must be
+qualified by Tools M9 and independent readers before a binary can be published.
+
+## Provenance and the Loss Sidecar
+
+A JSON sidecar is useful only when it is cryptographically bound. If $B$ is the exact sidecar byte
+sequence, the fixture records
+
+$$
+h = \operatorname{SHA256}(B)
+$$
+
+and $|B|$, its byte count. Verification reads bytes, checks the length, recomputes $h$, then checks
+the sidecar's fixture ID, contributor records, overflow list, and typed losses. Reformatting the
+sidecar changes its digest and requires an intentional fixture update.
+
+Every loss has a stable ID, source path, source meaning, C3D meaning, disposition, and explanation.
+The baseline losses are absolute timestamp origin, confidence, skeleton topology, and processing
+provenance. The eight-camera case adds camera-mask capacity. AffineDrift does not invent a custom
+C3D parameter group while Tools M9 is unavailable.
+
+Unknown top-level or nested fields fail closed through exact-key checks and JSON Schema
+`additionalProperties: false`. The declared unknown-metadata policy is `reject`. A future Tools
+release may instead preserve selected opaque parameters, but that policy must arrive through a
+versioned protected contract; it cannot be inferred from this article.
+
+## Compatibility Means Semantic Agreement
+
+C3D writers may choose different parameter ordering, processor encodings, numeric storage, or
+padding while representing the same acquisition. Qualification must compare normalized semantic
+agreement, not byte identity. The future conformance record should name and pin:
+
+- the protected Tools M1 schema and M9 exchange release;
+- the writer and every reader with exact versions;
+- the official C3D.org corpus artifact and digest;
+- the emitted binary and loss-sidecar digests;
+- normalized points, units, rates, residual/validity, masks, events, analog, force-platform, and
+  provenance results; and
+- every accepted loss before and after write-read-write.
+
+The current fixture records independent-reader qualification as unavailable with empty reader and
+corpus lists and a null result. No named reader, sample corpus, byte round trip, or normalized
+semantic agreement has run in this slice.
+
+## What the Verifier Proves
+
+The focused verifier proves fixture structure, authority boundaries, primary-source topics,
+fixed-rate timestamps, integer analog ratio, point/unit conversion, residual validity,
+seven-bit masks, overflow unavailability, skeleton references, force-channel bounds, sidecar
+digests, and explicit losses. Its output is a deterministic count summary.
+
+It does not prove JSON Schema equivalence to the eventual Tools schema, binary conformance,
+independent-reader acceptance, physical timing, calibration, pose accuracy, privacy review,
+render quality, or production readiness. Those omissions are blockers, not implied successes.
+
+## Release Gates
+
+AFF-M3 remains open until all of the following exist:
+
+1. Tools M1 and M9 are protected-merged and immutable releases replace the null pins.
+2. Fixtures are adapted through the protected Tools public seam without copied runtime code.
+3. Real sanitized C3D binaries pass Tools validation and at least the approved independent readers
+   against a digest-pinned corpus.
+4. Seven-camera and eight-plus-camera loss behavior is stable across write-read-write.
+5. The rendered article receives desktop/mobile, PDF, and Word visual QA under the normal fleet.
+6. AffineDrift passes its full protected checks, review, merge, and post-merge verification.
+
+Until then, the package is useful, executable groundwork—and nothing more.
