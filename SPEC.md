@@ -147,6 +147,25 @@ the ZED X One GS only as a long-cable topology evaluation. No model is approved
 for a full rig. Tools must own optional camera adapters and canonical contracts;
 UpstreamDrift must own physical qualification and operator workflows.
 
+### Camera Geometry Pedagogy Contract
+
+`articles/markerless-mocap-camera-geometry.qmd` is the canonical AffineDrift
+manual for intrinsics, Brown-Conrady distortion, extrinsics, DLT, PnP, bundle
+adjustment, observability, gauge freedom, first-order uncertainty,
+synchronization rejection, camera-movement invalidation, and recalibration.
+It teaches declared equations and failure states; it is not a calibration
+runtime, solver authority, or lab approval.
+
+The pinned `affinedrift/mocap-camera-geometry-fixture/v1` model scenario and its
+strict verifier exercise the written projection, distortion, rectified-stereo
+uncertainty, synchronization, and movement equations. The dependency adapter
+records Tools #4714 and #4721 as `unavailable` with null revision, schema, and
+fixture pins until protected releases exist. Any future `available` dependency
+must supply an exact 40-character protected revision, non-empty versioned schema
+identifier, and SHA-256 fixture digest. AffineDrift does not implement a general
+DLT, PnP, bundle-adjustment, or autocalibration solver and cannot approve a
+calibration while either Tools dependency is unavailable.
+
 ### Module Map
 
 ```

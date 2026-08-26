@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -110,18 +110,13 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   immutable evidence projections. Tools owns public contracts; UpstreamDrift
   owns runtime orchestration and qualification. Use ADR 0001 and
   `affinedrift/mocap-publication-projection/v1`; never publish raw video, PII,
-  secrets, AGPL components, moving links, or unqualified lab/model claims.
-  Local branch `feat/3954-mocap-authority-projection` is not pushed. Python
-  3.12 passes 16 focused tests plus Black, Ruff, and strict mypy; its full lane
-  is workstation-blocked at collection by the inherited PyQt6 `QtGui` DLL ABI.
-  Supplementary Python 3.13 evidence is 3,248 passed, 29 skipped, and 75.3%
-  coverage; the isolated Quarto render also passes. No protected mocap release
-  or physical-lab qualification exists yet; next pin merged Tools #4706 and
-  UpstreamDrift #9063 authorities.
-- **Camera evidence registry (AffineDrift #3956 / AFF-M1):** branch
-  `feat/3956-camera-selection-registry` starts from protected main
-  `ca33d3ef6f543ff3dfcadda35c3bdf2356acff84`. The versioned registry, strict
-  verifier, public camera-selection guide, and contract tests cover FLIR
+  secrets, AGPL components, moving links, or unqualified lab/model claims. AFF-M0
+  merged through PR #3973 at protected main `ca33d3ef6f543ff3dfcadda35c3bdf2356acff84`.
+  No protected Tools mocap runtime release or physical-lab qualification exists.
+- **Camera evidence registry (AffineDrift #3956 / AFF-M1):** merged through PR
+  #3975 at protected main `3feec152d9d6354ac60511d432876b0788cecda0`.
+  The versioned registry, strict verifier, public camera-selection guide, and
+  contract tests cover FLIR
   BFS-U3-16S2C-CS, Basler a2A1920-160ucBAS, and ZED X One GS through ten required
   purchasing attributes each. The decision is provisional: quote and buy two
   matched cameras for a physical pilot, not the full rig. No price, legal
@@ -129,6 +124,20 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   C3D result, or procurement approval exists. AFF-M2 must consume protected
   Tools calibration contracts after their dependency stack merges; do not copy
   runtime calculations into AffineDrift.
+- **Camera geometry pedagogy (AffineDrift #3962 / AFF-M2):** branch
+  `docs/3962-camera-geometry-manual` starts from protected main `3feec152...`.
+  Its manual and pinned `affinedrift/mocap-camera-geometry-fixture/v1` synthetic
+  model scenario teach intrinsics/distortion, extrinsics, DLT, PnP, bundle
+  adjustment, observability/gauge, uncertainty, synchronization rejection, and
+  camera-movement invalidation/recalibration. The adapter truthfully records
+  Tools #4714 (M4) and #4721 (M5) as `unavailable` with null immutable pins and
+  cannot claim calibration authority or Tools-fixture parity. TDD RED is run
+  33017972860 / job 98341042071 on OGLaptop-3 with explicit `-n 0`; the expected
+  missing verifier failed collection. The earlier GitHub-hosted fallback run
+  33017912617 is non-authoritative and discarded. During the workstation drain,
+  do not render or run local tests/lint/builds. AFF-M2 remains open pending
+  protected Tools dependencies, consumer parity, rendered-format QA, a full
+  protected PR gate, merge, and post-merge evidence.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.

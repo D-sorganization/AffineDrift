@@ -1,0 +1,134 @@
+{
+  "schema": "affinedrift/mocap-camera-geometry-fixture/v1",
+  "fixture_id": "affine-camera-geometry-synthetic-v1",
+  "classification": "model_scenario",
+  "authority": {
+    "repository": "D-sorganization/AffineDrift",
+    "purpose": "synthetic_pedagogy_only",
+    "runtime_authority": false,
+    "procurement_authority": false
+  },
+  "dependencies": [
+    {
+      "id": "tools_m4_intrinsics",
+      "authority_repository": "D-sorganization/Tools",
+      "issue_url": "https://github.com/D-sorganization/Tools/issues/4714",
+      "status": "unavailable",
+      "protected_revision": null,
+      "schema_id": null,
+      "fixture_sha256": null,
+      "limitation": "Tools M4 has no protected calibration schema or fixture release to consume."
+    },
+    {
+      "id": "tools_m5_extrinsics",
+      "authority_repository": "D-sorganization/Tools",
+      "issue_url": "https://github.com/D-sorganization/Tools/issues/4721",
+      "status": "unavailable",
+      "protected_revision": null,
+      "schema_id": null,
+      "fixture_sha256": null,
+      "limitation": "Tools M5 has no protected flexible-layout calibration release to consume."
+    }
+  ],
+  "coordinate_convention": {
+    "world": "right_handed_x_right_y_down_z_forward",
+    "camera": "world_to_camera_Xc_equals_R_Xw_plus_t",
+    "image": "u_right_v_down_pixel_centres",
+    "units": "metres_radians_pixels_seconds"
+  },
+  "cameras": [
+    {
+      "id": "camera_0",
+      "K": [[800.0, 0.0, 640.0], [0.0, 800.0, 360.0], [0.0, 0.0, 1.0]],
+      "distortion": [0.0, 0.0, 0.0, 0.0, 0.0],
+      "R": [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+      "t": [0.0, 0.0, 0.0]
+    },
+    {
+      "id": "camera_1",
+      "K": [[800.0, 0.0, 640.0], [0.0, 800.0, 360.0], [0.0, 0.0, 1.0]],
+      "distortion": [0.0, 0.0, 0.0, 0.0, 0.0],
+      "R": [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+      "t": [-1.0, 0.0, 0.0]
+    }
+  ],
+  "world_points": [
+    {"id": "point_0", "xyz_m": [-0.5, 0.0, 5.0]},
+    {"id": "point_1", "xyz_m": [0.0, 0.5, 4.0]},
+    {"id": "point_2", "xyz_m": [0.75, -0.25, 6.0]}
+  ],
+  "observations": [
+    {"camera_id": "camera_0", "point_id": "point_0", "expected_pixel": [560.0, 360.0]},
+    {"camera_id": "camera_1", "point_id": "point_0", "expected_pixel": [400.0, 360.0]},
+    {"camera_id": "camera_0", "point_id": "point_1", "expected_pixel": [640.0, 460.0]},
+    {"camera_id": "camera_1", "point_id": "point_1", "expected_pixel": [440.0, 460.0]},
+    {
+      "camera_id": "camera_0",
+      "point_id": "point_2",
+      "expected_pixel": [740.0, 326.6666666666667]
+    },
+    {
+      "camera_id": "camera_1",
+      "point_id": "point_2",
+      "expected_pixel": [606.6666666666666, 326.6666666666667]
+    }
+  ],
+  "probes": {
+    "distortion": {
+      "normalized_point": [0.4, -0.3],
+      "K": [[800.0, 0.0, 640.0], [0.0, 800.0, 360.0], [0.0, 0.0, 1.0]],
+      "coefficients": [-0.1, 0.01, 0.001, -0.002, 0.0],
+      "expected_pixel": [951.096, 126.578]
+    },
+    "stereo_uncertainty": {
+      "focal_length_px": 800.0,
+      "baseline_m": 1.0,
+      "disparity_px": 160.0,
+      "pixel_sigma_px": 0.5,
+      "expected_depth_m": 5.0,
+      "expected_depth_sigma_m": 0.02209708691207961
+    },
+    "synchronization": {
+      "speed_m_s": 8.0,
+      "time_skew_s": 0.003,
+      "maximum_skew_s": 0.001,
+      "expected_spatial_m": 0.024,
+      "action": "reject"
+    },
+    "movement": {
+      "baseline_center_m": [1.0, 0.0, 0.0],
+      "observed_center_m": [1.015, 0.0, 0.0],
+      "translation_limit_m": 0.01,
+      "rotation_delta_deg": 0.0,
+      "rotation_limit_deg": 0.2,
+      "expected_state": "invalidated",
+      "action": "reject_and_recalibrate"
+    },
+    "observability": {
+      "intrinsic_planar_target": {
+        "status": "model_conditioned",
+        "reason": "Multiple tilted views can constrain a declared intrinsic and distortion model."
+      },
+      "dlt_coplanar": {
+        "status": "unavailable",
+        "reason": "Unconstrained three-dimensional DLT is rank deficient for coplanar control points."
+      },
+      "pnp_planar": {
+        "status": "ambiguous",
+        "reason": "Planar PnP can admit mirror or near-degenerate pose hypotheses."
+      },
+      "bundle_adjustment_gauge": {
+        "status": "unavailable",
+        "reason": "Free cameras and points do not determine global similarity gauge without anchors."
+      },
+      "single_view_depth": {
+        "status": "unavailable",
+        "reason": "One perspective ray does not determine metric depth without another constraint."
+      },
+      "unsynchronized_multiview": {
+        "status": "rejected",
+        "reason": "Images of a moving point at different times do not define one geometric intersection."
+      }
+    }
+  }
+}

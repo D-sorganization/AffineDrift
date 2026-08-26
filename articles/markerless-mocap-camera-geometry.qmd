@@ -1,0 +1,461 @@
+---
+title: "Markerless Mocap Camera Geometry and Self-Calibration"
+description: "A dependency-aware manual for camera intrinsics, distortion, extrinsics, DLT, PnP, bundle adjustment, observability, uncertainty, movement rejection, and recalibration."
+author: "Dieter Olson"
+date: "2026-08-26"
+categories: [technology, motion capture, computer vision, calibration, uncertainty]
+---
+
+## Reader Contract
+
+This chapter teaches the calculation pathway by which image points can constrain camera geometry.
+It is not a calibration service, a qualified lab procedure, or evidence that a physical camera rig
+is accurate. In this chapter, **self-calibration** means that a lab can learn or refine camera poses
+from governed calibration observations instead of measuring every camera location by hand. It does
+not mean that arbitrary video makes every intrinsic and extrinsic parameter observable.
+
+The implementation boundary is intentionally strict:
+
+| Component | Owning Authority | State on 2026-08-26 | What This Chapter May Do |
+|---|---|---|---|
+| Intrinsic calibration contract | [Tools #4714](https://github.com/D-sorganization/Tools/issues/4714) | `unavailable` | Explain equations and verify a synthetic model scenario |
+| Extrinsic and flexible-layout calibration contract | [Tools #4721](https://github.com/D-sorganization/Tools/issues/4721) | `unavailable` | Explain equations and rejection states |
+| Calibration execution and lab workflow | UpstreamDrift | Not supplied by this slice | Describe required evidence only |
+| Public pedagogy and sanitized fixture | AffineDrift | Available | Publish calculations without runtime authority |
+
+Both Tools dependencies have status: `unavailable`, with null protected revision, schema identifier,
+and fixture digest. The adapter fails closed if a future `available` state lacks all three immutable
+pins. Consequently, this chapter does **not** claim parity with Tools fixtures, calibration approval,
+or completion of AffineDrift issue #3962.
+
+::: {.callout-warning title="No Calibration Approval"}
+The executable fixture is classified `model_scenario`. Its exact arithmetic proves that the written
+equations and coordinate conventions agree with a small synthetic example. It cannot qualify a
+lens, camera, target, room, solver, synchronization system, or reconstructed motion.
+:::
+
+## In Layman's Terms
+
+A camera flattens a three-dimensional scene onto a two-dimensional sensor. Calibration learns the
+rules of that flattening: how the lens bends rays, where the image centre lies, and where the camera
+was pointing. Multiple cameras can locate a point in space only when they see the *same point at the
+same time* and their geometry is known well enough.
+
+The difficult part is not asking an optimizer for numbers. The difficult part is knowing whether the
+images contain enough independent information to determine those numbers. A solver can return a
+small residual even when scale is free, a target was seen only head-on, two cameras moved together,
+or timestamps refer to different instants. This manual treats an unobservable answer as unavailable,
+not as a weakly supported number.
+
+## Coordinate, Frame, and Unit Contract
+
+The synthetic fixture freezes one convention so that every sign is testable:
+
+- world and camera frames are right-handed, with (x) right, (y) down, and (z) forward;
+- world points are expressed in metres and transformed *from world to camera* by
+  (mathbf X_c = Rmathbf X_w + mathbf t);
+- image coordinates are pixel-centre coordinates, (u) right and (v) down;
+- angles are radians unless a field explicitly says degrees; and
+- intrinsic focal lengths and principal points are in pixels.
+
+For a rigid rotation, (R^mathsf{T}R=I) and (det R=+1). The camera centre in world coordinates is
+
+$$
+\mathbf C_w = -R^\mathsf{T}\mathbf t.
+$$ {#eq-camera-centre}
+
+Confusing (mathbf t) with (mathbf C_w) is a common extrinsic-sign error. A system that stores a
+camera-to-world transform must invert it at the adapter boundary rather than quietly relabel it.
+
+## Intrinsics and Distortion
+
+### Pinhole Intrinsic Matrix
+
+For a camera-frame point (mathbf X_c=(X_c,Y_c,Z_c)^mathsf{T}) with (Z_c>0), normalized image
+coordinates are
+
+$$
+x = \frac{X_c}{Z_c}, \qquad y = \frac{Y_c}{Z_c}.
+$$ {#eq-normalized-image}
+
+The upper-triangular intrinsic matrix is
+
+$$
+K =
+\begin{bmatrix}
+f_x & s & c_x \\
+0 & f_y & c_y \\
+0 & 0 & 1
+\end{bmatrix},
+$$ {#eq-intrinsic-matrix}
+
+where (f_x,f_y) are focal lengths in pixels, (c_x,c_y) are the principal point, and (s) is
+skew. Most modern sensors constrain (s=0), but that is a declared model choice rather than a fact
+inferred from the symbol (K). The complete distortion-free projection is
+
+$$
+\lambda\widetilde{\mathbf x}=K[R\mid\mathbf t]\widetilde{\mathbf X}_w,
+\qquad \lambda=Z_c.
+$$ {#eq-camera-projection}
+
+The current [OpenCV calibration reference](https://docs.opencv.org/4.13.0/d9/d0c/group__calib3d.html)
+uses this world-to-camera convention and also warns that a non-monotonic radial mapping should be
+treated as calibration failure. AffineDrift cites that interface for comparison; it does not make
+OpenCV the missing Tools authority.
+
+### Brown-Conrady Distortion
+
+The teaching fixture uses five coefficients ordered
+((k_1,k_2,p_1,p_2,k_3)). With (r^2=x^2+y^2),
+
+$$
+L(r)=1+k_1r^2+k_2r^4+k_3r^6,
+$$ {#eq-radial-factor}
+
+$$
+\begin{aligned}
+x_d &= xL(r)+2p_1xy+p_2(r^2+2x^2),\\
+y_d &= yL(r)+p_1(r^2+2y^2)+2p_2xy.
+\end{aligned}
+$$ {#eq-brown-conrady}
+
+Pixels then follow from
+
+$$
+u=f_xx_d+sy_d+c_x, \qquad v=f_yy_d+c_y.
+$$ {#eq-distorted-pixel}
+
+The fixture probe uses ((x,y)=(0.4,-0.3)),
+((k_1,k_2,p_1,p_2,k_3)=(-0.1,0.01,0.001,-0.002,0)), and
+(f_x=f_y=800), ((c_x,c_y)=(640,360)). It deterministically obtains
+((u,v)=(951.096,126.578)) pixels.
+
+### Intrinsic Calibration Is a Model Fit
+
+Known target points (mathbf X_j), observed pixels (mathbf z_{ij}), camera parameters
+(oldsymbol\theta), and target pose (oldsymbol\xi_i) define residuals
+
+$$
+\mathbf r_{ij}=\mathbf z_{ij}-
+\pi(\mathbf X_j;\boldsymbol\theta,\boldsymbol\xi_i).
+$$ {#eq-intrinsic-residual}
+
+A common estimate minimizes a weighted robust objective,
+
+$$
+\min_{\boldsymbol\theta,\{\boldsymbol\xi_i\}}
+\sum_{i,j}\rho\!\left(\mathbf r_{ij}^\mathsf{T}
+W_{ij}\mathbf r_{ij}\right).
+$$ {#eq-intrinsic-objective}
+
+[Zhang's planar-target method](https://www.microsoft.com/en-us/research/publication/a-flexible-new-technique-for-camera-calibration/)
+uses multiple views of a plane at different orientations, a closed-form initialization, and nonlinear
+refinement. A planar target is not automatically degenerate: varied orientations supply constraints
+through multiple homographies. Repeated nearly fronto-parallel views, small image coverage, weak
+corner localization, and an over-parameterized distortion model can still make parameters highly
+correlated or practically unobservable.
+
+Record every accepted and rejected image, target identity and dimensions, image mode, focus,
+aperture, temperature where relevant, corner covariance, solver and version, initial state, robust
+loss, parameter constraints, residual distribution, covariance method, and validity interval.
+
+## Extrinsics
+
+Extrinsics describe one camera's pose relative to the declared world frame. They are not properties
+of the camera body alone: remounting the same camera changes (R,mathbf t), while changing focus can
+change intrinsics without moving the housing.
+
+The projection matrix
+
+$$
+P=K[R\mid\mathbf t]
+$$ {#eq-projection-matrix}
+
+has projective scale. If (K) is known and (R,mathbf t) are constrained to a rigid transform, the
+pose has six local degrees of freedom. If (P) is estimated as an unconstrained (3\times4) matrix,
+it has eleven degrees of freedom after removing scale. Those are different estimation problems and
+must not share an unlabeled result field.
+
+## Direct Linear Transform
+
+<abbr title="Direct Linear Transform">DLT</abbr> begins with homogeneous image point
+(widetilde{\mathbf x}), world point (widetilde{\mathbf X}), and
+(widetilde{\mathbf x}\times(P\widetilde{\mathbf X})=0). Two independent rows per
+correspondence yield
+
+$$
+\begin{bmatrix}
+\mathbf 0^\mathsf{T} & -w\widetilde{\mathbf X}^\mathsf{T} &
+v\widetilde{\mathbf X}^\mathsf{T} \\
+w\widetilde{\mathbf X}^\mathsf{T} & \mathbf 0^\mathsf{T} &
+-u\widetilde{\mathbf X}^\mathsf{T}
+\end{bmatrix}
+\mathbf p=\mathbf 0,
+$$ {#eq-dlt-rows}
+
+where (mathbf p=\operatorname{vec}(P)). Stacking correspondences forms (A\mathbf p=0); the
+right singular vector associated with the smallest singular value supplies a projective solution.
+
+This is an initializer, not a complete calibration claim. Coordinates should be normalized before
+forming (A); rank and singular-value separation must be reported; points behind the camera must be
+rejected; and the result should be refined under a physically declared model. Unconstrained 3D DLT
+is rank deficient when all control points are coplanar. A planar homography method is a different,
+explicitly constrained problem and must not be described as if the rank deficiency disappeared.
+
+## Perspective-n-Point
+
+<abbr title="Perspective-n-Point">PnP</abbr> estimates a calibrated camera pose from known
+three-dimensional points and their two-dimensional image correspondences:
+
+$$
+\min_{R\in SO(3),\mathbf t}
+\sum_j \rho\!\left(
+\left\|\mathbf z_j-\pi(K,R,\mathbf t,\mathbf X_j)\right\|^2_{W_j}
+\right).
+$$ {#eq-pnp-objective}
+
+The [EPnP reference implementation and paper](https://github.com/cvlab-epfl/EPnP) describe an
+(O(n)) initializer for (n\ge4), including planar and non-planar cases. That fact does not make all
+four-point layouts equally conditioned. Nearly collinear points, small angular extent, planar mirror
+hypotheses, mislabeled points, and points concentrated in one image region can produce ambiguity or
+large uncertainty.
+
+A robust operational pipeline therefore needs more than the word `solvePnP`: deterministic
+hypothesis generation, a registered robust estimator, inlier provenance, cheirality checks, explicit
+planarity classification, minimum spatial coverage, covariance or another uncertainty statement,
+and a typed ambiguous/unavailable outcome. Tools M5 will own that runtime seam; this chapter does not.
+
+## Bundle Adjustment
+
+Bundle adjustment jointly refines cameras and three-dimensional structure. For camera parameters
+(oldsymbol\theta_i), points (mathbf X_j), and observation set (mathcal O),
+
+$$
+\min_{\{\boldsymbol\theta_i\},\{\mathbf X_j\}}
+\sum_{(i,j)\in\mathcal O}
+\rho\!\left(
+\mathbf r_{ij}^\mathsf{T}W_{ij}\mathbf r_{ij}
+\right),
+\quad
+\mathbf r_{ij}=\mathbf z_{ij}-\pi(\boldsymbol\theta_i,\mathbf X_j).
+$$ {#eq-bundle-adjustment}
+
+[Triggs and colleagues' synthesis](https://doi.org/10.1007/3-540-44480-7_21) emphasizes cost
+functions, sparse optimization, gauge invariance, and quality control. A modern implementation often
+eliminates point increments through a Schur complement, but solver efficiency is secondary to a
+correct state definition and observable gauge.
+
+### Observability and Gauge Freedom
+
+If every camera pose and every point is free, image reprojection is unchanged by a global similarity
+transform: one global rotation, three-dimensional translation, and scale can move together. These
+seven degrees of gauge freedom mean the normal matrix is singular unless the system fixes a datum.
+Typical choices include fixing one camera pose and metric target scale, applying justified priors, or
+holding a surveyed reference rigidly. A prior changes the problem; it must be reported as evidence,
+not hidden as a numerical convenience.
+
+For local parameter vector (oldsymbol\delta), linearized residuals satisfy
+
+$$
+\mathbf r(\boldsymbol\delta)\approx\mathbf r_0+J\boldsymbol\delta.
+$$ {#eq-linearized-residual}
+
+With observation weight (W), the information matrix is (H=J^\mathsf{T}WJ). Rank deficiency,
+very small singular values, or a large condition number signal exact or practical unobservability.
+The labels depend on declared scaling and thresholds, so a production implementation must preserve
+the singular spectrum, parameter scaling, tolerance, and solver version.
+
+### Arbitrary Camera Count Is a Graph Problem
+
+A camera-agnostic rig is not merely an array of (N) camera records. Form a bipartite graph whose
+vertices are cameras and calibration target poses; an edge means that a camera observed that target
+pose. Disconnected components have independent gauges and cannot share one world frame. A weak bridge
+through one poor view can make the graph connected while leaving relative pose poorly conditioned.
+
+Qualification should therefore report:
+
+- connected components and articulation points of the observation graph;
+- target coverage across image radius, depth, and orientation;
+- pairwise and multi-view ray-angle distributions in the intended volume;
+- singular values or another registered observability metric;
+- leave-one-camera and leave-one-target sensitivity; and
+- whether every intended capture location is supported by at least two synchronized, qualified views.
+
+Adding cameras can improve visibility and redundancy, but it can also add weakly synchronized data,
+shared-host failures, reflections, and new unobservable parameter correlations. No algorithm should
+infer qualification from camera count alone.
+
+## Uncertainty Propagation
+
+A residual is not an uncertainty bound. Under a local linear approximation and a correctly scaled
+noise model, one covariance approximation is
+
+$$
+\Sigma_{\theta}\approx\widehat\sigma^2
+(J^\mathsf{T}WJ)^{+},
+$$ {#eq-parameter-covariance}
+
+where (+) denotes an inverse only after gauge removal, or a Moore-Penrose pseudoinverse with its
+null space explicitly retained. The approximation is model-conditioned: wrong correspondences,
+target deformation, lens changes, rolling-shutter effects, synchronization error, and pose-model bias
+are not repaired by multiplying a Jacobian.
+
+For a derived quantity (mathbf y=g(\boldsymbol\theta)), first-order propagation is
+
+$$
+\Sigma_y\approx G\Sigma_{\theta}G^\mathsf{T},
+\qquad G=\left.\frac{\partial g}{\partial\boldsymbol\theta}\right|_{\widehat\theta}.
+$$ {#eq-uncertainty-propagation}
+
+### Rectified Stereo Example
+
+For rectified cameras with focal length (f), baseline (B), and disparity (d=u_L-u_R),
+
+$$
+z=\frac{fB}{d}.
+$$ {#eq-stereo-depth}
+
+If the two horizontal pixel observations have independent standard deviation (sigma_p), then
+(sigma_d=\sqrt2\sigma_p) and
+
+$$
+\sigma_z\approx
+\left|\frac{\partial z}{\partial d}\right|\sigma_d
+=\frac{z^2}{fB}\sqrt2\sigma_p.
+$$ {#eq-stereo-depth-uncertainty}
+
+The fixture uses (f=800\) pixels, (B=1\) metre, (d=160\) pixels, and
+(sigma_p=0.5\) pixel. It obtains (z=5\) metres and
+(sigma_z\approx0.0220971\) metre. This is a first-order image-noise result, not total lab accuracy.
+It excludes calibration covariance, timing, target error, pose inference, and model inadequacy.
+
+## Unsynchronized Observations
+
+Two rays triangulate one moving point only if they refer to the same physical time. For local speed
+(v) and exposure-time offset (Delta t), the first spatial inconsistency screen is
+
+$$
+\Delta s\approx v\lvert\Delta t\rvert.
+$$ {#eq-synchronization-spatial-error}
+
+At (8\) metres per second and (3\) milliseconds, the offset is (0.024\) metre. The synthetic
+probe has a (1\)-millisecond registered limit and therefore returns `reject`. Reprojection
+optimization must not absorb timing error into camera pose or distortion. If clocks, exposure starts,
+or frame identity are unavailable, a dynamic multi-view result is unavailable even when static
+geometry is excellent.
+
+The timing record needs clock domain, timestamp origin, exposure start or midpoint convention,
+trigger topology, measured skew, drift, dropped and duplicate frames, and uncertainty. Software
+arrival times are not interchangeable with exposure times.
+
+## Movement Rejection and Recalibration
+
+Calibration validity belongs to a specific immutable camera identity, lens, focus, image mode,
+mounting state, and interval. A camera can move while still producing plausible images. The system
+therefore needs independent sentinels: fixed control points, surveyed fiducials, mount sensors, or a
+registered background geometry check.
+
+For baseline and observed poses (T_0,T_1\in SE(3)), define
+
+$$
+\Delta T=T_1T_0^{-1},\qquad
+\Delta r=\lVert\operatorname{Log}(\Delta R)\rVert,
+$$ {#eq-pose-change}
+
+with translation evaluated in a declared frame. Thresholds must come from qualification and include
+sentinel uncertainty; they are not universal constants. The fixture illustrates a camera-centre
+shift of (0.015\) metre against a (0.01\)-metre model-scenario limit. Its state becomes
+`invalidated`, and its action is `reject_and_recalibrate`.
+
+### Recalibration State Machine
+
+1. `unavailable`: required identity, intrinsic, extrinsic, synchronization, or provenance is absent.
+2. `candidate`: observations exist but have not passed degeneracy and residual gates.
+3. `qualified`: exact input, solver, uncertainty, validity, and approval records pass.
+4. `suspect`: a sentinel, clock, device, lens, focus, or mode change crosses a registered warning.
+5. `invalidated`: movement, identity mismatch, expired validity, or failed sentinel crosses a rejection
+   gate; reconstruction stops.
+6. `recalibrating`: new observations are collected under a new attempt identifier. The previous
+   calibration remains immutable.
+
+Cancellation never promotes a candidate. Recovery resumes only from durable, checksummed
+observations and records the solver attempt separately. A successful recalibration creates a new
+calibration identifier and validity interval; it does not overwrite the old record.
+
+## Executable Pinned Fixture
+
+The canonical synthetic input is
+[`camera_geometry_fixture_v1.json`](../data/markerless_mocap/camera_geometry_fixture_v1.json), with
+its adjacent SHA-256 lock. The versioned schema is
+[`mocap_camera_geometry_fixture_v1.schema.json`](../schemas/mocap_camera_geometry_fixture_v1.schema.json).
+The verifier is deliberately split into a strict contract adapter and small dependency-free equation
+functions:
+
+```text
+python3 scripts/verify_mocap_camera_geometry_fixture.py \
+  data/markerless_mocap/camera_geometry_fixture_v1.json
+```
+
+Its accepted result reports two cameras, six observations, and zero of two runtime dependencies
+available. It independently recomputes all projected pixels, the Brown-Conrady probe, rectified
+stereo depth and first-order uncertainty, synchronization rejection, and movement invalidation.
+
+The fixture contains three world points and two idealized cameras with (f_x=f_y=800\) pixels.
+Camera 0 is at the world origin; camera 1 has centre ((1,0,0)\) metres and therefore
+(mathbf t=(-1,0,0)) under the declared world-to-camera convention. Point
+((-0.5,0,5)) projects to (u=560) pixels in camera 0 and (u=400) pixels in camera 1, giving the
+160-pixel disparity used above.
+
+## Failure and Availability Matrix
+
+| Condition | Required State | Why |
+|---|---|---|
+| Tools M4 or M5 has no protected schema, revision, and fixture digest | `unavailable` | A moving issue or branch is not runtime authority |
+| Point has (Z_c\le0) | `rejected` | The declared pinhole projection is invalid behind the camera |
+| Unconstrained DLT control points are coplanar | `unavailable` | The design matrix lacks required rank |
+| PnP yields unresolved physical hypotheses | `ambiguous` | A low residual does not choose a unique pose |
+| Bundle adjustment gauge is not fixed | `unavailable` | Covariance and absolute pose are undefined |
+| Observation graph is disconnected | `unavailable` per component | Components do not share one determined world frame |
+| Exposure skew exceeds the registered dynamic limit | `rejected` | Rays describe different physical states |
+| Camera movement exceeds a qualified sentinel limit | `invalidated` | Stored extrinsics no longer describe the camera |
+| Required provenance, identity, units, or frame is absent | `unavailable` | Silent defaults would create an untraceable result |
+
+## Commissioning Evidence Required Later
+
+When Tools M4 and M5 are protected and versioned, AffineDrift can replace null dependency pins only
+after a consumer contract test verifies the exact public schema and sanitized fixture digest. That
+future gate must compare, at minimum:
+
+- intrinsic and distortion parameter ordering, image-size scaling, camera identity, covariance, and
+  validity semantics;
+- world/camera transform direction, handedness, image axes, units, timestamp meaning, and camera
+  centre derivation;
+- DLT/PnP initialization, robust-estimator identity, degeneracy labels, cheirality, and inlier
+  provenance;
+- bundle-adjustment gauge, loss, constraints, convergence, singular spectrum, covariance method,
+  and deterministic solver version;
+- arbitrary-(N) observation-graph connectivity and partial-camera availability;
+- movement sentinel thresholds, invalidation, cancellation, recovery, and immutable recalibration;
+  and
+- a public, sanitized example proving that unavailable and unsynchronized paths fail closed.
+
+Physical commissioning additionally needs target metrology, repeated calibration across the full
+volume, holdout reprojection tests, independent length and trajectory references, thermal and focus
+sensitivity, deliberate mount-movement challenges, clock-skew injection, and comparison to the
+actual downstream pose and C3D pathway. Training residuals alone are not validation.
+
+## Current Limitations
+
+- Tools #4714 and Tools #4721 remain unavailable dependencies; no runtime schema or fixture is pinned.
+- The fixture uses ideal rigid cameras, a five-coefficient distortion model, and three synthetic
+  points. It is not a general DLT, PnP, bundle-adjustment, or autocalibration solver.
+- The uncertainty probe includes only independent horizontal pixel noise in rectified stereo.
+- Movement and synchronization thresholds are model-scenario values, not shop qualification limits.
+- No physical camera, target, timestamp, image, pose estimate, C3D file, or human-subject data is
+  consumed or approved by this chapter.
+- PDF, DOCX, LaTeX, and rendered-page parity remain pending while the workstation capacity drain
+  prohibits rendering.
+
+The source slice is complete only as bounded pedagogy. AFF-M2 remains open until the missing Tools
+dependencies are protected, consumer parity is demonstrated, all required renders are produced and
+inspected, protected checks pass, and a reviewed implementation is merged.

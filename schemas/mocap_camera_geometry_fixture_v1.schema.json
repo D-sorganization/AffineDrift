@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/mocap_camera_geometry_fixture_v1.schema.json",
+  "title": "Markerless Mocap Camera Geometry Pedagogy Fixture Version 1",
+  "description": "A synthetic teaching fixture, never a calibration runtime or approval record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "fixture_id",
+    "classification",
+    "authority",
+    "dependencies",
+    "coordinate_convention",
+    "cameras",
+    "world_points",
+    "observations",
+    "probes"
+  ],
+  "properties": {
+    "schema": {"const": "affinedrift/mocap-camera-geometry-fixture/v1"},
+    "fixture_id": {"type": "string", "minLength": 1},
+    "classification": {"const": "model_scenario"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "dependencies": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/dependency"}
+    },
+    "coordinate_convention": {"$ref": "#/$defs/convention"},
+    "cameras": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/camera"}
+    },
+    "world_points": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/world_point"}
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 6,
+      "items": {"$ref": "#/$defs/observation"}
+    },
+    "probes": {"$ref": "#/$defs/probes"}
+  },
+  "$defs": {
+    "number": {"type": "number"},
+    "positive": {"type": "number", "exclusiveMinimum": 0},
+    "vector2": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/number"}
+    },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/number"}
+    },
+    "vector5": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/number"}
+    },
+    "matrix3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/vector3"}
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "purpose", "runtime_authority", "procurement_authority"],
+      "properties": {
+        "repository": {"const": "D-sorganization/AffineDrift"},
+        "purpose": {"const": "synthetic_pedagogy_only"},
+        "runtime_authority": {"const": false},
+        "procurement_authority": {"const": false}
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "authority_repository",
+        "issue_url",
+        "status",
+        "protected_revision",
+        "schema_id",
+        "fixture_sha256",
+        "limitation"
+      ],
+      "properties": {
+        "id": {"enum": ["tools_m4_intrinsics", "tools_m5_extrinsics"]},
+        "authority_repository": {"const": "D-sorganization/Tools"},
+        "issue_url": {"type": "string", "pattern": "^https://github\\.com/"},
+        "status": {"enum": ["available", "unavailable"]},
+        "protected_revision": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "schema_id": {"type": ["string", "null"]},
+        "fixture_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "limitation": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "unavailable"}}},
+          "then": {
+            "properties": {
+              "protected_revision": {"const": null},
+              "schema_id": {"const": null},
+              "fixture_sha256": {"const": null}
+            }
+          }
+        }
+      ]
+    },
+    "convention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world", "camera", "image", "units"],
+      "properties": {
+        "world": {"const": "right_handed_x_right_y_down_z_forward"},
+        "camera": {"const": "world_to_camera_Xc_equals_R_Xw_plus_t"},
+        "image": {"const": "u_right_v_down_pixel_centres"},
+        "units": {"const": "metres_radians_pixels_seconds"}
+      }
+    },
+    "camera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "K", "distortion", "R", "t"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "K": {"$ref": "#/$defs/matrix3"},
+        "distortion": {"$ref": "#/$defs/vector5"},
+        "R": {"$ref": "#/$defs/matrix3"},
+        "t": {"$ref": "#/$defs/vector3"}
+      }
+    },
+    "world_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "xyz_m"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "xyz_m": {"$ref": "#/$defs/vector3"}
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["camera_id", "point_id", "expected_pixel"],
+      "properties": {
+        "camera_id": {"type": "string", "minLength": 1},
+        "point_id": {"type": "string", "minLength": 1},
+        "expected_pixel": {"$ref": "#/$defs/vector2"}
+      }
+    },
+    "distortion_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized_point", "K", "coefficients", "expected_pixel"],
+      "properties": {
+        "normalized_point": {"$ref": "#/$defs/vector2"},
+        "K": {"$ref": "#/$defs/matrix3"},
+        "coefficients": {"$ref": "#/$defs/vector5"},
+        "expected_pixel": {"$ref": "#/$defs/vector2"}
+      }
+    },
+    "stereo_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "focal_length_px",
+        "baseline_m",
+        "disparity_px",
+        "pixel_sigma_px",
+        "expected_depth_m",
+        "expected_depth_sigma_m"
+      ],
+      "properties": {
+        "focal_length_px": {"$ref": "#/$defs/positive"},
+        "baseline_m": {"$ref": "#/$defs/positive"},
+        "disparity_px": {"$ref": "#/$defs/positive"},
+        "pixel_sigma_px": {"$ref": "#/$defs/positive"},
+        "expected_depth_m": {"$ref": "#/$defs/positive"},
+        "expected_depth_sigma_m": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "synchronization_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["speed_m_s", "time_skew_s", "maximum_skew_s", "expected_spatial_m", "action"],
+      "properties": {
+        "speed_m_s": {"$ref": "#/$defs/positive"},
+        "time_skew_s": {"$ref": "#/$defs/positive"},
+        "maximum_skew_s": {"$ref": "#/$defs/positive"},
+        "expected_spatial_m": {"$ref": "#/$defs/positive"},
+        "action": {"const": "reject"}
+      }
+    },
+    "movement_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline_center_m",
+        "observed_center_m",
+        "translation_limit_m",
+        "rotation_delta_deg",
+        "rotation_limit_deg",
+        "expected_state",
+        "action"
+      ],
+      "properties": {
+        "baseline_center_m": {"$ref": "#/$defs/vector3"},
+        "observed_center_m": {"$ref": "#/$defs/vector3"},
+        "translation_limit_m": {"$ref": "#/$defs/positive"},
+        "rotation_delta_deg": {"type": "number", "minimum": 0},
+        "rotation_limit_deg": {"$ref": "#/$defs/positive"},
+        "expected_state": {"enum": ["invalidated", "valid"]},
+        "action": {"enum": ["accept", "reject_and_recalibrate"]}
+      }
+    },
+    "observability_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason"],
+      "properties": {
+        "status": {"enum": ["ambiguous", "model_conditioned", "rejected", "unavailable"]},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "probes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["distortion", "stereo_uncertainty", "synchronization", "movement", "observability"],
+      "properties": {
+        "distortion": {"$ref": "#/$defs/distortion_probe"},
+        "stereo_uncertainty": {"$ref": "#/$defs/stereo_probe"},
+        "synchronization": {"$ref": "#/$defs/synchronization_probe"},
+        "movement": {"$ref": "#/$defs/movement_probe"},
+        "observability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "bundle_adjustment_gauge",
+            "dlt_coplanar",
+            "intrinsic_planar_target",
+            "pnp_planar",
+            "single_view_depth",
+            "unsynchronized_multiview"
+          ],
+          "properties": {
+            "bundle_adjustment_gauge": {"$ref": "#/$defs/observability_probe"},
+            "dlt_coplanar": {"$ref": "#/$defs/observability_probe"},
+            "intrinsic_planar_target": {"$ref": "#/$defs/observability_probe"},
+            "pnp_planar": {"$ref": "#/$defs/observability_probe"},
+            "single_view_depth": {"$ref": "#/$defs/observability_probe"},
+            "unsynchronized_multiview": {"$ref": "#/$defs/observability_probe"}
+          }
+        }
+      }
+    }
+  }
+}
