@@ -68,7 +68,7 @@ jobs:
       - name: Run focused Ruff and Black checks
         run: |
           python -m ruff check scripts/mocap_c3d_publication_contract.py scripts/mocap_c3d_publication_metadata.py scripts/mocap_c3d_publication_sidecar.py scripts/verify_mocap_c3d_publication.py tests/test_mocap_c3d_publication_contract.py
-          python -m black --check --line-length 100 scripts/mocap_c3d_publication_contract.py scripts/mocap_c3d_publication_metadata.py scripts/mocap_c3d_publication_sidecar.py scripts/verify_mocap_c3d_publication.py tests/test_mocap_c3d_publication_contract.py
+          python -m black --check --diff --line-length 100 scripts/mocap_c3d_publication_contract.py scripts/mocap_c3d_publication_metadata.py scripts/mocap_c3d_publication_sidecar.py scripts/verify_mocap_c3d_publication.py tests/test_mocap_c3d_publication_contract.py
 
       - name: Run bounded C3D publication contract
         run: >-
