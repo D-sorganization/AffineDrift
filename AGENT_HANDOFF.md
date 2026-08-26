@@ -133,11 +133,15 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   Tools #4714 (M4) and #4721 (M5) as `unavailable` with null immutable pins and
   cannot claim calibration authority or Tools-fixture parity. TDD RED is run
   33017972860 / job 98341042071 on OGLaptop-3 with explicit `-n 0`; the expected
-  missing verifier failed collection. The earlier GitHub-hosted fallback run
-  33017912617 is non-authoritative and discarded. During the workstation drain,
-  do not render or run local tests/lint/builds. AFF-M2 remains open pending
-  protected Tools dependencies, consumer parity, rendered-format QA, a full
-  protected PR gate, merge, and post-merge evidence.
+  missing verifier failed collection. The bounded source-validation target is
+  `5ced5fc2cc86fedbcb3c89a230b01d5506e7470b` (tree
+  `625abcdb240ce39c6c8312ffb95cc28f7c079dbe`); run 33019592205 / job
+  98346391192 passed 10 focused tests with explicit `-n 0`, Ruff, and Black over
+  all seven changed Python/test files on OGLaptop-2. The earlier GitHub-hosted
+  fallback run 33017912617 is non-authoritative and discarded. During the
+  workstation drain, do not render or run local tests/lint/builds. No PR is open.
+  AFF-M2 remains open pending protected Tools dependencies, consumer parity,
+  rendered-format QA, a full protected PR gate, merge, and post-merge evidence.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
