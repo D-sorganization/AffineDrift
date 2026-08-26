@@ -74,7 +74,14 @@ quarto preview
 
 The preview opens at `http://localhost:4000`.
 
-A container build is also available:
+A container build is also available, either directly:
+
+```bash
+docker build -t affinedrift:local .
+docker run --rm -p 8080:8000 affinedrift:local
+```
+
+or through Compose:
 
 ```bash
 docker compose up --build
@@ -83,8 +90,8 @@ docker compose up --build
 The preview is then served at `http://localhost:8080`. The image verifies the
 Quarto package checksum, installs Python dependencies from the hash-locked
 `requirements-docker.lock`, and writes `docs/build-provenance.json` into the
-rendered site. Never bake credentials into the image; pass them through
-environment variables or your deployment platform's secret store.
+rendered site. Pass credentials through environment variables or your deployment
+platform's secret store; do not bake secrets into the image.
 
 Python tooling targets Python 3.12. See
 [the contributor guide](CONTRIBUTING.md) for the full local setup, and
