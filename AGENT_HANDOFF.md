@@ -183,6 +183,13 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   (tree `a0556ce065f69d5c640a1def3d7ac37e50c500f1`) passed all 10 selected
   topology contracts in run `33011853493` / job `98319879099` on approved
   OGLaptop runner 2 with the same exact-SHA, serial wrapper.
+  The expanded whole-module contract then caught a real FLIR arithmetic-screen
+  defect at hardening SHA `ffbc5831e14abea49eac88ed3c2ea0d95e47e62f`:
+  run `33012057652` / job `98320585616` on approved OGLaptop runner 2 failed
+  because 5.6245248 Gbit/s did not equal the deterministic 5.6236032 Gbit/s
+  result. That run is retained as product RED evidence; checkout and setup
+  passed. The corrected contract recomputes every payload/storage screen and
+  also requires the article's formatted figures to match the registry.
   FLIR cable distance and exact OS matrix, Allied validated cable/network
   design, LUCID Arena redistribution terms, and every complete quote remain
   unavailable. All raw bandwidth/storage values are arithmetic screens, not

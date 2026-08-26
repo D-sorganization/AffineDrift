@@ -444,6 +444,7 @@ def test_topology_payload_and_storage_screens_are_reproducible(
         "reference_topology_role": (1632, 1248, 225.0),
         "distributed_challenger_role": (1440, 1080, 166.3),
     }
+    article = ARTICLE_PATH.read_text(encoding="utf-8")
     for evaluation in registry["topology_evaluations"]:
         width, height, frame_rate = modes[evaluation["role"]]
         bits_per_second = (
@@ -460,6 +461,8 @@ def test_topology_payload_and_storage_screens_are_reproducible(
         assert storage["value"] == pytest.approx(bits_per_second / 8e6)
         assert bandwidth["status"] == "provisional"
         assert storage["status"] == "provisional"
+        assert f'{bandwidth["value"]:.3f} Gbit/s' in article
+        assert f'{storage["value"]:,.3f} MB/s' in article
 
 
 def test_reader_separates_topology_decisions_and_preserves_qualification_boundary() -> None:
