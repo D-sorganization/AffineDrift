@@ -129,11 +129,13 @@ def test_zed_x_one_sync_evidence_matches_current_primary_documents(
 ) -> None:
     """Reject stale timing values and preserve the assembled-rig boundary."""
 
+    summary = verify_camera_registry(registry)
     claim = next(item for item in registry["claims"] if item["id"] == ZED_SYNC_CLAIM_ID)
     sources = {item["id"]: item for item in registry["sources"]}
     article = ARTICLE_PATH.read_text(encoding="utf-8")
     governed_text = f"{claim['value']}\n{article}".lower()
 
+    assert summary.source_count == 15
     assert "10 microseconds" not in governed_text
     assert claim["value"] == (
         "GMSL2 hardware synchronization; vendor states 15 microseconds for supported "
