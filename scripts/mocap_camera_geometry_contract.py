@@ -13,12 +13,11 @@ from scripts.mocap_camera_geometry_types import (
     CameraGeometrySummary,
 )
 from scripts.mocap_camera_geometry_validation import (
-    finite_number as _number,
-    matrix3 as _matrix3,
-    nonempty_array as _array,
-    nonempty_text as _text,
-    numeric_vector as _vector,
-    object_with_keys as _object,
+    matrix3,
+    nonempty_array,
+    nonempty_text,
+    numeric_vector,
+    object_with_keys,
 )
 
 GEOMETRY_SCHEMA_ID = "affinedrift/mocap-camera-geometry-fixture/v1"
@@ -26,6 +25,12 @@ DEPENDENCY_IDS = frozenset({"tools_m4_intrinsics", "tools_m5_extrinsics"})
 REVISION = re.compile(r"[0-9a-f]{40}")
 DIGEST = re.compile(r"[0-9a-f]{64}")
 PIXEL_TOLERANCE = 1e-9
+
+_array = nonempty_array
+_matrix3 = matrix3
+_object = object_with_keys
+_text = nonempty_text
+_vector = numeric_vector
 
 
 def _verify_authority(value: object) -> None:
