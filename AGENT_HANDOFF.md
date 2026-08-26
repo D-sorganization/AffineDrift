@@ -118,6 +118,17 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   coverage; the isolated Quarto render also passes. No protected mocap release
   or physical-lab qualification exists yet; next pin merged Tools #4706 and
   UpstreamDrift #9063 authorities.
+- **Camera evidence registry (AffineDrift #3956 / AFF-M1):** branch
+  `feat/3956-camera-selection-registry` starts from protected main
+  `ca33d3ef6f543ff3dfcadda35c3bdf2356acff84`. The versioned registry, strict
+  verifier, public camera-selection guide, and contract tests cover FLIR
+  BFS-U3-16S2C-CS, Basler a2A1920-160ucBAS, and ZED X One GS through ten required
+  purchasing attributes each. The decision is provisional: quote and buy two
+  matched cameras for a physical pilot, not the full rig. No price, legal
+  approval, runtime adapter, timing/bandwidth result, calibration, pose result,
+  C3D result, or procurement approval exists. AFF-M2 must consume protected
+  Tools calibration contracts after their dependency stack merges; do not copy
+  runtime calculations into AffineDrift.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
@@ -157,6 +168,8 @@ python scripts/check_terminology.py
 python scripts/check_image_budget.py
 python -m ruff check .
 python3 -m pytest tests/test_markerless_mocap_projection_contract.py -q
+python3 -m pytest tests/test_mocap_camera_registry_contract.py -q
+python3 scripts/verify_mocap_camera_registry.py data/markerless_mocap/camera_evidence_registry_v1.json
 ```
 
 Monograph verification:
