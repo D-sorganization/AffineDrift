@@ -8,12 +8,12 @@ from typing import cast
 from scripts.mocap_c3d_publication_contract import (
     LOSS_SIDECAR_SCHEMA_ID,
     MocapC3DPublicationError,
-    array as _array,
-    number as _number,
-    object_with_keys as _object,
-    text as _text,
-    unique_texts as _unique_texts,
 )
+from scripts.mocap_c3d_publication_contract import array as _array
+from scripts.mocap_c3d_publication_contract import number as _number
+from scripts.mocap_c3d_publication_contract import object_with_keys as _object
+from scripts.mocap_c3d_publication_contract import text as _text
+from scripts.mocap_c3d_publication_contract import unique_texts as _unique_texts
 
 OFFICIAL_SOURCE_IDS = {"c3d-user-guide", "ezc3d-primary"}
 LOSS_DISPOSITIONS = {"preserved_in_sidecar", "rejected"}
@@ -65,7 +65,10 @@ def verify_coordinate_frame(value: object) -> None:
     _text(frame["frame_id"], "coordinate frame id")
     if frame["handedness"] not in {"right-handed", "left-handed"}:
         raise MocapC3DPublicationError("coordinate frame handedness is unsupported")
-    axes = [_text(frame[name], f"coordinate frame {name}") for name in ("x_axis", "y_axis", "z_axis")]
+    axes = [
+        _text(frame[name], f"coordinate frame {name}")
+        for name in ("x_axis", "y_axis", "z_axis")
+    ]
     if len(set(axes)) != 3:
         raise MocapC3DPublicationError("coordinate axes must have distinct meanings")
     if frame["length_unit"] != "m":
@@ -82,7 +85,10 @@ def verify_provenance(value: object) -> None:
     )
     if provenance["source_kind"] != "sanitized_synthetic":
         raise MocapC3DPublicationError("fixture source must remain sanitized synthetic")
-    if provenance["human_subject_data"] is not False or provenance["claim_class"] != "model_scenario":
+    if (
+        provenance["human_subject_data"] is not False
+        or provenance["claim_class"] != "model_scenario"
+    ):
         raise MocapC3DPublicationError("fixture cannot claim human or observed evidence")
     _text(provenance["method_id"], "provenance method id")
     version = _text(provenance["method_version"], "provenance method version")
@@ -103,7 +109,9 @@ def verify_projection_rates(
     if not math.isclose(projected_point_rate, point_rate):
         raise MocapC3DPublicationError("projected point rate differs from canonical rate")
     if not math.isclose(projected_analog_rate, analog_rate) or projected_ratio != ratio:
-        raise MocapC3DPublicationError("projected analog rate/ratio differs from canonical timebase")
+        raise MocapC3DPublicationError(
+            "projected analog rate/ratio differs from canonical timebase"
+        )
 
 
 def verify_losses(value: object, *, overflow: bool) -> int:
@@ -127,7 +135,12 @@ def verify_losses(value: object, *, overflow: bool) -> int:
             _text(loss[key], f"loss {loss_id} {key}")
         if loss["disposition"] not in LOSS_DISPOSITIONS:
             raise MocapC3DPublicationError("loss disposition is unsupported")
-    required = {"absolute-timestamp-origin", "point-confidence", "skeleton-topology", "processing-provenance"}
+    required = {
+        "absolute-timestamp-origin",
+        "point-confidence",
+        "skeleton-topology",
+        "processing-provenance",
+    }
     if not required.issubset(loss_ids):
         raise MocapC3DPublicationError("sidecar omits a required semantic loss")
     if ("camera-mask-capacity" in loss_ids) != overflow:

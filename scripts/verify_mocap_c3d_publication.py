@@ -17,13 +17,13 @@ from scripts.mocap_c3d_publication_contract import (
     STANDARD_EVENT_HEADER_LIMIT,
     STANDARD_MASK_MAX,
     MocapC3DPublicationError,
-    array as _array,
-    integer as _integer,
-    number as _number,
-    object_with_keys as _object,
-    text as _text,
-    unique_texts as _unique_texts,
 )
+from scripts.mocap_c3d_publication_contract import array as _array
+from scripts.mocap_c3d_publication_contract import integer as _integer
+from scripts.mocap_c3d_publication_contract import number as _number
+from scripts.mocap_c3d_publication_contract import object_with_keys as _object
+from scripts.mocap_c3d_publication_contract import text as _text
+from scripts.mocap_c3d_publication_contract import unique_texts as _unique_texts
 from scripts.mocap_c3d_publication_metadata import (
     verify_coordinate_frame,
     verify_losses,
@@ -73,7 +73,13 @@ def _verify_authority(value: object) -> None:
     authority = _object(
         value,
         "authority",
-        {"repository", "scope", "runtime_authority", "binary_c3d_present", "unknown_metadata_policy"},
+        {
+            "repository",
+            "scope",
+            "runtime_authority",
+            "binary_c3d_present",
+            "unknown_metadata_policy",
+        },
     )
     if authority["repository"] != "D-sorganization/AffineDrift":
         raise MocapC3DPublicationError("AffineDrift must remain publication authority")
@@ -194,7 +200,11 @@ def _verify_events(value: object) -> int:
 
 
 def _verify_analog(value: object, frame_count: int, ratio: int) -> int:
-    analog = _object(value, "analog", {"channel_labels", "channel_units", "samples", "force_platforms"})
+    analog = _object(
+        value,
+        "analog",
+        {"channel_labels", "channel_units", "samples", "force_platforms"},
+    )
     labels = _unique_texts(analog["channel_labels"], "analog labels")
     units = [_text(unit, "analog unit") for unit in _array(analog["channel_units"], "analog units")]
     if len(labels) != len(units):
@@ -256,7 +266,17 @@ def _verify_projection(
     projection = _object(
         value,
         "C3D projection",
-        {"state", "point_rate_hz", "point_units", "timestamp_semantics", "analog_rate_hz", "analog_samples_per_point_frame", "event_header_limit", "points", "independent_reader_qualification"},
+        {
+            "state",
+            "point_rate_hz",
+            "point_units",
+            "timestamp_semantics",
+            "analog_rate_hz",
+            "analog_samples_per_point_frame",
+            "event_header_limit",
+            "points",
+            "independent_reader_qualification",
+        },
     )
     if projection["state"] != "semantic_example_only" or projection["point_units"] != "mm":
         raise MocapC3DPublicationError("C3D projection must remain a millimetre semantic example")
@@ -282,11 +302,17 @@ def _verify_projection(
 
 
 def _verify_reader_unavailable(value: object) -> None:
-    reader = _object(value, "reader qualification", {"state", "readers", "corpus", "normalized_semantic_agreement"})
+    reader = _object(
+        value,
+        "reader qualification",
+        {"state", "readers", "corpus", "normalized_semantic_agreement"},
+    )
     if reader["state"] != "unavailable" or reader["normalized_semantic_agreement"] is not None:
         raise MocapC3DPublicationError("independent reader qualification must remain unavailable")
     if reader["readers"] != [] or reader["corpus"] != []:
-        raise MocapC3DPublicationError("unqualified readers or corpus must not be named as evidence")
+        raise MocapC3DPublicationError(
+            "unqualified readers or corpus must not be named as evidence"
+        )
 
 
 def _verify_projected_point(
@@ -294,19 +320,41 @@ def _verify_projected_point(
     canonical: dict[tuple[int, str], tuple[dict[str, object], list[str]]],
     cameras: list[str],
 ) -> tuple[tuple[int, str], int | None]:
-    point = _object(value, "projected point", {"frame_index", "point_id", "xyz_mm", "residual", "contributor_mask"})
-    key = (_integer(point["frame_index"], "projected frame"), _text(point["point_id"], "projected id"))
+    point = _object(
+        value,
+        "projected point",
+        {"frame_index", "point_id", "xyz_mm", "residual", "contributor_mask"},
+    )
+    key = (
+        _integer(point["frame_index"], "projected frame"),
+        _text(point["point_id"], "projected id"),
+    )
     if key not in canonical:
         raise MocapC3DPublicationError("projected point has no canonical source")
     source, contributors = canonical[key]
-    expected_xyz = [_number(axis, "source coordinate") * 1000 for axis in cast(list[object], source["xyz_m"])]
-    projected_xyz = [_number(axis, "projected coordinate") for axis in _array(point["xyz_mm"], "projected xyz")]
-    if len(projected_xyz) != 3 or any(not math.isclose(a, b) for a, b in zip(projected_xyz, expected_xyz, strict=True)):
+    expected_xyz = [
+        _number(axis, "source coordinate") * 1000
+        for axis in cast(list[object], source["xyz_m"])
+    ]
+    projected_xyz = [
+        _number(axis, "projected coordinate")
+        for axis in _array(point["xyz_mm"], "projected xyz")
+    ]
+    if len(projected_xyz) != 3 or any(
+        not math.isclose(a, b)
+        for a, b in zip(projected_xyz, expected_xyz, strict=True)
+    ):
         raise MocapC3DPublicationError("projected coordinates must convert metres to millimetres")
-    if not math.isclose(_number(point["residual"], "projected residual"), _number(source["residual"], "source residual")):
+    if not math.isclose(
+        _number(point["residual"], "projected residual"),
+        _number(source["residual"], "source residual"),
+    ):
         raise MocapC3DPublicationError("projection must preserve residual semantics")
     mask = point["contributor_mask"]
-    overflow = any(cameras.index(camera_id) >= STANDARD_CAMERA_CAPACITY for camera_id in contributors)
+    overflow = any(
+        cameras.index(camera_id) >= STANDARD_CAMERA_CAPACITY
+        for camera_id in contributors
+    )
     if overflow:
         if mask is not None:
             raise MocapC3DPublicationError("overflow contributor mask must be unavailable")
