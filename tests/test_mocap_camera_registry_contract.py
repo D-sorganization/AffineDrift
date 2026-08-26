@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+
 from scripts.verify_mocap_camera_registry import (
     REGISTRY_SCHEMA_ID,
     CameraRegistryError,

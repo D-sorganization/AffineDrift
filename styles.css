@@ -1009,6 +1009,39 @@ blockquote,
     --header-height: 60px;
   }
 
+  /* Quarto's article grid already supplies a mobile gutter. Keeping the
+     desktop article padding here narrows the body twice and forces title
+     metadata beyond the viewport. Stack the title block and let the native
+     page-column gutter own the small-screen spacing. */
+  #quarto-content.page-layout-article {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  #title-block-header.quarto-title-block {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #title-block-header .quarto-title,
+  #title-block-header .quarto-title-meta {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  #title-block-header .quarto-title-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #title-block-header .quarto-title-meta-contents,
+  #title-block-header .reading-time-estimate {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
   /* Mobile typography scaling for better readability on small screens */
   h1 {
     font-size: var(--fs-large);

@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/mocap_camera_evidence_registry_v1.schema.json",
+  "title": "Markerless Mocap Camera Evidence Registry Version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "as_of",
+    "authority",
+    "review_policy",
+    "sources",
+    "claims",
+    "cameras",
+    "recommendations"
+  ],
+  "properties": {
+    "schema": { "const": "affinedrift/mocap-camera-evidence-registry/v1" },
+    "as_of": { "$ref": "#/$defs/date" },
+    "authority": { "$ref": "#/$defs/authority" },
+    "review_policy": { "$ref": "#/$defs/review_policy" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "cameras": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/camera" }
+    },
+    "recommendations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/recommendation" }
+    }
+  },
+  "$defs": {
+    "date": { "type": "string", "format": "date" },
+    "nonempty": { "type": "string", "minLength": 1 },
+    "unique_strings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/nonempty" }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "scope", "excludes"],
+      "properties": {
+        "repository": { "const": "D-sorganization/AffineDrift" },
+        "scope": { "$ref": "#/$defs/nonempty" },
+        "excludes": { "$ref": "#/$defs/unique_strings" }
+      }
+    },
+    "review_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_precedence",
+        "procurement_default",
+        "maximum_review_age_days"
+      ],
+      "properties": {
+        "source_precedence": { "$ref": "#/$defs/unique_strings" },
+        "procurement_default": { "const": "deny" },
+        "maximum_review_age_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 366
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "publisher",
+        "url",
+        "published_on",
+        "accessed_on"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "kind": {
+          "enum": [
+            "peer_reviewed_article",
+            "vendor_license",
+            "vendor_product_page",
+            "vendor_technical_documentation"
+          ]
+        },
+        "title": { "$ref": "#/$defs/nonempty" },
+        "publisher": { "$ref": "#/$defs/nonempty" },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "published_on": {
+          "oneOf": [{ "$ref": "#/$defs/date" }, { "const": "unavailable" }]
+        },
+        "accessed_on": { "$ref": "#/$defs/date" }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "subject_id",
+        "attribute",
+        "value",
+        "unit",
+        "evidence_class",
+        "status",
+        "source_ids",
+        "accessed_on",
+        "review_due",
+        "limitations"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "subject_id": { "$ref": "#/$defs/nonempty" },
+        "attribute": { "$ref": "#/$defs/nonempty" },
+        "value": { "type": ["string", "number", "integer", "boolean", "null"] },
+        "unit": { "$ref": "#/$defs/nonempty" },
+        "evidence_class": {
+          "enum": [
+            "engineering_inference",
+            "peer_reviewed_observed",
+            "unavailable",
+            "vendor_spec"
+          ]
+        },
+        "status": { "enum": ["current", "provisional", "unavailable"] },
+        "source_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonempty" }
+        },
+        "accessed_on": { "$ref": "#/$defs/date" },
+        "review_due": { "$ref": "#/$defs/date" },
+        "limitations": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "camera": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "vendor",
+        "model",
+        "role",
+        "color",
+        "integration",
+        "purchasing_claim_ids",
+        "limitations"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "vendor": { "$ref": "#/$defs/nonempty" },
+        "model": { "$ref": "#/$defs/nonempty" },
+        "role": {
+          "enum": [
+            "fast_motion_reference_candidate",
+            "long_cable_evaluation_candidate",
+            "research_baseline"
+          ]
+        },
+        "color": { "$ref": "#/$defs/nonempty" },
+        "integration": {
+          "enum": ["adapter_required", "external_service_only"]
+        },
+        "purchasing_claim_ids": { "$ref": "#/$defs/unique_strings" },
+        "limitations": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "task",
+        "status",
+        "preferred_camera_id",
+        "alternate_camera_ids",
+        "rationale_claim_ids",
+        "qualification_gates",
+        "decision",
+        "limitations"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonempty" },
+        "task": { "$ref": "#/$defs/nonempty" },
+        "status": { "enum": ["evaluation_only", "provisional"] },
+        "preferred_camera_id": { "$ref": "#/$defs/nonempty" },
+        "alternate_camera_ids": { "$ref": "#/$defs/unique_strings" },
+        "rationale_claim_ids": { "$ref": "#/$defs/unique_strings" },
+        "qualification_gates": { "$ref": "#/$defs/unique_strings" },
+        "decision": { "$ref": "#/$defs/nonempty" },
+        "limitations": { "$ref": "#/$defs/nonempty" }
+      }
+    }
+  }
+}
