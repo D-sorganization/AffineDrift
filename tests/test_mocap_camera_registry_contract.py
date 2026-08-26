@@ -396,6 +396,14 @@ def test_registry_types_distinct_pilot_reference_and_challenger_topology_records
             ),
             "belongs to",
         ),
+        (
+            lambda data: data["topology_evaluations"][2].update(
+                role="reference_topology_role",
+                camera_count=8,
+                qualification_state="reference_hypothesis_unqualified",
+            ),
+            "duplicate topology role",
+        ),
     ],
 )
 def test_registry_rejects_topology_authority_or_coverage_drift(
@@ -423,6 +431,35 @@ def test_topology_schema_types_roles_and_fail_closed_authority() -> None:
     ]
     assert definition["properties"]["runtime_authority"]["const"] == "none"
     assert definition["properties"]["procurement_authority"]["const"] is False
+
+
+def test_topology_payload_and_storage_screens_are_reproducible(
+    registry: dict[str, Any],
+) -> None:
+    """Recompute every provisional raw eight-bit topology screen."""
+
+    claims = {claim["id"]: claim for claim in registry["claims"]}
+    modes = {
+        "pilot_role": (1440, 1080, 226.0),
+        "reference_topology_role": (1632, 1248, 225.0),
+        "distributed_challenger_role": (1440, 1080, 166.3),
+    }
+    for evaluation in registry["topology_evaluations"]:
+        width, height, frame_rate = modes[evaluation["role"]]
+        bits_per_second = (
+            evaluation["camera_count"] * width * height * frame_rate * 8
+        )
+        topology_claims = [claims[claim_id] for claim_id in evaluation["claim_ids"]]
+        bandwidth = next(
+            claim for claim in topology_claims if claim["attribute"] == "aggregate_bandwidth"
+        )
+        storage = next(
+            claim for claim in topology_claims if claim["attribute"] == "storage_budget"
+        )
+        assert bandwidth["value"] == pytest.approx(bits_per_second / 1e9)
+        assert storage["value"] == pytest.approx(bits_per_second / 8e6)
+        assert bandwidth["status"] == "provisional"
+        assert storage["status"] == "provisional"
 
 
 def test_reader_separates_topology_decisions_and_preserves_qualification_boundary() -> None:

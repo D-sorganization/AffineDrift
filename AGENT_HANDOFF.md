@@ -179,6 +179,10 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   approved OGLaptop runner 3. Both runs used wrapper
   `cc1fee104fd4c513b393bc4701ff803e14101b01` and explicit
   `python -m pytest -q -n 0 tests/test_mocap_camera_registry_contract.py -k topology`.
+  GREEN implementation `e02d042fac818beb064d3e62936201a578955a0a`
+  (tree `a0556ce065f69d5c640a1def3d7ac37e50c500f1`) passed all 10 selected
+  topology contracts in run `33011853493` / job `98319879099` on approved
+  OGLaptop runner 2 with the same exact-SHA, serial wrapper.
   FLIR cable distance and exact OS matrix, Allied validated cable/network
   design, LUCID Arena redistribution terms, and every complete quote remain
   unavailable. All raw bandwidth/storage values are arithmetic screens, not
