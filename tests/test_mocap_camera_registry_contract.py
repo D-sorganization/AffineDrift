@@ -261,12 +261,13 @@ def test_reader_does_not_rank_candidates_by_camera_body_price() -> None:
     """Keep incomplete sticker prices out of camera ranking and procurement authority."""
 
     article = ARTICLE_PATH.read_text(encoding="utf-8")
+    normalized_article = " ".join(article.lower().split())
 
     assert "Camera-Body Price Observations" in article
     assert "USD 371.00" in article
     assert "USD 399.00" in article
     assert "USD 424.00" in article
     assert "Basler amount unavailable" in article
-    assert "do not rank the candidates" in article.lower()
+    assert "do not rank the candidates" in normalized_article
     assert "Complete qualified-topology cost remains unavailable" in article
     assert "does not authorize procurement" in article
