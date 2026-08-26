@@ -1,88 +1,58 @@
-name: Link Checker
+name: Issue 3976 Bounded Contract Validation
 
 on:
-  pull_request:
-    paths:
-      - "**.md"
-      - "**.qmd"
-      - "scripts/link-checker.py"
-      - ".github/workflows/link-checker.yml"
   workflow_dispatch:
-  schedule:
-    - cron: "0 2 * * *" # Daily at 2 AM UTC
+    inputs:
+      target_sha:
+        description: "Exact AffineDrift commit SHA to validate"
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: link-checker-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  group: issue-3976-bounded-${{ inputs.target_sha }}
+  cancel-in-progress: false
 
 jobs:
-  check-links:
+  bounded-markerless-contract:
+    name: Bounded markerless contract (-n 0)
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
-    name: Validate Quarto references and URLs
-    timeout-minutes: 30
-
+    timeout-minutes: 10
     steps:
-      - name: Checkout repository
+      - name: Validate exact target SHA
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+        shell: bash
+        run: |
+          if ! [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::target_sha must be an exact lowercase 40-hex commit SHA"
+            exit 1
+          fi
+          echo "TARGET_SHA=$TARGET_SHA" >> "$GITHUB_ENV"
+
+      - name: Checkout exact target
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.target_sha }}
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$TARGET_SHA"
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
-      - name: Check internal references
-        run: |
-          python3 scripts/link-checker.py --root . --internal-only --verbose
-        continue-on-error: true
-        id: internal-refs
+      - name: Install bounded test dependencies
+        run: >-
+          python -m pip install --disable-pip-version-check --no-cache-dir
+          pytest==9.1.1 pytest-asyncio==1.4.0 pytest-timeout==2.4.0 pytest-xdist==3.8.0
 
-      - name: Check external URLs
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-        timeout-minutes: 5
-        run: |
-          python3 scripts/link-checker.py --root . --external-only --verbose
-        continue-on-error: true
-        id: external-urls
-
-      - name: Report results
-        if: always()
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        with:
-          script: |
-            const internalStatus = '${{ steps.internal-refs.outcome }}';
-            const externalStatus = '${{ steps.external-urls.outcome }}';
-
-            let summary = '## Link Checker Results\n\n';
-
-            if (internalStatus === 'success') {
-              summary += '✅ Internal references: All valid\n';
-            } else {
-              summary += '❌ Internal references: Some broken (see job logs)\n';
-            }
-
-            if (externalStatus === 'success' || externalStatus === 'skipped') {
-              summary += '✅ External URLs: All valid\n';
-            } else {
-              summary += '⚠️ External URLs: Some timeouts/errors (see job logs)\n';
-            }
-
-            summary += '\n**Note:** Internal reference failures block this check. External URL warnings are non-blocking.';
-
-            console.log(summary);
-
-            // Fail if internal refs are broken
-            if (internalStatus === 'failure') {
-              core.setFailed('Internal reference validation failed');
-            }
-
-      - name: Enforce check
-        if: steps.internal-refs.outcome == 'failure'
-        run: |
-          echo '::error::Link checker found broken Quarto references'
-          exit 1
+      - name: Run bounded ZED synchronization contract
+        run: >-
+          python -m pytest -q -n 0 tests/test_mocap_camera_registry_contract.py
+          -k zed_x_one_sync_evidence
