@@ -6,66 +6,23 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 from typing import cast
 
-REGISTRY_SCHEMA_ID = "affinedrift/mocap-camera-evidence-registry/v1"
-REQUIRED_PURCHASING_ATTRIBUTES = frozenset(
-    {
-        "data_interface",
-        "lens",
-        "max_frame_rate",
-        "price",
-        "resolution",
-        "sdk",
-        "sdk_license",
-        "shutter_type",
-        "synchronization",
-        "topology_limits",
-    }
+from scripts.mocap_camera_price_contract import PRICE_ATTRIBUTES, verify_price_claim
+from scripts.mocap_camera_registry_contract import (
+    ALLOWED_CAMERA_ROLES,
+    ALLOWED_EVIDENCE_CLASSES,
+    ALLOWED_INTEGRATION_STATES,
+    ALLOWED_SOURCE_KINDS,
+    REGISTRY_SCHEMA_ID,
+    REQUIRED_PURCHASING_ATTRIBUTES,
+    SOURCE_BACKED_CLASSES,
+    TOP_LEVEL_KEYS,
+    CameraRegistryError,
+    CameraRegistrySummary,
 )
-ALLOWED_SOURCE_KINDS = frozenset(
-    {
-        "peer_reviewed_article",
-        "vendor_license",
-        "vendor_product_page",
-        "vendor_technical_documentation",
-    }
-)
-SOURCE_BACKED_CLASSES = frozenset({"peer_reviewed_observed", "vendor_spec"})
-ALLOWED_EVIDENCE_CLASSES = SOURCE_BACKED_CLASSES | {"engineering_inference", "unavailable"}
-ALLOWED_CAMERA_ROLES = frozenset(
-    {"fast_motion_reference_candidate", "long_cable_evaluation_candidate", "research_baseline"}
-)
-ALLOWED_INTEGRATION_STATES = frozenset({"adapter_required", "external_service_only"})
-TOP_LEVEL_KEYS = {
-    "schema",
-    "as_of",
-    "authority",
-    "review_policy",
-    "sources",
-    "claims",
-    "cameras",
-    "recommendations",
-}
-
-
-class CameraRegistryError(RuntimeError):
-    """Raised when camera evidence violates its publication contract."""
-
-
-@dataclass(frozen=True)
-class CameraRegistrySummary:
-    """Deterministic counts for one accepted camera registry."""
-
-    camera_count: int
-    source_count: int
-    claim_count: int
-    recommendation_count: int
-    unavailable_claim_count: int
-    procurement_approved_count: int
 
 
 def _object(value: object, label: str, keys: set[str]) -> dict[str, object]:
@@ -171,7 +128,9 @@ def _verify_sources(value: object, as_of: date) -> set[str]:
     return source_ids
 
 
-def _verify_claim_state(claim: dict[str, object], claim_id: str, sources: list[str]) -> None:
+def _verify_claim_state(
+    claim: dict[str, object], claim_id: str, attribute: str, sources: list[str]
+) -> None:
     evidence_class = _text(claim["evidence_class"], f"claim {claim_id} evidence class")
     status = _text(claim["status"], f"claim {claim_id} status")
     if evidence_class not in ALLOWED_EVIDENCE_CLASSES:
@@ -181,7 +140,8 @@ def _verify_claim_state(claim: dict[str, object], claim_id: str, sources: list[s
     if evidence_class == "engineering_inference" and status != "provisional":
         raise CameraRegistryError(f"claim {claim_id} engineering inference must remain provisional")
     if evidence_class == "unavailable":
-        if status != "unavailable" or claim["value"] is not None or sources:
+        typed_price = attribute in PRICE_ATTRIBUTES and isinstance(claim["value"], dict)
+        if status != "unavailable" or (not typed_price and claim["value"] is not None) or sources:
             raise CameraRegistryError(
                 f"claim {claim_id} unavailable claim must use null and no sources"
             )
@@ -220,11 +180,17 @@ def _verify_claim(
         raise CameraRegistryError(
             f"claim {claim_id} has unknown source ids: {sorted(unknown_sources)}"
         )
-    if _date(claim["accessed_on"], f"claim {claim_id} access date") > as_of:
+    accessed_on = _date(claim["accessed_on"], f"claim {claim_id} access date")
+    if accessed_on > as_of:
         raise CameraRegistryError(f"claim {claim_id} access date is after the registry date")
-    if _date(claim["review_due"], f"claim {claim_id} review date") <= as_of:
+    review_due = _date(claim["review_due"], f"claim {claim_id} review date")
+    if review_due <= as_of:
         raise CameraRegistryError(f"claim {claim_id} review is due or expired")
-    _verify_claim_state(claim, claim_id, sources)
+    if attribute in PRICE_ATTRIBUTES:
+        verify_price_claim(claim, sources)
+    elif isinstance(claim["value"], dict):
+        raise CameraRegistryError(f"claim {claim_id} non-price value must be scalar")
+    _verify_claim_state(claim, claim_id, attribute, sources)
     return claim_id, subject_id, attribute
 
 

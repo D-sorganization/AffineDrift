@@ -157,6 +157,7 @@ def test_registry_schema_and_reader_guidance_are_versioned() -> None:
     handoff = (REPO_ROOT / "AGENT_HANDOFF.md").read_text(encoding="utf-8")
 
     assert schema["properties"]["schema"]["const"] == REGISTRY_SCHEMA_ID
+    assert set(schema["$defs"]["price_observation"]["required"]) == PRICE_FIELDS
     assert "Provisional Shop Recommendation" in article
     assert "buy two cameras for the pilot" in article
     assert "Camera Evidence Registry" in spec
@@ -223,6 +224,14 @@ def test_complete_topology_costs_remain_typed_and_unavailable(
         }
         assert "camera_body_price" in attributes
         assert "complete_qualified_topology_cost" in attributes
+
+    price_claim_ids = {
+        claim_id
+        for claim_id, claim in claims.items()
+        if claim["attribute"] in {"camera_body_price", "complete_qualified_topology_cost"}
+    }
+    for recommendation in registry["recommendations"]:
+        assert price_claim_ids.isdisjoint(recommendation["rationale_claim_ids"])
 
 
 @pytest.mark.parametrize(

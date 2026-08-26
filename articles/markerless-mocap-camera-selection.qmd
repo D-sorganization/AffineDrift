@@ -29,9 +29,10 @@ In operational terms: buy two cameras for the pilot and make the larger purchase
 the recorded qualification evidence.
 
 ::: {.callout-warning title="No Procurement Approval"}
-No listed camera is approved for a full deployment. Prices, regional availability, exact software
-licenses, lenses, trigger hardware, host controllers, lighting, and physical performance still
-require quotes and qualification. The machine-readable registry defaults procurement to deny.
+No listed camera is approved for a full deployment. Dated camera-body list observations do not
+establish delivered or complete-system cost. Regional availability, exact software licenses,
+lenses, trigger hardware, host controllers, lighting, and physical performance still require
+quotes and qualification. The machine-readable registry defaults procurement to deny.
 :::
 
 ## Governed Evidence
@@ -40,8 +41,9 @@ The canonical dataset is the
 [camera evidence registry](../data/markerless_mocap/camera_evidence_registry_v1.json). Its schema is
 `affinedrift/mocap-camera-evidence-registry/v1`, and
 `scripts/verify_mocap_camera_registry.py` rejects missing sources, stale reviews, unknown links,
-cross-camera claims, incomplete purchasing attributes, and any claim that silently turns an
-engineering inference into an approved fact.
+cross-camera claims, incomplete purchasing attributes, untyped price metadata, camera-body prices
+presented as complete-system costs, and any claim that silently turns an engineering inference
+into an approved fact.
 
 Evidence classes have intentionally different authority:
 
@@ -66,12 +68,31 @@ duplicate either runtime.
 | Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 frames per second; 960 by 600 at up to 120 | External synchronization; vendor claim within 10 microseconds | Fixed narrow, wide, or model-dependent fisheye variant | GMSL2 plus capture hardware | Long-cable topology evaluation |
 
 Primary product evidence is available from the
-[FLIR product page](https://www.teledynevisionsolutions.com/en-ca/products/blackfly-s-usb3/?model=BFS-U3-16S2C-CS&segment=iis&vertical=machine+vision),
+[FLIR product page](https://www.teledynevisionsolutions.com/products/blackfly-s-usb3/),
 [FLIR technical reference](https://softwareservices.flir.com/BFS-U3-16S2/latest/Model/spec.html),
-[Basler product page](https://www.baslerweb.com/en-sg/shop/a2a1920-160ucbas/), and
-[ZED X One product page](https://www.stereolabs.com/en-si/products/zed-x-one). These pages were
-accessed on 2026-08-26. Product pages can change; the registry therefore carries review dates and
-does not treat a URL as an immutable specification.
+[Basler US product page](https://www.baslerweb.com/en-us/shop/a2a1920-160ucbas/),
+[ZED X One product page](https://www.stereolabs.com/en-si/products/zed-x-one), and
+[ZED X One GS store listing](https://store.stereolabs.com/products/zed-x-one-gs). These pages were
+accessed on 2026-08-26. Product pages can change; the registry therefore carries 31-day price
+review dates and does not treat a URL as an immutable specification.
+
+## Camera-Body Price Observations
+
+The official pages exposed the following dated, regional observations. They do not rank the
+candidates, establish delivered cost, or normalize unlike configurations.
+
+| Candidate and Configuration | Region | Camera-Body Observation | Availability Statement | Scope Limitation |
+|---|---|---|---|---|
+| FLIR `BFS-U3-16S2C-CS`, color CS-mount body | US | USD 371.00 | In production | Tax and shipping inclusion not established |
+| Basler `a2A1920-160ucBAS`, order number `107821` | US | Basler amount unavailable | Online commercial page exposes a net-list-price field, but no reproducible amount | Currency, tax, shipping, and delivered availability not established |
+| ZED X One GS base listing before field-of-view selection | Global store | USD 399.00 | Dispatch estimate published as one to two weeks | Base amount is not tied to one SKU; tax and shipping inclusion not established |
+| ZED X One GS wide, SKU `ZED-412010` | Global store | USD 424.00 | Dispatch estimate published as one to two weeks | Tax and shipping inclusion not established |
+
+Complete qualified-topology cost remains unavailable for every candidate. A comparable quote must
+cover the chosen camera count, matched lenses, trigger or synchronization I/O, USB controllers or
+GMSL2 capture and compute, cables, mounts, lighting, storage, spares, taxes, and shipping. A list
+observation does not authorize procurement, replace that quote, or change the two-camera pilot
+boundary. Price claims do not appear in either recommendation's rationale.
 
 ### Teledyne FLIR Fast-Motion Pilot Candidate
 
@@ -241,16 +262,20 @@ outcomes. The lab manifest selects providers and records immutable device identi
 the reconstruction code consumes canonical observations and never switches behavior by vendor
 name.
 
-To add a camera to this public registry, add its dated primary sources, exactly one claim for every
-purchasing attribute, limitations, review dates, and an explicit adapter state. If price, sync,
-license, or topology is unknown, record `unavailable`. The verifier will reject an apparently
-complete camera assembled from missing or cross-model claims.
+To add a camera to this public registry, add its dated primary sources, at least one claim for every
+purchasing attribute, limitations, review dates, and an explicit adapter state. Camera-body price
+observations and complete-qualified-topology cost are separate required attributes. If a body
+amount is not exposed, preserve its typed region, SKU or order number, configuration, availability,
+and tax/shipping status without inventing a value. Complete topology cost remains `unavailable`
+until a comparable quote exists. The verifier will reject an apparently complete camera assembled
+from missing or cross-model claims.
 
 ## Current Limitations
 
 - No candidate has been connected to this workstation under the canonical Tools protocol.
 - No physical timing, blur, lighting, field-of-view, pose, triangulation, or C3D test has run.
-- Prices are deliberately unavailable until comparable complete regional quotes exist.
+- Camera-body list observations are volatile and incomplete; comparable complete regional quotes
+  remain unavailable.
 - Vendor SDK summaries are not legal opinions.
 - The cited studies bound only their own cameras, participants, models, tasks, and protocols.
 - This document does not approve human-subject recording, public release, or biomechanical use.

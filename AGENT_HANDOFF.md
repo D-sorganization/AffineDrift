@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-25
+Last updated: 2026-08-26
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -124,11 +124,30 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   verifier, public camera-selection guide, and contract tests cover FLIR
   BFS-U3-16S2C-CS, Basler a2A1920-160ucBAS, and ZED X One GS through ten required
   purchasing attributes each. The decision is provisional: quote and buy two
-  matched cameras for a physical pilot, not the full rig. No price, legal
-  approval, runtime adapter, timing/bandwidth result, calibration, pose result,
-  C3D result, or procurement approval exists. AFF-M2 must consume protected
-  Tools calibration contracts after their dependency stack merges; do not copy
-  runtime calculations into AffineDrift.
+  matched cameras for a physical pilot, not the full rig. No complete-system
+  cost, legal approval, runtime adapter, timing/bandwidth result, calibration,
+  pose result, C3D result, or procurement approval exists. AFF-M2 must consume
+  protected Tools calibration contracts after their dependency stack merges;
+  do not copy runtime calculations into AffineDrift.
+- **Camera price evidence maintenance (AffineDrift #3977):** branch
+  `fix/3977-camera-price-evidence` starts from protected main
+  `3feec152d9d6354ac60511d432876b0788cecda0`. It separates typed, volatile
+  camera-body observations from complete qualified-topology cost. FLIR and ZED
+  amounts remain configuration/region-specific vendor observations; the Basler
+  amount remains unavailable because its official US page did not expose a
+  reproducible amount. All complete-system costs and procurement authority
+  remain unavailable/default-deny. RED was proven at exact tests-only SHA
+  `6ddc633de575dbd98fee59a144a33a4c3fa6fd5a` on approved OGLaptop runner 3 in
+  Repository_Management run `33008490854` / job `98308354626`, using wrapper
+  `c8fbcf6fe90a3c50d6f7813820bf7f1b717a4cd3` and explicit `-n 0`.
+  This branch intentionally does not absorb #3976's ZED synchronization change:
+  merge/rebase #3976 first, retain its 15-microsecond topology statements, and
+  advance this branch's spec version from 1.0.226 to 1.0.227 during resolution.
+  #3978 separately owns USB-pilot versus distributed-Ethernet topology roles;
+  do not infer those roles from camera-body prices or broaden this diff into
+  topology selection. Governed render/search derivatives remain paused by the
+  DeskComputer capacity-drain directive, and no PR should open while full-PR
+  rules would trigger prohibited broad jobs.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.

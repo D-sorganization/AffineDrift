@@ -128,7 +128,12 @@
         "id": { "$ref": "#/$defs/nonempty" },
         "subject_id": { "$ref": "#/$defs/nonempty" },
         "attribute": { "$ref": "#/$defs/nonempty" },
-        "value": { "type": ["string", "number", "integer", "boolean", "null"] },
+        "value": {
+          "oneOf": [
+            { "type": ["string", "number", "integer", "boolean", "null"] },
+            { "$ref": "#/$defs/price_observation" }
+          ]
+        },
         "unit": { "$ref": "#/$defs/nonempty" },
         "evidence_class": {
           "enum": [
@@ -147,6 +152,63 @@
         "accessed_on": { "$ref": "#/$defs/date" },
         "review_due": { "$ref": "#/$defs/date" },
         "limitations": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "price_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "amount",
+        "currency",
+        "region",
+        "sku",
+        "configuration",
+        "price_scope",
+        "tax_status",
+        "shipping_status",
+        "availability"
+      ],
+      "properties": {
+        "amount": {
+          "oneOf": [
+            { "type": "number", "exclusiveMinimum": 0 },
+            { "type": "null" }
+          ]
+        },
+        "currency": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[A-Z]{3}$" },
+            { "type": "null" }
+          ]
+        },
+        "region": {
+          "type": "string",
+          "pattern": "^([A-Z]{2}|GLOBAL)$"
+        },
+        "sku": {
+          "oneOf": [
+            { "$ref": "#/$defs/nonempty" },
+            { "type": "null" }
+          ]
+        },
+        "configuration": { "$ref": "#/$defs/nonempty" },
+        "price_scope": {
+          "enum": ["camera_body_only", "complete_qualified_topology"]
+        },
+        "tax_status": {
+          "enum": ["excluded", "included", "not_established"]
+        },
+        "shipping_status": {
+          "enum": ["excluded", "included", "not_established"]
+        },
+        "availability": {
+          "enum": [
+            "dispatch_estimate_published",
+            "in_production",
+            "online_shop_price_not_exposed",
+            "quote_required"
+          ]
+        }
       }
     },
     "camera": {

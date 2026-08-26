@@ -29,7 +29,7 @@ Last-Updated: 2026-08-26T04:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.225                                          |
+| **Spec Version**        | 1.0.226                                          |
 | **Last Spec Update**    | 2026-08-26                                       |
 
 ## 2. Purpose & Mission
@@ -132,13 +132,25 @@ and qualification gates.
 `data/markerless_mocap/camera_evidence_registry_v1.json` is the canonical
 AffineDrift camera-selection evidence surface. The strict
 `affinedrift/mocap-camera-evidence-registry/v1` schema requires dated primary
-sources; exactly one shutter, resolution, frame-rate, synchronization, lens,
-interface, SDK, SDK-license, topology, and price disposition for every camera;
+sources; at least one shutter, resolution, frame-rate, synchronization, lens,
+interface, SDK, SDK-license, topology, camera-body price, and complete-qualified-
+topology cost disposition for every camera;
 explicit vendor, peer-reviewed, engineering-inference, or unavailable evidence
 classes; review expiry; and default-deny procurement. The verifier rejects
 unknown or cross-model references, incomplete purchasing attributes, insecure
 source URLs, stale reviews, silent unavailable values, and any approved
 procurement state.
+
+Camera-body price observations use a typed record containing amount, ISO
+currency, market region, SKU or explicit missing-SKU state, configuration,
+scope, tax status, shipping status, availability, access date, primary source,
+and a review due within 31 days. The FLIR and ZED values are scoped vendor list
+observations; the Basler US product page identifies order number 107821 but did
+not expose a reproducible amount in the accessed evidence. Complete qualified-
+topology costs remain separately typed and unavailable until comparable quotes
+cover lenses, synchronization I/O, controllers or GMSL2 capture and compute,
+cables, mounts, lighting, storage, spares, taxes, and shipping. Price records
+cannot authorize procurement or participate in recommendation rationale.
 
 The public guide at `articles/markerless-mocap-camera-selection.qmd` records a
 provisional two-camera shop pilot. It screens the FLIR BFS-U3-16S2C-CS first for
@@ -640,6 +652,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-26 | 1.0.226 | fix(mocap, #3977): Split volatile camera-body list observations from complete qualified-topology cost. Added typed amount, ISO currency, region, SKU/configuration, scope, tax, shipping, availability, access/source provenance, and 31-day review contracts; recorded primary FLIR and ZED store observations while retaining the Basler amount as unavailable; and kept all complete-system costs and procurement authority default-deny. |
 | 2026-08-26 | 1.0.225 | feat(mocap, #3956): Added the source-bounded camera evidence registry, strict schema and deterministic verifier, three fully disposed industrial-camera candidates, two fail-closed pilot recommendations, selection calculations, current primary-source links, Quarto navigation, and TDD coverage. Procurement remains default-deny; prices, exact EULA approval, adapters, physical timing, bandwidth, pose, calibration, C3D, and task qualification remain unavailable.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | 2026-08-25 | 1.0.224 | feat(mocap, #3954): Established AffineDrift's standalone publication boundary for markerless mocap with a versioned manifest schema, deterministic projection verifier, immutable Tools/UpstreamDrift source pins, artifact digest locks, explicit evidence classes, and fail-closed privacy, security, licensing, live-lab, and synthetic-evidence gates.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2026-08-25 | 1.0.223 | docs(monograph, #3951): Pinned the protected proximal--distal projection to UpstreamDrift squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf` with 35 technical chapters, 244 pages, and 254 governed files (208 source-identical, 21 flattened, 12 immutable-link rewrites, and 13 declared adaptations). Added coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual terms; endpoint virtual-work mappings; signed and absolute hand-path impulse; power and work attribution; and a bounded 135-program optimization study with 91 qualified programs. Reconciled merge governance with the live zero-approval ruleset so required CI, rather than a named maintainer review, is the standing release gate. Retains coordinate, model, provenance, human-validation, and protected-publication boundaries.                                                                                                                                                                                                                                                                                          |
