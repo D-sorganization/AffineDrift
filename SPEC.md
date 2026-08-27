@@ -585,6 +585,28 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
+### 1.0.175 Impact-Optimality and Two-Link Model Limits
+
+New article `articles/impact-optimality-and-model-limits.qmd` derives why an
+optimized double pendulum brings its hands to a standstill at impact. In a
+point-mass-clubhead model the clubhead-speed-optimal hand speed is proportional
+to `L1*[I2 - m2*r2*(L2-r2)]`, which is identically zero for every parameter
+value and negative for a real driver; distributed club inertia therefore cannot
+repair it. Hill-type actuation limits reproduce measured golfer kinematics but
+leave the impact posture unreachable, because hub torque drives the wrist open
+through the coupling term and releasing the club requires reversing it.
+
+Records the consequence for the objective question: scored against measured
+kinematics the five swing objectives sit within 0.6% of each other while all of
+them sit far outside the published bands, so their ordering is not evidence
+about golf. Identifies a moving hub — a torso segment, or Miura's inward hand
+pull — as the model change that would matter.
+
+Cross-referenced from `articles/proximal-distal-model-workbench.qmd` and
+registered in `resources/articles.qmd`. Implementation and regression tests live
+in Tools `pendulum_simulator` under epic D-sorganization/Tools#4775. Every cited
+DOI was resolved before publication.
+
 ### 1.0.174 Ground-Reaction Drift Publication
 
 The public proximal-to-distal article, Physics of Golf chapter, and GRF
