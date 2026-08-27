@@ -29,7 +29,7 @@ Last-Updated: 2026-08-27T09:20:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.226                                          |
+| **Spec Version**        | 1.0.227                                          |
 | **Last Spec Update**    | 2026-08-27                                       |
 
 ## 2. Purpose & Mission
@@ -142,8 +142,13 @@ procurement state.
 
 The public guide at `articles/markerless-mocap-camera-selection.qmd` records a
 provisional two-camera shop pilot. It screens the FLIR BFS-U3-16S2C-CS first for
-fast motion, the Basler a2A1920-160ucBAS as a higher-resolution alternate, and
-the ZED X One GS only as a long-cable topology evaluation. No model is approved
+fast motion, the Basler a2A1920-160ucBAS as a higher-resolution alternate, the
+Allied Vision Alvium G5-203c as the distributed eight-camera reference-rig
+hypothesis, the LUCID Triton2 TRT016S-CC as the distributed Ethernet/PTP
+challenger, and the ZED X One GS (with refreshed 15 µs vendor sync claim) as a
+long-cable topology evaluation. Regional camera-body list prices (e.g. FLIR US
+list USD 371.00, Stereolabs store USD 399/424) are scoped strictly as
+camera-body-only without implying total system cost. No model is approved
 for a full rig. Tools must own optional camera adapters and canonical contracts;
 UpstreamDrift must own physical qualification and operator workflows.
 

@@ -118,17 +118,20 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   coverage; the isolated Quarto render also passes. No protected mocap release
   or physical-lab qualification exists yet; next pin merged Tools #4706 and
   UpstreamDrift #9063 authorities.
-- **Camera evidence registry (AffineDrift #3956 / AFF-M1):** branch
-  `feat/3956-camera-selection-registry` starts from protected main
-  `ca33d3ef6f543ff3dfcadda35c3bdf2356acff84`. The versioned registry, strict
-  verifier, public camera-selection guide, and contract tests cover FLIR
-  BFS-U3-16S2C-CS, Basler a2A1920-160ucBAS, and ZED X One GS through ten required
-  purchasing attributes each. The decision is provisional: quote and buy two
-  matched cameras for a physical pilot, not the full rig. No price, legal
-  approval, runtime adapter, timing/bandwidth result, calibration, pose result,
-  C3D result, or procurement approval exists. AFF-M2 must consume protected
-  Tools calibration contracts after their dependency stack merges; do not copy
-  runtime calculations into AffineDrift.
+- **Camera evidence registry (AffineDrift #3956, #3976, #3977, #3978 / AFF-M1):**
+  branch `fix/3976-camera-benchmark-evidence` qualifies and updates the evidence surface.
+  The versioned registry, strict verifier, public camera-selection guide, and contract
+  tests cover five cameras: FLIR BFS-U3-16S2C-CS (fast-motion USB pilot lead), Basler
+  a2A1920-160ucBAS (high-res USB alternate), Allied Vision Alvium G5-203c (distributed
+  8-camera 5GigE reference-rig hypothesis), LUCID Triton2 TRT016S-CC (distributed
+  2.5GigE/PTP challenger), and Stereolabs ZED X One GS (long-cable GMSL2 evaluation).
+  ZED X One GS synchronization evidence is refreshed to the current 15 µs vendor claim
+  (#3976). Regional list prices for camera bodies are scoped typed (FLIR USD 371.00,
+  Stereolabs USD 399/424) without implying total system cost (#3977). The two-camera
+  USB pilot and eight-camera distributed Ethernet evaluations remain strictly distinct
+  decisions (#3978). Default-deny procurement and human approval boundaries remain
+  mandatory. AFF-M2 must consume protected Tools calibration contracts after their
+  dependency stack merges; do not copy runtime calculations into AffineDrift.
 - The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
 - Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
