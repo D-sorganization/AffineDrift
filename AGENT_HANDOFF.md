@@ -84,7 +84,7 @@ changes were made in that session — the deliverable is the issue set below.
 
 AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Geometry of Motion_, _Volumes I–IV_), articles, and scientific monographs. UpstreamDrift remains the computational, claim, and evidence authority for the proximal-to-distal program:
 
-- **Protected immutable refresh (#3930):** use the clean worktree
+- **Protected immutable refresh ([#3930](https://github.com/D-sorganization/AffineDrift/issues/3930), [PR #3986](https://github.com/D-sorganization/AffineDrift/pull/3986)):** use the clean worktree
   `AffineDrift-worktrees/3930-proximal-projection` on
   `docs/3930-proximal-projection`. The branch pins protected
   UpstreamDrift #9137 squash `7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b`, adds a fail-closed
@@ -92,15 +92,17 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   protected Upstream release manifest, restores the previously omitted
   `_claim_adjudication_summary.qmd`, updates the declared chapter count to 36,
   and stages the web-linearized 245-page, 1,912,422-byte source-identical PDF.
-  Local projection verification passes with 208 source-identical files, 21
+  Local and anonymous projection verification pass with 208 source-identical files, 21
   flattened figures, 12 immutable-link rewrites, and 14 declared adaptations.
-  Complete the protected PR/merge and post-merge pin verification before
-  closing #3930. Preserve the untagged-PDF, Type 3, and
+  Required focused tests, title governance, module budget, internal links,
+  isolated Quarto rendering, responsive visual inspection, pre-commit, and
+  pre-push checks pass. Preserve squash merge, protected CI, post-merge pin
+  verification, and the untagged-PDF, Type 3, and
   unembedded-font archival limitations unless independently fixed and requalified.
 
 - **Published Technical Monograph**: [`articles/proximal_distal_energy_transfer/index.qmd`](articles/proximal_distal_energy_transfer/index.qmd)
   - 36 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual force sources, endpoint virtual-work mappings, multi-station Coulomb friction, and bounded optimization studies.
-  - Candidate technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (245 pages, >= 69,000 words).
+  - Qualified technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (245 pages, >= 69,000 words).
   - Executable companion and monograph PDF contracts use the exact governed
     `pypdf==6.16.1` root dependency pin.
   - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins the exact UpstreamDrift #9137 protected squash `7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
@@ -146,7 +148,7 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   decisions (#3978). Default-deny procurement and human approval boundaries remain
   mandatory. AFF-M2 must consume protected Tools calibration contracts after their
   dependency stack merges; do not copy runtime calculations into AffineDrift.
-- The candidate source release is pinned to UpstreamDrift #9137 protected squash `7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b`.
+- The protected source release is pinned to UpstreamDrift #9137 squash `7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b`.
 - Source release: 636 artifacts, 313 atomic claims, 2,312 evidence references, 350 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
 - #3882's immutable publication-projection, portable-link, generated-metadata, and deployment contract is enforced by the manifest, verifier, and publication tests. External archival/PID and human-validation gates remain separate.
