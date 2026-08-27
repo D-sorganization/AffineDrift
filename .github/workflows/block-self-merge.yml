@@ -1,4 +1,4 @@
-name: Block Self-Merges
+name: Reject Redundant Self-Approval
 
 on:
   pull_request_review:
@@ -32,26 +32,25 @@ jobs:
           if [ -n "$REVIEWER" ]; then
             if [ "$REVIEWER" = "$PR_AUTHOR" ] && [ "$REVIEW_STATE" = "APPROVED" ]; then
               echo "Error: PR author '$PR_AUTHOR' cannot approve their own pull request"
-              echo "Please request a review from a different team member."
+              echo "Self-approval is unnecessary; required checks govern merge readiness."
               exit 1
             fi
           fi
           echo "Review check passed"
 
-      - name: Enforce review requirement
+      - name: Report merge-review policy
         if: github.event_name == 'pull_request'
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          # This is a non-blocking informational check for now.
-          # Branch protection rules will enforce the actual requirement.
-          echo "This PR requires approval from a reviewer other than the author."
-          echo "Approvals from @${{ github.event.pull_request.user.login }} will be rejected."
+          # Reviews are optional; live branch protection requires zero approvals.
+          echo "Required status checks, not a named maintainer review, govern merge readiness."
+          echo "Optional reviews remain available for risk, expertise, or unresolved feedback."
           echo ""
           echo "For review guidelines, see: CONTRIBUTING.md#code-review-guidelines"
 
       - name: Report status
         if: always()
         run: |
-          echo "Self-merge block status: OK"
-          echo "Self-approval will be rejected by branch protection rules."
+          echo "Self-approval guard status: OK"
+          echo "No named maintainer approval is required by repository policy."

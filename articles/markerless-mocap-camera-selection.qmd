@@ -1,0 +1,260 @@
+---
+title: "Markerless Mocap Camera Selection"
+description: "A source-bounded, camera-agnostic guide to selecting and qualifying cameras for a flexible markerless motion-capture lab."
+date: "2026-08-26"
+categories: [Technology, Motion Capture, Computer Vision, Biomechanics]
+toc: true
+toc-depth: 3
+---
+
+## Provisional Shop Recommendation {.unnumbered}
+
+For a shop system intended to observe fast whole-body motion and eventually use six to eight
+cameras, the current evidence supports a **two-camera pilot**, not an immediate full-rig purchase.
+The provisional first candidate is the color Teledyne FLIR Blackfly S
+`BFS-U3-16S2C-CS`; the Basler ace 2 `a2A1920-160ucBAS` is the matched alternate.
+Both are global-shutter industrial cameras with hardware-trigger support and replaceable lenses.
+The FLIR candidate trades resolution for a higher vendor-specified maximum rate (226 frames per
+second at 1440 by 1080); the Basler candidate supplies 1920 by 1200 at 160 frames per second.
+
+The Stereolabs ZED X One GS remains an evaluation candidate for larger spaces where synchronized
+GMSL2 cabling is valuable. It is not the default fast-motion choice: its full-resolution mode is
+60 frames per second, its 120-frame-per-second mode is binned to 960 by 600, and the complete
+topology adds capture-card, NVIDIA, fixed-lens, and proprietary-SDK constraints.
+
+This recommendation is deliberately provisional. Camera specifications alone cannot establish
+pose, joint-angle, or C3D accuracy. Buy two cameras for the pilot, measure the whole acquisition
+chain, then decide whether to duplicate that qualified unit or change models.
+In operational terms: buy two cameras for the pilot and make the larger purchase conditional on
+the recorded qualification evidence.
+
+::: {.callout-warning title="No Procurement Approval"}
+No listed camera is approved for a full deployment. Prices, regional availability, exact software
+licenses, lenses, trigger hardware, host controllers, lighting, and physical performance still
+require quotes and qualification. The machine-readable registry defaults procurement to deny.
+:::
+
+## Governed Evidence
+
+The canonical dataset is the
+[camera evidence registry](../data/markerless_mocap/camera_evidence_registry_v1.json). Its schema is
+`affinedrift/mocap-camera-evidence-registry/v1`, and
+`scripts/verify_mocap_camera_registry.py` rejects missing sources, stale reviews, unknown links,
+cross-camera claims, incomplete purchasing attributes, and any claim that silently turns an
+engineering inference into an approved fact.
+
+Evidence classes have intentionally different authority:
+
+| Evidence Class | What It Can Establish | What It Cannot Establish |
+|---|---|---|
+| `vendor_spec` | A vendor's dated statement about its product or SDK | Sustained rig performance or independent accuracy |
+| `peer_reviewed_observed` | What a cited study observed under its own protocol | Transfer to another camera, task, pose model, or lab |
+| `engineering_inference` | A transparent design screen or pilot decision | A qualified threshold or procurement approval |
+| `unavailable` | That the necessary value is not currently authoritative | A value to be silently estimated or substituted |
+
+AffineDrift owns this public evidence and explanation only. Tools owns camera, time, frame,
+calibration, and interchange contracts. UpstreamDrift owns capture orchestration, calibration
+execution, reconstruction, validation, and operator workflows. This page does not implement or
+duplicate either runtime.
+
+## Candidate Matrix
+
+| Candidate | Shutter | Vendor-Specified Video Mode | Synchronization | Optics | Data Path | Current Role |
+|---|---|---|---|---|---|---|
+| Teledyne FLIR BFS-U3-16S2C-CS | Global | 1440 by 1080 at up to 226 frames per second | Hardware or software trigger; action command | CS mount; documented removable C adapter | USB 3.1 Gen 1 | Preferred fast-motion pilot candidate |
+| Basler a2A1920-160ucBAS | Global | 1920 by 1200 at up to 160 frames per second | Hardware trigger; programmable API | C mount | USB 3.0 | Higher-resolution fast-motion alternate |
+| Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 frames per second; 960 by 600 at up to 120 | External synchronization; vendor claim within 10 microseconds | Fixed narrow, wide, or model-dependent fisheye variant | GMSL2 plus capture hardware | Long-cable topology evaluation |
+
+Primary product evidence is available from the
+[FLIR product page](https://www.teledynevisionsolutions.com/en-ca/products/blackfly-s-usb3/?model=BFS-U3-16S2C-CS&segment=iis&vertical=machine+vision),
+[FLIR technical reference](https://softwareservices.flir.com/BFS-U3-16S2/latest/Model/spec.html),
+[Basler product page](https://www.baslerweb.com/en-sg/shop/a2a1920-160ucbas/), and
+[ZED X One product page](https://www.stereolabs.com/en-si/products/zed-x-one). These pages were
+accessed on 2026-08-26. Product pages can change; the registry therefore carries review dates and
+does not treat a URL as an immutable specification.
+
+### Teledyne FLIR Fast-Motion Pilot Candidate
+
+The FLIR candidate leads the pilot because temporal sampling is the first screen for rapid motion.
+The vendor lists a global shutter, 226 frames per second at full 1440-by-1080 Bayer output, a
+CS-mount lens interface, and hardware trigger support. The separate I/O documentation describes
+the physical input and its propagation specification. None of these statements proves exposure
+alignment between two assembled cameras, reliable eight-camera streaming, or pose accuracy.
+
+The Spinnaker SDK is a vendor component under a restrictive EULA, not the licensing authority for
+the open core. A camera adapter must remain optional and satisfy the public Tools camera protocol.
+Synthetic and prerecorded drivers must continue to work when Spinnaker is absent.
+
+### Basler Higher-Resolution Alternate
+
+The Basler candidate offers 2.3 megapixels at 160 frames per second, global shutter, C-mount
+optics, a hardware-trigger input, and GenICam-facing pylon APIs. Its additional pixels may improve
+keypoint localization when the person occupies a smaller portion of the image; that possible
+benefit is an inference to test, not a result. The lower maximum frame rate may be immaterial for
+some body segments and insufficient for others.
+
+The pylon SDK is also governed by a vendor license. It belongs behind an optional adapter. A
+commercial release must review the exact pylon license shipped with the chosen SDK version rather
+than relying on this summary.
+
+### Stereolabs Long-Cable Evaluation
+
+The ZED X One GS offers a synchronized, locking GMSL2 topology and fixed lens variants. The vendor
+states that multiple connected cameras can be synchronized within 10 microseconds. This makes the
+system interesting where USB cable length and connector reliability dominate. It does not remove
+the need to measure exposure timing, transport drops, or model latency.
+
+The comparison must preserve mode context. `120 frames per second` applies to the 960-by-600
+binned mode, while full 1920-by-1200 output is limited to 60 frames per second. A pair is required
+for ZED SDK stereo or depth features. The SDK and capture topology depend on supported NVIDIA
+hardware, and their licenses and redistribution terms remain separate review gates.
+
+## Selection Calculations
+
+### Temporal Sampling
+
+For a point moving at image speed $v_{px}$ pixels per second and a camera rate $f_s$, the nominal
+inter-frame displacement is
+
+$$
+\Delta p = \frac{v_{px}}{f_s}.
+$$ {#eq-inter-frame-displacement}
+
+This equation does not choose a universal frame rate. Measure $v_{px}$ for the intended body,
+club, implement, or tool region, then set a task-specific maximum displacement. A body-pose model
+may tolerate a displacement that is unacceptable for a fast implement. The registry's
+120-frame-per-second pilot screen is therefore provisional.
+
+### Motion Blur
+
+If exposure time is $t_e$, the approximate image-space motion blur is
+
+$$
+b_{px} = v_{px} t_e.
+$$ {#eq-motion-blur}
+
+For a declared blur budget $b_{max}$, the exposure contract is
+
+$$
+t_e \leq \frac{b_{max}}{v_{px}}.
+$$ {#eq-exposure-contract}
+
+A high frame rate does not automatically create a short exposure. Lighting, aperture, gain,
+sensor response, and flicker determine whether the required exposure is usable. The pilot must
+record exposure, gain, illumination, and observed blur for every camera.
+
+### Raw Payload Screen
+
+An uncompressed payload screen for width $W$, height $H$, frame rate $f_s$, and delivered bit
+depth $q$ is
+
+$$
+R_{raw} = W H f_s q.
+$$ {#eq-raw-payload}
+
+At eight delivered bits per pixel, one FLIR stream at the vendor maximum is approximately
+2.81 gigabits per second before protocol overhead. One Basler stream is approximately 2.95
+gigabits per second. Eight such streams would respectively be approximately 22.5 and 23.6
+gigabits per second in aggregate. These are arithmetic screens, not measured USB payloads. They
+show why eight cameras cannot be assigned casually to one shared host-controller path.
+
+The acquisition contract must measure successful payload, dropped and duplicate frames, buffer
+occupancy, host-controller assignment, CPU load, storage write rate, and graceful recovery. A
+nominal `5 Gbit/s` interface label is not a per-camera end-to-end guarantee.
+
+### Triangulation Geometry
+
+For two calibrated rays separated by angle $\theta$, depth sensitivity becomes poor as the rays
+approach parallel. A useful first-order relationship is
+
+$$
+\sigma_z \propto \frac{\sigma_{px} z^2}{f B},
+$$ {#eq-depth-sensitivity}
+
+where $\sigma_{px}$ is keypoint uncertainty, $z$ is working distance, $f$ is focal length in
+pixel units, and $B$ is baseline. This proportionality explains why baseline and resolution
+matter, but it is not a complete uncertainty model. Wider baselines can also increase occlusion
+and viewpoint-dependent pose failures. Camera placement must be learned and qualified from
+observations, residuals, covariance, visibility, ray angles, and task coverage rather than a
+fixed room diagram.
+
+## What the Research Establishes
+
+[Nakano and colleagues](https://doi.org/10.3389/fspor.2020.00050) evaluated five synchronized
+cameras at 1920 by 1080 and 120 hertz and reported task- and keypoint-dependent markerless error.
+The paper supports synchronized multi-view capture and explicit error analysis; it does not
+qualify any industrial camera listed here.
+
+[OpenCap](https://doi.org/10.1371/journal.pcbi.1011462) demonstrated useful movement analysis from
+synchronized 720-by-1280 smartphone videos at 60 hertz. It is an important accessible baseline,
+not evidence that 60 hertz is sufficient for every shop task or that its accuracy transfers to a
+different camera, detector, skeleton, or calibration pipeline.
+
+[Song and colleagues](https://pubmed.ncbi.nlm.nih.gov/37552921/) compared markerless and
+marker-based estimates across eight movements and reported larger differences for some hip
+quantities, particularly during rapid movement. This reinforces a central rule: qualification is
+task-, joint-, model-, and protocol-specific.
+
+## Two-Camera Pilot Protocol
+
+1. Obtain complete quotes for two FLIR cameras and two comparable Basler cameras. Include matched
+   lenses, locking data cables, isolated trigger distribution, mounts, tripods or structure,
+   lights, host controllers, storage, taxes, shipping, and one spare strategy.
+2. Review the exact SDK versions and EULAs. The MIT core must operate without either vendor SDK.
+3. Select lenses from the measured capture-volume dimensions. Record field of view, working
+   distance, focus, aperture, and distortion; do not select only by nominal focal length.
+4. Bench two matched cameras at the intended resolution, bit depth, frame rate, exposure, and
+   cable length. Measure exposure skew, drift, frame loss, duplicates, jitter, and recovery.
+5. Calibrate a real two-camera geometry, retain every observation and solver version, and report
+   residuals, covariance, ray-angle coverage, and movement invalidation.
+6. Run the intended pose backend on representative clothing, lighting, occlusion, body sizes,
+   and motions. Keep detector confidence separate from geometric uncertainty.
+7. Compare triangulated points and derived joint quantities against a declared reference. Report
+   all unavailable and failed keypoints; never interpolate them silently.
+8. Repeat at the worst intended capture-volume locations. Only then decide whether FLIR's rate or
+   Basler's resolution is materially better.
+9. Add cameras in stages. Re-run synchronization, bandwidth, calibration, visibility, thermal,
+   storage, and pose tests at four, six, and eight cameras.
+
+## Required Qualification Evidence
+
+The full-rig decision remains blocked until the following evidence exists:
+
+- a dated bill of materials and exact license review;
+- a camera capability record from the real driver rather than a product-name switch;
+- sustained stream results at every supported camera count and mixed-capability case;
+- common-trigger exposure timing, drift, drop, duplicate, and recovery measurements;
+- intrinsic and extrinsic calibration observations, residuals, covariance, and validity state;
+- task-volume visibility and ray-angle maps with occlusion and lighting challenges;
+- reference comparisons for the actual pose model, skeleton, filtering, and biomechanical outputs;
+- C3D export and independent-reader round trips with units, rates, residuals, events, and explicit
+  loss reporting;
+- privacy, consent, retention, security, SBOM, and redistribution approval; and
+- an exact-version commissioning report that states what the rig cannot measure.
+
+## Extension Contract
+
+A new camera does not require a core code change when it satisfies the shared provider protocol.
+Its adapter must report capabilities such as stream modes, shutter, trigger, clocks, controls,
+pixel formats, lens metadata, and cancellation. Unsupported functions return typed unsupported
+outcomes. The lab manifest selects providers and records immutable device identities and settings;
+the reconstruction code consumes canonical observations and never switches behavior by vendor
+name.
+
+To add a camera to this public registry, add its dated primary sources, exactly one claim for every
+purchasing attribute, limitations, review dates, and an explicit adapter state. If price, sync,
+license, or topology is unknown, record `unavailable`. The verifier will reject an apparently
+complete camera assembled from missing or cross-model claims.
+
+## Current Limitations
+
+- No candidate has been connected to this workstation under the canonical Tools protocol.
+- No physical timing, blur, lighting, field-of-view, pose, triangulation, or C3D test has run.
+- Prices are deliberately unavailable until comparable complete regional quotes exist.
+- Vendor SDK summaries are not legal opinions.
+- The cited studies bound only their own cameras, participants, models, tasks, and protocols.
+- This document does not approve human-subject recording, public release, or biomechanical use.
+
+The correct next hardware action is therefore small and reversible: quote the two fast-motion
+candidates, buy one matched pair after license and host-topology review, and make the pilot earn
+the larger purchase.

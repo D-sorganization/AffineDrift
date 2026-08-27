@@ -1,65 +1,70 @@
 # AffineDrift
 
 [![Quarto Syntax Check](https://github.com/D-sorganization/AffineDrift/actions/workflows/quarto-syntax-check.yml/badge.svg)](https://github.com/D-sorganization/AffineDrift/actions/workflows/quarto-syntax-check.yml)
-[![Quarto](https://img.shields.io/badge/built%20with-Quarto-blue.svg)](https://quarto.org/)
+[![Built with Quarto](https://img.shields.io/badge/built%20with-Quarto-blue.svg)](https://quarto.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-AffineDrift is a scientific writing and modeling portfolio for golf mechanics,
-multibody dynamics, and nonlinear control. It publishes source-bounded
-exposition, model notes, critique responses, and links to executable companion
-work rather than presenting a finished theory as a settled result.
+**The published site is at [affinedrift.com](https://affinedrift.com).** This
+repository holds its source. If you came to read the material, read it there;
+the files here are Quarto markdown and do not render as pages on GitHub.
 
-The site is intended for technical reviewers who want to see how assumptions,
-derivations, references, simulations, and open limitations are tracked together.
-The established material is the underlying mathematics and mechanics literature;
-the AffineDrift contribution is the application, synthesis, and review workflow
-around golf swing models.
+AffineDrift is a scientific writing and modeling portfolio covering golf
+mechanics, multibody dynamics, and nonlinear control. It publishes
+source-bounded exposition, model notes, critique responses, and links to
+executable companion work, rather than presenting a finished theory as a settled
+result.
 
-## What Is Here
+The established material is the underlying mechanics and control literature. The
+contribution here is the application, synthesis, and review workflow around golf
+swing models: assumptions, derivations, references, simulations, and open
+limitations tracked together and visible to a reader.
 
-- **Textbook-style expositions**: [The Physics of Golf](articles/The_Physics_of_Golf/quarto/index.qmd) and [The Geometry of Motion](articles/The_Geometry_of_Motion/quarto/index.qmd) organize the main mechanics and control narratives.
-- **Source maps and references**: [PARAMETERS.md](PARAMETERS.md), the [bibliography](resources/bibliography.qmd), and development notes identify symbols, units, citations, and repository status.
-- **Executable model path**: the site links to the [Golf Modeling Suite](models/models.qmd) page and the related implementation repository, [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift).
-- **Critique and limitation tracking**: [Critiques & Responses](critiques/index.qmd) records objections, assumptions, and evidence gaps alongside the main presentation.
-- **Validation artifacts**: CI, Quarto syntax checks, tests, repository inventories, and assessment reports document what is mechanically checked and what remains editorial or exploratory.
+## Read the material
 
-## What Is Validated
+| Start here                                                                                | What it covers                                                   |
+| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [The Physics of Golf](https://affinedrift.com/articles/The_Physics_of_Golf/quarto/)       | The main mechanics exposition, textbook length                   |
+| [The Geometry of Motion](https://affinedrift.com/articles/The_Geometry_of_Motion/quarto/) | The control and differential-geometry narrative                  |
+| [Books and textbooks](https://affinedrift.com/books/)                                     | The full series, including the four-volume roadmap               |
+| [Technology overview](https://affinedrift.com/pages/technology.html)                      | Force measurement, motion capture, launch monitors, club fitting |
+| [Golf Modeling Suite](https://affinedrift.com/models/models.html)                         | The executable models behind the exposition                      |
+| [Critiques and responses](https://affinedrift.com/critiques/)                             | Objections, assumptions, and evidence gaps                       |
+| [Bibliography](https://affinedrift.com/resources/bibliography.html)                       | Source provenance for every cited claim                          |
+| [Learning paths](https://affinedrift.com/resources/learning-paths.html)                   | Suggested reading orders by background                           |
 
-AffineDrift validates syntax, links, front matter, tests, and selected repository
-quality gates through local scripts and GitHub Actions. Some pages also include
-explicit provenance notes that distinguish standard control-theory facts from
-AffineDrift's golf-specific interpretations.
+For readers who want the shortest technical route: **The Physics of Golf** for
+mechanics, then **Critiques and Responses** for what the models do not settle.
 
-The validation does not prove that every biomechanical interpretation is true in
-vivo. Treat model-dependent quantities, optimization narratives, and proposed
-golf-specific metrics as hypotheses unless a page ties them to a cited source,
-an executable model, or a stated numerical experiment.
+## Companion repositories
 
-## For Technical Reviewers
+| Repository                                                                              | Relationship                                          |
+| --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift)                       | The executable multi-engine simulation platform       |
+| [Tools](https://github.com/D-sorganization/Tools)                                       | Shared engineering and analysis applications          |
+| [rate-of-closure-explorer](https://github.com/D-sorganization/rate-of-closure-explorer) | Interactive companion to the reference-point research |
+| [Launch-Monitor-Data](https://github.com/D-sorganization/Launch-Monitor-Data)           | Traceable public launch-monitor data and provenance   |
 
-Start with these paths:
+## What is checked, and what is not
 
-- [The Physics of Golf](articles/The_Physics_of_Golf/quarto/index.qmd) for the most direct mechanics exposition.
-- [Theory Part 1](articles/theory-part1.qmd) for the control-affine framing.
-- [Bibliography](resources/bibliography.qmd) for source provenance.
-- [Critiques & Responses](critiques/index.qmd) for limitations and objections.
-- [Golf Modeling Suite](models/models.qmd) for the site-level model entry point.
-- [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) for related executable model and workflow implementation.
+Continuous integration validates Quarto syntax, internal and external links,
+front matter, the Python test suite, and selected repository quality gates. Some
+pages carry explicit provenance notes separating standard control-theory results
+from AffineDrift's golf-specific interpretations.
 
-## Assumptions, Review, and Validation
+That validation does not establish that any biomechanical interpretation holds
+in vivo. Treat model-dependent quantities, optimization narratives, and proposed
+golf-specific metrics as hypotheses unless a page ties them to a cited source, an
+executable model, or a stated numerical experiment.
 
-Computational tools support drafting, refactoring, and repeatable checks. They
-are not the scientific claim of the project. Technical claims are expected to be
-tied to stated assumptions, cited sources, model code, or explicit numerical
-experiments, with limitations visible when evidence is incomplete.
+Technical claims are expected to rest on stated assumptions, cited sources, model
+code, or explicit numerical experiments, with limitations visible wherever the
+evidence is incomplete. Computational tools support drafting, refactoring, and
+repeatable checks; they are not the scientific claim of the project.
 
-In practice, the workflow emphasizes inspectable artifacts: equations, scripts,
-references, diffs, tests, and issue-linked review notes.
+## Building the site
 
-## Local Development
-
-This is a Quarto static site hosted through GitHub Pages at `AffineDrift.com`.
-
-Preview locally:
+AffineDrift is a Quarto static site deployed to GitHub Pages at
+`affinedrift.com`.
 
 ```bash
 git clone https://github.com/D-sorganization/AffineDrift.git
@@ -67,95 +72,98 @@ cd AffineDrift
 quarto preview
 ```
 
-The preview normally opens at `http://localhost:4000`.
+The preview opens at `http://localhost:4000`.
 
-Key paths:
-
-```text
-AffineDrift/
-├── index.qmd           # Main homepage (Quarto markdown)
-├── _quarto.yml         # Quarto configuration
-├── styles.css          # Custom styling
-├── js/                # JavaScript ES6 modules (main.js entry point)
-├── docs/               # Additional documentation
-│   └── assessments/    # Quality assessments
-├── tests/              # Python tests
-├── .github/
-│   └── workflows/      # CI/CD pipelines
-│       ├── ci-standard.yml      # Core quality gates and tests
-│       ├── deploy-website.yml   # GitHub Pages deployment
-│       └── quarto-syntax-check.yml # Quarto syntax validation
-└── *.qmd               # Content pages (Quarto markdown)
-```
-
-## Documentation
-
-**Development Guides:**
-
-- [API Reference](docs/api-reference.md): public API for all `src/` modules.
-- [Testing Guide](docs/development/testing-guide.md): test patterns, fixtures, and conventions.
-- [Code Style Guide](docs/development/code-style-guide.md): Python, JavaScript, CSS, and Quarto standards.
-- [Writing Style Guide](docs/development/writing-style-guide.md): prose standards, claim discipline, and review checklists.
-- [Git Workflow Guide](docs/development/git-workflow-guide.md): branch strategy, commits, and PR process.
-- [Performance Tuning Guide](docs/development/performance-tuning-guide.md): profiling and NumPy optimization.
-- [Security Guidelines](docs/development/security-guidelines.md): secrets, input validation, SAST.
-- [Release Notes Template](docs/development/release-notes-template.md): changelog and milestone documentation.
-- [Benchmarking Policy](docs/development/benchmarking.md): benchmark infrastructure and CI policy.
-
-**Reference:**
-
-- [Canonical Parameters Table](PARAMETERS.md): symbols, units, and parameter ranges.
-- [Textbook Series Architecture](docs/development/geometry_of_motion_architecture.md): series architecture and issue-to-deliverable tracking.
-- [Repository Inventory](docs/development/repository_inventory.md): component inventory, implementation status, and known gaps.
-- [src/README.md](src/README.md): Python source-tree overview and status notes.
-
-**Operations:**
-
-- [SLO & Performance Targets](docs/operations/slo-targets.md): CI/CD SLOs and error budgets.
-- [Incident Response Playbooks](docs/operations/incident-response-playbooks.md): step-by-step incident resolution.
-- [Troubleshooting Guide](docs/operations/troubleshooting-guide.md): error lookup and debug procedures.
-- [On-Call Procedures](docs/operations/on-call-procedures.md): routine checks and response runbooks.
-- [Monitoring Setup](docs/operations/monitoring-setup.md): current and planned observability.
-
-## Runtime and CI
-
-- Python tooling targets Python 3.12.
-- GitHub Actions run quality gates, tests, Quarto syntax checks, and deployment workflows.
-- The repository includes Docker and Compose support for reproducible static-site preview.
-
-Build and run the preview image:
+A container build is also available, either directly:
 
 ```bash
 docker build -t affinedrift:local .
 docker run --rm -p 8080:8000 affinedrift:local
 ```
 
-Or use Compose:
+or through Compose:
 
 ```bash
 docker compose up --build
 ```
 
-The container build now verifies the Quarto `.deb` checksum, installs Python
-dependencies from the hash-locked `requirements-docker.lock`, and emits
-`docs/build-provenance.json` inside the rendered site. Refresh the lock with:
+The preview is then served at `http://localhost:8080`. The image verifies the
+Quarto package checksum, installs Python dependencies from the hash-locked
+`requirements-docker.lock`, and writes `docs/build-provenance.json` into the
+rendered site. Pass credentials through environment variables or your deployment
+platform's secret store; do not bake secrets into the image.
 
-```bash
-py -3.12 -m piptools compile --allow-unsafe --generate-hashes --resolver=backtracking --output-file requirements-docker.lock requirements.txt
+Python tooling targets Python 3.12. See
+[the contributor guide](CONTRIBUTING.md) for the full local setup, and
+[docs/development/](docs/development/) for the release and build process.
+
+### Source layout
+
+```text
+AffineDrift/
+├── index.qmd            Site homepage
+├── _quarto.yml          Site configuration and navigation
+├── articles/            Long-form articles and textbook volumes
+├── books/               Book series landing pages
+├── models/              Model documentation pages
+├── critiques/           Critique and response record
+├── resources/           Bibliography, article index, learning paths
+├── pages/               Standalone pages: manifesto, technology, reviews
+├── src/                 Python modules supporting figures and calculations
+├── styles.css           Site styling
+├── js/                  JavaScript modules
+├── tests/               Python test suite
+└── docs/                Rendered output and repository documentation
 ```
 
-do not bake secrets into the image; pass credentials through local environment
-variables or your deployment platform's secret store.
+## Repository documentation
 
-The container preview is available at `http://localhost:8080`.
+**Writing and content**
+
+- [Writing style guide](docs/development/writing-style-guide.md) — prose standards and the constraints CI enforces on page edits.
+- [Canonical parameters](PARAMETERS.md) — symbols, units, and parameter ranges used across the site.
+- [Notation](NOTATION.md) — notation conventions.
+- [Textbook series architecture](docs/development/geometry_of_motion_architecture.md) — series structure and issue-to-deliverable tracking.
+
+**Development**
+
+- [Contributing](CONTRIBUTING.md) — how to propose a change.
+- [Code style guide](docs/development/code-style-guide.md) — Python, JavaScript, CSS, and Quarto standards.
+- [Testing guide](docs/development/testing-guide.md) — test patterns, fixtures, and conventions.
+- [Git workflow](docs/development/git-workflow-guide.md) — branch strategy, commits, and pull requests.
+- [API reference](docs/api-reference.md) — the public API of the modules under `src/`.
+- [Repository inventory](docs/development/repository_inventory.md) — component status and known gaps.
+- [Security guidelines](docs/development/security-guidelines.md) — secrets handling, input validation, static analysis.
+
+**Operations**
+
+- [Troubleshooting](docs/operations/troubleshooting-guide.md) — build and deployment failures.
+- [Service targets](docs/operations/slo-targets.md) — CI and deployment objectives.
+- [Incident response](docs/operations/incident-response-playbooks.md) — deployment and outage procedures.
 
 ## Contributing
 
-This is a personal research and writing portfolio. Issues are useful when they
-identify a source problem, broken link, reproducibility gap, unclear assumption,
-or technical correction.
+This is a research and writing portfolio maintained by one author, so pull
+requests that rewrite editorial content are unlikely to be merged. Issues are
+welcome and useful when they identify one of the following:
+
+- A source problem: a misattributed, misread, or missing citation.
+- A technical error in a derivation, model, or numerical result.
+- A reproducibility gap between a stated result and the code that produces it.
+- An assumption stated too weakly, or an unstated one.
+- A broken link, rendering fault, or accessibility problem on the site.
+
+Use the [issue templates](.github/ISSUE_TEMPLATE/) — there is one for content
+corrections, one for critique responses, and one for proposing an article.
+Report security issues through [SECURITY.md](SECURITY.md), not through public
+issues.
 
 ## License
 
-All content is the property of the repository owner. Code structure may be used
-as a template for similar projects with attribution.
+Source code is released under the MIT License; see [LICENSE](LICENSE).
+
+Written content, figures, and the textbook material published on
+[affinedrift.com](https://affinedrift.com) are reserved by the author. Quote and
+cite them under normal academic practice; ask before republishing them in
+substantial part. [COPYRIGHT.md](COPYRIGHT.md) states exactly which files fall
+under each, and gives the citation format.

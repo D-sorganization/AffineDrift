@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-25T18:58:00Z
+Last-Updated: 2026-08-27T09:20:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-08-25T18:58:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.224                                          |
-| **Last Spec Update**    | 2026-08-25                                       |
+| **Spec Version**        | 1.0.226                                          |
+| **Last Spec Update**    | 2026-08-27                                       |
 
 ## 2. Purpose & Mission
 
@@ -93,6 +93,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   pinning qualified aggregate results to immutable private manifests while
   keeping vendor-surrogate and paired-device claims unavailable until their
   leakage-safe and paired-observation gates are satisfied
+- Publish markerless-mocap pedagogy only from sanitized, qualified, immutable
+  Tools or UpstreamDrift evidence projections; keep capture, calibration,
+  reconstruction, private recordings, and scientific qualification outside
+  AffineDrift
 - Publish the Club Fitting Tester technology article (Epic #4549 Child C9) covering forward twist counterfactuals in $se(3)$, flexible shaft forward dynamics (lead/lag, droop, torsion), exact polyhedral mesh inertia tensor integration, and standardized wire schemas (`golf-club/fitting-document/v1`, `swing-sim/delivery-trajectory/v1`, `golf-club/fitting-report/v1`)
 - Publish the Heavy Hit / Multibody Impact Coupling research article (Epic #4562 Child H5) proving the $\tau^2$ decoupling law, acoustic and flexural wave transit horizons, physiological decoupling fraction $\eta_{\text{decouple}} > 0.99$, rigid-shaft upper bound, and runtime-free model interchange from MJCF/URDF/OpenSim
 
@@ -107,6 +111,41 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 ### System Context
 
 AffineDrift operates as a standalone research and education platform within the D-sorganization fleet. It complements but does not depend on QuatEngine (game engine) or UpstreamDrift (real-time physics simulator). The platform produces research content and optimization algorithms that can be consumed by educational institutions, biomechanics researchers, and control theory practitioners. It integrates with GitHub Pages for deployment and GitHub Actions for continuous integration, deployment, and automated quality assurance.
+
+### Markerless Mocap Publication Boundary
+
+AffineDrift owns public pedagogy, sanitized visualization, compatibility
+reporting, and immutable evidence projection for the cross-repository markerless
+mocap program. It does not own or import camera capture, synchronization,
+calibration, pose inference, reconstruction, or session orchestration runtime.
+
+The versioned `affinedrift/mocap-publication-projection/v1` contract accepts only
+qualified Tools or UpstreamDrift releases pinned by commit and SHA-256. The
+executable verifier rejects moving branch links; raw video, PII, secrets, and
+incompatible licenses; unqualified live-lab or synthetic claims; and changed or
+missing artifacts. The normative rationale is ADR 0001. Public C3D examples must
+be sanitized and pass the same privacy, security, consent, licensing, provenance,
+and qualification gates.
+
+### Markerless Mocap Camera Evidence Registry
+
+`data/markerless_mocap/camera_evidence_registry_v1.json` is the canonical
+AffineDrift camera-selection evidence surface. The strict
+`affinedrift/mocap-camera-evidence-registry/v1` schema requires dated primary
+sources; exactly one shutter, resolution, frame-rate, synchronization, lens,
+interface, SDK, SDK-license, topology, and price disposition for every camera;
+explicit vendor, peer-reviewed, engineering-inference, or unavailable evidence
+classes; review expiry; and default-deny procurement. The verifier rejects
+unknown or cross-model references, incomplete purchasing attributes, insecure
+source URLs, stale reviews, silent unavailable values, and any approved
+procurement state.
+
+The public guide at `articles/markerless-mocap-camera-selection.qmd` records a
+provisional two-camera shop pilot. It screens the FLIR BFS-U3-16S2C-CS first for
+fast motion, the Basler a2A1920-160ucBAS as a higher-resolution alternate, and
+the ZED X One GS only as a long-cable topology evaluation. No model is approved
+for a full rig. Tools must own optional camera adapters and canonical contracts;
+UpstreamDrift must own physical qualification and operator workflows.
 
 ### Module Map
 
@@ -585,6 +624,54 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
+### 1.0.176 Impact-Optimality Article Correction
+
+Corrects `articles/impact-optimality-and-model-limits.qmd`. The conclusions in
+its later sections were wrong: the simulation lumped 0.50 kg at the tip of a
+1.10 m shaft, where a real driver is 0.310 kg with its centre of mass 76% down.
+In a point-mass-at-tip model that overstates the club's inertia about the wrist,
+and the arm/club coupling that fights the release, by 2.1x. The resulting
+hub-torque reversal was published as a structural limit of two-link golf models.
+
+With an inertia-matched club the same model reaches 49.7 m/s of clubhead speed
+with 7.26 m/s of hand speed and a 3.46 club/arm rate ratio: five of six measured
+observables inside their published bands, with no constraint on the hands. The
+claim that measured hand speed was unreachable, and that a moving hub was
+required, is withdrawn.
+
+The objective question becomes answerable as a result. Optimizing for clubhead
+speed, Coriolis transfer, energy transfer or grip-force impulse produces the
+same swing; centrifugal release impulse is the one strategy that measurably
+costs speed. Release timing remains outside its measured band and is named as
+the open item.
+
+The impact-optimality derivation is unaffected: it concerns an unconstrained
+ideal rather than where a constrained optimum lands. A correction callout is
+carried at the head of the article and the layman's-terms summary is rewritten.
+Tracked as D-sorganization/Tools#4785.
+
+### 1.0.175 Impact-Optimality and Two-Link Model Limits
+
+New article `articles/impact-optimality-and-model-limits.qmd` derives why an
+optimized double pendulum brings its hands to a standstill at impact. In a
+point-mass-clubhead model the clubhead-speed-optimal hand speed is proportional
+to `L1*[I2 - m2*r2*(L2-r2)]`, which is identically zero for every parameter
+value and negative for a real driver; distributed club inertia therefore cannot
+repair it. Hill-type actuation limits reproduce measured golfer kinematics but
+leave the impact posture unreachable, because hub torque drives the wrist open
+through the coupling term and releasing the club requires reversing it.
+
+Records the consequence for the objective question: scored against measured
+kinematics the five swing objectives sit within 0.6% of each other while all of
+them sit far outside the published bands, so their ordering is not evidence
+about golf. Identifies a moving hub — a torso segment, or Miura's inward hand
+pull — as the model change that would matter.
+
+Cross-referenced from `articles/proximal-distal-model-workbench.qmd` and
+registered in `resources/articles.qmd`. Implementation and regression tests live
+in Tools `pendulum_simulator` under epic D-sorganization/Tools#4775. Every cited
+DOI was resolved before publication.
+
 ### 1.0.174 Ground-Reaction Drift Publication
 
 The public proximal-to-distal article, Physics of Golf chapter, and GRF
@@ -601,6 +688,9 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-26 | 1.0.225 | feat(mocap, #3956): Added the source-bounded camera evidence registry, strict schema and deterministic verifier, three fully disposed industrial-camera candidates, two fail-closed pilot recommendations, selection calculations, current primary-source links, Quarto navigation, and TDD coverage. Procurement remains default-deny; prices, exact EULA approval, adapters, physical timing, bandwidth, pose, calibration, C3D, and task qualification remain unavailable.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| 2026-08-25 | 1.0.224 | feat(mocap, #3954): Established AffineDrift's standalone publication boundary for markerless mocap with a versioned manifest schema, deterministic projection verifier, immutable Tools/UpstreamDrift source pins, artifact digest locks, explicit evidence classes, and fail-closed privacy, security, licensing, live-lab, and synthetic-evidence gates.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 2026-08-25 | 1.0.223 | docs(monograph, #3951): Pinned the protected proximal--distal projection to UpstreamDrift squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf` with 35 technical chapters, 244 pages, and 254 governed files (208 source-identical, 21 flattened, 12 immutable-link rewrites, and 13 declared adaptations). Added coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual terms; endpoint virtual-work mappings; signed and absolute hand-path impulse; power and work attribution; and a bounded 135-program optimization study with 91 qualified programs. Reconciled merge governance with the live zero-approval ruleset so required CI, rather than a named maintainer review, is the standing release gate. Retains coordinate, model, provenance, human-validation, and protected-publication boundaries.                                                                                                                                                                                                                                                                                          |
 | 2026-08-25 | 1.0.221 | fix(publication): Reconciled the proximal--distal companion PDF contract and dependency specification with the governed `pypdf==6.16.1` Dependabot update so clean environments retain executable page, text, outline, and URI checks without downgrading the protected dependency pin.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | 2026-08-20 | 1.0.212 | docs(launch-monitor): Pinned the canonical source-backed strokes-gained contract, its PyQt/React Tools integration, and the approved launch-monitor visual baseline by immutable merge and PNG digest. Preserved the older generic-v2 and grouped-estimator authorities by role while clarifying that no expected-strokes baseline is bundled, provenance declarations are not endorsement, the distance/target metric remains a non-SG proxy, and visual approval establishes presentation/accessibility rather than statistical or baseline validity.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | 2026-08-20 | 1.0.211 | docs(launch-monitor): Pinned the completed Release B software procedure and current fleet authorities, including the 252-pair schedule and ledger digests, while retaining zero analyzed pairs and `confirmatory_ready=false` as explicit scientific hold points. Corrected the paper's architecture description so the generic UpstreamDrift v2 envelope remains distinct from the specialized grouped estimators and tested PyQt/React twins currently released in Tools.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
@@ -863,3 +953,5 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-25 | 1.0.221 | fix(site, #3917, #3897): Restore H1 heading visibility and accessibility across all 55 full-layout pages; normalize multi-H1 standalone articles to H2 section headers; standardize Related Articles component to canonical theory-core pattern with callout-note and unspaced em-dashes; fix zero-link sections, backtick references, and over-traversal / root-absolute link paths; expand check_single_title.py and title-block-semantics.test.js with comprehensive CI checks. |
 | 2026-08-25 | 1.0.222 | fix(accessibility, #3944): Normalize multi-H1 articles and add CI heading-order validation gate ensuring every rendered page contains exactly one title H1, standalone pages start body content at H2, and full-layout pages author one visible H1. |
 | 2026-08-25 | 1.0.223 | fix(content, #3918): Remove unfinished Book Reviews link from navbar Read menu, replace placeholder warnings with full critical literature reviews for foundational texts (Cochran & Stobbs, Penner, Tedrake), synthesize complete research-review modules (baseball pitching, induced acceleration, interaction forces, shaft flexibility), replace template module placeholders with concrete learning path architecture, update Volume II-IV manuscript overview links, populate Golf Science book entries, and add test_unfinished_content_hygiene.py. |
+| 2026-08-25 | 1.0.224 | docs(monograph, #3951): Pinned the protected proximal--distal projection to UpstreamDrift squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf` with 35 technical chapters, 244 pages, and 254 governed files (208 source-identical, 21 flattened, 12 immutable-link rewrites, and 13 declared adaptations). Added coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual terms; endpoint virtual-work mappings; signed and absolute hand-path impulse; power and work attribution; and a bounded 135-program optimization study with 91 qualified programs. Reconciled merge governance with the live zero-approval ruleset so required CI, rather than a named maintainer review, is the standing release gate. Retains coordinate, model, provenance, human-validation, and protected-publication boundaries. |
+| 2026-08-27 | 1.0.226 | fix(content, #3913): Cleaned up tangent-space material parallel sets by enforcing a single canonical path in the article index and '_quarto.yml' render rules. |

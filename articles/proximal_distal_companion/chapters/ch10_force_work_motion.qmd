@@ -47,6 +47,54 @@ above 100 does not violate conservation; positive and negative contributions
 cancel to the total. In a two-arm local sweep, drift and control nearly cancel,
 making fraction language unstable.
 
+### What the Coriolis-Impulse Search Actually Optimized
+
+The new pendulum example asks a deliberately narrow question: among 135 frozen
+torque programs, which one produces the greatest *absolute* along-hand-path
+impulse from the coordinate-defined Coriolis cross term before qualified
+impact? Absolute impulse counts both signs, so a force that reverses direction
+does not disappear through cancellation. Signed impulse is published beside it
+to retain direction.
+
+Ninety-one programs reach the registered impact event. The maximum absolute
+Coriolis impulse is 13.817 N s with a 100 N m proximal drive, 10 N m of early
+wrist restraint, and wrist-drive onset at 0.100 s. That program reaches
+46.780 m/s. The highest-speed program instead uses 5 N m of early restraint and
+a 0.125 s onset; it reaches 46.913 m/s with 13.701 N s of absolute Coriolis
+impulse. The optima are close, but they are not the same program. Maximizing a
+named force component is therefore not identical to maximizing clubhead speed,
+even inside this small deterministic model.
+
+The signed values deepen the lesson. The maximum-absolute-impulse program has a
+signed Coriolis impulse of -6.825 N s and Coriolis generalized work of
+-100.69 J. A large absolute impulse can coexist with negative net work because
+the source reverses and because force, velocity, and generalized-coordinate
+signs matter. Squared-speed work is -33.73 J, gravity work is +25.56 J, and
+applied-drive work is +358.20 J in the same impact-truncated interval. These
+figures are an equation-term ledger, not a claim that a Coriolis agent supplied
+or removed a measured amount of biological energy.
+
+### The Hand-Path Arrow Does Not Carry the Whole Wrench
+
+The modeled wrist point moves with the arm coordinate but not independently
+with the relative wrist coordinate. Its task Jacobian is therefore
+rank-deficient for mapping a two-coordinate generalized drive into one
+force-only hand-path vector. The software computes the minimum-norm force that
+can be represented at the wrist and keeps the leftover generalized couple as a
+residual. It never hides that remainder inside the displayed hand force.
+
+For the two highlighted programs, the maximum retained residual is 54.44 and
+52.81 N m. That is not a small numerical rounding error. It tells the reader
+that an along-path force plot answers a useful but incomplete question. A
+complete grip description needs a wrench, or an endpoint-and-couple mapping
+with enough independent coordinates and measurements.
+
+At the top of the simulated swing, hand speed begins at zero, so no path tangent
+exists. The integration marks that interval undefined and uses only adjacent
+samples with a defined direction. More than 99.6% of the impact-truncated time
+is valid in the highlighted runs. Reporting that fraction prevents an arbitrary
+initial direction from contaminating the impulse.
+
 ### Fractions Become Dangerous Near Cancellation
 
 If drift contributes $+10$ J and control contributes $-9$ J, total signed work
@@ -247,5 +295,6 @@ time can worsen the final task.
 
 **Go Deeper:** Read the full
 [hand-path attribution chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03b_hand_path_attribution.qmd),
+[coordinate force-source chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03ba_coordinate_force_sources.qmd),
 inspect its [machine-readable evidence](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer/data),
 and compare the segment energetics conventions [@robertson1980; @winter2009].
