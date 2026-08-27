@@ -114,6 +114,20 @@ def test_projection_rejects_ambiguous_flattened_source(tmp_path: Path) -> None:
         verify_projection(root, publisher, upstream, pdf)
 
 
+def test_projection_rejects_an_upstream_chapter_omitted_from_publication(tmp_path: Path) -> None:
+    root, publisher, upstream, pdf = _fixture(tmp_path)
+    artifacts = upstream["artifacts"]
+    assert isinstance(artifacts, dict)
+    omitted = b"declared upstream chapter\n"
+    artifacts["upstream/root/chapters/omitted.qmd"] = {
+        "sha256": _sha(omitted),
+        "bytes": len(omitted),
+    }
+
+    with pytest.raises(ProjectionError, match="source chapter projection"):
+        verify_projection(root, publisher, upstream, pdf)
+
+
 def test_projection_rejects_claim_registry_or_pdf_mismatch(tmp_path: Path) -> None:
     root, publisher, upstream, pdf = _fixture(tmp_path)
     source = publisher["source"]

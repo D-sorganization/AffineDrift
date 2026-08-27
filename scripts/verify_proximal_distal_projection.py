@@ -122,6 +122,30 @@ def _verify_claim_registry(source: dict[str, object], artifacts: dict[str, objec
             raise ProjectionError(f"claim registry {key} does not match the release manifest")
 
 
+def _verify_complete_source_chapters(
+    publication_root: Path, artifacts: dict[str, object], source_root: str
+) -> None:
+    """Require every chapter declared by the protected source manifest."""
+    chapter_prefix = f"{source_root}/chapters/"
+    expected = {
+        path.removeprefix(f"{source_root}/")
+        for path in artifacts
+        if path.startswith(chapter_prefix) and path.endswith(".qmd")
+    }
+    actual = {
+        path.relative_to(publication_root).as_posix()
+        for path in (publication_root / "chapters").rglob("*.qmd")
+        if path.is_file()
+    }
+    if actual != expected:
+        missing = sorted(expected - actual)
+        unexpected = sorted(actual - expected)
+        raise ProjectionError(
+            "source chapter projection is incomplete: "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+
+
 def _normalize_source_links(data: bytes, repository: str, commit: str) -> tuple[bytes, bool]:
     """Reverse the declared immutable-link rewrite before source comparison."""
     prefix = f"https://github.com/{repository}/".encode()
@@ -190,6 +214,7 @@ def verify_projection(
     if publication.get("pdf_sha256") != expected_pdf:
         raise ProjectionError("publication PDF authority does not match the source authority")
     _verify_claim_registry(source, artifacts)
+    _verify_complete_source_chapters(publication_root, artifacts, source_root)
 
     result = _verify_source_files(
         publication_root, pdf_name, source, projection, artifacts, source_root
