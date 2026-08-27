@@ -1,7 +1,7 @@
 ---
 title: "Markerless Mocap Camera Selection"
 description: "A source-bounded, camera-agnostic guide to selecting and qualifying cameras for a flexible markerless motion-capture lab."
-date: "2026-08-26"
+date: "2026-08-27"
 categories: [Technology, Motion Capture, Computer Vision, Biomechanics]
 toc: true
 toc-depth: 3
@@ -17,21 +17,32 @@ Both are global-shutter industrial cameras with hardware-trigger support and rep
 The FLIR candidate trades resolution for a higher vendor-specified maximum rate (226 frames per
 second at 1440 by 1080); the Basler candidate supplies 1920 by 1200 at 160 frames per second.
 
-The Stereolabs ZED X One GS remains an evaluation candidate for larger spaces where synchronized
+The distributed eight-camera reference-rig evaluation hypothesis remains the Allied Vision Alvium
+G5-203 (`Alvium G5-203c`), with the LUCID Triton2 `TRT016S-CC` as an Ethernet/PTP challenger.
+These distributed candidates operate over 5GigE and 2.5GigE Vision with IEEE 1588 PTP synchronization,
+addressing the cabling and host-controller bottlenecks of high-rate USB topologies across large
+capture volumes.
+
+The Stereolabs ZED X One GS remains an evaluation candidate for spaces where synchronized
 GMSL2 cabling is valuable. It is not the default fast-motion choice: its full-resolution mode is
-60 frames per second, its 120-frame-per-second mode is binned to 960 by 600, and the complete
-topology adds capture-card, NVIDIA, fixed-lens, and proprietary-SDK constraints.
+60 frames per second, its 120-frame-per-second mode is binned to 960 by 600, its vendor dual-camera
+hardware synchronization claim is 15 microseconds, and the complete topology adds capture-card,
+NVIDIA, fixed-lens, and proprietary-SDK constraints.
 
 This recommendation is deliberately provisional. Camera specifications alone cannot establish
-pose, joint-angle, or C3D accuracy. Buy two cameras for the pilot, measure the whole acquisition
-chain, then decide whether to duplicate that qualified unit or change models.
+pose, joint-angle, or C3D accuracy. A successful two-camera USB pilot does not establish an
+eight-camera distributed topology, and an attractive camera-body specification does not qualify the
+complete lab. Buy two cameras for the pilot, measure the whole acquisition chain, and evaluate the
+distributed Ethernet candidates separately for the full room.
 In operational terms: buy two cameras for the pilot and make the larger purchase conditional on
 the recorded qualification evidence.
 
-::: {.callout-warning title="No Procurement Approval"}
-No listed camera is approved for a full deployment. Prices, regional availability, exact software
-licenses, lenses, trigger hardware, host controllers, lighting, and physical performance still
-require quotes and qualification. The machine-readable registry defaults procurement to deny.
+::: {.callout-warning title="No Procurement Approval & Price Scoping"}
+No listed camera is approved for a full deployment. Observed vendor list prices (such as FLIR US list
+USD 371.00 and Stereolabs store USD 399/424) cover **camera body only** and do not represent total
+system cost. Complete system costs remain unavailable until formal quotes include lenses, GPIO/trigger
+hardware, host controllers, multi-gigabit PoE switches, Cat6A cabling, mounting, lighting, storage,
+spares, taxes, and shipping. The machine-readable registry defaults procurement to deny.
 :::
 
 ## Governed Evidence
@@ -59,55 +70,124 @@ duplicate either runtime.
 
 ## Candidate Matrix
 
-| Candidate | Shutter | Vendor-Specified Video Mode | Synchronization | Optics | Data Path | Current Role |
-|---|---|---|---|---|---|---|
-| Teledyne FLIR BFS-U3-16S2C-CS | Global | 1440 by 1080 at up to 226 frames per second | Hardware or software trigger; action command | CS mount; documented removable C adapter | USB 3.1 Gen 1 | Preferred fast-motion pilot candidate |
-| Basler a2A1920-160ucBAS | Global | 1920 by 1200 at up to 160 frames per second | Hardware trigger; programmable API | C mount | USB 3.0 | Higher-resolution fast-motion alternate |
-| Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 frames per second; 960 by 600 at up to 120 | External synchronization; vendor claim within 10 microseconds | Fixed narrow, wide, or model-dependent fisheye variant | GMSL2 plus capture hardware | Long-cable topology evaluation |
+| Candidate | Shutter | Vendor-Specified Video Mode | Synchronization | Optics | Data Path | Camera Body List Price | Current Role |
+|---|---|---|---|---|---|---|---|
+| Teledyne FLIR BFS-U3-16S2C-CS | Global | 1440 by 1080 at up to 226 frames per second | Hardware or software trigger; action command | CS mount; documented removable C adapter | USB 3.1 Gen 1 | USD 371.00 (camera body only; US list) | Preferred fast-motion pilot candidate |
+| Basler a2A1920-160ucBAS | Global | 1920 by 1200 at up to 160 frames per second | Hardware trigger; programmable API | C mount | USB 3.0 | Quote required (unavailable) | Higher-resolution fast-motion alternate |
+| Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 fps; 960 by 600 at up to 120 fps | External synchronization; vendor claim within 15 microseconds | Fixed narrow, wide, or fisheye variant | GMSL2 plus capture hardware | USD 399 base / USD 424 wide (camera body only) | Long-cable topology evaluation |
+| Allied Vision Alvium G5-203c | Global | 1620 by 1220 at up to 231 frames per second | Hardware trigger; IEEE 1588 PTP; Action Commands | C mount | 5GigE (PoE) | Quote required (unavailable) | Distributed reference-rig evaluation hypothesis |
+| LUCID Triton2 TRT016S-CC | Global | 1440 by 1080 at up to 226 frames per second | Hardware trigger; IEEE 1588 PTP; Action Commands | C mount | 2.5GigE (PoE) | Quote required (unavailable) | Distributed Ethernet/PTP challenger |
 
-Primary product evidence is available from the
-[FLIR product page](https://www.teledynevisionsolutions.com/en-ca/products/blackfly-s-usb3/?model=BFS-U3-16S2C-CS&segment=iis&vertical=machine+vision),
-[FLIR technical reference](https://softwareservices.flir.com/BFS-U3-16S2/latest/Model/spec.html),
-[Basler product page](https://www.baslerweb.com/en-sg/shop/a2a1920-160ucbas/), and
-[ZED X One product page](https://www.stereolabs.com/en-si/products/zed-x-one). These pages were
-accessed on 2026-08-26. Product pages can change; the registry therefore carries review dates and
-does not treat a URL as an immutable specification.
+Primary product evidence is available from:
+
+- [FLIR Blackfly S product page](https://www.teledynevisionsolutions.com/en-ca/products/blackfly-s-usb3/?model=BFS-U3-16S2C-CS&segment=iis&vertical=machine+vision) and [US pricing page](https://www.teledynevisionsolutions.com/products/blackfly-s-usb3/)
+- [FLIR technical reference](https://softwareservices.flir.com/BFS-U3-16S2/latest/Model/spec.html)
+- [Basler product page](https://www.baslerweb.com/en-sg/shop/a2a1920-160ucbas/)
+- [ZED X One product page](https://www.stereolabs.com/en-si/products/zed-x-one) and [Stereolabs Store listing](https://store.stereolabs.com/products/zed-x-one-gs)
+- [Stereolabs Dual-Camera Sync Guide](https://docs.stereolabs.com/docs/products/cameras/zedxone/dual-camera-stereo-vision) and [ZED Box Connectivity Guide](https://docs.stereolabs.com/docs/products/embedded/zed-box-mini/connectivity)
+- [Allied Vision Alvium G5-203c product page](https://www.alliedvision.com/en/camera-selector/detail/alvium-g5/203c/) and [Technical Documentation](https://docs.alliedvision.com/hardware/alvium_g5_g5x/)
+- [LUCID Triton2 TRT016S-CC product page](https://thinklucid.com/product/triton2-2-5gige-trt016s-cc/) and [Technical Downloads](https://thinklucid.com/downloads-hub/)
+
+These pages were accessed on 2026-08-26 and 2026-08-27. Product pages can change; the registry therefore
+carries review dates and does not treat a URL as an immutable specification.
 
 ### Teledyne FLIR Fast-Motion Pilot Candidate
 
-The FLIR candidate leads the pilot because temporal sampling is the first screen for rapid motion.
-The vendor lists a global shutter, 226 frames per second at full 1440-by-1080 Bayer output, a
-CS-mount lens interface, and hardware trigger support. The separate I/O documentation describes
-the physical input and its propagation specification. None of these statements proves exposure
-alignment between two assembled cameras, reliable eight-camera streaming, or pose accuracy.
+The FLIR candidate leads the two-camera pilot because temporal sampling is the first screen for rapid
+motion. The vendor lists a global shutter, 226 frames per second at full 1440-by-1080 Bayer output, a
+CS-mount lens interface, and hardware trigger support. The separate I/O documentation describes the
+physical input and its propagation specification. None of these statements proves exposure alignment
+between two assembled cameras, reliable eight-camera streaming, or pose accuracy.
 
-The Spinnaker SDK is a vendor component under a restrictive EULA, not the licensing authority for
-the open core. A camera adapter must remain optional and satisfy the public Tools camera protocol.
-Synthetic and prerecorded drivers must continue to work when Spinnaker is absent.
+The Spinnaker SDK is a vendor component under a restrictive EULA, not the licensing authority for the
+open core. A camera adapter must remain optional and satisfy the public Tools camera protocol. Synthetic
+and prerecorded drivers must continue to work when Spinnaker is absent.
 
 ### Basler Higher-Resolution Alternate
 
-The Basler candidate offers 2.3 megapixels at 160 frames per second, global shutter, C-mount
-optics, a hardware-trigger input, and GenICam-facing pylon APIs. Its additional pixels may improve
-keypoint localization when the person occupies a smaller portion of the image; that possible
-benefit is an inference to test, not a result. The lower maximum frame rate may be immaterial for
-some body segments and insufficient for others.
+The Basler candidate offers 2.3 megapixels at 160 frames per second, global shutter, C-mount optics, a
+hardware-trigger input, and GenICam-facing pylon APIs. Its additional pixels may improve keypoint
+localization when the person occupies a smaller portion of the image; that possible benefit is an
+inference to test, not a result. The lower maximum frame rate may be immaterial for some body segments
+and insufficient for others.
 
-The pylon SDK is also governed by a vendor license. It belongs behind an optional adapter. A
-commercial release must review the exact pylon license shipped with the chosen SDK version rather
-than relying on this summary.
+The pylon SDK is also governed by a vendor license. It belongs behind an optional adapter. A commercial
+release must review the exact pylon license shipped with the chosen SDK version rather than relying on
+this summary.
 
 ### Stereolabs Long-Cable Evaluation
 
-The ZED X One GS offers a synchronized, locking GMSL2 topology and fixed lens variants. The vendor
-states that multiple connected cameras can be synchronized within 10 microseconds. This makes the
-system interesting where USB cable length and connector reliability dominate. It does not remove
-the need to measure exposure timing, transport drops, or model latency.
+The ZED X One GS offers a synchronized, locking GMSL2 topology and fixed lens variants. Stereolabs
+technical documentation states that dual ZED X One hardware synchronization is accurate to **15 microseconds**,
+and multi-device ZED Box documentation states approximately **15 microseconds**. This makes the system
+interesting where USB cable length and connector reliability dominate. It does not remove the need to
+measure exposure timing, transport drops, or model latency on the assembled system.
 
-The comparison must preserve mode context. `120 frames per second` applies to the 960-by-600
-binned mode, while full 1920-by-1200 output is limited to 60 frames per second. A pair is required
-for ZED SDK stereo or depth features. The SDK and capture topology depend on supported NVIDIA
-hardware, and their licenses and redistribution terms remain separate review gates.
+The comparison must preserve mode context. `120 frames per second` applies to the 960-by-600 binned mode,
+while full 1920-by-1200 output is limited to 60 frames per second. A pair is required for ZED SDK stereo
+or depth features. The SDK and capture topology depend on supported NVIDIA hardware, and their licenses
+and redistribution terms remain separate review gates.
+
+### Allied Vision Distributed Reference-Rig Hypothesis
+
+The Allied Vision Alvium G5-203 (`Alvium G5-203c`) is the reference-rig hypothesis for an eight-camera
+distributed capture lab. It pairs a Sony IMX422 global-shutter sensor (1620 by 1220 at up to 231 frames
+per second) with a 5GBASE-T (5GigE) interface, Power-over-Ethernet (PoE), and hardware IEEE 1588 PTP
+(Precision Time Protocol) synchronization.
+
+Ethernet transport decouples camera placement from host PC proximity, enabling shielded Cat6A cable
+runs up to 100 meters without active USB repeaters. PTP synchronization allows microsecond-level clock
+distribution over the Ethernet switch fabric. However, eight cameras streaming at 5 Gbit/s require
+dedicated multi-gigabit switch backplanes, multi-port host NICs, and high-performance packet capture
+drivers to prevent packet drops and buffer overflows.
+
+The Vimba X SDK provides GenICam and GenTL producer support. As with all candidates, the open Tools core
+must access the camera through an optional adapter, maintaining full independence from proprietary
+Vimba runtime binaries.
+
+### LUCID Triton2 Distributed Ethernet Challenger
+
+The LUCID Triton2 `TRT016S-CC` provides an Ethernet/PTP challenger for the distributed reference rig.
+Featuring a Sony IMX296 global-shutter sensor (1440 by 1080 at up to 226 frames per second), it utilizes
+a 2.5GBASE-T (2.5GigE) interface with PoE and IEEE 1588 PTP support.
+
+The 2.5GigE data path reduces per-camera bandwidth demand compared to 5GigE while maintaining full 226
+fps capture, easing switch throughput and host CPU load in an eight-camera configuration. The Arena SDK
+provides GenICam/GenTL compliance under a proprietary vendor license.
+
+## Topology Comparison
+
+| Parameter | Two-Camera USB Pilot | Distributed Ethernet Reference Rig | Long-Cable GMSL2 Rig |
+|---|---|---|---|
+| **Representative Models** | FLIR BFS-U3-16S2C-CS, Basler a2A1920-160ucBAS | Allied Vision Alvium G5-203c, LUCID Triton2 TRT016S-CC | Stereolabs ZED X One GS |
+| **Physical Transport** | USB 3.0 / USB 3.1 Gen 1 | 5GBASE-T / 2.5GBASE-T Ethernet (PoE) | GMSL2 with FAKRA connectors |
+| **Max Distance** | 3–5 meters (passive) | Up to 100 meters (Cat6A) | Up to 15 meters |
+| **Synchronization** | Direct opto-isolated GPIO trigger lines | IEEE 1588 PTP / Action Commands / GPIO | Hardware sync pin / ZED Link (15 µs claim) |
+| **Power Distribution** | USB bus power (host controller dependent) | Power-over-Ethernet (802.3af/at switch) | Power over Coax / capture card |
+| **Host Interface** | Dedicated PCIe USB host controllers | Multi-port 10GbE/5GbE NIC & PoE switch | Deserializer capture card (PCIe / Jetson) |
+| **Driver Interface** | GenICam / Vendor SDK (Spinnaker, pylon) | GenICam / GenTL (Vimba X, Arena) | Stereolabs SDK / V4L2 kernel driver |
+| **Lab Role** | Initial fast-motion screening (2 cameras) | Full-room distributed rig (8 cameras) | Fixed-lens long-cable evaluation |
+
+## Scoped Pricing vs Total System Cost
+
+Observed vendor list prices establish camera-body baseline figures but do not represent total system cost:
+
+- **Teledyne FLIR BFS-U3-16S2C-CS**: US model table lists the camera body at **USD 371.00**.
+- **Stereolabs ZED X One GS**: Stereolabs store lists the base camera body at **USD 399.00** and wide configured listing at **USD 424.00**.
+- **Basler, Allied Vision, LUCID**: Official regional list prices were not established in this audit and remain marked `unavailable`.
+
+A complete mocap lab requires extensive infrastructure beyond the camera body:
+
+1. **Optics**: High-resolution C/CS-mount lenses with manual focus/aperture locks (USD 150–400 per camera).
+2. **Synchronization & I/O**: Shielded trigger breakout cables, opto-isolated distribution amplifiers, or PTP grandmaster hardware.
+3. **Cabling**: High-flex locking USB cables, Cat6A shielded Ethernet cables, or FAKRA GMSL2 cables.
+4. **Host & Ingest**: Multi-channel PCIe host controllers, multi-Gigabit PoE switches, dedicated NVMe scratch arrays.
+5. **Mounting & Structure**: Rigid wall/truss mounts, vibration dampeners, protective enclosures.
+6. **Illumination**: High-CRI flicker-free LED lighting panels.
+7. **Spares & Logistics**: Cold spares, shipping, regional import tariffs, and taxes.
+
+Complete system cost comparisons remain unavailable until comprehensive, dated bills of materials are
+quoted for each candidate topology.
 
 ## Selection Calculations
 
@@ -154,13 +234,15 @@ $$ {#eq-raw-payload}
 
 At eight delivered bits per pixel, one FLIR stream at the vendor maximum is approximately
 2.81 gigabits per second before protocol overhead. One Basler stream is approximately 2.95
-gigabits per second. Eight such streams would respectively be approximately 22.5 and 23.6
-gigabits per second in aggregate. These are arithmetic screens, not measured USB payloads. They
-show why eight cameras cannot be assigned casually to one shared host-controller path.
+gigabits per second. One Allied Vision Alvium G5-203c stream is approximately 3.65 gigabits per
+second. One LUCID Triton2 stream is approximately 2.81 gigabits per second. Eight such streams
+would represent 22.5 to 29.2 gigabits per second in aggregate. These are arithmetic screens, not
+measured network payloads. They demonstrate why distributed Ethernet architectures with dedicated
+switch infrastructure are required for full eight-camera rigs.
 
 The acquisition contract must measure successful payload, dropped and duplicate frames, buffer
-occupancy, host-controller assignment, CPU load, storage write rate, and graceful recovery. A
-nominal `5 Gbit/s` interface label is not a per-camera end-to-end guarantee.
+occupancy, host-controller/NIC assignment, CPU load, storage write rate, and graceful recovery. A
+nominal interface bandwidth label is not a per-camera end-to-end guarantee.
 
 ### Triangulation Geometry
 
@@ -214,7 +296,7 @@ task-, joint-, model-, and protocol-specific.
 8. Repeat at the worst intended capture-volume locations. Only then decide whether FLIR's rate or
    Basler's resolution is materially better.
 9. Add cameras in stages. Re-run synchronization, bandwidth, calibration, visibility, thermal,
-   storage, and pose tests at four, six, and eight cameras.
+   storage, and pose tests before scaling to an eight-camera distributed topology.
 
 ## Required Qualification Evidence
 
@@ -223,7 +305,7 @@ The full-rig decision remains blocked until the following evidence exists:
 - a dated bill of materials and exact license review;
 - a camera capability record from the real driver rather than a product-name switch;
 - sustained stream results at every supported camera count and mixed-capability case;
-- common-trigger exposure timing, drift, drop, duplicate, and recovery measurements;
+- common-trigger and PTP exposure timing, drift, drop, duplicate, and recovery measurements;
 - intrinsic and extrinsic calibration observations, residuals, covariance, and validity state;
 - task-volume visibility and ray-angle maps with occlusion and lighting challenges;
 - reference comparisons for the actual pose model, skeleton, filtering, and biomechanical outputs;
@@ -250,7 +332,7 @@ complete camera assembled from missing or cross-model claims.
 
 - No candidate has been connected to this workstation under the canonical Tools protocol.
 - No physical timing, blur, lighting, field-of-view, pose, triangulation, or C3D test has run.
-- Prices are deliberately unavailable until comparable complete regional quotes exist.
+- Complete system costs remain unavailable until comparable complete regional quotes exist.
 - Vendor SDK summaries are not legal opinions.
 - The cited studies bound only their own cameras, participants, models, tasks, and protocols.
 - This document does not approve human-subject recording, public release, or biomechanical use.
@@ -258,3 +340,4 @@ complete camera assembled from missing or cross-model claims.
 The correct next hardware action is therefore small and reversible: quote the two fast-motion
 candidates, buy one matched pair after license and host-topology review, and make the pilot earn
 the larger purchase.
+
