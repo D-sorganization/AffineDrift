@@ -624,6 +624,32 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
+### 1.0.176 Impact-Optimality Article Correction
+
+Corrects `articles/impact-optimality-and-model-limits.qmd`. The conclusions in
+its later sections were wrong: the simulation lumped 0.50 kg at the tip of a
+1.10 m shaft, where a real driver is 0.310 kg with its centre of mass 76% down.
+In a point-mass-at-tip model that overstates the club's inertia about the wrist,
+and the arm/club coupling that fights the release, by 2.1x. The resulting
+hub-torque reversal was published as a structural limit of two-link golf models.
+
+With an inertia-matched club the same model reaches 49.7 m/s of clubhead speed
+with 7.26 m/s of hand speed and a 3.46 club/arm rate ratio: five of six measured
+observables inside their published bands, with no constraint on the hands. The
+claim that measured hand speed was unreachable, and that a moving hub was
+required, is withdrawn.
+
+The objective question becomes answerable as a result. Optimizing for clubhead
+speed, Coriolis transfer, energy transfer or grip-force impulse produces the
+same swing; centrifugal release impulse is the one strategy that measurably
+costs speed. Release timing remains outside its measured band and is named as
+the open item.
+
+The impact-optimality derivation is unaffected: it concerns an unconstrained
+ideal rather than where a constrained optimum lands. A correction callout is
+carried at the head of the article and the layman's-terms summary is rewritten.
+Tracked as D-sorganization/Tools#4785.
+
 ### 1.0.175 Impact-Optimality and Two-Link Model Limits
 
 New article `articles/impact-optimality-and-model-limits.qmd` derives why an
