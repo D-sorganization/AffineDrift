@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-26T04:00:00Z
+Last-Updated: 2026-08-27T09:20:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -28,9 +28,9 @@ Last-Updated: 2026-08-26T04:00:00Z
 | **Owner**               | D-sorganization                                  |
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
-| **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.225                                          |
-| **Last Spec Update**    | 2026-08-26                                       |
+| **Current Version**     | 1.0.9                                            |
+| **Spec Version**        | 1.0.226                                          |
+| **Last Spec Update**    | 2026-08-27                                       |
 
 ## 2. Purpose & Mission
 
@@ -952,4 +952,6 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-21 | 1.0.219 | docs(parity, #3718, #3717): Reconciled boxed items and book citations across Quarto mirror, verified 100% syntax compliance in scan_quarto_syntax.py, and merged latest origin/main. |
 | 2026-08-25 | 1.0.221 | fix(site, #3917, #3897): Restore H1 heading visibility and accessibility across all 55 full-layout pages; normalize multi-H1 standalone articles to H2 section headers; standardize Related Articles component to canonical theory-core pattern with callout-note and unspaced em-dashes; fix zero-link sections, backtick references, and over-traversal / root-absolute link paths; expand check_single_title.py and title-block-semantics.test.js with comprehensive CI checks. |
 | 2026-08-25 | 1.0.222 | fix(accessibility, #3944): Normalize multi-H1 articles and add CI heading-order validation gate ensuring every rendered page contains exactly one title H1, standalone pages start body content at H2, and full-layout pages author one visible H1. |
-| 2026-08-25 | 1.0.223 | docs(monograph, #3951): Pinned the protected proximal--distal projection to UpstreamDrift squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf` with 35 technical chapters, 244 pages, and 254 governed files (208 source-identical, 21 flattened, 12 immutable-link rewrites, and 13 declared adaptations). Added coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual terms; endpoint virtual-work mappings; signed and absolute hand-path impulse; power and work attribution; and a bounded 135-program optimization study with 91 qualified programs. Reconciled merge governance with the live zero-approval ruleset so required CI, rather than a named maintainer review, is the standing release gate. Retains coordinate, model, provenance, human-validation, and protected-publication boundaries. |
+| 2026-08-25 | 1.0.223 | fix(content, #3918): Remove unfinished Book Reviews link from navbar Read menu, replace placeholder warnings with full critical literature reviews for foundational texts (Cochran & Stobbs, Penner, Tedrake), synthesize complete research-review modules (baseball pitching, induced acceleration, interaction forces, shaft flexibility), replace template module placeholders with concrete learning path architecture, update Volume II-IV manuscript overview links, populate Golf Science book entries, and add test_unfinished_content_hygiene.py. |
+| 2026-08-25 | 1.0.224 | docs(monograph, #3951): Pinned the protected proximal--distal projection to UpstreamDrift squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf` with 35 technical chapters, 244 pages, and 254 governed files (208 source-identical, 21 flattened, 12 immutable-link rewrites, and 13 declared adaptations). Added coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual terms; endpoint virtual-work mappings; signed and absolute hand-path impulse; power and work attribution; and a bounded 135-program optimization study with 91 qualified programs. Reconciled merge governance with the live zero-approval ruleset so required CI, rather than a named maintainer review, is the standing release gate. Retains coordinate, model, provenance, human-validation, and protected-publication boundaries. |
+| 2026-08-27 | 1.0.226 | fix(content, #3913): Cleaned up tangent-space material parallel sets by enforcing a single canonical path in the article index and '\_quarto.yml' render rules. |
