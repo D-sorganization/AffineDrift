@@ -51,6 +51,24 @@ Tooltips explain controls at the point of use. The searchable glossary defines
 terms such as interaction torque, equivalent couple, power, work, mass matrix,
 Jacobian, and ZTCF family without requiring the reader to leave the experiment.
 
+## A Known Limit of the Two-Link Model
+
+The workbench now carries a **Swing Objective Lab** tile, which optimizes one
+downswing against five competing objectives under a shared torque budget. Its
+optima are dynamically feasible and **not golf-like**: they brake the arms to a
+standstill at impact, arriving with hands at 0.36 m/s against a measured 6–9 m/s.
+
+That is a property of the model, not of the optimizer. In a point-mass-clubhead
+double pendulum the clubhead-speed-optimal hand speed at impact is *identically
+zero* for every parameter value, and releasing the club requires reversing the
+hub torque, which is the same act as stopping the hands. The derivation, the
+repairs that fail, and the model change that would fix it are in
+[Why an Optimized Double Pendulum Stops Its Hands](impact-optimality-and-model-limits.html).
+
+Read that before drawing conclusions from the objective comparison: the five
+objectives sit within 0.6% of each other on realism while all of them sit far
+outside measured golfer kinematics, so their ordering is not evidence about golf.
+
 ## What Would Count Against the Mechanism?
 
 A useful interactive result need not support the proposed mechanism. Examples
