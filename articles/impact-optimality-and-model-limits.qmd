@@ -1,0 +1,225 @@
+---
+title: "Why an Optimized Double Pendulum Stops Its Hands"
+subtitle: "An Impact-Optimality Result, and the Structural Limit It Exposes"
+description: "In a point-mass-clubhead double pendulum the clubhead-speed-optimal hand speed at impact is identically zero. This note derives that result, shows why distributed club inertia and actuation limits do not repair it, and identifies the model change that would."
+author: "Dieter Olson"
+date: "2026-08-27"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    math: mathjax
+    number-sections: true
+---
+
+```{=html}
+<section class="laymans-terms">
+  <h2>
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
+  </button>
+</h2>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Ask a computer to find the golf swing that produces the fastest possible clubhead, using the standard two-link model, and it hands back something no golfer has ever done: it swings the arms hard and then slams them to a complete stop right at the ball, flinging the club through. Real golfers still have their hands moving at about 7 m/s at impact. The simulated ones arrive at 0.36 m/s — essentially parked.
+      </p>
+      <div class="laymans-item">
+        <h3>The optimizer is not broken</h3>
+        <p>
+          It turns out this is the genuinely correct answer <em>for that model</em>. If you pretend the whole clubhead is a single weight at the very end of the shaft, then all the energy in the club is the energy of that weight moving — and any energy left in your moving arms is energy that failed to reach the ball. Stopping the arms is optimal. We can prove it exactly, for every choice of arm and club weight.
+        </p>
+      </div>
+      <div class="laymans-item">
+        <h3>The obvious repairs do not work</h3>
+        <p>
+          Modelling the club more realistically, with its weight spread along the shaft, makes it <em>worse</em>: the ideal swing then wants the hands travelling slightly backwards. Adding muscle limits — real muscles get weaker the faster they move — fixes the hands but breaks the release: the club never uncocks in time to reach the ball.
+        </p>
+      </div>
+      <div class="laymans-item">
+        <h3>What is actually missing</h3>
+        <p>
+          In this model, the only way to let the club whip through is to stop pulling with the arms — and that is the same act as stopping the hands. Real golfers escape this because their whole torso keeps turning, and because their hands pull inward as they come into the ball. Neither is something a two-link model with a fixed pivot can represent. The fix is a third segment, not a better objective function.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+## The Observation
+
+The [interactive workbench](proximal-distal-model-workbench.html) now carries a
+**Swing Objective Lab**, which optimizes one downswing against five competing
+objectives — clubhead speed, centrifugal release impulse, Coriolis
+kinetic-chain transfer, grip-force energy transfer, grip-force impulse — under a
+single shared torque budget.
+
+Every objective converged. Every trajectory satisfied the equations of motion to
+roughly $10^{-14}$. And every one of them was wrong in the same way:
+
+| | Optimized | Measured golfer |
+|---|---|---|
+| Hand speed at impact | 0.36 m/s | 6–9 m/s |
+| Club / arm angular rate | 59× | 2.5–4× |
+| Downswing spent braking the arms | 32% | ≈0 (deceleration is passive) |
+
+Measured values from [Nesbit
+(2005)](https://www.jssm.org/jssm-04-499.xml.xml) and [Miura
+(2001)](https://doi.org/10.1007/BF02844309).
+
+The natural reading is that the optimizer is misbehaving. It is not.
+
+## The Impact-Optimality Result
+
+At impact the club is in line with the arms, so both angular rates drive the
+clubhead along the same perpendicular:
+
+$$v_{\text{head}} = (L_1 + L_2)\,\omega_1 + L_2\,\dot\phi$$
+
+Maximising $v_{\text{head}}$ subject to a fixed kinetic energy
+$T = \tfrac12 \dot q^{\mathsf T} M \dot q$ is a linear objective on a quadratic
+form, so the optimum lies along $\dot q^\ast \propto M^{-1} c$ with
+$c = (L_1 + L_2,\; L_2)$. Writing $\delta = I_2 + m_2 r_2^2$ for the club's
+inertia about the wrist and $\mu = m_2 L_1 r_2$ for the coupling, the mass matrix
+at $\phi = 0$ has $M_{22} = \delta$ and $M_{12} = \delta + \mu$, and the arm
+component of $M^{-1}c$ reduces to
+
+$$\omega_1^\ast \;\propto\; L_1\left[\,I_2 - m_2 r_2 (L_2 - r_2)\,\right]$$
+
+This bracket decides everything.
+
+### Three Regimes
+
+**A point-mass clubhead** — $r_2 = L_2$, $I_2 = 0$ — gives
+$0 - m_2 L_2 (L_2 - L_2) = 0$. **Identically zero, for every parameter value.**
+There is nothing to tune. With all of the club's mass at the tip, the club's
+kinetic energy *is* $\tfrac12 m_e v_{\text{head}}^2$, so energy in the moving arm
+is energy that never reached the head. The speed-optimal swing stops the hands
+because stopping them is optimal.
+
+**A real driver** — $m_2 = 0.31$ kg, $r_2 = 0.89$ m, $L_2 = 1.143$ m,
+$I_2 = 0.043$ kg·m² — gives $-0.027$. Negative. The optimum wants the hands
+travelling *backward* through impact. Modelling the club properly makes the
+pathology worse, not better.
+
+**A forward optimum** requires $r_2 \approx 1.0$ m — a centre of mass at 88% of
+club length — or $I_2 \gtrsim 0.2$ kg·m², about five times a driver's. No club
+anyone swings lands there.
+
+So the intuitive repair, distributed club inertia, is ruled out analytically
+before any of it is built.
+
+## Why Actuation Limits Are Necessary but Not Sufficient
+
+The model gives the golfer a symmetric, velocity-independent torque budget, so
+braking the arms costs exactly what driving them costs. Two pieces of physiology
+are missing: torque capacity falls hyperbolically with joint speed ([Hill
+1938](https://doi.org/10.1098/rspb.1938.0050)), and the muscles that decelerate
+the arms are not the ones that drive them.
+
+Adding a Hill-type torque–velocity relation of the form used in golf
+forward-dynamics models since [Sprigings & Neal
+(2000)](https://doi.org/10.1123/jab.16.4.356) and [MacKenzie & Sprigings
+(2009)](https://doi.org/10.1007/s12283-009-0020-9) produces exactly the
+kinematics the literature reports — hands at 6.8 m/s, a club/arm ratio of 2.8,
+and **zero active braking**, with the arm deceleration arising passively from the
+club's interaction torque, which is what [Nesbit & Serrano
+(2005)](https://www.jssm.org/jssm-04-520.xml.xml) find in real swings.
+
+Those trajectories are also **infeasible**. The club never reaches the ball.
+
+## The Structural Limit
+
+Hub torque does not only turn the arms. Through the off-diagonal mass term
+$M_{12}$ it also drives the wrist *open*. In a free rollout at full drive, the
+wrist cock angle grows from 100° to **184°** — the club does not release, it lags
+further.
+
+The only way this model brings the club through to $\phi = 0$ at impact is to
+cut, and then reverse, the hub torque, which necessarily decelerates the arms.
+
+> **Releasing the club and decelerating the hands are the same act in a two-link
+> fixed-hub model.** They are not two independent choices that an optimizer
+> happens to combine.
+
+Sweeping a floor on hand speed at impact measures the price directly:
+
+| Hand-speed floor | Feasible | Clubhead speed | Club / arm ratio |
+|---|---|---|---|
+| none | yes | 36.4 m/s | 59.2 |
+| 3 m/s | yes | 34.1 m/s | 6.1 |
+| 5 m/s | marginal | 29.6 m/s | 2.9 |
+| **6 m/s** (measured band) | **no** | — | — |
+
+The measured golfer band is unreachable at any price.
+
+## What This Means for the Objective Question
+
+The workbench was built to ask which mechanism a good golfer optimizes. Scored
+against measured kinematics, in the only near-realistic regime the model can
+reach, the five objectives land within **0.6% of each other** while every one of
+them has just one of six observables inside its measured band.
+
+The objective is not what makes these swings unrealistic. Any ranking here is
+noise on top of a much larger model bias, and the implementation reports that
+rather than presenting the ordering as a result.
+
+One finding does survive: under the unconstrained model, Coriolis kinetic-chain
+transfer is a genuine dissenter — it costs 2.7% of clubhead speed, and the other
+four objectives reach only 98.4% of its transfer value.
+
+## What Would Actually Change the Answer
+
+1. **A moving hub — a torso segment.** A real golfer's hands keep moving because
+   the torso keeps rotating, not because the arm joint is driven harder. Both
+   [Nesbit (2005)](https://www.jssm.org/jssm-04-499.xml.xml) and [MacKenzie &
+   Sprigings (2009)](https://doi.org/10.1007/s12283-009-0020-9) treat the torso
+   as a driven segment for exactly this reason. The triple-pendulum model in the
+   workbench is the natural home.
+2. **A variable hand radius.** [Miura (2001)](https://doi.org/10.1007/BF02844309)
+   measured the inward hand pull and named the resulting gain *parametric
+   acceleration*. It requires $L_1$ to shorten through impact, and it is the
+   measured mechanism for the hand deceleration this model fakes with torque
+   reversal.
+3. **Hill actuation, retained.** Necessary — it removes the impossible braking —
+   and sufficient only once the release no longer requires reversing the hub.
+4. **Not** distributed club inertia, for the reason derived above.
+
+## Interpretation Boundary
+
+This is a planar two-link model with a point-mass arm and clubhead, a fixed hub,
+constant torque limits, no shaft flex, no ground reaction and no plane change.
+The proximal link's angular rate is not an anatomical shoulder or thorax
+velocity. Everything above describes a two-link chain under a torque budget. None
+of it is anatomical attribution, and none of it is coaching advice.
+
+The result that a point-mass-clubhead model has $\omega_1^\ast = 0$ is exact and
+parameter-independent. Everything downstream of it — which repairs fail, what the
+frontier costs, how the objectives rank — is a statement about this model class,
+and is offered as a reason to change the model rather than as a claim about
+people.
+
+## Implementation
+
+Derivation, measurements and regression tests live in the Tools
+`pendulum_simulator` package:
+
+- [`impact_optimality.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/impact_optimality.py) — the coefficient and the energy-optimal rate split
+- [`actuation.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/actuation.py) — Hill-type joint limits
+- [`reference_kinematics.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/reference_kinematics.py) — measured bands, each with its source
+- [`model_adequacy.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/model_adequacy.py) — the feasibility frontier
+- [`SWING_ACTUATION_AND_REALISM.md`](https://github.com/D-sorganization/Tools/blob/main/docs/specs/SWING_ACTUATION_AND_REALISM.md) — the full design contract
+
+## References
+
+- Hill, A. V. (1938). [The heat of shortening and the dynamic constants of muscle](https://doi.org/10.1098/rspb.1938.0050). *Proc. R. Soc. Lond. B* 126, 136–195.
+- Jorgensen, T. (1970). [On the dynamics of the swing of a golf club](https://doi.org/10.1119/1.1976419). *Am. J. Phys.* 38(5), 644–651.
+- MacKenzie, S. J. & Sprigings, E. J. (2009). [A three-dimensional forward dynamics model of the golf swing](https://doi.org/10.1007/s12283-009-0020-9). *Sports Eng.* 11(4), 165–175.
+- Miura, K. (2001). [Parametric acceleration — the effect of inward pull of the golf club at impact stage](https://doi.org/10.1007/BF02844309). *Sports Eng.* 4, 75–86.
+- Nesbit, S. M. (2005). [A three dimensional kinematic and kinetic study of the golf swing](https://www.jssm.org/jssm-04-499.xml.xml). *J. Sports Sci. Med.* 4(4), 499–519.
+- Nesbit, S. M. & Serrano, M. (2005). [Work and power analysis of the golf swing](https://www.jssm.org/jssm-04-520.xml.xml). *J. Sports Sci. Med.* 4(4), 520–533.
+- Pickering, W. M. & Vickers, G. T. (1999). [On the double pendulum model of the golf swing](https://doi.org/10.1007/BF02844532). *Sports Eng.* 2(3), 161–172.
+- Sprigings, E. J. & Neal, R. J. (2000). [An insight into the importance of wrist torque in driving the golfball](https://doi.org/10.1123/jab.16.4.356). *J. Appl. Biomech.* 16(4), 356–366.
+- Williams, D. (1967). [The dynamics of the golf swing](https://doi.org/10.1093/qjmam/20.2.247). *Q. J. Mech. Appl. Math.* 20(2), 247–264.
