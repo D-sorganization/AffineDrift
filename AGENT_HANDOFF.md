@@ -86,7 +86,8 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 
 - **Active immutable refresh ([#3992](https://github.com/D-sorganization/AffineDrift/issues/3992)):** use the clean worktree
   `AffineDrift-worktrees/3992-proximal-projection` on
-  `docs/3992-proximal-projection`. The branch pins protected UpstreamDrift
+  `docs/3992-proximal-projection`; qualified projection content commit
+  `cd23c770dd983fc26145f3cd9c8c198bd7b6347b`. The branch pins protected UpstreamDrift
   #9151/#9152 squash `85cce4d3307bb7ad3953d9fc6e583e370803515c`, adds the
   articulated same-state drift/contact-attribution chapter and figure, and
   stages the byte-identical 252-page, 1,980,545-byte source PDF. Local
