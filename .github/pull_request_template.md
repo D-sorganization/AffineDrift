@@ -8,15 +8,12 @@
 - [ ] Unit/integration tests added or updated
 - [ ] Local checks run (`pytest`, lint, or targeted scripts)
 
-## Review Readiness
+## Merge Readiness
 
-- [ ] Independent reviewer requested and is not the PR author
-- [ ] PR author will not self-approve or self-merge
-- [ ] Latest material commit will be reviewed by someone other than its pusher
-- [ ] All review threads will be resolved before merge
-- [ ] Review focus areas listed (correctness, tests, security, maintainability, ownership)
-- [ ] Ownership and reviewer-rotation needs documented for cross-module changes
-- [ ] Material follow-up commits will re-request review before merge
+- [ ] Required status checks pass on the exact head
+- [ ] All review threads, if any, are resolved before merge
+- [ ] Optional review focus areas are listed when risk or specialized ownership warrants review
+- [ ] No named maintainer approval is treated as a standing release gate
 
 ## Regression Discipline
 
@@ -34,9 +31,9 @@
 
 ---
 
-## Reviewer Checklist
+## Optional Reviewer Checklist
 
-**Note:** This PR requires approval from a reviewer other than the author. Please verify:
+When review is requested for risk or expertise, please verify:
 
 - [ ] Code style and formatting pass all linting checks (`ruff`, `mypy`)
 - [ ] Type hints are present and correct

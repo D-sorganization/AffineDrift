@@ -314,15 +314,16 @@ You must verify the error (e.g. by derivation, script, or observation in both `.
 - Include "Layman's Terms" sections for complex topics
 - Add "Critics Corner" for addressing potential objections
 
-## Code Review Guidelines
+## Review and Merge Guidelines
 
-To maintain code quality and distribute knowledge across the team, we enforce a peer review process for all pull requests.
+Pull requests and required status checks are mandatory. Reviews are optional and
+risk-driven; no named maintainer is a standing release gate.
 
-### Review Requirements
+### Merge Requirements
 
-1. **Every PR requires at least one review** from a different author before merge
-2. **The PR author cannot approve their own changes** (self-merges are blocked by automation)
-3. **Reviews are mandatory** — self-approved PRs will fail CI/CD checks
+1. **Every change reaches `main` through a pull request** and an ordinary protected merge.
+2. **All required checks must pass on the exact head** before merge.
+3. **Approving reviews required: zero.** Request optional review for specialized ownership, security, or unresolved design risk; do not require `@dieterolson` or another named maintainer by default.
 
 ### What Reviewers Should Check
 
@@ -397,22 +398,20 @@ Pull requests need independent, meaningful review before merge.
 - Architecture-impacting changes should include an ADR or a clear rationale in
   the PR description before review is requested.
 
-### Required Repository Review Enforcement
+### Required Repository Merge Enforcement
 
-The default branch ruleset should enforce the review policy, not rely only on
-contributor discipline. Repository administrators should keep the default-branch
-ruleset aligned with these settings:
+Repository administrators should keep the default-branch ruleset aligned with
+these settings:
 
 - Require a pull request before merging to `main`.
-- Require at least one approving review from someone other than the PR author.
-- Require approval from someone other than the last pusher when available.
-- Dismiss stale approvals when new commits are pushed.
-- Require all review threads to be resolved before merge.
+- Require zero approving reviews.
+- Require configured status checks on the exact PR head.
+- Resolve any review threads created by optional review before merge.
 - Keep direct pushes, branch deletion, and non-fast-forward updates blocked.
 
-Until those settings are active, maintainers should treat a PR as not ready to
-merge if the author is the only approver, the author is attempting to self-merge,
-or material commits have landed after the latest independent review.
+A PR is not ready while required checks are pending or failing, the head is
+stale, or optional review feedback remains unresolved. Named-maintainer approval
+is not part of readiness.
 
 ### Architecture Decision Records (ADR)
 
@@ -536,9 +535,8 @@ git commit -m "test(scripts): add tests for sitemap generator"
 - [ ] All linting checks pass (`ruff`, `mypy`)
 - [ ] Tests added/updated and passing
 - [ ] Documentation updated (if needed)
-- [ ] Independent reviewer requested; self-approval/self-merge avoided
-- [ ] Review focus areas and ownership risks documented
-- [ ] Reviewer rotation considered for cross-module or repeated-author changes
+- [ ] Required checks pass on the exact head
+- [ ] Optional review focus areas documented when risk or ownership warrants review
 - [ ] Commit messages follow conventional format
 - [ ] PR description is clear and complete
 - [ ] No merge conflicts with main branch

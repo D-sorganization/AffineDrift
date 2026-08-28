@@ -217,3 +217,25 @@ def test_workbench_exposes_drift_transfer_diagnostics() -> None:
     assert "Drift Transfer" in text
     assert "Negative Grip Work" in text
     assert "proximal-link angular velocity" in text
+
+
+def test_companion_explains_coordinate_force_sources_without_double_counting() -> None:
+    source = _book_source()
+
+    for phrase in (
+        "Coriolis Cross Term",
+        "Squared-Speed Term",
+        "coordinate-dependent",
+        "not forces to add",
+        "13.817 N s",
+        "rank-deficient",
+    ):
+        assert phrase in source
+
+
+def test_workbench_exposes_coordinate_force_source_diagnostics() -> None:
+    text = WORKBENCH.read_text(encoding="utf-8")
+
+    assert "Full-Trajectory Coordinate Force Sources" in text
+    assert "signed and absolute tangent impulse" in text
+    assert "force-attribution/v1" in text

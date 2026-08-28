@@ -3,18 +3,14 @@
 This file documents the required branch protection settings for the `main` branch.
 These settings should be configured via GitHub Settings > Branches > Branch protection rules.
 
-## Current API-Observed Gap
+## Current API-Observed Contract
 
-The GitHub App token used by automation can read that `main` is protected, but
-the branch-protection detail endpoint currently returns
-`403 Resource not accessible by integration`. A ruleset read showed the active `Protect Main`
-ruleset still needs admin verification for review enforcement: required
-approvals, stale-review dismissal, latest-push approval, code-owner review, and
-review-thread resolution were not confirmed as enforced through that API view.
-
-An administrator or token with branch-administration permission should verify
-and update the live settings before closing #2912 or treating #2918 as fully
-enforced.
+The active repository `Protect Main` ruleset was read through the GitHub API on
+2026-08-25. It requires a pull request and blocks deletion and non-fast-forward
+updates. Its approval count is deliberately zero; it does not require code-owner,
+last-push, stale-review, or named-reviewer approval. Organization rules and
+required status checks remain additive. Do not treat a named maintainer review
+as a standing release gate.
 
 ## Settings to Enable
 
@@ -27,12 +23,11 @@ enforced.
     - `ci-standard.yml` (linting, tests, coverage)
     - Any other critical CI workflows
 
-- **Require code reviews before merging**: ✓ Enabled
+- **Require a pull request before merging**: ✓ Enabled
 
-  - Number of approvals required: 1 (minimum)
-  - Dismiss stale pull request approvals: ✓ Enabled
-  - Require approval of most recent reviewable push: ✓ Enabled
-  - Require review from code owners: (optional) ✓ Enabled if CODEOWNERS exists
+  - Number of approvals required: 0
+  - Named maintainer approval: not required
+  - Optional reviews may be requested for risk, expertise, or unresolved feedback
 
 - **Require status checks from required contexts**:
 
@@ -72,21 +67,21 @@ After enabling, test with a PR:
 3. Push and open PR
 4. Verify:
    - Status checks must pass before merge button appears
-   - Cannot merge without required reviews
-   - Cannot self-approve own PR (if code owner requirement enabled)
+   - Required status checks must pass
+   - No named maintainer approval is requested when the live approval count is zero
    - Cannot force push to main
 
 ## Related Issues
 
 - #2912: Enable branch protection on main branch
-- #2918: Enforce distributed code reviews and block self-merges
+- #2918: Historical distributed-review enforcement proposal; live zero-approval policy supersedes its review-count target
 
 ## Code Review Policy
 
-Until a CODEOWNERS file exists, require reviews from:
-
-- At least one maintainer or senior developer
-- Different person than PR author (self-merges blocked by settings)
+Review is optional and risk-driven. A reviewer may be requested for specialized
+ownership, security, or unresolved design feedback, but no individual—including
+`@dieterolson`—is a standing release dependency. Required CI and normal protected
+merge behavior remain mandatory.
 
 ## References
 

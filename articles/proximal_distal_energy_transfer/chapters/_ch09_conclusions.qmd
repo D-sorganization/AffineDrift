@@ -54,7 +54,8 @@ beam into the two-hand constrained solve.
 
 The articulated finite-base extension closes the next numerical mechanism
 gate while producing an adverse primary inference result. Across 384 pathway
-and 192 independent-control trajectories, both native engines agree, energy
+and 192 independent-control trajectories, the native inertia-and-bias
+operators remain within the registered transport bounds, energy
 residuals decrease with step refinement, and all declared shaft/base domains
 hold through 50 ms. Ground force and intrinsic free moment are mechanically
 active, but none of 384 coupled--fixed comparisons meets the preregistered 5%
@@ -97,15 +98,21 @@ the non-identifiability boundary. It is not an anatomical, muscular, or human
 strategy result.
 
 The reduced spatial forward-contact extension resolves that narrower mechanism
-gate. Native MuJoCo and Pinocchio independently integrate two finite-mass hand
-carriages, paired compliant interfaces, and a free rigid club without direct
-club actuation. Their baseline and same-state killswitch trajectories satisfy
+gate. Native MuJoCo and Pinocchio independently supply rigid-body kinematics,
+mass, bias, gravity, and continuous-time acceleration for two finite-mass hand
+carriages and a free rigid club without direct club actuation. Both branches
+share the projected compliant interfaces and project-authored state update.
+Their baseline and same-state killswitch trajectories satisfy
 the declared position, orientation, wrench, and energy regions. Removing the
 complete grounded driver leaves a negative force-generated swing-normal couple
 for 37.5 ms in both engines; coincident and reversed-moment-arm controls close
 exactly, and the work--energy residual decreases under timestep refinement.
-This supports reduced spatial contact persistence, not anatomical arms,
-muscles, calibrated grip tissue, equipment, or human strategy.
+This supports reduced spatial contact persistence and inertia-and-bias
+transport, not independent contact-solver equivalence, anatomical arms,
+muscles, calibrated grip tissue, equipment, or human strategy. A separate
+MuJoCo-native equality and `mj_step` control produces a nonzero discrepancy
+from the projected formulation and is reported as a formulation difference,
+not a parity success.
 
 The closed-state validity-horizon extension further shows that the same two
 engines remain inside the declared trajectory, wrench, energy-discrepancy, and
@@ -185,32 +192,32 @@ The matched-task allocation and transmission program is tracked separately in
 
 Analysis code, tests, figures, machine-readable outputs, and parameter
 records are available in the
-[open-source repository](https://github.com/D-sorganization/UpstreamDrift/tree/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer).
+[open-source repository](https://github.com/D-sorganization/UpstreamDrift/tree/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer).
 The repository name identifies provenance only; none of the scientific
 claims depend on adoption of the broader software project. The principal
 summary is recorded in
-[`data/results_summary.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/results_summary.json),
+[`data/results_summary.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/results_summary.json),
 and the parameter-sensitivity results are recorded in
-[`data/e1d_parameter_sensitivity.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/e1d_parameter_sensitivity.json).
+[`data/e1d_parameter_sensitivity.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/e1d_parameter_sensitivity.json).
 The spatial common-state evidence is recorded in
-[`data/spatial_full_body_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/spatial_full_body_study.json).
+[`data/spatial_full_body_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/spatial_full_body_study.json).
 The two-engine spatial forward-contact evidence is recorded in
-[`data/spatial_forward_contact_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/spatial_forward_contact_study.json).
+[`data/spatial_forward_contact_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/spatial_forward_contact_study.json).
 The uncertainty, identifiability, and control evidence is recorded in
-[`data/uncertainty_control_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.json).
+[`data/uncertainty_control_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.json).
 The distributed-shaft structural evidence is recorded in
-[`data/shaft_beam_reference.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/shaft_beam_reference.json).
+[`data/shaft_beam_reference.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/shaft_beam_reference.json).
 The forward distributed-modal shaft and arm--wrist allocation evidence are
 recorded in
-[`data/moving_base_modal_shaft_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/moving_base_modal_shaft_study.json)
+[`data/moving_base_modal_shaft_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/moving_base_modal_shaft_study.json)
 and
-[`data/torque_allocation_preload_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/torque_allocation_preload_study.json).
+[`data/torque_allocation_preload_study.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/torque_allocation_preload_study.json).
 The frozen experimental protocol and synthetic readiness classification are
-recorded in [`data/experimental_protocol_v1.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/experimental_protocol_v1.json)
-and [`data/experimental_protocol_readiness.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/experimental_protocol_readiness.json).
+recorded in [`data/experimental_protocol_v1.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/experimental_protocol_v1.json)
+and [`data/experimental_protocol_readiness.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/experimental_protocol_readiness.json).
 The finite-ground initialization, preregistered atlas, and labeled post-hoc
 matching sensitivity are recorded in
-[`data/articulated_ground_diagnostic.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/articulated_ground_diagnostic.json),
-[`data/articulated_ground_atlas.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/articulated_ground_atlas.json),
+[`data/articulated_ground_diagnostic.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/articulated_ground_diagnostic.json),
+[`data/articulated_ground_atlas.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/articulated_ground_atlas.json),
 and
-[`data/articulated_ground_posthoc_sensitivity.json`](https://github.com/D-sorganization/UpstreamDrift/blob/6e28baef54a04da714f1120c71c49058d7d7ebee/docs/research/proximal_distal_energy_transfer/data/articulated_ground_posthoc_sensitivity.json).
+[`data/articulated_ground_posthoc_sensitivity.json`](https://github.com/D-sorganization/UpstreamDrift/blob/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/docs/research/proximal_distal_energy_transfer/data/articulated_ground_posthoc_sensitivity.json).

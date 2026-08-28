@@ -13,6 +13,10 @@ from defusedxml import ElementTree as ET
 logger = logging.getLogger(__name__)
 SITEMAP_NAMESPACE = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 
 def load_render_rules(quarto_config: Path) -> list[str]:
     """Load the configured Quarto render rules."""
