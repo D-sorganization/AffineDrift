@@ -84,11 +84,10 @@ changes were made in that session — the deliverable is the issue set below.
 
 AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Geometry of Motion_, _Volumes I–IV_), articles, and scientific monographs. UpstreamDrift remains the computational, claim, and evidence authority for the proximal-to-distal program:
 
-- **Active immutable refresh ([#3992](https://github.com/D-sorganization/AffineDrift/issues/3992)):** use the clean worktree
-  `AffineDrift-worktrees/3992-proximal-projection` on
-  `docs/3992-proximal-projection`; qualified projection content commit
-  `cd23c770dd983fc26145f3cd9c8c198bd7b6347b`. The branch pins protected UpstreamDrift
-  #9151/#9152 squash `85cce4d3307bb7ad3953d9fc6e583e370803515c`, adds the
+- **Merged immutable refresh ([#3992](https://github.com/D-sorganization/AffineDrift/issues/3992), [PR #3993](https://github.com/D-sorganization/AffineDrift/pull/3993)):** protected AffineDrift squash
+  `9b9cbcc2199f1fbf8cd281beb08c57d543b552b1` is verified as the exact
+  remote `main`. It pins protected UpstreamDrift #9151/#9152 squash
+  `85cce4d3307bb7ad3953d9fc6e583e370803515c`, adds the
   articulated same-state drift/contact-attribution chapter and figure, and
   stages the byte-identical 252-page, 1,980,545-byte source PDF. Local
   projection verification passes with 214 source-identical files, 21 flattened
@@ -97,8 +96,9 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   transfer narratives: positive contact alignment with total acceleration
   coexists with negative contact power in every registered state, so the
   pointwise result is not evidence of positive work, accumulated transfer, or
-  clubhead-speed gain. Preserve protected CI, squash auto-merge, exact
-  post-merge verification, and the untagged-PDF, Type 3, and unembedded-font
+  clubhead-speed gain. All protected #3993 checks passed, including the full
+  Python, E2E, responsive-layout, benchmark, JavaScript, link, and quality
+  lanes. Preserve the untagged-PDF, Type 3, and unembedded-font
   archival limitations unless independently fixed and requalified.
   Local validation is green for all 64 proximal--distal tests, the complete
   3,296-test non-GUI lane (3,270 passed, 26 skipped), Ruff, Black, strict MyPy,
