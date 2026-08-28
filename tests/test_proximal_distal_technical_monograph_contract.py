@@ -19,15 +19,15 @@ BIB_FILE = MONOGRAPH_DIR / "references.bib"
 SOURCE_MANIFEST = MONOGRAPH_DIR / "source_manifest.json"
 MONOGRAPH_CSS = MONOGRAPH_DIR / "monograph.css"
 
-EXPECTED_CHAPTER_COUNT = 36
+EXPECTED_CHAPTER_COUNT = 37
 EXPECTED_MIN_PAGE_COUNT = 181
 EXPECTED_MIN_WORD_COUNT = 69_000
-EXPECTED_SOURCE_COMMIT = "1b867e9da38dc6c3a321e0f7c199586fff5cf7be"
+EXPECTED_SOURCE_COMMIT = "85cce4d3307bb7ad3953d9fc6e583e370803515c"
 EXPECTED_RELEASE_MANIFEST_SHA256 = (
-    "91a5c35bad5ea2bd5fc2737b8e0408d1256fac2f026927399e6e6b83018d9b9f"
+    "829c31bb3d0a1c668b289d56244b6043fe3ab89ede0eff5ba2128638ccfe32a4"
 )
-EXPECTED_CLAIM_REGISTRY_SHA256 = "dc07b321b913fc2d4af2f74a838b76b5f63cda527fa274f9d34f8efecb5e11a6"
-EXPECTED_PDF_SHA256 = "92bfaca850ac459cc431e573be8c0288af51ceab4d28759d02c67c602274ee8b"
+EXPECTED_CLAIM_REGISTRY_SHA256 = "ae03a4d945f21f0ba564a684620105742fb7ada82f06a83fe7dbf1e1549b596b"
+EXPECTED_PDF_SHA256 = "0527465cd0bf6b69c4ae4c541986b0aecad28d5c05dfdabdbda0d493433e19ec"
 
 
 def test_technical_monograph_files_exist_and_are_complete() -> None:
@@ -79,7 +79,7 @@ def test_technical_monograph_declares_immutable_scientific_source() -> None:
     assert manifest["source"]["claim_registry"] == {
         "path": "docs/research/proximal_distal_energy_transfer/data/claim_audit_registry.json",
         "sha256": EXPECTED_CLAIM_REGISTRY_SHA256,
-        "bytes": 1_630_883,
+        "bytes": 1_644_539,
     }
     assert manifest["source"]["pdf_sha256"] == EXPECTED_PDF_SHA256
     assert manifest["publication"]["repository"] == "D-sorganization/AffineDrift"

@@ -84,30 +84,38 @@ changes were made in that session — the deliverable is the issue set below.
 
 AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Geometry of Motion_, _Volumes I–IV_), articles, and scientific monographs. UpstreamDrift remains the computational, claim, and evidence authority for the proximal-to-distal program:
 
-- **Active immutable refresh ([#3990](https://github.com/D-sorganization/AffineDrift/issues/3990), [PR #3991](https://github.com/D-sorganization/AffineDrift/pull/3991)):** use the clean worktree
-  `AffineDrift-worktrees/3990-proximal-projection` on
-  `docs/3990-proximal-projection`; qualified projection content commit
-  `288f9c4b59db6a7658680f1509854f3467c96588`. The branch pins protected
-  UpstreamDrift #9136 squash `1b867e9da38dc6c3a321e0f7c199586fff5cf7be`, retains the fail-closed
-  verifier test and implementation requiring every chapter declared by the
-  protected Upstream release manifest, restores the previously omitted
-  `_claim_adjudication_summary.qmd`, updates the declared chapter count to 36,
-  and stages the web-linearized 251-page, 1,962,456-byte source-identical PDF.
-  Local and anonymous projection verification pass with 212 source-identical files, 21
-  flattened figures, 12 immutable-link rewrites, and 14 declared adaptations.
-  Required focused tests, title governance, module budget, internal links,
-  isolated Quarto rendering, responsive visual inspection, pre-commit, and
-  pre-push checks pass. Preserve squash merge, protected CI, post-merge pin
-  verification, and the untagged-PDF, Type 3, and
-  unembedded-font archival limitations unless independently fixed and requalified.
+- **Active immutable refresh ([#3992](https://github.com/D-sorganization/AffineDrift/issues/3992)):** use the clean worktree
+  `AffineDrift-worktrees/3992-proximal-projection` on
+  `docs/3992-proximal-projection`; qualified projection content commit
+  `cd23c770dd983fc26145f3cd9c8c198bd7b6347b`. The branch pins protected UpstreamDrift
+  #9151/#9152 squash `85cce4d3307bb7ad3953d9fc6e583e370803515c`, adds the
+  articulated same-state drift/contact-attribution chapter and figure, and
+  stages the byte-identical 252-page, 1,980,545-byte source PDF. Local
+  projection verification passes with 214 source-identical files, 21 flattened
+  figures, 12 immutable-link rewrites, and 15 declared adaptations across the
+  complete 262-file projection. The finding is deliberately adverse to simple
+  transfer narratives: positive contact alignment with total acceleration
+  coexists with negative contact power in every registered state, so the
+  pointwise result is not evidence of positive work, accumulated transfer, or
+  clubhead-speed gain. Preserve protected CI, squash auto-merge, exact
+  post-merge verification, and the untagged-PDF, Type 3, and unembedded-font
+  archival limitations unless independently fixed and requalified.
+  Local validation is green for all 64 proximal--distal tests, the complete
+  3,296-test non-GUI lane (3,270 passed, 26 skipped), Ruff, Black, strict MyPy,
+  title governance, terminology, internal links, cross-references, isolated
+  Quarto HTML rendering, and visual inspection of the new PDF treatment. The
+  unfiltered Windows 3.12 suite remains collection-blocked only by the inherited
+  PyQt6 `QtGui` DLL ABI in
+  `tests/tools/test_wrist_universal_joint_window.py` (`0xc0000139`); do not
+  misclassify that workstation dependency boundary as a publication failure.
 
 - **Published Technical Monograph**: [`articles/proximal_distal_energy_transfer/index.qmd`](articles/proximal_distal_energy_transfer/index.qmd)
-  - 36 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual force sources, endpoint virtual-work mappings, multi-station Coulomb friction, and bounded optimization studies.
-  - Qualified technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (251 pages, >= 69,000 words).
+  - 37 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, contact, and residual force sources, endpoint virtual-work mappings, multi-station Coulomb friction, and bounded optimization studies.
+  - Qualified technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (252 pages, >= 69,000 words).
   - Executable companion and monograph PDF contracts use the exact governed
     `pypdf==6.16.1` root dependency pin.
-  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins the exact UpstreamDrift #9136 protected squash `1b867e9da38dc6c3a321e0f7c199586fff5cf7be`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
-  - `python scripts/verify_proximal_distal_projection.py` independently downloads or reads that authority, verifies 212 byte-identical source files, 21 uniquely mapped flattened figures, 12 normalized immutable-link rewrites, 14 explicitly hashed publication adaptations, the claim registry, and the PDF. CI also pins the complete 259-file local projection tree. Unreferenced SVG derivatives absent from the source manifest are excluded rather than promoted.
+  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins the exact UpstreamDrift #9151/#9152 protected squash `85cce4d3307bb7ad3953d9fc6e583e370803515c`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
+  - `python scripts/verify_proximal_distal_projection.py` independently downloads or reads that authority, verifies 214 byte-identical source files, 21 uniquely mapped flattened figures, 12 normalized immutable-link rewrites, 15 explicitly hashed publication adaptations, the claim registry, and the PDF. CI also pins the complete 262-file local projection tree. Unreferenced derivatives absent from the source manifest are excluded rather than promoted.
   - The pinned profile is computational-release ready. It is not archival/PID ready: the PDF is untagged and retains Type 3 and unembedded font resources.
   - Dual web & PDF rendering registered in `_quarto.yml` (resources, `books-nav` sidebar, and `Read` navbar).
 - **Lay Companion Book**: [`articles/proximal-distal-a-journey-through-the-swing.qmd`](articles/proximal-distal-a-journey-through-the-swing.qmd) (30 chapters, PDF).
@@ -149,8 +157,9 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   decisions (#3978). Default-deny procurement and human approval boundaries remain
   mandatory. AFF-M2 must consume protected Tools calibration contracts after their
   dependency stack merges; do not copy runtime calculations into AffineDrift.
-- The protected source release is pinned to UpstreamDrift #9136 squash `1b867e9da38dc6c3a321e0f7c199586fff5cf7be`.
-- Source release: 693 artifacts, 325 atomic claims, 2,468 evidence references, 410 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
+- The protected source release is pinned to UpstreamDrift #9151/#9152 squash `85cce4d3307bb7ad3953d9fc6e583e370803515c`.
+- Source release: 702 artifacts, 328 atomic claims, 2,495 evidence references, 419 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
+- Articulated same-state attribution covers 234 states across MuJoCo 3.12.0 and Pinocchio 4.1.0. Configuration contributes 75.5--91.0% and contact 9.41--23.5% of the mass-metric acceleration projection, but contact generalized power is negative in every state. Treat these as pointwise synthetic mechanics projections, not energy fractions, human evidence, or strategy guidance. The next scientific gate is matched forward impulse/work through contact transitions with shaft/base coupling, uncertainty, and adverse loading.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
 - #3882's immutable publication-projection, portable-link, generated-metadata, and deployment contract is enforced by the manifest, verifier, and publication tests. External archival/PID and human-validation gates remain separate.
 - **Critical Adverse Results**:
