@@ -22,12 +22,12 @@ MONOGRAPH_CSS = MONOGRAPH_DIR / "monograph.css"
 EXPECTED_CHAPTER_COUNT = 36
 EXPECTED_MIN_PAGE_COUNT = 181
 EXPECTED_MIN_WORD_COUNT = 69_000
-EXPECTED_SOURCE_COMMIT = "7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b"
+EXPECTED_SOURCE_COMMIT = "1b867e9da38dc6c3a321e0f7c199586fff5cf7be"
 EXPECTED_RELEASE_MANIFEST_SHA256 = (
-    "37b4bc0a05a70115591ed2312a73f50f03424e2224f5e005b9f6e1ffacc4b900"
+    "91a5c35bad5ea2bd5fc2737b8e0408d1256fac2f026927399e6e6b83018d9b9f"
 )
-EXPECTED_CLAIM_REGISTRY_SHA256 = "e54a265410d7e350e4639ce49a21219d8e82942b8e7e57eab47f19e9732220e7"
-EXPECTED_PDF_SHA256 = "3eb37e4e5181d6c5f2931813257ae2cbd67e72cb5d851c48c3db2f6a6a44c931"
+EXPECTED_CLAIM_REGISTRY_SHA256 = "dc07b321b913fc2d4af2f74a838b76b5f63cda527fa274f9d34f8efecb5e11a6"
+EXPECTED_PDF_SHA256 = "92bfaca850ac459cc431e573be8c0288af51ceab4d28759d02c67c602274ee8b"
 
 
 def test_technical_monograph_files_exist_and_are_complete() -> None:
@@ -79,7 +79,7 @@ def test_technical_monograph_declares_immutable_scientific_source() -> None:
     assert manifest["source"]["claim_registry"] == {
         "path": "docs/research/proximal_distal_energy_transfer/data/claim_audit_registry.json",
         "sha256": EXPECTED_CLAIM_REGISTRY_SHA256,
-        "bytes": 1_546_921,
+        "bytes": 1_630_883,
     }
     assert manifest["source"]["pdf_sha256"] == EXPECTED_PDF_SHA256
     assert manifest["publication"]["repository"] == "D-sorganization/AffineDrift"

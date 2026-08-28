@@ -3,9 +3,9 @@
 The open-source implementation separates the analytical model, torque
 programs, counterfactual evaluation, energy accounting, robustness analyses,
 and figure generation. The scientific entry points are collected under
-[`scripts/research/proximal_distal_energy/`](https://github.com/D-sorganization/UpstreamDrift/tree/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/scripts/research/proximal_distal_energy),
+[`scripts/research/proximal_distal_energy/`](https://github.com/D-sorganization/UpstreamDrift/tree/1b867e9da38dc6c3a321e0f7c199586fff5cf7be/scripts/research/proximal_distal_energy),
 with shared model parameters and dynamics under
-[`simulation_backends/`](https://github.com/D-sorganization/UpstreamDrift/tree/7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b/src/shared/python/simulation_backends).
+[`simulation_backends/`](https://github.com/D-sorganization/UpstreamDrift/tree/1b867e9da38dc6c3a321e0f7c199586fff5cf7be/src/shared/python/simulation_backends).
 This is a provenance statement, not a capability claim about the surrounding
 software.
 
@@ -171,6 +171,38 @@ Recorded outputs:
   both assembly branches, full-phase scaled singular margins, exact triangle
   degeneracies, and phase, geometry, scale, unit, tolerance, impossible-
   geometry, and manufactured-rank controls.
+- `data/phase_event_stability.{json,npz}` — nondimensional finite-time state
+  transitions, singular gains and exponents, transverse-event derivatives,
+  direct perturbation controls, near-grazing rejection, saltation controls,
+  equivalent-unit checks, and the fail-closed periodicity/Floquet gate.
+- `data/trajectory_control_authority.{json,npz}` — exact-step
+  trajectory-varying input maps, continuous-energy-equivalent Gramians,
+  event-tangent projection, channel masks, direct nonlinear pulse controls,
+  frozen-local countermodels, refinement, additivity, zero-input, and
+  equivalent-unit gates.
+- `data/bounded_event_reachability.{json,npz}` — finite event-tangent
+  continuation, exact-RK4 multiple shooting and independent replay, four
+  channel masks, declared amplitude/slew limits, typed failures, and
+  multistart, mesh, step, zero-authority, and adverse-state controls.
+- `data/event_topology_robustness.{json,npz}` — global direction-aware event
+  enumeration, eleven-delay continuation, matched small synthetic
+  perturbations, pair-level adequacy intervals, and full retained events.
+- `data/event_topology_stress_extension.{json,npz}` — separately
+  preregistered fixed stress-to-failure ladder with absent and multiple
+  crossings retained rather than selected away.
+- `data/event_topology_channel_matrix.{json,npz}` — both, shoulder-only,
+  wrist-only, and zero-authority delay/noise maps; event-state and speed arrays;
+  integration-step refinement; and global-horizon truncation controls.
+- `data/nonlinear_controller_comparison_registration.json` — outcome-blind
+  tuning/evaluation split, nine declared families, matched plant, constraints,
+  objectives, typed failures, ranking suppression, and single-worker identity.
+- `data/nonlinear_controller_solver_qualification.json` — one bounded projected
+  first-order iLQR kernel with derivative, bound, descent, replay,
+  initialization-sensitivity, and typed nonfinite-dynamics gates; collocation
+  NMPC remains unavailable.
+- `data/nonlinear_controller_plant_transport.json` — 12 controller-to-ODE
+  parity cases across three integration steps, exact replay, immutable inputs,
+  typed invalid cases, and zero ranking authority.
 - `data/double_pendulum_identifiability.json` — exact seven-coefficient inverse-
   dynamics factorization, analytic physical-map rank witness, three exact
   nonunique parameter families, dimensionless finite-record rank, unit and
