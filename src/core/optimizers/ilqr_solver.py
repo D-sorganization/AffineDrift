@@ -5,16 +5,25 @@ from dataclasses import dataclass
 from typing import Protocol
 
 import numpy as np
-import numpy.typing as npt
+from numpy.typing import NDArray
 
 from src.core.contracts import check_finite_array, check_positive, require
-
-NDArray = npt.NDArray[np.float64]
 
 ILQR_STATUS_NOT_STARTED = "not_started"
 ILQR_STATUS_CONVERGED = "converged"
 ILQR_STATUS_LINE_SEARCH_FAILED = "line_search_failed"
 ILQR_STATUS_MAX_ITERATIONS = "max_iterations"
+
+__all__ = [
+    "ILQR_STATUS_CONVERGED",
+    "ILQR_STATUS_LINE_SEARCH_FAILED",
+    "ILQR_STATUS_MAX_ITERATIONS",
+    "ILQR_STATUS_NOT_STARTED",
+    "ILQRDiagnostics",
+    "ILQRSolver",
+    "NDArray",
+    "TrajectoryOptimizer",
+]
 
 
 @dataclass(frozen=True)
