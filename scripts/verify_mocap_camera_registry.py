@@ -37,7 +37,13 @@ ALLOWED_SOURCE_KINDS = frozenset(
 SOURCE_BACKED_CLASSES = frozenset({"peer_reviewed_observed", "vendor_spec"})
 ALLOWED_EVIDENCE_CLASSES = SOURCE_BACKED_CLASSES | {"engineering_inference", "unavailable"}
 ALLOWED_CAMERA_ROLES = frozenset(
-    {"fast_motion_reference_candidate", "long_cable_evaluation_candidate", "research_baseline"}
+    {
+        "fast_motion_reference_candidate",
+        "distributed_reference_candidate",
+        "distributed_ethernet_challenger",
+        "long_cable_evaluation_candidate",
+        "research_baseline",
+    }
 )
 ALLOWED_INTEGRATION_STATES = frozenset({"adapter_required", "external_service_only"})
 TOP_LEVEL_KEYS = {

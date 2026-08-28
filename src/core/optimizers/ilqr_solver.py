@@ -9,7 +9,7 @@ import numpy.typing as npt
 
 from src.core.contracts import check_finite_array, check_positive, require
 
-type NDArray = npt.NDArray[np.float64]
+NDArray = npt.NDArray[np.float64]
 
 ILQR_STATUS_NOT_STARTED = "not_started"
 ILQR_STATUS_CONVERGED = "converged"

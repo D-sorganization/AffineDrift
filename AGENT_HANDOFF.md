@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-25
+Last updated: 2026-08-27
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -84,13 +84,29 @@ changes were made in that session — the deliverable is the issue set below.
 
 AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Geometry of Motion_, _Volumes I–IV_), articles, and scientific monographs. UpstreamDrift remains the computational, claim, and evidence authority for the proximal-to-distal program:
 
+- **Protected immutable refresh ([#3930](https://github.com/D-sorganization/AffineDrift/issues/3930), [PR #3986](https://github.com/D-sorganization/AffineDrift/pull/3986)):** use the clean worktree
+  `AffineDrift-worktrees/3930-proximal-projection` on
+  `docs/3930-proximal-projection`. The branch pins protected
+  UpstreamDrift #9137 squash `7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b`, adds a fail-closed
+  verifier test and implementation requiring every chapter declared by the
+  protected Upstream release manifest, restores the previously omitted
+  `_claim_adjudication_summary.qmd`, updates the declared chapter count to 36,
+  and stages the web-linearized 245-page, 1,912,422-byte source-identical PDF.
+  Local and anonymous projection verification pass with 208 source-identical files, 21
+  flattened figures, 12 immutable-link rewrites, and 14 declared adaptations.
+  Required focused tests, title governance, module budget, internal links,
+  isolated Quarto rendering, responsive visual inspection, pre-commit, and
+  pre-push checks pass. Preserve squash merge, protected CI, post-merge pin
+  verification, and the untagged-PDF, Type 3, and
+  unembedded-font archival limitations unless independently fixed and requalified.
+
 - **Published Technical Monograph**: [`articles/proximal_distal_energy_transfer/index.qmd`](articles/proximal_distal_energy_transfer/index.qmd)
-  - 35 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual force sources, endpoint virtual-work mappings, multi-station Coulomb friction, and bounded optimization studies.
-  - Published technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (244 pages, >= 69,000 words).
+  - 36 comprehensive technical chapters (`chapters/_ch01_...` to `_ch09_...`) covering multibody mechanics, coordinate-explicit Coriolis, squared-speed/centripetal, gravity, applied, and residual force sources, endpoint virtual-work mappings, multi-station Coulomb friction, and bounded optimization studies.
+  - Qualified technical PDF: [`proximal_distal_energy_transfer.pdf`](articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf) (245 pages, >= 69,000 words).
   - Executable companion and monograph PDF contracts use the exact governed
     `pypdf==6.16.1` root dependency pin.
-  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins the exact UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
-  - `python scripts/verify_proximal_distal_projection.py` independently downloads or reads that authority, verifies 208 byte-identical source files, 21 uniquely mapped flattened figures, 12 normalized immutable-link rewrites, 13 explicitly hashed publication adaptations, the claim registry, and the PDF. CI also pins the complete 254-file local projection tree. Unreferenced SVG derivatives absent from the source manifest are excluded rather than promoted.
+  - [`source_manifest.json`](articles/proximal_distal_energy_transfer/source_manifest.json) pins the exact UpstreamDrift #9137 protected squash `7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b`, the release-manifest and claim-registry digests, the embedded generation environment, and both PDF digests. Digest equality establishes provenance, not independent scientific confirmation.
+  - `python scripts/verify_proximal_distal_projection.py` independently downloads or reads that authority, verifies 208 byte-identical source files, 21 uniquely mapped flattened figures, 12 normalized immutable-link rewrites, 14 explicitly hashed publication adaptations, the claim registry, and the PDF. CI also pins the complete 255-file local projection tree. Unreferenced SVG derivatives absent from the source manifest are excluded rather than promoted.
   - The pinned profile is computational-release ready. It is not archival/PID ready: the PDF is untagged and retains Type 3 and unembedded font resources.
   - Dual web & PDF rendering registered in `_quarto.yml` (resources, `books-nav` sidebar, and `Read` navbar).
 - **Lay Companion Book**: [`articles/proximal-distal-a-journey-through-the-swing.qmd`](articles/proximal-distal-a-journey-through-the-swing.qmd) (30 chapters, PDF).
@@ -118,19 +134,22 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
   coverage; the isolated Quarto render also passes. No protected mocap release
   or physical-lab qualification exists yet; next pin merged Tools #4706 and
   UpstreamDrift #9063 authorities.
-- **Camera evidence registry (AffineDrift #3956 / AFF-M1):** branch
-  `feat/3956-camera-selection-registry` starts from protected main
-  `ca33d3ef6f543ff3dfcadda35c3bdf2356acff84`. The versioned registry, strict
-  verifier, public camera-selection guide, and contract tests cover FLIR
-  BFS-U3-16S2C-CS, Basler a2A1920-160ucBAS, and ZED X One GS through ten required
-  purchasing attributes each. The decision is provisional: quote and buy two
-  matched cameras for a physical pilot, not the full rig. No price, legal
-  approval, runtime adapter, timing/bandwidth result, calibration, pose result,
-  C3D result, or procurement approval exists. AFF-M2 must consume protected
-  Tools calibration contracts after their dependency stack merges; do not copy
-  runtime calculations into AffineDrift.
-- The source release is pinned to UpstreamDrift #9062 protected squash `9c44fc068ec44788a1b957bbbfee109f59b02dbf`.
-- Source release: 608 artifacts, 306 atomic claims, 2,254 evidence references, 328 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
+- **Camera evidence registry (AffineDrift #3956, #3976, #3977, #3978 / AFF-M1):**
+  branch `fix/3976-camera-benchmark-evidence` qualifies and updates the evidence surface.
+  The versioned registry, strict verifier, public camera-selection guide, and contract
+  tests cover five cameras: FLIR BFS-U3-16S2C-CS (fast-motion USB pilot lead), Basler
+  a2A1920-160ucBAS (high-res USB alternate), Allied Vision Alvium G5-203c (distributed
+  8-camera 5GigE reference-rig hypothesis), LUCID Triton2 TRT016S-CC (distributed
+  2.5GigE/PTP challenger), and Stereolabs ZED X One GS (long-cable GMSL2 evaluation).
+  ZED X One GS synchronization evidence is refreshed to the current 15 µs vendor claim
+  (#3976). Regional list prices for camera bodies are scoped typed (FLIR USD 371.00,
+  Stereolabs USD 399/424) without implying total system cost (#3977). The two-camera
+  USB pilot and eight-camera distributed Ethernet evaluations remain strictly distinct
+  decisions (#3978). Default-deny procurement and human approval boundaries remain
+  mandatory. AFF-M2 must consume protected Tools calibration contracts after their
+  dependency stack merges; do not copy runtime calculations into AffineDrift.
+- The protected source release is pinned to UpstreamDrift #9137 squash `7ab5f26e9e716eb97a2b9c28bfd3b27271aec89b`.
+- Source release: 636 artifacts, 313 atomic claims, 2,312 evidence references, 350 local artifacts, and 78 external URLs; no source-manifest mismatch remains.
 - The coordinate-force study evaluates 135 preregistered control programs; 91 meet the declared qualification contract. It reports signed and absolute tangent impulse, power, work, speed, and residual closure without relabeling coordinate terms as anatomical forces or independent causal mechanisms.
 - #3882's immutable publication-projection, portable-link, generated-metadata, and deployment contract is enforced by the manifest, verifier, and publication tests. External archival/PID and human-validation gates remain separate.
 - **Critical Adverse Results**:
