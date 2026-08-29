@@ -64,12 +64,35 @@ def test_catalog_and_machine_readable_resources_are_linked() -> None:
 
 def test_schema_valid_concept_template_is_safe_to_copy() -> None:
     template = load_library(TEMPLATE, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+    canonical = load_library(
+        ROOT / "data/research_protocols/library.json", SCHEMA, CLAIMS, CRITIQUES, ROOT
+    )
     protocols = template["protocols"]
     assert isinstance(protocols, list) and len(protocols) == 1
     protocol = protocols[0]
     assert protocol["state"] == "concept"
+    assert protocol["companion_issue"] == 4041
     assert protocol["history"] == []
     assert protocol["promotion_attempts"] == []
+    assert protocol["evidence"] == []
+    assert protocol["links"]["claim_ids"] == []
+    assert protocol["links"]["critique_ids"] == []
+    assert protocol["links"]["route_audits"] == []
+    assert protocol["links"]["calculation_artifacts"] == []
+    assert protocol["links"]["workflow_artifacts"] == []
+    canonical_ids = {record["protocol_id"] for record in canonical["protocols"]}
+    assert protocol["protocol_id"] not in canonical_ids
+
+
+def test_generator_uses_module_imports_without_a_sys_path_bootstrap() -> None:
+    generator = (ROOT / "scripts/generate_research_readiness_library.py").read_text(
+        encoding="utf-8"
+    )
+    article = ARTICLE.read_text(encoding="utf-8")
+
+    assert "sys.path" not in generator
+    assert "python -m scripts.generate_research_readiness_library --check" in article
+    assert "python scripts/generate_research_readiness_library.py" not in article
 
 
 @pytest.mark.content_lint

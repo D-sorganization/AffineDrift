@@ -143,7 +143,129 @@ def test_rejected_or_wrong_scope_evidence_cannot_advance_state() -> None:
 def test_modeled_or_synthetic_evidence_cannot_validate() -> None:
     assert validation_origin_allowed("validated", {"manufactured-synthetic", "modeled"}) is False
     assert validation_origin_allowed("validated", {"measured"}) is True
+    assert validation_origin_allowed("validated", {"measured", "modeled"}) is False
     assert validation_origin_allowed("simulation-ready", {"manufactured-synthetic"}) is True
+
+
+def test_unavailable_evidence_cannot_be_verified_or_satisfy_a_gate() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    evidence = protocol["evidence"]
+    assert isinstance(evidence, list) and isinstance(evidence[-1], dict)
+    dry_run = evidence[-1]
+    dry_run.pop("path")
+    dry_run.pop("sha256")
+    dry_run.update(
+        {
+            "availability": "unavailable",
+            "governed_record_id": "unavailable-dry-run-001",
+            "custodian": "No custodian is available",
+            "disclosure_boundary": "No evidence record exists.",
+        }
+    )
+    _reseal(protocol)
+
+    with pytest.raises(ResearchReadinessError, match="unavailable|verified"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_private_gate_evidence_requires_an_immutable_record_revision() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    evidence = protocol["evidence"]
+    assert isinstance(evidence, list) and isinstance(evidence[0], dict)
+    review = evidence[0]
+    review.pop("path")
+    review.pop("sha256")
+    review.update(
+        {
+            "availability": "private",
+            "governed_record_id": "private-review-001",
+            "custodian": "Independent custodian",
+            "disclosure_boundary": "Contents are not public.",
+        }
+    )
+    _reseal(protocol)
+
+    with pytest.raises(ResearchReadinessError, match="record_revision"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_published_state_requires_external_4042_publication_authority() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    steps = (
+        ("simulation-ready", "pilot-ready", ("pilot-risk-review", "calibration-plan")),
+        (
+            "pilot-ready",
+            "data-ready",
+            ("data-dictionary", "privacy-license-review", "calibration-record"),
+        ),
+        ("data-ready", "preregistered", ("preregistration-record",)),
+        ("preregistered", "collecting", ("collection-release",)),
+        ("collecting", "analysis-locked", ("analysis-lock",)),
+        ("analysis-locked", "validated", ("validation-release", "null-result-audit")),
+        ("validated", "published", ("claim-promotion-release",)),
+    )
+    evidence = protocol["evidence"]
+    history = protocol["history"]
+    links = protocol["links"]
+    assert isinstance(evidence, list) and isinstance(history, list) and isinstance(links, dict)
+    for step_index, (source, target, kinds) in enumerate(steps, start=1):
+        evidence_ids = []
+        for kind_index, kind in enumerate(kinds, start=1):
+            evidence_id = f"evidence-adversarial-{step_index}-{kind_index}"
+            evidence_ids.append(evidence_id)
+            evidence.append(
+                {
+                    "evidence_id": evidence_id,
+                    "kind": kind,
+                    "status": "verified",
+                    "scope": protocol["protocol_id"],
+                    "availability": "private",
+                    "evidence_origin": "measured",
+                    "governed_record_id": "ad-validation-release-self-declared",
+                    "record_revision": "1" * 64,
+                    "custodian": "Self-declared test custodian",
+                    "disclosure_boundary": "No external publication authority.",
+                    "reviewed_by": "Self declaration",
+                    "reviewed_on": "2026-08-29",
+                }
+            )
+        history.append(
+            {
+                "from": source,
+                "to": target,
+                "on": "2026-08-29",
+                "rationale": "Adversarial publication-authority probe.",
+                "evidence_ids": evidence_ids,
+            }
+        )
+    links["validation_release"] = {
+        "status": "verified",
+        "release_id": "ad-validation-release-self-declared",
+        "record_revision": "1" * 64,
+    }
+    protocol["state"] = "published"
+    _reseal(protocol)
+
+    with pytest.raises(ResearchReadinessError, match="#4042 publication authority"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_participant_scope_requires_the_matching_governance_approval() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library, "ad-protocol-active-impedance-001")
+    specification = protocol["specification"]
+    assert isinstance(specification, dict)
+    governance = specification["governance"]
+    assert isinstance(governance, dict)
+    governance["human_approval_required"] = False
+    protocol["protocol_revision"] = protocol_revision(protocol)
+    _reseal(protocol)
+
+    with pytest.raises(ResearchReadinessError, match="participant scope.*governance"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
 
 
 def test_private_evidence_cannot_expose_a_repository_path() -> None:
@@ -332,6 +454,55 @@ def test_artifact_and_route_audit_links_are_exact_byte_joined() -> None:
     _reseal(_protocol(dangling))
     with pytest.raises(ResearchReadinessError, match="route audit ID"):
         validate_library(dangling, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_superseded_state_requires_an_existing_revision_pinned_successor() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    evidence = protocol["evidence"]
+    history = protocol["history"]
+    assert isinstance(evidence, list) and isinstance(history, list)
+    evidence_id = "evidence-dcr-supersession"
+    evidence.append(
+        {
+            "evidence_id": evidence_id,
+            "kind": "supersession-record",
+            "status": "verified",
+            "scope": protocol["protocol_id"],
+            "availability": "private",
+            "evidence_origin": "analytical",
+            "governed_record_id": "supersession-dcr-001",
+            "record_revision": "2" * 64,
+            "custodian": "Protocol owner",
+            "disclosure_boundary": "No private content is disclosed.",
+            "reviewed_by": "Protocol owner",
+            "reviewed_on": "2026-08-29",
+        }
+    )
+    history.append(
+        {
+            "from": "simulation-ready",
+            "to": "superseded",
+            "on": "2026-08-29",
+            "rationale": "Adversarial supersession without a successor.",
+            "evidence_ids": [evidence_id],
+        }
+    )
+    protocol["state"] = "superseded"
+    _reseal(protocol)
+
+    with pytest.raises(ResearchReadinessError, match="superseded.*successor"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_non_superseded_record_cannot_predeclare_a_successor() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    protocol["successor_protocol_id"] = "ad-protocol-hybrid-impact-001"
+    _reseal(protocol)
+
+    with pytest.raises(ResearchReadinessError, match="non-superseded.*successor"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
 
 
 def test_public_summary_preserves_readiness_and_authority_boundaries() -> None:
