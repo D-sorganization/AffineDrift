@@ -262,8 +262,11 @@ def test_public_model_ladder_has_exact_reviewed_claim_audit_evidence() -> None:
         "falsifiers",
         "audience_framing",
     }
+    assert review["source_path"] == "models/model-ladder.qmd"
     assert set(review["evidence_paths"]) == {
+        "models/model-ladder.qmd",
         "src/affine_control/model_ladder_fixtures.py",
         "src/affine_control/model_ladder_protocol.py",
         "tests/test_model_ladder_protocol.py",
     }
+    assert set(review["evidence_sha256"]) == set(review["evidence_paths"])
