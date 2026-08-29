@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-27
+Last updated: 2026-08-28
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -9,6 +9,25 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Use pull requests and ordinary protected merges; required status checks must pass.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
+
+## DCR Reachability Correction (#4013 — PR Pending)
+
+- Branch `feat/4013-dcr-reachability` owns the article correction, analytic
+  counterexample in `src/affine_control/reachability.py`, and corpus regression
+  in `tests/test_dcr_reachability_contract.py`.
+- DCR is a declared magnitude ratio, not a controllability or finite-horizon
+  reachability certificate. Keep `f(x)+G(x)\mathcal U(x)`,
+  `G(x)\mathcal U(x)`, and `\mathcal R(T;x_0)` distinct.
+- The exact constant-additive-drift scenario translates `[-1, 1]` to
+  `[99, 101]` without changing width. Control-cone, drift-tube, pancake,
+  timing, and face-variance conclusions remain unavailable until a governed
+  event-level computation declares horizon, controls, metric, and uncertainty.
+- Workstation Python 3.13 evidence: 76 focused reachability and publication
+  tests passed; the full suite passed 3,255 tests with 29 documented skips.
+  Ruff, Black, strict mypy, terminology, title-case, cross-reference,
+  display-math, and isolated Quarto 1.8.26 render gates pass. Python 3.12 is not
+  installed in this worktree environment; do not treat 3.13 evidence as a
+  substitute for the protected Python 3.12 lane.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
