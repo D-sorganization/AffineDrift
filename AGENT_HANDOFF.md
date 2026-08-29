@@ -39,7 +39,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
   human release decision.
 - `/models/active-impedance-identification.html` is registered as reviewed
   audit `ad-route-eb36645ba003`, bound to exact reviewed content commit
-  `c8cf64c5779640a5dacf9ef5aed8e6a7e4157b90` and all four review dimensions.
+  `c6c2e37505526afbf849ae9bf2e58399f6f3af11` and all four review dimensions.
   The protected 219-route deferred partition is unchanged.
 - RED evidence: the initial focused suite failed during collection because the
   protocol modules did not exist. Review-led RED cases then exposed the rank
