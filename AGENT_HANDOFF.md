@@ -10,7 +10,45 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Planar-to-Spatial-to-Flexible-Shaft Model Ladder (#4034 — PR Pending)
+## Bilateral Hand-Wrench Identifiability (#4035 — In Progress)
+
+- Branch `feat/4035-bilateral-wrench-identifiability` started from exact
+  protected main `d8f90713a0d3a4255ed1131a6c3517ee13217997`. It extends the
+  immutable UpstreamDrift bilateral-wrench evidence with a measurement and
+  promotion protocol; it does not edit the protected projection or add a
+  competing dynamics engine.
+- `hand_wrench_protocol.py` freezes the primary and executable source register,
+  lead/trail six-axis calibration, cross-talk, conditioning, bandwidth,
+  lead/trail-to-club transforms, synchronization, inertial compensation,
+  contact assumptions, hypotheses, rank, and exact observation maps.
+  `hand_wrench_evidence.py` keeps Total Measured, Bilateral Measured, Model
+  Estimated, and Unavailable results distinct. `hand_wrench_fixtures.py`
+  supplies only deterministic synthetic/manufactured-benchtop records.
+- The exact maps reproduce total-wrench rank six/nullity six, the two-point-force
+  axial null mode at rank five/nullity one, and direct bilateral rank twelve.
+  Cross-talk calibration recovery, passband/Nyquist qualification, reference
+  transport, timing, compensation, uncertainty, shaft/grip sensitivity, and
+  supported/negative/null/unavailable outcomes are executable contracts.
+- The human tier is unavailable and fails closed without ethics, privacy,
+  consent, licensing, and participant-held-out analysis. A hand wrench remains
+  an interface load with no muscle-force attribution and no coaching or clinical
+  authority.
+- `/models/bilateral-hand-wrench-validation.html` is registered as reviewed
+  audit `ad-route-5602bed13ca4`, bound to exact reviewed content commit
+  `1b6356f82dd5938738bfbd9a34b107769af8d4b3` and all four review dimensions.
+  The protected 219-route deferred partition is unchanged.
+- RED evidence: the focused suite initially failed during collection because
+  the hand-wrench modules did not exist. The first GREEN boundary passes 9/9
+  executable contracts, 2/2 public-content/audit contracts, 11/11 existing
+  claim-audit contracts, focused Ruff and Black, strict mypy, and publication
+  enforcement. Complete exact-head, render, and browser evidence remains due
+  before PR creation.
+
+## Planar-to-Spatial-to-Flexible-Shaft Model Ladder (#4034 — Protected)
+
+- Protected merge `d8f90713a0d3a4255ed1131a6c3517ee13217997` is the exact
+  reviewed #4034 tree. The branch history below records its ordinary claim-audit
+  reconciliation and final evidence.
 
 - Branch `feat/4034-model-ladder` started from protected main
   `42975df666c38154304652aaa48f856aefd4bd7e` and ordinarily reconciled protected
