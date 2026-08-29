@@ -4,10 +4,16 @@ from __future__ import annotations
 
 import copy
 import json
+from collections import Counter
 from pathlib import Path
 
 import pytest
 
+from scripts.claim_audit_ids import (
+    DEFERRED_AUDIT_SCOPE_COUNTS,
+    deferred_issue_url,
+    deferred_issue_urls,
+)
 from scripts.generate_claim_audit_inventory import (
     AuditContractError,
     AuditSources,
@@ -57,7 +63,7 @@ def _route(
         }
     elif status == "deferred":
         record["deferment"] = {
-            "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4021",
+            "issue_url": deferred_issue_url(route),
             "rationale": "The adversarial page review has not yet been completed.",
             "next_gate": "Complete the evidence and uncertainty review.",
         }
@@ -81,7 +87,7 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
             {
                 "pages": [
                     {
-                        "source_path": "articles/example.qmd",
+                        "source_path": "articles/superposition.qmd",
                         "claims": [{"claim_id": "ad-example-001", "title": "Example Claim"}],
                     }
                 ]
@@ -97,7 +103,7 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
                     {
                         "critique_id": "crit-example",
                         "source_path": "critiques/example.md",
-                        "affected_pages": ["articles/example.qmd"],
+                        "affected_pages": ["articles/superposition.qmd"],
                         "severity": "high",
                         "disposition": "open",
                     }
@@ -115,7 +121,7 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
             _route("/", "deferred"),
             _route("/404.html", "exempt"),
             _route(
-                "/articles/example.html",
+                "/articles/superposition.html",
                 "reviewed",
                 claim_ids=["ad-example-001"],
                 critique_ids=["crit-example"],
@@ -129,7 +135,7 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
         "pages": [
             {"route": "/"},
             {"route": "/404.html"},
-            {"route": "/articles/example.html"},
+            {"route": "/articles/superposition.html"},
             {"route": "/critiques/example.html"},
         ],
     }
@@ -161,7 +167,7 @@ def test_schema_is_strict_and_status_records_are_auditable(tmp_path: Path) -> No
         validate_inventory(invalid, sources)
 
     invalid = copy.deepcopy(inventory)
-    reviewed = _find_route(invalid, "/articles/example.html")
+    reviewed = _find_route(invalid, "/articles/superposition.html")
     assert isinstance(reviewed, dict)
     review = reviewed["review"]
     assert isinstance(review, dict)
@@ -170,8 +176,8 @@ def test_schema_is_strict_and_status_records_are_auditable(tmp_path: Path) -> No
         validate_inventory(invalid, sources)
 
     invalid = copy.deepcopy(inventory)
-    reviewed = _find_route(invalid, "/articles/example.html")
-    reviewed["deferment"] = _route("/unused.html", "deferred")["deferment"]
+    reviewed = _find_route(invalid, "/articles/superposition.html")
+    reviewed["deferment"] = _route("/pages/unused.html", "deferred")["deferment"]
     with pytest.raises(AuditContractError, match="not valid under any|valid under each"):
         validate_inventory(invalid, sources)
 
@@ -186,7 +192,7 @@ def test_every_rendered_route_requires_exactly_one_inventory_record(tmp_path: Pa
         validate_manifest_coverage(missing, manifest)
 
     extra = copy.deepcopy(inventory)
-    extra["routes"].append(_route("/not-rendered.html", "deferred"))  # type: ignore[union-attr]
+    extra["routes"].append(_route("/pages/not-rendered.html", "deferred"))  # type: ignore[union-attr]
     with pytest.raises(AuditContractError, match="coverage mismatch"):
         validate_manifest_coverage(extra, manifest)
 
@@ -201,9 +207,9 @@ def test_initial_inventory_is_deterministic_and_fail_closed(tmp_path: Path) -> N
 
     assert first == second
     assert _find_route(first, "/404.html")["status"] == "exempt"
-    assert _find_route(first, "/articles/example.html")["status"] == "deferred"
-    assert _find_route(first, "/articles/example.html")["claim_ids"] == ["ad-example-001"]
-    assert _find_route(first, "/articles/example.html")["critique_ids"] == ["crit-example"]
+    assert _find_route(first, "/articles/superposition.html")["status"] == "deferred"
+    assert _find_route(first, "/articles/superposition.html")["claim_ids"] == ["ad-example-001"]
+    assert _find_route(first, "/articles/superposition.html")["critique_ids"] == ["crit-example"]
     validate_inventory(first, sources)
 
 
@@ -217,20 +223,32 @@ def test_inventory_rejects_unstable_ids_and_authority_link_drift(tmp_path: Path)
         validate_inventory(invalid, sources)
 
     invalid = copy.deepcopy(inventory)
-    _find_route(invalid, "/articles/example.html")["claim_ids"] = []
+    _find_route(invalid, "/articles/superposition.html")["claim_ids"] = []
     with pytest.raises(AuditContractError, match="claim authority links"):
         validate_inventory(invalid, sources)
 
     invalid = copy.deepcopy(inventory)
-    _find_route(invalid, "/articles/example.html")["critique_ids"] = []
+    _find_route(invalid, "/articles/superposition.html")["critique_ids"] = []
     with pytest.raises(AuditContractError, match="critique authority links"):
         validate_inventory(invalid, sources)
+
+
+def test_deferred_route_rejects_parent_or_wrong_child_issue(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+    deferred = _find_route(inventory, "/")
+    deferment = deferred["deferment"]
+    assert isinstance(deferment, dict)
+    deferment["issue_url"] = "https://github.com/D-sorganization/AffineDrift/issues/4021"
+
+    with pytest.raises(AuditContractError, match="exact child issue.*4063"):
+        validate_inventory(inventory, sources)
 
 
 def test_p0_p1_findings_fail_closed_or_block_publication(tmp_path: Path) -> None:
     inventory, _, claims_path, ledger_path = _fixture(tmp_path)
     sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
-    reviewed = _find_route(inventory, "/articles/example.html")
+    reviewed = _find_route(inventory, "/articles/superposition.html")
     assert isinstance(reviewed, dict)
     findings = reviewed["findings"]
     assert isinstance(findings, list)
@@ -266,7 +284,15 @@ def test_report_generation_is_deterministic_and_joins_authorities(tmp_path: Path
 
     assert first == second
     assert first["counts"] == {"deferred": 2, "exempt": 1, "reviewed": 1}
-    article = next(route for route in first["routes"] if route["route"] == "/articles/example.html")
+    assert first["deferred_issue_counts"] == {
+        "https://github.com/D-sorganization/AffineDrift/issues/4057": 1,
+        "https://github.com/D-sorganization/AffineDrift/issues/4063": 1,
+    }
+    root_route = next(route for route in first["routes"] if route["route"] == "/")
+    assert root_route["deferment_issue_url"].endswith("/4063")
+    article = next(
+        route for route in first["routes"] if route["route"] == "/articles/superposition.html"
+    )
     assert article["claims"] == [{"claim_id": "ad-example-001", "title": "Example Claim"}]
     assert article["critiques"] == [
         {"critique_id": "crit-example", "disposition": "open", "severity": "high"}
@@ -282,6 +308,22 @@ def test_canonical_inventory_and_generated_reports_are_current() -> None:
     )
 
     assert outputs == [REPORT_JSON, REPORT_MD]
+
+
+def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
+    inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
+    deferred = [record for record in inventory["routes"] if record["status"] == "deferred"]
+    observed: Counter[str] = Counter()
+
+    for record in deferred:
+        issue_urls = deferred_issue_urls(record["route"])
+        assert len(issue_urls) == 1, f"{record['route']} maps to {issue_urls}"
+        assert record["deferment"]["issue_url"] == issue_urls[0]
+        observed[issue_urls[0]] += 1
+
+    assert len(deferred) == 219
+    assert observed == Counter(DEFERRED_AUDIT_SCOPE_COUNTS)
+    assert sum(DEFERRED_AUDIT_SCOPE_COUNTS.values()) == 219
 
 
 def test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers() -> None:

@@ -282,10 +282,14 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Stable IDs are SHA-256-derived from canonical routes. Claim and critique
   fields contain IDs only and must match the exact route joins derived from the
   protected #4019 registry and #4020 ledger.
-- The post-prune Quarto 1.8.26 render contains 222 public routes: 219 are
-  explicitly deferred to #4021, the static 404/offline system routes are
-  narrowly exempt, and the DCR route is reviewed against protected #4013/#4019
-  evidence. No route is absent or silently treated as reviewed.
+- The post-prune Quarto 1.8.26 render contains 222 public routes: the static
+  404/offline system routes are narrowly exempt, and the DCR route is reviewed
+  against protected #4013/#4019 evidence. The remaining 219 routes map exactly
+  once to exhaustive child batches: #4054 36 Physics of Golf, #4055 26 Geometry
+  of Motion, #4056 16 tangent-series, #4057 40 critiques, #4058 29 core
+  articles, #4059 18 applied articles, #4060 14 model/repository, #4061 21
+  resources, #4062 6 books, and #4063 13 root/page routes. Parent #4021 remains
+  open for final reconciliation; no route is absent or silently reviewed.
 - P0/P1 findings may be `corrected` or `publication_blocked`; open/deferred
   states fail validation, and any `publication_blocked` P0/P1 record stops the
   deploy workflow. Every finding requires a linked AffineDrift issue and
@@ -296,10 +300,12 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `data/trust/generated/claim_audit_report.json` plus
   `reports/scientific-claim-audit.md`. The generated reports join titles/status
   from upstream authorities but do not duplicate their scientific prose.
-- RED was the missing generator module at test collection. Exact-head GREEN
-  evidence is 73 combined #4013/#4019/#4020/#4021/public-manifest tests and
-  3,326 default-lane tests with 29 documented skips and 91 deselections. The
-  content lane passes 90 tests with 4 documented skips and 3,352 deselections. Ruff,
+- RED was the missing generator module at test collection; the child-partition
+  extension first failed on absent route-scope exports and then on all stale
+  parent issue URLs. Exact-head GREEN evidence is 75 combined
+  #4013/#4019/#4020/#4021/public-manifest tests and
+  3,328 default-lane tests with 29 documented skips and 91 deselections. The
+  content lane passes 90 tests with 4 documented skips and 3,354 deselections. Ruff,
   Black, repository MyPy (74 source files), code-quality, and all pre-commit
   hooks pass.
 - Quarto 1.8.26 rendered all 221 sources at the reconciled head. The deployment

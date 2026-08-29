@@ -13,7 +13,7 @@ from typing import Any, cast
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.claim_audit_ids import source_route, stable_audit_id
+from scripts.claim_audit_ids import deferred_issue_url, source_route, stable_audit_id
 from scripts.claim_audit_report import (
     BLOCKED_DISPOSITION,
     BLOCKING_PRIORITIES,
@@ -121,6 +121,21 @@ def _validate_review(record: dict[str, object], root: Path) -> None:
         raise AuditContractError(f"{record.get('route')} review evidence path is missing")
 
 
+def _validate_deferment(record: dict[str, object]) -> None:
+    if record.get("status") != "deferred":
+        return
+    route = str(record.get("route", ""))
+    deferment = record.get("deferment")
+    if not isinstance(deferment, dict):
+        raise AuditContractError(f"{route} deferred route lacks deferment evidence")
+    try:
+        expected_issue = deferred_issue_url(route)
+    except ValueError as exc:
+        raise AuditContractError(str(exc)) from exc
+    if deferment.get("issue_url") != expected_issue:
+        raise AuditContractError(f"{route} must defer to its exact child issue {expected_issue}")
+
+
 def _validate_findings(record: dict[str, object], root: Path) -> set[str]:
     findings = record.get("findings")
     if not isinstance(findings, list):
@@ -189,6 +204,7 @@ def validate_inventory(inventory: object, sources: AuditSources) -> None:
             raise AuditContractError(f"{route} does not use its stable audit ID")
         _validate_record_links(record, claim_links, critique_links)
         _validate_review(record, sources.root)
+        _validate_deferment(record)
         new_ids = _validate_findings(record, sources.root)
         if finding_ids.intersection(new_ids):
             raise AuditContractError("Finding IDs must be unique across routes")
@@ -251,7 +267,7 @@ def _initial_record(
             {
                 "status": "deferred",
                 "deferment": {
-                    "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4021",
+                    "issue_url": deferred_issue_url(route),
                     "next_gate": "Complete the route-level adversarial scientific claim review.",
                     "rationale": "No completed #4021 route-level adversarial review is registered.",
                 },

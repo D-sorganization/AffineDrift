@@ -30,13 +30,20 @@ def build_joined_report(
 ) -> dict[str, object]:
     """Join route audit state to the two authoritative ID registries."""
     counts = Counter(str(record["status"]) for record in records)
+    deferred_issue_counts: Counter[str] = Counter()
     routes: list[dict[str, object]] = []
     for record in records:
+        deferment_issue_url: str | None = None
+        if record["status"] == "deferred":
+            deferment = cast(dict[str, object], record["deferment"])
+            deferment_issue_url = str(deferment["issue_url"])
+            deferred_issue_counts[deferment_issue_url] += 1
         routes.append(
             {
                 "audit_id": record["audit_id"],
                 "route": record["route"],
                 "status": record["status"],
+                "deferment_issue_url": deferment_issue_url,
                 "claims": [
                     {"claim_id": claim_id, "title": claims[claim_id].get("title", "")}
                     for claim_id in cast(list[str], record["claim_ids"])
@@ -54,6 +61,10 @@ def build_joined_report(
         )
     return {
         "counts": {key: counts.get(key, 0) for key in ("deferred", "exempt", "reviewed")},
+        "deferred_issue_counts": {
+            issue_url: deferred_issue_counts[issue_url]
+            for issue_url in sorted(deferred_issue_counts)
+        },
         "inventory_schema_version": "1.0.0",
         "route_count": len(records),
         "routes": routes,
@@ -78,17 +89,35 @@ def render_markdown(report: dict[str, object]) -> str:
         f"- Deferred: {counts.get('deferred', 0)}",
         f"- Exempt: {counts.get('exempt', 0)}",
         "",
-        "| Audit ID | Route | Status | Claim IDs | Critique IDs | Findings |",
-        "|---|---|---|---|---|---:|",
+        "## Deferred Delivery Batches",
+        "",
     ]
+    deferred_counts = report.get("deferred_issue_counts")
+    if not isinstance(deferred_counts, dict):
+        raise ValueError("Generated deferred issue counts are invalid")
+    for issue_url, count in deferred_counts.items():
+        issue_number = str(issue_url).rsplit("/", 1)[-1]
+        lines.append(f"- [#{issue_number}]({issue_url}): {count} routes")
+    lines.extend(
+        [
+            "",
+            "| Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |",
+            "|---|---|---|---|---|---|---:|",
+        ]
+    )
     for route in routes:
         if not isinstance(route, dict):
             raise ValueError("Generated route report is invalid")
         claim_ids = ", ".join(f"`{item['claim_id']}`" for item in route["claims"])
         critique_ids = ", ".join(f"`{item['critique_id']}`" for item in route["critiques"])
+        issue_url = route.get("deferment_issue_url")
+        issue = (
+            f"[#{str(issue_url).rsplit('/', 1)[-1]}]({issue_url})" if issue_url is not None else "—"
+        )
         lines.append(
             f"| `{route['audit_id']}` | `{route['route']}` | {str(route['status']).title()} "
-            f"| {claim_ids or 'None'} | {critique_ids or 'None'} | {len(route['findings'])} |"
+            f"| {issue} | {claim_ids or 'None'} | {critique_ids or 'None'} "
+            f"| {len(route['findings'])} |"
         )
     lines.append("")
     return "\n".join(lines)

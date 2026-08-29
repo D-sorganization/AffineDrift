@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T08:42:57Z
+Last-Updated: 2026-08-29T09:11:45Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T08:42:57Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.247                                          |
+| **Spec Version**        | 1.0.248                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -389,7 +389,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F64 | Revision-bound public-site verification             | ✅     | `scripts/public_site_manifest.py` inventories every deployable HTML route and binds the artifact to its Git revision. `scripts/verify-public-site.js` fails closed on incomplete evidence, unavailable pages, title and heading defects, missing canonical URLs or navigation, wrong theme state, below-fold primary headings, overflow, fixed-chrome overlap, missing alternatives or button names, untypeset visible equations, console/page errors, and required-resource failures. Deployment verifies every route at mobile and desktop widths in both themes, stores representative tablet/desktop screenshots, then repeats the full matrix against the revision-matched live manifest. |
 | F65 | Control-affine scientific-trust contract            | ✅     | The canonical theory series, foundational monograph, and single-file manifesto define affinity relative to a declared input at fixed state; treat state-dependent input gains as affine; describe drift/input as additive rather than orthogonal; and condition attribution on the model, coordinates, parameters, intervention, horizon, and identifiability evidence. A shared rendered boundary and corpus tests reject direct inference of intent, individual-muscle forces, biological effort, or unique real-world causes from algebraic decomposition alone (#4012). |
 | F66 | Generated scientific trust metadata                | ✅     | A strict Draft 2020-12 JSON Schema, canonical claim registry, and deterministic generator publish stable page/claim IDs with review commit, evidence and critique status, scope, uncertainty, limitations, falsifiers, software/data provenance, and next validation gate. Corpus tests require governed-page includes and technical-anchor links, render unknown qualification visibly, and reject accessible-summary amplification of modal strength, causal/universal/exact/optimal/locked-in terms, or unsupported percentages (#4019). |
-| F67 | Full rendered-route scientific claim-audit inventory | ✅     | `data/trust/claim_audit_inventory.json` covers every post-prune public HTML route with a route-derived stable audit ID and an explicit reviewed, deferred, or exempt status. Exact claim and critique ID links are validated against the #4019 registry and #4020 ledger without copying their substantive authority. Deterministic JSON/Markdown reports expose coverage, while protected deployment fails closed on route drift and any registered P0/P1 publication blocker (#4021). |
+| F67 | Full rendered-route scientific claim-audit inventory | ✅     | `data/trust/claim_audit_inventory.json` covers every post-prune public HTML route with a route-derived stable audit ID and an explicit reviewed, deferred, or exempt status. Exact claim and critique ID links are validated against the #4019 registry and #4020 ledger without copying their substantive authority. Every deferred route maps exactly once to the exhaustive #4054–#4063 delivery partition, whose fixed counts sum to all 219 deferred routes. Deterministic JSON/Markdown reports expose coverage and child ownership, while protected deployment fails closed on route drift, partition drift, and any registered P0/P1 publication blocker (#4021). |
 
 ### API / Interface Contract
 
@@ -689,6 +689,15 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.248 Exhaustive Deferred-Route Delivery Partition
+
+Assigns every one of the 219 deferred public routes exactly once to child issues
+#4054–#4063. The deterministic route-scope mapping fails closed on gaps,
+overlaps, wrong issue URLs, or count drift from the declared
+36/26/16/40/29/18/14/21/6/13 partition. Generated JSON and Markdown reports now
+publish child-issue ownership and per-batch counts while parent #4021 remains
+open for final corpus reconciliation.
 
 ### 1.0.247 Full Rendered-Route Scientific Claim-Audit Inventory
 
