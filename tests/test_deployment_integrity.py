@@ -58,6 +58,15 @@ def test_deploy_workflow_gates_local_and_live_every_page_evidence() -> None:
     assert "upload-artifact" in content
 
 
+def test_live_manifest_poll_retries_transient_non_json_responses() -> None:
+    """Pages propagation may briefly return HTML without aborting the retry loop."""
+    content = WORKFLOW_PATH.read_text(encoding="utf-8")
+    live_poll = content.split("Verify Deployment Manifest and Every Public Page", maxsplit=1)[1]
+
+    assert "if SOURCE_REVISION=$(python3" in live_poll
+    assert "2>/dev/null); then" in live_poll
+
+
 def test_ci_and_deploy_use_the_locally_qualified_quarto_version() -> None:
     """CI and Pages render with the same qualified Quarto release as local QA."""
     for workflow in (WORKFLOW_PATH, CI_WORKFLOW_PATH):

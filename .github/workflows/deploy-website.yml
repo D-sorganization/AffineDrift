@@ -242,10 +242,11 @@ jobs:
             if curl --fail --silent --show-error \
               "$PUBLIC_SITE_URL/public-site-manifest.json?revision=$GITHUB_SHA" \
               --output "$LIVE_MANIFEST"; then
-              SOURCE_REVISION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["source_revision"])' "$LIVE_MANIFEST")
-              if [ "$SOURCE_REVISION" = "$GITHUB_SHA" ]; then
-                echo "Live manifest matches deployment revision $GITHUB_SHA."
-                break
+              if SOURCE_REVISION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["source_revision"])' "$LIVE_MANIFEST" 2>/dev/null); then
+                if [ "$SOURCE_REVISION" = "$GITHUB_SHA" ]; then
+                  echo "Live manifest matches deployment revision $GITHUB_SHA."
+                  break
+                fi
               fi
             fi
             if [ "$attempt" = "12" ]; then
