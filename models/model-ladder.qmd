@@ -1,0 +1,127 @@
+---
+title: "Planar-to-Spatial Model Ladder"
+description: "A bounded protocol for deciding when planar, spatial, closed-chain, or flexible-shaft mechanics are required"
+---
+
+# Planar-to-Spatial Model Ladder
+
+This page defines a comparison protocol for four nested model levels. It asks a
+limited question: *which is the least complex declared level that satisfies a
+particular task metric?* It does not rank entire models with one score.
+
+::: {.callout-warning title="Exploratory Authority"}
+The executable fixtures are analytic and **synthetic; no participant data** are
+used. They test the comparison protocol, not human performance. This work does
+not establish a global fidelity percentage, coaching advice, clinical guidance,
+causal attribution, or population-level conclusions.
+:::
+
+## Frozen Comparison Contract
+
+All levels use a right-handed, pelvis-fixed frame and SI units. The shared state
+starts with club-path angle and rate. Each child appends coordinates while
+preserving the names, units, ordering, initialization, and event convention of
+its parent. The frozen event is the first descending crossing of club-path angle
+through zero radians.
+
+| Level | Included Physics | Omitted Physics | Intended Use |
+|---|---|---|---|
+| Planar rigid | Planar rigid-link kinematics, inertial accounting, generalized loads | Out-of-plane motion, bilateral closure, shaft flexibility | Planar path and energy-accounting checks |
+| Spatial open chain | Three-dimensional rigid-body kinematics and out-of-plane face orientation | Bilateral closure, hand-contact reaction split, shaft flexibility | Three-dimensional face and path checks |
+| Spatial closed chain | Bilateral closure constraints and closed-chain reaction loads | Shaft flexibility and participant-specific tissue dynamics | Closure residual and bilateral load-share checks |
+| Flexible shaft | One declared shaft bending coordinate and shaft strain energy | Higher shaft modes, aerodynamics, and participant-specific tissue dynamics | Shaft deflection and impact-state sensitivity checks |
+
+The protocol revision is `affinedrift.model-ladder/v1`; the manufactured
+parameter revision is `manufactured-analytic-parameters/v1`. Results must label
+every quantity as **measured, estimated, modeled, assumed, or unavailable**.
+The source is MIT licensed. The fixtures contain no personal or capture data.
+
+## Exact Adjacent-Level Fixtures
+
+The parity intervention sets every child-only coordinate to zero. The shared
+manufactured state is `(club_path_angle, club_path_rate) = (0.25 rad,
+-3.0 rad/s)`. Exact prefix projections then produce these regression results:
+
+| Projection | Maximum Shared-Coordinate Residual |
+|---|---:|
+| Spatial open chain to planar rigid | 0 |
+| Spatial closed chain to spatial open chain | 0 |
+| Flexible shaft to spatial closed chain | 0 |
+
+Zero projection residual validates the declared map only. It does not prove
+that the richer physics are negligible in a measured swing.
+
+The manufactured flexible-shaft convergence fixture uses 1, 2, 4, and 8 modal
+terms. Its prescribed impact-speed errors are 0.08, 0.02, 0.005, and 0.00125
+m/s. The exact factor-of-four decrease is an executable regression for the
+protocol; it is not a measured convergence rate for a physical shaft.
+
+## Task-Specific Metrics and Uncertainty
+
+Each level records the same output categories, with metric-specific units and
+an uncertainty interval:
+
+| Output Category | Example Declared Metric | Unit |
+|---|---|---|
+| Conserved quantities and residuals | Absolute energy residual | J |
+| Kinematics | Club-path error | rad |
+| Joint and generalized loads | Generalized-load error | N m |
+| Club face and path | Face-orientation error | rad |
+| Impact state | Impact-speed error | m/s |
+| Runtime | Wall-clock time in a frozen benchmark environment | s |
+| Conditioning | Scaled Jacobian condition number | 1 |
+| Parameter sensitivity | Normalized local sensitivity | 1 |
+
+The analytic fixture supplies deterministic modeled intervals for every
+category except runtime. **Wall-clock runtime is unavailable** until the engine,
+hardware, software revision, warm-up, repeat count, and timing method are frozen.
+Unavailable is a result, not a value to be imputed. A future engine comparison
+must also publish solver tolerances and convergence failures.
+
+## Minimum-Sufficient-Level Guidance
+
+Selection starts at the simplest level and advances only when the entire
+declared uncertainty interval fails the task tolerance or a required output is
+unavailable.
+
+| Task | First Level That Can Qualify in the Manufactured Fixture | When the Simpler Conclusion Fails |
+|---|---|---|
+| Planar club-path error | Planar rigid | The question requires out-of-plane orientation or closure loads |
+| Three-dimensional face orientation | Spatial open chain | A planar model has no declared out-of-plane face coordinate |
+| Bilateral load share | Spatial closed chain | An open chain cannot identify the declared closure reaction split |
+| Shaft deflection at impact | Flexible shaft | A rigid shaft has no declared bending coordinate or strain energy |
+| Participant transfer | None | No governed participant comparison is available |
+
+This is task-specific sufficiency, not proof that a selected model is generally
+accurate. A more complex level may introduce conditioning, parameter, or solver
+uncertainty that outweighs its additional outputs.
+
+## Negative, Null, and Unavailable Results
+
+The executable ledger preserves all four outcomes:
+
+- **Supported:** the complete uncertainty interval meets a declared synthetic
+  task tolerance.
+- **Negative:** the task error exceeds tolerance or required physics are absent.
+- **Null:** the synthetic participant-transfer comparison shows no improvement.
+- **Unavailable:** participant transport and benchmark runtime lack governed
+  evidence.
+
+None of these outcomes may be silently removed when a richer model is added.
+In particular, a null or negative comparison cannot be restated as evidence of
+intent, muscle recruitment, a universally better technique, or a clinical
+effect.
+
+## Next Evidence Gate
+
+The next stage is a governed cross-engine comparison against revision-pinned
+three-dimensional simulation or capture data. Before that stage can change any
+scientific conclusion, it must declare coordinate transformations, calibration,
+participant and trial inclusion, event alignment, task outcomes, uncertainty,
+solver settings, source revisions, privacy and licensing terms, and falsifiers.
+Until those records exist, the current findings remain manufactured protocol
+tests rather than empirical validation.
+
+The executable contract lives in
+`src/affine_control/model_ladder_protocol.py`; exact fixtures live in
+`src/affine_control/model_ladder_fixtures.py`.

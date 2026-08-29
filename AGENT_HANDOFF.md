@@ -10,6 +10,35 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## Planar-to-Spatial-to-Flexible-Shaft Model Ladder (#4034 — PR Pending)
+
+- Branch `feat/4034-model-ladder` starts from protected main
+  `42975df666c38154304652aaa48f856aefd4bd7e`. It adds a validation and
+  minimum-sufficient-level protocol around existing model authority; it does
+  not add a competing dynamics engine or modify immutable UpstreamDrift
+  publication projections.
+- `src/affine_control/model_ladder_protocol.py` freezes four nested levels:
+  planar rigid, spatial open chain, spatial closed chain, and flexible shaft.
+  Each declares shared coordinates, units, frame, parameter revision,
+  initialization, event, included and omitted physics, intended use, and an
+  exact adjacent projection. `model_ladder_fixtures.py` contains only analytic
+  manufactured fixtures.
+- The executable contract covers conserved-quantity residuals, kinematics,
+  generalized loads, club face/path, impact state, runtime, conditioning, and
+  parameter sensitivity with task-specific units, uncertainty, and explicit
+  evidence status. Wall-clock runtime and participant transport are currently
+  unavailable. Negative, null, and unavailable results remain visible.
+- `models/model-ladder.qmd` publishes the bounded interpretation and links from
+  the UpstreamDrift companion hub. It prohibits a global fidelity percentage
+  and any promotion to coaching, clinical, causal, or population authority.
+- RED evidence: `tests/test_model_ladder_protocol.py` initially failed during
+  collection because the protocol module did not exist. Initial GREEN evidence
+  on workstation Python 3.13 is 12/12 focused contracts plus 137/137 existing
+  model-navigation and style contracts; Ruff, Black, and focused source-quality
+  checks pass. Full tests, JavaScript, render, browser, and hosted gates remain
+  to be recorded before protected delivery. Python 3.12 and hosted checks remain
+  protected authorities.
+
 ## ZTCF Intervention Contract (#4016 — Protected PR #4048 Merged)
 
 - Protected merge `443e20a8ecaf1b32b9940b644e0451355e316ea7` owns the

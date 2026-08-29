@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T08:24:35Z
+Last-Updated: 2026-08-29T08:53:11Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T08:24:35Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.246                                          |
+| **Spec Version**        | 1.0.247                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -388,6 +388,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F64 | Revision-bound public-site verification             | ✅     | `scripts/public_site_manifest.py` inventories every deployable HTML route and binds the artifact to its Git revision. `scripts/verify-public-site.js` fails closed on incomplete evidence, unavailable pages, title and heading defects, missing canonical URLs or navigation, wrong theme state, below-fold primary headings, overflow, fixed-chrome overlap, missing alternatives or button names, untypeset visible equations, console/page errors, and required-resource failures. Deployment verifies every route at mobile and desktop widths in both themes, stores representative tablet/desktop screenshots, then repeats the full matrix against the revision-matched live manifest. |
 | F65 | Control-affine scientific-trust contract            | ✅     | The canonical theory series, foundational monograph, and single-file manifesto define affinity relative to a declared input at fixed state; treat state-dependent input gains as affine; describe drift/input as additive rather than orthogonal; and condition attribution on the model, coordinates, parameters, intervention, horizon, and identifiability evidence. A shared rendered boundary and corpus tests reject direct inference of intent, individual-muscle forces, biological effort, or unique real-world causes from algebraic decomposition alone (#4012). |
 | F66 | Generated scientific trust metadata                | ✅     | A strict Draft 2020-12 JSON Schema, canonical claim registry, and deterministic generator publish stable page/claim IDs with review commit, evidence and critique status, scope, uncertainty, limitations, falsifiers, software/data provenance, and next validation gate. Corpus tests require governed-page includes and technical-anchor links, render unknown qualification visibly, and reject accessible-summary amplification of modal strength, causal/universal/exact/optimal/locked-in terms, or unsupported percentages (#4019). |
+| F67 | Nested model-ladder comparison protocol             | ✅     | A versioned AffineDrift protocol freezes planar-rigid, spatial open-chain, spatial closed-chain, and flexible-shaft levels with shared frames, units, parameters, initialization, event definitions, outputs, and exact adjacent projections. Manufactured parity and modal-convergence fixtures validate mappings without duplicating UpstreamDrift engines. Task-specific observations publish uncertainty and measured/estimated/modeled/assumed/unavailable status, preserve negative/null/unavailable outcomes, and select the minimum sufficient level without a global fidelity percentage (#4034). |
 
 ### API / Interface Contract
 
@@ -682,6 +683,18 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.247 Planar-to-Flexible-Shaft Model-Ladder Protocol
+
+Adds a strict four-level comparison and selection protocol around existing
+model authority rather than another dynamics engine. Exact manufactured
+fixtures validate adjacent coordinate projections and a declared modal-error
+sequence. Every level publishes included and omitted physics, intended use,
+shared frames/units/parameters/initialization/events, task-specific output
+metrics, uncertainty, provenance status, and negative/null/unavailable results.
+The public companion guide explains when a simpler level is sufficient and
+when its conclusions fail; governed participant transfer and frozen benchmark
+runtime remain unavailable, and no global fidelity percentage is permitted.
 
 ### 1.0.246 Bounded DCR Reachability and Event-Sensitivity Protocol
 

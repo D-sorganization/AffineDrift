@@ -2,20 +2,23 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
-from src.affine_control.model_ladder_protocol import (
-    COMPARISON_CATEGORIES,
-    LEVEL_IDS,
-    TaskAssessment,
+from src.affine_control.model_ladder_fixtures import (
     adjacent_projection_residuals,
-    build_model_ladder_protocol,
     manufactured_comparison_observations,
     manufactured_convergence_fixture,
     manufactured_parity_fixture,
     manufactured_task_assessments,
+)
+from src.affine_control.model_ladder_protocol import (
+    COMPARISON_CATEGORIES,
+    LEVEL_IDS,
+    TaskAssessment,
+    build_model_ladder_protocol,
     minimum_sufficient_level,
 )
 
@@ -53,6 +56,14 @@ def test_adjacent_projection_maps_have_exact_manufactured_parity() -> None:
         "spatial-closed-chain->spatial-open-chain": 0.0,
         "flexible-shaft->spatial-closed-chain": 0.0,
     }
+
+
+def test_ladder_fails_closed_on_a_reordered_adjacent_projection() -> None:
+    protocol = build_model_ladder_protocol()
+    bad_child = replace(protocol.levels[1], projection_to_parent=(1, 0))
+
+    with pytest.raises(ValueError, match="preserve shared coordinate order"):
+        replace(protocol, levels=(protocol.levels[0], bad_child, *protocol.levels[2:]))
 
 
 def test_flexible_shaft_manufactured_fixture_has_declared_convergence() -> None:
@@ -138,8 +149,8 @@ def test_null_negative_and_unavailable_results_remain_in_the_ledger() -> None:
 
 @pytest.mark.content_lint
 def test_public_model_ladder_declares_contract_limits_and_selection_guidance() -> None:
-    article = ARTICLE.read_text(encoding="utf-8")
-    hub = MODELS_HUB.read_text(encoding="utf-8")
+    article = " ".join(ARTICLE.read_text(encoding="utf-8").split())
+    hub = " ".join(MODELS_HUB.read_text(encoding="utf-8").split())
     required = (
         "Planar-to-Spatial Model Ladder",
         "Included Physics",
