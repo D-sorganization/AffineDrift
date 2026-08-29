@@ -1,0 +1,166 @@
+---
+title: "Research Protocol and Data-Readiness Library"
+description: "A machine-readable, fail-closed lifecycle for the AffineDrift E1–E8 research programs"
+---
+
+The companion's scientific models answer different questions, but they need one
+shared way to say what has actually been demonstrated. This library joins each
+E1–E8 program to its question, estimand, hypotheses, population, intervention or
+exposure, measurements, analysis contract, exact reviewed artifacts, and next
+blocking gate. It is both a reader's map and a programming contract.
+
+::: {.callout-warning title="Scientific Authority Boundary"}
+Every current entry is `simulation-ready` on analytical, modeled, or
+`manufactured-synthetic` evidence. No participant, qualified-device, external
+site, preregistered measured, or independently released result is present. The
+software never authorizes participant collection or claim promotion. This page
+provides **no coaching, clinical, design, causal, or population authority**.
+:::
+
+## What a Readiness State Means
+
+A readiness state means that the validator found all evidence required to enter
+that state at the exact registered revision. It does **not** mean that every
+later gate has been satisfied, that a study is good in general, or that a public
+page is a published result. A protocol page can be publicly readable while its
+research state remains `concept` or `simulation-ready`.
+
+Two hashes serve different purposes:
+
+- `protocol_revision` freezes the scientific specification: question,
+  estimands, hypotheses, population, intervention, measurements, frames, units,
+  calibration plan, dictionary, governance, analysis, uncertainty, falsifiers,
+  deviations, and promotion criteria.
+- `record_revision` also freezes evidence, history, links, rejected attempts,
+  authority boundaries, and current state.
+
+Changing either surface silently makes validation fail. Corrections require a
+new revision; an older program may be marked `superseded` only by an existing,
+acyclic successor record.
+
+## The Complete State and Evidence Ladder
+
+::: {.table-responsive}
+| Target State | Minimum Evidence Gate | What Still Is Not Authorized |
+|---|---|---|
+| `concept` | Stable identity, owner, bounded question, and authority limit | Evidence review, simulation, pilot, or collection |
+| `evidence-reviewed` | Exact source register, estimand, hypotheses, population, falsifiers, and claim/critique disposition | A working analysis or empirical validity |
+| `simulation-ready` | Pinned workflow, frames and units, deterministic synthetic dry run, uncertainty, and adverse/null/unavailable outcomes | Pilot work, participant contact, or empirical promotion |
+| `pilot-ready` | Measurement dictionary, calibration and risk plans, power basis, exclusions, missingness, and deviations | Ethics approval or collection |
+| `ethics-approved` | Participant-scoped ethics, consent, privacy, risk, license, revision, validity, and scope | Data readiness or collection release |
+| `data-ready` | Calibration record, data-management workflow, access controls, dictionary, and licensing | Preregistration or collection |
+| `preregistered` | Immutable registration of estimands, power, exclusions, analysis, uncertainty, falsifiers, deviations, and promotion criteria | Collection without an active external release |
+| `collecting` | Active approvals and an external collection-release record | Software authorization or unregistered analysis |
+| `analysis-locked` | Dataset manifest, checksum, split, code/environment pin, exclusions, and deviation log | Validation or public claim promotion |
+| `validated` | Eligible measured or estimated evidence, locked criteria, uncertainty, sensitivity, subgroup limits, and retained adverse outcomes | Publication without #4042 release evidence |
+| `published` | Verified immutable #4042 release, canonical claim/adjudication update, reviewed route, license, redaction, render, and accessibility evidence | Authority beyond the released claim envelope |
+| `superseded` | Existing successor, rationale, migration map, and a cycle-free relationship | Continued use as the current protocol |
+:::
+
+For `participant_scope=none`, only the validator may allow
+`pilot-ready → data-ready`; it does so because human and animal data are
+forbidden by the record, not because an author typed "not applicable." Human,
+animal, and private-data scopes must pass the applicable ethics gate. Rollbacks,
+skipped participant gates, unknown states, and self-declared approvals fail
+closed.
+
+## Current E1–E8 Program Catalog
+
+{{< include ../_includes/generated/research-readiness-library.qmd >}}
+
+The catalog covers [finite-horizon DCR](../articles/controllability-drift-ratio.qmd),
+[the model ladder](model-ladder.qmd),
+[bilateral hand-wrench identification](bilateral-hand-wrench-validation.qmd),
+[active impedance](active-impedance-identification.qmd),
+[neural timing](neural-timing-feedback.qmd),
+[hybrid impact](hybrid-impact-contact.qmd),
+[population generalization](population-generalization.qmd), and
+[equipment individual response](equipment-individual-response.qmd).
+Each entry resolves the existing reviewed route instead of copying its
+scientific claims or maintaining a competing evidence ledger.
+
+## Worked Example: DCR and Finite-Horizon Reachability
+
+The DCR entry asks when an instantaneous, declared acceleration ratio fails to
+predict bounded event-time reachability. Its primary estimand is the change in
+reachable-set width and event-state sensitivity under a modeled bounded-input
+perturbation. The target is declared analytical and simulated systems—not a
+golfer population.
+
+The concept entered `evidence-reviewed` only after joining the reviewed DCR
+route, claim `ad-dcr-001`, and all five linked critique dispositions. It entered
+`simulation-ready` only after the strict schema and a deterministic dry run
+retained one negative, one null, and one unavailable case. Its attempt to enter
+`pilot-ready` is explicitly rejected because qualified measurement,
+calibration, risk, power, and governance evidence are unavailable.
+
+That result says the workflow can reject malformed promotion. It does not show
+that DCR predicts a real golfer's correction capacity, event outcome, or future
+motion.
+
+## Frames, Units, Calibration, and Data Dictionary
+
+Each protocol must declare every measurement's quantity class—measured,
+estimated, modeled, assumed, analytical, manufactured-synthetic, or
+unavailable—along with its frame, unit, and calibration identifier. A planned
+calibration cannot be presented as verified. The data dictionary is a
+repository-bounded exact-byte artifact; digest drift invalidates both the
+scientific specification and the lifecycle record.
+
+The shared manufactured dictionary includes `protocol_id`, `case_id`,
+`outcome_status`, and `value`. It is sufficient to exercise reporting mechanics
+only. Real programs need protocol-specific variables, traceability,
+synchronization, missingness, access, retention, and release rules before they
+can become `data-ready`.
+
+## Negative, Null, Unavailable, and Rejected Outcomes
+
+Every E1–E8 dry run contains negative, null, and unavailable outcomes. They are
+kept in the generated file and public summary rather than filtered into a
+success-only demonstration. Promotion attempts are append-only records with a
+target, date, evidence IDs, outcome, and rationale. A rejected or revoked
+evidence record cannot satisfy a gate; an unknown evidence ID is an error.
+
+Modeled or manufactured evidence may establish `simulation-ready` mechanics,
+but cannot establish `validated`. That transition requires eligible measured or
+estimated evidence and all intervening locks. This is a deliberate defense
+against turning a successful software fixture into an empirical result.
+
+## Private and Unavailable Evidence
+
+Public evidence carries a repository path and SHA-256 digest. Private or
+unavailable evidence uses an opaque governed-record ID, custodian, scope,
+status, and disclosure boundary; the schema forbids it from carrying a public
+path or digest. The generated public projection excludes evidence custody
+details entirely.
+
+This allows a future ethics or controlled-data record to be acknowledged
+without exposing participant IDs, dataset locations, approval details, or
+private URLs. An opaque record must still have the correct type, status, scope,
+revision, and gate applicability. "Private" is not a shortcut around evidence.
+
+## Add or Revise a Protocol
+
+Start from the schema-valid DCR concept example, replace the scientific
+specification and links, recalculate both revisions with the maintained
+generator, and review the diff. Do not hand-edit generated summaries.
+
+```powershell
+python scripts/generate_research_readiness_library.py
+python scripts/generate_research_readiness_library.py --check
+python -m pytest tests/test_research_protocol_readiness.py
+```
+
+Machine-readable resources:
+
+- [Strict Draft 2020-12 schema](../schemas/research-protocol-readiness-v1.schema.json)
+- [Canonical E1–E8 library](../data/research_protocols/library.json)
+- [Schema-valid concept template](../data/research_protocols/protocol-template.json)
+- [Sanitized public summary](../data/research_protocols/public_summary.json)
+- [Manufactured adverse dry runs](../data/research_protocols/manufactured_dry_runs.json)
+- [Manufactured data dictionary](../data/research_protocols/data_dictionary.json)
+
+Before proposing a state change, update the canonical source, add a RED test for
+the new gate or failure mode, regenerate, run `--check`, and request protected
+review. A `published` result is delegated to issue #4042's immutable release and
+atomic claim-promotion contract; this library cannot mint that authority.

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import cast
 
@@ -376,3 +377,23 @@ def build_manufactured_library(root: Path) -> dict[str, object]:
     ]
     protocols.sort(key=lambda record: str(record["protocol_id"]))
     return {"schema_version": "affinedrift.research-protocol-readiness/v1", "protocols": protocols}
+
+
+def concept_template(library: dict[str, object]) -> dict[str, object]:
+    """Return a schema-valid concept template based on the bounded DCR example."""
+    protocols = cast(list[dict[str, object]], library["protocols"])
+    source = next(
+        record
+        for record in protocols
+        if record["protocol_id"] == "ad-protocol-dcr-perturbation-001"
+    )
+    protocol = deepcopy(source)
+    protocol["title"] = "Concept Template Based on the DCR Perturbation Example"
+    protocol["state"] = "concept"
+    protocol["history"] = []
+    protocol["promotion_attempts"] = []
+    protocol["record_revision"] = record_revision(protocol)
+    return {
+        "schema_version": "affinedrift.research-protocol-readiness/v1",
+        "protocols": [protocol],
+    }

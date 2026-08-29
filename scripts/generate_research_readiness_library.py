@@ -18,6 +18,7 @@ from src.affine_control.research_readiness import (  # noqa: E402  # reason: dir
 )
 from src.affine_control.research_readiness.fixtures import (  # noqa: E402  # reason: direct CLI bootstrap
     build_manufactured_library,
+    concept_template,
     manufactured_dictionary,
     manufactured_dry_runs,
 )
@@ -26,6 +27,7 @@ LIBRARY = ROOT / "data/research_protocols/library.json"
 DICTIONARY = ROOT / "data/research_protocols/data_dictionary.json"
 DRY_RUNS = ROOT / "data/research_protocols/manufactured_dry_runs.json"
 SUMMARY = ROOT / "data/research_protocols/public_summary.json"
+TEMPLATE = ROOT / "data/research_protocols/protocol-template.json"
 PARTIAL = ROOT / "_includes/generated/research-readiness-library.qmd"
 SCHEMA = ROOT / "schemas/research-protocol-readiness-v1.schema.json"
 CLAIMS = ROOT / "data/trust/claim_registry.json"
@@ -89,8 +91,11 @@ def generate(*, check: bool) -> list[Path]:
     library = build_manufactured_library(ROOT)
     validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
     summary = build_public_summary(library)
+    template = concept_template(library)
+    validate_library(template, SCHEMA, CLAIMS, CRITIQUES, ROOT)
     outputs = {
         LIBRARY: _json(library),
+        TEMPLATE: _json(template),
         SUMMARY: _json(summary),
         PARTIAL: _partial(summary),
     }
