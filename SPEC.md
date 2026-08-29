@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T10:48:25Z
+Last-Updated: 2026-08-29T11:06:05Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T10:48:25Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.251                                          |
+| **Spec Version**        | 1.0.252                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -110,6 +110,13 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   uncertainty, sensitivity, load-evidence tiers, and adverse outcomes; keep
   participant analysis gated by ethics, privacy, consent, licensing, and a
   participant-held-out split, with no muscle, coaching, or clinical authority
+- Maintain a source-bounded active-impedance identification protocol that
+  freezes perturbation safety, phase/event windows, endpoint and joint models,
+  one rank tolerance across qualification and fitting, governed EMG channel
+  pairs and CCI formula/normalization, adverse outcomes, uncertainty,
+  reliability, and a prospectively registered held-out analysis plan; keep
+  reflex, passive, voluntary, stiffness, muscle, human, coaching, and clinical
+  claims model-conditioned or unavailable
 - Pin the trajectory-level synthetic point-force sensor qualification by
   immutable upstream commit and hashes; expose allocation error independently
   of net-wrench closure, cross-talk calibration, contact-center migration, and
@@ -399,6 +406,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F68 | Nested model-ladder comparison protocol             | ✅     | A versioned AffineDrift protocol freezes planar-rigid, spatial open-chain, spatial closed-chain, and flexible-shaft levels with shared frames, unique coordinates, units, parameters, initialization, event definitions, outputs, and exact adjacent projections. Manufactured parity and modal-convergence fixtures validate mappings without duplicating UpstreamDrift engines; missing, duplicate, or misaligned fixture states fail closed. Task-specific observations publish uncertainty and measured/estimated/modeled/assumed/unavailable status, reject contradictory or duplicate sufficiency records, preserve negative/null/unavailable outcomes, and select the minimum sufficient level without a global fidelity percentage (#4034). |
 | F69 | Bilateral hand-wrench qualification protocol        | ✅     | A source-bounded protocol extends the immutable UpstreamDrift structural authority with exact total-wrench rank-six/nullity-six, point-force rank-five/nullity-one, and direct bilateral rank-twelve fixtures. Separate DbC records freeze six-axis calibration and cross-talk, bandwidth and Nyquist evidence, lead/trail-to-club transforms, synchronization, inertial compensation, contact assumptions, uncertainty, shaft/grip sensitivity, and total-measured/bilateral-measured/model-estimated/unavailable tiers. Negative, null, and unavailable results remain explicit; the human tier fails closed without ethics, privacy, consent, licensing, and participant-held-out analysis, and no muscle, coaching, or clinical authority is permitted (#4035). |
 | F70 | Site-level scientific trust-surface audit            | ✅     | The homepage and all twelve `/pages/*.html` routes carry a strict, revision-bound audit of claim class, authority, assumptions, uncertainty, falsifiers, audience limits, adversarial counterexamples, findings, and disposition. Stable route and claim-occurrence IDs join the #4019 claim contract and #4020 critique ledger without replacing them. Eleven P1, five P2, and one P3 amplification, authority, support-boundary, or render-integrity defects are corrected; no P0/P1 blocker remains. Availability, validation, experimental work, plans, deprecation, and opinion are explicitly distinct, while the overview pins its UpstreamDrift API/support statement to a protected revision and distinguishes package metadata from tested interpreter minors. Exact SHA-256 evidence verifies every scoped canonical source without Git-history assumptions; exact 13-route scope, deterministic reports, and fail-closed P0/P1 handling are executable contracts (#4063). |
+| F71 | Active impedance identification protocol            | ✅     | A source-bounded synthetic-feasibility protocol freezes perturbation-device safety, zero-anchored phase windows, exact endpoint/joint model cardinality, excitation, bounded relative SVD/lstsq tolerance, uncertainty, reliability, and negative/null/unavailable outcomes. Governed same-side agonist/antagonist records bind exact channel IDs, roles, normalization revision, amplitude-driven CCI formula, within-formula comparison scope, and sensitivity plan. Every result carries a strict origin/provenance record that prevents silent synthetic-to-measured promotion. Human records and a prospectively registered held-out analysis plan establish only non-authorizing external-review readiness; no muscle-force, unique physiological partition, participant, coaching, or clinical authority is permitted (#4036). |
 
 ### API / Interface Contract
 
@@ -700,6 +708,22 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
+### 1.0.252 Active Impedance Identification Protocol
+
+Adds a preregisterable synthetic-feasibility contract for phase-dependent
+effective mechanical impedance and bounded EMG association. Deterministic
+fixtures demonstrate exact phase-specific recovery and a rank-deficient
+stiffness/voluntary-basis counterexample. DbC records freeze perturbation safety,
+zero-anchored response windows, endpoint and joint outputs, one relative
+singular-value tolerance across rank qualification and least squares, governed
+same-side EMG channel pairs, the amplitude-driven CCI family and exact formula,
+normalization, within-formula comparison scope, uncertainty, reliability, and
+adverse-result preservation. Typed external records and a prospectively
+registered held-out analysis plan can make a human package ready for external
+review but never authorize participant collection. The reviewed public route
+prohibits direct cross-index comparison and withholds muscle-force, unique
+reflex/passive/voluntary, coaching, and clinical claims.
+
 ### 1.0.251 Site-Level Scientific Trust-Surface Audit
 
 Reviews the homepage and every top-level page route against primary sources,
@@ -996,6 +1020,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-29 | 1.0.252 | feat(science, #4036): Added the source-bounded active-impedance and governed CCI identification protocol, exact recovery and confounding fixtures, common rank/fit tolerance, typed non-authorizing human readiness, adverse-result preservation, and a reviewed public route without muscle, coaching, or clinical authority.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | 2026-08-29 | 1.0.250 | feat(science, #4035): Added the source-bounded bilateral hand-wrench identifiability and instrumented-grip qualification protocol, deterministic synthetic/manufactured-benchtop fixtures, exact rank and ambiguity controls, measurement/inference tiers, fail-closed human governance, and a reviewed public route while preserving the protected deferred-route partition.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | 2026-08-28 | 1.0.239 | fix(science, #4012): Corrected the canonical control-affine theory sources so Hill-type state-dependent gains and state-only aerodynamics are not misclassified as non-affine; replaced false orthogonality and causal/intent/muscle overreach with a shared model-, intervention-, and identifiability-conditioned attribution boundary; preserved the protected #4013 and #4014 scientific contracts; and added failing-first corpus contracts across the maintained series, foundational monograph, and single-file edition.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | 2026-08-28 | 1.0.241 | fix(content, #4017): Replaced the additive sensorimotor delay budget and open-loop/closed-loop binary with parallel response pathways; distinguished onset timing from task-, phase-, and outcome-specific mechanical authority; bounded golf claims pending perturbation evidence; synchronized the Quarto and LaTeX chapters; added primary long-latency-response citations and a regression contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
