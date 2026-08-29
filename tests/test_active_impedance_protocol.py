@@ -102,7 +102,7 @@ def test_safety_envelope_and_operational_windows_are_complete_and_ordered() -> N
     )
     assert all(
         earlier.end_ms <= later.start_ms
-        for earlier, later in zip(phase.windows, phase.windows[1:], strict=True)
+        for earlier, later in zip(phase.windows, phase.windows[1:], strict=False)
     )
     with pytest.raises(ValueError, match="safety limits"):
         replace(protocol.safety, maximum_torque_nm=0.0)
