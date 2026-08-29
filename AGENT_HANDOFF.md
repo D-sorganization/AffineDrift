@@ -44,9 +44,18 @@ This is current operational state. Historical detail belongs in git/GitHub.
   not exist. Content GREEN exposed and corrected a notebook-bridge regression
   before reconciliation; a new contract verifies all 43 canonical manuscript
   chapter source links while preserving 40 scaffolded notebook anchors.
-  Reconciled focused GREEN is 44/44 audit/inventory/site-audit/active-impedance
-  tests. Before the final PR, rerun full exact-head suites plus isolated render
-  and desktop/mobile browser verification.
+  Reconciled focused GREEN is 45/45 audit/inventory/site-audit/active-impedance
+  tests. Quarto 1.8.26 renders all six routes from the exact reconciled content
+  revision in a detached worktree. The 24-cell mobile 390 x 844 and desktop
+  1440 x 900, light/dark browser matrix has zero content failures: every route
+  has one visible H1, main/navigation landmarks, named controls, image
+  alternatives, contained tables, rendered equations, no page overflow, and
+  no empty anchors. Six isolated settled route loads have zero console errors
+  or warnings. Rapid preview navigation initially exposed stale localhost
+  service-worker chrome and transient view-transition snapshots; a fresh
+  static-server origin and isolated loads confirmed this was test-environment
+  state, not retained page overlap. No screenshots or generated render output
+  are committed.
 
 ## Active Impedance and Co-Contraction Identification (#4036 — In Progress)
 

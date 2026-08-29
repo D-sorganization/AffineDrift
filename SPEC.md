@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T11:42:15Z
+Last-Updated: 2026-08-29T12:04:30Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -723,7 +723,11 @@ The roadmap removes unmeasured time and mastery claims, stale chapter counts,
 completion language, and prerequisite waivers. Six P1 findings are corrected;
 the v1.1 inventory records canonical sources, recursive includes, and exact
 review and finding digests. The global inventory now contains 23 reviewed, 200
-deferred, and 2 exempt routes.
+deferred, and 2 exempt routes. A detached Quarto 1.8.26 render plus a 24-cell
+mobile/desktop, light/dark browser matrix verifies one primary heading,
+landmarks, accessible names, contained tables, equation rendering, route
+integrity, and zero isolated-route console errors without committing generated
+site output.
 
 ### 1.0.252 Active Impedance Identification Protocol
 

@@ -21,6 +21,7 @@ AUDIT = ROOT / "data/trust/book_publication_audit.json"
 SCHEMA = ROOT / "schemas/book-publication-audit-v1.schema.json"
 INVENTORY = ROOT / "data/trust/claim_audit_inventory.json"
 REPORT = ROOT / "reports/book-publication-audit.md"
+BROWSER_QA = ROOT / "reports/book-publication-browser-qa.json"
 
 SCOPED_SOURCES = {
     "/books/biomechanics-biology-to-systems.html": "books/biomechanics-biology-to-systems.qmd",
@@ -172,3 +173,31 @@ def test_report_is_deterministic_and_current(tmp_path: Path) -> None:
     output = tmp_path / "book-audit.md"
     generate_report(AUDIT, SCHEMA, output, ROOT)
     assert output.read_text(encoding="utf-8") == REPORT.read_text(encoding="utf-8")
+
+
+def test_browser_qa_covers_every_route_viewport_and_theme() -> None:
+    evidence = _json(BROWSER_QA)
+    assert evidence["schema_version"] == "affinedrift/book-publication-browser-qa/v1"
+    assert evidence["issue_url"].endswith("/issues/4062")
+    assert evidence["source_revision"] == "8680f12c627c0a5ee10f57710d8316f7c433c463"
+    assert evidence["routes"] == list(SCOPED_SOURCES)
+    assert evidence["render"] == {
+        "generated_output_committed": False,
+        "quarto_version": "1.8.26",
+        "source_route_count": 6,
+        "status": "passed",
+    }
+    assert evidence["viewports"] == [
+        {"height": 844, "id": "mobile", "width": 390},
+        {"height": 900, "id": "desktop", "width": 1440},
+    ]
+    assert evidence["themes"] == ["light", "dark"]
+
+    verification = evidence["automated_verification"]
+    assert verification["evidence_items"] == 24
+    assert verification["routes_verified"] == 6
+    assert verification["failures"] == 0
+    assert verification["isolated_route_console_errors"] == 0
+    assert verification["isolated_route_console_warnings"] == 0
+    assert evidence["interactive_browser_review"]["routes_reviewed"] == 6
+    assert evidence["interactive_browser_review"]["temporary_screenshots_retained"] is False
