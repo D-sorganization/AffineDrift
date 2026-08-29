@@ -10,10 +10,34 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## DCR Reachability Correction (#4013 — PR #4044 Open)
+## ZTCF Intervention Contract (#4016 — PR Pending)
 
-- Ready, non-draft PR #4044 from branch `feat/4013-dcr-reachability` owns the
-  article correction, analytic
+- Lease: `codex-20260828-affine-a5`, expiring 2026-08-29T14:44:17Z; issue
+  comment `#issuecomment-5460882100` records the exact claim.
+- `data/ztcf/ztcf_intervention_v1.schema.json` is the normative public record;
+  `data/ztcf/planar_golf_forward_fixture_v1.json` pins the sole supported golden
+  result to protected source `524c28926f364631ed06b15be9c6fdf440acce64`.
+- `src/affine_control/ztcf_contract.py` executes only the registered planar
+  Python adapter. Unavailable or engine-unsupported records fail closed;
+  MATLAB, Simulink, and cross-engine parity remain explicitly unavailable.
+- Canonical and paired Physics of Golf sources distinguish simulated trajectory
+  difference, contribution measure, causal estimand, and physiological
+  interpretation. A successful replay does not identify muscle, effort, intent,
+  human strategy, model adequacy, or finite-horizon reachability.
+- RED/GREEN evidence: collection initially failed on the absent contract
+  module. The final focused contract passes 7 tests; 133 adjacent tests pass;
+  the `content_lint` lane passes 66 tests with 4 documented skips; and the full
+  Python 3.13 suite passes 3,331 tests with 30 documented skips. Ruff, Black,
+  focused strict mypy, and diff checks pass. Quarto 1.8.26 renders both QMD
+  sources; direct `pdflatex` compiles the 605-page paired book; the normative
+  contract was inspected at desktop and mobile HTML viewports and on PDF page
+  67 without clipping or unreadable content. Python 3.12 remains the protected
+  lane authority.
+
+## DCR Reachability Correction (#4013 — Protected PR #4044 Merged)
+
+- Protected merge `524c28926f364631ed06b15be9c6fdf440acce64` owns the article
+  correction, analytic
   counterexample in `src/affine_control/reachability.py`, and corpus regression
   in `tests/test_dcr_reachability_contract.py`.
 - DCR is a declared magnitude ratio, not a controllability or finite-horizon

@@ -1,0 +1,114 @@
+{
+  "schema_version": "affinedrift.ztcf-intervention/v1",
+  "intervention_id": "ztcf-planar-golf-python-forward-v1",
+  "status": "available",
+  "construction": "forward",
+  "model": {
+    "id": "affinedrift.planar-golf",
+    "version": "1.0",
+    "source_revision": "524c28926f364631ed06b15be9c6fdf440acce64",
+    "engine": "affinedrift-python",
+    "engine_version": "GolfModel.ztcf_trajectory/v1",
+    "parameters": {
+      "masses": [10.0, 5.0, 0.81],
+      "lengths": [0.3, 0.35, 1.15],
+      "inertias": [0.25, 0.08, 0.089],
+      "shaft_mass": 0.3,
+      "modal_frequencies": [40.0, 120.0],
+      "com_fractions": [0.5, 0.5, 0.5]
+    }
+  },
+  "state": {
+    "coordinates": ["q1", "q2", "q3", "qd1", "qd2", "qd3"],
+    "frame": "right-handed planar inertial frame; relative joint angles",
+    "position_units": "rad",
+    "velocity_units": "rad/s",
+    "q": [0.2, -0.4, 0.6],
+    "qd": [2.0, -1.0, 3.0]
+  },
+  "zeroed_input": {
+    "name": "declared joint-torque vector",
+    "physical_level": "applied_generalized_torque",
+    "channels": ["shoulder", "elbow", "wrist"],
+    "units": "N*m",
+    "values": [0.0, 0.0, 0.0]
+  },
+  "retained": {
+    "controls": [],
+    "constraints": ["serial three-link planar relative-angle kinematics"],
+    "contact": "none",
+    "loads": ["uniform gravity at 9.81 m/s^2"],
+    "internal_states": [
+      "shaft inertia retained through the articulated-body mass matrix",
+      "no flexible modal state is integrated by this engine"
+    ],
+    "parameters": "all values are held at the model record above"
+  },
+  "integration": {
+    "start_time": 0.0,
+    "end_time": 0.01,
+    "time_units": "s",
+    "solver": "fixed-step RK4",
+    "solver_version": "GolfModel.ztcf_trajectory/v1",
+    "steps": 10,
+    "absolute_tolerance": 1e-11
+  },
+  "expected": {
+    "time": 0.01,
+    "q": [0.2184078900824315, -0.40823693140190215, 0.6294104732250332],
+    "qd": [1.6823945101226174, -0.650410122176964, 2.885420160696207],
+    "clubhead_speed": 5.299293488800635,
+    "frame": "right-handed planar inertial frame; relative joint angles",
+    "position_units": "rad",
+    "velocity_units": "rad/s",
+    "speed_units": "m/s"
+  },
+  "interpretation": {
+    "simulated_trajectory_difference": "Not estimated by this one-branch replay fixture.",
+    "contribution_measure": "No contribution fraction is identified; the fixture verifies deterministic rollout only.",
+    "causal_estimand": "Terminal-state response to zeroing the declared torque channel within this exact model.",
+    "physiological_interpretation": "Unavailable; generalized-torque removal does not identify muscle activation, force, effort, or intent.",
+    "non_identifiability": [
+      "individual muscle forces",
+      "co-contraction and impedance cost",
+      "unmodeled loads or contact changes",
+      "human strategy or coaching outcome"
+    ]
+  },
+  "parity": {
+    "status": "not_claimed",
+    "engines": ["affinedrift-python"],
+    "tolerance": null,
+    "note": "No second supported engine and no cross-engine parity result are registered."
+  },
+  "failure": null,
+  "preconditions": [
+    "the model, source revision, parameters, coordinates, frame, and branch state resolve",
+    "the declared torque channel is the only intervention and is set to exactly zero",
+    "the retained load, constraint, contact, and internal-state inventory matches the record",
+    "the registered Python engine and solver version are available"
+  ],
+  "postconditions": [
+    "the terminal result is expressed in the declared frame and units",
+    "the rollout begins from the registered state and ends at the registered horizon",
+    "no physiological or cross-engine interpretation is inferred from fixture replay"
+  ],
+  "failure_states": [
+    {
+      "code": "invalid_contract",
+      "message": "A required model, intervention, state, unit, frame, horizon, or interpretation field is invalid."
+    },
+    {
+      "code": "engine_unavailable",
+      "message": "The declared execution engine or version is not installed."
+    },
+    {
+      "code": "engine_unsupported",
+      "message": "AffineDrift has no registered adapter for the declared engine or algorithm."
+    },
+    {
+      "code": "numerical_failure",
+      "message": "The declared solver cannot produce a finite terminal state at the registered tolerance."
+    }
+  ]
+}

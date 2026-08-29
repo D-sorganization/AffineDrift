@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T06:19:06Z
+Last-Updated: 2026-08-29T07:11:58Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T06:19:06Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.238                                          |
+| **Spec Version**        | 1.0.240                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -54,6 +54,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   torque distinct from power, work, energy, tissue load, physiological effort,
   and outcome; net generalized input must not be presented as identified
   individual-muscle force, bilateral hand-force allocation, or neural intent
+- Require every executable or quantitative ZTCF result to carry a versioned,
+  fail-closed intervention record that freezes model and engine authority,
+  branch state, zeroed inputs, retained dynamics, frame, units, solver, horizon,
+  interpretation boundaries, and failure states
 - Publish an accessible, evidence-linked companion to the proximal--distal technical treatment, with original visual explanations and explicit model, human-evidence, and hypothesis boundaries
 - Pin the complete canonical proximal--distal claim audit by exact upstream
   merge and hashes, expose its reviewed/unadjudicated counts, and preserve
@@ -651,6 +655,18 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.240 ZTCF Intervention Contract
+
+Adds `affinedrift.ztcf-intervention/v1`, a public JSON schema, and a deterministic
+golden fixture for the repository's supported planar Python rollout. The
+executable contract rejects unavailable and engine-unsupported interventions
+without substituting results and withholds cross-engine parity unless two
+registered implementations, a metric, and tolerance exist. Canonical and paired
+textbook sources now separate simulated trajectory difference, contribution
+measure, causal estimand, and physiological interpretation; each states the
+non-identifiability boundary and preserves the protected #4013 reachability and
+#4014 mechanical-attribution authorities.
 
 ### 1.0.238 Scientific Repair Program Reconciliation
 

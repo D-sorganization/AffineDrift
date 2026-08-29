@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/data/ztcf/ztcf_intervention_v1.schema.json",
+  "title": "AffineDrift ZTCF Intervention v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "intervention_id",
+    "status",
+    "construction",
+    "model",
+    "state",
+    "zeroed_input",
+    "retained",
+    "integration",
+    "expected",
+    "interpretation",
+    "parity",
+    "failure",
+    "preconditions",
+    "postconditions",
+    "failure_states"
+  ],
+  "properties": {
+    "schema_version": { "const": "affinedrift.ztcf-intervention/v1" },
+    "intervention_id": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["available", "unavailable"] },
+    "construction": { "const": "forward" },
+    "model": { "$ref": "#/$defs/model" },
+    "state": { "$ref": "#/$defs/state" },
+    "zeroed_input": { "$ref": "#/$defs/zeroed_input" },
+    "retained": { "$ref": "#/$defs/retained" },
+    "integration": { "$ref": "#/$defs/integration" },
+    "expected": {
+      "anyOf": [{ "$ref": "#/$defs/terminal_state" }, { "type": "null" }]
+    },
+    "interpretation": { "$ref": "#/$defs/interpretation" },
+    "parity": { "$ref": "#/$defs/parity" },
+    "failure": {
+      "anyOf": [{ "$ref": "#/$defs/failure" }, { "type": "null" }]
+    },
+    "preconditions": { "$ref": "#/$defs/nonempty_strings" },
+    "postconditions": { "$ref": "#/$defs/nonempty_strings" },
+    "failure_states": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/failure" }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "available" } } },
+      "then": {
+        "properties": {
+          "expected": { "$ref": "#/$defs/terminal_state" },
+          "failure": { "type": "null" }
+        }
+      },
+      "else": {
+        "properties": {
+          "expected": { "type": "null" },
+          "failure": { "$ref": "#/$defs/failure" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "number_triplet": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "number" }
+    },
+    "string_triplet": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "nonempty_strings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "masses",
+        "lengths",
+        "inertias",
+        "shaft_mass",
+        "modal_frequencies",
+        "com_fractions"
+      ],
+      "properties": {
+        "masses": { "$ref": "#/$defs/number_triplet" },
+        "lengths": { "$ref": "#/$defs/number_triplet" },
+        "inertias": { "$ref": "#/$defs/number_triplet" },
+        "shaft_mass": { "type": "number", "exclusiveMinimum": 0 },
+        "modal_frequencies": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "number" }
+        },
+        "com_fractions": { "$ref": "#/$defs/number_triplet" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "source_revision",
+        "engine",
+        "engine_version",
+        "parameters"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "source_revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "engine": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "parameters": { "$ref": "#/$defs/parameters" }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coordinates",
+        "frame",
+        "position_units",
+        "velocity_units",
+        "q",
+        "qd"
+      ],
+      "properties": {
+        "coordinates": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "frame": { "type": "string", "minLength": 1 },
+        "position_units": { "const": "rad" },
+        "velocity_units": { "const": "rad/s" },
+        "q": { "$ref": "#/$defs/number_triplet" },
+        "qd": { "$ref": "#/$defs/number_triplet" }
+      }
+    },
+    "zeroed_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "physical_level", "channels", "units", "values"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "physical_level": { "const": "applied_generalized_torque" },
+        "channels": { "$ref": "#/$defs/string_triplet" },
+        "units": { "const": "N*m" },
+        "values": {
+          "type": "array",
+          "prefixItems": [{ "const": 0 }, { "const": 0 }, { "const": 0 }],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    },
+    "retained": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "controls",
+        "constraints",
+        "contact",
+        "loads",
+        "internal_states",
+        "parameters"
+      ],
+      "properties": {
+        "controls": { "type": "array", "items": { "type": "string" } },
+        "constraints": { "type": "array", "items": { "type": "string" } },
+        "contact": { "type": "string", "minLength": 1 },
+        "loads": { "type": "array", "items": { "type": "string" } },
+        "internal_states": { "type": "array", "items": { "type": "string" } },
+        "parameters": { "type": "string", "minLength": 1 }
+      }
+    },
+    "integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_time",
+        "end_time",
+        "time_units",
+        "solver",
+        "solver_version",
+        "steps",
+        "absolute_tolerance"
+      ],
+      "properties": {
+        "start_time": { "type": "number" },
+        "end_time": { "type": "number" },
+        "time_units": { "const": "s" },
+        "solver": { "const": "fixed-step RK4" },
+        "solver_version": { "type": "string", "minLength": 1 },
+        "steps": { "type": "integer", "minimum": 1 },
+        "absolute_tolerance": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "terminal_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time",
+        "q",
+        "qd",
+        "clubhead_speed",
+        "frame",
+        "position_units",
+        "velocity_units",
+        "speed_units"
+      ],
+      "properties": {
+        "time": { "type": "number" },
+        "q": { "$ref": "#/$defs/number_triplet" },
+        "qd": { "$ref": "#/$defs/number_triplet" },
+        "clubhead_speed": { "type": "number" },
+        "frame": { "type": "string", "minLength": 1 },
+        "position_units": { "const": "rad" },
+        "velocity_units": { "const": "rad/s" },
+        "speed_units": { "const": "m/s" }
+      }
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "simulated_trajectory_difference",
+        "contribution_measure",
+        "causal_estimand",
+        "physiological_interpretation",
+        "non_identifiability"
+      ],
+      "properties": {
+        "simulated_trajectory_difference": { "type": "string", "minLength": 1 },
+        "contribution_measure": { "type": "string", "minLength": 1 },
+        "causal_estimand": { "type": "string", "minLength": 1 },
+        "physiological_interpretation": { "type": "string", "minLength": 1 },
+        "non_identifiability": { "$ref": "#/$defs/nonempty_strings" }
+      }
+    },
+    "parity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "engines", "tolerance", "note"],
+      "properties": {
+        "status": { "enum": ["not_claimed", "verified"] },
+        "engines": { "$ref": "#/$defs/nonempty_strings" },
+        "tolerance": { "type": ["number", "null"] },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "invalid_contract",
+            "engine_unavailable",
+            "engine_unsupported",
+            "numerical_failure"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
