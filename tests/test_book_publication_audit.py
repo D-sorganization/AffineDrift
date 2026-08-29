@@ -106,6 +106,24 @@ def test_publication_state_chapter_coverage_and_notebook_limits_are_explicit() -
     assert "interplay of biology and dynamics of nonlinear systems" in human.lower()
 
 
+def test_every_canonical_substantive_chapter_is_linked_from_its_volume_route() -> None:
+    volumes = {
+        "I": (ROOT / "books/tangent-space-methods.qmd", 10),
+        "II": (ROOT / "books/control-is-motion.qmd", 11),
+        "III": (ROOT / "books/biomechanics-biology-to-systems.qmd", 10),
+        "IV": (ROOT / "books/human-motor-control.qmd", 12),
+    }
+    for volume, (route_path, expected_count) in volumes.items():
+        main = ROOT / f"articles/The_Geometry_of_Motion/Volume_{volume}/main.tex"
+        chapter_stems = re.findall(
+            r"\\include\{chapters/(ch[^}]+)\}", main.read_text(encoding="utf-8")
+        )
+        assert len(chapter_stems) == expected_count
+        route = route_path.read_text(encoding="utf-8")
+        for stem in chapter_stems:
+            assert f"/{stem}.tex" in route, f"Volume {volume} omits {stem}"
+
+
 def test_roadmap_rejects_unmeasured_completion_and_time_claims() -> None:
     text = (ROOT / "books/roadmap.qmd").read_text(encoding="utf-8")
     forbidden = [
