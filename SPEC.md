@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T06:31:35Z
+Last-Updated: 2026-08-29T07:12:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T06:31:35Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.239                                          |
+| **Spec Version**        | 1.0.241                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -50,6 +50,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Maintain opt-in performance benchmarks for stable computational paths without slowing routine CI
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
+- Present planar models as declared pedagogical or model-ladder members; do
+  not publish quantitative 2-D-to-3-D fidelity percentages without a governed
+  comparison that declares the dataset, cohort, coordinates, phase window,
+  metric, task outcome, and uncertainty
 - Maintain a tested mechanical-claim contract that keeps pointwise generalized
   torque distinct from power, work, energy, tissue load, physiological effort,
   and outcome; net generalized input must not be presented as identified
@@ -357,6 +361,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F62 | Ground-reaction drift publication                   | ✅     | The proximal-to-distal article and Physics of Golf GRF chapter define a frame-explicit constrained-reaction split, overlapping pointwise reaction ZTCF/ZVCF diagnostics, rank/identifiability boundaries, model-internal fixed-support results, and a participant-held-out force-plate falsification protocol. Regression tests prohibit universal contact-work claims, unique torque or bilateral inference, and one-template GRF prescriptions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | F63 | Physics of Golf LuaLaTeX contract                   | ✅     | The Physics of Golf PDF build uses `unicode-math`-compatible bold symbols, provides its shared source-level math macros in the PDF preamble, and keeps display equations valid for LuaLaTeX arrays and subscripts. Focused source-contract tests guard the failure modes exposed by a complete book render.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | F64 | Revision-bound public-site verification             | ✅     | `scripts/public_site_manifest.py` inventories every deployable HTML route and binds the artifact to its Git revision. `scripts/verify-public-site.js` fails closed on incomplete evidence, unavailable pages, title and heading defects, missing canonical URLs or navigation, wrong theme state, below-fold primary headings, overflow, fixed-chrome overlap, missing alternatives or button names, untypeset visible equations, console/page errors, and required-resource failures. Deployment verifies every route at mobile and desktop widths in both themes, stores representative tablet/desktop screenshots, then repeats the full matrix against the revision-matched live manifest. |
+| F65 | Control-affine scientific-trust contract            | ✅     | The canonical theory series, foundational monograph, and single-file manifesto define affinity relative to a declared input at fixed state; treat state-dependent input gains as affine; describe drift/input as additive rather than orthogonal; and condition attribution on the model, coordinates, parameters, intervention, horizon, and identifiability evidence. A shared rendered boundary and corpus tests reject direct inference of intent, individual-muscle forces, biological effort, or unique real-world causes from algebraic decomposition alone (#4012). |
 
 ### API / Interface Contract
 
@@ -652,7 +657,7 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
-### 1.0.239 Sensorimotor Pathway and Response-Authority Contract
+### 1.0.241 Sensorimotor Pathway and Response-Authority Contract
 
 Replaces the serial delay sum and binary feedforward-versus-feedback account in
 the motor-control chapters with parallel short-latency, long-latency,
@@ -660,6 +665,23 @@ voluntary, and visually guided pathway bands. The Quarto and LaTeX editions now
 separate response onset from useful mechanical authority, make golf-specific
 pathway claims conditional on phase-locked perturbation evidence, and retain a
 failing-first content contract plus primary neuroscience citations.
+
+### 1.0.240 Control-Affinity Program Reconciliation
+
+Preserves the protected #4013 finite-horizon DCR reachability, #4014
+mechanical-claim, and #4015 planar-spatial scope contracts while adding #4012's
+control-affinity, non-orthogonality, and model-conditioned attribution boundary.
+The four programs retain their separate regression contracts and scientific
+limits.
+
+### 1.0.239 Planar-Spatial Scope Integration
+
+Preserves the protected #4014 mechanical-attribution and #4013 DCR-reachability
+contracts while integrating #4015's planar-model scope boundary. Quantitative
+2-D-to-3-D fidelity claims remain unavailable until a governed comparison
+declares the dataset, cohort, coordinate definitions, phase window, metric,
+task outcome, and uncertainty. All three scientific-repair contracts remain
+independently regression protected.
 
 ### 1.0.238 Scientific Repair Program Reconciliation
 
@@ -794,7 +816,8 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-08-28 | 1.0.239 | fix(content, #4017): Replaced the additive sensorimotor delay budget and open-loop/closed-loop binary with parallel response pathways; distinguished onset timing from task-, phase-, and outcome-specific mechanical authority; bounded golf claims pending perturbation evidence; synchronized the Quarto and LaTeX chapters; added primary long-latency-response citations and a regression contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| 2026-08-28 | 1.0.239 | fix(science, #4012): Corrected the canonical control-affine theory sources so Hill-type state-dependent gains and state-only aerodynamics are not misclassified as non-affine; replaced false orthogonality and causal/intent/muscle overreach with a shared model-, intervention-, and identifiability-conditioned attribution boundary; preserved the protected #4013 and #4014 scientific contracts; and added failing-first corpus contracts across the maintained series, foundational monograph, and single-file edition.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| 2026-08-28 | 1.0.241 | fix(content, #4017): Replaced the additive sensorimotor delay budget and open-loop/closed-loop binary with parallel response pathways; distinguished onset timing from task-, phase-, and outcome-specific mechanical authority; bounded golf claims pending perturbation evidence; synchronized the Quarto and LaTeX chapters; added primary long-latency-response citations and a regression contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 2026-08-28 | 1.0.236 | fix(deploy): Targeted the Pages-configured `www.affinedrift.com` host directly for hosted post-deployment verification instead of traversing the cacheable apex redirect. Exact source-revision equality and the full live every-page browser gate remain fail-closed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-08-28 | 1.0.235 | fix(deploy): Extended the bounded Pages manifest propagation window from two minutes to ten minutes after exact-merge deployments repeatedly required slightly more than two minutes to appear through the custom domain. Exact source-revision equality and the full live every-page browser gate remain fail-closed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-08-28 | 1.0.234 | fix(deploy): Made live revision polling tolerate transient non-JSON Pages propagation responses within its existing bounded retry loop. Exact source-revision equality and the full live every-page browser gate remain fail-closed. Added a regression contract after deployment run 33226528683 exposed the premature Bash error exit.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |

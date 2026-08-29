@@ -43,12 +43,14 @@ The Drifter Manifesto establishes the control-affine framework, introduces key c
 
 ::: {.callout-note}
 #### Scope & Exclusions
-This model captures the mechanical structure of coupled rigid bodies (golfer's limbs and torso) and a flexible shaft connected at the grip. It includes inertia, gravity, elastic and damping forces from shaft bending, and joint torques as control inputs. It explicitly excludes aerodynamic drag, ground reaction forces, marker dynamics, muscle activation delays, and impacts. What is included can be mathematically decomposed into passive and active components; what is excluded lies outside the model's scope and should not be attributed to the decomposition.
+This model captures the mechanical structure of coupled rigid bodies (golfer's limbs and torso) and a flexible shaft connected at the grip. It includes inertia, gravity, elastic and damping forces from shaft bending, and joint torques as declared inputs. It explicitly excludes aerodynamic drag, ground reaction forces, marker dynamics, muscle activation delays, and impacts. Terms retained in the chosen equations can be separated into autonomous and declared-input components; what is excluded lies outside the model's scope and must not be attributed by the decomposition.
 :::
 
-The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate generalized joint torques and hand forces from motion capture and external force measurements, but it cannot distinguish how much of those forces arise from the golfer's active muscular effort versus passive mechanical dynamics such as inertia, gravity, and shaft deformation. This paper develops a strictly theoretical framework that models the golfer--club--shaft system as a nonlinear control-affine mechanical system and uses that structure to decompose forces into drift (passive) and input (torque-driven) components. We define the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as mathematical tools for isolating passive dynamics and torque effectiveness, and we derive a force taxonomy that classifies measured forces by their causal origin within the model. Applications and empirical validation will be presented in subsequent simulation and experimental papers.
+{{< include ../_includes/control-affine-attribution-boundary.qmd >}}
 
-Before we write a single equation, let's ask a simple question: when a golfer swings a club, how much of the resulting motion was *inevitable*—dictated by momentum, gravity, and the elastic whip of the shaft—and how much was *chosen* by the golfer's muscles? Stand at a range and watch a golfer in slow motion. The acceleration late in the downswing is violent, almost automatic. Is the golfer *doing* this, or is the club *falling* through this motion, carried by its own inertia? And if some of it is inevitable, which parts are chosen? This is the question that drives everything that follows. Physics tells us the swing is governed by equations of motion; those equations have a hidden structure that will let us answer it precisely.
+The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate net generalized loads consistent with motion and external-force measurements, but it does not identify individual-muscle forces, neural intent, or a unique real-world cause. This paper develops a strictly theoretical control-affine model and separates its instantaneous vector field into autonomous (drift) and declared-input terms. The ZTCF, ZVCF, and force taxonomy are model-conditioned diagnostics; empirical interpretation requires parameter identification, qualifying measurements, and validation.
+
+Before writing equations, we ask a bounded question: at a specified model state, how much instantaneous evolution is assigned to the autonomous term, and how much to the declared torque input channel? This is mathematical bookkeeping inside a chosen mechanical model, not a direct reading of what the golfer intended or which muscles produced the motion.
 
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
@@ -66,10 +68,10 @@ Before we write a single equation, let's ask a simple question: when a golfer sw
       <div class="laymans-item">
         <h3>The Core Question</h3>
         <p>
-          When watching a golf swing in slow motion, you see the club moving incredibly fast. But here's the puzzle: how much of that movement is the golfer actively creating, and how much is just physics (momentum, gravity) doing its thing?
+          At a specified state in the model, how much instantaneous motion is assigned to the autonomous dynamics, and how much is assigned to the declared input channel?
         </p>
         <div class="analogy">
-          Imagine you're on a skateboard going downhill. Part of your speed comes from you pushing (active effort), and part comes from gravity pulling you down (passive physics). This article builds the math to separate these two in a golf swing.
+          Imagine a skateboard model with gravity and a declared push force. The equations can report the term contributed by each channel at the same state, but that report does not measure the rider's intent, muscles, or biological effort.
         </div>
       </div>
 
@@ -79,7 +81,7 @@ Before we write a single equation, let's ask a simple question: when a golfer sw
           The "state" is a complete snapshot of the golfer-club system at any moment—it includes where every joint is positioned and how fast everything is moving. Think of it as pausing a video and noting every detail about the pose and motion.
         </p>
         <div class="key-takeaway">
-          If you know the current state and all future muscle efforts, you can predict exactly how the swing will unfold. The state contains all the "memory" of the swing so far.
+          Given the current state, model parameters, and future declared inputs, the model predicts a trajectory. The state contains the model's represented "memory"; omitted biological states remain outside that prediction.
         </div>
       </div>
 
@@ -131,7 +133,7 @@ Before we write a single equation, let's ask a simple question: when a golfer sw
           Critics suggest that emphasizing the "Drift" component implies that the resulting motion is "free" energy. However, the golfer must expend significant effort early in the swing to <em>create</em> the kinematic state where drift becomes dominant. By separating "Drift" from "Input" at the moment of release, the analysis might undervalue the active work done to set up the passive dynamics.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> This is a crucial distinction. The decomposition does not claim drift is "free" in a metabolic sense; it claims it is "passive" in a <em>causal</em> sense at the moment of analysis. The golfer's skill lies precisely in <em>actively</em> positioning the system (the setup) so that the <em>passive</em> drift field naturally generates the desired high-speed release. The framework highlights this "effort-to-ease" transition, rather than obscuring it.
+          <strong>Our Response:</strong> The decomposition does not claim drift is free or passive in a physiological sense. It labels the autonomous term of the declared effective plant at the selected state. Work, metabolic effort, and the history that produced that state require separate calculations and measurements.
         </div>
       </div>
 
@@ -144,7 +146,7 @@ Before we write a single equation, let's ask a simple question: when a golfer sw
           Why introduce the complexity of affine control theory and Lie brackets? Standard inverse dynamics already calculates the net moments required for a motion. Critics argue that decomposing these moments into $f(x)$ and $G(x)u$ adds mathematical overhead without changing the fundamental physics of $F=ma$.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> Standard inverse dynamics provides the <em>sum</em> of forces required, but it is causally ambiguous: it cannot distinguish between a force required to <em>overcome</em> inertia and a force required to <em>exploit</em> it. The affine structure is the only mathematical framework that rigorously separates the system's "Inertial Memory" (Drift) from the player's "Current Agency" (Input). Without this separation, we cannot formulate the counterfactuals (e.g., "What if I stopped pushing?") that are essential for understanding control strategy.
+          <strong>Our Response:</strong> Standard inverse dynamics provides the net generalized load consistent with a motion. A control-affine formulation adds reproducible bookkeeping: it separates the model's state-dependent autonomous term from its declared torque input term. That structure makes a precisely specified zero-input intervention well-posed, but physiological attribution still requires additional models, measurements, and identifiability evidence.
         </div>
       </div>
 
@@ -159,20 +161,20 @@ Before we write a single equation, let's ask a simple question: when a golfer sw
 
 #### Introduction
 
-Traditional biomechanical analyses of the golf swing rely heavily on inverse dynamics to estimate generalized joint torques and hand forces from measured kinematics and external forces. While inverse dynamics provides the *total* generalized forces consistent with a given motion, it does not reveal the causal structure of those forces---specifically, how much arises from the golfer's active muscular effort versus how much is generated passively by inertia, gravity, elastic shaft deformation, and motion history.
+Traditional biomechanical analyses of the golf swing rely heavily on inverse dynamics to estimate generalized joint torques and hand forces from measured kinematics and external forces. Inverse dynamics provides net generalized loads consistent with the declared model and measurements; it does not by itself identify individual-muscle forces, intent, or biological effort.
 
-This distinction is fundamental. Passive forces (drift) can be large---even dominant---during rapid phases of the swing, meaning that inverse-dynamics forces are often misinterpreted as indicators of muscular effort. Without a principled decomposition, it is impossible to determine whether a large observed torque is caused by the golfer's action or simply emerges from the dynamics of the system.
+This distinction is fundamental. Autonomous terms can be large during rapid phases, but their magnitude is not a direct indicator of biological effort. A decomposition can assign retained equation terms; it cannot determine a unique real-world cause from kinematics alone.
 
-The aim of this manuscript is to establish a rigorous, strictly theoretical foundation for decomposing forces in the golf swing into two analytically distinct components:
+The aim of this manuscript is to establish a rigorous, strictly theoretical foundation for decomposing the chosen equations into two additive components:
 
--   **Drift forces** arising purely from passive, state-dependent mechanical dynamics, and
--   **Input forces** arising solely from actively applied joint torques.
+-   **Drift terms** in the autonomous, state-dependent dynamics, and
+-   **Input terms** produced by the declared generalized-torque channel.
 
 The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system* [@isidori1995nonlinear; @bullo2004geometric]. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels [@nijmeijer1990nonlinear, Ch.~2]. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model. The broader programme of using counterfactual reasoning to attribute causal structure to dynamical systems is laid out by @pearl2009causality; here we specialize that programme to the mechanical setting by exploiting the linear-in-input structure of the equations of motion.
 
 This paper is *Part I* of a broader project. It develops the theoretical architecture only---no simulation, numerical results, or empirical data are presented here. Subsequent papers (Parts II and III) will implement and validate this framework using high-fidelity multibody simulations, flexible-shaft modeling, and experimental motion-capture data. By isolating the theory in this manuscript, we ensure that the mathematical structure is complete, self-contained, and available for independent scrutiny before numerical or empirical layers are added.
 
-Let us pause and say plainly what we are doing. Imagine you are sitting in a rowboat on a river. Part of your motion downstream comes from the river's current---that is the "drift." Part comes from your rowing---that is the "input." If you stop rowing, the current carries you along at some speed. If the river is still, only your rowing moves you. The total motion is the sum of both. This paper builds the mathematical machinery to decompose the golf swing the same way: what would the club do if the golfer's muscles went silent (drift), and what additional motion does muscular effort create (input)? The mathematical framework is sophisticated, but the physical question is as simple as a boat on a river.
+Let us pause and say plainly what we are doing. Imagine a rowboat model with a river-current term and a declared rowing-force input. At the same state, the equations can report the instantaneous contribution assigned to each term. This paper performs that bookkeeping for a golf-swing model. It does not identify the golfer's muscles, intent, or biological effort.
 
 The remainder of the paper is organized as follows:
 
@@ -203,7 +205,7 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 3.  **No ball--club impact phase.** Ball impact is excluded from the domain of analysis due to its hybrid (non-smooth) dynamics. The model applies to the pre-impact and post-impact phases only.
 4.  **No aerodynamic forces.** Drag and lift forces on the clubhead and shaft are omitted in this theoretical treatment. All modeled external forces arise from gravity or internal mechanical interactions.
 5.  **Torques treated as generalized inputs.** Muscular physiology (activation dynamics, force--velocity, force--length, tendon elasticity) is abstracted into a net generalized torque vector $\tau = B(q) u$. These torques serve as the control inputs in the affine control formulation.
-    -   *Mathematical Justification:* In a biological model, torque is a function of activation $a$, length $l(q)$, and velocity $v(\dot{q})$, i.e., $\tau = \tau_{\text{max}} \cdot f_{\text{FL}}(q) \cdot f_{\text{FV}}(\dot{q}) \cdot a$. If we treated activation $a$ as the input, the system would become control-non-affine due to the multiplicative state dependency $f_{\text{FV}}(\dot{q})$. By defining the input at the *torque level* ($u \equiv \tau$), we preserve the affine structure $\dot{x} = f(x) + G(x)u$, treating the force-velocity relationship as a constraint on the *feasible set* of inputs $\mathcal{U}(x)$ rather than a nonlinearity in the system dynamics.
+    -   *Mathematical Justification:* At fixed state, the Hill-type expression $\tau=\tau_{\max}f_{\text{FL}}(q)f_{\text{FV}}(\dot q)a$ is linear in activation $a$; its state-dependent gain belongs in the input map. We nevertheless declare the mechanical input at the net-torque level and treat physiological feasibility through $\mathcal{U}(x)$. Nonlinear activation dynamics, input-dependent impedance, saturation, or hysteresis require a richer model.
 6.  **Ground contact modeled as holonomic constraint.** Feet--ground interaction is simplified as a fixed base with no slip or compliance; the golfer is treated as rooted at the ground.
 7.  **Smooth dynamical evolution (no discontinuities).** Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.
 8.  **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
@@ -263,7 +265,7 @@ Aerodynamic forces, impact forces, and non-holonomic contact effects are exclude
 
 The final structural element is the coupling between the actuator (the golfer) and the payload (the club). This interface is not a simple rigid connection; it is the boundary where the active, articulated chain meets the passive, flexible object.
 
-Before we can assemble the global equations of motion, we must rigorously define this boundary. The interaction between the golfer and the club is the precise mechanism that transmits the "active" intent into the "passive" system. To capture this, we cannot simply weld the shaft to the hands; we must model the **bidirectional** flow of energy—torque going out, and recoil forces coming back. This requires a differential analysis of the interface itself, linking the rigid-body velocity of the hands to the flexible deformation of the shaft via specific Jacobians.
+Before we can assemble the global equations of motion, we must rigorously define this boundary. The grip transmits generalized loads between the modeled golfer segments and club; it does not encode intent. To capture that bidirectional mechanical interaction, we cannot simply weld the shaft to the hands. We link rigid-body hand velocity to flexible shaft deformation through explicit Jacobians.
 
 ##### Hand--Club Kinematic Interface and Jacobian Formulation
 
@@ -316,7 +318,7 @@ This derivation rigorously identifies the mass matrix blocks as projections of t
 
 The existence of the non-zero block $M_{q\eta}$ is the physical mechanism by which hand acceleration ($\ddot{q}$) creates an instantaneous inertial load on the shaft (via $-M_{q\eta}^T \ddot{q}$), and conversely, how shaft vibration recoil exerts reaction torques on the hands. This coupling exists purely due to the mass distribution of the shaft and is independent of stiffness.
 
-This inertial coupling is the mechanism that transmits the golfer's agency to the club, but it is also the conduit through which the club's passive momentum fights back. To capture this bidirectional energy flow, we must move from a kinematic description of velocities to a dynamic description of forces. The kinetic energy terms derived above provide the necessary scalar foundation for this step, allowing us to build the system **Lagrangian** in the following section.
+This inertial coupling transmits the effect of the declared generalized-torque channel to the club and transmits club reaction loads through the same model. To represent that bidirectional energy flow, we move from kinematics to dynamics and construct the system **Lagrangian**.
 
 ##### Notation Table
 
@@ -351,7 +353,7 @@ For reference, the following table summarizes the main symbols used in the manus
 
 #### Unified Control-Affine Derivation (Rigid + Flexible System)
 
-To identify the causal contribution of muscular torque, we derive the equations of motion in a form that explicitly separates active inputs from passive dynamics. We employ the **Lagrangian formalism** [@goldstein2002classical; @lanczos2012variational] to generate the dynamics, ensuring energy consistency, and then transform the result into **control-affine state space form** [@khalil2002nonlinear; @isidori1995nonlinear] to isolate the input channels.
+To identify the model-conditioned contribution of the declared generalized-torque channel, we derive the equations of motion in a form that explicitly separates the input term from the autonomous dynamics. We employ the **Lagrangian formalism** [@goldstein2002classical; @lanczos2012variational] to generate the dynamics, ensuring energy consistency, and then transform the result into **control-affine state space form** [@khalil2002nonlinear; @isidori1995nonlinear] to isolate the input channels.
 
 ##### Lagrangian Formulation
 
@@ -395,7 +397,7 @@ The zero vector in the lower block of the forcing term is the defining feature o
 
 ##### Control-Affine State Space Form
 
-To perform the drift-input decomposition, we must solve for the accelerations, effectively inverting the inertia matrix to isolate the causal origin of motion.
+To perform the drift--input decomposition, we solve for the accelerations, inverting the inertia matrix to expose the additive terms assigned by the chosen equations.
 
 To isolate the accelerations, we require the inverse inertia matrix $H(q) = M^{-1}(q)$. We derive the blockwise inverse explicitly using the **Schur Complement** decomposition. This step is critical because it reveals how the motion of the rigid golfer ($q$) is dynamically coupled to the motion of the flexible shaft ($\eta$).
 
@@ -481,7 +483,7 @@ Then the acceleration equation becomes $$
 = a_{\text{drift}}(x) + A_{\text{input}}(x)\,u.
 $$
 
-This explicit separation of the acceleration vector is not merely a mathematical convenience; it is the kinematic foundation for the causal analysis. The term $A_{\text{input}}(x)u$ isolates exactly those accelerations---both rigid and flexible---that are powered by the golfer's torque. In Part III, we will define **Input Forces** as the dynamic realization of this term, contrasting it with the **Drift Forces** generated by $a_{\text{drift}}(x)$.
+This explicit separation of the acceleration vector is the kinematic foundation for model-conditioned analysis. The term $A_{\text{input}}(x)u$ is the instantaneous acceleration contribution of the declared generalized-torque channel in these coordinates. It is not, without further evidence, a measure of power, effort, intent, or individual-muscle action.
 
 ##### First-Order State-Space Form
 
@@ -539,9 +541,9 @@ This control-affine structure is the backbone for the drift--input decomposition
 
 By isolating the torque input $u$ into the linear term $G(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $G(x)u$ represents the instantaneous ability of the golfer to alter that momentum.
 
-The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. This mathematical separation forces a philosophical shift in how we view the swing. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is an aggregate of two distinct physical species: the *inertial memory* of the system (drift) and the *current agency* of the player (input). The derivation above proves that these species do not mix; they are **mechanically orthogonal**.
+The derivation provides an additive, model-conditioned map of the instantaneous vector field. It assigns one term to the autonomous dynamics and one to the declared input channel. Additivity does not imply orthogonality: under a chosen metric, $f(x)$ and $G(x)u$ may align, oppose, or be oblique. The separation does not identify player agency or a unique physical cause.
 
-This orthogonality is what allows us to perform the "surgical" operations defined in the next part. If the drift field $f(x)$ encapsulates the system's passive destiny, we can theoretically allow it to play out uninterrupted. By mathematically amputating the input term ($u \equiv 0$), we can expose the underlying inertial current that the golfer is fighting—or riding. This leads us directly to the concept of **counterfactual simulation**. However, the affine equation $\dot{x} = f(x) + G(x)u$ describes only instantaneous tendencies (a vector field), not an outcome. To see the destiny that the drift field $f(x)$ prescribes, we must **integrate** it over time. Part II performs this integration, using the affine structure not just to describe the swing that happened, but to computationally reveal the **"Shadow Swings"**—the unobserved trajectories that *would* have occurred had the golfer chosen differently.
+The additive form permits a declared intervention $u\equiv0$ while holding the stated plant, parameters, and initial state fixed. Because $\dot{x}=f(x)+G(x)u$ describes only an instantaneous tendency, a trajectory-level counterfactual also requires a stated horizon and numerical integration. Part II defines those interventions without treating them as observations of intent or muscle behavior.
 
 ::: {.callout-warning}
 #### Model Limitations
@@ -552,15 +554,15 @@ This Part I analysis is based on the mechanical model only and is subject to the
 
 (b) **Constant grip impedance:** The boundary condition at the grip is treated as a fixed mechanical constraint, not as a state-dependent or input-dependent stiffness parameter.
 
-(c) **Aerodynamic forces neglected:** Air resistance on clubhead and shaft is not modeled; these forces enter nonlinearly and do not preserve the affine structure.
+(c) **Aerodynamic forces neglected:** Air resistance on clubhead and shaft is not modeled. Aerodynamic loads that depend only on state and fixed parameters belong in $f(x)$ and do not by themselves break control-affinity. Aerodynamic actuation or input-dependent flow models require a separately declared input map.
 
 (d) **Neural control delays not modeled:** All torques are applied instantaneously; activation dynamics, sensorimotor delays, and muscle force-velocity relations are outside the model scope.
 
-(e) **Control-affine structure requires torque-level inputs:** The affine decomposition $\dot{x} = f(x) + G(x)u$ treats joint torque $u = \tau$ as the exogenous input. This is valid at the mechanical level, but at the muscle level, the Hill model introduces multiplicative state-dependency ($\tau = \tau_{\max} \cdot f_{\text{FL}}(q) \cdot f_{\text{FV}}(\dot{q}) \cdot a$) that violates affine structure if activation $a$ is treated as input. The affine framework is therefore a *mechanical* model, not a neuromuscular model; the torque feasibility set $\mathcal{U}(x)$ is state-dependent but the structure $\dot{x} = f(x) + G(x)u$ remains valid as long as inputs are parameterized as torques rather than activations.
+(e) **The declared input level controls the affinity claim:** At fixed state, $\tau = \tau_{\max} f_{\text{FL}}(q) f_{\text{FV}}(\dot{q})a$ is linear in the declared input at fixed state when activation $a$ is the input; the force--length and force--velocity factors form a state-dependent input map $G(x)$. Such state-dependent input gains do not by themselves break control-affinity. Nonlinear activation dynamics in excitation, saturation, hysteresis, recruitment, or input-dependent impedance can require a different non-affine or hybrid model. This manuscript nevertheless declares net generalized torque as its mechanical input.
 
 (f) **Co-contraction not captured:** When antagonist muscles co-contract, they produce zero net torque but modulate joint stiffness in the null space of the torque map. This stiffness modulation is classified as part of the drift term $f(x)$ under the Frozen Strategy assumption (see §Note on Biological Impedance), and is not separately identifiable from the drift without additional measurements or models.
 
-Within these constraints, the affine decomposition is exact. Outside them, causal interpretations must be qualified. See also `sources-of-nonlinearity.qmd` for a detailed treatment of biological nonlinearities that fall outside this scope.
+Within these constraints, the affine decomposition is exact for the declared equations. Outside them, interpretation requires a revised model and new identification evidence. See also `sources-of-nonlinearity.qmd` for a detailed treatment of biological nonlinearities that fall outside this scope.
 :::
 
 #### Related Articles
@@ -708,19 +710,19 @@ Within these constraints, the affine decomposition is exact. Outside them, causa
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Part I showed us <em>how</em> the swing moves. Part II asks <em>why</em> it moves, introducing tools to separate the golfer's effort from physics.
+        Part I defined the model's equations. Part II introduces interventions that compare its autonomous dynamics with its declared input channel; these do not measure effort or intent.
       </p>
 
       <div class="laymans-item">
         <h3>The "Shadow Swing" (ZTCF)</h3>
         <p>
-          We introduce a concept called the <strong>Zero Torque Counterfactual (ZTCF)</strong>. This is a fancy name for a simple question: "What would happen if the golfer suddenly stopped trying?"
+          The <strong>Zero Torque Counterfactual (ZTCF)</strong> asks what the declared model predicts after its generalized-torque input is set to zero while the initial state, plant, and parameters remain fixed.
         </p>
         <p>
-          If you let go of the steering wheel on the highway, the car doesn't stop instantly—it drifts. Similarly, if a golfer stopped applying force mid-swing, the club would keep moving due to momentum. The ZTCF calculates this "drift" path.
+          Setting the declared input channel to zero does not erase momentum, gravity, or retained impedance. The ZTCF integrates that explicitly defined autonomous model; it does not simulate stopped intent, silent muscles, or a flaccid golfer.
         </p>
         <div class="analogy">
-          <strong>Analogy:</strong> Imagine sliding on ice. Once you push off, you keep moving without any more effort. That movement is the "drift." Any change to that path requires new effort (input).
+          <strong>Analogy:</strong> A vehicle model can be simulated with its declared drive command set to zero while drag and momentum remain. The result depends on what the model declares as state, plant, input, and parameters.
         </div>
       </div>
 
@@ -733,7 +735,7 @@ Within these constraints, the affine decomposition is exact. Outside them, causa
           It mathematically "freezes" the swing to measure the static loads—gravity and the springiness of the bent shaft—ignoring the speed.
         </p>
         <div class="key-takeaway">
-          By comparing the actual swing to these two baselines (Drift and Static Load), we can figure out exactly how much "extra" work the golfer is doing to bend the shaft or speed up the club.
+          Comparing these baselines separates terms in the declared equations. Work requires torque--velocity integration, and biological effort requires additional physiological measurements and models.
         </div>
       </div>
 
@@ -759,15 +761,15 @@ $$\dot{x} = f(x) + G(x)u$$
 This derivation was purely **descriptive**—it told us *how* the system moves. Now, in Part II, we pivot to **diagnostics**. We ask *why* it moves.
 :::
 
-In Part I, we established that the golfer--club--shaft system is governed by the nonlinear control-affine dynamics $\dot{x} = f(x) + G(x)u$. This equation represents the **physics** of the swing—a descriptive statement of how forces produce motion. In Part II, we pivot from description to **diagnostics**. We seek to transform this equation of motion into a causal map that can attribute specific features of the swing trajectory to either the golfer's intent or the club's inertia.
+In Part I, we declared nonlinear control-affine dynamics $\dot{x} = f(x) + G(x)u$. Part II turns this chosen equation into reproducible, model-conditioned diagnostics.
 
-This shift is enabled by the **Mechanical Separability** derived in Part I (the additive decomposition of drift and input terms), where the inertial memory of the system (drift) is shown to be structurally distinct from the current agency of the player (input). We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
+The additive form assigns separate terms to the autonomous dynamics and the declared input channel. It does not imply that those vectors are orthogonal or that either term uniquely identifies intent, muscles, or biological effort.
 
 Given the control-affine form $\dot{x} = f(x) + G(x)u$, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
 #### Passive Drift Dynamics
 
-The *drift dynamics* are defined as the evolution of the system in the absence of all muscular torques:
+The *drift dynamics* are defined by setting the declared generalized-torque input to zero while retaining the declared effective plant:
 
 $$\dot{x}_{\text{drift}} = f(x).$$
 
@@ -808,7 +810,7 @@ Within the model, this additive structure supports the following interpretation:
 
 The decomposition is analytically exact for the chosen multibody model; in practice it is limited by parameter accuracy and the validity of the modeling assumptions.
 
-This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask 'what if' questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.
+This analytical separation defines two explicit interventions: set the declared input to zero to evaluate or integrate drift, or set declared velocity coordinates to zero to evaluate configuration loads. Each result is conditional on its model, coordinates, parameters, initial state, and horizon. Neither operation alone establishes a unique real-world causal explanation.
 
 To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).
 
@@ -910,7 +912,7 @@ The ZTCF trajectory is not strictly required to compute this decomposition: eval
 - Conceptually, it is the trajectory that realizes the drift dynamics in isolation.
 - Computationally, simulating $x^{\mathrm{ZTCF}}(t)$ gives a concrete motion that can be analyzed or visualized alongside the actual swing to illustrate the effect of the torque input.
 
-There is a dynamical imperative hidden in this construction. In phases of low velocity (takeaway), the ZTCF is merely one of many possible paths, and the golfer retains high authority to deviate from it. However, as swing speed increases, the passive drift field $f(x)$ grows energetically while the input authority $G(x)u$ remains bounded by physiological limits. In this high-energy regime, the ZTCF transforms from a passive reference into a **Dominant Attractor**. As the **Drift-Control Ratio** (defined in subsequent work) rises, the swing trajectory is increasingly "railroaded" by the inertial terms. The ZTCF thus evolves from a mere counterfactual "what-if" into a prediction of the inevitable, revealing that late-swing mechanics are governed more by **Inertial Memory** than by current agency.
+The ZTCF is one reference trajectory, not an attractor merely because the drift magnitude is large. Statements about late-swing control authority require a specified input set, horizon, output, and reachability analysis. A high drift/input ratio at an instant does not prove inevitability or loss of control.
 
 ##### Worked Numerical Example
 
@@ -936,7 +938,7 @@ The input term is a net generalized quantity. It does not identify individual mu
 
 The ZTCF is a counterfactual *within the model*. It answers the question:
 
-> "Given the same initial configuration, velocities, shaft deformation, and model parameters, what motion would the system execute if all muscular torques were set to zero?"
+> "Given the same initial state, declared effective plant, model parameters, and integration horizon, what trajectory does the model predict when its declared generalized-torque input is set to zero?"
 
 It does *not* claim that such a motion could actually be achieved by a real golfer, nor that the nervous system ever selects "zero torque" as a control policy during a swing. Instead, ZTCF is a mathematical device that:
 
@@ -944,7 +946,7 @@ It does *not* claim that such a motion could actually be achieved by a real golf
 - provides a baseline against which torque-driven effects can be quantified, and
 - makes the drift--input decomposition explicit and reproducible.
 
-All causal statements made in this paper are therefore conditional on the mechanical model and on the modeling assumptions stated earlier. Within that scope, the decomposition
+All attribution statements made in this paper are conditional on the mechanical model and the modeling assumptions stated earlier. Within that scope, the decomposition
 
 $$\tau_{\text{total}}(t) = \tau_{\text{drift}}\big(x(t)\big) + \tau_{\text{input}}(t)$$
 
@@ -1094,7 +1096,7 @@ The ZVCF isolates configuration-dependent forces—gravity and elastic stiffness
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
-We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid.
+We have now constructed two counterfactual baselines: the ZTCF for the declared zero-input evolution, and the ZVCF for configuration loads at declared zero velocity. Their equation-level interpretation requires the autonomous term to have no direct dependence on the declared instantaneous input. If impedance, inertia, or another retained plant property changes with that input, the model boundary must be expanded or the quantity frozen explicitly; algebra alone does not supply causal independence.
 
 But is this separation scientifically valid? A skeptic might argue that in a biological system, the "passive" plant changes when the "active" input changes (e.g., via stiffness modulation). To defend our counterfactuals, we must prove the property of *Drift Invariance*—showing that the passive drift field is structurally immune to the active input. This is the subject of the next part of this series.
 
@@ -1130,7 +1132,7 @@ But is this separation scientifically valid? A skeptic might argue that in a bio
       <div class="laymans-item">
         <h3>The "Invariant" Drift</h3>
         <p>
-          We prove a property called <strong>Drift Invariance</strong>. It means that the laws of physics governing the club's passive motion (gravity, inertia) don't change just because you apply more muscle force.
+          <strong>Drift Invariance</strong> means that, at the declared model boundary, the autonomous term has no direct dependence on the instantaneous declared input. Input-dependent stiffness must be modeled or frozen explicitly.
         </p>
         <div class="analogy">
           <strong>Analogy:</strong> Think of a car on a road. The road's slope and the car's weight are the "drift" factors. Whether you gently tap the gas or floor it (input), the road and the car's weight remain the same. The "drift" is independent of your "input."
@@ -1145,7 +1147,7 @@ But is this separation scientifically valid? A skeptic might argue that in a bio
         <ul>
             <li><strong>Configuration Drift:</strong> Forces from just <em>being</em> there (gravity, bent shaft).</li>
             <li><strong>Velocity Drift:</strong> Forces from <em>moving</em> (momentum, centrifugal force).</li>
-            <li><strong>Input Force:</strong> Forces from <em>doing</em> (your active muscle effort).</li>
+            <li><strong>Input term:</strong> The force term assigned to the declared generalized-torque channel.</li>
         </ul>
         <div class="key-takeaway">
           This system allows us to take any swing and say, "50% of this speed came from momentum (Drift), and 50% came from the player (Input)."
@@ -1186,13 +1188,13 @@ However, the validity of this separation is not self-evident. A skeptic might as
 
 These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
 
-For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). This independence condition is not trivial. In many biological systems, active contraction changes the stiffness of the muscles, thereby altering the "plant" itself. However, by modeling the system at the skeletal level (generalized torques driving rigid bodies and a flexible shaft), we can formally prove that the drift vector field is structurally independent of the input vector field.
+For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to retain the declared equation-level meaning, $f(x)$ must have no direct dependence on the instantaneous declared input. This condition is not physiological independence: active contraction can change stiffness and therefore the plant. Such effects must be modeled as additional states or inputs, or frozen explicitly as parameters.
 
 The drift--input decomposition
 
 $$\dot{x} = f(x) + G(x)u$$
 
-is therefore meaningful only if the drift term $f(x)$ is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.
+has the declared interpretation only if $f(x)$ has no direct dependence on the instantaneous input at the selected model boundary. This section states that equation-level property and discusses what must be frozen or reclassified when input-dependent impedance is present.
 
 #### Definition of Drift Invariance
 
@@ -1237,7 +1239,7 @@ $$
 \frac{\partial f(x)}{\partial u} \equiv 0.
 $$
 
-The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. This orthogonality is structural: it is not an approximation but a property of the Lagrangian formulation where generalized forces are dual to generalized velocities. It guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
+The declared input $u$ appears directly only in $M^{-1}[B(q)u;0]^T$. This is structural additivity, not metric orthogonality. The vectors $f(x)$ and $G(x)u$ may align, oppose, or be oblique, and state history can depend on prior inputs.
 
 ::: {.callout-note}
 #### Assumption of Viscous-Only Damping
@@ -1348,11 +1350,11 @@ Thus, even with realistic physiological limitations,
 - the decomposition $\dot{x} = f(x) + G(x)u$ remains valid,
 - the torque decomposition $\tau_{\text{total}} = \tau_{\text{drift}} + \tau_{\text{input}}$ remains valid,
 - ZTCF and ZVCF remain fully defined,
-- causal attributions remain meaningful within the model.
+- model-conditioned attributions remain defined within the declared equations.
 
 #### Interpretational Scope
 
-Drift invariance enables strong causal statements, but only *within the mechanical model*. Real neuromuscular systems impose:
+Drift invariance preserves the declared additive bookkeeping, but does not by itself establish real-world causality. Real neuromuscular systems impose:
 
 - activation dynamics,
 - delays,
@@ -1362,7 +1364,7 @@ Drift invariance enables strong causal statements, but only *within the mechanic
 
 These appear in the present framework only through the feasible input set $\mathcal{U}(x)$. The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints. Interpretations must therefore remain explicitly mechanical.
 
-Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components $f(x)$ and $G(x)$ are not merely vector fields; they are distinct physical containers. $f(x)$ holds the system's "nature" (gravity, inertia, stiffness), while $G(x)u$ holds the "nurture" (agency).
+Having declared the drift field and its frozen parameters, we can map retained terms in the equations to mechanical categories. The categories label modeled gravity, velocity-dependent effects, elasticity, and the declared torque input; they do not label agency or muscular effort.
 
 #### Force and Torque Taxonomy via the Affine Mapping
 
@@ -1372,7 +1374,7 @@ This taxonomy classifies the generalized forces acting within the golfer--club--
 
 $$\dot{x} = f(x) + G(x)u.$$
 
-It separates forces into distinct causal categories based on their origin in the equations of motion rather than their magnitude or timing.
+It separates retained equation terms into declared mechanical categories rather than identifying physiological sources.
 
 This taxonomy applies to:
 
@@ -1444,7 +1446,7 @@ These forces can be large---often dominant---in fast regions of the swing (e.g.,
 
 ##### Category 3: Input (Torque-Driven) Forces
 
-These forces arise solely from the golfer's active torque input and are defined by:
+These terms are assigned to the model's declared generalized-torque input and are defined by:
 
 $$\tau_{\mathrm{input}}(t)
   =
@@ -1456,9 +1458,9 @@ $$\tau_{\text{drift}}(t)
   =
   M_q(q,\eta)\,[a_{\text{drift}}(x(t))]_{1:n}.$$
 
-By construction, $\tau_{\mathrm{input}}$ contains the mechanical effect of applied torques and nothing else. It is the only category that changes when the golfer changes their motor command.
+By construction, $\tau_{\mathrm{input}}$ is the residual assigned to the declared torque channel under the stated complete model. With measurement error or omitted forces, it can also absorb residual error; it does not identify a motor command.
 
-This subtraction is valid precisely because of the affine structure derived in Part I. Recall that the input acceleration is given by $A_{\text{input}}(x)u$. The 'Input Force' defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix. Crucially, it captures not just the direct drive on the joints, but also the forces induced by the **Inertial Coupling Ratio** ($\Gamma$) acting on the flexible shaft. Thus, $\tau_{\text{input}}$ represents the complete mechanical footprint of the golfer's agency.
+This subtraction follows from the declared affine structure. The input acceleration is $A_{\text{input}}(x)u$, and the input-force category is its equation-level realization after the stated mass-matrix mapping. It is not a complete footprint of agency, individual muscles, or biological effort.
 
 ##### Category 4: Mixed Forces (Interaction Effects)
 
@@ -1518,7 +1520,7 @@ This taxonomy completes the theoretical framework by providing a model-condition
 
 #### Limitations (Theoretical Scope)
 
-The framework developed in this manuscript provides a mathematically rigorous decomposition of forces in the golf swing within the structure of a nonlinear control-affine mechanical system. It is exact for the chosen model class, but its interpretation is bounded by several theoretical limitations. These limitations do not undermine the decomposition; rather, they define the domain in which its causal statements are valid.
+The framework provides a mathematically rigorous decomposition of a declared nonlinear control-affine model. Its algebra is exact for the chosen equations, but interpretation is bounded by the following theoretical and identification limitations.
 
 ##### Model-Form Limitations
 
@@ -1585,9 +1587,9 @@ During rapid transitions (late downswing), small errors in acceleration estimati
 
 ZTCF trajectories and ZVCF evaluations are mathematically defined but physically unrealizable diagnostics. They answer precise mechanical questions but should not be interpreted as physiological or behavioral alternatives available to a real golfer.
 
-**Mechanical vs. Control Causality.**
+**Equation-Level Attribution vs. Physiological Causality.**
 
-It is crucial to distinguish **Control Causality** (why the nervous system selected a torque) from **Mechanical Causality** (which physical mechanism generated the force). The AffineDrift framework addresses Mechanical Causality. The ZTCF answers the question: *'Regardless of the complex sensory-motor loops that determined the input, what would the system have done if that input were instantaneously removed?'* This isolates the mechanical affordances of the body from the neural strategy of the player.
+Reflex loops can make the realized input depend on state without changing the algebraic form of a torque-level model. AffineDrift attributes terms in that declared model; it does not identify why the nervous system selected a torque or which actuator generated it. The ZTCF asks what the same declared plant predicts under a zero-input intervention. Physiological causality requires a richer model, qualifying measurements, and an identifiability argument.
 
 **Ambiguity of "Braking" (Impedance vs. Drive).**
 
@@ -1660,31 +1662,31 @@ Beyond these verifications, future work will focus on experimental application a
   The affine structure lends itself to optimal control formulations aimed at identifying torque policies that reproduce desired trajectories or optimize clubhead delivery metrics.
 
 - **Data-driven extensions.**  
-  The drift--input decomposition may support machine-learning models that predict torque-driven accelerations or infer effort strategies from measured swings. The separation of passive and active forces provides clean targets for such models.
+  The drift--input decomposition may support machine-learning models that predict declared torque-channel accelerations. Inferring biological effort would require independent labels, physiological measurements, and identifiability validation.
 
 - **Generalization to other athletic motions.**  
   The same decomposition applies directly to pitching, striking, kicking, and other ballistic sporting movements where passive and torque-driven dynamics interact through coupled multibody systems.
 
-In summary, this manuscript establishes the mathematical foundation for a causal mechanical interpretation of the golf swing. The drift--input decomposition, ZTCF and ZVCF counterfactuals, and the associated force taxonomy provide a rigorous framework for analyzing how torque inputs shape the motion of a compliant multibody system. The subsequent simulation and experimental papers will build on this foundation to connect theory to practice.
+In summary, this manuscript establishes the mathematical foundation for model-conditioned mechanical attribution. The drift--input decomposition, ZTCF and ZVCF interventions, and force taxonomy provide a reproducible framework for analyzing how declared torque inputs enter a compliant multibody model. Subsequent simulation and experimental work must establish parameter validity, uncertainty, and any stronger causal interpretation.
 
 #### Application of Research
 
-The framework developed in this manuscript provides a new mechanical viewpoint for interpreting forces in the golf swing. While the technical details are presented for scientific completeness, the practical impact is straightforward: the approach separates forces that arise naturally from the motion of the body and club (passive drift forces) from forces the golfer must actively create through muscular torque (input forces). This distinction is essential for understanding how players produce clubhead speed, how they sequence their movements, and why some patterns are more efficient than others.
+The framework provides a mechanical bookkeeping method for a declared golf-swing model. It separates autonomous equation terms from a declared generalized-torque input term. It does not, without further validation, determine what forces a golfer's muscles must create, why a player moved, or which pattern is more efficient.
 
-For coaches, the decomposition clarifies several long-standing questions:
+For future validated applications, the decomposition frames several testable questions:
 
-- **When is the club accelerating itself?**  
-  Large portions of the downswing may be driven primarily by passive inertia and shaft dynamics rather than muscular effort.
-- **Where is torque actually needed?**  
-  By isolating input forces, the model highlights the phases in which golfers must apply torque to shape the club path or manage shaft bending.
-- **Which movement strategies are mechanically efficient?**  
-  Comparing a player's measured forces to the drift-only predictions (ZTCF and ZVCF) reveals whether their torque application amplifies or opposes passive motion.
+- **When is modeled drift acceleration large?**
+  A simulation can compare the autonomous and declared-input acceleration terms at specified states, coordinates, and parameters.
+- **Where does the declared torque channel have mechanical authority?**
+  Reachability and sensitivity analyses can identify phases where bounded torque inputs strongly change a selected output.
+- **How do input and drift align?**
+  A declared metric or projection can show whether the two modeled terms align or oppose; efficiency and biological cost require separate definitions.
 
 For equipment professionals, the framework provides a mechanically grounded way to analyze how shaft stiffness, club mass distribution, and player-specific kinematics interact. The drift--input decomposition allows shaft behavior and player torque strategies to be examined independently, improving the matching process between golfers and equipment.
 
-For researchers, the approach offers a reproducible method for quantifying torque effectiveness, evaluating technique variability, and linking high-speed motion capture to causal mechanical explanations of performance.
+For researchers, the approach offers a reproducible method for evaluating model-conditioned torque-channel effects and testing whether those attributions remain stable under parameter and measurement uncertainty.
 
-Overall, the framework enables clearer interpretation of how golfers generate speed, control the club, and use their bodies efficiently—supporting more targeted coaching, equipment fitting, and player development.
+Overall, the framework supplies hypotheses for simulation and measurement studies. Coaching, equipment-fitting, or player-development claims remain outside its present validation envelope.
 
 For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, we refer to the detailed derivations collected in the Appendices (Part IV). These appendices specifically provide the **block matrix inversion proofs** that justify the clean separation of rigid and flexible dynamics, and demonstrate that the modal approximation of the shaft does not violate the linearity of the torque input—a critical condition for the validity of the Force Taxonomy presented above.
 
@@ -2297,7 +2299,7 @@ However, algebraic exactness in continuous time does not guarantee numerical sta
       <div class="laymans-item">
         <h3>The "Flight Simulator" for Golf</h3>
         <p>
-          We built a digital model of a golfer and club (using a tool called Simulink) to act as a proving ground. It allows us to perform experiments that would be impossible in real life—like instantaneously turning off a golfer's muscles to see what happens.
+          We built a digital golfer--club model in Simulink as a numerical proving ground. It supports declared interventions, such as setting the model's generalized-torque input channel to zero while retaining its state and effective-plant parameters.
         </p>
         <div class="analogy">
           <strong>Analogy:</strong> Before a pilot flies a new plane, they test it in a simulator. We simulate the "crash" scenarios (like the ZTCF) here to ensure the math holds up under stress.
@@ -2307,10 +2309,10 @@ However, algebraic exactness in continuous time does not guarantee numerical sta
       <div class="laymans-item">
         <h3>The Kill Switch Experiment</h3>
         <p>
-          We ran a "kill switch" test: at various points in the downswing, we cut the power to the virtual golfer's muscles.
+          At selected downswing states, we set the declared torque input channel to zero and integrated the retained autonomous model.
         </p>
         <div class="key-takeaway">
-          The result? The club kept moving violently due to momentum. This confirms that late in the swing, the "passive" forces (Drift) are massive—often larger than what the golfer can actively produce.
+          The simulated club continued moving because the retained model still contained its state, gravity, elasticity, damping, and effective-plant parameters. This validates the numerical intervention, not a claim about real muscle capacity.
         </div>
       </div>
 
