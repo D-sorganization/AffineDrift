@@ -17,6 +17,7 @@ from src.companion.manifest_consumer import (
     CompanionImportError,
     CompanionPin,
     FetchedPayload,
+    HttpFetcher,
     validate_lock,
 )
 
@@ -240,6 +241,50 @@ class _FakeFetcher:
         payload = self.responses[url]
         assert len(payload.data) <= max_bytes
         return payload
+
+
+class _FakeResponse:
+    def __init__(self, payload: bytes, final_url: str) -> None:
+        self._payload = payload
+        self._offset = 0
+        self._final_url = final_url
+        self.headers = {"Content-Length": str(len(payload))}
+
+    def __enter__(self) -> _FakeResponse:
+        return self
+
+    def __exit__(self, *_args: object) -> None:
+        return None
+
+    def read(self, size: int) -> bytes:
+        chunk = self._payload[self._offset : self._offset + size]
+        self._offset += len(chunk)
+        return chunk
+
+    def geturl(self) -> str:
+        return self._final_url
+
+
+def test_http_fetcher_requires_https_and_bounds_streamed_bytes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with pytest.raises(CompanionImportError, match="requires HTTPS"):
+        HttpFetcher().fetch("file:///untrusted/provider.json", 5)
+
+    url = "https://raw.githubusercontent.com/provider/manifest.json"
+    monkeypatch.setattr(
+        "src.companion.manifest_consumer.urllib.request.urlopen",
+        lambda *_args, **_kwargs: _FakeResponse(b"12345", url),
+    )
+    fetched = HttpFetcher().fetch(url, 5)
+    assert fetched == FetchedPayload(data=b"12345", final_url=url)
+
+    monkeypatch.setattr(
+        "src.companion.manifest_consumer.urllib.request.urlopen",
+        lambda *_args, **_kwargs: _FakeResponse(b"123456", url),
+    )
+    with pytest.raises(CompanionImportError, match="remote payload exceeds"):
+        HttpFetcher().fetch(url, 5)
 
 
 def test_redirect_escape_is_rejected_before_install(tmp_path: Path) -> None:
