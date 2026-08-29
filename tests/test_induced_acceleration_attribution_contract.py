@@ -32,6 +32,46 @@ TEX_SOURCES = (
 )
 PHYSICS_MAIN_TEX = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "main.tex"
 GEOMETRY_MAIN_TEX = REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "Volume_I" / "main.tex"
+INCLUDE_PATTERN = re.compile(r"^\{\{< include (?P<path>.+?) >\}\}$")
+HEADING_PATTERN = re.compile(r"^(?P<marks>#{1,6})\s+")
+
+
+def _expand_qmd_includes(path: Path) -> str:
+    """Expand repository-local Quarto includes for heading-contract inspection."""
+    expanded_lines: list[str] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        match = INCLUDE_PATTERN.match(line.strip())
+        if match is None:
+            expanded_lines.append(line)
+            continue
+        include_path = (path.parent / match.group("path")).resolve()
+        expanded_lines.extend(_expand_qmd_includes(include_path).splitlines())
+    return "\n".join(expanded_lines)
+
+
+def _visible_heading_levels(path: Path) -> list[int]:
+    """Approximate Quarto's visible heading outline, excluding callout titles."""
+    source = _expand_qmd_includes(path)
+    frontmatter_end = source.find("\n---", len("---")) if source.startswith("---") else -1
+    frontmatter = source[len("---") : frontmatter_end] if frontmatter_end >= 0 else ""
+    levels = [1] if re.search(r"^title:", frontmatter, re.MULTILINE) else []
+    callout_title_seen: list[bool] = []
+    for line in source.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("::: {.callout-"):
+            callout_title_seen.append(False)
+            continue
+        if stripped == ":::" and callout_title_seen:
+            callout_title_seen.pop()
+            continue
+        match = HEADING_PATTERN.match(stripped)
+        if match is None:
+            continue
+        if callout_title_seen and not callout_title_seen[-1]:
+            callout_title_seen[-1] = True
+            continue
+        levels.append(len(match.group("marks")))
+    return levels
 
 
 def test_coordinate_change_preserves_dynamics_but_changes_reported_components() -> None:
@@ -107,6 +147,19 @@ def test_quarto_and_latex_sources_publish_the_same_attribution_boundary() -> Non
         assert "unsupported or unqualified" in source
         assert "anatomical source" in source
         assert "intervention effect" in source
+
+
+@pytest.mark.parametrize("path", QMD_SOURCES, ids=lambda path: path.name)
+def test_recursive_attribution_include_preserves_visible_heading_hierarchy(path: Path) -> None:
+    """Shared include headings must not skip a rank in any consuming route."""
+    levels = _visible_heading_levels(path)
+    rank_skips = [
+        (current, following)
+        for current, following in zip(levels, levels[1:], strict=False)
+        if following > current + 1
+    ]
+
+    assert rank_skips == [], f"{path.name} has visible heading-rank skips: {rank_skips}"
 
 
 def test_latex_sources_use_declared_attribution_boxes() -> None:

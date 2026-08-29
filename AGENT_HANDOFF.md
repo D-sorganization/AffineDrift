@@ -10,7 +10,35 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Scientific Claim-Audit Report Deploy Closure (#4075 — In Progress)
+## Induced-Acceleration Heading-Hierarchy Closure (#4077 — In Progress)
+
+- Protected squash `77fe82ca21c69c723e8617368b369ec067700d72`
+  completed #4075 and restored the missing scientific claim-audit route. Deploy
+  Website run `33259619057` then reached the newly enabled every-page gate and
+  exposed a distinct latent `H1`-to-`H3` skip in exactly three
+  induced-acceleration routes. The repaired claim-audit route itself passed all
+  four viewport/theme cells.
+- Issue #4077 is a bounded child of #4021/#4009. Branch
+  `fix/4077-induced-heading-hierarchy` and isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4077-a1` start from exact
+  protected main `77fe82ca21c69c723e8617368b369ec067700d72` with an active
+  `claim:codex` lease.
+- RED commit `7e6bfed2` recursively expands the shared attribution include and
+  fails all three canonical QMD consumers on the visible `(1, 3)` rank skip.
+  GREEN commit `49145413` changes only `Counterexamples to Unique Attribution`
+  from H3 to H2. The scientific words, claim-audit classification, evidence,
+  and authority are unchanged.
+- At exact content head `49145413889fe0711586587ab156354499d51a6a`,
+  Quarto renders all 229 configured HTML inputs. Site health reports zero broken
+  links with 24 known non-blocking orphan warnings; pruning removes 28 internal
+  artifacts; the revision-bound manifest contains 230 routes; claim-audit
+  publication enforcement passes; and the deploy browser verifier passes
+  920/920 mobile/desktop and light/dark evidence cells with zero failures.
+- Full Python/content/JavaScript/lint validation, protected-main reconciliation,
+  hosted checks, ordinary protected merge, and a clean post-merge Deploy Website
+  run remain required.
+
+## Scientific Claim-Audit Report Deploy Closure (#4075 — Complete)
 
 - Deploy Website run `33255752205` on protected main
   `9c03cd638c74e2326f6bff018b536d9a028507a8` rendered
@@ -38,8 +66,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Repository-wide Ruff, Black, focused mypy, and pre-commit pass. The default
   Python lane passes 3,463 tests with 29 documented skips and 93.19% coverage;
   the content lane passes 108 tests with 4 documented skips; and Jest passes
-  297 tests with 19 documented skips. Protected hosted checks and post-merge
-  deployment verification remain required before #4075 may close.
+  297 tests with 19 documented skips. All 14 exact-head hosted checks passed;
+  protected squash `77fe82ca21c69c723e8617368b369ec067700d72`
+  has the same tree as PR head `e8aebb7b6bea8b48adb04e5621ea5d0d35f0b7a5`,
+  and #4075 is closed. Its target passed post-merge browser verification; the
+  unrelated heading-rank defect exposed later in that run is tracked by #4077.
 
 ## Equipment and Shaft Individual-Response Validation (#4040 — In Progress)
 
