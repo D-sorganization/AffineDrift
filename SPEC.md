@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T07:26:55Z
+Last-Updated: 2026-08-29T07:28:35Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T07:26:55Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.242                                          |
+| **Spec Version**        | 1.0.243                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -62,6 +62,11 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   fail-closed intervention record that freezes model and engine authority,
   branch state, zeroed inputs, retained dynamics, frame, units, solver, horizon,
   interpretation boundaries, and failure states
+- Maintain generated, schema-validated scientific trust panels whose stable
+  claim IDs bind accessible summaries to bounded technical claims, provenance,
+  uncertainty, limitations, falsifiers, review state, and the next validation
+  gate; fail closed when summaries amplify modal strength or unsupported
+  causal, universal, exact, optimal, locked-in, or percentage claims
 - Publish an accessible, evidence-linked companion to the proximal--distal technical treatment, with original visual explanations and explicit model, human-evidence, and hypothesis boundaries
 - Pin the complete canonical proximal--distal claim audit by exact upstream
   merge and hashes, expose its reviewed/unadjudicated counts, and preserve
@@ -366,6 +371,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F63 | Physics of Golf LuaLaTeX contract                   | ✅     | The Physics of Golf PDF build uses `unicode-math`-compatible bold symbols, provides its shared source-level math macros in the PDF preamble, and keeps display equations valid for LuaLaTeX arrays and subscripts. Focused source-contract tests guard the failure modes exposed by a complete book render.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | F64 | Revision-bound public-site verification             | ✅     | `scripts/public_site_manifest.py` inventories every deployable HTML route and binds the artifact to its Git revision. `scripts/verify-public-site.js` fails closed on incomplete evidence, unavailable pages, title and heading defects, missing canonical URLs or navigation, wrong theme state, below-fold primary headings, overflow, fixed-chrome overlap, missing alternatives or button names, untypeset visible equations, console/page errors, and required-resource failures. Deployment verifies every route at mobile and desktop widths in both themes, stores representative tablet/desktop screenshots, then repeats the full matrix against the revision-matched live manifest. |
 | F65 | Control-affine scientific-trust contract            | ✅     | The canonical theory series, foundational monograph, and single-file manifesto define affinity relative to a declared input at fixed state; treat state-dependent input gains as affine; describe drift/input as additive rather than orthogonal; and condition attribution on the model, coordinates, parameters, intervention, horizon, and identifiability evidence. A shared rendered boundary and corpus tests reject direct inference of intent, individual-muscle forces, biological effort, or unique real-world causes from algebraic decomposition alone (#4012). |
+| F66 | Generated scientific trust metadata                | ✅     | A strict Draft 2020-12 JSON Schema, canonical claim registry, and deterministic generator publish stable page/claim IDs with review commit, evidence and critique status, scope, uncertainty, limitations, falsifiers, software/data provenance, and next validation gate. Corpus tests require governed-page includes and technical-anchor links, render unknown qualification visibly, and reject accessible-summary amplification of modal strength, causal/universal/exact/optimal/locked-in terms, or unsupported percentages (#4019). |
 
 ### API / Interface Contract
 
@@ -661,7 +667,7 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
-### 1.0.242 ZTCF Intervention Contract
+### 1.0.243 ZTCF Intervention Contract
 
 Adds `affinedrift.ztcf-intervention/v1`, a public JSON schema, and a deterministic
 golden fixture for the repository's supported planar Python rollout. The
@@ -672,8 +678,18 @@ textbook sources now separate simulated trajectory difference, contribution
 measure, causal estimand, and physiological interpretation; each states the
 non-identifiability boundary and preserves the protected #4013 reachability and
 #4014 mechanical-attribution authorities. It also preserves the now-protected
-#4015 planar-spatial, #4012 control-affinity, and #4017 sensorimotor contracts
-from merged `main`.
+#4015 planar-spatial, #4012 control-affinity, #4017 sensorimotor, and #4019
+trust-metadata contracts from merged `main`.
+
+### 1.0.242 Governed Scientific Trust Metadata
+
+Adds a strict versioned trust-metadata schema, canonical claim registry,
+deterministic Quarto-panel generator with freshness checking, reusable
+responsive/print presentation, and a first governed DCR claim. Technical and
+accessible text are linked by stable IDs; fail-closed contracts prevent lay
+summaries from strengthening modality or introducing unsupported causal,
+universal, exact, optimal, locked-in, or percentage language. Direct pins make
+JSON Schema validation and strict typing reproducible in clean environments.
 
 ### 1.0.241 Sensorimotor Pathway and Response-Authority Contract
 

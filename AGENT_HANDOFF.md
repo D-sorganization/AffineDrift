@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -125,6 +125,35 @@ This is current operational state. Historical detail belongs in git/GitHub.
   media, and no horizontal overflow. The chapter-pair citation audit retains
   one pre-existing edition-specific Jorgensen key in each tree; both new
   long-latency citations are shared by the Quarto and LaTeX editions.
+
+## Governed Scientific Trust Panels (#4019 — Protected PR #4049 Merged)
+
+- Protected merge `48026454cdd3e07b3ce489d288efcb9295417b10` adds strict
+  `schemas/trust-metadata-v1.schema.json`, the canonical
+  `data/trust/claim_registry.json`, and deterministic
+  `scripts/generate_trust_panels.py`. Generated QMD is reviewable but must not
+  be hand-edited; `python scripts/generate_trust_panels.py --check` is the
+  freshness gate.
+- The first governed DCR claim publishes a stable claim ID, review commit,
+  evidence and critique status, population and valid conditions, uncertainty,
+  limitations, falsifiers, software/data provenance, and next validation gate.
+  Unknown qualification fields render visibly as unqualified.
+- Accessible summaries must link to their technical anchor and cannot increase
+  modal strength, add causal/universal/exact/optimal/locked-in language, or
+  introduce an unsupported percentage. The same non-amplification check covers
+  the article's authored lay summary.
+- Required focused gate:
+  `python -m pytest tests/test_scientific_trust_metadata.py -q`. Current
+  evidence is 15/15 focused tests, the complete non-GUI suite green with 29
+  documented skips, the content-lint selection green, strict MyPy, Ruff,
+  Black, Stylelint, terminology, title-case, xref, bibliography, display-math,
+  generator freshness, and isolated Quarto HTML rendering. Browser inspection
+  at 1440 x 1000 and 390 x 844 found one H1, no broken images, and no horizontal
+  overflow; the print contract is source-tested for transparent background and
+  `break-inside: avoid` because the in-app browser does not expose print-media
+  emulation.
+- `jsonschema` and `types-jsonschema` are direct pinned requirements; do not
+  rely on an unrelated transitive dependency for schema validation or typing.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
