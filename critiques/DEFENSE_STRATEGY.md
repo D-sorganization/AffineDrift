@@ -1,295 +1,49 @@
 ---
-title: "AffineDrift Defense Strategy"
-description: "Working response map for AffineDrift critiques, tracking current defense strategies, validity judgments, and implementation status."
+title: "AffineDrift Critique Adjudication Status"
+description: "Governed status, evidence, and next validation gates for every public critique of the AffineDrift scientific framework."
 ---
 
-## Defense Strategy: AffineDrift
-
-This is a public working response map for critique transparency. It is not a peer-reviewed assessment, and status labels describe the current editorial response plan rather than settled consensus.
-
-## Critique-Response Table
-
-| Critique                                                              | Classification                 | Validity                       | Core Defense Strategy                                                                                                                                                                                                                                                                                                                                                                                                                      | Status                              |
-| :-------------------------------------------------------------------- | :----------------------------- | :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------- |
-| **01. Muscle Physiology**<br>(Variable Impedance)                     | Conceptual / Biophysical       | **Partially Valid**            | **Clarify Definition of Drift:** Acknowledge that muscle stiffness scales with input. Clarify that "Drift" $f(x)$ represents the _skeletal/inertial_ baseline (the limit as $u \to 0$), not necessarily the physiological "relaxed" state. The affine form $\dot{x}=f(x)+g(x)u$ remains the correct _mechanical_ description of the plant.                                                                                                 | **Applied** to Assumption 5         |
-| **02. Aerodynamics**<br>(Missing Drag)                                | Empirical / Modeling           | **Valid** (but manageable)     | **Scope & Structure Argument:** Admit the omission but demonstrate that aerodynamic forces $F_{aero}(q, \dot{q})$ are purely state-dependent. Thus, they fit perfectly into the drift term $f(x)$ without breaking the affine structure. Their exclusion is a parsimonious modeling choice.                                                                                                                                                | **Applied** to Assumption 4         |
-| **03. Neuromuscular Control**<br>(Feedback Loops)                     | Methodological                 | **Invalid** (Category Error)   | **Plant vs. Controller Distinction:** The critique confuses _control topology_ (feedback) with _mechanical causality_ (actuation). The decomposition separates forces by _source_ (actuator vs. inertia), not by _intent_. The ZTCF probes the mechanics of the plant, regardless of the reflex loops driving the input.                                                                                                                   | **Applied** to Limitations          |
-| **04. Impact Evasion**<br>(No Collision Model)                        | Methodological                 | **Valid** (Scope Limit)        | **Theory of Delivery:** Clarify that the framework analyzes the _generation_ of impact conditions (Delivery), not the collision itself. The golfer's control authority effectively ends at $t_{impact}$. The drift-input decomposition explains how the system arrives at the terminal state.                                                                                                                                              | **Applied** to Assumption 3         |
-| **05. Soft Grip Coupling**<br>(Rigid Hands)                           | Biophysical / Modeling         | **Valid** (Simplification)     | **Effective Plant Argument:** The input $u$ is defined as the _resultant torque at the handle_. Grip compliance acts as a filter but does not break the affine structure of the equations of motion on the handle side. Assuming rigidity likely _overestimates_ control authority, making the drift dominance argument stronger.                                                                                                          | **Applied** to Limitations          |
-| **06. Causal Masking**<br>(Drift Superposition)                       | Conceptual                     | **Valid** (Interpretational)   | **Distinguish Instantaneous vs. Historical:** Acknowledge that velocity-dependent drift (Coriolis, Centrifugal) is "Induced Drift" caused by past inputs. Clarify that "Drift" refers to the _passive mechanism_ at the current instant, not an exogenous energy source.                                                                                                                                                                   | **Applied** to Taxonomy             |
-| **07. Null Space Forces**<br>(Closed Chain)                           | Methodological                 | **Valid**                      | **Net Motion Definition:** Explicitly define $\tau_{input}$ as the "Net Motion-Producing Torque". Acknowledge that the framework is blind to internal forces (co-contraction, null-space fighting) in the closed chain.                                                                                                                                                                                                                    | **Applied** to Limitations          |
-| **08. Residual Input**<br>(Identifiability)                           | Empirical                      | **Valid**                      | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present.                                                                                                                                                                                                                        | **Applied** to Limitations          |
-| **09. Geometric Stiffness**<br>(Omission in ZVCF)                     | Mathematical                   | **Valid**                      | **Classification Defense:** Geometric stiffness is velocity-dependent ($K_g \propto \Omega^2$). Therefore, it correctly belongs to **Velocity Drift**, not Configuration Drift. The ZVCF intentionally removes it to isolate the static elastic baseline.                                                                                                                                                                                  | **Applied** to Taxonomy             |
-| **10. Parameter Causality**<br>(Fitting Active Data)                  | Methodological                 | **Valid**                      | **Effective Plant Argument:** Acknowledge that fitted parameters represent the "Effective Plant" conditioned on the task. This is an epistemological limit of identifying passive dynamics from active motion.                                                                                                                                                                                                                             | **Applied** to Limitations          |
-| **11. Passive Overshoot**<br>(Damping Artifact)                       | Empirical / Modeling           | **Valid** (Conservative)       | **Conservative Baseline:** Acknowledge that low damping exaggerates drift. Defend the "Skeletal Baseline" as the _conservative_ lower bound of intervention. Any "braking" input reflects the net non-conservative effort required to stabilize the path.                                                                                                                                                                                  | **Applied** to Simulink Results     |
-| **12. The Static Fallacy**<br>(ZVCF Irrelevance)                      | Conceptual                     | **Invalid** (Misunderstanding) | **Diagnostic Utility Argument:** Critics argue static loads are negligible in high-speed swings. The defense is that ZVCF is a _subtractive baseline_ required to isolate dynamic forces, not a claim that static forces dominate. It is the "tare" operation for the dynamic scale.                                                                                                                                                       | **Applied** to ZVCF Definition      |
-| **13. Input-Dependent BCs**<br>(The Grip Paradox)                     | Mathematical                   | **Valid** (Structural Risk)    | **Constant Impedance Assumption:** If grip stiffness depends on $u$, the mass matrix $M(u)$ breaks the affine form. We defend by assuming a "Constant Effective Impedance" for the plant, treating $u$ as the torque applied _to_ that plant, not a parameter that reshapes it.                                                                                                                                                            | **Applied** to Limitations          |
-| **14. Teleological Blindness**<br>(Mechanics vs. Intent)              | Conceptual / Methodological    | **Valid** (Interpretational)   | **Efficiency Fallacy Defense:** The model measures mechanical cost (torque), not tactical utility. "Braking" torque may be stability-seeking, not error. We must explicitly distinguish "fighting drift" from "modulating drift for robustness."                                                                                                                                                                                           | **Applied** to Limitations          |
-| **15. Intentional Constraint Collapse**<br>(Singularity vs Impedance) | Conceptual / Mathematical      | **Valid** (Terminological)     | **Virtual Constraint Defense:** Clarify that "collapse" is a metaphor for high impedance approaching a kinematic constraint. Reframe as "Quasi-Static Resolution" where $u$ shapes the _effective_ manifold for short intervals, justifying the local affine approximation.                                                                                                                                                                | **Applied** to Constraint Article   |
-| **16. The Effective Plant Fallacy**<br>(Task-Dependent Baseline)      | Methodological / Philosophical | **Valid** (Epistemological)    | **Impedance-Conditioned Drift Defense:** We explicitly rename the baseline as "Impedance-Conditioned Drift." A truly passive (flaccid) baseline is biologically irrelevant for high-speed motion; the "Effective Plant" (frozen strategy) is the only meaningful counterfactual for analyzing control _around_ the trajectory.                                                                                                             | **Applied** to Limitations          |
-| **17. Planar DCR Blindness**<br>(Axial Rotation)                      | Methodological / Scope         | **Valid** (Dimensionality)     | **Orthogonal Control Subspace:** Admit that Planar DCR measures "Path Controllability" while "Face Controllability" (axial) has lower inertia. Defend by assuming that Planar DCR dictates the _timing window_ of release; if path is uncontrollable, the temporal precision required to square the face becomes impossible, linking path drift to face error.                                                                             | **Applied** to DCR Article          |
-| **18. Dimensional Inconsistency**<br>(Unit Mixing)                    | Mathematical / Dimensional     | **Valid** (Formulation)        | **Dynamic Fiber Definition:** Acknowledge that $\|f(x)\|$ mixes velocity and acceleration units. Redefine DCR explicitly on the **acceleration subspace** (comparing drift torque/acceleration to control torque/acceleration) to ensure dimensional homogeneity and physical meaningfulness.                                                                                                                                              | **Applied** to DCR Article          |
-| **19. Strokes Gained Non-Ergodicity**<br>(Time vs Ensemble)           | Statistical / Philosophical    | **Valid** (Methodological)     | **Ergodicity & Risk Defense:** Explicitly distinguish between _ensemble_ averages (Strokes Gained) and _time_ averages (individual career). Acknowledge that the benchmark assumes risk neutrality, whereas real players optimize non-linear utility functions (risk aversion/seeking). Defend by framing SG as a descriptive comparative tool, not a causal predictive model for individuals.                                             | **Applied** to Limitations          |
-| **20. Intermediate Axis Fallacy**<br>(Putting Scale)                  | Empirical / Scaling            | **Valid** (Magnitude)          | **Inertial Alignment Defense:** Admit that gyroscopic torque ($\omega \times I \omega$) is small at putting speeds. Pivot the defense to **Tensor Diagonalization**. The "Central Spine" design aligns principal axes with the stroke frame, eliminating linear cross-coupling ($I_{xy}$) terms. The Intermediate Axis instability acts as the "topological worst-case," but the practical benefit in putting is **Kinematic Decoupling**. | **Applied** to Article              |
-| **21. Lie Bracket Overreach**<br>(Holonomic System)                   | Mathematical / Formalism       | **Valid** (Category Error)     | **Reachable Set Anisotropy:** Admit that the system is fully actuated (holonomic). Downgrade the "Rank Loss" claim to **"Control Cone Anisotropy."** The "loss of control" is not geometric (rank) but energetic (actuator saturation vs. drift). We replace Lie Brackets with Hamiltonian Reachability analysis.                                                                                                                          | **Applied** to DCR Article          |
-| **22. Sequencing Fallacy**<br>(Kinetic Chain vs Geometry)             | Mechanical                     | **Valid** (Mechanism)          | **Inertial Energy Transfer:** Acknowledge that "Sequencing" is driven by inertial coupling ($M_{ij}$) and Coriolis terms, not nonholonomic steering. Reframe the section to highlight **"Inertial Harvesting"** rather than geometric bracket generation.                                                                                                                                                                                  | **Applied** to Control Insights     |
-| **23. Coulomb Friction**<br>(Input-Dependent Passive Force)           | Mathematical / Modeling        | **Valid** (Assumption)         | **Viscous-Only Assumption:** Admit that Coulomb friction ($\mu F_N$) depends on input $u$ via constraint forces, violating affine form. Defend by assuming **Viscous-Only Damping** for the theoretical model, arguing that inertial forces dwarf friction in ballistic swing dynamics.                                                                                                                                                    | **Applied** to Limitations & Part 3 |
-| **24. Simulation Tautology**<br>(Circular Validation)                 | Methodological                 | **Valid** (Logic)              | **Verification vs Validation:** Reframe the result. Admit the simulation relies on the same equations, so it cannot physically validate them. Defend it as a **"Numerical Consistency Check"** that proves the subtraction logic is robust against integration error and discrete sampling.                                                                                                                                                | **Applied** to Part 5 & Monolithic  |
-| **25. Precision vs. Gross Control**<br>(The "Locked-In" Fallacy)      | Conceptual / Empirical         | **Valid** (Nuance)             | **Macro- vs. Micro-Control:** Admit that "uncontrollable" is an overstatement for fine-tuning. DCR prohibits **trajectory reshaping** (Macro) but allows **outcome biasing** (Micro). However, high DCR means micro-correction fights a massive signal-to-noise ratio, making it precarious.                                                                                                                                               | **Applied** to DCR Article          |
-| **26. The Flaccid Drift Contradiction**<br>(Theory vs Sim Mismatch)   | Mathematical / Consistency     | **Valid** (Fixed)              | **Unified Passive Drift:** We explicitly include $\tau_{pas}$ in the theoretical derivation to match the "Effective Plant" simulation. This ensures the "Drift" is not a ragdoll collapse but the "Zero-Input" evolution of the structural impedance.                                                                                                                                                                                      | **Applied** to Part 1               |
-| **27. The Stiffness Pulse Paradox**<br>(Time-Varying Impedance)       | Conceptual / Control           | **Valid** (Nuance)             | **Parametric Counterfactual:** Acknowledge that ZTCF during impact represents the trajectory given the _impedance schedule_. We treat high stiffness as a "Virtual Constraint" (Parametric Control) rather than a passive property, admitting a slight deviation from strict Drift Invariance in the final milliseconds.                                                                                                                   | **Applied** to Constraint Article   |
-| **28. Tip Mass Omission**<br>(The Headless Club)                      | Mathematical / Modeling        | **Valid** (Critical)           | **Discrete Tip Inertia:** Explicitly add the clubhead mass $m_{head}$ and inertia $I_{head}$ to the kinetic energy integral. This ensures the "Inertial Coupling" term $M_{q\eta}$ captures the dominant "kick" of the clubhead, preventing the model from degenerating into a massless fishing rod.                                                                                                                                       | **Applied** to Part 1               |
-| **29. Double Pendulum Energy Blindness**<br>(Elastic Omission)        | Conceptual / Modeling          | **Valid** (Scope Limit)        | **Explicit Limitation Note:** Acknowledge that the rigid-body power analysis ignores elastic potential energy storage ($V_{elastic}$). Add a callout clarifying that the rigid model illustrates the _mechanism_ of transfer (force) but underestimates the _capacity_ for delayed release (energy).                                                                                                                                       | **Applied** to Article              |
-
-## Detailed Defense & Implementation
-
-### 1. Addressing Muscle Physiology (Impedance)
-
-**Analysis:** The critic correctly notes that in biological systems, stiffness $K$ is a function of activation $u$. However, this does not break the affine structure; it merely means our $f(x)$ is an idealized "skeletal" drift.
-
-**Implementation:**
-We have refined **Assumption 5** in `articles/affine-nature-golf-swing.qmd` to explicitly distinguish "Skeletal Drift" from "Physiological Relaxation".
-
-> _Refinement:_ "While we treat $u$ as an exogenous mechanical input, we acknowledge that biological actuation modulates joint impedance... The term $f(x)$ represents the **skeletal drift**..."
-
-### 2. Addressing Aerodynamics
-
-**Analysis:** Aerodynamic forces depend on state $(q, \dot{q})$, not input $u$, so they fit the affine structure.
-
-**Implementation:**
-We have added a clarification to **Assumption 4** in `articles/affine-nature-golf-swing.qmd`.
-
-> _Clarification:_ "Note that aerodynamic forces $F_{aero}(q, \dot{q})$ are strictly state-dependent and thus mathematically compatible with the affine structure..."
-
-### 3. Addressing Neuromuscular Control
-
-**Analysis:** The critique confuses the _Controller_ (Golfer) with the _Plant_ (Body). The AffineDrift theory models the Plant.
-
-**Implementation:**
-We have added a new subsection **"Mechanical vs. Control Causality"** to the **Limitations** section in `articles/affine-nature-golf-swing.qmd`.
-
-> _Addition:_ "It is crucial to distinguish **Control Causality** (why the nervous system selected a torque) from **Mechanical Causality** (which physical mechanism generated the force)..."
-
-### 4. Addressing The Impact Evasion
-
-**Analysis:** The theory excludes impact. This is a valid scope limitation but requires explicit defense to avoid appearing as an evasion.
-
-**Implementation:**
-Clarified **Assumption 3** to emphasize the "Theory of Delivery".
-
-> _Refinement:_ "This framework analyzes the _generation_ of impact conditions (Delivery), not the collision itself. Since the golfer's control authority effectively ends at the moment of contact..."
-
-### 5. Addressing Soft Grip Coupling
-
-**Analysis:** The rigid-body assumption for the hands is weak.
-
-**Implementation:**
-Added "Biophysical Robustness" note to **Limitations**.
-
-> _Refinement:_ "While grip compliance acts as a low-pass filter on input transmission, it does not break the affine structure... assuming rigidity likely overestimates the control authority..."
-
-### 6. Addressing Causal Masking (Drift Superposition)
-
-**Analysis:** Calling velocity-dependent forces "Drift" can mask their origin in past inputs.
-
-**Implementation:**
-Added a **"Note on Causal History"** to the **Taxonomy** section (Category 2).
-
-> _Addition:_ "While classified as 'Drift' because they do not depend on the _instantaneous_ torque input, these velocity-dependent forces are causally linked to the _history_ of prior inputs..."
-
-### 7. Addressing Null Space Forces (Closed Chain)
-
-**Analysis:** Inverse dynamics on a closed chain cannot see internal co-contraction.
-
-**Implementation:**
-Added **"Closed-chain indeterminacy"** to **Limitations**.
-
-> _Addition:_ "Inverse dynamics recovers only the _net motion-producing torque_. Internal forces... are invisible to this decomposition."
-
-### 8. Addressing Residual Input (Identifiability)
-
-**Analysis:** $\tau_{input}$ is a residual and absorbs errors.
-
-**Implementation:**
-Added **"Residual nature of input estimation"** to **Limitations**.
-
-> _Addition:_ "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."
-
-### 9. Addressing Geometric Stiffness
-
-**Analysis:** Geometric stiffness is a real physical force in flexible bodies. ZVCF removes it.
-
-**Implementation:**
-Added to **Taxonomy** (Category 2) in `articles/theory-part3.qmd`.
-
-> _Addition:_ "Geometric stiffness (centrifugal stiffening) forces, which appear as apparent stiffness changes but scale with velocity..."
-
-### 10. Addressing Parameter Causality Leakage
-
-**Analysis:** Identifying "passive" parameters from active swings risks contaminating the drift term with input information.
-
-**Implementation:**
-Added **"Parameter Identification and Causality"** to **Limitations** in `articles/theory-part3.qmd`.
-
-> _Addition:_ "Parameters identified from active motion represent the 'effective' impedance... rather than a truly passive cadaveric baseline."
-
-### 11. Addressing Passive Overshoot Artifact
-
-**Analysis:** The "overshoot" of passive momentum in the Simulink model (where drift > total force) implies the golfer is braking. Critics argue this is an artifact of under-damped modeling.
-
-**Implementation:**
-Added **"Note on Damping and Overshoot"** to the **Simulink Results** section in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part5.qmd`.
-
-> _Addition:_ "This 'overshoot'... correctly identifies the net non-conservative effort required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory..."
-
-### 12. Addressing The Static Fallacy (ZVCF)
-
-**Analysis:** The critic argues that ZVCF is irrelevant because static loads (gravity) are negligible in high-speed swings ($1g \ll 100g$). This misses the purpose of ZVCF: it is a diagnostic baseline used to isolate velocity-dependent terms (like geometric stiffness), not a simulation of a static swing.
-
-**Implementation:**
-Add **"Note on Dynamic Relevance"** to the **ZVCF** section in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part2.qmd`.
-
-> _Addition:_ "We do not calculate ZVCF because we believe gravity 'steers' the downswing; we calculate it to mathematically subtract the configuration-dependent baseline... The ZVCF is the necessary 'tare' operation for the dynamic scale."
-
-### 13. Addressing Input-Dependent Boundary Conditions
-
-**Analysis:** If grip stiffness varies with input $u$, the mass matrix $M$ depends on $u$, breaking the affine form. This is a critical mathematical threat.
-
-**Implementation:**
-Add **"Input-Dependent Boundary Conditions"** to **Limitations** in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part4.qmd`.
-
-> _Addition:_ "Theoretically, variable grip stiffness would make the mass matrix input-dependent ($M(u)$). We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint that defines the 'Effective Plant'."
-
-### 14. Addressing Teleological Blindness
-
-**Analysis:** The critique notes that the model conflates "Trajectory Drive" with "Impedance Modulation" because both appear as net torques. "Braking" might be "Stabilizing".
-
-**Implementation:**
-Added **"Ambiguity of Braking (Impedance vs. Drive)"** to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
-
-> _Addition:_ "We explicitly warn against the **Efficiency Fallacy**—the assumption that all 'braking' torque is error. 'Fighting the drift' should be interpreted neutrally as 'modulating the drift,' a process that may serve robustness rather than speed."
-
-### 15. Addressing Intentional Constraint Collapse
-
-**Analysis:** The "Constraint Collapse" metaphor risks implying a true singularity or topological change that would break the affine assumption.
-
-**Implementation:**
-Updated `articles/intentional-constraint-collapse.qmd` to reframe "collapse" as high impedance.
-
-> _Refinement:_ "While not a true geometric singularity... neuromuscular co-contraction creates a 'virtual constraint'..."
-> _Addition:_ Added "Limitations Note" clarifying that we treat this as a parameter reconfiguration of $f(x)$, not a topological change to the manifold.
-
-### 16. Addressing The Effective Plant Fallacy
-
-**Analysis:** If the passive plant is defined by the active task, the ZTCF is tautological.
-
-**Implementation:**
-Added to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
-
-> _Addition:_ "We defend this by acknowledging that the ZTCF represents **'Impedance-Conditioned Drift'**. While a truly passive (cadaveric) baseline exists in theory, it is biologically inaccessible... The 'Effective Plant' baseline is the only relevant counterfactual..."
-
-### 17. Addressing Planar DCR Blindness
-
-**Analysis:** The critic argues that DCR is derived from a planar model ($q \in \mathbb{R}^3$) and thus ignores axial rotation (supination), which is the primary mechanism for squaring the face. Since axial inertia is tiny, control authority there remains high even when planar authority collapses.
-
-**Implementation:**
-Added **"Anisotropy of the Control Cone"** to `articles/controllability-drift-ratio.qmd`.
-
-> _Addition:_ "We acknowledge that the 'Control Cone' is likely **anisotropic** (pancake-shaped)... However, Planar DCR creates a **Temporal Accuracy Constraint**. Since face angle changes rapidly ($\approx 1500^\circ/s$), timing errors (caused by uncontrollable planar path velocity) map directly to face angle errors. You can steer the face, but you cannot steer the _time_ you arrive at impact."
-
-### 18. Addressing Dimensional Inconsistency of DCR
-
-**Analysis:**
-The critique correctly points out that the Euclidean norm of the state derivative vector $\dot{x} = [\dot{q}, \ddot{q}]^T$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). This makes the scalar DCR value sensitive to the choice of time units (e.g., seconds vs milliseconds).
-
-**Implementation:**
-We will refine the definition of DCR in `articles/controllability-drift-ratio.qmd` to focus explicitly on the **dynamic fiber** (accelerations/torques), where the competition between passive and active forces actually occurs. We will redefine DCR as the ratio of **Drift Acceleration** to **Control Acceleration Capacity**.
-
-> _Refinement:_ "To ensure dimensional consistency, we define the DCR specifically on the vertical fiber of the tangent bundle (the acceleration subspace). We compare the magnitude of the drift-induced acceleration $\|\ddot{q}_{drift}\|$ to the maximum available control acceleration $\|\ddot{q}_{control}\|$..."
-
-### 19. Addressing Strokes Gained Non-Ergodicity
-
-**Analysis:**
-Strokes Gained relies on ensemble averages ($J_{\text{ref}}$) which assumes ergodicity to apply to an individual's time-series performance. It also assumes risk neutrality ($\min E[\text{Score}]$), ignoring psychological state and non-linear utility (risk aversion/seeking).
-
-**Implementation:**
-Added **"The Ergodicity Problem"** and **"Behavioral Limits: Hidden States and Risk"** to `articles/strokes-gained-limitations.qmd`.
-
-> _Addition:_ "Strokes gained calculates an ensemble expectation ($J_{\text{ref}}$). However, a single golfer's career is a single time-series... performance is rarely ergodic..."
-> _Addition:_ "The Bellman equation... assumes **risk neutrality**. However, real players maximize a utility function $U(\text{Score})$..."
-
-### 20. Addressing Intermediate Axis Fallacy
-
-**Analysis:**
-The critique correctly notes that at putting speeds ($\omega \approx 2$ rad/s), the quadratic gyroscopic term ($\omega \times I \omega$) is small ($\approx$ mNm). Sacrificing MOI for this seems unjustified.
-
-**Implementation:**
-We add a **"Note on Scaling and Inertial Alignment"** to `articles/secondary-axis-stability.qmd`. We explicitly acknowledge the low speed but reframe the benefit as **"Tensor Diagonalization"** (Inertial Alignment).
-
-> _Refinement:_ "While the _gyroscopic_ component of instability scales quadratically with speed and is small in putting, the **structural misalignment** of principal axes creates linear cross-coupling... The Central Spine design minimizes these off-diagonal terms, simplifying the control problem."
-
-### 23. Addressing Coulomb Friction Violation
-
-**Analysis:**
-The critique correctly identifies that Dry Friction depends on Normal Force, which depends on Input $u$. Thus $f(x)$ becomes $f(x, u)$, breaking the affine form $\dot{x} = f(x) + g(x)u$.
-
-**Implementation:**
-We add a specific **"Viscous Damping Assumption"** to **Proposition 1** in `articles/theory-part3.qmd` and a **"Friction Causality"** note to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
-
-> _Refinement:_ "We explicitly assume that all dissipative forces are viscous (state-dependent). If Coulomb friction were included, the drift term would become input-dependent..."
-
-### 24. Addressing The Simulation Tautology
-
-**Analysis:**
-Using a simulation built on the theory to prove the theory is circular. It only proves the code matches the math.
-
-**Implementation:**
-We systematically replace "Empirical Validation" with **"Numerical Verification"** in `articles/theory-part5.qmd` and `articles/affine-nature-golf-swing.qmd`.
-
-> _Refinement:_ "This result does not serve as physical validation... but rather as a **Numerical Consistency Check**, confirming that discrete-time integration does not corrupt the algebraic subtraction..."
-
-### 25. Addressing Precision vs. Gross Control
-
-**Analysis:**
-The critique correctly argues that "no meaningful correction" is false because "meaningful" in golf is defined by millimeters, not meters. A 1% control authority is useless for stopping the swing but potentially sufficient for squaring the face.
-
-**Implementation:**
-We refined the "Cone Collapse" section in `articles/controllability-drift-ratio.qmd` to distinguish between **Macro-Control** (Trajectory) and **Micro-Control** (Outcome).
-
-> _Refinement:_ "Micro-Correction remains theoretically possible but precarious. While the golfer cannot reshape the swing, they may still influence impact parameters... provided they can overcome the massive signal-to-noise ratio..."
-
-### 26. Addressing The Flaccid Drift Contradiction
-
-**Analysis:** The derivation in Part I historically omitted passive joint stiffness, implying a "flaccid" drift ($u=0 \implies$ collapse). However, the simulation and "Effective Plant" defense rely on a "stiff" drift ($u=0 \implies$ spring-back).
-
-**Implementation:**
-We updated `articles/theory-part1.qmd` to explicitly include $\tau_{pas}(q, \dot{q})$ in the drift vector definition.
-
-> _Refinement:_ "We explicitly include the term $\tau_{pas}(q, \dot{q})$ to model the **passive joint impedance**... This distinguishes the **Effective Plant**... from a 'flaccid' ragdoll."
-
-### 27. Addressing The Stiffness Pulse Paradox
-
-**Analysis:** The "Stiffness Pulse" required for impact stability implies time-varying impedance ($\dot{K} \neq 0$), which technically violates the "Frozen Strategy" assumption of drift invariance.
-
-**Implementation:**
-We added a limitation note to `articles/intentional-constraint-collapse.qmd`.
-
-> _Addition:_ "We must strictly qualify this 'Effective Plant' argument... The 'Stiffness Pulse'... violates the strict Drift Invariance condition... Consequently, the ZTCF in this regime should be interpreted as a **Parametric Counterfactual**..."
-
-### 28. Addressing Tip Mass Omission
-
-**Analysis:** The integral formulation for shaft kinetic energy neglected the discrete mass of the clubhead, rendering the "Inertial Coupling" term $M_{q\eta}$ physically negligible.
-
-**Implementation:**
-We modified the kinetic energy derivation in `articles/theory-part1.qmd` to include discrete tip inertia terms ($m_{head}, I_{head}$).
-
-> _Refinement:_ "The total kinetic energy of the club... is the sum of the distributed shaft kinetic energy and the discrete kinetic energy of the clubhead..."
-
-### 29. Addressing Double Pendulum Energy Blindness
-
-**Analysis:** The critique correctly notes that the "Energy Transfer Decomposition" in the double pendulum article uses a rigid-body model, which is blind to the storage of active work as elastic potential energy in the shaft. This contradicts the full flexible theory where $V_{elastic}$ is central.
-
-**Implementation:**
-Added a **"Limitation: Rigid vs Flexible Energy Transfer"** callout to `articles/drift-components-wrench-double-pendulum.qmd`.
-
-> _Addition:_ "This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**... The rigid model here illustrates the _mechanism_ of transfer but underestimates the _capacity_ for delayed release."
+<!-- DO NOT EDIT. Generated by scripts/generate_claim_critique_ledger.py.
+     Ledger SHA-256: c8aa589d0de51aacea19a7359e044f701c802df14188929fcd1fd9c75185b461 -->
+
+## AffineDrift Critique Adjudication Status
+
+This generated view replaces the former hand-maintained defense plan. An **Open** entry has no protected adjudication evidence. A **Responded** entry records a bounded response but does not claim the critique is resolved.
+
+| Critique ID | Critique | Severity | Status | Rationale | Evidence / Next Gate |
+|---|---|---|---|---|---|
+| `crit-aerodynamics` | [Critique: Neglecting Aerodynamics in High-Speed Swing Analysis](02_aerodynamics.md) | Unknown | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-control-causality-mechanical` | [Critique: Control Causality vs. Mechanical Causality](control_causality_vs_mechanical.md) | High | Responded | The canonical theory now treats algebraic attribution as conditional on the declared model, coordinates, parameters, intervention, horizon, and identifiability evidence, and blocks inference of neural intent or unique real-world cause. | [test_control_affine_scientific_trust.py](../tests/test_control_affine_scientific_trust.py); [affine-nature-golf-swing.qmd](../articles/affine-nature-golf-swing.qmd); Acquire intervention-specific human evidence capable of separating passive, reflexive, and voluntary contributions. |
+| `crit-coulomb-friction-violation` | [Critique: Coulomb Friction Violation of Drift Invariance](coulomb_friction_violation.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-dimensional-inconsistency-dcr` | [Critique: Dimensional Inconsistency of the Drift-Control Ratio](dimensional_inconsistency_dcr.md) | High | Responded | The DCR article now defines a declared acceleration-space magnitude ratio and separates it from finite-horizon reachability, path-correction authority, and impact outcome. | [test_dcr_reachability_contract.py](../tests/test_dcr_reachability_contract.py); [reachability.py](../src/affine_control/reachability.py); [controllability-drift-ratio.qmd](../articles/controllability-drift-ratio.qmd); Run declared finite-horizon three-dimensional perturbation studies with uncertainty and impact outcomes. |
+| `crit-double-pendulum-energy-blindness` | [Critique: Double Pendulum Energy Blindness](double_pendulum_energy_blindness.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-drift-superposition` | [Critique: Causal Masking in Drift Superposition](drift_superposition.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-effective-plant-fallacy` | [Critique: The Effective Plant Fallacy (Task-Dependent Impedance)](the_effective_plant_fallacy.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-flaccid-drift-contradiction` | [Critique: The Flaccid Drift Contradiction](flaccid_drift_contradiction.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-geometric-stiffness-omission` | [Critique: Geometric Stiffness and Centrifugal Stiffening Omission](geometric_stiffness_omission.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-hard-constraint-fallacy` | [Critique: The Hard Constraint Fallacy in Biomechanical Joints](hard_constraint_fallacy.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-impact-evasion` | [Critique: The Impact Evasion](04_impact_evasion.md) | Unknown | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-input-dependent-boundary-conditions` | [Critique: Input-Dependent Boundary Conditions (The Grip Paradox)](input_dependent_boundary_conditions.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-intentional-constraint-collapse` | [Critique: Intentional Constraint Collapse](intentional_constraint_collapse.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-intermediate-axis-fallacy` | [Critique: Secondary Axis Stability in Golf Clubs](intermediate_axis_fallacy.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-lie-bracket-formalism-overreach` | [Critique: Controllability-Drift Ratio (Formalism Overreach)](lie_bracket_formalism_overreach.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-misattribution-stability-gravity` | [Critique: Misattribution of Stability (Gravity vs. Inertia) in Putter Design](misattribution_of_stability_gravity.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-muscle-physiology` | [Critique: The Fallacy of Passive Drift and the &quot;Skeletal Baseline&quot;](01_muscle_physiology.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-neuromuscular-control` | [Critique: The Illusion of Open-Loop Control](03_neuromuscular_control.md) | Unknown | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-normative-ambiguity-drift` | [Critique: Normative Ambiguity of Drift (The &quot;Good Drift&quot; Hypothesis)](normative_ambiguity_drift.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-nullspace-interpretation` | [Critique: Null Space Forces and Closed-Chain Indeterminacy](nullspace_interpretation.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-parameter-causality-leakage` | [Critique: Parameter Causality Leakage](parameter_causality_leakage.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-passive-active-boundary-ambiguity` | [Critique: The Passive-Active Boundary Ambiguity (The &quot;Effective Plant&quot; Tautology)](passive_active_boundary_ambiguity.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-passive-overshoot-artifact` | [Critique: Passive Overshoot Artifact (Simulink &quot;Proof&quot;)](passive_overshoot_artifact.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-planar-dcr-blindness` | [Critique: Planar Blindness in DCR and Control Cone Analysis](planar_dcr_blindness.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-precision-gross-control` | [Critique: Precision vs. Gross Control (The &quot;locked-in&quot; Fallacy)](precision_vs_gross_control.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-sequencing-lie-bracket-fallacy` | [Critique: Lie Brackets and &quot;Sequencing&quot; (Misinterpretation of Actuation)](sequencing_lie_bracket_fallacy.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-simulation-tautology` | [Critique: The Simulation Tautology (Circular Validation)](simulation_tautology.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-static-fallacy-zvcf` | [Critique: The Static Fallacy (Zero Velocity Counterfactual)](static_fallacy_zvcf.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-stiffness-pulse-paradox` | [Critique: The Stiffness Pulse Paradox (Time-Varying Impedance)](stiffness_pulse_paradox.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-stretch-shortening-blindspot` | [Critique: Conflation of Active and Passive Muscle-Tendon Dynamics](stretch_shortening_blindspot.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-strokes-gained-non-ergodic` | [Critique: Strokes Gained Limitations and Ecological Fallacy](strokes_gained_non_ergodic.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-teleological-blindness` | [Critique: Teleological Blindness (Mechanics $\neq$ Intent)](teleological_blindness.md) | Medium | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-tip-mass-omission` | [Critique: Tip Mass Omission (The Headless Club)](tip_mass_omission.md) | Critical | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-validation-dimensionality-gap` | [Critique: The Validation Dimensionality Gap](validation_dimensionality_gap.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
+| `crit-ztcf-identifiability` | [Critique: Identifiability and &quot;Input&quot; as a Residual](ztcf_identifiability.md) | High | Open | No protected adjudication evidence is registered; the critique remains open. | No verified evidence; next: Register evidence, review the affected pages, and merge an adjudication through protected review. |
