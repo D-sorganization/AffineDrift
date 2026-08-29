@@ -378,7 +378,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   protected main `e23cabbc84e58bae791e0868e473cfec48699b07` and ordinarily
   merged current protected main `d8f90713a0d3a4255ed1131a6c3517ee13217997`
   in `4e6b95db197d25961778f0ca142b3a892f567a72`, preserving the independent
-  model-ladder program and its reviewed inventory route.
+  model-ladder program and its reviewed inventory route. It then ordinarily
+  merged protected bilateral-wrench main
+  `9c3c5218744ecf5791d9af4a7871f618d917437a` in
+  `5d9f641a2b99cafc59647d4f9ca5aff816234f37`, preserving that program and its
+  reviewed route.
 - Canonical review revision `8d776c5682d5fee6a06dc51259306f7c9cdccd74`
   reviews `/` plus all twelve `/pages/*.html` routes. The homepage now defines
   Available, Validated, Experimental, Planned, Deprecated, and Opinion as
@@ -399,13 +403,14 @@ This is current operational state. Historical detail belongs in git/GitHub.
   deferment issue, and each carries its review evidence and corrected finding.
 - RED was collection failure for the absent
   `scripts.site_trust_surface_audit` module. Reconciled-head GREEN evidence is
-  24 focused audit/inventory/editorial tests and the full 3,472-test collection:
-  3,442 passed with 30 documented skips. Deterministic inventory and site-audit
-  report checks pass. The content/link/citation/accessibility lane passes 164
-  tests. Focused Ruff, Black, strict MyPy, title case, QMD style discipline, and
-  diff checks pass. Python 3.13 reports the repository's expected warnings for
-  disabled third-party pytest plugins; Python 3.12 and hosted checks remain
-  protected authorities.
+  40 focused audit/inventory/editorial/merged-authority tests and the full
+  3,486-test collection: 3,456 passed with 30 documented skips. Deterministic
+  inventory and site-audit report checks pass. The
+  content/link/citation/accessibility lane passes 166 tests. Focused Ruff,
+  Black, strict MyPy, title case, QMD style discipline, and diff checks pass.
+  Python 3.13 reports the repository's expected warnings for disabled
+  third-party pytest plugins; Python 3.12 and hosted checks remain protected
+  authorities.
 - Exact-source Quarto 1.8.26 render and two-viewport, two-theme browser
   inspection are recorded in `reports/site-trust-surface-browser-qa.json`.
   The adversarial browser pass exposed clipped and malformed canonical notation
