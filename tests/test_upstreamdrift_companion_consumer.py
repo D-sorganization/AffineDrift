@@ -465,7 +465,24 @@ def test_provider_schema_rejects_external_references(tmp_path: Path) -> None:
         ),
         (
             lambda lock: lock["snapshot"].__setitem__("directory", f"snapshots/{'2' * 40}"),
-            "do not share the locked directory",
+            "snapshot directory does not match the provider commit",
+        ),
+        (
+            lambda lock: lock["provider"].__setitem__(
+                "schema_url",
+                (
+                    "https://raw.githubusercontent.com/D-sorganization/UpstreamDrift/"
+                    f"{'1' * 40}/docs/api/contracts/not-the-provider-schema.json"
+                ),
+            ),
+            "schema URL path is invalid",
+        ),
+        (
+            lambda lock: lock["provider"].__setitem__(
+                "revision_url",
+                f"https://github.com/D-sorganization/UpstreamDrift/tree/{'2' * 40}",
+            ),
+            "revision URL does not match",
         ),
     ],
 )

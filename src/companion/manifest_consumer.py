@@ -182,7 +182,9 @@ def validate_lock(lock: object, lock_schema_path: Path) -> dict[str, object]:
         raise CompanionImportError("; ".join(errors))
     if not isinstance(lock, dict):
         raise CompanionImportError("lock must be an object")
-    return cast(dict[str, object], lock)
+    typed_lock = cast(dict[str, object], lock)
+    _validate_lock_semantics(typed_lock)
+    return typed_lock
 
 
 def _pin_url(pin: CompanionPin, url: str, kind: str, *, redirected: bool = False) -> None:
@@ -256,6 +258,48 @@ def _validate_pin(pin: CompanionPin) -> None:
     _validate_pin_digests(pin)
     _validate_acquisition(pin)
     _pin_url(pin, pin.schema_url, "schema")
+
+
+def _pin_from_lock(lock: Mapping[str, object]) -> CompanionPin:
+    provider = lock.get("provider")
+    if not isinstance(provider, dict):
+        raise CompanionImportError("active provider lock is invalid")
+    return CompanionPin(
+        provider_host=str(provider["host"]),
+        provider_repository=str(provider["repository"]),
+        commit=str(provider["commit"]),
+        manifest_sha256=str(provider["manifest_sha256"]),
+        schema_sha256=str(provider["schema_sha256"]),
+        acquisition=str(provider["manifest_acquisition"]),
+        manifest_provider_path=str(provider["manifest_provider_path"]),
+        generator_command=str(provider["generator_command"]),
+        manifest_url=(
+            str(provider["manifest_url"]) if provider["manifest_url"] is not None else None
+        ),
+        schema_url=str(provider["schema_url"]),
+    )
+
+
+def _validate_lock_semantics(lock: Mapping[str, object]) -> None:
+    pin = _pin_from_lock(lock)
+    _validate_pin(pin)
+    provider = lock.get("provider")
+    snapshot = lock.get("snapshot")
+    if not isinstance(provider, dict) or not isinstance(snapshot, dict):
+        raise CompanionImportError("active lock sections are invalid")
+    expected_revision = f"{PROVIDER_REPOSITORY_URL}/tree/{pin.commit}"
+    if provider.get("revision_url") != expected_revision:
+        raise CompanionImportError("provider revision URL does not match the locked commit")
+    directory = f"snapshots/{pin.commit}"
+    expected_paths = {
+        "directory": directory,
+        "manifest_path": f"{directory}/{MANIFEST_NAME}",
+        "schema_path": f"{directory}/{PROVIDER_SCHEMA_NAME}",
+        "provenance_path": f"{directory}/{PROVENANCE_NAME}",
+    }
+    for field, expected in expected_paths.items():
+        if snapshot.get(field) != expected:
+            raise CompanionImportError(f"snapshot {field} does not match the provider commit")
 
 
 def _provider_schema_identity(schema: Mapping[str, object]) -> None:
@@ -566,20 +610,7 @@ class CompanionConsumer:
         snapshot_record = lock["snapshot"]
         if not isinstance(provider, dict) or not isinstance(snapshot_record, dict):
             raise CompanionImportError("active lock sections are invalid")
-        pin = CompanionPin(
-            provider_host=str(provider["host"]),
-            provider_repository=str(provider["repository"]),
-            commit=str(provider["commit"]),
-            manifest_sha256=str(provider["manifest_sha256"]),
-            schema_sha256=str(provider["schema_sha256"]),
-            acquisition=str(provider["manifest_acquisition"]),
-            manifest_provider_path=str(provider["manifest_provider_path"]),
-            generator_command=str(provider["generator_command"]),
-            manifest_url=(
-                str(provider["manifest_url"]) if provider["manifest_url"] is not None else None
-            ),
-            schema_url=str(provider["schema_url"]),
-        )
+        pin = _pin_from_lock(lock)
         manifest_path = _safe_relative(self._root, str(snapshot_record["manifest_path"]))
         schema_path = _safe_relative(self._root, str(snapshot_record["schema_path"]))
         provenance_path = _safe_relative(self._root, str(snapshot_record["provenance_path"]))
