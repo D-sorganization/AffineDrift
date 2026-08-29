@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import sqrt
 from statistics import fmean, variance
+from typing import Literal
 
 from src.affine_control.equipment_response_protocol import (
     EquipmentResponseProtocol,
@@ -36,8 +37,8 @@ class ParticipantResponse:
     shrunken_effect: float | None
     interval: tuple[float, float] | None
     stable_across_cycles: bool
-    origin: str
-    authorized_guidance: str = "unavailable"
+    origin: Literal["manufactured-synthetic", "unavailable"]
+    authorized_guidance: Literal["unavailable"] = "unavailable"
 
     @property
     def interval_width(self) -> float:
