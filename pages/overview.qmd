@@ -80,12 +80,18 @@ and the [Models page](../models/models.html) for the AffineDrift link map.
 
 ### Quick Start
 
+The pinned package metadata declares `requires-python = ">=3.11"`, which is an
+installation lower bound rather than an open-ended compatibility qualification.
+Python 3.11 and 3.12 are the tested interpreter minors at that revision. The
+metadata declaration does not establish support for untested interpreter minors
+such as Python 3.13.
+
 ```bash
 # Clone the protected public repository
 git clone https://github.com/D-sorganization/UpstreamDrift.git
 cd UpstreamDrift
 
-# Editable development install (Python 3.11 or newer)
+# Editable development install using tested Python 3.11 or 3.12
 python -m pip install -e ".[dev]"
 
 # Verify the install, then launch the default web UI

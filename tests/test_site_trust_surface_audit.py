@@ -186,3 +186,37 @@ def test_public_status_and_upstream_capability_language_is_bounded() -> None:
     assert "Status Authority" in roadmap
     assert "Article state:" in technology
     assert "AVAILABLE" in tools and "EXPERIMENTAL" in tools
+
+
+def test_scoped_routes_reject_unbounded_support_and_completeness_claims() -> None:
+    source_text = {
+        route: (ROOT / source).read_text(encoding="utf-8")
+        for route, source in SCOPED_SOURCES.items()
+    }
+
+    forbidden_patterns = {
+        "open-ended interpreter support": re.compile(
+            r"python\s+\d+\.\d+(?:\s+or\s+(?:newer|later)|\+)", re.IGNORECASE
+        ),
+        "unbounded version support": re.compile(
+            r"\b(?:all|any)\s+(?:python\s+)?versions?\b", re.IGNORECASE
+        ),
+        "comprehensive theory claim": re.compile(
+            r"\bcomprehensive\s+theor(?:y|ies)\b", re.IGNORECASE
+        ),
+        "complete reference claim": re.compile(
+            r"\bcomplete\s+(?:single-file\s+)?reference\s+manuscript\b",
+            re.IGNORECASE,
+        ),
+    }
+    for route, text in source_text.items():
+        for label, pattern in forbidden_patterns.items():
+            assert pattern.search(text) is None, f"{route}: {label}"
+
+    overview = source_text["/pages/overview.html"]
+    assert '`requires-python = ">=3.11"`' in overview
+    assert "Python 3.11 and 3.12 are the tested interpreter minors" in overview
+    assert re.search(
+        r"does not establish support for untested interpreter minors\s+such as Python 3\.13",
+        overview,
+    )
