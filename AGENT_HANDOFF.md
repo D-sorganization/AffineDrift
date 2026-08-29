@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -95,8 +95,15 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Required focused gate:
   `python -m pytest tests/test_induced_acceleration_attribution_contract.py -m content_lint -q`.
   Current evidence: the deliberate RED state failed 7 publication contracts;
-  GREEN passes all 10 contracts on workstation Python 3.13. Protected Python
-  3.12 and hosted render evidence remain release gates.
+  GREEN passes all 10 contracts on workstation Python 3.13. After reconciling
+  protected #4015 and #4012, the full Python suite passes 3,258 tests with 29
+  documented skips; Jest passes 20 suites (295 tests passed, 19 skipped). Ruff,
+  Black, strict mypy for the new contract, terminology, title-case,
+  cross-reference, citation, display-math, single-title, Quarto-syntax,
+  tree-parity, LaTeX-structure, and diff gates pass. All three changed pages
+  render to isolated HTML and expose the normative record without horizontal
+  overflow at a 1,905-pixel desktop viewport; a fresh browser console is clean.
+  Protected Python 3.12 and hosted exact-head checks remain release gates.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
