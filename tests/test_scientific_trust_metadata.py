@@ -58,6 +58,7 @@ def test_registry_uses_a_strict_versioned_schema() -> None:
     (
         ("This ratio always proves that correction is locked-in.", "bounded", "term"),
         ("This ratio can prove that the golfer is locked-in.", "bounded", "term"),
+        ("This metric causally determines the golfer's path.", "bounded", "term"),
         ("The modeled contribution is 85%.", "bounded", "percentage"),
         ("A universal golfer result.", "established", "strength"),
     ),

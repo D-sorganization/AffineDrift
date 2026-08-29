@@ -35,6 +35,18 @@ AMPLIFICATION_TERMS = frozenset(
         "universal",
     }
 )
+AMPLIFICATION_ALIASES = {
+    "causally": "causal",
+    "causation": "causal",
+    "caused": "cause",
+    "causing": "cause",
+    "exactness": "exact",
+    "optimally": "optimal",
+    "proof": "prove",
+    "proved": "prove",
+    "proven": "prove",
+    "universally": "universal",
+}
 PERCENTAGE = re.compile(r"(?<![\w.])\d+(?:\.\d+)?\s*%")
 TOKEN = re.compile(r"[a-z]+(?:-[a-z]+)?")
 CLAUSE_BOUNDARY = re.compile(r"[.!?;,:]|\b(?:although|and|but|however|yet)\b")
@@ -162,7 +174,8 @@ def _assertive_amplification_terms(text: str) -> set[str]:
     normalized = NEGATED_CONTRACTION.sub(" not ", text.casefold())
     for clause in CLAUSE_BOUNDARY.split(normalized):
         tokens = TOKEN.findall(clause)
-        terms = AMPLIFICATION_TERMS.intersection(tokens)
+        canonical_tokens = (AMPLIFICATION_ALIASES.get(token, token) for token in tokens)
+        terms = AMPLIFICATION_TERMS.intersection(canonical_tokens)
         if terms and not NEGATION_TERMS.intersection(tokens):
             assertive.update(terms)
     return assertive
