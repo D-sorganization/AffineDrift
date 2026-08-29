@@ -205,6 +205,23 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 - Zero declared control does not mean zero muscle activation or effort.
 - DCR compares drift with bounded control capacity.
 
+## Scientific Trust Remediation (#4012)
+
+- Branch `feat/4012-scientific-trust` corrects the A1 control-affinity and
+  attribution defects across Theory Parts 1-2, the foundational monograph, and
+  the single-file manifesto.
+- A state-dependent gain belongs in $G(x)$ and does not by itself make a system
+  non-affine in the declared input; state-only aerodynamics belong in $f(x)$.
+- Additivity is not orthogonality. Drift and input vectors may align, oppose, or
+  be oblique under a declared metric.
+- The shared `_includes/control-affine-attribution-boundary.qmd` is the rendered
+  authority boundary: attribution is conditional on model, coordinates,
+  declared input, parameters, intervention, horizon, and identifiability.
+  Algebra alone does not identify intent, individual-muscle forces, biological
+  effort, or a unique real-world cause.
+- `tests/test_control_affine_scientific_trust.py` is the corpus contract and must
+  remain in the `content_lint` CI lane.
+
 ## Gate Commands & Verification
 
 Run locally before pushing:
