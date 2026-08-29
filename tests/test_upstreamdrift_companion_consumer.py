@@ -13,6 +13,8 @@ from pathlib import Path
 import pytest
 
 from src.companion.manifest_consumer import (
+    MAX_LOCK_BYTES,
+    MAX_MANIFEST_BYTES,
     CompanionConsumer,
     CompanionImportError,
     CompanionPin,
@@ -531,6 +533,44 @@ def test_active_lock_rejects_duplicate_json_keys(tmp_path: Path) -> None:
     consumer.lock_path.write_bytes(duplicate)
 
     with pytest.raises(CompanionImportError, match="duplicate key: schema_version"):
+        consumer.verify_active()
+
+
+def test_verify_rejects_unexpected_snapshot_entries(tmp_path: Path) -> None:
+    commit = "1" * 40
+    schema = _schema_bytes()
+    manifest = _manifest_bytes(commit)
+    consumer = CompanionConsumer(tmp_path, LOCK_SCHEMA)
+    installed = consumer.install(_pin(commit, manifest, schema), manifest, schema)
+    (installed.snapshot_dir / "undeclared").mkdir()
+
+    with pytest.raises(CompanionImportError, match="snapshot entries"):
+        consumer.verify_active()
+
+
+def test_verify_bounds_active_manifest_before_parsing(tmp_path: Path) -> None:
+    commit = "1" * 40
+    schema = _schema_bytes()
+    manifest = _manifest_bytes(commit)
+    consumer = CompanionConsumer(tmp_path, LOCK_SCHEMA)
+    installed = consumer.install(_pin(commit, manifest, schema), manifest, schema)
+    (installed.snapshot_dir / "upstreamdrift-companion.v1.json").write_bytes(
+        b"x" * (MAX_MANIFEST_BYTES + 1)
+    )
+
+    with pytest.raises(CompanionImportError, match="manifest exceeds"):
+        consumer.verify_active()
+
+
+def test_verify_bounds_active_lock_before_parsing(tmp_path: Path) -> None:
+    commit = "1" * 40
+    schema = _schema_bytes()
+    manifest = _manifest_bytes(commit)
+    consumer = CompanionConsumer(tmp_path, LOCK_SCHEMA)
+    consumer.install(_pin(commit, manifest, schema), manifest, schema)
+    consumer.lock_path.write_bytes(b" " * (MAX_LOCK_BYTES + 1))
+
+    with pytest.raises(CompanionImportError, match="active lock exceeds"):
         consumer.verify_active()
 
 

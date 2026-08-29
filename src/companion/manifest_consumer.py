@@ -28,6 +28,8 @@ PROVIDER_SCHEMA_NAME = "upstreamdrift-companion-v1.schema.json"
 PROVENANCE_NAME = "provenance.qmd"
 MAX_MANIFEST_BYTES = 4 * 1024 * 1024
 MAX_SCHEMA_BYTES = 512 * 1024
+MAX_LOCK_BYTES = 64 * 1024
+MAX_PROVENANCE_BYTES = 64 * 1024
 _COMMIT = re.compile(r"(?!0{40}$)[0-9a-f]{40}")
 _DIGEST = re.compile(r"(?!0{64}$)[0-9a-f]{64}")
 _MUTABLE_SEGMENTS = frozenset({"main", "master", "head"})
@@ -496,6 +498,18 @@ def _read_bounded_file(path: Path, max_bytes: int, label: str) -> bytes:
     return payload
 
 
+def _verify_snapshot_entries(snapshot: Path, expected_names: set[str]) -> None:
+    """Require one exact, regular-file-only immutable snapshot directory."""
+    try:
+        entries = list(snapshot.iterdir())
+    except OSError as exc:
+        raise CompanionImportError(f"cannot inspect immutable snapshot entries: {exc}") from exc
+    if {entry.name for entry in entries} != expected_names or any(
+        entry.is_symlink() or not entry.is_file() for entry in entries
+    ):
+        raise CompanionImportError("immutable snapshot entries do not match the contract")
+
+
 class CompanionConsumer:
     """Validate, install, verify, and compare immutable companion snapshots."""
 
@@ -563,9 +577,7 @@ class CompanionConsumer:
     @staticmethod
     def _verify_existing_snapshot(snapshot: Path, expected: Mapping[str, bytes]) -> None:
         """Require an existing revision directory to match every expected byte."""
-        actual_files = {path.name for path in snapshot.iterdir() if path.is_file()}
-        if actual_files != set(expected):
-            raise CompanionImportError("existing immutable snapshot conflicts with reviewed bytes")
+        _verify_snapshot_entries(snapshot, set(expected))
         for name, payload in expected.items():
             if (snapshot / name).read_bytes() != payload:
                 raise CompanionImportError(
@@ -635,10 +647,7 @@ class CompanionConsumer:
 
     def _load_lock(self) -> dict[str, object]:
         """Load and fully validate the active lock without following its paths."""
-        try:
-            payload = self.lock_path.read_bytes()
-        except OSError as exc:
-            raise CompanionImportError(f"active lock is unavailable: {exc}") from exc
+        payload = _read_bounded_file(self.lock_path, MAX_LOCK_BYTES, "active lock")
         lock = _json_object(payload, "active lock")
         return validate_lock(lock, self._lock_schema_path)
 
@@ -658,12 +667,12 @@ class CompanionConsumer:
             manifest_path.parent == schema_path.parent == provenance_path.parent == directory_path
         ):
             raise CompanionImportError("active snapshot paths do not share the locked directory")
-        try:
-            manifest_bytes = manifest_path.read_bytes()
-            schema_bytes = schema_path.read_bytes()
-            provenance = provenance_path.read_bytes()
-        except OSError as exc:
-            raise CompanionImportError(f"active snapshot is incomplete: {exc}") from exc
+        _verify_snapshot_entries(
+            directory_path, {MANIFEST_NAME, PROVIDER_SCHEMA_NAME, PROVENANCE_NAME}
+        )
+        manifest_bytes = _read_bounded_file(manifest_path, MAX_MANIFEST_BYTES, "active manifest")
+        schema_bytes = _read_bounded_file(schema_path, MAX_SCHEMA_BYTES, "active provider schema")
+        provenance = _read_bounded_file(provenance_path, MAX_PROVENANCE_BYTES, "active provenance")
         if provider["manifest_bytes"] != len(manifest_bytes):
             raise CompanionImportError("active manifest byte count does not match the lock")
         if provider["schema_bytes"] != len(schema_bytes):
