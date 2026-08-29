@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 27
+- Reviewed: 28
 - Deferred: 200
 - Exempt: 2
 
@@ -38,6 +38,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
 | `/models/neural-timing-feedback.html` | `models/neural-timing-feedback.qmd` | 8 |
 | `/models/population-generalization.html` | `models/population-generalization.qmd` | 9 |
+| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 18 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
 | `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
@@ -244,6 +245,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-50bd3b182f9b` | `/models/models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-8debf6763c2e` | `/models/neural-timing-feedback.html` | Reviewed | — | None | None | 1 |
 | `ad-route-b7d4c6ec440c` | `/models/population-generalization.html` | Reviewed | — | None | None | 0 |
+| `ad-route-7bb2e5fcbb84` | `/models/research-protocol-readiness.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | None | None | 0 |
 | `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | — | None | None | 1 |
 | `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | — | None | None | 1 |
