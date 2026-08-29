@@ -13,6 +13,18 @@ EvidenceTier = Literal[
     "unavailable",
 ]
 Outcome = Literal["supported", "negative", "null", "unavailable"]
+RecordStatus = Literal["pending-external", "approved-external"]
+RecordType = Literal[
+    "ethics-approval",
+    "risk-assessment",
+    "privacy-plan",
+    "consent-revision",
+    "data-license",
+    "device-calibration",
+    "stopping-rules-revision",
+    "reliability-protocol",
+    "independent-approval",
+]
 
 _EVIDENCE_TIERS = (
     "effective-mechanical",
@@ -21,6 +33,18 @@ _EVIDENCE_TIERS = (
     "unavailable",
 )
 _OUTCOMES = ("supported", "negative", "null", "unavailable")
+_RECORD_STATUSES = ("pending-external", "approved-external")
+_RECORD_TYPES = (
+    "ethics-approval",
+    "risk-assessment",
+    "privacy-plan",
+    "consent-revision",
+    "data-license",
+    "device-calibration",
+    "stopping-rules-revision",
+    "reliability-protocol",
+    "independent-approval",
+)
 _AUTHORITY_PHRASES = (
     "muscle force",
     "neural strategy",
@@ -87,23 +111,76 @@ class ImpedanceResult:
 
 
 @dataclass(frozen=True)
-class HumanStudyGate:
-    """Governance, safety, and validation gates required before human work."""
+class GovernedRecord:
+    """Typed reference to a record controlled by an external human authority."""
 
-    ethics_approval: str | None
-    risk_assessment: str | None
-    privacy_plan: str | None
-    consent_revision: str | None
-    data_license: str | None
-    device_calibration: str | None
-    stopping_rules_revision: str | None
-    reliability_protocol: str | None
-    participant_held_out: bool
+    record_id: str
+    record_type: RecordType
+    authority: str
+    revision: str
+    status: RecordStatus
+
+    def __post_init__(self) -> None:
+        """Reject placeholders and undeclared external-review states."""
+        for value, label in (
+            (self.record_id, "record_id"),
+            (self.authority, "record authority"),
+            (self.revision, "record revision"),
+        ):
+            _require_text(value, label)
+        if self.status not in _RECORD_STATUSES:
+            raise ValueError("record status must be pending-external or approved-external")
+        if self.record_type not in _RECORD_TYPES:
+            raise ValueError("governed record type must be declared")
 
     @property
-    def eligible(self) -> bool:
-        """Return true only when every required governed record exists."""
-        records = (
+    def externally_approved(self) -> bool:
+        """Return whether the external record carries its approved state."""
+        return self.status == "approved-external"
+
+
+@dataclass(frozen=True)
+class HumanReadiness:
+    """Structural review-readiness report that never authorizes collection."""
+
+    ready_for_external_review: bool
+    authorizes_participant_collection: Literal[False]
+    next_gate: str
+
+
+@dataclass(frozen=True)
+class HumanStudyGate:
+    """Typed structural prerequisites for an external human release decision."""
+
+    ethics_approval: GovernedRecord | None
+    risk_assessment: GovernedRecord | None
+    privacy_plan: GovernedRecord | None
+    consent_revision: GovernedRecord | None
+    data_license: GovernedRecord | None
+    device_calibration: GovernedRecord | None
+    stopping_rules_revision: GovernedRecord | None
+    reliability_protocol: GovernedRecord | None
+    independent_approval: GovernedRecord | None
+    participant_held_out: bool
+
+    def __post_init__(self) -> None:
+        """Reject arbitrary strings masquerading as governed approval records."""
+        if any(
+            record is not None and not isinstance(record, GovernedRecord) for record in self.records
+        ):
+            raise TypeError("human gates require typed governed records")
+        expected_types = _RECORD_TYPES
+        for record, expected_type in zip(self.records, expected_types, strict=True):
+            if record is not None and record.record_type != expected_type:
+                raise ValueError("human gate record types must match their exact prerequisites")
+        record_ids = tuple(record.record_id for record in self.records if record is not None)
+        if len(record_ids) != len(set(record_ids)):
+            raise ValueError("human gate record IDs must be distinct")
+
+    @property
+    def records(self) -> tuple[GovernedRecord | None, ...]:
+        """Return the exact structural record set."""
+        return (
             self.ethics_approval,
             self.risk_assessment,
             self.privacy_plan,
@@ -112,11 +189,21 @@ class HumanStudyGate:
             self.device_calibration,
             self.stopping_rules_revision,
             self.reliability_protocol,
+            self.independent_approval,
         )
-        return self.participant_held_out and all(value and value.strip() for value in records)
 
-    def authorize(self) -> bool:
-        """Fail closed until the complete human tier is governed and validated."""
-        if not self.eligible:
-            raise ValueError("human tier is unavailable until every gate is satisfied")
-        return True
+    @property
+    def ready_for_external_review(self) -> bool:
+        """Return structural completeness without granting participant authority."""
+        approvals = all(record and record.externally_approved for record in self.records)
+        return self.participant_held_out and bool(approvals)
+
+    def require_external_review_readiness(self) -> HumanReadiness:
+        """Fail closed or return a non-authorizing external-review handoff."""
+        if not self.ready_for_external_review:
+            raise ValueError("human tier is not ready for external review")
+        return HumanReadiness(
+            ready_for_external_review=True,
+            authorizes_participant_collection=False,
+            next_gate="A human release decision outside this software remains required.",
+        )

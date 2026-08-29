@@ -14,19 +14,18 @@ from typing import Literal
 import numpy as np
 from numpy.typing import NDArray
 
+from src.affine_control.impedance_emg import EmgChannel, EmgPairDeclaration
 from src.affine_control.impedance_evidence import HumanStudyGate
 
 type FloatArray = NDArray[np.float64]
 SourceType = Literal["primary-literature", "measurement-standard"]
 WindowType = Literal["baseline", "early-response", "late-response"]
-Side = Literal["lead", "trail"]
 OutputQuantity = Literal["endpoint-wrench", "joint-torque"]
 AdverseOutcome = Literal["negative", "null", "unavailable"]
 
 PARAMETER_NAMES = ("inertia", "damping", "stiffness", "reflex_gain", "voluntary_basis")
 WINDOW_TYPES = ("baseline", "early-response", "late-response")
 _SOURCE_TYPES = ("primary-literature", "measurement-standard")
-_SIDES = ("lead", "trail")
 _OUTPUT_QUANTITIES = ("endpoint-wrench", "joint-torque")
 _ADVERSE_OUTCOMES = ("negative", "null", "unavailable")
 
@@ -155,56 +154,9 @@ class PhaseDeclaration:
         pairs = zip(self.windows, self.windows[1:], strict=False)
         if any(earlier.end_ms > later.start_ms for earlier, later in pairs):
             raise ValueError("response windows must be ordered and nonoverlapping")
-
-
-@dataclass(frozen=True)
-class EmgChannel:
-    """One revisioned EMG channel and its processing uncertainty."""
-
-    channel_id: str
-    muscle_label: str
-    side: Side
-    electrode_location: str
-    electrode_orientation: str
-    interelectrode_distance_mm: float
-    sample_rate_hz: float
-    highpass_hz: float
-    lowpass_hz: float
-    normalization_method: str
-    electromechanical_delay_ms: float
-    delay_uncertainty_ms: float
-    crosstalk_check: str
-    electrode_revision: str
-
-    def __post_init__(self) -> None:
-        """Reject ambiguous placement, filtering, or latency declarations."""
-        if self.side not in _SIDES:
-            raise ValueError("EMG side must be lead or trail")
-        for value, label in (
-            (self.channel_id, "EMG channel_id"),
-            (self.muscle_label, "muscle label"),
-            (self.electrode_location, "electrode location"),
-            (self.electrode_orientation, "electrode orientation"),
-            (self.normalization_method, "normalization method"),
-            (self.crosstalk_check, "crosstalk check"),
-            (self.electrode_revision, "electrode revision"),
-        ):
-            _require_text(value, label)
-        _finite_positive(
-            (
-                self.interelectrode_distance_mm,
-                self.sample_rate_hz,
-                self.highpass_hz,
-                self.lowpass_hz,
-                self.electromechanical_delay_ms,
-                self.delay_uncertainty_ms,
-            ),
-            "EMG acquisition limits",
-        )
-        if self.highpass_hz >= self.lowpass_hz:
-            raise ValueError("EMG high-pass frequency must be below the low-pass frequency")
-        if self.sample_rate_hz <= 2.0 * self.lowpass_hz:
-            raise ValueError("EMG sample rate must exceed the declared Nyquist limit")
+        baseline, early, _ = self.windows
+        if not np.isclose(baseline.end_ms, 0.0) or not np.isclose(early.start_ms, 0.0):
+            raise ValueError("baseline and early-response windows must meet at perturbation zero")
 
 
 @dataclass(frozen=True)
@@ -280,6 +232,7 @@ class ImpedanceProtocol:
     safety: SafetyEnvelope
     phases: tuple[PhaseDeclaration, ...]
     emg_channels: tuple[EmgChannel, ...]
+    emg_pairs: tuple[EmgPairDeclaration, ...]
     models: tuple[IdentificationModel, ...]
     hypotheses: tuple[Hypothesis, ...]
     uncertainty_method: str
@@ -295,6 +248,7 @@ class ImpedanceProtocol:
             (tuple(source.source_id for source in self.sources), "source IDs"),
             (tuple(phase.phase_id for phase in self.phases), "phase IDs"),
             (tuple(channel.channel_id for channel in self.emg_channels), "EMG channel IDs"),
+            (tuple(pair.pair_id for pair in self.emg_pairs), "EMG pair IDs"),
             (tuple(model.model_id for model in self.models), "model IDs"),
             (tuple(item.hypothesis_id for item in self.hypotheses), "hypothesis IDs"),
         )
@@ -303,6 +257,13 @@ class ImpedanceProtocol:
                 raise ValueError(f"{label} must be nonempty and unique")
         if {model.output_quantity for model in self.models} != set(_OUTPUT_QUANTITIES):
             raise ValueError("exactly one endpoint and joint identification model are required")
+        channel_by_id = {channel.channel_id: channel for channel in self.emg_channels}
+        for pair in self.emg_pairs:
+            pair_ids = (pair.agonist_channel_id, pair.antagonist_channel_id)
+            if any(channel_id not in channel_by_id for channel_id in pair_ids):
+                raise ValueError("EMG pairs must reference registered EMG channels")
+            if any(channel_by_id[channel_id].side != pair.side for channel_id in pair_ids):
+                raise ValueError("each EMG pair must join two channels on the same declared side")
 
 
 @dataclass(frozen=True)
@@ -329,16 +290,26 @@ class ImpedanceFit:
 
 def assess_identifiability(
     design: FloatArray,
+    rank_tolerance: float,
     maximum_condition_number: float,
 ) -> IdentifiabilityReport:
-    """Assess structural rank and numerical conditioning of a design matrix."""
+    """Assess rank and conditioning with one relative singular-value tolerance."""
     matrix = np.asarray(design, dtype=float)
     if matrix.ndim != 2 or matrix.size == 0 or not np.all(np.isfinite(matrix)):
         raise ValueError("design matrix must be finite, nonempty, and two-dimensional")
-    _finite_positive((maximum_condition_number,), "maximum condition number")
+    _finite_positive(
+        (rank_tolerance, maximum_condition_number),
+        "rank and condition limits",
+    )
     observations, parameters = matrix.shape
-    rank = int(np.linalg.matrix_rank(matrix))
-    condition = float(np.linalg.cond(matrix))
+    singular_values = np.linalg.svd(matrix, compute_uv=False)
+    cutoff = rank_tolerance * singular_values[0]
+    rank = int(np.count_nonzero(singular_values > cutoff))
+    condition = (
+        float("inf")
+        if singular_values[-1] == 0.0
+        else float(singular_values[0] / singular_values[-1])
+    )
     qualified = rank == parameters and condition <= maximum_condition_number
     return IdentifiabilityReport(
         observations,
@@ -363,7 +334,11 @@ def fit_impedance(
     expected_shape = (output.size, len(model.parameter_names))
     if matrix.shape != expected_shape:
         raise ValueError("design and response must align with the declared parameters")
-    report = assess_identifiability(matrix, model.maximum_condition_number)
+    report = assess_identifiability(
+        matrix,
+        model.rank_tolerance,
+        model.maximum_condition_number,
+    )
     if not report.identifiable:
         raise ValueError("design is not identifiable under the declared conditioning gate")
     estimates, _, _, _ = np.linalg.lstsq(matrix, output, rcond=model.rank_tolerance)
@@ -374,23 +349,3 @@ def fit_impedance(
         residual_rms,
         model.output_quantity,
     )
-
-
-def co_contraction_proxy(agonist: FloatArray, antagonist: FloatArray) -> float:
-    """Return a symmetric EMG-envelope overlap proxy in [0, 1]."""
-    first = np.asarray(agonist, dtype=float)
-    second = np.asarray(antagonist, dtype=float)
-    if first.ndim != 1 or first.shape != second.shape or first.size == 0:
-        raise ValueError("EMG proxy inputs must be nonempty aligned vectors")
-    if not np.all(np.isfinite(first)) or not np.all(np.isfinite(second)):
-        raise ValueError("EMG proxy inputs must be finite")
-    if np.any(first < 0.0) or np.any(second < 0.0):
-        raise ValueError("EMG proxy inputs must be nonnegative envelopes")
-    denominator = first + second
-    samples = np.divide(
-        2.0 * np.minimum(first, second),
-        denominator,
-        out=np.zeros_like(denominator),
-        where=denominator > 0.0,
-    )
-    return float(np.mean(samples))

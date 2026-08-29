@@ -6,19 +6,26 @@ from typing import TypedDict
 
 import numpy as np
 
+from src.affine_control.impedance_emg import (
+    CciFamily,
+    ComparisonScope,
+    EmgChannel,
+    EmgEnvelopePair,
+    EmgPairDeclaration,
+    FormulaId,
+    Side,
+)
 from src.affine_control.impedance_evidence import HumanStudyGate, ImpedanceResult
 from src.affine_control.impedance_protocol import (
     PARAMETER_NAMES,
-    EmgChannel,
-    EvidenceSource,
     Hypothesis,
     IdentificationModel,
     ImpedanceProtocol,
     PhaseDeclaration,
     ResponseWindow,
     SafetyEnvelope,
-    Side,
 )
+from src.affine_control.impedance_sources import primary_sources
 
 
 class _SharedModelFields(TypedDict):
@@ -32,52 +39,14 @@ class _SharedModelFields(TypedDict):
     residual_metric: str
 
 
-def _sources() -> tuple[EvidenceSource, ...]:
-    """Return primary and measurement-standard sources with bounded authority."""
-    return (
-        EvidenceSource(
-            "westwick-perreault-2012",
-            "primary-literature",
-            "Westwick and Perreault (2012), IEEE TBME, doi:10.1109/TBME.2012.2213339",
-            "input bandwidth, noise, causality, and impedance-identification limits",
-            "does not validate this fixture, device, movement phase, or participant protocol",
-        ),
-        EvidenceSource(
-            "lipps-et-al-2020",
-            "primary-literature",
-            "Lipps et al. (2020), Ann Biomed Eng, doi:10.1007/s10439-020-02509-w",
-            "multidimensional shoulder-impedance measurement precedent",
-            "volitional posture experiment is not swing-phase or endpoint-to-joint equivalence",
-        ),
-        EvidenceSource(
-            "vant-veld-et-al-2021",
-            "primary-literature",
-            "van 't Veld et al. (2021), JNER, doi:10.1186/s12984-021-00809-3",
-            "parallel-cascade intrinsic/reflex model and EMG association precedent",
-            "association and model partition are not unique physiological identification",
-        ),
-        EvidenceSource(
-            "li-et-al-2021",
-            "primary-literature",
-            "Li et al. (2021), Front Bioeng Biotechnol, doi:10.3389/fbioe.2020.588908",
-            "co-contraction-index sensitivity to delay, muscle pair, and formulation",
-            "gait associations do not establish stiffness or swing-specific validity",
-        ),
-        EvidenceSource(
-            "carey-et-al-2026",
-            "primary-literature",
-            "Carey et al. (2026), PLOS ONE, doi:10.1371/journal.pone.0343081",
-            "synthetic comparison of co-contraction-index interpretation and normalization",
-            "synthetic index behavior is not mechanical impedance or participant evidence",
-        ),
-        EvidenceSource(
-            "hermens-et-al-2000",
-            "measurement-standard",
-            "Hermens et al. (2000), J Electromyogr Kinesiol, doi:10.1016/S1050-6411(00)00027-4",
-            "surface-EMG sensor and placement recommendations",
-            "placement guidance does not eliminate crosstalk or identify muscle force",
-        ),
-    )
+class _SharedPairFields(TypedDict):
+    """Typed keyword fields shared by the two governed EMG pairs."""
+
+    normalization_revision: str
+    cci_family: CciFamily
+    formula_id: FormulaId
+    comparison_scope: ComparisonScope
+    sensitivity_plan: tuple[str, ...]
 
 
 def _safety() -> SafetyEnvelope:
@@ -205,6 +174,37 @@ def _models() -> tuple[IdentificationModel, ...]:
     return endpoint, joint
 
 
+def _emg_pairs() -> tuple[EmgPairDeclaration, ...]:
+    """Return exact same-side channel pairings and proxy definitions."""
+    shared: _SharedPairFields = {
+        "normalization_revision": "task-reference/v1 with MVC sensitivity",
+        "cci_family": "amplitude-driven",
+        "formula_id": "symmetric-envelope-overlap-v1",
+        "comparison_scope": "within-formula-relative-trends-only",
+        "sensitivity_plan": (
+            "normalization method",
+            "electrode placement and crosstalk",
+            "muscle-pair selection",
+            "electromechanical delay",
+        ),
+    }
+    lead = EmgPairDeclaration(
+        pair_id="lead-flexor-extensor/v1",
+        agonist_channel_id="lead-flexor/v1",
+        antagonist_channel_id="lead-extensor/v1",
+        side="lead",
+        **shared,
+    )
+    trail = EmgPairDeclaration(
+        pair_id="trail-flexor-extensor/v1",
+        agonist_channel_id="trail-flexor/v1",
+        antagonist_channel_id="trail-extensor/v1",
+        side="trail",
+        **shared,
+    )
+    return lead, trail
+
+
 def _hypotheses() -> tuple[Hypothesis, ...]:
     """Return predeclared feasibility, recovery, and human-transfer hypotheses."""
     return (
@@ -245,10 +245,11 @@ def manufactured_protocol() -> ImpedanceProtocol:
     )
     return ImpedanceProtocol(
         protocol_id="affinedrift.active-impedance/v1",
-        sources=_sources(),
+        sources=primary_sources(),
         safety=_safety(),
         phases=_phases(),
         emg_channels=channels,
+        emg_pairs=_emg_pairs(),
         models=_models(),
         hypotheses=_hypotheses(),
         uncertainty_method=(
@@ -300,11 +301,22 @@ def manufactured_confounded_case() -> tuple[IdentificationModel, np.ndarray, np.
     return _models()[1], design, design @ truth
 
 
-def manufactured_emg_pair() -> tuple[np.ndarray, np.ndarray]:
+def manufactured_emg_pair_declaration() -> EmgPairDeclaration:
+    """Return the lead-side governed pair used by the synthetic proxy fixture."""
+    return _emg_pairs()[0]
+
+
+def manufactured_emg_pair() -> EmgEnvelopePair:
     """Return deterministic nonnegative normalized agonist/antagonist envelopes."""
     agonist = np.asarray((0.2, 0.4, 0.7, 0.9, 0.8, 0.5, 0.3, 0.1))
     antagonist = np.asarray((0.1, 0.3, 0.5, 0.4, 0.6, 0.4, 0.2, 0.1))
-    return agonist, antagonist
+    declaration = manufactured_emg_pair_declaration()
+    return EmgEnvelopePair(
+        declaration.agonist_channel_id,
+        declaration.antagonist_channel_id,
+        agonist,
+        antagonist,
+    )
 
 
 def manufactured_results() -> tuple[ImpedanceResult, ...]:
@@ -355,4 +367,4 @@ def manufactured_results() -> tuple[ImpedanceResult, ...]:
 
 def manufactured_human_gate() -> HumanStudyGate:
     """Return the deliberately unavailable participant tier."""
-    return HumanStudyGate(None, None, None, None, None, None, None, None, False)
+    return HumanStudyGate(None, None, None, None, None, None, None, None, None, False)
