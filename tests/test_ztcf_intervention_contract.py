@@ -58,10 +58,14 @@ def test_python_golden_fixture_replays_at_registered_tolerance() -> None:
     result = execute_ztcf_intervention(intervention)
 
     assert intervention.expected is not None
+    tolerance = intervention.integration.absolute_tolerance
+    assert tolerance <= 1e-9
     assert result.time == pytest.approx(intervention.expected.time, abs=1e-15)
-    assert result.q == pytest.approx(intervention.expected.q, abs=1e-11)
-    assert result.qd == pytest.approx(intervention.expected.qd, abs=1e-11)
-    assert result.clubhead_speed == pytest.approx(intervention.expected.clubhead_speed, abs=1e-11)
+    assert result.q == pytest.approx(intervention.expected.q, abs=tolerance)
+    assert result.qd == pytest.approx(intervention.expected.qd, abs=tolerance)
+    assert result.clubhead_speed == pytest.approx(
+        intervention.expected.clubhead_speed, abs=tolerance
+    )
 
 
 def test_unavailable_intervention_fails_closed() -> None:
