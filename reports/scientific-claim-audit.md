@@ -20,6 +20,30 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
 - [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062): 6 routes
 
+## Reviewed Evidence
+
+| Route | Canonical Source | Evidence Files |
+|---|---|---:|
+| `/` | `index.qmd` | 3 |
+| `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 5 |
+| `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
+| `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
+| `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
+| `/pages/about.html` | `pages/about.qmd` | 3 |
+| `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
+| `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
+| `/pages/contact.html` | `pages/contact.qmd` | 3 |
+| `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
+| `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
+| `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 3 |
+| `/pages/notation.html` | `pages/notation.qmd` | 4 |
+| `/pages/overview.html` | `pages/overview.qmd` | 3 |
+| `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
+| `/pages/technology.html` | `pages/technology.qmd` | 3 |
+| `/pages/tools.html` | `pages/tools.qmd` | 3 |
+
+## Route Inventory
+
 | Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |
 |---|---|---|---|---|---|---:|
 | `ad-route-8a5edab28263` | `/` | Reviewed | — | None | None | 1 |

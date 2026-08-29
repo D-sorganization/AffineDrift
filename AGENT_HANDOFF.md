@@ -510,24 +510,27 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Stable IDs are SHA-256-derived from canonical routes. Claim and critique
   fields contain IDs only and must match the exact route joins derived from the
   protected #4019 registry and #4020 ledger.
-- The post-prune Quarto 1.8.26 render contains 222 public routes: the static
-  404/offline system routes are narrowly exempt, and the DCR route is reviewed
-  against protected #4013/#4019 evidence. The remaining 219 routes map exactly
-  once to exhaustive child batches: #4054 36 Physics of Golf, #4055 26 Geometry
+- The current protected inventory contains 224 public routes: the static
+  404/offline system routes are narrowly exempt, 16 routes are reviewed, and
+  206 remain deferred. The original 219-route delivery partition still maps
+  every substantive route exactly once: #4054 36 Physics of Golf, #4055 26 Geometry
   of Motion, #4056 16 tangent-series, #4057 40 critiques, #4058 29 core
   articles, #4059 18 applied articles, #4060 14 model/repository, #4061 21
-  resources, #4062 6 books, and #4063 13 root/page routes. Parent #4021 remains
-  open for final reconciliation; no route is absent or silently reviewed.
+  resources, #4062 6 books, and protected-merged #4063 13 root/page routes.
+  Parent #4021 remains open for the nine unfinished content batches, the
+  cross-cutting #4067 evidence migration, and final reconciliation; no route is
+  absent or silently reviewed.
 - P0/P1 findings may be `corrected` or `publication_blocked`; open/deferred
   states fail validation, and any `publication_blocked` P0/P1 record stops the
   deploy workflow. Every finding requires a linked AffineDrift issue and
-  rationale. Corrected findings additionally require local evidence paths and a
-  verification commit.
+  rationale. Corrected findings additionally require local evidence paths, an
+  exact path-to-SHA-256 map, and a verification commit locator.
 - `scripts/generate_claim_audit_inventory.py` initializes from the rendered
   manifest, validates exact coverage and authority links, and generates
   `data/trust/generated/claim_audit_report.json` plus
   `reports/scientific-claim-audit.md`. The generated reports join titles/status
-  from upstream authorities but do not duplicate their scientific prose.
+  from upstream authorities, expose reviewed canonical sources and evidence
+  counts, and do not duplicate their scientific prose.
 - RED was the missing generator module at test collection; the child-partition
   extension first failed on absent route-scope exports and then on all stale
   parent issue URLs. Exact-head GREEN evidence is 75 combined
@@ -540,6 +543,37 @@ This is current operational state. Historical detail belongs in git/GitHub.
   pipeline pruned 28 internal artifacts, regenerated an exact 222-route public
   manifest, and passed deterministic report freshness plus the enforced
   publication gate. The isolated worktree is clean after render verification.
+
+### Self-Contained Reviewed Evidence (#4067 — In Development)
+
+- Worktree `C:\Users\diete\Repositories\worktrees\AffineDrift-4067-a1` on
+  `feat/4067-self-contained-review-evidence` started from exact protected
+  `f287ce6ab2cd26079bbace6b8f362a1f0a729acd`. RED commit `82e89c83`
+  demonstrated that the v1.0 schema rejected rather than understood
+  self-contained digest evidence. The GREEN implementation is `ede3ddb8`, with
+  compact report presentation in `95bc47ec`.
+- `scripts/claim_audit_evidence.py` is the single byte-evidence boundary. A
+  reviewed route must declare the canonical `.qmd` source implied by its public
+  route, include that source and every recursively resolved Quarto include in
+  `evidence_paths`, and provide an exact SHA-256 value for every declared path.
+  Corrected findings use the same exact-key digest rule. Paths must be normalized
+  repository-relative regular files; directory escape and symlinks fail closed.
+- `review_commit` and `verification_commit` remain useful review/event locators,
+  but they are not byte authority. This is deliberate because protected squash
+  merges do not retain PR-head commits as ancestors of `main`, and a depth-1
+  checkout must still reproduce the audit.
+- Maintenance rule: a digest failure means the affected route or finding must be
+  reviewed again. Do not blindly rehash changed files. After substantive review,
+  update the evidence paths/digests, review date, reviewer identity, and commit
+  locator together, regenerate both reports, and run the publication gate.
+- After ordinary reconciliation with protected active-impedance authority
+  `3cb57223624f5be9c3d0cf69ef1ef25c7238c325`, the migrated inventory contains
+  17 reviewed, 206 deferred, and 2 exempt routes. Focused GREEN evidence is
+  36/36 claim-audit, site-audit, and active-impedance contracts. The complete
+  non-content and content-lint suites pass with only their documented skips;
+  deterministic inventory/site-report checks, Ruff, Black, title/style checks,
+  `git diff --check`, and every pre-commit hook pass. Protected hosted gates and
+  exact-main verification remain required before #4067 may close.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 

@@ -415,7 +415,10 @@ def test_public_protocol_has_exact_reviewed_claim_audit_evidence() -> None:
         "falsifiers",
         "audience_framing",
     }
-    assert set(record["review"]["evidence_paths"]) == {
+    review = record["review"]
+    assert review["source_path"] == "models/active-impedance-identification.qmd"
+    assert set(review["evidence_paths"]) == {
+        "models/active-impedance-identification.qmd",
         "src/affine_control/impedance_evidence.py",
         "src/affine_control/impedance_emg.py",
         "src/affine_control/impedance_fixtures.py",
@@ -424,3 +427,4 @@ def test_public_protocol_has_exact_reviewed_claim_audit_evidence() -> None:
         "src/affine_control/impedance_sources.py",
         "tests/test_active_impedance_protocol.py",
     }
+    assert set(review["evidence_sha256"]) == set(review["evidence_paths"])
