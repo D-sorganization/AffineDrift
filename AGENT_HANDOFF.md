@@ -10,12 +10,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## ZTCF Intervention Contract (#4016 — PR #4048 Open)
+## ZTCF Intervention Contract (#4016 — Protected PR #4048 Merged)
 
-- Lease: `codex-20260828-affine-a5`, expiring 2026-08-29T14:44:17Z; issue
-  comment `#issuecomment-5460882100` records the exact claim.
-- Non-draft PR: `https://github.com/D-sorganization/AffineDrift/pull/4048` on
-  `feat/4016-ztcf-contract`; hosted Python 3.12 checks are merge authority.
+- Protected merge `443e20a8ecaf1b32b9940b644e0451355e316ea7` owns the
+  versioned ZTCF intervention record, executable planar-Python adapter, and
+  canonical/paired publication boundary.
 - `data/ztcf/ztcf_intervention_v1.schema.json` is the normative public record;
   `data/ztcf/planar_golf_forward_fixture_v1.json` pins the sole supported golden
   result to protected source `524c28926f364631ed06b15be9c6fdf440acce64`.
@@ -125,6 +124,47 @@ This is current operational state. Historical detail belongs in git/GitHub.
   media, and no horizontal overflow. The chapter-pair citation audit retains
   one pre-existing edition-specific Jorgensen key in each tree; both new
   long-latency citations are shared by the Quarto and LaTeX editions.
+
+## Induced-Acceleration Attribution Repair (#4018 — PR #4050 Open)
+
+- Branch `feat/4018-induced-acceleration-attribution` owns the A7 correction.
+  It preserves the protected #4015, #4012, #4017, #4019, and #4016
+  scientific-trust merges; its content files do not overlap those programs.
+- A normative record now requires model and revision; engine, solver, and
+  revision; generalized coordinates and reference frame; mass matrix;
+  constraints; contact; force partition; residual treatment; numerical
+  tolerance; output projection; and an identifiability contract. Missing or
+  unsupported cross-engine states are labeled unsupported or unqualified,
+  never treated as parity.
+- Coordinate-change and force-repartition counterexamples demonstrate that
+  reported term components are not unique causal truth even when total forward
+  dynamics close. Algebraic terms do not identify anatomical source, neural
+  intent, necessity, sufficiency, or intervention effect.
+- The paired Physics of Golf and Geometry of Motion Quarto/LaTeX chapters and
+  the public research-review page carry the same scientific boundary. No
+  qualified AffineDrift human-golf attribution or coaching result is claimed.
+- Required focused gate:
+  `python -m pytest tests/test_induced_acceleration_attribution_contract.py -m content_lint -q`.
+  Current evidence: the deliberate RED state failed 7 publication contracts;
+  GREEN passes all 11 contracts on workstation Python 3.13, including the
+  declared-LaTeX-environment regression added after the hosted textbook gate
+  exposed an undefined box. After reconciling
+  protected #4015, #4012, and #4017, the full Python suite passes 3,258 tests
+  with 29 documented skips; Jest passes 20 suites (295 tests passed, 19 skipped). Ruff,
+  Black, strict mypy for the new contract, terminology, title-case,
+  cross-reference, citation, display-math, single-title, Quarto-syntax,
+  tree-parity, LaTeX-structure, and diff gates pass. All three changed pages
+  render to isolated HTML and expose the normative record without horizontal
+  overflow at a 1,905-pixel desktop viewport; a fresh browser console is clean.
+  After merging protected #4019 and #4016 through
+  `443e20a8ecaf1b32b9940b644e0451355e316ea7`, the eight scientific-trust
+  selections pass all 57 tests, trust-panel generation is fresh, and the
+  focused lint/type/structure/diff gates remain green on the reconciled head.
+  All three affected QMD sources render as standalone HTML streams. Clean
+  first-pass `pdflatex` runs complete the 605-page Physics of Golf source and
+  209-page Geometry of Motion Volume I source without a hard LaTeX error; the
+  complete hosted multi-pass compiles remain the release gate.
+  Protected Python 3.12 and hosted exact-head checks remain release gates.
 
 ## Governed Scientific Trust Panels (#4019 — Protected PR #4049 Merged)
 
