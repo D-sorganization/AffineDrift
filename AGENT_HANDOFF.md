@@ -52,20 +52,19 @@ This is current operational state. Historical detail belongs in git/GitHub.
   content lane retained one exact RED failure because no reviewed audit record
   existed. Review-led RED commit `54a54c29` then proved a manually relabeled
   supported interval was accepted before the shared classification invariant
-  was added. The first isolated Quarto render exposed an ambiguous nested include
-  path; the canonical page now includes both governed boundaries explicitly,
-  preserving the schema-v1.1 closure while rendering correctly.
-- Pre-reconciliation GREEN evidence is 18 focused executable contracts, 2
+  was added. The first isolated Quarto render exposed an ambiguous nested
+  include path; the canonical page now includes both governed boundaries
+  explicitly, preserving the schema-v1.1 closure while rendering correctly.
+- Exact protected-base GREEN evidence is 18 focused executable contracts, 2
   focused content/audit contracts, and 14 claim-audit contracts. The full
-  default lane passed 3,395 tests with 30 documented skips before the final
-  fail-closed regression was added; the content lane passed 98 tests with 4
-  documented skips, and Jest passed 297 with 19 documented skips. Ruff, Black,
-  strict focused mypy, module budgets, changed-file budgets, Quarto syntax,
-  xrefs, single-title, title case, display math, terminology, frontmatter,
-  bibliography, citation, render-coverage, claim-audit, and diff gates pass.
-  Final exact-head Python/pre-commit results will supersede these counts after
-  protected-base reconciliation.
-- Quarto 1.8 renders the route in isolation. Desktop 1440 x 1000 and mobile
+  default `tests/` lane passes 3,396 tests with 30 documented skips; the content
+  lane passes 98 tests with 4 documented skips; and Jest passes 297 with 19
+  documented skips. Ruff, Black, strict focused mypy, module budgets,
+  changed-file budgets, full pre-commit, Quarto syntax, xrefs, single-title,
+  title case, display math, terminology, frontmatter, bibliography, citation,
+  227-route render coverage, claim-audit publication enforcement, and diff
+  gates pass. Protected main remains the exact starting commit above.
+- Quarto 1.8.26 renders the route in isolation. Desktop 1440 x 1000 and mobile
   390 x 844 browser inspection verifies one H1, all required scientific
   sections, five responsive locally scrolling tables, no body overflow, no raw
   include shortcode, and no console warning or error. Render/browser artifacts
