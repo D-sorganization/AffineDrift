@@ -138,11 +138,23 @@ def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _json_object(data: bytes, label: str) -> dict[str, object]:
+def _strict_json(data: bytes | str, label: str) -> object:
+    def reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        result: dict[str, object] = {}
+        for key, value in pairs:
+            if key in result:
+                raise CompanionImportError(f"{label} contains duplicate key: {key}")
+            result[key] = value
+        return result
+
     try:
-        value = json.loads(data)
+        return json.loads(data, object_pairs_hook=reject_duplicate_keys)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise CompanionImportError(f"{label} is not canonical JSON: {exc}") from exc
+        raise CompanionImportError(f"{label} is not valid UTF-8 JSON: {exc}") from exc
+
+
+def _json_object(data: bytes, label: str) -> dict[str, object]:
+    value = _strict_json(data, label)
     if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
         raise CompanionImportError(f"{label} must be a JSON object")
     return cast(dict[str, object], value)
@@ -162,8 +174,8 @@ def _schema_errors(instance: object, schema: object) -> list[str]:
 def validate_lock(lock: object, lock_schema_path: Path) -> dict[str, object]:
     """Validate and return one strict AffineDrift companion lock."""
     try:
-        schema = json.loads(lock_schema_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        schema = _json_object(lock_schema_path.read_bytes(), "lock schema")
+    except OSError as exc:
         raise CompanionImportError(f"cannot load lock schema: {exc}") from exc
     errors = _schema_errors(lock, schema)
     if errors:
@@ -541,9 +553,10 @@ class CompanionConsumer:
 
     def _load_lock(self) -> dict[str, object]:
         try:
-            lock = json.loads(self.lock_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
+            payload = self.lock_path.read_bytes()
+        except OSError as exc:
             raise CompanionImportError(f"active lock is unavailable: {exc}") from exc
+        lock = _json_object(payload, "active lock")
         return validate_lock(lock, self._lock_schema_path)
 
     def verify_active(self) -> InstalledCompanion:

@@ -233,6 +233,19 @@ def test_payload_size_limits_fail_before_any_write(tmp_path: Path) -> None:
     assert list(tmp_path.iterdir()) == []
 
 
+def test_manifest_rejects_duplicate_json_keys(tmp_path: Path) -> None:
+    commit = "1" * 40
+    schema = _schema_bytes()
+    manifest = _manifest_bytes(commit).replace(
+        b"{\n", b'{\n  "manifest_id": "shadowed-value",\n', 1
+    )
+
+    with pytest.raises(CompanionImportError, match="duplicate key: manifest_id"):
+        CompanionConsumer(tmp_path, LOCK_SCHEMA).install(
+            _pin(commit, manifest, schema), manifest, schema
+        )
+
+
 class _FakeFetcher:
     def __init__(self, responses: dict[str, FetchedPayload]) -> None:
         self.responses = responses
@@ -484,3 +497,20 @@ def test_lock_schema_is_strict_and_versioned(tmp_path: Path) -> None:
 
     with pytest.raises(CompanionImportError, match="Additional properties"):
         validate_lock(lock, LOCK_SCHEMA)
+
+
+def test_active_lock_rejects_duplicate_json_keys(tmp_path: Path) -> None:
+    commit = "1" * 40
+    schema = _schema_bytes()
+    manifest = _manifest_bytes(commit)
+    consumer = CompanionConsumer(tmp_path, LOCK_SCHEMA)
+    consumer.install(_pin(commit, manifest, schema), manifest, schema)
+    duplicate = consumer.lock_path.read_bytes().replace(
+        b"{\n",
+        b'{\n  "schema_version": "affinedrift/upstreamdrift-companion-lock/v1",\n',
+        1,
+    )
+    consumer.lock_path.write_bytes(duplicate)
+
+    with pytest.raises(CompanionImportError, match="duplicate key: schema_version"):
+        consumer.verify_active()
