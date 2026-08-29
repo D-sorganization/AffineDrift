@@ -37,7 +37,9 @@ data/upstreamdrift_companion/
 second byte sequence for the same provider commit is a hard conflict. The
 consumer validates all candidate bytes before staging, moves the complete
 snapshot into place, and replaces the lock last. A staging or lock-swap failure
-leaves every previously active byte unchanged.
+leaves every previously active byte unchanged. Verification bounds every read
+and requires exactly the three declared regular files; extra entries,
+directories, and symbolic links fail closed.
 
 ## Acquisition modes
 
@@ -97,8 +99,8 @@ It never advances the lock. Installation is a separate, explicit review action.
 
 - `install_from_local_export(...)` reads bounded local provider artifacts and
   atomically activates a validated snapshot.
-- `install_from_urls(...)` downloads a future immutable release asset through a
-  small `Fetcher` adapter and revalidates its final redirect URL.
+- `install_from_urls(...)` downloads a future commit-addressed raw artifact
+  through a small `Fetcher` adapter and revalidates its final redirect URL.
 - `verify_active()` validates the lock, path containment, byte counts, digests,
   provider schema, embedded repository/commit, and generated provenance view.
 - `check_local_export_update(...)` and `check_update(...)` compare candidates
