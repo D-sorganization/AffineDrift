@@ -121,6 +121,8 @@ def test_install_is_strict_deterministic_and_verifiable(tmp_path: Path) -> None:
     provenance = (installed.snapshot_dir / "provenance.qmd").read_text(encoding="utf-8")
     assert commit in provenance
     assert _digest(manifest) in provenance
+    assert "python scripts/companion_catalog.py export" in provenance
+    assert "immutable-url" in provenance
     assert "does not grant scientific qualification" in provenance
 
 
@@ -154,6 +156,10 @@ def test_install_is_strict_deterministic_and_verifiable(tmp_path: Path) -> None:
                 ),
             ),
             "URL is malformed",
+        ),
+        (
+            lambda pin: replace(pin, generator_command="python `unreviewed`"),
+            "generator command",
         ),
     ],
 )
@@ -270,6 +276,8 @@ def test_local_export_records_truthful_acquisition_without_false_url(tmp_path: P
     assert provider["manifest_acquisition"] == "protected-local-export"
     assert provider["manifest_url"] is None
     assert provider["manifest_provider_path"] == ("dist/companion/upstreamdrift-companion.v1.json")
+    provenance = (installed.snapshot_dir / "provenance.qmd").read_text(encoding="utf-8")
+    assert "reviewed protected local export (no manifest URL)" in provenance
     with pytest.raises(CompanionImportError, match="URL install requires"):
         consumer.install_from_urls(pin, _FakeFetcher({}))
 
