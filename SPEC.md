@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T07:57:41Z
+Last-Updated: 2026-08-29T08:24:35Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T07:57:41Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.245                                          |
+| **Spec Version**        | 1.0.246                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -72,6 +72,12 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   uncertainty, limitations, falsifiers, review state, and the next validation
   gate; fail closed when summaries amplify modal strength or unsupported
   causal, universal, exact, optimal, locked-in, or percentage claims
+- Maintain a fail-closed DCR validation protocol that declares state,
+  coordinates, bounded inputs, scaling and norm, finite horizon, event and
+  reset convention, task metric, uncertainty, and solver before computing a
+  result; compare DCR with finite-horizon reachability, constrained correction,
+  event sensitivity, and held-out prediction while preserving null, negative,
+  and unavailable results
 - Maintain a strict, versioned claim/critique adjudication ledger that covers
   every public critique exactly once, treats unknown state as open, requires
   protected evidence for adjudicated states, rejects dangling pages, claims,
@@ -676,6 +682,29 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.246 Bounded DCR Reachability and Event-Sensitivity Protocol
+
+Extends the protected #4013 reachability authority with a strict declaration
+record and deterministic analytic regressions for constant additive drift,
+state-dependent drift, rank-deficient input maps, saturation, contact-event
+timing, and bounded parameter perturbations. Predeclared association,
+prediction, and theorem-level hypotheses remain distinct; held-out prediction
+must beat a baseline containing state, speed, and control authority, and null,
+negative, and unavailable outcomes remain published. All current cases are
+analytic or deterministic synthetic systems with assumed parameter bounds, not
+golfer measurements or coaching, clinical, design, causal, or population
+authority.
+
+### 1.0.245 Governed Claim/Critique Adjudication Ledger
+
+Adds a strict versioned ledger that registers every public critique exactly
+once, preserves unknown disposition as open, and requires protected evidence
+for responded, resolved, or rejected states. Deterministic generation projects
+the governed state into the public critique index, affected-page annotations,
+defense planning, and search records while rejecting dangling references,
+invalid transitions, and active contradictions. The protected baseline records
+33 open critiques, two bounded responses, and zero resolutions.
 
 ### 1.0.244 Induced-Acceleration Attribution Contract
 
