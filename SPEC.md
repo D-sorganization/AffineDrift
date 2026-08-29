@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T09:11:45Z
+Last-Updated: 2026-08-29T09:31:38Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T09:11:45Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.248                                          |
+| **Spec Version**        | 1.0.249                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -390,6 +390,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F65 | Control-affine scientific-trust contract            | ✅     | The canonical theory series, foundational monograph, and single-file manifesto define affinity relative to a declared input at fixed state; treat state-dependent input gains as affine; describe drift/input as additive rather than orthogonal; and condition attribution on the model, coordinates, parameters, intervention, horizon, and identifiability evidence. A shared rendered boundary and corpus tests reject direct inference of intent, individual-muscle forces, biological effort, or unique real-world causes from algebraic decomposition alone (#4012). |
 | F66 | Generated scientific trust metadata                | ✅     | A strict Draft 2020-12 JSON Schema, canonical claim registry, and deterministic generator publish stable page/claim IDs with review commit, evidence and critique status, scope, uncertainty, limitations, falsifiers, software/data provenance, and next validation gate. Corpus tests require governed-page includes and technical-anchor links, render unknown qualification visibly, and reject accessible-summary amplification of modal strength, causal/universal/exact/optimal/locked-in terms, or unsupported percentages (#4019). |
 | F67 | Full rendered-route scientific claim-audit inventory | ✅     | `data/trust/claim_audit_inventory.json` covers every post-prune public HTML route with a route-derived stable audit ID and an explicit reviewed, deferred, or exempt status. Exact claim and critique ID links are validated against the #4019 registry and #4020 ledger without copying their substantive authority. Every deferred route maps exactly once to the exhaustive #4054–#4063 delivery partition, whose fixed counts sum to all 219 deferred routes. Deterministic JSON/Markdown reports expose coverage and child ownership, while protected deployment fails closed on route drift, partition drift, and any registered P0/P1 publication blocker (#4021). |
+| F68 | Nested model-ladder comparison protocol             | ✅     | A versioned AffineDrift protocol freezes planar-rigid, spatial open-chain, spatial closed-chain, and flexible-shaft levels with shared frames, unique coordinates, units, parameters, initialization, event definitions, outputs, and exact adjacent projections. Manufactured parity and modal-convergence fixtures validate mappings without duplicating UpstreamDrift engines; missing, duplicate, or misaligned fixture states fail closed. Task-specific observations publish uncertainty and measured/estimated/modeled/assumed/unavailable status, reject contradictory or duplicate sufficiency records, preserve negative/null/unavailable outcomes, and select the minimum sufficient level without a global fidelity percentage (#4034). |
 
 ### API / Interface Contract
 
@@ -689,6 +690,24 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.249 Planar-to-Flexible-Shaft Model-Ladder Protocol
+
+Adds a strict four-level comparison and selection protocol around existing
+model authority rather than another dynamics engine. Exact manufactured
+fixtures validate adjacent coordinate projections and a declared modal-error
+sequence. Every level publishes included and omitted physics, intended use,
+shared frames/units/parameters/initialization/events, task-specific output
+metrics, uncertainty, provenance status, and negative/null/unavailable results.
+The executable boundary rejects duplicate coordinates, malformed parity states,
+duplicate task-level rows, and outcome/sufficiency contradictions before model
+selection.
+The public companion guide explains when a simpler level is sufficient and
+when its conclusions fail; governed participant transfer and frozen benchmark
+runtime remain unavailable, and no global fidelity percentage is permitted.
+The new public route enters the protected #4021 claim-audit inventory as
+reviewed, with exact code/test evidence and all four review dimensions; the 219
+legacy deferred routes and their child-issue partition remain unchanged.
 
 ### 1.0.248 Exhaustive Deferred-Route Delivery Partition
 
