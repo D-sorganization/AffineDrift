@@ -178,8 +178,16 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Required focused gate:
   `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_claim_critique_ledger.py`.
   Current local evidence is 13/13 focused tests plus deterministic generation,
-  Ruff, Black, and strict MyPy. Isolated Quarto renders, responsive browser
-  inspection, repository-wide gates, and protected PR checks remain pending.
+  Ruff, Black, and strict MyPy. The critique index and three representative
+  affected articles render in isolation. Browser inspection at 1440 x 1000 and
+  390 x 844 found one H1 per page, no page-level horizontal overflow, no broken
+  images after load, an independently scrollable mobile status table, and
+  readable collapsed and expanded critique annotations. The default Python
+  `tests/` lane is green with 30 documented skips; the content-lint lane passes
+  78 tests with 4 documented skips; all 20 Jest suites pass 297 tests with 19
+  skips. Bibliography, terminology, title, cross-reference, display-math,
+  Stylelint, Ruff, Black, and strict MyPy gates pass.
+  Protected PR checks remain pending.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 

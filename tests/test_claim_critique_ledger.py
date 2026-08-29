@@ -170,6 +170,9 @@ def test_generated_surfaces_expose_status_provenance_and_open_defaults() -> None
 
     assert "DO NOT EDIT" in status
     assert "DO NOT EDIT" in defense
+    assert defense.startswith('---\ntitle: "AffineDrift Critique Adjudication Status"')
+    assert "\n## AffineDrift Critique Adjudication Status\n" in defense
+    assert "\n# AffineDrift Critique Adjudication Status\n" not in defense
     assert "Open" in status
     assert "Affected Pages" in status
     assert "Verification" in status
