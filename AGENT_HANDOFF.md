@@ -10,9 +10,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## DCR Reachability Correction (#4013 — PR Pending)
+## DCR Reachability Correction (#4013 — PR #4044 Open)
 
-- Branch `feat/4013-dcr-reachability` owns the article correction, analytic
+- Ready, non-draft PR #4044 from branch `feat/4013-dcr-reachability` owns the
+  article correction, analytic
   counterexample in `src/affine_control/reachability.py`, and corpus regression
   in `tests/test_dcr_reachability_contract.py`.
 - DCR is a declared magnitude ratio, not a controllability or finite-horizon
