@@ -18,7 +18,7 @@ TimingLayer = Literal[
 ]
 Outcome = Literal["supported", "negative", "null", "unavailable"]
 EvidenceOrigin = Literal["synthetic-fixture", "measured-human", "unavailable"]
-FloatArray = NDArray[np.float64]
+type FloatArray = NDArray[np.float64]
 
 _MODALITIES = {"mechanical", "visual", "auditory"}
 _LAYERS = {
