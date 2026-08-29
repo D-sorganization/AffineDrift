@@ -30,6 +30,7 @@ TEX_SOURCES = (
     / "chapters"
     / "ch03b_induced_acceleration_biomechanics.tex",
 )
+PHYSICS_MAIN_TEX = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "main.tex"
 
 
 def test_coordinate_change_preserves_dynamics_but_changes_reported_components() -> None:
@@ -105,6 +106,16 @@ def test_quarto_and_latex_sources_publish_the_same_attribution_boundary() -> Non
         assert "unsupported or unqualified" in source
         assert "anatomical source" in source
         assert "intervention effect" in source
+
+
+def test_physics_latex_uses_a_declared_attribution_box() -> None:
+    """The normative record must use an environment declared by the book."""
+    chapter = TEX_SOURCES[0].read_text(encoding="utf-8")
+    preamble = PHYSICS_MAIN_TEX.read_text(encoding="utf-8")
+
+    assert r"\begin{infobox}{Normative Attribution Record}" in chapter
+    assert r"\begin{importantbox}" not in chapter
+    assert r"\newtcolorbox{infobox}" in preamble
 
 
 def test_unique_cause_language_requires_an_identifiability_qualifier() -> None:
