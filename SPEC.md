@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T06:19:06Z
+Last-Updated: 2026-08-29T06:38:26Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T06:19:06Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.238                                          |
+| **Spec Version**        | 1.0.239                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -50,6 +50,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Maintain opt-in performance benchmarks for stable computational paths without slowing routine CI
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
+- Present planar models as declared pedagogical or model-ladder members; do
+  not publish quantitative 2-D-to-3-D fidelity percentages without a governed
+  comparison that declares the dataset, cohort, coordinates, phase window,
+  metric, task outcome, and uncertainty
 - Maintain a tested mechanical-claim contract that keeps pointwise generalized
   torque distinct from power, work, energy, tissue load, physiological effort,
   and outcome; net generalized input must not be presented as identified
@@ -651,6 +655,15 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.239 Planar-Spatial Scope Integration
+
+Preserves the protected #4014 mechanical-attribution and #4013 DCR-reachability
+contracts while integrating #4015's planar-model scope boundary. Quantitative
+2-D-to-3-D fidelity claims remain unavailable until a governed comparison
+declares the dataset, cohort, coordinate definitions, phase window, metric,
+task outcome, and uncertainty. All three scientific-repair contracts remain
+independently regression protected.
 
 ### 1.0.238 Scientific Repair Program Reconciliation
 
