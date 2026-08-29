@@ -1,271 +1,74 @@
 ---
 title: "Books Roadmap & Reading Paths"
-description: "Visual guide to the AffineDrift textbook series with prerequisites and recommended reading orders"
+description: "Evidence-bounded guide to the AffineDrift manuscript series, prerequisites, and reading paths"
 page-layout: article
 sidebar: books-nav
 ---
 
-## Choose Your Path
+This roadmap is a navigation aid, not a completion schedule or curriculum validation. Reading time depends on background, proof checking, exercise depth, and whether readers reproduce the computational work.
 
-The AffineDrift book series can be approached from different starting points depending on your background. Select the path that matches your expertise:
+## Publication-State Key
 
-### Path 1: Control Theory & Robotics Background
-**You have formal training in control systems, robotics, or nonlinear dynamics**
+- **Available:** the canonical manuscript source and public chapter map exist at the reviewed revision.
+- **Scaffolded:** a notebook file and tutorial title exist; execution, numerical correctness, and reproducibility are not established.
+- **Provisional:** explanatory, mathematical, or empirical claims require the hypotheses and evidence stated in the manuscript and cited sources.
+- **Planned:** a desired artifact or validation step does not yet exist and must not be treated as delivered.
 
-```
-Volume I: Tangent-Space Methods
-    ↓ (Builds on exact linearization concepts)
-Volume II: Control Is Motion
-    ↓ (Applies control to motion generation)
-Volume III: Biomechanics (selective)
-    ↓ (Optional: biological applications)
-Articles: Golf-Specific Physics
-```
+All four volumes are **available, provisional research-development manuscripts**. Their 40 mapped notebooks are **scaffolded** in `notebooks/geometry_of_motion/manifest.json`. The route audit does not qualify the books as complete courses, reference standards, clinical guidance, coaching guidance, or validated software documentation.
 
-**Estimated Time:** 120–160 hours | **Difficulty:** Intermediate to Advanced
+## Choose a Bounded Entry Path
 
-**Why This Order:** Volume I introduces the theoretical framework using control-theoretic language you'll recognize. Volume II applies those concepts to dynamics. The articles provide golf-specific grounding.
+### Control Theory and Robotics
 
----
+Suggested order: [Volume I](tangent-space-methods.html), [Volume II](control-is-motion.html), then selected [Volume III](biomechanics-biology-to-systems.html) chapters. Readers should already be comfortable with linear algebra, ordinary differential equations, state-space control, and local linearization. The manuscripts do not replace primary references or application-specific controller verification.
 
-### Path 2: Biomechanics & Biology Background
-**You have training in biomechanics, motor control, or exercise science**
+### Biomechanics and Movement Science
 
-```
-Articles: The Geometry of Motion (gentle intro)
-    ↓ (Learn the mathematical framework)
-Volume III: Biomechanics - Biology to Systems
-    ↓ (Directly relevant to biological modeling)
-Volume I: Tangent-Space Methods (theoretical deepening)
-    ↓ (Understand the mathematical foundations)
-Volume II: Control Is Motion (optional)
-```
+Suggested order: the [Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html) overview, [Volume III](biomechanics-biology-to-systems.html), then selected Volume I material. Inverse-dynamics, muscle-force, tissue-load, neural, clinical, and coaching interpretations remain separated by the evidence ladder on the Volume III page.
 
-**Estimated Time:** 100–140 hours | **Difficulty:** Intermediate
+### Golf Mechanics
 
-**Why This Order:** Volume III is designed for biomechanics specialists. The Geometry of Motion article introduces control theory gently. Volume I provides rigorous mathematical foundations.
+Suggested order: [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html), the [learning-path resources](../resources/learning-path-golf-science.html), then selected Volumes I-II chapters. Introductory articles still assume basic mechanics literacy; examples do not establish player-specific coaching or equipment prescriptions.
 
----
+### Cross-Volume Study
 
-### Path 3: Golf Science & Mechanics Enthusiast
-**You have practical knowledge of golf or physics background but no formal robotics/control training**
+Suggested order: Volumes I-IV, followed by application articles and critiques. “Cross-volume” describes breadth of navigation, not mastery or comprehensive coverage. Readers should check each chapter's source, assumptions, and validation state before reuse.
 
-```
-Articles: The Physics of Golf (start here)
-    ↓ (Golf-specific mechanics from first principles)
-Resources: Golf Science books + videos
-    ↓ (Broaden your biomechanics understanding)
-Volume I: Tangent-Space Methods (optional advanced)
-    ↓ (If you want mathematical rigor)
-Volume II: Control Is Motion (optional advanced)
-```
+## Reviewed Manuscript Coverage
 
-**Estimated Time:** 40–80 hours | **Difficulty:** Introductory to Intermediate
+| Volume | Canonical chapter coverage at the reviewed revision | Suggested prerequisites | Public state |
+|---|---:|---|---|
+| I — Tangent-Space Methods | 10 substantive chapters, including 3B and 9 | Linear algebra, ODEs, state-space control | Available, provisional |
+| II — Control Is Motion | 11 substantive chapters | Volume I concepts or equivalent nonlinear-control background | Available, provisional |
+| III — Biomechanics | 10 substantive chapters | Multibody mechanics and basic biomechanics | Available, provisional |
+| IV — Human Motor Control | 12 substantive chapters, including 7B | Prior volumes plus motor-control/neuroscience literacy | Available, provisional |
 
-**Why This Order:** The Physics of Golf is your entry point—no prior background required. Resources provide domain context. Volumes I–II are optional for deeper mathematical understanding.
+Counts are derived from the chapter inputs in the four canonical `main.tex` files. Glossaries, further-reading sections, and nomenclature inputs are not counted as substantive chapters. A chapter's presence does not establish pedagogical completeness, peer review, empirical validation, or notebook execution.
 
----
+## What Is Available Now
 
-### Path 4: Full Immersion (Sequential)
-**You want to master the entire framework from foundations to applications**
+- Revision-pinned LaTeX source links on each volume page.
+- Public chapter descriptions aligned to every substantive chapter included by the canonical manuscripts.
+- Scaffolded notebook links whose limits are stated on each volume page.
+- [Software and provider status](../pages/tools.html), which is governed separately from manuscript availability.
+- [Research reviews, critiques, and unresolved questions](../resources/research-reviews.html).
 
-```
-Volume I: Tangent-Space Methods
-    ↓ (4–6 weeks: mathematical foundations)
-Volume II: Control Is Motion
-    ↓ (4–6 weeks: motion generation and trajectory control)
-Volume III: Biomechanics - Biology to Systems
-    ↓ (4–6 weeks: biological modeling and inference)
-Volume IV: Human Motor Control
-    ↓ (4–6 weeks: neural aspects and embodied intelligence)
-Articles: Both Physics of Golf and Geometry of Motion
-    ↓ (Deep application in both domains)
-```
+## Known Development Gates
 
-**Estimated Time:** 200–280 hours | **Difficulty:** Advanced
+- Execute and independently validate notebook outputs before changing any notebook from scaffolded to validated.
+- Add chapter-level web renderings only when provenance remains tied to the canonical manuscript source.
+- Add measured reading-time evidence before publishing time estimates or workload schedules.
+- Add audience-specific learning assessments before claiming instructional sufficiency or prerequisite waivers.
+- Keep book prose, software capability, empirical evidence, and clinical/coaching interpretation in separate publication states.
 
-**Why This Order:** This follows the natural pedagogical flow: foundational theory → motion generation → biological systems → neural motor control → application in two domains.
+## Citation and Reuse
 
----
-
-## Textbook Series Overview
-
-### Volume I: Tangent-Space Methods for Nonlinear Control
-**Reading Level:** Intermediate–Advanced
-**Prerequisites:** Linear algebra, ODEs, basic control theory
-**Time to Complete:** 30–40 hours
-**Chapters:** 6+
-**Status:** Living manuscript (actively updated)
-
-**What You'll Learn:**
-- Tangent-space linearization and its geometric meaning
-- Contraction theory and stability certificates
-- Local optimal control (LQR, DDP)
-- Coordinate-free formulations on Riemannian manifolds
-
-[Open Volume I](tangent-space-methods.html){.resource-link}
-
----
-
-### Volume II: Control Is Motion
-**Reading Level:** Intermediate–Advanced
-**Prerequisites:** Volume I recommended (but not required with strong control theory background)
-**Time to Complete:** 30–40 hours
-**Chapters:** 5+
-**Status:** Living manuscript (actively updated)
-
-**What You'll Learn:**
-- Trajectory-centric control in high-dimensional spaces
-- Geometric mechanics for motion generation
-- Affine control systems and their properties
-- Applications to underactuated systems
-
-**Builds On:** Volume I concepts (but provides self-contained treatment)
-
-[Open Volume II](control-is-motion.html){.resource-link}
-
----
-
-### Volume III: Biomechanics - Biology to Systems
-**Reading Level:** Intermediate
-**Prerequisites:** Basic biomechanics knowledge; Volume I helpful but not required
-**Time to Complete:** 30–35 hours
-**Chapters:** 5+
-**Status:** Living manuscript (actively updated)
-
-**What You'll Learn:**
-- Rigid-body dynamics in biological contexts
-- Experimental pipelines for biomechanics research
-- Inference and parameter estimation from motion data
-- Modeling skeletal muscle and neural control
-
-**Builds On:** Mathematical foundations from Volume I; biology knowledge assumed
-
-[Open Volume III](biomechanics-biology-to-systems.html){.resource-link}
-
----
-
-### Volume IV: Human Motor Control
-**Reading Level:** Advanced
-**Prerequisites:** Volumes I, II, III strongly recommended; neuroscience background helpful
-**Time to Complete:** 35–45 hours
-**Chapters:** 6+
-**Status:** Living manuscript (actively updated)
-
-**What You'll Learn:**
-- Neural dimensionality reduction in motor control
-- Internal models and sensorimotor integration
-- Embodied intelligence and motor learning
-- Engineering implications for human-in-the-loop systems
-
-**Builds On:** All previous volumes; integrative capstone material
-
-[Open Volume IV](human-motor-control.html){.resource-link}
-
----
-
-## Reading Level Guide
-
-### 🟢 Introductory
-- The Physics of Golf (articles)
-- Golf-specific resources (books, videos, datasets)
-- No formal background required
-
-### 🟡 Intermediate
-- The Geometry of Motion (articles)
-- Volume I–III (with appropriate background)
-- Biomechanics resources
-- Requires prior course work in relevant domain
-
-### 🔴 Advanced
-- Volume IV
-- Full sequential reading of all 4 volumes
-- Integration of mathematics + biomechanics + neuroscience
-- Assumes graduate-level training or equivalent
-
----
-
-## Complementary Resources
-
-### For Control Theory Specialists
-See: [Learning Paths → Control Theory](../resources/learning-path-control-theory.html)
-
-**Start with:** Volume I, then papers in References section
-
-### For Biomechanics Researchers
-See: [Learning Paths → Biomechanics](../resources/learning-path-biomechanics.html)
-
-**Start with:** Volume III, then biomechanics books and papers
-
-### For Golf Scientists
-See: [Learning Paths → Golf Science](../resources/learning-path-golf-science.html)
-
-**Start with:** Physics of Golf articles, then golf-specific resources
-
-### Building a Foundation
-See: [Learning Paths → Foundations](../resources/learning-path-foundations.html)
-
-**Start here if:** You don't have formal background in control theory or biomechanics
-
----
-
-## Time Commitment Summary
-
-| Path | Total Hours | Per Week (5 hrs) | Per Week (10 hrs) | Per Week (15 hrs) |
-|------|------------|------------------|-------------------|-------------------|
-| Golf Enthusiast | 40–80 | 8–16 weeks | 4–8 weeks | 3–5 weeks |
-| Biomechanics | 100–140 | 20–28 weeks | 10–14 weeks | 7–9 weeks |
-| Control Theory | 120–160 | 24–32 weeks | 12–16 weeks | 8–11 weeks |
-| Full Immersion | 200–280 | 40–56 weeks | 20–28 weeks | 13–19 weeks |
-
----
-
-## Recommended Learning Resources
-
-Each volume has:
-- 📖 Chapter readings with links to source files
-- 📓 Jupyter notebook companions
-- 📊 Figures and visualizations
-- 🔗 Cross-references to papers and resources
-
-See the [Resources section](../resources/resources.html) for:
-- Supporting textbooks and papers
-- Video lectures on foundational topics
-- Software tools for implementation
-- Datasets for practice
-
----
-
-## FAQ
-
-**Q: Do I need to read the volumes in order?**
-
-A: Not necessarily. If you have strong control theory background, you can start with Volume II. If you're a biomechanics specialist, start with Volume III. But Volume I provides essential concepts referenced throughout.
-
-**Q: Can I skip to the golf articles?**
-
-A: Yes! The Physics of Golf stands alone. However, understanding the mathematical framework in Volumes I–II will deepen your insights significantly.
-
-**Q: How much math background do I need?**
-
-A: That depends on your path. Golf enthusiasts can get by with physics intuition. Control theorists should have graduate-level linear algebra and differential equations. Biomechanics researchers should have multivariate calculus and some differential equations.
-
-**Q: Are these books finished?**
-
-A: They are living manuscripts—actively researched and updated. Chapters are complete and usable, but some content is still being refined. See individual volume pages for scientific status notes.
-
-**Q: How do I cite these materials?**
-
-A: See the Bibliography page and individual chapter source files. Each has proper citation information.
-
----
+Use the revision-pinned manuscript links on the individual volume pages and inspect each source's bibliography. A source file being available does not by itself supply a complete citation record or license a stronger claim than the source supports.
 
 ## Next Steps
 
-1. **Pick your path** above based on your background
-2. **Browse the Books section** to see all volumes
-3. **Start with the introductory reading** from your chosen path
-4. **Check the Resources section** for supporting materials
-5. **Review the [Research Reviews](../resources/research-reviews.html)** for literature context
-
-Happy reading! 📚
+1. Choose an entry path above and read the corresponding scientific-status statement.
+2. Follow the pinned manuscript link for authoritative source text.
+3. Treat notebooks as scaffolded until an executable validation record says otherwise.
+4. Check [research reviews](../resources/research-reviews.html) for counterarguments and unresolved evidence.
+5. Check [software status](../pages/tools.html) before attempting an implementation workflow.

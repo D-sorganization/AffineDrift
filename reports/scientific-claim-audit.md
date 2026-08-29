@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 17
-- Deferred: 206
+- Reviewed: 23
+- Deferred: 200
 - Exempt: 2
 
 ## Deferred Delivery Batches
@@ -18,7 +18,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 18 routes
 - [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 14 routes
 - [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
-- [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062): 6 routes
 
 ## Reviewed Evidence
 
@@ -26,6 +25,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 |---|---|---:|
 | `/` | `index.qmd` | 3 |
 | `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 5 |
+| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
+| `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
+| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
+| `/books/index.html` | `books/index.qmd` | 3 |
+| `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
+| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 3 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
@@ -174,12 +179,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-c25ee250631d` | `/books/index.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-de682b77b431` | `/books/roadmap.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
+| `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 1 |
+| `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Reviewed | — | None | None | 1 |
+| `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 1 |
+| `ad-route-c25ee250631d` | `/books/index.html` | Reviewed | — | None | None | 1 |
+| `ad-route-de682b77b431` | `/books/roadmap.html` | Reviewed | — | None | None | 1 |
+| `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Reviewed | — | None | None | 1 |
 | `ad-route-facdfe9adc19` | `/critiques/01_muscle_physiology.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-muscle-physiology` | 0 |
 | `ad-route-f015ff569673` | `/critiques/02_aerodynamics.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-aerodynamics` | 0 |
 | `ad-route-40420c57d407` | `/critiques/03_neuromuscular_control.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-neuromuscular-control` | 0 |

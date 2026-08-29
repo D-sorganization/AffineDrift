@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T11:06:05Z
+Last-Updated: 2026-08-29T12:04:30Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T11:06:05Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.252                                          |
+| **Spec Version**        | 1.0.253                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -407,6 +407,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F69 | Bilateral hand-wrench qualification protocol        | ✅     | A source-bounded protocol extends the immutable UpstreamDrift structural authority with exact total-wrench rank-six/nullity-six, point-force rank-five/nullity-one, and direct bilateral rank-twelve fixtures. Separate DbC records freeze six-axis calibration and cross-talk, bandwidth and Nyquist evidence, lead/trail-to-club transforms, synchronization, inertial compensation, contact assumptions, uncertainty, shaft/grip sensitivity, and total-measured/bilateral-measured/model-estimated/unavailable tiers. Negative, null, and unavailable results remain explicit; the human tier fails closed without ethics, privacy, consent, licensing, and participant-held-out analysis, and no muscle, coaching, or clinical authority is permitted (#4035). |
 | F70 | Site-level scientific trust-surface audit            | ✅     | The homepage and all twelve `/pages/*.html` routes carry a strict, revision-bound audit of claim class, authority, assumptions, uncertainty, falsifiers, audience limits, adversarial counterexamples, findings, and disposition. Stable route and claim-occurrence IDs join the #4019 claim contract and #4020 critique ledger without replacing them. Eleven P1, five P2, and one P3 amplification, authority, support-boundary, or render-integrity defects are corrected; no P0/P1 blocker remains. Availability, validation, experimental work, plans, deprecation, and opinion are explicitly distinct, while the overview pins its UpstreamDrift API/support statement to a protected revision and distinguishes package metadata from tested interpreter minors. Exact SHA-256 evidence verifies every scoped canonical source without Git-history assumptions; exact 13-route scope, deterministic reports, and fail-closed P0/P1 handling are executable contracts (#4063). |
 | F71 | Active impedance identification protocol            | ✅     | A source-bounded synthetic-feasibility protocol freezes perturbation-device safety, zero-anchored phase windows, exact endpoint/joint model cardinality, excitation, bounded relative SVD/lstsq tolerance, uncertainty, reliability, and negative/null/unavailable outcomes. Governed same-side agonist/antagonist records bind exact channel IDs, roles, normalization revision, amplitude-driven CCI formula, within-formula comparison scope, and sensitivity plan. Every result carries a strict origin/provenance record that prevents silent synthetic-to-measured promotion. Human records and a prospectively registered held-out analysis plan establish only non-authorizing external-review readiness; no muscle-force, unique physiological partition, participant, coaching, or clinical authority is permitted (#4036). |
+| F72 | Book and publication-roadmap trust audit              | ✅     | All six `/books/*.html` routes carry a strict adversarial audit tied to exact bytes for their canonical QMD route, canonical manuscript `main.tex` authority, notebook manifest, and every declared review and corrected-finding evidence path. The public pages distinguish available provisional manuscripts from scaffolded notebooks and separately governed software capability. Volume I adds canonical chapters 3B and 9, Volume IV adds 7B, and the roadmap derives 10/11/10/12 substantive chapter counts from manuscript inputs while removing unsupported time, mastery, completion, comprehensiveness, and prerequisite-waiver claims. Mathematical, causal, biological, instructional, and deployment language is bounded; all six P1 findings are corrected. Schema v1.1 validates canonical route sources, recursive Quarto includes, and exact SHA-256 maps without Git-history assumptions. Exactly six deferments become reviewed, leaving 23 reviewed, 200 deferred, and 2 exempt routes (#4062). |
 
 ### API / Interface Contract
 
@@ -707,6 +708,26 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.253 Book and Publication-Roadmap Trust Audit
+
+Reviews all six public book routes against the four canonical LaTeX manuscripts,
+their included chapter maps, the notebook bridge manifest, cross-route status
+language, and separately governed software authority. Revision-pinned source
+links and self-contained SHA-256 evidence preserve manuscript authority without
+requiring Git history. The public routes distinguish available provisional
+manuscripts from 40 scaffolded notebooks, restore three omitted canonical
+chapters without falsely assigning them notebook coverage, and bound
+mathematical, causal, biological, clinical, coaching, and deployment language.
+The roadmap removes unmeasured time and mastery claims, stale chapter counts,
+completion language, and prerequisite waivers. Six P1 findings are corrected;
+the v1.1 inventory records canonical sources, recursive includes, and exact
+review and finding digests. The global inventory now contains 23 reviewed, 200
+deferred, and 2 exempt routes. A detached Quarto 1.8.26 render plus a 24-cell
+mobile/desktop, light/dark browser matrix verifies one primary heading,
+landmarks, accessible names, contained tables, equation rendering, route
+integrity, and zero isolated-route console errors without committing generated
+site output.
 
 ### 1.0.252 Active Impedance Identification Protocol
 
