@@ -95,6 +95,14 @@ def test_generator_uses_module_imports_without_a_sys_path_bootstrap() -> None:
     assert "python scripts/generate_research_readiness_library.py" not in article
 
 
+def test_generated_readiness_library_has_no_trailing_whitespace() -> None:
+    generated = (ROOT / "_includes/generated/research-readiness-library.qmd").read_text(
+        encoding="utf-8"
+    )
+
+    assert all(line == line.rstrip() for line in generated.splitlines())
+
+
 @pytest.mark.content_lint
 def test_generated_public_summary_is_non_authorizing_and_complete() -> None:
     summary = json.loads(
