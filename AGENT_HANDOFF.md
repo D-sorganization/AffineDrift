@@ -118,7 +118,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Required focused gate:
   `python -m pytest tests/test_induced_acceleration_attribution_contract.py -m content_lint -q`.
   Current evidence: the deliberate RED state failed 7 publication contracts;
-  GREEN passes all 10 contracts on workstation Python 3.13. After reconciling
+  GREEN passes all 11 contracts on workstation Python 3.13, including the
+  declared-LaTeX-environment regression added after the hosted textbook gate
+  exposed an undefined box. After reconciling
   protected #4015, #4012, and #4017, the full Python suite passes 3,258 tests
   with 29 documented skips; Jest passes 20 suites (295 tests passed, 19 skipped). Ruff,
   Black, strict mypy for the new contract, terminology, title-case,
@@ -127,9 +129,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   render to isolated HTML and expose the normative record without horizontal
   overflow at a 1,905-pixel desktop viewport; a fresh browser console is clean.
   After merging protected #4019 at `48026454cdd3e07b3ce489d288efcb9295417b10`,
-  the seven scientific-trust selections pass all 49 tests, trust-panel
+  the seven scientific-trust selections pass all 50 tests, trust-panel
   generation is fresh, and the focused lint/type/structure/diff gates remain
-  green on the reconciled head.
+  green on the reconciled head. A clean first-pass `pdflatex` run completes the
+  607-page Physics of Golf source without a hard LaTeX error; the complete
+  hosted multi-pass compile remains the release gate.
   Protected Python 3.12 and hosted exact-head checks remain release gates.
 
 ## Governed Scientific Trust Panels (#4019)
