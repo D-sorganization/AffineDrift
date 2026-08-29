@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T13:07:31Z
+Last-Updated: 2026-08-29T13:26:51Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -123,6 +123,13 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   solver convergence, balance checks, and adverse dispositions; select models
   per declared output and validation envelope, and withhold equipment, human,
   causal, coaching, and clinical authority until their independent gates pass
+- Maintain a source-bounded population-generalization protocol that freezes
+  the target population, sampling frame, strata, repeated-measure hierarchy,
+  missingness, exclusions, leakage controls, preregistration, locked test sets,
+  hierarchical uncertainty, calibration, subgroup suppression, sensitivity,
+  and transportability; preserve negative, null, and unavailable outcomes and
+  withhold participant, causal, coaching, clinical, design, and population
+  authority until governed measured evidence and independent human approval
 - Pin the trajectory-level synthetic point-force sensor qualification by
   immutable upstream commit and hashes; expose allocation error independently
   of net-wrench closure, cross-talk calibration, contact-center migration, and
@@ -416,6 +423,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F72 | Book and publication-roadmap trust audit              | ✅     | All six `/books/*.html` routes carry a strict adversarial audit tied to exact bytes for their canonical QMD route, canonical manuscript `main.tex` authority, notebook manifest, and every declared review and corrected-finding evidence path. The public pages distinguish available provisional manuscripts from scaffolded notebooks and separately governed software capability. Volume I adds canonical chapters 3B and 9, Volume IV adds 7B, and the roadmap derives 10/11/10/12 substantive chapter counts from manuscript inputs while removing unsupported time, mastery, completion, comprehensiveness, and prerequisite-waiver claims. Mathematical, causal, biological, instructional, and deployment language is bounded; all six P1 findings are corrected. Schema v1.1 validates canonical route sources, recursive Quarto includes, and exact SHA-256 maps without Git-history assumptions. Exactly six deferments become reviewed, leaving 23 reviewed, 200 deferred, and 2 exempt routes (#4062). |
 | F73 | Hybrid impact/contact and event-time protocol       | ✅     | A versioned source-bounded protocol compares paired-body rigid impulse, finite-duration compliant contact, and flow-to-guard hybrid reset models on analytic and deterministic synthetic fixtures. Exact DbC records freeze SI frame/sign conventions, state and parameter domains, guard and separation policies, grazing and multiple-contact rejection, solver limits, momentum/restitution/energy accounting, fixed-step convergence, and a complete 81-case event-time/restitution/friction/face-angle grid. Outcomes are qualified separately; negative, null, failed, and unavailable states remain visible, no model is globally preferred, and no equipment, human, causal, coaching, or clinical authority is granted (#4038). |
 | F74 | Neural timing and feedback perturbation protocol     | ✅     | A preregisterable synthetic-feasibility protocol separates general upper-limb evidence from golf-specific evidence and freezes phase-specific mechanical, visual, and auditory perturbations; active-to-sham joins; physical onset witnesses; calibrated shared-clock channels; perturbation-detection, muscle-response, mechanical-effect, and task-correction layers; expectation, order, learning, and history; hierarchical hypotheses; target power; Holm multiplicity control; complete uncertainty; and negative/null/unavailable outcomes. Deterministic fixtures reject a serial latency sum and preserve exact synthetic provenance. Human collection, participant count, unique neural-pathway or muscle-force attribution, population transport, coaching, and clinical authority remain unavailable (#4037). |
+| F75 | Population generalization and held-out validation  | ✅     | A versioned source-bounded protocol freezes a dataset card, target population, sampling frame, skill/sex/age/handedness/anthropometry/equipment strata, site-participant-session-equipment-trial hierarchy, preregistration, exclusions, missingness, and an immutable participant/session/site-held-out test split. Deterministic manufactured evidence exercises leakage rejection, participant-weighted uncertainty, calibration intercept/slope, small-cell suppression, sensitivity and transportability status, and negative/null/unavailable retention. Promotion fails closed without governed measured data, ethics, privacy, consent, licensing, external validation, and independent human approval; the protocol grants no coaching, clinical, design, causal, or population authority (#4039). |
 
 ### API / Interface Contract
 
@@ -719,6 +727,24 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.256 Population Generalization and Participant-Held-Out Validation
+
+Adds a source-bounded population-validation protocol and public companion. A
+strict dataset card declares the future target population, manufactured-only
+sampling frame, cohort strata, site/participant/session/equipment/trial
+hierarchy, repeated measures, missingness, exclusions, privacy, consent,
+ethics, licensing, and provenance. Executable DbC rejects participant, session,
+trial, and development-versus-test site leakage and requires an immutable test
+lock. The deterministic manufactured report exposes an adverse calibration
+slope, a null participant-level bias result, small-cell suppression, and
+unavailable external validation without favorable-result selection. Primary
+methodological citations bound dataset documentation, use-case-aligned splits,
+prediction reporting, calibration, and transportability. Exact SHA-256 review
+evidence registers the new route as reviewed, producing 26 reviewed, 200
+deferred, and 2 exempt routes. Population promotion remains false until
+governed measured data and every ethics, privacy, consent, license,
+preregistration, external-validation, and independent human-approval gate pass.
 
 ### 1.0.255 Neural Timing and Feedback Perturbation Protocol
 
