@@ -38,10 +38,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   analysis; none is represented as golfer evidence.
 - Audit `ad-route-b7d4c6ec440c` binds the canonical QMD, three implementation
   modules, generator, tests, and both report projections to exact SHA-256 bytes
-  reviewed at `966e2ad6251642f14bf5a8c372f6649d24a1d432`. The 227-route inventory
+  reviewed at `81da035b2b55eee203d5e180705de19cb248f678`. The 227-route inventory
   now has 25 reviewed, 200 deferred, and 2 exempt routes. A digest proves source
   bytes, not scientific validity.
-- Focused executable contracts are 6/6 green; focused content contracts are
+- Focused executable contracts are 11/11 green; focused content contracts are
   3/3 green; all 14 global inventory contracts pass. Ruff, strict focused MyPy,
   bibliography identity/quality, QMD citation integrity, Quarto syntax, title
   case, and deterministic report/publication checks pass. Full suites,
