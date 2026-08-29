@@ -93,8 +93,17 @@ This is current operational state. Historical detail belongs in git/GitHub.
   strict readiness MyPy, CI MyPy across 74 files, code quality, module-size,
   changed-file-size, technical-debt, syntax, xref, single-title, title-case,
   terminology, generator, publication-enforcement, pre-commit, and diff gates
-  pass. Detached render/browser evidence and fresh exact-head hosted checks
-  remain required before protected merge.
+  pass. Commit `b8cbef27` then updates this specification and handoff without
+  changing a rendered source. Quarto 1.8.26 renders all 230 configured inputs;
+  pre-prune health reports zero broken links and the expected 24 non-blocking
+  legacy orphans; pruning removes 28 internal artifacts; the revision-bound
+  manifest contains 231 public routes; and publication enforcement passes.
+  Browser verification passes 924/924 every-page cells and 72/72 representative
+  screenshot cells across tablet and three desktop widths in both themes,
+  including the readiness route; manual inspection finds no hierarchy,
+  overflow, contrast, or wrapping defect. Generated output was removed and the
+  source worktree restored cleanly. Fresh exact-head hosted checks remain
+  required before protected merge.
 
 ## Induced-Acceleration Heading-Hierarchy Closure (#4077 — Complete)
 
