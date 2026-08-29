@@ -44,10 +44,19 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - RED evidence: the initial focused suite failed during collection because the
   protocol modules did not exist. Review-led RED cases then exposed the rank
   tolerance mismatch, arbitrary-string human authorization, non-zero-anchored
-  windows, and ungoverned EMG arrays. Current GREEN evidence is 11/11 executable
-  tests, 2/2 content/audit tests, and 11/11 claim-audit tests; focused Ruff,
-  Black, strict mypy, bibliography quality, report generation, and publication
-  enforcement pass. Full exact-head and rendered/browser validation remain due.
+  windows, circular held-out-result naming, and ungoverned EMG arrays. Final
+  local GREEN evidence is 11/11 focused executable contracts, 2/2 focused
+  content/audit contracts, 11/11 claim-audit contracts, 3,362 non-content tests
+  with 30 documented skips, 96 content tests with 4 documented skips, and all
+  20 Jest suites (297 passes, 19 skips). Full Ruff/Black, focused strict mypy,
+  module and changed-file budgets, pre-commit, bibliography and citation gates,
+  terminology, title, Quarto syntax/xrefs/math, 226-URL bidirectional render
+  coverage, claim-audit report verification, and publication enforcement pass.
+  Quarto 1.8.26 renders the public route in isolation. Desktop 1440 x 1000 and
+  mobile 390 x 844 browser inspection shows one H1, all scientific sections,
+  five contained tables with local mobile scrolling, rendered MathJax, no page
+  overflow, and no console warnings or errors. Temporary render/browser
+  artifacts were removed and the feature tree is clean.
 
 ## Bilateral Hand-Wrench Identifiability (#4035 — Protected)
 
