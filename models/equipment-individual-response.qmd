@@ -1,0 +1,258 @@
+---
+title: "Equipment and Shaft Individual-Response Validation"
+description: "A source-bounded crossover protocol for equipment metrology, individual response, carryover, and uncertainty"
+---
+
+This program defines how an equipment-response claim could be tested without
+turning a group average, a plausible shaft simulation, or a single favorable
+trial into a fitting rule. The executable example contains eight coded
+participants, two equipment conditions, three crossover cycles, and five trials
+per condition and cycle. Every observation and property is
+`manufactured-synthetic`; no person or commercial product was measured.
+
+::: {.callout-warning title="Scientific Authority Boundary"}
+The current evidence provides **no product or fitting recommendation** and **no
+coaching, clinical, design, causal, or population authority**. It does not
+identify an optimal shaft, diagnose a golfer, validate a vendor category, or
+show that changing equipment causes a durable performance change. Human and
+product guidance remains `unavailable` pending the promotion gates below.
+:::
+
+## Primary-Source Register
+
+::: {.table-responsive}
+| Source | What It Supports Here | What It Does Not Authorize |
+|---|---|---|
+| Worobets and Stefanyshyn (2012) [@worobets2012effects] | Double-blind, subject-dependent shaft-stiffness response as a reason to retain individual effects | One best stiffness or a transportable responder label |
+| MacKenzie and Boucher (2017) [@mackenzie2017shaft] | Repeated within-golfer comparisons and the separation of group from individual results | Treating a significant individual contrast as a fitting prescription |
+| Betzler et al. (2012) [@betzler2012shaft] | Repeated shaft-strain, clubhead-presentation, and wrist-kinematic observations | A universal biomechanical mechanism or causal pathway |
+| Jones et al. (2019) [@jones2019shaft] | Within-golfer repeatability and between-golfer strain-pattern variation | A validated responder taxonomy or population subgroup |
+| Lacy et al. (2012) [@lacy2012driver] | Designed manipulation of driver mass and shaft length | This crossover, outcome, sample size, or individual advice |
+| Cheong, Kang, and Jeong (2006) [@cheong2006shaft] | Mechanical shaft-property measurement and model-comparison precedent | A qualified vendor specification or released design |
+:::
+
+The sources motivate the questions and controls. None supplies the manufactured
+values below, validates this estimator, or licenses a conclusion about a
+particular golfer or club.
+
+## Equipment Property and Metrology Contract
+
+An intervention is not the printed shaft label. Each coded condition requires
+the same ordered property manifest before allocation:
+
+::: {.table-responsive}
+| Property Family | Required Record | Primary Failure Mode |
+|---|---|---|
+| Shaft structure | Flexural-rigidity and torsional-rigidity profiles with station locations | A single flex label hides spatial and directional variation |
+| Mass distribution | Shaft, head, grip, and total mass; balance point; club length | Nominal component values do not close the assembled system |
+| Head geometry | Static loft, lie, face angle, and head inertia | Delivery changes can be confounded with an unmeasured head state |
+| Metrology | Value, unit, standard uncertainty, method, and calibration revision | Precision is claimed without traceability |
+| Custody | Seal, custodian role, code, transition, and condition IDs | Analysts or participants can infer or alter the intervention |
+:::
+
+The executable contract rejects missing, duplicated, reordered, nonfinite, or
+zero-uncertainty properties. The sample numbers are calibrated only against a
+manufactured software fixture. Real work requires traceable instruments,
+environmental conditions, as-found/as-left checks, and a signed chain of
+custody. A product name cannot substitute for those records.
+
+## Randomization, Blinding, and Washout
+
+Protocol revision `affinedrift.equipment-individual-response/v1` uses a declared
+seeded blocked permutation: four participants receive `AB`, four receive `BA`,
+with three cycles and five trials in each condition-cycle cell. Both the
+participant and the primary analyst receive condition codes. A ten-minute
+washout is a fixture declaration, not an empirically validated duration. Every
+trial records its period and elapsed minutes since the prior condition; the
+qualifier rejects a condition assigned to the wrong randomized period or a
+second period observed before the declared washout.
+
+Counterbalancing separates treatment order from condition, but it does not
+erase learning, fatigue, expectation, warming, or condition-by-period effects.
+The software therefore rejects imbalance and a zero washout rather than
+quietly interpreting them as ordinary noise.
+
+## Intent Control and Adaptation
+
+Each trial retains an intent-error signal and a carryover residual. A qualified
+study would declare the task cue, allowable speed or effort band, familiarization
+criterion, warm-up, rest, stopping rule, and method for measuring adherence.
+The fixture applies the gate before estimating a response:
+
+1. Keep every raw record, including excluded and adverse trials.
+2. Mark the participant result unavailable if the declared carryover or intent
+   limit is exceeded.
+3. Do not impute a failed participant into the hierarchical model.
+4. Report period and cycle effects so adaptation cannot masquerade as equipment
+   response.
+
+The adverse fixture preserves all P08 trials but reports its response as
+`unavailable` because its carryover residual exceeds the preregistered limit.
+
+## Preregistered Estimands
+
+The primary estimand is the **within-participant target-minus-baseline change in
+clubhead speed at impact**, in m/s. The practical threshold is 0.5 m/s. These
+choices are frozen before analyzing a real data set.
+
+Distinct questions require distinct estimands:
+
+::: {.table-responsive}
+| Question | Estimand | Required Scope Statement |
+|---|---|---|
+| Did this coded participant differ under these conditions? | Within-person mean contrast across qualified cycles | Conditional on the task, equipment, session, and measurement envelope |
+| Is the response stable? | Cycle-specific contrasts and direction consistency | Does not imply stability on another day or task |
+| How heterogeneous are fixture responses? | Between-participant variance after sampling-variance accounting | Descriptive for this manufactured set only |
+| Would a new participant benefit? | Held-out predictive distribution | `unavailable` in the current program |
+| Did the property change cause the response? | Preregistered causal contrast with exchangeability and adherence evidence | `unavailable` until the intervention and confounders are qualified |
+:::
+
+Changing from one row to another after seeing results is estimand drift and
+invalidates the confirmatory interpretation.
+
+## Hierarchical Participant-by-Equipment Analysis
+
+For participant $i$ and cycle $c$, the fixture first computes
+
+$$
+d_{ic}=\overline{y}_{i,c,B}-\overline{y}_{i,c,A}.
+$$
+
+The raw individual contrast is $\bar d_i$. A method-of-moments between-person
+variance separates observed dispersion from average sampling variance, and a
+partial-pooling estimate shrinks $\bar d_i$ toward the group mean. Raw and
+shrunken values remain side by side; shrinkage never changes the stored trials
+or creates a recommendation.
+
+The manufactured group mean is approximately 0.000 m/s while the estimated
+between-participant variance is 0.764 (m/s)$^2$. Opposing individual directions
+cancel at group level, which is precisely why a near-zero mean cannot prove
+that everyone has no response.
+
+::: {.table-responsive}
+| Fixture Record | Raw Contrast (m/s) | 95% Conditional Interval (m/s) | Status | Stable Across Cycles? |
+|---|---:|---:|---|---|
+| P01 | 1.400 | 1.360 to 1.440 | Positive | Yes |
+| P03 | -1.400 | -1.440 to -1.360 | Negative | Yes |
+| P05 | 0.000 | -0.040 to 0.040 | Null | Yes |
+| P07 | 0.200 | -0.998 to 1.398 | Indeterminate | No |
+| P08, adverse carryover fixture | unavailable | unavailable | Unavailable | No |
+:::
+
+These exact numbers are regression fixtures. Their clean separation is evidence
+that the code can preserve outcome classes, not evidence about real response
+rates or effect sizes.
+
+## Within-Person Uncertainty
+
+The interval combines cycle-to-cycle dispersion with declared measurement
+standard uncertainty. Increasing P01 measurement uncertainty from 0.08 to
+0.80 m/s leaves the raw contrast unchanged but widens its interval. That
+contract blocks a precise-looking mean from outrunning instrument capability.
+
+A human study must extend this calculation to calibration covariance, repeated
+days, trial autocorrelation, heteroscedasticity, missingness, analyst decisions,
+and sensitivity to hierarchical priors or variance estimators. A confidence or
+credible interval is conditional on its model; it is not a tolerance interval
+for all golfers.
+
+The executable sensitivity record also recomputes the group mean after leaving
+out each fixture participant and compares raw-status classifications with the
+partially pooled estimates. Its leave-one-out group-mean range is -0.2 to +0.2
+m/s, no fixture status changes under partial pooling, and mixed individual
+directions remain. This narrow check does not replace alternative priors,
+estimators, missing-data models, or held-out predictive assessment.
+
+## Responder Instability and Carryover
+
+A responder label is not a permanent trait. P07 has cycle effects of +1.0,
+-1.0, and +0.6 m/s: its mean is positive but its interval crosses both the null
+region and the positive practical boundary. The result remains
+`indeterminate`, with `stable_across_cycles = false`.
+
+Carryover is handled separately from instability. A large residual after
+condition A can contaminate condition B even when the trial values appear
+repeatable. The correct disposition is unavailable pending a qualified model
+or new collection—not deletion, favorable cycle selection, or imputation.
+
+## Practical Versus Statistical Significance
+
+The result classes use the complete interval relative to ±0.5 m/s:
+
+::: {.table-responsive}
+| Status | Interval Rule | Interpretation Limit |
+|---|---|---|
+| Positive | Entire interval exceeds +0.5 m/s | Manufactured contrast only |
+| Negative | Entire interval is below -0.5 m/s | Retained adverse direction, not failure of reporting |
+| Null | Entire interval lies inside -0.5 to +0.5 m/s | Practically bounded for this fixture, not proof of exact zero |
+| Indeterminate | Interval crosses a practical boundary | More precision or a better design may be needed |
+| Unavailable | Qualification or evidence gate fails | No numerical substitute is permitted |
+:::
+
+A small p-value does not establish practical importance. Conversely, a large
+but uncertain estimate does not become advice. Thresholds must be justified for
+the declared outcome before data collection and checked in sensitivity analyses.
+
+## Flexible-Shaft Prediction Linkage
+
+This protocol does not duplicate an UpstreamDrift shaft solver. A future
+comparison should import an immutable, schema-validated UpstreamDrift prediction
+for each measured condition and bind it to the exact property, coordinate,
+frame, event, and source revisions. The [planar-to-spatial model
+ladder](model-ladder.html) identifies when flexible-shaft states are required;
+the [hybrid impact-contact protocol](hybrid-impact-contact.html) identifies
+terminal-event uncertainty that can change the predicted outcome.
+
+The [club fitting simulation article](../articles/technology-club-fitting.html)
+describes forward models and interchange documents. A prediction is evaluated
+against locked measurements; it is not tuned on the same trials and then called
+validated. Model discrepancy, parameter uncertainty, numerical error, and
+measurement error remain separate. AffineDrift explains and audits the contract;
+[UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) owns the
+upstream computational implementation.
+
+## Negative, Null, Indeterminate, and Unavailable Results
+
+The regression ledger deliberately contains one representative positive,
+negative, null, indeterminate, and unavailable outcome. Every available row
+retains `manufactured-synthetic`; the failed row retains `unavailable`. All five
+retain `authorized_guidance = unavailable`. This prevents an unfavorable or
+ambiguous response from disappearing between code, analysis, and publication.
+
+No global recommendation is computed. Aggregation can summarize heterogeneity,
+but it cannot decide which product a person should use.
+
+## Further-Research and Promotion Gates
+
+Before human, product, fitting, causal, or population interpretation, complete
+all of the following:
+
+1. Publish a preregistered protocol with primary, secondary, and adverse
+   outcomes; multiplicity control; sample-size rationale; and a locked analysis.
+2. Qualify assembled-equipment metrology, calibration uncertainty, code
+   concealment, custody, environmental controls, and independent as-tested
+   configuration checks.
+3. Validate intent, familiarization, adaptation, fatigue, washout, carryover,
+   day-to-day repeatability, and missing-data rules in a pilot distinct from the
+   confirmatory set.
+4. Estimate participant-by-equipment effects hierarchically, publish raw and
+   pooled estimates, retain negative/null results, and test responder-label
+   stability on held-out sessions.
+5. Link flexible-shaft predictions through immutable manifests and compare them
+   on held-out conditions with outcome-specific calibration and sensitivity.
+6. Obtain ethics, consent, privacy, safety, product-identification, and
+   independent statistical approvals before collection and release.
+7. Replicate across sites, operators, equipment lots, tasks, skill strata, and
+   demographics before making any bounded transport claim.
+
+Until those gates close, product and fitting guidance remains unavailable.
+
+## Reproducible Implementation
+
+The declarations, manufactured fixtures, qualification, and analysis live in
+`src/affine_control/equipment_response_protocol.py`,
+`equipment_response_fixtures.py`, and `equipment_response_analysis.py`.
+Executable contracts live in `tests/test_equipment_response_protocol.py` and
+`tests/test_equipment_response_content.py`. The reviewed-route inventory binds
+those exact bytes by SHA-256. A digest proves review identity, not scientific
+truth or external validity.

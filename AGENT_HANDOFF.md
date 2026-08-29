@@ -10,6 +10,65 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## Equipment and Shaft Individual-Response Validation (#4040 — In Progress)
+
+- Branch `feat/4040-equipment-individual-response` started from exact protected
+  main `838cdb5971b071dda5bdebd3af4e46e320989afc`. It adds a validation
+  protocol and manufactured fixtures; it does not duplicate UpstreamDrift
+  shaft dynamics or contain participant or commercial-equipment measurements.
+  Ordinary merge `bf3e026d` reconciles protected neural-timing main
+  `e7dbdc538a3f9edcc60ec8bd578fb5a7d747aa4e` while preserving both reviewed
+  routes and their exact-byte evidence. Final ordinary merge `1e2fa959`
+  reconciles protected population-generalization main
+  `32969fa53be7c7402c02eefbdf06cc8689322400` as the next independent reviewed
+  route without weakening either contract.
+- RED commits `3796f9f6` and `9d3001f5` freeze the executable and publication
+  contracts before their modules, bibliography records, public route, or audit
+  evidence existed. GREEN commits `edc3f1fd`, `2ab784c5`, and `5b221cb8` add
+  the bounded analysis, chapter, and exact-byte review record.
+- `equipment_response_protocol.py` requires twelve ordered assembled-club and
+  shaft property families with values, units, positive standard uncertainty,
+  method, calibration revision, manufactured origin, and chain-of-custody
+  events. It freezes eight coded fixture participants, balanced AB/BA order,
+  three cycles, five trials per condition-cycle, participant/analyst blinding,
+  washout, intent, carryover, and a 0.5 m/s practical threshold.
+- Qualification rejects duplicate or incomplete cells. Intent or carryover
+  failure retains every observation but makes the participant estimate
+  unavailable rather than deleting or imputing it. The analysis reports raw
+  and partially pooled within-person contrasts, intervals, cycle-direction
+  stability, and between-participant variance while computing no global
+  recommendation.
+- The manufactured group mean is approximately 0.000 m/s despite positive,
+  negative, null, and indeterminate participant results; the adverse fixture
+  adds an unavailable carryover result. This is a software regression result,
+  not a response prevalence, effect-size estimate, fitting rule, or evidence
+  about a real golfer or product.
+- Six primary sources bind subject-dependent response, repeated shaft strain
+  and kinematics, designed equipment manipulation, and shaft metrology. The
+  canonical bibliography records exact DOI, volume, issue, page/article, full
+  author, and bounded-use metadata; offline quality, cross-file identity, and
+  citation-resolution checks pass.
+- `/models/equipment-individual-response.html` is reviewed audit
+  `ad-route-610504f8ac44`, bound to content commit
+  `2ab784c58b5d58e40ed40bd04ed3c0284fd901cc` and exact SHA-256 evidence for
+  its QMD, three implementation modules, and two test files. The inventory has
+  27 reviewed, 200 deferred, and 2 exempt routes after reconciliation with
+  protected neural-timing and population-generalization main.
+- Focused equipment executable, content, and audit evidence is 33/33 green.
+  Quarto 1.8.26 renders the route; desktop 1440 x 1000 and mobile 390 x 844
+  inspection verifies one H1, five responsive locally scrolling tables, seven
+  rendered mathematics containers, no body overflow, and no site-originated
+  browser warnings or errors. At exact final integration head `1e2fa959`, the
+  default Python lane passes 3,460 tests with 29 documented skips and 93.19%
+  coverage; the content lane passes 108 tests with 4 documented skips; and Jest passes
+  297 tests with 19 documented skips. Full Ruff/Black, focused strict mypy,
+  code quality, module and changed-file budgets, pre-commit, bibliography and
+  citation gates, Quarto source gates, 230-URL bidirectional render coverage,
+  deterministic audit reports, and publication enforcement pass. Hosted
+  protected gates remain to be run after final protected-main reconciliation.
+  No product or fitting recommendation and no coaching, clinical, design,
+  causal, or population authority is available.
+
 ## Population Generalization and Participant-Held-Out Validation (#4039 — In Progress)
 
 - Branch `feat/4039-population-generalization` started from exact protected main
