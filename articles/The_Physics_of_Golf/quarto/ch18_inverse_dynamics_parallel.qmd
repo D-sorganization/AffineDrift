@@ -455,7 +455,7 @@ This is why the dual null space matters for injury-risk and coaching discussions
 
 ## Why Drift Forces Are Not Constrained by the Loop {#sec-drift_not_constrained_inverse}
 
-A critical insight from @sec-parallel_mechanisms: drift terms can be computed from kinematics once the model, segment inertias, and coordinate convention are specified. They are not affected by muscle load-sharing ambiguity, but they are still model-conditioned.
+A critical insight from [Chapter 9](./ch09_parallel_mechanisms.qmd#sec-parallel_mechanisms): drift terms can be computed from kinematics once the model, segment inertias, and coordinate convention are specified. They are not affected by muscle load-sharing ambiguity, but they are still model-conditioned.
 
 ### Gravity {#sec-gravity_inverse}
 
@@ -498,7 +498,7 @@ $$
 \bm{F}_{\text{drift}} = \bm{F}_{\text{grav}} + \bm{F}_{\text{Cor}} + \bm{F}_{\text{cent}} + \text{(elastic drift)}
 $$ {#eq-total_drift_force}
 
-This total drift term has no muscle load-sharing ambiguity, but it depends on the selected model, parameters, and filtering. The ZTCF framework (@sec-zero_torque_counterfactual) leverages this distinction without claiming that drift estimates are independent of modeling choices.
+This total drift term has no muscle load-sharing ambiguity, but it depends on the selected model, parameters, and filtering. The ZTCF framework ([Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual)) leverages this distinction without claiming that drift estimates are independent of modeling choices.
 :::
 
 ## A Concrete Example: The Two-Handed Golf Grip
@@ -1329,10 +1329,12 @@ When reading biomechanics papers that claim to have computed individual joint to
 
 - **Claimed precision without uncertainty:** If a paper reports torques to the nearest Newton-meter without confidence intervals or sensitivity analysis, be suspicious. Inverse dynamics solutions are often sensitive to small changes in assumptions.
 
+:::
+
 ::: {.callout-important}
 ## ZTCF Is a Forward Problem {#principle:ztcf_forward_problem}
 
-The ZTCF framework (@sec-zero_torque_counterfactual) asks: "What motion does the declared effective plant produce from this state when applied generalized control is zero?" It does not specify muscle activation.
+The ZTCF framework ([Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual)) asks: "What motion does the declared effective plant produce from this state when applied generalized control is zero?" It does not specify muscle activation.
 
 This is a **forward dynamics** problem: given a model, initial state, contact assumptions, and drift forces, integrate forward to predict the motion.
 

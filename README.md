@@ -130,6 +130,8 @@ AffineDrift/
 - [Contributing](CONTRIBUTING.md) — how to propose a change.
 - [Code style guide](docs/development/code-style-guide.md) — Python, JavaScript, CSS, and Quarto standards.
 - [Testing guide](docs/development/testing-guide.md) — test patterns, fixtures, and conventions.
+- [Public site verification](docs/development/public-site-verification.md) — every-route visual,
+  responsive, and revision-bound deployment contract.
 - [Git workflow](docs/development/git-workflow-guide.md) — branch strategy, commits, and pull requests.
 - [API reference](docs/api-reference.md) — the public API of the modules under `src/`.
 - [Repository inventory](docs/development/repository_inventory.md) — component status and known gaps.

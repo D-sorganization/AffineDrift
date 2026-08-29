@@ -133,11 +133,11 @@ def test_article_never_mentions_prompt_or_style_exemplar() -> None:
 
 def test_model_workbench_page_is_discoverable_and_uses_canonical_tools() -> None:
     """The reader page must link to one shared simulator, not copy its glossary."""
-    config = (ROOT / "_quarto.yml").read_text(encoding="utf-8")
+    article_index = (ROOT / "resources/articles.qmd").read_text(encoding="utf-8")
     article = _source()
     workbench = WORKBENCH.read_text(encoding="utf-8")
 
-    assert "articles/proximal-distal-model-workbench.html" in config
+    assert "articles/proximal-distal-model-workbench.html" in article_index
     assert "proximal-distal-model-workbench.html" in article
     assert "D-sorganization/Tools/tree/main/src/pendulum_simulator" in workbench
     assert "companion_catalog.json" in workbench
@@ -169,7 +169,7 @@ def test_expanded_companion_has_one_substantive_file_per_registered_chapter() ->
     for expected_number, chapter_path in enumerate(chapter_paths, start=1):
         chapter = chapter_path.read_text(encoding="utf-8")
         words = re.findall(r"\b[\w'-]+\b", chapter)
-        assert chapter.startswith("# ")
+        assert chapter.startswith("## ")
         assert f"{{#sec-lay-ch{expected_number:02d}" in chapter
         assert len(words) >= 2_000, f"{chapter_path.name} has only {len(words)} words"
         assert "## A Concrete Picture" in chapter

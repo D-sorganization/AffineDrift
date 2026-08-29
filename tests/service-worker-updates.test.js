@@ -38,6 +38,13 @@ describe('service-worker-updates', () => {
     expect(banner).not.toBeNull();
     expect(banner.textContent).toContain('New content is available');
     expect(banner.querySelectorAll('button')).toHaveLength(2);
+    expect(banner.className).toBe('site-update-notice');
+    expect(banner.getAttribute('style')).toBeNull();
+    expect(banner.querySelector('.site-update-notice__actions')).not.toBeNull();
+    for (const button of banner.querySelectorAll('button')) {
+      expect(button.getAttribute('style')).toBeNull();
+      expect(button.className).toMatch(/site-update-notice__button/);
+    }
   });
 
   test('removeBanner clears the notice', () => {

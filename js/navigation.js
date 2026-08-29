@@ -192,6 +192,9 @@ export function generateTableOfContents() {
     const leftSidebar = document.querySelector(".left-sidebar");
     const sidebar = leftSidebar || document.getElementById("history-sidebar");
     if (!sidebar) return;
+    // Authored TOCs are the page contract. Generating a second list beside
+    // one creates duplicate navigation and competing IDs.
+    if (leftSidebar?.querySelector(".toc-nav")) return;
 
     let tocSection;
     if (leftSidebar) {

@@ -3,7 +3,7 @@ title: "Critique: Dimensional Inconsistency of the Drift-Control Ratio"
 description: "Critique and response context for Dimensional Inconsistency of the Drift-Control Ratio in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Dimensional Inconsistency of the Drift-Control Ratio
+## Critique: Dimensional Inconsistency of the Drift-Control Ratio
 
 ## Summary of Concern
 

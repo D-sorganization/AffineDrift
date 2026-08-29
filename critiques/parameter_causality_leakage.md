@@ -3,7 +3,7 @@ title: "Critique: Parameter Causality Leakage"
 description: "Critique and response context for Parameter Causality Leakage in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Parameter Causality Leakage
+## Critique: Parameter Causality Leakage
 
 ## Summary of Concern
 

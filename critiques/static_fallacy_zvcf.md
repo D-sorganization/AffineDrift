@@ -3,7 +3,7 @@ title: "Critique: The Static Fallacy (Zero Velocity Counterfactual)"
 description: "Critique and response context for The Static Fallacy (Zero Velocity Counterfactual) in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: The Static Fallacy (Zero Velocity Counterfactual)
+## Critique: The Static Fallacy (Zero Velocity Counterfactual)
 
 ## Summary of Concern
 

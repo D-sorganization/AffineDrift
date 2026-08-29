@@ -3,7 +3,7 @@ title: 'Critique: The Fallacy of Passive Drift and the "Skeletal Baseline"'
 description: 'Critique and response context for The Fallacy of Passive Drift and the "Skeletal Baseline" in AffineDrift''s control-affine golf-swing framework.'
 ---
 
-# Critique: The Fallacy of Passive Drift and the "Skeletal Baseline"
+## Critique: The Fallacy of Passive Drift and the "Skeletal Baseline"
 
 ## Summary of Concern
 

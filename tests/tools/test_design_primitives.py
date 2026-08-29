@@ -93,3 +93,13 @@ class TestPrimitivesAreImported:
             assert (
                 f"css/components/{name}.css" in styles
             ), f"styles.css does not @import css/components/{name}.css"
+
+
+def test_brand_card_preserves_text_and_filled_button_contrast() -> None:
+    """Nested helpers must not override the brand surface's contrast contract."""
+    card_css = PRIMITIVE_FILES["site-card"].read_text(encoding="utf-8")
+    button_css = PRIMITIVE_FILES["site-button"].read_text(encoding="utf-8")
+
+    assert ".site-card--brand .page-lede" in card_css
+    assert ".site-card--brand .u-text-muted" in card_css
+    assert ".site-card--brand .site-button--on-brand" in button_css

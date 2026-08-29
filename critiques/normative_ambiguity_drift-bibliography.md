@@ -3,7 +3,7 @@ title: 'Bibliographic Analysis: Normative Ambiguity of Drift (The "Good Drift" H
 description: 'Bibliographic analysis supporting the AffineDrift critique of Normative Ambiguity of Drift (The "Good Drift" Hypothesis).'
 ---
 
-# Bibliographic Analysis: Normative Ambiguity of Drift (The "Good Drift" Hypothesis)
+## Bibliographic Analysis: Normative Ambiguity of Drift (The "Good Drift" Hypothesis)
 
 ## A) Concept Map
 

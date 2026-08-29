@@ -3,7 +3,7 @@ title: "Critique: Geometric Stiffness and Centrifugal Stiffening Omission"
 description: "Critique and response context for Geometric Stiffness and Centrifugal Stiffening Omission in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Geometric Stiffness and Centrifugal Stiffening Omission
+## Critique: Geometric Stiffness and Centrifugal Stiffening Omission
 
 ## Summary of Concern
 

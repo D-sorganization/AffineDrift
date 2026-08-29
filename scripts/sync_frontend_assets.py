@@ -28,6 +28,27 @@ class SyncMap:
     mirrors: tuple[str, ...]
 
 
+CANONICAL_JS_NAMES = (
+    "accessibility.js",
+    "bibliography.js",
+    "dark-mode-toggle.js",
+    "equation-runtime-gate.js",
+    "forms.js",
+    "history.js",
+    "home.js",
+    "main.js",
+    "metrics.js",
+    "navigation.js",
+    "notes-workspace.js",
+    "pdf.js",
+    "rotation-converter.js",
+    "service-worker-updates.js",
+    "service-worker-utils.js",
+    "ui-components.js",
+    "utils.js",
+)
+
+
 SYNC_MAPS: tuple[SyncMap, ...] = (
     # css/ is the canonical source; docs/css/ is the Quarto-served mirror.
     # src/css/ has been removed (issue #1382); deploy_assets.py now reads from css/ directly.
@@ -51,34 +72,16 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
         source="css/resources.css",
         mirrors=("docs/css/resources.css",),
     ),
-    # js/ is the canonical source; docs/js/ is the Quarto-served mirror.
-    # src/js/ has been removed (issue #1425); js/ syncs directly to docs/js/.
-    SyncMap(
-        source="js/metrics.js",
-        mirrors=("docs/js/metrics.js",),
-    ),
-    SyncMap(
-        source="js/notes-workspace.js",
-        mirrors=("docs/js/notes-workspace.js",),
-    ),
-    SyncMap(
-        source="js/bibliography.js",
-        mirrors=("docs/js/bibliography.js",),
-    ),
-    SyncMap(
-        source="js/service-worker-utils.js",
-        mirrors=("docs/js/service-worker-utils.js",),
-    ),
-    SyncMap(
-        source="js/service-worker-updates.js",
-        mirrors=("docs/js/service-worker-updates.js",),
-    ),
     # NOTE: styles.css is NOT a byte-identical mirror. docs/styles.css is the
     # flattened CSS bundle produced by scripts/bundle_css.py (issue #3219): the
     # canonical styles.css keeps its modular @import graph, while the bundle
     # inlines that graph into a single render-blocking stylesheet. Bundle
     # freshness is validated by `python3 scripts/bundle_css.py --check`, not by
     # byte-equality here.
+) + tuple(
+    # js/ is canonical; every runtime module must reach the deploy mirror.
+    SyncMap(source=f"js/{name}", mirrors=(f"docs/js/{name}",))
+    for name in CANONICAL_JS_NAMES
 )
 
 # These are intentionally different architectures and are not synchronized.

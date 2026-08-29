@@ -3,7 +3,7 @@ title: "Critique: Conflation of Active and Passive Muscle-Tendon Dynamics"
 description: "Critique and response context for Conflation of Active and Passive Muscle-Tendon Dynamics in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Conflation of Active and Passive Muscle-Tendon Dynamics
+## Critique: Conflation of Active and Passive Muscle-Tendon Dynamics
 
 ## Summary of Concern
 

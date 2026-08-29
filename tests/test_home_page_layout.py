@@ -125,26 +125,16 @@ class TestStyleDiscipline:
         assert violations == [], "\n".join(v.format() for v in violations[:20])
 
 
-class TestSidebarTrimmed:
-    """A2: home sidebar collapses to three sections matching D1 IA."""
+class TestContentFirstHomeLayout:
+    """The landing page has one reading column without duplicate navigation rails."""
 
-    def test_three_sidebar_section_toggles(self, home_text: str) -> None:
-        # Each toggle button carries class "sidebar-section-toggle".
-        count = home_text.count("sidebar-section-toggle")
-        assert count == 3, f"Expected 3 sidebar toggles, found {count}"
+    def test_uses_single_column_layout(self, home_text: str) -> None:
+        assert 'class="home-layout home-layout--single"' in home_text
 
-    def test_toc_anchors_match_sections(self, home_text: str) -> None:
-        # Every right-rail TOC link must point to an anchor that exists.
-        import re
+    def test_duplicate_home_rails_are_absent(self, home_text: str) -> None:
+        for abandoned_class in ("home-sidebar", "home-toc", "sidebar-section-toggle"):
+            assert abandoned_class not in home_text
 
-        toc_block = re.search(
-            r"<aside class=\"home-toc\">.*?</aside>",
-            home_text,
-            re.DOTALL,
-        )
-        assert toc_block is not None, "home-toc aside missing"
-        href_anchors = re.findall(r'href="#([\w-]+)"', toc_block.group())
-        for anchor in href_anchors:
-            assert (
-                f'id="{anchor}"' in home_text
-            ), f"TOC links to #{anchor} but no element has that id"
+    @pytest.mark.parametrize("section_id", ["welcome", "framework", "latest", "books", "connect"])
+    def test_primary_sections_have_stable_anchors(self, home_text: str, section_id: str) -> None:
+        assert f'id="{section_id}"' in home_text

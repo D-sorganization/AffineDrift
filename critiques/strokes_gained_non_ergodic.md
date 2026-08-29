@@ -3,7 +3,7 @@ title: "Critique: Strokes Gained Limitations and Ecological Fallacy"
 description: "Critique and response context for Strokes Gained Limitations and Ecological Fallacy in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Strokes Gained Limitations and Ecological Fallacy
+## Critique: Strokes Gained Limitations and Ecological Fallacy
 
 ## Summary of Concern
 

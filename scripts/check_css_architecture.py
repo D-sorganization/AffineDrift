@@ -26,6 +26,22 @@ def extract_imports(path: Path) -> list[str]:
     return [match.group(1) for match in IMPORT_RE.finditer(text)]
 
 
+def discover_authored_stylesheets(repo_root: Path, root_stylesheet: Path) -> list[Path]:
+    """Return every canonical authored stylesheet in deterministic order.
+
+    The root entry point is reported first, followed by the modular ``css/``
+    tree.  An empty result is a broken gate, not a passing scan.
+    """
+    discovered: list[Path] = []
+    if root_stylesheet.is_file():
+        discovered.append(root_stylesheet)
+    discovered.extend(sorted(repo_root.glob("css/**/*.css")))
+    unique = list(dict.fromkeys(discovered))
+    if not unique:
+        raise ValueError(f"no authored stylesheets discovered under {repo_root}")
+    return unique
+
+
 def find_media_var_violations(path: Path, repo_root: Path) -> list[str]:
     """Return violations for ``var()`` used inside a ``@media`` prelude.
 
@@ -90,7 +106,7 @@ def check_rules(repo_root: Path) -> list[str]:
     # Forbid var() inside @media preludes across every authored stylesheet
     # (root entry + the modular css/ tree). The rendered docs/ bundle inherits
     # correctness from these sources via scripts/bundle_css.py.
-    media_var_targets = [root_stylesheet, *sorted(repo_root.glob("css/**/*.css"))]
+    media_var_targets = discover_authored_stylesheets(repo_root, root_stylesheet)
     for css_file in media_var_targets:
         violations.extend(find_media_var_violations(css_file, repo_root))
 
@@ -101,9 +117,16 @@ def main() -> int:
     """Run the CSS architecture check."""
     repo_root = Path(__file__).resolve().parent.parent
     violations = check_rules(repo_root)
+    root_stylesheet = (
+        repo_root / load_config(repo_root, "css_architecture_rules.json")["root_stylesheet"]
+    )
+    try:
+        files_scanned = len(discover_authored_stylesheets(repo_root, root_stylesheet))
+    except ValueError:
+        files_scanned = 0
     return report_results(
         "CSS architecture check",
-        files_scanned=0,
+        files_scanned=files_scanned,
         details=["passed" if not violations else f"{len(violations)} violations"],
         errors=violations,
     )

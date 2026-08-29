@@ -3,7 +3,7 @@ title: 'Critique: Precision vs. Gross Control (The "locked-in" Fallacy)'
 description: 'Critique and response context for Precision vs. Gross Control (The "locked-in" Fallacy) in AffineDrift''s control-affine golf-swing framework.'
 ---
 
-# Critique: Precision vs. Gross Control (The "locked-in" Fallacy)
+## Critique: Precision vs. Gross Control (The "locked-in" Fallacy)
 
 ## Summary of Concern
 

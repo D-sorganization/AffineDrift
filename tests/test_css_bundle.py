@@ -140,6 +140,23 @@ class TestRealRepoBundle:
         offenders = re.findall(r"@media[^{]*\bvar\(", decommented)
         assert offenders == [], f"invalid var() in @media prelude: {offenders}"
 
+    def test_real_bundle_contains_mobile_long_content_guards(self):
+        """Inline paths, URLs, equations, and book crumbs stay within 390px."""
+        out = bundle(REPO_ROOT / "styles.css", REPO_ROOT)
+        assert "#quarto-document-content :not(pre) > code" in out
+        assert "overflow-wrap: anywhere" in out
+        assert "#quarto-document-content h3" in out
+        assert ".math.display" in out and "display: block" in out
+        assert ".quarto-page-breadcrumbs" in out and "min-width: 0" in out
+        assert "#quarto-document-content .table-wrapper" in out
+        assert "#rc-app .rc-main-grid" in out
+        assert "#quarto-margin-sidebar" in out and "display: none !important" in out
+        header_rule = re.search(r"#quarto-header\s*{(?P<body>.*?)}", out, re.DOTALL)
+        assert header_rule and "position: fixed" in header_rule.group("body")
+        assert "#quarto-header .quarto-secondary-nav" in out
+        assert "#quarto-content.page-layout-full .ad-page-container.page-columns.page-full" in out
+        assert "#quarto-content.page-layout-full .home-layout--single.page-columns.page-full" in out
+
 
 def _significant_line(css: str) -> str | None:
     """Return the first substantive (non-import, non-comment) line, if any."""

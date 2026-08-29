@@ -10,6 +10,7 @@ import pytest
 
 from scripts.verify_proximal_distal_projection import (
     ProjectionError,
+    manifest_digest_matches,
     projection_tree,
     verify_projection,
     verify_projection_lock,
@@ -21,6 +22,26 @@ PUBLICATION_ROOT = REPO_ROOT / "articles" / "proximal_distal_energy_transfer"
 
 def _sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def test_manifest_digest_accepts_the_declared_crlf_authority_from_raw_lf_bytes() -> None:
+    raw = b'{\n  "schema": "example"\n}\n'
+    crlf = raw.replace(b"\n", b"\r\n")
+
+    assert manifest_digest_matches(raw, _sha(crlf))
+    assert not manifest_digest_matches(raw + b"tampered", _sha(crlf))
+
+
+def test_projection_tree_is_stable_across_git_line_endings(tmp_path: Path) -> None:
+    root = tmp_path / "publication"
+    root.mkdir()
+    chapter = root / "chapter.qmd"
+    chapter.write_bytes(b"# Chapter\n\nText\n")
+    expected = projection_tree(root, "publication.pdf")
+
+    chapter.write_bytes(b"# Chapter\r\n\r\nText\r\n")
+
+    assert projection_tree(root, "publication.pdf") == expected
 
 
 def _fixture(tmp_path: Path) -> tuple[Path, dict[str, object], dict[str, object], bytes]:

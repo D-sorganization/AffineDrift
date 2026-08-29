@@ -93,6 +93,12 @@ describe('gated MathJax loader (#3332-A)', () => {
     expect(source).not.toMatch(/paths:\s*{\s*a11y:/);
   });
 
+  test('publishes a deterministic ready state after initial typesetting', () => {
+    const source = readLoaderSource();
+    expect(source).toContain('defaultPageReady');
+    expect(source).toContain("dataset.adMathReady = 'true'");
+  });
+
   test('is idempotent: a second run does not inject a duplicate script', async () => {
     document.body.innerHTML = '<main><span class="math">x</span></main>';
     await runLoader();

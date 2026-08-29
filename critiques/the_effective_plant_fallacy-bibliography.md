@@ -3,7 +3,7 @@ title: "Bibliographic Analysis: The Effective Plant Fallacy"
 description: "Bibliographic analysis supporting the AffineDrift critique of The Effective Plant Fallacy."
 ---
 
-# Bibliographic Analysis: The Effective Plant Fallacy
+## Bibliographic Analysis: The Effective Plant Fallacy
 
 ## A) Concept Map
 

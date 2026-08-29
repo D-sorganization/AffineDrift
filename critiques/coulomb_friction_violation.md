@@ -3,7 +3,7 @@ title: "Critique: Coulomb Friction Violation of Drift Invariance"
 description: "Critique and response context for Coulomb Friction Violation of Drift Invariance in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Coulomb Friction Violation of Drift Invariance
+## Critique: Coulomb Friction Violation of Drift Invariance
 
 ## Summary of Concern
 

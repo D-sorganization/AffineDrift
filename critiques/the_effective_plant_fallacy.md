@@ -3,7 +3,7 @@ title: "Critique: The Effective Plant Fallacy (Task-Dependent Impedance)"
 description: "Critique and response context for The Effective Plant Fallacy (Task-Dependent Impedance) in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: The Effective Plant Fallacy (Task-Dependent Impedance)
+## Critique: The Effective Plant Fallacy (Task-Dependent Impedance)
 
 ## Summary of Concern
 

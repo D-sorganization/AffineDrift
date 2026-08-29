@@ -19,7 +19,7 @@ QUARTO_YML = REPO_ROOT / "_quarto.yml"
 
 # Hard limits — the IA contract.
 EXPECTED_DROPDOWNS: frozenset[str] = frozenset({"Read", "Technology", "Build", "Connect"})
-MAX_ITEMS_PER_DROPDOWN: int = 15
+MAX_ITEMS_PER_DROPDOWN: int = 11
 FORBIDDEN_TOP_LEVEL_LABELS: frozenset[str] = frozenset({"Learn", "Explore"})
 
 
@@ -105,3 +105,22 @@ class TestReadDropdownContent:
         menu = _entry_with_label(navbar, "Read")["menu"]
         hrefs = [item.get("href", "") for item in menu]
         assert any("learning-paths" in h for h in hrefs)
+
+
+class TestBuildDropdownContent:
+    """Build points to curated hubs; engine leaves belong on the model hub."""
+
+    def test_build_menu_is_hub_first(self, navbar: dict) -> None:
+        menu = _entry_with_label(navbar, "Build")["menu"]
+        labels = {item.get("text", "") for item in menu}
+
+        assert {
+            "Golf Modeling Suite",
+            "Repositories",
+            "Datasets",
+            "Software Catalog",
+            "Interactive Tools",
+        }.issubset(labels)
+        assert not {"MuJoCo", "Drake", "Pinocchio", "OpenSim", "MyoSim", "Simulink"}.intersection(
+            labels
+        )

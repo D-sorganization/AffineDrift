@@ -3,9 +3,11 @@
  */
 
 describe("Notes Workspace", () => {
+  const READING_PATH = "/articles/theory-part1.html";
   let NotesWorkspaceStore;
   let initNotesWorkspace;
   let STORAGE_KEYS;
+  let shouldOfferNotes;
 
   beforeEach(() => {
     jest.resetModules();
@@ -18,6 +20,7 @@ describe("Notes Workspace", () => {
     NotesWorkspaceStore = mod.NotesWorkspaceStore;
     initNotesWorkspace = mod.initNotesWorkspace;
     STORAGE_KEYS = mod.STORAGE_KEYS;
+    shouldOfferNotes = mod.shouldOfferNotes;
   });
 
   afterEach(() => {
@@ -32,6 +35,35 @@ describe("Notes Workspace", () => {
 
     expect(loaded.content).toBe("Research notes");
     expect(typeof loaded.updatedAt).toBe("string");
+  });
+
+  test.each([
+    ['/articles/theory-part1.html', true],
+    ['/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html', true],
+    ['/books/tangent-space-methods.html', true],
+    ['/critiques/01_muscle_physiology.html', true],
+    ['/critiques/index.html', false],
+    ['/', false],
+    ['/pages/technology.html', false],
+    ['/resources/articles.html', false],
+  ])('offers reader notes only on long-form reading routes: %s', (pathname, expected) => {
+    expect(shouldOfferNotes(pathname)).toBe(expected);
+  });
+
+  test('does not inject fixed notes chrome on a landing page', () => {
+    const store = new NotesWorkspaceStore(localStorage);
+    const result = initNotesWorkspace({ store, pathname: '/pages/technology.html' });
+
+    expect(result).toBeNull();
+    expect(document.getElementById('ad-notes-workspace-toggle')).toBeNull();
+  });
+
+  test('keeps reader-notes chrome out of the initial title viewport', () => {
+    const store = new NotesWorkspaceStore(localStorage);
+    initNotesWorkspace({ store, pathname: READING_PATH });
+
+    expect(document.getElementById('ad-notes-workspace-toggle').classList.contains('is-visible'))
+      .toBe(false);
   });
 
   test("clear removes active notes", () => {
@@ -127,7 +159,7 @@ describe("Notes Workspace", () => {
   test("clear button routes through bin and requires confirmation", () => {
     const store = new NotesWorkspaceStore(localStorage);
     store.saveActive("Do not lose me");
-    initNotesWorkspace({ store });
+    initNotesWorkspace({ store, pathname: READING_PATH });
 
     const toggle = document.getElementById("ad-notes-workspace-toggle");
     toggle.click();
@@ -148,7 +180,7 @@ describe("Notes Workspace", () => {
 
   test("clear button does nothing when textarea is empty", () => {
     const store = new NotesWorkspaceStore(localStorage);
-    initNotesWorkspace({ store });
+    initNotesWorkspace({ store, pathname: READING_PATH });
 
     const toggle = document.getElementById("ad-notes-workspace-toggle");
     toggle.click();
@@ -164,7 +196,7 @@ describe("Notes Workspace", () => {
   test("autosave fires after input event with fake timers", () => {
     jest.useFakeTimers();
     const store = new NotesWorkspaceStore(localStorage);
-    initNotesWorkspace({ store });
+    initNotesWorkspace({ store, pathname: READING_PATH });
 
     const toggle = document.getElementById("ad-notes-workspace-toggle");
     toggle.click();
@@ -183,7 +215,7 @@ describe("Notes Workspace", () => {
 
   test("init renders embedded workspace and saves via UI", () => {
     const store = new NotesWorkspaceStore(localStorage);
-    initNotesWorkspace({ store });
+    initNotesWorkspace({ store, pathname: READING_PATH });
 
     const toggle = document.getElementById("ad-notes-workspace-toggle");
     expect(toggle).toBeTruthy();
