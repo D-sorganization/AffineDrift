@@ -35,7 +35,7 @@ This is not a simple problem. It is a \textit{nonlinear optimal control problem 
 
 \item \textbf{Activation dynamics:} Once a motor neuron fires, the muscle doesn't instantly produce torque. Muscle force rises with a time constant of 50--100 milliseconds. The brain cannot produce torque changes faster than this.
 
-\item \textbf{Sensory feedback delay:} Information about body position (proprioception) reaches the brain in 30--50 milliseconds. Visual feedback takes 80--150 milliseconds. For vestibular (balance) feedback: 10--20 milliseconds. The downswing lasts 300 milliseconds.
+\item \textbf{Sensory feedback delay:} Sensorimotor feedback is not one serial channel. Short-latency stretch responses begin at roughly 20--45 ms, long-latency responses at roughly 50--100 ms, and voluntary responses at greater than 100 ms in the upper limb; visually guided responses usually enter later and depend on the task and response being measured \citep{kurtzer2014longlatency,pruszynski2012longlatency}. These are exemplar onset bands, not universal golf-swing constants.
 
 \item \textbf{Noisy sensors:} Proprioceptive acuity varies by joint. Illustrative estimates suggest detection thresholds on the order of 1--2$^{\circ}$ at the wrist and 3--5$^{\circ}$ at the shoulder, though exact values depend on testing methodology \citep{proske2012proprioceptive}. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
 
@@ -46,18 +46,18 @@ This is not a simple problem. It is a \textit{nonlinear optimal control problem 
 \end{constraintbox}
 
 \begin{example}{Delays in the Golf Swing}{ch24_delay_golf}
-The downswing takes approximately 250--300~ms. Consider the delay budget:
+In an illustrative 250--300~ms downswing, several parallel pathways may contribute:
 \begin{itemize}
-\item Visual processing: $\sim$100~ms from retina to visual cortex
-\item Proprioceptive processing: $\sim$50~ms from muscle spindles to cortex
-\item Motor planning and command generation: $\sim$50--100~ms
-\item Neural transmission to muscles: $\sim$10--20~ms
-\item Electromechanical delay (muscle activation): $\sim$40--60~ms
+\item Short-latency stretch response: approximately 20--45 ms
+\item Long-latency response: approximately 50--100 ms
+\item Voluntary response: greater than 100 ms
+\item Muscle activation and force development: additional, muscle- and task-dependent dynamics
+\item Visually guided response: typically late relative to the downswing, with timing and mechanical effect dependent on stimulus, response definition, and swing phase
 \end{itemize}
-Total round-trip delay: approximately 250--330~ms. This exceeds the entire downswing duration. The implication is stark: \textbf{full cortical feedback correction is not possible during the downswing.} The downswing is predominantly a pre-programmed ballistic action. Spinal reflexes (with $\sim$30~ms latency) may contribute modest proprioceptive adjustments, but conscious, visually guided corrections cannot occur within the available time. Every ``correction'' you feel yourself making was most likely planned before the downswing began, triggered by predicted (not actual) sensory feedback.
+The onset bands must not be added into one ``round-trip'' total: the pathways are partly parallel and close through different circuitry \citep{kurtzer2014longlatency,pruszynski2012longlatency}. Timing alone also does not establish response authority---whether a response begins before impact is different from whether it can materially change club or body state. The defensible conclusion is narrower: late visually guided gross corrections are strongly constrained, while short- and long-latency feedback may still regulate muscle activity, limb impedance, or a local trajectory error. Which effects matter in golf remains a phase- and task-specific empirical question.
 \end{example}
 
-\subsection{Feedforward vs. Feedback: A Crucial Distinction}
+\subsection{Feedforward and Feedback: Complementary Contributions}
 \label{subsec:ch24_ff_vs_fb}
 
 \index{feedforward control}
@@ -65,7 +65,7 @@ Total round-trip delay: approximately 250--330~ms. This exceeds the entire downs
 \index{closed-loop control}
 \index{open-loop control}
 
-A traditional control system can work in one of two ways:
+Feedforward and feedback are useful analytical components, but biological control can combine them rather than choosing one exclusively:
 
 \begin{definition}{Feedback (Closed-Loop) Control}{ch24_feedback}
 The controller measures the current state $\bm{x}(t)$, compares it to the desired state $\bm{x}_d(t)$, computes an error $\bm{e}(t) = \bm{x}_d(t) - \bm{x}(t)$, and adjusts the control input based on this error:
@@ -83,22 +83,22 @@ The controller uses a \textit{model} of the system to compute the required contr
 \bm{u}(t) = \bm{u}_{\mathrm{planned}}(t)
 \end{equation}
 
-This is pre-computed, before feedback arrives. No error correction is possible during execution.
+This component is prepared before the corresponding sensory consequence arrives. It can operate alongside feedback during execution.
 \end{definition}
 
-Now here is the critical insight: \textbf{the golf downswing is dominated by feedforward control}.
+The useful hypothesis is that learned preparation and feedforward commands carry substantial responsibility for the downswing, while feedback remains pathway- and phase-dependent.
 
-Why? The timescales don't work out. Suppose a visual feedback signal detected an error at time $t=100$ ms (early in the downswing). This signal takes 80--150 ms to reach the visual cortex. By the time it arrives, we're at $t \approx 180$--250 ms. The motor system then needs 50--100 ms to generate a corrective command \citep{Kandel2013,wolpert1998internal}. The correction reaches the muscles at $t \approx 230$--350 ms. But the swing is over by $t \approx 300$ ms. The correction arrives too late.
+For example, a new visual error presented at $t=100$ ms may not produce a mechanically important correction before a $t\approx300$ ms impact. That scenario bounds one late visually guided loop; it does not rule out faster proprioceptive pathways or responses already in progress. Long-latency responses are task-dependent and can incorporate limb mechanics and behavioral goals \citep{kurtzer2014longlatency,pruszynski2012longlatency}.
 
-\begin{mythreality}{The Feedback Fantasy}{box:ch24_feedback_fantasy}
-\textbf{Fantasy:} The golf swing is controlled by visual feedback. I see the clubface angle and correct it in real time.
+\begin{mythreality}{What Timing Does and Does Not Establish}{box:ch24_feedback_fantasy}
+\textbf{Unsupported extreme:} A golfer continuously sees clubface error and fully replans the downswing in real time.
 
-\textbf{Reality:} By the time visual information about clubface angle reaches your motor cortex, the downswing is finished. The correction arrives after impact. What you \textit{think} is feedback is actually \textit{learning from your last swing}. The golf swing is planned and executed as a feedforward command.
+\textbf{Bounded interpretation:} A late visual perturbation is unlikely to support a complete replan before impact. Faster feedback can still modulate the ongoing action, and post-shot feedback supports learning. The response authority of each pathway depends on perturbation onset, swing phase, task, response measure, and mechanical outcome.
 \end{mythreality}
 
-Proprioceptive feedback is faster (30--50 ms) \citep{Kandel2013,enoka2002neuromechanics} but still problematic. A proprioceptive error signal arrives in time for maybe one correction cycle. The elite golfer does not rely on this. Instead, the swing is executed as a \textit{ballistic} movement---once it starts, it unfolds according to a pre-planned motor program, with only minimal real-time adjustments.
+Short- and long-latency proprioceptive responses can begin within a downswing, but onset is not equivalent to a successful clubhead correction. Establishing their golf-specific role requires time-locked perturbations, muscle and motion measurements, and an outcome definition. Until golf-specific perturbation evidence is available, claims about elite golfers suppressing or relying on a pathway are hypotheses, not established facts.
 
-This realization has far-reaching implications. It means the brain does its real work \textit{before} the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely deterministic.
+This timing picture motivates careful study of pre-swing preparation, initial conditions, impedance, and learned commands without assuming that execution is open-loop or deterministic.
 
 \section{Internal Models: The Brain's Simulator}
 \label{sec:ch24_internal_models}
@@ -204,7 +204,7 @@ For the golf swing, this framework explains several phenomena:
 
 \item \textbf{Post-swing learning:} After the swing, a large prediction error is available: the ball lands at location $\bm{x}_{\mathrm{actual}}$ instead of the predicted location $\bm{x}_{\mathrm{predicted}}$. This error drives learning. The brain updates its internal model to reduce the error on the next swing.
 
-\item \textbf{Lack of time for correction:} During a 300 ms downswing, the brain has time for maybe one or two prediction error cycles. Thus, most corrections cannot happen mid-swing. The brain relies on the prior learning.
+\item \textbf{Limited time for some corrections:} A 300 ms downswing constrains late voluntary and visually guided responses, while faster parallel pathways can still contribute. Prior learning is important, but the number and effect of within-swing responses cannot be inferred by dividing duration by one nominal delay.
 \end{enumerate}
 
 This framework has far-reaching implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the \textit{feeling} of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
@@ -309,7 +309,7 @@ A neural circuit that produces rhythmic output without rhythmic input. CPGs in t
 A rapid response to muscle stretch. When a muscle is stretched, spindle receptors send a signal directly to motor neurons in the spinal cord, which fire and contract the muscle. This entire loop happens in about 30 milliseconds, \textit{without brain involvement}. The brain doesn't know about it until after it happens.
 \end{definition}
 
-For the golf swing, the spinal cord implements local stabilizing reflexes. If a gust of wind pushes your arm off its intended path, spinal reflexes resist the perturbation. The brain doesn't have time to react (visual feedback wouldn't arrive for 150 ms), so the spinal cord handles it automatically.
+For the golf swing, short-latency spinal pathways may contribute local stabilizing responses to a perturbation. Longer-latency supraspinal and visually guided contributions would enter later. Whether any pathway materially changes the club state requires a defined perturbation, phase, and measured outcome.
 
 \subsection{The Basal Ganglia: Action Selection}
 \label{subsec:ch24_basal_ganglia}
@@ -366,9 +366,9 @@ This principle has important consequences:
 
 \item \textbf{At low effort, you have precision control.} With only small units active, forces are fine-graded and controllable. This is why you can write with a pen or play piano (low forces, high precision).
 
-\item \textbf{At high effort, you lose precision.} At maximum effort, all motor units are active, and you can't fine-tune force. This is why maximum-effort movements are ballistic and imprecise.
+\item \textbf{High effort can constrain force grading.} Recruiting larger motor units changes the available force increments and signal-dependent variability. The effect on movement precision depends on task and coordination; it is not a universal proof that maximum-effort movement is ballistic.
 
-\item \textbf{The golf swing transitions from low force to high force.} During setup and the backswing, forces are moderate and the system is highly controllable. As the transition approaches, forces increase. By the downswing, the system is in a high-force regime where ballistic execution is the only option.
+\item \textbf{The golf swing transitions from lower to higher modeled force demand.} During setup and the backswing, forces are often lower than in the downswing. Higher effort may constrain force grading, but the control architecture and feedback contribution remain task- and phase-dependent.
 \end{enumerate}
 
 \section{Bandwidth Limitations: The Brain's Processing Speed}
@@ -400,16 +400,16 @@ A 300 millisecond downswing at 10 Hz bandwidth means the brain can process rough
 \item $t=200$--300 ms: deceleration phase (approaching impact)
 \end{itemize}
 
-This is barely enough for one feedback correction cycle. Moreover, sensory feedback for the first window doesn't arrive until after the second window has ended.
+This three-window sketch is a coarse pedagogical partition, not a count of feedback cycles. Different feedback pathways overlap these windows and have different response authority.
 
 It is tempting to blame a bandwidth mismatch --- a controller too slow for a fast plant --- but the numbers do not support that reading. A driver shaft's first bending mode is about 3--5 Hz, and the gross swing dynamics are slower still: the whole downswing is a single acceleration--deceleration cycle lasting roughly a quarter of a second. The plant is therefore \emph{slower} than the 10--40 Hz at which the nervous system can modulate its output, not faster.
 
-The binding constraint is \textit{transport delay}, not bandwidth. A monosynaptic stretch reflex returns force in roughly 25--40 ms, a long-latency response in 50--100 ms, and a voluntary correction to a visually detected error in 150--200 ms. Set against a downswing of 250--300 ms, only the fastest spinal loops can close at all within the movement, and those can modulate limb impedance --- they cannot restructure a movement plan. By the time a visually detected error could produce a corrective torque, the ball has gone.
+Transport delay is an important constraint, but it must be interpreted by pathway. A short-latency response can begin at roughly 20--45 ms, a long-latency response at 50--100 ms, and a voluntary response at greater than 100 ms \citep{kurtzer2014longlatency,pruszynski2012longlatency}. Late visually guided gross corrections may have little response authority before impact, while earlier proprioceptive feedback may modulate impedance or local trajectory. Timing alone does not determine the mechanical outcome.
 
 This is the classic problem of a control loop whose delay is comparable to the duration of the task itself.
 \end{constraintbox}
 
-The solution, as we learned in the physics chapters, is to exploit drift. When the plant (the golf swing) is drift-dominated, a slow controller can still achieve good performance by specifying initial conditions and letting physics do the rest. The brain doesn't need to correct the swing trajectory moment-by-moment. It only needs to get the initial conditions right \citep{todorov2005generalized, shadmehr2005computational}.
+One model-based response is to exploit drift and mechanical structure. When a motion is partly drift-dominated, a slow controller can perform better by preparing initial conditions, stiffness, and feedforward commands rather than relying on moment-by-moment correction. This does not mean initial conditions are the only thing that matters \citep{todorov2005generalized, shadmehr2005computational}.
 
 
 \section{The Brain's Processing Power: Energy and Computation}
@@ -431,21 +431,21 @@ How much ``horsepower'' does the brain have for controlling movement?
 \end{itemize}
 \end{principle}
 
-However, the brain doesn't use its power to solve optimization problems online. Instead, it learns solutions offline and recalls them online.
+The brain need not solve the explicit engineering optimization written here at every instant. Learned policies, state estimation, prediction, and task-dependent feedback can all contribute online.
 
 \begin{example}{Online Optimization vs. Offline Learning}{ch24_online_vs_offline}
 A robotic arm might use real-time trajectory optimization: at each time step (every millisecond), solve a local optimal control problem to compute the next motor command. This requires substantial computation per time step.
 
-The brain does something different: it \textit{learns}, over thousands of trials, a motor program that reliably produces the desired outcome. Then, at execution time, it simply \textit{recalls} and \textit{executes} the learned program. This is much cheaper computationally.
+Biological control can learn over repeated trials and reuse prepared policies during execution. That does not imply simple playback: prediction and task-dependent feedback can modify the ongoing command.
 
-The trade-off: the robot can adapt to novel situations (different dynamics, different payloads) within seconds. The brain requires hours or days to adapt. But the robot uses more power to do it.
+Robot and human adaptation rates depend on controller, task, perturbation, and learning history. This comparison is conceptual; it is not a measured energy or adaptation-time benchmark.
 \end{example}
 
-This distinction is fundamental to understanding biological motor control. The brain is not solving the golf swing problem online. It's solving it offline, during practice. The swing itself is the execution of a pre-learned motor program.
+Practice can shape prepared commands and feedback policies. During a swing, their relative contributions remain an experimental question rather than a strict offline/online divide.
 
 \begin{principle}{Key Takeaways}{box:ch24_takeaways}
 \begin{enumerate}
-\item The golf swing is a feedforward, ballistic movement. Once initiated, it unfolds according to a pre-planned motor program. Sensory feedback is too slow to correct the swing trajectory in real time.
+\item Learned preparation and feedforward commands are likely important in a short downswing, but feedback remains active through parallel pathways. The mechanical response authority of each pathway depends on latency, phase, task, and outcome.
 
 \item The brain controls movement using internal models---forward models that predict sensory consequences, and inverse models that compute motor commands. The cerebellum is the leading candidate neural substrate for these models, supported by substantial evidence from lesion studies and neuroimaging, though the full picture likely involves multiple brain regions.
 
@@ -455,9 +455,9 @@ This distinction is fundamental to understanding biological motor control. The b
 
 \item The nervous system is a hierarchy: the motor cortex (high-level planning), the spinal cord (local control), and the basal ganglia (action selection) all contribute.
 
-\item Feedback delay, not bandwidth, is the binding constraint. The plant is slow (shaft first mode 3--5 Hz; the downswing is one acceleration--deceleration cycle), but loop delays of 25--200 ms against a 250--300 ms downswing leave no room for a visually driven correction. The brain solves this by exploiting the drift-dominated physics of the swing.
+\item Delay and plant dynamics jointly constrain control. Late visually guided gross corrections may have little time before impact; faster proprioceptive pathways may still modulate the ongoing action. Golf-specific perturbation evidence is needed to quantify those contributions.
 
-\item The brain learns solutions offline (during practice) and executes them online (during performance). This is more efficient than online optimization, but less flexible.
+\item Practice shapes prepared commands, state estimation, and feedback policies that can all contribute during performance; this is not a strict offline-learning/online-playback split.
 \end{enumerate}
 \end{principle}
 
@@ -471,7 +471,7 @@ This distinction is fundamental to understanding biological motor control. The b
 
 \item In Section \ref{subsec:ch24_recruitment}, we discussed Henneman's size principle: motor units are recruited in order of size. Why is this principle important for control? What would happen if large motor units were recruited first?
 
-\item Feedback delays are 30--150 milliseconds, while the downswing is 300 milliseconds. Can the brain use visual feedback to correct a timing error early in the downswing? Explain.
+\item Compare a short-latency proprioceptive response, a long-latency response, and a late visually guided response during a 300 ms downswing. What additional measurement is needed to determine whether each response has useful mechanical authority?
 
 \item According to ideomotor theory, what should a golf coach emphasize: mechanical details of the swing, or the desired outcome and feel? Why?
 
@@ -481,7 +481,7 @@ This distinction is fundamental to understanding biological motor control. The b
 
 \item Sketch a block diagram of the golf swing control system. Include the motor cortex, motor command, muscles, dynamics, sensory feedback, and feedback delays. Indicate which components operate on which timescale.
 
-\item Compare and contrast feedback control (like a thermostat) with feedforward control (like a toaster). Why is the golf swing more like a toaster than a thermostat?
+\item Compare feedforward and feedback components in a golf swing. Which pathways could respond within a 250--300 ms downswing, and what experiment would distinguish response onset from useful mechanical correction?
 \end{enumerate}
 \end{exercises}
 
