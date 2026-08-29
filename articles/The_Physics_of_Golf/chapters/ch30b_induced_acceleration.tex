@@ -12,13 +12,19 @@
 
 \begin{laymansbox}{The Question Behind This Chapter}{lay:iaa_question}
 
-In the previous chapter, we described the kinetic chain as a sequential cascade of energy from proximal segments (hips, torso) to distal segments (arms, wrists, club). But that description, powerful as it is, leaves a question unanswered: \emph{how much} of the clubhead's acceleration at any given instant is caused by the hip torque, how much by the shoulder torque, how much by gravity, and how much is a lingering consequence of forces applied earlier in the swing?
+In the previous chapter, we described the kinetic chain as a sequential cascade of energy from proximal segments (hips, torso) to distal segments (arms, wrists, club). A narrower, model-bounded question is how one declared coordinate, contact, and force-partition convention divides the instantaneous acceleration ledger. That ledger does not identify a unique cause.
 
-This chapter introduces a technique from biomechanics research called \textbf{induced acceleration analysis} (IAA). The key idea is mathematically simple: because the equations of motion are linear in the forces at each instant, we can apply each force \emph{one at a time} and compute the acceleration it would produce if it acted alone. The sum of these individual contributions exactly equals the total acceleration. This is the principle of \textbf{superposition}\index{superposition} applied to multi-body dynamics.
+This chapter introduces \textbf{induced acceleration analysis} (IAA). At a frozen state, a declared force partition maps linearly through the constrained forward-dynamics operator and closes to the model acceleration when constraints, contact reactions, and residuals are handled consistently. The terms are calculations under that convention, not observations of forces literally acting alone.
 
 Induced acceleration analysis was pioneered by \cite{ZajacGordon1989} for studying muscle function in multi-joint movements and was extended into a comprehensive framework for walking by \cite{Zajac2002, Zajac2003}. The technique has since been applied to throwing \cite{Hirashima2008kinetic, Hirashima2007control, HirashimaOhtsuki2008}, gait pathology \cite{RileyKerrigan1999, Neptune2001}, sit-to-stand transfers \cite{Caruthers2016}, cycling \cite{Schutte1993}, and postural control \cite{Challis2011}. This chapter brings induced acceleration analysis into the golf swing for the first time, connecting it to the control-affine framework developed in earlier chapters.
 
 \end{laymansbox}
+
+\begin{importantbox}{Normative Attribution Record}
+A publishable attribution must identify the model and revision; engine, solver, and revision; generalized coordinates and reference frame; output point; mass matrix; constraint handling; contact model and mode; complete force partition; residual treatment; and numerical tolerance with closure error. Its identifiability contract must state the measurements or assumptions supporting each term. An algebraic term does not by itself identify anatomical source, neural intent, necessity, sufficiency, or intervention effect. Missing fields make a result \textbf{unsupported or unqualified}; an unavailable cross-engine state is reported that way rather than treated as solver parity.
+
+Two counterexamples block unique attribution. Under $q=Tz$, the same dynamics use $M_z=T^\mathsf{T}M_qT$ and $Q_z=T^\mathsf{T}Q_q$: component values change even though $T\ddot z=\ddot q$. Likewise, if $Q=Q_A+Q_B$, then $Q=(Q_A+r)+(Q_B-r)$: a residual reassignment changes both reported terms while preserving their sum. An intervention must separately re-solve constraints and contact and declare what is held fixed.
+\end{importantbox}
 
 %=============================================================================
 \section{The Mathematical Foundation}
@@ -36,7 +42,7 @@ Recall from Chapter~\ref{ch:04_forces_and_torques} that the equations of motion 
 \label{eq:iaa_eom}
 \end{equation}
 
-where $\bm{M}(\bm{q})$ is the mass (inertia) matrix, $\bm{q}$ is the vector of generalized coordinates (joint angles), $\bm{\tau}_{\text{muscle}}$ is the vector of muscle-generated joint torques, $\bm{V}(\bm{q}, \dot{\bm{q}})$ collects the velocity-dependent torques (Coriolis and centrifugal effects), and $\bm{g}(\bm{q})$ is the gravity torque vector.
+Here $\bm{q}$ is a declared independent coordinate vector and $\bm{\tau}_{\text{muscle}}$ is only a model-assigned generalized-force term unless an actuator map and identifiability contract support the anatomical label. Contact, passive, constraint, and residual terms must also appear when retained.
 
 The critical step is to solve for accelerations by premultiplying both sides by $\bm{M}^{-1}(\bm{q})$:
 
@@ -45,7 +51,7 @@ The critical step is to solve for accelerations by premultiplying both sides by 
 \label{eq:iaa_forward}
 \end{equation}
 
-Because the mass matrix $\bm{M}(\bm{q})$ is symmetric and positive definite (a consequence of the fact that kinetic energy is always positive for any nonzero velocity), its inverse always exists. Moreover, the multiplication $\bm{M}^{-1} \bm{\tau}$ is a \emph{linear} operation in $\bm{\tau}$. This linearity is the mathematical basis for superposition in induced acceleration analysis.
+For independent minimal coordinates with a regular kinetic-energy metric, $\bm{M}(\bm{q})$ is symmetric positive definite and invertible. Redundant coordinates or active constraints require a declared constrained solve. At a fixed state and active set, the resulting force-to-acceleration map is linear in the declared right-hand-side terms.
 
 \begin{principle}{Instantaneous Superposition of Accelerations}{prin:iaa_superposition}
 
@@ -68,7 +74,7 @@ where $\bm{\tau}_k$ is the torque vector produced by the $k$-th muscle (or the n
 \ddot{\bm{q}}_{\text{muscle}} = \sum_{k=1}^{m} \bm{M}^{-1}(\bm{q}) \bm{\tau}_k = \sum_{k=1}^{m} \ddot{\bm{q}}_k
 \end{equation}
 
-Each $\ddot{\bm{q}}_k = \bm{M}^{-1}(\bm{q}) \bm{\tau}_k$ is the acceleration \emph{induced} by the $k$-th muscle acting alone. The sum recovers the total muscle-induced acceleration exactly.
+Each $\ddot{\bm{q}}_k = \bm{M}^{-1}(\bm{q}) \bm{\tau}_k$ is the term assigned to one declared generalized-force channel. Calling that channel a muscle requires a muscle-to-generalized-force map and identification evidence.
 
 \end{principle}
 
@@ -76,7 +82,7 @@ Each $\ddot{\bm{q}}_k = \bm{M}^{-1}(\bm{q}) \bm{\tau}_k$ is the acceleration \em
 
 Imagine you could freeze time at one instant during the downswing. At that instant, multiple forces act on the golfer-club system: hip torque, shoulder torque, wrist torque, gravity, and the centrifugal and Coriolis forces arising from the current velocities.
 
-Induced acceleration analysis asks: if we turned off all forces except one---say, the hip torque---what acceleration would the system experience at this instant? The answer is the ``acceleration induced by the hip torque.'' We then repeat the calculation for each force in turn. Because the physics is linear in forces at each instant, the individual answers add up to the total acceleration.
+IAA asks how the frozen-state operator maps one declared term while state, active constraints, and partition are fixed. This is not automatically a realizable intervention that removes other forces; such an intervention must re-solve contact and constraints.
 
 This is not a thought experiment about what \emph{would} happen over time if we only applied one force (that would be a different and much more complicated question, because the system's state would diverge). It is a precise statement about the \emph{instantaneous} contribution of each force to the total acceleration at one frozen moment.
 
@@ -94,16 +100,16 @@ Readers who have followed the development in Chapter~\ref{ch:05_affine_structure
 \dot{\bm{x}} = \underbrace{\bm{f}(\bm{x})}_{\text{drift}} + \underbrace{\bm{G}(\bm{x}) \bm{u}}_{\text{control}}
 \end{equation}
 
-The drift field $\bm{f}(\bm{x})$ contains the velocity-dependent and gravity terms---exactly the terms that induced acceleration analysis labels as ``velocity-induced'' and ``gravity-induced'' accelerations. The control term $\bm{G}(\bm{x}) \bm{u}$ maps muscle inputs $\bm{u}$ to accelerations through the control matrix $\bm{G}(\bm{x})$, which embeds the inverse mass matrix $\bm{M}^{-1}(\bm{q})$.
+For one unconstrained partition, the acceleration block of drift may contain velocity and gravity terms while $\bm{G}(\bm{x})\bm{u}$ maps declared applied inputs. The complete drift also retains passive, contact, constraint, and internal-state terms. A control channel is not synonymous with a measured muscle input.
 
-The connection is direct: \textbf{the biomechanics community's ``induced acceleration analysis'' is the instantaneous superposition that arises naturally from the control-affine structure of mechanical systems.} Both frameworks exploit the same mathematical fact---that forces map linearly to accelerations at each frozen state---but they were developed independently by different research communities. The control-affine formulation comes from nonlinear control theory \cite{Murray1994, BulloLewis2004}, while induced acceleration analysis was developed in the biomechanics and rehabilitation literature \cite{ZajacGordon1989, Zajac2002}.
+The connection is conditional: both frameworks may use a frozen-state linear force-to-acceleration map, but their terms are comparable only when plant, coordinates, actuator map, constraints, contact, residual treatment, and output agree. The traditions were developed in nonlinear control \cite{Murray1994, BulloLewis2004} and biomechanics \cite{ZajacGordon1989, Zajac2002}, respectively.
 
 \begin{driftcontrol}{Drift, Control, and Induced Acceleration}{iaa}
 
 \textbf{In the control-affine framework:}
 \begin{itemize}
 \item \textbf{Drift} = the complete autonomous acceleration of the declared effective plant when applied generalized control is zero, including every retained inertial, gravitational, passive, contact, constraint, and internal-state term.
-\item \textbf{Control} = additional acceleration from muscle torques = $\bm{M}^{-1} \bm{\tau}_{\text{muscle}}$
+\item \textbf{Control} = additional acceleration from declared applied generalized inputs
 \end{itemize}
 
 \textbf{In induced acceleration analysis:}
@@ -113,12 +119,12 @@ The connection is direct: \textbf{the biomechanics community's ``induced acceler
 \item \textbf{Muscle-induced acceleration} = $\bm{M}^{-1} \bm{\tau}_{\text{muscle}}$
 \end{itemize}
 
-These are the same quantities, partitioned slightly differently. The drift field is the sum of the velocity-dependent and gravity-induced accelerations. The control term equals the muscle-induced acceleration. Both frameworks are saying the same thing in different disciplinary languages.
+These expressions coincide only when plant, state, coordinates, actuator map, constraints, contact mode, force partition, and output match. The control term is not identified muscular effort.
 
 \end{driftcontrol}
 
 %=============================================================================
-\section{Dynamic Coupling: A Muscle at One Joint Accelerates Every Joint}
+\section{Dynamic Coupling: A Declared Joint Torque Can Affect Multiple Coordinates}
 \label{sec:dynamic_coupling}
 
 \index{dynamic coupling}
@@ -147,7 +153,7 @@ A second important finding, emphasized in the work of \cite{Hirashima2011applica
 
 Consider the shoulder internal rotation torque applied to a three-segment upper limb model. When the elbow is fully extended (so the entire limb forms a straight line), the principal axes of inertia of the distal chain align with the shoulder joint axes. In this configuration, the shoulder internal rotation torque produces \emph{only} internal rotation---there is a clean one-to-one mapping from torque to acceleration.
 
-However, when the elbow is flexed at $90^{\circ}$ (a typical mid-downswing posture), the principal axes of inertia no longer align with the joint coordinate axes. Now the same shoulder internal rotation torque produces not only internal rotation, but also abduction and horizontal extension at the shoulder \cite{Hirashima2011application}. This means that a muscle's functional role---the acceleration it actually produces---is not fixed by anatomy alone. It depends on the instantaneous posture of the entire kinematic chain.
+When the elbow is flexed at $90^{\circ}$ in the cited model, the same declared shoulder-torque channel receives nonzero internal-rotation, abduction, and horizontal-extension components \cite{Hirashima2011application}. These are coordinate- and model-reported terms, not an identified anatomical function.
 
 \begin{principle}{Configuration-Dependent Muscle Function}{prin:config_dependent}
 
@@ -157,7 +163,7 @@ The acceleration induced by a given muscle force depends on:
 \item The current posture of the \emph{entire} kinematic chain (which determines $\bm{M}^{-1}(\bm{q})$).
 \end{enumerate}
 
-Changing the posture---even at joints far from the muscle---changes the acceleration that the muscle induces. This is why ``form'' in the golf swing matters: the same muscular effort produces different outcomes depending on the configuration of the body.
+Changing posture can change the declared term ledger. This supports a configuration-sensitivity hypothesis; it does not establish equal muscular effort, proper form, a unique cause, or an intervention effect.
 
 \end{principle}
 
@@ -210,7 +216,7 @@ The velocity-dependent torque $\bm{V}(\bm{q}, \dot{\bm{q}})$ depends on the curr
 \ddot{\bm{q}}_V(t) = \bm{M}^{-1}(\bm{q}(t)) \bm{V}(\bm{q}(t), \dot{\bm{q}}(t))
 \end{equation}
 
-therefore represents the \textbf{cumulative} contribution of the entire force history. It is not caused by any single muscle acting at this instant, but by the velocities that have accumulated in the system over the course of the movement.
+is often called a cumulative term because it depends on the velocity state. Model-bounded language must not relabel it as a uniquely reconstructed history; no such identifiability contract is provided here.
 
 \begin{driftcontrol}{Instantaneous vs.\ Cumulative = Control vs.\ Drift}{inst_cum}
 
@@ -226,7 +232,7 @@ The drift field in the golf swing is not an abstract mathematical construct. It 
 
 The golf swing is a fast, ballistic movement. By the time the club is approaching impact, the angular velocities in the system are enormous---shoulder internal rotation rates of $5{,}000$--$7{,}000~\text{deg/s}$ are not unusual in elite players, with wrist uncocking rates even higher. The velocity-dependent torques (centrifugal and Coriolis) at these speeds produce accelerations that dwarf what the muscles can produce instantaneously.
 
-This is the physical basis for the observation made in Chapter~\ref{ch:05_affine_structure} that the drift-control ratio at the wrist reaches 5:1 to 30:1 during the late downswing. The majority of the clubhead's acceleration during impact approach is a \emph{cumulative effect}---the stored consequence of forces applied earlier in the swing, now manifesting as velocity-dependent torques that accelerate the distal segments.
+A drift-control ratio is a declared magnitude ratio, not a causal certificate or induced-acceleration partition. This chapter supplies no governed human-golf attribution result satisfying the normative record.
 
 \cite{Hirashima2008kinetic} demonstrated this phenomenon clearly in baseball pitching, where the elbow extension and wrist flexion accelerations are produced predominantly by velocity-dependent torques rather than by local joint torques. The proximal trunk and shoulder joint motions, in contrast, are produced primarily by local muscle torques (instantaneous effects). The kinetic chain, in this framework, is a mechanism by which \emph{instantaneous} muscle efforts at proximal joints are converted into \emph{cumulative} velocity-dependent torques that accelerate distal joints without requiring large distal muscle forces.
 
@@ -271,9 +277,9 @@ This represents a ``route'' through which the kinetic energy flows, with each li
 
 A separate mechanism, distinct from the cumulative effect, also operates in fast multi-joint movements: the \textbf{torque reversal}. Near ball release, the elbow joint torque reverses from extension to flexion (the muscles begin braking elbow extension). While this braking decelerates the elbow, it simultaneously accelerates the wrist into flexion through the instantaneous remote effect (the off-diagonal coupling in $\bm{M}^{-1}$).
 
-\cite{Hirashima2011application} emphasized that this effect is mechanically distinct from the cumulative effect: the torque reversal is an instantaneous remote effect caused by the current joint torque, not by past force history. Previous researchers had often grouped these two effects together under the label ``interaction torque,'' obscuring their different origins and different implications for training and technique.
+\cite{Hirashima2011application} distinguishes the source model's assigned instantaneous term from its velocity-dependent term. Under the model's identifiability contract it is not a unique cause, reconstructed history, or training prescription.
 
-In the golf swing, an analogous mechanism may operate at the wrist: as the lead arm decelerates approaching impact, the braking torque at the wrist can accelerate the club through the instantaneous remote effect, adding to the dominant cumulative contribution from the drift field.
+An analogous wrist term in golf is an open hypothesis. It requires the complete normative record and cannot be asserted from a throwing model or drift magnitude alone.
 
 %=============================================================================
 \section{Lessons From Walking and Clinical Biomechanics}
@@ -282,14 +288,14 @@ In the golf swing, an analogous mechanism may operate at the wrist: as the lead 
 \index{gait!induced acceleration}
 \index{walking!muscle function}
 
-While the golf swing is a fast ballistic movement, the foundational work on induced acceleration analysis was performed in the study of human walking. These studies provide important methodological lessons and validate the technique against experimental data.
+Walking studies provide methodological examples. They do not validate a golf attribution, and cross-task or cross-engine states remain unsupported or unqualified unless the complete record is supplied.
 
 \subsection{The Foundational Walking Studies}
 
 The comprehensive two-part review by \cite{Zajac2002, Zajac2003} established the modern framework for induced acceleration analysis in biomechanics. Their key contributions were:
 
 \begin{enumerate}
-\item \textbf{Clarifying energy flow:} Joint powers and segmental angular velocities alone cannot determine how energy flows between segments, because constraint forces redistribute energy in ways that are not visible in inverse dynamics. Forward dynamics simulation, coupled with induced acceleration analysis, is required to identify causal relationships between muscle forces and movement outcomes.
+\item \textbf{Separating quantities:} Joint power, segment energy, and acceleration terms answer different questions. A forward model computes a declared ledger but does not identify a causal relationship without additional measurement and intervention evidence.
 
 \item \textbf{Separating individual muscle contributions:} By driving a musculoskeletal model with individual muscle forces and computing the resulting segment accelerations, it becomes possible to determine each muscle's contribution to whole-body tasks such as support (vertical center-of-mass acceleration) and forward progression (horizontal center-of-mass acceleration).
 
@@ -310,17 +316,17 @@ Despite both muscles being ankle plantar flexors, their contributions to whole-b
 
 This dissociation---two muscles at the same joint with opposite energetic roles---was invisible to inverse dynamics, which can only compute the \emph{net} ankle moment. Only induced acceleration analysis, which tracks each muscle's individual contribution through the constraint forces of the entire chain, could reveal this functional distinction.
 
-For golf, this finding carries a broader lesson: muscles with similar anatomical locations can have very different functional roles during the swing, depending on the dynamic coupling encoded in $\bm{M}^{-1}(\bm{q})$. Understanding muscle function in the golf swing requires forward dynamics reasoning, not just inverse dynamics measurement.
+For golf, this motivates actuator-map and configuration-sensitivity tests; it is not evidence that similarly located muscles have identified swing roles.
 
 \subsection{Clinical Applications: Stiff-Legged Gait}
 
 \cite{RileyKerrigan1999} applied induced acceleration analysis to study stiff-legged gait in stroke patients, demonstrating the clinical utility of the technique. By computing the knee accelerations induced by hip, knee, and ankle moments individually, they showed that the causes of reduced knee flexion in swing were highly variable across patients---some had ankle impairments, others had hip impairments, and individual patients required individualized rehabilitation protocols.
 
-This patient-specific diagnostic capability is a direct consequence of superposition: by decomposing the total acceleration into individual contributions, clinicians could identify which joint's impairment was primarily responsible for the movement dysfunction.
+The model can generate patient-specific hypotheses. Algebraic superposition does not identify which impairment is primarily responsible without an additional identifiability contract.
 
 \subsection{Sit-to-Stand Transfers}
 
-\cite{Caruthers2016} used a three-dimensional musculoskeletal model with 46 degrees of freedom and 194 muscle-tendon actuators to study sit-to-stand transfers. Their induced acceleration analysis revealed that the gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass, while the quadriceps---despite generating large forces---actually \emph{opposed} forward center-of-mass acceleration. This finding was counterintuitive to the quadriceps' anatomical function and to naive kinematic reasoning, but was entirely consistent with the dynamic coupling embedded in $\bm{M}^{-1}(\bm{q})$ given the body's configuration during the task.
+\cite{Caruthers2016} reported positive gluteus-maximus and soleus terms and an opposing quadriceps term for selected center-of-mass outputs in a 46-degree-of-freedom, 194-actuator model. These are model-reported contributions, not uniquely identified anatomical sources or intervention effects.
 
 %=============================================================================
 \section{Implications for the Golf Swing}
@@ -333,9 +339,9 @@ This patient-specific diagnostic capability is a direct consequence of superposi
 The results reviewed in this chapter frame the golf swing as a \textbf{superposition problem}: at each instant, the clubhead acceleration is the sum of contributions from every torque source in the body, weighted by the current configuration of the kinematic chain. This framing provides several actionable insights:
 
 \begin{enumerate}
-\item \textbf{Proximal muscles are the primary energy source.} Consistent with the kinetic chain analysis in Chapter~\ref{ch:kinetic_chain}, induced acceleration research confirms that the large muscles of the lower body and trunk generate the initial kinetic energy that is subsequently transferred to the distal segments through cumulative effects. Attempting to ``muscle'' the club with the hands and forearms during the late downswing is not only ineffective (because the drift field already dominates) but may actually be counterproductive (because inappropriate distal torques can disrupt the velocity-dependent acceleration cascade).
+\item \textbf{Golf attribution remains open.} A future study must compare declared force partitions, coordinates, contact models, residuals, and output projections before making source or technique claims.
 
-\item \textbf{The effectiveness of any torque depends on the current posture.} Two golfers applying the same hip torque at the same moment in the downswing may produce very different club accelerations if their postures differ, because $\bm{M}^{-1}(\bm{q})$ changes with configuration. This provides a physics-based explanation for why ``form'' matters: proper sequencing and posture optimize the coupling matrix $\bm{M}^{-1}$ to maximize the transfer of proximal effort to distal acceleration.
+\item \textbf{Configuration sensitivity is testable.} The same declared generalized torque can map to different terms as posture changes. This does not establish equal human effort, proper mechanics, or an intervention effect.
 
 \item \textbf{Late-downswing club acceleration is dominated by velocity-dependent torques.} The velocity-dependent torques (Coriolis and centrifugal) are the primary drivers of club acceleration during the critical impact-approach phase. These torques are the cumulative consequence of forces applied earlier in the swing. This is the induced acceleration community's version of the statement that drift dominates control in the late downswing.
 
@@ -351,16 +357,16 @@ The induced acceleration framework unifies the observations made throughout this
 \toprule
 \textbf{This Book's Framework} & \textbf{IAA Framework} & \textbf{Physical Meaning} \\
 \midrule
-Drift field $\bm{f}(\bm{x})$ & Velocity-dep.\ + gravity acc. & Autopilot forces \\
-Control $\bm{G}(\bm{x})\bm{u}$ & Muscle-induced acceleration & Voluntary effort \\
-$\bm{M}^{-1}(\bm{q})$ & Coupling matrix & Posture-dependent transfer \\
-Drift dominance & Cumulative $\gg$ instantaneous & Physics takes over late \\
+Complete drift $\bm{f}(\bm{x})$ & Declared autonomous terms & Model-defined zero-input evolution \\
+Control $\bm{G}(\bm{x})\bm{u}$ & Declared applied-input term & Not identified muscle or intent \\
+Constrained forward operator & Force-to-acceleration map & Coordinate-, contact-, and model-dependent \\
+Term-magnitude comparison & Declared norm and partition & Not a causal or reachability certificate \\
 ZTCF family (Ch.~\ref{ch:zero_torque_counterfactual}) & Zero-control model counterfactual & What the declared effective plant produces under zero applied generalized control \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-This correspondence is not a coincidence: both frameworks start from the same equations of motion and exploit the same linearity of the inverse mass matrix. The biomechanics community and the control theory community arrived at equivalent decompositions through different paths, motivated by different questions (``what does each muscle do?'' versus ``what can the controller influence?''). Recognizing this equivalence strengthens both approaches and allows practitioners in either field to draw on the insights of the other.
+Both frameworks can use the same frozen-state linear map, but they are not automatically equivalent. The plant, input definition, actuator map, constraints, contact, residual allocation, coordinates, solver qualification, and requested output must match.
 
 %=============================================================================
 \section{Superposition and Its Limits}
@@ -370,9 +376,9 @@ This correspondence is not a coincidence: both frameworks start from the same eq
 
 A critical caveat, emphasized in Chapter~3 of \emph{The Geometry of Motion, Volume~I}, is that superposition holds \emph{instantaneously} but \emph{not} over time. The accelerations induced by individual forces add up exactly at each frozen instant. But if we were to simulate the system forward in time under only one force, the resulting trajectory would diverge from the component of the actual trajectory ``due to'' that force, because the system's state evolves nonlinearly.
 
-\cite{HirashimaOhtsuki2008} articulated this point clearly in the context of motor control research. Several previous studies had incorrectly applied induced acceleration reasoning to individual equations of motion for each segment, rather than solving the coupled system simultaneously. When researchers treated each segment's equation independently and divided torques by the diagonal inertia term, they obtained incorrect estimates of the causal contributions. The correct approach---premultiplying by the \emph{full} inverse mass matrix, solving the coupled system of equations simultaneously---respects the dynamic coupling and yields physically meaningful results.
+\cite{HirashimaOhtsuki2008} showed why isolated diagonal-inertia calculations do not reproduce the coupled model. A full constrained solve is necessary for closure, but closure alone does not identify causal contributions; that stronger claim requires the normative identifiability and intervention contract.
 
-The lesson for golf biomechanics is clear: to understand what each muscle does at any instant, one must account for the full kinematic chain. Analyzing the wrist in isolation, or the shoulder in isolation, produces misleading conclusions because it ignores the off-diagonal coupling that is the physical basis of the kinetic chain itself.
+Any golf term must be computed on the declared coupled system. Even then, it remains a model term rather than an identified statement about what each muscle does.
 
 %=============================================================================
 \section{Summary}
@@ -387,7 +393,7 @@ The lesson for golf biomechanics is clear: to understand what each muscle does a
 
 \item \textbf{Instantaneous vs.\ cumulative:} Current muscle torques produce instantaneous accelerations; past muscle torques produce the current velocities, which generate velocity-dependent accelerations (cumulative effects). In fast movements like the golf swing, cumulative effects dominate the late phases.
 
-\item \textbf{Form determines function:} The same muscular effort produces different results depending on the body's configuration, because $\bm{M}^{-1}(\bm{q})$ changes with posture. This is a rigorous justification for the importance of proper swing mechanics.
+\item \textbf{Configuration sensitivity is a hypothesis generator:} A modeled term can change with posture, but this does not establish proper mechanics or equal human effort.
 
 \item \textbf{Induced acceleration analysis and the control-affine decomposition are equivalent frameworks} developed by different communities. Together, they provide a complete picture of how muscles, physics, and configuration interact to produce the golf swing.
 \end{enumerate}
@@ -403,7 +409,7 @@ The lesson for golf biomechanics is clear: to understand what each muscle does a
 
 \item The induced acceleration index (IAI) of \cite{Challis2011} quantifies the coupling potential between joints. For a two-segment model of the golfer's lead arm and club, compute the IAI at three postures: (a) early downswing (large lag angle), (b) mid-downswing (moderate lag angle), and (c) near impact (small lag angle). Discuss how the coupling changes and what this implies for wrist release mechanics.
 
-\item \cite{Hirashima2008kinetic} found that elbow extension in baseball pitching is primarily produced by velocity-dependent torques, not by elbow joint torques. Using the control-affine framework, explain why this observation is equivalent to saying that the drift field dominates the control input at the elbow during the late phase of the throw.
+\item Re-express the model-reported elbow result from \cite{Hirashima2008kinetic} as a term-magnitude comparison. List the metadata needed before comparing it with a control-affine implementation, and explain why neither wording establishes a unique cause.
 
 \item Consider the finding of \cite{Neptune2001} that soleus and gastrocnemius have opposite energetic effects on the trunk and leg during walking. Explain how this result follows from the off-diagonal structure of $\bm{M}^{-1}(\bm{q})$ and the different moment-arm vectors of uniarticular versus biarticular muscles. How might analogous reasoning apply to the pectoralis major (biarticular) versus the subscapularis (uniarticular) during the golf downswing?
 \end{enumerate}

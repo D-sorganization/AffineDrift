@@ -10,9 +10,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## DCR Reachability Correction (#4013 — PR #4044 Open)
+## DCR Reachability Correction (#4013 — PR #4044 Merged)
 
-- Ready, non-draft PR #4044 from branch `feat/4013-dcr-reachability` owns the
+- Protected PR #4044 merged at `524c28926f364631ed06b15be9c6fdf440acce64` and owns the
   article correction, analytic
   counterexample in `src/affine_control/reachability.py`, and corpus regression
   in `tests/test_dcr_reachability_contract.py`.
@@ -52,6 +52,29 @@ This is current operational state. Historical detail belongs in git/GitHub.
   affected pages render to isolated HTML, and the revised appendix was
   inspected at a 1440 x 1000 desktop viewport. This protected authority is now
   part of `main` and must remain intact in subsequent scientific repairs.
+
+## Induced-Acceleration Attribution Repair (#4018)
+
+- Branch `feat/4018-induced-acceleration-attribution` owns the A7 correction.
+  It does not overlap the content files in pending PRs #4045--#4047.
+- A normative record now requires model and revision; engine, solver, and
+  revision; generalized coordinates and reference frame; mass matrix;
+  constraints; contact; force partition; residual treatment; numerical
+  tolerance; output projection; and an identifiability contract. Missing or
+  unsupported cross-engine states are labeled unsupported or unqualified,
+  never treated as parity.
+- Coordinate-change and force-repartition counterexamples demonstrate that
+  reported term components are not unique causal truth even when total forward
+  dynamics close. Algebraic terms do not identify anatomical source, neural
+  intent, necessity, sufficiency, or intervention effect.
+- The paired Physics of Golf and Geometry of Motion Quarto/LaTeX chapters and
+  the public research-review page carry the same scientific boundary. No
+  qualified AffineDrift human-golf attribution or coaching result is claimed.
+- Required focused gate:
+  `python -m pytest tests/test_induced_acceleration_attribution_contract.py -m content_lint -q`.
+  Current evidence: the deliberate RED state failed 7 publication contracts;
+  GREEN passes all 10 contracts on workstation Python 3.13. Protected Python
+  3.12 and hosted render evidence remain release gates.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 

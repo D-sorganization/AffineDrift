@@ -9,17 +9,22 @@
 The superposition principle developed in the preceding chapter---that forces map linearly
 to accelerations at each frozen instant via the inverse mass matrix---was independently
 developed in the biomechanics community under the name \textbf{induced acceleration analysis}.
-This chapter traces that parallel development, examines the key results, and establishes
-the formal equivalence between the two frameworks. The story illustrates how the same
-mathematical structure, when encountered by different research communities addressing
-different questions, can lead to complementary insights that enrich both fields.
+This chapter traces that development and the conditions required before the
+frameworks can be compared. A shared frozen-state linear map does not make
+their force partitions, controls, constraints, outputs, or causal interpretations equivalent.
 \end{laymansbox}
+
+\begin{importantbox}{Normative Attribution Record}
+A publishable attribution must identify the model and revision; engine, solver, and revision; generalized coordinates and reference frame; output point; mass matrix; constraint handling; contact model and mode; complete force partition; residual treatment; and numerical tolerance with closure error. Its identifiability contract must state the measurements or assumptions supporting each term. An algebraic term does not by itself identify anatomical source, neural intent, necessity, sufficiency, or intervention effect. Missing fields make a result \textbf{unsupported or unqualified}; an unavailable cross-engine state is reported that way rather than treated as solver parity.
+
+Under $q=Tz$, the same dynamics use $M_z=T^\mathsf{T}M_qT$ and $Q_z=T^\mathsf{T}Q_q$: component values change even though $T\ddot z=\ddot q$. If $Q=Q_A+Q_B$, then $Q=(Q_A+r)+(Q_B-r)$: residual reassignment changes both terms while preserving their sum. These counterexamples block unique attribution. An intervention must separately re-solve constraints and contact and declare what is held fixed.
+\end{importantbox}
 
 %% --------------------------------------------------------------------------
 \section{Historical Context and Motivation}
 \label{sec:iaa_history}
 
-The study of human movement has long grappled with a fundamental attribution problem: given that many muscles act simultaneously on a mechanically coupled kinematic chain, how does one determine the contribution of each muscle to the observed motion? Inverse dynamics can determine the \emph{net} joint torques required to produce observed accelerations, but it cannot decompose those torques into individual muscle contributions, nor can it determine the causal relationship between a torque at one joint and the acceleration at another joint.
+Human movement presents an attribution problem: how should a declared model partition its acceleration ledger? Inverse dynamics can estimate net generalized forces, but it does not identify individual muscle forces or a unique causal relationship. IAA adds a forward-model term calculation, not the missing identifiability contract.
 
 \cite{ZajacGordon1989} addressed this gap in a seminal review that established the theoretical basis for induced acceleration analysis in multi-articular movement. Their central observation was that in a multi-joint system, a muscle force produces torques at the joints it crosses, but through the dynamic coupling inherent in the equations of motion, these torques induce accelerations at \emph{every} joint in the chain. Moreover, the induced accelerations depend not only on the muscle's torque, but on the entire system's mass matrix $\bm{M}(\bm{q})$ and its inverse---precisely the quantities that encode the inertial coupling between segments.
 
@@ -38,7 +43,7 @@ Consider a mechanical system with $n$ generalized coordinates $\bm{q} \in \mathb
 \label{eq:ch3b:eom}
 \end{equation}
 
-where $\bm{M}(\bm{q}) \succ 0$ is the mass (inertia) matrix, $\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$ collects Coriolis and centrifugal terms, $\bm{g}(\bm{q})$ is the gravity vector, and $\bm{\tau}$ is the vector of generalized forces (joint torques from muscle activity, external forces, etc.).
+Here $\bm{M}(\bm{q})\succ0$ assumes independent minimal coordinates and a regular kinetic-energy metric. Redundant coordinates or active constraints require a declared constrained solve. Generalized-force labels are a model partition; anatomical labels require an actuator map and identifiability contract.
 
 Solving for accelerations:
 
@@ -65,18 +70,18 @@ The core operation of induced acceleration analysis is the decomposition of the 
 \label{eq:ch3b:iaa_decomp}
 \end{equation}
 
-where $\bm{\tau}_k$ is the torque vector produced by the $k$-th muscle (or the $k$-th generalized force source). Each term $\bm{M}^{-1}(\bm{q}) \bm{\tau}_k$ is the acceleration \emph{induced} by muscle $k$ acting alone at the current instant.
+Here $\bm{\tau}_k$ is a declared generalized-force channel. Its mapped term is part of a frozen-state ledger, not an observation of a muscle acting alone.
 
-\begin{theorem}[Equivalence with Control-Affine Superposition]\label{thm:iaa_equivalence}
+\begin{theorem}[Compatibility with Control-Affine Superposition]\label{thm:iaa_equivalence}
 
-The induced acceleration decomposition (Equation~\ref{eq:ch3b:iaa_decomp}) is formally equivalent to the input superposition property of control-affine systems (Chapter~\ref{ch:superposition}, Section~\ref{sec:ch3:control-affine}).
+The two ledgers can share a linear operator, but their terms are comparable only when plant, state, coordinates, actuator map, constraints, contact, residual treatment, solver qualification, and output match.
 
 In the control-affine form $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x})\bm{u}$:
 
 \begin{itemize}
 \item The drift $\bm{f}(\bm{x})$ corresponds to $\bm{M}^{-1}(\bm{q})[\bm{V}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q})]$ (velocity-induced plus gravity-induced accelerations).
 \item The control columns $\bm{G}(\bm{x}) = [\bm{g}_1(\bm{x}), \ldots, \bm{g}_m(\bm{x})]$ correspond to $\bm{M}^{-1}(\bm{q}) \bm{B}$, where $\bm{B}$ maps control inputs to generalized forces.
-\item The muscle-induced acceleration $\bm{M}^{-1}(\bm{q}) \bm{\tau}_k$ equals $\bm{g}_k(\bm{x}) u_k$, the contribution of the $k$-th control input.
+\item A generalized-force channel can match $\bm{g}_k(\bm{x})u_k$ only under the same actuator map and partition; neither label identifies a muscle by itself.
 \end{itemize}
 
 Both frameworks exploit the fact that $\bm{M}^{-1}(\bm{q})$ is a \emph{linear} operator: the mapping from forces to accelerations is linear at each frozen state, even though the system dynamics are globally nonlinear.
@@ -84,7 +89,7 @@ Both frameworks exploit the fact that $\bm{M}^{-1}(\bm{q})$ is a \emph{linear} o
 \end{theorem}
 
 \begin{proof}
-Starting from the manipulator equation (Equation~\ref{eq:ch3:manipulator} in Chapter~\ref{ch:superposition}), solve for $\ddot{\bm{q}}$ by premultiplying by $\bm{M}^{-1}(\bm{q})$. This operation is linear in the right-hand side. Writing $\bm{\tau} = \sum_k \bm{\tau}_k$ and distributing $\bm{M}^{-1}$ over the sum yields Equation~\ref{eq:ch3b:iaa_decomp} directly. The state-space embedding into control-affine form follows by defining $\bm{x} = (\bm{q}, \dot{\bm{q}})$ and identifying the drift and control terms as in Section~\ref{sec:ch3:control-affine}.
+Distributing a fixed linear forward operator over $\bm{\tau}=\sum_k\bm{\tau}_k$ proves closure for that partition. It does not prove partition uniqueness, coordinate-invariant components, anatomical source, or an intervention effect.
 \end{proof}
 
 %% --------------------------------------------------------------------------
@@ -95,7 +100,7 @@ One of the most significant conceptual contributions of the induced acceleration
 
 \subsection{Instantaneous Effects}
 
-The muscle-induced acceleration $\bm{M}^{-1}(\bm{q}(t)) \bm{\tau}_k(t)$ is an \emph{instantaneous} quantity: it depends only on the current muscle force and the current configuration. If the muscle force were removed at time $t$, this contribution to the acceleration would vanish immediately. Instantaneous effects include:
+The mapped term $\bm{M}^{-1}(\bm{q}(t))\bm{\tau}_k(t)$ is a frozen-state quantity under the declared partition. Removing a physical force is a different intervention that can change activation, passive force, constraints, and contact.
 
 \begin{itemize}
 \item \textbf{Direct effects}: A joint torque accelerating its own joint (diagonal elements of $\bm{M}^{-1}$).
@@ -124,7 +129,7 @@ Gravity-induced acceleration & Drift field $\bm{f}(\bm{x})$ (gravity component) 
 
 The cumulative effect is the drift field: it is what the system would do if all control inputs were set to zero at the current instant. The instantaneous effects are the control inputs: they are what the muscles add on top of the drift at this instant.
 
-This mapping has practical significance. When the biomechanics community reports that velocity-dependent torques dominate the late phases of fast movements (throwing, kicking, swinging), they are observing the same phenomenon that control theory describes as ``drift dominance'': in fast movements, the drift field becomes large relative to the control authority, and the system is effectively on autopilot during the terminal phase.
+A model-reported term-magnitude comparison requires a declared norm, partition, and output. It does not show that a person is on autopilot, identify control authority, or establish cross-engine parity.
 
 %% --------------------------------------------------------------------------
 \section{Applications of Induced Acceleration Analysis}
@@ -137,9 +142,9 @@ The most comprehensive application of induced acceleration analysis has been to 
 Key findings include:
 
 \begin{enumerate}
-\item \textbf{Inverse dynamics is necessary but not sufficient.} Inverse dynamics computes the net joint torques required to produce observed motion, but cannot determine the causal contributions of individual muscles to segment accelerations. Induced acceleration analysis, applied to forward dynamics simulations, provides the missing causal information.
+\item \textbf{Inverse dynamics and IAA have different limits.} Inverse dynamics estimates net generalized forces. IAA can repartition a forward-model ledger, but does not identify causal contributions of individual muscles without an identifiability contract.
 
-\item \textbf{Energy flow between segments cannot be inferred from joint powers alone.} \cite{Zajac2002} demonstrated that the commonly used method of computing joint power ($P = \tau \cdot \dot{\theta}$) and segmental angular velocities does not correctly determine energy flow between segments, because constraint forces redistribute energy in complex ways. Only induced acceleration and power analysis, which tracks each muscle's contribution to each segment's energy, provides a correct account.
+\item \textbf{Acceleration, power, work, and energy are distinct.} Joint power alone does not identify segment-energy transfer. IAA and induced-power ledgers are also model- and partition-dependent and require constraint, contact, and residual closure.
 
 \item \textbf{Biarticular muscles have complex, configuration-dependent roles.} Muscles crossing two joints (such as the gastrocnemius or rectus femoris) can have different---sometimes opposite---effects on the two joints they cross, and these effects change with posture.
 \end{enumerate}
@@ -179,7 +184,7 @@ Induced acceleration analysis has been applied to clinical gait analysis, where 
 \begin{itemize}
 \item \textbf{Stiff-legged gait:} \cite{RileyKerrigan1999} showed that reduced knee flexion in swing-phase gait after stroke can result from impairments at the hip, knee, or ankle, with the specific cause varying between patients. Induced acceleration analysis, by decomposing knee acceleration into contributions from each joint's torque, identified the patient-specific impairment pattern and informed individualized rehabilitation protocols.
 
-\item \textbf{Sit-to-stand transfers:} \cite{Caruthers2016} used a 46-degree-of-freedom, 194-actuator musculoskeletal model to show that the quadriceps oppose forward center-of-mass acceleration during sit-to-stand, despite generating large forces. The gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass. This counterintuitive finding illustrates the importance of accounting for dynamic coupling ($\bm{M}^{-1}$) rather than reasoning from anatomy alone.
+\item \textbf{Sit-to-stand transfers:} \cite{Caruthers2016} reported positive gluteus-maximus and soleus terms and an opposing quadriceps term for selected center-of-mass outputs in a 46-degree-of-freedom, 194-actuator model. These are model-reported terms, not uniquely identified anatomical sources.
 
 \item \textbf{Electrical stimulation cycling:} \cite{Schutte1993} used a musculoskeletal model to analyze electrically stimulated leg cycling for spinal cord injury rehabilitation, identifying how seat configuration and stimulation timing affect the ability of stimulated muscles to produce the desired pedaling motion.
 \end{itemize}
@@ -202,7 +207,7 @@ In movements involving ground contact (walking, standing, the golf stance), the 
 \section{Synthesis: Two Communities, One Mathematical Structure}
 \label{sec:iaa_synthesis}
 
-The induced acceleration framework in biomechanics and the control-affine decomposition in nonlinear control theory are parallel formalizations of the same physical fact: forces map linearly to accelerations at each instant through the inverse mass matrix. The biomechanics community developed induced acceleration analysis to answer the question ``what does each muscle do?'', while the control theory community developed the control-affine decomposition to answer the question ``what can the controller influence?'' The answers are mathematically identical.
+IAA and control-affine analysis can share a frozen-state linear map. Their answers are not mathematically identical unless plant, coordinates, force and input partitions, constraints, contact mode, residual treatment, solver qualification, and output are identical.
 
 Recognizing this equivalence has several benefits:
 
