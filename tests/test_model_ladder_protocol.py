@@ -161,7 +161,7 @@ def test_public_model_ladder_declares_contract_limits_and_selection_guidance() -
         "Negative, Null, and Unavailable Results",
         "synthetic; no participant data",
         "does not establish a global fidelity percentage",
-        "wall-clock runtime is unavailable",
+        "Wall-clock runtime is unavailable",
         "measured, estimated, modeled, assumed, or unavailable",
     )
 
