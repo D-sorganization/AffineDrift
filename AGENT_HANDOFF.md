@@ -10,13 +10,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## ZTCF Intervention Contract (#4016 — PR #4048 Merged)
+## ZTCF Intervention Contract (#4016 — Protected PR #4048 Merged)
 
-- Lease: `codex-20260828-affine-a5`, expiring 2026-08-29T14:44:17Z; issue
-  comment `#issuecomment-5460882100` records the exact claim.
 - Protected merge `443e20a8ecaf1b32b9940b644e0451355e316ea7` owns the
-  intervention contract and evidence below. Hosted Python 3.12 checks were
-  merge authority.
+  versioned ZTCF intervention record, executable planar-Python adapter, and
+  canonical/paired publication boundary.
 - `data/ztcf/ztcf_intervention_v1.schema.json` is the normative public record;
   `data/ztcf/planar_golf_forward_fixture_v1.json` pins the sole supported golden
   result to protected source `524c28926f364631ed06b15be9c6fdf440acce64`.
@@ -127,6 +125,50 @@ This is current operational state. Historical detail belongs in git/GitHub.
   one pre-existing edition-specific Jorgensen key in each tree; both new
   long-latency citations are shared by the Quarto and LaTeX editions.
 
+## Induced-Acceleration Attribution Repair (#4018 — Protected PR #4050 Merged)
+
+- Protected merge `bde0ec906a233bb7fea592d5c676c042bd034754` owns the A7
+  correction and preserves the #4015, #4012, #4017, #4019, and #4016
+  scientific-trust boundaries.
+- A normative record now requires model and revision; engine, solver, and
+  revision; generalized coordinates and reference frame; mass matrix;
+  constraints; contact; force partition; residual treatment; numerical
+  tolerance; output projection; and an identifiability contract. Missing or
+  unsupported cross-engine states are labeled unsupported or unqualified,
+  never treated as parity.
+- Coordinate-change and force-repartition counterexamples demonstrate that
+  reported term components are not unique causal truth even when total forward
+  dynamics close. Algebraic terms do not identify anatomical source, neural
+  intent, necessity, sufficiency, or intervention effect.
+- The paired Physics of Golf and Geometry of Motion Quarto/LaTeX chapters and
+  the public research-review page carry the same scientific boundary. No
+  qualified AffineDrift human-golf attribution or coaching result is claimed.
+- Required focused gate:
+  `python -m pytest tests/test_induced_acceleration_attribution_contract.py -m content_lint -q`.
+  Current evidence: the deliberate RED state failed 7 publication contracts;
+  GREEN passes all 11 contracts on workstation Python 3.13, including the
+  declared-LaTeX-environment regression added after the hosted textbook gate
+  exposed an undefined box. After reconciling
+  protected #4015, #4012, and #4017, the full Python suite passes 3,258 tests
+  with 29 documented skips; Jest passes 20 suites (295 tests passed, 19 skipped). Ruff,
+  Black, strict mypy for the new contract, terminology, title-case,
+  cross-reference, citation, display-math, single-title, Quarto-syntax,
+  tree-parity, LaTeX-structure, and diff gates pass. All three changed pages
+  render to isolated HTML and expose the normative record without horizontal
+  overflow at a 1,905-pixel desktop viewport; a fresh browser console is clean.
+  After merging protected #4019 and #4016 through
+  `443e20a8ecaf1b32b9940b644e0451355e316ea7`, the eight scientific-trust
+  selections pass all 57 tests, trust-panel generation is fresh, and the
+  focused lint/type/structure/diff gates remain green on the reconciled head.
+  All three affected QMD sources render as standalone HTML streams. Clean
+  first-pass `pdflatex` runs complete the 605-page Physics of Golf source and
+  209-page Geometry of Motion Volume I source without a hard LaTeX error; the
+  complete hosted multi-pass compiles remain the release gate.
+  Protected Python 3.12, quality, E2E, links, governance, benchmarks, and all
+  eight textbook compile jobs passed on the exact PR head before the ordinary
+  protected squash merge. Post-merge focused tests and trust-panel freshness
+  also pass, and the protected tree matches the reviewed branch content.
+
 ## Governed Scientific Trust Panels (#4019 — Protected PR #4049 Merged)
 
 - Protected merge `48026454cdd3e07b3ce489d288efcb9295417b10` adds strict
@@ -156,8 +198,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - `jsonschema` and `types-jsonschema` are direct pinned requirements; do not
   rely on an unrelated transitive dependency for schema validation or typing.
 
-## Governed Claim/Critique Ledger (#4020 — In Development)
+## Governed Claim/Critique Ledger (#4020 — Protected PR #4051 Merged)
 
+- Protected merge `e3501e09e9914c134e4a5c0f189159028ca23f68` is the exact
+  reviewed #4020 tree; issue #4020 is closed.
 - `schemas/claim-critique-ledger-v1.schema.json` and
   `data/trust/claim_critique_ledger.json` are the normative critique-governance
   contract. Every public critique Markdown source is registered exactly once;
@@ -177,8 +221,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   adjacent repairs did not modify their affected source claims.
 - Required focused gate:
   `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_claim_critique_ledger.py`.
-  Current local evidence is 13/13 focused tests plus deterministic generation,
-  Ruff, Black, and strict MyPy. The critique index and three representative
+  Current local evidence is 17/17 focused tests plus deterministic generation,
+  Ruff, Black, and strict MyPy. Adversarial regressions reject non-contiguous
+  history, zero-commit sentinels, traversing repository paths, and resolved
+  states without explicit contradiction markers. The critique index and three representative
   affected articles render in isolation. Browser inspection at 1440 x 1000 and
   390 x 844 found one H1 per page, no page-level horizontal overflow, no broken
   images after load, an independently scrollable mobile status table, and
@@ -187,15 +233,15 @@ This is current operational state. Historical detail belongs in git/GitHub.
   78 tests with 4 documented skips; all 20 Jest suites pass 297 tests with 19
   skips. Bibliography, terminology, title, cross-reference, display-math,
   Stylelint, Ruff, Black, and strict MyPy gates pass.
-  Protected PR checks remain pending.
+  Protected PR #4051 merged normally after its required checks passed.
 
 ## Full Rendered-Route Scientific Claim Audit (#4021 — In Development)
 
 - Lease `codex-20260829-affine-a10` is recorded at issue comment
   `#issuecomment-5461176202`. The isolated branch started from local #4020 head
-  `76abdad507c3e1e4ef6ccacd0a6e696c29d7fb7a`; #4020 has since protected-merged
-  as `e3501e09e9914c134e4a5c0f189159028ca23f68` and must be reconciled by an
-  ordinary merge before publication.
+  `76abdad507c3e1e4ef6ccacd0a6e696c29d7fb7a` and was reconciled by ordinary
+  merge with protected #4020 authority
+  `e3501e09e9914c134e4a5c0f189159028ca23f68`.
 - `schemas/claim-audit-inventory-v1.schema.json` and
   `data/trust/claim_audit_inventory.json` own route-level audit state only.
   Stable IDs are SHA-256-derived from canonical routes. Claim and critique

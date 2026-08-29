@@ -94,12 +94,37 @@ def test_invalid_status_transition_fails_closed() -> None:
             "from": "resolved",
             "to": "open",
             "on": "2026-08-29",
-            "commit": "0" * 40,
+            "commit": "1" * 40,
             "rationale": "Silent reopening is forbidden.",
         }
     ]
 
     with pytest.raises(LedgerContractError, match="invalid transition"):
+        validate_ledger(ledger, SCHEMA, CLAIMS)
+
+
+def test_status_history_must_be_contiguous() -> None:
+    ledger = copy.deepcopy(_canonical())
+    critique = _critiques(ledger)[0]
+    critique["disposition"] = "deferred"
+    critique["history"] = [
+        {
+            "from": "open",
+            "to": "responded",
+            "on": "2026-08-28",
+            "commit": "1" * 40,
+            "rationale": "First transition.",
+        },
+        {
+            "from": "open",
+            "to": "deferred",
+            "on": "2026-08-29",
+            "commit": "2" * 40,
+            "rationale": "Disconnected transition.",
+        },
+    ]
+
+    with pytest.raises(LedgerContractError, match="non-contiguous history"):
         validate_ledger(ledger, SCHEMA, CLAIMS)
 
 
@@ -120,7 +145,7 @@ def test_dangling_page_claim_and_evidence_paths_fail_closed() -> None:
     critique["adjudication"] = {
         "rationale": "Purported response.",
         "evidence_paths": ["tests/missing.py"],
-        "verification_commit": "0" * 40,
+        "verification_commit": "1" * 40,
         "verified_on": "2026-08-29",
         "reviewer": "maintainer",
         "falsifier": "A registered test fails.",
@@ -128,6 +153,70 @@ def test_dangling_page_claim_and_evidence_paths_fail_closed() -> None:
         "next_gate": "Independent review.",
     }
     with pytest.raises(LedgerContractError, match="evidence path"):
+        validate_ledger(ledger, SCHEMA, CLAIMS)
+
+
+def test_traversal_paths_fail_closed_even_when_the_target_exists() -> None:
+    ledger = copy.deepcopy(_canonical())
+    critique = _critiques(ledger)[0]
+    critique["affected_pages"] = ["articles/../critiques/index.qmd"]
+
+    with pytest.raises(LedgerContractError, match="path traversal"):
+        validate_ledger(ledger, SCHEMA, CLAIMS)
+
+    ledger = copy.deepcopy(_canonical())
+    critique = _critiques(ledger)[0]
+    critique["disposition"] = "responded"
+    critique["adjudication"] = {
+        "rationale": "Purported response.",
+        "evidence_paths": ["tests/../SPEC.md"],
+        "verification_commit": "1" * 40,
+        "verified_on": "2026-08-29",
+        "reviewer": "maintainer",
+        "falsifier": "The traversal is accepted.",
+        "uncertainty": "Unknown.",
+        "next_gate": "Independent review.",
+    }
+
+    with pytest.raises(LedgerContractError, match="path traversal"):
+        validate_ledger(ledger, SCHEMA, CLAIMS)
+
+
+def test_adjudication_rejects_a_zero_commit_sentinel() -> None:
+    ledger = copy.deepcopy(_canonical())
+    critique = _critiques(ledger)[0]
+    critique["disposition"] = "responded"
+    critique["adjudication"] = {
+        "rationale": "Purported response.",
+        "evidence_paths": ["tests/test_claim_critique_ledger.py"],
+        "verification_commit": "0" * 40,
+        "verified_on": "2026-08-29",
+        "reviewer": "maintainer",
+        "falsifier": "The zero sentinel is accepted.",
+        "uncertainty": "Unknown.",
+        "next_gate": "Independent review.",
+    }
+
+    with pytest.raises(LedgerContractError, match="does not match"):
+        validate_ledger(ledger, SCHEMA, CLAIMS)
+
+
+def test_resolved_critique_requires_contradiction_markers() -> None:
+    ledger = copy.deepcopy(_canonical())
+    critique = _critiques(ledger)[0]
+    critique["disposition"] = "resolved"
+    critique["adjudication"] = {
+        "rationale": "Purported resolution.",
+        "evidence_paths": ["tests/test_claim_critique_ledger.py"],
+        "verification_commit": "1" * 40,
+        "verified_on": "2026-08-29",
+        "reviewer": "maintainer",
+        "falsifier": "The contradictory statement remains active.",
+        "uncertainty": "Unknown.",
+        "next_gate": "Independent review.",
+    }
+
+    with pytest.raises(LedgerContractError, match="contradiction marker"):
         validate_ledger(ledger, SCHEMA, CLAIMS)
 
 
@@ -141,7 +230,7 @@ def test_resolved_critique_cannot_leave_a_contradictory_statement_active() -> No
     critique["adjudication"] = {
         "rationale": "Purported resolution.",
         "evidence_paths": ["tests/test_claim_critique_ledger.py"],
-        "verification_commit": "0" * 40,
+        "verification_commit": "1" * 40,
         "verified_on": "2026-08-29",
         "reviewer": "maintainer",
         "falsifier": "The forbidden statement remains active.",

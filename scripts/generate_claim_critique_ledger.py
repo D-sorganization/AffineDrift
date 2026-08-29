@@ -10,7 +10,7 @@ import json
 import re
 import sys
 from collections import defaultdict
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
@@ -47,6 +47,22 @@ def normalized_status(status: object) -> str:
     """Normalize unknown critique state to the public fail-closed OPEN state."""
     value = str(status)
     return "open" if value == "unknown" else value
+
+
+def _checked_repo_file(root: Path, raw_path: str, missing_message: str) -> Path:
+    """Resolve a declared repository file without allowing path traversal."""
+    parts = PurePosixPath(raw_path).parts
+    if any(part in {".", ".."} for part in parts):
+        raise LedgerContractError(f"Repository path traversal is forbidden: {raw_path}")
+    candidate = (root / Path(*parts)).resolve()
+    resolved_root = root.resolve()
+    try:
+        candidate.relative_to(resolved_root)
+    except ValueError as exc:
+        raise LedgerContractError(f"Repository path traversal is forbidden: {raw_path}") from exc
+    if not candidate.is_file():
+        raise LedgerContractError(missing_message)
+    return candidate
 
 
 def _claim_ids(claims_path: Path) -> set[str]:
@@ -115,15 +131,17 @@ def validate_ledger(
             raise LedgerContractError(f"Duplicate critique source: {source}")
         critique_ids.add(critique_id)
         sources.add(source)
-        if not (root / source).is_file():
-            raise LedgerContractError(f"Missing critique source: {source}")
+        _checked_repo_file(root, source, f"Missing critique source: {source}")
 
         affected = raw.get("affected_pages")
         if not isinstance(affected, list):
             raise LedgerContractError(f"{critique_id} affected pages must be a list")
         for page in affected:
-            if not (root / str(page)).is_file():
-                raise LedgerContractError(f"{critique_id} has missing affected page: {page}")
+            _checked_repo_file(
+                root,
+                str(page),
+                f"{critique_id} has missing affected page: {page}",
+            )
 
         related = raw.get("related_claim_ids")
         if not isinstance(related, list):
@@ -143,21 +161,31 @@ def validate_ledger(
             if not isinstance(evidence, list):
                 raise LedgerContractError(f"{critique_id} adjudication evidence must be a list")
             for path in evidence:
-                if not (root / str(path)).is_file():
-                    raise LedgerContractError(f"{critique_id} has missing evidence path: {path}")
+                _checked_repo_file(
+                    root,
+                    str(path),
+                    f"{critique_id} has missing evidence path: {path}",
+                )
 
         history = raw.get("history", [])
         if not isinstance(history, list):
             raise LedgerContractError(f"{critique_id} history must be a list")
+        previous_target: str | None = None
         for event in history:
             if not isinstance(event, dict):
                 raise LedgerContractError(f"{critique_id} history event must be an object")
             source_status = normalized_status(event["from"])
             target_status = normalized_status(event["to"])
+            if previous_target is not None and source_status != previous_target:
+                raise LedgerContractError(
+                    f"{critique_id} has non-contiguous history: "
+                    f"{previous_target} -> {source_status}"
+                )
             if target_status not in ALLOWED_TRANSITIONS[source_status]:
                 raise LedgerContractError(
                     f"{critique_id} invalid transition: {source_status} -> {target_status}"
                 )
+            previous_target = target_status
         if history and normalized_status(history[-1]["to"]) != status:
             raise LedgerContractError(f"{critique_id} history does not end at disposition {status}")
 
@@ -165,8 +193,17 @@ def validate_ledger(
             markers = raw.get("contradiction_markers", [])
             if not isinstance(markers, list):
                 raise LedgerContractError(f"{critique_id} contradiction markers must be a list")
+            if not markers:
+                raise LedgerContractError(
+                    f"{critique_id} resolved state requires a contradiction marker"
+                )
             page_text = "\n".join(
-                (root / str(page)).read_text(encoding="utf-8") for page in affected
+                _checked_repo_file(
+                    root,
+                    str(page),
+                    f"{critique_id} has missing affected page: {page}",
+                ).read_text(encoding="utf-8")
+                for page in affected
             )
             active = [str(marker) for marker in markers if str(marker) in page_text]
             if active:
