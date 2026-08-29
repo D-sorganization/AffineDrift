@@ -12,6 +12,7 @@ from .states import protocol_revision, record_revision
 
 
 def _digest(path: Path) -> str:
+    """Return the SHA-256 digest of one fixture dependency."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
@@ -66,6 +67,7 @@ def manufactured_dry_runs() -> dict[str, object]:
 
 
 def _route_authority(inventory: dict[str, object], route: str) -> dict[str, object]:
+    """Return the sole reviewed audit record for a public route."""
     routes = cast(list[dict[str, object]], inventory["routes"])
     matches = [record for record in routes if record.get("route") == route]
     if len(matches) != 1 or matches[0].get("status") != "reviewed":
@@ -74,6 +76,7 @@ def _route_authority(inventory: dict[str, object], route: str) -> dict[str, obje
 
 
 def _artifact(audit: dict[str, object], prefixes: tuple[str, ...]) -> dict[str, str]:
+    """Project one exact-byte artifact from a reviewed route audit."""
     review = cast(dict[str, object], audit["review"])
     digest_map = cast(dict[str, str], review["evidence_sha256"])
     paths = sorted(
@@ -91,6 +94,7 @@ def _artifact(audit: dict[str, object], prefixes: tuple[str, ...]) -> dict[str, 
 
 
 def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict[str, object]:
+    """Build the non-authorizing scientific specification for one program."""
     human = seed.participant_scope == "human"
     return {
         "question": seed.question,
@@ -231,6 +235,7 @@ def _protocol(
     dictionary_path: Path,
     root: Path,
 ) -> dict[str, object]:
+    """Build one revision-bound manufactured readiness protocol."""
     protocol_id = f"ad-protocol-{seed.slug}-001"
     review = cast(dict[str, object], audit["review"])
     evidence_map = cast(dict[str, str], review["evidence_sha256"])

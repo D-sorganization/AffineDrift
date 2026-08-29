@@ -8,6 +8,7 @@ from .states import READINESS_STATES
 
 
 def _records(library: object) -> list[dict[str, object]]:
+    """Return validated-looking protocol records for projection."""
     if not isinstance(library, dict) or not isinstance(library.get("protocols"), list):
         raise ValueError("Library protocols must be a list")
     return cast(list[dict[str, object]], library["protocols"])

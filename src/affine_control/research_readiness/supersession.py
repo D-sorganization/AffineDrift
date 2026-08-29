@@ -8,6 +8,7 @@ from .errors import ResearchReadinessError
 
 
 def _successor_map(records: list[dict[str, object]]) -> dict[str, str]:
+    """Build the validated direct-successor mapping."""
     by_id = {str(record["protocol_id"]): record for record in records}
     successors: dict[str, str] = {}
     for record in records:
@@ -28,6 +29,7 @@ def _successor_map(records: list[dict[str, object]]) -> dict[str, str]:
 
 
 def _reject_cycles(successors: dict[str, str]) -> None:
+    """Reject cycles in the protocol supersession graph."""
     for source in successors:
         visited = {source}
         target = successors[source]
@@ -41,6 +43,7 @@ def _reject_cycles(successors: dict[str, str]) -> None:
 def _validate_successor_pin(
     record: dict[str, object], target: str, target_revision: object
 ) -> None:
+    """Require evidence that pins the successor's exact record revision."""
     history = cast(list[dict[str, object]], record["history"])
     evidence = {
         str(item["evidence_id"]): item for item in cast(list[dict[str, object]], record["evidence"])

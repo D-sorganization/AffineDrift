@@ -34,6 +34,7 @@ class EvidenceStatus:
 
 
 def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    """Build a mapping while rejecting ambiguous duplicate JSON keys."""
     result: dict[str, object] = {}
     for key, value in pairs:
         if key in result:
@@ -43,6 +44,7 @@ def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]
 
 
 def _load_json(path: Path) -> Any:
+    """Load a JSON contract with duplicate-key and parse-error handling."""
     try:
         return json.loads(
             path.read_text(encoding="utf-8"), object_pairs_hook=_reject_duplicate_keys
@@ -54,6 +56,7 @@ def _load_json(path: Path) -> Any:
 
 
 def _schema_errors(library: object, schema_path: Path) -> list[str]:
+    """Return deterministic JSON Schema validation messages."""
     validator = Draft202012Validator(_load_json(schema_path), format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(library), key=lambda error: list(error.absolute_path))
     return [
@@ -63,6 +66,7 @@ def _schema_errors(library: object, schema_path: Path) -> list[str]:
 
 
 def _records(library: object) -> list[dict[str, object]]:
+    """Return protocol records after enforcing their container shape."""
     if not isinstance(library, dict) or not isinstance(library.get("protocols"), list):
         raise ResearchReadinessError("Library protocols must be a list")
     records = cast(list[object], library["protocols"])
@@ -72,6 +76,7 @@ def _records(library: object) -> list[dict[str, object]]:
 
 
 def _checked_file(root: Path, raw_path: object, label: str) -> Path:
+    """Resolve a bounded regular evidence file below the repository root."""
     value = str(raw_path)
     parts = PurePosixPath(value).parts
     if not value or any(part in {".", ".."} for part in parts):
@@ -92,10 +97,12 @@ def _checked_file(root: Path, raw_path: object, label: str) -> Path:
 
 
 def _digest(path: Path) -> str:
+    """Return the SHA-256 digest of one bounded evidence file."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _authority_ids(path: Path, collection: str, id_field: str) -> set[str]:
+    """Load the unique identifiers exposed by one governed authority."""
     document = _load_json(path)
     if not isinstance(document, dict) or not isinstance(document.get(collection), list):
         raise ResearchReadinessError(f"Authority {collection} must be a list")
@@ -118,6 +125,7 @@ def _authority_ids(path: Path, collection: str, id_field: str) -> set[str]:
 
 
 def _route_audits(root: Path) -> dict[str, dict[str, object]]:
+    """Index the canonical route-audit authority by audit identifier."""
     inventory = _load_json(root / "data/trust/claim_audit_inventory.json")
     if not isinstance(inventory, dict) or not isinstance(inventory.get("routes"), list):
         raise ResearchReadinessError("Route-audit authority is invalid")
@@ -133,6 +141,7 @@ def _route_audits(root: Path) -> dict[str, dict[str, object]]:
 
 
 def _validate_public_evidence(record: dict[str, object], root: Path) -> None:
+    """Validate the path and digest of public evidence."""
     path = _checked_file(root, record.get("path"), "evidence path")
     if _digest(path) != record.get("sha256"):
         raise ResearchReadinessError(f"Evidence digest mismatch: {record.get('path')}")
@@ -141,6 +150,7 @@ def _validate_public_evidence(record: dict[str, object], root: Path) -> None:
 def _validate_evidence(
     protocol: dict[str, object], root: Path, global_ids: set[str]
 ) -> dict[str, EvidenceStatus]:
+    """Validate protocol evidence and return its gate-relevant status."""
     raw = protocol.get("evidence")
     if not isinstance(raw, list):
         raise ResearchReadinessError("Protocol evidence must be a list")
@@ -166,6 +176,7 @@ def _validate_evidence(
 
 
 def _transition_evidence(target: str, raw_ids: object, evidence: dict[str, EvidenceStatus]) -> None:
+    """Require eligible evidence for one lifecycle transition."""
     if not isinstance(raw_ids, list):
         raise ResearchReadinessError(f"Transition to {target} lacks evidence IDs")
     ids = [str(value) for value in raw_ids]
@@ -189,6 +200,7 @@ def _transition_evidence(target: str, raw_ids: object, evidence: dict[str, Evide
 
 
 def _validate_history(protocol: dict[str, object], evidence: dict[str, EvidenceStatus]) -> None:
+    """Validate contiguous, evidence-backed lifecycle history."""
     history = protocol.get("history")
     if not isinstance(history, list):
         raise ResearchReadinessError("Protocol history must be a list")
@@ -223,6 +235,7 @@ def _validate_artifact(
     root: Path,
     audits: dict[str, dict[str, object]],
 ) -> None:
+    """Validate an artifact against its file and reviewed route audit."""
     path = _checked_file(root, record.get("path"), label)
     if _digest(path) != record.get("sha256"):
         raise ResearchReadinessError(f"{label.capitalize()} digest mismatch")
@@ -242,6 +255,7 @@ def _validate_artifact(
 def _validate_artifacts(
     links: dict[str, object], root: Path, audits: dict[str, dict[str, object]]
 ) -> None:
+    """Validate calculation, workflow, and dataset artifact joins."""
     for field, label in (
         ("calculation_artifacts", "calculation artifact"),
         ("workflow_artifacts", "workflow artifact"),
@@ -272,6 +286,7 @@ def _validate_links(
     audits: dict[str, dict[str, object]],
     root: Path,
 ) -> None:
+    """Validate all external authority and artifact links for a protocol."""
     links = protocol.get("links")
     if not isinstance(links, dict):
         raise ResearchReadinessError("Protocol links must be an object")
@@ -303,6 +318,7 @@ def _validate_links(
 
 
 def _validate_specification(protocol: dict[str, object], root: Path) -> None:
+    """Validate exact data-dictionary and governance specification joins."""
     specification = protocol.get("specification")
     if not isinstance(specification, dict):
         raise ResearchReadinessError("Protocol specification must be an object")
@@ -328,6 +344,7 @@ def _validate_specification(protocol: dict[str, object], root: Path) -> None:
 
 
 def _validate_attempts(protocol: dict[str, object], evidence: dict[str, EvidenceStatus]) -> None:
+    """Validate promotion-attempt identities and referenced evidence."""
     attempts = protocol.get("promotion_attempts")
     if not isinstance(attempts, list):
         raise ResearchReadinessError("Protocol promotion attempts must be a list")

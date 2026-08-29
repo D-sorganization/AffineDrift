@@ -36,6 +36,7 @@ REQUIRED_EVIDENCE: dict[str, frozenset[str]] = {
 
 
 def _canonical_digest(value: object) -> str:
+    """Return a stable SHA-256 digest for canonical JSON material."""
     encoded = json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode(
         "utf-8"
     )
