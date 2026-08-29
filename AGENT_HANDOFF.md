@@ -275,7 +275,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `#issuecomment-5461176202`. The isolated branch started from local #4020 head
   `76abdad507c3e1e4ef6ccacd0a6e696c29d7fb7a` and was reconciled by ordinary
   merge with protected #4020 authority
-  `e3501e09e9914c134e4a5c0f189159028ca23f68`.
+  `e3501e09e9914c134e4a5c0f189159028ca23f68`, then current protected #4033
+  authority `42975df666c38154304652aaa48f856aefd4bd7e`.
 - `schemas/claim-audit-inventory-v1.schema.json` and
   `data/trust/claim_audit_inventory.json` own route-level audit state only.
   Stable IDs are SHA-256-derived from canonical routes. Claim and critique
@@ -296,9 +297,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `reports/scientific-claim-audit.md`. The generated reports join titles/status
   from upstream authorities but do not duplicate their scientific prose.
 - RED was the missing generator module at test collection. Exact-head GREEN
-  evidence is 47 focused #4019/#4020/#4021/public-manifest tests and 3,306
-  default-lane tests with 29 documented skips and 90 deselections. The content
-  lane passes 89 tests with 4 documented skips and 3,332 deselections. Ruff,
+  evidence is 73 combined #4013/#4019/#4020/#4021/public-manifest tests and
+  3,326 default-lane tests with 29 documented skips and 91 deselections. The
+  content lane passes 90 tests with 4 documented skips and 3,352 deselections. Ruff,
   Black, repository MyPy (74 source files), code-quality, and all pre-commit
   hooks pass.
 - Quarto 1.8.26 rendered all 221 sources at the reconciled head. The deployment
