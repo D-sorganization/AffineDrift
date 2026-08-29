@@ -10,7 +10,71 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Bilateral Hand-Wrench Identifiability (#4035 — In Progress)
+## Active Impedance and Co-Contraction Identification (#4036 — In Progress)
+
+- Branch `feat/4036-active-impedance-identification` started from exact
+  protected main `9c3c5218744ecf5791d9af4a7871f618d917437a`. It is bounded to
+  analytic and deterministic synthetic feasibility; it contains no participant
+  result or device qualification and does not modify protected UpstreamDrift
+  authority.
+- `impedance_protocol.py`, `impedance_evidence.py`, `impedance_emg.py`,
+  `impedance_sources.py`, and `impedance_fixtures.py` freeze primary sources,
+  device safety, phases and zero-anchored windows, endpoint/joint models,
+  exact endpoint/joint cardinality, excitation, one bounded relative rank/fit
+  tolerance, governed EMG pair/formula
+  declarations, uncertainty, reliability, adverse outcomes, and the human
+  boundary.
+- Hermens et al. is classified as a journal method-recommendation article, not
+  a formal measurement standard; its placement guidance carries no force,
+  crosstalk-elimination, or participant authority.
+- Exact phase fixtures recover manufactured effective parameters. The negative
+  control makes stiffness and a voluntary-like basis collinear and fails closed
+  at rank four/nullity one. A near-singular regression proves rank qualification
+  and `lstsq` use the same declared cutoff.
+- Every result carries a typed evidence origin, record ID, revision, and
+  synthetic-fixture marker. The current numerical ledger is synthetic only;
+  the DbC layer rejects silent relabeling as measured evidence.
+- The amplitude-driven CCI proxy requires exact same-side agonist/antagonist
+  channel IDs, roles, normalization revision, formula, comparison scope, and
+  sensitivity plan. Direct cross-index value comparison is prohibited. It is
+  not stiffness, force, effort, or a unique biological mechanism.
+- Human collection remains unavailable. Typed, distinct, category-matched
+  external records plus a prospectively registered participant-held-out
+  analysis plan can establish structural readiness for external review. The
+  field does not represent completed participant evidence; the software always
+  returns `authorizes_participant_collection=False` and requires an outside
+  human release decision.
+- `/models/active-impedance-identification.html` is registered as reviewed
+  audit `ad-route-eb36645ba003`, bound to exact reviewed content commit
+  `544273a337dd7fbf0236b3a8b95e26b5d88c06cb` and all four review dimensions.
+  After ordinary reconciliation with protected #4063, the combined inventory
+  contains 17 reviewed, 206 deferred, and 2 exempt routes; the #4063
+  site-surface records and dispositions are preserved.
+- Claim-audit `review_commit` values use the current reviewed-content convention;
+  squash merges can leave those commits outside protected-main ancestry. Issue
+  #4067 owns the central digest-based migration. This PR retains
+  `544273a337dd7fbf0236b3a8b95e26b5d88c06cb` and does not invent a merge SHA.
+- RED evidence: the initial focused suite failed during collection because the
+  protocol modules did not exist. Review-led RED cases then exposed the rank
+  tolerance mismatch, arbitrary-string human authorization, non-zero-anchored
+  windows, circular held-out-result naming, and ungoverned EMG arrays. Final
+  local GREEN evidence is 11/11 focused executable contracts, 2/2 focused
+  content/audit contracts, 11/11 claim-audit contracts, 3,375 non-content tests
+  with 30 documented skips, 96 content tests with 4 documented skips, and all
+  20 Jest suites (297 passes, 19 skips). Full Ruff/Black, focused strict mypy,
+  module and changed-file budgets, pre-commit, bibliography and citation gates,
+  terminology, title, Quarto syntax/xrefs/math, 226-URL bidirectional render
+  coverage, claim-audit report verification, and publication enforcement pass.
+  Quarto 1.8.26 renders the public route in isolation. Desktop 1440 x 1000 and
+  mobile 390 x 844 browser inspection shows one H1, all scientific sections,
+  five contained tables with local mobile scrolling, rendered MathJax, no page
+  overflow, and no console warnings or errors. Temporary render/browser
+  artifacts were removed and the feature tree is clean.
+
+## Bilateral Hand-Wrench Identifiability (#4035 — Protected)
+
+- Protected merge `9c3c5218744ecf5791d9af4a7871f618d917437a` is the exact
+  reviewed #4035 tree. The branch history below records its delivery evidence.
 
 - Branch `feat/4035-bilateral-wrench-identifiability` started from exact
   protected main `d8f90713a0d3a4255ed1131a6c3517ee13217997`. It extends the
