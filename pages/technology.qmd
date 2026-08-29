@@ -1,6 +1,6 @@
 ---
 title: "Technology"
-description: "How the measurement instruments of biomechanics actually work: force plates, motion capture, and launch monitors, with their operating principles, error budgets, and design frontiers."
+description: "Evidence-bounded guides to biomechanics instruments, golf technology, simulation, and measurement"
 page-layout: full
 toc: true
 toc-depth: 2
@@ -9,69 +9,106 @@ toc-depth: 2
 ```{=html}
 <div class="page-header">
   <h1 class="section-heading">Technology</h1>
-  <p class="page-subtitle">How the measurement instruments of biomechanics actually work: force plates, motion capture, and launch monitors</p>
+  <p class="page-subtitle">Measurement, simulation, and their validation boundaries</p>
 </div>
 ```
-Every claim in biomechanics rests on an instrument. Ground reaction forces come from a force plate, joint angles from a motion-capture system, clubhead delivery from a launch monitor — and each of those devices reports a mixture of things it genuinely observed and things it computed from what it observed, using models with assumptions.
 
-This section documents that machinery. Each article covers the underlying physics of the transducer, the mathematics of turning raw signals into reported quantities, the error sources that dominate in practice, the patent and research literature, and the advanced methods that define the current frontier.
+Biomechanics instruments report a mixture of direct observations and quantities
+derived through calibration, geometry, signal processing, or a physical model.
+This hub points to articles that examine those layers. A summary here is an
+editorial description of the linked article; it is not independent evidence for
+that article's equations, numbers, causal interpretation, or validation state.
 
-::: {.callout-note}
-## Editorial Standard for This Section
+::: {.callout-important}
+## State and Editorial Contract
 
-These articles distinguish explicitly between **measured**, **derived**, and **estimated** quantities. Manufacturer documentation routinely blurs that boundary; the validation literature consistently shows that the boundary is exactly where inter-device disagreement lives. Where a number is a model output rather than an observation, these articles say so.
+**Available** means the linked article can be read. It does not mean every claim
+on the page is validated. Each article must identify what is measured, derived,
+estimated, simulated, or proposed; name its sources and assumptions; and retain
+its own uncertainty, falsifiers, and audience limits. Until that page's
+route-level audit is protected-closed, treat its scientific conclusions as
+page-specific and not inherited by this hub.
 :::
 
-## Articles
+## Measurement Guides
 
 ### [Force Measurement Technology](../articles/technology-force-measurement.html)
 
-Force plates, pressure mats, and instrumented apparatus. Strain-gauge versus piezoelectric transduction and why the choice determines what you can measure; the six-component ground reaction wrench and the geometry of centre of pressure; why pressure mats cannot measure shear or free moment, and what that means for the golf systems built on them; specifications, calibration, and the error sources that matter; ground reaction force estimation without plates; and the patent and research literature.
+**Article state: Available.** Surveys force plates, pressure mats, wrench and
+centre-of-pressure conventions, calibration, and instrument limitations. Device
+specifications and performance claims require the sources and conditions on the
+article page.
 
 ### [Motion Capture Technology](../articles/technology-motion-capture.html)
 
-Optical marker-based, markerless, and inertial systems in methodological detail. Camera calibration and triangulation mathematics; soft tissue artefact as the dominant error source; joint-centre estimation and marker-set design; the rotation-representation problem and why helical-axis descriptions avoid the sequence dependence of Euler angles; markerless pose estimation and its validation record; inertial sensor fusion and drift; biplanar videoradiography as the accuracy benchmark; and the golf-specific challenges of capturing a 100 mph clubhead.
+**Article state: Available.** Surveys marker-based, markerless, inertial, and
+imaging methods, including calibration, coordinate conventions, and error
+sources. No modality is declared universally accurate by this hub.
 
 ### [Launch Monitor Technology](../articles/technology-launch-monitors.html)
 
-Doppler radar and photometric measurement of ball and club. The physics of radar spin measurement via harmonic sidebands; photogrammetric spin from dimple registration; the directness hierarchy that explains why ball data agrees across devices and club data does not; why clubface orientation is inferred rather than measured on radar systems; and a screw-theoretic reformulation that offers several routes to measuring face orientation without inverting an impact model.
-
-### [Club Fitting Simulation and Parameter Identification](../articles/technology-club-fitting.html)
-
-How forward multibody dynamics, spatial screw theory, and watertight mesh inertia identification transform club fitting into a deterministic counterfactual engineering discipline. Includes forward twist counterfactuals isolating club plant changes from neuromuscular adaptation; dynamic shaft deflection modes (lead/lag, droop, and torsion); exact polyhedral inertia tensor calculation via divergence-theorem boundary integrals; and standardized JSON wire schemas for OEM club specifications (`golf-club/fitting-document/v1`), cross-engine trajectory interchange (`swing-sim/delivery-trajectory/v1`), and deterministic fitting reports (`golf-club/fitting-report/v1`).
-
-### [Multibody Impact Coupling and the Heavy Hit Hypothesis](../articles/technology-heavy-hit-impact-coupling.html)
-
-A rigorous continuum-mechanics and multibody collision analysis of the "heavy hit" hypothesis. Proves why the ultra-short contact duration ($\tau_{\text{contact}} \approx 450\,\mu\text{s}$) relative to acoustic and flexural wave transit times enforces a decoupling fraction $\eta_{\text{decouple}} > 0.99$ for physiological hands and body; establishes the $\tau^2$ decoupling perturbation law; derives the rigid-shaft upper bound; and details a runtime-free two-stage simulation architecture decoupling multibody kinematics from algebraic collision restitution across MJCF, URDF, and OpenSim.
-
-### [The Reference-Point Problem in Club Delivery Data](../articles/reference-point-problem.html)
-
-Why a rotating clubhead has no single club path, and what that costs. The rigid-body relation $\mathbf{v}_P = \mathbf{v}_{\text{ref}} + \boldsymbol{\omega}\times\mathbf{r}$ reduced to a ratio of two lengths, $d/R_{\text{ISA}}$; magnitudes of one to three degrees at tour closure rates; why the offset is set by release geometry rather than by swing speed; why "a few percent of clubhead speed" is a category error rather than a small effect; and why closure rate is a dispersion variable rather than a bias variable. Includes an interactive tool that computes the reference-point consequences of any delivery, with a derivation-and-traceability view.
+**Article state: Available.** Surveys radar and photometric methods and separates
+direct observations from inferred club and ball quantities. Vendor behavior and
+accuracy remain device-, firmware-, protocol-, and condition-specific.
 
 ### [Launch Monitor Vendor Reference](../articles/launch-monitor-vendor-reference.html)
 
-A catalogue of publicly available vendor documentation --- TrackMan, FlightScope, Foresight, Uneekor, Full Swing, GEARS, Rapsodo, Sportsbox and Swing Catalyst --- with direct links, verbatim parameter definitions, and an honest account of which systems measure club data and which infer or import it. The central finding is that club numbers are **not portable between systems**: there is no industry-standard reference point on the clubhead and no standard definition of closure rate, so two devices can report different values for the same swing and both be right under their own conventions.
+**Article state: Available.** Indexes public vendor documentation and parameter
+definitions. It is a source map, not certification, an endorsement, or proof
+that identically named fields are numerically interchangeable.
+
+## Modeling and Analysis Guides
+
+### [Club Fitting Simulation and Parameter Identification](../articles/technology-club-fitting.html)
+
+**Article state: Available; engineering workflow experimental.** Describes
+counterfactual club-model changes, shaft and inertia representations, and data
+interchange. A deterministic computation is still conditional on its model,
+parameters, solver, input trajectory, and validation envelope.
+
+### [Multibody Impact Coupling and the Heavy Hit Hypothesis](../articles/technology-heavy-hit-impact-coupling.html)
+
+**Article state: Available; hypothesis scope model-conditioned.** Examines
+short-duration impact, wave-transit and multibody-coupling arguments. Read the
+linked derivation and limitations before applying any result to a person, club,
+impact condition, or coaching claim.
+
+### [The Reference-Point Problem in Club Delivery Data](../articles/reference-point-problem.html)
+
+**Article state: Available.** Examines how a reported velocity or path depends on
+the selected point on a rotating clubhead. Numerical examples remain conditional
+on the declared geometry and measurement convention.
 
 ### [Impact Mechanics and Ball Flight](../articles/impact-mechanics-and-ball-flight.html)
 
-A textbook-level treatment of what happens in the half-millisecond of contact and the six seconds after it. The collision as a rigid-body impulse problem; why the ball grips the face rather than rolling, and what that costs the standard spin models; the spin-loft cliff derived from measured friction; gear effect; the ball flight laws and the evidential basis of the face/path weighting — including why the familiar 85/15 figure is a vertical-plane number misapplied to the horizontal plane; the three canonical aerodynamic models and the yardage cost of choosing between them; and a full treatment of closure rate, including the case where a physically correct argument makes a population-level prediction the data refute.
+**Article state: Available.** Surveys collision and flight models, their
+parameters, and disagreements. Worked predictions are model outputs, not a
+universal launch-monitor or player result.
 
-### [Rotation-Induced Spin: Gear Effect Without an Off-Centre Strike](../articles/rotation-induced-spin.html)
+### [Rotation-Induced Spin](../articles/rotation-induced-spin.html)
 
-A supplement to the impact-mechanics treatment, working out a consequence of clubface closure rate that the main article states but does not quantify: because the contact patch stands one ball radius away from the ball's centre, a rotating clubhead sweeps its face sideways under the ball, and friction turns that sweep into spin. The rigid-impact partition gives a closed form in which the ball's radius, its mass and the head's moment of inertia all cancel --- a gripping contact hands the ball five-sevenths of the clubhead's own angular velocity. The result is bracketed between a frictionless lower bound of exactly zero and a no-slip upper bound, with the measured tangential restitution of a golf ball arguing that the physical answer sits slightly above the upper bound rather than below it.
+**Article state: Available; bounded model result.** Develops a rigid-contact
+calculation for a rotating face and brackets it with contact assumptions. The
+physical result depends on whether those assumptions describe the impact.
 
 ### [The Physics of the Rolling Putt](../articles/putting-roll-models.html)
 
-A complete first-principles roll model for putting, derived with every step shown. The low-speed putter impact and why true topspin cannot be launched; the skid phase under kinetic friction and the parameter-free five-sevenths transition to pure roll, proved twice — once from the equations of motion and once from angular-momentum conservation about the contact line; the stimpmeter reduced to a two-line energy calculation that recovers the 1.83 m/s release speed from the published ramp geometry, and the resulting stimp-to-deceleration map $a \approx 5.5/S$ m/s²; slope and break as gravity components, including the runaway-grade condition that makes some downhill putts unstoppable; and the geometric capture bound of about 1.64 m/s, with the effective hole shrinking as arrival speed grows. Worked numbers throughout for stimp 8, 10 and 12 greens.
+**Article state: Available.** Derives idealized impact, skid, roll, slope, and
+capture models. Parameters and course conditions bound any numerical prediction.
 
 ### [Simulating the Green](../articles/green-simulation.html)
 
-The implementation companion: how roll models become software. The hybrid two-phase ODE and why event detection, the finite-time stopping problem, and geometric capture testing carry most of the practical difficulty; surface representations from tilted planes to heightfields and meshes, and why the ball responds to the gradient rather than the height; and the stochastic layer — execution noise, surface random fields, and grain anisotropy — that separates a physics demo from a make-probability predictor. Includes a plain statement of what the project's own putting simulation implements and what it honestly omits, and why simulated make regions are ceilings on real make rates.
+**Article state: Available; software and stochastic extensions experimental.**
+Describes how idealized roll equations, event handling, surfaces, and uncertainty
+can be represented in software. Simulated make regions are not validated player
+make rates.
 
-## The Unifying Geometry
+## Shared Geometry, Bounded
 
-These core measurement technologies (motion capture, force plates, and launch monitors) measure dual halves of the same six-dimensional structure. A motion-capture system observes the **twist** of a body — its angular and linear velocity, equivalently a rotation about and translation along an instantaneous screw axis. A force plate observes the **wrench** applied to a body — its force and moment, equivalently a force along and torque about a central axis. Twists and wrenches pair through the reciprocal product to give power, which is why the same algebra underlies kinematics, kinetics, and their combination in inverse dynamics.
-
-A launch monitor sits in this same framework: its Doppler observables are reciprocal products of sight lines with the clubhead's twist, which is both why the estimation problem is linear in twist coordinates and why the instrument struggles with quantities — like clubface orientation at impact — that are not projections of what it can see.
-
-Reading the instruments this way makes their complementarity concrete rather than metaphorical, and it makes the limitations of each one predictable from geometry rather than discovered by surprise.
+Rigid-body twist and wrench notation provides a useful common language for
+motion and load measurements, and their reciprocal product has units of power
+when both are expressed at compatible points and in compatible frames. That
+mathematical pairing does not make every instrument a direct six-dimensional
+observer: sensors expose different projections, bandwidths, calibrations, and
+model dependencies. Instrument-specific observability and validation remain the
+authority for what can be inferred.

@@ -7,18 +7,22 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_development_roadmap_consistency():
-    """Verify roadmap page has accurate Q3 2026 status, chapter counts, and clean formatting (Issue #3922)."""
+    """Verify the roadmap uses live authorities instead of stale progress claims."""
     roadmap = (REPO_ROOT / "pages" / "development-roadmap.qmd").read_text(encoding="utf-8")
+    prose = " ".join(roadmap.split())
 
-    # Chapter counts
-    assert "8 chapters complete, living manuscript" in roadmap
-    assert "11 chapters, applications in progress" in roadmap
-    assert "10 chapters, experimental pipelines section active" in roadmap
-    assert "11 chapters, neural aspects in development" in roadmap
+    assert "This page is an evergreen map, not a schedule or progress meter" in prose
+    assert "Protected merge history is the authority for delivered changes" in prose
+    assert "Dates, percentages, and promises are intentionally omitted" in prose
+    assert "## State Contract" in roadmap
+    assert "#4021" in roadmap
+    assert "#4063" in roadmap
+    assert "8cc236c6879e7535bb6bd15aecbe3396fb6dbb36" in roadmap
 
-    # Timeline status
-    assert "Q3 2026 (Jul–Sep) [Current]" in roadmap
-    assert "2026-08-21" in roadmap
+    # Stale schedule and hand-maintained completion claims stay out of the page.
+    assert re.search(r"\bQ[1-4]\s+20\d{2}\b", roadmap) is None
+    assert re.search(r"\b\d{1,3}%\s+complete\b", roadmap, re.IGNORECASE) is None
+    assert "chapters complete" not in roadmap
 
     # Clean formatting / no undefined icons or raw check ticks
     assert "🟠" not in roadmap
