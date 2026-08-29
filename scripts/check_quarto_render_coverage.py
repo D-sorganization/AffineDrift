@@ -12,6 +12,15 @@ from defusedxml import ElementTree as ET
 
 logger = logging.getLogger(__name__)
 SITEMAP_NAMESPACE = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+REQUIRED_RENDER_RULES = frozenset(
+    {
+        "*.qmd",
+        "articles/**/*.qmd",
+        "pages/**/*.qmd",
+        "reports/scientific-claim-audit.md",
+        "resources/**/*.qmd",
+    }
+)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
@@ -107,8 +116,7 @@ def main() -> int:
     quarto_config = repo_root / "_quarto.yml"
     render_rules = load_render_rules(quarto_config)
 
-    required_rules = {"*.qmd", "articles/**/*.qmd", "pages/**/*.qmd", "resources/**/*.qmd"}
-    missing = [rule for rule in required_rules if rule not in render_rules]
+    missing = sorted(REQUIRED_RENDER_RULES.difference(render_rules))
     if missing:
         logger.error("Missing required render rules:")
         for rule in missing:

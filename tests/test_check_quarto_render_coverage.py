@@ -7,12 +7,28 @@ from pathlib import Path
 import pytest
 from defusedxml.common import DefusedXmlException
 
+from scripts import check_quarto_render_coverage as render_coverage
 from scripts.check_quarto_render_coverage import (
     find_missing_sitemap_sources,
     find_unindexed_sources,
     load_sitemap_paths,
     sitemap_loc_to_source_path,
 )
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+def test_required_render_rules_publish_only_the_claim_audit_report_from_reports():
+    """The public audit link must not expose the repository's broader report tree."""
+    assert "reports/scientific-claim-audit.md" in render_coverage.REQUIRED_RENDER_RULES
+    assert "reports/**/*.md" not in render_coverage.REQUIRED_RENDER_RULES
+
+
+def test_repository_render_config_covers_every_required_target():
+    """The checked-in Quarto project must satisfy the executable render contract."""
+    render_rules = render_coverage.load_render_rules(REPO_ROOT / "_quarto.yml")
+
+    assert render_coverage.REQUIRED_RENDER_RULES.issubset(render_rules)
 
 
 def test_sitemap_loc_to_source_path_maps_root_and_html_pages(tmp_path):
