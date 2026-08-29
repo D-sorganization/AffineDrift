@@ -10,12 +10,13 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## ZTCF Intervention Contract (#4016 — PR #4048 Open)
+## ZTCF Intervention Contract (#4016 — PR #4048 Merged)
 
 - Lease: `codex-20260828-affine-a5`, expiring 2026-08-29T14:44:17Z; issue
   comment `#issuecomment-5460882100` records the exact claim.
-- Non-draft PR: `https://github.com/D-sorganization/AffineDrift/pull/4048` on
-  `feat/4016-ztcf-contract`; hosted Python 3.12 checks are merge authority.
+- Protected merge `443e20a8ecaf1b32b9940b644e0451355e316ea7` owns the
+  intervention contract and evidence below. Hosted Python 3.12 checks were
+  merge authority.
 - `data/ztcf/ztcf_intervention_v1.schema.json` is the normative public record;
   `data/ztcf/planar_golf_forward_fixture_v1.json` pins the sole supported golden
   result to protected source `524c28926f364631ed06b15be9c6fdf440acce64`.
@@ -154,6 +155,31 @@ This is current operational state. Historical detail belongs in git/GitHub.
   emulation.
 - `jsonschema` and `types-jsonschema` are direct pinned requirements; do not
   rely on an unrelated transitive dependency for schema validation or typing.
+
+## Governed Claim/Critique Ledger (#4020 — In Development)
+
+- `schemas/claim-critique-ledger-v1.schema.json` and
+  `data/trust/claim_critique_ledger.json` are the normative critique-governance
+  contract. Every public critique Markdown source is registered exactly once;
+  unknown disposition renders as open, and responded/resolved/rejected states
+  require review metadata, protected verification commit, evidence paths,
+  uncertainty, falsifier, and next gate.
+- `scripts/generate_claim_critique_ledger.py` validates strict schema coverage,
+  claim/page/evidence references, allowed state transitions, and resolved-state
+  contradiction markers. It generates the critique index status table,
+  `critiques/DEFENSE_STRATEGY.md`, collapsible affected-page annotations, and
+  `data/trust/generated/claim_critique_search.json`. Generated files are never
+  hand-edited; run the generator and then `--check`.
+- The canonical ledger deliberately records 33 open critiques, two bounded
+  responses, and zero resolutions. The two responses point to protected DCR
+  and control-causality corrections; neither is represented as independent
+  human validation. Neuromuscular and planar-DCR critiques remain open because
+  adjacent repairs did not modify their affected source claims.
+- Required focused gate:
+  `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_claim_critique_ledger.py`.
+  Current local evidence is 13/13 focused tests plus deterministic generation,
+  Ruff, Black, and strict MyPy. Isolated Quarto renders, responsive browser
+  inspection, repository-wide gates, and protected PR checks remain pending.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
