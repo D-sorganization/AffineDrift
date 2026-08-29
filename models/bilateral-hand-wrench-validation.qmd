@@ -18,12 +18,14 @@ unavailable until every governance and held-out-analysis gate is satisfied.
 
 ## Primary-Source Register
 
+::: {.table-responsive}
 | Source | What It Supports Here | What It Does Not Authorize |
 |---|---|---|
 | Koike (2016), *Measurement of Individual Hand Forces Exerted on a Golf Club Grip* [@koike2016] | Instrumented-grip measurement precedent | Calibration or performance of the present manufactured fixture |
 | Choi and Park (2020), *Sensors* 20(13):3672 [@koike2020] | Use of measured internal grip force in upper-limb kinetics | Validation of this device, cohort, or bilateral six-axis accuracy |
 | UpstreamDrift protected source `85cce4d3`, bilateral-wrench structural study | Point-force rank five and full-wrench rank six/nullity six | Practical identifiability, anatomy, or human validation |
 | UpstreamDrift protected source `85cce4d3`, trajectory sensor qualification | Synthetic cross-talk, noise, contact-migration, and allocation-error controls | Physical-device calibration or participant evidence |
+:::
 
 The two UpstreamDrift entries are immutable executable project sources, not
 independent experiments. The literature entries establish relevant measurement
@@ -37,11 +39,13 @@ transition-to-impact window, event alignment, quantity definitions, tolerance,
 uncertainty method, perturbations, quality rules, exclusions, and falsifiers
 before evaluation.
 
+::: {.table-responsive}
 | Hypothesis | Metric and Decision Rule | Adverse Disposition |
 |---|---|---|
 | A total club wrench does not identify twelve bilateral wrench components | Rank and nullity of the declared linear observation map | **Negative** if a claimed unique allocation depends only on total wrench |
 | Independent calibrated sensors recover the manufactured bilateral loads | Complete component-error interval must remain inside tolerance | **Null** if the interval supports no improvement; **negative** if it exceeds tolerance |
 | The protocol transports to participant data | Participant-held-out coverage and prediction error | **Unavailable** until ethics, privacy, consent, licensing, and held-out gates exist |
+:::
 
 Failed, excluded, negative, null, and unavailable trials stay in the disposition
 ledger. They are not removed when a preferred allocation or model fails.
@@ -126,12 +130,14 @@ in a golfer.
 
 ## Measurement and Inference Tiers
 
+::: {.table-responsive}
 | Tier | Permitted Label | Remaining Boundary |
 |---|---|---|
 | **Total Measured** | Calibrated and inertially compensated total club wrench | Bilateral allocation remains nonidentifiable |
 | **Bilateral Measured** | Separately calibrated lead and trail grip-section wrenches | Practical error and contact-model uncertainty remain |
 | **Model Estimated** | One allocation selected by declared constraints, priors, or cost | The selection is not a measurement or unique source |
 | **Unavailable** | A quantity absent from the observation map or governance record | No value may be imputed or promoted |
+:::
 
 Inverse dynamics can estimate net generalized loads under a declared model. It
 does not convert total club motion into measured bilateral loads, and neither
@@ -141,12 +147,14 @@ bilateral loads nor generalized loads uniquely identify biological actuators.
 
 The deterministic fixtures exercise exact arithmetic and adverse dispositions:
 
+::: {.table-responsive}
 | Quantity | Tier | Result | Complete Interval | Outcome |
 |---|---|---:|---:|---|
 | Total club-wrench closure error | Total Measured | 0.004 | 0.002–0.008 normalized error | Supported |
 | Bilateral allocation recovery error under adverse perturbation | Bilateral Measured | 0.025 | 0.015–0.041 normalized error | Negative |
 | Regularized allocation advantage | Model Estimated | 0.000 | -0.080–0.080 normalized difference | Null |
 | Individual biological actuator force | Unavailable | — | — | Unavailable |
+:::
 
 These values are prescribed regression fixtures. They are not measured sensor
 performance. Future benchtop acceptance must propagate calibration residuals,
