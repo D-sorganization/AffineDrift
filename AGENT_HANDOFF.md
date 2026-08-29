@@ -10,6 +10,35 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## ZTCF Intervention Contract (#4016 — PR #4048 Open)
+
+- Lease: `codex-20260828-affine-a5`, expiring 2026-08-29T14:44:17Z; issue
+  comment `#issuecomment-5460882100` records the exact claim.
+- Non-draft PR: `https://github.com/D-sorganization/AffineDrift/pull/4048` on
+  `feat/4016-ztcf-contract`; hosted Python 3.12 checks are merge authority.
+- `data/ztcf/ztcf_intervention_v1.schema.json` is the normative public record;
+  `data/ztcf/planar_golf_forward_fixture_v1.json` pins the sole supported golden
+  result to protected source `524c28926f364631ed06b15be9c6fdf440acce64`.
+- `src/affine_control/ztcf_contract.py` executes only the registered planar
+  Python adapter. Unavailable or engine-unsupported records fail closed;
+  MATLAB, Simulink, and cross-engine parity remain explicitly unavailable.
+- Canonical and paired Physics of Golf sources distinguish simulated trajectory
+  difference, contribution measure, causal estimand, and physiological
+  interpretation. A successful replay does not identify muscle, effort, intent,
+  human strategy, model adequacy, or finite-horizon reachability.
+- RED/GREEN evidence: collection initially failed on the absent contract
+  module. The final focused contract passes 7 tests; 133 adjacent tests pass;
+  after reconciling protected #4017, the `content_lint` lane passes 78 tests
+  with 4 documented skips and the full Python 3.13 suite passes 3,343 tests
+  with 30 documented skips.
+  Ruff, Black,
+  focused strict mypy, and diff checks pass. Quarto 1.8.26 renders both QMD
+  sources; direct `pdflatex` compiles the 605-page paired book. After the final
+  protected-main merge, the normative contract was re-inspected at desktop and
+  mobile HTML viewports without clipping or unreadable content; the paired PDF
+  page was inspected earlier in the same slice. Python 3.12 remains the
+  protected lane authority.
+
 ## Ultimate Companion Planar-Scope Repair (#4015 — PR #4045 Merged)
 
 - Epic #4008 coordinates the companion program; issue #4015 removes two
@@ -74,8 +103,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
   part of `main` at `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed,
   and its claim boundaries must remain intact in subsequent scientific repairs.
 - Issue #4017 merged through protected PR #4047 at
-  `64624ca9ff9390be0b42f5b714b021718cc4ba85`: the Physics
-  of Golf Quarto and LaTeX chapters no longer add parallel sensory and motor
+  `64624ca9ff9390be0b42f5b714b021718cc4ba85`: the Physics of Golf Quarto
+  and LaTeX chapters no longer add parallel sensory and motor
   pathways into a single round-trip delay or treat feedforward and feedback as
   exclusive. Short-latency (20--45 ms), long-latency (50--100 ms), voluntary
   (>100 ms), and late visually guided responses are separated from their
@@ -97,9 +126,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
   one pre-existing edition-specific Jorgensen key in each tree; both new
   long-latency citations are shared by the Quarto and LaTeX editions.
 
-## Governed Scientific Trust Panels (#4019)
+## Governed Scientific Trust Panels (#4019 — Protected PR #4049 Merged)
 
-- Branch `feat/4019-trust-metadata` adds strict
+- Protected merge `48026454cdd3e07b3ce489d288efcb9295417b10` adds strict
   `schemas/trust-metadata-v1.schema.json`, the canonical
   `data/trust/claim_registry.json`, and deterministic
   `scripts/generate_trust_panels.py`. Generated QMD is reviewable but must not
@@ -302,11 +331,11 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 - Zero declared control does not mean zero muscle activation or effort.
 - DCR compares drift with bounded control capacity.
 
-## Scientific Trust Remediation (#4012)
+## Scientific Trust Remediation (#4012 — Protected PR #4046 Merged)
 
-- PR #4046 on branch `feat/4012-scientific-trust` corrects the A1 control-affinity and
-  attribution defects across Theory Parts 1-2, the foundational monograph, and
-  the single-file manifesto.
+- Protected merge `bb50862bd9993f5101bd9da71ee9a78f124cfb6e` corrects the A1
+  control-affinity and attribution defects across Theory Parts 1-2, the
+  foundational monograph, and the single-file manifesto.
 - A state-dependent gain belongs in $G(x)$ and does not by itself make a system
   non-affine in the declared input; state-only aerodynamics belong in $f(x)$.
 - Additivity is not orthogonality. Drift and input vectors may align, oppose, or

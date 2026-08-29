@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T07:19:00Z
+Last-Updated: 2026-08-29T07:28:35Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T07:19:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.242                                          |
+| **Spec Version**        | 1.0.243                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -58,6 +58,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   torque distinct from power, work, energy, tissue load, physiological effort,
   and outcome; net generalized input must not be presented as identified
   individual-muscle force, bilateral hand-force allocation, or neural intent
+- Require every executable or quantitative ZTCF result to carry a versioned,
+  fail-closed intervention record that freezes model and engine authority,
+  branch state, zeroed inputs, retained dynamics, frame, units, solver, horizon,
+  interpretation boundaries, and failure states
 - Maintain generated, schema-validated scientific trust panels whose stable
   claim IDs bind accessible summaries to bounded technical claims, provenance,
   uncertainty, limitations, falsifiers, review state, and the next validation
@@ -662,6 +666,20 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.243 ZTCF Intervention Contract
+
+Adds `affinedrift.ztcf-intervention/v1`, a public JSON schema, and a deterministic
+golden fixture for the repository's supported planar Python rollout. The
+executable contract rejects unavailable and engine-unsupported interventions
+without substituting results and withholds cross-engine parity unless two
+registered implementations, a metric, and tolerance exist. Canonical and paired
+textbook sources now separate simulated trajectory difference, contribution
+measure, causal estimand, and physiological interpretation; each states the
+non-identifiability boundary and preserves the protected #4013 reachability and
+#4014 mechanical-attribution authorities. It also preserves the now-protected
+#4015 planar-spatial, #4012 control-affinity, #4017 sensorimotor, and #4019
+trust-metadata contracts from merged `main`.
 
 ### 1.0.242 Governed Scientific Trust Metadata
 
