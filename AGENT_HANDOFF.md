@@ -40,13 +40,15 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - `/models/active-impedance-identification.html` is registered as reviewed
   audit `ad-route-eb36645ba003`, bound to exact reviewed content commit
   `c6c2e37505526afbf849ae9bf2e58399f6f3af11` and all four review dimensions.
-  The protected 219-route deferred partition is unchanged.
+  After ordinary reconciliation with protected #4063, the combined inventory
+  contains 17 reviewed, 206 deferred, and 2 exempt routes; the #4063
+  site-surface records and dispositions are preserved.
 - RED evidence: the initial focused suite failed during collection because the
   protocol modules did not exist. Review-led RED cases then exposed the rank
   tolerance mismatch, arbitrary-string human authorization, non-zero-anchored
   windows, circular held-out-result naming, and ungoverned EMG arrays. Final
   local GREEN evidence is 11/11 focused executable contracts, 2/2 focused
-  content/audit contracts, 11/11 claim-audit contracts, 3,362 non-content tests
+  content/audit contracts, 11/11 claim-audit contracts, 3,374 non-content tests
   with 30 documented skips, 96 content tests with 4 documented skips, and all
   20 Jest suites (297 passes, 19 skips). Full Ruff/Black, focused strict mypy,
   module and changed-file budgets, pre-commit, bibliography and citation gates,
