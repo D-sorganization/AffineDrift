@@ -209,6 +209,14 @@ def test_interval_decisions_preserve_supported_negative_null_and_unavailable() -
     assert unavailable.estimate is None
 
 
+def test_interval_decision_rejects_labels_that_contradict_its_bounds() -> None:
+    provenance = EvidenceProvenance("synthetic-fixture", "timing-ledger", "v1", True)
+    supported = classify_interval(2.0, 3.0, 1.0, provenance)
+
+    with pytest.raises(ValueError, match="outcome contradicts"):
+        replace(supported, outcome="negative")
+
+
 def test_result_provenance_prevents_synthetic_promotion() -> None:
     ledger = synthetic_result_ledger()
 
@@ -280,7 +288,14 @@ def test_public_route_has_recursive_digest_bound_review_evidence() -> None:
     assert len(records) == 1
     record = records[0]
     assert record["status"] == "reviewed"
-    assert record["findings"] == []
+    assert len(record["findings"]) == 1
+    finding = record["findings"][0]
+    assert finding["finding_id"] == "ad-finding-neural-timing-outcome-consistency"
+    assert finding["disposition"] == "corrected"
+    assert set(finding["evidence_paths"]) == {
+        "src/affine_control/neural_timing_analysis.py",
+        "tests/test_neural_timing_protocol.py",
+    }
     review = record["review"]
     assert review["source_path"] == "models/neural-timing-feedback.qmd"
     assert set(review["dimensions"]) == {
