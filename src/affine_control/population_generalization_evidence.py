@@ -10,18 +10,24 @@ from .population_generalization import LockedSplit, Observation, validate_split_
 
 @dataclass(frozen=True)
 class Interval:
+    """Closed participant-weighted manufactured interval."""
+
     lower: float
     upper: float
 
 
 @dataclass(frozen=True)
 class Calibration:
+    """Ordinary linear calibration intercept and slope."""
+
     intercept: float
     slope: float
 
 
 @dataclass(frozen=True)
 class SubgroupPerformance:
+    """Reported or small-cell-suppressed subgroup result."""
+
     subgroup: str
     sample_size: int
     status: Literal["reported", "unavailable"]
@@ -31,6 +37,8 @@ class SubgroupPerformance:
 
 @dataclass(frozen=True)
 class Outcome:
+    """Retained adverse, null, or unavailable outcome."""
+
     outcome_id: str
     status: Literal["negative", "null", "unavailable"]
     finding: str
@@ -38,6 +46,8 @@ class Outcome:
 
 @dataclass(frozen=True)
 class ValidationReport:
+    """Deterministic non-authorizing manufactured test report."""
+
     mean_error: float
     mean_absolute_error: float
     participant_weighted_interval: Interval

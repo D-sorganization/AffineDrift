@@ -272,6 +272,7 @@ class PopulationPromotionEvidence:
 
     @classmethod
     def manufactured_fixture(cls) -> PopulationPromotionEvidence:
+        """Return a deliberately non-authorizing manufactured evidence package."""
         return cls(
             evidence_origin=EvidenceOrigin.MANUFACTURED_SYNTHETIC,
             measured_dataset_record=None,
@@ -309,6 +310,8 @@ def population_claim_authorized(evidence: PopulationPromotionEvidence) -> bool:
 
 @dataclass(frozen=True)
 class PopulationProtocol:
+    """Complete population question, split, evidence, and authority declaration."""
+
     revision: str
     dataset_card: DatasetCard
     preregistration: Preregistration
