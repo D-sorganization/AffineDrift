@@ -102,9 +102,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - RED evidence: the new contract initially failed collection because the strict
   protocol API did not exist, then failed on the absent structured event
   declaration. GREEN evidence on workstation Python 3.13: 21/21 focused #4033
-  tests and 27/27 combined #4013/#4033 tests pass; the complete `tests/` tree is
-  3,300 passed and 29 documented skips; the content-lint lane is 90 passed, 4
-  skipped, and 3,371 deselected; Jest is 297 passed and 19 skipped. Ruff, Black,
+  tests and 27/27 combined #4013/#4033 tests pass. Before the protected #4020
+  reconciliation, the complete `tests/` tree was 3,300 passed and 29 documented
+  skips. On reconciled head, 43 combined #4013/#4020/#4033 contracts pass and
+  the content-lint lane is 90 passed, 4 skipped, and 3,388 deselected; Jest is
+  297 passed and 19 skipped. Ruff, Black,
   strict focused and CI-target mypy, module budgets, Quarto structure,
   terminology, title, math, citation, generated-content, and diff gates pass.
   Quarto 1.8.26 renders the public article in isolation; desktop and 390-pixel
