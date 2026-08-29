@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T09:24:18Z
+Last-Updated: 2026-08-29T09:31:38Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -705,6 +705,9 @@ selection.
 The public companion guide explains when a simpler level is sufficient and
 when its conclusions fail; governed participant transfer and frozen benchmark
 runtime remain unavailable, and no global fidelity percentage is permitted.
+The new public route enters the protected #4021 claim-audit inventory as
+reviewed, with exact code/test evidence and all four review dimensions; the 219
+legacy deferred routes and their child-issue partition remain unchanged.
 
 ### 1.0.248 Exhaustive Deferred-Route Delivery Partition
 

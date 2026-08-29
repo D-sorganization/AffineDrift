@@ -12,8 +12,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
 
 ## Planar-to-Spatial-to-Flexible-Shaft Model Ladder (#4034 — PR Pending)
 
-- Branch `feat/4034-model-ladder` starts from protected main
-  `42975df666c38154304652aaa48f856aefd4bd7e`. It adds a validation and
+- Branch `feat/4034-model-ladder` started from protected main
+  `42975df666c38154304652aaa48f856aefd4bd7e` and ordinarily reconciled protected
+  claim-audit main `e23cabbc84e58bae791e0868e473cfec48699b07` in merge commit
+  `39ea01a09d36fc6ca4001b883a1bdf1c707a0c41`. It adds a validation and
   minimum-sufficient-level protocol around existing model authority; it does
   not add a competing dynamics engine or modify immutable UpstreamDrift
   publication projections.
@@ -36,19 +38,28 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - `models/model-ladder.qmd` publishes the bounded interpretation and links from
   the UpstreamDrift companion hub. It prohibits a global fidelity percentage
   and any promotion to coaching, clinical, causal, or population authority.
+- `/models/model-ladder.html` is registered as reviewed audit
+  `ad-route-25575b069ccb`, bound to exact reviewed head
+  `303bb507e795092a9e83e8f607bf5eaae394ddd6` and the model-ladder source/test
+  evidence. All four evidence, uncertainty, falsifier, and audience-framing
+  dimensions are recorded with no open findings. Generated reports contain 223
+  audited routes: 219 deferred, 2 exempt, and 2 reviewed; the protected legacy
+  deferred partition is unchanged.
 - RED evidence: `tests/test_model_ladder_protocol.py` initially failed during
   collection because the protocol module did not exist. Review-led RED then
   reproduced five fail-closed gaps before their invariant checks were added.
-  Exact-head local GREEN evidence on workstation Python 3.13 is 17/17 focused executable contracts,
-  1/1 focused public-content contract, 137/137 existing model-navigation and
-  style contracts, 3,330 default-lane tests passed with 30 documented skips,
-  and 88 content-lint tests passed with 4 documented skips. Jest passes 297
+  Exact-head local GREEN evidence on workstation Python 3.13 is 17/17 focused
+  executable model contracts, 11/11 focused claim-audit contracts, 2/2 focused
+  public-content/audit contracts, 137/137 existing model-navigation and style
+  contracts, 3,341 default-lane tests passed with 30 documented skips, and 89
+  content-lint tests passed with 4 documented skips. Jest passes 297
   tests with 19 documented skips; the frontend asset build check completes.
   Ruff, Black, strict focused mypy, module budgets, pre-commit, terminology,
   title case, display math, diff, and 224-route bidirectional render-coverage
-  checks pass. Quarto 1.8.26 renders the
-  public page in isolation. Final desktop 1440 x 1000 and mobile 390 x 844
-  browser inspection shows one H1, all six scientific sections, no body
+  checks pass. The generated claim-audit reports are current and publication
+  enforcement finds no P0/P1 blocker. Quarto 1.8.26 renders the public page in
+  isolation on the reconciled head. Final desktop 1440 x 1000 and mobile 390 x
+  844 browser inspection shows one H1, all six scientific sections, no body
   overflow, responsive table scrolling, and no console warnings or errors.
   Python 3.12 and hosted checks remain protected authorities.
 
