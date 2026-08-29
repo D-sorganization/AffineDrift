@@ -60,6 +60,7 @@ class ValidationReport:
 
 
 def _linear_calibration(rows: tuple[Observation, ...]) -> Calibration:
+    """Fit the deterministic least-squares calibration intercept and slope."""
     x = [row.predicted for row in rows]
     y = [row.observed for row in rows]
     x_mean = sum(x) / len(x)
@@ -73,6 +74,7 @@ def _linear_calibration(rows: tuple[Observation, ...]) -> Calibration:
 
 
 def _subgroups(rows: tuple[Observation, ...], minimum_size: int) -> tuple[SubgroupPerformance, ...]:
+    """Report or suppress deterministic subgroup errors by minimum cell size."""
     groups: dict[str, list[float]] = {}
     for row in rows:
         labels = (

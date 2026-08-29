@@ -35,11 +35,13 @@ class EvidenceOrigin(StrEnum):
 
 
 def _require_text(value: str, label: str) -> None:
+    """Reject an empty required declaration."""
     if not value.strip():
         raise ValueError(f"{label} must be declared")
 
 
 def _require_texts(values: tuple[str, ...], label: str) -> None:
+    """Reject an empty collection or any empty declaration within it."""
     if not values or any(not value.strip() for value in values):
         raise ValueError(f"{label} must be declared")
 
@@ -64,6 +66,7 @@ class DatasetCard:
     evidence_origin: EvidenceOrigin
 
     def __post_init__(self) -> None:
+        """Validate dataset identity, governance, hierarchy, and evidence origin."""
         for value, label in (
             (self.dataset_id, "dataset ID"),
             (self.target_population, "target population"),
@@ -105,6 +108,7 @@ class Preregistration:
     falsifiers: tuple[str, ...]
 
     def __post_init__(self) -> None:
+        """Validate that every preregistered analysis field is declared."""
         for value, label in (
             (self.estimand, "estimand"),
             (self.outcome, "outcome"),
@@ -136,6 +140,7 @@ class Observation:
     predicted: float
 
     def __post_init__(self) -> None:
+        """Validate nested identifiers, strata, and finite outcome values."""
         values = (
             self.record_id,
             self.site_id,
@@ -162,6 +167,7 @@ class SplitAssignment:
     partition: Partition
 
     def __post_init__(self) -> None:
+        """Validate the record identifier and closed partition domain."""
         _require_text(self.record_id, "record ID")
         if self.partition not in ("train", "validation", "test"):
             raise ValueError("partition must be train, validation, or test")
@@ -179,6 +185,7 @@ class LockedSplit:
     tuning_partitions: tuple[Partition, ...]
 
     def __post_init__(self) -> None:
+        """Validate split identity, assignments, and test-set isolation."""
         _require_text(self.split_id, "split ID")
         _require_texts(self.strategies, "split strategies")
         _require_text(self.lock_revision, "lock revision")
@@ -265,6 +272,7 @@ class PopulationPromotionEvidence:
     human_approval: bool
 
     def __post_init__(self) -> None:
+        """Validate consistency between evidence origin and dataset provenance."""
         if self.evidence_origin is EvidenceOrigin.MEASURED and not self.measured_dataset_record:
             raise ValueError("measured evidence requires a governed dataset record")
         if self.evidence_origin is not EvidenceOrigin.MEASURED and self.measured_dataset_record:
@@ -321,6 +329,7 @@ class PopulationProtocol:
     authority_limit: str
 
     def __post_init__(self) -> None:
+        """Validate the revision, estimand taxonomy, and authority limit."""
         _require_text(self.revision, "protocol revision")
         expected: tuple[Estimand, ...] = (
             "within-person explanation",
