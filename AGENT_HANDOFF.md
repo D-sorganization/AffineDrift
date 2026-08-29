@@ -261,11 +261,16 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `data/trust/generated/claim_audit_report.json` plus
   `reports/scientific-claim-audit.md`. The generated reports join titles/status
   from upstream authorities but do not duplicate their scientific prose.
-- RED was the missing generator module at test collection. Current GREEN
-  evidence is 43 focused #4019/#4020/#4021/public-manifest tests, deterministic
-  report freshness, an exact 222-route manifest check, and the deploy
-  publication gate. Full post-reconciliation validation remains required before
-  opening the PR.
+- RED was the missing generator module at test collection. Exact-head GREEN
+  evidence is 47 focused #4019/#4020/#4021/public-manifest tests and 3,306
+  default-lane tests with 29 documented skips and 90 deselections. The content
+  lane passes 89 tests with 4 documented skips and 3,332 deselections. Ruff,
+  Black, repository MyPy (74 source files), code-quality, and all pre-commit
+  hooks pass.
+- Quarto 1.8.26 rendered all 221 sources at the reconciled head. The deployment
+  pipeline pruned 28 internal artifacts, regenerated an exact 222-route public
+  manifest, and passed deterministic report freshness plus the enforced
+  publication gate. The isolated worktree is clean after render verification.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
