@@ -54,6 +54,84 @@ This is current operational state. Historical detail belongs in git/GitHub.
   protected main. No product or fitting recommendation and no coaching,
   clinical, design, causal, or population authority is available.
 
+## Neural Timing and Feedback Perturbation Experiments (#4037 — In Progress)
+
+- Branch `feat/4037-neural-timing-feedback` started from exact protected main
+  `14f220052eb204dfdff6cf2b4ea51eebcd08a819` in isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4037-e4`. The lease is
+  recorded on #4037 and the branch ordinarily reconciles protected book-audit
+  main `902a71b73862a299ca8b6134a4701c15d4f3030c` and protected hybrid-impact
+  main `838cdb5971b071dda5bdebd3af4e46e320989afc`. Scope is preregisterable
+  protocol and deterministic
+  analytic/synthetic feasibility only; no participant result, device
+  qualification, or UpstreamDrift authority changes are present.
+- `neural_timing_protocol.py` freezes primary-source scope, phases, three
+  perturbation modalities, exact sham joins, calibrated channels, physical
+  onset witnesses, four observation layers, hierarchical hypotheses, target
+  power, Holm families, expectation, learning/history, uncertainty, and a
+  permanently non-authorizing human boundary. Runtime Literal domains,
+  identifiers, modality/window cardinality, and all cross-record references
+  fail closed.
+- `neural_timing_analysis.py` provides persistent-threshold onset detection,
+  original-order Holm step-down decisions, typed interval dispositions, and
+  evidence provenance that prohibits silent synthetic-to-measured promotion.
+  Direct construction also fails closed when an outcome label contradicts its
+  declared uncertainty bounds and minimum effect.
+  `neural_timing_fixtures.py` contains only manufactured values. Its direct
+  mechanical effect precedes its EMG response, proving the public timing layers
+  cannot be interpreted as one serial pathway.
+- The primary-source map separates mechanical, visual, auditory, and
+  expectation evidence from general upper-limb tasks from the single
+  golf-specific novice-putting visual-occlusion source. None authorizes elite
+  or full-swing transport, universal latency bands, unique neural pathways,
+  individual-muscle forces, coaching, or clinical claims.
+- `/models/neural-timing-feedback.html` is reviewed audit
+  `ad-route-8debf6763c2e`. Under claim-audit schema v1.1, its exact SHA-256 map
+  binds canonical `models/neural-timing-feedback.qmd`, the recursively included
+  authority and human boundaries, the bibliography, all three executable
+  modules, and its focused test. The reconciled inventory contains 25 reviewed, 200
+  deferred, and 2 exempt routes; the protected deferred partition is unchanged.
+  Corrected P1 finding `ad-finding-neural-timing-outcome-consistency` binds the
+  fail-closed interval implementation and its regression test to exact digests
+  and GREEN verification commit `dff3650fb1b41e721ee90a4fe060277d02cc836b`.
+- RED evidence is commit `073cfdde`: focused collection failed because the
+  protocol modules did not exist. After the public route was authored, the
+  content lane retained one exact RED failure because no reviewed audit record
+  existed. Review-led RED commit `54a54c29` then proved a manually relabeled
+  supported interval was accepted before the shared classification invariant
+  was added. The first isolated Quarto render exposed an ambiguous nested
+  include path; the canonical page now includes both governed boundaries
+  explicitly, preserving the schema-v1.1 closure while rendering correctly.
+  Hosted run `33252794679` added a final RED: `quality-gate` rejected 30
+  undocumented private builders and dataclass validators. Contract-oriented
+  docstrings now satisfy the same code-quality command locally without changing
+  behavior, and all three refreshed module bytes remain digest-bound. Hosted
+  reconciliation run `33253989533` exposed a Windows/Linux line-ending mismatch
+  in the newly canonical bibliography generator. A RED byte-level regression now
+  requires LF output on every platform; the reviewed bibliography digest and
+  generated audit report bind those deterministic bytes.
+- Exact reconciled-head GREEN evidence is 18 focused executable contracts, 2
+  focused content/audit contracts, and 14 claim-audit contracts. The full
+  default `tests/` lane passes 3,434 tests with 29 documented skips; the content
+  lane passes 101 tests with 4 documented skips; and Jest passes 297 with 19
+  documented skips. Ruff, Black, strict focused mypy, module budgets,
+  changed-file budgets, full pre-commit, Quarto syntax, xrefs, single-title,
+  title case, display math, terminology, frontmatter, bibliography, citation,
+  228-route render coverage, claim-audit publication enforcement, and diff
+  gates pass. The reconciled #4037/#4038/#4062 audit-focused set passes 75 tests
+  at ordinary-merge head `fe719e044c314eacace566aa0056f38d00469aee`.
+- Quarto 1.8.26 renders the neural route, protected hybrid-impact route, and
+  shared model hub from that exact reconciliation. Desktop 1440 x 1000 and mobile
+  390 x 844 browser inspection verifies one H1, all required scientific
+  sections, five responsive locally scrolling tables, no body overflow, no raw
+  include shortcode, and no console warning or error. Render/browser artifacts
+  are temporary QA output and are not publication source.
+- Human collection remains unavailable. External ethics, privacy, consent,
+  licensing, device-risk, calibration, stopping-rule, power, held-out-analysis,
+  and independent-release records are required before participant work. The
+  software cannot authorize collection or promote a fixture to measured human
+  evidence.
+
 ## Hybrid Impact-Contact and Event-Time Uncertainty (#4038 — In Progress)
 
 - Branch `feat/4038-hybrid-impact-contact` started from exact protected main

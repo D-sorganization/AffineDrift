@@ -2890,6 +2890,65 @@
       "status": "deferred"
     },
     {
+      "audit_id": "ad-route-8debf6763c2e",
+      "claim_ids": [],
+      "critique_ids": [],
+      "findings": [
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "src/affine_control/neural_timing_analysis.py",
+            "tests/test_neural_timing_protocol.py"
+          ],
+          "evidence_sha256": {
+            "src/affine_control/neural_timing_analysis.py": "3efa4477aef2974b1e8d57deb26be44242f54f05ab30388131cbf217a06fe123",
+            "tests/test_neural_timing_protocol.py": "5e445359426b74cb33d6036e6569c88420f769cd37d62f3c9578a09cfd26faa1"
+          },
+          "finding_id": "ad-finding-neural-timing-outcome-consistency",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4037",
+          "priority": "p1",
+          "rationale": "A manually constructed interval result could carry an outcome label that contradicted its uncertainty bounds. IntervalDecision now derives the expected classification from the declared minimum effect and rejects contradictory labels.",
+          "verification_commit": "dff3650fb1b41e721ee90a4fe060277d02cc836b"
+        }
+      ],
+      "review": {
+        "dimensions": [
+          "evidence",
+          "uncertainty",
+          "falsifiers",
+          "audience_framing"
+        ],
+        "evidence_paths": [
+          "_includes/neural-timing-authority-boundary.qmd",
+          "_includes/neural-timing-human-boundary.qmd",
+          "models/neural-timing-feedback.qmd",
+          "references/affine-drift.bib",
+          "src/affine_control/neural_timing_analysis.py",
+          "src/affine_control/neural_timing_fixtures.py",
+          "src/affine_control/neural_timing_protocol.py",
+          "tests/test_neural_timing_protocol.py"
+        ],
+        "evidence_sha256": {
+          "_includes/neural-timing-authority-boundary.qmd": "ff6bfc932420f38a9bc920932c15e97900a60e9213625c2d8906c837ef11f8f9",
+          "_includes/neural-timing-human-boundary.qmd": "25748326c47bf3fac2400971f72902f34c124656fd86fe9208c0a5c9fbed4738",
+          "models/neural-timing-feedback.qmd": "d3777a5e1ac7502a560acaeb0f0f1317068cf0a52978ee21781b8dd7730bb2c3",
+          "references/affine-drift.bib": "c3130916b24d58f0c00e18f0c354c39635ebd6085b23254f51902ca3bed768c7",
+          "src/affine_control/neural_timing_analysis.py": "3efa4477aef2974b1e8d57deb26be44242f54f05ab30388131cbf217a06fe123",
+          "src/affine_control/neural_timing_fixtures.py": "e4dd94e8288fd8cc4d51c30676831452810a6317a3ce0de99557982c9ee84df6",
+          "src/affine_control/neural_timing_protocol.py": "0f7b0712f48714f9a8a82903f7d513504ab9fb165bf8cb1fb8ae8c57d8381d29",
+          "tests/test_neural_timing_protocol.py": "5e445359426b74cb33d6036e6569c88420f769cd37d62f3c9578a09cfd26faa1"
+        },
+        "review_commit": "dff3650fb1b41e721ee90a4fe060277d02cc836b",
+        "reviewed_on": "2026-08-29",
+        "reviewer": "AffineDrift issue #4037 adversarial scientific review",
+        "source_path": "models/neural-timing-feedback.qmd"
+      },
+      "route": "/models/neural-timing-feedback.html",
+      "status": "reviewed"
+    },
+    {
       "audit_id": "ad-route-e009d7835d0d",
       "claim_ids": [],
       "critique_ids": [],
