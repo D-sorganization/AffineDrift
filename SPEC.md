@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T07:44:36Z
+Last-Updated: 2026-08-29T07:57:41Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T07:44:36Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.244                                          |
+| **Spec Version**        | 1.0.245                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -58,6 +58,11 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   torque distinct from power, work, energy, tissue load, physiological effort,
   and outcome; net generalized input must not be presented as identified
   individual-muscle force, bilateral hand-force allocation, or neural intent
+- Maintain a normative induced-acceleration attribution record that declares
+  model/solver revision, coordinates and frame, constraints and contact, force
+  partition, residual treatment, tolerance, output, and identifiability; treat
+  coordinate components and repartitioned terms as non-unique representations,
+  and report unsupported cross-engine states without implying parity
 - Require every executable or quantitative ZTCF result to carry a versioned,
   fail-closed intervention record that freezes model and engine authority,
   branch state, zeroed inputs, retained dynamics, frame, units, solver, horizon,
@@ -671,6 +676,20 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.244 Induced-Acceleration Attribution Contract
+
+Makes induced-acceleration analysis a model-, coordinate-, constraint-, contact-,
+force-partition-, residual-, solver-, and output-dependent ledger rather than
+unique causal truth. A shared normative record is published in both textbook
+web mirrors and the research-review page, with corresponding LaTeX boundaries.
+Executable counterexamples prove that a coordinate change alters generalized-
+acceleration components while preserving the represented dynamics and that a
+compensating residual reassignment changes term contributions while preserving
+their sum. Content contracts reject unique-cause wording without an explicit
+identifiability qualifier and prohibit control/muscle/intent and cross-engine
+parity conflation. The current chapter supplies no qualified AffineDrift human-
+golf attribution or coaching result.
 
 ### 1.0.243 ZTCF Intervention Contract
 

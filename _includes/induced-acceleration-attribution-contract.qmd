@@ -1,0 +1,45 @@
+::: {.callout-warning}
+## Normative Attribution Record
+
+An induced-acceleration attribution is a term ledger for a declared model at a
+declared state. It is not a unique causal history. A publishable result must
+identify all of the following:
+
+1. **Model and revision:** segment and actuator definitions, parameter set,
+   generalized coordinates, reference frame, output point or task metric, and
+   the state at which the mass matrix is evaluated.
+2. **Computation:** engine, solver, and revision; constraint handling; contact
+   model and active contact mode; integration or frozen-state procedure; and
+   numerical tolerance plus closure error.
+3. **Attribution convention:** the complete force partition, including sign
+   conventions, passive and applied terms, constraint reactions, and residual
+   treatment. Reassigning a residual between two terms changes their reported
+   contributions while leaving their sum unchanged.
+4. **Identifiability contract:** the measurements or assumptions that identify
+   each generalized-force term and the output projection. An algebraic term
+   contribution does not by itself identify anatomical source, neural intent,
+   necessity, sufficiency, or intervention effect.
+
+If any field is absent, label the result **unsupported or unqualified**. A
+cross-engine comparison must report an unavailable state as unsupported or
+unqualified; agreement on one output, or silence about an unsupported state,
+does not establish solver parity.
+
+### Counterexamples to Unique Attribution
+
+- **Coordinate representation:** under a constant change of generalized
+  coordinates $q=Tz$, the same dynamics are represented by
+  $M_z=T^\mathsf{T}M_qT$ and $Q_z=T^\mathsf{T}Q_q$. The component values of
+  $\ddot z=M_z^{-1}Q_z$ generally differ from those of
+  $\ddot q=M_q^{-1}Q_q$, even though $T\ddot z=\ddot q$. A generalized-
+  acceleration component is therefore not coordinate-invariant causal truth.
+- **Force partition:** if $Q=Q_A+Q_B$, then for any residual allocation $r$,
+  $Q=(Q_A+r)+(Q_B-r)$. The reported terms $M^{-1}Q_A$ and $M^{-1}Q_B$ change,
+  while the total acceleration does not. The partition must be declared and
+  justified before a term is interpreted.
+
+An intervention claim requires a separate governed counterfactual that
+re-solves constraints and contact and states what is held fixed. The frozen-
+state algebra alone supports neither a unique cause nor an anatomical or
+behavioral prescription.
+:::
