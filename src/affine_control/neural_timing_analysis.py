@@ -97,7 +97,11 @@ class IntervalDecision:
     provenance: EvidenceProvenance
 
     def __post_init__(self) -> None:
-        if self.outcome not in _OUTCOMES or self.minimum_effect <= 0.0:
+        if (
+            self.outcome not in _OUTCOMES
+            or not math.isfinite(self.minimum_effect)
+            or self.minimum_effect <= 0.0
+        ):
             raise ValueError("decision outcome or minimum effect is invalid")
         values = (self.estimate, self.lower, self.upper)
         if self.outcome == "unavailable":
@@ -116,6 +120,17 @@ class IntervalDecision:
             raise ValueError("available decisions require a complete interval")
         if not lower <= estimate <= upper or self.provenance.origin == "unavailable":
             raise ValueError("decision interval or evidence origin is inconsistent")
+        if self.outcome != _classify_complete_interval(lower, upper, self.minimum_effect):
+            raise ValueError("decision outcome contradicts its uncertainty bounds")
+
+
+def _classify_complete_interval(lower: float, upper: float, minimum_effect: float) -> Outcome:
+    """Classify one already-validated interval without duplicating decision rules."""
+    if lower > minimum_effect or upper < -minimum_effect:
+        return "supported"
+    if lower >= -minimum_effect and upper <= minimum_effect:
+        return "negative"
+    return "null"
 
 
 def detect_first_crossing(
@@ -179,10 +194,5 @@ def classify_interval(
     if not math.isfinite(lower) or not math.isfinite(upper) or lower > upper:
         raise ValueError("interval bounds must be finite and ordered")
     estimate = 0.5 * (lower + upper)
-    if lower > minimum_effect or upper < -minimum_effect:
-        outcome: Outcome = "supported"
-    elif lower >= -minimum_effect and upper <= minimum_effect:
-        outcome = "negative"
-    else:
-        outcome = "null"
+    outcome = _classify_complete_interval(lower, upper, minimum_effect)
     return IntervalDecision(outcome, estimate, lower, upper, minimum_effect, provenance)
