@@ -12,7 +12,7 @@ ARTICLE = ROOT / "models" / "equipment-individual-response.qmd"
 MODELS_HUB = ROOT / "models" / "models.qmd"
 BIBLIOGRAPHY = ROOT / "data" / "bibliography.json"
 AUDIT_INVENTORY = ROOT / "data" / "trust" / "claim_audit_inventory.json"
-REVIEW_COMMIT = "PENDING"
+REVIEW_COMMIT = "2ab784c58b5d58e40ed40bd04ed3c0284fd901cc"
 
 
 @pytest.mark.content_lint
