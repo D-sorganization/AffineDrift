@@ -59,7 +59,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
   tolerance mismatch, arbitrary-string human authorization, non-zero-anchored
   windows, circular held-out-result naming, and ungoverned EMG arrays. Final
   local GREEN evidence is 11/11 focused executable contracts, 2/2 focused
-  content/audit contracts, 11/11 claim-audit contracts, 3,374 non-content tests
+  content/audit contracts, 11/11 claim-audit contracts, 3,375 non-content tests
   with 30 documented skips, 96 content tests with 4 documented skips, and all
   20 Jest suites (297 passes, 19 skips). Full Ruff/Black, focused strict mypy,
   module and changed-file budgets, pre-commit, bibliography and citation gates,
