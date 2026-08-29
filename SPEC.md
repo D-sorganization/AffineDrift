@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T07:10:45Z
+Last-Updated: 2026-08-29T07:19:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T07:10:45Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.241                                          |
+| **Spec Version**        | 1.0.242                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -663,7 +663,7 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
-### 1.0.241 Governed Scientific Trust Metadata
+### 1.0.242 Governed Scientific Trust Metadata
 
 Adds a strict versioned trust-metadata schema, canonical claim registry,
 deterministic Quarto-panel generator with freshness checking, reusable
@@ -672,6 +672,15 @@ accessible text are linked by stable IDs; fail-closed contracts prevent lay
 summaries from strengthening modality or introducing unsupported causal,
 universal, exact, optimal, locked-in, or percentage language. Direct pins make
 JSON Schema validation and strict typing reproducible in clean environments.
+
+### 1.0.241 Sensorimotor Pathway and Response-Authority Contract
+
+Replaces the serial delay sum and binary feedforward-versus-feedback account in
+the motor-control chapters with parallel short-latency, long-latency,
+voluntary, and visually guided pathway bands. The Quarto and LaTeX editions now
+separate response onset from useful mechanical authority, make golf-specific
+pathway claims conditional on phase-locked perturbation evidence, and retain a
+failing-first content contract plus primary neuroscience citations.
 
 ### 1.0.240 Control-Affinity Program Reconciliation
 
@@ -824,6 +833,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2026-08-28 | 1.0.239 | fix(science, #4012): Corrected the canonical control-affine theory sources so Hill-type state-dependent gains and state-only aerodynamics are not misclassified as non-affine; replaced false orthogonality and causal/intent/muscle overreach with a shared model-, intervention-, and identifiability-conditioned attribution boundary; preserved the protected #4013 and #4014 scientific contracts; and added failing-first corpus contracts across the maintained series, foundational monograph, and single-file edition.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| 2026-08-28 | 1.0.241 | fix(content, #4017): Replaced the additive sensorimotor delay budget and open-loop/closed-loop binary with parallel response pathways; distinguished onset timing from task-, phase-, and outcome-specific mechanical authority; bounded golf claims pending perturbation evidence; synchronized the Quarto and LaTeX chapters; added primary long-latency-response citations and a regression contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 2026-08-28 | 1.0.236 | fix(deploy): Targeted the Pages-configured `www.affinedrift.com` host directly for hosted post-deployment verification instead of traversing the cacheable apex redirect. Exact source-revision equality and the full live every-page browser gate remain fail-closed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-08-28 | 1.0.235 | fix(deploy): Extended the bounded Pages manifest propagation window from two minutes to ten minutes after exact-merge deployments repeatedly required slightly more than two minutes to appear through the custom domain. Exact source-revision equality and the full live every-page browser gate remain fail-closed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-08-28 | 1.0.234 | fix(deploy): Made live revision polling tolerate transient non-JSON Pages propagation responses within its existing bounded retry loop. Exact source-revision equality and the full live every-page browser gate remain fail-closed. Added a regression contract after deployment run 33226528683 exposed the premature Bash error exit.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
