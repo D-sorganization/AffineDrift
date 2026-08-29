@@ -64,6 +64,15 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `1cee0462fc72fe426ab69d798241ce6befae1a4b` and includes the split error,
   supersession, and template modules. Hosted exact-head checks, ordinary
   protected merge, and a clean post-merge Deploy Website run remain required.
+- CI Standard run `33264046305` exposed one omitted local gate on the original
+  PR head: 27 private readiness helpers lacked the docstrings required by
+  `src.tools.code_quality_check`. The failure was reproduced locally before
+  repair. Content commit `410a64ad` documents every helper contract without
+  changing behavior; the exact route-review digests and deterministic audit
+  projection were then refreshed against that content commit. Focused
+  lifecycle/content/audit tests, strict MyPy, Ruff, Black, pre-commit, and the
+  previously failing code-quality gate pass. A fresh exact-head hosted matrix
+  is required; the failed head is not merge eligible.
 
 ## Induced-Acceleration Heading-Hierarchy Closure (#4077 — Complete)
 
