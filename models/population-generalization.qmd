@@ -1,0 +1,197 @@
+---
+title: "Population Generalization and Participant-Held-Out Validation"
+description: "A fail-closed protocol for group-aware validation, calibration, subgroup limits, and population-claim governance"
+---
+
+This program asks which model parameters, predictors, and findings survive a
+change of participant, session, site, equipment, or cohort composition. It
+provides a preregistration template, executable leakage checks, and a
+deterministic **manufactured-synthetic** example. It contains no participant
+measurement and no externally validated golf result.
+
+::: {.callout-warning title="Scientific Authority Boundary"}
+The current evidence validates protocol and reporting mechanics only. It has
+**no coaching, clinical, design, causal, or population authority**. A result
+from one person, one session, one site, or a convenience sample cannot be
+promoted to a population statement. Ethics, privacy, consent, licensing, safety,
+and independent human approval remain external gates.
+:::
+
+## Primary-Source Register
+
+::: {.table-responsive}
+| Source | What It Supports Here | What It Does Not Authorize |
+|---|---|---|
+| Gebru et al. (2021) [@gebru2021datasheets] | Documenting dataset motivation, composition, collection, uses, maintenance, and limits | Representativeness, fitness for a new purpose, or participant consent |
+| Collins et al. (2015) [@collins2015tripod] | Transparent prediction-model reporting and separation of development from external validation | Clinical applicability or compliance; this is a biomechanics protocol |
+| Saeb et al. (2017) [@saeb2017usecase] | Matching validation splits to the intended person-level use case | A universal split rule or evidence that this fixture predicts people |
+| Van Calster et al. (2019) [@vancalster2019calibration] | Calibration intercept/slope and sample-size limits on calibration assessment | Adequate calibration from this two-record manufactured test |
+| Cole and Stuart (2010) [@cole2010generalizing] | Naming a target population and analyzing sampling differences before transport | Transportability without measured common support and justified assumptions |
+:::
+
+These methodological sources bound the design. They are not measured authority
+for AffineDrift, UpstreamDrift, golfers, equipment, or an intervention.
+
+## Dataset Card
+
+The machine-readable contract freezes the following fields before analysis:
+
+::: {.table-responsive}
+| Field | Current Declaration |
+|---|---|
+| Target population | Future consenting adult golfers under a separately approved protocol |
+| Sampling frame | Manufactured balanced fixture only |
+| Cohort strata | Skill, sex, age, handedness, anthropometry, and equipment |
+| Hierarchy | Site → participant → session → equipment → trial |
+| Repeated measure | Trial nested inside every higher-level identifier |
+| Missingness | Retain reason; predeclare complete-case and bounded sensitivity analyses |
+| Exclusions | Acquisition failures declared before outcomes; never exclude by result direction |
+| Provenance | `manufactured-synthetic`; participant evidence is unavailable |
+| Privacy and consent | No direct identifiers; suppress small cells; study-specific consent required |
+| Ethics and licensing | Human review unavailable; fixture is CC0; participant-data license unavailable |
+:::
+
+This card is a template, not a claim that the proposed target population has
+been sampled. Target-population coverage, recruitment probabilities, and
+nonparticipation remain unavailable.
+
+## Preregistered Analysis Contract
+
+Before revealing a locked test set, a future study must freeze:
+
+1. one outcome and its units, coordinate frame, event window, intervention, and
+   measurement revision;
+2. predictor definitions, preprocessing, hyperparameters, and software/data
+   revisions;
+3. the target population, sampling frame, strata, inclusion/exclusion rules,
+   missingness estimand, and smallest reportable subgroup cell;
+4. participant-, session-, site-, and equipment-aware partitions plus a test
+   lock digest;
+5. primary metrics, calibration, hierarchical uncertainty, subgroup and
+   sensitivity analyses, multiplicity policy, and falsifiers; and
+6. negative/null publication rules and a human approval decision independent
+   of the software.
+
+The current preregistration status is **template-only**. It does not authorize
+collection, and it cannot be filled retrospectively after inspecting test
+outcomes.
+
+## Four Questions That Must Not Be Conflated
+
+::: {.table-responsive}
+| Question Class | Example Estimand | Required Boundary |
+|---|---|---|
+| **within-person explanation** | Association between a person's session-to-session change and their modeled parameter change | Does not establish between-person differences or an intervention effect |
+| **between-person association** | Covariation of a predeclared parameter and outcome across participants | Requires hierarchical uncertainty; does not identify a cause |
+| **prediction** | Error on entirely held-out participants and sites | Training, tuning, and threshold choices cannot use the locked test set |
+| **causal inference** | Effect of a declared intervention in a target population | Requires treatment, exchangeability, positivity, consistency, interference, and transport assumptions; currently unavailable |
+:::
+
+Prediction can succeed while a causal interpretation fails. A within-person
+pattern can coexist with no between-person association. Each outcome is reported
+under its own estimand.
+
+## Participant, Session, Site, and Equipment Leakage
+
+The executable fixture uses train, validation, and untouched test partitions.
+All records from a participant and session stay in one partition. The test site
+is absent from model development. Preprocessing, feature selection, model
+selection, calibration fitting, stopping rules, and subgroup thresholds use
+train/validation only. Trial-level random splitting is prohibited because
+repeated measures can place near-duplicates from one person on both sides of a
+nominal split [@saeb2017usecase].
+
+Equipment is recorded at every trial. When the intended deployment changes
+equipment, either the equipment grouping is held out or equipment becomes an
+explicit, preregistered transport factor. A participant-held-out split does not
+by itself establish site- or equipment-level transport.
+
+## Hierarchical Uncertainty and Calibration
+
+The report gives participant-weighted error bounds rather than pretending every
+trial is independent. A future measured analysis must predeclare its hierarchical
+model or cluster-resampling unit and propagate measurement, parameter, model,
+event-time, and sampling uncertainty separately.
+
+For the tiny manufactured test, ordinary linear calibration gives an intercept
+of 5.0 and slope of 0.5. The adverse slope is retained. Two synthetic records
+cannot qualify calibration, and the value is not a confidence interval or a
+golfer result. External validation should report calibration and error without
+refitting the locked model on the external outcome [@collins2015tripod;
+@vancalster2019calibration].
+
+## Subgroup Performance and Suppression
+
+Skill, sex, age, handedness, anthropometry, and equipment are planned strata,
+not biological mechanisms. The executable report suppresses any cell smaller
+than the fixed minimum and labels it **unavailable** rather than emitting an
+unstable estimate. A future report must show sample counts, uncertainty,
+missingness, exclusions, calibration, and error for each preregistered subgroup.
+
+Subgroup disparities can be negative findings. They cannot be hidden by an
+aggregate score or converted into coaching, clinical, or causal conclusions.
+Sex and age categories must follow the approved study and consent language;
+the fixture's labels are deliberately schematic.
+
+## Sensitivity and Transportability
+
+Sensitivity analyses are predeclared for missingness, exclusions, site,
+equipment, measurement revision, model choice, and subgroup threshold. The
+current missingness result is **template-only** because the fixture has no
+missing values. A future study must preserve both complete-case and governed
+missing-data analyses, including sign-changing or null outcomes.
+
+Transport requires a named target population, overlap in relevant covariates,
+compatible measurements and interventions, and explicit assumptions about
+selection and effect modification [@cole2010generalizing]. Site-held-out error
+is evidence only for the sampled sites and declared protocol. It is not proof of
+transport to arbitrary ages, skill levels, equipment, countries, or settings.
+
+**External validation: unavailable.** No independent measured site or cohort is
+registered here.
+
+## Negative, Null, and Unavailable Outcomes
+
+::: {.table-responsive}
+| Outcome | Status | Current Manufactured Finding |
+|---|---|---|
+| Calibration slope | **Negative** | 0.5, below the declared ideal of one; inadequate sample for qualification |
+| Participant-level mean bias | **Null** | The manufactured participant-level interval includes zero |
+| External-site population validation | **Unavailable** | No measured, governed external dataset exists |
+| Causal effect | **Unavailable** | No intervention, identification assumptions, or approved participant study exists |
+:::
+
+Negative, null, missing, excluded, suppressed, and unavailable records remain in
+the report. No favorable-only table may replace this ledger.
+
+## Promotion and Further-Research Gates
+
+Population promotion requires all of the following:
+
+1. ethics approval, privacy review, study-specific consent, data license,
+   security plan, withdrawal handling, and independent human authorization;
+2. a versioned dataset card with recruitment flow, representativeness limits,
+   missingness, exclusions, attrition, and subgroup counts;
+3. prospective registration and immutable participant/session/site/equipment
+   split records before test outcomes are revealed;
+4. calibrated instruments, frames, units, interventions, event definitions,
+   uncertainty, falsifiers, and pinned source/software revisions;
+5. participant-held-out and independent site or cohort validation, calibration,
+   hierarchical uncertainty, subgroup limits, sensitivity, and transport
+   assumptions; and
+6. publication of negative and null results plus a separate human decision that
+   the bounded claim is suitable for release.
+
+Passing software checks cannot supply any missing gate. The current promotion
+function returns false for manufactured evidence even if its synthetic external
+and approval flags are toggled.
+
+## Reproducible Manufactured Evidence
+
+The contract and fixtures live in
+`src/affine_control/population_generalization.py` and
+`population_generalization_fixtures.py`. Run
+`python -m scripts.generate_population_generalization_report --check` to verify
+the deterministic JSON and Markdown projections. Exact SHA-256 evidence is
+registered in the rendered-route audit. A checksum proves reviewed bytes, not
+scientific truth, population coverage, consent, or external validation.
