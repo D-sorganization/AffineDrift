@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 16
+- Reviewed: 17
 - Deferred: 206
 - Exempt: 2
 
@@ -19,6 +19,30 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 14 routes
 - [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
 - [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062): 6 routes
+
+## Reviewed Evidence
+
+| Route | Canonical Source | Evidence Files |
+|---|---|---:|
+| `/` | `index.qmd` | 3 |
+| `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 5 |
+| `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
+| `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
+| `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
+| `/pages/about.html` | `pages/about.qmd` | 3 |
+| `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
+| `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
+| `/pages/contact.html` | `pages/contact.qmd` | 3 |
+| `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
+| `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
+| `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 3 |
+| `/pages/notation.html` | `pages/notation.qmd` | 4 |
+| `/pages/overview.html` | `pages/overview.qmd` | 3 |
+| `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
+| `/pages/technology.html` | `pages/technology.qmd` | 3 |
+| `/pages/tools.html` | `pages/tools.qmd` | 3 |
+
+## Route Inventory
 
 | Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |
 |---|---|---|---|---|---|---:|
@@ -196,6 +220,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-tip-mass-omission` | 0 |
 | `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-ztcf-identifiability` | 0 |
+| `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
