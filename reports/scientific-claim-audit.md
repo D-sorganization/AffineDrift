@@ -20,229 +20,252 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
 - [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062): 6 routes
 
-| Audit ID | Route | Status | Evidence Files | Deferment Issue | Claim IDs | Critique IDs | Findings |
-|---|---|---|---:|---|---|---|---:|
-| `ad-route-8a5edab28263` | `/` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-846c879e19c9` | `/404.html` | Exempt | — | — | None | None | 0 |
-| `ad-route-2cd844057893` | `/articles/affine-nature-golf-swing.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-aerodynamics`, `crit-control-causality-mechanical`, `crit-drift-superposition`, `crit-effective-plant-fallacy`, `crit-geometric-stiffness-omission`, `crit-impact-evasion`, `crit-input-dependent-boundary-conditions`, `crit-muscle-physiology`, `crit-neuromuscular-control`, `crit-nullspace-interpretation`, `crit-parameter-causality-leakage`, `crit-passive-active-boundary-ambiguity`, `crit-passive-overshoot-artifact`, `crit-simulation-tautology`, `crit-static-fallacy-zvcf`, `crit-stretch-shortening-blindspot`, `crit-teleological-blindness`, `crit-ztcf-identifiability` | 0 |
-| `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-cb2afdfef800` | `/articles/controllability-drift-ratio.html` | Reviewed | 5 | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 0 |
-| `ad-route-746e90148b98` | `/articles/degrees-of-freedom-and-dimensionality.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-double-pendulum-energy-blindness` | 0 |
-| `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-33941e46336a` | `/articles/intentional-constraint-collapse.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-intentional-constraint-collapse`, `crit-stiffness-pulse-paradox` | 0 |
-| `ad-route-53f2549bc89f` | `/articles/inverse-dynamics-inference.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
-| `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-85ac4b6d5e6d` | `/articles/reference-point-problem.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-e7072902cc8a` | `/articles/rotation-converter.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
-| `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | `crit-strokes-gained-non-ergodic` | 0 |
-| `ad-route-0cd531e060c5` | `/articles/superposition.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-9d9393110de9` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-fb32e03a3315` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-722f781e687e` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-6b6f5d461ae3` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-47699ec9048b` | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-02cd806a8670` | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control_LAYMAN.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-b1f99ee70b7d` | `/articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-e1d71575a068` | `/articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-81907b2b08ca` | `/articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-18a4b136fe99` | `/articles/tangent-hyperplanes-series/part-1-geometry.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-e32542e3edd3` | `/articles/tangent-hyperplanes-series/part-2-dynamics.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-320ae4ecd65b` | `/articles/tangent-hyperplanes-series/part-3-control.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-d4f26e1eab6a` | `/articles/tangent-hyperplanes-series/part-4-residuals-curvature.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-31b16f695fea` | `/articles/tangent-hyperplanes-series/part-5-contraction.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-1c198098e00c` | `/articles/tangent-hyperplanes-series/part-6-hybrid.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-d231d447846d` | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | Deferred | — | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
-| `ad-route-4abf3e223d5f` | `/articles/technology-club-fitting.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-76402cb90d52` | `/articles/technology-force-measurement.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-88598cd32ba2` | `/articles/technology-heavy-hit-impact-coupling.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-8a80ab38a564` | `/articles/technology-launch-monitors.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-7237539d8141` | `/articles/technology-motion-capture.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-72a9a6bbc151` | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-121c2d553f4d` | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a4d65b536c60` | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-39e3dd6b6f46` | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-08a4d449d5e0` | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-3a38c1784447` | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-cd74d6d3f972` | `/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a4cdc131aaff` | `/articles/The_Geometry_of_Motion/quarto/ch08_applications.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-cc75ab053b10` | `/articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-55e3b9aedc22` | `/articles/The_Geometry_of_Motion/quarto/index.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-c985cb5b1549` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-646073f11ed6` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-fe1d4376452d` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-32c237b16cbe` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a1f883221333` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-d4d80522bfed` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a421a71d601a` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-97d61eb39f96` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-5d20426d8671` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-8b8407ed5087` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-bf7e160ce952` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-57f70c446a16` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-96feb1710fe4` | `/articles/The_Geometry_of_Motion/quarto/volume0.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-555d7d5b4797` | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-df931687d016` | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | Deferred | — | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-e6426572da2d` | `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-6c2a1c1053d6` | `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-6e5a4acf5112` | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f5006c4e6a60` | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-a5c8f4c49401` | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-40db0921f425` | `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b47203d9a15a` | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-c3f8f28d515e` | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-084d047d81cc` | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f860cf1740b2` | `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f711355c9899` | `/articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-40d07bf3aa25` | `/articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-d7bbf52529cb` | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-4b5f92354a9e` | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-17268df76f0d` | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-a9e0bb2b2321` | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-0c1fc851ee95` | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-80ef06755aaa` | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-ef14cf95e2cc` | `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-cb1f1f3aec30` | `/articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-671af74df048` | `/articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-58651a60328b` | `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-014de473327d` | `/articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f03c3bac009d` | `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b22748fa703e` | `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-1476e645111e` | `/articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-cf181f62e2e9` | `/articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b334697f4c84` | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-c2474c7d87e4` | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-166fffd1b8a2` | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-9c6617aeafdc` | `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-adc9d9939455` | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Deferred | — | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
-| `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |
-| `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-input-dependent-boundary-conditions` | 0 |
-| `ad-route-125d93f57874` | `/articles/theory-part5.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
-| `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Deferred | — | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
-| `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
-| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Deferred | — | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Deferred | — | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Deferred | — | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Deferred | — | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-c25ee250631d` | `/books/index.html` | Deferred | — | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-de682b77b431` | `/books/roadmap.html` | Deferred | — | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Deferred | — | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
-| `ad-route-facdfe9adc19` | `/critiques/01_muscle_physiology.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-muscle-physiology` | 0 |
-| `ad-route-f015ff569673` | `/critiques/02_aerodynamics.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-aerodynamics` | 0 |
-| `ad-route-40420c57d407` | `/critiques/03_neuromuscular_control.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-neuromuscular-control` | 0 |
-| `ad-route-d3d85eb515d8` | `/critiques/04_impact_evasion.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-impact-evasion` | 0 |
-| `ad-route-2027039c64ec` | `/critiques/control_causality_vs_mechanical.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-control-causality-mechanical` | 0 |
-| `ad-route-2eadf638653e` | `/critiques/coulomb_friction_violation.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-coulomb-friction-violation` | 0 |
-| `ad-route-89fff2c320f8` | `/critiques/DEFENSE_STRATEGY.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-f8c25ae4826b` | `/critiques/dimensional_inconsistency_dcr.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-dimensional-inconsistency-dcr` | 0 |
-| `ad-route-2e4ae737aa67` | `/critiques/double_pendulum_energy_blindness.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-double-pendulum-energy-blindness` | 0 |
-| `ad-route-28af684111a5` | `/critiques/drift_superposition.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-drift-superposition` | 0 |
-| `ad-route-613401124ddd` | `/critiques/flaccid_drift_contradiction.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-flaccid-drift-contradiction` | 0 |
-| `ad-route-723200dc583d` | `/critiques/geometric_stiffness_omission.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-geometric-stiffness-omission` | 0 |
-| `ad-route-4fcc963364b8` | `/critiques/hard_constraint_fallacy.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-hard-constraint-fallacy` | 0 |
-| `ad-route-6a44de6b950d` | `/critiques/index.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-0ab621690d62` | `/critiques/input_dependent_boundary_conditions.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-input-dependent-boundary-conditions` | 0 |
-| `ad-route-79c31d3309d2` | `/critiques/intentional_constraint_collapse.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-intentional-constraint-collapse` | 0 |
-| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-intermediate-axis-fallacy` | 0 |
-| `ad-route-3ec6541286cf` | `/critiques/lie_bracket_formalism_overreach.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-lie-bracket-formalism-overreach` | 0 |
-| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-misattribution-stability-gravity` | 0 |
-| `ad-route-604586932847` | `/critiques/normative_ambiguity_drift-bibliography.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-822a7bae7977` | `/critiques/normative_ambiguity_drift.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-normative-ambiguity-drift` | 0 |
-| `ad-route-250a52029db1` | `/critiques/nullspace_interpretation.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-nullspace-interpretation` | 0 |
-| `ad-route-3b05e8994a46` | `/critiques/parameter_causality_leakage.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-parameter-causality-leakage` | 0 |
-| `ad-route-32837e271768` | `/critiques/passive_active_boundary_ambiguity.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-passive-active-boundary-ambiguity` | 0 |
-| `ad-route-c1584d69af5b` | `/critiques/passive_overshoot_artifact.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-passive-overshoot-artifact` | 0 |
-| `ad-route-0eb5bc88ea92` | `/critiques/planar_dcr_blindness.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-planar-dcr-blindness` | 0 |
-| `ad-route-7be3ea017ce6` | `/critiques/precision_vs_gross_control-bibliography.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-facc522f8b2e` | `/critiques/precision_vs_gross_control.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-precision-gross-control` | 0 |
-| `ad-route-96be3c3d79a7` | `/critiques/sequencing_lie_bracket_fallacy.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
-| `ad-route-d375efd2d357` | `/critiques/simulation_tautology.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-simulation-tautology` | 0 |
-| `ad-route-194c2778a120` | `/critiques/static_fallacy_zvcf.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-static-fallacy-zvcf` | 0 |
-| `ad-route-b8f7226e7bd1` | `/critiques/stiffness_pulse_paradox.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stiffness-pulse-paradox` | 0 |
-| `ad-route-ec8e8b52b287` | `/critiques/stretch_shortening_blindspot.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stretch-shortening-blindspot` | 0 |
-| `ad-route-7474cd7ea698` | `/critiques/strokes_gained_non_ergodic.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-strokes-gained-non-ergodic` | 0 |
-| `ad-route-703ac96df708` | `/critiques/teleological_blindness.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-teleological-blindness` | 0 |
-| `ad-route-d78b18354fdf` | `/critiques/the_effective_plant_fallacy-bibliography.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-0713399f7619` | `/critiques/the_effective_plant_fallacy.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-effective-plant-fallacy` | 0 |
-| `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-tip-mass-omission` | 0 |
-| `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-validation-dimensionality-gap` | 0 |
-| `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Deferred | — | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-ztcf-identifiability` | 0 |
-| `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | 5 | — | None | None | 0 |
-| `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | 4 | — | None | None | 0 |
-| `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-7900d4c5494f` | `/models/models-myosim.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-0daf8c7255f6` | `/models/models-opensim.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-0c35be23a4e6` | `/models/models-pendulum.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-5776cb8aebbe` | `/models/models-simulink.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-50bd3b182f9b` | `/models/models.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | — | None | None | 0 |
-| `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-6e4e4be935a4` | `/pages/contact.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | 3 | — | None | None | 2 |
-| `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | 4 | — | None | None | 2 |
-| `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | 3 | — | None | None | 2 |
-| `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | 3 | — | None | None | 2 |
-| `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | 3 | — | None | None | 1 |
-| `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-c28bd36edd3e` | `/repositories/repositories-3d-model.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-59ad729f0fc1` | `/repositories/repositories-drake.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-257639545452` | `/repositories/repositories-models.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-9220d15a31f4` | `/repositories/repositories-pinocchio.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Deferred | — | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-32f17d5abbca` | `/resources/articles.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-e162f8e1f669` | `/resources/learning-path-biomechanics.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-3b89c286bfae` | `/resources/learning-path-control-theory.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-0ad68343def0` | `/resources/learning-path-foundations.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-aa192df4ba01` | `/resources/learning-path-golf-science.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-da7c073ff90f` | `/resources/learning-paths.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-397b07989cb1` | `/resources/research-review-baseball-pitching.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-b34fc06b00e9` | `/resources/research-review-induced-acceleration-analysis.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-cb426ba8f0be` | `/resources/research-review-interaction-forces.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-c3b127d902e9` | `/resources/research-review-shaft-flexibility.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-709386b02ebe` | `/resources/research-reviews.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-9d49aa3310be` | `/resources/resources-books.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-7eda67a2b1fa` | `/resources/resources-datasets.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-5019066bbd63` | `/resources/resources-notebooklm.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-560f2c6efddd` | `/resources/resources-papers.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-eba20bb8729f` | `/resources/resources-researchers.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-f2c40a1afbe1` | `/resources/resources-software.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-d879d4312832` | `/resources/resources-videos.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-4b132f59bf37` | `/resources/resources-websites.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-42f21a90c505` | `/resources/resources.html` | Deferred | — | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+## Reviewed Evidence
+
+| Route | Canonical Source | Evidence Files |
+|---|---|---:|
+| `/` | `index.qmd` | 3 |
+| `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 5 |
+| `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
+| `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
+| `/pages/about.html` | `pages/about.qmd` | 3 |
+| `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
+| `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
+| `/pages/contact.html` | `pages/contact.qmd` | 3 |
+| `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
+| `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
+| `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 3 |
+| `/pages/notation.html` | `pages/notation.qmd` | 4 |
+| `/pages/overview.html` | `pages/overview.qmd` | 3 |
+| `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
+| `/pages/technology.html` | `pages/technology.qmd` | 3 |
+| `/pages/tools.html` | `pages/tools.qmd` | 3 |
+
+## Route Inventory
+
+| Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |
+|---|---|---|---|---|---|---:|
+| `ad-route-8a5edab28263` | `/` | Reviewed | — | None | None | 1 |
+| `ad-route-846c879e19c9` | `/404.html` | Exempt | — | None | None | 0 |
+| `ad-route-2cd844057893` | `/articles/affine-nature-golf-swing.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-aerodynamics`, `crit-control-causality-mechanical`, `crit-drift-superposition`, `crit-effective-plant-fallacy`, `crit-geometric-stiffness-omission`, `crit-impact-evasion`, `crit-input-dependent-boundary-conditions`, `crit-muscle-physiology`, `crit-neuromuscular-control`, `crit-nullspace-interpretation`, `crit-parameter-causality-leakage`, `crit-passive-active-boundary-ambiguity`, `crit-passive-overshoot-artifact`, `crit-simulation-tautology`, `crit-static-fallacy-zvcf`, `crit-stretch-shortening-blindspot`, `crit-teleological-blindness`, `crit-ztcf-identifiability` | 0 |
+| `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-cb2afdfef800` | `/articles/controllability-drift-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 0 |
+| `ad-route-746e90148b98` | `/articles/degrees-of-freedom-and-dimensionality.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-double-pendulum-energy-blindness` | 0 |
+| `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-33941e46336a` | `/articles/intentional-constraint-collapse.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-intentional-constraint-collapse`, `crit-stiffness-pulse-paradox` | 0 |
+| `ad-route-53f2549bc89f` | `/articles/inverse-dynamics-inference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
+| `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-85ac4b6d5e6d` | `/articles/reference-point-problem.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-e7072902cc8a` | `/articles/rotation-converter.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | `crit-strokes-gained-non-ergodic` | 0 |
+| `ad-route-0cd531e060c5` | `/articles/superposition.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-9d9393110de9` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-fb32e03a3315` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-722f781e687e` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-6b6f5d461ae3` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-47699ec9048b` | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-02cd806a8670` | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control_LAYMAN.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-b1f99ee70b7d` | `/articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-e1d71575a068` | `/articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-81907b2b08ca` | `/articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-18a4b136fe99` | `/articles/tangent-hyperplanes-series/part-1-geometry.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-e32542e3edd3` | `/articles/tangent-hyperplanes-series/part-2-dynamics.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-320ae4ecd65b` | `/articles/tangent-hyperplanes-series/part-3-control.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-d4f26e1eab6a` | `/articles/tangent-hyperplanes-series/part-4-residuals-curvature.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-31b16f695fea` | `/articles/tangent-hyperplanes-series/part-5-contraction.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-1c198098e00c` | `/articles/tangent-hyperplanes-series/part-6-hybrid.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-d231d447846d` | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-4abf3e223d5f` | `/articles/technology-club-fitting.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-76402cb90d52` | `/articles/technology-force-measurement.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-88598cd32ba2` | `/articles/technology-heavy-hit-impact-coupling.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-8a80ab38a564` | `/articles/technology-launch-monitors.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-7237539d8141` | `/articles/technology-motion-capture.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-72a9a6bbc151` | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-121c2d553f4d` | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-a4d65b536c60` | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-39e3dd6b6f46` | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-08a4d449d5e0` | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-3a38c1784447` | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-cd74d6d3f972` | `/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-a4cdc131aaff` | `/articles/The_Geometry_of_Motion/quarto/ch08_applications.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-cc75ab053b10` | `/articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-55e3b9aedc22` | `/articles/The_Geometry_of_Motion/quarto/index.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-c985cb5b1549` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-646073f11ed6` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-fe1d4376452d` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-32c237b16cbe` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-a1f883221333` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-d4d80522bfed` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-a421a71d601a` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-97d61eb39f96` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-5d20426d8671` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-8b8407ed5087` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-bf7e160ce952` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-57f70c446a16` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-96feb1710fe4` | `/articles/The_Geometry_of_Motion/quarto/volume0.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-555d7d5b4797` | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-df931687d016` | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-e6426572da2d` | `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-6c2a1c1053d6` | `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-6e5a4acf5112` | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-f5006c4e6a60` | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-a5c8f4c49401` | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-40db0921f425` | `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-b47203d9a15a` | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-c3f8f28d515e` | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-084d047d81cc` | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-f860cf1740b2` | `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-f711355c9899` | `/articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-40d07bf3aa25` | `/articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-d7bbf52529cb` | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-4b5f92354a9e` | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-17268df76f0d` | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-a9e0bb2b2321` | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-0c1fc851ee95` | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-80ef06755aaa` | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-ef14cf95e2cc` | `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-cb1f1f3aec30` | `/articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-671af74df048` | `/articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-58651a60328b` | `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-014de473327d` | `/articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-f03c3bac009d` | `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-b22748fa703e` | `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-1476e645111e` | `/articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-cf181f62e2e9` | `/articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-b334697f4c84` | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-c2474c7d87e4` | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-166fffd1b8a2` | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-9c6617aeafdc` | `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-adc9d9939455` | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
+| `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |
+| `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-input-dependent-boundary-conditions` | 0 |
+| `ad-route-125d93f57874` | `/articles/theory-part5.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
+| `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
+| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
+| `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
+| `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
+| `ad-route-c25ee250631d` | `/books/index.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
+| `ad-route-de682b77b431` | `/books/roadmap.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
+| `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 0 |
+| `ad-route-facdfe9adc19` | `/critiques/01_muscle_physiology.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-muscle-physiology` | 0 |
+| `ad-route-f015ff569673` | `/critiques/02_aerodynamics.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-aerodynamics` | 0 |
+| `ad-route-40420c57d407` | `/critiques/03_neuromuscular_control.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-neuromuscular-control` | 0 |
+| `ad-route-d3d85eb515d8` | `/critiques/04_impact_evasion.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-impact-evasion` | 0 |
+| `ad-route-2027039c64ec` | `/critiques/control_causality_vs_mechanical.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-control-causality-mechanical` | 0 |
+| `ad-route-2eadf638653e` | `/critiques/coulomb_friction_violation.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-coulomb-friction-violation` | 0 |
+| `ad-route-89fff2c320f8` | `/critiques/DEFENSE_STRATEGY.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
+| `ad-route-f8c25ae4826b` | `/critiques/dimensional_inconsistency_dcr.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-dimensional-inconsistency-dcr` | 0 |
+| `ad-route-2e4ae737aa67` | `/critiques/double_pendulum_energy_blindness.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-double-pendulum-energy-blindness` | 0 |
+| `ad-route-28af684111a5` | `/critiques/drift_superposition.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-drift-superposition` | 0 |
+| `ad-route-613401124ddd` | `/critiques/flaccid_drift_contradiction.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-flaccid-drift-contradiction` | 0 |
+| `ad-route-723200dc583d` | `/critiques/geometric_stiffness_omission.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-geometric-stiffness-omission` | 0 |
+| `ad-route-4fcc963364b8` | `/critiques/hard_constraint_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-hard-constraint-fallacy` | 0 |
+| `ad-route-6a44de6b950d` | `/critiques/index.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
+| `ad-route-0ab621690d62` | `/critiques/input_dependent_boundary_conditions.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-input-dependent-boundary-conditions` | 0 |
+| `ad-route-79c31d3309d2` | `/critiques/intentional_constraint_collapse.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-intentional-constraint-collapse` | 0 |
+| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-intermediate-axis-fallacy` | 0 |
+| `ad-route-3ec6541286cf` | `/critiques/lie_bracket_formalism_overreach.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-lie-bracket-formalism-overreach` | 0 |
+| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-604586932847` | `/critiques/normative_ambiguity_drift-bibliography.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
+| `ad-route-822a7bae7977` | `/critiques/normative_ambiguity_drift.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-normative-ambiguity-drift` | 0 |
+| `ad-route-250a52029db1` | `/critiques/nullspace_interpretation.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-nullspace-interpretation` | 0 |
+| `ad-route-3b05e8994a46` | `/critiques/parameter_causality_leakage.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-parameter-causality-leakage` | 0 |
+| `ad-route-32837e271768` | `/critiques/passive_active_boundary_ambiguity.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-passive-active-boundary-ambiguity` | 0 |
+| `ad-route-c1584d69af5b` | `/critiques/passive_overshoot_artifact.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-passive-overshoot-artifact` | 0 |
+| `ad-route-0eb5bc88ea92` | `/critiques/planar_dcr_blindness.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-planar-dcr-blindness` | 0 |
+| `ad-route-7be3ea017ce6` | `/critiques/precision_vs_gross_control-bibliography.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
+| `ad-route-facc522f8b2e` | `/critiques/precision_vs_gross_control.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-precision-gross-control` | 0 |
+| `ad-route-96be3c3d79a7` | `/critiques/sequencing_lie_bracket_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
+| `ad-route-d375efd2d357` | `/critiques/simulation_tautology.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-simulation-tautology` | 0 |
+| `ad-route-194c2778a120` | `/critiques/static_fallacy_zvcf.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-static-fallacy-zvcf` | 0 |
+| `ad-route-b8f7226e7bd1` | `/critiques/stiffness_pulse_paradox.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stiffness-pulse-paradox` | 0 |
+| `ad-route-ec8e8b52b287` | `/critiques/stretch_shortening_blindspot.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stretch-shortening-blindspot` | 0 |
+| `ad-route-7474cd7ea698` | `/critiques/strokes_gained_non_ergodic.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-strokes-gained-non-ergodic` | 0 |
+| `ad-route-703ac96df708` | `/critiques/teleological_blindness.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-teleological-blindness` | 0 |
+| `ad-route-d78b18354fdf` | `/critiques/the_effective_plant_fallacy-bibliography.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
+| `ad-route-0713399f7619` | `/critiques/the_effective_plant_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-effective-plant-fallacy` | 0 |
+| `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-tip-mass-omission` | 0 |
+| `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-validation-dimensionality-gap` | 0 |
+| `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-ztcf-identifiability` | 0 |
+| `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-7900d4c5494f` | `/models/models-myosim.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-0daf8c7255f6` | `/models/models-opensim.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-0c35be23a4e6` | `/models/models-pendulum.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-5776cb8aebbe` | `/models/models-simulink.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-50bd3b182f9b` | `/models/models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | None | None | 0 |
+| `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | — | None | None | 1 |
+| `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | — | None | None | 1 |
+| `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Reviewed | — | None | None | 1 |
+| `ad-route-6e4e4be935a4` | `/pages/contact.html` | Reviewed | — | None | None | 1 |
+| `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Reviewed | — | None | None | 1 |
+| `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | — | None | None | 1 |
+| `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | — | None | None | 2 |
+| `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | — | None | None | 2 |
+| `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
+| `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
+| `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
+| `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
+| `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-c28bd36edd3e` | `/repositories/repositories-3d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-59ad729f0fc1` | `/repositories/repositories-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-257639545452` | `/repositories/repositories-models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-9220d15a31f4` | `/repositories/repositories-pinocchio.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-32f17d5abbca` | `/resources/articles.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-e162f8e1f669` | `/resources/learning-path-biomechanics.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-3b89c286bfae` | `/resources/learning-path-control-theory.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-0ad68343def0` | `/resources/learning-path-foundations.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-aa192df4ba01` | `/resources/learning-path-golf-science.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-da7c073ff90f` | `/resources/learning-paths.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-397b07989cb1` | `/resources/research-review-baseball-pitching.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-b34fc06b00e9` | `/resources/research-review-induced-acceleration-analysis.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-cb426ba8f0be` | `/resources/research-review-interaction-forces.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-c3b127d902e9` | `/resources/research-review-shaft-flexibility.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-709386b02ebe` | `/resources/research-reviews.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-9d49aa3310be` | `/resources/resources-books.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-7eda67a2b1fa` | `/resources/resources-datasets.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-5019066bbd63` | `/resources/resources-notebooklm.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-560f2c6efddd` | `/resources/resources-papers.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-eba20bb8729f` | `/resources/resources-researchers.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-f2c40a1afbe1` | `/resources/resources-software.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-d879d4312832` | `/resources/resources-videos.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-4b132f59bf37` | `/resources/resources-websites.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-42f21a90c505` | `/resources/resources.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |

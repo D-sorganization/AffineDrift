@@ -47,28 +47,28 @@ def build_joined_report(
                 "evidence_sha256": evidence_sha256,
                 "source_path": review["source_path"],
             }
-        routes.append(
-            {
-                "audit_id": record["audit_id"],
-                "route": record["route"],
-                "status": record["status"],
-                "deferment_issue_url": deferment_issue_url,
-                "claims": [
-                    {"claim_id": claim_id, "title": claims[claim_id].get("title", "")}
-                    for claim_id in cast(list[str], record["claim_ids"])
-                ],
-                "critiques": [
-                    {
-                        "critique_id": critique_id,
-                        "disposition": critiques[critique_id].get("disposition", "unknown"),
-                        "severity": critiques[critique_id].get("severity", "unknown"),
-                    }
-                    for critique_id in cast(list[str], record["critique_ids"])
-                ],
-                "findings": record["findings"],
-                "review_evidence": review_evidence,
-            }
-        )
+        route_report: dict[str, object] = {
+            "audit_id": record["audit_id"],
+            "route": record["route"],
+            "status": record["status"],
+            "deferment_issue_url": deferment_issue_url,
+            "claims": [
+                {"claim_id": claim_id, "title": claims[claim_id].get("title", "")}
+                for claim_id in cast(list[str], record["claim_ids"])
+            ],
+            "critiques": [
+                {
+                    "critique_id": critique_id,
+                    "disposition": critiques[critique_id].get("disposition", "unknown"),
+                    "severity": critiques[critique_id].get("severity", "unknown"),
+                }
+                for critique_id in cast(list[str], record["critique_ids"])
+            ],
+            "findings": record["findings"],
+        }
+        if review_evidence is not None:
+            route_report["review_evidence"] = review_evidence
+        routes.append(route_report)
     return {
         "counts": {key: counts.get(key, 0) for key in ("deferred", "exempt", "reviewed")},
         "deferred_issue_counts": {
@@ -111,8 +111,29 @@ def render_markdown(report: dict[str, object]) -> str:
     lines.extend(
         [
             "",
-            "| Audit ID | Route | Status | Evidence Files | Deferment Issue | Claim IDs | Critique IDs | Findings |",
-            "|---|---|---|---:|---|---|---|---:|",
+            "## Reviewed Evidence",
+            "",
+            "| Route | Canonical Source | Evidence Files |",
+            "|---|---|---:|",
+        ]
+    )
+    for route in routes:
+        if not isinstance(route, dict) or "review_evidence" not in route:
+            continue
+        review_evidence = route["review_evidence"]
+        if not isinstance(review_evidence, dict):
+            raise ValueError("Generated review evidence is invalid")
+        lines.append(
+            f"| `{route['route']}` | `{review_evidence['source_path']}` "
+            f"| {review_evidence['evidence_file_count']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Route Inventory",
+            "",
+            "| Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |",
+            "|---|---|---|---|---|---|---:|",
         ]
     )
     for route in routes:
@@ -124,15 +145,9 @@ def render_markdown(report: dict[str, object]) -> str:
         issue = (
             f"[#{str(issue_url).rsplit('/', 1)[-1]}]({issue_url})" if issue_url is not None else "—"
         )
-        review_evidence = route.get("review_evidence")
-        evidence_count = (
-            str(review_evidence["evidence_file_count"])
-            if isinstance(review_evidence, dict)
-            else "—"
-        )
         lines.append(
             f"| `{route['audit_id']}` | `{route['route']}` | {str(route['status']).title()} "
-            f"| {evidence_count} | {issue} | {claim_ids or 'None'} | {critique_ids or 'None'} "
+            f"| {issue} | {claim_ids or 'None'} | {critique_ids or 'None'} "
             f"| {len(route['findings'])} |"
         )
     lines.append("")
