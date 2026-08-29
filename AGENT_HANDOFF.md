@@ -64,15 +64,16 @@ This is current operational state. Historical detail belongs in git/GitHub.
   behavior, and all three refreshed module bytes remain digest-bound.
 - Exact reconciled-head GREEN evidence is 18 focused executable contracts, 2
   focused content/audit contracts, and 14 claim-audit contracts. The full
-  default `tests/` lane passes 3,405 tests with 30 documented skips; the content
-  lane passes 98 tests with 4 documented skips; and Jest passes 297 with 19
+  default `tests/` lane passes 3,434 tests with 29 documented skips; the content
+  lane passes 101 tests with 4 documented skips; and Jest passes 297 with 19
   documented skips. Ruff, Black, strict focused mypy, module budgets,
   changed-file budgets, full pre-commit, Quarto syntax, xrefs, single-title,
   title case, display math, terminology, frontmatter, bibliography, citation,
   228-route render coverage, claim-audit publication enforcement, and diff
-  gates pass. The reconciled #4037/#4062 audit-focused set passes 51 tests at the
-  exact ordinary-merge head.
-- Quarto 1.8.26 renders the route in isolation. Desktop 1440 x 1000 and mobile
+  gates pass. The reconciled #4037/#4038/#4062 audit-focused set passes 75 tests
+  at ordinary-merge head `fe719e044c314eacace566aa0056f38d00469aee`.
+- Quarto 1.8.26 renders the neural route, protected hybrid-impact route, and
+  shared model hub from that exact reconciliation. Desktop 1440 x 1000 and mobile
   390 x 844 browser inspection verifies one H1, all required scientific
   sections, five responsive locally scrolling tables, no body overflow, no raw
   include shortcode, and no console warning or error. Render/browser artifacts
