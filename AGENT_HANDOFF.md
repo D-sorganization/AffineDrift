@@ -96,7 +96,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
   one pre-existing edition-specific Jorgensen key in each tree; both new
   long-latency citations are shared by the Quarto and LaTeX editions.
 
-## Induced-Acceleration Attribution Repair (#4018)
+## Induced-Acceleration Attribution Repair (#4018 — PR #4050 Open)
 
 - Branch `feat/4018-induced-acceleration-attribution` owns the A7 correction.
   It preserves the protected #4015, #4012, and #4017 scientific-trust merges;
