@@ -50,14 +50,17 @@ def test_primary_sources_are_registered_in_canonical_bibliography() -> None:
     records = json.loads(BIBLIOGRAPHY.read_text(encoding="utf-8"))
     by_id = {record["id"]: record for record in records}
 
-    expected_dois = {
-        "roberts2001contacttime": "10.1046/j.1460-2687.2001.00084.x",
-        "petersen2009clubface": "10.1007/s12283-009-0030-7",
-        "mcnally2018shaftimpact": "10.3390/proceedings2060245",
-        "kong2024saltation": "10.1109/JPROC.2024.3440211",
+    expected_metadata = {
+        "roberts2001contacttime": ("10.1046/j.1460-2687.2001.00084.x", "4", "4", "191--203"),
+        "petersen2009clubface": ("10.1007/s12283-009-0030-7", "12", "2", "77--85"),
+        "mcnally2018shaftimpact": ("10.3390/proceedings2060245", "2", "6", "245"),
+        "kong2024saltation": ("10.1109/JPROC.2024.3440211", "112", "6", "585--608"),
     }
-    for source_id, doi in expected_dois.items():
+    for source_id, (doi, volume, number, pages) in expected_metadata.items():
         assert by_id[source_id]["doi"] == doi
+        assert by_id[source_id]["volume"] == volume
+        assert by_id[source_id]["number"] == number
+        assert by_id[source_id]["pages"] == pages
         assert by_id[source_id]["type"] == "paper"
         assert by_id[source_id]["note"]
 
