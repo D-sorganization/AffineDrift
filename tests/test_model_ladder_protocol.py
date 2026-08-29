@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import replace
 from pathlib import Path
 
@@ -27,6 +28,8 @@ from src.affine_control.model_ladder_protocol import (
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = REPO_ROOT / "models" / "model-ladder.qmd"
 MODELS_HUB = REPO_ROOT / "models" / "models.qmd"
+AUDIT_INVENTORY = REPO_ROOT / "data" / "trust" / "claim_audit_inventory.json"
+REVIEW_COMMIT = "303bb507e795092a9e83e8f607bf5eaae394ddd6"
 
 
 def test_ladder_freezes_four_nested_levels_and_interpretation_boundaries() -> None:
@@ -235,3 +238,32 @@ def test_public_model_ladder_declares_contract_limits_and_selection_guidance() -
         assert phrase in article
     assert "90%" not in article
     assert "model-ladder.html" in hub
+
+
+@pytest.mark.content_lint
+def test_public_model_ladder_has_exact_reviewed_claim_audit_evidence() -> None:
+    inventory = json.loads(AUDIT_INVENTORY.read_text(encoding="utf-8"))
+    records = [
+        record for record in inventory["routes"] if record["route"] == "/models/model-ladder.html"
+    ]
+
+    assert len(records) == 1
+    record = records[0]
+    assert record["status"] == "reviewed"
+    assert "deferment" not in record
+    assert record["findings"] == []
+    assert record["claim_ids"] == []
+    assert record["critique_ids"] == []
+    review = record["review"]
+    assert review["review_commit"] == REVIEW_COMMIT
+    assert set(review["dimensions"]) == {
+        "evidence",
+        "uncertainty",
+        "falsifiers",
+        "audience_framing",
+    }
+    assert set(review["evidence_paths"]) == {
+        "src/affine_control/model_ladder_fixtures.py",
+        "src/affine_control/model_ladder_protocol.py",
+        "tests/test_model_ladder_protocol.py",
+    }
