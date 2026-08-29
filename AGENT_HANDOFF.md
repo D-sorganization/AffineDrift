@@ -38,7 +38,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
   analysis; none is represented as golfer evidence.
 - Audit `ad-route-b7d4c6ec440c` binds the canonical QMD, three implementation
   modules, generator, tests, and both report projections to exact SHA-256 bytes
-  reviewed at `81da035b2b55eee203d5e180705de19cb248f678`. The 227-route inventory
+  reviewed at `bcd19f98b09a36f56ad8212a7a236909551fc72c`. The 227-route inventory
   now has 25 reviewed, 200 deferred, and 2 exempt routes. A digest proves source
   bytes, not scientific validity.
 - Focused executable contracts are 11/11 green; focused content contracts are
