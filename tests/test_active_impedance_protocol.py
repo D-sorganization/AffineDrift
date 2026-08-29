@@ -29,7 +29,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = REPO_ROOT / "models" / "active-impedance-identification.qmd"
 MODELS_HUB = REPO_ROOT / "models" / "models.qmd"
 AUDIT_INVENTORY = REPO_ROOT / "data" / "trust" / "claim_audit_inventory.json"
-REVIEW_COMMIT = "c6c2e37505526afbf849ae9bf2e58399f6f3af11"
+REVIEW_COMMIT = "544273a337dd7fbf0236b3a8b95e26b5d88c06cb"
 
 
 def test_preregistration_freezes_sources_safety_phases_models_and_hypotheses() -> None:
@@ -420,6 +420,7 @@ def test_public_protocol_has_exact_reviewed_claim_audit_evidence() -> None:
         "src/affine_control/impedance_emg.py",
         "src/affine_control/impedance_fixtures.py",
         "src/affine_control/impedance_protocol.py",
+        "src/affine_control/impedance_result_fixtures.py",
         "src/affine_control/impedance_sources.py",
         "tests/test_active_impedance_protocol.py",
     }

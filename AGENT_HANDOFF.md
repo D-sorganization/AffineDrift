@@ -46,14 +46,14 @@ This is current operational state. Historical detail belongs in git/GitHub.
   human release decision.
 - `/models/active-impedance-identification.html` is registered as reviewed
   audit `ad-route-eb36645ba003`, bound to exact reviewed content commit
-  `c6c2e37505526afbf849ae9bf2e58399f6f3af11` and all four review dimensions.
+  `544273a337dd7fbf0236b3a8b95e26b5d88c06cb` and all four review dimensions.
   After ordinary reconciliation with protected #4063, the combined inventory
   contains 17 reviewed, 206 deferred, and 2 exempt routes; the #4063
   site-surface records and dispositions are preserved.
 - Claim-audit `review_commit` values use the current reviewed-content convention;
   squash merges can leave those commits outside protected-main ancestry. Issue
   #4067 owns the central digest-based migration. This PR retains
-  `c6c2e37505526afbf849ae9bf2e58399f6f3af11` and does not invent a merge SHA.
+  `544273a337dd7fbf0236b3a8b95e26b5d88c06cb` and does not invent a merge SHA.
 - RED evidence: the initial focused suite failed during collection because the
   protocol modules did not exist. Review-led RED cases then exposed the rank
   tolerance mismatch, arbitrary-string human authorization, non-zero-anchored
