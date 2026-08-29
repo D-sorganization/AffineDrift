@@ -46,3 +46,21 @@ def test_all_authored_full_layouts_are_content_first_on_phones() -> None:
     assert "@media (width < 768px)" in phone_contract
     assert "display: none !important" in sidebar_rule
     assert "grid-column: 1 !important" in main_rule
+
+
+def test_mobile_publication_shell_contains_wide_content_without_page_scroll() -> None:
+    """Tables and equations may scroll locally but must not widen the phone viewport."""
+    stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
+
+    contract = stylesheet.split("/* Mobile publication overflow containment. */", maxsplit=1)[1]
+    table_rule = contract.split("#quarto-document-content .table-wrapper", maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    shell_rule = contract.split("#quarto-content,", maxsplit=1)[1].split("}", maxsplit=1)[0]
+
+    assert "@media (max-width: 575.98px)" in contract
+    assert "overflow-x: clip" in contract
+    assert "min-width: 0" in shell_rule
+    assert "max-width: 100%" in shell_rule
+    assert "width: 100%" in table_rule
+    assert "contain: inline-size" in table_rule
