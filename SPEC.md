@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T13:00:46Z
+Last-Updated: 2026-08-29T13:07:31Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -737,8 +737,9 @@ separates general upper-limb studies from golf-specific visual-occlusion
 evidence and is bound under claim-audit schema v1.1 to the canonical QMD, both
 recursive includes,
 the bibliography, executable modules, and focused test through exact SHA-256
-digests. Participant work and neural, muscle, coaching, and clinical authority
-remain unavailable.
+digests. The canonical bibliography generator writes deterministic LF bytes so
+those digests remain identical across Windows and Linux. Participant work and
+neural, muscle, coaching, and clinical authority remain unavailable.
 
 ### 1.0.254 Hybrid Impact-Contact and Event-Time Uncertainty
 

@@ -61,7 +61,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Hosted run `33252794679` added a final RED: `quality-gate` rejected 30
   undocumented private builders and dataclass validators. Contract-oriented
   docstrings now satisfy the same code-quality command locally without changing
-  behavior, and all three refreshed module bytes remain digest-bound.
+  behavior, and all three refreshed module bytes remain digest-bound. Hosted
+  reconciliation run `33253989533` exposed a Windows/Linux line-ending mismatch
+  in the newly canonical bibliography generator. A RED byte-level regression now
+  requires LF output on every platform; the reviewed bibliography digest and
+  generated audit report bind those deterministic bytes.
 - Exact reconciled-head GREEN evidence is 18 focused executable contracts, 2
   focused content/audit contracts, and 14 claim-audit contracts. The full
   default `tests/` lane passes 3,434 tests with 29 documented skips; the content
