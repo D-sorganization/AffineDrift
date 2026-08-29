@@ -12,18 +12,19 @@ This is current operational state. Historical detail belongs in git/GitHub.
 
 ## Books and Publication-Roadmap Trust Audit (#4062 — In Progress)
 
-- Branch `feat/4062-book-publication-roadmap` started in isolated worktree
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4062-a12` from exact
-  protected main `f287ce6ab2cd26079bbace6b8f362a1f0a729acd`. Lease
-  `codex-4062-20260829T110621Z` is recorded on #4062. Do not merge without final
-  root review; parent #4021 remains open.
-- Canonical content review commit `60ecb4dd04e6823cd81aa70cd5bcff20b8143dd9`
+- Branch `feat/4062-book-publication-roadmap` in isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4062-a12` started from
+  protected main `f287ce6ab2cd26079bbace6b8f362a1f0a729acd` and ordinarily
+  reconciled exact protected main `14f220052eb204dfdff6cf2b4ea51eebcd08a819`.
+  Lease `codex-4062-20260829T110621Z` is recorded on #4062. Do not merge
+  without final root review; parent #4021 remains open.
+- Canonical content review commit `2dca8d190f3840405315b6ff8415e257d6e81ea8`
   corrects all six public book routes. It restores Volume I chapters 3B and 9
-  and Volume IV chapter 7B to the public maps, pins manuscript and notebook
-  links to the protected review revision, labels all 40 notebook records
-  scaffolded, and distinguishes manuscript availability from execution,
-  numerical correctness, reproducibility, software readiness, and empirical
-  validation.
+  and Volume IV chapter 7B to the public maps while preserving the protected
+  40-notebook bridge, pins manuscript and notebook links to the protected
+  review revision, labels all notebook records scaffolded, and distinguishes
+  manuscript availability from execution, numerical correctness,
+  reproducibility, software readiness, and empirical validation.
 - `books/roadmap.qmd` now derives 10/11/10/12 substantive chapter counts from
   canonical `main.tex` inputs and removes unmeasured reading-time, mastery,
   completion, comprehensiveness, and prerequisite-waiver claims. Volume routes
@@ -34,16 +35,84 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - `data/trust/book_publication_audit.json` records exact route and included-
   authority SHA-256 bytes, claims, limits, assumptions, uncertainty, falsifiers,
   audience limits, six corrected P1 findings, and an adversarial second pass.
-  Its strict schema, validator, deterministic report, and focused tests fail
-  closed on missing routes, byte drift, incomplete review evidence, and weak
-  P0/P1 dispositions. Six #4062 deferments are replaced with reviewed records;
-  the global inventory is 22 reviewed, 200 deferred, and 2 exempt.
+  After protected #4067 reconciliation, every reviewed route declares its
+  canonical QMD source, recursively included Quarto source set, and exact
+  `evidence_sha256` map; every corrected finding carries exact-key digest
+  parity. Six #4062 deferments become reviewed, so the 225-route inventory is
+  23 reviewed, 200 deferred, and 2 exempt.
 - RED was deterministic collection failure because the book-audit module did
-  not exist. Current focused GREEN is 28/28 audit/inventory/site-audit tests,
-  with deterministic book and global reports current. Full suite, isolated
-  render, and desktop/mobile browser evidence remain to be completed before PR.
+  not exist. Content GREEN exposed and corrected a notebook-bridge regression
+  before reconciliation; a new contract verifies all 43 canonical manuscript
+  chapter source links while preserving 40 scaffolded notebook anchors.
+  Reconciled focused GREEN is 44/44 audit/inventory/site-audit/active-impedance
+  tests. Before the final PR, rerun full exact-head suites plus isolated render
+  and desktop/mobile browser verification.
 
-## Bilateral Hand-Wrench Identifiability (#4035 — In Progress)
+## Active Impedance and Co-Contraction Identification (#4036 — In Progress)
+
+- Branch `feat/4036-active-impedance-identification` started from exact
+  protected main `9c3c5218744ecf5791d9af4a7871f618d917437a`. It is bounded to
+  analytic and deterministic synthetic feasibility; it contains no participant
+  result or device qualification and does not modify protected UpstreamDrift
+  authority.
+- `impedance_protocol.py`, `impedance_evidence.py`, `impedance_emg.py`,
+  `impedance_sources.py`, and `impedance_fixtures.py` freeze primary sources,
+  device safety, phases and zero-anchored windows, endpoint/joint models,
+  exact endpoint/joint cardinality, excitation, one bounded relative rank/fit
+  tolerance, governed EMG pair/formula
+  declarations, uncertainty, reliability, adverse outcomes, and the human
+  boundary.
+- Hermens et al. is classified as a journal method-recommendation article, not
+  a formal measurement standard; its placement guidance carries no force,
+  crosstalk-elimination, or participant authority.
+- Exact phase fixtures recover manufactured effective parameters. The negative
+  control makes stiffness and a voluntary-like basis collinear and fails closed
+  at rank four/nullity one. A near-singular regression proves rank qualification
+  and `lstsq` use the same declared cutoff.
+- Every result carries a typed evidence origin, record ID, revision, and
+  synthetic-fixture marker. The current numerical ledger is synthetic only;
+  the DbC layer rejects silent relabeling as measured evidence.
+- The amplitude-driven CCI proxy requires exact same-side agonist/antagonist
+  channel IDs, roles, normalization revision, formula, comparison scope, and
+  sensitivity plan. Direct cross-index value comparison is prohibited. It is
+  not stiffness, force, effort, or a unique biological mechanism.
+- Human collection remains unavailable. Typed, distinct, category-matched
+  external records plus a prospectively registered participant-held-out
+  analysis plan can establish structural readiness for external review. The
+  field does not represent completed participant evidence; the software always
+  returns `authorizes_participant_collection=False` and requires an outside
+  human release decision.
+- `/models/active-impedance-identification.html` is registered as reviewed
+  audit `ad-route-eb36645ba003`, bound to exact reviewed content commit
+  `544273a337dd7fbf0236b3a8b95e26b5d88c06cb` and all four review dimensions.
+  After ordinary reconciliation with protected #4063, the combined inventory
+  contains 17 reviewed, 206 deferred, and 2 exempt routes; the #4063
+  site-surface records and dispositions are preserved.
+- Claim-audit `review_commit` values use the current reviewed-content convention;
+  squash merges can leave those commits outside protected-main ancestry. Issue
+  #4067 owns the central digest-based migration. This PR retains
+  `544273a337dd7fbf0236b3a8b95e26b5d88c06cb` and does not invent a merge SHA.
+- RED evidence: the initial focused suite failed during collection because the
+  protocol modules did not exist. Review-led RED cases then exposed the rank
+  tolerance mismatch, arbitrary-string human authorization, non-zero-anchored
+  windows, circular held-out-result naming, and ungoverned EMG arrays. Final
+  local GREEN evidence is 11/11 focused executable contracts, 2/2 focused
+  content/audit contracts, 11/11 claim-audit contracts, 3,375 non-content tests
+  with 30 documented skips, 96 content tests with 4 documented skips, and all
+  20 Jest suites (297 passes, 19 skips). Full Ruff/Black, focused strict mypy,
+  module and changed-file budgets, pre-commit, bibliography and citation gates,
+  terminology, title, Quarto syntax/xrefs/math, 226-URL bidirectional render
+  coverage, claim-audit report verification, and publication enforcement pass.
+  Quarto 1.8.26 renders the public route in isolation. Desktop 1440 x 1000 and
+  mobile 390 x 844 browser inspection shows one H1, all scientific sections,
+  five contained tables with local mobile scrolling, rendered MathJax, no page
+  overflow, and no console warnings or errors. Temporary render/browser
+  artifacts were removed and the feature tree is clean.
+
+## Bilateral Hand-Wrench Identifiability (#4035 — Protected)
+
+- Protected merge `9c3c5218744ecf5791d9af4a7871f618d917437a` is the exact
+  reviewed #4035 tree. The branch history below records its delivery evidence.
 
 - Branch `feat/4035-bilateral-wrench-identifiability` started from exact
   protected main `d8f90713a0d3a4255ed1131a6c3517ee13217997`. It extends the
@@ -404,11 +473,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Stylelint, Ruff, Black, and strict MyPy gates pass.
   Protected PR #4051 merged normally after all required hosted checks passed.
 
-## Homepage and Site-Level Trust-Surface Audit (#4063 — Protected)
-
-- Protected squash merge `f287ce6ab2cd26079bbace6b8f362a1f0a729acd`
-  is byte-identical to the reviewed PR head; #4063 is closed while parent #4021
-  remains open.
+## Homepage and Site-Level Trust-Surface Audit (#4063 — PR Pending)
 
 - Lease session `codex-4063-20260829T092627Z` is recorded at issue comment
   `#issuecomment-5461542895`. Branch `feat/4063-site-trust-surfaces` started from
@@ -483,24 +548,27 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Stable IDs are SHA-256-derived from canonical routes. Claim and critique
   fields contain IDs only and must match the exact route joins derived from the
   protected #4019 registry and #4020 ledger.
-- The post-prune Quarto 1.8.26 render contains 222 public routes: the static
-  404/offline system routes are narrowly exempt, and the DCR route is reviewed
-  against protected #4013/#4019 evidence. The remaining 219 routes map exactly
-  once to exhaustive child batches: #4054 36 Physics of Golf, #4055 26 Geometry
+- The current protected inventory contains 224 public routes: the static
+  404/offline system routes are narrowly exempt, 16 routes are reviewed, and
+  206 remain deferred. The original 219-route delivery partition still maps
+  every substantive route exactly once: #4054 36 Physics of Golf, #4055 26 Geometry
   of Motion, #4056 16 tangent-series, #4057 40 critiques, #4058 29 core
   articles, #4059 18 applied articles, #4060 14 model/repository, #4061 21
-  resources, #4062 6 books, and #4063 13 root/page routes. Parent #4021 remains
-  open for final reconciliation; no route is absent or silently reviewed.
+  resources, #4062 6 books, and protected-merged #4063 13 root/page routes.
+  Parent #4021 remains open for the nine unfinished content batches, the
+  cross-cutting #4067 evidence migration, and final reconciliation; no route is
+  absent or silently reviewed.
 - P0/P1 findings may be `corrected` or `publication_blocked`; open/deferred
   states fail validation, and any `publication_blocked` P0/P1 record stops the
   deploy workflow. Every finding requires a linked AffineDrift issue and
-  rationale. Corrected findings additionally require local evidence paths and a
-  verification commit.
+  rationale. Corrected findings additionally require local evidence paths, an
+  exact path-to-SHA-256 map, and a verification commit locator.
 - `scripts/generate_claim_audit_inventory.py` initializes from the rendered
   manifest, validates exact coverage and authority links, and generates
   `data/trust/generated/claim_audit_report.json` plus
   `reports/scientific-claim-audit.md`. The generated reports join titles/status
-  from upstream authorities but do not duplicate their scientific prose.
+  from upstream authorities, expose reviewed canonical sources and evidence
+  counts, and do not duplicate their scientific prose.
 - RED was the missing generator module at test collection; the child-partition
   extension first failed on absent route-scope exports and then on all stale
   parent issue URLs. Exact-head GREEN evidence is 75 combined
@@ -513,6 +581,41 @@ This is current operational state. Historical detail belongs in git/GitHub.
   pipeline pruned 28 internal artifacts, regenerated an exact 222-route public
   manifest, and passed deterministic report freshness plus the enforced
   publication gate. The isolated worktree is clean after render verification.
+
+### Self-Contained Reviewed Evidence (#4067 — Protected)
+
+- Protected merge `14f220052eb204dfdff6cf2b4ea51eebcd08a819` is the
+  schema-v1.1 authority; issue #4067 is closed. The development record below is
+  retained as implementation provenance.
+
+- Worktree `C:\Users\diete\Repositories\worktrees\AffineDrift-4067-a1` on
+  `feat/4067-self-contained-review-evidence` started from exact protected
+  `f287ce6ab2cd26079bbace6b8f362a1f0a729acd`. RED commit `82e89c83`
+  demonstrated that the v1.0 schema rejected rather than understood
+  self-contained digest evidence. The GREEN implementation is `ede3ddb8`, with
+  compact report presentation in `95bc47ec`.
+- `scripts/claim_audit_evidence.py` is the single byte-evidence boundary. A
+  reviewed route must declare the canonical `.qmd` source implied by its public
+  route, include that source and every recursively resolved Quarto include in
+  `evidence_paths`, and provide an exact SHA-256 value for every declared path.
+  Corrected findings use the same exact-key digest rule. Paths must be normalized
+  repository-relative regular files; directory escape and symlinks fail closed.
+- `review_commit` and `verification_commit` remain useful review/event locators,
+  but they are not byte authority. This is deliberate because protected squash
+  merges do not retain PR-head commits as ancestors of `main`, and a depth-1
+  checkout must still reproduce the audit.
+- Maintenance rule: a digest failure means the affected route or finding must be
+  reviewed again. Do not blindly rehash changed files. After substantive review,
+  update the evidence paths/digests, review date, reviewer identity, and commit
+  locator together, regenerate both reports, and run the publication gate.
+- After ordinary reconciliation with protected active-impedance authority
+  `3cb57223624f5be9c3d0cf69ef1ef25c7238c325`, the migrated inventory contains
+  17 reviewed, 206 deferred, and 2 exempt routes. Focused GREEN evidence is
+  36/36 claim-audit, site-audit, and active-impedance contracts. The complete
+  non-content and content-lint suites pass with only their documented skips;
+  deterministic inventory/site-report checks, Ruff, Black, title/style checks,
+  `git diff --check`, and every pre-commit hook pass. Protected hosted gates and
+  exact-main verification remain required before #4067 may close.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 

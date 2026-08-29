@@ -130,6 +130,11 @@
           "uniqueItems": true
         },
         "evidence_paths": { "$ref": "#/$defs/nonemptyList" },
+        "evidence_sha256": {
+          "additionalProperties": { "$ref": "#/$defs/sha256" },
+          "minProperties": 1,
+          "type": "object"
+        },
         "verification_commit": { "pattern": "^[0-9a-f]{40}$", "type": "string" }
       },
       "required": [
@@ -141,6 +146,7 @@
         "claim_ids",
         "critique_ids",
         "evidence_paths",
+        "evidence_sha256",
         "verification_commit"
       ],
       "type": "object"

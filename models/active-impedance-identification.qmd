@@ -1,0 +1,258 @@
+---
+title: "Active Impedance and Co-Contraction Identification"
+description: "A source-bounded synthetic-feasibility protocol for phase-dependent endpoint and joint impedance identification"
+---
+
+This program asks whether phase-dependent **effective mechanical impedance** can
+be identified during swing-like motion and whether model bases or EMG envelopes
+add bounded explanatory information. It freezes device, event, signal, model,
+uncertainty, reliability, and adverse-outcome rules before a result is fit. The
+current evidence is analytic and synthetic; it is not a perturbation-device
+qualification or participant result.
+
+::: {.callout-warning title="Scientific Authority Boundary"}
+The protocol provides **no muscle-force identification**, **no unique reflex,
+passive, voluntary, or neural-strategy attribution**, and **no coaching or
+clinical authority**. Mechanical impedance is an input--output property at a
+declared boundary. EMG overlap is a signal proxy. A fitted basis coefficient is
+model conditioned, not an observed biological source.
+:::
+
+## Primary-Source Register
+
+::: {.table-responsive}
+| Source | What It Supports Here | What It Does Not Authorize |
+|---|---|---|
+| Westwick and Perreault (2012) [@westwick2012acausal] | Impedance-identification limits from bandwidth, noise, and acausal estimates | This fixture, device, phase, or population |
+| Lipps et al. (2020) [@lipps2020shoulder] | Multidimensional shoulder-impedance measurement precedent | Swing-specific transfer or endpoint--joint equivalence |
+| van 't Veld et al. (2021) [@vantveld2021impedance] | Parallel-cascade intrinsic/reflex modeling and EMG association precedent | Unique physiological partition or neural source |
+| Li et al. (2021) [@li2021cocontraction] | Dependence of co-contraction indices on delay, muscle pair, and formulation | Treating a co-contraction index as measured stiffness |
+| Carey et al. (2026) [@carey2026cocontraction] | Synthetic sensitivity of co-contraction indices to normalization and index choice | Mechanical or participant validation |
+| Hermens et al. (2000) [@hermens2000semg] | Surface-EMG sensor and placement method recommendations | Elimination of crosstalk or recovery of individual force |
+:::
+
+These studies bound the protocol design; none is treated as validation of the
+manufactured fixtures below. Evidence from posture, ankle, shoulder, or gait
+does not establish that a swing-phase system is stationary, safe to perturb, or
+identifiable. Hermens et al. is classified as a journal method-recommendation
+article, not a formal measurement standard.
+
+## Preregistered Questions and Outcomes
+
+Protocol revision `affinedrift.active-impedance/v1` predeclares three questions:
+
+::: {.table-responsive}
+| Question | Metric and Decision Rule | Adverse Disposition |
+|---|---|---|
+| Is the phase-specific effective-impedance design identifiable? | Full column rank, zero nullity, condition number below threshold, and held-out residual inside tolerance | **Negative** after rank loss, poor conditioning, or failed prediction |
+| Do intrinsic, reflex, passive, and voluntary bases remain separable under sensitivity choices? | Complete interval over delay and alternative bases remains inside tolerance | **Null** when the interval does not support a distinct partition |
+| Does the protocol transport to people? | Participant-held-out error and preregistered reliability | **Unavailable** until every human and device gate exists |
+:::
+
+Negative, null, excluded, failed, and unavailable results remain in the result
+ledger. A preferred fitted story cannot replace them.
+
+## Perturbation Device and Safety Envelope
+
+The current device is a **simulated torque-pulse device**, revision
+`synthetic-feasibility-only`. The declaration includes control mode, trigger
+source and tolerance, maximum displacement, velocity, and torque, an independent
+hardware interlock, a held-enable/operator stop, dummy-load preflight, saturation
+and timestamp checks, and explicit stopping rules. Those fields are executable
+contracts; their numerical fixture values are not safe human limits.
+
+Any physical program must first qualify device dynamics, command/measurement
+latency, load-cell and motion calibration, mechanical stops, fault response,
+fixture strength, contact retention, and event-trigger behavior over the full
+operating envelope. Discomfort, unexpected contact loss, saturation, clipping,
+limit crossing, or trigger disagreement stops the trial and blocks repetition
+until governed review. Passing software tests does not approve a device.
+
+## Phase and Response-Window Contract
+
+The manufactured program declares transition and pre-impact phases with
+different event triggers and perturbation offsets. Each phase has three
+nonoverlapping operational windows:
+
+::: {.table-responsive}
+| Window | Manufactured Bounds | Reportable Quantities | Interpretation Limit |
+|---|---:|---|---|
+| Baseline | -80 to 0 ms | Background EMG proxy and pre-perturbation torque | Does not label passive or voluntary origin |
+| Early Response | 0 to 80 ms | Effective mechanical response, model-partitioned response, and EMG response proxy | Latency plus a declared model is required; timing alone does not identify a reflex |
+| Late Response | 80 to 250 ms | Effective response, activation proxy, and model residual | Reflexive, passive, voluntary, and task changes can overlap |
+:::
+
+The bounds are frozen analysis labels, not universal neurophysiological latency
+claims. Alternative delays, window edges, trigger jitter, and phase definitions
+belong in the complete sensitivity interval.
+
+## Endpoint and Joint Impedance
+
+Endpoint and joint impedance are distinct declared outputs. A local joint-space
+perturbation model can be written as
+
+$$
+\Delta \tau(t)
+= I\,\Delta \ddot q(t)
++ B\,\Delta \dot q(t)
++ K\,\Delta q(t)
++ G\,r\!\left(t-d\right)
++ W\,v(t)
++ \varepsilon(t),
+$$
+
+where $r(t-d)$ and $v(t)$ are preregistered reflex-like and voluntary-like
+regression bases. Their coefficients are **Model Partitioned** quantities. The
+equation does not prove that either basis contains only the named biological
+contribution.
+
+For a locally declared Jacobian $J$, a stiffness mapping may include
+
+$$
+K_q = J^{T} K_x J + K_{\mathrm{geo}}.
+$$
+
+The geometric term, coordinate frames, reference point, constraints, and
+Jacobian rank must be declared. The mapping is not generally invertible, and a
+joint-space result cannot be relabeled as endpoint stiffness—or vice versa—by
+omitting those terms.
+
+## EMG Processing and Electrode Uncertainty
+
+Every EMG channel freezes channel ID, muscle label, side, electrode location and
+orientation, interelectrode distance, sample rate, passband, normalization,
+electromechanical delay and uncertainty, crosstalk screen, and electrode-map
+revision. Raw amplitude is not comparable across channels, sessions, electrodes,
+or people without the declared normalization and uncertainty analysis.
+
+Each governed pair record fixes distinct agonist and antagonist channel IDs on
+one side, their roles, normalization revision, CCI family, formula identifier,
+comparison scope, and a sensitivity plan. Unknown channels, cross-side pairs,
+or envelopes whose identifiers do not match the declared roles fail closed.
+
+The manufactured index is in Carey's **Amplitude-Driven** family. For two
+already processed, nonnegative envelopes $a(t)$ and $b(t)$, its frozen
+`symmetric-envelope-overlap-v1` formula is
+
+$$
+C = \operatorname{mean}_t
+\left[
+\frac{2\min(a(t),b(t))}{a(t)+b(t)}
+\right],
+$$
+
+with zero assigned when both samples are zero. It ranges from zero to one and is
+unchanged when the two channels are swapped. It changes when only one channel is
+rescaled. Therefore this **EMG Proxy** is not stiffness, force, metabolic cost,
+or a unique co-contraction mechanism. Carey et al. distinguish shape-,
+amplitude-, and temporal-driven CCI families and show that normalization and
+formula choice alter the estimate. **Direct cross-index value comparison is
+prohibited**; this protocol permits only relative trends within the same frozen
+formula and normalization revision. Index choice must match the preregistered
+hypothesis.
+
+Li et al. report formulation-, electromechanical-delay-, and antagonist-pair-
+dependent CCI--stiffness associations in only two post-stroke gait participants.
+That bounded result motivates the sensitivity plan; it does not validate this
+formula, identify stiffness, or transport to swing-like motion. Muscle-pair
+selection, electrode placement, crosstalk, filtering, and delay remain explicit
+sensitivity inputs.
+
+## Excitation and Identifiability
+
+The synthetic regression uses the frozen parameter order
+
+$$
+\theta = [I,\ B,\ K,\ G,\ W]^T
+$$
+
+and design columns for acceleration, velocity, displacement, delayed response,
+and voluntary basis. Before fitting, the protocol reports observations,
+parameters, rank, nullity, and two-norm condition number. One declared relative
+singular-value tolerance controls both the SVD rank/nullity gate and the
+least-squares solution. A result is qualified only when the matrix has full
+column rank and its condition number is below the preregistered threshold.
+Scaling, perturbation bandwidth and amplitude, noise, state nonstationarity,
+input--motion correlation, and closed-loop feedback can all alter practical
+identifiability.
+
+A low residual does not rescue a rank-deficient design: infinitely many
+parameter allocations can predict the same response. Likewise, successful
+recovery from manufactured data proves the code path and declared design, not
+the adequacy of the biological model.
+
+## Synthetic Recovery and Confounding Fixtures
+
+The full-rank fixture uses 96 deterministic samples and five independent basis
+columns. It exactly recovers two distinct phase vectors:
+
+::: {.table-responsive}
+| Phase | $I$ | $B$ | $K$ | $G$ | $W$ | Result |
+|---|---:|---:|---:|---:|---:|---|
+| Transition | 1.8 | 5.0 | 72.0 | 14.0 | 3.5 | Full rank; exact manufactured recovery |
+| Pre-Impact | 1.8 | 7.5 | 96.0 | 9.0 | -2.0 | Full rank; exact manufactured recovery |
+:::
+
+Units inherit the declared joint model and each value is synthetic. A negative
+$W$ is a regression coefficient, not evidence of braking intent or eccentric
+muscle action.
+
+The negative control sets the voluntary basis equal to displacement. Rank drops
+by one, leaving a stiffness/voluntary null direction. Fitting fails closed even
+though the combined response remains exactly reproducible. This is the central
+counterexample to interpreting algebraic component labels as identified causes.
+
+## Evidence Tiers, Uncertainty, and Reliability
+
+::: {.table-responsive}
+| Tier | Permitted Statement | Prohibited Promotion |
+|---|---|---|
+| **Effective Mechanical** | Perturbation input and measured mechanical response identify a bounded input--output relation | Unique tissue, reflex, voluntary, or neural source |
+| **Model Partitioned** | A declared full-rank model allocates response among named bases with complete sensitivity intervals | Treating basis names as observed physiology |
+| **EMG Proxy** | Processed envelope overlap or activation association under a frozen pipeline | Stiffness, individual force, effort, or strategy identity |
+| **Unavailable** | Required quantity or governance record is absent | Substituting an estimate or preferred narrative |
+:::
+
+Complete uncertainty spans perturbation amplitude and bandwidth, trigger timing,
+reflex delay, passive and voluntary bases, model order, filtering, electrode
+placement, normalization, muscle-pair choice, and residual structure. Reliability
+is phase stratified and must report repeatability plus held-out prediction, not
+only within-fit error. The manufactured result ledger deliberately retains one
+supported, one negative, one null, and one unavailable outcome.
+
+Every ledger entry carries a **machine-readable evidence origin**, provenance
+record ID, revision, and synthetic-fixture marker. All numerical results on
+this page are labeled `synthetic-fixture`; the unavailable biological-actuator
+entry is labeled `unavailable`. A synthetic value cannot be relabeled as
+measured while retaining its fixture provenance, and no fixture value may be
+silently promoted to participant evidence.
+
+## Negative, Null, and Unavailable Results
+
+Rank loss is **negative** evidence for the requested partition, even when total
+response prediction remains exact. A sensitivity interval that spans competing
+partitions is **null** for a distinct contribution. Missing bandwidth, phase,
+calibration, electrode, safety, governance, or held-out records makes the
+corresponding result **unavailable**. These dispositions falsify or bound a
+claim; they are not data-cleaning inconveniences.
+
+## Human Tier and Promotion Gate
+
+Human collection remains unavailable. Typed, externally governed records for
+ethics approval, risk assessment, privacy plan, consent revision, data license,
+device calibration, stopping rules, reliability, and independent approval,
+can establish structural readiness only when a **participant-held-out analysis
+plan is registered** before collection. This is a prospective analysis-plan
+record, not a claim that held-out participant results already exist. Arbitrary
+strings and absent or pending records fail closed. This software never
+authorizes participant collection; an explicit human release decision outside
+the software remains required. Completed held-out reliability and prediction
+belong to a later post-collection promotion gate.
+
+Even after those records exist, any statement about an individual muscle,
+stiffness mechanism, reflex pathway, voluntary strategy, population, or outcome
+must remain conditioned on the declared measurement and model. Separate
+scientific review—not this protocol—would be required for clinical or coaching
+claims.
+
+## References

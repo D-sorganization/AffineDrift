@@ -12,6 +12,7 @@ from typing import Any, cast
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.claim_audit_evidence import ReviewEvidenceError, validate_digest_map
 from scripts.claim_audit_ids import stable_audit_id
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -114,11 +115,15 @@ def _validate_record(
             and finding["disposition"] not in CLOSED_BLOCKERS
         ):
             raise BookAuditContractError(f"P0/P1 finding {finding_id} is not corrected or blocked")
-        for evidence in cast(list[str], finding["evidence_paths"]):
-            if not (root / evidence).is_file():
-                raise BookAuditContractError(
-                    f"Missing finding evidence for {finding_id}: {evidence}"
-                )
+        try:
+            validate_digest_map(
+                root,
+                finding["evidence_paths"],
+                finding["evidence_sha256"],
+                label=f"{finding_id} evidence",
+            )
+        except ReviewEvidenceError as exc:
+            raise BookAuditContractError(str(exc)) from exc
 
 
 def validate_audit(audit: object, schema_path: Path, root: Path) -> None:

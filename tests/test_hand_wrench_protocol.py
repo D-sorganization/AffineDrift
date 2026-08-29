@@ -260,9 +260,13 @@ def test_public_protocol_has_exact_reviewed_claim_audit_evidence() -> None:
         "falsifiers",
         "audience_framing",
     }
-    assert set(record["review"]["evidence_paths"]) == {
+    review = record["review"]
+    assert review["source_path"] == "models/bilateral-hand-wrench-validation.qmd"
+    assert set(review["evidence_paths"]) == {
+        "models/bilateral-hand-wrench-validation.qmd",
         "src/affine_control/hand_wrench_evidence.py",
         "src/affine_control/hand_wrench_fixtures.py",
         "src/affine_control/hand_wrench_protocol.py",
         "tests/test_hand_wrench_protocol.py",
     }
+    assert set(review["evidence_sha256"]) == set(review["evidence_paths"])

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -58,7 +59,12 @@ def _route(
             "reviewed_on": "2026-08-29",
             "review_commit": "a" * 40,
             "reviewer": "protected review",
-            "evidence_paths": ["tests/review_evidence.txt"],
+            "source_path": "articles/superposition.qmd",
+            "evidence_paths": [
+                "articles/superposition.qmd",
+                "tests/review_evidence.txt",
+            ],
+            "evidence_sha256": {},
             "dimensions": REVIEW_DIMENSIONS,
         }
     elif status == "deferred":
@@ -81,6 +87,11 @@ def _route(
 def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path, Path]:
     (tmp_path / "tests").mkdir()
     (tmp_path / "tests/review_evidence.txt").write_text("reviewed\n", encoding="utf-8")
+    (tmp_path / "articles").mkdir()
+    (tmp_path / "articles/superposition.qmd").write_text(
+        "# Superposition\n",
+        encoding="utf-8",
+    )
     claims_path = tmp_path / "claims.json"
     claims_path.write_text(
         json.dumps(
@@ -113,7 +124,7 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
         encoding="utf-8",
     )
     inventory = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "manifest_contract": "affinedrift/public-site-manifest/v1",
         "claim_registry": "data/trust/claim_registry.json",
         "critique_ledger": "data/trust/claim_critique_ledger.json",
@@ -128,6 +139,14 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
             ),
             _route("/critiques/example.html", "deferred", critique_ids=["crit-example"]),
         ],
+    }
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    evidence_paths = review["evidence_paths"]
+    assert isinstance(evidence_paths, list)
+    review["evidence_sha256"] = {
+        path: _sha256(tmp_path / path) for path in evidence_paths if isinstance(path, str)
     }
     manifest = {
         "schema_version": "affinedrift/public-site-manifest/v1",
@@ -148,6 +167,58 @@ def _find_route(inventory: dict[str, object], route: str) -> dict[str, object]:
     return next(
         record for record in routes if isinstance(record, dict) and record.get("route") == route
     )
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_review_evidence_is_self_contained_and_covers_included_sources(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    article = tmp_path / "articles/superposition.qmd"
+    included = tmp_path / "articles/_generated/superposition-review.qmd"
+    included.parent.mkdir(parents=True)
+    article.write_text(
+        "# Superposition\n\n{{< include _generated/superposition-review.qmd >}}\n",
+        encoding="utf-8",
+    )
+    included.write_text("Reviewed boundary.\n", encoding="utf-8")
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    review["source_path"] = "articles/superposition.qmd"
+    review["evidence_paths"] = [
+        "articles/_generated/superposition-review.qmd",
+        "articles/superposition.qmd",
+        "tests/review_evidence.txt",
+    ]
+    review["evidence_sha256"] = {
+        path: _sha256(tmp_path / path) for path in review["evidence_paths"]
+    }
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+
+    validate_inventory(inventory, sources)
+
+    wrong_digest = copy.deepcopy(inventory)
+    wrong_review = _find_route(wrong_digest, "/articles/superposition.html")["review"]
+    assert isinstance(wrong_review, dict)
+    wrong_hashes = wrong_review["evidence_sha256"]
+    assert isinstance(wrong_hashes, dict)
+    wrong_hashes["articles/superposition.qmd"] = "0" * 64
+    with pytest.raises(AuditContractError, match="digest mismatch"):
+        validate_inventory(wrong_digest, sources)
+
+    missing_include = copy.deepcopy(inventory)
+    missing_review = _find_route(missing_include, "/articles/superposition.html")["review"]
+    assert isinstance(missing_review, dict)
+    missing_paths = missing_review["evidence_paths"]
+    missing_hashes = missing_review["evidence_sha256"]
+    assert isinstance(missing_paths, list)
+    assert isinstance(missing_hashes, dict)
+    missing_paths.remove("articles/_generated/superposition-review.qmd")
+    del missing_hashes["articles/_generated/superposition-review.qmd"]
+    with pytest.raises(AuditContractError, match="included source"):
+        validate_inventory(missing_include, sources)
 
 
 def test_stable_audit_id_is_route_derived_and_order_independent() -> None:
@@ -180,6 +251,16 @@ def test_schema_is_strict_and_status_records_are_auditable(tmp_path: Path) -> No
     reviewed["deferment"] = _route("/pages/unused.html", "deferred")["deferment"]
     with pytest.raises(AuditContractError, match="not valid under any|valid under each"):
         validate_inventory(invalid, sources)
+
+
+def test_byte_evidence_does_not_depend_on_a_reachable_review_commit(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    review["review_commit"] = "f" * 40
+
+    validate_inventory(inventory, AuditSources(SCHEMA, claims_path, ledger_path, tmp_path))
 
 
 def test_every_rendered_route_requires_exactly_one_inventory_record(tmp_path: Path) -> None:
@@ -273,6 +354,36 @@ def test_p0_p1_findings_fail_closed_or_block_publication(tmp_path: Path) -> None
         enforce_publication(inventory)
 
 
+def test_corrected_findings_require_exact_byte_digests(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    findings = reviewed["findings"]
+    assert isinstance(findings, list)
+    evidence_path = "tests/review_evidence.txt"
+    findings.append(
+        {
+            "finding_id": "ad-finding-example-corrected",
+            "priority": "p1",
+            "disposition": "corrected",
+            "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4021",
+            "rationale": "The canonical source now states the bounded result.",
+            "claim_ids": ["ad-example-001"],
+            "critique_ids": ["crit-example"],
+            "evidence_paths": [evidence_path],
+            "evidence_sha256": {evidence_path: _sha256(tmp_path / evidence_path)},
+            "verification_commit": "f" * 40,
+        }
+    )
+
+    validate_inventory(inventory, sources)
+
+    finding = findings[0]
+    finding["evidence_sha256"] = {evidence_path: "0" * 64}
+    with pytest.raises(AuditContractError, match="digest mismatch"):
+        validate_inventory(inventory, sources)
+
+
 def test_report_generation_is_deterministic_and_joins_authorities(tmp_path: Path) -> None:
     inventory, manifest, claims_path, ledger_path = _fixture(tmp_path)
     sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
@@ -297,6 +408,14 @@ def test_report_generation_is_deterministic_and_joins_authorities(tmp_path: Path
     assert article["critiques"] == [
         {"critique_id": "crit-example", "disposition": "open", "severity": "high"}
     ]
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    assert article["review_evidence"] == {
+        "evidence_file_count": 2,
+        "evidence_sha256": review["evidence_sha256"],
+        "source_path": "articles/superposition.qmd",
+    }
 
 
 def test_canonical_inventory_and_generated_reports_are_current() -> None:

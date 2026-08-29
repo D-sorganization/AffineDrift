@@ -34,41 +34,51 @@ def build_joined_report(
     routes: list[dict[str, object]] = []
     for record in records:
         deferment_issue_url: str | None = None
+        review_evidence: dict[str, object] | None = None
         if record["status"] == "deferred":
             deferment = cast(dict[str, object], record["deferment"])
             deferment_issue_url = str(deferment["issue_url"])
             deferred_issue_counts[deferment_issue_url] += 1
-        routes.append(
-            {
-                "audit_id": record["audit_id"],
-                "route": record["route"],
-                "status": record["status"],
-                "deferment_issue_url": deferment_issue_url,
-                "claims": [
-                    {"claim_id": claim_id, "title": claims[claim_id].get("title", "")}
-                    for claim_id in cast(list[str], record["claim_ids"])
-                ],
-                "critiques": [
-                    {
-                        "critique_id": critique_id,
-                        "disposition": critiques[critique_id].get("disposition", "unknown"),
-                        "severity": critiques[critique_id].get("severity", "unknown"),
-                    }
-                    for critique_id in cast(list[str], record["critique_ids"])
-                ],
-                "findings": record["findings"],
+        if record["status"] == "reviewed":
+            review = cast(dict[str, object], record["review"])
+            evidence_sha256 = cast(dict[str, str], review["evidence_sha256"])
+            review_evidence = {
+                "evidence_file_count": len(evidence_sha256),
+                "evidence_sha256": evidence_sha256,
+                "source_path": review["source_path"],
             }
-        )
+        route_report: dict[str, object] = {
+            "audit_id": record["audit_id"],
+            "route": record["route"],
+            "status": record["status"],
+            "deferment_issue_url": deferment_issue_url,
+            "claims": [
+                {"claim_id": claim_id, "title": claims[claim_id].get("title", "")}
+                for claim_id in cast(list[str], record["claim_ids"])
+            ],
+            "critiques": [
+                {
+                    "critique_id": critique_id,
+                    "disposition": critiques[critique_id].get("disposition", "unknown"),
+                    "severity": critiques[critique_id].get("severity", "unknown"),
+                }
+                for critique_id in cast(list[str], record["critique_ids"])
+            ],
+            "findings": record["findings"],
+        }
+        if review_evidence is not None:
+            route_report["review_evidence"] = review_evidence
+        routes.append(route_report)
     return {
         "counts": {key: counts.get(key, 0) for key in ("deferred", "exempt", "reviewed")},
         "deferred_issue_counts": {
             issue_url: deferred_issue_counts[issue_url]
             for issue_url in sorted(deferred_issue_counts)
         },
-        "inventory_schema_version": "1.0.0",
+        "inventory_schema_version": "1.1.0",
         "route_count": len(records),
         "routes": routes,
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
     }
 
 
@@ -100,6 +110,27 @@ def render_markdown(report: dict[str, object]) -> str:
         lines.append(f"- [#{issue_number}]({issue_url}): {count} routes")
     lines.extend(
         [
+            "",
+            "## Reviewed Evidence",
+            "",
+            "| Route | Canonical Source | Evidence Files |",
+            "|---|---|---:|",
+        ]
+    )
+    for route in routes:
+        if not isinstance(route, dict) or "review_evidence" not in route:
+            continue
+        review_evidence = route["review_evidence"]
+        if not isinstance(review_evidence, dict):
+            raise ValueError("Generated review evidence is invalid")
+        lines.append(
+            f"| `{route['route']}` | `{review_evidence['source_path']}` "
+            f"| {review_evidence['evidence_file_count']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Route Inventory",
             "",
             "| Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |",
             "|---|---|---|---|---|---|---:|",
