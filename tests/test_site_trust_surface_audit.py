@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
-import shutil
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -118,20 +117,29 @@ def test_p0_p1_findings_are_corrected_or_publication_blocked() -> None:
                 assert finding["verification_commit"] == record["source_revision"]
 
 
-def test_review_revision_contains_the_exact_scoped_source_bytes() -> None:
-    git = shutil.which("git")
-    assert git is not None
+def test_declared_source_digests_match_exact_scoped_source_bytes() -> None:
     for record in _route_map(_json(AUDIT)).values():
-        revision = str(record["source_revision"])
-        sources = [record["source_path"], *record.get("included_source_paths", [])]
-        for source_value in sources:
-            source = str(source_value)
-            result = subprocess.run(
-                [git, "diff", "--quiet", f"{revision}..HEAD", "--", source],
-                cwd=ROOT,
-                check=False,
-            )
-            assert result.returncode == 0, f"{source} changed after review revision {revision}"
+        source = ROOT / str(record["source_path"])
+        assert hashlib.sha256(source.read_bytes()).hexdigest() == record["source_sha256"]
+
+        included = record.get("included_source_paths", [])
+        included_digests = record["included_source_sha256"]
+        assert set(included_digests) == set(included)
+        for source_value in included:
+            source = ROOT / str(source_value)
+            assert hashlib.sha256(source.read_bytes()).hexdigest() == included_digests[source_value]
+
+
+def test_validator_rejects_missing_or_wrong_source_digest() -> None:
+    missing = _json(AUDIT)
+    del _records(missing, "routes")[0]["source_sha256"]
+    with pytest.raises(SiteAuditContractError, match="source_sha256"):
+        validate_audit(missing, SCHEMA, ROOT)
+
+    wrong = _json(AUDIT)
+    _records(wrong, "routes")[0]["source_sha256"] = "0" * 64
+    with pytest.raises(SiteAuditContractError, match="(?i)source digest mismatch"):
+        validate_audit(wrong, SCHEMA, ROOT)
 
 
 def test_report_generation_is_deterministic_and_current(tmp_path: Path) -> None:

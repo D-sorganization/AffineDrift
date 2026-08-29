@@ -383,31 +383,41 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `9c3c5218744ecf5791d9af4a7871f618d917437a` in
   `5d9f641a2b99cafc59647d4f9ca5aff816234f37`, preserving that program and its
   reviewed route.
-- Canonical review revision `8d776c5682d5fee6a06dc51259306f7c9cdccd74`
+- Canonical review revision `0d2bd503a226cbbf7da1e87ce558952efe797d33`
   reviews `/` plus all twelve `/pages/*.html` routes. The homepage now defines
   Available, Validated, Experimental, Planned, Deprecated, and Opinion as
   distinct claim states. Roadmap, overview, manifesto, tangent, technology,
   and tools capability language is bounded; the overview API and support tiers
   are pinned to protected UpstreamDrift revision
-  `8cc236c6879e7535bb6bd15aecbe3396fb6dbb36`.
+  `8cc236c6879e7535bb6bd15aecbe3396fb6dbb36`. The quick start separates the
+  package metadata lower bound (`requires-python = ">=3.11"`) from the tested
+  Python 3.11 and 3.12 minors and withholds Python 3.13 qualification. The
+  manifesto and tangent landing pages no longer imply comprehensive or complete
+  coverage.
 - `data/trust/site_trust_surface_audit.json` records stable route and claim
   occurrence IDs, claim classes, authority references and limits, assumptions,
   uncertainty, falsifiers, audience limits, adversarial counterexamples,
   alternative mechanisms, disagreements, and exact evidence. Its strict schema,
   validator, deterministic report, and source-byte contract cover exactly 13
-  routes. All eight P1, five P2, and one P3 findings are corrected; there is no
-  P0 and no open or publication-blocked P0/P1.
+  routes. Each canonical and included source carries exact SHA-256 evidence, so
+  byte verification is self-contained in shallow CI checkouts while the review
+  commit remains provenance metadata. All eleven P1, five P2, and one P3
+  findings are corrected; there is no P0 and no open or publication-blocked
+  P0/P1.
 - The global #4021 inventory preserves the protected model-ladder route and now
   reports 224 routes: 16 reviewed, 206 deferred, and 2 exempt. The remaining
   deferred child partition is unchanged. The #4063 routes no longer carry a
   deferment issue, and each carries its review evidence and corrected finding.
 - RED was collection failure for the absent
-  `scripts.site_trust_surface_audit` module. Reconciled-head GREEN evidence is
-  40 focused audit/inventory/editorial/merged-authority tests and the full
-  3,486-test collection: 3,456 passed with 30 documented skips. Deterministic
-  inventory and site-audit report checks pass. The
-  content/link/citation/accessibility lane passes 166 tests. Focused Ruff,
-  Black, strict MyPy, title case, QMD style discipline, and diff checks pass.
+  `scripts.site_trust_surface_audit` module. The trust-language amendment first
+  failed on the manifesto's `comprehensive theory` description, and the shallow
+  checkout regression first failed because digest evidence was absent. Current
+  GREEN evidence is 65 focused audit/inventory/critique/model-ladder/hand-wrench
+  tests. The default full lane discovers 3,488 tests and passes 3,363 with 30
+  documented skips and 95 marker deselections; the separate content-lint marker
+  lane passes 91 with 4 documented skips. Deterministic inventory and site-audit
+  report checks pass. Focused Ruff, Black, strict MyPy, title case, QMD style
+  discipline, and diff checks pass.
   Python 3.13 reports the repository's expected warnings for disabled
   third-party pytest plugins; Python 3.12 and hosted checks remain protected
   authorities.
@@ -415,9 +425,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   inspection are recorded in `reports/site-trust-surface-browser-qa.json`.
   The adversarial browser pass exposed clipped and malformed canonical notation
   tables plus an uncontained roadmap state table; source commits `ee253eed` and
-  `8d776c56` correct them, and the final manifest verifier passes all 52/52
-  evidence items. Generated output is isolated from the feature worktree and is
-  never staged. Issue #4063 remains
+  `8d776c56` correct them. Amendment commit `0d2bd503` bounds Python support and
+  removes completeness amplification; its detached rerender and interactive
+  desktop/mobile pass are clean, and the final manifest verifier passes all
+  52/52 evidence items. Generated output is isolated from the feature worktree
+  and is never staged. Issue #4063 remains
   open until the non-draft pull request is protected-merged and exact-main
   verification closes the batch.
 

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -116,6 +117,34 @@ def _validate_findings(record: dict[str, object], root: Path, seen: set[str]) ->
             raise SiteAuditContractError(f"Corrected finding {finding_id} lacks local evidence")
 
 
+def _source_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _validate_sources(record: dict[str, object], root: Path) -> None:
+    source_path = str(record["source_path"])
+    source = root / source_path
+    if not source.is_file():
+        raise SiteAuditContractError(f"Missing source for {record['route']}: {source_path}")
+    if _source_sha256(source) != record["source_sha256"]:
+        raise SiteAuditContractError(f"Source digest mismatch for {record['route']}: {source_path}")
+
+    included_paths = cast(list[str], record.get("included_source_paths", []))
+    included_digests = cast(dict[str, str], record["included_source_sha256"])
+    if set(included_digests) != set(included_paths):
+        raise SiteAuditContractError(
+            f"Included source digest paths do not match {record['route']} included sources"
+        )
+    for included_path in included_paths:
+        included = root / included_path
+        if not included.is_file():
+            raise SiteAuditContractError(f"Missing source for {record['route']}: {included_path}")
+        if _source_sha256(included) != included_digests[included_path]:
+            raise SiteAuditContractError(
+                f"Source digest mismatch for {record['route']}: {included_path}"
+            )
+
+
 def validate_audit(audit: object, schema_path: Path, root: Path) -> None:
     """Validate schema, exact scope, stable identities, evidence, and blockers."""
     _validate_schema(audit, schema_path)
@@ -124,9 +153,7 @@ def validate_audit(audit: object, schema_path: Path, root: Path) -> None:
     claim_ids: set[str] = set()
     finding_ids: set[str] = set()
     for record in records:
-        sources = [record["source_path"], *cast(list[str], record.get("included_source_paths", []))]
-        if any(not (root / str(source)).is_file() for source in sources):
-            raise SiteAuditContractError(f"Missing source for {record['route']}")
+        _validate_sources(record, root)
         _validate_claims(record, root, claim_ids)
         _validate_findings(record, root, finding_ids)
 
@@ -172,6 +199,8 @@ def _route_report(
         "route": record["route"],
         "source_path": record["source_path"],
         "included_source_paths": record.get("included_source_paths", []),
+        "included_source_sha256": record["included_source_sha256"],
+        "source_sha256": record["source_sha256"],
         "source_revision": record["source_revision"],
     }
 
@@ -189,8 +218,8 @@ def render_report(report: dict[str, object]) -> str:
         f"- Finding priorities: {_counts(report['finding_priority_counts'])}",
         f"- Finding dispositions: {_counts(report['finding_disposition_counts'])}",
         "",
-        "| Audit ID | Route | Source | Claim Classes | Claims | Findings | Review Revision |",
-        "|---|---|---|---|---:|---|---|",
+        "| Audit ID | Route | Source | SHA-256 | Claim Classes | Claims | Findings | Review Revision |",
+        "|---|---|---|---|---|---:|---|---|",
     ]
     for route in cast(list[dict[str, object]], report["routes"]):
         classes = ", ".join(str(item) for item in cast(list[str], route["claim_classes"]))
@@ -198,7 +227,8 @@ def render_report(report: dict[str, object]) -> str:
         revision = str(route["source_revision"])
         lines.append(
             f"| `{route['audit_id']}` | `{route['route']}` | `{route['source_path']}` | "
-            f"{classes} | {route['claim_count']} | {findings or 'None'} | `{revision}` |"
+            f"`{route['source_sha256']}` | {classes} | {route['claim_count']} | "
+            f"{findings or 'None'} | `{revision}` |"
         )
     lines.append("")
     return "\n".join(lines)
