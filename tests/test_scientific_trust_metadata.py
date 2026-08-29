@@ -57,6 +57,7 @@ def test_registry_uses_a_strict_versioned_schema() -> None:
     ("summary_text", "strength", "message"),
     (
         ("This ratio always proves that correction is locked-in.", "bounded", "term"),
+        ("This ratio can prove that the golfer is locked-in.", "bounded", "term"),
         ("The modeled contribution is 85%.", "bounded", "percentage"),
         ("A universal golfer result.", "established", "strength"),
     ),
@@ -74,6 +75,22 @@ def test_accessible_summary_cannot_amplify_the_technical_claim(
 
     with pytest.raises(TrustContractError, match=message):
         validate_non_amplification(claim)
+
+
+@pytest.mark.parametrize(
+    "summary_text",
+    (
+        "DCR does not prove that a golfer is locked-in.",
+        "DCR doesn't prove that a golfer is locked-in.",
+    ),
+)
+def test_negated_boundary_terms_remain_allowed_in_accessible_text(summary_text: str) -> None:
+    claim = copy.deepcopy(_first_claim(_canonical()))
+    summary = claim["accessible_summary"]
+    assert isinstance(summary, dict)
+    summary["text"] = summary_text
+
+    validate_non_amplification(claim)
 
 
 def test_unknown_evidence_is_visible_and_unqualified() -> None:

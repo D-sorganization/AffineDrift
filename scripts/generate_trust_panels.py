@@ -24,17 +24,24 @@ AMPLIFICATION_TERMS = frozenset(
     {
         "always",
         "causal",
+        "cause",
         "causes",
         "exact",
         "exactly",
         "locked-in",
         "optimal",
+        "prove",
         "proves",
         "universal",
     }
 )
 PERCENTAGE = re.compile(r"(?<![\w.])\d+(?:\.\d+)?\s*%")
 TOKEN = re.compile(r"[a-z]+(?:-[a-z]+)?")
+CLAUSE_BOUNDARY = re.compile(r"[.!?;,:]|\b(?:although|and|but|however|yet)\b")
+NEGATION_TERMS = frozenset({"cannot", "never", "no", "not", "without"})
+NEGATED_CONTRACTION = re.compile(
+    r"\b(?:are|ca|could|did|does|do|is|should|was|were|will|wo|would)n['’]t\b"
+)
 
 
 class TrustContractError(ValueError):
@@ -134,8 +141,8 @@ def validate_accessible_text(
             f"summary strength {accessible_strength} exceeds technical strength {technical_strength}"
         )
 
-    technical_terms = AMPLIFICATION_TERMS.intersection(TOKEN.findall(technical_text.casefold()))
-    summary_terms = AMPLIFICATION_TERMS.intersection(TOKEN.findall(accessible_text.casefold()))
+    technical_terms = _assertive_amplification_terms(technical_text)
+    summary_terms = _assertive_amplification_terms(accessible_text)
     extra_terms = sorted(summary_terms - technical_terms)
     if extra_terms:
         raise TrustContractError(f"summary adds amplification term(s): {', '.join(extra_terms)}")
@@ -147,6 +154,18 @@ def validate_accessible_text(
         raise TrustContractError(
             f"summary adds percentage(s) absent from technical claim: {', '.join(extra_percentages)}"
         )
+
+
+def _assertive_amplification_terms(text: str) -> set[str]:
+    """Return high-risk terms used affirmatively within simple prose clauses."""
+    assertive: set[str] = set()
+    normalized = NEGATED_CONTRACTION.sub(" not ", text.casefold())
+    for clause in CLAUSE_BOUNDARY.split(normalized):
+        tokens = TOKEN.findall(clause)
+        terms = AMPLIFICATION_TERMS.intersection(tokens)
+        if terms and not NEGATION_TERMS.intersection(tokens):
+            assertive.update(terms)
+    return assertive
 
 
 def _label(value: object) -> str:
