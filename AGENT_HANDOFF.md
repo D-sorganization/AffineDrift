@@ -126,6 +126,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   tree-parity, LaTeX-structure, and diff gates pass. All three changed pages
   render to isolated HTML and expose the normative record without horizontal
   overflow at a 1,905-pixel desktop viewport; a fresh browser console is clean.
+  After merging protected #4019 at `48026454cdd3e07b3ce489d288efcb9295417b10`,
+  the seven scientific-trust selections pass all 49 tests, trust-panel
+  generation is fresh, and the focused lint/type/structure/diff gates remain
+  green on the reconciled head.
   Protected Python 3.12 and hosted exact-head checks remain release gates.
 
 ## Governed Scientific Trust Panels (#4019)
