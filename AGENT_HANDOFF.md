@@ -55,10 +55,16 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Quarto 1.8.26 renders the route; desktop 1440 x 1000 and mobile 390 x 844
   inspection verifies one H1, five responsive locally scrolling tables, seven
   rendered mathematics containers, no body overflow, and no site-originated
-  browser warnings or errors. Complete exact-head Python, JavaScript, type,
-  security, corpus, and hosted protected gates remain to be run. No product or
-  fitting recommendation and no coaching, clinical, design, causal, or
-  population authority is available.
+  browser warnings or errors. At exact integration head `cb692095`, the default
+  Python lane passes 3,449 tests with 29 documented skips and 93.15% coverage;
+  the content lane passes 105 tests with 4 documented skips; and Jest passes
+  297 tests with 19 documented skips. Full Ruff/Black, focused strict mypy,
+  code quality, module and changed-file budgets, pre-commit, bibliography and
+  citation gates, Quarto source gates, 229-URL bidirectional render coverage,
+  deterministic audit reports, and publication enforcement pass. Hosted
+  protected gates remain to be run after final protected-main reconciliation.
+  No product or fitting recommendation and no coaching, clinical, design,
+  causal, or population authority is available.
 
 ## Neural Timing and Feedback Perturbation Experiments (#4037 — In Progress)
 
