@@ -57,16 +57,16 @@ This is current operational state. Historical detail belongs in git/GitHub.
   was added. The first isolated Quarto render exposed an ambiguous nested
   include path; the canonical page now includes both governed boundaries
   explicitly, preserving the schema-v1.1 closure while rendering correctly.
-- Exact protected-base GREEN evidence is 18 focused executable contracts, 2
+- Exact reconciled-head GREEN evidence is 18 focused executable contracts, 2
   focused content/audit contracts, and 14 claim-audit contracts. The full
-  default `tests/` lane passes 3,396 tests with 30 documented skips; the content
+  default `tests/` lane passes 3,405 tests with 30 documented skips; the content
   lane passes 98 tests with 4 documented skips; and Jest passes 297 with 19
   documented skips. Ruff, Black, strict focused mypy, module budgets,
   changed-file budgets, full pre-commit, Quarto syntax, xrefs, single-title,
   title case, display math, terminology, frontmatter, bibliography, citation,
   227-route render coverage, claim-audit publication enforcement, and diff
-  gates pass before reconciliation; exact-head focused gates are repeated after
-  the ordinary protected merge.
+  gates pass. The reconciled #4037/#4062 audit-focused set passes 51 tests at the
+  exact ordinary-merge head.
 - Quarto 1.8.26 renders the route in isolation. Desktop 1440 x 1000 and mobile
   390 x 844 browser inspection verifies one H1, all required scientific
   sections, five responsive locally scrolling tables, no body overflow, no raw
