@@ -919,11 +919,18 @@ There is a dynamical imperative hidden in this construction. In phases of low ve
 The numbers below are hypothetical values chosen to illustrate the decomposition method. They do not represent real motion-capture measurements from a specific swing.
 :::
 
-To make this concrete, consider a hypothetical snapshot during mid-downswing. Suppose inverse dynamics analysis yields a total torque magnitude of $\tau_{\text{total}} = 100 \text{ Nm}$ at the lead shoulder, and the drift torque—evaluated from the passive terms at the actual state $x(t)$—is $\tau_{\text{drift}} = 85 \text{ Nm}$. The input torque is therefore:
+To make the bookkeeping concrete, consider a hypothetical snapshot during mid-downswing. Suppose the model assigns a **signed scalar generalized-torque component**, expressed in one declared coordinate and sign convention, of $\tau_{\text{total}} = 100 \text{ N m}$ at the lead shoulder. If the drift term evaluated at the same state and in the same coordinate is $\tau_{\text{drift}} = 85 \text{ N m}$, the model's input term is:
 
-$$\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}} = 100 - 85 = 15 \text{ Nm}.$$
+$$\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}} = 100 - 85 = 15 \text{ N m}.$$
 
-This tells us something striking: the golfer is applying only 15 Nm of active torque, while passive momentum, gravity, and elastic shaft forces are contributing 85 Nm—*85%* of the mechanical load. This is the essence of "surfing on momentum." The golfer's muscles are not driving the downswing; they are *steering* it. The drift dominates. In the takeaway, this ratio would be reversed: the golfer might apply 60 Nm of active torque against only 10 Nm of drift, because the system has less momentum and requires more muscular steering. This shift from "steering a momentum-driven system" to "actively powering the early motion" is invisible in raw inverse dynamics but transparent in the drift--input decomposition.
+This arithmetic establishes only a **pointwise generalized-torque decomposition** for the declared model and coordinate. It does not establish percentages of mechanical load, energetic contribution, physiological effort, or outcome. Mechanical power and work require velocity and a time interval:
+
+$$
+P = \tau^\mathsf{T}\dot{q}, \qquad
+W = \int_{t_0}^{t_1} P(t)\,dt.
+$$
+
+The input term is a net generalized quantity. It does not identify individual muscle forces, bilateral hand-force allocation, neural intent, or tissue loading; those require additional measurements, physiological models, and an identifiability analysis. The hypothetical numbers therefore illustrate the model's algebraic partition, not an empirical claim about how a golfer powers or steers a downswing.
 
 #### Scope and Limitations
 
@@ -1506,7 +1513,7 @@ In simulation (as developed in [Theory Part 4](theory-part4.html) and [Theory Pa
 - identification of torque timing patterns,
 - mapping of how individual torque bursts shape the club path.
 
-This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in Part I. We now catalogue these limitations to define the precise scope of validity for our causal claims.
+This taxonomy completes the theoretical framework by providing a model-conditioned bookkeeping map from declared force terms to selected mathematical categories. It does not turn observed forces into a unique map of real-world causes: different force partitions, coordinates, parameters, constraints, and unobserved inputs can be compatible with the same motion or net wrench. The algebra is exact only for the declared equations and partition. Its application to a golfer remains limited by the assumptions in Part I, measurement uncertainty, and identifiability.
 
 
 #### Limitations (Theoretical Scope)

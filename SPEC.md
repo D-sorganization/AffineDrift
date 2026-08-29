@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T06:05:22Z
+Last-Updated: 2026-08-29T06:19:06Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T06:05:22Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.237                                          |
+| **Spec Version**        | 1.0.238                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -50,6 +50,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Maintain opt-in performance benchmarks for stable computational paths without slowing routine CI
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
+- Maintain a tested mechanical-claim contract that keeps pointwise generalized
+  torque distinct from power, work, energy, tissue load, physiological effort,
+  and outcome; net generalized input must not be presented as identified
+  individual-muscle force, bilateral hand-force allocation, or neural intent
 - Publish an accessible, evidence-linked companion to the proximal--distal technical treatment, with original visual explanations and explicit model, human-evidence, and hypothesis boundaries
 - Pin the complete canonical proximal--distal claim audit by exact upstream
   merge and hashes, expose its reviewed/unadjudicated counts, and preserve
@@ -647,6 +651,14 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.238 Scientific Repair Program Reconciliation
+
+Preserves the protected #4014 mechanical-claim contract and its explicit
+torque, power, work, tissue-load, effort, and identifiability boundaries while
+adding the #4013 finite-horizon DCR reachability contract below. Neither program
+weakens the other's claim restrictions, regression coverage, or requirement to
+merge through ordinary protected review.
 
 ### 1.0.237 DCR Reachability Contract
 

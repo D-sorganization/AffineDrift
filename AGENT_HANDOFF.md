@@ -23,12 +23,35 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `[99, 101]` without changing width. Control-cone, drift-tube, pancake,
   timing, and face-variance conclusions remain unavailable until a governed
   event-level computation declares horizon, controls, metric, and uncertainty.
-- Workstation Python 3.13 evidence: 76 focused reachability and publication
-  tests passed; the full suite passed 3,255 tests with 29 documented skips.
+- Workstation Python 3.13 evidence before the protected-main reconciliation:
+  76 focused reachability and publication tests passed; the full suite passed
+  3,255 tests with 29 documented skips. After merging protected #4014, the
+  combined DCR, mechanical-claim, and publication regression selection passes
+  76 tests.
   Ruff, Black, strict mypy, terminology, title-case, cross-reference,
   display-math, and isolated Quarto 1.8.26 render gates pass. Python 3.12 is not
   installed in this worktree environment; do not treat 3.13 evidence as a
   substitute for the protected Python 3.12 lane.
+
+## Ultimate Companion Scientific Repair (2026-08-28)
+
+- Epic #4008 coordinates the AffineDrift--UpstreamDrift companion program;
+  scientific trust is #4009 and the generated software companion is #4010.
+- Issue #4014 merged through protected PR #4043 at
+  `b427347ccd5c18182b68274538c92c1e31906174`: its
+  content contract blocks torque/load/effort/muscle-cause conflation; the
+  torque example now distinguishes pointwise generalized torque from power
+  and work; accessible and technical force-taxonomy copy states the
+  model/measurement/identifiability boundary.
+- Required focused gate:
+  `python -m pytest tests/test_mechanical_claim_contract.py -m content_lint -q`.
+  Current evidence: 6/6 claim-contract tests and 3/3 adjacent public-content
+  hygiene tests pass; the complete `tests/` lane is 3,252 passed, 29 skipped,
+  and 67 deselected. Ruff and Black pass; strict mypy passes for the new test
+  (the full local mypy lane lacks the optional Streamlit dependency). All four
+  affected pages render to isolated HTML, and the revised appendix was
+  inspected at a 1440 x 1000 desktop viewport. This protected authority is now
+  part of `main` and must remain intact in subsequent scientific repairs.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
