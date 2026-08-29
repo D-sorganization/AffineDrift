@@ -44,6 +44,10 @@ def test_preregistration_freezes_sources_safety_phases_models_and_hypotheses() -
         "carey-et-al-2026",
         "hermens-et-al-2000",
     }
+    hermens = next(
+        source for source in protocol.sources if source.source_id == "hermens-et-al-2000"
+    )
+    assert hermens.source_type == "method-recommendation"
     assert len(protocol.safety.stopping_rules) >= 3
     assert {phase.phase_id for phase in protocol.phases} == {
         "transition",
@@ -87,6 +91,9 @@ def test_runtime_domains_and_preregistration_joins_fail_closed() -> None:
     )
     with pytest.raises(ValueError, match="endpoint and joint"):
         replace(protocol, models=(protocol.models[0], duplicate_output))
+    extra_endpoint = replace(protocol.models[0], model_id="extra-endpoint-model")
+    with pytest.raises(ValueError, match="exactly one endpoint and joint"):
+        replace(protocol, models=(*protocol.models, extra_endpoint))
 
     duplicate_phase = replace(protocol.phases[1], phase_id=protocol.phases[0].phase_id)
     with pytest.raises(ValueError, match="phase IDs"):
@@ -185,6 +192,19 @@ def test_near_singular_design_uses_the_same_relative_tolerance_for_rank_and_fit(
     assert report.identifiable is False
     with pytest.raises(ValueError, match="identifiable"):
         fit_impedance(tolerant_model, design, response)
+
+
+def test_rank_and_condition_domains_reject_nonsensical_numerical_gates() -> None:
+    model, design, _, _ = manufactured_full_rank_case("transition")
+
+    with pytest.raises(ValueError, match="rank tolerance"):
+        replace(model, rank_tolerance=1.0)
+    with pytest.raises(ValueError, match="condition number"):
+        replace(model, maximum_condition_number=0.99)
+    with pytest.raises(ValueError, match="rank tolerance"):
+        assess_identifiability(design, 1.0, model.maximum_condition_number)
+    with pytest.raises(ValueError, match="condition number"):
+        assess_identifiability(design, model.rank_tolerance, 0.99)
 
 
 def test_endpoint_and_joint_impedance_are_distinct_model_conditioned_outputs() -> None:
