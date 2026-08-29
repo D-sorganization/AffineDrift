@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T12:25:08Z
+Last-Updated: 2026-08-29T12:48:01Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T12:25:08Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.253                                          |
+| **Spec Version**        | 1.0.255                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -117,6 +117,12 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   reliability, and a prospectively registered held-out analysis plan; keep
   reflex, passive, voluntary, stiffness, muscle, human, coaching, and clinical
   claims model-conditioned or unavailable
+- Maintain a source-bounded hybrid impact/contact protocol that freezes the
+  pre-impact state, contact frame and signs, rigid impulse reset, finite-duration
+  compliant law, hybrid guard/reset policy, event-time and parameter uncertainty,
+  solver convergence, balance checks, and adverse dispositions; select models
+  per declared output and validation envelope, and withhold equipment, human,
+  causal, coaching, and clinical authority until their independent gates pass
 - Pin the trajectory-level synthetic point-force sensor qualification by
   immutable upstream commit and hashes; expose allocation error independently
   of net-wrench closure, cross-talk calibration, contact-center migration, and
@@ -408,7 +414,8 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F70 | Site-level scientific trust-surface audit            | ✅     | The homepage and all twelve `/pages/*.html` routes carry a strict, revision-bound audit of claim class, authority, assumptions, uncertainty, falsifiers, audience limits, adversarial counterexamples, findings, and disposition. Stable route and claim-occurrence IDs join the #4019 claim contract and #4020 critique ledger without replacing them. Eleven P1, five P2, and one P3 amplification, authority, support-boundary, or render-integrity defects are corrected; no P0/P1 blocker remains. Availability, validation, experimental work, plans, deprecation, and opinion are explicitly distinct, while the overview pins its UpstreamDrift API/support statement to a protected revision and distinguishes package metadata from tested interpreter minors. Exact SHA-256 evidence verifies every scoped canonical source without Git-history assumptions; exact 13-route scope, deterministic reports, and fail-closed P0/P1 handling are executable contracts (#4063). |
 | F71 | Active impedance identification protocol            | ✅     | A source-bounded synthetic-feasibility protocol freezes perturbation-device safety, zero-anchored phase windows, exact endpoint/joint model cardinality, excitation, bounded relative SVD/lstsq tolerance, uncertainty, reliability, and negative/null/unavailable outcomes. Governed same-side agonist/antagonist records bind exact channel IDs, roles, normalization revision, amplitude-driven CCI formula, within-formula comparison scope, and sensitivity plan. Every result carries a strict origin/provenance record that prevents silent synthetic-to-measured promotion. Human records and a prospectively registered held-out analysis plan establish only non-authorizing external-review readiness; no muscle-force, unique physiological partition, participant, coaching, or clinical authority is permitted (#4036). |
 | F72 | Book and publication-roadmap trust audit              | ✅     | All six `/books/*.html` routes carry a strict adversarial audit tied to exact bytes for their canonical QMD route, canonical manuscript `main.tex` authority, notebook manifest, and every declared review and corrected-finding evidence path. The public pages distinguish available provisional manuscripts from scaffolded notebooks and separately governed software capability. Volume I adds canonical chapters 3B and 9, Volume IV adds 7B, and the roadmap derives 10/11/10/12 substantive chapter counts from manuscript inputs while removing unsupported time, mastery, completion, comprehensiveness, and prerequisite-waiver claims. Mathematical, causal, biological, instructional, and deployment language is bounded; all six P1 findings are corrected. Schema v1.1 validates canonical route sources, recursive Quarto includes, and exact SHA-256 maps without Git-history assumptions. Exactly six deferments become reviewed, leaving 23 reviewed, 200 deferred, and 2 exempt routes (#4062). |
-| F73 | Neural timing and feedback perturbation protocol     | ✅     | A preregisterable synthetic-feasibility protocol separates general upper-limb evidence from golf-specific evidence and freezes phase-specific mechanical, visual, and auditory perturbations; active-to-sham joins; physical onset witnesses; calibrated shared-clock channels; perturbation-detection, muscle-response, mechanical-effect, and task-correction layers; expectation, order, learning, and history; hierarchical hypotheses; target power; Holm multiplicity control; complete uncertainty; and negative/null/unavailable outcomes. Deterministic fixtures reject a serial latency sum and preserve exact synthetic provenance. Human collection, participant count, unique neural-pathway or muscle-force attribution, population transport, coaching, and clinical authority remain unavailable (#4037). |
+| F73 | Hybrid impact/contact and event-time protocol       | ✅     | A versioned source-bounded protocol compares paired-body rigid impulse, finite-duration compliant contact, and flow-to-guard hybrid reset models on analytic and deterministic synthetic fixtures. Exact DbC records freeze SI frame/sign conventions, state and parameter domains, guard and separation policies, grazing and multiple-contact rejection, solver limits, momentum/restitution/energy accounting, fixed-step convergence, and a complete 81-case event-time/restitution/friction/face-angle grid. Outcomes are qualified separately; negative, null, failed, and unavailable states remain visible, no model is globally preferred, and no equipment, human, causal, coaching, or clinical authority is granted (#4038). |
+| F74 | Neural timing and feedback perturbation protocol     | ✅     | A preregisterable synthetic-feasibility protocol separates general upper-limb evidence from golf-specific evidence and freezes phase-specific mechanical, visual, and auditory perturbations; active-to-sham joins; physical onset witnesses; calibrated shared-clock channels; perturbation-detection, muscle-response, mechanical-effect, and task-correction layers; expectation, order, learning, and history; hierarchical hypotheses; target power; Holm multiplicity control; complete uncertainty; and negative/null/unavailable outcomes. Deterministic fixtures reject a serial latency sum and preserve exact synthetic provenance. Human collection, participant count, unique neural-pathway or muscle-force attribution, population transport, coaching, and clinical authority remain unavailable (#4037). |
 
 ### API / Interface Contract
 
@@ -703,14 +710,17 @@ python src/tools/code_quality_check.py
 ### Known Limitations
 
 - **Real-time Performance**: Current optimizers are designed for batch analysis, not real-time control (handled by UpstreamDrift)
-- **Physical Accuracy**: Models assume rigid-body dynamics; soft-tissue deformation not modeled
+- **Physical Accuracy**: Primary swing models assume rigid-body dynamics. The
+  hybrid-impact research route includes one uncalibrated reduced compliant contact
+  law for solver/protocol testing; it is not a qualified material, equipment, or
+  soft-tissue model.
 - **Browser Support**: Progressive Web App features require modern browsers (ES6+, Service Worker API)
 - **Content Rendering**: Complex 3D visualizations limited to JavaScript WebGL (no headless rendering)
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
 
-### 1.0.254 Neural Timing and Feedback Perturbation Protocol
+### 1.0.255 Neural Timing and Feedback Perturbation Protocol
 
 Adds a source-bounded protocol for mechanical, visual, and auditory
 perturbations during registered phases of golf-like motion. Typed DbC records
@@ -724,11 +734,30 @@ cannot imply one serial pathway. Interval decisions recompute their declared
 supported, negative, or null classification and reject any manual label that
 contradicts its complete uncertainty bounds. The reviewed public route
 separates general upper-limb studies from golf-specific visual-occlusion
-evidence and is bound
-under claim-audit schema v1.1 to the canonical QMD, both recursive includes,
+evidence and is bound under claim-audit schema v1.1 to the canonical QMD, both
+recursive includes,
 the bibliography, executable modules, and focused test through exact SHA-256
 digests. Participant work and neural, muscle, coaching, and clinical authority
 remain unavailable.
+
+### 1.0.254 Hybrid Impact-Contact and Event-Time Uncertainty
+
+Adds a source-bounded synthetic research protocol for three outcome-specific
+club--ball contact abstractions: paired-body Newton/Coulomb rigid impulse,
+finite-duration regularized compliant contact, and constant-acceleration flow to
+an uncertain guard followed by the rigid reset. Analytic balances, restitution,
+energy accounting, force/impulse integration, step-halving convergence, grazing,
+separating, multiple-contact, and solver-failure cases are executable contracts.
+A complete 81-combination event-time, restitution, friction, and face-normal
+angle grid publishes intervals without best-case selection. The canonical
+bibliography now reproduces all scholarly volume, issue, page, edition, DOI,
+URL, arXiv, and note metadata needed by the protected bibliography, preserves
+all prior unique works while removing a duplicate entry, and registers four
+primary hybrid-impact sources. The reviewed public route is bound to exact
+SHA-256 source/code/test evidence and states that checksum evidence is not
+scientific validation. Physical and participant promotion remain unavailable
+pending calibrated equipment, three-dimensional contact, uncertainty,
+held-out, ethics, privacy, consent, safety, and independent approval gates.
 
 ### 1.0.253 Book and Publication-Roadmap Trust Audit
 
@@ -1062,7 +1091,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-08-29 | 1.0.254 | feat(science, #4037): Added a preregisterable multimodal perturbation protocol with exact sham, clock, onset, response-layer, expectation/history, hierarchy, power, Holm, uncertainty, provenance, and adverse-result contracts; published a recursively digest-bound reviewed route while withholding participant, pathway, muscle, population, coaching, and clinical authority.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| 2026-08-29 | 1.0.255 | feat(science, #4037): Added a preregisterable multimodal perturbation protocol with exact sham, clock, onset, response-layer, expectation/history, hierarchy, power, Holm, uncertainty, provenance, and adverse-result contracts; published a recursively digest-bound reviewed route while withholding participant, pathway, muscle, population, coaching, and clinical authority.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | 2026-08-29 | 1.0.252 | feat(science, #4036): Added the source-bounded active-impedance and governed CCI identification protocol, exact recovery and confounding fixtures, common rank/fit tolerance, typed non-authorizing human readiness, adverse-result preservation, and a reviewed public route without muscle, coaching, or clinical authority.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | 2026-08-29 | 1.0.250 | feat(science, #4035): Added the source-bounded bilateral hand-wrench identifiability and instrumented-grip qualification protocol, deterministic synthetic/manufactured-benchtop fixtures, exact rank and ambiguity controls, measurement/inference tiers, fail-closed human governance, and a reviewed public route while preserving the protected deferred-route partition.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | 2026-08-28 | 1.0.239 | fix(science, #4012): Corrected the canonical control-affine theory sources so Hill-type state-dependent gains and state-only aerodynamics are not misclassified as non-affine; replaced false orthogonality and causal/intent/muscle overreach with a shared model-, intervention-, and identifiability-conditioned attribution boundary; preserved the protected #4013 and #4014 scientific contracts; and added failing-first corpus contracts across the maintained series, foundational monograph, and single-file edition.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
