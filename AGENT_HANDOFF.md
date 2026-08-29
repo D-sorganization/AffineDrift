@@ -100,6 +100,29 @@ This is current operational state. Historical detail belongs in git/GitHub.
   inspected at a 1440 x 1000 desktop viewport. This protected authority is now
   part of `main` at `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed,
   and its claim boundaries must remain intact in subsequent scientific repairs.
+- Issue #4017 merged through protected PR #4047 at
+  `64624ca9ff9390be0b42f5b714b021718cc4ba85`: the Physics of Golf Quarto
+  and LaTeX chapters no longer add parallel sensory and motor
+  pathways into a single round-trip delay or treat feedforward and feedback as
+  exclusive. Short-latency (20--45 ms), long-latency (50--100 ms), voluntary
+  (>100 ms), and late visually guided responses are separated from their
+  task-, phase-, and outcome-dependent mechanical authority. Golf-specific
+  reliance claims remain experimental pending time-locked perturbation,
+  muscle, motion, and outcome evidence.
+- Required focused gates:
+  `python -m pytest tests/test_sensorimotor_claim_contract.py -m content_lint -q`,
+  `python scripts/audit_book_citations.py --chapter ch24_motor_control_brain --check`,
+  and `python scripts/check_bibliography_cross_file.py`.
+- Current #4017 evidence after merging protected #4044: 11 combined #4013,
+  #4014, and #4017 contract tests pass; the full default Python lane passes
+  3,255 tests with 29 documented skips; the content-lint lane passes 71 tests
+  with 4 skips and 3,284 deselections. Strict mypy, Ruff, Black, terminology,
+  title-case, display-math, Quarto citation resolution, and cross-bibliography
+  identity gates pass. Both affected Quarto chapters render in isolation and
+  were inspected at a 1440 x 1000 desktop viewport with one H1, no broken
+  media, and no horizontal overflow. The chapter-pair citation audit retains
+  one pre-existing edition-specific Jorgensen key in each tree; both new
+  long-latency citations are shared by the Quarto and LaTeX editions.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
