@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T07:26:00Z
+Last-Updated: 2026-08-29T07:45:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T07:26:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.243                                          |
+| **Spec Version**        | 1.0.244                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -63,6 +63,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   partition, residual treatment, tolerance, output, and identifiability; treat
   coordinate components and repartitioned terms as non-unique representations,
   and report unsupported cross-engine states without implying parity
+- Require every executable or quantitative ZTCF result to carry a versioned,
+  fail-closed intervention record that freezes model and engine authority,
+  branch state, zeroed inputs, retained dynamics, frame, units, solver, horizon,
+  interpretation boundaries, and failure states
 - Maintain generated, schema-validated scientific trust panels whose stable
   claim IDs bind accessible summaries to bounded technical claims, provenance,
   uncertainty, limitations, falsifiers, review state, and the next validation
@@ -668,7 +672,7 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
-### 1.0.243 Induced-Acceleration Attribution Contract
+### 1.0.244 Induced-Acceleration Attribution Contract
 
 Makes induced-acceleration analysis a model-, coordinate-, constraint-, contact-,
 force-partition-, residual-, solver-, and output-dependent ledger rather than
@@ -681,6 +685,20 @@ their sum. Content contracts reject unique-cause wording without an explicit
 identifiability qualifier and prohibit control/muscle/intent and cross-engine
 parity conflation. The current chapter supplies no qualified AffineDrift human-
 golf attribution or coaching result.
+
+### 1.0.243 ZTCF Intervention Contract
+
+Adds `affinedrift.ztcf-intervention/v1`, a public JSON schema, and a deterministic
+golden fixture for the repository's supported planar Python rollout. The
+executable contract rejects unavailable and engine-unsupported interventions
+without substituting results and withholds cross-engine parity unless two
+registered implementations, a metric, and tolerance exist. Canonical and paired
+textbook sources now separate simulated trajectory difference, contribution
+measure, causal estimand, and physiological interpretation; each states the
+non-identifiability boundary and preserves the protected #4013 reachability and
+#4014 mechanical-attribution authorities. It also preserves the now-protected
+#4015 planar-spatial, #4012 control-affinity, #4017 sensorimotor, and #4019
+trust-metadata contracts from merged `main`.
 
 ### 1.0.242 Governed Scientific Trust Metadata
 

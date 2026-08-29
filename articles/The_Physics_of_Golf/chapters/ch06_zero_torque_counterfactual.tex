@@ -5,18 +5,14 @@
 \label{ch:zero_torque_counterfactual}
 
 \epigraph{%
-What would happen to your swing if your muscles simply shut off right now? \\
-This counterfactual reveals what you're \emph{actually controlling}.
+What does this exact model compute when one declared generalized-torque channel is set to zero? \\
+The answer is conditional on the intervention record.
 }{---A thought experiment in constraint physics}
 
 \begin{laymansbox}{The Central Question}{context:ztcf_motivation}
-Every swing is the result of two competing forces:
-\begin{enumerate}
-\item \textbf{What your muscles are doing:} the torques you apply at your joints.
-\item \textbf{What the laws of physics are doing on their own:} gravity, centrifugal effects, and energy transfer through the kinetic chain.
-\end{enumerate}
-
-Most golfers think they're creating the swing through muscular effort. In reality, the opposite is closer to the truth: \emph{you're preventing the swing from happening too fast}.
+The model assigns terms to a declared autonomous plant and to declared input
+channels. That bookkeeping does not identify individual muscle forces or divide
+a real swing into physiology versus physics.
 
 The \textbf{forward Zero-Torque Counterfactual (ZTCF) trajectory} is a model intervention. It asks: \textbf{What trajectory follows when the declared applied generalized-control channel is set to zero while the declared effective plant is retained?}
 
@@ -40,17 +36,30 @@ The \textbf{forward Zero-Torque Counterfactual trajectory} is $\bm{q}_{\text{ZTC
 The retained term $\bm{h}$ must be declared and may include Coriolis/centrifugal effects, gravity, passive joint impedance, shaft dynamics, damping, and modeled contact or constraint reactions. Exogenous loads and contact modes follow the stated protocol. Zero declared control does not imply zero muscle activation, zero co-contraction, or a flaccid body.
 \end{definition}
 
+\section{Normative ZTCF Contract}
+\label{sec:ztcf_contract}
+
+Every executable or quantitative record uses
+\texttt{affinedrift.ztcf-intervention/v1}. The published normative schema and
+Python golden fixture freeze model/version/revision, inputs, state, units,
+frame, retained controls/constraints/contact/loads/internal states,
+solver/version, horizon, preconditions, postconditions, and failure states. The
+ZTCF is a model-conditioned intervention. The record separates simulated trajectory difference
+from any contribution measure. It states each causal estimand and physiological interpretation,
+and records non-identifiability explicitly. Unavailable or engine-unsupported
+interventions fail closed; no MATLAB, Simulink, or cross-engine parity result is
+inherited from the Python fixture. The public records are
+\url{https://affinedrift.com/data/ztcf/ztcf_intervention_v1.schema.json} and
+\url{https://affinedrift.com/data/ztcf/planar_golf_forward_fixture_v1.json}.
+
 \begin{laymansbox}{Understanding the ZTCF}{inplain:ztcf_meaning}
 Think of this as a software intervention rather than a physiological event. At a selected state, the simulator sets the declared applied generalized-control vector to zero while retaining the effective plant and protocol-specified loads. It then evaluates either an instantaneous sample or a forward rollout.
 
-The answer: the system undergoes \emph{passive dynamics}—motion driven purely by gravity, by the momentum already stored in your limbs, and by the couplings between segments.
-
-This is not a realistic scenario. Your muscles are always active. But it's an invaluable \emph{reference trajectory}, a yardstick that tells you:
-\begin{itemize}
-\item \textbf{How much of the swing motion is "free"} (driven by passive physics).
-\item \textbf{How much requires active muscular control} (the difference between actual and ZTCF).
-\item \textbf{Where control is critical} (where ZTCF diverges badly from the actual swing).
-\end{itemize}
+The answer is the trajectory of the retained effective plant. Its forces are
+exactly those listed in the intervention record; they are not assumed to be
+purely gravitational, inertial, or biologically passive. The rollout is a
+software branch, not a measured muscle state, and cannot uniquely allocate a
+difference to activation, effort, strategy, or omitted forces.
 
 Agreement with measured motion supports the adequacy of that model and intervention over the tested interval; it does not establish low EMG or relaxation. Divergence can reflect control input, parameter error, omitted forces, contact mismatch, or numerical error.
 \end{laymansbox}
@@ -109,7 +118,10 @@ At a fixed state, the acceleration block admits the pointwise decomposition
 \node at (-0.8, 5) [rotate=90, font=\small] {Torque};
 
 \end{tikzpicture}
-\caption{Schematic Comparison of ZTCF and Actual Torque Trajectories During the Swing. The ZTCF Torque (Red, Passive) Grows Quadratically With Velocity. The Actual Torque (Blue) Is Modulated by Control. The Difference (Green, Control Input) Varies Through the Swing. Early Phases Require Substantial Control Input; Late Phases Show Reduced Control as Drift Dominates (High DCR).}
+\caption{Schematic model comparison of a declared drift-equivalent generalized
+quantity (red) and a separately specified reference branch (blue). The green
+difference is illustrative only; without an intervention record it is not a
+validated trajectory, causal effect, or physiological attribution.}
 \label{fig:ch06_ztcf_timeline}
 \end{figure}
 
@@ -121,41 +133,19 @@ where:
 
 Calling a drift term a ``ZTCF torque'' is avoided because generalized force and acceleration are different representations. Any force-space decomposition must declare its mass matrix, Jacobian, projection, and constraint treatment.
 
-\begin{principle}{The Control Signal is Not the Total Torque}{principle:control_vs_total}
-Novice biomechanics assumes that what the muscles produce \emph{is} the motion. This is wrong. The muscles produce a \emph{control signal}, an adjustment to the passive dynamics. The actual motion arises from the interplay of both.
-
-A professional golfer's advantage is \emph{not} producing more total torque. It's producing smaller, more precisely-timed \emph{control signals} that guide the massive passive dynamics into a collision with the golf ball.
+\begin{principle}{Generalized Input Is Not Physiological Attribution}{principle:control_vs_total}
+Net generalized torque, the modeled input term, individual muscle forces,
+activation, co-contraction, impedance, and effort are distinct quantities. A
+pointwise affine decomposition is exact within its declared model, but it does
+not identify the biological source of either term.
 \end{principle}
 
-\begin{laymansbox}{Why This Matters for the Swing}{inplain:ztcf_application}
-The ZTCF analysis reveals a fundamental decomposition of swing dynamics:
-
-At any frozen state, the generalized acceleration splits additively into a passive
-contribution and a contribution linear in the control input. That split holds instant
-by instant. It does \emph{not} carve the finished swing into a passive trajectory plus
-a control trajectory: the dynamics are nonlinear in the state, so trajectories do not
-superpose.
-
-Read at that instantaneous scope, the decomposition has important implications for
-understanding the downswing:
-
-\begin{enumerate}
-\item \textbf{Initial conditions matter}: The configuration and velocities at the top of the backswing determine the passive trajectory (ZTCF). If the initial state is chosen correctly, the passive dynamics carry much of the downswing motion naturally. If not, active control must work harder.
-
-\item \textbf{Control acts as correction}: The actual motion $\bm{q}(t)$ will deviate from the ZTCF trajectory. The deviation $\Delta \bm{q}(t) = \bm{q}(t) - \bm{q}_{\text{ZTCF}}(t)$ is driven by the control input $\bm{u}(t)$. The control input magnitude needed depends on how different the actual trajectory is from what passive dynamics would produce.
-
-\item \textbf{Control timing is critical}: From the optimal control perspective, the most efficient control occurs early (when control authority is high) and strategically during phases when the ZTCF trajectory diverges from the target. Late-swing corrections require larger muscular effort when the selected DCR is high.
-
-\end{enumerate}
-
-\textbf{Computational approach:} To design an efficient swing, one could:
-\begin{enumerate}
-\item Compute the ZTCF trajectory from the initial state.
-\item Identify deviations from desired impact conditions.
-\item Solve for control inputs that minimize the cost of correction.
-\end{enumerate}
-
-This systematic approach connects biomechanical parameters, system dynamics, and control design.
+\begin{laymansbox}{What This Analysis Can Support}{inplain:ztcf_application}
+A registered ZTCF can compare model branches, test implementation closure, and
+quantify a declared task difference. It cannot prescribe setup, timing,
+relaxation, or coaching cues. Human-performance conclusions require measured
+participants and an analysis that separates model discrepancy from the named
+intervention.
 \end{laymansbox}
 
 %============================================================================
@@ -173,19 +163,19 @@ Given the current state $\bm{x}(t_0) = (\bm{q}(t_0), \dot{\bm{q}}(t_0))$ at time
 \ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q}) \right]
 \label{eq:ztcf_acceleration}
 \end{equation}
-This equation gives the acceleration purely from passive forces (gravity, Coriolis).
+This equation gives the acceleration from the terms retained in this simplified declared model.
 
 \item \textbf{Integrate:} Numerically integrate this ODE from $t_0$ forward in time using a standard solver (e.g., RK4). The declared applied generalized-control channel is zero; the retained effective plant determines the branch.
 
-\item \textbf{Compare to reality:} Overlay the ZTCF trajectory with the actual measured swing. The deviation tells you where active control is required.
+\item \textbf{Report the branch:} Compare only under a declared metric and uncertainty model. Divergence is not uniquely attributable to active control.
 \end{enumerate}
 \end{algorithm}
 
-\begin{example}{Simulink Implementation: The ``Kill-Switch'' Model}{ztcf_simulink}
-In practice, the ZTCF is computed in simulation by:
+\begin{example}{Generic Branch-Switch Pattern}{ztcf_simulink}
+A branch-switch architecture proceeds by:
 
 \begin{enumerate}
-\item Building a forward-dynamics model of the arm/club system, including all passive forces.
+\item Registering the forward-dynamics model and retained-force inventory.
 
 \item Including a \textbf{``kill switch''} parameter, a binary flag $k_u$ that multiplies the input torques:
 \begin{equation}
@@ -199,10 +189,12 @@ In practice, the ZTCF is computed in simulation by:
 \item With $k_u = 0$: the ZTCF (uncontrolled) dynamics.
 \end{itemize}
 
-\item Both simulations start from the \emph{same initial condition}, so any divergence is purely due to the difference in applied torques.
+\item Both simulations start from the same registered state. Differences remain conditional on model identity, retained protocols, and numerical error.
 \end{enumerate}
 
-In Simulink, this is literally a switch block in the control signal path, allowing you to toggle between reality and counterfactual with a single parameter change.
+The Python fixture is the only executable engine registered here. A Simulink
+switch is an illustrative architecture, not a supported or parity-validated
+implementation under this contract.
 \end{example}
 
 %============================================================================
@@ -267,16 +259,12 @@ Any numerical DCR claim should report enough information for another reader to r
 Without these declarations, a value such as DCR $=10$ should be read only as an illustrative scale, not as an experimentally established phase boundary.
 \end{constraintbox}
 
-\begin{constraintbox}{DCR as a Control-Authority Diagnostic}{constraint:dcr_meaning}
-The Drift-Control Ratio is a \emph{model-dependent control-authority diagnostic}. It asks: \textbf{How large is the modeled drift field compared with the control acceleration available under the stated torque bound and weighting?}
-
-\begin{itemize}
-\item \textbf{Early backswing (low DCR):} modeled control has substantial leverage over the subsequent state.
-\item \textbf{Early downswing (moderate DCR):} gravity, inertia, and Coriolis terms become comparable with bounded control.
-\item \textbf{Late downswing (high DCR):} modeled drift can substantially exceed late corrective authority, so impact conditions are more sensitive to earlier state preparation than to last-instant intervention.
-\end{itemize}
-
-The increase in DCR during the downswing is a hypothesis to evaluate in a specified model, not a universal numerical law.
+\begin{constraintbox}{DCR as a Magnitude Diagnostic}{constraint:dcr_meaning}
+The Drift-Control Ratio asks: \textbf{How large is the modeled drift field
+compared with bounded control acceleration under the stated projection, norm,
+and input set?} It does not determine whether a subsequent state is reachable,
+whether a ZTCF branch approaches the reference branch, or how impact conditions
+respond to an intervention. Those are finite-horizon questions.
 \end{constraintbox}
 
 \begin{example}{The DCR Growth in a Typical Swing}{dcr_blowup_numbers}
@@ -294,7 +282,7 @@ At this configuration, using the club center-of-mass distance $L_{c,2} = 0.15$~m
 \label{eq:dcr_example_coriolis}
 \end{equation}
 
-The typical muscular torque available at the elbow is perhaps $5$--$10$ Nm. Thus:
+For a declared illustrative torque bound of $7.5$ Nm:
 \begin{equation}
 \text{DCR}_{\text{elbow}} \approx \frac{0.6}{7.5} \approx 0.08
 \label{eq:dcr_example_ratio}
@@ -312,7 +300,8 @@ Now:
 \label{eq:dcr_example_late_ratio}
 \end{equation}
 
-Even in this toy model, the passive term still grows quadratically with speed. In richer models and near-impact postures, published inverse-dynamics studies report wrist Coriolis torques on the order of 10--50 Nm \citep{Nesbit2005}. With muscular torques of $\sim$10--20 Nm, the DCR at the wrist can still become large in the late downswing.
+This toy calculation shows the velocity scaling of one term under its stated
+parameters. It does not establish a human torque bound or a late-downswing DCR.
 
 \textbf{Interpretation:} In this simplified interpretation, the main point is the quadratic scaling of passive torque with velocity. The late downswing still demands careful timing, but this toy example should not be read as a literal hundreds-of-Nm Coriolis estimate.
 \end{example}
@@ -325,19 +314,19 @@ The mathematical origin of high DCR is the velocity-dependent scaling of the dri
 \tau_{\text{passive}} \propto \dot{\bm{q}}^2
 \end{equation}
 
-\textbf{Muscular torque (control input):} The input $\bm{u}$ is bounded by physiology, activation history, and force--velocity effects:
+\textbf{Declared generalized torque bound:} The input set must be registered:
 \begin{equation}
-|\tau_{\text{muscle}}| \leq \tau_{\text{max}}
+|\tau_{\text{input}}| \leq \tau_{\text{bound}}
 \end{equation}
 
 As velocity increases during the downswing, the modeled velocity-dependent drift can grow as $v^2$, while available corrective torque is bounded. In the single-joint simplification:
 \begin{equation}
-\text{DCR} = \frac{\tau_{\text{passive}}}{\tau_{\text{muscle}}} \propto \dot{\bm{q}}^2
+\text{DCR} = \frac{\tau_{\text{drift}}}{\tau_{\text{bound}}} \propto \dot{\bm{q}}^2
 \end{equation}
 
-can grow rapidly with velocity. This explains why late-downswing correction can become difficult in high-speed models, but the threshold is not universal; it depends on body parameters, club parameters, the selected norm, and the torque bound.
-
-\textbf{Implication:} To achieve high clubhead speeds with repeatability, the control strategy should prepare useful states early, when control authority is larger, and treat late-downswing control as bounded steering rather than unlimited last-moment correction.
+can grow rapidly with velocity in that simplification. Whether a task correction
+becomes unavailable still requires a finite-horizon reachability calculation
+with declared controls, metric, uncertainty, and event outcome.
 \end{laymansbox}
 
 %============================================================================
@@ -462,9 +451,10 @@ Now compare to the actual swing. If the actual $\ddot{q}_1 = 2$ rad/s$^2$ and $\
 \tau_{\text{input},2} &\approx 0.015 \times (8 - 39.6) = 0.015 \times (-31.6) \approx -0.47 \text{ Nm}
 \end{align}
 
-\textbf{Insight:} The shoulder requires a muscular torque of $4.5$ Nm to \emph{slow the natural acceleration} (gravity wants to accelerate it more). The elbow requires a \emph{braking} torque of $-0.47$ Nm to prevent the club from extending as fast as physics wants it to.
-
-This is the hallmark of the downswing: muscles are mostly \emph{restraining}, not driving.
+\textbf{Insight:} Under this coordinate convention and toy-model inventory, the
+applied generalized input is approximately $4.5$ Nm at the shoulder and
+$-0.47$ Nm at the elbow. These net generalized quantities do not identify a
+muscle, activation level, or biological strategy.
 \end{example}
 
 %============================================================================
@@ -482,7 +472,9 @@ In a real swing, you can measure:
 \item Reaction forces at the grip (via force plates or instrumented clubs).
 \end{itemize}
 
-But you \emph{cannot} directly observe what would happen if you removed the muscle torques. That's a counterfactual.
+But you cannot directly observe the trajectory generated by zeroing a modeled
+generalized-control channel. That trajectory is a model-conditioned
+counterfactual, not an observation of removed muscle activity.
 
 To compute the ZTCF, you must:
 \begin{enumerate}
@@ -492,11 +484,16 @@ To compute the ZTCF, you must:
 \item Solve the passive EOM with $\bm{u} = \mathbf{0}$.
 \end{enumerate}
 
-The accuracy of the ZTCF depends entirely on how well your model captures the true biomechanics.
+The usefulness of the ZTCF depends on the declared model, retained-load
+inventory, parameter estimates, solver, initial state, and horizon. A fixture
+can verify software replay; it cannot establish a unique ``true''
+counterfactual for a person.
 \end{principle}
 
 \begin{laymansbox}{Why Model Errors Matter}{inplain:ztcf_model_error}
-Suppose your estimate of the club's moment of inertia is off by 20\%. This affects how Coriolis torques scale. The ZTCF trajectory will diverge from the true counterfactual.
+Suppose your estimate of the club's moment of inertia is off by 20\%. This
+changes the retained inertial and velocity-dependent terms, so the computed
+ZTCF trajectory can change materially.
 
 This is why researchers spend so much effort on accurate biomechanical parameter estimation. The ZTCF analysis is only as good as the model underneath.
 
@@ -504,46 +501,44 @@ However—and this is important—the ZTCF can still be \emph{qualitatively} use
 \end{laymansbox}
 
 %============================================================================
-\section{Implications: Late Downswing Has a Narrow Correction Window}
+\section{Hypothesis: Late-Downswing Correction Under a Declared Model}
 \label{sec:swing_ballistic_commitment}
 
-\begin{principle}{Late-Downswing Commitment}{principle:ballistic_commitment}
-The ZTCF analysis suggests: \textbf{the late downswing becomes strongly conditioned by the state established before impact}.
+\begin{principle}{Model-Conditioned Late-Downswing Hypothesis}{principle:ballistic_commitment}
+For a specified plant, admissible-input set, metric, and horizon, a ZTCF
+comparison can motivate the hypothesis that the late-downswing state is
+strongly conditioned by an earlier state. ZTCF alone does not establish human
+control authority or coaching guidance.
 
-As club and body speeds increase, velocity-dependent drift terms often grow faster than the late corrective authority available from bounded muscle torques. A rough illustrative speed scale such as club speed on the order of 50 mph (22 m/s) with shoulder rotation on the order of 8--10 rad/s \citep{Nesbit2005} should be treated as model input, not a universal threshold.
+Some velocity-dependent model terms are quadratic in generalized velocity,
+but that fact alone does not determine reachable corrections. Any claim about
+late corrective authority requires a declared admissible-control set,
+finite-horizon reachability calculation, constraints, and sensitivity study.
 
-At this point:
-\begin{itemize}
-\item The direction and speed of the club are strongly conditioned by the kinematics and velocities already present.
-\item Muscular torques still contribute to stiffness, release timing, and small steering corrections, but large path changes have little time and limited leverage.
-\item The remaining control is best modeled as bounded timing and impedance regulation rather than a fresh plan for the whole trajectory.
-\end{itemize}
-
-This helps explain why golf swings can look consistent when performed at full speed: after the downswing acceleration is established, the modeled drift field strongly constrains the trajectory. The consistency is not evidence that muscles are absent; it is evidence that much of the useful control must be expressed through earlier state preparation and feedforward timing.
-
-It also explains why trying to "add speed" at the last instant is a poor model of elite impact mechanics. The speed is determined substantially earlier—in the initial acceleration phase, rotational momentum buildup, release timing, and elastic energy exchange—while late muscle action mainly modulates stiffness and timing.
+The governed comparison may report branch separation in a named output metric.
+It may not infer stiffness regulation, feedforward timing, muscular strategy,
+elite technique, or a reachable-set boundary without the additional models and
+measurements required for those claims.
 \end{principle}
 
-\begin{driftcontrol}{Drift Dominance in Late Downswing}{driftcontrol:drift_dominance_late}
-\textbf{Drift:} In the final tens of milliseconds before impact, Coriolis, centrifugal, gravity, and elastic terms can dominate the selected state derivatives.
+\begin{driftcontrol}{Drift Magnitude Versus Reachability}{driftcontrol:drift_dominance_late}
+\textbf{Drift:} A declared drift term can exceed the bounded instantaneous
+input effect in a stated norm at a specified state.
 
-\textbf{Control:} The golfer is not a passenger. Muscle activation remains important for impedance, grip stability, release timing, and bounded corrections.
+\textbf{Control:} That magnitude comparison is not a finite-horizon reachable
+set and does not identify muscle activation.
 
-\textbf{Implication:} The skill is concentrated in \emph{setup, transition, and early downswing}—building the momentum and configuration that make late bounded control sufficient.
+\textbf{Implication:} Any statement about feasible correction, human skill, or
+timing must be tested separately with declared controls, constraints, horizon,
+and measurement evidence.
 \end{driftcontrol}
 
-\begin{example}{Impact Time and the Margin for Control}{impact_control_margin}
-For illustration, suppose the club head reaches a representative speed of $100$ mph (44.7 m/s) at impact---a value typical of mid-to-high swing speeds \citep{Jorgensen1994}---with an angular velocity of approximately $50$ rad/s about the shoulder. Under the chosen weighting and torque bound, the DCR at this moment may be high, for example on the order of 10--20:1.
-
-If late corrective muscular torques are on the order of $10$ Nm, while passive Coriolis and centrifugal terms are on the order of 20--50 Nm \citep{Nesbit2005}, the correction margin is narrow rather than zero.
-
-If the golfer tries to make a 1° correction (0.0175 rad) in club face angle, this requires a tangential acceleration at the club head. But the club is already accelerating at $44.7 \times 50 = 2235$ m/s$^2$ (228 G's). Adding a 10\% correction requires additional acceleration of 224 m/s$^2$.
-
-With the club mass of $0.2$ kg, this requires a force of $44.8$ N, or a torque of $44.8 \times 0.3 = 13.4$ Nm—just barely within reach of muscular capacity.
-
-But the timing window is small: the contact lasts only approximately $0.5$ ms \citep{Penner2001}. A correction that is delayed until impact cannot materially reshape the incoming state; effective steering must occur earlier than the collision interval.
-
-\textbf{Conclusion:} The control margin is narrow. The late downswing is drift dominated in this model, and the skill is in preparing the state early enough that only bounded late corrections are required.
+\begin{example}{Required Analysis for an Impact-Time Claim}{impact_control_margin}
+Freeze the model/version and state estimate; define the face-angle output,
+admissible generalized inputs, contact mode, horizon, constraints, and solver
+tolerance; then compute a finite-horizon reachable set with uncertainty. Until
+that artifact is available, a numerical margin-to-correction or
+muscular-capacity claim is unavailable rather than inferred from DCR or ZTCF.
 \end{example}
 
 %============================================================================
@@ -555,28 +550,37 @@ But the timing window is small: the contact lasts only approximately $0.5$ ms \c
 \begin{enumerate}
 \item \textbf{What the ZTCF is:} A model intervention that sets the declared applied generalized-control channel to zero and integrates the retained effective plant. It does not measure muscle activation or a biological "passive fraction."
 
-\item \textbf{The decomposition:} Total torque = drift (passive) + control (muscular). Knowing this split is essential for understanding where effort matters.
+\item \textbf{The decomposition:} The declared generalized equation separates
+drift from applied input effect. Neither term is automatically a passive
+fraction or muscular quantity.
 
 \item \textbf{The ZVCF refinement:} Further isolates gravity from velocity-dependent forces, revealing the role of initial momentum.
 
-\item \textbf{DCR growth:} As velocity increases, several passive terms grow with speed, while bounded muscular torques do not necessarily scale with the same law. The Drift-Control Ratio can become large in late downswing, but its magnitude depends on the weighting, torque bound, and model parameters.
+\item \textbf{DCR boundary:} DCR is a declared instantaneous magnitude
+comparison; it does not establish finite-horizon reachability or a human
+control strategy.
 
-\item \textbf{Double pendulum example:} Showed concretely how gravity and Coriolis produce large torques, while muscles apply restraint and correction.
+\item \textbf{Double-pendulum example:} Demonstrates model arithmetic for
+retained drift and a net generalized input, not muscle-force attribution.
 
 \item \textbf{Model-dependence:} ZTCF requires a biomechanical model; it cannot be measured directly. Qualitative conclusions should be reported with the DCR weighting, torque bound, parameter set, and sensitivity checks rather than asserted as model-independent facts.
 
-\item \textbf{Late correction window:} The downswing can become strongly conditioned by earlier state preparation once velocity-dependent terms are large. The real skill is in setup, transition, and early-downswing momentum building.
-
-\item \textbf{Practical implication:} Last-instant effort is a weak substitute for earlier state preparation. Build momentum early, preserve timing, and use late control for stiffness and bounded steering.
+\item \textbf{Unavailable inference:} Late correction, skill, effort, and
+coaching claims require separate reachability, muscle, and measurement evidence.
 \end{enumerate}
 \end{principle}
 
-\textbf{What comes next:} Understanding the ZTCF reveals what's drift and what's control. But how are those forces actually \emph{applied}? How does a joint constraint redirect energy from one segment to another? That's where constraint forces enter—and they're the hidden protagonists of the kinetic chain.
+\textbf{What comes next:} ZTCF records one declared model intervention. The next
+chapter studies constraint forces, which are distinct from both the drift/input
+bookkeeping and physiological attribution.
 
 \begin{exercises}{Chapter Exercises: The Zero-Torque Counterfactual}{ex:chapter_6_exercises}
 
 \begin{exercise}{Conceptual}
-Imagine you're at the top of your backswing (arm horizontal, club parallel to the ground). Your muscles suddenly relax completely. Using intuition, describe what would happen next—would the club accelerate downward? Outward? Why?
+Define a two-link model at the top of a simulated backswing. List which
+generalized-control channels are zeroed and which passive, contact, and
+constraint terms are retained. Predict the model trajectory, and list the
+physiological conclusions that the intervention cannot support.
 
 (Hint: think about gravity and the Coriolis effect as the shoulder starts rotating forward.)
 \end{exercise}
@@ -606,18 +610,16 @@ Set up the double pendulum ZTCF from Section \ref{sec:double_pendulum_ztcf} in a
 \begin{exercise}{Analysis}
 The Drift-Control Ratio (DCR) compares modeled drift with bounded modeled control under a stated weighting and torque bound. Choose plausible early- and late-downswing values for $\bm{W}$ and $u_{\max}$, declare the model parameters that matter most, then estimate how the DCR changes under at least two sensitivity perturbations.
 
-What does this imply about the \emph{type} of muscular effort needed in each phase? Is "harder work" required early or late?
+Explain why these DCR values alone do not determine reachable corrections or
+the type, timing, or magnitude of muscular effort.
 \end{exercise}
 
 \begin{exercise}{Application}
-Watch a slow-motion video of a professional golfer's downswing (e.g., from PGA Tour or YouTube). Identify three moments:
-\begin{enumerate}
-\item Early downswing (just after backswing top): hypothesize whether DCR is low or high.
-\item Mid-downswing: same question.
-\item Late downswing (last 50 ms before impact): same question.
-\end{enumerate}
-
-Based on your intuition about passive physics (gravity, momentum), predict whether you'd expect to see obvious muscular effort (tense, active muscles) or relaxation at each stage.
+For three simulated downswing states, freeze a model/version, norm,
+admissible-input set, and parameters. Compute DCR and a short-horizon reachable
+set at each state. Compare what each diagnostic supports, and identify the EMG,
+musculoskeletal, and uncertainty evidence needed before making a physiological
+interpretation.
 \end{exercise}
 
 \end{exercises}
