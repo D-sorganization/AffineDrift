@@ -123,6 +123,47 @@ def test_qualification_requires_complete_cells_and_retains_failed_records() -> N
     assert "carryover" in failed.participant_records[-1].reason
 
 
+def test_observed_period_order_and_washout_follow_randomized_sequence() -> None:
+    protocol = build_protocol()
+    observations = manufactured_observations()
+
+    p01_cycle_one = tuple(
+        row for row in observations if row.participant_id == "P01" and row.cycle == 1
+    )
+    p08_cycle_one = tuple(
+        row for row in observations if row.participant_id == "P08" and row.cycle == 1
+    )
+    assert {row.condition_id for row in p01_cycle_one if row.period == 1} == {"condition-a"}
+    assert {row.condition_id for row in p08_cycle_one if row.period == 1} == {"condition-b"}
+    assert all(
+        row.minutes_since_prior_condition >= protocol.randomization.washout_minutes
+        for row in observations
+        if row.period == 2
+    )
+
+    wrong_order = tuple(
+        (
+            replace(row, period=1)
+            if row.participant_id == "P08" and row.cycle == 1 and row.condition_id == "condition-a"
+            else row
+        )
+        for row in observations
+    )
+    with pytest.raises(ValueError, match="randomized condition order"):
+        qualify_observations(protocol, wrong_order)
+
+    short_washout = tuple(
+        (
+            replace(row, minutes_since_prior_condition=1.0)
+            if row.participant_id == "P01" and row.cycle == 1 and row.period == 2
+            else row
+        )
+        for row in observations
+    )
+    with pytest.raises(ValueError, match="declared washout"):
+        qualify_observations(protocol, short_washout)
+
+
 def test_hierarchical_analysis_preserves_individual_directions_and_instability() -> None:
     analysis = analyze_equipment_response(build_protocol(), manufactured_observations())
     statuses = {result.status for result in analysis.participants}
@@ -134,6 +175,15 @@ def test_hierarchical_analysis_preserves_individual_directions_and_instability()
     assert any(not result.stable_across_cycles for result in analysis.participants)
     assert all(result.origin == "manufactured-synthetic" for result in analysis.participants)
     assert all(result.authorized_guidance == "unavailable" for result in analysis.participants)
+
+
+def test_model_sensitivity_retains_mixed_effects_and_no_recommendation() -> None:
+    analysis = analyze_equipment_response(build_protocol(), manufactured_observations())
+
+    assert analysis.sensitivity.leave_one_out_group_mean_interval == pytest.approx((-0.2, 0.2))
+    assert analysis.sensitivity.status_changes_under_partial_pooling == ()
+    assert analysis.sensitivity.authorized_guidance == "unavailable"
+    assert "mixed individual directions" in analysis.sensitivity.interpretation
 
 
 def test_measurement_uncertainty_widens_the_individual_interval() -> None:
