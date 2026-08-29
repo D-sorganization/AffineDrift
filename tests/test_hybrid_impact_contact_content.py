@@ -12,7 +12,7 @@ ARTICLE = ROOT / "models" / "hybrid-impact-contact.qmd"
 MODELS_HUB = ROOT / "models" / "models.qmd"
 BIBLIOGRAPHY = ROOT / "data" / "bibliography.json"
 AUDIT_INVENTORY = ROOT / "data" / "trust" / "claim_audit_inventory.json"
-REVIEW_COMMIT = "TO-BE-REPLACED-BY-CONTENT-COMMIT"
+REVIEW_COMMIT = "8a56cebb13488106fa4d071b31b0f7d05b1d5ca8"
 
 
 @pytest.mark.content_lint
