@@ -29,7 +29,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = REPO_ROOT / "models" / "active-impedance-identification.qmd"
 MODELS_HUB = REPO_ROOT / "models" / "models.qmd"
 AUDIT_INVENTORY = REPO_ROOT / "data" / "trust" / "claim_audit_inventory.json"
-REVIEW_COMMIT = "PENDING_REVIEW_COMMIT"
+REVIEW_COMMIT = "c8cf64c5779640a5dacf9ef5aed8e6a7e4157b90"
 
 
 def test_preregistration_freezes_sources_safety_phases_models_and_hypotheses() -> None:
