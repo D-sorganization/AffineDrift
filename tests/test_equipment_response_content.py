@@ -12,6 +12,7 @@ ARTICLE = ROOT / "models" / "equipment-individual-response.qmd"
 MODELS_HUB = ROOT / "models" / "models.qmd"
 BIBLIOGRAPHY = ROOT / "data" / "bibliography.json"
 AUDIT_INVENTORY = ROOT / "data" / "trust" / "claim_audit_inventory.json"
+PHYSICS_BIBLIOGRAPHY = ROOT / "articles" / "The_Physics_of_Golf" / "golf_physics.bib"
 REVIEW_COMMIT = "2ab784c58b5d58e40ed40bd04ed3c0284fd901cc"
 
 
@@ -67,6 +68,18 @@ def test_equipment_response_sources_are_registered_with_exact_metadata() -> None
         assert record["pages"] == pages
         assert record["type"] == "paper"
         assert record["note"]
+
+
+@pytest.mark.content_lint
+def test_duplicate_worobets_key_cannot_erase_rendered_issue_and_pages() -> None:
+    bibliography = PHYSICS_BIBLIOGRAPHY.read_text(encoding="utf-8")
+    entry = bibliography.split("@article{worobets2012effects,", maxsplit=1)[1].split(
+        "\n}", maxsplit=1
+    )[0]
+
+    assert "volume = {11}" in entry
+    assert "number = {2}" in entry
+    assert "pages = {239--248}" in entry
 
 
 @pytest.mark.content_lint
