@@ -32,6 +32,7 @@ REQUIRED_PROPERTY_IDS = (
 
 
 def _require_text(value: str, label: str) -> None:
+    """Reject an empty required protocol field."""
     if not value.strip():
         raise ValueError(f"{label} must be declared")
 
@@ -44,6 +45,7 @@ class EvidenceSource:
     contribution: str
 
     def __post_init__(self) -> None:
+        """Validate the source identifier and bounded contribution."""
         _require_text(self.source_id, "source ID")
         _require_text(self.contribution, "source contribution")
 
@@ -61,6 +63,7 @@ class EquipmentProperty:
     origin: str
 
     def __post_init__(self) -> None:
+        """Validate metrology values, uncertainty, metadata, and origin."""
         if self.property_id not in REQUIRED_PROPERTY_IDS:
             raise ValueError("property ID is outside the required equipment property set")
         if not self.values or not all(isfinite(value) for value in self.values):
@@ -86,6 +89,7 @@ class EquipmentCondition:
     properties: tuple[EquipmentProperty, ...]
 
     def __post_init__(self) -> None:
+        """Require identifiers and the complete ordered property manifest."""
         _require_text(self.condition_id, "condition ID")
         _require_text(self.analyst_code, "analyst code")
         if tuple(item.property_id for item in self.properties) != REQUIRED_PROPERTY_IDS:
@@ -110,6 +114,7 @@ class ChainOfCustody:
     events: tuple[CustodyEvent, ...]
 
     def __post_init__(self) -> None:
+        """Require every custody event to cover every declared condition."""
         if not self.condition_ids or not self.events:
             raise ValueError("chain of custody must name conditions and events")
         if any(event.condition_ids != self.condition_ids for event in self.events):
@@ -130,9 +135,11 @@ class RandomizationPlan:
 
     @property
     def sequence_counts(self) -> dict[str, int]:
+        """Return the participant count assigned to each crossover sequence."""
         return dict(Counter(sequence for _, sequence in self.assignments))
 
     def __post_init__(self) -> None:
+        """Validate unique, balanced, repeated, blinded crossover allocation."""
         participant_ids = tuple(participant for participant, _ in self.assignments)
         if not participant_ids or len(set(participant_ids)) != len(participant_ids):
             raise ValueError("randomization requires unique participant IDs")
@@ -173,6 +180,7 @@ class EquipmentResponseProtocol:
     authority_limit: str
 
     def __post_init__(self) -> None:
+        """Validate condition alignment and positive qualification thresholds."""
         if len(self.conditions) != 2 or len({row.condition_id for row in self.conditions}) != 2:
             raise ValueError("protocol requires exactly two unique equipment conditions")
         if self.chain_of_custody.condition_ids != tuple(
@@ -203,6 +211,7 @@ class ResponseObservation:
     origin: str
 
     def __post_init__(self) -> None:
+        """Validate trial identity, indices, uncertainty, timing, and origin."""
         for value, label in (
             (self.observation_id, "observation ID"),
             (self.participant_id, "participant ID"),

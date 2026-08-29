@@ -16,6 +16,8 @@ from src.affine_control.equipment_response_protocol import (
 
 @dataclass(frozen=True)
 class ParticipantQualification:
+    """Qualification disposition for one coded participant."""
+
     participant_id: str
     status: str
     reason: str
@@ -23,6 +25,8 @@ class ParticipantQualification:
 
 @dataclass(frozen=True)
 class QualificationResult:
+    """Complete retained-observation and participant qualification record."""
+
     complete: bool
     retained_observation_count: int
     unavailable_participant_ids: tuple[str, ...]
@@ -31,6 +35,8 @@ class QualificationResult:
 
 @dataclass(frozen=True)
 class ParticipantResponse:
+    """Within-participant response estimate and authority boundary."""
+
     participant_id: str
     status: ResultStatus
     raw_effect: float | None
@@ -42,6 +48,7 @@ class ParticipantResponse:
 
     @property
     def interval_width(self) -> float:
+        """Return the interval width, or zero for an unavailable result."""
         if self.interval is None:
             return 0.0
         return self.interval[1] - self.interval[0]
@@ -49,6 +56,8 @@ class ParticipantResponse:
 
 @dataclass(frozen=True)
 class GroupResponse:
+    """Descriptive manufactured-fixture group summary."""
+
     mean_effect: float
     between_participant_variance: float
     interpretation: str
@@ -56,6 +65,8 @@ class GroupResponse:
 
 @dataclass(frozen=True)
 class ModelSensitivity:
+    """Leave-one-out and partial-pooling sensitivity summary."""
+
     leave_one_out_group_mean_interval: tuple[float, float]
     status_changes_under_partial_pooling: tuple[str, ...]
     interpretation: str
@@ -64,6 +75,8 @@ class ModelSensitivity:
 
 @dataclass(frozen=True)
 class EquipmentResponseAnalysis:
+    """Qualified participant results with no global recommendation."""
+
     participants: tuple[ParticipantResponse, ...]
     group: GroupResponse
     sensitivity: ModelSensitivity
@@ -92,6 +105,7 @@ def _require_complete_cells(
     protocol: EquipmentResponseProtocol,
     observations: tuple[ResponseObservation, ...],
 ) -> None:
+    """Reject duplicate, missing, or extra participant-condition cells."""
     expected = {
         (participant, cycle, condition.condition_id, trial)
         for participant, _ in protocol.randomization.assignments
@@ -108,6 +122,7 @@ def _require_randomized_order(
     protocol: EquipmentResponseProtocol,
     observations: tuple[ResponseObservation, ...],
 ) -> None:
+    """Reject observations that violate sequence or washout contracts."""
     condition_ids = tuple(row.condition_id for row in protocol.conditions)
     sequences = dict(protocol.randomization.assignments)
     for row in observations:
@@ -128,6 +143,7 @@ def _qualify_participant(
     participant_id: str,
     observations: tuple[ResponseObservation, ...],
 ) -> ParticipantQualification:
+    """Apply carryover and intent gates without deleting observations."""
     rows = tuple(row for row in observations if row.participant_id == participant_id)
     if max(row.carryover_residual for row in rows) > protocol.carryover_limit:
         return ParticipantQualification(participant_id, "unavailable", "carryover limit exceeded")
@@ -187,6 +203,7 @@ def _model_sensitivity(
     results: tuple[ParticipantResponse, ...],
     practical_threshold: float,
 ) -> ModelSensitivity:
+    """Summarize leave-one-out and partial-pooling classification sensitivity."""
     leave_one_out = tuple(
         fmean(value for other, value in raw_means.items() if other != participant)
         for participant in raw_means
@@ -217,6 +234,7 @@ def _cycle_effects(
     participant_id: str,
     observations: tuple[ResponseObservation, ...],
 ) -> tuple[float, ...]:
+    """Calculate target-minus-baseline effects for every retained cycle."""
     baseline_id, target_id = (row.condition_id for row in protocol.conditions)
     effects: list[float] = []
     for cycle in range(1, protocol.randomization.cycles_per_participant + 1):
@@ -243,6 +261,7 @@ def _sampling_variance(
     effects: tuple[float, ...],
     observations: tuple[ResponseObservation, ...],
 ) -> float:
+    """Combine cycle dispersion and declared measurement uncertainty."""
     cycle_component = variance(effects) / len(effects) if len(effects) > 1 else 0.0
     uncertainty = fmean(
         row.measurement_standard_uncertainty
@@ -261,6 +280,7 @@ def _participant_result(
     group_mean: float,
     between_variance: float,
 ) -> ParticipantResponse:
+    """Build one raw and partially pooled response without giving guidance."""
     if effects is None:
         return ParticipantResponse(
             participant_id, "unavailable", None, None, None, False, "unavailable"
@@ -285,6 +305,7 @@ def _participant_result(
 
 
 def _classify(interval: tuple[float, float], threshold: float) -> ResultStatus:
+    """Classify an uncertainty interval against the practical threshold."""
     lower, upper = interval
     if lower > threshold:
         return "positive"
@@ -296,5 +317,6 @@ def _classify(interval: tuple[float, float], threshold: float) -> ResultStatus:
 
 
 def _stable_directions(effects: tuple[float, ...], threshold: float) -> bool:
+    """Report whether all cycle effects share one threshold-relative class."""
     directions = {1 if value > threshold else -1 if value < -threshold else 0 for value in effects}
     return len(directions) == 1

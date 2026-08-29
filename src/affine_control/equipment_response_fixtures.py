@@ -89,6 +89,7 @@ def build_protocol() -> EquipmentResponseProtocol:
 
 
 def _condition(condition_id: str, analyst_code: str, offset: float) -> EquipmentCondition:
+    """Build one complete manufactured equipment condition."""
     values = {
         "shaft-flexural-rigidity-profile": (31.0 + offset, 27.0 + offset, 22.0 + offset),
         "shaft-torsional-rigidity-profile": (8.0 + offset, 7.0 + offset, 6.0 + offset),

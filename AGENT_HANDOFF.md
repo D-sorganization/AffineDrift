@@ -16,6 +16,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
   main `838cdb5971b071dda5bdebd3af4e46e320989afc`. It adds a validation
   protocol and manufactured fixtures; it does not duplicate UpstreamDrift
   shaft dynamics or contain participant or commercial-equipment measurements.
+  Ordinary merge `bf3e026d` reconciles protected neural-timing main
+  `e7dbdc538a3f9edcc60ec8bd578fb5a7d747aa4e` while preserving both reviewed
+  routes and their exact-byte evidence.
 - RED commits `3796f9f6` and `9d3001f5` freeze the executable and publication
   contracts before their modules, bibliography records, public route, or audit
   evidence existed. GREEN commits `edc3f1fd`, `2ab784c5`, and `5b221cb8` add
@@ -46,13 +49,16 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `ad-route-610504f8ac44`, bound to content commit
   `2ab784c58b5d58e40ed40bd04ed3c0284fd901cc` and exact SHA-256 evidence for
   its QMD, three implementation modules, and two test files. The inventory has
-  25 reviewed, 200 deferred, and 2 exempt routes before reconciliation with
-  later protected scientific slices.
-- Focused executable and content/audit evidence is 30/30 green. Complete
-  exact-head Python, JavaScript, type, security, render, browser, and hosted
-  protected gates remain to be run after ordinary reconciliation with current
-  protected main. No product or fitting recommendation and no coaching,
-  clinical, design, causal, or population authority is available.
+  26 reviewed, 200 deferred, and 2 exempt routes after reconciliation with
+  protected neural-timing main.
+- Focused equipment executable, content, and audit evidence is 33/33 green.
+  Quarto 1.8.26 renders the route; desktop 1440 x 1000 and mobile 390 x 844
+  inspection verifies one H1, five responsive locally scrolling tables, seven
+  rendered mathematics containers, no body overflow, and no site-originated
+  browser warnings or errors. Complete exact-head Python, JavaScript, type,
+  security, corpus, and hosted protected gates remain to be run. No product or
+  fitting recommendation and no coaching, clinical, design, causal, or
+  population authority is available.
 
 ## Neural Timing and Feedback Perturbation Experiments (#4037 — In Progress)
 
