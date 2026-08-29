@@ -1228,17 +1228,17 @@ These appear in the present framework only through the feasible input set $\math
 The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints.  
 Interpretations must therefore remain explicitly mechanical.
 
-Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components $f(x)$ and $G(x)$ are not just vector fields; they are containers for specific physical phenomena—gravity, centrifugal force, muscular effort—that can now be labeled with precision.
+Having declared the model, coordinates, inputs, and force partition, we can map each retained term in the equations to a bookkeeping category. The vector fields $f(x)$ and $G(x)$ can contain modeled phenomena such as gravity, motion-dependent terms, and net generalized inputs. Those labels are conditional on the chosen equations and do not uniquely identify muscles, intent, or real-world causal origin.
 
 ## Force and Torque Taxonomy via the Affine Mapping {#sec-taxonomy}
 
-Having established the control-affine form (Part I), defined the physical decomposition (Part II), constructed the necessary temporal and configurational counterfactuals (Part II), and verified the invariance of the passive baseline (@sec-drift_invariance), we can now synthesize these elements into a unified *Force Taxonomy*. This taxonomy is not merely a descriptive list; it is the direct algebraic consequence of the framework. It provides a comprehensive map for attributing every newton of force in the swing to its specific causal origin—whether it arises from the system's shape (Configuration Drift), its motion (Velocity Drift), or the golfer's immediate intent (Input).
+Having established the control-affine form (Part I), defined the selected decomposition (Part II), and constructed temporal and configurational counterfactuals (Part II), we can synthesize these elements into a *Force Taxonomy*. The taxonomy records how the declared model assigns retained terms to configuration drift, velocity drift, or input. It is an algebraic bookkeeping device, not a unique reconstruction of anatomical source, human intent, or every physical force acting in a measured swing.
 
 With the drift--input decomposition formalized, we now classify the generalized forces acting within the golfer--club--shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form
 $$
   \dot{x} = f(x) + G(x)u.
 $$
-It separates forces into distinct causal categories based on their origin in the equations of motion rather than their magnitude or timing.
+It separates declared model terms into mathematical categories based on their location in the equations rather than their magnitude or timing. Calling these categories causal requires a separately declared intervention and identifiability argument.
 
 This taxonomy applies to:
 - generalized torques at joints,
@@ -1409,7 +1409,7 @@ In simulation (Parts II and III of this project), these categories enable:
 
 This taxonomy completes the theoretical framework required to interpret forces and torques in the golf swing using control-affine decomposition.
 
-This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in @sec-assumptions. We now catalogue these limitations to define the precise scope of validity for our causal claims.
+This taxonomy completes the theoretical framework by providing a model-conditioned bookkeeping map from declared force terms to selected mathematical categories. It does not turn observed forces into a unique map of real-world causes: different force partitions, coordinates, parameters, constraints, and unobserved inputs can be compatible with the same motion or net wrench. The algebra is exact only for the declared equations and partition. Its application to a golfer remains limited by @sec-assumptions, measurement uncertainty, and identifiability.
 
 ## Limitations (Theoretical Scope) {#sec-limitations}
 
