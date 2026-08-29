@@ -10,6 +10,25 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## Scientific Claim-Audit Report Deploy Closure (#4075 — In Progress)
+
+- Deploy Website run `33255752205` on protected main
+  `9c03cd638c74e2326f6bff018b536d9a028507a8` rendered
+  `pages/development-roadmap.html` with a link to
+  `../reports/scientific-claim-audit.html` but did not render that target.
+- Issue #4075 is a bounded child of #4021/#4009. Branch
+  `fix/4075-render-claim-audit-report` and isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4075-a1` start from that
+  exact protected commit. Lease `claim:codex` is active.
+- RED commit `8a39ca00` proves the existing coverage contract had no required
+  audit-report target. The narrow fix explicitly renders only
+  `reports/scientific-claim-audit.md`; it does not publish `reports/**/*.md` or
+  alter the claim-audit schema, generator, inventory, findings, or authority.
+- Focused render-coverage tests pass 8/8 and the executable bidirectional gate
+  passes for 230 sitemap URLs. Isolated render, post-build link health,
+  deterministic report, publication enforcement, and protected hosted checks
+  remain required before merge.
+
 ## Equipment and Shaft Individual-Response Validation (#4040 — In Progress)
 
 - Branch `feat/4040-equipment-individual-response` started from exact protected
