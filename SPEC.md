@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-28T01:15:00Z
+Last-Updated: 2026-08-29T00:45:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-08-28T01:15:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.230                                          |
-| **Last Spec Update**    | 2026-08-28                                       |
+| **Spec Version**        | 1.0.231                                          |
+| **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
 
@@ -42,6 +42,9 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 
 - Model golf swings as affine controllable systems with mathematical rigor, enabling optimization through advanced control algorithms
 - Publish and maintain research-quality educational content via Quarto website (AffineDrift.com) on GitHub Pages
+- Verify a revision-bound manifest of every public route before deployment and
+  again against the live site, covering mobile and desktop layouts in light and
+  dark themes plus representative desktop screenshot review
 - Swing trajectory optimization using iLQR (implemented); DDP backward pass pending implementation (gated mock)
 - Model golf-ball flight with velocity-dependent drag and spin-dependent Magnus lift using the standard projected-area aerodynamic formulation
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
@@ -197,7 +200,9 @@ AffineDrift/
 │   ├── check_latex_structure.py     # Structural LaTeX pre-check (no TeX distribution needed)
 │   ├── check_terminology.py         # Acronym and expansion consistency
 │   ├── check_tree_parity.py         # Cross-tree divergence between duplicated chapters
-│   └── check_bibliography_metadata.py  # Audits entries against CrossRef; manual, needs network
+│   ├── check_bibliography_metadata.py  # Audits entries against CrossRef; manual, needs network
+│   ├── public_site_manifest.py       # Revision-bound rendered-route publication contract
+│   └── verify-public-site.js         # Manifest-driven Playwright layout and behavior verifier
 ├── tests/                       # Test suite (80+ test files)
 │   ├── test_affine_control/     # Physics and optimization tests
 │   ├── test_core/               # Core module tests
@@ -347,6 +352,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F61 | Editorial title and contrast gates                  | ✅     | `scripts/check_title_case.py` enforces significant-word title capitalization across navigation labels, page metadata, headings, figure captions, literal chart titles, and LaTeX structural titles in publishable sources. It runs in pre-commit, pull-request CI, and deployment validation. The fleet policy additionally covers Word title styles plus PDF metadata and outline labels. The rendered-site accessibility suite evaluates computed text contrast on sitemap routes in light and dark themes, while semantic CSS tokens keep links, muted text, callouts, controls, and code readable.                                                                                                                                                                                                                                                                                                                 |
 | F62 | Ground-reaction drift publication                   | ✅     | The proximal-to-distal article and Physics of Golf GRF chapter define a frame-explicit constrained-reaction split, overlapping pointwise reaction ZTCF/ZVCF diagnostics, rank/identifiability boundaries, model-internal fixed-support results, and a participant-held-out force-plate falsification protocol. Regression tests prohibit universal contact-work claims, unique torque or bilateral inference, and one-template GRF prescriptions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | F63 | Physics of Golf LuaLaTeX contract                   | ✅     | The Physics of Golf PDF build uses `unicode-math`-compatible bold symbols, provides its shared source-level math macros in the PDF preamble, and keeps display equations valid for LuaLaTeX arrays and subscripts. Focused source-contract tests guard the failure modes exposed by a complete book render.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| F64 | Revision-bound public-site verification             | ✅     | `scripts/public_site_manifest.py` inventories every deployable HTML route and binds the artifact to its Git revision. `scripts/verify-public-site.js` fails closed on incomplete evidence, unavailable pages, title and heading defects, missing canonical URLs or navigation, wrong theme state, below-fold primary headings, overflow, fixed-chrome overlap, missing alternatives or button names, untypeset visible equations, console/page errors, and required-resource failures. Deployment verifies every route at mobile and desktop widths in both themes, stores representative tablet/desktop screenshots, then repeats the full matrix against the revision-matched live manifest. |
 
 ### API / Interface Contract
 
@@ -571,7 +577,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 # Prerequisites
 - Python 3.12 or later
 - Node.js 20 or later
-- Quarto 1.6.39 or later
+- Quarto 1.8.26 (deployment-pinned)
 - Git
 
 # Installation
@@ -591,6 +597,11 @@ python -m affine_control.swing_optimizer --config=example_swing.yaml
 
 # Building website locally
 quarto render
+python scripts/prune_internal_docs_from_deploy.py --docs-dir docs
+python scripts/public_site_manifest.py --docs-dir docs --source-root . --output docs/public-site-manifest.json
+python -m http.server 8000 --directory docs
+# In a second shell:
+node scripts/verify-public-site.js --base-url http://127.0.0.1:8000 --manifest docs/public-site-manifest.json
 
 # Running CI tools
 python src/tools/check_links.py
@@ -603,6 +614,8 @@ python src/tools/code_quality_check.py
 | Artifact             | Format          | Destination                                 |
 | -------------------- | --------------- | ------------------------------------------- |
 | Static Website       | HTML + CSS + JS | GitHub Pages (AffineDrift.com)              |
+| Public Site Manifest | JSON            | GitHub Pages and CI evidence artifacts      |
+| Visual Evidence      | JSON + PNG      | GitHub Actions artifacts (30-day retention) |
 | Test Reports         | JSON + HTML     | GitHub Actions artifacts and CI logs        |
 | Coverage Reports     | LCOV + HTML     | CI artifacts (coverage.xml)                 |
 | Quarto Book          | PDF + HTML      | GitHub Pages and releases                   |
@@ -634,6 +647,16 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.231 Responsive Publication Shell and Every-Page Gate
+
+Rebuilds the desktop and responsive publication shell around content-first
+home, article, textbook, book, Models, Resources, and system-page layouts.
+Establishes a deterministic 222-route manifest, exhaustive light/dark
+mobile/desktop verification, representative desktop screenshot review, and
+revision-matched live verification. The publication projection retains exact
+UpstreamDrift evidence bytes and declared adaptation hashes; generated deploy
+artifacts remain outside canonical source control.
 
 ### 1.0.176 Impact-Optimality Article Correction
 
