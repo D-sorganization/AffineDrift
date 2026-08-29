@@ -62,8 +62,8 @@ def _partial(summary: dict[str, object]) -> str:
     lines.extend(
         [
             "",
-            "All eight entries are capped at **simulation-ready**. The catalog reports ",
-            "evidence state; it never authorizes participant collection or claim promotion.",
+            "All eight entries are capped at **simulation-ready**. The catalog reports evidence "
+            "state; it never authorizes participant collection or claim promotion.",
             "",
         ]
     )
