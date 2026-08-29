@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -148,6 +149,58 @@ def _find_route(inventory: dict[str, object], route: str) -> dict[str, object]:
     return next(
         record for record in routes if isinstance(record, dict) and record.get("route") == route
     )
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_review_evidence_is_self_contained_and_covers_included_sources(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    article = tmp_path / "articles/superposition.qmd"
+    included = tmp_path / "articles/_generated/superposition-review.qmd"
+    included.parent.mkdir(parents=True)
+    article.write_text(
+        "# Superposition\n\n{{< include _generated/superposition-review.qmd >}}\n",
+        encoding="utf-8",
+    )
+    included.write_text("Reviewed boundary.\n", encoding="utf-8")
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    review["source_path"] = "articles/superposition.qmd"
+    review["evidence_paths"] = [
+        "articles/_generated/superposition-review.qmd",
+        "articles/superposition.qmd",
+        "tests/review_evidence.txt",
+    ]
+    review["evidence_sha256"] = {
+        path: _sha256(tmp_path / path) for path in review["evidence_paths"]
+    }
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+
+    validate_inventory(inventory, sources)
+
+    wrong_digest = copy.deepcopy(inventory)
+    wrong_review = _find_route(wrong_digest, "/articles/superposition.html")["review"]
+    assert isinstance(wrong_review, dict)
+    wrong_hashes = wrong_review["evidence_sha256"]
+    assert isinstance(wrong_hashes, dict)
+    wrong_hashes["articles/superposition.qmd"] = "0" * 64
+    with pytest.raises(AuditContractError, match="digest mismatch"):
+        validate_inventory(wrong_digest, sources)
+
+    missing_include = copy.deepcopy(inventory)
+    missing_review = _find_route(missing_include, "/articles/superposition.html")["review"]
+    assert isinstance(missing_review, dict)
+    missing_paths = missing_review["evidence_paths"]
+    missing_hashes = missing_review["evidence_sha256"]
+    assert isinstance(missing_paths, list)
+    assert isinstance(missing_hashes, dict)
+    missing_paths.remove("articles/_generated/superposition-review.qmd")
+    del missing_hashes["articles/_generated/superposition-review.qmd"]
+    with pytest.raises(AuditContractError, match="included source"):
+        validate_inventory(missing_include, sources)
 
 
 def test_stable_audit_id_is_route_derived_and_order_independent() -> None:
