@@ -15,6 +15,7 @@ from typing import cast
 MAX_MANIFEST_BYTES = 5_000_000
 MAX_PDF_BYTES = 10_000_000
 USER_AGENT = "AffineDrift-publication-verifier/1"
+TEXT_PROJECTION_SUFFIXES = frozenset({".bib", ".css", ".csv", ".json", ".qmd", ".svg"})
 
 
 class ProjectionError(RuntimeError):
@@ -36,12 +37,16 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _line_ending_forms(data: bytes) -> tuple[bytes, ...]:
+    """Return stable LF and CRLF forms without changing other bytes."""
+    lf = data.replace(b"\r\n", b"\n")
+    crlf = lf.replace(b"\n", b"\r\n")
+    return tuple(dict.fromkeys((data, lf, crlf)))
+
+
 def manifest_digest_matches(data: bytes, expected: str) -> bool:
-    """Match a text manifest across Git's LF and declared Windows CRLF forms."""
-    if sha256_bytes(data) == expected:
-        return True
-    canonical_crlf = data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
-    return sha256_bytes(canonical_crlf) == expected
+    """Match text across Git's LF and Windows CRLF checkout forms."""
+    return any(sha256_bytes(form) == expected for form in _line_ending_forms(data))
 
 
 def _mapping(value: object, label: str) -> dict[str, object]:
@@ -71,12 +76,19 @@ def _artifact_entry(artifacts: dict[str, object], path: str) -> dict[str, object
 def _verify_artifact(path: str, data: bytes, entry: dict[str, object]) -> None:
     expected_hash = _text(entry.get("sha256"), f"{path} sha256")
     expected_bytes = _integer(entry.get("bytes"), f"{path} bytes")
-    if len(data) != expected_bytes or sha256_bytes(data) != expected_hash:
+    forms = (
+        _line_ending_forms(data)
+        if Path(path).suffix.lower() in TEXT_PROJECTION_SUFFIXES
+        else (data,)
+    )
+    if not any(
+        len(form) == expected_bytes and sha256_bytes(form) == expected_hash for form in forms
+    ):
         raise ProjectionError(f"artifact mismatch: {path}")
 
 
 def projection_tree(publication_root: Path, pdf_name: str) -> tuple[int, str]:
-    """Hash every projected source file except the recursive manifest and PDF."""
+    """Hash projected source with platform-neutral line endings."""
     digest = hashlib.sha256()
     files = [
         path
@@ -85,9 +97,12 @@ def projection_tree(publication_root: Path, pdf_name: str) -> tuple[int, str]:
     ]
     for path in sorted(files, key=lambda item: item.relative_to(publication_root).as_posix()):
         relative = path.relative_to(publication_root).as_posix()
+        data = path.read_bytes()
+        if path.suffix.lower() in TEXT_PROJECTION_SUFFIXES:
+            data = data.replace(b"\r\n", b"\n")
         digest.update(relative.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(sha256_bytes(path.read_bytes()).encode("ascii"))
+        digest.update(sha256_bytes(data).encode("ascii"))
         digest.update(b"\n")
     return len(files), digest.hexdigest()
 
@@ -184,7 +199,7 @@ def _verify_source_files(
             spec = _mapping(adapted[relative], f"adaptation {relative}")
             _text(spec.get("reason"), f"adaptation reason {relative}")
             expected = _text(spec.get("sha256"), f"adaptation sha256 {relative}")
-            if sha256_bytes(data) != expected:
+            if not manifest_digest_matches(data, expected):
                 raise ProjectionError(f"adapted publication file is stale: {relative}")
             seen_adapted.add(relative)
             continue
