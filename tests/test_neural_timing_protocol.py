@@ -10,6 +10,13 @@ import numpy as np
 import pytest
 
 from scripts.claim_audit_evidence import included_sources, validate_review_evidence
+from src.affine_control.neural_timing_analysis import (
+    EvidenceProvenance,
+    IntervalDecision,
+    classify_interval,
+    detect_first_crossing,
+    holm_step_down,
+)
 from src.affine_control.neural_timing_fixtures import (
     build_neural_timing_protocol,
     synthetic_layer_observations,
@@ -17,17 +24,12 @@ from src.affine_control.neural_timing_fixtures import (
     synthetic_result_ledger,
 )
 from src.affine_control.neural_timing_protocol import (
-    EvidenceProvenance,
     EvidenceSource,
     HumanStudyBoundary,
-    IntervalDecision,
     NeuralTimingProtocol,
     PerturbationDeclaration,
     ResponseWindow,
     SynchronizationContract,
-    classify_interval,
-    detect_first_crossing,
-    holm_step_down,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -187,7 +189,7 @@ def test_parallel_layer_fixture_does_not_create_a_serial_latency_sum() -> None:
 
 
 def test_holm_step_down_preserves_original_order_and_controls_one_family() -> None:
-    decisions = holm_step_down((0.010, 0.040, 0.015), family_alpha=0.05)
+    decisions = holm_step_down((0.010, 0.060, 0.015), family_alpha=0.05)
 
     assert decisions == (True, False, True)
     with pytest.raises(ValueError):
