@@ -73,7 +73,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
   inspected at a 1440 x 1000 desktop viewport. This protected authority is now
   part of `main` at `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed,
   and its claim boundaries must remain intact in subsequent scientific repairs.
-- Issue #4017 is implemented on `feat/4017-sensorimotor-latency`: the Physics
+- Issue #4017 merged through protected PR #4047 at
+  `64624ca9ff9390be0b42f5b714b021718cc4ba85`: the Physics
   of Golf Quarto and LaTeX chapters no longer add parallel sensory and motor
   pathways into a single round-trip delay or treat feedforward and feedback as
   exclusive. Short-latency (20--45 ms), long-latency (50--100 ms), voluntary
@@ -99,8 +100,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
 ## Induced-Acceleration Attribution Repair (#4018 — PR #4050 Open)
 
 - Branch `feat/4018-induced-acceleration-attribution` owns the A7 correction.
-  It preserves the protected #4015, #4012, and #4017 scientific-trust merges;
-  its content files do not overlap those programs.
+  It preserves the protected #4015, #4012, #4017, and #4019 scientific-trust
+  merges; its content files do not overlap those programs.
 - A normative record now requires model and revision; engine, solver, and
   revision; generalized coordinates and reference frame; mass matrix;
   constraints; contact; force partition; residual treatment; numerical
@@ -126,6 +127,35 @@ This is current operational state. Historical detail belongs in git/GitHub.
   render to isolated HTML and expose the normative record without horizontal
   overflow at a 1,905-pixel desktop viewport; a fresh browser console is clean.
   Protected Python 3.12 and hosted exact-head checks remain release gates.
+
+## Governed Scientific Trust Panels (#4019)
+
+- Branch `feat/4019-trust-metadata` adds strict
+  `schemas/trust-metadata-v1.schema.json`, the canonical
+  `data/trust/claim_registry.json`, and deterministic
+  `scripts/generate_trust_panels.py`. Generated QMD is reviewable but must not
+  be hand-edited; `python scripts/generate_trust_panels.py --check` is the
+  freshness gate.
+- The first governed DCR claim publishes a stable claim ID, review commit,
+  evidence and critique status, population and valid conditions, uncertainty,
+  limitations, falsifiers, software/data provenance, and next validation gate.
+  Unknown qualification fields render visibly as unqualified.
+- Accessible summaries must link to their technical anchor and cannot increase
+  modal strength, add causal/universal/exact/optimal/locked-in language, or
+  introduce an unsupported percentage. The same non-amplification check covers
+  the article's authored lay summary.
+- Required focused gate:
+  `python -m pytest tests/test_scientific_trust_metadata.py -q`. Current
+  evidence is 15/15 focused tests, the complete non-GUI suite green with 29
+  documented skips, the content-lint selection green, strict MyPy, Ruff,
+  Black, Stylelint, terminology, title-case, xref, bibliography, display-math,
+  generator freshness, and isolated Quarto HTML rendering. Browser inspection
+  at 1440 x 1000 and 390 x 844 found one H1, no broken images, and no horizontal
+  overflow; the print contract is source-tested for transparent background and
+  `break-inside: avoid` because the in-app browser does not expose print-media
+  emulation.
+- `jsonschema` and `types-jsonschema` are direct pinned requirements; do not
+  rely on an unrelated transitive dependency for schema validation or typing.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 

@@ -1,0 +1,55 @@
+{
+  "pages": [
+    {
+      "claims": [
+        {
+          "accessible_summary": {
+            "modal_strength": "bounded",
+            "text": "A large DCR may flag a modeled acceleration imbalance worth investigating. It does not prove that a golfer is locked-in or that a future correction is unavailable."
+          },
+          "claim_id": "ad-dcr-001",
+          "critique_status": "adjudicated",
+          "data_provenance": "No participant dataset is used; the governing evidence is an exact analytical constant-drift counterexample and its executable regression test.",
+          "evidence_class": "analytical_counterexample",
+          "falsifiers": [
+            "The declared constant-additive-drift system changes reachable-interval width when only constant drift changes.",
+            "A scalar DCR value alone uniquely determines a finite-horizon reachable set across admissible systems."
+          ],
+          "limitations": [
+            "DCR depends on the declared state, input set, projection, weighting, norm, and regularization.",
+            "The analytical counterexample is not a participant-level golf validation or a coaching prescription."
+          ],
+          "next_validation_gate": "Run preregistered finite-horizon, three-dimensional golfer-club perturbation studies with declared controls, uncertainty, and impact outcomes.",
+          "population": "Declared dynamical models and admissible input sets; no golfer population is inferred.",
+          "review_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "reviewed_on": "2026-08-28",
+          "software_provenance": [
+            {
+              "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+              "path": "src/affine_control/reachability.py",
+              "repository": "D-sorganization/AffineDrift",
+              "sha256": "783935d0252a3e384ce9a4f3ba07487738693cd43fb289fa090336332fd75191"
+            }
+          ],
+          "technical_anchor": "claim-ad-dcr-001",
+          "technical_claim": {
+            "modal_strength": "bounded",
+            "text": "Within a declared model, DCR compares the magnitudes of modeled drift acceleration and the largest modeled input acceleration in chosen coordinates. DCR alone does not prove or determine finite-horizon reachability, path-correction authority, an impact outcome, or a locked-in golfer state."
+          },
+          "title": "DCR Is Not a Reachability Certificate",
+          "uncertainty": {
+            "statement": "Model-form, input-set, coordinate, norm, parameter, and measurement uncertainty are not quantified by the scalar ratio.",
+            "status": "unquantified"
+          },
+          "valid_conditions": [
+            "Drift and input accelerations are evaluated at the same state in the same coordinates.",
+            "The admissible input set, weighting, norm, and regularization are declared."
+          ]
+        }
+      ],
+      "page_id": "ad-dcr-reachability",
+      "source_path": "articles/controllability-drift-ratio.qmd"
+    }
+  ],
+  "schema_version": "1.0.0"
+}
