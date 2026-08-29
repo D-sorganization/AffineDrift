@@ -18,6 +18,14 @@ This is current operational state. Historical detail belongs in git/GitHub.
   them without importing publication authority from #4042. RED commit
   `51f476ae` then rejects trailing whitespace in the generated public include;
   GREEN commit `801694e7` removes it at the generator boundary.
+- Independent adversarial RED commit `8abe2669` adds 21 authority, lifecycle,
+  and projection attacks. GREEN commit `c511e9e9` rejects self-declared
+  approval authority; reconciles top-level origin, unique scientific IDs,
+  calibration and release joins; evaluates evidence status at each transition;
+  preserves later revocation history; requires route membership and explicit
+  artifact roles; and replaces generic dry runs with exact program-specific
+  input, workflow, and result manifests. Trust commit `57b802fe` recursively
+  pins the implementation and adversarial tests to those exact bytes.
 - The strict E1–E8 lifecycle distinguishes scientific `protocol_revision` from
   whole-record `record_revision`, enforces contiguous participant-scope-aware
   transitions, and binds exact claims, critiques, route audits, calculation
@@ -42,6 +50,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   route joins. The generator runs as
   `python -m scripts.generate_research_readiness_library`; no production
   `sys.path` bootstrap remains.
+- Generated Markdown now escapes untrusted protocol titles and derives its
+  state summary from the catalog instead of asserting that all entries are
+  simulation-ready. Filesystem, authority, dry-run, fixture, and validation
+  responsibilities are separate; every readiness module remains below the
+  repository's 400-line hard ceiling.
 - Ordinary merge `1a37fcd5eb4a5786bde5735e83064d8db05285fe`
   reconciles exact protected main
   `cec3842d9e8b4629a8a6c34b25322450f16f471f`, preserving #4075, #4077, and
@@ -73,6 +86,15 @@ This is current operational state. Historical detail belongs in git/GitHub.
   lifecycle/content/audit tests, strict MyPy, Ruff, Black, pre-commit, and the
   previously failing code-quality gate pass. A fresh exact-head hosted matrix
   is required; the failed head is not merge eligible.
+- At exact local head `57b802feeebea24ab7c7429139336631284cef65`, all
+  50 authority/lifecycle/readiness contracts pass, the hosted-equivalent full
+  `tests/` lane passes with 29 documented skips, content passes 115 with 4
+  skips, and JavaScript passes 297 with 19 skips. Ruff, Black across 540 files,
+  strict readiness MyPy, CI MyPy across 74 files, code quality, module-size,
+  changed-file-size, technical-debt, syntax, xref, single-title, title-case,
+  terminology, generator, publication-enforcement, pre-commit, and diff gates
+  pass. Detached render/browser evidence and fresh exact-head hosted checks
+  remain required before protected merge.
 
 ## Induced-Acceleration Heading-Hierarchy Closure (#4077 — Complete)
 
