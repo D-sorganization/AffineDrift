@@ -49,22 +49,25 @@ This is current operational state. Historical detail belongs in git/GitHub.
   inventory now reports 24 reviewed, 200 deferred, and 2 exempt routes after
   ordinary reconciliation with protected #4062. A
   digest proves the declared reviewed bytes, not scientific truth.
-- Focused executable contracts are 24/24 green and focused public-content/audit
-  contracts are 3/3 green. The complete non-content and content-lint lanes pass
-  with only their 30 and 4 documented skips; all 20 Jest suites pass with 297
-  tests and 19 documented skips. Full Ruff/Black, strict focused MyPy, Bandit,
+- Focused executable contracts are 24/24 green; the exact reconciled hybrid,
+  book, and global-inventory set is 47/47 green. At merge head
+  `d841a179f6c67383c3f3c3f7ab145b73091a4815`, the complete non-content lane
+  passes with 30 documented skips, the content-lint lane passes 99 tests with
+  4 documented skips, and all 20 Jest suites pass with 297 tests and 19
+  documented skips. Full Ruff/Black, strict focused MyPy, Bandit,
   module and changed-file budgets, pre-commit, bibliography identity/quality,
   citation resolution, terminology, title/H1, Quarto syntax/xrefs/math,
   227-URL bidirectional render coverage, deterministic audit reports, and
   publication enforcement pass. Quarto 1.8.26 renders the route in isolation.
-  Desktop 1440 x 1000 and mobile 390 x 844 light/dark browser inspection shows
+  Desktop 1440 x 1000 and mobile 390 x 844 browser reinspection after the
+  reconciliation shows
   one H1, eight locally scrollable tables, 18 rendered math containers, no body
   overflow, and no console warnings/errors. The visual review caught and fixed
   missing canonical volume/issue/page metadata for all four new sources before
   acceptance. The branch ordinarily reconciles protected #4062 squash
-  `902a71b73862a299ca8b6134a4701c15d4f3030c`; repeat affected exact-head
-  gates, then push a non-draft PR and merge only after every required hosted
-  check passes on that exact head.
+  `902a71b73862a299ca8b6134a4701c15d4f3030c`; every affected exact-head gate
+  above passes. Push a non-draft PR and merge only after every required hosted
+  check passes on the exact current head.
 
 ## Books and Publication-Roadmap Trust Audit (#4062 — Protected)
 
