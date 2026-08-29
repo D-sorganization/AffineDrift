@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/upstreamdrift-companion-lock-v1.schema.json",
+  "title": "AffineDrift UpstreamDrift Companion Lock v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "provider", "snapshot", "publication"],
+  "properties": {
+    "schema_version": {
+      "const": "affinedrift/upstreamdrift-companion-lock/v1"
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "host",
+        "repository",
+        "commit",
+        "revision_url",
+        "manifest_acquisition",
+        "manifest_provider_path",
+        "generator_command",
+        "manifest_url",
+        "schema_url",
+        "manifest_sha256",
+        "schema_sha256",
+        "manifest_bytes",
+        "schema_bytes",
+        "provider_schema_id"
+      ],
+      "properties": {
+        "host": { "const": "github.com" },
+        "repository": { "const": "D-sorganization/UpstreamDrift" },
+        "commit": { "$ref": "#/$defs/commit" },
+        "revision_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://github\\.com/D-sorganization/UpstreamDrift/tree/[0-9a-f]{40}$"
+        },
+        "manifest_acquisition": {
+          "enum": ["protected-local-export", "immutable-url"]
+        },
+        "manifest_provider_path": {
+          "const": "dist/companion/upstreamdrift-companion.v1.json"
+        },
+        "generator_command": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "manifest_url": {
+          "oneOf": [{ "$ref": "#/$defs/immutableUrl" }, { "type": "null" }]
+        },
+        "schema_url": { "$ref": "#/$defs/immutableUrl" },
+        "manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "schema_sha256": { "$ref": "#/$defs/sha256" },
+        "manifest_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4194304
+        },
+        "schema_bytes": { "type": "integer", "minimum": 1, "maximum": 524288 },
+        "provider_schema_id": {
+          "const": "https://upstreamdrift.dev/schemas/upstreamdrift-companion-v1.schema.json"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "manifest_acquisition": { "const": "protected-local-export" }
+            }
+          },
+          "then": { "properties": { "manifest_url": { "type": "null" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "manifest_acquisition": { "const": "immutable-url" }
+            }
+          },
+          "then": {
+            "properties": { "manifest_url": { "$ref": "#/$defs/immutableUrl" } }
+          }
+        }
+      ]
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory",
+        "manifest_path",
+        "schema_path",
+        "provenance_path"
+      ],
+      "properties": {
+        "directory": { "$ref": "#/$defs/snapshotDirectory" },
+        "manifest_path": { "$ref": "#/$defs/snapshotPath" },
+        "schema_path": { "$ref": "#/$defs/snapshotPath" },
+        "provenance_path": { "$ref": "#/$defs/snapshotPath" }
+      }
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "boundary"],
+      "properties": {
+        "state": { "enum": ["draft", "qualified"] },
+        "boundary": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "commit": {
+      "type": "string",
+      "pattern": "^(?!0{40}$)[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^(?!0{64}$)[0-9a-f]{64}$"
+    },
+    "immutableUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://raw\\.githubusercontent\\.com/D-sorganization/UpstreamDrift/[0-9a-f]{40}/"
+    },
+    "snapshotPath": {
+      "type": "string",
+      "pattern": "^snapshots/[0-9a-f]{40}/[A-Za-z0-9._-]+$"
+    },
+    "snapshotDirectory": {
+      "type": "string",
+      "pattern": "^snapshots/[0-9a-f]{40}$"
+    }
+  }
+}
