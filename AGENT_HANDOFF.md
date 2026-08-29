@@ -10,7 +10,56 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Planar-to-Spatial-to-Flexible-Shaft Model Ladder (#4034 — PR Pending)
+## Bilateral Hand-Wrench Identifiability (#4035 — In Progress)
+
+- Branch `feat/4035-bilateral-wrench-identifiability` started from exact
+  protected main `d8f90713a0d3a4255ed1131a6c3517ee13217997`. It extends the
+  immutable UpstreamDrift bilateral-wrench evidence with a measurement and
+  promotion protocol; it does not edit the protected projection or add a
+  competing dynamics engine.
+- `hand_wrench_protocol.py` freezes the primary and executable source register,
+  lead/trail six-axis calibration, cross-talk, conditioning, bandwidth,
+  lead/trail-to-club transforms, synchronization, inertial compensation,
+  contact assumptions, hypotheses, rank, and exact observation maps. Runtime
+  domains, sensor IDs, lead/trail roles, source-frame joins, the common club
+  target frame, and both passband endpoints fail closed.
+  `hand_wrench_evidence.py` keeps Total Measured, Bilateral Measured, Model
+  Estimated, and Unavailable results distinct. `hand_wrench_fixtures.py`
+  supplies only deterministic synthetic/manufactured-benchtop records.
+- The exact maps reproduce total-wrench rank six/nullity six, the two-point-force
+  axial null mode at rank five/nullity one, and direct bilateral rank twelve.
+  Cross-talk calibration recovery, passband/Nyquist qualification, reference
+  transport, timing, compensation, uncertainty, shaft/grip sensitivity, and
+  supported/negative/null/unavailable outcomes are executable contracts.
+- The human tier is unavailable and fails closed without ethics, privacy,
+  consent, licensing, and participant-held-out analysis. A hand wrench remains
+  an interface load with no muscle-force attribution and no coaching or clinical
+  authority.
+- `/models/bilateral-hand-wrench-validation.html` is registered as reviewed
+  audit `ad-route-5602bed13ca4`, bound to exact reviewed content commit
+  `8d0649f9fb5da9c65364f76161abe22379dcded3` and all four review dimensions.
+  The protected 219-route deferred partition is unchanged.
+- RED evidence: the focused suite initially failed during collection because
+  the hand-wrench modules did not exist. A later focused RED boundary exposed
+  missing runtime-domain, sensor/frame-join, passband-endpoint, and full-source-
+  commit contracts. The corrected GREEN boundary passes 10/10
+  executable contracts, 2/2 public-content/audit contracts, 11/11 existing
+  claim-audit contracts, focused Ruff and Black, strict mypy, and publication
+  enforcement. Exact-head validation passes 3,351 non-content tests with 30
+  documented skips, 94 content tests with 4 documented skips, and all 20 Jest
+  suites (297 passes, 19 skips). Full Ruff/Black, strict focused mypy, module
+  budgets, terminology, title, display-math, 225-route render coverage,
+  claim-audit publication enforcement, pre-commit, and isolated generated-build
+  drift checks pass. Quarto 1.8.26 renders the public route; desktop and mobile
+  browser inspection confirms one H1, all scientific sections, four contained
+  tables, no page overflow or unrendered math, the full immutable source commit,
+  and no fresh console warnings or errors.
+
+## Planar-to-Spatial-to-Flexible-Shaft Model Ladder (#4034 — Protected)
+
+- Protected merge `d8f90713a0d3a4255ed1131a6c3517ee13217997` is the exact
+  reviewed #4034 tree. The branch history below records its ordinary claim-audit
+  reconciliation and final evidence.
 
 - Branch `feat/4034-model-ladder` started from protected main
   `42975df666c38154304652aaa48f856aefd4bd7e` and ordinarily reconciled protected
@@ -345,7 +394,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
   routes. All eight P1, five P2, and one P3 findings are corrected; there is no
   P0 and no open or publication-blocked P0/P1.
 - The global #4021 inventory preserves the protected model-ladder route and now
-  reports 223 routes: 15 reviewed, 206 deferred, and 2 exempt. The remaining
+  reports 224 routes: 16 reviewed, 206 deferred, and 2 exempt. The remaining
   deferred child partition is unchanged. The #4063 routes no longer carry a
   deferment issue, and each carries its review evidence and corrected finding.
 - RED was collection failure for the absent
