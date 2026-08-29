@@ -17,6 +17,9 @@ Hand = Literal["lead", "trail"]
 FloatArray = NDArray[np.float64]
 
 _WRENCH_SIZE = 6
+_SOURCE_TYPES = {"primary-literature", "immutable-executable"}
+_HANDS = {"lead", "trail"}
+_ADVERSE_OUTCOMES = {"negative", "null", "unavailable"}
 
 
 def _require_text(value: str, label: str) -> None:
@@ -59,6 +62,8 @@ class SourceRecord:
 
     def __post_init__(self) -> None:
         """Require complete source provenance and scope."""
+        if self.source_type not in _SOURCE_TYPES:
+            raise ValueError("source type must be primary-literature or immutable-executable")
         for value, label in (
             (self.source_id, "source_id"),
             (self.citation, "citation"),
@@ -85,6 +90,8 @@ class SensorCalibration:
 
     def __post_init__(self) -> None:
         """Reject incomplete, singular, or aliased calibration declarations."""
+        if self.hand not in _HANDS:
+            raise ValueError("hand must be lead or trail")
         for value, label in (
             (self.sensor_id, "sensor_id"),
             (self.output_frame, "output frame"),
@@ -216,6 +223,8 @@ class Hypothesis:
 
     def __post_init__(self) -> None:
         """Require a testable, non-promotional hypothesis."""
+        if self.outcome_if_not_supported not in _ADVERSE_OUTCOMES:
+            raise ValueError("adverse outcome must be negative, null, or unavailable")
         for value, label in (
             (self.hypothesis_id, "hypothesis_id"),
             (self.quantity, "hypothesis quantity"),
@@ -242,6 +251,7 @@ class Preregistration:
         _require_text(self.protocol_id, "protocol_id")
         collections = (
             (tuple(source.source_id for source in self.sources), "source"),
+            (tuple(sensor.sensor_id for sensor in self.sensors), "sensor IDs"),
             (tuple(sensor.hand for sensor in self.sensors), "sensor hand"),
             (tuple(frame.source_frame for frame in self.frames), "frame"),
             (tuple(item.hypothesis_id for item in self.hypotheses), "hypothesis"),
@@ -251,6 +261,12 @@ class Preregistration:
                 raise ValueError(f"{label} records must be nonempty and unique")
         if set(sensor.hand for sensor in self.sensors) != {"lead", "trail"}:
             raise ValueError("exactly one lead and one trail calibration are required")
+        sensor_frames = {sensor.output_frame for sensor in self.sensors}
+        registered_frames = {frame.source_frame for frame in self.frames}
+        if registered_frames != sensor_frames:
+            raise ValueError("frame sources must match the two sensor output frames exactly")
+        if len({frame.target_frame for frame in self.frames}) != 1:
+            raise ValueError("frames must share one common target club frame")
 
 
 @dataclass(frozen=True)
@@ -324,6 +340,8 @@ def qualify_bandwidth(
         raise ValueError("bandwidth sample frequencies must be strictly increasing")
     if not np.isclose(frequencies[-1], calibration.bandwidth_hz):
         raise ValueError("samples must include the declared bandwidth boundary")
+    if not np.isclose(frequencies[0], 0.0):
+        raise ValueError("samples must include 0 Hz")
     return all(
         abs(sample.gain_ratio - 1.0) <= calibration.maximum_passband_gain_error
         for sample in samples

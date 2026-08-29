@@ -20,7 +20,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - `hand_wrench_protocol.py` freezes the primary and executable source register,
   lead/trail six-axis calibration, cross-talk, conditioning, bandwidth,
   lead/trail-to-club transforms, synchronization, inertial compensation,
-  contact assumptions, hypotheses, rank, and exact observation maps.
+  contact assumptions, hypotheses, rank, and exact observation maps. Runtime
+  domains, sensor IDs, lead/trail roles, source-frame joins, the common club
+  target frame, and both passband endpoints fail closed.
   `hand_wrench_evidence.py` keeps Total Measured, Bilateral Measured, Model
   Estimated, and Unavailable results distinct. `hand_wrench_fixtures.py`
   supplies only deterministic synthetic/manufactured-benchtop records.
@@ -38,7 +40,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `ae1577ccfb2001d191e5a329d61a0551cfa06583` and all four review dimensions.
   The protected 219-route deferred partition is unchanged.
 - RED evidence: the focused suite initially failed during collection because
-  the hand-wrench modules did not exist. The first GREEN boundary passes 9/9
+  the hand-wrench modules did not exist. A later focused RED boundary exposed
+  missing runtime-domain, sensor/frame-join, passband-endpoint, and full-source-
+  commit contracts. The corrected GREEN boundary passes 10/10
   executable contracts, 2/2 public-content/audit contracts, 11/11 existing
   claim-audit contracts, focused Ruff and Black, strict mypy, and publication
   enforcement. Complete exact-head, render, and browser evidence remains due

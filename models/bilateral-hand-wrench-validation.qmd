@@ -23,8 +23,8 @@ unavailable until every governance and held-out-analysis gate is satisfied.
 |---|---|---|
 | Koike (2016), *Measurement of Individual Hand Forces Exerted on a Golf Club Grip* [@koike2016] | Instrumented-grip measurement precedent | Calibration or performance of the present manufactured fixture |
 | Choi and Park (2020), *Sensors* 20(13):3672 [@koike2020] | Use of measured internal grip force in upper-limb kinetics | Validation of this device, cohort, or bilateral six-axis accuracy |
-| UpstreamDrift protected source `85cce4d3`, bilateral-wrench structural study | Point-force rank five and full-wrench rank six/nullity six | Practical identifiability, anatomy, or human validation |
-| UpstreamDrift protected source `85cce4d3`, trajectory sensor qualification | Synthetic cross-talk, noise, contact-migration, and allocation-error controls | Physical-device calibration or participant evidence |
+| UpstreamDrift protected source `85cce4d3307bb7ad3953d9fc6e583e370803515c`, bilateral-wrench structural study | Point-force rank five and full-wrench rank six/nullity six | Practical identifiability, anatomy, or human validation |
+| UpstreamDrift protected source `85cce4d3307bb7ad3953d9fc6e583e370803515c`, trajectory sensor qualification | Synthetic cross-talk, noise, contact-migration, and allocation-error controls | Physical-device calibration or participant evidence |
 :::
 
 The two UpstreamDrift entries are immutable executable project sources, not
@@ -54,7 +54,10 @@ ledger. They are not removed when a preferred allocation or model fails.
 
 The lead and trail sensors each report a six-component wrench in a named,
 right-handed sensor frame. Both are transported to the declared club grip-center
-frame before addition. For sensor-to-club rotation $R$ and the club-origin to
+frame before addition. Sensor identifiers and lead/trail roles must be unique;
+the two transform source names must match the two sensor output-frame names
+exactly, and both transforms must declare one common target club frame. For
+sensor-to-club rotation $R$ and the club-origin to
 sensor-origin vector $r$ expressed in the club frame,
 
 $$
@@ -79,8 +82,8 @@ precision. That exact recovery tests the software path, not a load cell.
 The current dynamic fixture samples gain at 0, 50, 150, and 300 Hz. Its declared
 sample rate is 2,000 Hz, bandwidth is 300 Hz, and gain-error limit is 3%. The
 complete manufactured passband qualifies. Missing the bandwidth boundary,
-using a sample rate at or below twice the bandwidth, a singular calibration, or
-exceeding the gain tolerance fails closed. A physical device must repeat the
+missing the 0 Hz endpoint, using a sample rate at or below twice the bandwidth,
+a singular calibration, or exceeding the gain tolerance fails closed. A physical device must repeat the
 test for every channel, direction, load combination, temperature envelope, and
 mounting revision used in analysis.
 

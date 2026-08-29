@@ -75,14 +75,16 @@ def manufactured_preregistration() -> Preregistration:
         SourceRecord(
             "upstream-identifiability-2026",
             "immutable-executable",
-            "UpstreamDrift 85cce4d3 bilateral-wrench structural-identifiability study",
+            "UpstreamDrift 85cce4d3307bb7ad3953d9fc6e583e370803515c "
+            "bilateral-wrench structural-identifiability study",
             "rank-five point-force and rank-six/nullity-six full-wrench maps",
             "synthetic structural result; no practical or human validation",
         ),
         SourceRecord(
             "upstream-sensor-qualification-2026",
             "immutable-executable",
-            "UpstreamDrift 85cce4d3 trajectory-level point-force sensor qualification",
+            "UpstreamDrift 85cce4d3307bb7ad3953d9fc6e583e370803515c "
+            "trajectory-level point-force sensor qualification",
             "cross-talk, noise, contact migration, and allocation-error controls",
             "synthetic point-force fixture; not physical-device calibration",
         ),

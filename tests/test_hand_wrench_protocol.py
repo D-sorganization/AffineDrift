@@ -58,6 +58,35 @@ def test_preregistration_freezes_sources_measurement_and_analysis_contracts() ->
         "null",
         "unavailable",
     }
+    upstream_sources = [
+        source for source in protocol.sources if source.source_id.startswith("upstream")
+    ]
+    assert all(
+        "85cce4d3307bb7ad3953d9fc6e583e370803515c" in source.citation for source in upstream_sources
+    )
+
+
+def test_literal_domains_and_preregistration_joins_fail_closed() -> None:
+    protocol = manufactured_preregistration()
+
+    with pytest.raises(ValueError, match="source type"):
+        replace(protocol.sources[0], source_type="secondary")
+    with pytest.raises(ValueError, match="hand must"):
+        replace(protocol.sensors[0], hand="unknown")
+    with pytest.raises(ValueError, match="adverse outcome"):
+        replace(protocol.hypotheses[0], outcome_if_not_supported="supported")
+
+    duplicate_sensor = replace(protocol.sensors[1], sensor_id=protocol.sensors[0].sensor_id)
+    with pytest.raises(ValueError, match="sensor IDs"):
+        replace(protocol, sensors=(protocol.sensors[0], duplicate_sensor))
+
+    mismatched_source = replace(protocol.frames[0], source_frame="unregistered-sensor-frame")
+    with pytest.raises(ValueError, match="sensor output frames"):
+        replace(protocol, frames=(mismatched_source, protocol.frames[1]))
+
+    mismatched_target = replace(protocol.frames[1], target_frame="different-club-frame")
+    with pytest.raises(ValueError, match="common target club frame"):
+        replace(protocol, frames=(protocol.frames[0], mismatched_target))
 
 
 def test_net_wrench_observability_does_not_identify_bilateral_allocation() -> None:
@@ -110,6 +139,8 @@ def test_bandwidth_qualification_requires_nyquist_and_complete_passband_evidence
         replace(calibration, sample_rate_hz=2.0 * calibration.bandwidth_hz)
     with pytest.raises(ValueError, match="bandwidth boundary"):
         qualify_bandwidth(calibration, samples[:-1])
+    with pytest.raises(ValueError, match="0 Hz"):
+        qualify_bandwidth(calibration, samples[1:])
     failed = (*samples[:-1], replace(samples[-1], gain_ratio=0.8))
     assert qualify_bandwidth(calibration, failed) is False
 

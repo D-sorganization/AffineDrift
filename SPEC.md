@@ -706,7 +706,8 @@ dynamics authority. Exact fixtures distinguish the rank-six/nullity-six total
 club-wrench map, the rank-five two-point-force map, and direct rank-twelve
 bilateral sensing. The fail-closed API validates six-axis cross-talk
 calibration, conditioning, passband and Nyquist evidence, proper lead/trail to
-club transforms, synchronization, inertial compensation, contact assumptions,
+club transforms with unique sensor identities, exact source-frame joins, and
+one common target club frame, synchronization, inertial compensation, contact assumptions,
 complete uncertainty, shaft/grip sensitivity, and adverse result preservation.
 The public guide separates Total Measured, Bilateral Measured, Model Estimated,
 and Unavailable quantities, carries a primary-source register, and withholds
