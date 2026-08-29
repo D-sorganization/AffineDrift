@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T08:24:35Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.245                                          |
+| **Spec Version**        | 1.0.246                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -78,6 +78,11 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   result; compare DCR with finite-horizon reachability, constrained correction,
   event sensitivity, and held-out prediction while preserving null, negative,
   and unavailable results
+- Maintain a strict, versioned claim/critique adjudication ledger that covers
+  every public critique exactly once, treats unknown state as open, requires
+  protected evidence for adjudicated states, rejects dangling pages, claims,
+  evidence, invalid transitions, and active contradictions, and deterministically
+  projects public status, page annotations, defense planning, and search records
 - Publish an accessible, evidence-linked companion to the proximal--distal technical treatment, with original visual explanations and explicit model, human-evidence, and hypothesis boundaries
 - Pin the complete canonical proximal--distal claim audit by exact upstream
   merge and hashes, expose its reviewed/unadjudicated counts, and preserve
@@ -678,7 +683,7 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
-### 1.0.245 Bounded DCR Reachability and Event-Sensitivity Protocol
+### 1.0.246 Bounded DCR Reachability and Event-Sensitivity Protocol
 
 Extends the protected #4013 reachability authority with a strict declaration
 record and deterministic analytic regressions for constant additive drift,
@@ -690,6 +695,16 @@ negative, and unavailable outcomes remain published. All current cases are
 analytic or deterministic synthetic systems with assumed parameter bounds, not
 golfer measurements or coaching, clinical, design, causal, or population
 authority.
+
+### 1.0.245 Governed Claim/Critique Adjudication Ledger
+
+Adds a strict versioned ledger that registers every public critique exactly
+once, preserves unknown disposition as open, and requires protected evidence
+for responded, resolved, or rejected states. Deterministic generation projects
+the governed state into the public critique index, affected-page annotations,
+defense planning, and search records while rejecting dangling references,
+invalid transitions, and active contradictions. The protected baseline records
+33 open critiques, two bounded responses, and zero resolutions.
 
 ### 1.0.244 Induced-Acceleration Attribution Contract
 

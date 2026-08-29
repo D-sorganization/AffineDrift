@@ -1,0 +1,363 @@
+{
+  "schema_version": "1.0.0",
+  "claim_registry": "data/trust/claim_registry.json",
+  "defaults": {
+    "open_rationale": "No protected adjudication evidence is registered; the critique remains open.",
+    "open_uncertainty": "The critique has not completed evidence-backed adjudication.",
+    "open_falsifier": "A protected, reproducible result may refute or materially narrow the critique.",
+    "open_next_gate": "Register evidence, review the affected pages, and merge an adjudication through protected review."
+  },
+  "critiques": [
+    {
+      "critique_id": "crit-muscle-physiology",
+      "source_path": "critiques/01_muscle_physiology.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-aerodynamics",
+      "source_path": "critiques/02_aerodynamics.md",
+      "severity": "unknown",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-neuromuscular-control",
+      "source_path": "critiques/03_neuromuscular_control.md",
+      "severity": "unknown",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-impact-evasion",
+      "source_path": "critiques/04_impact_evasion.md",
+      "severity": "unknown",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-control-causality-mechanical",
+      "source_path": "critiques/control_causality_vs_mechanical.md",
+      "severity": "high",
+      "disposition": "responded",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": [],
+      "adjudication": {
+        "rationale": "The canonical theory now treats algebraic attribution as conditional on the declared model, coordinates, parameters, intervention, horizon, and identifiability evidence, and blocks inference of neural intent or unique real-world cause.",
+        "evidence_paths": [
+          "tests/test_control_affine_scientific_trust.py",
+          "articles/affine-nature-golf-swing.qmd"
+        ],
+        "verification_commit": "bb50862bd9993f5101bd9da71ee9a78f124cfb6e",
+        "verified_on": "2026-08-29",
+        "reviewer": "protected AffineDrift review",
+        "falsifier": "A maintained canonical page again infers intent, individual-muscle force, biological effort, or unique cause from the affine decomposition alone.",
+        "uncertainty": "The correction is a publication-scope adjudication, not biological validation of the model.",
+        "next_gate": "Acquire intervention-specific human evidence capable of separating passive, reflexive, and voluntary contributions."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-08-29",
+          "commit": "bb50862bd9993f5101bd9da71ee9a78f124cfb6e",
+          "rationale": "Protected PR #4046 added the model- and intervention-conditioned attribution boundary."
+        }
+      ]
+    },
+    {
+      "critique_id": "crit-coulomb-friction-violation",
+      "source_path": "critiques/coulomb_friction_violation.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/theory-part3.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-dimensional-inconsistency-dcr",
+      "source_path": "critiques/dimensional_inconsistency_dcr.md",
+      "severity": "high",
+      "disposition": "responded",
+      "affected_pages": ["articles/controllability-drift-ratio.qmd"],
+      "related_claim_ids": ["ad-dcr-001"],
+      "adjudication": {
+        "rationale": "The DCR article now defines a declared acceleration-space magnitude ratio and separates it from finite-horizon reachability, path-correction authority, and impact outcome.",
+        "evidence_paths": [
+          "tests/test_dcr_reachability_contract.py",
+          "src/affine_control/reachability.py",
+          "articles/controllability-drift-ratio.qmd"
+        ],
+        "verification_commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+        "verified_on": "2026-08-28",
+        "reviewer": "protected AffineDrift review",
+        "falsifier": "The maintained DCR definition again mixes state-rate units or treats the scalar as a reachability certificate.",
+        "uncertainty": "The response does not quantify model-form, input-set, coordinate, norm, parameter, or measurement uncertainty.",
+        "next_gate": "Run declared finite-horizon three-dimensional perturbation studies with uncertainty and impact outcomes."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-08-28",
+          "commit": "524c28926f364631ed06b15be9c6fdf440acce64",
+          "rationale": "Protected PR #4044 corrected the DCR definition and added an executable reachability counterexample."
+        }
+      ]
+    },
+    {
+      "critique_id": "crit-double-pendulum-energy-blindness",
+      "source_path": "critiques/double_pendulum_energy_blindness.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/drift-components-wrench-double-pendulum.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-drift-superposition",
+      "source_path": "critiques/drift_superposition.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-flaccid-drift-contradiction",
+      "source_path": "critiques/flaccid_drift_contradiction.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/theory-part1.qmd",
+        "articles/theory-part5.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-geometric-stiffness-omission",
+      "source_path": "critiques/geometric_stiffness_omission.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-hard-constraint-fallacy",
+      "source_path": "critiques/hard_constraint_fallacy.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/wrist-universal-joint.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-input-dependent-boundary-conditions",
+      "source_path": "critiques/input_dependent_boundary_conditions.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/affine-nature-golf-swing.qmd",
+        "articles/theory-part4.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-intentional-constraint-collapse",
+      "source_path": "critiques/intentional_constraint_collapse.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/intentional-constraint-collapse.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-intermediate-axis-fallacy",
+      "source_path": "critiques/intermediate_axis_fallacy.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/secondary-axis-stability.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-lie-bracket-formalism-overreach",
+      "source_path": "critiques/lie_bracket_formalism_overreach.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/controllability-drift-ratio.qmd"],
+      "related_claim_ids": ["ad-dcr-001"]
+    },
+    {
+      "critique_id": "crit-misattribution-stability-gravity",
+      "source_path": "critiques/misattribution_of_stability_gravity.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/secondary-axis-stability.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-normative-ambiguity-drift",
+      "source_path": "critiques/normative_ambiguity_drift.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/controllability-drift-ratio.qmd",
+        "articles/theory-part1.qmd"
+      ],
+      "related_claim_ids": ["ad-dcr-001"]
+    },
+    {
+      "critique_id": "crit-nullspace-interpretation",
+      "source_path": "critiques/nullspace_interpretation.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-parameter-causality-leakage",
+      "source_path": "critiques/parameter_causality_leakage.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-passive-active-boundary-ambiguity",
+      "source_path": "critiques/passive_active_boundary_ambiguity.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-passive-overshoot-artifact",
+      "source_path": "critiques/passive_overshoot_artifact.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-planar-dcr-blindness",
+      "source_path": "critiques/planar_dcr_blindness.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/controllability-drift-ratio.qmd"],
+      "related_claim_ids": ["ad-dcr-001"]
+    },
+    {
+      "critique_id": "crit-precision-gross-control",
+      "source_path": "critiques/precision_vs_gross_control.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/controllability-drift-ratio.qmd"],
+      "related_claim_ids": ["ad-dcr-001"]
+    },
+    {
+      "critique_id": "crit-sequencing-lie-bracket-fallacy",
+      "source_path": "critiques/sequencing_lie_bracket_fallacy.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/nonlinear-control-insights.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-simulation-tautology",
+      "source_path": "critiques/simulation_tautology.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/theory-part5.qmd",
+        "articles/affine-nature-golf-swing.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-static-fallacy-zvcf",
+      "source_path": "critiques/static_fallacy_zvcf.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-stiffness-pulse-paradox",
+      "source_path": "critiques/stiffness_pulse_paradox.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/intentional-constraint-collapse.qmd",
+        "articles/theory-part3.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-stretch-shortening-blindspot",
+      "source_path": "critiques/stretch_shortening_blindspot.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/theory-part1.qmd",
+        "articles/affine-nature-golf-swing.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-strokes-gained-non-ergodic",
+      "source_path": "critiques/strokes_gained_non_ergodic.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/strokes-gained-limitations.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-teleological-blindness",
+      "source_path": "critiques/teleological_blindness.md",
+      "severity": "medium",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-effective-plant-fallacy",
+      "source_path": "critiques/the_effective_plant_fallacy.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/theory-part3.qmd",
+        "articles/affine-nature-golf-swing.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-tip-mass-omission",
+      "source_path": "critiques/tip_mass_omission.md",
+      "severity": "critical",
+      "disposition": "open",
+      "affected_pages": ["articles/theory-part1.qmd"],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-validation-dimensionality-gap",
+      "source_path": "critiques/validation_dimensionality_gap.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": [
+        "articles/theory-part5.qmd",
+        "articles/wrist-universal-joint.qmd"
+      ],
+      "related_claim_ids": []
+    },
+    {
+      "critique_id": "crit-ztcf-identifiability",
+      "source_path": "critiques/ztcf_identifiability.md",
+      "severity": "high",
+      "disposition": "open",
+      "affected_pages": ["articles/affine-nature-golf-swing.qmd"],
+      "related_claim_ids": []
+    }
+  ]
+}
