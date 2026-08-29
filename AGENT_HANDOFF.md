@@ -207,7 +207,7 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 
 ## Scientific Trust Remediation (#4012)
 
-- Branch `feat/4012-scientific-trust` corrects the A1 control-affinity and
+- PR #4046 on branch `feat/4012-scientific-trust` corrects the A1 control-affinity and
   attribution defects across Theory Parts 1-2, the foundational monograph, and
   the single-file manifesto.
 - A state-dependent gain belongs in $G(x)$ and does not by itself make a system
