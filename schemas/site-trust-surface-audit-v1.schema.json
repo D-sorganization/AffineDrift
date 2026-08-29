@@ -153,6 +153,14 @@
           "type": "array",
           "uniqueItems": true
         },
+        "evidence_sha256": {
+          "additionalProperties": { "$ref": "#/$defs/sha256" },
+          "minProperties": 1,
+          "propertyNames": {
+            "pattern": "^(index\\.qmd|NOTATION\\.md|styles\\.css|articles|critiques|data|pages|reports|scripts|src|tests)/?[A-Za-z0-9_./-]*$"
+          },
+          "type": "object"
+        },
         "finding_id": {
           "pattern": "^ad-finding-[a-z0-9-]+$",
           "type": "string"
@@ -173,6 +181,7 @@
         "claim_ids",
         "critique_ids",
         "evidence_paths",
+        "evidence_sha256",
         "verification_commit"
       ],
       "type": "object"

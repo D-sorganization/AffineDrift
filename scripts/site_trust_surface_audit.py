@@ -12,6 +12,7 @@ from typing import Any, cast
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.claim_audit_evidence import ReviewEvidenceError, validate_digest_map
 from scripts.claim_audit_ids import stable_audit_id
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -110,11 +111,16 @@ def _validate_findings(record: dict[str, object], root: Path, seen: set[str]) ->
         if finding["priority"] in BLOCKING_PRIORITIES:
             if finding["disposition"] not in BLOCKING_DISPOSITIONS:
                 raise SiteAuditContractError(f"P0/P1 finding {finding_id} is not closed or blocked")
-        evidence = cast(list[str], finding.get("evidence_paths", []))
-        if finding["disposition"] == "corrected" and (
-            not evidence or any(not (root / path).is_file() for path in evidence)
-        ):
-            raise SiteAuditContractError(f"Corrected finding {finding_id} lacks local evidence")
+        if finding["disposition"] == "corrected":
+            try:
+                validate_digest_map(
+                    root,
+                    finding.get("evidence_paths"),
+                    finding.get("evidence_sha256"),
+                    label=f"corrected finding {finding_id} evidence",
+                )
+            except ReviewEvidenceError as exc:
+                raise SiteAuditContractError(str(exc)) from exc
 
 
 def _source_sha256(path: Path) -> str:
