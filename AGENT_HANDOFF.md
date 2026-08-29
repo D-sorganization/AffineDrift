@@ -10,6 +10,39 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## Books and Publication-Roadmap Trust Audit (#4062 — In Progress)
+
+- Branch `feat/4062-book-publication-roadmap` started in isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4062-a12` from exact
+  protected main `f287ce6ab2cd26079bbace6b8f362a1f0a729acd`. Lease
+  `codex-4062-20260829T110621Z` is recorded on #4062. Do not merge without final
+  root review; parent #4021 remains open.
+- Canonical content review commit `60ecb4dd04e6823cd81aa70cd5bcff20b8143dd9`
+  corrects all six public book routes. It restores Volume I chapters 3B and 9
+  and Volume IV chapter 7B to the public maps, pins manuscript and notebook
+  links to the protected review revision, labels all 40 notebook records
+  scaffolded, and distinguishes manuscript availability from execution,
+  numerical correctness, reproducibility, software readiness, and empirical
+  validation.
+- `books/roadmap.qmd` now derives 10/11/10/12 substantive chapter counts from
+  canonical `main.tex` inputs and removes unmeasured reading-time, mastery,
+  completion, comprehensiveness, and prerequisite-waiver claims. Volume routes
+  bound instantaneous affine exactness, stability-optimality hypotheses,
+  biological inference, neural causality, clinical/coaching authority, and
+  robot deployment readiness. Follow-up links expose examples, software state,
+  critiques, and unresolved questions.
+- `data/trust/book_publication_audit.json` records exact route and included-
+  authority SHA-256 bytes, claims, limits, assumptions, uncertainty, falsifiers,
+  audience limits, six corrected P1 findings, and an adversarial second pass.
+  Its strict schema, validator, deterministic report, and focused tests fail
+  closed on missing routes, byte drift, incomplete review evidence, and weak
+  P0/P1 dispositions. Six #4062 deferments are replaced with reviewed records;
+  the global inventory is 22 reviewed, 200 deferred, and 2 exempt.
+- RED was deterministic collection failure because the book-audit module did
+  not exist. Current focused GREEN is 28/28 audit/inventory/site-audit tests,
+  with deterministic book and global reports current. Full suite, isolated
+  render, and desktop/mobile browser evidence remain to be completed before PR.
+
 ## Bilateral Hand-Wrench Identifiability (#4035 — In Progress)
 
 - Branch `feat/4035-bilateral-wrench-identifiability` started from exact
@@ -371,7 +404,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Stylelint, Ruff, Black, and strict MyPy gates pass.
   Protected PR #4051 merged normally after all required hosted checks passed.
 
-## Homepage and Site-Level Trust-Surface Audit (#4063 — PR Pending)
+## Homepage and Site-Level Trust-Surface Audit (#4063 — Protected)
+
+- Protected squash merge `f287ce6ab2cd26079bbace6b8f362a1f0a729acd`
+  is byte-identical to the reviewed PR head; #4063 is closed while parent #4021
+  remains open.
 
 - Lease session `codex-4063-20260829T092627Z` is recorded at issue comment
   `#issuecomment-5461542895`. Branch `feat/4063-site-trust-surfaces` started from

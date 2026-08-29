@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 
 import pytest
+
 from scripts.book_publication_audit import (
     BookAuditContractError,
     build_report,
