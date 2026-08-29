@@ -26,6 +26,25 @@ This is current operational state. Historical detail belongs in git/GitHub.
   no overflow or clipping. Merge only through an ordinary protected PR; do not
   close #4015 on local evidence alone.
 
+## Ultimate Companion Scientific Repair (2026-08-28)
+
+- Epic #4008 coordinates the AffineDrift--UpstreamDrift companion program;
+  scientific trust is #4009 and the generated software companion is #4010.
+- Issue #4014 is implemented on `feat/4014-mechanical-attribution`: a new
+  content contract blocks torque/load/effort/muscle-cause conflation; the
+  torque example now distinguishes pointwise generalized torque from power
+  and work; accessible and technical force-taxonomy copy states the
+  model/measurement/identifiability boundary.
+- Required focused gate:
+  `python -m pytest tests/test_mechanical_claim_contract.py -m content_lint -q`.
+  Current evidence: 6/6 claim-contract tests and 3/3 adjacent public-content
+  hygiene tests pass; the complete `tests/` lane is 3,252 passed, 29 skipped,
+  and 67 deselected. Ruff and Black pass; strict mypy passes for the new test
+  (the full local mypy lane lacks the optional Streamlit dependency). All four
+  affected pages render to isolated HTML, and the revised appendix was
+  inspected at a 1440 x 1000 desktop viewport. Protected PR #4043 merged as
+  `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed.
+
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
 A full adversarial review of website content, organization, and cross-article

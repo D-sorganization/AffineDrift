@@ -29,9 +29,9 @@ $$
 u(t) \equiv 0.
 $$
 
-The resulting drift wrench reflects inertial, gravitational, Coriolis, centrifugal, and elastic shaft forces. This is essential for interpreting measured hand--club interaction forces and determining how much of the measured signal arises from momentum transfer rather than active muscular effort.
+The resulting modeled drift wrench can include inertial, gravitational, Coriolis, centrifugal, and elastic shaft terms. Comparing it with a compatible measured or simulated net wrench shows how the **declared model** partitions those generalized quantities. It does not identify muscle force or physiological effort.
 
-## Estimating Active Effort
+## Interpreting Net Model Input
 
 Given measured or simulated total force $F_{\text{total}}$, and drift force $F_{\mathrm{drift}}$ from ZTCF-based computation, input forces are obtained via
 
@@ -39,15 +39,17 @@ $$
 F_{\mathrm{input}} = F_{\text{total}} - F_{\mathrm{drift}}.
 $$
 
-This supports reconstruction of active joint torques, improved inverse dynamics, and isolation of the golfer's actual contribution to club acceleration.
+This residual can support estimation of a net generalized input when the total and drift quantities use the same coordinates, frame, reference point, sign convention, units, constraints, and model parameters. It does not by itself reconstruct individual muscles, distribute load between the hands, or identify intent.
 
 ## Shaft Mechanics
 
-Shaft deformation contributes only to drift and not to the input mapping. Shaft-related forces should therefore not be interpreted as direct indicators of muscular effort. Changes in stiffness or material properties primarily influence the drift term.
+In a model that treats shaft elasticity as autonomous state dynamics, the retained elastic terms appear in the drift field. That bookkeeping choice does not make shaft reaction forces direct indicators of muscle action. Different state, input, contact, and shaft models can partition the terms differently and must declare that partition.
 
 ## Simulation and Validation
 
-The affine formulation supports: - torque estimation through forward-dynamics matching,
+The affine formulation supports:
+
+- torque estimation through forward-dynamics matching,
 
 - counterfactual mechanical tests,
 
@@ -55,15 +57,15 @@ The affine formulation supports: - torque estimation through forward-dynamics ma
 
 ## Data Interpretation
 
-The decomposition provides a rigorous basis for interpreting measured forces, enabling one to classify contributions into passive, active, and constraint-filtered components. This mitigates common misinterpretations where passive effects are inaccurately attributed to active torques.
+The decomposition provides a reproducible basis for classifying retained model terms into drift, declared input, and constraint/contact components. Applying those labels to measurements requires compatible frames, parameters, boundary conditions, and uncertainty; the categories are not unique anatomical or causal labels.
 
 ## Machine Learning Applications
 
-ML models can be trained on drift-free input data, improving sample efficiency and interpretability. Drift can also be modeled directly to accelerate simulation, while input torques can be learned as low-dimensional latent representations.
+Drift and input terms can be supplied as model-derived features to a learning system. Any improvement in sample efficiency, prediction, or interpretability must be demonstrated on leakage-safe held-out data. A learned latent input must not be relabeled as muscle activity, effort, or intent without independent measurements and an identification model.
 
 ## Summary
 
-The control-affine decomposition provides actionable guidance for simulation, measurement interpretation, torque reconstruction, shaft mechanics, and ML-based modeling. The separation of drift and input forces yields a rigorous framework for analyzing and understanding the golf swing.
+The control-affine decomposition provides a transparent bookkeeping framework for simulation, measurement-model comparison, net generalized-input estimation, shaft modeling, and ML feature construction. Its conclusions remain conditional on the declared model, data, uncertainty, and identifiability limits.
 
 ## Limitations
 
@@ -94,7 +96,7 @@ While the applications described above leverage the control-affine framework eff
       <div class="laymans-item">
         <h3>The "What If" Game (Counterfactuals)</h3>
         <p>
-          Because we can separate the player's effort from the physics, we can simulate scenarios like "What if the player stopped pulling?" or "What if the club was stiffer?" This lets us test ideas without needing a real golfer to change their swing.
+          Within a declared model, we can change an input or parameter and simulate questions such as "What if this modeled joint torque were set to zero?" or "What if the modeled shaft stiffness changed?" These are model-conditioned comparisons, not direct observations of what a real golfer would do.
         </p>
         <div class="analogy">
           <strong>Think of it like:</strong> A flight simulator. You can program the wind to stop (counterfactual) to see how the plane flies on its own, without putting a real pilot in danger.
@@ -102,27 +104,27 @@ While the applications described above leverage the control-affine framework eff
       </div>
 
       <div class="laymans-item">
-        <h3>Separating Muscle from Momentum</h3>
+        <h3>Separating Modeled Input from Drift</h3>
         <p>
-          We can mathematically subtract the forces caused by the club's weight and speed to reveal exactly how much force the golfer is adding with their muscles.
+          The equations can separate a net modeled input term from the model's drift term at a declared state. That result does not identify individual muscles, bilateral hand forces, neural intent, or physiological effort without additional measurements and models.
         </p>
         <div class="analogy">
-          <strong>Think of it like:</strong> Cruise control vs. the gas pedal. If your car is maintaining speed downhill, the engine might be doing nothing. This math tells us when the "engine" (muscles) is actually working versus when the car is just coasting.
+          <strong>Think of it like:</strong> A simulator's force ledger. It can report which terms the chosen equations assigned to gravity, motion, and declared input, but it cannot inspect the driver's muscles or intentions.
         </div>
       </div>
 
       <div class="laymans-item">
         <h3>Cleaning Data for AI</h3>
         <p>
-          By removing the complicated "background noise" of physics (drift) from the data, we can give computers a cleaner signal to learn from. This helps AI understand golfer technique faster and more accurately.
+          A model can provide drift and input features for a learning system. Whether those features improve prediction must be tested on held-out data, and they should not be labelled as intent or muscle activity unless those quantities were independently measured.
         </p>
         <div class="analogy">
-          <strong>Think of it like:</strong> Noise-canceling headphones. It's much easier to hear the music (the player's intent) when you filter out the roar of the airplane engine (the passive physics).
+          <strong>Think of it like:</strong> Comparing a sensor trace with a simulator's baseline. The difference can be a useful feature, but it does not by itself say which biological process produced that difference.
         </div>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> This math isn't just theory—it gives us the tools to build "X-Ray glasses" for the golf swing, letting us see the player's true effort hidden inside the motion.
+        <strong>Key Takeaway:</strong> The decomposition is a transparent ledger for a declared mechanical model. It can support testable comparisons while keeping muscle, intent, and real-world causal attribution outside its authority unless additional evidence identifies them.
       </div>
     </div>
 
