@@ -10,10 +10,12 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## ZTCF Intervention Contract (#4016 — PR Pending)
+## ZTCF Intervention Contract (#4016 — PR #4048 Open)
 
 - Lease: `codex-20260828-affine-a5`, expiring 2026-08-29T14:44:17Z; issue
   comment `#issuecomment-5460882100` records the exact claim.
+- Non-draft PR: `https://github.com/D-sorganization/AffineDrift/pull/4048` on
+  `feat/4016-ztcf-contract`; hosted Python 3.12 checks are merge authority.
 - `data/ztcf/ztcf_intervention_v1.schema.json` is the normative public record;
   `data/ztcf/planar_golf_forward_fixture_v1.json` pins the sole supported golden
   result to protected source `524c28926f364631ed06b15be9c6fdf440acce64`.
