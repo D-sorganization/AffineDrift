@@ -49,7 +49,10 @@ def _local_args(
         "--schema-url",
         raw_schema,
         "--generator-command",
-        "python scripts/companion_catalog.py export",
+        (
+            "python -m scripts.companion_catalog --output "
+            "dist/companion/upstreamdrift-companion.v1.json"
+        ),
         "--manifest",
         str(manifest),
         "--schema",

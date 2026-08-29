@@ -85,7 +85,10 @@ def _pin(commit: str, manifest: bytes, schema: bytes) -> CompanionPin:
         schema_sha256=_digest(schema),
         acquisition="immutable-url",
         manifest_provider_path="dist/companion/upstreamdrift-companion.v1.json",
-        generator_command="python scripts/companion_catalog.py export",
+        generator_command=(
+            "python -m scripts.companion_catalog --output "
+            "dist/companion/upstreamdrift-companion.v1.json"
+        ),
         manifest_url=(f"{raw_root}/{commit}/dist/companion/upstreamdrift-companion.v1.json"),
         schema_url=(
             f"{raw_root}/{commit}/docs/api/contracts/" "upstreamdrift-companion-v1.schema.json"
@@ -121,7 +124,7 @@ def test_install_is_strict_deterministic_and_verifiable(tmp_path: Path) -> None:
     provenance = (installed.snapshot_dir / "provenance.qmd").read_text(encoding="utf-8")
     assert commit in provenance
     assert _digest(manifest) in provenance
-    assert "python scripts/companion_catalog.py export" in provenance
+    assert "python -m scripts.companion_catalog --output" in provenance
     assert "immutable-url" in provenance
     assert "does not grant scientific qualification" in provenance
 
@@ -265,7 +268,10 @@ def test_local_export_records_truthful_acquisition_without_false_url(tmp_path: P
         _pin(commit, manifest, schema),
         acquisition="protected-local-export",
         manifest_url=None,
-        generator_command="python scripts/companion_catalog.py export",
+        generator_command=(
+            "python -m scripts.companion_catalog --output "
+            "dist/companion/upstreamdrift-companion.v1.json"
+        ),
     )
     consumer = CompanionConsumer(tmp_path, LOCK_SCHEMA)
 
