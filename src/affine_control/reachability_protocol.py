@@ -41,11 +41,13 @@ _FORBIDDEN_AUTHORITY_PHRASES = (
 
 
 def _require_text(value: str, label: str) -> None:
+    """Reject an empty or whitespace-only declaration field."""
     if not value.strip():
         raise ValueError(f"{label} must be declared")
 
 
 def _require_finite(values: tuple[float, ...], label: str) -> None:
+    """Reject nonfinite numeric fields in a protocol record."""
     if not all(isfinite(value) for value in values):
         raise ValueError(f"{label} must be finite")
 
@@ -316,6 +318,7 @@ class CrossValidationResult:
 def _design_matrix(
     samples: tuple[CrossValidationSample, ...], include_dcr: bool
 ) -> NDArray[np.float64]:
+    """Build the declared baseline or DCR-augmented regression matrix."""
     rows = tuple(
         (
             (1.0, sample.state, sample.speed, sample.control_authority, sample.dcr)
@@ -330,6 +333,7 @@ def _design_matrix(
 def _leave_one_out_errors(
     samples: tuple[CrossValidationSample, ...], include_dcr: bool
 ) -> NDArray[np.float64]:
+    """Return deterministic held-out residuals for the declared model."""
     design = _design_matrix(samples, include_dcr)
     target = np.asarray(tuple(sample.task_error for sample in samples), dtype=np.float64)
     errors = np.empty(len(samples), dtype=np.float64)

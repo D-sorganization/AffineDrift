@@ -5,6 +5,7 @@ from math import exp, isfinite, sqrt
 
 
 def _require_finite(values: tuple[float, ...], label: str) -> None:
+    """Reject nonfinite numeric inputs at the calculation boundary."""
     if not all(isfinite(value) for value in values):
         raise ValueError(f"{label} must be finite")
 
