@@ -38,6 +38,9 @@ _APPROVED_REMOTE_PATHS = {
 LOCAL_EXPORT = "protected-local-export"
 IMMUTABLE_URL = "immutable-url"
 MANIFEST_PROVIDER_PATH = "dist/companion/upstreamdrift-companion.v1.json"
+PROVIDER_GENERATOR_COMMAND = (
+    "python -m scripts.companion_catalog --output " "dist/companion/upstreamdrift-companion.v1.json"
+)
 
 
 class CompanionImportError(RuntimeError):
@@ -223,12 +226,7 @@ def _validate_pin_digests(pin: CompanionPin) -> None:
 def _validate_acquisition(pin: CompanionPin) -> None:
     if pin.manifest_provider_path != MANIFEST_PROVIDER_PATH:
         raise CompanionImportError("manifest provider path is not approved")
-    if (
-        not pin.generator_command.strip()
-        or "\n" in pin.generator_command
-        or "\r" in pin.generator_command
-        or "`" in pin.generator_command
-    ):
+    if pin.generator_command != PROVIDER_GENERATOR_COMMAND:
         raise CompanionImportError("manifest generator command is invalid")
     if pin.acquisition == LOCAL_EXPORT:
         if pin.manifest_url is not None:

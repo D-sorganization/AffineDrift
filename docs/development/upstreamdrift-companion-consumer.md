@@ -63,7 +63,7 @@ python scripts/manage_upstreamdrift_companion.py install-local `
   --manifest-sha256 <MANIFEST_SHA256> `
   --schema-sha256 <SCHEMA_SHA256> `
   --schema-url <IMMUTABLE_RAW_SCHEMA_URL> `
-  --generator-command "<REVIEWED_PROVIDER_COMMAND>" `
+  --generator-command "python -m scripts.companion_catalog --output dist/companion/upstreamdrift-companion.v1.json" `
   --manifest <PATH_TO_EXPORTED_MANIFEST> `
   --schema <PATH_TO_PROVIDER_SCHEMA>
 ```
@@ -82,7 +82,7 @@ python scripts/manage_upstreamdrift_companion.py check-local `
   --manifest-sha256 <CANDIDATE_MANIFEST_SHA256> `
   --schema-sha256 <CANDIDATE_SCHEMA_SHA256> `
   --schema-url <CANDIDATE_IMMUTABLE_SCHEMA_URL> `
-  --generator-command "<REVIEWED_PROVIDER_COMMAND>" `
+  --generator-command "python -m scripts.companion_catalog --output dist/companion/upstreamdrift-companion.v1.json" `
   --manifest <PATH_TO_CANDIDATE_MANIFEST> `
   --schema <PATH_TO_CANDIDATE_SCHEMA>
 ```
