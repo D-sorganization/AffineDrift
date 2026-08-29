@@ -1,6 +1,6 @@
 ---
 title: "Affine Control Interpretation of the Golf Swing — Part 2"
-description: "Diagnostic tools for analyzing golf swing dynamics: the Zero Torque Counterfactual (ZTCF) family and Zero Velocity Counterfactual (ZVCF) for separating passive and active forces."
+description: "Diagnostic tools for analyzing golf swing dynamics: the Zero Torque Counterfactual (ZTCF) family and Zero Velocity Counterfactual (ZVCF) for model-conditioned drift/input attribution."
 subtitle: "Drift/Input Decomposition and Counterfactual Diagnostics"
 author: "Dieter Olson"
 date: today
@@ -24,19 +24,19 @@ format:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Part I showed us <em>how</em> the swing moves. Part II asks <em>why</em> it moves, introducing tools to separate the golfer's effort from physics.
+        Part I defined the model's equations. Part II introduces interventions that compare its autonomous dynamics with its declared input channel; these do not measure effort or intent.
       </p>
 
       <div class="laymans-item">
         <h3>The Counterfactual Swing (ZTCF)</h3>
         <p>
-          We introduce a concept called the <strong>Zero Torque Counterfactual (ZTCF)</strong>. This is a fancy name for a simple question: "What would happen if the golfer suddenly stopped trying?"
+          The <strong>Zero Torque Counterfactual (ZTCF)</strong> asks what the declared model predicts after its generalized-torque input is set to zero while the initial state, plant, and parameters remain fixed.
         </p>
         <p>
-          If you let go of the steering wheel on the highway, the car doesn't stop instantly—it drifts. Similarly, if a golfer stopped applying force mid-swing, the club would keep moving due to momentum. The ZTCF calculates this "drift" path.
+          Setting the declared input channel to zero does not erase momentum, gravity, or retained impedance. The ZTCF integrates that explicitly defined autonomous model; it does not simulate stopped intent, silent muscles, or a flaccid golfer.
         </p>
         <div class="analogy">
-          <strong>Analogy:</strong> Imagine sliding on ice. Once you push off, you keep moving without any more effort. That movement is the "drift." Any change to that path requires new effort (input).
+          <strong>Analogy:</strong> A vehicle model can be simulated with its declared drive command set to zero while drag and momentum remain. The result depends on what the model declares as state, plant, input, and parameters.
         </div>
       </div>
 
@@ -49,7 +49,7 @@ format:
           It mathematically "freezes" the swing to measure the static loads—gravity and the springiness of the bent shaft—ignoring the speed.
         </p>
         <div class="key-takeaway">
-          By comparing the actual swing to these two baselines (Drift and Static Load), we can figure out exactly how much "extra" work the golfer is doing to bend the shaft or speed up the club.
+          Comparing these baselines separates terms in the declared equations. Work requires torque--velocity integration, and biological effort requires additional physiological measurements and models.
         </div>
       </div>
 
@@ -66,17 +66,19 @@ format:
 - **Terminology:** "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' labels for these constructions; the underlying mathematics is standard rigid-body dynamics.
 :::
 
+{{< include ../_includes/control-affine-attribution-boundary.qmd >}}
+
 ## Drift vs. Input Decomposition {#drift-vs-input-decomposition}
 
-Recall the control-affine form $\dot{x} = f(x) + G(x)u$ established in Part 1, where $f$ encodes drift and $G$ encodes control directions [@isidori1995nonlinear]. In Part II, we pivot from description to **diagnostics**. We seek to transform this equation of motion into a causal map that can attribute specific features of the swing trajectory to either the golfer's intent or the club's inertia.
+Recall the control-affine form $\dot{x} = f(x) + G(x)u$ established in Part 1, where $f$ encodes the autonomous vector field and $G$ encodes declared input directions [@isidori1995nonlinear]. Part II turns this equation into reproducible, model-conditioned diagnostics.
 
-This shift is enabled by the additive separability derived in Part I, where the velocity-dependent drift is structurally distinct from the active control of the player. We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
+The additive form assigns separate terms to the autonomous dynamics and the declared input channel. It does not imply that those vectors are orthogonal or that either term uniquely identifies intent, muscles, or biological effort.
 
-Given the control-affine form $\dot{x} = f(x) + G(x)u$, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
+Given the control-affine form $\dot{x} = f(x) + G(x)u$, we now formalize this equation-level separation of autonomous (drift) and declared-input contributions.
 
 ### Passive Drift Dynamics
 
-The *drift dynamics* are defined as the evolution of the system in the absence of all muscular torques:
+The *drift dynamics* are defined by setting the declared generalized-torque input to zero while retaining the declared effective plant:
 
 $$\dot{x}_{\text{drift}} = f(x).$$
 
@@ -102,7 +104,7 @@ Key properties:
 - The mapping $G(x)$ depends on configuration and shaft deformation, but does not multiply $u$ nonlinearly.
 - The number of effective torque channels is $m_{u} \le n$, reflecting anatomical underactuation at the joint level.
 
-This term represents the portion of the dynamics directly caused by the golfer's applied torques at the mechanical level of description.
+This term is the instantaneous contribution assigned to the declared generalized-torque channel at the mechanical level of description.
 
 ### Total Evolution and Causal Interpretation Within the Model
 
@@ -117,7 +119,7 @@ Within the model, this additive structure supports the following interpretation:
 
 The decomposition is analytically exact for the chosen multibody model; in practice it is limited by parameter accuracy and the validity of the modeling assumptions.
 
-This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask 'what if' questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.
+This analytical separation defines two explicit interventions: set the declared input to zero to evaluate or integrate drift, or set the declared velocity coordinates to zero to evaluate configuration loads. Each result is conditional on its model, coordinates, parameters, initial state, and horizon. Neither operation alone establishes a unique real-world causal explanation.
 
 To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).
 
@@ -253,7 +255,7 @@ The input term is a net generalized quantity. It does not identify individual mu
 
 The ZTCF is a counterfactual *within the model*. It answers the question:
 
-> "Given the same initial configuration, velocities, shaft deformation, and model parameters, what motion would the system execute if all muscular torques were set to zero?"
+> "Given the same initial state, declared effective plant, model parameters, and integration horizon, what trajectory does the model predict when its declared generalized-torque input is set to zero?"
 
 It does *not* claim that such a motion could actually be achieved by a real golfer, nor that the nervous system ever selects "zero torque" as a control policy during a swing. Instead, ZTCF is a mathematical device that:
 
@@ -261,7 +263,7 @@ It does *not* claim that such a motion could actually be achieved by a real golf
 - provides a baseline against which torque-driven effects can be quantified, and
 - makes the drift--input decomposition explicit and reproducible.
 
-All causal statements made in this paper are therefore conditional on the mechanical model and on the modeling assumptions stated earlier. Within that scope, the decomposition
+All attribution statements made in this paper are conditional on the mechanical model and the modeling assumptions stated earlier. Within that scope, the decomposition
 
 $$\tau_{\text{total}}(t) = \tau_{\text{drift}}\big(x(t)\big) + \tau_{\text{input}}(t)$$
 
@@ -425,7 +427,7 @@ The ZVCF isolates configuration-dependent forces—gravity and elastic stiffness
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
-We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid.
+We have now constructed two counterfactual baselines: the ZTCF for the declared zero-input evolution, and the ZVCF for configuration loads at declared zero velocity. Their equation-level interpretation requires the autonomous term to have no direct dependence on the declared instantaneous input. If impedance, inertia, or another retained plant property changes with that input, the model boundary must be expanded or the quantity frozen explicitly; algebra alone does not supply causal independence.
 
 But is this separation scientifically valid? A skeptic might argue that in a biological system, the "passive" plant changes when the "active" input changes (e.g., via stiffness modulation). To defend our counterfactuals, we must prove the property of *Drift Invariance*—showing that the passive drift field is structurally immune to the active input. This is the subject of the next part of this series.
 

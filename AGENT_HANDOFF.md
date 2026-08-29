@@ -10,11 +10,31 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## DCR Reachability Correction (#4013 — PR #4044 Merged)
+## Ultimate Companion Planar-Scope Repair (#4015 — PR #4045 Merged)
 
-- Protected PR #4044 merged at `524c28926f364631ed06b15be9c6fdf440acce64` and owns the
-  article correction, analytic
-  counterexample in `src/affine_control/reachability.py`, and corpus regression
+- Epic #4008 coordinates the companion program; issue #4015 removes two
+  unsupported planar 90 percent fidelity claims.
+- Protected merge `7b1ccde2afb103f200e0d4a010411560471bb6f4` replaces them with an explicit
+  pedagogical planar-model boundary and the evidence contract required before
+  any quantitative 2-D-to-3-D comparison can be published.
+- Required focused gate:
+  `python -m pytest tests/test_planar_model_scope_contract.py -m content_lint -q`.
+  Current evidence: 2/2 focused contracts and the complete `tests/` lane
+  (3,252 passed, 29 skipped, 63 deselected) pass; Ruff, Black, focused strict
+  mypy, terminology, and two isolated Quarto renders pass. The revised critic
+  response was inspected at 1440 x 1000 with the disclosure expanded and has
+  no overflow or clipping. All exact-head hosted gates passed before the
+  ordinary protected squash merge.
+- After merging protected DCR PR #4044, the combined planar-scope, DCR, and
+  mechanical-claim selection passes 14 tests; the repository content-lint lane
+  passes 68 tests with 4 documented skips and 3,284 deselections. Black, Ruff,
+  terminology, title-case, cross-reference, display-math, and diff checks pass.
+
+## DCR Reachability Correction (#4013 — Protected PR #4044 Merged)
+
+- Protected merge `524c28926f364631ed06b15be9c6fdf440acce64` owns the corrected
+  article, analytic counterexample in `src/affine_control/reachability.py`, and
+  corpus regression
   in `tests/test_dcr_reachability_contract.py`.
 - DCR is a declared magnitude ratio, not a controllability or finite-horizon
   reachability certificate. Keep `f(x)+G(x)\mathcal U(x)`,
@@ -51,12 +71,14 @@ This is current operational state. Historical detail belongs in git/GitHub.
   (the full local mypy lane lacks the optional Streamlit dependency). All four
   affected pages render to isolated HTML, and the revised appendix was
   inspected at a 1440 x 1000 desktop viewport. This protected authority is now
-  part of `main` and must remain intact in subsequent scientific repairs.
+  part of `main` at `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed,
+  and its claim boundaries must remain intact in subsequent scientific repairs.
 
 ## Induced-Acceleration Attribution Repair (#4018)
 
 - Branch `feat/4018-induced-acceleration-attribution` owns the A7 correction.
-  It does not overlap the content files in pending PRs #4045--#4047.
+  It preserves the protected #4015 and #4012 merges and does not overlap the
+  content files in pending PR #4047.
 - A normative record now requires model and revision; engine, solver, and
   revision; generalized coordinates and reference frame; mass matrix;
   constraints; contact; force partition; residual treatment; numerical
@@ -251,6 +273,23 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 - Drift is the complete autonomous vector field of the declared plant.
 - Zero declared control does not mean zero muscle activation or effort.
 - DCR compares drift with bounded control capacity.
+
+## Scientific Trust Remediation (#4012 — PR #4046 Merged)
+
+- Protected merge `bb50862bd9993f5101bd9da71ee9a78f124cfb6e` corrects the A1
+  control-affinity and attribution defects across Theory Parts 1-2, the
+  foundational monograph, and the single-file manifesto.
+- A state-dependent gain belongs in $G(x)$ and does not by itself make a system
+  non-affine in the declared input; state-only aerodynamics belong in $f(x)$.
+- Additivity is not orthogonality. Drift and input vectors may align, oppose, or
+  be oblique under a declared metric.
+- The shared `_includes/control-affine-attribution-boundary.qmd` is the rendered
+  authority boundary: attribution is conditional on model, coordinates,
+  declared input, parameters, intervention, horizon, and identifiability.
+  Algebra alone does not identify intent, individual-muscle forces, biological
+  effort, or a unique real-world cause.
+- `tests/test_control_affine_scientific_trust.py` is the corpus contract and must
+  remain in the `content_lint` CI lane.
 
 ## Gate Commands & Verification
 
