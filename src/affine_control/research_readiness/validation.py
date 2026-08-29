@@ -10,6 +10,7 @@ from typing import Any, cast
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from .errors import ResearchReadinessError
 from .states import (
     REQUIRED_EVIDENCE,
     protocol_revision,
@@ -17,18 +18,16 @@ from .states import (
     transition_allowed,
     validation_origin_allowed,
 )
+from .supersession import validate_supersession
 
 MAX_EVIDENCE_BYTES = 5_000_000
-
-
-class ResearchReadinessError(ValueError):
-    """Raised when research-readiness evidence fails closed."""
 
 
 @dataclass(frozen=True)
 class EvidenceStatus:
     """Validated lifecycle-gate evidence metadata."""
 
+    availability: str
     kind: str
     origin: str
     status: str
@@ -158,6 +157,7 @@ def _validate_evidence(
         if record.get("availability") == "public":
             _validate_public_evidence(record, root)
         evidence[evidence_id] = EvidenceStatus(
+            availability=str(record.get("availability")),
             kind=str(record.get("kind")),
             origin=str(record.get("evidence_origin")),
             status=str(record.get("status")),
@@ -171,12 +171,19 @@ def _transition_evidence(target: str, raw_ids: object, evidence: dict[str, Evide
     ids = [str(value) for value in raw_ids]
     if any(value not in evidence for value in ids):
         raise ResearchReadinessError(f"Transition to {target} has unknown evidence IDs")
-    accepted = {evidence[value].kind for value in ids if evidence[value].status == "verified"}
+    eligible = {
+        value
+        for value in ids
+        if evidence[value].status == "verified"
+        and evidence[value].availability in {"public", "private"}
+    }
+    accepted = {evidence[value].kind for value in eligible}
     required = REQUIRED_EVIDENCE[target]
     if not required.issubset(accepted):
         missing = ", ".join(sorted(required - accepted))
         raise ResearchReadinessError(f"Transition to {target} lacks {missing}")
-    origins = {evidence[value].origin for value in ids}
+    required_ids = {value for value in eligible if evidence[value].kind in required}
+    origins = {evidence[value].origin for value in required_ids}
     if not validation_origin_allowed(target, origins):
         raise ResearchReadinessError("Validated state requires measured or estimated evidence")
 
@@ -198,6 +205,11 @@ def _validate_history(protocol: dict[str, object], evidence: dict[str, EvidenceS
         if not transition_allowed(source, target, scope):
             raise ResearchReadinessError(f"Protocol has invalid transition: {source} -> {target}")
         _transition_evidence(target, event.get("evidence_ids"), evidence)
+        if target == "published":
+            raise ResearchReadinessError(
+                "Published state requires external #4042 publication authority; "
+                "the #4041 lifecycle cannot mint it"
+            )
         previous = target
     if previous != protocol.get("state"):
         raise ResearchReadinessError(
@@ -290,28 +302,6 @@ def _validate_links(
     _validate_artifacts(links, root, audits)
 
 
-def _validate_supersession(records: list[dict[str, object]]) -> None:
-    ids = {str(record["protocol_id"]) for record in records}
-    successors: dict[str, str] = {}
-    for record in records:
-        successor = record.get("successor_protocol_id")
-        if successor is None:
-            continue
-        source = str(record["protocol_id"])
-        target = str(successor)
-        if target == source or target not in ids:
-            raise ResearchReadinessError(f"Invalid successor protocol ID: {target}")
-        successors[source] = target
-    for source in successors:
-        visited = {source}
-        target = successors[source]
-        while target in successors:
-            if target in visited:
-                raise ResearchReadinessError("Supersession cycle is forbidden")
-            visited.add(target)
-            target = successors[target]
-
-
 def _validate_specification(protocol: dict[str, object], root: Path) -> None:
     specification = protocol.get("specification")
     if not isinstance(specification, dict):
@@ -322,6 +312,19 @@ def _validate_specification(protocol: dict[str, object], root: Path) -> None:
     path = _checked_file(root, dictionary.get("path"), "data dictionary")
     if _digest(path) != dictionary.get("sha256"):
         raise ResearchReadinessError("Data dictionary digest mismatch")
+    governance = specification.get("governance")
+    if not isinstance(governance, dict):
+        raise ResearchReadinessError("Protocol governance must be an object")
+    scope = str(protocol["participant_scope"])
+    expected = {
+        "human_approval_required": scope == "human",
+        "animal_approval_required": scope == "animal",
+        "private_data_approval_required": scope == "private-data",
+    }
+    if any(governance.get(field) is not required for field, required in expected.items()):
+        raise ResearchReadinessError(
+            f"Protocol participant scope {scope} is inconsistent with governance approvals"
+        )
 
 
 def _validate_attempts(protocol: dict[str, object], evidence: dict[str, EvidenceStatus]) -> None:
@@ -374,7 +377,7 @@ def validate_library(
         _validate_attempts(protocol, evidence)
         _validate_specification(protocol, root)
         _validate_links(protocol, claims, critiques, audits, root)
-    _validate_supersession(records)
+    validate_supersession(records)
 
 
 def load_library(

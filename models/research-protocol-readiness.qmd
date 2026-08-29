@@ -141,13 +141,16 @@ revision, and gate applicability. "Private" is not a shortcut around evidence.
 
 ## Add or Revise a Protocol
 
-Start from the schema-valid DCR concept example, replace the scientific
-specification and links, recalculate both revisions with the maintained
-generator, and review the diff. Do not hand-edit generated summaries.
+Start from the neutral schema-valid concept template. Assign a unique protocol
+ID, accountable owner, and participant scope; replace every placeholder in the
+scientific specification; add only scoped, reviewed authority links; then
+recalculate both revisions with the maintained generator and review the diff.
+The template deliberately carries no DCR claim, critique, evidence, route, or
+dataset authority. Do not hand-edit generated summaries.
 
 ```powershell
-python scripts/generate_research_readiness_library.py
-python scripts/generate_research_readiness_library.py --check
+python -m scripts.generate_research_readiness_library
+python -m scripts.generate_research_readiness_library --check
 python -m pytest tests/test_research_protocol_readiness.py
 ```
 

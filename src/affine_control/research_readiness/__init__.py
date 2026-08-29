@@ -1,5 +1,6 @@
 """Public API for governed research-readiness contracts."""
 
+from .errors import ResearchReadinessError
 from .projection import build_public_summary
 from .states import (
     protocol_revision,
@@ -7,11 +8,7 @@ from .states import (
     transition_allowed,
     validation_origin_allowed,
 )
-from .validation import (
-    ResearchReadinessError,
-    load_library,
-    validate_library,
-)
+from .validation import load_library, validate_library
 
 __all__ = [
     "ResearchReadinessError",

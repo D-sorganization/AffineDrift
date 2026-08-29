@@ -120,8 +120,27 @@
     },
     "evidence": {
       "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "supersession-record" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["related_protocol_id", "related_record_revision"]
+          }
+        }
+      ],
       "oneOf": [
         {
+          "not": {
+            "anyOf": [
+              { "required": ["custodian"] },
+              { "required": ["disclosure_boundary"] },
+              { "required": ["governed_record_id"] },
+              { "required": ["record_revision"] }
+            ]
+          },
           "properties": { "availability": { "const": "public" } },
           "required": ["path", "sha256"]
         },
@@ -130,9 +149,30 @@
             "anyOf": [{ "required": ["path"] }, { "required": ["sha256"] }]
           },
           "properties": {
-            "availability": { "enum": ["private", "unavailable"] }
+            "availability": { "const": "private" }
           },
-          "required": ["governed_record_id", "custodian", "disclosure_boundary"]
+          "required": [
+            "governed_record_id",
+            "record_revision",
+            "custodian",
+            "disclosure_boundary"
+          ]
+        },
+        {
+          "not": {
+            "anyOf": [{ "required": ["path"] }, { "required": ["sha256"] }]
+          },
+          "properties": {
+            "availability": { "const": "unavailable" },
+            "evidence_origin": { "const": "unavailable" },
+            "status": { "const": "unavailable" }
+          },
+          "required": [
+            "governed_record_id",
+            "record_revision",
+            "custodian",
+            "disclosure_boundary"
+          ]
         }
       ],
       "properties": {
@@ -166,6 +206,12 @@
           ]
         },
         "path": { "$ref": "#/$defs/path" },
+        "record_revision": { "$ref": "#/$defs/digest" },
+        "related_protocol_id": {
+          "pattern": "^ad-protocol-[a-z0-9-]+-[0-9]{3}$",
+          "type": "string"
+        },
+        "related_record_revision": { "$ref": "#/$defs/digest" },
         "reviewed_by": { "$ref": "#/$defs/text" },
         "reviewed_on": {
           "format": "date",
@@ -220,18 +266,22 @@
     "governance": {
       "additionalProperties": false,
       "properties": {
+        "animal_approval_required": { "type": "boolean" },
         "consent": { "$ref": "#/$defs/text" },
         "ethics": { "$ref": "#/$defs/text" },
         "human_approval_required": { "type": "boolean" },
         "license": { "$ref": "#/$defs/text" },
-        "privacy": { "$ref": "#/$defs/text" }
+        "privacy": { "$ref": "#/$defs/text" },
+        "private_data_approval_required": { "type": "boolean" }
       },
       "required": [
         "privacy",
         "license",
         "consent",
         "ethics",
-        "human_approval_required"
+        "human_approval_required",
+        "animal_approval_required",
+        "private_data_approval_required"
       ],
       "type": "object"
     },
@@ -298,7 +348,6 @@
       "properties": {
         "calculation_artifacts": {
           "items": { "$ref": "#/$defs/artifact" },
-          "minItems": 1,
           "type": "array"
         },
         "claim_ids": {
@@ -323,7 +372,6 @@
         "critique_link_next_gate": { "$ref": "#/$defs/text" },
         "datasets": {
           "items": { "$ref": "#/$defs/dataset" },
-          "minItems": 1,
           "type": "array"
         },
         "route_audits": {
@@ -342,7 +390,6 @@
             "required": ["audit_id", "route"],
             "type": "object"
           },
-          "minItems": 1,
           "type": "array"
         },
         "validation_release": {
@@ -368,7 +415,6 @@
         },
         "workflow_artifacts": {
           "items": { "$ref": "#/$defs/artifact" },
-          "minItems": 1,
           "type": "array"
         }
       },
@@ -435,12 +481,11 @@
       "properties": {
         "authority_boundary": { "$ref": "#/$defs/text" },
         "companion_issue": {
-          "enum": [4033, 4034, 4035, 4036, 4037, 4038, 4039, 4040],
+          "enum": [4033, 4034, 4035, 4036, 4037, 4038, 4039, 4040, 4041],
           "type": "integer"
         },
         "evidence": {
           "items": { "$ref": "#/$defs/evidence" },
-          "minItems": 1,
           "type": "array"
         },
         "evidence_origin": { "$ref": "#/$defs/evidenceOrigin" },

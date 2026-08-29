@@ -5,23 +5,20 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
-from src.affine_control.research_readiness import (  # noqa: E402  # reason: direct CLI bootstrap
+from src.affine_control.research_readiness import (
     build_public_summary,
     validate_library,
 )
-from src.affine_control.research_readiness.fixtures import (  # noqa: E402  # reason: direct CLI bootstrap
+from src.affine_control.research_readiness.fixtures import (
     build_manufactured_library,
-    concept_template,
     manufactured_dictionary,
     manufactured_dry_runs,
 )
+from src.affine_control.research_readiness.template import concept_template
+
+ROOT = Path(__file__).resolve().parent.parent
 
 LIBRARY = ROOT / "data/research_protocols/library.json"
 DICTIONARY = ROOT / "data/research_protocols/data_dictionary.json"

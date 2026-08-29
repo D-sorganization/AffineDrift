@@ -187,7 +187,7 @@ def test_private_gate_evidence_requires_an_immutable_record_revision() -> None:
     )
     _reseal(protocol)
 
-    with pytest.raises(ResearchReadinessError, match="record_revision"):
+    with pytest.raises(ResearchReadinessError, match="not valid under any"):
         validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
 
 
@@ -462,6 +462,7 @@ def test_superseded_state_requires_an_existing_revision_pinned_successor() -> No
     evidence = protocol["evidence"]
     history = protocol["history"]
     assert isinstance(evidence, list) and isinstance(history, list)
+    successor = _protocol(library, "ad-protocol-hybrid-impact-001")
     evidence_id = "evidence-dcr-supersession"
     evidence.append(
         {
@@ -473,6 +474,8 @@ def test_superseded_state_requires_an_existing_revision_pinned_successor() -> No
             "evidence_origin": "analytical",
             "governed_record_id": "supersession-dcr-001",
             "record_revision": "2" * 64,
+            "related_protocol_id": successor["protocol_id"],
+            "related_record_revision": successor["record_revision"],
             "custodian": "Protocol owner",
             "disclosure_boundary": "No private content is disclosed.",
             "reviewed_by": "Protocol owner",
@@ -502,6 +505,49 @@ def test_non_superseded_record_cannot_predeclare_a_successor() -> None:
     _reseal(protocol)
 
     with pytest.raises(ResearchReadinessError, match="non-superseded.*successor"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_supersession_evidence_must_pin_the_exact_successor_revision() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    successor = _protocol(library, "ad-protocol-hybrid-impact-001")
+    evidence = protocol["evidence"]
+    history = protocol["history"]
+    assert isinstance(evidence, list) and isinstance(history, list)
+    evidence_id = "evidence-dcr-supersession"
+    evidence.append(
+        {
+            "evidence_id": evidence_id,
+            "kind": "supersession-record",
+            "status": "verified",
+            "scope": protocol["protocol_id"],
+            "availability": "private",
+            "evidence_origin": "analytical",
+            "governed_record_id": "supersession-dcr-001",
+            "record_revision": "2" * 64,
+            "related_protocol_id": successor["protocol_id"],
+            "related_record_revision": "3" * 64,
+            "custodian": "Protocol owner",
+            "disclosure_boundary": "No private content is disclosed.",
+            "reviewed_by": "Protocol owner",
+            "reviewed_on": "2026-08-29",
+        }
+    )
+    history.append(
+        {
+            "from": "simulation-ready",
+            "to": "superseded",
+            "on": "2026-08-29",
+            "rationale": "Adversarial stale successor revision.",
+            "evidence_ids": [evidence_id],
+        }
+    )
+    protocol["successor_protocol_id"] = successor["protocol_id"]
+    protocol["state"] = "superseded"
+    _reseal(protocol)
+
+    with pytest.raises(ResearchReadinessError, match="does not pin successor"):
         validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
 
 

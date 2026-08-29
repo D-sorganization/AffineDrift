@@ -77,4 +77,4 @@ def validation_origin_allowed(target: str, origins: set[str]) -> bool:
     """Return whether evidence origins are eligible for a target state."""
     if target != "validated":
         return True
-    return not origins.isdisjoint({"measured", "estimated"})
+    return bool(origins) and origins <= {"measured", "estimated"}
