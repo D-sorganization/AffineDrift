@@ -15,7 +15,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Branch `feat/4041-preregistration-readiness` is in isolated worktree
   `C:\Users\diete\Repositories\worktrees\AffineDrift-4041-e9`. RED commit
   `0c440db2` captures five adversarial defects; GREEN commit `1cee0462` closes
-  them without importing publication authority from #4042.
+  them without importing publication authority from #4042. RED commit
+  `51f476ae` then rejects trailing whitespace in the generated public include;
+  GREEN commit `801694e7` removes it at the generator boundary.
 - The strict E1–E8 lifecycle distinguishes scientific `protocol_revision` from
   whole-record `record_revision`, enforces contiguous participant-scope-aware
   transitions, and binds exact claims, critiques, route audits, calculation
@@ -40,14 +42,30 @@ This is current operational state. Historical detail belongs in git/GitHub.
   route joins. The generator runs as
   `python -m scripts.generate_research_readiness_library`; no production
   `sys.path` bootstrap remains.
-- Focused GREEN evidence is 30 tests plus the four `content_lint` contracts,
-  deterministic readiness and claim-audit generators, Ruff, Black, strict
-  MyPy, and hard module/changed-file size budgets. The reviewed route evidence
-  is pinned to GREEN commit `1cee0462fc72fe426ab69d798241ce6befae1a4b`
-  and includes the split error, supersession, and template modules. Full final
-  local gates and protected-main reconciliation remain before PR publication.
+- Ordinary merge `1a37fcd5eb4a5786bde5735e83064d8db05285fe`
+  reconciles exact protected main
+  `cec3842d9e8b4629a8a6c34b25322450f16f471f`, preserving #4075, #4077, and
+  the canonical development log. At that head, 54 focused lifecycle,
+  claim-audit, render-coverage, and heading contracts pass; the default Python
+  lane passes with 29 documented skips; the content lane passes 115 tests with
+  4 documented skips; and all 20 JavaScript suites pass 297 tests with 19
+  documented skips. Deterministic generators, Ruff, Black across 533 files,
+  strict MyPy across the 10 changed sources, CI MyPy across 74 files, both size
+  budgets, terminology/title/xref/syntax gates, pre-commit, and diff hygiene
+  pass. No new placeholder implementation remains.
+- A detached Quarto 1.8.26 build renders all 230 configured inputs. Before
+  pruning, site health reports zero broken links and 24 known non-blocking
+  orphan warnings. Pruning removes 28 internal artifacts; the revision-bound
+  manifest contains 231 public routes; publication enforcement passes; and
+  every-page browser verification passes 924/924 mobile/desktop and light/dark
+  evidence cells. A separate representative tablet/desktop screenshot matrix,
+  including the new route, passes 72/72 cells and was manually inspected in
+  both themes. The reviewed route evidence remains pinned to GREEN commit
+  `1cee0462fc72fe426ab69d798241ce6befae1a4b` and includes the split error,
+  supersession, and template modules. Hosted exact-head checks, ordinary
+  protected merge, and a clean post-merge Deploy Website run remain required.
 
-## Induced-Acceleration Heading-Hierarchy Closure (#4077 — In Progress)
+## Induced-Acceleration Heading-Hierarchy Closure (#4077 — Complete)
 
 - Protected squash `77fe82ca21c69c723e8617368b369ec067700d72`
   completed #4075 and restored the missing scientific claim-audit route. Deploy
@@ -57,23 +75,21 @@ This is current operational state. Historical detail belongs in git/GitHub.
   four viewport/theme cells.
 - Issue #4077 is a bounded child of #4021/#4009. Branch
   `fix/4077-induced-heading-hierarchy` and isolated worktree
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4077-a1` start from exact
-  protected main `77fe82ca21c69c723e8617368b369ec067700d72` with an active
-  `claim:codex` lease.
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4077-a1` started from
+  exact protected main `77fe82ca21c69c723e8617368b369ec067700d72`.
 - RED commit `7e6bfed2` recursively expands the shared attribution include and
   fails all three canonical QMD consumers on the visible `(1, 3)` rank skip.
   GREEN commit `49145413` changes only `Counterexamples to Unique Attribution`
   from H3 to H2. The scientific words, claim-audit classification, evidence,
   and authority are unchanged.
-- At exact content head `49145413889fe0711586587ab156354499d51a6a`,
-  Quarto renders all 229 configured HTML inputs. Site health reports zero broken
-  links with 24 known non-blocking orphan warnings; pruning removes 28 internal
-  artifacts; the revision-bound manifest contains 230 routes; claim-audit
-  publication enforcement passes; and the deploy browser verifier passes
-  920/920 mobile/desktop and light/dark evidence cells with zero failures.
-- Full Python/content/JavaScript/lint validation, protected-main reconciliation,
-  hosted checks, ordinary protected merge, and a clean post-merge Deploy Website
-  run remain required.
+- All 14 exact-head checks passed. Protected squash
+  `cec3842d9e8b4629a8a6c34b25322450f16f471f` has the same tree
+  `5592b53a6f40b522b1a8b78248d59601af193c0c` as reviewed head
+  `28a6cf43e24da40c2f1698e78c1b46daa4a729f7`; #4077 is closed.
+  Deploy Website run `33262633416` binds the live manifest to the exact merge
+  SHA and passes 920/920 live evidence cells. All three affected production
+  routes and the claim-audit report return HTTP 200; the shared title renders as
+  H2 on each route. Parent #4021 and program #4009 remain open.
 
 ## Scientific Claim-Audit Report Deploy Closure (#4075 — Complete)
 
