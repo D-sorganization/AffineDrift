@@ -1,0 +1,204 @@
+{
+  "$id": "https://affinedrift.com/schemas/trust-metadata-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "pages": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "claims": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "accessible_summary": {
+                  "$ref": "#/$defs/claimText"
+                },
+                "claim_id": {
+                  "pattern": "^ad-[a-z0-9-]+-[0-9]{3}$",
+                  "type": "string"
+                },
+                "critique_status": {
+                  "enum": [
+                    "not_reviewed",
+                    "open",
+                    "responded",
+                    "adjudicated",
+                    "unknown"
+                  ]
+                },
+                "data_provenance": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "evidence_class": {
+                  "enum": [
+                    "analytical_counterexample",
+                    "computational",
+                    "experimental",
+                    "literature_review",
+                    "mixed",
+                    "unknown"
+                  ]
+                },
+                "falsifiers": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "limitations": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "next_validation_gate": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "population": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "review_commit": {
+                  "pattern": "^[0-9a-f]{40}$",
+                  "type": "string"
+                },
+                "reviewed_on": {
+                  "format": "date",
+                  "type": "string"
+                },
+                "software_provenance": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "commit": {
+                        "pattern": "^[0-9a-f]{40}$",
+                        "type": "string"
+                      },
+                      "path": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "repository": {
+                        "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+                        "type": "string"
+                      },
+                      "sha256": {
+                        "pattern": "^[0-9a-f]{64}$",
+                        "type": "string"
+                      }
+                    },
+                    "required": ["repository", "commit", "path", "sha256"],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "technical_anchor": {
+                  "pattern": "^claim-ad-[a-z0-9-]+-[0-9]{3}$",
+                  "type": "string"
+                },
+                "technical_claim": {
+                  "$ref": "#/$defs/claimText"
+                },
+                "title": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "uncertainty": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "statement": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "status": {
+                      "enum": [
+                        "quantified",
+                        "bounded",
+                        "unquantified",
+                        "unknown"
+                      ]
+                    }
+                  },
+                  "required": ["status", "statement"],
+                  "type": "object"
+                },
+                "valid_conditions": {
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "claim_id",
+                "title",
+                "technical_anchor",
+                "technical_claim",
+                "accessible_summary",
+                "population",
+                "valid_conditions",
+                "evidence_class",
+                "uncertainty",
+                "limitations",
+                "falsifiers",
+                "critique_status",
+                "software_provenance",
+                "data_provenance",
+                "reviewed_on",
+                "review_commit",
+                "next_validation_gate"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "page_id": {
+            "pattern": "^ad-[a-z0-9-]+$",
+            "type": "string"
+          },
+          "source_path": {
+            "pattern": "^articles/[A-Za-z0-9_./-]+\\.qmd$",
+            "type": "string"
+          }
+        },
+        "required": ["page_id", "source_path", "claims"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    }
+  },
+  "required": ["schema_version", "pages"],
+  "title": "AffineDrift Scientific Trust Metadata",
+  "type": "object",
+  "$defs": {
+    "claimText": {
+      "additionalProperties": false,
+      "properties": {
+        "modal_strength": {
+          "enum": ["hypothesis", "bounded", "supported", "established"]
+        },
+        "text": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": ["text", "modal_strength"],
+      "type": "object"
+    }
+  }
+}
