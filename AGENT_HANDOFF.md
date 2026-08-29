@@ -10,7 +10,47 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Bilateral Hand-Wrench Identifiability (#4035 — In Progress)
+## Active Impedance and Co-Contraction Identification (#4036 — In Progress)
+
+- Branch `feat/4036-active-impedance-identification` started from exact
+  protected main `9c3c5218744ecf5791d9af4a7871f618d917437a`. It is bounded to
+  analytic and deterministic synthetic feasibility; it contains no participant
+  result or device qualification and does not modify protected UpstreamDrift
+  authority.
+- `impedance_protocol.py`, `impedance_evidence.py`, `impedance_emg.py`,
+  `impedance_sources.py`, and `impedance_fixtures.py` freeze primary sources,
+  device safety, phases and zero-anchored windows, endpoint/joint models,
+  excitation, one relative rank/fit tolerance, governed EMG pair/formula
+  declarations, uncertainty, reliability, adverse outcomes, and the human
+  boundary.
+- Exact phase fixtures recover manufactured effective parameters. The negative
+  control makes stiffness and a voluntary-like basis collinear and fails closed
+  at rank four/nullity one. A near-singular regression proves rank qualification
+  and `lstsq` use the same declared cutoff.
+- The amplitude-driven CCI proxy requires exact same-side agonist/antagonist
+  channel IDs, roles, normalization revision, formula, comparison scope, and
+  sensitivity plan. Direct cross-index value comparison is prohibited. It is
+  not stiffness, force, effort, or a unique biological mechanism.
+- Human collection remains unavailable. Typed, distinct, category-matched
+  external records can establish structural readiness for external review, but
+  the software always returns `authorizes_participant_collection=False` and
+  requires an outside human release decision.
+- `/models/active-impedance-identification.html` is registered as reviewed
+  audit `ad-route-eb36645ba003`, bound to exact reviewed content commit
+  `c8cf64c5779640a5dacf9ef5aed8e6a7e4157b90` and all four review dimensions.
+  The protected 219-route deferred partition is unchanged.
+- RED evidence: the initial focused suite failed during collection because the
+  protocol modules did not exist. Review-led RED cases then exposed the rank
+  tolerance mismatch, arbitrary-string human authorization, non-zero-anchored
+  windows, and ungoverned EMG arrays. Current GREEN evidence is 11/11 executable
+  tests, 2/2 content/audit tests, and 11/11 claim-audit tests; focused Ruff,
+  Black, strict mypy, bibliography quality, report generation, and publication
+  enforcement pass. Full exact-head and rendered/browser validation remain due.
+
+## Bilateral Hand-Wrench Identifiability (#4035 — Protected)
+
+- Protected merge `9c3c5218744ecf5791d9af4a7871f618d917437a` is the exact
+  reviewed #4035 tree. The branch history below records its delivery evidence.
 
 - Branch `feat/4035-bilateral-wrench-identifiability` started from exact
   protected main `d8f90713a0d3a4255ed1131a6c3517ee13217997`. It extends the
