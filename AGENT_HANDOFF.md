@@ -156,13 +156,14 @@ This is current operational state. Historical detail belongs in git/GitHub.
   tree-parity, LaTeX-structure, and diff gates pass. All three changed pages
   render to isolated HTML and expose the normative record without horizontal
   overflow at a 1,905-pixel desktop viewport; a fresh browser console is clean.
-  After merging protected #4019 at `48026454cdd3e07b3ce489d288efcb9295417b10`,
-  the seven scientific-trust selections pass all 50 tests, trust-panel
-  generation is fresh, and the focused lint/type/structure/diff gates remain
-  green on the reconciled head. Clean first-pass `pdflatex` runs complete the
-  607-page Physics of Golf source and 209-page Geometry of Motion Volume I
-  source without a hard LaTeX error; the complete hosted multi-pass compiles
-  remain the release gate.
+  After merging protected #4019 and #4016 through
+  `443e20a8ecaf1b32b9940b644e0451355e316ea7`, the eight scientific-trust
+  selections pass all 57 tests, trust-panel generation is fresh, and the
+  focused lint/type/structure/diff gates remain green on the reconciled head.
+  All three affected QMD sources render as standalone HTML streams. Clean
+  first-pass `pdflatex` runs complete the 605-page Physics of Golf source and
+  209-page Geometry of Motion Volume I source without a hard LaTeX error; the
+  complete hosted multi-pass compiles remain the release gate.
   Protected Python 3.12 and hosted exact-head checks remain release gates.
 
 ## Governed Scientific Trust Panels (#4019 — Protected PR #4049 Merged)
