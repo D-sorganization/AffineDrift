@@ -461,6 +461,17 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     )
 
 
+def test_generated_claim_audit_report_route_is_narrowly_exempt() -> None:
+    """The inventory projection carries no independent scientific authority."""
+    inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
+    record = _find_route(inventory, "/reports/scientific-claim-audit.html")
+
+    assert record["status"] == "exempt"
+    assert record["exemption"]["issue_url"].endswith("/4075")
+    assert "no independent scientific claim" in record["exemption"]["rationale"]
+    assert "generator and freshness contracts" in record["exemption"]["scope"]
+
+
 def test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers() -> None:
     workflow = (ROOT / ".github/workflows/deploy-website.yml").read_text(encoding="utf-8")
 

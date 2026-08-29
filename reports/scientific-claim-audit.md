@@ -6,7 +6,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 
 - Reviewed: 28
 - Deferred: 200
-- Exempt: 2
+- Exempt: 3
 
 ## Deferred Delivery Batches
 
@@ -259,6 +259,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
+| `ad-route-8544bec56dfb` | `/reports/scientific-claim-audit.html` | Exempt | — | None | None | 0 |
 | `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-c28bd36edd3e` | `/repositories/repositories-3d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-59ad729f0fc1` | `/repositories/repositories-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
