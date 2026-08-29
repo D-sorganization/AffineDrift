@@ -23,6 +23,7 @@ from src.companion.manifest_consumer import (
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCK_SCHEMA = ROOT / "schemas/upstreamdrift-companion-lock-v1.schema.json"
+CANONICAL_ROOT = ROOT / "data/upstreamdrift_companion"
 PROVIDER_SCHEMA_ID = "https://upstreamdrift.dev/schemas/upstreamdrift-companion-v1.schema.json"
 
 
@@ -531,3 +532,26 @@ def test_active_lock_rejects_duplicate_json_keys(tmp_path: Path) -> None:
 
     with pytest.raises(CompanionImportError, match="duplicate key: schema_version"):
         consumer.verify_active()
+
+
+def test_canonical_snapshot_is_exact_verified_and_explicitly_draft() -> None:
+    """Keep the checked-in provider snapshot exact without promoting its authority."""
+    installed = CompanionConsumer(CANONICAL_ROOT, LOCK_SCHEMA).verify_active()
+    provider = installed.lock["provider"]
+    publication = installed.lock["publication"]
+    manifest = installed.manifest
+
+    assert manifest["manifest_id"] == "upstreamdrift-companion"
+    assert manifest["source"]["repository"] == ("https://github.com/D-sorganization/UpstreamDrift")
+    assert manifest["source"]["commit"] == installed.commit
+    assert provider["manifest_acquisition"] == "protected-local-export"
+    assert provider["manifest_url"] is None
+    assert publication["state"] == "draft"
+    assert manifest["publication"]["state"] == "draft"
+    assert manifest["publication"]["blockers"]
+    assert manifest["programs"]
+    assert manifest["features"]
+    assert manifest["engines"]
+    assert manifest["workflows"] == []
+    assert manifest["screenshots"] == []
+    assert manifest["documentation"] == []
