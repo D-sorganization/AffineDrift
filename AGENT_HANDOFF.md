@@ -1,6 +1,6 @@
 # Agent Handoff — AffineDrift
 
-Last updated: 2026-08-27
+Last updated: 2026-08-28
 
 This is current operational state. Historical detail belongs in git/GitHub.
 
@@ -9,6 +9,22 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Use pull requests and ordinary protected merges; required status checks must pass.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
+
+## Ultimate Companion Planar-Scope Repair (2026-08-28)
+
+- Epic #4008 coordinates the companion program; issue #4015 removes two
+  unsupported planar 90 percent fidelity claims.
+- Branch `feat/4015-planar-spatial-scope` replaces them with an explicit
+  pedagogical planar-model boundary and the evidence contract required before
+  any quantitative 2-D-to-3-D comparison can be published.
+- Required focused gate:
+  `python -m pytest tests/test_planar_model_scope_contract.py -m content_lint -q`.
+  Current evidence: 2/2 focused contracts and the complete `tests/` lane
+  (3,252 passed, 29 skipped, 63 deselected) pass; Ruff, Black, focused strict
+  mypy, terminology, and two isolated Quarto renders pass. The revised critic
+  response was inspected at 1440 x 1000 with the disclosure expanded and has
+  no overflow or clipping. Merge only through an ordinary protected PR; do not
+  close #4015 on local evidence alone.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
