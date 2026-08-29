@@ -13,6 +13,11 @@ from typing import Any, cast
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from scripts.claim_audit_evidence import (
+    ReviewEvidenceError,
+    validate_digest_map,
+    validate_review_evidence,
+)
 from scripts.claim_audit_ids import deferred_issue_url, source_route, stable_audit_id
 from scripts.claim_audit_report import (
     BLOCKED_DISPOSITION,
@@ -116,9 +121,10 @@ def _validate_review(record: dict[str, object], root: Path) -> None:
     dimensions = review.get("dimensions")
     if not isinstance(dimensions, list) or set(dimensions) != REVIEW_DIMENSIONS:
         raise AuditContractError(f"{record.get('route')} review dimensions are incomplete")
-    evidence = review.get("evidence_paths")
-    if not isinstance(evidence, list) or any(not (root / str(path)).is_file() for path in evidence):
-        raise AuditContractError(f"{record.get('route')} review evidence path is missing")
+    try:
+        validate_review_evidence(record, root)
+    except ReviewEvidenceError as exc:
+        raise AuditContractError(str(exc)) from exc
 
 
 def _validate_deferment(record: dict[str, object]) -> None:
@@ -158,11 +164,15 @@ def _validate_findings(record: dict[str, object], root: Path) -> set[str]:
                 f"P0/P1 finding {finding_id} must be corrected or publication_blocked"
             )
         if disposition == "corrected":
-            evidence = finding.get("evidence_paths")
-            if not isinstance(evidence, list) or not evidence:
-                raise AuditContractError(f"Corrected finding {finding_id} lacks evidence")
-            if any(not (root / str(path)).is_file() for path in evidence):
-                raise AuditContractError(f"Corrected finding {finding_id} evidence path is missing")
+            try:
+                validate_digest_map(
+                    root,
+                    finding.get("evidence_paths"),
+                    finding.get("evidence_sha256"),
+                    label=f"corrected finding {finding_id} evidence",
+                )
+            except ReviewEvidenceError as exc:
+                raise AuditContractError(str(exc)) from exc
             if not finding.get("verification_commit"):
                 raise AuditContractError(
                     f"Corrected finding {finding_id} lacks verification commit"
@@ -304,7 +314,7 @@ def initialize_inventory(
         "critique_ledger": "data/trust/claim_critique_ledger.json",
         "manifest_contract": MANIFEST_CONTRACT,
         "routes": routes,
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
     }
     validate_inventory(inventory, sources)
     validate_manifest_coverage(inventory, manifest)

@@ -34,10 +34,19 @@ def build_joined_report(
     routes: list[dict[str, object]] = []
     for record in records:
         deferment_issue_url: str | None = None
+        review_evidence: dict[str, object] | None = None
         if record["status"] == "deferred":
             deferment = cast(dict[str, object], record["deferment"])
             deferment_issue_url = str(deferment["issue_url"])
             deferred_issue_counts[deferment_issue_url] += 1
+        if record["status"] == "reviewed":
+            review = cast(dict[str, object], record["review"])
+            evidence_sha256 = cast(dict[str, str], review["evidence_sha256"])
+            review_evidence = {
+                "evidence_file_count": len(evidence_sha256),
+                "evidence_sha256": evidence_sha256,
+                "source_path": review["source_path"],
+            }
         routes.append(
             {
                 "audit_id": record["audit_id"],
@@ -57,6 +66,7 @@ def build_joined_report(
                     for critique_id in cast(list[str], record["critique_ids"])
                 ],
                 "findings": record["findings"],
+                "review_evidence": review_evidence,
             }
         )
     return {
@@ -65,10 +75,10 @@ def build_joined_report(
             issue_url: deferred_issue_counts[issue_url]
             for issue_url in sorted(deferred_issue_counts)
         },
-        "inventory_schema_version": "1.0.0",
+        "inventory_schema_version": "1.1.0",
         "route_count": len(records),
         "routes": routes,
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
     }
 
 
@@ -101,8 +111,8 @@ def render_markdown(report: dict[str, object]) -> str:
     lines.extend(
         [
             "",
-            "| Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |",
-            "|---|---|---|---|---|---|---:|",
+            "| Audit ID | Route | Status | Evidence Files | Deferment Issue | Claim IDs | Critique IDs | Findings |",
+            "|---|---|---|---:|---|---|---|---:|",
         ]
     )
     for route in routes:
@@ -114,9 +124,15 @@ def render_markdown(report: dict[str, object]) -> str:
         issue = (
             f"[#{str(issue_url).rsplit('/', 1)[-1]}]({issue_url})" if issue_url is not None else "—"
         )
+        review_evidence = route.get("review_evidence")
+        evidence_count = (
+            str(review_evidence["evidence_file_count"])
+            if isinstance(review_evidence, dict)
+            else "—"
+        )
         lines.append(
             f"| `{route['audit_id']}` | `{route['route']}` | {str(route['status']).title()} "
-            f"| {issue} | {claim_ids or 'None'} | {critique_ids or 'None'} "
+            f"| {evidence_count} | {issue} | {claim_ids or 'None'} | {critique_ids or 'None'} "
             f"| {len(route['findings'])} |"
         )
     lines.append("")

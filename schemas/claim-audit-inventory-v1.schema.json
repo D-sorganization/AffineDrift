@@ -20,7 +20,7 @@
       "type": "array"
     },
     "schema_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     }
   },
   "required": [
@@ -98,12 +98,14 @@
         },
         "evidence_paths": {
           "items": {
-            "pattern": "^(index\\.qmd|NOTATION\\.md|styles\\.css|(articles|critiques|data|pages|reports|scripts|src|tests)/[A-Za-z0-9_./-]+)$",
-            "type": "string"
+            "$ref": "#/$defs/evidencePath"
           },
           "minItems": 1,
           "type": "array",
           "uniqueItems": true
+        },
+        "evidence_sha256": {
+          "$ref": "#/$defs/evidenceDigestMap"
         },
         "finding_id": {
           "pattern": "^ad-finding-[a-z0-9-]+$",
@@ -152,12 +154,14 @@
         },
         "evidence_paths": {
           "items": {
-            "pattern": "^(index\\.qmd|NOTATION\\.md|(articles|critiques|data|pages|reports|scripts|src|tests)/[A-Za-z0-9_./-]+)$",
-            "type": "string"
+            "$ref": "#/$defs/evidencePath"
           },
           "minItems": 1,
           "type": "array",
           "uniqueItems": true
+        },
+        "evidence_sha256": {
+          "$ref": "#/$defs/evidenceDigestMap"
         },
         "review_commit": {
           "pattern": "^[0-9a-f]{40}$",
@@ -169,13 +173,18 @@
         },
         "reviewer": {
           "$ref": "#/$defs/nonempty"
+        },
+        "source_path": {
+          "$ref": "#/$defs/evidencePath"
         }
       },
       "required": [
         "reviewed_on",
         "review_commit",
         "reviewer",
+        "source_path",
         "evidence_paths",
+        "evidence_sha256",
         "dimensions"
       ],
       "type": "object"
@@ -279,6 +288,21 @@
       },
       "type": "array",
       "uniqueItems": true
+    },
+    "evidenceDigestMap": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/evidencePath"
+      },
+      "type": "object"
+    },
+    "evidencePath": {
+      "pattern": "^(index\\.qmd|[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*)$",
+      "type": "string"
     },
     "issueUrl": {
       "pattern": "^https://github\\.com/D-sorganization/AffineDrift/issues/[0-9]+$",

@@ -59,7 +59,12 @@ def _route(
             "reviewed_on": "2026-08-29",
             "review_commit": "a" * 40,
             "reviewer": "protected review",
-            "evidence_paths": ["tests/review_evidence.txt"],
+            "source_path": "articles/superposition.qmd",
+            "evidence_paths": [
+                "articles/superposition.qmd",
+                "tests/review_evidence.txt",
+            ],
+            "evidence_sha256": {},
             "dimensions": REVIEW_DIMENSIONS,
         }
     elif status == "deferred":
@@ -82,6 +87,11 @@ def _route(
 def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path, Path]:
     (tmp_path / "tests").mkdir()
     (tmp_path / "tests/review_evidence.txt").write_text("reviewed\n", encoding="utf-8")
+    (tmp_path / "articles").mkdir()
+    (tmp_path / "articles/superposition.qmd").write_text(
+        "# Superposition\n",
+        encoding="utf-8",
+    )
     claims_path = tmp_path / "claims.json"
     claims_path.write_text(
         json.dumps(
@@ -114,7 +124,7 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
         encoding="utf-8",
     )
     inventory = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "manifest_contract": "affinedrift/public-site-manifest/v1",
         "claim_registry": "data/trust/claim_registry.json",
         "critique_ledger": "data/trust/claim_critique_ledger.json",
@@ -129,6 +139,14 @@ def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path
             ),
             _route("/critiques/example.html", "deferred", critique_ids=["crit-example"]),
         ],
+    }
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    evidence_paths = review["evidence_paths"]
+    assert isinstance(evidence_paths, list)
+    review["evidence_sha256"] = {
+        path: _sha256(tmp_path / path) for path in evidence_paths if isinstance(path, str)
     }
     manifest = {
         "schema_version": "affinedrift/public-site-manifest/v1",
@@ -235,6 +253,16 @@ def test_schema_is_strict_and_status_records_are_auditable(tmp_path: Path) -> No
         validate_inventory(invalid, sources)
 
 
+def test_byte_evidence_does_not_depend_on_a_reachable_review_commit(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    review["review_commit"] = "f" * 40
+
+    validate_inventory(inventory, AuditSources(SCHEMA, claims_path, ledger_path, tmp_path))
+
+
 def test_every_rendered_route_requires_exactly_one_inventory_record(tmp_path: Path) -> None:
     inventory, manifest, _, _ = _fixture(tmp_path)
     validate_manifest_coverage(inventory, manifest)
@@ -326,6 +354,36 @@ def test_p0_p1_findings_fail_closed_or_block_publication(tmp_path: Path) -> None
         enforce_publication(inventory)
 
 
+def test_corrected_findings_require_exact_byte_digests(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    findings = reviewed["findings"]
+    assert isinstance(findings, list)
+    evidence_path = "tests/review_evidence.txt"
+    findings.append(
+        {
+            "finding_id": "ad-finding-example-corrected",
+            "priority": "p1",
+            "disposition": "corrected",
+            "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4021",
+            "rationale": "The canonical source now states the bounded result.",
+            "claim_ids": ["ad-example-001"],
+            "critique_ids": ["crit-example"],
+            "evidence_paths": [evidence_path],
+            "evidence_sha256": {evidence_path: _sha256(tmp_path / evidence_path)},
+            "verification_commit": "f" * 40,
+        }
+    )
+
+    validate_inventory(inventory, sources)
+
+    finding = findings[0]
+    finding["evidence_sha256"] = {evidence_path: "0" * 64}
+    with pytest.raises(AuditContractError, match="digest mismatch"):
+        validate_inventory(inventory, sources)
+
+
 def test_report_generation_is_deterministic_and_joins_authorities(tmp_path: Path) -> None:
     inventory, manifest, claims_path, ledger_path = _fixture(tmp_path)
     sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
@@ -350,6 +408,14 @@ def test_report_generation_is_deterministic_and_joins_authorities(tmp_path: Path
     assert article["critiques"] == [
         {"critique_id": "crit-example", "disposition": "open", "severity": "high"}
     ]
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    assert article["review_evidence"] == {
+        "evidence_file_count": 2,
+        "evidence_sha256": review["evidence_sha256"],
+        "source_path": "articles/superposition.qmd",
+    }
 
 
 def test_canonical_inventory_and_generated_reports_are_current() -> None:
