@@ -28,6 +28,18 @@ This is current operational state. Historical detail belongs in git/GitHub.
   affected pages render to isolated HTML, and the revised appendix was
   inspected at a 1440 x 1000 desktop viewport. This issue must merge through
   an ordinary protected PR before #4014 closes.
+- Issue #4017 is implemented on `feat/4017-sensorimotor-latency`: the Physics
+  of Golf Quarto and LaTeX chapters no longer add parallel sensory and motor
+  pathways into a single round-trip delay or treat feedforward and feedback as
+  exclusive. Short-latency (20--45 ms), long-latency (50--100 ms), voluntary
+  (>100 ms), and late visually guided responses are separated from their
+  task-, phase-, and outcome-dependent mechanical authority. Golf-specific
+  reliance claims remain experimental pending time-locked perturbation,
+  muscle, motion, and outcome evidence.
+- Required focused gates:
+  `python -m pytest tests/test_sensorimotor_claim_contract.py -m content_lint -q`,
+  `python scripts/audit_book_citations.py --chapter ch24_motor_control_brain --check`,
+  and `python scripts/check_bibliography_cross_file.py`.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
