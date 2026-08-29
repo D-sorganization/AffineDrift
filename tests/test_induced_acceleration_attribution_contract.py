@@ -31,6 +31,7 @@ TEX_SOURCES = (
     / "ch03b_induced_acceleration_biomechanics.tex",
 )
 PHYSICS_MAIN_TEX = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "main.tex"
+GEOMETRY_MAIN_TEX = REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "Volume_I" / "main.tex"
 
 
 def test_coordinate_change_preserves_dynamics_but_changes_reported_components() -> None:
@@ -108,14 +109,19 @@ def test_quarto_and_latex_sources_publish_the_same_attribution_boundary() -> Non
         assert "intervention effect" in source
 
 
-def test_physics_latex_uses_a_declared_attribution_box() -> None:
-    """The normative record must use an environment declared by the book."""
-    chapter = TEX_SOURCES[0].read_text(encoding="utf-8")
-    preamble = PHYSICS_MAIN_TEX.read_text(encoding="utf-8")
+def test_latex_sources_use_declared_attribution_boxes() -> None:
+    """Each normative record must use an environment declared by its book."""
+    physics_chapter = TEX_SOURCES[0].read_text(encoding="utf-8")
+    physics_preamble = PHYSICS_MAIN_TEX.read_text(encoding="utf-8")
+    geometry_chapter = TEX_SOURCES[1].read_text(encoding="utf-8")
+    geometry_preamble = GEOMETRY_MAIN_TEX.read_text(encoding="utf-8")
 
-    assert r"\begin{infobox}{Normative Attribution Record}" in chapter
-    assert r"\begin{importantbox}" not in chapter
-    assert r"\newtcolorbox{infobox}" in preamble
+    assert r"\begin{infobox}{Normative Attribution Record}" in physics_chapter
+    assert r"\begin{importantbox}" not in physics_chapter
+    assert r"\newtcolorbox{infobox}" in physics_preamble
+    assert r"\begin{axiombox}[Normative Attribution Record]" in geometry_chapter
+    assert r"\begin{importantbox}" not in geometry_chapter
+    assert r"\newtcolorbox{axiombox}" in geometry_preamble
 
 
 def test_unique_cause_language_requires_an_identifiability_qualifier() -> None:

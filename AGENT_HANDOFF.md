@@ -131,9 +131,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   After merging protected #4019 at `48026454cdd3e07b3ce489d288efcb9295417b10`,
   the seven scientific-trust selections pass all 50 tests, trust-panel
   generation is fresh, and the focused lint/type/structure/diff gates remain
-  green on the reconciled head. A clean first-pass `pdflatex` run completes the
-  607-page Physics of Golf source without a hard LaTeX error; the complete
-  hosted multi-pass compile remains the release gate.
+  green on the reconciled head. Clean first-pass `pdflatex` runs complete the
+  607-page Physics of Golf source and 209-page Geometry of Motion Volume I
+  source without a hard LaTeX error; the complete hosted multi-pass compiles
+  remain the release gate.
   Protected Python 3.12 and hosted exact-head checks remain release gates.
 
 ## Governed Scientific Trust Panels (#4019)
