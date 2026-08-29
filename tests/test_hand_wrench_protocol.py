@@ -35,7 +35,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = REPO_ROOT / "models" / "bilateral-hand-wrench-validation.qmd"
 MODELS_HUB = REPO_ROOT / "models" / "models.qmd"
 AUDIT_INVENTORY = REPO_ROOT / "data" / "trust" / "claim_audit_inventory.json"
-REVIEW_COMMIT = "1b6356f82dd5938738bfbd9a34b107769af8d4b3"
+REVIEW_COMMIT = "ae1577ccfb2001d191e5a329d61a0551cfa06583"
 
 
 def test_preregistration_freezes_sources_measurement_and_analysis_contracts() -> None:
