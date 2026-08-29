@@ -38,15 +38,25 @@ This is current operational state. Historical detail belongs in git/GitHub.
   analysis; none is represented as golfer evidence.
 - Audit `ad-route-b7d4c6ec440c` binds the canonical QMD, three implementation
   modules, generator, tests, and both report projections to exact SHA-256 bytes
-  reviewed at `0fb7a0ded1f75c955e2cc34632c6e3745674aa00`. The 227-route inventory
-  now has 25 reviewed, 200 deferred, and 2 exempt routes. A digest proves source
+  reviewed at `0fb7a0ded1f75c955e2cc34632c6e3745674aa00`. The 228-route inventory
+  now has 26 reviewed, 200 deferred, and 2 exempt routes. A digest proves source
   bytes, not scientific validity.
-- Focused executable contracts are 11/11 green; focused content contracts are
-  3/3 green; all 14 global inventory contracts pass. Ruff, strict focused MyPy,
-  bibliography identity/quality, QMD citation integrity, Quarto syntax, title
-  case, and deterministic report/publication checks pass. Full suites,
-  detached rendering, browser QA, protected-main reconciliation, and hosted
-  checks remain before merge.
+- Ordinary reconciliation commit `261c0e6c44bb350c0b58e798bf8396ff4d156e3f`
+  preserves protected neural-timing route `ad-route-8debf6763c2e`, moves this
+  program to SPEC F75 / 1.0.256, and refreshes the shared bibliography digest.
+  The exact head passes 43 combined population/neural/audit contracts, 3,445
+  default-lane tests with 29 documented skips, and 104 content-lint tests with 4
+  documented skips. Ruff, Black, strict focused MyPy, full pre-commit,
+  bibliography identity/quality, QMD citation integrity, Quarto syntax/xrefs,
+  title/H1/math/terminology, deterministic report generation, publication
+  enforcement, and diff gates pass.
+- Quarto 1.8.26 renders the population route from that exact commit in detached
+  worktree `AffineDrift-4039-render`. Browser QA at 1440 x 1000 and 390 x 844
+  verifies one accessible H1, one main landmark, four responsive tables, five
+  resolved bibliography entries, no page overflow, no empty links, no unresolved
+  citations, visible external-unavailable and non-authorization boundaries, and
+  no warning or error in a fresh page tab. Hosted exact-head checks remain before
+  protected merge.
 
 ## Neural Timing and Feedback Perturbation Experiments (#4037 — In Progress)
 
