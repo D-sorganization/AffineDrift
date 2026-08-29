@@ -136,7 +136,7 @@ def main(repo_root: Path | None = None) -> int:
         lines.append(_entry_to_bibtex(entry))
         lines.append("")
 
-    out_path.write_text("\n".join(lines), encoding="utf-8")
+    out_path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     write_stdout(f"Wrote {len(entries)} entries to {out_path}")
     return 0
 

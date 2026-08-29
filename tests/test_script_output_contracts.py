@@ -48,7 +48,9 @@ def test_convert_bibliography_to_bib_reports_success_on_stdout(
 
     assert "Wrote 1 entries" in captured.out
     assert captured.err == ""
-    assert (repo_root / "references" / "affine-drift.bib").exists()
+    bibliography = repo_root / "references" / "affine-drift.bib"
+    assert bibliography.exists()
+    assert b"\r\n" not in bibliography.read_bytes()
 
 
 def test_convert_bibliography_preserves_scholarly_metadata(tmp_path: Path) -> None:
