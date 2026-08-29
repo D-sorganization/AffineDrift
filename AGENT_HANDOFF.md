@@ -55,7 +55,15 @@ This is current operational state. Historical detail belongs in git/GitHub.
   service-worker chrome and transient view-transition snapshots; a fresh
   static-server origin and isolated loads confirmed this was test-environment
   state, not retained page overlap. No screenshots or generated render output
-  are committed.
+  are committed. The full non-content Python lane passes with 30 documented
+  skips; the content lane passes with 4 documented skips; Jest passes all 20
+  suites (297 passed, 19 skipped). Full Ruff and Black, focused strict mypy,
+  Prettier, pre-commit, citation resolution, QMD citation integrity, Quarto
+  syntax/xrefs/title/math checks, terminology, 226-URL bidirectional render
+  coverage, deterministic claim-audit reports, and publication enforcement
+  pass. A depth-one clone containing only the exact feature head passes all
+  23 book-audit and global-inventory tests, proving the digest evidence does
+  not depend on intermediate Git history.
 
 ## Active Impedance and Co-Contraction Identification (#4036 — In Progress)
 
