@@ -21,6 +21,8 @@ class ProgramSeed:
     frame: str
     participant_scope: str
     evidence_origin: str
+    calculation_path: str
+    workflow_path: str
 
 
 PROGRAMS = (
@@ -37,6 +39,8 @@ PROGRAMS = (
         "declared model coordinates",
         "none",
         "analytical",
+        "tests/test_scientific_trust_metadata.py",
+        "tests/test_dcr_reachability_contract.py",
     ),
     ProgramSeed(
         4034,
@@ -52,6 +56,8 @@ PROGRAMS = (
         "rung-specific declared frames",
         "none",
         "modeled",
+        "src/affine_control/model_ladder_fixtures.py",
+        "src/affine_control/model_ladder_protocol.py",
     ),
     ProgramSeed(
         4035,
@@ -67,6 +73,8 @@ PROGRAMS = (
         "declared grip frame",
         "human",
         "manufactured-synthetic",
+        "src/affine_control/hand_wrench_fixtures.py",
+        "src/affine_control/hand_wrench_protocol.py",
     ),
     ProgramSeed(
         4036,
@@ -81,6 +89,8 @@ PROGRAMS = (
         "declared segment and perturbation frames",
         "human",
         "manufactured-synthetic",
+        "src/affine_control/impedance_result_fixtures.py",
+        "src/affine_control/impedance_protocol.py",
     ),
     ProgramSeed(
         4037,
@@ -96,6 +106,8 @@ PROGRAMS = (
         "declared event-aligned frames",
         "human",
         "manufactured-synthetic",
+        "src/affine_control/neural_timing_fixtures.py",
+        "src/affine_control/neural_timing_analysis.py",
     ),
     ProgramSeed(
         4038,
@@ -110,6 +122,8 @@ PROGRAMS = (
         "declared club-ball contact frame",
         "none",
         "modeled",
+        "src/affine_control/impact_contact_fixtures.py",
+        "src/affine_control/impact_contact_models.py",
     ),
     ProgramSeed(
         4039,
@@ -125,6 +139,8 @@ PROGRAMS = (
         "declared measurement frames",
         "human",
         "manufactured-synthetic",
+        "src/affine_control/population_generalization_fixtures.py",
+        "src/affine_control/population_generalization.py",
     ),
     ProgramSeed(
         4040,
@@ -140,5 +156,7 @@ PROGRAMS = (
         "declared equipment and laboratory frames",
         "human",
         "manufactured-synthetic",
+        "src/affine_control/equipment_response_fixtures.py",
+        "src/affine_control/equipment_response_analysis.py",
     ),
 )

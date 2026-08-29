@@ -16,56 +16,6 @@ def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def manufactured_dictionary() -> dict[str, object]:
-    """Return the shared dry-run data dictionary."""
-    return {
-        "schema_version": "affinedrift.research-dry-run-dictionary/v1",
-        "fields": [
-            {"name": "protocol_id", "type": "string", "unit": "not applicable"},
-            {"name": "case_id", "type": "string", "unit": "not applicable"},
-            {"name": "outcome_status", "type": "string", "unit": "not applicable"},
-            {"name": "value", "type": ["number", "null"], "unit": "declared by protocol"},
-        ],
-        "privacy": "Manufactured records contain no participant or private data.",
-    }
-
-
-def manufactured_dry_runs() -> dict[str, object]:
-    """Return deterministic negative, null, and unavailable dry-run outcomes."""
-    rows = []
-    for seed in PROGRAMS:
-        protocol_id = f"ad-protocol-{seed.slug}-001"
-        rows.extend(
-            [
-                {
-                    "protocol_id": protocol_id,
-                    "case_id": "negative-001",
-                    "outcome_status": "negative",
-                    "value": -1.0,
-                },
-                {
-                    "protocol_id": protocol_id,
-                    "case_id": "null-001",
-                    "outcome_status": "null",
-                    "value": 0.0,
-                },
-                {
-                    "protocol_id": protocol_id,
-                    "case_id": "unavailable-001",
-                    "outcome_status": "unavailable",
-                    "value": None,
-                },
-            ]
-        )
-    return {
-        "schema_version": "affinedrift.research-dry-run/v1",
-        "evidence_origin": "manufactured-synthetic",
-        "authorizes_data_collection": False,
-        "authorizes_claim_promotion": False,
-        "rows": rows,
-    }
-
-
 def _route_authority(inventory: dict[str, object], route: str) -> dict[str, object]:
     """Return the sole reviewed audit record for a public route."""
     routes = cast(list[dict[str, object]], inventory["routes"])
@@ -75,18 +25,15 @@ def _route_authority(inventory: dict[str, object], route: str) -> dict[str, obje
     return matches[0]
 
 
-def _artifact(audit: dict[str, object], prefixes: tuple[str, ...]) -> dict[str, str]:
+def _artifact(audit: dict[str, object], path: str, role: str) -> dict[str, str]:
     """Project one exact-byte artifact from a reviewed route audit."""
     review = cast(dict[str, object], audit["review"])
     digest_map = cast(dict[str, str], review["evidence_sha256"])
-    paths = sorted(
-        path for path in digest_map if any(path.startswith(prefix) for prefix in prefixes)
-    )
-    if not paths:
-        raise ValueError(f"Route audit lacks {prefixes} evidence")
-    path = paths[0]
+    if path not in digest_map:
+        raise ValueError(f"Route audit lacks declared {role} evidence: {path}")
     return {
         "path": path,
+        "role": role,
         "sha256": digest_map[path],
         "source_revision": str(review["review_commit"]),
         "route_audit_id": str(audit["audit_id"]),
@@ -195,7 +142,7 @@ def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict
             "private_data_approval_required": False,
         },
         "analysis": {
-            "workflow_path": "scripts/generate_research_readiness_library.py",
+            "workflow_path": seed.workflow_path,
             "power_plan": (
                 "Unavailable until a pilot supplies a justified variance or precision basis."
             ),
@@ -271,8 +218,8 @@ def _protocol(
             "critique_link_next_gate": (
                 "Register critiques through the canonical adjudication ledger."
             ),
-            "calculation_artifacts": [_artifact(audit, ("src/", "articles/", "models/"))],
-            "workflow_artifacts": [_artifact(audit, ("tests/",))],
+            "calculation_artifacts": [_artifact(audit, seed.calculation_path, "calculation")],
+            "workflow_artifacts": [_artifact(audit, seed.workflow_path, "workflow")],
             "datasets": [
                 {
                     "availability": "public",

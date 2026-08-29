@@ -74,6 +74,23 @@
       ],
       "properties": {
         "availability": { "enum": ["public", "private", "unavailable"] },
+        "authority_id": {
+          "pattern": "^authority-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "authority_role": {
+          "enum": [
+            "independent-ethics-review",
+            "independent-risk-review",
+            "qualified-calibration-review",
+            "governed-data-review",
+            "independent-validation-review"
+          ]
+        },
+        "calibration_id": {
+          "pattern": "^cal-[a-z0-9-]+$",
+          "type": "string"
+        },
         "custodian": { "$ref": "#/$defs/text" },
         "evidence_origin": { "$ref": "#/$defs/evidenceOrigin" },
         "governed_record_id": { "$ref": "#/$defs/text" },
@@ -207,6 +224,7 @@
         },
         "path": { "$ref": "#/$defs/path" },
         "record_revision": { "$ref": "#/$defs/digest" },
+        "release_id": { "$ref": "#/$defs/text" },
         "related_protocol_id": {
           "pattern": "^ad-protocol-[a-z0-9-]+-[0-9]{3}$",
           "type": "string"
@@ -221,6 +239,28 @@
         "sha256": { "$ref": "#/$defs/digest" },
         "status": {
           "enum": ["verified", "rejected", "revoked", "expired", "unavailable"]
+        },
+        "status_history": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "on": { "format": "date", "type": "string" },
+              "rationale": { "$ref": "#/$defs/text" },
+              "status": {
+                "enum": [
+                  "verified",
+                  "rejected",
+                  "revoked",
+                  "expired",
+                  "unavailable"
+                ]
+              }
+            },
+            "required": ["status", "on"],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
         }
       },
       "required": [
@@ -250,6 +290,7 @@
       "additionalProperties": false,
       "properties": {
         "path": { "$ref": "#/$defs/path" },
+        "role": { "enum": ["calculation", "workflow"] },
         "route_audit_id": {
           "pattern": "^ad-route-[0-9a-f]{12}$",
           "type": "string"

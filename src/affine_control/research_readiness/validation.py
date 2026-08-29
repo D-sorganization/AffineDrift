@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 from dataclasses import dataclass
-from pathlib import Path, PurePosixPath
-from typing import Any, cast
+from datetime import date
+from pathlib import Path
+from typing import cast
 
-from jsonschema import Draft202012Validator, FormatChecker
-
+from .authority import (
+    authority_ids,
+    route_audits,
+    validate_evidence_authority,
+    validate_links,
+)
 from .errors import ResearchReadinessError
+from .files import checked_file, digest, load_json, schema_errors
 from .states import (
     REQUIRED_EVIDENCE,
     protocol_revision,
@@ -20,8 +24,6 @@ from .states import (
 )
 from .supersession import validate_supersession
 
-MAX_EVIDENCE_BYTES = 5_000_000
-
 
 @dataclass(frozen=True)
 class EvidenceStatus:
@@ -30,39 +32,9 @@ class EvidenceStatus:
     availability: str
     kind: str
     origin: str
+    reviewed_on: date
     status: str
-
-
-def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
-    """Build a mapping while rejecting ambiguous duplicate JSON keys."""
-    result: dict[str, object] = {}
-    for key, value in pairs:
-        if key in result:
-            raise ResearchReadinessError(f"Duplicate JSON key: {key}")
-        result[key] = value
-    return result
-
-
-def _load_json(path: Path) -> Any:
-    """Load a JSON contract with duplicate-key and parse-error handling."""
-    try:
-        return json.loads(
-            path.read_text(encoding="utf-8"), object_pairs_hook=_reject_duplicate_keys
-        )
-    except ResearchReadinessError:
-        raise
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ResearchReadinessError(f"Cannot load JSON contract {path}: {exc}") from exc
-
-
-def _schema_errors(library: object, schema_path: Path) -> list[str]:
-    """Return deterministic JSON Schema validation messages."""
-    validator = Draft202012Validator(_load_json(schema_path), format_checker=FormatChecker())
-    errors = sorted(validator.iter_errors(library), key=lambda error: list(error.absolute_path))
-    return [
-        f"{'/'.join(str(part) for part in error.absolute_path) or '<root>'}: {error.message}"
-        for error in errors
-    ]
+    status_history: tuple[tuple[date, str], ...]
 
 
 def _records(library: object) -> list[dict[str, object]]:
@@ -75,81 +47,55 @@ def _records(library: object) -> list[dict[str, object]]:
     return cast(list[dict[str, object]], records)
 
 
-def _checked_file(root: Path, raw_path: object, label: str) -> Path:
-    """Resolve a bounded regular evidence file below the repository root."""
-    value = str(raw_path)
-    parts = PurePosixPath(value).parts
-    if not value or any(part in {".", ".."} for part in parts):
-        raise ResearchReadinessError(f"Repository path traversal is forbidden: {value}")
-    unresolved = root.joinpath(*parts)
-    if unresolved.is_symlink():
-        raise ResearchReadinessError(f"Symlink evidence is forbidden: {value}")
-    candidate = unresolved.resolve()
-    try:
-        candidate.relative_to(root.resolve())
-    except ValueError as exc:
-        raise ResearchReadinessError(f"Repository path traversal is forbidden: {value}") from exc
-    if not candidate.is_file():
-        raise ResearchReadinessError(f"Missing {label}: {value}")
-    if candidate.stat().st_size > MAX_EVIDENCE_BYTES:
-        raise ResearchReadinessError(f"Oversized {label}: {value}")
-    return candidate
-
-
-def _digest(path: Path) -> str:
-    """Return the SHA-256 digest of one bounded evidence file."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def _authority_ids(path: Path, collection: str, id_field: str) -> set[str]:
-    """Load the unique identifiers exposed by one governed authority."""
-    document = _load_json(path)
-    if not isinstance(document, dict) or not isinstance(document.get(collection), list):
-        raise ResearchReadinessError(f"Authority {collection} must be a list")
-    records = cast(list[object], document[collection])
-    candidates: list[dict[str, object]] = []
-    for record in records:
-        if not isinstance(record, dict):
-            raise ResearchReadinessError(f"Authority {collection} records must be objects")
-        if collection == "pages":
-            claims = record.get("claims")
-            if not isinstance(claims, list) or not all(isinstance(item, dict) for item in claims):
-                raise ResearchReadinessError("Claim authority page is invalid")
-            candidates.extend(cast(list[dict[str, object]], claims))
-        else:
-            candidates.append(record)
-    values = [str(candidate.get(id_field, "")) for candidate in candidates]
-    if any(not value for value in values) or len(values) != len(set(values)):
-        raise ResearchReadinessError(f"Duplicate or empty authority ID in {collection}")
-    return set(values)
-
-
-def _route_audits(root: Path) -> dict[str, dict[str, object]]:
-    """Index the canonical route-audit authority by audit identifier."""
-    inventory = _load_json(root / "data/trust/claim_audit_inventory.json")
-    if not isinstance(inventory, dict) or not isinstance(inventory.get("routes"), list):
-        raise ResearchReadinessError("Route-audit authority is invalid")
-    result: dict[str, dict[str, object]] = {}
-    for record in cast(list[object], inventory["routes"]):
-        if not isinstance(record, dict):
-            raise ResearchReadinessError("Route-audit records must be objects")
-        audit_id = str(record.get("audit_id", ""))
-        if not audit_id or audit_id in result:
-            raise ResearchReadinessError(f"Duplicate or empty route audit ID: {audit_id}")
-        result[audit_id] = record
-    return result
-
-
 def _validate_public_evidence(record: dict[str, object], root: Path) -> None:
     """Validate the path and digest of public evidence."""
-    path = _checked_file(root, record.get("path"), "evidence path")
-    if _digest(path) != record.get("sha256"):
+    path = checked_file(root, record.get("path"), "evidence path")
+    if digest(path) != record.get("sha256"):
         raise ResearchReadinessError(f"Evidence digest mismatch: {record.get('path')}")
+
+
+def _evidence_history(record: dict[str, object], evidence_id: str) -> tuple[tuple[date, str], ...]:
+    """Validate and normalize one evidence status history."""
+    history_raw = record.get("status_history", [])
+    if not isinstance(history_raw, list):
+        raise ResearchReadinessError(f"Evidence status history is invalid: {evidence_id}")
+    status_history: list[tuple[date, str]] = []
+    for event in cast(list[object], history_raw):
+        if not isinstance(event, dict):
+            raise ResearchReadinessError(f"Evidence status history is invalid: {evidence_id}")
+        status_history.append((date.fromisoformat(str(event.get("on"))), str(event.get("status"))))
+    dates = [item[0] for item in status_history]
+    if status_history != sorted(status_history) or len(dates) != len(set(dates)):
+        raise ResearchReadinessError(f"Evidence status history is non-monotonic: {evidence_id}")
+    if status_history and status_history[-1][1] != record.get("status"):
+        raise ResearchReadinessError(
+            f"Evidence current status disagrees with history: {evidence_id}"
+        )
+    return tuple(status_history)
+
+
+def _evidence_status(
+    protocol: dict[str, object], record: dict[str, object], root: Path, evidence_id: str
+) -> EvidenceStatus:
+    """Validate one evidence record and project its lifecycle status."""
+    if record.get("scope") not in {protocol["protocol_id"], "library-wide"}:
+        raise ResearchReadinessError(f"Evidence scope mismatch: {evidence_id}")
+    if record.get("availability") == "public":
+        _validate_public_evidence(record, root)
+    validate_evidence_authority(protocol, record)
+    return EvidenceStatus(
+        availability=str(record.get("availability")),
+        kind=str(record.get("kind")),
+        origin=str(record.get("evidence_origin")),
+        reviewed_on=date.fromisoformat(str(record.get("reviewed_on"))),
+        status=str(record.get("status")),
+        status_history=_evidence_history(record, evidence_id),
+    )
 
 
 def _validate_evidence(
     protocol: dict[str, object], root: Path, global_ids: set[str]
-) -> dict[str, EvidenceStatus]:
+) -> tuple[dict[str, EvidenceStatus], list[dict[str, object]]]:
     """Validate protocol evidence and return its gate-relevant status."""
     raw = protocol.get("evidence")
     if not isinstance(raw, list):
@@ -162,20 +108,26 @@ def _validate_evidence(
         if evidence_id in global_ids:
             raise ResearchReadinessError(f"Duplicate evidence ID: {evidence_id}")
         global_ids.add(evidence_id)
-        if record.get("scope") not in {protocol["protocol_id"], "library-wide"}:
-            raise ResearchReadinessError(f"Evidence scope mismatch: {evidence_id}")
-        if record.get("availability") == "public":
-            _validate_public_evidence(record, root)
-        evidence[evidence_id] = EvidenceStatus(
-            availability=str(record.get("availability")),
-            kind=str(record.get("kind")),
-            origin=str(record.get("evidence_origin")),
-            status=str(record.get("status")),
-        )
-    return evidence
+        evidence[evidence_id] = _evidence_status(protocol, record, root, evidence_id)
+    return evidence, cast(list[dict[str, object]], raw)
 
 
-def _transition_evidence(target: str, raw_ids: object, evidence: dict[str, EvidenceStatus]) -> None:
+def _status_at(item: EvidenceStatus, event_on: date) -> str:
+    """Return the evidence status that was in force on a lifecycle date."""
+    if item.reviewed_on > event_on:
+        raise ResearchReadinessError("Evidence was reviewed after transition chronology")
+    if not item.status_history:
+        return item.status
+    applicable = [status for changed_on, status in item.status_history if changed_on <= event_on]
+    return applicable[-1] if applicable else "unavailable"
+
+
+def _transition_evidence(
+    target: str,
+    event_on: date,
+    raw_ids: object,
+    evidence: dict[str, EvidenceStatus],
+) -> None:
     """Require eligible evidence for one lifecycle transition."""
     if not isinstance(raw_ids, list):
         raise ResearchReadinessError(f"Transition to {target} lacks evidence IDs")
@@ -185,14 +137,16 @@ def _transition_evidence(target: str, raw_ids: object, evidence: dict[str, Evide
     eligible = {
         value
         for value in ids
-        if evidence[value].status == "verified"
+        if _status_at(evidence[value], event_on) == "verified"
         and evidence[value].availability in {"public", "private"}
     }
     accepted = {evidence[value].kind for value in eligible}
     required = REQUIRED_EVIDENCE[target]
     if not required.issubset(accepted):
         missing = ", ".join(sorted(required - accepted))
-        raise ResearchReadinessError(f"Transition to {target} lacks {missing}")
+        raise ResearchReadinessError(
+            f"Evidence was not verified at transition to {target}: {missing}"
+        )
     required_ids = {value for value in eligible if evidence[value].kind in required}
     origins = {evidence[value].origin for value in required_ids}
     if not validation_origin_allowed(target, origins):
@@ -205,129 +159,92 @@ def _validate_history(protocol: dict[str, object], evidence: dict[str, EvidenceS
     if not isinstance(history, list):
         raise ResearchReadinessError("Protocol history must be a list")
     previous = "concept"
+    previous_on: date | None = None
     scope = str(protocol["participant_scope"])
     for event in cast(list[object], history):
         if not isinstance(event, dict):
             raise ResearchReadinessError("Protocol history events must be objects")
         source, target = str(event.get("from")), str(event.get("to"))
+        event_on = date.fromisoformat(str(event.get("on")))
+        if previous_on is not None and event_on < previous_on:
+            raise ResearchReadinessError("Protocol history chronology is non-monotonic")
         if source != previous:
             raise ResearchReadinessError(
                 f"Protocol history is non-contiguous: {previous} -> {source}"
             )
         if not transition_allowed(source, target, scope):
             raise ResearchReadinessError(f"Protocol has invalid transition: {source} -> {target}")
-        _transition_evidence(target, event.get("evidence_ids"), evidence)
+        _transition_evidence(target, event_on, event.get("evidence_ids"), evidence)
         if target == "published":
             raise ResearchReadinessError(
                 "Published state requires external #4042 publication authority; "
                 "the #4041 lifecycle cannot mint it"
             )
         previous = target
+        previous_on = event_on
     if previous != protocol.get("state"):
         raise ResearchReadinessError(
             f"Protocol history does not end at state {protocol.get('state')}"
         )
 
 
-def _validate_artifact(
-    record: dict[str, object],
-    label: str,
-    root: Path,
-    audits: dict[str, dict[str, object]],
-) -> None:
-    """Validate an artifact against its file and reviewed route audit."""
-    path = _checked_file(root, record.get("path"), label)
-    if _digest(path) != record.get("sha256"):
-        raise ResearchReadinessError(f"{label.capitalize()} digest mismatch")
-    audit = audits.get(str(record.get("route_audit_id")))
-    review = audit.get("review") if isinstance(audit, dict) else None
-    if not isinstance(review, dict):
-        raise ResearchReadinessError(f"{label.capitalize()} lacks a reviewed route audit")
-    digest_map = review.get("evidence_sha256")
-    if (
-        not isinstance(digest_map, dict)
-        or digest_map.get(record.get("path")) != record.get("sha256")
-        or review.get("review_commit") != record.get("source_revision")
-    ):
-        raise ResearchReadinessError(f"{label.capitalize()} is not exact-byte audit joined")
-
-
-def _validate_artifacts(
-    links: dict[str, object], root: Path, audits: dict[str, dict[str, object]]
-) -> None:
-    """Validate calculation, workflow, and dataset artifact joins."""
-    for field, label in (
-        ("calculation_artifacts", "calculation artifact"),
-        ("workflow_artifacts", "workflow artifact"),
-    ):
-        records = links.get(field)
-        if not isinstance(records, list):
-            raise ResearchReadinessError(f"Protocol {field} must be a list")
-        for record in cast(list[object], records):
-            if not isinstance(record, dict):
-                raise ResearchReadinessError(f"Protocol {label} must be an object")
-            _validate_artifact(record, label, root, audits)
-    datasets = links.get("datasets")
-    if not isinstance(datasets, list):
-        raise ResearchReadinessError("Protocol datasets must be a list")
-    for dataset in cast(list[object], datasets):
-        if not isinstance(dataset, dict):
-            raise ResearchReadinessError("Protocol datasets must be objects")
-        if dataset.get("availability") == "public":
-            path = _checked_file(root, dataset.get("path"), "dataset path")
-            if _digest(path) != dataset.get("sha256"):
-                raise ResearchReadinessError(f"Dataset digest mismatch: {dataset.get('path')}")
-
-
-def _validate_links(
-    protocol: dict[str, object],
-    claims: set[str],
-    critiques: set[str],
-    audits: dict[str, dict[str, object]],
-    root: Path,
-) -> None:
-    """Validate all external authority and artifact links for a protocol."""
-    links = protocol.get("links")
-    if not isinstance(links, dict):
-        raise ResearchReadinessError("Protocol links must be an object")
-    for field, authority, label in (
-        ("claim_ids", claims, "claim ID"),
-        ("critique_ids", critiques, "critique ID"),
-    ):
-        values = links.get(field)
-        if not isinstance(values, list):
-            raise ResearchReadinessError(f"Protocol {field} must be a list")
-        dangling = sorted(str(value) for value in values if str(value) not in authority)
-        if dangling:
-            raise ResearchReadinessError(f"Unknown {label}: {dangling[0]}")
-        status = links.get(field.replace("_ids", "_link_status"))
-        if (status == "linked") != bool(values):
-            raise ResearchReadinessError(f"{label.capitalize()} availability is inconsistent")
-    route_links = links.get("route_audits")
-    if not isinstance(route_links, list):
-        raise ResearchReadinessError("Protocol route audits must be a list")
-    for link in cast(list[object], route_links):
-        if not isinstance(link, dict) or str(link.get("audit_id")) not in audits:
-            raise ResearchReadinessError(f"Unknown route audit ID: {link}")
-        audit = audits[str(link["audit_id"])]
-        if link.get("route") != audit.get("route") or audit.get("status") != "reviewed":
-            raise ResearchReadinessError(
-                f"Route audit ID is stale or unreviewed: {link['audit_id']}"
-            )
-    _validate_artifacts(links, root, audits)
-
-
-def _validate_specification(protocol: dict[str, object], root: Path) -> None:
-    """Validate exact data-dictionary and governance specification joins."""
-    specification = protocol.get("specification")
-    if not isinstance(specification, dict):
-        raise ResearchReadinessError("Protocol specification must be an object")
+def _validate_dictionary(specification: dict[str, object], root: Path) -> None:
+    """Validate the exact-byte data dictionary join."""
     dictionary = specification.get("data_dictionary")
     if not isinstance(dictionary, dict):
         raise ResearchReadinessError("Protocol data dictionary must be an object")
-    path = _checked_file(root, dictionary.get("path"), "data dictionary")
-    if _digest(path) != dictionary.get("sha256"):
+    path = checked_file(root, dictionary.get("path"), "data dictionary")
+    if digest(path) != dictionary.get("sha256"):
         raise ResearchReadinessError("Data dictionary digest mismatch")
+
+
+def _validate_specification_ids(specification: dict[str, object]) -> None:
+    """Require unique scientific identifiers within one specification."""
+    for field, id_field in (
+        ("estimands", "estimand_id"),
+        ("hypotheses", "hypothesis_id"),
+        ("calibrations", "calibration_id"),
+    ):
+        values = cast(list[dict[str, object]], specification[field])
+        identifiers = [str(item[id_field]) for item in values]
+        if len(identifiers) != len(set(identifiers)):
+            raise ResearchReadinessError(f"duplicate IDs in {field}")
+
+
+def _validate_calibrations(protocol: dict[str, object], specification: dict[str, object]) -> None:
+    """Validate measurement joins, evidence origin, and verified calibrations."""
+    calibrations = cast(list[dict[str, object]], specification["calibrations"])
+    calibration_ids = {str(item["calibration_id"]) for item in calibrations}
+    measurements = cast(list[dict[str, object]], specification["measurements"])
+    quantity_classes = {str(item["quantity_class"]) for item in measurements}
+    if quantity_classes != {str(protocol["evidence_origin"])}:
+        raise ResearchReadinessError(
+            "Protocol evidence origin and measurement quantity class differ"
+        )
+    for measurement in measurements:
+        calibration_id = str(measurement["calibration_id"])
+        if calibration_id not in calibration_ids:
+            raise ResearchReadinessError(f"Measurement calibration is unknown: {calibration_id}")
+    evidence = cast(list[dict[str, object]], protocol["evidence"])
+    for calibration in calibrations:
+        if calibration["status"] != "verified":
+            continue
+        calibration_id = str(calibration["calibration_id"])
+        matching = [
+            item
+            for item in evidence
+            if item.get("kind") == "calibration-record"
+            and item.get("status") == "verified"
+            and item.get("calibration_id") == calibration_id
+        ]
+        if len(matching) != 1:
+            raise ResearchReadinessError(
+                f"verified calibration {calibration_id} lacks matching verified evidence"
+            )
+
+
+def _validate_governance(protocol: dict[str, object], specification: dict[str, object]) -> None:
+    """Validate participant scope against approval requirements."""
     governance = specification.get("governance")
     if not isinstance(governance, dict):
         raise ResearchReadinessError("Protocol governance must be an object")
@@ -343,6 +260,17 @@ def _validate_specification(protocol: dict[str, object], root: Path) -> None:
         )
 
 
+def _validate_specification(protocol: dict[str, object], root: Path) -> None:
+    """Validate exact data-dictionary and governance specification joins."""
+    specification = protocol.get("specification")
+    if not isinstance(specification, dict):
+        raise ResearchReadinessError("Protocol specification must be an object")
+    _validate_dictionary(specification, root)
+    _validate_specification_ids(specification)
+    _validate_calibrations(protocol, specification)
+    _validate_governance(protocol, specification)
+
+
 def _validate_attempts(protocol: dict[str, object], evidence: dict[str, EvidenceStatus]) -> None:
     """Validate promotion-attempt identities and referenced evidence."""
     attempts = protocol.get("promotion_attempts")
@@ -356,6 +284,15 @@ def _validate_attempts(protocol: dict[str, object], evidence: dict[str, Evidence
         if attempt_id in ids:
             raise ResearchReadinessError(f"Duplicate promotion attempt ID: {attempt_id}")
         ids.add(attempt_id)
+        target = str(attempt.get("target"))
+        current_state = str(protocol.get("state"))
+        if current_state == "superseded":
+            history = cast(list[dict[str, object]], protocol["history"])
+            current_state = str(history[-1]["from"])
+        if not transition_allowed(current_state, target, str(protocol.get("participant_scope"))):
+            raise ResearchReadinessError(
+                f"Promotion attempt target {target} is not structurally reachable"
+            )
         evidence_ids = attempt.get("evidence_ids")
         if not isinstance(evidence_ids, list) or any(
             str(value) not in evidence for value in evidence_ids
@@ -373,27 +310,35 @@ def validate_library(
     root: Path,
 ) -> None:
     """Validate schema, lifecycle, evidence, revisions, and authority joins."""
-    errors = _schema_errors(library, schema_path)
+    errors = schema_errors(library, schema_path)
     if errors:
         raise ResearchReadinessError("; ".join(errors))
     records = _records(library)
     ids = [str(record["protocol_id"]) for record in records]
     if ids != sorted(ids) or len(ids) != len(set(ids)):
         raise ResearchReadinessError("Protocol IDs must be unique and sorted")
-    claims = _authority_ids(claims_path, "pages", "claim_id")
-    critiques = _authority_ids(critiques_path, "critiques", "critique_id")
-    audits = _route_audits(root)
+    claims = authority_ids(claims_path, "pages", "claim_id")
+    critiques = authority_ids(critiques_path, "critiques", "critique_id")
+    audits = route_audits(root)
     evidence_ids: set[str] = set()
     for protocol in records:
+        history = cast(list[dict[str, object]], protocol["history"])
+        if protocol.get("state") == "published" or any(
+            event.get("to") == "published" for event in history
+        ):
+            raise ResearchReadinessError(
+                "Published state requires external #4042 publication authority; "
+                "the #4041 lifecycle cannot mint it"
+            )
         if protocol_revision(protocol) != protocol.get("protocol_revision"):
             raise ResearchReadinessError(f"protocol revision mismatch: {protocol['protocol_id']}")
         if record_revision(protocol) != protocol.get("record_revision"):
             raise ResearchReadinessError(f"record revision mismatch: {protocol['protocol_id']}")
-        evidence = _validate_evidence(protocol, root, evidence_ids)
+        evidence, evidence_records = _validate_evidence(protocol, root, evidence_ids)
         _validate_history(protocol, evidence)
         _validate_attempts(protocol, evidence)
         _validate_specification(protocol, root)
-        _validate_links(protocol, claims, critiques, audits, root)
+        validate_links(protocol, claims, critiques, audits, evidence_records, root)
     validate_supersession(records)
 
 
@@ -405,7 +350,7 @@ def load_library(
     root: Path,
 ) -> dict[str, object]:
     """Load and validate the canonical readiness library."""
-    library = _load_json(library_path)
+    library = load_json(library_path)
     validate_library(library, schema_path, claims_path, critiques_path, root)
     if not isinstance(library, dict):
         raise ResearchReadinessError("Library must be an object")
