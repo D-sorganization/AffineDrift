@@ -32,6 +32,7 @@ _ORIGINS = {"synthetic-fixture", "measured-human", "unavailable"}
 
 
 def _require_text(value: str, label: str) -> None:
+    """Require a nonblank text field."""
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{label} must be nonblank")
 
@@ -46,6 +47,7 @@ class EvidenceProvenance:
     synthetic: bool
 
     def __post_init__(self) -> None:
+        """Validate origin, identity, revision, and synthetic status."""
         _require_text(self.record_id, "evidence record ID")
         _require_text(self.revision, "evidence revision")
         if self.origin not in _ORIGINS:
@@ -71,6 +73,7 @@ class LayerObservation:
     provenance: EvidenceProvenance
 
     def __post_init__(self) -> None:
+        """Validate the declared modality, layer, and latency."""
         if self.modality not in _MODALITIES or self.layer not in _LAYERS:
             raise ValueError("observation modality or timing layer is not supported")
         if not math.isfinite(self.latency_ms) or self.latency_ms < 0.0:
@@ -97,6 +100,7 @@ class IntervalDecision:
     provenance: EvidenceProvenance
 
     def __post_init__(self) -> None:
+        """Validate interval completeness, provenance, and outcome consistency."""
         if (
             self.outcome not in _OUTCOMES
             or not math.isfinite(self.minimum_effect)

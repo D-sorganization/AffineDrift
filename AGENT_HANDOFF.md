@@ -57,6 +57,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   was added. The first isolated Quarto render exposed an ambiguous nested
   include path; the canonical page now includes both governed boundaries
   explicitly, preserving the schema-v1.1 closure while rendering correctly.
+  Hosted run `33252794679` added a final RED: `quality-gate` rejected 30
+  undocumented private builders and dataclass validators. Contract-oriented
+  docstrings now satisfy the same code-quality command locally without changing
+  behavior, and all three refreshed module bytes remain digest-bound.
 - Exact reconciled-head GREEN evidence is 18 focused executable contracts, 2
   focused content/audit contracts, and 14 claim-audit contracts. The full
   default `tests/` lane passes 3,405 tests with 30 documented skips; the content

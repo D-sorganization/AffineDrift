@@ -32,16 +32,19 @@ _HIERARCHIES = {"primary", "secondary", "exploratory"}
 
 
 def _require_text(value: str, label: str) -> None:
+    """Require a nonblank text field."""
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{label} must be nonblank")
 
 
 def _require_finite(value: float, label: str) -> None:
+    """Require a finite numeric field."""
     if not math.isfinite(value):
         raise ValueError(f"{label} must be finite")
 
 
 def _require_unique(values: tuple[str, ...], label: str) -> None:
+    """Require a nonempty tuple of unique identifiers."""
     if not values or len(set(values)) != len(values):
         raise ValueError(f"{label} must be nonempty and unique")
 
@@ -60,6 +63,7 @@ class EvidenceSource:
     does_not_authorize: str
 
     def __post_init__(self) -> None:
+        """Validate source identity, scope, modality, and authority boundary."""
         for value, label in (
             (self.source_id, "source ID"),
             (self.citation_key, "citation key"),
@@ -86,6 +90,7 @@ class PhaseDeclaration:
     end_event: str
 
     def __post_init__(self) -> None:
+        """Validate the event-bounded phase declaration."""
         _require_text(self.phase_id, "phase ID")
         _require_text(self.start_event, "phase start event")
         _require_text(self.end_event, "phase end event")
@@ -104,6 +109,7 @@ class ShamDeclaration:
     blinded_code: str
 
     def __post_init__(self) -> None:
+        """Validate the blinded same-modality sham declaration."""
         for value, label in (
             (self.sham_id, "sham ID"),
             (self.matched_features, "matched sham features"),
@@ -127,6 +133,7 @@ class SignalChannel:
     calibration_revision: str
 
     def __post_init__(self) -> None:
+        """Validate channel metadata and acquisition rate."""
         for value, label in (
             (self.channel_id, "channel ID"),
             (self.units, "channel units"),
@@ -159,6 +166,7 @@ class PerturbationDeclaration:
     safety_stop: str
 
     def __post_init__(self) -> None:
+        """Validate perturbation scope, magnitude, expectation, and safety."""
         for value, label in (
             (self.perturbation_id, "perturbation ID"),
             (self.phase_id, "perturbation phase"),
@@ -193,6 +201,7 @@ class ResponseWindow:
     metric: str
 
     def __post_init__(self) -> None:
+        """Validate one operational response window."""
         _require_text(self.window_id, "window ID")
         _require_text(self.onset_method, "window onset method")
         _require_text(self.metric, "window metric")
@@ -219,6 +228,7 @@ class SynchronizationContract:
     force_onset_required: bool
 
     def __post_init__(self) -> None:
+        """Validate shared-clock calibration and physical-onset witnesses."""
         _require_text(self.clock_source, "clock source")
         _require_text(self.calibration_record_id, "synchronization calibration record")
         _require_unique(self.required_channel_ids, "synchronization channel IDs")
@@ -254,6 +264,7 @@ class Hypothesis:
     falsifier: str
 
     def __post_init__(self) -> None:
+        """Validate the preregistered contrast and its authority joins."""
         for value, label in (
             (self.hypothesis_id, "hypothesis ID"),
             (self.phase_id, "hypothesis phase"),
@@ -284,6 +295,7 @@ class PowerPlan:
     participant_count: None = None
 
     def __post_init__(self) -> None:
+        """Validate error control while retaining unavailable recruitment."""
         for value, label in (
             (self.family_id, "power family ID"),
             (self.effect_units, "minimum-effect units"),
@@ -310,6 +322,7 @@ class HumanStudyBoundary:
     authorizes_participant_collection: Literal[False]
 
     def __post_init__(self) -> None:
+        """Enforce the permanently non-authorizing checked-in state."""
         if (
             self.status != "unavailable"
             or self.participant_data_present is not False
@@ -319,6 +332,7 @@ class HumanStudyBoundary:
 
 
 def _protocol_ids(protocol: NeuralTimingProtocol) -> None:
+    """Require unique identifiers across every protocol collection."""
     collections = (
         (tuple(item.source_id for item in protocol.sources), "source IDs"),
         (tuple(item.phase_id for item in protocol.phases), "phase IDs"),
@@ -334,6 +348,7 @@ def _protocol_ids(protocol: NeuralTimingProtocol) -> None:
 
 
 def _protocol_modalities(protocol: NeuralTimingProtocol) -> None:
+    """Require complete evidence scopes, modalities, and timing layers."""
     if {source.evidence_scope for source in protocol.sources} != _EVIDENCE_SCOPES:
         raise ValueError("sources must separate general upper-limb and golf-specific evidence")
     if {item.modality for item in protocol.perturbations} != _MODALITIES:
@@ -345,6 +360,7 @@ def _protocol_modalities(protocol: NeuralTimingProtocol) -> None:
 
 
 def _protocol_references(protocol: NeuralTimingProtocol) -> None:
+    """Validate all cross-record references and same-modality joins."""
     phases = {item.phase_id for item in protocol.phases}
     shams = {item.sham_id: item for item in protocol.shams}
     windows = {item.window_id: item for item in protocol.windows}
@@ -387,6 +403,7 @@ class NeuralTimingProtocol:
     human_boundary: HumanStudyBoundary
 
     def __post_init__(self) -> None:
+        """Validate the complete protocol and all joined declarations."""
         _require_text(self.protocol_id, "protocol ID")
         _require_text(self.analysis_revision, "analysis revision")
         _require_text(self.history_model, "history model")

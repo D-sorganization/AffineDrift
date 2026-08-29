@@ -28,6 +28,7 @@ from src.affine_control.neural_timing_protocol import (
 
 
 def _sources() -> tuple[EvidenceSource, ...]:
+    """Build the bounded primary-source evidence map."""
     return (
         EvidenceSource(
             "kurtzer-2009-mechanical",
@@ -83,6 +84,7 @@ def _sources() -> tuple[EvidenceSource, ...]:
 
 
 def _phases() -> tuple[PhaseDeclaration, ...]:
+    """Build the registered perturbation phases."""
     return (
         PhaseDeclaration("transition", "top-of-motion", "mid-downswing"),
         PhaseDeclaration("pre-impact", "mid-downswing", "nominal-impact"),
@@ -90,6 +92,7 @@ def _phases() -> tuple[PhaseDeclaration, ...]:
 
 
 def _shams() -> tuple[ShamDeclaration, ...]:
+    """Build blinded same-modality sham declarations."""
     return (
         ShamDeclaration(
             "mechanical-sham",
@@ -116,6 +119,7 @@ def _shams() -> tuple[ShamDeclaration, ...]:
 
 
 def _channels() -> tuple[SignalChannel, ...]:
+    """Build calibrated shared-clock signal declarations."""
     calibration = "manufactured-calibration/v1"
     return (
         SignalChannel("command", "command", "normalized", 2000.0, "device", calibration),
@@ -129,6 +133,7 @@ def _channels() -> tuple[SignalChannel, ...]:
 
 
 def _perturbations() -> tuple[PerturbationDeclaration, ...]:
+    """Build phase-specific perturbation declarations."""
     revision = "synthetic-device-calibration/v1"
     stop = "abort on saturation, trigger disagreement, limit crossing, or unexpected contact"
     return (
@@ -185,6 +190,7 @@ def _window(
     onset_method: str,
     metric: str,
 ) -> ResponseWindow:
+    """Build one operational response window."""
     return ResponseWindow(
         f"{modality}-{layer}",
         modality,
@@ -197,6 +203,7 @@ def _window(
 
 
 def _windows() -> tuple[ResponseWindow, ...]:
+    """Build the complete modality-by-layer window matrix."""
     rows: tuple[tuple[Modality, float, float, float, float, float, float, float, float], ...] = (
         ("mechanical", 0.0, 10.0, 20.0, 120.0, 0.0, 80.0, 80.0, 250.0),
         ("visual", 0.0, 20.0, 80.0, 240.0, 80.0, 260.0, 100.0, 320.0),
@@ -216,6 +223,7 @@ def _windows() -> tuple[ResponseWindow, ...]:
 
 
 def _hypotheses() -> tuple[Hypothesis, ...]:
+    """Build the preregistered hierarchy of bounded contrasts."""
     return (
         Hypothesis(
             "h1-mechanical-effect",
@@ -257,6 +265,7 @@ def _hypotheses() -> tuple[Hypothesis, ...]:
 
 
 def _power_plans() -> tuple[PowerPlan, ...]:
+    """Build multiplicity-controlled plans without recruitment authority."""
     return tuple(
         PowerPlan(
             family,
