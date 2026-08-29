@@ -81,6 +81,37 @@ This is current operational state. Historical detail belongs in git/GitHub.
   installed in this worktree environment; do not treat 3.13 evidence as a
   substitute for the protected Python 3.12 lane.
 
+## Bounded DCR Event-Validation Protocol (#4033 — PR Pending)
+
+- Branch `feat/4033-dcr-event-sensitivity` starts from protected main
+  `bde0ec906a233bb7fea592d5c676c042bd034754` and extends, rather than replaces,
+  the #4013 reachability authority. The zero-gradient scalar and
+  rank-deficient planar regressions call
+  `constant_additive_drift_interval` directly.
+- `src/affine_control/reachability_protocol.py` fails closed unless state,
+  coordinates, input bounds, scaling and norm, horizon, event guard/direction/
+  reset/timing, task metric, uncertainty evidence state, and solver/tolerance
+  are declared. `src/affine_control/reachability.py` supplies bounded analytic
+  calculations for the six issue systems.
+- The public DCR article leads with analytic counterexamples, publishes the six
+  deterministic regression outcomes, and predeclares association, prediction,
+  and theorem-level claims separately. The current synthetic held-out result is
+  null, scalar-sufficiency is negative, and golfer association is unavailable;
+  none may be suppressed or promoted to coaching, clinical, design, causal, or
+  population authority.
+- RED evidence: the new contract initially failed collection because the strict
+  protocol API did not exist, then failed on the absent structured event
+  declaration. GREEN evidence on workstation Python 3.13: 21/21 focused #4033
+  tests and 27/27 combined #4013/#4033 tests pass; the complete `tests/` tree is
+  3,300 passed and 29 documented skips; the content-lint lane is 90 passed, 4
+  skipped, and 3,371 deselected; Jest is 297 passed and 19 skipped. Ruff, Black,
+  strict focused and CI-target mypy, module budgets, Quarto structure,
+  terminology, title, math, citation, generated-content, and diff gates pass.
+  Quarto 1.8.26 renders the public article in isolation; desktop and 390-pixel
+  mobile inspection show readable protocol and authority-boundary content with
+  no horizontal overflow or console errors. Python 3.12 and hosted checks remain
+  the protected authorities.
+
 ## Ultimate Companion Scientific Repair (2026-08-28)
 
 - Epic #4008 coordinates the AffineDrift--UpstreamDrift companion program;
