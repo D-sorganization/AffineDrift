@@ -38,7 +38,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
 | `/models/neural-timing-feedback.html` | `models/neural-timing-feedback.qmd` | 8 |
 | `/models/population-generalization.html` | `models/population-generalization.qmd` | 9 |
-| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 21 |
+| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 28 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
 | `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
