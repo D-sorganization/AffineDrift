@@ -1,0 +1,190 @@
+---
+title: "Neural Timing and Feedback Perturbation Experiments"
+description: "A source-bounded synthetic-feasibility protocol for phase-specific mechanical, visual, and auditory perturbations"
+---
+
+This program asks when a registered perturbation is detected, when a measured
+muscle signal changes, when motion or load changes, and when a task outcome is
+corrected during golf-like motion. Those are four different observables. The
+protocol freezes phase, perturbation, sham, clock, calibration, response-window,
+hypothesis, uncertainty, and adverse-result rules before any model is fit.
+
+{{< include ../_includes/neural-timing-authority-boundary.qmd >}}
+
+## Evidence Map
+
+### General Upper-Limb Evidence
+
+::: {.table-responsive}
+| Primary Experiment | Bounded Support | Does Not Authorize |
+|---|---|---|
+| Kurtzer, Pruszynski, and Scott (2009) [@kurtzer2009multijoint] | Mechanical perturbations with separately analyzed early and long-latency upper-limb EMG responses during reaching | Golf transport, a universal latency band, or unique cortical-pathway attribution |
+| Saunders and Knill (2003) [@saunders2003visual] | Online hand-trajectory correction after virtual-hand position perturbations during reaching | A universal visual delay or golf transfer |
+| Boyer et al. (2020) [@boyer2020sonification] | Movement change after an unannounced perturbation of a movement-to-sound mapping | Auditory-pathway identity, correction latency, or golf transfer |
+| Akbaş et al. (2024) [@akbas2024anticipatory] | Anticipatory kinematic and EMG changes under expected and partly predictable arm loads | A universal preparation strategy, full-swing transfer, or a causal neural mechanism |
+:::
+
+### Golf-Specific Evidence
+
+Causer et al. (2017) used visual occlusion during novice golf putting at two
+distances and reported condition-dependent putting and quiet-eye outcomes
+[@causer2017quieteye]. This is task-specific visual evidence. It does not
+establish mechanical or auditory feedback timing, elite-golfer behavior,
+full-swing transfer, or an individual neural pathway. The literature map
+therefore does not fill unsupported golf cells with reaching results.
+
+## Preregistered Questions and Hierarchy
+
+Protocol `affinedrift.neural-timing-feedback/v1` declares three families before
+analysis:
+
+::: {.table-responsive}
+| Hierarchy | Perturbation and Phase | Frozen Contrast | Decision Boundary |
+|---|---|---|---|
+| Primary | Unexpected mechanical pulse at transition | Club-frame state divergence versus its paired sham | Holm-adjusted complete interval must exclude the minimum relevant effect |
+| Secondary | Direction-unknown visual cursor jump at transition | Target-frame correction versus its paired sham | Holm-adjusted complete interval must exclude the minimum relevant effect |
+| Exploratory | Predictable auditory mapping shift before impact | Club-frame speed change versus its paired sham | Report the complete interval without confirmatory promotion |
+:::
+
+Each confirmatory family uses family alpha 0.05, target power 0.80, a frozen
+minimum relevant effect in its declared units, and **Holm step-down**
+multiplicity control. Participant count is unavailable until an external pilot
+variance and device reliability record are entered into the registered
+simulation plan. Recruitment cannot begin with an invented variance or an
+after-the-fact effect size. The final count, attrition allowance, exclusions,
+and stopping rule must be frozen before unblinding.
+
+## Perturbation, Sham, and Blinding Contract
+
+::: {.table-responsive}
+| Modality | Active Component | Matched Sham | Physical-Onset Witness |
+|---|---|---|---|
+| Mechanical | Club-frame transverse load pulse | Same trigger, device sound, and duration without commanded load | Force/load onset plus command loopback |
+| Visual | Target-frame cursor displacement | Same refresh and visibility without displacement | Photodiode on the rendered transition |
+| Auditory | Movement-to-sound mapping-slope change | Same level, duration, and carrier without mapping change | Microphone loopback |
+:::
+
+Condition codes are generated outside the analysis module. Participants,
+operators where practicable, onset reviewers, and primary analysts remain
+blinded to the active/sham mapping until frozen exclusions, calibration checks,
+and primary results exist. A sham is not assumed inert: expectancy, device
+sound, display refresh, and carrier sound remain measured covariates.
+
+All active magnitudes, directions, durations, onset events, calibration
+revisions, and stopping rules are frozen. Saturation, trigger disagreement,
+limit crossing, unexpected contact, discomfort, or loss of retention stops the
+trial. The manufactured magnitudes are normalized software fixtures, not safe
+human operating limits.
+
+## Four Observed Timing Layers
+
+::: {.table-responsive}
+| Layer | Operational Observation | Prohibited Shortcut |
+|---|---|---|
+| **Perturbation Detection** | First persistent physical-onset witness on the shared clock | Treating the software command time as delivered stimulus time |
+| **Muscle Response** | Preregistered EMG-envelope change relative to its baseline and sham | Naming a unique reflex, voluntary source, intent, force, or stiffness |
+| **Mechanical Effect** | Kinematic or kinetic divergence in a declared frame and uncertainty interval | Assuming the effect was generated by the measured muscle response |
+| **Task Correction** | Target- or outcome-frame change versus sham | Calling any movement difference successful correction or learning |
+:::
+
+These layers are analyzed on one event clock but are not required to form a
+serial chain. A direct load can create a **Mechanical Effect** before a measured
+**Muscle Response**. A detected EMG onset can occur without a task-relevant
+change. A task change can also reflect passive mechanics, pre-existing control,
+expectation, or an unmeasured pathway.
+
+## Synchronization, Calibration, and Onset Detection
+
+The executable contract requires a hardware-shared clock for command,
+photodiode, microphone, motion, load, EMG, and task channels. Every channel
+declares units, frame, sample rate, and calibration revision. The manufactured
+clock declares 0.02 ms timestamp resolution, at most 0.10 ms channel skew, and
+0.50 ms onset uncertainty. These are fixture gates, not achieved device
+performance.
+
+Physical device qualification must measure command-to-load latency and
+bandwidth, photodiode transition latency, audio loopback latency, force and
+motion calibration, EMG delay and filtering, clock drift, dropped samples, and
+trigger jitter across the complete operating envelope. The onset algorithm uses
+a frozen threshold and persistence count. Alternative thresholds, filters,
+window edges, and clock corrections enter the complete sensitivity interval.
+
+## Phase, Expectation, Learning, and History
+
+The manufactured phases are transition (`top-of-motion` to `mid-downswing`) and
+pre-impact (`mid-downswing` to `nominal-impact`). A future study must replace
+these labels with reproducible event definitions and quantify event uncertainty.
+Phase is not inferred from wall-clock percentage alone.
+
+The analysis model includes phase, perturbation magnitude and direction,
+expectation condition, trial index, block, preceding perturbation, time since
+the preceding perturbation, and cumulative exposure. Unexpected,
+direction-unknown, and fully predictable conditions are not pooled. Acute
+within-trial response, anticipatory preparation, across-trial adaptation,
+retention, and transfer are separate estimands. Order is counterbalanced, sham
+frequency is fixed, and washout sensitivity is reported; a late-block change
+cannot be relabeled as immediate feedback.
+
+## Deterministic Synthetic Fixtures
+
+The code fixture supplies one manufactured observation for each modality and
+layer:
+
+::: {.table-responsive}
+| Modality | Detection | Muscle Response | Mechanical Effect | Task Correction |
+|---|---:|---:|---:|---:|
+| Mechanical | 2 ms | 52 ms | 16 ms | 138 ms |
+| Visual | 8 ms | 132 ms | 148 ms | 176 ms |
+| Auditory | 5 ms | 104 ms | 120 ms | 168 ms |
+:::
+
+The mechanical fixture deliberately places the mechanical effect before the EMG
+response. It is a regression against the false serial-latency story, not a
+participant finding. A separate onset trace has a persistent threshold crossing
+at exactly 12 ms. Holm decisions preserve original hypothesis order. The
+interval ledger retains one supported, one negative, one null, and one
+unavailable record, each with an exact evidence origin, record ID, revision, and
+synthetic marker.
+
+## Outcomes, Uncertainty, and Falsifiers
+
+Primary outputs are onset latency, response amplitude, club- or hand-frame
+mechanical divergence, and target-frame task correction, each versus its paired
+sham. Kinematic, kinetic, EMG, and outcome variables retain their own units and
+frames. An association between layers is secondary; mediation, pathway, and
+causal-source claims are unavailable without an independently identified
+intervention and model.
+
+Complete uncertainty spans calibration, clock skew, onset threshold,
+persistence, filter, baseline, response-window edge, event timing, perturbation
+magnitude and direction, expectation, history, sham activity, missingness,
+model family, and multiplicity. The primary claim is falsified when its complete
+interval lies inside the preregistered equivalence region. An interval that
+straddles the minimum relevant effect is null/inconclusive, not supportive.
+
+## Negative, Null, and Unavailable Results
+
+- **Negative:** the complete interval remains inside the equivalence region, or
+  the registered response direction is contradicted.
+- **Null:** the interval spans both negligible and relevant effects after the
+  full sensitivity and multiplicity analysis.
+- **Unavailable:** calibration, synchronization, safe delivery, blinded sham,
+  power input, participant governance, or a required channel is absent.
+
+Excluded trials, failed physical-onset checks, adverse events, negative
+directions, null intervals, and unavailable cells remain in the ledger. They
+cannot be removed to improve a timing narrative. A detected response outside a
+registered window is reported as outside-window evidence rather than moved into
+a preferred bin.
+
+## Promotion and Generalization Limits
+
+The current result tier is analytic and deterministic synthetic feasibility.
+Promotion to measured human evidence requires the external records in the human
+boundary, qualified hardware, frozen recruitment and power, independent release,
+and held-out analysis. Even then, conclusions remain limited to the tested
+modality, phase, magnitude, direction, expectation, history, task, population,
+and device envelope. Reaching and novice-putting evidence cannot be generalized
+to elite full swings or to a universal theory of feedback control.
+
+## References

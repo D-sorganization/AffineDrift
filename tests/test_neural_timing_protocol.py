@@ -245,7 +245,11 @@ def test_protocol_type_is_complete_and_source_bounded() -> None:
 
 @pytest.mark.content_lint
 def test_public_route_states_required_scientific_boundaries() -> None:
-    page = PUBLIC_PAGE.read_text(encoding="utf-8")
+    source_paths = (
+        PUBLIC_PAGE,
+        *(ROOT / path for path in included_sources(ROOT, PUBLIC_PAGE.relative_to(ROOT).as_posix())),
+    )
+    page = "\n".join(path.read_text(encoding="utf-8") for path in source_paths)
     hub = MODEL_HUB.read_text(encoding="utf-8")
     required = (
         "General Upper-Limb Evidence",
