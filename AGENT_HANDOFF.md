@@ -566,9 +566,14 @@ This is current operational state. Historical detail belongs in git/GitHub.
   reviewed again. Do not blindly rehash changed files. After substantive review,
   update the evidence paths/digests, review date, reviewer identity, and commit
   locator together, regenerate both reports, and run the publication gate.
-- Focused GREEN evidence is 14/14 claim-audit tests plus Ruff, Black, module-size,
-  pre-commit, and deterministic report checks. Full repository, content,
-  deployment, and protected hosted gates remain required before merge.
+- After ordinary reconciliation with protected active-impedance authority
+  `3cb57223624f5be9c3d0cf69ef1ef25c7238c325`, the migrated inventory contains
+  17 reviewed, 206 deferred, and 2 exempt routes. Focused GREEN evidence is
+  36/36 claim-audit, site-audit, and active-impedance contracts. The complete
+  non-content and content-lint suites pass with only their documented skips;
+  deterministic inventory/site-report checks, Ruff, Black, title/style checks,
+  `git diff --check`, and every pre-commit hook pass. Protected hosted gates and
+  exact-main verification remain required before #4067 may close.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
