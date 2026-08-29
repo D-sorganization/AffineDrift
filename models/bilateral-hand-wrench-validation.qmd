@@ -1,0 +1,204 @@
+---
+title: "Bilateral Hand-Wrench Identifiability and Instrumented-Grip Validation"
+description: "A preregisterable, source-bounded protocol for deciding which lead- and trail-hand loads can be measured or estimated"
+---
+
+This protocol asks which club-wrench components can be identified separately
+for the lead and trail hands, under which measurements and assumptions. It
+freezes the measurement and analysis contract before a result is interpreted.
+The executable records are synthetic or manufactured benchtop fixtures; they
+are not physical-device or participant validation.
+
+::: {.callout-warning title="Scientific Authority Boundary"}
+The protocol provides **no muscle-force attribution** and **no coaching or
+clinical authority**. A hand wrench is an interface load, not a unique tissue,
+muscle, neural, intentional, or causal source. Human inference remains
+unavailable until every governance and held-out-analysis gate is satisfied.
+:::
+
+## Primary-Source Register
+
+::: {.table-responsive}
+| Source | What It Supports Here | What It Does Not Authorize |
+|---|---|---|
+| Koike (2016), *Measurement of Individual Hand Forces Exerted on a Golf Club Grip* [@koike2016] | Instrumented-grip measurement precedent | Calibration or performance of the present manufactured fixture |
+| Choi and Park (2020), *Sensors* 20(13):3672 [@koike2020] | Use of measured internal grip force in upper-limb kinetics | Validation of this device, cohort, or bilateral six-axis accuracy |
+| UpstreamDrift protected source `85cce4d3307bb7ad3953d9fc6e583e370803515c`, bilateral-wrench structural study | Point-force rank five and full-wrench rank six/nullity six | Practical identifiability, anatomy, or human validation |
+| UpstreamDrift protected source `85cce4d3307bb7ad3953d9fc6e583e370803515c`, trajectory sensor qualification | Synthetic cross-talk, noise, contact-migration, and allocation-error controls | Physical-device calibration or participant evidence |
+:::
+
+The two UpstreamDrift entries are immutable executable project sources, not
+independent experiments. The literature entries establish relevant measurement
+precedent but are not treated as a governed participant-level data deposit for
+this protocol.
+
+## Preregistered Questions and Outcomes
+
+The protocol revision is `affinedrift.bilateral-hand-wrench/v1`. It freezes the
+transition-to-impact window, event alignment, quantity definitions, tolerance,
+uncertainty method, perturbations, quality rules, exclusions, and falsifiers
+before evaluation.
+
+::: {.table-responsive}
+| Hypothesis | Metric and Decision Rule | Adverse Disposition |
+|---|---|---|
+| A total club wrench does not identify twelve bilateral wrench components | Rank and nullity of the declared linear observation map | **Negative** if a claimed unique allocation depends only on total wrench |
+| Independent calibrated sensors recover the manufactured bilateral loads | Complete component-error interval must remain inside tolerance | **Null** if the interval supports no improvement; **negative** if it exceeds tolerance |
+| The protocol transports to participant data | Participant-held-out coverage and prediction error | **Unavailable** until ethics, privacy, consent, licensing, and held-out gates exist |
+:::
+
+Failed, excluded, negative, null, and unavailable trials stay in the disposition
+ledger. They are not removed when a preferred allocation or model fails.
+
+## Lead, Trail, and Club Frames
+
+The lead and trail sensors each report a six-component wrench in a named,
+right-handed sensor frame. Both are transported to the declared club grip-center
+frame before addition. Sensor identifiers and lead/trail roles must be unique;
+the two transform source names must match the two sensor output-frame names
+exactly, and both transforms must declare one common target club frame. For
+sensor-to-club rotation $R$ and the club-origin to
+sensor-origin vector $r$ expressed in the club frame,
+
+$$
+F_C = R F_S,
+\qquad
+M_C = R M_S + r \times F_C.
+$$
+
+Lead/trail labeling, axis directions, reference points, force direction, and
+moment sign are data, not plotting choices. A frame transform must be proper and
+orthonormal. Comparing raw channels from different reference points is outside
+the contract.
+
+## Calibration, Cross-Talk, and Bandwidth
+
+Each grip section requires an independently revisioned $6\times6$ calibration
+matrix, traceability record, condition-number limit, sample rate, passband, and
+passband gain tolerance. The manufactured matrix includes declared cross-talk;
+solving that full-rank matrix recovers the applied fixture wrench to numerical
+precision. That exact recovery tests the software path, not a load cell.
+
+The current dynamic fixture samples gain at 0, 50, 150, and 300 Hz. Its declared
+sample rate is 2,000 Hz, bandwidth is 300 Hz, and gain-error limit is 3%. The
+complete manufactured passband qualifies. Missing the bandwidth boundary,
+missing the 0 Hz endpoint, using a sample rate at or below twice the bandwidth,
+a singular calibration, or exceeding the gain tolerance fails closed. A physical device must repeat the
+test for every channel, direction, load combination, temperature envelope, and
+mounting revision used in analysis.
+
+## Synchronization and Inertial Compensation
+
+The declared maximum absolute synchronization offset is 0.5 ms. A fixture at
+0.2 ms qualifies; one at 1.2 ms does not. Future acquisition must synchronize
+bilateral wrenches with club motion, shaft response, and any auxiliary channels
+before event windows are selected.
+
+The measured instrument/club wrench contains contact and inertial contributions.
+The protocol subtracts a revisioned inertial wrench computed from declared mass
+properties, kinematics, gravity, sensor mounting, filtering, and reference
+frame. If that record is missing, contact wrench is unavailable rather than
+silently equated with the raw signal.
+
+Contact assumptions are explicit: each sensor is treated as reporting the
+complete wrench transmitted through its grip section, while pressure
+distribution, contact-center migration, grip compliance, and slip remain
+sensitivity inputs. Saturation, clipping, timestamp discontinuity, calibration
+expiry, and undeclared contact loss are predeclared quality failures.
+
+## Rank and Observability
+
+Stacking lead and trail six-axis wrenches into $w=[w_L^T,w_T^T]^T$, a single
+total club-wrench observation is
+
+$$
+w_C = \begin{bmatrix}I_6 & I_6\end{bmatrix} w.
+$$
+
+This $6\times12$ map has rank six and nullity six. Infinitely many bilateral
+allocations therefore reproduce the same total wrench. A regularizer may choose
+one, but that choice is **Model Estimated**, not observed.
+
+Two independent six-axis grip sensors have an identity observation map with rank
+twelve and nullity zero inside the declared calibration and frame model. This is
+structural observability, not guaranteed practical accuracy. Calibration,
+cross-talk, bandwidth, synchronization, inertial compensation, contact
+migration, shaft dynamics, and uncertainty can still make an observed component
+practically weak.
+
+For the more restrictive two-point-force map, distinct contacts yield rank five
+and one invisible equal-and-opposite axial force mode. This reproduces the
+protected UpstreamDrift analytic result; it does not assert that the mode occurs
+in a golfer.
+
+## Measurement and Inference Tiers
+
+::: {.table-responsive}
+| Tier | Permitted Label | Remaining Boundary |
+|---|---|---|
+| **Total Measured** | Calibrated and inertially compensated total club wrench | Bilateral allocation remains nonidentifiable |
+| **Bilateral Measured** | Separately calibrated lead and trail grip-section wrenches | Practical error and contact-model uncertainty remain |
+| **Model Estimated** | One allocation selected by declared constraints, priors, or cost | The selection is not a measurement or unique source |
+| **Unavailable** | A quantity absent from the observation map or governance record | No value may be imputed or promoted |
+:::
+
+Inverse dynamics can estimate net generalized loads under a declared model. It
+does not convert total club motion into measured bilateral loads, and neither
+bilateral loads nor generalized loads uniquely identify biological actuators.
+
+## Manufactured Benchtop Fixtures and Uncertainty
+
+The deterministic fixtures exercise exact arithmetic and adverse dispositions:
+
+::: {.table-responsive}
+| Quantity | Tier | Result | Complete Interval | Outcome |
+|---|---|---:|---:|---|
+| Total club-wrench closure error | Total Measured | 0.004 | 0.002–0.008 normalized error | Supported |
+| Bilateral allocation recovery error under adverse perturbation | Bilateral Measured | 0.025 | 0.015–0.041 normalized error | Negative |
+| Regularized allocation advantage | Model Estimated | 0.000 | -0.080–0.080 normalized difference | Null |
+| Individual biological actuator force | Unavailable | — | — | Unavailable |
+:::
+
+These values are prescribed regression fixtures. They are not measured sensor
+performance. Future benchtop acceptance must propagate calibration residuals,
+cross-talk, noise, timing, inertial parameters, reference-point placement, and
+repeatability. Sensitivity repeats the analysis over predeclared shaft mass,
+inertia, compliance, grip compliance, and contact-center bounds. Conclusions
+must follow the complete interval, not only its center.
+
+## Negative, Null, and Unavailable Results
+
+- **Supported** means the complete declared interval meets a manufactured or
+  governed task tolerance.
+- **Negative** means a required tolerance or hypothesis fails.
+- **Null** means the predeclared comparison shows no supported difference.
+- **Unavailable** means the observation, calibration, governance, or source
+  record is absent.
+
+A negative or null allocation result does not become evidence for a different
+hand strategy. An unavailable actuator force does not become an estimated value
+by substituting a minimum-norm solution.
+
+## Human Tier and Promotion Gate
+
+The current human tier is unavailable. Before collection or analysis, a future
+record must provide all of the following:
+
+1. ethics approval appropriate to the protocol and jurisdiction;
+2. a privacy and retention plan;
+3. a revisioned informed-consent record;
+4. explicit data and instrument-software licensing;
+5. participant-level rather than swing-level train/test separation; and
+6. a frozen **participant-held-out** analysis with registered exclusions,
+   uncertainty, and falsifiers.
+
+Promotion additionally requires traceable physical calibration, cross-talk and
+bandwidth qualification, independent review, uncertainty coverage, shaft/grip
+sensitivity, and preservation of adverse results. Even a promoted human
+bilateral-wrench result would remain an interface-load result with no
+muscle-force attribution and no coaching or clinical authority.
+
+The executable declarations live in
+`src/affine_control/hand_wrench_protocol.py`, evidence boundaries in
+`src/affine_control/hand_wrench_evidence.py`, and exact fixtures in
+`src/affine_control/hand_wrench_fixtures.py`.
