@@ -21,13 +21,25 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `C:\Users\diete\Repositories\worktrees\AffineDrift-4075-a1` start from that
   exact protected commit. Lease `claim:codex` is active.
 - RED commit `8a39ca00` proves the existing coverage contract had no required
-  audit-report target. The narrow fix explicitly renders only
-  `reports/scientific-claim-audit.md`; it does not publish `reports/**/*.md` or
-  alter the claim-audit schema, generator, inventory, findings, or authority.
-- Focused render-coverage tests pass 8/8 and the executable bidirectional gate
-  passes for 230 sitemap URLs. Isolated render, post-build link health,
-  deterministic report, publication enforcement, and protected hosted checks
-  remain required before merge.
+  audit-report target. RED commit `0f1618e4` proves the public inventory did not
+  classify the newly rendered projection. The narrow fix explicitly renders
+  only `reports/scientific-claim-audit.md`; it does not publish
+  `reports/**/*.md` or alter the claim-audit schema, generator, reviewed routes,
+  deferment partition, findings, or scientific authority. One approved exempt
+  record now classifies the deterministic projection itself, yielding 27
+  reviewed, 200 deferred, and 3 exempt routes.
+- At content head `29fba5cc49f9cfe6ee5baf344702216a273f59db`, focused
+  render/audit contracts pass 23/23. Quarto 1.8.26 renders all 229 configured
+  inputs with `--to html`; the 118,575-byte audit HTML displays the updated
+  exemption count. The exact pre-prune site-health gate reports zero broken
+  links with 24 known non-blocking orphan warnings. Canonical pruning removes
+  28 internal artifacts, the revision-bound public manifest contains 230 pages,
+  and deterministic report freshness plus publication enforcement pass.
+- Repository-wide Ruff, Black, focused mypy, and pre-commit pass. The default
+  Python lane passes 3,463 tests with 29 documented skips and 93.19% coverage;
+  the content lane passes 108 tests with 4 documented skips; and Jest passes
+  297 tests with 19 documented skips. Protected hosted checks and post-merge
+  deployment verification remain required before #4075 may close.
 
 ## Equipment and Shaft Individual-Response Validation (#4040 — In Progress)
 
