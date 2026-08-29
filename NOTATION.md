@@ -140,12 +140,12 @@ $(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
 
 ### Quaternions
 
-| Notation             | Meaning               | Convention                    |
-| -------------------- | --------------------- | ----------------------------- | --- | ------- | -------------------------- | --------------------- |
-| **q**                | Unit quaternion       | Hamilton convention (default) |
-| **q = (w, x, y, z)** | Quaternion components | Scalar-first format           |
-| \*\*                 |                       | q                             |     | = 1\*\* | Unit quaternion constraint | Normalized quaternion |
-| **q^{-1} = q^\***    | Quaternion inverse    | Conjugate of unit quaternion  |
+| Notation                  | Meaning                    | Convention                    |
+| ------------------------- | -------------------------- | ----------------------------- |
+| **q**                     | Unit quaternion            | Hamilton convention (default) |
+| **q = (w, x, y, z)**      | Quaternion components      | Scalar-first format           |
+| **$\lVert q \rVert = 1$** | Unit quaternion constraint | Normalized quaternion         |
+| **q^{-1} = q^\***         | Quaternion inverse         | Conjugate of unit quaternion  |
 
 **Hamilton vs JPL Conventions:**
 
@@ -198,10 +198,10 @@ $(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
 ### Vector Notation
 
 | Notation              | Meaning              | Example                                                                               |
-| --------------------- | -------------------- | ------------------------------------------------------------------------------------- | -------------- | ----------------------------------------------- |
+| --------------------- | -------------------- | ------------------------------------------------------------------------------------- |
 | **v** or **v̄**        | Vector (bold or bar) | Velocity: $\mathbf{v}$ or $\bar{v}$                                                   |
 | **v_i** or **[v]\_i** | Component notation   | $v_1, v_2, v_3$ for (x, y, z)                                                         |
-| \*\*\\                | v\\                  | \*\*                                                                                  | Magnitude/norm | $\|\mathbf{v}\| = \sqrt{v_1^2 + v_2^2 + v_3^2}$ |
+| **$\lVert v \rVert$** | Magnitude/norm       | $\lVert\mathbf{v}\rVert = \sqrt{v_1^2 + v_2^2 + v_3^2}$                               |
 | **v^T** or **v^†**    | Transpose/conjugate  | Row vector form                                                                       |
 | **u · v**             | Dot product          | $u_1v_1 + u_2v_2 + u_3v_3$                                                            |
 | **u × v**             | Cross product        | $\begin{pmatrix} u_2v_3 - u_3v_2 \\ u_3v_1 - u_1v_3 \\ u_1v_2 - u_2v_1 \end{pmatrix}$ |
