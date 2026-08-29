@@ -9,6 +9,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.affine_control.golf_model import GolfModel
 
+GRAVITY_M_S2 = 9.81
+SUPPORTED_GRAVITY_LOAD = f"uniform gravity at {GRAVITY_M_S2} m/s^2"
+
 __all__ = [
     "UnsupportedZTCFEngineError",
     "ZTCFIntervention",
@@ -238,7 +241,7 @@ def _validate_supported_protocol(intervention: ZTCFIntervention) -> None:
         raise UnsupportedZTCFEngineError("engine-unsupported retained controls")
     if intervention.retained.contact != "none":
         raise UnsupportedZTCFEngineError("engine-unsupported contact protocol")
-    if intervention.retained.loads != ["uniform gravity at 9.81 m/s^2"]:
+    if intervention.retained.loads != [SUPPORTED_GRAVITY_LOAD]:
         raise UnsupportedZTCFEngineError("engine-unsupported load protocol")
 
 
