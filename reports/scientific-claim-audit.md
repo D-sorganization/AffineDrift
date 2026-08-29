@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 23
+- Reviewed: 24
 - Deferred: 200
 - Exempt: 2
 
@@ -33,6 +33,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 3 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
+| `/models/hybrid-impact-contact.html` | `models/hybrid-impact-contact.qmd` | 6 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
@@ -227,6 +228,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-ztcf-identifiability` | 0 |
 | `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-cd5e133fe28e` | `/models/hybrid-impact-contact.html` | Reviewed | — | None | None | 0 |
 | `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |

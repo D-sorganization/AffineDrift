@@ -10,14 +10,71 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Books and Publication-Roadmap Trust Audit (#4062 — In Progress)
+## Hybrid Impact-Contact and Event-Time Uncertainty (#4038 — In Progress)
 
-- Branch `feat/4062-book-publication-roadmap` in isolated worktree
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4062-a12` started from
-  protected main `f287ce6ab2cd26079bbace6b8f362a1f0a729acd` and ordinarily
-  reconciled exact protected main `14f220052eb204dfdff6cf2b4ea51eebcd08a819`.
-  Lease `codex-4062-20260829T110621Z` is recorded on #4062. Do not merge
-  without final root review; parent #4021 remains open.
+- Branch `feat/4038-hybrid-impact-contact` started from exact protected main
+  `14f220052eb204dfdff6cf2b4ea51eebcd08a819`. It adds only a bounded
+  AffineDrift protocol, deterministic fixtures, and public pedagogy; it does not
+  replace or modify UpstreamDrift dynamics authority.
+- RED commits `f50e0e08`, `8ceeabff`, and `54e66cdd` establish missing
+  executable, content/audit, and canonical scholarly-metadata contracts. GREEN
+  commits `60b168ed`, `8a56cebb`, and `c40076ac` add the implementation,
+  reviewed content, and digest-bound audit evidence.
+- `impact_contact_protocol.py` freezes the primary-source register, SI contact
+  frame and signs, pre-impact state and parameter domains, rigid/compliant/
+  hybrid model declarations, solver and event policy, uncertainty ranges,
+  provenance, adverse outcomes, and non-authorizing human gates.
+  `impact_contact_models.py` implements paired Newton/Coulomb impulse, a finite
+  regularized Hunt--Crossley-like contact solve, and constant-acceleration flow
+  to an uncertain guard followed by reset. `impact_contact_uncertainty.py`
+  evaluates every one of the declared `3^4 = 81` combinations.
+- The manufactured centered result reports rigid ball-normal speed
+  63.6929 m/s and compliant speed 60.5293 m/s with 0.436 ms contact, 13.196 kN
+  peak force, paired momentum closure, and a 3.51e-6 m/s step-halving change.
+  These are solver fixtures, not club/ball measurements or model rankings. The
+  oblique grid spans 62.1987--65.1757 m/s ball speed, -0.3466--1.3038 degrees
+  launch, and -86.8948 to -38.6700 rad/s spin, conditional only on four declared
+  synthetic ranges.
+- The canonical bibliography now carries the complete protected unique-key and
+  field set, removes one duplicate Winter record, corrects the Cross and
+  Worobets records, restores previously manual entries to canonical JSON, and
+  adds Roberts (2001), Petersen and McPhee (2009), McNally et al. (2018), and
+  Kong et al. (2024). The generator preserves volume, number, pages, edition,
+  DOI, URL, arXiv metadata, and bounded source notes. Offline quality,
+  cross-file identity, and citation-resolution gates are green.
+- `/models/hybrid-impact-contact.html` is reviewed audit
+  `ad-route-cd5e133fe28e`, bound to reviewed content commit
+  `8a56cebb13488106fa4d071b31b0f7d05b1d5ca8` and exact SHA-256 evidence for
+  its canonical QMD, four implementation modules, and executable test. The
+  inventory now reports 24 reviewed, 200 deferred, and 2 exempt routes after
+  ordinary reconciliation with protected #4062. A
+  digest proves the declared reviewed bytes, not scientific truth.
+- Focused executable contracts are 24/24 green; the exact reconciled hybrid,
+  book, and global-inventory set is 47/47 green. At merge head
+  `d841a179f6c67383c3f3c3f7ab145b73091a4815`, the complete non-content lane
+  passes with 30 documented skips, the content-lint lane passes 99 tests with
+  4 documented skips, and all 20 Jest suites pass with 297 tests and 19
+  documented skips. Full Ruff/Black, strict focused MyPy, Bandit,
+  module and changed-file budgets, pre-commit, bibliography identity/quality,
+  citation resolution, terminology, title/H1, Quarto syntax/xrefs/math,
+  227-URL bidirectional render coverage, deterministic audit reports, and
+  publication enforcement pass. Quarto 1.8.26 renders the route in isolation.
+  Desktop 1440 x 1000 and mobile 390 x 844 browser reinspection after the
+  reconciliation shows
+  one H1, eight locally scrollable tables, 18 rendered math containers, no body
+  overflow, and no console warnings/errors. The visual review caught and fixed
+  missing canonical volume/issue/page metadata for all four new sources before
+  acceptance. The branch ordinarily reconciles protected #4062 squash
+  `902a71b73862a299ca8b6134a4701c15d4f3030c`; every affected exact-head gate
+  above passes. Push a non-draft PR and merge only after every required hosted
+  check passes on the exact current head.
+
+## Books and Publication-Roadmap Trust Audit (#4062 — Protected)
+
+- Protected squash `902a71b73862a299ca8b6134a4701c15d4f3030c` has the exact
+  reviewed head tree from PR #4070 after all 14 hosted checks passed. Issue
+  #4062 is closed; parent #4021 remains open. The branch history below records
+  its delivery evidence.
 - Canonical content review commit `2dca8d190f3840405315b6ff8415e257d6e81ea8`
   corrects all six public book routes. It restores Volume I chapters 3B and 9
   and Volume IV chapter 7B to the public maps while preserving the protected
@@ -65,7 +122,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   23 book-audit and global-inventory tests, proving the digest evidence does
   not depend on intermediate Git history.
 
-## Active Impedance and Co-Contraction Identification (#4036 — In Progress)
+## Active Impedance and Co-Contraction Identification (#4036 — Protected)
+
+- Protected squash `3cb57223624f5be9c3d0cf69ef1ef25c7238c325` is the exact
+  reviewed #4036 tree. The branch history below records its delivery evidence.
 
 - Branch `feat/4036-active-impedance-identification` started from exact
   protected main `9c3c5218744ecf5791d9af4a7871f618d917437a`. It is bounded to

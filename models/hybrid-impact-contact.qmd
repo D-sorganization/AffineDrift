@@ -1,0 +1,266 @@
+---
+title: "Hybrid Impact-Contact and Event-Time Uncertainty"
+description: "A source-bounded synthetic protocol comparing rigid, compliant, and hybrid club-ball contact models"
+---
+
+This program asks how a declared contact law, mode transition, and uncertainty
+in the detected impact time change club--ball outcomes and any upstream
+attribution that uses them. It compares three reduced planar models against
+analytic and deterministic synthetic fixtures. The current result is a software
+and protocol feasibility study, not a calibrated club, ball, shaft, or golfer.
+
+::: {.callout-warning title="Scientific Authority Boundary"}
+Every number below is `synthetic-fixture` evidence. The program provides **no
+coaching, clinical, causal, population, or equipment-design authority**. It does
+not identify injury risk, technique, intent, muscle contribution, or an optimal
+club. Qualification is outcome specific: **no contact model is universally
+correct**.
+:::
+
+## Primary-Source Register
+
+::: {.table-responsive}
+| Source | What It Supports Here | What It Does Not Authorize |
+|---|---|---|
+| Penner (2003) [@penner2003physics] | Golf impact and flight-physics context | This reduced state, parameter set, or uncertainty interval |
+| Cross (1999) [@cross2014impact] | Impulse, restitution, friction, and implement--ball mechanics | Direct transfer of a bat/racket model to a golf fixture |
+| Roberts, Jones, and Rothberg (2001) [@roberts2001contacttime] | A golf-specific contact-time measurement method and dependence on speed and ball construction | This event detector, solver law, or a link between measured time and perceived feel |
+| Petersen and McPhee (2009) [@petersen2009clubface] | Golf clubface/ball finite-element impact-model precedent | Promotion of this penalty law to a calibrated design model |
+| McNally, McPhee, and Henrikson (2018) [@mcnally2018shaftimpact] | A declared comparison in which shaft coupling changes modeled launch conditions | A universal shaft correction or proof that either free-body or full-club treatment is always adequate |
+| Kong et al. (2024) [@kong2024saltation] | Guard/reset sensitivity and event-aware uncertainty transport in hybrid systems | This golf guard, reset map, or first-order envelope |
+:::
+
+The sources bound model choice and measurement questions; none validates the
+manufactured outputs. Roberts et al. found measured contact duration depended on
+ball construction and clubhead speed, and that measured duration did not track
+golfer perception in their study. That is a warning against replacing an
+instrumented event with a subjective label, not a population claim.
+
+## Preregistered Questions and Falsifiers
+
+Protocol revision `affinedrift.hybrid-impact-contact/v1` fixes three questions:
+
+::: {.table-responsive}
+| Question | Metric | Falsifier or Adverse Disposition |
+|---|---|---|
+| Does each model satisfy its own declared mechanics? | Paired-body momentum residual, restitution reset, force/impulse integral, and energy accounting | **Negative** if a balance or reset identity fails |
+| Are reported outputs stable to numerical and event choices? | Fixed-step convergence plus a complete four-input sensitivity interval | **Null** if competing models or sensitivity choices do not support a distinct conclusion |
+| Can the reduced single-contact result be promoted? | Calibrated measurements, outcome-specific validation, governed data, and held-out error | **Unavailable** until every physical and human gate exists |
+:::
+
+Negative, null, excluded, solver-failed, and unavailable cases stay in the
+ledger. A low residual or visually plausible launch cannot replace a failed
+contract.
+
+## Pre-Impact State and Frame Contract
+
+The nominal contact frame is fixed before solving:
+
+::: {.table-responsive}
+| Field | Declaration |
+|---|---|
+| Origin | Nominal first contact point on the undeformed clubface |
+| Normal | `+x clubface normal from club toward ball` |
+| Tangent | `+y face tangent` |
+| Spin | `+z right-hand rule` |
+| Units | m, s, rad, N, kg |
+| Club velocity | $(44, 0)$ m/s for the centered fixture; $(44, 2)$ m/s for the oblique fixture |
+| Ball velocity and spin | $(0, 0)$ m/s and $0$ rad/s |
+| Reduced masses | Club $0.200$ kg; ball $0.04593$ kg |
+| Ball geometry | Radius $0.02135$ m; manufactured solid-sphere inertia |
+:::
+
+The masses and inertia are numerical fixtures, not equipment measurements. The
+state is a two-dimensional contact-coordinate reduction: off-center geometry,
+clubhead inertia tensor, face curvature, ball construction, shaft modes, and
+three-dimensional spin-axis dynamics remain outside it.
+
+Let the closing speed be
+
+$$
+u_n = (v_c^- - v_b^-) \mathbin{\cdot} n > 0.
+$$
+
+Zero contact, separating motion, a closing speed at or below the declared
+grazing threshold, and more than one candidate contact do not enter the nominal
+solver.
+
+## Rigid Impulse Model
+
+The instantaneous model uses a Newton normal reset and a Coulomb-limited
+tangential impulse:
+
+$$
+J_n = \frac{(1+e)u_n}{1/m_c+1/m_b},
+\qquad
+J_t = \operatorname{clip}
+\left(
+-\frac{s_t^-}{1/m_c+1/m_b+r_b^2/I_b},
+-\mu J_n,
+\mu J_n
+\right).
+$$
+
+Equal and opposite impulses update the club and ball. The ball angular update
+uses the declared $+z$ sign. This model exposes a direct restitution parameter
+but has zero contact duration and cannot report a force waveform or deformation.
+
+## Compliant Contact Model
+
+The finite-duration model integrates one Hunt--Crossley-like regularized normal
+law:
+
+$$
+F_n(\delta,\dot\delta)
+= k\,\delta^p
+\max\!\left(0,1+\chi\dot\delta\right),
+\qquad
+m_{\mathrm{eff}}\ddot\delta=-F_n.
+$$
+
+The executable law is $k\delta^p\max(0,1+\chi\dot\delta)$. The fixture uses
+$p=1.5$, a fixed-step fourth-order Runge--Kutta integrator, and a declared
+separation event. Stiffness and damping are uncalibrated synthetic parameters.
+The law is useful for testing contact duration, peak force, impulse integration,
+and convergence; it is not a material model for a particular ball or face.
+
+## Hybrid Event Model
+
+The hybrid model flows to a detected guard and then applies the rigid reset:
+
+$$
+x^- = \phi(\hat t_e+\Delta t_e, x_0),
+\qquad
+x^+ = R(x^-;e,\mu).
+$$
+
+This makes event time part of the state-to-outcome map. The manufactured flow
+uses constant club acceleration only to expose sensitivity; it is not a swing
+estimate. Saltation analysis explains why a guard crossing carries timing
+information beyond the reset Jacobian [@kong2024saltation]. This implementation
+reports a complete finite parameter grid rather than claiming a first-order
+saltation approximation is adequate near every impact.
+
+## Solver and Event-Detection Policy
+
+::: {.table-responsive}
+| Boundary | Frozen Rule | Failure State |
+|---|---|---|
+| Contact guard | Signed gap crosses zero from positive to nonpositive while closing | No contact or separating |
+| Sampling | 200 kHz, bracketed linear timestamp interpolation | Missing bracket or nonfinite sample |
+| Timing envelope | ±50 µs event time; ±10 µs synchronization | Unreported timing uncertainty |
+| Grazing | Closing speed must exceed 0.05 m/s | **Grazing** is rejected as ill-conditioned |
+| Contact topology | Exactly one candidate contact | **Multiple Contact** is unavailable, not sequentialized silently |
+| Compliant solve | Fixed step $2\times10^{-6}$ s; separation before 3 ms and within 2,000 steps | Explicit solver failure; no partial output |
+:::
+
+Grazing makes event-time sensitivity singular or poorly conditioned. Multiple
+Contact can change transition order and impulse allocation. Neither case is
+rescued by choosing a preferred ordering after seeing the result.
+
+## Balance, Convergence, and Failure Contracts
+
+For the centered manufactured state, both paired-body solvers have a reported
+linear-momentum residual below $10^{-10}$ kg m/s. The rigid reset reproduces
+the declared restitution equation to numerical precision. Halving the compliant
+time step from 2 µs changes manufactured ball speed by approximately
+$3.51\times10^{-6}$ m/s.
+
+::: {.table-responsive}
+| Model | Ball Normal Speed | Contact Time | Peak Normal Force | Energy Before / After | Interpretation |
+|---|---:|---:|---:|---:|---|
+| Rigid Impulse Model | 63.693 m/s | 0 | unavailable | 193.600 / 179.441 J | Analytic reset check |
+| Compliant Contact Model | 60.529 m/s | 0.436 ms | 13.196 kN | 193.600 / 174.737 J | Uncalibrated force-law fixture |
+| Hybrid Event Model, nominal time | 63.693 m/s | 0 | unavailable | 193.600 / 179.441 J | Nominal flow/reset agrees with rigid reset |
+:::
+
+Different synthetic energy loss or ball speed is not evidence that one model is
+closer to a real impact. Physical accuracy requires calibrated force, deflection,
+contact time, launch, and spin evidence over a declared envelope.
+
+## Event-Time and Parameter Uncertainty
+
+The oblique fixture evaluates all $3^4=81$ combinations of event time,
+restitution, friction, and face-normal angle. It reports the entire interval;
+there is no best-case selection.
+
+::: {.table-responsive}
+| Output | Nominal | Complete Manufactured Interval | Unit |
+|---|---:|---:|---|
+| Ball speed | 63.695 | 62.199 to 65.176 | m/s |
+| Launch angle in the original frame | 0.482 | -0.347 to 1.304 | degrees |
+| Ball spin | -62.792 | -86.895 to -38.670 | rad/s |
+:::
+
+These bounds are conditional on only four finite ranges. They omit measurement
+bias, face curvature, impact location, shaft state, material-law error,
+three-dimensional inertia, ball construction, and correlated parameters.
+Therefore they are not confidence intervals or tolerance specifications.
+
+## Outcome-Specific Model Comparison
+
+::: {.table-responsive}
+| Intended Outcome | Minimum Needed Evidence | Model Limitation |
+|---|---|---|
+| Post-impact linear velocity | Calibrated pre/post states, frames, and timing | A rigid reset can fit velocity while hiding force history |
+| Contact time and peak force | Calibrated high-bandwidth force/deformation measurement | An impulse model cannot provide these outputs |
+| Spin and gear effect | Three-dimensional contact location, friction, inertia, and angular measurements | The planar fixture has one spin axis and no face curvature |
+| Upstream attribution interval | Event-aligned pre-impact state covariance and a declared attribution model | Contact sensitivity does not identify a golfer's intent or anatomical cause |
+| Equipment response | Qualified ball, face, shaft, and boundary-condition models | Free-body and full-club assumptions are outcome and configuration dependent |
+:::
+
+Model selection is made per output and validation envelope. Agreement between
+two models on ball speed does not validate their force histories, spin, or
+upstream attribution.
+
+## Negative, Null, and Unavailable Results
+
+::: {.table-responsive}
+| Ledger State | Retained Result | Authority Limit |
+|---|---|---|
+| **Supported** | The rigid synthetic fixture satisfies its paired momentum and restitution equations | Software equation check only |
+| **Negative** | The single-contact map rejects grazing input | Does not characterize real grazing contact |
+| **Null** | The comparison identifies no universal model winner | Does not imply models are physically equivalent |
+| **Unavailable** | Human, calibrated equipment, multiple-contact, and population conclusions | Cannot be replaced by a plausible simulation |
+:::
+
+Every numerical result retains the machine-readable origin
+`synthetic-fixture`; missing promoted evidence retains `unavailable`.
+
+## Upstream Attribution Boundary
+
+An impact outcome is downstream of the pre-impact club/ball state, contact
+geometry, material law, and event time. If an UpstreamDrift analysis attributes
+delivery dynamics to a terminal impact metric, it must propagate the terminal
+metric's interval and preserve the exact frame and event definition. A shift in
+ball speed after changing restitution or event timing is not evidence that an
+upstream joint torque, muscle, intention, or technique caused that shift.
+
+## Promotion and Further-Research Gates
+
+The next evidence tier requires all of the following before any physical or
+human statement:
+
+1. Calibrate clubface and ball geometry, mass properties, compliance, damping,
+   friction, contact time, force bandwidth, and sensor synchronization.
+2. Compare rigid, compliant, finite-element, and coupled shaft models on locked
+   outcome-specific benchmarks, including off-center and three-dimensional hits.
+3. Quantify solver convergence, parameter identifiability, correlated
+   uncertainty, guard interpolation error, grazing, repeated, and simultaneous
+   contacts.
+4. Register equipment revisions, raw-data licensing, exclusions, null results,
+   and held-out test criteria.
+5. Obtain ethics, privacy, consent, safety, and independent approvals before any
+   participant collection; software tests do not grant those authorities.
+
+Until then, the human tier remains unavailable.
+
+## Reproducible Implementation
+
+The contract, fixtures, solvers, uncertainty sweep, and tests live in
+`src/affine_control/impact_contact_protocol.py`,
+`impact_contact_fixtures.py`, `impact_contact_models.py`,
+`impact_contact_uncertainty.py`, and
+`tests/test_hybrid_impact_contact_protocol.py`. Exact SHA-256 evidence for this
+page and those files is recorded in the rendered-route claim audit. A checksum
+attests reviewed bytes; it does not establish scientific truth.

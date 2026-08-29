@@ -51,6 +51,45 @@ def test_convert_bibliography_to_bib_reports_success_on_stdout(
     assert (repo_root / "references" / "affine-drift.bib").exists()
 
 
+def test_convert_bibliography_preserves_scholarly_metadata(tmp_path: Path) -> None:
+    """Canonical JSON must reproduce fields needed to identify and audit a paper."""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    payload = [
+        {
+            "id": "source2026",
+            "type": "paper",
+            "title": "A Source-Bounded Study",
+            "authors": ["Ada Lovelace", "Grace Hopper"],
+            "year": 2026,
+            "venue": "Journal of Reproducible Models",
+            "volume": "12",
+            "number": "3",
+            "pages": "10--24",
+            "edition": "revised",
+            "doi": "10.1000/example",
+            "url": "https://doi.org/10.1000/example",
+            "note": "Supports one declared method; does not validate the local fixture.",
+        }
+    ]
+    (data_dir / "bibliography.json").write_text(json.dumps(payload), encoding="utf-8")
+
+    assert convert_bib_main(tmp_path) == 0
+    rendered = (tmp_path / "references" / "affine-drift.bib").read_text(encoding="utf-8")
+
+    assert "@article{source2026" in rendered
+    assert "volume    = {12}" in rendered
+    assert "number    = {3}" in rendered
+    assert "pages     = {10--24}" in rendered
+    assert "edition   = {revised}" in rendered
+    assert "doi       = {10.1000/example}" in rendered
+    assert "url       = {https://doi.org/10.1000/example}" in rendered
+    assert (
+        "note      = {Supports one declared method; does not validate the local fixture.}"
+        in rendered
+    )
+
+
 def test_validate_frontmatter_reports_failure_summary(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
