@@ -13,6 +13,8 @@ from src.affine_control.research_readiness import (
     build_public_summary,
     load_library,
     protocol_revision,
+    record_revision,
+    transition_allowed,
     validate_library,
 )
 
@@ -27,10 +29,15 @@ def _canonical() -> dict[str, object]:
     return load_library(LIBRARY, SCHEMA, CLAIMS, CRITIQUES, ROOT)
 
 
-def _protocol(library: dict[str, object]) -> dict[str, object]:
+def _protocol(
+    library: dict[str, object],
+    protocol_id: str = "ad-protocol-dcr-perturbation-001",
+) -> dict[str, object]:
     protocols = library["protocols"]
-    assert isinstance(protocols, list) and len(protocols) == 1
-    protocol = protocols[0]
+    assert isinstance(protocols, list)
+    matches = [row for row in protocols if row["protocol_id"] == protocol_id]
+    assert len(matches) == 1
+    protocol = matches[0]
     assert isinstance(protocol, dict)
     return protocol
 
@@ -43,6 +50,7 @@ def test_library_is_strict_versioned_and_revision_pinned() -> None:
     assert protocol["protocol_id"] == "ad-protocol-dcr-perturbation-001"
     assert protocol["state"] == "simulation-ready"
     assert protocol["protocol_revision"] == protocol_revision(protocol)
+    assert protocol["record_revision"] == record_revision(protocol)
 
     invalid = copy.deepcopy(library)
     invalid["undeclared"] = True
@@ -62,6 +70,15 @@ def test_unknown_and_skipped_states_fail_closed() -> None:
     history[0]["to"] = "simulation-ready"
     with pytest.raises(ResearchReadinessError, match="invalid transition"):
         validate_library(skipped, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_participant_scope_controls_ethics_applicability() -> None:
+    assert transition_allowed("pilot-ready", "data-ready", "none") is True
+    assert transition_allowed("pilot-ready", "data-ready", "human") is False
+    assert transition_allowed("pilot-ready", "ethics-approved", "human") is True
+    assert transition_allowed("pilot-ready", "ethics-approved", "none") is False
+    assert transition_allowed("analysis-locked", "superseded", "human") is True
+    assert transition_allowed("published", "validated", "human") is False
 
 
 def test_state_history_must_be_contiguous_and_end_at_declared_state() -> None:
@@ -112,10 +129,20 @@ def test_evidence_paths_and_digests_are_repository_bounded() -> None:
     (
         ("claim_ids", ["ad-missing-999"], "claim ID"),
         ("critique_ids", ["crit-missing"], "critique ID"),
-        ("workflow_paths", ["scripts/missing.py"], "workflow path"),
+        (
+            "workflow_artifacts",
+            [
+                {
+                    "path": "scripts/missing.py",
+                    "sha256": "0" * 64,
+                    "source_revision": "0" * 40,
+                }
+            ],
+            "workflow artifact",
+        ),
     ),
 )
-def test_authority_links_must_resolve(field: str, value: list[str], message: str) -> None:
+def test_authority_links_must_resolve(field: str, value: list[object], message: str) -> None:
     library = copy.deepcopy(_canonical())
     links = _protocol(library)["links"]
     assert isinstance(links, dict)
@@ -136,6 +163,69 @@ def test_analysis_contract_mutation_invalidates_revision() -> None:
         validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
 
 
+def test_lifecycle_mutation_invalidates_record_revision() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    protocol["authority_boundary"] = "A silently changed authority boundary."
+
+    with pytest.raises(ResearchReadinessError, match="record revision mismatch"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_catalog_indexes_every_completed_e1_through_e8_program() -> None:
+    protocols = _canonical()["protocols"]
+    assert isinstance(protocols, list)
+
+    assert len(protocols) == 8
+    assert {row["companion_issue"] for row in protocols} == {
+        4033,
+        4034,
+        4035,
+        4036,
+        4037,
+        4038,
+        4039,
+        4040,
+    }
+    assert {row["state"] for row in protocols} == {"simulation-ready"}
+    assert {row["evidence_origin"] for row in protocols} <= {
+        "analytical",
+        "manufactured-synthetic",
+        "modeled",
+    }
+
+
+def test_duplicate_json_keys_are_rejected(tmp_path: Path) -> None:
+    duplicate = tmp_path / "duplicate.json"
+    duplicate.write_text(
+        '{"schema_version":"first","schema_version":"second","protocols":[]}',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ResearchReadinessError, match="Duplicate JSON key"):
+        load_library(duplicate, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
+def test_artifact_and_route_audit_links_are_exact_byte_joined() -> None:
+    library = copy.deepcopy(_canonical())
+    protocol = _protocol(library)
+    links = protocol["links"]
+    assert isinstance(links, dict)
+    artifacts = links["workflow_artifacts"]
+    assert isinstance(artifacts, list) and isinstance(artifacts[0], dict)
+    artifacts[0]["sha256"] = "0" * 64
+
+    with pytest.raises(ResearchReadinessError, match="artifact digest mismatch"):
+        validate_library(library, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+    dangling = copy.deepcopy(_canonical())
+    dangling_links = _protocol(dangling)["links"]
+    assert isinstance(dangling_links, dict)
+    dangling_links["route_audit_ids"] = ["ad-route-000000000000"]
+    with pytest.raises(ResearchReadinessError, match="route audit ID"):
+        validate_library(dangling, SCHEMA, CLAIMS, CRITIQUES, ROOT)
+
+
 def test_public_summary_preserves_readiness_and_authority_boundaries() -> None:
     summary = build_public_summary(_canonical())
     protocol = summary["protocols"][0]
@@ -146,4 +236,6 @@ def test_public_summary_preserves_readiness_and_authority_boundaries() -> None:
     assert protocol["authorizes_claim_promotion"] is False
     assert protocol["evidence_origin"] == "manufactured-synthetic"
     assert protocol["unavailable_boundaries"]
+    assert "evidence" not in json.dumps(summary)
+    assert "custodian" not in json.dumps(summary)
     assert json.dumps(summary, sort_keys=True) == json.dumps(summary, sort_keys=True)
