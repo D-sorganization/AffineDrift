@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 17
+- Reviewed: 18
 - Deferred: 206
 - Exempt: 2
 
@@ -29,6 +29,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
+| `/models/neural-timing-feedback.html` | `models/neural-timing-feedback.qmd` | 8 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
 | `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
@@ -231,6 +232,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-5776cb8aebbe` | `/models/models-simulink.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-50bd3b182f9b` | `/models/models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-8debf6763c2e` | `/models/neural-timing-feedback.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | None | None | 0 |
 | `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | — | None | None | 1 |
 | `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | — | None | None | 1 |

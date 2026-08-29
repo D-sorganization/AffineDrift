@@ -10,6 +10,51 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## Neural Timing and Feedback Perturbation Experiments (#4037 — In Progress)
+
+- Branch `feat/4037-neural-timing-feedback` started from exact protected main
+  `14f220052eb204dfdff6cf2b4ea51eebcd08a819` in isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4037-e4`. The lease is
+  recorded on #4037. Scope is preregisterable protocol and deterministic
+  analytic/synthetic feasibility only; no participant result, device
+  qualification, or UpstreamDrift authority changes are present.
+- `neural_timing_protocol.py` freezes primary-source scope, phases, three
+  perturbation modalities, exact sham joins, calibrated channels, physical
+  onset witnesses, four observation layers, hierarchical hypotheses, target
+  power, Holm families, expectation, learning/history, uncertainty, and a
+  permanently non-authorizing human boundary. Runtime Literal domains,
+  identifiers, modality/window cardinality, and all cross-record references
+  fail closed.
+- `neural_timing_analysis.py` provides persistent-threshold onset detection,
+  original-order Holm step-down decisions, typed interval dispositions, and
+  evidence provenance that prohibits silent synthetic-to-measured promotion.
+  `neural_timing_fixtures.py` contains only manufactured values. Its direct
+  mechanical effect precedes its EMG response, proving the public timing layers
+  cannot be interpreted as one serial pathway.
+- The primary-source map separates mechanical, visual, auditory, and
+  expectation evidence from general upper-limb tasks from the single
+  golf-specific novice-putting visual-occlusion source. None authorizes elite
+  or full-swing transport, universal latency bands, unique neural pathways,
+  individual-muscle forces, coaching, or clinical claims.
+- `/models/neural-timing-feedback.html` is reviewed audit
+  `ad-route-8debf6763c2e`. Under claim-audit schema v1.1, its exact SHA-256 map
+  binds canonical `models/neural-timing-feedback.qmd`, the recursively included
+  authority and human boundaries, the bibliography, all three executable
+  modules, and its focused test. The inventory contains 18 reviewed, 206
+  deferred, and 2 exempt routes; the protected deferred partition is unchanged.
+- RED evidence is commit `073cfdde`: focused collection failed because the
+  protocol modules did not exist. After the public route was authored, the
+  content lane retained one exact RED failure because no reviewed audit record
+  existed. Current GREEN evidence is 17 focused executable contracts, 2
+  focused content/audit contracts, and 14 claim-audit contracts. Final full
+  Python/content/JS/lint/render/browser and exact protected-base reconciliation
+  remain required before the PR opens.
+- Human collection remains unavailable. External ethics, privacy, consent,
+  licensing, device-risk, calibration, stopping-rule, power, held-out-analysis,
+  and independent-release records are required before participant work. The
+  software cannot authorize collection or promote a fixture to measured human
+  evidence.
+
 ## Active Impedance and Co-Contraction Identification (#4036 — In Progress)
 
 - Branch `feat/4036-active-impedance-identification` started from exact
