@@ -18,14 +18,14 @@ from src.affine_control.impedance_emg import EmgChannel, EmgPairDeclaration
 from src.affine_control.impedance_evidence import HumanStudyGate
 
 type FloatArray = NDArray[np.float64]
-SourceType = Literal["primary-literature", "measurement-standard"]
+SourceType = Literal["primary-literature", "method-recommendation", "measurement-standard"]
 WindowType = Literal["baseline", "early-response", "late-response"]
 OutputQuantity = Literal["endpoint-wrench", "joint-torque"]
 AdverseOutcome = Literal["negative", "null", "unavailable"]
 
 PARAMETER_NAMES = ("inertia", "damping", "stiffness", "reflex_gain", "voluntary_basis")
 WINDOW_TYPES = ("baseline", "early-response", "late-response")
-_SOURCE_TYPES = ("primary-literature", "measurement-standard")
+_SOURCE_TYPES = ("primary-literature", "method-recommendation", "measurement-standard")
 _OUTPUT_QUANTITIES = ("endpoint-wrench", "joint-torque")
 _ADVERSE_OUTCOMES = ("negative", "null", "unavailable")
 
@@ -48,9 +48,20 @@ def _finite_positive(values: tuple[float, ...], label: str) -> None:
         raise ValueError(f"{label} must be finite and positive")
 
 
+def _validate_identification_gates(
+    rank_tolerance: float,
+    maximum_condition_number: float,
+) -> None:
+    """Require meaningful relative-rank and condition-number domains."""
+    if not isfinite(rank_tolerance) or not 0.0 < rank_tolerance < 1.0:
+        raise ValueError("rank tolerance must be finite and strictly between zero and one")
+    if not isfinite(maximum_condition_number) or maximum_condition_number < 1.0:
+        raise ValueError("maximum condition number must be finite and at least one")
+
+
 @dataclass(frozen=True)
 class EvidenceSource:
-    """One primary or measurement-standard source and its authority limit."""
+    """One literature, method-recommendation, or standard source and its authority limit."""
 
     source_id: str
     source_type: SourceType
@@ -61,7 +72,10 @@ class EvidenceSource:
     def __post_init__(self) -> None:
         """Require complete source provenance and a valid runtime domain."""
         if self.source_type not in _SOURCE_TYPES:
-            raise ValueError("source type must be primary-literature or measurement-standard")
+            raise ValueError(
+                "source type must be primary-literature, method-recommendation, "
+                "or measurement-standard"
+            )
         for value, label in (
             (self.source_id, "source_id"),
             (self.citation, "citation"),
@@ -192,10 +206,8 @@ class IdentificationModel:
             _require_text(value, label)
         if self.parameter_names != PARAMETER_NAMES:
             raise ValueError("model parameters must follow the frozen identification order")
-        _finite_positive(
-            (self.reflex_delay_ms, self.rank_tolerance, self.maximum_condition_number),
-            "identification limits",
-        )
+        _finite_positive((self.reflex_delay_ms,), "identification delay")
+        _validate_identification_gates(self.rank_tolerance, self.maximum_condition_number)
 
 
 @dataclass(frozen=True)
@@ -255,7 +267,9 @@ class ImpedanceProtocol:
         for values, label in collections:
             if not values or len(set(values)) != len(values):
                 raise ValueError(f"{label} must be nonempty and unique")
-        if {model.output_quantity for model in self.models} != set(_OUTPUT_QUANTITIES):
+        if len(self.models) != len(_OUTPUT_QUANTITIES) or {
+            model.output_quantity for model in self.models
+        } != set(_OUTPUT_QUANTITIES):
             raise ValueError("exactly one endpoint and joint identification model are required")
         channel_by_id = {channel.channel_id: channel for channel in self.emg_channels}
         for pair in self.emg_pairs:
@@ -297,10 +311,7 @@ def assess_identifiability(
     matrix = np.asarray(design, dtype=float)
     if matrix.ndim != 2 or matrix.size == 0 or not np.all(np.isfinite(matrix)):
         raise ValueError("design matrix must be finite, nonempty, and two-dimensional")
-    _finite_positive(
-        (rank_tolerance, maximum_condition_number),
-        "rank and condition limits",
-    )
+    _validate_identification_gates(rank_tolerance, maximum_condition_number)
     observations, parameters = matrix.shape
     singular_values = np.linalg.svd(matrix, compute_uv=False)
     cutoff = rank_tolerance * singular_values[0]

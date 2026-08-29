@@ -14,6 +14,7 @@ EvidenceTier = Literal[
 ]
 Outcome = Literal["supported", "negative", "null", "unavailable"]
 RecordStatus = Literal["pending-external", "approved-external"]
+EvidenceOrigin = Literal["synthetic-fixture", "measured", "model-estimated", "unavailable"]
 RecordType = Literal[
     "ethics-approval",
     "risk-assessment",
@@ -33,6 +34,7 @@ _EVIDENCE_TIERS = (
     "unavailable",
 )
 _OUTCOMES = ("supported", "negative", "null", "unavailable")
+_EVIDENCE_ORIGINS = ("synthetic-fixture", "measured", "model-estimated", "unavailable")
 _RECORD_STATUSES = ("pending-external", "approved-external")
 _RECORD_TYPES = (
     "ethics-approval",
@@ -62,6 +64,27 @@ def _require_text(value: str, label: str) -> None:
 
 
 @dataclass(frozen=True)
+class EvidenceProvenance:
+    """Machine-readable result origin that prevents silent synthetic promotion."""
+
+    origin: EvidenceOrigin
+    record_id: str
+    revision: str
+    synthetic_fixture: bool
+
+    def __post_init__(self) -> None:
+        """Require a runtime origin and a consistent synthetic-fixture marker."""
+        if self.origin not in _EVIDENCE_ORIGINS:
+            raise ValueError("evidence origin is not declared")
+        _require_text(self.record_id, "provenance record_id")
+        _require_text(self.revision, "provenance revision")
+        if self.origin == "synthetic-fixture" and not self.synthetic_fixture:
+            raise ValueError("synthetic-fixture origin requires its explicit fixture marker")
+        if self.origin != "synthetic-fixture" and self.synthetic_fixture:
+            raise ValueError(f"{self.origin} origin cannot retain synthetic-fixture provenance")
+
+
+@dataclass(frozen=True)
 class ImpedanceResult:
     """One tiered result with uncertainty, sensitivity, and adverse outcome."""
 
@@ -73,6 +96,7 @@ class ImpedanceResult:
     outcome: Outcome
     sensitivity_parameters: tuple[str, ...]
     interpretation: str
+    provenance: EvidenceProvenance
 
     def __post_init__(self) -> None:
         """Reject contradictory or over-authoritative result records."""
@@ -83,6 +107,10 @@ class ImpedanceResult:
             raise ValueError("evidence tier and outcome must be declared")
         if any(phrase in self.interpretation.lower() for phrase in _AUTHORITY_PHRASES):
             raise ValueError("interpretation exceeds the authority boundary")
+        if self.provenance.origin == "synthetic-fixture" and "synthetic" not in (
+            self.interpretation.lower()
+        ):
+            raise ValueError("synthetic results must retain an explicit synthetic interpretation")
         if self.evidence_tier == "unavailable" or self.outcome == "unavailable":
             self._validate_unavailable()
             return
@@ -94,6 +122,8 @@ class ImpedanceResult:
             raise ValueError("unavailable tier and outcome must agree")
         if self.estimate is not None or self.uncertainty_interval is not None:
             raise ValueError("unavailable results cannot contain estimates")
+        if self.provenance.origin != "unavailable":
+            raise ValueError("unavailable results require unavailable provenance")
 
     def _validate_available(self) -> None:
         """Require finite estimates, complete intervals, and sensitivity inputs."""
@@ -108,6 +138,8 @@ class ImpedanceResult:
             not value.strip() for value in self.sensitivity_parameters
         ):
             raise ValueError("sensitivity parameters must be declared")
+        if self.provenance.origin == "unavailable":
+            raise ValueError("available results cannot use unavailable provenance")
 
 
 @dataclass(frozen=True)

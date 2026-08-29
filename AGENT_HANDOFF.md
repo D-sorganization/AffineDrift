@@ -20,13 +20,20 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - `impedance_protocol.py`, `impedance_evidence.py`, `impedance_emg.py`,
   `impedance_sources.py`, and `impedance_fixtures.py` freeze primary sources,
   device safety, phases and zero-anchored windows, endpoint/joint models,
-  excitation, one relative rank/fit tolerance, governed EMG pair/formula
+  exact endpoint/joint cardinality, excitation, one bounded relative rank/fit
+  tolerance, governed EMG pair/formula
   declarations, uncertainty, reliability, adverse outcomes, and the human
   boundary.
+- Hermens et al. is classified as a journal method-recommendation article, not
+  a formal measurement standard; its placement guidance carries no force,
+  crosstalk-elimination, or participant authority.
 - Exact phase fixtures recover manufactured effective parameters. The negative
   control makes stiffness and a voluntary-like basis collinear and fails closed
   at rank four/nullity one. A near-singular regression proves rank qualification
   and `lstsq` use the same declared cutoff.
+- Every result carries a typed evidence origin, record ID, revision, and
+  synthetic-fixture marker. The current numerical ledger is synthetic only;
+  the DbC layer rejects silent relabeling as measured evidence.
 - The amplitude-driven CCI proxy requires exact same-side agonist/antagonist
   channel IDs, roles, normalization revision, formula, comparison scope, and
   sensitivity plan. Direct cross-index value comparison is prohibited. It is
@@ -43,6 +50,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   After ordinary reconciliation with protected #4063, the combined inventory
   contains 17 reviewed, 206 deferred, and 2 exempt routes; the #4063
   site-surface records and dispositions are preserved.
+- Claim-audit `review_commit` values use the current reviewed-content convention;
+  squash merges can leave those commits outside protected-main ancestry. Issue
+  #4067 owns the central digest-based migration. This PR retains
+  `c6c2e37505526afbf849ae9bf2e58399f6f3af11` and does not invent a merge SHA.
 - RED evidence: the initial focused suite failed during collection because the
   protocol modules did not exist. Review-led RED cases then exposed the rank
   tolerance mismatch, arbitrary-string human authorization, non-zero-anchored

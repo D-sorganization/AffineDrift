@@ -15,7 +15,11 @@ from src.affine_control.impedance_emg import (
     FormulaId,
     Side,
 )
-from src.affine_control.impedance_evidence import HumanStudyGate, ImpedanceResult
+from src.affine_control.impedance_evidence import (
+    EvidenceProvenance,
+    HumanStudyGate,
+    ImpedanceResult,
+)
 from src.affine_control.impedance_protocol import (
     PARAMETER_NAMES,
     Hypothesis,
@@ -331,6 +335,12 @@ def manufactured_results() -> tuple[ImpedanceResult, ...]:
             "supported",
             ("passive tissue basis", "perturbation bandwidth"),
             "The synthetic mechanical response closes inside its declared interval.",
+            EvidenceProvenance(
+                "synthetic-fixture",
+                "active-impedance-transition-v1",
+                "manufactured-fixture/v1",
+                True,
+            ),
         ),
         ImpedanceResult(
             "reflex-basis recovery error",
@@ -341,6 +351,12 @@ def manufactured_results() -> tuple[ImpedanceResult, ...]:
             "negative",
             ("reflex delay", "passive basis", "voluntary basis"),
             "The adverse synthetic basis exceeds its preregistered recovery tolerance.",
+            EvidenceProvenance(
+                "synthetic-fixture",
+                "active-impedance-confounded-v1",
+                "manufactured-fixture/v1",
+                True,
+            ),
         ),
         ImpedanceResult(
             "agonist-antagonist envelope overlap",
@@ -350,7 +366,13 @@ def manufactured_results() -> tuple[ImpedanceResult, ...]:
             "normalized proxy",
             "null",
             ("electrode placement", "EMG normalization", "muscle-pair selection"),
-            "The proxy interval supports no unique mechanical partition.",
+            "The synthetic proxy interval supports no unique mechanical partition.",
+            EvidenceProvenance(
+                "synthetic-fixture",
+                "active-impedance-emg-pair-v1",
+                "manufactured-fixture/v1",
+                True,
+            ),
         ),
         ImpedanceResult(
             "individual biological actuator contribution",
@@ -361,6 +383,12 @@ def manufactured_results() -> tuple[ImpedanceResult, ...]:
             "unavailable",
             (),
             "No declared observation identifies the requested biological source.",
+            EvidenceProvenance(
+                "unavailable",
+                "active-impedance-unavailable-actuator-v1",
+                "result-ledger/v1",
+                False,
+            ),
         ),
     )
 

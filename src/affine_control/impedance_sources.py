@@ -45,7 +45,7 @@ def primary_sources() -> tuple[EvidenceSource, ...]:
         ),
         EvidenceSource(
             "hermens-et-al-2000",
-            "measurement-standard",
+            "method-recommendation",
             "Hermens et al. (2000), J Electromyogr Kinesiol, " "doi:10.1016/S1050-6411(00)00027-4",
             "surface-EMG sensor and placement recommendations",
             "placement guidance does not eliminate crosstalk or identify muscle force",
