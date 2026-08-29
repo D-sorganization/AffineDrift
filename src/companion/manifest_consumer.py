@@ -135,11 +135,15 @@ class HttpFetcher:
 
 
 def _sha256(data: bytes) -> str:
+    """Return the lowercase SHA-256 digest for exact candidate bytes."""
     return hashlib.sha256(data).hexdigest()
 
 
 def _strict_json(data: bytes | str, label: str) -> object:
+    """Parse UTF-8 JSON while rejecting ambiguous duplicate object keys."""
+
     def reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+        """Build one object or reject the first repeated key."""
         result: dict[str, object] = {}
         for key, value in pairs:
             if key in result:
@@ -154,6 +158,7 @@ def _strict_json(data: bytes | str, label: str) -> object:
 
 
 def _json_object(data: bytes, label: str) -> dict[str, object]:
+    """Parse strict JSON bytes and require an object at the root."""
     value = _strict_json(data, label)
     if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
         raise CompanionImportError(f"{label} must be a JSON object")
@@ -161,6 +166,7 @@ def _json_object(data: bytes, label: str) -> dict[str, object]:
 
 
 def _schema_errors(instance: object, schema: object) -> list[str]:
+    """Return stable, path-qualified Draft 2020-12 validation errors."""
     if not isinstance(schema, dict):
         return ["schema must be an object"]
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
@@ -188,6 +194,7 @@ def validate_lock(lock: object, lock_schema_path: Path) -> dict[str, object]:
 
 
 def _pin_url(pin: CompanionPin, url: str, kind: str, *, redirected: bool = False) -> None:
+    """Require one immutable, approved raw-provider URL and exact path."""
     try:
         parsed = urllib.parse.urlsplit(url)
         port = parsed.port
@@ -222,6 +229,7 @@ def _pin_url(pin: CompanionPin, url: str, kind: str, *, redirected: bool = False
 
 
 def _validate_pin_identity(pin: CompanionPin) -> None:
+    """Require the allowlisted provider and one exact nonzero revision."""
     if pin.provider_host != PROVIDER_HOST:
         raise CompanionImportError("provider host is not allowlisted")
     if pin.provider_repository != PROVIDER_REPOSITORY:
@@ -231,6 +239,7 @@ def _validate_pin_identity(pin: CompanionPin) -> None:
 
 
 def _validate_pin_digests(pin: CompanionPin) -> None:
+    """Require nonzero lowercase SHA-256 manifest and schema digests."""
     if _DIGEST.fullmatch(pin.manifest_sha256) is None:
         raise CompanionImportError("manifest SHA-256 is invalid")
     if _DIGEST.fullmatch(pin.schema_sha256) is None:
@@ -238,6 +247,7 @@ def _validate_pin_digests(pin: CompanionPin) -> None:
 
 
 def _validate_acquisition(pin: CompanionPin) -> None:
+    """Validate the manifest acquisition mode and provider generator facts."""
     if pin.manifest_provider_path != MANIFEST_PROVIDER_PATH:
         raise CompanionImportError("manifest provider path is not approved")
     if pin.generator_command != PROVIDER_GENERATOR_COMMAND:
@@ -254,6 +264,7 @@ def _validate_acquisition(pin: CompanionPin) -> None:
 
 
 def _validate_pin(pin: CompanionPin) -> None:
+    """Validate every reviewer-supplied identity and acquisition precondition."""
     _validate_pin_identity(pin)
     _validate_pin_digests(pin)
     _validate_acquisition(pin)
@@ -261,6 +272,7 @@ def _validate_pin(pin: CompanionPin) -> None:
 
 
 def _pin_from_lock(lock: Mapping[str, object]) -> CompanionPin:
+    """Reconstruct the typed reviewer pin from a schema-valid lock."""
     provider = lock.get("provider")
     if not isinstance(provider, dict):
         raise CompanionImportError("active provider lock is invalid")
@@ -281,6 +293,7 @@ def _pin_from_lock(lock: Mapping[str, object]) -> CompanionPin:
 
 
 def _validate_lock_semantics(lock: Mapping[str, object]) -> None:
+    """Enforce cross-field lock invariants beyond JSON Schema structure."""
     pin = _pin_from_lock(lock)
     _validate_pin(pin)
     provider = lock.get("provider")
@@ -303,6 +316,7 @@ def _validate_lock_semantics(lock: Mapping[str, object]) -> None:
 
 
 def _provider_schema_identity(schema: Mapping[str, object]) -> None:
+    """Require the supported provider schema identity and version constants."""
     if schema.get("$id") != PROVIDER_SCHEMA_ID:
         raise CompanionImportError("provider schema ID is unsupported")
     if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
@@ -319,6 +333,7 @@ def _provider_schema_identity(schema: Mapping[str, object]) -> None:
 
 
 def _reject_external_references(value: object) -> None:
+    """Reject provider schemas that could resolve references off-document."""
     if isinstance(value, dict):
         reference = value.get("$ref")
         if reference is not None and (
@@ -333,6 +348,7 @@ def _reject_external_references(value: object) -> None:
 
 
 def _provider_schema_contract(schema: Mapping[str, object]) -> None:
+    """Validate provider schema identity, dialect, structure, and isolation."""
     _provider_schema_identity(schema)
     try:
         Draft202012Validator.check_schema(schema)
@@ -342,6 +358,7 @@ def _provider_schema_contract(schema: Mapping[str, object]) -> None:
 
 
 def _embedded_source(manifest: Mapping[str, object]) -> tuple[str, str]:
+    """Extract the manifest's embedded repository and revision identity."""
     source = manifest.get("source")
     if not isinstance(source, dict):
         raise CompanionImportError("manifest source must be an object")
@@ -355,6 +372,7 @@ def _embedded_source(manifest: Mapping[str, object]) -> tuple[str, str]:
 def _validate_payloads(
     pin: CompanionPin, manifest_bytes: bytes, schema_bytes: bytes
 ) -> tuple[dict[str, object], dict[str, object]]:
+    """Validate bounded bytes, digests, schema, and embedded source identity."""
     _validate_pin(pin)
     if len(manifest_bytes) > MAX_MANIFEST_BYTES:
         raise CompanionImportError(f"manifest exceeds {MAX_MANIFEST_BYTES} bytes")
@@ -379,6 +397,7 @@ def _validate_payloads(
 
 
 def _provenance(pin: CompanionPin) -> bytes:
+    """Render the deterministic snapshot provenance and authority boundary."""
     acquisition = (
         "reviewed protected local export (no manifest URL)"
         if pin.manifest_url is None
@@ -405,6 +424,7 @@ def _provenance(pin: CompanionPin) -> bytes:
 
 
 def _lock_document(pin: CompanionPin, manifest_size: int, schema_size: int) -> dict[str, object]:
+    """Build the canonical active-lock document for one immutable snapshot."""
     directory = f"snapshots/{pin.commit}"
     return {
         "schema_version": LOCK_VERSION,
@@ -441,10 +461,12 @@ def _lock_document(pin: CompanionPin, manifest_size: int, schema_size: int) -> d
 
 
 def _canonical_json(value: object) -> bytes:
+    """Serialize deterministic UTF-8 JSON with sorted keys and final newline."""
     return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
 
 
 def _safe_relative(root: Path, relative: str) -> Path:
+    """Resolve a normalized lock path while containing it under the root."""
     path = PurePosixPath(relative)
     if path.is_absolute() or any(part in {".", ".."} for part in path.parts):
         raise CompanionImportError(f"lock path is not normalized: {relative}")
@@ -458,10 +480,12 @@ def _safe_relative(root: Path, relative: str) -> Path:
 
 
 def _write_bytes(path: Path, payload: bytes) -> None:
+    """Write one staged payload through the injectable filesystem boundary."""
     path.write_bytes(payload)
 
 
 def _read_bounded_file(path: Path, max_bytes: int, label: str) -> bytes:
+    """Read at most one byte beyond the declared local payload limit."""
     try:
         with path.open("rb") as stream:
             payload = stream.read(max_bytes + 1)
@@ -483,6 +507,7 @@ class CompanionConsumer:
         replace: Callable[[Path, Path], None] = os.replace,
         write_bytes: Callable[[Path, bytes], None] = _write_bytes,
     ) -> None:
+        """Configure one consumer root and injectable atomic I/O adapters."""
         self._root = root
         self._lock_schema_path = lock_schema_path
         self._replace = replace
@@ -518,6 +543,7 @@ class CompanionConsumer:
     def _snapshot_payloads(
         self, pin: CompanionPin, manifest: bytes, schema: bytes
     ) -> dict[str, bytes]:
+        """Return the complete deterministic file set for a snapshot."""
         return {
             MANIFEST_NAME: manifest,
             PROVIDER_SCHEMA_NAME: schema,
@@ -526,6 +552,7 @@ class CompanionConsumer:
 
     @staticmethod
     def _verify_existing_snapshot(snapshot: Path, expected: Mapping[str, bytes]) -> None:
+        """Require an existing revision directory to match every expected byte."""
         actual_files = {path.name for path in snapshot.iterdir() if path.is_file()}
         if actual_files != set(expected):
             raise CompanionImportError("existing immutable snapshot conflicts with reviewed bytes")
@@ -536,6 +563,7 @@ class CompanionConsumer:
                 )
 
     def _write_staged_snapshot(self, expected: Mapping[str, bytes], snapshots: Path) -> Path:
+        """Write a complete temporary snapshot and clean partial writes."""
         stage = Path(tempfile.mkdtemp(prefix=".companion-stage-", dir=snapshots))
         try:
             for name, payload in expected.items():
@@ -596,6 +624,7 @@ class CompanionConsumer:
         return self.verify_active()
 
     def _load_lock(self) -> dict[str, object]:
+        """Load and fully validate the active lock without following its paths."""
         try:
             payload = self.lock_path.read_bytes()
         except OSError as exc:
