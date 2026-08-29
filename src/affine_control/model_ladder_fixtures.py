@@ -39,6 +39,15 @@ class ParityFixture:
     intervention: str
     states: tuple[FixtureState, ...]
 
+    def __post_init__(self) -> None:
+        """Require named fixture semantics and at least one state."""
+        if not self.fixture_id.strip():
+            raise ValueError("fixture_id must be declared")
+        if not self.intervention.strip():
+            raise ValueError("fixture intervention must be declared")
+        if not self.states:
+            raise ValueError("fixture states must be declared")
+
 
 @dataclass(frozen=True)
 class ConvergenceSample:
@@ -69,6 +78,16 @@ def adjacent_projection_residuals(
     fixture: ParityFixture,
 ) -> dict[str, float]:
     """Compute maximum coordinate residual for each adjacent projection."""
+    state_ids = tuple(state.level_id for state in fixture.states)
+    if len(set(state_ids)) != len(state_ids):
+        raise ValueError("duplicate fixture state for the same model level")
+    expected_ids = tuple(level.level_id for level in protocol.levels)
+    if set(state_ids) != set(expected_ids) or len(state_ids) != len(expected_ids):
+        raise ValueError("fixture must contain exactly one state per protocol level")
+    level_lengths = {level.level_id: len(level.coordinates) for level in protocol.levels}
+    for state in fixture.states:
+        if len(state.values) != level_lengths[state.level_id]:
+            raise ValueError("fixture state vector length must match declared coordinates")
     states = {state.level_id: state for state in fixture.states}
     residuals: dict[str, float] = {}
     for child in protocol.levels[1:]:

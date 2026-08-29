@@ -83,6 +83,8 @@ class ModelLevel:
             raise ValueError("coordinates and units must be nonempty and aligned")
         _require_text_tuple(self.coordinates, "coordinates")
         _require_text_tuple(self.units, "coordinate units")
+        if len(set(self.coordinates)) != len(self.coordinates):
+            raise ValueError("coordinate names must be unique within a model level")
         _require_text(self.frame, "coordinate frame")
         _require_text_tuple(self.included_physics, "included physics")
         _require_text_tuple(self.omitted_physics, "omitted physics")
@@ -205,6 +207,24 @@ class TaskAssessment:
             self.evidence_status,
             self.outcome,
         )
+        self._validate_sufficiency()
+
+    def _validate_sufficiency(self) -> None:
+        """Reject contradictory outcome and task-sufficiency declarations."""
+        if self.outcome == "unavailable":
+            if self.sufficient is not None:
+                raise ValueError("unavailable outcomes require sufficient=None")
+            return
+        if self.outcome in ("negative", "null"):
+            if self.sufficient is not False:
+                raise ValueError("negative and null outcomes require sufficient=False")
+            return
+        if self.sufficient is not True:
+            raise ValueError("supported outcomes require sufficient=True")
+        if self.uncertainty_interval is None:
+            raise ValueError("supported outcomes require a complete uncertainty interval")
+        if max(abs(value) for value in self.uncertainty_interval) > self.tolerance:
+            raise ValueError("the complete interval must meet the declared tolerance")
 
 
 def _validate_result_fields(
@@ -300,6 +320,9 @@ def minimum_sufficient_level(
 ) -> LevelId | None:
     """Return the least complex level meeting its declared task tolerance."""
     _require_text(task_id, "task_id")
+    keys = tuple((row.task_id, row.level_id) for row in assessments)
+    if len(set(keys)) != len(keys):
+        raise ValueError("duplicate task assessment for the same task and level")
     by_level = {row.level_id: row for row in assessments if row.task_id == task_id}
     for level in protocol.levels:
         assessment = by_level.get(level.level_id)
