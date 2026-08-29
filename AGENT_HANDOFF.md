@@ -10,11 +10,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Ultimate Companion Planar-Scope Repair (#4015 — PR #4045 Open)
+## Ultimate Companion Planar-Scope Repair (#4015 — PR #4045 Merged)
 
 - Epic #4008 coordinates the companion program; issue #4015 removes two
   unsupported planar 90 percent fidelity claims.
-- Branch `feat/4015-planar-spatial-scope` replaces them with an explicit
+- Protected merge `7b1ccde2afb103f200e0d4a010411560471bb6f4` replaces them with an explicit
   pedagogical planar-model boundary and the evidence contract required before
   any quantitative 2-D-to-3-D comparison can be published.
 - Required focused gate:
@@ -23,8 +23,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
   (3,252 passed, 29 skipped, 63 deselected) pass; Ruff, Black, focused strict
   mypy, terminology, and two isolated Quarto renders pass. The revised critic
   response was inspected at 1440 x 1000 with the disclosure expanded and has
-  no overflow or clipping. Merge only through an ordinary protected PR; do not
-  close #4015 on local evidence alone.
+  no overflow or clipping. All exact-head hosted gates passed before the
+  ordinary protected squash merge.
 - After merging protected DCR PR #4044, the combined planar-scope, DCR, and
   mechanical-claim selection passes 14 tests; the repository content-lint lane
   passes 68 tests with 4 documented skips and 3,284 deselections. Black, Ruff,
@@ -249,6 +249,23 @@ AffineDrift is the publication home of textbooks (_The Physics of Golf_, _The Ge
 - Drift is the complete autonomous vector field of the declared plant.
 - Zero declared control does not mean zero muscle activation or effort.
 - DCR compares drift with bounded control capacity.
+
+## Scientific Trust Remediation (#4012)
+
+- PR #4046 on branch `feat/4012-scientific-trust` corrects the A1 control-affinity and
+  attribution defects across Theory Parts 1-2, the foundational monograph, and
+  the single-file manifesto.
+- A state-dependent gain belongs in $G(x)$ and does not by itself make a system
+  non-affine in the declared input; state-only aerodynamics belong in $f(x)$.
+- Additivity is not orthogonality. Drift and input vectors may align, oppose, or
+  be oblique under a declared metric.
+- The shared `_includes/control-affine-attribution-boundary.qmd` is the rendered
+  authority boundary: attribution is conditional on model, coordinates,
+  declared input, parameters, intervention, horizon, and identifiability.
+  Algebra alone does not identify intent, individual-muscle forces, biological
+  effort, or a unique real-world cause.
+- `tests/test_control_affine_scientific_trust.py` is the corpus contract and must
+  remain in the `content_lint` CI lane.
 
 ## Gate Commands & Verification
 
