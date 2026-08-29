@@ -18,7 +18,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   shaft dynamics or contain participant or commercial-equipment measurements.
   Ordinary merge `bf3e026d` reconciles protected neural-timing main
   `e7dbdc538a3f9edcc60ec8bd578fb5a7d747aa4e` while preserving both reviewed
-  routes and their exact-byte evidence.
+  routes and their exact-byte evidence. Final ordinary merge `1e2fa959`
+  reconciles protected population-generalization main
+  `32969fa53be7c7402c02eefbdf06cc8689322400` as the next independent reviewed
+  route without weakening either contract.
 - RED commits `3796f9f6` and `9d3001f5` freeze the executable and publication
   contracts before their modules, bibliography records, public route, or audit
   evidence existed. GREEN commits `edc3f1fd`, `2ab784c5`, and `5b221cb8` add
@@ -49,18 +52,18 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `ad-route-610504f8ac44`, bound to content commit
   `2ab784c58b5d58e40ed40bd04ed3c0284fd901cc` and exact SHA-256 evidence for
   its QMD, three implementation modules, and two test files. The inventory has
-  26 reviewed, 200 deferred, and 2 exempt routes after reconciliation with
-  protected neural-timing main.
+  27 reviewed, 200 deferred, and 2 exempt routes after reconciliation with
+  protected neural-timing and population-generalization main.
 - Focused equipment executable, content, and audit evidence is 33/33 green.
   Quarto 1.8.26 renders the route; desktop 1440 x 1000 and mobile 390 x 844
   inspection verifies one H1, five responsive locally scrolling tables, seven
   rendered mathematics containers, no body overflow, and no site-originated
-  browser warnings or errors. At exact integration head `cb692095`, the default
-  Python lane passes 3,449 tests with 29 documented skips and 93.15% coverage;
-  the content lane passes 105 tests with 4 documented skips; and Jest passes
+  browser warnings or errors. At exact final integration head `1e2fa959`, the
+  default Python lane passes 3,460 tests with 29 documented skips and 93.19%
+  coverage; the content lane passes 108 tests with 4 documented skips; and Jest passes
   297 tests with 19 documented skips. Full Ruff/Black, focused strict mypy,
   code quality, module and changed-file budgets, pre-commit, bibliography and
-  citation gates, Quarto source gates, 229-URL bidirectional render coverage,
+  citation gates, Quarto source gates, 230-URL bidirectional render coverage,
   deterministic audit reports, and publication enforcement pass. Hosted
   protected gates remain to be run after final protected-main reconciliation.
   No product or fitting recommendation and no coaching, clinical, design,
