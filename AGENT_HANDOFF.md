@@ -189,6 +189,38 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Stylelint, Ruff, Black, and strict MyPy gates pass.
   Protected PR checks remain pending.
 
+## Full Rendered-Route Scientific Claim Audit (#4021 — In Development)
+
+- Lease `codex-20260829-affine-a10` is recorded at issue comment
+  `#issuecomment-5461176202`. The isolated branch started from local #4020 head
+  `76abdad507c3e1e4ef6ccacd0a6e696c29d7fb7a`; #4020 has since protected-merged
+  as `e3501e09e9914c134e4a5c0f189159028ca23f68` and must be reconciled by an
+  ordinary merge before publication.
+- `schemas/claim-audit-inventory-v1.schema.json` and
+  `data/trust/claim_audit_inventory.json` own route-level audit state only.
+  Stable IDs are SHA-256-derived from canonical routes. Claim and critique
+  fields contain IDs only and must match the exact route joins derived from the
+  protected #4019 registry and #4020 ledger.
+- The post-prune Quarto 1.8.26 render contains 222 public routes: 219 are
+  explicitly deferred to #4021, the static 404/offline system routes are
+  narrowly exempt, and the DCR route is reviewed against protected #4013/#4019
+  evidence. No route is absent or silently treated as reviewed.
+- P0/P1 findings may be `corrected` or `publication_blocked`; open/deferred
+  states fail validation, and any `publication_blocked` P0/P1 record stops the
+  deploy workflow. Every finding requires a linked AffineDrift issue and
+  rationale. Corrected findings additionally require local evidence paths and a
+  verification commit.
+- `scripts/generate_claim_audit_inventory.py` initializes from the rendered
+  manifest, validates exact coverage and authority links, and generates
+  `data/trust/generated/claim_audit_report.json` plus
+  `reports/scientific-claim-audit.md`. The generated reports join titles/status
+  from upstream authorities but do not duplicate their scientific prose.
+- RED was the missing generator module at test collection. Current GREEN
+  evidence is 43 focused #4019/#4020/#4021/public-manifest tests, deterministic
+  report freshness, an exact 222-route manifest check, and the deploy
+  publication gate. Full post-reconciliation validation remains required before
+  opening the PR.
+
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
 A full adversarial review of website content, organization, and cross-article

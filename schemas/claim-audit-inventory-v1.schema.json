@@ -1,0 +1,292 @@
+{
+  "$id": "https://affinedrift.com/schemas/claim-audit-inventory-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_registry": {
+      "const": "data/trust/claim_registry.json"
+    },
+    "critique_ledger": {
+      "const": "data/trust/claim_critique_ledger.json"
+    },
+    "manifest_contract": {
+      "const": "affinedrift/public-site-manifest/v1"
+    },
+    "routes": {
+      "items": {
+        "$ref": "#/$defs/routeAudit"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    }
+  },
+  "required": [
+    "schema_version",
+    "manifest_contract",
+    "claim_registry",
+    "critique_ledger",
+    "routes"
+  ],
+  "title": "AffineDrift Rendered-Route Scientific Claim-Audit Inventory",
+  "type": "object",
+  "$defs": {
+    "deferment": {
+      "additionalProperties": false,
+      "properties": {
+        "issue_url": {
+          "$ref": "#/$defs/issueUrl"
+        },
+        "next_gate": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonempty"
+        }
+      },
+      "required": ["issue_url", "rationale", "next_gate"],
+      "type": "object"
+    },
+    "exemption": {
+      "additionalProperties": false,
+      "properties": {
+        "approved_by": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "approved_on": {
+          "format": "date",
+          "type": "string"
+        },
+        "issue_url": {
+          "$ref": "#/$defs/issueUrl"
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "scope": {
+          "$ref": "#/$defs/nonempty"
+        }
+      },
+      "required": [
+        "issue_url",
+        "rationale",
+        "scope",
+        "approved_by",
+        "approved_on"
+      ],
+      "type": "object"
+    },
+    "finding": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_ids": {
+          "$ref": "#/$defs/claimIds"
+        },
+        "critique_ids": {
+          "$ref": "#/$defs/critiqueIds"
+        },
+        "disposition": {
+          "enum": [
+            "open",
+            "deferred",
+            "corrected",
+            "publication_blocked",
+            "exempt"
+          ]
+        },
+        "evidence_paths": {
+          "items": {
+            "pattern": "^(articles|critiques|data|reports|scripts|src|tests)/[A-Za-z0-9_./-]+$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "finding_id": {
+          "pattern": "^ad-finding-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "issue_url": {
+          "$ref": "#/$defs/issueUrl"
+        },
+        "priority": {
+          "enum": ["p0", "p1", "p2", "p3"]
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "verification_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "priority",
+        "disposition",
+        "issue_url",
+        "rationale",
+        "claim_ids",
+        "critique_ids"
+      ],
+      "type": "object"
+    },
+    "review": {
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": {
+          "items": {
+            "enum": [
+              "evidence",
+              "uncertainty",
+              "falsifiers",
+              "audience_framing"
+            ]
+          },
+          "minItems": 4,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence_paths": {
+          "items": {
+            "pattern": "^(articles|critiques|data|reports|scripts|src|tests)/[A-Za-z0-9_./-]+$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "review_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "reviewed_on": {
+          "format": "date",
+          "type": "string"
+        },
+        "reviewer": {
+          "$ref": "#/$defs/nonempty"
+        }
+      },
+      "required": [
+        "reviewed_on",
+        "review_commit",
+        "reviewer",
+        "evidence_paths",
+        "dimensions"
+      ],
+      "type": "object"
+    },
+    "routeAudit": {
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "not": {
+            "anyOf": [
+              { "required": ["deferment"] },
+              { "required": ["exemption"] }
+            ]
+          },
+          "properties": {
+            "status": {
+              "const": "reviewed"
+            }
+          },
+          "required": ["review"]
+        },
+        {
+          "not": {
+            "anyOf": [{ "required": ["review"] }, { "required": ["exemption"] }]
+          },
+          "properties": {
+            "status": {
+              "const": "deferred"
+            }
+          },
+          "required": ["deferment"]
+        },
+        {
+          "not": {
+            "anyOf": [{ "required": ["review"] }, { "required": ["deferment"] }]
+          },
+          "properties": {
+            "status": {
+              "const": "exempt"
+            }
+          },
+          "required": ["exemption"]
+        }
+      ],
+      "properties": {
+        "audit_id": {
+          "pattern": "^ad-route-[0-9a-f]{12}$",
+          "type": "string"
+        },
+        "claim_ids": {
+          "$ref": "#/$defs/claimIds"
+        },
+        "critique_ids": {
+          "$ref": "#/$defs/critiqueIds"
+        },
+        "deferment": {
+          "$ref": "#/$defs/deferment"
+        },
+        "exemption": {
+          "$ref": "#/$defs/exemption"
+        },
+        "findings": {
+          "items": {
+            "$ref": "#/$defs/finding"
+          },
+          "type": "array"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "route": {
+          "pattern": "^/([^?#]*)$",
+          "type": "string"
+        },
+        "status": {
+          "enum": ["reviewed", "deferred", "exempt"]
+        }
+      },
+      "required": [
+        "audit_id",
+        "route",
+        "status",
+        "claim_ids",
+        "critique_ids",
+        "findings"
+      ],
+      "type": "object"
+    },
+    "claimIds": {
+      "items": {
+        "pattern": "^ad-[a-z0-9-]+-[0-9]{3}$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "critiqueIds": {
+      "items": {
+        "pattern": "^crit-[a-z0-9-]+$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "issueUrl": {
+      "pattern": "^https://github\\.com/D-sorganization/AffineDrift/issues/[0-9]+$",
+      "type": "string"
+    },
+    "nonempty": {
+      "minLength": 1,
+      "type": "string"
+    }
+  }
+}

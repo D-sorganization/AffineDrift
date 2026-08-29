@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T07:44:36Z
+Last-Updated: 2026-08-29T08:19:28Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T07:44:36Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.244                                          |
+| **Spec Version**        | 1.0.245                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -223,6 +223,7 @@ AffineDrift/
 │   ├── check_terminology.py         # Acronym and expansion consistency
 │   ├── check_tree_parity.py         # Cross-tree divergence between duplicated chapters
 │   ├── check_bibliography_metadata.py  # Audits entries against CrossRef; manual, needs network
+│   ├── generate_claim_audit_inventory.py  # Full rendered-route audit coverage and publication gate
 │   ├── public_site_manifest.py       # Revision-bound rendered-route publication contract
 │   └── verify-public-site.js         # Manifest-driven Playwright layout and behavior verifier
 ├── tests/                       # Test suite (80+ test files)
@@ -377,6 +378,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F64 | Revision-bound public-site verification             | ✅     | `scripts/public_site_manifest.py` inventories every deployable HTML route and binds the artifact to its Git revision. `scripts/verify-public-site.js` fails closed on incomplete evidence, unavailable pages, title and heading defects, missing canonical URLs or navigation, wrong theme state, below-fold primary headings, overflow, fixed-chrome overlap, missing alternatives or button names, untypeset visible equations, console/page errors, and required-resource failures. Deployment verifies every route at mobile and desktop widths in both themes, stores representative tablet/desktop screenshots, then repeats the full matrix against the revision-matched live manifest. |
 | F65 | Control-affine scientific-trust contract            | ✅     | The canonical theory series, foundational monograph, and single-file manifesto define affinity relative to a declared input at fixed state; treat state-dependent input gains as affine; describe drift/input as additive rather than orthogonal; and condition attribution on the model, coordinates, parameters, intervention, horizon, and identifiability evidence. A shared rendered boundary and corpus tests reject direct inference of intent, individual-muscle forces, biological effort, or unique real-world causes from algebraic decomposition alone (#4012). |
 | F66 | Generated scientific trust metadata                | ✅     | A strict Draft 2020-12 JSON Schema, canonical claim registry, and deterministic generator publish stable page/claim IDs with review commit, evidence and critique status, scope, uncertainty, limitations, falsifiers, software/data provenance, and next validation gate. Corpus tests require governed-page includes and technical-anchor links, render unknown qualification visibly, and reject accessible-summary amplification of modal strength, causal/universal/exact/optimal/locked-in terms, or unsupported percentages (#4019). |
+| F67 | Full rendered-route scientific claim-audit inventory | ✅     | `data/trust/claim_audit_inventory.json` covers every post-prune public HTML route with a route-derived stable audit ID and an explicit reviewed, deferred, or exempt status. Exact claim and critique ID links are validated against the #4019 registry and #4020 ledger without copying their substantive authority. Deterministic JSON/Markdown reports expose coverage, while protected deployment fails closed on route drift and any registered P0/P1 publication blocker (#4021). |
 
 ### API / Interface Contract
 
@@ -408,6 +410,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 - `src/tools/code_quality_check.py` — Analyze Python code structure and metrics
 - `check_style_discipline.py` — Enforce QMD style-discipline rules that keep page styling in canonical CSS primitives
 - `scripts/cli_output.py` — Shared helper for scripts that intentionally emit user-facing stdout/stderr lines as part of their CLI contract
+- `scripts/generate_claim_audit_inventory.py` — Initialize, validate, report, and enforce exact rendered-route scientific audit coverage
 
 **Website (HTTP):**
 
@@ -425,22 +428,24 @@ Quarto resolution remain governed by the configured BibTeX files.
 
 ### Input Data
 
-| Input                    | Format                 | Source                               | Schema                                                   |
-| ------------------------ | ---------------------- | ------------------------------------ | -------------------------------------------------------- |
-| Swing Trajectories       | YAML / JSON            | User-defined or benchmark datasets   | Defines initial position, velocity, torques, constraints |
-| Mathematical Examples    | Quarto Markdown        | `articles/` and `books/` directories | Standard Quarto with LaTeX and code cells                |
-| Website Content          | Quarto Markdown (.qmd) | `content/`, `articles/`, `books/`    | Quarto markdown with YAML frontmatter                    |
-| Configuration Parameters | YAML                   | `_quarto.yml`, `.github/workflows/`  | Quarto and GitHub Actions configuration                  |
+| Input                    | Format                 | Source                                  | Schema                                                             |
+| ------------------------ | ---------------------- | --------------------------------------- | ------------------------------------------------------------------ |
+| Swing Trajectories       | YAML / JSON            | User-defined or benchmark datasets      | Defines initial position, velocity, torques, constraints           |
+| Mathematical Examples    | Quarto Markdown        | `articles/` and `books/` directories    | Standard Quarto with LaTeX and code cells                          |
+| Website Content          | Quarto Markdown (.qmd) | `content/`, `articles/`, `books/`       | Quarto markdown with YAML frontmatter                              |
+| Claim-Audit Inventory    | JSON                   | `data/trust/claim_audit_inventory.json` | Strict rendered-route status, authority-link, and finding contract |
+| Configuration Parameters | YAML                   | `_quarto.yml`, `.github/workflows/`     | Quarto and GitHub Actions configuration                            |
 
 ### Output Data
 
-| Output                       | Format              | Destination                      | Description                                         |
-| ---------------------------- | ------------------- | -------------------------------- | --------------------------------------------------- |
-| Optimized Swing Trajectories | NumPy arrays / JSON | Memory or file system            | Joint angles, velocities, and torques over time     |
-| Optimization Reports         | JSON                | User-defined or CI logs          | Convergence metrics, final cost, solver statistics  |
-| Static Website               | HTML + CSS + JS     | GitHub Pages (`AffineDrift.com`) | Rendered Quarto site with interactive features      |
-| Test Reports                 | JSON / HTML         | GitHub Actions artifacts         | Coverage reports, test results, performance metrics |
-| Code Quality Reports         | JSON / Text         | CI logs and artifacts            | Linting results, type checking errors, AST analysis |
+| Output                        | Format              | Destination                         | Description                                           |
+| ----------------------------- | ------------------- | ----------------------------------- | ----------------------------------------------------- |
+| Optimized Swing Trajectories  | NumPy arrays / JSON | Memory or file system               | Joint angles, velocities, and torques over time       |
+| Optimization Reports          | JSON                | User-defined or CI logs             | Convergence metrics, final cost, solver statistics    |
+| Static Website                | HTML + CSS + JS     | GitHub Pages (`AffineDrift.com`)    | Rendered Quarto site with interactive features        |
+| Test Reports                  | JSON / HTML         | GitHub Actions artifacts            | Coverage reports, test results, performance metrics   |
+| Code Quality Reports          | JSON / Text         | CI logs and artifacts               | Linting results, type checking errors, AST analysis   |
+| Scientific Claim-Audit Report | JSON / Markdown     | `data/trust/generated/`, `reports/` | Deterministic route coverage and joined authority IDs |
 
 ### Configuration
 
@@ -623,6 +628,7 @@ python -m affine_control.swing_optimizer --config=example_swing.yaml
 quarto render
 python scripts/prune_internal_docs_from_deploy.py --docs-dir docs
 python scripts/public_site_manifest.py --docs-dir docs --source-root . --output docs/public-site-manifest.json
+python -m scripts.generate_claim_audit_inventory --manifest docs/public-site-manifest.json --check --enforce-publication
 python -m http.server 8000 --directory docs
 # In a second shell:
 node scripts/verify-public-site.js --base-url http://127.0.0.1:8000 --manifest docs/public-site-manifest.json
@@ -635,15 +641,16 @@ python src/tools/code_quality_check.py
 
 ### Build Artifacts
 
-| Artifact             | Format          | Destination                                 |
-| -------------------- | --------------- | ------------------------------------------- |
-| Static Website       | HTML + CSS + JS | GitHub Pages (AffineDrift.com)              |
-| Public Site Manifest | JSON            | GitHub Pages and CI evidence artifacts      |
-| Visual Evidence      | JSON + PNG      | GitHub Actions artifacts (30-day retention) |
-| Test Reports         | JSON + HTML     | GitHub Actions artifacts and CI logs        |
-| Coverage Reports     | LCOV + HTML     | CI artifacts (coverage.xml)                 |
-| Quarto Book          | PDF + HTML      | GitHub Pages and releases                   |
-| Optimization Results | JSON            | File system or cloud storage (user-defined) |
+| Artifact                         | Format          | Destination                                         |
+| -------------------------------- | --------------- | --------------------------------------------------- |
+| Static Website                   | HTML + CSS + JS | GitHub Pages (AffineDrift.com)                      |
+| Public Site Manifest             | JSON            | GitHub Pages and CI evidence artifacts              |
+| Claim-Audit Inventory and Report | JSON + Markdown | Governed source and deterministic generated reports |
+| Visual Evidence                  | JSON + PNG      | GitHub Actions artifacts (30-day retention)         |
+| Test Reports                     | JSON + HTML     | GitHub Actions artifacts and CI logs                |
+| Coverage Reports                 | LCOV + HTML     | CI artifacts (coverage.xml)                         |
+| Quarto Book                      | PDF + HTML      | GitHub Pages and releases                           |
+| Optimization Results             | JSON            | File system or cloud storage (user-defined)         |
 
 ## 11. Roadmap & Open Issues
 
@@ -671,6 +678,17 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.245 Full Rendered-Route Scientific Claim-Audit Inventory
+
+Adds the strict `claim-audit-inventory-v1` schema, a canonical audit record for
+every post-prune rendered public route, route-derived stable audit IDs, and
+exact ID-only joins to the protected #4019 claim registry and #4020 critique
+ledger. Reviewed, deferred, and exempt states carry distinct auditable evidence
+contracts. P0/P1 findings must be corrected or explicitly registered as
+publication-blocked, and protected deployment refuses any remaining blocker or
+rendered-route coverage drift. Deterministic JSON and Markdown reports expose
+the complete inventory without copying claim or critique prose.
 
 ### 1.0.243 ZTCF Intervention Contract
 

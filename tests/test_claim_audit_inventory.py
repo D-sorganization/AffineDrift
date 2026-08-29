@@ -1,0 +1,292 @@
+"""Contracts for the rendered-route scientific claim-audit inventory."""
+
+from __future__ import annotations
+
+import copy
+import json
+from pathlib import Path
+
+import pytest
+
+from scripts.generate_claim_audit_inventory import (
+    AuditContractError,
+    AuditSources,
+    GenerationOptions,
+    ReportTargets,
+    build_report,
+    enforce_publication,
+    generate,
+    initialize_inventory,
+    stable_audit_id,
+    validate_inventory,
+    validate_manifest_coverage,
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+INVENTORY = ROOT / "data/trust/claim_audit_inventory.json"
+SCHEMA = ROOT / "schemas/claim-audit-inventory-v1.schema.json"
+CLAIMS = ROOT / "data/trust/claim_registry.json"
+LEDGER = ROOT / "data/trust/claim_critique_ledger.json"
+REPORT_JSON = ROOT / "data/trust/generated/claim_audit_report.json"
+REPORT_MD = ROOT / "reports/scientific-claim-audit.md"
+REVIEW_DIMENSIONS = ["evidence", "uncertainty", "falsifiers", "audience_framing"]
+
+
+def _route(
+    route: str,
+    status: str,
+    *,
+    claim_ids: list[str] | None = None,
+    critique_ids: list[str] | None = None,
+) -> dict[str, object]:
+    record: dict[str, object] = {
+        "audit_id": stable_audit_id(route),
+        "route": route,
+        "status": status,
+        "claim_ids": claim_ids or [],
+        "critique_ids": critique_ids or [],
+        "findings": [],
+    }
+    if status == "reviewed":
+        record["review"] = {
+            "reviewed_on": "2026-08-29",
+            "review_commit": "a" * 40,
+            "reviewer": "protected review",
+            "evidence_paths": ["tests/review_evidence.txt"],
+            "dimensions": REVIEW_DIMENSIONS,
+        }
+    elif status == "deferred":
+        record["deferment"] = {
+            "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4021",
+            "rationale": "The adversarial page review has not yet been completed.",
+            "next_gate": "Complete the evidence and uncertainty review.",
+        }
+    else:
+        record["exemption"] = {
+            "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4021",
+            "rationale": "This system page makes no scientific claim.",
+            "scope": "Static error handling only.",
+            "approved_by": "protected review",
+            "approved_on": "2026-08-29",
+        }
+    return record
+
+
+def _fixture(tmp_path: Path) -> tuple[dict[str, object], dict[str, object], Path, Path]:
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests/review_evidence.txt").write_text("reviewed\n", encoding="utf-8")
+    claims_path = tmp_path / "claims.json"
+    claims_path.write_text(
+        json.dumps(
+            {
+                "pages": [
+                    {
+                        "source_path": "articles/example.qmd",
+                        "claims": [{"claim_id": "ad-example-001", "title": "Example Claim"}],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    ledger_path = tmp_path / "ledger.json"
+    ledger_path.write_text(
+        json.dumps(
+            {
+                "critiques": [
+                    {
+                        "critique_id": "crit-example",
+                        "source_path": "critiques/example.md",
+                        "affected_pages": ["articles/example.qmd"],
+                        "severity": "high",
+                        "disposition": "open",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    inventory = {
+        "schema_version": "1.0.0",
+        "manifest_contract": "affinedrift/public-site-manifest/v1",
+        "claim_registry": "data/trust/claim_registry.json",
+        "critique_ledger": "data/trust/claim_critique_ledger.json",
+        "routes": [
+            _route("/", "deferred"),
+            _route("/404.html", "exempt"),
+            _route(
+                "/articles/example.html",
+                "reviewed",
+                claim_ids=["ad-example-001"],
+                critique_ids=["crit-example"],
+            ),
+            _route("/critiques/example.html", "deferred", critique_ids=["crit-example"]),
+        ],
+    }
+    manifest = {
+        "schema_version": "affinedrift/public-site-manifest/v1",
+        "page_count": 4,
+        "pages": [
+            {"route": "/"},
+            {"route": "/404.html"},
+            {"route": "/articles/example.html"},
+            {"route": "/critiques/example.html"},
+        ],
+    }
+    return inventory, manifest, claims_path, ledger_path
+
+
+def _find_route(inventory: dict[str, object], route: str) -> dict[str, object]:
+    routes = inventory["routes"]
+    assert isinstance(routes, list)
+    return next(
+        record for record in routes if isinstance(record, dict) and record.get("route") == route
+    )
+
+
+def test_stable_audit_id_is_route_derived_and_order_independent() -> None:
+    assert stable_audit_id("/articles/example.html") == "ad-route-3bd723407b99"
+    assert stable_audit_id("/articles/example.html") == stable_audit_id("/articles/example.html")
+    assert stable_audit_id("/articles/other.html") != stable_audit_id("/articles/example.html")
+
+
+def test_schema_is_strict_and_status_records_are_auditable(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+    validate_inventory(inventory, sources)
+
+    invalid = copy.deepcopy(inventory)
+    invalid["undeclared"] = True
+    with pytest.raises(AuditContractError, match="Additional properties"):
+        validate_inventory(invalid, sources)
+
+    invalid = copy.deepcopy(inventory)
+    reviewed = _find_route(invalid, "/articles/example.html")
+    assert isinstance(reviewed, dict)
+    review = reviewed["review"]
+    assert isinstance(review, dict)
+    review["dimensions"] = ["evidence", "uncertainty"]
+    with pytest.raises(AuditContractError, match="too short|review dimensions"):
+        validate_inventory(invalid, sources)
+
+    invalid = copy.deepcopy(inventory)
+    reviewed = _find_route(invalid, "/articles/example.html")
+    reviewed["deferment"] = _route("/unused.html", "deferred")["deferment"]
+    with pytest.raises(AuditContractError, match="not valid under any|valid under each"):
+        validate_inventory(invalid, sources)
+
+
+def test_every_rendered_route_requires_exactly_one_inventory_record(tmp_path: Path) -> None:
+    inventory, manifest, _, _ = _fixture(tmp_path)
+    validate_manifest_coverage(inventory, manifest)
+
+    missing = copy.deepcopy(inventory)
+    missing["routes"].pop()  # type: ignore[union-attr]
+    with pytest.raises(AuditContractError, match="coverage mismatch"):
+        validate_manifest_coverage(missing, manifest)
+
+    extra = copy.deepcopy(inventory)
+    extra["routes"].append(_route("/not-rendered.html", "deferred"))  # type: ignore[union-attr]
+    with pytest.raises(AuditContractError, match="coverage mismatch"):
+        validate_manifest_coverage(extra, manifest)
+
+
+def test_initial_inventory_is_deterministic_and_fail_closed(tmp_path: Path) -> None:
+    _, manifest, claims_path, ledger_path = _fixture(tmp_path)
+    manifest["pages"][1]["page_kind"] = "system"  # type: ignore[index]
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+
+    first = initialize_inventory(manifest, sources, "2026-08-29")
+    second = initialize_inventory(manifest, sources, "2026-08-29")
+
+    assert first == second
+    assert _find_route(first, "/404.html")["status"] == "exempt"
+    assert _find_route(first, "/articles/example.html")["status"] == "deferred"
+    assert _find_route(first, "/articles/example.html")["claim_ids"] == ["ad-example-001"]
+    assert _find_route(first, "/articles/example.html")["critique_ids"] == ["crit-example"]
+    validate_inventory(first, sources)
+
+
+def test_inventory_rejects_unstable_ids_and_authority_link_drift(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+
+    invalid = copy.deepcopy(inventory)
+    invalid["routes"][0]["audit_id"] = "ad-route-000000000000"  # type: ignore[index]
+    with pytest.raises(AuditContractError, match="stable audit ID"):
+        validate_inventory(invalid, sources)
+
+    invalid = copy.deepcopy(inventory)
+    _find_route(invalid, "/articles/example.html")["claim_ids"] = []
+    with pytest.raises(AuditContractError, match="claim authority links"):
+        validate_inventory(invalid, sources)
+
+    invalid = copy.deepcopy(inventory)
+    _find_route(invalid, "/articles/example.html")["critique_ids"] = []
+    with pytest.raises(AuditContractError, match="critique authority links"):
+        validate_inventory(invalid, sources)
+
+
+def test_p0_p1_findings_fail_closed_or_block_publication(tmp_path: Path) -> None:
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+    reviewed = _find_route(inventory, "/articles/example.html")
+    assert isinstance(reviewed, dict)
+    findings = reviewed["findings"]
+    assert isinstance(findings, list)
+    findings.append(
+        {
+            "finding_id": "ad-finding-example-p1",
+            "priority": "p1",
+            "disposition": "open",
+            "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4021",
+            "rationale": "An unqualified causal statement remains public.",
+            "claim_ids": ["ad-example-001"],
+            "critique_ids": ["crit-example"],
+        }
+    )
+
+    with pytest.raises(AuditContractError, match="P0/P1 finding"):
+        validate_inventory(inventory, sources)
+
+    findings[0]["disposition"] = "publication_blocked"
+    validate_inventory(inventory, sources)
+    with pytest.raises(AuditContractError, match="publication blocker"):
+        enforce_publication(inventory)
+
+
+def test_report_generation_is_deterministic_and_joins_authorities(tmp_path: Path) -> None:
+    inventory, manifest, claims_path, ledger_path = _fixture(tmp_path)
+    sources = AuditSources(SCHEMA, claims_path, ledger_path, tmp_path)
+    validate_inventory(inventory, sources)
+    validate_manifest_coverage(inventory, manifest)
+
+    first = build_report(inventory, sources)
+    second = build_report(inventory, sources)
+
+    assert first == second
+    assert first["counts"] == {"deferred": 2, "exempt": 1, "reviewed": 1}
+    article = next(route for route in first["routes"] if route["route"] == "/articles/example.html")
+    assert article["claims"] == [{"claim_id": "ad-example-001", "title": "Example Claim"}]
+    assert article["critiques"] == [
+        {"critique_id": "crit-example", "disposition": "open", "severity": "high"}
+    ]
+
+
+def test_canonical_inventory_and_generated_reports_are_current() -> None:
+    outputs = generate(
+        INVENTORY,
+        AuditSources(SCHEMA, CLAIMS, LEDGER, ROOT),
+        ReportTargets(REPORT_JSON, REPORT_MD),
+        GenerationOptions(check=True),
+    )
+
+    assert outputs == [REPORT_JSON, REPORT_MD]
+
+
+def test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers() -> None:
+    workflow = (ROOT / ".github/workflows/deploy-website.yml").read_text(encoding="utf-8")
+
+    assert "scripts.generate_claim_audit_inventory" in workflow
+    assert "--manifest docs/public-site-manifest.json" in workflow
+    assert "--enforce-publication" in workflow

@@ -168,6 +168,13 @@ jobs:
             --source-revision "$GITHUB_SHA" \
             --output docs/public-site-manifest.json
 
+      - name: Enforce scientific claim-audit coverage
+        run: |
+          python3 -m scripts.generate_claim_audit_inventory \
+            --manifest docs/public-site-manifest.json \
+            --check \
+            --enforce-publication
+
       - name: Verify every rendered public page
         run: |
           python3 -m http.server 8000 --directory docs > "$RUNNER_TEMP/affinedrift-site.log" 2>&1 &
