@@ -8,6 +8,8 @@ from pathlib import Path
 import pytest
 
 from src.affine_control.model_ladder_fixtures import (
+    FixtureState,
+    ParityFixture,
     adjacent_projection_residuals,
     manufactured_comparison_observations,
     manufactured_convergence_fixture,
@@ -64,6 +66,16 @@ def test_ladder_fails_closed_on_a_reordered_adjacent_projection() -> None:
 
     with pytest.raises(ValueError, match="preserve shared coordinate order"):
         replace(protocol, levels=(protocol.levels[0], bad_child, *protocol.levels[2:]))
+
+
+def test_model_level_rejects_duplicate_coordinate_names() -> None:
+    level = build_model_ladder_protocol().levels[1]
+
+    with pytest.raises(ValueError, match="coordinate names must be unique"):
+        replace(
+            level,
+            coordinates=("club_path_angle", "club_path_angle", *level.coordinates[2:]),
+        )
 
 
 def test_flexible_shaft_manufactured_fixture_has_declared_convergence() -> None:
@@ -136,6 +148,60 @@ def test_task_assessment_rejects_global_percentage_and_authority_overreach() -> 
         TaskAssessment(**common, interpretation="A global fidelity percentage.")
     with pytest.raises(ValueError, match="authority boundary"):
         TaskAssessment(**common, interpretation="A coaching prescription for all golfers.")
+
+
+def test_task_assessment_rejects_contradictory_sufficiency_states() -> None:
+    valid = manufactured_task_assessments()[0]
+
+    with pytest.raises(ValueError, match="unavailable.*sufficient=None"):
+        replace(
+            valid,
+            estimate=None,
+            uncertainty_interval=None,
+            evidence_status="unavailable",
+            outcome="unavailable",
+            sufficient=False,
+        )
+    for outcome in ("negative", "null"):
+        with pytest.raises(ValueError, match="negative and null.*sufficient=False"):
+            replace(valid, outcome=outcome, sufficient=True)
+    with pytest.raises(ValueError, match="supported.*sufficient=True"):
+        replace(valid, outcome="supported", sufficient=False)
+    with pytest.raises(ValueError, match="complete interval.*tolerance"):
+        replace(valid, uncertainty_interval=(-0.03, 0.01))
+
+
+def test_selection_rejects_duplicate_task_and_level_assessments() -> None:
+    protocol = build_model_ladder_protocol()
+    assessments = manufactured_task_assessments()
+    duplicate = assessments + (assessments[0],)
+
+    with pytest.raises(ValueError, match="duplicate task assessment"):
+        minimum_sufficient_level(protocol, duplicate, "planar-path")
+
+
+def test_parity_fixture_rejects_blank_identity_and_intervention() -> None:
+    state = FixtureState("planar-rigid", (0.25, -3.0))
+
+    with pytest.raises(ValueError, match="fixture_id"):
+        ParityFixture("", "zero child coordinates", (state,))
+    with pytest.raises(ValueError, match="intervention"):
+        ParityFixture("fixture/v1", "", (state,))
+
+
+def test_projection_rejects_missing_duplicate_and_misaligned_fixture_states() -> None:
+    protocol = build_model_ladder_protocol()
+    fixture = manufactured_parity_fixture()
+
+    with pytest.raises(ValueError, match="exactly one state per protocol level"):
+        adjacent_projection_residuals(protocol, replace(fixture, states=fixture.states[:-1]))
+    duplicate = (*fixture.states[:-1], fixture.states[0])
+    with pytest.raises(ValueError, match="duplicate fixture state"):
+        adjacent_projection_residuals(protocol, replace(fixture, states=duplicate))
+    short_state = replace(fixture.states[1], values=fixture.states[1].values[:-1])
+    misaligned = (fixture.states[0], short_state, *fixture.states[2:])
+    with pytest.raises(ValueError, match="vector length"):
+        adjacent_projection_residuals(protocol, replace(fixture, states=misaligned))
 
 
 def test_null_negative_and_unavailable_results_remain_in_the_ledger() -> None:
