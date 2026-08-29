@@ -3086,6 +3086,15 @@ input:focus:not(:focus-visible) {
   max-width: none;
 }
 
+/* Keep the long normative notation tables complete on narrow screens. */
+#quarto-document-content .notation-reference table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Interactive calculators collapse their primary columns at tablet width. */
 @media (max-width: 767.98px) {
   #rc-app .rc-main-grid {

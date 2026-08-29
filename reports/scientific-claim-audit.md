@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 4
-- Deferred: 219
+- Reviewed: 17
+- Deferred: 206
 - Exempt: 2
 
 ## Deferred Delivery Batches
@@ -19,11 +19,10 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 14 routes
 - [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
 - [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062): 6 routes
-- [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063): 13 routes
 
 | Audit ID | Route | Status | Deferment Issue | Claim IDs | Critique IDs | Findings |
 |---|---|---|---|---|---|---:|
-| `ad-route-8a5edab28263` | `/` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
+| `ad-route-8a5edab28263` | `/` | Reviewed | — | None | None | 1 |
 | `ad-route-846c879e19c9` | `/404.html` | Exempt | — | None | None | 0 |
 | `ad-route-2cd844057893` | `/articles/affine-nature-golf-swing.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-aerodynamics`, `crit-control-causality-mechanical`, `crit-drift-superposition`, `crit-effective-plant-fallacy`, `crit-geometric-stiffness-omission`, `crit-impact-evasion`, `crit-input-dependent-boundary-conditions`, `crit-muscle-physiology`, `crit-neuromuscular-control`, `crit-nullspace-interpretation`, `crit-parameter-causality-leakage`, `crit-passive-active-boundary-ambiguity`, `crit-passive-overshoot-artifact`, `crit-simulation-tautology`, `crit-static-fallacy-zvcf`, `crit-stretch-shortening-blindspot`, `crit-teleological-blindness`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
@@ -209,18 +208,18 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-5776cb8aebbe` | `/models/models-simulink.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-50bd3b182f9b` | `/models/models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | None | None | 0 |
-| `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-6e4e4be935a4` | `/pages/contact.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-4c6de352603b` | `/pages/notation.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-36ae7b392279` | `/pages/overview.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-67c107f8df01` | `/pages/technology.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
-| `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Deferred | [#4063](https://github.com/D-sorganization/AffineDrift/issues/4063) | None | None | 0 |
+| `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | — | None | None | 1 |
+| `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | — | None | None | 1 |
+| `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Reviewed | — | None | None | 1 |
+| `ad-route-6e4e4be935a4` | `/pages/contact.html` | Reviewed | — | None | None | 1 |
+| `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Reviewed | — | None | None | 1 |
+| `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | — | None | None | 1 |
+| `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | — | None | None | 2 |
+| `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | — | None | None | 2 |
+| `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
+| `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
+| `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
+| `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
 | `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-c28bd36edd3e` | `/repositories/repositories-3d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-59ad729f0fc1` | `/repositories/repositories-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
