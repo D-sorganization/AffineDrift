@@ -64,6 +64,16 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `python -m pytest tests/test_sensorimotor_claim_contract.py -m content_lint -q`,
   `python scripts/audit_book_citations.py --chapter ch24_motor_control_brain --check`,
   and `python scripts/check_bibliography_cross_file.py`.
+- Current #4017 evidence after merging protected #4044: 11 combined #4013,
+  #4014, and #4017 contract tests pass; the full default Python lane passes
+  3,255 tests with 29 documented skips; the content-lint lane passes 71 tests
+  with 4 skips and 3,284 deselections. Strict mypy, Ruff, Black, terminology,
+  title-case, display-math, Quarto citation resolution, and cross-bibliography
+  identity gates pass. Both affected Quarto chapters render in isolation and
+  were inspected at a 1440 x 1000 desktop viewport with one H1, no broken
+  media, and no horizontal overflow. The chapter-pair citation audit retains
+  one pre-existing edition-specific Jorgensen key in each tree; both new
+  long-latency citations are shared by the Quarto and LaTeX editions.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
