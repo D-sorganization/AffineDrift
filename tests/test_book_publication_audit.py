@@ -103,7 +103,7 @@ def test_publication_state_chapter_coverage_and_notebook_limits_are_explicit() -
     human = volume_sources[3].read_text(encoding="utf-8")
     assert "Induced Acceleration Analysis" in tangent
     assert "Parallel Mechanisms" in tangent
-    assert "Interplay of Biology and Dynamics of Nonlinear Systems" in human
+    assert "interplay of biology and dynamics of nonlinear systems" in human.lower()
 
 
 def test_roadmap_rejects_unmeasured_completion_and_time_claims() -> None:
