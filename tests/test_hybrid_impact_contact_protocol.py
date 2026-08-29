@@ -138,9 +138,8 @@ def test_oblique_rigid_impulse_caps_friction_and_updates_spin_with_declared_sign
         oblique_impact_state(), protocol.parameters, protocol.event_policy
     )
 
-    assert abs(outcome.tangential_impulse_n_s) <= pytest.approx(
-        protocol.parameters.friction * outcome.normal_impulse_n_s
-    )
+    friction_limit = protocol.parameters.friction * outcome.normal_impulse_n_s
+    assert abs(outcome.tangential_impulse_n_s) <= friction_limit + 1e-12
     assert outcome.ball_spin_rad_s < 0.0
     assert outcome.slip_after_m_s <= outcome.slip_before_m_s
 
