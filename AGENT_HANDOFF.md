@@ -10,6 +10,43 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## Public Research-Readiness Lifecycle Library (#4041 — In Progress)
+
+- Branch `feat/4041-preregistration-readiness` is in isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4041-e9`. RED commit
+  `0c440db2` captures five adversarial defects; GREEN commit `1cee0462` closes
+  them without importing publication authority from #4042.
+- The strict E1–E8 lifecycle distinguishes scientific `protocol_revision` from
+  whole-record `record_revision`, enforces contiguous participant-scope-aware
+  transitions, and binds exact claims, critiques, route audits, calculation
+  artifacts, workflows, datasets, and adverse manufactured dry runs. Every
+  current program remains `simulation-ready`; no measured participant result or
+  collection authority is present.
+- Evidence marked unavailable must also have unavailable status and origin and
+  cannot satisfy a gate. Private evidence has no public path and must identify
+  an immutable governed record revision. A `validated` transition accepts only
+  required-kind measured or estimated evidence; unrelated measured evidence
+  cannot dilute a modeled or manufactured validation record.
+- Participant scope and governance are exact: human, animal, and private-data
+  scopes select their matching approval flag, while `none` requires every
+  approval flag false. Superseded protocols must name an existing acyclic
+  successor and carry eligible evidence pinning that successor's exact record
+  revision; a current record cannot predeclare a successor.
+- `published` remains a known lifecycle state but #4041 refuses to validate a
+  transition into it. The external immutable release/claim-promotion adapter is
+  owned by #4042; a local opaque record cannot mint that authority.
+- The schema-valid concept template is now neutral: it has a distinct #4041
+  example identity and no live claim, critique, evidence, dataset, artifact, or
+  route joins. The generator runs as
+  `python -m scripts.generate_research_readiness_library`; no production
+  `sys.path` bootstrap remains.
+- Focused GREEN evidence is 30 tests plus the four `content_lint` contracts,
+  deterministic readiness and claim-audit generators, Ruff, Black, strict
+  MyPy, and hard module/changed-file size budgets. The reviewed route evidence
+  is pinned to GREEN commit `1cee0462fc72fe426ab69d798241ce6befae1a4b`
+  and includes the split error, supersession, and template modules. Full final
+  local gates and protected-main reconciliation remain before PR publication.
+
 ## Equipment and Shaft Individual-Response Validation (#4040 — In Progress)
 
 - Branch `feat/4040-equipment-individual-response` started from exact protected
