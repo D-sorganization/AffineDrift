@@ -1,0 +1,232 @@
+{
+  "$id": "https://affinedrift.com/schemas/book-publication-audit-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "issue_url": {
+      "const": "https://github.com/D-sorganization/AffineDrift/issues/4062"
+    },
+    "method": {
+      "additionalProperties": false,
+      "properties": {
+        "first_pass": { "$ref": "#/$defs/nonempty" },
+        "second_pass": { "$ref": "#/$defs/nonempty" }
+      },
+      "required": ["first_pass", "second_pass"],
+      "type": "object"
+    },
+    "routes": {
+      "items": { "$ref": "#/$defs/route" },
+      "maxItems": 6,
+      "minItems": 6,
+      "type": "array"
+    }
+  },
+  "required": ["schema_version", "issue_url", "method", "routes"],
+  "title": "AffineDrift Book and Publication Roadmap Audit",
+  "type": "object",
+  "$defs": {
+    "nonempty": { "minLength": 1, "type": "string" },
+    "nonemptyList": {
+      "items": { "$ref": "#/$defs/nonempty" },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "claimClass": {
+      "enum": [
+        "causal",
+        "clinical_coaching",
+        "comparative",
+        "factual",
+        "mathematical",
+        "quantitative",
+        "research_readiness",
+        "software_capability"
+      ],
+      "type": "string"
+    },
+    "claim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "pattern": "^ad-book-[a-z0-9-]+-[0-9]{3}$",
+          "type": "string"
+        },
+        "claim_classes": {
+          "items": { "$ref": "#/$defs/claimClass" },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "statement": { "$ref": "#/$defs/nonempty" },
+        "publication_state": {
+          "enum": [
+            "available",
+            "validated",
+            "experimental",
+            "planned",
+            "deprecated",
+            "opinion"
+          ]
+        },
+        "authority_references": { "$ref": "#/$defs/nonemptyList" },
+        "authority_limits": { "$ref": "#/$defs/nonemptyList" },
+        "assumptions": { "$ref": "#/$defs/nonemptyList" },
+        "uncertainty": { "$ref": "#/$defs/nonemptyList" },
+        "falsifiers": { "$ref": "#/$defs/nonemptyList" },
+        "audience_limits": { "$ref": "#/$defs/nonemptyList" },
+        "finding_id": {
+          "pattern": "^ad-finding-book-[a-z0-9-]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim_id",
+        "claim_classes",
+        "statement",
+        "publication_state",
+        "authority_references",
+        "authority_limits",
+        "assumptions",
+        "uncertainty",
+        "falsifiers",
+        "audience_limits",
+        "finding_id"
+      ],
+      "type": "object"
+    },
+    "finding": {
+      "additionalProperties": false,
+      "properties": {
+        "finding_id": {
+          "pattern": "^ad-finding-book-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "priority": { "enum": ["p0", "p1", "p2", "p3"] },
+        "disposition": {
+          "enum": [
+            "corrected",
+            "publication_blocked",
+            "open",
+            "deferred",
+            "exempt"
+          ]
+        },
+        "issue_url": {
+          "const": "https://github.com/D-sorganization/AffineDrift/issues/4062"
+        },
+        "rationale": { "$ref": "#/$defs/nonempty" },
+        "claim_ids": {
+          "items": { "type": "string" },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "critique_ids": {
+          "items": { "type": "string" },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence_paths": { "$ref": "#/$defs/nonemptyList" },
+        "evidence_sha256": {
+          "additionalProperties": { "$ref": "#/$defs/sha256" },
+          "minProperties": 1,
+          "type": "object"
+        },
+        "verification_commit": { "pattern": "^[0-9a-f]{40}$", "type": "string" }
+      },
+      "required": [
+        "finding_id",
+        "priority",
+        "disposition",
+        "issue_url",
+        "rationale",
+        "claim_ids",
+        "critique_ids",
+        "evidence_paths",
+        "evidence_sha256",
+        "verification_commit"
+      ],
+      "type": "object"
+    },
+    "adversarial": {
+      "additionalProperties": false,
+      "properties": {
+        "counterexamples": { "$ref": "#/$defs/nonemptyList" },
+        "alternative_mechanisms": { "$ref": "#/$defs/nonemptyList" },
+        "remaining_disagreements": { "$ref": "#/$defs/nonemptyList" }
+      },
+      "required": [
+        "counterexamples",
+        "alternative_mechanisms",
+        "remaining_disagreements"
+      ],
+      "type": "object"
+    },
+    "route": {
+      "additionalProperties": false,
+      "properties": {
+        "audit_id": { "pattern": "^ad-route-[0-9a-f]{12}$", "type": "string" },
+        "route": { "pattern": "^/books/[a-z0-9-]+\\.html$", "type": "string" },
+        "source_path": {
+          "pattern": "^books/[a-z0-9-]+\\.qmd$",
+          "type": "string"
+        },
+        "source_sha256": { "$ref": "#/$defs/sha256" },
+        "included_source_paths": {
+          "items": {
+            "pattern": "^(articles/The_Geometry_of_Motion/Volume_(I|II|III|IV)/main\\.tex|notebooks/geometry_of_motion/manifest\\.json)$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "included_source_sha256": {
+          "additionalProperties": { "$ref": "#/$defs/sha256" },
+          "type": "object"
+        },
+        "source_revision": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "render_revision": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "reviewed_on": { "format": "date", "type": "string" },
+        "reviewer": { "$ref": "#/$defs/nonempty" },
+        "claim_classes": {
+          "items": { "$ref": "#/$defs/claimClass" },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "claims": {
+          "items": { "$ref": "#/$defs/claim" },
+          "minItems": 1,
+          "type": "array"
+        },
+        "findings": {
+          "items": { "$ref": "#/$defs/finding" },
+          "minItems": 1,
+          "type": "array"
+        },
+        "adversarial_review": { "$ref": "#/$defs/adversarial" }
+      },
+      "required": [
+        "audit_id",
+        "route",
+        "source_path",
+        "source_sha256",
+        "included_source_paths",
+        "included_source_sha256",
+        "source_revision",
+        "render_revision",
+        "reviewed_on",
+        "reviewer",
+        "claim_classes",
+        "claims",
+        "findings",
+        "adversarial_review"
+      ],
+      "type": "object"
+    }
+  }
+}

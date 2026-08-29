@@ -432,11 +432,15 @@ def test_canonical_inventory_and_generated_reports_are_current() -> None:
 def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
     deferred = [record for record in inventory["routes"] if record["status"] == "deferred"]
-    reviewed_4063 = [
+    reviewed_completed_batches = [
         record
         for record in inventory["routes"]
         if record["status"] == "reviewed"
-        and (record["route"] == "/" or record["route"].startswith("/pages/"))
+        and (
+            record["route"] == "/"
+            or record["route"].startswith("/pages/")
+            or record["route"].startswith("/books/")
+        )
     ]
     observed: Counter[str] = Counter()
 
@@ -448,10 +452,13 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
 
     expected_deferred = Counter(DEFERRED_AUDIT_SCOPE_COUNTS)
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4063"]
-    assert len(deferred) == 206
-    assert len(reviewed_4063) == 13
+    del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4062"]
+    assert len(deferred) == 200
+    assert len(reviewed_completed_batches) == 19
     assert observed == expected_deferred
-    assert len(deferred) + len(reviewed_4063) == sum(DEFERRED_AUDIT_SCOPE_COUNTS.values())
+    assert len(deferred) + len(reviewed_completed_batches) == sum(
+        DEFERRED_AUDIT_SCOPE_COUNTS.values()
+    )
 
 
 def test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers() -> None:

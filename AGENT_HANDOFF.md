@@ -46,7 +46,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
   `ad-route-cd5e133fe28e`, bound to reviewed content commit
   `8a56cebb13488106fa4d071b31b0f7d05b1d5ca8` and exact SHA-256 evidence for
   its canonical QMD, four implementation modules, and executable test. The
-  inventory now reports 18 reviewed, 206 deferred, and 2 exempt routes. A
+  inventory now reports 24 reviewed, 200 deferred, and 2 exempt routes after
+  ordinary reconciliation with protected #4062. A
   digest proves the declared reviewed bytes, not scientific truth.
 - Focused executable contracts are 24/24 green and focused public-content/audit
   contracts are 3/3 green. The complete non-content and content-lint lanes pass
@@ -60,9 +61,63 @@ This is current operational state. Historical detail belongs in git/GitHub.
   one H1, eight locally scrollable tables, 18 rendered math containers, no body
   overflow, and no console warnings/errors. The visual review caught and fixed
   missing canonical volume/issue/page metadata for all four new sources before
-  acceptance. Reconcile protected main ordinarily, repeat affected exact-head
+  acceptance. The branch ordinarily reconciles protected #4062 squash
+  `902a71b73862a299ca8b6134a4701c15d4f3030c`; repeat affected exact-head
   gates, then push a non-draft PR and merge only after every required hosted
   check passes on that exact head.
+
+## Books and Publication-Roadmap Trust Audit (#4062 — Protected)
+
+- Protected squash `902a71b73862a299ca8b6134a4701c15d4f3030c` has the exact
+  reviewed head tree from PR #4070 after all 14 hosted checks passed. Issue
+  #4062 is closed; parent #4021 remains open. The branch history below records
+  its delivery evidence.
+- Canonical content review commit `2dca8d190f3840405315b6ff8415e257d6e81ea8`
+  corrects all six public book routes. It restores Volume I chapters 3B and 9
+  and Volume IV chapter 7B to the public maps while preserving the protected
+  40-notebook bridge, pins manuscript and notebook links to the protected
+  review revision, labels all notebook records scaffolded, and distinguishes
+  manuscript availability from execution, numerical correctness,
+  reproducibility, software readiness, and empirical validation.
+- `books/roadmap.qmd` now derives 10/11/10/12 substantive chapter counts from
+  canonical `main.tex` inputs and removes unmeasured reading-time, mastery,
+  completion, comprehensiveness, and prerequisite-waiver claims. Volume routes
+  bound instantaneous affine exactness, stability-optimality hypotheses,
+  biological inference, neural causality, clinical/coaching authority, and
+  robot deployment readiness. Follow-up links expose examples, software state,
+  critiques, and unresolved questions.
+- `data/trust/book_publication_audit.json` records exact route and included-
+  authority SHA-256 bytes, claims, limits, assumptions, uncertainty, falsifiers,
+  audience limits, six corrected P1 findings, and an adversarial second pass.
+  After protected #4067 reconciliation, every reviewed route declares its
+  canonical QMD source, recursively included Quarto source set, and exact
+  `evidence_sha256` map; every corrected finding carries exact-key digest
+  parity. Six #4062 deferments become reviewed, so the 225-route inventory is
+  23 reviewed, 200 deferred, and 2 exempt.
+- RED was deterministic collection failure because the book-audit module did
+  not exist. Content GREEN exposed and corrected a notebook-bridge regression
+  before reconciliation; a new contract verifies all 43 canonical manuscript
+  chapter source links while preserving 40 scaffolded notebook anchors.
+  Reconciled focused GREEN is 45/45 audit/inventory/site-audit/active-impedance
+  tests. Quarto 1.8.26 renders all six routes from the exact reconciled content
+  revision in a detached worktree. The 24-cell mobile 390 x 844 and desktop
+  1440 x 900, light/dark browser matrix has zero content failures: every route
+  has one visible H1, main/navigation landmarks, named controls, image
+  alternatives, contained tables, rendered equations, no page overflow, and
+  no empty anchors. Six isolated settled route loads have zero console errors
+  or warnings. Rapid preview navigation initially exposed stale localhost
+  service-worker chrome and transient view-transition snapshots; a fresh
+  static-server origin and isolated loads confirmed this was test-environment
+  state, not retained page overlap. No screenshots or generated render output
+  are committed. The full non-content Python lane passes with 30 documented
+  skips; the content lane passes with 4 documented skips; Jest passes all 20
+  suites (297 passed, 19 skipped). Full Ruff and Black, focused strict mypy,
+  Prettier, pre-commit, citation resolution, QMD citation integrity, Quarto
+  syntax/xrefs/title/math checks, terminology, 226-URL bidirectional render
+  coverage, deterministic claim-audit reports, and publication enforcement
+  pass. A depth-one clone containing only the exact feature head passes all
+  23 book-audit and global-inventory tests, proving the digest evidence does
+  not depend on intermediate Git history.
 
 ## Active Impedance and Co-Contraction Identification (#4036 — Protected)
 
@@ -601,7 +656,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   manifest, and passed deterministic report freshness plus the enforced
   publication gate. The isolated worktree is clean after render verification.
 
-### Self-Contained Reviewed Evidence (#4067 — In Development)
+### Self-Contained Reviewed Evidence (#4067 — Protected)
+
+- Protected merge `14f220052eb204dfdff6cf2b4ea51eebcd08a819` is the
+  schema-v1.1 authority; issue #4067 is closed. The development record below is
+  retained as implementation provenance.
 
 - Worktree `C:\Users\diete\Repositories\worktrees\AffineDrift-4067-a1` on
   `feat/4067-self-contained-review-evidence` started from exact protected
