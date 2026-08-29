@@ -322,6 +322,51 @@ This is current operational state. Historical detail belongs in git/GitHub.
   Stylelint, Ruff, Black, and strict MyPy gates pass.
   Protected PR #4051 merged normally after all required hosted checks passed.
 
+## Homepage and Site-Level Trust-Surface Audit (#4063 — PR Pending)
+
+- Lease session `codex-4063-20260829T092627Z` is recorded at issue comment
+  `#issuecomment-5461542895`. Branch `feat/4063-site-trust-surfaces` started from
+  protected main `e23cabbc84e58bae791e0868e473cfec48699b07` and ordinarily
+  merged current protected main `d8f90713a0d3a4255ed1131a6c3517ee13217997`
+  in `4e6b95db197d25961778f0ca142b3a892f567a72`, preserving the independent
+  model-ladder program and its reviewed inventory route.
+- Canonical review revision `8d776c5682d5fee6a06dc51259306f7c9cdccd74`
+  reviews `/` plus all twelve `/pages/*.html` routes. The homepage now defines
+  Available, Validated, Experimental, Planned, Deprecated, and Opinion as
+  distinct claim states. Roadmap, overview, manifesto, tangent, technology,
+  and tools capability language is bounded; the overview API and support tiers
+  are pinned to protected UpstreamDrift revision
+  `8cc236c6879e7535bb6bd15aecbe3396fb6dbb36`.
+- `data/trust/site_trust_surface_audit.json` records stable route and claim
+  occurrence IDs, claim classes, authority references and limits, assumptions,
+  uncertainty, falsifiers, audience limits, adversarial counterexamples,
+  alternative mechanisms, disagreements, and exact evidence. Its strict schema,
+  validator, deterministic report, and source-byte contract cover exactly 13
+  routes. All eight P1, five P2, and one P3 findings are corrected; there is no
+  P0 and no open or publication-blocked P0/P1.
+- The global #4021 inventory preserves the protected model-ladder route and now
+  reports 223 routes: 15 reviewed, 206 deferred, and 2 exempt. The remaining
+  deferred child partition is unchanged. The #4063 routes no longer carry a
+  deferment issue, and each carries its review evidence and corrected finding.
+- RED was collection failure for the absent
+  `scripts.site_trust_surface_audit` module. Reconciled-head GREEN evidence is
+  24 focused audit/inventory/editorial tests and the full 3,472-test collection:
+  3,442 passed with 30 documented skips. Deterministic inventory and site-audit
+  report checks pass. The content/link/citation/accessibility lane passes 164
+  tests. Focused Ruff, Black, strict MyPy, title case, QMD style discipline, and
+  diff checks pass. Python 3.13 reports the repository's expected warnings for
+  disabled third-party pytest plugins; Python 3.12 and hosted checks remain
+  protected authorities.
+- Exact-source Quarto 1.8.26 render and two-viewport, two-theme browser
+  inspection are recorded in `reports/site-trust-surface-browser-qa.json`.
+  The adversarial browser pass exposed clipped and malformed canonical notation
+  tables plus an uncontained roadmap state table; source commits `ee253eed` and
+  `8d776c56` correct them, and the final manifest verifier passes all 52/52
+  evidence items. Generated output is isolated from the feature worktree and is
+  never staged. Issue #4063 remains
+  open until the non-draft pull request is protected-merged and exact-main
+  verification closes the batch.
+
 ## Full Rendered-Route Scientific Claim Audit (#4021 — In Development)
 
 - Lease `codex-20260829-affine-a10` is recorded at issue comment

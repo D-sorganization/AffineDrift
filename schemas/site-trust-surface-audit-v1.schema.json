@@ -146,7 +146,7 @@
         },
         "evidence_paths": {
           "items": {
-            "pattern": "^(index\\.qmd|NOTATION\\.md|articles|critiques|data|pages|reports|scripts|src|tests)/?[A-Za-z0-9_./-]*$",
+            "pattern": "^(index\\.qmd|NOTATION\\.md|styles\\.css|articles|critiques|data|pages|reports|scripts|src|tests)/?[A-Za-z0-9_./-]*$",
             "type": "string"
           },
           "minItems": 1,
@@ -215,6 +215,15 @@
           "items": { "$ref": "#/$defs/finding" },
           "minItems": 1,
           "type": "array"
+        },
+        "included_source_paths": {
+          "items": {
+            "pattern": "^(NOTATION\\.md|pages/[A-Za-z0-9_.-]+\\.qmd)$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
         },
         "render_revision": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
         "reviewed_on": { "format": "date", "type": "string" },

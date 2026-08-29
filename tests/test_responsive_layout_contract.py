@@ -64,3 +64,32 @@ def test_mobile_publication_shell_contains_wide_content_without_page_scroll() ->
     assert "max-width: 100%" in shell_rule
     assert "width: 100%" in table_rule
     assert "contain: inline-size" in table_rule
+
+
+def test_notation_tables_scroll_locally_and_keep_well_formed_norm_rows() -> None:
+    """The normative notation reference must remain complete on narrow screens."""
+    page = (REPO_ROOT / "pages" / "notation.qmd").read_text(encoding="utf-8")
+    notation = (REPO_ROOT / "NOTATION.md").read_text(encoding="utf-8")
+    stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
+
+    assert "::: {.notation-reference}" in page
+    table_rule = stylesheet.split(".notation-reference table", maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    assert "display: block" in table_rule
+    assert "overflow-x: auto" in table_rule
+    assert "max-width: 100%" in table_rule
+
+    assert "| **$\\lVert q \\rVert = 1$** | Unit quaternion constraint" in notation
+    assert "| **$\\lVert v \\rVert$** | Magnitude/norm" in notation
+    assert "| --- | ------- | -------------------------- |" not in notation
+
+
+def test_roadmap_state_contract_table_scrolls_locally() -> None:
+    """The high-value state key must not be clipped by the mobile page shell."""
+    roadmap = (REPO_ROOT / "pages" / "development-roadmap.qmd").read_text(encoding="utf-8")
+
+    state_section = roadmap.split("## State Contract", maxsplit=1)[1].split(
+        "## Public Content Workstreams", maxsplit=1
+    )[0]
+    assert "::: {.table-wrapper}" in state_section

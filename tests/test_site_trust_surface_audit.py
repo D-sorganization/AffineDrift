@@ -64,6 +64,7 @@ def test_site_surface_audit_is_schema_valid_and_exactly_scoped() -> None:
     assert routes.keys() == SCOPED_SOURCES.keys()
     assert {route: record["source_path"] for route, record in routes.items()} == SCOPED_SOURCES
     assert len({record["audit_id"] for record in routes.values()}) == 13
+    assert routes["/pages/notation.html"]["included_source_paths"] == ["NOTATION.md"]
 
 
 def test_every_route_has_substantive_claim_and_adversarial_evidence() -> None:
@@ -122,13 +123,15 @@ def test_review_revision_contains_the_exact_scoped_source_bytes() -> None:
     assert git is not None
     for record in _route_map(_json(AUDIT)).values():
         revision = str(record["source_revision"])
-        source = str(record["source_path"])
-        result = subprocess.run(
-            [git, "diff", "--quiet", f"{revision}..HEAD", "--", source],
-            cwd=ROOT,
-            check=False,
-        )
-        assert result.returncode == 0, f"{source} changed after review revision {revision}"
+        sources = [record["source_path"], *record.get("included_source_paths", [])]
+        for source_value in sources:
+            source = str(source_value)
+            result = subprocess.run(
+                [git, "diff", "--quiet", f"{revision}..HEAD", "--", source],
+                cwd=ROOT,
+                check=False,
+            )
+            assert result.returncode == 0, f"{source} changed after review revision {revision}"
 
 
 def test_report_generation_is_deterministic_and_current(tmp_path: Path) -> None:

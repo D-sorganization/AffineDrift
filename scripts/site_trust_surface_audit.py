@@ -124,7 +124,8 @@ def validate_audit(audit: object, schema_path: Path, root: Path) -> None:
     claim_ids: set[str] = set()
     finding_ids: set[str] = set()
     for record in records:
-        if not (root / str(record["source_path"])).is_file():
+        sources = [record["source_path"], *cast(list[str], record.get("included_source_paths", []))]
+        if any(not (root / str(source)).is_file() for source in sources):
             raise SiteAuditContractError(f"Missing source for {record['route']}")
         _validate_claims(record, root, claim_ids)
         _validate_findings(record, root, finding_ids)
@@ -170,6 +171,7 @@ def _route_report(
         "finding_ids": [finding["finding_id"] for finding in findings],
         "route": record["route"],
         "source_path": record["source_path"],
+        "included_source_paths": record.get("included_source_paths", []),
         "source_revision": record["source_revision"],
     }
 
