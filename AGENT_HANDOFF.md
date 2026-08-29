@@ -45,8 +45,15 @@ This is current operational state. Historical detail belongs in git/GitHub.
   commit contracts. The corrected GREEN boundary passes 10/10
   executable contracts, 2/2 public-content/audit contracts, 11/11 existing
   claim-audit contracts, focused Ruff and Black, strict mypy, and publication
-  enforcement. Complete exact-head, render, and browser evidence remains due
-  before PR creation.
+  enforcement. Exact-head validation passes 3,351 non-content tests with 30
+  documented skips, 94 content tests with 4 documented skips, and all 20 Jest
+  suites (297 passes, 19 skips). Full Ruff/Black, strict focused mypy, module
+  budgets, terminology, title, display-math, 225-route render coverage,
+  claim-audit publication enforcement, pre-commit, and isolated generated-build
+  drift checks pass. Quarto 1.8.26 renders the public route; desktop and mobile
+  browser inspection confirms one H1, all scientific sections, four contained
+  tables, no page overflow or unrendered math, the full immutable source commit,
+  and no fresh console warnings or errors.
 
 ## Planar-to-Spatial-to-Flexible-Shaft Model Ladder (#4034 — Protected)
 
