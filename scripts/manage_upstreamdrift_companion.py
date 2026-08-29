@@ -56,7 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_local_arguments(install_local)
 
     install_url = commands.add_parser(
-        "install-url", help="download and atomically install an immutable release asset"
+        "install-url", help="download and install an immutable tracked manifest"
     )
     _add_pin_arguments(install_url)
     install_url.add_argument("--manifest-url", required=True)

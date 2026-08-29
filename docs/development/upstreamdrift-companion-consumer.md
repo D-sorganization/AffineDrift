@@ -47,11 +47,12 @@ those bytes to AffineDrift and records the exact generator command. The lock
 sets `manifest_url` to `null` because the artifact is not hosted at a raw GitHub
 path.
 
-`immutable-url` is reserved for a future governed release asset. Its URL must
-resolve to the approved path at the pinned commit. The downloader uses bounded
-temporary storage and rejects mutable branches, redirects outside the approved
-host/path, traversal, query strings, fragments, credentials, ports, and
-oversized responses.
+`immutable-url` is reserved for a future manifest tracked at the approved path
+in the pinned commit. The downloader uses bounded temporary storage and rejects
+mutable branches, redirects outside the approved host/path, traversal, query
+strings, fragments, credentials, ports, and oversized responses. GitHub release
+assets are not yet accepted by this mode: they require a separately reviewed
+release-attestation and redirect contract before the allowlist can expand.
 
 ## Commands
 
