@@ -6,29 +6,34 @@ from pathlib import Path
 import pytest
 
 from src.affine_control.reachability import (
-    AnalysisDeclaration,
     ContactEventCase,
-    CoordinateDeclaration,
     CorrectionRequest,
-    CrossValidationSample,
-    Hypothesis,
-    HypothesisResult,
-    InputDeclaration,
     LinearScalarSystem,
-    ModelDeclaration,
     PlanarRankDeficientSystem,
-    ReachabilityProtocol,
-    SolverDeclaration,
-    StateDeclaration,
-    assess_incremental_prediction,
     bounded_optimal_correction,
     contact_event_control_sensitivity,
     instantaneous_scalar_dcr,
     parameter_reachability_envelope,
-    preserve_hypothesis_results,
     rank_deficient_reachable_box,
     scalar_linear_reachable_interval,
     solve_contact_event,
+)
+from src.affine_control.reachability_protocol import (
+    AnalysisDeclaration,
+    CoordinateDeclaration,
+    CrossValidationSample,
+    EventDeclaration,
+    Hypothesis,
+    HypothesisResult,
+    InputDeclaration,
+    ModelDeclaration,
+    ReachabilityProtocol,
+    SolverDeclaration,
+    StateDeclaration,
+    TaskMetricDeclaration,
+    UncertaintyDeclaration,
+    assess_incremental_prediction,
+    preserve_hypothesis_results,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -54,11 +59,25 @@ def _declared_protocol() -> ReachabilityProtocol:
         state=state,
         inputs=inputs,
     )
+    event = EventDeclaration(
+        guard="path_angle = 0",
+        direction="descending",
+        reset="no reset in synthetic fixture",
+        timing="first future crossing",
+    )
+    task_metric = TaskMetricDeclaration(
+        name="absolute event-angle correction error",
+        unit="rad",
+        tolerance=0.01,
+        evaluation="at the declared event",
+    )
+    uncertainty = UncertaintyDeclaration(
+        model="deterministic bounded parameter envelope",
+        parameters="declared drift-gradient set",
+        evidence_status="assumed",
+    )
     analysis = AnalysisDeclaration(
-        horizon=0.2,
-        event="first descending path_angle zero crossing",
-        task_metric="absolute event-angle correction error in radians",
-        uncertainty="deterministic parameter envelope over declared bounds",
+        horizon=0.2, event=event, task_metric=task_metric, uncertainty=uncertainty
     )
     solver = SolverDeclaration(name="analytic-plus-fixed-step", revision="v1", tolerance=1e-10)
     return ReachabilityProtocol(
@@ -77,9 +96,12 @@ def test_protocol_declares_every_quantity_needed_for_interpretation() -> None:
     assert protocol.model.state.coordinates.scaling == (1.0, 0.1)
     assert protocol.model.state.coordinates.norm == "weighted_l2"
     assert protocol.analysis.horizon == pytest.approx(0.2)
-    assert "zero crossing" in protocol.analysis.event
-    assert "event-angle" in protocol.analysis.task_metric
-    assert "parameter envelope" in protocol.analysis.uncertainty
+    assert protocol.analysis.event.direction == "descending"
+    assert protocol.analysis.event.timing == "first future crossing"
+    assert protocol.analysis.task_metric.tolerance == pytest.approx(0.01)
+    assert protocol.analysis.task_metric.evaluation == "at the declared event"
+    assert protocol.analysis.uncertainty.evidence_status == "assumed"
+    assert "parameter envelope" in protocol.analysis.uncertainty.model
     assert protocol.solver.tolerance == pytest.approx(1e-10)
 
 
@@ -90,7 +112,9 @@ def test_protocol_declares_every_quantity_needed_for_interpretation() -> None:
         lambda: CoordinateDeclaration(("x",), ("m",), (0.0,), "weighted_l2"),
         lambda: CoordinateDeclaration(("x",), ("m",), (1.0,), "undeclared"),
         lambda: InputDeclaration(("u",), ((1.0, -1.0),), ("N",)),
-        lambda: AnalysisDeclaration(0.0, "event", "metric", "uncertainty"),
+        lambda: EventDeclaration("", "descending", "none", "first crossing"),
+        lambda: TaskMetricDeclaration("error", "rad", -1.0, "at event"),
+        lambda: UncertaintyDeclaration("bounded", "a", "undeclared"),
         lambda: SolverDeclaration("solver", "v1", 0.0),
     ),
 )

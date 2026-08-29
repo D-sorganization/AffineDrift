@@ -13,6 +13,7 @@ format:
 
 <!--
 Revision History:
+- v4: Added the bounded validation protocol, six system regressions, structured event/task/uncertainty declarations, hypothesis tiers, and null/negative-result preservation.
 - v3: Corrected the reachability contract; added the constant-additive-drift counterexample; withdrew unsupported control-cone, threshold, Gramian-scaling, timing, and face-variance claims.
 - v2: Added cross-joint DCR comparison caveat; clarified accessibility vs. controllability in Lie bracket analysis; refined norm-dependence discussion; added DCR threshold switching condition for ICC transition.
 - v1: Initial publication with core DCR definition, relativistic analogy, and numerical example.
@@ -487,6 +488,88 @@ changes in path, arrival time, and face angle in the impact-event outcome. It wo
 sensitivity to inertial parameters, shaft dynamics, impedance assumptions, and uncertainty.
 Neither planar DCR nor a quoted closure rate supplies those missing results.
 
+## Bounded DCR Validation Protocol {#sec-bounded-dcr-validation}
+
+This protocol asks a narrower question than whether DCR is an appealing description: **does a
+declared DCR add held-out information about a declared correction task beyond the state already
+known to the analysis?** The analytic counterexamples come first. A positive association or
+prediction result cannot override a counterexample to a universal or theorem-level claim.
+
+::: {.callout-important}
+## Authority Boundary
+
+The current executable cases are analytic or deterministic synthetic systems. Parameter bounds
+are assumed inputs to those systems. No participant or golfer data are measured or estimated,
+and golfer task outcomes remain unavailable. This exploratory output is
+**not coaching, clinical, design, causal, or population authority**.
+:::
+
+### Protocol Declaration
+
+Every run fails closed unless it records all of the following fields before results are examined:
+
+| Required Field | Declaration |
+|---|---|
+| **State and coordinates** | Named initial-state values, coordinate frame or chart, and units. |
+| **Input set and bounds** | Named admissible inputs, lower and upper bounds, units, and whether bounds vary with state. |
+| **Scaling and norm** | Coordinate scaling or weighting and the exact norm used for DCR and task projections. |
+| **Finite horizon** | Start state or phase, terminal time or stopping rule, and units. |
+| **Event definition** | Guard surface, crossing direction, reset/contact rule, and event-time convention. |
+| **Task metric** | Quantity being corrected, tolerance, and whether error is evaluated at fixed time or at the event. |
+| **Uncertainty model** | Declared parameter/model set or probability model; unavailable uncertainty is reported as unavailable. |
+| **Solver and tolerance** | Engine, solver and revision, step or analytic method, convergence test, and numerical tolerance. |
+
+The executable `ReachabilityProtocol` binds those declarations. The scalar and planar system
+regressions extend `src/affine_control/reachability.py`; the zero-gradient and rank-deficient
+cases call the protected #4013 `constant_additive_drift_interval` API rather than defining a
+competing reachability calculation. Protocol and hypothesis records live in the separate
+orchestration layer `src/affine_control/reachability_protocol.py`.
+
+### Analytic and Deterministic Regression Matrix
+
+The regression suite fixes six systems before any positive interpretation:
+
+| System | Frozen Regression | What It Can and Cannot Establish |
+|---|---|---|
+| **constant additive drift** | With $x_0=0$, $\bar u=1$, and $T=1$, drift 0 and 100 give $[-1,1]$ and $[99,101]$; both widths are 2. | Drift can translate a reachable set without shrinking it. This refutes universal scalar sufficiency, not a golf-specific effect. |
+| **state-dependent drift** | $\dot x=1+u$ and $\dot x=x+u$, both at $x_0=1$ with instantaneous DCR 1, have widths 2 and $2(e-1)\approx3.4366$. | Equal instantaneous DCR does not fix finite-horizon width. |
+| **rank-deficient input map** | For $G=[1,0]^\mathsf{T}$, drift $(0,10)$, $\bar u=1$, and $T=1$, the box is $[-1,1]\times\{10\}$, input-map rank is 1, and area is 0. | A norm ratio does not encode directional rank or controllability. |
+| **saturation** | A requested scalar correction of 2 with gain 1 and input bound 0.5 applies 0.5 and preserves an unmet residual of 1.5. | Constrained optimal correction depends on the task request and bounds, not DCR alone. |
+| **contact and event timing** | Two height-1 cases with velocities $-1$ and $-3$, drift acceleration $-9$, and control acceleration $+1$ reach the event at about 0.3904 and 0.25. Event-velocity sensitivities to control acceleration are about 0.2425 and 0.2. | The same drift/control magnitude comparison can accompany different event maps because baseline state and speed differ. |
+| **model and parameter perturbations** | For $\dot x=ax+u$, $x_0=1$, $\bar u=1$, $T=1$, and $a\in\{0.8,1.0,1.2\}$, center spans $[2.2255,3.3201]$ and width spans $[3.0639,3.8669]$. | Assumed parameter variation is published as an envelope rather than hidden behind one ratio. |
+
+All values above are analytic or modeled quantities from declared synthetic systems. They are not
+measurements. The exact numeric checks are in
+`tests/test_dcr_event_sensitivity_protocol.py`; a failed event, invalid bound, missing field, or
+nonfinite value is an explicit failure state rather than a substituted result.
+
+### Predeclared Hypotheses and Promotion Gates
+
+1. **Association hypothesis:** Test whether DCR remains associated with the declared task error
+   after adjustment for baseline state, speed, and control authority. Report the coefficient,
+   uncertainty interval, dependence structure, and missingness rule. Association does not imply
+   intervention effect.
+2. **Prediction hypothesis:** Test whether adding DCR to that baseline reduces held-out task-error
+   RMSE by at least a predeclared margin. Use group- or participant-held-out folds for participant
+   data; the deterministic fixture uses leave-one-out cross-validation only to regression-test the
+   calculation.
+3. **Theorem-level hypothesis:** Test any claim that scalar DCR alone determines correction
+   authority against the complete counterexample matrix. One valid counterexample rejects the
+   universal claim even if association or prediction is positive in a narrower dataset.
+
+The current baseline-exact synthetic fixture gives both baseline and DCR-augmented held-out RMSE
+below the declared $10^{-10}$ tolerance. Its incremental-prediction outcome is therefore **null**,
+not positive. The theorem-level scalar-sufficiency hypothesis is **negative** because the analytic
+counterexamples refute it. Association in golfers is **unavailable** because no participant data
+enter this protocol. **Null and negative results remain in the ledger** alongside supported and
+unavailable results; they are not filtered from publication.
+
+For future measured data, preprocessing, folds, thresholds, model revisions, and hypothesis tiers
+must be frozen before inspecting outcomes. Cross-validation must compare the baseline state,
+speed, and control authority model with the same model plus DCR. Uncertainty must cover held-out
+error and declared parameter/model perturbations. A result can be promoted only within that
+dataset, model, event, task metric, and uncertainty envelope.
+
 ## Stability and Clubface Variance: Required Model
 
 Let clubface angle be $\phi=h(q)$. A local event-variance analysis may start from
@@ -547,7 +630,7 @@ plt.show()
 
 5. **Rigid body assumption:** Shaft flexibility and soft tissue compliance may modify the effective inertia and hence the DCR, particularly near impact.
 
-6. **No finite-horizon reachability result:** This article does not yet compute governed reachable sets for the golf model. Path correction, arrival-time adjustment, and impact tolerances remain unavailable until the contract in @sec-anisotropy is implemented.
+6. **No golf-model finite-horizon result:** The bounded protocol above contains analytic and deterministic synthetic cases, not a governed reachable set for a calibrated golfer-club model. Path correction, arrival-time adjustment, and impact tolerances in golfers remain unavailable pending the spatial, event-level study described in @sec-anisotropy.
 :::
 
 ## Conceptual Linkages
