@@ -51,9 +51,9 @@ def _sources() -> tuple[EvidenceSource, ...]:
             "Does not promote this reduced compliant law to a design model.",
         ),
         EvidenceSource(
-            "mackenzie2018shaftimpact",
+            "mcnally2018shaftimpact",
             "primary-literature",
-            "MacKenzie (2018), doi:10.3390/proceedings2060245",
+            "McNally, McPhee, and Henrikson (2018), doi:10.3390/proceedings2060245",
             "Evidence that shaft coupling can alter modeled launch outcomes.",
             "Does not supply a universal shaft correction or validate free-body impact.",
         ),

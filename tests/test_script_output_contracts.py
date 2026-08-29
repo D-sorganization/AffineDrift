@@ -66,6 +66,7 @@ def test_convert_bibliography_preserves_scholarly_metadata(tmp_path: Path) -> No
             "volume": "12",
             "number": "3",
             "pages": "10--24",
+            "edition": "revised",
             "doi": "10.1000/example",
             "url": "https://doi.org/10.1000/example",
             "note": "Supports one declared method; does not validate the local fixture.",
@@ -80,6 +81,7 @@ def test_convert_bibliography_preserves_scholarly_metadata(tmp_path: Path) -> No
     assert "volume    = {12}" in rendered
     assert "number    = {3}" in rendered
     assert "pages     = {10--24}" in rendered
+    assert "edition   = {revised}" in rendered
     assert "doi       = {10.1000/example}" in rendered
     assert "url       = {https://doi.org/10.1000/example}" in rendered
     assert (

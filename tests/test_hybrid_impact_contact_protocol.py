@@ -39,7 +39,7 @@ def test_protocol_freezes_sources_models_frames_and_authority() -> None:
         "cross2014impact",
         "roberts2001contacttime",
         "petersen2009clubface",
-        "mackenzie2018shaftimpact",
+        "mcnally2018shaftimpact",
         "kong2024saltation",
     )
     assert protocol.model_ids == ("rigid-impulse", "compliant-contact", "hybrid-event")

@@ -79,17 +79,29 @@ def _entry_to_bibtex(entry: dict) -> str:  # type: ignore[type-arg]
         else:
             fields.append(f"  howpublished = {{{_escape_bibtex(venue)}}}")
 
+    for source_name, bib_name in (
+        ("volume", "volume"),
+        ("number", "number"),
+        ("pages", "pages"),
+        ("edition", "edition"),
+        ("eprint", "eprint"),
+        ("archive_prefix", "archivePrefix"),
+    ):
+        value = entry.get(source_name, "")
+        if value:
+            fields.append(f"  {bib_name:<9} = {{{_escape_bibtex(str(value))}}}")
+
     doi = entry.get("doi", "")
     if doi:
         fields.append(f"  doi       = {{{doi}}}")
 
     url = entry.get("url", "")
-    if url and not doi:
+    if url:
         fields.append(f"  url       = {{{url}}}")
 
-    description = entry.get("description", "")
-    if description:
-        fields.append(f"  note      = {{{_escape_bibtex(description[:200])}}}")
+    note = entry.get("note") or entry.get("description", "")
+    if note:
+        fields.append(f"  note      = {{{_escape_bibtex(str(note)[:500])}}}")
 
     body = ",\n".join(fields)
     return f"@{bib_type}{{{key},\n{body}\n}}"

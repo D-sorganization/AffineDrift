@@ -53,12 +53,12 @@ def test_primary_sources_are_registered_in_canonical_bibliography() -> None:
     expected_dois = {
         "roberts2001contacttime": "10.1046/j.1460-2687.2001.00084.x",
         "petersen2009clubface": "10.1007/s12283-009-0030-7",
-        "mackenzie2018shaftimpact": "10.3390/proceedings2060245",
+        "mcnally2018shaftimpact": "10.3390/proceedings2060245",
         "kong2024saltation": "10.1109/JPROC.2024.3440211",
     }
     for source_id, doi in expected_dois.items():
         assert by_id[source_id]["doi"] == doi
-        assert by_id[source_id]["type"] == "article"
+        assert by_id[source_id]["type"] == "paper"
         assert by_id[source_id]["note"]
 
 
