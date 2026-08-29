@@ -81,11 +81,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   installed in this worktree environment; do not treat 3.13 evidence as a
   substitute for the protected Python 3.12 lane.
 
-## Bounded DCR Event-Validation Protocol (#4033 — PR Pending)
+## Bounded DCR Event-Validation Protocol (#4033 — Protected PR #4052 Merged)
 
-- Branch `feat/4033-dcr-event-sensitivity` starts from protected main
-  `bde0ec906a233bb7fea592d5c676c042bd034754` and extends, rather than replaces,
-  the #4013 reachability authority. The zero-gradient scalar and
+- Protected merge `42975df666c38154304652aaa48f856aefd4bd7e` is the exact
+  reviewed #4033 tree and extends, rather than replaces, the #4013 reachability
+  authority. The zero-gradient scalar and
   rank-deficient planar regressions call
   `constant_additive_drift_interval` directly.
 - `src/affine_control/reachability_protocol.py` fails closed unless state,
@@ -111,8 +111,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
   terminology, title, math, citation, generated-content, and diff gates pass.
   Quarto 1.8.26 renders the public article in isolation; desktop and 390-pixel
   mobile inspection show readable protocol and authority-boundary content with
-  no horizontal overflow or console errors. Python 3.12 and hosted checks remain
-  the protected authorities.
+  no horizontal overflow or console errors. All required hosted checks passed
+  before the ordinary protected merge.
 
 ## Ultimate Companion Scientific Repair (2026-08-28)
 
@@ -233,8 +233,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
 
 ## Governed Claim/Critique Ledger (#4020 — Protected PR #4051 Merged)
 
-- Protected merge `e3501e09e9914c134e4a5c0f189159028ca23f68` owns the
-  ledger and its deterministic public projections.
+- Protected merge `e3501e09e9914c134e4a5c0f189159028ca23f68` is the exact
+  reviewed #4020 tree and owns the ledger plus its deterministic public
+  projections; issue #4020 is closed.
 - `schemas/claim-critique-ledger-v1.schema.json` and
   `data/trust/claim_critique_ledger.json` are the normative critique-governance
   contract. Every public critique Markdown source is registered exactly once;
@@ -266,7 +267,51 @@ This is current operational state. Historical detail belongs in git/GitHub.
   78 tests with 4 documented skips; all 20 Jest suites pass 297 tests with 19
   skips. Bibliography, terminology, title, cross-reference, display-math,
   Stylelint, Ruff, Black, and strict MyPy gates pass.
-  All required hosted checks passed before the ordinary protected merge.
+  Protected PR #4051 merged normally after all required hosted checks passed.
+
+## Full Rendered-Route Scientific Claim Audit (#4021 — In Development)
+
+- Lease `codex-20260829-affine-a10` is recorded at issue comment
+  `#issuecomment-5461176202`. The isolated branch started from local #4020 head
+  `76abdad507c3e1e4ef6ccacd0a6e696c29d7fb7a` and was reconciled by ordinary
+  merge with protected #4020 authority
+  `e3501e09e9914c134e4a5c0f189159028ca23f68`, then current protected #4033
+  authority `42975df666c38154304652aaa48f856aefd4bd7e`.
+- `schemas/claim-audit-inventory-v1.schema.json` and
+  `data/trust/claim_audit_inventory.json` own route-level audit state only.
+  Stable IDs are SHA-256-derived from canonical routes. Claim and critique
+  fields contain IDs only and must match the exact route joins derived from the
+  protected #4019 registry and #4020 ledger.
+- The post-prune Quarto 1.8.26 render contains 222 public routes: the static
+  404/offline system routes are narrowly exempt, and the DCR route is reviewed
+  against protected #4013/#4019 evidence. The remaining 219 routes map exactly
+  once to exhaustive child batches: #4054 36 Physics of Golf, #4055 26 Geometry
+  of Motion, #4056 16 tangent-series, #4057 40 critiques, #4058 29 core
+  articles, #4059 18 applied articles, #4060 14 model/repository, #4061 21
+  resources, #4062 6 books, and #4063 13 root/page routes. Parent #4021 remains
+  open for final reconciliation; no route is absent or silently reviewed.
+- P0/P1 findings may be `corrected` or `publication_blocked`; open/deferred
+  states fail validation, and any `publication_blocked` P0/P1 record stops the
+  deploy workflow. Every finding requires a linked AffineDrift issue and
+  rationale. Corrected findings additionally require local evidence paths and a
+  verification commit.
+- `scripts/generate_claim_audit_inventory.py` initializes from the rendered
+  manifest, validates exact coverage and authority links, and generates
+  `data/trust/generated/claim_audit_report.json` plus
+  `reports/scientific-claim-audit.md`. The generated reports join titles/status
+  from upstream authorities but do not duplicate their scientific prose.
+- RED was the missing generator module at test collection; the child-partition
+  extension first failed on absent route-scope exports and then on all stale
+  parent issue URLs. Exact-head GREEN evidence is 75 combined
+  #4013/#4019/#4020/#4021/public-manifest tests and
+  3,328 default-lane tests with 29 documented skips and 91 deselections. The
+  content lane passes 90 tests with 4 documented skips and 3,354 deselections. Ruff,
+  Black, repository MyPy (74 source files), code-quality, and all pre-commit
+  hooks pass.
+- Quarto 1.8.26 rendered all 221 sources at the reconciled head. The deployment
+  pipeline pruned 28 internal artifacts, regenerated an exact 222-route public
+  manifest, and passed deterministic report freshness plus the enforced
+  publication gate. The isolated worktree is clean after render verification.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
