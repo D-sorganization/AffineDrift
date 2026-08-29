@@ -10,6 +10,44 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
+## Population Generalization and Participant-Held-Out Validation (#4039 — In Progress)
+
+- Branch `feat/4039-population-generalization` started from exact protected main
+  `838cdb5971b071dda5bdebd3af4e46e320989afc` in isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4039-a13`. RED commit
+  `373bcf1f` fails collection on the absent protocol API; GREEN content and
+  executable implementation commit `966e2ad6` supplies the bounded contract.
+- `population_generalization.py` freezes the dataset card, evidence origin,
+  site/participant/session/equipment/trial hierarchy, four distinct estimand
+  classes, preregistration, immutable group-aware split, and measured-evidence
+  promotion gates. It rejects participant, session, trial, and site leakage,
+  incomplete test assignment, test-set tuning, and manufactured-to-measured
+  promotion. `population_generalization_evidence.py` and `_fixtures.py` contain
+  deterministic manufactured analysis only.
+- The manufactured locked test retains a calibration slope of 0.5 as negative,
+  a participant-level mean-bias interval including zero as null, and external
+  validation as unavailable. Small subgroups are suppressed rather than
+  estimated. Generated JSON/Markdown reports are deterministic and explicitly
+  non-authorizing.
+- `/models/population-generalization.html` declares the target population,
+  sampling frame, strata, repeated measures, missingness, exclusions, leakage,
+  hierarchical uncertainty, calibration, subgroup, sensitivity,
+  transportability, ethics, privacy, consent, licensing, and independent human
+  boundaries. Primary sources support dataset documentation, prediction
+  reporting, use-case-aligned splits, calibration, and target-population
+  analysis; none is represented as golfer evidence.
+- Audit `ad-route-b7d4c6ec440c` binds the canonical QMD, three implementation
+  modules, generator, tests, and both report projections to exact SHA-256 bytes
+  reviewed at `966e2ad6251642f14bf5a8c372f6649d24a1d432`. The 227-route inventory
+  now has 25 reviewed, 200 deferred, and 2 exempt routes. A digest proves source
+  bytes, not scientific validity.
+- Focused executable contracts are 6/6 green; focused content contracts are
+  3/3 green; all 14 global inventory contracts pass. Ruff, strict focused MyPy,
+  bibliography identity/quality, QMD citation integrity, Quarto syntax, title
+  case, and deterministic report/publication checks pass. Full suites,
+  detached rendering, browser QA, protected-main reconciliation, and hosted
+  checks remain before merge.
+
 ## Hybrid Impact-Contact and Event-Time Uncertainty (#4038 — In Progress)
 
 - Branch `feat/4038-hybrid-impact-contact` started from exact protected main
