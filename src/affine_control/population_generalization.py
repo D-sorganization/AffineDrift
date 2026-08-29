@@ -202,6 +202,7 @@ def _partition_groups(
         for label, key in (
             ("participant", row.participant_id),
             ("session", row.session_id),
+            ("equipment", row.equipment_id),
             ("trial", row.trial_id),
         ):
             partitions.setdefault(f"{label}:{key}", set()).add(assignment.partition)

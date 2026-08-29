@@ -77,6 +77,24 @@ def test_locked_split_is_group_disjoint_and_rejects_every_leakage_level() -> Non
         validate_split_integrity(observations, replace(split, locked_test_set=False))
 
 
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    (
+        ("participant_id", "p1", "participant leakage"),
+        ("session_id", "s1", "session leakage"),
+        ("equipment_id", "driver-a", "equipment leakage"),
+        ("trial_id", "t1", "trial leakage"),
+        ("site_id", "site-a", "site leakage"),
+    ),
+)
+def test_test_partition_rejects_nested_group_leakage(field: str, value: str, message: str) -> None:
+    observations = list(manufactured_observations())
+    observations[-2] = replace(observations[-2], **{field: value})
+
+    with pytest.raises(ValueError, match=message):
+        validate_split_integrity(tuple(observations), manufactured_split())
+
+
 def test_prediction_report_is_deterministic_hierarchical_and_keeps_adverse_results() -> None:
     observations = manufactured_observations()
     split = manufactured_split()
