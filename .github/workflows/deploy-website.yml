@@ -238,7 +238,7 @@ jobs:
         run: |
           mkdir -p artifacts/public-site-verification
           LIVE_MANIFEST="$RUNNER_TEMP/public-site-manifest.json"
-          for attempt in {1..12}; do
+          for attempt in {1..60}; do
             if curl --fail --silent --show-error \
               "$PUBLIC_SITE_URL/public-site-manifest.json?revision=$GITHUB_SHA" \
               --output "$LIVE_MANIFEST"; then
@@ -249,7 +249,7 @@ jobs:
                 fi
               fi
             fi
-            if [ "$attempt" = "12" ]; then
+            if [ "$attempt" = "60" ]; then
               echo "Live manifest did not reach deployment revision $GITHUB_SHA."
               exit 1
             fi
