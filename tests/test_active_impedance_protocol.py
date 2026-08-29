@@ -269,6 +269,11 @@ def test_result_ledger_preserves_mechanical_model_proxy_and_unavailable_tiers() 
         "null",
         "unavailable",
     }
+    assert {result.provenance.origin for result in results} == {
+        "synthetic-fixture",
+        "unavailable",
+    }
+    assert all(result.provenance.record_id for result in results)
     assert all(
         result.uncertainty_interval is not None for result in results if result.estimate is not None
     )
@@ -281,6 +286,16 @@ def test_result_ledger_preserves_mechanical_model_proxy_and_unavailable_tiers() 
         replace(results[0], evidence_tier="unavailable")
     with pytest.raises(ValueError, match="authority"):
         replace(results[0], interpretation="This identifies muscle force for coaching.")
+    with pytest.raises(ValueError, match="measured origin"):
+        replace(
+            results[0],
+            provenance=replace(results[0].provenance, origin="measured"),
+        )
+    with pytest.raises(ValueError, match="unavailable"):
+        replace(
+            results[0],
+            provenance=replace(results[0].provenance, origin="unavailable"),
+        )
 
 
 def test_human_tier_requires_every_governance_safety_and_validation_gate() -> None:
@@ -356,6 +371,7 @@ def test_public_protocol_is_source_bounded_and_non_authoritative() -> None:
     required = (
         "Active Impedance and Co-Contraction Identification",
         "Primary-Source Register",
+        "journal method-recommendation article, not a formal measurement standard",
         "Perturbation Device and Safety Envelope",
         "Phase and Response-Window Contract",
         "Endpoint and Joint Impedance",
@@ -364,6 +380,7 @@ def test_public_protocol_is_source_bounded_and_non_authoritative() -> None:
         "Direct cross-index value comparison is prohibited",
         "Excitation and Identifiability",
         "Synthetic Recovery and Confounding Fixtures",
+        "machine-readable evidence origin",
         "Effective Mechanical",
         "Model Partitioned",
         "EMG Proxy",
