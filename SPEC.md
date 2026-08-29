@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T06:38:26Z
+Last-Updated: 2026-08-29T07:10:45Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -58,6 +58,11 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   torque distinct from power, work, energy, tissue load, physiological effort,
   and outcome; net generalized input must not be presented as identified
   individual-muscle force, bilateral hand-force allocation, or neural intent
+- Maintain generated, schema-validated scientific trust panels whose stable
+  claim IDs bind accessible summaries to bounded technical claims, provenance,
+  uncertainty, limitations, falsifiers, review state, and the next validation
+  gate; fail closed when summaries amplify modal strength or unsupported
+  causal, universal, exact, optimal, locked-in, or percentage claims
 - Publish an accessible, evidence-linked companion to the proximal--distal technical treatment, with original visual explanations and explicit model, human-evidence, and hypothesis boundaries
 - Pin the complete canonical proximal--distal claim audit by exact upstream
   merge and hashes, expose its reviewed/unadjudicated counts, and preserve
@@ -361,6 +366,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F62 | Ground-reaction drift publication                   | ✅     | The proximal-to-distal article and Physics of Golf GRF chapter define a frame-explicit constrained-reaction split, overlapping pointwise reaction ZTCF/ZVCF diagnostics, rank/identifiability boundaries, model-internal fixed-support results, and a participant-held-out force-plate falsification protocol. Regression tests prohibit universal contact-work claims, unique torque or bilateral inference, and one-template GRF prescriptions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | F63 | Physics of Golf LuaLaTeX contract                   | ✅     | The Physics of Golf PDF build uses `unicode-math`-compatible bold symbols, provides its shared source-level math macros in the PDF preamble, and keeps display equations valid for LuaLaTeX arrays and subscripts. Focused source-contract tests guard the failure modes exposed by a complete book render.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | F64 | Revision-bound public-site verification             | ✅     | `scripts/public_site_manifest.py` inventories every deployable HTML route and binds the artifact to its Git revision. `scripts/verify-public-site.js` fails closed on incomplete evidence, unavailable pages, title and heading defects, missing canonical URLs or navigation, wrong theme state, below-fold primary headings, overflow, fixed-chrome overlap, missing alternatives or button names, untypeset visible equations, console/page errors, and required-resource failures. Deployment verifies every route at mobile and desktop widths in both themes, stores representative tablet/desktop screenshots, then repeats the full matrix against the revision-matched live manifest. |
+| F66 | Generated scientific trust metadata                | ✅     | A strict Draft 2020-12 JSON Schema, canonical claim registry, and deterministic generator publish stable page/claim IDs with review commit, evidence and critique status, scope, uncertainty, limitations, falsifiers, software/data provenance, and next validation gate. Corpus tests require governed-page includes and technical-anchor links, render unknown qualification visibly, and reject accessible-summary amplification of modal strength, causal/universal/exact/optimal/locked-in terms, or unsupported percentages (#4019). |
 
 ### API / Interface Contract
 
@@ -655,6 +661,16 @@ python src/tools/code_quality_check.py
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
+
+### 1.0.240 Governed Scientific Trust Metadata
+
+Adds a strict versioned trust-metadata schema, canonical claim registry,
+deterministic Quarto-panel generator with freshness checking, reusable
+responsive/print presentation, and a first governed DCR claim. Technical and
+accessible text are linked by stable IDs; fail-closed contracts prevent lay
+summaries from strengthening modality or introducing unsupported causal,
+universal, exact, optimal, locked-in, or percentage language. Direct pins make
+JSON Schema validation and strict typing reproducible in clean environments.
 
 ### 1.0.239 Planar-Spatial Scope Integration
 
