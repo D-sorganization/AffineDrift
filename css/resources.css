@@ -34,8 +34,14 @@
 
 .resource-card.has-media {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
+}
+
+.resource-card > *,
+.resource-media,
+.resource-content {
+  min-width: 0;
 }
 
 .resource-media {
@@ -53,7 +59,8 @@
   display: block;
 }
 
-.resource-content h3 {
+.resource-card > h2,
+.resource-content :is(h2, h3) {
   font-size: 1.25rem;
   margin-top: 0;
   margin-bottom: 0.75rem;

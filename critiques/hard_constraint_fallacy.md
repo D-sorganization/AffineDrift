@@ -3,7 +3,7 @@ title: "Critique: The Hard Constraint Fallacy in Biomechanical Joints"
 description: "Critique and response context for The Hard Constraint Fallacy in Biomechanical Joints in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: The Hard Constraint Fallacy in Biomechanical Joints
+## Critique: The Hard Constraint Fallacy in Biomechanical Joints
 
 ## Summary of Concern
 

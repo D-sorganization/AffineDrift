@@ -3,7 +3,7 @@ title: "Critique: The Simulation Tautology (Circular Validation)"
 description: "Critique and response context for The Simulation Tautology (Circular Validation) in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: The Simulation Tautology (Circular Validation)
+## Critique: The Simulation Tautology (Circular Validation)
 
 ## Summary of Concern
 

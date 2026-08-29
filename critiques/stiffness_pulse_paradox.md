@@ -3,7 +3,7 @@ title: "Critique: The Stiffness Pulse Paradox (Time-Varying Impedance)"
 description: "Critique and response context for The Stiffness Pulse Paradox (Time-Varying Impedance) in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: The Stiffness Pulse Paradox (Time-Varying Impedance)
+## Critique: The Stiffness Pulse Paradox (Time-Varying Impedance)
 
 ## Summary of Concern
 

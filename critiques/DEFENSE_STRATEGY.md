@@ -3,7 +3,7 @@ title: "AffineDrift Defense Strategy"
 description: "Working response map for AffineDrift critiques, tracking current defense strategies, validity judgments, and implementation status."
 ---
 
-# Defense Strategy: AffineDrift
+## Defense Strategy: AffineDrift
 
 This is a public working response map for critique transparency. It is not a peer-reviewed assessment, and status labels describe the current editorial response plan rather than settled consensus.
 

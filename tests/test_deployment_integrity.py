@@ -45,6 +45,27 @@ def test_deploy_workflow_integrity() -> None:
     ), "Deploy workflow must render the site before post-build checks"
 
 
+def test_deploy_workflow_gates_local_and_live_every_page_evidence() -> None:
+    """Pages may deploy only after the manifest matrix passes locally and live."""
+    content = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "scripts/public_site_manifest.py" in content
+    assert content.count("scripts/verify-public-site.js") >= 2
+    assert "public-site-manifest.json" in content
+    assert "source_revision" in content and "GITHUB_SHA" in content
+    assert "npx playwright install" in content
+    assert "public-site-verification" in content
+    assert "upload-artifact" in content
+
+
+def test_ci_and_deploy_use_the_locally_qualified_quarto_version() -> None:
+    """CI and Pages render with the same qualified Quarto release as local QA."""
+    for workflow in (WORKFLOW_PATH, CI_WORKFLOW_PATH):
+        content = workflow.read_text(encoding="utf-8")
+        assert 'version: "1.8.26"' in content
+        assert 'version: "1.6.39"' not in content
+
+
 def test_deploy_runner_picker_does_not_depend_on_org_api_token() -> None:
     """Deploy routing should not fail when an org runner-listing token is stale."""
     assert WORKFLOW_PATH.exists(), "Deployment workflow file missing"

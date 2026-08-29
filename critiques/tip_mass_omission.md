@@ -3,7 +3,7 @@ title: "Critique: Tip Mass Omission (The Headless Club)"
 description: "Critique and response context for Tip Mass Omission (The Headless Club) in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Tip Mass Omission (The Headless Club)
+## Critique: Tip Mass Omission (The Headless Club)
 
 ## Summary of Concern
 

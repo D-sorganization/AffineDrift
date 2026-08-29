@@ -3,7 +3,7 @@ title: 'Critique: Normative Ambiguity of Drift (The "Good Drift" Hypothesis)'
 description: 'Critique and response context for Normative Ambiguity of Drift (The "Good Drift" Hypothesis) in AffineDrift''s control-affine golf-swing framework.'
 ---
 
-# Critique: Normative Ambiguity of Drift (The "Good Drift" Hypothesis)
+## Critique: Normative Ambiguity of Drift (The "Good Drift" Hypothesis)
 
 ## Summary of Concern
 

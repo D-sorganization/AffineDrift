@@ -27,13 +27,14 @@ EXPECTED_VOLUME0_FILES = {
 }
 
 
-def test_volume0_chapter_files_match_the_canonical_include_set() -> None:
-    """Volume 0 should only keep the chapter files that the index includes."""
+def test_volume0_chapter_files_match_the_canonical_linked_reading_path() -> None:
+    """Volume 0 links each canonical chapter instead of duplicating it into one page."""
     actual = {path.name for path in QUARTO_DIR.glob("vol0_ch*.qmd")}
     assert actual == EXPECTED_VOLUME0_FILES
     text = (QUARTO_DIR / "volume0.qmd").read_text(encoding="utf-8")
     for filename in EXPECTED_VOLUME0_FILES:
-        assert f"{{{{< include {filename} >}}}}" in text
+        assert f"({Path(filename).with_suffix('.html').name})" in text
+        assert f"{{{{< include {filename} >}}}}" not in text
 
 
 def test_volume2_is_monolithic_and_has_no_split_qmd_duplicates() -> None:

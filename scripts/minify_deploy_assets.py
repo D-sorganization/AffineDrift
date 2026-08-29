@@ -15,13 +15,25 @@ from collections.abc import Callable
 from pathlib import Path
 
 CSS_COMMENT_RE = re.compile(r"/\*.*?\*/", re.DOTALL)
+DESCENDANT_PSEUDO_SENTINEL = "\ue000"
 
 
 def minify_css(source: str) -> str:
     """Return a compact CSS string suitable for generated deploy artifacts."""
     text = CSS_COMMENT_RE.sub("", source)
+    # Whitespace before a pseudo-class can be a descendant combinator. Protect
+    # it before the generic punctuation pass trims declaration colons.
+    text = re.sub(
+        r"(?<=\S)\s+(?=:{1,2}[A-Za-z-])",
+        DESCENDANT_PSEUDO_SENTINEL,
+        text,
+    )
     text = re.sub(r"\s+", " ", text)
-    text = re.sub(r"\s*([{}:;,>+~])\s*", r"\1", text)
+    # Keep whitespace around >, +, and ~. They are selector combinators, but
+    # they are also comparison/arithmetic operators whose spacing is required
+    # by media-range and calc() grammar.
+    text = re.sub(r"\s*([{}:;,])\s*", r"\1", text)
+    text = text.replace(DESCENDANT_PSEUDO_SENTINEL, " ")
     text = text.replace(";}", "}")
     return text.strip() + "\n"
 

@@ -3,7 +3,7 @@ title: "Critique: The Flaccid Drift Contradiction"
 description: "Critique and response context for The Flaccid Drift Contradiction in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: The Flaccid Drift Contradiction
+## Critique: The Flaccid Drift Contradiction
 
 ## Summary of Concern
 

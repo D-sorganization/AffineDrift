@@ -3,7 +3,7 @@ title: 'Bibliographic Analysis: Precision vs. Gross Control (The "Locked-In" Fal
 description: 'Bibliographic analysis supporting the AffineDrift critique of Precision vs. Gross Control (The "Locked-In" Fallacy).'
 ---
 
-# Bibliographic Analysis: Precision vs. Gross Control (The "Locked-In" Fallacy)
+## Bibliographic Analysis: Precision vs. Gross Control (The "Locked-In" Fallacy)
 
 ## A) Concept Map
 

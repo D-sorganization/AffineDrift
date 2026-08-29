@@ -26,6 +26,7 @@ project:
     - manifest.json
     - service-worker.js
     - offline.html
+    - listings.json
     - js/
     - content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py
 
@@ -95,8 +96,6 @@ website:
           - text: "---"
           - text: "How a Golf Swing Carries Energy"
             href: articles/proximal-distal-a-journey-through-the-swing.html
-          - text: "Explore the Proximal–Distal Models"
-            href: articles/proximal-distal-model-workbench.html
           - text: "Learning Paths"
             href: resources/learning-paths.html
           - text: "Critiques & Responses"
@@ -129,21 +128,6 @@ website:
             href: models/models.html
           - text: "Repositories"
             href: repositories/repositories.html
-          - text: "---"
-          - text: "MuJoCo"
-            href: models/models-mujoco.html
-          - text: "Drake"
-            href: models/models-drake.html
-          - text: "Pinocchio"
-            href: models/models-pinocchio.html
-          - text: "OpenSim"
-            href: models/models-opensim.html
-          - text: "MyoSim"
-            href: models/models-myosim.html
-          - text: "Simulink"
-            href: models/models-simulink.html
-          - text: "Pendulum Models"
-            href: models/models-pendulum.html
           - text: "---"
           - text: "Datasets"
             href: resources/resources-datasets.html
@@ -206,7 +190,13 @@ format:
     number-sections: false
     code-fold: true
     code-tools: false
-    html-math-method: mathjax
+    canonical-url: true
+    # Pandoc must preserve TeX delimiters, while the tested local gate decides
+    # whether the pinned MathJax runtime is needed. The inert local URL prevents
+    # Pandoc from adding its legacy polyfill and second MathJax runtime.
+    html-math-method:
+      method: mathjax
+      url: "/js/equation-runtime-gate.js"
     include-in-header:
       - _includes/site-head.html
       - _includes/mathjax-loader.html

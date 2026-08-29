@@ -36,6 +36,14 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def manifest_digest_matches(data: bytes, expected: str) -> bool:
+    """Match a text manifest across Git's LF and declared Windows CRLF forms."""
+    if sha256_bytes(data) == expected:
+        return True
+    canonical_crlf = data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+    return sha256_bytes(canonical_crlf) == expected
+
+
 def _mapping(value: object, label: str) -> dict[str, object]:
     if not isinstance(value, dict) or not all(isinstance(key, str) for key in value):
         raise ProjectionError(f"{label} must be an object with string keys")
@@ -270,7 +278,7 @@ def main() -> int:
         args.source_manifest or f"{raw_root}/release_manifest.json", MAX_MANIFEST_BYTES
     )
     expected_manifest = _text(source.get("release_manifest_sha256"), "release manifest sha256")
-    if sha256_bytes(manifest_bytes) != expected_manifest:
+    if not manifest_digest_matches(manifest_bytes, expected_manifest):
         raise ProjectionError("release manifest digest does not match the protected authority")
     upstream = _mapping(json.loads(manifest_bytes), "upstream release manifest")
     upstream_pdf = _read_bounded(args.source_pdf or f"{raw_root}/{pdf_name}", MAX_PDF_BYTES)

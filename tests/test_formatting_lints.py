@@ -142,6 +142,10 @@ class TestTableMathPipeIntegrity:
                 if "Exponential coordinates" in line:
                     assert r"\lVert\boldsymbol{\omega}\rVert" in line
 
+    def test_rotation_converter_has_named_responsive_grid(self) -> None:
+        content = (REPO_ROOT / "articles/rotation-converter.qmd").read_text(encoding="utf-8")
+        assert 'class="rc-main-grid"' in content
+
 
 class TestHeadingLevelProgression:
     """Verify heading levels step linearly without skipping levels."""

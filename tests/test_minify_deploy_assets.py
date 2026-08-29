@@ -19,6 +19,22 @@ def test_minify_css_removes_comments_and_extra_whitespace() -> None:
     assert minify_css(css) == ".card{color:red;margin:0}\n"
 
 
+def test_minify_css_preserves_descendant_space_before_pseudo_class() -> None:
+    css = "#quarto-document-content :not(pre) > code { white-space: normal; }"
+
+    assert minify_css(css) == ("#quarto-document-content :not(pre) > code{white-space:normal}\n")
+
+
+def test_minify_css_preserves_media_ranges_and_calc_operator_spacing() -> None:
+    css = """
+    @media (width >= 1440px) {
+      .grid > .item { width: calc(50% + 1rem); }
+    }
+    """
+
+    assert minify_css(css) == ("@media (width >= 1440px){.grid > .item{width:calc(50% + 1rem)}}\n")
+
+
 def test_minify_js_preserves_strings_while_removing_comments() -> None:
     js = """
     const url = "https://example.test/a//b"; // trailing comment

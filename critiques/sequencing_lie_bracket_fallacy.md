@@ -3,7 +3,7 @@ title: 'Critique: Lie Brackets and "Sequencing" (Misinterpretation of Actuation)
 description: 'Critique and response context for Lie Brackets and "Sequencing" (Misinterpretation of Actuation) in AffineDrift''s control-affine golf-swing framework.'
 ---
 
-# Critique: Lie Brackets and "Sequencing" (Misinterpretation of Actuation)
+## Critique: Lie Brackets and "Sequencing" (Misinterpretation of Actuation)
 
 ## Summary of Concern
 

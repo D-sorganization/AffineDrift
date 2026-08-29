@@ -19,6 +19,8 @@
 @import url("css/components/not-found.css");
 @import url("css/components/callouts.css");
 @import url("css/components/code-theme.css");
+@import url("css/components/update-notice.css");
+@import url("css/components/notes-workspace.css");
 @import url("css/utilities/spacing.css");
 
 /* Native cross-document view transitions (issue #3334): a free same-origin
@@ -127,27 +129,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Full-layout pages keep Quarto's generated title block visible by default so
-   every page has an accessible H1 (issue #3917). A handful of full-layout
-   pages author their own hero <h1> directly in custom markup (see the
-   opt-out selector list below); those pages suppress the redundant
-   auto-generated title so they don't end up with two H1s. */
+/* Full-layout hubs own their visible H1 in authored page markup. Every such
+   source is checked by tests/title-block-semantics.test.js, so the generated
+   Quarto title is always the redundant copy and is hidden consistently. */
 #quarto-content.page-layout-full #title-block-header {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-#quarto-content.page-layout-full #title-block-header .title {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-/* Pages that author their own hero H1 in raw HTML markup: hide Quarto's
-   auto-generated title block to avoid a duplicate H1 on the page. Mark such
-   a page by adding class="page-has-custom-h1" to the outermost element of
-   its custom markup (see 404.qmd, index.qmd, pages/collaborate.qmd,
-   pages/book-reviews.qmd, resources/resources.qmd for examples). */
-#quarto-content.page-layout-full:has(.page-has-custom-h1) #title-block-header {
   display: none;
 }
 
@@ -216,7 +201,7 @@ a:hover {
    --- */
 
 /* Central Container */
-.container {
+.ad-page-container {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 0 2rem;
@@ -247,6 +232,69 @@ a:hover {
   max-width: 100%;
 }
 
+/* Publication title shell. The title, description, and metadata stack in one
+   readable flow at every viewport; they never compete for narrow flex tracks. */
+#quarto-content.page-layout-article #title-block-header.quarto-title-block {
+  position: static;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 var(--spacing-lg);
+  padding: clamp(1.25rem, 2.5vw, 2.25rem);
+  color: var(--text-inverse);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark),
+    var(--color-primary-main)
+  );
+  border: 1px solid var(--color-primary-main);
+  border-radius: var(--border-radius-lg, 0.75rem);
+  box-shadow: var(--shadow-md);
+}
+
+#title-block-header .quarto-title,
+#title-block-header .quarto-title-meta {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+#title-block-header .title {
+  max-width: 24ch;
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 2.9rem);
+  overflow-wrap: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+#title-block-header .description,
+#title-block-header .subtitle {
+  max-width: 62ch;
+  margin-top: 0.75rem;
+  color: var(--text-inverse);
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  opacity: 0.92;
+  text-wrap: pretty;
+}
+
+#title-block-header .quarto-title-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(255 255 255 / 0.25);
+}
+
+#title-block-header .quarto-title-meta-heading,
+#title-block-header .quarto-title-meta-contents,
+#title-block-header .quarto-title-meta-contents p {
+  color: var(--text-inverse);
+  overflow-wrap: break-word;
+}
+
 /* Reset Quarto's margin-sidebar and sidebar columns on full-layout pages only */
 #quarto-content.page-layout-full #quarto-margin-sidebar,
 #quarto-content.page-layout-full #quarto-sidebar {
@@ -254,16 +302,28 @@ a:hover {
 }
 
 /* Override page-columns grid behavior on full-layout pages */
-#quarto-content.page-layout-full .page-columns.page-full,
+#quarto-content.page-layout-full .page-columns.page-full:not(.standard-page-layout),
 #quarto-content.page-layout-full .page-columns.column-page {
   display: block;
   max-width: 100%;
 }
 
+/* Quarto adds page-column utility classes to authored full-layout wrappers.
+   Restore the intentional centered widths after the generic grid reset. */
+#quarto-content.page-layout-full .ad-page-container.page-columns.page-full {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+}
+
+#quarto-content.page-layout-full .home-layout--single.page-columns.page-full {
+  max-width: 74rem;
+  margin-inline: auto;
+}
+
 /* 3-Column Grid System
    Using specific selectors to override Quarto defaults */
 .page-columns.page-full .standard-page-layout,
-.container .standard-page-layout,
+.ad-page-container .standard-page-layout,
 .standard-page-layout {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(
@@ -301,6 +361,21 @@ a:hover {
 .page-columns .standard-page-layout .right-sidebar,
 .standard-page-layout .right-sidebar {
   grid-column: 3;
+}
+
+/* Quarto annotates authored children with its own page-column utilities.
+   Keep the explicit public-site grid authoritative even when Quarto's
+   stylesheet is loaded later in the document. */
+#quarto-content .standard-page-layout > .left-sidebar {
+  grid-column: 1 !important;
+}
+
+#quarto-content .standard-page-layout > .main-content-area {
+  grid-column: 2 !important;
+}
+
+#quarto-content .standard-page-layout > .right-sidebar {
+  grid-column: 3 !important;
 }
 
 /* Sidebars */
@@ -506,7 +581,7 @@ figcaption {
   outline: 3px solid var(--accent-blue);
 }
 
-header {
+#quarto-header {
   background: linear-gradient(
     135deg,
     var(--primary-dark) 0%,
@@ -515,12 +590,12 @@ header {
   color: var(--pure-white);
   border-bottom: 2px solid var(--accent-blue);
   padding: 0.8rem 0;
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 1000;
   box-shadow: 0 4px 12px var(--shadow-color);
-  display: flex;
-  align-items: center;
+  display: block;
 }
 
 nav .container {
@@ -534,17 +609,6 @@ nav .container {
   padding: 0 1rem;
 
   /* Minimal padding */
-}
-
-/* Quarto Navbar Full Width Fix */
-#quarto-header {
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--primary-blue) 100%
-  );
-  border-bottom: 2px solid var(--accent-blue);
-  box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 #quarto-header .navbar {
@@ -933,6 +997,15 @@ nav .container {
 
 .code-wrapper {
   position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.code-wrapper pre {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .copy-btn {
@@ -991,7 +1064,7 @@ blockquote,
 /* Tablet and up: Switch to 2-column layout (Left Sidebar + Content) */
 @media (width >= 768px) {
   .page-columns.page-full .standard-page-layout,
-  .container .standard-page-layout,
+  .ad-page-container .standard-page-layout,
   .standard-page-layout {
     grid-template-columns: 240px minmax(0, 1fr);
     gap: 2rem;
@@ -1060,7 +1133,7 @@ blockquote,
   }
 
   .page-columns.page-full .standard-page-layout,
-  .container .standard-page-layout,
+  .ad-page-container .standard-page-layout,
   .standard-page-layout {
     display: flex;
     flex-direction: column;
@@ -1077,6 +1150,24 @@ blockquote,
 
   .logo-text {
     font-size: var(--fs-base);
+  }
+}
+
+/* A long in-page contents rail can consume the entire first viewport. Pages
+   opting into this modifier keep primary content first on phones and tablets. */
+@media (width < 1024px) {
+  #quarto-content .standard-page-layout--content-first-compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .standard-page-layout--content-first-compact > .left-sidebar {
+    display: none;
+  }
+
+  #quarto-content .standard-page-layout--content-first-compact > .main-content-area {
+    grid-column: 1 !important;
+    width: 100%;
   }
 }
 
@@ -1962,6 +2053,17 @@ form.contact-form .form-group textarea {
   width: 100%;
 }
 
+.home-layout--single {
+  display: block;
+  max-width: 74rem;
+  margin: 0 auto;
+}
+
+.home-layout--single .home-content > section:not(.home-hero) > p,
+.home-layout--single .home-content > section:not(.home-hero) > .provenance-note {
+  max-width: var(--prose-width);
+}
+
 .home-sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
@@ -2216,6 +2318,22 @@ h1.title,
   /* Hide right sidebar on smaller screens */
   .standard-page-layout .right-sidebar {
     display: none;
+  }
+}
+
+/* Phone full-layout contract: primary content precedes section navigation. */
+@media (width < 768px) {
+  #quarto-content .standard-page-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #quarto-content .standard-page-layout > .left-sidebar {
+    display: none !important;
+  }
+
+  #quarto-content .standard-page-layout > .main-content-area {
+    grid-column: 1 !important;
+    width: 100%;
   }
 }
 
@@ -2936,10 +3054,95 @@ input:focus:not(:focus-visible) {
    MathJax Responsive Design (Issue #2968)
    ========================================================================== */
 
+/* Public-site mobile containment: prose paths and URLs may be arbitrarily long. */
+#quarto-document-content :not(pre) > code,
+#quarto-document-content a,
+#quarto-document-content h1,
+#quarto-document-content h2,
+#quarto-document-content h3,
+#quarto-document-content h4,
+#quarto-document-content li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#quarto-document-content :not(pre) > code {
+  white-space: normal;
+}
+
+/* Wide semantic tables scroll inside the article instead of widening the page. */
+#quarto-document-content .table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+#quarto-document-content .table-wrapper > table {
+  display: table;
+  min-width: 100%;
+  max-width: none;
+}
+
+/* Interactive calculators collapse their primary columns at tablet width. */
+@media (max-width: 767.98px) {
+  #rc-app .rc-main-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #rc-app .rc-main-grid > * {
+    min-width: 0;
+  }
+}
+
+/* Quarto's margin TOC enters the article grid too early at tablet widths. */
+@media (max-width: 991.98px) {
+  #quarto-margin-sidebar {
+    display: none !important;
+  }
+
+  #quarto-header .quarto-secondary-nav {
+    width: 100%;
+    background: rgb(0 0 0 / 0.14);
+    border-top: 1px solid rgb(255 255 255 / 0.16);
+    color: var(--pure-white);
+  }
+
+  #quarto-header .quarto-secondary-nav .quarto-page-breadcrumbs {
+    display: none;
+  }
+
+  #quarto-header .quarto-secondary-nav .quarto-btn-toggle {
+    color: var(--pure-white);
+  }
+}
+
+/* Quarto's book breadcrumb row is a flex item and needs explicit shrink points. */
+@media (max-width: 575.98px) {
+  .quarto-secondary-nav,
+  .quarto-secondary-nav .container-fluid,
+  .quarto-page-breadcrumbs,
+  .quarto-page-breadcrumbs .breadcrumb {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .quarto-secondary-nav {
+    overflow-x: clip;
+  }
+
+  .quarto-page-breadcrumbs {
+    overflow: hidden;
+  }
+
+  .quarto-page-breadcrumbs .breadcrumb {
+    flex-wrap: wrap;
+  }
+}
+
 /* 1. MathJax container overflow handling */
 mjx-container[jax="CHTML"][display="true"],
 .MathJax_Display,
 .math.display {
+  display: block;
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;

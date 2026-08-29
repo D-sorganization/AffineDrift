@@ -3,7 +3,7 @@ title: 'Critique: Identifiability and "Input" as a Residual'
 description: 'Critique and response context for Identifiability and "Input" as a Residual in AffineDrift''s control-affine golf-swing framework.'
 ---
 
-# Critique: Identifiability and "Input" as a Residual
+## Critique: Identifiability and "Input" as a Residual
 
 ## Summary of Concern
 

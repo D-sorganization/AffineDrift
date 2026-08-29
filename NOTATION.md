@@ -1,4 +1,4 @@
-# Mathematical Notation Reference
+## Mathematical Notation Reference
 
 **Unified notation conventions for AffineDrift documentation**
 

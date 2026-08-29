@@ -3,7 +3,7 @@ title: 'Critique: The Passive-Active Boundary Ambiguity (The "Effective Plant" T
 description: 'Critique and response context for The Passive-Active Boundary Ambiguity (The "Effective Plant" Tautology) in AffineDrift''s control-affine golf-swing framework.'
 ---
 
-# Critique: The Passive-Active Boundary Ambiguity (The "Effective Plant" Tautology)
+## Critique: The Passive-Active Boundary Ambiguity (The "Effective Plant" Tautology)
 
 ## Summary of Concern
 

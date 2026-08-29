@@ -1,0 +1,133 @@
+/* Reader notes are offered only on long-form articles and books (WEB-C). */
+.ad-notes-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: 4.75rem;
+  z-index: var(--z-notification, 1200);
+  min-height: 2.75rem;
+  padding: 0.55rem 0.8rem;
+  color: var(--text-inverse);
+  background: var(--color-primary-main);
+  border: 1px solid var(--color-primary-dark);
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ad-notes-toggle.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.ad-notes-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 8rem;
+  z-index: var(--z-modal, 1300);
+  display: none;
+  width: min(92vw, 26rem);
+  padding: 0.8rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg, 0.75rem);
+  box-shadow: var(--shadow-lg);
+}
+
+.ad-notes-panel.open {
+  display: block;
+}
+
+.ad-notes-header,
+.ad-notes-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ad-notes-header {
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.ad-notes-header h3 {
+  margin: 0;
+  color: var(--color-link);
+  font-size: 1rem;
+}
+
+.ad-notes-area {
+  width: 100%;
+  min-height: 13rem;
+  padding: 0.65rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md, 0.5rem);
+  font: inherit;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.ad-notes-actions {
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+
+.ad-notes-actions button {
+  min-height: 2.75rem;
+  padding: 0.38rem 0.6rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm, 0.375rem);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.ad-notes-actions .danger {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.ad-notes-status {
+  min-height: 1.1rem;
+  margin-top: 0.45rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 575.98px) {
+  .ad-notes-toggle {
+    right: auto;
+    bottom: 1rem;
+    left: 1rem;
+    width: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .ad-notes-toggle::before {
+    content: "\270e";
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .ad-notes-panel {
+    right: 1rem;
+    bottom: 4.75rem;
+    left: 1rem;
+    width: auto;
+  }
+}

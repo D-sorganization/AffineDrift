@@ -51,6 +51,15 @@ function findStandaloneArticleFiles(dir, files = []) {
 }
 
 describe('Quarto title semantics (#3445, #3917)', () => {
+  test('publishes canonical URLs while delegating the math runtime to the local gate', () => {
+    const config = read('_quarto.yml');
+
+    expect(config).toMatch(/canonical-url:\s*true/);
+    expect(config).toMatch(/method:\s*mathjax/);
+    expect(config).toMatch(/url:\s*["']\/js\/equation-runtime-gate\.js["']/);
+    expect(config).not.toMatch(/html-math-method:\s*plain/);
+  });
+
   test('uses Quarto title-block rendering instead of verbatim Pandoc title blocks', () => {
     const config = read('_quarto.yml');
     expect(config).toMatch(/title-block-style:\s*default/);
@@ -64,6 +73,30 @@ describe('Quarto title semantics (#3445, #3917)', () => {
     expect(displayNoneRules.length).toBeGreaterThan(0);
     for (const [, selector] of displayNoneRules) {
       expect(selector).toContain('#quarto-content.page-layout-full');
+    }
+  });
+
+  test('full-layout pages use their authored H1 as the only visible title', () => {
+    const css = read('styles.css');
+
+    expect(css).toMatch(
+      /#quarto-content\.page-layout-full\s+#title-block-header\s*\{[^}]*display:\s*none/s,
+    );
+    expect(css).not.toMatch(
+      /page-layout-full:has\(\.page-has-custom-h1\)\s+#title-block-header/,
+    );
+  });
+
+  test('site layout containers are namespaced away from Bootstrap container', () => {
+    const css = read('styles.css');
+    const authoredPages = findFullLayoutFiles(ROOT);
+
+    expect(css).not.toMatch(/(^|\n)\.container\s*\{/);
+    expect(css).toMatch(/(^|\n)\.ad-page-container\s*\{/);
+    for (const relPath of authoredPages) {
+      expect(read(relPath)).not.toMatch(
+        /class=["'](?:[^"']+\s)?container(?:\s[^"']*)?["']/,
+      );
     }
   });
 
@@ -97,4 +130,3 @@ describe('Quarto title semantics (#3445, #3917)', () => {
     }
   });
 });
-

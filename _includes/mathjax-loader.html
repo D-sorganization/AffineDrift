@@ -71,6 +71,11 @@
         MathJax.startup.defaultReady();
         // MathJax.startup.defaultReady() already typesets the page once.
         // No additional typeset() call needed here.
+      },
+      pageReady: function() {
+        return MathJax.startup.defaultPageReady().then(function() {
+          document.documentElement.dataset.adMathReady = 'true';
+        });
       }
     }
   };

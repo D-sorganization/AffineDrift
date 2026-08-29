@@ -3,7 +3,7 @@ title: "Critique: Teleological Blindness (Mechanics $\\neq$ Intent)"
 description: "Critique and response context for Teleological Blindness (Mechanics $\neq$ Intent) in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Teleological Blindness (Mechanics $\neq$ Intent)
+## Critique: Teleological Blindness (Mechanics $\neq$ Intent)
 
 ## Summary of Concern
 

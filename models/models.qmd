@@ -6,8 +6,8 @@ page-layout: full
 
 ```{=html}
 <section class="resources-section">
-  <div class="container">
-    <div class="standard-page-layout">
+  <div class="ad-page-container">
+    <div class="standard-page-layout standard-page-layout--content-first-compact">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -48,7 +48,7 @@ page-layout: full
 
           <!-- About This Website -->
           <aside class="site-card site-card--callout u-mb-4">
-            <h3 class="u-mb-1">About This Companion Website</h3>
+            <h2 class="u-mb-1">About This Companion Website</h2>
             <p class="resource-description">
               This website serves as a <strong>companion resource</strong> to the Golf Modeling Suite repository. While the repository contains the actual implementation code, simulation models, and technical documentation, this website provides:
             </p>
@@ -65,11 +65,11 @@ page-layout: full
 
           <!-- Getting Started Section -->
           <div id="getting-started" class="category-section">
-            <h3 class="category-title">Getting Started</h3>
+            <h2 class="category-title">Getting Started</h2>
           </div>
 
           <div class="resource-card u-mb-3">
-            <h4>Requirements</h4>
+            <h3>Requirements</h3>
             <ul class="model-bullet-list model-bullet-list--leading">
               <li><strong>Python 3.11+</strong> (3.13 recommended)</li>
               <li><strong>Git with LFS support</strong> for large model files</li>
@@ -77,7 +77,7 @@ page-layout: full
               <li><strong>Conda</strong> optional convenience wrapper for binary dependencies</li>
             </ul>
 
-            <h4 class="u-mt-3">Quick Installation</h4>
+            <h3 class="u-mt-3">Quick Installation</h3>
             <pre class="code-block"><code>git clone https://github.com/D-sorganization/UpstreamDrift.git
 cd UpstreamDrift
 git lfs install &amp;&amp; git lfs pull
@@ -93,7 +93,7 @@ python scripts/verify_installation.py</code></pre>
 
           <!-- Application: launcher, web UI, entry points (issues #3337, #3338) -->
           <div class="resource-card u-mb-3">
-            <h4>Running the Application</h4>
+            <h3>Running the Application</h3>
             <p class="resource-description">
               The recommended entry point launches a FastAPI server (on port 8000) with a
               React/Vite web UI:
@@ -107,12 +107,12 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               installed. For a UI-only exploration without heavy engine dependencies, set
               <code>GOLF_USE_MOCK_ENGINE=1</code>.
             </p>
-            <h4 class="u-mt-3">Web UI Pages</h4>
+            <h3 class="u-mt-3">Web UI Pages</h3>
             <p class="resource-description">
               Dashboard, Simulation, Model Explorer, Motion Capture, Analysis Tools,
               Character Builder, Data Explorer, Putting Green, Terrain, and Video Analyzer.
             </p>
-            <h4 class="u-mt-3">REST API &amp; Tools</h4>
+            <h3 class="u-mt-3">REST API &amp; Tools</h3>
             <p class="resource-description">
               A REST API (24 routes under <code>src/api/routes/</code>: ball flight, force
               overlays, motion capture, character builder, and more) backs end-user tools in
@@ -125,7 +125,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
 
           <!-- Documentation link-map (issue #3338 C2) -->
           <div class="resource-card u-mb-3">
-            <h4>Documentation</h4>
+            <h3>Documentation</h3>
             <ul class="model-bullet-list">
               <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/getting_started.md" target="_blank" rel="noopener">User Guide — Getting Started<span class="sr-only">(opens in a new tab)</span></a></li>
               <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/motion_pipeline/README.md" target="_blank" rel="noopener">Motion Pipeline Guide<span class="sr-only">(opens in a new tab)</span></a></li>
@@ -138,7 +138,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
 
           <!-- Physics Engines Section -->
           <div id="physics-engines" class="category-section">
-            <h3 class="category-title">Supported Physics Engines</h3>
+            <h2 class="category-title">Supported Physics Engines</h2>
           </div>
 
           <div class="accordion-item">
@@ -153,14 +153,14 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               <p class="resource-description">
                 <a href="models-mujoco.html" class="resource-link"><strong>MuJoCo Companion Guide →</strong></a>
               </p>
-              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <h3 class="model-section-h4">Key Capabilities:</h3>
               <ul class="model-bullet-list">
                 <li>Full musculoskeletal models with realistic contact</li>
                 <li>Model-based optimization and trajectory planning</li>
                 <li>Real-time visualization and analysis</li>
                 <li>Integration with reinforcement learning frameworks</li>
               </ul>
-              <h4>Learning Resources:</h4>
+              <h3>Learning Resources:</h3>
               <ul class="model-bullet-list">
                 <li><a href="https://mujoco.readthedocs.io/en/stable/" target="_blank" rel="noopener">MuJoCo Documentation<span class="sr-only">(opens in a new tab)</span></a></li>
                 <li><a href="https://mujoco.readthedocs.io/en/stable/programming.html" target="_blank" rel="noopener">Programming Guide<span class="sr-only">(opens in a new tab)</span></a></li>
@@ -181,14 +181,14 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               <p class="resource-description">
                 <a href="models-drake.html" class="resource-link"><strong>Drake Companion Guide →</strong></a>
               </p>
-              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <h3 class="model-section-h4">Key Capabilities:</h3>
               <ul class="model-bullet-list">
                 <li>Trajectory optimization and motion planning</li>
                 <li>Underactuated systems analysis</li>
                 <li>Control-affine dynamics modeling</li>
                 <li>Mathematical program solvers</li>
               </ul>
-              <h4>Learning Resources:</h4>
+              <h3>Learning Resources:</h3>
               <ul class="model-bullet-list">
                 <li><a href="https://underactuated.mit.edu/" target="_blank" rel="noopener">Underactuated Robotics (MIT Course)<span class="sr-only">(opens in a new tab)</span></a></li>
                 <li><a href="https://manipulation.mit.edu/" target="_blank" rel="noopener">Robotic Manipulation (MIT Course)<span class="sr-only">(opens in a new tab)</span></a></li>
@@ -209,14 +209,14 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               <p class="resource-description">
                 <a href="models-pinocchio.html" class="resource-link"><strong>Pinocchio Companion Guide →</strong></a>
               </p>
-              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <h3 class="model-section-h4">Key Capabilities:</h3>
               <ul class="model-bullet-list">
                 <li>Efficient forward/inverse dynamics</li>
                 <li>Analytical Jacobian computation</li>
                 <li>Constraint handling for closed-loop mechanisms</li>
                 <li>Spatial algebra operations</li>
               </ul>
-              <h4>Learning Resources:</h4>
+              <h3>Learning Resources:</h3>
               <ul class="model-bullet-list">
                 <li><a href="https://stack-of-tasks.github.io/pinocchio/" target="_blank" rel="noopener">Pinocchio Documentation<span class="sr-only">(opens in a new tab)</span></a></li>
                 <li><a href="https://royfeatherstone.org/" target="_blank" rel="noopener">Roy Featherstone's Website<span class="sr-only">(opens in a new tab)</span></a></li>
@@ -240,14 +240,14 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               <p class="resource-description">
                 <a href="models-opensim.html" class="resource-link"><strong>OpenSim Companion Guide →</strong></a>
               </p>
-              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <h3 class="model-section-h4">Key Capabilities:</h3>
               <ul class="model-bullet-list">
                 <li>Biomechanical validation and analysis</li>
                 <li>Inverse kinematics and dynamics</li>
                 <li>Motion capture data integration</li>
                 <li>Muscle activation analysis</li>
               </ul>
-              <h4>Learning Resources:</h4>
+              <h3>Learning Resources:</h3>
               <ul class="model-bullet-list">
                 <li><a href="https://simtk.org/projects/opensim" target="_blank" rel="noopener">OpenSim on SimTK<span class="sr-only">(opens in a new tab)</span></a></li>
                 <li><a href="https://simtk-confluence.stanford.edu:8443/display/OpenSim" target="_blank" rel="noopener">OpenSim Documentation<span class="sr-only">(opens in a new tab)</span></a></li>
@@ -271,14 +271,14 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               <p class="resource-description">
                 <a href="models-myosim.html" class="resource-link"><strong>MyoSim Companion Guide →</strong></a>
               </p>
-              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <h3 class="model-section-h4">Key Capabilities:</h3>
               <ul class="model-bullet-list">
                 <li>290-muscle full-body models</li>
                 <li>Realistic muscle dynamics and activation</li>
                 <li>Integration with MuJoCo physics</li>
                 <li>Reinforcement learning ready</li>
               </ul>
-              <h4>Learning Resources:</h4>
+              <h3>Learning Resources:</h3>
               <ul class="model-bullet-list">
                 <li><a href="https://sites.google.com/view/myosuite" target="_blank" rel="noopener">MyoSuite Project Page<span class="sr-only">(opens in a new tab)</span></a></li>
                 <li><a href="https://github.com/MyoHub/myosuite" target="_blank" rel="noopener">GitHub Repository<span class="sr-only">(opens in a new tab)</span></a></li>
@@ -298,14 +298,14 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               <p class="resource-description">
                 <a href="models-simulink.html" class="resource-link"><strong>Simulink Companion Guide →</strong></a>
               </p>
-              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <h3 class="model-section-h4">Key Capabilities:</h3>
               <ul class="model-bullet-list">
                 <li>Control-affine system implementation</li>
                 <li>Drift-input decomposition analysis</li>
                 <li>Integration with MATLAB analysis tools</li>
                 <li>Simulink block diagrams</li>
               </ul>
-              <h4>Related Theory:</h4>
+              <h3>Related Theory:</h3>
               <ul class="model-bullet-list">
                 <li><a href="../articles/theory-part5.html">Theory Part 5 - Simulink Model Documentation</a></li>
                 <li><a href="https://www.mathworks.com/products/simscape-multibody.html" target="_blank" rel="noopener">Simscape Multibody<span class="sr-only">(opens in a new tab)</span></a></li>
@@ -325,7 +325,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
               <p class="resource-description">
                 <a href="models-pendulum.html" class="resource-link"><strong>Double Pendulum Models Guide →</strong></a>
               </p>
-              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <h3 class="model-section-h4">Key Capabilities:</h3>
               <ul class="model-bullet-list">
                 <li>Two-link planar kinetic and kinematic formulations</li>
                 <li>Drift-input decomposition in closed form</li>
@@ -337,7 +337,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
 
           <!-- Project Structure Section -->
           <div id="project-structure" class="category-section">
-            <h3 class="category-title">Project Structure</h3>
+            <h2 class="category-title">Project Structure</h2>
           </div>
 
           <div class="resource-card u-mb-3">
@@ -354,31 +354,31 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
 
           <!-- Key Features Section -->
           <div id="features" class="category-section">
-            <h3 class="category-title">Key Features</h3>
+            <h2 class="category-title">Key Features</h2>
           </div>
 
           <div class="resource-grid resource-grid--wide u-mb-4">
             <div class="resource-card resource-card--padded">
-              <h4>Advanced Biomechanics</h4>
+              <h3>Advanced Biomechanics</h3>
               <p class="resource-description">Inverse kinematics/dynamics, motion capture integration, and muscle dynamics analysis.</p>
             </div>
             <div class="resource-card resource-card--padded">
-              <h4>Real-Time Visualization</h4>
+              <h3>Real-Time Visualization</h3>
               <p class="resource-description">3D rendering with multiple analysis plot types for immediate feedback during simulation.</p>
             </div>
             <div class="resource-card resource-card--padded">
-              <h4>Cross-Engine Validation</h4>
+              <h3>Cross-Engine Validation</h3>
               <p class="resource-description">Compare results across different simulators to validate models and build confidence.</p>
             </div>
             <div class="resource-card resource-card--padded">
-              <h4>Data Export</h4>
+              <h3>Data Export</h3>
               <p class="resource-description">CSV and JSON formats for external analysis and integration with other tools.</p>
             </div>
           </div>
 
           <!-- Theory Resources Section -->
           <div id="theory" class="category-section">
-            <h3 class="category-title">Theory Resources on This Website</h3>
+            <h2 class="category-title">Theory Resources on This Website</h2>
           </div>
 
           <div class="resource-card u-mb-3">
@@ -411,7 +411,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
 
           <!-- Interactive Tools Section -->
           <div id="interactive-tools" class="category-section">
-            <h3 class="category-title">Interactive Tools</h3>
+            <h2 class="category-title">Interactive Tools</h2>
           </div>
 
           <div class="accordion-item">

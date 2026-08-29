@@ -62,8 +62,6 @@ import {
     initFocusManagement,
 } from "./accessibility.js";
 
-import { initPDFDownload } from "./pdf.js";
-
 // Main initialization
 runOnDomReady(function () {
     // Update offset values from CSS
@@ -107,9 +105,6 @@ runOnDomReady(function () {
     // --- Reading Time (articles only) ---
     initReadingTime();
     initReadingProgress();
-
-    // --- PDF Download ---
-    initPDFDownload();
 
     // --- Deferred Initialization (non-critical) ---
     runWhenIdle(updateHistorySidebar);

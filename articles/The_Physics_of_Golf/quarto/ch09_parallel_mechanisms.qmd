@@ -93,7 +93,7 @@ $$
 \bm{\Phi}_{\text{spine}}(\theta_p, \theta_s, \theta_{sh}) = \mathbf{0}
 $$ {#eq-spine_loop_constraint_general}
 
-This is a holonomic constraint, just like the joint constraints from @sec-constraint_forces.
+This is a holonomic constraint, just like the joint constraints from [Chapter 7](./ch07_constraint_forces.qmd#sec-constraint_forces).
 
 ### Why Loops Matter for the Swing {#inplain:loops_swing_importance}
 In a serial chain, you can rotate your hips, shoulders, and arms independently (within limits). In a body with loops, these rotations are coupled.
@@ -126,7 +126,7 @@ $$
 \bm{J}_{\text{loop}}(\bm{q}) = \frac{\partial \bm{\Phi}_{\text{loop}}}{\partial \bm{q}}
 $$ {#eq-loop_jacobian_definition}
 
-It has the same interpretation as the constraint Jacobian from @sec-constraint_forces: its null space defines allowed motions, and its range defines constraint force directions.
+It has the same interpretation as the constraint Jacobian from [Chapter 7](./ch07_constraint_forces.qmd#sec-constraint_forces): its null space defines allowed motions, and its range defines constraint force directions.
 
 :::
 
@@ -236,7 +236,7 @@ More flexibility allows more efficient constraint-based energy transfer. This is
 ::: {.callout-important}
 ## Loop Constraints Produce Enormous Forces
 
-Every loop closure constraint produces constraint forces, just like the joint constraints from @sec-constraint_forces. But because a body has multiple loops, there can be multiple constraint forces acting simultaneously.
+Every loop closure constraint produces constraint forces, just like the joint constraints from [Chapter 7](./ch07_constraint_forces.qmd#sec-constraint_forces). But because a body has multiple loops, there can be multiple constraint forces acting simultaneously.
 
 These forces are often internal—they don't directly produce motion, but they create internal stresses and torques within the spine, at the grip, and throughout the kinetic chain.
 
@@ -498,7 +498,7 @@ For the golf swing, the over-constraint ensures that as the hips drive, the shou
 
 ## Drift and Control in a Parallel System {#sec-drift_control_parallel}
 
-@sec-zero_torque_counterfactual introduced drift forces (gravity, Coriolis, centrifugal) and control forces (muscle-applied torques). In a serial chain, these forces and the applied torques solve the dynamics uniquely. In a parallel mechanism, the story is more subtle.
+[Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual) introduced drift forces (gravity, Coriolis, centrifugal) and control forces (muscle-applied torques). In a serial chain, these forces and the applied torques solve the dynamics uniquely. In a parallel mechanism, the story is more subtle.
 
 ### The Drift/Control Decomposition {#sec-drift_control_decomposition}
 
@@ -537,7 +537,7 @@ These are relatively low-dimensional control inputs (maybe 5–8 parameters) tha
 
 ### The Control Is Small {#sec-control_is_small}
 
-A key insight from @sec-zero_torque_counterfactual was that *drift forces dominate active muscle forces* during the downswing. This is especially true in a parallel system with significant inertia and angular velocities.
+A key insight from [Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual) was that *drift forces dominate active muscle forces* during the downswing. This is especially true in a parallel system with significant inertia and angular velocities.
 
 ::: {.callout-important}
 ## Drift Forces Dominate During Release {#theorem:drift_dominates}
@@ -723,7 +723,7 @@ This is why inverse dynamics can compute *joint-level* torques (sum of all muscl
 
 :::
 
-**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in @sec-energy_transfer.
+**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in [Chapter 10](./ch10_energy_transfer.qmd#sec-energy_transfer).
 
 ## Vaughan's Closed-Loop Analysis: Historical Context
 
@@ -1154,7 +1154,7 @@ The golfer's body is a parallel mechanism, not a serial chain. This has profound
 These insights explain why biomechanically efficient golfers (professionals) look similar to each other: they're all exploiting the same parallel mechanism constraints and drift forces. They differ mainly in detailed control inputs (grip pressure, face angle adjustment) and in how they load the swing (X-factor magnitude, spine flexibility).
 :::
 
-**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in @sec-energy_transfer.
+**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in [Chapter 10](./ch10_energy_transfer.qmd#sec-energy_transfer).
 
 ## Chapter Exercises: Parallel Mechanisms
 

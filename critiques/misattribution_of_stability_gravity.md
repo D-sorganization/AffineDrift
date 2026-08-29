@@ -3,7 +3,7 @@ title: "Critique: Misattribution of Stability (Gravity vs. Inertia) in Putter De
 description: "Critique and response context for Misattribution of Stability (Gravity vs. Inertia) in Putter Design in AffineDrift's control-affine golf-swing framework."
 ---
 
-# Critique: Misattribution of Stability (Gravity vs. Inertia) in Putter Design
+## Critique: Misattribution of Stability (Gravity vs. Inertia) in Putter Design
 
 ## Summary of Concern
 
