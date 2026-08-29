@@ -529,15 +529,25 @@ class CompanionConsumer:
         _pin_url(pin, schema.final_url, "schema", redirected=True)
         return self.install(pin, manifest.data, schema.data)
 
+    @staticmethod
+    def _local_export_bytes(
+        pin: CompanionPin, manifest_path: Path, schema_path: Path
+    ) -> tuple[bytes, bytes]:
+        """Validate local acquisition and return both bounded provider payloads."""
+        _validate_pin(pin)
+        if pin.acquisition != LOCAL_EXPORT or pin.manifest_url is not None:
+            raise CompanionImportError(
+                "local operation requires protected-local-export acquisition"
+            )
+        manifest = _read_bounded_file(manifest_path, MAX_MANIFEST_BYTES, "manifest")
+        schema = _read_bounded_file(schema_path, MAX_SCHEMA_BYTES, "provider schema")
+        return manifest, schema
+
     def install_from_local_export(
         self, pin: CompanionPin, manifest_path: Path, schema_path: Path
     ) -> InstalledCompanion:
         """Install a reviewed provider export and committed schema from local paths."""
-        _validate_pin(pin)
-        if pin.acquisition != LOCAL_EXPORT or pin.manifest_url is not None:
-            raise CompanionImportError("local install requires protected-local-export acquisition")
-        manifest = _read_bounded_file(manifest_path, MAX_MANIFEST_BYTES, "manifest")
-        schema = _read_bounded_file(schema_path, MAX_SCHEMA_BYTES, "provider schema")
+        manifest, schema = self._local_export_bytes(pin, manifest_path, schema_path)
         return self.install(pin, manifest, schema)
 
     def _snapshot_payloads(
@@ -699,11 +709,5 @@ class CompanionConsumer:
         self, pin: CompanionPin, manifest_path: Path, schema_path: Path
     ) -> UpdateCheck:
         """Read and validate a local candidate without changing the active pin."""
-        _validate_pin(pin)
-        if pin.acquisition != LOCAL_EXPORT or pin.manifest_url is not None:
-            raise CompanionImportError(
-                "local update check requires protected-local-export acquisition"
-            )
-        manifest = _read_bounded_file(manifest_path, MAX_MANIFEST_BYTES, "manifest")
-        schema = _read_bounded_file(schema_path, MAX_SCHEMA_BYTES, "provider schema")
+        manifest, schema = self._local_export_bytes(pin, manifest_path, schema_path)
         return self.check_update(pin, manifest, schema)
