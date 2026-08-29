@@ -62,7 +62,10 @@ Protocol revision `affinedrift.equipment-individual-response/v1` uses a declared
 seeded blocked permutation: four participants receive `AB`, four receive `BA`,
 with three cycles and five trials in each condition-cycle cell. Both the
 participant and the primary analyst receive condition codes. A ten-minute
-washout is a fixture declaration, not an empirically validated duration.
+washout is a fixture declaration, not an empirically validated duration. Every
+trial records its period and elapsed minutes since the prior condition; the
+qualifier rejects a condition assigned to the wrong randomized period or a
+second period observed before the declared washout.
 
 Counterbalancing separates treatment order from condition, but it does not
 erase learning, fatigue, expectation, warming, or condition-by-period effects.
@@ -152,6 +155,13 @@ days, trial autocorrelation, heteroscedasticity, missingness, analyst decisions,
 and sensitivity to hierarchical priors or variance estimators. A confidence or
 credible interval is conditional on its model; it is not a tolerance interval
 for all golfers.
+
+The executable sensitivity record also recomputes the group mean after leaving
+out each fixture participant and compares raw-status classifications with the
+partially pooled estimates. Its leave-one-out group-mean range is -0.2 to +0.2
+m/s, no fixture status changes under partial pooling, and mixed individual
+directions remain. This narrow check does not replace alternative priors,
+estimators, missing-data models, or held-out predictive assessment.
 
 ## Responder Instability and Carryover
 

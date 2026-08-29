@@ -137,10 +137,11 @@ def manufactured_observations() -> tuple[ResponseObservation, ...]:
     protocol = build_protocol()
     observations: list[ResponseObservation] = []
     trial_offsets = (-0.08, -0.04, 0.0, 0.04, 0.08)
-    for participant_index, (participant, _) in enumerate(protocol.randomization.assignments):
+    for participant_index, (participant, sequence) in enumerate(protocol.randomization.assignments):
         for cycle, effect in enumerate(_PARTICIPANT_EFFECTS[participant], start=1):
             baseline = 39.0 + participant_index * 0.25 + cycle * 0.05
             for condition_index, condition in enumerate(protocol.conditions):
+                period = condition_index + 1 if sequence == "AB" else 2 - condition_index
                 for trial, trial_offset in enumerate(trial_offsets, start=1):
                     observations.append(
                         ResponseObservation(
@@ -151,6 +152,10 @@ def manufactured_observations() -> tuple[ResponseObservation, ...]:
                             cycle=cycle,
                             condition_id=condition.condition_id,
                             trial=trial,
+                            period=period,
+                            minutes_since_prior_condition=(
+                                0.0 if period == 1 else protocol.randomization.washout_minutes
+                            ),
                             outcome_value=baseline + condition_index * effect + trial_offset,
                             measurement_standard_uncertainty=0.08,
                             intent_error=0.04,

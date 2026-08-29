@@ -55,9 +55,18 @@ class GroupResponse:
 
 
 @dataclass(frozen=True)
+class ModelSensitivity:
+    leave_one_out_group_mean_interval: tuple[float, float]
+    status_changes_under_partial_pooling: tuple[str, ...]
+    interpretation: str
+    authorized_guidance: Literal["unavailable"] = "unavailable"
+
+
+@dataclass(frozen=True)
 class EquipmentResponseAnalysis:
     participants: tuple[ParticipantResponse, ...]
     group: GroupResponse
+    sensitivity: ModelSensitivity
     global_recommendation: None = None
 
 
@@ -70,6 +79,7 @@ def qualify_observations(
     if len(set(ids)) != len(ids):
         raise ValueError("duplicate observation ID")
     _require_complete_cells(protocol, observations)
+    _require_randomized_order(protocol, observations)
     records = tuple(
         _qualify_participant(protocol, participant, observations)
         for participant, _ in protocol.randomization.assignments
@@ -92,6 +102,25 @@ def _require_complete_cells(
     actual = {(row.participant_id, row.cycle, row.condition_id, row.trial) for row in observations}
     if actual != expected or len(observations) != len(expected):
         raise ValueError("observations must provide complete participant-cycle-condition cells")
+
+
+def _require_randomized_order(
+    protocol: EquipmentResponseProtocol,
+    observations: tuple[ResponseObservation, ...],
+) -> None:
+    condition_ids = tuple(row.condition_id for row in protocol.conditions)
+    sequences = dict(protocol.randomization.assignments)
+    for row in observations:
+        ordered = condition_ids if sequences[row.participant_id] == "AB" else condition_ids[::-1]
+        if row.condition_id != ordered[row.period - 1]:
+            raise ValueError("observations do not follow randomized condition order")
+        if row.period == 1 and row.minutes_since_prior_condition != 0.0:
+            raise ValueError("first period cannot declare a prior-condition washout")
+        if (
+            row.period == 2
+            and row.minutes_since_prior_condition < protocol.randomization.washout_minutes
+        ):
+            raise ValueError("second period does not meet the declared washout")
 
 
 def _qualify_participant(
@@ -148,6 +177,37 @@ def analyze_equipment_response(
                 "Manufactured mixed individual effects; no population, product, "
                 "or fitting inference."
             ),
+        ),
+        sensitivity=_model_sensitivity(raw_means, results, protocol.practical_threshold),
+    )
+
+
+def _model_sensitivity(
+    raw_means: dict[str, float],
+    results: tuple[ParticipantResponse, ...],
+    practical_threshold: float,
+) -> ModelSensitivity:
+    leave_one_out = tuple(
+        fmean(value for other, value in raw_means.items() if other != participant)
+        for participant in raw_means
+    )
+    changed: list[str] = []
+    for result in results:
+        if result.interval is None or result.shrunken_effect is None:
+            continue
+        half_width = result.interval_width / 2.0
+        pooled_status = _classify(
+            (result.shrunken_effect - half_width, result.shrunken_effect + half_width),
+            practical_threshold,
+        )
+        if pooled_status != result.status:
+            changed.append(result.participant_id)
+    return ModelSensitivity(
+        leave_one_out_group_mean_interval=(min(leave_one_out), max(leave_one_out)),
+        status_changes_under_partial_pooling=tuple(changed),
+        interpretation=(
+            "Leave-one-out and partial-pooling checks preserve mixed individual directions; "
+            "no global recommendation is authorized."
         ),
     )
 

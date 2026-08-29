@@ -194,6 +194,8 @@ class ResponseObservation:
     cycle: int
     condition_id: str
     trial: int
+    period: int
+    minutes_since_prior_condition: float
     outcome_value: float
     measurement_standard_uncertainty: float
     intent_error: float
@@ -220,6 +222,13 @@ class ResponseObservation:
             raise ValueError("carryover residual must be finite and nonnegative")
         if self.cycle < 1 or self.trial < 1:
             raise ValueError("cycle and trial indices must be positive")
+        if self.period not in (1, 2):
+            raise ValueError("period must be one or two")
+        if (
+            not isfinite(self.minutes_since_prior_condition)
+            or self.minutes_since_prior_condition < 0.0
+        ):
+            raise ValueError("minutes since prior condition must be finite and nonnegative")
         if self.origin != "manufactured-synthetic":
             raise ValueError("observation origin must be manufactured-synthetic")
 
