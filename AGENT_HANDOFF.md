@@ -28,18 +28,25 @@ This is current operational state. Historical detail belongs in git/GitHub.
   parameter sensitivity with task-specific units, uncertainty, and explicit
   evidence status. Wall-clock runtime and participant transport are currently
   unavailable. Negative, null, and unavailable results remain visible.
+- The DbC boundary rejects duplicate coordinates; blank, missing, duplicate,
+  and length-misaligned parity records; duplicate task-level assessments; and
+  outcome/sufficiency contradictions. A supported result requires
+  `sufficient=True` and its complete uncertainty interval within tolerance;
+  negative/null require `False`, while unavailable requires `None`.
 - `models/model-ladder.qmd` publishes the bounded interpretation and links from
   the UpstreamDrift companion hub. It prohibits a global fidelity percentage
   and any promotion to coaching, clinical, causal, or population authority.
 - RED evidence: `tests/test_model_ladder_protocol.py` initially failed during
-  collection because the protocol module did not exist. Exact-head local GREEN
-  evidence on workstation Python 3.13 is 12/12 focused executable contracts,
+  collection because the protocol module did not exist. Review-led RED then
+  reproduced five fail-closed gaps before their invariant checks were added.
+  Exact-head local GREEN evidence on workstation Python 3.13 is 17/17 focused executable contracts,
   1/1 focused public-content contract, 137/137 existing model-navigation and
-  style contracts, 3,325 default-lane tests passed with 30 documented skips,
+  style contracts, 3,330 default-lane tests passed with 30 documented skips,
   and 88 content-lint tests passed with 4 documented skips. Jest passes 297
   tests with 19 documented skips; the frontend asset build check completes.
   Ruff, Black, strict focused mypy, module budgets, pre-commit, terminology,
-  title case, display math, and diff checks pass. Quarto 1.8.26 renders the
+  title case, display math, diff, and 224-route bidirectional render-coverage
+  checks pass. Quarto 1.8.26 renders the
   public page in isolation. Final desktop 1440 x 1000 and mobile 390 x 844
   browser inspection shows one H1, all six scientific sections, no body
   overflow, responsive table scrolling, and no console warnings or errors.
