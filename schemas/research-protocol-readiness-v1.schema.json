@@ -1,0 +1,681 @@
+{
+  "$id": "https://affinedrift.com/schemas/research-protocol-readiness-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "protocols": {
+      "items": { "$ref": "#/$defs/protocol" },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "affinedrift.research-protocol-readiness/v1"
+    }
+  },
+  "required": ["schema_version", "protocols"],
+  "title": "AffineDrift Research Protocol and Readiness Library",
+  "type": "object",
+  "$defs": {
+    "analysis": {
+      "additionalProperties": false,
+      "properties": {
+        "deviation_policy": { "$ref": "#/$defs/text" },
+        "exclusion_rules": { "$ref": "#/$defs/textArray" },
+        "falsifiers": { "$ref": "#/$defs/textArray" },
+        "null_result_policy": { "$ref": "#/$defs/text" },
+        "power_plan": { "$ref": "#/$defs/text" },
+        "promotion_criteria": { "$ref": "#/$defs/textArray" },
+        "uncertainty_plan": { "$ref": "#/$defs/text" },
+        "workflow_path": { "$ref": "#/$defs/path" }
+      },
+      "required": [
+        "workflow_path",
+        "power_plan",
+        "exclusion_rules",
+        "uncertainty_plan",
+        "falsifiers",
+        "null_result_policy",
+        "deviation_policy",
+        "promotion_criteria"
+      ],
+      "type": "object"
+    },
+    "calibration": {
+      "additionalProperties": false,
+      "properties": {
+        "calibration_id": {
+          "pattern": "^cal-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "plan": { "$ref": "#/$defs/text" },
+        "status": {
+          "enum": ["planned", "verified", "unavailable"]
+        }
+      },
+      "required": ["calibration_id", "status", "plan"],
+      "type": "object"
+    },
+    "dataset": {
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": { "availability": { "const": "public" } },
+          "required": ["path", "sha256"]
+        },
+        {
+          "not": {
+            "anyOf": [{ "required": ["path"] }, { "required": ["sha256"] }]
+          },
+          "properties": {
+            "availability": { "enum": ["private", "unavailable"] }
+          },
+          "required": ["governed_record_id", "custodian", "next_gate"]
+        }
+      ],
+      "properties": {
+        "availability": { "enum": ["public", "private", "unavailable"] },
+        "authority_id": {
+          "pattern": "^authority-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "authority_role": {
+          "enum": [
+            "independent-ethics-review",
+            "independent-risk-review",
+            "qualified-calibration-review",
+            "governed-data-review",
+            "independent-validation-review"
+          ]
+        },
+        "calibration_id": {
+          "pattern": "^cal-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "custodian": { "$ref": "#/$defs/text" },
+        "evidence_origin": { "$ref": "#/$defs/evidenceOrigin" },
+        "governed_record_id": { "$ref": "#/$defs/text" },
+        "next_gate": { "$ref": "#/$defs/text" },
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/digest" }
+      },
+      "required": ["availability", "evidence_origin"],
+      "type": "object"
+    },
+    "dataDictionary": {
+      "additionalProperties": false,
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "sha256": { "$ref": "#/$defs/digest" }
+      },
+      "required": ["path", "sha256"],
+      "type": "object"
+    },
+    "digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "estimand": {
+      "additionalProperties": false,
+      "properties": {
+        "contrast": { "$ref": "#/$defs/text" },
+        "description": { "$ref": "#/$defs/text" },
+        "estimand_id": {
+          "pattern": "^est-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "outcome": { "$ref": "#/$defs/text" },
+        "population": { "$ref": "#/$defs/text" }
+      },
+      "required": [
+        "estimand_id",
+        "description",
+        "population",
+        "outcome",
+        "contrast"
+      ],
+      "type": "object"
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "supersession-record" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["related_protocol_id", "related_record_revision"]
+          }
+        }
+      ],
+      "oneOf": [
+        {
+          "not": {
+            "anyOf": [
+              { "required": ["custodian"] },
+              { "required": ["disclosure_boundary"] },
+              { "required": ["governed_record_id"] },
+              { "required": ["record_revision"] }
+            ]
+          },
+          "properties": { "availability": { "const": "public" } },
+          "required": ["path", "sha256"]
+        },
+        {
+          "not": {
+            "anyOf": [{ "required": ["path"] }, { "required": ["sha256"] }]
+          },
+          "properties": {
+            "availability": { "const": "private" }
+          },
+          "required": [
+            "governed_record_id",
+            "record_revision",
+            "custodian",
+            "disclosure_boundary"
+          ]
+        },
+        {
+          "not": {
+            "anyOf": [{ "required": ["path"] }, { "required": ["sha256"] }]
+          },
+          "properties": {
+            "availability": { "const": "unavailable" },
+            "evidence_origin": { "const": "unavailable" },
+            "status": { "const": "unavailable" }
+          },
+          "required": [
+            "governed_record_id",
+            "record_revision",
+            "custodian",
+            "disclosure_boundary"
+          ]
+        }
+      ],
+      "properties": {
+        "availability": { "enum": ["public", "private", "unavailable"] },
+        "custodian": { "$ref": "#/$defs/text" },
+        "disclosure_boundary": { "$ref": "#/$defs/text" },
+        "evidence_id": {
+          "pattern": "^evidence-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "evidence_origin": { "$ref": "#/$defs/evidenceOrigin" },
+        "governed_record_id": { "$ref": "#/$defs/text" },
+        "kind": {
+          "enum": [
+            "evidence-review",
+            "schema-validation",
+            "synthetic-dry-run",
+            "pilot-risk-review",
+            "calibration-plan",
+            "ethics-approval",
+            "data-dictionary",
+            "privacy-license-review",
+            "calibration-record",
+            "preregistration-record",
+            "collection-release",
+            "analysis-lock",
+            "validation-release",
+            "null-result-audit",
+            "claim-promotion-release",
+            "supersession-record"
+          ]
+        },
+        "path": { "$ref": "#/$defs/path" },
+        "record_revision": { "$ref": "#/$defs/digest" },
+        "release_id": { "$ref": "#/$defs/text" },
+        "related_protocol_id": {
+          "pattern": "^ad-protocol-[a-z0-9-]+-[0-9]{3}$",
+          "type": "string"
+        },
+        "related_record_revision": { "$ref": "#/$defs/digest" },
+        "reviewed_by": { "$ref": "#/$defs/text" },
+        "reviewed_on": {
+          "format": "date",
+          "type": "string"
+        },
+        "scope": { "$ref": "#/$defs/text" },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "status": {
+          "enum": ["verified", "rejected", "revoked", "expired", "unavailable"]
+        },
+        "status_history": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "on": { "format": "date", "type": "string" },
+              "rationale": { "$ref": "#/$defs/text" },
+              "status": {
+                "enum": [
+                  "verified",
+                  "rejected",
+                  "revoked",
+                  "expired",
+                  "unavailable"
+                ]
+              }
+            },
+            "required": ["status", "on"],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "kind",
+        "status",
+        "scope",
+        "availability",
+        "evidence_origin",
+        "reviewed_by",
+        "reviewed_on"
+      ],
+      "type": "object"
+    },
+    "evidenceOrigin": {
+      "enum": [
+        "measured",
+        "estimated",
+        "modeled",
+        "assumed",
+        "analytical",
+        "manufactured-synthetic",
+        "unavailable"
+      ]
+    },
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": { "$ref": "#/$defs/path" },
+        "role": { "enum": ["calculation", "workflow"] },
+        "route_audit_id": {
+          "pattern": "^ad-route-[0-9a-f]{12}$",
+          "type": "string"
+        },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "source_revision": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": ["path", "sha256", "source_revision", "route_audit_id"],
+      "type": "object"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "animal_approval_required": { "type": "boolean" },
+        "consent": { "$ref": "#/$defs/text" },
+        "ethics": { "$ref": "#/$defs/text" },
+        "human_approval_required": { "type": "boolean" },
+        "license": { "$ref": "#/$defs/text" },
+        "privacy": { "$ref": "#/$defs/text" },
+        "private_data_approval_required": { "type": "boolean" }
+      },
+      "required": [
+        "privacy",
+        "license",
+        "consent",
+        "ethics",
+        "human_approval_required",
+        "animal_approval_required",
+        "private_data_approval_required"
+      ],
+      "type": "object"
+    },
+    "historyEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "pattern": "^evidence-[a-z0-9-]+$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "from": { "$ref": "#/$defs/state" },
+        "on": {
+          "format": "date",
+          "type": "string"
+        },
+        "rationale": { "$ref": "#/$defs/text" },
+        "to": { "$ref": "#/$defs/state" }
+      },
+      "required": ["from", "to", "on", "rationale", "evidence_ids"],
+      "type": "object"
+    },
+    "hypothesis": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "enum": ["positive", "negative", "two-sided", "none"]
+        },
+        "falsifier": { "$ref": "#/$defs/text" },
+        "hypothesis_id": {
+          "pattern": "^hyp-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "null_handling": { "$ref": "#/$defs/text" },
+        "statement": { "$ref": "#/$defs/text" }
+      },
+      "required": [
+        "hypothesis_id",
+        "statement",
+        "direction",
+        "falsifier",
+        "null_handling"
+      ],
+      "type": "object"
+    },
+    "interventionExposure": {
+      "additionalProperties": false,
+      "properties": {
+        "comparator": { "$ref": "#/$defs/text" },
+        "description": { "$ref": "#/$defs/text" },
+        "type": {
+          "enum": ["intervention", "exposure", "modeled-perturbation", "none"]
+        }
+      },
+      "required": ["type", "description", "comparator"],
+      "type": "object"
+    },
+    "links": {
+      "additionalProperties": false,
+      "properties": {
+        "calculation_artifacts": {
+          "items": { "$ref": "#/$defs/artifact" },
+          "type": "array"
+        },
+        "claim_ids": {
+          "items": {
+            "pattern": "^ad-[a-z0-9-]+-[0-9]{3}$",
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "claim_link_status": { "enum": ["linked", "unavailable"] },
+        "claim_link_next_gate": { "$ref": "#/$defs/text" },
+        "critique_ids": {
+          "items": {
+            "pattern": "^crit-[a-z0-9-]+$",
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "critique_link_status": { "enum": ["linked", "unavailable"] },
+        "critique_link_next_gate": { "$ref": "#/$defs/text" },
+        "datasets": {
+          "items": { "$ref": "#/$defs/dataset" },
+          "type": "array"
+        },
+        "route_audits": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "audit_id": {
+                "pattern": "^ad-route-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "route": {
+                "pattern": "^/([^?#]*)$",
+                "type": "string"
+              }
+            },
+            "required": ["audit_id", "route"],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "validation_release": {
+          "additionalProperties": false,
+          "oneOf": [
+            {
+              "properties": { "status": { "const": "unavailable" } },
+              "required": ["next_gate"]
+            },
+            {
+              "properties": { "status": { "const": "verified" } },
+              "required": ["release_id", "record_revision"]
+            }
+          ],
+          "properties": {
+            "next_gate": { "$ref": "#/$defs/text" },
+            "record_revision": { "$ref": "#/$defs/digest" },
+            "release_id": { "$ref": "#/$defs/text" },
+            "status": { "enum": ["unavailable", "verified"] }
+          },
+          "required": ["status"],
+          "type": "object"
+        },
+        "workflow_artifacts": {
+          "items": { "$ref": "#/$defs/artifact" },
+          "type": "array"
+        }
+      },
+      "required": [
+        "claim_ids",
+        "claim_link_status",
+        "claim_link_next_gate",
+        "critique_ids",
+        "critique_link_status",
+        "critique_link_next_gate",
+        "calculation_artifacts",
+        "workflow_artifacts",
+        "datasets",
+        "route_audits",
+        "validation_release"
+      ],
+      "type": "object"
+    },
+    "measurement": {
+      "additionalProperties": false,
+      "properties": {
+        "calibration_id": {
+          "pattern": "^cal-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "frame": { "$ref": "#/$defs/text" },
+        "name": { "$ref": "#/$defs/text" },
+        "quantity_class": { "$ref": "#/$defs/evidenceOrigin" },
+        "unit": { "$ref": "#/$defs/text" }
+      },
+      "required": ["name", "quantity_class", "frame", "unit", "calibration_id"],
+      "type": "object"
+    },
+    "path": {
+      "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "type": "string"
+    },
+    "pathArray": {
+      "items": { "$ref": "#/$defs/path" },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "population": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": { "$ref": "#/$defs/text" },
+        "exclusion": { "$ref": "#/$defs/textArray" },
+        "inclusion": { "$ref": "#/$defs/textArray" },
+        "sampling_frame": { "$ref": "#/$defs/text" },
+        "target_population": { "$ref": "#/$defs/text" }
+      },
+      "required": [
+        "target_population",
+        "sampling_frame",
+        "inclusion",
+        "exclusion",
+        "authority"
+      ],
+      "type": "object"
+    },
+    "protocol": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_boundary": { "$ref": "#/$defs/text" },
+        "companion_issue": {
+          "enum": [4033, 4034, 4035, 4036, 4037, 4038, 4039, 4040, 4041],
+          "type": "integer"
+        },
+        "evidence": {
+          "items": { "$ref": "#/$defs/evidence" },
+          "type": "array"
+        },
+        "evidence_origin": { "$ref": "#/$defs/evidenceOrigin" },
+        "history": {
+          "items": { "$ref": "#/$defs/historyEvent" },
+          "type": "array"
+        },
+        "links": { "$ref": "#/$defs/links" },
+        "owner": { "$ref": "#/$defs/text" },
+        "participant_scope": {
+          "enum": ["none", "human", "animal", "private-data"]
+        },
+        "promotion_attempts": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "attempt_id": {
+                "pattern": "^attempt-[a-z0-9-]+$",
+                "type": "string"
+              },
+              "evidence_ids": {
+                "items": {
+                  "pattern": "^evidence-[a-z0-9-]+$",
+                  "type": "string"
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "on": { "format": "date", "type": "string" },
+              "outcome": { "const": "rejected" },
+              "rationale": { "$ref": "#/$defs/text" },
+              "target": { "$ref": "#/$defs/state" }
+            },
+            "required": [
+              "attempt_id",
+              "target",
+              "outcome",
+              "on",
+              "rationale",
+              "evidence_ids"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "protocol_id": {
+          "pattern": "^ad-protocol-[a-z0-9-]+-[0-9]{3}$",
+          "type": "string"
+        },
+        "protocol_revision": { "$ref": "#/$defs/digest" },
+        "record_revision": { "$ref": "#/$defs/digest" },
+        "specification": { "$ref": "#/$defs/specification" },
+        "state": { "$ref": "#/$defs/state" },
+        "title": { "$ref": "#/$defs/text" },
+        "unavailable_boundaries": { "$ref": "#/$defs/textArray" },
+        "successor_protocol_id": {
+          "pattern": "^ad-protocol-[a-z0-9-]+-[0-9]{3}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "protocol_id",
+        "title",
+        "companion_issue",
+        "owner",
+        "protocol_revision",
+        "record_revision",
+        "state",
+        "participant_scope",
+        "evidence_origin",
+        "authority_boundary",
+        "unavailable_boundaries",
+        "specification",
+        "links",
+        "evidence",
+        "history",
+        "promotion_attempts"
+      ],
+      "type": "object"
+    },
+    "specification": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis": { "$ref": "#/$defs/analysis" },
+        "calibrations": {
+          "items": { "$ref": "#/$defs/calibration" },
+          "minItems": 1,
+          "type": "array"
+        },
+        "data_dictionary": { "$ref": "#/$defs/dataDictionary" },
+        "estimands": {
+          "items": { "$ref": "#/$defs/estimand" },
+          "minItems": 1,
+          "type": "array"
+        },
+        "governance": { "$ref": "#/$defs/governance" },
+        "hypotheses": {
+          "items": { "$ref": "#/$defs/hypothesis" },
+          "minItems": 1,
+          "type": "array"
+        },
+        "intervention_exposure": { "$ref": "#/$defs/interventionExposure" },
+        "measurements": {
+          "items": { "$ref": "#/$defs/measurement" },
+          "minItems": 1,
+          "type": "array"
+        },
+        "population": { "$ref": "#/$defs/population" },
+        "question": { "$ref": "#/$defs/text" }
+      },
+      "required": [
+        "question",
+        "estimands",
+        "hypotheses",
+        "population",
+        "intervention_exposure",
+        "measurements",
+        "calibrations",
+        "data_dictionary",
+        "governance",
+        "analysis"
+      ],
+      "type": "object"
+    },
+    "state": {
+      "enum": [
+        "concept",
+        "evidence-reviewed",
+        "simulation-ready",
+        "pilot-ready",
+        "ethics-approved",
+        "data-ready",
+        "preregistered",
+        "collecting",
+        "analysis-locked",
+        "validated",
+        "published",
+        "superseded"
+      ]
+    },
+    "text": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "textArray": {
+      "items": { "$ref": "#/$defs/text" },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    }
+  }
+}
