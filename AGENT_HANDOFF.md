@@ -37,7 +37,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
   authority.
 - `/models/bilateral-hand-wrench-validation.html` is registered as reviewed
   audit `ad-route-5602bed13ca4`, bound to exact reviewed content commit
-  `ae1577ccfb2001d191e5a329d61a0551cfa06583` and all four review dimensions.
+  `08ca5ab6ed52e5bd9e365c8eb5116018a682621b` and all four review dimensions.
   The protected 219-route deferred partition is unchanged.
 - RED evidence: the focused suite initially failed during collection because
   the hand-wrench modules did not exist. A later focused RED boundary exposed
