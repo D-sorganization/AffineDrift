@@ -1,6 +1,6 @@
 ---
-title: "A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift-Control Ratio in the Golf Swing"
-description: "Analysis of the drift-control ratio in golf swings using control theory, multibody dynamics, and relativistic analogies to understand passive dynamics exploitation."
+title: "A Control-Theoretic and Multibody Dynamics Analysis of the Drift-Control Ratio in the Golf Swing"
+description: "A model-bounded drift-control ratio analysis that distinguishes instantaneous velocity sets, control effects, and finite-horizon reachability."
 author:
   - name: "Dieter Olson"
     affiliations: "Affine Golf Swing Analysis Project"
@@ -13,6 +13,7 @@ format:
 
 <!--
 Revision History:
+- v3: Corrected the reachability contract; added the constant-additive-drift counterexample; withdrew unsupported control-cone, threshold, Gramian-scaling, timing, and face-variance claims.
 - v2: Added cross-joint DCR comparison caveat; clarified accessibility vs. controllability in Lie bracket analysis; refined norm-dependence discussion; added DCR threshold switching condition for ICC transition.
 - v1: Initial publication with core DCR definition, relativistic analogy, and numerical example.
 -->
@@ -27,9 +28,9 @@ $$
 {\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|+\varepsilon},
 $$
 
-Within the simplified planar model used here, example calculations suggest that DCR can increase by more than two orders of magnitude from the top of the backswing to impact. The resulting interpretation is a model-bounded loss of **gross path authority** during the downswing, not a direct empirical measurement of every golfer.
+Within the simplified planar model used here, example calculations suggest that DCR can increase by more than two orders of magnitude from the top of the backswing to impact. This is a statement about the relative magnitudes of two modeled acceleration sets in a declared projection. **DCR alone does not determine finite-horizon reachability**, path-correction authority, or an impact outcome.
 
-We use an analogy to **relativistic time cones** to describe an evolving **control cone**: a reachable-set picture in which future states narrow as drift becomes large relative to available control. The analogy is pedagogical rather than literal. It helps explain why the model predicts severe limits on late-downswing path redirection while still allowing small outcome-relevant adjustments. We conclude by discussing how high DCR can amplify upstream deviations into clubface-closure variability in the modeled system.
+We distinguish the drift-affected instantaneous velocity set, the input-only control-effect set, and the finite-horizon reachable set. A constant-additive-drift counterexample shows why large scalar DCR can translate a reachable set without shrinking it. The former control-cone, pancake, and drift-tube descriptions are retained only as **unvalidated hypotheses** whose evaluation requires a horizon, admissible controls, task metric, uncertainty model, and event-level outcome.
 
 :::
 
@@ -45,41 +46,41 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Why does your swing feel "out of control" at impact? This article explains the mathematical reason: as you swing faster, physics overpowers your muscles.
+        This article asks a narrow modeling question: how large is passive acceleration relative to the acceleration available from a declared input set? That ratio does not, by itself, say whether a golfer can correct a path or outcome.
       </p>
 
       <div class="laymans-item">
-        <h3>The Drift-Control Ratio (Muscle vs. Momentum)</h3>
+        <h3>The Drift-Control Ratio (One Magnitude Comparison)</h3>
         <p>
-          We compare two forces: "Control" (your muscle power) and "Drift" (the club's momentum). At the start of the swing, your muscles are in charge. But as speed increases, momentum becomes 100 times stronger than your hands.
+          DCR compares modeled drift acceleration with the largest modeled input acceleration in the same chosen coordinates. It is not a muscle-power measurement, and a large value is not a certificate that control has disappeared.
         </p>
         <div class="analogy">
-          <strong>Think of it like a canoe on a river:</strong> Imagine you're paddling a canoe on a river. When the current is gentle (low DCR), you can paddle wherever you want—you control the river. When the current becomes stronger (medium DCR), your ability to change direction shrinks; you can make small adjustments, but the water increasingly decides your path. When you approach the rapids (high DCR), no amount of paddling will steer you; the current overpowers your paddles, and you're committed to the path the water chooses. And when you go over a waterfall (very high DCR), paddling is irrelevant. The DCR is a number that tells you where you are on this spectrum—gentle current, fast water, rapids, or waterfall.
+          <strong>Think of a uniform river current:</strong> A stronger current moves every possible canoe endpoint downstream, but it does not automatically reduce the range of endpoints the paddles can add around that downstream motion. Whether the endpoint range actually narrows depends on how the current, boat, paddle limits, and route change over time.
         </div>
       </div>
 
       <div class="laymans-item">
-        <h3>The "Control Cone" (Tunnel Vision)</h3>
+        <h3>Three Different Questions</h3>
         <p>
-          Because momentum is so strong, your ability to change the club's path shrinks as you speed up. You can't steer the clubhead in the last split-second; you are locked into the path you created earlier.
+          The possible velocity right now, the change attributable to the available input right now, and the states reachable by impact are different mathematical objects. DCR summarizes neither their shape nor their future evolution.
         </p>
         <div class="analogy">
-          <strong>Think of it like:</strong> A waterslide. At the top, you can choose which slide to take. Once you're sliding down, you can't change lanes—gravity has taken over.
+          <strong>Practical consequence:</strong> A late correction may be small in a particular model, but that conclusion must come from a bounded trajectory calculation tied to the impact task—not from the scalar ratio alone.
         </div>
       </div>
 
       <div class="laymans-item">
-        <h3>The "Pancake" Effect (Twist but Don't Turn)</h3>
+        <h3>Path and Face Hypotheses</h3>
         <p>
-          While you lose the ability to steer the heavy club path (Drift), you can still easily twist the lightweight shaft (Control). This creates a dangerous situation where you can rotate the face but cannot change where the club is going.
+          The idea that path corrections become narrow while face corrections remain wide is a testable hypothesis. It has not been established here with a three-dimensional golfer-club model or measured admissible controls.
         </p>
         <div class="analogy">
-          <strong>Think of it like:</strong> Skidding on ice in a car. You can't turn the car (the path is set), but you can frantically spin the steering wheel (the face angle). You might change which way you're facing, but you're still sliding into the ditch.
+          <strong>What the test needs:</strong> Declare the time remaining to impact, allowable inputs, coordinates and task metric, parameter uncertainty, and the impact quantity being corrected.
         </div>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> You can't fight physics at 100 mph. Elite golfers don't try to steer the downswing; they focus on a perfect setup so the "drift" takes the club exactly where they want it to go.
+        <strong>Key Takeaway:</strong> A large DCR flags a modeled magnitude imbalance worth investigating. It does not prescribe technique or prove that a future correction is unavailable.
       </div>
     </div>
   </div>
@@ -108,7 +109,7 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
           Critics citing the **Signal-Dependent Noise** theory (Wolpert et al.) argue that high torque generation introduces proportional motor noise. Therefore, the high DCR observed in the late downswing (where active torque is minimal relative to drift) may be a functional adaptation to *minimize* noise, not a loss of agency. By "riding the drift," the golfer avoids the inaccuracy inherent in high-force corrections.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We agree that reducing torque minimizes noise. However, DCR measures **trajectory controllability**—the ability to change the path if it is wrong. A low-noise trajectory is useless if it is heading for the water hazard. The high DCR implies that even if the golfer *wanted* to correct a path error, the signal-to-noise ratio required to overcome the drift momentum would be prohibitive. The system is precise, but ballistically committed.
+          <strong>Our Response:</strong> DCR does not measure trajectory controllability or signal-to-noise ratio. Those require a controller, an admissible input set, a noise model, a horizon, and a task-level correction target. The noise-minimization interpretation and the loss-of-agency interpretation are both hypotheses until tested under the same declared model and data.
         </div>
       </div>
 
@@ -121,7 +122,7 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
           The DCR analysis focuses on the high inertia of the swing plane. Skeptics argue that accuracy depends primarily on the **Clubface Angle** (axial rotation), which has very low inertia ($I_{axial} \ll I_{plane}$). Since the golfer retains high authority over axial rotation throughout the downswing, the "loss of path control" is irrelevant to the outcome.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> This isolates the "what" (face angle) from the "when" (impact). The clubface rotates at $\approx 1500^\circ/s$ near impact. To square the face, the golfer must match the rotation angle to the *exact millisecond* of arrival. Since Planar DCR dictates that the *arrival time* is determined by the ballistic path, path variance indirectly forces face variance. You can steer the face, but you cannot steer the clock.
+          <strong>Our Response:</strong> Planar DCR does not determine arrival-time reachability or face-angle variance. Testing that coupling requires a spatial model, bounded path and axial inputs, event-time sensitivity, and an impact metric. The present planar ratio cannot adjudicate the critique.
         </div>
       </div>
 
@@ -134,7 +135,7 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
           The affine model $\dot{x} = f(x) + G(x)u$ treats control purely as torque ($u$). Critics argue that skilled golfers modulate **Mechanical Impedance** (stiffness/damping) to reject disturbances without active feedback. By stiffening the wrists ("Effective Plant"), the golfer can maintain control even when DCR suggests torque authority is lost.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> Stiffness is a critical stabilization mechanism, but it is energetically passive. It can reject small perturbations around a trajectory, but it cannot perform **net work** to redirect a massive ballistic object onto a new path. In this model, adding effective-plant stiffness does not remove the high-DCR regime; the extent to which that holds for real golfers requires subject-specific measurement.
+          <strong>Our Response:</strong> Changing stiffness or damping changes the effective plant, its drift field, and potentially its admissible input set. A DCR value is therefore conditional on the declared impedance model. Subject-specific perturbation, kinematic, kinetic, and activation measurements would be needed to identify that plant in golfers.
         </div>
       </div>
 
@@ -149,18 +150,18 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
 
 ## Introduction
 
-Elite golfers routinely generate clubhead speeds exceeding $45\;\mathrm{m/s}$, wrist angular velocities exceeding $2000^\circ/\mathrm{s}$, and torso angular velocities approaching $900^\circ/\mathrm{s}$. Human neuromechanical delays (≈150–250 ms) and electromechanical activation delays (≈30–50 ms) make real-time corrections during the downswing impossible.
+Golf swings can involve large clubhead and segment velocities. Sensorimotor and electromechanical delays constrain some feedback pathways, but they do not establish that every within-downswing adjustment is impossible.
 
 This mirrors a common theme in high-speed movement: **the system transitions from control-dominated to drift-dominated dynamics** as velocity increases.
 
-Building on the foundational framework established in *Affine Control Interpretation of the Golf Swing*, we analyze this transition not as a vague loss of coordination, but as a precise algebraic consequence of the equation of motion $\dot{x} = f(x) + G(x)u$. While the primary manuscript focused on *decomposing* these forces to identify causality, this article focuses on their *relative magnitude* to quantify controllability.
+Building on the foundational framework established in *Affine Control Interpretation of the Golf Swing*, we analyze the relative magnitude of declared drift and bounded input acceleration in $\dot{x} = f(x) + G(x)u$. The decomposition is model-based bookkeeping; it does not identify physiological cause or quantify controllability by itself.
 
 Our goal is to provide a model-bounded treatment of this phenomenon through:
 
 1. **Multibody dynamic derivations** of drift and control.
-2. **Nonlinear controllability analysis** (Lie algebraic).
-3. **Reachable set / control cone analysis** using an analogy to relativistic time cones.
-4. **Impact stability analysis** showing how DCR predicts clubface variance.
+2. **Accessibility and Gramian boundaries** for interpreting the scalar ratio.
+3. **Reachable-set distinctions** and an executable counterexample to scalar-DCR overreach.
+4. **Validation requirements** for path, event-time, and clubface-outcome hypotheses.
 
 This approach treats the Drift-Control Ratio as a useful diagnostic for the model's drift-versus-input balance. Its empirical value depends on calibration against measured swing data.
 
@@ -262,7 +263,7 @@ This scaling disparity is the kinetic manifestation of the **Force Taxonomy** es
 
 ::: {.callout-note}
 ## Scope Limitation: Planar vs. Axial Dynamics
-It is critical to note that this planar model ($q \in \mathbb{R}^3$) captures the transport mechanics of the swing (path velocity) but excludes the axial rotation of the shaft (supination/pronation). As discussed in @sec-anisotropy, this implies our DCR analysis strictly governs **path controllability**, while **face controllability** operates in an orthogonal, lower-inertia subspace.
+This planar model ($q \in \mathbb{R}^3$) captures transport mechanics (path velocity) but excludes axial shaft rotation (supination/pronation). As discussed in @sec-anisotropy, planar DCR is only a path-projected magnitude ratio. It does not establish path controllability, and it provides no certificate for face controllability in the omitted spatial subsystem.
 :::
 
 ## Drift-Control Ratio (DCR)
@@ -340,28 +341,17 @@ But alternative norms yield numerically different DCR values:
 
 A system with DCR$_2 = 47.3$ might have DCR$_\infty = 89.2$ or DCR$_M = 12.1$. The absolute numbers depend on the measuring stick.
 
-#### Proposed Monotonic Growth Across Norms
-
-Here is the key insight: while the numerical value of DCR depends on the norm, the *direction and magnitude of change* does not.
-
-**Conjecture (Monotonic Growth Invariance):** Across the downswing, DCR *increases monotonically* under *any* norm.
-
-::: {.callout-warning}
-## Status: Conjecture, Not Proven Theorem
-
-The intuitive argument is: drift magnitude grows with $\|\dot{q}\|^2$ (Coriolis/centrifugal scaling) while physiological torque capacity decreases under peak velocity, so the ratio should grow under any norm. However, this reasoning assumes **component-wise** monotonicity — that every drift component grows and every control component shrinks — which is not necessarily true. Individual components can increase or decrease in complex ways along a nonlinear trajectory. A rigorous proof would require either (a) showing the argument holds for the specific norm families of interest, or (b) providing empirical evidence from multi-subject simulation data showing the monotonic trend is consistent across norm choices. Until such a proof or validation is available, this claim should be treated as a well-motivated empirical observation rather than a mathematical theorem.
-:::
-
-The qualitative claim — that DCR increases substantially from backswing to impact in the cited planar simulations — is supported by the examples in this article. The conjecture that this trend is norm-independent follows from physical reasoning but remains to be formally verified.
-
-#### The Physically Natural Norm: Inertia-Weighted
+#### An Inertia-Weighted Option
 
 For golf biomechanics, we recommend the **inertia-weighted norm**:
 $$
 \|f_{acc}\|_M = \sqrt{f_{acc}^\top M(q) f_{acc}}.
 $$
 
-Why? Because $M(q)$ is the mass (inertia) matrix. This norm measures accelerations in units of kinetic energy. It captures what actually matters for dynamics: how much energy you need to change the motion. It is the "physically natural" choice, not an arbitrary convention.
+Because $M(q)$ is the mass matrix, this weighting incorporates configuration-dependent inertia.
+It does not turn acceleration into kinetic energy, and it is not uniquely preferred for every task.
+A task-space metric may be more appropriate when the declared outcome is clubhead path or an
+impact variable.
 
 #### Statement and Recommendation
 
@@ -372,7 +362,7 @@ The physically meaningful conclusion is therefore:
 For practice:
 1. **Always report the norm** used in DCR calculations.
 2. **Report growth ratio** (e.g., "100× increase from top to impact") rather than absolute threshold values.
-3. **Recommend inertia-weighted norm** as the default, because it measures kinetic energy—what physics actually cares about.
+3. **Justify the metric for the task** rather than treating any one norm as universal.
 
 ::: {.callout-warning}
 ## Cross-Joint Comparison Caveat
@@ -382,284 +372,133 @@ DCR values for different degrees of freedom (e.g., shoulder rotation vs. wrist f
 
 ---
 
-**The numbers change with the measuring stick. The physics doesn't.**
+**Both the reported number and its interpretation remain conditional on the declared measuring stick and model.**
 
-## Nonlinear Reachability and the "Effective Control Cone"
+## DCR and Reachability: What the Scalar Does Not Prove
 
-While the 3-link model is technically **holonomic** and fully actuated (assuming sufficient torque), the massive scaling of the drift term creates a regime of **Practical Underactuation**. We analyze this not through Lie Brackets (which govern geometric accessibility), but through **Hamiltonian Reachability** analysis, which governs the energetic feasibility of motion.
+For $\dot{x}=f(x)+G(x)u$ with admissible control set $\mathcal{U}(x)$, three
+objects must remain separate:
 
-Consider the **Control Hamiltonian** representing the maximum rate of change along a costate vector $p$:
+1. The **drift-affected instantaneous velocity set**
+   $f(x) + G(x)\mathcal{U}(x)$.
+2. The **input-only control-effect set** $G(x)\mathcal{U}(x)$.
+3. The **finite-horizon reachable set**
 
-$$
-H(x,p) = \sup_{u \in \mathcal{U}} p^T(f(x) + G(x)u).
-$$
+   $$
+   \mathcal{R}(T;x_0)=
+   \left\{x(T):u(t)\in\mathcal{U}(x(t)),\;t\in[0,T]\right\}.
+   $$
 
-As velocity increases, the "Drift Component" $p^T f(x)$ scales quadratically ($\sim \dot{q}^2$), while the "Control Component" $p^T G(x) u$ remains bounded by physiological torque limits ($u_{\text{max}}$).
+The drift translates the first set relative to the origin. It does not change the shape of the
+second set at the same state. Over a finite horizon, state dependence in $f$, $G$, and
+$\mathcal{U}$ can translate, rotate, stretch, or contract the reachable set. A scalar norm ratio
+does not encode those effects. **DCR alone does not determine finite-horizon reachability.**
 
-### The Anisotropy of Control Authority
-
-The result is a severe **Anisotropy of the Reachable Set**.
-
-- **Along the Drift Vector:** The system possesses massive momentum. To stop or reverse the motion requires a generalized force $M(q)\,\|f(x)\|$ that exceeds the available $\|\tau_{\text{max}}\|$ by orders of magnitude (DCR > 100) — comparing like (torque-valued) quantities, $\|M(q) f(x)\| \gg \|\tau_{\text{max}}\|$. Equivalently, the drift acceleration $\|f(x)\|$ dwarfs the input-achievable acceleration $\|M(q)^{-1}\tau_{\text{max}}\|$. This direction is therefore effectively uncontrollable.
-- **Orthogonal to Drift:** The control authority depends on the inertia matrix $M(q)$.
-    - **Planar Path:** High inertia ($I_{plane}$) $\to$ Low acceleration authority.
-    - **Axial Rotation (Supination):** Low inertia ($I_{axial}$) $\to$ High acceleration authority.
-
-Thus, the "ball of reachable states" flattens into a thin **pancake shape**.
-
-While the DCR provides a scalar magnitude of the problem—telling us *that* path control is lost—this reachability analysis reveals the *geometry* of that loss. It shows us that while the golfer retains the ability to rotate the shaft (low inertia), they lose the ability to steer the path of the center of mass (high inertia + high drift). The golfer is locked into a **"Drift Tube"** determined by the initial conditions set at the top of the swing.
-
-## Control Authority Collapse
-
-Control authority:
+The Hamiltonian support function makes the same distinction:
 
 $$
-\alpha(t) = \frac{\|g u\|}{\|f\|} = \frac{1}{\mathrm{DCR}(t)}.
+H(x,p)=p^\top f(x)+\sup_{u\in\mathcal{U}(x)}p^\top G(x)u.
 $$
 
-Collapse occurs when:
+The first term shifts support in direction $p$; the second supplies directional control support.
+Their norm ratio cannot recover the support function or its evolution to an impact event.
+
+### Executable Constant-Drift Counterexample
+
+Consider $\dot{x}=d+u$ with $|u(t)|\leq\bar{u}$. For constant $d$,
 
 $$
-\alpha(t) < 0.1
-\quad\Leftrightarrow\quad
-\mathrm{DCR}(t) > 10.
+\mathcal{R}(T;x_0)=
+\left[x_0+(d-\bar{u})T,\;x_0+(d+\bar{u})T\right].
 $$
 
-::: {.callout-note}
-## DCR > 10: A Heuristic Threshold
-The specific value DCR > 10 (equivalently, α < 0.1) is a **rough heuristic** derived from setting the control authority fraction below 10%. It depends on the chosen norm and the 10% threshold level, both of which are arbitrary. The **qualitative pattern** in the simplified examples is that DCR grows substantially through the downswing. The absolute threshold and 100-300x growth estimate should be treated as illustrative model output, not as a universal biomechanical constant.
-:::
+Its center is $x_0+dT$, while its width is $2\bar{u}T$, independent of $d$. With
+$x_0=0$, $\bar{u}=1$, and $T=1$, zero drift gives $[-1,1]$ and $d=100$ gives
+$[99,101]$. The DCR-like magnitude ratio changes from $0$ to $100$, but the reachable width
+remains $2$. The checked implementation is
+`src/affine_control/reachability.py::constant_additive_drift_interval`, exercised by
+`tests/test_dcr_reachability_contract.py`.
 
+This counterexample does not claim that golf-swing drift is constant. It proves the narrower
+logical point: drift magnitude alone cannot establish reachable-set shrinkage.
 
-The planar model predicts (estimates, not empirically validated):
+### What a DCR Threshold Means
 
-- Collapse begins approximately 70–120 ms before impact.
-- Drift dominance peaks 40–60 ms before impact (DCR ≈ 50–200).
-- Late-downswing gross path control is severely constrained in the planar model.
+If a declared DCR equals 10, the reported drift norm is ten times the largest input-effect norm
+in that projection and metric. Nothing discontinuous happens at 10. It is not a controllability,
+accessibility, saturation, or reachable-set threshold.
 
-These values are estimates from the simplified planar model; instrumented swing capture data would be needed to confirm. The qualitative pattern (progressive loss of gross path authority approaching impact) is plausible for high-speed swings, but the specific timing should be validated with measured data.
+Claims about whether path correction becomes too small for a specified task remain unavailable
+until a governed trajectory study declares the horizon, state-dependent admissible control set,
+state coordinates, task metric, model and measurement uncertainty, and impact-event outcome with
+its acceptable tolerance.
 
-The DCR calculation provides a model-based reason to compare the actual swing with the **Zero Torque Counterfactual (ZTCF)**. In low-DCR regimes such as putting or the takeaway, the ZTCF can diverge substantially from the actual path because input authorities remain comparable to passive dynamics. In the high-DCR downswing, the model predicts a smaller separation between the actual trajectory and the passive baseline. This makes the ZTCF a useful diagnostic reference, not a claim that real swings literally converge to a universal passive attractor.
+DCR also does not predict separation between an observed trajectory and a **Zero Torque
+Counterfactual (ZTCF)**. That separation must be obtained from the declared forward interventions,
+with divergent states and model assumptions reported.
 
-## The Control Cone Analogy: A Relativistic Perspective
+## The Control-Cone Analogy as an Unvalidated Hypothesis
 
-We now extend the analysis by introducing a new conceptual tool: the **Control Cone**, analogous to the **light cone** in relativity.
-
-### Relativity Background
-
-In special relativity, the **future light cone** at event $p$ contains all events reachable at speed ≤ $c$. Points outside the cone cannot be influenced causally.
-
-Let:
-
-- $\mathcal{C}^+(p)$: forward light cone
-- $\mathcal{C}^-(p)$: backward light cone
-
-Events outside $\mathcal{C}^+(p)$ are unreachable.
-
-### Control Theory Parallel: Reachable Sets
-
-For a control system:
+For fixed $x$, the short-time limit $\mathcal{R}(\Delta t;x)\to\{x\}$ is a singleton, not a
+direction cone. A first-order rescaling instead gives the drift-affected velocity set:
 
 $$
-\dot{x}=f(x)+G(x)u
+\lim_{\Delta t\to0^+}
+\frac{\mathcal{R}(\Delta t;x)-x}{\Delta t}
+=f(x)+G(x)\mathcal{U}(x),
 $$
 
-the **reachable set** over time $t$ from $x_0$ is:
+under the usual local regularity assumptions. Subtracting the nominal drift contribution leaves
+the control-effect set $G(x)\mathcal{U}(x)$. Neither set is generally a cone; bounded controls more
+often produce a translated compact set.
+
+The earlier **control-cone**, **drift-tube**, and **pancake** pictures can therefore serve only as
+names for possible finite-horizon anisotropy. They are **unvalidated hypotheses**, not consequences
+of high DCR or analogues of relativistic causal structure. A governed computation might support a
+narrow task-projected reachable corridor in a particular model, but it must report the horizon,
+admissible controls, task metric, uncertainty, and impact-event outcome.
+
+### Accessibility and Gramian Boundaries {#sec-anisotropy}
+
+Lie-bracket rank conditions concern local accessibility under their stated regularity assumptions.
+They do not show that multiplying the drift magnitude reduces accessibility rank, nor do they
+turn a norm ratio into a finite-horizon controllability certificate.
+
+For a trajectory-linearized perturbation model
 
 $$
-\mathcal{R}(t;x_0)
-=
-\left\{
-x(t) : u(s)\in \mathcal{U},\; s\in[0,t]
-\right\}.
+\delta\dot{x}=A(t)\delta x+B(t)\delta u,
 $$
 
-When control dominates, the reachable set expands widely.
-When drift dominates, it collapses into a narrow tube around the drift trajectory.
+a controllability Gramian depends on $A(t)$, $B(t)$, the time horizon, and the input metric.
+There is no general law making its planar eigenvalues or ellipsoid aspect ratio a scalar function
+of DCR. Establishing a pancake-shaped nonlinear reachable set would require an explicit spatial
+model, converged reachability computation, admissible controls, and uncertainty treatment.
 
-### Defining the Control Cone
+### Event-Level Path and Face Tests
 
-Define the **Control Cone** at state $x$:
+Different path and axial inertias can motivate a hypothesis that late path authority and face
+authority differ. DCR does not validate that hypothesis. A suitable study would apply the same
+declared bounded controls to a spatial model through an impact event, then report directional
+changes in path, arrival time, and face angle in the impact-event outcome. It would also test
+sensitivity to inertial parameters, shaft dynamics, impedance assumptions, and uncertainty.
+Neither planar DCR nor a quoted closure rate supplies those missing results.
 
-$$
-\mathcal{C}_c(x)
-=
-\lim_{\Delta t\to 0^+}
-\mathcal{R}(\Delta t;x).
-$$
+## Stability and Clubface Variance: Required Model
 
-This is the direction set the system can move **instantaneously** through control perturbations.
-
-#### When Drift Is Small:
-$$
-\mathcal{C}_c(x) \text{ is wide}.
-$$
-
-#### When Drift Is Large:
-$$
-\mathcal{C}_c(x) \text{ collapses to a thin region}.
-$$
-
-This is exactly analogous to the narrowing of reachable future states in relativity, but governed not by light speed, but by drift dominance.
-
-### Mathematical Representation of Cone Narrowing
-
-The instantaneous reachable set is spanned by:
+Let clubface angle be $\phi=h(q)$. A local event-variance analysis may start from
 
 $$
-\mathcal{V}(x)
-=
-\mathrm{span}\left\{
-G(x),\; \mathrm{Ad}_{e^{tf}} g,\;
-\mathrm{Ad}_{e^{tf}}[f,g], \dots
-\right\}.
+\delta\dot{x}=A(t)\delta x+B(t)\delta u,
+\qquad
+\delta\phi=H(t)\delta x,
 $$
 
-As drift grows:
-
-$$
-\mathrm{Ad}_{e^{tf}} g
-\longrightarrow 0
-\quad (\text{relative to drift})
-$$
-
-and
-
-$$
-\dim(\mathcal{V}(x))
-\longrightarrow 1.
-$$
-
-Interpretation:
-The future becomes **nearly predetermined**.
-
-Just like a narrowing time cone restricts your causal influence, a narrowing control cone restricts your mechanical influence.
-
-### Application to the Golf Swing
-
-#### Backswing — Wide Control Cone
-- Many future swing shapes are reachable.
-- Technique changes land well.
-
-#### Transition — Cone Tilt
-- Drift begins overwhelming control.
-- Only certain motion corridors remain reachable.
-
-#### Early Downswing — Cone Narrowing
-- Drift ≫ control.
-- You are "locked in."
-
-#### Late Downswing — Cone Collapse
-- Cone becomes a thin tube.
-- Only the ballistic trajectory remains reachable (Macro-Control is lost).
-- **Micro-Correction** remains theoretically possible but precarious. While the golfer cannot reshape the swing, they may still influence impact parameters by the small margins required for ball flight control, provided they can overcome the massive signal-to-noise ratio imposed by the drift.
-
-This explains why golfers feel “along for the ride,” even as they execute subtle hand actions to square the face.
-
-Crucially, the narrowing of the Control Cone suggests that late "steering" is limited, while earlier setup of the reachable corridor remains important. This is consistent with the **Intentional Constraint Collapse** hypothesis, but it should be treated as a model interpretation until it is tested against swing data.
-
-#### Limits of the Analogy: When the Parallel Breaks Down
-
-The control cone analogy illuminates the *qualitative structure* of controllability loss but should not be interpreted as a formal isomorphism with relativistic light cones. Several fundamental differences deserve explicit acknowledgment:
-
-#### Differences From Relativistic Causality
-
-**Lorentz Invariance vs. Coordinate Dependence:**
-In relativity, the light cone is invariant under all inertial reference frames. The speed of light $c$ is universal. The control cone, by contrast, depends *entirely* on the choice of norm, the mass distribution, and the physiological torque constraints—none of which are universal. Different norms yield different cone shapes.
-
-**Metric Structure:**
-Relativistic light cones arise from the Minkowski metric, which has a fixed algebraic structure. The "metric" governing the control cone is the ratio of drift to control authority, which is *time-varying* (as torque decreases and velocity increases). Thus, the control cone's shape changes dynamically; it is not a static geometric object.
-
-**Determinism and Reversibility:**
-In relativity, causal structure is reversible—if an event A can causally influence B, then the light cone structure applies symmetrically. The control cone is inherently *irreversible*: the golfer cannot undo an early decision by acting late. This asymmetry is fundamental to control, not a symmetry of dynamics.
-
-#### The Pedagogical Value
-
-Despite these differences, the control cone remains useful because it captures the model's qualitative prediction: **as drift dominates, the reachable future states shrink toward a narrower tube**. The relativistic analogy *visualizes* this shrinkage but should not be confused with the underlying reachability calculation.
-
-#### Appropriate Use of the Analogy
-
-The control cone should be understood as:
-- A **pedagogical tool** for visualizing controllability loss,
-- NOT a claim that golf swings obey Lorentz transformations,
-- NOT a suggestion that relativistic constants or metrics apply,
-- A **qualitative guide** to understanding why late corrections may be limited in this model, rooted in Hamiltonian reachability rather than relativistic causality.
-
-### Anisotropy of the Control Cone: The "Pancake" Hypothesis {#sec-anisotropy}
-
-A critical nuance (see *Planar DCR Blindness* critique) is that the loss of control is not isotropic. The moment of inertia about the shaft axis ($I_{axial}$) is orders of magnitude smaller than the swing plane inertia. Thus, while the **Path Control Cone** (planar) collapses to a thin tube, the **Face Control Cone** (axial) likely remains relatively wide.
-
-This suggests the control cone is "pancake-shaped": thin in the dimension of travel, but wide in the dimension of face orientation.
-
-#### Lie Bracket Analysis of Anisotropic Accessibility
-
-::: {.callout-note}
-## Accessibility vs. Controllability
-
-Lie brackets (via the Lie Algebra Rank Condition, LARC) establish **local accessibility**: the ability to reach an open neighborhood of states from any initial condition. This is a weaker property than **controllability** (the ability to reach *any* target state from *any* initial state). For underactuated nonlinear systems like the golf swing, LARC-based arguments should be interpreted as accessibility claims, not full controllability. In particular, the "anisotropy" discussed below describes the *relative richness* of accessible directions, not a formal controllability certificate.
-:::
-
-The pancake shape can be made precise through the accessibility Lie algebra. For the planar subsystem with drift $f_{plane}$ and control $g_{plane}$, the first-order Lie bracket $[f_{plane}, g_{plane}]$ generates acceleration corrections perpendicular to drift. However, as $\|f_{plane}\|$ grows, the ratio $\|[f_{plane}, g_{plane}]\| / \|f_{plane}\|$ diminishes—the bracket-generated directions become negligible relative to the drift flow. For the axial subsystem, $f_{axial}$ remains small (low angular momentum about the shaft axis), so $\|[f_{axial}, g_{axial}]\| / \|f_{axial}\|$ remains $\mathcal{O}(1)$, preserving local accessibility in that subsystem.
-
-More concretely, the Gramian-based reachable ellipsoid over time horizon $\Delta t$ is:
-$$
-\mathcal{E}(\Delta t) = \left\{ \delta x : \delta x^\top W_c^{-1}(\Delta t) \, \delta x \leq 1 \right\}
-$$
-where $W_c$ is the controllability Gramian. **Note:** This formula is exact for linear systems and represents a first-order (linearization-based) approximation for the nonlinear golf swing system; for the nonlinear case, the true reachable set is generally not an ellipsoid. The eigenvalues of $W_c$ in planar directions shrink as $\mathcal{O}(1/\text{DCR}^2)$, while axial eigenvalues remain $\mathcal{O}(1)$. This produces an ellipsoid with aspect ratio $\sim \text{DCR}$—a pancake whose thickness-to-width ratio matches the DCR.
-
-#### The Temporal Coupling
-
-However, this does not rescue the golfer from the DCR imperative. The face angle $\phi$ is coupled to the path via the **closure rate** ($\dot{\phi} \approx 1500^\circ/s$). Even if axial authority remains high, the **timing window** to square the face is dictated by the planar trajectory. If the Planar DCR is high, the golfer cannot adjust the *arrival time* of the clubhead. Therefore, Planar DCR creates a **Temporal Accuracy Constraint** that indirectly bounds the Face Angle variance. You can steer the face, but you cannot steer the *time* you arrive at impact.
-
-## Stability of Impact and Clubface Closure Variance
-
-Let clubface angle be:
-
-$$
-\phi(t) = h(q(t)).
-$$
-
-Linearizing:
-
-$$
-\delta \phi = H \delta q,
-\quad H = \frac{\partial h}{\partial q}.
-$$
-
-Perturbation dynamics:
-
-$$
-\delta \dot{x}
-\approx
-\frac{\partial f}{\partial x} \delta x
-\quad (\text{since control effects vanish}).
-$$
-
-Solution:
-
-$$
-\delta x(t)
-= e^{A_f (t-t_0)} \delta x(t_0),
-\quad
-A_f = \frac{\partial f}{\partial x}.
-$$
-
-The variance at impact:
-
-$$
-\mathrm{Var}[\phi]
-\approx
-H
-e^{A_f \Delta t}
-\Sigma_0
-e^{A_f^T \Delta t}
-H^T.
-$$
-
-High DCR implies large $A_f$, hence exponential amplification of small errors.
-
-**Conclusion:**
-Impact is extremely sensitive to early-swing structure. While the golfer may retain the torque authority to rotate the clubface (low axial inertia), the **high Planar DCR** denies them the ability to slow or steer the clubhead to *meet* that face angle at the correct millisecond. Thus, **Path Drift** enforces **Face Error**.
+but it must also declare the feedback policy, disturbances, measurement noise, initial covariance,
+state-transition model, and impact-event sensitivity. DCR contains none of these objects. In
+particular, a large norm ratio does not imply a large state Jacobian or exponential error growth.
+The previous claim that path drift enforces face error is therefore withdrawn; that relationship is
+unavailable pending an event-level uncertainty study.
 
 ## Schematic Illustration: Drift vs Control Magnitude
 
@@ -695,15 +534,17 @@ plt.show()
 ::: {.callout-warning}
 ## Limitations of This Analysis
 
-1. **Planar model only:** The 3-DOF planar model captures path dynamics but excludes axial rotation. The Pancake Hypothesis partially addresses this but has not been validated with a full 3D model.
+1. **Planar model only:** The 3-DOF model captures path dynamics but excludes axial rotation. A spatial model is required before any directional reachable-set shape can be assessed; the pancake picture remains an unvalidated hypothesis.
 
-2. **Norm dependence of absolute values:** While monotonic DCR growth is norm-independent, the specific threshold "DCR > 10 implies collapse" depends on the chosen norm and should be calibrated per application.
+2. **Norm and model dependence:** DCR values and their time trend depend on the declared projection, norm, input bounds, and model. No scalar DCR threshold establishes reachable-set collapse.
 
 3. **Static torque bounds:** We assume fixed physiological torque limits. In reality, torque capacity varies with joint angle and velocity (the force-velocity relationship), which could modify the DCR profile.
 
 4. **No stochastic analysis:** This deterministic analysis does not account for motor noise. The interplay between DCR and signal-dependent noise (Wolpert et al.) deserves separate treatment.
 
 5. **Rigid body assumption:** Shaft flexibility and soft tissue compliance may modify the effective inertia and hence the DCR, particularly near impact.
+
+6. **No finite-horizon reachability result:** This article does not yet compute governed reachable sets for the golf model. Path correction, arrival-time adjustment, and impact tolerances remain unavailable until the contract in @sec-anisotropy is implemented.
 :::
 
 ## Conceptual Linkages
@@ -712,13 +553,13 @@ To place this analysis within the broader AffineDrift framework:
 
 1.  **Implicit Assumptions**:
     *   **Drift Invariance**: We assume that the passive drift field $f(x)$ remains structurally independent of the input mechanism, a condition formally proven in **Proposition 1** of the core theory.
-    *   **Torque Saturation**: The DCR analysis assumes physiological limits on $\tau$, treating the golfer as an underactuated system during the ballistic phase.
+    *   **Torque Bounds**: The DCR analysis assumes physiological limits on $\tau$. Bounded inputs do not by themselves make the modeled system structurally underactuated or establish a ballistic phase.
 
 2.  **Cross-References**:
     *   **The Drifter Manifesto**: For the foundational derivation of the affine form $\dot{x} = f(x) + G(x)u$.
     *   **Theory Part 3 (Force Taxonomy)**: For the detailed breakdown of the drift components (Inertial, Coriolis, Centripetal) that drive the DCR explosion.
-    *   **Intentional Constraint Collapse**: For the mechanism by which golfers "pre-shape" the control cone to manage the high-drift impact interval.
-    *   **Zero Torque Counterfactual (ZTCF)**: For the baseline trajectory that represents the infinite-DCR limit.
+    *   **Intentional Constraint Collapse**: A separate hypothesis about early organization that must not be treated as a reachable-set consequence of DCR.
+    *   **Zero Torque Counterfactual (ZTCF)**: A declared input-removal intervention. It is not an infinite-DCR limit and must be reported with its model assumptions.
 
 ## External Resources
 
@@ -828,7 +669,7 @@ The following resources are selected to provide authoritative grounding for the 
     <h3>What is Relativity? - Sean Carroll</h3>
     <div class="resource-description">
       <p>
-        <strong>Why it fits:</strong> Provides the conceptual bridge for the "Control Cone." Carroll explains how Light Cones delineate causal reachability in spacetime, exactly analogous to how Drift limits mechanical reachability in the swing.
+        <strong>Why it fits:</strong> Explains relativistic light cones and clarifies why they should not be used as evidence for mechanical reachable-set geometry. The comparison is pedagogical only; the systems do not share a reachability contract.
       </p>
       <ul>
         <li><strong>Seek:</strong> 20:30 (What are Light Cones?), 28:45 (Implications of Relativity).</li>

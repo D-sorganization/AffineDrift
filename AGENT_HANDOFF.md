@@ -10,7 +10,7 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## Ultimate Companion Planar-Scope Repair (2026-08-28)
+## Ultimate Companion Planar-Scope Repair (#4015 — PR #4045 Open)
 
 - Epic #4008 coordinates the companion program; issue #4015 removes two
   unsupported planar 90 percent fidelity claims.
@@ -25,12 +25,40 @@ This is current operational state. Historical detail belongs in git/GitHub.
   response was inspected at 1440 x 1000 with the disclosure expanded and has
   no overflow or clipping. Merge only through an ordinary protected PR; do not
   close #4015 on local evidence alone.
+- After merging protected DCR PR #4044, the combined planar-scope, DCR, and
+  mechanical-claim selection passes 14 tests; the repository content-lint lane
+  passes 68 tests with 4 documented skips and 3,284 deselections. Black, Ruff,
+  terminology, title-case, cross-reference, display-math, and diff checks pass.
+
+## DCR Reachability Correction (#4013 — Protected PR #4044 Merged)
+
+- Protected merge `524c28926f364631ed06b15be9c6fdf440acce64` owns the corrected
+  article, analytic counterexample in `src/affine_control/reachability.py`, and
+  corpus regression
+  in `tests/test_dcr_reachability_contract.py`.
+- DCR is a declared magnitude ratio, not a controllability or finite-horizon
+  reachability certificate. Keep `f(x)+G(x)\mathcal U(x)`,
+  `G(x)\mathcal U(x)`, and `\mathcal R(T;x_0)` distinct.
+- The exact constant-additive-drift scenario translates `[-1, 1]` to
+  `[99, 101]` without changing width. Control-cone, drift-tube, pancake,
+  timing, and face-variance conclusions remain unavailable until a governed
+  event-level computation declares horizon, controls, metric, and uncertainty.
+- Workstation Python 3.13 evidence before the protected-main reconciliation:
+  76 focused reachability and publication tests passed; the full suite passed
+  3,255 tests with 29 documented skips. After merging protected #4014, the
+  combined DCR, mechanical-claim, and publication regression selection passes
+  76 tests.
+  Ruff, Black, strict mypy, terminology, title-case, cross-reference,
+  display-math, and isolated Quarto 1.8.26 render gates pass. Python 3.12 is not
+  installed in this worktree environment; do not treat 3.13 evidence as a
+  substitute for the protected Python 3.12 lane.
 
 ## Ultimate Companion Scientific Repair (2026-08-28)
 
 - Epic #4008 coordinates the AffineDrift--UpstreamDrift companion program;
   scientific trust is #4009 and the generated software companion is #4010.
-- Issue #4014 is implemented on `feat/4014-mechanical-attribution`: a new
+- Issue #4014 merged through protected PR #4043 at
+  `b427347ccd5c18182b68274538c92c1e31906174`: its
   content contract blocks torque/load/effort/muscle-cause conflation; the
   torque example now distinguishes pointwise generalized torque from power
   and work; accessible and technical force-taxonomy copy states the
@@ -42,8 +70,9 @@ This is current operational state. Historical detail belongs in git/GitHub.
   and 67 deselected. Ruff and Black pass; strict mypy passes for the new test
   (the full local mypy lane lacks the optional Streamlit dependency). All four
   affected pages render to isolated HTML, and the revised appendix was
-  inspected at a 1440 x 1000 desktop viewport. Protected PR #4043 merged as
-  `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed.
+  inspected at a 1440 x 1000 desktop viewport. This protected authority is now
+  part of `main` at `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed,
+  and its claim boundaries must remain intact in subsequent scientific repairs.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
