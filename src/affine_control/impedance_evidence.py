@@ -161,7 +161,7 @@ class HumanStudyGate:
     stopping_rules_revision: GovernedRecord | None
     reliability_protocol: GovernedRecord | None
     independent_approval: GovernedRecord | None
-    participant_held_out: bool
+    participant_held_out_plan_registered: bool
 
     def __post_init__(self) -> None:
         """Reject arbitrary strings masquerading as governed approval records."""
@@ -196,7 +196,7 @@ class HumanStudyGate:
     def ready_for_external_review(self) -> bool:
         """Return structural completeness without granting participant authority."""
         approvals = all(record and record.externally_approved for record in self.records)
-        return self.participant_held_out and bool(approvals)
+        return self.participant_held_out_plan_registered and bool(approvals)
 
     def require_external_review_readiness(self) -> HumanReadiness:
         """Fail closed or return a non-authorizing external-review handoff."""

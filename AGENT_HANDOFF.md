@@ -32,9 +32,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   sensitivity plan. Direct cross-index value comparison is prohibited. It is
   not stiffness, force, effort, or a unique biological mechanism.
 - Human collection remains unavailable. Typed, distinct, category-matched
-  external records can establish structural readiness for external review, but
-  the software always returns `authorizes_participant_collection=False` and
-  requires an outside human release decision.
+  external records plus a prospectively registered participant-held-out
+  analysis plan can establish structural readiness for external review. The
+  field does not represent completed participant evidence; the software always
+  returns `authorizes_participant_collection=False` and requires an outside
+  human release decision.
 - `/models/active-impedance-identification.html` is registered as reviewed
   audit `ad-route-eb36645ba003`, bound to exact reviewed content commit
   `c8cf64c5779640a5dacf9ef5aed8e6a7e4157b90` and all four review dimensions.

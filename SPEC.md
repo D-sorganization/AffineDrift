@@ -113,8 +113,9 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Maintain a source-bounded active-impedance identification protocol that
   freezes perturbation safety, phase/event windows, endpoint and joint models,
   one rank tolerance across qualification and fitting, governed EMG channel
-  pairs and CCI formula/normalization, adverse outcomes, uncertainty, and
-  reliability; keep reflex, passive, voluntary, stiffness, muscle, human,
+  pairs and CCI formula/normalization, adverse outcomes, uncertainty,
+  reliability, and a prospectively registered held-out analysis plan; keep
+  reflex, passive, voluntary, stiffness, muscle, human,
   coaching, and clinical claims model-conditioned or unavailable
 - Pin the trajectory-level synthetic point-force sensor qualification by
   immutable upstream commit and hashes; expose allocation error independently
@@ -715,8 +716,9 @@ zero-anchored response windows, endpoint and joint outputs, one relative
 singular-value tolerance across rank qualification and least squares, governed
 same-side EMG channel pairs, the amplitude-driven CCI family and exact formula,
 normalization, within-formula comparison scope, uncertainty, reliability, and
-adverse-result preservation. Typed external records can make a human package
-ready for external review but never authorize participant collection. The
+adverse-result preservation. Typed external records and a prospectively
+registered held-out analysis plan can make a human package ready for external
+review but never authorize participant collection. The
 reviewed public route prohibits direct cross-index comparison and withholds
 muscle-force, unique reflex/passive/voluntary, coaching, and clinical claims.
 

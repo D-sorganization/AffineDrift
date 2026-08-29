@@ -367,4 +367,15 @@ def manufactured_results() -> tuple[ImpedanceResult, ...]:
 
 def manufactured_human_gate() -> HumanStudyGate:
     """Return the deliberately unavailable participant tier."""
-    return HumanStudyGate(None, None, None, None, None, None, None, None, None, False)
+    return HumanStudyGate(
+        ethics_approval=None,
+        risk_assessment=None,
+        privacy_plan=None,
+        consent_revision=None,
+        data_license=None,
+        device_calibration=None,
+        stopping_rules_revision=None,
+        reliability_protocol=None,
+        independent_approval=None,
+        participant_held_out_plan_registered=False,
+    )

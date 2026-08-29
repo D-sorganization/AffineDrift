@@ -267,6 +267,7 @@ def test_human_tier_requires_every_governance_safety_and_validation_gate() -> No
     gate = manufactured_human_gate()
 
     assert gate.ready_for_external_review is False
+    assert gate.participant_held_out_plan_registered is False
     with pytest.raises(ValueError, match="external review"):
         gate.require_external_review_readiness()
 
@@ -281,7 +282,7 @@ def test_human_tier_requires_every_governance_safety_and_validation_gate() -> No
             stopping_rules_revision="future-approved-record",
             reliability_protocol="future-approved-record",
             independent_approval="future-approved-record",
-            participant_held_out=True,
+            participant_held_out_plan_registered=True,
         )
 
     record_types = (
@@ -315,7 +316,7 @@ def test_human_tier_requires_every_governance_safety_and_validation_gate() -> No
         stopping_rules_revision=records[6],
         reliability_protocol=records[7],
         independent_approval=records[8],
-        participant_held_out=True,
+        participant_held_out_plan_registered=True,
     )
     readiness = complete.require_external_review_readiness()
     assert readiness.ready_for_external_review is True
@@ -347,7 +348,7 @@ def test_public_protocol_is_source_bounded_and_non_authoritative() -> None:
         "Model Partitioned",
         "EMG Proxy",
         "Negative, Null, and Unavailable Results",
-        "participant-held-out",
+        "participant-held-out analysis plan is registered",
         "no muscle-force identification",
         "no coaching or clinical authority",
     )
