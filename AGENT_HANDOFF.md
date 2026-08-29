@@ -66,6 +66,54 @@ This is current operational state. Historical detail belongs in git/GitHub.
   No product or fitting recommendation and no coaching, clinical, design,
   causal, or population authority is available.
 
+## Population Generalization and Participant-Held-Out Validation (#4039 — In Progress)
+
+- Branch `feat/4039-population-generalization` started from exact protected main
+  `838cdb5971b071dda5bdebd3af4e46e320989afc` in isolated worktree
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4039-a13`. RED commit
+  `373bcf1f` fails collection on the absent protocol API; GREEN content and
+  executable implementation commit `966e2ad6` supplies the bounded contract.
+- `population_generalization.py` freezes the dataset card, evidence origin,
+  site/participant/session/equipment/trial hierarchy, four distinct estimand
+  classes, preregistration, immutable group-aware split, and measured-evidence
+  promotion gates. It rejects participant, session, trial, and site leakage,
+  incomplete test assignment, test-set tuning, and manufactured-to-measured
+  promotion. `population_generalization_evidence.py` and `_fixtures.py` contain
+  deterministic manufactured analysis only.
+- The manufactured locked test retains a calibration slope of 0.5 as negative,
+  a participant-level mean-bias interval including zero as null, and external
+  validation as unavailable. Small subgroups are suppressed rather than
+  estimated. Generated JSON/Markdown reports are deterministic and explicitly
+  non-authorizing.
+- `/models/population-generalization.html` declares the target population,
+  sampling frame, strata, repeated measures, missingness, exclusions, leakage,
+  hierarchical uncertainty, calibration, subgroup, sensitivity,
+  transportability, ethics, privacy, consent, licensing, and independent human
+  boundaries. Primary sources support dataset documentation, prediction
+  reporting, use-case-aligned splits, calibration, and target-population
+  analysis; none is represented as golfer evidence.
+- Audit `ad-route-b7d4c6ec440c` binds the canonical QMD, three implementation
+  modules, generator, tests, and both report projections to exact SHA-256 bytes
+  reviewed at `0fb7a0ded1f75c955e2cc34632c6e3745674aa00`. The 228-route inventory
+  now has 26 reviewed, 200 deferred, and 2 exempt routes. A digest proves source
+  bytes, not scientific validity.
+- Ordinary reconciliation commit `261c0e6c44bb350c0b58e798bf8396ff4d156e3f`
+  preserves protected neural-timing route `ad-route-8debf6763c2e`, moves this
+  program to SPEC F75 / 1.0.256, and refreshes the shared bibliography digest.
+  The exact head passes 43 combined population/neural/audit contracts, 3,445
+  default-lane tests with 29 documented skips, and 104 content-lint tests with 4
+  documented skips. Ruff, Black, strict focused MyPy, full pre-commit,
+  bibliography identity/quality, QMD citation integrity, Quarto syntax/xrefs,
+  title/H1/math/terminology, deterministic report generation, publication
+  enforcement, and diff gates pass.
+- Quarto 1.8.26 renders the population route from that exact commit in detached
+  worktree `AffineDrift-4039-render`. Browser QA at 1440 x 1000 and 390 x 844
+  verifies one accessible H1, one main landmark, four responsive tables, five
+  resolved bibliography entries, no page overflow, no empty links, no unresolved
+  citations, visible external-unavailable and non-authorization boundaries, and
+  no warning or error in a fresh page tab. Hosted exact-head checks remain before
+  protected merge.
+
 ## Neural Timing and Feedback Perturbation Experiments (#4037 — In Progress)
 
 - Branch `feat/4037-neural-timing-feedback` started from exact protected main
