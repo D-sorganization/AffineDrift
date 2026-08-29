@@ -1,6 +1,6 @@
 ---
 title: "Development Roadmap"
-description: "In-progress content and future development areas for AffineDrift"
+description: "Evidence-bounded development states and live planning authorities for AffineDrift"
 page-layout: full
 ---
 
@@ -9,307 +9,109 @@ page-layout: full
   <div class="ad-page-container">
     <div class="page-section">
       <h1 class="section-heading">Development Roadmap</h1>
-      <p class="page-subtitle">Explore AffineDrift's active development areas and contribute to future work.</p>
+      <p class="page-subtitle">Evidence-bounded states and live planning authorities</p>
     </div>
   </div>
 </section>
 ```
 
-## Overview
+## Status Authority
 
-AffineDrift is a living research project. This page lists content currently in development, with clear status indicators and timelines.
+This page is an evergreen map, not a schedule or progress meter. Live scope,
+ownership, dependencies, and delivery state reside in the
+[GitHub issue tracker](https://github.com/D-sorganization/AffineDrift/issues) and
+[pull requests](https://github.com/D-sorganization/AffineDrift/pulls). Protected
+merge history is the authority for delivered changes. Dates, percentages, and
+promises are intentionally omitted because a hand-maintained forecast cannot
+establish readiness.
 
-::: {.callout-note}
-## Content Development and Review Standards
+The repository's content-review process is documented in
+[`content-development/`](https://github.com/D-sorganization/AffineDrift/tree/main/content-development):
 
-Written content — the textbooks, articles, and reference material — is planned and reviewed
-under [`content-development/`](https://github.com/D-sorganization/AffineDrift/tree/main/content-development)
-in the repository.
+- [Rigor Guide](https://github.com/D-sorganization/AffineDrift/blob/main/content-development/RIGOR_GUIDE.md)
+- [Review Protocol](https://github.com/D-sorganization/AffineDrift/blob/main/content-development/REVIEW_PROTOCOL.md)
+- [Development plans](https://github.com/D-sorganization/AffineDrift/tree/main/content-development/plans)
+- [Findings Index](https://github.com/D-sorganization/AffineDrift/blob/main/content-development/FINDINGS_INDEX.md)
 
-- **[Rigor Guide](https://github.com/D-sorganization/AffineDrift/blob/main/content-development/RIGOR_GUIDE.md)** — the standard content must meet before it ships.
-- **[Review Protocol](https://github.com/D-sorganization/AffineDrift/blob/main/content-development/REVIEW_PROTOCOL.md)** — how content reviews are run, and the severity rubric.
-- **[Development plans](https://github.com/D-sorganization/AffineDrift/tree/main/content-development/plans)** — what each corpus needs next.
-- **[Findings Index](https://github.com/D-sorganization/AffineDrift/blob/main/content-development/FINDINGS_INDEX.md)** — the 2026-07-31 full-corpus review, mapped to tracking issues.
+## State Contract
 
-Live status lives in the tracking issues, not in a hand-maintained table.
+::: {.table-wrapper}
+| State | Meaning | What it does not mean |
+|---|---|---|
+| **Available** | A linked page, source, or program exists and can be inspected. | Peer reviewed, experimentally validated, or suitable for a decision. |
+| **Validated** | A specific claim names its validation evidence, revision, population or model, and limits. | The whole page or neighboring claims inherit that result. |
+| **Experimental** | Work is available for exploration but remains under qualification. | Stable API, cross-engine parity, human validation, or production readiness. |
+| **Planned** | A tracking issue or explicit proposal exists, but the deliverable is not available. | Active work, a promised date, or guaranteed delivery. |
+| **Deprecated** | Material remains only for compatibility or historical reference. | Recommended use. |
+| **Opinion** | Editorial interpretation, priorities, or hypotheses. | Empirical evidence or organizational commitment. |
 :::
 
-**Legend:**
-- **Planned** — Not yet started
-- **In Progress** — Active development
-- **Usable** — Available for reading/use, may be incomplete
-- **Complete** — Finished and polished
-
----
-
-## Content Status by Section
-
-### Books & Textbooks
-
-| Item | Status | Progress | Completion | Notes |
-|------|--------|----------|------------|-------|
-| [Volume I: Tangent-Space Methods](../books/tangent-space-methods.html) | Usable | 85% | Q3 2026 | 8 chapters complete, living manuscript |
-| [Volume II: Control Is Motion](../books/control-is-motion.html) | Usable | 75% | Q4 2026 | 11 chapters, applications in progress |
-| [Volume III: Biomechanics](../books/biomechanics-biology-to-systems.html) | Usable | 70% | Q4 2026 | 10 chapters, experimental pipelines section active |
-| [Volume IV: Human Motor Control](../books/human-motor-control.html) | Usable | 60% | Q1 2027 | 11 chapters, neural aspects in development |
-
-### Research Reviews
-
-| Item | Status | Progress | Completion | Notes |
-|------|--------|----------|------------|-------|
-| [Research Reviews Hub](../resources/research-reviews.html) | In Progress | 20% | Q3 2026 | Structure in place, content being added |
-| [Interaction Forces Review](../resources/research-review-interaction-forces.html) | Planned | 10% | Q3 2026 | Queued for priority work |
-| [Induced Acceleration Analysis](../resources/research-review-induced-acceleration-analysis.html) | Planned | 5% | Q3 2026 | Highest priority (foundational to other reviews) |
-| [Shaft Flexibility Review](../resources/research-review-shaft-flexibility.html) | Planned | 10% | Q4 2026 | Critical for golf-specific content |
-| [Baseball Pitching Review](../resources/research-review-baseball-pitching.html) | Planned | 5% | Q4 2026 | Comparative biomechanics domain |
-
-### Other In-Progress Content
-
-| Item | Status | Progress | Completion | Notes |
-|------|--------|----------|------------|-------|
-| [Book Reviews](../pages/book-reviews.html) | Queued | 0% | Q4 2026 | 3 reviews queued; 0 completed |
-| [Daydreams & Doodles](../pages/daydreams-doodles.html) | In Progress | 20% | Ongoing | 1 example complete; growing collection |
-
-### Software (UpstreamDrift)
-
-[UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) (formerly Golf Modeling Suite)
-is the site's primary software. Current release: **v2.1.1**.
-
-| Engine | Support tier | Status |
-|--------|--------------|--------|
-| Pinocchio | Supported | Core, in the required PR CI contract |
-| MuJoCo | Supported | Core, in the required PR CI contract |
-| Drake | Extended | Supported via separate installer |
-| OpenSim | Experimental | Extended support, outside core PR CI contract |
-| MyoSuite | Experimental | Extended support, outside core PR CI contract |
-
-**Planned integration items**
-
-| Item | Status | Notes |
-|------|--------|-------|
-| Drift-Control Ratio tooling (`DriftControlAnalyzer`) | Planned | Tracked in [UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431); documented as *proposed* in the [educational-integration article](../articles/upstreamdrift-educational-integration.html) |
-| Contraction-rate verifier (`ContractionVerifier`) | Planned | Same UD issue #7431 |
-| Floquet-multiplier analysis (passive swing) | Planned | Marked *(planned)* in the integration map |
-| ABA-timing benchmark CLI | Planned | Same UD issue #7431 |
-
----
-
-## Current Work Focus Areas
-
-### Phase 1: Research Reviews (Current Priority)
-**Status:** In Progress | **Estimated Duration:** 8–12 weeks
-
-**Goal:** Complete literature review scaffolds for core topics
-
-**Tasks:**
-- [x] Create research reviews overview and structure
-- [ ] Complete Induced Acceleration Analysis review
-- [ ] Complete Interaction Forces review
-- [ ] Complete Shaft Flexibility review
-- [ ] Add critical summaries and evidence tables
-- [ ] Cross-reference with papers and videos
-
-**Dependencies:** Requires deep reading of 20–30 papers per review
-
-**Responsible:** Dieter Olson, contributors welcome
-
----
-
-### Phase 2: Learning Paths (New)
-**Status:** Complete | **Completion Date:** 2026-04-29
-
-**Deliverables:**
-- [Foundations Path](../resources/learning-path-foundations.html)
-- [Control Theory Path](../resources/learning-path-control-theory.html)
-- [Biomechanics Path](../resources/learning-path-biomechanics.html)
-- [Golf Science Path](../resources/learning-path-golf-science.html)
-- [Books Roadmap](../books/roadmap.html)
-
-**What's Next:** Refine paths based on user feedback; add more specialized paths
-
----
-
-### Phase 3: Book Reviews (Medium Priority)
-**Status:** Queued | **Estimated Duration:** 4–6 weeks per review
-
-**Planned Reviews:**
-1. "The Search for the Perfect Golf Swing" (Cochran & Stobbs, 1968)
-2. "The Physics of Golf" (A. Raymond Penner, 2003)
-3. "Underactuated Robotics" (Russ Tedrake, MIT OpenCourseWare)
-
-**How to Contribute:** Read a book, write critical analysis, submit to [Collaborate](../pages/collaborate.html)
-
----
-
-### Phase 4: Daydreams Expansion (Ongoing)
-**Status:** In Progress | **Duration:** Ongoing
-
-**Current Content:**
-- Dead Fish Swimming Upstream (physics of passive propulsion)
-
-**Planned Additions:**
-- [ ] Flocking and collective behavior
-- [ ] Soft robotics and compliant systems
-- [ ] Nonlinear dynamics in nature
-- [ ] Biological signal processing
-- [ ] More examples as they emerge
-
-**How to Contribute:** Submit interesting physics/bio topics to [Collaborate](../pages/collaborate.html)
-
----
-
-### Phase 5: Advanced Topics (Future)
-**Status:** Planned | **Estimated Start:** Q4 2026
-
-**Potential Areas:**
-- [ ] Reinforcement learning for motor control
-- [ ] Humanoid robot locomotion
-- [ ] Machine learning for biomechanics
-- [ ] Neural network interpretability in movement
-- [ ] Soft robotics design principles
-- [ ] Rehabilitation robotics case studies
-
-**Status:** These are research directions, not committed yet. Interest-driven.
-
----
-
-## How to Contribute
-
-### For Research Reviews
-1. **Choose a topic** from the planned reviews list
-2. **Read 15–20 key papers** (we can suggest a reading list)
-3. **Write a 3,000–5,000 word summary** following our editorial guidelines
-4. **Submit to** [Collaborate](../pages/collaborate.html) or create a PR
-
-### For Book Reviews
-1. **Pick a book** from the queued list
-2. **Read and analyze** against the AffineDrift framework
-3. **Write a 2,000–3,000 word critical review**
-4. **Submit to** [Collaborate](../pages/collaborate.html)
-
-### For Daydreams
-1. **Find an interesting topic** (physics, biology, robotics, etc.)
-2. **Write a 500–2,000 word explanation** with references
-3. **Include images/videos if possible**
-4. **Submit to** [Collaborate](../pages/collaborate.html)
-
-### For Other Areas
-- **Textbook improvements:** Submit corrections, clarifications, or new examples via GitHub or email
-- **Resource curation:** Suggest missing books, papers, videos, or datasets
-- **Code and notebooks:** Contribute implementations of concepts
-- **Feedback:** Let us know what's unclear or needs improvement
-
----
-
-## Timeline Overview
-
-```
-Q1 2026 (Jan–Mar)
-├─ Volume I chapters 1–8 complete
-└─ Volume II chapters 1–3 in progress
-
-Q2 2026 (Apr–Jun)
-├─ Learning paths complete
-├─ Research reviews phase 1 in progress
-├─ Volume II chapter 4–5 initial draft
-└─ Book reviews queued
-
-Q3 2026 (Jul–Sep) [Current]
-├─ Research reviews phase 2
-├─ Induced Acceleration Analysis review focus
-├─ Daydreams expansion
-└─ Volume III chapters refinement
-
-Q4 2026 (Oct–Dec)
-├─ Advanced topics scoping
-├─ Volume IV chapters completion
-└─ Full site polish and optimization
-
-Q1 2027+
-└─ Ongoing research and publishing
-```
-
----
-
-## Frequently Asked Questions
-
-### Q: When Will Research Reviews Be Done?
-
-**A:** Realistically, 12–16 weeks for the first complete review. Literature reviews are thorough work. We're prioritizing by relevance:
-1. Induced Acceleration Analysis (Q3 2026)
-2. Interaction Forces (Q3 2026)
-3. Shaft Flexibility (Q4 2026)
-4. Baseball Pitching (Q4 2026)
-
-### Q: Can I Contribute?
-
-**A:** Absolutely! We welcome:
-- Literature reviews and critical analysis
-- Code implementations
-- Corrections and improvements
-- New examples and case studies
-
-See [Collaborate](../pages/collaborate.html) for details.
-
-### Q: What About Volume IV?
-
-**A:** Currently 60% complete. Chapters 1–6 are usable for reading. Chapters 7–11 come in Q4 2026–Q1 2027.
-
-### Q: When Will Books Be Peer-Reviewed?
-
-**A:** These are living research documents, not traditional textbooks. Some chapters will go through peer review; others remain as working materials. We're transparent about status on each page.
-
-### Q: Can I Use This Commercially?
-
-**A:** Check the License page. Most content allows reuse with attribution. Special uses require permission.
-
----
-
-## What's Next?
-
-**If you're a user:**
-- Start with [Books Roadmap](../books/roadmap.html) to navigate content
-- Choose a [Learning Path](../resources/learning-paths.html) tailored to your background
-- Read what's complete; check back as content expands
-
-**If you're a contributor:**
-- Check [Collaborate](../pages/collaborate.html) for contribution guidelines
-- Email dieterolson@AffineDrift.com to discuss ideas
-- Submit PRs for content or code improvements
-- Join the community and help shape the project
-
-**If you're a researcher:**
-- Consider collaborating on peer review
-- Contribute to research reviews
-- Co-author textbook improvements
-- Help identify gaps and priorities
-
----
-
-## Project Status Summary
-
-- **Core textbooks:** 75% complete, actively used
-- **Resources:** 90% complete, comprehensive curated collections
-- **Learning paths:** 100% complete, launched 2026-04-29
-- **Research reviews:** 15% complete, in active development
-- **Book reviews:** 0% complete, queued for execution
-- **Daydreams:** 20% complete, ongoing organic growth
-- **Code/notebooks:** 60% complete, expanding with chapters
-
-**Overall project:** Launched 2024, active development, significant momentum.
-
----
-
-## Contact & Questions
-
-- **General questions:** [Contact page](../pages/contact.html)
-- **Contribution ideas:** [Collaborate page](../pages/collaborate.html)
-- **Bug reports or content corrections:** GitHub issues or email
-- **Research partnerships:** Email dieterolson@AffineDrift.com
-
----
-
-Happy exploring!
-
-*Last updated: 2026-08-21*
-
+Status is claim-specific. A readable book can be **Available** while some of its
+claims remain **Experimental**. A software engine can be **Extended** in its own
+support contract without making every analysis workflow validated.
+
+## Public Content Workstreams
+
+The site-wide scientific trust review is tracked by
+[#4021](https://github.com/D-sorganization/AffineDrift/issues/4021). Its child
+issues partition the rendered site without treating publication as review:
+
+- [Physics of Golf audit #4054](https://github.com/D-sorganization/AffineDrift/issues/4054)
+- [Geometry of Motion audit #4055](https://github.com/D-sorganization/AffineDrift/issues/4055)
+- [Tangent-series audit #4056](https://github.com/D-sorganization/AffineDrift/issues/4056)
+- [Critique-surface audit #4057](https://github.com/D-sorganization/AffineDrift/issues/4057)
+- [Core-article audit #4058](https://github.com/D-sorganization/AffineDrift/issues/4058)
+- [Applied-article audit #4059](https://github.com/D-sorganization/AffineDrift/issues/4059)
+- [Model and repository audit #4060](https://github.com/D-sorganization/AffineDrift/issues/4060)
+- [Resource and learning-path audit #4061](https://github.com/D-sorganization/AffineDrift/issues/4061)
+- [Book audit #4062](https://github.com/D-sorganization/AffineDrift/issues/4062)
+- [Site-level trust-surface audit #4063](https://github.com/D-sorganization/AffineDrift/issues/4063)
+
+An open child issue means the corresponding review gate is not protected-closed.
+The generated [Scientific Claim-Audit Inventory](../reports/scientific-claim-audit.html)
+is the route-level status report; an inventory record is not itself scientific
+evidence.
+
+## Reading and Contribution Surfaces
+
+- **Available:** [Article Index](../resources/articles.html),
+  [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html),
+  [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html),
+  and the [book series](../books/index.html). Availability says only that the
+  reader-facing material exists.
+- **Experimental:** [Tangent-Space Series](tangent-hyperplanes.html) and
+  [Daydreams & Doodles](daydreams-doodles.html), subject to their local scope notes.
+- **Planned:** [Book Reviews](book-reviews.html); no review text is currently
+  represented as delivered.
+- **Available submission channels:** [Collaborate](collaborate.html) and
+  [Contact](contact.html), without an acceptance or response-time promise.
+
+## UpstreamDrift Software Boundary
+
+[UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) is the runtime
+and computational repository. This roadmap does not duplicate its live backlog.
+The capability statement reviewed here is pinned to protected UpstreamDrift
+commit [`8cc236c6879e7535bb6bd15aecbe3396fb6dbb36`](https://github.com/D-sorganization/UpstreamDrift/tree/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36):
+
+- **Supported:** MuJoCo, exercised by required pull-request CI.
+- **Extended:** Drake and Pinocchio, exercised by scheduled or targeted validation.
+- **Experimental:** OpenSim and MyoSuite, outside the required release gate.
+
+See the pinned
+[engine support contract](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/engines/support_tiers.md)
+and [getting-started guide](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/user_guide/getting_started.md).
+A support tier is a software-test boundary, not a statement of biomechanical
+validity or cross-engine numerical equivalence.
+
+## How to Choose Work
+
+1. Check the relevant issue and its dependencies.
+2. Verify that no active lease or pull request already owns the same files.
+3. State the evidence and falsifier before strengthening a public claim.
+4. Change canonical sources test-first and use an ordinary protected pull request.
+5. Treat the work as delivered only after protected merge and exact-main verification.
+
+For corrections, open a [GitHub issue](https://github.com/D-sorganization/AffineDrift/issues/new).
+For private questions, use the [Contact page](contact.html).
+
+*Authority snapshot reviewed: 2026-08-29. Follow the linked repositories for live state.*

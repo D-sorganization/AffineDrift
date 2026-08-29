@@ -59,55 +59,82 @@ The control-affine formulation itself is standard nonlinear-systems material. Th
 
 ## UpstreamDrift: The Software
 
-The site's primary software is [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) (formerly Golf Modeling Suite) — a unified golf-swing modeling platform with a web UI, a REST API, and a suite of analysis tools across several physics engines. See the [Models page](../models/models.html) for the full capability tour and documentation link-map.
+[UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) is the separate
+runtime and computational repository that AffineDrift accompanies. The statements
+below are an **UpstreamDrift authority snapshot** pinned to protected commit
+[`8cc236c6879e7535bb6bd15aecbe3396fb6dbb36`](https://github.com/D-sorganization/UpstreamDrift/tree/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36),
+reviewed on 2026-08-29. The upstream repository remains the live authority.
+
+At that revision, the web UI and versioned REST API are **available**. Engine
+support is not uniform:
+
+- **Supported:** MuJoCo, exercised by required pull-request CI.
+- **Extended:** Drake and Pinocchio, exercised by nightly or targeted validation.
+- **Experimental:** OpenSim and MyoSuite, outside the required release gate.
+
+These are software support tiers, not proof of cross-engine numerical equality,
+biomechanical validity, participant-level accuracy, or fitness for coaching or
+clinical use. See the pinned
+[support-tier contract](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/engines/support_tiers.md)
+and the [Models page](../models/models.html) for the AffineDrift link map.
 
 ### Quick Start
 
+The pinned package metadata declares `requires-python = ">=3.11"`, which is an
+installation lower bound rather than an open-ended compatibility qualification.
+Python 3.11 and 3.12 are the tested interpreter minors at that revision. The
+metadata declaration does not establish support for untested interpreter minors
+such as Python 3.13.
+
 ```bash
-# Clone and pull large model files via Git LFS
+# Clone the protected public repository
 git clone https://github.com/D-sorganization/UpstreamDrift.git
 cd UpstreamDrift
-git lfs install && git lfs pull
 
-# Canonical editable install with dev extras
-pip install -e ".[dev]"
+# Editable development install using tested Python 3.11 or 3.12
+python -m pip install -e ".[dev]"
 
-# Verify the install, then launch the web UI + API
-python scripts/verify_installation.py
-python launch_upstream_drift.py
+# Verify the install, then launch the default web UI
+python scripts/ci/verify_installation.py
+upstream-drift
 ```
 
-For a UI-only exploration without heavy engine dependencies, set `GOLF_USE_MOCK_ENGINE=1` before launching. Full instructions: [UpstreamDrift Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/getting_started.md).
+For UI development without a real engine, `GOLF_USE_MOCK_ENGINE=1` selects the
+mock engine; its output is synthetic and must not be presented as a physics
+result. Full pinned instructions:
+[UpstreamDrift Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/user_guide/getting_started.md).
 
 ### A Real API Example
 
-Once `python launch_upstream_drift.py` is running (FastAPI on port 8000), a minimal simulation request looks like:
+Once the API is running on its default local port, the pinned v1 simulation
+route accepts a request shaped by UpstreamDrift's `SimulationRequest` model:
 
 ```python
 import requests
 
 # Submit a simulation to the running UpstreamDrift API
 resp = requests.post(
-    "http://localhost:8000/simulation",
-    json={"engine": "pinocchio", "model": "golf_3dof", "duration": 0.5},
+    "http://localhost:8000/api/v1/simulate",
+    json={"engine_type": "mujoco", "duration": 0.5},
     timeout=30,
 )
 resp.raise_for_status()
-result = resp.json()
-print(result["status"])
+print(resp.json())
 ```
 
-(See UpstreamDrift's `examples/01_basic_simulation.py` for the equivalent engine-manager Python API.)
+This example establishes request shape only; successful execution still depends
+on the selected engine, model configuration, environment, and input validity.
+Inspect the running server's `/docs` endpoint for its exact OpenAPI contract.
 
 ### Documentation & Troubleshooting
 
-- [User Guide — Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/getting_started.md)
-- [Engine Support Tiers](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/engines/support_tiers.md) (Supported / Extended / Experimental)
-- [Motion Pipeline Guide](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/motion_pipeline/README.md)
+- [User Guide — Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/user_guide/getting_started.md)
+- [Engine Support Tiers](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/engines/support_tiers.md)
+- [Motion Pipeline Guide](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/motion_pipeline/README.md)
 
 ::: {.callout-tip}
 ## Troubleshooting
-If installation fails, see [UpstreamDrift's installation troubleshooting guide](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/troubleshooting/installation.md). For UI-only work that avoids engine builds, launch with `GOLF_USE_MOCK_ENGINE=1`.
+If installation fails, see the pinned [installation troubleshooting guide](https://github.com/D-sorganization/UpstreamDrift/blob/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36/docs/troubleshooting/installation.md). For UI-only work, `GOLF_USE_MOCK_ENGINE=1` is experimental synthetic mode, not a scientific simulation.
 :::
 
 ## Scope and Limits
