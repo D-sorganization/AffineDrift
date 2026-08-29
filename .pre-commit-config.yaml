@@ -113,7 +113,9 @@ repos:
       - id: prettier
         name: "prettier (yaml/json/md)"
         types_or: [yaml, markdown, json]
-        exclude: '(\.py|\.m|package-lock\.json|\.ipynb)$'
+        # Generated search JSON is owned by the deterministic ledger generator;
+        # formatting it independently would make `--check` report a stale surface.
+        exclude: '(\.py|\.m|package-lock\.json|\.ipynb|data/trust/generated/claim_critique_search\.json)$'
 
   # -------------------------------------------------------------------------
   # Stage 4: Pre-push Hooks (Slower - PYTHON FILES ONLY)

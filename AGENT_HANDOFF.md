@@ -125,11 +125,11 @@ This is current operational state. Historical detail belongs in git/GitHub.
   one pre-existing edition-specific Jorgensen key in each tree; both new
   long-latency citations are shared by the Quarto and LaTeX editions.
 
-## Induced-Acceleration Attribution Repair (#4018 — PR #4050 Open)
+## Induced-Acceleration Attribution Repair (#4018 — Protected PR #4050 Merged)
 
-- Branch `feat/4018-induced-acceleration-attribution` owns the A7 correction.
-  It preserves the protected #4015, #4012, #4017, #4019, and #4016
-  scientific-trust merges; its content files do not overlap those programs.
+- Protected merge `bde0ec906a233bb7fea592d5c676c042bd034754` owns the A7
+  correction and preserves the #4015, #4012, #4017, #4019, and #4016
+  scientific-trust boundaries.
 - A normative record now requires model and revision; engine, solver, and
   revision; generalized coordinates and reference frame; mass matrix;
   constraints; contact; force partition; residual treatment; numerical
@@ -164,7 +164,10 @@ This is current operational state. Historical detail belongs in git/GitHub.
   first-pass `pdflatex` runs complete the 605-page Physics of Golf source and
   209-page Geometry of Motion Volume I source without a hard LaTeX error; the
   complete hosted multi-pass compiles remain the release gate.
-  Protected Python 3.12 and hosted exact-head checks remain release gates.
+  Protected Python 3.12, quality, E2E, links, governance, benchmarks, and all
+  eight textbook compile jobs passed on the exact PR head before the ordinary
+  protected squash merge. Post-merge focused tests and trust-panel freshness
+  also pass, and the protected tree matches the reviewed branch content.
 
 ## Governed Scientific Trust Panels (#4019 — Protected PR #4049 Merged)
 
@@ -194,6 +197,41 @@ This is current operational state. Historical detail belongs in git/GitHub.
   emulation.
 - `jsonschema` and `types-jsonschema` are direct pinned requirements; do not
   rely on an unrelated transitive dependency for schema validation or typing.
+
+## Governed Claim/Critique Ledger (#4020 — In Development)
+
+- `schemas/claim-critique-ledger-v1.schema.json` and
+  `data/trust/claim_critique_ledger.json` are the normative critique-governance
+  contract. Every public critique Markdown source is registered exactly once;
+  unknown disposition renders as open, and responded/resolved/rejected states
+  require review metadata, protected verification commit, evidence paths,
+  uncertainty, falsifier, and next gate.
+- `scripts/generate_claim_critique_ledger.py` validates strict schema coverage,
+  claim/page/evidence references, allowed state transitions, and resolved-state
+  contradiction markers. It generates the critique index status table,
+  `critiques/DEFENSE_STRATEGY.md`, collapsible affected-page annotations, and
+  `data/trust/generated/claim_critique_search.json`. Generated files are never
+  hand-edited; run the generator and then `--check`.
+- The canonical ledger deliberately records 33 open critiques, two bounded
+  responses, and zero resolutions. The two responses point to protected DCR
+  and control-causality corrections; neither is represented as independent
+  human validation. Neuromuscular and planar-DCR critiques remain open because
+  adjacent repairs did not modify their affected source claims.
+- Required focused gate:
+  `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q tests/test_claim_critique_ledger.py`.
+  Current local evidence is 17/17 focused tests plus deterministic generation,
+  Ruff, Black, and strict MyPy. Adversarial regressions reject non-contiguous
+  history, zero-commit sentinels, traversing repository paths, and resolved
+  states without explicit contradiction markers. The critique index and three representative
+  affected articles render in isolation. Browser inspection at 1440 x 1000 and
+  390 x 844 found one H1 per page, no page-level horizontal overflow, no broken
+  images after load, an independently scrollable mobile status table, and
+  readable collapsed and expanded critique annotations. The default Python
+  `tests/` lane is green with 30 documented skips; the content-lint lane passes
+  78 tests with 4 documented skips; all 20 Jest suites pass 297 tests with 19
+  skips. Bibliography, terminology, title, cross-reference, display-math,
+  Stylelint, Ruff, Black, and strict MyPy gates pass.
+  Protected PR checks remain pending.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 

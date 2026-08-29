@@ -1,0 +1,209 @@
+{
+  "$id": "https://affinedrift.com/schemas/claim-critique-ledger-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_registry": {
+      "const": "data/trust/claim_registry.json"
+    },
+    "critiques": {
+      "items": {
+        "$ref": "#/$defs/critique"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "defaults": {
+      "additionalProperties": false,
+      "properties": {
+        "open_falsifier": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "open_next_gate": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "open_rationale": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "open_uncertainty": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "open_rationale",
+        "open_uncertainty",
+        "open_falsifier",
+        "open_next_gate"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    }
+  },
+  "required": ["schema_version", "claim_registry", "defaults", "critiques"],
+  "title": "AffineDrift Claim and Critique Adjudication Ledger",
+  "type": "object",
+  "$defs": {
+    "adjudication": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_paths": {
+          "items": {
+            "pattern": "^(articles|critiques|data|scripts|src|tests)/[A-Za-z0-9_./-]+$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "falsifier": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "next_gate": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reviewer": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "uncertainty": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "verification_commit": {
+          "pattern": "^(?!0{40}$)[0-9a-f]{40}$",
+          "type": "string"
+        },
+        "verified_on": {
+          "format": "date",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rationale",
+        "evidence_paths",
+        "verification_commit",
+        "verified_on",
+        "reviewer",
+        "falsifier",
+        "uncertainty",
+        "next_gate"
+      ],
+      "type": "object"
+    },
+    "critique": {
+      "additionalProperties": false,
+      "properties": {
+        "adjudication": {
+          "$ref": "#/$defs/adjudication"
+        },
+        "affected_pages": {
+          "items": {
+            "pattern": "^articles/[A-Za-z0-9_./-]+\\.qmd$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "contradiction_markers": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "critique_id": {
+          "pattern": "^crit-[a-z0-9-]+$",
+          "type": "string"
+        },
+        "disposition": {
+          "enum": [
+            "unknown",
+            "open",
+            "responded",
+            "resolved",
+            "rejected",
+            "deferred"
+          ]
+        },
+        "history": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "commit": {
+                "pattern": "^(?!0{40}$)[0-9a-f]{40}$",
+                "type": "string"
+              },
+              "from": {
+                "enum": [
+                  "unknown",
+                  "open",
+                  "responded",
+                  "resolved",
+                  "rejected",
+                  "deferred"
+                ]
+              },
+              "on": {
+                "format": "date",
+                "type": "string"
+              },
+              "rationale": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "to": {
+                "enum": [
+                  "open",
+                  "responded",
+                  "resolved",
+                  "rejected",
+                  "deferred"
+                ]
+              }
+            },
+            "required": ["from", "to", "on", "commit", "rationale"],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "related_claim_ids": {
+          "items": {
+            "pattern": "^ad-[a-z0-9-]+-[0-9]{3}$",
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "severity": {
+          "enum": ["critical", "high", "medium", "low", "unknown"]
+        },
+        "source_path": {
+          "pattern": "^critiques/[A-Za-z0-9_-]+\\.md$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "critique_id",
+        "source_path",
+        "severity",
+        "disposition",
+        "affected_pages",
+        "related_claim_ids"
+      ],
+      "type": "object"
+    }
+  }
+}
