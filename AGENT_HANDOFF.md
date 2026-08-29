@@ -28,6 +28,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - `neural_timing_analysis.py` provides persistent-threshold onset detection,
   original-order Holm step-down decisions, typed interval dispositions, and
   evidence provenance that prohibits silent synthetic-to-measured promotion.
+  Direct construction also fails closed when an outcome label contradicts its
+  declared uncertainty bounds and minimum effect.
   `neural_timing_fixtures.py` contains only manufactured values. Its direct
   mechanical effect precedes its EMG response, proving the public timing layers
   cannot be interpreted as one serial pathway.
@@ -42,13 +44,32 @@ This is current operational state. Historical detail belongs in git/GitHub.
   authority and human boundaries, the bibliography, all three executable
   modules, and its focused test. The inventory contains 18 reviewed, 206
   deferred, and 2 exempt routes; the protected deferred partition is unchanged.
+  Corrected P1 finding `ad-finding-neural-timing-outcome-consistency` binds the
+  fail-closed interval implementation and its regression test to exact digests
+  and GREEN verification commit `dff3650fb1b41e721ee90a4fe060277d02cc836b`.
 - RED evidence is commit `073cfdde`: focused collection failed because the
   protocol modules did not exist. After the public route was authored, the
   content lane retained one exact RED failure because no reviewed audit record
-  existed. Current GREEN evidence is 17 focused executable contracts, 2
-  focused content/audit contracts, and 14 claim-audit contracts. Final full
-  Python/content/JS/lint/render/browser and exact protected-base reconciliation
-  remain required before the PR opens.
+  existed. Review-led RED commit `54a54c29` then proved a manually relabeled
+  supported interval was accepted before the shared classification invariant
+  was added. The first isolated Quarto render exposed an ambiguous nested include
+  path; the canonical page now includes both governed boundaries explicitly,
+  preserving the schema-v1.1 closure while rendering correctly.
+- Pre-reconciliation GREEN evidence is 18 focused executable contracts, 2
+  focused content/audit contracts, and 14 claim-audit contracts. The full
+  default lane passed 3,395 tests with 30 documented skips before the final
+  fail-closed regression was added; the content lane passed 98 tests with 4
+  documented skips, and Jest passed 297 with 19 documented skips. Ruff, Black,
+  strict focused mypy, module budgets, changed-file budgets, Quarto syntax,
+  xrefs, single-title, title case, display math, terminology, frontmatter,
+  bibliography, citation, render-coverage, claim-audit, and diff gates pass.
+  Final exact-head Python/pre-commit results will supersede these counts after
+  protected-base reconciliation.
+- Quarto 1.8 renders the route in isolation. Desktop 1440 x 1000 and mobile
+  390 x 844 browser inspection verifies one H1, all required scientific
+  sections, five responsive locally scrolling tables, no body overflow, no raw
+  include shortcode, and no console warning or error. Render/browser artifacts
+  are temporary QA output and are not publication source.
 - Human collection remains unavailable. External ethics, privacy, consent,
   licensing, device-risk, calibration, stopping-rule, power, held-out-analysis,
   and independent-release records are required before participant work. The

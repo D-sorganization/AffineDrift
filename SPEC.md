@@ -719,7 +719,9 @@ power inputs, Holm families, expectation, learning, history, uncertainty, and
 adverse outcomes. Deterministic fixtures keep perturbation detection, muscle
 response, mechanical effect, and task correction distinct; the mechanical
 fixture deliberately produces an effect before its EMG response so the API
-cannot imply one serial pathway. The reviewed public route separates general
+cannot imply one serial pathway. Interval decisions recompute their declared
+supported, negative, or null classification and reject any manual label that
+contradicts its complete uncertainty bounds. The reviewed public route separates general
 upper-limb studies from golf-specific visual-occlusion evidence and is bound
 under claim-audit schema v1.1 to the canonical QMD, both recursive includes,
 the bibliography, executable modules, and focused test through exact SHA-256
