@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T06:31:35Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.238                                          |
+| **Spec Version**        | 1.0.239                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -652,7 +652,7 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
-### 1.0.238 Sensorimotor Pathway and Response-Authority Contract
+### 1.0.239 Sensorimotor Pathway and Response-Authority Contract
 
 Replaces the serial delay sum and binary feedforward-versus-feedback account in
 the motor-control chapters with parallel short-latency, long-latency,
@@ -660,6 +660,27 @@ voluntary, and visually guided pathway bands. The Quarto and LaTeX editions now
 separate response onset from useful mechanical authority, make golf-specific
 pathway claims conditional on phase-locked perturbation evidence, and retain a
 failing-first content contract plus primary neuroscience citations.
+
+### 1.0.238 Scientific Repair Program Reconciliation
+
+Preserves the protected #4014 mechanical-claim contract and its explicit
+torque, power, work, tissue-load, effort, and identifiability boundaries while
+adding the #4013 finite-horizon DCR reachability contract below. Neither program
+weakens the other's claim restrictions, regression coverage, or requirement to
+merge through ordinary protected review.
+
+### 1.0.237 DCR Reachability Contract
+
+Corrects the DCR publication so the drift-affected instantaneous velocity set,
+input-only control-effect set, and finite-horizon reachable set remain distinct.
+The required executable scenario is the constant-additive-drift system with
+$x(0)=0$, $|u|\leq1$, and $T=1$: increasing constant drift from 0 to 100 must
+translate the exact reachable interval from $[-1,1]$ to $[99,101]$ without
+changing its width. The publication corpus must reject unsupported locked-in,
+control-cone-collapse, scalar-Gramian-scaling, arrival-time, and face-variance
+claims. Control-cone, drift-tube, and pancake language is allowed only as an
+explicitly unvalidated hypothesis pending a governed finite-horizon computation
+that declares controls, task metric, uncertainty, and impact-event outcome.
 
 ### 1.0.236 Canonical Pages Verification Host
 
@@ -773,7 +794,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-08-28 | 1.0.238 | fix(content, #4017): Replaced the additive sensorimotor delay budget and open-loop/closed-loop binary with parallel response pathways; distinguished onset timing from task-, phase-, and outcome-specific mechanical authority; bounded golf claims pending perturbation evidence; synchronized the Quarto and LaTeX chapters; added primary long-latency-response citations and a regression contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| 2026-08-28 | 1.0.239 | fix(content, #4017): Replaced the additive sensorimotor delay budget and open-loop/closed-loop binary with parallel response pathways; distinguished onset timing from task-, phase-, and outcome-specific mechanical authority; bounded golf claims pending perturbation evidence; synchronized the Quarto and LaTeX chapters; added primary long-latency-response citations and a regression contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 2026-08-28 | 1.0.236 | fix(deploy): Targeted the Pages-configured `www.affinedrift.com` host directly for hosted post-deployment verification instead of traversing the cacheable apex redirect. Exact source-revision equality and the full live every-page browser gate remain fail-closed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-08-28 | 1.0.235 | fix(deploy): Extended the bounded Pages manifest propagation window from two minutes to ten minutes after exact-merge deployments repeatedly required slightly more than two minutes to appear through the custom domain. Exact source-revision equality and the full live every-page browser gate remain fail-closed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-08-28 | 1.0.234 | fix(deploy): Made live revision polling tolerate transient non-JSON Pages propagation responses within its existing bounded retry loop. Exact source-revision equality and the full live every-page browser gate remain fail-closed. Added a regression contract after deployment run 33226528683 exposed the premature Bash error exit.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
