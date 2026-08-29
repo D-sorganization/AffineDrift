@@ -68,6 +68,13 @@ def test_live_manifest_poll_retries_transient_non_json_responses() -> None:
     assert "2>/dev/null); then" in live_poll
 
 
+def test_live_verifier_targets_the_direct_canonical_pages_host() -> None:
+    """Hosted verification must avoid the cacheable apex-to-www redirect."""
+    content = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert 'PUBLIC_SITE_URL: "https://www.affinedrift.com"' in content
+
+
 def test_ci_and_deploy_use_the_locally_qualified_quarto_version() -> None:
     """CI and Pages render with the same qualified Quarto release as local QA."""
     for workflow in (WORKFLOW_PATH, CI_WORKFLOW_PATH):
