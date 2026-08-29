@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T06:38:22Z
+Last-Updated: 2026-08-29T07:03:58Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T06:38:22Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.239                                          |
+| **Spec Version**        | 1.0.240                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -50,6 +50,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Maintain opt-in performance benchmarks for stable computational paths without slowing routine CI
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
+- Present planar models as declared pedagogical or model-ladder members; do
+  not publish quantitative 2-D-to-3-D fidelity percentages without a governed
+  comparison that declares the dataset, cohort, coordinates, phase window,
+  metric, task outcome, and uncertainty
 - Maintain a tested mechanical-claim contract that keeps pointwise generalized
   torque distinct from power, work, energy, tissue load, physiological effort,
   and outcome; net generalized input must not be presented as identified
@@ -653,12 +657,22 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
-### 1.0.239 Control-Affinity Program Reconciliation
+### 1.0.240 Control-Affinity Program Reconciliation
 
-Preserves the protected #4013 finite-horizon DCR reachability contract and
-#4014 mechanical-claim contract while adding #4012's control-affinity,
-non-orthogonality, and model-conditioned attribution boundary. The three
-programs retain their separate regression contracts and scientific limits.
+Preserves the protected #4013 finite-horizon DCR reachability, #4014
+mechanical-claim, and #4015 planar-spatial scope contracts while adding #4012's
+control-affinity, non-orthogonality, and model-conditioned attribution boundary.
+The four programs retain their separate regression contracts and scientific
+limits.
+
+### 1.0.239 Planar-Spatial Scope Integration
+
+Preserves the protected #4014 mechanical-attribution and #4013 DCR-reachability
+contracts while integrating #4015's planar-model scope boundary. Quantitative
+2-D-to-3-D fidelity claims remain unavailable until a governed comparison
+declares the dataset, cohort, coordinate definitions, phase window, metric,
+task outcome, and uncertainty. All three scientific-repair contracts remain
+independently regression protected.
 
 ### 1.0.238 Scientific Repair Program Reconciliation
 

@@ -10,12 +10,32 @@ This is current operational state. Historical detail belongs in git/GitHub.
 - Do not require or request a named maintainer's approval when the live ruleset requires zero approving reviews. Review remains optional for risk, expertise, or unresolved feedback, but `@dieterolson` is not a standing release gate.
 - Never use admin bypass, force-push, or protection changes to merge a failing or stale head.
 
-## DCR Reachability Correction (#4013 — PR #4044 Merged)
+## Ultimate Companion Planar-Scope Repair (#4015 — PR #4045 Merged)
 
-- Protected PR #4044 merged at
-  `524c28926f364631ed06b15be9c6fdf440acce64`; it owns the article correction,
-  analytic counterexample in `src/affine_control/reachability.py`, and corpus
-  regression in `tests/test_dcr_reachability_contract.py`.
+- Epic #4008 coordinates the companion program; issue #4015 removes two
+  unsupported planar 90 percent fidelity claims.
+- Protected merge `7b1ccde2afb103f200e0d4a010411560471bb6f4` replaces them with an explicit
+  pedagogical planar-model boundary and the evidence contract required before
+  any quantitative 2-D-to-3-D comparison can be published.
+- Required focused gate:
+  `python -m pytest tests/test_planar_model_scope_contract.py -m content_lint -q`.
+  Current evidence: 2/2 focused contracts and the complete `tests/` lane
+  (3,252 passed, 29 skipped, 63 deselected) pass; Ruff, Black, focused strict
+  mypy, terminology, and two isolated Quarto renders pass. The revised critic
+  response was inspected at 1440 x 1000 with the disclosure expanded and has
+  no overflow or clipping. All exact-head hosted gates passed before the
+  ordinary protected squash merge.
+- After merging protected DCR PR #4044, the combined planar-scope, DCR, and
+  mechanical-claim selection passes 14 tests; the repository content-lint lane
+  passes 68 tests with 4 documented skips and 3,284 deselections. Black, Ruff,
+  terminology, title-case, cross-reference, display-math, and diff checks pass.
+
+## DCR Reachability Correction (#4013 — Protected PR #4044 Merged)
+
+- Protected merge `524c28926f364631ed06b15be9c6fdf440acce64` owns the corrected
+  article, analytic counterexample in `src/affine_control/reachability.py`, and
+  corpus regression
+  in `tests/test_dcr_reachability_contract.py`.
 - DCR is a declared magnitude ratio, not a controllability or finite-horizon
   reachability certificate. Keep `f(x)+G(x)\mathcal U(x)`,
   `G(x)\mathcal U(x)`, and `\mathcal R(T;x_0)` distinct.
@@ -51,7 +71,8 @@ This is current operational state. Historical detail belongs in git/GitHub.
   (the full local mypy lane lacks the optional Streamlit dependency). All four
   affected pages render to isolated HTML, and the revised appendix was
   inspected at a 1440 x 1000 desktop viewport. This protected authority is now
-  part of `main` and must remain intact in subsequent scientific repairs.
+  part of `main` at `b427347ccd5c18182b68274538c92c1e31906174`; #4014 is closed,
+  and its claim boundaries must remain intact in subsequent scientific repairs.
 
 ## Website Adversarial Review & Cross-Linking Program (2026-08-21)
 
