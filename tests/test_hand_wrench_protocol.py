@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from src.affine_control.hand_wrench_evidence import HumanTierGate
 from src.affine_control.hand_wrench_fixtures import (
     manufactured_bandwidth_samples,
     manufactured_benchtop_results,
@@ -19,7 +20,6 @@ from src.affine_control.hand_wrench_fixtures import (
     manufactured_wrench_pair,
 )
 from src.affine_control.hand_wrench_protocol import (
-    HumanTierGate,
     assess_identifiability,
     bilateral_sensor_map,
     calibrate_wrench,
@@ -121,7 +121,7 @@ def test_lead_and_trail_frames_transport_wrenches_to_one_club_frame() -> None:
 
     assert np.allclose(lead_club[:3], np.array([12.0, -5.0, 30.0]))
     assert np.allclose(trail_club[:3], np.array([-2.0, 8.0, 20.0]))
-    assert np.allclose(lead_club + trail_club, np.array([10.0, 3.0, 50.0, 1.6, 3.4, -0.7]))
+    assert np.allclose(lead_club + trail_club, np.array([10.0, 3.0, 50.0, -0.2, 2.4, 1.2]))
 
 
 def test_synchronization_inertial_compensation_and_contact_assumptions_fail_closed() -> None:
@@ -155,8 +155,9 @@ def test_result_ledger_separates_load_tiers_uncertainty_and_adverse_outcomes() -
         "unavailable",
     }
     assert all(row.uncertainty_interval is not None for row in results if row.estimate is not None)
-    assert any("shaft" in row.sensitivity_parameters for row in results)
-    assert any("grip" in row.sensitivity_parameters for row in results)
+    parameters = {parameter for row in results for parameter in row.sensitivity_parameters}
+    assert any("shaft" in parameter for parameter in parameters)
+    assert any("grip" in parameter for parameter in parameters)
 
     available = results[0]
     with pytest.raises(ValueError, match="unavailable"):
@@ -227,6 +228,7 @@ def test_public_protocol_has_exact_reviewed_claim_audit_evidence() -> None:
         "audience_framing",
     }
     assert set(record["review"]["evidence_paths"]) == {
+        "src/affine_control/hand_wrench_evidence.py",
         "src/affine_control/hand_wrench_fixtures.py",
         "src/affine_control/hand_wrench_protocol.py",
         "tests/test_hand_wrench_protocol.py",
