@@ -11,10 +11,10 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   authority at `75042154b05c2a04351b0d47e6ed44c994243476`. #4092's exact-head
   protected checks passed. The prior #4091 deployment run 33303380671 passed,
   including its revision-matched live every-route gate.
-- Deployment run 33306144800 targets the exact #4092 merge and has cleared all
-  pre-render gates; its long full-site render was still in progress at this
-  handoff update. Do not claim the revision live until the run and live-route
-  gate succeed.
+- Deployment run 33306144800 targets the exact #4092 merge. Its full build,
+  every-page predeployment verification, and Pages publication succeeded; the
+  revision-matched live-route verification was still in progress at this
+  handoff update. Do not claim the revision live until that final gate succeeds.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` was last
   verified clean on `main` at `af49c1f15f2771397ecf0e67eb53dd92646ac0b1`.
   Fast-forward it only after the exact #4092 deployment is green.
