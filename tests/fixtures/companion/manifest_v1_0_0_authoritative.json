@@ -1,0 +1,4846 @@
+{
+  "$schema": "https://upstreamdrift.dev/schemas/upstreamdrift-companion-v1.schema.json",
+  "compatibility": {
+    "requires_python": ">=3.11",
+    "supported_python_minors": ["3.11", "3.12"],
+    "verification_command": {
+      "arguments": ["scripts/ci/verify_installation.py"],
+      "executable": "python"
+    }
+  },
+  "documentation": [],
+  "engines": [
+    {
+      "id": "drake",
+      "name": "Drake",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Installation/support tier only; no numerical capability claim",
+        "state": "unqualified"
+      },
+      "support_tier": "extended"
+    },
+    {
+      "id": "mujoco",
+      "name": "MuJoCo",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Installation/support tier only; no numerical capability claim",
+        "state": "unqualified"
+      },
+      "support_tier": "supported"
+    },
+    {
+      "id": "myosuite",
+      "name": "MyoSuite",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Installation/support tier only; no numerical capability claim",
+        "state": "unqualified"
+      },
+      "support_tier": "experimental"
+    },
+    {
+      "id": "opensim",
+      "name": "OpenSim",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Installation/support tier only; no numerical capability claim",
+        "state": "unqualified"
+      },
+      "support_tier": "experimental"
+    },
+    {
+      "id": "pinocchio",
+      "name": "Pinocchio",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Installation/support tier only; no numerical capability claim",
+        "state": "unqualified"
+      },
+      "support_tier": "extended"
+    }
+  ],
+  "features": [
+    {
+      "id": "analysis.analysis_tools_api",
+      "notes": "Web page exists but the backing API endpoints are stubs/partial (F4).",
+      "parity": {
+        "issue": 7448,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["analysis_tools_api"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/api/routes/analysis_tools.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/AnalysisTools.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Analysis Tools REST endpoints (swing metrics, biomechanics)"
+    },
+    {
+      "id": "analysis.counterfactuals",
+      "notes": null,
+      "parity": {
+        "issue": 7450,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["simulation_backends"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/shared/python/biomechanics/ztcf.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "ZTCF/ZVCF + induced-acceleration counterfactuals"
+    },
+    {
+      "id": "analysis.cross_engine_robustness",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["cross_engine_dashboard", "perturbation_analysis"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/cross_engine_dashboard.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/cross_engine.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/CrossEngineDashboard.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Cross-engine robustness dashboard (perturbation/CV)"
+    },
+    {
+      "id": "analysis.static_plots",
+      "notes": "Reached parity via #7449 (closed completed 2026-06-12). GET /analysis/plot-types enumerates AnalysisOrchestrator.PLOT_TYPES; GET /analysis/plot-data/{plot_type} returns PlotData JSON rendered by the web PlotsSection.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/shared/python/plot_engine/pyqt6_widget.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/analysis_plots.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/components/analysis/PlotsSection.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Static analysis plots (20+ plot types)"
+    },
+    {
+      "id": "biomech.exercise_injury_dashboards",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Desktop biomechanics dashboards; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": ["biomech_exercise", "injury_analysis"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/exercise_dashboard.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Exercise + injury-risk biomechanics dashboards"
+    },
+    {
+      "id": "canonical_core.workspaces",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["canonical_core_comparison", "canonical_core_estimation"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/tools/canonical_core/estimation.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "ui/src/pages/CanonicalCoreShell.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Canonical-core estimation/comparison workspaces"
+    },
+    {
+      "id": "chat.live_context",
+      "notes": "Shared ChatAppContext schema (#7453): both server wirings install make_app_state_provider; web chip via GET /chat/context.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/launcher_sidekick_sidebar.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/services/chat_app_context.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/components/ui/ChatContextChip.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Live app/engine context in chat"
+    },
+    {
+      "id": "chat.transport",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["chat_assistant"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/launcher_sidekick_sidebar.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/chat_ws.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/Chat.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "AI chat transport (message send/stream)"
+    },
+    {
+      "id": "diagnostics.integrations_health",
+      "notes": "Single probe implementation (DIAGNOSTIC_CHECKS in launcher_diagnostics.py + integrations_health_data.py) feeds the desktop panels and GET /api/v1/diagnostics/full + /api/v1/integrations/health (issue #7458).",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/integrations_health_panel.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/diagnostics.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/components/ui/DiagnosticsPanel.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Diagnostics + integrations-health panel"
+    },
+    {
+      "id": "docs.document_library",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Desktop documentation browser; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": ["project_map"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/library_widget.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Document library / project map viewer"
+    },
+    {
+      "id": "engines.dashboards",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Experimental desktop dashboards; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": [
+        "drake_dashboard",
+        "mujoco_dashboard",
+        "pinocchio_dashboard"
+      ],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/drake_dashboard.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Per-engine interactive dashboards (Drake/MuJoCo/Pinocchio)"
+    },
+    {
+      "id": "engines.load_and_simulate",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": [
+        "drake_golf",
+        "mujoco_unified",
+        "myosim_suite",
+        "opensim_golf",
+        "pendulum_simulator",
+        "pinocchio_golf"
+      ],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/launcher_simulation.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/engines.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/Simulation.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Engine load/probe + basic simulation loop"
+    },
+    {
+      "id": "export.recordings_downloads",
+      "notes": null,
+      "parity": {
+        "issue": 7451,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/shared/python/data_io/export.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/export.py",
+          "surface": "api"
+        }
+      ],
+      "title": "Export/recording parity (HDF5/MAT/C3D/CSV/video, persisted recordings)"
+    },
+    {
+      "id": "launcher.docker_management",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Manages the local Docker daemon from the desktop; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/docker_manager.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Docker engine management dialog"
+    },
+    {
+      "id": "launcher.embedded_tabs_docks",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": "Desktop windowing composition is explicitly desktop-only per ADR-0028 (React shell uses routes, not embedded Qt docks).",
+        "state": "exempt"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/embedded_host.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Embedded tool host (tabs + docks)"
+    },
+    {
+      "id": "launcher.mcp_config",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Writes local MCP configuration files for desktop AI integrations; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/mcp_config_writer.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "MCP server configuration writer/preferences"
+    },
+    {
+      "id": "launcher.tile_grid",
+      "notes": "src/config/models.yaml is the canonical registry for both shells: the PyQt launcher reads it via ModelRegistry, and the web/API surface reads the same registry through LauncherManifest.load(), which overlays web metadata from launcher_manifest.json. tests/config/test_launcher_registry_parity.py enforces the ID parity.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/embedded_tool_bootstrap.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/launcher.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/Dashboard.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Launcher tile grid from shared manifest"
+    },
+    {
+      "id": "launcher.tile_web_reachability",
+      "notes": "External/docs-backed tiles whose web reachability is not yet contract-checked.",
+      "parity": {
+        "issue": 7461,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": [
+        "data_processor",
+        "pid_generator",
+        "robotics_module",
+        "tools_calculator_hub",
+        "unreal_integration",
+        "video_analyzer",
+        "video_processor"
+      ],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/embedded_tool_bootstrap.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "ui/src/pages/Dashboard.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Manifest tile web-reachability contract (route / native-window / unavailable)"
+    },
+    {
+      "id": "mocap.breadth",
+      "notes": "Web has both the 2D SVG skeleton and an R3F 3D skeleton view (MocapSkeleton3D, auto-selected when frames carry depth) plus live pose/canonical streaming via WS /realtime/subscribe (#8406).",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": [
+        "motion_capture",
+        "motion_pipeline",
+        "motion_target_preview",
+        "starting_pose_matcher"
+      ],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/tools/freemocap_sidecar/run_freemocap.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/motion_capture.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/MotionCapture.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Motion-capture breadth (C3D upload/playback, OpenPose source)"
+    },
+    {
+      "id": "onboarding.about_version",
+      "notes": null,
+      "parity": {
+        "issue": 7459,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/about_dialog.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "About/version info + onboarding"
+    },
+    {
+      "id": "optimization.swing_optimizer",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Desktop optimization GUI; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": ["swing_optimizer"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/shared/python/optimization/swing_optimizer.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Swing Optimizer (trajectory optimization GUI)"
+    },
+    {
+      "id": "platform.aip_protocol",
+      "notes": "API-backed protocol; both shells are thin consumers.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["aip"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/api/routes/aip.py",
+          "surface": "api"
+        }
+      ],
+      "title": "AI Protocol (AIP) structured method dispatch"
+    },
+    {
+      "id": "settings.desktop_only_tabs",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Desktop-process management (MCP server processes, Docker startup, window layout, app zoom of native widgets) has no browser equivalent; awaiting the desktop-only exemption decision in issue #7460.",
+        "state": "exempt"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/settings_dialog.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Desktop-only settings tabs (MCP Servers, Processes, Startup/Docker, Layout, Performance)"
+    },
+    {
+      "id": "settings.preferences",
+      "notes": "Web /settings route (appearance/notifications/simulation-defaults/diagnostics) persisted server-side to ~/.upstreamdrift/web_settings.json; theme round-trips via the shared /themes router (#7457).",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/settings_dialog.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/settings.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/Settings.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Settings/preferences surface + persistence"
+    },
+    {
+      "id": "sidekick.terminal_repl_jupyter_skills",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Desktop-native OS integration (terminal/REPL/Jupyter/skills) per ADR-0028; final disposition pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": [],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/launcher_sidekick_sidebar.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Sidekick OS terminal / REPL / Jupyter / skills"
+    },
+    {
+      "id": "simulation.controls_wiring",
+      "notes": null,
+      "parity": {
+        "issue": 7452,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["actuator_controls", "force_overlays"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/launcher_simulation.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "ui/src/components/simulation/SimulationControls.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Web SimulationControls wiring (camera presets, recording toggle, trajectory export, force overlays, actuator controls)"
+    },
+    {
+      "id": "simulation.golf_suite_batch",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Desktop batch-simulation GUI; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": ["golf_simulation_suite"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/tools/golf_simulation_suite/__main__.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Golf Simulation Suite (parameter sweeps, batch runs)"
+    },
+    {
+      "id": "simulation.realtime_ws_stream",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["realtime_ws"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/launcher_simulation.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/simulation_ws.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/Simulation.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Live simulation data over WebSocket pub-sub"
+    },
+    {
+      "id": "simulation.shot_tracer",
+      "notes": "Reached parity via #7456 (closed completed 2026-06-12); web BallFlight page consumes the existing /ball_flight API.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["shot_tracer"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/_shot_tracer_gui.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/ball_flight.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/BallFlight.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Shot Tracer / ball-flight visualization"
+    },
+    {
+      "id": "simulation.swing_objective_lab",
+      "notes": "Parity implementation via #9128: canonical API route /api/tools/swing-objectives/compare and React surface ui/src/pages/SwingObjectiveLab.tsx; scientific equivalence remains evidence-gated.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["swing_objective_lab"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/adapters/swing_objective_lab_embed.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/swing_objectives.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/SwingObjectiveLab.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Swing Objective Lab — mechanism-vs-outcome downswing comparison"
+    },
+    {
+      "id": "tools.bunkershot3d_workbench",
+      "notes": "Moved out of engines.load_and_simulate by #8618: the tile is a club-design workbench, not an engine load/simulate surface, and the two launcher tiles (bunkershot3d -> a notebook script, bunker_shot -> the GUI) were reconciled into this one entry point. The computation lives in src/tools/bunker_shot_gui/model.py, which imports no GUI toolkit and is the layer a React port would consume; no API route or web page exists yet. The visualization suite (epic #8699) keeps that split: shot3d.py and traces.py compute, render3d.py and render_traces.py draw headlessly through matplotlib, and viewport_widgets.py only wires them to a canvas. A React port would consume shot3d.viewport_payload, which is the backend-neutral ADR-0027 ViewportOverlayPayload and carries the envelope status and fidelity tier in its metadata so any renderer can stamp its own frames. The F1 sand cut (#8710, #8711) keeps the same split and adds one constraint a port must honour: the field carries its fidelity tier and validity status as data covered by a SHA-256 over the provenance and the arrays together, so any client that renders a field must read the standing out of the file rather than out of its filename, and must refuse a field whose digest does not match.",
+      "parity": {
+        "issue": 8607,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["bunkershot3d"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/tools/bunker_shot_gui/gui.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "BunkerShot3D designer workbench (W2 sole parameters, W3 sand condition, F0 dynamic-RFT shot, W7 metrics, playability window, bounce utilisation, animated sole load field, 3-D shot animation through the ADR-0027 viewport, linked scalar traces with a validity band, F1 sand-field cross-sections, A/B comparison, validity verdict)"
+    },
+    {
+      "id": "tools.character_builder",
+      "notes": "Web page exists but the backing API endpoints are stubs/partial (F4).",
+      "parity": {
+        "issue": 7448,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["character_builder"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/shared/python/model_generation/cli/main.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/character_builder.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/CharacterBuilder.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Character Builder (humanoid URDF generation)"
+    },
+    {
+      "id": "tools.data_explorer",
+      "notes": "Web page exists but the backing API endpoints are stubs/partial (F4).",
+      "parity": {
+        "issue": 7448,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["data_explorer"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/api/routes/data_explorer.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/DataExplorer.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Data Explorer (import/filter/visualize datasets)"
+    },
+    {
+      "id": "tools.dataset_generator",
+      "notes": "Web-first tool; the desktop launcher opens the web route.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["dataset_generator"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/api/routes/dataset.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/DatasetGenerator.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Swing dataset generation and import"
+    },
+    {
+      "id": "tools.launch_monitor_analytics",
+      "notes": "The PyQt6 workbench and versioned API share one flexible-analysis contract. React/Vite parity in the authoritative Tools Rate of Closure app is tracked cross-repository in Tools #4205 under epic #8364.",
+      "parity": {
+        "issue": 8364,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["launch_monitor_analytics"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/tools/launch_monitor_analytics/gui.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/launch_monitor_analytics.py",
+          "surface": "api"
+        }
+      ],
+      "title": "Launch-monitor import, interdependency analysis, monitor comparison, dispersion, and longitudinal trends"
+    },
+    {
+      "id": "tools.matlab_suite",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Requires a local MATLAB installation; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": ["matlab_suite"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/launchers/matlab_suite_dialog.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "MATLAB/Simscape model suite"
+    },
+    {
+      "id": "tools.model_explorer",
+      "notes": "Web page exists but the backing API endpoints are stubs/partial (F4).",
+      "parity": {
+        "issue": 7448,
+        "pending_decision": false,
+        "reason": null,
+        "state": "gap"
+      },
+      "program_ids": ["model_explorer"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/tools/model_explorer/launch_model_explorer.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/model_explorer.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/ModelExplorer.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Model Explorer (browse/select/build URDF-MJCF)"
+    },
+    {
+      "id": "tools.pose_editing",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": true,
+        "reason": "Interactive 3D pose editing; desktop-only candidate pending #7460.",
+        "state": "exempt"
+      },
+      "program_ids": ["pose_studio"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/tools/pose_studio/__main__.py",
+          "surface": "pyqt"
+        }
+      ],
+      "title": "Pose Studio interactive pose editing"
+    },
+    {
+      "id": "tools.putting_green",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["putting_green"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/engines/physics_engines/putting_green/python/simulator.py",
+          "surface": "pyqt"
+        },
+        {
+          "path": "src/api/routes/putting_green.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/PuttingGreen.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Putting green simulation"
+    },
+    {
+      "id": "tools.rate_of_closure",
+      "notes": null,
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": "Vendored Tools desktop GUI (vendor/ud-tools src/rate_of_closure); web surface is served by the Tools repo's own build, not UpstreamDrift.",
+        "state": "exempt"
+      },
+      "program_ids": ["rate_of_closure"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [],
+      "title": "Rate of Closure Impact Explorer (clubhead impact-point delivery analysis)"
+    },
+    {
+      "id": "tools.terrain_engine",
+      "notes": "Web-first tool; the desktop launcher opens the web route.",
+      "parity": {
+        "issue": null,
+        "pending_decision": false,
+        "reason": null,
+        "state": "parity"
+      },
+      "program_ids": ["terrain_engine"],
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Feature parity record only",
+        "state": "unqualified"
+      },
+      "surfaces": [
+        {
+          "path": "src/api/routes/terrain.py",
+          "surface": "api"
+        },
+        {
+          "path": "ui/src/pages/Terrain.tsx",
+          "surface": "web"
+        }
+      ],
+      "title": "Terrain and topography configuration"
+    }
+  ],
+  "manifest_id": "upstreamdrift-companion",
+  "programs": [
+    {
+      "availability": {
+        "reason": "No direct entry point; use a declared shell surface",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Live actuator parameter tuning and control scheme editor",
+      "engine_id": null,
+      "entry_point": null,
+      "feature_ids": ["simulation.controls_wiring"],
+      "hidden": false,
+      "id": "actuator_controls",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Actuator Controls",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "api_backed"
+    },
+    {
+      "availability": {
+        "reason": "No direct entry point; use a declared shell surface",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "AI-native simulation control protocol with structured method dispatch",
+      "engine_id": null,
+      "entry_point": null,
+      "feature_ids": ["platform.aip_protocol"],
+      "hidden": false,
+      "id": "aip",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "AI Protocol (AIP)",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "api_backed"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "analysis",
+      "description": "REST API access to 6 analysis endpoints (swing metrics, biomechanics)",
+      "engine_id": null,
+      "entry_point": "src/api/routes/analysis_tools.py",
+      "feature_ids": ["analysis.analysis_tools_api"],
+      "hidden": false,
+      "id": "analysis_tools_api",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Analysis Tools",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Aerodynamic ball flight simulator with drag, Magnus, and wind models",
+      "engine_id": null,
+      "entry_point": "src/tools/ball_flight_gui/gui.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "ball_flight_simulator",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Ball Flight Simulator",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "biomechanics",
+      "description": "Biomechanics exercise workflows with injury risk and joint stress analysis",
+      "engine_id": null,
+      "entry_point": "src/launchers/exercise_dashboard.py",
+      "feature_ids": ["biomech.exercise_injury_dashboards"],
+      "hidden": false,
+      "id": "biomech_exercise",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Exercise Dashboard",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Virtual launcher target requires its declared runtime",
+        "state": "conditional"
+      },
+      "category": "biomechanics",
+      "description": "Standardized human gait model across engines",
+      "engine_id": null,
+      "entry_point": "virtual/biomech_exercise/biomech_gait",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "biomech_gait",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Gait Model",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "biomech_exercise"
+    },
+    {
+      "availability": {
+        "reason": "Virtual launcher target requires its declared runtime",
+        "state": "conditional"
+      },
+      "category": "biomechanics",
+      "description": "Standardized sit-to-stand motion model",
+      "engine_id": null,
+      "entry_point": "virtual/biomech_exercise/biomech_sit_to_stand",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "biomech_sit_to_stand",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Sit-to-Stand Model",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "biomech_exercise"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Wedge sole design against the F0 dynamic-RFT bunker model",
+      "engine_id": null,
+      "entry_point": "src/tools/bunker_shot_gui/gui.py",
+      "feature_ids": ["tools.bunkershot3d_workbench"],
+      "hidden": false,
+      "id": "bunkershot3d",
+      "legacy_statuses": ["experimental", "gui_ready"],
+      "maturity": "experimental",
+      "name": "BunkerShot3D Designer Workbench",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_capture",
+      "description": "Visualise and analyse optical mocap data (.c3d)",
+      "engine_id": null,
+      "entry_point": "src/engines/Simscape_Multibody_Models/3D_Golf_Model/python/src/apps/c3d_viewer.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "c3d_viewer",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "C3D Viewer",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "biomechanics",
+      "description": "CC-27 comparison services in the unified workspace",
+      "engine_id": null,
+      "entry_point": "src/tools/canonical_core/comparison.py",
+      "feature_ids": ["canonical_core.workspaces"],
+      "hidden": false,
+      "id": "canonical_core_comparison",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Canonical-Core Comparison",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "biomechanics",
+      "description": "CC-19 estimation services in the unified workspace",
+      "engine_id": null,
+      "entry_point": "src/tools/canonical_core/estimation.py",
+      "feature_ids": ["canonical_core.workspaces"],
+      "hidden": false,
+      "id": "canonical_core_estimation",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Canonical-Core Estimation",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Build and customize humanoid URDF models with anthropometric scaling",
+      "engine_id": null,
+      "entry_point": "src/shared/python/model_generation/cli/main.py",
+      "feature_ids": ["tools.character_builder"],
+      "hidden": false,
+      "id": "character_builder",
+      "legacy_statuses": ["gui_ready"],
+      "maturity": "stable",
+      "name": "Character Builder",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "No direct entry point; use a declared shell surface",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Chat-based AI assistant with calculator, workspace, and data explorer integration",
+      "engine_id": null,
+      "entry_point": null,
+      "feature_ids": ["chat.transport"],
+      "hidden": false,
+      "id": "chat_assistant",
+      "legacy_statuses": ["gui_ready"],
+      "maturity": "stable",
+      "name": "AI Assistant",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Validate canonical-core units, model dimensions, and calibration before a run.",
+      "engine_id": null,
+      "entry_point": "src/tools/config_setup_wizard/_embed_adapter.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "config_setup_wizard",
+      "legacy_statuses": ["beta"],
+      "maturity": "beta",
+      "name": "Setup Wizard",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Perturbation robustness comparison across physics engines",
+      "engine_id": null,
+      "entry_point": "src/launchers/cross_engine_dashboard.py",
+      "feature_ids": ["analysis.cross_engine_robustness"],
+      "hidden": false,
+      "id": "cross_engine_dashboard",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Cross-Engine Dashboard",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Import, filter, and visualise simulation datasets",
+      "engine_id": null,
+      "entry_point": "src/data_explorer/data_explorer_app.py",
+      "feature_ids": ["tools.data_explorer"],
+      "hidden": false,
+      "id": "data_explorer",
+      "legacy_statuses": ["external", "ready"],
+      "maturity": "stable",
+      "name": "Data Explorer",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Shared signal processing and time-series data analysis tool",
+      "engine_id": null,
+      "entry_point": "src/data_processing/data_processor/launch_pyqt6.py",
+      "feature_ids": ["launcher.tile_web_reachability"],
+      "hidden": false,
+      "id": "data_processor",
+      "legacy_statuses": ["external", "ready"],
+      "maturity": "stable",
+      "name": "Data Processor",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "No direct entry point; use a declared shell surface",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Generate and import swing datasets with configurable strategies and export",
+      "engine_id": null,
+      "entry_point": null,
+      "feature_ids": ["tools.dataset_generator"],
+      "hidden": false,
+      "id": "dataset_generator",
+      "legacy_statuses": ["gui_ready"],
+      "maturity": "stable",
+      "name": "Dataset Generator",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Interactive Drake simulation dashboard",
+      "engine_id": "drake",
+      "entry_point": "src/launchers/drake_dashboard.py",
+      "feature_ids": ["engines.dashboards"],
+      "hidden": false,
+      "id": "drake_dashboard",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Drake Dashboard",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "extended",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Drake robotics with MeshCat visualisation",
+      "engine_id": "drake",
+      "entry_point": "src/engines/physics_engines/drake/python/src/drake_gui_app.py",
+      "feature_ids": ["engines.load_and_simulate"],
+      "hidden": false,
+      "id": "drake_golf",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Drake",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "extended",
+      "type": "drake"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Drake simulation models repository folder",
+      "engine_id": null,
+      "entry_point": "Drake_Models",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "drake_models_shared",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Drake Models",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "shared_repo"
+    },
+    {
+      "availability": {
+        "reason": "No direct entry point; use a declared shell surface",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Physics visualization: joint forces and torques overlaid on 3D model",
+      "engine_id": null,
+      "entry_point": null,
+      "feature_ids": ["simulation.controls_wiring"],
+      "hidden": false,
+      "id": "force_overlays",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Force Overlays",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "api_backed"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "3D Driving Range and Golf Course Hole visualization",
+      "engine_id": null,
+      "entry_point": "src/tools/golf_environment/gui.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "golf_environment",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Golf Environment",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Complete golf simulation with ball flight physics and putting green",
+      "engine_id": "golf_simulation",
+      "entry_point": "src/tools/golf_simulation_suite/__main__.py",
+      "feature_ids": ["simulation.golf_suite_batch"],
+      "hidden": false,
+      "id": "golf_simulation_suite",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Simulator",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "golf_simulation"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "biomechanics",
+      "description": "Joint stress, spinal load, and swing modification analysis for injury prevention",
+      "engine_id": null,
+      "entry_point": "src/shared/python/injury/injury_risk.py",
+      "feature_ids": ["biomech.exercise_injury_dashboards"],
+      "hidden": false,
+      "id": "injury_analysis",
+      "legacy_statuses": ["experimental", "gui_ready"],
+      "maturity": "experimental",
+      "name": "Injury Risk Analysis",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Harmonize multi-vendor shot data, map impact-parameter dependencies, compare monitors, and track dispersion and trends",
+      "engine_id": null,
+      "entry_point": "src/tools/launch_monitor_analytics/__main__.py",
+      "feature_ids": ["tools.launch_monitor_analytics"],
+      "hidden": false,
+      "id": "launch_monitor_analytics",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Launch Monitor Analytics",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Virtual launcher target requires its declared runtime",
+        "state": "conditional"
+      },
+      "category": "documentation",
+      "description": "Research library for managing publications, LaTeX references, and documents",
+      "engine_id": null,
+      "entry_point": "virtual/library",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "library_tool",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Library",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Virtual launcher target requires its declared runtime",
+        "state": "conditional"
+      },
+      "category": "physics_engine",
+      "description": "MATLAB / Simscape models, dataset generators, and tooling",
+      "engine_id": "matlab",
+      "entry_point": "virtual/matlab_suite",
+      "feature_ids": ["tools.matlab_suite"],
+      "hidden": false,
+      "id": "matlab_suite",
+      "legacy_statuses": ["external", "ready"],
+      "maturity": "stable",
+      "name": "Simscape",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "matlab_suite"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_capture",
+      "description": "Fast pose estimation via Google MediaPipe (Apache 2.0)",
+      "engine_id": null,
+      "entry_point": "src/shared/python/pose_estimation/mediapipe_gui.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "mediapipe_analysis",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "MediaPipe",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Explore models and generate URDFs",
+      "engine_id": null,
+      "entry_point": "src/tools/model_explorer/main_window.py",
+      "feature_ids": ["tools.model_explorer"],
+      "hidden": false,
+      "id": "model_explorer",
+      "legacy_statuses": ["ready", "utility"],
+      "maturity": "stable",
+      "name": "Model Explorer",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_capture",
+      "description": "FreeMoCap sidecar: markerless motion capture recording and processing",
+      "engine_id": null,
+      "entry_point": "src/tools/freemocap_sidecar/run_freemocap.py",
+      "feature_ids": ["mocap.breadth"],
+      "hidden": false,
+      "id": "motion_capture",
+      "legacy_statuses": ["beta", "utility"],
+      "maturity": "beta",
+      "name": "Motion Capture",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_matching",
+      "description": "Full markerless mocap to forward-dynamics pipeline (video in, motion out)",
+      "engine_id": null,
+      "entry_point": "src/shared/python/motion_pipeline/api.py",
+      "feature_ids": ["mocap.breadth"],
+      "hidden": false,
+      "id": "motion_pipeline",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Motion Pipeline",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_matching",
+      "description": "Preview multi-source motion-capture targets on a shared timegrid",
+      "engine_id": null,
+      "entry_point": "src/tools/starting_pose_matcher/__main__.py",
+      "feature_ids": ["mocap.breadth"],
+      "hidden": false,
+      "id": "motion_target_preview",
+      "legacy_statuses": ["ready", "utility"],
+      "maturity": "stable",
+      "name": "Motion-Match Preview",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "biomechanics",
+      "description": "Cross-engine trajectory optimization",
+      "engine_id": null,
+      "entry_point": "src/movement_optimizer/__main__.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "movement_optimizer",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Movement Optimizer",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Interactive MuJoCo simulation dashboard",
+      "engine_id": "mujoco",
+      "entry_point": "src/launchers/mujoco_dashboard.py",
+      "feature_ids": ["engines.dashboards"],
+      "hidden": false,
+      "id": "mujoco_dashboard",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "MuJoCo Dashboard",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "supported",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "MuJoCo simulation models repository folder",
+      "engine_id": null,
+      "entry_point": "MuJoCo_Models",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "mujoco_models_shared",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "MuJoCo Models",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "shared_repo"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Biomechanical golf swing analysis (humanoid + simulation)",
+      "engine_id": "mujoco",
+      "entry_point": "src/engines/physics_engines/mujoco/python/mujoco_humanoid_golf/__main__.py",
+      "feature_ids": ["engines.load_and_simulate"],
+      "hidden": false,
+      "id": "mujoco_unified",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "MuJoCo",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "supported",
+      "type": "custom_humanoid"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Muscle-actuated simulation environment",
+      "engine_id": "myosuite",
+      "entry_point": "src/engines/physics_engines/myosuite/python/gui.py",
+      "feature_ids": ["engines.load_and_simulate"],
+      "hidden": false,
+      "id": "myosim_suite",
+      "legacy_statuses": ["engine_ready", "ready"],
+      "maturity": "stable",
+      "name": "MyoSuite",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "experimental",
+      "type": "myosim"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_capture",
+      "description": "High-accuracy body pose estimation (Academic License)",
+      "engine_id": null,
+      "entry_point": "src/shared/python/pose_estimation/openpose_gui.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "openpose_analysis",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "OpenPose",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Musculoskeletal modelling for biomechanics",
+      "engine_id": "opensim",
+      "entry_point": "src/engines/physics_engines/opensim/python/opensim_gui.py",
+      "feature_ids": ["engines.load_and_simulate"],
+      "hidden": false,
+      "id": "opensim_golf",
+      "legacy_statuses": ["engine_ready", "ready"],
+      "maturity": "stable",
+      "name": "OpenSim",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "experimental",
+      "type": "opensim"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "OpenSim simulation models repository folder",
+      "engine_id": null,
+      "entry_point": "OpenSim_Models",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "opensim_models_shared",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "OpenSim Models",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "shared_repo"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "simulation",
+      "description": "Interactive proximal–distal companion for double, triple, and 8-DOF golfer dynamics",
+      "engine_id": null,
+      "entry_point": "src/double_pendulum_golf/__main__.py",
+      "feature_ids": ["engines.load_and_simulate"],
+      "hidden": false,
+      "id": "pendulum_simulator",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Pendulum Simulator",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "No direct entry point; use a declared shell surface",
+        "state": "conditional"
+      },
+      "category": "analysis",
+      "description": "Cross-engine robustness analysis via perturbation testing",
+      "engine_id": null,
+      "entry_point": null,
+      "feature_ids": ["analysis.cross_engine_robustness"],
+      "hidden": false,
+      "id": "perturbation_analysis",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Perturbation Analysis",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "api_backed"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Programmatic P&ID Generator from the Tools repo - create ISA-5.1 piping diagrams",
+      "engine_id": null,
+      "entry_point": "src/shared/python/programmatic_pid/cli.py",
+      "feature_ids": ["launcher.tile_web_reachability"],
+      "hidden": false,
+      "id": "pid_generator",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "P&ID Generator",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Virtual launcher target requires its declared runtime",
+        "state": "conditional"
+      },
+      "category": "biomechanics",
+      "description": "Rigid body + JAX residual torque MLP",
+      "engine_id": null,
+      "entry_point": "virtual/physics_informed/pinn_hybrid",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "pinn_hybrid",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "PINN Hybrid",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "physics_informed"
+    },
+    {
+      "availability": {
+        "reason": "Virtual launcher target requires its declared runtime",
+        "state": "conditional"
+      },
+      "category": "biomechanics",
+      "description": "Pinocchio inverse dynamics only — no ML",
+      "engine_id": null,
+      "entry_point": "virtual/physics_informed/pinn_pure_rigid",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "pinn_pure_rigid",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Pure Rigid Body",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "physics_informed"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Interactive Pinocchio simulation dashboard",
+      "engine_id": "pinocchio",
+      "entry_point": "src/launchers/pinocchio_dashboard.py",
+      "feature_ids": ["engines.dashboards"],
+      "hidden": false,
+      "id": "pinocchio_dashboard",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Pinocchio Dashboard",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "extended",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "physics_engine",
+      "description": "Rigid-body dynamics with analytical derivatives",
+      "engine_id": "pinocchio",
+      "entry_point": "src/engines/physics_engines/pinocchio/python/pinocchio_golf/gui.py",
+      "feature_ids": ["engines.load_and_simulate"],
+      "hidden": false,
+      "id": "pinocchio_golf",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Pinocchio",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "extended",
+      "type": "pinocchio"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Pinocchio simulation models repository folder",
+      "engine_id": null,
+      "entry_point": "Pinocchio_Models",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "pinocchio_models_shared",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Pinocchio Models",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "shared_repo"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_matching",
+      "description": "Cross-engine interactive pose editor",
+      "engine_id": null,
+      "entry_point": "src/tools/pose_studio/__main__.py",
+      "feature_ids": ["tools.pose_editing"],
+      "hidden": false,
+      "id": "pose_studio",
+      "legacy_statuses": ["beta", "gui_ready"],
+      "maturity": "beta",
+      "name": "Pose Studio",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "motion_matching",
+      "description": "Live mirror of Pose Studio's canonical pose via the realtime IPC layer",
+      "engine_id": null,
+      "entry_point": "src/tools/pose_subscriber_demo/__main__.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "pose_subscriber_demo",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Pose Subscriber (demo)",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "documentation",
+      "description": "Map of every feature and module in the suite",
+      "engine_id": null,
+      "entry_point": "docs/architecture/PROJECT_MAP.md",
+      "feature_ids": ["docs.document_library"],
+      "hidden": false,
+      "id": "project_map",
+      "legacy_statuses": ["ready", "utility"],
+      "maturity": "stable",
+      "name": "Project Map",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "document"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Realistic putting green with ball-rolling physics",
+      "engine_id": "putting_green",
+      "entry_point": "src/tools/putting_green_gui/gui.py",
+      "feature_ids": ["tools.putting_green"],
+      "hidden": false,
+      "id": "putting_green",
+      "legacy_statuses": ["ready", "simulator"],
+      "maturity": "stable",
+      "name": "Putting Green",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "putting_green"
+    },
+    {
+      "availability": {
+        "reason": "Hidden by provider registry",
+        "state": "unavailable"
+      },
+      "category": "simulation",
+      "description": "Legacy alias for the canonical putting_green launcher tile.",
+      "engine_id": null,
+      "entry_point": "src/tools/putting_green_gui/gui.py",
+      "feature_ids": [],
+      "hidden": true,
+      "id": "putting_green_gui",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Putting Green",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "biomechanics",
+      "description": "Quantifies how a rotating clubhead's impact-point delivery differs from the tracked reference point (COM or geometric center)",
+      "engine_id": null,
+      "entry_point": "src/rate_of_closure/launch_pyqt6.py",
+      "feature_ids": ["tools.rate_of_closure"],
+      "hidden": false,
+      "id": "rate_of_closure",
+      "legacy_statuses": ["external", "ready"],
+      "maturity": "stable",
+      "name": "Rate of Closure Impact Explorer",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "No direct entry point; use a declared shell surface",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Live simulation data stream via WebSocket pub-sub",
+      "engine_id": null,
+      "entry_point": null,
+      "feature_ids": ["simulation.realtime_ws_stream"],
+      "hidden": false,
+      "id": "realtime_ws",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Realtime WebSocket",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "api_backed"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Locomotion planning, contact mechanics, and robot control for humanoid models",
+      "engine_id": null,
+      "entry_point": "src/robotics/__init__.py",
+      "feature_ids": ["launcher.tile_web_reachability"],
+      "hidden": false,
+      "id": "robotics_module",
+      "legacy_statuses": ["experimental"],
+      "maturity": "experimental",
+      "name": "Robotics Module",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Multi-model golf ball trajectory comparison (Waterloo, MacDonald, Nathan)",
+      "engine_id": null,
+      "entry_point": "src/launchers/_shot_tracer_gui.py",
+      "feature_ids": ["simulation.shot_tracer"],
+      "hidden": false,
+      "id": "shot_tracer",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Shot Tracer",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "AI assistant chat panel — embed as a dock or tab",
+      "engine_id": null,
+      "entry_point": "src/tools/sidekick/_embed_adapter.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "sidekick",
+      "legacy_statuses": ["beta"],
+      "maturity": "beta",
+      "name": "Sidekick",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Compare ODE, MuJoCo (CPU) and MuJoCo Warp (GPU) backends with rollouts, sweeps, and HDF5 export",
+      "engine_id": null,
+      "entry_point": "src/tools/simulation_backends_launcher/__main__.py",
+      "feature_ids": ["analysis.counterfactuals"],
+      "hidden": false,
+      "id": "simulation_backends",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Simulation Backends",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Hidden by provider registry",
+        "state": "unavailable"
+      },
+      "category": "motion_matching",
+      "description": "Legacy alias for motion_target_preview. Hidden by default.",
+      "engine_id": null,
+      "entry_point": "src/tools/starting_pose_matcher/__main__.py",
+      "feature_ids": ["mocap.breadth"],
+      "hidden": true,
+      "id": "starting_pose_matcher",
+      "legacy_statuses": ["deprecated", "utility"],
+      "maturity": "deprecated",
+      "name": "Starting-Pose Matcher (legacy)",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "End-to-end swing dynamics → impact → aerodynamic ball flight pipeline",
+      "engine_id": null,
+      "entry_point": "src/tools/swing_flight_pipeline/gui.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "swing_flight_pipeline",
+      "legacy_statuses": ["ready"],
+      "maturity": "stable",
+      "name": "Swing → Flight Pipeline",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "simulation",
+      "description": "Compare downswings optimized for clubhead speed against centrifugal, Coriolis, energy, and impulse transfer",
+      "engine_id": null,
+      "entry_point": "src/double_pendulum_golf/swing_objectives/__main__.py",
+      "feature_ids": ["simulation.swing_objective_lab"],
+      "hidden": false,
+      "id": "swing_objective_lab",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Swing Objective Lab",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Trajectory optimization with constraint solving and cost functions",
+      "engine_id": null,
+      "entry_point": "src/shared/python/optimization/swing_optimizer.py",
+      "feature_ids": ["optimization.swing_optimizer"],
+      "hidden": false,
+      "id": "swing_optimizer",
+      "legacy_statuses": ["experimental", "gui_ready"],
+      "maturity": "experimental",
+      "name": "Swing Optimizer",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "simulation",
+      "description": "Topography presets and surface queries for terrain-aware ball physics",
+      "engine_id": null,
+      "entry_point": "src/tools/terrain_engine/gui.py",
+      "feature_ids": ["tools.terrain_engine"],
+      "hidden": false,
+      "id": "terrain_engine",
+      "legacy_statuses": ["gui_ready", "ready"],
+      "maturity": "stable",
+      "name": "Terrain Engine",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "tool",
+      "description": "Engineering process calculators from the Tools repo (50+ calculators)",
+      "engine_id": null,
+      "entry_point": "src/data_processing/data_processor/launch_pyqt6.py",
+      "feature_ids": ["launcher.tile_web_reachability"],
+      "hidden": false,
+      "id": "tools_calculator_hub",
+      "legacy_statuses": ["external"],
+      "maturity": "unclassified",
+      "name": "Tools Calculator Suite",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Schedule, monitor, and manage model-training jobs across engines.",
+      "engine_id": null,
+      "entry_point": "src/tools/training_controller/__main__.py",
+      "feature_ids": [],
+      "hidden": false,
+      "id": "training_controller",
+      "legacy_statuses": ["beta"],
+      "maturity": "beta",
+      "name": "Training Controller",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "category": "tool",
+      "description": "Unreal Engine streaming and VR visualization for golf swing simulation",
+      "engine_id": null,
+      "entry_point": "src/unreal_integration/__init__.py",
+      "feature_ids": ["launcher.tile_web_reachability"],
+      "hidden": false,
+      "id": "unreal_integration",
+      "legacy_statuses": ["external"],
+      "maturity": "unclassified",
+      "name": "Unreal Integration",
+      "provider_id": "upstreamdrift",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "motion_capture",
+      "description": "Video-based motion analysis with pose tracking",
+      "engine_id": null,
+      "entry_point": "src/video_analyzer/launch_video_analyzer.py",
+      "feature_ids": ["launcher.tile_web_reachability"],
+      "hidden": false,
+      "id": "video_analyzer",
+      "legacy_statuses": ["external", "ready"],
+      "maturity": "stable",
+      "name": "Video Analyzer",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    },
+    {
+      "availability": {
+        "reason": "Requires the provider pinned by this manifest",
+        "state": "conditional"
+      },
+      "category": "motion_capture",
+      "description": "Shared media processor for video conversion, frame extraction, and analysis",
+      "engine_id": null,
+      "entry_point": "src/media_processing/video_processor/apps/web/launch_platform.py",
+      "feature_ids": ["launcher.tile_web_reachability"],
+      "hidden": false,
+      "id": "video_processor",
+      "legacy_statuses": ["external", "ready"],
+      "maturity": "stable",
+      "name": "Video Processor",
+      "provider_id": "tools",
+      "scientific_qualification": {
+        "limitations": [
+          "Catalog inclusion is not scientific validation or engineering approval."
+        ],
+        "scope": "Program listing and launch metadata only",
+        "state": "unqualified"
+      },
+      "source_records": [
+        {
+          "path": "src/config/launcher_manifest.json",
+          "registry": "launcher_manifest"
+        },
+        {
+          "path": "src/config/models.yaml",
+          "registry": "model_registry"
+        }
+      ],
+      "support_tier": "not_applicable",
+      "type": "special_app"
+    }
+  ],
+  "providers": [
+    {
+      "id": "tools",
+      "pin_kind": "gitlink",
+      "pinned_commit": "cc883cbaf63157b58c71cba385a683df2762b0cb",
+      "relationship": "vendored-provider",
+      "repository": "https://github.com/D-sorganization/Tools",
+      "vendor_path": "vendor/ud-tools"
+    },
+    {
+      "id": "upstreamdrift",
+      "pin_kind": "source-commit",
+      "pinned_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "relationship": "authority",
+      "repository": "https://github.com/D-sorganization/UpstreamDrift",
+      "vendor_path": null
+    }
+  ],
+  "publication": {
+    "blockers": [
+      "Engine capability claims require qualification evidence.",
+      "Documentation and screenshot inventories require their governed provider slices."
+    ],
+    "state": "draft"
+  },
+  "registries": [
+    {
+      "discovery_mode": "local-only",
+      "id": "feature_parity",
+      "path": "src/config/feature_parity.json",
+      "version": "1.0.0"
+    },
+    {
+      "discovery_mode": "local-only",
+      "id": "launcher_manifest",
+      "path": "src/config/launcher_manifest.json",
+      "version": "1.0.0"
+    },
+    {
+      "discovery_mode": "local-only",
+      "id": "model_registry",
+      "path": "src/config/models.yaml",
+      "version": null
+    },
+    {
+      "discovery_mode": "local-only",
+      "id": "workflow_registry",
+      "path": "scripts/config/companion_workflows.v1.json",
+      "version": "1.0.0"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "screenshots": [],
+  "source": {
+    "commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+    "commit_timestamp": "2026-08-30T10:10:55-07:00",
+    "generator": {
+      "path": "scripts/companion_catalog.py",
+      "version": "1.1.0"
+    },
+    "inputs": [
+      {
+        "path": "docs/api/contracts/upstreamdrift-companion-compatibility-v1.json",
+        "sha256": "4b04dbf8d05a5e837912769653a5a45a4258276de0c1824698bf8bba3e3878c6"
+      },
+      {
+        "path": "docs/api/contracts/upstreamdrift-companion-v1.schema.json",
+        "sha256": "39b8e54719f75aa428f2375d804ee29c458aa23b876a094aff802c48928b6702"
+      },
+      {
+        "path": "pyproject.toml",
+        "sha256": "e17e5f217b8f4082383e16c06be4a82848da8f43bafe40384bd0f5594e7ddac0"
+      },
+      {
+        "path": "scripts/config/companion_workflows.v1.json",
+        "sha256": "ef78695030635fbe476912ecb7f59c8cdfd303cf0c187de0d24d63e22fd6be35"
+      },
+      {
+        "path": "src/config/feature_parity.json",
+        "sha256": "c5d5eb5f3d9dd903dd0ed6abf60bd7c0006b05790f93291a2d43276b831ece2e"
+      },
+      {
+        "path": "src/config/launcher_manifest.json",
+        "sha256": "389aab1a2eb6b946296dbd0bb924d261f0bf0f4a8c27151e84a0189f20a19baa"
+      },
+      {
+        "path": "src/config/models.yaml",
+        "sha256": "e6e70784226b1f22382cc944981a0d8de9d919ac824754a1cebb0e77a56ac321"
+      },
+      {
+        "path": "tests/fixtures/launch_monitor/trackman.csv",
+        "sha256": "e8e344c9b0c08f832973e7fea811cb1322f9b6fcdc7066f80bb95e89ef6c2ddf"
+      }
+    ],
+    "package_version": "2.1.1",
+    "repository": "https://github.com/D-sorganization/UpstreamDrift"
+  },
+  "summary": {
+    "executable_workflow_records": 14,
+    "feature_records": 41,
+    "feature_surface_paths": 79,
+    "local_model_records": 56,
+    "program_records": 70,
+    "raw_launcher_records": 49,
+    "workflow_records": 15
+  },
+  "workflows": [
+    {
+      "argv": [
+        "scripts.companion_catalog",
+        "--output",
+        "dist/companion-workflows/artifacts/companion-export/upstreamdrift-companion.v1.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "repository",
+        "fixture_paths": [
+          "docs/api/contracts/upstreamdrift-companion-v1.schema.json"
+        ],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": [
+        "docs/adr/0043-companion-manifest-provider-authority.md",
+        "docs/operations/companion-publication.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/companion-export/upstreamdrift-companion.v1.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        },
+        {
+          "path": "dist/companion-workflows/artifacts/companion-export/upstreamdrift-companion.v1.json.sha256",
+          "required": true,
+          "type": "sha256",
+          "verification": {
+            "method": "sha256-sidecar",
+            "minimum_bytes": 70
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "companion-export",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["project_map"],
+      "scientific_limitations": [
+        "The manifest exports software facts and does not qualify calculations, engines, or biomechanics claims."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Export the Exact-Revision Companion Manifest",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "bad-input",
+        "--output",
+        "dist/companion-workflows/artifacts/failure-bad-input/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": ["docs/engines/pendulum.md"],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/failure-bad-input/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 21,
+      "failure_class": "bad-input",
+      "id": "failure-bad-input",
+      "kind": "failure-fixture",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["pendulum_simulator"],
+      "scientific_limitations": [
+        "The fixture verifies a precondition failure only and does not bound all invalid physical inputs."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Reject Invalid Pendulum Parameters",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "stale-version",
+        "--output",
+        "dist/companion-workflows/artifacts/failure-stale-version/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "repository",
+        "fixture_paths": [
+          "docs/api/contracts/upstreamdrift-companion-compatibility-v1.json"
+        ],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": ["docs/operations/companion-publication.md"],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/failure-stale-version/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 23,
+      "failure_class": "stale-version",
+      "id": "failure-stale-version",
+      "kind": "failure-fixture",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["project_map"],
+      "scientific_limitations": [
+        "The fixture proves compatibility-policy refusal and does not declare a real historical schema version."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Reject a Stale Companion Compatibility Version",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "unavailable-engine",
+        "--output",
+        "dist/companion-workflows/artifacts/failure-unavailable-engine/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": [
+        "docs/user_guide/installing_optional_features.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/failure-unavailable-engine/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 22,
+      "failure_class": "unavailable-engine",
+      "id": "failure-unavailable-engine",
+      "kind": "failure-fixture",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["opensim_golf"],
+      "scientific_limitations": [
+        "The reserved engine identifier is a deterministic fail-closed fixture and does not assert that a named production engine is unavailable."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Reject an Unavailable Engine Fixture",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "unsupported-dependency",
+        "--output",
+        "dist/companion-workflows/artifacts/failure-unsupported-dependency/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": [
+        "docs/user_guide/installing_optional_features.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/failure-unsupported-dependency/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 20,
+      "failure_class": "unsupported-dependency",
+      "id": "failure-unsupported-dependency",
+      "kind": "failure-fixture",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["opensim_golf"],
+      "scientific_limitations": [
+        "The reserved missing package is a deterministic conformance fixture and does not report the installation state of any real optional dependency."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Reject an Unsupported Dependency",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "installation-verification",
+        "--output",
+        "dist/companion-workflows/artifacts/installation-verification/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": [
+        "docs/troubleshooting/installation.md",
+        "docs/user_guide/installation.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/installation-verification/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "installation-verification",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["project_map"],
+      "scientific_limitations": [
+        "This CI record checks the Python floor and provider-authority imports; optional GUI and engine extras remain outside its scope."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Verify the Core Provider Installation Contract",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "launch-monitor-roundtrip",
+        "--output",
+        "dist/companion-workflows/artifacts/launch-monitor-import-export/result.json",
+        "--csv-output",
+        "dist/companion-workflows/artifacts/launch-monitor-import-export/canonical-shots.csv"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "repository",
+        "fixture_paths": ["tests/fixtures/launch_monitor/trackman.csv"],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": [
+        "docs/adr/0031-launch-monitor-canonical-shot-schema.md",
+        "docs/user_guide/launch_monitor_analytics.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/launch-monitor-import-export/canonical-shots.csv",
+          "required": true,
+          "type": "csv",
+          "verification": {
+            "method": "csv-header",
+            "minimum_bytes": 20,
+            "required_columns": [
+              "shot_id",
+              "club_speed",
+              "ball_speed",
+              "launch_angle",
+              "spin_rate",
+              "carry_distance"
+            ]
+          }
+        },
+        {
+          "path": "dist/companion-workflows/artifacts/launch-monitor-import-export/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "launch-monitor-import-export",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["launch_monitor_analytics"],
+      "scientific_limitations": [
+        "The two-row synthetic fixture verifies mapping and round-trip mechanics; it is not monitor calibration or population evidence."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Import and Export Canonical Launch-Monitor Data",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "model-launch-resolution",
+        "--output",
+        "dist/companion-workflows/artifacts/model-launch-resolution/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "repository",
+        "fixture_paths": ["src/config/models.yaml"],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": ["docs/model_explorer/attachment-manifests.md"],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/model-launch-resolution/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "model-launch-resolution",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["model_explorer"],
+      "scientific_limitations": [
+        "Provider CI resolves the launch command headlessly and does not claim that a graphical window was visually inspected."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Resolve a Registered Model Launch",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [],
+      "availability": {
+        "reason": "Core provider CI does not install or visually qualify the optional native OpenSim GUI runtime.",
+        "state": "unavailable"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "repository",
+        "fixture_paths": ["src/config/models.yaml"],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": [
+        "docs/user_guide/installing_optional_features.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": null,
+      "expected_artifacts": [],
+      "expected_exit_code": null,
+      "id": "opensim-native-gui-launch",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["opensim_golf"],
+      "scientific_limitations": [
+        "This record is deliberately non-executable until a separately qualified optional-runtime workflow and visual evidence authority exist."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "experimental",
+      "title": "Launch the Native OpenSim GUI",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "program-catalog-export",
+        "--output",
+        "dist/companion-workflows/artifacts/program-catalog-export/programs.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 0.0,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 0.0
+      },
+      "documentation_paths": [
+        "docs/adr/0043-companion-manifest-provider-authority.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/program-catalog-export/programs.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "program-catalog-export",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["project_map"],
+      "scientific_limitations": [
+        "This is a software-discovery projection and does not qualify the listed programs or their scientific outputs."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Export a Program Catalog Slice",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "reference-analysis",
+        "--output",
+        "dist/companion-workflows/artifacts/reference-double-pendulum-analysis/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 1e-9,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 1e-9
+      },
+      "documentation_paths": ["docs/engines/pendulum.md"],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/reference-double-pendulum-analysis/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "reference-double-pendulum-analysis",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["pendulum_simulator"],
+      "scientific_limitations": [
+        "Tip speed and mechanical-energy change are model outputs, not independent measurements or causal evidence."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Analyze a Reference Double-Pendulum Trace",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "reference-simulation",
+        "--output",
+        "dist/companion-workflows/artifacts/reference-double-pendulum-simulation/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 1e-9,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 1e-9
+      },
+      "documentation_paths": ["docs/engines/pendulum.md"],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/reference-double-pendulum-simulation/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "reference-double-pendulum-simulation",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["pendulum_simulator"],
+      "scientific_limitations": [
+        "The short synthetic trajectory is a deterministic software example, not a fitted or validated golfer motion."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Run a Reference Double-Pendulum Simulation",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "reference-plot",
+        "--output",
+        "dist/companion-workflows/artifacts/reference-simulation-plot/tip-speed.png"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 1e-9,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 1e-9
+      },
+      "documentation_paths": [
+        "docs/adr/0011-plot-style-toolkit.md",
+        "docs/engines/pendulum.md"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/reference-simulation-plot/tip-speed.png",
+          "required": true,
+          "type": "png",
+          "verification": {
+            "method": "png-signature",
+            "minimum_bytes": 1000
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "reference-simulation-plot",
+      "kind": "workflow",
+      "prerequisites": [
+        "Matplotlib with the headless Agg backend",
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["pendulum_simulator"],
+      "scientific_limitations": [
+        "The plot is a deterministic software illustration of a synthetic trace and has no subject-level inferential authority."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Generate a Reference Simulation Plot",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "reference-report",
+        "--output",
+        "dist/companion-workflows/artifacts/reference-simulation-report/report.md"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 1e-9,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 1e-9
+      },
+      "documentation_paths": ["docs/engines/pendulum.md"],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/reference-simulation-report/report.md",
+          "required": true,
+          "type": "markdown",
+          "verification": {
+            "method": "non-empty",
+            "minimum_bytes": 80
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "reference-simulation-report",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["pendulum_simulator"],
+      "scientific_limitations": [
+        "The generated Markdown reports only the governed synthetic fixture and is not a scientific publication or design authority."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Generate a Reference Simulation Report",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    },
+    {
+      "argv": [
+        "scripts.companion_workflow_tasks",
+        "zero-torque-counterfactual",
+        "--output",
+        "dist/companion-workflows/artifacts/zero-torque-counterfactual/result.json"
+      ],
+      "availability": {
+        "reason": null,
+        "state": "available"
+      },
+      "cwd": ".",
+      "determinism": {
+        "absolute_tolerance": 1e-9,
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "relative_tolerance": 1e-9
+      },
+      "documentation_paths": [
+        "docs/engines/pendulum.md",
+        "docs/research/proximal_distal_energy_transfer/chapters/_ch04_counterfactuals.qmd"
+      ],
+      "environment": {
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONUTF8": "1"
+        },
+        "inherit": [
+          "COMSPEC",
+          "HOME",
+          "LANG",
+          "LC_ALL",
+          "PATH",
+          "PATHEXT",
+          "SYSTEMROOT",
+          "TEMP",
+          "TMP",
+          "USERPROFILE",
+          "WINDIR"
+        ],
+        "python_paths": [".", "src", "src/shared/python"]
+      },
+      "executor": "python-module",
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/zero-torque-counterfactual/result.json",
+          "required": true,
+          "type": "json",
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "expected_exit_code": 0,
+      "id": "zero-torque-counterfactual",
+      "kind": "workflow",
+      "prerequisites": [
+        "Python 3.11 or 3.12",
+        "Repository checkout at the declared source commit"
+      ],
+      "program_ids": ["pendulum_simulator"],
+      "scientific_limitations": [
+        "This is an instantaneous model intervention at a fixed state, not an experimentally observed no-torque swing or a full alternative trajectory."
+      ],
+      "source_commit": "a485e28db9b82f8641b04c866b40497f2703736a",
+      "support_tier": "supported",
+      "title": "Evaluate the Instantaneous Zero-Torque Counterfactual",
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence"
+    }
+  ]
+}

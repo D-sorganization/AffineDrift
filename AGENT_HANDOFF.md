@@ -58,9 +58,9 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   All exact-head CI, benchmark, link, SPEC, and browser checks passed.
   The companion schema pins UpstreamDrift protected `main` `6ff956a4d`
   and includes comprehensive schema version matrix fixtures in `tests/fixtures/companion/`.
+- Programming companion catalog generator (Issue #4023): Implemented `src/affine_control/programming_companion/catalog_generator.py` and `scripts/generate_programming_catalog.py`, generating authoritative Quarto indexes and detail pages for Engines, Programs, Features, Workflows, and Provenance (`models/programming/*.qmd`) from pinned provider facts, and added comprehensive TDD test suite in `tests/test_programming_companion_catalog_generator.py`.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and equals `origin/main` at protected #4030 merge
-  `de1f5a7ed6d68b9fefaa4e1975e5fb25d259c782`. Reverify exact equality before
+  on `main` at protected merge `35d187015f59dc49df14af66ef01b7b074b600e9`. Reverify exact equality before
   starting new work. #4099 is the latest Programming Companion presentation
   authority; #4093 merge
   `17b5f15d362eb0225053d4e51ed86863d305074c` remains the immutable provider

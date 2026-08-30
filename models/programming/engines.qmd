@@ -1,0 +1,34 @@
+---
+title: "Engines and Runtime Support"
+description: "Physics solvers, support tiers, and runtime environments supported by UpstreamDrift"
+---
+
+## Authority Boundary
+
+> [!NOTE]
+> **This establishes** software support tiers and runtime execution boundaries.
+> **This does not establish** that a physics engine has been validated on human data.
+
+## Runtime Compatibility Matrix
+
+| Runtime Dimension | Specification | Verification Command |
+| :--- | :--- | :--- |
+| **Python Requirement** | `>=3.11` | `python -V` |
+| **Supported Minors** | 3.11, 3.12 | `python scripts/ci/verify_installation.py` |
+| **Verification Entrypoint** | `scripts/ci/verify_installation.py` | `python -m scripts.companion_workflows execute --workflow-id installation-verification` |
+
+## Physics Engines & Support Tiers
+
+| Engine ID | Engine Name | Support Tier | Maturity | Operational Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| `drake` | **drake** | Extended | Unspecified | None |
+| `mujoco` | **mujoco** | Supported | Unspecified | None |
+| `myosuite` | **myosuite** | Experimental | Unspecified | None |
+| `opensim` | **opensim** | Experimental | Unspecified | None |
+| `pinocchio` | **pinocchio** | Extended | Unspecified | None |
+
+### Support Tier Definitions
+
+- **Supported (`F0`):** Core stack (e.g. MuJoCo). Fully tested across operating systems.
+- **Extended (`F1`):** Extended stack (e.g. Drake, Pinocchio). Tested in simulation suites.
+- **Experimental (`F2`):** Research-grade experimental interfaces (e.g. OpenSim, MyoSuite).
