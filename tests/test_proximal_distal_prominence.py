@@ -69,7 +69,9 @@ def test_books_hub_uses_the_desktop_width_for_peer_long_form_cards() -> None:
 
     assert "page-layout: full" in frontmatter
     assert "toc: false" in frontmatter
-    assert "resource-grid resource-grid--long-form" in books
+    assert '<div class="book-hub">' in books
+    assert "<h1>Books and Textbooks</h1>" in books
+    assert "{.resource-grid .resource-grid--long-form}" in books
 
 
 def test_article_catalog_uses_current_monograph_scope_and_long_form_orientation() -> None:
