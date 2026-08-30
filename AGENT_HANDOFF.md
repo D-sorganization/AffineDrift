@@ -58,10 +58,13 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   All exact-head CI, benchmark, link, SPEC, and browser checks passed.
   The companion schema pins UpstreamDrift protected `main` `6ff956a4d`
   and includes comprehensive schema version matrix fixtures in `tests/fixtures/companion/`.
-- Programming companion catalog generator (Issue #4023): Implemented `src/affine_control/programming_companion/catalog_generator.py` and `scripts/generate_programming_catalog.py`, generating authoritative Quarto indexes and detail pages for Engines, Programs, Features, Workflows, and Provenance (`models/programming/*.qmd`) from pinned provider facts, and added comprehensive TDD test suite in `tests/test_programming_companion_catalog_generator.py`.
+- Programming companion catalog generator PR #4112 protected-squash-merged as
+  `2eb6e9a7e651522db9ff81fffe1a6beaa53a79d0`; issue #4023 is closed.
+  Implements `src/affine_control/programming_companion/catalog_generator.py` and `scripts/generate_programming_catalog.py`, generating authoritative Quarto indexes and detail pages for Engines, Programs, Features, Workflows, and Provenance (`models/programming/*.qmd`) from pinned provider facts, with comprehensive TDD test suite in `tests/test_programming_companion_catalog_generator.py`.
+- Onboarding & Installation guidance (Issue #4024): Replaced stale installation and verification guidance across documentation with verified UpstreamDrift CI entrypoints and companion workflows (`scripts/ci/verify_installation.py`, `python -m scripts.companion_workflows execute --workflow-id installation-verification`), cross-linked to `/models/programming/engines.html`, and added regression tests in `tests/test_programming_companion_onboarding_contract.py`.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` at protected merge `35d187015f59dc49df14af66ef01b7b074b600e9`. Reverify exact equality before
-  starting new work. #4099 is the latest Programming Companion presentation
+  on `main` at protected merge `2eb6e9a7e651522db9ff81fffe1a6beaa53a79d0`. Reverify exact equality before
+  starting new work. #4112 is the latest Programming Companion presentation
   authority; #4093 merge
   `17b5f15d362eb0225053d4e51ed86863d305074c` remains the immutable provider
   consumer authority, #4095 remains the falsification-atlas authority, and
