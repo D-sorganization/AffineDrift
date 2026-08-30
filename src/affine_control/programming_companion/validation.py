@@ -30,6 +30,7 @@ class _FetchExpectation:
 
 
 def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    """Build a mapping while rejecting ambiguous duplicate JSON keys."""
     result: dict[str, object] = {}
     for key, value in pairs:
         if key in result:
@@ -39,6 +40,7 @@ def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]
 
 
 def _load_json(payload: bytes, label: str) -> object:
+    """Decode one duplicate-key-free UTF-8 JSON payload."""
     try:
         return json.loads(payload.decode("utf-8"), object_pairs_hook=_reject_duplicate_keys)
     except AcquisitionError:
@@ -48,10 +50,12 @@ def _load_json(payload: bytes, label: str) -> object:
 
 
 def _digest(payload: bytes) -> str:
+    """Return the lowercase SHA-256 of exact payload bytes."""
     return hashlib.sha256(payload).hexdigest()
 
 
 def _validate_digest(payload: bytes, expected: str, label: str) -> None:
+    """Require payload bytes to match their reviewed digest."""
     if _digest(payload) != expected:
         raise AcquisitionError(f"{label} SHA-256 does not match the pinned digest")
 
@@ -62,6 +66,7 @@ def _validate_fetch(
     request: ImportRequest,
     policy: ConsumerPolicy,
 ) -> bytes:
+    """Validate transport evidence and return its bounded payload."""
     if result.requested_url != expectation.url:
         raise AcquisitionError("transport returned evidence for a different requested URL")
     observed_urls = (*result.redirects, result.final_url)
@@ -73,6 +78,7 @@ def _validate_fetch(
 
 
 def _validate_repository_path(value: str) -> None:
+    """Require an unambiguous repository-relative POSIX path."""
     parts = value.split("/")
     if (
         not value
@@ -85,6 +91,7 @@ def _validate_repository_path(value: str) -> None:
 
 
 def _validate_paths(value: object, parent_key: str | None = None) -> None:
+    """Recursively validate every schema-defined repository path field."""
     if parent_key in PATH_KEYS and isinstance(value, str):
         _validate_repository_path(value)
     if isinstance(value, dict):
@@ -96,6 +103,7 @@ def _validate_paths(value: object, parent_key: str | None = None) -> None:
 
 
 def _validate_schema(schema: object, policy: ConsumerPolicy) -> dict[str, object]:
+    """Require the exact schema identity and a valid Draft 2020-12 schema."""
     if not isinstance(schema, dict):
         raise AcquisitionError("provider schema must be a JSON object")
     if schema.get("$id") != policy.schema_id:
@@ -113,6 +121,7 @@ def _validate_manifest(
     request: ImportRequest,
     policy: ConsumerPolicy,
 ) -> tuple[str, str]:
+    """Validate manifest structure, authority fields, and repository paths."""
     _validate_paths(manifest)
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(manifest), key=lambda error: list(error.absolute_path))

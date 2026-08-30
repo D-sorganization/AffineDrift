@@ -22,6 +22,7 @@ class CompanionConsumer:
     """Coordinate transport, validation, storage, and read-only inspection."""
 
     def __init__(self, policy: ConsumerPolicy, transport: Transport, store: SnapshotStore) -> None:
+        """Bind explicit policy, transport, and storage adapters."""
         self._policy = policy
         self._transport = transport
         self._store = store

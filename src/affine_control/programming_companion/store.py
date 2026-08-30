@@ -19,6 +19,7 @@ SNAPSHOT_FILES = frozenset({"manifest.json", "schema.json"})
 
 
 def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    """Build a lock mapping while rejecting ambiguous duplicate keys."""
     result: dict[str, object] = {}
     for key, value in pairs:
         if key in result:
@@ -28,6 +29,7 @@ def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]
 
 
 def _load_lock(payload: bytes) -> LockRecord:
+    """Parse and validate canonical active-lock bytes."""
     try:
         record = json.loads(payload.decode(), object_pairs_hook=_reject_duplicate_keys)
         if not isinstance(record, dict):
@@ -68,6 +70,7 @@ def _load_lock(payload: bytes) -> LockRecord:
 
 
 def _strict_mapping(value: object, keys: set[str], label: str) -> dict[str, Any]:
+    """Require one lock mapping to contain exactly its declared keys."""
     if not isinstance(value, dict) or set(value) != keys:
         raise AcquisitionError(f"active lock {label} has missing or extra fields")
     return cast(dict[str, Any], value)
@@ -77,6 +80,7 @@ class SnapshotStore:
     """Store one active lock and content-addressed immutable snapshots."""
 
     def __init__(self, root: Path) -> None:
+        """Configure a store rooted at an explicit filesystem path."""
         if not isinstance(root, Path):
             raise TypeError("root must be a pathlib.Path")
         self._root = root
@@ -154,17 +158,20 @@ class SnapshotStore:
         return payloads
 
     def _verify_snapshot(self, snapshot: ValidatedSnapshot) -> None:
+        """Require stored bytes to equal a validated candidate exactly."""
         actual = self.snapshot_bytes(snapshot.lock)
         expected = {"manifest.json": snapshot.manifest, "schema.json": snapshot.schema}
         if actual != expected:
             raise ExistingPinConflict("active snapshot bytes conflict with the requested pin")
 
     def _snapshot_path(self, snapshot_id: str) -> Path:
+        """Resolve one safe content-addressed snapshot directory."""
         if not snapshot_id or any(char not in "0123456789abcdef-" for char in snapshot_id):
             raise AcquisitionError("snapshot ID is unsafe")
         return self._root / SNAPSHOTS_NAME / snapshot_id
 
     def _install_new(self, snapshot: ValidatedSnapshot) -> LockRecord:
+        """Install the first active lock with rollback on pointer failure."""
         self._root.mkdir(parents=True, exist_ok=True)
         snapshots_root = self._root / SNAPSHOTS_NAME
         snapshots_root.mkdir(exist_ok=True)
@@ -179,6 +186,7 @@ class SnapshotStore:
         return snapshot.lock
 
     def _prepare_snapshot(self, snapshot: ValidatedSnapshot) -> bool:
+        """Verify an existing snapshot or stage a new immutable directory."""
         target = self._snapshot_path(snapshot.lock.snapshot_id)
         if target.exists():
             self._verify_snapshot(snapshot)
@@ -186,6 +194,7 @@ class SnapshotStore:
         return self._stage_snapshot(snapshot, target)
 
     def _stage_snapshot(self, snapshot: ValidatedSnapshot, target: Path) -> bool:
+        """Write both payloads to staging before one directory rename."""
         staging = Path(tempfile.mkdtemp(prefix=".snapshot-", dir=self._root))
         try:
             (staging / "manifest.json").write_bytes(snapshot.manifest)
@@ -197,6 +206,7 @@ class SnapshotStore:
         return True
 
     def _replace_lock(self, lock_bytes: bytes) -> None:
+        """Durably write canonical lock bytes before replacing the pointer."""
         descriptor, raw_path = tempfile.mkstemp(prefix=".lock-", dir=self._root)
         temporary = Path(raw_path)
         try:
@@ -209,6 +219,7 @@ class SnapshotStore:
             temporary.unlink(missing_ok=True)
 
     def _remove_empty_directories(self, snapshots_root: Path) -> None:
+        """Remove only empty directories created by a failed first install."""
         if snapshots_root.exists() and not any(snapshots_root.iterdir()):
             snapshots_root.rmdir()
         if self._root.exists() and not any(self._root.iterdir()):

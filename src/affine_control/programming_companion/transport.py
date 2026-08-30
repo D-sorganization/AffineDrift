@@ -26,6 +26,7 @@ class RequestsTransport:
     """HTTPS transport that rejects redirects and bounds streaming payloads."""
 
     def __init__(self, timeout_seconds: float = 20.0) -> None:
+        """Configure a positive request timeout."""
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
         self._timeout_seconds = timeout_seconds
@@ -54,6 +55,7 @@ class RequestsTransport:
 
     @staticmethod
     def _validate_content_length(raw_length: str | None, max_bytes: int) -> None:
+        """Reject malformed, negative, or oversized declared lengths."""
         if raw_length is None:
             return
         try:
@@ -65,6 +67,7 @@ class RequestsTransport:
 
     @staticmethod
     def _bounded_bytes(chunks: Iterator[bytes], max_bytes: int) -> bytes:
+        """Accumulate chunks only while the incremental limit holds."""
         payload = bytearray()
         for chunk in chunks:
             payload.extend(chunk)
