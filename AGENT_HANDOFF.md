@@ -108,12 +108,12 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   workflows; executable unit contracts prevent silent trigger erosion.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
-  `4cf39347be49adb0e700edebb05390717c5ce2ec`; #9174 and #9190–#9193 remain
-  open. The exact-main publication run had no completed artifact when audited,
-  and the draft manifest still lacked qualified workflows, screenshots,
-  documentation, and public interface inventory. No provider artifact is
-  accepted for AffineDrift import; only provider-independent RED fixtures are
-  safe before those gates close.
+  `727bda2de2d4656e8d9a3abbbc3a72b30fa06ebb`; it advances the previously
+  audited `4cf39347...` only through vendor force-source frame pinning. #9174
+  and #9190–#9193 remain open, and exact-main has no `dist/companion/`
+  publication tree. No provider artifact is accepted for AffineDrift import;
+  only provider-independent RED/security fixtures are safe before those gates
+  close.
 - UpstreamDrift PR #9267 remains a separate blocked scientific-authority lane at
   observed head `7215e0e285bd21f7f1631681e51226bbf746d610`. It cannot authorize a
   refreshed proximal-distal projection until its exact artifact, manifests,
