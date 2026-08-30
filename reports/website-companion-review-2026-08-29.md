@@ -1,6 +1,6 @@
 # AffineDrift Website and UpstreamDrift Companion Review
 
-Date: 2026-08-29  
+Date: 2026-08-29
 Status: implementation review; publication remains subject to protected pull-request and deployment gates
 
 ## Executive Finding

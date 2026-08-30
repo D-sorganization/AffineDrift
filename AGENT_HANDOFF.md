@@ -29,6 +29,12 @@ Updated: 2026-08-29. Current-state only; use git and GitHub for history.
   `C:\Users\diete\Repositories\worktrees\AffineDrift-4080-monograph`. It is
   integrated with protected `dbb8e90e`; create a PR only after a final
   independent exact-head review.
+- Independent review covered exact implementation head
+  `31424f7ee96a9fb68c99a2cd26a2d19a2454c4a1`: 24 files, +828/-169 against
+  protected `dbb8e90e`, with zero deleted paths. The documentation-only repair
+  above that head reconciles the fleet dependency contract, exact handoff, and
+  diff hygiene; verify current `HEAD` rather than treating this reviewed source
+  commit as a moving pointer.
 - The governed proximal-to-distal monograph is now a peer of the two rendered
   textbook collections in Read navigation, the homepage, and the full-width
   Books hub. It is also present in the article catalog, search contract,
@@ -47,7 +53,9 @@ Updated: 2026-08-29. Current-state only; use git and GitHub for history.
   adaptations.
 - The immutable monograph source, chapter, figure, PDF, and source-manifest tree
   has zero diff. The render preview was removed after validation and is fully
-  reproducible from source.
+  reproducible from source. Root and nested review renders were sent to the
+  Windows Recycle Bin after their absolute paths were verified inside the
+  worktree.
 - `reports/website-companion-review-2026-08-29.md` records the content gaps,
   further research, and selectable Packages A–E. Recommended order is A, B, C,
   then one narrow D pilot; add E before expanding the workbench.

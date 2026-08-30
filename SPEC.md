@@ -178,7 +178,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 
 ### System Context
 
-AffineDrift operates as a standalone research and education platform within the D-sorganization fleet. It complements but does not depend on QuatEngine (game engine) or UpstreamDrift (real-time physics simulator). The platform produces research content and optimization algorithms that can be consumed by educational institutions, biomechanics researchers, and control theory practitioners. It integrates with GitHub Pages for deployment and GitHub Actions for continuous integration, deployment, and automated quality assurance.
+AffineDrift operates as a standalone research and education platform within the D-sorganization fleet. Its site build and local solvers have no runtime or import dependency on QuatEngine or UpstreamDrift. Cross-repository publications do have a governed evidence dependency: UpstreamDrift owns the executable models, scientific claims, evidence, and release records, while AffineDrift publishes explanatory and immutable projections from exact protected provider revisions. The platform produces research content and optimization algorithms that can be consumed by educational institutions, biomechanics researchers, and control theory practitioners. It integrates with GitHub Pages for deployment and GitHub Actions for continuous integration, deployment, and automated quality assurance.
 
 ### Markerless Mocap Publication Boundary
 
@@ -643,10 +643,10 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 ### Fleet Dependencies
 
-| Repo          | Relationship            | Description                                               |
-| ------------- | ----------------------- | --------------------------------------------------------- |
-| QuatEngine    | Referenced in non-goals | Game engine; AffineDrift does not depend on it            |
-| UpstreamDrift | Referenced in non-goals | Real-time physics simulator; AffineDrift is complementary |
+| Repo          | Relationship               | Description                                                                                  |
+| ------------- | -------------------------- | -------------------------------------------------------------------------------------------- |
+| QuatEngine    | Referenced in non-goals    | Game engine; AffineDrift has no runtime dependency                                           |
+| UpstreamDrift | Governed evidence provider | Owns computation, claims, evidence, and releases for revision-pinned AffineDrift projections |
 
 ## 10. Deployment & Operations
 
