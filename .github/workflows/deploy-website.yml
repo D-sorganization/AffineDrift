@@ -263,7 +263,9 @@ jobs:
           node scripts/verify-public-site.js \
             --base-url "$PUBLIC_SITE_URL" \
             --manifest "$LIVE_MANIFEST" \
-            --output artifacts/public-site-verification/live-every-page.json
+            --output artifacts/public-site-verification/live-every-page.json \
+            --document-retries 2 \
+            --document-retry-delay-ms 500
 
       - name: Upload live public site evidence
         if: always()

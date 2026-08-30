@@ -3,83 +3,14 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  navigateWithRetry,
+  navigationRetryPolicyEvidence,
+  RETRYABLE_STATUS_CODES,
+  summarizeNavigationAttempts,
+} = require('./public-site-navigation.js');
 
 const SCHEMA_VERSION = 'affinedrift/public-site-manifest/v1';
-
-const RETRYABLE_STATUS_CODES = new Set([502, 503, 504]);
-
-async function navigateWithRetry(page, targetUrl, options = {}) {
-  const maxRetries = options.maxRetries ?? 3;
-  const baseDelayMs = options.baseDelayMs ?? 500;
-  const sleepFn = options.sleepFn ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
-  const logger = options.logger ?? console.log;
-  const timeout = options.timeout ?? 60000;
-  const waitUntil = options.waitUntil ?? 'domcontentloaded';
-
-  if (!Number.isInteger(maxRetries) || maxRetries < 0) {
-    throw new TypeError(`maxRetries must be a non-negative integer, got ${maxRetries}`);
-  }
-  if (typeof baseDelayMs !== 'number' || baseDelayMs < 0) {
-    throw new TypeError(`baseDelayMs must be a non-negative number, got ${baseDelayMs}`);
-  }
-  if (typeof targetUrl !== 'string' || !targetUrl) {
-    throw new TypeError(`targetUrl must be a non-empty string, got ${targetUrl}`);
-  }
-
-  let attempt = 0;
-  let lastResponse = null;
-  let lastError = null;
-  const attempts = [];
-
-  while (attempt <= maxRetries) {
-    attempt += 1;
-    lastError = null;
-    try {
-      lastResponse = await page.goto(targetUrl, { waitUntil, timeout });
-      const status = lastResponse ? lastResponse.status() : null;
-      attempts.push({ attempt, status, error: null });
-
-      if (lastResponse && RETRYABLE_STATUS_CODES.has(status) && attempt <= maxRetries) {
-        const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
-        if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1' || options.verbose) {
-          logger(
-            `Transient HTTP ${status} on ${targetUrl} (attempt ${attempt}/${maxRetries + 1}); retrying in ${delayMs}ms...`,
-          );
-        }
-        await sleepFn(delayMs);
-        continue;
-      }
-
-      return {
-        response: lastResponse,
-        error: null,
-        attempts,
-        retried: attempt > 1,
-      };
-    } catch (err) {
-      lastError = err;
-      attempts.push({ attempt, status: null, error: err.message });
-      if (attempt <= maxRetries) {
-        const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
-        if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1' || options.verbose) {
-          logger(
-            `Navigation error on ${targetUrl} (attempt ${attempt}/${maxRetries + 1}): ${err.message}; retrying in ${delayMs}ms...`,
-          );
-        }
-        await sleepFn(delayMs);
-        continue;
-      }
-      break;
-    }
-  }
-
-  return {
-    response: lastResponse,
-    error: lastError ? lastError.message : null,
-    attempts,
-    retried: attempt > 1,
-  };
-}
 
 function assertManifest(manifest) {
   if (!manifest || manifest.schema_version !== SCHEMA_VERSION) {
@@ -172,6 +103,14 @@ function canonicalPathMatches(canonicalPath, route) {
   return canonicalPath === route.slice(0, -'index.html'.length);
 }
 
+function boundedInteger(value, label) {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    throw new TypeError(`${label} must be a non-negative integer`);
+  }
+  return parsed;
+}
+
 function parseArgs(argv) {
   const options = {
     baseUrl: 'http://localhost:8000',
@@ -182,6 +121,8 @@ function parseArgs(argv) {
     viewportIds: undefined,
     themes: undefined,
     routes: undefined,
+    documentRetries: 0,
+    documentRetryDelayMs: 500,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -197,6 +138,11 @@ function parseArgs(argv) {
     else if (arg === '--viewports') options.viewportIds = value().split(',').filter(Boolean);
     else if (arg === '--themes') options.themes = value().split(',').filter(Boolean);
     else if (arg === '--routes') options.routes = value().split(',').filter(Boolean);
+    else if (arg === '--document-retries') {
+      options.documentRetries = boundedInteger(value(), 'document retries');
+    } else if (arg === '--document-retry-delay-ms') {
+      options.documentRetryDelayMs = boundedInteger(value(), 'document retry delay');
+    }
     else if (arg === '--screenshots') options.screenshots = true;
     else throw new TypeError(`unknown argument: ${arg}`);
   }
@@ -478,17 +424,26 @@ async function verifyItem(page, item, options) {
   let response = null;
   let inspection = { failures: ['page inspection did not run'] };
   let navigationError = null;
+  let navigationAttempts = [];
+  let navigationRetried = false;
+  const resetAttemptEvidence = () => {
+    consoleErrors.length = 0;
+    pageErrors.length = 0;
+    failedRequests.length = 0;
+  };
   try {
     const navResult = await navigateWithRetry(page, targetUrl, {
       timeout: 60000,
       waitUntil: 'domcontentloaded',
+      maxRetries: options.documentRetries,
+      baseDelayMs: options.documentRetryDelayMs,
+      resetAttemptEvidence,
     });
     response = navResult.response;
+    navigationAttempts = navResult.attempts;
+    navigationRetried = navResult.retried;
     if (navResult.error) {
       throw new Error(navResult.error);
-    }
-    if (!response || !response.ok()) {
-      throw new Error(`HTTP ${response?.status() ?? 'no response'}`);
     }
 
     await page.evaluate(() => document.fonts?.ready);
@@ -580,6 +535,8 @@ async function verifyItem(page, item, options) {
     failures,
     screenshot,
     inspection,
+    navigation_attempts: navigationAttempts,
+    navigation_retried: navigationRetried,
   };
 }
 
@@ -655,6 +612,8 @@ async function runVerification(options) {
     expected_evidence_count: plan.length,
     passed: failures.length === 0 && results.length === plan.length,
     failure_count: failures.length,
+    navigation_retry_policy: navigationRetryPolicyEvidence(options),
+    ...summarizeNavigationAttempts(results),
     results,
   };
   fs.mkdirSync(path.dirname(options.outputPath), { recursive: true });
@@ -680,7 +639,10 @@ module.exports = {
   headingBeginsWithinViewport,
   isActionableConsoleError,
   navigateWithRetry,
+  navigationRetryPolicyEvidence,
+  parseArgs,
   RETRYABLE_STATUS_CODES,
+  summarizeNavigationAttempts,
   screenshotOptions,
   screenshotName,
   runVerification,

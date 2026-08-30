@@ -49,7 +49,7 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   exact source diff is four retained files, +49/-8, with zero deleted paths and
   zero immutable-monograph diff.
 - Verifier reliability PR #4107 protected-squash-merged as
-  `6350a5d4fdd59ccc68e1b8562d8f8c2b20d3e262`; issue #4104 is closed.
+  `6350a5d4fdd59ccc68e1b8562d8f8c2b20d3e262`; issue #4104 is tracked.
   Deployment run 33324477245 passed the complete build, all 928 pre-deployment
   browser inspections, Pages publication, and all 928 revision-matched live
   inspections with 100% green status and uploaded live evidence.
@@ -62,9 +62,9 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   `2eb6e9a7e651522db9ff81fffe1a6beaa53a79d0`; issue #4023 is closed.
   Implements `src/affine_control/programming_companion/catalog_generator.py` and `scripts/generate_programming_catalog.py`, generating authoritative Quarto indexes and detail pages for Engines, Programs, Features, Workflows, and Provenance (`models/programming/*.qmd`) from pinned provider facts, with comprehensive TDD test suite in `tests/test_programming_companion_catalog_generator.py`.
 - Onboarding & Installation guidance (Issue #4024): Replaced stale installation and verification guidance across documentation with verified UpstreamDrift CI entrypoints and companion workflows (`scripts/ci/verify_installation.py`, `python -m scripts.companion_workflows execute --workflow-id installation-verification`), cross-linked to `/models/programming/engines.html`, and added regression tests in `tests/test_programming_companion_onboarding_contract.py`.
+- Corrective retry PR #4108 (`fix/4104-live-evidence-v2`) restricts retries to live evidence only, tracks attempts, and extracts navigation policy.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` at protected merge `2eb6e9a7e651522db9ff81fffe1a6beaa53a79d0`. Reverify exact equality before
-  starting new work. #4112 is the latest Programming Companion presentation
+  on `main`. Reverify exact equality before starting new work. #4112 is the latest Programming Companion presentation
   authority; #4093 merge
   `17b5f15d362eb0225053d4e51ed86863d305074c` remains the immutable provider
   consumer authority, #4095 remains the falsification-atlas authority, and
@@ -350,6 +350,15 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Validation
 
+The corrective branch was validated on 2026-08-30 before turnover: the full
+JavaScript suite passed 319 tests with 19 skips; the focused verifier suite
+passed 22/22; the deployment/content lane passed with its one declared missing
+LaTeX-release-workflow skip; and the complete headless Python lane had already
+passed 3,658 tests with 26 skips. The only excluded collection module was
+`tests/tools/test_wrist_universal_joint_window.py`, because this workstation's
+PyQt6 QtGui native DLL could not import. That environment exclusion is not a
+substitute for CI.
+
 ```powershell
 $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = "1"
 $proximalTests = @(Get-ChildItem tests -File -Filter "test_proximal_distal_*.py" | ForEach-Object FullName)
@@ -381,9 +390,10 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Start from `TURNOVER_PROMPT.md`. Do not rerun deployment 33321616181. Work
-   issue #4104 with deterministic bounded 5xx-policy tests, then require one
-   new exact-revision live run with 928/928 passing.
+1. Complete the current-main corrective #4104 branch through an ordinary
+   protected PR. Do not rerun deployment 33321616181. Require one new
+   exact-revision 928/928 live artifact that contains the attempt counters, and
+   close #4104 only after that artifact is inspected.
 2. Requery UpstreamDrift PR #9307. Its substantive checks passed, but the bot
    trigger is queued and GitHub reports a conflict despite exact base ancestry.
    Do not force-push or merge while that discrepancy remains; use a fresh
