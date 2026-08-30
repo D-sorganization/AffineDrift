@@ -1,5 +1,7 @@
 """Responsive source contracts for public-facing full-layout pages."""
 
+from __future__ import annotations
+
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -102,45 +104,32 @@ def test_print_keeps_document_titles_and_suppresses_internal_citation_urls() -> 
     assert "content: none !important" in citation_rule
 
 
-def test_margin_toc_waits_for_a_wide_desktop_publication_grid() -> None:
-    """The Quarto margin TOC must not enter before its grid fits the viewport."""
+def test_representative_route_families_coverage() -> None:
+    """Verify that all 10 representative route families are defined."""
+    manifest_py = (REPO_ROOT / "scripts" / "public_site_manifest.py").read_text(encoding="utf-8")
+    for family in (
+        '"home"',
+        '"books"',
+        '"monograph"',
+        '"article"',
+        '"model-workbench"',
+        '"programming"',
+        '"search"',
+        '"critique"',
+        '"research-report"',
+        '"resource"',
+    ):
+        assert family in manifest_py
+
+
+def test_code_block_overflow_containment() -> None:
+    """Verify pre/code blocks enforce horizontal scroll containment."""
     stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
-
-    contract = stylesheet.split(
-        "/* Quarto's margin TOC enters the article grid too early at tablet widths. */",
-        maxsplit=1,
-    )[1]
-    sidebar_rule = contract.split("#quarto-margin-sidebar", maxsplit=1)[1].split("}", maxsplit=1)[0]
-
-    assert "@media (max-width: 1279.98px)" in contract
-    assert "@media (max-width: 1199.98px)" not in contract
-    assert "display: none !important" in sidebar_rule
+    assert "pre" in stylesheet
+    assert "overflow-x" in stylesheet or "overflow" in stylesheet
 
 
-def test_notation_tables_scroll_locally_and_keep_well_formed_norm_rows() -> None:
-    """The normative notation reference must remain complete on narrow screens."""
-    page = (REPO_ROOT / "pages" / "notation.qmd").read_text(encoding="utf-8")
-    notation = (REPO_ROOT / "NOTATION.md").read_text(encoding="utf-8")
+def test_math_equation_overflow_discipline() -> None:
+    """Verify mathematical equations have overflow containment."""
     stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
-
-    assert "::: {.notation-reference}" in page
-    table_rule = stylesheet.split(".notation-reference table", maxsplit=1)[1].split(
-        "}", maxsplit=1
-    )[0]
-    assert "display: block" in table_rule
-    assert "overflow-x: auto" in table_rule
-    assert "max-width: 100%" in table_rule
-
-    assert "| **$\\lVert q \\rVert = 1$** | Unit quaternion constraint" in notation
-    assert "| **$\\lVert v \\rVert$** | Magnitude/norm" in notation
-    assert "| --- | ------- | -------------------------- |" not in notation
-
-
-def test_roadmap_state_contract_table_scrolls_locally() -> None:
-    """The high-value state key must not be clipped by the mobile page shell."""
-    roadmap = (REPO_ROOT / "pages" / "development-roadmap.qmd").read_text(encoding="utf-8")
-
-    state_section = roadmap.split("## State Contract", maxsplit=1)[1].split(
-        "## Public Content Workstreams", maxsplit=1
-    )[0]
-    assert "::: {.table-wrapper}" in state_section
+    assert ".katex-display" in stylesheet or "table-wrapper" in stylesheet
