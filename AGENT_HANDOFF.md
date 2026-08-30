@@ -36,6 +36,13 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   check passed. Deployment run 33317188855 passed the complete build, Pages
   publication, and revision-matched live every-route verification for that
   exact merge.
+- Handoff-only PR #4101 protected-squash-merged as
+  `8edfc9117d7c52d829f61540d455f6b4bbd31d42`. Its deployment run 33318598234
+  reproducibly found one failed item among 928 browser inspections: the
+  bibliography metrics widget skipped from H2 to H4 on desktop/light. Evidence
+  artifact `public-site-verification-8edfc911...` identifies the exact route and
+  assertion. Issue #4102 is the closure authority; do not treat an unmerged H3
+  source correction as live deployment authority.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
   on `main` and was fast-forwarded to `origin/main` at the protected #4099
   merge. Reverify exact local/remote equality before starting new work. #4099
@@ -195,6 +202,8 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Content-Loss Audit
 
+- Protected handoff PR #4101 changed two retained governance files by
+  +47/-30, with zero deleted paths and no public-site source change.
 - Protected PR #4099 is 10 retained files, +402/-475, with zero
   deleted paths. The 475 removals replace a 511-line copy-maintained hub
   and small obsolete test expectations; no article, book, monograph, provider
@@ -336,20 +345,23 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Keep production companion installation fail-closed. Finish provider
+1. Finish #4102 through ordinary protected merge and exact-revision deployment;
+   require all 928 browser evidence items to pass without weakening the heading
+   hierarchy contract.
+2. Keep production companion installation fail-closed. Finish provider
    #9174/#9190–#9193 before installing any lock/snapshot or starting generated
    catalog #4023/#4024; then exercise #4030 against current and previous
    supported provider schema versions.
-2. Review UpstreamDrift #9190 through protected PR #9304; it is workflow
+3. Review UpstreamDrift #9190 through protected PR #9304; it is workflow
    execution evidence, not publication, screenshot, native-engine, or
    scientific qualification authority.
-3. Obtain explicit human approval for the #4089 visual candidate before
+4. Obtain explicit human approval for the #4089 visual candidate before
    creating an approved baseline. Implement #4086 shared evidence semantics
    only when the provider-owned catalog and evidence authority are protected.
-4. Preserve the protected #4087 atlas and immutable monograph source; never
+5. Preserve the protected #4087 atlas and immutable monograph source; never
    create a competing scientific registry. Add exact provider workflow links
    only after #9174 publishes qualified records.
-5. Run #4088 baseline and follow-up reader validation under its privacy and
+6. Run #4088 baseline and follow-up reader validation under its privacy and
    preregistration gates. Keep #4042 and #9267 fail-closed until independently
    complete and protected.
 
