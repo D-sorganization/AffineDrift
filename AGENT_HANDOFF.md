@@ -14,9 +14,13 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 - Deployment run 33306144800 succeeded for the exact #4092 merge, including
   the full build, every-page predeployment verification, Pages publication,
   revision-matched live-route verification, and uploaded live evidence.
+- Programming-companion PR #4093 protected-squash-merged as
+  `17b5f15d362eb0225053d4e51ed86863d305074c`; all exact-head CI, benchmark,
+  link, SPEC, routing, and governance checks passed, and issue #4022 is closed.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` at `c1963cf038dcc5cf8dacb583aed9e35fe176fc41` and equals
-  `origin/main`.
+  on `main` and equals `origin/main`. The latest substantive companion authority
+  is #4093 merge `17b5f15d362eb0225053d4e51ed86863d305074c`; this handoff-only
+  follow-up changes no runtime or publication behavior.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -117,10 +121,10 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   publication tree. No provider artifact is accepted for AffineDrift import;
   only provider-independent RED/security fixtures are safe before those gates
   close.
-- The provider-independent #4022 consumer foundation is active in
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4022-consumer` on branch
-  `test/4022-immutable-consumer-security`. It pins the exact protected provider
-  schema from UpstreamDrift `1af18489e8755933a0d189aa8edafe787fa94d0f`
+- The provider-independent #4022 consumer foundation is protected on `main`
+  through PR #4093 at merge `17b5f15d362eb0225053d4e51ed86863d305074c`.
+  It pins the exact protected provider schema from UpstreamDrift
+  `1af18489e8755933a0d189aa8edafe787fa94d0f`
   (`d0d0389...` SHA-256) with an adjacent provenance record. The typed package
   enforces exact-commit allowlists, bounded no-redirect acquisition, strict
   schema/provider/commit/path validation, content-addressed snapshots, canonical
@@ -134,6 +138,9 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Content-Loss Audit
 
+- #4093 is 15 files, +2,236/-20, with zero deleted paths. Its 20 removals are
+  replacements in the retained handoff and specification; no scientific
+  article, book, monograph, or generated-site path changed.
 - No reviewed implementation range deletes a path. #4041 from `cec3842d` to
   protected `b28fd822` is 37 files, +6,356/-22, with zero deleted paths. The 22
   removals are edits in retained configuration, specification, handoff, audit,
@@ -251,11 +258,13 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Deliver the provider-independent #4022 consumer foundation through protected
-   review. Finish provider #9174/#9190–#9193 before installing any production
-   lock/snapshot or starting generated catalog #4023/#4024.
-2. In parallel where dependencies permit, implement #4086 shared evidence
-   semantics and #4089 whole-site desktop regression from fresh worktrees.
+1. Keep production companion installation fail-closed. Finish provider
+   #9174/#9190–#9193 before installing any lock/snapshot or starting generated
+   catalog #4023/#4024; then exercise #4030 against current and previous
+   supported provider schema versions.
+2. Obtain explicit human approval for the #4089 visual candidate before
+   creating an approved baseline. Implement #4086 shared evidence semantics
+   only when the provider-owned catalog and evidence authority are protected.
 3. Build #4087 from existing governed claim/critique/readiness/provider IDs;
    never create a competing scientific registry.
 4. Run #4088 baseline and follow-up reader validation under its privacy and
