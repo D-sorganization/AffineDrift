@@ -29,6 +29,17 @@ def navbar() -> dict:
     return data["website"]["navbar"]
 
 
+def test_page_footer_links_publication_and_executable_companions() -> None:
+    website = yaml.safe_load(QUARTO_YML.read_text(encoding="utf-8"))["website"]
+    footer = website["page-footer"]
+
+    assert "independent open research" in footer["left"].casefold()
+    links = {item["text"]: item["href"] for item in footer["right"]}
+    assert links["AffineDrift Source"].endswith("/AffineDrift")
+    assert links["UpstreamDrift Programs"].endswith("/UpstreamDrift")
+    assert links["About & Authority"] == "pages/about.html"
+
+
 def _left_entries(navbar: dict) -> list[dict]:
     """Return the navbar 'left' array as a list of dicts (LOD helper)."""
     return list(navbar.get("left", []))
