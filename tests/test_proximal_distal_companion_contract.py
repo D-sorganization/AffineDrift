@@ -139,7 +139,11 @@ def test_model_workbench_page_is_discoverable_and_uses_canonical_tools() -> None
 
     assert "articles/proximal-distal-model-workbench.html" in article_index
     assert "proximal-distal-model-workbench.html" in article
-    assert "D-sorganization/Tools/tree/main/src/pendulum_simulator" in workbench
+    assert (
+        "D-sorganization/Tools/tree/cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/"
+        "src/pendulum_simulator"
+    ) in workbench
+    assert "D-sorganization/Tools/tree/main/" not in workbench
     assert "companion_catalog.json" in workbench
     assert "PyQt6" in workbench and "React/Tauri" in workbench
     assert "exploratory_model_output" in workbench
