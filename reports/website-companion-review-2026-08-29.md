@@ -1,13 +1,19 @@
 # AffineDrift Website and UpstreamDrift Companion Review
 
 Date: 2026-08-29
-Status: implementation review; publication remains subject to protected pull-request and deployment gates
+Status: Package A protected and deployed; Packages B–E remain governed work
+
+Protected delivery: issue #4080 / PR #4083 / merge
+`75042154b05c2a04351b0d47e6ed44c994243476`.
 
 ## Executive Finding
 
 AffineDrift has unusually strong long-form material, governed scientific caveats, and reproducible publication evidence, but its public information architecture has not consistently communicated that strength. The principal problem is not a shortage of content. It is that readers can encounter articles, software links, provisional workbenches, technical monographs, and research-readiness records without a stable explanation of which repository owns computation, which revision is authoritative, what evidence state applies, or what to do next.
 
-The proximal-to-distal publication is the clearest example. It is a substantial governed monograph, but it was previously presented more like a specialized article than a peer of the longer books. The #4080 implementation corrects that discovery problem without changing the immutable monograph source.
+The proximal-to-distal publication is the clearest example. It is a substantial
+governed monograph that was previously presented more like a specialized
+article than a peer of the longer books. Protected PR #4083 corrected that
+discovery problem without changing the immutable monograph source.
 
 ## Companion Contract
 
@@ -105,7 +111,7 @@ Improvement:
 - Run task-based usability review: find the long monograph, identify its evidence state, locate the provider record, and explain one limitation.
 - Treat analytics as interface evidence, not scientific validation.
 
-## Implemented in #4080
+## Delivered in #4080 / PR #4083
 
 - Promoted the proximal-to-distal monograph into the primary Read navigation.
 - Featured it on the homepage and as an equal long-form card on the Books hub.
@@ -121,7 +127,9 @@ Improvement:
 
 ### Package A — Discovery and Desktop Polish
 
-Scope: the current #4080 implementation.
+Status: delivered and live at protected merge `75042154`.
+
+Scope: the protected #4080 implementation.
 
 Benefits:
 
@@ -136,10 +144,10 @@ Limits:
 
 Acceptance gates:
 
-- Full-route Quarto render and site health.
-- One visible H1 and no overflow at mobile and desktop widths.
-- Light/dark inspection and search discovery.
-- Immutable projection verifier and zero source-manifest drift.
+- [x] Full-route Quarto render, site health, and 231-route manifest.
+- [x] One visible H1 and no overflow at 390 px mobile and 1440 px desktop.
+- [x] Light/dark inspection, search discovery, and 924 browser cells.
+- [x] Immutable projection verifier and zero source-manifest drift.
 
 ### Package B — Governed Companion Dashboard
 
@@ -230,25 +238,27 @@ Acceptance gates:
 
 ## Recommended Sequence
 
-1. Publish Package A after exact-head protected checks and live deployment verification.
-2. Stabilize the UpstreamDrift hybrid authority record and protected release before exposing any new reproduction promise.
-3. Implement Package B as the canonical cross-repository contract.
-4. Build Package C from the same governed data rather than a separate editorial database.
-5. Select a narrow Package D pilot only after B is stable; use one figure/table with adverse controls.
-6. Run Package E before expanding the workbench or claiming improved discovery.
+1. Package A is complete at protected `75042154` with live deployment evidence.
+2. Complete UpstreamDrift #9174/#9190–#9193 before exposing a new reproduction promise.
+3. Implement Package B through existing AffineDrift #4010/#4022–#4030.
+4. Implement Package C from the same governed data through #4084/#4086/#4087 and #4032.
+5. Complete the narrow Package D pilot through #4028/#4029/#4042 only after B is stable.
+6. Run Package E through #4088 before expanding the workbench or claiming improved discovery.
 
 ## Decision Points
 
-- **Fastest user-visible improvement:** select A.
-- **Best cohesion and maintenance payoff:** select A + B.
-- **Best scientific-review companion:** select A + B + C.
-- **Best executable companion:** select A + B + one narrow D pilot.
-- **Best evidence for the next roadmap:** add E after A, before committing to a broad workbench.
+- **Delivered discovery baseline:** Package A / #4080 / PR #4083.
+- **Programming companion:** #4010 and #4022–#4030, sourced from UpstreamDrift #9174.
+- **Scientific-review companion:** #4084, #4086, #4087, and #4032.
+- **Executable companion:** #4028, #4029, and #4042 after the provider contract is protected.
+- **Reader evidence:** #4088; whole-site desktop regression is #4089.
 
 ## Safety and Publication Boundaries
 
 - The large deletion summaries observed during this work are not accepted as evidence of content loss. Git ranges, deleted paths, immutable manifests, and the completed post-render tree must be checked independently.
 - Generated Quarto output may disappear and reappear during rendering or pruning. Canonical QMD, source manifests, PDFs, code, tests, and protected Git history are the content-loss authority.
-- #4042 remains unpublished until its local storage/replay review is fully green and protected checks pass.
+- #4042 has a reviewed partial local adapter but remains unpublished because 14
+  standard-lane publication/reproduction contracts still fail. They may not be
+  hidden, skipped, or deselected to obtain a green check.
 - UpstreamDrift #9267 remains blocked until the exact CPython 3.11.15 authority lane produces a reviewable record, publication manifests are rebuilt from that accepted record, and protected checks pass.
 - No package may promote manufactured, simulation-ready, deferred, private, or unavailable evidence into human validation or application guidance.
