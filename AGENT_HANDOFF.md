@@ -21,11 +21,17 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   `bcc25fa43a1f741e8565a2037476deed9f45cd69`; deployment run 33308185575
   passed through revision-matched live every-page verification. It changed no
   runtime or scientific publication authority.
+- Proximal-distal atlas PR #4095 protected-squash-merged as
+  `ea14c92e5bdbb544b75dc254be0f68b3ec1310b8`; all exact-head required checks
+  passed and issue #4087 is closed. Deployment run 33311698720 passed the
+  complete build, Pages publication, and revision-matched live every-route
+  verification for that exact merge.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and equals `origin/main` at the last verified protected handoff
-  authority `bcc25fa43a1f741e8565a2037476deed9f45cd69`. The latest substantive
+  on `main` and equals `origin/main` at the protected atlas authority
+  `ea14c92e5bdbb544b75dc254be0f68b3ec1310b8`. The latest substantive
   companion authority remains #4093 merge
-  `17b5f15d362eb0225053d4e51ed86863d305074c`.
+  `17b5f15d362eb0225053d4e51ed86863d305074c`; #4095 is the latest substantive
+  website and atlas authority.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -53,12 +59,12 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 - Live desktop inspection at 1440 px shows three equal 386 px long-form cards;
   390 px collapses to one column. Both have one visible H1, no horizontal
   overflow, and no fresh-console errors.
-- Exact publication evidence: 230 Quarto inputs rendered; site health found
+- Exact #4095 publication evidence: 231 Quarto inputs rendered; site health found
   zero broken links and 24 known legacy orphans; pruning removed 30 internal
-  artifacts; the manifest contains 231 public routes; claim-audit generation
+  artifacts; the manifest contains 232 public routes; claim-audit generation
   and enforcement pass; browser verification passes 924/924 mobile/desktop,
-  light/dark cells. Jest passes 297 with 19 documented skips. The final
-  governed Python slice passes 60/60, and the projection verifier reports 207
+  light/dark cells. Jest passes 307 with 19 documented skips. The complete
+  Python suite and hosted full-test lane pass, and the projection verifier reports 207
   source-identical, 21 flattened, zero immutable-link rewrites, and 36 declared
   adaptations.
 - The immutable monograph source, chapter, figure, PDF, and source-manifest tree
@@ -136,19 +142,18 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   active locks, rollback, tamper detection, read-only update comparison, and
   explicit active-lock-digest replacement. Thirty manufactured contracts pass.
   There is deliberately no production lock or snapshot.
-- #4087 implementation is active on branch `feat/4087-falsification-atlas` in
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4022-consumer`. The
-  reviewed implementation checkpoint is
-  `cdab7483c16c26b2820e4b00fd3d277ac41ddbf9` (22 files, +1,273/-27, zero
-  deleted paths). The
+- #4087 is protected and closed through PR #4095 at merge
+  `ea14c92e5bdbb544b75dc254be0f68b3ec1310b8`. The final PR is 23 files,
+  +1,303/-37, with zero deleted paths. The
   dependency-safe foundation uses a strict editorial schema and typed
   deterministic generator to join six required themes to pinned claim,
   critique, readiness, validation-release, source-manifest, and provider
   authorities. Scientific wording and state are authority-derived; exact
   provider workflows and validation releases remain visibly unavailable. The
   public static atlas has desktop/mobile/no-overflow and clean-console browser
-  evidence, plus print/no-JavaScript semantics. Do not call it protected until
-  the branch has passed exact-head CI and an ordinary protected merge.
+  evidence, plus print/no-JavaScript semantics. The immutable monograph source
+  tree remains byte-identical; discovery is provided through catalog and
+  sidebar surfaces rather than by mutating the governed projection.
 - UpstreamDrift PR #9267 remains a separate blocked scientific-authority lane at
   observed head `7215e0e285bd21f7f1631681e51226bbf746d610`. It cannot authorize a
   refreshed proximal-distal projection until its exact artifact, manifests,
@@ -156,8 +161,8 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Content-Loss Audit
 
-- The #4087 implementation checkpoint is 22 files, +1,273/-27, with zero
-  deleted paths. Its 27 removals are retained-file edits in the handoff, SPEC,
+- The final #4095 pull request is 23 files, +1,303/-37, with zero deleted
+  paths. Its 37 removals are retained-file edits in the handoff, SPEC,
   generated readiness table, claim-audit inventory/report, and research
   readiness generator; the immutable proximal-distal monograph tree has zero
   diff.
@@ -294,10 +299,9 @@ Do not treat source tests alone as rendered-publication evidence.
 2. Obtain explicit human approval for the #4089 visual candidate before
    creating an approved baseline. Implement #4086 shared evidence semantics
    only when the provider-owned catalog and evidence authority are protected.
-3. Finish protected review and publication of the active #4087 foundation;
-   preserve the immutable monograph source and never create a competing
-   scientific registry. Add exact provider workflow links only after #9174
-   publishes qualified records.
+3. Preserve the protected #4087 atlas and immutable monograph source; never
+   create a competing scientific registry. Add exact provider workflow links
+   only after #9174 publishes qualified records.
 4. Run #4088 baseline and follow-up reader validation under its privacy and
    preregistration gates. Keep #4042 and #9267 fail-closed until independently
    complete and protected.
