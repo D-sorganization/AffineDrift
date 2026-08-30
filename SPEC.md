@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-30T05:15:40Z
+Last-Updated: 2026-08-30T07:19:14Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-08-30T05:15:40Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.263                                          |
-| **Last Spec Update**    | 2026-08-29                                       |
+| **Spec Version**        | 1.0.264                                          |
+| **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
 
@@ -713,10 +713,11 @@ python src/tools/code_quality_check.py
 | Priority | Item                                                              | Target Date |
 | -------- | ----------------------------------------------------------------- | ----------- |
 | P0       | Maintain test coverage >50% across all PRs                        | Ongoing     |
-| P0       | Publish and verify the proximal-to-distal discovery integration   | Q3 2026     |
-| P1       | Add a generated AffineDrift/UpstreamDrift compatibility panel     | Q3 2026     |
-| P1       | Add a governed claim, critique, and falsification explorer        | Q4 2026     |
-| P1       | Run reader findability and evidence-state comprehension review    | Q4 2026     |
+| Done     | Publish and verify the proximal-to-distal discovery integration   | 2026-08-29  |
+| P1       | Deliver generated programming companion #4010/#4022–#4030         | Q3 2026     |
+| P1       | Deliver evidence semantics and falsification atlas #4086/#4087    | Q4 2026     |
+| P1       | Run preregistered reader validation #4088                         | Q4 2026     |
+| P1       | Complete whole-site desktop visual regression #4089               | Q4 2026     |
 | P2       | Pilot one pinned reproducible monograph figure or table           | Q4 2026     |
 | P2       | Optimize iLQR solver performance for real-time feedback           | Q4 2026     |
 | P3       | Support additional swing types (left-handed, alternative stances) | 2027        |
@@ -739,6 +740,13 @@ python src/tools/code_quality_check.py
   or comprehension.
 
 ## 12. Change Log
+
+### 1.0.264 Protected Reader Baseline and Companion Issue Architecture
+
+Records Package A as protected and deployed at exact merge `75042154`; maps the
+remaining programming companion to #4010/#4022–#4030 and the reader-evidence,
+falsification, desktop-regression, and validation work to #4084–#4089; and keeps
+the incomplete provider and research-release gates explicit.
 
 ### 1.0.263 Proximal-to-Distal Long-Form Discovery and Companion Plan
 
@@ -1171,6 +1179,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-30 | 1.0.264 | docs(governance, #4085): Reconciled the protected and deployed #4083 reader baseline, assigned remaining companion work to the existing #4010 provider-consumer program and new #4084 reader-evidence subepic, and preserved explicit blockers for provider acquisition, reader validation, and the 14 incomplete #4042 release contracts.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2026-08-29 | 1.0.263 | feat(site, #4080): Promoted the governed proximal-to-distal monograph across primary discovery surfaces; rebuilt the Books hub as a responsive three-peer long-form library; linked reading, governed evidence, and the bounded workbench through exact authority pins; added search, learning-path, cross-surface, and desktop-width contracts; and documented selectable companion-dashboard, falsification-explorer, reproducible-workbench, and reader-validation packages. The immutable monograph tree and its scientific authority remain unchanged.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | 2026-08-29 | 1.0.262 | fix(research, #4041): Closed the independent adversarial review by rejecting self-declared approval authority, reconciling evidence origin and calibration identities, enforcing unique scientific IDs and chronological status-at-transition evidence, preserving later revocation history, validating exact route membership and release-state joins, replacing generic dry runs with program-specific executable result manifests, escaping generated Markdown, removing the hard-coded readiness-state summary, and splitting filesystem, authority, dry-run, fixture, and validation responsibilities below the 400-line ceiling. Added 21 failing-first adversarial contracts and recursively pinned their exact bytes in the governed route audit.                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-08-29 | 1.0.261 | fix(research, #4041): Hardened the E1–E8 readiness lifecycle so unavailable evidence cannot satisfy gates, opaque private evidence requires an immutable revision, validation origins cannot be diluted by unrelated measured evidence, participant scope selects exact governance approvals, and supersession pins an existing successor revision. Publication remains delegated to #4042 and fails closed without its external authority. Replaced the live-DCR-derived concept example with a neutral non-authorizing template and removed the forbidden generator path bootstrap.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
