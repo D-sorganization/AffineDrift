@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 def _collect_claims(claims_file: Path) -> list[EvidencePresentationViewModel]:
+    """Collect and project claim view models from claim registry JSON."""
     vms: list[EvidencePresentationViewModel] = []
     if not claims_file.is_file():
         return vms
@@ -40,6 +41,7 @@ def _collect_claims(claims_file: Path) -> list[EvidencePresentationViewModel]:
 
 
 def _collect_protocols(protocols_file: Path) -> list[EvidencePresentationViewModel]:
+    """Collect and project protocol view models from research protocol summary."""
     vms: list[EvidencePresentationViewModel] = []
     if not protocols_file.is_file():
         return vms
@@ -53,6 +55,7 @@ def _collect_protocols(protocols_file: Path) -> list[EvidencePresentationViewMod
 
 
 def _collect_companion_entities(companion_file: Path) -> list[EvidencePresentationViewModel]:
+    """Collect and project companion engine, program, feature, and workflow view models."""
     vms: list[EvidencePresentationViewModel] = []
     if not companion_file.is_file():
         return vms

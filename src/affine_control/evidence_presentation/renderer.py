@@ -1,4 +1,4 @@
-﻿"""Pure functional renderers generating accessible, responsive HTML and Quarto components."""
+"""Pure functional renderers generating accessible, responsive HTML and Quarto components."""
 
 from __future__ import annotations
 

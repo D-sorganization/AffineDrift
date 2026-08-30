@@ -1,4 +1,4 @@
-﻿"""Pure functional projectors mapping raw governed records into typed view models."""
+"""Pure functional projectors mapping raw governed records into typed view models."""
 
 from __future__ import annotations
 
@@ -17,12 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 def _clean_str(val: Any) -> str:
+    """Normalize arbitrary metadata value to a stripped string."""
     if isinstance(val, dict):
         return str(val.get("content", "") or val.get("title", "") or "")
     return str(val or "").strip()
 
 
 def _derive_claim_tier(evidence_class: str) -> EvidenceTier:
+    """Map evidence class string to an EvidenceTier enum."""
     if evidence_class == "analytical_counterexample":
         return EvidenceTier.MATHEMATICAL_IDENTITY
     if evidence_class == "computational":
@@ -33,6 +35,7 @@ def _derive_claim_tier(evidence_class: str) -> EvidenceTier:
 
 
 def _derive_claim_establishes(claim_record: dict[str, Any], claim_id: str) -> list[str]:
+    """Derive list of established facts for a claim."""
     summary = _clean_str(claim_record.get("accessible_summary"))
     tech_claim = _clean_str(claim_record.get("technical_claim"))
     establishes: list[str] = []
@@ -46,6 +49,7 @@ def _derive_claim_establishes(claim_record: dict[str, Any], claim_id: str) -> li
 
 
 def _derive_claim_falsifiers(claim_record: dict[str, Any]) -> list[str]:
+    """Derive list of non-established bounds and falsification criteria for a claim."""
     does_not: list[str] = [
         "Does not establish universal human execution invariance",
         "Does not establish clinical, coaching, or equipment design prescription",
@@ -60,6 +64,7 @@ def _derive_claim_falsifiers(claim_record: dict[str, Any]) -> list[str]:
 
 
 def _derive_claim_limitations(claim_record: dict[str, Any]) -> list[str]:
+    """Derive list of governed limitations for a claim."""
     raw_limits = claim_record.get("limitations", [])
     limitations: list[str] = []
     if isinstance(raw_limits, list):
@@ -73,6 +78,7 @@ def _derive_claim_limitations(claim_record: dict[str, Any]) -> list[str]:
 
 
 def _derive_claim_source_revision(claim_record: dict[str, Any]) -> str:
+    """Extract or fall back to the exact source commit revision."""
     source_rev = _clean_str(claim_record.get("review_commit"))
     if not source_rev:
         prov = claim_record.get("software_provenance")
@@ -122,6 +128,7 @@ def project_claim(claim_record: dict[str, Any]) -> EvidencePresentationViewModel
 
 
 def _derive_protocol_tier(state: str, origin: str) -> EvidenceTier:
+    """Map protocol state and evidence origin to an EvidenceTier enum."""
     if state in ("concept", "evidence-reviewed", "pilot-ready", "ethics-approved"):
         return EvidenceTier.PILOT_BOUNDED
     if state == "simulation-ready":

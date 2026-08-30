@@ -1,4 +1,4 @@
-﻿"""Standardized presentation vocabulary and view-model types for reader-facing evidence states."""
+"""Standardized presentation vocabulary and view-model types for reader-facing evidence states."""
 
 from __future__ import annotations
 
