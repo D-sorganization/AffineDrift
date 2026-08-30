@@ -64,7 +64,9 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 - #4089 visual work is active in
   `C:\Users\diete\Repositories\worktrees\AffineDrift-4089-desktop-regression`
   on branch `test/4089-desktop-visual-regression`. Commit `ea2c2b6a` adds the
-  governed evidence foundation; merge commit `93e4b960` incorporates protected
+  governed evidence foundation, `559067bd` wires PR evidence, `b42a4249`
+  closes adversarial baseline/breakpoint findings, and `2e0f7f7c` reconciles
+  the governed trust digests. Merge commit `93e4b960` incorporates protected
   #4090. Do not describe #4089 as complete yet.
 - The new representative contract is ten route families by seven viewports
   (390, 768, 1024, 1200, 1280, 1366, and 1920 px) by two themes: 140 cells. It includes a
@@ -74,7 +76,8 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   exposed the margin TOC too early. Adversarial review then measured a second
   21 px monograph overflow at the former 1200 px rail-entry boundary. Exact
   1200 and 1280 px probes plus a canonical 1279.98 px hide threshold govern the
-  corrected transition; rerun the complete 140-cell matrix before delivery.
+  corrected transition. The complete local rerun passes 140/140; exact Linux
+  PR screenshots remain the protected-delivery evidence to inspect.
 - Screenshot evidence binds route family, scenario, source revision, renderer,
   decoded PNG dimensions, byte count, and SHA-256. The runner emits a candidate
   baseline only. Comparison validates the complete baseline schema and fails
@@ -212,9 +215,10 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Deliver the current #4089 candidate-evidence/1024 px overflow slice through
-   protected review, inspect its exact Linux screenshots, and use a separate
-   reviewed follow-up to approve the baseline and add remaining scenarios.
+1. Deliver the current #4089 candidate-evidence and 1024/1200 px overflow fixes
+   through protected review, inspect the exact Linux 140-cell screenshots, and
+   use a separate reviewed follow-up to approve the baseline and add remaining
+   scenarios.
 2. Finish provider #9174/#9190–#9193, then implement immutable consumer #4022
    and compatibility contract #4030 before generated catalog #4023/#4024.
 3. In parallel where dependencies permit, implement #4086 shared evidence
