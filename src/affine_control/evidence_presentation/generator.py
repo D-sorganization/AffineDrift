@@ -183,7 +183,7 @@ def generate_evidence_presentation(
     if check:
         if not registry_path.is_file():
             raise FileNotFoundError(f"Missing evidence presentation registry: {registry_path}")
-        if registry_path.read_text(encoding="utf-8") != registry_content:
+        if json.loads(registry_path.read_text(encoding="utf-8")) != registry_dict:
             raise ValueError(f"Evidence presentation registry is stale: {registry_path}")
         if not partial_path.is_file():
             raise FileNotFoundError(f"Missing evidence presentation partial: {partial_path}")

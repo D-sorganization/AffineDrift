@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T16:38:28Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.283                                          |
+| **Spec Version**        | 1.0.284                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -1623,3 +1623,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-30 | 1.0.281 | fix(claim-audit): Update review evidence SHA-256 digest for `scripts/generate_proximal_distal_falsification_atlas.py` in `data/trust/claim_audit_inventory.json` and regenerate `data/trust/generated/claim_audit_report.json` to satisfy claim-audit publication gates. |
 | 2026-08-30 | 1.0.282 | fix(claim-audit): Add reviewed audit records and deterministic review evidence digests for the 6 newly generated Programming Companion catalog routes (`/models/programming/*.html`) to `data/trust/claim_audit_inventory.json` and regenerate `data/trust/generated/claim_audit_report.json` and `reports/scientific-claim-audit.md` to satisfy full rendered manifest coverage in publication deployment gates. |
 | 2026-08-30 | 1.0.283 | feat(evidence-presentation, #4086): Implement reader-facing evidence state presentation vocabulary, pure view-model projectors, accessible renderers (`src/affine_control/evidence_presentation/`), JSON schema (`schemas/evidence-presentation-v1.schema.json`), deterministic generator (`scripts/generate_evidence_presentation.py`), and test suite (`tests/test_evidence_presentation.py`), establishing a standard reader-facing verification status language across all content and programming catalog surfaces without amplifying claim authority. |
+| 2026-08-30 | 1.0.284 | feat(reader-validation, #4088): Implement preregistered reader findability and evidence-comprehension validation study framework (`src/affine_control/reader_validation/`), schema (`schemas/reader-comprehension-study-v1.schema.json`), deterministic generator (`scripts/generate_reader_comprehension_study.py`), and test suite (`tests/test_reader_comprehension_validation.py`), evaluating 6 standardized tasks across technical-reviewer and general-reader cohorts, calculating Wilson score confidence intervals, and preserving null/negative findings and remediation issue links. |
