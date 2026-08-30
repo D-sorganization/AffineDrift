@@ -6,7 +6,7 @@ test.describe("Search Functionality", () => {
 
     // Look for search elements
     const searchButton = page.locator(
-      'button.search-trigger, button[aria-label*="search" i]',
+      '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
     );
     const searchInput = page.locator(
       'input[type="search"], input[placeholder*="search" i]',
@@ -22,7 +22,9 @@ test.describe("Search Functionality", () => {
 
     // Find search button
     const searchButton = page
-      .locator('button.search-trigger, button[aria-label*="search" i]')
+      .locator(
+        '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
+      )
       .first();
 
     if ((await searchButton.count()) > 0) {
@@ -86,7 +88,9 @@ test.describe("Search Functionality", () => {
     await page.goto("/");
 
     const searchButton = page
-      .locator('button.search-trigger, button[aria-label*="search" i]')
+      .locator(
+        '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
+      )
       .first();
     await searchButton.click();
 
@@ -95,9 +99,7 @@ test.describe("Search Functionality", () => {
     await searchInput.fill("proximal distal energy transfer");
 
     const monographResult = page
-      .locator(
-        'a[href*="articles/proximal_distal_energy_transfer/index.html"]',
-      )
+      .locator('a[href*="articles/proximal_distal_energy_transfer/index.html"]')
       .first();
     await expect(monographResult).toBeVisible();
   });
