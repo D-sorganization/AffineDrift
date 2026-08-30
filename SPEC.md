@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T16:38:28Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.280                                          |
+| **Spec Version**        | 1.0.281                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -1620,3 +1620,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-30 | 1.0.278 | test(companion, #4030): Add provider-consumer compatibility suite and schema version matrix fixtures (`tests/fixtures/companion/`), pin UpstreamDrift protected `main` `6ff956a4d` workflow-governed companion schema in `schemas/`, and verify Draft 2020-12 fail-closed validation, future version refusal, tamper resistance, and atomic rollback retention in `tests/test_programming_companion_compatibility.py`. |
 | 2026-08-30 | 1.0.279 | feat(companion, #4023): Implement deterministic Programming Companion catalog generator (`src/affine_control/programming_companion/catalog_generator.py` and `scripts/generate_programming_catalog.py`), producing authoritative Quarto indexes and detail pages for Engines, Programs, Features, Workflows, and Provenance (`models/programming/*.qmd`) from pinned provider facts, and add comprehensive TDD test suite in `tests/test_programming_companion_catalog_generator.py`. |
 | 2026-08-30 | 1.0.280 | feat(companion, #4024): Replace stale installation, onboarding, and verification guidance across documentation with verified UpstreamDrift CI entrypoints and companion workflows (`scripts/ci/verify_installation.py`, `python -m scripts.companion_workflows execute --workflow-id installation-verification`), cross-link to `/models/programming/engines.html`, and add regression tests in `tests/test_programming_companion_onboarding_contract.py`. |
+| 2026-08-30 | 1.0.281 | fix(claim-audit): Update review evidence SHA-256 digest for `scripts/generate_proximal_distal_falsification_atlas.py` in `data/trust/claim_audit_inventory.json` and regenerate `data/trust/generated/claim_audit_report.json` to satisfy claim-audit publication gates. |
