@@ -4,14 +4,19 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Protected Authority
 
-- Website PR #4091 protected-squash-merged as
-  `af49c1f15f2771397ecf0e67eb53dd92646ac0b1`, on top of the #4090 reader
+- Website PR #4092 protected-squash-merged as
+  `c1963cf038dcc5cf8dacb583aed9e35fe176fc41`, on top of the #4091 visual
+  authority at `af49c1f15f2771397ecf0e67eb53dd92646ac0b1`, #4090 reader
   authority at `1c0c04c5c115afe34f65e416f3007d9c525f0e80` and #4083 discovery
-  authority at `75042154b05c2a04351b0d47e6ed44c994243476`. Exact-head checks and
-  deployment run 33303380671 passed, including the revision-matched live
-  every-route gate.
-- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean on
-  `main` at `af49c1f15f2771397ecf0e67eb53dd92646ac0b1` and equals `origin/main`.
+  authority at `75042154b05c2a04351b0d47e6ed44c994243476`. #4092's exact-head
+  protected checks passed. The prior #4091 deployment run 33303380671 passed,
+  including its revision-matched live every-route gate.
+- Deployment run 33306144800 succeeded for the exact #4092 merge, including
+  the full build, every-page predeployment verification, Pages publication,
+  revision-matched live-route verification, and uploaded live evidence.
+- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
+  on `main` at `c1963cf038dcc5cf8dacb583aed9e35fe176fc41` and equals
+  `origin/main`.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -66,9 +71,7 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   reviewed head was `b74160d9e3c0f955c0f1a4befdd333255188edf1`; its source diff was 21
   files, +1,346/-60, with zero deleted paths. The protected squash is
   `af49c1f15f2771397ecf0e67eb53dd92646ac0b1` and its deployment is green.
-- The supplemental #4089 slice is active in
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4089-supplemental` on
-  branch `test/4089-supplemental-visual-scenarios` as PR #4092. It adds 18 cells for the
+- The supplemental #4089 slice is protected through PR #4092. It adds 18 cells for the
   global footer, dense-content containment, keyboard focus, reduced motion,
   print, and no-JavaScript behavior, bringing local evidence to 158/158. Keep
   #4089 open until a human reviews and approves an exact candidate baseline.
@@ -114,6 +117,16 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   publication tree. No provider artifact is accepted for AffineDrift import;
   only provider-independent RED/security fixtures are safe before those gates
   close.
+- The provider-independent #4022 consumer foundation is active in
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4022-consumer` on branch
+  `test/4022-immutable-consumer-security`. It pins the exact protected provider
+  schema from UpstreamDrift `1af18489e8755933a0d189aa8edafe787fa94d0f`
+  (`d0d0389...` SHA-256) with an adjacent provenance record. The typed package
+  enforces exact-commit allowlists, bounded no-redirect acquisition, strict
+  schema/provider/commit/path validation, content-addressed snapshots, canonical
+  active locks, rollback, tamper detection, read-only update comparison, and
+  explicit active-lock-digest replacement. Thirty manufactured contracts pass.
+  There is deliberately no production lock or snapshot.
 - UpstreamDrift PR #9267 remains a separate blocked scientific-authority lane at
   observed head `7215e0e285bd21f7f1631681e51226bbf746d610`. It cannot authorize a
   refreshed proximal-distal projection until its exact artifact, manifests,
@@ -238,16 +251,14 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Deliver the current #4089 supplemental 158-cell scenario slice through
-   protected review, inspect the exact Linux evidence, and keep candidate
-   baseline approval as a separate explicit human decision.
-2. Finish provider #9174/#9190–#9193, then implement immutable consumer #4022
-   and compatibility contract #4030 before generated catalog #4023/#4024.
-3. In parallel where dependencies permit, implement #4086 shared evidence
+1. Deliver the provider-independent #4022 consumer foundation through protected
+   review. Finish provider #9174/#9190–#9193 before installing any production
+   lock/snapshot or starting generated catalog #4023/#4024.
+2. In parallel where dependencies permit, implement #4086 shared evidence
    semantics and #4089 whole-site desktop regression from fresh worktrees.
-4. Build #4087 from existing governed claim/critique/readiness/provider IDs;
+3. Build #4087 from existing governed claim/critique/readiness/provider IDs;
    never create a competing scientific registry.
-5. Run #4088 baseline and follow-up reader validation under its privacy and
+4. Run #4088 baseline and follow-up reader validation under its privacy and
    preregistration gates. Keep #4042 and #9267 fail-closed until independently
    complete and protected.
 
