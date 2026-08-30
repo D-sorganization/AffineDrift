@@ -67,10 +67,12 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   governed evidence foundation, `559067bd` wires PR evidence, `b42a4249`
   closes adversarial baseline/breakpoint findings, and `2e0f7f7c` reconciles
   the governed trust digests. `40cf470f` refreshes this handoff, `f1f3c5e2`
-  rebuilds CSS before PR capture, and `4ed9e108` makes every canonical visual
-  contract path trigger that capture. The substantive range is 21 files,
-  +1330/-60, with zero deleted paths. Merge commit `93e4b960` incorporates
-  protected #4090. Do not describe #4089 as complete yet.
+  rebuilds CSS before PR capture, `4ed9e108` centralizes the visual-contract
+  change detector, and `dd29ca53` closes its final article-local stylesheet
+  gap by treating every tracked CSS/SCSS path as visual evidence input. The
+  current range is 21 files, +1342/-60, with zero deleted paths. Merge commit
+  `93e4b960` incorporates protected #4090. Do not describe #4089 as complete
+  yet.
 - The new representative contract is ten route families by seven viewports
   (390, 768, 1024, 1200, 1280, 1366, and 1920 px) by two themes: 140 cells. It includes a
   real `proximal distal` search interaction while preserving the separate
@@ -95,7 +97,8 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   Quarto renders from testing a stale tracked stylesheet. Deployment keeps the
   same candidate capture in addition to its complete live-route gate.
 - `scripts/e2e_relevant_paths.py` is the single change-detector authority for
-  that lane. It covers canonical CSS/SCSS, visual runner/evidence/manifest
+  that lane. It covers every tracked CSS/SCSS path (including article-local
+  proximal-distal and monograph stylesheets), visual runner/evidence/manifest
   scripts, screenshot schemas, the public report source, and both visual
   workflows; executable unit contracts prevent silent trigger erosion.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
