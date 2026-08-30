@@ -138,6 +138,9 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   There is deliberately no production lock or snapshot.
 - #4087 implementation is active on branch `feat/4087-falsification-atlas` in
   `C:\Users\diete\Repositories\worktrees\AffineDrift-4022-consumer`. The
+  reviewed implementation checkpoint is
+  `cdab7483c16c26b2820e4b00fd3d277ac41ddbf9` (22 files, +1,273/-27, zero
+  deleted paths). The
   dependency-safe foundation uses a strict editorial schema and typed
   deterministic generator to join six required themes to pinned claim,
   critique, readiness, validation-release, source-manifest, and provider
@@ -153,6 +156,17 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Content-Loss Audit
 
+- The #4087 implementation checkpoint is 22 files, +1,273/-27, with zero
+  deleted paths. Its 27 removals are retained-file edits in the handoff, SPEC,
+  generated readiness table, claim-audit inventory/report, and research
+  readiness generator; the immutable proximal-distal monograph tree has zero
+  diff.
+- The #4087 full render/prune reproduced the transient deletion alarm at 82
+  tracked files, +618/-15,107. After the 232-route manifest and audit evidence
+  were generated, restoring tracked `docs/` bytes and removing only dry-run-
+  enumerated untracked render products returned the canonical diff to zero
+  deleted paths. No source, monograph, book, or scientific evidence path was
+  removed.
 - #4093 is 15 files, +2,236/-20, with zero deleted paths. Its 20 removals are
   replacements in the retained handoff and specification; no scientific
   article, book, monograph, or generated-site path changed.
