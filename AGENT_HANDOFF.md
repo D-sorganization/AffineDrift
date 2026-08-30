@@ -1,14 +1,15 @@
 # Agent Handoff — AffineDrift
 
-Updated: 2026-08-29. Current-state only; use git and GitHub for history.
+Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Protected Authority
 
-- Turnover PR #4082 protected-squash-merged as
-  `dbb8e90ea2c7a62dbdb91bb411788659a98d2608`; verify current `origin/main`
-  before acting rather than treating this evidence commit as a moving pointer.
-- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` was clean
-  and synchronized to that exact protected merge when this handoff was updated.
+- Website PR #4083 protected-squash-merged as
+  `75042154b05c2a04351b0d47e6ed44c994243476`. Its main CI, Pages build,
+  revision-bound manifest, every-public-page verification, and deployment
+  verification passed.
+- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean on
+  `main` at that exact revision and equals `origin/main`.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -23,26 +24,19 @@ Updated: 2026-08-29. Current-state only; use git and GitHub for history.
   and verify the protected merge plus post-merge deployment before claiming
   publication.
 
-## Active Website and Provider Work
+## Website and Companion Program
 
-- AffineDrift issue #4080 uses branch `feat/4080-monograph-prominence` in
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4080-monograph`. It is
-  integrated with protected `dbb8e90e`; create a PR only after a final
-  independent exact-head review.
-- Independent review covered exact implementation head
-  `31424f7ee96a9fb68c99a2cd26a2d19a2454c4a1`: 24 files, +828/-169 against
-  protected `dbb8e90e`, with zero deleted paths. The documentation-only repair
-  above that head reconciles the fleet dependency contract, exact handoff, and
-  diff hygiene; verify current `HEAD` rather than treating this reviewed source
-  commit as a moving pointer.
+- Issue #4080 / PR #4083 is protected, deployed, and closed. The final reviewed
+  PR head was `b544dc8ceea985eac5f3ca32d674f5e6b8aa125a`; its diff was 24 files,
+  +841/-175, with zero deleted paths.
 - The governed proximal-to-distal monograph is now a peer of the two rendered
   textbook collections in Read navigation, the homepage, and the full-width
   Books hub. It is also present in the article catalog, search contract,
   biomechanics and golf-science learning paths, Models, and Software. The
   companion/workbench use local governed evidence and exact protected pins.
-- Desktop inspection at 1366 and 1440 px shows three equal 386 px long-form
-  cards; 1920 px remains centered at a 1200 px maximum; 390 px collapses to one
-  column. All inspected widths have one visible H1 and no horizontal overflow.
+- Live desktop inspection at 1440 px shows three equal 386 px long-form cards;
+  390 px collapses to one column. Both have one visible H1, no horizontal
+  overflow, and no fresh-console errors.
 - Exact publication evidence: 230 Quarto inputs rendered; site health found
   zero broken links and 24 known legacy orphans; pruning removed 30 internal
   artifacts; the manifest contains 231 public routes; claim-audit generation
@@ -56,15 +50,24 @@ Updated: 2026-08-29. Current-state only; use git and GitHub for history.
   reproducible from source. Root and nested review renders were sent to the
   Windows Recycle Bin after their absolute paths were verified inside the
   worktree.
-- `reports/website-companion-review-2026-08-29.md` records the content gaps,
-  further research, and selectable Packages A–E. Recommended order is A, B, C,
-  then one narrow D pilot; add E before expanding the workbench.
-- UpstreamDrift PR #9267 is at repair head
-  `ee864bc67e5c7fa80e7c57d3329a7c3459f49133`. RED `020bb0a2` and GREEN
-  `ee864bc6` close the exact/rolling dependency and artifact-bootstrap defect
-  without changing scientific JSON or publication manifests. Hosted exact
-  CPython 3.11.15 authority, rolling, standard, and publication gates remain
-  authoritative; the PR must also reconcile newer protected main before merge.
+- `reports/website-companion-review-2026-08-29.md` records the content gaps and
+  Packages A–E. Package A is delivered. Epic #4008, programming subepic #4010,
+  and reader-evidence subepic #4084 own the remaining work. #4085–#4089 cover
+  baseline reconciliation, shared evidence semantics, the proximal-distal
+  falsification atlas, reader validation, and whole-site desktop regression.
+- The writing-quality batches protected in merged PR #3831 at
+  `915309d51ec43a475efcce32ad3ecb98cc8e207c` are reconciled: child trackers
+  #3823-#3828 closed on 2026-08-30 with batch completion recorded and unproven
+  aggregate metrics left unchecked. HTML-2 and author-decision residue remain
+  open in #3821/#3830.
+- Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
+  than creating another catalog. Protected UpstreamDrift main is
+  `4cf39347be49adb0e700edebb05390717c5ce2ec`; #9174/#9192 remain open, so no
+  provider artifact is yet accepted for AffineDrift import.
+- UpstreamDrift PR #9267 remains a separate blocked scientific-authority lane at
+  observed head `7215e0e285bd21f7f1631681e51226bbf746d610`. It cannot authorize a
+  refreshed proximal-distal projection until its exact artifact, manifests,
+  protected checks, and merge are complete.
 
 ## Content-Loss Audit
 
@@ -107,17 +110,14 @@ Updated: 2026-08-29. Current-state only; use git and GitHub for history.
 - #4041 is protected on current `main` through PR #4079. The public lifecycle
   library is simulation-ready only; it does not mint publication authority or
   measured-human validation.
-- #4042 owns the external immutable release and claim-promotion adapter. Treat
-  local branches as unapproved until ordinary protected publication completes.
-  Independent review of head `0daaa97a` was NO-GO for root identity stability,
-  Windows final-generation write prevention, interrupted rename recovery, and
-  exact canonical CAS replay. RED `7071cc8f`, GREEN `2f842598`, and contained
-  cleanup follow-up `e8e37b11` repair those four contracts at exact local head
-  `e8e37b11956a57880de4df22051cd7fe20a26f38`; 216 focused tests, 53 readiness
-  tests, 519 release tests, strict typing/lint/architecture, and zero-deletion
-  gates pass, while the exact 14 publication/reproduction REDs remain deferred.
-  A fresh independent exact-head review is still required; do not push or create
-  its PR until that review is GO.
+- #4042 owns the external immutable release and claim-promotion adapter. Its
+  clean local checkpoint is `730210d9e39730ac72c4bbc0ed77c61210411873` in
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4042-e10`. Independent
+  review returned GO as a truthful handoff checkpoint and NO-GO for merge: 531
+  tests pass, 8 opposite-platform tests skip, and exactly 14 standard-lane
+  publication/reproduction contracts still fail. Do not skip or deselect them,
+  push a completion PR, or mark #4042 complete until those acceptance contracts
+  are implemented and protected CI can pass.
 - #4034–#4040 define falsifiability programs for the model ladder, bilateral
   wrenches, active impedance, neural timing, impact timing, participant-held-out
   generalization, and equipment response. Preserve unavailable and adverse
@@ -148,16 +148,27 @@ Updated: 2026-08-29. Current-state only; use git and GitHub for history.
 ## Validation
 
 ```powershell
-python -m pytest tests/test_proximal_distal_*.py -v
+$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = "1"
+$proximalTests = @(Get-ChildItem tests -File -Filter "test_proximal_distal_*.py" | ForEach-Object FullName)
+python -m pytest $proximalTests -v
 python -m pytest tests/test_markerless_mocap_projection_contract.py -v
 python -m pytest tests/test_mocap_camera_registry_contract.py -v
 python -m ruff check .
-python -m black --check .
+python -m black --check --line-length 100 .
 python scripts/check_title_case.py
 python -m scripts.book_publication_audit --check
 python -m scripts.site_trust_surface_audit --check
-python -m scripts.generate_claim_audit_inventory --manifest <manifest> --check --enforce-publication
-node scripts/verify-public-site.js --base-url <url> --manifest <manifest> --output <evidence>
+quarto render --to html
+python scripts/prune_internal_docs_from_deploy.py --docs-dir docs
+$sourceRevision = (git rev-parse HEAD).Trim()
+python scripts/public_site_manifest.py --docs-dir docs --source-root . --source-revision $sourceRevision --output docs/public-site-manifest.json
+python -m scripts.generate_claim_audit_inventory --manifest docs/public-site-manifest.json --check --enforce-publication
+$siteServer = Start-Process python -ArgumentList "-m", "http.server", "8000", "--directory", "docs" -WindowStyle Hidden -PassThru
+try {
+    node scripts/verify-public-site.js --base-url http://127.0.0.1:8000 --manifest docs/public-site-manifest.json --output artifacts/public-site-verification/local-every-page.json
+} finally {
+    Stop-Process -Id $siteServer.Id
+}
 ```
 
 For publication work, also render Quarto from canonical sources, run site
@@ -166,15 +177,16 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Finish the independent exact-head review of #4080; repair any P0–P3 finding.
-2. Push #4080, create a full PR, wait for every required check, merge normally,
-   and verify the live 231-route deployment before claiming publication.
-3. Let UpstreamDrift #9267 produce the exact authority artifact; independently
-   review it, rebuild governed manifests only from accepted evidence, reconcile
-   current protected main, and wait for protected merge.
-4. Keep the immutable AffineDrift projection unchanged until that protected
-   provider release exists; then implement Package B from a fresh worktree.
-5. Finish #4042 TDD repair and a fresh adversarial review before its own PR.
+1. Complete #4085 tracker/document reconciliation and protected delivery.
+2. Finish provider #9174/#9190–#9193, then implement immutable consumer #4022
+   and compatibility contract #4030 before generated catalog #4023/#4024.
+3. In parallel where dependencies permit, implement #4086 shared evidence
+   semantics and #4089 whole-site desktop regression from fresh worktrees.
+4. Build #4087 from existing governed claim/critique/readiness/provider IDs;
+   never create a competing scientific registry.
+5. Run #4088 baseline and follow-up reader validation under its privacy and
+   preregistration gates. Keep #4042 and #9267 fail-closed until independently
+   complete and protected.
 
 ## Do Not
 
