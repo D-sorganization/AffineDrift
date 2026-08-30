@@ -422,7 +422,7 @@ jobs:
             echo "No merge base found for origin/${{ github.base_ref }}...HEAD; falling back to HEAD^..HEAD."
             changed_files=$(git diff --name-only "HEAD^..HEAD")
           fi
-          relevant_files=$(printf "%s\n" "$changed_files" | grep -E '(^_quarto\.yml$|^package(-lock)?\.json$|^playwright\.config\.|^tests/e2e/|^scripts/sync_frontend_assets\.py$|^scripts/update_sw_cache_version\.py$|^styles\.css$|^js/|^src/js/|^pages/|^posts/|^resources/|^books/|^docs/.*\.(html|css|js|qmd)$|\.qmd$)' || true)
+          relevant_files=$(printf "%s\n" "$changed_files" | python3 scripts/e2e_relevant_paths.py)
 
           if [ -z "$relevant_files" ]; then
             echo "No site-facing files changed; skipping E2E site render."

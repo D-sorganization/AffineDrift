@@ -172,6 +172,7 @@ def test_ci_captures_revision_bound_representative_visual_evidence() -> None:
     assert "pr-representative.json" in content
     assert "candidate-baseline.json" in content
     assert "public-site-visual-evidence-${{ github.sha }}" in content
+    assert "python3 scripts/e2e_relevant_paths.py" in content
 
 
 def test_requirements_integrity() -> None:
