@@ -126,7 +126,7 @@ class TestBuildDropdownContent:
         labels = {item.get("text", "") for item in menu}
 
         assert {
-            "Golf Modeling Suite",
+            "Programming Companion",
             "Repositories",
             "Datasets",
             "Software Catalog",

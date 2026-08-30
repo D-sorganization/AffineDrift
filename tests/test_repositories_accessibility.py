@@ -35,10 +35,11 @@ def test_repositories_accordion_icons_are_hidden_from_screen_readers() -> None:
     assert all(icon.get("aria-hidden") == "true" for icon in parser.icons)
 
 
-def test_models_accordion_icons_are_hidden_from_screen_readers() -> None:
-    """Decorative accordion icons must not be announced as button text."""
+def test_models_jump_navigation_is_labelled_without_decorative_icon_noise() -> None:
+    """The replacement hub uses labelled links instead of ambiguous accordions."""
+    source = MODELS_PAGE.read_text(encoding="utf-8")
     parser = AccordionIconParser()
-    parser.feed(MODELS_PAGE.read_text(encoding="utf-8"))
+    parser.feed(source)
 
-    assert parser.icons
-    assert all(icon.get("aria-hidden") == "true" for icon in parser.icons)
+    assert '<nav class="programming-hub__jump" aria-label="On this page">' in source
+    assert parser.icons == []

@@ -1,510 +1,242 @@
 ---
-title: "UpstreamDrift (Golf Modeling Suite)"
-description: "Companion guide to UpstreamDrift (formerly Golf Modeling Suite) - a unified platform for golf swing analysis across multiple physics engines"
+title: "Programming Companion"
+description: "A governed bridge from AffineDrift's long-form biomechanics references to verified UpstreamDrift programs, workflows, and evidence"
 page-layout: full
 ---
 
 ```{=html}
 <section class="resources-section">
-  <div class="ad-page-container">
-    <div class="standard-page-layout standard-page-layout--content-first-compact">
-      <!-- Left Sidebar: Table of Contents -->
-      <aside class="left-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="toc-nav">
-          <h3 class="sidebar-heading">On This Page</h3>
-          <ul class="sidebar-links">
-            <li><a href="#overview">Overview</a></li>
-            <li><a href="#getting-started">Getting Started</a></li>
-            <li><a href="#physics-engines">Physics Engines</a></li>
-            <li><a href="#project-structure">Project Structure</a></li>
-            <li><a href="#features">Key Features</a></li>
-            <li><a href="#theory">Theory Resources</a></li>
-            <li><a href="#interactive-tools">Interactive Tools</a></li>
-          </ul>
-        </nav>
-      </div>
-      </aside>
-
-      <!-- Main Content -->
-      <main class="main-content-area">
+  <div class="programming-hub" data-layout-contract="standard-page-layout--content-first-compact">
+    <nav class="programming-hub__jump" aria-label="On this page">
+      <a href="#purpose">Purpose</a>
+      <a href="#featured-study">Featured Study</a>
+      <a href="#reading-map">Reading Map</a>
+      <a href="#programming-status">Programming Status</a>
+      <a href="#research-readiness">Research Readiness</a>
+      <a href="#deferred-guides">Deferred Guides</a>
+    </nav>
+    <div class="main-content-area">
         <div class="resource-grid">
-
-          <!-- Overview Section -->
-          <div id="overview" class="site-card site-card--feature site-card--brand u-mb-4">
-            <h1 class="u-mb-2">UpstreamDrift <span class="u-text-muted">(formerly Golf Modeling Suite)</span></h1>
+          <header id="purpose" class="site-card site-card--feature site-card--brand u-mb-4">
+            <p class="u-text-muted u-mb-1"><strong>Content ↔ Computation</strong></p>
+            <h1 class="u-mb-2">Programming Companion</h1>
             <p class="page-lede">
-              A unified biomechanical analysis platform consolidating golf swing modeling across multiple physics simulation frameworks. The suite enables comprehensive analysis from simple educational pendulums to complex 290-muscle musculoskeletal models.
+              Start with the scientific argument, inspect its evidence and falsifiers, then
+              move toward executable workflows only when an immutable provider record makes
+              the software claim verifiable. This page is the stable bridge between
+              AffineDrift's biomechanics library and the UpstreamDrift program repository.
             </p>
             <div class="button-row">
-              <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener" class="site-button site-button--on-brand">
-                View Repository on GitHub
-              <span class="sr-only">(opens in a new tab)</span></a>
-              <a href="#getting-started" class="site-button site-button--on-brand-ghost">
-                Quick Start Guide
+              <a href="#featured-study" class="site-button site-button--on-brand">Explore the Featured Study</a>
+              <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener" class="site-button site-button--on-brand-ghost">
+                View UpstreamDrift Source
               </a>
             </div>
-          </div>
+          </header>
 
-          <!-- About This Website -->
-          <aside class="site-card site-card--callout u-mb-4">
-            <h2 class="u-mb-1">About This Companion Website</h2>
-            <p class="resource-description">
-              This website serves as a <strong>companion resource</strong> to the Golf Modeling Suite repository. While the repository contains the actual implementation code, simulation models, and technical documentation, this website provides:
+          <div class="site-card site-card--callout u-mb-4">
+            <h2 class="u-mb-1">Authority Boundary</h2>
+            <p>
+              <strong>This establishes</strong> a curated map among AffineDrift-owned reading,
+              exploratory tools, declared models, claims, and evidence. Exact source commit
+              <a href="https://github.com/D-sorganization/UpstreamDrift/tree/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer" target="_blank" rel="noopener"><code>85cce4d3307bb7ad3953d9fc6e583e370803515c</code></a>
+              governs the featured computational publication.
             </p>
-            <ul class="model-bullet-list">
-              <li><strong>Advanced Theory</strong> - Mathematical foundations and control-affine system theory</li>
-              <li><strong>Research Context</strong> - Links to academic papers, books, and foundational resources</li>
-              <li><strong>Learning Pathways</strong> - Curated educational materials for each physics engine</li>
-              <li><strong>Interactive Tools</strong> - Web-based visualizations and calculators</li>
-            </ul>
-            <p class="resource-description">
-              For implementation details, installation instructions, and source code, please visit the <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">GitHub repository<span class="sr-only">(opens in a new tab)</span></a>.
-            </p>
-          </aside>
-
-          <!-- Getting Started Section -->
-          <div id="getting-started" class="category-section">
-            <h2 class="category-title">Getting Started</h2>
-          </div>
-
-          <div class="resource-card u-mb-3">
-            <h3>Requirements</h3>
-            <ul class="model-bullet-list model-bullet-list--leading">
-              <li><strong>Python 3.11+</strong> (3.13 recommended)</li>
-              <li><strong>Git with LFS support</strong> for large model files</li>
-              <li><strong>MATLAB R2023a+</strong> (optional, for Simscape models)</li>
-              <li><strong>Conda</strong> optional convenience wrapper for binary dependencies</li>
-            </ul>
-
-            <h3 class="u-mt-3">Quick Installation</h3>
-            <pre class="code-block"><code>git clone https://github.com/D-sorganization/UpstreamDrift.git
-cd UpstreamDrift
-git lfs install &amp;&amp; git lfs pull
-pip install -e ".[dev]"
-python scripts/verify_installation.py</code></pre>
-            <p class="resource-description">
-              The editable <code>pip install -e ".[dev]"</code> is the canonical install. A conda
-              environment (<code>conda env create -f environment.yml &amp;&amp; conda activate upstream-drift</code>)
-              is available as a convenience wrapper. For detailed instructions and troubleshooting, see the
-              <a href="https://github.com/D-sorganization/UpstreamDrift#installation" target="_blank" rel="noopener">repository documentation<span class="sr-only">(opens in a new tab)</span></a>.
+            <p>
+              <strong>This does not establish</strong> current installation commands, program
+              inventory, engine support, interface compatibility, reproducibility on a reader's
+              machine, independent scientific review, or participant-level human validation.
             </p>
           </div>
-
-          <!-- Application: launcher, web UI, entry points (issues #3337, #3338) -->
-          <div class="resource-card u-mb-3">
-            <h3>Running the Application</h3>
-            <p class="resource-description">
-              The recommended entry point launches a FastAPI server (on port 8000) with a
-              React/Vite web UI:
-            </p>
-            <pre class="code-block"><code>python launch_upstream_drift.py            # web UI + API (recommended)
-python launch_upstream_drift.py --classic  # classic PyQt6 desktop UI
-python launch_upstream_drift.py --api-only # REST API only, no UI
-python launch_upstream_drift.py --engine pinocchio  # select an engine</code></pre>
-            <p class="resource-description">
-              Console scripts <code>upstream-drift</code> and <code>sidekick</code> are also
-              installed. For a UI-only exploration without heavy engine dependencies, set
-              <code>GOLF_USE_MOCK_ENGINE=1</code>.
-            </p>
-            <h3 class="u-mt-3">Web UI Pages</h3>
-            <p class="resource-description">
-              Dashboard, Simulation, Model Explorer, Motion Capture, Analysis Tools,
-              Character Builder, Data Explorer, Putting Green, Terrain, and Video Analyzer.
-            </p>
-            <h3 class="u-mt-3">REST API &amp; Tools</h3>
-            <p class="resource-description">
-              A REST API (24 routes under <code>src/api/routes/</code>: ball flight, force
-              overlays, motion capture, character builder, and more) backs end-user tools in
-              <code>src/tools/</code> — ball-flight GUI, swing-flight pipeline, putting-green
-              and bunker-shot GUIs, terrain engine, video analyzer, strokes-gained optimizer,
-              model explorer, and pose studio — plus motion-capture import (CSV/JSON/C3D with
-              OpenPose/MediaPipe retargeting) and an RL/imitation/sim2real learning stack.
-            </p>
-          </div>
-
-          <!-- Documentation link-map (issue #3338 C2) -->
-          <div class="resource-card u-mb-3">
-            <h3>Documentation</h3>
-            <ul class="model-bullet-list">
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/getting_started.md" target="_blank" rel="noopener">User Guide — Getting Started<span class="sr-only">(opens in a new tab)</span></a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/motion_pipeline/README.md" target="_blank" rel="noopener">Motion Pipeline Guide<span class="sr-only">(opens in a new tab)</span></a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/engines/support_tiers.md" target="_blank" rel="noopener">Engine Support Tiers (Supported / Extended / Experimental)<span class="sr-only">(opens in a new tab)</span></a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/character_builder_quickstart.md" target="_blank" rel="noopener">Character / URDF Builder Quickstart<span class="sr-only">(opens in a new tab)</span></a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/troubleshooting/installation.md" target="_blank" rel="noopener">Troubleshooting — Installation<span class="sr-only">(opens in a new tab)</span></a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/portfolio/golf_modeling_demo.md" target="_blank" rel="noopener">Portfolio Demo<span class="sr-only">(opens in a new tab)</span></a></li>
-            </ul>
-          </div>
-
-          <!-- Physics Engines Section -->
-          <div id="physics-engines" class="category-section">
-            <h2 class="category-title">Supported Physics Engines</h2>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>MuJoCo (Recommended)</span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                <strong>Multi-Joint dynamics with Contact</strong> - The recommended engine for most use cases. MuJoCo provides fast, accurate physics simulation ideal for biomechanical analysis with full musculoskeletal models and contact dynamics.
-              </p>
-              <p class="resource-description">
-                <a href="models-mujoco.html" class="resource-link"><strong>MuJoCo Companion Guide →</strong></a>
-              </p>
-              <h3 class="model-section-h4">Key Capabilities:</h3>
-              <ul class="model-bullet-list">
-                <li>Full musculoskeletal models with realistic contact</li>
-                <li>Model-based optimization and trajectory planning</li>
-                <li>Real-time visualization and analysis</li>
-                <li>Integration with reinforcement learning frameworks</li>
-              </ul>
-              <h3>Learning Resources:</h3>
-              <ul class="model-bullet-list">
-                <li><a href="https://mujoco.readthedocs.io/en/stable/" target="_blank" rel="noopener">MuJoCo Documentation<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://mujoco.readthedocs.io/en/stable/programming.html" target="_blank" rel="noopener">Programming Guide<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://github.com/google-deepmind/mujoco/discussions" target="_blank" rel="noopener">Community Discussions<span class="sr-only">(opens in a new tab)</span></a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Drake</span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                <strong>MIT Robot Locomotion Group Toolkit</strong> - Specialized for trajectory optimization and model-based design. Drake excels at underactuated systems analysis, making it ideal for studying the control-affine nature of the golf swing.
-              </p>
-              <p class="resource-description">
-                <a href="models-drake.html" class="resource-link"><strong>Drake Companion Guide →</strong></a>
-              </p>
-              <h3 class="model-section-h4">Key Capabilities:</h3>
-              <ul class="model-bullet-list">
-                <li>Trajectory optimization and motion planning</li>
-                <li>Underactuated systems analysis</li>
-                <li>Control-affine dynamics modeling</li>
-                <li>Mathematical program solvers</li>
-              </ul>
-              <h3>Learning Resources:</h3>
-              <ul class="model-bullet-list">
-                <li><a href="https://underactuated.mit.edu/" target="_blank" rel="noopener">Underactuated Robotics (MIT Course)<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://manipulation.mit.edu/" target="_blank" rel="noopener">Robotic Manipulation (MIT Course)<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://drake.mit.edu/pydrake/" target="_blank" rel="noopener">PyDrake API Documentation<span class="sr-only">(opens in a new tab)</span></a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Pinocchio</span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                <strong>High-Performance Rigid Body Dynamics</strong> - Based on Roy Featherstone's algorithms, Pinocchio provides efficient computation of forward/inverse dynamics, Jacobians, and constraint handling for multibody systems.
-              </p>
-              <p class="resource-description">
-                <a href="models-pinocchio.html" class="resource-link"><strong>Pinocchio Companion Guide →</strong></a>
-              </p>
-              <h3 class="model-section-h4">Key Capabilities:</h3>
-              <ul class="model-bullet-list">
-                <li>Efficient forward/inverse dynamics</li>
-                <li>Analytical Jacobian computation</li>
-                <li>Constraint handling for closed-loop mechanisms</li>
-                <li>Spatial algebra operations</li>
-              </ul>
-              <h3>Learning Resources:</h3>
-              <ul class="model-bullet-list">
-                <li><a href="https://stack-of-tasks.github.io/pinocchio/" target="_blank" rel="noopener">Pinocchio Documentation<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://royfeatherstone.org/" target="_blank" rel="noopener">Roy Featherstone's Website<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://www.amazon.com/dp/1447113341" target="_blank" rel="noopener">Rigid Body Dynamics Algorithms (Book)<span class="sr-only">(opens in a new tab)</span></a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>OpenSim <strong>[Experimental]</strong></span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                <strong>Stanford Biomechanics Platform</strong> - The gold standard for biomechanical validation and analysis. OpenSim provides detailed musculoskeletal models with muscle-tendon units, inverse kinematics/dynamics, and motion capture integration.
-              </p>
-              <p class="resource-description">
-                <strong>Support tier: Experimental.</strong> In UpstreamDrift, OpenSim integration is experimental and is <em>not</em> part of the required PR CI contract today. Treat the musculoskeletal workflow below as exploratory rather than turnkey.
-              </p>
-              <p class="resource-description">
-                <a href="models-opensim.html" class="resource-link"><strong>OpenSim Companion Guide →</strong></a>
-              </p>
-              <h3 class="model-section-h4">Key Capabilities:</h3>
-              <ul class="model-bullet-list">
-                <li>Biomechanical validation and analysis</li>
-                <li>Inverse kinematics and dynamics</li>
-                <li>Motion capture data integration</li>
-                <li>Muscle activation analysis</li>
-              </ul>
-              <h3>Learning Resources:</h3>
-              <ul class="model-bullet-list">
-                <li><a href="https://simtk.org/projects/opensim" target="_blank" rel="noopener">OpenSim on SimTK<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://simtk-confluence.stanford.edu:8443/display/OpenSim" target="_blank" rel="noopener">OpenSim Documentation<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://simtk.org/forums/viewforum.php?f=91" target="_blank" rel="noopener">Community Forums<span class="sr-only">(opens in a new tab)</span></a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>MyoSuite <strong>[Experimental]</strong></span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                <strong>Realistic Muscle Dynamics</strong> - MyoSuite provides 290-muscle musculoskeletal models for detailed muscle-driven movement simulation. Ideal for studying muscle activation patterns and force generation in complex movements.
-              </p>
-              <p class="resource-description">
-                <strong>Support tier: Experimental.</strong> In UpstreamDrift, MyoSuite integration is experimental and is <em>not</em> part of the required PR CI contract today. The 290-muscle workflow is not yet a turnkey, fully-supported pipeline — expect to do setup work.
-              </p>
-              <p class="resource-description">
-                <a href="models-myosim.html" class="resource-link"><strong>MyoSim Companion Guide →</strong></a>
-              </p>
-              <h3 class="model-section-h4">Key Capabilities:</h3>
-              <ul class="model-bullet-list">
-                <li>290-muscle full-body models</li>
-                <li>Realistic muscle dynamics and activation</li>
-                <li>Integration with MuJoCo physics</li>
-                <li>Reinforcement learning ready</li>
-              </ul>
-              <h3>Learning Resources:</h3>
-              <ul class="model-bullet-list">
-                <li><a href="https://sites.google.com/view/myosuite" target="_blank" rel="noopener">MyoSuite Project Page<span class="sr-only">(opens in a new tab)</span></a></li>
-                <li><a href="https://github.com/MyoHub/myosuite" target="_blank" rel="noopener">GitHub Repository<span class="sr-only">(opens in a new tab)</span></a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>MATLAB Simscape Multibody</span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                <strong>MathWorks Simulation Environment</strong> - MATLAB Simscape models implement the control-affine theoretical framework from the Drifter Manifesto series, providing drift-input decomposition and numerical analysis tools.
-              </p>
-              <p class="resource-description">
-                <a href="models-simulink.html" class="resource-link"><strong>Simulink Companion Guide →</strong></a>
-              </p>
-              <h3 class="model-section-h4">Key Capabilities:</h3>
-              <ul class="model-bullet-list">
-                <li>Control-affine system implementation</li>
-                <li>Drift-input decomposition analysis</li>
-                <li>Integration with MATLAB analysis tools</li>
-                <li>Simulink block diagrams</li>
-              </ul>
-              <h3>Related Theory:</h3>
-              <ul class="model-bullet-list">
-                <li><a href="../articles/theory-part5.html">Theory Part 5 - Simulink Model Documentation</a></li>
-                <li><a href="https://www.mathworks.com/products/simscape-multibody.html" target="_blank" rel="noopener">Simscape Multibody<span class="sr-only">(opens in a new tab)</span></a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Double Pendulum Models</span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                <strong>Reduced-Complexity Analytical Models</strong> - Classical double pendulum dynamics providing transparent analytical foundations for golf swing mechanics, energy transfer, and parametric sensitivity.
-              </p>
-              <p class="resource-description">
-                <a href="models-pendulum.html" class="resource-link"><strong>Double Pendulum Models Guide →</strong></a>
-              </p>
-              <h3 class="model-section-h4">Key Capabilities:</h3>
-              <ul class="model-bullet-list">
-                <li>Two-link planar kinetic and kinematic formulations</li>
-                <li>Drift-input decomposition in closed form</li>
-                <li>Analytical Lagrangian and Hamiltonian equations</li>
-                <li>Interactive parameter sweeps and simulations</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Project Structure Section -->
-          <div id="project-structure" class="category-section">
-            <h2 class="category-title">Project Structure</h2>
-          </div>
-
-          <div class="resource-card u-mb-3">
-            <pre class="code-block code-block--compact"><code>UpstreamDrift/
-├── docs/                    # Comprehensive guides and API documentation
-├── launchers/               # Unified launch applications
-├── engines/
-│   ├── physics_engines/     # MuJoCo, Drake, Pinocchio, OpenSim, MyoSuite
-│   ├── Simscape_Multibody/  # MATLAB/Simulink models
-│   └── pendulum_models/     # Educational pendulum implementations
-├── shared/                  # Common utilities and data formats
-└── tools/                   # Analysis and visualization tools</code></pre>
-          </div>
-
-          <!-- Key Features Section -->
-          <div id="features" class="category-section">
-            <h2 class="category-title">Key Features</h2>
-          </div>
-
-          <div class="resource-grid resource-grid--wide u-mb-4">
-            <div class="resource-card resource-card--padded">
-              <h3>Advanced Biomechanics</h3>
-              <p class="resource-description">Inverse kinematics/dynamics, motion capture integration, and muscle dynamics analysis.</p>
-            </div>
-            <div class="resource-card resource-card--padded">
-              <h3>Real-Time Visualization</h3>
-              <p class="resource-description">3D rendering with multiple analysis plot types for immediate feedback during simulation.</p>
-            </div>
-            <div class="resource-card resource-card--padded">
-              <h3>Cross-Engine Validation</h3>
-              <p class="resource-description">Compare results across different simulators to validate models and build confidence.</p>
-            </div>
-            <div class="resource-card resource-card--padded">
-              <h3>Data Export</h3>
-              <p class="resource-description">CSV and JSON formats for external analysis and integration with other tools.</p>
-            </div>
-          </div>
-
-          <!-- Theory Resources Section -->
-          <div id="theory" class="category-section">
-            <h2 class="category-title">Theory Resources on This Website</h2>
-          </div>
-
-          <div class="resource-card u-mb-3">
-            <h3>Worked Research Program: Proximal-to-Distal Transfer</h3>
-            <p class="resource-description">
-              Read the <a href="../articles/proximal_distal_energy_transfer/index.html">governed technical monograph</a>, inspect its models, claims, and evidence at protected UpstreamDrift commit <a href="https://github.com/D-sorganization/UpstreamDrift/tree/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer" target="_blank" rel="noopener"><code>85cce4d3</code><span class="sr-only"> (opens in a new tab)</span></a>, then challenge the declared mechanisms in the <a href="../articles/proximal-distal-model-workbench.html">interactive workbench</a>. The program is a computational publication; independent scientific review and participant-level human validation remain open.
-            </p>
-          </div>
-
-          <div class="resource-card u-mb-3">
-            <p class="resource-description">
-              This companion website provides theoretical background and advanced concepts to complement the practical implementations in the repository:
-            </p>
-            <div class="resource-grid resource-grid--narrow u-mt-2">
-              <a href="../pages/drifter-manifesto.html" class="resource-link" class="site-card site-card--inline">
-                <strong>Drifter Manifesto</strong>
-                <p class="resource-meta">Control-affine theory applied to golf swing dynamics</p>
-              </a>
-              <a href="../articles/theory-part1.html" class="resource-link" class="site-card site-card--inline">
-                <strong>Theory Series</strong>
-                <p class="resource-meta">Mathematical foundations and derivations</p>
-              </a>
-              <a href="../articles/inverse-dynamics.html" class="resource-link" class="site-card site-card--inline">
-                <strong>Inverse Dynamics</strong>
-                <p class="resource-meta">Computing joint torques from motion data</p>
-              </a>
-              <a href="../articles/drift-components-wrench-double-pendulum.html" class="resource-link" class="site-card site-card--inline">
-                <strong>Drift & Wrench Analysis</strong>
-                <p class="resource-meta">Passive dynamics in multibody systems</p>
-              </a>
-              <a href="../articles/proximal_distal_energy_transfer/index.html" class="resource-link site-card site-card--inline">
-                <strong>Proximal-to-Distal Technical Monograph</strong>
-                <p class="resource-meta">Governed computational publication with exact evidence and interpretation boundaries</p>
-              </a>
-              <a href="../articles/proximal-distal-model-workbench.html" class="resource-link site-card site-card--inline">
-                <strong>Proximal–Distal Model Workbench</strong>
-                <p class="resource-meta">Exploratory counterfactuals and parameter challenges, not measured golfer data</p>
-              </a>
-              <a href="model-ladder.html" class="resource-link" class="site-card site-card--inline">
-                <strong>Planar-to-Spatial Model Ladder</strong>
-                <p class="resource-meta">Task-specific comparison, uncertainty, and minimum-sufficient-level guidance</p>
-              </a>
-              <a href="bilateral-hand-wrench-validation.html" class="resource-link" class="site-card site-card--inline">
-                <strong>Bilateral Hand-Wrench Validation</strong>
-                <p class="resource-meta">Instrumented-grip calibration, identifiability, uncertainty, and human-evidence gates</p>
-              </a>
-              <a href="active-impedance-identification.html" class="resource-link" class="site-card site-card--inline">
-                <strong>Active Impedance Identification</strong>
-                <p class="resource-meta">Synthetic perturbation, EMG-proxy, identifiability, uncertainty, and human-evidence gates</p>
-              </a>
-              <a href="neural-timing-feedback.html" class="resource-link site-card site-card--inline">
-                <strong>Neural Timing and Feedback Perturbations</strong>
-                <p class="resource-meta">Phase-specific mechanical, visual, and auditory timing with sham, calibration, and authority gates</p>
-              </a>
-              <a href="hybrid-impact-contact.html" class="resource-link site-card site-card--inline">
-                <strong>Hybrid Impact-Contact and Event-Time Uncertainty</strong>
-                <p class="resource-meta">Rigid, compliant, and hybrid-event comparison with timing and parameter uncertainty</p>
-              </a>
-              <a href="equipment-individual-response.html" class="resource-link site-card site-card--inline">
-                <strong>Equipment and Shaft Individual-Response Validation</strong>
-                <p class="resource-meta">Crossover design, equipment metrology, hierarchical response, carryover, and no-advice gates</p>
-              </a>
-              <a href="population-generalization.html" class="resource-link site-card site-card--inline">
-                <strong>Population Generalization and Held-Out Validation</strong>
-                <p class="resource-meta">Group-aware validation, calibration, subgroup limits, and population-claim gates</p>
-              </a>
-              <a href="research-protocol-readiness.html" class="resource-link site-card site-card--inline">
-                <strong>Research Protocol and Data-Readiness Library</strong>
-                <p class="resource-meta">Machine-readable E1–E8 lifecycle, exact evidence joins, and fail-closed promotion gates</p>
-              </a>
-            </div>
-          </div>
-
-          <!-- Interactive Tools Section -->
-          <div id="interactive-tools" class="category-section">
-            <h2 class="category-title">Interactive Tools</h2>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Wrist Universal Joint Simulator</span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Interactive web application modeling the wrist as a universal joint. Explore how grip angle and wrist deviation affect torque transmission to the club's shaft axis and high-inertia axis.
-              </p>
-              <a href="../articles/wrist-universal-joint.html" class="resource-link">Launch Web Tool</a>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Wrist Universal Joint (PyQt6 Desktop)</span>
-              <span class="accordion-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Enhanced PyQt6 desktop application with advanced GUI features. Download and run locally for full interactive control over grip angle, wrist angle, club properties, and signal generation.
-              </p>
-              <a href="../content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py" class="resource-link">Download Application</a>
-            </div>
-          </div>
-
         </div>
-      </main>
 
-      <!-- Right Sidebar -->
-      <aside class="right-sidebar">
-        <div class="sidebar-sticky-content">
-          <nav class="history-nav">
-            <h3 class="sidebar-heading">Quick Links</h3>
-            <ul class="sidebar-links">
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">GitHub Repository<span class="sr-only">(opens in a new tab)</span></a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/issues" target="_blank" rel="noopener">Report Issues<span class="sr-only">(opens in a new tab)</span></a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift/discussions" target="_blank" rel="noopener">Discussions<span class="sr-only">(opens in a new tab)</span></a></li>
-            </ul>
-          </nav>
-          <nav class="history-nav u-mt-3">
-            <h3 class="sidebar-heading">License</h3>
-            <p class="resource-meta-inline">
-              MIT License - Open source with permissive terms for research and commercial use.
+        <section id="featured-study" class="u-mb-5">
+          <div class="category-section">
+            <h2 class="category-title">Featured Proximal-to-Distal Study</h2>
+          </div>
+          <p class="page-lede">
+            The proximal-to-distal collection is AffineDrift's most complete worked bridge from
+            a long scientific argument to inspectable assumptions, counterfactuals, and model
+            experiments. Choose the depth that fits your task; the routes reinforce one another.
+          </p>
+          <div class="resource-grid resource-grid--long-form">
+            <article class="resource-card">
+              <h3>Technical Monograph</h3>
+              <p class="resource-description">
+                The governed 37-chapter reference for equations, model-conditioned transfer
+                mechanisms, uncertainty, attribution, evidence ledgers, and declared falsifiers.
+              </p>
+              <a href="../articles/proximal_distal_energy_transfer/index.html" class="resource-link">Read the Technical Monograph →</a>
+            </article>
+            <article class="resource-card">
+              <h3>Visual Companion</h3>
+              <p class="resource-description">
+                A 30-chapter plain-language journey through how a golf swing carries energy,
+                with the same model and human-validation boundaries as the technical work.
+              </p>
+              <a href="../articles/proximal-distal-a-journey-through-the-swing.html" class="resource-link">Read the Visual Companion →</a>
+            </article>
+            <article class="resource-card">
+              <h3>Falsification Atlas</h3>
+              <p class="resource-description">
+                A claim-by-claim field guide to observables, competing explanations, failure
+                signatures, and the evidence that could weaken or overturn each mechanism.
+              </p>
+              <a href="../articles/proximal-distal-falsification-atlas.html" class="resource-link">Open the Falsification Atlas →</a>
+            </article>
+            <article class="resource-card">
+              <h3>Interactive Model Workbench</h3>
+              <p class="resource-description">
+                Guided parameter sweeps and model comparisons for challenging the argument.
+                Outputs are exploratory model results, not measurements from golfers.
+              </p>
+              <a href="../articles/proximal-distal-model-workbench.html" class="resource-link">Open the Model Workbench →</a>
+            </article>
+          </div>
+        </section>
+
+        <section id="reading-map" class="u-mb-5">
+          <div class="category-section">
+            <h2 class="category-title">Continue the Reading Map</h2>
+          </div>
+          <div class="resource-grid resource-grid--wide">
+            <article class="resource-card">
+              <h3>Books and Textbooks</h3>
+              <p class="resource-description">
+                Place the featured monograph alongside The Physics of Golf, The Geometry of
+                Motion, and the four focused research-development volumes.
+              </p>
+              <a href="../books/index.html" class="resource-link">Browse the Long-Form Library →</a>
+            </article>
+            <article class="resource-card">
+              <h3>Golf Science Learning Path</h3>
+              <p class="resource-description">
+                Build from physical intuition toward mechanics, evidence, and bounded model
+                interpretation without treating simulation as human validation.
+              </p>
+              <a href="../resources/learning-path-golf-science.html" class="resource-link">Follow the Golf Science Path →</a>
+            </article>
+            <article class="resource-card">
+              <h3>Biomechanics Learning Path</h3>
+              <p class="resource-description">
+                Connect coordinate conventions, multibody models, measurement, uncertainty,
+                and causal limits before making claims about a golfer or population.
+              </p>
+              <a href="../resources/learning-path-biomechanics.html" class="resource-link">Follow the Biomechanics Path →</a>
+            </article>
+          </div>
+        </section>
+
+        <section id="programming-status" class="u-mb-5">
+          <div class="category-section">
+            <h2 class="category-title">Programming Status</h2>
+          </div>
+          <div class="site-card site-card--callout u-mb-3">
+            <h3>Unavailable until governed evidence is pinned</h3>
+            <p>
+              UpstreamDrift remains the implementation authority. AffineDrift will publish exact
+              commands, catalogs, screenshots, and worked examples only from its deterministic,
+              exact-commit companion artifact. Until then, absence here means <strong>not yet
+              verified for publication</strong>, not that a capability does or does not exist.
             </p>
-          </nav>
-        </div>
-      </aside>
+          </div>
+          <div class="resource-grid resource-grid--wide">
+            <article class="resource-card">
+              <h3>Capability and Interface Catalog</h3>
+              <p class="resource-description">
+                Waiting for provider manifest and interface authority
+                (<a href="https://github.com/D-sorganization/UpstreamDrift/issues/9174">UpstreamDrift #9174</a>,
+                <a href="https://github.com/D-sorganization/UpstreamDrift/issues/9193">#9193</a>)
+                and the generated AffineDrift catalog (<a href="https://github.com/D-sorganization/AffineDrift/issues/4023">#4023</a>).
+              </p>
+            </article>
+            <article class="resource-card">
+              <h3>Installation and Onboarding</h3>
+              <p class="resource-description">
+                Waiting for the curated public-interface record
+                (<a href="https://github.com/D-sorganization/UpstreamDrift/issues/9193">UpstreamDrift #9193</a>)
+                and generated onboarding contract (<a href="https://github.com/D-sorganization/AffineDrift/issues/4024">AffineDrift #4024</a>).
+              </p>
+            </article>
+            <article class="resource-card">
+              <h3>Executable Workflows and Examples</h3>
+              <p class="resource-description">
+                Waiting for governed workflow authority
+                (<a href="https://github.com/D-sorganization/UpstreamDrift/issues/9190">UpstreamDrift #9190</a>),
+                exact-commit regression (<a href="https://github.com/D-sorganization/AffineDrift/issues/4028">AffineDrift #4028</a>),
+                and interpreted examples (<a href="https://github.com/D-sorganization/AffineDrift/issues/4029">#4029</a>).
+              </p>
+            </article>
+            <article class="resource-card">
+              <h3>Governed Screenshots</h3>
+              <p class="resource-description">
+                Waiting for provider capture provenance
+                (<a href="https://github.com/D-sorganization/UpstreamDrift/issues/9191">UpstreamDrift #9191</a>)
+                and the AffineDrift visual-artifact pipeline
+                (<a href="https://github.com/D-sorganization/AffineDrift/issues/4025">#4025</a>).
+              </p>
+            </article>
+            <article class="resource-card">
+              <h3>Compatibility and Release Evidence</h3>
+              <p class="resource-description">
+                Waiting for protected immutable publication
+                (<a href="https://github.com/D-sorganization/UpstreamDrift/issues/9192">UpstreamDrift #9192</a>)
+                and provider-consumer compatibility gates
+                (<a href="https://github.com/D-sorganization/AffineDrift/issues/4030">AffineDrift #4030</a>).
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="research-readiness" class="u-mb-5">
+          <div class="category-section">
+            <h2 class="category-title">Research Readiness</h2>
+          </div>
+          <div class="site-card site-card--callout">
+            <p>
+              Use the <a href="research-protocol-readiness.html">Research Protocol and
+              Data-Readiness Library</a> to distinguish concept, simulation, pilot, ethics,
+              and analysis states. Software readiness never authorizes participant collection,
+              coaching, clinical use, or claim promotion.
+            </p>
+          </div>
+          <h3>Validation and Research Protocols</h3>
+          <p>
+            Continue from the readiness library into the governed protocol that matches the
+            claim you intend to test. Each route states its evidence boundary, unavailable
+            results, and the conditions required before stronger interpretation.
+          </p>
+          <ul class="model-bullet-list">
+            <li><a href="model-ladder.html">Model Ladder and Selection Protocol</a></li>
+            <li><a href="hybrid-impact-contact.html">Hybrid Impact and Contact Validation</a></li>
+            <li><a href="bilateral-hand-wrench-validation.html">Bilateral Hand-Wrench Validation</a></li>
+            <li><a href="active-impedance-identification.html">Active Impedance and Co-Contraction Identification</a></li>
+            <li><a href="neural-timing-feedback.html">Neural Timing and Feedback Validation</a></li>
+            <li><a href="equipment-individual-response.html">Equipment and Individual-Response Validation</a></li>
+            <li><a href="population-generalization.html">Population Generalization and Participant-Held-Out Validation</a></li>
+          </ul>
+        </section>
+
+        <section id="deferred-guides" class="u-mb-5">
+          <div class="category-section">
+            <h2 class="category-title">Deferred Editorial References</h2>
+          </div>
+          <p>
+            These legacy guides remain available for orientation while route audit
+            <a href="https://github.com/D-sorganization/AffineDrift/issues/4060">#4060</a>
+            checks every capability, version, support, license, and qualification claim.
+            Their presence here is not a statement of current UpstreamDrift support.
+          </p>
+          <ul class="model-bullet-list">
+            <li><a href="models-mujoco.html">MuJoCo editorial reference</a></li>
+            <li><a href="models-drake.html">Drake editorial reference</a></li>
+            <li><a href="models-pinocchio.html">Pinocchio editorial reference</a></li>
+            <li><a href="models-opensim.html">OpenSim editorial reference</a></li>
+            <li><a href="models-myosim.html">MyoSim editorial reference</a></li>
+            <li><a href="models-simulink.html">Simulink editorial reference</a></li>
+            <li><a href="models-pendulum.html">Pendulum-model editorial reference</a></li>
+          </ul>
+        </section>
     </div>
   </div>
 </section>

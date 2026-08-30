@@ -136,6 +136,31 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   publication tree. No provider artifact is accepted for AffineDrift import;
   only provider-independent RED/security fixtures are safe before those gates
   close.
+- Issue #4098 owns the dependency-safe interim Programming Companion hub. The
+  implementation checkpoint is `c6ee857fb5b2e2218bfd5d13258664b8ef8b2008`
+  in `C:\Users\diete\Repositories\worktrees\AffineDrift-4098-programming-hub`
+  on branch `feat/4098-programming-companion`; PR #4099 is open, and the branch
+  is not protected publication authority until that pull request merges and
+  deploys.
+- The stable `/models/models.html` route now removes copied provider versions,
+  counts, launcher/install commands, support tiers, repository structure, and
+  mutable branch links. It features the technical monograph, visual companion,
+  falsification atlas, workbench, Books hub, and two learning paths. Catalog,
+  onboarding, workflow, screenshot, and compatibility cards fail closed behind
+  UpstreamDrift #9174/#9190–#9193 and AffineDrift #4023–#4030. The seven legacy
+  engine guides remain explicitly deferred under #4060.
+- Browser review at 1440 px measured a centered 1,200 px content canvas and
+  three 386 px peer long-form cards; at 390 px the cards collapse to 341 px,
+  with one visible H1 and no horizontal overflow. The retired three-rail shell
+  had squeezed primary desktop content to 691 px. Human visual approval for the
+  separate #4089 governed baseline remains open.
+- #4098 local verification renders all 231 canonical Quarto inputs and produces
+  a 232-route public manifest; internal links, title case, claim-audit
+  generation/enforcement, book/site-trust audits, and the immutable projection
+  verifier pass. The maintained Python suite passes 3,609 tests with 29
+  dependency/platform skips and 117 configured deselections; Jest passes 307
+  with 19 documented skips; Ruff, Black, strict `src/affine_control` mypy, and
+  Stylelint pass. Direct light/dark browser review reports no console errors.
 - The provider-independent #4022 consumer foundation is protected on `main`
   through PR #4093 at merge `17b5f15d362eb0225053d4e51ed86863d305074c`.
   It pins the exact protected provider schema from UpstreamDrift
@@ -165,6 +190,16 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Content-Loss Audit
 
+- The current #4098 branch range is 10 retained files, +386/-475, with zero
+  deleted paths. The 475 removals replace a 511-line copy-maintained hub
+  and small obsolete test expectations; no article, book, monograph, provider
+  snapshot, program source, or scientific evidence path is deleted.
+- The #4098 full render reproduced transient generated-site churn at 72 tracked
+  `docs/` paths, +785/-12,057, including 67 apparent deletions and 31 untracked
+  render entries. Restoring only tracked `docs/` bytes from Git returned the
+  generated tree to zero tracked diff while all canonical source and audit
+  changes remained. This is additional direct evidence that large UI deletion
+  totals during Quarto rendering are not committed source loss.
 - The final #4095 pull request is 23 files, +1,303/-37, with zero deleted
   paths. Its 37 removals are retained-file edits in the handoff, SPEC,
   generated readiness table, claim-audit inventory/report, and research
@@ -296,17 +331,19 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Keep production companion installation fail-closed. Finish provider
+1. Finish #4098 through its ordinary protected pull request and exact-revision
+   deployment, then replace this branch checkpoint with protected authority.
+2. Keep production companion installation fail-closed. Finish provider
    #9174/#9190–#9193 before installing any lock/snapshot or starting generated
    catalog #4023/#4024; then exercise #4030 against current and previous
    supported provider schema versions.
-2. Obtain explicit human approval for the #4089 visual candidate before
+3. Obtain explicit human approval for the #4089 visual candidate before
    creating an approved baseline. Implement #4086 shared evidence semantics
    only when the provider-owned catalog and evidence authority are protected.
-3. Preserve the protected #4087 atlas and immutable monograph source; never
+4. Preserve the protected #4087 atlas and immutable monograph source; never
    create a competing scientific registry. Add exact provider workflow links
    only after #9174 publishes qualified records.
-4. Run #4088 baseline and follow-up reader validation under its privacy and
+5. Run #4088 baseline and follow-up reader validation under its privacy and
    preregistration gates. Keep #4042 and #9267 fail-closed until independently
    complete and protected.
 
