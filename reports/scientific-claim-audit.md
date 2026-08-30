@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 28
+- Reviewed: 29
 - Deferred: 200
 - Exempt: 3
 
@@ -25,6 +25,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 |---|---|---:|
 | `/` | `index.qmd` | 3 |
 | `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 5 |
+| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
@@ -81,6 +82,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |

@@ -103,6 +103,18 @@ def test_generated_readiness_library_has_no_trailing_whitespace() -> None:
     assert all(line == line.rstrip() for line in generated.splitlines())
 
 
+def test_generated_readiness_library_exposes_stable_protocol_anchors() -> None:
+    """Companion pages must be able to link to one exact readiness record."""
+    generated = (ROOT / "_includes/generated/research-readiness-library.qmd").read_text(
+        encoding="utf-8"
+    )
+    library = json.loads(
+        (ROOT / "data/research_protocols/library.json").read_text(encoding="utf-8")
+    )
+    for protocol in library["protocols"]:
+        assert f'id="{protocol["protocol_id"]}"' in generated
+
+
 @pytest.mark.content_lint
 def test_generated_public_summary_is_non_authorizing_and_complete() -> None:
     summary = json.loads(

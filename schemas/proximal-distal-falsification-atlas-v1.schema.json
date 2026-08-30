@@ -1,0 +1,112 @@
+{
+  "$id": "https://affinedrift.com/schemas/proximal-distal-falsification-atlas-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authorities": {
+      "additionalProperties": false,
+      "properties": {
+        "claims": { "$ref": "#/$defs/authority" },
+        "critiques": { "$ref": "#/$defs/authority" },
+        "source_manifest": { "$ref": "#/$defs/authority" },
+        "readiness": { "$ref": "#/$defs/authority" }
+      },
+      "required": ["claims", "critiques", "source_manifest", "readiness"],
+      "type": "object"
+    },
+    "provider_authority": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": { "minLength": 20, "type": "string" },
+        "state": { "const": "unavailable" },
+        "tracking_issue": {
+          "const": "https://github.com/D-sorganization/UpstreamDrift/issues/9174"
+        }
+      },
+      "required": ["state", "reason", "tracking_issue"],
+      "type": "object"
+    },
+    "records": {
+      "items": { "$ref": "#/$defs/record" },
+      "maxItems": 6,
+      "minItems": 6,
+      "type": "array"
+    },
+    "schema_version": { "const": "1.0.0" }
+  },
+  "required": [
+    "schema_version",
+    "authorities",
+    "provider_authority",
+    "records"
+  ],
+  "type": "object",
+  "$defs": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "path": { "minLength": 1, "type": "string" },
+        "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" }
+      },
+      "required": ["path", "sha256"],
+      "type": "object"
+    },
+    "record": {
+      "additionalProperties": false,
+      "properties": {
+        "alternative_mechanism": { "minLength": 30, "type": "string" },
+        "atlas_id": { "pattern": "^pd-atlas-[a-z0-9-]+$", "type": "string" },
+        "chapter_anchor": { "pattern": "^sec-[a-z0-9-]+$", "type": "string" },
+        "chapter_path": {
+          "pattern": "^articles/proximal_distal_energy_transfer/chapters/_[a-z0-9_]+\\.qmd$",
+          "type": "string"
+        },
+        "claim_id": { "pattern": "^PD-CLAIM-[0-9]{3}$", "type": "string" },
+        "critique_id": { "pattern": "^crit-[a-z0-9-]+$", "type": "string" },
+        "readiness_protocol_id": {
+          "pattern": "^ad-protocol-[a-z0-9-]+-[0-9]{3}$",
+          "type": "string"
+        },
+        "critique_question": { "minLength": 20, "type": "string" },
+        "discriminating_measurement": { "minLength": 30, "type": "string" },
+        "theme": {
+          "enum": [
+            "endpoint-equifinality",
+            "timing-without-benefit",
+            "coordinate-dependent-attribution",
+            "bilateral-hand-ambiguity",
+            "prescribed-base-artifacts",
+            "shaft-contact-confounding"
+          ],
+          "type": "string"
+        },
+        "title": { "minLength": 10, "type": "string" },
+        "workflow": {
+          "additionalProperties": false,
+          "properties": {
+            "provider_record_url": { "type": "null" },
+            "reason": { "minLength": 20, "type": "string" },
+            "state": { "const": "unavailable" }
+          },
+          "required": ["state", "reason", "provider_record_url"],
+          "type": "object"
+        }
+      },
+      "required": [
+        "atlas_id",
+        "theme",
+        "title",
+        "claim_id",
+        "critique_id",
+        "readiness_protocol_id",
+        "critique_question",
+        "alternative_mechanism",
+        "discriminating_measurement",
+        "chapter_path",
+        "chapter_anchor",
+        "workflow"
+      ],
+      "type": "object"
+    }
+  }
+}

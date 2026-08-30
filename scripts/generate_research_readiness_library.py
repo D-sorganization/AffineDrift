@@ -63,8 +63,15 @@ def _partial(summary: dict[str, object]) -> str:
             raise StaleReadinessOutputError("Public summary records must be objects")
         issue = record["companion_issue"]
         title = _markdown_text(record["title"])
+        protocol_id = record.get("protocol_id")
+        anchor = (
+            f'<span id="{_markdown_text(protocol_id)}"></span>'
+            if isinstance(protocol_id, str)
+            else ""
+        )
         lines.append(
-            f"| [{title}](https://github.com/D-sorganization/AffineDrift/issues/{issue}) "
+            f"| {anchor}"
+            f"[{title}](https://github.com/D-sorganization/AffineDrift/issues/{issue}) "
             f"| `{record['state']}` | `{record['evidence_origin']}` "
             f"| `{record['next_gate']}` |"
         )
