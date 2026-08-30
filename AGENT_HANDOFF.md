@@ -21,15 +21,19 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   `bcc25fa43a1f741e8565a2037476deed9f45cd69`; deployment run 33308185575
   passed through revision-matched live every-page verification. It changed no
   runtime or scientific publication authority.
+- Post-atlas handoff PR #4096 protected-squash-merged as
+  `b5df6d5cd7a1b81c0771c6f7378c37f7378c6618` after every protected check
+  passed. It changed only this handoff and the specification; it introduced no
+  runtime, scientific-authority, or immutable-monograph byte changes.
 - Proximal-distal atlas PR #4095 protected-squash-merged as
   `ea14c92e5bdbb544b75dc254be0f68b3ec1310b8`; all exact-head required checks
   passed and issue #4087 is closed. Deployment run 33311698720 passed the
   complete build, Pages publication, and revision-matched live every-route
   verification for that exact merge.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and equals `origin/main` at the protected atlas authority
-  `ea14c92e5bdbb544b75dc254be0f68b3ec1310b8`. The latest substantive
-  companion authority remains #4093 merge
+  on `main` and was fast-forwarded to `origin/main` after the protected #4096
+  merge. Reverify exact local/remote equality before starting new work. The
+  latest substantive companion authority remains #4093 merge
   `17b5f15d362eb0225053d4e51ed86863d305074c`; #4095 is the latest substantive
   website and atlas authority.
 - Numerous older local worktrees remain. Their presence is not evidence that an
