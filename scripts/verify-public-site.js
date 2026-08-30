@@ -6,6 +6,81 @@ const path = require('path');
 
 const SCHEMA_VERSION = 'affinedrift/public-site-manifest/v1';
 
+const RETRYABLE_STATUS_CODES = new Set([502, 503, 504]);
+
+async function navigateWithRetry(page, targetUrl, options = {}) {
+  const maxRetries = options.maxRetries ?? 3;
+  const baseDelayMs = options.baseDelayMs ?? 500;
+  const sleepFn = options.sleepFn ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const logger = options.logger ?? console.log;
+  const timeout = options.timeout ?? 60000;
+  const waitUntil = options.waitUntil ?? 'domcontentloaded';
+
+  if (!Number.isInteger(maxRetries) || maxRetries < 0) {
+    throw new TypeError(`maxRetries must be a non-negative integer, got ${maxRetries}`);
+  }
+  if (typeof baseDelayMs !== 'number' || baseDelayMs < 0) {
+    throw new TypeError(`baseDelayMs must be a non-negative number, got ${baseDelayMs}`);
+  }
+  if (typeof targetUrl !== 'string' || !targetUrl) {
+    throw new TypeError(`targetUrl must be a non-empty string, got ${targetUrl}`);
+  }
+
+  let attempt = 0;
+  let lastResponse = null;
+  let lastError = null;
+  const attempts = [];
+
+  while (attempt <= maxRetries) {
+    attempt += 1;
+    lastError = null;
+    try {
+      lastResponse = await page.goto(targetUrl, { waitUntil, timeout });
+      const status = lastResponse ? lastResponse.status() : null;
+      attempts.push({ attempt, status, error: null });
+
+      if (lastResponse && RETRYABLE_STATUS_CODES.has(status) && attempt <= maxRetries) {
+        const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
+        if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1' || options.verbose) {
+          logger(
+            `Transient HTTP ${status} on ${targetUrl} (attempt ${attempt}/${maxRetries + 1}); retrying in ${delayMs}ms...`,
+          );
+        }
+        await sleepFn(delayMs);
+        continue;
+      }
+
+      return {
+        response: lastResponse,
+        error: null,
+        attempts,
+        retried: attempt > 1,
+      };
+    } catch (err) {
+      lastError = err;
+      attempts.push({ attempt, status: null, error: err.message });
+      if (attempt <= maxRetries) {
+        const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
+        if (process.env.AFFINEDRIFT_VERIFY_VERBOSE === '1' || options.verbose) {
+          logger(
+            `Navigation error on ${targetUrl} (attempt ${attempt}/${maxRetries + 1}): ${err.message}; retrying in ${delayMs}ms...`,
+          );
+        }
+        await sleepFn(delayMs);
+        continue;
+      }
+      break;
+    }
+  }
+
+  return {
+    response: lastResponse,
+    error: lastError ? lastError.message : null,
+    attempts,
+    retried: attempt > 1,
+  };
+}
+
 function assertManifest(manifest) {
   if (!manifest || manifest.schema_version !== SCHEMA_VERSION) {
     throw new TypeError(`manifest must use ${SCHEMA_VERSION}`);
@@ -404,7 +479,18 @@ async function verifyItem(page, item, options) {
   let inspection = { failures: ['page inspection did not run'] };
   let navigationError = null;
   try {
-    response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    const navResult = await navigateWithRetry(page, targetUrl, {
+      timeout: 60000,
+      waitUntil: 'domcontentloaded',
+    });
+    response = navResult.response;
+    if (navResult.error) {
+      throw new Error(navResult.error);
+    }
+    if (!response || !response.ok()) {
+      throw new Error(`HTTP ${response?.status() ?? 'no response'}`);
+    }
+
     await page.evaluate(() => document.fonts?.ready);
     // The gated MathJax request is injected after DOMContentLoaded. Wait for
     // its explicit post-typeset contract before checking the visible fold.
@@ -593,6 +679,8 @@ module.exports = {
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   isActionableConsoleError,
+  navigateWithRetry,
+  RETRYABLE_STATUS_CODES,
   screenshotOptions,
   screenshotName,
   runVerification,
