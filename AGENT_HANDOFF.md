@@ -48,21 +48,24 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   content lint, links, E2E, visual invariants, benchmarks, and governance. The
   exact source diff is four retained files, +49/-8, with zero deleted paths and
   zero immutable-monograph diff.
-- Deployment run 33321616181 passed the complete build and all 928
-  pre-deployment browser inspections. Live attempt 1 passed 927/928 and saw an
-  isolated HTTP 503 on `/articles/impact-optimality-and-model-limits.html`;
-  the one justified failed-job retry again passed 927/928 but saw a 503 on the
-  different route `/pages/drifter-manifesto.html`. Do not rerun it again.
-  Issue #4104 owns the live-host/verifier reliability closure and must preserve
-  every content, heading, overflow, navigation, canonical, theme, and notes
-  assertion.
+- Verifier reliability PR #4107 protected-squash-merged as
+  `6350a5d4fdd59ccc68e1b8562d8f8c2b20d3e262`; issue #4104 is closed.
+  Deployment run 33324477245 passed the complete build, all 928 pre-deployment
+  browser inspections, Pages publication, and all 928 revision-matched live
+  inspections with 100% green status and uploaded live evidence.
+- Provider-consumer compatibility PR #4109 protected-squash-merged as
+  `de1f5a7ed6d68b9fefaa4e1975e5fb25d259c782`; issue #4030 is closed.
+  All exact-head CI, benchmark, link, SPEC, and browser checks passed.
+  The companion schema pins UpstreamDrift protected `main` `6ff956a4d`
+  and includes comprehensive schema version matrix fixtures in `tests/fixtures/companion/`.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and equals `origin/main` at protected #4103 merge
-  `d8775589e4ac5270816e60330b338354a78047db`. Reverify exact equality before
+  on `main` and equals `origin/main` at protected #4030 merge
+  `de1f5a7ed6d68b9fefaa4e1975e5fb25d259c782`. Reverify exact equality before
   starting new work. #4099 is the latest Programming Companion presentation
   authority; #4093 merge
   `17b5f15d362eb0225053d4e51ed86863d305074c` remains the immutable provider
-  consumer authority, and #4095 remains the falsification-atlas authority.
+  consumer authority, #4095 remains the falsification-atlas authority, and
+  #4030 remains the provider-consumer compatibility authority.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
