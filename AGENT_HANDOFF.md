@@ -139,8 +139,9 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 - Issue #4098 owns the dependency-safe interim Programming Companion hub. The
   implementation checkpoint is `c6ee857fb5b2e2218bfd5d13258664b8ef8b2008`
   in `C:\Users\diete\Repositories\worktrees\AffineDrift-4098-programming-hub`
-  on branch `feat/4098-programming-companion`; it is not protected publication
-  authority until its ordinary pull request merges and deploys.
+  on branch `feat/4098-programming-companion`; PR #4099 is open, and the branch
+  is not protected publication authority until that pull request merges and
+  deploys.
 - The stable `/models/models.html` route now removes copied provider versions,
   counts, launcher/install commands, support tiers, repository structure, and
   mutable branch links. It features the technical monograph, visual companion,
