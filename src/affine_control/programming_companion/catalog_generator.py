@@ -50,6 +50,7 @@ class CatalogGenerator:
     )
 
     def __init__(self, manifest: Mapping[str, Any]) -> None:
+        """Initialize the catalog generator with a validated manifest mapping."""
         if not self.REQUIRED_ROOT_KEYS.issubset(manifest.keys()):
             missing = sorted(self.REQUIRED_ROOT_KEYS - set(manifest.keys()))
             raise CatalogGeneratorError(
