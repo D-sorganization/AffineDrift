@@ -142,6 +142,34 @@ def test_ci_workflow_builds_site_for_e2e_and_audits_dependencies() -> None:
     ), "E2E lane should not silently skip smoke tests by default"
 
 
+def test_ci_captures_revision_bound_representative_visual_evidence() -> None:
+    """PR CI must preserve the governed route-family screenshot contract."""
+    content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    representative_sources = (
+        "books/index.qmd",
+        "articles/proximal_distal_energy_transfer/index.qmd",
+        "articles/affine-nature-golf-swing.qmd",
+        "articles/proximal-distal-model-workbench.qmd",
+        "models/models.qmd",
+        "resources/articles.qmd",
+        "critiques/index.qmd",
+        "reports/scientific-claim-audit.md",
+        "resources/resources.qmd",
+    )
+    for source in representative_sources:
+        assert f"quarto render {source} --to html" in content
+
+    assert "Capture governed representative visual evidence" in content
+    assert "scripts/prune_internal_docs_from_deploy.py --docs-dir docs" in content
+    assert "scripts/public_site_manifest.py" in content
+    assert '--source-revision "$GITHUB_SHA"' in content
+    assert "scripts/verify-public-site-visual.js" in content
+    assert "pr-representative.json" in content
+    assert "candidate-baseline.json" in content
+    assert "public-site-visual-evidence-${{ github.sha }}" in content
+
+
 def test_requirements_integrity() -> None:
     """Ensure build dependencies are present."""
     assert REQUIREMENTS_PATH.exists()

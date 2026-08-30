@@ -519,6 +519,13 @@ jobs:
           quarto render pages/about.qmd --to html
           quarto render resources/resources-books.qmd --to html
           quarto render models/models.qmd --to html
+          quarto render books/index.qmd --to html
+          quarto render articles/proximal_distal_energy_transfer/index.qmd --to html
+          quarto render articles/affine-nature-golf-swing.qmd --to html
+          quarto render articles/proximal-distal-model-workbench.qmd --to html
+          quarto render critiques/index.qmd --to html
+          quarto render reports/scientific-claim-audit.md --to html
+          quarto render resources/resources.qmd --to html
       - name: Sync Frontend Assets
         if: steps.e2e_changes.outputs.run == 'true'
         run: python3 scripts/sync_frontend_assets.py
@@ -543,6 +550,30 @@ jobs:
             --retries=0 \
             --grep "no horizontal overflow|single column" \
             tests/e2e/visual.spec.js
+      - name: Capture governed representative visual evidence
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: |
+          python3 scripts/prune_internal_docs_from_deploy.py --docs-dir docs
+          python3 scripts/public_site_manifest.py \
+            --docs-dir docs \
+            --source-root . \
+            --source-revision "$GITHUB_SHA" \
+            --output docs/public-site-manifest.json
+          python3 -m http.server 8000 --directory docs > "$RUNNER_TEMP/affinedrift-visual.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          node scripts/verify-public-site-visual.js \
+            --base-url http://127.0.0.1:8000 \
+            --manifest docs/public-site-manifest.json \
+            --output artifacts/public-site-verification/pr-representative.json \
+            --screenshot-dir artifacts/public-site-verification/screenshots \
+            --candidate-baseline artifacts/public-site-verification/candidate-baseline.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always() && steps.e2e_changes.outputs.run == 'true'
+        with:
+          name: public-site-visual-evidence-${{ github.sha }}
+          path: artifacts/public-site-verification/
+          retention-days: 30
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: failure() && steps.e2e_changes.outputs.run == 'true'
         with:

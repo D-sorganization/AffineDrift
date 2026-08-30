@@ -78,6 +78,10 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   baseline only. Comparison fails closed until a protected follow-up supplies
   explicit reviewer, timestamp, and pull-request approval metadata. Footer,
   dense-content, focus, print, and no-JavaScript scenarios remain open in #4089.
+- The PR E2E job renders every representative source, generates the bounded
+  public manifest, runs all 100 cells, and uploads screenshots, results, and the
+  candidate baseline as `public-site-visual-evidence-<SHA>`. Deployment keeps
+  the same candidate capture in addition to its complete live-route gate.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
   `4cf39347be49adb0e700edebb05390717c5ce2ec`; #9174 and #9190–#9193 remain
