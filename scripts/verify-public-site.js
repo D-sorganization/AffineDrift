@@ -280,8 +280,22 @@ async function inspectRenderedPage(page, item) {
     }
 
     if (pageKind === 'book' && viewportId === 'desktop') {
-      const sidebar = document.querySelector('#quarto-sidebar');
-      if (!sidebar || !isVisible(sidebar)) failures.push('Books navigation sidebar is not visible');
+      if (route === '/books/index.html') {
+        const hub = document.querySelector('.book-hub');
+        const grid = document.querySelector('.resource-grid--long-form');
+        const cards = grid ? [...grid.querySelectorAll('.resource-card')].filter(isVisible) : [];
+        const cardRows = new Set(cards.map((card) => Math.round(card.getBoundingClientRect().top)));
+        if (!hub || !isVisible(hub) || !grid || !isVisible(grid) || cards.length < 3) {
+          failures.push('Books hub long-form library is incomplete or not visible');
+        } else if (cardRows.size !== 1) {
+          failures.push('Books hub long-form library does not share one desktop row');
+        }
+      } else {
+        const sidebar = document.querySelector('#quarto-sidebar');
+        if (!sidebar || !isVisible(sidebar)) {
+          failures.push('Books navigation sidebar is not visible');
+        }
+      }
     }
 
     if (visibleH1s.length === 1) {

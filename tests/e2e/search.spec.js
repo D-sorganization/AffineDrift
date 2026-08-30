@@ -6,7 +6,7 @@ test.describe("Search Functionality", () => {
 
     // Look for search elements
     const searchButton = page.locator(
-      'button.search-trigger, button[aria-label*="search" i]',
+      '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
     );
     const searchInput = page.locator(
       'input[type="search"], input[placeholder*="search" i]',
@@ -22,7 +22,9 @@ test.describe("Search Functionality", () => {
 
     // Find search button
     const searchButton = page
-      .locator('button.search-trigger, button[aria-label*="search" i]')
+      .locator(
+        '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
+      )
       .first();
 
     if ((await searchButton.count()) > 0) {
@@ -78,5 +80,27 @@ test.describe("Search Functionality", () => {
       await closeBtn.click();
       await expect(modal).not.toHaveClass(/active/);
     }
+  });
+
+  test("finds the governed proximal-distal technical monograph", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const searchButton = page
+      .locator(
+        '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
+      )
+      .first();
+    await searchButton.click();
+
+    const searchInput = page.locator(".aa-Input, input[type=search]").first();
+    await expect(searchInput).toBeVisible();
+    await searchInput.fill("proximal distal energy transfer");
+
+    const monographResult = page
+      .locator('a[href*="articles/proximal_distal_energy_transfer/index.html"]')
+      .first();
+    await expect(monographResult).toBeVisible();
   });
 });
