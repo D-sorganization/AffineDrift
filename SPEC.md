@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-30T12:59:50Z
+Last-Updated: 2026-08-30T14:56:15Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T12:59:50Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.272                                          |
+| **Spec Version**        | 1.0.274                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -760,6 +760,16 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
+### 1.0.274 Protected Programming Companion Handoff
+
+Records #4099 as the protected and deployed Programming Companion presentation
+authority, including its exact merge, deployment, live desktop/mobile review,
+and zero-deleted-path source footprint. Replaces the retired branch checkpoint,
+corrects the current protected UpstreamDrift dependency pin, and routes the next
+agent to provider workflow PR #9304 without promoting its unmerged evidence.
+No runtime, scientific, provider-publication, human-validation, or immutable
+monograph authority changes.
+
 ### 1.0.273 Fail-Closed Programming Companion Hub
 
 Replaces the copy-maintained 511-line model-suite page with a concise,
@@ -1289,6 +1299,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-30 | 1.0.274 | docs(handoff, #4100): Recorded protected PR #4099 and exact-revision deployment run 33317188855 as the live Programming Companion presentation authority; replaced the retired branch checkpoint; reconciled the final 10-file +402/-475, zero-deleted-path content-loss audit; recorded live desktop/mobile layout evidence; updated the protected UpstreamDrift dependency pin; and routed the next agent to unmerged provider PR #9304 without promoting its evidence. No runtime, scientific, provider-publication, human-validation, or immutable-monograph authority changed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | 2026-08-30 | 1.0.273 | feat(site, #4098): Rebuilt the stable Programming route as a wide, fail-closed content-to-computation hub; featured the proximal-distal monograph, visual companion, falsification atlas, workbench, Books hub, and learning paths; removed copied mutable provider versions, counts, commands, support tiers, repository structure, and branch links; exposed governed blockers for catalog, onboarding, workflows, screenshots, and compatibility; retained seven engine guides as deferred editorial references; and added TDD, responsive, accessibility, title-case, audit, and browser contracts. No production lock, provider capability authority, scientific authority, or immutable monograph bytes changed.                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-08-30 | 1.0.272 | docs(handoff): Recorded protected PR #4096 as the documentation-only post-atlas handoff authority and replaced a point-in-time checkout SHA assertion with a durable clean local/remote equality gate. No runtime, scientific-authority, generated-publication, or immutable-monograph bytes changed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | 2026-08-30 | 1.0.271 | docs(handoff, #4087): Recorded protected PR #4095 merge authority and issue closure, replaced branch-era instructions with the publication boundary, and documented the exact 23-file, +1,303/-37, zero-deleted-path source footprint plus the reproduced transient render/prune deletion total. No scientific authority or immutable monograph bytes changed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |

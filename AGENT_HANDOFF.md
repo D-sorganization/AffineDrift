@@ -30,12 +30,18 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   passed and issue #4087 is closed. Deployment run 33311698720 passed the
   complete build, Pages publication, and revision-matched live every-route
   verification for that exact merge.
+- Programming Companion PR #4099 protected-squash-merged as
+  `717461e42e2de9f257cfa873ed336795dcc2d321`; issue #4098 is closed and every
+  exact-head CI, content-lint, link, benchmark, governance, Quarto, and browser
+  check passed. Deployment run 33317188855 passed the complete build, Pages
+  publication, and revision-matched live every-route verification for that
+  exact merge.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and was fast-forwarded to `origin/main` after the protected #4096
-  merge. Reverify exact local/remote equality before starting new work. The
-  latest substantive companion authority remains #4093 merge
-  `17b5f15d362eb0225053d4e51ed86863d305074c`; #4095 is the latest substantive
-  website and atlas authority.
+  on `main` and was fast-forwarded to `origin/main` at the protected #4099
+  merge. Reverify exact local/remote equality before starting new work. #4099
+  is the latest Programming Companion presentation authority; #4093 merge
+  `17b5f15d362eb0225053d4e51ed86863d305074c` remains the immutable provider
+  consumer authority, and #4095 remains the falsification-atlas authority.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -130,18 +136,14 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   workflows; executable unit contracts prevent silent trigger erosion.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
-  `727bda2de2d4656e8d9a3abbbc3a72b30fa06ebb`; it advances the previously
-  audited `4cf39347...` only through vendor force-source frame pinning. #9174
-  and #9190–#9193 remain open, and exact-main has no `dist/companion/`
-  publication tree. No provider artifact is accepted for AffineDrift import;
-  only provider-independent RED/security fixtures are safe before those gates
-  close.
-- Issue #4098 owns the dependency-safe interim Programming Companion hub. The
-  implementation checkpoint is `c6ee857fb5b2e2218bfd5d13258664b8ef8b2008`
-  in `C:\Users\diete\Repositories\worktrees\AffineDrift-4098-programming-hub`
-  on branch `feat/4098-programming-companion`; PR #4099 is open, and the branch
-  is not protected publication authority until that pull request merges and
-  deploys.
+  `7dc5f86af68907f19bc953c509d96d05f505cdab`; provider workflow PR #9304 is
+  open, while #9174 and #9190–#9193 remain incomplete and exact-main has no
+  `dist/companion/` publication tree. No provider artifact is accepted for
+  AffineDrift import; only provider-independent RED/security fixtures are safe
+  before those gates close.
+- Issue #4098 is closed through protected PR #4099 at merge
+  `717461e42e2de9f257cfa873ed336795dcc2d321` and deployment run 33317188855.
+  Retired branch/worktree checkpoints are not current publication authority.
 - The stable `/models/models.html` route now removes copied provider versions,
   counts, launcher/install commands, support tiers, repository structure, and
   mutable branch links. It features the technical monograph, visual companion,
@@ -152,13 +154,16 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 - Browser review at 1440 px measured a centered 1,200 px content canvas and
   three 386 px peer long-form cards; at 390 px the cards collapse to 341 px,
   with one visible H1 and no horizontal overflow. The retired three-rail shell
-  had squeezed primary desktop content to 691 px. Human visual approval for the
-  separate #4089 governed baseline remains open.
-- #4098 local verification renders all 231 canonical Quarto inputs and produces
-  a 232-route public manifest; internal links, title case, claim-audit
-  generation/enforcement, book/site-trust audits, and the immutable projection
-  verifier pass. The maintained Python suite passes 3,609 tests with 29
-  dependency/platform skips and 117 configured deselections; Jest passes 307
+  had squeezed primary desktop content to 691 px. Post-deployment inspection at
+  1280 px measured a 1,265 px body/canvas inside the 1,280 px viewport; at
+  390 px it measured 375 px, with one visible H1 and no page overflow in both
+  cases. Human visual approval for the separate #4089 governed baseline remains
+  open.
+- #4098 local and protected verification render all 231 canonical Quarto
+  inputs and produce a 232-route public manifest; internal links, title case,
+  claim-audit generation/enforcement, book/site-trust audits, and the immutable
+  projection verifier pass. The maintained Python suite passes 3,609 tests with
+  29 dependency/platform skips and 117 configured deselections; Jest passes 307
   with 19 documented skips; Ruff, Black, strict `src/affine_control` mypy, and
   Stylelint pass. Direct light/dark browser review reports no console errors.
 - The provider-independent #4022 consumer foundation is protected on `main`
@@ -190,7 +195,7 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Content-Loss Audit
 
-- The current #4098 branch range is 10 retained files, +386/-475, with zero
+- Protected PR #4099 is 10 retained files, +402/-475, with zero
   deleted paths. The 475 removals replace a 511-line copy-maintained hub
   and small obsolete test expectations; no article, book, monograph, provider
   snapshot, program source, or scientific evidence path is deleted.
@@ -331,12 +336,13 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Finish #4098 through its ordinary protected pull request and exact-revision
-   deployment, then replace this branch checkpoint with protected authority.
-2. Keep production companion installation fail-closed. Finish provider
+1. Keep production companion installation fail-closed. Finish provider
    #9174/#9190–#9193 before installing any lock/snapshot or starting generated
    catalog #4023/#4024; then exercise #4030 against current and previous
    supported provider schema versions.
+2. Review UpstreamDrift #9190 through protected PR #9304; it is workflow
+   execution evidence, not publication, screenshot, native-engine, or
+   scientific qualification authority.
 3. Obtain explicit human approval for the #4089 visual candidate before
    creating an approved baseline. Implement #4086 shared evidence semantics
    only when the provider-owned catalog and evidence authority are protected.
