@@ -4,10 +4,11 @@ Updated: 2026-08-29. Current-state only; use git and GitHub for history.
 
 ## Protected Authority
 
-- Protected `main` is `b28fd8227d5003c752a16426ed508e13ff2e137a`.
-- No AffineDrift pull request was open when this handoff was refreshed.
-- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean,
-  on `main`, and equal to `origin/main`.
+- Turnover PR #4081 protected-squash-merged as
+  `7d96e3d96e624b4d19123280d14d9a9c0399cc58`; verify current `origin/main`
+  before acting rather than treating this evidence commit as a moving pointer.
+- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` was clean
+  and synchronized through that protected merge at turnover.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
