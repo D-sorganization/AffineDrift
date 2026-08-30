@@ -79,4 +79,26 @@ test.describe("Search Functionality", () => {
       await expect(modal).not.toHaveClass(/active/);
     }
   });
+
+  test("finds the governed proximal-distal technical monograph", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const searchButton = page
+      .locator('button.search-trigger, button[aria-label*="search" i]')
+      .first();
+    await searchButton.click();
+
+    const searchInput = page.locator(".aa-Input, input[type=search]").first();
+    await expect(searchInput).toBeVisible();
+    await searchInput.fill("proximal distal energy transfer");
+
+    const monographResult = page
+      .locator(
+        'a[href*="articles/proximal_distal_energy_transfer/index.html"]',
+      )
+      .first();
+    await expect(monographResult).toBeVisible();
+  });
 });
