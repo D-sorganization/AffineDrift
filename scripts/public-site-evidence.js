@@ -2,9 +2,15 @@
 
 const crypto = require('crypto');
 const path = require('path');
+const Ajv2020 = require('ajv/dist/2020');
+const addFormats = require('ajv-formats');
+const baselineSchema = require('../schemas/public-site-screenshot-baseline-v1.schema.json');
 
 const EVIDENCE_SCHEMA = 'affinedrift/public-site-screenshot-evidence/v1';
 const BASELINE_SCHEMA = 'affinedrift/public-site-screenshot-baseline/v1';
+const ajv = new Ajv2020({ allErrors: true, strict: true });
+addFormats(ajv);
+const validateBaselineSchema = ajv.compile(baselineSchema);
 
 function decodePngDimensions(bytes) {
   const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
@@ -102,15 +108,40 @@ function buildBaselineCandidate(report) {
   };
 }
 
-function compareScreenshotBaseline(report, baseline) {
-  if (
-    baseline?.schema_version !== BASELINE_SCHEMA ||
-    baseline.status !== 'approved' ||
-    !baseline.approval?.reviewed_by ||
-    !baseline.approval?.pull_request
-  ) {
+function assertApprovedBaseline(baseline) {
+  if (!validateBaselineSchema(baseline)) {
+    const details = validateBaselineSchema.errors
+      .map((error) => `${error.instancePath || '/'} ${error.message}`)
+      .join('; ');
+    throw new TypeError(`visual baseline schema invalid: ${details}`);
+  }
+  if (baseline.status !== 'approved') {
     throw new TypeError('visual baseline must be an approved v1 baseline');
   }
+  if (baseline.capture_count !== baseline.captures.length) {
+    throw new TypeError(
+      'visual baseline capture_count must equal captures length',
+    );
+  }
+  const keys = new Set();
+  for (const capture of baseline.captures) {
+    const derivedKey = captureKey(capture);
+    if (capture.key !== derivedKey) {
+      throw new TypeError(
+        `visual baseline capture key does not match its dimensions: ${capture.key}`,
+      );
+    }
+    if (keys.has(capture.key)) {
+      throw new TypeError(
+        `visual baseline contains duplicate capture key: ${capture.key}`,
+      );
+    }
+    keys.add(capture.key);
+  }
+}
+
+function compareScreenshotBaseline(report, baseline) {
+  assertApprovedBaseline(baseline);
   if (
     baseline.browser?.name !== report.browser?.name ||
     baseline.browser?.version !== report.browser?.version

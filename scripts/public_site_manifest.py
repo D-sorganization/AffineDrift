@@ -26,6 +26,8 @@ EVERY_PAGE_VIEWPORTS = (
 REPRESENTATIVE_VIEWPORTS = (
     {"id": "tablet", "width": 768, "height": 1024},
     {"id": "intermediate", "width": 1024, "height": 768},
+    {"id": "margin-boundary", "width": 1200, "height": 900},
+    {"id": "margin-reentry", "width": 1280, "height": 900},
     {"id": "desktop-small", "width": 1366, "height": 768},
     {"id": "desktop-wide", "width": 1920, "height": 1080},
 )

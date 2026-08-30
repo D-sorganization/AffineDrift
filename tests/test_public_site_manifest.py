@@ -117,6 +117,8 @@ def test_representative_contract_names_every_required_desktop_route_family(
         "mobile",
         "tablet",
         "intermediate",
+        "margin-boundary",
+        "margin-reentry",
         "desktop-small",
         "desktop-wide",
     ]

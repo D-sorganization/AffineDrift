@@ -36,6 +36,8 @@ function fixtureManifest() {
     { id: 'mobile', width: 390, height: 844 },
     { id: 'tablet', width: 768, height: 1024 },
     { id: 'intermediate', width: 1024, height: 768 },
+    { id: 'margin-boundary', width: 1200, height: 900 },
+    { id: 'margin-reentry', width: 1280, height: 900 },
     { id: 'desktop-small', width: 1366, height: 768 },
     { id: 'desktop-wide', width: 1920, height: 1080 },
   ];
@@ -93,7 +95,7 @@ function fixtureEvidenceReport() {
 }
 
 describe('public-site visual evidence contracts (SITE-UX)', () => {
-  test('governs exactly ten families across a 100-cell core matrix', () => {
+  test('governs exactly ten families across a 140-cell core matrix', () => {
     const manifest = fixtureManifest();
     const contract = assertRepresentativeContract(manifest);
     const bounded = representativeManifest(manifest);
@@ -103,7 +105,7 @@ describe('public-site visual evidence contracts (SITE-UX)', () => {
       contract.routes.length *
         contract.viewports.length *
         contract.themes.length,
-    ).toBe(100);
+    ).toBe(140);
     expect(bounded.page_count).toBe(10);
     expect(bounded.verification.every_page.viewports).toEqual(
       contract.viewports,
@@ -170,15 +172,58 @@ describe('public-site visual evidence contracts (SITE-UX)', () => {
     changed.captures[0].sha256 = '0'.repeat(64);
     expect(compareScreenshotBaseline(report, changed).passed).toBe(false);
 
-    const missing = JSON.parse(JSON.stringify(approved));
-    missing.captures = [];
-    missing.capture_count = 0;
-    expect(compareScreenshotBaseline(report, missing).passed).toBe(false);
+    const missing = JSON.parse(JSON.stringify(report));
+    missing.results = [];
+    expect(compareScreenshotBaseline(missing, approved).passed).toBe(false);
 
     const incompatible = JSON.parse(JSON.stringify(approved));
     incompatible.browser.version = '9.9.9';
     expect(() => compareScreenshotBaseline(report, incompatible)).toThrow(
       /browser/,
+    );
+  });
+
+  test('rejects malformed approval metadata, count mismatches, and duplicate keys', () => {
+    const report = fixtureEvidenceReport();
+    const approved = {
+      ...buildBaselineCandidate(report),
+      status: 'approved',
+      approval: {
+        reviewed_by: 'independent-reviewer',
+        reviewed_at: '2026-08-30T00:00:00Z',
+        pull_request: 'https://github.com/D-sorganization/AffineDrift/pull/1',
+      },
+    };
+
+    const missingTimestamp = JSON.parse(JSON.stringify(approved));
+    delete missingTimestamp.approval.reviewed_at;
+    expect(() => compareScreenshotBaseline(report, missingTimestamp)).toThrow(
+      /baseline schema/,
+    );
+
+    const invalidTimestamp = JSON.parse(JSON.stringify(approved));
+    invalidTimestamp.approval.reviewed_at = 'yesterday';
+    expect(() => compareScreenshotBaseline(report, invalidTimestamp)).toThrow(
+      /baseline schema/,
+    );
+
+    const invalidPullRequest = JSON.parse(JSON.stringify(approved));
+    invalidPullRequest.approval.pull_request = 'not-a-url';
+    expect(() => compareScreenshotBaseline(report, invalidPullRequest)).toThrow(
+      /baseline schema/,
+    );
+
+    const countMismatch = JSON.parse(JSON.stringify(approved));
+    countMismatch.capture_count = 2;
+    expect(() => compareScreenshotBaseline(report, countMismatch)).toThrow(
+      /capture_count/,
+    );
+
+    const duplicateKey = JSON.parse(JSON.stringify(approved));
+    duplicateKey.captures.push({ ...duplicateKey.captures[0] });
+    duplicateKey.capture_count = 2;
+    expect(() => compareScreenshotBaseline(report, duplicateKey)).toThrow(
+      /duplicate capture key/,
     );
   });
 });

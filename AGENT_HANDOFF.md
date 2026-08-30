@@ -66,20 +66,24 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   on branch `test/4089-desktop-visual-regression`. Commit `ea2c2b6a` adds the
   governed evidence foundation; merge commit `93e4b960` incorporates protected
   #4090. Do not describe #4089 as complete yet.
-- The new representative contract is ten route families by five viewports
-  (390, 768, 1024, 1366, and 1920 px) by two themes: 100 cells. It includes a
+- The new representative contract is ten route families by seven viewports
+  (390, 768, 1024, 1200, 1280, 1366, and 1920 px) by two themes: 140 cells. It includes a
   real `proximal distal` search interaction while preserving the separate
   924-cell every-route structural verifier. The first full run failed 10 cells:
   five route families in both themes overflowed at 1024 px because Quarto
-  exposed the margin TOC too early. A failing-first source contract and the
-  canonical 1199.98 px TOC threshold close all 100/100 cells locally.
+  exposed the margin TOC too early. Adversarial review then measured a second
+  21 px monograph overflow at the former 1200 px rail-entry boundary. Exact
+  1200 and 1280 px probes plus a canonical 1279.98 px hide threshold govern the
+  corrected transition; rerun the complete 140-cell matrix before delivery.
 - Screenshot evidence binds route family, scenario, source revision, renderer,
   decoded PNG dimensions, byte count, and SHA-256. The runner emits a candidate
-  baseline only. Comparison fails closed until a protected follow-up supplies
-  explicit reviewer, timestamp, and pull-request approval metadata. Footer,
-  dense-content, focus, print, and no-JavaScript scenarios remain open in #4089.
+  baseline only. Comparison validates the complete baseline schema and fails
+  closed on missing or malformed reviewer/timestamp/pull-request metadata,
+  count mismatch, non-derived or duplicate keys, or renderer mismatch. A
+  protected follow-up must still approve a candidate. Footer, dense-content,
+  focus, print, and no-JavaScript scenarios remain open in #4089.
 - The PR E2E job renders every representative source, generates the bounded
-  public manifest, runs all 100 cells, and uploads screenshots, results, and the
+  public manifest, runs all 140 cells, and uploads screenshots, results, and the
   candidate baseline as `public-site-visual-evidence-<SHA>`. Deployment keeps
   the same candidate capture in addition to its complete live-route gate.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather

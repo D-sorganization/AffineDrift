@@ -76,7 +76,8 @@ def test_margin_toc_waits_for_a_wide_desktop_publication_grid() -> None:
     )[1]
     sidebar_rule = contract.split("#quarto-margin-sidebar", maxsplit=1)[1].split("}", maxsplit=1)[0]
 
-    assert "@media (max-width: 1199.98px)" in contract
+    assert "@media (max-width: 1279.98px)" in contract
+    assert "@media (max-width: 1199.98px)" not in contract
     assert "display: none !important" in sidebar_rule
 
 
