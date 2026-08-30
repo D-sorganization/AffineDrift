@@ -11,13 +11,12 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   authority at `75042154b05c2a04351b0d47e6ed44c994243476`. #4092's exact-head
   protected checks passed. The prior #4091 deployment run 33303380671 passed,
   including its revision-matched live every-route gate.
-- Deployment run 33306144800 targets the exact #4092 merge. Its full build,
-  every-page predeployment verification, and Pages publication succeeded; the
-  revision-matched live-route verification was still in progress at this
-  handoff update. Do not claim the revision live until that final gate succeeds.
-- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` was last
-  verified clean on `main` at `af49c1f15f2771397ecf0e67eb53dd92646ac0b1`.
-  Fast-forward it only after the exact #4092 deployment is green.
+- Deployment run 33306144800 succeeded for the exact #4092 merge, including
+  the full build, every-page predeployment verification, Pages publication,
+  revision-matched live-route verification, and uploaded live evidence.
+- The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
+  on `main` at `c1963cf038dcc5cf8dacb583aed9e35fe176fc41` and equals
+  `origin/main`.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -252,16 +251,14 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Verify deployment run 33306144800 and its revision-matched live-route gate,
-   then fast-forward the clean primary checkout to exact protected main.
-2. Deliver the provider-independent #4022 consumer foundation through protected
+1. Deliver the provider-independent #4022 consumer foundation through protected
    review. Finish provider #9174/#9190–#9193 before installing any production
    lock/snapshot or starting generated catalog #4023/#4024.
-3. In parallel where dependencies permit, implement #4086 shared evidence
+2. In parallel where dependencies permit, implement #4086 shared evidence
    semantics and #4089 whole-site desktop regression from fresh worktrees.
-4. Build #4087 from existing governed claim/critique/readiness/provider IDs;
+3. Build #4087 from existing governed claim/critique/readiness/provider IDs;
    never create a competing scientific registry.
-5. Run #4088 baseline and follow-up reader validation under its privacy and
+4. Run #4088 baseline and follow-up reader validation under its privacy and
    preregistration gates. Keep #4042 and #9267 fail-closed until independently
    complete and protected.
 
