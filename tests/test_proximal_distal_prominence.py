@@ -62,6 +62,16 @@ def test_books_hub_treats_the_monograph_as_a_distinct_long_form_reference() -> N
     assert "not a completed or peer-reviewed textbook" in books
 
 
+def test_books_hub_uses_the_desktop_width_for_peer_long_form_cards() -> None:
+    """The desktop hub should not squeeze all three primary works into one narrow column."""
+    books = _read("books/index.qmd")
+    frontmatter = books.split("---", 2)[1]
+
+    assert "page-layout: full" in frontmatter
+    assert "toc: false" in frontmatter
+    assert "resource-grid resource-grid--long-form" in books
+
+
 def test_article_catalog_uses_current_monograph_scope_and_long_form_orientation() -> None:
     """The catalog should use the governed chapter count and distinguish publication types."""
     catalog = _read("resources/articles.qmd")
