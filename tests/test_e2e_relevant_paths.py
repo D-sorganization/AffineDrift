@@ -16,6 +16,7 @@ from scripts.e2e_relevant_paths import is_e2e_relevant
         "articles/proximal_distal_energy_transfer/monograph.css",
         "scripts/verify-public-site-visual.js",
         "scripts/public-site-evidence.js",
+        "scripts/public-site-visual-scenario-plan.js",
         "scripts/public_site_manifest.py",
         "scripts/bundle_css.py",
         "schemas/public-site-screenshot-baseline-v1.schema.json",
