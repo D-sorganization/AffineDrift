@@ -70,7 +70,8 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   rebuilds CSS before PR capture, `4ed9e108` centralizes the visual-contract
   change detector, and `dd29ca53` closes its final article-local stylesheet
   gap by treating every tracked CSS/SCSS path as visual evidence input. The
-  current range is 21 files, +1342/-60, with zero deleted paths. Merge commit
+  implementation range through `dd29ca53` is 21 files, +1342/-60, with zero
+  deleted paths; later commits only refresh this handoff. Merge commit
   `93e4b960` incorporates protected #4090. Do not describe #4089 as complete
   yet.
 - The new representative contract is ten route families by seven viewports
