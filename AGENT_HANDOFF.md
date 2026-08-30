@@ -17,10 +17,15 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 - Programming-companion PR #4093 protected-squash-merged as
   `17b5f15d362eb0225053d4e51ed86863d305074c`; all exact-head CI, benchmark,
   link, SPEC, routing, and governance checks passed, and issue #4022 is closed.
+- Handoff-only PR #4094 protected-squash-merged as
+  `bcc25fa43a1f741e8565a2037476deed9f45cd69`; deployment run 33308185575
+  passed through revision-matched live every-page verification. It changed no
+  runtime or scientific publication authority.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and equals `origin/main`. The latest substantive companion authority
-  is #4093 merge `17b5f15d362eb0225053d4e51ed86863d305074c`; this handoff-only
-  follow-up changes no runtime or publication behavior.
+  on `main` and equals `origin/main` at the last verified protected handoff
+  authority `bcc25fa43a1f741e8565a2037476deed9f45cd69`. The latest substantive
+  companion authority remains #4093 merge
+  `17b5f15d362eb0225053d4e51ed86863d305074c`.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -131,6 +136,16 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   active locks, rollback, tamper detection, read-only update comparison, and
   explicit active-lock-digest replacement. Thirty manufactured contracts pass.
   There is deliberately no production lock or snapshot.
+- #4087 implementation is active on branch `feat/4087-falsification-atlas` in
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4022-consumer`. The
+  dependency-safe foundation uses a strict editorial schema and typed
+  deterministic generator to join six required themes to pinned claim,
+  critique, readiness, validation-release, source-manifest, and provider
+  authorities. Scientific wording and state are authority-derived; exact
+  provider workflows and validation releases remain visibly unavailable. The
+  public static atlas has desktop/mobile/no-overflow and clean-console browser
+  evidence, plus print/no-JavaScript semantics. Do not call it protected until
+  the branch has passed exact-head CI and an ordinary protected merge.
 - UpstreamDrift PR #9267 remains a separate blocked scientific-authority lane at
   observed head `7215e0e285bd21f7f1631681e51226bbf746d610`. It cannot authorize a
   refreshed proximal-distal projection until its exact artifact, manifests,
@@ -265,8 +280,10 @@ Do not treat source tests alone as rendered-publication evidence.
 2. Obtain explicit human approval for the #4089 visual candidate before
    creating an approved baseline. Implement #4086 shared evidence semantics
    only when the provider-owned catalog and evidence authority are protected.
-3. Build #4087 from existing governed claim/critique/readiness/provider IDs;
-   never create a competing scientific registry.
+3. Finish protected review and publication of the active #4087 foundation;
+   preserve the immutable monograph source and never create a competing
+   scientific registry. Add exact provider workflow links only after #9174
+   publishes qualified records.
 4. Run #4088 baseline and follow-up reader validation under its privacy and
    preregistration gates. Keep #4042 and #9267 fail-closed until independently
    complete and protected.

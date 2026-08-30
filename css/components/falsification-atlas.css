@@ -1,0 +1,84 @@
+/* Governed proximal-distal falsification atlas.
+   Scientific text is generated from pinned authorities; this component owns
+   only the accessible reading surface. */
+
+.falsification-atlas-record {
+  display: grid;
+  gap: var(--space-md, 1rem);
+  margin-block: var(--space-xl, 2.5rem);
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--border-color);
+  border-left: 0.35rem solid var(--accent-blue);
+  border-radius: var(--border-radius-md, 0.5rem);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.falsification-atlas-record > h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  text-wrap: balance;
+}
+
+.falsification-atlas-record dl {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+}
+
+.falsification-atlas-record dt {
+  margin-top: var(--space-sm, 0.75rem);
+  color: var(--color-link);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.falsification-atlas-record dd {
+  margin: 0;
+  color: var(--text-main);
+}
+
+.falsification-atlas-record p,
+.falsification-atlas-record details,
+.falsification-atlas-record ul {
+  margin-block: 0;
+}
+
+.falsification-atlas-record a,
+.falsification-atlas-record code {
+  overflow-wrap: anywhere;
+}
+
+.falsification-atlas-record details {
+  padding-top: var(--space-sm, 0.75rem);
+  border-top: 1px solid var(--border-color);
+}
+
+.falsification-atlas-record summary {
+  cursor: pointer;
+  color: var(--color-link);
+  font-weight: 700;
+}
+
+.falsification-atlas-record .atlas-evidence {
+  margin-top: var(--space-sm, 0.75rem);
+  padding-left: 1.25rem;
+}
+
+@media print {
+  .falsification-atlas-record {
+    break-inside: avoid;
+    border-color: currentcolor;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .falsification-atlas-record details {
+    display: block;
+  }
+
+  .falsification-atlas-record details > * {
+    display: block;
+  }
+}
