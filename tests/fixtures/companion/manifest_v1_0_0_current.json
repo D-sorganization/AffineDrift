@@ -1,0 +1,104 @@
+{
+  "$schema": "https://upstreamdrift.dev/schemas/upstreamdrift-companion-v1.schema.json",
+  "schema_version": "1.0.0",
+  "manifest_id": "upstreamdrift-companion",
+  "publication": {
+    "state": "draft",
+    "blockers": ["Compatibility test fixture only."]
+  },
+  "source": {
+    "repository": "https://github.com/D-sorganization/UpstreamDrift",
+    "commit": "6ff956a4df928d3ef7be241e3d06289b5ea7bb89",
+    "commit_timestamp": "2026-08-30T17:15:00Z",
+    "package_version": "2.1.1",
+    "generator": {
+      "path": "scripts/companion_catalog.py",
+      "version": "1.0.0"
+    },
+    "inputs": [
+      {
+        "path": "pyproject.toml",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ]
+  },
+  "providers": [],
+  "registries": [],
+  "compatibility": {
+    "requires_python": ">=3.11",
+    "supported_python_minors": ["3.11", "3.12"],
+    "verification_command": {
+      "executable": "python",
+      "arguments": ["-m", "pytest"]
+    }
+  },
+  "engines": [],
+  "programs": [],
+  "features": [],
+  "documentation": [],
+  "workflows": [
+    {
+      "id": "companion-export",
+      "title": "Export the Exact-Revision Companion Manifest",
+      "kind": "workflow",
+      "executor": "python-module",
+      "argv": [
+        "scripts.companion_catalog",
+        "--output",
+        "dist/companion-workflows/artifacts/companion-export/upstreamdrift-companion.v1.json"
+      ],
+      "cwd": ".",
+      "environment": {
+        "inherit": ["PATH", "PYTHONPATH"],
+        "fixed": {
+          "MPLBACKEND": "Agg",
+          "PYTHONHASHSEED": "0",
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONUTF8": "1"
+        },
+        "python_paths": [".", "src"]
+      },
+      "expected_exit_code": 0,
+      "expected_artifacts": [
+        {
+          "path": "dist/companion-workflows/artifacts/companion-export/upstreamdrift-companion.v1.json",
+          "type": "json",
+          "required": true,
+          "verification": {
+            "method": "json-object",
+            "minimum_bytes": 3
+          }
+        }
+      ],
+      "documentation_paths": ["docs/operations/companion-publication.md"],
+      "program_ids": ["project_map"],
+      "prerequisites": ["Python 3.11 or 3.12"],
+      "support_tier": "supported",
+      "availability": {
+        "state": "available",
+        "reason": null
+      },
+      "determinism": {
+        "fixture_kind": "inline",
+        "fixture_paths": [],
+        "absolute_tolerance": 0.0,
+        "relative_tolerance": 0.0
+      },
+      "verification_method": "Exact exit code plus declared artifact type, size, and SHA-256 evidence",
+      "scientific_limitations": [
+        "Execution evidence only; not scientific qualification."
+      ],
+      "source_commit": "6ff956a4df928d3ef7be241e3d06289b5ea7bb89"
+    }
+  ],
+  "screenshots": [],
+  "summary": {
+    "raw_launcher_records": 0,
+    "local_model_records": 0,
+    "program_records": 0,
+    "feature_records": 0,
+    "feature_surface_paths": 0,
+    "workflow_records": 1,
+    "executable_workflow_records": 1
+  }
+}
