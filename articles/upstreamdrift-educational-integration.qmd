@@ -246,7 +246,9 @@ python3 -m src.engines.pinocchio.benchmarks.aba_timing --n_dof 7 --n_steps 1000
 
 ## Installation
 
-UpstreamDrift's canonical install is an editable pip install (see the UD README):
+UpstreamDrift's canonical install is an editable pip install (see the UpstreamDrift documentation).
+For current engine matrices, support tiers, and exact-commit provenance, consult the
+[Programming Companion Engines Matrix](../models/programming/engines.html).
 
 ```bash
 # Clone UpstreamDrift and pull large model files via Git LFS
@@ -260,14 +262,17 @@ pip install -e ".[dev]"
 # Optional: Drake (requires separate installer)
 # See https://drake.mit.edu/installation.html
 
-# Verify the installation
-python scripts/verify_installation.py
+# Verify the installation via CI entrypoint
+python scripts/ci/verify_installation.py
+
+# Or execute the governed installation verification workflow
+python -m scripts.companion_workflows execute --workflow-id installation-verification
 ```
 
 Choose the engine profile that matches your needs — UpstreamDrift groups engines
-into **Supported**, **Extended**, and **Experimental** tiers (Pinocchio/MuJoCo are
-core; MyoSuite/OpenSim are Experimental). For a UI-only exploration without the
-heavy engine dependencies, set `GOLF_USE_MOCK_ENGINE=1`.
+into **Supported** (`F0`), **Extended** (`F1`), and **Experimental** (`F2`) tiers
+(Pinocchio/MuJoCo are core; MyoSuite/OpenSim are Experimental). For a UI-only exploration
+without the heavy engine dependencies, set `GOLF_USE_MOCK_ENGINE=1`.
 
 
 ## Connection to Book Theorems
