@@ -41,12 +41,26 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   reproducibly found one failed item among 928 browser inspections: the
   bibliography metrics widget skipped from H2 to H4 on desktop/light. Evidence
   artifact `public-site-verification-8edfc911...` identifies the exact route and
-  assertion. Issue #4102 is the closure authority; do not treat an unmerged H3
-  source correction as live deployment authority.
+  assertion.
+- Bibliography accessibility PR #4103 protected-squash-merged as
+  `d8775589e4ac5270816e60330b338354a78047db`; issue #4102 is closed. All
+  exact-head checks passed, including the complete Python lane, JavaScript,
+  content lint, links, E2E, visual invariants, benchmarks, and governance. The
+  exact source diff is four retained files, +49/-8, with zero deleted paths and
+  zero immutable-monograph diff.
+- Deployment run 33321616181 passed the complete build and all 928
+  pre-deployment browser inspections. Live attempt 1 passed 927/928 and saw an
+  isolated HTTP 503 on `/articles/impact-optimality-and-model-limits.html`;
+  the one justified failed-job retry again passed 927/928 but saw a 503 on the
+  different route `/pages/drifter-manifesto.html`. Do not rerun it again.
+  Issue #4104 owns the live-host/verifier reliability closure and must preserve
+  every content, heading, overflow, navigation, canonical, theme, and notes
+  assertion.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and was fast-forwarded to `origin/main` at the protected #4099
-  merge. Reverify exact local/remote equality before starting new work. #4099
-  is the latest Programming Companion presentation authority; #4093 merge
+  on `main` and equals `origin/main` at protected #4103 merge
+  `d8775589e4ac5270816e60330b338354a78047db`. Reverify exact equality before
+  starting new work. #4099 is the latest Programming Companion presentation
+  authority; #4093 merge
   `17b5f15d362eb0225053d4e51ed86863d305074c` remains the immutable provider
   consumer authority, and #4095 remains the falsification-atlas authority.
 - Numerous older local worktrees remain. Their presence is not evidence that an
@@ -143,8 +157,14 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   workflows; executable unit contracts prevent silent trigger erosion.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
-  `7dc5f86af68907f19bc953c509d96d05f505cdab`; provider workflow PR #9304 is
-  open, while #9174 and #9190–#9193 remain incomplete and exact-main has no
+  `f98bf7b382083322c609bfd7d680e4e82d71aed8`; provider workflow PR #9307 is
+  open at head `6614f7ad8eafedde8a4f3162470850921d20e195` with that exact base. Its
+  substantive checks, including `companion-workflows` and the optional stack,
+  passed; `check-and-trigger` remains queued, while GitHub reports the PR as
+  conflicting even though local Git proves protected main is a parent of the
+  merge head. Requery before acting and never force-push; if GitHub does not
+  reconcile, create a fresh replacement branch from current protected main.
+  #9174 and #9190–#9193 remain incomplete and exact-main has no
   `dist/companion/` publication tree. No provider artifact is accepted for
   AffineDrift import; only provider-independent RED/security fixtures are safe
   before those gates close.
@@ -202,6 +222,11 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Content-Loss Audit
 
+- Protected PR #4103 changed four retained source/governance files by +49/-8,
+  with zero deleted paths and no immutable proximal-distal publication change.
+  Its full render briefly produced +422/-3,154 across generated `docs/` assets;
+  restoring tracked generated output and removing only dry-run-enumerated
+  untracked render products returned the intended diff to four files.
 - Protected handoff PR #4101 changed two retained governance files by
   +47/-30, with zero deleted paths and no public-site source change.
 - Protected PR #4099 is 10 retained files, +402/-475, with zero
@@ -266,9 +291,12 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 - `source_manifest.json` and
   `python scripts/verify_proximal_distal_projection.py` govern immutable source,
   figure, adaptation, claim-registry, and PDF identity.
-- UpstreamDrift #9153 is still an unprotected structural campaign. Do not edit
-  or refresh the AffineDrift projection until #9153 is protected, its release
-  manifest is immutable, and all failure boundaries remain visible.
+- UpstreamDrift PRs #9305 and #9306 protected the event-aligned forward
+  attribution kernel and distributed event-boundary adapter at protected main
+  `f98bf7b382083322c609bfd7d680e4e82d71aed8`, but issue #9153 remains open.
+  Do not refresh the AffineDrift projection until #9153's explicit remaining
+  gates close, its release manifest is immutable, and all failure boundaries
+  remain visible.
 - Do not infer human technique, anatomy, physiology, or coaching effects from
   structural-model evidence.
 
@@ -311,6 +339,8 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 5. `scripts/verify_proximal_distal_projection.py` — projection verifier.
 6. `reports/website-companion-review-2026-08-29.md` — argument gaps, feature
    choices, research augmentation, and implementation order.
+7. `TURNOVER_PROMPT.md` — copy-ready next-agent prompt, exact current state,
+   commands, stop conditions, and closure order.
 
 ## Validation
 
@@ -345,16 +375,17 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Finish #4102 through ordinary protected merge and exact-revision deployment;
-   require all 928 browser evidence items to pass without weakening the heading
-   hierarchy contract.
-2. Keep production companion installation fail-closed. Finish provider
+1. Start from `TURNOVER_PROMPT.md`. Do not rerun deployment 33321616181. Work
+   issue #4104 with deterministic bounded 5xx-policy tests, then require one
+   new exact-revision live run with 928/928 passing.
+2. Requery UpstreamDrift PR #9307. Its substantive checks passed, but the bot
+   trigger is queued and GitHub reports a conflict despite exact base ancestry.
+   Do not force-push or merge while that discrepancy remains; use a fresh
+   replacement branch from current protected main if GitHub does not reconcile.
+3. Keep production companion installation fail-closed. Finish provider
    #9174/#9190–#9193 before installing any lock/snapshot or starting generated
    catalog #4023/#4024; then exercise #4030 against current and previous
    supported provider schema versions.
-3. Review UpstreamDrift #9190 through protected PR #9304; it is workflow
-   execution evidence, not publication, screenshot, native-engine, or
-   scientific qualification authority.
 4. Obtain explicit human approval for the #4089 visual candidate before
    creating an approved baseline. Implement #4086 shared evidence semantics
    only when the provider-owned catalog and evidence authority are protected.
@@ -372,3 +403,5 @@ Do not treat source tests alone as rendered-publication evidence.
 - Do not revive a stale worktree without fetching and proving exact ancestry.
 - Do not promote simulation-ready, manufactured, unavailable, or private
   evidence to validated or published status.
+- Do not retry run 33321616181 or weaken the every-page verifier to obtain a
+  green result; #4104 must retain both isolated-503 artifacts as adverse data.

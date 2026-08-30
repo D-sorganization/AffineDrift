@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-30T15:43:55Z
+Last-Updated: 2026-08-30T16:38:28Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T15:43:55Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.275                                          |
+| **Spec Version**        | 1.0.276                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -760,6 +760,16 @@ python src/tools/code_quality_check.py
 
 ## 12. Change Log
 
+### 1.0.276 Final Programming Companion Turnover
+
+Records the protected bibliography hierarchy repair, the complete green
+pre-deployment evidence, both isolated live HTTP 503 failures, and the #4104
+reliability boundary. Reconciles the current UpstreamDrift protected main and
+provider PR without promoting unmerged execution evidence, preserves the
+zero-deletion/content-loss audit, and adds a copy-ready next-agent turnover
+prompt. No runtime, scientific, provider-publication, or immutable-monograph
+authority changes.
+
 ### 1.0.275 Bibliography Heading Hierarchy
 
 Changes the privacy-preserving metrics widget heading from H4 to H3 so the
@@ -1307,6 +1317,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-30 | 1.0.276 | docs(handoff, #4105): Recorded protected PR #4103 and exact source diff, both attempt-specific 927/928 live deployment failures caused by isolated HTTP 503 responses on different routes, issue #4104 as the no-weakening reliability closure, current UpstreamDrift main and PR #9307 state, primary-checkout equality, and the generated-output deletion audit; added a copy-ready turnover prompt and dependency-safe closure order. No runtime, scientific, provider-publication, or immutable-monograph authority changed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | 2026-08-30 | 1.0.275 | fix(a11y, #4102): Changed the bibliography metrics widget heading from H4 to H3, preserving the existing styling class while restoring sequential H2-to-H3 semantics; added failing-first DOM coverage; and recorded the exact adverse deployment evidence from run 33318598234. No text, metrics behavior, scientific authority, provider state, or immutable-monograph bytes changed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | 2026-08-30 | 1.0.274 | docs(handoff, #4100): Recorded protected PR #4099 and exact-revision deployment run 33317188855 as the live Programming Companion presentation authority; replaced the retired branch checkpoint; reconciled the final 10-file +402/-475, zero-deleted-path content-loss audit; recorded live desktop/mobile layout evidence; updated the protected UpstreamDrift dependency pin; and routed the next agent to unmerged provider PR #9304 without promoting its evidence. No runtime, scientific, provider-publication, human-validation, or immutable-monograph authority changed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | 2026-08-30 | 1.0.273 | feat(site, #4098): Rebuilt the stable Programming route as a wide, fail-closed content-to-computation hub; featured the proximal-distal monograph, visual companion, falsification atlas, workbench, Books hub, and learning paths; removed copied mutable provider versions, counts, commands, support tiers, repository structure, and branch links; exposed governed blockers for catalog, onboarding, workflows, screenshots, and compatibility; retained seven engine guides as deferred editorial references; and added TDD, responsive, accessibility, title-case, audit, and browser contracts. No production lock, provider capability authority, scientific authority, or immutable monograph bytes changed.                                                                                                                                                                                                                                                                                                                                                                                                                 |
