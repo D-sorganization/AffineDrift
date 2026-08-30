@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T16:38:28Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.285                                          |
+| **Spec Version**        | 1.0.286                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -1625,3 +1625,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-30 | 1.0.283 | feat(evidence-presentation, #4086): Implement reader-facing evidence state presentation vocabulary, pure view-model projectors, accessible renderers (`src/affine_control/evidence_presentation/`), JSON schema (`schemas/evidence-presentation-v1.schema.json`), deterministic generator (`scripts/generate_evidence_presentation.py`), and test suite (`tests/test_evidence_presentation.py`), establishing a standard reader-facing verification status language across all content and programming catalog surfaces without amplifying claim authority. |
 | 2026-08-30 | 1.0.284 | feat(reader-validation, #4088): Implement preregistered reader findability and evidence-comprehension validation study framework (`src/affine_control/reader_validation/`), schema (`schemas/reader-comprehension-study-v1.schema.json`), deterministic generator (`scripts/generate_reader_comprehension_study.py`), and test suite (`tests/test_reader_comprehension_validation.py`), evaluating 6 standardized tasks across technical-reviewer and general-reader cohorts, calculating Wilson score confidence intervals, and preserving null/negative findings and remediation issue links. |
 | 2026-08-30 | 1.0.285 | test(site-ux, #4089): Expand whole-site desktop layout and visual-regression test suites (`tests/e2e/visual.spec.js` and `tests/test_responsive_layout_contract.py`) across all 10 representative route families and standard desktop/intermediate/mobile viewports, validating overflow containment, navigation reachability, and reading measure constraints. |
+| 2026-08-30 | 1.0.286 | feat(research-releases, #4042): Implement governed research artifact release package system (`src/affine_control/research_releases/`), JSON schema (`schemas/research-artifact-release-v1.schema.json`), deterministic generator (`scripts/generate_research_releases.py`), and test suite (`tests/test_research_artifact_releases.py`), validating release maturity levels, exact artifact checksums, independent review records, and modeled vs measured epistemological boundaries. |
