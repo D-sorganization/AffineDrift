@@ -307,6 +307,26 @@ describe("Metrics Module", () => {
     });
   });
 
+  describe("renderStatsWidget", () => {
+    test("uses an H3 after the bibliography sidebar H2", () => {
+      document.body.innerHTML = `
+        <aside>
+          <h2>Details</h2>
+          <div id="metrics-widget"></div>
+        </aside>
+      `;
+
+      window.AffineDriftMetrics.renderStatsWidget("metrics-widget");
+
+      const heading = document.querySelector(
+        "#metrics-widget .metrics-heading",
+      );
+      expect(heading).toBeTruthy();
+      expect(heading.tagName).toBe("H3");
+      expect(heading.textContent).toBe("Your Usage Statistics");
+    });
+  });
+
   describe("escapeHtml", () => {
     // escapeHtml is now sourced from the canonical utils.js implementation
     // via window.AffineDriftUtils.escapeHtml (deduplication: issue #3291)
