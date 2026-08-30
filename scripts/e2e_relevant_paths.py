@@ -57,6 +57,8 @@ def is_e2e_relevant(path: str) -> bool:
         return True
     if normalized.startswith("playwright.config."):
         return True
+    if normalized.endswith((".css", ".scss")):
+        return True
     if normalized.endswith(".qmd"):
         return True
     if normalized.startswith(PATH_PREFIXES):
