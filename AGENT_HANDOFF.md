@@ -4,12 +4,13 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Protected Authority
 
-- Website PR #4083 protected-squash-merged as
-  `75042154b05c2a04351b0d47e6ed44c994243476`. Its main CI, Pages build,
-  revision-bound manifest, every-public-page verification, and deployment
-  verification passed.
+- Website PR #4090 protected-squash-merged as
+  `1c0c04c5c115afe34f65e416f3007d9c525f0e80`, on top of the #4083 website
+  authority at `75042154b05c2a04351b0d47e6ed44c994243476`. Its protected checks
+  and Pages build passed. Deployment run 33299991625 completed successfully,
+  including the revision-matched live every-route gate.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean on
-  `main` at that exact revision and equals `origin/main`.
+  `main` at `1c0c04c5c115afe34f65e416f3007d9c525f0e80` and equals `origin/main`.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -60,10 +61,55 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   #3823-#3828 closed on 2026-08-30 with batch completion recorded and unproven
   aggregate metrics left unchecked. HTML-2 and author-decision residue remain
   open in #3821/#3830.
+- #4089 visual work is active in
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4089-desktop-regression`
+  on branch `test/4089-desktop-visual-regression`. Commit `ea2c2b6a` adds the
+  governed evidence foundation, `559067bd` wires PR evidence, `b42a4249`
+  closes adversarial baseline/breakpoint findings, and `2e0f7f7c` reconciles
+  the governed trust digests. `40cf470f` refreshes this handoff, `f1f3c5e2`
+  rebuilds CSS before PR capture, `4ed9e108` centralizes the visual-contract
+  change detector, and `dd29ca53` closes its final article-local stylesheet
+  gap by treating every tracked CSS/SCSS path as visual evidence input. The
+  implementation range through `dd29ca53` is 21 files, +1342/-60, with zero
+  deleted paths; later commits only refresh this handoff. Merge commit
+  `93e4b960` incorporates protected #4090. Do not describe #4089 as complete
+  yet.
+- The new representative contract is ten route families by seven viewports
+  (390, 768, 1024, 1200, 1280, 1366, and 1920 px) by two themes: 140 cells. It includes a
+  real `proximal distal` search interaction while preserving the separate
+  924-cell every-route structural verifier. The first full run failed 10 cells:
+  five route families in both themes overflowed at 1024 px because Quarto
+  exposed the margin TOC too early. Adversarial review then measured a second
+  21 px monograph overflow at the former 1200 px rail-entry boundary. Exact
+  1200 and 1280 px probes plus a canonical 1279.98 px hide threshold govern the
+  corrected transition. The complete local rerun passes 140/140; exact Linux
+  PR screenshots remain the protected-delivery evidence to inspect.
+- Screenshot evidence binds route family, scenario, source revision, renderer,
+  decoded PNG dimensions, byte count, and SHA-256. The runner emits a candidate
+  baseline only. Comparison validates the complete baseline schema and fails
+  closed on missing or malformed reviewer/timestamp/pull-request metadata,
+  count mismatch, non-derived or duplicate keys, or renderer mismatch. A
+  protected follow-up must still approve a candidate. Footer, dense-content,
+  focus, print, and no-JavaScript scenarios remain open in #4089.
+- The PR E2E job renders every representative source, generates the bounded
+  current flattened CSS bundle, generates the bounded public manifest, runs all
+  140 cells, and uploads screenshots, results, and the candidate baseline as
+  `public-site-visual-evidence-<SHA>`. The explicit bundle step prevents partial
+  Quarto renders from testing a stale tracked stylesheet. Deployment keeps the
+  same candidate capture in addition to its complete live-route gate.
+- `scripts/e2e_relevant_paths.py` is the single change-detector authority for
+  that lane. It covers every tracked CSS/SCSS path (including article-local
+  proximal-distal and monograph stylesheets), visual runner/evidence/manifest
+  scripts, screenshot schemas, the public report source, and both visual
+  workflows; executable unit contracts prevent silent trigger erosion.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
-  `4cf39347be49adb0e700edebb05390717c5ce2ec`; #9174/#9192 remain open, so no
-  provider artifact is yet accepted for AffineDrift import.
+  `4cf39347be49adb0e700edebb05390717c5ce2ec`; #9174 and #9190–#9193 remain
+  open. The exact-main publication run had no completed artifact when audited,
+  and the draft manifest still lacked qualified workflows, screenshots,
+  documentation, and public interface inventory. No provider artifact is
+  accepted for AffineDrift import; only provider-independent RED fixtures are
+  safe before those gates close.
 - UpstreamDrift PR #9267 remains a separate blocked scientific-authority lane at
   observed head `7215e0e285bd21f7f1631681e51226bbf746d610`. It cannot authorize a
   refreshed proximal-distal projection until its exact artifact, manifests,
@@ -85,6 +131,10 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   Codex tuple is therefore build/prune workspace churn, not a committed loss
   claim. Continue to verify exact Git ranges and manifests rather than trusting
   a transient UI aggregate.
+- The #4089 full local render/prune reproduced the same effect: 75 tracked
+  generated paths appeared as +853/-11,959 until `docs/` was restored exactly.
+  The implementation commit itself is 10 files, +916/-14, with zero deleted
+  paths. Canonical scientific and monograph sources are unchanged.
 
 ## Proximal–Distal Publication Boundary
 
@@ -166,6 +216,7 @@ python -m scripts.generate_claim_audit_inventory --manifest docs/public-site-man
 $siteServer = Start-Process python -ArgumentList "-m", "http.server", "8000", "--directory", "docs" -WindowStyle Hidden -PassThru
 try {
     node scripts/verify-public-site.js --base-url http://127.0.0.1:8000 --manifest docs/public-site-manifest.json --output artifacts/public-site-verification/local-every-page.json
+    node scripts/verify-public-site-visual.js --base-url http://127.0.0.1:8000 --manifest docs/public-site-manifest.json --output artifacts/public-site-verification/local-representative.json --screenshot-dir artifacts/public-site-verification/screenshots --candidate-baseline artifacts/public-site-verification/candidate-baseline.json
 } finally {
     Stop-Process -Id $siteServer.Id
 }
@@ -177,7 +228,10 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Complete #4085 tracker/document reconciliation and protected delivery.
+1. Deliver the current #4089 candidate-evidence and 1024/1200 px overflow fixes
+   through protected review, inspect the exact Linux 140-cell screenshots, and
+   use a separate reviewed follow-up to approve the baseline and add remaining
+   scenarios.
 2. Finish provider #9174/#9190–#9193, then implement immutable consumer #4022
    and compatibility contract #4030 before generated catalog #4023/#4024.
 3. In parallel where dependencies permit, implement #4086 shared evidence

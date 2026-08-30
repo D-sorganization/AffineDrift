@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T07:19:14Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.264                                          |
+| **Spec Version**        | 1.0.265                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -43,8 +43,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Model golf swings as affine controllable systems with mathematical rigor, enabling optimization through advanced control algorithms
 - Publish and maintain research-quality educational content via Quarto website (AffineDrift.com) on GitHub Pages
 - Verify a revision-bound manifest of every public route before deployment and
-  again against the live site, covering mobile and desktop layouts in light and
-  dark themes plus representative desktop screenshot review
+  again against the live site. Keep the exhaustive mobile/desktop structural
+  matrix separate from a governed 140-cell visual matrix spanning ten route
+  families, seven breakpoint-distinct viewports, both themes, and real search
+  interaction; candidates require explicit review before baseline approval.
 - Swing trajectory optimization using iLQR (implemented); DDP backward pass pending implementation (gated mock)
 - Model golf-ball flight with velocity-dependent drag and spin-dependent Magnus lift using the standard projected-area aerodynamic formulation
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
@@ -428,6 +430,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F77 | Claim-audit report deployment closure                | ✅     | The generated scientific claim-audit Markdown report is an explicit single-file Quarto render target, and the executable render-coverage contract fails if that target is removed. The broader `reports/` tree remains excluded from publication; claim-audit schemas, generation, inventory status, and scientific authority are unchanged (#4075). |
 | F79 | Recursive induced-acceleration heading closure        | ✅     | The shared normative attribution include exposes a valid visible H2 subsection beneath each consuming route's H1. A recursive-include content contract covers all three public consumers and fails on an H1-to-H3 rank skip. This is an accessibility and deployment correction only; scientific wording, claim-audit classification, evidence, and authority remain unchanged (#4077). |
 | F78 | Public research-readiness lifecycle library          | ✅     | A strict lifecycle registry covers all eight E1–E8 programs with exact scientific and record revisions, conditional human/animal/private-data governance, chronological scoped evidence gates, measured/estimated validation eligibility, independent governed authority roles, exact route and artifact joins, and sanitized deterministic public projections. Scientific IDs are unique; measurement origins and calibration joins are reconciled; verified calibrations and releases require matching exact evidence; status history cannot retroactively authorize a transition. Each adverse manufactured dry run pins a program-specific calculation input, executable workflow, and result manifest while retaining negative, null, and unavailable outcomes. Supersession preserves prior verified history and requires a structurally reachable target or an existing acyclic exact-revision successor. The neutral concept template carries no live DCR claim, critique, evidence, dataset, or route authority. The #4041 lifecycle explicitly cannot mint `published` state; only #4042 may provide the external immutable publication-authority adapter (#4041). |
+| F80 | Governed representative visual evidence              | ✅     | A manifest-owned route-family contract covers home, Books, the proximal-to-distal monograph, a long article, the proximal-distal workbench, Programming, live search, critiques, the scientific claim-audit report, and Resources at 390, 768, 1024, 1200, 1280, 1366, and 1920 px in both themes. The runner preserves the 924-cell exhaustive structural verifier, opens search with a deterministic proximal-distal query, validates actual PNG dimensions and SHA-256, emits schema-valid candidate baselines, and refuses comparison unless the complete baseline schema, approval timestamp, exact GitHub pull-request URL, capture count, unique derived keys, and renderer identity pass. PR E2E renders the exact representative sources, rebuilds the flattened canonical CSS instead of reusing a stale tracked bundle, and uploads the complete candidate artifact; deployment repeats candidate capture alongside its live-route gate. Failing-first and adversarial browser evidence exposed Quarto margin-TOC overflow at 1024 and again at the former 1200 px re-entry boundary; the canonical CSS now withholds that rail through 1279.98 px, with governed 1200 and 1280 px boundary probes (#4089). |
 
 ### API / Interface Contract
 
@@ -714,10 +717,11 @@ python src/tools/code_quality_check.py
 | -------- | ----------------------------------------------------------------- | ----------- |
 | P0       | Maintain test coverage >50% across all PRs                        | Ongoing     |
 | Done     | Publish and verify the proximal-to-distal discovery integration   | 2026-08-29  |
+| Done     | Establish the #4089 governed 140-cell visual evidence matrix      | 2026-08-30  |
 | P1       | Deliver generated programming companion #4010/#4022–#4030         | Q3 2026     |
 | P1       | Deliver evidence semantics and falsification atlas #4086/#4087    | Q4 2026     |
 | P1       | Run preregistered reader validation #4088                         | Q4 2026     |
-| P1       | Complete whole-site desktop visual regression #4089               | Q4 2026     |
+| P1       | Approve #4089 baseline and add footer/focus/print/no-JS scenarios | Q4 2026     |
 | P2       | Pilot one pinned reproducible monograph figure or table           | Q4 2026     |
 | P2       | Optimize iLQR solver performance for real-time feedback           | Q4 2026     |
 | P3       | Support additional swing types (left-handed, alternative stances) | 2027        |
@@ -738,8 +742,34 @@ python src/tools/code_quality_check.py
 - **Reader Validation**: The #4080 navigation and desktop-layout changes have
   responsive browser evidence but no user-study evidence of improved discovery
   or comprehension.
+- **Visual Baseline**: The #4089 runner emits complete candidate evidence, but
+  no candidate is an approved regression baseline until its exact renderer,
+  screenshots, and review metadata are accepted in a protected follow-up. The
+  footer, bounded dense-content, focus, print, and no-JavaScript scenarios also
+  remain open in #4089.
 
 ## 12. Change Log
+
+### 1.0.266 Fail-Closed Baseline and Breakpoint Hardening
+
+Validates approved visual baselines against their complete JSON Schema before
+comparison and rejects missing or malformed review metadata, count mismatches,
+non-derived or duplicate capture keys, and incompatible renderers. Adds exact
+1200 and 1280 px browser probes after adversarial review found overflow at the
+former rail-entry boundary, moves margin-TOC re-entry to 1280 px, and expands
+the governed matrix from 100 to 140 cells. PR CI now renders every
+representative source and uploads its revision-bound candidate evidence (#4089).
+
+### 1.0.265 Governed Whole-Site Visual Evidence Foundation
+
+Adds a manifest-owned 100-cell visual matrix across ten site families, five
+breakpoint-distinct viewports, and both themes while preserving the exhaustive
+924-cell structural verifier. Screenshot evidence binds route family, scenario,
+source revision, renderer, decoded PNG dimensions, and SHA-256. Candidate
+baselines cannot be compared until explicit review metadata approves them. A
+failing-first full render found ten 1024 px overflow cells across five route
+families; delaying Quarto's margin TOC through 1199.98 px closes all ten without
+changing scientific content or authority (#4089).
 
 ### 1.0.264 Protected Reader Baseline and Companion Issue Architecture
 
@@ -1179,6 +1209,8 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-30 | 1.0.266 | fix(site, #4089): Closed adversarial baseline-consumption, breakpoint, and partial-render gaps by validating approved baselines against their complete schema, rejecting malformed approval metadata, count/key corruption, and duplicate keys; adding exact 1200 and 1280 px browser probes; moving margin-TOC re-entry to 1280 px; expanding the governed matrix to 140 cells; rebuilding the canonical CSS bundle after partial Quarto renders; and wiring revision-bound candidate evidence into protected PR CI.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 2026-08-30 | 1.0.265 | test(site, #4089): Added the initial governed ten-family, five-viewport, two-theme visual matrix; deterministic real-search capture; revision, renderer, decoded-dimension, and SHA-256 evidence; candidate/approved baseline schemas; and explicit review metadata. Failing-first browser evidence found ten 1024 px margin-TOC overflows; subsequent adversarial review in 1.0.266 found and closed an additional 1200 px boundary gap before protected delivery.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | 2026-08-30 | 1.0.264 | docs(governance, #4085): Reconciled the protected and deployed #4083 reader baseline, assigned remaining companion work to the existing #4010 provider-consumer program and new #4084 reader-evidence subepic, and preserved explicit blockers for provider acquisition, reader validation, and the 14 incomplete #4042 release contracts.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2026-08-29 | 1.0.263 | feat(site, #4080): Promoted the governed proximal-to-distal monograph across primary discovery surfaces; rebuilt the Books hub as a responsive three-peer long-form library; linked reading, governed evidence, and the bounded workbench through exact authority pins; added search, learning-path, cross-surface, and desktop-width contracts; and documented selectable companion-dashboard, falsification-explorer, reproducible-workbench, and reader-validation packages. The immutable monograph tree and its scientific authority remain unchanged.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | 2026-08-29 | 1.0.262 | fix(research, #4041): Closed the independent adversarial review by rejecting self-declared approval authority, reconciling evidence origin and calibration identities, enforcing unique scientific IDs and chronological status-at-transition evidence, preserving later revocation history, validating exact route membership and release-state joins, replacing generic dry runs with program-specific executable result manifests, escaping generated Markdown, removing the hard-coded readiness-state summary, and splitting filesystem, authority, dry-run, fixture, and validation responsibilities below the 400-line ceiling. Added 21 failing-first adversarial contracts and recursively pinned their exact bytes in the governed route audit.                                                                                                                                                                                                                                                                                                                                                                              |

@@ -25,11 +25,49 @@ EVERY_PAGE_VIEWPORTS = (
 )
 REPRESENTATIVE_VIEWPORTS = (
     {"id": "tablet", "width": 768, "height": 1024},
+    {"id": "intermediate", "width": 1024, "height": 768},
+    {"id": "margin-boundary", "width": 1200, "height": 900},
+    {"id": "margin-reentry", "width": 1280, "height": 900},
     {"id": "desktop-small", "width": 1366, "height": 768},
-    {"id": "desktop-medium", "width": 1536, "height": 864},
     {"id": "desktop-wide", "width": 1920, "height": 1080},
 )
+REPRESENTATIVE_VIEWPORT_IDS = (
+    "mobile",
+    *(viewport["id"] for viewport in REPRESENTATIVE_VIEWPORTS),
+)
 THEMES = ("light", "dark")
+REPRESENTATIVE_ROUTES = (
+    {"family": "home", "route": "/", "scenario": "fold"},
+    {"family": "books", "route": "/books/index.html", "scenario": "fold"},
+    {
+        "family": "monograph",
+        "route": "/articles/proximal_distal_energy_transfer/index.html",
+        "scenario": "fold",
+    },
+    {
+        "family": "article",
+        "route": "/articles/affine-nature-golf-swing.html",
+        "scenario": "fold",
+    },
+    {
+        "family": "model-workbench",
+        "route": "/articles/proximal-distal-model-workbench.html",
+        "scenario": "fold",
+    },
+    {"family": "programming", "route": "/models/models.html", "scenario": "fold"},
+    {
+        "family": "search",
+        "route": "/resources/articles.html",
+        "scenario": "site-search",
+    },
+    {"family": "critique", "route": "/critiques/index.html", "scenario": "fold"},
+    {
+        "family": "research-report",
+        "route": "/reports/scientific-claim-audit.html",
+        "scenario": "fold",
+    },
+    {"family": "resource", "route": "/resources/resources.html", "scenario": "fold"},
+)
 
 
 def _html_paths(docs_dir: Path) -> list[Path]:
@@ -153,6 +191,7 @@ def build_manifest(
     *,
     source_root: Path,
     source_revision: str | None = None,
+    require_representative: bool = True,
 ) -> dict[str, Any]:
     """Build and validate a complete public-page manifest.
 
@@ -168,6 +207,15 @@ def build_manifest(
     routes = [page["route"] for page in pages]
     if len(routes) != len(set(routes)):
         raise ValueError("rendered public HTML contains duplicate routes")
+    if require_representative:
+        missing_routes = [
+            record["route"] for record in REPRESENTATIVE_ROUTES if record["route"] not in routes
+        ]
+        if missing_routes:
+            raise ValueError(
+                "rendered public HTML is missing representative route(s): "
+                + ", ".join(missing_routes)
+            )
 
     return {
         "schema_version": MANIFEST_SCHEMA_VERSION,
@@ -182,7 +230,8 @@ def build_manifest(
                 "themes": list(THEMES),
             },
             "representative": {
-                "viewports": [item["id"] for item in REPRESENTATIVE_VIEWPORTS],
+                "routes": [dict(record) for record in REPRESENTATIVE_ROUTES],
+                "viewports": list(REPRESENTATIVE_VIEWPORT_IDS),
                 "themes": list(THEMES),
             },
         },
