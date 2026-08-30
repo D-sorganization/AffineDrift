@@ -86,9 +86,11 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   protected follow-up must still approve a candidate. Footer, dense-content,
   focus, print, and no-JavaScript scenarios remain open in #4089.
 - The PR E2E job renders every representative source, generates the bounded
-  public manifest, runs all 140 cells, and uploads screenshots, results, and the
-  candidate baseline as `public-site-visual-evidence-<SHA>`. Deployment keeps
-  the same candidate capture in addition to its complete live-route gate.
+  current flattened CSS bundle, generates the bounded public manifest, runs all
+  140 cells, and uploads screenshots, results, and the candidate baseline as
+  `public-site-visual-evidence-<SHA>`. The explicit bundle step prevents partial
+  Quarto renders from testing a stale tracked stylesheet. Deployment keeps the
+  same candidate capture in addition to its complete live-route gate.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
   `4cf39347be49adb0e700edebb05390717c5ce2ec`; #9174 and #9190–#9193 remain

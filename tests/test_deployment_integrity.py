@@ -161,6 +161,10 @@ def test_ci_captures_revision_bound_representative_visual_evidence() -> None:
         assert f"quarto render {source} --to html" in content
 
     assert "Capture governed representative visual evidence" in content
+    assert "python3 scripts/bundle_css.py" in content
+    assert content.index("python3 scripts/bundle_css.py") < content.index(
+        "scripts/verify-public-site-visual.js"
+    )
     assert "scripts/prune_internal_docs_from_deploy.py --docs-dir docs" in content
     assert "scripts/public_site_manifest.py" in content
     assert '--source-revision "$GITHUB_SHA"' in content

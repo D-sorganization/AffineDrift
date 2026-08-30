@@ -528,7 +528,9 @@ jobs:
           quarto render resources/resources.qmd --to html
       - name: Sync Frontend Assets
         if: steps.e2e_changes.outputs.run == 'true'
-        run: python3 scripts/sync_frontend_assets.py
+        run: |
+          python3 scripts/sync_frontend_assets.py
+          python3 scripts/bundle_css.py
 
       - name: Run E2E Smoke Tests (Critical Flows)
         if: steps.e2e_changes.outputs.run == 'true'
