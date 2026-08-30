@@ -3,11 +3,18 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
-from src.affine_control.falsification_atlas import AtlasPaths, load_atlas, render_atlas
-
 ROOT = Path(__file__).parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.affine_control.falsification_atlas import (  # noqa: E402  # reason: import ordering constraint
+    AtlasPaths,
+    load_atlas,
+    render_atlas,
+)
 
 
 def canonical_paths(root: Path = ROOT) -> AtlasPaths:
