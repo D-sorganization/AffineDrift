@@ -74,6 +74,16 @@ def test_books_hub_uses_the_desktop_width_for_peer_long_form_cards() -> None:
     assert "{.resource-grid .resource-grid--long-form}" in books
 
 
+def test_public_site_verifier_recognizes_the_full_width_books_hub() -> None:
+    """The browser gate should verify the hub grid instead of requiring its retired sidebar."""
+    verifier = _read("scripts/verify-public-site.js")
+
+    assert "route === '/books/index.html'" in verifier
+    assert ".book-hub" in verifier
+    assert ".resource-grid--long-form" in verifier
+    assert "Books hub long-form library" in verifier
+
+
 def test_article_catalog_uses_current_monograph_scope_and_long_form_orientation() -> None:
     """The catalog should use the governed chapter count and distinguish publication types."""
     catalog = _read("resources/articles.qmd")
