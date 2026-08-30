@@ -7,6 +7,7 @@ const {
 const {
   assertRepresentativeContract,
   representativeManifest,
+  scenarioFailures,
   scenarioScreenshotName,
   supplementalScenarioPlan,
 } = require("../scripts/verify-public-site-visual.js");
@@ -214,6 +215,25 @@ describe("public-site visual evidence contracts (SITE-UX)", () => {
     const unknownTheme = fixtureManifest();
     unknownTheme.verification.supplemental.scenarios[0].themes = ["sepia"];
     expect(() => supplementalScenarioPlan(unknownTheme)).toThrow(/theme/);
+  });
+
+  test("rejects a bright footer surface in the dark theme", () => {
+    const inspection = {
+      visible: true,
+      links: [
+        { name: "About & Authority" },
+        { name: "AffineDrift Source" },
+        { name: "UpstreamDrift Programs" },
+      ],
+      text: "AffineDrift governed publication",
+      backgroundColor: "rgb(255, 255, 255)",
+      pageOverflow: 0,
+    };
+
+    expect(scenarioFailures("footer", inspection, "dark")).toContain(
+      "dark-theme footer has a bright rgb(255, 255, 255) surface",
+    );
+    expect(scenarioFailures("footer", inspection, "light")).toEqual([]);
   });
 
   test("rejects arbitrary bytes and decodes actual PNG dimensions", () => {

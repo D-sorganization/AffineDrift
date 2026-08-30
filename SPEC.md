@@ -759,7 +759,8 @@ no-JavaScript scenarios. Failing-first browser review corrected unreadable
 character-by-character wrapping in narrow scientific tables and restored a
 readable monograph print title while suppressing unwanted citation URL
 expansion. The global footer now states AffineDrift's publication role and
-links its authority, source, and UpstreamDrift program surfaces. Candidate
+links its authority, source, and UpstreamDrift program surfaces while using the
+same governed light/dark surface tokens as the page. Candidate
 baseline approval remains a separate human-gated action.
 
 ### 1.0.266 Fail-Closed Baseline and Breakpoint Hardening

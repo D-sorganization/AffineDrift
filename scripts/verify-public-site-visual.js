@@ -145,6 +145,7 @@ async function inspectFooter(page) {
   await footer.waitFor({ state: "visible" });
   await footer.scrollIntoViewIfNeeded();
   return footer.evaluate((element) => {
+    const surface = element.querySelector(".nav-footer") || element;
     const rect = element.getBoundingClientRect();
     const text = element.textContent.replace(/\s+/g, " ").trim();
     const links = [...element.querySelectorAll("a")]
@@ -156,6 +157,7 @@ async function inspectFooter(page) {
     return {
       text,
       links,
+      backgroundColor: getComputedStyle(surface).backgroundColor,
       visible: rect.width > 0 && rect.height > 0,
       pageOverflow: Math.max(
         0,
@@ -334,7 +336,18 @@ async function inspectNoJavaScript(page) {
   });
 }
 
-function scenarioFailures(scenarioId, inspection) {
+function isBrightOpaqueColor(value) {
+  const match = String(value).match(
+    /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/,
+  );
+  if (!match || (match[4] !== undefined && Number(match[4]) < 0.9)) {
+    return false;
+  }
+  const [, red, green, blue] = match.map(Number);
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue > 220;
+}
+
+function scenarioFailures(scenarioId, inspection, theme) {
   if (scenarioId === "footer") {
     return [
       !inspection.visible && "footer is not visible",
@@ -345,6 +358,9 @@ function scenarioFailures(scenarioId, inspection) {
         "footer executable-companion link is missing",
       inspection.links.some((link) => !link.name) &&
         "footer link lacks an accessible name",
+      theme === "dark" &&
+        isBrightOpaqueColor(inspection.backgroundColor) &&
+        `dark-theme footer has a bright ${inspection.backgroundColor} surface`,
       inspection.pageOverflow > 1 &&
         `footer causes ${inspection.pageOverflow}px page overflow`,
     ].filter(Boolean);
@@ -454,7 +470,7 @@ async function runScenario(browser, item, options) {
       inspection = await inspectReducedMotion(page);
     else if (item.scenarioId === "print") inspection = await inspectPrint(page);
     else inspection = await inspectNoJavaScript(page);
-    failures.push(...scenarioFailures(item.scenarioId, inspection));
+    failures.push(...scenarioFailures(item.scenarioId, inspection, item.theme));
     fs.mkdirSync(options.screenshotDir, { recursive: true });
     await page.screenshot({
       path: screenshotPath,
@@ -630,6 +646,7 @@ module.exports = {
   parseArgs,
   representativeManifest,
   runVisualVerification,
+  scenarioFailures,
   scenarioScreenshotName,
   supplementalScenarioPlan,
 };

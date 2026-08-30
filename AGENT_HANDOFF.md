@@ -68,7 +68,7 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   `af49c1f15f2771397ecf0e67eb53dd92646ac0b1` and its deployment is green.
 - The supplemental #4089 slice is active in
   `C:\Users\diete\Repositories\worktrees\AffineDrift-4089-supplemental` on
-  branch `test/4089-supplemental-visual-scenarios`. It adds 18 cells for the
+  branch `test/4089-supplemental-visual-scenarios` as PR #4092. It adds 18 cells for the
   global footer, dense-content containment, keyboard focus, reduced motion,
   print, and no-JavaScript behavior, bringing local evidence to 158/158. Keep
   #4089 open until a human reviews and approves an exact candidate baseline.
@@ -92,6 +92,9 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   character-by-character mobile table wrapping plus print-title suppression,
   dark title colors, and raw citation URL expansion. The complete local matrix
   passes 158/158; candidate approval remains deliberately human-gated.
+  Exact Linux artifact review also caught a bright mobile footer in dark mode;
+  a color-surface assertion and token-driven footer styling now guard that
+  theme boundary.
 - The PR E2E job renders every representative source, generates the bounded
   current flattened CSS bundle, generates the bounded public manifest, runs all
   140 cells, and uploads screenshots, results, and the candidate baseline as
