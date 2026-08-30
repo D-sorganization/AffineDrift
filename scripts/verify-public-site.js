@@ -3,6 +3,11 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  isRetriableDocumentStatus,
+  navigateDocumentWithRetries,
+  summarizeNavigationAttempts,
+} = require('./public-site-navigation.js');
 
 const SCHEMA_VERSION = 'affinedrift/public-site-manifest/v1';
 
@@ -97,6 +102,15 @@ function canonicalPathMatches(canonicalPath, route) {
   return canonicalPath === route.slice(0, -'index.html'.length);
 }
 
+function boundedInteger(value, label, minimum) {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < minimum) {
+    const qualifier = minimum === 0 ? 'non-negative' : 'positive';
+    throw new TypeError(`${label} must be a ${qualifier} integer`);
+  }
+  return parsed;
+}
+
 function parseArgs(argv) {
   const options = {
     baseUrl: 'http://localhost:8000',
@@ -107,6 +121,8 @@ function parseArgs(argv) {
     viewportIds: undefined,
     themes: undefined,
     routes: undefined,
+    documentAttempts: 1,
+    documentRetryDelayMs: 500,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -122,6 +138,11 @@ function parseArgs(argv) {
     else if (arg === '--viewports') options.viewportIds = value().split(',').filter(Boolean);
     else if (arg === '--themes') options.themes = value().split(',').filter(Boolean);
     else if (arg === '--routes') options.routes = value().split(',').filter(Boolean);
+    else if (arg === '--document-attempts') {
+      options.documentAttempts = boundedInteger(value(), 'document attempts', 1);
+    } else if (arg === '--document-retry-delay-ms') {
+      options.documentRetryDelayMs = boundedInteger(value(), 'document retry delay', 0);
+    }
     else if (arg === '--screenshots') options.screenshots = true;
     else throw new TypeError(`unknown argument: ${arg}`);
   }
@@ -403,8 +424,24 @@ async function verifyItem(page, item, options) {
   let response = null;
   let inspection = { failures: ['page inspection did not run'] };
   let navigationError = null;
+  let navigationAttempts = [];
+  const resetAttemptEvidence = () => {
+    consoleErrors.length = 0;
+    pageErrors.length = 0;
+    failedRequests.length = 0;
+  };
   try {
-    response = await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    const navigation = await navigateDocumentWithRetries({
+      page,
+      targetUrl,
+      resetAttemptEvidence,
+      maxAttempts: options.documentAttempts,
+      retryDelayMs: options.documentRetryDelayMs,
+    });
+    response = navigation.response;
+    navigationError = navigation.navigationError;
+    navigationAttempts = navigation.attempts;
+    if (navigationError) throw new Error(navigationError);
     await page.evaluate(() => document.fonts?.ready);
     // The gated MathJax request is injected after DOMContentLoaded. Wait for
     // its explicit post-typeset contract before checking the visible fold.
@@ -494,6 +531,7 @@ async function verifyItem(page, item, options) {
     failures,
     screenshot,
     inspection,
+    navigation_attempts: navigationAttempts,
   };
 }
 
@@ -569,6 +607,7 @@ async function runVerification(options) {
     expected_evidence_count: plan.length,
     passed: failures.length === 0 && results.length === plan.length,
     failure_count: failures.length,
+    ...summarizeNavigationAttempts(results),
     results,
   };
   fs.mkdirSync(path.dirname(options.outputPath), { recursive: true });
@@ -593,6 +632,10 @@ module.exports = {
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   isActionableConsoleError,
+  isRetriableDocumentStatus,
+  navigateDocumentWithRetries,
+  parseArgs,
+  summarizeNavigationAttempts,
   screenshotOptions,
   screenshotName,
   runVerification,

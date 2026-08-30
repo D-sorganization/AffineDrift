@@ -68,6 +68,19 @@ def test_live_manifest_poll_retries_transient_non_json_responses() -> None:
     assert "2>/dev/null); then" in live_poll
 
 
+def test_only_live_every_page_verification_opts_into_bounded_document_retries() -> None:
+    """Local evidence stays single-attempt while the revision-matched live gate retries 5xx."""
+    content = WORKFLOW_PATH.read_text(encoding="utf-8")
+    pre_live, live_step = content.split(
+        "Verify Deployment Manifest and Every Public Page", maxsplit=1
+    )
+
+    assert "--document-attempts" not in pre_live
+    assert "--document-retry-delay-ms" not in pre_live
+    assert "--document-attempts 3" in live_step
+    assert "--document-retry-delay-ms 500" in live_step
+
+
 def test_live_verifier_targets_the_direct_canonical_pages_host() -> None:
     """Hosted verification must avoid the cacheable apex-to-www redirect."""
     content = WORKFLOW_PATH.read_text(encoding="utf-8")

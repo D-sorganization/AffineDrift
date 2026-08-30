@@ -48,6 +48,11 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   content lint, links, E2E, visual invariants, benchmarks, and governance. The
   exact source diff is four retained files, +49/-8, with zero deleted paths and
   zero immutable-monograph diff.
+- Final turnover PR #4106 protected-squash-merged as
+  `27d8a560a34fe7928d276960870853a2b35206cb`; issue #4105 is closed and all
+  exact-head checks passed. It added the copy-ready turnover prompt and updated
+  only controlled handoff/specification documents: three retained files,
+  +215/-19, zero deleted paths.
 - Deployment run 33321616181 passed the complete build and all 928
   pre-deployment browser inspections. Live attempt 1 passed 927/928 and saw an
   isolated HTTP 503 on `/articles/impact-optimality-and-model-limits.html`;
@@ -56,9 +61,25 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   Issue #4104 owns the live-host/verifier reliability closure and must preserve
   every content, heading, overflow, navigation, canonical, theme, and notes
   assertion.
+- Turnover deployment run 33323483901 subsequently passed for exact protected
+  main `27d8a560a34fe7928d276960870853a2b35206cb`: the build, Pages publication,
+  and all four live 232-route groups completed, producing 928/928 evidence
+  items with zero failures in artifact ID 9735795376. This supports an
+  intermittent-host diagnosis but predates the bounded-policy implementation;
+  #4104 still requires a new exact-revision post-policy 928/928 run.
+- Issue #4104 is active on branch `fix/4104-bounded-live-retries` in
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4104-live-retries`, based
+  on protected main `27d8a560a34fe7928d276960870853a2b35206cb`. The dedicated
+  navigation module is single-attempt by default. Only the revision-matched
+  live workflow opts into retrying HTTP 500/502/503/504, at most three attempts
+  with a 500 ms delay; it records each attempt, resets intermediate error-page
+  events, and adds aggregate counters. Deterministic tests cover success after
+  a 503, exhaustion, 404/501 non-retry, navigation exceptions, event reset, and
+  summary preservation. This branch is not publication authority until its
+  protected PR and a new exact-revision 928/928 live run pass.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean
-  on `main` and equals `origin/main` at protected #4103 merge
-  `d8775589e4ac5270816e60330b338354a78047db`. Reverify exact equality before
+  on `main` and equals `origin/main` at protected #4106 merge
+  `27d8a560a34fe7928d276960870853a2b35206cb`. Reverify exact equality before
   starting new work. #4099 is the latest Programming Companion presentation
   authority; #4093 merge
   `17b5f15d362eb0225053d4e51ed86863d305074c` remains the immutable provider
@@ -375,9 +396,10 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Start from `TURNOVER_PROMPT.md`. Do not rerun deployment 33321616181. Work
-   issue #4104 with deterministic bounded 5xx-policy tests, then require one
-   new exact-revision live run with 928/928 passing.
+1. Complete the active #4104 branch through ordinary protected review. Do not
+   rerun deployment 33321616181. Require one new exact-revision live run with
+   928/928 final documents passing, retain all transient-attempt evidence, and
+   close #4104 only from the protected merge evidence.
 2. Requery UpstreamDrift PR #9307. Its substantive checks passed, but the bot
    trigger is queued and GitHub reports a conflict despite exact base ancestry.
    Do not force-push or merge while that discrepancy remains; use a fresh
