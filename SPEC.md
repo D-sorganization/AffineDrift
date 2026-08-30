@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T16:38:28Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.277                                          |
+| **Spec Version**        | 1.0.278                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -1617,3 +1617,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-27 | 1.0.226 | fix(content, #3913): Cleaned up tangent-space material parallel sets by enforcing a single canonical path in the article index and '\_quarto.yml' render rules. |
 | 2026-08-27 | 1.0.228 | fix(accessibility, #3944): Normalize multi-H1 articles and add CI heading-order validation gate ensuring every rendered page contains exactly one title H1, standalone pages start body content at H2, and full-layout pages author one visible H1. |
 | 2026-08-30 | 1.0.277 | fix(deploy, #4104): Implement bounded observable retry policy for transient 5xx HTTP responses (502, 503, 504) with exponential backoff in `scripts/verify-public-site.js` and add deterministic test coverage in `tests/public-site-verifier.test.js` without weakening any DOM, layout, or accessibility contracts. |
+| 2026-08-30 | 1.0.278 | test(companion, #4030): Add provider-consumer compatibility suite and schema version matrix fixtures (`tests/fixtures/companion/`), pin UpstreamDrift protected `main` `6ff956a4d` workflow-governed companion schema in `schemas/`, and verify Draft 2020-12 fail-closed validation, future version refusal, tamper resistance, and atomic rollback retention in `tests/test_programming_companion_compatibility.py`. |

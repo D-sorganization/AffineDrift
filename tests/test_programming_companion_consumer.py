@@ -28,7 +28,7 @@ SCHEMA_ID = "https://upstreamdrift.dev/schemas/upstreamdrift-companion-v1.schema
 MANIFEST_PATH = "dist/companion/manifest.json"
 SCHEMA_PATH = "docs/api/contracts/upstreamdrift-companion-v1.schema.json"
 PINNED_SCHEMA = Path("schemas/upstreamdrift-companion-v1.schema.json")
-PINNED_SCHEMA_SHA256 = "d0d0389a84c63fee6d2c7bce8edb5e058907510ffb6ed78f90662811ef0b0220"
+PINNED_SCHEMA_SHA256 = "39b8e54719f75aa428f2375d804ee29c458aa23b876a094aff802c48928b6702"
 SCHEMA_PROVENANCE = Path("schemas/upstreamdrift-companion-v1.provenance.json")
 
 
@@ -69,6 +69,8 @@ def _manifest(commit: str = COMMIT) -> dict[str, object]:
             "program_records": 0,
             "feature_records": 0,
             "feature_surface_paths": 0,
+            "workflow_records": 0,
+            "executable_workflow_records": 0,
         },
     }
 
@@ -141,7 +143,7 @@ def test_provider_schema_is_exactly_pinned() -> None:
     assert hashlib.sha256(PINNED_SCHEMA.read_bytes()).hexdigest() == PINNED_SCHEMA_SHA256
     provenance = json.loads(SCHEMA_PROVENANCE.read_text(encoding="utf-8"))
     assert provenance["schema_sha256"] == PINNED_SCHEMA_SHA256
-    assert provenance["source_commit"] == "1af18489e8755933a0d189aa8edafe787fa94d0f"
+    assert provenance["source_commit"] == "6ff956a4df928d3ef7be241e3d06289b5ea7bb89"
     assert provenance["source_repository"] == REPOSITORY
 
 
