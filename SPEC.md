@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-29T17:30:41Z
+Last-Updated: 2026-08-30T05:15:40Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-29T17:30:41Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.262                                          |
+| **Spec Version**        | 1.0.263                                          |
 | **Last Spec Update**    | 2026-08-29                                       |
 
 ## 2. Purpose & Mission
@@ -713,11 +713,13 @@ python src/tools/code_quality_check.py
 | Priority | Item                                                              | Target Date |
 | -------- | ----------------------------------------------------------------- | ----------- |
 | P0       | Maintain test coverage >50% across all PRs                        | Ongoing     |
-| P1       | Publish research paper on affine swing modeling                   | Q2 2026     |
-| P1       | Expand tangent space examples and tutorials                       | Q2 2026     |
-| P2       | Optimize iLQR solver performance for real-time feedback           | Q3 2026     |
-| P2       | Add interactive swing trajectory editor to website                | Q3 2026     |
-| P3       | Support additional swing types (left-handed, alternative stances) | Q4 2026     |
+| P0       | Publish and verify the proximal-to-distal discovery integration   | Q3 2026     |
+| P1       | Add a generated AffineDrift/UpstreamDrift compatibility panel     | Q3 2026     |
+| P1       | Add a governed claim, critique, and falsification explorer        | Q4 2026     |
+| P1       | Run reader findability and evidence-state comprehension review    | Q4 2026     |
+| P2       | Pilot one pinned reproducible monograph figure or table           | Q4 2026     |
+| P2       | Optimize iLQR solver performance for real-time feedback           | Q4 2026     |
+| P3       | Support additional swing types (left-handed, alternative stances) | 2027        |
 
 ### Known Limitations
 
@@ -729,8 +731,27 @@ python src/tools/code_quality_check.py
 - **Browser Support**: Progressive Web App features require modern browsers (ES6+, Service Worker API)
 - **Content Rendering**: Complex 3D visualizations limited to JavaScript WebGL (no headless rendering)
 - **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
+- **Cross-Repository Reproduction**: A readable AffineDrift projection does not
+  establish that the corresponding UpstreamDrift provider release reproduces;
+  compatibility and execution claims require an exact protected provider record.
+- **Reader Validation**: The #4080 navigation and desktop-layout changes have
+  responsive browser evidence but no user-study evidence of improved discovery
+  or comprehension.
 
 ## 12. Change Log
+
+### 1.0.263 Proximal-to-Distal Long-Form Discovery and Companion Plan
+
+Promotes the governed proximal-to-distal publication as a peer of the two
+rendered textbook collections across Read navigation, the homepage, the Books
+hub, article catalog, search, and biomechanics/golf-science learning paths.
+Models and Software now use a read-to-evidence-to-workbench journey with local
+governed evidence and exact protected provider pins. The Books hub uses the
+desktop canvas for three equal long-form cards and collapses responsively. The
+immutable monograph source, PDF, chapters, figures, and source manifest remain
+unchanged. A companion review records argument gaps, further research, and five
+selectable feature packages without promoting simulation evidence to human
+validation.
 
 ### 1.0.261 Public Research-Readiness Lifecycle Library
 
@@ -1150,6 +1171,7 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-29 | 1.0.263 | feat(site, #4080): Promoted the governed proximal-to-distal monograph across primary discovery surfaces; rebuilt the Books hub as a responsive three-peer long-form library; linked reading, governed evidence, and the bounded workbench through exact authority pins; added search, learning-path, cross-surface, and desktop-width contracts; and documented selectable companion-dashboard, falsification-explorer, reproducible-workbench, and reader-validation packages. The immutable monograph tree and its scientific authority remain unchanged.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | 2026-08-29 | 1.0.262 | fix(research, #4041): Closed the independent adversarial review by rejecting self-declared approval authority, reconciling evidence origin and calibration identities, enforcing unique scientific IDs and chronological status-at-transition evidence, preserving later revocation history, validating exact route membership and release-state joins, replacing generic dry runs with program-specific executable result manifests, escaping generated Markdown, removing the hard-coded readiness-state summary, and splitting filesystem, authority, dry-run, fixture, and validation responsibilities below the 400-line ceiling. Added 21 failing-first adversarial contracts and recursively pinned their exact bytes in the governed route audit.                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-08-29 | 1.0.261 | fix(research, #4041): Hardened the E1–E8 readiness lifecycle so unavailable evidence cannot satisfy gates, opaque private evidence requires an immutable revision, validation origins cannot be diluted by unrelated measured evidence, participant scope selects exact governance approvals, and supersession pins an existing successor revision. Publication remains delegated to #4042 and fails closed without its external authority. Replaced the live-DCR-derived concept example with a neutral non-authorizing template and removed the forbidden generator path bootstrap.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | 2026-08-29 | 1.0.260 | fix(deploy, #4077): Corrected the shared induced-acceleration attribution include from a visible H3 to H2, added recursive-include heading-topology contracts for all three public consumers, and restored the complete 920-cell mobile/desktop and light/dark browser matrix without changing scientific wording, audit classification, evidence, or authority.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
