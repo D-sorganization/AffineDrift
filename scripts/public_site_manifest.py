@@ -68,6 +68,50 @@ REPRESENTATIVE_ROUTES = (
     },
     {"family": "resource", "route": "/resources/resources.html", "scenario": "fold"},
 )
+SUPPLEMENTAL_SCENARIOS = (
+    {
+        "id": "footer",
+        "family": "home",
+        "route": "/",
+        "viewports": ("mobile", "desktop-wide"),
+        "themes": THEMES,
+    },
+    {
+        "id": "dense-content",
+        "family": "research-report",
+        "route": "/reports/scientific-claim-audit.html",
+        "viewports": ("mobile", "desktop-small"),
+        "themes": THEMES,
+    },
+    {
+        "id": "keyboard-focus",
+        "family": "home",
+        "route": "/",
+        "viewports": ("desktop-small",),
+        "themes": THEMES,
+    },
+    {
+        "id": "reduced-motion",
+        "family": "home",
+        "route": "/",
+        "viewports": ("desktop-small",),
+        "themes": THEMES,
+    },
+    {
+        "id": "print",
+        "family": "monograph",
+        "route": "/articles/proximal_distal_energy_transfer/index.html",
+        "viewports": ("desktop-small",),
+        "themes": THEMES,
+    },
+    {
+        "id": "no-javascript",
+        "family": "books",
+        "route": "/books/index.html",
+        "viewports": ("mobile", "desktop-small"),
+        "themes": THEMES,
+    },
+)
 
 
 def _html_paths(docs_dir: Path) -> list[Path]:
@@ -233,6 +277,16 @@ def build_manifest(
                 "routes": [dict(record) for record in REPRESENTATIVE_ROUTES],
                 "viewports": list(REPRESENTATIVE_VIEWPORT_IDS),
                 "themes": list(THEMES),
+            },
+            "supplemental": {
+                "scenarios": [
+                    {
+                        **record,
+                        "viewports": list(record["viewports"]),
+                        "themes": list(record["themes"]),
+                    }
+                    for record in SUPPLEMENTAL_SCENARIOS
+                ]
             },
         },
     }

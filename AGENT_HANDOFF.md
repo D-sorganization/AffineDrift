@@ -4,13 +4,14 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
 
 ## Protected Authority
 
-- Website PR #4090 protected-squash-merged as
-  `1c0c04c5c115afe34f65e416f3007d9c525f0e80`, on top of the #4083 website
-  authority at `75042154b05c2a04351b0d47e6ed44c994243476`. Its protected checks
-  and Pages build passed. Deployment run 33299991625 completed successfully,
-  including the revision-matched live every-route gate.
+- Website PR #4091 protected-squash-merged as
+  `af49c1f15f2771397ecf0e67eb53dd92646ac0b1`, on top of the #4090 reader
+  authority at `1c0c04c5c115afe34f65e416f3007d9c525f0e80` and #4083 discovery
+  authority at `75042154b05c2a04351b0d47e6ed44c994243476`. Exact-head checks and
+  deployment run 33303380671 passed, including the revision-matched live
+  every-route gate.
 - The primary checkout at `C:\Users\diete\Repositories\AffineDrift` is clean on
-  `main` at `1c0c04c5c115afe34f65e416f3007d9c525f0e80` and equals `origin/main`.
+  `main` at `af49c1f15f2771397ecf0e67eb53dd92646ac0b1` and equals `origin/main`.
 - Numerous older local worktrees remain. Their presence is not evidence that an
   issue or pull request is active. Verify GitHub state and exact ancestry before
   resuming any of them.
@@ -61,19 +62,16 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   #3823-#3828 closed on 2026-08-30 with batch completion recorded and unproven
   aggregate metrics left unchecked. HTML-2 and author-decision residue remain
   open in #3821/#3830.
-- #4089 visual work is active in
-  `C:\Users\diete\Repositories\worktrees\AffineDrift-4089-desktop-regression`
-  on branch `test/4089-desktop-visual-regression`. Commit `ea2c2b6a` adds the
-  governed evidence foundation, `559067bd` wires PR evidence, `b42a4249`
-  closes adversarial baseline/breakpoint findings, and `2e0f7f7c` reconciles
-  the governed trust digests. `40cf470f` refreshes this handoff, `f1f3c5e2`
-  rebuilds CSS before PR capture, `4ed9e108` centralizes the visual-contract
-  change detector, and `dd29ca53` closes its final article-local stylesheet
-  gap by treating every tracked CSS/SCSS path as visual evidence input. The
-  implementation range through `dd29ca53` is 21 files, +1342/-60, with zero
-  deleted paths; later commits only refresh this handoff. Merge commit
-  `93e4b960` incorporates protected #4090. Do not describe #4089 as complete
-  yet.
+- #4089's governed visual foundation is protected in PR #4091. The final
+  reviewed head was `b74160d9e3c0f955c0f1a4befdd333255188edf1`; its source diff was 21
+  files, +1,346/-60, with zero deleted paths. The protected squash is
+  `af49c1f15f2771397ecf0e67eb53dd92646ac0b1` and its deployment is green.
+- The supplemental #4089 slice is active in
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4089-supplemental` on
+  branch `test/4089-supplemental-visual-scenarios` as PR #4092. It adds 18 cells for the
+  global footer, dense-content containment, keyboard focus, reduced motion,
+  print, and no-JavaScript behavior, bringing local evidence to 158/158. Keep
+  #4089 open until a human reviews and approves an exact candidate baseline.
 - The new representative contract is ten route families by seven viewports
   (390, 768, 1024, 1200, 1280, 1366, and 1920 px) by two themes: 140 cells. It includes a
   real `proximal distal` search interaction while preserving the separate
@@ -82,15 +80,21 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   exposed the margin TOC too early. Adversarial review then measured a second
   21 px monograph overflow at the former 1200 px rail-entry boundary. Exact
   1200 and 1280 px probes plus a canonical 1279.98 px hide threshold govern the
-  corrected transition. The complete local rerun passes 140/140; exact Linux
-  PR screenshots remain the protected-delivery evidence to inspect.
+  corrected transition. The protected Linux evidence passes 140/140.
 - Screenshot evidence binds route family, scenario, source revision, renderer,
   decoded PNG dimensions, byte count, and SHA-256. The runner emits a candidate
   baseline only. Comparison validates the complete baseline schema and fails
   closed on missing or malformed reviewer/timestamp/pull-request metadata,
   count mismatch, non-derived or duplicate keys, or renderer mismatch. A
-  protected follow-up must still approve a candidate. Footer, dense-content,
-  focus, print, and no-JavaScript scenarios remain open in #4089.
+  protected follow-up must still approve a candidate. The supplemental runner
+  now exercises footer, bounded dense content, keyboard focus, reduced motion,
+  print, and no-JavaScript behavior. Browser review found and corrected
+  character-by-character mobile table wrapping plus print-title suppression,
+  dark title colors, and raw citation URL expansion. The complete local matrix
+  passes 158/158; candidate approval remains deliberately human-gated.
+  Exact Linux artifact review also caught a bright mobile footer in dark mode;
+  a color-surface assertion and token-driven footer styling now guard that
+  theme boundary.
 - The PR E2E job renders every representative source, generates the bounded
   current flattened CSS bundle, generates the bounded public manifest, runs all
   140 cells, and uploads screenshots, results, and the candidate baseline as
@@ -104,12 +108,12 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   workflows; executable unit contracts prevent silent trigger erosion.
 - Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
-  `4cf39347be49adb0e700edebb05390717c5ce2ec`; #9174 and #9190–#9193 remain
-  open. The exact-main publication run had no completed artifact when audited,
-  and the draft manifest still lacked qualified workflows, screenshots,
-  documentation, and public interface inventory. No provider artifact is
-  accepted for AffineDrift import; only provider-independent RED fixtures are
-  safe before those gates close.
+  `727bda2de2d4656e8d9a3abbbc3a72b30fa06ebb`; it advances the previously
+  audited `4cf39347...` only through vendor force-source frame pinning. #9174
+  and #9190–#9193 remain open, and exact-main has no `dist/companion/`
+  publication tree. No provider artifact is accepted for AffineDrift import;
+  only provider-independent RED/security fixtures are safe before those gates
+  close.
 - UpstreamDrift PR #9267 remains a separate blocked scientific-authority lane at
   observed head `7215e0e285bd21f7f1631681e51226bbf746d610`. It cannot authorize a
   refreshed proximal-distal projection until its exact artifact, manifests,
@@ -135,6 +139,12 @@ Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
   generated paths appeared as +853/-11,959 until `docs/` was restored exactly.
   The implementation commit itself is 10 files, +916/-14, with zero deleted
   paths. Canonical scientific and monograph sources are unchanged.
+- The supplemental #4089 render/prune reproduced it again: 80 generated
+  `docs/` paths appeared as +1,531/-12,060, including apparent deleted files.
+  Restoring only tracked `docs/` bytes and removing only untracked generated
+  preview files returned the source diff to zero deleted paths. This is direct
+  evidence that the alarming deletion totals are transient generated-site
+  churn, not loss of canonical content.
 
 ## Proximal–Distal Publication Boundary
 
@@ -228,10 +238,9 @@ Do not treat source tests alone as rendered-publication evidence.
 
 ## Ordered Next Actions
 
-1. Deliver the current #4089 candidate-evidence and 1024/1200 px overflow fixes
-   through protected review, inspect the exact Linux 140-cell screenshots, and
-   use a separate reviewed follow-up to approve the baseline and add remaining
-   scenarios.
+1. Deliver the current #4089 supplemental 158-cell scenario slice through
+   protected review, inspect the exact Linux evidence, and keep candidate
+   baseline approval as a separate explicit human decision.
 2. Finish provider #9174/#9190–#9193, then implement immutable consumer #4022
    and compatibility contract #4030 before generated catalog #4023/#4024.
 3. In parallel where dependencies permit, implement #4086 shared evidence

@@ -124,6 +124,30 @@ def test_representative_contract_names_every_required_desktop_route_family(
     ]
     assert representative["themes"] == ["light", "dark"]
 
+    supplemental = build_manifest(docs, source_root=tmp_path, source_revision="abc123")[
+        "verification"
+    ]["supplemental"]
+    assert {record["id"] for record in supplemental["scenarios"]} == {
+        "footer",
+        "dense-content",
+        "keyboard-focus",
+        "reduced-motion",
+        "print",
+        "no-javascript",
+    }
+    assert (
+        sum(
+            len(record["viewports"]) * len(record["themes"]) for record in supplemental["scenarios"]
+        )
+        == 18
+    )
+    assert {record["route"] for record in supplemental["scenarios"]} <= {
+        "/",
+        "/books/index.html",
+        "/articles/proximal_distal_energy_transfer/index.html",
+        "/reports/scientific-claim-audit.html",
+    }
+
 
 def test_manifest_fails_closed_when_a_representative_route_is_not_rendered(
     tmp_path: Path,

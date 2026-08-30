@@ -66,6 +66,42 @@ def test_mobile_publication_shell_contains_wide_content_without_page_scroll() ->
     assert "contain: inline-size" in table_rule
 
 
+def test_dense_tables_scroll_without_collapsing_long_cells_to_fragments() -> None:
+    """Content-bearing table cells must stay readable inside the local scroller."""
+    stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
+
+    table_rule = stylesheet.split("#quarto-document-content .table-wrapper > table", maxsplit=1)[
+        1
+    ].split("}", maxsplit=1)[0]
+    assert "min-width: max(100%, 42rem)" in table_rule
+
+
+def test_print_keeps_document_titles_and_suppresses_internal_citation_urls() -> None:
+    """Print CSS must hide site chrome without hiding the semantic title header."""
+    stylesheet = (REPO_ROOT / "css" / "print.css").read_text(encoding="utf-8")
+    hidden_chrome = stylesheet.split("@media print", maxsplit=1)[1].split("body {", maxsplit=1)[0]
+
+    assert "\n  header," not in hidden_chrome
+    assert "#title-block-header" in stylesheet
+    title_rule = stylesheet.split("#title-block-header", maxsplit=1)[1].split("}", maxsplit=1)[0]
+    assert "display: block !important" in title_rule
+    assert "background: white !important" in title_rule
+    assert "color: black !important" in title_rule
+    assert "#title-block-header .reading-time-estimate" in stylesheet
+    reading_time_rule = stylesheet.split("#title-block-header .reading-time-estimate", maxsplit=1)[
+        1
+    ].split("}", maxsplit=1)[0]
+    assert "color: black !important" in reading_time_rule
+    external_link_rule = stylesheet.split('a[href^="http"]::after', maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    assert "content: none !important" in external_link_rule
+    citation_rule = stylesheet.split('a[role="doc-biblioref"]::after', maxsplit=1)[1].split(
+        "}", maxsplit=1
+    )[0]
+    assert "content: none !important" in citation_rule
+
+
 def test_margin_toc_waits_for_a_wide_desktop_publication_grid() -> None:
     """The Quarto margin TOC must not enter before its grid fits the viewport."""
     stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")

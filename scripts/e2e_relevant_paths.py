@@ -21,6 +21,7 @@ EXACT_PATHS = frozenset(
         "scripts/e2e_relevant_paths.py",
         "scripts/prune_internal_docs_from_deploy.py",
         "scripts/public-site-evidence.js",
+        "scripts/public-site-visual-scenario-plan.js",
         "scripts/public_site_manifest.py",
         "scripts/sync_frontend_assets.py",
         "scripts/update_sw_cache_version.py",
