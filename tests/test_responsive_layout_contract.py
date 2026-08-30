@@ -6,17 +6,17 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_models_mobile_layout_prioritizes_primary_content() -> None:
-    """The compact Models view must not spend its first fold on a duplicate TOC."""
+    """The Programming hub must use one wide canvas that collapses cleanly."""
     source = (REPO_ROOT / "models" / "models.qmd").read_text(encoding="utf-8")
-    stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
+    stylesheet = (REPO_ROOT / "css" / "resources.css").read_text(encoding="utf-8")
 
-    modifier = "standard-page-layout--content-first-compact"
-    assert modifier in source
-    assert f".{modifier} > .left-sidebar" in stylesheet
-    assert (
-        "display: none"
-        in stylesheet.split(f".{modifier} > .left-sidebar", maxsplit=1)[1].split("}", maxsplit=1)[0]
-    )
+    assert '<div class="programming-hub">' in source
+    assert "standard-page-layout" not in source
+    hub_rule = stylesheet.split(".programming-hub {", maxsplit=1)[1].split("}", maxsplit=1)[0]
+    mobile_rule = stylesheet.split("@media (max-width: 767.98px)", maxsplit=1)[1]
+    assert "1200px" in hub_rule
+    assert "width: min(calc(100% - 2rem), 1200px)" in hub_rule
+    assert "grid-template-columns: 1fr" in mobile_rule
 
 
 def test_full_layout_grid_placement_overrides_quarto_page_columns() -> None:
