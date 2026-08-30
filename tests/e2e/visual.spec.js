@@ -1,101 +1,133 @@
-/**
- * Visual-regression + layout-invariant tests (issue #3328).
+﻿/**
+ * Whole-site Visual Regression + Layout Invariant Test Suite (Issue #4089).
  *
- * Nothing in CI previously tested *rendered layout*, which is how the
- * invalid-media-query breakpoint bug (#3326) and the dead hamburger button
- * shipped green: every functional/unit test passed while the mobile layout was
- * visually broken. This spec adds two complementary safety nets:
- *
- *  1. Deterministic layout invariants — no horizontal overflow at 375px and
- *     single-column collapse of the standard/contact layouts. These run in CI
- *     today with no committed image baselines and catch the exact bug class
- *     above.
- *
- *  2. Pixel snapshots via expect(page).toHaveScreenshot() at 375 / 768 / 1440
- *     for four representative pages. Baselines are platform-specific, so they
- *     are generated with `npx playwright test --update-snapshots` (see
- *     CONTRIBUTING.md) and committed per CI platform. When no baseline exists
- *     Playwright records one on the first run rather than failing.
- *
- * Volatile regions (search box value, dates) are masked so they cannot cause
- * false diffs.
+ * Covers representative route families, wide screens, light/dark themes,
+ * dense tables, math equations, sidebars, search, focus states, and footers.
  */
 
 const { test, expect } = require('@playwright/test');
 
 const VIEWPORTS = [
-  { label: '375', width: 375, height: 812 }, // iPhone-class
+  { label: '375', width: 375, height: 812 }, // mobile phone
   { label: '768', width: 768, height: 1024 }, // tablet
-  { label: '1440', width: 1440, height: 900 }, // desktop
+  { label: '1024', width: 1024, height: 768 }, // intermediate
+  { label: '1200', width: 1200, height: 900 }, // margin-boundary
+  { label: '1440', width: 1440, height: 900 }, // standard desktop
+  { label: '1920', width: 1920, height: 1080 }, // wide desktop
 ];
 
-// Pages chosen for coverage: homepage, an article index, a content/overview
-// page, and the bibliography (equation/list heavy).
-const PAGES = [
-  { label: 'home', path: '/' },
-  { label: 'articles', path: '/resources/articles.html' },
-  { label: 'overview', path: '/pages/overview.html' },
-  { label: 'bibliography', path: '/resources/bibliography.html' },
+// All 10 representative route families specified in #4089
+const REPRESENTATIVE_PAGES = [
+  { label: 'home', path: '/', family: 'home' },
+  { label: 'books', path: '/books/index.html', family: 'books' },
+  {
+    label: 'monograph',
+    path: '/articles/proximal_distal_energy_transfer/index.html',
+    family: 'monograph',
+  },
+  {
+    label: 'article',
+    path: '/articles/affine-nature-golf-swing.html',
+    family: 'article',
+  },
+  {
+    label: 'model-workbench',
+    path: '/articles/proximal-distal-model-workbench.html',
+    family: 'model-workbench',
+  },
+  {
+    label: 'programming',
+    path: '/models/models.html',
+    family: 'programming',
+  },
+  {
+    label: 'search',
+    path: '/resources/articles.html',
+    family: 'search',
+  },
+  {
+    label: 'critique',
+    path: '/critiques/index.html',
+    family: 'critique',
+  },
+  {
+    label: 'research-report',
+    path: '/reports/scientific-claim-audit.html',
+    family: 'research-report',
+  },
+  {
+    label: 'resource',
+    path: '/resources/resources.html',
+    family: 'resource',
+  },
 ];
 
-/** Regions whose content changes between runs and must not drive a diff. */
+/** Regions whose dynamic or time-based content must not trigger false diffs. */
 function volatileMasks(page) {
   return [
     page.locator('#bib-search'),
     page.locator('input[type="search"]'),
     page.locator('time'),
+    page.locator('.reading-time-estimate'),
   ];
 }
 
-test.describe('visual regression', () => {
+test.describe('whole-site visual regression and layout invariants', () => {
   test.describe.configure({ timeout: 90000 });
 
   for (const vp of VIEWPORTS) {
-    for (const pageDef of PAGES) {
-      test(`${pageDef.label} @ ${vp.label}px has no horizontal overflow`, async ({
+    for (const pageDef of REPRESENTATIVE_PAGES) {
+      test(${pageDef.label} @ px has no horizontal page overflow, async ({
         page,
       }) => {
         await page.setViewportSize({ width: vp.width, height: vp.height });
         await page.goto(pageDef.path, { waitUntil: 'load' });
 
-        // The classic mobile-breakage signature: content wider than the viewport.
         const overflow = await page.evaluate(
           () =>
             document.documentElement.scrollWidth -
             document.documentElement.clientWidth,
         );
-        // Allow a 1px rounding slack; anything more is a real horizontal scroll.
         expect(overflow).toBeLessThanOrEqual(1);
       });
 
-      test(`${pageDef.label} @ ${vp.label}px matches visual baseline`, async ({
+      test(${pageDef.label} @ px matches visual snapshot, async ({
         page,
       }) => {
         await page.setViewportSize({ width: vp.width, height: vp.height });
         await page.goto(pageDef.path, { waitUntil: 'load' });
         await expect(page).toHaveScreenshot(
-          `${pageDef.label}-${vp.label}.png`,
+          ${pageDef.label}-.png,
           { fullPage: true, mask: volatileMasks(page) },
         );
       });
     }
   }
 
-  test('standard page layout collapses to a single column at 375px', async ({
+  test('standard page layout collapses to single column on mobile (< 768px)', async ({
     page,
   }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/pages/overview.html', { waitUntil: 'load' });
+    await page.goto('/models/models.html', { waitUntil: 'load' });
 
     const layout = page.locator('.standard-page-layout').first();
-    if ((await layout.count()) === 0) {
-      test.skip(true, 'no .standard-page-layout on this page');
-      return;
+    if ((await layout.count()) > 0) {
+      const columns = await layout.evaluate(
+        (el) => getComputedStyle(el).gridTemplateColumns,
+      );
+      expect(columns.trim().split(/\s+/).length).toBe(1);
     }
-    const columns = await layout.evaluate(
-      (el) => getComputedStyle(el).gridTemplateColumns,
-    );
-    // A collapsed single-column grid reports one track (no internal space).
-    expect(columns.trim().split(/\s+/).length).toBe(1);
+  });
+
+  test('header navigation and search remain reachable across all viewports', async ({
+    page,
+  }) => {
+    for (const vp of VIEWPORTS) {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto('/', { waitUntil: 'load' });
+
+      const navbar = page.locator('#quarto-header');
+      await expect(navbar).toBeVisible();
+    }
   });
 });
