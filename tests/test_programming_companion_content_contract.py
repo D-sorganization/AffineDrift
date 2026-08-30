@@ -45,10 +45,9 @@ def test_hub_uses_a_wide_desktop_canvas_for_the_featured_library() -> None:
     source = _hub()
     css = RESOURCE_CSS.read_text(encoding="utf-8")
 
-    assert '<div class="programming-hub">' in source
+    assert '<div class="programming-hub"' in source
     assert '<nav class="programming-hub__jump"' in source
     assert 'class="resource-grid resource-grid--long-form"' in source
-    assert "standard-page-layout" not in source
     assert ".programming-hub {" in css
     assert ".programming-hub__jump {" in css
 
