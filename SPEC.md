@@ -29,7 +29,7 @@ Last-Updated: 2026-08-30T16:38:28Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.282                                          |
+| **Spec Version**        | 1.0.283                                          |
 | **Last Spec Update**    | 2026-08-30                                       |
 
 ## 2. Purpose & Mission
@@ -1622,3 +1622,4 @@ Windows. The figure, numerical results, and scientific claims are unchanged.
 | 2026-08-30 | 1.0.280 | feat(companion, #4024): Replace stale installation, onboarding, and verification guidance across documentation with verified UpstreamDrift CI entrypoints and companion workflows (`scripts/ci/verify_installation.py`, `python -m scripts.companion_workflows execute --workflow-id installation-verification`), cross-link to `/models/programming/engines.html`, and add regression tests in `tests/test_programming_companion_onboarding_contract.py`. |
 | 2026-08-30 | 1.0.281 | fix(claim-audit): Update review evidence SHA-256 digest for `scripts/generate_proximal_distal_falsification_atlas.py` in `data/trust/claim_audit_inventory.json` and regenerate `data/trust/generated/claim_audit_report.json` to satisfy claim-audit publication gates. |
 | 2026-08-30 | 1.0.282 | fix(claim-audit): Add reviewed audit records and deterministic review evidence digests for the 6 newly generated Programming Companion catalog routes (`/models/programming/*.html`) to `data/trust/claim_audit_inventory.json` and regenerate `data/trust/generated/claim_audit_report.json` and `reports/scientific-claim-audit.md` to satisfy full rendered manifest coverage in publication deployment gates. |
+| 2026-08-30 | 1.0.283 | feat(evidence-presentation, #4086): Implement reader-facing evidence state presentation vocabulary, pure view-model projectors, accessible renderers (`src/affine_control/evidence_presentation/`), JSON schema (`schemas/evidence-presentation-v1.schema.json`), deterministic generator (`scripts/generate_evidence_presentation.py`), and test suite (`tests/test_evidence_presentation.py`), establishing a standard reader-facing verification status language across all content and programming catalog surfaces without amplifying claim authority. |

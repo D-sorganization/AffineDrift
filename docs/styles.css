@@ -1959,6 +1959,68 @@ Dark mode (separate concern):
   min-width: 0;
 }
 
+.resource-grid--long-form {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.book-hub {
+  width: min(calc(100% - 2rem), 1200px);
+  margin: 0 auto;
+  padding: 2.5rem 0 4rem;
+}
+
+.book-hub__hero {
+  max-width: 780px;
+  margin-bottom: 2.5rem;
+}
+
+.book-hub__hero h1 {
+  margin: 0 0 1rem;
+}
+
+.book-hub__hero p:last-child {
+  color: var(--text-main);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.book-hub__eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--color-link);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Wide, content-first shell for the programming companion. The retired
+   three-rail model hub left too little room for book and workflow cards on
+   desktop screens. */
+.programming-hub {
+  width: min(calc(100% - 2rem), 1200px);
+  margin: 0 auto;
+  padding: 1.5rem 0 4rem;
+}
+
+.programming-hub__jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.programming-hub__jump a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+}
+
 .resource-card {
   background: var(--bg-body);
   border: 1px solid var(--border-color);
@@ -1977,8 +2039,14 @@ Dark mode (separate concern):
 
 .resource-card.has-media {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
+}
+
+.resource-card > *,
+.resource-media,
+.resource-content {
+  min-width: 0;
 }
 
 .resource-media {
@@ -1996,7 +2064,8 @@ Dark mode (separate concern):
   display: block;
 }
 
-.resource-content h3 {
+.resource-card > h2,
+.resource-content :is(h2, h3) {
   font-size: 1.25rem;
   margin-top: 0;
   margin-bottom: 0.75rem;
@@ -2049,6 +2118,12 @@ Dark mode (separate concern):
 }
 
 /* Responsive resource grid */
+@media (max-width: 1199.98px) {
+  .resource-grid--long-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 767.98px) {
   .resource-grid {
     grid-template-columns: 1fr;
@@ -2217,6 +2292,11 @@ Dark mode (separate concern):
   color: var(--color-neutral-0);
 }
 
+.site-card--brand .page-lede,
+.site-card--brand .u-text-muted {
+  color: var(--color-neutral-0);
+}
+
 .site-card--brand:hover {
   background: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
@@ -2291,27 +2371,27 @@ Dark mode (separate concern):
 
 /* On-brand variants: usable when a .site-button sits on top of a
    .site-card--brand surface (filled white-on-brand button + ghost). */
-.site-button--on-brand {
+.site-card--brand .site-button--on-brand {
   background: var(--color-neutral-0);
   color: var(--color-primary-main);
   border-color: var(--color-neutral-0);
 }
 
-.site-button--on-brand:hover,
-.site-button--on-brand:focus-visible {
+.site-card--brand .site-button--on-brand:hover,
+.site-card--brand .site-button--on-brand:focus-visible {
   background: var(--bg-secondary);
   color: var(--color-primary-dark);
   border-color: var(--bg-secondary);
 }
 
-.site-button--on-brand-ghost {
+.site-card--brand .site-button--on-brand-ghost {
   background: transparent;
   color: var(--color-neutral-0);
   border-color: var(--color-neutral-0);
 }
 
-.site-button--on-brand-ghost:hover,
-.site-button--on-brand-ghost:focus-visible {
+.site-card--brand .site-button--on-brand-ghost:hover,
+.site-card--brand .site-button--on-brand-ghost:focus-visible {
   background: rgba(255, 255, 255, 0.12);
   color: var(--color-neutral-0);
   border-color: var(--color-neutral-0);
@@ -2473,6 +2553,55 @@ Dark mode (separate concern):
   color: var(--color-link);
 }
 /* ===== end css/components/provenance-note.css ===== */
+/* ===== begin css/components/scientific-trust-panel.css ===== */
+/* Generated scientific-claim trust surface. Source facts live in
+   data/trust/claim_registry.json; this file owns presentation only. */
+
+.scientific-trust-panel {
+  display: grid;
+  gap: var(--space-md, 1rem);
+  margin-block: var(--space-xl, 2rem);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid var(--border-color);
+  border-left: 0.35rem solid var(--accent-blue);
+  border-radius: var(--border-radius-md, 0.5rem);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.scientific-trust-panel > h2 {
+  margin: 0;
+  font-size: var(--font-size-xl, 1.5rem);
+}
+
+.scientific-trust-panel h3 {
+  margin-block: var(--space-sm, 0.5rem) 0;
+  font-size: var(--font-size-lg, 1.25rem);
+}
+
+.scientific-trust-panel p,
+.scientific-trust-panel ul {
+  margin-block: 0;
+}
+
+.scientific-trust-panel code {
+  overflow-wrap: anywhere;
+}
+
+.trust-claim-link {
+  display: block;
+  margin-top: var(--space-sm, 0.5rem);
+  font-weight: 600;
+}
+
+@media print {
+  .scientific-trust-panel {
+    break-inside: avoid;
+    border-color: currentcolor;
+    background: transparent;
+  }
+}
+/* ===== end css/components/scientific-trust-panel.css ===== */
 /* ===== begin css/components/home-hero.css ===== */
 /* Home hero — single content-first introduction block.
    No background fills, no gradients, no decorative imagery. The brand is
@@ -2804,6 +2933,304 @@ code span.va {
 
 /* stylelint-enable selector-class-pattern */
 /* ===== end css/components/code-theme.css ===== */
+/* ===== begin css/components/update-notice.css ===== */
+/* Nonblocking, theme-aware service-worker update notice (WEB-C). */
+.site-update-notice {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: var(--z-notification, 1200);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: min(32rem, calc(100vw - 2rem));
+  padding: 0.75rem 0.875rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--color-info);
+  border-radius: var(--border-radius-md, 0.5rem);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+}
+
+.site-update-notice__actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.site-update-notice__button {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm, 0.375rem);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.site-update-notice__button--primary {
+  color: var(--text-inverse);
+  background: var(--color-primary-main);
+  border-color: var(--color-primary-main);
+}
+
+@media (width < 480px) {
+  .site-update-notice {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .site-update-notice__actions,
+  .site-update-notice__button {
+    width: 100%;
+  }
+}
+/* ===== end css/components/update-notice.css ===== */
+/* ===== begin css/components/notes-workspace.css ===== */
+/* Reader notes are offered only on long-form articles and books (WEB-C). */
+.ad-notes-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: 4.75rem;
+  z-index: var(--z-notification, 1200);
+  min-height: 2.75rem;
+  padding: 0.55rem 0.8rem;
+  color: var(--text-inverse);
+  background: var(--color-primary-main);
+  border: 1px solid var(--color-primary-dark);
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ad-notes-toggle.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.ad-notes-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 8rem;
+  z-index: var(--z-modal, 1300);
+  display: none;
+  width: min(92vw, 26rem);
+  padding: 0.8rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg, 0.75rem);
+  box-shadow: var(--shadow-lg);
+}
+
+.ad-notes-panel.open {
+  display: block;
+}
+
+.ad-notes-header,
+.ad-notes-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ad-notes-header {
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.ad-notes-header h3 {
+  margin: 0;
+  color: var(--color-link);
+  font-size: 1rem;
+}
+
+.ad-notes-area {
+  width: 100%;
+  min-height: 13rem;
+  padding: 0.65rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md, 0.5rem);
+  font: inherit;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.ad-notes-actions {
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+
+.ad-notes-actions button {
+  min-height: 2.75rem;
+  padding: 0.38rem 0.6rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm, 0.375rem);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.ad-notes-actions .danger {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.ad-notes-status {
+  min-height: 1.1rem;
+  margin-top: 0.45rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 575.98px) {
+  .ad-notes-toggle {
+    right: auto;
+    bottom: 1rem;
+    left: 1rem;
+    width: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .ad-notes-toggle::before {
+    content: "\270e";
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .ad-notes-panel {
+    right: 1rem;
+    bottom: 4.75rem;
+    left: 1rem;
+    width: auto;
+  }
+}
+/* ===== end css/components/notes-workspace.css ===== */
+/* ===== begin css/components/evidence-presentation.css ===== */
+﻿/* Governed reader-facing evidence presentation components (Issue #4086). */
+
+.evidence-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-size: var(--fs-small, 0.85rem);
+  font-weight: 600;
+  border-radius: var(--border-radius-sm, 0.25rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  vertical-align: middle;
+  border: 1px solid var(--border-color);
+}
+
+.badge-math-identity {
+  background: var(--bg-secondary, #f0f4f8);
+  color: var(--primary-dark, #1e293b);
+  border-color: #94a3b8;
+}
+
+.badge-manufactured-synthetic {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #f59e0b;
+}
+
+.badge-qualified-simulation {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #38bdf8;
+}
+
+.badge-pilot-bounded {
+  background: #f3e8ff;
+  color: #6b21a8;
+  border-color: #c084fc;
+}
+
+.badge-governed-dataset {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #34d399;
+}
+
+.badge-collecting-locked {
+  background: #ffedd5;
+  color: #c2410c;
+  border-color: #fb923c;
+}
+
+.badge-validated-evidence {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #22c55e;
+}
+
+.badge-published-claim {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-color: #3b82f6;
+}
+
+.badge-superseded-revoked {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #f87171;
+}
+
+/* Callout Card Container */
+.evidence-state-card {
+  margin-block: var(--space-lg, 1.5rem);
+  border-left: 4px solid var(--accent-blue, #2563eb);
+}
+
+.evidence-state-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm, 0.75rem);
+}
+
+.evidence-state-section {
+  margin-block: 0.25rem;
+}
+
+.evidence-state-section ul {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.25rem;
+}
+
+.evidence-state-metadata {
+  margin-top: var(--space-sm, 0.75rem);
+  padding-top: var(--space-sm, 0.75rem);
+  border-top: 1px solid var(--border-color);
+  font-size: var(--fs-small, 0.85rem);
+}
+
+.evidence-boundary-note {
+  font-size: var(--fs-small, 0.85rem);
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+/* ===== end css/components/evidence-presentation.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the
@@ -3140,17 +3567,23 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Full-layout pages own their visible H1 in custom page markup. Standard
-   content pages keep Quarto's generated title block visible and accessible. */
-#quarto-content.page-layout-full #title-block-header {
-  display: none;
-  margin-top: 0;
-  padding-top: 0;
+footer.footer,
+.nav-footer {
+  color: var(--text-secondary);
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
 }
 
-#quarto-content.page-layout-full #title-block-header .title {
-  margin-top: 0;
-  padding-top: 0;
+footer.footer a,
+.nav-footer a {
+  color: var(--text-secondary);
+}
+
+/* Full-layout hubs own their visible H1 in authored page markup. Every such
+   source is checked by tests/title-block-semantics.test.js, so the generated
+   Quarto title is always the redundant copy and is hidden consistently. */
+#quarto-content.page-layout-full #title-block-header {
+  display: none;
 }
 
 /* Typography */
@@ -3218,7 +3651,7 @@ a:hover {
    --- */
 
 /* Central Container */
-.container {
+.ad-page-container {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 0 2rem;
@@ -3237,11 +3670,6 @@ a:hover {
   width: 100%;
 }
 
-/* Hide Quarto's default title block only on designed full-layout pages. */
-#quarto-content.page-layout-full #title-block-header {
-  display: none;
-}
-
 /* Article pages: keep margins tighter and sidebars visible */
 #quarto-content.page-layout-article {
   max-width: var(--content-max-width);
@@ -3254,6 +3682,69 @@ a:hover {
   max-width: 100%;
 }
 
+/* Publication title shell. The title, description, and metadata stack in one
+   readable flow at every viewport; they never compete for narrow flex tracks. */
+#quarto-content.page-layout-article #title-block-header.quarto-title-block {
+  position: static;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 var(--spacing-lg);
+  padding: clamp(1.25rem, 2.5vw, 2.25rem);
+  color: var(--text-inverse);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-dark),
+    var(--color-primary-main)
+  );
+  border: 1px solid var(--color-primary-main);
+  border-radius: var(--border-radius-lg, 0.75rem);
+  box-shadow: var(--shadow-md);
+}
+
+#title-block-header .quarto-title,
+#title-block-header .quarto-title-meta {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+#title-block-header .title {
+  max-width: 24ch;
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 2.9rem);
+  overflow-wrap: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+#title-block-header .description,
+#title-block-header .subtitle {
+  max-width: 62ch;
+  margin-top: 0.75rem;
+  color: var(--text-inverse);
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  opacity: 0.92;
+  text-wrap: pretty;
+}
+
+#title-block-header .quarto-title-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(255 255 255 / 0.25);
+}
+
+#title-block-header .quarto-title-meta-heading,
+#title-block-header .quarto-title-meta-contents,
+#title-block-header .quarto-title-meta-contents p {
+  color: var(--text-inverse);
+  overflow-wrap: break-word;
+}
+
 /* Reset Quarto's margin-sidebar and sidebar columns on full-layout pages only */
 #quarto-content.page-layout-full #quarto-margin-sidebar,
 #quarto-content.page-layout-full #quarto-sidebar {
@@ -3261,16 +3752,28 @@ a:hover {
 }
 
 /* Override page-columns grid behavior on full-layout pages */
-#quarto-content.page-layout-full .page-columns.page-full,
+#quarto-content.page-layout-full .page-columns.page-full:not(.standard-page-layout),
 #quarto-content.page-layout-full .page-columns.column-page {
   display: block;
   max-width: 100%;
 }
 
+/* Quarto adds page-column utility classes to authored full-layout wrappers.
+   Restore the intentional centered widths after the generic grid reset. */
+#quarto-content.page-layout-full .ad-page-container.page-columns.page-full {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+}
+
+#quarto-content.page-layout-full .home-layout--single.page-columns.page-full {
+  max-width: 74rem;
+  margin-inline: auto;
+}
+
 /* 3-Column Grid System
    Using specific selectors to override Quarto defaults */
 .page-columns.page-full .standard-page-layout,
-.container .standard-page-layout,
+.ad-page-container .standard-page-layout,
 .standard-page-layout {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(
@@ -3308,6 +3811,21 @@ a:hover {
 .page-columns .standard-page-layout .right-sidebar,
 .standard-page-layout .right-sidebar {
   grid-column: 3;
+}
+
+/* Quarto annotates authored children with its own page-column utilities.
+   Keep the explicit public-site grid authoritative even when Quarto's
+   stylesheet is loaded later in the document. */
+#quarto-content .standard-page-layout > .left-sidebar {
+  grid-column: 1 !important;
+}
+
+#quarto-content .standard-page-layout > .main-content-area {
+  grid-column: 2 !important;
+}
+
+#quarto-content .standard-page-layout > .right-sidebar {
+  grid-column: 3 !important;
 }
 
 /* Sidebars */
@@ -3513,7 +4031,7 @@ figcaption {
   outline: 3px solid var(--accent-blue);
 }
 
-header {
+#quarto-header {
   background: linear-gradient(
     135deg,
     var(--primary-dark) 0%,
@@ -3522,12 +4040,12 @@ header {
   color: var(--pure-white);
   border-bottom: 2px solid var(--accent-blue);
   padding: 0.8rem 0;
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 1000;
   box-shadow: 0 4px 12px var(--shadow-color);
-  display: flex;
-  align-items: center;
+  display: block;
 }
 
 nav .container {
@@ -3541,17 +4059,6 @@ nav .container {
   padding: 0 1rem;
 
   /* Minimal padding */
-}
-
-/* Quarto Navbar Full Width Fix */
-#quarto-header {
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--primary-blue) 100%
-  );
-  border-bottom: 2px solid var(--accent-blue);
-  box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 #quarto-header .navbar {
@@ -3940,6 +4447,15 @@ nav .container {
 
 .code-wrapper {
   position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.code-wrapper pre {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .copy-btn {
@@ -3998,7 +4514,7 @@ blockquote,
 /* Tablet and up: Switch to 2-column layout (Left Sidebar + Content) */
 @media (width >= 768px) {
   .page-columns.page-full .standard-page-layout,
-  .container .standard-page-layout,
+  .ad-page-container .standard-page-layout,
   .standard-page-layout {
     grid-template-columns: 240px minmax(0, 1fr);
     gap: 2rem;
@@ -4014,6 +4530,39 @@ blockquote,
 @media (width < 768px) {
   :root {
     --header-height: 60px;
+  }
+
+  /* Quarto's article grid already supplies a mobile gutter. Keeping the
+     desktop article padding here narrows the body twice and forces title
+     metadata beyond the viewport. Stack the title block and let the native
+     page-column gutter own the small-screen spacing. */
+  #quarto-content.page-layout-article {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  #title-block-header.quarto-title-block {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #title-block-header .quarto-title,
+  #title-block-header .quarto-title-meta {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  #title-block-header .quarto-title-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #title-block-header .quarto-title-meta-contents,
+  #title-block-header .reading-time-estimate {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   /* Mobile typography scaling for better readability on small screens */
@@ -4034,7 +4583,7 @@ blockquote,
   }
 
   .page-columns.page-full .standard-page-layout,
-  .container .standard-page-layout,
+  .ad-page-container .standard-page-layout,
   .standard-page-layout {
     display: flex;
     flex-direction: column;
@@ -4051,6 +4600,24 @@ blockquote,
 
   .logo-text {
     font-size: var(--fs-base);
+  }
+}
+
+/* A long in-page contents rail can consume the entire first viewport. Pages
+   opting into this modifier keep primary content first on phones and tablets. */
+@media (width < 1024px) {
+  #quarto-content .standard-page-layout--content-first-compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .standard-page-layout--content-first-compact > .left-sidebar {
+    display: none;
+  }
+
+  #quarto-content .standard-page-layout--content-first-compact > .main-content-area {
+    grid-column: 1 !important;
+    width: 100%;
   }
 }
 
@@ -4936,6 +5503,17 @@ form.contact-form .form-group textarea {
   width: 100%;
 }
 
+.home-layout--single {
+  display: block;
+  max-width: 74rem;
+  margin: 0 auto;
+}
+
+.home-layout--single .home-content > section:not(.home-hero) > p,
+.home-layout--single .home-content > section:not(.home-hero) > .provenance-note {
+  max-width: var(--prose-width);
+}
+
 .home-sidebar {
   width: var(--sidebar-width);
   flex-shrink: 0;
@@ -5190,6 +5768,22 @@ h1.title,
   /* Hide right sidebar on smaller screens */
   .standard-page-layout .right-sidebar {
     display: none;
+  }
+}
+
+/* Phone full-layout contract: primary content precedes section navigation. */
+@media (width < 768px) {
+  #quarto-content .standard-page-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #quarto-content .standard-page-layout > .left-sidebar {
+    display: none !important;
+  }
+
+  #quarto-content .standard-page-layout > .main-content-area {
+    grid-column: 1 !important;
+    width: 100%;
   }
 }
 
@@ -5910,10 +6504,129 @@ input:focus:not(:focus-visible) {
    MathJax Responsive Design (Issue #2968)
    ========================================================================== */
 
+/* Public-site mobile containment: prose paths and URLs may be arbitrarily long. */
+#quarto-document-content :not(pre) > code,
+#quarto-document-content a,
+#quarto-document-content h1,
+#quarto-document-content h2,
+#quarto-document-content h3,
+#quarto-document-content h4,
+#quarto-document-content li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#quarto-document-content :not(pre) > code {
+  white-space: normal;
+}
+
+/* Wide semantic tables scroll inside the article instead of widening the page. */
+#quarto-document-content .table-wrapper {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  contain: inline-size;
+}
+
+#quarto-document-content .table-wrapper > table {
+  display: table;
+  min-width: max(100%, 42rem);
+  max-width: none;
+}
+
+/* Keep the long normative notation tables complete on narrow screens. */
+#quarto-document-content .notation-reference table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Interactive calculators collapse their primary columns at tablet width. */
+@media (max-width: 767.98px) {
+  #rc-app .rc-main-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #rc-app .rc-main-grid > * {
+    min-width: 0;
+  }
+}
+
+/* Mobile publication overflow containment. */
+@media (max-width: 575.98px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  #quarto-content,
+  #quarto-content.page-columns,
+  #quarto-content main,
+  #quarto-document-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #quarto-document-content .table-wrapper {
+    width: 100%;
+    contain: inline-size;
+  }
+}
+
+/* Quarto's margin TOC enters the article grid too early at tablet widths. */
+@media (max-width: 1279.98px) {
+  #quarto-margin-sidebar {
+    display: none !important;
+  }
+
+  #quarto-header .quarto-secondary-nav {
+    width: 100%;
+    background: rgb(0 0 0 / 0.14);
+    border-top: 1px solid rgb(255 255 255 / 0.16);
+    color: var(--pure-white);
+  }
+
+  #quarto-header .quarto-secondary-nav .quarto-page-breadcrumbs {
+    display: none;
+  }
+
+  #quarto-header .quarto-secondary-nav .quarto-btn-toggle {
+    color: var(--pure-white);
+  }
+}
+
+/* Quarto's book breadcrumb row is a flex item and needs explicit shrink points. */
+@media (max-width: 575.98px) {
+  .quarto-secondary-nav,
+  .quarto-secondary-nav .container-fluid,
+  .quarto-page-breadcrumbs,
+  .quarto-page-breadcrumbs .breadcrumb {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .quarto-secondary-nav {
+    overflow-x: clip;
+  }
+
+  .quarto-page-breadcrumbs {
+    overflow: hidden;
+  }
+
+  .quarto-page-breadcrumbs .breadcrumb {
+    flex-wrap: wrap;
+  }
+}
+
 /* 1. MathJax container overflow handling */
 mjx-container[jax="CHTML"][display="true"],
 .MathJax_Display,
 .math.display {
+  display: block;
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
