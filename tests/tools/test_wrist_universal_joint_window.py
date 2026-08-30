@@ -23,7 +23,13 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-PyQt6 = pytest.importorskip("PyQt6", reason="PyQt6 not installed")
+try:
+    import PyQt6.QtWidgets as QtWidgets
+
+    _ = QtWidgets.QApplication
+except (ImportError, Exception):
+    pytest.skip("PyQt6 not loadable in this environment", allow_module_level=True)
+
 pytest.importorskip("matplotlib", reason="matplotlib not installed")
 
 

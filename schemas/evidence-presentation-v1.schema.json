@@ -1,0 +1,136 @@
+{
+  "": "https://affinedrift.com/schemas/evidence-presentation-v1.schema.json",
+  "": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AffineDrift Reader-Facing Evidence Presentation Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_on", "entities"],
+  "properties": {
+    "schema_version": {
+      "const": "affinedrift.evidence-presentation/v1"
+    },
+    "generated_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "entities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "": "#//entityViewModel"
+      }
+    }
+  },
+  "": {
+    "entityViewModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entity_id",
+        "title",
+        "kind",
+        "tier",
+        "state_label",
+        "state_badge_class",
+        "establishes",
+        "does_not_establish",
+        "limitations",
+        "next_gate",
+        "source_revision",
+        "evidence_origin",
+        "authority_boundary",
+        "accessible_label"
+      ],
+      "properties": {
+        "entity_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "claim",
+            "protocol",
+            "engine",
+            "program",
+            "feature",
+            "workflow",
+            "atlas_entry"
+          ]
+        },
+        "tier": {
+          "enum": [
+            "mathematical_identity",
+            "manufactured_synthetic",
+            "qualified_simulation",
+            "pilot_bounded",
+            "governed_dataset",
+            "collecting_locked",
+            "validated_evidence",
+            "published_claim",
+            "superseded_revoked"
+          ]
+        },
+        "state_label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "state_badge_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "establishes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "does_not_establish": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "next_gate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_origin": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority_boundary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessible_label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
