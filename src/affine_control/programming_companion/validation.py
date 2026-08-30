@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass
 from typing import Any, cast
 
 from jsonschema import Draft202012Validator, FormatChecker
@@ -20,6 +21,12 @@ from .models import (
 from .policy import ConsumerPolicy
 
 PATH_KEYS = frozenset({"entry_point", "path", "source_path", "vendor_path"})
+
+
+@dataclass(frozen=True)
+class _FetchExpectation:
+    url: str
+    approved_path: str
 
 
 def _reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict[str, object]:
@@ -51,16 +58,15 @@ def _validate_digest(payload: bytes, expected: str, label: str) -> None:
 
 def _validate_fetch(
     result: FetchResult,
-    expected_url: str,
+    expectation: _FetchExpectation,
     request: ImportRequest,
     policy: ConsumerPolicy,
-    approved_path: str,
 ) -> bytes:
-    if result.requested_url != expected_url:
+    if result.requested_url != expectation.url:
         raise AcquisitionError("transport returned evidence for a different requested URL")
     observed_urls = (*result.redirects, result.final_url)
     for observed_url in observed_urls:
-        policy.validate_url(observed_url, request.source_commit, approved_path)
+        policy.validate_url(observed_url, request.source_commit, expectation.approved_path)
     if len(result.payload) > policy.max_payload_bytes:
         raise AcquisitionError("payload exceeds byte limit")
     return result.payload
@@ -138,10 +144,16 @@ def validate_downloads(
         Returned bytes match every digest, schema, provider, commit, and path contract.
     """
     manifest_bytes = _validate_fetch(
-        manifest_result, request.manifest_url, request, policy, policy.manifest_path
+        manifest_result,
+        _FetchExpectation(request.manifest_url, policy.manifest_path),
+        request,
+        policy,
     )
     schema_bytes = _validate_fetch(
-        schema_result, request.schema_url, request, policy, policy.schema_path
+        schema_result,
+        _FetchExpectation(request.schema_url, policy.schema_path),
+        request,
+        policy,
     )
     _validate_digest(manifest_bytes, request.manifest_sha256, "manifest")
     _validate_digest(schema_bytes, request.schema_sha256, "schema")
