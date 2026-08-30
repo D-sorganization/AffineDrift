@@ -25,6 +25,8 @@ PATH_KEYS = frozenset({"entry_point", "path", "source_path", "vendor_path"})
 
 @dataclass(frozen=True)
 class _FetchExpectation:
+    """Describe one immutable URL and its approved repository-relative path."""
+
     url: str
     approved_path: str
 
