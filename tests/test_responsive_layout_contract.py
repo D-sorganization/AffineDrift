@@ -66,6 +66,20 @@ def test_mobile_publication_shell_contains_wide_content_without_page_scroll() ->
     assert "contain: inline-size" in table_rule
 
 
+def test_margin_toc_waits_for_a_wide_desktop_publication_grid() -> None:
+    """The Quarto margin TOC must not enter before its grid fits the viewport."""
+    stylesheet = (REPO_ROOT / "styles.css").read_text(encoding="utf-8")
+
+    contract = stylesheet.split(
+        "/* Quarto's margin TOC enters the article grid too early at tablet widths. */",
+        maxsplit=1,
+    )[1]
+    sidebar_rule = contract.split("#quarto-margin-sidebar", maxsplit=1)[1].split("}", maxsplit=1)[0]
+
+    assert "@media (max-width: 1199.98px)" in contract
+    assert "display: none !important" in sidebar_rule
+
+
 def test_notation_tables_scroll_locally_and_keep_well_formed_norm_rows() -> None:
     """The normative notation reference must remain complete on narrow screens."""
     page = (REPO_ROOT / "pages" / "notation.qmd").read_text(encoding="utf-8")

@@ -184,15 +184,12 @@ jobs:
             --base-url http://127.0.0.1:8000 \
             --manifest docs/public-site-manifest.json \
             --output artifacts/public-site-verification/local-every-page.json
-          node scripts/verify-public-site.js \
+          node scripts/verify-public-site-visual.js \
             --base-url http://127.0.0.1:8000 \
             --manifest docs/public-site-manifest.json \
             --output artifacts/public-site-verification/local-representative.json \
             --screenshot-dir artifacts/public-site-verification/screenshots \
-            --screenshots \
-            --viewports tablet,desktop-small,desktop-medium,desktop-wide \
-            --themes light,dark \
-            --routes /,/articles/affine-nature-golf-swing.html,/articles/proximal_distal_energy_transfer/index.html,/articles/The_Physics_of_Golf/quarto/index.html,/books/index.html,/resources/resources.html,/models/models.html,/offline.html
+            --candidate-baseline artifacts/public-site-verification/candidate-baseline.json
 
       - name: Upload pre-deployment public site evidence
         if: always()

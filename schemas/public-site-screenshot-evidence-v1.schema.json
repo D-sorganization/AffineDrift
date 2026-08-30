@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://affinedrift.com/schemas/public-site-screenshot-evidence-v1.schema.json",
+  "title": "AffineDrift Public Site Screenshot Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_revision",
+    "route",
+    "route_family",
+    "scenario_id",
+    "page_kind",
+    "viewport",
+    "theme",
+    "browser",
+    "screenshot"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "affinedrift/public-site-screenshot-evidence/v1"
+    },
+    "source_revision": { "type": "string", "minLength": 1 },
+    "route": { "type": "string", "pattern": "^/" },
+    "route_family": { "type": ["string", "null"] },
+    "scenario_id": { "type": ["string", "null"] },
+    "page_kind": { "type": "string", "minLength": 1 },
+    "viewport": { "$ref": "#/$defs/viewport" },
+    "theme": { "enum": ["light", "dark"] },
+    "browser": { "$ref": "#/$defs/browser" },
+    "screenshot": { "$ref": "#/$defs/screenshot" }
+  },
+  "$defs": {
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "width", "height"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "browser": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "screenshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "width", "height", "byte_count", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "byte_count": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}
