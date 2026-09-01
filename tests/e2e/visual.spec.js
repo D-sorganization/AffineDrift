@@ -77,7 +77,7 @@ test.describe('whole-site visual regression and layout invariants', () => {
 
   for (const vp of VIEWPORTS) {
     for (const pageDef of REPRESENTATIVE_PAGES) {
-      test(${pageDef.label} @ px has no horizontal page overflow, async ({
+      test(`${pageDef.label} @ ${vp.label}px has no horizontal page overflow`, async ({
         page,
       }) => {
         await page.setViewportSize({ width: vp.width, height: vp.height });
@@ -91,13 +91,13 @@ test.describe('whole-site visual regression and layout invariants', () => {
         expect(overflow).toBeLessThanOrEqual(1);
       });
 
-      test(${pageDef.label} @ px matches visual snapshot, async ({
+      test(`${pageDef.label} @ ${vp.label}px matches visual snapshot`, async ({
         page,
       }) => {
         await page.setViewportSize({ width: vp.width, height: vp.height });
         await page.goto(pageDef.path, { waitUntil: 'load' });
         await expect(page).toHaveScreenshot(
-          ${pageDef.label}-.png,
+          `${pageDef.label}-${vp.label}.png`,
           { fullPage: true, mask: volatileMasks(page) },
         );
       });
