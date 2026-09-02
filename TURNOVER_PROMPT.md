@@ -31,8 +31,9 @@ human-validation authority separate and fail closed.
 ## Exact AffineDrift State
 
 - Primary checkout: `C:\Users\diete\Repositories\AffineDrift`, clean `main`,
-  equal to `origin/main` at
-  `d8775589e4ac5270816e60330b338354a78047db` before the final turnover PR.
+  equal to `origin/main` at protected #4107 merge
+  `6350a5d4fdd59ccc68e1b8562d8f8c2b20d3e262` when the corrective worktree was
+  created. Reverify because GitHub may have advanced.
 - Programming Companion presentation: protected PR #4099, merge
   `717461e42e2de9f257cfa873ed336795dcc2d321`, successful deployment 33317188855. The stable `/models/models.html` route prominently presents the
   proximal-distal technical monograph beside the longer books, plus the visual
@@ -53,8 +54,26 @@ human-validation authority separate and fail closed.
   transient 5xx responses, but must have deterministic tests for eventual
   success, exhaustion, and non-retriable failures and must not weaken any DOM,
   layout, heading, canonical, navigation, theme, notes, or overflow assertion.
-- Turnover issue #4105 owns these documents. Requery its PR and protected merge
-  state before modifying anything.
+- Turnover issue #4105 is closed by protected PR #4106 at
+  `27d8a560a34fe7928d276960870853a2b35206cb`.
+- Turnover deployment 33323483901 passed all four 232-route live groups for
+  928/928 evidence items and zero failures, confirming the earlier 503s were
+  intermittent. Artifact ID is 9735795376.
+- Initial retry PR #4107 merged at
+  `6350a5d4fdd59ccc68e1b8562d8f8c2b20d3e262`, but #4104 was reopened because
+  retries were not live-only, retry attempts were absent from the artifact,
+  intermediate error events persisted, and all navigation exceptions retried.
+  Corrective work is in
+  `C:\Users\diete\Repositories\worktrees\AffineDrift-4104-live-evidence` on
+  `fix/4104-live-evidence-v2`. Requery its PR state before continuing.
+- The clean pushed branch `fix/4104-bounded-live-retries` at `83dafc2b` in the
+  `AffineDrift-4104-live-retries` worktree is superseded. Do not open it as a
+  competing PR.
+- Corrective-branch validation at turnover: full JavaScript 319 passed/19
+  skipped; focused verifier 22/22 passed; deployment/content integrity passed
+  with one declared missing-LaTeX-workflow skip; full headless Python 3,658
+  passed/26 skipped. One PyQt6 GUI module was excluded because QtGui's native
+  DLL would not import on this workstation; rely on protected CI for that lane.
 
 ## Exact UpstreamDrift State
 
@@ -100,11 +119,11 @@ the immutable projection verifier before publication.
 
 1. Fetch and verify exact repository, issue, PR, check, deployment, and worktree
    state. Do not trust this snapshot if GitHub advanced.
-2. Ensure the final turnover PR for #4105 is protected, merged, and reflected in
-   clean AffineDrift `main` before implementation.
-3. Resolve #4104 with failing-first deterministic tests and one new protected
-   exact-revision deployment whose pre-deployment and live matrices both pass
-   928/928. Preserve both prior 503 artifacts as adverse evidence.
+2. Complete the corrective #4104 branch through ordinary protected review;
+   preserve #4107's valid tests and the two prior 503 artifacts.
+3. Require one new protected exact-revision deployment whose pre-deployment and
+   live matrices pass 928/928 and whose live artifact exposes the attempt and
+   transient counters. Close #4104 only after inspecting that artifact.
 4. Reconcile #9307 without force-pushing. Merge only when the exact head/base,
    every required check, and GitHub merge state are green. Verify the squash
    commit/tree, post-merge CI, and #9190 issue state.

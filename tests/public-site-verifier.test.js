@@ -6,7 +6,10 @@ const {
   headingBeginsWithinViewport,
   isActionableConsoleError,
   navigateWithRetry,
+  navigationRetryPolicyEvidence,
+  parseArgs,
   RETRYABLE_STATUS_CODES,
+  summarizeNavigationAttempts,
   screenshotOptions,
   screenshotName,
 } = require('../scripts/verify-public-site.js');
@@ -105,6 +108,22 @@ describe('public-site verifier contracts (WEB-D)', () => {
     expect(screenshotOptions()).toEqual({ animations: 'disabled', fullPage: false });
   });
 
+  test('keeps document retries disabled unless the live gate opts in', () => {
+    const defaults = parseArgs([]);
+    expect(defaults.documentRetries).toBe(0);
+    expect(defaults.documentRetryDelayMs).toBe(500);
+
+    const live = parseArgs([
+      '--document-retries',
+      '2',
+      '--document-retry-delay-ms',
+      '500',
+    ]);
+    expect(live.documentRetries).toBe(2);
+    expect(live.documentRetryDelayMs).toBe(500);
+    expect(() => parseArgs(['--document-retries', '-1'])).toThrow(/non-negative integer/);
+  });
+
   test('requires the primary heading to begin inside the visible fold', () => {
     const viewport = { width: 768, height: 1024 };
     expect(headingBeginsWithinViewport(
@@ -186,6 +205,7 @@ describe('public-site verifier contracts (WEB-D)', () => {
       const logs = [];
       const sleepFn = (ms) => { sleeps.push(ms); return Promise.resolve(); };
       const logger = (msg) => logs.push(msg);
+      const resetAttemptEvidence = jest.fn();
 
       const result = await navigateWithRetry(page, 'http://test/articles/page.html', {
         maxRetries: 3,
@@ -193,6 +213,7 @@ describe('public-site verifier contracts (WEB-D)', () => {
         sleepFn,
         logger,
         verbose: true,
+        resetAttemptEvidence,
       });
 
       expect(page.goto).toHaveBeenCalledTimes(2);
@@ -203,6 +224,7 @@ describe('public-site verifier contracts (WEB-D)', () => {
       expect(result.attempts[0]).toEqual({ attempt: 1, status: 503, error: null });
       expect(result.attempts[1]).toEqual({ attempt: 2, status: 200, error: null });
       expect(sleeps).toEqual([250]); // 250 * 2^0
+      expect(resetAttemptEvidence).toHaveBeenCalledTimes(2);
       expect(logs[0]).toContain('Transient HTTP 503 on http://test/articles/page.html (attempt 1/4); retrying in 250ms...');
     });
 
@@ -270,7 +292,7 @@ describe('public-site verifier contracts (WEB-D)', () => {
       expect(sleeps).toEqual([]);
     });
 
-    test('recovers from transient network/navigation errors', async () => {
+    test('does not retry navigation exceptions outside the response policy', async () => {
       const res200 = { status: () => 200, ok: () => true };
       const page = {
         goto: jest.fn()
@@ -286,14 +308,50 @@ describe('public-site verifier contracts (WEB-D)', () => {
         sleepFn,
       });
 
-      expect(page.goto).toHaveBeenCalledTimes(2);
-      expect(result.response).toBe(res200);
-      expect(result.error).toBeNull();
-      expect(result.retried).toBe(true);
-      expect(result.attempts).toHaveLength(2);
+      expect(page.goto).toHaveBeenCalledTimes(1);
+      expect(result.response).toBeNull();
+      expect(result.error).toBe('net::ERR_CONNECTION_RESET');
+      expect(result.retried).toBe(false);
+      expect(result.attempts).toHaveLength(1);
       expect(result.attempts[0].error).toBe('net::ERR_CONNECTION_RESET');
-      expect(result.attempts[1].status).toBe(200);
-      expect(sleeps).toEqual([150]);
+      expect(sleeps).toEqual([]);
+    });
+  });
+
+  test('summarizes transient attempts without hiding exhausted evidence cells', () => {
+    expect(summarizeNavigationAttempts([
+      {
+        navigation_attempts: [
+          { attempt: 1, status: 503, error: null },
+          { attempt: 2, status: 200, error: null },
+        ],
+      },
+      {
+        navigation_attempts: [
+          { attempt: 1, status: 502, error: null },
+          { attempt: 2, status: 502, error: null },
+          { attempt: 3, status: 502, error: null },
+        ],
+      },
+      { navigation_attempts: [{ attempt: 1, status: 404, error: null }] },
+    ])).toEqual({
+      navigation_attempt_count: 6,
+      retried_evidence_count: 2,
+      transient_response_count: 4,
+      exhausted_retry_count: 1,
+    });
+  });
+
+  test('emits self-describing bounded retry policy evidence', () => {
+    expect(navigationRetryPolicyEvidence({
+      documentRetries: 2,
+      documentRetryDelayMs: 500,
+    })).toEqual({
+      max_retries: 2,
+      maximum_attempts: 3,
+      base_delay_ms: 500,
+      backoff: 'exponential',
+      retryable_status_codes: [502, 503, 504],
     });
   });
 });
