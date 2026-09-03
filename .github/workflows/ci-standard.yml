@@ -138,6 +138,10 @@ jobs:
           fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
+      - name: Verify Programming Companion Catalog Is Current
+        # models/programming/*.qmd are generated; hand edits or generator changes
+        # without regeneration must fail here, not on the live site (#4123, RM #1507).
+        run: python3 -m scripts.generate_programming_catalog --check
       - name: Verify Quarto Math Syntax
         # scan_quarto_syntax.py existed but was wired into nothing, so none of its
         # checks had ever run in CI. The corpus was brought to zero findings before

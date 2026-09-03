@@ -148,3 +148,40 @@ def test_generator_fails_closed_on_invalid_manifest() -> None:
     """Generator refuses malformed manifests or missing required summary sections."""
     with pytest.raises(CatalogGeneratorError, match="invalid manifest structure"):
         CatalogGenerator({"manifest_id": "incomplete"})
+
+
+@pytest.mark.unit
+def test_every_generated_page_carries_the_fixture_preview_notice(
+    manifest_data: dict[str, object], tmp_path: Path
+) -> None:
+    """AffineDrift #4123: pages built from the fixture manifest must say so at the top."""
+    generator = CatalogGenerator(manifest_data)
+    files = generator.generate_all(tmp_path)
+
+    for f in files:
+        content = f.content
+        body = content.split("---", 2)[2]
+        notice_at = body.find("PREVIEW")
+        assert notice_at != -1, f"{f.relative_path} lacks the preview notice"
+        assert "tests/fixtures/companion/manifest_v1_0_0_authoritative.json" in content
+        assert "issues/4123" in content and "issues/9416" in content
+        first_heading = body.find("Authority Boundary")
+        assert first_heading != -1
+        assert notice_at < first_heading, f"{f.relative_path} notice is not at the top"
+
+
+@pytest.mark.unit
+def test_features_page_renders_structured_fields_not_dict_literals(
+    manifest_data: dict[str, object],
+) -> None:
+    """The parity table must show surfaces, parity state and qualification, not repr()."""
+    features = CatalogGenerator(manifest_data).generate_features()
+
+    assert "{'" not in features and '{"' not in features
+    assert "| Feature ID | Title | Surfaces | Parity State | Parity Issue |" in features
+    assert "| `analysis.analysis_tools_api` |" in features
+    row = next(line for line in features.splitlines() if "`analysis.analysis_tools_api`" in line)
+    assert "`api`, `web`" in row
+    assert "`gap`" in row
+    assert "https://github.com/D-sorganization/UpstreamDrift/issues/7448" in row
+    assert "`unqualified`" in row
