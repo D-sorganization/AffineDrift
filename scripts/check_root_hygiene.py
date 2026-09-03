@@ -114,6 +114,9 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "resources",
         "schemas",
         "scripts",
+        # Fleet-shared modules synced from Repository_Management
+        # (Repository_Management#1520).
+        "shared_scripts",
         "src",
         "static",
         "tests",

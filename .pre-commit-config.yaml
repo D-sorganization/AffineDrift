@@ -101,6 +101,12 @@ repos:
         language: system
         pass_filenames: false
         files: (^|/)_quarto\.yml$|\.(qmd|tex)$|^(src|content)/.*\.py$|^scripts/check_title_case\.py$
+      - id: spec-changelog
+        name: "SPEC.md change-log rows are PR-keyed (RM #1520)"
+        entry: python3 -m scripts.check_spec_changelog
+        language: system
+        pass_filenames: false
+        files: '^(SPEC\.md|shared_scripts/spec_changelog\.py|scripts/check_spec_changelog\.py)$'
       - id: claim-audit-evidence
         name: "Claim-audit evidence digests are current (#4124)"
         entry: python3 -m scripts.regenerate_claim_audit_evidence --check

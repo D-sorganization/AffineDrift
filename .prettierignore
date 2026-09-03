@@ -30,3 +30,10 @@ articles/proximal_distal_energy_transfer/data/*.json
 # Deterministic claim-audit reports are byte-checked by their generator.
 data/trust/generated/claim_audit_report.json
 reports/scientific-claim-audit.md
+
+# Repository_Management#1520: SPEC.md's change-log table is left unpadded on
+# purpose. Prettier pads markdown table cells to the width of the widest row,
+# so a single new change-log row would rewrite every other row -- turning a
+# one-line addition into a whole-table diff that conflicts with every
+# concurrent pull request. That is the exact failure #1520 removes.
+SPEC.md
