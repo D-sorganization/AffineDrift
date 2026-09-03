@@ -15,9 +15,19 @@ def test_find_forbidden_agent_artifacts_flags_generated_delivery_wrappers():
 
 def test_find_forbidden_agent_artifacts_allows_static_agent_docs():
     paths = [
-        ".agent/skills/lint/SKILL.md",
+        ".claude/skills/lint/SKILL.md",
         ".claude/commands/gaai-status.md",
         ".gaai/core/scripts/delivery-daemon.sh",
     ]
 
     assert find_forbidden_agent_artifacts(paths) == []
+
+
+def test_find_forbidden_agent_artifacts_flags_duplicate_agent_and_gaai_artefacts():
+    paths = [
+        ".agent/skills/lint/SKILL.md",
+        ".gaai/project/contexts/artefacts/plans/GH1602.execution-plan.md",
+        ".claude/skills/lint/SKILL.md",
+    ]
+
+    assert find_forbidden_agent_artifacts(paths) == paths[:2]

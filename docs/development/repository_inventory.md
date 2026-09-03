@@ -45,7 +45,7 @@ history, but they are not primary public article surfaces:
 
 | Path | Classification | Retention policy |
 | --- | --- | --- |
-| `AffineDrift_Content_Review_Instructions.docx` | Internal process | Retain as source-bound review guidance until replaced by a Markdown process document. Do not link from public navigation. |
+| `AffineDrift_Content_Review_Instructions.docx` | Internal process | Removed/retired in Issue #4128 per root hygiene; internal review processes governed in Markdown under `docs/`. |
 | `articles/PR_INDUCED_ACCELERATION.md` | Internal process | Treat as PR-specific development notes for induced-acceleration work. Future updates should move or supersede this under `docs/process/` before public linking. |
 | `articles/The_Physics_of_Golf/PR_GUIDANCE.md` | Internal process | Retain as golf-series PR guidance, separate from reader-facing Physics of Golf chapters. Do not add to public article indexes. |
 | `articles/The_Physics_of_Golf/PR_INSTRUCTIONS.md` | Internal process | Retain as implementation instructions only. Do not link from public golf research navigation. |

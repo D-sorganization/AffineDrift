@@ -1,6 +1,6 @@
 # AffineDrift
 
-[![Quarto Syntax Check](https://github.com/D-sorganization/AffineDrift/actions/workflows/quarto-syntax-check.yml/badge.svg)](https://github.com/D-sorganization/AffineDrift/actions/workflows/quarto-syntax-check.yml)
+[![CI Standard](https://github.com/D-sorganization/AffineDrift/actions/workflows/ci-standard.yml/badge.svg)](https://github.com/D-sorganization/AffineDrift/actions/workflows/ci-standard.yml)
 [![Built with Quarto](https://img.shields.io/badge/built%20with-Quarto-blue.svg)](https://quarto.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
