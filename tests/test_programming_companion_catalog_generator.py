@@ -192,14 +192,16 @@ def test_features_page_renders_structured_fields_not_dict_literals(
 @pytest.mark.unit
 def test_committed_catalog_matches_source_manifest() -> None:
     """Ensure the committed catalog in models/programming does not drift from source."""
-    manifest_data = cast(
-        dict[str, object], json.loads(AUTHORITATIVE_MANIFEST.read_text(encoding="utf-8"))
-    )
-    generator = CatalogGenerator(manifest_data)
+    from scripts.generate_programming_catalog import build_generator, resolve_source
+
     repo_root = Path(__file__).resolve().parent.parent
+    store = repo_root / "data/companion"
+    # The committed pages follow the active provider pin when one is installed
+    # (#4123 Phase 1) and the fixture otherwise; either way they must not drift.
+    generator = build_generator(resolve_source(None, store), store)
     catalog_dir = repo_root / "models/programming"
     is_clean, drifts = generator.check(catalog_dir)
-    assert is_clean, f"Committed catalog has drifted from authoritative manifest: {drifts}"
+    assert is_clean, f"Committed catalog has drifted from its source manifest: {drifts}"
 
 
 @pytest.mark.unit

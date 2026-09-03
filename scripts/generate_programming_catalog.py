@@ -94,6 +94,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--store", type=Path, default=DEFAULT_STORE, help="companion store dir")
     parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=None,
+        help="explicit manifest path (alias for --source <path>; PREVIEW-stamped)",
+    )
+    parser.add_argument(
         "--output-dir",
         type=Path,
         default=DEFAULT_OUTPUT_DIR,
@@ -105,7 +111,9 @@ def main(argv: list[str] | None = None) -> int:
         help="Check whether existing files are up-to-date without writing changes",
     )
     args = parser.parse_args(argv)
-    source = resolve_source(args.source, args.store)
+    if args.manifest is not None and args.source is not None:
+        parser.error("--manifest and --source are mutually exclusive")
+    source = resolve_source(str(args.manifest) if args.manifest else args.source, args.store)
 
     try:
         generator = build_generator(source, args.store)
