@@ -21,11 +21,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  # Cancel superseded PR runs, but never cancel a main run: back-to-back merges
-  # were cancelling each other's required checks and leaving main unverified
-  # (Repository_Management #1507 main-green campaign).
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  # Per-commit group on main so back-to-back merges never cancel each other's
+  # required checks; per-ref elsewhere so a newer PR push still supersedes the
+  # stale run (Repository_Management #1507 main-green campaign).
+  group: ci-standard-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # ── Dispatcher: enforce local-only routing (NO GitHub-hosted runners) ──────
