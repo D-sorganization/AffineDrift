@@ -873,5 +873,16 @@ Part of the fleet-wide rollout tracked at
    git. Update it as part of every PR you open and every push that lands on
    `main`.
 
+4. **SPEC.md change-log rows are PR-keyed.** A substantive PR adds exactly one
+   row to `SPEC.md` section 12 in the form
+   `| YYYY-MM-DD | #<pr> | summary |`. Never mint a serial spec version, never
+   bump the `Spec Version` field in section 1 (it is release-derived, set by
+   `scripts/bump_spec_version.py`), and never renumber or reorder another
+   author's row — row order is merge order. Verify with
+   `python3 -m scripts.check_spec_changelog`. Register the row-union merge
+   driver once per clone with `python3 scripts/install_spec_merge_driver.py`.
+   Ratified as
+   [Repository_Management#1520](https://github.com/D-sorganization/Repository_Management/issues/1520).
+
 See `AGENT_HANDOFF.md` for the current gate commands, in-flight branches, and
 do-not list.

@@ -260,6 +260,11 @@ jobs:
         run: python3 scripts/check_tech_debt_budget.py
       - name: Verify generated agent automation artifacts
         run: python3 scripts/check_agent_automation_artifacts.py
+      - name: Verify SPEC.md Change Log Is PR-Keyed
+        # Rows are keyed by pull request, not by a serial spec version, so two
+        # concurrent PRs cannot collide on a global counter (RM #1520). The
+        # "a substantive PR touches SPEC.md" half stays in spec-check.yml.
+        run: python3 -m scripts.check_spec_changelog
       - name: Verify Repository Root Hygiene
         # Allowlist of tracked root-level files (#4128; wired by #4126, RM #1507).
         run: python3 scripts/check_root_hygiene.py
