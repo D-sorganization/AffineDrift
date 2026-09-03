@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -22,7 +23,7 @@ AUTHORITATIVE_MANIFEST = FIXTURES_DIR / "manifest_v1_0_0_authoritative.json"
 
 @pytest.fixture
 def manifest_data() -> dict[str, object]:
-    return json.loads(AUTHORITATIVE_MANIFEST.read_text(encoding="utf-8"))
+    return cast(dict[str, object], json.loads(AUTHORITATIVE_MANIFEST.read_text(encoding="utf-8")))
 
 
 @pytest.mark.unit
@@ -163,6 +164,7 @@ def test_every_generated_page_carries_the_fixture_preview_notice(
         body = content.split("---", 2)[2]
         notice_at = body.find("PREVIEW")
         assert notice_at != -1, f"{f.relative_path} lacks the preview notice"
+        assert "PREVIEW — generated from a fixture manifest; not yet provider-published" in content
         assert "tests/fixtures/companion/manifest_v1_0_0_authoritative.json" in content
         assert "issues/4123" in content and "issues/9416" in content
         first_heading = body.find("Authority Boundary")
@@ -185,3 +187,46 @@ def test_features_page_renders_structured_fields_not_dict_literals(
     assert "`gap`" in row
     assert "https://github.com/D-sorganization/UpstreamDrift/issues/7448" in row
     assert "`unqualified`" in row
+
+
+@pytest.mark.unit
+def test_committed_catalog_matches_source_manifest() -> None:
+    """Ensure the committed catalog in models/programming does not drift from source."""
+    manifest_data = cast(
+        dict[str, object], json.loads(AUTHORITATIVE_MANIFEST.read_text(encoding="utf-8"))
+    )
+    generator = CatalogGenerator(manifest_data)
+    repo_root = Path(__file__).resolve().parent.parent
+    catalog_dir = repo_root / "models/programming"
+    is_clean, drifts = generator.check(catalog_dir)
+    assert is_clean, f"Committed catalog has drifted from authoritative manifest: {drifts}"
+
+
+@pytest.mark.unit
+def test_cli_check_flag(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """generate_programming_catalog.py CLI supports --check and gates catalog drift."""
+    from scripts.generate_programming_catalog import main
+
+    manifest_data = cast(
+        dict[str, object], json.loads(AUTHORITATIVE_MANIFEST.read_text(encoding="utf-8"))
+    )
+    generator = CatalogGenerator(manifest_data)
+    generator.generate_all(tmp_path)
+
+    # Clean check
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "generate_programming_catalog",
+            "--manifest",
+            str(AUTHORITATIVE_MANIFEST),
+            "--output-dir",
+            str(tmp_path),
+            "--check",
+        ],
+    )
+    assert main() == 0
+
+    # Drifted check fails
+    (tmp_path / "engines.qmd").write_text("drift", encoding="utf-8")
+    assert main() == 1
