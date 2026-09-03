@@ -10,6 +10,11 @@ from pathlib import Path
 
 import pytest
 
+from scripts.claim_audit_evidence import (
+    ReviewEvidenceError,
+    split_evidence_path,
+    symbol_sha256,
+)
 from scripts.claim_audit_ids import (
     DEFERRED_AUDIT_SCOPE_COUNTS,
     deferred_issue_url,
@@ -28,6 +33,7 @@ from scripts.generate_claim_audit_inventory import (
     validate_inventory,
     validate_manifest_coverage,
 )
+from scripts.regenerate_claim_audit_evidence import patched_text, refresh_inventory
 
 ROOT = Path(__file__).resolve().parents[1]
 INVENTORY = ROOT / "data/trust/claim_audit_inventory.json"
@@ -478,3 +484,89 @@ def test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers() -
     assert "scripts.generate_claim_audit_inventory" in workflow
     assert "--manifest docs/public-site-manifest.json" in workflow
     assert "--enforce-publication" in workflow
+
+
+def _symbol_fixture(tmp_path: Path) -> tuple[dict[str, object], AuditSources, Path]:
+    """Return an inventory whose corrected finding binds one test function, not its file."""
+    inventory, _, claims_path, ledger_path = _fixture(tmp_path)
+    module = tmp_path / "tests/test_bound.py"
+    module.write_text(
+        "def test_unrelated() -> None:\n"
+        "    assert 1 == 1\n"
+        "\n"
+        "\n"
+        "def test_bound_assertion() -> None:\n"
+        "    assert 'scroll' in 'local scroll'\n",
+        encoding="utf-8",
+    )
+    reviewed = _find_route(inventory, "/articles/superposition.html")
+    findings = reviewed["findings"]
+    assert isinstance(findings, list)
+    bound_path = "tests/test_bound.py::test_bound_assertion"
+    findings.append(
+        {
+            "finding_id": "ad-finding-example-symbol-bound",
+            "priority": "p1",
+            "disposition": "corrected",
+            "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4124",
+            "rationale": "The assertion, not the whole module, is the evidence.",
+            "claim_ids": ["ad-example-001"],
+            "critique_ids": ["crit-example"],
+            "evidence_paths": [bound_path],
+            "evidence_sha256": {
+                bound_path: symbol_sha256(module, "test_bound_assertion", label=bound_path)
+            },
+            "verification_commit": "f" * 40,
+        }
+    )
+    return inventory, AuditSources(SCHEMA, claims_path, ledger_path, tmp_path), module
+
+
+def test_symbol_bound_evidence_ignores_unrelated_edits_in_the_same_module(
+    tmp_path: Path,
+) -> None:
+    """AffineDrift #4124: editing a neighbouring test must not break the ledger digest."""
+    inventory, sources, module = _symbol_fixture(tmp_path)
+    validate_inventory(inventory, sources)
+
+    text = module.read_text(encoding="utf-8")
+    module.write_text(text.replace("assert 1 == 1", "assert 2 == 2"), encoding="utf-8")
+    validate_inventory(inventory, sources)
+
+    module.write_text(text.replace("'local scroll'", "'no scroll'"), encoding="utf-8")
+    with pytest.raises(AuditContractError, match="digest mismatch"):
+        validate_inventory(inventory, sources)
+
+
+def test_symbol_bound_evidence_fails_closed_on_missing_or_invalid_symbols(
+    tmp_path: Path,
+) -> None:
+    inventory, sources, module = _symbol_fixture(tmp_path)
+
+    module.write_text("def test_unrelated() -> None:\n    assert True\n", encoding="utf-8")
+    with pytest.raises(AuditContractError, match="symbol is missing"):
+        validate_inventory(inventory, sources)
+
+    with pytest.raises(ReviewEvidenceError, match="symbol is invalid"):
+        split_evidence_path("tests/test_bound.py::not a symbol")
+    with pytest.raises(ReviewEvidenceError, match="requires a Python file"):
+        split_evidence_path("pages/notation.qmd::heading")
+    assert split_evidence_path("pages/notation.qmd") == ("pages/notation.qmd", None)
+
+
+def test_regenerate_patches_only_digest_values_and_keeps_ledger_formatting(
+    tmp_path: Path,
+) -> None:
+    inventory, sources, module = _symbol_fixture(tmp_path)
+    original = json.dumps(inventory, indent=2, sort_keys=True) + "\n"
+    compact = original.replace('"evidence_paths": [\n', '"evidence_paths": [  \n')
+    text = module.read_text(encoding="utf-8")
+    module.write_text(text.replace("'local scroll'", "'x'"), encoding="utf-8")
+
+    refreshed = copy.deepcopy(inventory)
+    assert refresh_inventory(refreshed, tmp_path) == 1
+    patched = patched_text(compact, inventory, refreshed)
+
+    assert '"evidence_paths": [  \n' in patched
+    assert json.loads(patched) == refreshed
+    validate_inventory(json.loads(patched), sources)

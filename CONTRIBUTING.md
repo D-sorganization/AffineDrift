@@ -683,6 +683,10 @@ python scripts/seo_audit.py
 
 # Check equations
 python scripts/check-equations.py
+
+# Refresh claim-audit evidence digests after editing any file a trust ledger binds
+# (data/trust/*.json evidence_paths; supports path::test_function bindings, #4124)
+python -m scripts.regenerate_claim_audit_evidence   # add --check to verify only
 ```
 
 ### Developing New Tools

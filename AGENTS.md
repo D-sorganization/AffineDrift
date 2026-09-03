@@ -350,6 +350,7 @@ general Python standards above.
 - **Linter:** `ruff check` only (not `ruff format`).
 - **Python version:** 3.12. Always use `python3`.
 - **Tests:** `pytest --cov --cov-fail-under=65` (65% coverage minimum).
+- **Trust ledgers:** after editing any file bound by `data/trust/*.json` (`evidence_paths`, incl. `path::test_function`), run `python3 -m scripts.regenerate_claim_audit_evidence` and commit the result; `quality-gate` runs `--check` (#4124).
 
 ### Quarto Authoring Standards
 

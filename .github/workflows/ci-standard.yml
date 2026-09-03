@@ -71,7 +71,7 @@ jobs:
         run: |
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
-          python -m pip install PyYAML==6.0.3 beautifulsoup4==4.14.3 requests==2.33.1 Markdown==3.10.2 pydantic==2.13.3 simpleeval==1.0.7 numpy==2.4.4 matplotlib==3.10.9 defusedxml==0.7.1
+          python -m pip install PyYAML==6.0.3 beautifulsoup4==4.14.3 requests==2.33.1 Markdown==3.10.2 pydantic==2.13.3 simpleeval==1.0.7 numpy==2.4.4 matplotlib==3.10.9 defusedxml==0.7.1 jsonschema==4.26.0
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Reject Raw Merge Conflict Markers
@@ -263,6 +263,12 @@ jobs:
         run: python3 scripts/check_citation_resolution.py
       - name: Verify Quarto Citation Integrity
         run: python3 scripts/check_qmd_citation_keys.py
+      - name: Verify Claim-Audit Evidence Ledgers
+        # PR-time twin of deploy-website.yml "Enforce scientific claim-audit
+        # coverage" minus the rendered-manifest join (which needs a full render).
+        # Digest drift used to surface first on main (#4124, RM #1507); a stale
+        # ledger is fixed by `python3 -m scripts.regenerate_claim_audit_evidence`.
+        run: python3 -m scripts.regenerate_claim_audit_evidence --check
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
