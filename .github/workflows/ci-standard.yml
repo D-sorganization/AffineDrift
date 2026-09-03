@@ -56,7 +56,11 @@ jobs:
           fi
           echo "runner=$RUNNER" >> "$GITHUB_OUTPUT"
           echo "Routing to $RUNNER ($WHY)."
-  quality-gate:
+  static-checks:
+    # Lint, format, type, and repository-contract lane. The required ruleset
+    # context is the fan-in `quality-gate` job at the bottom of this file
+    # (AffineDrift #4126, Repository_Management #1507).
+    name: Static checks
     needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
@@ -256,6 +260,9 @@ jobs:
         run: python3 scripts/check_tech_debt_budget.py
       - name: Verify generated agent automation artifacts
         run: python3 scripts/check_agent_automation_artifacts.py
+      - name: Verify Repository Root Hygiene
+        # Allowlist of tracked root-level files (#4128; wired by #4126, RM #1507).
+        run: python3 scripts/check_root_hygiene.py
       - name: Verify GitHub Actions pinning
         run: python3 scripts/check_workflow_action_pins.py
       - name: Security Input Sanitization Audit (SEC-001)
@@ -379,7 +386,9 @@ jobs:
       - name: Run Tests
         env:
           PYTHONPATH: src
-        run: python -m pytest tests/ --cov=src --cov-report=xml --cov-fail-under=65 --timeout=120
+        # The coverage floor lives once, in pyproject.toml
+        # `[tool.coverage.report] fail_under`; pytest-cov honours it (#4126).
+        run: python -m pytest tests/ --cov=src --cov-report=xml --timeout=120
       - name: Run Content Lint Tests
         env:
           PYTHONPATH: src
@@ -519,46 +528,48 @@ jobs:
             npx playwright install chromium
           fi
 
+      - name: Resolve pinned Quarto version
+        if: steps.e2e_changes.outputs.run == 'true'
+        id: quarto
+        # `.quarto-version` is the single source for the Quarto pin shared by
+        # CI, deploy-website.yml, and the Dockerfile (#4126).
+        run: echo "version=$(tr -d '[:space:]' < .quarto-version)" >> "$GITHUB_OUTPUT"
       - name: Set up Quarto
         if: steps.e2e_changes.outputs.run == 'true'
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
-          version: "1.8.26"
+          version: ${{ steps.quarto.outputs.version }}
       - name: Remove .env.example
         if: steps.e2e_changes.outputs.run == 'true'
         run: rm -f .env.example
         # Quarto's dotenv validation requires non-empty example values, but CI
         # doesn't need the example file during the E2E render.
       - name: Build site for E2E
+        # Full-site render (measured at 14 min on the fleet runner for the
+        # 2026-09-03 deploy) so the E2E baseline is the real site rather than
+        # 14 hand-listed pages (#4126). The site has no executable cells, so a
+        # Quarto freeze cache would buy nothing; the render is pure Pandoc.
         if: steps.e2e_changes.outputs.run == 'true'
-        run: |
-          quarto render index.qmd --to html
-          quarto render resources/articles.qmd --to html
-          quarto render resources/bibliography.qmd --to html
-          quarto render pages/overview.qmd --to html
-          quarto render pages/about.qmd --to html
-          quarto render resources/resources-books.qmd --to html
-          quarto render models/models.qmd --to html
-          quarto render books/index.qmd --to html
-          quarto render articles/proximal_distal_energy_transfer/index.qmd --to html
-          quarto render articles/affine-nature-golf-swing.qmd --to html
-          quarto render articles/proximal-distal-model-workbench.qmd --to html
-          quarto render critiques/index.qmd --to html
-          quarto render reports/scientific-claim-audit.md --to html
-          quarto render resources/resources.qmd --to html
+        run: quarto render --to html
       - name: Sync Frontend Assets
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           python3 scripts/sync_frontend_assets.py
           python3 scripts/bundle_css.py
 
-      - name: Run E2E Smoke Tests (Critical Flows)
+      - name: Run Playwright E2E Suite (Chromium)
+        # Every spec under tests/e2e against the full render (130 tests).
+        # Pixel-snapshot tests are excluded (they need platform baselines; see
+        # the visual invariants step below). Firefox/WebKit/mobile stay local.
+        # TODO(2026-09-03, #4140): the nine titles below failed on the first
+        # full-site run (stale home-layout tests + real contrast/touch-target/
+        # bibliography/offline defects); drop the exclusions when #4140 closes.
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           npx playwright test \
             --project=chromium \
             --retries=0 \
-            tests/e2e/smoke.spec.js
+            --grep-invert "matches visual snapshot|should meet WCAG AA text contrast in both themes|should show entry details when clicked|should render desktop home layout as a three-column grid|should toggle mobile sidebar sections|should navigate to articles page|should serve cached homepage when offline|should validate mobile menu button|should provide summary of all compliant elements|should allow a user to navigate from home to article and back to top"
       - name: Run Visual Layout Invariants (no-overflow / column collapse)
         # Runs the deterministic layout assertions from visual.spec.js (issue
         # #3328) — these need no committed image baselines and fail the build on
@@ -590,6 +601,23 @@ jobs:
             --output artifacts/public-site-verification/pr-representative.json \
             --screenshot-dir artifacts/public-site-verification/screenshots \
             --candidate-baseline artifacts/public-site-verification/candidate-baseline.json
+      - name: Run axe-core on every route
+        # One desktop/light axe scan per public route via the every-page
+        # verifier. `--axe warn` reports serious/critical violations without
+        # failing; TODO(2026-09-03, #4139): flip to `--axe fail` once #4139
+        # (247 serious/critical violations on 163 routes) is closed.
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: |
+          python3 -m http.server 8000 --directory docs > "$RUNNER_TEMP/affinedrift-axe.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          node scripts/verify-public-site.js \
+            --base-url http://127.0.0.1:8000 \
+            --manifest docs/public-site-manifest.json \
+            --viewports desktop-small \
+            --themes light \
+            --axe warn \
+            --output artifacts/public-site-verification/pr-axe.json
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always() && steps.e2e_changes.outputs.run == 'true'
         with:
@@ -602,6 +630,29 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+  quality-gate:
+    # Fan-in gate. The repository ruleset requires the literal status context
+    # `quality-gate`, so this job carries that name and fails unless every
+    # constituent lane succeeded: a failing Jest, pytest, or Playwright run now
+    # blocks merge (AffineDrift #4126, Repository_Management #1507). spec-check
+    # lives in spec-check.yml and cannot be a `needs` dependency across
+    # workflow files; it stays a separate context.
+    needs: [pick-runner, static-checks, tests, js-tests, e2e-tests]
+    if: always()
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    timeout-minutes: 5
+    steps:
+      - name: Require every constituent lane to succeed
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS_JSON"
+          if echo "$NEEDS_JSON" | grep -Eq '"result": *"(failure|cancelled|skipped)"'; then
+            echo "::error::quality-gate blocked: a constituent lane did not succeed (see JSON above)."
+            exit 1
+          fi
+          echo "quality-gate: all constituent lanes succeeded."
 
   website-lint:
     timeout-minutes: 30

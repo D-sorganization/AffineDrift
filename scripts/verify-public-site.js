@@ -9,6 +9,15 @@ const {
   RETRYABLE_STATUS_CODES,
   summarizeNavigationAttempts,
 } = require('./public-site-navigation.js');
+const {
+  AXE_FAILING_IMPACTS,
+  AXE_MODES,
+  axeMode,
+  axePolicyEvidence,
+  markAxeCells,
+  scanWithAxe,
+  summarizeAxeViolations,
+} = require('./public-site-axe.js');
 
 const SCHEMA_VERSION = 'affinedrift/public-site-manifest/v1';
 
@@ -123,6 +132,7 @@ function parseArgs(argv) {
     routes: undefined,
     documentRetries: 0,
     documentRetryDelayMs: 500,
+    axe: 'warn',
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -144,6 +154,7 @@ function parseArgs(argv) {
       options.documentRetryDelayMs = boundedInteger(value(), 'document retry delay');
     }
     else if (arg === '--screenshots') options.screenshots = true;
+    else if (arg === '--axe') options.axe = axeMode(value());
     else throw new TypeError(`unknown argument: ${arg}`);
   }
   return options;
@@ -528,6 +539,20 @@ async function verifyItem(page, item, options) {
   page.off('console', onConsole);
   page.off('pageerror', onPageError);
   page.off('requestfailed', onRequestFailed);
+
+  // axe runs after the page's own console evidence is closed (its stylesheet
+  // fetches trip the site's connect-src CSP and are not the page's errors).
+  let axeViolations = null;
+  if (item.axe && !navigationError) {
+    try {
+      axeViolations = await scanWithAxe(page);
+    } catch (error) {
+      failures.push(`axe scan failed: ${error.message}`);
+    }
+  }
+  if (axeViolations && options.axe === 'fail') {
+    failures.push(...axeViolations.map((v) => `axe ${v.impact}: ${v.id} (${v.node_count} nodes) ${v.help}`));
+  }
   return {
     ...item,
     status: response?.status() ?? null,
@@ -537,6 +562,7 @@ async function verifyItem(page, item, options) {
     inspection,
     navigation_attempts: navigationAttempts,
     navigation_retried: navigationRetried,
+    ...(axeViolations ? { axe_violations: axeViolations } : {}),
   };
 }
 
@@ -585,7 +611,7 @@ async function runVerification(options) {
   const manifest = assertManifest(
     JSON.parse(fs.readFileSync(options.manifestPath, 'utf8')),
   );
-  const plan = buildEvidencePlan(manifest, options);
+  const plan = markAxeCells(buildEvidencePlan(manifest, options), options.axe);
   const groups = new Map();
   for (const item of plan) {
     const key = `${item.viewport.id}:${item.theme}`;
@@ -613,6 +639,7 @@ async function runVerification(options) {
     passed: failures.length === 0 && results.length === plan.length,
     failure_count: failures.length,
     navigation_retry_policy: navigationRetryPolicyEvidence(options),
+    axe_policy: axePolicyEvidence(options, results),
     ...summarizeNavigationAttempts(results),
     results,
   };
@@ -628,11 +655,26 @@ async function main() {
     `Public site verification: ${report.evidence_count}/${report.expected_evidence_count} evidence items, ` +
     `${report.failure_count} failed -> ${options.outputPath}`,
   );
+  const axe = report.axe_policy;
+  if (axe.mode !== 'off') {
+    console.log(
+      `axe-core (${axe.mode}): ${axe.scanned_route_count} routes scanned, ` +
+      `${axe.violation_count} serious/critical violations on ${axe.routes_with_violations.length} routes`,
+    );
+    if (axe.mode === 'warn' && axe.violation_count > 0) {
+      console.log(`::warning::axe-core found ${axe.violation_count} serious/critical violations (warn-only, #4126)`);
+    }
+  }
   if (!report.passed) process.exitCode = 1;
 }
 
 module.exports = {
+  AXE_FAILING_IMPACTS,
+  AXE_MODES,
   assertManifest,
+  axePolicyEvidence,
+  markAxeCells,
+  summarizeAxeViolations,
   buildEvidencePlan,
   canonicalPathMatches,
   fixedElementCanObscureHeading,

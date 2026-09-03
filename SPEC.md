@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-09-03T06:00:00Z
+Last-Updated: 2026-09-03T07:00:00Z
 
 ## 1. Identity
 
@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T06:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.289                                          |
+| **Spec Version**        | 1.0.290                                          |
 | **Last Spec Update**    | 2026-09-03                                       |
 
 ## 2. Purpose & Mission
@@ -26,7 +26,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Model golf swings as affine controllable systems with mathematical rigor, enabling trajectory optimization via iLQR.
 - Publish research-quality educational content via Quarto website (AffineDrift.com) on GitHub Pages with revision-bound route validation.
 - Model golf-ball flight with velocity-dependent drag and spin-dependent Magnus lift using standard aerodynamic formulations.
-- Maintain property-based testing (Hypothesis) and minimum 65% test coverage across all critical modules.
+- Maintain property-based testing (Hypothesis) and test coverage at or above the single floor declared in `pyproject.toml` (`[tool.coverage.report] fail_under`, currently 75%) across all critical modules.
 - Present planar models within a declared model ladder; withhold quantitative 2D-to-3D claims without governed comparative datasets.
 - Maintain mechanical-claim contracts keeping generalized torque distinct from power, energy, tissue load, and muscle force.
 - Maintain normative induced-acceleration attribution records declaring model, coordinates, frame, contact constraints, and identifiability.
@@ -158,7 +158,7 @@ AffineDrift/
 
 AffineDrift follows a test pyramid: fast unit tests, integration tests, property-based tests (Hypothesis), JavaScript tests (Jest), and browser end-to-end tests (Playwright).
 
-- Minimum `src/` coverage: **65%** (enforced by `pytest --cov=src --cov-fail-under=65`).
+- Minimum `src/` coverage: the `pyproject.toml` `fail_under` floor (75%; measured 92.6% on 2026-09-03), enforced by `pytest --cov=src` — no CLI ever restates the number (#4126).
 - Critical physics and optimization modules maintain >=70% coverage.
 - Code quality gates: `ruff check .`, `black --check --line-length 100 .`, `mypy .`.
 
@@ -181,6 +181,8 @@ AffineDrift follows a test pyramid: fast unit tests, integration tests, property
 
 ## 9. Dependencies
 
+- Quarto 1.8.26, pinned once in `.quarto-version` (CI, deploy-website.yml, and the Dockerfile read it; #4126).
+
 - **Runtime**: `numpy>=2.0.0`, `scipy>=1.14.0`, `matplotlib>=3.9.0`, `pydantic>=2.8.0`, `PyYAML>=6.0.1`, `requests>=2.32.0`, `beautifulsoup4>=4.12.0`.
 - **Development**: `pytest>=8.0.0`, `pytest-cov>=5.0.0`, `hypothesis>=6.100.0`, `ruff>=0.5.0`, `black>=24.0.0`, `mypy>=1.10.0`.
 - **Fleet Dependencies**: UpstreamDrift (governed evidence provider for executable models, companion manifests, and benchmark releases).
@@ -196,7 +198,7 @@ black --check --line-length 100 .
 mypy src/ scripts/
 
 # Run tests and root hygiene
-pytest tests/ --cov=src --cov-fail-under=65
+pytest tests/ --cov=src
 python scripts/check_root_hygiene.py
 
 # Render Quarto website
@@ -209,7 +211,7 @@ Static website in `docs/`, public site manifest (`docs/public-site-manifest.json
 
 ## 11. Roadmap & Open Issues
 
-- **Active Development**: Maintain >65% coverage, refine affine swing optimization models, expand educational textbook materials.
+- **Active Development**: Maintain coverage above the `pyproject.toml` floor, refine affine swing optimization models, expand educational textbook materials.
 - **Current Priorities**: Complete programming companion consumer integration (#4022-#4030), maintain root hygiene allowlists (#4128), execute reader validation protocols (#4088).
 - **Known Boundaries**: Real-time simulation is delegated to UpstreamDrift; DDP backward pass is a gated mock; markerless mocap runtime capture is external.
 

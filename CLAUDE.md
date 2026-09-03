@@ -40,7 +40,7 @@ Research platform, educational textbook series, and companion website exploring 
 python3 -m ruff check .                               # lint
 python3 -m black --check --line-length 100 .           # format check (Black!)
 python3 -m black --line-length 100 .                   # auto-format
-python3 -m pytest --cov --cov-fail-under=65            # Python tests (65% min)
+python3 -m pytest --cov                                # Python tests (floor: pyproject fail_under)
 npx jest                                               # JavaScript tests
 npx playwright test                                    # E2E browser tests
 quarto render                                          # build the site
@@ -82,9 +82,9 @@ The `dev` stage is the entry point for new contributors: it avoids installing Qu
 4. Bibliography quality check — BibTeX well-formed, no broken refs
 5. DRY adoption tracking — duplication metrics monitored
 6. Module size budget — enforced per-file
-7. pytest with **65% coverage minimum** — coverage must not decrease
-8. Jest — all JS tests pass
-9. Playwright E2E — critical user flows pass
+7. pytest coverage at or above the single `fail_under` floor in `pyproject.toml` — coverage must not decrease
+8. Jest — all JS tests pass (`js-tests` feeds the fan-in `quality-gate`)
+9. Playwright E2E — full-site render, every spec on Chromium, per-route axe-core (`e2e-tests` feeds `quality-gate`)
 10. CSS mirror enforcement — `css/` must be mirrored in `docs/` (never edit `docs/` CSS directly)
 11. No `print()` in `src/` — use logging
 12. No TODO/FIXME unless tied to a tracked GitHub issue
@@ -99,7 +99,7 @@ The `dev` stage is the entry point for new contributors: it avoids installing Qu
 ## Known Constraints
 
 - **Black with 100-char lines.** Do not configure or run `ruff format` in this repo.
-- **Quarto rendering** can be slow; CI may only render changed chapters.
+- **Quarto rendering** is slow (~14 min full site on the fleet runner); the E2E lane renders the full site when site-facing files change. The Quarto version is pinned once in `.quarto-version`.
 - **Playwright** requires `npx playwright install` for browser binaries before first run.
 - **CSS lives in two places:** edit in `css/`, CI validates that `docs/` mirrors match. Never edit rendered CSS directly.
 
@@ -124,7 +124,7 @@ See `.logging-standard.md` for full details.
 - **DRY:** CI tracks duplication. Extract shared Quarto includes and Python utilities. No copy-paste between chapters. Reusable patterns go in `src/tools/utils/` (see `.dry-improvements.md`).
 - **DbC:** Validation functions check inputs, raise clear errors with context.
 - **LOD:** No method chains >2 levels. Keep rendering logic separate from content logic. Complex Python goes in importable modules, not inline in QMD.
-- **TDD:** New Python utilities need pytest tests. New interactive features need Jest tests. Coverage stays above 65%.
+- **TDD:** New Python utilities need pytest tests. New interactive features need Jest tests. Coverage stays above the `pyproject.toml` floor.
 
 ## Cross-Repo Dependencies
 

@@ -80,9 +80,9 @@ project_name/
 
 - Use `pytest` (not `unittest`).
 - Write unit tests for individual functions and integration tests for workflows.
-- **Coverage requirement: 65% minimum** (`--cov-fail-under=65`). Coverage must not decrease.
+- **Coverage requirement:** the single floor in `pyproject.toml` (`[tool.coverage.report] fail_under`). Never restate the floor as a CLI flag. Coverage must not decrease.
 - Place all tests in `tests/`. Mark cross-module or I/O tests with `@pytest.mark.integration`.
-- Run with: `pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=65 --timeout=60`
+- Run with: `pytest tests/ --cov=src --cov-report=xml --timeout=60`
 
 ### 4. Test-Driven Development (TDD) - RED, GREEN, REFACTOR
 
@@ -111,10 +111,10 @@ project_name/
 
 **Coverage Gate (AffineDrift-specific):**
 
-- CI enforces **65% minimum line coverage** on `src/tools/`. PRs that drop below this threshold will fail.
+- CI enforces the `pyproject.toml` coverage floor on `src/`. PRs that drop below it will fail.
 - Every new Python utility added to `src/` MUST have a corresponding `tests/` module.
 - Every new interactive JavaScript feature MUST have a corresponding Jest test.
-- Use `python3 -m pytest --cov --cov-fail-under=65` locally before pushing.
+- Use `python3 -m pytest --cov` locally before pushing.
 
 **Benefits of TDD:**
 
@@ -349,7 +349,7 @@ general Python standards above.
 - **Formatter:** Black with `--line-length 100`. **Never** run `ruff format` in this repo.
 - **Linter:** `ruff check` only (not `ruff format`).
 - **Python version:** 3.12. Always use `python3`.
-- **Tests:** `pytest --cov --cov-fail-under=65` (65% coverage minimum).
+- **Tests:** `pytest --cov` (floor from `pyproject.toml`).
 - **Trust ledgers:** after editing any file bound by `data/trust/*.json` (`evidence_paths`, incl. `path::test_function`), run `python3 -m scripts.regenerate_claim_audit_evidence` and commit the result; `quality-gate` runs `--check` (#4124).
 
 ### Quarto Authoring Standards
