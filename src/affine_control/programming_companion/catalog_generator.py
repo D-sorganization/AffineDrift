@@ -12,6 +12,11 @@ from pathlib import Path
 from typing import Any
 
 
+def _record_id(record: Mapping[str, Any]) -> str:
+    """Sort key: the record's string identifier."""
+    return str(record.get("id", ""))
+
+
 class CatalogGeneratorError(Exception):
     """Raised when catalog generation fails due to missing or invalid inputs."""
 
@@ -48,6 +53,45 @@ class CatalogGenerator:
             "summary",
         }
     )
+
+    # AffineDrift #4123 / UpstreamDrift #9416: until the provider publishes a real
+    # companion artifact, every generated page must say where its data comes from.
+    FIXTURE_MANIFEST_PATH = "tests/fixtures/companion/manifest_v1_0_0_authoritative.json"
+    PREVIEW_TRACKING = (
+        ("AffineDrift #4123", "https://github.com/D-sorganization/AffineDrift/issues/4123"),
+        ("UpstreamDrift #9416", "https://github.com/D-sorganization/UpstreamDrift/issues/9416"),
+    )
+
+    @classmethod
+    def preview_notice_markdown(cls) -> str:
+        """Return the Quarto callout shown at the top of every Markdown catalog page."""
+        tracking = " / ".join(f"[{label}]({url})" for label, url in cls.PREVIEW_TRACKING)
+        return (
+            '::: {.callout-warning title="Preview"}\n'
+            "PREVIEW \u2014 this catalog is generated from a fixture manifest "
+            f"(`{cls.FIXTURE_MANIFEST_PATH}`), not yet from a provider-published UpstreamDrift "
+            f"artifact. Tracking: {tracking}.\n"
+            ":::\n"
+        )
+
+    @classmethod
+    def preview_notice_html(cls) -> str:
+        """Return the same notice as a site card for the raw-HTML hub page."""
+        tracking = " / ".join(
+            f'<a href="{url}" target="_blank" rel="noopener">{label}</a>'
+            for label, url in cls.PREVIEW_TRACKING
+        )
+        return (
+            '        <div class="site-card site-card--callout u-mb-4" role="note">\n'
+            '          <h2 class="u-mb-1">Preview</h2>\n'
+            "          <p>\n"
+            "            <strong>PREVIEW</strong> \u2014 this catalog is generated from a fixture "
+            "manifest\n"
+            f"            (<code>{cls.FIXTURE_MANIFEST_PATH}</code>), not yet from a\n"
+            f"            provider-published UpstreamDrift artifact. Tracking: {tracking}.\n"
+            "          </p>\n"
+            "        </div>\n"
+        )
 
     def __init__(self, manifest: Mapping[str, Any]) -> None:
         """Initialize the catalog generator with a validated manifest mapping."""
@@ -100,6 +144,7 @@ page-layout: full
           </p>
         </header>
 
+{self.preview_notice_html()}
         <div class="site-card site-card--callout u-mb-4">
           <h2 class="u-mb-1">Authority Boundary</h2>
           <p>
@@ -136,8 +181,8 @@ page-layout: full
         <article class="resource-card">
           <h3><a href="features.html">Feature Parity Matrix ({feat_count})</a></h3>
           <p class="resource-description">
-            Cross-surface parity tracking across CLI, GUI, API, and Web interfaces with explicit
-            gap accounting.
+            Parity state per feature across the desktop (PyQt), API, and web surfaces with
+            explicit gap accounting.
           </p>
           <a href="features.html" class="resource-link">Inspect Features →</a>
         </article>
@@ -190,6 +235,7 @@ title: "Engines and Runtime Support"
 description: "Physics solvers, support tiers, and runtime environments supported by UpstreamDrift"
 ---
 
+{self.preview_notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -237,6 +283,7 @@ title: "Programs and Models Directory"
 description: "Authoritative inventory of 70 UpstreamDrift simulation programs, solvers, and models"
 ---
 
+{self.preview_notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -252,43 +299,64 @@ description: "Authoritative inventory of 70 UpstreamDrift simulation programs, s
 
     def generate_features(self) -> str:
         """Build the feature parity matrix page."""
-        rows: list[str] = []
-        for feat in sorted(self._features, key=lambda f: str(f.get("id", ""))):
-            fid = feat.get("id", "")
-            title = feat.get("title", fid)
-            parity = feat.get("parity", {})
-            cli_state = "✓" if parity.get("cli") else "—"
-            gui_state = "✓" if parity.get("gui") else "—"
-            api_state = "✓" if parity.get("api") else "—"
-            web_state = "✓" if parity.get("web") else "—"
-            qual = feat.get("scientific_qualification", "unqualified")
-            rows.append(
-                f"| `{fid}` | {title} | {cli_state} | {gui_state} | "
-                f"{api_state} | {web_state} | `{qual}` |"
-            )
-        feat_table = "\n".join(rows) if rows else "| None | - | - | - | - | - | - |"
+        rows = [self._feature_row(feat) for feat in sorted(self._features, key=_record_id)]
+        feat_table = "\n".join(rows) if rows else "| None | - | - | - | - | - |"
 
         desc = (
-            "Cross-surface parity tracking for CLI, GUI, API, "
-            "and Web interfaces across UpstreamDrift features"
+            "Parity state of each UpstreamDrift feature across its "
+            "desktop (PyQt), API, and web surfaces"
         )
         return f"""---
 title: "Feature Parity Matrix"
 description: "{desc}"
 ---
 
+{self.preview_notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
-> **This establishes** interface availability across execution surfaces (CLI, GUI, API, Web).
+> **This establishes** which execution surfaces (desktop PyQt, API, web) each feature is
+> registered on and the provider's parity state for it.
 > **This does not establish** scientific validation or equivalence between solver implementations.
 
 ## Feature Surface Parity ({len(self._features)} Records)
 
-| Feature ID | Title | CLI | GUI | API | Web | Scientific Qualification |
-| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+Parity state is the provider's own classification: `parity` (all registered surfaces agree),
+`gap` (a surface is missing or partial; the tracking issue is linked), or `exempt` (parity is
+not expected for this feature). Scientific qualification is reported exactly as the provider
+declares it; every record here is `unqualified`, meaning catalog inclusion is a software fact,
+not validation.
+
+| Feature ID | Title | Surfaces | Parity State | Parity Issue | Scientific Qualification |
+| :--- | :--- | :--- | :---: | :---: | :--- |
 {feat_table}
 """
+
+    @staticmethod
+    def _feature_row(feat: Mapping[str, Any]) -> str:
+        """Render one feature as a table row from its structured manifest fields."""
+        fid = str(feat.get("id", ""))
+        title = str(feat.get("title", fid))
+        surfaces = sorted({str(s.get("surface", "")) for s in feat.get("surfaces", [])} - {""})
+        surface_text = ", ".join(f"`{surface}`" for surface in surfaces) or "\u2014"
+        parity = feat.get("parity", {})
+        parity_state = str(parity.get("state", "unspecified"))
+        issue = parity.get("issue")
+        issue_text = (
+            f"[#{issue}](https://github.com/D-sorganization/UpstreamDrift/issues/{issue})"
+            if isinstance(issue, int)
+            else "\u2014"
+        )
+        qualification = feat.get("scientific_qualification", {})
+        if not isinstance(qualification, Mapping):
+            qualification = {"state": str(qualification)}
+        qual_state = str(qualification.get("state", "unqualified"))
+        qual_scope = str(qualification.get("scope", "")).strip()
+        qual_text = f"`{qual_state}`" + (f" \u2014 {qual_scope}" if qual_scope else "")
+        return (
+            f"| `{fid}` | {title} | {surface_text} | `{parity_state}` | "
+            f"{issue_text} | {qual_text} |"
+        )
 
     def generate_workflows(self) -> str:
         """Build the governed workflows page."""
@@ -312,6 +380,7 @@ title: "Governed Workflows and Verification Tasks"
 description: "{desc}"
 ---
 
+{self.preview_notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -349,6 +418,7 @@ title: "Companion Provenance and Cryptographic Digests"
 description: "Exact-commit provenance, generator versions, and cryptographic input digests"
 ---
 
+{self.preview_notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -386,7 +456,7 @@ description: "Exact-commit provenance, generator versions, and cryptographic inp
         ]
         for f in files:
             target = output_dir / f.relative_path
-            target.write_text(f.content, encoding="utf-8")
+            target.write_text(f.content, encoding="utf-8", newline="\n")
         return files
 
     def check(self, output_dir: Path) -> tuple[bool, list[DriftItem]]:
