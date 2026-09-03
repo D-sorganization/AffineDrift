@@ -65,7 +65,11 @@ jobs:
                 echo "::notice::Skipping cancel-in-progress check for $f (intentional exception)"
                 ;;
               *)
-                if grep -q '^concurrency:' "$f" && ! grep -q 'cancel-in-progress:\s*true' "$f"; then
+                # The governed main-exempt form (cancel-in-progress set from the expression
+                # "github.ref != 'refs/heads/main'", Repository_Management #1507) is also
+                # accepted; bracket classes keep expression delimiters out of this script.
+                if grep -q '^concurrency:' "$f" && ! grep -q 'cancel-in-progress:\s*true' "$f" \
+                   && ! grep -Eq "cancel-in-progress: *[$][{][{] github[.]ref != 'refs/heads/main' [}][}]" "$f"; then
                   FAIL="${FAIL}\n  - $f: cancel-in-progress not set to true"
                 fi
                 ;;
