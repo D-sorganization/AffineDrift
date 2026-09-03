@@ -68,9 +68,8 @@ class CatalogGenerator:
         tracking = " / ".join(f"[{label}]({url})" for label, url in cls.PREVIEW_TRACKING)
         return (
             '::: {.callout-warning title="Preview"}\n'
-            "PREVIEW \u2014 this catalog is generated from a fixture manifest "
-            f"(`{cls.FIXTURE_MANIFEST_PATH}`), not yet from a provider-published UpstreamDrift "
-            f"artifact. Tracking: {tracking}.\n"
+            "PREVIEW \u2014 generated from a fixture manifest; not yet provider-published "
+            f"(`{cls.FIXTURE_MANIFEST_PATH}`). Tracking: {tracking}.\n"
             ":::\n"
         )
 
@@ -85,10 +84,9 @@ class CatalogGenerator:
             '        <div class="site-card site-card--callout u-mb-4" role="note">\n'
             '          <h2 class="u-mb-1">Preview</h2>\n'
             "          <p>\n"
-            "            <strong>PREVIEW</strong> \u2014 this catalog is generated from a fixture "
-            "manifest\n"
-            f"            (<code>{cls.FIXTURE_MANIFEST_PATH}</code>), not yet from a\n"
-            f"            provider-published UpstreamDrift artifact. Tracking: {tracking}.\n"
+            "            <strong>PREVIEW \u2014 generated from a fixture manifest; "
+            "not yet provider-published</strong>\n"
+            f"            (<code>{cls.FIXTURE_MANIFEST_PATH}</code>). Tracking: {tracking}.\n"
             "          </p>\n"
             "        </div>\n"
         )
