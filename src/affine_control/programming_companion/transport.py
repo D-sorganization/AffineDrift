@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
+from pathlib import Path
 from typing import Protocol
 
 import requests
@@ -74,3 +75,38 @@ class RequestsTransport:
             if len(payload) > max_bytes:
                 raise AcquisitionError("payload exceeds byte limit")
         return bytes(payload)
+
+
+class DirectoryTransport:
+    """Serve an already-downloaded provider bundle (an extracted Actions artifact).
+
+    Every URL must start with ``url_prefix`` (the policy's object URL with an
+    empty path); the remainder is a single file name resolved inside ``root``.
+    Symlinks, nested paths, missing files, and oversized files are rejected, so
+    the consumer's validation and store contracts apply unchanged (#4123).
+    """
+
+    def __init__(self, root: Path, url_prefix: str) -> None:
+        """Bind one extracted bundle directory to one URL prefix."""
+        if not url_prefix.startswith("https://") or not url_prefix.endswith("/"):
+            raise AcquisitionError("directory transport prefix must be an https URL ending in /")
+        if root.is_symlink() or not root.is_dir():
+            raise AcquisitionError("directory transport root must be a real directory")
+        self._root = root
+        self._url_prefix = url_prefix
+
+    def fetch(self, url: str, max_bytes: int) -> FetchResult:
+        """Read one bounded regular file addressed by an approved URL."""
+        if max_bytes <= 0:
+            raise AcquisitionError("payload byte limit must be positive")
+        if not url.startswith(self._url_prefix):
+            raise AcquisitionError("URL is outside the bundle transport prefix")
+        name = url[len(self._url_prefix) :]
+        if not name or "/" in name or "\\" in name or name in {".", ".."}:
+            raise AcquisitionError("bundle transport only serves single file names")
+        target = self._root / name
+        if target.is_symlink() or not target.is_file():
+            raise AcquisitionError(f"bundle file is missing or unsafe: {name}")
+        if target.stat().st_size > max_bytes:
+            raise AcquisitionError("payload exceeds byte limit")
+        return FetchResult(url, url, (), target.read_bytes())

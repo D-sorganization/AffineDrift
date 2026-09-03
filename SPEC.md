@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-09-02T20:30:00Z
+Last-Updated: 2026-09-03T06:00:00Z
 
 ## 1. Identity
 
@@ -12,8 +12,8 @@ Last-Updated: 2026-09-02T20:30:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.288                                          |
-| **Last Spec Update**    | 2026-09-02                                       |
+| **Spec Version**        | 1.0.289                                          |
+| **Last Spec Update**    | 2026-09-03                                       |
 
 ## 2. Purpose & Mission
 
@@ -135,6 +135,7 @@ AffineDrift/
 | F21 | Opt-In Performance Benchmark Suite      | ✅     | `benchmarks/` provides pytest-benchmark timing checks for stable computational paths.          |
 | F22 | Distributed Review Guard                | ✅     | `block-self-merge.yml` blocks PR authors from self-approving changes.                          |
 | F23 | Programming Companion Consumer          | ✅     | Validates and pins immutable upstream companion packages and manifests from UpstreamDrift.     |
+| F24 | Software Freshness Dashboard            | ✅     | `data/companion/pins.json` + generated `/models/programming/freshness.html`; every UpstreamDrift SHA linked from the site is reconciled by `scripts/check_companion_pins.py` (#4027, #4123). |
 | F24 | Scientific Claim-Audit Inventory        | ✅     | Governed route classification, digest binding, and audit reports for all public claims.        |
 | F25 | Repository Root Hygiene Enforcement     | ✅     | CI quality gate (`scripts/check_root_hygiene.py`) enforces strict root allowlist.              |
 
@@ -169,6 +170,7 @@ AffineDrift follows a test pyramid: fast unit tests, integration tests, property
 - [x] Website citations resolve against configured BibTeX files.
 - [x] Playwright smoke tests pass on desktop and mobile viewports.
 - [x] Programming companion consumer validates manifests and rejects conflicting/unverified packages.
+- [x] The active pin is the provider-published, attested `upstreamdrift-companion-<sha>` artifact (`data/companion/active-lock.json` + `acquisition.json`); `models/programming/*` regenerate from it, never from the fixture, while a pin exists.
 - [x] Root hygiene allowlist passes with zero untracked or forbidden artifacts.
 
 ## 8. Quality Standards

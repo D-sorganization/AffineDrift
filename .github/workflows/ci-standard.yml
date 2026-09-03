@@ -142,6 +142,13 @@ jobs:
         # models/programming/*.qmd are generated; hand edits or generator changes
         # without regeneration must fail here, not on the live site (#4123, RM #1507).
         run: python3 -m scripts.generate_programming_catalog --check
+      - name: Verify UpstreamDrift Pins Are Reconciled
+        # Every UpstreamDrift tree/blob/commit SHA linked from a rendered source
+        # must be in data/companion/pins.json and the active lock must be the
+        # one active pin (#4027 via #4123, RM #1507).
+        run: python3 scripts/check_companion_pins.py
+      - name: Verify Software Freshness Dashboard Is Current
+        run: python3 -m scripts.generate_companion_freshness --check
       - name: Verify Quarto Math Syntax
         # scan_quarto_syntax.py existed but was wired into nothing, so none of its
         # checks had ever run in CI. The corpus was brought to zero findings before

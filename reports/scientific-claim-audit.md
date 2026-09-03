@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 35
+- Reviewed: 36
 - Deferred: 200
 - Exempt: 3
 
@@ -41,6 +41,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/population-generalization.html` | `models/population-generalization.qmd` | 9 |
 | `/models/programming/engines.html` | `models/programming/engines.qmd` | 4 |
 | `/models/programming/features.html` | `models/programming/features.qmd` | 4 |
+| `/models/programming/freshness.html` | `models/programming/freshness.qmd` | 5 |
 | `/models/programming/index.html` | `models/programming/index.qmd` | 4 |
 | `/models/programming/programs.html` | `models/programming/programs.qmd` | 4 |
 | `/models/programming/provenance.html` | `models/programming/provenance.qmd` | 4 |
@@ -255,6 +256,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-b7d4c6ec440c` | `/models/population-generalization.html` | Reviewed | — | None | None | 0 |
 | `ad-route-150009a0e003` | `/models/programming/engines.html` | Reviewed | — | None | None | 0 |
 | `ad-route-acc503ef154a` | `/models/programming/features.html` | Reviewed | — | None | None | 0 |
+| `ad-route-bc52ee832870` | `/models/programming/freshness.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5f5ed80c6ff7` | `/models/programming/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-a0016096eed0` | `/models/programming/programs.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c9d7d2a37313` | `/models/programming/provenance.html` | Reviewed | — | None | None | 0 |

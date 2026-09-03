@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Programming Companion Phase 1 (#4123): `scripts/install_programming_companion.py` installs the attested UpstreamDrift `upstreamdrift-companion-<sha>` Actions artifact through the fail-closed consumer (`ConsumerPolicy.upstreamdrift_actions_artifact`, `DirectoryTransport`); committed `data/companion/active-lock.json`, snapshot, and `acquisition.json` for UD `27b6eead`; catalog pages regenerate from the lock with a provider-pin notice instead of the PREVIEW banner.
+- Software Freshness Dashboard (#4027 via #4123): `data/companion/pins.json`, `scripts/check_companion_pins.py` (every UpstreamDrift SHA linked from the site must be pinned; the lock commit is the one active pin), and generated `/models/programming/freshness.html`; both gated in `quality-gate`.
 - Repository root hygiene check (`scripts/check_root_hygiene.py`) and CI quality gate enforcement (#4128).
 - Explicit repository root allowlist test in `tests/test_root_hygiene.py` (#4128).
 
