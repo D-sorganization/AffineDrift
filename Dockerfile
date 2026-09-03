@@ -15,8 +15,10 @@
 
 ARG PYTHON_BASE_IMAGE=python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
 ARG NODE_MAJOR=20
-ARG QUARTO_VERSION=1.6.39
-ARG QUARTO_DEB_SHA256=cf3f2840d54149aac0a2f68e8d53b6e3122d2a5dae0cb9c09a26fe9eb9ae5d86
+# Keep QUARTO_VERSION equal to `.quarto-version` (the CI pin); enforced by
+# tests/test_single_source_pins.py (#4126).
+ARG QUARTO_VERSION=1.8.26
+ARG QUARTO_DEB_SHA256=60451a42095dd60bc23ad529b39ca81017da688aab029bec9b5565818fc55cf8
 ARG AFFINEDRIFT_GIT_SHA=unknown
 
 # ---------------------------------------------------------------------------
@@ -74,7 +76,7 @@ RUN npm ci --prefer-offline
 COPY . .
 
 # Default: run pytest (mirrors CI quality gate)
-CMD ["python", "-m", "pytest", "--cov=src", "--cov-fail-under=65", "-v"]
+CMD ["python", "-m", "pytest", "--cov=src", "-v"]
 
 # ---------------------------------------------------------------------------
 # builder: renders Quarto site to docs/

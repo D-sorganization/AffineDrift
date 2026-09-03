@@ -355,3 +355,67 @@ describe('public-site verifier contracts (WEB-D)', () => {
     });
   });
 });
+
+describe('axe-core policy (ISSUE-4126)', () => {
+  const {
+    AXE_FAILING_IMPACTS,
+    axePolicyEvidence,
+    markAxeCells,
+    summarizeAxeViolations,
+  } = require('../scripts/verify-public-site.js');
+
+  test('defaults to warn-only and rejects unknown modes', () => {
+    expect(parseArgs([]).axe).toBe('warn');
+    expect(parseArgs(['--axe', 'fail']).axe).toBe('fail');
+    expect(parseArgs(['--axe', 'off']).axe).toBe('off');
+    expect(() => parseArgs(['--axe', 'loud'])).toThrow(/--axe must be one of/);
+  });
+
+  test('keeps only serious and critical violations, sorted by rule id', () => {
+    expect(AXE_FAILING_IMPACTS).toEqual(['serious', 'critical']);
+    const summary = summarizeAxeViolations([
+      { id: 'region', impact: 'moderate', help: 'x', helpUrl: 'u', nodes: [{ target: ['main'] }] },
+      { id: 'link-name', impact: 'serious', help: 'Links must have discernible text', helpUrl: 'u1', nodes: [{ target: ['a.x'] }, { target: ['a.y'] }] },
+      { id: 'color-contrast', impact: 'serious', help: 'c', helpUrl: 'u2', nodes: [] },
+      { id: 'image-alt', impact: 'critical', help: 'i', helpUrl: 'u3', nodes: [{ target: ['img'] }] },
+      { id: 'label', impact: 'minor', help: 'l', helpUrl: 'u4', nodes: [] },
+    ]);
+    expect(summary.map((v) => v.id)).toEqual(['color-contrast', 'image-alt', 'link-name']);
+    expect(summary[2]).toEqual({
+      id: 'link-name',
+      impact: 'serious',
+      help: 'Links must have discernible text',
+      help_url: 'u1',
+      node_count: 2,
+      first_target: 'a.x',
+    });
+    expect(() => summarizeAxeViolations(null)).toThrow(TypeError);
+  });
+
+  test('scans each route exactly once unless axe is off', () => {
+    const plan = buildEvidencePlan(fixtureManifest());
+    const marked = markAxeCells(plan, 'warn');
+    expect(marked.filter((item) => item.axe).map((item) => item.route)).toEqual([
+      '/',
+      '/articles/example.html',
+    ]);
+    expect(markAxeCells(plan, 'off').some((item) => item.axe)).toBe(false);
+    expect(marked).toHaveLength(plan.length);
+  });
+
+  test('summarizes scanned routes and violations without hiding warn-mode findings', () => {
+    const results = [
+      { route: '/', axe_violations: [] },
+      { route: '/a.html', axe_violations: [{ id: 'link-name' }, { id: 'image-alt' }] },
+      { route: '/a.html' },
+      { route: '/b.html', axe_violations: [{ id: 'link-name' }] },
+    ];
+    expect(axePolicyEvidence({ axe: 'warn' }, results)).toEqual({
+      mode: 'warn',
+      impacts: ['serious', 'critical'],
+      scanned_route_count: 3,
+      routes_with_violations: ['/a.html', '/b.html'],
+      violation_count: 3,
+    });
+  });
+});

@@ -29,6 +29,7 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         ".pre-commit-hooks.yaml",
         ".prettierignore",
         ".python-version",
+        ".quarto-version",
         ".quartoignore",
         ".stylelintignore",
         "404.qmd",

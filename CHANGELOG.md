@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `quality-gate` is now a fan-in job requiring `static-checks`, `tests`, `js-tests`, and `e2e-tests`; the E2E lane renders the full site and runs every Playwright spec plus a per-route axe-core scan (`--axe warn`, serious/critical) via `scripts/verify-public-site.js`; the coverage floor is stated once in `pyproject.toml`; the Quarto pin is stated once in `.quarto-version` (Dockerfile aligned 1.6.39 -> 1.8.26); `scripts/check_root_hygiene.py` wired into CI (#4126).
 - Relocated historical specification change log entries (v1.0.173 - v1.0.278) from `SPEC.md` to `CHANGELOG.md` to maintain a concise specification (#4128).
 - Updated `CLAUDE.md` to accurately document repository layout, key directories, and companion consumer architecture (#4128).
 - Cleaned up `.quartoignore` to eliminate all references to missing files (#4128).
