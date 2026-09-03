@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import re
 from pathlib import Path, PurePosixPath
@@ -9,6 +10,12 @@ from typing import cast
 
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 QUARTO_INCLUDE_PATTERN = re.compile(r"\{\{<\s*include\s+([^\s>]+)\s*>\}\}")
+# ``path::symbol`` binds evidence to one named Python definition instead of the
+# whole file, so unrelated edits to a shared test module do not break the ledger
+# (AffineDrift #4124). ``symbol`` is a module-level function/class, optionally
+# ``Class.method``.
+SYMBOL_SEPARATOR = "::"
+SYMBOL_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?$")
 
 
 class ReviewEvidenceError(ValueError):
@@ -60,10 +67,76 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def split_evidence_path(raw_path: object) -> tuple[str, str | None]:
+    """Split ``path`` or ``path::symbol`` into its file part and optional symbol."""
+    if not isinstance(raw_path, str) or not raw_path:
+        raise ReviewEvidenceError("review evidence path must be a nonempty string")
+    file_part, separator, symbol = raw_path.partition(SYMBOL_SEPARATOR)
+    if not separator:
+        return raw_path, None
+    if not SYMBOL_PATTERN.fullmatch(symbol):
+        raise ReviewEvidenceError(f"review evidence symbol is invalid: {raw_path}")
+    if not file_part.endswith(".py"):
+        raise ReviewEvidenceError(f"review evidence symbol requires a Python file: {raw_path}")
+    return file_part, symbol
+
+
+def _symbol_source(module_source: str, symbol: str, label: str) -> str:
+    """Return the exact source segment of one named definition."""
+    try:
+        tree = ast.parse(module_source)
+    except SyntaxError as exc:
+        raise ReviewEvidenceError(f"review evidence module does not parse: {label}") from exc
+    scope: list[ast.stmt] = list(tree.body)
+    node: ast.AST | None = None
+    for name in symbol.split("."):
+        node = next(
+            (
+                candidate
+                for candidate in scope
+                if isinstance(candidate, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef)
+                and candidate.name == name
+            ),
+            None,
+        )
+        if node is None:
+            raise ReviewEvidenceError(f"review evidence symbol is missing: {label}")
+        scope = list(getattr(node, "body", []))
+    definition = cast(ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef, node)
+    first_line = min([definition.lineno, *(d.lineno for d in definition.decorator_list)])
+    last_line = definition.end_lineno or definition.lineno
+    # Whole physical lines (decorators through the last body line), so trailing
+    # comments and formatting inside the definition are part of the evidence.
+    lines = module_source.splitlines(keepends=True)[first_line - 1 : last_line]
+    if not lines:
+        raise ReviewEvidenceError(f"review evidence symbol has no source: {label}")
+    return "".join(lines)
+
+
+def symbol_sha256(path: Path, symbol: str, *, label: str) -> str:
+    """Return the SHA-256 of one definition's source, independent of its neighbours."""
+    try:
+        module_source = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise ReviewEvidenceError(f"review evidence module is not UTF-8 text: {label}") from exc
+    segment = _symbol_source(module_source, symbol, label)
+    return hashlib.sha256(segment.encode("utf-8")).hexdigest()
+
+
+def evidence_digest(root: Path, raw_path: str) -> tuple[str, str]:
+    """Return ``(normalized_evidence_path, digest)`` for one declared evidence path."""
+    file_part, symbol = split_evidence_path(raw_path)
+    relative, resolved = _regular_file(root, file_part)
+    if symbol is None:
+        return relative, file_sha256(resolved)
+    key = f"{relative}{SYMBOL_SEPARATOR}{symbol}"
+    return key, symbol_sha256(resolved, symbol, label=key)
+
+
 def evidence_digests(root: Path, paths: list[str]) -> dict[str, str]:
     """Return deterministic digests for a declared evidence-path collection."""
-    records = (_regular_file(root, path) for path in paths)
-    return {relative: file_sha256(resolved) for relative, resolved in sorted(records)}
+    records = (evidence_digest(root, path) for path in paths)
+    return {relative: digest for relative, digest in sorted(records)}
 
 
 def canonical_source_path(route: str) -> str:

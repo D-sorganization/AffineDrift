@@ -101,6 +101,12 @@ repos:
         language: system
         pass_filenames: false
         files: (^|/)_quarto\.yml$|\.(qmd|tex)$|^(src|content)/.*\.py$|^scripts/check_title_case\.py$
+      - id: claim-audit-evidence
+        name: "Claim-audit evidence digests are current (#4124)"
+        entry: python3 -m scripts.regenerate_claim_audit_evidence --check
+        language: system
+        pass_filenames: false
+        files: '^(data/trust/|reports/|schemas/|tests/|pages/|src/|scripts/|articles/|_includes/|index\.qmd|NOTATION\.md|styles\.css)'
 
   # -------------------------------------------------------------------------
   # Stage 3: Config File Formatting - ALWAYS RUNS

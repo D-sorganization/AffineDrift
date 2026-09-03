@@ -169,6 +169,10 @@ jobs:
             --output docs/public-site-manifest.json
 
       - name: Enforce scientific claim-audit coverage
+        # Blocking by design: publication must be truthful. Ledger bookkeeping
+        # (digests, generated reports) is gated at PR time by quality-gate's
+        # "Verify Claim-Audit Evidence Ledgers" so this step can only fail here
+        # on manifest coverage or a publication blocker (#4124, RM #1507).
         run: |
           python3 -m scripts.generate_claim_audit_inventory \
             --manifest docs/public-site-manifest.json \
