@@ -67,6 +67,51 @@ def test_scan_collects_full_shas_per_route_and_flags_short_ones(tmp_path: Path) 
 
 
 @pytest.mark.unit
+def test_partial_sources_resolve_to_the_pages_that_include_them(tmp_path: Path) -> None:
+    """Quarto never renders underscore-prefixed sources, so a pin in a partial
+    must be attributed to the page that includes it (#4142)."""
+    root = tmp_path / "site"
+    (root / "articles" / "chapters").mkdir(parents=True)
+    (root / "articles" / "_generated").mkdir()
+    (root / "articles" / "monograph.qmd").write_text(
+        "{{< include chapters/_ch01.qmd >}}\n{{< include _generated/atlas.qmd >}}\n",
+        encoding="utf-8",
+    )
+    (root / "articles" / "chapters" / "_ch01.qmd").write_text(
+        f"https://github.com/D-sorganization/UpstreamDrift/blob/{SHA_A}/a.py\n",
+        encoding="utf-8",
+    )
+    (root / "articles" / "_generated" / "atlas.qmd").write_text(
+        f"https://github.com/D-sorganization/UpstreamDrift/blob/{SHA_A}/b.py\n",
+        encoding="utf-8",
+    )
+
+    scanned, findings = pins.scan_site_pins(root)
+
+    assert scanned == {SHA_A: ["/articles/monograph.html"]}
+    assert findings == []
+
+
+@pytest.mark.unit
+def test_pin_in_an_unincluded_partial_is_reported(tmp_path: Path) -> None:
+    """A partial nothing includes never reaches the site, so it cannot carry a route."""
+    root = tmp_path / "site"
+    (root / "articles").mkdir(parents=True)
+    (root / "articles" / "_orphan.qmd").write_text(
+        f"https://github.com/D-sorganization/UpstreamDrift/blob/{SHA_A}/a.py\n",
+        encoding="utf-8",
+    )
+
+    scanned, findings = pins.scan_site_pins(root)
+
+    assert scanned == {}
+    assert findings == [
+        f"articles/_orphan.qmd: UpstreamDrift pin {SHA_A[:8]} sits in a partial that "
+        "no rendered page includes"
+    ]
+
+
+@pytest.mark.unit
 def test_validation_rejects_bad_states_dates_and_active_mismatch() -> None:
     doc = _document(
         (SHA_A, "pinned", "2026-09-03", "2026-09-01", ["/index.html"]),

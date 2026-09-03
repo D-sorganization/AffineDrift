@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-09-03T07:00:00Z
+Last-Updated: 2026-09-03T09:00:00Z
 
 ## 1. Identity
 
@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T07:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.290                                          |
+| **Spec Version**        | 1.0.291                                          |
 | **Last Spec Update**    | 2026-09-03                                       |
 
 ## 2. Purpose & Mission
@@ -110,34 +110,34 @@ AffineDrift/
 
 ### Core Features
 
-| #   | Feature                                 | Status | Description                                                                                    |
-| --- | --------------------------------------- | ------ | ---------------------------------------------------------------------------------------------- |
-| F1  | Quarto Website Rendering and Deployment | ✅     | Renders Quarto markdown (.qmd) and LaTeX into static HTML/PDF; deploys to GitHub Pages.        |
-| F2  | Affine Control Theory Swing Optimizer   | ✅     | Implements iLQR solver with backward pass, regularization, and line search.                    |
-| F3  | Tangent Space and Hyperplane Models     | ✅     | Mathematical models for tangent space methods with educational examples.                       |
-| F4  | Interactive JavaScript Visualizations   | ✅     | Rotation converter, search interface, and mathematical visualization components.               |
-| F5  | Mathematical Notation Rendering         | ✅     | MathJax and KaTeX support for rendering LaTeX equations in web content.                        |
-| F6  | Property-Based Testing with Hypothesis  | ✅     | Property-based testing for physics and numerical solvers across parameter spaces.              |
-| F7  | CSS Budget Enforcement                  | ✅     | Automated CI enforcement of stylesheet size limits to maintain performance.                    |
-| F8  | Mirror Validation                       | ✅     | Ensures duplicate stylesheets and assets match canonical versions across the codebase.         |
-| F9  | GitHub Actions Automation               | ✅     | 12 production workflows with third-party actions pinned to immutable commit SHAs.              |
-| F10 | Progressive Web App Support             | ✅     | Service worker and web manifest for offline access and installability.                         |
-| F11 | Textbook Compilation Pipeline           | ✅     | Compiles LaTeX books with latexmk, strict error stops, and page-count floors.                  |
-| F12 | Textbook Claim Guardrail                | ✅     | CI blocks unsupported quantitative claims in textbook content without citations.               |
-| F13 | PR Site Build & Dependency Audit        | ✅     | Checks coverage, runs `pip-audit`, validates sitemap, and executes Playwright smoke tests.     |
-| F14 | Bibliography Duplicate-Alias Guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry compatibility notes. |
-| F15 | Bibliography Synchronization            | ✅     | Synchronizes chapter-level citations with shared references in `references/affine-drift.bib`.  |
-| F16 | Citation Resolution Guardrail           | ✅     | CI validates that all QMD citation keys map to known entries in configured .bib files.         |
-| F17 | Textbook Algorithm Convention Sharing   | ✅     | Shared algorithm and pseudocode style macros across textbook volumes.                          |
-| F18 | Verified Container Build Inputs         | ✅     | Pins Python base image, verifies Quarto checksum, and generates build provenance records.      |
-| F19 | Script CLI Output Contracts             | ✅     | Maintenance scripts route terminal output through `scripts/cli_output.py`.                     |
-| F20 | Stimpmeter-Calibrated Putting Physics   | ✅     | Putting roll simulation sharing USGA Stimpmeter deceleration models.                           |
-| F21 | Opt-In Performance Benchmark Suite      | ✅     | `benchmarks/` provides pytest-benchmark timing checks for stable computational paths.          |
-| F22 | Distributed Review Guard                | ✅     | `block-self-merge.yml` blocks PR authors from self-approving changes.                          |
-| F23 | Programming Companion Consumer          | ✅     | Validates and pins immutable upstream companion packages and manifests from UpstreamDrift.     |
-| F24 | Software Freshness Dashboard            | ✅     | `data/companion/pins.json` + generated `/models/programming/freshness.html`; every UpstreamDrift SHA linked from the site is reconciled by `scripts/check_companion_pins.py` (#4027, #4123). |
-| F24 | Scientific Claim-Audit Inventory        | ✅     | Governed route classification, digest binding, and audit reports for all public claims.        |
-| F25 | Repository Root Hygiene Enforcement     | ✅     | CI quality gate (`scripts/check_root_hygiene.py`) enforces strict root allowlist.              |
+| #   | Feature                                 | Status | Description                                                                                                                                                                                                                                                                  |
+| --- | --------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F1  | Quarto Website Rendering and Deployment | ✅     | Renders Quarto markdown (.qmd) and LaTeX into static HTML/PDF; deploys to GitHub Pages.                                                                                                                                                                                      |
+| F2  | Affine Control Theory Swing Optimizer   | ✅     | Implements iLQR solver with backward pass, regularization, and line search.                                                                                                                                                                                                  |
+| F3  | Tangent Space and Hyperplane Models     | ✅     | Mathematical models for tangent space methods with educational examples.                                                                                                                                                                                                     |
+| F4  | Interactive JavaScript Visualizations   | ✅     | Rotation converter, search interface, and mathematical visualization components.                                                                                                                                                                                             |
+| F5  | Mathematical Notation Rendering         | ✅     | MathJax and KaTeX support for rendering LaTeX equations in web content.                                                                                                                                                                                                      |
+| F6  | Property-Based Testing with Hypothesis  | ✅     | Property-based testing for physics and numerical solvers across parameter spaces.                                                                                                                                                                                            |
+| F7  | CSS Budget Enforcement                  | ✅     | Automated CI enforcement of stylesheet size limits to maintain performance.                                                                                                                                                                                                  |
+| F8  | Mirror Validation                       | ✅     | Ensures duplicate stylesheets and assets match canonical versions across the codebase.                                                                                                                                                                                       |
+| F9  | GitHub Actions Automation               | ✅     | 12 production workflows with third-party actions pinned to immutable commit SHAs.                                                                                                                                                                                            |
+| F10 | Progressive Web App Support             | ✅     | Service worker and web manifest for offline access and installability.                                                                                                                                                                                                       |
+| F11 | Textbook Compilation Pipeline           | ✅     | Compiles LaTeX books with latexmk, strict error stops, and page-count floors.                                                                                                                                                                                                |
+| F12 | Textbook Claim Guardrail                | ✅     | CI blocks unsupported quantitative claims in textbook content without citations.                                                                                                                                                                                             |
+| F13 | PR Site Build & Dependency Audit        | ✅     | Checks coverage, runs `pip-audit`, validates sitemap, and executes Playwright smoke tests.                                                                                                                                                                                   |
+| F14 | Bibliography Duplicate-Alias Guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry compatibility notes.                                                                                                                                                                               |
+| F15 | Bibliography Synchronization            | ✅     | Synchronizes chapter-level citations with shared references in `references/affine-drift.bib`.                                                                                                                                                                                |
+| F16 | Citation Resolution Guardrail           | ✅     | CI validates that all QMD citation keys map to known entries in configured .bib files.                                                                                                                                                                                       |
+| F17 | Textbook Algorithm Convention Sharing   | ✅     | Shared algorithm and pseudocode style macros across textbook volumes.                                                                                                                                                                                                        |
+| F18 | Verified Container Build Inputs         | ✅     | Pins Python base image, verifies Quarto checksum, and generates build provenance records.                                                                                                                                                                                    |
+| F19 | Script CLI Output Contracts             | ✅     | Maintenance scripts route terminal output through `scripts/cli_output.py`.                                                                                                                                                                                                   |
+| F20 | Stimpmeter-Calibrated Putting Physics   | ✅     | Putting roll simulation sharing USGA Stimpmeter deceleration models.                                                                                                                                                                                                         |
+| F21 | Opt-In Performance Benchmark Suite      | ✅     | `benchmarks/` provides pytest-benchmark timing checks for stable computational paths.                                                                                                                                                                                        |
+| F22 | Distributed Review Guard                | ✅     | `block-self-merge.yml` blocks PR authors from self-approving changes.                                                                                                                                                                                                        |
+| F23 | Programming Companion Consumer          | ✅     | Validates and pins immutable upstream companion packages and manifests from UpstreamDrift.                                                                                                                                                                                   |
+| F24 | Software Freshness Dashboard            | ✅     | `data/companion/pins.json` + generated `/models/programming/freshness.html`; every UpstreamDrift SHA linked from the site is reconciled by `scripts/check_companion_pins.py`, which resolves include partials to the rendered pages that publish them (#4027, #4123, #4142). |
+| F24 | Scientific Claim-Audit Inventory        | ✅     | Governed route classification, digest binding, and audit reports for all public claims.                                                                                                                                                                                      |
+| F25 | Repository Root Hygiene Enforcement     | ✅     | CI quality gate (`scripts/check_root_hygiene.py`) enforces strict root allowlist.                                                                                                                                                                                            |
 
 ## 6. Data & Configuration
 
@@ -216,6 +216,18 @@ Static website in `docs/`, public site manifest (`docs/public-site-manifest.json
 - **Known Boundaries**: Real-time simulation is delegated to UpstreamDrift; DDP backward pass is a gated mock; markerless mocap runtime capture is external.
 
 ## 12. Change Log
+
+### 1.0.291 Companion Pin Routes Resolve Through Quarto Includes (#4142)
+
+Fixes the `Deploy Website` regression that blocked publication from 05:56 on
+2026-09-03. `scripts/check_companion_pins.py` mapped every scanned source to
+`/<path>.html`, but Quarto never renders underscore-prefixed files or
+directories: they are `{{< include >}}` partials published through the document
+that includes them. Twenty-two monograph chapter partials and one generated
+atlas partial therefore recorded routes that no rendered page occupies, and the
+generated freshness dashboard linked all of them. Route derivation now resolves
+a partial to the rendered pages that include it, transitively, and reports any
+pin sitting in a partial that nothing includes.
 
 ### 1.0.288 Governance and Root Hygiene Cleanup (#4128)
 

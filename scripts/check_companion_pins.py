@@ -36,6 +36,7 @@ STATES = ("active", "pinned", "review-required")
 LINK_PATTERN = re.compile(
     r"github\.com/D-sorganization/UpstreamDrift/(?:tree|blob|commit)/([0-9a-fA-F]{7,40})\b"
 )
+INCLUDE_PATTERN = re.compile(r"\{\{<\s*include\s+([^>}]+?)\s*>\}\}")
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 # Mirrors the _quarto.yml render set: every .qmd plus the two Markdown families
 # that render, minus the excluded workspaces.
@@ -78,18 +79,75 @@ def route_for(source: Path) -> str:
     return "/" + source.with_suffix(".html").as_posix()
 
 
+def renders_standalone(source: Path) -> bool:
+    """Return True when Quarto renders this source as its own page.
+
+    Quarto never renders a file or directory whose name begins with an
+    underscore: those are include partials (``{{< include ... >}}``) whose
+    content is published through the document that includes them.
+    """
+    return not any(part.startswith("_") for part in source.parts)
+
+
+def include_parents(root: Path, sources: list[Path]) -> dict[Path, set[Path]]:
+    """Map each included partial to the sources that include it."""
+    parents: dict[Path, set[Path]] = {}
+    for source in sources:
+        text = (root / source).read_text(encoding="utf-8", errors="replace")
+        for match in INCLUDE_PATTERN.finditer(text):
+            target = match.group(1).strip().strip("\"'")
+            if not target:
+                continue
+            try:
+                child = (root / source.parent / target).resolve().relative_to(root.resolve())
+            except ValueError:
+                continue
+            parents.setdefault(child, set()).add(source)
+    return parents
+
+
+def routes_for(source: Path, parents: dict[Path, set[Path]]) -> list[str]:
+    """Return the public routes that publish ``source``.
+
+    A standalone source publishes itself; a partial publishes through every
+    rendered document that includes it, transitively.
+    """
+    routes: set[str] = set()
+    seen: set[Path] = set()
+    pending = [source]
+    while pending:
+        current = pending.pop()
+        if current in seen:
+            continue
+        seen.add(current)
+        if renders_standalone(current):
+            routes.add(route_for(current))
+            continue
+        pending.extend(parents.get(current, set()))
+    return sorted(routes)
+
+
 def scan_site_pins(root: Path) -> tuple[dict[str, list[str]], list[str]]:
     """Return {full_sha: [routes]} and findings for abbreviated SHAs."""
     pins: dict[str, set[str]] = {}
     findings: list[str] = []
-    for source in site_sources(root):
+    sources = site_sources(root)
+    parents = include_parents(root, sources)
+    for source in sources:
         text = (root / source).read_text(encoding="utf-8", errors="replace")
         for match in LINK_PATTERN.finditer(text):
             sha = match.group(1).lower()
             if not FULL_SHA.fullmatch(sha):
                 findings.append(f"{source.as_posix()}: abbreviated UpstreamDrift pin {sha}")
                 continue
-            pins.setdefault(sha, set()).add(route_for(source))
+            routes = routes_for(source, parents)
+            if not routes:
+                findings.append(
+                    f"{source.as_posix()}: UpstreamDrift pin {sha[:8]} sits in a partial that "
+                    "no rendered page includes"
+                )
+                continue
+            pins.setdefault(sha, set()).update(routes)
     return {sha: sorted(routes) for sha, routes in sorted(pins.items())}, findings
 
 
