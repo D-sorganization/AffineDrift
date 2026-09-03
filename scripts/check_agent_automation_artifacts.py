@@ -13,7 +13,9 @@ if __package__ in {None, ""}:
 from scripts.cli_output import write_stderr, write_stdout
 
 FORBIDDEN_TRACKED_PATTERNS = (
+    ".agent/*",
     ".claude/settings.local.json",
+    ".gaai/project/contexts/artefacts/*",
     ".gaai/project/contexts/backlog/.delivery-locks/*_run.sh",
     ".gaai/project/contexts/backlog/.delivery-locks/*.lock",
     ".gaai/project/contexts/backlog/.delivery-logs/[!.]*",

@@ -6,18 +6,27 @@
 
 ## What This Is
 
-Educational textbook and companion website for engineering mathematics. Content is
-authored in Quarto (.qmd files) and rendered to HTML. Combines narrative text,
-interactive code cells, and mathematical visualizations.
+Research platform, educational textbook series, and companion website exploring golf swing biomechanics through affine control theory. Content is authored in Quarto (.qmd files) and LaTeX, rendering to HTML and PDF. Combines narrative text, interactive code cells, mathematical visualizations, and executable control-theoretic models.
 
 ## Key Directories
 
-- `chapters/` or `content/` — Quarto `.qmd` source files (the textbook)
-- `css/` — canonical stylesheets (CSS budget enforced by CI)
-- `docs/` — rendered output; CSS mirrors enforced by CI to match `css/`
-- `tests/` — pytest (Python) and Jest (JavaScript) test suites
-- `e2e/` or `tests/e2e/` — Playwright end-to-end browser tests
-- `references/` — BibTeX bibliography files
+- `articles/` — Quarto (.qmd) and LaTeX sources for articles, textbooks, and monographs
+- `books/` — Book-length projects and Quarto book sources
+- `content/` — Supplementary publication materials and presentation assets
+- `models/` — Quarto model pages and generated programming companion catalogs (`models/programming/`)
+- `pages/` — Top-level standalone Quarto pages (technology overview, manifesto, etc.)
+- `critiques/` — Falsification ledgers, scientific critiques, and peer review records
+- `reports/` — Scientific claim audit reports and summaries
+- `resources/` — Interactive simulations, bibliography viewer, and learning paths
+- `src/` — Python source code (`affine_control`, `golf_simulation`, `tangent_models`, `core`, `tools`)
+- `scripts/` — Content gates, validators, code generators, and CI maintenance scripts
+- `tools/` — Developer tooling and MATLAB quality utilities
+- `tests/` — pytest (Python), Jest (JavaScript), and Playwright browser test suites
+- `references/` — BibTeX bibliography databases
+- `schemas/` — JSON schemas for companion manifests, falsification atlases, and research readiness
+- `css/` — Canonical stylesheets (CSS budget enforced by CI)
+- `docs/` — Destination directory for Quarto rendered output (built at deploy time)
+- `config/` — Quality budgets, terminology baselines, and tree parity baselines
 
 ## Python and Tooling
 
@@ -119,8 +128,8 @@ See `.logging-standard.md` for full details.
 
 ## Cross-Repo Dependencies
 
-- **Standalone.** AffineDrift does not import from other fleet repos.
-- Shared engineering principles (DRY tracking, module budgets) are consistent across the fleet but implemented independently here.
+- **Programming Companion Consumer:** AffineDrift acts as an immutable companion consumer for upstream fleet packages (`src/affine_control/programming_companion/`). It consumes, validates, and pins schemas and manifests published by upstream fleet repositories (such as `UpstreamDrift`), verifying SHA-256 digests and cryptographic/schema provenance without arbitrary runtime imports.
+- Shared engineering principles (DRY tracking, module budgets, root hygiene) are consistent across the fleet.
 
 ## Slash Commands
 
