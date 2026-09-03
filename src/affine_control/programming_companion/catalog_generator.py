@@ -93,13 +93,35 @@ class CatalogGenerator:
             "        </div>\n"
         )
 
-    def __init__(self, manifest: Mapping[str, Any]) -> None:
-        """Initialize the catalog generator with a validated manifest mapping."""
+    def __init__(
+        self,
+        manifest: Mapping[str, Any],
+        *,
+        preview: bool = True,
+        provenance: Mapping[str, Any] | None = None,
+    ) -> None:
+        """Initialize the catalog generator with a validated manifest mapping.
+
+        ``preview=True`` (the fixture path) stamps every page with the PREVIEW
+        notice. ``preview=False`` requires ``provenance`` describing the
+        installed provider artifact (``artifact_name``, ``manifest_sha256``,
+        ``fetched_on``, ``attestation``) and stamps a provider-pin notice
+        instead (#4123 Phase 1).
+        """
         if not self.REQUIRED_ROOT_KEYS.issubset(manifest.keys()):
             missing = sorted(self.REQUIRED_ROOT_KEYS - set(manifest.keys()))
             raise CatalogGeneratorError(
                 f"invalid manifest structure; missing required keys: {missing}"
             )
+        if not preview:
+            required = {"artifact_name", "manifest_sha256", "fetched_on", "attestation"}
+            if provenance is None or not required.issubset(provenance.keys()):
+                raise CatalogGeneratorError(
+                    "provider mode requires provenance with "
+                    "artifact_name, manifest_sha256, fetched_on, attestation"
+                )
+        self._preview = preview
+        self._provenance: Mapping[str, Any] = provenance or {}
         self._manifest = manifest
         self._source: Mapping[str, Any] = manifest.get("source", {})
         self._engines: list[Mapping[str, Any]] = list(manifest.get("engines", []))
@@ -108,6 +130,50 @@ class CatalogGenerator:
         self._workflows: list[Mapping[str, Any]] = list(manifest.get("workflows", []))
         self._compatibility: Mapping[str, Any] = manifest.get("compatibility", {})
         self._summary: Mapping[str, Any] = manifest.get("summary", {})
+
+    def _publication_sentence(self) -> str:
+        """State the provider's own publication verdict without upgrading it."""
+        publication: Mapping[str, Any] = self._manifest.get("publication", {})
+        state = str(publication.get("state", "unknown"))
+        blockers = [str(item) for item in publication.get("blockers", [])]
+        if blockers:
+            return f"The provider marks this catalog **{state}**: " + " ".join(blockers)
+        return f"The provider marks this catalog **{state}**."
+
+    def _notice_markdown(self) -> str:
+        """Return the PREVIEW notice or the provider-pin notice for Markdown pages."""
+        if self._preview:
+            return self.preview_notice_markdown()
+        prov = self._provenance
+        return (
+            '::: {.callout-note title="Provider Pin"}\n'
+            f"Generated from the provider-published UpstreamDrift artifact "
+            f"`{prov['artifact_name']}` (manifest SHA-256 `{prov['manifest_sha256']}`; "
+            f"attestation: {prov['attestation']}; installed {prov['fetched_on']}). "
+            f"{self._publication_sentence()} "
+            "See the [freshness dashboard](freshness.html).\n"
+            ":::\n"
+        )
+
+    def _notice_html(self) -> str:
+        """Return the PREVIEW notice or the provider-pin notice for the HTML hub."""
+        if self._preview:
+            return self.preview_notice_html()
+        prov = self._provenance
+        sentence = self._publication_sentence().replace("**", "")
+        return (
+            '        <div class="site-card site-card--callout u-mb-4" role="note">\n'
+            '          <h2 class="u-mb-1">Provider Pin</h2>\n'
+            "          <p>\n"
+            "            Generated from the provider-published UpstreamDrift artifact\n"
+            f"            <code>{prov['artifact_name']}</code> (manifest SHA-256\n"
+            f"            <code>{prov['manifest_sha256']}</code>;\n"
+            f"            attestation: {prov['attestation']};\n"
+            f"            installed {prov['fetched_on']}). {sentence}\n"
+            '            See the <a href="freshness.html">freshness dashboard</a>.\n'
+            "          </p>\n"
+            "        </div>\n"
+        )
 
     def generate_index(self) -> str:
         """Build the main programming companion hub index."""
@@ -144,7 +210,7 @@ page-layout: full
           </p>
         </header>
 
-{self.preview_notice_html()}
+{self._notice_html()}
         <div class="site-card site-card--callout u-mb-4">
           <h2 class="u-mb-1">Authority Boundary</h2>
           <p>
@@ -204,6 +270,15 @@ page-layout: full
           </p>
           <a href="provenance.html" class="resource-link">Review Provenance →</a>
         </article>
+
+        <article class="resource-card">
+          <h3><a href="freshness.html">Software Freshness Dashboard</a></h3>
+          <p class="resource-description">
+            Which UpstreamDrift revision this site represents, every pinned SHA across the
+            site, review dates, and the provider's own publication state.
+          </p>
+          <a href="freshness.html" class="resource-link">Check Freshness →</a>
+        </article>
       </div>
     </div>
   </div>
@@ -235,7 +310,7 @@ title: "Engines and Runtime Support"
 description: "Physics solvers, support tiers, and runtime environments supported by UpstreamDrift"
 ---
 
-{self.preview_notice_markdown()}
+{self._notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -283,7 +358,7 @@ title: "Programs and Models Directory"
 description: "Authoritative inventory of 70 UpstreamDrift simulation programs, solvers, and models"
 ---
 
-{self.preview_notice_markdown()}
+{self._notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -311,7 +386,7 @@ title: "Feature Parity Matrix"
 description: "{desc}"
 ---
 
-{self.preview_notice_markdown()}
+{self._notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -380,7 +455,7 @@ title: "Governed Workflows and Verification Tasks"
 description: "{desc}"
 ---
 
-{self.preview_notice_markdown()}
+{self._notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
@@ -418,7 +493,7 @@ title: "Companion Provenance and Cryptographic Digests"
 description: "Exact-commit provenance, generator versions, and cryptographic input digests"
 ---
 
-{self.preview_notice_markdown()}
+{self._notice_markdown()}
 ## Authority Boundary
 
 > [!NOTE]
