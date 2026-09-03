@@ -1,7 +1,9 @@
 ---
 title: "3D Golf Model Repository"
-description: "MATLAB-based biomechanical golf swing modeling and simulation"
+description: "UpstreamDrift: a Python multi-engine physics-simulation and analysis suite for the golf swing, with a PyQt6 desktop launcher, FastAPI API, and React/Tauri web UI"
 page-layout: full
+pinned_upstreamdrift_sha: "98165272f404e6752ec573e05e30a0def7562e0d"
+pinned_upstreamdrift_reviewed: "2026-09-02"
 ---
 
 ```{=html}
@@ -11,45 +13,96 @@ page-layout: full
       <div class="resource-card">
         <h1 class="section-heading">3D Golf Model Repository</h1>
         <p class="resource-description">
-          A comprehensive MATLAB-based biomechanical modeling and simulation system for analyzing golf swing dynamics, 
-          trajectory optimization, and performance metrics.
+          <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">UpstreamDrift<span class="sr-only">(opens in a new tab)</span></a>
+          is a Python simulation and analysis platform for the golf swing. It runs the same model definitions
+          through several independent physics engines so that a result can be checked against a second
+          implementation rather than taken on trust, and wraps that core in a desktop application, a REST API,
+          and a web interface.
+        </p>
+        <p class="resource-description">
+          <strong>Authority snapshot.</strong> The statements on this page describe UpstreamDrift at protected
+          <code>main</code> commit
+          <a href="https://github.com/D-sorganization/UpstreamDrift/tree/98165272f404e6752ec573e05e30a0def7562e0d" target="_blank" rel="noopener"><code>98165272</code><span class="sr-only">(opens in a new tab)</span></a>,
+          reviewed 2026-09-02. The upstream repository is the live authority; these are software facts and
+          support tiers, not evidence of biomechanical validity or fitness for coaching or clinical use.
         </p>
       </div>
 
       <div class="resource-card">
         <h2>Overview</h2>
         <p class="resource-description">
-          This repository contains tools for golf swing biomechanical modeling using MATLAB/Simulink Simscape Multibody, 
-          motion capture data analysis and visualization, dataset generation for swing parameter variations, interactive 
-          GUI applications for visualization and analysis, performance tracking and optimization tools, and Python-based 
-          utilities for data processing and visualization.
+          UpstreamDrift covers forward and inverse dynamics, inverse kinematics with nullspace optimization,
+          trajectory optimization across candidate swing objectives, kinematic force decomposition (Coriolis,
+          centrifugal, gravitational), motion-capture retargeting, and cross-engine comparison that reports the
+          deviation between engines. Models range from two-degree-of-freedom pendulums and flexible-shaft
+          formulations up to full-body and muscle-driven musculoskeletal models, with parametric humanoid
+          generation and URDF export.
         </p>
       </div>
 
       <div class="resource-card">
-        <h2>Repository Structure</h2>
+        <h2>Physics Engines and Support Tiers</h2>
         <p class="resource-description">
-          The repository is organized into MATLAB source code and models, Python utilities, documentation, automation 
-          scripts, generated results, and example implementations. Key components include Simscape Multibody models, 
-          analysis and GUI scripts, interactive visualization applications, batch simulation tools, and utility functions.
+          Support tier states what continuous integration validates, not what is implemented.<br>
+          <strong>Supported:</strong> MuJoCo (required on every pull request)<br>
+          <strong>Extended:</strong> Drake, Pinocchio (nightly cross-engine validation)<br>
+          <strong>Experimental:</strong> OpenSim, MyoSuite (best-effort local validation)<br>
+          <strong>Experimental, differentiable:</strong> JaxSim, a JAX-based backend kept in
+          <code>src/engines/physics_engines/jaxsim</code> with its own upgrade guard; it has no launcher tile
+          and is not part of the published support-tier contract.<br>
+          The tier contract is
+          <a href="https://github.com/D-sorganization/UpstreamDrift/blob/98165272f404e6752ec573e05e30a0def7562e0d/docs/engines/support_tiers.md" target="_blank" rel="noopener">docs/engines/support_tiers.md<span class="sr-only">(opens in a new tab)</span></a>.
         </p>
       </div>
 
       <div class="resource-card">
-        <h2>Features</h2>
+        <h2>Architecture</h2>
         <p class="resource-description">
-          <strong>Biomechanical Modeling:</strong> Full 3D golf swing models using Simscape Multibody<br>
-          <strong>Motion Analysis:</strong> Tools for processing and analyzing motion capture data<br>
-          <strong>Visualization:</strong> Interactive GUI applications for swing visualization<br>
-          <strong>Dataset Generation:</strong> Batch simulation tools for parameter variation studies<br>
-          <strong>Python Integration:</strong> Python utilities for data processing and analysis
+          <strong>Entry point:</strong> <code>python launch_upstream_drift.py</code> starts the local API on port 8000
+          and opens the web interface; <code>--classic</code> opens the PyQt6 desktop launcher and
+          <code>--api-only</code> runs the server alone.<br>
+          <strong>API:</strong> a versioned FastAPI service (<code>src/api</code>) with REST and WebSocket routes.<br>
+          <strong>Web UI:</strong> React with Vite, packaged as a Tauri desktop shell (<code>ui/</code>).<br>
+          <strong>Rust kernels:</strong> physics kernels in <code>rust_core/</code> (the <code>upstream-physics</code>
+          crate, built with maturin) sharing a <code>tools-core</code> crate pinned from the Tools repository.<br>
+          <strong>Tooling:</strong> standalone tools under <code>src/tools/</code>, including Pose Studio, the
+          Model Explorer, and the launch-monitor analytics workbench.
         </p>
       </div>
 
       <div class="resource-card">
-        <h2>Repository Access</h2>
+        <h2>Pipelines and Workbenches</h2>
         <p class="resource-description">
-          The 3D golf swing biomechanical models, Simulink systems, and analysis scripts are hosted in the UpstreamDrift repository:
+          <strong>Motion pipeline:</strong> video to tracked motion through OpenPose or MediaPipe, with C3D, CSV,
+          and JSON import and retargeting onto the simulation models
+          (<a href="https://github.com/D-sorganization/UpstreamDrift/blob/98165272f404e6752ec573e05e30a0def7562e0d/docs/motion_pipeline/README.md" target="_blank" rel="noopener">motion pipeline guide<span class="sr-only">(opens in a new tab)</span></a>).<br>
+          <strong>Launch-monitor analytics:</strong> import, monitor comparison, dispersion, and longitudinal
+          trends built on a single canonical model layer shared with the Tools repository
+          (<a href="https://github.com/D-sorganization/UpstreamDrift/blob/98165272f404e6752ec573e05e30a0def7562e0d/docs/adr/0046-launch-monitor-analytics-single-model-layer.md" target="_blank" rel="noopener">ADR-0046<span class="sr-only">(opens in a new tab)</span></a>).<br>
+          <strong>BunkerShot3D:</strong> a designer workbench for sand shots and sole geometry
+          (<a href="https://github.com/D-sorganization/UpstreamDrift/blob/98165272f404e6752ec573e05e30a0def7562e0d/docs/adr/0032-bunkershot3d-club-design-architecture.md" target="_blank" rel="noopener">ADR-0032<span class="sr-only">(opens in a new tab)</span></a>).<br>
+          <strong>Visualization and export:</strong> real-time 3D rendering with force-torque overlays, more than
+          ten plot types, and CSV/JSON export.
+        </p>
+      </div>
+
+      <div class="resource-card">
+        <h2>History</h2>
+        <p class="resource-description">
+          The project began as a MATLAB/Simulink Simscape Multibody model of the golf swing. Those models are
+          still in the repository under <code>src/engines/Simscape_Multibody_Models/</code>, maintained as research
+          references rather than production artifacts, and are the subject of the
+          <a href="../models/models-simulink.html">Simulink Models page</a>. Everything described above is the
+          Python platform that grew around them.
+        </p>
+      </div>
+
+      <div class="resource-card">
+        <h2>Requirements and Access</h2>
+        <p class="resource-description">
+          Windows, macOS, and Linux. Python 3.11 and 3.12 are the tested interpreter minors; Git LFS is required
+          because model assets are stored in LFS. MATLAB R2023a or later is needed only for the historical
+          MATLAB models.
           <br><br>
           <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener" class="resource-link">View on GitHub →<span class="sr-only">(opens in a new tab)</span></a>
           <br><br>
@@ -61,13 +114,13 @@ page-layout: full
       <div class="resource-card">
         <h2>Related Resources</h2>
         <p class="resource-description">
-          See the <a href="../models/models-simulink.html">MATLAB Simulink Models page</a> and the
-          <a href="../models/models.html">Golf Modeling Suite</a> for full architectural documentation, or visit the
-          <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">UpstreamDrift repository<span class="sr-only">(opens in a new tab)</span></a>.
+          See the <a href="../pages/overview.html">Overview</a> for the pinned quick start and API example, the
+          <a href="../models/programming/index.html">Programming Companion Catalog</a> for the engine, program,
+          and workflow inventory, and the <a href="../models/models.html">Golf Modeling Suite</a> for the
+          AffineDrift link map.
         </p>
       </div>
     </div>
   </div>
 </section>
 ```
-
