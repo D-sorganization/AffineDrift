@@ -8,7 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_make_test_runs_python_and_javascript_suites() -> None:
     makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
 
-    assert "python3 -m pytest tests/ --cov=src --cov-fail-under=65" in makefile
+    assert "python3 -m pytest tests/ --cov=src\n" in makefile
+    assert "--cov-fail-under" not in makefile  # the floor lives in pyproject.toml (#4126)
     assert "npm test -- --coverage" in makefile
 
 

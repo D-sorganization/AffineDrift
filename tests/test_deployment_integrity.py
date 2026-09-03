@@ -89,10 +89,14 @@ def test_live_verifier_targets_the_direct_canonical_pages_host() -> None:
 
 
 def test_ci_and_deploy_use_the_locally_qualified_quarto_version() -> None:
-    """CI and Pages render with the same qualified Quarto release as local QA."""
+    """CI and Pages render with the single Quarto pin in `.quarto-version` (#4126)."""
+    pinned = (ROOT_DIR / ".quarto-version").read_text(encoding="utf-8").strip()
+    assert pinned == "1.8.26"
     for workflow in (WORKFLOW_PATH, CI_WORKFLOW_PATH):
         content = workflow.read_text(encoding="utf-8")
-        assert 'version: "1.8.26"' in content
+        assert "tr -d '[:space:]' < .quarto-version" in content
+        assert "version: ${{ steps.quarto.outputs.version }}" in content
+        assert 'version: "1.8.26"' not in content
         assert 'version: "1.6.39"' not in content
 
 
@@ -159,19 +163,11 @@ def test_ci_captures_revision_bound_representative_visual_evidence() -> None:
     """PR CI must preserve the governed route-family screenshot contract."""
     content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
 
-    representative_sources = (
-        "books/index.qmd",
-        "articles/proximal_distal_energy_transfer/index.qmd",
-        "articles/affine-nature-golf-swing.qmd",
-        "articles/proximal-distal-model-workbench.qmd",
-        "models/models.qmd",
-        "resources/articles.qmd",
-        "critiques/index.qmd",
-        "reports/scientific-claim-audit.md",
-        "resources/resources.qmd",
-    )
-    for source in representative_sources:
-        assert f"quarto render {source} --to html" in content
+    # #4126: the E2E lane renders the whole site once, so every representative
+    # route family is present without a hand-maintained per-file render list.
+    assert "run: quarto render --to html" in content
+    assert "quarto render books/index.qmd" not in content
+    assert "quarto render index.qmd" not in content
 
     assert "Capture governed representative visual evidence" in content
     assert "python3 scripts/bundle_css.py" in content
