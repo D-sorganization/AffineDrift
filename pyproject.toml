@@ -149,6 +149,7 @@ max-complexity = 10
 "tests/test_critical_physics_fixes.py" = ["F821", "E402", "E731", "F401"]
 "src/tools/**/*.py" = ["E501", "S603", "S607"]
 "scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901", "S310", "S314"]
+"shared_scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901"]
 "src/affine_control/swing_optimizer.py" = ["S101"]
 "articles/**/*.py" = ["S603", "S607"]
 "docs/**/*.py" = ["E501"]
@@ -164,6 +165,19 @@ skips = ["B101"]  # assert used in tests
 [tool.black]
 line-length = 100
 target-version = ['py312']
+# Fleet-shared modules and the merge-driver entry points are vendored verbatim
+# from Repository_Management (RM #1520) and are byte-bound to that copy: the
+# campaign's rollout script compares bytes and re-copies on drift, so a local
+# reformat would be undone on every sync and then fail this check. Formatting
+# them is upstream's job.
+extend-exclude = '''
+(
+  ^/shared_scripts/
+  | ^/scripts/spec_rows_merge_driver\.py$
+  | ^/scripts/install_spec_merge_driver\.py$
+  | ^/scripts/bump_spec_version\.py$
+)
+'''
 exclude = '''
 /(
   # Website content

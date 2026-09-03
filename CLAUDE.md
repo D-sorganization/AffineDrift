@@ -142,6 +142,29 @@ This repository's specification is defined in `SPEC.md` at the repo root.
 Read SPEC.md before making any changes. Update it when your changes
 affect documented functionality, features, or architecture.
 
+A substantive pull request adds **exactly one** change-log row to section 12,
+keyed by the pull request (or the governing issue, when the row is written
+before the pull request exists):
+
+```markdown
+| 2026-09-03 | #1520 | one-line summary |
+```
+
+Do **not** mint a serial spec version and do **not** bump the `Spec Version`
+field in section 1. Both were global counters, so two concurrent pull requests
+always picked the same value and edited the same two lines; the field is now
+release-derived and set by `scripts/bump_spec_version.py` alone
+([Repository_Management#1520](https://github.com/D-sorganization/Repository_Management/issues/1520)).
+Never renumber or reorder anybody else's row — row order is merge order.
+Verify with `python3 -m scripts.check_spec_changelog`.
+
+Register the row-union merge driver once per clone so a rebase over somebody
+else's row is a no-op rather than a conflict:
+
+```bash
+python3 scripts/install_spec_merge_driver.py
+```
+
 ## Hook bypass policy
 
 **Never use `git commit --no-verify` or `git push --no-verify` unless the hook itself is broken** (tooling not installed, hook script crashes). It is _not_ an acceptable workaround for a hook that flags real issues.

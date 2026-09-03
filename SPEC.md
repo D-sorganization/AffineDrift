@@ -217,14 +217,24 @@ Static website in `docs/`, public site manifest (`docs/public-site-manifest.json
 
 ## 12. Change Log
 
-### 1.0.288 Governance and Root Hygiene Cleanup (#4128)
+Rows are keyed by pull request, not by a serial spec version: `| YYYY-MM-DD | #<pr> | summary |`. Add exactly one row for your own pull request and do not renumber anybody else's; the `Spec Version` field in section 1 is bumped at release time by `scripts/bump_spec_version.py`, never by an individual pull request. See [Repository_Management#1520](https://github.com/D-sorganization/Repository_Management/issues/1520).
+
+The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-#1520 serial-versioned narrative entries, kept verbatim for traceability. Do not add new ones — new detail goes in the row summary or the pull request.
+
+| Date       | PR    | Changes    |
+| ---------- | ----- | ---------- |
+| 2026-09-03 | #1520 | Key SPEC.md change-log rows by pull request instead of the next free serial spec version; add `scripts/check_spec_changelog.py` and `shared_scripts/spec_changelog.py`; make `Spec Version` release-derived via `scripts/bump_spec_version.py`; register the `spec-rows` union merge driver |
+| 2026-09-02 | #4128 | Governance and Root Hygiene Cleanup (spec 1.0.288) |
+| 2026-09-01 | #4104 | Live-Only Observable Retry Closure (spec 1.0.278) |
+
+Archived entry (spec 1.0.288): Governance and Root Hygiene Cleanup (#4128)
 
 Removes root sprawl, stray and duplicate agent assets, and deprecated review files.
 Enforces an explicit repository root allowlist via `scripts/check_root_hygiene.py`.
 Relocates historical changelog entries to `CHANGELOG.md` and updates `CLAUDE.md` to
 accurately describe the repository layout and the immutable companion consumer role.
 
-### 1.0.278 Live-Only Observable Retry Closure
+Archived entry (spec 1.0.278): Live-Only Observable Retry Closure
 
 Corrects the first #4104 implementation without changing the site or its
 scientific content. Local and pre-deployment verification again default to one
