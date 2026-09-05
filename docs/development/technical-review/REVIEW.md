@@ -191,3 +191,12 @@ All 12 mathematical checks and four edition guards pass after the old-edition gu
 Primary sources checked: [Tedrake's trajectory-optimization notes](https://underactuated.mit.edu/trajopt.html), [Kelly's original transcription tutorial](https://arxiv.org/abs/1707.00284), [Liberzon's maximum-principle and endpoint conditions](https://liberzon.csl.illinois.edu/teaching/cvoc/node1.html), [Tedrake's robust/stochastic notes](https://underactuated.mit.edu/robust.html), and [Harris and Wolpert's original paper](https://www.nature.com/articles/29528). The adjacent funnel chapter is separately tracked in #4175; the remaining corpus is not cleared.
 
 Orbital PR #4174 passes 3,828 CI tests with 29 skips and 92.29% coverage, and all eight textbook builds. Its browser checks and publication remain separate gates.
+
+
+## Long-Chapter Visibility Repair
+
+Issue #4176 records a reader-facing failure discovered during trajectory chapter visual QA: a long section remained fully transparent despite valid equation markup and no horizontal overflow. The fade observer's 10% threshold was unreachable for the chapter's height in the tested browser. The canonical module now reveals a section on any intersection. A controlled 18,000-pixel chapter regression fails with the old asset and passes with the corrected asset, including an anchor into a nested example and resizing to a mobile viewport. Tests run against the current local preview with service workers blocked to avoid stale assets.
+
+Validation: two browser regressions pass, all 325 JavaScript tests pass (19 skipped), and all 34 static contracts pass. Browser QA explicitly checks ancestor opacity; element presence and MathJax success alone are insufficient evidence of visible prose. The existing preview service-worker cache was cleared before checking the corrected full publication page.
+
+Orbital PR #4174 merged as `c6496781dc9f96894dd0f78eb8c8b563e474c2cd` after all final-head checks passed, including 3,828 CI tests, 92.29% coverage, and eight book builds. Deployment 33977761586 remains in progress. Manifold deployment 33975676795 succeeded through every revision-matched live route.
