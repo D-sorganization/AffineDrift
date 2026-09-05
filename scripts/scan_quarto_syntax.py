@@ -286,7 +286,10 @@ class QuartoSyntaxScanner:
         subscript leaves behind are flagged -- `*` immediately before `{`, or
         immediately after a control word and before a digit (`\\int*0`).
         """
-        match = re.search(r"(?:[A-Za-z}\]]\*\{|\\[a-zA-Z]+\*\d)", math_text)
+        # The star in \operatorname* is valid LaTeX (limits below an operator).
+        # Remove only that command suffix, preserving its arguments for checks.
+        checked_text = math_text.replace(r"\operatorname*", r"\operatorname")
+        match = re.search(r"(?:[A-Za-z}\]]\*\{|\\[a-zA-Z]+\*\d)", checked_text)
         if match:
             self.errors.append(
                 (

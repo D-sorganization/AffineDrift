@@ -176,3 +176,27 @@ PR #4172 has passed every final-head check, including 3,812 CI tests with 29 ski
 
 
 Deployment 33974016554 succeeded through every revision-matched live route and publishes both foundations and curve corrections. Manifold PR #4172 merged as `0ed10bdb28705e829e1aa99d2662ecda7731a977`; deployment 33975676795 is pending. The orbital correction is PR #4174. The next full chapter audit is trajectory optimization, issue #4173.
+
+
+## Trajectory Objectives, Numerical Fidelity, and Repeatability
+
+Issue #4173 covers the complete trajectory-optimization chapter in Geometry Volume II and the standalone, combined, and web motion-control editions. The correction fixes reversed normalized-time dynamics and the inconsistent Hamiltonian optimization sign. It develops an event-aware OCP with duration, contact geometry, first passage, actuator bounds, normal PMP/transversality conditions, and the limits of necessary conditions. A free-time effort example has an unattained infimum; rest-to-rest effort, minimum-time travel, and maximum first-arrival speed select different control patterns. These independently checked examples replace the uncomputed universal shoulder-torque reversal.
+
+The transcription treatment derives Hermite--Simpson defects, checks an exact cubic example, and separates numerical solver success from continuous-path feasibility, global optimality, and model validity. Underactuated equations use configuration accelerations and the actual actuation image, with independent closure/contact constraints and loads. Clubhead speed uses the full kinematic Jacobian; equal distal angular speed can coexist with zero or nonzero tip speed. The shared figure compares duration costs and objective-dependent control schedules without claiming measured golf data.
+
+The uncertainty treatment separates local covariance propagation from covariance steering and nonlinear robustness certification. It includes multiplicative-noise contributions, impact-time sensitivity, bias plus variance in output loss, and marginal versus joint chance constraints. A constraint Jacobian condition number is not an absolute gain, and an exactly satisfied hitting guard cannot represent all impact errors. The original Harris–Wolpert hypothesis is presented within its eye/arm movement scope rather than as a universal golf torque-noise law. The golf protocol connects objective choice, constrained power flow, perturbation transport, impact outcomes, and forward interventions that can distinguish competing explanations.
+
+All 12 mathematical checks and four edition guards pass after the old-edition guards failed. Local validation: 3,844 Python tests, 29 skips, 92.32% source coverage; 128 content checks with four skips; all 34 static contracts; Ruff, Black, and new-test code-quality inspection. Three publication PDFs (88/70/9 pages) are rebuilt and all 27 revised pages visually inspected. The final web volume contains 916 math containers; all 14 revised display equations actually typeset, with zero math errors and no page overflow at 1440/390 pixels. The shared figure loads. Final copy review clarified random output moments and improved a heading's line break.
+
+Primary sources checked: [Tedrake's trajectory-optimization notes](https://underactuated.mit.edu/trajopt.html), [Kelly's original transcription tutorial](https://arxiv.org/abs/1707.00284), [Liberzon's maximum-principle and endpoint conditions](https://liberzon.csl.illinois.edu/teaching/cvoc/node1.html), [Tedrake's robust/stochastic notes](https://underactuated.mit.edu/robust.html), and [Harris and Wolpert's original paper](https://www.nature.com/articles/29528). The adjacent funnel chapter is separately tracked in #4175; the remaining corpus is not cleared.
+
+Orbital PR #4174 passes 3,828 CI tests with 29 skips and 92.29% coverage, and all eight textbook builds. Its browser checks and publication remain separate gates.
+
+
+## Long-Chapter Visibility Repair
+
+Issue #4176 records a reader-facing failure discovered during trajectory chapter visual QA: a long section remained fully transparent despite valid equation markup and no horizontal overflow. The fade observer's 10% threshold was unreachable for the chapter's height in the tested browser. The canonical module now reveals a section on any intersection. A controlled 18,000-pixel chapter regression fails with the old asset and passes with the corrected asset, including an anchor into a nested example and resizing to a mobile viewport. Tests run against the current local preview with service workers blocked to avoid stale assets.
+
+Validation: two browser regressions pass, all 325 JavaScript tests pass (19 skipped), and all 34 static contracts pass. Browser QA explicitly checks ancestor opacity; element presence and MathJax success alone are insufficient evidence of visible prose. The existing preview service-worker cache was cleared before checking the corrected full publication page.
+
+Orbital PR #4174 merged as `c6496781dc9f96894dd0f78eb8c8b563e474c2cd` after all final-head checks passed, including 3,828 CI tests, 92.29% coverage, and eight book builds. Deployment 33977761586 remains in progress. Manifold deployment 33975676795 succeeded through every revision-matched live route.

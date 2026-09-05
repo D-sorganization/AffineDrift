@@ -424,6 +424,23 @@ class TestQuartoSyntaxScanner:
         p.write_text("$$ a * b = 2*3 $$\n\nAnd $x \\times y$ inline.\n")
         assert check_file(p) == []
 
+    @pytest.mark.parametrize("delimiter", ["$", "$$"])
+    def test_allows_starred_operator_name(self, delimiter: str) -> None:
+        from scripts.scan_quarto_syntax import QuartoSyntaxScanner
+
+        expression = r"u_*\in\operatorname*{arg\,min}_{u\in U} H(u)"
+        assert QuartoSyntaxScanner(delimiter + expression + delimiter).scan() == []
+
+    @pytest.mark.parametrize("corruption", [r"F*{aero}", r"\int*0"])
+    def test_starred_operator_does_not_hide_corrupted_subscripts(self, corruption: str) -> None:
+        from scripts.scan_quarto_syntax import QuartoSyntaxScanner
+
+        expression = r"$$\operatorname*{arg\,min}_{u\in U}" + corruption + "$$"
+        errors = QuartoSyntaxScanner(expression).scan()
+        assert len(errors) == 1
+        assert "rewritten as emphasis" in errors[0][1]
+        assert corruption[:3] in errors[0][1]
+
     def test_detects_deprecated_delimiters(self, tmp_path: Any) -> None:
         from scripts.scan_quarto_syntax import check_file
 
