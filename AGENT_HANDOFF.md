@@ -1,6 +1,19 @@
 # Agent Handoff — AffineDrift
 
-Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
+Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
+
+## Technical Content Review
+
+- PR #4153 publishes the first substantial correction wave; the full corpus audit remains open under epic #4009.
+- Issue #4156 rebuilds the long constrained-mechanics chapter in paired LaTeX/Quarto: mass-metric duality, inertial loads, constrained input rank, grip/ground mechanics, control conditions, identifiability, and geometric phase. Six independent/regression checks pass; Geometry Volume I is rebuilt again for this chapter.
+- Issue #4157 reconciles the long superposition article's three-formulation derivations, summaries, and conclusions; fixes body-frame transport, spatial inertia, 2R inertia, and biological/causal overclaims. Five new checks pass. The first-use counterfactual qualifier and dynamic textbook cross-reference also pass their corrected source checks.
+- Issue #4154 adds corrections to the long tangent reference: evolving residual baseline, transported mixed variations, curvature distinctions, DDP/iLQR, and work/impulse bookkeeping. Final local Python 3.12 suite: 3,712 passed, 29 skipped, 92.32% coverage. The paired tangent PDF is regenerated as the fifth revised publication PDF.
+
+- User-directed long-form technical review is tracked under epic #4009, with concrete fixes #4148–#4151. See `docs/development/technical-review/REVIEW.md` for equations, scope, sources, validation, and remaining route audits.
+- The current correction set repairs inverse-dynamics double subtraction, constraint-force attribution, impedance/inertia confusion, optimal-control derivations, unsupported passive-stabilization claims, and impact/measurement interpretation. Canonical LaTeX and corresponding Quarto chapters are edited together.
+- The motion-control manuscript and Geometry Volume II also receive a coordinate-consistent underactuation treatment, input-feasibility counterexample, and corrected reachability/stability scope. Four affected book PDFs have been regenerated; the complete motion manuscript needed missing chapter macro definitions to compile.
+- Validation: first-wave full suite 3,715 passed, 26 skipped, 92.62% coverage; four subsequent underactuation tests passed; final content lane 128 passed, four skipped. Repository Ruff/Black and CI mypy (74 files) pass. Revised PDF chapter pages were visually inspected; rendered foundation and impact math showed no MathJax error nodes.
+- Full-corpus #4021 and route batches #4054–#4061 remain open. Source enumeration and targeted pattern checks do not constitute a completed technical review of every article. Preserve the immutable upstream monograph boundary.
 
 ## Protected Authority
 

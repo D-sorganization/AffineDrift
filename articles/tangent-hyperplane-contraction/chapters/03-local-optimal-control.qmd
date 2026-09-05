@@ -38,7 +38,7 @@ and substituting back gives the recursion above. Full proof: Anderson & Moore (1
 
 ## Link to DDP
 
-DDP extends this local recursion with repeated model updates and forward rollout, but the local stabilizing core is unchanged [@jacobson1970ddp; @todorov2002optimal].
+DDP extends local quadratic value propagation with dynamics second derivatives and nonlinear forward rollout. Solving a finite-horizon subproblem does not by itself establish stability [@jacobson1970ddp; @todorov2002optimal].
 
 ## Prior Art and What Is New Here
 
@@ -61,11 +61,11 @@ This pedagogical reframing makes the tools accessible to practitioners who need 
 :::{.callout-warning}
 ## Scope and Limitations
 
-- **LQR and DDP solve local optimal control problems, not global ones.** The Riccati recursion gives you the best possible control law in a small neighborhood around your nominal trajectory. But if a disturbance pushes you far from that trajectory, the local LQR law may steer you toward a different (suboptimal or unstable) local basin. We prove optimality within a ball of radius $\epsilon$ around the reference path, but we do not prove the trajectory is globally optimal or that the controller is globally stabilizing. For large perturbations or highly nonlinear systems with multiple modes (like a swing with discrete phases: backswing, downswing, impact, follow-through), this is a serious limitation.
+- **Separate the linear problem from its nonlinear application.** Under positive-semidefinite state costs, positive-definite input costs, and no constraints, finite-horizon LQR is globally optimal for the specified linear model. A trajectory linearization supplies only a local approximation to a nonlinear system. This chapter does not prove a neighborhood of nonlinear optimality or stability. DDP generally seeks a local stationary solution; its quality depends on initialization, derivatives, constraints, and termination checks.
 
-- **The derivation assumes controllability of the linearization.** The Riccati equation requires that the linearization be controllable. *Caveat:* For a time-varying linearization $\dot{\delta x} = A(t)\delta x + B(t)\delta u$, the correct test is the **controllability Gramian** $W_c(t_0, t_1) = \int_{t_0}^{t_1} \Phi(t_0, s) B(s) B(s)^\top \Phi(t_0, s)^\top \, ds$ being full-rank, not the constant-coefficient rank condition $\rank[B, AB, A^2B, \ldots] = n$ (which applies only to LTI systems). Applying the constant-matrix rank test to a time-varying linearization is a frozen-time approximation that holds exactly only at fixed operating points; along a trajectory, use the Gramian. If the linearization is uncontrollable (either exactly or nearly so), the Riccati equation becomes singular and the LQR framework breaks. Verifying controllability for high-dimensional nonlinear systems is nontrivial in general.
+- **Finite-horizon LQR does not require controllability.** With $Q,Q_T\succeq0$ and $R\succ0$, the Riccati recursion remains well defined even for $B=0$. For example, $\dot x=x$, $B=0$, $Q=1$, and zero terminal cost give $S(t)=(e^{2(T-t)}-1)/2$, finite on every finite horizon. Infinite-horizon stabilization is a different question: stabilizability and detectability are standard sufficient assumptions for the time-invariant stabilizing solution. For time-varying endpoint reachability, inspect $W_c=\int_{t_0}^T\Phi(T,s)B(s)B(s)^T\Phi(T,s)^T\,ds$, where $\Phi$ is the state-transition matrix. A hard terminal constraint can be infeasible even when unconstrained LQR is well posed.
 
-- **The cost function heavily influences the result, and there is no principled way to choose it.** The "optimal" control law depends entirely on your choice of $Q$ (state cost) and $R$ (control cost). Different choices yield wildly different behaviors. A coach and a roboticist will optimize different cost functions, arriving at different "optimal" swings. The LQR framework is silent on whether your cost function is biomechanically sensible, energetically efficient, or injury-avoiding. You are choosing your goal (implicitly) through matrix entries, and if your goal is stated badly, your "optimal" solution will achieve that bad goal perfectly.
+- **The cost specifies the question.** Choose state and input scales, connect weights to measurable objectives, and report sensitivity to alternative weights. Squared torque, mechanical work, impact accuracy, and injury-related loading are distinct quantities. A model optimum is not proof that the nervous system uses that cost or that it is clinically safe.
 
 :::
 

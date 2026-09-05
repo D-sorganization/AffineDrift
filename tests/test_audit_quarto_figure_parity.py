@@ -267,13 +267,14 @@ class TestAuditBookPhysicsOfGolf:
 
         assert res.book_name == "The_Physics_of_Golf"
         assert res.total_chapters == 34
-        assert res.chapters_with_latex_figures == 29
-        assert res.total_latex_figures == 31
-        assert res.total_latex_tikz == 31
+        # #4149 removes two unsupported physiological diagrams from chapter 9b.
+        assert res.chapters_with_latex_figures == 28
+        assert res.total_latex_figures == 29
+        assert res.total_latex_tikz == 29
         assert res.total_latex_includegraphics == 0
-        assert res.total_latex_fig_labels == 31
+        assert res.total_latex_fig_labels == 29
         assert res.total_quarto_figures == 0
-        assert res.missing_figures_count == 31
+        assert res.missing_figures_count == 29
         assert res.is_in_full_parity is False
 
 
@@ -355,7 +356,7 @@ class TestCLI:
         data = json.loads(captured.out)
         assert data["book_name"] == "The_Physics_of_Golf"
         assert data["total_chapters"] == 34
-        assert data["total_latex_figures"] == 31
+        assert data["total_latex_figures"] == 29
 
     def test_cli_check_mode_fails_when_discrepancy(self) -> None:
         repo_root = Path(__file__).resolve().parent.parent

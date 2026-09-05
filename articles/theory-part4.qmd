@@ -72,7 +72,7 @@ This Part IV collects the detailed mathematical proofs that substantiate those a
 
 ::: {.callout-important}
 ## Critical Assumption: Fixed Grip Impedance
-The derivations in this appendix treat the grip boundary condition as a fixed mechanical constraint: the hand is clamped with constant stiffness and damping (the "Effective Plant" impedance). Physiologically, grip stiffness modulates with muscle activation, which is part of the input $u$. If grip impedance were state-dependent or input-dependent, the boundary conditions defining the modal shapes would depend on $u$, making the inertia matrix $M(q,\eta,u)$ input-dependent and violating the affine structure. To preserve the validity of the control-affine form $\dot{x} = f(x) + G(x)u$, we assume constant boundary conditions. This is justified during the ballistic phases of the swing (takeaway through impact), where grip adjustments are minimal; it may fail during the address or follow-through. All results in this Part IV assume this constant impedance context.
+A clamped grip fixes relative displacement and rotation and idealizes infinite stiffness. Finite grip compliance instead contributes elastic and damping forces and may require extra coordinates. Changing stiffness does not directly add to physical inertia. A state-dependent impedance can preserve control-affinity; an excitation-dependent force law must be examined in its declared input. The frozen-grip counterfactual is an assumption to test over the chosen horizon, not evidence that golfers hold impedance constant.
 :::
 
 This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid--flexible dynamics produce the affine decomposition
@@ -324,11 +324,11 @@ for a clamped handle, and free-tip conditions at $s=L$:
 
 $$EI\,w_{ss}(L,t) = 0, \qquad EI\,w_{sss}(L,t) = 0.$$
 
-These constraints define the mode shapes used in the modal expansion.
+These free-tip conditions define an unloaded reference beam. A shaft carrying a clubhead instead has dynamic tip force and moment conditions. If unloaded-beam shapes are used as assumed basis functions, include the clubhead mass and rotary inertia in the assembled matrices and verify convergence; they are not exact eigenmodes of the loaded club.
 
 ::: {.callout-note}
 ## Input-Dependent Boundary Conditions (Note on Grip Impedance)
-Theoretically, the "clamped" boundary condition ($w(0,t)=0, w_s(0,t)=0$) implies an infinitely stiff grip. In reality, grip impedance varies with muscle activation, which is part of the input $u$. If the boundary conditions depended on $u$, the mode shapes $\phi_i$ and consequently the mass matrix $M$ would become input-dependent ($M(u)$), breaking the affine structure. To preserve the validity of the decomposition $\dot{x} = f(x) + G(x)u$, we formally adopt the **Constant Impedance Assumption**: the grip is treated as a fixed mechanical constraint defining the "Effective Plant" for the swing. The input $u$ is the torque applied *to* this plant, not a parameter that reshapes it.
+A clamped grip fixes relative displacement and rotation and idealizes infinite stiffness. Finite grip compliance instead contributes elastic and damping forces and may require extra coordinates. Changing stiffness does not directly add to physical inertia. A state-dependent impedance can preserve control-affinity; an excitation-dependent force law must be examined in its declared input. The frozen-grip counterfactual is an assumption to test over the chosen horizon, not evidence that golfers hold impedance constant.
 :::
 
 ### Modal Expansion
@@ -357,7 +357,7 @@ Substituting the modal expansion into the beam equation and projecting onto each
 
 ::: {.callout-note}
 ## Sufficient Modes for Golf Shafts
-In practice, how many modes $m$ are required to capture shaft dynamics in the golf swing? For typical golf club shafts (length 0.9 m, hollow steel or composite), empirical studies show that the first 2–3 bending modes capture more than 95% of the shaft's kinetic and strain energy during the swing. Higher modes have natural frequencies (20+ Hz) that are damped by grip compliance and rarely excited by the joint-driven excitation of the swing (which typically has energy content up to 10–15 Hz). For theoretical completeness, we retain the full modal series; in practice, truncating at $m = 2$ or $m = 3$ yields excellent fidelity while reducing computational cost.
+Choose the retained modes by convergence of the specific outputs: tip deflection, delivered loft, speed, strain energy and interface loads may require different bandwidths. No source or dataset here establishes a universal 2–3-mode or 95% fidelity claim. Include tip mass/inertia, grip conditions, material variation and excitation bandwidth when testing truncation.
 :::
 
 ### Modal Equations of Motion
@@ -368,24 +368,24 @@ $$\ddot{\eta}_i
   + 2\,\zeta_i \omega_i\,\dot{\eta}_i
   + \omega_i^2 \eta_i
   =
-  Q_i(q,\dot{q}),$$
+  Q_i(q,\dot{q},\ddot{q},\eta,\dot\eta),$$
 
 for $i = 1,\dots,m$, where:
 
 - $\omega_i$ is the natural frequency of mode $i$,
 - $\zeta_i$ is the modal damping ratio (derived from $c_b$),
-- $Q_i(q,\dot{q})$ are generalized modal forces induced by handle motion.
+- $Q_i(q,\dot{q},\ddot{q},\eta,\dot\eta)$ are generalized modal forces induced by handle motion.
 
 Collecting terms,
 
-$$\ddot{\eta} + C_s \dot{\eta} + K_s \eta = Q(q,\dot{q}),$$
+$$\ddot{\eta} + C_s \dot{\eta} + K_s \eta = Q(q,\dot{q},\ddot{q},\eta,\dot\eta),$$
 
 where:
 
 $$K_s = \mathrm{diag}(\omega_1^2,\dots,\omega_m^2),\qquad
 C_s = \mathrm{diag}(2\zeta_1\omega_1,\dots,2\zeta_m\omega_m).$$
 
-These matrices match those used in the main text, where the shaft forces enter the drift term.
+These diagonal matrices assume mass-normalized eigenmodes and damping diagonal in that basis. With general damping, tip inertia or an assumed basis, retain full modal matrices. Their role corresponds to the matrices used in the main text, where the shaft forces enter the drift term.
 
 ### Preservation of Linear Torque Input
 
@@ -411,7 +411,7 @@ $$u \mapsto \ddot{\eta} \quad \text{is filtered through} \quad \ddot{q}.$$
 
 Hence: **The modal representation does not create any nonlinear torque dependence.**
 
-All flexible-body dynamics remain embedded in the drift vector field $f(x)$.
+Elastic and damping terms enter the drift; coupled inertia also changes $G(x)$.
 
 ## Appendix C: Pendulum Examples
 
@@ -425,7 +425,7 @@ In each case, we show that the equations of motion can be written as
 
 $$\dot{x} = f(x) + G(x)u,$$
 
-with all flexible-shaft contributions confined to the drift term, preserving linearity in the torque input $u$.
+with flexible-shaft restoring terms in the drift and coupled inertia also present in the input map, preserving linearity in the torque input $u$.
 
 ### Planar Rigid Pendulum With Torque Input
 
@@ -557,7 +557,7 @@ $$\begin{bmatrix}
   =
   a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u.$$
 
-**Superposition still holds.** Even though the dynamics are now richer and nonlinear in $(\theta,\eta)$, the torque input still appears linearly as $A_{\mathrm{input}}(x)\,u$. The drift term contains all flexible-shaft effects; any two solutions corresponding to inputs $u_1,u_2$ differ by the same linear map $A_{\mathrm{input}}(x)$ applied to the difference in inputs.
+**Superposition still holds.** Even though the dynamics are now richer and nonlinear in $(\theta,\eta)$, the torque input still appears linearly as $A_{\mathrm{input}}(x)\,u$. At the same state, acceleration differences equal $A_{\mathrm{input}}(x)(u_1-u_2)$. Finite trajectories need not superpose; flexibility changes both drift and input sensitivity.
 
 ::: {.callout-tip}
 ## Worked 2-DOF Example: Concrete Numbers for Rigid + Flexible-Mode Coupling

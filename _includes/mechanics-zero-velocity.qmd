@@ -1,0 +1,53 @@
+The ZVCF is a **state evaluation**, not a trajectory held in equilibrium.
+With $z=(q,\eta)$ and $v=\dot z$, evaluate $h_0(z)=h(z,0)$ while retaining
+the declared deformation, parameters, other internal states, and contact mode.
+For stationary constraints and the smooth mechanical model used here,
+
+$$
+\tau_{\mathrm{ZVCF}}:=-h_0(z),\qquad
+a_{\mathrm{ZVCF}}=-M(z)^{-1}h_0(z).
+$$ {#eq-zvcf_accel}
+
+This uses the **signed drift-force** convention. Software that reports the
+positive holding load instead returns $h_0$; label the sign explicitly.
+In particular,
+
+$$
+\mathrm{ID}(z,0,0)=h_0(z),\qquad
+\mathrm{ID}(z,0,a_{\mathrm{ZVCF}})=0.
+$$ {#eq-zvcf_id}
+
+Holding every coordinate of an underactuated model may require fictitious
+actuators: $h_0$ need not lie in $\operatorname{range}(\bar B)$.
+The formal holding load remains a useful diagnostic, not an executable policy.
+For time-dependent constraints, zero velocity may be inadmissible; use a
+constraint-consistent evaluation rather than silently resetting the state.
+
+At the same configuration, define
+
+$$
+\tau_{\mathrm{vel.\,drift}}:=-[h(z,v)-h(z,0)],\qquad
+\tau_{\text{drift}}=\tau_{\mathrm{ZVCF}}+
+\tau_{\mathrm{vel.\,drift}}.
+$$ {#eq-zvcf_split}
+
+This difference contains every retained term that changes under the specified
+velocity reset, including viscous damping. It is not generally a purely
+inertial term. Velocity reset does not remove stiffness, stored elastic energy,
+activation, or history encoded in retained internal states.
+
+**Force evaluation does not identify stiffness.** Tangent stiffness is a
+derivative of force with respect to displacement under stated loading and
+boundary conditions. Material elasticity and geometric stiffness from
+prestress can both contribute at zero velocity. For a beam under constant
+tension $N>0$, the transverse restoring operator contains
+$EI\,w_{ssss}-N\,w_{ss}$ even when $w_t=0$. Centrifugal loading is one possible
+source of prestress; it is not the definition of geometric stiffness.
+ZVCF subtraction is one reproducible way to partition loads. Direct evaluation
+of the declared equation terms is another. Neither establishes material and
+geometric stiffness separately without the tangent model.
+
+The useful golf question is therefore precise: how much does a specified load
+change when velocity is reset, and how sensitive is the answer to retained
+shaft deformation, grip conditions, and contact? This exposes interactions
+without calling a hypothetical frozen state a physically passive golfer.

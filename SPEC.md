@@ -36,6 +36,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Publish evidence-linked companions to the proximal-distal technical treatment with explicit model and hypothesis boundaries.
 - Pin upstream momentum-transfer agendas, timing-policy viability, and typed-slack identifiability evidence to immutable upstream commits.
 - Maintain textbook bibliographies, citation integrity, and consistent algorithm notation across the series.
+- Keep long-form mechanics and paired textbook arguments consistent about inverse dynamics, constraint reactions, impedance, finite-horizon control, and impact vector geometry; bind numerical examples to independently checked identities and distinguish model predictions from human evidence.
 - Publish technology overviews covering launch-monitor qualification, force measurement, and markerless motion capture.
 - Enforce strict repository root hygiene with an explicit allowlist gating pull requests.
 
@@ -223,12 +224,12 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4153 | Correct long-form mechanics, inverse dynamics, optimal control, passive stabilization, impact, underactuation, variational residuals, constrained geometry, and superposition; synchronize paired editions, regenerate five PDFs, and document the continuing corpus audit under epic #4009. |
 | 2026-09-05 | #4146 | chore(spec): re-vendor spec-changelog helpers and worktree-relative merge driver installer from Repository_Management (#4146) |
 | 2026-09-03 | #4144 | fix(companion, #4142): resolve companion pin routes through Quarto includes so `scripts/check_companion_pins.py` maps underscore-prefixed partials to the rendered pages that transitively include them, unblocking the `Deploy Website` job and the generated freshness dashboard |
 | 2026-09-03 | #1520 | Key SPEC.md change-log rows by pull request instead of the next free serial spec version; add `scripts/check_spec_changelog.py` and `shared_scripts/spec_changelog.py`; make `Spec Version` release-derived via `scripts/bump_spec_version.py`; register the `spec-rows` union merge driver |
 | 2026-09-02 | #4128 | Governance and Root Hygiene Cleanup (spec 1.0.288) |
 | 2026-09-01 | #4104 | Live-Only Observable Retry Closure (spec 1.0.278) |
-
 Archived entry (spec 1.0.288): Governance and Root Hygiene Cleanup (#4128)
 
 Removes root sprawl, stray and duplicate agent assets, and deprecated review files.

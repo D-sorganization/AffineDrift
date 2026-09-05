@@ -1,0 +1,109 @@
+### Recover the Net Wrench Before Interpreting It
+
+Take the club as the system boundary and use one inertial frame. Let $C$ be its
+center of mass, $P$ a grip reference point, and $\mathbf g$ gravitational
+acceleration. For a rigid club with known mass $m$ and inertia $I_C$, the net
+hand-on-club wrench satisfies
+
+$$
+\mathbf F_h=m\mathbf a_C-m\mathbf g-\mathbf F_a,
+$$ {#eq-force_balance}
+
+$$
+\mathbf M_{h,C}=I_C\boldsymbol\alpha+
+\boldsymbol\omega\times(I_C\boldsymbol\omega)-\mathbf M_{a,C}.
+$$
+
+The subscript $a$ collects declared non-hand external loads such as aerodynamics;
+gravity has zero moment about $C$ in a uniform field. Include collision or turf
+loads when present. Inertia, angular velocity, acceleration and moments must be
+expressed consistently. For a flexible club, use the sum of segment momentum
+balances or the distributed model; one rigid-body inertia is an approximation.
+
+Translate the **same** hand wrench using
+
+$$
+\mathbf M_{h,P}=\mathbf M_{h,C}
++(\mathbf r_C-\mathbf r_P)\times\mathbf F_h.
+$$ {#eq-moment_balance}
+
+For any two reporting points, the general rule is
+
+$$
+\mathbf M_{h,Q}=\mathbf M_{h,P}
++(\mathbf r_P-\mathbf r_Q)\times\mathbf F_h.
+$$ {#eq-couple_transform}
+
+The sign follows directly from moments of the original forces. A pure couple
+is independent of reference point; the moment component of a general wrench
+with nonzero force is not. These are standard wrench transformations
+[@lynch2017modern, chap. 3].
+
+For example, a force $(0,4,0)$ N applied at $(0.5,0,0)$ m produces a moment
+$(0,0,2)$ N m about the origin and zero moment about its application point.
+The physical load did not change. It is inappropriate to label the two reported
+moments different twisting actions by the hands.
+
+### What Remains Unidentified
+
+For two contact points with forces $\mathbf F_1,\mathbf F_2$ and local couples
+$\mathbf C_1,\mathbf C_2$, the net wrench gives six balance equations:
+
+$$
+\mathbf F_h=\mathbf F_1+\mathbf F_2,\qquad
+\mathbf M_{h,P}=\sum_{i=1}^2
+\left[(\mathbf r_i-\mathbf r_P)\times\mathbf F_i+\mathbf C_i\right].
+$$
+
+There are generally more unknowns than observations. Even with zero local
+couples, an equal-and-opposite force pair along the line joining the two contact
+points leaves both net force and moment unchanged. Thus a known resultant does
+not identify bilateral grip squeeze, finger pressures or joint tissue loading.
+An instrumented grip or independently validated contact model adds information;
+a pseudoinverse only selects a solution according to a mathematical metric.
+
+The relation $\tau=J^\mathsf{T}w$ maps a specified external wrench to its
+generalized load by virtual power. It does not turn an arbitrary net actuator
+torque into the uniquely measured wrench at one hand. A pseudoinverse requires
+a consistency check, its null space, a force/moment scaling convention, and a
+physical allocation model.
+
+### Power Is Invariant Under a Consistent Reference Change
+
+For two material points on the same rigid body,
+$\mathbf v_Q=\mathbf v_P+\boldsymbol\omega\times(\mathbf r_Q-\mathbf r_P)$.
+Consequently,
+
+$$
+\mathbf F_h\cdot\mathbf v_P+\mathbf M_{h,P}\cdot\boldsymbol\omega
+=\mathbf F_h\cdot\mathbf v_Q+\mathbf M_{h,Q}\cdot\boldsymbol\omega.
+$$
+
+The force and moment power components can change separately while their sum
+does not. A comparison of "force-driven" and "couple-driven" power must declare
+the reporting point. For a flexible grip/shaft, use velocities at the actual
+ports and include deformation power; rigid transport is not exact.
+
+### Account for Missing Loads Without Double Counting
+
+If aerodynamic force and moment are omitted while measured motion is held
+fixed, the inferred hand wrench is biased by
+
+$$
+\Delta\mathbf F_h=\mathbf F_a,\qquad
+\Delta\mathbf M_{h,P}=\mathbf M_{a,C}
++(\mathbf r_C-\mathbf r_P)\times\mathbf F_a=\mathbf M_{a,P}.
+$$
+
+The omitted force's change in moment arm is already included in this wrench
+translation. Do not add it again to a drag moment already reported about $P$.
+For the illustrative force $(0,-8,0)$ N at $(0.6,0,0)$ m relative to the grip,
+with zero intrinsic aerodynamic couple, the omitted moment is $(0,0,-4.8)$ N m.
+These are chosen numbers, not measurements of a particular club or golfer.
+
+Drag opposes velocity relative to the air; lift and aerodynamic couples need
+separate directions. The coefficient, projected area, orientation, relative
+wind and center of pressure must be supplied to make a quantitative estimate.
+The fractional error in a small inferred grip moment can be large even when
+the aerodynamic force is small relative to another load. That is a sensitivity
+statement, not a general percentage correction to every swing.

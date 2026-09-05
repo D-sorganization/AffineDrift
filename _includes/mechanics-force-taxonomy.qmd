@@ -1,0 +1,62 @@
+For $M\dot v+h=\bar B u$, the following quantities have distinct meanings.
+Evaluate every row at the same declared state and in the same coordinates.
+
+| Quantity | Definition | Interpretation |
+|---|---|---|
+| Applied Generalized Load | $\tau_{\mathrm{ID}}=M\dot v+h$ | Net input required by the declared inverse-dynamics model |
+| Resultant Generalized Load | $\tau_{\text{total}}=M\dot v$ | Right-hand side of the acceleration balance |
+| Configuration Drift | $\tau_{\mathrm{ZVCF}}=-h(z,0)$ | Signed load at the specified velocity-reset state |
+| Velocity-Dependent Drift | $-[h(z,v)-h(z,0)]$ | Difference under that reset, including retained damping |
+| Declared Input Contribution | $\tau_{\text{input}}=\bar B u$ | Applied generalized load, not muscle-force allocation |
+
+: Generalized-Load Bookkeeping {#tbl-taxonomy}
+
+The first row must not also be called the sum of drift and input. Doing so
+counts $h$ twice. In redundant coordinates, constraint forces require their own
+balance; uniqueness of net reduced torque does not establish unique actuator,
+muscle, or bilateral hand-force allocation [@lynch2017modern].
+
+For a chosen, identifiable reaction output in a fixed smooth contact mode,
+substituting acceleration into the reaction equations can yield
+$r(x,u)=r_d(x)+R_u(x)u$. A same-state subtraction then gives
+$r(x,u)-r(x,0)=R_u(x)u$. Declare the reference point, frame, sign and force/moment
+components. The result for a wrench is not obtained by relabeling an actuator
+torque. Changes of mode, friction branches or unidentified internal forces
+require additional treatment.
+
+There is no universal fourth "mixed force" equal to total minus a forward
+ZTCF load minus a ZVCF load. That expression can subtract overlapping baseline
+terms at different states. To investigate interactions, define two interventions
+and a common outcome $Y$: the contrast
+$Y_{11}-Y_{10}-Y_{01}+Y_{00}$ measures nonadditivity for those interventions and
+that outcome. It is not a new physical force or a unique anatomical cause.
+
+### How Geometry, Energy, and Torque Work Together
+
+Past torque changes the present configuration, speed, and elastic deformation.
+Those states change both the drift and the input-to-acceleration map. Current
+torque then acts through that changed geometry. A shaft can store and return
+energy, but it does not create energy; compare complete endpoint energy and
+work balances when changing shaft or timing parameters.
+
+For time-independent kinetic and potential energy and ideal stationary
+constraints, the total mechanical energy satisfies
+
+$$
+\dot E=v^\mathsf{T}\bar B u-v^\mathsf{T}d+P_{\mathrm{external}},
+\qquad E=\tfrac12v^\mathsf{T}Mv+V.
+$$
+
+The inertial/Coriolis terms redistribute motion consistently with this balance;
+their individual magnitudes are not independent energy sources. At an internal
+interface, equal and opposite wrenches cancel in the whole-system balance but
+can transfer power between segments. A segment slowing down does not by itself
+show that its energy went into the club: examine joint force power, moment
+power, elastic storage and external work [@featherstone2008rigid].
+
+A torque's sign alone does not identify braking. For one angular coordinate,
+$P=\tau\dot q$ is negative when the torque opposes velocity. Zero power does
+not imply zero muscle effort, and large normal force can redirect motion while
+doing little instantaneous work at a specified moving point. This distinction
+connects hand-path geometry, energy transfer and delivery without conflating
+force, impulse, work, tissue load and neural strategy.
