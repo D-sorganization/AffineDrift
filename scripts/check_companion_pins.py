@@ -16,10 +16,15 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import functools
 import json
 import re
+import shutil
+import subprocess
 import sys
 from pathlib import Path
+
+import yaml
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -44,9 +49,89 @@ EXCLUDED_PARTS = ("docs", "node_modules", "_freeze", ".quarto", "Drafts_Original
 EXCLUDED_SUFFIXES = ("_CRITIC.qmd", "INLINE_SUGGESTIONS.md")
 # The freshness dashboard is generated *from* the pin file, so it must not feed it.
 EXCLUDED_FILES = ("models/programming/freshness.qmd",)
+DEFAULT_RENDER_RULES: tuple[str, ...] = (
+    "*.qmd",
+    "pages/**/*.qmd",
+    "reports/scientific-claim-audit.md",
+    "resources/**/*.qmd",
+    "models/**/*.qmd",
+    "repositories/**/*.qmd",
+    "articles/**/*.qmd",
+    "!articles/tangent-hyperplane-contraction/**/*.qmd",
+    "!articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd",
+    "!articles/tangent-hyperplane-articles/Drafts_Original_Articles/**/*.qmd",
+    "!articles/tangent-hyperplane-articles/Advanced/*_CRITIC.qmd",
+    "!articles/proximal_distal_companion/chapters/**/*.qmd",
+    "!articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+    "books/**/*.qmd",
+    "critiques/index.qmd",
+    "critiques/*.md",
+    "!critiques/INLINE_SUGGESTIONS.md",
+)
 
 
-def _is_site_source(path: Path) -> bool:
+def _glob_to_regex(pattern: str) -> re.Pattern[str]:
+    parts: list[str] = []
+    i = 0
+    n = len(pattern)
+    while i < n:
+        if pattern[i : i + 4] == "/**/":
+            parts.append(r"/(?:.+/)?")
+            i += 4
+        elif pattern[i : i + 3] == "/**":
+            parts.append(r"(?:/.*)?")
+            i += 3
+        elif pattern[i : i + 2] == "**/":
+            parts.append(r"(?:.*/)?")
+            i += 2
+        elif pattern[i : i + 2] == "**":
+            parts.append(r".*")
+            i += 2
+        elif pattern[i] == "*":
+            parts.append(r"[^/]*")
+            i += 1
+        elif pattern[i] == "?":
+            parts.append(r"[^/]")
+            i += 1
+        else:
+            parts.append(re.escape(pattern[i]))
+            i += 1
+    return re.compile(r"^" + "".join(parts) + r"$")
+
+
+@functools.lru_cache(maxsize=32)
+def load_render_rules(
+    root: Path = ROOT,
+) -> tuple[tuple[re.Pattern[str], ...], tuple[re.Pattern[str], ...]]:
+    """Load include and exclude regexes from _quarto.yml, falling back to ROOT or defaults."""
+    quarto_yml = root / "_quarto.yml"
+    if not quarto_yml.is_file() and root != ROOT:
+        quarto_yml = ROOT / "_quarto.yml"
+    raw_rules: list[str] = []
+    if quarto_yml.is_file():
+        try:
+            data = yaml.safe_load(quarto_yml.read_text(encoding="utf-8"))
+            if isinstance(data, dict):
+                render = data.get("project", {}).get("render")
+                if isinstance(render, list):
+                    raw_rules = [str(r) for r in render]
+        except (OSError, yaml.YAMLError):
+            pass
+    if not raw_rules:
+        raw_rules = list(DEFAULT_RENDER_RULES)
+
+    include_patterns: list[re.Pattern[str]] = []
+    exclude_patterns: list[re.Pattern[str]] = []
+    for rule in raw_rules:
+        if rule.startswith("!"):
+            exclude_patterns.append(_glob_to_regex(rule[1:]))
+        else:
+            include_patterns.append(_glob_to_regex(rule))
+    return tuple(include_patterns), tuple(exclude_patterns)
+
+
+def _is_scannable(path: Path) -> bool:
+    """Return True if path is a candidate site document (rendered page or partial)."""
     if any(part in EXCLUDED_PARTS for part in path.parts):
         return False
     if path.name.endswith(EXCLUDED_SUFFIXES):
@@ -54,23 +139,48 @@ def _is_site_source(path: Path) -> bool:
     if path.as_posix() in EXCLUDED_FILES:
         return False
     if path.suffix == ".qmd":
-        return (
-            "tangent-hyperplane-contraction" not in path.parts or path.name != "textbook-main.qmd"
-        )
+        return True
     rel = path.as_posix()
     return rel.startswith("critiques/") or rel == "reports/scientific-claim-audit.md"
 
 
-def site_sources(root: Path) -> list[Path]:
-    """Return rendered source files, repository-relative, in a stable order."""
+def _is_site_source(path: Path, root: Path = ROOT) -> bool:
+    """Return True when Quarto renders path as a standalone page."""
+    try:
+        rel_path = path.relative_to(root)
+    except ValueError:
+        rel_path = path
+    if any(part in EXCLUDED_PARTS for part in rel_path.parts):
+        return False
+    if rel_path.name.endswith(EXCLUDED_SUFFIXES):
+        return False
+    posix = rel_path.as_posix()
+    if posix in EXCLUDED_FILES:
+        return False
+    if any(part.startswith("_") for part in rel_path.parts):
+        return False
+    include_patterns, exclude_patterns = load_render_rules(root)
+    if any(rx.match(posix) for rx in exclude_patterns):
+        return False
+    return any(rx.match(posix) for rx in include_patterns)
+
+
+def site_sources(root: Path, *, include_partials: bool = False) -> list[Path]:
+    """Return site sources, repository-relative, in a stable order.
+
+    When include_partials is True, include partials and excluded chapters are
+    retained so scan_site_pins can discover pins within them. When False,
+    only documents that Quarto renders as standalone public routes are returned.
+    """
     candidates = [*root.rglob("*.qmd"), *(root / "critiques").glob("*.md")]
     audit = root / "reports/scientific-claim-audit.md"
     if audit.is_file():
         candidates.append(audit)
+    predicate = _is_scannable if include_partials else (lambda p: _is_site_source(p, root=root))
     return sorted(
         path.relative_to(root)
         for path in candidates
-        if path.is_file() and _is_site_source(path.relative_to(root))
+        if path.is_file() and predicate(path.relative_to(root))
     )
 
 
@@ -79,14 +189,14 @@ def route_for(source: Path) -> str:
     return "/" + source.with_suffix(".html").as_posix()
 
 
-def renders_standalone(source: Path) -> bool:
+def renders_standalone(source: Path, root: Path = ROOT) -> bool:
     """Return True when Quarto renders this source as its own page.
 
     Quarto never renders a file or directory whose name begins with an
-    underscore: those are include partials (``{{< include ... >}}``) whose
-    content is published through the document that includes them.
+    underscore (those are include partials), nor documents excluded by the
+    project render set in _quarto.yml.
     """
-    return not any(part.startswith("_") for part in source.parts)
+    return _is_site_source(source, root=root)
 
 
 def include_parents(root: Path, sources: list[Path]) -> dict[Path, set[Path]]:
@@ -106,7 +216,7 @@ def include_parents(root: Path, sources: list[Path]) -> dict[Path, set[Path]]:
     return parents
 
 
-def routes_for(source: Path, parents: dict[Path, set[Path]]) -> list[str]:
+def routes_for(source: Path, parents: dict[Path, set[Path]], root: Path = ROOT) -> list[str]:
     """Return the public routes that publish ``source``.
 
     A standalone source publishes itself; a partial publishes through every
@@ -120,7 +230,7 @@ def routes_for(source: Path, parents: dict[Path, set[Path]]) -> list[str]:
         if current in seen:
             continue
         seen.add(current)
-        if renders_standalone(current):
+        if renders_standalone(current, root=root):
             routes.add(route_for(current))
             continue
         pending.extend(parents.get(current, set()))
@@ -131,7 +241,7 @@ def scan_site_pins(root: Path) -> tuple[dict[str, list[str]], list[str]]:
     """Return {full_sha: [routes]} and findings for abbreviated SHAs."""
     pins: dict[str, set[str]] = {}
     findings: list[str] = []
-    sources = site_sources(root)
+    sources = site_sources(root, include_partials=True)
     parents = include_parents(root, sources)
     for source in sources:
         text = (root / source).read_text(encoding="utf-8", errors="replace")
@@ -140,7 +250,7 @@ def scan_site_pins(root: Path) -> tuple[dict[str, list[str]], list[str]]:
             if not FULL_SHA.fullmatch(sha):
                 findings.append(f"{source.as_posix()}: abbreviated UpstreamDrift pin {sha}")
                 continue
-            routes = routes_for(source, parents)
+            routes = routes_for(source, parents, root=root)
             if not routes:
                 findings.append(
                     f"{source.as_posix()}: UpstreamDrift pin {sha[:8]} sits in a partial that "
@@ -267,6 +377,21 @@ def dump(document: dict[str, object]) -> str:
     return json.dumps(document, indent=2, sort_keys=True) + "\n"
 
 
+def _format_with_prettier(path: Path) -> None:
+    """Format path with prettier if npx is available."""
+    npx = shutil.which("npx") or shutil.which("npx.cmd")
+    if npx and path.is_file():
+        try:
+            subprocess.run(
+                [npx, "prettier", "--write", str(path)],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except OSError:
+            pass
+
+
 def main(argv: list[str] | None = None) -> int:
     """CLI entrypoint."""
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n", maxsplit=1)[0])
@@ -290,6 +415,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.write:
         pins_path.parent.mkdir(parents=True, exist_ok=True)
         pins_path.write_text(dump(refreshed), encoding="utf-8", newline="\n")
+        _format_with_prettier(pins_path)
         for line in drift:
             write_stdout(f"updated: {line}")
     else:
