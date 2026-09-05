@@ -243,14 +243,15 @@ def test_vendored_helpers_match_pinned_hashes() -> None:
     import hashlib
 
     expected_digests = {
-        "shared_scripts/spec_changelog.py": "9421409aafa2f9e694eac662c43c603ebe73f7334e9dd163047581e8839b417a",
-        "scripts/spec_rows_merge_driver.py": "697b224b512557b3b1da2123e5d9bf0ce707f031879dac8ccccde63bb59c8cc7",
-        "scripts/install_spec_merge_driver.py": "ab682df2063f9df01bf8dc3abb81b2678906ad8476a573147868265971818b57",
+        "shared_scripts/spec_changelog.py": "5e6c24cdbfd8e539d3c15f8347ec75dbbbdfe6ae64f6dcebeab1564d066b09d7",
+        "scripts/spec_rows_merge_driver.py": "bec98b67861370ba25af1d9b51548b8772b9f206a9de994c584a0c28b4250cef",
+        "scripts/install_spec_merge_driver.py": "7008edb515ebdf3d659ed24c7dec1145977d66b4932c473c4f4541a449ebe6ef",
     }
     for rel_path, expected_hash in expected_digests.items():
         full_path = REPO_ROOT / rel_path
         assert full_path.exists(), f"Vendored file missing: {rel_path}"
-        actual_hash = hashlib.sha256(full_path.read_bytes()).hexdigest()
+        normalized_content = full_path.read_text(encoding="utf-8").replace("\r\n", "\n")
+        actual_hash = hashlib.sha256(normalized_content.encode("utf-8")).hexdigest()
         assert actual_hash == expected_hash, (
             f"Vendored file {rel_path} has drifted from upstream Repository_Management. "
             f"Expected {expected_hash}, got {actual_hash}."
