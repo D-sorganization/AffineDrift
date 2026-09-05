@@ -492,313 +492,400 @@ A model comparison needs matched ball, surface, speed, local normal, strike, mas
 
 ## Part V: Aerodynamics and Trajectory
 
-### V.1 The Regime
+The collision supplies the ball's launch state. Aerodynamics maps that state to a flight, and the landing interaction maps the arriving state to bounce and roll. Each stage changes what the next stage receives. A carry estimate therefore cannot be read backwards as a unique diagnosis of the swing.
 
-A golf ball spends its entire flight at Reynolds numbers of roughly $0.9$–$2.6 \times 10^5$ (42.67 mm diameter; the exact figure moves about 20% between 0 °C and 30 °C through viscosity alone, which is a real temperature effect independent of air density). Driver launch is near $2.3 \times 10^5$, decaying to about $1 \times 10^5$ at landing.
+### V.1 Air-Relative Velocity and Force Conventions
 
-That window is chosen. A **smooth** sphere has its drag crisis at $Re \approx 3.7 \times 10^5$ — above everything a golf ball ever does, so a smooth ball would fly its whole flight subcritical at $C_D \approx 0.5$. Dimples pull the crisis down by nearly an order of magnitude, to roughly $5 \times 10^4$ for Bearman and Harvey's deep dimples and about $9 \times 10^4$ for shallower modern ones. The ball therefore flies **entirely supercritical**, at $C_D \approx 0.25$ instead of 0.5.
+Let $\mathbf r$ and $\mathbf v$ be ground-frame position and velocity, and let $\mathbf u_a(\mathbf r,t)$ be wind velocity in the same frame. Define
 
-The spin ratio $S = \omega R / V$ runs from about 0.10 for a driver at launch to 0.7 or more for a wedge, and **rises through flight** as speed decays faster than spin.
+$$
+\mathbf w=\mathbf v-\mathbf u_a,\qquad
+V_a=\|\mathbf w\|,\qquad A=\pi R^2.
+$$
 
-### V.2 What Dimples Actually Do
+For a spherical, spin-averaged model with isotropic moment of inertia $I_b$,
 
-The standard explanation — "dimples trip the boundary layer turbulent" — is incomplete. [Choi, Jeon & Choi (2006)](https://doi.org/10.1063/1.2191848) measured the real mechanism on a 150 mm, 392-dimple sphere dynamically similar to a real ball:
+$$
+\dot{\mathbf r}=\mathbf v,\qquad
+m\dot{\mathbf v}=m\mathbf g+\mathbf F_D+\mathbf F_L,
+\qquad I_b\dot{\boldsymbol\omega}=\boldsymbol\tau_a.
+$$
 
-1. Each dimple causes **local** separation at its leading edge.
-2. The separating shear layer goes unstable, generating high turbulence intensity. Smoke-wire visualisation showed **no discrete vortex pairs**, disproving Bearman and Harvey's original conjecture.
-3. Flow **reattaches inside the dimple**, forming a separation bubble now carrying high near-wall momentum.
-4. That momentum survives the rear adverse pressure gradient, delaying main separation from 82° (smooth) to **110°** — a narrower wake and lower pressure drag.
+The position derivative remains the **ground-frame** velocity. Replacing every occurrence of velocity by air-relative velocity would incorrectly move the ball's position with the air.
 
-The elegant part is *why* $C_D$ is then nearly flat with $Re$, which is the signature golf-ball behaviour that distinguishes it from a sand-roughened sphere. As $Re$ rises the *first* separating dimple moves upstream, but the **last reattachment always occurs at the same dimple**. Fixed last-reattachment gives a fixed separation angle, and a fixed separation angle gives a constant $C_D$.
+For nonzero $V_a$, use
 
-Below about $Re = 5 \times 10^4$ the shear layer carries energy only at low frequencies, the bubble cannot form, and **dimples stop reducing drag altogether**. That sets the lower bound of the useful regime — and a golf ball only approaches it at the very end of its flight.
+$$
+\mathbf F_D=-\tfrac12\rho A C_D V_a\mathbf w.
+$$
 
-There is also a cost that is rarely acknowledged, and it is larger than most treatments admit. [Beratlis, Balaras & Squires (2019)](https://doi.org/10.1017/jfm.2019.647) put the comparison bluntly in their abstract:
+When $\boldsymbol\omega\times\mathbf w\ne0$, define
 
-> It is well established that dimples accelerate the drag crisis on a sphere. The result of the early drag crisis is a reduction of the drag coefficient by more than a factor of two when compared to a smooth sphere at the same Reynolds number. However, when the drag coefficients for smooth and dimpled spheres in the **post-critical** regime are compared, the latter is higher **by a factor of two to three**.
+$$
+\hat{\boldsymbol\ell}
+=\frac{\boldsymbol\omega\times\mathbf w}
+{\|\boldsymbol\omega\times\mathbf w\|},
+\qquad
+\mathbf F_L=\tfrac12\rho A C_L V_a^2\hat{\boldsymbol\ell}.
+$$
 
-Their explanation is that dimples **impose a local drag penalty** — a direct in-dimple contribution — rather than acting purely indirectly by energising near-wall flow and delaying separation. That is why a dimpled ball's $C_D \approx 0.25$ never approaches a smooth sphere's post-critical minimum of 0.07–0.1.
+Here $C_D\ge0$ and $C_L$ is signed: negative $C_L$ reverses the stated lift direction. With forward $+x$, upward $+y$, and rightward $+z$, positive backspin is $+\omega_z$, which gives upward lift for forward motion.
 
-Dimples are not free. They buy separation delay by paying surface drag, and the trade is favourable only because a golf ball would otherwise spend its entire flight stuck subcritical at $C_D \approx 0.5$ — as §V.1 established, the smooth-sphere drag crisis sits above anything a golf ball ever reaches.
+A scalar $C_L$ defined for spin perpendicular to flow cannot automatically describe arbitrary axial spin. A general model must state its dependence on spin-axis inclination. At zero transverse spin the symmetric Magnus contribution needs a continuous zero-spin limit; a unit vector obtained by dividing a zero cross product is undefined. At zero airspeed the force law likewise needs its limiting definition. Orientation-dependent side forces require a richer model than the two terms above.
 
-::: {.callout-note}
-## A Figure We Removed, and What Tracing It Turned Up
+These conventions give two useful checks:
 
-An earlier version of this section stated that the local penalty accounts for "up to 60% of total drag." We removed it, and the trace is instructive.
+$$
+\mathbf F_D\cdot\mathbf w
+=-\tfrac12\rho A C_D V_a^3\le0,
+\qquad
+\mathbf F_L\cdot\mathbf w=0.
+$$
 
-That number appears in **exactly one document** — a 2024 preprint, which renders it as "accounting for up to 60% of the total drag." The *same research group's* peer-reviewed paper describes the result differently: that dimples "incur a local pressure penalty which increased the total drag force by **approximately 50%**."
+They are air-relative power statements. Wind can supply ground-frame mechanical energy: a ball travelling forward more slowly than a following air mass can experience forward drag. In still air, lift does no instantaneous translational work, but it changes trajectory, flight time, gravity's contribution, and the drag accumulated later. “Lift does no work” does not mean lift has no effect on carry.
 
-Those are not two phrasings of one number. **"60% *of* the total drag" is a share; "increased total drag *by* 50%" is an increment.** They cannot both be restatements of the same quantity, and neither is checkable, because the primary is closed-access with no preprint and no repository copy — confirmed against three independent open-access indexes.
+### V.2 A Flight Traces a Path Through Aerodynamic Conditions
 
-We therefore cite neither. The factor-of-two-to-three comparison quoted above is verbatim from the abstract and is what the claim rests on. This is a small example of a general hazard: a number that has been through one paraphrase can arrive looking precise while having changed meaning.
-:::
+With dynamic viscosity $\mu$ and kinematic viscosity $\nu=\mu/\rho$,
 
-### V.3 The Models, and What They Actually Contain
+$$
+Re=\frac{2RV_a}{\nu},\qquad
+S=\frac{R\|\boldsymbol\omega\|}{V_a}.
+$$
 
-Three wind-tunnel and trajectory models underpin essentially all golf-ball trajectory computation.
+The spin ratio uses radius. A convention using diameter is twice this value; a torque coefficient also changes when its reference length changes. Revolutions per minute must be converted to radians per second before insertion into $S$.
 
-**Bearman & Harvey (1976)** remains the most complete published dataset: 2.5× scale hollow models on a 0.5 mm support wire, $Re = 0.4$–$2.4 \times 10^5$, spin to 6,000 rpm, round versus hexagonal dimples. Representative digitized values for a conventional round-dimpled ball in the post-critical regime:
+For an illustrative diameter of 42.7 mm and $\nu=1.5\times10^{-5}$ m$^2$/s, airspeeds of 20, 40 and 75 m/s give approximately $5.69\times10^4$, $1.14\times10^5$ and $2.14\times10^5$. These are operating points, not universal launch or landing conditions.
 
-| $S = \omega R/V$ | $C_D$ | $C_L$ |
-|---|---|---|
-| 0.05 | 0.264 | 0.111 |
-| 0.10 | 0.267 | 0.144 |
-| 0.15 | 0.283 | 0.177 |
-| 0.20 | 0.299 | 0.211 |
-| 0.25 | 0.313 | 0.247 |
-| 0.28 | 0.320 | 0.264 |
+A ball need not remain above its drag crisis. Short shots, high trajectories, winds, surface condition and ball design can move the flight into different regimes. Smooth-sphere transition is also affected by disturbance and roughness; a single transition number is not an absolute speed ceiling for golf.
 
-A reference drive at 75 m/s and 3,500 rpm sits at $S \approx 0.1$, $Re \approx 2.1 \times 10^5$ — so $C_D \approx 0.267$, $C_L \approx 0.144$.
+Even the common statement that spin ratio rises throughout flight is conditional:
 
-These figures are **digitized from a redraw of the original figures**, cross-validated against the digitizing authors' own quoted values (they state $C_D \approx 0.28$, $C_L \approx 0.18$ at $S = 0.15$; the table gives 0.283 and 0.177). They are good to about ±0.005 and are not a substitute for the original tables, which remain closed-access.
+$$
+\frac{\dot S}{S}
+=\frac{d}{dt}\log\|\boldsymbol\omega\|
+-\frac{\dot V_a}{V_a}.
+$$
 
-Note what the table shows: **$C_D$ rises with spin too.** Backspin buys lift and pays drag, which is why an optimum spin rate exists rather than "more spin, more carry."
+It rises when fractional airspeed loss exceeds fractional spin loss. A descending ball can regain airspeed; a gust can alter it abruptly. A model should evaluate its actual $(Re,S)$ path and report where that path leaves the measured domain.
 
-**Smits & Smith (1994)** produced $C_D(Re,S)$ and $C_L(S)$ from Princeton wind-tunnel work, with $C_L$ approximately Reynolds-independent. **Their published coefficients could not be obtained from any open source.** Every purported verbatim statement of them that we checked traced back to a different paper or to uncited code comments — one widely circulated coefficient list turns out to belong to a 2013 paper fitting Bearman and Harvey. We therefore state the model's form and decline to give numbers.
+This is why matching the coefficient at launch is insufficient. A small discrepancy sustained over much of a flight can matter more than a large discrepancy confined to an operating point the ball never visits.
 
-**Quintavalla (2002)** fitted a six-term expansion in $Re$ and $S$ by inversion of full trajectories measured on the USGA's Indoor Test Range. Its fitted coefficients are likewise not public — and, importantly, they are **per-ball fitted parameters rather than universal constants**, so "the Quintavalla model" is a method, not a coefficient set. The *model form* is published in the USGA's patent, and so are population **ranges** from a 2006 USGA technical report: across the conforming market, $C_L$ spans 0.125–0.30 and $C_D$ spans 0.22–0.32 over $\Omega = 0.05$–0.2, with both peaking near $Re \approx 1 \times 10^5$ and declining above it.
+### V.3 What Dimples Change
 
-**Naruo & Mizota (2004)** is the one canonical model whose coefficients are fully published, which makes it the practical choice for anyone who needs a working model today rather than a literature search:
+Dimples alter boundary-layer transition, local separation and reattachment, and the final separation that establishes the wake. They do not simply reduce all forms of drag.
+
+Choi, Jeon and Choi studied a nonrotating 150 mm model with 392 dimples. They observed local separation, shear-layer instability and reattachment with increased near-wall momentum, followed by delayed main separation. Their approximately 110-degree separation result applies to the investigated regime and geometry. At $Re=5\times10^4$, reattachment still occurred locally, but the flow did not acquire enough near-wall momentum to delay final separation. Thus “no bubble forms” is not their low-speed finding. Their smoke-wire observations did not show the proposed vortex pairs in that experiment; they did not exclude such structures from every dimpled flow. [Choi et al., 2006, pp. 2–4](https://research.engineering.ucdavis.edu/biosport/wp-content/uploads/sites/24/2014/06/Choi-et-al-2006-Mechanism-of-drag-reduction-by-dimples-on-a-sphere.pdf).
+
+The important comparison is at matched conditions. A dimpled sphere can have lower drag than a subcritical smooth sphere at the same Reynolds number while having greater drag than a smooth sphere in its own postcritical regime. Beratlis and colleagues' simulations identify a local dimple drag penalty in addition to the change in separation. [Beratlis, Balaras and Squires, 2019, abstract](https://doi.org/10.1017/jfm.2019.647). Depth, diameter, arrangement, coverage and surface condition affect that trade. A correlation with one geometric variable across a chosen set of balls is not proof that it alone governs drag.
+
+Computational fluid dynamics can test mechanisms that force measurements cannot directly resolve. Its numerical resolution, turbulence treatment, actual geometry, rotation, boundary conditions and validation still need scrutiny. A computed coefficient is not automatically more authoritative than a measured one, and a smooth-sphere simulation is not a production golf-ball measurement.
+
+### V.4 Evidence Supports Conditional Models
+
+A model is more than the names attached to its coefficient curves. It includes the ball, coefficient definitions, atmosphere, spin evolution, measurement method, fitted domain and numerical implementation.
+
+**Wind-tunnel measurements** can control speed and rotation and measure loads. Supports, blockage, turbulence and vibration must be accounted for. **Free-flight measurements** avoid a rotating support, but infer forces from positions, times and air properties. **Trajectory fits** infer parameters through an assumed dynamical model. These approaches have different error sources; none eliminates the need for validation.
+
+Bearman and Harvey's 1976 study remains an important historical wind-tunnel reference. Its particular models and measurements are not a universal coefficient set for current balls. Smits and Smith's 1994 work incorporates spin decay and aerodynamic dependence into a flight model. Neither historical importance nor a convenient polynomial justifies extrapolating beyond an applicable domain. [Bearman and Harvey, 1976](https://doi.org/10.1017/S0001925900007617).
+
+#### Production-Ball Measurements
+
+Lyu and colleagues measured 13 production-ball models using repeated launches through still air. Their 2018 study fitted aerodynamic responses and then **simulated** flights with common launch conditions: 71.5 m/s, 6 degrees and 3000 rpm, assuming 4% spin loss per second. The resulting approximately 18 m carry spread is a model-based comparison, not a direct measurement of 13 complete flights under those conditions. It demonstrates sensitivity to the measured aerodynamic differences under the simulation assumptions; it does not establish a universal price ranking or an 18 m benefit for an individual player. [Lyu et al., 2018](https://doi.org/10.3390/proceedings2060238).
+
+The same group's 2020 measurements found reverse Magnus behaviour in three production balls near $Re=5$–$7\times10^4$ and 750–2250 rpm. Reported minima differed, approximately $-0.10$ and $-0.15$. That is a comparison of complete ball models, not an isolated intervention on dimple shape. Positive lift returned at lower Reynolds numbers in the reported data, so “negative lift below a threshold” is also too broad. The authors specifically describe reverse Magnus as uncommon in long drives. [Lyu, Kensrud and Smith, 2020](https://doi.org/10.1007/s12283-020-0318-1).
+
+The heuristic surface speeds $V_a\pm R\omega$ help explain how rotation can place opposite sides near different transition conditions. They do not turn a nonrotating drag curve into a complete local flow law. A sign change in lift requires the relevant flow state, not simply a sufficiently large spin ratio.
+
+#### A Published Polynomial With an Explicit Domain
+
+Naruo, Mizota and Shimozono published force and torque measurements on actual balls, together with robot-launch comparisons. Their lower-turbulence force measurements covered approximately $7.09\times10^4\le Re\le1.25\times10^5$ and $0.03\le S\le1.13$. Higher-speed measurements supported their qualitative spin-ratio dependence, but the authors identified greater turbulence and vibration-related drag overestimation; they used the lower-speed fits for quantitative flight calculations. This distinction is essential when applying the model. [Naruo et al., 2004, Sections 5–6](https://doi.org/10.1299/kikaib.70.2371).
+
+Their equations (12)–(14), using radius-based $S$, are
 
 $$
 \begin{aligned}
-C_D(S) &= 0.7510\,S^4 - 1.760\,S^3 + 1.098\,S^2 + 0.2148\,S + 0.2049\\
-C_L(S) &= -0.2158\,S^4 + 1.006\,S^3 - 1.644\,S^2 + 1.250\,S + 0.0616
+C_D(S)={}&0.7510S^4-1.760S^3+1.098S^2\\
+&+0.2148S+0.2049,\\
+C_L(S)={}&-0.2158S^4+1.006S^3-1.644S^2\\
+&+1.250S+0.0616,\\
+C_M(S)={}&\exp(3.780S-6.707).
 \end{aligned}
 $$
 
-valid over $S = 0.03$–1.13 and $Re = 0.71$–$1.25 \times 10^5$. At $S = 0.1$ these give $C_D = 0.236$, $C_L = 0.171$; at $S = 0.2$, $C_D = 0.279$, $C_L = 0.253$.
-
-Note the structural claim embedded in that form: **these are functions of spin ratio alone.** Naruo and Mizota found $C_D$ and $C_L$ collapse onto single curves in $S$ and are *independent of Reynolds number* across the flight range. That is precisely the assumption the modern free-flight measurements contradict (V.3b), so the model is convenient and internally consistent but rests on a premise now in dispute.
-
-Independent ITR-class values for named balls have also appeared in ball-maker patent filings, which is a useful cross-check on all of the above:
-
-| Ball | $C_L$ @ $Re$ 70k, $S$ 0.188 | $C_L$ @ $Re$ 180k, $S$ 0.110 | $C_D$ @ 70k | $C_D$ @ 180k |
-|---|---|---|---|---|
-| Pinnacle Gold (USGA standard) | 0.216 | 0.158 | 0.276 | 0.225 |
-| Titleist Pro V1 | 0.209 | 0.168 | 0.274 | 0.227 |
-| Callaway HX Red | 0.215 | 0.179 | 0.282 | 0.228 |
-
-These sit comfortably inside the still-air ranges below, which is worth saying plainly: **the wind-tunnel, indoor-range and free-flight methods are not in gross conflict on modern balls.** The disagreements are real but they are at the level of a few hundredths in coefficient, not a wholesale disagreement about how a golf ball flies.
-
-### V.3b the Reynolds-Independence Question, and the Best Modern Dataset
-
-The sharpest modern golf-ball measurements come from a still-air projectile method that sidesteps the wind tunnel's two structural problems — support interference and scaled models — by firing production balls through stationary laboratory air between light gates and inferring drag from speed decay and lift from vertical deflection.
-
-The apparatus detail matters for judging the numbers. Three sensor stations, each a pair of vertical light gates 0.41 m apart plus a 45° gate for vertical position; a 3.81 m baseline chosen short enough that the coefficients are effectively constant across it; total vertical drop held under 0.1 m; spin verified by high-speed camera to ±15 rpm. The rig is recalibrated daily by firing a ball with a **vertical** spin axis — so that no vertical Magnus force exists — and adjusting sensor positions until the measured $C_L$ reads $0.00 \pm 0.01$. Propagated uncertainty is $U(C_D) = 0.005$, $U(C_L) = 0.0005$.
-
-Findings that bear on everything above:
-
-- **The drag crisis onset is at $Re \approx 7 \times 10^4$**, and $C_D$ falls from about 0.5 to 0.2 between $Re = 5$ and $7.5 \times 10^4$. Of eight sports balls tested, the golf ball has the most severe drag crisis of any.
-- **Minimum $C_D = 0.17$**, against Bearman and Harvey's 0.23 — but the authors attribute this to fifty years of ball development, not to method error.
-- **$C_L$ is non-linear in spin ratio**, fitted per ball with a second-order polynomial. Rotating drag needed *two* polynomial branches. Neither collapses onto a single Reynolds-independent curve.
-- **Between-model spread in $C_D$ exceeds 0.1 below $Re = 10^5$** and falls under 0.05 above it — so ball-to-ball variation is largest exactly where the model disagreements are.
-
-::: {.callout-note}
-## Dimple Pattern Changes Lift by 50% at Identical Flow Conditions
-
-In the reverse-Magnus regime ($5 \times 10^4 < Re < 7 \times 10^4$, 750–2,250 rpm), three production balls measured at identical Reynolds number and spin gave minimum lift coefficients of **−0.10** (circular dimples) and **−0.15** (hexagonal) — a 50% difference from dimple geometry alone.
-
-The mechanism is legible in the data: the steepness of a ball's drag crisis correlates with the severity of its reverse Magnus at $r^2 = 0.87$. A ball spinning near the critical Reynolds number has its advancing and retreating surfaces on *opposite branches* of the drag crisis — at $Re = 6\times10^4$ and 1,500 rpm the bottom of the ball is at $Re = 6.9\times10^4$ and the top at $5.1\times10^4$ — and the sharper the transition between those branches, the more violently the lift reverses.
-
-This is the strongest available argument that **no single-parameter $C_L(S)$ model can be right**, and it is a direct measurement rather than an inference.
-:::
-
-### V.2b What Simulation Adds
-
-Direct numerical simulation and large-eddy simulation now resolve real dimpled geometry, and they are worth citing because they supply *tabulated* coefficients rather than curves to be digitised — with the caveat that they are computations, not measurements.
-
-The cleanest tabulated set is [Li, Tsubokura & Tsunoda (2017)](https://doi.org/10.1007/s10494-017-9859-1), an LES of a real 392-dimple ball at spin parameter $\Gamma = 0.1$, using over 140 million elements with 40 surface elements across each dimple and 28 prism layers within the dimple depth:
-
-| | $Re = 4.3\times10^4$ | $Re = 7.5\times10^4$ | $Re = 1.1\times10^5$ |
-|---|---|---|---|
-| $C_D$ | 0.5059 | 0.3168 | 0.2397 |
-| $C_L$ | 0.1498 | **−0.1367** | 0.1353 |
-
-Those three columns are the subcritical, critical and supercritical regimes. **Note the middle one.** At the critical Reynolds number the lift coefficient goes *negative* — the reverse Magnus effect — and it is positive on either side of it. Their smooth-sphere control does the same thing at its own critical Reynolds number ($C_L = -0.2067$ at $Re = 2\times10^5$).
-
-This is an independent confirmation of the free-flight measurements in §V.3b, arrived at computationally: reverse Magnus is not an artefact of a particular rig, and for a golf ball it is confined to a narrow window around the drag crisis rather than being a general low-Reynolds phenomenon. The mechanism both accounts point to is the same — at critical $Re$ the advancing and retreating sides sit on *opposite branches* of the drag crisis, one separating turbulently and late, the other laminarly and early, which reverses the sense of the separation-point asymmetry.
-
-Wind-tunnel measurement on a rotating sphere reaches the same conclusion by yet another route, and adds a mechanism the flow-state argument alone does not give. Once the advancing side transitions and its separation is delayed, the streamline **radius of curvature is smaller on that side**; through $\partial p/\partial n = -\rho V^2/R$ the pressure there is lower, and the lift points advancing-ward — negative. Push the spin higher and transition moves further upstream on the advancing side, separation moves back upstream with it, and positive lift returns. That is why the effect occupies a *window* in spin ratio rather than switching on and staying on.
-
-::: {.callout-warning}
-## Two Traps in the Reverse-Magnus Literature
-
-**The spin ratio is not consistently normalised.** Some authors define $\Gamma = D\omega/U$, others $\alpha = \omega R/U$ — differing by a **factor of two**. Taken at face value, one prominent LES reports its negative-lift condition at $\Gamma = 0.2$ and a wind-tunnel study reports one at $\alpha \approx 0.53$, an apparent five-fold discrepancy that only partly closes once the definitions are reconciled. Always check which normalisation a source uses before comparing spin ratios across papers. The same trap applies to the spin-decay coefficients in §V.4.
-
-**The datasets genuinely disagree.** A 2024 review notes that three of the major rotating-sphere studies show **large mutual disagreement at matched Reynolds number** — this is not a normalisation artefact. Reverse Magnus is well established as a phenomenon and poorly established as a number.
-
-The golf-ball-specific free-flight measurements in §V.3b are the ones to trust for golf, because they use production balls rather than scaled smooth spheres, and because their run-to-run scatter is published.
-:::
-
-Non-rotating DNS gives consistent numbers: [Smith et al. (2010)](https://doi.org/10.1016/j.ijheatfluidflow.2010.01.002) report $C_D = 0.47$ subcritically (337 million grid points) and **0.26** supercritically (1.2 billion points), the latter within about 2% of Choi's experimental value.
-
-::: {.callout-note}
-## Separation Angles, and a Discrepancy Worth Flagging
-
-The supercritical separation angle is consistently ~110° across studies, against ~84° subcritically. Smith et al. trace it dimple by dimple: the flow detaches just downstream of a dimple's leading edge, reattaches before the dimple's exit, does this repeatedly, and only fully detaches near 110°.
-
-⚠️ The journal and conference versions of that same study give the subcritical figure as **84°** and **"approximately 90°"** respectively. We report 84° as the journal value, but the two are inconsistent in the source material.
-:::
-
-### V.3c How the Governing Bodies Actually Measure This
-
-The USGA and R&A do not use a wind tunnel, and their reasons are on the record in the patent that defines the method ([US 6,186,002 B1](https://patents.google.com/patent/US6186002B1/en), inventors including Smits and Quintavalla):
-
-> One of the problems associated with using a wind tunnel to obtain measurements of the aerodynamic lift and drag of a golf ball is that the wind tunnel provides a very limited height over which a golf ball may be dropped into a horizontal flow of air within the wind tunnel. [...] There are air flow disruptions from the mechanisms used to support a golf ball within a flow of air and there are dynamic imbalances of the balls. In addition, force measurement assumptions have to be made.
-
-Frank Thomas, the USGA's Technical Director when the range was built, puts it more bluntly: firing a spinning ball through still air *"has proven to produce far more accurate and reliable data than trying to support a spinning ball in a laminar stream of air in a wind tunnel."*
-
-**The method.** A launcher fires the ball through a series of ballistic light screens over roughly 65 feet — nine vertical screens giving nine timed positions, plus angled screens for vertical position. A **Newton–Raphson search on an overdetermined system** then finds the values of $V_0$, $\theta_0$, $C_D$ and $C_L$ that best fit the measured coordinates. Launch conditions span 220–250 ft/s, 8–25°, and 20–60 rev/s.
-
-This is the cleanest example of the inverse-fitting philosophy in V.3: rather than measuring forces directly and integrating, it measures a trajectory and asks what coefficients would have produced it.
-
-::: {.callout-note}
-## What the Conformance Numbers Actually Are
-
-**Overall Distance Standard.** The limit is **317.0 yards plus a 3.0-yard tolerance**, so a ball conforms at ≤ 320.0 yards, tested at 75 °F, 30.0 inHg and 50% humidity. Current launch conditions are 175 mph ball speed, 10°, 2,520 rpm. From 2028 these become **183 mph, 11°, ~2,200 rpm** — the distance limit is unchanged; the *test* got harder. The governing bodies project reductions of under 5 yards for recreational players, 9–11 yards for elite men, and 13–15 for the longest hitters.
-
-**Repeatability.** Published gauge R&R for the range is **±2.49 yards in carry and ±1.81 yards in total distance** at the 2028 conditions (four ball types × four operators × three trials). Set that against §V.6: a coefficient difference of 0.01 in $C_D$ is worth about eight yards. The measurement floor is roughly a third of that — tight enough for the regulation to mean something, which is not obvious a priori.
-
-**Symmetry.** A ball is non-conforming if the mean paired difference between poles-horizontal and pole-over-pole orientations exceeds **4.0 yards of carry or 0.40 seconds of flight time**, and the difference is statistically significant. The spherical-symmetry standard was adopted in **1980** in response to asymmetric anti-slice balls; the test itself was **removed from the Rules text in 1996**, though it is still used to advise manufacturers.
-:::
-
-::: {.callout-warning}
-## Why Trajectory-Fitted and Wind-Tunnel Coefficients Disagree — And Why It Matters
-
-Inverse-fitted coefficients absorb **every** modelling error in the integrator that produced them: the spin-decay law, the air properties, the launch measurement. Ported into a different integrator with a different spin-decay law, **they are no longer guaranteed correct.**
-
-The tunnel side has its own problems: support hardware sits in the near wake that sets pressure drag; tunnel turbulence shifts the critical Reynolds number between facilities; a tunnel holds $\omega$ fixed and samples the $(Re, S)$ plane on a grid while a real trajectory traces a *curve* through it with $S$ sweeping upward.
-
-The practical consequence: any model-versus-model comparison that does not control for integrator and spin-decay mismatch will largely be measuring integrator mismatch. **We could not find a published head-to-head comparison that does control for it — and that absence is itself a finding.**
-:::
-
-### V.4 Spin Decay
-
-Two models exist, and they disagree with the radar data in the same direction.
+Their torque convention uses **diameter**:
 
 $$
-\frac{d\omega}{dt} = -\beta\,\frac{v\,\omega}{R}
+\|\boldsymbol\tau_a\|
+=\tfrac12\rho V_a^2 A(2R)C_M.
 $$
 
-with $\beta = 2.0 \times 10^{-5}$ (Smits & Smith, adopted verbatim by the USGA's ITR patent as its spin-decay constant) or $2.5 \times 10^{-5}$ (Tavares et al., from radar). Because $\tau \propto 1/v$, there is **no constant time constant** — it runs from about 12–16 s at driver launch to 30–37 s late in flight.
+Approximate collapse onto $S$ for these observations does not imply Reynolds independence for every ball or across a different transition region. Conversely, later reverse-Magnus measurements do not invalidate every use of the earlier fit inside its supported operating region.
 
-::: {.callout-note}
-## An Unresolved Conflict Worth Knowing About
+The polynomial's positive lift intercept and the moment fit's positive value at $S=0$ expose an extrapolation problem: these fits do not supply a symmetric zero-spin limit. Clipping the argument to the fitted interval would conceal extrapolation rather than repair it.
 
-Radar-measured spin decay for a Pro V1x off a driver is about **3%/s** (implying $\tau \approx 32$–37 s), while both models predict **6–8%/s** at launch speed. **The models overpredict measured driver spin decay by roughly 2–3×.**
+### V.5 A Reproducible Flight Within a Stated Fit Domain
 
-Worse, the models say the rate should scale with $v$ and so fall sharply as the ball slows — yet the measured rate is nearly constant through flight. We found no source that reconciles this.
+Here is a complete **model calculation**, using the preceding fits. It is not a newly measured shot or a validation of a current commercial ball.
 
-Two practical cautions follow. Do not treat the commonly quoted "4% per second" and $C_M = 0.012S$ as interchangeable; they are not the same claim. And be careful with units — the canonical published statement of this law carries an internal inconsistency between its body text and its footnote over whether $v$ is in m/s or mph, and taking the wrong one introduces a factor of 2.24.
-:::
+Use still air with $\rho=1.2$ kg/m$^3$ and $\nu=1.5\times10^{-5}$ m$^2$/s. Set $m=0.0456$ kg, $R=0.02135$ m and $I_b=8.10\times10^{-6}$ kg m$^2$. Launch from zero height at 40 m/s, 12 degrees elevation, and 2000 rpm of backspin. The positive spin axis is $+z$; the planar state is $(x,y,v_x,v_y,\omega_z)$.
 
-Does it matter? For carry, **second-order**: roughly doubling spin decay changes driver carry by 1 to 3 yards. That is under 1% of a drive — far smaller than the 18 m spread measured *across ball models* from lift and drag differences alone — but large enough that ball manufacturers have patented tuning it.
+For forward planar motion the lift direction is $(-v_y,v_x)/V_a$. Integrate position, velocity **and spin**, stopping at the first descending crossing of the launch-height plane. Carry here means horizontal distance to that plane; there is no bounce, roll, turf or elevation model.
 
-### V.5 Atmosphere, and One Folk Belief That Is Backwards
+~~~python
+from math import exp, pi, radians
+import numpy as np
+from scipy.integrate import solve_ivp
 
-The equations of motion are standard:
+GRAVITY_M_S2 = 9.81
+mass, radius, inertia = 0.0456, 0.02135, 8.10e-6
+density, nu = 1.2, 1.5e-5
+area = pi * radius**2
+
+def coefficients(s: float) -> tuple[float, float, float]:
+    cd = 0.7510*s**4 - 1.760*s**3 + 1.098*s**2
+    cd += 0.2148*s + 0.2049
+    cl = -0.2158*s**4 + 1.006*s**3 - 1.644*s**2
+    cl += 1.250*s + 0.0616
+    cm = exp(3.780*s - 6.707)
+    return cd, cl, cm
+
+def dynamics(time: float, state: np.ndarray) -> np.ndarray:
+    del time
+    velocity = state[2:4]
+    speed = np.linalg.norm(velocity)
+    omega = state[4]
+    cd, cl, cm = coefficients(radius * omega / speed)
+    load = 0.5 * density * area * speed**2
+    lift_direction = np.array([-velocity[1], velocity[0]]) / speed
+    acceleration = load / mass * (-cd * velocity / speed)
+    acceleration += load / mass * cl * lift_direction
+    acceleration[1] -= GRAVITY_M_S2
+    omega_dot = -load * (2 * radius) * cm / inertia
+    return np.r_[velocity, acceleration, omega_dot]
+
+def landing(time: float, state: np.ndarray) -> float:
+    del time
+    return float(state[1])
+
+landing.direction = -1
+landing.terminal = True
+angle = radians(12)
+initial = [
+    0, 0, 40*np.cos(angle), 40*np.sin(angle), 2000*2*pi/60
+]
+solution = solve_ivp(
+    dynamics, (0, 10), initial, events=landing,
+    rtol=1e-10, atol=1e-11, max_step=0.02, dense_output=True
+)
+if not solution.success or len(solution.t_events[0]) != 1:
+    raise RuntimeError("A descending landing was not found.")
+samples = solution.sol(np.linspace(0, solution.t[-1], 2001))
+speeds = np.linalg.norm(samples[2:4], axis=0)
+reynolds = 2 * radius * speeds / nu
+ratios = radius * samples[4] / speeds
+if not (
+    reynolds.min() >= 7.09e4 and reynolds.max() <= 1.25e5
+    and ratios.min() >= 0.03 and ratios.max() <= 1.13
+):
+    raise RuntimeError("This trajectory leaves the stated force-fit domain.")
+print("Time, carry, final spin:",
+      solution.t[-1], solution.y[0, -1], solution.y[4, -1])
+print("Re range:", reynolds.min(), reynolds.max())
+print("S range:", ratios.min(), ratios.max())
+~~~
+
+The calculation gives approximately **2.720636 s**, **85.4319 m carry**, and **184.2220 rad/s** final spin. The sampled Reynolds numbers remain approximately 78,136–113,867, and spin ratios 0.11179–0.14350. A separate fixed-step RK4 implementation, with step refinement and its own descending-contact interpolation, agrees on carry to a few micrometres. That agreement verifies the numerical calculation, not the empirical accuracy of its coefficients.
+
+![Coupled Flight and Operating Conditions](figures/impact_flight_operating_path.png){fig-alt="Four plots of the illustrative flight show height rising and falling, Reynolds number decreasing, backspin decreasing, and spin ratio rising toward a maximum. The changing spin ratio depends on both airspeed and spin."}
+
+The domain check samples the trajectory; it is a practical diagnostic, not a mathematical proof over every instant. This example has substantial margin from the force-fit boundaries. Being inside the reported bounding rectangle also does not mean every joint combination was independently measured. A general solver needs explicit event or interval handling near a boundary and a physically defined alternative model outside it.
+
+For a modern high-speed drive, choosing these coefficients solely because they are available would require an additional applicability argument. The purpose of the example is to make the assumptions and calculation inspectable.
+
+### V.6 Spin Decay Is a Dynamical Assumption
+
+With isotropic inertia and a torque antiparallel to spin, the spin axis stays fixed in an inertial frame while magnitude decays. A torque with a transverse component changes that axis; a nonspherical inertia tensor requires full rotational dynamics.
+
+A commonly used model form is
 
 $$
-m\frac{d\mathbf{V}}{dt} = -\tfrac12\rho A C_D|\mathbf{V}|\mathbf{V} + \tfrac12\rho A C_L|\mathbf{V}|^2\hat{\mathbf{n}} + m\mathbf{g},
-\qquad \hat{\mathbf{n}} = \frac{\boldsymbol\omega\times\mathbf{V}}{|\boldsymbol\omega\times\mathbf{V}|}
+\dot\omega=-\beta\frac{V_a}{R}\omega.
 $$
 
-Two conventions bite here. Some authors write the Magnus term with an **unnormalised** $\boldsymbol\omega \times \mathbf{V}$, folding $|\omega||V|\sin\theta$ into the coefficient; mixing conventions gives badly wrong answers. And spin must be integrated as a **coupled state**, not applied as a post-hoc correction, since both $C_L$ and $C_D$ depend on $S(t)$.
+For dimensionless $\beta$ and consistent length/time units, the instantaneous fractional decay rate is $\beta V_a/R$. Its inverse is an **instantaneous** time scale, not a constant for the whole flight.
 
-On atmospherics:
+Define air-relative path length
 
-**Humidity increases carry, slightly.** Humid air is *less* dense, because water's molar mass (18) is below air's (29). The "heavy humid air" of golf folklore has the sign backwards. The effect is small.
+$$
+s_a(t)=\int_0^t V_a(\tau)\,d\tau.
+$$
 
-**Temperature acts through three independent mechanisms** that are routinely conflated: air density (cold is denser, more drag), ball COR (a cold ball is stiffer with lower restitution), and kinematic viscosity shifting $Re$ by about 20% across 0–30 °C. They are additive and only the first is usually modelled.
+For constant $\beta$ the exact solution is
 
-**A headwind costs more than an equal tailwind gains.** Wind enters through relative velocity in *both* force terms, so the effect is quadratic — and a headwind additionally raises the spin ratio, lifting both $C_L$ and $C_D$.
+$$
+\omega(t)=\omega_0
+\exp\!\left[-\frac{\beta}{R}s_a(t)\right].
+$$
 
-### V.6 How Much Does the Model Choice Actually Cost You?
+This is exponential in air-relative distance. Replacing $V_a(t)$ by launch speed changes the model.
 
-The question that makes all of the above concrete: if two models disagree about $C_D$ by some amount, how many yards is that?
+A constant time-rate law $\dot\omega=-k\omega$ instead gives $\omega_0e^{-kt}$. Losing exactly 4% of the remaining spin each second corresponds to $k=-\log(0.96)\ {\rm s}^{-1}$, approximately 0.04082 s$^{-1}$, rather than exactly 0.04 s$^{-1}$. Both differ from a statement that spin loses four percentage points of its **initial** value each second.
 
-Three independent estimates converge:
+A torque coefficient linear in $S$ can yield the velocity-proportional form, but its gain also depends on density, area, inertia and the reference length. If $C_M=cS$ with the diameter convention above,
 
-| Source | $d(\text{carry})/dC_D$ |
-|---|---|
-| USGA/R&A sensitivity tables (total distance, tour baseline) | ≈ 7.5 yd per 0.01 |
-| Lyu et al. 2018, from stated $C_D$ uncertainty | ≈ 10 yd per 0.01 (carry only) |
-| Direct numerical integration (ours: 71.5 m/s, 11°, 2,700 rpm) | ≈ 7.4 yd per 0.01 |
+$$
+\dot\omega
+=-\frac{\rho A R^2 c}{I_b}\,V_a\omega,
+\qquad
+\beta=\frac{\rho A R^3c}{I_b}.
+$$
 
-Working numbers: **about 8 yards per 0.01 in $C_D$**, and about 3 yards per 0.01 in $C_L$ for carry (5 for total distance). Two asymmetries matter. **Drag is roughly twice as potent per unit coefficient as lift.** And the two errors propagate differently across player populations — the distance effect of a $C_D$ error correlates strongly with clubhead speed ($R^2 = 0.96$) while a $C_L$ error does not ($R^2 = 0.14$), so a lift-coefficient error shifts everybody by about the same amount while a drag error punishes fast swingers most.
+Changing radius to diameter in a definition without changing its coefficient introduces a factor of two. Changing revolutions per second to radians per second introduces $2\pi$. Neither is a physical disagreement.
 
-Now apply that. The measured $C_D$ minimum in Bearman and Harvey's 1976 data is 0.23; a 2010 free-flight measurement on a production ball gives 0.17. That difference of 0.06 is worth **more than 40 yards** if the two datasets are naively swapped — though the comparison is badly confounded, since it is a 2.5× scale model from 1976 against a modern production ball, and the ball itself changed enormously in between.
+Two datasets should be compared using matched balls, conditions, spin definitions and uncertainty. There is no basis here for declaring that only two decay models exist or that a quoted radar percentage universally disproves a different experiment. The effect on carry must be calculated with the same lift/drag model because changing spin changes both coefficients and the rest of the flight.
 
-The honest scale of genuine ball-to-ball variation is better measured directly: 13 production balls fired at identical release conditions produced a **carry spread of 18 metres**, from an average coefficient difference of only 0.02. Cost was not correlated with distance — the two longest were a low-cost and a mid-cost ball.
+The energy balance gives a further check. In still air, with upward coordinate $y$ and the stated isotropic inertia,
 
-::: {.callout-important}
-## The Head-to-Head Comparison Does Not Exist
+$$
+E=\tfrac12m\|\mathbf v\|^2+mgy
++\tfrac12I_b\|\boldsymbol\omega\|^2,
+$$
 
-We searched for a published paper implementing two or more of the canonical models and reporting carry disagreement in yards for matched launch conditions. **There is none.**
+$$
+\dot E=-\tfrac12\rho A C_D\|\mathbf v\|^3
++\boldsymbol\tau_a\cdot\boldsymbol\omega.
+$$
 
-What exists instead is each group critiquing the others' *method*, and enough overlapping coefficient data to infer that the disagreement is large. Given that a 0.01 coefficient difference is worth roughly eight yards, and published datasets differ by several times that, this is a conspicuous hole in a field with substantial commercial and regulatory stakes.
+Both terms are nonpositive for dissipative drag and spin decay. This connects the flight model back to the collision's energy accounting while distinguishing aerodynamic dissipation from redistribution between height and speed.
 
-The nearest thing to a validation benchmark is a 2023 study fitting 90,000 radar-measured shots, which found that abandoning the common spin-ratio-only parameterisation in favour of one retaining Reynolds dependence **reduced mean landing-position error by 28%** (6.95 to 4.75 yards). Its authors are appropriately careful: the improved coefficients may not be physical, and they recommend wind-tunnel work to check. But the direction of the result supports the Reynolds-dependent camp.
-:::
+### V.7 Precision, Repeatability, and Model Error
 
-**One extrapolation hazard worth naming.** Models whose lift coefficient is fitted as monotonically increasing in spin ratio get the **sign of lift wrong** below about $Re = 7 \times 10^4$, where measurements show $C_L$ going negative — the reverse Magnus effect, reaching $C_L = -0.10$ to $-0.15$ depending on dimple geometry. This is not exotic: it is the regime a wedge shot or a headwind-shortened flight ends in. The USGA's own fitting procedure flags it, noting that when the regression quality drops "the ball probably exhibits negative lift." Any simulator integrating a monotonic $C_L(S)$ to the end of flight is out of range at the point where it matters for short-game accuracy.
+The 2020 Lyu study distinguishes sensor-propagated coefficient uncertainties, approximately 0.005 for drag and 0.0005 for lift, from mean repeat-shot standard deviations of approximately 0.02 and 0.01. Its calibration tolerances are another quantity. Those numbers represent different uncertainty components; their difference is not an internal contradiction. [Lyu et al., 2020, Section 3](https://doi.org/10.1007/s12283-020-0318-1).
 
-### V.7 Orientation: The Asymmetry the Rules Exist to Police {#sec-orientation}
+Precision concerns variation associated with an instrument or repeated measurement. Bias concerns systematic error relative to an appropriate reference. Model discrepancy concerns a failure of the equations or parameterization to represent the process. Increasing the number of repeat shots can reduce uncertainty in an estimated mean without removing systematic bias or model discrepancy.
 
-A golf ball is not aerodynamically axisymmetric. It has a moulding parting line and a dimple pattern with discrete symmetry, so its coefficients depend on **how the pattern is oriented relative to the spin axis**. Two conventions matter: **poles-horizontal (PH)**, with the axis of rotation normal to the parting line, and **pole-over-pole (PP)**, orthogonal to it.
+Force reconstruction also requires an explicit approximation. Over a short horizontal interval of length $\Delta x$, nearly constant drag with negligible vertical work gives
 
-::: {.callout-important}
-## A Correction: We Said This Data Didn't Exist
+$$
+\overline F_D
+\approx\frac{m(V_1^2-V_2^2)}{2\Delta x},
+$$
 
-An earlier version of this article stated that no measurement of orientation-dependent lift and drag existed anywhere, and advised treating any PH-versus-PP figure as unsourced.
+where $V_1$ is upstream speed, $V_2$ downstream speed, and the drag **magnitude** is positive during deceleration. Larger changes in height, direction, wind or coefficient require the full vector equations and gravitational work. A scalar short-baseline estimate is not an exact identity for arbitrary ball flight.
 
-**That was wrong.** It holds for the *peer-reviewed* literature, where we still find nothing — but ball-maker patent filings contain exactly these tables, measured across the full Reynolds range. The error came from searching the academic literature and treating its silence as global. Patent filings are a primary source for this industry precisely because the measurements are commercially sensitive, and they should have been the first place checked.
-:::
+#### Inverse Fitting Does Not Uniquely Identify Every Mechanism
 
-Acushnet's [US7156757B2](https://patents.google.com/patent/US7156757B2/en) tabulates $C_L$ and $C_D$ in both orientations across eight Reynolds numbers, for a claimed design and a prior-art comparator. The prior-art ball, at spin ratio 0.170:
+A trajectory fit chooses parameters to reduce a discrepancy between simulated and measured outputs. Errors in wind, density, launch measurements, spin decay, event detection or numerical integration can then be absorbed into the fitted coefficients. They need not be absorbed completely, or in the same way.
 
-| Orientation | $C_L$ | $C_D$ |
-|---|---|---|
-| Pole-over-pole | 0.242 | 0.269 |
-| Poles-horizontal | 0.213 | 0.249 |
+A simple identifiability example needs no complicated aerodynamics. In horizontal one-dimensional motion with constant drag coefficient and still air,
 
-That is a **14% difference in lift coefficient from orientation alone**, at identical Reynolds number and spin. The patent's own asymmetry metric reaches **10.9%** for the prior-art ball, against **≤2.5%** for the improved design — which is the entire point of the filing.
+$$
+\dot v=-kv^2,\qquad
+k=\frac{\rho A C_D}{2m},
+$$
 
-The consequences in flight are tabulated too. At 168.4 mph and 3,500 rpm the prior-art ball carries **271.0 yards poles-horizontal against 267.2 pole-over-pole**, with landing angles of 36.2° and 41.4°. Same ball, same launch conditions, **3.8 yards and 5 degrees of descent angle** separating them.
+so
 
-::: {.callout-note}
-## Why the Tolerance Is 4.0 Yards
+$$
+v(t)=\frac{v_0}{1+kv_0t},
+\qquad
+x(t)-x_0=\frac{\log(1+kv_0t)}{k}.
+$$
 
-Recall from §V.3c that a ball is non-conforming if the mean carry difference between the two orientations exceeds **4.0 yards**.
+Position observations identify the product $\rho C_D$ in this simplified experiment. They cannot separately determine density and coefficient without additional information. Likewise, matching one landing position cannot identify arbitrary lift, drag and spin-decay functions.
 
-Set that against the patent's measured **3.8-yard** difference for a prior-art ball, and the regulation stops looking arbitrary. The tolerance sits just above what an ordinary, non-optimised, conforming ball actually exhibits — tight enough to catch a ball engineered for asymmetry, loose enough not to fail the incumbent field on manufacturing reality.
+A learned model can improve predictions without uniquely recovering physical coefficients. McNally, Lambeth and Brekke used 90,233 shots, reserving the most recent 9024 for validation. Their matched position-plus-height comparison reports mean landing errors of **6.63 and 4.75 yards**, approximately 28% lower; 6.95 belongs to another baseline comparison. The method uses velocity/spin inputs and changes architecture and training, so its gain is not an isolated test of Reynolds dependence. Wind was unavailable, and the authors caution that the learned coefficients might not represent actual physics. The reported values are validation-set results used during model selection, not an untouched external test. [McNally et al., 2023, Sections 3.1–3.5 and Table 1](https://openaccess.thecvf.com/content/CVPR2023W/CVSports/papers/McNally_Combining_Physics_and_Deep_Learning_Models_To_Simulate_the_Flight_CVPRW_2023_paper.pdf).
 
-The direction is consistent for icosahedral patterns, which the patents describe as tending to "fly slightly lower and longer in the poles-horizontal position." Note the 168.4 mph rows follow that; the lower-speed rows invert the distance ordering, so the effect is launch-condition dependent and not a fixed offset.
-:::
+That is useful comparative evidence. It also directly contradicts a blanket claim that published model comparisons do not exist. A stronger benchmark would publish matched launches, atmospheric conditions, full trajectories, spin histories, held-out ball models, coefficient definitions, numerical convergence and uncertainty—not merely a single average landing error.
 
-A second Acushnet filing, [US8550941B2](https://patents.google.com/patent/US8550941B2/en), gives the ball-to-ball scatter measured on an indoor range at 110 mph and 1,740 rpm. Across nominally identical two-piece balls, drag varied about 5% in the pole orientation and 4% in the seam orientation — but **lift varied 3% in the pole orientation against 13% in the seam orientation.** Orientation does not merely shift the mean; it changes how *repeatable* the ball is, and it does so asymmetrically between the two coefficients.
+### V.8 Atmosphere Changes Several Coupled Quantities
 
-Two things are worth noting about the state of this evidence. The original Polara patent — the ball that provoked the symmetry rule in the first place — contains **no measured data at all**, only qualitative claims. And the contrast with baseball is instructive: the seam-shifted wake has a published, peer-reviewed particle-image-velocimetry study. **The golf equivalent does not exist in the open literature.** For a sport whose governing bodies test every ball in two orientations as a matter of routine, that is a conspicuous asymmetry between what is measured and what is published.
+A **headwind lowers spin ratio at fixed ground velocity and spin**: the opposing wind increases $V_a$ in the denominator. It simultaneously raises Reynolds number when viscosity is fixed. The dynamic-pressure factor increases, but $C_L$ and $C_D$ may change in either direction along their actual response surfaces. A quadratic force factor alone does not prove a universal headwind-versus-tailwind carry asymmetry.
 
-**On dimple depth**, the picture from Japanese wind-tunnel work is more interesting than "shallower is better." Shallow dimples give higher lift at speed — but below about 30 m/s a shallow-dimpled ball's lift **collapses**, because the boundary layer relaminarises as relative velocity falls. A real drive drops below 30 m/s just after apex, so the shallow ball loses exactly where it needs lift most. The published fix is to intersperse *tiny* dimples between the large shallow ones, which removes the low-speed collapse.
+For spatially and temporally varying wind,
 
-⚠️ Those two studies publish their coefficients **as figures only**, so the low-speed collapse is reported as direction and mechanism rather than numbers.
+$$
+\dot{\mathbf w}
+=\dot{\mathbf v}
+-\partial_t\mathbf u_a
+-(\nabla\mathbf u_a)\mathbf v.
+$$
 
-Depth *does* have published numbers, from non-rotating work on 328-dimple spheres at $Re = 1.27\times10^5$:
+Thus a gust or wind gradient changes the operating path as well as instantaneous force. Measured mean wind is not a complete description of turbulent fluctuations. Because force is nonlinear in relative velocity, force at the mean wind need not equal mean force. Laboratory disturbance effects and outdoor gust effects should be investigated separately.
 
-| Dimple depth ratio $k/d$ | $C_D$ |
-|---|---|
-| Smooth sphere | 0.45 |
-| 0.0079 | **0.25** |
-| 0.0151 | 0.30 |
-| 0.0188 | 0.35 |
+At fixed total pressure $p$ and temperature $T$, a dry-air/water-vapour ideal-mixture approximation gives
 
-Two results follow. **Deeper is not better** past a point — drag rises monotonically with depth across this range, and the same work locates a **minimum near $k/d \approx 0.003$** in the supercritical regime. And deeper dimples pull the drag crisis to lower Reynolds number while raising the post-critical drag, which is the trade in one sentence: an early crisis bought at the cost of everything after it.
+$$
+\rho=\frac{p-p_v}{R_dT}
++\frac{p_v}{R_vT},
+\qquad R_v>R_d,
+$$
 
-Set that against §V.1, where Bearman and Harvey's 1976 balls had $k/d = 9\times10^{-3}$ and a modern ball roughly $4\times10^{-3}$. Fifty years of dimple development has moved depth **down**, toward the drag minimum — which is part of why the 1976 dataset's minimum $C_D$ of 0.23 sits above a modern ball's 0.17, and why that difference should not be read as a measurement disagreement.
+where $p_v$ is water-vapour partial pressure. Increasing $p_v$ reduces density under those fixed conditions. The claim that humidity itself makes the air heavier has the sign wrong. Whether the resulting small density change increases a particular carry is a trajectory question because density scales both drag and lift.
 
-A 2023 study adds the complementary variable, fitting drag against dimple *volume* ratio across 25 model balls. Every fit is strongly positive — more dimple volume, more drag — with the lift-to-drag ratio falling correspondingly ($r = -0.83$ at spin ratio 0.31). Volume, not count, appears to be the governing geometric quantity.
+Temperature affects density, viscosity and potentially the impact response of the conditioned ball. Kinematic viscosity already contains density through $\nu=\mu/\rho$; treating its change as independent of density can double-count an effect. Ball-temperature effects also depend on material, conditioning and collision conditions. These mechanisms interact through the trajectory and launch state; they are not independent yardage corrections that can automatically be added.
+
+An atmospheric comparison must say what is fixed: launch state, club delivery, ball temperature, pressure, relative humidity, wind profile and landing elevation. A weather effect on a fixed launch is different from a weather effect that also changes the collision.
+
+### V.9 Sensitivity Must Name the Baseline and the Output
+
+Let a landing output be $Y(\xi,p)$, where $\xi$ contains launch conditions and $p$ contains aerodynamic and atmospheric parameters. A local approximation is
+
+$$
+\delta Y\approx D_\xi Y\,\delta\xi+D_pY\,\delta p.
+$$
+
+Each derivative belongs to a specified baseline, model, parameter definition and landing event. “Yards per 0.01 of drag coefficient” is incomplete unless it states how that coefficient changes across the whole $(Re,S)$ path.
+
+In the reproducible 40 m/s example, adding **0.01 to $C_D$ throughout the flight**, while keeping the other coefficient functions and launch inputs fixed, reduces carry from 85.4319 m to approximately **84.3454 m**: about **1.1883 yards**. Subtracting 0.01 increases carry to approximately **86.5565 m**. These outputs are independently reproduced by the second integrator.
+
+The centred local slope is approximately $-110.55$ m per unit coefficient. Extending that slope to an addition of 0.06 predicts approximately 78.80 m, whereas reintegration gives approximately **79.4133 m**. Even this simple smooth model demonstrates finite-change error. Neither its sensitivity nor a sensitivity computed for a fast drive is a universal conversion.
+
+The same caution applies to comparing coefficient minima from different balls or years: a difference at two separate minima is not a constant difference along a matched flight. Multiplying it by a local derivative does not establish a 40-yard discrepancy.
+
+#### Landing Time Is Part of the Derivative
+
+For a flat plane $y=0$ crossed with $v_y(t_c)\ne0$, a fixed-time state perturbation gives
+
+$$
+\delta t_c=-\frac{\delta y(t_c)}{v_y(t_c)},
+\qquad
+\delta x_c=\delta x(t_c)+v_x(t_c)\delta t_c.
+$$
+
+Evaluating the horizontal perturbation at the unperturbed landing time omits this event contribution. An elevated or sloping landing surface needs its own event normal. Grazing contact makes the first-order formula ill-conditioned.
+
+Carry, total distance, landing angle, peak height and stopping position are different outputs. Total distance additionally requires ground interaction. A sensitivity for total distance cannot be relabelled as a carry sensitivity.
+
+For joint uncertainty $\zeta=(\xi,p)$ with covariance $\Sigma$,
+
+$$
+\operatorname{Var}(Y)\approx
+DY\,\Sigma\,DY^{\mathsf T}.
+$$
+
+Correlations matter: launch speed and spin, face and path, or fitted lift and drag may vary together. Removing cross terms can either increase or decrease the predicted variance. This is the flight-stage counterpart of the delivery/contact covariance discussed above.
+
+### V.10 Orientation and Conformance {#sec-orientation}
+
+A real dimple pattern has discrete geometry. Rotating a ball into a different orientation relative to the spin axis can change its spin-averaged aerodynamic response. Spin averaging does not imply complete spherical symmetry.
+
+Patent filings can contain useful primary descriptions and measurements, including coefficients and trajectories for different ball orientations. Their named designs, test definitions and claimed improvements need to be read as such; they are not independent confirmation of every physical explanation in the filing. A coefficient ratio, an average over several conditions, a carry difference and a conformance statistic are different quantities. [Example: Acushnet US7156757B2](https://patents.google.com/patent/US7156757B2/en).
+
+An observed 3.8-yard orientation difference does not reveal why a regulator selected a 4.0-yard criterion. It also does not by itself establish conformity: the applicable procedure includes sample handling, orientations, launch conditions and statistical decisions.
+
+The published USGA/R&A distance protocol uses a 317.0-yard overall-distance limit with a 3.0-yard test tolerance. Its symmetry procedure considers paired carry and flight-time differences, with 4.0-yard and 0.40-second criteria **and statistical significance**. Passing a quoted distance threshold alone is not a complete equipment-conformance determination. Consult the applicable full protocol rather than substituting the outputs of an illustrative simulator. [Overall Distance and Symmetry Test Protocol, version 4.0](https://www.usga.org/content/dam/usga/pdf/2025/equipment-standards/Overall-Distance-and-Symmetry-Test-Protocol-4.0-TPX.pdf).
+
+**Status checked 5 September 2026:** the joint notice of **17 June 2026** states that the Overall Distance Standard testing approach will not change until **January 2030**. It also describes reconsideration of alternative approaches, including potential Model Local Rules. The earlier phased 2028/2030 implementation should therefore not be presented as the current schedule, and this notice should not be expanded into an unsupported claim that every future test parameter is settled. [USGA/R&A notice, hosted by the Japan Golf Association](https://www.jga.or.jp/data/wp-content/uploads/2026/06/Notice_to_Manufacturers_17_June_2026.pdf).
+
+### V.11 What This Means for the Swing Argument
+
+The swing controls a delivery process; the collision transforms delivery into launch; the atmosphere and ball transform launch into flight. Improving one stage can change the sensitivity of the next.
+
+For example, a delivery change can increase ball speed while changing spin and strike location. That changes both the flight's starting point and its path through the coefficient domain. A change that reduces variability in one launch coordinate may increase it in another, and their covariance can determine whether the landing distribution narrows.
+
+A technically convincing argument therefore follows the complete chain using matched definitions and uncertainty. It distinguishes a mechanical identity, a model prediction, a measurement, and an intervention result. The aim is to explain how the shot emerges from the coupled system while keeping each conclusion proportional to the evidence.
 
 ## Part VI: Closure Rate
 
@@ -980,7 +1067,7 @@ This structure allows an argument about swing coordination to be technically str
 - Cross, R. (2010). Impact of a ball on a surface with tangential compliance. *American Journal of Physics* **78**(7), 716–720. [doi:10.1119/1.3313455](https://doi.org/10.1119/1.3313455)
 - Penner, A.R. (2001). The physics of golf: the convex face of a driver. *American Journal of Physics* **69**(10), 1073. [doi:10.1119/1.1380380](https://doi.org/10.1119/1.1380380)
 - Williams, K.R. & Sih, B.L. (2002). Changes in golf clubface orientation following impact with the ball. *Sports Engineering* **5**(2), 65–80. [doi:10.1046/j.1460-2687.2002.00093.x](https://doi.org/10.1046/j.1460-2687.2002.00093.x)
-- Leach, R., Forrester, S.E., Mears, A.C. & Roberts, J.R. (2017). How valid and accurate are measurements of golf impact parameters obtained using commercially available radar and stereoscopic optical launch monitors? *Measurement* **112**, 125–136. [doi:10.1016/j.measurement.2017.08.009](https://doi.org/10.1016/j.measurement.2017.08.009)
+- Leach, R.J., Forrester, S.E., Mears, A.C. & Roberts, J.R. (2017). How valid and accurate are measurements of golf impact parameters obtained using commercially available radar and stereoscopic optical launch monitors? *Measurement* **112**, 125–136. [doi:10.1016/j.measurement.2017.08.009](https://doi.org/10.1016/j.measurement.2017.08.009)
 
 **Ball flight laws and launch conditions**
 
@@ -1002,13 +1089,15 @@ This structure allows an argument about swing coordination to be technically str
 - Achenbach, E. (1974). The effects of surface roughness and tunnel blockage on the flow past spheres. *JFM* **65**(1), 113–125. [doi:10.1017/S0022112074001285](https://doi.org/10.1017/S0022112074001285)
 - Beratlis, N., Balaras, E. & Squires, K. (2019). On the origin of the drag force on dimpled spheres. *JFM* **879**, 147–167. [doi:10.1017/jfm.2019.647](https://doi.org/10.1017/jfm.2019.647)
 - Mehta, R.D. (1985). Aerodynamics of sports balls. *Annual Review of Fluid Mechanics* **17**, 151–189.
-- Lyu, B., Kensrud, J. & Smith, L. (2020). The reverse Magnus effect in golf balls. *Sports Engineering* **23**(1). [doi:10.1007/s12283-020-0318-1](https://doi.org/10.1007/s12283-020-0318-1)
+- Lyu, B., Kensrud, J. & Smith, L. (2020). The reverse Magnus effect in golf balls. *Sports Engineering* **23**, article 3. [doi:10.1007/s12283-020-0318-1](https://doi.org/10.1007/s12283-020-0318-1)
 - Lyu, B., Kensrud, J., Smith, L. & Tosaya, T. (2018). Aerodynamics of golf balls in still air. *Proceedings* **2**(6), 238. [doi:10.3390/proceedings2060238](https://doi.org/10.3390/proceedings2060238)
-- Naruo, T., Mizota, T. & Shimozono, H. (2004). Experimental study of golf ball aerodynamics. *Transactions of the JSME Series B* **70**(697), 2371–2377. [doi:10.1299/kikaib.70.2371](https://doi.org/10.1299/kikaib.70.2371)
+- Naruo, T., Mizota, T. & Shimozono, H. (2004). Aerodynamic force measurement of highly spinning golf ball in uniform flow and trajectory experiment. *Transactions of the JSME Series B* **70**(697), 2371–2377. [doi:10.1299/kikaib.70.2371](https://doi.org/10.1299/kikaib.70.2371)
 - Li, J., Tsubokura, M. & Tsunoda, M. (2017). Numerical investigation of the flow around a golf ball at around the critical Reynolds number. *Flow, Turbulence and Combustion* **99**, 837–864. [doi:10.1007/s10494-017-9859-1](https://doi.org/10.1007/s10494-017-9859-1)
 - Smith, C.E., Beratlis, N., Balaras, E., Squires, K. & Tsunoda, M. (2010). Numerical investigation of the flow over a golf ball in the subcritical and supercritical regimes. *International Journal of Heat and Fluid Flow* **31**(3), 262–273. [doi:10.1016/j.ijheatfluidflow.2010.01.002](https://doi.org/10.1016/j.ijheatfluidflow.2010.01.002)
 - Tavares, G., Shannon, K. & Melvin, T. (1999). Golf ball spin decay model based on radar measurements. In *Science and Golf III*, 464–472. Human Kinetics.
 - Lieberman, B. et al. (2001). Method for determining coefficients of lift and drag of a golf ball. US Patent 6,186,002 B1 (USGA). [Google Patents](https://patents.google.com/patent/US6186002B1/en)
+
+- McNally, W., Lambeth, J. & Brekke, D. (2023). Combining physics and deep learning models to simulate the flight of a golf ball. *IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops*, 5119–5128. [Paper](https://openaccess.thecvf.com/content/CVPR2023W/CVSports/papers/McNally_Combining_Physics_and_Deep_Learning_Models_To_Simulate_the_Flight_CVPRW_2023_paper.pdf)
 
 **Closure rate and clubhead delivery**
 
@@ -1020,4 +1109,4 @@ This structure allows an argument about swing coordination to be technically str
 
 ---
 
-*Working dossiers with full verification status for every claim in this article, including the items we could not source, are in `content-development/technology-research/`.*
+*This reference distinguishes derived mechanics, illustrative calculations and primary empirical evidence. Numerical agreement between implementations verifies a calculation; validation for a particular golfer or ball requires independent measurements.*
