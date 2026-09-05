@@ -1,6 +1,6 @@
 ---
 title: "Affine Control Interpretation of the Golf Swing — Part 5"
-description: "Simulink implementation documentation for the control-affine golf swing model, including numerical routines and validation approaches."
+description: "Reproducibility protocol for numerical verification of a control-affine golf model, with explicit boundaries between mathematical checks and empirical validation."
 subtitle: "Numerical Consistency Check (Planar Model)"
 author: "Dieter Olson"
 date: today
@@ -14,71 +14,16 @@ format:
 
 {{< include _generated/trust/critique-annotations/theory-part5.qmd >}}
 
-```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Theory is great, but can we implement it without breaking the math? Part V specifies how to check a simulation against the equations, and what evidence a reproducible numerical result needs.
-      </p>
+## What This Numerical Procedure Establishes
 
-      <div class="laymans-item">
-        <h3>The "Flight Simulator" for Golf</h3>
-        <p>
-          A digital golfer-and-club model, such as a Simulink model, can act as a numerical test environment. It allows us to perform model-based experiments that would be impossible in real life—like instantaneously turning off the simulated driving torques to see what happens.
-        </p>
-        <div class="analogy">
-          <strong>Analogy:</strong> Before a pilot flies a new plane, they test it in a simulator. We simulate the "crash" scenarios (like the ZTCF family) here to ensure the math holds up under stress.
-        </div>
-      </div>
+A simulator can check whether an implementation solves its declared equations consistently. That is numerical verification. Whether those equations predict a golfer's motion and loads is an empirical validation question requiring separate measurements, identified parameters and uncertainty.
 
-      <div class="laymans-item">
-        <h3>The Kill Switch Experiment</h3>
-        <p>
-          The proposed "kill switch" test branches from selected downswing states and sets the chosen simulated driving torques to zero.
-        </p>
-        <div class="key-takeaway">
-          The question is how motion and forces evolve after that intervention. Continued motion is compatible with stored momentum and energy; its magnitude and duration require a specified model and saved results.
-        </div>
-      </div>
+The proposed branch experiment sets the declared torque channel to zero while retaining the specified state and plant. It preserves momentum, elastic deformation and any declared auxiliary states. It does not establish that a golfer could reproduce the intervention, or that continued motion measures a passive share of performance.
 
-    </div>
-  </div>
-</section>
-```
+A planar model can test force balance, modal coupling, energy accounting and solver convergence in its own degrees of freedom. It cannot establish spatial gyroscopic behavior involving the full angular-velocity cross product, bilateral grip-force allocation, or three-dimensional contact accuracy. The particular planar coordinates, constraints and shaft approximation must be specified; the word “planar” alone does not determine the number of degrees of freedom.
 
-::: {.callout-note}
-## Novelty Status
-
-- **Established:** Numerical simulation of multibody dynamics (Simulink/MATLAB); validation against analytical solutions.
-- **Novel application:** Implementing the specific control-affine golf swing model numerically; deriving numerical consistency checks for the ZTCF/ZVCF counterfactuals. (Site-wide canonical ZTCF glossary: [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ZTCF-canonical).)
-- **Status:** This page specifies numerical consistency checks. Its historical simulation narrative is not a revision-bound reproducible validation package; algebraic identities and empirical validation have different evidence requirements.
-:::
-
-::: {.callout-warning}
-## Dimensionality Gap
-A planar numerical test cannot assess spatial gyroscopic effects. The planar model ($q \in \mathbb{R}^3$) lacks the three-dimensional rotational degrees of freedom required to test gyroscopic effects that rely on the cross-product terms $\omega \times I \omega$ (discussed in Part III). A planar test can check algebraic consistency and numerical convergence within that model. Same-state affine decomposition is a model identity; experimental validity of a spatial golf model requires separate measurements.
-:::
+The checks below are a reproducibility protocol. They do not report a newly executed full-golfer Simulink study or establish novelty of the method. The [worked pendulum](theory-part4.html) supplies independently checkable mathematical examples; the [counterfactual discussion](theory-part2.html) supplies branch, uncertainty and event conventions.
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
 {{< include ../_includes/mechanics-counterfactual-algorithm.qmd >}}
-
-## Related Articles
-
-::: {.callout-note}
-## See Also
-
-- **[Part 1: Affine Control Interpretation of the Golf Swing](theory-part1.html)** — Foundational framework
-- **[Part 2: ZTCF and ZVCF Tools](theory-part2.html)** — Theoretical definition of the counterfactuals to be tested numerically
-- **[Part 3: Drift Invariance](theory-part3.html)** — Scope of same-state decomposition and counterfactual inference
-- **[Part 4: Mathematical Derivations](theory-part4.html)** — Block matrix proofs underlying the numerical algorithms
-- **[Sources of Nonlinearity](sources-of-nonlinearity.html)** — Catalog of nonlinearities and their impact on ZTCF validity
-:::
