@@ -183,3 +183,66 @@ def test_cli_write_then_check_round_trips(tmp_path: Path) -> None:
 def test_repository_pins_are_reconciled() -> None:
     """The committed pin file must match the live sources and the active lock."""
     assert pins.main(["--root", str(REPO_ROOT)]) == 0
+
+
+@pytest.mark.unit
+def test_render_excluded_chapters_do_not_produce_routes_and_are_reported(tmp_path: Path) -> None:
+    """A link inside articles/proximal_distal_companion/chapters/ must not
+    produce a route, and must be reported rather than silently dropped (#4145)."""
+    root = tmp_path / "site"
+    chapters_dir = root / "articles" / "proximal_distal_companion" / "chapters"
+    chapters_dir.mkdir(parents=True)
+    (chapters_dir / "ch01.qmd").write_text(
+        f"https://github.com/D-sorganization/UpstreamDrift/blob/{SHA_A}/a.py\n",
+        encoding="utf-8",
+    )
+
+    scanned, findings = pins.scan_site_pins(root)
+
+    assert scanned == {}
+    assert findings == [
+        f"articles/proximal_distal_companion/chapters/ch01.qmd: UpstreamDrift pin {SHA_A[:8]} "
+        "sits in a partial that no rendered page includes"
+    ]
+
+
+@pytest.mark.unit
+def test_render_excluded_chapter_included_by_page_resolves_to_page_route(tmp_path: Path) -> None:
+    """When a render-excluded chapter is included by a rendered page, its pins
+    must resolve to the page route and not emit a dead chapter route (#4145)."""
+    root = tmp_path / "site"
+    chapters_dir = root / "articles" / "proximal_distal_companion" / "chapters"
+    chapters_dir.mkdir(parents=True)
+    (chapters_dir / "ch01.qmd").write_text(
+        f"https://github.com/D-sorganization/UpstreamDrift/blob/{SHA_A}/a.py\n",
+        encoding="utf-8",
+    )
+    (root / "articles" / "proximal-distal-a-journey-through-the-swing.qmd").write_text(
+        "{{< include proximal_distal_companion/chapters/ch01.qmd >}}\n",
+        encoding="utf-8",
+    )
+
+    scanned, findings = pins.scan_site_pins(root)
+
+    assert scanned == {SHA_A: ["/articles/proximal-distal-a-journey-through-the-swing.html"]}
+    assert "/articles/proximal_distal_companion/chapters/ch01.html" not in scanned[SHA_A]
+    assert findings == []
+
+
+@pytest.mark.unit
+def test_is_site_source_respects_quarto_render_exclusions() -> None:
+    """_is_site_source must reject excluded trees and partials while accepting rendered pages (#4145)."""
+    assert not pins._is_site_source(
+        Path("articles/proximal_distal_companion/chapters/ch01_follow_the_energy.qmd")
+    )
+    assert not pins._is_site_source(
+        Path("articles/tangent-hyperplane-contraction/textbook-main.qmd")
+    )
+    assert not pins._is_site_source(
+        Path("articles/The_Geometry_of_Motion/quarto/volume2_content.qmd")
+    )
+    assert not pins._is_site_source(Path("critiques/INLINE_SUGGESTIONS.md"))
+    assert not pins._is_site_source(Path("articles/chapters/_ch01.qmd"))
+    assert pins._is_site_source(Path("articles/proximal-distal-a-journey-through-the-swing.qmd"))
+    assert pins._is_site_source(Path("pages/overview.qmd"))
+    assert pins._is_site_source(Path("index.qmd"))

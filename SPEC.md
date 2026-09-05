@@ -136,7 +136,7 @@ AffineDrift/
 | F21 | Opt-In Performance Benchmark Suite      | ✅     | `benchmarks/` provides pytest-benchmark timing checks for stable computational paths.                                                                                                                                                                                        |
 | F22 | Distributed Review Guard                | ✅     | `block-self-merge.yml` blocks PR authors from self-approving changes.                                                                                                                                                                                                        |
 | F23 | Programming Companion Consumer          | ✅     | Validates and pins immutable upstream companion packages and manifests from UpstreamDrift.                                                                                                                                                                                   |
-| F24 | Software Freshness Dashboard            | ✅     | `data/companion/pins.json` + generated `/models/programming/freshness.html`; every UpstreamDrift SHA linked from the site is reconciled by `scripts/check_companion_pins.py`, which resolves include partials to the rendered pages that publish them (#4027, #4123, #4142). |
+| F24 | Software Freshness Dashboard            | ✅     | `data/companion/pins.json` + generated `/models/programming/freshness.html`; every UpstreamDrift SHA linked from the site is reconciled by `scripts/check_companion_pins.py`, which respects `_quarto.yml` render exclusions and resolves include partials to the rendered pages that publish them (#4027, #4123, #4142, #4145). |
 | F24 | Scientific Claim-Audit Inventory        | ✅     | Governed route classification, digest binding, and audit reports for all public claims.                                                                                                                                                                                      |
 | F25 | Repository Root Hygiene Enforcement     | ✅     | CI quality gate (`scripts/check_root_hygiene.py`) enforces strict root allowlist.                                                                                                                                                                                            |
 
@@ -225,11 +225,11 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-09-05 | #4153 | Correct long-form mechanics, inverse dynamics, optimal control, passive stabilization, impact, underactuation, variational residuals, and constrained geometry; synchronize paired editions, regenerate five PDFs, and document the continuing corpus audit under epic #4009. |
+| 2026-09-05 | #4146 | chore(spec): re-vendor spec-changelog helpers and worktree-relative merge driver installer from Repository_Management (#4146) |
 | 2026-09-03 | #4144 | fix(companion, #4142): resolve companion pin routes through Quarto includes so `scripts/check_companion_pins.py` maps underscore-prefixed partials to the rendered pages that transitively include them, unblocking the `Deploy Website` job and the generated freshness dashboard |
 | 2026-09-03 | #1520 | Key SPEC.md change-log rows by pull request instead of the next free serial spec version; add `scripts/check_spec_changelog.py` and `shared_scripts/spec_changelog.py`; make `Spec Version` release-derived via `scripts/bump_spec_version.py`; register the `spec-rows` union merge driver |
 | 2026-09-02 | #4128 | Governance and Root Hygiene Cleanup (spec 1.0.288) |
 | 2026-09-01 | #4104 | Live-Only Observable Retry Closure (spec 1.0.278) |
-
 Archived entry (spec 1.0.288): Governance and Root Hygiene Cleanup (#4128)
 
 Removes root sprawl, stray and duplicate agent assets, and deprecated review files.

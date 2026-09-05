@@ -179,8 +179,7 @@ def parse_changelog(text: str) -> Changelog:
 
     if header is None or table_start is None:
         raise SpecChangelogError(
-            "the 'Change Log' heading is not followed by a table whose first "
-            "column is 'Date'"
+            "the 'Change Log' heading is not followed by a table whose first " "column is 'Date'"
         )
 
     return Changelog(
@@ -254,11 +253,7 @@ def validate(changelog: Changelog) -> list[str]:
             )
         if not row.summary.strip():
             failures.append(f"{label}: empty summary")
-        elif (
-            "|" in row.summary
-            and _DATE_RE.match(row.date)
-            and row.date >= PR_KEYED_SINCE
-        ):
+        elif "|" in row.summary and _DATE_RE.match(row.date) and row.date >= PR_KEYED_SINCE:
             # A pipe splits the row into extra cells, so the rendered markdown
             # table and the parsed row disagree and the row stops round-tripping
             # through the merge driver.
@@ -267,11 +262,7 @@ def validate(changelog: Changelog) -> list[str]:
                 "column break. Escape it as a backslash-pipe, or reword."
             )
 
-        if (
-            _KEY_RE.match(row.key)
-            and _DATE_RE.match(row.date)
-            and row.date >= PR_KEYED_SINCE
-        ):
+        if _KEY_RE.match(row.key) and _DATE_RE.match(row.date) and row.date >= PR_KEYED_SINCE:
             if row.key in seen:
                 failures.append(
                     f"duplicate change-log key {row.key} "
@@ -327,9 +318,7 @@ def migrate_rows(rows: list[Row]) -> tuple[list[Row], int]:
         note = f"(spec {row.key})"
         if note not in summary:
             summary = f"{summary} {note}" if summary else note
-        migrated.append(
-            Row(date=row.date, key=_recover_key(row.summary), summary=summary)
-        )
+        migrated.append(Row(date=row.date, key=_recover_key(row.summary), summary=summary))
         changed += 1
     return migrated, changed
 
@@ -339,9 +328,7 @@ def migrate_rows(rows: list[Row]) -> tuple[list[Row], int]:
 #: rows did, are inserted at the same offset by every pull request, and so are
 #: the second conflict site. The migration freezes them: the text is preserved
 #: verbatim, the word "Current" and the coordination it implies are not.
-_PROSE_ENTRY_RE = re.compile(
-    r"^Current (?P<version>\d+\.\d+\.\d+) entry:", re.MULTILINE
-)
+_PROSE_ENTRY_RE = re.compile(r"^Current (?P<version>\d+\.\d+\.\d+) entry:", re.MULTILINE)
 
 POLICY_NOTE = (
     "Rows are keyed by pull request, not by a serial spec version: "
@@ -385,6 +372,34 @@ def ensure_policy_note(text: str, *, include_frozen_note: bool) -> str:
     return text[:insert_at] + "\n" + note.lstrip("\n") + text[insert_at:]
 
 
+#: Prettier pads markdown table cells to the width of the widest row, so with
+#: the change-log table in its scope a single new row re-pads every other row --
+#: turning a one-line addition into a whole-table diff that conflicts with every
+#: concurrent pull request, which is the exact failure #1520 removes. The fence
+#: is narrower than putting all of SPEC.md in `.prettierignore`: Prettier keeps
+#: formatting the rest of the specification. (Tools already carried this fence;
+#: the migration now gives it to every repository.)
+PRETTIER_FENCE_START = "<!-- prettier-ignore-start -->"
+PRETTIER_FENCE_END = "<!-- prettier-ignore-end -->"
+
+
+def ensure_prettier_fence(text: str) -> str:
+    """Wrap the change-log table in Prettier ignore markers. Idempotent."""
+    changelog = parse_changelog(text)
+    before = text[: changelog.start]
+    if before.rstrip().endswith(PRETTIER_FENCE_START):
+        return text
+    table = text[changelog.start : changelog.end]
+    after = text[changelog.end :]
+    if not before.endswith("\n"):
+        before += "\n"
+    fenced = f"{PRETTIER_FENCE_START}\n\n{table}"
+    if not fenced.endswith("\n"):
+        fenced += "\n"
+    fenced += f"\n{PRETTIER_FENCE_END}\n"
+    return before + fenced + after.removeprefix("\n")
+
+
 def migrate_text(text: str) -> tuple[str, int]:
     """Migrate the change log in ``text``. Returns ``(text, n_rows_rewritten)``.
 
@@ -392,32 +407,28 @@ def migrate_text(text: str) -> tuple[str, int]:
 
     1. ``Current X.Y.Z entry:`` prose paragraphs become
        ``Archived entry (spec X.Y.Z):`` — frozen, not deleted.
-    2. A policy note naming the new row format is inserted under the heading.
+    2. A policy note naming the new row format is inserted under the heading,
+       and the table is wrapped in Prettier ignore markers so a new row can
+       never re-pad the whole table.
     3. Every serial-versioned table row is rewritten to a PR key, with the old
        serial appended to its summary as ``(spec X.Y.Z)``.
     """
     text, prose_count = migrate_prose_entries(text)
     text = ensure_policy_note(text, include_frozen_note=prose_count > 0)
+    text = ensure_prettier_fence(text)
     changelog = parse_changelog(text)
     rows, changed = migrate_rows(changelog.rows)
     header = list(changelog.header)
     header_block = changelog.header_block
     if tuple(header[:3]) != CANONICAL_HEADER:
         header_lines = header_block.splitlines(keepends=True)
-        widths = [
-            max(len(CANONICAL_HEADER[index]), 10)
-            for index in range(len(CANONICAL_HEADER))
-        ]
+        widths = [max(len(CANONICAL_HEADER[index]), 10) for index in range(len(CANONICAL_HEADER))]
         new_header = (
             "| "
-            + " | ".join(
-                CANONICAL_HEADER[index].ljust(widths[index]) for index in range(3)
-            )
+            + " | ".join(CANONICAL_HEADER[index].ljust(widths[index]) for index in range(3))
             + " |\n"
         )
-        new_separator = (
-            "| " + " | ".join("-" * widths[index] for index in range(3)) + " |\n"
-        )
+        new_separator = "| " + " | ".join("-" * widths[index] for index in range(3)) + " |\n"
         header_block = new_header + new_separator
         if len(header_lines) > 2:  # pragma: no cover - defensive
             header_block += "".join(header_lines[2:])
@@ -464,9 +475,7 @@ def union_rows(base: list[Row], ours: list[Row], theirs: list[Row]) -> list[Row]
     """
     base_counts: Counter[tuple[str, str, str]] = Counter(row.identity for row in base)
     our_counts: Counter[tuple[str, str, str]] = Counter(row.identity for row in ours)
-    their_counts: Counter[tuple[str, str, str]] = Counter(
-        row.identity for row in theirs
-    )
+    their_counts: Counter[tuple[str, str, str]] = Counter(row.identity for row in theirs)
 
     # Keep each base occurrence unless BOTH sides removed it.
     kept: list[Row] = []
@@ -523,9 +532,7 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.reconfigure(errors="backslashreplace")
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "command", choices=["validate", "migrate", "rows"], help="what to do"
-    )
+    parser.add_argument("command", choices=["validate", "migrate", "rows"], help="what to do")
     parser.add_argument("--spec", default="SPEC.md", help="path to SPEC.md")
     parser.add_argument(
         "--write",
