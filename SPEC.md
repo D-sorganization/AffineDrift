@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4165 | Correct aerodynamic force and inverse-dynamics signs, distributed shaft loads, air-relative power, reproducible forward counterfactuals, ball flight, and environmental sensitivity; synchronize print/web, regenerate the PDF, add numerical checks and a shared plot, and remove an unverified reference under #4164. |
 | 2026-09-05 | #4163 | Rebuild the long inverse-dynamics chapter with complete spatial recursion, measurement rank, calibrated sensors, muscle-inference scope, uncertainty, and forward counterfactuals; synchronize print/web and correct incoming explanations under #4161. |
 | 2026-09-05 | #4162 | Rebuild the Physics parallel-mechanisms chapter with correct closure rank, load identification, hand/ground wrench and energy balances; synchronize print/web, add a shared graph and numerical checks, and correct two repeated spine-loop statements under #4160. |
 | 2026-09-05 | #4153 | Correct long-form mechanics, inverse dynamics, optimal control, passive stabilization, impact, underactuation, variational residuals, constrained geometry, and superposition; synchronize paired editions, regenerate five PDFs, and document the continuing corpus audit under epic #4009. |
