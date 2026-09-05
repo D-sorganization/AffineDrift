@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4170 | Derive curve geometry, physical force, constrained timing, moving frames, and transverse dynamics with reproducible counterexamples; synchronize four editions, rebuild three PDFs, and qualify golf inference under #4168. |
 | 2026-09-05 | #4167 | Rebuild motion-control foundations around impact outcomes, feasible trajectories, timing, metrics, stability, and robust tubes; correct repeated input-rank claims, synchronize four editions, rebuild four PDFs, and add reproducible examples under #4166. |
 | 2026-09-05 | #4165 | Correct aerodynamic force and inverse-dynamics signs, distributed shaft loads, air-relative power, reproducible forward counterfactuals, ball flight, and environmental sensitivity; synchronize print/web, regenerate the PDF, add numerical checks and a shared plot, and remove an unverified reference under #4164. |
 | 2026-09-05 | #4163 | Rebuild the long inverse-dynamics chapter with complete spatial recursion, measurement rank, calibrated sensors, muscle-inference scope, uncertainty, and forward counterfactuals; synchronize print/web and correct incoming explanations under #4161. |
