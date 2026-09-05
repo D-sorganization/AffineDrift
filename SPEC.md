@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4185 | Correct stochastic motor-control conventions, moment and task uncertainty, optimal-effort claims, original experimental scope, and first-contact risk; synchronize four editions, rebuild three PDFs, and add checked counterexamples under #4179. |
 | 2026-09-05 | #4183 | Derive valid phase coordinates, virtual constraints, input authority, internal dynamics, active power, and hybrid contact conditions; synchronize four editions, rebuild three PDFs, and connect coordination to golf impact under #4177. |
 | 2026-09-05 | #4182 | Derive nonlinear funnel invariance, progress and impact conditions, robust and SOS certificate limits, continuous-time verification, and output-sensitive geometry; synchronize four editions, rebuild three PDFs, and add independently checked examples under #4175. |
 | 2026-09-05 | #4178 | Correct trajectory objectives, free-time scaling, PMP signs, numerical feasibility, and impact uncertainty in four editions; rebuild three PDFs and repair long-chapter visibility under #4173 and #4176; accept valid starred LaTeX operators without weakening corruption checks under #4181. |
