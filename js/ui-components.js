@@ -58,7 +58,9 @@ export function initFadeAnimations() {
     ).matches;
 
     if (!isMobile && !prefersReducedMotion) {
-        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px 0px 0px" };
+        // Long textbook sections may never fit 10% of their area in a viewport.
+        // Reveal on any intersection, including anchors into nested subsections.
+        const observerOptions = { threshold: 0, rootMargin: "0px 0px 0px 0px" };
         const observer = new IntersectionObserver(function (entries) {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
