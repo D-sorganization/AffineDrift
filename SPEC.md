@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4182 | Derive nonlinear funnel invariance, progress and impact conditions, robust and SOS certificate limits, continuous-time verification, and output-sensitive geometry; synchronize four editions, rebuild three PDFs, and add independently checked examples under #4175. |
 | 2026-09-05 | #4178 | Correct trajectory objectives, free-time scaling, PMP signs, numerical feasibility, and impact uncertainty in four editions; rebuild three PDFs and repair long-chapter visibility under #4173 and #4176; accept valid starred LaTeX operators without weakening corruption checks under #4181. |
 | 2026-09-05 | #4174 | Correct orbital stability, transverse coordinates, Floquet limits, hybrid timing, transient growth, event outcomes, and LQR tube conditions; synchronize four editions, rebuild three PDFs, and add checked examples under #4171. |
 | 2026-09-05 | #4172 | Correct configuration manifolds, force covectors, rotation singularities, kinetic geometry, passive energy, and attitude-control frames; synchronize four editions, rebuild three PDFs, and add reproducible checks under #4169. |
