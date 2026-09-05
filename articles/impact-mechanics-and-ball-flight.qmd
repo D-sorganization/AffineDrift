@@ -1,107 +1,81 @@
 ---
 title: "Impact Mechanics and Ball Flight: A Reference Treatment"
-description: "A comprehensive review of golf impact mechanics: the collision, gear effect, ball flight laws, aerodynamic models, and the consequences of clubface closure rate."
+description: "A comprehensive review connecting delivered club motion, coupled contact mechanics, ball launch, aerodynamics, and the interpretation of closure rate."
 author: "Dieter Olson"
 date: "2026-08-03"
 categories: [physics, impact, ball-flight, golf, reference]
 ---
 
-```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Everything that happens to a golf ball is decided in about half a millisecond — roughly a thousandth of the time it takes to blink. In that instant the clubface pushes the ball forward, drags it sideways enough to make it spin, and then the ball is gone and nothing more can be done. The rest of the shot is aerodynamics acting on whatever the collision produced.
-      </p>
+## The Physical Story
 
-      <div class="laymans-item">
-        <h3>Two numbers decide where it goes</h3>
-        <p>
-          Where the face points, and where the clubhead is travelling. The ball starts off mostly where the face points — roughly three quarters of the way there for a driver — and then curves away from the direction the head was moving. That is the modern understanding, and it is close to the reverse of what golf taught for several decades.
-        </p>
-      </div>
+The swing prepares the club's motion and deformation. Contact converts that delivered state into ball velocity and spin. Flight then depends on those launch conditions, the ball's aerodynamic properties, wind, and the atmosphere.
 
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The ball starts where the face looks and curves away from the path. The old teaching — that it starts along the path and curves away from the face — had it backwards, and high-speed cameras settled the argument.
-      </div>
+These stages are intertwined. A shaft can change head orientation and velocity before contact; an off-centre impulse can rotate the head during contact; that rotation changes surface slip, which changes the ball's spin and launch direction. The flight model then turns those launch differences into a landing distribution.
 
-      <div class="laymans-item">
-        <h3>Why a fast-rotating face is a double-edged tool</h3>
-        <p>
-          Some players square the face by rotating it quickly through impact; others hold it steadier and square it with their body. Rotating quickly works, but it makes timing brutal: if the face is turning at 2,000 degrees per second, being two thousandths of a second early or late changes where the face points by four degrees — which is the difference between the fairway and the trees.
-        </p>
-        <div class="analogy">
-          <strong>Catching a spinning door handle:</strong> If the handle is turning slowly you can grab it anywhere and it feels the same. If it is spinning fast, grabbing a fraction of a second late means it is pointing somewhere quite different. The face is the handle, and closure rate is how fast it spins.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-```
+For many ordinary centred strikes, launch direction is closer to the face normal than to the club's path. This is useful guidance, but two angles alone do not determine a shot. Strike location, contact speed, head inertia, ball deformation, and surface conditions matter too. Likewise, rapid face rotation creates a local timing sensitivity, but it does not by itself establish how accurately a golfer plays.
 
 ## Scope and Intent
 
-This article is a reference treatment of what happens between the club and the ball, and what the resulting launch conditions do in flight. It is written to be read out of order and returned to, and it tries to do four things that shorter treatments usually skip:
+This reference connects four tasks:
 
-1. State the **collision mechanics** properly, as a rigid-body impulse problem rather than a one-dimensional restitution formula.
-2. Give the **ball flight laws** their history, their evidence, and their limits — including where the widely quoted numbers came from and how well they are actually established.
-3. **Compare the competing aerodynamic models** rather than presenting one as canonical.
-4. Work out, quantitatively, what **clubface closure rate** does — to the ball, to the measurement, and to the player.
+1. Describe delivered motion with a declared reference point, frame, and time.
+2. Solve a collision whose impulse changes both bodies' translation and rotation.
+3. Interpret launch measurements using the assumptions and uncertainty of the contact model.
+4. Propagate launch conditions through an aerodynamic model with a stated range of validity.
 
-Throughout, the distinction between what is *measured*, what is *derived from a model*, and what is *assumed* is kept explicit, in keeping with the standard used across the [Technology section](../pages/technology.html).
+A derived identity, an assumed model parameter, and a measured result have different evidential roles. Reproducing arithmetic verifies the calculation; agreement with independent measurements is needed to establish predictive accuracy.
 
 ::: {.callout-note}
 ## Conventions
 
-Right-handed coordinate frame for a right-handed golfer: $x$ along the target line, $y$ vertical, $z$ to the right of the target line looking down it. Angles positive right and up. Unless a measurement source specifies otherwise, club-delivery quantities refer to **immediately before first contact** and ball launch quantities to **separation**. Compression changes club motion; maximum-compression values must not be substituted into pre-impact momentum or restitution formulas. Where a quantity depends on which point of the clubhead is used as reference — and several do — the reference point is stated.
+Use a right-handed frame with $x$ along the target line, $y$ up, and $z$ right when looking along the target line. The face normal $\mathbf n$ points toward the ball. Unless a source specifies otherwise, incoming club quantities refer to immediately before first contact and outgoing ball quantities to separation. Maximum-compression values cannot be substituted into pre-impact restitution formulas.
+
+Head inertia tensors and all vectors in the impulse calculation are expressed in the same world frame at the frozen contact configuration. A scalar ball inertia denotes an isotropic sphere.
 :::
 
-## Part I: The Delivery, as a Twist
+## Part I: Delivered Pose, Velocity, and Deformation
 
-### Why a Single "Path" Is Not Enough
+### Why a Single Path Is Not Enough
 
-A clubhead approaching the ball is a rigid body with six degrees of freedom, and its instantaneous motion is completely described by a **twist**
-
-$$
-\xi = (\boldsymbol{\omega},\, \mathbf{v}_O)
-$$
-
-— an angular velocity together with the linear velocity of a chosen reference point. The velocity of any other point on the head follows:
+The instantaneous motion of a rigid head can be represented by angular velocity and the velocity of a named point $O$:
 
 $$
-\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega}\times\mathbf{r}, \qquad \mathbf{r} = \mathbf{p}_P - \mathbf{p}_O
+\xi=(\boldsymbol\omega_c,\mathbf v_O).
 $$
 
-This matters immediately, because it means **there is no such thing as "the" club path**. There is a velocity field over the clubhead, and any reported path is that field evaluated at some point. The industry samples it at two different points depending on the sensing technology, and for a driver the two answers differ by about three degrees — a result developed in detail in [Launch Monitor Technology](technology-launch-monitors.html) and revisited in Part VI below.
+For another head-fixed point $P$,
 
-The delivery parameters in common use are all projections of this one object:
+$$
+\mathbf v_P=\mathbf v_O+\boldsymbol\omega_c\times
+(\mathbf p_P-\mathbf p_O).
+$$
 
-| Parameter | Projection of the twist |
+The velocities can differ, but do not always differ. For example, a separation parallel to $\boldsymbol\omega_c$ contributes no cross product. The [reference-point companion](reference-point-problem.html) derives the exact direction and speed changes.
+
+A twist describes instantaneous velocity. It does not supply the head's pose, local face normal, strike position, or shaft deformation. Those are additional parts of the delivered state.
+
+| Delivery Quantity | Mathematical Meaning |
 |---|---|
-| Club speed | $\lVert\mathbf{v}_O\rVert$ at the declared reference point |
-| Club path | Horizontal direction angle of $\mathbf{v}_O$ |
-| Attack angle | Vertical direction angle of $\mathbf{v}_O$ |
-| Closure rate | Time derivative of the face-normal azimuth; depends on attitude and angular velocity |
-| Swing plane, swing direction | A declared trajectory-plane fit or local osculating-plane construction; not determined by the instantaneous twist alone |
-| Face angle, dynamic loft | Orientation of the face normal (not a velocity — an attitude) |
-| Spin loft | 3D angle between the face normal and the velocity direction |
+| Club speed | $\|\mathbf v_O\|$ at a named point |
+| Club path | Horizontal direction of that point's velocity |
+| Attack angle | Elevation of that point's velocity |
+| Face angle and dynamic loft | Azimuth and elevation of the local face normal |
+| Closure rate | A declared angular component or angle derivative |
+| Strike location | Contact position relative to head geometry and centre of mass |
+| Spin loft | Angle between the local normal and a declared incident velocity |
+| Swing plane | A specified trajectory-plane fit or local geometric construction |
 
-Note the last two rows: face angle and dynamic loft are **orientations**, not velocities. They are properties of the body's attitude and do not depend on which point you evaluate them at — except through face curvature (bulge and roll), which makes the local normal at a toe strike differ from the normal at centre. That is why the convention is to evaluate the face at the **contact point**.
+The local normal changes across a curved face. A head-centre normal cannot replace the normal at a toe or high-face strike without accounting for bulge and roll. Handle motion also cannot determine head motion through a flexible shaft using a single rigid-body transform.
 
-### Spin Loft: The Master Variable for Spin
+### Spin Loft Organises Obliqueness
 
-Spin loft $\Phi$ is the angle between the local face unit normal $\hat n$ and the incident contact-point velocity direction $\hat v$. Let face azimuth be $\phi$, path azimuth $\psi$, dynamic loft $\lambda$, and attack angle $\alpha$. In the forward/up/right frame,
+Let face azimuth be $\phi$, path azimuth $\psi$, dynamic loft $\lambda$, and attack angle $\alpha$. For the incoming contact-point velocity of a head approaching a stationary ball,
 
 $$
 \hat n=(\cos\lambda\cos\phi,\ \sin\lambda,\ \cos\lambda\sin\phi),
-\quad
+$$
+
+$$
 \hat v=(\cos\alpha\cos\psi,\ \sin\alpha,\ \cos\alpha\sin\psi).
 $$
 
@@ -112,277 +86,409 @@ $$
 =\sin\lambda\sin\alpha+\cos\lambda\cos\alpha\cos(\phi-\psi).
 $$
 
-For zero face-to-path, $\Phi=|\lambda-\alpha|$ within the relevant angle range. In general, $\cos(\phi-\psi)\cos(\lambda-\alpha)$ is **not** the exact dot product. At face-to-path $30^\circ$, loft $40^\circ$, and attack $20^\circ$, the expressions already differ materially. Near a common elevation $\alpha$, small separations give $\Phi^2\simeq(\lambda-\alpha)^2+\cos^2\alpha(\phi-\psi)^2$, with angles in radians.
+For zero face-to-path, $\Phi=|\lambda-\alpha|$ within the relevant angle range. In general, $\cos(\phi-\psi)\cos(\lambda-\alpha)$ is **not** the exact dot product. At face-to-path $30^\circ$, loft $40^\circ$, and attack $20^\circ$, the expressions already differ materially. Near a common elevation $\alpha$,
 
-Spin loft sets the obliqueness of compression and shear. Spin also depends on contact speed, friction, tangential compliance, strike position, and incident club rotation. A three-dimensional angle organizes those inputs; it does not replace the contact model.
+$$
+\Phi^2\simeq(\lambda-\alpha)^2+
+\cos^2\alpha(\phi-\psi)^2,
+$$
+
+with small angles in radians.
+
+Spin loft describes geometry, not a complete spin law. If the ball is already moving or spinning, the relative surface velocity is needed as well. Contact speed, friction, compliance, and the head's response determine the impulse.
 
 ## Part II: The Collision
 
-### What Actually Has to Be Solved
+### One Coupled Impulse
 
-The popular treatment of impact is a one-dimensional restitution formula, and it is a reasonable approximation for ball speed on a centred strike. But the real problem is a **rigid-body impulsive collision** in which an impulse $\mathbf{J}$ is applied at the contact point, and:
+Approximate the short contact by a resultant impulse $\mathbf J$ on the ball and $-\mathbf J$ on the head. Let ball and head masses be $m$ and $M$. Let their contact levers from their respective centres of mass be $\mathbf r_b$ and $\mathbf r_c$.
 
-$$
-m_b \Delta\mathbf{v}_{\text{ball}} = \mathbf{J}, \qquad
-M \Delta\mathbf{v}_{\text{club,CG}} = -\mathbf{J}, \qquad
-\mathsf{I}\,\Delta\boldsymbol{\omega}_{\text{club}} = -\mathbf{r}\times\mathbf{J}
-$$
-
-Three consequences follow immediately, and each is a section below:
-
-- The impulse has a **normal component** governed by elastic restitution and the *effective* mass of the club at the contact point — not its total mass (Part II.1).
-- It has a **tangential component** governed by friction and tangential compliance, and this is what creates spin (Part II.2).
-- Because the impulse acts at a **moment arm** $\mathbf{r}$ from the CG, it torques the head, and the head's rotation feeds back into the ball — **gear effect** (Part III).
-
-The effective-mass idea is the key to seeing why these are one problem rather than three. For an impulse applied at offset $\mathbf{r}$ along direction $\hat{\mathbf{n}}$, the club presents an effective mass
+For a spherical ball and central local normal, $\mathbf r_b=-R\mathbf n$. Ignoring external impulses during contact gives
 
 $$
-\frac{1}{M_{\text{eff}}} = \frac{1}{M} + \hat{\mathbf{n}}\cdot\left[\left(\mathsf{I}^{-1}(\mathbf{r}\times\hat{\mathbf{n}})\right)\times\mathbf{r}\right]
+m(\mathbf v_b^+-\mathbf v_b^-)=\mathbf J,
+\qquad
+M(\mathbf v_c^+-\mathbf v_c^-)=-\mathbf J,
 $$
 
-The rotational contribution is nonnegative: it depends on the perpendicular moment arm to the impulse line, not simply the distance to the centre of gravity. This rigid-body mechanism can reduce ball speed and contribute to gear effect. Real face compliance and local restitution can also vary with strike location.
-
-### II.1 The Normal Impulse {#sec-normal}
-
-Along the face normal, momentum conservation plus a coefficient of restitution $e$ gives
-
 $$
-\frac{v_{\text{ball}}}{v_{\text{club}}} = \frac{1+e}{1+m/M_{\text{eff}}}
+I_b(\boldsymbol\omega_b^+-\boldsymbol\omega_b^-)
+=\mathbf r_b\times\mathbf J,
 $$
 
-It is worth pausing on how general this is. The identical equation appears in the baseball literature as $v_{\text{ball},n} = [(1+e_y)/(1+r_y)]\,v_{\text{bat},n}$ ([Kensrud, Nathan & Smith 2017](https://doi.org/10.1119/1.4982793)). Golf and baseball are not analogous here; they are the same problem with different constants.
-
-Putting numbers in: the Rules cap the ball at 45.93 g, a driver head is about 200 g, and $e \approx 0.83$, so
-
 $$
-\frac{1.83}{1 + 0.2297} = 1.488
+I_c(\boldsymbol\omega_c^+-\boldsymbol\omega_c^-)
+=-\mathbf r_c\times\mathbf J.
 $$
 
-This is where the familiar **smash-factor ceiling of about 1.50** comes from. It is worth deriving rather than quoting, because the popular sources that assert 1.50 do not show where it comes from, and the derivation makes the assumptions visible — in particular that it is a *centred*-strike number, since $M_{\text{eff}}$ falls off-centre.
+These equations enforce equal and opposite contact action. They do not yet determine $\mathbf J$: a contact law supplies the missing relationship between incoming and outgoing relative motion.
 
-::: {.callout-warning}
-## Two Regulatory Numbers That Are Constantly Confused
+This is a frozen-geometry rigid-impulse approximation. In a resolved collision, pressure and shear are distributed over a changing patch; levers and attitude can change. The shaft and support can also transmit impulses. Treating the head as free is appropriate only when those external contributions are negligible for the question and time scale being modelled.
 
-**Coefficient of restitution.** The USGA states its limit as **0.822**, unchanged since 1998, while **0.830** circulates widely as "the USGA limit." These are almost certainly the limit and the limit-plus-tolerance conformance threshold respectively, by exact analogy with the CT structure below — but we could not confirm that reconciliation from a primary document, so we state both rather than assert one.
+### Contact-Point Effective Inverse Mass
 
-For an initially stationary ball in a one-dimensional collision, the [USGA's separation-speed definition](https://www.usga.org/content/usga/home-page/articles/2025/05/what-happens-collision-between-club-ball.html) is the ordinary relative-speed COR: $e=(v_b^+-v_c^+)/v_c^-$. An apparent rebound coefficient from a different experimental setup must be defined separately. Neither COR nor its square is a general fraction of the club's energy delivered to the ball.
+Define the ball-surface velocity relative to the head surface:
 
-**Characteristic Time.** Since 2004, spring-like effect in *drivers* has been policed by CT rather than COR (COR remains the method for fairway woods, hybrids and irons). A steel pendulum ball with internal sensors strikes the face and the sensors time the contact; the limit is **239 µs with an 18 µs tolerance**, so 257 µs conforms.
+$$
+\mathbf w^-=
+\mathbf v_b^-+\boldsymbol\omega_b^-\times\mathbf r_b
+-\mathbf v_c^--\boldsymbol\omega_c^-\times\mathbf r_c.
+$$
 
-**CT is not the golf ball's contact time.** It is a small steel ball on the face, used as a proxy for face flexibility. The ball's own contact time is roughly twice as long (below). The two numbers are the same order of magnitude and the popular literature conflates them relentlessly.
-:::
+Let $[\mathbf r]_\times\mathbf a=\mathbf r\times\mathbf a$. Substituting the four momentum changes gives
 
-**Contact duration.** The USGA puts impact at "about 500 microseconds." The measurement is subtle: the best peer-reviewed approach makes the ball and clubface act as **a switch closing an electrical circuit**, which [Roberts, Jones & Rothberg (2001)](https://repository.lboro.ac.uk/articles/journal_contribution/9565028) applied across five clubhead types and two ball constructions.
+$$
+\mathbf w^+=\mathbf w^-+W\mathbf J,
+$$
 
-Contact time is not a constant. It **decreases with impact speed** ([Arakawa et al. 2009](https://doi.org/10.1007/s11340-008-9156-y)), but differing reported durations can also reflect ball construction, face compliance, and measurement method. The two quoted durations cannot be assigned to the same ball at different speeds without the underlying experiment. This matters more than it looks: finite-element golf-ball models are calibrated by fitting maximum load, contact time, deformation history and rebound velocity *simultaneously*, so contact time is a model-identification target, not merely a prediction.
+$$
+\begin{aligned}
+W={}&\left(\frac1m+\frac1M\right)I\\
+&-[\mathbf r_b]_\times I_b^{-1}[\mathbf r_b]_\times\\
+&-[\mathbf r_c]_\times I_c^{-1}[\mathbf r_c]_\times.
+\end{aligned}
+$$
 
-**Peak force.** The USGA quotes "upwards of 3,000 pounds." A consistency check: the impulse for a 150 mph ball speed is $J = 0.0459 \times 67 \approx 3.08$ N·s, which over 0.45 ms is a mean force of 6.8 kN; a half-sine pulse peaks at $\pi/2$ times the mean, or about **10.7 kN ≈ 2,400 lbf**. So the USGA's figure is the right order and slightly conservative-high. A "4,000 lbf" figure that circulates on equipment sites has no traceable basis and should be discarded.
+The matrix $W$ has units of inverse mass. For positive masses and positive-definite inertias it is symmetric positive definite. Each rotational term is positive semidefinite because the skew matrix changes sign under transpose.
 
-Arakawa's group also found that **Hertz contact theory predicts the maximum normal force well** for normal impact, which makes it the defensible analytical route rather than a hand-wave.
+This matrix explains the coupling. A tangential impulse can change normal relative velocity if the head geometry and inertia give nonzero normal–tangential entries. A normal impulse can change tangential relative velocity. Solving two unrelated scalar collisions can therefore give an inconsistent answer.
 
-**Loft and speed.** In the stationary-ball, normal-only model, the outgoing velocity is $\mathbf v_b=C(\mathbf v_c\cdot\hat n)\hat n$, with $C=(1+e)/(1+m/M_{\rm eff})$. Consequently, the **speed ratio** is $C\cos\Phi$. Its projection on the incoming club direction is $C\cos^2\Phi$; that projection is not smash factor. Tangential impulse changes both speed and launch direction. Restitution can depend on impact speed and the interacting ball/face construction, so a fixed-$e$ example is not a universal equipment ceiling.
+If support constraints or other bodies matter, the effective operator must instead be obtained from the corresponding constrained multibody dynamics or compliant model. It cannot be repaired by simply adding shaft mass to $M$.
 
-### II.2 The Tangential Impulse, and Why the Ball Does Not Roll {#sec-tangential}
+### II.1 Normal Restitution and Its Scalar Limit {#sec-normal}
 
-This is the part of impact mechanics where the standard golf treatment is **wrong**, and where the correction changes predictions in a consistent direction.
+Let $w_n=\mathbf n^{\mathsf T}\mathbf w$, with $w_n^-<0$ for approach. A Newton normal-restitution law is
 
-The textbook story is that the ball slides up the face until $v_x = R\omega$, at which point it rolls, friction vanishes, and spin is fixed at the rolling value. That is Brody's model, and it is what most golf spin models still assume.
+$$
+w_n^+=-e_n w_n^-.
+$$
 
-**Maw, Barber & Fawcett** ([1976](https://doi.org/10.1016/0043-1648(76)90201-5), [1981](https://doi.org/10.1115/1.3251617)) showed the contact does something else. Treating the normal problem as Hertzian and dividing the contact circle into concentric annuli, they found the contact area comprises **coexisting stick and slip regions**. Rod Cross summarises the mechanism:
+With $\mathbf J=J_n\mathbf n+\mathbf J_t$, it requires
 
-> the approach is to divide the contact circle into small annuli, some of which grip the surface and some of which slip. Because the component of the normal reaction force acting on the outermost annulus is zero, this and several adjacent annuli usually slip … As time progresses, the annuli in slip spread radially inward, reducing the friction force to zero and then reversing it.
+$$
+(\mathbf n^{\mathsf T}W\mathbf n)J_n
++\mathbf n^{\mathsf T}W\mathbf J_t
+=-(1+e_n)w_n^-.
+$$
 
-The crucial difference from Brody: at the instant $v_x = R\omega$, every point in the contact area is momentarily at rest, so the contact **sticks** rather than rolling. Friction does not vanish — it decays smoothly and then **reverses sign**. Friction reversal is the experimental signature that distinguishes grip from roll, and [Cross (2002)](https://doi.org/10.1119/1.1507792) measured it directly with a piezo force plate, calibrated absolutely by requiring the force integrals to equal the measured momentum changes. His conclusion:
+The familiar scalar effective-mass formula follows only when tangential coupling is absent or the tangential impulse is known to vanish. For a spherical ball,
 
-> Measurements of the friction force on a bouncing ball demonstrate that **balls can slide on a surface or they can grip the surface but they do not roll.**
+$$
+\frac1{M_{\rm eff}}=
+\frac1M+
+(\mathbf r_c\times\mathbf n)^{\mathsf T}
+I_c^{-1}(\mathbf r_c\times\mathbf n),
+$$
 
-The consequence is that the rolling limit is not a ceiling. Defining a **tangential coefficient of restitution** $e_x$ — negative for gross slip, zero for rolling, positive for gripping — a gripping contact stores tangential elastic energy during compression and returns it during restitution, adding spin beyond the rolling value.
+and the decoupled normal impulse is
 
-**Where golf sits.** Cross measured $e_x \approx 0.1$ for a golf ball, against 0.146 for a softball, 0.405 for a baseball and 0.49 for a superball. The golf ball is among the **tangentially stiffest** sports balls, which is exactly why golf spin sits closer to the rolling limit than baseball spin does. Cross's own verdict is worth quoting because it cuts against the direction of his own headline result:
+$$
+J_n=\frac{-(1+e_n)w_n^-}{1/m+1/M_{\rm eff}}.
+$$
 
-> Brody's model provides a better quantitative description in the case of a golf ball, presumably because the storage and recovery of elastic energy due to tangential compliance is less efficient for the golf ball, giving a value for $e_x$ of only about 0.1 when the ball grips.
+For a stationary ball, a head translating normally at speed $V$, and a normal through the head centre of mass, $M_{\rm eff}=M$. The outgoing ball normal speed is then
 
-So Maw–Barber–Fawcett is qualitatively right and Brody is numerically closer *for golf specifically*. But the residual error is signed: [Cross & Dewhurst (2018)](https://doi.org/10.1088/1361-6404/aadda8) applied the measurement directly to golf and found that because "the ball grips the club face, rather than rolling," the "outgoing ball spin is generally larger than previously estimated," and varies between ball models according to their tangential COR.
+$$
+v_{b,n}^+=(1+e_n)\frac{M}{M+m}V.
+$$
 
-::: {.callout-note}
-## Measured Golf-Ball Impact Constants (Cross 2002, on Polished Granite)
+This is not a general formula for the magnitude of ball velocity in an oblique strike. It also does not make COR a universal material constant: measured restitution depends on the bodies, impact conditions, and test definition.
 
-| Quantity | Value |
-|---|---|
-| Mass / radius / $\alpha$ where $I = \alpha m R^2$ | 45.5 g / 21.3 mm / 0.40 |
-| Friction coefficient $\mu$ | 0.18 |
-| Normal COR $e_y$ | 0.90 ± 0.02, *independent of incidence angle* |
-| Tangential COR $e_x$ when gripping | ≈ 0.1 |
-| Slides throughout for | incidence $\lesssim 40°$ from the surface |
-| **Maximum spin occurs at** | **≈ 40° — the slide-to-grip transition** |
+### Check Energy as Well as Momentum
 
-These are low-speed (~4 m/s) measurements against granite, not clubface measurements at 110 mph. [Henrikson et al. (2020)](https://doi.org/10.3390/proceedings2020049027) measured $\mu$ on actual golf balls by sled test as **0.40 urethane, 0.35 surlyn**.
-:::
+For the closed, frozen-geometry model, the total kinetic-energy change is
 
-**The spin-loft cliff, from first principles.** Cross's data give the coaching observation a mechanical basis. There is a critical incidence angle separating pure sliding from gripping, and **peak spin occurs exactly at that transition**. Below it, spin grows as $2.5\mu(1+e_y)\tan\theta$; above it the ball grips and the incremental spin per degree of added loft collapses because the friction impulse has saturated at $\mu N$.
+$$
+\Delta K=(\mathbf w^-)^{\mathsf T}\mathbf J
++\frac12\mathbf J^{\mathsf T}W\mathbf J.
+$$
 
-Two things follow that are more useful than the usual "spin peaks around 45–50° of spin loft." First, the critical angle **scales with $\mu$** — so there is no universal spin-loft optimum; it moves with the friction available. Second, that is precisely why a wet or grassy face produces a flier: moisture lowers $\mu$, which lowers the critical angle, which pushes a normal-loft shot down into the pure-sliding regime where spin scales *linearly in $\mu$*. The flier lie is a direct prediction of measured contact physics, not a separate phenomenon.
+This provides a useful independent check on an implemented contact law. For example, a common scalar restitution law in every direction, $\mathbf w^+=-e\mathbf w^-$, gives
 
-This also reframes what grooves do. They are not primarily gripping features — on a clean dry ball, groove geometry barely matters. They are **drainage channels** that evacuate water and grass from the contact patch so that dry friction can be established at all. The 2010 groove rule, which limits groove volume on all clubs but drivers and putters and groove edge sharpness on clubs of 25° loft and above, was adopted after joint USGA/R&A research in 2007–08 found the rough had become too little of a penalty for expert players. Its purpose was to restore the fairway-versus-rough spin differential — that is, to restore the $\mu$ gap.
+$$
+\Delta K=
+-\frac12(1-e^2)
+(\mathbf w^-)^{\mathsf T}W^{-1}\mathbf w^-\leq0
+$$
 
-### II.3 A Third Spin Mechanism Nobody Mentions
+when $0\leq e\leq1$. That law is an algebraic example, not a substitute for friction-cone and contact-history checks.
 
-Cross found something in his force data that does not appear in golf writing at all. The friction impulse $R\!\int\!F\,dt$ was consistently **30–40% less than the measured change in angular momentum**. The missing torque comes from the normal reaction acting a distance $D$ *behind* the centre of mass — the ball leans forward during the bounce, mechanically analogous to weight transferring onto the front wheels under braking — contributing a torque $ND \approx 0.3FR$.
+Choosing separate normal and tangential restitution coefficients requires checking the resulting coupled energy balance. Bounds on the individual coefficients alone do not replace that check when the directional restitution operator and $W$ do not commute. A model with stored elastic energy or external impulses needs the corresponding terms in its energy accounting.
 
-For golf balls $D < 0.5$ mm, so the effect is **minor in golf** (it is 2–3 mm for tennis balls and baseballs, where it is large). We include it because it is a genuine third spin source alongside friction and tangential compliance, and because its smallness in golf is itself the reason golf spin models get away with ignoring it.
+### COR and Characteristic Time Are Different Tests
+
+Characteristic time (CT) is a pendulum-test measure of clubface spring effect. It is not the duration of a golf-ball collision and is not itself a restitution coefficient.
+
+The USGA's historical technical account relates 239 microseconds plus an 18-microsecond test tolerance to the earlier COR limit of $0.822$ plus $0.008$. Thus $0.830$ has a documented regulatory origin; it is not an untraceable internet number. The correlation does not make those values interchangeable for arbitrary heads and impact speeds. [USGA/R&A, *Distance Insights Report*, 2020](https://www.usopen.com/content/dam/usga/pdf/2020/distance-insights/DIPR-FINAL-2020-usga.pdf).
+
+Conformance involves the applicable club category, tested locations, protocol, and equipment rules. Historical thresholds explain the physics literature; they do not by themselves establish that a particular club conforms. Consult the [official equipment rules and testing sources](https://www.usga.org/equipment-standards/equipment-rules-2019/equipment-rules/toc.html).
+
+### II.2 Tangential Impulse, Slip, and Grip {#sec-tangential}
+
+Normal restitution alone leaves two tangential impulse components undetermined. A contact model must describe how friction and deformation change the relative tangential velocity.
+
+For a fixed normal and constant Coulomb coefficient, sliding traction opposes local slip and its magnitude is bounded by $\mu N$. In a compliant patch, some regions can stick while others slip. Sticking means no relative motion of the contacting material locally; it does not mean that the ball behaves as a rigid sphere rolling on the face.
+
+For an ideal point contact, a necessary integrated constraint is
+
+$$
+\|\mathbf J_t\|\leq\mu J_n.
+$$
+
+The same vector budget covers both tangential directions. Satisfying it is not sufficient to prove a particular slip–stick history. Elastic shear can reverse traction during restitution, and a time-varying normal force affects when sticking or renewed slipping occurs.
+
+A tangential restitution model can prescribe
+
+$$
+\mathbf w_t^+=-e_t\mathbf w_t^-,
+\qquad
+\mathbf w_t=(I-\mathbf n\mathbf n^{\mathsf T})\mathbf w.
+$$
+
+Together with normal restitution, this supplies three algebraic conditions for $\mathbf J$. The solved impulse must still be admissible and energetically consistent. A resolved compliant-contact law instead evolves compression, shear, slip, and force over time.
+
+### A Surface Experiment With Explicit Angle Conventions
+
+For insight, consider an initially unspun sphere incident on an infinitely massive fixed plane at speed $V$. Let $\theta$ be the angle **from the surface**, so the normal approach speed is $V\sin\theta$ and tangential speed is $V\cos\theta$. The complementary angle from the normal is $\Phi=90^\circ-\theta$.
+
+Assume isotropic inertia $I_b=\alpha mR^2$, zero normal-force moment, and full sliding without slip reversal. Then
+
+$$
+J_n=m(1+e_n)V\sin\theta,\qquad
+|J_t|=\mu J_n,
+$$
+
+and the dimensionless outgoing spin is
+
+$$
+\frac{R|\omega_b^+|}{V}
+=\frac{\mu(1+e_n)}{\alpha}\sin\theta.
+$$
+
+If normalised instead by the incoming **tangential** speed $V\cos\theta$, the right side contains $\tan\theta$. Those normalisations must not be confused.
+
+In the zero-slip-at-separation approximation,
+
+$$
+\frac{R|\omega_b^+|}{V}
+=\frac{\cos\theta}{1+\alpha}.
+$$
+
+The sliding branch reaches that condition at
+
+$$
+\tan\theta_*=
+\frac{1}{\mu(1+e_n)(1+1/\alpha)}.
+$$
+
+For assumed $\mu=0.18$, $e_n=0.9$, and $\alpha=0.4$, $\theta_*\approx39.9^\circ$, or $\Phi_*\approx50.1^\circ$. Increasing friction decreases this threshold measured from the surface and increases its complement measured from the normal.
+
+These are deductions from the stated plane model, not a universal driver or wedge threshold. Cross's low-speed granite experiments distinguish sliding and gripping and show why tangential elasticity can exceed a rolling approximation. Their conditions and fitted coefficients should not be transferred directly to a high-speed club impact. [Cross, 2002](https://www.physics.usyd.edu.au/~cross/PUBLICATIONS/GripSlip.pdf).
+
+### Contact Duration, Force, and Ball Construction
+
+Impulse is the integral of force. Knowing $J_n$ and a contact duration determines average normal force, not its peak or waveform. For an illustrative $J_n=3.2$ N s and duration $0.00045$ s, the mean is about $7.1$ kN. A peak-force claim needs a measured trace or a force–deformation model.
+
+Hertz theory is a useful starting point for elastic contact, but a layered, viscoelastic golf ball and a flexible clubface need not satisfy its homogeneous, small-deformation assumptions over a full-speed collision. Constitutive parameters, loading-rate dependence, and the definition of contact area matter.
+
+Water, grass, cover material, grooves, and roughness can change friction and the contact history. Lower friction does not imply a single monotonic change in every launch parameter over every obliqueness. A “flier” explanation should specify the surface condition and show how the resulting impulse changes launch and spin together.
+
+### II.3 Moments Beyond the Central Point Model
+
+A distributed normal reaction need not pass through the ball centre. Its moment, together with distributed shear, can affect ball spin. A finite patch can also transmit a torsional moment about the normal, which an ideal point-contact impulse omits.
+
+If the normal resultant has a lever $\mathbf d_N$ and total normal impulse $J_n$, its angular impulse is $\mathbf d_N\times J_n\mathbf n$ when that lever is effectively constant. A general contact requires the time integral of the moment.
+
+The existence of this mechanism does not establish its size for a golf drive. A lever measured for a different ball or impact condition cannot support a universal percentage of golf-ball spin.
 
 ## Part III: Gear Effect and Off-Centre Impact
 
-Gear effect is the direct consequence of the third equation in Part II: because the impulse acts at a moment arm from the CG, it torques the head, and the head's rotation drags the ball's surface.
+An off-centre normal impulse has angular impulse $-\mathbf r_c\times J_n\mathbf n$ on the head. That changes head rotation, hence surface velocity, hence tangential slip and impulse. This is the mechanical basis of gear-effect coupling.
 
-The magnitude scales as CG depth over head moment of inertia. A commonly used form for horizontal gear-effect spin is $s = 58{,}830\,V_b C x / I_h$, with $C$ the CG depth behind the face and $x$ the horizontal miss distance, which for a modern driver reduces to roughly $s \approx 16.4\,V_b x$. The vertical case is **1.5–2× stronger** for the same offset, because $I_v \approx 0.5$–$0.66\,I_h$ — which is why vertical gear effect dominates driver launch tuning and why high-face and low-face strikes change spin so much more than heel and toe strikes change curvature.
+It is already present in the matrix $W$. Its normal–tangential terms show how a normal impulse can induce sideways relative motion even when the initial tangential slip is zero. The tangential impulse then changes both ball spin and head rotation again. The process is coupled rather than a sequence of independent kicks.
 
-The magnitudes involved are small enough to be startling. TrackMan's own worked example has a 6-iron struck **one dimple (0.14 inch)** toward the toe tilting the spin axis by 2°, which is about 2.5 yards offline at 170 yards of carry.
+The magnitude depends on strike offset, centre-of-mass depth, the relevant inertia tensor, face curvature, contact properties, and delivered motion. Horizontal and vertical gear effects generally involve different levers and inertia axes. A fixed universal ratio between them is not justified.
 
-Two consequences matter for the rest of this article:
+### A Reproducible Coupled Example
 
-**Gear effect tilts the spin axis independently of the D-plane.** This is exactly why launch monitors report *measured* spin axis and *computed* D-plane tilt as separate quantities — they disagree whenever the strike is off-centre, and the disagreement is the gear-effect signature.
+Take an initially stationary, unspun ball and a head whose centre moves at 48 m/s along $+x$, with initial angular velocity $30\mathbf e_y$ rad/s. Set the local normal to $\mathbf e_x$ and the contact lever to $(0.04,0,0.02)$ m. The masses, inertias, and restitution below are illustrative inputs. Use $e_n=0.8$ and zero tangential relative velocity at separation.
 
-**It contaminates any measurement of the face/path weighting.** [Wood et al. (2018)](https://doi.org/10.3390/proceedings2060249) filtered their dataset to strikes within 0.25 inch of face centre explicitly "in order to minimize changes in initial angle caused by the twisting of the club head during impact." Off-centre impacts twist the head enough *during contact* to move launch direction measurably. Any weighting figure quoted without a centredness filter is measuring something else as well.
+```python
+import numpy as np
 
-Bulge and roll — the convex curvature of a driver face — exist to partially compensate, by starting off-centre strikes further offline so that the gear-effect curvature brings them back. The compensation is approximate by construction, since it is a fixed geometric correction to an effect that scales with ball speed. TrackMan quantifies the face-side consequence: *"if the ball is impacted ½ inch (12.7 mm) towards the heel, the face angle will at this point on the club face be 2 deg. closed relative to the center of the club face,"* a rule they state holds "for all drivers on the market."
+m, radius, alpha = 0.04593, 0.021335, 0.4
+head_mass = 0.2
+ball_inertia = alpha * m * radius**2
+head_inertia = 0.0004 * np.eye(3)
+ball_lever = np.array([-radius, 0.0, 0.0])
+head_lever = np.array([0.04, 0.0, 0.02])
+head_velocity = np.array([48.0, 0.0, 0.0])
+head_spin = np.array([0.0, 30.0, 0.0])
 
-### III.1 The One Clean Laboratory Measurement
+def cross_matrix(r: np.ndarray) -> np.ndarray:
+    x, y, z = r
+    return np.array([[0, -z, y], [z, 0, -x], [-y, x, 0]])
 
-Almost everything written about gear effect in golf traces to closed-form expressions of uncertain provenance. There is, however, a direct peer-reviewed measurement — [Cross & Nathan (2007)](https://doi.org/10.1119/1.2713788) — and it is worth knowing because it isolates the mechanism from every golf-specific complication.
+Sb, Sc = cross_matrix(ball_lever), cross_matrix(head_lever)
+W = (1 / m + 1 / head_mass) * np.eye(3)
+W -= Sb @ Sb / ball_inertia
+W -= Sc @ np.linalg.solve(head_inertia, Sc)
+w_before = -head_velocity - np.cross(head_spin, head_lever)
+restitution = np.diag([0.8, 0.0, 0.0])
+impulse = np.linalg.solve(W, -(np.eye(3) + restitution) @ w_before)
+ball_velocity = impulse / m
+ball_spin = np.cross(ball_lever, impulse) / ball_inertia
+energy_change = w_before @ impulse + 0.5 * impulse @ W @ impulse
+print(impulse, ball_velocity, ball_spin, energy_change)
+```
 
-A golf ball on a pendulum ($m = 45.4$ g, $d = 42.7$ mm) struck a free 210 g wood block at 0.82 m/s, either centred or **50 mm off-centre**, with no incident spin. The governing result for normal incidence is
+The calculation gives impulse $(3.15422,0,0.0599562)$ N s, ball velocity $(68.6746,0,1.30538)$ m/s, and ball spin $(0,152.963,0)$ rad/s. Total kinetic energy decreases by about 15.2936 J. The impulse ratio $\|\mathbf J_t\|/J_n\approx0.0190$ passes an integrated friction bound with, for example, assumed $\mu=0.1$; this does not verify a transient sticking history.
 
-$$
-\omega = -\frac{(1+e)\,d\,b\,v_{y1}}{1.4\,r\left(b^2 + I_B\left(\frac1m + \frac1M\right)\right)}
-$$
+The initial head surface moves toward $-z$ at contact, yet the solved tangential impulse on the ball points toward $+z$. The off-centre normal impulse changes head rotation strongly enough to reverse the net tangential requirement. This is exactly the interaction that adding an isolated pre-rotation spin estimate to an isolated normal collision can miss. The example checks the coupled model, not a calibrated prediction for a commercial driver.
 
-which vanishes when either the offset $b$ or the lever arm $d$ is zero — the two ways of having no gear effect.
+### Face Curvature Changes the Same Collision
 
-| Condition | Result |
-|---|---|
-| Centred ($b = 0$), normal incidence | **$\omega = 0$**, as predicted |
-| 50 mm off-centre, normal incidence | **$\omega = -9.0$ rad/s** measured, $-7.6$ predicted |
-| Rebound angle, 50 mm off-centre | **25° measured**, 25.1° predicted |
-| Normal COR | 0.83 centred, **0.89 ± 0.02** off-centre |
-| Tangential COR | fits satisfied for $-0.2 \le e_x \le 0.2$; curves drawn at $e_x = 0$ |
+Bulge and roll alter the local face normal. This changes the normal impulse direction and the obliquity of the contact, as well as the initial launch direction used to compensate curvature in flight.
 
-Two things in that table deserve attention.
+The compensation is conditional on speed, strike, spin, and aerodynamics. More inertia can reduce rotation for a specified angular impulse, but the impulse itself can change when the head's response changes. A design comparison should solve the collision again rather than vary inertia in one isolated gear-effect term.
 
-**The 25° deflection is not a reflection.** The block rotated only about 0.2° during the ~1 ms impact, while the ball came off 25° from the normal. The ball is not bouncing off a tilted surface; it is being *dragged* sideways by the rotating face. That is the whole of gear effect in one measurement.
+The geometric face centre is not automatically the projected centre of mass or centre of percussion. State which “centre” defines the strike before claiming a gear effect vanishes.
 
-**The normal COR rises off-centre**, from 0.83 to 0.89 — attributed to the smaller effective mass and lower peak force of an off-axis impact. This runs opposite to golf intuition, where off-centre strikes lose ball speed. Both are true and they are different quantities: the *restitution* improves while the *effective mass* falls, and in golf the second dominates. It is a useful reminder that "off-centre hits are less efficient" is a statement about $M_{\text{eff}}$, not about the face being less springy.
+### Pre-Existing Rotation and Gear Effect Share the Contact Law
 
-Across the full sweep of incidence angles, the off-centre spin curve is simply the centred curve **shifted rigidly by about 9 rad/s** — so the ball rotates counter-clockwise at all small incidence angles and does not reverse until incidence exceeds about 18°.
+Head angular velocity before impact enters $\mathbf w^-$. Rotation generated by the impulse enters $W\mathbf J$. Neither contribution is missing from a consistent rigid-body model.
+
+Changing pre-impact rotation while holding centre velocity fixed differs from changing it while holding contact velocity fixed. The [rotation-induced spin derivation](rotation-induced-spin.html) demonstrates both cases, including why $\omega_b=5\omega_c/7$ is not a universal centred-strike prediction.
+
+Laboratory tests on other balls, blocks, or bats can demonstrate the mechanism. Their numerical gains are not golf-club constants. A usable empirical gear-effect formula must state units, measured bodies, strike geometry, speed range, and how launch direction and spin were separated.
 
 ## Part IV: Ball Flight Laws {#sec-ballflight}
 
-### IV.1 What Changed, and What Actually Went Wrong
+### IV.1 A Useful Rule With Physical Conditions
 
-The "old" ball flight laws held that the ball starts along the club path and curves away from the face. The "new" laws hold the reverse: the ball starts close to where the face points and curves away from the path. The modern statement was put in circulation by Fredrik Tuxen of TrackMan in [*TrackMan News* #4, January 2009](https://www.yumpu.com/en/document/view/4429184/secret-of-the-straight-shot-trackman):
+For many centred, initially unspun impacts, the ball launches between the contact-point velocity direction and the local face normal, generally closer to the normal. Tangential impulse produces spin whose direction follows from the same contact geometry.
 
-> According to the "old" ball flight laws, the initial direction of the ball is 100% dictated by the club path. All the scientific people in the golf industry know that this is very wrong.
-
-The history here is usually told badly, and the accurate version is more interesting. It was **not** a case of science being unknown. Cochran and Stobbs published correct, quantified oblique-impact data in *The Search for the Perfect Swing* in **1968** — their worked example of a −20° path with a square face producing a −7° launch is a 65%-toward-the-face result, and it is still cited as a data source in 2020 peer review. Jorgensen's D-plane derivation followed in 1994.
-
-What went wrong was **transmission**, and there is a peer-reviewed account of it. Wood, Henrikson and Broadie of PING write:
-
-> The PGA Teaching Manual [Wiren, 1990] … indicated that initial ball direction is more toward face angle than club path. However, due to a misunderstanding of the material, the PGA test for many years required candidates to state that the initial direction of the ball is equal to the club path.
-
-The manual was right and the exam was wrong. That is a considerably more precise claim than the usual "golf taught it wrong for a hundred years," which has no source and is not defensible — the institutional window is roughly 1972 to 2009, and it was never universal, since Homer Kelley's *The Golfing Machine* and Wiren's own manual both stated face dominance.
+This is more accurate than declaring that launch always equals club path. It is also more precise than declaring that the ball always starts exactly where the face points or that face and path alone determine curvature. Contact asymmetry, strike offset, initial spin, and head rotation can change the simple picture.
 
 ### IV.2 The D-Plane
 
-Jorgensen's **D-plane** ("D" for *descriptive*) is the plane containing the club-face normal and the clubhead velocity vector immediately before impact. Initial ball flight lies in that plane, and the spin axis is normal to it. It is the geometric object that makes the new laws inevitable rather than empirical: once you accept that the ball is launched somewhere between the face normal and the velocity vector, and that spin is generated by shear perpendicular to the launch direction, the curvature direction follows.
+The local normal and incident contact-point velocity define a plane when they are not parallel. In a centred, symmetric contact model with no initial ball spin, the impulse lies in that plane and ball spin is perpendicular to it.
 
-Three limitations are worth stating, because the D-plane is often presented as more complete than it is. The two vectors define a geometric plane whenever they are nonparallel, including off-centre strikes, but its simple spin prediction neglects off-centre gear effect (Part III). It does not specify *when* "just before impact" is, though both vectors rotate measurably through the ~0.5 ms of contact (Part VI). And practitioners routinely assume a straight-line path tangent that Jorgensen never asserted.
+Those conclusions require the mechanical symmetry, not merely the existence of two vectors. Off-centre head response, asymmetric contact, or a rotating normal can move the resulting impulse out of the initially defined plane. If the vectors are parallel, that construction does not pick a unique plane, and the ideal symmetric model generates no oblique-impact spin.
 
-### IV.3 The Face/Path Weighting — Where the Numbers Actually Come From {#sec-weighting}
+### IV.3 What Launch Ratios Measure {#sec-weighting}
 
-Here is the claim that appears in nearly every modern golf source: launch direction is 85% face angle and 15% club path for a driver, shifting toward path for lofted clubs.
+For horizontal launch $\beta$, face angle $\phi$, and path $\psi$, an empirical launch ratio is
 
-**The only peer-reviewed measurement of it does not find 85%.**
+$$
+k_h=\frac{\beta-\psi}{\phi-\psi}.
+$$
 
-Wood, Henrikson and Broadie measured 157 golfers over 731 driver, 745 7-iron and 99 wedge shots with an 8-camera Vicon system at 720 fps, plus a robot test at 9,000 fps:
+For small angles, a constant-ratio approximation gives $\beta\approx k_h\phi+(1-k_h)\psi$. A ratio near one indicates launch close to the face angle; it is not a statement that this fraction of force, energy, or causal influence belongs to the face.
 
-| Launch ratio toward the face | Driver | 7-iron | Wedge |
-|---|---|---|---|
-| **Vertical** (toward dynamic loft) | 83% ± 8% | 81% ± 5% | 72% ± 6% |
-| **Horizontal** (toward face angle) | **76% ± 8%** | **69% ± 3%** | **61% ± 7%** |
-| Robot, horizontal | — | 63% ± 4% | — |
+The ratio is ill-conditioned near $\phi=\psi$: small angle-measurement errors are divided by a small number. Horizontal and vertical ratios also refer to different projections and should not be interchanged.
 
-::: {.callout-important}
-## What the 85/15 Rule Actually Claims, and Where It Fails
+Wood and colleagues reported these **95% confidence intervals**, after filtering near-centre strikes and, for horizontal ratios, requiring at least $1.5^\circ$ face-to-path:
 
-It is tempting to say the 85% figure is simply a vertical-plane number misapplied to the horizontal plane. That is part of the story but not all of it, and the fuller version is more interesting.
+::: {#launch-ratio-tables}
 
-TrackMan's *Ten Fundamentals* ([Newsletter #7](https://www.gregsmithgolfcoach.com/wp-content/uploads/2014/04/newsletter7.pdf), October 2010) asserts **85% in both planes**, in consecutive sections:
+```{=html}
+<style>
+#quarto-document-content #launch-ratio-tables .table-wrapper > table {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+#launch-ratio-tables th, #launch-ratio-tables td { white-space: normal; }
+</style>
+```
 
-> TrackMan data has shown for drivers, that dynamic loft normally accounts for about 85% of the launch angle, while attack angle accounts for the remaining 15%. For irons, the ratio is around 75% dynamic loft and 25% attack angle.
+#### Horizontal Launch Ratios
 
-> For drivers, TrackMan has discovered that face angle accounts for roughly 85% of the initial direction, and for irons face angle accounts for around 75%.
-
-Set against PING's measurements, the two claims fare very differently:
-
-| | TrackMan claim | PING measurement |
+| Club | Toward Face | Shots |
 |---|---|---|
-| **Vertical** (dynamic loft → launch angle), driver | 85% | **83% ± 8%** ✓ |
-| **Horizontal** (face angle → start direction), driver | 85% | **76% ± 8%** ✗ |
-| Horizontal, 7-iron | ~75% | **69% ± 3%** |
+| Driver | 76% ± 8% | 89 |
+| 7-Iron | 69% ± 3% | 172 |
+| Wedge | 61% ± 7% | 28 |
+| 7-Iron (Robot) | 63% ± 4% | 15 |
 
-**The vertical claim holds. The horizontal one does not.** So this is a live disagreement between a vendor's published figure and the only peer-reviewed measurement of it — not merely a bookkeeping error about planes.
+#### Vertical Launch Ratios
 
-The plane confusion is real too, and compounds it: Jorgensen's "just over 80%" was a *vertical* derivation, and the peer-reviewed comparison of TrackMan against PING is likewise tabulated in the vertical plane, where the two agree well. A reader checking the 85% figure against that comparison would conclude it was confirmed.
+| Club | Toward Loft | Shots |
+|---|---|---|
+| Driver | 83% ± 8% | 137 |
+| 7-Iron | 81% ± 5% | 252 |
+| Wedge | 72% ± 6% | 36 |
 
-The practical consequence is not small. At 76% rather than 85%, a 4° in-to-out path with a square face starts the ball about 1° right rather than 0.6° right, and the face-to-path needed to zero out a given start direction changes accordingly.
 :::
 
-There is a second correction that matters more conceptually. **The "85/15 driver" and "75/25 wedge" rules are not two laws — they are one curve evaluated at two spin lofts.** Wood et al. show the ratio declining monotonically and non-linearly with obliqueness $\Phi$; a published fit $DA_x = A(0.96 - 0.0071\Phi)$ reproduces the folklore exactly, giving 85.3% at $\Phi = 15°$ and 74.7% at $\Phi = 30°$. The fitted relation describes the tested conditions. Club construction, strike location, and contact properties can still matter at matched spin loft.
+Counts refer to retained shots. The original dataset included 157 golfers for driver/7-iron testing and a ten-player wedge subset. The robot manipulation also changed dynamic loft, limiting interpretation as a change in face angle alone. [Wood, Henrikson, and Broadie, 2018, Table 1 and Discussion](https://doi.org/10.3390/proceedings2060249).
 
-**A genuine live dispute.** TrackMan attributes the driver's higher ratio to a smoother titanium face producing less friction. PING explicitly rejects this: their tangential-compliance model reproduces the loft dependence **at constant $\mu$**, and finds that below about 20° incidence *lower* friction gives a launch direction *closer to the path* — the opposite of the friction hypothesis. This is unresolved in the peer-reviewed literature, and anyone building a launch monitor inversion should know that the mechanism behind a coefficient they are fitting is contested.
+These results support face-dominated launch for those conditions. They do not establish a universal coefficient. A commonly used 85% driver approximation should be treated as a rule of thumb whose suitability depends on the population, plane, strike filtering, instrumentation, and contact conditions. The reported driver horizontal interval is approximately 68–84%; its rounded endpoint is not a sufficient basis for a blanket verdict on every 85% claim.
+
+Nor are the many shots necessarily independent golfers. Interpreting uncertainty beyond what the paper reports would require the repeated-measures structure and underlying data.
 
 ### IV.4 Spin Axis Geometry
 
-For an initially nonspinning spherical ball in a centred, symmetric oblique-impact model, the spin direction is parallel to $\hat v\times\hat n$. This follows from the moment of the tangential impulse at the ball contact point. The direction degenerates when the two vectors are parallel: the ideal model then generates no oblique-impact spin. Gear effect, initial spin, asymmetric contact, and finite face rotation require additional mechanics.
+For an initially nonspinning spherical ball in a centred, symmetric oblique-impact model, spin direction is parallel to $\hat v\times\hat n$. This follows from the moment of tangential impulse at the ball contact point. It degenerates for parallel vectors. Gear effect, initial spin, asymmetric contact, and finite face rotation require additional mechanics.
 
-Compute spin tilt from vectors in a declared launch frame. Given outgoing unit velocity $\hat v_b$ and world-up vector $\hat e_y$, define
-
-$$
-\hat e_b=\frac{\hat v_b\times\hat e_y}{\|\hat v_b\times\hat e_y\|},
-\qquad \hat e_u=\hat e_b\times\hat v_b,
-\qquad \mathbf s=\hat v\times\hat n.
-$$
-
-Here $\hat e_b$ is the positive backspin axis for the declared forward/up/right convention. One signed tilt convention is
+Given outgoing unit velocity $\hat v_b$ and world-up vector $\hat e_y$, define
 
 $$
-\gamma=\operatorname{atan2}(-\mathbf s\cdot\hat e_u,\ \mathbf s\cdot\hat e_b).
+\hat e_b=\frac{\hat v_b\times\hat e_y}
+{\|\hat v_b\times\hat e_y\|},
+\qquad
+\hat e_u=\hat e_b\times\hat v_b,
+\qquad
+\mathbf s=\hat v\times\hat n.
 $$
 
-State the sign convention when comparing monitor outputs. A vertical launch needs a different frame construction. The cross product gives a direction, not the spin magnitude; the collision model supplies the magnitude.
-
-The frequently repeated $\arctan[\tan A/\tan L]$ relation is not a general identity for horizontal face-to-path $A$ and loft-minus-attack $L$. The full vectors retain both elevations and specify the reference axis. Small-angle sensitivities can explain why a low-loft strike has a large tilt response, but matching a vendor rule of thumb does not identify the vendor's internal algorithm.
-
-Tilt alone does not determine yards of curve. Launch speed, total spin, aerodynamic coefficients, wind, and flight duration also matter. In particular, **yards per degree of face-to-path** and **yards per degree of spin-axis tilt** have different denominators. The earlier comparison of 9.5 with 2.7 yards per degree did not establish a factor-of-three physical disagreement without matching those variables and flight conditions.
-
-### IV.5 Why "Sidespin" Is Not a Quantity
-
-A struck ball leaves the face with **one angular velocity vector**. "Backspin" and "sidespin" are a coordinate decomposition of that single vector, not two independent spins — a ball has no mechanism for spinning about two axes at once. Spin rate plus spin axis is the complete, non-redundant description, and sidespin is merely the projection $\text{spin rate} \times \sin(\text{spin axis})$.
-
-This is not pedantry. Because the Magnus force depends on the *component* of spin perpendicular to velocity, **the same axis tilt with a higher total spin rate curves more.** Axis tilt alone underdetermines curvature, which is exactly why vendor yardage tables are stated per club and per carry distance rather than as a universal constant. Neither TrackMan nor FlightScope reports a sidespin parameter at all.
-
-### IV.6 Launch Weighting and Contact Mechanics
-
-Launch direction and spin are coupled outputs of the same normal and tangential impulses. For an initially stationary ball, let $J_n$ and $J_t$ be their scalar components in the obliquity plane. Then
+Here $\hat e_b$ is the positive backspin axis for the declared convention. One signed tilt convention is
 
 $$
-\tan\delta_b=J_t/J_n,
-\qquad m\mathbf v_b=J_n\hat n+J_t\hat t.
+\gamma=\operatorname{atan2}(-\mathbf s\cdot\hat e_u,\
+\mathbf s\cdot\hat e_b).
 $$
 
-Here $\delta_b$ is launch deflection from the normal and $\hat t$ is the in-plane tangent. A tangential-compliance model changes $J_t$, so it changes both launch weighting and spin. This is the physical connection between those measurements.
+State the sign convention when comparing monitor outputs. A vertical launch needs another frame construction. The cross product supplies a direction; the collision supplies the magnitude.
 
-Quantifying that connection requires matched ball, face, impact speed, obliqueness, effective mass, and coefficient definitions. A tangential restitution coefficient measured on granite at low speed cannot simply be inserted alongside an ambiguously defined driver COR to explain a high-speed population average. The previous 84/81/77-percent table mixed those assumptions and did not establish why a particular experiment found 76-percent face weighting. A useful next test measures both outgoing spin and launch direction under the same controlled impacts and fits one contact model to both.
+The frequently repeated $\arctan[\tan A/\tan L]$ relation is not a general identity for horizontal face-to-path $A$ and loft-minus-attack $L$. Full vectors retain both elevations and define the reference axis.
+
+Yards per degree of face-to-path and yards per degree of spin-axis tilt have different denominators. Comparing such numbers without matching launch and flight conditions cannot establish a physical discrepancy.
+
+### IV.5 One Spin Vector, Several Useful Components
+
+The ball has one angular-velocity vector. “Backspin” and “sidespin” are legitimate components in a declared frame, not separate physical rotation processes. A component along the launch velocity, sometimes called rifle spin, is also possible.
+
+For a general vector,
+
+$$
+\boldsymbol\omega_b
+=(\boldsymbol\omega_b\cdot\hat e_b)\hat e_b
++(\boldsymbol\omega_b\cdot\hat e_u)\hat e_u
++(\boldsymbol\omega_b\cdot\hat v_b)\hat v_b.
+$$
+
+A two-component tilt description is complete only when the axial component is absent or specified separately. A total spin magnitude and one tilt angle are not a general three-dimensional spin-vector specification.
+
+Aerodynamic force depends on spin relative to the air-relative velocity. The same tilt need not produce the same curve at different spin magnitudes, launch speeds, winds, or aerodynamic coefficients.
+
+### IV.6 Launch and Spin Must Fit One Contact Model
+
+For a stationary ball and impulse in the obliquity plane,
+
+$$
+m\mathbf v_b^+=J_n\hat n+J_t\hat t,
+\qquad
+\tan\delta_b=\frac{J_t}{J_n},
+$$
+
+where $\delta_b$ is launch deflection from the normal. The same $J_t$ changes angular momentum. A model cannot independently choose launch weighting and spin without checking that both arise from its contact solution.
+
+Henrikson and colleagues' compliant-contact model reproduces a decrease in launch ratio with obliqueness even at constant friction. It also shows that the effect of changing friction depends on incidence angle and the slip–stick history. Their comparison motivates a mechanistic explanation beyond assigning different fixed percentages to different clubs. [Henrikson et al., 2020](https://doi.org/10.3390/proceedings2020049027).
+
+A model comparison needs matched ball, surface, speed, local normal, strike, mass properties, and coefficient definitions. Fitting one output is weaker evidence than predicting both launch direction and spin on independent impacts.
 
 ## Part V: Aerodynamics and Trajectory
 
@@ -696,208 +802,165 @@ A 2023 study adds the complementary variable, fitting drag against dimple *volum
 
 ## Part VI: Closure Rate
 
-Closure rate — the speed at which the clubface rotates from open to closed through impact — is measured by several launch monitors and discussed constantly in coaching, but its mechanical consequences are rarely worked out. They turn out to be more interesting than the usual "fast closing face causes hooks" summary, and they divide into three distinct mechanisms that do not all point the same way.
+Closure rate connects delivered orientation, reference-point kinematics, collision dynamics, and repeatability. It is not one scalar with a universal physical interpretation.
 
-::: {.callout-tip icon=false}
-## Run These Numbers Yourself
+### VI.1 Define the Measured Rate
 
-The measurement side of this section — how far the impact point's path differs from the reported reference-point path for a given delivery — is treated separately in [The Reference-Point Problem in Club Delivery Data](reference-point-problem.qmd), with an interactive tool that computes it for any combination of speed, rotation rate, lie angle and strike location.
-:::
-
-### VI.1 Reference-Point Velocity and Direction
-
-The exact relation is $\Delta\mathbf v=\boldsymbol\omega\times\mathbf r$. For small offsets, the change in the unit velocity direction is
+For the horizontal face angle $\phi=\operatorname{atan2}(n_z,n_x)$,
 
 $$
-\delta\hat v\simeq\frac{(I-\hat v\hat v^T)(\boldsymbol\omega\times\mathbf r)}{\|\mathbf v\|}.
+\dot{\mathbf n}=\boldsymbol\omega_c\times\mathbf n,
 $$
 
-Only the component perpendicular to the original velocity changes its direction to first order. Horizontal path differences need the corresponding horizontal projection; a vertical or along-path velocity change cannot simply be counted as horizontal path. Angular velocity and the offset vector must be expressed in the same frame.
-
-For $\boldsymbol\omega\ne0$, distance to the instantaneous screw axis is
-
 $$
-R_{\rm ISA}=\frac{\|\mathbf v_\perp\|}{\|\boldsymbol\omega\|},\qquad
-\mathbf v_\perp=\mathbf v-(\mathbf v\cdot\hat\omega)\hat\omega.
+\dot\phi=
+\frac{n_x(\boldsymbol\omega_c\times\mathbf n)_z
+-n_z(\boldsymbol\omega_c\times\mathbf n)_x}
+{n_x^2+n_z^2}.
 $$
 
-Using total speed $v/\omega$ requires zero axial translation. The estimate $\Delta\theta\simeq d/R_{\rm ISA}$ additionally requires a suitably oriented offset and a velocity difference perpendicular to the original velocity. A scalar closure rate is the derivative of face azimuth; it is not generally the magnitude of the full club angular velocity. Consequently, a three-degree path offset alone does not locate the screw axis or identify release technique.
+This derivative is generally neither total angular speed nor handle twist. Near a forward-facing normal, $\dot\phi=-\omega_{c,y}$ in this article's convention.
 
-### VI.2 Scaling and Illustrative Magnitudes
+Handle twist is an angular-velocity component along the handle's shaft axis. Face-to-path rate is the difference between face-azimuth rate and path-azimuth rate, when both are defined consistently. A speed-normalised rate divides an angle derivative by the speed of a specified point.
 
-If the full twist scales by the same factor while attitude and reference-point separation remain fixed, the direction offset is unchanged. Increasing speed alone does not specify how the rotational part changes. For a deliberately simplified case with $d=0.04$ m, $v=50$ m/s, and a perpendicular angular contribution of $34.9$ rad/s, the transverse speed difference is $1.396$ m/s and the small-angle direction difference is about $1.6^\circ$. These assumptions explain the estimate; they do not establish a population-average offset.
+A two-component projection using handle twist, swing-plane angular rate, and lie angle is a model of the geometry. It is not a general identity for a flexible club or arbitrary three-dimensional head motion.
 
-### VI.3 Horizontal and Vertical Components
+### VI.2 Reference-Point Velocity and Direction
 
-Evaluate both components of the same cross product for the measured delivery. Shaft lean, lie, strike location, and all components of angular velocity can change their signs and magnitudes. A driver and an iron have different reference-point offsets, but the equipment label alone does not determine the correction. The linked reference-point tool provides a specified geometry for investigating these dependencies.
+For a separation $\mathbf r$,
 
-### VI.4 The Face Keeps Closing During Contact
+$$
+\delta\mathbf v=\boldsymbol\omega_c\times\mathbf r.
+$$
 
-Contact lasts on the order of half a millisecond, and the face does not stop rotating during it:
+This correction can change both speed and direction. For a small change in horizontal velocity,
 
-| Closure rate | Face rotation during ~0.45 ms of contact |
+$$
+\delta\psi\approx
+\frac{v_x\delta v_z-v_z\delta v_x}{v_x^2+v_z^2}.
+$$
+
+The special estimate $\Delta\theta\approx\omega d/v$ requires the appropriate perpendicular geometry. The [reference-point article](reference-point-problem.html) gives a complete example: an assumed 35 mm forward separation, 2000 degrees/s vertical-axis rotation, and 120 mph forward speed produce about $-1.305^\circ$ of path change and $0.0311$ mph of speed increase.
+
+A reference correction describes the same physical motion at another point. It is not an extra force or a new spin mechanism. Two devices can disagree because of reference conventions, reconstruction errors, time definitions, or some combination; the cross-product identity alone does not identify which.
+
+### VI.3 Rotation During Contact
+
+Face-angle change over a contact interval is
+
+$$
+\Delta\phi=\int_{t_{\rm first}}^{t_{\rm sep}}\dot\phi(t)\,dt.
+$$
+
+If the rate were constant at 2000 degrees/s for 0.45 ms, the change would be $0.9^\circ$. This is an illustrative integration, not a measured constant rate. The contact impulse can change head angular velocity during that interval.
+
+The effective direction of the normal impulse is determined by
+
+$$
+\mathbf J_N=\int N(t)\mathbf n(t)\,dt.
+$$
+
+It is not automatically the normal at first contact, maximum compression, the interval midpoint, or separation. A slowly varying normal and a known symmetric force history can motivate an approximation, but the weighting must be stated.
+
+Comparing a pre-contact face angle with a face angle inferred from the resulting ball launch can therefore involve both measurement and modelling assumptions. If the inferred angle was calculated using a launch-ratio model, agreement with that same model is not independent validation.
+
+### VI.4 Timing Sensitivity and Contact Events
+
+A small shift along a prescribed face-angle trace gives
+
+$$
+\delta\phi\approx\dot\phi\,\delta t.
+$$
+
+At 2000 degrees/s, a 2 ms shift corresponds to $4^\circ$. This is a derivative calculation. It does not establish that a golfer has 2 ms of independent timing error, or that the associated shot must miss a fairway.
+
+Physical contact occurs when a gap function reaches zero. Let the pre-contact state obey $\dot x=f(x)$ and first admissible contact satisfy $g(x(t_c))=0$, with a transverse crossing $Dg\,f\ne0$. A small fixed-time state perturbation $\delta x^-$ gives the first-order event-time change
+
+$$
+\delta t_c=
+-\frac{Dg\,\delta x^-}{Dg\,f}.
+$$
+
+The state perturbation evaluated at its own shifted contact time is
+
+$$
+\delta x_c^-=\delta x^-+f\,\delta t_c.
+$$
+
+For a contact output map $y=\mathcal C(x_c^-)$,
+
+$$
+\delta y=D\mathcal C\,\delta x_c^-.
+$$
+
+These equations explain why independent timing noise is only one possible model. Changes in head position, velocity, orientation, and shaft state can change **when** contact occurs and **what state** reaches it. Their correlations can increase or reduce output variation. Near grazing contact the denominator becomes small and the linear event approximation can become unreliable.
+
+The same logic links impact to the site's trajectory-sensitivity treatment: a fixed-time deviation and a deviation at each trial's first contact are not interchangeable.
+
+### VI.5 What the Observational Evidence Establishes
+
+Cheetham's study reports a mean handle twist of 1307 degrees/s for 94 tour professionals. Its accuracy analysis paired a captured swing with same-season fairway statistics for 70 players, finding $r=-0.14$ and no significant high/low-group difference. [Cheetham, 2014, Study 1](https://www.philcheetham.com/media/Phillip-Cheetham-Doctoral-Dissertation-2014.pdf).
+
+The mean is not a median. Handle twist is not directly measured head face-azimuth rate. Season-level fairways hit is not the dispersion of the particular captured swing. The observational association does not estimate the effect of instructing one player to change closure rate.
+
+A nonsignificant difference is also not an equivalence result. Using the rounded $r=-0.14$ and $n=70$, a conventional Fisher-transform approximation gives a 95% correlation interval of about $[-0.36,0.10]$, under its independent-sample assumptions. This is a calculation from the summary statistics, not an interval reported by the dissertation. It illustrates the uncertainty that a simple “no relationship” verdict hides.
+
+Adaptation, correlated control, strike variability, and selection of successful tour players are possible explanations to investigate. They are not mechanisms identified by that correlation.
+
+### VI.6 Bias, Dispersion, and Controlled Comparisons
+
+For a fixed delivery, a reference-point offset is deterministic. Across swings it can have a mean and a variance. Neither must be zero. Face rotation during contact and off-centre response can also affect launch, but their signs and magnitudes depend on the full geometry and contact law.
+
+A table assigning universal fade, draw, and timing contributions cannot substitute for solving that coupled problem. There is also no basis for declaring that one term always dominates without measuring the relevant variation.
+
+When changing rotation in a model, say what is held fixed:
+
+| Comparison | Immediate Consequence |
 |---|---|
-| 1000 °/s | 0.45° |
-| 2000 °/s | 0.90° |
-| 3000 °/s | 1.35° |
-| 4000 °/s | 1.80° |
+| Same centre velocity, different head rotation | Contact velocity generally changes |
+| Same contact velocity, different head rotation | Centre velocity must compensate |
+| Same physical motion, different reference point | Correctly transformed prediction stays unchanged |
+| Same pre-contact face angle, different rotation history | Finite-duration normal and slip evolution may differ |
 
-These are constant-rate estimates of face-angle change during contact. Actual club rotation changes under the collision impulse; the resulting launch bias requires integrating the contact forces and local normals. It is not a universal draw correction.
+In a frozen-geometry impulse model, matched contact velocity, geometry, mass properties, and initial ball state give the same impulse under the same law. Additional effects require modelling contact duration, head/shaft response, or patch mechanics. The [rotation companion](rotation-induced-spin.html) derives this limit and the finite-head alternative.
 
-This is largely handled by convention rather than by physics. TrackMan defines face angle at **maximum compression** — mid-contact rather than first contact — which approximates the time-average over the collision. A system reporting face angle at first contact would carry a systematic open bias that grew with closure rate.
+### VI.7 What a Useful Measurement Program Would Record
 
-### VI.5 The Dominant Effect: Timing Sensitivity
+A technically useful closure study would report the head's full pose and angular velocity, velocity of a named point, local face normal, impact location, and ball launch and spin. It would distinguish direct measurements from reconstructed quantities and state uncertainty at the relevant time scale.
 
-By definition,
+Repeated trials within each player are needed to estimate delivery covariance and shot variability. An intervention that changes closure rate must also report changes in speed, posture, strike, and shaft state. Otherwise a change in outcome cannot be attributed to closure alone.
 
-$$
-\frac{d(\text{face angle})}{dt} = \omega
-$$
+A robot can control some of these variables more tightly, but “matched delivery” still needs an explicit list of controlled quantities. Surface conditions and ball construction must be matched when testing a contact mechanism.
 
-so closure rate *is* the gain from timing error to face-angle error:
+The [interactive closure explorer](https://d-sorganization.github.io/rate-of-closure-explorer/) can illustrate its chosen geometry. Agreement between implementations checks code consistency; it does not supply empirical validation of the assumed delivery or a prediction of player accuracy.
 
-| Closure rate | Face error per 1 ms | Per 5 ms |
-|---|---|---|
-| 1000 °/s | 1.0° | 5° |
-| 2000 °/s | 2.0° | 10° |
-| 3000 °/s | 3.0° | 15° |
-| 4000 °/s | 4.0° | 20° |
+## Part VII: Connecting the Evidence
 
-Face-angle error affects launch direction (see @sec-weighting), and obliquity affects spin direction. Whether timing sensitivity dominates other sources of shot variation depends on their measured magnitudes and covariances. A high-closure release is a **high-gain system**: it will square the face, and it converts small timing errors into large directional ones.
+### What the Mechanics Establish
 
-An independent check on the magnitude comes from the launch-monitor validation literature, where the same rate appears as a *measurement* problem rather than a coaching one. [Leach et al. (2017)](https://doi.org/10.1016/j.measurement.2017.08.009) note that **"the face angle of a driver closes at a rate of 2.9°/ms immediately prior to impact"** — 2,900 °/s, the same order as the clubhead closing velocities in VI.8, arrived at from a completely different direction. Their concern is that *"the point in time at which the measurement is taken will significantly affect the output"*, and only one vendor specifies that instant (see the [Vendor Reference](launch-monitor-vendor-reference.qmd)). The player's timing problem and the instrument's timing problem are the same derivative.
+Rigid-body kinematics relates velocities at different points. Momentum balance couples ball and head responses to the same impulse. A contact law is required to determine that impulse, and energy and friction checks constrain its admissibility.
 
-The arithmetic is sound, and it is the reason the "fast closure is hard to time" argument has been the coaching consensus since Cochran and Stobbs put it in print in 1968. But the arithmetic is not the end of the story, and the next section is the most important in this article.
+Within a symmetric oblique-contact model, launch and spin are linked by geometry and tangential impulse. A launch ratio is an empirical summary of this interaction, not a universal division of causal responsibility between face and path.
 
-### VI.5b the Prediction Fails: Closure Rate Does Not Predict Accuracy
+A local face-angle timing derivative is well defined. A population-level accuracy effect requires additional measurements and an appropriate study design.
 
-A between-player accuracy prediction requires assumptions about timing-error distributions and other delivery variables. The evidence below does not establish a clear accuracy disadvantage for faster handle twist; a nonsignificant association is not proof of equivalence.
+### What Requires a Stated Model
 
-[Cheetham (2014)](https://www.philcheetham.com/media/Phillip-Cheetham-Doctoral-Dissertation-2014.pdf) measured handle twist velocity in **94 PGA and European Tour professionals** using an electromagnetic six-degree-of-freedom system at 240 Hz, and had PGA Tour driving-accuracy statistics for 70 of them. The result:
+Effective head mass, gear-effect gain, tangential restitution, force history, and the consequences of pre-existing rotation depend on geometry and modelling assumptions. Compliance can matter even when a rigid-impulse approximation reproduces one output.
 
-| Comparison | Result |
-|---|---|
-| Handle twist velocity vs driving accuracy | **r = −0.14** ($r^2$ = 0.02) |
-| High-HTV group (n=32) vs Low-HTV group (n=32), driving accuracy | **62.9% vs 63.9%, not significant** (d = 0.26) |
-| High vs Low HTV, clubhead speed | 48.9 vs 48.0 m/s, not significant |
+A flight prediction additionally needs aerodynamic coefficients appropriate to its air-relative speed, spin, ball, and conditions. Agreement at launch does not validate the subsequent aerodynamic model, and agreement with one measured carry distance does not uniquely identify the collision and flight parameters.
 
-The two groups differed enormously in technique — mean twist velocity 1,631 versus 996 °/s, with lead-forearm supination the *only* significant discriminator (1,811 versus 1,295 °/s, d = 1.90) — and were indistinguishable in outcome. Cheetham's own summary: *"These results are contrary to popular belief among many instructors."*
+### A Stronger Golf-Swing Investigation
 
-Sasho MacKenzie reaches the same conclusion independently: *"there is currently no evidence to suggest that players with lower RoC hit more fairways or hit their approaches closer to the hole."*
+Start with the outcome to be explained, then preserve the links in the chain:
 
-::: {.callout-important}
-## The Resolution, and What It Costs the Theory
+1. **Delivery:** specify body, handle, shaft, and head states with measured uncertainty.
+2. **Contact:** predict launch velocity and the complete spin vector using one consistent collision model.
+3. **Flight:** propagate those launch conditions with matched aerodynamic and atmospheric assumptions.
+4. **Repeatability:** propagate joint variation and contact-event timing rather than varying unrelated scalars independently.
+5. **Intervention:** declare the changed input and what is fixed, then test predictions on data not used to choose the model.
 
-The timing arithmetic is not wrong — 1° of face angle really is about half a millisecond at 2,100 °/s, and face angle really does dominate launch direction. What is wrong is the assumption that timing precision is a fixed quantity a player brings to whatever technique they use.
-
-**Adapted timing is one possible explanation, not an identified mechanism.** Other possibilities include covariance among delivery variables, differences between handle twist and face closure, limited statistical power, and selection of skilled players. The population association does not measure each player's timing-error distribution or prove that gain and precision co-adapt.
-
-This is a genuine and instructive failure of a physically correct argument. The mechanism is real; the population-level prediction it implies is not observed. Any treatment that presents the sensitivity table above *without* this section is presenting half of a refuted argument.
-:::
-
-What *is* established is narrower: better players show significantly lower shot-to-shot variability in face angle, club path, attack angle and impact location ([Betzler et al. 2012](https://pubmed.ncbi.nlm.nih.gov/22272690/), 285 participants). That is a statement about outcome consistency, not about closure rate — and it is consistent with either release style being executed well.
-
-### VI.6 So Is a High-Closure Player More Likely to Hit a Cut?
-
-Three mechanisms, and they do not agree:
-
-| Mechanism | Direction | Rough magnitude |
-|---|---|---|
-| Reference-point offset — true face-centre path lies left of the reported CG path | **Fade** | 0.4–3° of face-to-path |
-| Face rotation during contact | **Draw** | 0.5–2°, mostly absorbed by the max-compression convention |
-| Timing sensitivity | **Neither — variance** | ±5–20° of face angle |
-
-The honest answer has two halves.
-
-**In free play, no.** A golfer calibrates to ball flight over years, not to a number. Whatever the reference convention and whatever the closure rate, the delivery that produces the desired flight is the one that gets learned; and the draw-side mechanism of VI.4 partly cancels the fade-side mechanism of VI.3. There is no reason to expect fast-releasing players to be systematically cutters, and coaching lore in fact associates a fast-closing face with the opposite miss.
-
-**Under a measured target, yes — and this is the sharp version of the concern.** If a player is coached to "get the path to zero" on a radar unit, that number is referenced to the geometric centre. A high-closure player achieving a reported zero path has a true face-centre path further left, by up to a couple of degrees, and is therefore being trained toward a delivery that is fade-biased *by the measurement convention rather than by their swing*. Two players hitting the same reported numbers on the same machine, releasing at different rates, are not doing the same thing to the ball.
-
-That is a real and correctable problem, and the correction is not complicated: state the reference point, and report the angular rate alongside the path so the size of the discrepancy is visible on that swing.
-
-### VI.7 Interaction With Gear Effect
-
-Closure rate and gear effect are mechanically separate — gear effect depends on strike offset and head moment of inertia, not on $\omega$ — but they compound through a common cause. A mistimed release both mis-orients the face *and* tends to move the strike location, late releases toward the heel and early ones toward the toe. The player therefore receives face-angle error and gear-effect spin-axis error from the same underlying timing fault, which is part of why high-closure patterns feel unforgiving out of proportion to any single measured parameter.
-
-::: {.callout-note}
-## Companion Derivation
-For a detailed mathematical derivation of how the clubface's own closing rotation generates gear-effect spin even on a dead-centre strike (independent of strike offset), see the companion article: [Rotation-Induced Spin: Gear Effect Without an Off-Centre Strike](rotation-induced-spin.qmd).
-:::
-
-### VI.8 How Closure Rate Is Measured, and Typical Values
-
-Everything above is geometry and holds whatever the measured values are. But applying it requires knowing what "closure rate" a given number refers to — and here the literature is in worse shape than the physics.
-
-**There is no peer-reviewed journal article that reports "clubface closure rate" in °/s as a named variable.** The available numbers come from a doctoral dissertation, a three-subject open-access study, and vendor documentation. More importantly, at least **four mutually incompatible reference frames** are all called "closure rate," differing by factors of two to five:
-
-| Convention | What it measures | Typical range |
-|---|---|---|
-| **Handle twist velocity (HTV)** | Angular velocity of the *grip* about its own long axis | 650–2,430 °/s (tour) |
-| **Clubhead closing velocity (CCV)** | Angular velocity of the *head* about the face normal's vertical | ~1,800–3,600 °/s |
-| **Shaft-relative** (Foresight) | *"The rotation of the club head heel to toe measured about the shaft"* | — |
-| **Path-relative** (GEARS) | Face rotation measured relative to the club path | 360–620 °/s |
-| **Per unit distance** (°/ft) | Face rotation per foot of clubhead travel | 13–25 °/ft |
-
-The middle two are worth dwelling on, because they are both *vendor* definitions, both published, and they are not the same quantity. [Foresight](https://www.foresightsports.com/pages/what-we-measure) measures rotation about the **shaft**; [GEARS](https://www.gearssports.com/articles/gears-golf-club-ball-metrics/) measures rotation relative to the **club path**. Neither flags the discrepancy, and a player moving between the two systems will see numbers that differ by a factor of several with no indication that the definition changed underneath them.
-
-The first two are reconciled by the lie angle:
-
-$$
-\text{CCV} = \text{HTV}\sin(\text{lie}) + \text{SPV}\cos(\text{lie})
-$$
-
-where SPV is swing-plane velocity. The measured ratio HTV : CCV is about **0.62** — the head closes faster than the handle twists, because the swing-plane rotation projects onto the face. A player quoted "1,300 °/s" on one system and "2,100 °/s" on another may be perfectly consistent.
-
-**Measured values.** The most substantial dataset is Cheetham's, using electromagnetic six-degree-of-freedom sensors at 240 Hz on 94 tour professionals: mean HTV **1,307 ± 304 °/s**, range 652–2,432. Applying the 0.62 ratio gives a mean clubhead closing velocity around **2,100 °/s**, which is the figure used in the sensitivity tables above. Lead-forearm supination at impact averages **1,569 ± 338 °/s** and correlates with HTV at $r = 0.68$ — it is the dominant contributor.
-
-Two findings from that dataset deserve wider circulation. Of 94 tour players, **92 had the lead wrist *extending* through impact**, not flexing. And shaft torsional wind-up is negligible — 0.2–1.0° — so measured shaft-axis rotation is real body-driven rotation, not the shaft unwinding.
-
-::: {.callout-note}
-## A Convergence Worth Noting
-
-MacKenzie reports closure rate in **degrees per foot**. That is exactly $\omega/v$ — the reciprocal of $R_{\text{ISA}}$, the quantity VI.2 derived as the dimensionally correct predictor.
-
-Two independent routes, one from screw-theoretic kinematics and one from coaching practice, arrive at the same variable. That is a good sign for both. It also means the °/ft convention is the one to prefer: it is the only one of the four that is **speed-invariant by construction**, and therefore the only one that compares two players of different clubhead speeds meaningfully.
-:::
-
-**Two release archetypes, both valid.** Cochran and Stobbs distinguished "rollers" from "pushers," and Suttie later drew the same line as open-face versus closed-face patterns. Cheetham's high- and low-HTV groups are the modern measurement of it — mean 1,631 versus 996 °/s, differing enormously in forearm supination — and, as VI.5b establishes, **indistinguishable in outcome**. There is no evidence that one archetype is superior; there is good evidence they are different solutions to the same problem.
-
-**A caution on measurement windows.** One high-speed study reports 25° of shaft-axis rotation in the ±2 ms around impact, which is about 6,250 °/s. That figure is sometimes quoted as a closure rate, but the window is roughly eight times the ball-contact duration and the sample is three golfers. It is not comparable to the values in the table above.
-
-## Part VII: What Is Settled, What Is Contested, and What Is Missing
-
-It is worth separating these explicitly, because golf's technical literature tends to present all three in the same voice.
-
-### Settled
-
-- The **new ball flight laws**. Launch direction is dominated by face angle, curvature by face-to-path. Measured by multiple independent groups, robot-confirmed, and mechanistically explained.
-- The **D-plane geometry** and the $\arctan(\tan A/\tan L)$ spin-axis relation, which reproduces vendor rules of thumb to two decimal places.
-- **The ball grips the face rather than rolling.** Directly measured, and it means rolling-based spin models under-predict spin in a consistent direction.
-- **Dimple mechanism**: local separation, shear-layer instability, reattachment inside the dimple, main separation delayed to 110°, with the fixed last-reattachment dimple explaining the flat $C_D$.
-- **Gear effect scaling** with CG depth over moment of inertia, and the 1.5–2× vertical-versus-horizontal asymmetry.
-- **Closure rate does not predict accuracy** at tour level. Two independent sources, one with 70 tour players.
-
-### Contested in the Peer-Reviewed Literature
-
-- **The mechanism behind the face/path weighting.** Friction (TrackMan/Dewhurst) versus tangential compliance (PING). The two make opposite predictions about the low-incidence regime.
-- **The magnitude of the weighting itself.** 85% is folklore; 76% ± 8% is the measurement; the two have coexisted for fifteen years without the discrepancy being widely noticed, largely because of the vertical/horizontal plane conflation.
-- **Spin decay.** Models overpredict radar measurements by 2–3×, and predict a speed dependence the data do not show. No reconciliation exists.
-
-### Missing, and Worth Someone's Time
-
-- **A published head-to-head trajectory-model comparison** implementing two or more canonical models at matched launch conditions and reporting the disagreement in yards. We searched specifically for this and it does not exist — a conspicuous gap given that the coefficient spreads involved are worth tens of yards (V.6).
-- **An inter-laboratory round robin for golf-ball aerodynamics.** No ISEA, ASTM or governing-body comparison exists publicly. Every dataset is a single lab's.
-- **A golf-specific quantification of sting interference or of turbulence intensity shifting the critical Reynolds number.** Both mechanisms are well established generically and neither has a published golf magnitude.
-- **Measured COR as a function of loft.** Widely assumed, apparently never published.
-- **Cross & Dewhurst's three-ball tangential-COR values** — the single most on-point measurement for golf impact. We established this one is *genuinely* unobtainable rather than merely elusive: the repository record indexed as open access is a metadata-only stub tagged non-open-access, the Wayback Machine shows a PDF was never deposited there, Google Scholar has never located a free copy, and the author stopped posting PDFs to his own directory around 2011. The "green open access" flag on this DOI is a false positive. It needs interlibrary loan or an author request.
-- **The Smits & Smith and Quintavalla coefficients.** The first is print-only; the second may be genuinely unpublished, and is in any case a per-ball fit rather than a constant. Naruo & Mizota's coefficients *are* public (V.3), so a fully-specified model does exist — it simply rests on a Reynolds-independence assumption that later measurements contradict.
-- **Peer-reviewed** measurement of coefficients versus dimple-pattern orientation. None exists — but see §V.7, because the data does exist in ball-maker patent filings and an earlier version of this article wrongly reported it as absent altogether.
-- **Whether any vendor reports face angle at first contact rather than maximum compression.** This determines whether a systematic open-face bias exists for high-closure players (VI.4).
-- **Roberts, Jones & Rothberg's measured contact times** across five clubheads and two ball constructions — the peer-reviewed contact-time reference, currently inaccessible.
-
-### A Note on How This Article Treats Numbers
-
-Several widely circulated figures are **deliberately absent** because we could not trace them to a primary source: a 4,000 lbf peak impact force, a universal 45–50° spin-loft optimum, "the ball flight laws were wrong for a hundred years," and specific Smits & Smith lift and drag coefficients. In each case the claim may well be true. But a reference document that fills gaps with plausible-looking numbers propagates them indefinitely, and the gaps above are more useful to a reader than confident guesses would be.
+This structure allows an argument about swing coordination to be technically strong without pretending that one measure—closure, path, torque, or spin loft—explains the whole shot.
 
 ## References
 
@@ -916,13 +979,13 @@ Several widely circulated figures are **deliberately absent** because we could n
 - Cross, R. & Nathan, A.M. (2007). Experimental study of the gear effect in ball collisions. *American Journal of Physics* **75**(7), 658–664. [doi:10.1119/1.2713788](https://doi.org/10.1119/1.2713788)
 - Cross, R. (2010). Impact of a ball on a surface with tangential compliance. *American Journal of Physics* **78**(7), 716–720. [doi:10.1119/1.3313455](https://doi.org/10.1119/1.3313455)
 - Penner, A.R. (2001). The physics of golf: the convex face of a driver. *American Journal of Physics* **69**(10), 1073. [doi:10.1119/1.1380380](https://doi.org/10.1119/1.1380380)
-- Williams, K.R. & Sih, B.L. (2002). Changes in golf clubface orientation following impact with the ball. *Sports Engineering* **5**(4). [doi:10.1046/j.1460-2687.2002.00093.x](https://doi.org/10.1046/j.1460-2687.2002.00093.x)
-- Leach, R., Forrester, S., Smith, A. & Roberts, J. (2017). On the coupling of clubhead and ball data. *Measurement* **112**, 125–136. [doi:10.1016/j.measurement.2017.08.009](https://doi.org/10.1016/j.measurement.2017.08.009)
+- Williams, K.R. & Sih, B.L. (2002). Changes in golf clubface orientation following impact with the ball. *Sports Engineering* **5**(2), 65–80. [doi:10.1046/j.1460-2687.2002.00093.x](https://doi.org/10.1046/j.1460-2687.2002.00093.x)
+- Leach, R., Forrester, S.E., Mears, A.C. & Roberts, J.R. (2017). How valid and accurate are measurements of golf impact parameters obtained using commercially available radar and stereoscopic optical launch monitors? *Measurement* **112**, 125–136. [doi:10.1016/j.measurement.2017.08.009](https://doi.org/10.1016/j.measurement.2017.08.009)
 
 **Ball flight laws and launch conditions**
 
 - Wood, P., Henrikson, E. & Broadie, C. (2018). The influence of face angle and club path on the resultant launch angle of a golf ball. *Proceedings* **2**(6), 249. [doi:10.3390/proceedings2060249](https://doi.org/10.3390/proceedings2060249)
-- Henrikson, E., Wood, P., Broadie, C. & Nuttall, N. (2020). *Proceedings* **49**, 27. [doi:10.3390/proceedings2020049027](https://doi.org/10.3390/proceedings2020049027)
+- Henrikson, E., Wood, P., Broadie, C. & Nuttall, T. (2020). The role of friction and tangential compliance on the resultant launch angle of a golf ball. *Proceedings* **49**, 27. [doi:10.3390/proceedings2020049027](https://doi.org/10.3390/proceedings2020049027)
 - Jorgensen, T.P. (1999). *The Physics of Golf*, 2nd ed. Springer. (D-plane: Technical Appendix, §3.)
 - Cochran, A.J. & Stobbs, J. (1968). *The Search for the Perfect Swing*. Golf Society of Great Britain / J.B. Lippincott.
 - Dewhurst, P. (2015). *The Science of the Perfect Swing*. Oxford University Press.

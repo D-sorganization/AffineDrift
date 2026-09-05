@@ -1,379 +1,228 @@
 ---
-title: "Rotation-Induced Spin: Gear Effect Without an Off-Centre Strike"
-description: "How much ball spin the clubhead's own closing rotation generates through the contact patch, derived from rigid-impact kinematics and bracketed between the frictionless and no-slip limits."
+title: "Rotation-Induced Spin: What Must Be Held Fixed?"
+description: "How head rotation affects ball spin through contact velocity, head inertia, and tangential compliance, with a derivation of the limited five-sevenths result."
 author: "Dieter Olson"
 date: "2026-08-03"
 categories: [physics, impact, spin, closure-rate, golf, derivation]
 ---
 
-```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Everyone knows that hitting the ball off the toe or the heel makes the clubhead twist, and that the twisting face drags the ball into a curve. That is gear effect. This article is about a second version of the same thing that happens even on a perfectly centred strike — because the face is already turning when it arrives.
-      </p>
+## The Physical Question
 
-      <div class="laymans-item">
-        <h3>The face is a moving surface, not a wall</h3>
-        <p>
-          The clubface is rotating as it meets the ball, and the ball sits a ball's-radius away from the face surface. So while the ball's centre travels forward with the head, the face itself slides sideways underneath the ball — about a third of a millimetre over the half-millisecond of contact. Friction turns that sliding into spin, exactly the way a gear rolls on a rack.
-        </p>
-      </div>
+A rotating clubface can impart spin on a centred strike. But a rotation rate alone does not tell us how much spin it imparts. We also need the velocity of a specified point on the head, the contact location, the head's mass and inertia, and a model of how the two surfaces interact.
 
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> If the contact grips, the ball leaves with five-sevenths of the clubhead's own rotation rate. For a tour-median delivery that is roughly 250 rpm of side-axis spin, in the draw direction, on a dead-centre strike.
-      </div>
-
-      <div class="laymans-item">
-        <h3>Why five-sevenths, and why that number is a ceiling</h3>
-        <p>
-          The five-sevenths comes from how a sphere shares an impulse between sliding and spinning, and it is the same factor that turns a slid billiard ball into a rolling one. It is the best case: it assumes the face never slips against the ball in the sideways direction. If the face slid the whole way instead, the effect would be zero. The real answer sits between, and closer to the top of the range than the bottom.
-        </p>
-        <div class="analogy">
-          <strong>A conveyor belt under a beach ball:</strong> Set a ball on a belt and start the belt. The ball does not simply shoot off — most of the belt's motion goes into spinning it. The face is the belt, and its closing rotation is what starts it moving.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-```
-
-## Scope and Intent
-
-The [reference treatment of impact mechanics](impact-mechanics-and-ball-flight.html) works out three consequences of clubface closure rate: a reference-point offset in the reported club path, a degree or two of face rotation during contact, and the timing sensitivity that dominates all of it in practice. It does not work out a fourth one, which is the subject of this supplement.
-
-A closing clubhead is a rigid body with a non-zero angular velocity at the moment of contact. Its contact patch therefore has a tangential surface velocity relative to the ball, and friction converts tangential surface motion into ball spin. That is precisely the mechanism of gear effect — but here the relative tangential motion has nothing to do with where on the face the ball was struck. It exists on a dead-centre strike, and it exists in the absence of any impulse-induced head rotation at all.
-
-This article does one thing: derive how much ball spin that produces, from stated assumptions, with every step reproducible. It reaches a clean closed form, works it for the tour-median delivery in the project's closure-rate model and for the two extremes of the measured range, and then spends as much space on why the closed form is an upper bound as on the closed form itself.
-
-::: {.callout-note}
-## Conventions
-
-Right-handed frame for a right-handed golfer: $x$ along the target line, $y$ vertical, $z$ to the right of the target line looking down it. Angles positive right and up. Club-delivery quantities are referenced to the moment of **maximum compression** and to the **geometric centre** of the head, matching the convention documented in the [Launch Monitor Technology Review](technology-launch-monitors.html) parameter definitions; ball quantities are referenced to separation from the face.
-
-Ball constants are the governing-body specification limits, which are openly published equipment rules rather than measurements: mass $m = 45.93$ g (the 1.620 oz maximum) and radius $R = 21.335$ mm (half the 1.680 in minimum diameter). Inertia is taken as a uniform solid sphere, $I = \tfrac25 mR^2 = 8.363\times10^{-6}$ kg m². A real ball is not uniform, and this is flagged in the assumption ledger at the end.
-:::
-
-## 1. The Kinematic Term
-
-Everything starts from the same relation the rest of the closure-rate treatment starts from. For two points on a rigid clubhead,
-
-$$
-\mathbf{v}_P = \mathbf{v}_Q + \boldsymbol{\omega}\times(\mathbf{r}_P - \mathbf{r}_Q)
-$$
-
-Let $\hat{\mathbf{n}}$ be the face normal, pointing from the face toward the ball. Let $P$ be the contact point on the face and let $Q$ be the head's material point that momentarily coincides with the **ball's centre**. Since the ball's centre stands off the face by one ball radius,
-
-$$
-\mathbf{r}_P - \mathbf{r}_Q = -R\,\hat{\mathbf{n}}
-$$
-
-and therefore
-
-$$
-\mathbf{v}_P = \mathbf{v}_Q - R\,\boldsymbol{\omega}\times\hat{\mathbf{n}}
-$$
-
-That second term is the whole subject of this article. Read it carefully:
-
-- $\mathbf{v}_Q$ is the velocity a **non-rotating** head would deliver uniformly to the contact. It is the term every impact model already carries — it produces the ordinary spin-loft backspin and the ordinary face-to-path sidespin, and it is the quantity a point-mass treatment of the ball is implicitly using when it drives the ball's centre of mass with the clubhead velocity.
-- $-R\,\boldsymbol{\omega}\times\hat{\mathbf{n}}$ exists **only because the contact patch is offset from the ball's centre along the normal**, and only when the head is rotating. It is a pure tangential term: its dot product with $\hat{\mathbf{n}}$ is zero identically.
-
-Two structural facts fall out immediately.
-
-**Only the perpendicular part of $\boldsymbol{\omega}$ matters.** Write $\boldsymbol{\omega} = \omega_n \hat{\mathbf{n}} + \boldsymbol{\omega}_\perp$. Then $\boldsymbol{\omega}\times\hat{\mathbf{n}} = \boldsymbol{\omega}_\perp\times\hat{\mathbf{n}}$, because $\hat{\mathbf{n}}\times\hat{\mathbf{n}} = \mathbf{0}$. A head spinning about its own face normal — the face rotating in its own plane — sweeps nothing under the contact patch and generates nothing. Every other component does.
-
-**The sweep speed is a rate times a length.** Taking magnitudes,
-
-$$
-u = R\,\lVert\boldsymbol{\omega}_\perp\rVert
-$$
-
-This is the tangential surface velocity of the face at the contact patch, relative to the ball's centre. It is the golf equivalent of a rack sliding under a gear, and the lever arm is the ball's own radius rather than anything about the club.
+Faster rotation **with the head centre's velocity held fixed** changes the velocity of the face at contact. Faster rotation **with the contact-point velocity held fixed** requires a compensating change in the head centre's velocity. Those are different physical experiments.
 
 ::: {.callout-important}
-## A Double-Counting Caution, Stated Up Front
+## The Result to Carry Forward
 
-The decomposition above is exact but it is a *choice of reference point*, and the answer to the question "is this effect already in my model?" depends entirely on which point a model uses for clubhead velocity.
+There is no universal rule that a golf ball receives five-sevenths of the clubhead's angular velocity. The factor $5/7$ belongs to a uniform sphere interacting with a surface whose tangential speed is prescribed, with zero relative tangential speed at separation. Converting that result into a fraction of head rotation requires an additional, explicitly chosen kinematic relationship.
 
-A model that drives the collision with clubhead velocity **evaluated at the geometric centre or the CG** does not contain this term. A model that evaluates clubhead velocity at the **contact point on the face** already contains it, though usually without the author noticing, because the ordinary spin calculation then uses a face velocity that silently includes $-R\,\boldsymbol{\omega}\times\hat{\mathbf{n}}$.
-
-Since the launch-monitor convention documented in the [parameter reference](technology-launch-monitors.html) is the **geometric centre**, and since the CG-to-face separation on a driver (25–50 mm) is comparable to the ball radius, this is not a small bookkeeping point. It is the same reference-point problem the main article works out for club path, applied to spin instead of direction.
+A consistent impact model already includes head rotation through contact velocity and the head's response to the impulse. Adding an extra rotation-generated spin term to that model can count the same motion twice.
 :::
 
-### 1.1 Working the Sweep for the Tour-Median Delivery
+The [impact reference](impact-mechanics-and-ball-flight.html) develops the complete collision. Here we isolate the rotation question without treating the isolated calculation as a measured golf effect.
 
-The project's closure-rate model takes its delivery numbers from Cheetham's 94-player tour dataset and the Henrikson relation that converts a shaft-axis rate into a target-line rate:
+## One Frame and Two Bodies
 
-$$
-\text{CCV} = \text{HTV}\,\sin(\text{lie}) + \text{SPV}\,\cos(\text{lie})
-$$
+Use a right-handed world frame with $x$ along the target line, $y$ up, and $z$ to the right when looking along the target line. The face normal $\mathbf n$ points from the head toward the ball. Incoming velocities are evaluated immediately before contact; outgoing ball velocities refer to separation.
 
-With the tour-median values — handle twist velocity 1,307 °/s, swing-plane velocity 1,870 °/s, lie angle 58° — this gives
+Let $C$ be the head's centre of mass and $P$ its contact point:
 
 $$
-\text{CCV} = 1{,}307\sin 58° + 1{,}870\cos 58° = 1{,}108 + 991 = 2{,}099 \approx 2{,}100\ \text{°/s}
+\mathbf r_c=\mathbf p_P-\mathbf p_C,\qquad
+\mathbf v_P=\mathbf v_C+\boldsymbol\omega_c\times\mathbf r_c.
 $$
 
-which is the figure used throughout. The [rate-of-closure explorer](https://d-sorganization.github.io/rate-of-closure-explorer/) is the interactive form of that relation and will reproduce it for any other combination of the three inputs.
-
-Converting and applying the kinematics, with $\Delta t = 450$ µs for the contact duration:
-
-| Quantity | Derivation | Value |
-|---|---|---|
-| Closing rate about the target-line frame | $2{,}100$ °/s | $36.65$ rad/s |
-| Face rotation during contact | $\omega\,\Delta t$ | $0.94°$ |
-| Sweep speed at the contact patch | $u = \omega R$ | $0.782$ m/s |
-| Sideways sweep distance during contact | $u\,\Delta t$ | $0.35$ mm |
-
-A third of a millimetre. That is the entire physical event this article is about, and its smallness is worth holding onto — it is the reason the no-slip limit turns out to be the relevant one, and the reason the resulting spin is a correction rather than a dominant term.
-
-## 2. The Impulse Partition, and the Five-Sevenths Result
-
-Now let friction act on that sweep. Treat the contact as a rigid impact: the ball is free, initially at rest and unspun, and the tangential impulse $J_t$ acts at the contact point, whose perpendicular distance from the ball's centre is $R$.
-
-The tangential impulse does two things at once. It accelerates the ball's centre of mass,
+For a spherical ball of radius $R$, its contact lever is $\mathbf r_b=-R\mathbf n$. The incoming relative surface velocity is
 
 $$
-\Delta v_t = \frac{J_t}{m}
+\mathbf w^-=
+\mathbf v_b^-+\boldsymbol\omega_b^-\times\mathbf r_b
+-\mathbf v_C^--\boldsymbol\omega_c^-\times\mathbf r_c.
 $$
 
-and it spins the ball about its centre,
+Its tangential component is $\mathbf w_t^-=(I-\mathbf n\mathbf n^{\mathsf T})\mathbf w^-$. This combines every source of slip: delivered translation, initial ball spin, head rotation, and strike location.
+
+The relevant angular velocity is the full vector. A scalar handle-twist rate or derivative of horizontal face angle cannot replace it without a geometric conversion.
+
+### A Reference Change Does Not Create an Extra Velocity
+
+For any other point $Q$ fixed in the head's rigid extension,
 
 $$
-\omega_b = \frac{J_t R}{I} = \frac{J_t R}{\tfrac25 mR^2} = \frac{5J_t}{2mR}
+\mathbf v_Q=\mathbf v_C+
+\boldsymbol\omega_c\times(\mathbf p_Q-\mathbf p_C).
 $$
 
-The slip velocity that friction is working against is the difference between the face's surface velocity and the ball's surface velocity at the contact patch. The ball's contact-patch velocity is its centre velocity plus $\omega_b R$, so the impulse closes the slip gap at
+Substitution into the formula for $\mathbf v_P$ gives the same contact velocity. The reference changes the description, not the collision.
+
+One may place a **virtual** head-fixed point $Q$ at the position instantaneously occupied by the ball centre. Then
 
 $$
-\Delta v_t + \omega_b R = \frac{J_t}{m} + \frac{5J_t}{2m} = \frac{7}{2}\,\frac{J_t}{m}
+\mathbf v_P=\mathbf v_Q-R\boldsymbol\omega_c\times\mathbf n.
 $$
 
-The factor $7/2$ is the whole content of the rigid-sphere partition: two parts of the impulse go into translating the ball for every five that go into spinning its surface.
+That identity is valid, but $\mathbf v_Q$ is neither the ball-centre velocity nor automatically the velocity of the head's centre of mass. The ball is a separate body. Nor does $\mathbf v_Q$ remain unchanged when rotation is changed at fixed $\mathbf v_C$.
 
-**The no-slip (rolling) limit** is the case where friction is sufficient to drive the slip to zero before separation. Setting the slip closure equal to the initial slip $u$,
+Identifying $R|\boldsymbol\omega_c|$ as a new speed missing from every centre-referenced impact model is therefore incorrect. A centre-referenced model uses the actual lever $\mathbf r_c$; a contact-referenced model already has $\mathbf v_P$. Both can describe exactly the same experiment.
 
-$$
-J_t = \frac{2}{7}mu
-$$
+## Deriving the Prescribed-Surface Result
 
-and substituting back,
+Consider an initially stationary, unspun sphere touching a surface moving at a prescribed tangential speed $u>0$. Take the tangential impulse on the ball in that direction as $J_t$. Assume spherical inertia $I_b=\alpha mR^2$, a fixed normal, and no normal-force moment about the ball centre.
 
-$$
-\omega_b = \frac{5}{2mR}\cdot\frac{2}{7}mu = \frac{5}{7}\,\frac{u}{R}
-$$
-
-But $u = \omega R$, so the radius cancels:
+The translational speed and spin magnitude imparted to the ball are
 
 $$
-\boxed{\;\omega_{\text{ball}} = \frac{5}{7}\,\boldsymbol{\omega}_{\perp,\text{head}}\;}
+v_t^+=\frac{J_t}{m},\qquad
+\omega_b^+=\frac{J_t}{\alpha mR}.
 $$
 
-**A gripping contact hands the ball five-sevenths of the clubhead's own angular velocity, about the same axis.** The ball's mass, its radius and the head's moment of inertia have all dropped out. Nothing about the club design appears. It depends on one property of the ball — that its inertia is $\tfrac25 mR^2$ — and on nothing else.
-
-This is the same $5/7$ that governs a billiard ball sliding into a roll, and for the same reason: it is the sphere's inertia ratio, not a golf number. It surfaces once more in this site's putting material: the skid phase of a putt is the surface-side twin of this partition, and the [roll-model article](putting-roll-models.html) derives the same factor as the fraction of launch speed a sliding putt retains at pure-roll onset.
-
-The companion result, worth recording because it is a launch-direction effect rather than a spin effect, is the tangential velocity the ball's centre picks up:
+The ball's surface at contact moves in the impulse direction with speed $v_t^++R\omega_b^+$. If it matches the prescribed wall speed at separation,
 
 $$
-\Delta v_t = \frac{2}{7}u = \frac{2}{7}(0.782) = 0.223\ \text{m/s}
+u=\frac{J_t}{m}\left(1+\frac{1}{\alpha}\right).
 $$
 
-Against a driver ball speed of order 70 m/s that is $\arctan(0.223/70) = 0.18°$ of launch direction — small, and in the opposite lateral sense to the curvature it accompanies.
-
-## 3. The Numbers
-
-Applying $\omega_{\text{ball}} = \tfrac57\omega$ across the measured range. The extremes are Cheetham's highest and lowest individual handle twist velocities, converted to the target-line frame using the measured HTV:CCV ratio of 0.62, exactly as in the closure-rate dossier:
-
-| Delivery | HTV (°/s) | CCV (°/s) | $\omega$ (rad/s) | Sweep $u$ (m/s) | **Ball spin, no-slip (rpm)** |
-|---|---|---|---|---|---|
-| Range low | 652 | 1,052 | 18.4 | 0.392 | **125** |
-| **Tour median** | **1,307** | **2,100** | **36.7** | **0.782** | **250** |
-| Range high | 2,432 | 3,923 | 68.5 | 1.461 | **467** |
-
-The arithmetic is trivial once the closed form is in hand — the ball spin column is simply the CCV column in rpm (divide °/s by 6) multiplied by $5/7$. For the tour median: $2{,}100/6 = 350$ rpm of head rotation, of which $5/7$ is exactly **250 rpm**.
-
-Two labels belong on those numbers and must travel with them:
-
-- **125 / 250 / 467 rpm are the no-slip upper-bound estimates.** They assume the cross-face slip is fully arrested before separation, and no tangential elastic recovery.
-- **The frictionless lower bound is 0 rpm, exactly.** With $\mu = 0$ there is no tangential impulse, the face slides across the ball for the whole of contact, and the head's rotation contributes nothing whatever to ball spin.
-
-The true value lies between, and §4 argues it lies very close to the top of that bracket.
-
-## 4. Is the Friction Actually Available?
-
-The no-slip result is only meaningful if the contact can supply the required tangential impulse within the contact time. Two checks, both of which the collision passes comfortably.
-
-**Check 1: impulse ratio.** The required tangential impulse is
+Therefore,
 
 $$
-J_t = \tfrac27 mu = \tfrac27(0.04593)(0.782) = 1.03\times10^{-2}\ \text{N s}
+J_t=\frac{\alpha m}{1+\alpha}u,\qquad
+v_t^+=\frac{\alpha}{1+\alpha}u,\qquad
+\omega_b^+=\frac{u}{(1+\alpha)R}.
 $$
 
-The normal impulse, for a ball leaving at roughly 70 m/s, is $J_n = mv_b = 3.22$ N s. So
+For a uniform solid sphere, $\alpha=2/5$, so
 
 $$
-\frac{J_t}{J_n} = 3.2\times10^{-3}
+\omega_b^+=\frac57\frac{u}{R}.
 $$
 
-Against a measured clubface friction coefficient of $\mu \approx 0.40$ for urethane covers, the Coulomb ceiling is $\mu J_n$ — over a hundred times the impulse this mechanism needs. In isolation, the requirement is not close to binding.
+This is a result about an **imposed surface speed**. Only if a separate model specifies $u=R\omega_c$ does it become $\omega_b^+=5\omega_c/7$ in magnitude. The sign still follows from the contact lever and impulse direction.
 
-**Check 2: the shared friction budget, which is the real constraint.** Friction is a vector, and it opposes the *net* slip. The cross-face sweep of 0.78 m/s does not get its own friction cone; it competes with the much larger up-the-face slip that spin loft generates. For a 48.4 m/s delivery at 14° of spin loft, that up-face slip is $48.4\sin 14° = 11.7$ m/s, so the sweep is only
+With assumed $R=0.021335$ m and $u=0.8$ m/s, the result is approximately $26.8$ rad/s, or $256$ rpm. These inputs describe a constructed surface experiment, not a typical player's rotation-generated spin.
 
-$$
-\frac{u}{\sqrt{u^2 + (11.7)^2}} = 6.7\%
-$$
+### Zero Slip Is Not a Universal Upper Bound
 
-of the slip direction. In a fully saturated sliding contact the friction force is $\mu N$ directed against the net slip, so the horizontal share of it is $6.7\%$ of $\mu N$. With an average normal force of $J_n/\Delta t = 7.1$ kN, that is $\mu N = 2.86$ kN total and $190$ N horizontally — enough to deliver $J_t$ in
+Define tangential restitution by $w_t^+=-e_t w_t^-$ in this one-dimensional surface experiment. Then
 
 $$
-\frac{1.03\times10^{-2}\ \text{N s}}{190\ \text{N}} = 5.4\times10^{-5}\ \text{s}
+\omega_b^+=\frac{(1+e_t)u}{(1+\alpha)R}.
 $$
 
-that is, 54 µs, which is **12% of the contact duration**. Even under the pessimistic assumption that the contact is friction-saturated throughout, the cross-face slip is arrested in the first eighth of the collision. If the contact is not saturated the arrest time falls to about 4 µs.
+Positive $e_t$ means reversal of relative surface velocity and exceeds the zero-slip result. Elastic shear deformation can store and return energy while some or all of the contact patch sticks. Sticking during contact and zero slip at separation are different conditions.
 
-That is the substantive reason to treat the no-slip figure as the working estimate rather than as a remote theoretical ceiling: the sideways sweep is small enough, and the normal force large enough, that the sideways degree of freedom sticks almost immediately.
+Cross's experiments include golf-ball impacts on polished granite at about 4 m/s, with tangential restitution around $0.1$ in the gripping regime. That supports exceeding a rolling approximation; it does not establish a 10% correction for a driver face at full swing speed. [Cross, 2002](https://www.physics.usyd.edu.au/~cross/PUBLICATIONS/GripSlip.pdf).
 
-## 5. Where the Bracket Is Honestly Wider Than It Looks
+Frictionless point contact produces no spin from a central normal impulse. **Sliding with nonzero friction still produces spin.** “It slides throughout” cannot mean “the tangential impulse is zero.”
 
-Three effects push the real answer away from a clean $5/7$, and two of them push **upward**, which means "no-slip upper bound" is a statement about the rigid-friction model rather than about physics.
+## Repeating the Calculation for a Finite Head
 
-**Tangential compliance can exceed the no-slip value.** The main article's treatment of the tangential impulse records the central experimental result: a golf ball *grips* rather than rolls, storing tangential elastic energy during compression and returning part of it during restitution. Cross's measured tangential coefficient of restitution for a golf ball is $e_x \approx 0.1$. Carrying that through, the gripping-contact result is $\tfrac57(1+e_x)\,\omega$, so the tour-median figure becomes
+Choose a centred contact with $\mathbf r_c=d\mathbf n$ and a tangential direction whose associated rotation is about a principal head-inertia axis. Let the head mass be $M$ and its inertia about that axis be $I_c$.
 
-$$
-250 \times 1.1 = 275\ \text{rpm}
-$$
-
-roughly a 10% overshoot of the rigid no-slip value. The honest framing is therefore: **the no-slip result is the upper bound of the rigid-friction bracket, and the measured tangential COR of the ball suggests the physical answer sits about 10% above it**, not below.
-
-**Friction saturation cuts the other way at high spin loft.** §4's second check assumed the cross-face impulse can be extracted from a saturated friction vector proportionally. That is a linearisation. In a genuinely saturated contact the two slip directions are coupled non-linearly, and superposition of the loft-driven and rotation-driven spin contributions is no longer exact. The error is second order in the ratio computed there — 6.7% — so it is small for a driver, but it grows with spin loft and would be worth a numerical treatment for wedges.
-
-**The uniform-sphere inertia is an approximation.** A modern multi-layer ball is not of uniform density. Repeating §2 with $I = \alpha mR^2$ left general: $\omega_b = J_t/(\alpha mR)$, the slip closes at $(1 + 1/\alpha)J_t/m$, so the no-slip impulse is $J_t = \alpha mu/(1+\alpha)$ and
+An impulse changes both bodies' translation and rotation. Relative tangential velocity changes by $W_tJ_t$, where
 
 $$
-\omega_{\text{ball}} = \frac{1}{1+\alpha}\,\omega
+W_t=\frac1m+\frac{1}{\alpha m}
++\frac1M+\frac{d^2}{I_c}.
 $$
 
-which returns $5/7$ at $\alpha = 0.4$. Cross's measured $\alpha$ for a golf ball is 0.40, so the uniform-sphere value is well supported and the sensitivity is mild: $\alpha = 0.38$ would give $0.725$ instead of $0.714$, a 1.4% change.
-
-**And the comparison to typical driver spin is left qualitative, deliberately.** 250 rpm about the side axis is not nothing set against the couple of thousand rpm of backspin a driver produces, but converting that into a spin-axis tilt and then into yards requires an assumed backspin, an assumed launch condition and an assumed aerodynamic model, and the main article documents at length how much those choices move the answer. What can be said without those assumptions is structural: the effect is of the same order as the spin-axis changes a fraction of a degree of face-to-path produces, and therefore it is not negligible at the precision at which delivery numbers are now quoted.
-
-For readers who want the geometry anyway, the tilt of the spin axis is $\arctan(\omega_{\text{side}}/\omega_{\text{back}})$, which for 250 rpm of side-axis spin against an **assumed** 2,500 rpm of backspin is 5.7°. The 2,500 is a stated assumption, not a measurement, and the number should not be quoted without it.
-
-## 6. Which Way Does It Curve?
-
-The sign is worth deriving rather than asserting, because it turns out to reinforce one of the main article's three closure-rate mechanisms and oppose another.
-
-A closing face on a right-handed swing rotates its normal from right-of-target toward left-of-target. With $\hat{\mathbf{n}} \approx \hat{\mathbf{x}}$ and $\hat{\mathbf{y}}\times\hat{\mathbf{x}} = -\hat{\mathbf{z}}$, that is a rotation $\boldsymbol{\omega} = +\omega\hat{\mathbf{y}}$. The sweep term is then
+For incoming slip magnitude $u$ and zero slip at separation,
 
 $$
--R\,\boldsymbol{\omega}\times\hat{\mathbf{n}} = -R\omega\,(\hat{\mathbf{y}}\times\hat{\mathbf{x}}) = +R\omega\,\hat{\mathbf{z}}
+J_t=\frac{u}{W_t},\qquad
+\omega_b^+=\frac{u}{\alpha mR W_t}.
 $$
 
-so the face surface sweeps toward $+z$ — to the golfer's right — under the ball. Friction on the ball at the contact patch acts in that same $+z$ direction, at a position $-R\hat{\mathbf{x}}$ from the ball's centre, giving a torque
+The finite head introduces both $1/M$ and $d^2/I_c$. Its mass and inertia have not cancelled. This scalar calculation assumes that normal and selected tangential directions decouple; general off-centre contact requires the matrix treatment in the main reference.
+
+### Changing Rotation at Fixed Centre Velocity
+
+Suppose the initial tangential velocity of $C$ is zero and the head rotates about the selected axis. The surface speed magnitude is $u=d|\omega_c|$, giving
 
 $$
-(-R\hat{\mathbf{x}})\times(F\hat{\mathbf{z}}) = +RF\,\hat{\mathbf{y}}
+|\omega_b^+|=
+\frac{d|\omega_c|}
+{\alpha R\left(1+1/\alpha+m/M+md^2/I_c\right)}.
 $$
 
-The ball spins about $+\hat{\mathbf{y}}$, in the same rotational sense as the head. The Magnus force is proportional to $\boldsymbol{\omega}_{\text{ball}}\times\mathbf{v}$, and $\hat{\mathbf{y}}\times\hat{\mathbf{x}} = -\hat{\mathbf{z}}$, so the aerodynamic force is toward $-z$: **the curvature is to the left. A closing face produces a draw-side spin contribution on a centred strike.**
+The lever is the depth from the **head centre of mass to contact**, not automatically the ball radius. Both depth and inertia affect the result.
 
-Set against the three mechanisms tabulated in the main article, this is a fourth, and it sides with the smaller of the two directional effects:
-
-| Mechanism | Source of relative tangential motion | Direction (RH golfer) | Order of magnitude |
-|---|---|---|---|
-| Reference-point offset in reported path | None — a measurement convention | Fade | 0.4–3° of face-to-path |
-| Face rotation during contact | Head rotation, integrated over contact | Draw | 0.5–2° of face angle |
-| Timing sensitivity | None — a gain, not a bias | Variance only | ±5–20° of face |
-| **Rotation-induced spin (this article)** | **Head rotation, at the contact patch** | **Draw** | **125–467 rpm side-axis** |
-
-Note also the small launch-direction term from §2: the ball's centre is pushed 0.18° toward $+z$, to the right, while the spin curves it left. A push-draw in miniature, from a single mechanism, on a centred strike.
-
-## 7. Relation to Classical Gear Effect
-
-The two effects share a mechanism and differ in every input.
-
-| | Classical gear effect | Rotation-induced spin |
-|---|---|---|
-| Friction mechanism | Face surface drags ball surface | Face surface drags ball surface |
-| Source of head rotation | **Generated by the impulse** — off-centre force torques the head about its CG | **Pre-existing** — the delivered closing rate |
-| Requires an off-centre strike | Yes; vanishes at the centre | **No; present at the centre** |
-| Governing lever arm | CG depth behind the face | **Ball radius $R$** |
-| Scales with head MOI | Yes, inversely — the design lever | **No. MOI cancels entirely** |
-| Scales with ball speed | Yes | **No. Depends only on $\omega$** |
-| Correctable by face curvature | Yes — that is what bulge and roll are for | Not by bulge and roll; the effect does not vary with strike location |
-
-The last three rows are the interesting ones. Gear effect is a club-design variable: raise the moment of inertia and it shrinks, which is most of what driver design has been doing for thirty years. Rotation-induced spin is **not** a club-design variable at all under this model. It is set by the player's delivery and by the ball's inertia ratio, and no amount of head engineering changes the $5/7$.
-
-It also fails to respond to the one correction golf has built for gear effect. Bulge and roll compensate an effect that scales with how far off centre the strike was; this effect is the same at every strike location, so a fixed face curvature cannot correct it — it would simply be absorbed into the club's overall bias.
-
-## 8. An Extension, Flagged Rather Than Claimed
-
-The boxed result applies to **every** component of head angular velocity perpendicular to the face normal, not only the closing component. A clubhead approaching impact is also rotating in the swing plane — pitching about a roughly horizontal axis as it passes through the bottom of the arc — and that component is perpendicular to the face normal too. By the same algebra it should contribute **backspin**.
-
-Its magnitude follows from the main article's instantaneous-screw-axis form: the head's total angular velocity is $\lVert\boldsymbol{\omega}\rVert = v/R_{\text{ISA}}$. At 48.4 m/s and the back-solved $R_{\text{ISA}} \approx 0.77$ m, that is 62.9 rad/s in total, which caps the rotation-induced spin from all sources at
+Take the illustrative parameters
 
 $$
-\tfrac57 \times 62.9 = 44.9\ \text{rad/s} = 429\ \text{rpm}
+\begin{aligned}
+m&=0.04593\ {\rm kg},&R&=0.021335\ {\rm m},\\
+\alpha&=0.4,&M&=0.2\ {\rm kg},
+\end{aligned}
 $$
 
-with the closing component accounting for 250 rpm of it and the remainder appearing largely as backspin.
+with $d=0.04$ m, $I_c=0.0004\ {\rm kg\,m^2}$ and $|\omega_c|=30$ rad/s. These are model inputs, not a measured cohort. The spin magnitude is approximately $35.9$ rad/s, or $343$ rpm. In comparison, $5|\omega_c|/7$ would give $21.4$ rad/s, or $205$ rpm. The difference exposes the dependence on the experiment; it does not validate either number for a golfer.
 
-⚠️ **This is an extension, not a result.** $R_{\text{ISA}} \approx 0.77$ m is itself back-solved from a vendor path-offset figure in the main article and carries a warning there; the decomposition of the residual into pitch and other components has not been measured; and a few hundred rpm of backspin is large enough that if it were real and unaccounted for, impact models referenced to the geometric centre would be under-predicting driver backspin systematically. Either that under-prediction exists and has been absorbed into fitted constants, or one of the assumptions above is wrong. **Resolving which is the single most useful thing that could be done with this article.**
+A head rotation $+\omega_c\mathbf e_y$ and lever $d\mathbf e_x$ give face velocity $-d\omega_c\mathbf e_z$. The impulse on the initially stationary ball points toward $-z$, and its moment about the ball centre points toward $-y$. Ball spin is opposite head rotation in this example. The virtual-point experiment can give the opposite sign because it holds a different velocity fixed.
 
-## 9. Assumption Ledger
+### Changing Rotation at Fixed Contact Velocity
 
-Every number above traces to this list. Nothing else was used.
+Require $\mathbf v_P$ to stay fixed while changing $\boldsymbol\omega_c$:
 
-| Input | Value | Status |
-|---|---|---|
-| Ball mass $m$ | 45.93 g | Equipment rule (1.620 oz maximum), openly published |
-| Ball radius $R$ | 21.335 mm | Equipment rule (1.680 in minimum diameter), openly published |
-| Ball inertia $I$ | $\tfrac25 mR^2$ | Uniform-sphere idealisation; consistent with the measured $\alpha = 0.40$ |
-| Handle twist velocity, tour median | 1,307 °/s | Cheetham 2014, 94 tour professionals |
-| HTV range | 652–2,432 °/s | Cheetham 2014, individual extremes |
-| Swing-plane velocity | 1,870 °/s | Delivery model input |
-| Lie angle | 58° | Delivery model input |
-| HTV:CCV ratio | 0.62 | Used only to convert the two range extremes |
-| Contact duration $\Delta t$ | 450 µs | Modelling assumption, mid-range of published golf contact times |
-| Clubhead speed | 48.4 m/s | Cheetham 2014 cohort mean |
-| Ball speed | 70 m/s | Modelling assumption; used only in the friction-budget check |
-| Spin loft | 14° | Modelling assumption; used only in the friction-budget check |
-| Friction coefficient $\mu$ | 0.40 | Measured, urethane cover, sled test |
-| Tangential COR $e_x$ | 0.10 | Measured, golf ball |
-| Backspin reference | 2,500 rpm | **Assumption**, used only for the illustrative spin-axis tilt |
-| $R_{\text{ISA}}$ | 0.77 m | **Back-solved estimate**, used only in §8 and flagged there |
+$$
+\mathbf v_C=\mathbf v_P-\boldsymbol\omega_c\times\mathbf r_c.
+$$
 
-Everything else in this article is algebra.
+For the same ball state, geometry, mass properties, and frozen-geometry impulse law, $\mathbf w^-$ and the contact inverse-mass matrix stay the same. The solved impulse, outgoing ball velocity, and outgoing ball spin stay the same.
 
-## 10. What Would Falsify This
+This is a useful limit. In a finite-duration collision, the normal can rotate, the patch can migrate, and the shaft can supply loads. Those mechanisms require a time-resolved model and can distinguish deliveries that this impulse model treats as equivalent.
 
-- **A centred-strike robot test at two closure rates, matched in every other delivery parameter.** The prediction is a difference in side-axis spin of $\tfrac57\Delta\omega$ — for a 1,000 °/s difference in CCV, 119 rpm, in the draw direction for the faster-closing delivery. That is within the resolution of current spin measurement and nothing about it requires a new instrument.
-- **Any measurement of ball spin referenced against clubhead velocity taken at the contact point rather than the geometric centre.** If the two references give the same spin prediction, the decomposition in §1 is wrong.
-- **A published golf-ball $\alpha$ materially different from 0.40**, which would move the $5/7$ directly.
+## Friction Is Shared Across the Contact
 
-## References
+Under a Coulomb model with constant coefficient $\mu$ and compressive normal force, a necessary integrated bound is
 
-- Cheetham, P.J. (2014). *The Relationship of Club Handle Twist Velocity to Selected Biomechanical Characteristics of the Golf Drive*. Doctoral dissertation, Arizona State University. [PDF](https://www.philcheetham.com/media/Phillip-Cheetham-Doctoral-Dissertation-2014.pdf)
-- Cross, R. (2002). Grip-slip behavior of a bouncing ball. *American Journal of Physics* **70**(11), 1093–1102. [doi:10.1119/1.1507792](https://doi.org/10.1119/1.1507792)
-- Cross, R. (2010). Impact of a ball on a surface with tangential compliance. *American Journal of Physics* **78**(7), 716–720. [doi:10.1119/1.3313455](https://doi.org/10.1119/1.3313455)
-- Cross, R. & Nathan, A.M. (2007). Experimental study of the gear effect in ball collisions. *American Journal of Physics* **75**(7), 658–664. [doi:10.1119/1.2713788](https://doi.org/10.1119/1.2713788)
-- Cross, R. & Dewhurst, P. (2018). Launch speed, angle and spin in golf. *European Journal of Physics* **39**(6), 065003. [doi:10.1088/1361-6404/aadda8](https://doi.org/10.1088/1361-6404/aadda8)
-- Henrikson, E., Wood, P., Broadie, C. & Nuttall, N. (2020). *Proceedings* **49**, 27. [doi:10.3390/proceedings2020049027](https://doi.org/10.3390/proceedings2020049027)
-- Maw, N., Barber, J.R. & Fawcett, J.N. (1981). The role of elastic tangential compliance in oblique impact. *Journal of Lubrication Technology* **103**(1), 74–80. [doi:10.1115/1.3251617](https://doi.org/10.1115/1.3251617)
-- Stronge, W.J. (2018). *Impact Mechanics*, 2nd ed. Cambridge University Press. [doi:10.1017/9781139050227](https://doi.org/10.1017/9781139050227)
-- R&A and USGA. *Equipment Rules*, Part 4 (the ball): maximum mass 1.620 oz, minimum diameter 1.680 in.
-- Interactive tool: [Rate of Closure Explorer](https://d-sorganization.github.io/rate-of-closure-explorer/) — the reconciling relation between handle twist velocity, swing-plane velocity, lie angle and target-line closure rate.
+$$
+\|\mathbf J_t\|\leq\mu J_n.
+$$
 
----
+Checking components separately is insufficient. If $\mu J_n=1.2$ N s, components $1.19$ and $0.20$ N s each satisfy the scalar bound, but their vector magnitude is approximately $1.207$ N s and violates it.
 
-*Companion to [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html), Part VI. The verification status of every delivery input used here is recorded in `content-development/technology-research/closure-rate-literature-dossier.md`.*
+Passing the vector bound also does not prove a proposed sticking history. Sliding force opposes the **current total slip**. During sticking, shear deformation and its history determine force. Normal force changes during the collision.
+
+A small sideways component does not receive an independent friction allowance. Dividing its required impulse by an assumed average sideways force cannot establish that it arrests within a specified fraction of contact. A transient solution must check the coupled slip components, force direction, compression, and reversal.
+
+Henrikson and colleagues modelled annular contact regions that can stick or slip separately. Their friction measurements used a low-load sled; their impact validation used a separate ball-on-plate experiment. These are distinct kinds of evidence, not a direct measurement of a universal driver-impact coefficient. [Henrikson et al., 2020](https://doi.org/10.3390/proceedings2020049027).
+
+## How This Connects to Gear Effect
+
+Pre-existing rotation enters incoming contact velocity. Impulse-induced rotation enters the head's response. Both participate in one collision:
+
+| Quantity | Where It Enters |
+|---|---|
+| Pre-impact head rotation | $\boldsymbol\omega_c^-\times\mathbf r_c$ in surface velocity |
+| Off-centre normal impulse | $\mathbf r_c\times J_n\mathbf n$ changes head angular momentum |
+| Tangential impulse | Changes ball spin and both bodies' surface velocities |
+| Head inertia | Determines angular-velocity response |
+| Face curvature and strike location | Determine local normal and levers |
+| Ball shear deformation | Influences sticking, slipping, and restitution |
+
+A centred strike can have tangential slip. An off-centre strike can additionally couple normal impulse into head rotation and tangential motion. “Centred” must itself be defined: geometric face centre, projected centre of mass, and a dynamically defined centre of percussion need not coincide.
+
+It is unsafe to add independently calculated “spin-loft spin,” “gear spin,” and “closure spin” without checking the approximation against the coupled solution. These contributions share contact forces and change one another's trajectories.
+
+Rotation about the face normal generates no tangential velocity at an ideal central **point** contact. A finite patch can nevertheless transmit a torsional friction moment about the normal. The point model omits that mechanism; it does not disprove it.
+
+## What Would Distinguish the Models
+
+A robot experiment should report full head pose and angular velocity, the velocity of a named point, strike location, and ball launch and spin. Specify the intervention before comparing rates:
+
+1. **Hold centre-of-mass velocity fixed.** Measure the contact-velocity change as rotation varies and compare with the finite-head prediction.
+2. **Hold contact-point velocity fixed.** Compensate centre velocity as rotation varies. Residual changes test effects beyond the frozen-geometry model.
+3. **Vary inertia or centre-of-mass depth independently where practicable.** Test the head-response terms rather than assuming their cancellation.
+4. **Measure surface conditions.** Cover, wetness, roughness, and compliance can change tangential impulse.
+
+Changing only the mathematical reference point is a consistency check: a correct model must predict the same output. That agreement verifies the description; it does not show that changing physical rotation has no effect.
+
+The golfer and flexible shaft deliver a state; the collision maps it to ball launch; aerodynamic forces determine subsequent flight. Keeping these maps consistent is how we connect swing mechanics to the shot without inventing an extra spin source.
+
+## Further Reading
+
+- [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html): coupled impulse, launch geometry, and evidence.
+- [The Reference-Point Problem](reference-point-problem.html): rigid-body kinematics and scalar closure rates.
+- [Cross, 2002](https://doi.org/10.1119/1.1507792): measured slip, grip, and tangential restitution.
+- [Henrikson, Wood, Broadie, and Nuttall, 2020](https://doi.org/10.3390/proceedings2020049027): friction and tangential compliance.
