@@ -231,3 +231,40 @@ def test_missing_shared_module_warns_rather_than_failing(tmp_path: Path) -> None
 def test_absent_spec_is_not_an_error(tmp_path: Path) -> None:
     """No SPEC.md means nothing to check."""
     assert check(tmp_path / "nope.md", module_path=SHARED_MODULE) == []
+
+
+# ---------------------------------------------------------------------------
+# Vendored file integrity & drift prevention (RM #1525, AD #4146)
+# ---------------------------------------------------------------------------
+
+
+def test_vendored_helpers_match_pinned_hashes() -> None:
+    """Vendored spec-changelog helpers must match pinned SHA256 hashes from Repository_Management."""
+    import hashlib
+
+    expected_digests = {
+        "shared_scripts/spec_changelog.py": "5e6c24cdbfd8e539d3c15f8347ec75dbbbdfe6ae64f6dcebeab1564d066b09d7",
+        "scripts/spec_rows_merge_driver.py": "bec98b67861370ba25af1d9b51548b8772b9f206a9de994c584a0c28b4250cef",
+        "scripts/install_spec_merge_driver.py": "7008edb515ebdf3d659ed24c7dec1145977d66b4932c473c4f4541a449ebe6ef",
+    }
+    for rel_path, expected_hash in expected_digests.items():
+        full_path = REPO_ROOT / rel_path
+        assert full_path.exists(), f"Vendored file missing: {rel_path}"
+        normalized_content = full_path.read_text(encoding="utf-8").replace("\r\n", "\n")
+        actual_hash = hashlib.sha256(normalized_content.encode("utf-8")).hexdigest()
+        assert actual_hash == expected_hash, (
+            f"Vendored file {rel_path} has drifted from upstream Repository_Management. "
+            f"Expected {expected_hash}, got {actual_hash}."
+        )
+
+
+def test_driver_command_is_worktree_relative() -> None:
+    """The merge driver command must use a relative script path, not an absolute worktree path."""
+    from scripts.install_spec_merge_driver import DRIVER_SCRIPT, driver_command
+
+    cmd = driver_command(REPO_ROOT)
+    assert DRIVER_SCRIPT in cmd
+    assert not Path(DRIVER_SCRIPT).is_absolute()
+    # Confirm it does not embed repo root / worktree path
+    assert str(REPO_ROOT) not in cmd
+    assert REPO_ROOT.as_posix() not in cmd
