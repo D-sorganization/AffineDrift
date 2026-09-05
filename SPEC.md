@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4191 | Correct rigid–flexible golf foundations and posture-dependent coupling in three web editions |
 | 2026-09-05 | #4188 | Correct concluding golf investigation protocol, shared glossary and reading lists; synchronize four case-study editions and rebuild five PDFs. |
 | 2026-09-05 | #4186 | Derive learning-control convergence, transient growth, noise and filtering limits, identifiability, policy-search scope, and verified controller reuse in four editions; rebuild three PDFs and repair valid LaTeX group-ending detection under #4180. |
 | 2026-09-05 | #4185 | Correct stochastic motor-control conventions, moment and task uncertainty, optimal-effort claims, original experimental scope, and first-contact risk; synchronize four editions, rebuild three PDFs, and add checked counterexamples under #4179. |
