@@ -1,668 +1,478 @@
-\chapter{Throwing Away the Target}
+\chapter{Motion, Targets, and Timing}
 \label{ch:throwing_target}
 
-\epigraph{%
-  A river does not flow toward the ocean because it knows where the ocean is.
-  It flows because flowing is what rivers do.
-}{--- \textup{Adapted from Lao Tzu}}
+A golf swing is a motion undertaken for an outcome. The club must arrive at
+contact with a useful position, velocity, orientation, and impact location;
+the subsequent collision and flight determine what the ball does. The body
+must produce that delivery through a feasible movement, tolerate relevant
+variation, and continue into follow-through. Studying only a static pose
+misses much of this problem. Discarding the outcome would miss its purpose.
 
-\vspace{0.5cm}
+``Control is motion'' is the organizing perspective of this book. It directs
+attention to how a trajectory is generated, shaped, and made reliable. It is
+not a claim that trajectory tracking, optimal control, or orbital stability
+replaces classical control theory. Those established tools already address
+moving references, periodic behavior, disturbances, and constrained objectives.
+The task is to choose and combine them correctly for the question at hand.
 
-\begin{laymansbox}{Setting the Stage: Motion, Not Destination}{setting_the_stage}
-Classical control theory often focuses on getting a system to a specific point and keeping it there---like a thermostat holding a room at 72 degrees. However, for complex motions like a golf swing, a gymnast's routine, or a robot walking, there is no single "destination"; the motion itself is the goal. This chapter shifts the perspective from "reaching a target" to "following a trajectory." We will see how focusing on the path a system takes, rather than a single endpoint, fundamentally changes how we think about stability, optimization, and control in high-dimensional spaces. Let's explore why throwing away the target is the first step toward true mastery of motion.
-\end{laymansbox}
+The important connections are physical. Earlier applied work changes the
+state available later. Configuration and velocity change inertial coupling,
+force transmission, and external loads. Grip and ground constraints restrict
+compatible motion and affect reactions. Timing changes velocity and effort
+even along an unchanged configuration path. Feedback and constitutive response
+alter how disturbances develop. Impact samples the resulting state at an event,
+which need not occur at a fixed clock time. A rigorous account keeps these
+connections while distinguishing a model identity from a claim about a golfer.
 
-% ──────────────────────────────────────────────
-\section{The Wrong Question}
-% ──────────────────────────────────────────────
+\section{Specify What the Motion Should Produce}
 
-Open any classical control textbook and you will find, within the first few pages, a
-picture like this: a system, an error signal, a reference point, and a controller
-whose entire purpose is to drive that error to zero. The implicit promise is
-seductive---\emph{give me a destination and I will take you there}.
-
-But consider the golf swing.
-
-A skilled golfer does not steer the clubhead toward the ball the way a thermostat
-drives a room toward $72^\circ$F. There is no ``setpoint'' floating in space that
-the club is chasing. Instead, the golfer's body executes a \emph{motion}---a
-coordinated, whole-body trajectory through a high-dimensional configuration space.
-The clubhead arrives at the ball not because it was pointed at the ball, but because
-the entire motion was shaped so that, somewhere along its arc, the club happens to
-pass through the ball's location at enormous speed.
-
-\begin{keyidea}{The Central Thesis}{central}
-  \textbf{Control is motion, not destination.}
-  The fundamental object of nonlinear control is not a setpoint, not an equilibrium,
-  and not a fixed target. It is a \emph{trajectory}---a curve through state space
-  that the system is asked to follow, and around which disturbances are rejected.
-  The quality of control is measured not by how close the system gets to a point,
-  but by how faithfully it reproduces a desired motion.
-\end{keyidea}
-
-This is not merely a philosophical reframing. It changes the mathematics. It changes
-what we optimize. It changes how we define stability. And it changes what ``success''
-means in a controlled system.
-
-The purpose of this book is to develop control theory from this trajectory-first
-perspective. The classical setpoint framework is the correct tool for regulation
-problems---holding a system at a desired operating point---and remains one of the
-great achievements of control engineering. However, for systems whose primary purpose
-is to \emph{move}, the trajectory-tracking framework provides a natural generalization
-that contains setpoint regulation as a special case.
-
-\vspace{0.3cm}
-
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  % Classical picture
-  \begin{scope}[shift={(-4.5,0)}]
-    \node[font=\bfseries\color{chapblue}] at (0, 2.8) {Classical View};
-    \draw[-{Stealth[length=3mm]}, thick, gray] (-1.8, 0) -- (1.8, 0)
-      node[right, font=\small] {$x_1$};
-    \draw[-{Stealth[length=3mm]}, thick, gray] (0, -1.8) -- (0, 1.8)
-      node[above, font=\small] {$x_2$};
-    % Target
-    \filldraw[accentred] (0.8, 0.6) circle (3pt)
-      node[right, font=\small\bfseries, accentred] {~target $\state^*$};
-    % Trajectories converging
-    \foreach \a/\b in {-1.3/1.4, -1.5/-0.8, 1.4/-1.2, 1.0/1.5} {
-      \draw[-{Stealth[length=2mm]}, thick, chapblue!70, opacity=0.7]
-        (\a, \b) .. controls (0.2, 0.1) .. (0.75, 0.57);
-    }
-    \node[font=\small, text width=3.5cm, align=center] at (0, -2.5)
-      {All trajectories converge\\to a single point.};
-  \end{scope}
-
-  % Our picture
-  \begin{scope}[shift={(4.5,0)}]
-    \node[font=\bfseries\color{trajgreen!80!black}] at (0, 2.8) {Trajectory View};
-    \draw[-{Stealth[length=3mm]}, thick, gray] (-1.8, 0) -- (1.8, 0)
-      node[right, font=\small] {$x_1$};
-    \draw[-{Stealth[length=3mm]}, thick, gray] (0, -1.8) -- (0, 1.8)
-      node[above, font=\small] {$x_2$};
-    % Reference trajectory
-    \draw[very thick, trajgreen, decoration={markings,
-        mark=at position 0.3 with {\arrow{Stealth[length=3mm]}},
-        mark=at position 0.7 with {\arrow{Stealth[length=3mm]}}
-      }, postaction={decorate}]
-      (-1.4, -1.2) .. controls (-0.5, 0.8) and (0.5, 1.6) .. (1.5, 0.3);
-    \node[trajgreen!80!black, font=\small\bfseries] at (1.2, 1.3)
-      {$\traj^*(t)$};
-    % Tube around trajectory
-    \draw[dashed, trajgreen!50, thick]
-      (-1.2, -1.5) .. controls (-0.3, 0.5) and (0.7, 1.3) .. (1.7, 0.0);
-    \draw[dashed, trajgreen!50, thick]
-      (-1.6, -0.9) .. controls (-0.7, 1.1) and (0.3, 1.9) .. (1.3, 0.6);
-    % Nearby trajectory
-    \draw[thick, accentred!70, decoration={markings,
-        mark=at position 0.5 with {\arrow{Stealth[length=2mm]}}
-      }, postaction={decorate}]
-      (-1.3, -1.0) .. controls (-0.4, 0.9) and (0.6, 1.5) .. (1.4, 0.4);
-    \node[font=\small, text width=3.5cm, align=center] at (0, -2.5)
-      {System tracks a moving\\reference through state space.};
-  \end{scope}
-
-  % Dividing line
-  \draw[thick, gray!40] (0, -2.0) -- (0, 2.5);
-\end{tikzpicture}
-\end{center}
-
-\vspace{0.3cm}
-
-% ──────────────────────────────────────────────
-\section{Why Setpoints Are a Special Case}
-% ──────────────────────────────────────────────
-
-Let us be precise about what we mean. Consider a nonlinear system
-\begin{equation}\label{eq:nonlinear_sys}
-  \dot{\state} = \bm{f}(\state, \control), \qquad
-  \state \in \statespace \subseteq \Reals^n, \quad
-  \control \in \controlspace \subseteq \Reals^m,
-\end{equation}
-where $\bm{f}$ is smooth and the state space $\statespace$ may carry additional
-geometric structure (it may be a manifold, as we will see in Chapter~3).
-
-In the classical framework, the control objective is:
-\begin{quote}
-  \emph{Find $\control(t)$ such that $\state(t) \to \state^*$ as $t \to \infty$.}
-\end{quote}
-The entire apparatus of Lyapunov stability, LQR, pole placement, and PID control
-is built around this question. But notice what this objective assumes:
-
-\begin{enumerate}[leftmargin=2cm, label=\textbf{A\arabic*.}]
-  \item There exists a meaningful equilibrium $\state^*$ where $\bm{f}(\state^*, \control^*) = \bm{0}$.
-  \item The system's purpose is to \emph{reach and remain at} this equilibrium.
-  \item Performance is measured by how quickly and smoothly the error
-        $\bm{e}(t) = \state(t) - \state^*$ decays.
-\end{enumerate}
-
-Now consider the systems this book is about:
-
-\begin{itemize}[leftmargin=1.5cm]
-  \item A golfer executing a swing---the body passes through a continuum of
-        configurations and never ``arrives'' anywhere.
-  \item A gymnast performing a floor routine---the motion \emph{is} the performance.
-  \item A biped walking---there is no single posture that constitutes ``walking'';
-        walking is a \emph{limit cycle}, a periodic orbit through state space.
-  \item A robotic arm tracing a weld seam---the task is defined by the path, not the endpoint.
-\end{itemize}
-
-For all of these systems, assumptions \textbf{A1}--\textbf{A3} fail. The correct
-control objective is fundamentally different:
-
-\begin{principle}{The Trajectory Tracking Objective}{tracking}
-  Given a reference trajectory $\traj^*: [0, T] \to \statespace$, find a feedback
-  control law $\control = \bm{k}(\state, t)$ such that
-  \begin{equation}\label{eq:tracking_obj}
-    \norm{\state(t) - \traj^*(t)} \leq \varepsilon(t)
-    \qquad \text{for all } t \in [0, T],
-  \end{equation}
-  where $\varepsilon(t)$ is a prescribed tracking tolerance (the ``tube width''),
-  and the system is robust to disturbances $\bm{d}(t)$ satisfying
-  $\norm{\bm{d}(t)} \leq \delta$.
-\end{principle}
-
-A setpoint is simply the degenerate case where $\traj^*(t) = \state^*$ for all $t$
-and $T \to \infty$. The trajectory-tracking framework \emph{contains} the setpoint
-framework, but not vice versa.
-
-\begin{definition}{Trajectory Tube}{tube}
-  Given a reference trajectory $\traj^*: [0,T] \to \statespace$ and a tube radius
-  function $\varepsilon: [0,T] \to \Reals_{>0}$, the \textbf{trajectory tube} is the
-  time-varying set
-  \begin{equation}
-    \tube(t) = \bigl\{\, \state \in \statespace : \norm{\state - \traj^*(t)} \leq \varepsilon(t) \,\bigr\}.
-  \end{equation}
-  A controller achieves \textbf{tube-invariance} if every solution starting in
-  $\tube(0)$ remains in $\tube(t)$ for all $t \in [0, T]$.
-\end{definition}
-
-This definition is the trajectory-centric replacement for Lyapunov stability. Instead
-of asking ``does the system converge to a point?'' we ask ``does the system stay
-inside a moving tube?'' The tube can be tight where precision matters (e.g., at
-ball impact in the golf swing) and loose where it does not (e.g., during the
-backswing).
-
-\begin{remark}{Tubes as Reachable Sets}{reachability}
-  The trajectory tube $\tube(t)$ is intimately related to the concept of \textbf{reachable sets} and \textbf{attainable sets} from geometric control theory. These concepts form the mathematical foundation of trajectory-first control and are rigorously developed in the modern treatment by Agrachev and Sachkov \cite{AgrachevSachkov2004}. A reachable set at time $t$ is the collection of all states that can be reached from the initial condition $\state(0)$ in exactly time $t$, using admissible controls. The funnel-shaped tube narrows as time progresses precisely because the reachable sets, when constrained by the terminal manifold $\psi(\state(t_f)) = \bm{0}$, force convergence toward the target. Agrachev and Sachkov's framework for characterizing these sets through the orbit of vector fields generated by the control Lie algebra provides the theoretical underpinning for understanding why certain motions are ``accessible'' and others are not.
-\end{remark}
-
-% ──────────────────────────────────────────────
-\section{Anatomy of a Motion: The Golf Swing as Prototype}
-% ──────────────────────────────────────────────
-
-We will use the golf swing throughout this book as a running example---not because
-golf is inherently more interesting than other motions, but because it compresses
-an extraordinary number of control-theoretic challenges into roughly 1.2~seconds:
-
-\begin{enumerate}[label=(\roman*)]
-  \item \textbf{High dimensionality.} The human body has over 200 degrees of freedom.
-        Even a simplified musculoskeletal model of the golf swing uses 20--40
-        generalized coordinates.
-  \item \textbf{Extreme nonlinearity.} Joint torques couple through the full rigid-body
-        dynamics, including Coriolis and centrifugal terms that dominate at high
-        angular velocities.
-  \item \textbf{Underactuation.} Once the club is released in the simplified
-        downswing model, the wrist hinge is treated as low-torque or passive.
-        Clubhead speed at impact is strongly shaped by passive coupling terms,
-        but the size of that contribution depends on the model, grip constraint,
-        and measured swing data.
-  \item \textbf{Time-criticality with flexible timing.} The swing must produce the
-        right state (clubhead position, velocity, and orientation) at impact,
-        but the \emph{exact} time of impact is not prescribed. The golfer
-        is free to take the backswing slowly or quickly.
-  \item \textbf{Repeatability over optimality.} A touring professional does not
-        execute the theoretically optimal swing. They execute a swing they
-        can \emph{repeat} 300 times in a tournament, under pressure, with
-        minimal variance.
-\end{enumerate}
-
-\begin{example}{From Setpoint Thinking to Trajectory Thinking}{golf_shift}
-  Suppose we model a simplified golf swing with generalized coordinates
-  $\bm{q} = (\theta_{\text{torso}},\, \theta_{\text{shoulder}},\,
-  \theta_{\text{arm}},\, \theta_{\text{wrist}})^\top$ and their velocities
-  $\dot{\bm{q}}$, giving state $\state = (\bm{q}, \dot{\bm{q}}) \in \Reals^8$.
-
-  \textbf{Setpoint approach} (inappropriate for this task): Define a target state
-  $\state^* = (\bm{q}_{\text{impact}}, \dot{\bm{q}}_{\text{impact}})$ and design a
-  controller to drive $\state(t) \to \state^*$. This is ill-suited to a golf swing
-  because the system should not \emph{stop} at $\state^*$. Impact is a waypoint, not
-  a destination. The club must be accelerating \emph{through} the ball, not
-  decelerating toward it.
-
-  \textbf{Trajectory approach} (right): Define a reference motion
-  $\traj^*(s): [0, 1] \to \Reals^8$ parameterized by a phase variable $s$ (not
-  clock time $t$). The controller's job is to ensure that the system traverses
-  $\traj^*$ with the right sequencing and coordination, with a tight tube near the
-  impact phase ($s \approx 0.7$) and a loose tube during setup ($s \approx 0$).
-\end{example}
-
-Point~(v) deserves special emphasis. Classical optimal control asks: ``What is
-the minimum-time or minimum-energy trajectory?'' But this is the wrong question
-for biological and athletic systems. The right question is:
-
-\begin{principle}{The Repeatability Principle}{repeatability}
-  The best trajectory is not the one that maximizes performance on a single trial,
-  but the one that maximizes \emph{expected performance over many trials} in the
-  presence of noise, fatigue, and uncertainty. Formally, we seek
-  \begin{equation}\label{eq:repeatability}
-    \traj^* = \arg\min_{\traj} \;
-    \mathbb{E}\!\left[\, \int_0^T
-      \ell\bigl(\state(t), \control(t)\bigr) \dt \,\right]
-    + \lambda \, \mathrm{Var}\!\left[\, J(\traj, \bm{w}) \,\right],
-  \end{equation}
-  where $J$ is the performance cost, $\bm{w}$ represents stochastic disturbances
-  (motor noise, perceptual error), and $\lambda > 0$ penalizes variance.
-\end{principle}
-
-This is why elite golfers do not all swing the same way. Each golfer finds a
-trajectory that is locally optimal \emph{for their body and their noise characteristics}.
-Robustness is not an afterthought bolted onto an optimal controller---it is the
-primary design objective.
-
-% ──────────────────────────────────────────────
-\section{The Mathematical Landscape}
-% ──────────────────────────────────────────────
-
-To make the trajectory-first perspective rigorous, we need mathematical machinery
-that most introductory control courses skip entirely. This section provides a roadmap
-of the key concepts we will develop in subsequent chapters.
-
-\subsection{Phase Variables and Time Reparameterization}
-
-A crucial distinction separates \emph{what} the system does from \emph{when} it
-does it. Consider two executions of the same golf swing: one with a slow backswing
-and one with a fast backswing. The \emph{spatial path} through configuration space
-may be identical, but the \emph{time parameterization} differs.
-
-We formalize this by introducing a \textbf{phase variable} $s(t) \in [0, 1]$ that
-monotonically increases from $0$ (start of motion) to $1$ (end of motion), with
-dynamics
-\begin{equation}\label{eq:phase}
-  \dot{s} = \alpha(s, \state),
-\end{equation}
-where $\alpha > 0$ is the \emph{phase velocity}. The reference trajectory is defined
-as a function of $s$, not $t$:
+Let the state be $x$, the effective input be $u$, and the declared dynamics be
 \begin{equation}
-  \traj^* = \traj^*(s), \qquad s \in [0, 1].
+ \dot x=f(x,u,t),\qquad u\in\mathcal U(x,t).
+ \label{eq:nonlinear_sys}
 \end{equation}
-This decouples the \emph{shape} of the motion from its \emph{temporal execution}.
-The controller has two separate tasks:
-\begin{enumerate}[label=(\alph*)]
-  \item \textbf{Path tracking}: keep $\state(t)$ close to the reference path
-        $\traj^*(s(t))$, and
-  \item \textbf{Timing control}: regulate $\dot{s}$ to achieve the desired
-        speed profile along the path.
-\end{enumerate}
-This decomposition is impossible in the setpoint framework, where time and space
-are fused together.
+The state must contain enough information for the model to predict its own
+continuation. For a rigid mechanical model it includes configuration and
+velocity. A muscle-driven or flexible model may also need activation, tissue,
+shaft, and other internal states. A list of joint angles alone is not generally
+a complete dynamic state. Contact modes and their transition rules are part
+of the model as well.
 
-\subsection{Transverse Dynamics and Orbital Stability}
+Several objectives are useful and can coexist. Regulation keeps a quantity
+near a desired constant value. Trajectory tracking compares the state or output
+with a time-indexed reference. Path following permits progress along a geometric
+path with a separately specified timing objective. Terminal or event objectives
+constrain the state delivered at a particular time or crossing. Periodic tasks
+may call for orbital stabilization. The names describe different specifications;
+they are not mutually exclusive schools of control.
 
-When we shift from point stability to trajectory stability, the relevant notion of
-``closeness'' changes. We do not care about the distance from $\state(t)$ to
-$\traj^*(t)$ at the same clock time---we care about the distance from $\state(t)$
-to the \emph{nearest point on the trajectory}.
-
-\begin{definition}{Transverse Distance}{transverse}
-  Let $\traj^*: [0,1] \to \statespace$ be a smooth reference trajectory. The
-  \textbf{transverse distance} from a state $\state$ to $\traj^*$ is
-  \begin{equation}
-    d_\perp(\state, \traj^*) = \min_{s \in [0,1]} \norm{\state - \traj^*(s)}.
-  \end{equation}
-  The minimizing argument $s^*(\state) = \arg\min_s \norm{\state - \traj^*(s)}$
-  is the \textbf{projection phase}, giving the ``closest point on the reference.''
-\end{definition}
-
-This leads to a decomposition of the state into two components:
-\begin{itemize}[leftmargin=1.5cm]
-  \item The \textbf{tangential component}: where the system is \emph{along} the
-        trajectory (measured by $s$).
-  \item The \textbf{transverse component}: how far the system is \emph{from} the
-        trajectory (measured by $d_\perp$).
-\end{itemize}
-
-\begin{center}
-\begin{tikzpicture}[scale=1.2]
-  % Reference trajectory
-  \draw[very thick, trajgreen, decoration={markings,
-      mark=at position 0.15 with {\arrow{Stealth[length=3mm]}},
-      mark=at position 0.55 with {\arrow{Stealth[length=3mm]}},
-      mark=at position 0.85 with {\arrow{Stealth[length=3mm]}}
-    }, postaction={decorate}]
-    (-3, -0.5) .. controls (-1, 1.5) and (1, 1.5) .. (3, -0.3);
-  \node[trajgreen!70!black, font=\small\bfseries] at (3.3, 0.1) {$\traj^*(s)$};
-
-  % Point on trajectory
-  \coordinate (P) at (0.3, 1.45);
-  \filldraw[trajgreen!70!black] (P) circle (2pt);
-  \node[above left, font=\small, trajgreen!70!black] at (P) {$\traj^*(s^*)$};
-
-  % Actual state
-  \coordinate (X) at (0.9, 0.2);
-  \filldraw[accentred] (X) circle (2pt);
-  \node[below right, font=\small\bfseries, accentred] at (X) {$\state(t)$};
-
-  % Transverse distance
-  \draw[thick, accentred, dashed, {Stealth[length=2.5mm]}-{Stealth[length=2.5mm]}]
-    (P) -- (X) node[midway, right, font=\small] {$d_\perp$};
-
-  % Tangent vector
-  \draw[-{Stealth[length=3mm]}, thick, chapblue]
-    (P) -- ++(0.9, -0.15) node[above, font=\small] {tangential};
-
-  % Phase annotation
-  \draw[thin, gray, |->] (-3, -1.3) -- (3, -1.3)
-    node[right, font=\small] {$s$};
-  \node[font=\small, gray] at (-3, -1.6) {$0$};
-  \node[font=\small, gray] at (3, -1.6) {$1$};
-  \draw[thin, gray, dashed] (0.3, -1.3) -- (P);
-  \filldraw[gray] (0.3, -1.3) circle (1.5pt);
-  \node[font=\small, gray, below] at (0.3, -1.3) {$s^*$};
-\end{tikzpicture}
-\end{center}
-
-\vspace{0.2cm}
-
-A system is \textbf{orbitally stable} around $\traj^*$ if the transverse distance
-$d_\perp(\state(t), \traj^*)$ remains small (or decays) even if the tangential
-phase $s(t)$ drifts relative to the nominal timing. This is exactly the right notion
-for the golf swing: we want the motion to follow the right \emph{path} even if the
-golfer is slightly faster or slower than planned.
-
-\subsection{Funnel Control and Time-Varying Tubes}
-
-Combining the trajectory tube (Definition~\ref{def:tube}) with the
-transverse/tangential decomposition leads to what we call \textbf{funnel control}:
-the design of controllers that keep the system inside a prescribed time-varying tube
-around the reference.
-
-The tube width $\varepsilon(s)$ is a design parameter. For the golf swing:
-\begin{equation}\label{eq:funnel_profile}
-  \varepsilon(s) = \begin{cases}
-    \varepsilon_{\text{loose}} & s \in [0,\, 0.3] \quad \text{(address \& backswing)}, \\[4pt]
-    \varepsilon_{\text{loose}} - (\varepsilon_{\text{loose}} - \varepsilon_{\text{tight}})
-      \dfrac{s - 0.3}{0.4} & s \in [0.3,\, 0.7] \quad \text{(transition \& downswing)}, \\[6pt]
-    \varepsilon_{\text{tight}} & s \in [0.7,\, 0.8] \quad \text{(impact zone)}, \\[4pt]
-    \text{relaxed} & s \in [0.8,\, 1.0] \quad \text{(follow-through)}.
-  \end{cases}
-\end{equation}
-
-\begin{center}
-\begin{tikzpicture}[xscale=8, yscale=2.5]
-  % Axes
-  \draw[-{Stealth[length=3mm]}, thick] (0, 0) -- (1.08, 0)
-    node[right, font=\small] {phase $s$};
-  \draw[-{Stealth[length=3mm]}, thick] (0, 0) -- (0, 1.3)
-    node[above, font=\small] {tube width $\varepsilon(s)$};
-
-  % Funnel profile
-  \draw[very thick, accentred]
-    (0, 1.0) -- (0.3, 1.0)
-    -- (0.7, 0.15)
-    -- (0.8, 0.15)
-    (0.8, 0.15) .. controls (0.85, 0.3) and (0.9, 0.7) .. (1.0, 0.9);
-
-  % Phase labels
-  \node[font=\scriptsize, below, text width=1.3cm, align=center] at (0.15, -0.05)
-    {backswing\\(loose)};
-  \node[font=\scriptsize, below, text width=1.5cm, align=center] at (0.5, -0.05)
-    {downswing\\(narrowing)};
-  \node[font=\scriptsize, below, text width=1.2cm, align=center, accentred] at (0.75, -0.05)
-    {\textbf{impact}\\(tight)};
-  \node[font=\scriptsize, below, text width=1.5cm, align=center] at (0.92, -0.05)
-    {follow-through\\(relaxed)};
-
-  % Dashed guidelines
-  \foreach \x in {0.3, 0.7, 0.8} {
-    \draw[thin, gray, dashed] (\x, 0) -- (\x, 1.1);
-  }
-\end{tikzpicture}
-\end{center}
-
-This funnel profile encodes the modeling hypothesis that precision demands are
-highest near impact and lower during setup. The controller allocates authority
-where the stated terminal constraint is most sensitive, rather than maintaining
-uniform precision everywhere; this distinction is easy to obscure in a pure
-fixed-setpoint framing.
-
-% ──────────────────────────────────────────────
-\section{What Changes When Control Is Motion}
-% ──────────────────────────────────────────────
-
-Adopting the trajectory-first perspective changes nearly every aspect of control
-system design. Here we preview the major consequences, each of which will be
-developed in detail in subsequent chapters.
-
-\subsection{Stability Is Not Convergence---It Is Confinement}
-
-In the setpoint framework, stability means convergence: the state approaches the
-equilibrium and stays near it. In the trajectory framework, stability means
-\emph{confinement}: the state remains inside the moving tube.
-
-\begin{definition}{Trajectory Stability}{traj_stability}
-  A reference trajectory $\traj^*$ is \textbf{stable} under the closed-loop
-  dynamics $\dot{\state} = \bm{f}(\state, \bm{k}(\state, t))$ if for every
-  $\varepsilon > 0$ there exists $\delta > 0$ such that
-  \begin{equation}
-    d_\perp(\state(0), \traj^*) < \delta \implies
-    d_\perp(\state(t), \traj^*) < \varepsilon \quad \forall\, t \in [0, T].
-  \end{equation}
-  It is \textbf{asymptotically trajectory-stable} if, additionally,
-  $d_\perp(\state(t), \traj^*) \to 0$ as the system evolves.
-\end{definition}
-
-Note the subtle but critical difference: we use the transverse distance $d_\perp$,
-not the time-indexed error $\norm{\state(t) - \traj^*(t)}$. This allows the system
-to be ahead of or behind schedule without being considered ``unstable.''
-
-\subsection{The Cost Function Is a Functional, Not a Function}
-
-In setpoint control, the cost is typically a function of the error $\bm{e}(t)$:
+For a simplified impact investigation, let the first intended approach crossing
+be described by
 \begin{equation}
-  J_{\text{setpoint}} = \int_0^\infty \bigl(\bm{e}^\top \bm{Q}\, \bm{e}
-  + \control^\top \bm{R}\, \control\bigr) \dt.
+ h(x(t_e))=0,\qquad \nabla h(x(t_e))^Tf(x(t_e),u(t_e),t_e)\ne0,
+ \label{eq:motion_impact_event}
 \end{equation}
-In trajectory control, the cost is a \textbf{functional} that operates on the
-entire motion:
-\begin{equation}\label{eq:traj_cost}
-  J_{\text{traj}}[\state(\cdot), \control(\cdot)] =
-  \underbrace{\int_0^T w_\perp(s)\, d_\perp^2\bigl(\state(t), \traj^*\bigr) \dt}_{%
-    \text{tracking fidelity (transverse)}}
-  + \underbrace{\int_0^T w_\parallel(s)\, (\dot{s} - \dot{s}_{\text{ref}})^2 \dt}_{%
-    \text{timing fidelity (tangential)}}
-  + \underbrace{\int_0^T \control^\top \bm{R}(s)\, \control \dt}_{%
-    \text{effort}},
-\end{equation}
-where the weighting matrices $w_\perp(s)$, $w_\parallel(s)$, and $\bm{R}(s)$ are
-\emph{phase-dependent}. This is what allows us to demand high precision at impact
-and low effort during the backswing.
+with an appropriate approach direction and contact mode. The nonzero derivative
+is a transversality condition: it excludes a grazing crossing where event time
+can be especially sensitive. Define an output $y_e=H(x(t_e^-))$ from the
+pre-impact state and a target set $\mathcal Y$ of acceptable deliveries. Its
+components might describe clubhead velocity, face orientation, path direction,
+and impact location. A ball-outcome model can map those quantities, together
+with ball and contact properties, into launch and flight predictions.
 
-\begin{remark}{The Pontryagin Maximum Principle}{pontryagin}
-  The mathematical foundation for solving trajectory optimization problems with terminal constraints (such as the moving goal in the golf swing) comes from the \textbf{Pontryagin Maximum Principle}, a cornerstone of geometric control theory. As developed rigorously in Agrachev and Sachkov \cite{AgrachevSachkov2004}, this principle transforms the infinite-dimensional problem of optimizing $J[\state(\cdot), \control(\cdot)]$ into a two-point boundary value problem via the introduction of costate variables (adjoint variables) and a Hamiltonian function. The principle states that along an optimal trajectory, the Hamiltonian $\mathcal{H} = L(\state, \control) + \bm{\lambda}^\top \bm{f}(\state, \control)$ is maximized with respect to $\control$ at each instant, where $\bm{\lambda}(t)$ evolves backward in time according to adjoint dynamics. This formalism unifies our treatment of both the path optimization (determining $\traj^*$) and the feedback stabilization (computing funnels around $\traj^*$) within a single geometric framework. Chapter 6 will apply these principles explicitly to synthesize the moving-target golf swing trajectory.
-\end{remark}
+A terminal requirement $y_e\in\mathcal Y$ is compatible with a moving club.
+It does not demand convergence to an equilibrium with nonzero velocity, nor
+require that the club accelerate through the collision. The impact model must
+account for the rapid change in momentum. Follow-through and any subsequent
+constraints require their own continuation. The event model, output definition,
+and admissible set determine what constitutes success.
 
-\subsection{Feedforward Is Not Optional---It Is Primary}
+This distinction is practical: two motions can have similar joint paths but
+different delivery speeds, while different joint paths can deliver similar
+club states. Neither observation by itself identifies how individual muscles
+produced the motion.
 
-In the setpoint framework, feedforward is a ``nice to have'' that reduces transient
-error. In the trajectory framework, feedforward is the \emph{primary} control
-action. The reference trajectory $\traj^*(t)$ implicitly defines a feedforward
-control signal
+\section{A Moving Reference Must Be Feasible}
+
+A nominal time-indexed trajectory $x_d(t)$ must have a compatible admissible
+input $u_d(t)$:
 \begin{equation}
-  \control_{\text{ff}}(t) = \bm{f}^{-1}\!\left(\dot{\traj}^*(t),\, \traj^*(t)\right),
+ \dot x_d(t)=f(x_d(t),u_d(t),t),\qquad u_d(t)\in\mathcal U(x_d(t),t).
+ \label{eq:motion_nominal_feasibility}
 \end{equation}
-where $\bm{f}^{-1}$ denotes the inverse dynamics. The feedback controller handles
-only the \emph{deviations} from this feedforward signal:
-\begin{equation}\label{eq:ff_fb_decomp}
-  \control(t) = \underbrace{\control_{\text{ff}}(t)}_{\text{executes the motion}}
-  + \underbrace{\control_{\text{fb}}(\state(t), t)}_{\text{corrects deviations}}.
+Joint limits, closure conditions, contact forces, and internal-state dynamics
+must also hold. Drawing a smooth curve in state space does not establish these
+properties. If a tracking error is expected to remain zero, the closed-loop
+vector field must reproduce the nominal tangent there.
+
+For a control-affine model $f=f_0+Gu$, define
+$r=\dot x_d-f_0(x_d,t)$. At a given nominal state, an unconstrained input exists
+only if $r\in\operatorname{im}G$. When that condition holds,
+\begin{equation}
+ u_d=G^\dagger r+(I-G^\dagger G)z
+ \label{eq:motion_feedforward_family}
 \end{equation}
-For the golf swing, the feedforward component accounts for approximately 90\% of
-the total joint torques. The feedback controller provides the remaining 10\% of
-correction. A control design that treats everything as feedback is asking the
-feedback loop to do ten times more work than necessary.
+expresses the family of solutions in chosen coordinates. The pseudoinverse
+selects a minimum Euclidean-norm representative; that criterion depends on
+input scaling and is not a muscle-recruitment law. Input bounds can eliminate
+all members of the family. A nonlinear input map may require a different
+solution procedure and still need not have an inverse.
 
-\subsection{Underactuation Creates Geometry, Not Just Constraints}
+For example, $G=(1,0)^T$ cannot produce $r=(0,1)^T$. Its least-squares solution
+leaves a nonzero residual. Conversely, $G=(1,1)$ with $r=1$ admits both
+$(1,0)^T$ and $(1/2,1/2)^T$, among infinitely many choices. Feasibility,
+uniqueness, and the selection of a preferred input are separate questions.
 
-Many moving systems are underactuated: they have fewer control inputs than degrees
-of freedom. In the setpoint framework, underactuation is an obstacle---it means we
-cannot independently control all states. In the trajectory framework, underactuation
-creates \emph{geometric structure} that we can exploit.
+One useful architecture is $u=u_d+\Delta u$, with corrections designed for the
+actual tracking-error dynamics. It does not imply a universal feedforward share
+of measured joint torque. A nominal passive motion can have $u_d=0$, whereas
+a strongly forced motion may require substantial nominal input. The split also
+depends on the chosen reference and policy representation. Establishing a neural
+feedforward or feedback contribution requires an experimental and physiological
+model beyond this algebraic split.
 
-The set of states reachable from a given configuration through passive dynamics
-forms a submanifold of the state space. A well-designed trajectory \emph{rides along}
-this manifold, using the passive dynamics to generate motion that active torques
-alone could not produce within the chosen actuator model. In a simplified golf
-model, a passive wrist release and centrifugal coupling can contribute to
-clubhead acceleration and face closure; whether they square the clubface in a
-real swing depends on grip mechanics, shaft dynamics, impact geometry, and
-validation against measured swings.
+\section{Tracking and Regulation}
 
-\begin{proposition}
-  For a mechanical system with $n$ degrees of freedom and $m < n$ actuators, the
-  set of dynamically feasible trajectories lies on a submanifold of dimension
-  at most $2m$ in the $2n$-dimensional state space. Effective trajectory design
-  requires understanding the geometry of this submanifold.
-\end{proposition}
+In a local Euclidean chart, set $e=x-x_d(t)$. Then
+\begin{equation}
+ \dot e=f(e+x_d(t),u,t)-\dot x_d(t).
+ \label{eq:motion_error_dynamics}
+\end{equation}
+Tracking becomes regulation of the origin in a generally time-varying error
+system. This change of variables explains why Lyapunov methods and
+linear-quadratic designs remain useful for moving references. The
+\href{https://underactuated.mit.edu/lqr.html}{MIT treatment of finite-horizon LQR and trajectory stabilization}
+provides an established development of these tools. Applying an equilibrium
+controller without accounting for the changing reference can fail; that is a
+modeling or design error, not a limitation of all regulation-based analysis.
 
-We will make this precise in Chapter~5 using the language of constraint manifolds
-and their null-space structures.
+For a scalar example, take $\dot x=x+u$ and $x_d(t)=\sin t$. The nominal input
+is $u_d=\cos t-\sin t$. Choosing
+\begin{equation}
+ u=u_d-(k+1)e,\qquad k>0,
+ \label{eq:motion_tracking_example}
+\end{equation}
+gives $\dot e=-ke$ exactly. The state keeps moving while its tracking error
+converges. If actuator bounds are imposed, this result applies only where the
+specified input can actually be delivered. Delays, unmodeled dynamics, and
+measurement error also require their own treatment.
 
-% ──────────────────────────────────────────────
-\section{A Roadmap for the Book}
-% ──────────────────────────────────────────────
+\section{Configuration Paths, Timing, and State}
 
-The remainder of this book develops the trajectory-first theory in a sequence of
-increasingly sophisticated layers:
+Write a configuration path as $q_d(s)$, where $s$ is a dimensionless progress
+coordinate. For a timing law $s(t)$, define $\sigma=\dot s$. The chain rule gives
+\begin{equation}
+ \begin{aligned}
+ q(t)&=q_d(s(t)),\\
+ \dot q(t)&=q_d'(s)\sigma,\\
+ \ddot q(t)&=q_d''(s)\sigma^2+q_d'(s)\dot\sigma.
+ \end{aligned}
+ \label{eq:motion_path_timing}
+\end{equation}
+Thus the mechanical state is $(q_d(s),q_d'(s)\sigma)$, not a configuration-only
+curve. Changing $\sigma$ changes that state and usually the required loads.
+A prescribed full-state curve $(q_d(s),v_d(s))$ has an additional compatibility
+condition $q_d'(s)\sigma=v_d(s)$. It cannot generally be traversed at any chosen
+speed while remaining the same physical state trajectory.
 
-\begin{description}[leftmargin=1.5cm, labelwidth=1.2cm, font=\bfseries\color{chapblue}]
-  \item[Ch.~2] \textbf{Curves in State Space.}
-    The geometry of trajectories: parameterization, arc length, curvature, and torsion
-    in high-dimensional state spaces. Frenet--Serret frames for nonlinear systems.
+For a mechanical model $M(q)\ddot q+h(q,\dot q)=B(q)u$, substitution yields
+\begin{equation}
+ B(q_d)u=M(q_d)\bigl(q_d''\sigma^2+q_d'\dot\sigma\bigr)
+             +h(q_d,q_d'\sigma).
+ \label{eq:motion_timing_feasibility}
+\end{equation}
+The right side must lie in the admissible input image. Closure reactions,
+external forces, and constitutive loads must be included consistently in a
+more complete model. Geometric path design and timing design are useful
+subproblems, but the dynamics couples them. Underactuation makes that
+compatibility especially important; it does not make arbitrary retiming free.
 
-  \item[Ch.~3] \textbf{Configuration Manifolds.}
-    Why state space is often not $\Reals^n$: Lie groups, joint spaces, and the
-    geometry of articulated bodies. The golf swing lives on $SO(3)^k$, not $\Reals^k$.
+As a reproducible example, take $m\ddot q=u$ with mass $m=1$ kg and applied
+force $u$. Let $q_d(s)=\ell s^2$ with $\ell=1$ m. Use $s=t/T$ on
+$0\leq t\leq T$. The same configuration path from 0 to 1 metre gives
+\begin{equation}
+ q=\ell(t/T)^2,
+ \qquad \dot q=2\ell t/T^2,
+ \qquad u=2m\ell/T^2.
+ \label{eq:motion_retiming_example}
+\end{equation}
+At the endpoint, $T=1$ s
+gives speed 2 m/s, force 2 N, and kinetic energy 2 J. With $T=2$ s, the values
+are 1 m/s, 0.5 N, and 0.5 J. Work over the one-metre displacement equals the
+kinetic-energy increase in each case. The phase-plane curves are
+$\dot q=2\sqrt{\ell q}/T$, so they are different state-space curves.
+This is an illustrative timing calculation, not a measured golf swing.
 
-  \item[Ch.~4] \textbf{Orbital Stability and Transverse Linearization.}
-    Rigorous definitions of trajectory stability. Linearization transverse to the
-    orbit. Floquet theory for periodic motions. Moving Poincar\'e sections.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{../figures/motion_path_timing.png}
+\caption{One Configuration Path, Two Timing Laws, and Different State Trajectories. Curves End at the Same Position With Different Velocities.}
+\label{fig:motion_path_timing}
+\end{figure}
 
-  \item[Ch.~5] \textbf{Underactuation and Passive Dynamics.}
-    Constraint Jacobians, null-space control, and the exploitation of passive
-    mechanical coupling. The double pendulum and the physics of the wrist release.
+The example uses a prescribed clock-based phase. Estimating phase from the
+configuration itself needs care near the stationary start, where $q_d'(0)=0$.
+In a swing, a coordinate that reverses at the top of the backswing cannot serve
+as a globally increasing phase through that reversal without a different
+construction. A useful phase must be defined on the intended interval, be
+observable from the chosen state or measurements, and have the required
+regularity and progress properties.
 
-  \item[Ch.~6] \textbf{Trajectory Optimization.}
-    Direct collocation, shooting methods, and pseudospectral methods for finding
-    optimal reference trajectories. The interplay between optimality and
-    repeatability.
+\section{Choose a Meaningful Metric and Phase}
 
-  \item[Ch.~7] \textbf{Funnel Synthesis.}
-    Designing time-varying tubes with certified invariance under stated model,
-    controller, and disturbance assumptions. Sums-of-squares programming for
-    funnel computation. Robust funnels under model uncertainty.
+A raw norm of position and velocity coordinates mixes different units. Even
+among positions, changing metres to centimetres changes an unweighted norm.
+One local choice is
+\begin{equation}
+ \|e\|_W^2=e^TWe,\qquad W=W^T\succ0,
+ \label{eq:motion_metric}
+\end{equation}
+with weights and scales declared according to the desired interpretation.
+Under an invertible linear coordinate change $\widetilde e=Se$, the same
+quantity uses $\widetilde W=S^{-T}WS^{-1}$. Keeping $W$ unchanged while changing
+units generally changes the specification. A physically motivated metric or
+scaled output error can be useful, but neither is automatically a clinical
+risk measure or an empirical measure of human effort.
 
-  \item[Ch.~8] \textbf{Phase-Variable Control}~\cite{WesterveltGrizzle2007}.
-    Decoupling path shape from timing. Virtual constraints and hybrid zero dynamics
-    for walking and running. Central pattern generators as phase oscillators.
+On a configuration manifold, subtraction is a local coordinate operation;
+rotations, for example, need compatible charts or a chosen local logarithmic
+error. The mass matrix defines a kinetic-energy metric on configuration
+velocities, not by itself a unique distance on the entire augmented state
+including angles, velocities, activation, and other quantities.
 
-  \item[Ch.~9] \textbf{Stochastic Trajectories and Motor Variability.}
-    Signal-dependent noise in biological actuators. The minimum-variance theory of human movement~\cite{TodorovJordan2002}. Why optimal trajectories are smooth~\cite{FlashHogan1985}.
+For an embedded regular reference curve $\gamma(s)$ in a scaled state chart,
+one possible local phase is
+\begin{equation}
+ s_*(x)\in\arg\min_s\frac12(x-\gamma(s))^TW(x-\gamma(s)).
+ \label{eq:motion_projection_phase}
+\end{equation}
+At an interior minimizer with constant $W$,
+\begin{equation}
+ \gamma'(s_*)^TW(x-\gamma(s_*))=0.
+ \label{eq:motion_phase_orthogonality}
+\end{equation}
+A sufficiently small tubular neighborhood of a suitably regular embedded curve
+can make the projection unique and smooth. That conclusion is local. At the
+center of a circle every point on the circle is equally close; self-intersections,
+nearby branches, zero tangents, or a finite arc's endpoints can invalidate the
+assumed phase chart. A constrained endpoint minimizer need not satisfy the
+interior orthogonality equation.
 
-  \item[Ch.~10] \textbf{Learning to Move.}
-    Iterative learning control, policy search, and trajectory libraries. How to
-    improve a motion over repeated trials without losing stability.
+Transverse coordinates need not use nearest-point orthogonality, but must form
+valid local coordinates together with phase. If the state dimension is $d$,
+there are locally $d-1$ transverse coordinates around a regular one-dimensional
+curve. This coordinate count is different from the number of actuators and
+from the dimension of a task-equivalent set.
 
-  \item[Ch.~11] \textbf{Case Study: The Complete Golf Swing.}
-    A planned application of the theory to a declared musculoskeletal model of
-    the golf swing, from trajectory optimization through funnel synthesis to
-    stochastic robustness analysis.
-\end{description}
+\section{Stability, Attraction, and Finite Motion}
 
-% ──────────────────────────────────────────────
-\section{A New Language for Control}
-% ──────────────────────────────────────────────
+Lyapunov stability means sufficiently small initial errors remain small over
+the stated time domain. It does not by itself mean convergence. Asymptotic
+stability adds attraction as time tends to infinity. Exponential stability adds
+a quantitative decay bound with specified constants. These distinctions apply
+to equilibria and have corresponding trajectory and orbital formulations; see
+\href{https://underactuated.mit.edu/lyapunov.html}{the MIT Lyapunov analysis notes}.
 
-Before proceeding, let us establish the conceptual vocabulary that will replace
-the classical language throughout this book:
+For a periodic orbit of an autonomous closed-loop system, orbital stability
+allows phase displacement while controlling distance to the orbit. A nearby
+solution can converge to the orbit without converging to the same clock phase
+as a nominal solution. This is useful for periodic motions when phase locking
+is not the objective. It is not a general license to change the physical speed
+along a prescribed position-velocity curve.
 
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{@{} l @{\qquad$\longrightarrow$\qquad} l @{}}
-  \textbf{\color{gray}Classical term} & \textbf{\color{chapblue}Trajectory term} \\
-  \hline
-  Setpoint / reference & Reference trajectory $\traj^*(s)$ \\
-  Error $\bm{e}(t) = \state - \state^*$ & Transverse deviation $d_\perp(\state, \traj^*)$ \\
-  Lyapunov stability & Orbital / trajectory stability \\
-  Convergence to equilibrium & Confinement to tube \\
-  Regulation & Path tracking + timing control \\
-  Step response & Trajectory tracking response \\
-  Steady-state error & Persistent transverse offset \\
-  Gain margin & Funnel robustness margin \\
-  Pole placement & Transverse eigenvalue assignment \\
-\end{tabular}
-\end{center}
+A golf swing studied only up to an impact event is a finite-duration motion.
+Its appropriate claims may concern bounded deviation, successful event arrival,
+and delivered output tolerances. An infinite-time attraction statement needs
+a defined continuation, such as a periodic task or a subsequent stabilization
+phase. A finite reference arc is not an invariant orbit once the motion leaves
+its endpoint. Bounds on a finite interval should not be renamed asymptotic
+stability without that missing structure.
 
-\vspace{0.5cm}
+For example, $\dot e=e$ gives $e(t)=e(0)e^t$. On a fixed interval $[0,T]$,
+choosing $|e(0)|<\varepsilon e^{-T}$ keeps $|e(t)|<\varepsilon$. This finite-time
+bound holds even though errors amplify and the origin is unstable on the
+infinite time axis. A useful swing robustness result should therefore report
+the permitted initial/measurement uncertainty, the amplification or decay,
+the time or event interval, and the terminal output bound.
 
-% ──────────────────────────────────────────────
-\section{Exercises}
-% ──────────────────────────────────────────────
+Orbital analysis still uses Lyapunov functions. For an explicit example,
+consider $\dot x_1=x_2$, $\dot x_2=-x_1+u$. The unit circle is a nominal orbit
+with $u_d=0$. Put $r^2=x_1^2+x_2^2$ and choose
+\begin{equation}
+ u=kx_2(1-r^2),\qquad
+ V=\tfrac14(r^2-1)^2,\qquad
+ \dot V=-k x_2^2(r^2-1)^2\leq0,
+ \quad k>0.
+ \label{eq:motion_orbit_example}
+\end{equation}
+On a sufficiently small compact annulus around the unit circle, the largest
+invariant subset of $\dot V=0$ is the circle itself. Points with $x_2=0$ away
+from the circle do not remain there, since $\dot x_2=-x_1\ne0$; the origin is
+excluded by the annulus. Lyapunov and invariance arguments then establish local
+orbital attraction and stability. They do not establish phase locking or global
+attraction from the origin. The
+\href{https://underactuated.mit.edu/limit_cycles.html}{MIT limit-cycle treatment}
+and \href{https://arxiv.org/abs/1010.2241}{Manchester's transverse-dynamics analysis}
+provide the broader framework.
 
-\begin{enumerate}[label=\textbf{1.\arabic*.}, leftmargin=1.5cm]
+\section{Verifying a Motion Tube}
 
-\item \textbf{(Conceptual.)} Consider a simple pendulum $\ddot{\theta} + \sin\theta = u$.
-  \begin{enumerate}[label=(\alph*)]
-    \item Identify the equilibria and classify their stability.
-    \item Now consider the task of making the pendulum execute a full revolution
-          (pumping up from rest to continuous spinning). Explain why this task
-          \emph{cannot} be formulated as setpoint regulation.
-    \item Sketch the reference trajectory in the $(\theta, \dot{\theta})$ phase
-          plane for one complete revolution. What is the natural phase variable?
-  \end{enumerate}
+A time-varying tube can be defined by
+\begin{equation}
+ \mathcal T(t)=\{x:V(x,t)\leq\rho(t)\}.
+ \label{eq:motion_tube}
+\end{equation}
+For example, $V$ may measure weighted tracking error. Selecting $\rho(t)$ to
+be small near impact expresses a desired tolerance. It does not show that the
+closed-loop motion can stay inside the tube. Even $\dot e=0$ leaves a shrinking
+tube when initialized on its boundary: constant error cannot fit inside an
+arbitrarily decreasing allowed radius.
 
-\item \textbf{(Mathematical.)} For the system $\dot{x}_1 = x_2$,\;
-  $\dot{x}_2 = -x_1 + u$, consider the reference trajectory
-  $\traj^*(t) = (\cos t,\, -\sin t)^\top$ (a unit circle in state space).
-  \begin{enumerate}[label=(\alph*)]
-    \item Verify that $u_{\text{ff}}(t) = 0$ produces exactly this trajectory.
-    \item Compute the transverse linearization about $\traj^*$.
-    \item Design a feedback law $u_{\text{fb}}$ that achieves asymptotic orbital
-          stability.
-  \end{enumerate}
+Suppose the closed-loop dynamics is well posed with admissible inputs,
+$V$ and $\rho$ are continuously differentiable, and the tube has a regular
+boundary on the domain of interest. For disturbances $d$ in a declared set
+$\mathcal D$, a robust inward-boundary condition is
+\begin{equation}
+ \partial_t V+\nabla_x V^Tf(x,k(x,t),d,t)\leq\dot\rho(t)
+ \quad\text{when }V(x,t)=\rho(t),\quad\forall d\in\mathcal D.
+ \label{eq:motion_tube_boundary}
+\end{equation}
+Together with the appropriate regularity and initial membership, this supports
+forward invariance over the specified interval. The derivative must include
+reference motion and changing metric weights. If $V$ and $\rho$ are indexed
+by phase, their derivatives involve the actual $\dot s$; it cannot silently
+be replaced by one. Nonsmooth profile corners or hybrid resets need their own
+one-sided or transition conditions.
 
-\item \textbf{(Design.)} A simplified 2-DOF golf swing model has coordinates
-  $\bm{q} = (\theta_{\text{arm}}, \theta_{\text{club}})$ with dynamics
-  \[
-    \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}
-    + \bm{g}(\bm{q}) = \bm{B}\,\control,
-    \qquad \bm{B} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}.
-  \]
-  This system is underactuated: only $\theta_{\text{arm}}$ is directly actuated.
-  \begin{enumerate}[label=(\alph*)]
-    \item Explain qualitatively how the club can accelerate through passive dynamics
-          even though no torque is applied at the wrist.
-    \item Define a phase variable $s$ and sketch a funnel profile $\varepsilon(s)$
-          appropriate for this system.
-    \item Discuss why a setpoint controller applied only at impact ($s = 0.7$)
-          may be inadequate or misleading for a trajectory-native task.
-  \end{enumerate}
+A scalar example makes the effort and disturbance limit explicit. Let
+$\dot e=-ke+d$, $|d|\leq\bar d$, and require $|e|\leq r(t)$. On either boundary,
+a sufficient condition is
+\begin{equation}
+ \dot r\geq-kr+\bar d.
+ \label{eq:motion_radius_condition}
+\end{equation}
+For $k=2$, $\bar d=0.1$, and $r(0)=1$ in declared scaled units, the tight
+comparison radius is $r(t)=0.05+0.95e^{-2t}$. Constant worst-direction
+disturbances attain its two boundaries. The nonzero limiting radius follows
+from the disturbance bound and available correction rate. A drawing that
+shrinks to zero would not certify this disturbed system.
 
-\item \textbf{(Philosophical.)} A thermostat, an autopilot, and a dancer's body
-  are all ``controlled systems.'' Classify each according to whether its primary
-  control objective is (i)~setpoint regulation, (ii)~trajectory tracking, or
-  (iii)~something else entirely. Justify your classification.
+For an impact specification, also require that every relevant pre-impact
+boundary state allowed by the verified tube maps into $\mathcal Y$, and that
+the intended event is reached. A phase estimate bounded below by
+$\dot s\geq\alpha_{\min}>0$ can supply a progress bound on an appropriate
+interval; distance to a path alone cannot. Actuator saturation, sensor delay,
+contact feasibility, and uncertainty in the model must be included in the
+claimed guarantee. A verified model tube is still a statement about that model
+and its declared uncertainty set, not automatic validation on golfers.
 
+\section{Input Rank and Reachability}
+
+For an $n$-coordinate mechanical model with $m<n$ effective inputs, rank limits
+instantaneous input acceleration directions. It does not imply that all feasible
+states lie on a surface of dimension $2m$. In a state model, drift and input
+directions evolve as the system moves; their effect over time can provide
+additional reachable directions. The underactuation chapter develops the
+associated feasibility and reachability questions.
+
+A concrete counterexample uses two unit masses, one grounded spring, and one
+coupling spring, all with unit coefficients. In scaled coordinates,
+\begin{equation}
+ \ddot q+Kq=bu,\qquad
+ K=\begin{pmatrix}2&-1\\-1&1\end{pmatrix},\qquad
+ b=\begin{pmatrix}1\\0\end{pmatrix}.
+ \label{eq:motion_coupled_springs}
+\end{equation}
+There is one applied force. With $x=(q_1,q_2,\dot q_1,\dot q_2)^T$,
+\begin{equation}
+ \dot x=Ax+gu,\qquad
+ A=\begin{pmatrix}0&I\\-K&0\end{pmatrix},\qquad
+ g=\begin{pmatrix}0\\0\\1\\0\end{pmatrix}.
+ \label{eq:motion_spring_state}
+\end{equation}
+The controllability matrix $[g,Ag,A^2g,A^3g]$ has determinant $-1$ and rank
+four. With unconstrained signed inputs, this linear system is controllable in
+its full four-dimensional state space. Input limits restrict the size of
+reachable sets and time needed; they do not restore the asserted universal
+$2m$ dimension bound.
+
+A single trajectory is itself a one-dimensional curve, but the union of
+reachable trajectories and the span of a curve's successive derivatives are
+different objects. For the same system with $u=0$ and $x(0)=(1,0,0,0)^T$,
+the matrix $[Ax,A^2x,A^3x,A^4x]$ at the initial state also has determinant
+$-1$. Thus even an unforced example has four independent time derivatives.
+At that regular point, smooth arc-length reparameterization preserves their
+rank. Actuator count therefore does not cap the number of independent
+Frenet-frame directions at $2m$ either.
+
+The useful golf interpretation is more specific. Coupling can transmit and
+redistribute the effects of earlier work and present loads. Whether an effective
+wrist coordinate is unactuated, weakly actuated, or actively constrained is a
+modeling and measurement question. A rapid release does not prove zero wrist
+moment, and passive planar dynamics does not guarantee three-dimensional face
+squaring. Force, joint moment, mechanical power, and muscle activation must be
+kept distinct when testing such hypotheses.
+
+\section{Reliability and Performance}
+
+A path error, a delivery error, and a ball-dispersion measure are different
+costs. Choose the one that represents the study, then state how the others
+enter the model. Both regulation and trajectory problems can use cost
+functionals over an entire history; neither is restricted to a single
+instantaneous error value.
+
+For a specified stochastic model and admissible policy $\pi$, one possible
+criterion is
+\begin{equation}
+ \begin{aligned}
+ J_\pi&=\phi(y_e)+\int_0^{t_e}\ell(x(t),u(t))\,dt,\\
+ \min_\pi\quad&\mathbb E[J_\pi]+\lambda\operatorname{Var}(J_\pi),
+ \qquad\lambda\geq0.
+ \end{aligned}
+ \label{eq:motion_risk_objective}
+\end{equation}
+The cost and its units, disturbance distribution, event definition, and
+constraint handling must be declared. The variance weight has corresponding
+units; it expresses a design preference rather than a universal biological
+constant. A low variance can accompany a consistently poor mean outcome, so
+repeatability alone is not sufficient. Expected cost, tail risk, target-set
+probability, and worst-case guarantees answer different questions.
+If the intended event is not reached by an allowed horizon, define a failure
+cost or constraint; silently discarding those trials changes the question.
+
+A candidate policy may use feedback, a learned reference, or both. Comparing
+policies requires recomputing the motion, loads, event time, and output in each
+branch. Reusing a measured state or reaction history after the intervention
+changes the trajectory can invalidate the comparison. Experimental perturbations
+and held-out predictions can test a model; fitting one observed motion does not
+establish that the nervous system optimized the proposed criterion.
+
+A practical golf investigation can proceed as follows:
+\begin{enumerate}
+\item Define the delivered output, its tolerance, and the ball/contact model
+      used to connect that output to performance.
+\item Declare the mechanical boundary, contact modes, state variables, input
+      meaning, parameter uncertainty, and available measurements.
+\item Construct compatible nominal states and inputs. Check closure, timing,
+      actuator limits, work, and contact feasibility before optimizing a path.
+\item Model disturbances and measurement/actuation delays. Compare finite-time
+      or event-based output sensitivity and verify any proposed tube condition.
+\item Test predictions on independent swings or perturbations, including
+      uncertainty in event timing and the inferred loads.
+\item Separate demonstrated mechanical identities, validated predictions,
+      physiological interpretations, and proposed coaching or design hypotheses.
 \end{enumerate}
 
-\vspace{1cm}
-\begin{center}
-  \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
-  {\small\itshape
-  The river does not arrive at the ocean and stop.\\
-  It becomes the ocean.\\
-  The swing does not arrive at impact and stop.\\
-  It becomes the follow-through.\\[0.3cm]
-  Control is motion.}
-\end{center}
+This is the role of the subsequent chapters: curve geometry describes motion;
+configuration manifolds describe compatible coordinates; transverse analysis
+and underactuation constrain candidate designs; optimization and robustness
+analysis evaluate them; learning and experiments test how well they transfer.
+The later golf case study is a modeling proposal unless supported by a complete
+specified model, reproducible results, and validation data. The framework's
+value comes from making the links testable.
+
+\section{Chapter Exercises}
+
+\begin{enumerate}
+\item Specify an impact-event output set that distinguishes clubhead speed,
+      face orientation, and impact location. Explain why a terminal target
+      does not require stopping there.
+\item Derive the error dynamics for the scalar tracking example, then impose
+      an input bound and identify where the proposed law becomes infeasible.
+\item Reproduce the one-mass timing example. Compare endpoint velocity, input,
+      work, and the phase-plane curves for $T=1$ and $T=2$ seconds.
+\item For a prescribed pair $(q_d(s),v_d(s))$, derive the compatibility condition
+      on $\dot s$ and give an example where arbitrary retiming fails.
+\item Rescale a position coordinate from metres to centimetres. Transport the
+      error metric and verify that the weighted distance remains unchanged.
+\item Show why nearest-point phase is not unique at a circle's center and why
+      a finite arc's endpoint needs a separate projection condition.
+\item Derive the scalar robust-radius condition and integrate its two
+      worst-direction disturbance cases. Explain the nonzero limiting radius.
+\item Verify both rank-four matrices in the spring example. Distinguish
+      actuator rank, reachable-set dimension, and a trajectory's derivative span.
+\item Verify the orbital Lyapunov derivative and the invariant-set argument.
+      Explain why this does not prove phase locking or global convergence.
+\item Formulate two different reliability objectives for a golf study. State
+      what data would distinguish their predictions and what remains unidentifiable.
+\end{enumerate}

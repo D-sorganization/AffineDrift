@@ -1,15 +1,16 @@
-# Agent Handoff — AffineDrift
+# Agent Handoff â€” AffineDrift
 
 Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
 
 ## Technical Content Review
 
-- User-directed review is governed by epic #4009. Full-corpus #4021 and route batches #4054–#4061 remain open; the 405-source inventory does not certify every claim. Preserve the immutable upstream monograph boundary.
+- User-directed review is governed by epic #4009. Full-corpus #4021 and route batches #4054â€“#4061 remain open; the 405-source inventory does not certify every claim. Preserve the immutable upstream monograph boundary.
 - PR #4153 merged as `d5a55f229d190e0dda71d7c55f0d5e8f40518281`; deployment 33957446845 succeeded through revision-matched live verification. Seven concrete findings are closed, 59 files changed, and five publication PDFs regenerated. Final CI: 3,728 Python tests, 92.29% coverage, all eight textbook builds and other checks passed.
 - PR #4159 merged as `fba9ad794d486ab60895d777c43bcb03dcaafaa6`; deployment 33959676165 succeeded through every live route. Its contraction/tangent reference now has correct metric/Riccati conditions, numerical certificates, biological scope, task dynamics, covariance, and hybrid-event sensitivity. Final CI: 3,736 Python tests, 29 skips, 92.29% coverage, all eight textbook builds and other checks passed. The historical critique still needs its own full audit.
 - PR #4162 closed #4160 and merged as `32b774c438eb325c7cdb059d512e8ea3b54cdda0`; all final-head checks passed, including 3,745 Python tests, 92.29% source coverage, and eight textbook builds. Deployment 33964697060 succeeded through every revision-matched live route. Direct inspection confirms 180 math expressions, zero errors, and no mobile page overflow. It corrects the Physics loop chapter and two repeated spine-loop statements.
-- PR #4163 closed #4161 and merged as `bbb163d48d21318658dfd6650a6e1bc454ebd461`; final CI passed 3,756 tests, 92.29% coverage, all eight textbook builds, and every other check. Deployment 33966729029 is pending. It rebuilds the full inverse-dynamics chapter and paired web edition, with a shared inference workflow, 11 numerical/regression checks, and targeted incoming-reference corrections. Local validation: 3,756 tests, 29 skips, 92.32% coverage; 128 content checks and 34 static contracts. The 580-page PDF and 13 revised chapter pages are inspected; HTML has 190 math expressions, zero math errors, and no page overflow at 1440/390 pixels. Full adjacent-chapter audits remain pending.
-- PR #4165 for #4164 on `fix/physics-aerodynamic-drag` corrects the full aerodynamic chapter in both editions: air-relative forces, distributed moments, inverse signs, energy, input dependence, reproducible forward counterfactuals, ball flight, and environmental sensitivity. Validation: 3,767 tests, 29 skips, 92.32% coverage; 128 content checks and 34 static contracts. The 573-page PDF and all nine revised pages are inspected; HTML has 135 math expressions, zero math errors, and no page overflow at 1440/390 pixels. Adjacent chapters and the remaining corpus still need their own audits.
+- PR #4163 closed #4161 and merged as `bbb163d48d21318658dfd6650a6e1bc454ebd461`; final CI passed 3,756 tests, 92.29% coverage, all eight textbook builds, and every other check. Deployment 33966729029 succeeded through every revision-matched live route; direct inspection confirms 190 math expressions, zero errors, and no mobile overflow. It rebuilds the full inverse-dynamics chapter and paired web edition, with a shared inference workflow, 11 numerical/regression checks, and targeted incoming-reference corrections. Local validation: 3,756 tests, 29 skips, 92.32% coverage; 128 content checks and 34 static contracts. The 580-page PDF and 13 revised chapter pages are inspected; HTML has 190 math expressions, zero math errors, and no page overflow at 1440/390 pixels. Full adjacent-chapter audits remain pending.
+- PR #4165 closed #4164 and merged as `627918628c52ef0320136f201668a5f816717f8a`; final CI passed 3,767 tests, 92.29% coverage, all eight book builds, and every check. Deployment 33968761331 is running. It corrects the full aerodynamic chapter in both editions: air-relative forces, distributed moments, inverse signs, energy, input dependence, reproducible forward counterfactuals, ball flight, and environmental sensitivity. Validation: 3,767 tests, 29 skips, 92.32% coverage; 128 content checks and 34 static contracts. The 573-page PDF and all nine revised pages are inspected; HTML has 135 math expressions, zero math errors, and no page overflow at 1440/390 pixels. Adjacent chapters and the remaining corpus still need their own audits.
+- Issue #4166 on `fix/motion-control-foundations` rebuilds the motion-control introduction in four source editions, corrects the repeated chapter-two input-rank bound, and refreshes dependent evidence digests without broadening existing review claims. Local validation: 3,780 tests, 29 skips, 92.32% coverage; 128 content checks; all 34 static contracts; 13 new mathematical/regression checks. Four PDFs rebuilt (107/83/10/16 pages), with all 27 revised introduction pages, covers, preface, and targeted rank passages inspected. Website: 1,072 math expressions, zero errors, no overflow at 1440/390 pixels. Full chapter-two and remaining corpus audits remain pending.
 - Detailed findings, primary sources, scope, and validation live in `docs/development/technical-review/REVIEW.md` and `corpus-review-index.csv`. Temporary QA artifacts in that directory are not publication authority.
 
 ## Protected Authority
@@ -120,8 +121,8 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
   Windows Recycle Bin after their absolute paths were verified inside the
   worktree.
 - `reports/website-companion-review-2026-08-29.md` records the content gaps and
-  Packages A–E. Package A is delivered. Epic #4008, programming subepic #4010,
-  and reader-evidence subepic #4084 own the remaining work. #4085–#4089 cover
+  Packages Aâ€“E. Package A is delivered. Epic #4008, programming subepic #4010,
+  and reader-evidence subepic #4084 own the remaining work. #4085â€“#4089 cover
   baseline reconciliation, shared evidence semantics, the proximal-distal
   falsification atlas, reader validation, and whole-site desktop regression.
 - The writing-quality batches protected in merged PR #3831 at
@@ -171,7 +172,7 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
   proximal-distal and monograph stylesheets), visual runner/evidence/manifest
   scripts, screenshot schemas, the public report source, and both visual
   workflows; executable unit contracts prevent silent trigger erosion.
-- Programming work reuses #4022–#4030 and provider UpstreamDrift #9174 rather
+- Programming work reuses #4022â€“#4030 and provider UpstreamDrift #9174 rather
   than creating another catalog. Protected UpstreamDrift main is
   `f98bf7b382083322c609bfd7d680e4e82d71aed8`; provider workflow PR #9307 is
   open at head `6614f7ad8eafedde8a4f3162470850921d20e195` with that exact base. Its
@@ -180,7 +181,7 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
   conflicting even though local Git proves protected main is a parent of the
   merge head. Requery before acting and never force-push; if GitHub does not
   reconcile, create a fresh replacement branch from current protected main.
-  #9174 and #9190–#9193 remain incomplete and exact-main has no
+  #9174 and #9190â€“#9193 remain incomplete and exact-main has no
   `dist/companion/` publication tree. No provider artifact is accepted for
   AffineDrift import; only provider-independent RED/security fixtures are safe
   before those gates close.
@@ -192,7 +193,7 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
   mutable branch links. It features the technical monograph, visual companion,
   falsification atlas, workbench, Books hub, and two learning paths. Catalog,
   onboarding, workflow, screenshot, and compatibility cards fail closed behind
-  UpstreamDrift #9174/#9190–#9193 and AffineDrift #4023–#4030. The seven legacy
+  UpstreamDrift #9174/#9190â€“#9193 and AffineDrift #4023â€“#4030. The seven legacy
   engine guides remain explicitly deferred under #4060.
 - Browser review at 1440 px measured a centered 1,200 px content canvas and
   three 386 px peer long-form cards; at 390 px the cards collapse to 341 px,
@@ -294,7 +295,7 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
   evidence that the alarming deletion totals are transient generated-site
   churn, not loss of canonical content.
 
-## Proximal–Distal Publication Boundary
+## Proximalâ€“Distal Publication Boundary
 
 - UpstreamDrift is the computational, claim, evidence, and campaign authority.
   AffineDrift is the immutable publication and explanatory layer.
@@ -329,7 +330,7 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
   publication/reproduction contracts still fail. Do not skip or deselect them,
   push a completion PR, or mark #4042 complete until those acceptance contracts
   are implemented and protected CI can pass.
-- #4034–#4040 define falsifiability programs for the model ladder, bilateral
+- #4034â€“#4040 define falsifiability programs for the model ladder, bilateral
   wrenches, active impedance, neural timing, impact timing, participant-held-out
   generalization, and equipment response. Preserve unavailable and adverse
   evidence; never substitute manufactured fixtures for human data.
@@ -347,15 +348,15 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
 
 ## Must-Read Files
 
-1. `AGENTS.md` and `CLAUDE.md` — repository and publication policy.
-2. `SPEC.md` — current scientific/publication contracts.
-3. `articles/proximal_distal_energy_transfer/source_manifest.json` — immutable
+1. `AGENTS.md` and `CLAUDE.md` â€” repository and publication policy.
+2. `SPEC.md` â€” current scientific/publication contracts.
+3. `articles/proximal_distal_energy_transfer/source_manifest.json` â€” immutable
    upstream projection boundary.
-4. `reports/scientific-claim-audit.md` — governed route classification.
-5. `scripts/verify_proximal_distal_projection.py` — projection verifier.
-6. `reports/website-companion-review-2026-08-29.md` — argument gaps, feature
+4. `reports/scientific-claim-audit.md` â€” governed route classification.
+5. `scripts/verify_proximal_distal_projection.py` â€” projection verifier.
+6. `reports/website-companion-review-2026-08-29.md` â€” argument gaps, feature
    choices, research augmentation, and implementation order.
-7. Issue #4128 turnover comments — copy-ready next-agent prompt, exact current state,
+7. Issue #4128 turnover comments â€” copy-ready next-agent prompt, exact current state,
    commands, stop conditions, and closure order (retired from `TURNOVER_PROMPT.md`).
 
 ## Validation
@@ -409,7 +410,7 @@ Do not treat source tests alone as rendered-publication evidence.
    Do not force-push or merge while that discrepancy remains; use a fresh
    replacement branch from current protected main if GitHub does not reconcile.
 3. Keep production companion installation fail-closed. Finish provider
-   #9174/#9190–#9193 before installing any lock/snapshot or starting generated
+   #9174/#9190â€“#9193 before installing any lock/snapshot or starting generated
    catalog #4023/#4024; then exercise #4030 against current and previous
    supported provider schema versions.
 4. Obtain explicit human approval for the #4089 visual candidate before
