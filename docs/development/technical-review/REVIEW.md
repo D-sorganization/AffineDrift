@@ -250,3 +250,6 @@ Validation: 20 mathematical/source checks, including four old-edition failures b
 Primary sources: Bristow, Tharayil, and Alleyne (2006), Sutton et al. (1999), and Tedrake et al. (2010), linked in the chapter. Counterexamples and the golf-testing protocol are independently derived, not experimental golf results reported by those papers.
 
 Funnel deployment 33983136557 succeeded through every live route. Phase PR #4183 merged as 693e4a5f7965e91e55cd0a440698b0239fdd4f0d after every check passed; deployment 33984854219 remains pending. Stochastic PR #4185 is open at 75406b7ff2576c8894ae1e316c7a3535d45f5f67 with browser CI pending. Case study and shared glossary/reading correction #4184 is claimed and drafted only. Full-corpus #4021 and the remaining route batches stay open.
+
+
+Final learning publication check: the final layout exposed a validator false positive for a valid closing LaTeX group. Added one failing-before/fixed-after regression and accepted the closing command without changing malformed-prose detection. All 42 structure tests, the article-wide structure scan, Ruff, Black, and code-quality checks pass. The previously recorded full-suite count precedes this additional regression. Phase deployment 33984854219 succeeded; stochastic PR #4185 merged as 11f3e623 after every required check passed.

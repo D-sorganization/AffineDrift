@@ -83,6 +83,12 @@ class TestEnvironmentBalance:
 
 
 class TestTruncation:
+    def test_accepts_closing_a_local_layout_group(self, tmp_path: Path) -> None:
+        source = write(
+            tmp_path, "ch.tex", "\\begingroup\n\\raggedbottom\nComplete text.\n\\endgroup\n"
+        )
+        assert check_truncation(source) == []
+
     def test_flags_file_ending_mid_sentence(self, tmp_path: Path) -> None:
         source = write(tmp_path, "ch30.tex", "Some prose.\n\\item[(c)] For a system excited by")
         findings = check_truncation(source)
