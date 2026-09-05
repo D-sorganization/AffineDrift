@@ -524,17 +524,23 @@ Not all of these are physically meaningful for every system. In practice, the
 effective dimensionality of the curve---the number of linearly independent
 derivatives---is determined by the system dynamics:
 
-\begin{principle}{Dynamic Rank of a Trajectory}{dynamic_rank}
-  For a controlled mechanical system with $N$ DOF and $m$ independent actuators,
-  a generic trajectory has at most $p = 2m$ linearly independent arc-length
-  derivatives. The Frenet--Serret frame therefore has at most $2m$ intrinsically
-  meaningful vectors, and the curve has at most $2m - 1$ independent curvatures.
+\begin{principle}{Trajectory Derivatives and Input Rank}{dynamic_rank}
+The dimension of the input image at one state does not bound the rank of a
+trajectory's successive derivatives by twice the actuator count. Drift,
+coupling, and the evolving input can generate additional derivative directions.
+For the one-input, two-coordinate spring system in Chapter~1, the unforced
+trajectory from $x(0)=(1,0,0,0)^T$ has
+$\det[Ax,A^2x,A^3x,A^4x]=-1$. At that regular point its first four time
+derivatives are independent, and a smooth arc-length reparameterization
+preserves their rank. A Frenet frame can therefore span four directions even
+though only one input is available.
 
-  For a fully actuated system ($m = N$), the trajectory can bend freely in all
-  $2N$ state-space directions. For an underactuated system ($m < N$), the
-  trajectory is geometrically constrained: it lives on a submanifold, and the
-  curvatures in the ``forbidden'' directions are determined by the passive
-  dynamics.
+A single regular trajectory remains a one-dimensional curve. Its local
+osculating spaces, the state space, and the union of reachable trajectories
+have different dimensions. Determine the derivative ranks and required
+regularity for the actual curve; do not infer them from actuator count.
+Conversely, full actuation does not remove the kinematic compatibility between
+position and velocity or make an arbitrary state-space curve feasible.
 \end{principle}
 
 % ══════════════════════════════════════════════
