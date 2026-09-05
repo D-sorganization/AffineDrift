@@ -172,7 +172,7 @@
     const widget = document.createElement("div");
     widget.className = "metrics-widget";
 
-    const heading = document.createElement("h4");
+    const heading = document.createElement("h3");
     heading.className = "metrics-heading";
     heading.textContent = "Your Usage Statistics";
     widget.appendChild(heading);

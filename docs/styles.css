@@ -189,6 +189,10 @@
   --color-primary-lightest: #0a2a40;
   --color-link: #8bd3ff;
   --color-link-hover: #b9e6ff;
+  --bs-link-color: #8bd3ff;
+  --bs-link-hover-color: #b9e6ff;
+  --bs-link-color-rgb: 139, 211, 255;
+  --bs-link-hover-color-rgb: 185, 230, 255;
   --color-highlight-yellow: #1a1810;
   --color-highlight-yellow-accent: #6b6b2a;
   --color-highlight-yellow-border: #8b8b3a;
@@ -235,6 +239,10 @@
     --color-primary-lightest: #0a2a40;
     --color-link: #8bd3ff;
     --color-link-hover: #b9e6ff;
+    --bs-link-color: #8bd3ff;
+    --bs-link-hover-color: #b9e6ff;
+    --bs-link-color-rgb: 139, 211, 255;
+    --bs-link-hover-color-rgb: 185, 230, 255;
     --color-highlight-yellow: #1a1810;
     --color-highlight-yellow-accent: #6b6b2a;
     --color-highlight-yellow-border: #8b8b3a;
@@ -5711,7 +5719,7 @@ h1.title,
 /* Ensure the grid doesn't collapse the main content too aggressively */
 
 /* Using high specificity to override Quarto's .page-columns defaults */
-@media (width >= 1440px) {
+@media (width >= 1200px) {
   div.standard-page-layout,
   .standard-page-layout {
     display: grid !important;
@@ -5758,7 +5766,7 @@ h1.title,
   }
 }
 
-@media (width < 1440px) {
+@media (width < 1200px) {
   .standard-page-layout {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
@@ -6368,8 +6376,10 @@ h1.title,
   background: var(--bg-alt);
   border: 1px solid var(--border-color);
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   font-size: var(--fs-base);
   cursor: pointer;
   box-shadow: var(--shadow-md);
@@ -6411,6 +6421,43 @@ textarea:focus-visible,
 [data-theme="dark"] a:focus-visible,
 [data-theme="dark"] input:focus-visible {
   outline-color: var(--accent-cyan, #06b6d4);
+}
+
+/* Dark mode text contrast overrides (issue #4140) */
+[data-theme="dark"] a,
+[data-bs-theme="dark"] a,
+body.quarto-dark a {
+  color: #8bd3ff;
+}
+
+[data-theme="dark"] .site-button--ghost,
+[data-bs-theme="dark"] .site-button--ghost,
+body.quarto-dark .site-button--ghost {
+  color: #8bd3ff !important;
+  border-color: #8bd3ff !important;
+}
+
+[data-theme="dark"] .entry-list__title,
+[data-bs-theme="dark"] .entry-list__title,
+body.quarto-dark .entry-list__title {
+  color: #8bd3ff !important;
+}
+
+[data-theme="dark"] .navbar .nav-link,
+[data-bs-theme="dark"] .navbar .nav-link,
+body.quarto-dark .navbar .nav-link {
+  color: #fff !important;
+}
+
+[data-theme="dark"] footer.footer,
+[data-theme="dark"] .nav-footer,
+[data-theme="dark"] .nav-footer a,
+[data-theme="dark"] .nav-footer p,
+[data-bs-theme="dark"] footer.footer,
+[data-bs-theme="dark"] .nav-footer,
+[data-bs-theme="dark"] .nav-footer a,
+[data-bs-theme="dark"] .nav-footer p {
+  color: var(--text-secondary);
 }
 
 /* Ensure :focus-visible is visible (no outline: none) */

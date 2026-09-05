@@ -4,8 +4,9 @@ test.describe('Navigation', () => {
   test('should navigate to articles page', async ({ page }) => {
     await page.goto('/');
     
-    // Find and click articles link
-    const articlesLink = page.locator('a[href*="articles"]').first();
+    // Find and click visible articles link (hero action on homepage)
+    const articlesLink = page.locator('a[href*="articles"]').filter({ hasText: 'Browse all articles' }).first();
+    await expect(articlesLink).toBeVisible();
     await articlesLink.click();
     
     // Wait for navigation
