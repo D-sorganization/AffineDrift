@@ -17,72 +17,40 @@ $$
 \dot x = f(x) + \sum_{i=1}^m g_i(x) u_i,
 $$
 
-for finite-dimensional mechanical systems actuated by generalized forces, and prove that the mapping from inputs to generalized accelerations, generalized forces, and wrenches is linear at fixed state. This yields a precise superposition principle: although *trajectories in state space do not superpose* in general (due to nonlinearity), the *effects of distinct input channels on generalized forces and accelerations do*. We provide worked examples in each formulation (a single pendulum, a planar 2R manipulator, and a spatial single-link model) and show how to decompose motion into contributions from gravity, Coriolis/centrifugal effects, and individual actuators.
+for finite-dimensional mechanical systems actuated by generalized forces, and prove that applied generalized loads depend linearly on the declared load inputs, while acceleration is affine and its increment relative to zero input is linear at fixed state. This yields a precise superposition principle: although *trajectories in state space do not superpose* in general (due to nonlinearity), the *effects of distinct input channels on generalized forces and accelerations do*. We provide worked examples in each formulation (a single pendulum, a planar 2R manipulator, and a spatial single-link model) and show how to decompose motion into contributions from gravity, Coriolis/centrifugal effects, and individual actuators.
 
-In the broader context of the AffineDrift framework, this linearity explains why the **Zero Torque Counterfactual (ZTCF) family** is well-defined inside a control-affine model. Because the input enters linearly, we can mathematically set the modeled torque input to zero ($u=0$) without changing the passive drift vector field $f(x)$. This supports a model-level separation between the history-dependent passive layer (Drift) and the instantaneous active layer (Input).
+In the AffineDrift framework, a **Zero Torque Counterfactual (ZTCF) family** requires a well-posed model and a declared zero-input intervention. Such a baseline can also be defined in nonaffine systems; affinity supplies the additional exact identity for input increments. Setting the modeled torque to zero leaves the function $f$ unchanged, but a forward counterfactual evaluates it along a different evolving state. The split is conditional on the state, inputs, and contact assumptions and does not identify intention or physiological effort.
 :::
 
-```{=html}
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This article answers a deceptively simple question: in a system as complicated as a golf swing, can you study one force at a time and then add them up?
-      </p>
+::: {.callout-note}
+## Reading the Snapshot Correctly
 
-      <div class="laymans-item">
-        <h3>The Snapshot Principle</h3>
-        <p>
-          Imagine freezing a golfer mid-swing — like pressing pause on a video. In that frozen instant, every force acting on the system (gravity, muscle torque, centrifugal effects) has a perfectly predictable effect on the club's acceleration. And here's the key: these effects <strong>add up exactly</strong>, just like they would for a simple pendulum. Gravity pulls down by X, your shoulder pushes by Y, and the club accelerates by X + Y. No surprises, no interactions, no "nonlinear weirdness."
-        </p>
-        <div class="analogy">
-          <strong>Think of it like a bank account:</strong> Your salary deposits, your rent withdrawals, and your grocery spending all add up to your final balance. Each transaction is independent. The "nonlinearity" of your finances (spending habits change based on your balance) only matters when you look at how things evolve over <em>time</em> — not at a single frozen snapshot.
-        </div>
-      </div>
+At a specified state in a torque-driven model, applied load increments produce acceleration increments that add. The zero-input acceleration must be included once, not once for each input. A snapshot calculation concerns acceleration; delivered clubhead speed also depends on the preceding trajectory.
 
-      <div class="laymans-item">
-        <h3>Why This Matters</h3>
-        <p>
-          Because forces add up at each instant, we can study them one at a time. We can ask: "How much does gravity contribute to clubhead speed right now?" or "What would happen if we turned off the shoulder torque?" These are meaningful, well-defined questions — not because the swing is simple, but because at each frozen moment, the physics IS simple.
-        </p>
-      </div>
+The same posture and velocity must be used for every term. In a two-hand grip, changing applied torque also changes the constraint reactions. Those reactions must be solved consistently. Muscle force cannot generally be recovered uniquely from the total joint torque, and an additive equation does not make its physical causes independent.
 
-      <div class="laymans-item">
-        <h3>The Catch: Trajectories Don't Add Up</h3>
-        <p>
-          Here's what does NOT work: you can't take two complete swings, add them together, and get a third valid swing. That's because the forces at each instant depend on WHERE you are and HOW FAST you're moving — and those change as the swing progresses. Forces superpose. Trajectories don't.
-        </p>
-        <div class="analogy">
-          <strong>Think of it like cooking:</strong> Adding salt and pepper to a dish at any moment gives predictable flavor (superposition works). But you can't take two complete recipes and add them together to get a new valid recipe — the order and timing matter (trajectories don't superpose).
-        </div>
-      </div>
+Earlier muscle work, ground impulse, geometry, and elastic storage affect the arriving state. A forward counterfactual then follows its own state and contact events. This is how the snapshot calculation connects to the whole swing without treating several different swing trajectories as additive.
+:::
 
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The forces in a golf swing add up perfectly at each instant, even though the swing itself is deeply nonlinear. This is the mathematical foundation that makes the entire AffineDrift framework possible.
-      </div>
-    </div>
-  </div>
-</section>
-```
 
 ## Introduction
 
 ::: {.callout-important}
-## Scope of Superposition in This Article --- Read First
-The superposition principle developed below is **instantaneous and pointwise (tangent-space) in state**. For the control-affine system $\dot x = f(x) + G(x)(u_1 + u_2)$, the statement we prove is that the *response at each fixed state $x$* to the input $u_1 + u_2$ equals the sum of responses to $u_1$ and $u_2$ *at that same state $x$*. It is **not** a statement about finite-time trajectories: because $f$ is generally nonlinear in $x$, the trajectory generated by $u_1 + u_2$ is *not* the pointwise sum of the trajectories generated by $u_1$ and $u_2$ separately. Forces superpose instantaneously at each state; trajectories do not.
+## Scope of Superposition in This Article
+
+At fixed state, define $\mathcal F_x(u)=f(x)+G(x)u$. The exact identity is
+$$
+\mathcal F_x(u_1+u_2)=\mathcal F_x(u_1)+\mathcal F_x(u_2)-\mathcal F_x(0).
+$$
+The total map is affine; $\mathcal F_x(u)-\mathcal F_x(0)$ is linear. Every term uses the same complete state, parameters, and contact mode. These are model-conditioned contributions to the instantaneous state derivative, not independently identified shares of a finite swing outcome.
 :::
+
 
 Superposition is often invoked informally in robotics and biomechanics: one speaks of "the gravitational torque," "the Coriolis torque," "the control torque," as if these were independently meaningful and add linearly to produce the net motion. At the same time, the underlying dynamics are nonlinear in configuration and velocity, so **naïve trajectory superposition is false**. This tension is a constant source of conceptual confusion.
 
 The correct statement is more modest but powerful:
 
-> For a mechanical system whose dynamics are *affine in generalized forces*, the **mapping from inputs to generalized accelerations is linear at fixed state**. Therefore, the generalized acceleration (and the corresponding wrench) at any instant can be written as a *sum of contributions* induced by different input channels or physical effects.
+> For a mechanical system whose dynamics are *affine in generalized forces*, the **increment in generalized acceleration relative to zero input is linear at fixed state**. Therefore, the generalized acceleration (and the corresponding wrench) at any instant can be written as a *sum of contributions* induced by different input channels or physical effects.
 
 This paper makes that statement precise and derives it in three parallel languages:
 
@@ -179,9 +147,10 @@ $$
 
 **This is the basic superposition statement:** at a fixed state $x$, the *incremental effect of each input component* on $\dot x$ is linear and additively separable.
 
-This additive separability is the engine behind the **Drift–Input Decomposition**. It implies that the "Input Acceleration" is *additively separable* from the "Drift Acceleration"—the two combine by simple vector addition at a fixed state, with no cross-coupling term (this is separability, not geometric orthogonality in any inner-product sense). Consequently, the operation of subtracting the total observed acceleration from the passive drift acceleration to recover the input is not just an approximation—it is an exact algebraic inversion permitted by the fiber-linear structure of the tangent bundle.
+For acceleration $a=a_d+Hu$, subtraction gives $a-a_d=Hu$: the acceleration increment, not a unique input. Recovering $u$ also requires a known $H$, a range-consistent observation, and enough independent input information. If $H$ has a nontrivial kernel, several inputs give the same increment. Input bounds and noise can further limit inversion. The sign matters: subtracting total acceleration from drift gives $-Hu$.
 
-What is *not* true in general is that full solutions $x(t)$ of the nonlinear ODE (2.1) can be written as linear sums of solutions for different inputs. That would require $f$ and $g_i$ to be linear in $x$ as well; we do **not** assume that.
+Finite trajectories generally do not add. For the specified linear system $\dot x=A(t)x+B(t)u+c(t)$, trajectories with the same initial state obey $x_{u_1+u_2}=x_{u_1}+x_{u_2}-x_0$, with the evolved zero-input baseline counted once. Making the columns of $G(x)$ linear in state is not enough: $\dot x=xu$ is bilinear and does not have that input-to-trajectory superposition property.
+
 
 The rest of this paper is devoted to showing that **standard rigid-body dynamics models admit the structure (2.1)**, with the controls entering as generalized forces, and that in each formulation the map from those generalized forces to accelerations is linear.
 
@@ -193,91 +162,36 @@ We start from the most classical picture: Newton–Euler equations for rigid bod
 
 ### Single Rigid Body in 3D
 
-Let $B$ be a rigid body, with body-fixed frame $\mathcal{F}_B$ and spatial (inertial) frame $\mathcal{F}_0$. For simplicity, assume:
+Place the body frame at the center of mass. Let $p$ be its position in a fixed inertial frame, $R$ map body components into that frame, $v^B=R^\top\dot p$, and $\omega^B$ be body angular velocity. Let $I_B$ be the constant inertia about the center of mass, expressed in body axes. Applied force $f^{\mathrm{ext},B}$ and moment $n^{\mathrm{ext},B}$ below exclude gravity; the moment is about the center of mass. Write $g^B=R^\top g^0$.
 
-* mass $m > 0$,
-* inertia tensor (about the body frame origin) $I_B \in \mathbb{R}^{3\times 3}$, symmetric positive definite,
-* position of the body frame origin $p \in \mathbb{R}^3$,
-* rotation matrix $R \in SO(3)$ mapping body frame coordinates to spatial coordinates.
-
-Define:
-
-* linear velocity $v = \dot p \in \mathbb{R}^3$,
-* angular velocity $\omega \in \mathbb{R}^3$ (in body or spatial coordinates; we choose body for definiteness).
-
-Let $f^\text{ext} \in \mathbb{R}^3$ be the net **external force** on the body, expressed in the chosen frame, and $n^\text{ext} \in \mathbb{R}^3$ the net **external moment** about the body frame origin.
-
-The Newton–Euler equations in body coordinates can be written as
-
+The consistent body-frame equations are
 \begin{align}
-m \dot v &= m g^B + f^\text{ext}, \tag{3.1a} \\
-I_B \dot \omega + \omega \times (I_B \omega) &= n^\text{ext}, \tag{3.1b}
+m(\dot v^B+\omega^B\times v^B)&=mg^B+f^{\mathrm{ext},B},\tag{3.1a}\\
+I_B\dot\omega^B+\omega^B\times(I_B\omega^B)&=n^{\mathrm{ext},B}.\tag{3.1b}
 \end{align}
-
-where $g^B$ is the gravity vector expressed in the body frame.
+The transport term in the first equation comes from differentiating $v^B=R^\top\dot p$. A body moving with constant spatial velocity can have a changing body-frame velocity when its axes rotate. At a reference point away from the center of mass, translation and rotation couple through the spatial inertia described below; the decoupled equations above must not simply be reused there.
 
 #### Identification of Inputs
 
-We can regard $(f^\text{ext}, n^\text{ext})$ as *control-like inputs* $u \in \mathbb{R}^6$, decomposed as
-
+Choose $u=(f^{\mathrm{ext},B},n^{\mathrm{ext},B})\in\mathbb R^6$ and state $x=(p,R,v^B,\omega^B)$. Its kinematics and dynamics are
+\begin{align}
+\dot p&=Rv^B,\tag{3.3a}\\
+\dot R&=R\widehat\omega^B,\tag{3.3b}\\
+\dot v^B&=g^B-\omega^B\times v^B+f^{\mathrm{ext},B}/m,\tag{3.4a}\\
+\dot\omega^B&=-I_B^{-1}\bigl(\omega^B\times I_B\omega^B\bigr)+I_B^{-1}n^{\mathrm{ext},B}.\tag{3.4b}
+\end{align}
+The drift is the tuple of right-hand sides at $u=0$, and the input contribution is
 $$
-u =
-\begin{bmatrix}
-f^\text{ext} \\
-n^\text{ext}
-\end{bmatrix}.
-\tag{3.2}
+G(x)u=\left(0_{\mathbb R^3},0_{3\times3},f^{\mathrm{ext},B}/m,I_B^{-1}n^{\mathrm{ext},B}\right).\tag{3.5}
 $$
+The rotation-rate component is a tangent matrix in $T_RSO(3)$, not an arbitrary three-vector. The matrix representation of $R$ uses nine entries subject to orthogonality constraints, while the physical configuration has six dimensions. This tuple notation avoids a dimensionally inconsistent block matrix.
 
-Then the state is $x = (p, R, v, \omega)$ and the dynamics can be written in first-order form:
-
-* Kinematics:
-  \begin{align}
-  \dot p &= R v^B \quad \text{(if $v^B$ is body velocity; or simply $\dot p = v$ if $v$ spatial)}, \tag{3.3a} \\
-  \dot R &= R \widehat{\omega}^B, \tag{3.3b}
-  \end{align}
-  where $\widehat{\omega}$ is the skew-symmetric matrix representing the cross product: $\widehat{\omega} x = \omega \times x$.
-
-* Dynamics:
-  \begin{align}
-  \dot v &= g^B + \frac{1}{m} f^\text{ext}, \tag{3.4a} \\
-  \dot \omega &= I_B^{-1}\left(n^\text{ext} - \omega \times (I_B \omega)\right). \tag{3.4b}
-  \end{align}
-
-Writing this as $\dot x = f(x) + G(x) u$, we identify:
-
-* Drift term $f(x)$ (terms present without external input $u$),
-* Input matrix $G(x)$ (linear mapping from $u$ to $\dot x$).
-
-Explicitly, for $x = (p, R, v, \omega)$:
-
+Thus the vector-field equation on the rigid-body state manifold is
 $$
-f(x) =
-\begin{bmatrix}
-R v^B \\
-R \widehat{\omega}^B \\
-g^B \\
--I_B^{-1}\big(\omega \times (I_B \omega)\big)
-  \end{bmatrix},
-  \quad
-  G(x) =
-  \begin{bmatrix}
-  0_{3\times 3} & 0_{3\times 3} \\
-  0_{3\times 3} & 0_{3\times 3} \\
-  \frac{1}{m} I_{3} & 0_{3} \\
-  0_{3} & I_B^{-1}
-  \end{bmatrix}.
-  \tag{3.5}
+\dot x=f(x)+G(x)u.\tag{3.6}
 $$
 
-Then
-
-$$
-\dot x = f(x) + G(x) u.
-\tag{3.6}
-$$
-
-Note that $G(x)$ is *constant* (independent of $x$) in this simple rigid-body case, but this is not essential; in multibody systems $G(x)$ will depend on configuration.
+The dynamic input blocks are constant for these body-frame wrench inputs. If the force inputs were instead expressed spatially while the velocity remained in body components, their input block would include $R^\top$. Affinity survives this declared frame change; the numerical input matrix changes.
 
 ### Superposition in Inputs for the Single Body
 
@@ -334,7 +248,7 @@ Again, note the limitation: integrating (3.6) over time, the *trajectories* $x^{
 
 Now consider a multibody system with $n$ generalized coordinates $q \in \mathbb{R}^n$ and generalized velocities $\dot q \in \mathbb{R}^n$. Let $x = (q, \dot q)$ be the state.
 
-Using Newton–Euler and constraint kinematics, one arrives at the standard manipulator form of the equations,
+For an open chain or an already reduced system with independent coordinates, the manipulator form is given below. External wrenches treated as inputs must be prescribed loads, not unknown ideal constraint reactions. For closed loops, eliminate the reactions and use the projected input map derived in the [constrained-mechanics chapter](The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.html).
 
 $$
 M(q) \ddot q + C(q,\dot q) \dot q + g(q) + d(q,\dot q) = \tau + J^\top(q) f^\text{ext},
@@ -421,7 +335,7 @@ f(x) + G_\tau(x)\tau + G_f(x) f^\text{ext}.
 \tag{3.18}
 $$
 
-Again we see a **control-affine system** with $m = n + r$ input channels ($n$ joint torques and $r$ external wrench components). At fixed $x$, the map from $(\tau,f^\text{ext})$ to $\ddot q$ is *linear*.
+Again we see a **control-affine system** with $m = n + r$ input channels ($n$ joint torques and $r$ external wrench components). At fixed $x$, the map from $(\tau,f^\text{ext})$ to $\ddot q$ is *affine*, and its increment relative to zero input is linear.
 
 ### Newton–Euler Superposition Theorem
 
@@ -485,9 +399,9 @@ $$
 The right-hand side is a linear map of $(\tau,f^\text{ext})$. ∎
 :::
 
-This theorem is the precise superposition statement: **for fixed state, generalized accelerations superpose linearly with respect to inputs**.
+This theorem is the precise incremental superposition statement: **for fixed state, acceleration increments relative to the same zero-input baseline superpose linearly**.
 
-### Example: Planar Simple Pendulum (Newton–Euler Flavor)
+### Example: Planar Simple Pendulum (Newton–Euler Flavor) {#pendulum-newton-euler}
 
 Consider a planar pendulum: point mass $m$ at end of rigid massless rod length $l$, pivot at the origin. Let $q$ be the angle from the vertical, positive counterclockwise. Generalized coordinate $q \in \mathbb{R}$. We use a sign convention where $q=0$ is vertical downward.
 
@@ -628,7 +542,7 @@ where:
 * $f_j$ are physical forces acting at points with position vectors $r_j(q)$,
 * $k = 1,\dots,n$ indexes generalized coordinates.
 
-By construction, $Q$ is **linear in the physical forces $f_j$**. We will exploit this linearity.
+By construction, $Q$ is linear in the specified point forces. Applied couples contribute their angular-Jacobian transpose mappings as well. Forces already represented through $V$ must not be counted again in $Q$; ideal constraints must be reduced or included with multipliers.
 
 #### Lagrange–d’Alembert Equations
 
@@ -665,8 +579,8 @@ We now decompose the generalized forces $Q$ into components induced by distinct 
 Suppose the physical forces present are:
 
 * internal actuation forces (joint torques, muscle forces, etc.),
-* gravity,
-* external contact forces,
+* gravity (already represented by $V$ on the left in this formulation),
+* prescribed external loads,
 * dissipative forces (viscous friction),
 * etc.
 
@@ -693,7 +607,7 @@ f^{(i)} = u_i \bar f^{(i)},
 \tag{4.9}
 $$
 
-where $\bar f^{(i)}$ is a unit "shape" of the $i$th force (for example a fixed direction at a given attachment point). Then
+where $\bar f^{(i)}$ is a declared input-independent force pattern with consistent units (for example a fixed direction at a given attachment point). Then
 
 $$
 Q^{(i)}(q,\dot q;u_i) = u_i \bar Q^{(i)}(q,\dot q),
@@ -801,11 +715,11 @@ is linear. ∎
 
 ### Example: Planar Pendulum (Lagrangian Derivation)
 
-Re-derive the pendulum example from §3.6 using Lagrange–d’Alembert.
+Re-derive the [Newton–Euler pendulum example](#pendulum-newton-euler) using Lagrange–d’Alembert.
 
 * Coordinate: $q$ (pendulum angle).
 * Kinetic energy: $T = \frac{1}{2} m l^2 \dot q^2$.
-* Potential energy: $V = -m g l \cos q$ (zero at $q = 0$ is arbitrary).
+* Potential energy: $V = -m g l \cos q$, whose value at $q=0$ is $-mgl$; adding $mgl$ would set that reference value to zero without changing the dynamics.
 * Lagrangian: $L = T - V = \frac{1}{2} m l^2 \dot q^2 + m g l \cos q$.
 
 Compute
@@ -844,224 +758,55 @@ Screw theory packages translational and rotational quantities into unified **twi
 
 ### Twists, Wrenches, and Spatial Inertia
 
-A **twist** is a 6D vector
-
+Use body-frame components throughout, with twist $V=(\omega,v_O)$ and wrench $F=(n_O,f)$ referenced to the same body-fixed origin $O$. The dual pairing is power, $F^\top V=n_O^\top\omega+f^\top v_O$. Let $c$ point from $O$ to the center of mass, let $C=[c]_\times$, and let $I_C$ be the inertia about the center of mass in the same axes. Then
 $$
-V =
-\begin{bmatrix}
-\omega \\ v
-\end{bmatrix},
-\tag{5.1}
+\mathcal I=\begin{bmatrix}I_C+mC^\top C&mC\\-mC&mI_3\end{bmatrix}.\tag{5.3}
 $$
-
-with angular velocity $\omega \in \mathbb{R}^3$ and linear velocity $v \in \mathbb{R}^3$ of a body frame.
-
-A **wrench** is a 6D vector
-
+The off-diagonal blocks have opposite signs because $C^\top=-C$, consistent with [Featherstone's spatial-vector reference](https://royfeatherstone.org/spatial/v2/). Consequently $\mathcal I$ is symmetric and
 $$
-F =
-\begin{bmatrix}
-n \\ f
-\end{bmatrix},
-\tag{5.2}
+\tfrac12 V^\top\mathcal I V=\tfrac12\omega^\top I_C\omega+\tfrac12m\|v_O+\omega\times c\|^2.
 $$
+This energy identity independently checks the signs and the parallel-axis term. The spatial momentum is $h=\mathcal I V$.
 
-with moment $n \in \mathbb{R}^3$ and force $f \in \mathbb{R}^3$ about the body frame origin.
-
-The **spatial inertia matrix** of a rigid body is a symmetric $6\times 6$ matrix of the form
-
+Define the force cross-product operator explicitly to avoid coadjoint-sign ambiguity:
 $$
-\mathcal{I} =
-\begin{bmatrix}
-I & m c^\times \\
-m c^\times & m I_3
-  \end{bmatrix},
-  \tag{5.3}
+V\times^*=\begin{bmatrix}[\omega]_\times&[v_O]_\times\\0&[\omega]_\times\end{bmatrix}.
 $$
-
-where
-
-* $I$ is the $3\times 3$ rotational inertia about the body frame origin,
-* $m$ is the mass,
-* $c$ is the vector from body frame origin to center of mass,
-* $c^\times$ is the skew-symmetric matrix s.t. $c^\times x = c \times x$.
-
-The spatial **momentum** is $h = \mathcal{I} V$, and Newton–Euler dynamics become
-
+With constant body-frame spatial inertia, Newton–Euler dynamics are
 $$
-\mathcal{I} \dot V + \mathrm{ad}^\ast_V \mathcal{I} V = \sum F^\text{ext},
-\tag{5.4}
+\mathcal I\dot V+(V\times^*)\mathcal I V=F_{\mathrm{all}}.\tag{5.4}
 $$
+Here $F_{\mathrm{all}}$ includes gravity if it has not been separated elsewhere. At fixed complete state the velocity-product term is fixed, so a prescribed wrench increment gives $\Delta\dot V=\mathcal I^{-1}\Delta F$.
 
-where $\mathrm{ad}^\ast_V$ is the dual of the Lie algebra adjoint operator (encoding Coriolis and gyroscopic terms), and the sum runs over all external wrenches applied to the body.
+### Multibody Dynamics and Virtual Work
 
-### Multibody Dynamics in Screw Form
-
-For a chain of rigid bodies, the dynamics can be written compactly (Featherstone-style) as
-
+For link $k$, a consistent body Jacobian gives $V_k=J_k(q)\dot q$ and $\dot V_k=J_k\ddot q+\dot J_k\dot q$. Summing kinetic energies yields $M=\sum_kJ_k^\top\mathcal I_kJ_k$. Eliminating internal joint reactions through virtual work gives the same minimal-coordinate equations as before:
 $$
-\mathcal{M}(q) \dot V + \mathcal{C}(q,\dot q) V = \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q),
-\tag{5.5}
+M(q)\ddot q+h(q,\dot q)=B(q)u+J_e(q)^\top F_e.\tag{5.6}
 $$
+One cannot treat every link twist as an independent coordinate and invert a block of body inertias while ignoring joint constraints. The joint compatibility and internal reactions are essential parts of the articulated system.
 
-where:
+### Wrench-to-Load Mapping Is Not a Unique Inverse
 
-* $\mathcal{M}(q)$ is the *global spatial inertia*,
-* $\mathcal{C}(q,\dot q)$ collects Coriolis and centrifugal-like terms,
-* $\mathcal{W}(q)$ is a "wrench-shaping" matrix mapping generalized forces $u$ to body-frame wrenches,
-* $\mathcal{F}^\text{ext}(q)$ collects gravity and other known wrenches.
-
-In minimal coordinate form, one recovers the manipulator equation
-
+For $V_e=J_e\dot q$, an external wrench applied to the mechanism contributes the generalized load
 $$
-M(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau + J(q)^\top f^\text{ext},
-\tag{5.6}
+Q_e=J_e^\top F_e,
+\qquad Q_e^\top\dot q=F_e^\top V_e.
 $$
+This is virtual-work duality for the same applied load. It does not assert that total actuator power equals end-effector power while links accelerate, change potential energy, or dissipate energy. Actual actuator torque must satisfy the full dynamics, including those terms. A wrench exerted by the mechanism on its environment has the opposite sign to the environmental wrench applied to the mechanism.
 
-but the spatial formalism keeps wrenches and twists as first-class objects.
+The forward mapping $F_e\mapsto Q_e$ is linear at fixed configuration. Its inverse may be nonexistent or nonunique. If $J_e$ has full row rank, then $J_e^\top$ is injective onto its range, but an arbitrary generalized load need not belong to that range. Rank deficiency permits wrench components in $\ker J_e^\top$ that have no generalized-load effect. For a real grasp, admissibility also depends on contact type and friction.
 
-### Linearity of Wrench Mapping and Superposition
-
-The crucial property is:
-
-* The mapping from generalized forces $u$ to **wrenches** at any point is **linear**,
-* The mapping from **wrenches** to joint accelerations is **linear** at fixed state.
-
-#### Jacobian Mapping From Joint Torques to Wrenches
-
-Consider a manipulator with end-effector twist $V_e$ and Jacobian $J(q)$ such that
-
-$$
-V_e = J(q)\dot q.
-\tag{5.7}
-$$
-
-The **joint torques** $\tau$ produce end-effector wrench $F_e$ related by the power duality
-
-$$
-\tau^\top \dot q = F_e^\top V_e,
-\tag{5.8}
-$$
-
-i.e., mechanical power at the joints equals mechanical power at the end-effector. Using (5.7),
-
-$$
-\tau^\top \dot q = F_e^\top J(q)\dot q
-= (J(q)^\top F_e)^\top \dot q.
-\tag{5.9}
-$$
-
-Since this must hold for all $\dot q$, we obtain
-
-$$
-\tau = J(q)^\top F_e.
-\tag{5.10}
-$$
-
-Thus, for fixed configuration $q$, the mapping $F_e \mapsto \tau$ is *linear* (matrix multiplication by $J(q)^\top$).
-
-If the end-effector wrench $F_e$ is itself decomposed as
-
-$$
-F_e = \sum_{i=1}^m u_i F_e^{(i)},
-\tag{5.11}
-$$
-
-then
-
-$$
-\tau = \sum_{i=1}^m u_i J(q)^\top F_e^{(i)}.
-\tag{5.12}
-$$
-
-So each input component $u_i$ contributes an additive joint torque component $J(q)^\top F_e^{(i)}$.
-
-#### From Wrenches to Accelerations
-
-The spatial equations (5.5) can be written as
-
-$$
-\mathcal{M}(q) \dot V = - \mathcal{C}(q,\dot q) V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q).
-\tag{5.13}
-$$
-
-At fixed state $(q,\dot q)$, the matrix $\mathcal{M}$, operator $\mathcal{C}$, and mapping $\mathcal{W}$ are fixed. Solving,
-
-$$
-\dot V(q,\dot q; u)
-= \mathcal{M}(q)^{-1} \left(- \mathcal{C}(q,\dot q) V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q) \right).
-\tag{5.14}
-$$
-
-Thus,
-
-$$
-\dot V(q,\dot q; u) = A(q,\dot q) + B(q,\dot q) u,
-\tag{5.15}
-$$
-
-with $A(q,\dot q)$ and $B(q,\dot q)$ independent of $u$. The dependence on $u$ is linear.
-
-This leads directly to:
-
-::: theorem
-For fixed state $(q,\dot q)$, the spatial acceleration $\dot V$ is an affine function of the generalized input $u$, and its incremental dependence on $u$ is linear. Therefore, the acceleration contribution from each input channel superposes linearly in the screw-theoretic formulation.
-:::
-
-The proof is simply (5.14)–(5.15).
+For prescribed load components $F_e=\sum_iF_e^{(i)}$, their acceleration increments are $M^{-1}J_e^\top F_e^{(i)}$ in the unconstrained or reduced model. Add the drift once. In an unreduced closed-loop model, use its constrained inverse-mass map and solve reactions consistently.
 
 ### Example: Spatial Single-Link Actuator
 
-Consider a single rigid link actuated by a spatial wrench $F^\text{act}$. Let the link’s twist $V$ obey
-
+For a free rigid link with prescribed actuator wrench $F^{\mathrm{act}}=\sum_i u_i\bar F^{(i)}$ and known gravity wrench $F^{\mathrm{grav}}(R)$,
 $$
-\mathcal{I} \dot V + \mathrm{ad}^\ast_V \mathcal{I} V = F^\text{grav} + F^\text{act},
-\tag{5.16}
+\dot V=\mathcal I^{-1}\left[F^{\mathrm{grav}}-(V\times^*)\mathcal I V\right]
++\sum_i\mathcal I^{-1}\bar F^{(i)}u_i.
 $$
-
-where $F^\text{grav}$ is the gravity wrench, and $F^\text{act}$ is the actuator-applied wrench. Writing explicitly,
-
-$$
-\dot V = \mathcal{I}^{-1} \left( - \mathrm{ad}^\ast_V \mathcal{I} V + F^\text{grav} + F^\text{act} \right).
-\tag{5.17}
-$$
-
-Decompose $F^\text{act}$ into basis wrenches:
-
-$$
-F^\text{act} = \sum_{i=1}^m u_i \bar F^{(i)}.
-\tag{5.18}
-$$
-
-Then
-
-$$
-\dot V
-= \mathcal{I}^{-1} \left( - \mathrm{ad}^\ast_V \mathcal{I} V + F^\text{grav} \right)
-+ \mathcal{I}^{-1} \sum_{i=1}^m u_i \bar F^{(i)}.
-  \tag{5.19}
-$$
-
-Define
-
-$$
-A(V) := \mathcal{I}^{-1} \left( - \mathrm{ad}^\ast_V \mathcal{I} V + F^\text{grav} \right),
-\quad
-B := \mathcal{I}^{-1}
-\begin{bmatrix}
-\bar F^{(1)} & \cdots & \bar F^{(m)}
-\end{bmatrix}.
-\tag{5.20}
-$$
-
-Then
-
-$$
-\dot V = A(V) + B u,
-\tag{5.21}
-$$
-
-where $u \in \mathbb{R}^m$. This is the same control-affine structure as before, now in terms of twists and wrenches; the superposition in $u$ is again immediate.
+The drift depends on orientation through the gravity wrench as well as on $V$. A function of $V$ alone is not a complete state description. The formula proves incremental input superposition for this free-body model; a link pinned at a joint must additionally satisfy that joint's constraints.
 
 ---
 
@@ -1108,129 +853,51 @@ $$
 
 Still, this local superposition is extremely useful in practice: it allows you to calculate, at each time, how much of the instantaneous acceleration or joint torque is attributable to gravity, inertial coupling, specific actuators, or external loads, etc.
 
-### The Snapshot Principle: Why Instantaneous Suffices
+### The Snapshot Principle and Its Time Horizon
 
-A natural question arises: "If superposition only holds at a *fixed state*, how is that useful? Control and motion happen over *time*, not at frozen moments."
-
-The answer reveals why instantaneous superposition is exactly what we need.
-
-**The key insight:** Superposition is instantaneous because that is precisely the level at which causation and force accounting operate in mechanics. Newton's second law is a *local* statement:
-
+At a fixed complete state $x_0$, a control-affine acceleration model obeys
 $$
-F_{\text{net}} = m a \quad \text{(at each instant)}
+\ddot q(u_1+u_2;x_0)=\ddot q(u_1;x_0)+\ddot q(u_2;x_0)-\ddot q(0;x_0).
 $$
+This is an exact affine identity for the chosen model. It does not make force production independent, identify individual muscle forces, or remove state-dependent coupling. Even at one state, the influence of a shoulder torque on club acceleration depends on the whole mass matrix and the active constraints.
 
-The trajectory—the path through state space—is nonlinear and unfolds over time. But at each slice of time, the force decomposition is exact and linear. The trajectory emerges from integrating these instantaneous force rules forward in time.
+Repeating this calculation along an observed trajectory produces a sequence of same-state contributions. Integrating those contributions along that common trajectory can define an accounting quantity, but it is not the same as rerunning the swing with one input removed. A forward intervention changes the state, and therefore subsequent inertia, geometry, force production, and possibly contact mode. Comparing the two constructions is a useful research question, not a reason to label them equivalent.
 
-**A physical analogy:** Imagine photographing a ballet dancer mid-leap using a high-speed flash. The frozen image captures the dancer suspended in air. The position is complex, the pose is nonlinear, the motion is chaotic—but at that frozen moment, you can ask: "What forces are acting? Gravity? Muscle tension? Air resistance?" The forces decompose cleanly. The *jump* as a whole is a complex, nonlinear arc. But each frame of the motion obeys superposed forces.
+For a task velocity $\dot y=J(q)\dot q$, task acceleration also includes $\dot J\dot q$. For nonzero clubhead velocity $v_c$, the rate of speed change is $v_c^\top a_c/\|v_c\|$. Neither instantaneous acceleration nor its norm is a share of the speed already present at impact.
 
-**The temporal picture:** As time steps forward, the state $x(t)$ evolves according to $\dot x = f(x) + G(x)u(t)$. At time $t_1$, the state is $x(t_1)$, and superposition tells us exactly how much acceleration each input channel contributes at that instant. At time $t_2 = t_1 + \Delta t$, the state has moved (nonlinearly) to $x(t_2)$, and superposition again applies—now at a different state. The nonlinear trajectory emerges from gluing together these locally linear force decompositions.
+### Coordinate Invariance Has a Defined Meaning
 
-**Why this matters for control:** When you design a controller, you often ask: "At the current state, if I apply force $u_1$, what happens?" or "How do I decompose the current acceleration into what gravity is doing versus what my actuators need to do?" These are instantaneous questions, and superposition answers them perfectly. The fact that the long-term trajectory is nonlinear doesn't invalidate this—it just means you need to re-evaluate the decomposition as the state changes.
-
-::: {.callout-tip}
-## Definition: The Snapshot Principle
-
-At any fixed state $x_0 = (q_0, \dot{q}_0)$, the mapping from control inputs to generalized accelerations is **exactly linear**:
-
+For a smooth, time-independent state diffeomorphism $y=\psi(x)$ with the same physical inputs,
 $$
-\ddot{q}(u_1 + u_2; x_0) = \ddot{q}(u_1; x_0) + \ddot{q}(u_2; x_0) - \ddot{q}(0; x_0)
+\dot y=D\psi(x)f(x)+D\psi(x)G(x)u.
 $$
-
-We call this the **Snapshot Principle**: freeze time, freeze the state, and the system behaves as if it were linear. This is not an approximation — it is an exact consequence of the control-affine structure. The nonlinearity of the system manifests only when the state *evolves* — when we release the snapshot and let time flow.
-
-This principle is the mathematical foundation for the force decomposition used throughout this site. It justifies analyzing the contributions of individual muscles, gravity, and Coriolis effects independently, then summing them — provided we evaluate all contributions at the same instantaneous state.
-:::
-
-### Coordinate Invariance of the Decomposition
-
-One might worry: "If I change coordinates on the configuration space $Q$, does the decomposition into drift and control change? Is the conclusion somehow dependent on my choice of basis?"
-
-The answer is subtle and important: **the components change, but the geometric content does not.**
-
-**Component-level changes:** If you perform a coordinate transformation $q \to q'(q)$ on the configuration manifold, the drift vector field $f(x)$ and control distribution $G(x)u$ do not have the same numerical coordinates in the new frame. Just as the velocity of a car is different in mph vs. km/h (the number changes), the components of $f$ and $G$ change under coordinate transformation.
-
-**Geometric invariance:** However, the *geometric objects* underlying the decomposition are coordinate-independent:
-
-* The **drift vector field** $f(x)$ is a section of the tangent bundle $T(TQ)$. It is a vector field, and vector fields transform naturally under coordinate changes—the field itself is invariant; only its components change.
-* The **control distribution** (spanned by the columns of $G(x)$) is a subspace of the tangent space at each point in $TQ$. As a geometric object—a subspace—it is independent of the coordinates used to describe it. You can describe a line through the origin in hundreds of ways, but it remains the same line.
-* The **linearity of the input** is a property of the equations themselves, not of any particular representation. If $\dot x = f(x) + G(x)u$ is affine in $u$ in one coordinate system, it remains affine in any other.
-
-**Physical meaning:** The decomposition into "passive" and "active" forces has direct physical meaning: gravity and Coriolis are passive; actuator torques are active. This decomposition doesn't depend on your choice of coordinates. The numerical coefficients might change, but the *identity* of which forces are passive and which are active is invariant.
-
-**Example:** In a 2-link robot, you might measure joint angles in degrees or radians. The equations look different numerically. But the geometric fact—"there is a drift from gravity and Coriolis; the control input adds torque additively"—is true in both coordinate systems. The decomposition is real, even though its numerical form is not.
-
----
-
-## The Modeling Question: Why Control-Affine?
-
-At this point, a critical reader should ask: **Is the affine structure actually true, or is it a convenient fiction?** The equations $\dot x = f(x) + G(x)u$ look clean and mathematically beautiful, but does nature really obey them?
-
-The honest answer: *The affine structure is a modeling choice, not a physical truth.* And understanding why it's the *right* choice reveals something deep about abstraction in physics and engineering.
-
-### The Muscle Reality: Why Raw Biology Isn't Affine
-
-Consider a muscle actuated by neural activation $a$ (a signal from the nervous system). A detailed biomechanical model might include:
-
-* **Activation dynamics:** $a$ doesn't instantly produce force; there are calcium dynamics, actin-myosin binding kinetics, etc.
-* **Force-velocity relationship:** the force a muscle can produce depends on how fast it's shortening (Hill's equation). This is fundamentally nonlinear and *couples force to length and velocity*.
-* **Force-length relationship:** passive fibers have spring-like properties; active fibers have length-dependent strength.
-* **Tendon compliance:** tendons aren't rigid; they store and release elastic energy.
-
-If you try to model a robot arm using *activation* as the control input—that is, $u = a$ (neural signals)—the system is **decidedly not affine**. The muscle's force depends on its current length, its current velocity, and its activation history. Force enters the equations in a deeply nonlinear, state-dependent way.
-
-So why does the robotics and biomechanics literature routinely use affine models?
-
-### The Right Level of Description: Abstraction and Torque
-
-The answer is that we choose a *different level of abstraction*. Instead of using neural activation as the control input, we use **torque at the joint** as the input:
-
+Affinity is preserved. The geometric fields are pushed forward; their components and coordinate norms change. For a nonlinear configuration change $q'=\chi(q)$, coordinate acceleration includes a Hessian term,
 $$
-u = \tau_{\text{joint}}
+\ddot q'=D\chi\,\ddot q+D^2\chi[\dot q,\dot q].
 $$
+That term cancels in a same-state acceleration difference, while it belongs to the transformed drift in the total acceleration. Coordinate acceleration by itself is not a tangent vector under arbitrary configuration changes.
 
-At this level, the affine structure emerges naturally. Here's why:
+A time-dependent state transformation adds $\partial_t\psi$ to the drift. Changing the input convention also changes the split: if $u=\alpha(x)+\beta(x)w$, then the new zero-$w$ drift is $f+G\alpha$. Thus invariance under state coordinates does not make every choice of passive/active boundary, zero-input intervention, or metric identical. Coriolis terms need not disappear merely because the laboratory axes are inertial; generalized joint coordinates can still have a varying mass matrix.
 
-**The muscle complex as a constraint:** When you set the model input to be joint torque, all the details of muscle activation, force-velocity coupling, and tendon compliance *don't disappear*—they become **constraints on the feasible input set** $\mathcal{U}(x)$. You cannot arbitrarily command any joint torque; your neuromuscular system can only produce torques within a certain range that depends on the current configuration, velocity, and fatigue state. But that constraint is about *which torques are feasible*, not about whether torque enters linearly into the dynamics.
+## The Modeling Question: Which Inputs and States?
 
-**The physics of the joint:** At the joint level, Newton's laws are unambiguous:
+### Activation Dependence Must Be Checked
 
+Nonlinearity in state does not rule out affinity in a declared input. For example, a simplified muscle law
 $$
-I(q) \ddot q + C(q,\dot q) \dot q + g(q) = \tau
+F(a,l,\dot l)=aF_{\max}f_l(l)f_v(\dot l)+F_{\mathrm{pass}}(l)
 $$
+is affine in activation $a$ at fixed muscle state, even when the force-length and force-velocity factors are nonlinear. This is a specified constitutive example, not a claim that every muscle model has this form. Pennation, compliant tendon state, history dependence, and the chosen equilibrium formulation need explicit treatment.
 
-Torque is torque. It enters the equations linearly. The fact that a particular $\tau$ value is hard or impossible for the muscle to produce is a separate question—a question about the constraints on the input space, not about the structure of the differential equation itself.
+If excitation $e$ is the input and activation $a$ is a state, the complete state is $(q,\dot q,a,\ldots)$. The simple law $\dot a=(e-a)/\tau_a$ with constant $\tau_a>0$ is affine in excitation; instantaneous mechanical acceleration then depends on the activation state, while excitation changes its subsequent evolution. More elaborate activation/deactivation laws must be checked for their actual dependence on $e$. Calling $a$ a neural signal or citing state-dependent muscle force is not enough to establish nonaffinity. See the [OpenSim activation-dynamics model](https://opensimconfluence.atlassian.net/wiki/spaces/OpenSim/pages/53090590) for a concrete state/input distinction.
 
-**Analogy from mechanics:** This is like choosing coordinate systems in physics. You can describe a particle's motion in Cartesian or polar coordinates. The laws of motion are "simpler" in some coordinates than others (gravity is simpler in Cartesian; circular motion is simpler in polar). But the underlying physics doesn't depend on your choice. Once you make the choice, you get a definite equation of motion, and that equation has structural properties (like affinity or linearity) that reflect the *coordinate choice* as much as the physics.
+### Torque Is a Useful Mechanical Input With Limits
 
-### The Modeling Philosophy: Physics Doesn't Care
+For a specified rigid multibody model, $M\ddot q+h=B\tau$ is affine in applied torque. This is an exact property of those equations, rather than an arbitrary assumption that biological torque is linear in neural drive. Whether the model describes the measured golfer accurately is a separate empirical question.
 
-Here's the key philosophical point, in Feynman's spirit: **The question isn't whether nature is affine. The question is whether, at the level of description we care about, the affine decomposition captures the physics correctly.**
+A torque envelope $\mathcal U(x)$ can represent some instantaneous capacity limits. It cannot by itself encode all activation delays, tendon energy, fatigue, or other history unless the necessary internal states are retained. Two histories can arrive at the same joint position and velocity with different feasible future torques. Likewise, zero net joint torque can coexist with muscle co-contraction and nonzero metabolic cost.
 
-You might object: "But muscles aren't linear springs! They're complex biological systems with activation dynamics, force-velocity coupling, and all sorts of nonlinearities!"
-
-And you'd be absolutely right. But consider: when an engineer asks "What torque is the shoulder joint producing?" they don't care about the molecular details of actin-myosin sliding. The torque is *defined* at the joint, and it enters the equations of motion linearly. The fact that complex biology underlies that torque is irrelevant to the question being asked.
-
-**An analogy:** Imagine a thermometer. Thermometers work because mercury or a gas expands with temperature, and we calibrate that expansion to read out a number. The microscopic physics of the glass, the mercury, and thermal equilibration is fantastically complex. But when a doctor reads the thermometer, they don't care about any of that complexity. The thermometer abstracts away the details and gives a clean, linear-looking relationship: higher temperature → higher reading. The abstraction is *useful and valid* even though the underlying physics is complex.
-
-The same is true for the affine control model:
-
-* At the **muscle-activation level**, you'd need a detailed, nonlinear, state-coupled model. That level is correct if you're studying how neural signals drive movement or how fatigue affects performance.
-* At the **joint-torque level**, the system is affine. This level is correct if you're studying robotics, biomechanical motion, or control strategy. You don't need to (and shouldn't) model the details of muscle biology at this level—that would be like asking your thermometer to explain quantum mechanics.
-
-### Affinity as an Abstraction, Not a Constraint
-
-A final insight: **the affine structure is not a constraint imposed by physics—it's a *consequence of the abstraction we choose*.**
-
-Different abstractions give different structures:
-
-* **Muscle-activation level:** System is nonlinear, with state-dependent force production. Affinity fails.
-* **Joint-torque level:** System is affine. Superposition holds for torques and accelerations.
-* **End-effector wrench level:** Wrench (force + moment) enters linearly, but may be in a different state space (end-effector pose rather than joint angles). Affinity still holds geometrically.
-
-Which level you use depends on your question. A neural motor control researcher cares about the first. A roboticist cares about the second. A biomechanist studying the operational space might use the third.
-
-The article proves that at the joint-torque level, superposition is rigorous and powerful. It doesn't claim that biological reality is secretly affine. It claims that when you abstract to joint torques—a sensible and natural level of description—you get an affine, superposable system. And that's exactly what you need for the control theory and physics on which the AffineDrift framework rests.
+Choose the model level for the question: torque-level equations can analyze load transmission; muscle states and constitutive laws are needed to investigate how that torque is generated; neither model alone identifies a neural objective. Geometric constraints, force bounds, uncertainty, and intervention feasibility remain important at every level.
 
 ---
 
@@ -1240,7 +907,7 @@ To make the parallels concrete, we now present two more worked examples: a plana
 
 ### Example: 2R Planar Robot Arm (Newton–Euler / Lagrangian)
 
-Consider a 2-link planar robot arm with joint angles $q_1,q_2$, link lengths $l_1,l_2$, link masses $m_1,m_2$, and moments of inertia $I_1,I_2$ about their centers of mass. Gravity acts in $-y$.
+Consider a 2-link planar robot arm. Let $q_1$ be the first link's angle from the horizontal and $q_2$ the second link's angle relative to the first. Link lengths are $l_1,l_2$, masses are $m_1,m_2$, center-of-mass distances along the links are $c_1,c_2$, and $I_1,I_2$ are planar inertias about those centers. Gravity acts in $-y$.
 
 The equations of motion can be written as
 
@@ -1249,7 +916,7 @@ M(q) \ddot q + C(q,\dot q)\dot q + g(q) = \tau,
 \tag{8.1}
 $$
 
-with $q = [q_1;q_2]^\top$, $\tau = [\tau_1;\tau_2]^\top$.
+Use column vectors $q=(q_1,q_2)^\top$ and $\tau=(\tau_1,\tau_2)^\top$.
 
 Explicit expressions (standard textbook result, shown here to emphasize structure):
 
@@ -1265,12 +932,12 @@ $$
 where
 
 $$
-a = I_1 + I_2 + m_2 l_1^2, \quad
+a = I_1 + I_2 + m_1c_1^2 + m_2(l_1^2+c_2^2), \quad
 b = m_2 l_1 c_2, \quad
-d = I_2,
+d = I_2+m_2c_2^2,
 $$
 
-and $c_2$ is the COM distance of link 2 from joint 2.
+as follows by summing both center-of-mass translational energies and both rotational energies. For two uniform unit-length, unit-mass rods at $q_2=0$, $c_1=c_2=1/2$ and $I_1=I_2=1/12$, giving $M_{11}=8/3$, $M_{12}=5/6$, and $M_{22}=1/3$. Omitting the center-of-mass terms changes this physical model.
 
 The Coriolis/centrifugal term is
 
@@ -1346,69 +1013,20 @@ From the Lagrangian viewpoint, the same equations arise from
 
 The key distinction is *interpretive*: Lagrangian mechanics frames $M(q)$ as a metric on $Q$, and $g(q)$ as the gradient of a potential. But the linearity in $u$ (here $u=\tau$) is identical to the Newton–Euler derivation.
 
-### Example: Planar End-Effector Wrench (Screw-Theoretic Flavor)
+### Example: Planar End-Effector Wrench
 
-For the same 2R planar manipulator, consider the end-effector exerting a planar force $f_e = [f_x;f_y]^\top$ (moments ignored for simplicity). The Jacobian $J(q) \in \mathbb{R}^{2\times 2}$ satisfies
-
+For the same 2R arm, take $f_e=(f_x,f_y)^\top$ to be a force applied by the environment to the end effector, with no applied couple. Differentiating its position gives
 $$
-\begin{bmatrix}
-\dot x \\ \dot y
-\end{bmatrix}
-= J(q)
-\begin{bmatrix}
-\dot q_1 \\ \dot q_2
-\end{bmatrix},
-\tag{8.9}
+J_e=\begin{bmatrix}
+-l_1\sin q_1-l_2\sin(q_1+q_2)&-l_2\sin(q_1+q_2)\\
+l_1\cos q_1+l_2\cos(q_1+q_2)&l_2\cos(q_1+q_2)
+\end{bmatrix}.
 $$
-
-so that the power duality implies
-
+The generalized load of this force is $Q_e=J_e^\top f_e$, and $Q_e^\top\dot q=f_e^\top\dot p_e$. With applied joint torque $\tau_{\mathrm{act}}$, the dynamics are
 $$
-\tau = J(q)^\top f_e.
-\tag{8.10}
+\ddot q=a_d+M^{-1}\tau_{\mathrm{act}}+M^{-1}J_e^\top f_e.
 $$
-
-Decompose the end-effector force as
-
-$$
-f_e = f_e^{(1)} + f_e^{(2)},
-\tag{8.11}
-$$
-
-with, say,
-
-* $f_e^{(1)}$ = commanded interaction force,
-* $f_e^{(2)}$ = environmental force (contact).
-
-Then
-
-$$
-\tau
-= J(q)^\top f_e^{(1)} + J(q)^\top f_e^{(2)}
-= \tau^{(1)} + \tau^{(2)}.
-\tag{8.12}
-$$
-
-Substituting into (8.6),
-
-$$
-\ddot q
-= \ddot q^{(\text{drift})}
-+ L(q,\dot q) \tau^{(1)}
-+ L(q,\dot q) \tau^{(2)}.
-  \tag{8.13}
-$$
-
-If we are interested in the acceleration "due to environment forces" versus "due to commanded forces," we can compute each term separately at a given $(q,\dot q)$:
-
-$$
-\Delta \ddot q^{(1)} = L(q,\dot q)\,J(q)^\top f_e^{(1)},
-\quad
-\Delta \ddot q^{(2)} = L(q,\dot q)\,J(q)^\top f_e^{(2)}.
-\tag{8.14}
-$$
-
-This is a direct screw-theoretic superposition: the **total acceleration is the sum of accelerations induced by separate wrenches**.
+Separate prescribed load components add through $M^{-1}J_e^\top$ at the same state. Actuator and environmental loads must not be counted twice as if an action-reaction pair were two forces on the same system. If $f_e$ is instead an unknown reaction enforcing a rigid contact, solve that contact constraint; it cannot be varied freely as an independent input.
 
 ---
 
@@ -1425,7 +1043,7 @@ We have shown, in three formulations (Newton–Euler, Lagrangian, screw-theoreti
 3. This yields a rigorous **superposition principle for inputs**: the instantaneous contributions of different input channels (actuators, gravity compensation, disturbances, contact forces) to generalized accelerations and wrenches add linearly.
 4. The principle is identical in essence across Newton–Euler, Lagrangian, and screw-theoretic settings; they differ in how the mass matrix and generalized forces are constructed, not in the linearity structure.
 
-At the same time, we emphasized that **trajectory-level superposition is false in general** for nonlinear systems. Superposition here is a local statement about the *linear structure of forces and wrenches* and their mapping into accelerations at a given state.
+At the same time, we emphasized that **trajectory-level superposition is false in general** for nonlinear systems. Superposition here is a local statement about the *linear structure of forces and wrenches* and their mapping into acceleration increments at a given state.
 
 This clarified view of superposition is particularly valuable for:
 
@@ -1434,155 +1052,33 @@ This clarified view of superposition is particularly valuable for:
 * counterfactual simulations (e.g., “what would the motion be under zero gravity?”, “what if a particular actuator were disabled?”);
 * screw-theoretic modeling of force transmission and manipulability.
 
-In applications ranging from robotics to biomechanics, this perspective allows us to speak precisely about the *share* of motion "caused by" different inputs, without pretending that nonlinear trajectories themselves superpose.
+For golf, the decomposition supplies a model-conditioned acceleration budget. It does not by itself assign unique causal shares of clubhead speed, muscle effort, or metabolic expenditure. A forward intervention, an observed correlation, and an algebraic same-state partition answer different questions.
 
-This structural insight connects directly to the **Drift--Control Ratio**. While the input map $u \mapsto \dot{x}$ is linear, the drift field $f(x)$ typically scales quadratically with velocity (due to $\omega^2$ terms in Coriolis/centrifugal forces). This creates the **Dominant Attractor** phenomenon: at high swing speeds, the passive drift vector $f(x)$ energetically dwarfs the maximum available control authority $G(x)u_{\text{max}}$, rendering the superposition "lopsided"—the golfer can steer, but the train is driving itself.
+Velocity-quadratic inertial terms may become large in some configurations, but a large drift-to-input ratio does not prove attraction, negligible steering, or loss of reachability. The system $\dot x=x+u$ can have a large drift compared with bounded input while nearby uncontrolled states separate exponentially. Evaluate finite-horizon sensitivities, feasible input directions, a declared metric, and the delivered impact state rather than inferring stability from a magnitude ratio.
 
 ### Related Concepts in the AffineDrift Framework
 
-*   **Zero Torque Counterfactual (ZTCF):** The integral curve of the drift field $f(x)$, justified by the independence of $f$ from $u$.
-*   **Drift Invariance:** The property $\nabla_u f(x) = 0$, which is the differential equivalent of the superposition principle derived here.
-*   **Control Efficacy:** The magnitude of the input vector field $G(x)$, representing the "leverage" the golfer has over the system state (equivalent to the Mobility Ellipsoid).
+- **Forward Zero Torque Counterfactual (ZTCF):** A trajectory generated from a declared initial state with the chosen applied torque input set to zero, including consistent reaction and contact-mode handling.
+- **Drift Independence:** In the specified affine representation $f$ has no direct input argument. This does not imply that its value along a trajectory is unaffected by earlier inputs. It also does not imply affinity by itself: $\dot x=f(x)+u^2$ has input-independent $f$ but nonlinear input response.
+- **Control Authority:** The feasible acceleration increments form $G(x)\mathcal U(x)$ in state coordinates. Their directional size depends on the input set and metric; finite-time influence additionally depends on how the dynamics transport perturbations. A scalar norm of $G$ is not a complete mobility or controllability description.
 
-```{=html}
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        A simple guide to understanding how we can mathematically separate the golfer's effort from the club's natural momentum.
-      </p>
+## Tests of the Argument
 
-      <div class="laymans-item">
-        <h3>Adding Forces vs. Adding Paths</h3>
-        <p>
-          Here's the beautiful bit: in a golf swing, the forces acting on the club at any given instant are simple and additive. Gravity pulls down, your muscles push, friction acts—all at the same time, all adding up. But here's what trips people up: if you try to add two *complete golf swings* together, you don't get a "double swing." The complex, nonlinear dance of the club through space breaks superposition. What *doesn't* break is the force budget at any frozen moment.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A snapshot of a ballet dancer mid-leap. That frozen frame tells you exactly what forces are supporting the dancer—gravity, the push-off from the legs, air resistance. You can calculate the net force at that instant by simply adding them up. But the shape of the actual leap—the arc, the timing, the recovery—that's a complex, nonlinear dance that doesn't superpose with another leap. Still, the force accounting at each moment is clean.
-        </div>
-      </div>
+**Intervention Feasibility.** A mathematical torque clamp is not instantaneous muscle deactivation. State whether passive tissue, activation, grip contact, and prescribed base motion remain in the model, and check feasibility of the resulting loads. This determines what the counterfactual can explain.
 
-      <div class="laymans-item">
-        <h3>Why "Superposition" Matters</h3>
-        <p>
-          "Superposition" means being able to study forces separately and then add them back together. It sounds obvious, but it's not: in many complex systems, you *can't* do this because things interact in tangled ways. But in mechanical systems—golf clubs, robot arms, your body—the forces enter the equations in a special, linear way. That's the gift: we can point at the acceleration you're producing and say "that piece is gravity, that piece is your muscles, that piece is friction" and they truly add up.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Recording a song where each instrument is on a separate track. The final mix is the sum of all tracks. You can turn off the drums and hear just the guitars and bass. The parts don't interact—they truly add. This is unlike, say, blending colors of paint, where you can't easily "subtract out" the blue from green. Forces in mechanics are like separate tracks, not like paint colors.
-        </div>
-      </div>
+**Causal Identification.** The same input can affect several links through inertia and reactions; different muscle inputs can produce the same net torque. The decomposition must be accompanied by an identification argument and a sensitivity analysis before it supports an empirical causal claim.
 
-      <div class="laymans-item">
-        <h3>The "Affine" Structure: Separating Passive and Active</h3>
-        <p>
-          "Affine" is a fancy word for a very concrete thing: the system splits into two pieces. One part happens passively—gravity, momentum, friction—and it does what it does regardless of your control. The other part is what you actively control. The key is that your control enters the equations *additively and linearly*. It doesn't change the rules of gravity or friction; it just adds a new force on top.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A surfer riding a wave. The wave itself (drift) carries the surfer passively. The surfer can lean and shift balance (input), which adds forces on top of the wave. The surfer's lean doesn't change the wave itself; the surfer just adds acceleration in the forward or backward direction. The total motion is wave-motion-plus-surfer-control. Neither the surfer nor the wave, individually—both together, additively.
-        </div>
-      </div>
+**Feedback and Outcome Sensitivity.** Perturbation direction, remaining time, feedback pathways, force limits, and the sensitivity of impact outcomes all matter. A small attainable correction can matter greatly for face orientation even when it is small relative to total acceleration. A drift-to-input magnitude ratio alone cannot determine whether feedback matters.
 
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The golf swing is complex and nonlinear—the trajectory is a tangle you can't simply add up. But at any frozen instant, the forces are clean, simple, and truly additive. You can point at a moment in time and say exactly how much acceleration gravity is producing, how much your muscles are adding, how much friction is subtracting. That's what this article proves, rigorously, in three different mathematical languages. And that's powerful.
-      </div>
+**Falsification and Alternative Explanations.** Compare predictions across plausible inertial parameters, grip compliance, and muscle allocations that fit the observations. If the claimed advantage disappears under those alternatives, report it as model-sensitive. Test proposed interventions against measured outcome changes rather than promoting a convenient algebraic split into a universal instruction.
 
-      <div class="laymans-item">
-        <h3>The Snapshot Principle</h3>
-        <p>
-          Imagine freezing the golfer mid-swing like a photograph. In that frozen instant, forces add up the same way they do for a simple spring or pendulum — perfectly linearly. The complexity only returns when you press "play" and let time move forward.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-```
-
-```{=html}
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View: Biomechanics</span>
-          <h3>Is "Zero Torque" Biologically Possible?</h3>
-        </div>
-        <p class="critic-argument">
-          The "Zero Torque Counterfactual" assumes we can mathematically remove the golfer's input ($u=0$) to reveal a pure passive drift. However, biological muscles aren't electric motors that can be switched off instantly. Even with zero neural excitation, muscle-tendon units have passive stiffness and damping that depend on length and velocity. A "zero active torque" state is physically distinct from a "zero tissue presence" state, making the baseline drift field $f(x)$ difficult to isolate empirically.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a valid distinction. The drift field $f(x)$ in our model explicitly includes all <em>passive</em> viscoelastic properties of the body (ligaments, passive muscle tension). The "input" $u$ represents only the <em>active</em> contractile component derived from neural drive. While separating these experimentally is challenging, the mathematical superposition of Active Force onto Passive Dynamics remains valid within Hill-type muscle models.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View: Control Theory</span>
-          <h3>Linearity Does Not Imply Control Authority</h3>
-        </div>
-        <p class="critic-argument">
-          Emphasizing that "input enters linearly" might mislead readers into thinking the golfer has symmetric or unlimited control. In high-speed swings, the drift forces (Coriolis and Centrifugal) scale quadratically with velocity ($v^2$), while human torque limits are roughly constant or decreasing with speed. At 100 mph, the "linear" input term is numerically overwhelmed by the nonlinear drift term. The mathematical elegance of affine systems hides the practical reality that the golfer is often a passenger, not a driver.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We agree entirely. In fact, this "lopsided" relationship is central to the <strong>Drift-Control Ratio</strong>. We highlight the linear structure not to suggest control is easy, but to justify the <em>algebraic subtraction</em> of drift. You are correct that while the <em>mechanism</em> of input is linear, the <em>magnitude</em> of influence relative to momentum drops precipitously at high speeds.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View: Classical Mechanics</span>
-          <h3>Frame-Dependent "Forces" Cause Confusion</h3>
-        </div>
-        <p class="critic-argument">
-          The article treats "drift acceleration" (including Coriolis and centrifugal terms) as a physical entity to be subtracted. However, these are inertial forces that vanish in a non-rotating frame. Teaching superposition this way risks confusing students who learned Newton's Second Law in inertial frames ($F=ma$). If you change the reference frame, the "drift" changes, which makes the decomposition seem arbitrary rather than fundamental.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> While the <em>components</em> of the drift vector change with coordinates, the vector field $f(x)$ itself is a coordinate-invariant geometric object (the geodesic spray). Whether you view them as inertial forces or connection coefficients, they represent the system's "natural path" in the absence of input. The decomposition $f(x) + G(x)u$ holds in any frame, preserving the distinction between "system dynamics" and "external forcing."
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding.
-      </div>
-    </div>
-  </div>
-</section>
-```
-
----
-
-:::{.callout-warning}
 ## Scope and Limitations
 
-- **This analysis is instantaneous, not trajectorial.** We prove that at any frozen moment in time, forces superpose and accelerations are linear in the control input. But the actual *path* the club takes through space is nonlinear, and you cannot simply add two golf swings to get a third. Think of it like a photograph: in one frame, forces are simple and additive; press play and the story becomes much more tangled.
-
-- **The affine structure is a modeling choice, not physics itself.** We choose to write the equations as $\dot{x} = f(x) + G(x)u$ and separate "drift" from "input." But this decomposition is useful only if the boundary between passive and active is crisp. In reality, muscles have state-dependent stiffness and damping that blur this boundary—a high-speed contraction feels different from a low-speed one because tissue behavior changes. Our model freezes this into a fixed "passive" baseline, which is an approximation that works well at high speeds but breaks down in quasi-static regimes.
-
-- **Biological actuation may not follow the $G(x)u$ form.** We assume torque generation scales linearly with neural drive and configuration. Hill-type muscle models support this roughly, but only if you're careful about contraction velocity and length-tension relationships. In extreme configurations (joints near singularity or at full stretch), the assumption that "muscle force enters linearly" becomes questionable. Saturation, fatigue, and reflex delays all introduce nonlinearities that the simple $G(x)u$ term cannot capture.
-
-- **The experimental validation of this decomposition is indirect.** We cannot measure the drift field $f(x)$ directly because you cannot command "zero muscular torque" in a living organism—only zero voluntary effort, which still leaves passive viscoelasticity. This forces us to infer drift from models or from counterfactual simulations, introducing model-dependence into something we present as fundamental.
-
-:::
+The exact result is incremental superposition in a declared control-affine mechanical model at one complete state. It is compatible with nonlinear state dynamics and finite-time interaction. It does not assume that neural drive maps linearly to torque, that high-speed models are automatically more accurate than quasi-static models, or that a torque-level description identifies individual muscles. Model validation, parameter identification, and human outcome evidence remain separate requirements.
 
 ## References
 
-*(Indicative only; you can replace or expand with your preferred bibliography.)*
+The derivations above use virtual work, rigid-body energy, and fixed-state linear algebra. These references develop the underlying mechanics and control formulations; they are not empirical validation of a particular golf intervention.
 
 * Featherstone, R. **Rigid Body Dynamics Algorithms**. Springer, 2008.
 * Murray, R. M., Li, Z., Sastry, S. S. **A Mathematical Introduction to Robotic Manipulation**. CRC Press, 1994.
