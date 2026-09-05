@@ -1,23 +1,36 @@
 \chapter{Further Reading and References}
+\markboth{Further Reading and References}{Further Reading and References}
+\begingroup
+\raggedbottom
 
-This text is a primer and introductory guide designed to construct an intuitive and unified framework. The formal depths of modern geometric mechanics and nonlinear control are actively pioneered and formalized across several seminal texts. For the reader eager to pursue more mathematically rigorous treatments, we strongly recommend the following resources:
+The following books develop complementary parts of the framework used here. Choose a source for the particular claim or calculation being investigated, and consult its assumptions, notation, edition, and errata. A robotics or control theorem does not become evidence about human golf performance merely because it can be applied to a simplified swing model.
 
-\section*{Geometric Control and Robotic Manipulation}
+\section*{Geometry, Kinematics, and Mechanical Models}
+
 \begin{itemize}
-    \item \textbf{A Mathematical Introduction to Robotic Manipulation} \cite{Murray1994}. The definitive textbook bridging Lie group theory with classical robotics, establishing the Product of Exponentials (PoE) standard.
-    \item \textbf{Geometric Control of Mechanical Systems} \cite{BulloLewis2004}. An authoritative resource on the differential geometry of mechanical control systems, including connections and geodesics.
-    \item \textbf{Robot Modeling and Control} \cite{Spong2006}. A highly accessible and rigorous text covering everything from basic Euler-Lagrange forms to robust robotic control.
+\item \textbf{A Mathematical Introduction to Robotic Manipulation}, Murray, Li, and Sastry \cite{Murray1994}, treats rigid-body motion, manipulator and hand kinematics, dynamics, and nonholonomic motion planning. The \href{https://www.cds.caltech.edu/~murray/mlswiki/index.php?title=Main_Page}{authors' companion site} provides chapter information and corrections. Use it to connect Lie groups and Jacobians to explicitly defined frames and mechanical systems.
+\item \textbf{Geometric Control of Mechanical Systems}, Bullo and Lewis \cite{BulloLewis2004}, develops differential-geometric modeling and control of mechanical systems. Its \href{https://motion.me.ucsb.edu/book-gcms/}{companion page} includes contents, selected material, examples, and errata. This is a suitable route into connections, mechanical control structures, and the hypotheses behind geometric analysis.
+\item \textbf{Robot Modeling and Control}, Spong, Hutchinson, and Vidyasagar \cite{Spong2006}, covers kinematics, Jacobians, trajectory planning, dynamics, joint and multivariable control, force control, and vision-based methods. The \href{https://bcs.wiley.com/he-bcs/Books?action=contents&bcsId=2888&itemId=0471649902}{publisher's chapter listing} identifies the scope of the cited edition. Its robot models still require adaptation and validation before supporting a biomechanical interpretation.
 \end{itemize}
 
-\section*{Advanced Rigid Body Dynamics}
+\section*{Computational Rigid-Body Dynamics}
+
 \begin{itemize}
-    \item \textbf{Rigid Body Dynamics Algorithms} \cite{Featherstone2008}. To truly implement physics engines, Featherstone's Spatial Vector notation and the derivation of $O(N)$ ABA are unmatched.
+\item \textbf{Rigid Body Dynamics Algorithms}, Featherstone \cite{Featherstone2008}, develops spatial-vector conventions and recursive dynamics algorithms. The \href{https://royfeatherstone.org/teaching/index.html}{author's teaching materials} and \href{https://royfeatherstone.org/}{software resources} support implementation. Distinguish the linear-cost articulated-body calculation for a tree from the additional work needed for closed loops, constraints, and contacts.
 \end{itemize}
 
-\section*{Nonlinear Systems and Contraction}
+\begin{samepage}
+\section*{Nonlinear Stability and Feedback}
+
 \begin{itemize}
-    \item \textbf{Applied Nonlinear Control} \cite{SlotineLi1991}. Slotine's classic text providing the most intuitive treatment of sliding mode and robust nonlinear stability.
-    \item \textbf{Contraction Theory for Dynamical Systems} \cite{BulloContraction}. The modern codification of contraction bounding and metrics for trajectory stability.
+\item \textbf{Applied Nonlinear Control}, Slotine and Li \cite{SlotineLi1991}, develops nonlinear stability and feedback methods. \href{https://www.mit.edu/~nsl/videos/lectures.html}{Slotine's accompanying course materials} identify the relevant book sections and separate the later contraction lectures and papers. Check the domain and model conditions of a stability argument before extending it to saturated or hybrid systems.
+\item \textbf{Contraction Theory for Dynamical Systems}, Bullo \cite{BulloContraction}, develops contractivity and incremental stability using specified norms and metrics. The \href{https://fbullo.github.io/ctds}{author's book page} provides version information and materials. The bibliography cites the 2024 edition; later revisions may reorganize or extend the treatment. Contraction claims must retain their metric, input, domain, and existence assumptions.
 \end{itemize}
+
+The chapter-level primary references supply more specialized results for transverse dynamics, phase constraints, nonlinear funnels, stochastic models, and learning. Keep mathematical derivations, numerical verification, model calibration, and experimental validation identifiable when combining those sources.
 
 \nocite{LohmillerSlotine1998, ManchesterSlotine2017, Khatib1987, Shiriaev2010}
+
+\end{samepage}
+\clearpage
+\endgroup
