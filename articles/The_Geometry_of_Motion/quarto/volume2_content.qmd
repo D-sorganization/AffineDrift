@@ -3302,41 +3302,127 @@ The examples and golf-testing framework here are independently derived interpret
 1. State sufficient common-certificate conditions for a proposed controller blend.
 1. Design a comparison that distinguishes better impact outcomes from identification of a biological learning mechanism.
 
-## Case Study: The Complete Golf Swing
+## Case Study: The Complete Golf Swing {#case-study-the-complete-golf-swing}
 
 
-> The physics are invariant. What separates the professional is their mastery over the geometry of the resultant funnel.
 
 
-## Unifying the "Control Is Motion" Framework
+
+### A Reproducible Golf Investigation
+
+A golf swing combines motion generation, contact preparation, a collision, and recovery. Inertial coupling helps determine how applied forces change segment and club velocities. Coordination and feedback influence which perturbations grow or shrink. Timing determines where a moving club first meets the ball. Learning changes subsequent commands and possibly feedback. These effects are intertwined because each acts through the same mechanics and the same task outputs.
+
+The purpose of this case study is to specify an investigation that can distinguish these mechanisms. It is a modeling and verification protocol, accompanied by small analytic examples. It does not report a solved musculoskeletal optimization, an experimentally identified golfer, or a computed nonlinear golf-swing certificate. No funnel shape, preferred torque reversal, or optimal effort level is asserted without the corresponding calculation and assumptions.
+
+A complete implementation would model address and backswing, the transition, downswing, club-ball contact, and follow-through. A study restricted to the downswing must declare how it obtains its initial state and what it assumes about subsequent contact and recovery. Calling a downswing trajectory complete does not supply those missing phases.
+
+### Define the Shot Before Choosing a Motion
+
+Specify an acceptable set of shot outcomes. Pre-impact clubhead speed is one useful measurement, but contact location, face orientation, velocity direction, and ball/club properties also affect the collision. If launch or ball flight is the target, include the declared contact and flight models needed to predict it. A stationary golf ball is a fixed spatial target; the club state and contact time are still unknown.
+
+Let $h(x,t)=0$ define the chosen contact guard, with an approaching-crossing condition and rules that distinguish intended ball contact from ground or other contact. Write the first admissible contact time as $\tau$ and the evaluated output as
+$$
+z=H_{\mathrm{impact}}(x(\tau^-),p),\qquad z\in\mathcal Z_{\mathrm{goal}},
+$$
+where $p$ contains the declared equipment and contact parameters. The output map can include an explicit reset and subsequent ball state. No-contact trials and invalid contact modes must have an explicit failure definition. Merely satisfying the guard does not make orientation, speed, or launch error zero.
+
+Choose tolerances and weights with units. A cost mixing radians, meters, and meters per second requires declared scaling. Distinguish a speed reward from a squared target error, a mean penalty from dispersion, and a hard constraint from a finite penalty. These choices express the task being investigated; they are not automatic consequences of the equations of motion.
+
+### Declare the Mechanical Plant and Its Authority
+
+List the body segments, joint models, club flexibility if retained, hand/grip closure, foot-ground modes, and independent coordinates. Report degrees of freedom after the chosen constraints and coordinate redundancies are handled. A nominal count such as fifteen does not determine whether a model is underactuated. The relevant question is the rank and bounded authority of its declared input map in each mode.
+
+For a simple local-coordinate model with $\dot q=v$, one possible smooth-mode equation is
+$$
+M(q)\dot v+c(q,v)+g(q)
+=B(q)u+J_{\mathrm{ext}}(q)^\top F_{\mathrm{ext}}-D(q)v .
+$$
+Here $c$ denotes the inertial velocity terms, $g$ the conservative gravity load, and $D$ a positive-semidefinite viscous model. Other passive forces, actuator dynamics, or state variables must be added when used. Minimal-coordinate elimination and redundant-coordinate constraints require different implementations; do not count a constrained coordinate as independent actuation.
+
+Setting a wrist torque channel to zero is a model intervention. It does not show that a golfer's wrist is an anatomical passive pin joint. Holding a joint angle fixed is a different intervention requiring a constraint or a maintaining torque. Compare passive, actively driven, and constrained alternatives using the same declared plant and initial state.
+
+For the stated mechanical model with conservative potential $U$, total mechanical energy $E=T+U$ satisfies
+$$
+\dot E=v^\top B u+(J_{\mathrm{ext}}v)^\top F_{\mathrm{ext}}-v^\top Dv .
+$$
+Internal inertial coupling redistributes mechanical energy; it is not an additional source in this balance. An ideal stationary constraint can exert a nonzero force while doing zero work. Moving contacts, compliance, and dissipation change that statement. At impact, apply the separate impulse and energy model rather than extending a smooth power equation through a velocity jump. Net joint mechanical power is also different from metabolic energy expenditure.
+
+This balance helps interpret a speed increase. Determine whether it reflects added actuator work, transfer from another segment, release of stored potential energy, or a changed external interaction. A faster club accompanied by reduced speed elsewhere is not evidence of energy creation. A torque reversal can change transfer and sensitivity together; its benefit must be evaluated against the selected impact task and limits.
+
+### Compute a Feasible Reference Before Analyzing Its Stability
+
+Specify initial conditions, phase/mode transitions, duration bounds, inputs and their rate or activation limits, contact conditions, and terminal outputs. For an underactuated smooth mode, the required generalized acceleration force must lie in the available input image, with any declared external forces included. Passing an annihilator test is a necessary algebraic feasibility condition; the input must also satisfy its bounds and the entire trajectory must satisfy the dynamics.
+
+Direct collocation returns a candidate discretized trajectory. Report mesh, defects, solver residuals, initial guesses, and convergence behavior. Independently integrate the continuous model with the recovered controls, refine the mesh, locate first contact, and check constraints between nodes. A visually smooth curve or a successful optimizer status is not enough to establish physical feasibility or a global optimum.
+
+If phase $s$ is used, retain its speed $\nu=\dot s$. Along a configuration path $q_d(s)$,
+$$
+v=q_d'(s)\nu,\qquad
+\dot v=q_d''(s)\nu^2+q_d'(s)\dot\nu .
+$$
+The same geometric path at a different speed has different velocity, energy, acceleration, and actuation demands. Verify monotonicity and chart validity for the actual closed-loop phase variable. The top of the backswing may require a transition rule rather than a globally increasing shoulder-angle coordinate.
+
+### Keep Event Timing in the Outcome Calculation
+
+A small example shows why errors tangent to motion cannot always be discarded. Consider a point moving at constant velocities $v_x>0,v_y$ toward the plane $x=D$. Its initial position is $(x_0,y_0)$, with $x_0<D$. First contact and vertical contact position are
+$$
+\tau=\frac{D-x_0}{v_x},\qquad
+y_{\mathrm{hit}}=y_0+v_y\frac{D-x_0}{v_x} .
+$$
+The sensitivity to the initial state $(x_0,y_0,v_x,v_y)$ is
+$$
+C=\left(-\frac{v_y}{v_x},\ 1,
+-\frac{v_y(D-x_0)}{v_x^2},\ \frac{D-x_0}{v_x}\right).
+$$
+With $D=1$ m, $x_0=y_0=0$, $v_x=2$ m/s, and $v_y=0.1$ m/s, contact occurs after $0.5$ s at $y_{\mathrm{hit}}=0.05$ m. Increasing $v_x$ by $0.02$ m/s changes vertical contact by approximately $-0.0005$ m to first order. A fixed-time position evaluation at $0.5$ s would miss that event-time contribution. The exact change is about $-0.000495$ m.
+
+This point model does not represent a club-ball collision. It isolates a timing mechanism. For a swing, compute the corresponding guard and output derivatives from the actual geometry, retaining face and velocity components. Transverse coordinates can simplify local dynamics, but an along-path change that affects impact speed or first-contact outcome remains task-relevant. Near grazing contact, the event derivative can become poorly conditioned and the local approximation requires particular scrutiny.
+
+### Turn Local Feedback Into a Precisely Scoped Claim
+
+Design feedback using a feasible reference, actual input authority, state estimation, and delays. A Riccati solution can provide a local quadratic candidate. It does not by itself prove nonlinear invariance under saturation, contact changes, and finite disturbances. State the error coordinates and dimensions: a transverse matrix acts on transverse errors, not an unprojected full-state difference of another dimension.
+
+For a phase-indexed candidate set $\mathcal F(s)=\{e:V(e,s)\leq\rho(s)\}$, with error dynamics $\dot e=F_e$ and actual phase rate $\dot s=\nu$, the boundary condition is
+$$
+V_e F_e+\bigl(V_s-\rho'(s)\bigr)\nu\leq0
+\quad\hbox{when }V(e,s)=\rho(s).
+$$
+It must hold throughout the stated domain for every admissible disturbance, with appropriate regularity and existence conditions. Add progress and arrival bounds; containment alone does not ensure contact occurs. Include input limits, valid phase charts, output tolerances, and reset/terminal containment. A finite-horizon funnel is not automatically an asymptotic region of attraction.
+
+If using sums of squares, identify the polynomial model and approximation-error bounds, domain, multipliers, strictness margins, and solver residual checks. A fixed-candidate verification problem and joint nonlinear synthesis are different optimization problems. Verify the full interval rather than only its endpoints. Reintegrated samples help detect errors but do not replace a statement quantified over a continuous set.
+
+Even the picture of a funnel depends on coordinate scaling. For $P\succ0$, the ellipsoid $e^\top Pe\leq\rho$ bounds a linearized scalar output by
+$$
+\max |c e|=\sqrt{\rho\,cP^{-1}c^\top} .
+$$
+This algebraic bound connects a state set to an output tolerance. It does not establish that the ellipsoid is invariant. Rescaling coordinates changes its plotted width without changing the represented physical set when $P$ is transformed consistently. Claims about a funnel widening or narrowing should therefore specify coordinates, metric, units, and task projections rather than rely on an unlabeled envelope.
+
+### Add Variability and Learning Without Changing the Meaning of Evidence
+
+Estimate initial-state uncertainty, process variability, correlations, and measurement noise at a stated bandwidth. If using a diffusion approximation, specify its units and convention and verify numerical time-step scaling. Propagate the actual closed-loop model to first contact. Report bias, covariance, failure probability estimates, and uncertainty in those estimates as appropriate. A Gaussian model's unbounded support is not covered by a certificate proved only for bounded disturbances.
+
+Use repeated trials to test a declared learning rule. Keep within-trial feedback fixed when isolating a feedforward update, or explicitly model both changes. Compare systematic improvement with changes in dispersion and contact timing. Revalidate feasibility and any certificate after adapting a controller or borrowing a trajectory from a library. A policy with good training reward is neither a uniquely identified biological strategy nor a verified nonlinear controller.
+
+The central experimental comparison should ask which mechanism explains an outcome difference. Compare policies under matched actuation, sensing, and task requirements. Examine energy transfer and torque contributions alongside event sensitivity and error distributions. Hold out relevant swings, participants, equipment conditions, or perturbations rather than repeatedly fitting and testing on the same observations. A simplified model can generate useful predictions even when it cannot identify every muscle force or neural objective.
+
+### What a Completed Case Study Must Publish
+
+A reproducible computational result includes model and data provenance, coordinate and force conventions, parameters with units, input and contact assumptions, reference trajectories, controller/estimator definitions, objective and constraints, solver settings, and executable checks. A claimed certificate additionally needs its coefficients, domain, margins, and a verification procedure. A measured golf claim needs the acquisition and analysis methods, uncertainty, and the relevant comparison data.
+
+Until those artifacts exist, describe the result at the level supported: a proposed protocol, an analytic example, a simulated candidate, or a verified statement for a specified model. The chapter's point is to make a complete swing investigation testable. Geometry identifies the motion and admissible directions; dynamics determines effort and transfer; control changes sensitivity; contact determines success; variability and learning determine what repeated performance can tell us.
 
 
-Throughout this text, we have reframed control around trajectory geometry and local transverse correction. We conclude with a hypothetical 15-DOF musculoskeletal golf-swing model that illustrates how the framework could be assembled into a reproducible analysis.
+### Primary Reading and the Scope of the Examples
 
-The objective is to maximize clubhead speed at the spatial intersection with the golf ball while controlling face orientation and respecting biological torque limits. The terminal time may be treated as a decision variable, but the formulation must still state admissible timing, contact, and phase-coordinate assumptions. Robustness is included through an explicit signal-dependent-noise model.
+The modeling conventions can be pursued through [Bullo and Lewis's geometric mechanics text](https://motion.me.ucsb.edu/book-gcms/) and [Featherstone's spatial dynamics materials](https://royfeatherstone.org/teaching/index.html). The phase and hybrid conditions connect to [Grizzle and Chevallereau's treatment of virtual constraints and hybrid zero dynamics](https://grizzle.robotics.umich.edu/files/HZD_HandbookApril2015.pdf). [Majumdar and Tedrake (2017)](https://doi.org/10.1177/0278364917712421) develops verified funnel libraries for robotic motion planning. These references support the engineering methods; they do not constitute experimental validation of the golf protocol proposed here.
 
-
-### Phase 1: Defining the Geometry and Optimization
-
-
-The system is heavily underactuated in this example. The wrists are treated as passive pin joints, which is a simplifying assumption used to expose inertial coupling rather than a complete anatomical model.
-
-We formulate a **Stochastic Moving Target Optimal Control Problem** (Chapter 6). Direct collocation optimizes the trajectory $\traj^*(s)$ over a spatial phase variable $s$ representing shoulder angle, provided that this phase coordinate remains monotone over the modeled interval (Chapter 8). The integral cost penalizes signal variance through local covariance propagation (Chapter 9).
-
-In the illustrative model, the collocation solver satisfies the $\Bmat^\perp$ annihilator constraint (Chapter 5) and may produce a smooth reference motion. A torque reversal before impact can exploit passive wrist dynamics, but claims about face squaring require explicit contact geometry, grip modeling, and validation against measured swings.
+### Worked Checks and Exercises
 
 
-### Phase 2: Funnel Synthesis and Robustness
-
-
-With $\traj^*(s)$ computed, we lock down the trajectory using **Transverse Linearization** (Chapter 4). We ignore errors along the tangent of the path (since chronological timing is irrelevant) and construct a time-varying LQR feedback matrix to regulate only the transverse deviations. 
-
-Finally, we compute candidate bounds for this stability region using **Sums-of-Squares Programming** (Chapter 7). The SDP supplies a boundary function $V(\state, t) = 1$ that certifies invariance under the polynomial model, controller, and disturbance assumptions used in the computation.
-
-
-  The final computed funnel describes the model's certified region of attraction. During the backswing, the funnel may be wider if the modeled dynamics tolerate larger transverse deviations without violating the invariant boundary.
-  
-  As the swing approaches the transition and downswing, the funnel may tighten because the model becomes more sensitive to timing, phase, and actuation errors. Any claim about a final $0.15$ seconds, near-zero funnel diameter, or passive absorption of muscular noise must be supported by the actual SDP solution and sensitivity analysis.
-
-
-The case study illustrates the intended use of the framework: define a motion objective, state the model assumptions, compute a trajectory, and certify the local control region. It does not replace empirical validation, and it should be read as a reproducible modeling program rather than a proof of a universal control language.
+1. Specify the contact guard, crossing direction, output map, and failure events for a proposed shot task.
+1. Count independent coordinates and input rank after declaring grip and ground constraints.
+1. Derive the smooth energy balance and state which impact assumptions it does not cover.
+1. Recover the point model's exact contact and its first-order sensitivity to forward speed.
+1. Derive the phase-indexed boundary condition using the actual phase rate.
+1. Verify the ellipsoid output bound and its invariance under a nonsingular change of coordinates.
+1. Separate the evidence needed for a simulated improvement, a nonlinear certificate, and a biological explanation.
