@@ -5,6 +5,7 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
 ## Technical Content Review
 
 - PR #4153 publishes the first substantial correction wave; the full corpus audit remains open under epic #4009.
+- Issue #4156 rebuilds the long constrained-mechanics chapter in paired LaTeX/Quarto: mass-metric duality, inertial loads, constrained input rank, grip/ground mechanics, control conditions, identifiability, and geometric phase. Six independent/regression checks pass; Geometry Volume I is rebuilt again for this chapter.
 - Issue #4154 adds corrections to the long tangent reference: evolving residual baseline, transported mixed variations, curvature distinctions, DDP/iLQR, and work/impulse bookkeeping. Final local Python 3.12 suite: 3,712 passed, 29 skipped, 92.32% coverage. The paired tangent PDF is regenerated as the fifth revised publication PDF.
 
 - User-directed long-form technical review is tracked under epic #4009, with concrete fixes #4148–#4151. See `docs/development/technical-review/REVIEW.md` for equations, scope, sources, validation, and remaining route audits.
