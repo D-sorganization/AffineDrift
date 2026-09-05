@@ -137,15 +137,17 @@
   references_out_ids: []
 
 - id: koike2019dynamic
-  title: "Dynamic contribution analysis of the golf swing"
+  title: "Direct and indirect effects of joint torque inputs during an induced speed analysis of a swinging motion"
   authors:
     - "Sekiya Koike"
-    - "et al."
+    - "Tatsuya Ishikawa"
+    - "Alexander P. Willmott"
+    - "Neil Bezodis"
   year: 2019
-  venue: "Sports Biomechanics"
-  scholar_link: "https://scholar.google.com/scholar?q=Dynamic+contribution+analysis+of+the+golf+swing+Koike"
-  clusters: ["golf biomechanics", "induced acceleration"]
-  concepts: ["contribution analysis", "equation of motion", "golf"]
+  venue: "Journal of Biomechanics 86, 8–16"
+  scholar_link: "https://doi.org/10.1016/j.jbiomech.2019.01.032"
+  clusters: ["sports biomechanics", "induced speed"]
+  concepts: ["contribution analysis", "equation of motion", "rugby kicking"]
   related_ids: ["zajac1989determining"]
   references_out_ids: []
 
@@ -223,7 +225,7 @@ _Target: Understand why "forces add up" but "motions don't"._
 2.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_ (`featherstone2008rigid`). Chapter 3 on Spatial Vectors.
 3.  **Lynch & Park (2017)** - _Modern Robotics_ (`lynch2017modern`). Chapter 8 on Dynamics of Open Chains.
 4.  **Zajac & Gordon (1989)** - _Determining muscle's force..._ (`zajac1989determining`). The classic biomechanics "induced acceleration" paper.
-5.  **Koike et al. (2019)** - _Dynamic contribution analysis of the golf swing_ (`koike2019dynamic`). Direct application to golf.
+5.  **Koike et al. (2019)** - [Direct and indirect effects of joint torque inputs during an induced speed analysis of a swinging motion](https://doi.org/10.1016/j.jbiomech.2019.01.032) (`koike2019dynamic`). Rugby-kicking application; distinguish its recorded-motion recurrence from a freely evolving golf counterfactual.
 
 ### Path 2: Deep Technical (Geometric & Algebraic Structure)
 

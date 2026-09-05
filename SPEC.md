@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4195 | Correct counterfactual flow and sensitivity, input invariance, physiological inference and Koike citation across the theory series and long editions. |
 | 2026-09-05 | #4193 | Derive loaded beam boundary conditions, modal normalization and reproducible flexible pendulum dynamics across three web editions. |
 | 2026-09-05 | #4191 | Correct rigid–flexible golf foundations and posture-dependent coupling in three web editions |
 | 2026-09-05 | #4188 | Correct concluding golf investigation protocol, shared glossary and reading lists; synchronize four case-study editions and rebuild five PDFs. |
