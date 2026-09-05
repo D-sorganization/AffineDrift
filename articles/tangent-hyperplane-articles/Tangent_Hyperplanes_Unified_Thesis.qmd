@@ -5,6 +5,12 @@ subtitle: "Reference Derivations for Tangent Space Linearization and Integral Ac
 author: "Dieter Olson"
 date: "2026-01-01"
 format:
+  pdf:
+    toc: true
+    toc-title: "Contents"
+    toc-depth: 3
+    number-sections: true
+    pdf-engine: xelatex
   html:
     toc: true
     toc-depth: 4
@@ -31,7 +37,7 @@ source-backed form.
 ::: {.callout-note appearance="minimal"}
 ### Thesis Abstract
 
-Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, arguing that it obscures a more precise mathematical fact: **at each fixed state (and fixed contact/constraint mode), the instantaneous mapping from inputs to state derivatives is exactly linear in the tangent space, and the associated variational equations accumulate perturbations linearly along a chosen reference trajectory**. We do not claim that motion trajectories superpose—nonlinear flows are generally not additive. Superposition here refers to the instantaneous tangent-space structure.
+Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, arguing that it obscures a more precise mathematical fact: **at a fixed nominal state and input, the differential mapping from perturbations to state-rate variations is linear; for a control-affine model, finite input increments also map linearly into instantaneous rate increments at fixed state and mode, and the associated variational equations accumulate perturbations linearly along a chosen reference trajectory**. We do not claim that motion trajectories superpose—nonlinear flows are generally not additive. Superposition here refers to the instantaneous tangent-space structure.
 
 We develop this claim across three interconnected frameworks. Part I establishes that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics—the derivative of a vector field is, by definition, a linear map operating on a linear tangent space. Part II shows how the linear variational system propagates perturbations along a reference trajectory. Part III connects these geometric foundations to optimal control through Hamiltonian structures and adjoint dynamics.
 
@@ -87,7 +93,7 @@ We are **not** claiming that linearization is "good enough" for nonlinear system
 
 - **The tangent space is exact** (not approximate) infinitesimal structure—it is the Fréchet derivative, which is the unique best linear approximation by definition
 - **Superposition is exact** (not approximate) in tangent spaces because tangent spaces are vector spaces
-- **Approximation enters only when moving between tangent spaces**—residuals measure manifold curvature, not "linearization error"
+- **Finite perturbations require an approximation** even in a fixed Euclidean coordinate space; distinguish nonlinear interaction from integration error and model error
 
 **Key distinction:** Standard linearization says "we accept error for tractability." This thesis says "we exploit exact local geometry and quantify transport costs." The exactness comes from **geometry**, not from "being close to the operating point."
 :::
@@ -97,25 +103,28 @@ This perspective has profound implications:
 1. It explains why **linear control techniques** such as LQR and pole placement succeed in practice, even when applied to inherently nonlinear plants
 2. It clarifies why **stability analysis via linearization** (Lyapunov's indirect method) yields rigorous conclusions about nonlinear behavior
 3. It provides the **geometric foundation** for modern nonlinear control theory, where trajectories are curves on manifolds with tangent spaces attached at each point
-4. It establishes that **residuals** from additivity failures are genuine geometric features (curvature), not modeling errors
+4. It establishes that **interaction residuals** can occur in a perfect nonlinear model, while measured residuals can additionally contain modeling and numerical error
 
 ### Structure of This Thesis
 
 This thesis develops the "exact superposition in the infinitesimal" framework across three interconnected parts:
 
 **Part I: Geometric Foundations and Local Dynamics**
+
 - Chapter 1: Tangent spaces and the exact nature of differentiation
 - Chapter 2: Time evolution through moving tangent spaces
 - Chapter 3: Local optimal control in tangent space (LQR, Lyapunov)
-- Chapter 4: Residuals as manifestations of manifold curvature
+- Chapter 4: Residuals of the nonlinear input-to-flow map
 
 **Part II: Integral Superposition and Transport**
+
 - Chapter 5: Integration preserves linear accumulation of variations
 - Chapter 6: State transition operators and variational dynamics
 - Chapter 7: Physical interpretations (impulse, work) as integral consequences
 - Chapter 8: Global residuals and error quantification
 
 **Part III: Hamiltonian Structure and Optimal Control**
+
 - Chapter 9: Variational principles and Hamiltonian formulation
 - Chapter 10: Adjoint (costate) dynamics as backward sensitivity integration
 - Chapter 11: Control synthesis via DDP, iLQR, and MPC
@@ -128,12 +137,14 @@ Each part builds on the previous, progressing from pure geometric foundations th
 #### Mathematical Prerequisites
 
 This thesis assumes familiarity with:
+
 - **Multivariable calculus**: Partial derivatives, gradients, Jacobians
 - **Linear algebra**: Vector spaces, linear maps, eigenvalues
 - **Ordinary differential equations**: Existence and uniqueness theorems
 - **Basic functional analysis**: Normed spaces, limits, $o(\cdot)$ and $O(\cdot)$ notation
 
 The thesis introduces, as needed:
+
 - Differential geometry concepts (manifolds, tangent bundles)
 - Variational calculus (Euler-Lagrange equations, Hamiltonian mechanics)
 - Control theory foundations (state-space representation, LQR, stability)
@@ -142,9 +153,10 @@ The thesis introduces, as needed:
 
 The mathematical framework developed here applies to:
 
-✅ **Smooth nonlinear systems**: Vector fields $f(x,u)$ that are continuously differentiable ($C^1$)
+**Smooth nonlinear systems**: Vector fields $f(x,u)$ that are continuously differentiable ($C^1$)
 
 This includes:
+
 - Mechanical systems (Newtonian, Lagrangian, Hamiltonian)
 - Robotic manipulators and vehicles
 - Aerospace systems (aircraft, spacecraft)
@@ -153,11 +165,11 @@ This includes:
 
 The framework requires modification or does not apply to:
 
-❌ **Discontinuous systems**: Switching controllers, relay systems, variable-structure control
-❌ **Impact dynamics**: Collisions, rigid body contact with instantaneous velocity changes
-❌ **Coulomb friction**: Stick-slip dynamics with set-valued force laws
-❌ **Hybrid systems**: Discrete state transitions combined with continuous dynamics
-❌ **State constraints**: Hard boundaries with inequality constraints
+**Discontinuous systems**: Switching controllers, relay systems, variable-structure control
+**Impact dynamics**: Collisions, rigid body contact with instantaneous velocity changes
+**Coulomb friction**: Stick-slip dynamics with set-valued force laws
+**Hybrid systems**: Discrete state transitions combined with continuous dynamics
+**State constraints**: Hard boundaries with inequality constraints
 
 For these cases, generalizations exist (differential inclusions, Filippov solutions, complementarity systems, hybrid automata) but lie outside this thesis scope.
 
@@ -171,9 +183,10 @@ Consider a nonlinear dynamical system described by the ordinary differential equ
 
 $$
 \dot{x} = f(x,u), \quad x \in \mathbb{R}^n, \; u \in \mathbb{R}^m
-$$ {#thesis-eq-dynamics}
+$$ {#eq-thesis-dynamics}
 
 where:
+
 - $x$ represents the **state vector** (positions, velocities, temperatures, concentrations, etc.)
 - $u$ represents the **control input** or external forcing
 - $f: \mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n$ is the **vector field** encoding system physics
@@ -254,6 +267,7 @@ B = \left.\frac{\partial f}{\partial u}\right|_{(x_0,u_0)} = \begin{bmatrix}
 $$ {#eq-jacobian-B}
 
 These matrices have specific interpretations:
+
 - **$A$**: State Jacobian ($n \times n$)—how each component of $\dot{x}$ depends on each state variable
 - **$B$**: Input Jacobian ($n \times m$)—how $\dot{x}$ responds to control inputs
 
@@ -288,11 +302,13 @@ This is not an approximation of the nonlinear system—it **is** the differentia
 #### Visualization: The Moving Tangent Plane
 
 Imagine a hiker walking along a mountain ridge:
+
 - At each point, the ground is **locally flat** (the tangent plane)
 - But the tangent plane **rotates and tilts** as the hiker moves
 - The mountain is **curved** even though every tangent plane is **flat**
 
 This is precisely the geometric picture for nonlinear dynamics:
+
 - The state space is a **manifold** (possibly curved, complex topology)
 - At each point there is a **tangent space** where dynamics are exactly linear
 - As a trajectory evolves, it passes through a **continuous family of tangent spaces**
@@ -302,6 +318,7 @@ This is precisely the geometric picture for nonlinear dynamics:
 #### System Dynamics
 
 Consider the simple pendulum—a mass hanging from a rigid rod of length $L$, swinging under gravity. Let:
+
 - $\theta$: angle from vertical (downward)
 - $\omega = \dot{\theta}$: angular velocity
 - $g$: gravitational acceleration
@@ -336,6 +353,7 @@ A = \left.\frac{\partial f}{\partial x}\right|_{x_0} = \begin{bmatrix}
 $$ {#eq-pendulum-jacobian-def}
 
 Computing entries:
+
 - $\frac{\partial f_1}{\partial \theta} = \frac{\partial \omega}{\partial \theta} = 0$
 - $\frac{\partial f_1}{\partial \omega} = \frac{\partial \omega}{\partial \omega} = 1$
 - $\frac{\partial f_2}{\partial \theta} = \frac{\partial}{\partial \theta}\left(-\frac{g}{L}\sin\theta\right) = -\frac{g}{L}\cos\theta\big|_{\theta=0} = -\frac{g}{L}$
@@ -372,6 +390,7 @@ $$
 $$ {#eq-pendulum-eigenvalues}
 
 These are **pure imaginary** numbers, indicating:
+
 - **Oscillatory behavior** with no damping
 - **Natural frequency** $\omega_n = \sqrt{g/L}$
 - **Neutrally stable** equilibrium (neither attracting nor repelling)
@@ -408,7 +427,7 @@ $$
 \delta \dot{x}(\delta u_1 + \delta u_2) = \delta \dot{x}(\delta u_1) + \delta \dot{x}(\delta u_2)
 $$
 
-There is no interaction, no coupling, no nonlinear mixing—at the infinitesimal level. The tangent space **moves with the state**, so trajectories are not additive.
+The derivative is additive in the perturbations. Its matrix can still couple coordinates; additivity does not imply mechanical independence. The tangent space **moves with the state**, so trajectories are not additive.
 :::
 
 This is not an approximation we impose for convenience. It is a **mathematical theorem**, inherited directly from the properties of matrix multiplication and the definition of the derivative.
@@ -443,12 +462,12 @@ $$
 \delta \dot{x} = \sum_i \delta \dot{x}_i = B \sum_i \delta u_i
 $$ {#eq-counterfactual}
 
-This **counterfactual decomposition** allows us to attribute portions of the rate of change to individual inputs. The contributions are additive and non-interacting.
+This **counterfactual decomposition** allows us to attribute portions of the rate of change to individual inputs. The differential contributions add within the specified coordinates and nominal model. This does not make actuators mechanically independent or identify physiological causes from measured motion.
 
 ::: {.callout-note}
 ### Validity Domain
 
-Superposition holds for the **instantaneous** mapping to the tangent space at fixed $(x, \text{mode})$; the tangent space **moves with the state**, so trajectories are not additive. When we integrate over finite time intervals, deviations from additivity appear. These deviations arise from manifold curvature: as the state evolves, it passes through different tangent spaces. The nonlinear coupling emerges from how these tangent spaces vary, not from any breakdown of local linearity.
+Superposition holds for the **instantaneous** mapping to the tangent space at fixed $(x, \text{mode})$; the tangent space **moves with the state**, so trajectories are not additive. When we integrate over finite time intervals, deviations from additivity appear. Finite input changes can move the system through different states and therefore change its derivatives. Such nonlinear interactions occur even in flat Euclidean state space. Intrinsic manifold curvature is a different geometric object and is not required for a nonzero residual.
 :::
 
 \newpage
@@ -470,11 +489,13 @@ At each instant, the tangent space provides an exact linear description of the l
 #### Geometric Interpretation
 
 Return to the mountain hiker analogy:
+
 - At each point, the ground is locally flat (tangent plane)
 - The tangent plane rotates and tilts as the hiker moves
 - The mountain is curved even though every tangent plane is flat
 
 For nonlinear dynamics:
+
 - State space is a manifold (possibly curved, complex topology)
 - At each point there is a tangent space (exactly linear)
 - Trajectories pass through a continuous family of tangent spaces
@@ -487,7 +508,7 @@ This perspective transforms how we think about nonlinearity. The "nonlinear effe
 
 1. The trajectory passing through regions where tangent spaces differ significantly
 2. The accumulated effect of these differences over time
-3. The **curvature** of the manifold encoded in how $A(t)$ and $B(t)$ vary
+3. The state and input dependence of the vector-field derivatives, which is not a measurement of intrinsic manifold curvature
 
 Nonlinearity is **relocated** from the local structure (which is exactly linear) to the global geometry (how local structures fit together).
 
@@ -502,6 +523,7 @@ x(t + \Delta t) = x(t) + f(x(t),u(t)) \, \Delta t + \frac{1}{2}\frac{d}{dt}f(x(t
 $$ {#eq-taylor-time}
 
 The terms break down as:
+
 1. **Zeroth order**: $x(t)$ — current state
 2. **First order**: $f(x(t),u(t)) \, \Delta t$ — tangent space prediction (linear contribution)
 3. **Second order and higher**: $O(\Delta t^2)$ — curvature effects
@@ -549,6 +571,7 @@ The theoretical framework developed thus far is not merely academic—it underli
 Linear Quadratic Regulation (LQR) solves the following problem:
 
 **Given:**
+
 - Linear system: $\dot{x} = Ax + Bu$
 - Quadratic cost: $J = \int_0^\infty (x^T Q x + u^T R u) dt$
 - Matrices $Q \succeq 0$ (positive semidefinite), $R \succ 0$ (positive definite)
@@ -561,34 +584,19 @@ $$
 A^T P + P A - P B R^{-1} B^T P + Q = 0
 $$ {#eq-riccati}
 
-with $K = R^{-1} B^T P$.
+with $K = R^{-1} B^T P$. Standard sufficient assumptions for the stabilizing infinite-horizon solution are stabilizability of $(A,B)$ and detectability of $(Q^{1/2},A)$. Select the stabilizing positive-semidefinite solution; the matrix equation alone does not guarantee that an arbitrary root defines an optimal stabilizer.
 
-#### Why LQR Works for Nonlinear Systems
+#### What a Nonlinear LQR Design Establishes
 
-But real systems are rarely linear. Why does LQR work so well in practice? The answer lies in the **exactness of tangent space linearization**.
+At an equilibrium, a differentiable nonlinear system has a linear first variation. If the resulting closed-loop Jacobian is Hurwitz, the smooth nonlinear closed loop is locally asymptotically stable. This is a local result with a model-dependent neighborhood. It does not establish that the linear feedback globally minimizes the nonlinear objective.
 
-When we apply LQR to a nonlinear system:
+A $C^2$ cost has a second-order Taylor model. Its linear term vanishes at an unconstrained stationary minimum, but the Hessian may be singular or zero: $\ell(x)=x^4$ has no nonzero quadratic leading term. Along a general nominal trajectory, retain cost gradients and state-input cross derivatives rather than assuming each stage is at a minimum.
 
-1. At each operating point $(x,u)$, compute $(A,B) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial u}\right)$
-2. The linearization captures the **exact infinitesimal dynamics** at that point
-3. The quadratic cost is similarly justified: any smooth cost function is quadratic to leading order near a minimum (via Taylor expansion)
+Along a dynamically feasible moving reference, time-varying LQR propagates a value approximation backward from the terminal cost. Solving independent equilibrium Riccati equations at each instant is a different design. The finite-horizon recursion, nonlinear rollout, input constraints, and stability argument must be checked separately. See the [reviewed optimal-control chapter](../The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd).
 
-The resulting controller operates in a **sequence of tangent spaces** along the trajectory. At each instant, it computes the optimal action based on the local linear-quadratic structure—and this local structure is exact, not approximate.
+#### Gain Scheduling Requires Its Own Check
 
-::: {.callout-important}
-### LQR's Success Explained
-
-The success of LQR for nonlinear systems stems from exploiting the **exactness of the tangent-space representation**, not from any assumption that the true system is globally linear.
-:::
-
-#### Gain Scheduling
-
-**Gain scheduling** makes this explicit:
-1. Compute LQR gains $K(x)$ at various operating points
-2. Interpolate between gains during operation
-3. Controller adapts as system moves through tangent spaces
-
-This is implicit exploitation of the moving tangent space perspective.
+Interpolating locally stabilizing gains does not automatically stabilize the scheduled nonlinear system. For a scheduled Lyapunov metric $P(\rho)$, its derivative contains $\sum_i P_{\rho_i}\dot\rho_i$ as well as the closed-loop Jacobian terms. A common Lyapunov function, appropriate scheduling-rate bounds, or a direct trajectory analysis can supply a certificate. Frozen-point eigenvalues alone do not.
 
 ### Lyapunov Stability Analysis
 
@@ -627,6 +635,7 @@ A = \begin{bmatrix} 0 & 1 \\ -g/L & 0 \end{bmatrix}, \quad \lambda = \pm i\sqrt{
 $$
 
 The eigenvalues are pure imaginary (on the borderline), so Lyapunov's indirect method is **inconclusive**. Indeed, the pendulum equilibrium is:
+
 - Stable (nearby trajectories stay nearby)
 - But not asymptotically stable (they don't converge to equilibrium)
 - Neutrally stable—consistent with conservative mechanical system
@@ -637,11 +646,12 @@ For the inverted pendulum at $x_e = [\pi, 0]^T$, one eigenvalue would be positiv
 #### Connection to Tangent Space Framework
 
 Lyapunov stability analysis via linearization succeeds because:
+
 - The tangent space at equilibrium captures exact local dynamics
 - Eigenvalues encode local growth/decay rates exactly
 - For stability, only local behavior matters (by definition)
 
-This is another manifestation of "exact superposition in the infinitesimal" enabling rigorous global conclusions.
+This yields rigorous local conclusions under the stated smoothness and spectral assumptions. Global attraction requires an additional argument over a specified domain.
 
 ### Practical Implications
 
@@ -656,135 +666,85 @@ The tangent space perspective suggests a design philosophy:
 #### When Linear Techniques Suffice
 
 Linear control techniques (LQR, pole placement, loop shaping) work well when:
+
 - Operating region is small (tangent spaces don't vary much)
 - Trajectory stays near equilibrium (single tangent space dominates)
 - Curvature is mild (residuals small)
 
 #### When Nonlinear Techniques Required
 
-Explicitly nonlinear methods (feedback linearization, backstepping, MPC) become necessary when:
+Nonlinear analysis or controller designs may be useful in the following situations; these features alone do not prove that a linear controller must fail:
+
 - Large operating regions (tangent spaces vary significantly)
 - Complex manifold topology (multiple equilibria, limit cycles)
 - Strong curvature (large residuals)
 
-The tangent space framework provides the conceptual foundation for understanding both regimes.
-
 \newpage
 
-## Residuals and Manifold Curvature
+## Residuals, Reference Motion, and Nonlinearity
 
-### Defining Residuals
+### An Interaction Requires Four Comparable Trajectories
 
-#### Additivity Failures
-
-We have established that in the tangent space at a fixed state, instantaneous superposition holds exactly:
+Fix an initial state, model, time interval, and nominal input $\bar u$. Let $x_{00}$ use $\bar u$, $x_{10}$ use $\bar u+\epsilon v_1$, $x_{01}$ use $\bar u+\epsilon v_2$, and $x_{11}$ use $\bar u+\epsilon(v_1+v_2)$. In a common state coordinate chart, define
 
 $$
-\delta \dot{x}(\delta u_1 + \delta u_2) = \delta \dot{x}(\delta u_1) + \delta \dot{x}(\delta u_2)
-$$
+r(t_1)=x_{11}(t_1)-x_{10}(t_1)-x_{01}(t_1)+x_{00}(t_1).
+$$ {#eq-thesis-residual-def}
 
-But when we integrate over finite time, deviations from additivity appear. Consider applying two inputs $u_1$ and $u_2$ separately, then together, over interval $[t_0, t_1]$:
+The fourth term is the **evolved nominal trajectory**, not the initial state. With zero nominal input it is the evolved zero-input trajectory. For the scalar linear system $\dot x=ax+u$, constant $u$, and duration $T$, the endpoint is $e^{aT}x_0+u(e^{aT}-1)/a$ for $a\ne0$. The four-trajectory residual is zero. Replacing its last term by $x_0$ gives $x_0(1-e^{aT})$, a false interaction even in this linear system.
 
-- **Input 1 alone**: $x_1(t_1)$ starting from $x(t_0)$
-- **Input 2 alone**: $x_2(t_1)$ starting from $x(t_0)$
-- **Both inputs**: $x_{12}(t_1)$ starting from $x(t_0)$
+For $\dot x=u^2$ on the Euclidean line and constant perturbations, the same residual is $2\epsilon^2v_1v_2T$. The state space is flat; the input-to-flow map is nonlinear. Ordinary Hessians depend on coordinates and are not intrinsic Riemann curvature tensors. On a manifold, state subtraction requires a declared chart or retraction and a consistent comparison point.
 
-Define the **residual**:
+### First Variations and the Mixed Second Variation
 
-$$
-r = x_{12}(t_1) - x_1(t_1) - x_2(t_1) + x(t_0)
-$$ {#thesis-eq-residual-def}
-
-(The $+x(t_0)$ term corrects for double-counting the initial condition.)
-
-For linear systems, $r = 0$ exactly—superposition holds globally. For nonlinear systems, $r \neq 0$ in general. The residual quantifies the **failure of additivity**.
-
-#### Geometric Interpretation
-
-Residuals arise from **manifold curvature**. As trajectories evolve:
-
-1. They pass through different tangent spaces
-2. The tangent spaces themselves vary in orientation and structure
-3. The accumulated effect depends on the path taken through state space
-
-The residual $r$ measures this path-dependence—it is a geometric feature, not a modeling error.
-
-::: {.callout-important}
-### Residuals as Geometric Objects
-
-Residuals are not approximation errors or numerical artifacts. They represent genuine second-order nonlinear coupling encoded in the curvature of the state-space manifold.
-:::
-
-### Quantifying Residuals
-
-#### Scaling Analysis
-
-For small perturbations, we expect:
+For a fixed finite horizon, assume $f(x,u,t)$ is $C^2$ in state and input on a neighborhood containing the relevant trajectories, with sufficient time regularity and bounded input directions. Let
 
 $$
-\|r\| = O(\|\delta x\|^2)
-$$ {#eq-residual-scaling}
+\dot\xi_i=A(t)\xi_i+B(t)v_i,\qquad \xi_i(t_0)=0,
+\quad A=f_x(\bar x,\bar u,t),\quad B=f_u(\bar x,\bar u,t).
+$$
 
-This follows from Taylor expansion: the first-order terms (tangent space) cancel exactly, leaving second-order terms (curvature).
-
-More precisely, for perturbations of size $\epsilon$:
+These are exact first variations along one nominal trajectory. Their sum obeys the same linear equation. Define $\eta_{12}$ as the mixed second variation of the solution with respect to the two input amplitudes. It satisfies
 
 $$
-\|r\| \leq \frac{1}{2} \epsilon^2 \int_{t_0}^{t_1} \|H_f(x(t))\| \, dt
-$$ {#thesis-eq-residual-bound}
-
-where $H_f(x) = \nabla^2 f(x)$ is the Hessian of $f$ (encoding the second-order curvature of the vector field).
-
-::: {.callout-note}
-### Interpretation
-
-- Residuals scale quadratically with perturbation size $\epsilon$
-- They accumulate over time (integral over trajectory)
-- They depend on the local curvature of the vector field ($\|H_f\|$), not the Jacobian
-
-For small perturbations and short times, residuals are negligible. For large perturbations or long times, they become significant.
-:::
-
-#### Connection to Second-Order Geometry
-
-For control systems evolving in $\mathbb{R}^n$ (flat space), the relevant curvature object is the **Hessian** of the vector field $f$, not the Riemann curvature tensor (which vanishes identically in flat space). The residual accumulation is approximated as:
+\dot\eta_{12}=A\eta_{12}+S_{12},\qquad \eta_{12}(t_0)=0,
+$$
 
 $$
-r \approx \frac{1}{2} \int_{t_0}^{t_1} H_f(x(t))[\delta x(t), \delta x(t)] \, dt
+S_{12}=f_{xx}[\xi_1,\xi_2]+f_{xu}[\xi_1,v_2]
++f_{xu}[\xi_2,v_1]+f_{uu}[v_1,v_2].
 $$ {#eq-curvature-connection}
 
-where $H_f(x)[\delta x, \delta x]$ denotes the quadratic form defined by the Hessian of $f$ at $x$. This formalizes the intuition that residuals measure how the vector field "curves" away from its linear approximation along the trajectory.
-
-### Practical Implications
-
-#### Validity Regime
-
-The tangent space linearization is most accurate when residuals are small:
+Every derivative is evaluated along the same nominal state and input. For a control-affine system, $f_{uu}=0$, but $f_{xu}$ can be nonzero when the input vector fields depend on state. The interaction is
 
 $$
-\frac{\|r\|}{\|\delta x\|} \ll 1
+r(t_1)=\epsilon^2\eta_{12}(t_1)+o(\epsilon^2),
+\qquad
+\eta_{12}(t_1)=\int_{t_0}^{t_1}\Phi(t_1,t)S_{12}(t)\,dt.
+$$ {#eq-residual-scaling}
+
+There is no factor of $1/2$ on this mixed interaction: the two symmetric mixed terms in the Taylor expansion cancel that factor. A single trajectory's second-order Taylor error is a different quantity.
+
+### Transport Is Part of the Bound
+
+For a chosen consistent norm and fixed interval,
+
+$$
+\|r(t_1)\|\leq\epsilon^2\int_{t_0}^{t_1}
+\|\Phi(t_1,t)\|\,\|S_{12}(t)\|\,dt+o(\epsilon^2).
+$$ {#eq-thesis-residual-bound}
+
+The Jacobian matters through $\Phi$ and the first variations inside $S_{12}$. For $\dot x=ax+u^2$, constant directions about $\bar u=0$ give $r=2\epsilon^2v_1v_2(e^{aT}-1)/a$. A constant Hessian source can therefore be amplified exponentially. A bound proportional to $T$ is valid only when its coefficient controls this transport and the other terms over the entire stated interval; it is not a universal linear growth law.
+
+### What a Small Residual Does Not Establish
+
+A small interaction residual does not bound every prediction error. For instance, two input directions may have no mutual interaction while each has its own nonlinear self-effect. A zero denominator also makes $\|r\|/\|\delta x\|$ unusable. Choose physical scales or a metric, a reference magnitude bounded away from zero, and a task tolerance:
+
+$$
+\frac{\|r\|_W}{s_{\mathrm{reference}}}\ll1,\qquad s_{\mathrm{reference}}>0.
 $$ {#eq-validity-criterion}
 
-This provides a quantitative criterion for when linear techniques suffice.
-
-#### Adaptive Control Strategies
-
-Monitoring residuals in real-time allows:
-1. **Detecting** when nonlinear effects become significant
-2. **Adapting** control gains or switching to nonlinear methods
-3. **Validating** model-based predictions against measurements
-
-#### Model-Based vs. Geometric Errors
-
-Distinguishing:
-- **Model error**: Mismatch between true physics and assumed model $f(x,u)$
-- **Geometric residuals**: Inevitable second-order effects from manifold curvature
-
-Even with a perfect model, geometric residuals exist. They are features of the mathematics, not deficiencies of modeling.
-
-\newpage
-
----
+This is an interaction diagnostic, not a stability or optimality certificate. Separately check finite-model prediction errors, disturbances, discretization error, and active contact modes. A computation should demonstrate convergence under tighter integration tolerances before calling its residual physical.
 
 ## Part II: Integral Superposition and Transport {.unnumbered}
 
@@ -848,6 +808,7 @@ This is the **endpoint variation**—the change in state perturbation from start
 What superposes is the **variation between endpoints**, not the "fractional cause" of the final state. This is a subtle but crucial point.
 
 Consider two inputs $u_1(t)$ and $u_2(t)$ applied from $t_0$ to $t_1$:
+
 - We can exactly compute: $\Delta x_1 = x_1(t_1) - x(t_0)$ and $\Delta x_2 = x_2(t_1) - x(t_0)$
 - If both are applied: $\Delta x_{12} = x_{12}(t_1) - x(t_0)$
 - The integrated variation equation tells us how $\Delta x_1$ and $\Delta x_2$ relate to $\Delta x_{12}$
@@ -986,6 +947,7 @@ J = \phi(x(t_1)) + \int_{t_0}^{t_1} L(x(t), u(t), t) \, dt
 $$ {#eq-cost-functional}
 
 where:
+
 - $\phi(x(t_1))$: terminal cost
 - $L(x, u, t)$: running cost (Lagrangian)
 
@@ -1016,6 +978,7 @@ This is the **adjoint equation**—it integrates sensitivities backward from the
 ### Physical Interpretation
 
 The costate $\lambda(t)$ represents the "shadow price" or "marginal value" of the state at time $t$:
+
 - If we perturb $x(t)$ by $\delta x(t)$, the cost changes by approximately $\lambda(t)^T \delta x(t)$
 - Integrating backward accumulates these marginal values
 - At $t_0$, $\lambda(t_0)^T \delta x(t_0)$ gives the total cost impact of initial condition perturbations
@@ -1041,13 +1004,13 @@ This is the basis for gradient-based optimization in optimal control.
 
 ### Newton's Second Law
 
-For a mechanical system with generalized coordinates $q$ and momenta $p = M(q)\dot{q}$:
+For a mechanical Lagrangian $L_m=T-V$ with $p=\partial L_m/\partial\dot q=M(q)\dot q$, the Euler–Lagrange momentum equation can be written:
 
 $$
 \frac{dp}{dt} = f(q, \dot{q}) + u
 $$ {#eq-newton}
 
-where $u$ represents applied forces.
+Here $u$ is the chosen generalized applied load and $f=\partial L_m/\partial q+Q_{\mathrm{other}}$. The derivative $\partial L_m/\partial q$ includes configuration-dependent kinetic terms as well as potential forces. Canonical generalized momentum need not equal a Cartesian momentum component. For Cartesian translation with constant mass, the equation reduces to Newton's law with all other external forces included in $f$.
 
 ### Impulse Definition
 
@@ -1063,7 +1026,7 @@ $$
 \int_{t_0}^{t_1} \frac{dp}{dt} dt = p(t_1) - p(t_0) = \int_{t_0}^{t_1} [f + u] dt
 $$ {#eq-impulse-momentum}
 
-If the system starts at rest ($\dot{q}(t_0) = 0$) and $f$ represents damping or potential forces that integrate to small values, then approximately:
+If the system starts at rest ($\dot{q}(t_0) = 0$) and the integral of every retained term in $f$ is demonstrably negligible on the stated interval, then approximately:
 
 $$
 p(t_1) \approx \int_{t_0}^{t_1} u(\tau) d\tau = J
@@ -1082,10 +1045,10 @@ $$ {#eq-impulse-superposition}
 This is **exact**—impulses superpose because integration is linear. The resulting momentum change is:
 
 $$
-p(t_1) = p(t_0) + J_1 + J_2 + \text{[higher-order]}
+p(t_1) = p(t_0) + J_1 + J_2 + \int_{t_0}^{t_1}f(q(t),\dot q(t))\,dt
 $$ {#eq-momentum-superposition}
 
-Higher-order terms arise from nonlinear coupling (e.g., $f$ depending on $\dot{q}$), but the impulse contributions are exactly additive.
+This is exact bookkeeping on the combined trajectory. The remaining integral is not generally higher order or small; gravity can contribute at first order in elapsed time. If force laws or feedback depend on the state, their actual histories also change across separate counterfactual runs.
 
 ::: {.callout-note}
 ## Interpretation
@@ -1109,13 +1072,13 @@ $$
 W = \int_{t_0}^{t_1} P(\tau) d\tau = \int_{t_0}^{t_1} u(\tau)^T \dot{q}(\tau) d\tau
 $$ {#eq-work}
 
-By the work-energy theorem (from integrating Newton's law and using $p = M\dot{q}$):
+For generalized load $u$ paired with $\dot q$, this is the work of that load. The kinetic-energy balance must include the work $W_{\mathrm{other}}$ of all other forces, including gravity when it is not absorbed into potential energy:
 
 $$
-W = E_k(t_1) - E_k(t_0)
+W+W_{\mathrm{other}}=E_k(t_1)-E_k(t_0)
 $$ {#eq-work-energy}
 
-where $E_k = \frac{1}{2}\dot{q}^T M \dot{q}$ is kinetic energy.
+Here $E_k=\tfrac12\dot q^TM\dot q$. For a time-independent conservative potential and only dissipative loads $-d$ besides $u$, the mechanical-energy balance is $\Delta(E_k+V)=\int(u-d)^T\dot q\,dt$. Ideal stationary constraint reactions do no work; moving supports can. These assumptions must be stated before equating actuator work with an energy change.
 
 ### Superposition of Work
 
@@ -1132,7 +1095,7 @@ However, there's a subtlety: $\dot{q}(\tau)$ itself depends on the forces. So wh
 ::: {.callout-warning}
 ## Variation vs. Causation
 
-The work done by each force adds linearly: $W_{12} = W_1 + W_2$. But the final kinetic energy $E_k(t_1)$ does not decompose as "fraction from force 1" plus "fraction from force 2" because the velocity $\dot{q}$ depends nonlinearly on both forces.
+The force-work terms add along the same combined trajectory, providing a valid signed energy budget when all terms are included. Those terms are not the works obtained by running each input alone, and normalized work fractions do not uniquely identify physiological causation or efficiency. Negative work and an initial energy store can also make naive percentage interpretations misleading.
 
 This reinforces: **integrated variations** superpose; **fractional causation** does not.
 :::
@@ -1156,130 +1119,84 @@ $$
 \Psi(u_1 + u_2) = \Psi(u_1) + \Psi(u_2)
 $$
 
-**Important caveat:** This superposition holds only for variations at a fixed trajectory $x(t)$. If $x(t)$ itself depends nonlinearly on $u$ (as it generally does in closed-loop or trajectory optimization settings), then the principle does not hold globally — changing $u$ changes the trajectory, and the two contributions cannot be evaluated independently.
+**Important caveat:** This integral identity holds for any such input histories evaluated along the same fixed trajectory $x(t)$; the histories need not be infinitesimal. If $x(t)$ itself depends nonlinearly on $u$ (as it generally does in closed-loop or trajectory optimization settings), then the principle does not hold globally — changing $u$ changes the trajectory, and the two contributions cannot be evaluated independently.
 :::
 
 Impulse and work are special cases where $g = u$ and $g = u^T \dot{q}$ respectively. The linearity of integration ensures exact additivity of these quantities, even as the underlying dynamics remain nonlinear.
 
 \newpage
 
-## Global Residuals and Error Quantification
+## Finite-Horizon Residuals and Error Quantification
 
-## Second-Order Residual Analysis
+### Keep the Baseline and the Perturbation Definition Fixed
 
-### Residual Definition (Revisited)
-
-From Chapter 4, the residual from applying two inputs together vs. separately is:
+The four-trajectory interaction in @eq-thesis-residual-def can also be written using finite deviations $\Delta x_{ij}=x_{ij}-x_{00}$:
 
 $$
-r(t_1) = x_{12}(t_1) - x_1(t_1) - x_2(t_1) + x(t_0)
+r(t_1)=x_{11}(t_1)-x_{10}(t_1)-x_{01}(t_1)+x_{00}(t_1).
 $$ {#eq-residual-global}
 
-For **variations** (perturbations around a nominal trajectory), this becomes:
-
 $$
-r(t_1) = \delta x_{12}(t_1) - \delta x_1(t_1) - \delta x_2(t_1)
+r=\Delta x_{11}-\Delta x_{10}-\Delta x_{01}.
 $$ {#eq-residual-variation}
 
-where subscripts denote which inputs were applied.
+These finite deviations differ from the first variations $\xi_i$, whose equation is linear and whose interaction is exactly zero. The notation must not quietly turn one into the other.
 
-### Scaling With Perturbation Size
-
-Via Taylor expansion of the nonlinear dynamics, residuals scale as:
+For a smooth solution map on a fixed interval,
 
 $$
-\|r(t_1)\| = O(\epsilon^2)
+\|r\|=O(\epsilon^2).
 $$ {#eq-residual-order}
 
-where $\epsilon$ is a measure of perturbation magnitude (e.g., $\epsilon = \max\{\|\delta u_1\|, \|\delta u_2\|\}$).
-
-More precisely:
+If $\|\Phi(t_1,t)\|\,\|S_{12}(t)\|\leq C_T$ throughout an interval of duration $T$, then
 
 $$
-\|r(t_1)\| \leq C (t_1 - t_0) \epsilon^2
+\|r\|\leq\epsilon^2 C_T T+o(\epsilon^2).
 $$ {#eq-residual-bound-time}
 
-where $C$ depends on the second derivatives of $f$ (the Hessian) and the trajectory.
+$C_T$ can grow rapidly with the horizon. Quadratic order does not mean exact quadrupling at arbitrary amplitudes: the mixed coefficient can vanish, higher orders can matter, and contacts can destroy smooth dependence. Convergence in perturbation amplitude should be tested at a fixed horizon.
 
-### Interpretation
+### Interaction and Single-Trajectory Approximation Error
 
-- Residuals are **quadratic** in perturbation size: doubling the perturbations quadruples the residual
-- They accumulate **linearly** in time: $\|r\| \propto (t_1 - t_0)$
-- They depend on **curvature**: regions of high curvature produce larger residuals
-
-::: {.callout-note}
-## Practical Implication
-
-For small perturbations ($\epsilon \ll 1$) and short times, $\|r\| / \epsilon \ll 1$, so the linear approximation (integral superposition) is excellent. For large perturbations or long times, residuals become significant, indicating that nonlinear effects must be accounted for.
-:::
-
-## Connection to Hessian and Curvature
-
-### Second Derivatives
-
-Residuals arise from second-order terms in the Taylor expansion of $f(x, u)$. The Hessian matrices:
+The relevant Hessians are
 
 $$
-H_x = \frac{\partial^2 f}{\partial x^2}, \quad H_u = \frac{\partial^2 f}{\partial u^2}, \quad H_{xu} = \frac{\partial^2 f}{\partial x \partial u}
+H_x=f_{xx},\qquad H_u=f_{uu},\qquad H_{xu}=f_{xu}.
 $$ {#eq-hessians}
 
-encode the curvature of the vector field. The residual can be approximated as:
+The mixed interaction uses $S_{12}$ from @eq-curvature-connection:
 
 $$
-r(t_1) \approx \frac{1}{2}\int_{t_0}^{t_1} \Phi(t_1, t) \left[ H_x : (\delta x \otimes \delta x) + 2 H_{xu} : (\delta x \otimes \delta u) + H_u : (\delta u \otimes \delta u) \right] dt
+r(t_1)=\epsilon^2\int_{t_0}^{t_1}\Phi(t_1,t)S_{12}(t)\,dt+o(\epsilon^2).
 $$ {#eq-residual-hessian}
 
-where $:$ denotes tensor contraction.
+By comparison, a single-input expansion $x_\epsilon=\bar x+\epsilon\xi+\tfrac12\epsilon^2\eta+o(\epsilon^2)$ has a self-variation source $f_{xx}[\xi,\xi]+2f_{xu}[\xi,v]+f_{uu}[v,v]$. Both calculations need transport. Neither identifies intrinsic manifold curvature from a measured residual.
 
-### Curvature Interpretation
+### A Task-Based Interpretation for the Swing
 
-In differential geometry, curvature measures how tangent spaces twist relative to each other. For our context:
-- **Flat manifolds** (linear systems): All tangent spaces parallel $\Rightarrow$ zero curvature $\Rightarrow$ zero residuals
-- **Curved manifolds** (nonlinear systems): Tangent spaces rotate/twist $\Rightarrow$ nonzero curvature $\Rightarrow$ nonzero residuals
+Specify whether comparisons use the same elapsed time or an event such as first ball contact. A perturbed trajectory may reach that event at a different time, so a contact-event endpoint map must include event-time sensitivity; smooth-flow expressions alone do not provide it. A changed contact mode requires a hybrid analysis.
 
-Residuals are the **observable manifestation** of manifold curvature in the dynamics.
-
-## Validity Regime
-
-### Quantitative Criterion
-
-The linearized/integral superposition framework is valid when:
+In a common coordinate chart, compare residuals using declared scales:
 
 $$
-\frac{\|r(t_1)\|}{\|\delta x(t_1)\|} \ll 1
+\chi=\|r\|_W/s_{\mathrm{reference}},\qquad s_{\mathrm{reference}}>0.
 $$ {#eq-validity-quantitative}
 
-Roughly, "the residual is much smaller than the perturbation itself."
-
-Substituting the scaling:
+If the chosen perturbation response scale is proportional to $\epsilon$, a bounded mixed response gives a diagnostic of order
 
 $$
-\frac{C (t_1 - t_0) \epsilon^2}{\epsilon} = C (t_1 - t_0) \epsilon \ll 1
+\chi=O(\epsilon C_T T).
 $$ {#eq-validity-simplified}
 
-This gives:
+For a prescribed tolerance $\chi_{\max}$, a leading-order estimate is
 
 $$
-\epsilon \ll \frac{1}{C (t_1 - t_0)}
+\epsilon C_T T\lesssim\chi_{\max},
 $$ {#eq-validity-epsilon}
 
-**Interpretation:**
-- Smaller perturbations $\Rightarrow$ longer validity
-- Shorter time horizons $\Rightarrow$ broader validity
-- Lower curvature ($C$ small) $\Rightarrow$ broader validity
+with scales absorbed into $C_T$. It is meaningful only where the derivative bounds and remainder estimates hold. There is no universal threshold such as 0.1 at which a nonlinear controller becomes necessary.
 
-### Adaptive Strategies
-
-In practice, monitor the ratio $\|r\| / \|\delta x\|$:
-- If $\ll 1$: Linear techniques sufficient
-- If $\sim 0.1$: Nonlinear effects becoming noticeable but manageable
-- If $\gtrsim 1$: Nonlinear methods required
-
-This provides a data-driven criterion for switching between linear and nonlinear control strategies.
-
-\newpage
-
----
+Applied to a swing model, this procedure can quantify how two chosen input interventions interact in club position, face orientation, or speed. It does not recover a unique causal allocation of observed performance to muscles. Geometry, state-dependent leverage, activation, shaft storage, feedback, and impact timing can all alter the endpoint map. Compare those mechanisms through explicit model variants and measured uncertainties.
 
 ## Part III: Hamiltonian Structure and Optimal Control {.unnumbered}
 
@@ -1296,15 +1213,15 @@ This provides a data-driven criterion for switching between linear and nonlinear
 
 #### Lagrangian Mechanics
 
-Classical mechanics can be formulated via the **principle of least action**. Define the **action functional**:
+For conservative mechanics, Hamilton's stationary-action principle varies configurations $q(t)$ with fixed endpoints in $S=\int L(q,\dot q,t)dt$; stationarity need not be a minimum. External generalized forces enter the Lagrange–d'Alembert formulation. Optimal control is a distinct constrained variational problem. For its running objective $L$ (which need not be kinetic minus potential energy), define:
 
 $$
 S[x(\cdot), u(\cdot)] = \int_{t_0}^{t_1} L(x(t), u(t), t) \, dt
 $$ {#eq-action}
 
-where $L$ is the **Lagrangian** (often kinetic minus potential energy for mechanical systems).
+Here $L$ denotes an optimization running cost. Using a different symbol such as $\ell$ avoids confusing it with the mechanical Lagrangian.
 
-The actual trajectory $x^*(t)$ extremizes $S$ subject to the dynamics constraint $\dot{x} = f(x, u)$. This leads to the **Euler-Lagrange equations**.
+A candidate minimizing trajectory satisfies necessary conditions for the specified dynamics, endpoint conditions, and admissible inputs. A physical trajectory does not generally minimize an arbitrary chosen control objective.
 
 #### Hamiltonian Formulation
 
@@ -1326,7 +1243,7 @@ $$
 \end{aligned}
 $$ {#eq-hamiltonian-eqs}
 
-These are the **Hamiltonian canonical equations** (Pontryagin's Maximum Principle in continuous time).
+These are the normal, unconstrained interior stationarity conditions for a minimization convention. With bounded inputs, minimize this Hamiltonian over the admissible set instead of universally imposing $H_u=0$. Terminal cost and endpoint constraints determine costate transversality; stationarity alone does not prove a minimum.
 
 ::: {.callout-note}
 ### Connection to Previous Content
@@ -1574,6 +1491,7 @@ This is the standard LQR result, derived from the Hamiltonian formulation!
 ### Connection to Tangent Space Framework
 
 LQR succeeds because:
+
 1. Local linearization ($Ax + Bu$) is exact in tangent space
 2. Quadratic cost aligns with second-order Taylor expansion
 3. Riccati equation propagates cost-to-go exactly along tangent directions
@@ -1599,7 +1517,7 @@ $$
 $$
 $$
 \mu_{\max} \geq 0, \quad u_{\max} - u \geq 0, \quad \mu_{\max}(u_{\max} - u) = 0
-$$ {#thesis-eq-complementarity}
+$$ {#eq-thesis-complementarity}
 
 This yields **saturated control**: $u^* = \text{sat}_{[u_{\min}, u_{\max}]}\left(-R^{-1}B^T \lambda\right)$ for quadratic Hamiltonians.
 
@@ -1728,6 +1646,7 @@ For control applications, RK4 evaluates dynamics at intermediate points. When li
 For systems with varying stiffness or curvature, **adaptive timesteps** improve efficiency.
 
 **Embedded Runge-Kutta** (e.g., Dormand-Prince 5(4)):
+
 - Compute two estimates: $x_{k+1}^{(4)}$ (4th order) and $x_{k+1}^{(5)}$ (5th order)
 - Error estimate: $e_k = \|x_{k+1}^{(5)} - x_{k+1}^{(4)}\|$
 - Adjust step: If $e_k > \epsilon_{\text{tol}}$, reduce $\Delta t$; if $e_k \ll \epsilon_{\text{tol}}$, increase $\Delta t$
@@ -1769,6 +1688,7 @@ Trade-off: Stability vs. computational cost per step.
 **Global error**: Accumulated error over many steps.
 
 For a method with LTE $= O(\Delta t^{p+1})$:
+
 - **Consistency**: LTE $\to 0$ as $\Delta t \to 0$
 - **Stability**: Errors don't grow exponentially
 - **Convergence**: Global error $= O(\Delta t^p)$ (Lax Equivalence Theorem)
@@ -1793,6 +1713,7 @@ $$ {#eq-euler-error-bound}
 where $M$ bounds the second derivative: $\|\frac{d^2 x}{dt^2}\| \leq M$.
 
 **Proof sketch**:
+
 1. LTE at each step: $\|e_k\| \leq \frac{M}{2}\Delta t^2$
 2. Error propagation: $e_{k+1} \leq (1 + L\Delta t)e_k + \frac{M}{2}\Delta t^2$
 3. Sum geometric series with $N = (t_N - t_0)/\Delta t$ steps
@@ -1941,6 +1862,7 @@ B_k = B(x_k, u_k)  # Shape: (2, 1)
 | **Trapezoidal** | 2 | A-stable | Solve NL system | Stiff + accuracy |
 
 **Recommendation for control**:
+
 - Simulation: RK4 or adaptive RK45
 - Optimization (DDP/iLQR): RK4 with analytical Jacobians or autodiff
 - Real-time MPC: Euler or RK2 (computational constraints)
@@ -1974,12 +1896,14 @@ DDP solves nonlinear optimal control via iterated local quadratic approximations
    - Compute cost-to-go quadratic approximation $V_k(x) \approx \text{const} + v_k^T (x - x_k) + \frac{1}{2}(x-x_k)^T V_k (x-x_k)$
    - Optimize locally: $\delta u_k^* = \arg\min Q_k(\delta x_k, \delta u_k)$ where $Q_k$ is local quadratic cost
    - Result: Feedback gain $K_k$ and feedforward term $d_k$
+
 3. **Forward pass**: Apply $\delta u_k = K_k \delta x_k + d_k$ with line search
 4. **Iterate** until convergence
 
 #### Connection to Integral Superposition
 
 DDP exploits:
+
 - **Local linearization** at each step (tangent space)
 - **Local quadratic cost** (second-order expansion)
 - **Linear transport** of cost-to-go via state transition
@@ -2007,7 +1931,7 @@ MPC applies the same principle in real-time:
 3. Measure new state $x(t+\Delta t)$
 4. Repeat with updated state and shifted horizon
 
-MPC is "repeated DDP/iLQR" at each timestep, exploiting integral superposition in each optimization.
+MPC repeatedly solves a finite-horizon problem and applies its first action. DDP or iLQR can serve as nonlinear subproblem solvers; linear-quadratic MPC often uses a quadratic program instead.
 
 ### Detailed DDP Derivation
 
@@ -2043,7 +1967,7 @@ Linearize dynamics:
 
 $$
 \delta x_{k+1} = A_k \delta x_k + B_k \delta u_k + o(\|\delta x_k\|, \|\delta u_k\|)
-$$ {#thesis-eq-linearized-dynamics}
+$$ {#eq-thesis-linearized-dynamics}
 
 where $A_k = \frac{\partial f}{\partial x}|_k$, $B_k = \frac{\partial f}{\partial u}|_k$.
 
@@ -2075,9 +1999,9 @@ $$
 \begin{aligned}
 q_x &= L_x + A_k^T v_{k+1} \\
 q_u &= L_u + B_k^T v_{k+1} \\
-Q_{xx} &= L_{xx} + A_k^T P_{k+1} A_k \\
-Q_{xu} &= L_{xu} + A_k^T P_{k+1} B_k \\
-Q_{uu} &= L_{uu} + B_k^T P_{k+1} B_k
+Q_{xx} &= L_{xx} + A_k^T P_{k+1} A_k + \sum_i (v_{k+1})_i(f_i)_{xx} \\
+Q_{xu} &= L_{xu} + A_k^T P_{k+1} B_k + \sum_i (v_{k+1})_i(f_i)_{xu} \\
+Q_{uu} &= L_{uu} + B_k^T P_{k+1} B_k + \sum_i (v_{k+1})_i(f_i)_{uu}
 \end{aligned}
 $$ {#eq-q-derivatives}
 
@@ -2106,7 +2030,7 @@ $$ {#eq-gains-feedforward}
 Substituting optimal control back:
 
 $$
-V_k(\delta x_k) = q + q_x^T \delta x_k - \frac{1}{2}q_u^T Q_{uu}^{-1} q_u + \frac{1}{2}\delta x_k^T (Q_{xx} - Q_{xu}Q_{uu}^{-1}Q_{xu}^T) \delta x_k
+V_k(\delta x_k) = q + (q_x-Q_{xu}Q_{uu}^{-1}q_u)^T \delta x_k - \frac{1}{2}q_u^T Q_{uu}^{-1} q_u + \frac{1}{2}\delta x_k^T (Q_{xx} - Q_{xu}Q_{uu}^{-1}Q_{xu}^T) \delta x_k
 $$ {#eq-value-update}
 
 Thus:
@@ -2122,15 +2046,15 @@ This is the **discrete-time Riccati recursion**, solved backward from $k = N-1$ 
 ::: {.callout-important}
 ### DDP Algorithm (Full)
 
-**Initialization**: Choose initial trajectory $\{\bar{x}_k, \bar{u}_k\}_{k=0}^{N-1}$.
+**Initialization**: Roll out the chosen inputs from the fixed initial state to obtain a dynamically feasible nominal trajectory. Initialize terminal value derivatives from the terminal cost.
 
 **Repeat until convergence:**
 
 1. **Backward Pass** ($k = N-1 \to 0$):
-   - Compute Jacobians: $A_k$, $B_k$
+   - Compute Jacobians $A_k,B_k$ and, for full DDP, componentwise second derivatives of the discrete transition $f_k$
    - Compute cost derivatives: $L_x$, $L_u$, $L_{xx}$, $L_{xu}$, $L_{uu}$
    - Compute Q-function matrices: $q_x, q_u, Q_{xx}, Q_{xu}, Q_{uu}$ (Eq. {@eq-q-derivatives})
-   - Compute gains: $K_k$, $d_k$ (Eq. {@eq-gains-feedforward})
+   - Check positive definiteness of $Q_{uu}$ before solving for $K_k,d_k$; regularize and recompute the backward pass if needed (see @eq-gains-feedforward)
    - Update value function: $v_k$, $P_k$ (Eq. {@eq-value-parameters})
 
 2. **Forward Pass** with Line Search:
@@ -2141,52 +2065,28 @@ This is the **discrete-time Riccati recursion**, solved backward from $k = N-1$ 
 
 3. **Update**: $\{\bar{x}_k, \bar{u}_k\} \leftarrow \{x_k^{\text{new}}, u_k^{\text{new}}\}$
 
-**Convergence check**: $|J^{\text{new}} - J^{\text{old}}| < \epsilon$ or max iterations reached.
+**Convergence check**: Report stationarity, feasibility, accepted improvement, and step size. A tiny cost change can mean stagnation; reaching the iteration limit is not convergence.
 :::
 
 ### Iterative LQR (iLQR) Variant
 
-**iLQR** simplifies by using **first-order cost expansion** in state:
+iLQR omits the value-gradient-weighted **dynamics Hessians** in @eq-q-derivatives. It retains the full quadratic cost model, including state and state-input curvature:
 
 $$
-Q_{xx} = A_k^T P_{k+1} A_k, \quad Q_{xu} = A_k^T P_{k+1} B_k
+Q_{xx}=L_{xx}+A_k^TP_{k+1}A_k,\qquad
+Q_{xu}=L_{xu}+A_k^TP_{k+1}B_k,\qquad
+Q_{uu}=L_{uu}+B_k^TP_{k+1}B_k.
 $$ {#eq-ilqr-approximation}
 
-(ignores $L_{xx}$, $L_{xu}$).
+Thus iLQR is not a first-order cost approximation. Full DDP and iLQR can differ in local curvature, computational cost, and convergence behavior; neither has a universal speed or robustness advantage.
 
-**Trade-off**:
-- **DDP**: Full second-order, faster convergence, requires Hessians
-- **iLQR**: First-order, more robust, cheaper per iteration
+### Convergence Requires More Than Positive Input Curvature
 
-Both exploit exact local linearity; iterations refine nominal trajectory.
+Positive $Q_{uu}$ makes a particular local control minimization well posed. It does not alone prove convergence of the nonlinear iteration. Local quadratic Newton convergence requires a nonsingular reduced Hessian, sufficient derivative regularity, a close initialization, and eventually accepted full steps. DDP convergence results depend on the particular algorithm and assumptions. iLQR's Hessian approximation does not generally give superlinear convergence. See the [worked control chapter](../The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd) for the precise distinction.
 
-### Convergence Analysis
+Use nonlinear rollout, a sufficient-decrease acceptance rule, bounded line search, regularization, and a declared failure exit. If regularization changes the computed policy, evaluate that actual policy in the quadratic model rather than substituting an unregularized Schur-complement formula indiscriminately. Constraints require a compatible constrained subproblem.
 
-#### Local Convergence
-
-::: {.callout-note}
-### Convergence Rate
-
-For smooth problems with positive definite $Q_{uu}$:
-- **DDP**: Quadratic convergence near optimum (Newton-like)
-- **iLQR**: Superlinear convergence
-
-**Proof sketch**: Each iteration solves exact local quadratic problem; residuals $O(\|\delta x\|^2)$ from curvature; successive approximations contract. $\square$
-:::
-
-#### Globally Bounded
-
-**Not globally convergent** without modifications:
-- $Q_{uu}$ may be indefinite (add regularization: $Q_{uu} + \mu I$)
-- Line search ensures descent
-- Initialization matters (use simple heuristic or RRT* warm start)
-
-#### Practical Performance
-
-Typical performance:
-- **Iterations**: 5-20 for convergence
-- **Per iteration cost**: $O(N(n^3 + m^3))$ (Riccati backward pass dominates)
-- **Total**: Fast for $N \sim 100$, $n, m \sim 10$
+No benchmark package establishes a universal 5–20 iteration count here. Dense Riccati algebra includes state-control cross products as well as matrix factorizations; derivative and rollout costs depend on the model and implementation. Report timings together with dimensions, horizon, tolerances, derivative method, and achieved residuals.
 
 ### Constrained MPC Extension
 
@@ -2195,13 +2095,14 @@ Typical performance:
 For $u_{\min} \leq u \leq u_{\max}$:
 
 **Projected DDP**:
+
 - Compute unconstrained $\delta u_k^*$
 - Project: $u_k = \text{clamp}(\bar{u}_k + \alpha \delta u_k^*, u_{\min}, u_{\max})$
 - Iterate with active-set refinement
 
-**Augmented Lagrangian**:
-- Add penalty: $\rho \|\max(0, u - u_{\max})\|^2 + \rho \|\max(0, u_{\min} - u)\|^2$
-- Solve with DDP, increase $\rho$ until constraints satisfied
+**Quadratic Penalty**:
+
+An input-violation penalty can use $\rho \|\max(0, u-u_{\max})\|^2+\rho \|\max(0,u_{\min}-u)\|^2$. This is not an augmented Lagrangian, which also uses multiplier terms and updates. A finite penalty need not enforce exact feasibility, and increasing $\rho$ can worsen conditioning. Check constraint residuals explicitly. Likewise, clipping an unconstrained update is not equivalent to solving the box-constrained quadratic subproblem.
 
 #### State Constraints
 
@@ -2213,7 +2114,7 @@ $$
 L_{\text{aug}}(x, u) = L(x, u) - \mu \sum_i \log(-g_i(x))
 $$ {#eq-log-barrier}
 
-As $\mu \to 0$, solution approaches constrained optimum.
+A logarithmic barrier requires a strictly feasible interior. Convergence of a sequence as $\mu\to0$ requires appropriately solved subproblems and regularity assumptions; it is not a general global-optimality guarantee for a nonlinear problem.
 
 **Sequential quadratic programming** (SQP): Linearize constraints, solve QP subproblem per iteration.
 
@@ -2226,10 +2127,12 @@ At each time $t$:
 1. **Measure** current state $x(t)$
 2. **Solve** finite-horizon optimal control (via DDP/iLQR):
    $$\min_{u(\cdot)} \int_t^{t+T} L(x, u) \, d\tau + \phi(x(t+T))$$ {#eq-mpc-problem}
+
 3. **Apply** first control $u^*(t)$ (open-loop for $\Delta t$)
 4. **Shift** horizon to $[t+\Delta t, t+T+\Delta t]$, repeat
 
-**Receding horizon** compensates for:
+**Receding-horizon replanning** can respond to the following effects, subject to estimation quality, feasibility, and robustness of the chosen design:
+
 - Model mismatch
 - Disturbances
 - Unmodeled dynamics
@@ -2241,44 +2144,22 @@ Continuous re-planning exploits local exactness at each step.
 ::: {.callout-important}
 ### MPC Stability Theorem
 
-If:
-1. Terminal cost $\phi$ is a Lyapunov function: $\phi(x) \geq 0$, $\phi(0) = 0$
-2. Running cost positive definite: $L(x, u) \geq \alpha(\|x\| + \|u\|)$ for $\alpha > 0$
-3. Horizon $T$ sufficiently long
-4. Problem feasible at each step
+For the sampled model $x^+=F(x,u)$, specify a terminal set $X_f$ and terminal controller $k_f$. Require that $k_f$ respects the constraints, maps $X_f$ into itself, and satisfies
 
-Then the closed-loop system is asymptotically stable.
+$$
+\phi(F(x,k_f(x)))-\phi(x)\leq-\ell_d(x,k_f(x)),\qquad x\in X_f,
+$$
 
-**Intuition**: Value function decreases at each step; receding horizon maintains feasibility; positive cost ensures convergence. $\square$
+where $\ell_d$ is the stage cost over a sampling interval. With initial feasibility, exact nominal dynamics, and an attained finite-horizon minimum at each step, shifting the previous optimal sequence and appending $k_f$ supplies a feasible next candidate and the value decrease $V_N(x^+)-V_N(x)\leq-\ell_d(x,u^*)$. A suboptimal solver needs a compatible certified-decrease argument; a small optimization residual alone does not prove this inequality.
+
+Positive-definite state-cost lower bounds, appropriate local upper bounds and continuity of $V_N$, and admissible bounded trajectories then yield the corresponding stability and attraction result on the certified feasible domain. A nonnegative terminal cost alone is not a Lyapunov certificate, and merely choosing a long horizon does not replace these conditions. Disturbances and model mismatch need a separate robust or practical-stability argument.
 :::
 
-### Computational Complexity
+### Computational Complexity and Timing Budgets
 
-#### Per-Iteration Cost
+Dense Riccati algebra involves terms of order $N(n^3+n^2m+nm^2+m^3)$, with opportunities to exploit structure. This excludes model-specific derivative evaluation, full-DDP dynamics Hessians, factorization retries, and constrained subproblems. A forward rollout costs $N$ transition evaluations per line-search trial; a general nonlinear transition does not universally cost $O(n)$. Finite differences and automatic differentiation also have different costs depending on the computational graph.
 
-**Backward pass**:
-- Jacobians: $O(Nn^2m)$ (finite differences or autodiff)
-- Riccati recursion: $O(N(n^3 + m^3))$
-
-**Forward pass**:
-- Simulation: $O(Nn)$ per line search iteration
-- Typical: 3-5 line search steps
-
-**Total per DDP iteration**: $O(Nn^3)$ for $m \ll n$.
-
-#### Real-Time Implementation
-
-For **real-time MPC** with update rate $f_{\text{control}}$:
-
-**Requirement**: Solve optimization in $\Delta t = 1/f_{\text{control}}$.
-
-**Strategies**:
-- Warm start from previous solution
-- Limit DDP iterations (1-3 per MPC step)
-- Coarse discretization ($N = 20{-}50$)
-- Hardware acceleration (GPU for parallel Jacobian comp.)
-
-**Example**: Quadrotor at 100 Hz $\Rightarrow$ 10ms per solve; feasible with $N = 30$, $n = 12$, $m = 4$ on modern CPU.
+At a control rate of 100 Hz, the available sampling interval is 10 ms. That arithmetic is a budget, not evidence that a specified nonlinear optimization meets it. Record hardware, horizon, dimensions, derivative method, worst-case latency, feasibility, and achieved optimization residuals. Warm starts and iteration limits can reduce runtime, but a time limit requires an admissible fallback policy and does not certify convergence. No universal iteration count or real-time benchmark is established here.
 
 ### Robust and Stochastic Extensions
 
@@ -2296,7 +2177,7 @@ $$ {#eq-robust-mpc}
 
 #### Stochastic MPC
 
-For stochastic dynamics $\dot{x} = f(x, u) + \sigma(x, u) \xi$ (noise $\xi$):
+For an Itô model $dx=f(x,u)dt+\sigma(x,u)dW_t$ with Brownian motion $W_t$, admissible controls must be adapted to the available information. One possible risk-sensitive objective is:
 
 **Risk-sensitive cost**:
 
@@ -2304,25 +2185,25 @@ $$
 \min_{u(\cdot)} \mathbb{E}\left[ \int_0^T L(x, u) \, dt + \phi(x(T)) \right] + \lambda \text{Var}[J]
 $$ {#eq-risk-sensitive-cost}
 
-**Certainty-equivalence**: Solve deterministic problem for mean; robust if noise small (exploits local linearity).
+**Certainty equivalence** has precise validity in standard linear-quadratic-Gaussian settings with their separation assumptions. It is not a general robustness theorem for a nonlinear plant. In general, $\mathbb E[f(x,u)]\ne f(\mathbb E[x],\mathbb E[u])$, and even small noise can matter near constraints, unstable modes, or mode transitions. Evaluate the stochastic or robust formulation actually being used.
 
 ### Summary: DDP/iLQR/MPC
 
 **Key insights**:
 
-1. **DDP/iLQR** iteratively solve sequence of exact local LQR problems
+1. **DDP/iLQR** solve local quadratic subproblems whose relation to the nonlinear objective depends on the retained derivatives
 2. **Riccati recursion** propagates cost-to-go backward through tangent spaces
 3. **Feedback gains** $K_k$ exploit exact local superposition
-4. **MPC** applies receding horizon for robustness to disturbances
-5. **Computational efficiency** $O(Nn^3)$ enables real-time control
+4. **MPC** replans; robustness requires additional design assumptions and verification
+5. **Real-time feasibility** depends on measured computation, problem structure, and an admissible fallback
 
-All methods succeed by exploiting the **exact infinitesimal linearity** established in Parts I and II.
+These methods use linear algebra and local derivatives in different ways. Their convergence, stability, and performance require the separate assumptions stated above.
 
 \newpage
 
 ## Case Studies and Worked Examples
 
-This chapter presents three detailed case studies demonstrating the tangent space framework in practice: spacecraft rendezvous (orbital mechanics), planar robot arm (manipulation), and quadrotor stabilization (underactuated flight). Each example includes complete problem formulation, DDP/iLQR implementation, and results analysis.
+This chapter presents three detailed case studies demonstrating the tangent space framework in practice: spacecraft rendezvous (orbital mechanics), planar robot arm (manipulation), and quadrotor stabilization (underactuated flight). Each example provides an illustrative problem setup and algorithm sketch; the status notice below governs the unvalidated numerical targets.
 
 ::: {.callout-important}
 ### Illustrative, Not Validated
@@ -2346,6 +2227,7 @@ $$
 $$ {#eq-cw-equations}
 
 where:
+
 - $(x, y, z)$: relative position (radial, along-track, out-of-plane)
 - $(u_x, u_y, u_z)$: thrust forces
 - $n = \sqrt{\mu/a^3}$: orbital rate (mean motion)
@@ -2485,6 +2367,7 @@ def solve_spacecraft_ilqr(x0, xf, T=1000, N=50, max_iter=20):
 #### Results
 
 **Initial conditions**:
+
 - Position: $[100, 50, 20]$ meters (ahead, along-track, out-of-plane)
 - Velocity: $[0.01, 0.02, 0]$ m/s
 
@@ -2514,9 +2397,10 @@ For nonlinear orbital mechanics (elliptical orbits, J2 perturbations), tangent s
 
 $$
 M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q) = \tau
-$$ {#thesis-eq-robot-dynamics}
+$$ {#eq-thesis-robot-dynamics}
 
 where:
+
 - $M(q)$: Inertia matrix (configuration-dependent)
 - $C(q, \dot{q})$: Coriolis/centrifugal terms
 - $G(q)$: Gravity terms
@@ -2622,6 +2506,7 @@ def inverse_kinematics(target_xy):
 **Target config**: $q_f = \text{IK}([0.3, 0.8])$ $\approx [80°, 40°]$
 
 **Results**:
+
 - Convergence: 12 iters
 - Smooth trajectory respecting arm dynamics (Coriolis effects visible in joint accelerations)
 - Final position error: 1.2 cm (within tolerance)
@@ -2632,6 +2517,7 @@ def inverse_kinematics(target_xy):
 The inertia matrix $M(q)$ **depends on configuration**—tangent spaces vary! At $\theta_2 = 0$ (straight arm), $M$ is maximal; at $\theta_2 = \pm 90°$, different coupling.
 
 DDP succeeds by:
+
 1. Linearizing at each $q_k$ along trajectory (exact local $M(q_k)$)
 2. Propagating cost backward through varying tangent spaces
 3. Computing gains $K_k$ that adapt to local geometry
@@ -2673,6 +2559,7 @@ where $R(q)$ is rotation matrix from body to world frame, $J$ is inertia tensor.
 #### Linearization Challenge
 
 At hover equilibrium:
+
 - $u_i^* = mg/4$ (equal thrust)
 - Small perturbations: $\delta p, \delta v, \delta \theta$ (Euler angles), $\delta \omega$
 
@@ -2697,6 +2584,7 @@ X_opt, U_opt = ddp_solver(quadrotor_dynamics, x0, x_target, N=50)
 ```
 
 **Results**:
+
 - Settles to 5 cm radius in 1.5 s
 - Smooth control (no oscillations)
 - Robust to 20% model uncertainty
@@ -2707,6 +2595,7 @@ X_opt, U_opt = ddp_solver(quadrotor_dynamics, x0, x_target, N=50)
 Quadrotor is **underactuated**: 6 DOF (3 position + 3 orientation), but 4 controls. Cannot independently control all directions instantaneously.
 
 **Tangent space insight**: Locally, the 4 control inputs span a 4D subspace of the 6D acceleration space. DDP finds sequences exploiting this structure:
+
 - Tilt to generate horizontal force (couple position/attitude)
 - Integrate over time to achieve desired position
 
@@ -2749,7 +2638,7 @@ This thesis has developed a unified geometric framework for understanding nonlin
 2. **Linearization captures the exact infinitesimal structure** of smooth dynamics (not an approximation)
 3. **Time evolution passes through a continuous family of exact linear snapshots** (Chapter 2)
 4. **Local optimal control (LQR, Lyapunov) succeeds by exploiting this exactness** (Chapter 3)
-5. **Residuals measure geometric curvature**, not modeling error (Chapter 4)
+5. **Residuals require a matched evolving baseline** and bounds on nonlinear variations and their transport; measured discrepancies can also contain model error
 
 ### Part II: Integral Accumulation
 
@@ -2784,7 +2673,7 @@ Nonlinearity does not eliminate superposition—it **relocates** it along a spec
 | **Single tangent space** | Exact | Linearity of derivatives |
 | **Infinitesimal time** | Exact | Limit definition of $\dot{x}$ |
 | **Integrated variations** | Exact (first-order) | Linearity of integration |
-| **Finite perturbations** | Approximate | Quadratic residuals from curvature |
+| **Finite perturbations** | Approximate | Second-order interactions under a smooth endpoint map |
 | **Global state space** | Generally fails | Tangent spaces vary significantly |
 
 ### Geometric vs. Analytic Perspectives
@@ -2818,6 +2707,7 @@ The framework has immediate practical implications:
 ### Software Implementation
 
 The discrete-time perspective (Part III) directly informs numerical implementations:
+
 - Per-step exact linearization
 - Accumulated variations via recursive state transition
 - Real-time residual monitoring
@@ -2855,12 +2745,14 @@ Part III (control synthesis) needs substantial development:
 ### Theoretical Extensions
 
 **Short-term (1-2 years):**
-- Sharper residual bounds via curvature tensor analysis
+
+- Sharper residual bounds via mixed variations, transport estimates, and declared metrics
 - Explicit connection to Riemannian geometry (metric structure, geodesics)
 - Stochastic extension via tangent spaces to Wiener processes
 - Hybrid system formulation with jump maps
 
 **Long-term (3-5 years):**
+
 - Infinite-dimensional extension to PDE-constrained optimization
 - Information-geometric perspective (Fisher information on manifolds)
 - Quantum-classical correspondence in phase space
@@ -2868,11 +2760,13 @@ Part III (control synthesis) needs substantial development:
 ### Practical Applications
 
 **Immediate (0-1 year):**
+
 - Software library implementing state transition operators and residual monitoring
 - Worked examples: quadrotor, robot arm, spacecraft (complete Part III)
 - Comparison studies: proposed framework vs. standard methods
 
 **Near-term (1-3 years):**
+
 - Industrial case studies (automotive, aerospace, manufacturing)
 - Integration with commercial MPC packages
 - Real-time embedded implementations
@@ -2890,8 +2784,9 @@ This thesis has argued that **nonlinear systems are exactly linear in the instan
 The tangent space is not an approximation we impose for convenience. It is the **exact local structure** of smooth dynamics, inherited from the definition of derivatives and limits. Superposition does not disappear in nonlinear systems—it **relocates** from global state space to local tangent spaces, where it holds exactly at each fixed state. The tangent space moves with the state, so trajectories are not additive—but the instantaneous structure is exact.
 
 This perspective transforms how we think about nonlinearity:
+
 - Not as a failure of linear methods
-- But as a call to **think geometrically**: trajectories winding through manifolds, tangent spaces providing exact local snapshots, curvature encoding nonlinear coupling
+- But as a call to **think geometrically**: trajectories winding through manifolds, tangent spaces providing exact local snapshots, state-dependent dynamics shaping nonlinear coupling
 
 The practical payoff is substantial: it explains why LQR works, why Lyapunov analysis is rigorous, why MPC succeeds—all by recognizing that these methods exploit the **exact local linearity** that exists everywhere in smooth nonlinear systems.
 
@@ -2985,90 +2880,47 @@ The practical payoff is substantial: it explains why LQR works, why Lyapunov ana
 
 This appendix supplies explicit bounds and convergence statements used in the main text.
 
-## B.1 Residual Scaling Bound
+## B.1 A Finite-Difference Bound From the Endpoint Map
 
-Consider a control-affine nonlinear system
-$$
-\dot{x} = f(x) + G(x)u,
-$$
-with $f, G \in C^2$ on a compact tubular neighborhood $\Omega$ around a nominal trajectory $(x^\star(t), u^\star(t))$ on $[t_0, t_1]$.
+Let $F(a,b)=x(t_1;\bar u+a v_1+b v_2)$ use the same initial state for every pair of amplitudes. Assume a $C^2$ solution map exists on a rectangle containing $0\leq a,b\leq\epsilon$. The fundamental theorem of calculus, applied twice componentwise, gives the exact identity
 
-Let $\delta x_1, \delta x_2$ be perturbation trajectories generated by two infinitesimal input perturbations $\delta u_1, \delta u_2$, and define the superposition residual
 $$
-r(t) := \delta x_{12}(t) - \delta x_1(t) - \delta x_2(t),
-$$
-where $\delta x_{12}$ is the perturbation generated by $\delta u_1 + \delta u_2$.
-
-Since $f$ and $G$ are $C^2$ on compact $\Omega$, there exists $M_H > 0$ such that for all $z \in \Omega$:
-$$
-\|D^2 f(z)\| \le M_H, \qquad \|D^2(G(z)u^\star(t))\| \le M_H.
+r=F(\epsilon,\epsilon)-F(\epsilon,0)-F(0,\epsilon)+F(0,0)
+=\int_0^\epsilon\int_0^\epsilon F_{ab}(a,b)\,db\,da.
 $$
 
-By second-order Taylor expansion around $x^\star(t)$, the non-canceling part of the additivity defect is quadratic:
-$$
-\dot{r}(t) = A(t)r(t) + \eta(t), \qquad \|\eta(t)\| \le \frac{M_H}{2}\|\delta x_1(t)+\delta x_2(t)\|^2,
-$$
-with $r(t_0)=0$ and $A(t)=\partial_x(f+Gu^\star)|_{x^\star(t)}$.
+Consequently,
 
-Using variation of constants,
 $$
-r(t_1)=\int_{t_0}^{t_1}\Phi(t_1,\tau)\eta(\tau)\,d\tau,
+\|r\|\leq\epsilon^2\sup_{a,b\in[0,\epsilon]}\|F_{ab}(a,b)\|.
 $$
-and a uniform transition bound $\|\Phi(t_1,\tau)\|\le C_\Phi$, we obtain
-$$
-\|r(t_1)\|
-\le \frac{C_\Phi M_H}{2}\int_{t_0}^{t_1}\|\delta x_1(\tau)+\delta x_2(\tau)\|^2\,d\tau.
-$$
-Therefore,
-$$
-\|r(t_1)\| \le C_r \int_{t_0}^{t_1}\|\delta x(\tau)\|^2\,d\tau
-\quad\text{for } C_r := \frac{C_\Phi M_H}{2},
-$$
-which is the required quadratic scaling.
 
-## B.2 Curvature-Tensor Interpretation
+The mixed second-variation equation in the main text computes $F_{ab}$, using derivatives along each corresponding trajectory. A bound on the state Hessian alone omits mixed state-input terms and nonlinear input effects. For control-affine dynamics $f_0(x)+G(x)u$, the term $D G(x)[\xi]v$ remains even though the pure input Hessian vanishes. Existence of one nominal trajectory is also insufficient: all perturbations used by the bound must remain in the smooth model domain.
 
-Let $\mathcal{M}$ be a Riemannian state manifold with Levi-Civita connection $\nabla$ and curvature tensor $R$.
-For nearby displacement fields $v,w \in T_x\mathcal{M}$ transported along the nominal flow, the first non-commuting term in second-order transport is governed by curvature:
-$$
-\nabla_v\nabla_w \xi - \nabla_w\nabla_v \xi
-= R(v,w)\xi.
-$$
-In coordinates, this contributes second-order coupling of the form
-$$
-r^i \approx \frac{1}{2}R^i_{\;jkl}\,v^j w^k \,\Xi^l + O(\|v\|^3+\|w\|^3).
-$$
-Hence residual magnitude is controlled by sectional curvature:
-$$
-\|r\| \le C_K \|v\|\,\|w\|\,\|\Xi\| + O(3\text{rd order}),
-$$
-which formalizes "residuals as curvature."
+## B.2 Intrinsic Curvature Is a Different Quantity
 
-## B.3 Discrete-Time Convergence Rate
+For a connection $\nabla$, the curvature identity is
 
-For Euler discretization with step $\Delta t$:
 $$
-x_{k+1}=x_k+\Delta t\,f(x_k,u_k),
+R(v,w)\xi=\nabla_v\nabla_w\xi-\nabla_w\nabla_v\xi-\nabla_{[v,w]}\xi.
 $$
-the local truncation error is $O(\Delta t^2)$ under $C^2$ smoothness.
-Over $N=(t_1-t_0)/\Delta t$ steps, global integration error is
+
+The final Lie-bracket term vanishes for commuting coordinate vector fields, but cannot generally be omitted. Curvature can govern parallel-transport holonomy. That geometric operation is not the same as comparing four forced trajectories of an arbitrary vector field.
+
+The counterexample $\dot x=u^2$ lives on the flat Euclidean line, where $R=0$, yet its input interaction is nonzero. It disproves a general bound of this interaction solely by sectional curvature. Coordinate-dependent field derivatives, a specified connection, and intrinsic manifold curvature must be distinguished before proposing a geometric interpretation.
+
+## B.3 Integration Error and Linearization Error
+
+For explicit Euler applied to a sufficiently smooth initial-value problem over a fixed finite interval, bounded local truncation error $O(h^2)$ and a suitable Lipschitz stability bound yield global integration error $O(h)$. The constant depends on the interval and growth of perturbations. Lipschitz continuity alone does not supply the higher differentiability needed for every claimed high-order method.
+
+If the integrated model is the first-variation approximation rather than the full nonlinear system, reducing $h$ converges to that approximate model. It does not remove finite-perturbation error. For a single smooth input direction, write $x_\epsilon=\bar x+\epsilon\xi+\tfrac12\epsilon^2\eta+o(\epsilon^2)$. A computed first-variation endpoint with a uniform Euler error bound satisfies
+
 $$
-\|e_N\| = O(\Delta t).
+\|x_\epsilon(t_1)-x_{\mathrm{linear},h}(t_1)\|
+\leq C_{\mathrm{disc}}h+\tfrac12\epsilon^2\|\eta(t_1)\|+o(\epsilon^2).
 $$
-For linearized-transport accumulation, each step introduces second-order residual $O(\|\delta x_k\|^2\Delta t)$ and first-order discretization defect $O(\Delta t^2)$.
-Under bounded perturbations $\|\delta x_k\|\le \bar{\delta}$:
-$$
-\sum_{k=0}^{N-1} O(\|\delta x_k\|^2\Delta t) = O(\bar{\delta}^2 (t_1-t_0)),
-$$
-and
-$$
-\sum_{k=0}^{N-1} O(\Delta t^2) = O(\Delta t).
-$$
-Therefore the discrete approximation converges with order one in $\Delta t$, with an additive curvature-controlled term:
-$$
-\|e_N\| \le C_1 \Delta t + C_2\int_{t_0}^{t_1}\|\delta x(t)\|^2dt.
-$$
-This gives an explicit practical criterion: refine timestep to reduce integration error, and reduce perturbation magnitude (or operate in lower-curvature regions) to reduce geometric residuals.
+
+The self-variation $\eta$ includes state, input, and mixed derivatives and their transport. This distinguishes convergence of the numerical solver from fidelity of the linearized physical prediction. Assess the two with separate step-size and perturbation-amplitude refinements.
 
 ## Appendix C: Notation Guide and Glossary
 
@@ -3085,7 +2937,7 @@ This gives an explicit practical criterion: refine timestep to reduce integratio
 | $\Phi(t_1, t_0)$ | State transition operator |
 | $\lambda(t)$ | Costate (adjoint variable) |
 | $H(x,u,\lambda,t)$ | Hamiltonian |
-| $L(x,u,t)$ | Lagrangian (running cost) |
+| $L(x,u,t)$ | Optimization running cost; distinct from a mechanical Lagrangian |
 | $r$ | Residual (failure of superposition) |
 
 ## Glossary
@@ -3098,7 +2950,7 @@ This gives an explicit practical criterion: refine timestep to reduce integratio
 
 **Manifold**: Space that locally resembles Euclidean space; may be curved globally.
 
-**Residual**: Deviation from additivity when applying multiple perturbations; $O(\epsilon^2)$ geometric effect.
+**Residual**: Deviation from additivity when applying multiple perturbations; $O(\epsilon^2)$ interaction under stated smoothness and fixed-horizon assumptions.
 
 **State Transition Operator** ($\Phi$): Linear map transporting perturbations forward in time via variational dynamics.
 
