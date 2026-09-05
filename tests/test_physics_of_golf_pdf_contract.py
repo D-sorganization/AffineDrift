@@ -1,5 +1,6 @@
 """PDF-toolchain contracts for The Physics of Golf Quarto book."""
 
+import re
 from pathlib import Path
 
 CONFIG = Path("articles/The_Physics_of_Golf/quarto/_quarto.yml")
@@ -59,15 +60,16 @@ def test_christoffel_expression_is_inside_display_math() -> None:
     assert f"$$\n{inertia_expression}\n$$" in text
 
 
-def test_spine_constraint_expressions_are_inside_display_math() -> None:
-    """Keep the illustrative loop and torque equations in math mode."""
+def test_elastic_and_constraint_expressions_are_inside_display_math() -> None:
+    """Keep the actual closure and tissue-model equations in math mode."""
     text = PARALLEL_MECHANISMS_CHAPTER.read_text(encoding="utf-8")
+    displays = re.findall(r"\$\$(.*?)\$\$", text, flags=re.DOTALL)
 
     for expression in (
-        r"\theta_p + \theta_s + \theta_a = \text{constant}",
-        r"\tau_{\text{constraint, spine}} = I_{\text{spine}} \ddot{\theta}_s + C_s + g_s",
+        r"T_L^{-1}T_R=H_L^{-1}H_R",
+        r"V_e=\tfrac12k(\Delta-\Delta_0)^2",
     ):
-        assert f"$$\n{expression}\n$$" in text
+        assert any(expression in display for display in displays)
 
 
 def test_shaft_stiffness_has_one_grouped_subscript() -> None:

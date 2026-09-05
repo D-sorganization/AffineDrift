@@ -1,1212 +1,646 @@
 ---
-description: "A parallel mechanism is like multiple paths. If you try to move one joint, you might be blocked by another path. The constraint must be satisfied by all..."
+pagetitle: Parallel Mechanisms and Loop Constraints
+description: "How grip and ground contact connect geometry, feasible motion, load sharing, muscle work, and golf outcomes."
 ---
-
 
 # Parallel Mechanisms and Loop Constraints {#sec-parallel_mechanisms}
 
-::: {.callout-tip}
-## Why the Body Is Not a Serial Chain
+The golf swing combines articulated chains, closed contact paths, muscle-generated
+loads, and elastic deformation. A useful model must say which connections it
+represents before it counts freedoms or interprets forces. The two-handed grip
+closes a path through the arms and club. Two supported feet close another through
+the legs and ground. The spine connects pelvis and thorax along an articulated
+path; that connection alone does not form a loop.
 
-In the preceding chapters, we modeled the golf swing as a *serial* kinematic chain: hips → shoulders → arms → club. This is pedagogically useful, but it's *biomechanically wrong*.
+The central question is how these connections change the motion produced by a
+specified set of inputs, and what measurements can distinguish different ways
+of producing the same motion. Geometry defines feasible motion. Inertia and
+applied loads determine its acceleration. Contact reactions enforce the declared
+contact model. Muscle and tissue mechanics determine available forces and energy.
+None of those roles can be inferred merely by calling the golfer a parallel
+mechanism.
 
-A serial chain assumes:
-- The hips rotate independently.
-- The shoulders rotate relative to the hips.
-- The arms rotate relative to the shoulders.
-- Each segment can move freely.
+## Draw the Actual Mechanical Graph {#sec-serial_vs_parallel}
 
-But the human body doesn't work this way. The spine connects the pelvis to the shoulders. The two arms both attach to the shoulders. The ground constrains the feet. These connections form *closed loops*—the hallmarks of a parallel mechanism.
+Represent each rigid segment as a graph vertex and each joint or maintained
+contact as an edge. A serial chain has one unbranched path. An open articulated
+tree can branch without containing a cycle. A closed chain contains a cycle:
+there must be a distinct return path, not an instruction to go back along the
+same spine or arm. Serial models can have strongly coupled dynamics even when
+their joint coordinates are independently selectable.
 
-A parallel mechanism is fundamentally different from a serial chain:
-- Fewer degrees of freedom than you'd naively expect.
-- Larger constraint forces.
-- Motion of one part directly constrains others.
-- Mobility is determined not just by the number of joints, but by the topology of the loops.
+For a fixed-torso upper-body model, trace the cycle as thorax, left upper arm,
+left forearm/hand, club, right hand/forearm, right upper arm, thorax. Hand offsets,
+wrist joints, and shoulder-girdle motion can be resolved further when needed.
+For the lower body, trace ground, left foot, left leg, pelvis, right leg, right
+foot, ground. The spine links the pelvis to the thorax between these structures.
+Removing one hand contact opens the upper loop; removing one foot contact changes
+the lower contact structure. A raised heel can change the admissible contact
+wrench without completely detaching the foot.
 
-This chapter develops the math and physics of parallel mechanisms, then applies it to understand the golf swing's body structure, in the same sense used in the robotics literature on closed-chain manipulators and over-constrained mechanisms [@briot2015parallel_robots].
+![Actual Closed Paths and the Connecting Spine Path](../figures/parallel_mechanical_graph.png){#fig-parallel_mechanical_graph fig-alt="Two closed paths pass through both arms and the club, and both legs and the ground. The articulated spine connects thorax and pelvis without forming an additional cycle."}
 
-:::
+A pelvis–spine–thorax sequence is an open path. Defining a relative angle
+between pelvis and thorax does not add a physical return connection. Soft tissue
+can introduce additional force paths, but a tendon spanning joints is usually
+represented by a length-dependent force law, not an inextensible closure
+constraint. Its finite stiffness must not be silently converted into a rigid
+kinematic restriction.
 
-## Serial vs. Parallel Mechanisms
+The distinction agrees with the humanoid examples in the
+[Modern Robotics constrained-dynamics treatment](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/).
+The same geometry can be represented by independent joint coordinates plus loop
+constraints or by a larger set of segment poses plus joint constraints. Mixing
+those two counts subtracts the same restriction twice.
 
-::: {.callout-note}
-## Serial Mechanism
+## Mobility and Independent Constraints {#sec-gruebler_formula}
 
-A **serial mechanism** is a kinematic chain where each segment is attached to the next in a single sequence. Examples:
-- A robotic arm: base → joint 1 → link 1 → joint 2 → link 2 → ... → end effector.
-- A simplified golf swing: hips → shoulders → elbows → wrists → club.
-
-Key property: Each joint is traversed at most once. There are no closed loops.
-
-:::
-
-::: {.callout-note}
-## Parallel Mechanism
-
-A **parallel mechanism** is a kinematic structure with closed loops. Multiple paths connect the same two bodies. Examples:
-- A Stewart platform (used in flight simulators): a hexapod with 6 legs, each of which connects the base to the moving platform. The 6 legs form 6 parallel paths.
-- The human body during a golf swing: the spine connects the pelvis to the shoulders, the arms connect the shoulders to the hands, and the grip connects the hands to the club. These form loops.
-
-Key property: Motion of one part is constrained by multiple paths. The system is over-constrained, meaning flexibility (joints have limited ranges) is crucial.
-
-:::
-
-### Intuitive Difference {#inplain:serial_vs_parallel_intuition}
-A serial chain is like a single path through a graph: you can move each joint, and the endpoint of the chain follows.
-
-A parallel mechanism is like multiple paths. If you try to move one joint, you might be blocked by another path. The constraint must be satisfied by all paths simultaneously.
-
-For example, in the human body:
-- The spine is one path from pelvis to shoulders.
-- The left arm is another path: pelvis → shoulder → elbow → wrist → hand.
-- The right arm is a third path.
-
-These paths must be consistent. If the pelvis rotates, the shoulders must be positioned such that both spine and both arms can reach their destinations. This consistency constraint reduces the effective DOF.
-
-## The Body as a Closed Kinematic Chain
-
-::: {.callout-note}
-## Closed Kinematic Loop
-
-A **closed kinematic loop** is a sequence of segments and joints that form a cycle: segment 1 → joint 1 → segment 2 → joint 2 → ... → segment N → joint N → segment 1.
-
-The closure constraint is an algebraic equation relating the positions of all segments in the loop.
-
-:::
-
-**Example: The Shoulder-Spine-Hip Loop**
-
-Consider the loop formed by:
-1. Pelvis (base segment).
-2. Spine (a flexible multi-joint segment from pelvis to shoulders).
-3. Shoulders (a rigid platform connecting the two shoulder joints).
-4. Back from shoulders to pelvis (closure).
-
-The closure constraint states: if the pelvis rotates by angle $\theta_p$, the spine rotates by angle $\theta_s$, and the shoulders rotate by angle $\theta_{sh}$, then for the loop to close, the net rotation must be zero:
-
-\theta_p + \theta_s + \theta_{sh} = 0 \quad \text{(approximately, in a simplified 2D model)}
-
-Or more generally:
-
+Let $q\in\mathbb R^n$ be local coordinates for an open-tree model. Suppose the
+additional, time-independent holonomic closures are
 $$
-\bm{\Phi}_{\text{spine}}(\theta_p, \theta_s, \theta_{sh}) = \mathbf{0}
-$$ {#eq-spine_loop_constraint_general}
-
-This is a holonomic constraint, just like the joint constraints from [Chapter 7](./ch07_constraint_forces.qmd#sec-constraint_forces).
-
-### Why Loops Matter for the Swing {#inplain:loops_swing_importance}
-In a serial chain, you can rotate your hips, shoulders, and arms independently (within limits). In a body with loops, these rotations are coupled.
-
-For example, if you rotate your pelvis 50° (hips opening), and you want to prevent your shoulders from rotating (to create "X-factor"), the spine must absorb the difference. This is not free—it requires elastic energy and creates internal stresses.
-
-The loop constraint is what creates the X-factor: the separation between hip and shoulder rotation. Without understanding the loop constraint, you can't explain why X-factor is important or how it's limited.
-
-## Loop Closure Constraints and the Loop Jacobian
-
-::: {.callout-note}
-## Loop Closure Constraint
-
-For a closed loop, the endpoint must return to the starting point. If the loop consists of segments with relative positions $\bm{x}_1, \bm{x}_2, \ldots, \bm{x}_N$, then:
-
-$$
-\bm{\Phi}_{\text{loop}} = \sum_{i=1}^{N} \bm{x}_i = \mathbf{0}
-$$ {#eq-loop_closure_general}
-
-Each $\bm{x}_i$ is a function of the configuration $\bm{q}$, so $\bm{\Phi}_{\text{loop}}(\bm{q}) = \mathbf{0}$ is a constraint equation.
-
-:::
-
-::: {.callout-note}
-## Loop Jacobian
-
-The **loop Jacobian** is the Jacobian of the loop closure constraint:
-
-$$
-\bm{J}_{\text{loop}}(\bm{q}) = \frac{\partial \bm{\Phi}_{\text{loop}}}{\partial \bm{q}}
+\Phi(q)=0,\qquad J_c(q)=D_q\Phi(q).
 $$ {#eq-loop_jacobian_definition}
+If $J_c$ has constant rank $r$ near a feasible configuration, the local
+configuration manifold has dimension $n-r$. This is a regular-point statement.
+At a singular point, the linearized null space can include directions that do
+not extend to a finite feasible motion; higher-order closure conditions matter.
+Neither an actuator being passive nor a muscle being inactive adds a kinematic
+constraint by itself.
 
-It has the same interpretation as the constraint Jacobian from [Chapter 7](./ch07_constraint_forces.qmd#sec-constraint_forces): its null space defines allowed motions, and its range defines constraint force directions.
-
-:::
-
-**Example: Loop Jacobian for a Planar Two-Arm System**
-
-Consider a simplified body: a fixed torso with two arms attached at the shoulders. Each arm is a 2-DOF serial chain (shoulder and elbow). Total DOF: 4 (2 per arm).
-
-The loop closure constraint states: the left hand and right hand positions must satisfy the grip constraint (hands are fixed relative to the club). In a simplified model:
-
+For a connected linkage with $N$ bodies including one grounded body, $J$ joints,
+and $f_i$ freedoms at joint $i$, the generic Gruebler count is
 $$
-\bm{x}_L(\bm{q}_L) + \bm{x}_R(\bm{q}_R) = 2 \bm{x}_{\text{grip}} + \epsilon
-$$ {#eq-two_arm_grip_constraint}
+d_{\mathrm{generic}}=s(N-1)-\sum_{i=1}^{J}(s-f_i),
+ \qquad s=3\ \text{(planar)},\quad s=6\ \text{(spatial)}.
+$$ {#eq-gruebler_spatial}
+It assumes that the counted joint restrictions are independent. In a planar
+linkage made only of one-freedom revolute or prismatic joints this becomes
+$d_{\mathrm{generic}}=3(N-1)-2J$. A four-bar with four bodies including ground
+and four revolute joints therefore has one generic freedom. An unactuated
+revolute joint still has one freedom. A fixed contact removes freedoms; it is
+not a positive correction called a passive constraint.
 
-where $\bm{\epsilon}$ is a small allowable deviation (grips are not perfectly rigid).
+A negative generic count is a reason to inspect the model, independence, and
+geometry. It is not proof that the actual mechanism is immobile or that tissue
+elasticity is the only reason a human can move. Omitted arm or leg bodies,
+counting joint freedoms as joints, and mixing planar and spatial restrictions
+can all produce meaningless results. Special rigid mechanisms can move because
+some restrictions are dependent.
 
-The loop Jacobian relating shoulder angles to hand positions is:
+### A Stewart-Platform Count With All the Parts Included
 
+Consider a six-leg UPS platform: each leg has a universal joint with two
+freedoms, a prismatic joint with one, and a spherical joint with three. Each
+leg contains two telescoping rigid members. Including base and moving platform,
+$N=14$, $J=18$, and $\sum_i f_i=6(2+1+3)=36$. Thus
 $$
-\bm{J}_{\text{loop}} = \begin{bmatrix}
-\frac{\partial x_L}{\partial q_1^L} & \frac{\partial x_L}{\partial q_2^L} & \frac{\partial x_R}{\partial q_1^R} & \frac{\partial x_R}{\partial q_2^R}
-\end{bmatrix}
-$$ {#eq-two_arm_loop_jacobian}
+d_{\mathrm{UPS}}=6(14-1-18)+36=6.
+$$ {#eq-stewart_mobility}
+Away from singularities, these six freedoms can describe the moving platform's
+pose. Locking the six independent prismatic lengths fixes that pose locally.
+Actual platforms may use different joint architectures; their counts must follow
+their own joints rather than the word hexapod.
 
-This matrix encodes how each shoulder angle affects the hand positions.
+In particular, two platforms connected by six fixed-length rods with spherical
+joints at both ends give $N=8$, $J=12$, and a count of six. Those six freedoms
+are the axial spins of the rods, not six free motions of the platform. The six
+fixed distance conditions generically fix the platform pose. This example shows
+why total mechanism mobility, internal passive motion, and output mobility must
+be distinguished. The
+[joint-counting derivation](https://modernrobotics.northwestern.edu/nu-gm-book-resource/2-2-degrees-of-freedom-of-a-robot/)
+provides the general starting point; the physical interpretation still requires
+examining the particular linkage.
 
-## The Gruebler Mobility Formula
+## Grip Closure With Separated Hand Frames {#sec-grip_parallel_constraint}
 
-### Gruebler's Criterion for Planar Mechanisms {#theorem:gruebler}
-For a mechanism with $N$ rigid bodies, $J$ joints, and $C$ constraints, the mobility (degrees of freedom) is:
-
-M = 3(N - 1) - 2J - C_{\text{passive}}
-
-where:
-- $3(N-1)$ is the total DOF if all bodies were free.
-- $2J$ is the constraint count (each joint in a planar mechanism removes up to 2 DOF).
-- $C_{\text{passive}}$ is the count of passive (non-actuated) constraints, like ground contact.
-
-For a 3D mechanism, the formula is:
-
-M = 6(N - 1) - \sum_i f_i
-
-::: {.callout-note}
-## What Gruebler's Formula Tells You {#inplain:gruebler_interpretation}
-
-Gruebler's criterion predicts the effective DOF of a mechanism based purely on its topology—the number and types of joints, without needing to know forces or dynamics.
-
-For example, a Stewart platform (6-legged parallel manipulator):
-- 2 platforms (base + moving platform) plus six rigid legs: $N = 8$.
-- Two spherical joints per leg: $J = 12$, with $f_i = 3$ per spherical joint.
-
-Mobility:
+A rigid two-handed grip fixes each hand frame relative to a different location
+and orientation on the club. It does not require the hands to coincide. Let
+$T_L(q)$ and $T_R(q)$ be hand poses in a common world frame, $T_C$ the club pose,
+and $H_L,H_R$ the constant poses of the hand frames in club coordinates. Then
 $$
-M = 6(8-1) - 12 \times 3 = 42 - 36 = 6
-$$
-
-A Stewart platform is a 6-DOF mechanism with a well-conditioned rigid platform: this is the expected baseline mobility for six-legged flight-simulator style manipulators. Over-constrained systems can be rigid and predictable, provided the constraints are compatible and the system has sufficient elasticity to accommodate small deviations from the nominal configuration.
-:::
-
-**Example: Gruebler Applied to the Golfer**
-
-Simplify the golfer as:
-- Bodies: pelvis, torso, shoulders (3).
-- Spine: 5 revolute joints (simplified).
-- Two arms: 3 DOF each (shoulder + elbow, wrist is small) = 6 DOF.
-- Total joints: $J = 5 + 6 = 11$.
-- Constraints from ground contact: $C_{\text{passive}} = 3$ (feet fixed to ground).
-
-Mobility (planar approximation, 2D):
-
-M = 3(3-1) - 2 \times 11 - 3 = 6 - 22 - 3 = -19
-
-This gives a negative mobility, which means the system is over-constrained. But the golfer is not locked—there's flexibility.
-
-The resolution: the body has elasticity (muscles and tendons). The "passive constraints" are not truly rigid; they allow small deviations. Gruebler's formula applies to rigid bodies. For the human body, you need to account for elasticity, which effectively increases the passive DOF.
-
-**Insight:** The fact that Gruebler's formula gives a negative mobility for a rigid body tells us that the human skeleton is over-constrained and rigid—it can't move. The only reason it *does* move is because soft tissues (ligaments, muscle tendons) have elasticity. This elasticity is crucial for defining effective DOF.
-
-## Over-Constrained Mechanisms and Flexibility
-
-::: {.callout-important}
-## Over-Constraint Requires Flexibility
-
-A mechanical system with negative mobility (according to Gruebler) cannot move if all parts are rigid. But the human body is not rigid—it's flexible.
-
-Flexibility provides the necessary "wiggle room" for the system to move:
-- The spine flexes, allowing bending and rotation beyond the rigid skeleton alone.
-- Muscle tendons stretch, allowing slight displacements at joints.
-- Cartilage compresses, allowing small adjustments.
-
-These small flexibilities effectively add DOF to the system, raising the mobility from negative to positive (or at least allowing motion).
-
-For the golf swing, this is crucial: the golfer's flexibility determines how much of a constraint-based strategy is possible. A stiff golfer (low flexibility) has fewer effective DOF and must rely more on active muscular control. A flexible golfer (high flexibility) can leverage constraint mechanisms and passive dynamics more effectively.
-
-:::
-
-### Why Flexibility Matters {#inplain:flexibility_importance}
-A golfer's flexibility is often treated as a cosmetic issue (in yoga-style golf tips). But from a dynamics perspective, flexibility is *functional*.
-
-A golfer who can rotate their hips 60° while keeping their shoulders at 20° rotation is creating a large X-factor. This is possible because the spine has elasticity—it can absorb the differential rotation.
-
-A stiff golfer can only achieve 60° hip rotation with 50° shoulder rotation, leaving little X-factor. The constraint (stiff spine) prevents the differential motion.
-
-More flexibility allows more efficient constraint-based energy transfer. This is why professional golfers invest in flexibility training.
-
-## How Loop Constraints Create Additional Constraint Forces
-
-::: {.callout-important}
-## Loop Constraints Produce Enormous Forces
-
-Every loop closure constraint produces constraint forces, just like the joint constraints from [Chapter 7](./ch07_constraint_forces.qmd#sec-constraint_forces). But because a body has multiple loops, there can be multiple constraint forces acting simultaneously.
-
-These forces are often internal—they don't directly produce motion, but they create internal stresses and torques within the spine, at the grip, and throughout the kinetic chain.
-
-A professional golfer's X-factor rotation creates large internal compressive and shear forces in the spine, borne by the constraint forces maintaining loop closure.
-
-:::
-
-**Example: Constraint Forces in the Spine Loop**
-
-Consider the spine loop: pelvis → spine → shoulders. If the pelvis rotates $\theta_p = 60°$ and the shoulders rotate $\theta_{sh} = 20°$ (X-factor), the spine must absorb the difference: $\theta_s = 40°$.
-
-The loop constraint is:
-
-$$
-\bm{\Phi}_{\text{spine}} = \theta_p + \theta_s + \theta_{sh} = 60° + 40° + 20° = 120° \neq 0
-$$
-
-If all rotations are measured from a common reference frame (not relative), and the constraint is that the total rotations must sum to zero in the loop:
-
-$$
-\bm{\Phi}_{\text{spine}} = \theta_p - \theta_{sh} - \Delta\theta_{\text{spine}} = 0
-$$ {#eq-spine_constraint_correct}
-
-where $\Delta\theta_{\text{spine}}$ is the rotation of the spine relative to the pelvis.
-
-For the golfer to achieve X-factor (hips open more than shoulders), the constraint force in the spine must act to resist the differential rotation. This force manifests as:
-- Compressive forces in the discs of the lumbar spine.
-- Shear forces between vertebrae.
-- Elastic restoring torques from the spine ligaments.
-
-During a golf swing at full speed, these forces can reach $1000$ N or higher, causing significant stress in the spine [@Penner2001].
-
-### The X-Factor Is a Constraint Mechanism {#constraint:xfactor_constraint}
-The **X-factor** is the difference between hip and shoulder rotation:
-
-$$
-\text{X-factor} = \theta_{\text{shoulders}} - \theta_{\text{hips}}
-$$ {#eq-xfactor_definition}
-
-From a constraint perspective, X-factor is the result of a loop constraint: the spine constrains the relationship between hip and shoulder motion. A large X-factor means the spine is being stretched or compressed significantly.
-
-The X-factor is not just a biomechanical marker of efficiency—it's a dynamic consequence of the loop constraint. Golfers with larger X-factor can store more elastic potential energy in the spine, which is released during the downswing.
-
-However, there's a limit: beyond a certain X-factor (typically 45°--60° for professionals), the spine constraint force becomes so large that injury risk increases significantly [@Nesbit2005].
-
-## The Grip as a Parallel Constraint {#sec-grip_parallel_constraint}
-
-The most obvious parallel constraint in the golf swing is the grip: both hands hold the same club. This seemingly simple constraint has profound kinematic and dynamic consequences.
-
-::: {.callout-note}
-## The Grip Constraint {#definition:grip_constraint}
-
-The **grip constraint** is a spatial coupling between the left and right hands. Both hands must maintain a fixed relative position and orientation on the club. Formally:
-
-$$
-\bm{p}_L(\bm{q}_L) = \bm{p}_R(\bm{q}_R) \quad \text{(at the grip point)}
+T_L=T_C H_L,\qquad T_R=T_C H_R,\qquad
+ T_L^{-1}T_R=H_L^{-1}H_R.
 $$ {#eq-grip_spatial_constraint}
+The last relation supplies six local independent restrictions at a regular
+spatial grasp. Pose coordinates require a nonsingular local representation;
+three position equations alone do not enforce relative orientation. Grip
+compliance, rolling, or slip replaces some of these ideal equalities with an
+appropriate contact model.
 
-where $\bm{p}_L$ and $\bm{p}_R$ are the 3D positions of the left and right hands as functions of their respective arm joint angles.
-:::
-
-::: {.callout-note}
-## Degrees of Freedom and the Grip Constraint {#inplain:grip_dof}
-
-Without any grip constraint, the two arms have:
-
-- Left arm: 7 DOF (3 shoulder + 1 elbow + 3 wrist, approximately).
-- Right arm: 7 DOF (same).
-- Total: 14 DOF.
-
-The grip constraint imposes 6 constraints (3 positional + 3 rotational):
-
-- The left and right hands must be at the same position (3 constraints).
-- The left and right hands must have the same orientation (3 constraints).
-
-So the effective DOF with a two-handed grip is:
-
+For two seven-coordinate arms attached to a fixed torso, there are 14 arm
+coordinates before the grip closes. Seven is a modeling choice; it commonly
+resolves shoulder rotation, elbow flexion, forearm rotation, and wrist motion.
+It is not a claim that the wrist alone supplies all three distal rotations.
+With six independent relative-pose restrictions, the assembly has $14-6=8$
+local freedoms. Equivalently, adding a free club contributes six coordinates
+and fixing each hand to it adds twelve independent restrictions:
 $$
-\text{DOF}_{\text{effective}} = 14 - 6 = 8
+d=14+6-12=8.
 $$ {#eq-two_arm_dof_with_grip}
+The fixed torso was already assumed. Subtracting additional pelvis or spine
+restrictions from this upper-body count is double counting. A whole-body model
+must instead add its pelvis, trunk, legs, and contact coordinates explicitly.
+Eight kinematic freedoms also do not mean eight independently available neural
+commands or eight controllable directions over a finite time interval.
 
-But wait: the golfer doesn't control all 8 DOF independently. The torso constrains the shoulder positions. The pelvis constrains the torso. And the ground constrains the pelvis and feet. So the effective controllable DOF is even smaller.
-:::
+### A Planar Example You Can Differentiate
 
-### Load Sharing Between Hands {#sec-load_sharing_hands}
-
-One of the most important consequences of the grip constraint is that the forces generated by the two hands become ambiguous — this is the subject of extensive study in robotics under the umbrella of "parallel mechanism force distribution."
-
-Consider the two-arm system during the downswing. Both hands accelerate the club at the same acceleration (they're gripping the same object). The total generalized force needed is determined by the club's inertia and acceleration:
-
+For a deliberately simpler coincident-point grip, fix shoulder bases at
+$b_L=(-1,0)^T$ and $b_R=(1,0)^T$, in meters. Give each arm two unit-length links
+and relative elbow coordinates. Its hand position is
 $$
-\mathbf{f}_{\text{total}} = \mathbf{M}_{\text{club}}\,\ddot{\bm{q}}_{\text{club}}
-$$ {#eq-club_total_force}
+p_i=b_i+
+ \begin{bmatrix}\cos q_{i1}+\cos(q_{i1}+q_{i2})\\
+ \sin q_{i1}+\sin(q_{i1}+q_{i2})\end{bmatrix},\qquad i=L,R.
+$$ {#eq-two_arm_positions}
+The point closure is $\Phi=p_L-p_R=0$, with $J_c=[J_L\;-J_R]$ and
+$J_i=D_{q_i}p_i$. The difference is essential: fixing the sum of hand positions
+would allow the hands to move apart while their midpoint stayed fixed.
 
-But this total force can be decomposed between the left and right hands infinitely many ways:
-
+At $q_L=(0,\pi/2)$ and $q_R=(\pi,-\pi/2)$, both hands are at $(0,1)$ and
 $$
-\mathbf{f}_{\text{total}} = \mathbf{f}_L + \mathbf{f}_R
-$$ {#eq-force_decomposition_ambiguous}
+J_L=\begin{bmatrix}-1&-1\\1&0\end{bmatrix},\quad
+ J_R=\begin{bmatrix}-1&-1\\-1&0\end{bmatrix},\quad
+ J_c=\begin{bmatrix}-1&-1&1&1\\1&0&1&0\end{bmatrix}.
+$$ {#eq-two_arm_loop_jacobian}
+Here $J_c$ has rank two, leaving two freedoms. The velocity
+$\dot q=(1,-1,-1,1)^T$ satisfies $J_c\dot q=0$, yet both hands move upward at
+$1$ meter per second. Preserving closure does not mean holding the club still.
+A separated rigid club requires its pose and attachment offsets as above; the
+point example is a lower-fidelity model, not an anatomical measurement.
 
-where $\mathbf{f}_L$ and $\mathbf{f}_R$ satisfy $\mathbf{f}_L + \mathbf{f}_R = \mathbf{f}_{\text{total}}$ but are otherwise underdetermined.
+## Three Different Null Spaces {#sec-constraint_jacobian_nullspace}
 
-Mathematically:
-
+The constraint null space $\ker J_c$ contains compatible velocities. For a
+stationary holonomic closure,
 $$
-\dim(\text{null space}) = 6 - \text{rank}(\mathbf{J}_{\text{grip}})
-$$ {#eq-null_space_load_sharing}
-
-In practice, the golfer controls this load sharing through grip pressure, hand position variations, and wrist cocking — all of which affect the effective moment arms and force distribution. This is why two golfers with identical kinematics may have very different grip pressures and hand muscle activation patterns.
-
-### Constraint Forces at the Grip {#sec-grip_constraint_forces}
-
-The constraint forces at the grip are the reaction forces between the hands and the club. These are not muscular forces — they are geometric consequences of the grip constraint itself.
-
-**Example: Grip Constraint Forces During Downswing**
-
-Consider a simplified model where both hands grip the club at a single point. During the downswing, the club accelerates angularly at $\ddot{\theta} = 500$ rad/s².
-
-The moment of inertia of the club about the grip is $I = 0.25$ kg·m² (approximately for a 5-iron).
-
-The torque required to produce this acceleration is:
-
-$$
-\tau = I\,\ddot{\theta} = 0.25 \times 500 = 125 \text{ N·m}
-$$ {#eq-club_torque_example}
-
-This torque comes from the combined action of both hands. The constraint force at the grip (the equal-and-opposite reaction force between hands and club) ensures that the two hands move together.
-
-If the left hand applies a torque $\tau_L$ and the right hand applies $\tau_R$, with $\tau_L + \tau_R = 125$ N·m, then any split $(40, 85)$, $(60, 65)$, or $(80, 45)$ is kinematically consistent. The actual split depends on the golfer's muscular control strategy, which is not observable from kinematics alone.
-
-::: {.callout-important}
-## The Ground Closes the Kinetic Chain
-
-A crucial loop closure: the golfer's feet are in contact with the ground. This contact is a constraint.
-
-The ground reaction force is not something the muscles produce; it's a constraint force that the ground produces to maintain the contact constraint.
-
-Without the ground, the golfer would slide backward as they rotate forward (by Newton's third law). The ground prevents this by providing a normal force and friction. These forces close the kinematic loop: feet → legs → torso → ground.
-
-:::
-
-**Example: Ground Reaction Forces During Downswing**
-
-For an illustrative calculation, suppose a golfer has mass $m$. The static vertical
-load is then $mg$, and the dynamic ground-reaction force can exceed that value during
-rapid weight transfer and rotation. In practice, replace this illustrative placeholder
-with directly observed force-plate data rather than treating the generic example as a
-verified result.
-
-1. **Vertical force:** The golfer's static weight is $mg$. During the downswing, the
-   vertical ground-reaction force must adjust to satisfy the contact constraint while
-   the body accelerates and shifts pressure.
-2. **Horizontal force:** As the upper body rotates and accelerates forward, friction
-   between the feet and the ground provides the horizontal constraint force that
-   prevents slipping.
-3. **Torque:** Because the ground force is applied at the feet rather than at the
-   center of mass, it also creates a moment about the body that contributes to the
-   overall rotational dynamics.
-
-All of these forces are constraints, not muscle-produced forces. The muscles control the motion (how the golfer accelerates), but the ground enforces the constraints (the golfer doesn't sink into the ground or slide away).
-
-### Why Footing Matters {#inplain:footing_importance}
-A golfer's balance and footing are crucial because the ground constraint is critical for the swing's effectiveness.
-
-If the feet slip (poor footing), the constraint is violated, and the golfer's motion becomes uncontrolled. The energy that would normally be transferred through the kinetic chain (hips → shoulders → arms → club) is instead lost to lateral motion.
-
-This is why professionals choose their stance carefully, ensuring firm footing. It's not just about comfort—it's about making the ground constraint maximally effective.
-
-## The Shoulder-Hip-Spine Loop in Detail
-
-**Example: Detailed Analysis of the Shoulder-Hip-Spine Closed Loop**
-
-Consider the major closed loop in the golfer's body:
-
-1. Start at the pelvis (hip joint).
-2. Rotate the pelvis by angle $\theta_p$.
-3. Move up the spine to the shoulder, rotating by angle $\theta_s$ (spine rotation).
-4. At the shoulder, the arm attachment point has moved. The arm must accommodate this.
-5. The arm rotates at the shoulder joint by angle $\theta_a$.
-6. The hand grips the club (fixed attachment).
-7. The club must be consistent with the arm position.
-8. Back down to the hip: the constraint is that the shoulder position, given pelvis rotation and spine rotation, must be consistent.
-
-The loop closure constraint is:
-
-$$
-\text{Position of shoulder} = f(\theta_p, \theta_s, \theta_a, \text{arm parameters}) = \text{ground frame position}
-$$
-
-This is an algebraic equation relating the three rotations. The constraint force arises when this equation is enforced dynamically.
-
-**Numerical insight:**
-
-Assume:
-- Hip rotates at $\dot{\theta}_p = 20$ rad/s (fast).
-- Spine has been rotated $\theta_s = 30°$ (X-factor built up).
-- Arm wants to rotate at $\dot{\theta}_a = 5$ rad/s (shoulder muscles applying modest torque).
-
-The loop constraint equation is (in a simplified 2D form):
-
-$$
-\theta_p + \theta_s + \theta_a = \text{constant}
-$$
-
-Differentiating:
-
-$$
-\mathbf{J}_c(\bm{q}) \dot{\bm{q}} = \mathbf{0}
+J_c\dot q=0,\qquad J_c\ddot q+\dot J_c\dot q=0.
 $$ {#eq-velocity_constraint}
+The second equation includes the change in tangent directions along the motion.
+Dropping $\dot J_c\dot q$ can remove required normal acceleration even when the
+velocity satisfies closure perfectly.
 
-But we have $\dot{\theta}_p = 20$ and $\dot{\theta}_a = 5$. For the constraint to be satisfied:
-
+A task has a different Jacobian. Let $y=\psi(q)$ describe the chosen output and
+$J_y=D_q\psi$. Motions that preserve both closure and this output lie in
+$\ker J_c\cap\ker J_y$. If the columns of $Z$ form a basis of $\ker J_c$, then
+$\dot q=Z\nu$ and $\dot y=J_yZ\nu$. The task-preserving dimension is
 $$
-\dot{\theta}_s = -\dot{\theta}_p - \dot{\theta}_a = -20 - 5 = -25 \text{ rad/s}
+(n-r)-\operatorname{rank}(J_yZ).
+$$ {#eq-task_null_dimension}
+For the regular spatial arm example, an independent six-dimensional club-pose
+task leaves two posture freedoms out of eight. Holding only club-center position
+leaves orientation unspecified. A face-angle change can preserve that position
+task while changing the impact task. It is not invisible to every meaningful
+output, and kinematic freedom does not establish negligible actuation cost.
+
+For a feasible desired task velocity, a weighted minimum-velocity construction
+uses $H=J_yZ$ and a positive-definite coordinate weight $W$:
 $$
-
-The spine must rotate backward at $25$ rad/s to maintain the loop constraint. But the spine can't rotate that fast—it has inertia and elasticity. The constraint force (acting on the spine) must provide the necessary torque.
-
-This constraint force is:
-
-$$
-\tau_{\text{constraint, spine}} = I_{\text{spine}} \ddot{\theta}_s + C_s + g_s
-$$
-
-If the arm is accelerating ($\ddot{\theta}_a > 0$) while the hips are accelerating ($\ddot{\theta}_p > 0$), the spine must decelerate ($\ddot{\theta}_s < 0$) to maintain the constraint. This creates a large constraint torque in the spine.
-
-**Physical interpretation:** The X-factor rotation (large $\theta_s - \theta_p$) creates large constraint forces because the rotation rates must remain compatible. When the hips suddenly accelerate forward (initiating the downswing), the shoulders lag behind (constraint), creating a differential rotation that stretches the spine elastically and produces constraint forces. These forces are what "slingshot" the upper body forward in the downswing.
-
-## Redundancy and Over-Constraint in Real Swings
-
-::: {.callout-important}
-## The Golf Swing Is Over-Constrained by Design
-
-The golfer's body is deliberately over-constrained. Multiple paths couple the hips to the shoulders to the arms:
-
-1. **The spine:** Direct coupling via vertebral rotation.
-2. **The shoulder joint:** Connects arm to torso.
-3. **The rib cage:** Couples thoracic and lumbar spine.
-4. **The grip:** Couples both arms to the club.
-
-This over-constraint serves a purpose: **stiffness and energy transfer efficiency**.
-
-An over-constrained system, if well-designed, is stiff and predictable. The energy input (from leg drive and hip acceleration) is efficiently channeled through the constrained structure to the output (club speed).
-
-By contrast, a loosely jointed system (fewer constraints) is floppy and unpredictable. Energy dissipates in uncontrolled motion.
-
-:::
-
-### Why Over-Constraint Is a Feature {#inplain:redundancy_feature}
-In engineering, over-constraint is usually a bad thing—it can cause jamming or failure if tolerances are tight. But in biomechanics, over-constraint can be beneficial.
-
-The human body is over-constrained but has elasticity. This elasticity allows the over-constraints to be satisfied while maintaining mobility. The benefits:
-
-1. **Load sharing:** Multiple paths can share the load, reducing stress on any single path. If the spine is damaged, the arms can still function (though less efficiently).
-2. **Stiffness:** Multiple constraints stiffen the structure, reducing energy loss to unwanted motion.
-3. **Precision:** Over-constraints allow precise control. A robot with one arm can reach a point, but it wiggles around that point. A robot with two arms over-constrained to reach the same point is rigid.
-
-For the golf swing, the over-constraint ensures that as the hips drive, the shoulders and arms follow predictably. There's no slack or slop. Energy flows efficiently from the ground (through the feet) up through the kinetic chain to the club.
-
-## Drift and Control in a Parallel System {#sec-drift_control_parallel}
-
-[Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual) introduced drift forces (gravity, Coriolis, centrifugal) and control forces (muscle-applied torques). In a serial chain, these forces and the applied torques solve the dynamics uniquely. In a parallel mechanism, the story is more subtle.
-
-### The Drift/Control Decomposition {#sec-drift_control_decomposition}
-
-Recall the equation of motion:
-
-$$
-\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}_{\text{drift}} + \bm{\tau}_{\text{control}}
-$$ {#eq-drift_control_general}
-
-where:
-
-- $\bm{\tau}_{\text{drift}} = -[\bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})]$ are the passive forces (drift).
-- $\bm{\tau}_{\text{control}}$ are the active muscle-applied torques.
-
-In a parallel system, the closed-loop constraints introduce additional complexity. The constraint forces (Lagrange multipliers) become part of the dynamics and must be accounted for:
-
-$$
-\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}_{\text{control}} + \bm{J}_c^T(\bm{q})\,\bm{\lambda}
-$$ {#eq-drift_control_constrained}
-
-where $\bm{\lambda}$ are the constraint multipliers (internal constraint forces).
-
-::: {.callout-note}
-## What the Golfer Actually Controls {#inplain:golfer_control_inputs}
-
-A golfer doesn't directly control 14 joint angles independently. Instead, they control a smaller set of "control inputs":
-
-1. **Hip drive:** the initial rotational acceleration of the pelvis, driven by hip and lower back muscles. This typically reaches 300–500 rad/s² at the top of the downswing.
-2. **Shoulder plane:** the golfer can adjust whether the shoulders rotate in a plane parallel to the ground or at an angle. This is controlled by the lats and upper back muscles.
-3. **Wrist release:** the timing and magnitude of wrist ulnar deviation (in plane) and pronation/supination (out of plane). This controls when the club accelerates.
-4. **Grip pressure:** dynamic grip pressure changes during the swing affect the effective stiffness of the two-handed system and modify load distribution between hands.
-5. **Foot pressure:** weight shift and foot pressure distribution affect the center of pressure and the ground reaction forces, which indirectly affect the lower body's rotational dynamics.
-
-These are relatively low-dimensional control inputs (maybe 5–8 parameters) that a golfer's nervous system can feasibly modulate. They are distinct from the 14 joint angles, which are consequences of the closed-loop constraints acting on these inputs.
-:::
-
-### The Control Is Small {#sec-control_is_small}
-
-A key insight from [Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual) was that *drift forces dominate active muscle forces* during the downswing. This is especially true in a parallel system with significant inertia and angular velocities.
-
-::: {.callout-important}
-## Drift Forces Dominate During Release {#theorem:drift_dominates}
-
-During the downswing and release, the magnitudes of drift forces exceed active muscle torques by a factor of 5–40, depending on swing speed and body size.
-
-**Proof sketch:**
-
-- Centrifugal force: $\bm{F}_{\text{cent}} = m\omega^2 r$. With $\omega \sim 20$ rad/s (arm rotation) and $r \sim 0.5$ m, $F_{\text{cent}} \sim 200$ N. Torque: $\tau_{\text{cent}} = F_{\text{cent}} \times r \sim 100$ N·m.
-- Coriolis force: $\bm{F}_{\text{Cor}} = -2m\bm{\omega} \times \bm{v}_{\text{rel}}$. With $\omega \sim 10$ rad/s (body rotation), $v_{\text{rel}} \sim 10$ m/s (arm motion), $F_{\text{Cor}} \sim 200$ N. Torque: $\tau_{\text{Cor}} \sim 50$ N·m.
-- Gravity: $F_g = mg = 900 \times 0.3 = 270$ N (for 3 kg arm). Torque: $\tau_g \sim 30$ N·m.
-- Muscle torque: typical maximal isometric torque at the shoulder is 100–150 N·m. But during the release, muscles are shortening at high velocity, so dynamic torque is 30–60 N·m.
-
-The total drift torque can exceed 150 N·m, while active control torque is $\sim 40$ N·m. Drift dominates.
-:::
-
-This domination of drift is crucial because it means:
-
-- The golfer's swing is largely "passive" in the sense that drift forces do the mechanical work.
-- Active control is more about "releasing" the drift (removing brakes) than about actively accelerating the club.
-- Variations in golf swing efficiency correlate with how well the golfer harnesses drift rather than muscle force.
-
-## Drift Forces in Detail: Computational Treatment {#sec-drift_forces_detailed}
-
-This section provides detailed computational expressions for each drift force component in the golf swing context.
-
-### Centrifugal Effects {#sec-centrifugal_detailed}
-
-When a body rotates about an axis, every point in the body experiences an outward centrifugal acceleration (in the rotating frame). In a rotating body (like the golfer's torso), segments moving radially experience a centrifugal acceleration proportional to the square of angular velocity.
-
-$$
-\bm{a}_{\text{centrifugal}} = -\bm{\omega} \times (\bm{\omega} \times \bm{r})
-$$ {#eq-centrifugal_acceleration}
-
-For a simple case: arm of mass $m_a = 3$ kg rotating at angular velocity $\omega = 15$ rad/s at distance $r = 0.6$ m from the axis:
-
-$$
-a_{\text{centrifugal}} = \omega^2 r = 15^2 \times 0.6 = 135 \text{ m/s}^2
-$$ {#eq-centrifugal_numerical}
-
-Force:
-
-$$
-F_{\text{centrifugal}} = m_a \times a_{\text{centrifugal}} = 3 \times 135 = 405 \text{ N}
-$$ {#eq-centrifugal_force}
-
-This force acts radially outward (away from the rotation axis). If it acts at distance $d = 0.4$ m from a joint, the torque is:
-
-$$
-\tau_{\text{centrifugal}} = 405 \times 0.4 = 162 \text{ N·m}
-$$ {#eq-centrifugal_torque}
-
-This is a large torque, approaching the maximal muscle torque at the shoulder. And it comes "for free" from rotation — no muscle activation needed.
-
-### Coriolis Effects {#sec-coriolis_detailed}
-
-The Coriolis force arises when motion occurs in a rotating frame. It's given by:
-
-$$
-\bm{F}_{\text{Coriolis}} = -2m\,\bm{\omega} \times \bm{v}_{\text{rel}}
-$$ {#eq-coriolis_force}
-
-where $\bm{\omega}$ is the angular velocity of the rotating frame and $\bm{v}_{\text{rel}}$ is the velocity of the mass in the rotating frame.
-
-In the golf swing:
-
-- $\bm{\omega} \sim 10$ rad/s (body rotation about vertical axis).
-- $\bm{v}_{\text{rel}} \sim 8$ m/s (arm extension during downswing).
-- $m_a \sim 3$ kg (arm mass).
-
-Magnitude:
-
-$$
-|\bm{F}_{\text{Coriolis}}| = 2 \times 3 \times 10 \times 8 = 480 \text{ N}
-$$ {#eq-coriolis_numerical}
-
-This Coriolis force is perpendicular to both $\bm{\omega}$ and $\bm{v}_{\text{rel}}$. If the body rotates about the vertical and the arm extends horizontally, the Coriolis force points approximately horizontal (perpendicular to arm motion).
-
-Depending on its moment arm, this creates a torque of:
-
-$$
-\tau_{\text{Coriolis}} \sim 480 \times 0.2 = 96 \text{ N·m}
-$$ {#eq-coriolis_torque}
-
-Coriolis couples body rotation to arm motion. It's one reason why trying to keep your arms stiff during a fast body rotation creates stresses — the Coriolis force resists the relative motion.
-
-### Gravity {#sec-gravity_detailed}
-
-Gravity acts downward on every segment. For the golf swing, the major gravity effects are:
-
-1. **Support of the arm:** the shoulder muscles must support the weight of the arm and club against gravity. If the arm is horizontal and extended, the torque at the shoulder is:
-
-   $$
-   \tau_{\text{grav,arm}} = (m_a + m_c) \times g \times r_{\text{com}} = (3 + 0.2) \times 9.81 \times 0.35 \sim 11 \text{ N·m}
-   $$ {#eq-gravity_arm}
-
-   This is small compared to drift forces but non-negligible.
-
-2. **Torso weight:** the erector spinae muscles along the spine must support the weight of the upper body during flexion and rotation. This can create torques of 50–100 N·m depending on posture.
-3. **Weight shift:** as the golfer shifts weight from back foot to front foot, gravity assists with this shift (the center of mass moves forward and downward). This is a potential energy loss but also a source of passive acceleration.
-
-Gravity is the most "predictable" drift force because it's constant (always downward). In contrast, centrifugal and Coriolis forces depend on angular velocities and change throughout the swing.
-
-### Elastic Drift: Passive Tissue Forces {#sec-elastic_drift}
-
-Beyond inertial drift forces, the spine, ligaments, and tendons store elastic potential energy and release it as restoring forces. These are also "drift" in the sense that they act without active muscle control (at least during the release phase when muscles are shortening eccentrically).
-
-::: {.callout-note}
-## Elastic Drift {#definition:elastic_drift}
-
-**Elastic drift** is the restoring force exerted by stretched or compressed elastic tissues (spine ligaments, tendons, fascia, connective tissue) to return toward their resting length or configuration.
-:::
-
-The elastic restoring torque in the spine during the downswing can be modeled as:
-
-$$
-\tau_{\text{elastic}} = -k \times (\theta_{\text{current}} - \theta_{\text{rest}})
-$$ {#eq-elastic_restoring_torque}
-
-where $k$ is the effective stiffness (100–300 N·m/rad for the lumbar spine) and $\theta_{\text{rest}}$ is the neutral spine angle.
-
-During the backswing, the golfer stretches the spine and elastic tissues, storing energy. During the downswing, this energy is released. The elastic drift torque can reach 80–150 N·m at peak storage.
-
-## Why Drift Forces Are Not Constrained by the Loop {#sec-drift_not_constrained}
-
-Here is a critical insight: *drift forces are computed from position, velocity, and acceleration alone and are not constrained by the loop closure equations*. This is profound because it means:
-
-1. Gravity acts on the center of mass, which is determined by the skeleton's configuration. The configuration must satisfy the closure constraints, but gravity's direction and magnitude are independent of whether the system is serial or parallel.
-2. Coriolis forces depend on rotation rates and relative velocities. These are also determined by kinematics, not by constraint forces.
-3. Centrifugal forces depend on rotation rates and radii. Again, purely kinematic.
-
-In contrast, the distribution of constraint forces between the two hands (in a two-handed grip) is ambiguous. But the total drift force acting on the system is *not* ambiguous — it's determined by kinematics.
-
-::: {.callout-important}
-## Drift Forces Are Observable {#principle:drift_observable}
-
-From motion capture data alone, a biomechanist can compute:
-
-- The center of mass trajectory (from skeletal kinematics).
-- The gravitational force on each segment (mass and center of mass position).
-- The velocity and acceleration of each segment (from joint angles and time derivatives).
-- The Coriolis and centrifugal forces (from angular velocities and accelerations).
-
-These drift forces are *uniquely determined* by kinematics. There is no ambiguity, no null space, no underdetermined system. This is why the ZTCF family framework (which computes total forces and moments without worrying about muscle-by-muscle details) is robust to loop constraints.
-:::
-
-## The Closed Loop Ambiguity Affects Only Active Force Distribution {#sec-loop_ambiguity_active}
-
-To clarify the distinction, let's state precisely what is ambiguous and what is not:
-
-::: {.callout-important}
-## The Ambiguity Is Localized to Active Torques {#theorem:ambiguity_localized}
-
-In a system with loop constraints and redundant actuation:
-
-- **Uniquely determined:** total generalized force (drift + control combined), computed from kinematics and mass distribution. This is the right-hand side of Newton's second law: $\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})$.
-- **Uniquely determined:** constraint forces (Lagrange multipliers), determined by the constraint kinematics equations.
-- **Underdetermined:** distribution of active muscle torques among the redundant muscles/actuators. Given the total required force, there are infinitely many ways to distribute it among the muscle groups.
-:::
-
-In the golf swing context:
-
-- The *total* torque needed to accelerate the club is determined by the club's inertia and angular acceleration. No ambiguity.
-- The *constraint forces* at the grip (the internal reaction between left and right hands) are determined by the closure constraint and kinematics. No ambiguity.
-- The *individual torques* from left hand vs. right hand, or from shoulder muscles vs. elbow muscles, are underdetermined. Ambiguity.
-
-This is why inverse dynamics can compute *joint-level* torques (sum of all muscles at a joint) without ambiguity, but it cannot compute individual muscle forces in a parallel system without additional information (EMG, force plates, etc.).
-
-## Summary: Parallel Mechanisms and the Golf Body
-
-::: {.callout-important}
-### Key Takeaways: Parallel Mechanisms and Loop Constraints {#principle:parallel_key_takeaways}
-
-1. **Serial vs. parallel:** The golf body is not a serial chain (hips → shoulders → arms). It's a parallel mechanism with closed loops. The spine and arms form multiple paths from the hips to the shoulders.
-2. **Closed loops and constraints:** Each loop (e.g., spine loop, ground contact loop) is a holonomic constraint. These constraints reduce effective DOF and create constraint forces.
-3. **Loop Jacobian:** The loop Jacobian defines which motions are allowed (null space) and which constraint forces can act (range of transpose).
-4. **Gruebler's criterion:** Predicts effective mobility based on the number of bodies and constraints. The golf body is over-constrained in a rigid approximation, but elasticity adds the needed flexibility.
-5. **X-factor is a constraint mechanism:** X-factor (hip-shoulder separation) is a direct consequence of the spine loop constraint. It stores elastic potential energy, which is released during the downswing.
-6. **Ground reaction forces close the chain:** The ground contact is a loop constraint that prevents sliding and creates reaction forces. Without firm footing, this constraint is violated and energy is lost.
-7. **Constraint forces are enormous:** Loop constraints produce forces of $500$--$1000$ N or more at the spine, grip, and other joints. These are not muscular forces—they're automatic consequences of the constraint geometry.
-8. **Over-constraint is intentional:** Multiple paths from hips to arms create redundancy. This redundancy, combined with elasticity, enables stiffness, load sharing, and efficient energy transfer.
-9. **Control and constraint:** A golfer controls the swing by modulating the initial acceleration (hip drive) and the sequence of joint releases. The constraint forces automatically redistribute this acceleration to the club, with minimal active muscular guidance needed.
-
-:::
-
-**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in [Chapter 10](./ch10_energy_transfer.qmd#sec-energy_transfer).
-
-## Vaughan's Closed-Loop Analysis: Historical Context
-
-In the early 1980s, biomechanist C.L. Vaughan published foundational work on the biomechanics of athletic movements with closed kinematic loops. His key contributions include:
-
-::: {.callout-note}
-
-## Vaughan's Contributions to Constraint Biomechanics
-
-Vaughan was among the first to recognize that the golf swing is a *closed kinematic chain* and to formalize the mathematics of loop constraints in biomechanics [@Vaughan1981; @Vaughan1983]. His work addressed the fundamental problem: when both hands grip a club and both feet touch the ground, how can inverse dynamics resolve the ambiguity in force distribution?
-
-Vaughan's resolution strategy:
-
-1. Assume that the load is distributed proportionally to the sum of kinetic and potential energies in each limb.
-2. Alternatively, minimize a criterion such as total muscle activation or total joint torque (optimization approach).
-3. Use additional sensors (force plates, instrumented grip) to break the ambiguity.
-
-His work established the vocabulary and mathematical framework still used today in analyzing parallel mechanisms in biomechanics.
-
-:::
-
-Modern understanding builds on Vaughan's foundation by recognizing that:
-
-- The ambiguity in load distribution is a feature of parallel mechanisms, not a bug or limitation of the analysis.
-- Different golfers can achieve the same kinematics with different muscle activation patterns (load distributions), reflecting individual control strategies.
-- Optimization criteria (e.g., minimize muscle activation) are useful but can only constrain the ambiguity, not eliminate it.
-
-## Parallel Mechanisms in Robotics: Background and Theory
-
-Parallel mechanisms have been studied extensively in the robotics and mechanical engineering literature. Key theoretical foundations include:
-
-**The Stewart Platform (1965)**
-
-Stewart published the foundational paper on the Stewart platform, a hexapod parallel manipulator with 6 legs connecting a base to a moving platform [@Stewart1965]. The Stewart platform has become ubiquitous in precision engineering, flight simulators, and machine tools.
-
-Stewart's key insight: a parallel mechanism with $n$ legs can be designed to have $n$ DOF (one per leg) or more if the legs are redundantly constrained. The stiffness and precision of a parallel mechanism often exceed those of a serial robot because loads are distributed across multiple paths.
-
-**Merlet's Parallel Robots (2006)**
-
-Merlet provides a comprehensive treatise on parallel robots that systematized the theory of parallel mechanisms [@Merlet2006], including:
-
-- Forward and inverse kinematics algorithms.
-- Singularity analysis.
-- Workspace analysis.
-- Control strategies.
-
-Merlet's work is essential reading for anyone serious about understanding parallel mechanism theory in the context of biomechanics.
-
-**Hunt's Kinematic Geometry (1978)**
-
-Hunt provided foundational work on the geometry and algebraic foundations of kinematic mechanisms, including parallel systems [@Hunt1978]. Hunt's screw theory approach is particularly relevant to understanding constraint forces.
-
-**Gosselin & Angeles' Singularity Analysis (1990)**
-
-Gosselin and Angeles developed comprehensive methods for analyzing singularities in parallel mechanisms [@GosselinAngeles1990]. Their classification of singularities into workspace boundaries, leg singularities, and architecture singularities has become standard in robotics.
-
-## Formal Mapping: Robotics Terminology to Golf Swing
-
-To clarify the parallel between robotics terminology and the golf swing, here is an explicit mapping:
-
-| Robotics (Stewart Platform) | Golf Swing |
-|---|---|
-| Fixed base | Pelvis / torso |
-| Moving platform | Club |
-| Hexapod legs (6 paths) | Arms + spine (multiple paths) |
-| Leg actuators | Muscle torques |
-| Leg constraint forces | Internal hand/grip forces |
-| Forward kinematics | Position of club given arm angles |
-| Inverse kinematics | Finding arm angles for desired club position |
-| Singularity (workspace boundary) | Maximum reach of club |
-| Leg singularity (straight) | Arm fully extended (impact) |
-| Self-motion (null space) | Face angle adjustment without changing trajectory |
-| Load sharing problem | Left vs. right hand force ambiguity |
-
-This mapping makes clear that the golf swing is mechanically a parallel mechanism in the robotics sense. The problems and insights from parallel robotics transfer directly to biomechanics.
-
-## The Body as a Hybrid Serial-Parallel System {#sec-hybrid_serial_parallel}
-
-The golfer's body is neither purely serial nor purely parallel — it's a hybrid: the lower body (torso + pelvis + ground) forms a parallel mechanism with the ground, while the upper body (shoulders + arms) forms a serial kinematic chain branching from the shoulders.
-
-However, the upper body's serial nature is constrained by the lower body's parallel structure and by the two-handed grip constraint. This creates a system whose kinematic and dynamic behavior is fundamentally different from either a pure serial or a pure parallel mechanism.
-
-## Forward Kinematics: From Joint Angles to End Effector Position {#sec-fk_parallel}
-
-In a serial chain, forward kinematics is straightforward: given all joint angles, compute the position of the end effector by composing transformations.
-
-In a parallel mechanism with closed loops, forward kinematics becomes a system of *nonlinear simultaneous equations*:
-
-$$
-\bm{\Phi}(\bm{q}) = \mathbf{0}
-$$ {#eq-fk_parallel_implicit}
-
-where $\bm{\Phi}$ is the set of closure constraints. These equations must all be satisfied simultaneously. There is no simple forward recursion as in the serial case.
-
-**Example: Forward Kinematics for the Two-Handed Grip**
-
-Given the angles $\bm{q}_L$ and $\bm{q}_R$ of both arms, the position of the left hand is $\bm{p}_L(\bm{q}_L)$ and the right hand is $\bm{p}_R(\bm{q}_R)$.
-
-The grip constraint equation is:
-
-$$
-\bm{\Phi}_{\text{grip}} = \bm{p}_L(\bm{q}_L) - \bm{p}_R(\bm{q}_R) = \mathbf{0}
-$$ {#eq-fk_grip_implicit}
-
-This is an implicit equation for the club position in terms of arm angles. It cannot be solved by forward recursion — instead, it must be solved iteratively (e.g., using Newton-Raphson) or via constraint-satisfaction methods.
-
-The existence and uniqueness of a solution depend on the *configuration* (specific arm angles). Some configurations may have no solution (the arms can't both reach the same point), one solution, or multiple solutions. A configuration with multiple solutions is called **kinematically redundant** or **singularities** in some robotics contexts.
-
-## Inverse Kinematics: Overdetermined and Ill-Posed {#sec-ik_parallel}
-
-In a serial chain, inverse kinematics asks: given the desired position of the end effector, what joint angles achieve it? This problem can have 0, 1, or many solutions depending on the arm's geometry and the desired position.
-
-In a parallel mechanism, the problem is harder: the end effector position is constrained by the closure equations, so you cannot specify it arbitrarily. Instead, you specify the joint angles on one "branch" of the mechanism, and the closure constraints determine the position of the end effector.
-
-::: {.callout-note}
-## Why Parallel Inverse Kinematics Is Overdetermined {#inplain:parallel_ik_overdetermined}
-
-In a serial chain with $n$ DOF, you specify $n$ variables (the joint angles) to control $n$ variables (the end effector position). Square system, typically solvable.
-
-In a parallel mechanism with $n$ DOF and $m$ closure constraints ($m > 0$), you have $n + m$ variables (joint angles plus constraint forces) but only $n$ equations (dynamics or kinematics). The system is underdetermined.
-
-Conversely, if you try to solve for joint angles given only kinematic or constraint information, you're asking: "Which joint angles satisfy the closure constraint?" The closure constraint is typically a single equation or a small set of equations, while you're solving for many joint angles. The problem is overdetermined and has no exact solution in general.
-
-The resolution: the closure constraint must be satisfied, and the system finds the joint angles that satisfy it while minimizing some objective (e.g., energy, joint torques, deviation from a preferred posture).
-:::
-
-## Singularities in Parallel Mechanisms {#sec-singularities_parallel}
-
-In a serial mechanism, a singularity occurs when the Jacobian loses rank, typically at the boundary of the workspace. At a singularity, the end effector cannot move in certain directions no matter how fast the joints rotate.
-
-In a parallel mechanism, singularities are more nuanced because the "end effector" is constrained by multiple paths. There are different types:
-
-::: {.callout-note}
-## Types of Singularities in Parallel Mechanisms {#definition:parallel_singularities}
-
-1. **Workspace singularity (Type I):** the end effector reaches the boundary of its feasible region. At these configurations, small motions of the platform require infinite joint velocities. In the golf swing, this occurs when the club reaches maximum distance from the golfer's center.
-2. **Leg singularity (Type II):** a leg becomes fully extended or fully flexed, losing ability to apply force in a particular direction. This can occur at impact when the arms are nearly straight.
-3. **Architecture singularity:** the loop closure equations become redundant, and the mechanism gains unexpected degrees of freedom. These can occur transiently during a swing and are often associated with sudden changes in swing dynamics.
-:::
-
-## Singularities of the Golf Swing Parallel Mechanism {#sec-singularities_golf}
-
-A singularity in robotics is a configuration where the mechanism loses a degree of freedom or gains unexpected degrees of freedom. In the golf swing, there are several types:
-
-### Address Position Singularity {#sec-address_singularity}
-
-At address, the golfer is relatively still. The club is in a fixed position relative to the hands. The arms are extended but not yet rotating rapidly. This is a configuration where the mechanism has minimal flexibility — it's close to a singularity.
-
-In this configuration, small changes in hip angle produce small changes in club orientation (the system is "stiff"). This is advantageous because it allows the golfer to set up with precision.
-
-### Straight-Arm Impact Singularity {#sec-impact_singularity}
-
-At impact, the leading arm is nearly fully extended. In this configuration, the elbow joint approaches its mechanical limit and becomes a "hard" constraint (the arm is locked straight). The mechanism momentarily loses rotational DOF at the elbow.
-
-This singularity is actually mechanically useful: it "stiffens" the arm at the moment of force application, allowing maximum acceleration to be transmitted to the ball.
-
-### Type II Singularities: Self-Motion {#sec-type_ii_singularities}
-
-In some configurations during the swing, the mechanism might allow "self-motion" — motion of the joints that doesn't change the position or velocity of the club. This can occur when:
-
-- The left arm rotates while the right arm counter-rotates in just the right way to maintain club position.
-- The wrists cock while the shoulders and hips adjust to keep the club moving along the same trajectory.
-
-These self-motions are solutions to the null space of the constraint Jacobian and represent redundancy in the mechanism. They're important because they allow the golfer to adjust internal joint angles without changing the overall swing trajectory — useful for fine-tuning club face angle or release timing.
-
-## Null Space Exploitation in Practice {#sec-null_space_practice}
-
-The null space of a parallel mechanism is the set of joint motions that don't change the end effector motion. In the golf swing, golfers exploit the null space for several purposes:
-
-### Face Angle Adjustment {#sec-face_angle_adjustment}
-
-Even if the club's center of mass follows the same trajectory, the club can rotate about its long axis (roll) or twist. This roll rotation is controlled through:
-
-- Adjusting the relative pronation/supination of the forearms.
-- Changing grip pressure distribution (left hand vs. right).
-- Modulating wrist cock angle.
-
-All of these are motions in the null space of the grip constraint (they don't change the club's position but change its orientation).
-
-### Grip Pressure Redistribution {#sec-grip_pressure_redistribution}
-
-The magnitude of grip pressure can increase or decrease without affecting the club's motion (as long as grip doesn't slip). This is a null space motion in the force space: the grip forces change, but their resultant remains constant.
-
-A golfer might increase right-hand grip pressure while decreasing left-hand pressure (or vice versa) as a strategy to control face angle or release timing.
-
-### Arm Plane Adjustment {#sec-arm_plane_adjustment}
-
-The plane in which the arms move (more or less in front of the body vs. behind the shoulders) can vary while keeping the club on the same trajectory. This is a null space motion — the arms' configuration changes, but the club's motion is preserved.
-
-Different arm planes result in different loads on the shoulder joints and spine, so golfers adjust arm plane based on comfort, injury history, or a conscious coaching decision.
-
-## Jacobian Analysis: Velocity and Force
-
-The constraint Jacobian encodes relationships at two levels: velocity and force.
-
-**Velocity-Level Constraint**
-
-The velocity-level constraint is:
-
-$$\mathbf{J}_c(\bm{q}) \dot{\bm{q}} = \mathbf{0}$$
-
-This says: any joint velocity $\dot{\bm{q}}$ must be orthogonal to the row vectors of $\mathbf{J}_c$ (i.e., in the null space of $\mathbf{J}_c$). These null space velocities are the allowed motions.
-
-**Force-Level Jacobian Transpose**
-
-The force-level relation is:
-
-$$\boldsymbol{\tau} = \mathbf{J}_c^T(\bm{q}) \mathbf{f}$$
-
-This says: constraint forces $\mathbf{f}$ (e.g., grip forces) produce generalized torques $\boldsymbol{\tau}$ through the Jacobian transpose. Forces in the range of $\mathbf{J}_c^T$ constrain motion; forces in the null space of $\mathbf{J}_c^T$ are internal (don't constrain motion).
-
-**Orthogonality of Null Spaces**
-
-The null space of $\mathbf{J}_c$ (allowed velocities) is orthogonal to the range of $\mathbf{J}_c^T$ (constraining forces):
-
-$$\mathcal{N}(\mathbf{J}_c) \perp \text{Range}(\mathbf{J}_c^T)$$
-
-Mechanically, this means: a force in the range of $\mathbf{J}_c^T$ does no work on a velocity in the null space of $\mathbf{J}_c$. Forces perpendicular to allowed motions don't produce motion—they create internal stress.
-
-### The Constraint Jacobian Null Space {#sec-constraint_jacobian_nullspace}
-
-Formally, the null space of the constraint Jacobian is defined as:
-
-$$
-\mathcal{N}(\mathbf{J}_c) = \{ \mathbf{v} \in \mathbb{R}^n : \mathbf{J}_c \mathbf{v} = \mathbf{0} \}
-$$ {#eq-nullspace_definition_formal}
-
-Any velocity vector $\mathbf{v}$ in this null space produces zero velocity of the constraint (the end effector or grip point), meaning the joint motion is "invisible" to the constraint.
-
-The *dimension* of the null space is:
-
-$$
-\dim(\mathcal{N}(\mathbf{J}_c)) = n - \text{rank}(\mathbf{J}_c)
-$$ {#eq-nullspace_dimension}
-
-**Example: Null Space Dimension for a Two-Armed System**
-
-For the two-handed grip:
-
-- Total DOF: $n = 14$ (7 per arm).
-- Constraint rank: $\text{rank}(\mathbf{J}_c) = 6$ (3 position + 3 orientation constraints).
-- Null space dimension: $14 - 6 = 8$.
-
-But wait — we have only 2 arms, so the effective DOF should be smaller. The additional reduction comes from the torso and pelvis constraints:
-
-- Torso constraint (spine loop): reduces by 1 DOF.
-- Pelvis constraint (ground contact): reduces by 3 DOF.
-- Upper body serial structure constraints: reduces by additional DOF.
-
-After accounting for all constraints, the golfer's effective controllable DOF is approximately 5–7, consistent with empirical observations of human motor control.
-
-### Minimum-Norm Solutions via Pseudoinverse {#sec-minimum_norm_pseudoinverse}
-
-When the system is underdetermined, one approach is to find the *minimum-norm* solution: the joint configuration that achieves the desired end effector motion while minimizing the sum of squared joint torques (or some other metric).
-
-The pseudoinverse of the constraint Jacobian provides the minimum-norm solution:
-
-$$
-\mathbf{v}_{\text{min-norm}} = \mathbf{J}_c^+ \mathbf{v}_{\text{desired}}
+\nu_* = W^{-1}H^T(HW^{-1}H^T)^{-1}\dot y_{\mathrm{des}}.
 $$ {#eq-pseudoinverse_solution}
+This formula requires full row rank of $H$. It minimizes
+$\tfrac12\nu^TW\nu$ subject to $H\nu=\dot y_{\mathrm{des}}$. It does not minimize
+joint torque, muscle activation, or metabolic cost. Rank-deficient or bounded
+problems need a suitable pseudoinverse or constrained optimization, with explicit
+handling of infeasible requests.
 
-where $\mathbf{J}_c^+ = \mathbf{J}_c^T (\mathbf{J}_c \mathbf{J}_c^T)^{-1}$.
+Finally, a grasp map $G$ maps contact-load coordinates to a resultant club
+wrench. Its null space $\ker G$ contains self-equilibrated load changes. Those
+are forces, not joint velocities. Even the multiplier null space $\ker J_c^T$
+is a different object: it describes redundant multiplier representations that
+produce the same generalized reaction. When $J_c$ has independent rows,
+$\ker J_c^T=\{0\}$, although a bilateral grip can still have unresolved internal
+loads when applied inputs are unknown.
 
-This solution minimizes $\|\mathbf{v}\|^2$ subject to the constraint $\mathbf{J}_c \mathbf{v} = \mathbf{v}_{\text{desired}}$.
+## Constraint Reactions and the Forward Dynamics {#sec-drift_control_parallel}
 
-## Internal Forces and the Dual Null Space {#sec-dual_nullspace}
-
-The null space applies to velocities and motions. A related concept, the dual null space, applies to forces.
-
-The range of the constraint Jacobian transpose, $\text{Range}(\mathbf{J}_c^T)$, is the set of constraint forces that can constrain motion. Forces perpendicular to this range (in the null space of $\mathbf{J}_c^T$) are "internal" forces — they don't constrain motion but they do create stresses within the system.
-
-::: {.callout-important}
-## Internal Forces and Injury Risk {#principle:internal_forces_injury}
-
-A key insight for injury prevention: internal forces that lie in the null space of $\mathbf{J}_c^T$ are *not* observable from motion alone. They don't affect the kinematics but they create internal stresses in muscles, ligaments, and joints.
-
-For example, a golfer might maintain the same club trajectory but increase grip pressure dramatically. The motion is unchanged, but the internal stress in the hands and forearms increases. This increased stress is a null space force — it's mechanical work that doesn't produce useful output.
-
-Injury often occurs from accumulated internal forces, especially in repetitive motions. A golfer who generates large internal forces (high muscle co-contraction, high grip pressure) may fatigue or injure tissues without producing more club velocity.
-:::
-
-Understanding internal forces is crucial for analyzing injury risk and predicting when a swing technique might be "efficient" kinematically but "inefficient" mechanically (producing internal stresses with little mechanical benefit).
-
-## Screw Theory Treatment
-
-Screw theory is an elegant mathematical framework for kinematic and force analysis of mechanisms. It's particularly powerful for parallel mechanisms.
-
-**Twists and Wrenches**
-
-A **twist** (or screw) is a unit vector representing a motion: rotation about an axis combined with translation along that axis.
-
-A **wrench** is a unit vector representing a force: a force in some direction combined with a torque (moment) about an axis.
-
-Twists and wrenches satisfy a reciprocal relationship: a twist and a wrench are **reciprocal** if their inner product is zero. Reciprocal wrenches do no work on reciprocal twists.
-
-In the context of the golf swing:
-
-- The allowed motions of the club (given the constraint) form a subspace of twists.
-- The constraint forces (grip force) form wrenches reciprocal to the allowed twists.
-- The internal forces (null space forces) also form reciprocal wrenches and do no work on allowed motions.
-
-Screw theory provides a coordinate-free, elegant way to analyze these relationships. Interested readers are referred to [@Murray1994; @BulloLewis2004].
-
-## GRF and Lower Body: Full Treatment {#sec-grf_lower_body}
-
-::: {.callout-note}
-## Ground Reaction Force {#definition:grf}
-
-The **ground reaction force** (GRF) is the force exerted by the ground on the golfer's feet to maintain the contact constraint. It has three orthogonal components:
-- $F_z$ (vertical): supports the golfer's body weight and accelerates the center of mass vertically.
-- $F_x$ (anterior-posterior): drives weight shift and linear acceleration forward/backward.
-- $F_y$ (medial-lateral): stabilizes the pelvis and drives rotational acceleration.
-:::
-
-So far, we've discussed GRF conceptually. Here's a complete treatment of how to measure and analyze lower body mechanics using force plate data.
-
-### Force Plate Basics {#sec-force_plate_basics}
-
-A force plate is a sensor that measures three orthogonal force components and three torque components (six DOF). Modern force plates (e.g., AMTI, Bertec, Kistler) are accurate to within 1% of the measured force.
-
-During a golf swing, a golfer typically stands on one or two force plates (one under each foot). The data streams include:
-
-- $F_x$ (anterior-posterior force)
-- $F_y$ (medial-lateral force)
-- $F_z$ (vertical force)
-- $M_x$ (roll moment)
-- $M_y$ (pitch moment)
-- $M_z$ (yaw moment, or "ground reaction torque" or "free moment")
-
-Each component changes throughout the swing, revealing the golfer's weight transfer, rotational strategy, and force application pattern.
-
-### Center of Pressure Trajectory {#sec-cop_trajectory}
-
-::: {.callout-note}
-## Center of Pressure {#definition:cop}
-
-The **center of pressure** is the point where the vertical ground reaction force can be considered to act. Its trajectory during the swing reveals the golfer's balance and weight transfer strategy.
-:::
-
-The center of pressure (COP) is computed from the force and moment data:
-
+Use minimal open-tree coordinates with $M(q)$ positive definite, input map
+$B(q)$, and input vector $u$. Put velocity-dependent inertial terms and gravity
+in $h(q,\dot q)$. Keep passive tissue loads and other applied loads explicitly
+in $p(q,\dot q,z)$, where $z$ denotes any additional constitutive states. For a
+fixed, ideal contact mode,
 $$
-\text{COP}_x = \frac{M_y}{F_z}, \quad \text{COP}_y = -\frac{M_x}{F_z}
+M\ddot q+h=Bu+p+J_c^T\lambda.
+$$ {#eq-drift_control_constrained}
+Do not put $h$ on the left and then subtract it again inside an additional
+right-hand-side drift torque. Different bookkeeping conventions are possible,
+but each physical term must occur exactly once.
+
+Set $a_0=M^{-1}(Bu+p-h)$ and $A=J_cM^{-1}J_c^T$. If $J_c$ has independent rows,
+$A$ is positive definite. Substitution into the acceleration constraint yields
+$$
+\lambda=-A^{-1}(J_c a_0+\dot J_c\dot q),\qquad
+ \ddot q=a_0-M^{-1}J_c^TA^{-1}(J_c a_0+\dot J_c\dot q).
+$$ {#eq-reaction_elimination}
+The acceleration correction depends on the mass matrix as well as the geometry.
+The matrix $I-M^{-1}J_c^TA^{-1}J_c$ acts on velocities or acceleration
+increments; its transpose acts on generalized-force covectors. They cannot be
+interchanged merely because both are called projections.
+
+This solution is unique for the specified model, state, applied inputs, and
+regular active equality constraints. Redundant constraints can leave multiplier
+coordinates nonunique. Unilateral contacts can be infeasible for the computed
+reaction; frictional contact can require a different mode or contact law.
+Calling a problem forward dynamics does not remove those conditions.
+
+### Reactions Depend on Applied Muscle Loads
+
+For a two-coordinate illustration take $M=\operatorname{diag}(2,1)$,
+$J_c=[1\;-1]$, $h=p=0$, and $B=I$. The two coordinates must accelerate together.
+With $u=(1,0)^T$, the solution is
+$$
+\ddot q=(1/3,1/3)^T,\qquad \lambda=-1/3.
+$$ {#eq-reaction_example}
+With $u=(2,-1)^T$, the acceleration is unchanged and $\lambda=-4/3$. An
+additional applied load in $\operatorname{range}(J_c^T)$ is balanced by a changed
+reaction. Geometry determines the admissible reaction directions, not their
+magnitudes independently of actuation. A reaction may be zero or large depending
+on the state and inputs; the existence or number of loops alone gives no force
+scale.
+
+In inverse dynamics, the observed motion supplies the balance
+$$
+[B\;J_c^T]\begin{bmatrix}u\\\lambda\end{bmatrix}
+ =M\ddot q+h-p.
+$$ {#eq-inverse_loop_balance}
+Uniqueness depends on the rank of this identification map and on additional
+measurements and restrictions. Joint-level net torques can be ambiguous as well
+as individual muscle forces and hand loads. Known segment inertias and motion
+fix inertial demands; they do not generally separate all unknown sources.
+
+## Club Wrenches and Bilateral Load Sharing {#sec-loop_ambiguity_active}
+
+For a rigid club, express all vectors in a common inertial frame and take moments
+about its center of mass $C$. Let $r_i$ point from $C$ to hand contact $i$, $f_i$
+be its force on the club, and $m_i$ its contact couple. Then
+$$
+\begin{aligned}
+ m_c a_C &= f_L+f_R+m_c g+f_{\mathrm{other}},\\
+ I_C\dot\omega+\omega\times(I_C\omega)
+ &=r_L\times f_L+r_R\times f_R+m_L+m_R+m_{\mathrm{other},C}.
+ \end{aligned}
+$$ {#eq-club_total_force}
+The current rotational inertia tensor $I_C$ is expressed in that same frame. Other
+loads include aerodynamic forces or ball contact when applicable. The hand
+points of a rotating club generally have different linear accelerations:
+$a_i=a_C+\dot\omega\times r_i+\omega\times(\omega\times r_i)$.
+Sharing a rigid body does not make those accelerations equal.
+
+Stack each hand load as $w_i=(m_i,f_i)$ and transport its moment to $C$ before
+summing. The resulting $6\times12$ grasp map $G$ has rank six if both contacts
+are modeled as unrestricted full wrenches. For a compatible required wrench,
+$$
+w=G^+w_{\mathrm{req}}+N_G\eta,\qquad
+ \operatorname{range}(N_G)=\ker G,
+$$ {#eq-force_decomposition_ambiguous}
+so there are six unconstrained load-sharing parameters before friction,
+unilateral pressure, moment capacity, and actuator limits are imposed. Those
+physical restrictions can reduce the feasible set or make it empty; an arbitrary
+algebraic split need not be realizable by a hand.
+
+If each contact transmits only a point force, the map is $6\times6$. For two
+distinct points it generically has rank five, because equal opposite forces along
+the joining line produce zero resultant wrench. The null dimension is then one,
+and arbitrary required spatial wrenches cannot be supported. Grip models that
+allow contact couples and distributed pressure have different capabilities.
+
+A simple scalar illustration is $\tau_L+\tau_R=10$ N m, with both torques expressed
+about the same axis and reference point after all other terms are accounted for.
+The pairs $(4,6)$ and $(7,3)$ satisfy the same balance. A minimum-squared-torque
+choice gives $(5,5)$, but that is an optimization assumption, not an observation
+of how a golfer shared the load. Relative EMG amplitudes do not by themselves
+supply the missing torque ratio. Calibrated instrumented grips, muscle models,
+or additional experimental perturbations can constrain the inference.
+
+### Force Transmission, Power, and Internal Loading
+
+A twist is a six-component angular/linear velocity representation, not generally
+a unit vector. With the matching wrench ordering, $V=(\omega,v)$ and
+$w=(m,f)$ pair to give power $w^TV=m\cdot\omega+f\cdot v$. Both must refer to
+compatible points and frames. A change of point changes the moment and linear
+velocity together, preserving power.
+
+For an ideal rigid internal attachment, the two bodies have the same contact
+twist and experience opposite wrenches. Their contact powers cancel when both
+bodies are included in the system. Each body separately can receive or lose
+power through that attachment. Thus the grip can transfer energy to the club
+while ideal closure reactions do zero total work on the golfer-plus-club system.
+In generalized coordinates this cancellation is
+$$
+\dot q^TJ_c^T\lambda=\lambda^TJ_c\dot q=0.
+$$ {#eq-orthogonality_relation}
+A constraint can redirect acceleration while doing no total work. An internal
+load need not produce mechanical work merely because it stresses tissue. Muscle
+maintenance can have a metabolic cost even when modeled joint power is zero;
+local tissue deformation and injury outcomes require their own measurements and
+constitutive models.
+
+## Ground Contact: Wrench, Momentum, and Energy {#sec-grf_lower_body}
+
+Ground reaction is an external contact wrench on the golfer-plus-club system.
+Its value depends on the motion, geometry, muscle loading, and contact conditions.
+It is not independent of muscle action, nor is it an additional muscle force.
+For a simple unilateral contact with normal gap $\phi_n$, the ideal conditions
+include $\phi_n\ge0$, $\lambda_n\ge0$, and $\phi_n\lambda_n=0$. A sticking
+Coulomb contact also requires $\|f_t\|\le\mu\lambda_n$. Distributed foot contact
+has moment and center-of-pressure restrictions in addition to this force cone.
+Slip, lift-off, shoe deformation, and moving support change the equations.
+
+For the center of mass $C$ of the selected whole system and angular momentum
+$H_C$, the external balances are
+$$
+\begin{aligned}
+ m_{\mathrm{tot}}a_C &=m_{\mathrm{tot}}g+\sum_i f_i+f_{\mathrm{other}},\\
+ \dot H_C &=\sum_i\big((r_i-C)\times f_i+m_i\big)
+                  +m_{\mathrm{other},C}.
+ \end{aligned}
+$$ {#eq-whole_body_momentum}
+Here $r_i$ is the contact position in world coordinates, whereas the preceding
+club balance used offsets from the club center. Uniform gravity contributes no
+net moment about the whole-system center of mass. These equations constrain
+whole-system momentum, not the pelvis acceleration alone. Hip, spine, and joint
+reactions exchange angular momentum among segments. Even with zero total external
+moment, one segment can rotate while others counter-rotate. A free moment measured
+at a foot is therefore not a complete explanation of pelvis motion or proof of a
+universally passive shoulder.
+
+### A Force Plate's Reference Point Matters
+
+Declare a right-handed frame with $z$ upward, and let $(F,M_O)$ be the wrench
+of the ground on the golfer measured about an origin $O$ in the contact plane.
+For $F_z\ne0$, a center of pressure $r=(x,y,0)$ is defined so that the remaining
+moment there has only a vertical component. Since
+$M_O=r\times F+T_z e_z$,
+$$
+x=-\frac{M_y}{F_z},\qquad y=\frac{M_x}{F_z},\qquad
+ T_z=M_z-(xF_y-yF_x).
 $$ {#eq-cop_computation}
+Thus the plate-origin yaw moment $M_z$ is not generally the free moment $T_z$.
+If the contact plane is at height $h$ relative to $O$, use
+$x=(hF_x-M_y)/F_z$ and $y=(M_x+hF_y)/F_z$. Vendor outputs may use the opposite
+force-on-plate sign or different axes; transform the full wrench before applying
+these formulas. Near zero normal load the division is ill-conditioned, so state
+a justified contact threshold and report unloaded intervals separately.
 
-The COP trajectory during the swing reveals the golfer's balance. A professional golfer's COP typically:
+For a numerical check, a force $F=(20,30,800)$ N applied at
+$r=(0.2,-0.1,0)$ m with free moment $T_z=5$ N m gives
+$M_O=(-80,-160,13)$ N m. The formulas recover $x=0.2$ m, $y=-0.1$ m, and
+$T_z=13-(6+2)=5$ N m. Calling the measured $13$ N m the free moment would
+conflate the horizontal-force lever arm with the residual couple.
 
-1. Starts near the center of the stance at address.
-2. Moves toward the trailing foot during the backswing.
-3. Moves toward the lead foot during the downswing and through-swing.
-4. Stabilizes near the lead foot in the follow-through.
+COP is pressure-weighted position, not the center of mass or a direct measure
+of transferred body mass. A changing foot-load share can move COP while the
+center of mass barely moves. With two coplanar plates, transform the wrenches
+to one frame and origin before combining them. Separate plates supply each
+foot's boundary wrench; one combined plate generally leaves bilateral sharing
+unresolved. Six-axis measurements are wrench components, not six motion DOFs.
+Calibration, cross-talk, sampling, synchronization, and filtering affect accuracy;
+a universal instrument-accuracy percentage cannot substitute for calibration.
 
-An erratic or jerky COP trajectory indicates poor balance or weight transfer and is often associated with inconsistent swing mechanics.
+With each foot wrench known, segment poses and inertial parameters allow a
+Newton–Euler recursion from foot to shank to thigh. Transfer both force and
+moment, including their lever arms, at each step. This gives model-conditioned
+net joint loads when other external loads and joint assumptions are specified.
+It does not uniquely identify individual muscle forces or tissue stress.
 
-### Vertical GRF Profile {#sec-vertical_grf}
+### Support Can Enable Work Without Supplying Energy
 
-The vertical GRF is typically expressed as a multiple of body weight (%BW). During the golf swing:
+A fully stationary rigid foot has zero velocity at its ground-contact points
+and zero angular velocity. In this idealization, the ground wrench has zero
+mechanical power, although its force and moment can change the whole-system
+momentum. Muscle work can increase body and club energy while ground support
+prevents an incompatible foot motion. The resultant external force dotted with
+center-of-mass velocity describes center-of-mass translational-energy change; it is not the
+contact power of that force on a deformable or articulated system.
 
-1. **Address:** $F_z \approx 1.0 \times BW$ (static support).
-2. **Early backswing:** $F_z$ may decrease slightly to $0.95 \times BW$ as the golfer unweights the lead foot.
-3. **Top of backswing:** $F_z$ increases to $1.1$–$1.2 \times BW$ as the golfer coils and prepares to accelerate.
-4. **Downswing:** $F_z$ continues to increase, reaching peak values of $1.3$–$1.6 \times BW$ at the moment of impact. (Professional golfers often reach higher values.)
-5. **Post-impact / follow-through:** $F_z$ decreases back toward $1.0 \times BW$ as the golfer finishes the swing.
+For time-independent elastic potentials and ideal stationary contacts, an
+energy balance has the form
+$$
+\frac{d}{dt}(T+V_g+V_e)
+ =\dot q^TBu+P_{\mathrm{other}}-P_{\mathrm{diss}},
+ \qquad P_{\mathrm{diss}}\ge0.
+$$ {#eq-parallel_energy_balance}
+Moving support, slipping friction, changing elastic rest states, and contact
+impacts require their corresponding boundary or constitutive power terms.
+Neither a large ground force nor an early force peak establishes the source,
+amount, or direction of energy transferred to the club. A segment power audit
+must state the system boundaries, force points, velocities, and sign conventions.
 
-The shape and magnitude of the vertical GRF profile reveal the golfer's sequencing and force application strategy. A golfer with poor sequencing might have premature peak GRF (early in the downswing), while a golfer with good sequencing has peak GRF near impact.
+There is no single force-plate curve in this model that defines a good golfer.
+Lead-foot and combined forces, normalization by body weight, club choice, swing
+phase, and target all change a comparison. A claim that the best peak must occur
+exactly at impact needs an identified study and outcome definition, not an
+illustrative sketch. The chapter's equations specify what must balance; they do
+not provide a coaching threshold or an injury-risk cutoff.
 
-### Horizontal GRF Components {#sec-horizontal_grf}
+## X-Factor, Compliance, and Muscle State {#sec-body_as_closed_chain}
 
-The horizontal forces ($F_x$ and $F_y$) are typically much smaller than the vertical force (usually $< 0.3 \times BW$) but are critical for revealing the golfer's rotational dynamics.
+In a planar illustration, define $\theta_p$ and $\theta_t$ as pelvis and thorax
+angles about the same axis. Then $\Delta=\theta_t-\theta_p$ is a relative
+rotation, not a new loop-closure equation. For $\theta_p=60$ degrees and
+$\theta_t=20$ degrees, $\Delta=-40$ degrees under this convention. In three
+dimensions, use the relative orientation $R_p^TR_t$ and declare its reported
+angle convention. Subtracting two Euler angles or projected shoulder-line
+angles need not measure the same quantity.
 
-- **Anterior-posterior force ($F_x$):** this component is associated with forward/backward weight shift. A positive $F_x$ (forward) during the downswing indicates the golfer is pushing into the ground to drive the lower body forward and up.
-- **Medial-lateral force ($F_y$):** this component is associated with lateral stability and rotational acceleration. It's typically small but becomes significant during weight transfer.
+[Brown, Selbie, and Wallace's X-factor methods study](https://doi.org/10.1080/02640414.2013.775474)
+examines this measurement issue. A reported intersegment angle is not a direct
+measurement of lumbar rotation, disc compression, tissue strain, or stored
+elastic energy. Distribution among spinal levels, rib-cage/shoulder motion,
+posture, and muscle activation matter. An angle associated with performance is
+also not by itself evidence that increasing that angle improves an individual
+swing or is safe for that individual.
 
-### Ground Reaction Torque (Free Moment) {#sec-ground_reaction_torque}
+For a clearly declared toy torsional spring,
+$$
+V_e=\tfrac12k(\Delta-\Delta_0)^2,\qquad
+ Q_t=-k(\Delta-\Delta_0),\qquad Q_p=+k(\Delta-\Delta_0).
+$$ {#eq-elastic_restoring_torque}
+The two torques are opposite, and their combined power is
+$-k(\Delta-\Delta_0)\dot\Delta=-\dot V_e$ when $k$ and $\Delta_0$ are fixed.
+Doubling displacement quadruples this model's energy only if the stiffness and
+rest angle stay the same. It does not establish a universal human tissue law
+or prove that the stored energy reaches the club rather than another segment
+or dissipation. If stiffness is actively changed, the energy derivative also
+contains $\tfrac12\dot k(\Delta-\Delta_0)^2$; changing a rest angle adds another
+term. An impedance schedule is not energetically free by definition.
 
-The ground reaction torque (or "free moment") is the torque $M_z$ about the vertical axis. This torque is crucial for initiating pelvis rotation.
+Joint range of motion, tangent stiffness, damping, geometric constraint rank,
+and neural feedback are distinct. Finite stiffness resists displacement without
+reducing the exact kinematic dimension. It can make some motions small over a
+specified loading range and time scale. A rigid-constraint approximation must
+be justified against those scales, contact margins, and output errors.
 
-::: {.callout-important}
-## Ground Torque Drives Pelvis Rotation {#principle:ground_torque_pelvis}
+Muscle excitation, activation, fiber length, shortening velocity, and tendon
+stretch must likewise be distinguished. Eccentric contraction means active
+lengthening; active shortening is concentric. A tendon can recoil while its
+muscle fibers behave differently. Treating all release-phase tissue forces as
+passive because club speed is high is not justified. For a muscle model,
+$\tau=R(q)F_m(q,\dot q,z)$ maps muscle forces through moment arms; multiplying
+moment arms by dimensionless activation alone does not produce torque.
 
-The free moment $M_z$ from the ground is one of the primary drivers of pelvis rotational acceleration. In the absence of external torques, the only torque acting on the pelvis comes from the ground (the ground reaction torque) and from muscle actions.
+## Constrained Drift and Forward Counterfactuals {#sec-drift_not_constrained}
 
-During the downswing, the ground exerts a torque $M_z \sim 50$–$150$ N·m, depending on the golfer's size and swing speed. This torque is measured directly by force plates and represents the ground's mechanical contribution to initiating and sustaining pelvis rotation.
-:::
+At a fixed admissible state and contact mode, reaction elimination gives
+$$
+\begin{aligned}
+ \ddot q &= f_c(q,\dot q,z)+G_c(q)u,\\
+ G_c &=\big(I-M^{-1}J_c^TA^{-1}J_c\big)M^{-1}B.
+ \end{aligned}
+$$ {#eq-constrained_affine_dynamics}
+The input-independent term includes gravity, velocity-dependent dynamics,
+retained passive forces, and the geometric acceleration correction. It depends
+on the declared inputs and state variables. This is the useful local affine
+structure: closure reshapes both drift and the effect of an input. Removing
+$u$ does not remove the reactions needed to satisfy the remaining contacts.
 
-The ground reaction torque is computed from the moment data directly (it's $M_z$ from the force plate) or can be inferred from the offset of the resultant GRF vector relative to the body's center of rotation.
+Computing these terms requires a model, inertial parameters, calibrated
+kinematics, and any relevant tissue or contact state. Motion capture alone
+does not measure masses, inertias, tendon preload, or the chosen decomposition.
+Although gravitational force can be evaluated before solving for reactions,
+the resulting constrained gravitational acceleration differs from free fall.
+Observable motion and model-computable force terms are different evidential
+categories.
 
-### Sequential Computation From Distal to Proximal {#sec-sequential_inverse_dynamics}
+For a particle observed in a rotating frame, the centrifugal and Coriolis
+fictitious forces are
+$$
+F_{\mathrm{cf}}=-m\omega\times(\omega\times r),\qquad
+ F_{\mathrm{cor}}=-2m\omega\times v_{\mathrm{rel}}.
+$$ {#eq-rotating_frame_forces}
+An accelerating origin and changing frame angular velocity introduce translational
+and Euler terms as well. These expressions cannot be added to inertial-frame
+loads without the matching frame transformation; that would double count the
+kinematics. Generalized velocity-dependent terms in an articulated model are
+not automatically identical to one particle's rotating-frame force.
 
-With force plate data, lower body inverse dynamics can be computed in a sequential manner:
+For a hypothetical $3$ kg point mass rotating at $15$ rad/s on a $0.6$ m radius,
+$m\omega^2r=405$ N. About that same center, however, the radial force has zero
+moment because $r\times F_{\mathrm{cf}}=0$. It has zero power on purely tangential
+relative motion. About another joint it can have a moment, but the perpendicular
+lever arm and vector directions must be computed. Multiplying $405$ N by an
+arbitrary segment distance does not establish a shoulder torque.
 
-1. **Ankle:** apply RNEA starting from the force plate data (known forces and moments at the foot). Compute ankle joint torque.
-2. **Knee:** using the ankle torque and lower leg kinematics, compute the forces and moments at the knee joint. From these, compute knee joint torque.
-3. **Hip:** using the knee torque and upper leg kinematics, compute the forces and moments at the hip joint. From these, compute hip joint torque.
+Similarly, $F_{\mathrm{cor}}\cdot v_{\mathrm{rel}}=0$: the Coriolis term is
+perpendicular to the relative velocity and is not dissipative resistance to it.
+For mutually perpendicular $\omega$ and $v_{\mathrm{rel}}$, with magnitudes
+$10$ rad/s and $8$ m/s and mass $3$ kg, its magnitude is $480$ N. That conditional
+number is not an observed golf force. A $3$ kg segment weighs $29.43$ N in
+$9.81$ m/s$^2$ gravity. Neither example establishes a universal ratio of inertial
+to muscle torque, and ratios of load magnitudes are not fractions of work or
+clubhead-speed causation.
 
-This sequential computation is unique and well-determined (unlike upper body inverse dynamics) because the force plate provides a known boundary condition.
+A forward zero-torque counterfactual (forward ZTCF) branches from a specified
+initial state and changes a declared torque input or policy. It then evolves
+the state and recomputes compatible reactions, contact events, and retained
+passive forces. It must not reset the measured state at every time sample and
+call the resulting instantaneous accelerations a new trajectory. If the inferred
+baseline torques or contact model are uncertain, that uncertainty carries into
+the forward prediction. Forward simulation avoids solving for unspecified
+inputs during integration; it does not establish that its initial inputs,
+parameters, or biological interpretation are correct.
 
-### The "Ground-Up" Power Transfer Chain {#sec-ground_up_power}
+## Kinematics, Singularities, and Feasible Control {#sec-singularities_parallel}
 
-A key insight from force plate analysis is that the golf swing's power flow is initiated from the ground up:
+When all compatible open-tree joint coordinates are known, their link poses can
+be computed recursively and the closure residual checked. If only some actuated
+coordinates are specified, passive coordinates and platform pose may require
+solving nonlinear closure equations. Multiple isolated assembly modes are not
+the same as continuous redundancy or a Jacobian singularity. Inverse kinematics
+asks for coordinates achieving a specified pose; its difficulty depends on the
+architecture. For a Stewart-type platform, computing leg lengths from a pose
+can be much simpler than computing pose from lengths. Constraint forces are not
+unknowns in a purely kinematic solve.
 
-1. The ground exerts a vertical force (support) and a torque (drive). These are the initiating forces.
-2. The ground torque accelerates the pelvis. The pelvis acceleration then couples to the upper body via the spine and hips.
-3. The hips transfer some of the power to the shoulders via the spine.
-4. The shoulders transfer power to the arms via shoulder joints.
-5. The arms accelerate the club.
+For local input coordinates $s$ and output coordinates $x$, write differentiated
+closure as $A_x\dot x+B_s\dot s=0$. In a square nonredundant mechanism, the
+[Gosselin–Angeles classification](https://doi.org/10.1109/70.56660)
+distinguishes rank loss of the input-side matrix $B_s$ (first kind), output-side
+matrix $A_x$ (second kind), and simultaneous loss (third kind). When $A_x$ is
+singular, a nonzero output velocity may satisfy the linearized equations with
+locked inputs. Architecture singularity concerns geometric design that imposes
+persistent rank deficiency; it is not a name for any transient unusual posture.
 
-This "ground-up" perspective contrasts with the (incorrect) "upper-body-down" perspective where golfers imagine "driving from the shoulders." In fact, the shoulders are largely passive followers of the pelvis rotation initiated by ground forces.
+Standing still at address does not demonstrate a singularity, because these
+ranks depend on geometry rather than whether velocity happens to be zero. A
+straight two-link planar arm has a singular endpoint-position Jacobian, but its
+elbow coordinate still exists. A mechanical stop, contact inequality, or a
+separately imposed lock changes the admissible motion in another way. Neither
+near extension nor a small singular value proves maximum impact efficiency or
+safe tissue loading. A first-order rank loss may require nonlinear analysis to
+determine actual finite self-motion.
 
-Force plate data quantifies this ground-up flow and shows that the contribution of the ground reaction torque to pelvis acceleration is often larger than the contribution of the hip muscles themselves — another example of drift dominance.
+Report which Jacobian is tested, its coordinate and unit scaling, the posture,
+and the numerical threshold. Conditioning of $J_yZ$ concerns task velocity;
+conditioning of $J_cM^{-1}J_c^T$ concerns reaction elimination; rank of
+$[B\;J_c^T]$ concerns inverse load identification. Their numerical values answer
+different questions. Local input rank also does not alone determine finite-time
+reachability, because drift, input bounds, time horizon, and contact transitions
+matter.
 
-## Synthesis: The Golfer's Mechanical Reality {#sec-synthesis_golfer}
+## An Investigation That Connects the Pieces {#sec-synthesis_golfer}
 
-Bringing together all the threads of this chapter, here's a counterintuitive but mechanically accurate picture of what happens during a golf swing:
+The defensible research hypothesis is that preparation and changing geometry
+alter how feasible muscle inputs and stored energy produce the impact state.
+The two-handed grip and ground contacts are essential parts of that mapping.
+They can transmit loads, restrict relative motion, and alter the effectiveness
+of an input without supplying unlimited energy or determining a unique neural
+strategy. To investigate the hypothesis:
 
-::: {.callout-tip}
-## The Golfer as a Parallel Mechanism {#context:golfer_parallel_mechanism}
 
-The golfer's body is a parallel mechanism, not a serial chain. This has profound implications:
+1. Define the outcome: clubhead velocity and face orientation at contact,
+   strike location, ball launch, or dispersion. A club-center path alone is
+   not a complete impact task.
+1. Declare the graph, joint coordinates, contact modes, hand-frame offsets,
+   inertias, muscle/input representation, and elastic states. Check closure,
+   velocity, and acceleration residuals with measurement uncertainty.
+1. Synchronize segment kinematics, separate foot wrenches, and any hand-load
+   measurements. Identify which aggregate loads are determined and which
+   bilateral or muscle distributions remain compatible with the data.
+1. Audit linear and angular momentum separately from segment power, total
+   energy, and tissue loading. Report sign conventions and reference points.
+   An acceleration contribution, work contribution, and injury hypothesis
+   must not share a percentage without an explicit derivation.
+1. Compare a baseline trajectory with declared forward interventions on
+   torque, timing, grip compliance, or contact. Preserve the same starting
+   state when testing a late intervention; change it deliberately when testing
+   preparation. Include uncertainty in unmeasured load sharing and parameters.
+1. Test predictions on held-out trials and controlled perturbations where
+   feasible. Similar observed kinematics do not prove identical forces, and
+   a model that reproduces a swing does not identify the golfer's intention.
 
-1. **The grip is a hard constraint.** Both hands must move with the club. The constraint forces between the hands are enormous (hundreds of Newtons) but entirely determined by kinematics. There is no ambiguity in constraint forces, only in how the golfer distributes active muscle torques between the hands.
-2. **The ground is a hard constraint.** The feet cannot slip (if they're well-planted). The ground reaction forces and torques are determined by the pelvis's inertia and acceleration, not by hip muscle effort. The ground does mechanical work on the golfer's body.
-3. **Drift forces dominate.** Gravity, Coriolis, and centrifugal forces do far more work than muscles during the release. The golfer's "control" is largely about releasing these drift forces (removing brakes) rather than about actively powering the swing.
-4. **X-factor is a stored elastic energy mechanism.** The spine loop constraint couples hip and shoulder rotation. Large X-factor stores elastic energy in the spine. During the downswing, this energy is released, contributing to club acceleration. The constraint forces in the spine are very large, but they are necessary to maintain the loop closure.
-5. **Efficiency comes from exploiting the null space.** By using the redundancy of the parallel mechanism (the null space), the golfer can adjust club face angle, grip pressure, arm plane, etc., without changing the overall club trajectory. This allows fine-tuning of the swing while maintaining the power-generating motion.
-6. **Preparation is the key.** The actual downswing is largely determined by drift and constraints. What matters is the preparation: achieving the right backswing configuration (high X-factor, loaded position), the right flexibility (to allow loop constraints to work), and the right timing of the downswing initiation (hip drive). Once the downswing is initiated, physics takes over.
 
-These insights explain why biomechanically efficient golfers (professionals) look similar to each other: they're all exploiting the same parallel mechanism constraints and drift forces. They differ mainly in detailed control inputs (grip pressure, face angle adjustment) and in how they load the swing (X-factor magnitude, spine flexibility).
-:::
+This approach can reveal when a change in grip loading mainly affects internal
+stress, when it changes club orientation, or when a different contact condition
+changes the admissible acceleration. It also allows a passive mechanism to be
+supported where the evidence supports it, while retaining the muscle work,
+feedback, and prior preparation needed to explain the entire swing.
+[The energy-transfer chapter](./ch10_energy_transfer.qmd#sec-energy_transfer) develops the next question: how energy moves
+between the chosen segments and storage elements.
 
-**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in [Chapter 10](./ch10_energy_transfer.qmd#sec-energy_transfer).
+## Exercises and Checks
 
-## Chapter Exercises: Parallel Mechanisms
 
-**Conceptual**
-
-Explain in plain language: Why is the golfer's body over-constrained (according to Gruebler's formula), yet it can still move? What makes this possible?
-
-{X-Factor Calculation}
-In a golf swing, measure (or estimate) the hip and shoulder rotations at two points:
-1. At the top of the backswing.
-2. At the start of the downswing.
-
-Calculate the X-factor at each point. Does X-factor increase or decrease as the downswing begins? What does this tell you about the spine constraint?
-
-{Gruebler's Mobility}
-For a simplified golfer model:
-- Pelvis (1 body).
-- Torso (1 body), connected via spine (3 joints).
-- Shoulders (1 body), connected via 2 shoulder joints (one per arm).
-- Total: 4 bodies, 5 joints.
-- Ground contact: 3 constraints.
-
-Compute the mobility using Gruebler's formula (planar approximation). Is it positive, negative, or zero? What does this imply?
-
-{Loop Jacobian for Grip Constraint}
-In a simplified 2D model, the left and right arms both reach the same grip point (on the club). Let:
-- Left arm: shoulder angle $q_1$, elbow angle $q_2$. Hand position: $x_L = L_1 \cos q_1 + L_2 \cos(q_1 + q_2)$.
-- Right arm: shoulder angle $q_3$, elbow angle $q_4$. Hand position: $x_R = L_1 \cos q_3 + L_2 \cos(q_3 + q_4)$.
-
-The grip constraint is $x_L = x_R$ (hands at the same position).
-
-1. Write the constraint equation $\bm{\Phi}_{\text{grip}}(\bm{q}) = 0$.
-2. Compute the constraint Jacobian $\bm{J}_c = \partial \bm{\Phi} / \partial \bm{q}$.
-3. What is the dimension of the null space? (How many DOF remain after enforcing this constraint?)
-
-{Constraint Forces in the Spine}
-Assume the spine loop constraint requires that hip rotation and shoulder rotation are related by:
-
-\theta_{\text{hips}} = \theta_{\text{shoulders}} + \theta_{\text{spine}}
-
-During the downswing:
-- $\theta_{\text{hips}}$ accelerates at $\ddot{\theta}_{\text{hips}} = 100$ rad/s$^2$.
-- $\theta_{\text{shoulders}}$ accelerates at $\ddot{\theta}_{\text{shoulders}} = 20$ rad/s$^2$ (delayed).
-
-What is the required spine acceleration $\ddot{\theta}_{\text{spine}}$? If the spine's moment of inertia is $I_s = 0.5$ kg$\cdot$m$^2$, what torque must the constraint force provide to the spine?
-
-{Application: Footing and Ground Reaction}
-Record or find a video of two golf swings (professional and amateur, if possible).
-
-Observe the footwork:
-1. How much does each golfer's feet move during the swing?
-2. At address, what is the width of stance?
-3. During the downswing, does the golfer's weight shift?
-
-Hypothesize: How does foot position affect the ground contact constraint? Does a wider stance provide a firmer constraint?
+1. Draw the upper and lower loops and the connecting spine path. Remove one
+   grip edge. Which cycle disappears? Why does defining a pelvis–thorax
+   relative angle not restore it?
+1. Reproduce the UPS platform count and explain the six axial rod spins in
+   the fixed-length SPS example. State which freedoms move the platform.
+1. Differentiate the planar two-arm positions. Verify both closure and
+   common upward hand motion for the stated configuration and velocity.
+   Then compute the stacked closure/task rank when the hand point is fixed.
+1. Solve the two-coordinate reaction example for both applied loads. Verify
+   identical accelerations, different reactions, and zero total ideal
+   constraint power for a common admissible velocity.
+1. Construct the two-point-force grasp map. Show that opposite forces along
+   the joining line lie in its null space. Explain why opposite forces in
+   an arbitrary direction generally leave a couple.
+1. Recover COP and free moment from the numerical wrench. Repeat after
+   moving the reference origin, transporting the moment consistently.
+1. Derive the complete energy derivative of the torsional spring when both
+   stiffness and rest angle vary. Identify which terms require a source or
+   sink beyond the fixed-spring mechanical exchange.
+1. Specify an experiment that distinguishes a grip-load change preserving
+   the resultant club wrench from one that changes club orientation. List
+   the measurements needed; explain why motion alone and raw EMG ratios
+   do not resolve every candidate load distribution.
