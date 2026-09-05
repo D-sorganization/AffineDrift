@@ -270,11 +270,12 @@ class TestAuditBookPhysicsOfGolf:
         # #4149 removes two unsupported physiological diagrams from chapter 9b.
         assert res.chapters_with_latex_figures == 28
         assert res.total_latex_figures == 29
-        assert res.total_latex_tikz == 29
-        assert res.total_latex_includegraphics == 0
+        # #4160 replaces the incorrect loop diagram with a shared print/web image.
+        assert res.total_latex_tikz == 28
+        assert res.total_latex_includegraphics == 1
         assert res.total_latex_fig_labels == 29
-        assert res.total_quarto_figures == 0
-        assert res.missing_figures_count == 29
+        assert res.total_quarto_figures == 1
+        assert res.missing_figures_count == 28
         assert res.is_in_full_parity is False
 
 
