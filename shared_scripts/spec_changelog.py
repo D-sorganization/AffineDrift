@@ -179,8 +179,7 @@ def parse_changelog(text: str) -> Changelog:
 
     if header is None or table_start is None:
         raise SpecChangelogError(
-            "the 'Change Log' heading is not followed by a table whose first "
-            "column is 'Date'"
+            "the 'Change Log' heading is not followed by a table whose first " "column is 'Date'"
         )
 
     return Changelog(
@@ -254,11 +253,7 @@ def validate(changelog: Changelog) -> list[str]:
             )
         if not row.summary.strip():
             failures.append(f"{label}: empty summary")
-        elif (
-            "|" in row.summary
-            and _DATE_RE.match(row.date)
-            and row.date >= PR_KEYED_SINCE
-        ):
+        elif "|" in row.summary and _DATE_RE.match(row.date) and row.date >= PR_KEYED_SINCE:
             # A pipe splits the row into extra cells, so the rendered markdown
             # table and the parsed row disagree and the row stops round-tripping
             # through the merge driver.
@@ -267,11 +262,7 @@ def validate(changelog: Changelog) -> list[str]:
                 "column break. Escape it as a backslash-pipe, or reword."
             )
 
-        if (
-            _KEY_RE.match(row.key)
-            and _DATE_RE.match(row.date)
-            and row.date >= PR_KEYED_SINCE
-        ):
+        if _KEY_RE.match(row.key) and _DATE_RE.match(row.date) and row.date >= PR_KEYED_SINCE:
             if row.key in seen:
                 failures.append(
                     f"duplicate change-log key {row.key} "
@@ -327,9 +318,7 @@ def migrate_rows(rows: list[Row]) -> tuple[list[Row], int]:
         note = f"(spec {row.key})"
         if note not in summary:
             summary = f"{summary} {note}" if summary else note
-        migrated.append(
-            Row(date=row.date, key=_recover_key(row.summary), summary=summary)
-        )
+        migrated.append(Row(date=row.date, key=_recover_key(row.summary), summary=summary))
         changed += 1
     return migrated, changed
 
@@ -339,9 +328,7 @@ def migrate_rows(rows: list[Row]) -> tuple[list[Row], int]:
 #: rows did, are inserted at the same offset by every pull request, and so are
 #: the second conflict site. The migration freezes them: the text is preserved
 #: verbatim, the word "Current" and the coordination it implies are not.
-_PROSE_ENTRY_RE = re.compile(
-    r"^Current (?P<version>\d+\.\d+\.\d+) entry:", re.MULTILINE
-)
+_PROSE_ENTRY_RE = re.compile(r"^Current (?P<version>\d+\.\d+\.\d+) entry:", re.MULTILINE)
 
 POLICY_NOTE = (
     "Rows are keyed by pull request, not by a serial spec version: "
@@ -435,20 +422,13 @@ def migrate_text(text: str) -> tuple[str, int]:
     header_block = changelog.header_block
     if tuple(header[:3]) != CANONICAL_HEADER:
         header_lines = header_block.splitlines(keepends=True)
-        widths = [
-            max(len(CANONICAL_HEADER[index]), 10)
-            for index in range(len(CANONICAL_HEADER))
-        ]
+        widths = [max(len(CANONICAL_HEADER[index]), 10) for index in range(len(CANONICAL_HEADER))]
         new_header = (
             "| "
-            + " | ".join(
-                CANONICAL_HEADER[index].ljust(widths[index]) for index in range(3)
-            )
+            + " | ".join(CANONICAL_HEADER[index].ljust(widths[index]) for index in range(3))
             + " |\n"
         )
-        new_separator = (
-            "| " + " | ".join("-" * widths[index] for index in range(3)) + " |\n"
-        )
+        new_separator = "| " + " | ".join("-" * widths[index] for index in range(3)) + " |\n"
         header_block = new_header + new_separator
         if len(header_lines) > 2:  # pragma: no cover - defensive
             header_block += "".join(header_lines[2:])
@@ -495,9 +475,7 @@ def union_rows(base: list[Row], ours: list[Row], theirs: list[Row]) -> list[Row]
     """
     base_counts: Counter[tuple[str, str, str]] = Counter(row.identity for row in base)
     our_counts: Counter[tuple[str, str, str]] = Counter(row.identity for row in ours)
-    their_counts: Counter[tuple[str, str, str]] = Counter(
-        row.identity for row in theirs
-    )
+    their_counts: Counter[tuple[str, str, str]] = Counter(row.identity for row in theirs)
 
     # Keep each base occurrence unless BOTH sides removed it.
     kept: list[Row] = []
@@ -554,9 +532,7 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.reconfigure(errors="backslashreplace")
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "command", choices=["validate", "migrate", "rows"], help="what to do"
-    )
+    parser.add_argument("command", choices=["validate", "migrate", "rows"], help="what to do")
     parser.add_argument("--spec", default="SPEC.md", help="path to SPEC.md")
     parser.add_argument(
         "--write",

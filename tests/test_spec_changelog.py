@@ -243,8 +243,8 @@ def test_vendored_helpers_match_pinned_hashes() -> None:
     import hashlib
 
     expected_digests = {
-        "shared_scripts/spec_changelog.py": "9a9dd5eaf38dd4bdd8ebb9ef9424155296ff7b4e59e5907570a56bea22439418",
-        "scripts/spec_rows_merge_driver.py": "c908a4a15bfc831143fd1b2514d3ffb32beb74fb3143ffd7a52ea9ebc8476a5b",
+        "shared_scripts/spec_changelog.py": "9421409aafa2f9e694eac662c43c603ebe73f7334e9dd163047581e8839b417a",
+        "scripts/spec_rows_merge_driver.py": "697b224b512557b3b1da2123e5d9bf0ce707f031879dac8ccccde63bb59c8cc7",
         "scripts/install_spec_merge_driver.py": "ab682df2063f9df01bf8dc3abb81b2678906ad8476a573147868265971818b57",
     }
     for rel_path, expected_hash in expected_digests.items():
@@ -267,4 +267,3 @@ def test_driver_command_is_worktree_relative() -> None:
     # Confirm it does not embed repo root / worktree path
     assert str(REPO_ROOT) not in cmd
     assert REPO_ROOT.as_posix() not in cmd
-

@@ -58,9 +58,7 @@ def _load_spec_changelog() -> ModuleType:
         Path(__file__).with_name("spec_changelog.py"),
     ):
         if candidate.is_file():
-            spec = importlib.util.spec_from_file_location(
-                "fleet_spec_changelog", candidate
-            )
+            spec = importlib.util.spec_from_file_location("fleet_spec_changelog", candidate)
             if spec is None or spec.loader is None:  # pragma: no cover - defensive
                 continue
             module = importlib.util.module_from_spec(spec)
@@ -120,9 +118,7 @@ def _merge_file(base: str, ours: str, theirs: str, label: str) -> tuple[str, int
     return result.stdout, result.returncode
 
 
-def merge(
-    base_text: str, ours_text: str, theirs_text: str, label: str
-) -> tuple[str, int]:
+def merge(base_text: str, ours_text: str, theirs_text: str, label: str) -> tuple[str, int]:
     """Merge three SPEC.md versions, unioning change-log rows.
 
     Returns the merged text and an exit status (0 = clean).
