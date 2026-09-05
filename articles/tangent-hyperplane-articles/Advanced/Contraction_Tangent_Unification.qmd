@@ -1,7 +1,7 @@
 ---
 title: "Contraction Theory Meets Tangent Spaces: Stability, Optimality, and Scope Limits"
-description: "Conditional notes on how contraction metrics, Riccati equations, and tangent-space trajectory optimization overlap in local nonlinear control settings."
-subtitle: "A Differential Geometric Bridge Between Exponential Stability and Optimal Control"
+description: "Derivations and counterexamples connecting differential stability, Riccati value functions, constrained control, and measurable golf-swing outcomes."
+subtitle: "What a Differential Stability Certificate Establishes"
 author: "Dieter Olson"
 date: "2026-01-18"
 format:
@@ -9,1785 +9,438 @@ format:
     toc: true
     toc-depth: 3
     code-fold: show
-    html-math-method: katex
+    html-math-method: mathjax
     number-sections: true
-    theme: cosmo
-    highlight-style: github
-execute:
-  enabled: true
-jupyter: python3
-bibliography: ../references.bib
+  pdf:
+    pdf-engine: xelatex
+    keep-tex: true
+    toc: true
+    toc-title: Contents
+    toc-depth: 1
+    number-sections: true
+    fontsize: 10pt
+    geometry: margin=1in
 ---
+
+```{=latex}
+\clearpage
+```
 
 ## Abstract {.unnumbered}
 
-This article examines a conditional relationship between **contraction theory** (Lohmiller & Slotine, 1998) and **tangent-space methods** for trajectory optimization. In linear-quadratic and local differential settings, Riccati-type objects can be read both as value-function Hessians and as candidate metrics for perturbation dynamics. That overlap is exact only under stated regularity, boundedness, and basin assumptions; finite-time or global conclusions require separate residual and robustness analysis. The article develops three narrower claims:
+Contraction analysis asks whether neighboring solutions approach one another under a specified dynamics model and input policy. Trajectory optimization asks which admissible motion minimizes a declared objective. Their common use of differential dynamics creates a useful connection: under explicit definiteness and boundedness conditions, a linear-quadratic value matrix also certifies contraction of the associated closed loop. Neither optimality nor a positive matrix alone supplies that certificate.
 
-1. **Stability and Optimality Link**: LQR-style feedback can induce local contraction under the appropriate closed-loop conditions.
-2. **Geometric Unification**: Both frameworks operate on tangent spaces, with infinitesimal dynamics governed by the same differential Riccati equation.
-3. **Design Synthesis**: A proposed class of algorithms that optimize trajectories while explicitly checking contraction constraints and their regions of validity.
+This article derives the connection, distinguishes continuous and discrete time, and develops counterexamples to stronger interpretations. It then treats metric geometry, numerical verification, musculoskeletal actuation, stochastic variability, task-space control, and contact events. The golf application connects geometry and stored energy to feasible corrections and the delivered impact state. Its empirical questions remain separate from the mathematical identities.
 
-The application sections in biomechanics and robotics should be read as modeling proposals. They require system-specific validation, uncertainty analysis, and empirical comparison before they can support strong performance or safety claims.
+## Reading the Physical Argument
 
-**Keywords**: Contraction theory, differential dynamic programming, Riemannian geometry, exponential stability, optimal control, tangent spaces
+A repeatable swing need not erase every state difference. It may tolerate variation in directions that have little influence on club delivery while controlling a small number of consequential errors. A contraction metric is one way to test a stronger model claim: all differential errors measured by that metric decrease throughout a specified region and time interval.
 
----
+The metric changes how error is measured; feedback and mechanics change how error evolves. Calling a metric curved does not make it a physical restoring force. Earlier work, geometry, inertia, grip compliance, activation history, and ground contact determine the state and the available responses. A stability calculation must include those mechanisms in its dynamics before drawing conclusions about their effects.
 
-## Part I: Foundations
+## Differential Dynamics and the Correct Metric Test
 
-## Contraction Theory Primer
-
-## The Essence of Contraction
-
-Contraction theory provides a coordinate-free framework for establishing exponential stability of nonlinear dynamical systems. Unlike Lyapunov theory, which focuses on distance in state space, contraction analyzes how **infinitesimal perturbations** evolve.
-
-### Core Definition
-
-Consider a dynamical system:
+Let the smooth closed-loop dynamics be
 $$
-\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}, t)
+\dot x=F(x,t)=f(x,\pi(x,t),t),\qquad A_{\mathrm{cl}}=D_xF.
 $$ {#eq-ctu-dynamics}
-
-The system is **contracting** if the distance between neighboring trajectories decreases exponentially.
-
-::: {.callout-note icon=false}
-## Definition 1.1 (Contraction)
-Let $\mathbf{J} = \partial \mathbf{f} / \partial \mathbf{x}$ be the Jacobian of the dynamics and let $\mathbf{M}(\mathbf{x}, t) = \mathbf{\Theta}^\top(\mathbf{x}, t) \mathbf{\Theta}(\mathbf{x}, t)$ be a uniformly positive definite metric. System (@eq-ctu-dynamics) is contracting in a region $\mathcal{D} \subset \mathbb{R}^n$ with rate $\lambda > 0$ if
+Here $\pi$ is the actual input policy. Differentiating while holding time fixed gives the exact variational equation
 $$
-\mathbf{J}^\top \mathbf{M} + \mathbf{M} \mathbf{J} + \dot{\mathbf{M}} \preceq -2\lambda \mathbf{M}
-\qquad \forall\, \mathbf{x} \in \mathcal{D},\ t \geq 0.
-$$ {#eq-contraction-condition}
-Equivalently, in the differential coordinates $\delta \mathbf{z} = \mathbf{\Theta} \, \delta \mathbf{x}$ the **generalized Jacobian** is
-$$
-\mathbf{F} = \left( \dot{\mathbf{\Theta}} + \mathbf{\Theta} \mathbf{J} \right) \mathbf{\Theta}^{-1},
-$$ {#eq-ctu-generalized-jacobian-def}
-and contraction holds iff its symmetric part is uniformly negative definite, $\tfrac{1}{2}\left(\mathbf{F} + \mathbf{F}^\top\right) \preceq -\lambda \mathbf{I}$ [@lohmiller1998contraction].
-:::
-
-**Physical Interpretation**: Virtual displacements $\delta \mathbf{x}$ evolve according to:
-$$
-\frac{d}{dt}(\delta \mathbf{x}) = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \delta \mathbf{x}
+\delta\dot x=A_{\mathrm{cl}}(x,t)\delta x.
 $$ {#eq-virtual-displacement}
+For an open-loop plant with independently perturbed input, the equation is instead $\delta\dot x=f_x\delta x+f_u\delta u$. Closing the loop adds $\delta u=\pi_x\delta x$, so $A_{\mathrm{cl}}=f_x+f_u\pi_x$. Differentiating the plant with input held fixed does not test feedback stability.
 
-If the system is contracting, any two trajectories converge exponentially:
-$$
-\|\delta \mathbf{x}(t)\|_{\mathbf{M}} \leq \|\delta \mathbf{x}(0)\|_{\mathbf{M}} e^{-\lambda t}
-$$ {#eq-exponential-convergence}
-
-### Connection to Riemannian Geometry
-
-The metric $\mathbf{M}(\mathbf{x})$ defines a **Riemannian structure** on state space. The squared length of an infinitesimal displacement is:
-$$
-ds^2 = \delta \mathbf{x}^\top \mathbf{M}(\mathbf{x}) \, \delta \mathbf{x}
-$$ {#eq-riemannian-metric}
-
-Contraction asks: *Does the flow shrink volumes in this metric?*
-
-The **generalized Jacobian** in metric coordinates is:
-$$
-\mathbf{J}_{\mathbf{M}} = \mathbf{M}^{-1/2} \left( \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \mathbf{M} + \mathbf{M} \frac{\partial \mathbf{f}^\top}{\partial \mathbf{x}} + \dot{\mathbf{M}} \right) \mathbf{M}^{-1/2}
-$$ {#eq-generalized-jacobian}
-
-Contraction requires (consistent with the $-2\lambda\mathbf{M}$ convention of @eq-contraction-condition, since $\mathbf{J}_{\mathbf{M}}$ in @eq-generalized-jacobian collects $\mathbf{J}^\top\mathbf{M} + \mathbf{M}\mathbf{J} + \dot{\mathbf{M}}$ in metric-normalized coordinates):
-$$
-\lambda_{\max}(\mathbf{J}_{\mathbf{M}}) \leq -2\lambda
-$$ {#eq-eigenvalue-condition}
-
-## Fundamental Theorems
-
-::: {.callout-important icon=false}
-## Theorem 1.1 (Lohmiller-Slotine)
-If system (@eq-ctu-dynamics) is contracting, then:
-
-1. **Uniqueness**: All trajectories converge to a single trajectory (steady state, periodic orbit, or any solution).
-2. **Exponential Convergence**: Rate is bounded by the contraction rate $\lambda$.
-3. **Robustness**: Convergence is preserved under perturbations bounded in the metric $\mathbf{M}$.
-:::
-
-**Proof Sketch**: Consider two trajectories $\mathbf{x}_1(t)$, $\mathbf{x}_2(t)$ with infinitesimal separation $\delta \mathbf{x} = \mathbf{x}_2 - \mathbf{x}_1$. Define the squared distance:
-$$
-V = \delta \mathbf{x}^\top \mathbf{M} \, \delta \mathbf{x}
-$$ {#eq-distance-lyapunov}
-
-Time derivative:
+Choose a smooth symmetric metric $M(x,t)$ and define differential squared length $V=\delta x^\top M\delta x$. Its derivative is
 $$
 \begin{aligned}
-\dot{V} &= \delta \mathbf{x}^\top \left( \mathbf{M} \frac{\partial \mathbf{f}}{\partial \mathbf{x}} + \frac{\partial \mathbf{f}^\top}{\partial \mathbf{x}} \mathbf{M} + \dot{\mathbf{M}} \right) \delta \mathbf{x} \\
-&\leq -2\lambda V
+\dot V&=\delta x^\top\mathcal H\delta x,\\
+\mathcal H&=A_{\mathrm{cl}}^\top M+MA_{\mathrm{cl}}+\dot M,\\
+\dot M&=\partial_tM+\sum_iF_i\partial_{x_i}M.
 \end{aligned}
 $$ {#eq-distance-derivative}
+The material derivative uses the same closed-loop flow. A sequence of matrices evaluated along one trajectory does not define the spatial derivatives of a metric in its neighborhood.
 
-by the contraction condition. Integration yields (@eq-exponential-convergence). $\square$
-
-## Example: Linear Systems
-
-For $\dot{\mathbf{x}} = \mathbf{A} \mathbf{x}$, contraction is equivalent to:
+The contraction inequality with length-decay rate $\lambda>0$ is
 $$
-\exists \mathbf{M} \succ 0: \quad \mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}
+\mathcal H\preceq-2\lambda M.
+$$ {#eq-contraction-condition}
+Its normalized symmetric matrix is
+$$
+M^{-1/2}\mathcal H M^{-1/2}\preceq-2\lambda I.
+$$ {#eq-generalized-jacobian}
+The multiplication order matters. With
+$$
+A=\begin{bmatrix}-1&3\\0&-2\end{bmatrix},\qquad
+M=\begin{bmatrix}1/2&1/2\\1/2&1\end{bmatrix},
+$$
+the correct $A^\top M+MA=-I$. The different expression $AM+MA^\top$ has a positive eigenvalue approximately $2.354$ and tests a different object.
+
+For a constant LTI matrix and constant metric this specializes to
+$$
+A^\top M+MA\preceq-2\lambda M,\qquad M\succ0.
 $$ {#eq-linear-contraction}
 
-This is a **Lyapunov inequality**. If $\mathbf{A}$ is Hurwitz (stable), we can find such $\mathbf{M}$ by solving:
+If $M=\Theta^\top\Theta$ with invertible $\Theta$, differential components $\delta z=\Theta\delta x$ obey
 $$
-\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} = -\mathbf{Q}
-$$ {#eq-lyapunov-equation}
-for any $\mathbf{Q} \succ 0$.
+\delta\dot z=\mathcal F\delta z,\qquad
+\mathcal F=(\dot\Theta+\Theta A_{\mathrm{cl}})\Theta^{-1}.
+$$ {#eq-ctu-generalized-jacobian-def}
+Then $\operatorname{sym}\mathcal F\preceq-\lambda I$ is equivalent to the metric inequality. The differential transformation need not integrate to a global coordinate map $z(x)$.
 
-**Key Insight**: For linear systems, any Lyapunov function yields a contraction metric. This extends to nonlinear systems via **local linearization**—a connection we'll exploit later.
+### From Differential Length to Finite Separation
 
-## Hierarchical Combination Theorems
-
-One of contraction theory's most powerful features is **compositionality**: Contracting subsystems combine to form contracting systems.
-
-::: {.callout-note icon=false}
-## Theorem 1.2 (Parallel Combination)
-If $\dot{\mathbf{x}}_1 = \mathbf{f}_1(\mathbf{x}_1, \mathbf{u})$ and $\dot{\mathbf{x}}_2 = \mathbf{f}_2(\mathbf{x}_2, \mathbf{u})$ are both contracting w.r.t. $\mathbf{u}$, then:
+Integrating the differential inequality gives
 $$
-\begin{bmatrix} \dot{\mathbf{x}}_1 \\ \dot{\mathbf{x}}_2 \end{bmatrix} = \begin{bmatrix} \mathbf{f}_1(\mathbf{x}_1, \mathbf{u}) \\ \mathbf{f}_2(\mathbf{x}_2, \mathbf{u}) \end{bmatrix}
-$$ {#eq-parallel-system}
-is contracting w.r.t. $\mathbf{u}$.
-:::
+\|\delta x(t)\|_{M(x(t),t)}
+\leq e^{-\lambda(t-t_0)}\|\delta x(t_0)\|_{M(x(t_0),t_0)}.
+$$ {#eq-exponential-convergence}
+For finite separation, connect the initial states by a smooth path and evolve every point of that path under the same flow. If this path of solutions remains inside the certified region, its metric length shrinks. Taking the infimum over admissible connecting paths yields a corresponding bound on Riemannian distance. A finite difference $x_2-x_1$ cannot simply be substituted for $\delta x$ in the exact differential equation of a nonlinear system.
 
-**Application**: Modular robot control—if each joint controller is contracting, the full system is contracting.
+State existence, path containment, and metric bounds belong to the conclusion. Uniform bounds $0<m_-I\preceq M\preceq m_+I$ permit comparison with Euclidean errors, including the conditioning factor $\sqrt{m_+/m_-}$. An invariant region or an invariant tube about a reference can provide the required containment. A condition checked only at the reference does not establish the tube. These distinctions follow the path-based formulation in [Lohmiller and Slotine](https://web.mit.edu/nsl/www/preprints/contraction.pdf).
 
----
+Contraction shrinks every differential length in the chosen metric. Volume shrinkage is weaker: $\dot x=\operatorname{diag}(1,-2)x$ shrinks area while one direction expands. Convergence between solutions also does not imply bounded motion: $\dot x=-x+e^{2t}$ has contracting differences while its solutions grow without bound. For an autonomous system, strict full-state contraction cannot support a nonconstant periodic orbit in the same certified domain, because phase-shifted solutions would have to converge at equal time. Orbital or transverse contraction is a different statement.
 
-## Tangent Spaces and Variational Dynamics
+### Disturbances and Interconnections
 
-### Review From Unified Thesis
-
-In the tangent space framework, we consider a **nominal trajectory** $\mathbf{x}^*_t$ and analyze **perturbed trajectories** $\mathbf{x}_t = \mathbf{x}^*_t + \delta \mathbf{x}_t$ in the tangent bundle $T\mathcal{M}$.
-
-#### The δ-Dynamics
-
-Perturbed trajectories satisfy:
+Suppose one trajectory receives an added disturbance whose norm in the certified metric is bounded by $\bar d$. Under the same region and regularity conditions, a comparison inequality gives
 $$
-\mathbf{x}_{t+1} = \mathbf{x}^*_{t+1} + \mathbf{A}_t \delta \mathbf{x}_t + \mathbf{B}_t \delta \mathbf{u}_t + O(\|\delta\|^2)
-$$ {#eq-discrete-tangent}
-
-where:
+d_M(t)\leq e^{-\lambda(t-t_0)}d_M(t_0)
++\frac{\bar d}{\lambda}\left(1-e^{-\lambda(t-t_0)}\right).
 $$
-\begin{aligned}
-\mathbf{A}_t &= \frac{\partial \mathbf{f}}{\partial \mathbf{x}}\bigg|_{(\mathbf{x}^*_t, \mathbf{u}^*_t)} \\
-\mathbf{B}_t &= \frac{\partial \mathbf{f}}{\partial \mathbf{u}}\bigg|_{(\mathbf{x}^*_t, \mathbf{u}^*_t)}
-\end{aligned}
-$$ {#eq-linearization-matrices}
+Persistent disturbance generally produces a nonzero error bound. It does not guarantee convergence to the undisturbed trajectory, and the perturbed trajectory must remain in the region where the bound applies.
 
-For continuous-time systems:
+Independent contracting subsystems driven by the same prescribed signal admit a block-diagonal contraction metric. Mechanically coupled joints are not independent subsystems. Feedback interconnection adds off-diagonal Jacobian blocks whose symmetric contribution must be bounded. A bounded hierarchical coupling can sometimes be handled by rescaling a composite metric; arbitrary mutual coupling cannot be ignored. For example, two isolated equations $\dot x_i=-x_i$ are stable, but coupling them as $\dot x_1=-x_1+2x_2$, $\dot x_2=2x_1-x_2$ creates an expanding eigenvalue $1$.
+
+## Riccati Value Functions and Contraction
+
+### The Continuous-Time Identity
+
+Consider a linear time-varying perturbation system $\dot\xi=A(t)\xi+B(t)v$ and the quadratic cost
 $$
-\delta \dot{\mathbf{x}} = \mathbf{A}(t) \, \delta \mathbf{x} + \mathbf{B}(t) \, \delta \mathbf{u}
-$$ {#eq-continuous-tangent}
-
-**This is precisely the virtual displacement equation** (@eq-virtual-displacement) from contraction theory!
-
-### Variational Principles
-
-The tangent dynamics arise from the **variational principle**:
+J=\xi(T)^\top S_T\xi(T)
++\int_{t_0}^T\left(\xi^\top Q\xi+2\xi^\top Nv+v^\top Rv\right)dt,
+\qquad R\succ0.
 $$
-\delta \int_0^T L(\mathbf{x}, \mathbf{u}) \, dt = 0
-$$ {#eq-variational-principle}
-
-This yields the **Euler-Lagrange equations**:
+Assume the cost block is positive semidefinite and the Riccati solution exists. Completing the square in dynamic programming gives
 $$
-\frac{\partial L}{\partial \mathbf{x}} - \frac{d}{dt} \frac{\partial L}{\partial \dot{\mathbf{x}}} = 0
-$$ {#eq-euler-lagrange}
-
-Taking variations:
-$$
-\delta^2 L = \delta \mathbf{x}^\top \mathbf{Q}_t \, \delta \mathbf{x} + \delta \mathbf{u}^\top \mathbf{R}_t \, \delta \mathbf{u}
-$$ {#eq-second-variation}
-
-where $\mathbf{Q}_t = \frac{\partial^2 L}{\partial \mathbf{x}^2}$, $\mathbf{R}_t = \frac{\partial^2 L}{\partial \mathbf{u}^2}$.
-
-### Differential Dynamic Programming
-
-DDP exploits the tangent space structure by solving a sequence of **time-varying LQR problems**:
-$$
-\min_{\delta \mathbf{u}} \frac{1}{2} \delta \mathbf{x}_T^\top \mathbf{Q}_T \delta \mathbf{x}_T + \frac{1}{2} \sum_{t=0}^{T-1} \left( \delta \mathbf{x}_t^\top \mathbf{Q}_t \delta \mathbf{x}_t + \delta \mathbf{u}_t^\top \mathbf{R}_t \delta \mathbf{u}_t \right)
-$$ {#eq-lqr-subproblem}
-
-subject to (@eq-discrete-tangent).
-
-The solution is:
-$$
-\delta \mathbf{u}_t = -\mathbf{K}_t \delta \mathbf{x}_t
-$$ {#eq-feedback-law}
-
-where $\mathbf{K}_t$ satisfies the **discrete-time Riccati recursion**:
-$$
-\begin{aligned}
-\mathbf{S}_T &= \mathbf{Q}_T \\
-\mathbf{K}_t &= (\mathbf{R}_t + \mathbf{B}_t^\top \mathbf{S}_{t+1} \mathbf{B}_t)^{-1} \mathbf{B}_t^\top \mathbf{S}_{t+1} \mathbf{A}_t \\
-\mathbf{S}_t &= \mathbf{Q}_t + \mathbf{A}_t^\top \mathbf{S}_{t+1} (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t)
-\end{aligned}
-$$ {#eq-discrete-riccati}
-
-**Key Observation**: $\mathbf{S}_t$ is a **time-varying metric** that measures the cost-to-go from state $\mathbf{x}_t$.
-
-### Connection to Virtual Displacements
-
-In classical mechanics, virtual displacements $\delta \mathbf{x}$ satisfy:
-$$
-\delta W = \mathbf{F} \cdot \delta \mathbf{x} = 0
-$$ {#eq-virtual-work}
-
-where $\mathbf{F}$ are constraint forces. The tangent space $T_{\mathbf{x}} \mathcal{M}$ contains all admissible displacements.
-
-**Analogy**:
-- **Mechanical constraints** $\leftrightarrow$ **Dynamics** $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}, \mathbf{u})$
-- **Virtual displacements** $\leftrightarrow$ **State perturbations** $\delta \mathbf{x}$
-- **D'Alembert's principle** $\leftrightarrow$ **Optimality conditions**
-
-This suggests a deep connection between variational mechanics and contraction theory.
-
-::: {.callout-tip}
-### Instantaneous Force-Acceleration Superposition
-While nonlinear systems do not exhibit superposition at the trajectory level, many mechanical models have an affine instantaneous map from generalized forces to generalized accelerations once the state, constraints, and contact mode are fixed:
-
-$$ \ddot{\mathbf{q}} = \mathbf{M}(\mathbf{q})^{-1} (\boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q})) $$
-
-This instantaneous linearity is the local "Tangent Hyperplane" used here to decompose modeled motor behavior at a fixed instant. Integrating those local components into a finite motion introduces curvature, residual, and contact-mode errors that must be tracked separately [@slotine1991applied].
-:::
-
----
-
-## The Duality Revealed
-
-## Exponential Forgetting vs. Exponential Convergence
-
-### Contraction Perspective
-
-Contraction theory states: *Perturbations decay exponentially in the metric $\mathbf{M}$*:
-$$
-\|\delta \mathbf{x}(t)\|_{\mathbf{M}}^2 = \delta \mathbf{x}^\top \mathbf{M} \, \delta \mathbf{x} \leq e^{-2\lambda t} \|\delta \mathbf{x}(0)\|_{\mathbf{M}}^2
-$$ {#eq-contraction-decay}
-
-### Optimality Perspective
-
-LQR theory states: *Deviations from optimal trajectory incur cost growing quadratically*:
-$$
-V(\delta \mathbf{x}_t) = \delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t
-$$ {#ctu-eq-value-function}
-
-The closed-loop system:
-$$
-\delta \mathbf{x}_{t+1} = (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t) \delta \mathbf{x}_t
-$$ {#eq-closed-loop}
-
-is **exponentially stable** if $\rho(\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t) < 1$.
-
-### The Duality
-
-**Claim, under the LQR assumptions stated below**: The Riccati solution $\mathbf{S}_t$ can be used as a contraction metric for the local closed-loop system.
-
-::: {.callout-important icon=false}
-## Theorem 3.1 (Stability-Optimality Duality)
-Consider the LQR problem (@eq-lqr-subproblem) with solution $\mathbf{K}_t$, $\mathbf{S}_t$. Then:
-
-1. $\mathbf{S}_t \succ 0$ defines a Riemannian metric on tangent space.
-2. The closed-loop system (@eq-closed-loop) is contracting w.r.t. metric $\mathbf{M}_t = \mathbf{S}_t$.
-3. The contraction rate is $\lambda = -\frac{1}{2} \log \rho(\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t)$.
-:::
-
-**Proof**: Define the Lyapunov function $V_t = \delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t$. Then:
-$$
-\begin{aligned}
-V_{t+1} &= \delta \mathbf{x}_{t+1}^\top \mathbf{S}_{t+1} \delta \mathbf{x}_{t+1} \\
-&= \delta \mathbf{x}_t^\top (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t)^\top \mathbf{S}_{t+1} (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t) \delta \mathbf{x}_t
-\end{aligned}
-$$ {#eq-value-propagation}
-
-By the Riccati equation (@eq-discrete-riccati):
-$$
-(\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t)^\top \mathbf{S}_{t+1} (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t) = \mathbf{S}_t - \mathbf{Q}_t - \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t
-$$ {#eq-riccati-substitution}
-
-Thus:
-$$
-V_{t+1} = V_t - \delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t
-$$ {#eq-value-decrease}
-
-Since $\mathbf{Q}_t, \mathbf{R}_t \succ 0$:
-$$
-V_{t+1} \leq \rho V_t
-$$ {#eq-exponential-decrease}
-
-where $\rho = 1 - \frac{\lambda_{\min}(\mathbf{Q}_t)}{\lambda_{\max}(\mathbf{S}_t)} < 1$. This is exactly the discrete-time contraction condition. $\square$
-
-## Continuous-Time Riccati Connection
-
-For continuous systems, the **differential Riccati equation** (DRE) is:
-$$
--\dot{\mathbf{S}} = \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q}
+-\dot S=A^\top S+SA-(SB+N)R^{-1}(B^\top S+N^\top)+Q,
+\qquad
+K=R^{-1}(B^\top S+N^\top).
 $$ {#eq-differential-riccati}
-
-**Compare** with the contraction condition (@eq-linear-contraction):
+For the minimizing policy $v=-K\xi$, let $A_c=A-BK$ and
 $$
-\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} = -\mathbf{Q} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}
-$$ {#eq-contraction-riccati}
-
-These are **identical** when $\mathbf{M}$ is constant ($\dot{\mathbf{M}} = 0$) and we set $\mathbf{M} = \mathbf{S}$.
-
-### Infinite-Horizon Case
-
-For the infinite-horizon problem:
+W=Q-NK-K^\top N^\top+K^\top RK.
 $$
-\min_{\mathbf{u}} \int_0^\infty \left( \mathbf{x}^\top \mathbf{Q} \mathbf{x} + \mathbf{u}^\top \mathbf{R} \mathbf{u} \right) dt
-$$ {#eq-infinite-horizon}
-
-The **algebraic Riccati equation** (ARE) is:
+Substitution yields the exact identity
 $$
-\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q} = 0
-$$ {#eq-algebraic-riccati}
-
-This can be read as a steady-state contraction-metric equation when the stabilizability and definiteness assumptions hold.
-
-::: {.callout-note icon=false}
-## Corollary 3.1 (LQR Induces Contraction)
-The LQR controller $\mathbf{u} = -\mathbf{K} \mathbf{x}$ where $\mathbf{K} = \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}$ renders the closed-loop system:
-$$
-\dot{\mathbf{x}} = (\mathbf{A} - \mathbf{B} \mathbf{K}) \mathbf{x}
-$$ {#eq-lqr-closed-loop}
-contracting with metric $\mathbf{M} = \mathbf{S}$ and rate
-$\lambda = \frac{1}{2} \lambda_{\min}\!\left(\mathbf{S}^{-1/2}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})\,\mathbf{S}^{-1/2}\right)$.
-This follows from the closed-loop ARE identity $(\mathbf{A}-\mathbf{B}\mathbf{K})^\top \mathbf{S} + \mathbf{S}(\mathbf{A}-\mathbf{B}\mathbf{K}) = -(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})$: writing the right-hand side as $-2\lambda \mathbf{S}$ in the $\mathbf{S}$-metric gives the $\mathbf{S}^{-1/2}$-normalized eigenvalue above.
-:::
-
-**Interpretation**: In this restricted setting, the optimal feedback law also provides a local exponential-stability certificate through the induced metric.
-
-## Geometric Interpretation
-
-### Riemannian Curvature
-
-The metric $\mathbf{S}_t$ defines a **curved geometry** on state space. The **Riemann curvature tensor** captures how geodesics (optimal trajectories) diverge.
-
-For a flat metric ($\mathbf{M} = \mathbf{I}$), geodesics are straight lines. The Riccati metric **curves** space such that all geodesics converge to the optimal trajectory.
-
-### Geodesic Equation
-
-In Riemannian geometry, the geodesic equation is:
-$$
-\ddot{\mathbf{x}}^i + \Gamma^i_{jk} \dot{\mathbf{x}}^j \dot{\mathbf{x}}^k = 0
-$$ {#eq-geodesic}
-
-where $\Gamma^i_{jk}$ are **Christoffel symbols**:
-$$
-\Gamma^i_{jk} = \frac{1}{2} g^{il} \left( \frac{\partial g_{lj}}{\partial x^k} + \frac{\partial g_{lk}}{\partial x^j} - \frac{\partial g_{jk}}{\partial x^l} \right)
-$$ {#eq-christoffel}
-
-with $g_{ij} = (\mathbf{M})_{ij}$ the metric components.
-
-**Connection**: The optimal feedback law $\mathbf{u} = -\mathbf{K} \mathbf{x}$ can be viewed as a **geodesic spray** that forces trajectories onto optimal geodesics.
-
----
-
-## Part II: Theory
-
-## Contraction-Constrained DDP
-
-### Motivation: Stability Guarantees From Optimization
-
-Standard DDP provides **local stability** around the nominal trajectory but no guarantees about:
-- Basin of attraction size
-- Convergence rate
-- Robustness to disturbances
-
-**Idea**: Augment the cost function with a **contraction penalty**:
-$$
-J = \phi(\mathbf{x}_T) + \int_0^T \left[ L(\mathbf{x}, \mathbf{u}) + \mu \, \mathcal{C}(\mathbf{x}, \mathbf{u}) \right] dt
-$$ {#eq-contraction-augmented-cost}
-
-where $\mathcal{C}(\mathbf{x}, \mathbf{u})$ measures deviation from contraction.
-
-### Contraction Metric as Soft Constraint
-
-Define the **contraction defect**:
-$$
-\mathcal{C}(\mathbf{x}, \mathbf{u}) = \lambda_{\max}\left( \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \mathbf{M} + \mathbf{M} \frac{\partial \mathbf{f}^\top}{\partial \mathbf{x}} + \dot{\mathbf{M}} \right)
-$$ {#eq-contraction-defect}
-
-For a contracting system, $\mathcal{C} < -2\lambda \lambda_{\min}(\mathbf{M})$.
-
-**Penalty formulation**:
-$$
-\mathcal{C}_{\text{penalty}}(\mathbf{x}, \mathbf{u}) = \max(0, \mathcal{C}(\mathbf{x}, \mathbf{u}) + 2\lambda \lambda_{\min}(\mathbf{M}))^2
-$$ {#eq-contraction-penalty}
-
-This is zero when contracting, positive otherwise.
-
-### Algorithm: Contraction-DDP
-
-**Input**: Initial trajectory $\{\mathbf{x}^*_t, \mathbf{u}^*_t\}$, desired contraction rate $\lambda$, penalty weight $\mu$
-
-**Repeat** until convergence:
-
-1. **Forward Pass**: Simulate dynamics, compute costs.
-
-2. **Metric Update**: For each $t$, solve for optimal metric $\mathbf{M}_t$ via:
-   $$
-   \min_{\mathbf{M}_t \succ 0} \, \text{tr}(\mathbf{M}_t) + \mu \, \mathcal{C}_{\text{penalty}}(\mathbf{x}^*_t, \mathbf{u}^*_t; \mathbf{M}_t)
-   $$ {#eq-metric-optimization}
-
-   **Convex optimization** (SDP) in $\mathbf{M}_t$.
-
-3. **Backward Pass**: Compute Riccati recursion with augmented cost:
-   $$
-   \begin{aligned}
-   \tilde{\mathbf{Q}}_t &= \mathbf{Q}_t + \mu \frac{\partial \mathcal{C}}{\partial \mathbf{x}} \\
-   \tilde{\mathbf{R}}_t &= \mathbf{R}_t + \mu \frac{\partial \mathcal{C}}{\partial \mathbf{u}}
-   \end{aligned}
-   $$ {#eq-augmented-cost-matrices}
-
-   Use $\tilde{\mathbf{Q}}_t$, $\tilde{\mathbf{R}}_t$ in (@eq-discrete-riccati).
-
-4. **Line Search**: Update trajectory with step size $\alpha$.
-
-**Output**: Trajectory $\{\mathbf{x}^*_t, \mathbf{u}^*_t\}$ with certified contraction rate $\lambda$.
-
-### Stability Guarantees
-
-::: {.callout-important icon=false}
-### Theorem 4.1 (Certified Stability From Contraction-DDP)
-Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contraction-DDP with penalty weight $\mu$ sufficiently large. Then:
-
-1. The closed-loop system $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}, \mathbf{u}^*_t - \mathbf{K}_t(\mathbf{x} - \mathbf{x}^*_t))$ is contracting with rate $\lambda$.
-2. The basin of attraction contains all $\mathbf{x}_0$ with $\|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0} < \epsilon$ where $\epsilon$ is determined by linearization validity.
-3. Convergence is exponential: $\|\mathbf{x}_t - \mathbf{x}^*_t\|_{\mathbf{M}_t} \leq e^{-\lambda t} \|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0}$.
-:::
-
-**Proof Sketch**: The penalty forces $\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) \to 0$ as $\mu \to \infty$. By continuity, there exists a neighborhood where (@eq-contraction-condition) holds. $\square$
-
-### Comparison With Classical DDP
-
-| Feature | Classical DDP | Contraction-DDP |
-|---------|--------------|-----------------|
-| **Stability** | Local (unquantified) | Local-to-semi-global (certified within basin) |
-| **Convergence Rate** | Unknown | Guaranteed $\geq \lambda$ within basin |
-| **Basin of Attraction** | Unknown | Computable via $\mathbf{M}_t$ (linearization-limited) |
-| **Robustness** | Heuristic | Quantified by metric condition number |
-| **Computational Cost** | $O(n^3 T)$ | $O(n^3 T + n^4 T)$ (SDP) |
-
-::: {.callout-important}
-### Scope of Stability Claim
-
-The "certified" stability for Contraction-DDP is **local**, not global. The proof of Theorem 4.1 relies on linearization validity: the contraction condition is enforced at $(\mathbf{x}^*_t, \mathbf{u}^*_t)$ and holds in a neighborhood whose size $\epsilon$ is limited by the validity of the first-order expansion. For strongly nonlinear systems, this basin may be small. Claiming "global" stability would require showing the contraction metric remains uniformly positive-definite across the entire state space, which is not established here.
-:::
-
-The extra $O(n^4 T)$ cost comes from solving (@eq-metric-optimization) as an SDP at each timestep.
-
----
-
-## LQR as Contraction Design
-
-## Algebraic vs. Differential Riccati
-
-### Time-Varying Case (Finite Horizon)
-
-The DRE (@eq-differential-riccati) describes how the value function propagates **backward** in time:
-$$
--\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}
-$$ {#eq-dre-backward}
-
-with terminal condition $\mathbf{S}(T) = \mathbf{Q}_T$.
-
-**Contraction interpretation**: $\mathbf{S}(t)$ is the time-varying metric that makes the closed-loop **maximally contracting** at each instant.
-
-### Time-Invariant Case (Infinite Horizon)
-
-Setting $\dot{\mathbf{S}} = 0$ yields the ARE (@eq-algebraic-riccati). The solution $\mathbf{S}_\infty$ is the **unique positive-definite stabilizing solution**.
-
-::: {.callout-note icon=false}
-## Proposition 5.1 (ARE as Contraction Design)
-For a controllable pair $(\mathbf{A}, \mathbf{B})$, the ARE solution $\mathbf{S}_\infty$ is the **minimal metric** (in Loewner order) such that:
-$$
-\mathbf{A}^\top \mathbf{S}_\infty + \mathbf{S}_\infty \mathbf{A} - \mathbf{S}_\infty \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}_\infty + \mathbf{Q} = 0
-$$ {#eq-are-minimal}
-
-provides a stabilizing metric candidate for the chosen cost weights. Any claim about rate optimality requires a separate optimization statement and proof.
-:::
-
-**Proof**: The rate of contraction is determined by the most negative eigenvalue of:
-$$
-(\mathbf{A} - \mathbf{B} \mathbf{K})^\top \mathbf{S}_\infty + \mathbf{S}_\infty (\mathbf{A} - \mathbf{B} \mathbf{K}) = -\mathbf{Q} - \mathbf{K}^\top \mathbf{R} \mathbf{K}
+\dot S+A_c^\top S+SA_c=-W.
 $$ {#eq-closed-loop-lyapunov}
+Thus $S$ is a contraction metric on an interval if it is uniformly positive definite and bounded there and $W\succeq2\lambda S$ holds uniformly. For zero cross cost, $W=Q+K^\top RK$. The open-loop ARE instead gives $A^\top S+SA=SBR^{-1}B^\top S-Q$; the negative feedback contribution appears only after forming $A_c$.
 
-Maximizing this requires minimizing $\text{tr}(\mathbf{K}^\top \mathbf{R} \mathbf{K})$ subject to stability—exactly the LQR problem. $\square$
+For infinite-horizon LTI LQR, standard stabilizability and detectability assumptions with $Q\succeq0$, $R\succ0$ yield a stabilizing positive-semidefinite solution. Positive definiteness and a strict decay bound in that particular matrix require their own checks. For example, $A=-1$, $B=1$, $Q=0$, $R=1$ has optimal cost $S=0$ and a stable uncontrolled plant, but zero is not a Riemannian metric. With $Q\succ0$ the usual stabilizing solution is positive definite. The [MIT LQR treatment](https://underactuated.mit.edu/lqr.html) develops the finite- and infinite-horizon optimization problems.
 
-## Design Procedure: Specifying Contraction Rate
+### Finite-Horizon Decrease Is Not an Asymptotic Certificate
 
-**Problem**: Given desired contraction rate $\lambda$, find $\mathbf{Q}$, $\mathbf{R}$ such that the LQR solution achieves this rate.
-
-**Solution**: Solve the **inverse LQR problem**.
-
-### Method 1: Eigenvalue Placement
-
-The closed-loop eigenvalues are $\text{eig}(\mathbf{A} - \mathbf{B} \mathbf{K})$. We want:
+A terminal weight may vanish. In the scalar uncontrolled system $\dot\xi=\xi$ with running cost $\xi^2$ and zero terminal cost,
 $$
-\text{Re}(\lambda_i) \leq -\lambda \quad \forall i
-$$ {#eq-eigenvalue-constraint}
-
-This is achieved by choosing:
+S(t)=\frac{e^{2(T-t)}-1}{2},\qquad \dot S+2S=-1.
 $$
-\mathbf{Q} = \alpha \mathbf{I}, \quad \mathbf{R} = \beta \mathbf{I}
-$$ {#eq-scalar-weights}
+The value $S(t)\xi(t)^2$ decreases as the remaining horizon disappears, while $|\xi(t)|$ grows. At $T$, $S(T)=0$. There is no uniformly positive metric through the endpoint and no claim about behavior after the horizon. This example isolates why value decrease and physical error decay must be distinguished.
 
-and adjusting $\alpha/\beta$ ratio. Larger $\alpha/\beta$ → faster convergence (higher $\lambda$).
+In a nonlinear tracking problem, linearization along a nominal trajectory supplies a variational candidate. To extend its result to a finite neighborhood, verify the closed-loop derivative and metric inequality throughout a tube, with strict margin, model residual bounds, feasible controls, and containment. Recomputing LQR at sample points does not supply these conditions automatically.
 
-### Method 2: Contraction Rate Constraint
+### Discrete-Time Dynamics Require a Different Test
 
-Directly enforce:
+For a discrete closed loop $x_{k+1}=F_k(x_k)$ with differential map $A_{c,k}=D F_k$, the contraction condition is
 $$
-(\mathbf{A} - \mathbf{B} \mathbf{K})^\top \mathbf{S} + \mathbf{S} (\mathbf{A} - \mathbf{B} \mathbf{K}) \preceq -2\lambda \mathbf{S}
-$$ {#eq-rate-constraint}
+A_{c,k}^\top M_{k+1}(F_k(x))A_{c,k}\preceq\rho M_k(x),\qquad0<\rho<1.
+$$ {#eq-discrete-contraction}
+The metric is evaluated at the next state on the left. At sample interval $\Delta t$, the length-decay rate is $-\log(\rho)/(2\Delta t)$. A continuous Lyapunov inequality applied to the Jacobian of a discrete integrator is not this condition.
 
-This is a **bilinear matrix inequality** (BMI) in $\mathbf{K}$, $\mathbf{S}$.
-
-**Convex relaxation**: Fix $\mathbf{K}$, solve for $\mathbf{S}$ (convex). Then fix $\mathbf{S}$, solve for $\mathbf{K}$ (convex). Alternate until convergence.
-
-## Example: Double Integrator
-
-System:
+For zero-cross-cost discrete LQR, the Riccati identity is
 $$
-\begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} 0 \\ 1 \end{bmatrix} u
-$$ {#eq-double-integrator}
+(A_k-B_kK_k)^\top S_{k+1}(A_k-B_kK_k)
+=S_k-Q_k-K_k^\top R_kK_k.
+$$ {#eq-riccati-substitution}
+If $S_k$ has uniform positive bounds and $Q_k+K_k^\top R_kK_k\succeq(1-\rho)S_k$, it supplies the desired contraction inequality. The normalized matrix inequality, not the spectral radius of each update, establishes the one-step rate.
 
-**Design goal**: Contraction rate $\lambda = 2.0$ rad/s.
-
-Choose $\mathbf{Q} = \text{diag}(16, 1)$, $\mathbf{R} = 1$. Solving the ARE analytically with $A = \begin{bmatrix}0&1\\0&0\end{bmatrix}$, $B = \begin{bmatrix}0\\1\end{bmatrix}$:
+For example,
 $$
-\mathbf{S}_\infty = \begin{bmatrix} 12 & 4 \\ 4 & 3 \end{bmatrix}
+F_1=\begin{bmatrix}0.5&2\\0&0.5\end{bmatrix},\qquad F_2=F_1^\top.
+$$
+Both matrices have eigenvalues $0.5$, yet $F_2F_1$ has an eigenvalue approximately $4.486$. Alternation amplifies errors. Time-varying stability depends on products or a valid changing metric, not independent eigenvalue tests. Even in an LTI system, nonnormal transient amplification separates an asymptotic spectral rate from monotone decay in a chosen norm.
+
+### Worked Double-Integrator Certificate
+
+Take
+$$
+A=\begin{bmatrix}0&1\\0&0\end{bmatrix},\quad
+B=\begin{bmatrix}0\\1\end{bmatrix},\quad
+Q=\operatorname{diag}(16,1),\quad R=1.
+$$
+The stabilizing ARE solution and feedback are
+$$
+S=\begin{bmatrix}12&4\\4&3\end{bmatrix},\qquad K=\begin{bmatrix}4&3\end{bmatrix}.
 $$ {#eq-double-integrator-riccati}
-
-Optimal gain:
+They give eigenvalues $-1.5\pm(\sqrt7/2)i$. In the specific metric $S$, however, the largest certified uniform length-decay rate is
 $$
-\mathbf{K} = \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}_\infty = \begin{bmatrix} 4 & 3 \end{bmatrix}
-$$ {#eq-double-integrator-gain}
-
-Closed-loop eigenvalues: $\{-\tfrac{3}{2} \pm \tfrac{\sqrt{7}}{2}j\}$, implying $\lambda_{\min} = \tfrac{3}{2} = 1.5$.
-
-**To increase** $\lambda$: Increase $\mathbf{Q}/\mathbf{R}$ ratio. E.g., $\mathbf{Q} = \text{diag}(64, 4)$ gives higher contraction rate.
-
----
-
-## Coordinate-Free Formulation
-
-### Differential Geometry Perspective
-
-#### Tangent Bundle Formulation
-
-The state space $\mathcal{M}$ is a smooth manifold (e.g., configuration space). The **tangent bundle** $T\mathcal{M}$ consists of pairs $(\mathbf{x}, \delta \mathbf{x})$ where:
-- $\mathbf{x} \in \mathcal{M}$ (base point)
-- $\delta \mathbf{x} \in T_{\mathbf{x}} \mathcal{M}$ (tangent vector)
-
-Dynamics lift to $T\mathcal{M}$:
+\lambda_S=\frac12\lambda_{\min}\left(S^{-1/2}(Q+K^\top K)S^{-1/2}\right)
+\approx1.276393\ \mathrm{s}^{-1}.
 $$
-\begin{aligned}
-\dot{\mathbf{x}} &= \mathbf{f}(\mathbf{x}, \mathbf{u}) \\
-\frac{D}{dt} \delta \mathbf{x} &= \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \delta \mathbf{x} + \frac{\partial \mathbf{f}}{\partial \mathbf{u}} \delta \mathbf{u}
-\end{aligned}
-$$ {#eq-tangent-bundle-dynamics}
+The other normalized half-eigenvalue is approximately $1.723607$. Neither the eigenvalue real part $1.5$ nor a requested design value $2$ can replace this calculation. Rates of exponential decay have units inverse seconds; they are not oscillation frequencies measured in cycles per second.
 
-where $\frac{D}{dt}$ is the **covariant derivative** along the flow.
-
-#### Riemannian Metric Tensor
-
-A metric $g: T\mathcal{M} \times T\mathcal{M} \to \mathbb{R}$ assigns an inner product to each tangent space:
+LQR minimizes its declared cost, not contraction rate over all feedback policies. Changing the cost weights changes that compromise; a scalar weight ratio cannot prescribe arbitrary multivariable poles. To design a rate directly for an unconstrained LTI plant, set $X=M^{-1}$ and $Y=KX$. Congruence transforms the state-feedback inequality into
 $$
-g_{\mathbf{x}}(\delta \mathbf{x}_1, \delta \mathbf{x}_2) = \delta \mathbf{x}_1^\top \mathbf{M}(\mathbf{x}) \delta \mathbf{x}_2
+AX+XA^\top-BY-Y^\top B^\top+2\lambda X\preceq0,
+\qquad X\succ0.
+$$
+For fixed $\lambda$, this is linear in $X,Y$. Add normalization and any required actuator or region constraints, and recover $K=YX^{-1}$. This feasibility problem is not automatically an inverse-LQR solution, and imposing input bounds over a state region requires additional constraints.
+
+## What the Geometry Does and Does Not Say
+
+### Metric Tensors and Coordinates
+
+For a diffeomorphism $z=\phi(x)$, write $T=D\phi$. Since $\delta z=T\delta x$, equal differential lengths require
+$$
+M_z=T^{-\top}M_xT^{-1}.
+$$
+The expression $J^\top M_yJ$ is instead the pullback of a metric from a target through a map $y=h(x)$ with $J=Dh$. These are compatible tensor rules in opposite directions. Coordinate invariance of the inequality does not make arbitrary choices of metric equivalent or make their Euclidean conditioning identical.
+
+The bilinear metric and task pullback can be written explicitly as
+$$
+g_x(\xi,\zeta)=\xi^\top M_x\zeta,
 $$ {#eq-metric-tensor}
-
-In coordinates $\{x^i\}$:
 $$
-ds^2 = g_{ij} dx^i dx^j
-$$ {#eq-line-element}
-
-### Pullback Metrics and Natural Coordinates
-
-#### Configuration Space vs. Task Space
-
-Consider a robot with configuration $\mathbf{q} \in \mathbb{R}^n$ and end-effector position $\mathbf{x} = \mathbf{h}(\mathbf{q}) \in \mathbb{R}^m$.
-
-The task-space metric:
-$$
-\mathbf{M}_{\mathbf{x}} = \mathbf{I}_m
-$$ {#eq-task-metric}
-
-**Pullback** to configuration space:
-$$
-\mathbf{M}_{\mathbf{q}} = \mathbf{J}^\top(\mathbf{q}) \mathbf{M}_{\mathbf{x}} \mathbf{J}(\mathbf{q})
+h^*M_y=J^\top M_yJ.
 $$ {#eq-pullback-metric}
 
-where $\mathbf{J} = \frac{\partial \mathbf{h}}{\partial \mathbf{q}}$ is the Jacobian.
+A Riccati matrix depending on time alone has no spatial derivatives at each fixed time. Its spatial Riemann curvature is zero in these coordinates. LQR trajectories are solutions of controlled dynamics and an optimization problem; they are not generally geodesics of that matrix. For instance, $\dot x=-x$ contracts in the flat Euclidean metric, without curvature or a funnel-shaped physical surface.
 
-**Physical meaning**: Distances in $\mathbf{q}$-space are weighted by how much they affect $\mathbf{x}$-space (task-relevant).
-
-#### Example: Planar Arm
-
-Configuration: $\mathbf{q} = [\theta_1, \theta_2]^\top$ (joint angles).
-
-End-effector position:
+For a metric $g$, the Levi–Civita coefficients are
 $$
-\mathbf{x} = \begin{bmatrix} l_1 \cos \theta_1 + l_2 \cos(\theta_1 + \theta_2) \\ l_1 \sin \theta_1 + l_2 \sin(\theta_1 + \theta_2) \end{bmatrix}
-$$ {#eq-planar-arm-kinematics}
+\Gamma^i_{jk}=\tfrac12g^{i\ell}(\partial_jg_{\ell k}+\partial_kg_{\ell j}-\partial_\ell g_{jk}).
+$$ {#eq-christoffel}
+They vanish for a spatially constant metric in these coordinates. This fact is compatible with a nonzero contraction rate of a dissipative controlled flow.
 
-Jacobian:
+The variational equation in coordinates uses ordinary time derivatives. With a chosen torsion-free connection it can be written $\nabla_t\delta x=\nabla_{\delta x}F$; replacing only the left derivative with a covariant derivative while keeping an ordinary Jacobian on the right omits connection terms. This geometric rewriting does not turn the dynamics into an Euler–Lagrange optimality condition. Differentiating an ODE and varying a dynamics-constrained objective are separate operations.
+
+In components, the covariant identity is
 $$
-\mathbf{J} = \begin{bmatrix}
--l_1 \sin \theta_1 - l_2 \sin(\theta_1 + \theta_2) & -l_2 \sin(\theta_1 + \theta_2) \\
-l_1 \cos \theta_1 + l_2 \cos(\theta_1 + \theta_2) & l_2 \cos(\theta_1 + \theta_2)
-\end{bmatrix}
-$$ {#eq-planar-arm-jacobian}
+\frac{D\delta x^i}{dt}=\left(\partial_jF^i+\Gamma^i_{kj}F^k\right)\delta x^j.
+$$ {#eq-tangent-bundle-dynamics}
 
-Pullback metric:
+### Task Metrics, Inertia, and Stiffness
+
+For a task $y=h(q)$, $J^\top W_yJ$ measures local task displacement. It is positive definite only if $J$ has full column rank when $W_y\succ0$. Redundancy or singularity can leave task-invisible directions. With a straight two-link unit-length arm,
 $$
-\mathbf{M}_{\mathbf{q}} = \mathbf{J}^\top \mathbf{J} = \begin{bmatrix}
-l_1^2 + l_2^2 + 2 l_1 l_2 \cos \theta_2 & l_2^2 + l_1 l_2 \cos \theta_2 \\
-l_2^2 + l_1 l_2 \cos \theta_2 & l_2^2
-\end{bmatrix}
-$$ {#eq-planar-arm-metric}
-
-This is the **kinetic energy metric** (mass matrix with unit link masses).
-
-### Gauge Freedom and Metric Choice
-
-#### Equivalence Classes
-
-Two metrics $\mathbf{M}_1$, $\mathbf{M}_2$ are **gauge equivalent** if there exists a diffeomorphism $\phi: \mathcal{M} \to \mathcal{M}$ such that:
+J=\begin{bmatrix}0&0\\2&1\end{bmatrix},\qquad
+J^\top J=\begin{bmatrix}4&2\\2&1\end{bmatrix},
 $$
-\mathbf{M}_2 = \phi^* \mathbf{M}_1
-$$ {#eq-gauge-equivalence}
+which is singular. It equals the generalized kinetic metric of a unit point mass at the endpoint with massless links. It is not the mass matrix of two unit-mass links. For two uniform unit rods the actual inertia is $\left[\begin{smallmatrix}8/3&5/6\\5/6&1/3\end{smallmatrix}\right]$, which is positive definite at this configuration.
 
-where $\phi^*$ is the pullback.
+Mechanical inertia acts on configuration velocities. A contraction metric for state $(q,\dot q)$ acts on both position and velocity perturbations and generally includes cross blocks. Stiffness acts between displacement and force; it is not automatically a full-state contraction metric. Likewise, $BR^{-1}B^\top$ is a contravariant input map that is often singular in underactuated mechanics, not automatically a positive-definite covariant metric. Fisher information and value Hessians can also be degenerate. Every proposed metric needs a domain, units or nondimensionalization, rank check, and differential inequality.
 
-**Physical example**: Changing coordinates $\mathbf{x} \to \mathbf{z} = \boldsymbol{\phi}(\mathbf{x})$ induces:
+Minimizing $\operatorname{tr}M$ without a fixed lower bound is degenerate because the homogeneous contraction inequality permits $\epsilon M$ for arbitrarily small $\epsilon>0$. Scaling the ruler does not enlarge a physical basin. With $I\preceq M\preceq\kappa I$, a fixed linear closed loop and fixed rate produce a meaningful semidefinite feasibility problem. A nonlinear metric search must specify a function class, derivative constraints, a domain, and how a continuum inequality is verified. Solver complexity depends on those choices; no universal $O(n^4)$ runtime follows from naming the problem an SDP.
+
+For the fixed constant closed loop, the normalized feasibility constraints are
 $$
-\mathbf{M}_{\mathbf{z}} = \left( \frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}} \right)^\top \mathbf{M}_{\mathbf{x}} \left( \frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}} \right)
-$$ {#eq-metric-transformation}
-
-#### Canonical Choices
-
-Several natural metric choices:
-
-1. **Euclidean**: $\mathbf{M} = \mathbf{I}$ (simplest, but coordinate-dependent).
-
-2. **Fisher Information**: $\mathbf{M}_{ij} = \mathbb{E}\left[ \frac{\partial \log p}{\partial x^i} \frac{\partial \log p}{\partial x^j} \right]$ for probabilistic systems.
-
-3. **Kinetic Energy**: $\mathbf{M} = \mathbf{D}(\mathbf{q})$ (inertia matrix) for mechanical systems.
-
-4. **Control Metric**: $\mathbf{M} = \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top$ (control authority).
-
-5. **Riccati Metric**: $\mathbf{M} = \mathbf{S}$ (optimal control).
-
-**Trade-off**: Simpler metrics (e.g., Euclidean) are easier to compute but may not respect system structure. Intrinsic metrics (e.g., kinetic energy) are more natural but computationally expensive.
-
-#### Optimal Metric via Trace Minimization
-
-Among all metrics satisfying the contraction condition, choose the one minimizing:
-$$
-\min_{\mathbf{M} \succ 0} \, \text{tr}(\mathbf{M})
-$$ {#eq-optimal-metric}
-
-subject to:
-$$
-\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \preceq -2\lambda \mathbf{M}
+I\preceq M\preceq\kappa I,\qquad A_c^\top M+MA_c+2\lambda M\preceq0.
 $$ {#eq-contraction-lmi}
 
-This is a **convex SDP** (linear matrix inequality).
+## Combining Trajectory Optimization With Stability Verification
 
-**Interpretation**: Smallest metric = largest basin of attraction.
+### What DDP Actually Expands
 
----
-
-## Part III: Applications
-
-## Biomechanical Stability
-
-## Muscle Synergies as Contraction Subspaces
-
-### Muscle Redundancy Problem
-
-The human arm has $n > 7$ muscles controlling $m = 7$ DOF (shoulder + elbow + wrist). This **redundancy** allows multiple muscle activation patterns $\mathbf{a} \in \mathbb{R}^n$ to produce the same joint torque $\boldsymbol{\tau} \in \mathbb{R}^m$:
-$$
-\boldsymbol{\tau} = \mathbf{R}(\mathbf{q}) \mathbf{a}
-$$ {#eq-muscle-torque}
-
-where $\mathbf{R}(\mathbf{q})$ is the moment arm matrix.
-
-### Synergy Hypothesis
-
-The CNS (central nervous system) activates muscles in **low-dimensional synergies**:
-$$
-\mathbf{a} = \mathbf{W} \mathbf{c}
-$$ {#eq-synergy-decomposition}
-
-where:
-- $\mathbf{W} \in \mathbb{R}^{n \times k}$ ($k \ll n$): synergy matrix (spatial pattern)
-- $\mathbf{c} \in \mathbb{R}^k$: synergy coefficients (temporal activation)
-
-**Question**: Why does the CNS use synergies? **Answer**: Stability through contraction!
-
-### Contraction Subspace Theory
-
-::: {.callout-note icon=false}
-## Hypothesis 7.1 (Synergies Maximize Contraction Rate)
-The synergy matrix $\mathbf{W}$ is chosen such that the closed-loop musculoskeletal system:
-$$
-\dot{\mathbf{q}} = \mathbf{f}(\mathbf{q}, \mathbf{W} \mathbf{c})
-$$ {#eq-synergy-dynamics}
-has **maximal contraction rate** in the subspace $\text{span}(\mathbf{W})$.
-:::
-
-**Evidence**: Studies show synergies are task-specific and adapt to stability requirements (e.g., balancing vs. reaching).
-
-## Neural Control as Metric Shaping
-
-### Impedance Control
-
-The CNS modulates **endpoint stiffness** $\mathbf{K}_{\text{end}}$ and **damping** $\mathbf{B}_{\text{end}}$ via co-contraction:
-$$
-\mathbf{F}_{\text{end}} = -\mathbf{K}_{\text{end}} \Delta \mathbf{x} - \mathbf{B}_{\text{end}} \Delta \dot{\mathbf{x}}
-$$ {#eq-impedance-control}
-
-In joint space:
-$$
-\boldsymbol{\tau} = -\mathbf{K}_{\mathbf{q}} \Delta \mathbf{q} - \mathbf{B}_{\mathbf{q}} \Delta \dot{\mathbf{q}}
-$$ {#eq-joint-impedance}
-
-where:
+For a discrete dynamics map $x^+=f_d(x,u)$ and running cost $\ell$, define the local action value $\mathcal Q=\ell+V^+(f_d(x,u))$. Along a feasible nominal trajectory, write $A=f_{d,x}$, $B=f_{d,u}$, $p=V_x^+$, and $P=V_{xx}^+$. The second derivatives include
 $$
 \begin{aligned}
-\mathbf{K}_{\mathbf{q}} &= \mathbf{J}^\top \mathbf{K}_{\text{end}} \mathbf{J} \\
-\mathbf{B}_{\mathbf{q}} &= \mathbf{J}^\top \mathbf{B}_{\text{end}} \mathbf{J}
+\mathcal Q_{xx}&=\ell_{xx}+A^\top PA+\sum_i p_i f_{d,xx}^{,i},\\
+\mathcal Q_{ux}&=\ell_{ux}+B^\top PA+\sum_i p_i f_{d,ux}^{,i},\\
+\mathcal Q_{uu}&=\ell_{uu}+B^\top PB+\sum_i p_i f_{d,uu}^{,i}.
 \end{aligned}
-$$ {#eq-impedance-pullback}
-
-**Contraction interpretation**: $\mathbf{K}_{\mathbf{q}}$ is a contraction metric! The CNS shapes this metric to ensure stability.
-
-### Optimal Feedback Control Model — Heuristic Risk-Sensitive / Contraction-Motivated Extension {#sec-ofc-heuristic}
-
-Recent neuroscience proposes the CNS solves:
 $$
-\min_{\mathbf{c}(t)} \int_0^T \left( \mathbf{x}^\top \mathbf{Q} \mathbf{x} + \mathbf{c}^\top \mathbf{R} \mathbf{c} + \mathbf{u}_{\text{noise}}^\top \mathbf{\Sigma}^{-1} \mathbf{u}_{\text{noise}} \right) dt
-$$ {#eq-ofc-cost}
-
-subject to stochastic dynamics:
+DDP retains these dynamics-Hessian contractions. The iLQR approximation omits them while retaining the relevant cost Hessians and cross terms. In either case, a general optimization step includes a feedforward correction as well as feedback:
 $$
-d\mathbf{x} = \mathbf{f}(\mathbf{x}, \mathbf{W} \mathbf{c}) dt + \mathbf{G} d\mathbf{w}
-$$ {#eq-stochastic-dynamics}
-
-::: {.callout-warning}
-## Conjectural Extension --- Not Standard Stochastic LQR
-The equation presented immediately below is **not** the standard stochastic-LQR Riccati equation. It is a heuristic fusion of two different control problems (stochastic LQR and risk-sensitive / Whittle--Speyer LEQG control), offered here as a motivating conjecture for combining contraction-theoretic robustness with stochastic feedback control. **Do not** quote it as a derived result in downstream work.
-
-The **standard stochastic-LQR** formulation separates the Riccati equation from the covariance evolution:
+\delta u=k+L\delta x,\qquad
+k=-\mathcal Q_{uu}^{-1}\mathcal Q_u,\quad
+L=-\mathcal Q_{uu}^{-1}\mathcal Q_{ux},
 $$
--\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}
-\qquad \text{(Riccati --- identical to deterministic LQR)}
+when the local control Hessian is positive definite and the step is unconstrained. Regularization, input bounds, line search, and defects in an infeasible nominal rollout change the subproblem. The purely homogeneous LQR recursion describes a special case, not a complete nonlinear optimizer. See [MIT trajectory optimization](https://underactuated.mit.edu/trajopt.html).
+
+A value Hessian can be indefinite away from a suitable local minimum. Even a positive Hessian does not certify the resulting nonlinear feedback policy. Optimization convergence, trajectory feasibility, stability, and empirical model validity are distinct checks.
+
+### A Defensible Contraction Penalty
+
+For a declared metric and continuous closed-loop policy, define the normalized defect
 $$
+d(x,t)=\lambda_{\max}\left(M^{-1/2}\mathcal H M^{-1/2}\right)+2\lambda,
+\qquad c(x,t)=\max(0,d(x,t))^2.
 $$
-\dot{\boldsymbol{\Sigma}}_{\mathbf{x}} = \mathbf{A}\boldsymbol{\Sigma}_{\mathbf{x}} + \boldsymbol{\Sigma}_{\mathbf{x}} \mathbf{A}^\top + \mathbf{G}\boldsymbol{\Sigma}\mathbf{G}^\top
-\qquad \text{(Lyapunov / covariance ODE)}
+Zero penalty means the tested point satisfies the inequality at the requested rate. A finite penalty weight in an objective does not force zero violation. Sampled zero violations also do not certify an unsampled region. The largest-eigenvalue function is nonsmooth at repeated active eigenvalues, so an implementation must specify how derivatives or nonsmooth steps are handled.
+
+If a scalar penalty is added to a cost, its first derivatives modify the cost gradients and its second derivatives modify the cost Hessians, including mixed terms. Adding a gradient vector to a Hessian matrix is dimensionally invalid. If the policy or metric is optimized too, account for their dependence in those derivatives. Use the continuous condition for continuous Jacobians and the next-state metric inequality for discrete maps.
+
+For a candidate policy and metric, a useful verification sequence is:
+
+1. Check the nominal trajectory against the dynamics, contact model, and actuator limits.
+2. Define the metric throughout a proposed tube, with explicit positive lower and upper bounds.
+3. Differentiate the implemented closed loop, including saturation or its smooth region, activation states, and metric material derivatives.
+4. Verify the contraction inequality with numerical margin throughout that tube, and establish trajectory containment. A certified Lipschitz bound can turn a sampled margin into a neighborhood bound; an arbitrary sample spacing cannot.
+5. Bound model errors and disturbances, inspect contact-event sensitivities, and report the resulting finite-error or output bound.
+
+For example, if the largest eigenvalue of the normalized defect matrix is at most $-\eta$ at a point and a proven Lipschitz constant is $L$, a ball of radius $r<\eta/L$ retains negativity, provided the metric and policy remain regular there. This verifies a local inequality; an invariant tube and time-uniform bounds still need proof. A finite-horizon capture set under one policy is not automatically an asymptotic basin of attraction or a control-reachable set under all policies.
+
+Control contraction metrics provide a separate constructive framework for differential feedback design. The original [Manchester–Slotine paper](https://arxiv.org/abs/1503.03144) and its [integrability amendment](https://arxiv.org/abs/1711.08128) specify technical conditions for turning differential controls into finite controls. A pointwise Riccati matrix or a soft penalty should not be presented as an implementation of those theorems without checking their hypotheses.
+
+## Musculoskeletal Mechanics and Variability
+
+### Force, Activation, and Full Mechanical State
+
+Moment arms map muscle forces to joint torque:
 $$
-Noise enters the *covariance* evolution, not the Riccati. The **quadratic-in-$\mathbf{S}$ noise term** shown below appears in **risk-sensitive** control [Jacobson 1973](https://doi.org/10.1109/TAC.1973.1100280); [Whittle 1981](https://doi.org/10.2307/1426756)) under the exponential-of-integral (LEQG) cost criterion, not under the standard quadratic expectation cost.
-:::
-
-**Proposed (heuristic) formulation.** A **stochastic contraction metric** $\mathbf{S}(t)$ for the mean-field dynamics satisfying:
+\tau=R(q)F_m(q,\dot q,a,z)+\tau_{\mathrm{other}}.
 $$
--\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \frac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}
-$$ {#eq-stochastic-riccati-conjectural}
+Here $a$ denotes activation and $z$ any additional tendon, fatigue, or history state. Multiplying a moment-arm matrix, measured in length, by dimensionless activation alone does not produce torque. A simplified constitutive law can be affine in activation at fixed muscle state; its force-length, force-velocity, tendon, and excitation dynamics must still be specified. The [OpenSim activation model](https://opensimconfluence.atlassian.net/wiki/spaces/OpenSim/pages/53090590) illustrates why excitation and activation occupy different roles.
 
-The extra $\tfrac{1}{2}\mathbf{S}\mathbf{G}\boldsymbol{\Sigma}\mathbf{G}^\top\mathbf{S}$ term is imported from risk-sensitive control --- where it arises from the LEQG derivation of Jacobson (1973) and Whittle (1981) --- and is offered here by analogy with contraction-theoretic robustness bounds. A rigorous derivation from the stochastic Lyapunov / contraction framework (via Itô's lemma on $\mathbf{x}^\top\mathbf{S}\mathbf{x}$, with a carefully chosen pseudo-Lyapunov rate) is not provided in this article and is left as an open problem; it is plausible but not established.
+A low-dimensional factorization $a\approx Wc$ is a candidate description of recorded activation patterns. Its columns live in muscle-activation space, not directly in the tangent space of the mechanical state. The resulting input directions involve the muscle model, moment arms, inertia, and constraints. A low-rank factorization does not establish that the nervous system selects $W$ to maximize contraction, or even that the factors identify unique neural modules.
 
-The qualitative interpretation that survives this caveat: noise terms tend to **oppose** contraction --- the CNS must work harder to maintain stability in the presence of variability --- regardless of which Riccati/Lyapunov pair is used. That qualitative claim follows already from the standard stochastic-LQR covariance ODE above.
-
-## Golf Swing Stability Margins
-
-### Model: 3-DOF Planar Swing
-
-Configuration: $\mathbf{q} = [\theta_{\text{shoulder}}, \theta_{\text{elbow}}, \theta_{\text{wrist}}]^\top$.
-
-Dynamics (Lagrangian):
+For mechanics
 $$
-\mathbf{D}(\mathbf{q}) \ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau}
-$$ {#eq-golf-swing-dynamics}
-
-Objective: Hit ball at position $\mathbf{x}_{\text{ball}}$ with velocity $\mathbf{v}_{\text{target}}$ at time $T = 0.3$ s.
-
-### Contraction Analysis
-
-Linearize around nominal swing $\mathbf{q}^*(t)$:
+D(q)\ddot q+h(q,v)=B(q)\tau,\qquad v=\dot q,
 $$
-\delta \ddot{\mathbf{q}} = \mathbf{D}^{-1} \left[ -\frac{\partial \mathbf{C}}{\partial \mathbf{q}} \delta \mathbf{q} - \frac{\partial \mathbf{g}}{\partial \mathbf{q}} \delta \mathbf{q} + \delta \boldsymbol{\tau} \right]
-$$ {#eq-golf-swing-linearization}
-
-Convert to first-order:
+define $a_q=D^{-1}(B\tau-h)$ as the acceleration function. Its configuration derivative in direction $\delta q$ is
 $$
-\frac{d}{dt} \begin{bmatrix} \delta \mathbf{q} \\ \delta \dot{\mathbf{q}} \end{bmatrix} = \begin{bmatrix} \mathbf{0} & \mathbf{I} \\ \mathbf{A}_{21} & \mathbf{A}_{22} \end{bmatrix} \begin{bmatrix} \delta \mathbf{q} \\ \delta \dot{\mathbf{q}} \end{bmatrix} + \begin{bmatrix} \mathbf{0} \\ \mathbf{D}^{-1} \end{bmatrix} \delta \boldsymbol{\tau}
-$$ {#eq-golf-swing-state-space}
-
-Compute contraction metric via:
+D_qa_q[\delta q]=D^{-1}\left(D_qB[\delta q]\tau-D_qh[\delta q]-D_qD[\delta q]a_q\right),
 $$
-\mathbf{M}(t) = \begin{bmatrix} \mathbf{S}_{11}(t) & \mathbf{S}_{12}(t) \\ \mathbf{S}_{12}^\top(t) & \mathbf{S}_{22}(t) \end{bmatrix}
-$$ {#eq-golf-swing-metric}
+and $D_va_q=-D^{-1}D_vh$, $D_\tau a_q=D^{-1}B$ under the stated $q$-only inertia and input map. The first-order state Jacobian has top blocks $(0,I)$ and bottom blocks $(D_qa_q,D_va_q)$. Omitting the derivative of inertia or the velocity dependence of the Coriolis load changes the predicted perturbation dynamics. Closed loops add reaction derivatives; muscle-driven models add their internal-state blocks.
 
-from LQR with $\mathbf{Q} = \text{diag}(\mathbf{Q}_{\text{pos}}, \mathbf{Q}_{\text{vel}})$, $\mathbf{R} = \mathbf{I}$.
+### Impedance Is Part of the Dynamics
 
-### Stability Margin Definition
+A local endpoint law $\delta F=-K_y\delta y-C_y\delta\dot y$ contributes stiffness and damping. The simple pullback $J^\top K_yJ$ is the unloaded linearization at a matching reference; differentiating $J^\top F$ at nonzero preload also produces a geometric term involving $D_qJ$. Along motion, velocity and Jacobian-rate terms matter as well.
 
-The **stability margin** is:
+Finite stiffness can redirect an error without eliminating a degree of freedom. A spring without damping stores and returns energy; it does not make trajectories converge. A contraction test therefore belongs to the full position/velocity/internal-state dynamics. Co-contraction may alter impedance and later force production without changing instantaneous net torque, and it can have metabolic cost. Neither an inferred torque nor a metric identifies that cost uniquely.
+
+### Stochastic Errors Need a Noise Model
+
+For fully observed additive-noise LQ control,
 $$
-\gamma(t) = \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S}(t))}
-$$ {#eq-stability-margin}
-
-This quantifies the **robustness** to perturbations at time $t$.
-
-**Illustrative hypothesis**: If contraction stability margins were measured empirically, one would expect professional golfers to maintain higher $\gamma(t)$ throughout the swing than amateurs, particularly near impact ($t \approx T$). This prediction follows from the framework but has not yet been validated against motion-capture data.
-
-**Interpretation**: This framework predicts that pros maintain higher contraction rate even during rapid motion; amateurs may lose stability near impact. Empirical validation is a direction for future work.
-
----
-
-## Robotics: Manipulation With Local Certificates
-
-### Contraction-Based Task Space Control
-
-#### Operational Space Formulation
-
-Robot dynamics:
+dx=(Ax+Bu)dt+G\,dW_t,\qquad \mathbb E[dW_t,dW_t^\top]=I\,dt,
 $$
-\mathbf{D}(\mathbf{q}) \ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau}
-$$ {#eq-ctu-robot-dynamics}
-
-Task space: $\mathbf{x} = \mathbf{h}(\mathbf{q})$ (e.g., end-effector position).
-
-Task dynamics:
+the expected quadratic-cost problem has the deterministic Riccati equation for its state-quadratic part. Noise contributes an additive value term involving $\operatorname{tr}(SGG^\top)$. Under $u=-Kx$, the covariance evolves with the closed-loop matrix:
 $$
-\mathbf{\Lambda}(\mathbf{x}) \ddot{\mathbf{x}} + \boldsymbol{\mu}(\mathbf{x}, \dot{\mathbf{x}}) \dot{\mathbf{x}} + \mathbf{p}(\mathbf{x}) = \mathbf{F}
-$$ {#eq-task-dynamics}
-
-where:
+\dot\Sigma_x=A_c\Sigma_x+\Sigma_xA_c^\top+GG^\top.
 $$
-\begin{aligned}
-\mathbf{\Lambda} &= (\mathbf{J} \mathbf{D}^{-1} \mathbf{J}^\top)^{-1} \\
-\boldsymbol{\mu} &= \mathbf{\Lambda} (\dot{\mathbf{J}} \dot{\mathbf{q}} - \mathbf{J} \mathbf{D}^{-1} \mathbf{C} \dot{\mathbf{q}}) \\
-\mathbf{p} &= \mathbf{\Lambda} \mathbf{J} \mathbf{D}^{-1} \mathbf{g}
-\end{aligned}
-$$ {#eq-task-matrices}
+For $dx=-x,dt+\sigma,dW_t$ from a known initial state, the variance is $\sigma^2(1-e^{-2t})/2$. Mean error decays, but variance approaches a nonzero floor. Two trajectories driven by exactly the same additive noise have deterministic difference dynamics; independent noise does not cancel. These are different notions of stochastic contraction and synchronization.
 
-#### Contraction-Based Controller
+Risk-sensitive exponential costs can change the Riccati equation, but their noise-dependent term follows from the specified criterion, normalization, and admissibility conditions. It should not be inserted into ordinary expected-quadratic LQR by analogy. Additive-noise covariance alone also does not establish that a human must always increase effort to maintain a particular outcome; the objective, feedback, signal-dependent noise, and feasible muscle responses need a model and data.
 
-**Objective**: Track desired trajectory $\mathbf{x}_d(t)$ with a local exponential-convergence certificate.
+## Task-Space Tracking and Contact
 
-**Design**: Choose task force:
+### Operational-Space Bias Is a Force Vector
+
+For $D\ddot q+h=\tau$, task $y=h_y(q)$, and full-row-rank task Jacobian $J$, suppose the input is implemented as $\tau=J^\top F+\tau_0$ with $JD^{-1}\tau_0=0$. Then
 $$
-\mathbf{F} = \mathbf{\Lambda} \ddot{\mathbf{x}}_d + \boldsymbol{\mu} \dot{\mathbf{x}}_d + \mathbf{p} - \mathbf{K}_p (\mathbf{x} - \mathbf{x}_d) - \mathbf{K}_d (\dot{\mathbf{x}} - \dot{\mathbf{x}}_d)
+\Lambda=(JD^{-1}J^\top)^{-1},\qquad
+\Lambda\ddot y+\eta=F,\qquad
+\eta=\Lambda(JD^{-1}h-\dot Jv).
+$$
+The bias $\eta$ is a force vector, not a matrix that should be multiplied by task velocity again. Its state dependence generally cannot be expressed using only $y,\dot y$ in a redundant arm. Rank loss, constraint contacts, torque limits, and imperfect cancellation require separate treatment.
+
+With exact model cancellation, choose
+$$
+F=\eta+\Lambda\left(\ddot y_d-2a\dot e-a^2e\right),\qquad e=y-y_d,
 $$ {#eq-task-force}
+to obtain $\ddot e+2a\dot e+a^2e=0$. This is critically damped. Its solutions contain $(c_1+c_2t)e^{-at}$, so a uniform exponential bound with exactly rate $a$ and fixed prefactor does not hold for arbitrary initial error. Any strictly smaller rate can be bounded with a suitable prefactor. The full error-state metric has dimension twice the task dimension; $\Lambda$ alone cannot serve that role.
 
-Error dynamics:
+For $a=1$ and error state $z=(e,\dot e)$,
 $$
-\ddot{\mathbf{e}} + \mathbf{\Lambda}^{-1} \mathbf{K}_d \dot{\mathbf{e}} + \mathbf{\Lambda}^{-1} \mathbf{K}_p \mathbf{e} = \mathbf{0}
-$$ {#eq-error-dynamics}
-
-**Contraction condition**: Choose $\mathbf{K}_p = \lambda^2 \mathbf{\Lambda}$, $\mathbf{K}_d = 2\lambda \mathbf{\Lambda}$ to get:
+A_e=\begin{bmatrix}0&1\\-1&-2\end{bmatrix},\qquad
+P=\begin{bmatrix}3/2&1/2\\1/2&1/2\end{bmatrix}
 $$
-\ddot{\mathbf{e}} + 2\lambda \dot{\mathbf{e}} + \lambda^2 \mathbf{e} = \mathbf{0}
-$$ {#eq-critically-damped}
+satisfies $A_e^\top P+PA_e=-I$. It gives the valid rate $1/(2\lambda_{\max}(P))\approx0.292893\ \mathrm{s}^{-1}$ in that metric. In contrast, the simple energy $(e^2+\dot e^2)/2$ has derivative $-2\dot e^2$, which is zero at $e\ne0,\dot e=0$ and cannot satisfy a strict instantaneous exponential energy inequality. A conservative certificate can be correct even when it is below the asymptotic spectral rate.
 
-This is **critically damped** with contraction rate $\lambda$.
+### Saltation and Mode Changes
 
-**Metric**: The natural metric is $\mathbf{M} = \mathbf{\Lambda}$ (kinetic energy).
-
-::: {.callout-note icon=false}
-### Theorem 8.1 (Task Space Contraction)
-The controller (@eq-task-force) renders the task-space error dynamics contracting with metric $\mathbf{M} = \mathbf{\Lambda}$ and rate $\lambda$.
-:::
-
-**Proof**: Define $\mathbf{e} = [\mathbf{e}, \dot{\mathbf{e}}]^\top$. The Lyapunov function:
+A contact model needs a guard, pre- and post-contact vector fields, and a reset map. For a smooth non-grazing event $g(x,t)=0$ with reset $x^+=R(x^-,t)$, the first-order sensitivity across the event is
 $$
-V = \frac{1}{2} \dot{\mathbf{e}}^\top \mathbf{\Lambda} \dot{\mathbf{e}} + \frac{1}{2} \mathbf{e}^\top \mathbf{K}_p \mathbf{e}
-$$ {#eq-task-lyapunov}
-
-has derivative:
+\Xi=D_xR+
+\frac{F^+-D_xR\,F^- -\partial_tR}
+{D_xg\,F^-+\partial_tg}\,D_xg.
 $$
-\dot{V} = -\dot{\mathbf{e}}^\top \mathbf{K}_d \dot{\mathbf{e}} \leq -2\lambda V
-$$ {#eq-task-lyapunov-derivative}
+This is the saltation matrix. It includes event-time shifts as well as reset derivatives; see the [saltation review](https://arxiv.org/abs/2306.06862). The denominator must be nonzero, and a consistent coordinate representation and event sequence are required. Grazing, simultaneous contacts, and changes in effective state dimension need additional analysis.
 
-by choice of gains. $\square$
-
-### Certified Stability During Contact
-
-#### Hybrid Dynamics
-
-During contact, the robot switches between:
-- **Free space**: Dynamics (@eq-ctu-robot-dynamics)
-- **Contact**: Constrained dynamics with contact forces $\mathbf{F}_c$
-
-Hybrid system:
+Across an event, a nonexpansion condition is
 $$
-\begin{cases}
-\mathbf{D} \ddot{\mathbf{q}} + \mathbf{C} \dot{\mathbf{q}} + \mathbf{g} = \boldsymbol{\tau} & \text{if } \phi(\mathbf{q}) > 0 \\
-\mathbf{D} \ddot{\mathbf{q}} + \mathbf{C} \dot{\mathbf{q}} + \mathbf{g} = \boldsymbol{\tau} + \mathbf{J}_c^\top \mathbf{F}_c & \text{if } \phi(\mathbf{q}) = 0
-\end{cases}
-$$ {#eq-hybrid-dynamics}
-
-where $\phi(\mathbf{q}) = 0$ is the contact surface.
-
-#### Contraction Across Modes
-
-**Challenge**: Metric $\mathbf{M}$ must ensure contraction in **both modes**.
-
-**Solution**: Use **common Lyapunov function** approach.
-
-Find $\mathbf{M} \succ 0$ such that:
+\Xi^\top M^+\Xi\preceq M^-.
 $$
-\begin{aligned}
-\mathbf{A}_{\text{free}}^\top \mathbf{M} + \mathbf{M} \mathbf{A}_{\text{free}} &\prec -2\lambda \mathbf{M} \\
-\mathbf{A}_{\text{contact}}^\top \mathbf{M} + \mathbf{M} \mathbf{A}_{\text{contact}} &\prec -2\lambda \mathbf{M}
-\end{aligned}
+For constant linear mode dynamics, a common flow metric would separately require
+$$
+A_i^\top M+MA_i\preceq-2\lambda M\quad\text{for each mode }i.
 $$ {#eq-common-lyapunov}
+Contracting flows within each mode do not imply this jump condition. The scalar flow $\dot x=-x$ with a scheduled reset $x^+=2x^-$ every half second has net multiplier $2e^{-1/2}>1$. Flow contraction is overwhelmed by repeated expansion at resets. If jumps have bounded expansion rather than nonexpansion, a dwell-time or cumulative flow/jump bound may establish an overall result. A common flow metric alone is insufficient for an impact model.
 
-This is feasible if the **switched system** is jointly contracting.
+## An Executable Certificate Example
 
-::: {.callout-important icon=false}
-### Theorem 8.2 (Hybrid Contraction)
-If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), then the hybrid system is exponentially stable across mode switches with rate $\lambda$.
-:::
-
-**Application**: Peg-in-hole insertion, where any convergence claim must account for intermittent contact and mode changes.
-
-### Simulation Study: 7-DOF Robot Arm
-
-> **Note**: The following numerical results are illustrative simulations, not empirical experiments. They demonstrate expected theoretical behavior but have not been validated on physical hardware. Experimental validation is a direction for future work.
-
-#### Setup
-
-- **Robot model**: 7-DOF arm dynamics (KUKA LWR geometry, simulated)
-- **Task**: Circular trajectory (radius 10 cm, period 2 s)
-- **Controller**: Contraction-based task space (@eq-task-force) with $\lambda = 5.0$ Hz
-
-#### Metrics
-
-1. **Tracking error**: $e_{\text{pos}}(t) = \|\mathbf{x}(t) - \mathbf{x}_d(t)\|$
-2. **Contraction rate (measured)**:
-   $$
-   \lambda_{\text{meas}} = -\frac{1}{\Delta t} \log \frac{\|e(t+\Delta t)\|_{\mathbf{M}}}{\|e(t)\|_{\mathbf{M}}}
-   $$ {#eq-measured-contraction}
-
-#### Simulated Results
-
-| Metric | Contraction Controller | Standard PD | Improvement |
-|--------|----------------------|-------------|-------------|
-| RMS Error (mm) | 0.82 | 3.45 | 76% |
-| Max Error (mm) | 1.21 | 8.73 | 86% |
-| Measured $\lambda$ (Hz) | 4.87 | 2.13 | 129% |
-| Settling time (s) | 0.31 | 1.15 | 73% |
-
-**Key finding**: In simulation, the measured contraction rate (4.87 Hz) closely matches the design value (5.0 Hz), **consistent with the theory**. Physical validation remains future work.
-
-#### Robustness Test (Simulated)
-
-Applied **external disturbance** (5 N impulse) at $t = 1.0$ s:
-- **Contraction controller**: Recovers in 0.28 s (within theoretical bound $3/\lambda = 0.60$ s)
-- **PD controller**: Recovers in 1.43 s
-
-**Contraction provides 5× faster disturbance rejection in simulation.**
-
----
-
-## Comparison: Classical vs. Contraction-Aware DDP
-
-## Numerical Experiments
-
-### Benchmark Problem: Cartpole Swing-Up
-
-Dynamics:
-$$
-\begin{aligned}
-\dot{x} &= v \\
-\dot{\theta} &= \omega \\
-\dot{v} &= \frac{u + m l \omega^2 \sin \theta - m g \cos \theta \sin \theta}{M + m \sin^2 \theta} \\
-\dot{\omega} &= \frac{(M+m) g \sin \theta - \cos \theta (u + m l \omega^2 \sin \theta)}{l (M + m \sin^2 \theta)}
-\end{aligned}
-$$ {#eq-cartpole-dynamics}
-
-with $M = 1.0$ kg, $m = 0.1$ kg, $l = 0.5$ m.
-
-**Task**: Swing up from $\theta = \pi$ (hanging) to $\theta = 0$ (upright) in $T = 2.0$ s.
-
-**Cost**:
-$$
-J = \mathbf{x}_T^\top \mathbf{Q}_T \mathbf{x}_T + \int_0^T (\mathbf{x}^\top \mathbf{Q} \mathbf{x} + u^2 R) dt
-$$ {#eq-cartpole-cost}
-
-with $\mathbf{Q}_T = \text{diag}(100, 100, 10, 10)$, $\mathbf{Q} = \text{diag}(1, 1, 0.1, 0.1)$, $R = 0.01$.
-
-### Comparison Setup
-
-**Methods**:
-1. **Classical DDP**: Standard algorithm (Jacobson & Mayne, 1970)
-2. **Contraction-DDP**: With penalty $\mu = 10.0$, desired rate $\lambda = 2.0$ Hz
-
-**Evaluation**:
-- Initial condition perturbations: $\mathbf{x}_0 \sim \mathcal{N}(\mathbf{x}_0^*, \sigma^2 \mathbf{I})$ for $\sigma \in \{0.1, 0.2, 0.3\}$
-- 100 random trials per $\sigma$
-
-### Results: Success Rate
-
-| $\sigma$ | Classical DDP | Contraction-DDP | Improvement |
-|----------|--------------|----------------|-------------|
-| 0.1 | 94% | 100% | +6% |
-| 0.2 | 71% | 98% | +38% |
-| 0.3 | 42% | 89% | +112% |
-
-**Success** = reaching goal region $\|\mathbf{x}_T - \mathbf{x}_{\text{goal}}\| < 0.1$.
-
-**Conclusion**: Contraction-DDP has **significantly larger basin of attraction**.
-
-### Results: Convergence Rate
-
-Measured contraction rate from exponential fit:
-$$
-\|\mathbf{x}(t) - \mathbf{x}^*(t)\| \approx C e^{-\lambda_{\text{meas}} t}
-$$ {#eq-exponential-fit}
-
-| Method | Mean $\lambda_{\text{meas}}$ (Hz) | Std Dev |
-|--------|----------------------------------|---------|
-| Classical DDP | 1.23 | 0.87 |
-| Contraction-DDP | 1.94 | 0.21 |
-
-**Observations**:
-1. Contraction-DDP achieves near-target rate (2.0 Hz) on average
-2. Much lower variance (more consistent)
-
-## Basin of Attraction Analysis
-
-### Method: Backward Reachable Set
-
-Compute the **largest set** of initial conditions that converge to goal:
-$$
-\mathcal{B} = \{ \mathbf{x}_0 : \|\mathbf{x}(T; \mathbf{x}_0) - \mathbf{x}_{\text{goal}}\| < \epsilon \}
-$$ {#eq-basin-definition}
-
-**Algorithm**:
-1. Grid state space: $\{x, \theta, v, \omega\} \in [-2, 2] \times [-\pi, \pi] \times [-3, 3] \times [-5, 5]$
-2. For each grid point, simulate closed-loop with both controllers
-3. Check if trajectory reaches goal
-
-**Visualization**: Project 4D basin onto $(x, \theta)$ plane by marginalizing over $v$, $\omega$.
-
-### Results
-
-**Classical DDP**:
-- Basin volume: $V_{\text{classical}} = 14.3$ (arbitrary units)
-- Irregular shape with "holes" (bifurcations)
-
-**Contraction-DDP**:
-- Basin volume: $V_{\text{contraction}} = 28.7$ (2× larger!)
-- Smooth, convex shape
-
-**Key insight**: In this illustrative simulation, the contraction metric produces a larger, smoother basin around the nominal trajectory. Treating that shape as certified requires the metric and residual assumptions to be verified.
-
-## Computational Overhead
-
-### Timing Breakdown (Per Iteration)
-
-| Operation | Classical DDP | Contraction-DDP | Overhead |
-|-----------|--------------|----------------|----------|
-| Forward pass | 12 ms | 12 ms | 0% |
-| Backward pass | 8 ms | 8 ms | 0% |
-| Metric optimization | 0 ms | 47 ms | — |
-| Line search | 15 ms | 18 ms | +20% |
-| **Total** | **35 ms** | **85 ms** | **+143%** |
-
-**Bottleneck**: SDP for metric optimization (@eq-metric-optimization).
-
-**Scaling**: For $n$-dimensional systems, SDP cost is $O(n^4)$ using interior-point methods.
-
-### Mitigation Strategies
-
-1. **Warm starting**: Use previous $\mathbf{M}_{t-1}$ as initial guess
-2. **Sparsity**: Exploit block structure in large systems
-3. **Approximation**: Use fixed metric $\mathbf{M}_t = \mathbf{I}$ (loses optimality but retains stability)
-
-With warm starting, overhead reduces to **+60%**.
-
----
-
-## Part IV: Implementation
-
-## Computing Contraction Metrics
-
-### Numerical Tools
-
-#### SDP Formulation
-
-The metric optimization (@eq-metric-optimization) is:
-$$
-\begin{aligned}
-\min_{\mathbf{M}} \quad & \text{tr}(\mathbf{M}) \\
-\text{s.t.} \quad & \mathbf{M} \succ 0 \\
-& \mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \preceq -2\lambda \mathbf{M}
-\end{aligned}
-$$ {#eq-sdp-formulation}
-
-**Standard form** (for solvers like CVXPY):
-$$
-\begin{aligned}
-\min_{\mathbf{M}} \quad & \langle \mathbf{C}, \mathbf{M} \rangle \\
-\text{s.t.} \quad & \mathbf{A}_i \mathbf{M} + \mathbf{M} \mathbf{A}_i^\top \preceq \mathbf{B}_i, \quad i = 1, \ldots, k \\
-& \mathbf{M} \succeq \epsilon \mathbf{I}
-\end{aligned}
-$$ {#eq-sdp-standard-form}
-
-where $\langle \mathbf{C}, \mathbf{M} \rangle = \text{tr}(\mathbf{C}^\top \mathbf{M})$.
-
-#### The Metric Belongs to the *Closed Loop*
-
-A subtle but essential point: an LQR controller's contraction metric pertains to the
-**closed-loop** dynamics $A - BK$, **not** the open-loop $A$. Trying to solve the
-Lyapunov inequality $A^\top M + M A \preceq -2\lambda M - Q$ on the *open-loop* $A$
-of, say, a double integrator $A = \begin{bmatrix}0&1\\0&0\end{bmatrix}$ is **infeasible**:
-both eigenvalues of $A$ are $0$ (not Hurwitz), so no $M \succ 0$ makes
-$A^\top M + M A \prec 0$. The correct object is the ARE solution $S$, which is a
-contraction metric for the *stabilized* system.
-
-#### Example: Double Integrator (Closed-Loop ARE)
-
-Solve the continuous-time ARE for the double integrator with $Q = \operatorname{diag}(10, 1)$,
-$R = 1$, form the LQR gain $K = R^{-1} B^\top S$, and verify that $M = S$ satisfies the
-**closed-loop** contraction LMI $(A-BK)^\top M + M(A-BK) = -(Q + K^\top R K) \preceq 0$:
+The following example verifies the double-integrator identity and metric rate. It is a complete algebraic certificate for the stated linear model, not a DDP solver or a benchmark of golf performance. The generalized symmetric eigenvalue calculation avoids explicitly constructing $S^{-1/2}$.
 
 ```python
 import numpy as np
-from scipy.linalg import solve_continuous_are
+from scipy.linalg import eigvalsh, solve_continuous_are
 
-# System: dx/dt = [0 1; 0 0] x + [0; 1] u  (double integrator)
 A = np.array([[0.0, 1.0], [0.0, 0.0]])
 B = np.array([[0.0], [1.0]])
-Q = np.diag([10.0, 1.0])
+Q = np.diag([16.0, 1.0])
 R = np.array([[1.0]])
-
-S = solve_continuous_are(A, B, Q, R)   # ARE solution = contraction metric
-K = np.linalg.solve(R, B.T @ S)        # LQR gain
-A_cl = A - B @ K                       # closed-loop dynamics
-
-print("ARE solution S (contraction metric M):")
-print(np.round(S, 4))
-print("LQR gain K:", np.round(K, 4))
-print("Closed-loop eigenvalues:", np.round(np.linalg.eigvals(A_cl), 4))
-print("Closed-loop Lyapunov residual  A_cl^T S + S A_cl + (Q + K^T R K):")
-print(np.round(A_cl.T @ S + S @ A_cl + (Q + K.T @ R @ K), 9))
+S = solve_continuous_are(A, B, Q, R)
+K = np.linalg.solve(R, B.T @ S)
+A_closed = A - B @ K
+W = Q + K.T @ R @ K
+residual = A_closed.T @ S + S @ A_closed + W
+rate = float(eigvalsh(W, S)[0] / 2)
+assert np.linalg.eigvalsh(S)[0] > 0
+assert np.linalg.norm(residual, ord=2) < 1e-10
+assert np.isclose(rate, 1.27639320225)
+print("Gain:", np.round(K, 6))
+print("Metric rate (1/s):", round(rate, 6))
 ```
 
-**Output** (computed with SciPy `solve_continuous_are`):
+The gain is $[4,3]$ and the metric rate is $1.276393$ inverse seconds. For a nonlinear model, evaluate the actual policy derivative and the actual metric derivative. Assigning a Riccati derivative to an arbitrary guessed matrix at one state does not establish that a positive metric solves the required differential equation over a trajectory or region.
 
-```
-ARE solution S (contraction metric M):
-[[8.5584 3.1623]
- [3.1623 2.7064]]
-LQR gain K: [[3.1623 2.7064]]
-Closed-loop eigenvalues: [-1.3532+1.1537j -1.3532-1.1537j]
-Closed-loop Lyapunov residual  A_cl^T S + S A_cl + (Q + K^T R K):
-[[ 0. -0.]
- [-0.  0.]]
-```
+A numerical study comparing optimizers must publish model parameters, coordinate conventions, integrator and step size, input bounds, costs, initialization, seeds, convergence criteria, metric normalization, feasibility tolerances, and code revisions. Report failed runs and distinguish sampled error fits from worst-direction contraction bounds. Timing requires hardware and solver details. This article supplies no measured success-rate, basin-volume, robot-tracking, or runtime comparison; such results require a reproducible experiment package. An impulse is measured in newton-seconds, whereas a force in newtons requires its duration and profile to define an impulse.
 
-The residual is zero to machine precision: $S$ exactly satisfies the closed-loop
-Lyapunov equation $(A-BK)^\top S + S(A-BK) = -(Q + K^\top R K)$, so $S$ **is** a valid
-contraction metric for the LQR-stabilized double integrator (closed-loop eigenvalues
-$-1.353 \pm 1.154\,j$, both in the left half-plane). Note $K = B^\top S = [\,3.162,\ 2.706\,]$,
-i.e. $s_{12} = \sqrt{10}$ and $s_{22} = \sqrt{2\sqrt{10}+1}$ — the analytic ARE solution.
+## A Golf Investigation That Connects the Mechanisms
 
-### JAX Autodiff for Metric Tensors
+Start with the delivered outcome: clubhead velocity, face orientation, contact point, and relevant ball-launch variables at the model's own impact event. A state fixed at a common clock time is a different comparison from a state evaluated when the club reaches the ball. Event-time sensitivity becomes important if perturbed swings arrive earlier or later.
 
-#### Why JAX?
+Specify the mechanical state and its history variables. Posture and grip geometry change load transmission. Inertia couples accelerations among links. Earlier muscle work and elastic storage affect the available kinetic energy. Ground reactions can redirect momentum while doing zero work at an ideal stationary contact. Activation and tissue dynamics set feasible corrections and impedance. A same-state affine decomposition describes an acceleration budget; a forward intervention follows a different state and recomputes those mechanisms.
 
-Computing (@eq-generalized-jacobian) requires:
-1. **Jacobian** $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$
-2. **Time derivative** $\dot{\mathbf{M}} = \frac{d \mathbf{M}}{dt}$
-
-JAX provides:
-- **Forward-mode AD**: Efficient for Jacobians
-- **JIT compilation**: Fast execution
-- **Batching**: Vectorize over time steps
-
-#### Computing $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$
-
-```python
-import jax
-import jax.numpy as jnp
-from jax import jacfwd, jit
-
-@jit
-def dynamics(x, u, params):
-    """
-    Example: Pendulum dynamics
-    x = [theta, omega]
-    u = torque
-    """
-    m, l, b, g = params
-    theta, omega = x
-
-    dx = jnp.array([
-        omega,
-        (u - m*g*l*jnp.sin(theta) - b*omega) / (m*l**2)
-    ])
-    return dx
-
-# Compute Jacobian
-@jit
-def compute_jacobian(x, u, params):
-    return jacfwd(dynamics, argnums=0)(x, u, params)
-
-# Example
-x0 = jnp.array([0.1, 0.0])
-u0 = 0.0
-params = (1.0, 1.0, 0.1, 9.81)  # m, l, b, g
-
-A = compute_jacobian(x0, u0, params)
-print("Jacobian A:")
-print(A)
-```
-
-**Output**:
-```
-Jacobian A:
-[[ 0.          1.        ]
- [-9.76099086 -0.1       ]]
-```
-(The lower-left entry is $\partial\dot\omega/\partial\theta = -g\cos\theta_0 = -9.81\cos(0.1) \approx -9.761$.)
-
-#### Computing Metric Time Derivative
-
-For a trajectory $\mathbf{x}(t)$, the metric evolves:
+For a candidate feedback policy, propagate the full variational system and contact sensitivities. With state-transition matrix $\Phi(T,t)$ and a smooth fixed-time outcome $y_T=H(x(T))$, the first-order output perturbation is
 $$
-\mathbf{M}(t) = \mathbf{S}(t) \quad \Rightarrow \quad \dot{\mathbf{M}} = \dot{\mathbf{S}}
-$$ {#eq-metric-time-derivative}
-
-From the DRE (@eq-differential-riccati):
+\delta y_T=H_x\Phi(T,t)\delta x(t)
++\int_t^T H_x\Phi(T,s)B(s)\delta u(s)\,ds.
 $$
-\dot{\mathbf{S}} = -\mathbf{A}^\top \mathbf{S} - \mathbf{S} \mathbf{A} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} - \mathbf{Q}
-$$ {#eq-riccati-derivative}
+For an impact-defined outcome, replace this fixed-time expression by the appropriate event map and include its timing derivatives. The output map, remaining time, disturbance direction, feasible control set, and state uncertainty together determine which errors matter. A metric can express a useful bound, but a large full-state contraction rate is not the only route to small impact variability.
 
-```python
-@jit
-def riccati_derivative(S, A, B, Q, R):
-    """
-    Compute dS/dt from differential Riccati equation
-    """
-    BRinvBT = B @ jnp.linalg.solve(R, B.T)
-    dS = -A.T @ S - S @ A + S @ BRinvBT @ S - Q
-    return dS
+Compare candidate mechanisms using matched outcomes and declared alternatives. A configuration may transmit torque effectively while amplifying a face-orientation error. Co-contraction may reduce one perturbation while increasing energetic cost or changing another response. A low-torque continuation may retain substantial speed without preserving the required contact state. A golfer may allow harmless joint variation while correcting a smaller task-relevant component. These possibilities motivate measurements; none follows solely from an algebraic decomposition or a fitted exponential.
 
-@jit
-def metric_time_derivative(t, x, u, S, params, Q, R):
-    """
-    Compute dM/dt = dS/dt
-    """
-    A = compute_jacobian(x, u, params)
-    B = jnp.array([[0], [1.0 / (params[0] * params[1]**2)]])  # Pendulum B matrix
-    return riccati_derivative(S, A, B, Q, R)
-```
+To compare golfers, use the same outcome definition, model class, units, uncertainty treatment, feasible input assumptions, and metric normalization. A computed Riccati matrix depends on chosen cost weights and policy; it is not a directly measured neural strategy. Do not infer that skilled golfers maximize contraction, or that a particular local rate predicts skill, without a preregistered comparison and evidence against alternative explanations. Useful tests include controlled perturbations, repeated trials, parameter sensitivity, grip/contact alternatives, and out-of-sample prediction of delivered impact changes.
 
-#### Verifying Contraction Condition
+## Exercises and Checks
 
-```python
-@jit
-def check_contraction(x, u, S, params, Q, R, lam):
-    """
-    Check if system is contracting with rate lam
-    Returns: maximum eigenvalue of (A.T M + M A + dM/dt + 2*lam*M)
-    """
-    A = compute_jacobian(x, u, params)
-    B = jnp.array([[0], [1.0 / (params[0] * params[1]**2)]])
-    dS = riccati_derivative(S, A, B, Q, R)
+1. Derive the metric derivative and reproduce the matrix-order counterexample.
+2. Compute the alternating discrete product and compare it with its individual spectra.
+3. Solve the finite-horizon scalar example and explain why decreasing remaining cost does not imply decreasing state error.
+4. Verify the double-integrator ARE, spectral rate, and metric rate separately.
+5. Compare the endpoint pullback with the physical two-link mass matrix at straight and bent configurations.
+6. Verify the critically damped error-state certificate and identify why its simple energy proof is not strict.
+7. Compute the scalar noise variance for common and independent noise realizations.
+8. Combine flow and reset multipliers for several event intervals, then include event-time sensitivity in a non-grazing guard example.
+9. Define a golf outcome map and identify one state direction that is weakly observed by that outcome. Explain what additional measurements would distinguish low output sensitivity from active error correction.
 
-    # Contraction matrix
-    C = A.T @ S + S @ A + dS + 2*lam*S
+## References and Scope {.unnumbered}
 
-    # Should be negative definite
-    eigvals = jnp.linalg.eigvalsh(C)
-    return jnp.max(eigvals)
+The contraction definitions follow Lohmiller and Slotine, *On Contraction Analysis for Non-linear Systems*, Automatica 34(6), 683–696 (1998). The relevant Manchester and Slotine paper is *Control Contraction Metrics: Convex and Intrinsic Criteria for Nonlinear Feedback Design*, with the amendment linked above. Riccati and DDP identities can be checked against the linked MIT chapters; the numerical counterexamples and certificate code make the distinctions independently reproducible. The saltation review supplies the event-sensitivity framework.
 
-# Test
-Q = jnp.diag(jnp.array([10.0, 1.0]))
-R = jnp.array([[1.0]])
-S_init = jnp.diag(jnp.array([5.0, 2.0]))  # Guess
+These are mathematical and computational sources. They do not validate a particular golf intervention, neural objective, or physiological efficiency claim. The contribution here is a consistent chain from model assumptions through differential equations and feasible controls to testable outcome predictions.
 
-max_eig = check_contraction(x0, u0, S_init, params, Q, R, lam=1.0)
-print(f"Max eigenvalue: {max_eig:.4f}")
-print(f"Contracting: {max_eig < 0}")
-```
-
-**Output**:
-```
-Max eigenvalue: -0.3218
-Contracting: True
-```
-
-Success! The metric satisfies the contraction condition.
-
-### Complete Example: Contraction-DDP for Pendulum
-
-#### Full Implementation
-
-```python
-import jax
-import jax.numpy as jnp
-from jax import jit, grad, vmap, jacfwd
-import matplotlib.pyplot as plt
-
-# ========== Dynamics ==========
-@jit
-def dynamics(x, u, params):
-    m, l, b, g = params
-    theta, omega = x
-    dx = jnp.array([
-        omega,
-        (u - m*g*l*jnp.sin(theta) - b*omega) / (m*l**2)
-    ])
-    return dx
-
-@jit
-def discrete_dynamics(x, u, params, dt):
-    """RK4 integration"""
-    k1 = dynamics(x, u, params)
-    k2 = dynamics(x + 0.5*dt*k1, u, params)
-    k3 = dynamics(x + 0.5*dt*k2, u, params)
-    k4 = dynamics(x + dt*k3, u, params)
-    return x + (dt/6.0) * (k1 + 2*k2 + 2*k3 + k4)
-
-# ========== Linearization ==========
-@jit
-def linearize(x, u, params, dt):
-    """Compute A, B matrices via autodiff"""
-    A = jacfwd(discrete_dynamics, argnums=0)(x, u, params, dt)
-    B = jacfwd(discrete_dynamics, argnums=1)(x, u, params, dt)
-    return A, B
-
-# ========== Cost Function ==========
-@jit
-def running_cost(x, u, Q, R):
-    return 0.5 * (x @ Q @ x + u * R * u)
-
-@jit
-def terminal_cost(x, QT):
-    return 0.5 * x @ QT @ x
-
-# ========== Contraction Penalty ==========
-@jit
-def contraction_penalty(A, M, lam):
-    """Penalty for violating contraction condition"""
-    C = A.T @ M + M @ A + 2*lam*M
-    eigvals = jnp.linalg.eigvalsh(C)
-    max_eig = jnp.max(eigvals)
-    return jnp.maximum(0, max_eig)**2
-
-# ========== DDP Backward Pass ==========
-@jit
-def backward_pass(xs, us, params, Q, R, QT, dt, mu=0.0, lam=1.0):
-    """
-    Compute optimal gains K_t and value function S_t
-
-    Args:
-        mu: Penalty weight for contraction
-        lam: Desired contraction rate
-    """
-    T = len(us)
-    n = xs.shape[1]
-    m = 1
-
-    # Initialize value function
-    S = QT
-    v = jnp.zeros(n)
-
-    # Storage
-    Ks = jnp.zeros((T, m, n))
-    ks = jnp.zeros((T, m))
-
-    # Backward pass
-    for t in range(T-1, -1, -1):
-        x, u = xs[t], us[t]
-
-        # Linearize dynamics
-        A, B = linearize(x, u, params, dt)
-
-        # Compute metric (for contraction penalty)
-        M = S  # Use value function as metric
-
-        # Augmented cost matrices
-        Q_aug = Q + mu * grad(lambda M: contraction_penalty(A, M, lam))(M)
-
-        # Cost derivatives
-        l_x = Q_aug @ x
-        l_u = R * u
-        l_xx = Q_aug
-        l_uu = R
-        l_ux = jnp.zeros((m, n))
-
-        # Q-function expansion
-        Q_x = l_x + A.T @ v
-        Q_u = l_u + B.T @ v
-        Q_xx = l_xx + A.T @ S @ A
-        Q_ux = l_ux + B.T @ S @ A
-        Q_uu = l_uu + B.T @ S @ B
-
-        # Optimal gains
-        Q_uu_inv = 1.0 / Q_uu  # Scalar case
-        K = -Q_uu_inv * Q_ux
-        k = -Q_uu_inv * Q_u
-
-        # Value function update
-        v = Q_x + K.T @ Q_u
-        S = Q_xx - K.T @ Q_uu @ K
-
-        Ks = Ks.at[t].set(K)
-        ks = ks.at[t].set(k)
-
-    return Ks, ks
-
-# ========== DDP Forward Pass ==========
-@jit
-def forward_pass(x0, us, xs, Ks, ks, params, dt, alpha=1.0):
-    """Rollout with updated policy"""
-    T = len(us)
-    n = len(x0)
-
-    xs_new = jnp.zeros((T+1, n))
-    us_new = jnp.zeros(T)
-    xs_new = xs_new.at[0].set(x0)
-
-    for t in range(T):
-        x = xs_new[t]
-        u = us[t] + alpha * ks[t] + Ks[t] @ (x - xs[t])
-        xs_new = xs_new.at[t+1].set(discrete_dynamics(x, u, params, dt))
-        us_new = us_new.at[t].set(u)
-
-    return xs_new, us_new
-
-# ========== Main DDP Loop ==========
-def ddp_solve(x0, xT, T_horizon, params, Q, R, QT, dt,
-              max_iters=50, mu=0.0, lam=1.0):
-    """
-    Solve trajectory optimization via DDP
-
-    Args:
-        dt: Time step for discretization
-        mu: Contraction penalty weight (0 = classical DDP)
-        lam: Desired contraction rate
-    """
-    n = len(x0)
-    T = int(T_horizon / dt)
-
-    # Initialize trajectory
-    xs = jnp.linspace(x0, xT, T+1)
-    us = jnp.zeros(T)
-
-    costs = []
-
-    for iter in range(max_iters):
-        # Backward pass
-        Ks, ks = backward_pass(xs, us, params, Q, R, QT, dt, mu, lam)
-
-        # Forward pass with line search
-        step_accepted = False
-        for alpha in [1.0, 0.5, 0.25, 0.1]:
-            xs_new, us_new = forward_pass(x0, us, xs, Ks, ks, params, dt, alpha)
-
-            # Compute cost
-            cost = sum([running_cost(xs_new[t], us_new[t], Q, R)
-                       for t in range(T)])
-            cost += terminal_cost(xs_new[-1], QT)
-
-            # Accept step
-            if iter == 0 or cost < costs[-1]:
-                xs, us = xs_new, us_new
-                step_accepted = True
-                break
-
-        if not step_accepted:
-            print(f"Line search failed at iteration {iter}")
-            break
-
-        costs.append(cost)
-
-        # Convergence check
-        if iter > 0 and abs(costs[-1] - costs[-2]) < 1e-4:
-            print(f"Converged in {iter+1} iterations")
-            break
-
-    return xs, us, costs
-
-# ========== Run Experiment ==========
-# Parameters
-params = (1.0, 1.0, 0.1, 9.81)  # m, l, b, g
-dt = 0.02
-T_horizon = 2.0
-
-# Initial/final states
-x0 = jnp.array([jnp.pi, 0.0])  # Hanging down
-xT = jnp.array([0.0, 0.0])      # Upright
-
-# Cost matrices
-Q = jnp.diag(jnp.array([1.0, 0.1]))
-R = 0.01
-QT = jnp.diag(jnp.array([100.0, 10.0]))
-
-# Solve with classical DDP
-print("Solving with classical DDP...")
-xs_classical, us_classical, costs_classical = ddp_solve(
-    x0, xT, T_horizon, params, Q, R, QT, dt, mu=0.0
-)
-
-# Solve with contraction-DDP
-print("\nSolving with contraction-DDP...")
-xs_contraction, us_contraction, costs_contraction = ddp_solve(
-    x0, xT, T_horizon, params, Q, R, QT, dt, mu=10.0, lam=2.0
-)
-
-# ========== Visualization ==========
-t = jnp.linspace(0, T_horizon, len(xs_classical))
-
-fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-
-# Trajectory comparison
-axes[0,0].plot(t, xs_classical[:,0], 'b-', label='Classical DDP')
-axes[0,0].plot(t, xs_contraction[:,0], 'r--', label='Contraction-DDP')
-axes[0,0].set_ylabel('Angle (rad)')
-axes[0,0].legend()
-axes[0,0].grid(True)
-
-axes[0,1].plot(t, xs_classical[:,1], 'b-')
-axes[0,1].plot(t, xs_contraction[:,1], 'r--')
-axes[0,1].set_ylabel('Angular velocity (rad/s)')
-axes[0,1].grid(True)
-
-# Control
-axes[1,0].plot(t[:-1], us_classical, 'b-', label='Classical')
-axes[1,0].plot(t[:-1], us_contraction, 'r--', label='Contraction')
-axes[1,0].set_xlabel('Time (s)')
-axes[1,0].set_ylabel('Torque (Nm)')
-axes[1,0].legend()
-axes[1,0].grid(True)
-
-# Cost convergence
-axes[1,1].semilogy(costs_classical, 'b-o', label='Classical')
-axes[1,1].semilogy(costs_contraction, 'r--s', label='Contraction')
-axes[1,1].set_xlabel('Iteration')
-axes[1,1].set_ylabel('Cost')
-axes[1,1].legend()
-axes[1,1].grid(True)
-
-plt.tight_layout()
-plt.savefig('contraction_ddp_comparison.png', dpi=150)
-print("\nPlot saved as 'contraction_ddp_comparison.png'")
-```
-
-#### Expected Output
-
-```
-Solving with classical DDP...
-Converged in 12 iterations
-
-Solving with contraction-DDP...
-Converged in 18 iterations
-
-Plot saved as 'contraction_ddp_comparison.png'
-```
-
-**Observations**:
-1. Contraction-DDP requires more iterations (18 vs 12) due to additional constraint
-2. Final trajectories are smoother for contraction version
-3. Control effort is comparable
-
----
-
-## Conclusion
-
-This article established a rigorous connection between contraction theory and tangent space methods for optimal control. The key insights:
-
-## Theoretical Contributions
-
-1. **Conditional Duality Theorem** (Theorem 3.1): Under LQR-style assumptions, the Riccati solution $\mathbf{S}_t$ can be read as both:
-   - The value function (optimality)
-   - A contraction metric (stability)
-
-   This links two previously separate frameworks in a local setting.
-
-2. **Contraction-Constrained Optimization** (Theorem 4.1): Augmenting DDP with contraction penalties can provide local stability certificates when the basin, metric, and residual assumptions are verified.
-
-3. **Geometric Formulation** (Section 6): The framework can be phrased with Riemannian geometry, but coordinate-free claims require careful tensor definitions and transformation rules.
-
-## Practical Impact
-
-1. **Robotics**: Task-space controllers with explicit local convergence checks and simulation-based comparisons that still need physical validation.
-
-2. **Biomechanics**: A hypothesis that muscle synergies can be studied as contraction subspaces, requiring motion-capture, EMG, and perturbation evidence before drawing neural-control conclusions.
-
-3. **Algorithm Design**: Contraction-DDP provides a route to stability certificates, with computational cost depending on solver choice, sparsity, and problem dimension.
-
-## Future Directions
-
-1. **Stochastic Extension**: Incorporate noise via stochastic DRE (@eq-stochastic-riccati-conjectural).
-
-2. **Learning Metrics**: Use machine learning to discover optimal contraction metrics from data.
-
-3. **Hybrid Systems**: Extend to switched dynamics (contact, walking, manipulation).
-
-4. **High-Dimensional Systems**: Scalable SDP solvers for $n > 100$ states.
-
-## Key Equations Summary
-
-| Concept | Equation | Number |
-|---------|----------|--------|
-| Contraction condition | $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}$ | (@eq-linear-contraction) |
-| Differential Riccati | $-\dot{\mathbf{S}} = \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q}$ | (@eq-differential-riccati) |
-| Algebraic Riccati | $\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q} = 0$ | (@eq-algebraic-riccati) |
-| Duality | $\mathbf{M} = \mathbf{S}$ | (Theorem 3.1) |
-| Contraction rate | $\lambda = -\frac{1}{2} \log \rho(\mathbf{A} - \mathbf{B} \mathbf{K})$ | (Theorem 3.1) |
-
-## Implementation Resources
-
-The code snippets above are self-contained and illustrative; each can be run directly
-with `numpy`, `scipy`, and (for the autodiff examples) `jax`. There is no separate
-companion repository.
-
-Includes:
-- JAX implementation of Contraction-DDP
-- CVXPY solvers for metric optimization
-- Benchmark problems (cartpole, pendulum, robot arm)
-- Visualization tools
-
----
-
-<section class="laymans-terms">
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <h2>In Layman's Terms</h2>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This article explains why some optimal-control calculations and some stability calculations can share the same local mathematical objects.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Two-for-One Deal</h3>
-        <p>
-          Engineers often plan a path first, then add feedback to keep the system near that path. In restricted LQR-like settings, the same calculation that prices deviations from a path can also help define feedback that reduces small deviations.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A rubber band. The tension that pulls it back to its shape is the same force that defines its shape in the first place.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Funnel Effect</h3>
-        <p>
-          Some systems behave like a funnel only inside a verified region: nearby errors move back toward the reference trajectory. The analysis here asks when an optimal-control calculation can provide that local funnel and how its limits should be checked.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A coin spiral at a museum. No matter how you drop the coin, the curved shape of the funnel forces it into a specific spiral path.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Curved Space Navigation</h3>
-        <p>
-          To make this work, distance is measured by how costly or dynamically important an error is. That metric can guide both path correction and stability analysis, but it does not by itself prove global safety.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Walking on a trampoline. If you stand in the middle, the trampoline curves down and naturally pulls everything toward you.
-        </div>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> Under the right local assumptions, performance and error correction can be designed together. The useful question is where those assumptions hold and how the certified region is measured.
-      </div>
-    </div>
-  </div>
-</section>
-
----
-
-<section class="critics-comments">
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <h2>Critics' Comments</h2>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        The main limitations are about how far local certificates can be extended:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-<span class="critic-label">Alternative View:</span>
-<h3>Global Claims from Local Linearization</h3>
-        </div>
-        <p class="critic-argument">The unification relies on tangent-space linearization ($\delta \dot{\mathbf{x}} = \mathbf{A}(t) \delta \mathbf{x}$). This supports local analysis around a state or trajectory, but global contraction requires uniform metric bounds across the relevant region. Without those bounds, a sequence of pointwise LQR metrics is only a local certificate, not a global proof.</p>
-        <div class="author-response">
-<strong>Our Response:</strong> This is the central boundary condition. The certificates discussed here are local unless a uniformly positive-definite metric and residual bounds are established over the full region of interest. Proving global stability for strongly nonlinear systems remains outside the evidence provided by this article.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-<span class="critic-label">Alternative View:</span>
-<h3>The $O(n^4)$ Computational Bottleneck</h3>
-        </div>
-        <p class="critic-argument">The proposed Contraction-DDP algorithm may require repeated metric optimization, often through semidefinite programs or structured approximations. The runtime depends on problem structure and solver choice, but the computational burden can dominate high-DOF or contact-rich systems.</p>
-        <div class="author-response">
-<strong>Our Response:</strong> This is a practical limitation. The current argument is most credible for offline studies, lower-dimensional systems, or cases with exploitable sparsity. Claims about real-time high-DOF control require timing data and solver-specific validation.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-<span class="critic-label">Alternative View:</span>
-<h3>Brittleness to Unmodeled Dynamics</h3>
-        </div>
-        <p class="critic-argument">The framework relies on a dynamics model $\mathbf{f}(\mathbf{x}, \mathbf{u})$ and on smoothness assumptions in the region being certified. Stiction, backlash, compliance, sensor delay, and contact transitions can violate those assumptions and invalidate a certificate computed for a cleaner model.</p>
-        <div class="author-response">
-<strong>Our Response:</strong> This is an empirical concern, not a minor implementation detail. A metric can help express sensitivity inside the model, but deployment requires model-error bounds, disturbance tests, and evidence that the certified region survives hardware effects.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> These objections should be treated as scope conditions for the article's claims.
-      </div>
-    </div>
-  </div>
-</section>
-
----
-
-## References {.unnumbered}
-
-1. Lohmiller, W., & Slotine, J. J. E. (1998). On contraction analysis for non-linear systems. *Automatica*, 34(6), 683-696.
-
-2. Mayne, D. Q. (1966). A second-order gradient method for determining optimal trajectories of non-linear discrete-time systems. *International Journal of Control*, 3(1), 85-95.
-
-3. Khatib, O. (1987). A unified approach for motion and force control of robot manipulators: The operational space formulation. *IEEE Journal on Robotics and Automation*, 3(1), 43-53.
-
-4. Todorov, E., & Jordan, M. I. (2002). Optimal feedback control as a theory of motor coordination. *Nature Neuroscience*, 5(11), 1226-1235.
-
-5. Manchester, I. R., & Slotine, J. J. E. (2017). Control contraction metrics and model-based control of nonlinear systems. *IEEE Transactions on Automatic Control*, 62(9), 4506-4521.
-
-6. Tseng, P. (1991). Dual coordinate ascent methods for non-strictly convex minimization. *Mathematical Programming*, 59(1-3), 231-247.
-
-7. Boyd, S., El Ghaoui, L., Feron, E., & Balakrishnan, V. (1994). *Linear Matrix Inequalities in System and Control Theory*. SIAM.
-
-8. Tedrake, R. (2009). LQR-Trees: Feedback motion planning on sparse randomized trees. In *Robotics: Science and Systems*.
-
-9. Spong, M. W., Hutchinson, S., & Vidyasagar, M. (2006). *Robot Modeling and Control*. Wiley.
-
-10. Jouffroy, J., & Slotine, J. J. E. (2004). Methodological remarks on contraction theory. In *Proceedings of the 43rd IEEE Conference on Decision and Control* (Vol. 3, pp. 2537-2543).
-
-11. Slotine, J. J. E., & Li, W. (1991). *Applied Nonlinear Control*. Prentice Hall.
-
----
-
-**Acknowledgments**: This work synthesizes ideas from optimal control, differential geometry, and biomechanics.
-
-**License**: This article and accompanying code are released under CC BY 4.0.
+**License**: This article and accompanying example code are released under CC BY 4.0.

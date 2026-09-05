@@ -4,6 +4,9 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
 
 ## Technical Content Review
 
+- PR #4153 merged as `d5a55f229d190e0dda71d7c55f0d5e8f40518281` after every final-head check passed: 3,728 Python tests, 92.29% coverage, all eight textbook builds, and browser/accessibility checks. Deployment run 33957446845 is separate. Seven finding issues are closed; the corpus epic remains open.
+- Continued review under #4158 corrects the long contraction reference and generated LaTeX: differential metric tests, Riccati scope, DDP/penalty claims, task and muscle dynamics, noise, and hybrid events. Eight counterexample/regression checks pass. Its historical critique receives a revision-status note, with existing reference anchors preserved.
+
 - PR #4153 publishes the first substantial correction wave; the full corpus audit remains open under epic #4009.
 - Issue #4156 rebuilds the long constrained-mechanics chapter in paired LaTeX/Quarto: mass-metric duality, inertial loads, constrained input rank, grip/ground mechanics, control conditions, identifiability, and geometric phase. Six independent/regression checks pass; Geometry Volume I is rebuilt again for this chapter.
 - Issue #4157 reconciles the long superposition article's three-formulation derivations, summaries, and conclusions; fixes body-frame transport, spatial inertia, 2R inertia, and biological/causal overclaims. Five new checks pass. The first-use counterfactual qualifier and dynamic textbook cross-reference also pass their corrected source checks.
