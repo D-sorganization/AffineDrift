@@ -11,246 +11,56 @@ format:
     code-fold: true
 ---
 
-## Introduction
+## What Inverse Dynamics Can Identify
 
-You're a detective. A golfer swings the club and hits a ball. You have perfect video of what happened—every position, every acceleration, every twist. The question: what forces did the golfer apply? This is inverse dynamics: detective work, working backward from what happened to figure out what must have caused it.
+With a declared mechanical model, mass properties, motion derivatives and known external loads, inverse dynamics estimates the net generalized input needed to reproduce that motion. It already accounts for gravity and inertial coupling. Control-affine analysis reorganizes the same equations and supplies explicit interventions; it does not recover a missing input by subtracting gravity a second time.
 
-But here's the detective's dilemma: imagine you see a car accelerating downhill at constant speed. Did the driver press the gas (active force) or is the hill doing it (passive drift)? Without knowing the slope of the hill, you can't tell. You see the acceleration, but you can't separate the driver's input from gravity's free push.
+What remains difficult is identifying the physiological source of that input. Multiple muscle recruitment patterns, bilateral hand-force distributions and impedance states can be compatible with the same motion. Separating those possibilities requires additional evidence.
 
-The same problem haunts inverse dynamics in biomechanics. You see the club accelerating. But that acceleration comes from two modeled sources: drift (state-dependent mechanics) and applied input. Classical inverse dynamics gives you a model-consistent net load, not muscle activation, metabolic cost, or conscious intent. A drift/control split can clarify mechanical attribution while leaving those physiological quantities unidentified.
+## Applied Load, Drift and Resultant
 
-This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) family and Zero Velocity Counterfactual (ZVCF) solve the detective's dilemma by separating passive from active contributions.
+{{< include ../_includes/mechanics-inverse-dynamics.qmd >}}
 
-## Classical Inverse Dynamics and Its Limitations
+## From Generalized Torque to Actuator Input
 
-The classical rigid-body dynamics of the system can be written as
+If $Bu=\tau_{\mathrm{ID}}$ and $B$ has full column rank, a consistent load has a unique input, $u=B^+\tau_{\mathrm{ID}}$. First check that $BB^+\tau_{\mathrm{ID}}=\tau_{\mathrm{ID}}$: a residual indicates inconsistency or noise, not an identified hidden muscle.
 
-$$
-\underbrace{M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}}}_{\tau_{\mathrm{ID}}} = \tau_{\mathrm{input}},
-$$
+With redundant actuators, $u=B^+\tau_{\mathrm{ID}}+n$ for $n\in\ker B$. Muscle nonnegativity, force–length/velocity properties, activation dynamics and independent measurements restrict this family. A minimum-norm solution is an assumption about allocation, not an observation of the nervous system.
 
-where $M(q)$ is the inertia matrix, $C(q,\dot{q})\dot{q}$ contains Coriolis and centrifugal forces, $g(q)$ contains gravitational forces, and $\tau_{\mathrm{passive}}$ includes passive elastic and damping forces. The left-hand side is exactly the **total inverse-dynamics torque** $\tau_{\mathrm{ID}}$ — the generalized torque required to reproduce the measured motion. For the actual motion the applied (input) torque equals this total, $\tau_{\mathrm{input}} = \tau_{\mathrm{ID}}$; that identity is what classical inverse dynamics computes.
+An inverse-dynamics implementation that omits passive tissue forces estimates a net joint load that includes them. A model that explicitly subtracts those forces estimates a different residual input. Declare that boundary before comparing results. This is especially important when impedance was identified from an actively contracting subject.
 
-The difficulty is not in computing $\tau_{\mathrm{ID}}$ but in *attributing* it. We re-group the same total — not adding a second equation — into an inertial part and a drift part. Define the **drift torque** as the configuration- and velocity-dependent passive generalized force evaluated along the actual trajectory, and the **inertial torque** as the part carried by the mass matrix:
+## Configuration Loads and Counterfactual Trajectories
 
-$$
-\tau_{\mathrm{drift}}(x) := C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}},
-\qquad
-\tau_{\mathrm{inertial}} := M(q)\ddot{q},
-$$
+{{< include ../_includes/mechanics-zero-velocity.qmd >}}
 
-so that $\tau_{\mathrm{ID}} = \tau_{\mathrm{inertial}} + \tau_{\mathrm{drift}}$ (matching the decomposition in [inverse-dynamics](inverse-dynamics.html) and [drift-components-wrench-double-pendulum](drift-components-wrench-double-pendulum.html)). The *active* contribution is the residual after removing the drift the zero-input (ZTCF) trajectory would require:
+## Hand Forces and Energy Transfer
 
-$$
-\tau_{\mathrm{input}}^{\mathrm{active}} = \tau_{\mathrm{ID}} - \tau_{\mathrm{drift}}^{\mathrm{ZTCF}}.
-$$
+{{< include ../_includes/mechanics-wrench-inference.qmd >}}
 
-Because the drift and inertial parts are not separately observable from kinematics alone, classical inverse dynamics — which yields only the total $\tau_{\mathrm{ID}}$ — inherently conflates passive and active contributions.
+## Why the Mechanisms Are Intertwined
 
-## Why Classical Inverse Dynamics Cannot Identify Input Torques
+Earlier muscle work changes segment motion and shaft deformation. The resulting state changes current gravitational leverage, inertial coupling and the effect of a new torque. A force can redirect club motion with little power in its normal direction, while another component supplies work. The complete wrench power must be calculated before inferring energy transfer.
 
-The input torques satisfy
+A zero-input branch answers what a specified model predicts after one declared intervention. It does not establish what a golfer would feel, whether a motion is effortless, or which coaching cue improves it. A frozen-impedance branch and a muscle-relaxation experiment are different interventions.
 
-$$
-\tau_{\mathrm{input}} = Bu,
-$$
+## An Evidence-Driven Analysis
 
-where $B$ maps input controls into generalized joint torques. Solving for $u$ given only $\tau_{\mathrm{ID}}$ would require knowing $\tau_{\mathrm{drift}}$, because
+1. Define the question and measured outcome: net grip wrench, club speed, segment energy, or a tissue-specific load.
+2. State the model boundary, coordinate conventions, external loads and passive-force treatment.
+3. Propagate motion, force, parameter and filtering uncertainty into the inferred quantities.
+4. Check forward/inverse consistency and analytic limits before making a same-state attribution.
+5. Test whether conclusions survive alternative contact, muscle and shaft models.
+6. Use independent measurements to assess external validity. Agreement between two rearrangements of the same equations establishes consistency only.
 
-$$
-Bu = \tau_{\mathrm{ID}} - \tau_{\mathrm{drift}}.
-$$
+A useful falsifier is a model that reproduces the measured motion but predicts hand forces outside independent measurement uncertainty. Another is a sign or ranking of an attribution that reverses under plausible parameter changes. Report such outcomes rather than presenting a mechanically possible explanation as the unique cause.
 
-However, $\tau_{\mathrm{drift}}$ is not observable directly from kinematic measurements. Drift dynamics include inertial effects, Coriolis forces, gravitational loading, shaft deformation forces, joint passive forces, and geometric coupling terms. Many of these require full dynamic simulation or model-based estimation and cannot be separated from $\tau_{\mathrm{input}}$ using classical inverse dynamics alone.
+## In Plain Language
 
-Thus, classical inverse dynamics cannot provide an unambiguous estimate of muscular effort in a drift-dominated system such as the golf swing. Even a model-perfect net input torque remains compatible with different muscle recruitment, co-contraction, and passive-impedance states.
+Watching a car travel down a hill does not reveal engine effort from speed alone. Given acceleration, slope, mass and resistance, ordinary mechanics can estimate the net driving force. It still cannot tell how the driver produced that force or how hard the driver felt they were working. The golf-swing distinction is the same: net mechanical input can be estimated under a model; muscle recruitment, sensation and strategy need further evidence.
 
-## Drift--Input Decomposition and Affine Structure
+## Related Articles
 
-In the affine form, the decomposition of total generalized forces is
-
-$$
-F_{\mathrm{total}} = F_{\mathrm{drift}} + F_{\mathrm{input}}.
-$$
-
-Therefore, the active input forces can be computed only if the drift forces are known:
-
-$$
-F_{\mathrm{input}} = F_{\mathrm{total}} - F_{\mathrm{drift}}.
-$$
-
-Classical inverse dynamics attempts to recover $F_{\mathrm{total}}$ but has no mechanism for computing $F_{\mathrm{drift}}$. This is where counterfactual simulation becomes essential.
-
-## Pointwise Drift and ZTCF Trajectories
-
-The Zero Torque Counterfactual (ZTCF) simulates the dynamics under $u(t) \equiv 0$:
-
-$$
-\dot{x} = f(x).
-$$
-
-At the branch state, the zero-input solve provides a pointwise drift-force evaluation:
-
-$$
-F_{\mathrm{drift}}(t_0) = \text{forces from the zero-input solve at }x(t_0),
-$$
-
-including all inertial, gravitational, Coriolis, centrifugal, and elastic shaft contributions declared by the model. Integrating from that state produces a branched ZTCF trajectory. Once the trajectories diverge, their force difference is a counterfactual outcome difference rather than a same-state algebraic attribution.
-
-## ZVCF for Configuration-Dependent Drift
-
-The Zero Velocity Counterfactual (ZVCF) sets all velocities to zero while keeping the configuration fixed, then evaluates the drift at this zero-velocity state. This yields configuration-dependent forces (gravity and elastic restoring forces) without velocity-dependent terms (Coriolis, centrifugal). The forces obtained from the ZVCF correspond to
-
-$$
-F_{\mathrm{ZVCF}} = f(q, 0) = F_{\mathrm{gravity}} + F_{\mathrm{elastic}}.
-$$
-
-The ZVCF therefore isolates the configuration-dependent passive component of generalized forces. The **pure** input is obtained by subtracting the *full* drift, $F_{\mathrm{input}} = F_{\mathrm{total}} - F_{\mathrm{drift}}$ (the drift the ZTCF provides at the branch instant), **not** by subtracting the ZVCF: $F_{\mathrm{total}} - F_{\mathrm{ZVCF}}$ retains the velocity-dependent drift (Coriolis/centrifugal), so it equals $F_{\mathrm{input}} + F_{\mathrm{vel.drift}}$, not input alone. In the downswing the velocity-dependent drift is large, so this distinction matters.
-
-## Hand--Club and Ground Reaction Forces as Mixed Forces
-
-Measured hand--club forces and ground reaction forces satisfy
-
-$$
-F_{\mathrm{measured}} = F_{\mathrm{drift}} + F_{\mathrm{input}}.
-$$
-
-Without drift--input decomposition, classical inverse dynamics cannot distinguish passive contributions (such as inertial loading or shaft bending) from active contributions transmitted through joint torques. Counterfactual simulation enables this separation by computing drift and input terms independently.
-
-The [proximal-to-distal hand-path study](proximal-distal-energy-transfer.html#force-along-the-hand-path) applies this distinction to the equivalent grip force reported in golf inverse dynamics. Its new numerical attribution remains fail-closed until an exact source commit and artifact hashes are pinned.
-
-## Causal Interpretation of Inverse Dynamics in Affine Systems
-
-Because drift is the causal residue of all prior states, the generalized forces required to reproduce a motion necessarily encode the system's history. Classical inverse dynamics at time $t$ therefore conflates contributions from past passive dynamics with present-time active inputs. The affine decomposition clarifies this causality by separating drift from input forces, allowing torque inference to be interpreted in terms of the system's geometry and dynamic history.
-
-## Implications for Biomechanics Research
-
-The affine decomposition, ZTCF, and ZVCF enable:
-- accurate estimation of input torques,
-
-- separation of passive and active contributions to interaction forces,
-
-- interpretation of large forces without assuming high muscular effort,
-
-- reproducible inference independent of equipment or technique,
-
-- improved machine learning models based on drift-removed data.
-This section provides the conceptual and computational foundation for replacing classical inverse dynamics with a more rigorous framework grounded in nonlinear affine dynamics.
-
-## Limitations
-
-:::{.callout-warning}
-The ZTCF and ZVCF framework, while powerful, operates within several constraints that practitioners should recognize:
-
-1. **Full model and initial conditions required**: ZTCF computation requires knowledge of the complete system model—inertia matrices, damping coefficients, gravity, and shaft properties. Without precise initial conditions, the counterfactual trajectory diverges rapidly, compounding error in the estimated drift forces.
-
-2. **Computational cost scales with complexity**: As model fidelity increases (more degrees of freedom, flexible segments, joint stiffness distributions), the cost of running high-fidelity counterfactual simulations scales superlinearly. For real-time biomechanics or online coaching, this becomes prohibitive.
-
-3. **Assumes perfectly known system parameters**: The drift estimation is only as good as the parameterization. In practice, mass distributions, joint friction, and passive elastic properties are approximated. Small parameter errors can create large errors in drift estimation, particularly when inertial forces dwarf muscular contributions.
-
-4. **Cannot distinguish voluntary braking from reflexive co-contraction**: If a golfer is simultaneously contracting agonist and antagonist muscles (co-contraction), the ZVCF isolation sees only the *net* input torque. It cannot separate deliberate stabilization efforts from reflex responses, potentially mischaracterizing the cognitive control component of motion.
-:::
-
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Here is a simplified explanation of why standard methods struggle to measure golfer effort and how our new approach solves it.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Hidden Hill Problem</h3>
-        <p>Imagine driving a car. Your speedometer shows your speed, but it doesn't tell you how hard the engine is working. You could be speeding up because you are pressing the gas (effort) or because you are rolling down a steep hill (gravity/drift).</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A <strong>Speedometer on a Hill</strong>. Standard methods see the speed (Total Force) but can't tell if it's from the engine (Muscles) or the hill (Drift).
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Separating the Electric Assist</h3>
-        <p>The golf swing is like riding an electric bike. You have your own pedaling (Input) and the motor/momentum helping you (Drift). To know how much exercise you are getting, you need to know exactly how much the bike is helping you.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> An <strong>Electric Bike</strong>. We need to separate your pedaling effort from the "free speed" provided by the bike's momentum and motor.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The "Weighing the Pet" Method</h3>
-        <p>To measure just your muscular effort, we use a trick. We calculate what the club would do if you stopped trying (Drift), and subtract that from what actually happened (Total). The difference is your contribution.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> <strong>Weighing a Pet</strong>. You step on the scale holding the pet (Total), then step on alone (Drift). Subtracting your weight reveals the pet's weight (Input) without weighing it directly.
-        </div>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> By subtracting the drift torques (inertial, gravitational, Coriolis/centrifugal, and elastic) from the total torques, we isolate the <em>modeled</em> input torques attributable to the golfer --- subject to the limitations of the model (see &sect;Limitations below). Soft tissue, muscle co-contraction, and unmodeled contact forces are absorbed into this residual and are not separated out.
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Is "Drift" Just a Semantic Rebranding?</h3>
-        </div>
-        <p class="critic-argument">
-          Classical inverse dynamics already calculates inertial, Coriolis, and gravitational terms ($M\ddot{q} + C\dot{q} + G$). Skeptics argue that defining "drift" as the sum of these passive terms does not introduce a new physical insight but merely groups existing terms differently. If the model ($M, C, G$) is known, standard methods can already isolate the "net muscle moment" by simple subtraction, making the affine decomposition mathematically equivalent to existing practices rather than a novel inference method.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> While the equations are algebraically equivalent, the <em>inference</em> capability differs. Classical methods treat the total residual torque as the input. Our framework treats the <em>counterfactual trajectory</em> (ZTCF) as the baseline. The distinction is critical when the system is under-actuated or when we need to estimate what the system <em>would have done</em> without input, which is a trajectory question, not just an instantaneous torque subtraction.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>The Static Fallacy of ZVCF</h3>
-        </div>
-        <p class="critic-argument">
-          The instantaneous Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent drift by evaluating zero velocity and zero declared control at fixed configuration. It does not isolate input force or estimate biological capacity. Hill-type force--velocity mechanics instead constrain the admissible control set $\mathcal U(x)$; ignoring them can overstate control capacity in a high-velocity movement.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a valid limitation. The ZVCF isolates the <em>control signal contribution</em> to the generalized force, not the maximal muscular capacity. We assume the control input $u$ enters linearly ($G(x)u$). Future work must integrate muscle dynamics into $f(x)$ so that "drift" includes passive muscle properties, but for rigid-body analysis, ZVCF correctly identifies the component of force attributable to the controller's command at that instant.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Model Sensitivity & Error Propagation</h3>
-        </div>
-        <p class="critic-argument">
-          Separating "Drift" and "Input" relies on a perfect forward model. In practice, errors in mass properties or joint parameters are inevitable. Because the "Drift" forces (inertial/centrifugal) are often orders of magnitude larger than the "Input" forces in a ballistic swing, a small percentage error in the drift model could result in a calculated input error that is larger than the input signal itself. Classical inverse dynamics suffers this too, but the explicit separation might imply a false precision.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge that model error is the primary limiting factor. However, explicit drift estimation allows us to bound this error more effectively than lumped inverse dynamics. By validating the passive ZTCF trajectory against passive physical swing experiments (e.g., the "Iron Byron" without motor torque), we can calibrate the drift model independently of the active inputs.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding of the limitations and requirements of affine decomposition.
-      </div>
-    </div>
-  </div>
-</section>
+- [Interpretation of Inverse Dynamics](inverse-dynamics.html)
+- [Zero-Torque Counterfactual](zero-torque-counterfactual.html)
+- [Force Along the Hand Path](proximal-distal-energy-transfer.html#force-along-the-hand-path)
+- [The Theory Series](theory-part1.html)

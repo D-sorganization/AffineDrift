@@ -148,9 +148,7 @@ The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. T
 
 ::: {.callout-note}
 ## Assumption of Viscous-Only Damping
-This invariance proof strictly relies on the assumption that all dissipative forces $h_{\text{dissip}}$ depend only on state $(q, \dot{q})$. Specifically, we assume damping is viscous (linear in velocity).
-If the system included **Coulomb friction** ($\tau_{fric} = \mu F_N \operatorname{sgn}(\dot{q})$), where the normal force $F_N$ depends on constraint forces (and thus on input $u$), the drift term $f(x)$ would become input-dependent ($\nabla_u f \neq 0$), violating the affine structure.
-For the high-speed ballistic phases of the golf swing, we assume inertial forces dominate frictional forces ($F_{\text{inertia}} \gg \mu F_N$), justifying this viscous-only approximation.
+Control-affinity does not require linear viscous damping: any retained state-only dissipative load can enter $h(x)$. Smoothness is a separate condition. Coulomb friction is nonsmooth at zero slip; in a fixed sliding mode, a normal force affine in $u$ can leave friction affine in $u$ after regrouping. Contact switching, stiction and nonlinear input-dependent loads require a mode-specific solve or an inclusion. Their importance cannot be dismissed from swing speed alone.
 :::
 
 $\square$
@@ -184,7 +182,7 @@ Drift invariance has three key consequences for the force decomposition.
 
 **(1) Passive and active forces are formally separable.**
 
-The total generalized torque from inverse dynamics satisfies
+The resultant generalized load, defined as $	au_{\text{total}}=M\dot v$ rather than the inverse-dynamics applied load, satisfies
 
 $$\tau_{\text{total}}(t)
   = 
@@ -192,7 +190,7 @@ $$\tau_{\text{total}}(t)
   +
   \tau_{\text{input}}(t),$$
 
-where $\tau_{\text{drift}}$ is computed by evaluating the passive terms at the actual state. Because $f(x)$ is input-invariant, $\tau_{\text{drift}}$ depends only on the state and model parameters, not on the golfer's actions.
+where $\tau_{\text{drift}}$ is computed by evaluating the passive terms at the actual state. Because $f(x)$ is input-invariant, $\tau_{\text{drift}}$ depends only on the state and model parameters, not directly on instantaneous input at fixed state; previous inputs generally shaped that state.
 
 **(2) Torque effectiveness can be evaluated cleanly.**
 
@@ -213,7 +211,7 @@ Any modification to:
 
 changes $f(x)$.
 
-In contrast, changing the torque profile $u(t)$ leaves $f(x)$ unchanged. This separation is the foundation for counterfactual analysis, optimization of torque profiles, and sensitivity studies.
+Changing the torque profile leaves the function $f$ unchanged for a fixed plant, but generally changes $x(t)$ and therefore the sampled drift $f(x(t))$. This separation is the foundation for counterfactual analysis, optimization of torque profiles, and sensitivity studies.
 
 ### Velocity Dependence vs. Torque Dependence
 
@@ -255,11 +253,11 @@ Thus, even with realistic physiological limitations,
 - the decomposition $\dot{x} = f(x) + G(x)u$ remains valid,
 - the torque decomposition $\tau_{\text{total}} = \tau_{\text{drift}} + \tau_{\text{input}}$ remains valid,
 - ZTCF and ZVCF remain fully defined,
-- causal attributions remain meaningful within the model.
+- declared model-intervention comparisons remain defined, subject to feasibility and identifiability.
 
 ### Interpretational Scope
 
-Drift invariance enables strong causal statements, but only *within the mechanical model*. Real neuromuscular systems impose:
+Drift invariance defines equation-level bookkeeping. Causal interpretation additionally requires a specified intervention and identifiable model. Real neuromuscular systems impose:
 
 - activation dynamics,
 - delays,
@@ -267,165 +265,13 @@ Drift invariance enables strong causal statements, but only *within the mechanic
 - physiological force limits,
 - state-dependent strength variations.
 
-These appear in the present framework only through the feasible input set $\mathcal{U}(x)$. The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints. Interpretations must therefore remain explicitly mechanical.
+A static feasible input set $\mathcal{U}(x)$ can represent instantaneous torque bounds, but does not by itself encode activation history, delay, or fatigue. Those require additional states, history or dynamic constraints. The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints. Interpretations must therefore remain explicitly mechanical.
 
-Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components $f(x)$ and $G(x)$ are not merely vector fields; they are distinct model terms: $f(x)$ encodes the state-dependent dynamics (gravity, inertia, stiffness, velocity-dependent terms) while $G(x)u$ represents the modeled applied-input contribution [@isidori1995nonlinear; @bullo2004geometric]. Neither term alone identifies muscle activation or biological effort.
+Having established that the drift field is a declared vector field, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components $f(x)$ and $G(x)$ are not merely vector fields; they are distinct model terms: $f(x)$ encodes the state-dependent dynamics (gravity, inertia, stiffness, velocity-dependent terms) while $G(x)u$ represents the modeled applied-input contribution [@isidori1995nonlinear; @bullo2004geometric]. Neither term alone identifies muscle activation or biological effort.
 
 ## Force and Torque Taxonomy via the Affine Mapping
 
-We can now synthesize the **Control-Affine Form** (Part I), the **Counterfactual Baselines** (Part II), and the **Drift Invariance** property (Section 1) into a unified *Force Taxonomy*.
-
-This taxonomy classifies the generalized forces acting within the golfer--club--shaft system. It is purely mechanical and applies directly to any control-affine multibody model of the form
-
-$$\dot{x} = f(x) + G(x)u.$$
-
-It separates forces into distinct causal categories based on their origin in the equations of motion rather than their magnitude or timing.
-
-This taxonomy applies to:
-
-- generalized torques at joints,
-- internal forces transmitted through the kinetic chain,
-- shaft reaction forces,
-- hand forces, whether measured or derived.
-
-::: {.callout-note}
-## Applied Hand-Path Evidence
-
-The [proximal-to-distal hand-path article](proximal-distal-energy-transfer.html#force-along-the-hand-path)
-defines the matching force, impulse, power, and work estimands. Its new numerical
-results remain withheld until a compact evidence snapshot is pinned to an exact
-merged source commit.
-:::
-
-The categories are defined algebraically and can be computed from simulation or from motion-capture data via inverse dynamics.
-
-### Total Generalized Force
-
-At any time $t$, inverse dynamics yields the total generalized torque:
-
-$$\tau_{\text{total}}(t)
-  =
-  \text{ID}\big(x(t),\dot{x}(t)\big),$$
-
-consistent with the equations of motion. This total force is the sum of all mechanical contributions and is the unique torque vector that reproduces the observed motion.
-
-We now partition $\tau_{\text{total}}$ into components.
-
-### Category 1: Configuration-Dependent Drift Forces
-
-These are modeled forces present due to configuration alone, independent of velocity and the declared torque input. They are obtained from the *instantaneous Zero Velocity Counterfactual* (ZVCF) evaluation:
-
-$$x^{\mathrm{ZVCF}} = (q,\, 0,\, \eta,\, 0),$$
-
-and are defined as:
-
-$$\tau_{\mathrm{ZVCF}}(t)
-  =
-  \tau_{\text{config}}\big(q(t),\eta(t)\big).$$
-
-Explicitly, this torque corresponds to the gradient of the potential energy (gravity and elasticity) projected into the joint space:
-$$
-\tau_{\text{config}} = G(q,\eta) + J_{s}^T K_s \eta,
-$$
-where $G(q,\eta)$ is the generalized gravitational vector and $J_s^T K_s \eta$ represents the projection of shaft elastic forces onto the rigid-body coordinates. These forces include:
-
-- gravitational torques,
-- elastic shaft forces (restoring stiffness),
-- geometric coupling forces that depend on configuration,
-- static interaction forces between rigid and flexible components.
-
-They represent the "static loading" the system experiences if momentarily frozen in place at the same posture.
-
-### Category 2: Velocity-Dependent Drift Forces
-
-These are passive forces that depend on velocities but not on applied torques. Subtracting the ZVCF torque from the full drift torque gives:
-
-$$\tau_{\mathrm{vel.\,drift}}(t)
-  =
-  \tau_{\text{drift}}(t) - \tau_{\mathrm{ZVCF}}(t).$$
-
-Analytically, this term isolates the velocity-dependent nonlinearities:
-$$
-\tau_{\mathrm{vel.\,drift}} = C(q,\dot{q},\eta,\dot{\eta}) \dot{q}_{\text{sys}} + \text{Damping Terms}.
-$$
-Velocity-dependent drift forces include:
-
-- Coriolis and centrifugal forces,
-- inertial coupling terms induced by multi-segment motion,
-- geometric stiffness (centrifugal stiffening) forces, which act as a velocity-dependent restoration term,
-- shaft damping forces proportional to $\dot{\eta}$,
-- any passive joint damping.
-
-These forces can be large---often dominant---in fast regions of the swing (e.g., late downswing).
-
-### Category 3: Input (Torque-Driven) Forces
-
-These forces arise from the applied torque channels represented in the model and are defined by:
-
-$$\tau_{\mathrm{input}}(t)
-  =
-  \tau_{\text{total}}(t) - \tau_{\text{drift}}(t).$$
-
-Here, $\tau_{\text{drift}}$ is the passive drift torque evaluated along the actual trajectory, using the same $x(t)$ as the total torque:
-
-$$\tau_{\text{drift}}(t)
-  =
-  \begin{bmatrix}
-    M_{qq}(q,\eta) & M_{q\eta}(q,\eta)
-  \end{bmatrix}
-  a_{\text{drift}}\big(x(t)\big),$$
-
-acting on the **full** drift acceleration (rigid and flexible), matching the Part 2 definition so the recoil coupling $M_{q\eta}\ddot{\eta}_{\text{drift}}$ is retained rather than dropped.
-
-By construction, $\tau_{\mathrm{input}}$ contains the modeled mechanical effect of applied torques. It is a net mechanical quantity, not a unique muscle-force, activation, or effort estimate.
-
-This subtraction is valid precisely because of the affine structure derived in Part I. Recall that the input acceleration is given by $A_{\text{input}}(x)u$. The 'Input Force' defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix [@featherstone2008rigid]. Crucially, it captures not just the direct drive on the joints, but also the forces induced by the coupling ratio ($\Gamma$) acting on the flexible shaft. Thus, $\tau_{\text{input}}$ represents the complete mechanical footprint of the active control.
-
-### Category 4: Mixed Forces (Interaction Effects)
-
-Although drift and input contributions add at the same state in the equations of motion,
-
-$$\tau_{\text{total}} = \tau_{\text{drift}} + \tau_{\text{input}},$$
-
-later states also reflect the trajectory changes produced by earlier inputs. External hand forces and internal forces are therefore best understood by examining:
-
-- the ZTCF trajectory (removing input entirely),
-- the ZVCF evaluation (removing velocity-dependent drift),
-- the configuration-dependent and velocity-dependent parts of drift,
-- how hand forces change relative to these baselines.
-
-No additional same-state "mixed force" is introduced: total remains drift plus input. Differences between independently evolving full and counterfactual trajectories are labeled **trajectory-mediated outcome differences**, because their forces are evaluated at different states after the branch.
-
-### Taxonomy Summary
-
-The following table summarizes the categories.
-
-| Category | Symbol | Definition / Mechanical Meaning |
-|----------|--------|----------------------------------|
-| Configuration drift | $\tau_{\mathrm{ZVCF}}$ | Forces from configuration alone (gravity, stiffness, static geometry). |
-| Velocity drift | $\tau_{\mathrm{vel.\,drift}}$ | Forces from velocities (Coriolis, centrifugal, damping). |
-| Total drift | $\tau_{\text{drift}}$ | Passive forces along the actual trajectory: $\tau_{\mathrm{ZVCF}} + \tau_{\mathrm{vel.\,drift}}$. |
-| Input forces | $\tau_{\mathrm{input}}$ | Torque-driven forces from the golfer: $\tau_{\text{total}} - \tau_{\text{drift}}$. |
-| Trajectory-mediated difference | $\Delta\tau_{\mathrm{trajectory}}$ | Difference between forces evaluated on diverged trajectories; not a third same-state force component. |
-
-### Interpretation and Practical Use
-
-The taxonomy provides a framework for interpreting joint torques, hand forces, or shaft loads in practice:
-
-- Comparing $\tau_{\text{total}}$ to $\tau_{\mathrm{drift}}$ reveals how much of the motion is mechanically self-propelled.
-- Comparing $\tau_{\mathrm{drift}}$ to $\tau_{\mathrm{ZVCF}}$ quantifies inertial loading.
-- Comparing $\tau_{\mathrm{input}}$ to $\tau_{\mathrm{ZTCF}}$ reveals torque effectiveness.
-- Trajectory-mediated differences help diagnose how earlier input changes the later drift landscape without being relabeled as a third force.
-
-In simulation (as developed in [Theory Part 4](theory-part4.html) and [Theory Part 5](theory-part5.html)), these categories enable:
-
-- decomposition of power flow,
-- isolation of passive shaft recoil,
-- identification of torque timing patterns,
-- mapping of how individual torque bursts shape the club path.
-
-This taxonomy completes the theoretical framework, providing a model-based map from observed forces to the mechanical categories used here. However, the exactness of that map is bounded by the fidelity of the model itself. While the decomposition is algebraically exact within the model, its application to reality is constrained by the simplifications made in Part I. We now catalogue these limitations to define the scope of validity for the causal claims made on this site.
-
+{{< include ../_includes/mechanics-force-taxonomy.qmd >}}
 
 ## Limitations (Theoretical Scope)
 
@@ -443,7 +289,7 @@ The shaft is represented using a truncated set of bending modes. Modal truncatio
 
 **No aerodynamic or contact modeling.**
 
-Air resistance on the clubhead and shaft, ground--body compliance, and ball--club impact forces are excluded. Since these forces do not enter linearly in torque, adding them would require additional modeling choices and affect the passive drift term.
+Air resistance on the clubhead and shaft, ground--body compliance, and ball--club impact forces are excluded. State-only aerodynamic or compliant-contact loads can enter drift without breaking torque affinity. Impacts, friction branches and input-dependent contacts require separate analysis.
 
 **Holonomic base constraint.**
 
@@ -488,7 +334,7 @@ Inverse dynamics requires accurate positions, velocities, and accelerations. Mar
 
 **High-speed phases of motion.**
 
-During rapid transitions (late downswing), small errors in acceleration estimation can produce disproportionately large drift torques. These phases require careful filtering and high-frame-rate motion capture.
+During rapid transitions (late downswing), acceleration-estimation errors perturb inverse-dynamics applied loads; position and velocity errors also perturb the drift estimate. These phases require careful filtering and high-frame-rate motion capture.
 
 ### Conceptual Limitations
 
@@ -502,7 +348,7 @@ It is crucial to distinguish **Control Causality** (why the nervous system selec
 
 **Ambiguity of "Braking" (Impedance vs. Drive).**
 
-The decomposition identifies the net torque vector but cannot distinguish between torque applied to accelerate the system (work) and co-contraction torque applied to increase stiffness (stability). A negative or "braking" input $\tau_{\text{input}}$ may represent a functional strategy to stabilize the clubhead against impact disturbances rather than an inefficient opposition to the swing's momentum. Thus, "fighting the drift" should be interpreted as "modulating the drift," which may serve robustness rather than speed.
+The decomposition identifies the net torque vector but cannot distinguish between torque applied to accelerate the system (work) and co-contraction torque applied to increase stiffness (stability). A negative signed input $\tau_{\text{input}}$ may represent a functional strategy to stabilize the clubhead against impact disturbances rather than an inefficient opposition to the swing's momentum. Thus, "fighting the drift" should be interpreted as "modulating the drift," which may serve robustness rather than speed.
 
 **No claims about optimality or intent.**
 
@@ -528,10 +374,10 @@ is exact for the model and provides a well-defined mechanical basis for analyzin
 
 ## Future Work: Distinguishing Braking Types
 
-One unresolved ambiguity in the current decomposition concerns the interpretation of negative (braking) input torques. The framework cleanly separates drift from input, but it does not distinguish between:
+One unresolved ambiguity in the current decomposition concerns the interpretation of negative signed input (braking requires negative power) torques. The framework cleanly separates drift from input, but it does not distinguish between:
 
-1. **Active Deceleration:** Negative torque applied to *resist* the momentum of the drift, absorbing energy and reducing clubhead speed.
-2. **Stiffness Modulation:** Negative torque applied to *stabilize* or *stiffen* the system against destabilizing forces (e.g., centrifugal effects or impact disturbances), without necessarily reducing the primary motion.
+1. **Energy Absorption:** Torque opposing its conjugate velocity has negative joint power. Its effect on clubhead speed still depends on the coupled energy transfers.
+2. **Stiffness Modulation:** Changes in the local torque–displacement response can alter stability against disturbances (e.g., centrifugal effects or impact disturbances), without necessarily reducing the primary motion.
 
 In practice, both mechanisms may be active simultaneously, and distinguishing them from inverse dynamics alone is not possible. Future work should address this by:
 
@@ -599,7 +445,7 @@ For coaches, the decomposition clarifies several long-standing questions:
 - **Which movement strategies are mechanically efficient?**  
   Comparing a player's measured forces to the drift-only predictions (ZTCF and ZVCF) reveals whether their torque application amplifies or opposes passive motion.
 
-For equipment professionals, the framework provides a mechanically grounded way to analyze how shaft stiffness, club mass distribution, and player-specific kinematics interact. The drift--input decomposition allows shaft behavior and player torque strategies to be examined independently, improving the matching process between golfers and equipment.
+For equipment professionals, the framework provides a mechanically grounded way to analyze how shaft stiffness, club mass distribution, and player-specific kinematics interact. A factorial comparison of shaft parameters and torque histories can examine their interaction. Equipment-fitting benefit requires prospective player measurements; holding a torque history fixed does not establish how a player adapts to a different club.
 
 For researchers, the approach offers a reproducible method for quantifying torque effectiveness, evaluating technique variability, and linking high-speed motion capture to causal mechanical explanations of performance.
 

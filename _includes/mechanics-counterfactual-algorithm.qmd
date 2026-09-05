@@ -1,0 +1,66 @@
+### Reproducible Evaluation Procedure
+
+Use the same model, parameter set, generalized-coordinate convention and
+external loads for each paired evaluation. Record whether constraints are
+eliminated or enforced, and what the force output actually measures.
+
+1. At each measured or simulated state, compute $M$, $h$, and the applied
+   generalized load $\tau_{\mathrm{ID}}=M\dot v+h$.
+2. Solve $M a_d=-h$. Verify $M a_d+h=0$ and
+   $M(\dot v-a_d)=\tau_{\mathrm{ID}}$ within declared tolerances.
+3. Evaluate $h_0=h(z,0)$ at the declared velocity-reset state. Report the signed
+   configuration drift $-h_0$ or holding load $h_0$, with its convention.
+   Do not use inverse dynamics on $a_{\mathrm{ZVCF}}$ to obtain $h_0$.
+4. For reaction forces, solve the constraint/reaction equations twice at the
+   **same state**, once with the declared input and once without it. Compare
+   homologous outputs in the same frame and at the same reference point.
+5. For a **forward ZTCF**, initialize once at $x(t_0)$ and integrate $\dot x=f(x)$
+   using the evolving counterfactual state. For **branched ZTCFs**, restart at
+   each selected actual state and keep the branches separate. Reinitializing
+   at every actual sample produces pointwise samples or short branches, not
+   one forward trajectory.
+
+Conceptually, the force bookkeeping is:
+
+```text
+for each actual sample (z, v, acceleration):
+    M = inertia(z)
+    h = bias_load(z, v)
+    drift_acceleration = solve(M, -h)
+    applied_load = M @ acceleration + h
+    resultant_load = M @ acceleration
+    drift_load = -h
+    configuration_drift = -bias_load(z, zero_velocity)
+    velocity_drift = drift_load - configuration_drift
+    check(resultant_load == drift_load + applied_load)
+
+forward_ztcf = integrate(drift_field, initial_state, declared_horizon)
+```
+
+The equality is an implementation check for the declared equations, not an
+independent validation of human biomechanics. A nonzero inverse-dynamics
+residual in a nominally zero-input run can expose unmatched external loads,
+incorrect state ordering, inconsistent constraint treatment, or numerical error.
+
+### Verification and Empirical Limits
+
+Publish model/source revision, initial states, input histories, contact rules,
+force definitions, units, solver tolerances, convergence studies and raw result
+artifacts before treating a numerical observation as reproducible evidence.
+Check analytic limits, energy balance, forward/inverse consistency, sensitivity
+to modal truncation and parameter uncertainty, and event/reset handling.
+Identical solvers are neither necessary nor sufficient: independent converged
+implementations provide a stronger cross-check than matching solver names.
+
+A stiff shaft model may need an implicit integrator. Large path curvature alone
+does not establish numerical stiffness. Select a method using the model's
+time scales and measured convergence [@hairer1996solving]. Kinematic
+differentiation and filtering uncertainties also need propagation into estimated
+loads; filtering cannot establish an unmeasured bilateral force allocation.
+
+The historical Simulink narrative on this site is a description of intended or
+reported computations. This page does not supply a revision-bound run package
+for the reported 56 interventions, so their numerical and hand-specific outcomes
+are not treated here as verified results. Such a package would establish model
+verification; external measurements and identified parameters would still be
+needed for human validation.

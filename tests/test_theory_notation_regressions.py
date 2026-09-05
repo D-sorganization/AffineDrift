@@ -18,6 +18,9 @@ def test_theory_part1_uses_distinct_symbol_for_shaft_deformation() -> None:
 def test_theory_part2_uses_explicit_rigid_torque_row_block() -> None:
     """The drift-torque derivation should keep rigid-flexible coupling explicit."""
     text = THEORY_PART2.read_text(encoding="utf-8")
+    include = REPO_ROOT / "_includes/mechanics-inverse-dynamics.qmd"
+    assert "include ../_includes/mechanics-inverse-dynamics.qmd" in text
+    text += include.read_text(encoding="utf-8")
     assert "M_{q}(q,\\eta)" not in text
-    assert "M_{qq}(q,\\eta) & M_{q\\eta}(q,\\eta)" in text
-    assert "full drift acceleration vector, including both rigid and flexible components" in text
+    assert "[M_{qq}\\ M_{q\\eta}]a_d" in text
+    assert "**full** acceleration vector" in text

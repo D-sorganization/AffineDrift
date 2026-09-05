@@ -1,796 +1,311 @@
 ---
-description: "Passive stabilization is not about making the system rigid. It is about shaping the potential energy landscape so the drift field guides motion toward the task."
+description: "How geometry, activation, elasticity, and feedback jointly affect swing stability, with explicit mechanical assumptions and testable hypotheses."
 ---
 
 # Passive Stabilization in Parallel Loops {#sec-09b_passive_stabilization}
 
-In [Chapter 9](./ch09_parallel_mechanisms.qmd#sec-parallel_mechanisms), we established that the golf swing is a serial-to-parallel hybrid mechanism: serial segments connected by parallel constraints (the closed kinematic chains formed by the pelvis-torso loop, shoulder girdle closure, and ground contact loop). Those constraints generate forces---the loop Jacobian couples joint motions, the ground reaction forces close the chain, and the X-factor represents an over-constrained constraint on rotation.
 
-This chapter asks a fundamental question: *Given these constraints, what is the body's stabilization strategy?*
+## What Needs to Be Stabilized?
 
-Intuitively, one might think that tighter muscles (co-contraction) would stabilize the system. Indeed, co-contraction increases joint stiffness and reduces the influence of perturbations. But is this always optimal? Can a *passive* mechanism---pre-tensioned muscles, compliant fascia, favorable geometry---do the stabilization job with less metabolic cost?
+A golfer must tolerate variability while delivering an accurate clubhead state
+at impact. Geometry, muscle activation, tissue elasticity, and feedback all
+affect that task. The useful question is how these mechanisms share the work
+of rejecting a specified disturbance, at what energetic and loading cost.
+Neither maximum stiffness nor maximum compliance is a universal answer.
 
-We will see that passive stabilization is not about making the system rigid. Rather, it is about *shaping the potential energy landscape* so that the drift field naturally guides motion toward the desired task. This is Bosch's attractor-fluctuation framework: attractors are low-energy regions where the body can relax into stability; fluctuations are high-energy regions where active control is necessary. A well-tensioned golfer creates favorable attractors throughout the swing; a poorly coordinated golfer must fight against an unfavorable landscape.
+Bosch's attractor-fluctuation framework offers a way to discuss robust features
+of movement [@bosch2020agility]. Its application to golf is a hypothesis
+to operationalize. A repeatable impact configuration is not automatically an
+attractor of an autonomous mechanical system, and an energy minimum is not
+automatically evidence of reduced muscle activity.
 
-The key insight from affine control theory is that *pre-tensioning modifies the drift field $f(x)$, not the control input $G(x)$*. Thus, passive stabilization is about building a drift field that is already close to the desired trajectory. This is the foundation of Bosch's principle: *Coordinate the assembly lines, not the muscles.*
+## Constraints, Impedance, and Activation
 
-## The Stabilization Problem in Closed Kinematic Chains {#sec-stabilization_problem}
 
-### Problem Formulation
-
-Recall from [Chapter 9](./ch09_parallel_mechanisms.qmd#sec-parallel_mechanisms) that a parallel kinematic chain enforces $m$ loop closure constraints:
-
-$$
-\phi_i(\bm{q}) = 0, \quad i = 1, \ldots, m.
-$$
-
-Each constraint generates a constraint force $\lambda_i$ (a Lagrange multiplier), and the total constraint force is:
-
-$$
-\bm{F}_c = \bm{J}_{\mathrm{loop}}^T(\bm{q}) \bm{\lambda},
-$$
-
-where $\bm{J}_{\mathrm{loop}}(\bm{q}) \in \mathbb{R}^{m \times n}$ is the loop Jacobian, $\bm{\lambda} \in \mathbb{R}^m$ is the vector of constraint multipliers, and $\bm{F}_c$ is the resulting generalized constraint force.
-
-The equations of motion become:
-
-$$
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \boldsymbol{\tau} + \bm{F}_c.
-$$ {#eq-constrained_eom}
-
-::: {.callout-note}
-## In Plain Language
-
-This equation says: the net torque on each joint equals (1) the muscle torque $\boldsymbol{\tau}$, (2) constraint forces that keep the kinematic chain closed, plus gravity and Coriolis/centrifugal effects. The constraint forces $\bm{F}_c$ are not under direct voluntary control; they are *internal* to the mechanism and are determined by the requirement that the chain remain closed.
-:::
-
-Now comes the stabilization problem: *How should the nervous system manage the constraint forces to maintain task performance in the presence of perturbations?*
-
-There are two competing strategies:
-
-1. **Increase passive stiffness** (co-contraction): Make the joint impedance $\mathcal{Z}(s) = K + D s + M s^2$ large, especially the stiffness $K$. This directly opposes perturbations and reduces the sensitivity of motion to disturbances. The constraint forces are then "absorbed" by the stiff joints.
-
-1. **Reduce the impact of constraints** (compliance): Keep joints compliant but shape the potential energy landscape so that attractors naturally guide the system toward the desired trajectory. The constraint forces act *with* the gravitational and elastic fields, not against them.
-
-Both strategies have metabolic costs. Co-contraction is expensive (it produces no external work, only heat). Compliance requires active feedback to reject disturbances. The optimal strategy depends on the task, the perturbation spectrum, and the biomechanical constraints.
-
-### Impedance Control Framework
-
-Let's formalize the first strategy. In impedance control, a joint is modeled as having target stiffness $K$ and damping $D$:
-
-$$
-\boldsymbol{\tau} = K (\bm{q}_d - \bm{q}) + D (\dot{\bm{q}}_d - \dot{\bm{q}}) + \boldsymbol{\tau}_g(\bm{q}),
-$$ {#eq-impedance_control}
-
-where $\bm{q}_d, \dot{\bm{q}}_d$ are the desired position and velocity, and $\boldsymbol{\tau}_g$ is the gravity compensation term.
-
-::: {.callout-note}
-## In Plain Language
-
-This says: the muscle produces a torque proportional to the error (desired position minus actual position), plus a damping term proportional to velocity error, plus a term to cancel gravity. This is the classic proportional-derivative (PD) controller. In the musculoskeletal system, stiffness $K$ arises from the intrinsic elasticity of muscle and tendon (passive properties) plus the reflex gains (active feedback). Damping $D$ arises from viscous properties of muscle and reflex delays.
-:::
-
-The effective impedance matrix $\mathcal{Z}_\text{eff}$ combines the intrinsic joint stiffness (from muscle-tendon elasticity), reflex stiffness (from proprioceptive feedback), and the mechanical coupling through the constraint forces. For a parallel mechanism, the effective impedance seen at the end-effector is:
-
-$$
-\mathcal{Z}_\text{eff} = \bm{J}(\bm{q})^T \mathcal{Z}_\text{joint} \bm{J}(\bm{q}) + \text{(constraint terms)}.
-$$ {#eq-effective_impedance}
-
-The problem is that in a parallel mechanism, the constraint terms can *increase* the effective impedance unpredictably. If the constraint forces are large and misaligned with the task direction, they can amplify perturbations or force the system into undesired configurations.
-
-### Visualization: The Energy Landscape
-
-A more intuitive way to think about stabilization is through the potential energy landscape $V(\bm{q})$. For a conservative system (gravity + elastic potential):
-
-$$
-V(\bm{q}) = m g h(\bm{q}) + \frac{1}{2} \bm{q}^T K(\bm{q}) \bm{q} + \text{(constraint potential)}.
-$$
-
-An *attractor* is a point $\bm{q}^*$ where $\nabla V(\bm{q}^*) = 0$ and the Hessian $H = \nabla^2 V$ is positive-definite (a local minimum). Near an attractor, the system is passively stable: small perturbations produce restoring forces. A *fluctuation* is a region where $V$ is nearly flat (small gradients), so the system does not experience strong restoring forces and must rely on active control.
-
-Plotted against a single joint angle $\theta$, the landscape has three regions. At address the
-potential energy sits in a well: a local minimum where small perturbations produce restoring
-forces, so only moderate co-contraction is needed to hold the position. Through the backswing the
-curve flattens — gradients are small, restoring forces are weak, and the body has to supply
-external work and active control to stay on the intended path. At the top of the swing a second
-well forms, and pre-tension rather than active correction holds the position.
-
-The stabilization strategy therefore differs by region rather than being uniform across the swing:
-attractors are stabilized passively, and the flat region between them is where active control
-earns its metabolic cost.
-
-## Passive Stability Through Pre-Tensioning {#sec-pretensioning}
-
-### Co-Contraction as a Degrees-of-Freedom Reduction Strategy
-
-In Bosch's framework ([@bosch2020agility]), co-contraction is not primarily about stability---it is about *reducing the effective degrees of freedom (DOF)* of the system. When opposing muscles contract simultaneously, they reduce the bandwidth of possible motions, effectively constraining the joint to move along a preferred direction.
-
-Mathematically, suppose a joint has two muscles: an agonist (primary mover) and an antagonist (opposing muscle). The joint torque is:
-
-$$
-\tau_j = F_{\text{ago}} r_{\text{ago}} - F_{\text{ant}} r_{\text{ant}},
-$$
-
-where $F$ is muscle force and $r$ is moment arm. If only the agonist contracts, the net torque is unconstrained. But if both contract with forces $F_{\text{ago}}$ and $F_{\text{ant}}$ adjusted so that their average force is held constant while only their *difference* drives motion, the system enters a low-impedance mode.
-
-More formally, in the frame of the constraint forces, co-contraction modifies the effective stiffness matrix:
-
-$$
-K_\text{eff} = K_0 + \Delta K_{\text{cocontraction}},
-$$
-
-where $K_0$ is the baseline intrinsic stiffness (from elasticity) and $\Delta K_{\text{cocontraction}}$ is the added stiffness from reflex feedback. The total stiffness can be written in terms of the co-contraction level $\alpha \in [0, 1]$:
-
-$$
-K_\text{eff}(\alpha) = (1 - \alpha) K_0 + \alpha K_{\text{max}},
-$$ {#eq-cocontraction_stiffness}
-
-where $K_{\text{max}}$ is the maximum achievable stiffness (when agonist and antagonist are fully co-contracted).
-
-::: {.callout-important}
-## Co-Contraction Modulates Impedance
-
-Co-contraction is a motor strategy to adjust the stiffness of a joint without changing the target position or velocity. By simultaneously contracting opposing muscles, the nervous system can increase the mechanical stiffness of the joint, reducing sensitivity to external perturbations. However, this comes at a metabolic cost: co-contraction produces no external work.
-:::
-
-### The Viscoelastic Muscle Model: Preflex Control
-
-The mechanical response of muscle to a sudden length change occurs on a timescale of 10--50\,ms, which is faster than neural feedback can react (typical reflex latency is 50--100\,ms). This *preflex* or zero-delay response arises from the passive elastic properties of muscle and tendon.
-
-A simple viscoelastic model of muscle is:
-
-$$
-F(t) = K_m \left[ L(t) - L_0 \right] + D_m \dot{L}(t) + F_{\text{active}}(t),
-$$ {#eq-muscle_viscoelastic}
-
-where $K_m$ is the intrinsic stiffness of muscle, $D_m$ is the viscous damping, $L$ is the muscle length, and $F_{\text{active}}$ is the actively controlled force (determined by neural input).
-
-::: {.callout-note}
-## In Plain Language
-
-@eq-muscle_viscoelastic says that muscle force has three components: (1) a spring-like term $K_m (L - L_0)$ that resists length changes, (2) a damper-like term $D_m \dot{L}$ that resists the *rate* of length change, and (3) the actively controlled force. The spring and damper respond immediately to length changes, without waiting for the nervous system.
-:::
-
-The beauty of preflex control is that it provides *instantaneous stabilization*. If a joint is suddenly perturbed (e.g., by ground reaction forces during impact), the elastic properties automatically generate a restoring force. The nervous system can then use slower feedback (reflex) to fine-tune the response.
-
-For a joint with balanced co-contraction, the effective stiffness and damping are approximately:
-
-$$
-K_j = n_{\text{ant}} K_m \sin^2(\phi) + n_{\text{ago}} K_m \cos^2(\phi),
-$$
-
-where $\phi$ is the relative angle between agonist and antagonist moment arms, and $n_{\text{ant}}, n_{\text{ago}}$ are the number of antagonist and agonist muscles. With balanced co-contraction, $K_j$ increases, providing passive stiffness.
-
-### Force-Length and Force-Velocity Relationships as Passive Stabilizers
-
-The force-length relationship of muscle (the ascending and descending limbs of the tension curve) and the force-velocity relationship (the hyperbolic relationship between force and shortening velocity) are inherent mechanical properties that do not require active neural control. They automatically stabilize the system:
-
-1. **Force-Length Stability**: If a muscle is stretched beyond its optimal length, passive tension increases (due to titin and collagen in the sarcomere). This resists further stretching. Conversely, if the muscle is shortened below its optimal length, it cannot generate force. This creates a "zone of comfort" around the optimal length where stability is highest.
-
-1. **Force-Velocity Stability**: The force-velocity relationship means that if the muscle is forcibly lengthened (eccentric contraction), passive tension spikes due to the viscous damping. This opposes the lengthening, providing dynamic stability.
-
-Together, these properties create a *natural attractiveness* to a certain operating range. A well-pre-tensioned joint is one that sits comfortably in the middle of the force-length curve, where small perturbations are automatically resisted.
-
-### Fascial Pre-Tension and Biotensegrity
-
-Beyond individual muscles, the fascia (connective tissue surrounding muscles, organs, and entire body regions) can store and distribute elastic potential energy. The biotensegrity model, proposed by Levin and popularized by practitioners of movement, suggests that the body is not a machine of rigid links connected by hinges, but rather a tensioned network where compression elements (bones) are suspended in a web of tension (muscles, fascia, ligaments).
-
-::: {.callout-warning}
-## Fascial Networks as Passive Stabilization
-
-The fascia is not merely a passive wrapper; it is a load-bearing component of the kinetic chain. When pre-tensioned, the fascial network creates a three-dimensional restraint system that distributes loads efficiently and provides passive stabilization without relying on muscular contraction. This is discussed in detail in [Chapter 12](./ch12_fascia.qmd#sec-fascia).
-:::
-
-Pre-tensioning the fascia (through postural alignment and initial muscle activation) creates a favorable initial condition for motion. Think of it as tuning the strings of a guitar: proper tension distributes loads and allows the whole system to resonate in harmony.
-
-### Affine Control Interpretation
-
-From the affine control perspective, pre-tensioning modifies the *drift field*, not the control input. Recall the general form of a control-affine system:
-
-$$
-\dot{\bm{q}} = f(\bm{q}) + \sum_{i=1}^{m} u_i G_i(\bm{q}),
-$$ {#eq-affine_system}
-
-where $f(\bm{x})$ is the drift field (motion under zero input) and $G_i$ are the control vector fields.
-
-When we pre-tension the system (increase baseline muscle activation or adjust the reference length of antagonist muscles), we change $f(\bm{q})$. Specifically:
-
-$$
-f(\bm{q}) = f_0(\bm{q}) + \Delta f(\bm{x})_{\text{pretension}}(\bm{q}),
-$$
-
-where $\Delta f(\bm{x})_{\text{pretension}}$ represents the change in the natural trajectory caused by the pre-tension. If the pre-tension is well chosen, the new drift field is already oriented toward the desired motion, reducing the need for control inputs.
-
-::: {.callout-note}
-## Pre-Tensioning Optimizes the Drift Field
-
-A well-tensioned body has a favorable drift field. The ZTCF family (zero-torque counterfactual) trajectory---the motion that would occur if all voluntary control were removed and only passive properties remained---is already close to the intended swing. This is why elite golfers appear to swing effortlessly: their pre-tension creates an attractor that naturally guides the motion.
-:::
-
-## Self-Organization and the Attractor-Fluctuation Landscape {#sec-attractors}
-
-### Bosch's Attractor-Fluctuation Framework
-
-Bosch ([@bosch2020agility]) proposes that human motor control operates by creating energy landscapes with attractors (low-energy regions) and fluctuations (high-energy, unstable regions). The body's primary job is not to compute trajectories but to *structure the landscape* so that motion self-organizes toward the task goal.
-
-In mathematical terms, an attractor is a stable equilibrium of the dynamics. For a system with potential energy $V(\bm{q})$, an attractor $\bm{q}^*$ satisfies:
-
-$$
-\nabla V(\bm{q}^*) = 0, \quad \text{and} \quad \nabla^2 V(\bm{q}^*) \succ 0.
-$$ {#eq-attractor_definition}
-
-The second condition (positive-definite Hessian) ensures local stability: any small perturbation is pushed back toward $\bm{q}^*$.
-
-By contrast, a fluctuation is a region where $\nabla^2 V$ is nearly singular or has negative eigenvalues. In such regions, the system is marginally stable or unstable, and active control (muscle contraction with feedback) is necessary to maintain the desired trajectory.
-
-::: {.callout-important}
-## Attractor-Driven Stabilization
-
-A motor task that involves stable attractors requires less active control and metabolic energy than a task with extensive fluctuation regions. The nervous system designs movement by:
-
-1. Creating attractors at critical task landmarks (e.g., the address position, the top of the swing, the impact point).
-1. Filling fluctuation regions with continuous active feedback to guide the system from attractor to attractor.
-1. Exploiting the passive properties of muscles, tendons, and fascia to maintain attractors without conscious effort.
-:::
-
-### Phase Transitions and Control Mode Switching
-
-As the body moves through a swing, it undergoes phase transitions between different stabilization modes. Early in the backswing, the address attractor is strong: the body is stiff and stable. As the backswing progresses and the golfer builds pre-tension, the old attractor weakens and a new attractor (the top of the swing) forms. At the transition point, the control mode switches: the system transitions from one attractor to another.
-
-This phase transition can be understood mathematically as a bifurcation. The stiffness parameter (controlled by co-contraction level $\alpha$) changes, and the eigenvalues of the linearized dynamics cross the imaginary axis, indicating a loss of stability in one mode and the emergence of stability in another.
-
-Across the swing the joint stiffness $K(\alpha)$ moves through three phases separated by two
-transitions. The body holds the address position with substantial stiffness, maintaining the
-attractor. Through the swing itself stiffness falls, as pre-tension is handed off from active
-co-contraction to elastic elements — tendon and fascia — which is what makes the speed possible.
-Approaching impact stiffness rises again, so the collision forces meet a stiff chain rather than
-a compliant one. The two transitions are the moments where the control mode switches, and they
-are the parts of the swing most sensitive to mistiming.
-
-### The Uncontrolled Manifold Hypothesis
-
-The uncontrolled manifold (UCM) hypothesis, developed by [@Scholz1999], provides an empirical way to test the attractor-fluctuation framework. The hypothesis states that variability in movement is not uniformly distributed across all degrees of freedom. Instead, variance is *concentrated in task-irrelevant directions* (the uncontrolled manifold) and minimized in task-relevant directions.
-
-In terms of the energy landscape, task-relevant directions are those that change the cost function (e.g., the accuracy of the golf shot). Task-irrelevant directions are those where fluctuations do not affect the task. The nervous system tolerates high variance in task-irrelevant directions (allowing self-organization and flexibility) and tightly controls task-relevant directions (maintaining stability where it matters).
-
-Mathematically, if the task cost is $J(\bm{q})$, the UCM is defined by:
-
-$$
-\text{UCM} = \{ \bm{q} : \nabla J(\bm{q}) = \mathbf{0} \}.
-$$
-
-In the subspace perpendicular to the UCM, variance is minimized. This suggests that the attractor is not a point but a *low-dimensional manifold*: the nervous system drives variance into irrelevant dimensions and stabilizes the relevant dimensions.
-
-### What's Right and What's Overclaimed: The Attractor-Fluctuation Reality
-
-::: {.callout-warning}
-## "The Body Doesn't Compute Trajectories---It Creates Energy Landscapes"
-
-**What's right:** The body does create energy landscapes (through potential energy, muscle pre-tension, and fascia) that shape motion. Attractors exist and do reduce the need for active control. Variance analysis shows that the nervous system tolerates fluctuations in irrelevant directions.
-
-**What's overclaimed:** The claim that "the body doesn't compute trajectories" is too strong. The nervous system does maintain internal models and predictions. It does adjust commands based on feedback. The attractor-fluctuation framework is a useful organizing principle, but it is not the complete story. The brain actively shapes both the landscape (via pre-tension) and the control inputs (via feedback). The two work together.
-
-**Why it matters for golf:** A golfer must build a favorable energy landscape (through setup, posture, and pre-tension), but this alone does not guarantee a good swing. The golfer must also use active feedback to correct errors and adapt to perturbations. The most efficient swings appear effortless because the attractor is so favorable that active control is minimal---not because there is no control.
-:::
-
-## The Drift-Control Perspective on Passive Stabilization {#sec-drift_control_perspective}
-
-### Pre-Tensioning Modifies the Drift Field
-
-Let's formalize the affine control perspective. The golf swing is a control-affine system:
-
-$$
-\dot{\bm{q}} = f(\bm{q}, \alpha) + \sum_{i=1}^{m} u_i(t) G_i(\bm{q}),
-$$ {#eq-golf_affine}
-
-where $\alpha$ is the co-contraction level (a parameter that changes slowly), $\bm{q}$ is the configuration (joint angles, positions), and $u_i(t)$ are the voluntary control inputs (muscle activations above the baseline co-contraction).
-
-The drift field $f(\bm{q}, \alpha)$ includes the effects of gravity, Coriolis forces, centrifugal forces, and the passive properties of muscles and tendons:
-
-$$
-f(\bm{q}, \alpha) = -\bm{M}(\bm{q})^{-1} \left[ \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) - \boldsymbol{\tau}_{\text{passive}}(\bm{q}, \alpha) \right].
-$$
-
-The key insight is that $\boldsymbol{\tau}_{\text{passive}}(\bm{q}, \alpha)$ depends on the co-contraction level $\alpha$. Increasing $\alpha$ increases the passive torque, which modifies the drift field. A favorable drift field is one where the ZTCF (zero-torque counterfactual)---the trajectory with $u_i = 0$---is already close to the desired task trajectory.
-
-### The ZTCF and Task-Specific Adaptation
-
-The ZTCF is defined as:
-
-$$
-\text{ZTCF: } \quad \dot{\bm{q}} = f(\bm{q}, \alpha) \quad (\text{with } u_i = 0).
-$$
-
-If the ZTCF is close to the desired trajectory $\bm{q}_d(t)$, then the control inputs $u_i(t)$ need only make small corrections. This is a key design principle: *let the body's natural dynamics do most of the work*.
-
-Conversely, if the ZTCF is far from the desired trajectory (because the co-contraction is too low or poorly timed), the control inputs must work hard to steer the system. This requires higher metabolic cost and greater reliance on feedback.
-
-Elite golfers are skilled at tuning $\alpha(t)$ throughout the swing to keep the ZTCF favorable. They build pre-tension early (increasing $\alpha$ during setup and backswing), which creates an attractor at the top of the swing. Then, they release the pre-tension at the transition, allowing the drift field to naturally drive the downswing. This is why great golfers appear to swing with minimal muscular effort---because the drift field is doing most of the work.
-
-### DCR Analysis: How Pre-Tensioning Improves Control Efficacy
-
-Recall from [Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual) the
-Drift--Control Ratio (DCR):
-
+For ideal stationary loop constraints $\phi(q)=0$, let $A=\partial\phi/\partial q$.
+The equations are
 $$
-\text{DCR} = \frac{\|f(\bm{q})\|}{\left\|\sum_i u_{\max,i}\,G_i(\bm{q})\right\|}.
-$$ {#eq-ch9b:dcr}
+M(q)\ddot q+h(q,\dot q)=Bu+A^T\lambda,\qquad
+A\dot q=0,\quad A\ddot q+\dot A\dot q=0.
 
-The DCR compares modeled drift against bounded modeled control. It is a ratio, not a
-fraction: it is unbounded above, and $\text{DCR} > 1$ means the drift term exceeds what the
-bounded control can produce. That is what makes statements such as "DCR of order 10"
-meaningful.
-
-::: {.callout-warning}
-
-An earlier revision of this section defined DCR as
-$\|f(\bm{x})\|^2 / (\|f(\bm{x})\|^2 + \sum_i \|u_i G_i\|^2)$, which is bounded in
-$[0,1]$ by construction. That form is a perfectly reasonable quantity --- it is the fraction
-of squared dynamics attributable to drift --- but it is *not* the DCR, and mixing the
-two makes the book's own ratio claims arithmetically impossible: no quantity in $[0,1]$ can
-be "$20{:}1$". If you want the bounded fraction, compute it and call it something else.
-See `NOTATION.md`, which reserves the bare acronym DCR site-wide for the ratio.
-:::
-
-A high DCR means the drift field is doing most of the work; a low DCR means the control
-inputs have comparatively more authority.
-
-For a well-pre-tensioned system (high $\alpha$), the DCR is higher, because the drift field is richer and closer to the desired trajectory. For a loosely-tensioned system (low $\alpha$), the DCR is lower, because the control inputs must do more work.
-
-::: {.callout-note}
-## Passive Stabilization Through Favorable Drift
-
-A well-tensioned body has a favorable drift field---the ZTCF (zero-torque counterfactual) trajectory is already close to the intended swing. This means:
-
-1. The body can reduce the muscle effort required (lower $\|u_i\|^2$).
-1. The system is more robust to delays in feedback (because the drift field is already guiding the right direction).
-1. The motion appears effortless and coordinated, even though significant pre-tension is present.
-1. The DCR is high, indicating that the body's natural dynamics are doing most of the work.
-:::
-
-### Linearization and Stability Analysis
-
-Near an attractor $\bm{q}^*$, the dynamics can be linearized:
-
-$$
-\delta \dot{\bm{q}} = A(\bm{q}^*) \delta \bm{q} + B(\bm{q}^*) \delta u,
-$$
-
-where $A = \frac{\partial f(\bm{x})}{\partial \bm{q}}\bigg|_{\bm{q}^*}$ and $B = [G_1, \ldots, G_m]$.
-
-For the attractor to be stable under zero control ($\delta u = 0$), the matrix $A$ must have all eigenvalues in the left half-plane. This requires:
-
 $$
-\text{Eigenvalues of } A \text{ have negative real parts.}
-$$
-
-For a simple joint with dominant compliance (springs and dampers), the eigenvalues are related to the natural frequency $\omega_n = \sqrt{K/M}$ and damping ratio $\zeta = D / (2\sqrt{KM})$:
+The generalized reaction $A^T\lambda$ is determined jointly by geometry,
+motion, applied forces, and the closure conditions. It depends on actuation
+even though it is not an independently commanded input. For these ideal
+stationary constraints, $\dot q^TA^T\lambda=0$. Reactions can transfer energy
+between connected bodies while doing zero net work on the complete system.
+Real ground contacts also require friction, unilateral contact, and possible
+slip or separation. Pelvis--thorax separation is a measured kinematic relation,
+not by itself an extra rigid loop constraint.
 
+For small perturbations around a fixed operating condition, a local model is
 $$
-\lambda = -\zeta \omega_n \pm i \sqrt{1 - \zeta^2} \omega_n.
-$$
-
-For stability, both real parts must be negative, which requires $\zeta > 0$ (positive damping) and $K > 0$ (positive stiffness). This justifies the intuition that pre-tensioning (increasing $K$ through co-contraction) stabilizes the system.
-
-## The Cost of Over-Constraint: When Stiffness Hurts {#sec-overconstraint_costs}
-
-### Bandwidth Reduction and Loss of Adaptability
+M\delta\ddot q+D\delta\dot q+K\delta q=B\delta u+J^T\delta w,
+\qquad Z_q(s)=Ms^2+Ds+K.
 
-While moderate co-contraction stabilizes the system, excessive co-contraction (over-constraint) reduces the *bandwidth* of movement---the range of frequencies that the system can express. A highly stiffened joint can only respond to slow, low-amplitude perturbations. Fast, high-amplitude perturbations exceed the system's capability, and the joint either breaks (injury) or locks up (loss of smoothness).
-
-Mathematically, the bandwidth is approximately the reciprocal of the response time:
-
 $$
-\text{Bandwidth} \approx \frac{\omega_n}{2\pi} = \frac{1}{2\pi}\sqrt{\frac{K}{M}}.
-$$
-
-If we increase $K$ too much (high co-contraction), the bandwidth increases, but so does the stiffness, which makes the system brittle. The system can respond quickly to high-frequency perturbations, but it cannot accommodate slow, large-amplitude deflections (like the ground reaction forces at impact).
-
-### The Phase Transition Under Loading
+Here $Z_q$ maps displacement to generalized force. Mechanical impedance is
+also often defined relative to velocity, in which case it is $Z_q(s)/s$.
+State the convention. Along a swing these coefficients vary; delayed reflex
+feedback generally gives a frequency-dependent contribution rather than a
+constant viscous damper. Neural delay can reduce stability margins.
 
-Consider what happens when the system experiences a large external load (e.g., the impact forces at ball strike). The constraint force $\bm{F}_c$ becomes very large, and the loop closure constraint $\phi(\bm{q}) = 0$ becomes critical. If the system is over-stiffened, the constraint forces are distributed rigidly across the joints, and the load is borne entirely by the muscles (metabolically expensive) or by structural damage (injury).
+Intrinsic muscle response begins without waiting for a new neural command.
+That does not make activated muscle metabolically passive. Existing activation,
+short-range stiffness, force--length and force--velocity behavior, tendon
+compliance, and contraction history affect the response. They cannot all be
+represented by an activation-independent spring [@rack1974short].
+The descending limb of the active force--length curve does not guarantee
+restoring stiffness, and a shortened muscle does not abruptly lose all force
+as soon as it is below optimal length.
 
-If the system is moderately stiffened with good compliance, the load is distributed through multiple DOF, and elastic elements absorb energy (less metabolic cost, less injury risk).
+## How Muscle Stiffness Becomes Joint Stiffness
 
-There is a phase transition: as the load increases, the optimal stiffness level decreases. This is captured by the LQR (linear-quadratic regulator) optimality condition:
 
-### LQR Optimality and the Stiffness-Control Trade-Off
-
-The optimal control input for a linear system is found by minimizing the cost:
-
-$$
-J = \int_0^T \left[ \delta \bm{q}^T Q \delta \bm{q} + \delta u^T R \delta u \right] dt,
-$$ {#eq-lqr_cost}
-
-where $Q$ penalizes deviation from the desired trajectory and $R$ penalizes control effort (metabolic cost). The solution is a linear feedback:
-
-$$
-\delta u^* = -R^{-1} B^T P \delta \bm{q},
+Let muscle length be $l_i(q)$, tension $F_i$, and
+$r_i=-\partial l_i/\partial q$ be its signed moment-arm vector. The generalized
+muscle force is $\tau=\sum_i r_iF_i$. At fixed activation and local history,
+the restoring tangent stiffness is
 $$
-
-where $P$ is the solution to the algebraic Riccati equation.
-
-The key insight is that the optimal control gain depends on the ratio $Q / R$. If $Q$ is large (task error is very costly), the control effort is high. If $R$ is large (metabolic cost is high), the control effort is low. An over-stiffened system effectively increases $R$ (metabolic cost of the co-contraction) without necessarily reducing $Q$ (task error).
-
-::: {.callout-warning}
-## The Optimal Stiffness Is Task and Context Dependent
+K_q=-\frac{\partial\tau}{\partial q}
+=\sum_i\left[k_i r_i r_i^T-F_i\frac{\partial r_i}{\partial q}\right],
+\qquad k_i=\frac{\partial F_i}{\partial l_i}.
 
-The optimal stiffness is not "maximum." It is tuned to balance:
-
-1. **Stability requirement**: enough stiffness to maintain the attractor.
-1. **Bandwidth requirement**: enough compliance to accommodate perturbations.
-1. **Metabolic cost**: the cost of maintaining co-contraction.
-1. **Task precision**: the accuracy demanded by the task.
-
-Elite golfers tune these factors unconsciously, finding the sweet spot where the swing is both stable and efficient.
-:::
-
-### Energy Cost and Metabolic Efficiency
-
-Co-contraction is expensive. When an agonist and antagonist contract simultaneously with forces $F_{\text{ago}}$ and $F_{\text{ant}}$ producing no net joint torque (pure co-contraction), the metabolic cost is:
-
-$$
-P_{\text{metabolic}} \propto (F_{\text{ago}} + F_{\text{ant}}) v,
 $$
-
-where $v$ is the contraction velocity. The cost is proportional to the *sum* of forces, not their difference. This is why co-contraction is metabolically expensive: both muscles consume ATP, but neither does useful external work.
-
-During the golf swing, metabolic efficiency is important. A poorly tensioned swing requires high co-contraction throughout, draining energy. A well-tensioned swing minimizes co-contraction by building pre-tension early (when motion is slow and the cost is low) and releasing it strategically.
-
-## Strategies for the Golf Swing: Applying the Framework {#sec-golf_strategies}
-
-Now let's apply the attractor-fluctuation and drift-control framework to the phases of the golf swing.
-
-### Phase 1: Setup/Address
-
-**Goal**: Establish a stable initial configuration and create a favorable attractor.
-
-**Strategy**:
-
-- Moderate co-contraction ($\alpha \approx 0.4 - 0.6$) to stabilize the stance and spine.
-- Postural alignment to place the center of mass over the base of support, minimizing the effort needed to maintain balance.
-- Fascial pre-tension to distribute loads and create a unified structure (biotensegrity).
-- The energy landscape has a strong attractor at the address position, with positive-definite Hessian.
-
-The ZTCF at address should be nearly zero (motion at rest with zero control). This is achieved by careful balance of muscle forces around each joint.
-
-### Phase 2: Backswing
-
-**Goal**: Build elastic potential energy in muscles and tendons while maintaining postural stability.
-
-**Strategy**:
-
-- Progressive increase in co-contraction ($\alpha$ increases from 0.4 to 0.8) as the swing builds speed.
-- The primary motion is driven by control inputs (voluntary activation), not by drift. The DCR is low.
-- Pre-tension is stored in elastic elements: the latissimus dorsi is stretched, the posterior shoulder rotators are lengthened, and the spinal erectors are loaded eccentrically.
-- The old attractor (address) weakens, and a new attractor begins to form at the top of the swing.
-
-The backswing is a fluctuation region in the energy landscape. The system is not in a stable well; it is being actively driven uphill, storing energy.
-
-### Phase 3: Transition (Top of Swing)
-
-**Goal**: Switch from active control (backswing) to passive drift (downswing).
-
-**Strategy**:
-
-- Highest co-contraction level ($\alpha \approx 0.9 - 1.0$) to create a strong attractor at the top of the swing.
-- This locks in the pre-tension: the muscles are loaded, the fascia is tensioned, and the elastic elements are stretched.
-- A new attractor forms with strong positive-definite Hessian. This is the "coiled spring" state.
-- The downswing will be driven primarily by drift (the elastic recoil), not by new muscle activation. The DCR will be high.
-
-This is the critical phase transition. The nervous system switches from actively driving the backswing to passively releasing the elastic energy.
-
-### Phase 4: Downswing
-
-**Goal**: Release elastic energy and drive the club through the ball with minimal muscular effort.
-
-**Strategy**:
-
-- Rapid decrease in co-contraction ($\alpha$ drops from 1.0 to 0.2--0.4) as the muscles relax and allow elastic recoil.
-- The primary motion is driven by drift: elastic recoil of muscles and tendons, gravity, and Coriolis forces. The DCR is very high.
-- The attractor at the top of the swing destabilizes and repels the system toward impact position.
-- The sequence is driven by the proximodistal progression: hip rotation initiates the motion (highest inertia, lowest stiffness), which pulls on the torso, which accelerates the shoulder, which drives the arm, which accelerates the club. Each link is momentarily locked (high stiffness) before passing the motion to the next link.
-
-The downswing should feel effortless because the drift field is favorable. The golfer is not "muscling" the club; the body is releasing stored energy in a coordinated sequence.
-
-### Phase 5: Impact and Follow-Through
-
-**Goal**: Stabilize the wrist and dissipate impact forces without injury.
-
-**Strategy**:
-
-- Very high co-contraction at the wrist and forearm ($\alpha \approx 0.9$) to absorb the impact forces through the stiffened joints and the elastic properties of muscle.
-- The ground reaction forces (closing the kinematic loop) are very large at impact. High wrist stiffness is essential to prevent excessive wrist motion and to transmit the force cleanly to the club.
-- The larger joints (shoulder, hip) can be more relaxed ($\alpha \approx 0.4 - 0.6$) because they are farther from the impact point and experience lower stresses.
-- Post-impact, the body dissipates energy through controlled deceleration (high damping) and elastic recoil.
-
-### The Assembly Line: Intramuscular to Intermuscular Coordination
-
-Bosch's concept of "assembly lines" in motor coordination refers to the hierarchical structure of muscle activation. Intramuscular coordination is the fine control of motor units *within* a muscle (via the nervous system's ability to recruit and synchronize motor units). Intermuscular coordination is the sequencing of different muscles and muscle groups across joints.
+The first term includes squared moment arms; without them a muscle stiffness
+in force per length cannot become joint stiffness in torque per angle. The
+second is a geometric or prestress contribution and need not be positive.
+This local formula needs modification for tendon states, muscle coupling,
+history-dependent response, and neural feedback.
 
-In the golf swing, the assembly line works as follows:
+Balanced antagonist forces can yield small net torque while both muscles carry
+large tension. Co-contraction commonly raises intrinsic joint stiffness and
+loading; it does not define a low-impedance mode. Finite stiffness changes
+compliance, not the rank of the kinematic Jacobian or the number of exact
+degrees of freedom. Treating a stiff direction as locked is an approximation
+that needs a time scale and a tolerated deflection.
 
-1. **Intramuscular**: Motor units within the hip rotators are recruited progressively, building torque smoothly.
-1. **Intermuscular**: The hip torque is transmitted to the torso via fascial connections and the spinal muscles, which maintain the X-factor constraint.
-1. **Intermuscular**: Torso rotation accelerates the shoulder, and shoulder muscles stabilize the scapula while rotators cuff muscles accelerate the humerus.
-1. **Intermuscular**: Shoulder acceleration pulls on the elbow, and the forearm muscles decelerate the arm while accelerating the club through the wrist.
-1. **Intramuscular**: At the wrist and forearm, fine intramuscular control ensures a clean impact (smooth force transmission through the club).
-
-This assembly line is optimized for *efficiency and robustness*. Each stage amplifies the motion from the previous stage (proximal to distal), transferring momentum while dissipating little energy. This is the kinetic chain principle, now understood through the lens of affine control and attractor-fluctuation dynamics.
-
-### The Bosch Attractor Hierarchy
-
-Bosch identifies a hierarchy of attractors in elite golf:
-
-1. **Attractor 0 (Posture)**: The spine and pelvis maintain a stable, neutral alignment throughout the swing. This is a high-level attractor that constrains all lower-level attractors.
-
-1. **Attractor 1 (Hip/Pelvis Rotation)**: The hip rotates around a stable, central axis. The pelvis does not slide forward excessively. This creates a stable reference frame for the upper body.
-
-1. **Attractor 2 (X-Factor)**: The relative rotation between pelvis and shoulders is controlled (the X-factor constraint from [Chapter 9](./ch09_parallel_mechanisms.qmd#sec-parallel_mechanisms)). This creates a stable twist in the torso, storing elastic energy.
-
-1. **Attractor 3 (Shoulder Rotation)**: The shoulder rotates relative to the pelvis, maintaining the X-factor constraint. The shoulder is a parallel mechanism (multiple muscles supporting the ball-and-socket joint), and the attractor ensures smooth rotation.
-
-1. **Attractor 4 (Arm/Wrist Position)**: The arm follows the shoulder rotation, with the wrist in a stable position relative to the forearm. The wrist is minimally flexed or extended, maintaining elastic tension for a clean impact.
-
-1. **Attractor 5 (Club Path)**: The club follows a stable path in space, determined by the arm and wrist attractors.
-
-Each attractor is maintained by a combination of pre-tension and active feedback. Disrupting any attractor cascades down the hierarchy: if posture fails, hip rotation becomes unstable, which destabilizes the X-factor, which disrupts shoulder rotation, and so on. This is why Bosch emphasizes the importance of stability at each level.
-
-## Experimental Evidence and Measurement {#sec-experimental_evidence}
-
-### EMG Studies of Co-Contraction
-
-Electromyography (EMG) provides a direct window into muscle activation patterns. In elite golfers, EMG recordings during the downswing show a clear pattern:
-
-1. **Backswing**: High, sustained EMG activity in all major muscles (high co-contraction level).
-1. **Transition**: A brief, sharp increase in EMG amplitude (maximum co-contraction at the top of the swing).
-1. **Early downswing**: Rapid decrease in EMG activity in most muscles, but sustained activity in proximal muscles (hip rotators) and selective activity in distal muscles (wrist stabilizers).
-1. **Late downswing**: Minimal EMG activity in most muscles, but high activity in the wrist and forearm just before impact.
-1. **Impact and follow-through**: High EMG activity in arm and forearm muscles to stabilize the impact; rapid decrease in lower body muscles.
-
-In amateur golfers, the pattern is different: EMG activity is often higher throughout the swing, suggesting persistent co-contraction and higher metabolic cost. The transition is less distinct, indicating a less efficient hand-off between active and passive phases.
-
-### Variance Analysis and the Uncontrolled Manifold
-
-Analysis of swing variability can test the attractor-fluctuation hypothesis. If the hypothesis is correct, we expect:
-
-1. **Low variance in task-relevant directions**: The ball-contact point, club head speed, and club path should be highly consistent from swing to swing, even for naturalistic swings.
-1. **High variance in task-irrelevant directions**: The exact hip angle, shoulder angle, or wrist angle should vary considerably, as long as the task-relevant variables are maintained.
-
-UCM decomposition [@Scholz1999] quantifies this by partitioning variance into:
-
-$$
-V_{\parallel} = \text{variance in task-relevant directions},
+At an unloaded static operating point with $K_q\succ0$ and task displacement
+$\delta y=J\delta q$, compliance is
 $$
+C_y=J K_q^{-1}J^T,\qquad K_y=C_y^{-1}
 
 $$
-V_{\perp} = \text{variance in task-irrelevant directions}.
-$$
-
-The hypothesis predicts $V_{\perp} > V_{\parallel}$ in the golf swing. Studies confirm this: elite golfers show much lower variance in club head speed and impact location, but higher variance in joint angles, consistent with self-organization on a low-dimensional attractor.
-
-### Ground Reaction Force Analysis
-
-Ground reaction forces (GRF) reveal the constraint forces that close the kinematic loop. During the golf swing, GRF should show:
-
-1. **Address and backswing**: Stable, nearly vertical GRF (weight supported symmetrically).
-1. **Transition**: Shift of weight toward the front foot, and lateral forces as the body prepares to rotate.
-1. **Downswing**: Rapid increase in vertical GRF (the ground pushes up on the golfer as the golfer pushes down) and horizontal forces (the golfer pushes laterally to generate rotational torque).
-1. **Impact**: Transient spike in GRF (the impact force is transmitted through the body to the ground).
-1. **Follow-through**: Decay of GRF as the swing ends.
+when the task compliance is invertible. Only for square nonsingular $J$ does
+this become $K_y=J^{-T}K_qJ^{-1}$. The familiar $J^TK_yJ$ maps task stiffness
+back to joint coordinates; it is not the general forward map. External
+preload adds geometric terms, and rigid constraints require a reduced-coordinate
+or constrained solve.
 
-The GRF pattern is a fingerprint of how well the golfer is using the ground reaction forces to close the kinematic loop. Elite golfers show smooth, coordinated GRF patterns; amateur golfers often show jerky, asymmetric patterns.
+For $J=[1\;1]$ and $K_q=\operatorname{diag}(2,3)$ in consistent units,
+$C_y=1/2+1/3=5/6$. Multiplying both joint stiffnesses by ten divides compliance
+by ten and leaves the rank of $J$ unchanged. Geometry and stiffness interact
+without being the same mathematical object.
 
-### Stiffness Estimation From Perturbation Studies
+## Energy Minima, Stability, and Attractors
 
-Joint stiffness can be estimated by applying a small perturbation (force or displacement) to a joint and measuring the restoring force or impedance. For example, a torque pulse can be applied to the ankle, and the ankle's response (position change and restoring torque) is measured. The ratio of restoring torque to position change gives the stiffness.
 
-In the context of the golf swing, such measurements are difficult because the swing is dynamic and transient. However, stiffness can be estimated from steady-state postures (like the address position) and compared between elite and amateur golfers. Studies generally find that elite golfers have higher baseline stiffness at address (due to effective pre-tensioning) but lower stiffness during the swing (allowing for greater compliance and energy absorption).
+For a conservative mechanical model, a strict potential minimum with positive
+reduced Hessian supplies restoring forces and local Lyapunov stability under
+the usual regularity and positive-inertia assumptions. Without dissipation,
+nearby trajectories can oscillate forever; they need not converge to that
+minimum. An attracting equilibrium requires an additional dissipation argument.
+An attractor can also be a periodic orbit or another invariant set, rather than
+an equilibrium. Address, transition, and impact must not all be called potential
+wells merely because they are recognizable landmarks.
 
-## Computational Methods: Optimizing the Stiffness Distribution {#sec-optimization}
-
-::: {.callout-note}
-## Computing Optimal Joint Stiffness Distribution
-
-**Input:**
-
-- Desired trajectory $\bm{q}_d(t)$ for a golf swing phase.
-- Model of joint dynamics, including mass matrix $\bm{M}(\bm{q})$, Coriolis matrix
-  $\bm{C}(\bm{q}, \dot{\bm{q}})$, and gravity $\bm{g}(\bm{q})$.
-- Muscle model with maximum force $F_{\max,i}$ and moment arms $r_i(\bm{q})$ for each joint $i$.
-- Task cost matrix $Q$ (penalties for trajectory error).
-- Control cost matrix $R$ (metabolic cost of muscle activation).
-- Constraint: loop closure constraints $\phi_j(\bm{q}) = 0$ for $j = 1, \ldots, m$.
-
-**Output:** Optimal co-contraction profile $\alpha^*(t)$ and control input profile $u^*(t)$.
-
-**Algorithm:**
-
-1. **Initialize:** Set $\alpha(t) = \alpha_0$ (baseline, e.g., $\alpha_0 = 0.3$).
-
-2. **Optimize control inputs:** For the current $\alpha(t)$, solve the LQR problem to find the
-   optimal control inputs $u^*(t)$:
-
+For $M\ddot e+D\dot e+Ke=0$ with scalar $M>0$, $K>0$, and $D>0$,
 $$
-\min_{u(t)} \int_0^T \left[ (\bm{q} - \bm{q}_d)^T Q (\bm{q} - \bm{q}_d) + u^T R u \right] dt.
+\omega_n=\sqrt{K/M},\qquad \zeta=\frac{D}{2\sqrt{KM}},\qquad
+\lambda_{1,2}=\frac{-D\pm\sqrt{D^2-4MK}}{2M}.
 $$
+The equilibrium is asymptotically stable. At $D=0$ it is stable but not
+attracting. Increasing $K$ with fixed $M,D$ raises natural frequency and lowers
+damping ratio. Consequently, ``more stiffness reduces bandwidth'' is not a
+general law. Disturbance rejection depends on frequency and on which transfer
+function is being measured.
 
-   Subject to the dynamics:
+For a constrained equilibrium, stability uses admissible perturbations and the
+reduced Hessian of the constrained potential, including preload terms. Along
+a moving swing, assess the time-varying variational dynamics. Stable eigenvalues
+of every frozen-time matrix alone do not establish stability of the full
+time-varying system. A change in stiffness is not evidence of a bifurcation;
+one must identify the solution family and demonstrate a change of stability.
 
-$$
-\dot{\bm{q}} = f(\bm{q}, \alpha(t)) + G(\bm{q}) u(t).
-$$
+## What Pre-Tension Changes in an Affine Model
 
-3. **Evaluate cost:** Compute the total metabolic cost:
 
-$$
-C_{\text{total}} = C_{\text{control}} + C_{\text{cocontraction}},
+A mechanical state includes position and velocity, not configuration alone:
+$x=(q,v,a,z)$ may also include activation $a$ and internal tissue states $z$.
+For a specified input and contact mode, a model may take the form
 $$
-
-   where $C_{\text{control}} = \int_0^T \|u(t)\|^2_R dt$ (control effort) and
-   $C_{\text{cocontraction}} = \int_0^T w(\alpha(t)) dt$ (metabolic cost of co-contraction, where
-   $w$ is an increasing function).
-
-4. **Gradient descent:** Update $\alpha(t)$ using gradient descent:
+\dot x=f(x)+G(x)u.
 
 $$
-\alpha(t) \leftarrow \alpha(t) - \eta \frac{\partial C_{\text{total}}}{\partial \alpha(t)},
-$$
-
-   where $\eta$ is the step size (learning rate).
+If $u$ denotes residual torque around a maintained baseline activation, that
+baseline remains in the zero-input dynamics. If $u$ is neural excitation,
+setting it to zero does not instantaneously erase activation or tendon force.
+If total actuator torque is set to zero, the intervention removes a different
+quantity. A zero-torque counterfactual must specify which model is used.
 
-5. **Iterate:** Repeat steps 2--4 until convergence:
-   $\|\partial C_{\text{total}} / \partial \alpha\|_2 < \epsilon$.
+Pre-tension changes state, elastic forces, and local tangent dynamics. In a
+fixed-geometry rigid model with direct torque input, changing a spring does
+not add a stiffness matrix to $M$ or directly change $M^{-1}B$. Through later
+changes of posture, constraints, activation, or actuator model, it can change
+the input-to-task response. This is why same-state acceleration authority and
+finite-duration control performance must be assessed separately.
 
-6. **Return:** $\alpha^*(t)$ and the corresponding optimal control $u^*(t)$.
+A zero-input branch near a target suggests a potentially useful initial state;
+it does not establish low total effort. Earlier actions created that state,
+maintained activation may remain, and small errors in difficult directions
+may require substantial correction. Compare the complete task and preparation
+cost under matched input limits and measurement uncertainty.
 
-**Notes:**
+### Why a Drift Ratio Is Not an Efficiency Measurement
 
-- The key is that increasing $\alpha$ changes the drift field $f(\bm{q}, \alpha)$. A favorable
-  drift field reduces the need for control inputs, thus reducing $C_{\text{control}}$. However,
-  the co-contraction itself has a cost $w(\alpha)$. The algorithm finds the balance.
-- In practice, this optimization can be solved using dynamic programming (Bellman recursion) or by
-  direct transcription (converting the continuous optimal control problem into a
-  finite-dimensional nonlinear programming problem).
-- The constraint $\phi_j(\bm{q}) = 0$ must be satisfied at all times. This can be enforced using
-  penalty methods or Lagrange multipliers.
-- The output $\alpha^*(t)$ should increase during the backswing (building pre-tension), peak at
-  the top of the swing, and decrease during the downswing (releasing pre-tension). This matches
-  the empirical observations from EMG studies.
-:::
+A ratio of drift magnitude to a specified bounded-input magnitude summarizes
+model terms in a chosen norm. It is not a work fraction, an energy source
+fraction, or a measurement of metabolic efficiency. Norms of sums contain
+cross terms; the norm of one arbitrarily signed sum of actuator columns need
+not equal maximum available control. State the admissible input set and use
+its actual optimization when making an authority claim.
 
-### Practical Computation
-
-In practice, the stiffness-optimization algorithm above is implemented by discretizing time and using numerical optimization. A common approach is direct transcription:
-
-$$
-\min_{\bm{q}_k, u_k, \alpha_k} \sum_{k=1}^{N} \left[ (\bm{q}_k - \bm{q}_{d,k})^T Q (\bm{q}_k - \bm{q}_{d,k}) + u_k^T R u_k + w(\alpha_k) \Delta t \right]
-$$
+Magnitude also omits direction. Fast motion away from the target can have a
+large drift ratio and poor performance. Use task error, sensitivity over the
+remaining horizon, and explicit work or energetic costs to evaluate whether
+the drift is helpful.
 
-subject to:
+## Stiffness Modulation Has an Energy Budget
 
-$$
-\bm{q}_{k+1} = \bm{q}_k + \Delta t \left[ f(\bm{q}_k, \alpha_k) + G(\bm{q}_k) u_k \right]
-$$
 
+For a spring with $e=q-q_0(t)$ and storage $V_s=\tfrac12k(t)e^2$,
 $$
-\phi_j(\bm{q}_k) = 0, \quad j = 1, \ldots, m, \quad k = 1, \ldots, N.
+\dot V_s=ke\dot q-ke\dot q_0+\tfrac12\dot k e^2.
 $$
-
-This is a finite-dimensional nonlinear program (NLP) that can be solved using interior-point methods (e.g., IPOPT) or sequential quadratic programming (SQP). The solution gives $\alpha_k^*$ and $u_k^*$ at each time step.
-
-## Summary: Passive Stabilization in the Golf Swing
-
-The central insight of this chapter is that *passive stabilization is not about making the body rigid*. Rather, it is about shaping the energy landscape (through pre-tension, elastic elements, and favorable geometry) so that motion self-organizes toward the task goal.
-
-Key takeaways:
-
-1. **Pre-tensioning modifies the drift field:** By increasing co-contraction, the nervous system changes the natural dynamics of the system. A favorable drift field requires minimal control inputs.
-
-1. **Attractors are low-energy regions where stability is passive:** Elite golfers create attractors at critical swing landmarks (address, top of swing, impact). The nervous system maintains these attractors with minimal effort.
+Changing stiffness or rest position can exchange energy with the mechanism.
+A scheduled stiffness change is not automatically a passive operation. Report
+where this energy goes in the actuator or tissue model.
 
-1. **Optimal stiffness is task dependent:** It is not "maximum stiffness." The optimal strategy balances stability, bandwidth, metabolic cost, and task precision.
+Isometric activated muscle can consume metabolic energy at zero shortening
+velocity. Thus $(F_{\rm ago}+F_{\rm ant})v$ is not a general metabolic-power
+model. Joint power is $\tau^T\dot q$; individual muscle work, tendon storage,
+activation and maintenance heat, and joint work differ. Net torque can conceal
+large opposing forces and energetic expenditure.
 
-1. **The assembly line coordinates intramuscular to intermuscular activation:** The kinetic chain works by progressively recruiting muscles in a hierarchical sequence, transferring momentum from proximal to distal.
+Fascia and other connective tissues can carry load and store energy, but a
+tensegrity analogy does not quantify their contribution to club speed or prove
+a universal low-cost posture. A model needs tissue properties, load paths,
+boundary conditions, and validation. Likewise, reduced modeled loading is not
+by itself clinical evidence of reduced injury risk.
 
-1. **The drift-control ratio (DCR) is the efficiency metric:** A high DCR indicates that the body's natural dynamics are doing most of the work. Elite golfers have high DCR during the downswing (passive release) and lower DCR during the backswing (active building of pre-tension).
+## Testing Coordination With the Uncontrolled Manifold
 
-1. **Experimental evidence supports the framework:** EMG patterns, variance analysis (UCM), and GRF measurements all confirm that elite golfers use passive stabilization effectively.
 
-The practical implication: Improving the golf swing is not about practicing harder (higher control inputs). It is about *building a better landscape*. This means improving posture (to create favorable initial attractors), pre-tensioning strategically (to store elastic energy efficiently), and trusting the body's natural dynamics to drive the swing.
+For task output $y=h(x)$, the nonlinear task-equivalent set is
+$\{x:h(x)=y^*\}$. At a regular point its tangent is $\ker J$, where
+$J=\partial h/\partial x$. This is not the stationary set of a scalar cost.
+If the task is clubhead speed, the state must include velocities: joint angles
+alone do not determine speed [@Scholz1999].
 
-## Passive Stabilization in Parallel Loops
-
-**Exercise 1: Conceptual: Attractor Stability**
-Consider a golfer at address. The posture creates an attractor with potential energy $V(\theta) = \frac{1}{2} K \theta^2$, where $\theta$ is a small deviation from ideal posture and $K$ is the "postural stiffness."
-
-(a) If $K = 100 \, \mathrm{N \cdot m/rad}$, compute the restoring torque for a deviation of $\theta = 0.05 \, \text{rad}$ (about 3 degrees).
-
-(b) If the torso mass is $m = 30 \, \text{kg}$ and the center of mass is $d = 0.1 \, \text{m}$ from the axis of rotation, what is the gravitational torque due to a forward lean of 0.05 rad?
-
-(c) Is the attractor stable? (Is the postural stiffness sufficient to resist the gravitational torque?)
-
-(d) How much co-contraction is needed to increase $K$ to a level where the attractor is strongly stable (restoring torque is at least 2x the gravitational torque)?
-
-**Exercise 2: Mathematical: Impedance Control**
-A golfer's wrist is modeled as a mass-spring-damper system:
-
+Using consistently scaled state coordinates and the corresponding Euclidean
+metric, define $P_\parallel=I-J^+J$, $P_\perp=J^+J$, and sample covariance
+$\Sigma$. With $r=\operatorname{rank}J$ and $0<r<n$, variance per dimension is
 $$
-M \ddot{\theta} + D \dot{\theta} + K \theta = \tau + \tau_{\text{dist}},
+V_\parallel=\frac{\operatorname{tr}(P_\parallel\Sigma)}{n-r},\qquad
+V_\perp=\frac{\operatorname{tr}(P_\perp\Sigma)}{r}.
 $$
-
-where $M = 0.02 \, \mathrm{kg}\cdot\mathrm{m}^2$ (moment of inertia of the hand and club), $D = 0.5 \, \mathrm{N}\cdot\mathrm{m}\cdot\mathrm{s/rad}$ (damping), $K$ is the stiffness (variable), $\tau$ is the muscle torque, and $\tau_{\text{dist}}$ is a disturbance (e.g., impact force).
-
-Suppose the muscle uses impedance control: $\tau = K_c (\theta_d - \theta)$, where $\theta_d$ is the desired angle and $K_c$ is the control gain (related to co-contraction level).
+Parallel means within the task-equivalent tangent; perpendicular means changing
+the task to first order. Test $V_\parallel>V_\perp$ with an appropriate
+subject-level statistical design. Coordinate scaling, measurement noise,
+phase alignment, and nonlinear curvature affect the result. Such covariance
+structure supports a task-stabilization interpretation but does not distinguish
+passive mechanics from feedback or prove a neural algorithm.
 
-(a) Write the closed-loop equation of motion and identify the effective stiffness.
+## An Experimental Program for the Golf Swing
 
-(b) For stability, what is the minimum value of $K_c$ (in units of $\mathrm{N \cdot m/rad}$)?
+The earlier chapter asserted a universal elite-golfer stiffness pulse, minimal
+late-downswing activation, and lower metabolic cost without identifying studies
+that established those claims. Treat these as proposed comparisons, not results.
+No numerical co-contraction schedule is prescribed here.
 
-(c) If $K_c = 100 \, \mathrm{N}\cdot\mathrm{m/rad}$, compute the natural frequency $\omega_n$ and damping ratio $\zeta$ of the wrist.
 
-(d) If a disturbance $\tau_{\text{dist}} = 5 \, \mathrm{N}\cdot\mathrm{m}$ (impact force) is suddenly applied, what is the steady-state deflection $\theta_{\infty}$? How does it depend on $K_c$?
 
-**Exercise 3: Conceptual: Drift Field and ZTCF**
-Consider the golf downswing. The drift field (due to gravity, elastic recoil, and Coriolis forces) points roughly toward the impact position. The control inputs (muscle activation) fine-tune the trajectory.
+1. Define the task: impact location, clubhead velocity, face orientation,
+   or their joint distribution. Specify the tested club, intent, and skill groups.
 
-(a) If the ZTCF (zero-torque counterfactual) is very close to the desired trajectory, is the DCR high or low? What does this mean for muscular effort?
+1. Synchronize kinematics, external forces, and relevant EMG. EMG is an
+   electrical measurement; it is not a direct force or stiffness measurement.
 
-(b) If the ZTCF is far from the desired trajectory (e.g., because pre-tension is inadequate), is the DCR high or low? What is the metabolic cost?
+1. Identify impedance using controlled perturbations and a model separating
+   inertia, damping, stiffness, delays, and measurement error. A dynamic
+   torque/displacement ratio alone conflates these contributions.
 
-(c) Why do elite golfers appear to swing effortlessly? Explain in terms of the drift field.
+1. Compare preparation, swing, and recovery costs. A baseline posture
+   measurement does not determine stiffness throughout a transient swing.
 
-**Exercise 4: Computational: Optimize Stiffness During Downswing**
-Consider a simplified two-joint model of the golf downswing: hip rotation ($\theta_1$) and shoulder rotation ($\theta_2$). The desired motion is:
+1. Distinguish ordinary force-plate loading from ball-contact transmission.
+   Do not assume a universal ground-force spike exactly at impact without
+   synchronized measurements and adequate bandwidth.
 
-$$
-\theta_{1,d}(t) = \theta_{1,0} + \frac{\pi}{4} \left[ 1 - \cos\left(\frac{2\pi t}{T}\right) \right],
-$$
+1. Test alternative explanations: geometry, starting speed, net torque,
+   passive tissue loading, activation, and predictive or delayed feedback.
+   Report unfavorable outcomes as well as favorable ones.
 
-$$
-\theta_{2,d}(t) = \theta_{2,0} + \frac{\pi}{3} \sin\left(\frac{2\pi t}{T}\right),
-$$
 
-where $T = 0.2 \, \text{s}$ is the downswing duration.
+## Optimizing a Stiffness Strategy
 
-The dynamics are decoupled:
 
+Let $\alpha$ parameterize a specified activation or stiffness mechanism. A
+finite-horizon model comparison can minimize
 $$
-M_i \ddot{\theta}_i + D_i \dot{\theta}_i + K_i(\alpha) \theta_i = \tau_i,
+J=\ell_T(x_N)+\sum_{k=0}^{N-1}h\{e_k^TQe_k+u_k^TRu_k+
+c_\alpha(x_k,\alpha_k)+c_{\rm rate}(\dot\alpha_k)\},
 $$
-
-where $M_1 = 0.5, M_2 = 0.1 \, \mathrm{kg}\cdot\mathrm{m}^2$, $D_i = 0.5$ (Ns/rad), and $K_i(\alpha) = K_{0,i} + \alpha \Delta K_i$ with $K_{0,1} = 50, K_{0,2} = 20, \Delta K_1 = 50, \Delta K_2 = 30$ ($\mathrm{N \cdot m/rad}$).
-
-The task cost is $Q = I$ (penalize error equally), and the control cost is $R = I$. The co-contraction cost is $w(\alpha) = 10 \alpha^2$ (quadratic in co-contraction level).
-
-(a) Set up the LQR problem for a fixed $\alpha$. What is the optimal control $u_i^*$ in terms of $\alpha$?
-
-(b) For which values of $\alpha$ (say, $\alpha \in [0, 1]$ discretized in steps of 0.1) is the total cost minimized?
-
-(c) Plot the optimal $\alpha^*(t)$ as a function of time during the downswing. Does it increase or decrease? Why?
+subject to state dynamics, contact and loop constraints, input bounds, and
+admissible activation/stiffness rates. Every running-cost term carries the
+time step. The quantities $c_\alpha$ and $c_{\rm rate}$ are stated penalties
+unless calibrated as physical energetic costs.
 
-(d) Compare the DCR at the optimal $\alpha$ to the DCR at $\alpha = 0$ (no co-contraction) and $\alpha = 1$ (maximum co-contraction). Which is most efficient?
+Use a state containing velocities and activation dynamics where required.
+LQR applies to a linearization with a quadratic objective; a finite horizon
+uses a differential or discrete Riccati recursion, not automatically an
+algebraic steady-state solution. Joint optimization of state, inputs, and
+stiffness is generally nonlinear and constrained. Check feasibility, derivative
+accuracy, integration convergence, stationarity, and sensitivity to starting
+guesses. Penalty terms alone do not exactly enforce loop closure.
 
-**Exercise 5: Experimental Design: Measuring Stiffness**
-Design an experiment to estimate the joint stiffness of the wrist during different phases of the golf swing (address, backswing, top of swing, downswing, impact).
+The optimal profile is an output of this specified comparison. It need not
+peak at transition or decline with increasing load. Those are hypotheses to
+test, not conditions to build into the answer while calling it a prediction.
 
-(a) What measurement equipment would you use (force sensors, motion capture, EMG)?
+## How the Mechanisms Fit Together
 
-(b) How would you apply a perturbation without disrupting the natural swing?
+Geometry directs forces and couples joints. Activation changes force capacity
+and local response. Elastic tissues store and return part of earlier work.
+Feedback and prediction manage deviations that mechanics alone does not reject.
+Impact precision selects which deviations matter. The technical argument for
+coordination is strongest when these contributions are computed in one
+consistent model and tested with measurements, including the cost of preparing
+the state. Apparent effortlessness alone cannot identify any of them.
 
-(c) What are the expected stiffness values (in $\mathrm{N \cdot m/rad}$) at each phase?
+## Exercises
 
-(d) How would you compare elite golfers to amateurs based on stiffness measurements?
 
-**Exercise 6: Theoretical: UCM Decomposition**
-The uncontrolled manifold (UCM) hypothesis states that variance in irrelevant directions is larger than variance in relevant directions. In the golf swing, the relevant direction is the club head speed at impact (task goal), and irrelevant directions include the exact wrist angle, shoulder angle, etc.
+1. For $M=0.02$, $D=0.5$, and $K=100$ in rotational SI units,
+   compute natural frequency, damping ratio, and static deflection under a
+   $5\,\mathrm{N\,m}$ torque. Double $K$ and explain which quantities change.
 
-(a) Define the task Jacobian $J_{\text{task}}$ that maps joint angles to club head speed. (You may assume a simple kinematic chain model.)
+1. Show that the undamped spring conserves energy and therefore cannot
+   attract all nearby nonzero-energy states to its equilibrium.
 
-(b) Define the UCM as the null space of the task Jacobian: $\text{UCM} = \text{null}(J_{\text{task}})$.
+1. Verify the task-compliance example and preserve the Jacobian rank while
+   scaling stiffness. Explain the extra terms introduced by preload.
 
-(c) If the total variance in joint angle space is $\Sigma$, decompose it into variance within the UCM ($V_{\parallel}$) and variance perpendicular to the UCM ($V_{\perp}$).
+1. Derive the variable-spring energy identity, including moving rest length.
+   Identify the terms an actuator must supply or absorb.
 
-(d) The UCM hypothesis predicts $V_{\parallel} > V_{\perp}$. What does this imply about the motor control strategy?
+1. For $J=[1\;1]$ and a specified covariance, compute both UCM variances
+   per dimension. Repeat after rescaling one coordinate and discuss the metric.
 
-(e) How could you test this hypothesis experimentally?
+1. Design a perturbation study that can distinguish intrinsic stiffness
+   from delayed feedback without interpreting EMG amplitude as force.

@@ -1,6 +1,12 @@
 # Agent Handoff — AffineDrift
 
-Updated: 2026-08-30. Current-state only; use Git and GitHub for history.
+Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
+
+## Technical Content Review
+
+- User-directed long-form technical review is tracked under epic #4009, with concrete fixes #4148, #4149, and #4150. See `docs/development/technical-review/REVIEW.md` for equations, scope, sources, validation, and remaining route audits.
+- The current correction set repairs inverse-dynamics double subtraction, constraint-force attribution, impedance/inertia confusion, optimal-control derivations, unsupported passive-stabilization claims, and impact/measurement interpretation. Canonical LaTeX and corresponding Quarto chapters are edited together.
+- Full-corpus #4021 and route batches #4054–#4061 remain open. Source enumeration and targeted pattern checks do not constitute a completed technical review of every article. Preserve the immutable upstream monograph boundary.
 
 ## Protected Authority
 

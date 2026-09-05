@@ -1,0 +1,66 @@
+Use one force convention throughout. In independent generalized coordinates
+$z=(q,\eta)$, let $v=\dot z$ and write
+
+$$
+M(z)\dot v+h(z,v)=\bar B(z)u,\qquad
+h=Cv+\nabla_z V+d,\qquad \bar B=\begin{bmatrix}B\\0\end{bmatrix}.
+$$
+
+Here $h$ contains the terms written on the left of the mechanical balance;
+their signed contribution to acceleration is $a_d=-M^{-1}h$.
+Known external loads must either be included with their signs in $h$ or
+declared separately. These are the standard forward/inverse dynamics
+conventions [@lynch2017modern; @featherstone2008rigid].
+
+**Inverse dynamics estimates the applied generalized load.** Its output is
+
+$$
+\tau_{\mathrm{ID}}=\mathrm{ID}(z,v,\dot v)=M\dot v+h=\bar B u.
+$$
+
+Consequently, $\mathrm{ID}(z,v,a_d)=0$ for an exactly matched zero-input
+model, up to numerical error. It does not return a nonzero gravity, elastic,
+or interaction-force contribution. A constrained model can simultaneously
+have zero actuator torque and nonzero constraint reactions; the solver's
+actuator and reaction outputs must be distinguished.
+
+**A resultant-force partition is a different quantity.** If we retain
+$\tau_{\text{total}}$ for the net generalized right-hand side of $M\dot v$,
+the consistent definitions are
+
+$$
+\tau_{\text{total}}:=M\dot v,
+\qquad \tau_{\text{drift}}:=-h=M a_d,
+\qquad \tau_{\text{input}}:=\bar B u=\tau_{\mathrm{ID}}.
+$$ {#eq-tau_split}
+
+Thus
+
+$$
+\tau_{\text{input}}=\tau_{\text{total}}-\tau_{\text{drift}}
+=M(\dot v-a_d).
+$$ {#eq-tau_input_def}
+
+These symbols denote generalized loads, whose units depend on the coordinate:
+torque for an angle, force for a translation, and the corresponding conjugate
+load for a normalized modal coordinate. They are not individual muscle forces.
+The rigid rows require the **full** acceleration vector:
+$[M_{qq}\ M_{q\eta}]a_d$ includes recoil; $M_{qq}(a_d)_q$ alone does not.
+
+For example, an unforced pendulum at an inclined angle has nonzero gravitational
+acceleration. Applying inverse dynamics to that free fall returns zero pivot
+torque. Holding it stationary instead requires the gravity-balancing torque.
+The same distinction persists in a coupled golfer–club model.
+
+A forward ZTCF follows its own state after release. In a shared local chart,
+
+$$
+\frac{d}{dt}(x-x_0)=f(x)-f(x_0)+G(x)u,
+$$
+
+where $x_0$ is the zero-input trajectory, not the initial-state symbol in this
+equation. Only at a common state does the drift difference vanish. A later
+trajectory difference contains the accumulated effect of changed geometry,
+velocity, deformation, and contact; it is not an instantaneous input-force
+sample. Specify the output, comparison time or event, horizon, and admissible
+input set before interpreting closeness to a ZTCF as control authority.

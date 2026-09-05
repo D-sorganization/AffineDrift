@@ -36,6 +36,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Publish evidence-linked companions to the proximal-distal technical treatment with explicit model and hypothesis boundaries.
 - Pin upstream momentum-transfer agendas, timing-policy viability, and typed-slack identifiability evidence to immutable upstream commits.
 - Maintain textbook bibliographies, citation integrity, and consistent algorithm notation across the series.
+- Keep long-form mechanics and paired textbook arguments consistent about inverse dynamics, constraint reactions, impedance, finite-horizon control, and impact vector geometry; bind numerical examples to independently checked identities and distinguish model predictions from human evidence.
 - Publish technology overviews covering launch-monitor qualification, force measurement, and markerless motion capture.
 - Enforce strict repository root hygiene with an explicit allowlist gating pull requests.
 
