@@ -377,3 +377,6 @@ Validation: all 22 new focused checks pass (18 mathematical/numerical, four sour
 Web verification: all 63 display equations typeset; 254 math containers and zero math errors; no page overflow at 1440/390 pixels. All 18 equation/example/evidence views and three additional figure views were visually inspected, including dark mode. The standalone high-resolution figure was also inspected. No tracked print manuscript changes.
 
 Publication state: twenty prior correction batches through #4199 are published; deployment33997700775 succeeded. Contact/closure PR #4201 merged as fb3df92f54940f0f19b20d5f34775f67d92a232b at 23:40 UTC, with deployment33999279815 pending. This batch must rebase from old contact anchor1c3ce27e697a3342110b4c9999cffc7e7810f19d onto that protected merge before its own PR. Energy-transfer article and bibliography were fully read and identified corrections are claimed in #4202; no correction is yet certified there. Epic #4009, full-corpus #4021 and route batches #4054–#4061 remain open.
+
+
+Aerodynamic publication update: PR #4203 is open from content8473e5b6 rebased onto contact mergefb3df92f. All 88 combined aerodynamic/contact/validator checks pass. Final CI and contact deployment33999279815 remain pending.
