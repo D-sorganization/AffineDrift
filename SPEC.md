@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4199 | Rebuild tangent-reference control and mechanical cases; verify Hamiltonian/KKT signs, discrete derivatives, DDP curvature, exact orbital LQR, arm kinematics and quadrotor hover with 23 new checks and 4,029 full-suite passes. |
 | 2026-09-05 | #4196 | Correct tangent-reference differentiation, moving-coordinate transport, functional sensitivity and finite swing interpretation; 20 new checks, 4,006 full-suite passes and verified web mathematics. |
 | 2026-09-05 | #4195 | Correct counterfactual flow and sensitivity, input invariance, physiological inference and Koike citation across the theory series and long editions. |
 | 2026-09-05 | #4193 | Derive loaded beam boundary conditions, modal normalization and reproducible flexible pendulum dynamics across three web editions. |
