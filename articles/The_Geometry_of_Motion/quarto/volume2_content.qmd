@@ -1501,873 +1501,485 @@ changing its coordinates. Identify quantities that must remain invariant and
 quantities that depend on the chosen metric. Add a separate intervention that
 changes the dynamics and specify the impact prediction it would test.
 
-## Orbital Stability and Transverse Linearization
-
-
-> Stability is not the absence of motion.\\
-> It is the faithfulness of motion.
-
-
-## The Problem With Lyapunov
-
-
-The classical Lyapunov framework asks a simple question: *does the state
-converge to an equilibrium?* We demonstrated in Chapter 1 that this is the
-wrong question for systems whose purpose is to move. But the problem goes
-deeper than philosophical framing---Lyapunov stability is *structurally
-incapable* of analyzing trajectory-tracking systems.
-
-Consider a system perfectly tracking a reference trajectory $\traj^*(t)$.
-The state $\state(t)$ matches $\traj^*(t)$ at every instant. Now apply a
-small timing perturbation: the system executes the same motion but shifted
-by $\varepsilon$ seconds. The perturbed state is $\tilde{\state}(t) =
-\traj^*(t - \varepsilon)$, and the time-indexed error is
-\begin{equation}\label{eq:timing_error}
-  \bm{e}(t) = \tilde{\state}(t) - \traj^*(t)
-  = \traj^*(t - \varepsilon) - \traj^*(t)
-  \approx -\varepsilon\, \dot{\traj}^*(t).
-\end{equation}
-This error does *not* decay to zero---it persists indefinitely,
-oscillating with a magnitude proportional to $\varepsilon\, v(t)$ where $v$
-is the speed. By Lyapunov's definition, the trajectory is *unstable*.
-But the system is executing the correct motion perfectly! The only
-"error" is that it is slightly ahead of or behind schedule.
-
-
-  Lyapunov stability conflates two independent phenomena:
-  1. **Transverse deviations**: the system drifts *away from*
-      the trajectory path. This is a genuine control failure.
-2. **Tangential deviations**: the system is ahead of or behind
-      schedule *along* the trajectory path. This is a timing difference,
-      not a tracking failure.
-
-  Lyapunov stability rejects both. Orbital stability accepts tangential
-  deviations and rejects only transverse ones. For systems whose purpose is
-  motion, orbital stability is the correct notion.
-
-
-::: {.content-visible when-format="pdf"}
-```{=latex}
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  % --- Lyapunov view ---
-  \begin{scope}[shift={(-4.5,0)}]
-    \node[font=\bfseries\small, chapblue] at (0, 3.0) {Lyapunov View};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (-2, 0) -- (2, 0)
-      node[right, font=\small] {$x_1$};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (0, -2) -- (0, 2.5)
-      node[above, font=\small] {$x_2$};
-    % Reference trajectory
-    \draw[very thick, trajgreen, decoration={markings,
-        mark=at position 0.3 with {\arrow{Stealth[length=2.5mm]}},
-        mark=at position 0.7 with {\arrow{Stealth[length=2.5mm]}}
-      }, postaction={decorate}]
-      (-1.5, -1.5) .. controls (-0.5, 1) and (0.5, 1.5) .. (1.5, 0.3);
-    % Reference point at time t
-    \filldraw[trajgreen!80!black] (0.0, 1.15) circle (2.5pt);
-    \node[above right, font=\scriptsize, trajgreen!80!black] at (0.1, 1.2) {$\traj^*(t)$};
-    % Perturbed (timing shift)
-    \filldraw[accentred] (-0.55, 0.5) circle (2.5pt);
-    \node[below left, font=\scriptsize, accentred] at (-0.6, 0.4) {$\traj^*(t\!-\!\varepsilon)$};
-    % Error arrow
-    \draw[-{Stealth[length=2mm]}, thick, accentred, dashed]
-      (0.0, 1.15) -- (-0.5, 0.55);
-    \node[font=\scriptsize, accentred] at (0.5, 0.55) {$\bm{e}(t) \neq 0$};
-    % Verdict
-    \node[font=\small\bfseries, accentred] at (0, -2.5) {"Unstable"};
-    \node[font=\scriptsize] at (0, -2.9) {(wrong answer)};
-  \end{scope}
-
-  % Dividing line
-  \draw[thick, gray!30] (0, -2.2) -- (0, 2.8);
-
-  % --- Orbital view ---
-  \begin{scope}[shift={(4.5,0)}]
-    \node[font=\bfseries\small, trajgreen!80!black] at (0, 3.0) {Orbital View};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (-2, 0) -- (2, 0)
-      node[right, font=\small] {$x_1$};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (0, -2) -- (0, 2.5)
-      node[above, font=\small] {$x_2$};
-    % Reference trajectory
-    \draw[very thick, trajgreen, decoration={markings,
-        mark=at position 0.3 with {\arrow{Stealth[length=2.5mm]}},
-        mark=at position 0.7 with {\arrow{Stealth[length=2.5mm]}}
-      }, postaction={decorate}]
-      (-1.5, -1.5) .. controls (-0.5, 1) and (0.5, 1.5) .. (1.5, 0.3);
-    % Perturbed (timing shift) - ON the trajectory
-    \filldraw[chapblue] (-0.55, 0.5) circle (2.5pt);
-    \node[below left, font=\scriptsize, chapblue] at (-0.6, 0.4) {on $\orbit$};
-    % Transverse distance = 0
-    \node[font=\scriptsize, chapblue] at (1.0, 0.9) {$d_\transverse = 0$};
-    % Verdict
-    \node[font=\small\bfseries, trajgreen!80!black] at (0, -2.5) {"Stable"};
-    \node[font=\scriptsize] at (0, -2.9) {(correct answer)};
-  \end{scope}
-\end{tikzpicture}
-\end{center}
-```
-:::
-
-::: {.content-visible when-format="html"}
-*[Figure: See PDF edition for TikZ diagram.]*
-:::
-
-
-## Orbital Stability: Formal Definitions
-
-
-We now define orbital stability rigorously. The key object is the
-**orbit**---the image of the trajectory as a set, stripped of all
-timing information.
-
-
-  Given a trajectory $\traj^*: [0, T] \to \statespace$, the **orbit**
-  is the set
-  \begin{equation}
-    \orbit = \{\traj^*(t) : t \in [0, T]\} \subset \statespace.
-  \end{equation}
-  The orbit is a one-dimensional submanifold of $\statespace$ (a curve
-  without parameterization). For periodic trajectories with period $T$,
-  $\traj^*(0) = \traj^*(T)$ and $\orbit$ is a closed curve (a loop).
-
-
-  A trajectory $\traj^*(t)$ (or its orbit $\orbit$) is **orbitally
-  stable** if for every $\varepsilon > 0$ there exists $\delta > 0$ such that
-  \begin{equation}\label{eq:orbital_stability}
-    d(\state(0), \orbit) < \delta \implies
-    d(\state(t), \orbit) < \varepsilon \quad \forall\, t \geq 0,
-  \end{equation}
-  where $d(\state, \orbit) = \inf_{p \in \orbit} \norm{\state - p}$ is the
-  distance from the state to the orbit.
-
-  It is **asymptotically orbitally stable** if additionally
-  $d(\state(t), \orbit) \to 0$ as $t \to \infty$.
-
-
-Critically, orbital stability does not require $\norm{\state(t) - \traj^*(t)}
-\to 0$. The system may drift along the orbit (ahead or behind schedule) while
-still satisfying the orbital-stability condition. Only deviations *away from*
-the orbit matter.
-
-
-  A trajectory is orbitally stable **with asymptotic phase** if it is
-  asymptotically orbitally stable and additionally there exists a phase shift
-  $\theta^*$ such that
-  \begin{equation}
-    \norm{\state(t) - \traj^*(t + \theta^*)} \to 0 \quad \text{as } t \to \infty.
-  \end{equation}
-  This means the system not only returns to the orbit but eventually
-  "locks in" to a definite timing, shifted by $\theta^*$ from the
-  nominal schedule. This is the strongest practical form of trajectory
-  stability.
-
-
-::: {#exm-limit_cycle}
-**Limit Cycles: The Prototype**
-
-  The Van der Pol oscillator $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$
-  possesses a **limit cycle**---a periodic orbit that is asymptotically
-  orbitally stable with asymptotic phase. All nearby trajectories spiral
-  toward the limit cycle and eventually synchronize to a definite phase.
-
-  The limit cycle is the simplest example of a system whose purpose is to
-  move: the "target" is not a point but an orbit, and stability means
-  the orbit attracts nearby trajectories. Walking, running, and heartbeats
-  are all limit cycles. The golf swing is a transient trajectory (not
-  periodic), but the same stability concepts apply over the finite interval
-  $[0, T]$.
-:::
-
-
-## The Transverse--Tangential Decomposition
-
-
-To analyze orbital stability, we must decompose the dynamics into components
-along and across the orbit. This is the *transverse--tangential
-decomposition*, the central technical tool of this chapter.
-
-
-### Projection Onto the Orbit
-
-
-  Given a state $\state$ sufficiently close to the orbit $\orbit$, the
-  **nearest-point projection** is
-  \begin{equation}\label{eq:projection}
-    \pi(\state) = \arg\min_{p \in \orbit} \norm{\state - p},
-  \end{equation}
-  and the associated **projected phase** is the unique $s^*(\state)$
-  satisfying $\pi(\state) = \traj^*(s^*)$. The projection is well-defined
-  and smooth in a tubular neighborhood of $\orbit$ (as long as $\state$
-  is closer to $\orbit$ than the minimum radius of curvature of the orbit).
-
-
-### The Moving Hyperplane Decomposition
-
-
-At each point $\traj^*(s)$ on the orbit, the state space $\Reals^n$
-decomposes into a one-dimensional tangential direction and an
-$(n{-}1)$-dimensional transverse hyperplane:
-
-
-  At the point $\traj^*(s)$ on the orbit, define:
-  \begin{align}
-    \text{Tangential direction:} &\quad
-      \bm{t}(s) = \frac{\dot{\traj}^*(s)}{\norm{\dot{\traj}^*(s)}}, \\
-    \text{Transverse hyperplane:} &\quad
-      \Sigma(s) = \{\bm{v} \in \Reals^n : \bm{v}^\top \bm{t}(s) = 0\}.
-  \end{align}
-  A state $\state$ near $\traj^*(s)$ decomposes as
-  \begin{equation}\label{eq:decomposition}
-    \state = \traj^*(s^*) + \bm{\xi}, \qquad
-    \bm{\xi} \in \Sigma(s^*),
-  \end{equation}
-  where $s^*$ is the projected phase and $\bm{\xi}$ is the **transverse
-  deviation**---the component of the error perpendicular to the orbit. Orbital
-  stability is equivalent to the stability of the origin $\bm{\xi} = \bm{0}$
-  in the transverse dynamics.
-
-
-::: {.content-visible when-format="pdf"}
-```{=latex}
-\begin{center}
-\begin{tikzpicture}[scale=1.15]
-  % Orbit
-  \draw[very thick, trajgreen, decoration={markings,
-      mark=at position 0.15 with {\arrow{Stealth[length=3mm]}},
-      mark=at position 0.5 with {\arrow{Stealth[length=3mm]}},
-      mark=at position 0.85 with {\arrow{Stealth[length=3mm]}}
-    }, postaction={decorate}]
-    (-3, -0.5) .. controls (-1.5, 2) and (1.5, 2) .. (3, -0.3);
-  \node[trajgreen!70!black, font=\small\bfseries] at (3.4, 0.1) {$\orbit$};
-
-  % Point on orbit
-  \coordinate (P) at (0, 1.65);
-  \filldraw[trajgreen!70!black] (P) circle (2.5pt);
-  \node[above, font=\small, trajgreen!70!black] at (0, 1.85) {$\traj^*(s^*)$};
-
-  % Tangent vector
-  \draw[-{Stealth[length=3.5mm]}, very thick, chapblue]
-    (P) -- ++(1.2, -0.05);
-  \node[chapblue, font=\small\bfseries] at (1.5, 1.85) {$\bm{t}(s^*)$};
-
-  % Transverse hyperplane (shown as a line in 2D)
-  \draw[thick, darkgold, dashed] ($(P) + (-0.1, -1.8)$) -- ($(P) + (0.1, 1.8)$);
-  \node[darkgold, font=\small\bfseries, rotate=85] at (-0.5, 2.8) {$\Sigma(s^*)$};
-
-  % Actual state
-  \coordinate (X) at (0.3, 0.2);
-  \filldraw[accentred] (X) circle (2.5pt);
-  \node[right, font=\small\bfseries, accentred] at (0.4, 0.2) {$\state(t)$};
-
-  % Transverse deviation
-  \draw[-{Stealth[length=2.5mm]}, thick, accentred]
-    (P) -- ($(P) + (0.05, -1.45)$);
-  \node[accentred, font=\small] at (-0.7, 0.5) {$\bm{\xi}$};
-
-  % Phase annotation
-  \draw[thin, gray, |->] (-3, -1.6) -- (3, -1.6) node[right, font=\small] {$s$};
-  \draw[thin, gray, dashed] (0, -1.6) -- (P);
-  \filldraw[gray] (0, -1.6) circle (1.5pt);
-  \node[font=\small, gray, below] at (0, -1.6) {$s^*$};
-\end{tikzpicture}
-\end{center}
-```
-:::
-
-::: {.content-visible when-format="html"}
-*[Figure: See PDF edition for TikZ diagram.]*
-:::
-
-
-## Transverse Linearization
-
-
-The power of the transverse decomposition is that it reduces orbital
-stability to the stability of a *time-varying linear system*---the
-transverse linearization.
-
-
-### Deriving the Transverse Dynamics
-
-
-Consider the nonlinear system $\dot{\state} = \bm{f}(\state, \control)$
-with a reference trajectory $\traj^*(t)$ satisfying
-$\dot{\traj}^* = \bm{f}(\traj^*, \control^*(t))$. Using the decomposition
-$\state = \traj^*(s^*) + \bm{\xi}$ and linearizing about $\bm{\xi} = \bm{0}$:
-
-::: {#thm-transverse_lin}
-**Transverse Linearization [@HauserHindman1995; @Shiriaev2010; @ManchesterSlotine2017]**
-
-  The linearized transverse dynamics about the orbit $\orbit$ are
-  \begin{equation}\label{eq:transverse_linear}
-    \dot{\bm{\xi}} = \Amat_\transverse(s)\, \bm{\xi}
-    + \Bmat_\transverse(s)\, \delta\control,
-  \end{equation}
-  where $\delta\control = \control - \control^*$ is the feedback perturbation, and
-  \begin{align}
-    \Amat_\transverse(s) &= \bm{P}(s) \left[
-      \frac{\partial \bm{f}}{\partial \state}\bigg|_{\traj^*, \control^*}
-      - \frac{\dot{\traj}^* \otimes (\nabla_{\state} s^*)^\top}
-      {\norm{\dot{\traj}^*}^2} \cdot
-      \frac{\partial \bm{f}}{\partial \state}\bigg|_{\traj^*, \control^*}
-    \right] \bm{P}(s), \label{eq:A_transverse} \\[6pt]
-    \Bmat_\transverse(s) &= \bm{P}(s)\,
-      \frac{\partial \bm{f}}{\partial \control}\bigg|_{\traj^*, \control^*},
-      \label{eq:B_transverse}
-  \end{align}
-  and $\bm{P}(s) = \bm{I} - \bm{t}(s)\bm{t}(s)^\top$ is the orthogonal
-  projector onto $\Sigma(s)$.
-:::
-
-::: {.callout-note title="Remark"}
-**Understanding the Transverse $\Amat_\transverse$**
-
-  Equation \eqref{eq:A_transverse} has a clear structure:
-  - The first term $\bm{P}\, \frac{\partial \bm{f}}{\partial \state}\, \bm{P}$
-  is the standard Jacobian projected onto the transverse space. This
-  captures how the system dynamics affect cross-trajectory deviations.
-- The second term subtracts the component of the Jacobian that acts along
-  the tangent direction---this is exactly the tangential dynamics that
-  orbital stability "forgets."
-  The resulting $\Amat_\transverse(s)$ has dimension $(n{-}1) \times (n{-}1)$,
-  one less than the full state Jacobian. The removed eigenvalue corresponds
-  to motion along the orbit---the tangential direction in which we are
-  *not* demanding stability.
-:::
-
-
-  The reference trajectory $\traj^*(t)$ is asymptotically orbitally stable
-  if and only if the origin of the transverse linearization
-  \eqref{eq:transverse_linear} (with $\delta\control = \bm{0}$) is
-  asymptotically stable. This reduces the orbital stability question from
-  a nonlinear problem on the full $n$-dimensional state space to a
-  *linear* problem on the $(n{-}1)$-dimensional transverse space.
-
-  For controller design: if we can stabilize the linear system
-  \eqref{eq:transverse_linear}, we achieve orbital stability of the
-  nonlinear system. All the tools of linear time-varying (LTV) control
-  theory apply.
-
-
-### The Transverse Jacobian: A Practical Formula
-
-
-For implementation, the key quantities are computed as follows. Let
-$\bm{J}(t) = \frac{\partial \bm{f}}{\partial \state}\big|_{\traj^*, \control^*}$
-be the Jacobian along the reference. Choose any orthonormal basis
-$\{\bm{n}_1(s), \ldots, \bm{n}_{n-1}(s)\}$ for $\Sigma(s)$---the Frenet--Serret
-frame from Chapter 2 provides a natural choice. Collect these into the matrix
-$\bm{N}(s) = [\bm{n}_1 \mid \cdots \mid \bm{n}_{n-1}] \in \Reals^{n \times (n-1)}$.
-Then:
-
-\begin{equation}\label{eq:transverse_practical}
-  \Amat_\transverse(s) = \bm{N}(s)^\top \left[\bm{J}(s)
-  - \frac{\bm{f}^* \cdot \bm{J}(s)^\top \bm{t}(s)}{\norm{\bm{f}^*}^2}\, \bm{f}^*\, \bm{t}(s)^\top
-  - \dot{\bm{N}}(s)\, \bm{N}(s)^\top \right] \bm{N}(s),
-\end{equation}
-where $\bm{f}^* = \bm{f}(\traj^*, \control^*)$ and $\dot{\bm{N}}$ accounts
-for the rotation of the transverse frame along the orbit (the Frenet--Serret
-equations).
-
-::: {#exm-planar_transverse}
-**Transverse Linearization of a Planar System**
-
-  Consider the system $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1 + u$ tracking
-  the circular orbit $\traj^*(t) = (\cos t,\, -\sin t)$ with $u^* = 0$.
-
-  The Jacobian is $\bm{J} = \bigl(\begin{smallmatrix} 0 & 1 \\ -1 & 0
-  \end{smallmatrix}\bigr)$, the tangent vector is
-  $\bm{t} = (-\sin t,\, -\cos t)^\top / 1 = (-\sin t,\, -\cos t)^\top$,
-  and the normal is $\bm{n} = (-\cos t,\, \sin t)^\top$.
-
-  Computing $\Amat_\transverse = \bm{n}^\top[\bm{J} - \text{tangential terms}]\bm{n}$,
-  we find:
-  \begin{equation}
-    \Amat_\transverse(t) = 0, \qquad \Bmat_\transverse(t) = \bm{n}^\top
-    \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \sin t.
-  \end{equation}
-  The open-loop transverse dynamics are *neutrally stable*
-  ($\Amat_\transverse = 0$). Feedback $\delta u = -k\, \xi$ gives
-  $\dot{\xi} = -k\sin^2\!t\, \xi$ (after averaging), which is stable
-  for $k > 0$. The orbit is stabilizable.
-:::
-
-
-## Floquet Theory: Stability of Periodic Orbits
-
-
-For periodic trajectories (limit cycles, walking gaits, repetitive
-manufacturing), the transverse linearization is a *periodic* linear
-system. Floquet theory provides the definitive stability analysis tool.
-
-
-### The State Transition Matrix
-
-
-  For the linear time-varying system $\dot{\bm{\xi}} = \Amat_\transverse(t)\,
-  \bm{\xi}$, the **state transition matrix**
-  $\PhiMat(t, t_0)$ satisfies
-  \begin{equation}
-    \dot{\Phi}(t, t_0) = \Amat_\transverse(t)\, \PhiMat(t, t_0), \qquad
-    \PhiMat(t_0, t_0) = \bm{I}.
-  \end{equation}
-  The solution is $\bm{\xi}(t) = \PhiMat(t, t_0)\, \bm{\xi}(t_0)$.
-
-
-### The Monodromy Matrix
-
-
-  For a periodic orbit with period $T$, the **monodromy matrix**
-  is the state transition matrix over one complete period:
-  \begin{equation}
-    \monodromy = \PhiMat(T, 0).
-  \end{equation}
-  The eigenvalues $\mu_1, \ldots, \mu_{n-1}$ of $\monodromy$ are the
-  **Floquet multipliers** (also called **characteristic
-  multipliers**).
-
-
-::: {#thm-floquet}
-**Floquet Stability Criterion**
-
-  A periodic orbit is:
-  1. **Orbitally stable** if all Floquet multipliers satisfy
-      $|\mu_k| \leq 1$, with multipliers on the unit circle being
-      semisimple.
-2. **Asymptotically orbitally stable** if all Floquet multipliers
-      satisfy $|\mu_k| < 1$ (all strictly inside the unit circle).
-3. **Orbitally unstable** if any Floquet multiplier satisfies
-      $|\mu_k| > 1$.
-
-:::
-
-::: {.callout-note title="Remark"}
-**The Missing Multiplier**
-
-  If we had computed the monodromy matrix for the *full*
-  $n$-dimensional system (not the transverse reduction), there would be
-  $n$ Floquet multipliers, with one of them exactly equal to $+1$. This
-  "trivial" multiplier corresponds to the tangential direction---perturbations
-  along the orbit neither grow nor decay. The transverse reduction removes
-  this trivial multiplier, leaving only the $n - 1$ multipliers that
-  matter for orbital stability.
-
-  This is why the transverse reduction is essential: without it, the
-  monodromy matrix *always* has an eigenvalue at $+1$, making the
-  orbit appear only marginally stable even when it is asymptotically
-  orbitally stable.
-:::
-
-::: {#exm-walking_floquet}
-**Floquet Analysis of a Walking Gait**
-
-  Consider a simplified compass-gait biped with 4-dimensional state space
-  $(\theta_1, \theta_2, \dot{\theta}_1, \dot{\theta}_2)$. The walking gait
-  is a periodic orbit with period $T$ (one stride). The transverse
-  linearization has dimension $n - 1 = 3$.
-
-  After numerically integrating $\PhiMat(T, 0)$ for the transverse dynamics,
-  suppose we find the monodromy matrix has eigenvalues
-  $\mu_1 = 0.7$, $\mu_2 = 0.4$, $\mu_3 = -0.3$.
-  Since all $|\mu_k| < 1$, the gait is asymptotically orbitally stable.
-
-  The physical interpretation: $\mu_1 = 0.7$ means that after one stride,
-  transverse deviations in the first mode are reduced to 70\% of their
-  initial value. After 10 strides, they are reduced to $0.7^{10} \approx 3\%$.
-  The negative multiplier $\mu_3 = -0.3$ indicates an alternating (flip-flop)
-  convergence pattern in the third mode.
-
-  For the golf swing (a non-periodic motion), we cannot use the monodromy
-  matrix directly, but the state transition matrix $\PhiMat(T, 0)$ plays an
-  analogous role---its singular values measure how much transverse
-  deviations amplify or attenuate over the course of the motion.
-:::
-
-
-## Moving Poincar\'e Sections
-
-
-A complementary tool for analyzing orbital stability is the
-**Poincar\'e section**---a codimension-1 surface that the orbit
-crosses transversally. While Floquet theory gives continuous-time
-information, Poincar\'e sections give *discrete-time* (strobed)
-information.
-
-
-  A **Poincar\'e section** for an orbit $\orbit$ is a smooth
-  $(n{-}1)$-dimensional surface $\poincare \subset \statespace$ such that:
-  1. $\orbit$ intersects $\poincare$ transversally (not tangentially).
-2. In a neighborhood of the intersection, every orbit near $\orbit$
-      also crosses $\poincare$.
-
-  The **Poincar\'e return map** $\bm{P}: \poincare \to \poincare$ sends
-  each point on $\poincare$ to the next intersection with $\poincare$ under
-  the flow.
-
-
-For periodic orbits, the orbit crosses $\poincare$ once per period, and
-the Poincar\'e return map has a fixed point at the intersection
-$\state^* = \orbit \cap \poincare$. Orbital stability of $\orbit$ is
-equivalent to stability of this fixed point under the return map.
-
-::: {#thm-poincare_floquet}
-**Poincar\'e--Floquet Connection**
-
-  The Jacobian of the Poincar\'e return map at the fixed point equals the
-  transverse monodromy matrix:
-  \begin{equation}
-    D\bm{P}(\state^*) = \monodromy_\transverse.
-  \end{equation}
-  The Floquet multipliers and the eigenvalues of the Poincar\'e map are
-  identical.
-:::
-
-
-### Moving Poincar\'e Sections for Non-Periodic Trajectories
-
-
-The golf swing is not periodic---it is a *finite-time* trajectory.
-The classical Poincar\'e section (which relies on periodicity) does not
-directly apply. However, we can generalize to **moving Poincar\'e
-sections**: a continuous family of transverse hyperplanes, one at each point
-of the orbit.
-
-
-  A **moving Poincar\'e section** along a trajectory $\traj^*(s)$,
-  $s \in [0, L]$, is the family of hyperplanes
-  \begin{equation}
-    \poincare(s) = \traj^*(s) + \Sigma(s),
-  \end{equation}
-  where $\Sigma(s)$ is the transverse hyperplane at $s$. The
-  **section-to-section map** from $\poincare(s_1)$ to $\poincare(s_2)$
-  is defined by following the flow from $s_1$ to $s_2$:
-  \begin{equation}
-    \bm{P}_{s_1 \to s_2}: \poincare(s_1) \to \poincare(s_2), \qquad
-    \bm{\xi}(s_1) \mapsto \bm{\xi}(s_2).
-  \end{equation}
-  The linearized section-to-section map is the state transition matrix
-  $\PhiMat_\transverse(s_2, s_1)$ of the transverse dynamics.
-
-
-For the golf swing, this gives us a powerful analysis tool:
-
-
-  For a finite-time trajectory $\traj^*: [0, T] \to \statespace$, define
-  the **transverse amplification ratio** from phase $s_1$ to $s_2$:
-  \begin{equation}\label{eq:amplification}
-    \rho(s_1, s_2) = \norm{\PhiMat_\transverse(s_2, s_1)}_2
-    = \sigma_{\max}\!\left(\PhiMat_\transverse(s_2, s_1)\right),
-  \end{equation}
-  where $\sigma_{\max}$ is the largest singular value. If
-  $\rho(s_1, s_2) < 1$, then transverse deviations shrink between $s_1$
-  and $s_2$. If $\rho(s_1, s_2) > 1$, they grow.
-
-  For trajectory design, we require:
-  \begin{equation}
-    \rho(0, s_{\text{impact}}) \ll 1 \qquad \text{(deviations shrink
-    toward impact)}.
-  \end{equation}
-  This is a precise formulation of the funnel concept from Chapter 1:
-  the tube narrows because the transverse dynamics are contracting.
-
-
-::: {#exm-golf_amplification}
-**Amplification Profile of the Golf Swing**
-
-  Consider the 8-dimensional state space of a 4-DOF golf swing model.
-  The transverse dynamics have dimension 7. The transverse state transition
-  matrix $\PhiMat_\transverse(s, 0)$ maps initial deviations to deviations at
-  phase $s$.
-
-  Hypothetical numerical computation on representative swing models reveals the amplification ratio $\rho(0, s)$ as a
-  function of theoretical phase $s$:
-  - $s \in [0, 0.3]$ (backswing): $\rho$ is approximately 1---deviations
-  neither grow nor shrink. The motion is kinematically slow and nearly
-  linear.
-- $s \in [0.3, 0.5]$ (transition): $\rho$ *increases* past 1.
-  This is the unstable phase---the high curvature and speed change
-  amplify deviations. Without feedback, errors grow here.
-- $s \in [0.5, 0.7]$ (late downswing): $\rho$ *decreases*.
-  In some simplified release models, the transverse dynamics contract
-  over this phase interval. Interpreted carefully, the wrist-release
-  geometry narrows the admissible error tube for that model; it is not
-  proof that every real swing is open-loop self-stabilizing.
-- $s = 0.75$ (impact): $\rho(0, 0.75) < 1$. The net effect over
-  the entire swing is transverse contraction---deviations are smaller
-  at impact than at address.
-
-  This profile shows one way skilled golfers could remain accurate despite the
-  extreme nonlinearity of the swing: a well-posed model may exhibit passive
-  transverse contraction near impact, and feedback can exploit that
-  contraction. The result is a model-level funnel, not a blanket claim that
-  errors vanish without sensing or control.
-:::
-
-
-## Controller Design via Transverse Stabilization
-
-
-We now use the transverse linearization to design tracking controllers.
-The approach is systematic: stabilize the transverse linear system
-\eqref{eq:transverse_linear} using standard LTV techniques, then map
-the result back to the nonlinear system.
-
-
-### Time-Varying LQR for Transverse Stabilization
-
-
-  The trajectory tracking problem reduces to solving the *differential
-  Riccati equation* for the transverse dynamics:
-  \begin{equation}\label{eq:riccati}
-    -\dot{\bm{S}}(t) = \Amat_\transverse^\top \bm{S}
-    + \bm{S}\, \Amat_\transverse
-    - \bm{S}\, \Bmat_\transverse \bm{R}^{-1} \Bmat_\transverse^\top \bm{S}
-    + \bm{Q}(t),
-  \end{equation}
-  with terminal condition $\bm{S}(T) = \bm{S}_T$. The optimal transverse
-  feedback gain is
-  \begin{equation}
-    \bm{K}_\transverse(t) = \bm{R}^{-1}\, \Bmat_\transverse(t)^\top\, \bm{S}(t).
-  \end{equation}
-  The full control law is
-  \begin{equation}\label{eq:full_control_law}
-    \control(t) = \underbrace{\control^*(t)}_{\text{feedforward}}
-    + \underbrace{\bm{N}(s^*)\, \bm{K}_\transverse(t)\,
-    \bm{N}(s^*)^\top (\state - \traj^*(s^*))}_{\text{transverse feedback}},
-  \end{equation}
-  where $\bm{N}(s^*)$ maps between the transverse coordinates $\bm{\xi}$
-  and the full state coordinates.
-
-
-The weighting matrices $\bm{Q}(t)$ and $\bm{R}$ have clear physical
-interpretations:
-- $\bm{Q}(t)$ penalizes transverse deviation. Making $\bm{Q}$ large
-  near impact tightens the funnel where precision matters.
-- $\bm{R}$ penalizes control effort. Making $\bm{R}$ small allows
-  aggressive correction but may demand unrealistic actuator authority.
-- The *phase-dependent* nature of $\bm{Q}(t)$ is essential:
-  we want tight tracking near impact and loose tracking during the backswing.
-  This is the time-varying tube from Chapter 1, now realized through the
-  Riccati equation.
-
-
-### Phase-Varying Gains and the Funnel Connection
-
-
-The terminal-value Riccati equation \eqref{eq:riccati} naturally produces
-gains that tighten as the terminal time approaches. This is exactly the
-funnel behavior we designed geometrically in Chapter 1:
-
-::: {#thm-riccati_funnel}
-**Riccati Funnel**
-
-  Let $\bm{S}(t)$ be the solution of \eqref{eq:riccati} with terminal
-  penalty $\bm{S}_T \succ 0$. The ellipsoidal set
-  \begin{equation}
-    \mathcal{E}(t) = \left\{\bm{\xi} \in \Sigma(s) :
-    \bm{\xi}^\top \bm{S}(t)\, \bm{\xi} \leq c \right\}
-  \end{equation}
-  defines a time-varying tube whose width (in the direction of eigenvector
-  $\bm{v}_k$ of $\bm{S}$) is proportional to $1/\sqrt{\lambda_k(t)}$, where
-  $\lambda_k(t)$ is the corresponding eigenvalue of $\bm{S}(t)$.
-
-  As $t \to T$ and $\bm{S}(t) \to \bm{S}_T$, the tube tightens. The
-  closed-loop transverse dynamics ensure that any trajectory starting inside
-  the tube at $t = 0$ remains inside for all $t \in [0, T]$, provided the
-  control authority is sufficient.
-:::
-
-This is the formal connection between the geometric funnel of Chapter 1 and
-the algebraic Riccati equation: **the funnel is the level set of the
-Riccati cost-to-go.**
-
-
-### The Complete Tracking Controller Architecture
-
-
-Assembling all the pieces, the trajectory tracking controller has three
-layers:
-
-::: {.content-visible when-format="pdf"}
-```{=latex}
-\begin{center}
-\begin{tikzpicture}[
-  block/.style={draw, rounded corners, minimum height=1.2cm,
-    minimum width=3.5cm, font=\small, align=center, thick},
-  arrow/.style={-{Stealth[length=3mm]}, thick}
-]
-  % Blocks
-  \node[block, fill=trajgreen!15, draw=trajgreen!70] (ff) at (0, 3)
-    {**Feedforward**\\ $\control^*(t)$ from\\ inverse dynamics};
-  \node[block, fill=chapblue!10, draw=chapblue!70] (proj) at (0, 1.2)
-    {**Projection**\\ $s^* = \pi(\state)$\\ $\bm{\xi} = \bm{P}\,(\state - \traj^*(s^*))$};
-  \node[block, fill=darkgold!15, draw=darkgold!70] (fb) at (0, -0.6)
-    {**Transverse Feedback**\\ $\delta\control = \bm{K}_\transverse(s^*)\, \bm{\xi}$};
-  \node[block, fill=accentred!10, draw=accentred!70] (plant) at (5.5, 1.2)
-    {**Plant**\\ $\dot{\state} = \bm{f}(\state, \control)$};
-
-  % Arrows
-  \draw[arrow] (ff) -| (4, 3) |- node[above, font=\scriptsize, pos=0.25]
-    {$\control^*$} (plant.170);
-  \draw[arrow] (fb) -| (4, -0.6) |- node[below, font=\scriptsize, pos=0.25]
-    {$\delta\control$} (plant.190);
-  \draw[arrow] (plant) -- ++(2, 0) node[right, font=\small] {$\state(t)$}
-    |- (7.5, -2) -| (-3, -2) |- (proj.west);
-  \draw[arrow] (proj) -- (fb);
-
-  % Sum
-  \node[font=\large] at (4.3, 1.2) {$+$};
-\end{tikzpicture}
-\end{center}
-```
-:::
-
-::: {.content-visible when-format="html"}
-*[Figure: See PDF edition for TikZ diagram.]*
-:::
-
-1. **Feedforward** $\control^*(t)$: computed offline from inverse
-    dynamics, provides $\sim90$\% of the total control effort.
-2. **Projection**: measures the current state $\state(t)$,
-    projects onto the orbit to find $s^*$, and computes the transverse
-    deviation $\bm{\xi}$.
-3. **Transverse feedback** $\delta\control = \bm{K}_\transverse(s^*)\, \bm{\xi}$:
-    stabilizes the transverse dynamics using phase-varying gains from the
-    Riccati equation.
-
-
-::: {.callout-note title="Remark"}
-**Why Not Just Use Standard LQR?**
-
-  One could linearize the *full* dynamics about $\traj^*(t)$ and apply
-  standard time-varying LQR to the $n$-dimensional error
-  $\bm{e}(t) = \state(t) - \traj^*(t)$. This works, but:
-  1. It "wastes" control effort trying to correct tangential deviations
-      (timing errors), which are benign.
-2. It fights the inherent marginal stability in the tangential direction,
-      leading to unnecessarily high gains.
-3. It does not produce the correct funnel shape---it penalizes all
-      errors equally, including timing errors.
-
-  The transverse approach avoids all three problems. It is geometrically
-  correct, computationally smaller (dimension $n - 1$ vs.\ $n$), and
-  physically meaningful.
-:::
-
-
-## Robustness of Orbital Stability
-
-
-A practical controller must be robust to model uncertainty and external
-disturbances. The transverse framework provides natural robustness margins.
-
-
-  For the closed-loop transverse system
-  $\dot{\bm{\xi}} = [\Amat_\transverse - \Bmat_\transverse \bm{K}_\transverse]\, \bm{\xi}$,
-  the **transverse gain margin** and **transverse phase margin**
-  are the gain and phase margins of the transverse loop transfer function.
-  These are the trajectory-tracking analogues of the classical setpoint
-  stability margins.
-
-
-::: {#prp-lqr_robust}
-**Robustness of Transverse LQR**
-
-  If the transverse LQR is designed with $\bm{R} = r\bm{I}$, then the
-  closed-loop transverse system has guaranteed gain margin
-  $[1/2, \infty)$ and phase margin $\pm 60^\circ$, inheriting the
-  classical LQR robustness guarantees in each transverse channel.
-:::
-
-For the golf swing, robustness translates directly to *repeatability*:
-a swing with high transverse robustness margins produces consistent results
-even when the golfer's motor commands are noisy.
-
-
-## Summary
-
-
-| **Concept** | **Significance** |
-| --- | --- |
-| only cross-orbit deviations matter |
-| LTV stability; removes the tangential "nuisance" direction |
-| determine stability of periodic orbits |
-| trajectories; connect to the state transition matrix |
-| quantifies transverse error growth or contraction |
-| optimal funnel controller |
-| geometric and algebraic views |
-
-
-This chapter has provided the mathematical backbone for everything that
-follows. The transverse linearization converts the nonlinear trajectory-tracking
-problem into a linear, lower-dimensional problem that inherits all the powerful
-tools of LTV control theory. The Floquet/Poincar\'e framework provides both
-analytical insight and numerical algorithms for assessing stability.
-
-The key insight for the golf swing is that orbital stability---not Lyapunov
-stability---is the correct framework. The swing is designed so that its
-passive transverse dynamics create a natural funnel toward impact, and the
-transverse LQR controller tightens this funnel using phase-varying gains
-that match the demands of each phase of the motion.
-
-In Chapter 5, we will see how underactuation constrains the transverse dynamics,
-creating geometric structure that can be *exploited* rather than merely
-tolerated.
-
-
-## Exercises
-
-
-1. **(Conceptual.)** Explain why a pendulum swinging on its limit
-  cycle (pumped by a periodic torque) is orbitally stable but *not*
-  Lyapunov stable. Sketch the phase portrait and identify the tangential
-  and transverse directions.
-2. **(Computation.)** For the Van der Pol oscillator
-  $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$ with $\mu = 1$:
-  1. **(Transverse linearization.)** For the system
-   $\dot{x}_1 = x_2 + u$, $\dot{x}_2 = -x_1^3$, consider the trajectory
-   $\traj^*(t) = (\cos t, -\sin t)$ with appropriate $u^*$.
-   1. Find $u^*(t)$ such that $\traj^*$ is a solution.
-   2. Compute the full Jacobian $\bm{J}(t)$ along $\traj^*$.
-   3. Compute the transverse Jacobian $\Amat_\transverse(t)$.
-   4. Is the orbit stable open-loop? Design stabilizing transverse feedback.
-2. **(Numerical project: Transverse LQR.)** For the double pendulum
-   from Exercise 3.4:
-   1. Compute a reference swing trajectory using direct collocation
-   (or load from a data file).
-   2. Compute the transverse linearization along the trajectory.
-   3. Solve the differential Riccati equation with $\bm{Q}(t)$ that
-   increases 10-fold near the terminal phase ("impact").
-   4. Simulate the closed-loop system with random initial perturbations
-   and plot the transverse deviation $\norm{\bm{\xi}(t)}$ over time.
-   5. Compute the amplification ratio profile $\rho(0, s)$ and identify
-   the "natural funnel" phase.
-3. **(Design.)** A walking robot with period-1 gait has Floquet
-   multipliers $\mu_1 = 0.9$, $\mu_2 = 1.1$, $\mu_3 = 0.5$.
-   1. Is the gait orbitally stable? Which mode is problematic?
-   2. Design a transverse feedback controller that places the unstable
-   multiplier $\mu_2$ at $0.6$. What gain is required?
-   3. After stabilization, what is the worst-case convergence rate
-   per stride?
-   4. How many strides does it take to reduce a 10\% transverse
-   deviation to 1\%?
-4. **(Philosophical.)** Compare the transverse LQR approach
-   (this chapter) with the standard trajectory-tracking LQR (linearize about
-   $\traj^*(t)$, regulate $\bm{e} = \state - \traj^*(t)$ to zero).
-   1. Under what conditions do the two approaches give identical feedback
-   gains? (Hint: consider straight-line trajectories.)
-   2. Construct a numerical example where standard LQR uses significantly
-   more control effort than transverse LQR.
-   3. Discuss which approach is preferable for the golf swing and why.
-
-
-> ---
-> The pendulum does not care if you are watching at noon or midnight.
-> Its orbit knows no clock.
-> Stability is not arrival. It is the promise
-> that the motion, once begun, will keep its shape---
-> even when the world pushes back.
-
+## Orbital Stability and Transverse Linearization {#orbital-stability-and-transverse-linearization}
+
+### Choose the Error That Matches the Task
+
+A swing can follow a similar spatial path at a different speed, arrive at
+impact at a different time, or deliver a different face orientation at the
+same time. These are different perturbations. Their importance depends on
+the task and on which variables the path contains. A configuration path
+omits velocity; a mechanical state-space path includes it. Sliding along
+the latter is therefore not permission to choose an arbitrary speed along
+the former. The compatibility conditions from Chapter 1 still apply.
+
+Timed tracking compares $x(t)$ with a feasible reference $x_d(t)$ at the same
+clock time. Orbital analysis compares a state with an invariant trajectory
+set. Event-based analysis compares outcomes when a specified event occurs.
+All three can be useful. A stationary ball may make some absolute start-time
+shifts irrelevant, while clubhead speed, face orientation, contact order,
+and timing relative to an external disturbance remain consequential. The
+choice should follow the outcome, not a general preference for or against
+time-indexed error.
+
+Lyapunov stability means that sufficiently small initial perturbations remain
+small. Asymptotic stability additionally requires convergence; exponential
+stability specifies a rate bound. Lyapunov functions can analyze equilibria,
+time-varying tracking errors, invariant sets, and periodic orbits. Orbital
+stability is not an alternative that invalidates Lyapunov analysis. It is a
+choice of the set whose stability we want to study.
+
+For the unit-speed circle $x_d(t)=(\cos t,\sin t)$, a phase-shifted solution
+$x_d(t-\varepsilon)$ has same-time distance
+$$
+\|x_d(t-\varepsilon)-x_d(t)\|=2|\sin(\varepsilon/2)|.
+$$ {#eq-timing_error}
+This remains small with small $\varepsilon$ and does not decay. It disproves
+asymptotic convergence to the scheduled solution, not stability. For a system
+driven by an explicit clock-dependent input, the shifted curve is not generally
+a solution under the original input. Either shift the input too, use a
+phase-dependent autonomous feedback law, or include the forcing phase in the
+state before drawing an orbital conclusion.
+
+### Invariant Orbits and Finite Segments
+
+Consider a smooth autonomous closed-loop system $\dot x=F(x)$ with a regular
+nonstationary periodic solution $\gamma(t+T)=\gamma(t)$ of minimal period $T$.
+Its image $\mathcal O$ is an invariant closed curve. In a neighborhood with a
+specified distance, orbital stability means
+$$
+\forall\epsilon>0\ \exists\delta>0:\quad
+ d(x_0,\mathcal O)<\delta\ \Longrightarrow
+ d(x(t),\mathcal O)<\epsilon\quad\text{for all }t\geq0.
+$$ {#eq-orbital_stability}
+Asymptotic orbital stability adds $d(x(t),\mathcal O)\to0$ locally. Asymptotic
+phase additionally means convergence to a particular time-shifted nominal
+solution, $\|x(t)-\gamma(t+\theta_*)\|\to0$. These statements require the
+relevant existence, invariance, and neighborhood conditions; they are not
+inferred from a visually closed plot of a few coordinates.
+
+A finite downswing segment is generally not invariant: its nominal solution
+leaves through the endpoint. It cannot satisfy an all-future-time set-stability
+definition merely because nearby motions remain close until impact. Useful
+finite-horizon questions instead concern error amplification, constraint
+satisfaction, disturbance sensitivity, and event outcomes before termination.
+They need their own bounds. Calling a finite segment an orbit for descriptive
+purposes should not transfer infinite-time theorems to it.
+
+A nonstationary smooth periodic orbit is regular because its autonomous flow
+cannot pass through an equilibrium and then leave under uniqueness. Arbitrary
+reference curves can have stops, self-intersections, or endpoints. A projection
+into selected measurements can intersect itself even if the full state orbit
+does not. The state, metric, regularity, and selected phase neighborhood must
+therefore be specified before constructing transverse coordinates.
+
+The Van der Pol oscillator has an attracting limit cycle for positive damping
+parameter in its standard form. It is a useful mathematical example. Walking
+is often modeled with hybrid periodic gaits, and a golf swing is usually modeled
+as a transient. Neither an analogy with an oscillator nor an attractive orbit
+in a reduced model establishes a measured human coordination strategy.
+
+### Derive the Local Phase and Transverse Coordinates
+
+Work first in a fixed Euclidean state chart with declared scaling. Let
+$\gamma(\tau)$ be a regular reference, parameterized by its nominal physical
+time $\tau$, and let $u_*(\tau)$ satisfy
+$\gamma'(\tau)=f(\gamma(\tau),u_*(\tau))$. Define
+$v(\tau)=\|\gamma'(\tau)\|>0$, unit tangent $T=\gamma'/v$, and a smooth
+orthonormal normal basis $E(\tau)\in\mathbb R^{n\times(n-1)}$, with
+$E^TE=I$ and $E^TT=0$. A local coordinate representation is
+$$
+x=\gamma(\tau)+E(\tau)\xi,\qquad \xi\in\mathbb R^{n-1}.
+$$ {#eq-decomposition}
+The ambient displacement $E\xi$ has $n$ components; the reduced error $\xi$
+has $n-1$. The orthogonal projector $P=EE^T=I-TT^T$ is an $n\times n$
+matrix. Projecting with $P$ does not itself produce reduced coordinates.
+
+For nearest-point phase, $T(\tau)^T[x-\gamma(\tau)]=0$. This defines a smooth
+local phase only where its derivative with respect to $\tau$ is nonzero and
+the chosen closest point is unique. A compact embedded curve has an appropriate
+tubular neighborhood, but a curvature radius alone does not establish its
+global width: distant pieces of the curve can approach one another. Endpoints
+and branch changes need explicit handling. Frenet frames can fail at zero
+curvature; a smooth normal frame can often be constructed without that failure.
+
+Differentiate the coordinate representation and project along $T$ and $E$.
+For $u=u_*(\tau)+\delta u$, the exact local equations are
+$$
+\dot\tau=\frac{T^Tf(x,u)}{v-T'^TE\xi},\qquad
+ \dot\xi=E^Tf(x,u)-E^TE'\xi\dot\tau.
+$$ {#eq-orbital_exact_transverse}
+Primes here mean derivatives with respect to nominal time $\tau$, and dots
+mean actual physical time. We used $T^TE'=-T'^TE$. The denominator must remain
+nonzero; forward progression additionally requires $\dot\tau>0$. At the
+reference $\dot\tau=1$ and $\dot\xi=0$. This is the nominal-time version of
+Chapter 2's arc-length equations, with its parameter factors made explicit.
+
+Linearization at fixed phase gives
+$$
+\dot\xi=A_\perp(\tau)\xi+B_\perp(\tau)\delta u
+       +O(\|\xi\|^2+\|\delta u\|^2),
+$$ {#eq-transverse_linear}
+$$
+A_\perp=E^Tf_xE-E^TE',\qquad B_\perp=E^Tf_u.
+$$ {#eq-transverse_practical}
+Mixed second-order terms are absorbed into the displayed bound locally.
+The dimensions are $(n-1)\times(n-1)$ and $(n-1)\times m$, respectively.
+The frame derivative matters; an arbitrary sequence of independently computed
+normal bases can introduce sign jumps and fictitious dynamics. In a rotating
+normal basis this term transforms with the basis, preserving the physical
+prediction when the full transformation is retained.
+
+The derivation assumes an autonomous plant and feedforward evaluated at the
+estimated phase. Explicit time dependence, an independent clock-driven input,
+or a dynamic phase estimator adds variables or coupling terms. For a manifold
+state use compatible local charts, connections, or group coordinates as in
+Chapter 3. The fixed-chart formula should not be applied unchanged to an
+arbitrary position-dependent metric. Under a different path parameter, both
+the speed and cost integration measure must be transformed consistently.
+
+#### An Oscillator With a Missing Input Factor
+
+For $\dot x_1=x_2$, $\dot x_2=-x_1+u$, take
+$\gamma(\tau)=(\cos\tau,-\sin\tau)$ and $u_*=0$. Then
+$T=(-\sin\tau,-\cos\tau)^T$, $E=(-\cos\tau,\sin\tau)^T$, and
+$x=(1-\xi)\gamma(\tau)$. The equations become
+$$
+\dot\xi=u\sin\tau,\qquad
+ \dot\tau=1-\frac{u\cos\tau}{1-\xi},\qquad
+ A_\perp=0,\quad B_\perp=\sin\tau.
+$$ {#eq-orbital_oscillator}
+Choose $u=-k\sin\tau\,\xi$ with $k>0$. The exact radial equation is
+$\dot\xi=-k\sin^2\tau\,\xi$; along the nominal orbit $\tau=t$ its scalar
+linearization has one-period multiplier
+$$
+\mu=\exp\!\left(-k\int_0^{2\pi}\sin^2t\,dt\right)=e^{-k\pi}<1.
+$$ {#eq-orbital_oscillator_multiplier}
+This is a local exponential-stability certificate with the usual smoothness
+and regular-phase assumptions. No averaging is required for the multiplier.
+The incorrect law $u=-k\xi$ instead gives exponent
+$-k\int_0^{2\pi}\sin t\,dt=0$ and multiplier one. The missing sine factor
+changes the conclusion. For sufficiently small $\xi$, forward phase remains
+well-defined; this local argument does not establish global behavior at the
+origin, where radial phase is undefined, or under torque saturation.
+
+The related exercise $\dot x_1=x_2+u$, $\dot x_2=-x_1^3$ cannot track the
+same timed circle by any choice of $u$: the second equation would require
+$-\cos t=-\cos^3t$ for all $t$. Checking the uncontrolled equation should
+precede linearization, optimization, or feedback design.
+
+### What Linearization Can Certify
+
+For a smooth invariant orbit, uniform exponential stability of the transverse
+linearization implies local exponential orbital stability under standard
+regularity conditions. An unstable transverse multiplier gives local
+instability. A marginal linearization generally leaves nonlinear behavior
+undecided. Nonlinear asymptotic stability is not equivalent to asymptotic
+stability of the linearized system.
+
+For example, in a local annulus use angular phase $\dot\theta=1$ and radial
+error dynamics either $\dot\xi=-\xi^3$ or $\dot\xi=+\xi^3$. Both have the
+same circle and the same transverse linearization $\dot\xi=0$. Yet
+$$
+\xi_-(t)=\frac{\xi_0}{\sqrt{1+2\xi_0^2t}},\qquad
+ \xi_+(t)=\frac{\xi_0}{\sqrt{1-2\xi_0^2t}}.
+$$ {#eq-orbital_nonlinear_marginal}
+The first converges algebraically; the second grows until it leaves the local
+region. Both linearizations have multiplier one. Higher-order terms decide
+the distinction. This counterexample also explains why a linear Lyapunov
+function is a candidate for nonlinear verification, not an automatic proof
+over a large tube.
+
+### Periodic Orbits, Return Maps, and Hybrid Events
+
+For a periodic transverse linear system $\dot\xi=A_\perp(t)\xi$, the state
+transition matrix satisfies $\partial_t\Phi(t,t_0)=A_\perp(t)\Phi(t,t_0)$,
+$\Phi(t_0,t_0)=I$. Its one-period map $M_\perp=\Phi(T,0)$ has Floquet
+multipliers as eigenvalues. All magnitudes strictly below one give exponential
+stability of this periodic linear system and local exponential stability of
+the smooth nonlinear orbit. Any magnitude above one implies instability.
+For the linear system, semisimple unit-modulus multipliers can permit bounded
+solutions; for the nonlinear orbit they are inconclusive without more analysis.
+
+A nonstationary autonomous periodic orbit has a unit multiplier in the full
+variational system because its tangent is a periodic solution of that system.
+There may be additional unit multipliers. Transverse reduction removes the
+phase direction, not every possible neutral mode. Periodically forced systems
+do not automatically have the same neutral phase direction when the forcing
+clock is held fixed. An augmented phase formulation must state what is varied.
+
+A local Poincare section crosses the flow transversely near a point on a
+periodic orbit. The local return map has a fixed point there. Its derivative
+represents the transverse monodromy map up to a consistent change of section
+coordinates; numerical matrices need not be literally equal under different
+bases. Their nontrivial multipliers agree. A phase basis used around a cycle
+must also be identified consistently after one period; a frame mismatch can
+alter an incorrectly assembled return matrix.
+
+A hypothetical return map with diagonal multipliers $0.7,0.4,-0.3$ contracts
+those eigenmodes, with the last alternating sign. Along the first eigenmode,
+ten returns give factor $0.7^{10}\approx0.028$. This is an illustrative map,
+not a computed walking or golf result. Nonnormal eigenvectors can produce
+large norm growth before asymptotic decay. A gain that moves a multiplier
+cannot be computed from the multiplier alone: the input map is required.
+For $z_{j+1}=1.1z_j+b u_j$, $u_j=-kz_j$, the target $0.6$ requires
+$k=0.5/b$ when $b\ne0$.
+
+Hybrid motion requires the event and reset derivative as well as continuous
+variational integration. For a smooth guard $h(x,t)=0$, reset
+$x^+=\Delta(x^-,t)$, and transverse crossing
+$h_t+h_xf^-\ne0$, the saltation matrix mapping perturbations at a common
+nominal time is
+$$
+S=\Delta_x+
+ \frac{(f^+-\Delta_x f^--\Delta_t)h_x}{h_t+h_xf^-}.
+$$ {#eq-orbital_saltation}
+This includes the effect of changed event time. A hybrid cycle's linear map
+composes continuous transitions and these event maps in chronological order,
+with consistent coordinates. Grazing, simultaneous contacts, or changes in
+event order can invalidate this smooth local formula.
+
+Even an identity reset does not imply $S=I$. In one dimension, let speed
+change from one to two when $x$ crosses zero. Then $S=2$: a small position
+lead triggers the faster mode earlier and doubles the subsequent position
+lead. Differentiating only the identity reset would miss this effect.
+Club-ball contact, ground contact, and changing grip constraints likewise
+need a stated event model; a smooth downswing Jacobian alone does not
+describe sensitivity across an impact.
+
+### Finite-Time Amplification and Impact Sensitivity
+
+For a transient, $\Phi(t_2,t_1)$ gives first-order sensitivity under its stated
+closed-loop dynamics. In a fixed Euclidean norm its largest singular value
+is a worst-case amplification factor. A value above one means \emph{some}
+initial direction is amplified, not all directions. A terminal value below
+one does not exclude earlier growth. Higher-order errors and ongoing
+disturbances also remain outside that homogeneous linear map.
+
+The stable constant matrix
+$$
+A=\begin{pmatrix}-1&10\\0&-1\end{pmatrix},\qquad
+ \Phi(t,0)=e^{-t}\begin{pmatrix}1&10t\\0&1\end{pmatrix}
+$$ {#eq-orbital_transient_growth}
+has both eigenvalues at $-1$. Nevertheless $\|\Phi(1,0)\|_2>3.7$, while
+$\|\Phi(10,0)\|_2<0.005$. A small final error does not prove an intermediate
+joint or contact constraint was respected. Bounds should cover the whole
+relevant interval and the actual output, not just a terminal state norm.
+
+With positive-definite endpoint metrics $W_1,W_2$, the consistent gain is
+$$
+\rho_W=\|W_2^{1/2}\Phi(t_2,t_1)W_1^{-1/2}\|_2.
+$$ {#eq-amplification}
+Changing coordinate units without transforming the metrics changes the
+numerical gain and can change whether it exceeds one. Output sensitivity
+may matter more than the norm of the full transverse state: some directions
+barely affect face orientation, while others have large task consequences.
+For phase-to-phase integration, convert $d\xi/dt$ to $d\xi/ds$ with the
+phase rate; do not substitute a path coordinate for time in an unchanged ODE.
+
+Impact is usually an event rather than a fixed clock time. Let the nominal
+event occur at $t_e$, with $a=h_t+h_xf\ne0$ and a pre-event fixed-time
+perturbation $\delta x=\Phi(t_e,t_0)\delta x_0$. To first order,
+$$
+\delta t_e=-\frac{h_x\delta x}{a},\qquad
+ \delta x_e=\delta x+f\delta t_e,\qquad
+ \delta y=H_x\delta x+(H_xf+H_t)\delta t_e.
+$$ {#eq-orbital_event_sensitivity}
+Here $y=H(x_e,t_e)$ is the event output, and all derivatives are evaluated
+on the nominal pre-event state. A reset requires its own derivative afterward.
+The denominator reveals why near-grazing events can have large timing
+sensitivity even when fixed-time state perturbations look modest.
+
+For constant-speed travel $\dot q=v$, $\dot v=0$ toward $q=L$, the fixed-time
+transition is $\Phi=\left(\begin{smallmatrix}1&t_e\\0&1\end{smallmatrix}\right)$.
+At the event, position perturbation is zero by definition, but velocity
+perturbation remains and
+$\delta t_e=-(\delta q_0+t_e\delta v_0)/v$. A metric that discards event
+time is appropriate only if the task also discards it. A metric that discards
+velocity would miss a central contributor to impact performance.
+
+### LQR With the Correct Variables and Cost
+
+For the reduced linear model, define the finite-horizon cost
+$$
+J=\xi(T)^TS_T\xi(T)+\int_0^T
+       (\xi^TQ(t)\xi+\delta u^TR(t)\delta u)\,dt,
+ \qquad Q,S_T\succeq0,\quad R\succ0.
+$$ {#eq-orbital_lqr_cost}
+With appropriate continuous bounded coefficients and positive-definite $R$,
+the finite-horizon Riccati solution gives
+$$
+-\dot S=A_\perp^TS+SA_\perp-SB_\perp R^{-1}B_\perp^TS+Q,
+ \quad S(T)=S_T,\quad K=R^{-1}B_\perp^TS.
+$$ {#eq-riccati}
+The input law is
+$$
+u=u_*(\tau)-K(\tau)\xi,\qquad
+ \xi=E(\tau)^T[x-\gamma(\tau)].
+$$ {#eq-full_control_law}
+Its correction has $m$ components. Multiplying $K\xi$ by the state basis
+$E$ is generally dimensionally invalid: that basis maps reduced state error
+to ambient state displacement, not to actuator input. The negative sign
+follows the stated gain convention. Finite-horizon optimality for this linear
+cost is not an unlimited-time stability theorem or a nonlinear optimum.
+
+Evaluating a nominal-time gain schedule at measured phase creates a
+phase-dependent controller. The exact dynamics include $\dot\tau$, so an
+off-reference nonlinear certificate must differentiate $S(\tau)$ with that
+actual rate. If the optimization itself uses another phase coordinate $s$,
+then $dt=ds/\dot s$ changes the dynamics and running cost. A frozen nominal
+conversion can be a local design approximation, but should not be described
+as an exact nonlinear optimal-control solution.
+
+The value $V=\xi^TS\xi$ satisfies
+$$
+\dot V=-\xi^T(Q+K^TRK)\xi
+$$ {#eq-orbital_lqr_dissipation}
+along the ideal linear closed loop. If $S>0$, a constant level set gives an
+invariant time-varying ellipsoid for that linear system. Its axis radii are
+$\sqrt{c/\lambda_i(S)}$, but they need not decrease toward the terminal time.
+For a scalar integrator with $Q=R=1$, $T=1$, and $S_T=1/4$,
+$$
+S(t)=\tanh(1-t+\operatorname{arctanh}(1/4)).
+$$ {#eq-orbital_riccati_counterexample}
+This positive solution decreases toward $1/4$, so a fixed-level ellipsoid
+expands. A larger terminal penalty or state weight does not by itself prove
+monotone tightening, feasible torque, or improved impact variance. Those
+claims require the resulting closed-loop and task calculations.
+
+![Transient Growth and Expanding Invariant Sets](../figures/orbital_transient_bounds.png){#fig-orbital_transient_bounds fig-alt="A stable triangular system initially amplifies state errors above three before decaying. A positive finite-horizon Riccati solution produces an invariant level-set radius that grows toward two."}
+The left panel evaluates the triangular transition matrix above; the right
+evaluates the scalar Riccati radius with level one. Both are calculated
+counterexamples, not measured golf profiles. Together they separate asymptotic
+stability, intermediate amplification, and the geometric width of a verified set.
+
+Standard full-state time-varying LQR can use nonuniform weights and explicitly
+represent task-relevant directions. It does not inherently penalize all errors
+equally. Transverse design is useful when phase freedom matches the task and
+the phase estimate is reliable. Timed tracking is useful when schedule matters.
+The comparison should use equal constraints, uncertainty assumptions, and
+outcome criteria, rather than assume one architecture always expends less effort.
+
+### Verify Nonlinear Tubes and Disturbance Effects
+
+For a candidate tube $V(\tau,\xi)\leq c(\tau)$, verify on its boundary
+$$
+V_\tau\dot\tau+V_\xi\dot\xi\leq c'(\tau)\dot\tau
+$$ {#eq-orbital_tube_boundary}
+under the actual nonlinear controller, admissible disturbances, and input
+bounds, with the initial condition inside. Also verify phase-coordinate
+validity, event ordering, and any reset inclusion into the next tube. A
+positive Riccati matrix is a useful starting candidate, not a replacement
+for these checks. For $\dot\xi=-\xi+\xi^3$, the quadratic $V=\xi^2$ has
+$\dot V=-2\xi^2+2\xi^4$: the linearized dissipation holds locally but fails
+outside $|\xi|=1$. Available actuator authority alone does not repair an
+unverified nonlinear inequality.
+
+For additive linear disturbances, the propagation is
+$$
+\xi(t)=\Phi(t,0)\xi_0+
+       \int_0^t\Phi(t,s)D(s)d(s)\,ds.
+$$ {#eq-orbital_disturbance}
+Even strong attenuation of initial error does not eliminate disturbances
+arriving near impact. For white-noise diffusion with covariance intensity
+$Q_d$, a linear covariance model satisfies
+$\dot\Sigma=A_{\rm cl}\Sigma+\Sigma A_{\rm cl}^T+DQ_dD^T$.
+This is a stochastic-model assumption, not a universal description of motor
+noise. Event-output covariance additionally uses the event sensitivity map,
+and uncertainty in estimated phase or model parameters must be included.
+
+Classical gain and phase margins concern specified frequency-domain loop
+models under particular assumptions. An arbitrary time-varying transverse
+system has no ordinary stationary transfer function to which those margins
+can be assigned unchanged. Setting $R=rI$ in finite-horizon LQR does not
+establish universal per-channel half-gain or sixty-degree margins for a
+time-varying nonlinear swing controller. Appropriate alternatives include
+verified Lyapunov inequalities over an uncertainty set, induced-gain bounds,
+delay-aware models, and explicit perturbation studies. Simulation evidence
+should be distinguished from a worst-case certificate.
+
+### A Reproducible Golf Stability Investigation
+
+Define the measured state and the impact event first. State whether the
+comparison is at common time, common phase, or each swing's own impact, and
+which output coordinates determine success. Include clubhead velocity and
+face orientation with their measurement uncertainties rather than treating
+proximity in an arbitrary state plot as sufficient evidence of accuracy.
+
+Next construct a feasible nominal motion and identify what is held fixed in
+the perturbation experiment: prescribed torques, phase-dependent feedback,
+an estimated biological controller, or a passive model. A nominal trajectory
+does not identify its surrounding closed-loop vector field. Different
+feedback laws can generate the same nominal swing and different stability.
+Inverse dynamics supplies model-dependent net force requirements; it does
+not alone reveal how those forces change after a perturbation.
+
+Compute the variational dynamics, phase transformation, and event/reset maps
+for that model. Test numerical derivatives against finite perturbations and
+check convergence with integration tolerance and perturbation size. Examine
+weighted singular values throughout the motion, not just eigenvalues or the
+final gain. Propagate realistic ongoing disturbances and inspect input,
+contact, and joint constraints. Estimate nonlinear validity by direct tests
+or a certificate with a stated region.
+
+Only then compare a proposed passive-assistance mechanism with a changed
+model or controller. Recompute the trajectory and impact event under the
+intervention. Report whether a difference comes from initial-error attenuation,
+disturbance rejection, timing, output sensitivity, or altered nominal speed.
+These aspects can interact: higher speed can improve a performance objective
+while reducing correction time, and a stable state direction may have little
+effect on the ball. There is no universal numerical amplification profile
+through backswing, transition, release, and impact established by geometry alone.
+
+Validate the predicted distinctions on held-out data and report alternative
+models that fit equally well. A reduction in a model's transverse norm is
+evidence about that model and metric. Calling it improved repeatability requires
+the event-output distribution; attributing it to human feedback requires
+additional identification or intervention evidence. Feedforward and feedback
+contributions should be measured under a stated decomposition, not assigned
+a fixed ninety-to-ten percentage.
+
+### Further Reading
+
+[Tedrake's limit-cycle notes](https://underactuated.mit.edu/limit_cycles.html) and [LQR treatment](https://underactuated.mit.edu/lqr.html) explain
+trajectory and orbital analysis within Lyapunov and optimal-control methods.
+[Manchester's transverse-dynamics work](https://arxiv.org/abs/1010.2241)
+develops local coordinates and nonlinear region verification.
+[Kong and colleagues' saltation tutorial](https://arxiv.org/abs/2306.06862)
+explains event-time corrections in hybrid linearization. Their assumptions
+must be matched to the swing model before transferring a stability conclusion.
+
+### Exercises
+
+
+1. Compute the same-time distance between two phase-shifted unit circles.
+Distinguish bounded error, convergence to the scheduled solution, and orbital
+convergence. Explain what changes with a fixed periodic forcing clock.
+1. Derive the nominal-time phase and reduced equations from
+$x=\gamma(\tau)+E(\tau)\xi$. State matrix dimensions and the denominator
+condition. Convert to an arc-length parameter and check the speed factors.
+1. Verify the oscillator's two feedback laws and their linear multipliers.
+Simulate small radial perturbations and compare with $e^{-k\pi}$ after one
+cycle. Check phase positivity and input saturation separately.
+1. Compare $\dot\xi=-\xi^3$ and $\dot\xi=+\xi^3$ around a periodic orbit.
+Explain why their identical unit multiplier does not settle nonlinear stability.
+1. Test feasibility of the proposed circle in
+$\dot x_1=x_2+u$, $\dot x_2=-x_1^3$. Identify the violated equation before
+attempting a feedback or optimization calculation.
+1. Compute singular values of the triangular transition matrix throughout
+$0\leq t\leq10$. Compare transient gain with its eigenvalues, then repeat
+after coordinate scaling with and without transforming the metric.
+1. Derive the event-time and output sensitivity for constant-speed travel.
+Check it by finite differences, then add an identity-reset speed switch and
+verify the saltation factor two.
+1. Verify the scalar Riccati solution with terminal weight $1/4$ and plot
+the fixed-level radius. Explain how invariance and expanding geometric width
+can coexist. Test the nonlinear cubic remainder on a candidate tube.
+1. For $z_{j+1}=1.1z_j+b u_j$, compute gains producing multiplier $0.6$
+for $b=1$ and $b=2$. Explain why multiplier data alone cannot determine a gain.
+1. Design a model-based swing experiment separating initial-error reduction,
+ongoing noise, phase uncertainty, and impact-output sensitivity. Specify an
+intervention and held-out evidence that would distinguish competing explanations.
 
 ## Underactuation and Passive Dynamics
 \label{ch:underactuation}
