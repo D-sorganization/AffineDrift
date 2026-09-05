@@ -69,6 +69,7 @@ ALLOWED_TERMINAL_COMMANDS = frozenset(
         r"\clearpage",
         r"\newpage",
         r"\endinput",
+        r"\endgroup",
         r"\end{document}",
     }
 )
