@@ -135,49 +135,27 @@
     }
   }
 
-  function injectNotesStyles() {
-    if (document.getElementById("ad-notes-workspace-style")) return;
-    const style = document.createElement("style");
-    style.id = "ad-notes-workspace-style";
-    style.textContent = `
-      .ad-notes-toggle {
-        position: fixed; bottom: 1.25rem; left: 1.25rem; z-index: 1200;
-        border: 1px solid #194870; border-radius: 999px; background: #0f4c75; color: #fff;
-        padding: 0.65rem 0.95rem; font-size: 0.9rem; cursor: pointer;
-      }
-      .ad-notes-panel {
-        position: fixed; left: 1.25rem; bottom: 4.5rem; width: min(92vw, 420px);
-        background: var(--bg-primary, #fff); border: 1px solid var(--border-color, #d9e1e8); border-radius: 12px; box-shadow: 0 14px 30px rgba(15, 76, 117, 0.18);
-        z-index: 1200; padding: 0.8rem; display: none;
-      }
-      .ad-notes-panel.open { display: block; }
-      .ad-notes-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-      .ad-notes-header h3 { margin: 0; font-size: 1rem; color: #0f4c75; }
-      .ad-notes-area {
-        width: 100%; min-height: 210px; border: 1px solid var(--border-color, #d9e1e8); border-radius: 8px;
-        padding: 0.65rem; font-size: 0.92rem; resize: vertical; line-height: 1.45;
-        background: var(--bg-primary, #fff); color: var(--text-dark, #243746);
-      }
-      .ad-notes-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.6rem; }
-      .ad-notes-actions button {
-        border: 1px solid var(--border-color, #d1dbe4); background: var(--bg-secondary, #f7fafc); color: var(--text-dark, #243746); border-radius: 6px;
-        padding: 0.38rem 0.6rem; font-size: 0.82rem; cursor: pointer;
-      }
-      .ad-notes-actions .danger { border-color: #f0b9b9; background: #fff3f3; color: #8c2323; }
-      .ad-notes-status { font-size: 0.78rem; color: var(--text-muted, #5e6d7a); margin-top: 0.45rem; min-height: 1.1rem; }
-    `;
-    document.head.appendChild(style);
+  function shouldOfferNotes(pathname) {
+    if (typeof pathname !== "string") {
+      throw new TypeError("notes pathname must be a string");
+    }
+    const critiqueIndex = pathname === "/critiques/" ||
+      pathname === "/critiques/index.html";
+    return pathname.startsWith("/articles/") ||
+      pathname.startsWith("/books/") ||
+      (pathname.startsWith("/critiques/") && !critiqueIndex);
   }
 
   function initNotesWorkspace(options = {}) {
     if (typeof window === "undefined" || typeof document === "undefined") return null;
 
+    const pathname = options.pathname ?? window.location.pathname;
+    if (!shouldOfferNotes(pathname)) return null;
+
     const store = options.store || new NotesWorkspaceStore(window.localStorage);
     if (document.getElementById("ad-notes-workspace-toggle")) {
       return { store };
     }
-
-    injectNotesStyles();
 
     const toggleBtn = document.createElement("button");
     toggleBtn.id = "ad-notes-workspace-toggle";
@@ -245,6 +223,14 @@
     document.body.appendChild(toggleBtn);
     document.body.appendChild(panel);
 
+    function updateToggleVisibility() {
+      const panelOpen = toggleBtn.getAttribute("aria-expanded") === "true";
+      const readingStarted = window.scrollY >= Math.max(180, window.innerHeight * 0.35);
+      toggleBtn.classList.toggle("is-visible", panelOpen || readingStarted);
+    }
+    window.addEventListener("scroll", updateToggleVisibility, { passive: true });
+    updateToggleVisibility();
+
     const textArea = panel.querySelector("#ad-notes-workspace-area");
     const status = panel.querySelector("#ad-notes-status");
 
@@ -268,6 +254,7 @@
       toggleBtn.setAttribute("aria-label", "Collapse Project Notes");
       toggleBtn.setAttribute("title", "Collapse Project Notes");
       panel.setAttribute("aria-hidden", "false");
+      updateToggleVisibility();
       textArea.focus();
     }
 
@@ -277,6 +264,7 @@
       toggleBtn.setAttribute("aria-label", "Expand Project Notes");
       toggleBtn.setAttribute("title", "Expand Project Notes");
       panel.setAttribute("aria-hidden", "true");
+      updateToggleVisibility();
       toggleBtn.focus();
     }
 
@@ -467,13 +455,18 @@
   }
 
   if (typeof window !== "undefined") {
-    window.AffineDriftNotesWorkspace = { initNotesWorkspace, NotesWorkspaceStore, STORAGE_KEYS };
+    window.AffineDriftNotesWorkspace = {
+      initNotesWorkspace,
+      NotesWorkspaceStore,
+      STORAGE_KEYS,
+      shouldOfferNotes,
+    };
     if (!window.__AFFINEDRIFT_NOTES_NO_AUTO_INIT__) {
       initOnDomReady();
     }
   }
 
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { initNotesWorkspace, NotesWorkspaceStore, STORAGE_KEYS };
+    module.exports = { initNotesWorkspace, NotesWorkspaceStore, STORAGE_KEYS, shouldOfferNotes };
   }
 })();

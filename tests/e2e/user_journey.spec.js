@@ -8,18 +8,18 @@ test.describe('User Journey', () => {
     await page.goto('/');
     await expect(page).toHaveTitle(/AffineDrift/);
 
-    // 2. Verify Sidebar is visible
-    const sidebar = page.locator('.home-sidebar');
-    await expect(sidebar).toBeVisible();
+    // 2. Verify Home content is visible
+    await expect(page.locator('.home-content')).toBeVisible();
 
-    // 3. Click on "Drifter Manifesto" link in the sidebar
-    const articleLink = page.locator('.home-sidebar a').filter({ hasText: 'Drifter Manifesto' }).first();
+    // 3. Click on first article link in the entry list
+    const articleLink = page.locator('.entry-list a.entry-list__title').first();
     await expect(articleLink).toBeVisible();
+    const targetHref = await articleLink.getAttribute('href');
     await articleLink.click();
 
     // 4. Verify navigation to the article page
-    await expect(page).toHaveURL(/drifter-manifesto.html/);
     await page.waitForLoadState('domcontentloaded');
+    expect(page.url()).toContain(targetHref.replace(/\.html$/, ''));
 
     // 5. Scroll to the bottom of the page
     // Ensure page is long enough

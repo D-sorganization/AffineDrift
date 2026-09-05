@@ -5,7 +5,6 @@
     margin: 1in;
   }
 
-  header,
   footer,
   #quarto-header,
   .left-sidebar,
@@ -26,6 +25,24 @@
   .toc-nav,
   .history-nav {
     display: none !important;
+  }
+
+  #title-block-header {
+    display: block !important;
+    background: white !important;
+    color: black !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  #title-block-header * {
+    background: transparent !important;
+    color: black !important;
+  }
+
+  html #title-block-header .reading-time-estimate,
+  html #title-block-header .reading-time-estimate span {
+    color: black !important;
   }
 
   body {
@@ -123,10 +140,11 @@
   }
 
   a[href^="http"]::after {
-    content: " (" attr(href) ")";
-    font-size: 9pt;
-    color: #666;
-    word-break: break-all;
+    content: none !important;
+  }
+
+  a[role="doc-biblioref"]::after {
+    content: none !important;
   }
 
   a[href^="#"]::after,
