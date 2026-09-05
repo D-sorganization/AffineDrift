@@ -981,855 +981,525 @@ hypotheses in this chapter.
    its mechanical interpretation, a competing explanation, an independent
    validation measurement, and a criterion that could falsify it.
 
-::: {.callout-warning title="The Gimbal Lock Catastrophe"}
-If we represent orientation using three Euler angles
-$(\phi, \theta, \psi) \in \Reals^3$, we encounter **gimbal lock**:
-configurations where the representation degenerates and loses a degree of
-freedom. At $\theta = \pm\pi/2$, the axes for $\phi$ and $\psi$ align,
-making the system appear to have only 2~DOF when it actually has 3.
-
-This is not a hardware problem---it is a *coordinate singularity*,
-an artifact of forcing a non-Euclidean space ($\SOthree$) into Euclidean
-coordinates ($\Reals^3$). The Apollo guidance system's three-gimbal
-inertial platform had a built-in gimbal-lock caution region that crews
-were trained to avoid; this was a known design constraint of the IMU,
-not a specific Apollo~13 operational event. Every modern spacecraft avoids
-Euler angles for precisely this reason.
-
-The lesson for control: **if you use the wrong coordinates, your
-controller will have singularities that the physical system does not.**
-:::
-
-
-  The configuration space of a mechanical system is a *smooth manifold*
-  $\configspace$---a space that is locally like $\Reals^n$ but may have
-  nontrivial global topology. Control theory built on $\Reals^n$ must be
-  replaced by control theory built on $\configspace$ whenever:
-  1. Joints allow full rotation (wrapping around $\Sone$ or $\SOthree$).
-2. The trajectory traverses a significant fraction of the configuration space.
-3. Singularity-free representation is required for robustness.
-
-  For the golf swing---which involves large rotations in multiple joints
-  simultaneously---all three conditions are met.
-
-
-## Smooth Manifolds: The Minimum You Need
-
-
-We develop only as much manifold theory as the control engineer needs. The
-reader seeking a comprehensive treatment should consult Lee~(2012) or
-Abraham \& Marsden~(1978).
-
-
-  A **smooth manifold** $\manifold$ of dimension $n$ is a set together
-  with a collection of **coordinate charts**
-  $\{(U_\alpha, \varphi_\alpha)\}$ such that:
-  1. Each $U_\alpha \subseteq \manifold$ is an open set, and the
-      $U_\alpha$ cover $\manifold$.
-2. Each $\varphi_\alpha: U_\alpha \to \Reals^n$ is a homeomorphism
-      onto an open subset of $\Reals^n$.
-3. Where two charts overlap, the **transition maps**
-      $\varphi_\beta \circ \varphi_\alpha^{-1}$ are smooth
-      ($C^\infty$) functions from $\Reals^n$ to $\Reals^n$.
-
-
-The key intuition is: a manifold is a space where you can *locally* use
-coordinates, but no single coordinate system works *globally*. You need
-an atlas of overlapping charts, like a road atlas needs multiple pages to cover
-a country.
-
-::: {#exm-circle_manifold}
-**The Circle $\Sone$**
-
-  The circle $\Sone = \{(\cos\theta, \sin\theta) : \theta \in \Reals\}$ is a
-  1-dimensional manifold. It cannot be covered by a single coordinate chart:
-  any angle parameterization $\theta \in [0, 2\pi)$ has a discontinuity
-  at $\theta = 0 = 2\pi$. We need at least two charts:
-  \begin{align}
-    U_1 &= \Sone \setminus \{(-1, 0)\}, &
-    \varphi_1(p) &= \theta \in (-\pi, \pi), \\
-    U_2 &= \Sone \setminus \{(1, 0)\}, &
-    \varphi_2(p) &= \theta \in (0, 2\pi).
-  \end{align}
-  On the overlap $U_1 \cap U_2$, the transition map is either the identity
-  or a shift by $2\pi$---both smooth.
-
-  For a hinge joint, this means: no single angle variable $\theta$ can
-  represent all configurations without a discontinuity. If the joint rotates
-  past the discontinuity, any controller using that angle will experience
-  a "jump"---a coordinate artifact, not a physical event.
-:::
-
-
-### Tangent Spaces and Tangent Vectors
-
-
-On a manifold, there is no global notion of "direction." Velocity is a
-*local* concept, defined at each point.
-
-
-  The **tangent space** $\tangentspace{p}$ at a point $p \in \manifold$
-  is the vector space of all possible velocity vectors at $p$. If $\manifold$
-  has dimension $n$, then $\tangentspace{p} \cong \Reals^n$ as a vector
-  space, but each point has its *own* tangent space.
-
-  Given a curve $\gamma: (-\varepsilon, \varepsilon) \to \manifold$ with
-  $\gamma(0) = p$, the tangent vector $\dot{\gamma}(0)$ is an element of
-  $\tangentspace{p}$.
-
-
-  The **tangent bundle** $T\!\manifold = \bigsqcup_{p \in \manifold}
-  \tangentspace{p}$ is the collection of all tangent spaces, one for each
-  point. It is itself a smooth manifold of dimension $2n$. A point in
-  $T\!\manifold$ is a pair $(p, v)$ where $p \in \manifold$ and
-  $v \in \tangentspace{p}$.
-
-  For a mechanical system with configuration manifold $\configspace$, the
-  **state space is the tangent bundle** $\statespace = \tangentbundle$.
-  A state is a pair $(\bm{q}, \dot{\bm{q}})$---a configuration and a
-  velocity.
-
-
-::: {.content-visible when-format="pdf"}
-```{=latex}
-\begin{center}
-\begin{tikzpicture}[scale=1.1]
-  % Manifold surface
-  \draw[thick, fill=chapblue!8]
-    (-3, 0) .. controls (-2, 1.2) and (-0.5, 1.5) .. (0, 1.2)
-    .. controls (0.5, 0.9) and (2, 1.5) .. (3, 0.8)
-    .. controls (3.3, 0.2) and (2.5, -0.5) .. (1.5, -0.3)
-    .. controls (0.5, -0.1) and (-0.5, -0.8) .. (-1.5, -0.5)
-    .. controls (-2.5, -0.2) and (-3.3, 0.2) .. (-3, 0);
-  \node[font=\large\bfseries, chapblue] at (-2.2, 0.5) {$\manifold$};
-
-  % Point p
-  \coordinate (P) at (0.5, 0.7);
-  \filldraw[accentred] (P) circle (2.5pt);
-  \node[below left, font=\small\bfseries, accentred] at (P) {$p$};
-
-  % Tangent plane
-  \draw[fill=darkgold!10, opacity=0.7, thick, darkgold!60]
-    (-0.8, 1.8) -- (1.8, 2.5) -- (2.2, 0.5) -- (-0.4, -0.2) -- cycle;
-  \node[font=\small, darkgold!80!black] at (1.8, 1.0) {$\tangentspace{p}$};
-
-  % Tangent vector
-  \draw[-{Stealth[length=3.5mm]}, very thick, accentred]
-    (P) -- ++(1.0, 0.8) node[above right, font=\small] {$v \in \tangentspace{p}$};
-
-  % Curve on manifold
-  \draw[thick, trajgreen, decoration={markings,
-      mark=at position 0.6 with {\arrow{Stealth[length=2.5mm]}}
-    }, postaction={decorate}]
-    (-1.5, 0.1) .. controls (-0.5, 0.3) and (0, 0.5) .. (P)
-    .. controls (1.0, 0.9) and (1.8, 1.0) .. (2.3, 0.7);
-  \node[trajgreen!80!black, font=\small] at (-1.7, 0.4) {$\gamma(t)$};
-\end{tikzpicture}
-\end{center}
-```
-:::
-
-::: {.content-visible when-format="html"}
-*[Figure: See PDF edition for TikZ diagram.]*
-:::
-
-
-## The Configuration Manifolds of Joints
-
-
-Every mechanical joint constrains relative motion between two rigid bodies.
-The set of allowed relative configurations forms a manifold whose topology
-depends on the joint type.
-
-| **Joint type** | **DOF** | **Manifold** | **Topology** |
-| --- | --- | --- | --- |
-| Revolute (hinge) | 1 | $\Sone$ | Circle |
-| Prismatic (slider) | 1 | $\Reals$ | Line (or interval) |
-| Universal | 2 | $\Stwo$ | 2-sphere |
-| Ball-and-socket | 3 | $\SOthree$ | Rotation group |
-| Planar | 3 | $\SEthree|_{\text{2D}} = \Reals^2 \times \Sone$ | Plane + rotation |
-| Free body | 6 | $\SEthree = \Reals^3 \rtimes \SOthree$ | Rigid motions of 3-space |
-
-The configuration space of a multi-body system is the *product* of
-individual joint manifolds (modulo kinematic constraints):
-
-
-  For a serial chain of $k$ joints with individual configuration manifolds
-  $\manifold_1, \ldots, \manifold_k$, the total configuration space is
-  \begin{equation}\label{eq:product_config}
-    \configspace = \manifold_1 \times \manifold_2 \times \cdots \times \manifold_k.
-  \end{equation}
-  For example, a robot arm with three revolute joints has
-  $\configspace = \Sone \times \Sone \times \Sone = \Torus^3$, the
-  3-dimensional torus.
-
-
-::: {#exm-shoulder}
-**The Human Shoulder**
-
-  The glenohumeral (shoulder) joint is approximately a ball-and-socket joint
-  with configuration manifold $\SOthree$. Combined with the 1-DOF hinge at
-  the elbow ($\Sone$) and the 1-DOF pronation/supination of the forearm
-  ($\Sone$), the arm has configuration space
-  \begin{equation}
-    \configspace_{\text{arm}} = \SOthree \times \Sone \times \Sone.
-  \end{equation}
-  This is a 5-dimensional manifold with the topology of $\SOthree \times \Torus^2$.
-  No set of 5 angle variables can parameterize this space without singularities.
-:::
-
-
-## The Rotation Group $\SOthree$
-
-
-The rotation group $\SOthree$ appears wherever a joint allows full 3D rotation.
-It is the single most important non-Euclidean manifold in mechanical control,
-and its properties drive many of the challenges we will encounter.
-
-
-  $\SOthree$ is the group of $3 \times 3$ real orthogonal matrices with
-  determinant $+1$:
-  \begin{equation}
-    \SOthree = \{\bm{R} \in \Reals^{3 \times 3} :
-    \bm{R}^\top\!\bm{R} = \bm{I},\; \det(\bm{R}) = 1\}.
-  \end{equation}
-  It is a 3-dimensional compact Lie group. As a manifold, it is diffeomorphic
-  to the real projective space $\Reals P^3$.
-
-
-### Why Euler Angles Fail
-
-
-The most common parameterization of $\SOthree$ uses three Euler angles
-$(\phi, \theta, \psi)$, defining the rotation matrix as a product of three
-elemental rotations. This parameterization has two fundamental problems:
-
-1. **Singularities.** Every 3-parameter representation of $\SOthree$
-    has at least one singularity. For the ZYX convention, gimbal lock occurs
-    at $\theta = \pm\pi/2$. This is a topological necessity, not a flaw
-    in the choice of convention: $\SOthree$ is not homeomorphic to any open
-    subset of $\Reals^3$.
-2. **Non-uniqueness.** Euler angles are periodic: $(\phi, \theta, \psi)$
-    and $(\phi + 2\pi, \theta, \psi)$ represent the same rotation. Near the
-    singularity, drastically different angle triples can represent nearly
-    identical orientations, creating numerical chaos in controllers.
-
-
-  For trajectory control on $\SOthree$, use one of:
-  1. **Rotation matrices** $\bm{R} \in \Reals^{3 \times 3}$: 9
-      parameters with 6 orthogonality constraints. Singularity-free but
-      redundant.
-2. **Unit quaternions** $\bm{q} \in S^3 \subset \Reals^4$: 4
-      parameters with 1 unit-norm constraint. Singularity-free, minimal
-      redundancy, excellent for interpolation and computation.
-3. **Exponential coordinates** (axis-angle or Lie algebra):
-      3 parameters with a singularity at $\norm{\bm{\omega}} = \pi$, but
-      natural for small rotations and linearization.
-
-  Never use Euler angles for control of large-rotation trajectories.
-
-
-### The Lie Algebra $\sothree$
-
-
-The tangent space of $\SOthree$ at the identity is the **Lie algebra**
-$\sothree$---the space of $3 \times 3$ skew-symmetric matrices:
-\begin{equation}
-  \sothree = \{\bm{\Omega} \in \Reals^{3\times 3} :
-  \bm{\Omega}^\top = -\bm{\Omega}\}
-  = \left\{ \skewmat{\bm{\omega}} :=
-  \begin{pmatrix} 0 & -\omega_3 & \omega_2 \\
-  \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{pmatrix}
-  : \bm{\omega} \in \Reals^3 \right\}.
-\end{equation}
-The "hat map" $(\cdot)^\wedge: \Reals^3 \to \sothree$ and its inverse
-"vee map" $(\cdot)^\vee: \sothree \to \Reals^3$ identify the Lie algebra
-with $\Reals^3$ (the space of angular velocity vectors).
-
-
-  The **exponential map** $\exp: \sothree \to \SOthree$ connects the
-  Lie algebra to the Lie group:
-  \begin{equation}\label{eq:exp_map}
-    \bm{R} = \exp(\skewmat{\bm{\omega}})
-    = \bm{I} + \frac{\sin\theta}{\theta}\skewmat{\bm{\omega}}
-    + \frac{1 - \cos\theta}{\theta^2}\skewmat{\bm{\omega}}^2,
-  \end{equation}
-  where $\theta = \norm{\bm{\omega}}$. This is the **Rodrigues formula**.
-  Geometrically, $\bm{R}$ is a rotation by angle $\theta$ about the axis
-  $\bm{\omega}/\theta$.
-
-  The inverse map $\log: \SOthree \to \sothree$ is well-defined for
-  rotations with angle $\theta < \pi$ and gives the **rotation vector**
-  representation.
-
-
-The exponential map is the bridge between the linear world (the Lie algebra,
-where we can add and scale) and the nonlinear world (the Lie group, where
-the actual dynamics live). This bridge is the central tool for linearization
-on manifolds.
-
-
-## The Golf Swing Configuration Space
-
-
-We now apply the manifold framework to our running example. The result will
-show exactly why Euclidean control theory is insufficient for the golf swing.
-
-
-### A Simplified Kinematic Model
-
-
-Consider a 4-segment model of the golf swing:
-1. **Torso**: rotates relative to ground via the spine. Modeled as a
-    3-DOF ball joint: $\manifold_1 = \SOthree$.
-2. **Lead arm**: rotates relative to the torso via the shoulder.
-    Modeled as a 3-DOF ball joint: $\manifold_2 = \SOthree$.
-3. **Forearm/hands**: rotates relative to the upper arm via the
-    elbow (1~DOF) and wrist flexion (1~DOF): $\manifold_3 = \Sone \times \Sone$.
-4. **Club**: rotates relative to the hands via wrist
-    cock/uncock (1~DOF): $\manifold_4 = \Sone$.
-
-
-The total configuration space is:
-\begin{equation}\label{eq:golf_config}
-  \configspace_{\text{golf}} = \SOthree \times \SOthree \times \Sone \times \Sone
-  \times \Sone.
-\end{equation}
-This is a **9-dimensional manifold**. Its topology is
-$\SOthree \times \SOthree \times \Torus^3$---decidedly not $\Reals^9$.
-
-::: {.content-visible when-format="pdf"}
-```{=latex}
-\begin{center}
-\begin{tikzpicture}[scale=0.9, every node/.style={font=\small}]
-  % Stick figure
-  % Ground
-  \draw[thick, gray] (-1, 0) -- (4, 0);
-
-  % Torso
-  \draw[very thick, chapblue] (1.5, 0.3) -- (1.5, 2.5);
-  \filldraw[chapblue] (1.5, 2.5) circle (2pt);
-  \node[right, chapblue, font=\footnotesize] at (1.8, 1.4) {torso};
-
-  % Shoulder joint
-  \draw[fill=accentred, accentred] (1.5, 2.5) circle (5pt);
-  \node[above right, accentred, font=\footnotesize\bfseries] at (1.7, 2.6)
-    {$\SOthree$};
-
-  % Upper arm
-  \draw[very thick, trajgreen] (1.5, 2.5) -- (0.3, 1.5);
-  \filldraw[trajgreen] (0.3, 1.5) circle (2pt);
-  \node[left, trajgreen, font=\footnotesize] at (0.1, 2.0) {arm};
-
-  % Elbow joint
-  \draw[fill=darkgold, darkgold] (0.3, 1.5) circle (4pt);
-  \node[left, darkgold, font=\footnotesize\bfseries] at (0.0, 1.3) {$\Sone$};
-
-  % Forearm
-  \draw[very thick, purplehaze] (0.3, 1.5) -- (-0.3, 0.3);
-  \node[left, purplehaze, font=\footnotesize] at (-0.3, 0.9) {forearm};
-
-  % Wrist joint
-  \draw[fill=darkgold, darkgold] (-0.3, 0.3) circle (4pt);
-  \node[left, darkgold, font=\footnotesize\bfseries] at (-0.6, 0.1) {$\Sone \times \Sone$};
-
-  % Club
-  \draw[very thick, black!70] (-0.3, 0.3) -- (-1.2, -0.8);
-  \filldraw[black] (-1.2, -0.8) circle (3pt);
-  \node[below, font=\footnotesize] at (-1.2, -1.0) {clubhead};
-
-  % Spine joint
-  \draw[fill=accentred, accentred] (1.5, 0.3) circle (5pt);
-  \node[right, accentred, font=\footnotesize\bfseries] at (1.8, 0.3) {$\SOthree$};
-
-  % Configuration space annotation
-  \draw[thick, gray, rounded corners, dashed]
-    (3.2, -0.5) rectangle (7.2, 3.2);
-  \node[font=\bfseries, chapblue] at (5.2, 2.8) {Configuration Space};
-  \node[font=\normalsize, align=left] at (5.2, 1.8)
-    {$\configspace = \SOthree \times \SOthree$};
-  \node[font=\normalsize, align=left] at (5.2, 1.1)
-    {$\phantom{\configspace = {}} \times\;\Sone \times \Sone \times \Sone$};
-  \node[font=\small, align=left] at (5.2, 0.2)
-    {dim $= 3 + 3 + 1 + 1 + 1 = 9$};
-  \node[font=\small, accentred, align=center] at (5.2, -0.4)
-    {**Not $\Reals^9$!**};
-\end{tikzpicture}
-\end{center}
-```
-:::
-
-::: {.content-visible when-format="html"}
-*[Figure: See PDF edition for TikZ diagram.]*
-:::
-
-
-### Why This Matters for Control
-
-
-The state space (tangent bundle) has dimension $2 \times 9 = 18$. A trajectory
-through this space is a curve on an 18-dimensional manifold. The consequences
-for control are immediate:
-
-1. **No global linearization.** You cannot write
-    $\state = \state^* + \delta\state$ with $\delta\state \in \Reals^{18}$,
-    because the "$+$" operation is not defined globally on the manifold.
-    Linearization must be done in the *tangent space*, using the
-    exponential map.
-2. **Error is not a vector.** The "error" between two configurations
-    $\bm{q}_1, \bm{q}_2 \in \configspace$ is not $\bm{q}_2 - \bm{q}_1$
-    (subtraction is undefined on manifolds). The correct notion of error
-    is the *logarithmic map*: $\bm{e} = \log(\bm{q}_1^{-1} \bm{q}_2)$,
-    which lives in the Lie algebra.
-3. **Geodesics replace straight lines.** The "shortest path" between
-    two configurations is not a straight line in any coordinate system---it
-    is a *geodesic* on the manifold, determined by the Riemannian metric.
-    In mechanical coordinates, the kinetic-energy metric is represented by
-    the mass-inertia matrix after that modeling choice has been made.
-4. **Parallel transport replaces vector addition.** To compare
-    tangent vectors (velocities, errors) at different points on the trajectory,
-    we must *transport* them along the manifold using the connection.
-    Simply subtracting velocity vectors at different times is mathematically
-    meaningless.
-
-
-::: {.callout-warning title="Euler Angle Catastrophe in Golf Modeling"}
-Many biomechanics studies parameterize the golf swing using Euler angles for
-each joint. For the shoulder joint ($\SOthree$), this means three angles
-$(\phi_s, \theta_s, \psi_s)$. But during the backswing, the shoulder
-passes through configurations near gimbal lock ($\theta_s \approx \pm\pi/2$).
-
-In these regions:
-- The Jacobian mapping angular velocities to Euler angle rates becomes
-singular.
-- Small physical rotations produce large jumps in angle coordinates.
-- Any controller computing torques from angle errors will produce
-*infinite* commanded torques at the singularity.
-The fix is not to "choose a better Euler angle convention" (all conventions
-have singularities somewhere). The fix is to work on $\SOthree$ directly,
-using rotation matrices or quaternions.
-:::
-
-
-## Riemannian Metrics and the Mass Matrix
-
-
-A manifold by itself has no notion of distance, angle, or length. To measure
-these, we need a **Riemannian metric**---a smooth choice of inner product
-on each tangent space.
-
-
-  A **Riemannian metric** on a manifold $\manifold$ is a smooth assignment
-  of an inner product $\inner{\cdot}{\cdot}_p$ on each tangent space
-  $\tangentspace{p}$. In local coordinates $\bm{q} = (q_1, \ldots, q_n)$, the
-  metric is represented by a positive-definite matrix $\bm{G}(\bm{q})$:
-  \begin{equation}
-    \inner{\bm{v}}{\bm{w}}_{\bm{q}} = \bm{v}^\top \bm{G}(\bm{q})\, \bm{w},
-    \qquad \bm{v}, \bm{w} \in T_{\bm{q}}\manifold.
-  \end{equation}
-
-
-For mechanical systems, nature provides a canonical Riemannian metric: the
-**kinetic energy metric**.
-
-
-  For a mechanical system with generalized coordinates $\bm{q}$ and
-  mass-inertia matrix $\bm{M}(\bm{q})$, the kinetic energy
-  \begin{equation}
-    T = \frac{1}{2}\dot{\bm{q}}^\top \bm{M}(\bm{q})\, \dot{\bm{q}}
-  \end{equation}
-  defines a Riemannian metric $\bm{G} = \bm{M}(\bm{q})$ on $\configspace$.
-  This metric has deep physical significance:
-  1. **Distance** between configurations is measured in "units of
-      kinetic energy"---configurations connected by high-inertia motions
-      are "far apart."
-2. **Geodesics** (shortest paths) under this metric are the
-      trajectories of the *unforced* system---free motions with no
-      applied torques.
-3. **Arc length** from Chapter 2, computed with this metric,
-      naturally weights each DOF by its effective inertia.
-
-
-::: {#exm-inertia_distance}
-**Inertia-Weighted Distance in the Swing**
-
-  Consider two configurations that differ by either:
-  1. A $10^\circ$ rotation of the torso (high inertia, $I \approx 12\;\text{kg}\cdot\text{m}^2$), or
-2. A $10^\circ$ rotation of the wrist (low inertia, $I \approx 0.03\;\text{kg}\cdot\text{m}^2$).
-
-  In Euclidean coordinates, both represent "$10^\circ$ of change." In the
-  kinetic energy metric, the torso rotation is $\sqrt{12/0.03} = 20$ times
-  "farther" than the wrist rotation. This correctly reflects the physical
-  reality: rotating the torso requires 400 times more energy than rotating
-  the wrist by the same angle.
-
-  The curvature of a trajectory measured in this metric therefore naturally
-  captures the *physical* difficulty of the motion, not merely the
-  angular change.
-:::
-
-
-### Geodesics as Natural Trajectories
-
-
-  A **geodesic** on a Riemannian manifold $(\manifold, \bm{G})$ is a
-  curve that locally minimizes arc length. Geodesics satisfy the
-  **geodesic equation**:
-  \begin{equation}\label{eq:geodesic}
-    \ddot{q}^i + \sum_{j,k} \Gamma^i_{jk}(\bm{q})\, \dot{q}^j\, \dot{q}^k = 0,
-  \end{equation}
-  where $\Gamma^i_{jk}$ are the **Christoffel symbols** of the metric
-  $\bm{G}$.
-
-
-The remarkable fact is that the geodesic equation \eqref{eq:geodesic} is
-*exactly* the equation of motion for the unforced mechanical system
-$\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} = \bm{0}$.
-The Coriolis and centrifugal terms are precisely the Christoffel symbol terms.
-Free motions of mechanical systems are geodesics on the configuration manifold
-equipped with the kinetic energy metric.
-
-
-  For trajectory design, geodesics represent the "easiest" paths---the
-  motions the system would naturally follow with no applied forces. A
-  well-designed trajectory stays close to geodesics where possible,
-  deviating only where task requirements (e.g., impact conditions) demand
-  it.
-
-  In the golf swing, the follow-through is nearly geodesic: after impact,
-  the golfer relaxes and the body follows its natural, inertia-weighted
-  path through configuration space. The downswing deviates significantly
-  from the geodesic because the task (delivering maximum clubhead speed at
-  impact) requires active torques to redirect the motion.
-
-
-## Curves on Manifolds Revisited
-
-
-With the manifold framework in place, we can extend every concept from
-Chapter 2 to non-Euclidean configuration spaces.
-
-
-### Covariant Differentiation
-
-
-On $\Reals^n$, we differentiate vector fields by taking component-wise
-derivatives. On a manifold, this does not work---the tangent spaces at
-different points are different vector spaces, so we cannot simply subtract
-vectors at different points.
-
-
-  The **covariant derivative** (or **Levi-Civita connection**)
-  $\nabla$ is the unique way to differentiate vector fields along curves on
-  a Riemannian manifold that:
-  1. Is compatible with the metric:
-      $\frac{\dd}{\dd t}\inner{\bm{V}}{\bm{W}} =
-      \inner{\nabla_{\dot{\gamma}} \bm{V}}{\bm{W}} +
-      \inner{\bm{V}}{\nabla_{\dot{\gamma}} \bm{W}}$.
-2. Is torsion-free: $\nabla_{\bm{V}}\bm{W} - \nabla_{\bm{W}}\bm{V}
-      = [\bm{V}, \bm{W}]$.
-
-  In local coordinates, the covariant derivative of a vector field
-  $\bm{V}$ along a curve $\gamma(t)$ is
-  \begin{equation}
-    (\nabla_{\dot{\gamma}} \bm{V})^i
-    = \dot{V}^i + \sum_{j,k} \Gamma^i_{jk}\, \dot{\gamma}^j\, V^k.
-  \end{equation}
-
-
-The covariant derivative replaces the ordinary derivative in all of our
-Chapter 2 formulas. The generalized curvatures, the Frenet--Serret frame,
-and the transverse decomposition all carry over, with $\dd/\dd s$ replaced
-by $\nabla_{\dot{\gamma}}$.
-
-
-### Manifold Curvature of Trajectories
-
-
-  The **geodesic curvature** of a curve $\gamma(s)$ on a Riemannian
-  manifold, parameterized by arc length, is
-  \begin{equation}
-    \kappa_g(s) = \norm{\nabla_{\dot{\gamma}} \dot{\gamma}}.
-  \end{equation}
-  This measures how much the curve deviates from a geodesic. A geodesic
-  has $\kappa_g = 0$ everywhere.
-
-
-Geodesic curvature is the manifold generalization of the curvature from
-Chapter 2, and it has the same control interpretation: *geodesic
-curvature measures the force per unit mass needed to follow the curve*,
-beyond what the natural dynamics would provide for free.
-
-::: {.proposition}
-  The control force required to track a trajectory $\gamma^*(s)$ at speed
-  $v$ on a configuration manifold with metric $\bm{M}(\bm{q})$ has magnitude
-  \begin{equation}
-    \norm{\bm{\tau}_{\perp}} = \kappa_g(s)\, v^2,
-  \end{equation}
-  where $\norm{\cdot}$ is measured in the dual (force) metric. Comparing with
-  the Euclidean formula $a_\perp = \kappa v^2$ from Chapter 2: the Euclidean
-  curvature $\kappa$ is replaced by the geodesic curvature $\kappa_g$, which
-  accounts for the curvature of the manifold itself.
-:::
-
-This is a deeper version of the Curvature--Authority Principle. The control
-demand is reduced along directions where the manifold's own curvature
-"helps"---i.e., where the natural dynamics carry the system in the desired
-direction. The control demand increases where the trajectory fights the
-natural dynamics.
-
-::: {#exm-downswing_geod_curv}
-**Geodesic Curvature of the Downswing**
-
-  During the downswing, the trajectory has two sources of curvature:
-  1. **Euclidean curvature**: the path bends in coordinate space
-      (the club changes direction).
-2. **Manifold curvature**: the Christoffel symbol terms
-      ($\Gamma^i_{jk}\dot{q}^j\dot{q}^k$) represent Coriolis and centrifugal
-      effects that curve the natural trajectories.
-
-  The geodesic curvature $\kappa_g$ is the *difference*. When the
-  Coriolis/centrifugal terms push the system in the direction the trajectory
-  wants to go (as happens during the wrist release, where centrifugal
-  acceleration "unhinges" the club), $\kappa_g$ is *less* than the
-  Euclidean $\kappa$. The passive dynamics are doing work for free.
-
-  This is the geometric explanation for the "free speed" of the golf swing:
-  a well-designed trajectory aligns with the manifold's geodesics during the
-  speed-critical phase, exploiting the natural dynamics rather than fighting
-  them.
-:::
-
-
-## Error Metrics on Manifolds
-
-
-We now address the critical question: how do we measure tracking error when
-the state space is a manifold?
-
-
-### The Logarithmic Error
-
-
-  For two configurations $\bm{q}_1, \bm{q}_2 \in \configspace$ where
-  $\configspace$ is a Lie group, the **error** is
-  \begin{equation}\label{eq:log_error}
-    \bm{e} = \log(\bm{q}_1^{-1}\, \bm{q}_2) \in \text{Lie algebra}.
-  \end{equation}
-  For the rotation group $\SOthree$, this gives
-  \begin{equation}
-    \bm{e}_R = \log(\bm{R}_1^\top \bm{R}_2)^\vee \in \Reals^3,
-  \end{equation}
-  which is the rotation vector needed to go from $\bm{R}_1$ to $\bm{R}_2$.
-  This error is zero if and only if $\bm{q}_1 = \bm{q}_2$, and it varies
-  smoothly with both arguments (away from the cut locus at $\norm{\bm{e}} = \pi$).
-
-
-::: {.callout-note title="Remark"}
-**Why Not Just Subtract Quaternions?**
-
-  Given two unit quaternions $\bm{q}_1$ and $\bm{q}_2$, a tempting error
-  metric is $\bm{e} = \bm{q}_2 - \bm{q}_1$. But this lives in $\Reals^4$,
-  not in the tangent space of $S^3$. Worse, it violates the double-cover
-  property: $\bm{q}$ and $-\bm{q}$ represent the same rotation, so the
-  error $\bm{q}_2 - \bm{q}_1$ and $-\bm{q}_2 - \bm{q}_1$ should be
-  "the same," but they point in opposite directions.
-
-  The logarithmic error correctly handles the group structure and produces
-  an error vector in the Lie algebra that has a clear physical interpretation
-  (the angular velocity needed to correct the error in unit time).
-:::
-
-
-### The Trajectory Tube on a Manifold
-
-
-The trajectory tube from Chapter 1 now generalizes naturally:
-
-
-  Let $\traj^*: [0, T] \to \configspace$ be a reference trajectory on a
-  Riemannian manifold $(\configspace, \bm{G})$ and let
-  $\varepsilon: [0, T] \to \Reals_{>0}$ be a tube radius function. The
-  **manifold trajectory tube** is
-  \begin{equation}
-    \mathcal{T}(t) = \left\{\, \bm{q} \in \configspace :
-    d_{\bm{G}}\!\left(\bm{q},\, \traj^*(t)\right) \leq \varepsilon(t) \,\right\},
-  \end{equation}
-  where $d_{\bm{G}}$ is the **geodesic distance**---the length of the
-  shortest geodesic connecting $\bm{q}$ and $\traj^*(t)$.
-
-
-The geodesic distance correctly accounts for the topology of the configuration
-space. On $\SOthree$, the maximum distance between any two orientations is $\pi$
-(a half-rotation), and the tube wraps properly around the group.
-
-
-## Equations of Motion on Manifolds
-
-
-The Euler--Lagrange equations on a manifold take a coordinate-free form that
-reveals the geometric structure:
-
-::: {#thm-lagrange_manifold}
-**Lagrangian Mechanics on Manifolds**
-
-  For a mechanical system on a configuration manifold $(\configspace, \bm{M})$
-  with potential energy $V: \configspace \to \Reals$ and generalized forces
-  $\bm{\tau}$, the equations of motion are
-  \begin{equation}\label{eq:euler_lagrange_manifold}
-    \bm{M}(\bm{q})\, \nabla_{\dot{\bm{q}}} \dot{\bm{q}} = -\mathrm{grad}\, V + \bm{B}\, \control,
-  \end{equation}
-  where $\nabla_{\dot{\bm{q}}} \dot{\bm{q}}$ is the covariant acceleration and
-  $\mathrm{grad}\, V$ is the Riemannian gradient of the potential energy.
-:::
-
-In local coordinates, this reduces to the familiar
-$\bm{M}\ddot{\bm{q}} + \bm{C}\dot{\bm{q}} + \bm{g} = \bm{B}\control$,
-but the coordinate-free form \eqref{eq:euler_lagrange_manifold} makes clear that:
-- The Coriolis matrix $\bm{C}$ is not a separate "term"---it is the
-  Christoffel symbol contribution to the covariant derivative.
-- The equation has the same form on any manifold, regardless of coordinate
-  choice.
-- The "centrifugal and Coriolis forces" are geometric artifacts of the
-  manifold's curvature, not real forces. On a flat manifold ($\Reals^n$),
-  they vanish.
-
-
-## Practical Implications for Controller Implementation
-
-
-We conclude with concrete guidance for implementing trajectory controllers
-on manifold-valued configuration spaces.
-
-
-  A trajectory tracking controller for a system on $\configspace$ must:
-  1. **Compute errors using the logarithmic map**, not coordinate
-      subtraction:
-      \begin{equation}
-        \bm{e}_q = \log\!\left((\bm{q}^*)^{-1}\, \bm{q}\right), \qquad
-        \bm{e}_v = \dot{\bm{q}} - \mathrm{PT}_{q^* \to q}(\dot{\bm{q}}^*),
-      \end{equation}
-      where $\mathrm{PT}$ denotes parallel transport of the reference velocity
-      to the current configuration.
-2. **Compute feedforward using the covariant derivative**, not
-      ordinary differentiation of coordinates.
-3. **Design feedback gains in the tangent space**, then map the
-      resulting control back to the manifold via the exponential map.
-4. **Monitor for cut-locus proximity**: when the error approaches
-      $\pi$ (for $\SOthree$), the logarithmic map becomes ill-conditioned.
-      Switch to a recovery strategy.
-
-
-::: {#exm-pd_so3}
-**PD Control on $\SOthree$**
-
-  The manifold-correct PD controller for tracking a reference orientation
-  $\bm{R}^*(t)$ with a rigid body (moment of inertia $\bm{J}$,
-  angular velocity $\bm{\omega}$) is:
-  \begin{equation}\label{eq:pd_so3}
-    \bm{\tau} = -k_p\, \log(\bm{R}^{*\top}\bm{R})^\vee
-    - k_d\, (\bm{\omega} - \bm{R}^{*\top}\bm{R}\,\bm{\omega}^*)
-    + \bm{J}\dot{\bm{\omega}}^* + \bm{\omega} \times \bm{J}\bm{\omega},
-  \end{equation}
-  where the first term is the manifold-correct proportional error
-  (logarithmic map), the second is the velocity error (parallel-transported),
-  and the last two terms are the feedforward (covariant derivative of the
-  reference).
-
-  Compare with the na\"{\i}ve Euler-angle PD controller:
-  $\tau = -k_p(\bm{\theta} - \bm{\theta}^*) - k_d(\dot{\bm{\theta}} - \dot{\bm{\theta}}^*)$.
-  The na\"{\i}ve controller has singularities; Eq.~\eqref{eq:pd_so3} does not.
-  The na\"{\i}ve controller produces torques proportional to angle differences
-  (which can be misleading near $\pm\pi$); Eq.~\eqref{eq:pd_so3} produces
-  torques proportional to the *true rotation* needed to correct the error.
-:::
-
-
-## Summary
-
-
-| **Euclidean assumption** | **Manifold replacement** |
-| --- | --- |
-| $\configspace = \Reals^n$ | $\configspace = \SOthree^k \times \Torus^m \times \cdots$ |
-| Error: $\bm{e} = \bm{q} - \bm{q}^*$ | Error: $\bm{e} = \log((\bm{q}^*)^{-1}\bm{q})$ |
-| Derivative: $\ddot{\bm{q}}$ | Covariant derivative: $\nabla_{\dot{q}}\dot{\bm{q}}$ |
-| Shortest path: straight line | Shortest path: geodesic |
-| Distance: $\norm{\bm{q}_2 - \bm{q}_1}$ | Geodesic distance: $d_{\bm{G}}(\bm{q}_1, \bm{q}_2)$ |
-| Curvature: $\kappa$ (Ch.~2) | Geodesic curvature: $\kappa_g$ |
-| Trajectory tube: Euclidean ball | Geodesic ball |
-| Coriolis terms: "extra forces" | Christoffel symbols: manifold geometry |
-| PD: $-k_p\bm{e} - k_d\dot{\bm{e}}$ | $-k_p\log(\cdot)^\vee - k_d(\text{parallel transport})$ |
-
-
-The central message of this chapter is that the configuration spaces of
-mechanical systems have geometry, and this geometry matters for control.
-Working in $\Reals^n$ when the true space is $\SOthree \times \Torus^k$
-introduces artificial singularities, incorrect error metrics, and
-controllers that fail when the system moves far from a nominal configuration.
-
-The trajectory-first philosophy of this book demands that we take the
-geometry seriously from the start. The curves we designed in Chapter 2 live
-on manifolds, and the stability theory we will develop in Chapter 4 must
-respect the manifold structure. The payoff is controllers that work globally,
-without singularities, and that correctly exploit the natural dynamics
-encoded in the manifold's Riemannian geometry.
-
-
-## Exercises
-
-
-1. **(Topology.)** Determine the configuration manifold and its
-  dimension for each system:
-  1. **(Euler angle singularity.)** For the ZYX Euler angle representation
-   $\bm{R} = R_z(\psi)\, R_y(\theta)\, R_x(\phi)$ (yaw $\psi$ about Z, pitch $\theta$ about Y, roll $\phi$ about X, per `NOTATION.md`):
-   1. Compute the Jacobian $\bm{J}$ relating angular velocity
-   $\bm{\omega}$ to Euler angle rates $(\dot{\phi}, \dot{\theta}, \dot{\psi})$.
-   2. Show that $\bm{J}$ is singular at $\theta = \pm\pi/2$.
-   3. Find an orientation trajectory $\bm{R}(t)$ that passes through the
-   singularity and compute the Euler angle rates. What happens?
-2. **(Logarithmic error.)** For two rotations
-   $\bm{R}_1 = \bm{I}$ and $\bm{R}_2 = R_z(\alpha)$ (rotation by $\alpha$
-   about $z$):
-   1. Compute $\log(\bm{R}_1^\top\bm{R}_2)^\vee$ for
-   $\alpha = \pi/6, \pi/2, \pi, 5\pi/3$.
-   2. Compare with the "error" $\alpha - 0 = \alpha$ as a function of
-   $\alpha$. At what point do they differ significantly?
-   3. What happens at $\alpha = \pi$? Explain geometrically.
-3. **(Geodesics.)** For a double pendulum with masses $m_1, m_2$ and
-   lengths $l_1, l_2$:
-   1. Write the mass matrix $\bm{M}(\theta_1, \theta_2)$.
-   2. Compute the Christoffel symbols (or use the Coriolis matrix formula
-   $C_{ijk} = \frac{1}{2}(\partial M_{ij}/\partial q_k +
-   \partial M_{ik}/\partial q_j - \partial M_{jk}/\partial q_i)$).
-   3. Numerically integrate the geodesic equation from initial condition
-   $(\theta_1, \theta_2) = (0, 0)$ with $(\dot{\theta}_1, \dot{\theta}_2) = (1, 0)$.
-   Plot the geodesic on $\Torus^2$.
-4. **(Manifold PD control.)** Implement and compare:
-   1. An Euler-angle PD controller for a rigid body tracking a reference
-   orientation $\bm{R}^*(t) = R_z(\omega t)$ (constant-speed rotation).
-   2. The manifold PD controller from Eq.~\eqref{eq:pd_so3} for the
-   same task.
-   3. Run both controllers with the reference trajectory passing through
-   $\theta = \pi/2$ (gimbal lock for ZYX convention). Compare the
-   tracking errors and commanded torques.
-5. **(Golf swing configuration space.)** For the 9-DOF golf swing
-   model of Eq.~\eqref{eq:golf_config}:
-   1. How many Euler angles would be needed to parameterize the full
-   configuration space? How many singularity surfaces exist?
-   2. Propose a quaternion-based parameterization for the two $\SOthree$
-   joints. What is the total number of parameters? What constraints
-   must be maintained?
-   3. Discuss the trade-offs between the Euler angle and quaternion
-   representations for numerical simulation of the golf swing.
-
-
-> ---
-> The sphere cannot be flattened without tearing.
-> The rotation group cannot be charted without singularity.
-> Do not fight the topology---ride it.
-> The manifold is not an obstacle. It is the landscape
-> through which every motion flows.
-
+## Configuration Manifolds {#configuration-manifolds}
+
+### Describe the System Before Choosing Coordinates
+
+A club has a position and an orientation. An elbow angle describes a relative
+configuration, while clubface orientation describes an output of the entire
+kinematic chain. Angular velocity adds information that a configuration does
+not contain. These distinctions matter when comparing swings: a small change
+in a joint coordinate can accompany a large change in an impact outcome, and
+a large coordinate jump can occur while the physical motion remains smooth.
+Geometry helps us distinguish these possibilities. It does not determine which
+motion a golfer should make without a mechanical model and an outcome criterion.
+
+Coordinates are measurements expressed as numbers. They are legitimate local
+descriptions, not false versions of the physical system. A useful model states
+what configurations are identified, what constraints apply, and where its
+coordinates remain valid. Some mechanical configuration spaces are Euclidean;
+others require multiple charts or a constrained representation. The relevant
+question is whether the chosen description covers the motion being analyzed
+without ambiguity that the analysis fails to handle.
+
+An ideal revolute joint with unlimited rotation has configuration space $S^1$
+when a full turn restores every modeled property. If cable winding, accumulated
+twist, or another internal variable distinguishes successive turns, that angle
+alone is not a complete configuration. A joint restricted between two stops
+instead has an interval of admissible angles. Its interior admits a single
+real coordinate; the endpoints require a boundary or contact model. These
+models answer different questions and should not be interchanged silently.
+
+A smooth $n$-dimensional manifold is a Hausdorff, second-countable space locally
+described by open subsets of $\mathbb R^n$, with smooth invertible transitions
+between overlapping coordinate charts. This definition covers $\mathbb R^n$
+itself. A chart need not cover the entire space, but some manifolds do admit one
+global chart. A circle does not admit a single nonsingular real coordinate
+with all its identifications preserved. Embedding it as $(\cos\theta,\sin\theta)$
+uses two numbers subject to one constraint rather than creating a second
+degree of freedom. Boundaries, corners, changing contact modes, and singular
+constraint sets require qualifications beyond an ordinary smooth manifold.
+
+#### Configurations, Directions, and Task Outputs
+
+A spherical pendulum whose only configuration is the direction of a rigid rod
+has space $S^2$. An unconstrained rigid-body orientation has space $SO(3)$,
+which also records rotation about the rod's axis. A two-axis universal joint
+consists of ordered revolute joints. With ideal unlimited independent angles,
+its joint configuration space is $S^1\times S^1$, not automatically $S^2$.
+Its pointing-direction output may cover a sphere with repeated or singular
+representations. Joint limits, interference, or closure can restrict that
+space. Counting two degrees of freedom does not identify its topology.
+
+An open ideal chain with two spherical joints and three revolute joints has
+the nine-dimensional configuration space
+$$
+Q_0=SO(3)\times SO(3)\times(S^1)^3,\qquad \dim Q_0=9.
+$$ {#eq-golf_config}
+This can be a teaching model of torso, shoulder, elbow, and wrist motion.
+It is not an anatomical assertion that those joints rotate without limits,
+nor a complete two-handed golfer. A real model must state its pelvis/ground
+attachment, joint axes, ranges, hand contacts, and whether shaft flexibility
+or grip compliance is represented. Shoulder translation and distributed
+spinal motion may matter for the chosen question.
+
+Smooth holonomic constraints $\Phi(q)=0$ with independent Jacobian rows define
+a local submanifold of dimension $n-\operatorname{rank}D\Phi$. Velocities then
+satisfy $D\Phi(q)\dot q=0$. At changing rank, this dimension argument needs
+reassessment. Unilateral contact also has inequalities and mode transitions.
+A velocity constraint need not integrate to a configuration constraint.
+Consequently, a closed chain cannot be analyzed by adding nominal joint
+degrees of freedom and ignoring closure. Nor does configuration dimension
+give the number of independently identifiable hand forces or muscle inputs.
+
+The clubhead position $p(q)$ and face orientation $R_c(q)$ are task maps out
+of this configuration space. Their derivatives can lose rank even when the
+configuration coordinates are regular. Conversely, singular coordinates can
+be replaced without changing the rank of a physical task map. Keeping these
+two questions separate is essential when interpreting a large wrist-angle
+change or a poorly conditioned inverse calculation.
+
+### Velocities, Forces, and Mechanical State
+
+A tangent vector at $q$ describes an infinitesimal configuration change. In
+coordinates it has components $v^i$, and a mechanical velocity is one such
+vector. The tangent bundle $TQ$ collects all pairs $(q,v)$. For a regular
+second-order mechanical model with no additional internal state, it is a
+natural state space of dimension $2n$. Muscle activation, viscoelastic memory,
+flexible modes, controller state, and contact mode can require an augmented
+state. A configuration path alone does not determine any of these quantities.
+
+A generalized force is a covector $F\in T_q^*Q$: it acts on a virtual
+displacement to give virtual work, and on velocity to give power. In coordinates,
+$$
+\delta W=F_i\,\delta q^i,\qquad P=F_i\dot q^i.
+$$ {#eq-manifold_force_power}
+Repeated indices are summed here. A torque represented by a three-vector in
+a chosen orthonormal frame uses an identification between vectors and
+covectors; this convenience should not obscure the dual role of force.
+Mass and inertia provide a different identification in generalized coordinates.
+
+Let new coordinates be $z=\psi(q)$ with invertible Jacobian $A=D\psi$.
+Velocity components transform as $v_z=A v_q$, whereas force components
+transform as $F_z=A^{-T}F_q$. Therefore $F_z^Tv_z=F_q^Tv_q$: physical power
+does not depend on the coordinate units or chart. Transforming both with $A$
+would generally destroy this equality. This is a direct diagnostic for
+incorrect unit scaling in a swing model.
+
+For a positive-definite mass matrix $M(q)$, kinetic energy is
+$$
+T(q,v)=\tfrac12v^TM(q)v,\qquad
+ M_z=A^{-T}M_qA^{-1}.
+$$ {#eq-manifold_kinetic_metric}
+It defines an inner product on configuration tangent vectors. Redundant
+coordinates, massless idealizations, or uneliminated constraints can instead
+give a singular matrix; then a positive-definite metric must be justified on
+the appropriate reduced tangent space. The configuration mass matrix is not
+automatically a metric on the augmented position/velocity/activation state.
+
+### Rotations and Three Different Singularities
+
+We use active rotation matrices $R\in SO(3)$ mapping body components into
+world components. Thus $R^TR=I$ and $\det R=1$. Body angular velocity $\omega$
+and world angular velocity $\omega_w$ satisfy
+$$
+\dot R=R\widehat\omega=\widehat{\omega_w}R,\qquad
+ \omega_w=R\omega,\qquad \widehat a\,b=a\times b.
+$$ {#eq-manifold_rotation_kinematics}
+Nine matrix entries describe three rotational degrees of freedom subject to
+constraints. A numerical integrator must preserve or appropriately restore
+these constraints. This representation avoids Euler-chart singularities,
+but it does not remove joint stops, loss of task authority, or input bounds.
+
+For the specific ZYX convention $R=R_z(\psi)R_y(\theta)R_x(\phi)$, body
+angular velocity is related to roll, pitch, and yaw rates by
+$$
+\omega=
+ \begin{pmatrix}
+ 1&0&-\sin\theta\\
+ 0&\cos\phi&\sin\phi\cos\theta\\
+ 0&-\sin\phi&\cos\phi\cos\theta
+ \end{pmatrix}
+ \begin{pmatrix}\dot\phi\\\dot\theta\\\dot\psi\end{pmatrix},
+ \qquad \det E=\cos\theta.
+$$ {#eq-manifold_euler_rates}
+At $\theta=\pm\pi/2$ the rate map loses rank. Recovering arbitrary angle
+rates from a physical angular velocity is then impossible or nonunique, and
+nearby inversions can amplify measurement errors. This does not mean the
+rigid body loses a rotational degree of freedom. A pure pitch motion
+$R(t)=R_y(t)$ crosses $\pi/2$ with finite body velocity $(0,1,0)$; this special
+coordinate path remains finite even though the chart cannot represent all
+nearby motions regularly. Infinite torque does not follow from the chart
+alone: it depends on whether a controller performs an ill-conditioned
+inversion, differentiates discontinuities, saturates, or switches charts.
+
+There are three distinct concerns. A \emph{coordinate singularity} is a
+failure of a representation. A \emph{mechanical singularity} may align actual
+gimbal axes or change the mobility of a mechanism. A \emph{task singularity}
+is a rank loss in the map from feasible joint velocity to the selected output.
+A three-gimbal inertial platform can physically suffer gimbal alignment;
+rewriting its orientation with quaternions does not rebuild its hardware.
+Historical spacecraft incidents should not substitute for this distinction.
+
+For biomechanics, report the rotation sequence, segment frames, calibration,
+and the observed distance to its singular set. A different Euler sequence or
+local chart can be entirely adequate over a measured swing. Quaternion or
+matrix methods are useful when coverage, interpolation, or integration makes
+them preferable. No sequence-independent claim that every golf shoulder
+passes near gimbal lock is justified without actual orientation data.
+
+#### Exponential Coordinates and the Half-Turn Cut
+
+For a rotation vector $a\in\mathbb R^3$, $\alpha=\|a\|$, Rodrigues' formula is
+$$
+\exp(\widehat a)=I+\frac{\sin\alpha}{\alpha}\widehat a
+       +\frac{1-\cos\alpha}{\alpha^2}\widehat a^2.
+$$ {#eq-manifold_rodrigues}
+The coefficients have limits $1$ and $1/2$ at zero. Stable implementations
+use appropriate small-angle expansions. The principal rotation logarithm
+chooses an angle below $\pi$ away from half-turns. At angle $\pi$, axes $n$
+and $-n$ give the same rotation with opposite rotation vectors. A single
+continuous principal branch cannot resolve that choice globally.
+
+This branch ambiguity differs from a singular differential of the exponential
+map. The right-trivialized differential is
+$$
+J_r(a)=I-\frac{1-\cos\alpha}{\alpha^2}\widehat a
+       +\frac{\alpha-\sin\alpha}{\alpha^3}\widehat a^2,
+ \qquad \det J_r=\left(\frac{2\sin(\alpha/2)}{\alpha}\right)^2.
+$$ {#eq-manifold_exp_jacobian}
+Its determinant is $4/\pi^2$ at a half-turn and zero at a nonzero full turn.
+The exponential is locally regular at each half-turn vector even though the
+principal logarithm must choose between globally identified vectors. At
+zero the determinant limit is one. This example separates local invertibility
+from global uniqueness, two ideas that should remain distinct throughout
+trajectory analysis.
+
+A unit quaternion is another rotation representation, with $q$ and $-q$
+representing the same orientation. The raw Euclidean difference can have norm
+two for identical physical orientations. A shortest angular distance is
+$2\arccos(|q_1^Tq_2|)$ for normalized quaternions, with the dot product clipped
+for numerical roundoff. Sign-consistent interpolation or a sign-invariant
+error is needed. A raw quaternion difference does not generally reverse
+direction when only one input sign changes; the actual defect is dependence
+on an arbitrary representative. Lifting rotations to quaternions does not
+by itself guarantee global continuous feedback convergence or prevent unwinding.
+
+### What a Kinetic Metric Measures
+
+The kinetic metric gives the length of a configuration curve $q(\lambda)$ as
+$$
+L_M=\int\sqrt{q'(\lambda)^TM(q(\lambda))q'(\lambda)}\,d\lambda
+     =\int\sqrt{2T(q(t),\dot q(t))}\,dt.
+$$ {#eq-manifold_metric_length}
+It is invariant under regular monotone changes of the path parameter. It is
+not an energy expenditure. With ordinary mechanical units its length has
+units $\sqrt{\mathrm{kg}}\,\mathrm m$, whereas its time derivative has units
+$\sqrt{\mathrm J}$. Work also depends on applied forces, and metabolic cost
+requires a physiological model. The action $\int T\,dt$ is another quantity
+again and depends on timing.
+
+For an illustrative pair of independent constant-inertia rotations with
+$I_1=12$ and $I_2=0.03\;\mathrm{kg\,m^2}$, equal angular displacements have
+metric lengths in ratio $\sqrt{I_1/I_2}=20$. At equal angular speeds their
+kinetic energies have ratio $400$. If the first motion takes twenty times
+as long with a correspondingly scaled speed profile, their instantaneous
+kinetic energies at matched path phase can instead be equal. The angle
+change alone establishes neither energy ratio nor required work. These
+numbers illustrate a model; they are not subject-specific torso and wrist
+inertia estimates. Coupled limbs also have off-diagonal mass-matrix terms.
+
+Different metrics answer different questions. An orientation distance based
+on rotation angle is convenient for face alignment; a measurement covariance
+metric can quantify uncertainty; the kinetic metric weights generalized
+velocity by inertia. For the standard rotation-angle metric, the largest
+distance on $SO(3)$ is $\pi$. Arbitrary scaling or an anisotropic kinetic
+metric changes that statement. A clubface error measured in degrees should
+not be silently reinterpreted as a kinetic distance or a success probability.
+
+### Geodesics, Gravity, and Passive Dynamics
+
+The Levi-Civita connection of a metric is the unique metric-compatible,
+torsion-free connection. Its coordinate coefficients are
+$$
+\Gamma^i_{jk}=\tfrac12(M^{-1})^{i\ell}
+ (\partial_jM_{\ell k}+\partial_kM_{\ell j}-\partial_\ell M_{jk}),
+ \qquad
+ (\nabla_{\dot q}\dot q)^i=\ddot q^i+\Gamma^i_{jk}\dot q^j\dot q^k.
+$$ {#eq-manifold_christoffel}
+An affinely parameterized geodesic satisfies $\nabla_{\dot q}\dot q=0$.
+It has constant metric speed and minimizes length on sufficiently short
+segments. A long geodesic need not be a globally shortest path. General
+reparameterization preserves its unparameterized image but can introduce
+tangential covariant acceleration. The geodesic equation requires its
+parameter convention as well as its metric.
+
+Let $F=B(q)u+F_{\rm passive}+F_{\rm external}$ denote nonpotential generalized
+force covectors, and let $V$ include the conservative gravity and elastic
+potentials chosen for the model. Avoid counting an elastic force in both
+$V$ and $F_{\rm passive}$. For an unconstrained regular simple mechanical
+system, the equivalent covector and vector equations are
+$$
+M\nabla_{\dot q}\dot q=-dV+F,\qquad
+ \nabla_{\dot q}\dot q=-\operatorname{grad}_M V+M^{-1}F,
+ \qquad \operatorname{grad}_M V=M^{-1}dV.
+$$ {#eq-euler_lagrange_manifold}
+Here $dV$ means the column of partial derivatives when written in coordinates.
+The metric lowers a tangent index; its inverse raises a covector index.
+Multiplying the left side by $M$ while leaving a Riemannian gradient on the
+right would mix the two types. In coordinates the same mechanics is
+$M\ddot q+C\dot q+dV=F$, where $C\dot q$ equals the metric-lowered connection
+term. The matrix $C$ is not uniquely determined by that product.
+
+Only when the total nonkinetic force vanishes does physical time parameterize
+a geodesic of the kinetic metric. Zero actuator command does not eliminate
+gravity, springs, dissipation, or external forces. An ideal pendulum with
+$M=m\ell^2$ has zero connection coefficient in its angular coordinate, yet
+under gravity it satisfies $\ddot\theta=-(g/\ell)\sin\theta$. With $\ell=1$
+metre and $\theta=\pi/6$, its acceleration is $-4.905\;\mathrm{rad/s^2}$.
+It is passive and conserves $T+V$, but is not a time-parameterized geodesic
+of that kinetic metric. Fixed-energy conservative paths can sometimes be
+related to a Jacobi metric with a different parameter; this is a separate
+construction, requiring $E>V$ and excluding the degeneracy at turning points.
+
+Thus an observed follow-through cannot be called nearly geodesic merely
+because it looks relaxed. The test is a model-based covariant-acceleration
+residual, interpreted alongside estimated gravity, elasticity, contact,
+dissipation, and active moments. A small residual is not an observation of
+small muscle activation. Opposing muscles can have substantial activation
+and small net moment, and motion data may not identify those forces uniquely.
+
+#### A Flat-Space Counterexample
+
+In polar coordinates on the Euclidean plane away from the origin, the unit-mass
+metric is $M=\operatorname{diag}(1,r^2)$. Its nonzero coefficients include
+$\Gamma^r_{\theta\theta}=-r$ and
+$\Gamma^\theta_{r\theta}=\Gamma^\theta_{\theta r}=1/r$. A free particle obeys
+$$
+\ddot r-r\dot\theta^2=0,\qquad
+ \ddot\theta+2\dot r\dot\theta/r=0.
+$$ {#eq-manifold_polar_geodesic}
+For the straight Cartesian motion $(x,y)=(1,t)$, take
+$r=\sqrt{1+t^2}$ and $\theta=\arctan t$. Then
+$\dot r=t/r$, $\ddot r=1/r^3$, $\dot\theta=1/r^2$, and
+$\ddot\theta=-2t/r^4$. Both equations vanish exactly, despite nonzero
+ordinary coordinate accelerations and connection coefficients.
+
+Intrinsic Riemann curvature is zero here. Connection coefficients are not
+themselves curvature tensors; they can be nonzero in curvilinear coordinates
+on flat space. Conversely, the topology of a configuration space does not
+specify its metric curvature. The coordinate terms represent a consistent
+description of inertial dynamics, not a source of energy. In a multibody
+system, inertial coupling can exchange energy between motions while the
+overall power balance remains
+$$
+\frac{d}{dt}(T+V)=F_i\dot q^i
+$$ {#eq-manifold_energy_balance}
+for time-independent $M,V$ and the stated unconstrained model. Stationary
+ideal constraint reactions do no work on allowed velocities; moving constraints,
+friction, and impacts require their own power or energy terms. A distal speed
+increase must be reconciled with this balance, not attributed to work created
+by a coordinate connection.
+
+### Path Bending and Required Actuation
+
+Let $q(s)$ be a regular configuration path parameterized by kinetic-metric
+arc length, $T_q=dq/ds$ its unit tangent, and $\nu=ds/dt>0$ its metric speed.
+To avoid confusing kinetic energy with the tangent, the subscript is retained.
+Its covariant curvature vector is $k_g=\nabla_{T_q}T_q$, with norm
+$\kappa_g=\|k_g\|_M$. The acceleration decomposition is
+$$
+\nabla_{\dot q}\dot q=\dot\nu T_q+\nu^2 k_g,\qquad
+ B u=M(\dot\nu T_q+\nu^2 k_g)+dV-F_{\rm passive}-F_{\rm external}.
+$$ {#eq-manifold_path_force}
+The curvature vector is metric-orthogonal to the tangent. In the special
+case that actuators supply the entire force and there is no potential or
+other load, the transverse force covector is $\nu^2 M k_g$, whose dual norm
+is $\nu^2\kappa_g$. The dual norm is $\|F\|_{M^{-1}}=\sqrt{F^TM^{-1}F}$.
+This is not an unqualified formula for muscle effort or Cartesian newtons.
+
+In a constrained system add reaction covectors and enforce the constraints,
+or use a valid reduced model. In an underactuated system the right side must
+lie in the image of $B$, and a feasible solution must satisfy input bounds.
+Different columns can have different torque limits and biological costs.
+The scalar curvature does not establish this feasibility. A guide can provide
+normal reaction without actuator work; gravity can supply some acceleration
+while changing potential energy. The feasible timing calculation in Chapter 2
+is therefore still required.
+
+Geodesic curvature is not obtained by subtracting a scalar coordinate curvature
+from a scalar "Coriolis curvature." It is a norm of a covariant derivative
+in a specified metric. Ordinary curvature of a plotted coordinate path changes
+under coordinate scaling and can have different units. Neither is automatically
+the Cartesian curvature of the clubhead path $p(q)$. That physical path still
+obeys $\ddot p=J\ddot q+\dot J\dot q$. These are connected descriptions,
+but they answer different questions about the same motion.
+
+### Tracking Errors With Consistent Frames
+
+A nearby configuration can be compared with a reference using a common chart,
+a local Riemannian logarithm, a retraction, or an embedded error with stated
+constraints. A Lie-group logarithm is another option when the configuration
+space actually has that group structure. It is not a universal subtraction
+operation on every manifold. The Riemannian exponential of a chosen metric
+also need not coincide with the Lie-group exponential; they agree in special
+settings such as the standard bi-invariant rotation metric.
+
+Velocities at different configurations require a stated identification.
+Levi-Civita parallel transport is one choice and depends on the connection
+and path. A common coordinate chart or group trivialization is another.
+Rotating components between body frames is a physical frame transformation;
+it should not be casually labeled parallel transport for an arbitrary kinetic
+metric. These conventions must be settled before constructing feedback gains.
+
+#### A Derived Rigid-Body Tracking Law
+
+Consider a fully actuated rigid body with constant body inertia $J>0$,
+$J\dot\omega+\omega\times J\omega=\tau$. Assume an exactly known model,
+a smooth feasible desired rotation $R_d(t)$, and available torque without
+saturation for the following derivation. Define $\dot R_d=R_d\widehat\omega_d$
+and $A=R^TR_d$, which maps desired-body components into actual-body components.
+Let
+$$
+e_\omega=\omega-A\omega_d,\qquad
+ \Psi=\tfrac12\operatorname{tr}(I-R_d^TR),\qquad
+ e_R=\tfrac12(R_d^TR-R^TR_d)^\vee.
+$$ {#eq-manifold_attitude_errors}
+The vee map inverts the hat map on skew matrices. This smooth $e_R$ is
+$\sin\alpha$ times the relative rotation axis, not the logarithmic angle-axis
+vector $\alpha n$. In particular it vanishes at a half-turn, an important
+limitation rather than a numerical defect to conceal.
+
+Differentiating the frame transformation gives
+$$
+\dot A=-\widehat\omega A+A\widehat\omega_d,\qquad
+ b=\frac{d}{dt}(A\omega_d)=-\omega\times(A\omega_d)+A\dot\omega_d.
+$$ {#eq-manifold_attitude_transport}
+Using the inverse transformation $R_d^TR$ in $e_\omega$ would compare vectors
+in inconsistent frames. Omitting the first term in $b$ would omit the rate
+at which the reference components rotate relative to the actual body.
+
+For positive scalar gains, choose
+$$
+\tau=-k_R e_R-k_\omega e_\omega+\omega\times J\omega+Jb.
+$$ {#eq-pd_so3}
+Substitution yields $J\dot e_\omega=-k_R e_R-k_\omega e_\omega$.
+Direct differentiation of $\Psi$ gives $\dot\Psi=e_R^Te_\omega$; hence
+$$
+W=\tfrac12e_\omega^TJe_\omega+k_R\Psi,\qquad
+ \dot W=-k_\omega\|e_\omega\|^2.
+$$ {#eq-manifold_attitude_energy}
+For $W(0)<2k_R$, the trajectory stays away from the half-turn potential level.
+In the ideal closed error dynamics, the largest invariant zero-dissipation
+set in this region has $e_\omega=0$, then $e_R=0$, and therefore the desired
+relative orientation. This supplies a local attraction argument. Stronger
+rate or domain claims require the corresponding proof and assumptions.
+At a half-turn with zero velocity error the feedback vanishes, providing an
+explicit counterexample to global attraction. A globally defined smooth
+formula is not the same as a globally convergent controller. Logarithmic
+feedback has its own branch restriction; quaternion feedback must respect
+the double cover, and hybrid designs require analysis of their switching.
+
+Two checks make the formula practical to audit. If actual and desired bodies
+have the same world angular velocity $w$, then $\omega=R^Tw$ and
+$\omega_d=R_d^Tw$, so $e_\omega=0$ exactly. For arbitrary orientations and
+rates, substituting the torque into the rigid-body equation must reproduce
+the stated $\dot W$. Both identities can be verified numerically without
+simulating a golf swing. Torque saturation, disturbances, uncertain inertia,
+underactuation, and muscle activation dynamics change this closed-loop result.
+It is a mathematical example, not an identified human motor-control law.
+
+### Connecting Geometry to a Golf Investigation
+
+Begin with the observable outcome: preimpact clubhead velocity, face orientation,
+strike location, and their uncertainty at a defined event. Construct the
+kinematic model needed to map measured segment poses to those outcomes.
+State which joints, constraints, flexible elements, and contact modes the
+model retains. A larger geometric model is useful only when its parameters
+and outputs can be estimated well enough for the question.
+
+Next verify representation consistency. Record active/passive rotation
+conventions, handedness, body/world frames, joint sequence, units, quaternion
+ordering, and calibration. Test that converting coordinates preserves physical
+orientations, velocities, kinetic energy, and power. Examine chart conditioning
+along the actual data. A discontinuity created by angle wrapping is not
+evidence of a sudden physical release, and smoothing it as if it were physical
+can corrupt estimated acceleration and inverse torque.
+
+Then connect kinematics to dynamics. Estimate the forces and moments required
+by the motion, including gravity, elastic energy, hand and ground interactions,
+and the shaft model. Propagate measurement and parameter uncertainty. Compute
+covariant quantities only with a declared metric and compare them with physical
+clubhead quantities through the task Jacobian. Apparent simplicity in one
+coordinate system does not establish lower loading, greater efficiency, or
+better impact reliability.
+
+Finally test the explanatory hypothesis. If inertial coupling is proposed to
+assist distal speed, verify the energy and power balance and compare forward
+simulations under a precisely defined change in coupling, activation, or timing.
+Recompute the resulting motion rather than subtracting a term from a fixed
+trajectory and calling it a performance prediction. Check predictions on
+held-out swings and report where uncertainty prevents discrimination between
+mechanisms. Passive assistance, active regulation, and task constraints may
+operate together; their contributions are questions to estimate.
+
+A configuration tube $d_M(q,q_d(t))\leq\varepsilon$ bounds only configuration
+error under its chosen metric. Two states inside it can have very different
+velocities and impact results. A state tube needs a metric or certificate on
+the actual state space, with explicit velocity comparisons and contact events.
+Invariance must be verified under the closed-loop dynamics and disturbances.
+Geometry defines the set; dynamics determine whether a trajectory stays inside,
+and the task map determines whether staying inside is useful.
+
+The benefit of manifold methods is precise bookkeeping of configuration,
+velocity, force, and frame relationships across a motion. That precision
+strengthens an explanation of the swing when combined with measured evidence.
+It does not remove the need for timing, feasibility, stability, or an empirical
+account of how the golfer supplies and regulates forces.
+
+### Further Reading
+
+[Lynch and Park's Modern Robotics](https://hades.mech.northwestern.edu/images/2/25/MR-v2.pdf) provides joint, rotation, wrench, and rigid-body conventions.
+[Lee, Leok, and McClamroch's geometric control analysis](https://arxiv.org/abs/1003.2005) develops smooth attitude tracking with explicit attraction
+conditions. These are mathematical and engineering sources; applying their
+structures to a human swing requires the additional modeling and validation
+steps described here.
+
+### Exercises
+
+
+1. Compare an unlimited revolute joint, a joint with stops, and a rod whose
+direction alone is measured. Identify the configuration, output map, and any
+unobserved rotation. Explain why dimension alone cannot identify topology.
+1. For an ideal chain with two spherical and three revolute joints, count
+configuration and tangent-bundle dimensions. Add two independent holonomic
+constraints locally. Explain why an activation state changes the state count.
+1. Derive the ZYX body-rate matrix and its determinant. Evaluate a pure
+pitch crossing through the rate-map singular set at $\theta=\pi/2$.
+Distinguish loss of inverse uniqueness from unbounded physical velocity.
+1. Evaluate $\det J_r$ at $0$, $\pi$, and $2\pi$. Compare the exponentials
+of $\pi n$ and $-\pi n$. Explain why local invertibility at each half-turn
+does not define a globally continuous principal logarithm.
+1. Choose a nonsingular coordinate scaling and verify the velocity, force,
+and mass-matrix transformation laws. Check kinetic energy, power, and dual
+force norm numerically before and after transformation.
+1. Verify the polar-coordinate free-particle example and compute a component
+of its Riemann curvature tensor. Contrast nonzero connection coefficients
+with zero intrinsic curvature and zero Cartesian acceleration.
+1. Derive the gravity pendulum equation and its energy balance. Compare
+its motion with the kinetic-metric geodesic from the same initial state.
+Explain what zero actuator torque does and does not imply.
+1. For a regular configuration path, derive the required actuator covector
+including a potential and external force. State the image and bound tests
+needed when the actuation map is rectangular.
+1. Implement the attitude law with two different body orientations but a
+common world angular velocity. Verify zero velocity error, the transport
+derivative, and the dissipation identity. Test the undesired half-turn
+equilibrium and a torque-saturated case separately.
+1. Design a swing-data comparison that preserves the physical motion while
+changing its coordinates. Identify quantities that must remain invariant and
+quantities that depend on the chosen metric. Add a separate intervention that
+changes the dynamics and specify the impact prediction it would test.
 
 ## Orbital Stability and Transverse Linearization
 
