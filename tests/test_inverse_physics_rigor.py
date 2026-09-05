@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 BOOK = Path(__file__).resolve().parents[1] / "articles/The_Physics_of_Golf"
+GRAVITY_M_S2 = 9.81
 
 
 def test_measurement_must_remove_the_actual_load_null_space() -> None:
@@ -48,7 +49,7 @@ def test_wrench_transport_preserves_power_and_changes_moment() -> None:
 def test_vertical_force_offset_does_not_create_yaw_moment() -> None:
     moment = np.cross([0.2, -0.1, 0.0], [0.0, 0.0, 1400.0])
     np.testing.assert_allclose(moment, [-140.0, -280.0, 0.0])
-    assert 1400 / (100 * 9.81) == pytest.approx(1.4271151886)
+    assert 1400 / (100 * GRAVITY_M_S2) == pytest.approx(1.4271151886)
 
 
 def test_small_inertia_reduces_absolute_inverse_acceleration_error() -> None:
