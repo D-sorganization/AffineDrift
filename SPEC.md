@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-05 | #4162 | Rebuild the Physics parallel-mechanisms chapter with correct closure rank, load identification, hand/ground wrench and energy balances; synchronize print/web, add a shared graph and numerical checks, and correct two repeated spine-loop statements under #4160. |
 | 2026-09-05 | #4153 | Correct long-form mechanics, inverse dynamics, optimal control, passive stabilization, impact, underactuation, variational residuals, constrained geometry, and superposition; synchronize paired editions, regenerate five PDFs, and document the continuing corpus audit under epic #4009. |
 | 2026-09-05 | #4159 | Correct the contraction reference's metric and Riccati certificates, optimization, muscle/task dynamics, noise, and hybrid-event treatment; regenerate paired LaTeX, add reproducible counterexamples, and preserve historical critique context under #4158. |
 | 2026-09-05 | #4146 | chore(spec): re-vendor spec-changelog helpers and worktree-relative merge driver installer from Repository_Management (#4146) |
