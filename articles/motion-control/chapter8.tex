@@ -7,6 +7,8 @@
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{mathtools}
 \usepackage{bm}
+\usepackage{graphicx}
+\usepackage{float}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
@@ -117,73 +119,155 @@
 \setcounter{chapter}{7}
 
 \chapter{Phase-Variable Control}
+\label{ch:phase_variable_control}
 
-\epigraph{%
-  Time is a river that carries us forward. Phase is the boat we build to navigate it.
-}{}
+\section{Coordination, Progress, and the Clock}
 
-\vspace{0.5cm}
+Two swings can pass through similar joint configurations at different speeds and produce different impacts. Conversely, a modest delay need not spoil a shot if the golfer still reaches a suitable contact state. Phase-variable control addresses this distinction by scheduling selected relationships according to measured progress. It does not make elapsed time or velocity physically irrelevant.
 
-% ══════════════════════════════════════════════
-\section{Spatial Paths vs. Temporal Execution}
-% ══════════════════════════════════════════════
-
-One common limitation of direct time-tracking architectures, when applied to biomechanics or advanced robotics, is their rigid adherence to the clock. If you construct a time-varying trajectory $\traj^*(t)$ for a robotic arm and command a tracking controller to follow it, the controller evaluates the error as $\bm{e}(t) = \state(t) - \traj^*(t)$.
-
-If the robot hits an unmodeled friction patch and slows down, the reference trajectory $\traj^*(t)$ continues advancing. The controller can calculate a large position error not because the robot has left the intended path, but because it is behind schedule. Depending on gains, actuator limits, and saturation handling, this can produce excessive catch-up commands.
-
-\begin{keyidea}{The Autonomy of Time}{autonomy_of_time}
-  A system executing a motion can often be controlled more safely when progress is measured by state-dependent phase rather than by clock time alone. If the system is impeded, the reference can slow down. The mathematical task is to decouple the spatial geometry of the motion from its temporal execution by replacing chronological time $t$ with a locally monotone \textbf{phase variable} $s$.
-\end{keyidea}
-
-Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameterize it as a function of the phase: $\traj^*(s)$. The phase $s \in [0, 1]$ represents the percentage of motion completed. For a walking robot, $s$ could be the forward position of the hip. For a golf swing, $s$ could be the angular position of the shoulder relative to the ball. The reference trajectory is now a spatial curve with a separately modeled timing law.
-
-This construction is publication-safe only after the phase variable's domain, monotonicity condition, and reset behavior are specified.
-
-\begin{definition}{Phase Variable}{phase_variable}
-  A phase variable $s(\state)$ is a continuously differentiable scalar function of the state $\state$ such that its time derivative is strictly positive along all feasible trajectories inside the nominal funnel:
-  \begin{equation}
-    \dot{s}(\state) > 0 \quad \text{for all } \state \in \mathcal{F}.
-  \end{equation}
-\end{definition}
-
-% ══════════════════════════════════════════════
-\section{Virtual Constraints}
-% ══════════════════════════════════════════════
-
-If the goal is no longer to match a time sequence but rather to conform to a spatial path defined by $s(\state)$, we can express the control objective as a set of holonomic constraints on the state. However, because these constraints are not mechanical linkages but rather enforced by software, they are termed \textbf{Virtual Constraints}.
-
-Let our control objective be to drive the state $\state$ to the invariant manifold $\mathcal{Z}$ defined by:
+For a prescribed configuration path $q_d(s)$, write $\nu=\dot s$. Its mechanically consistent lift is
 \begin{equation}
-  \mathcal{Z} = \{ \state \mid \state - \traj^*(s(\state)) = \bm{0} \}.
+q=q_d(s),\qquad v=q_d'(s)\nu,\qquad
+\dot v=q_d''(s)\nu^2+q_d'(s)\dot\nu .
 \end{equation}
+Changing $\nu$ changes the velocity state, inertial loads, actuator demand, and impact speed. A configuration path with freely varying speed generally lifts to a two-dimensional surface in state space, parameterized by $(s,\nu)$; specifying a speed law reduces that freedom. A full-state reference $(q_d(s),v_d(s))$ already specifies velocities. It cannot generally be traversed at arbitrary speed while preserving $\dot q=v$.
 
-By using partial feedback linearization (Chapter 5), we can design a synthetic input $\bm{v}_a$ that drives the actuated degrees of freedom $\bm{q}_a$ onto their nominal surfaces proportional to the phase:
+This is the connection to Chapters 2 and 6: geometry organizes possible motion, while dynamics determines which timing laws can realize it. Phase scheduling can avoid an unnecessary catch-up command when a movement slows, but its performance depends on the phase estimator, feedback, and available actuation. Time tracking with a reference governor can also adapt its schedule. Neither architecture is universally safer.
+
+\section{A Phase Coordinate Has a Domain}
+
+On a stated region of a smooth deterministic model $\dot x=f(x)+g(x)u$, a candidate $s=\phi(x)$ has rate
 \begin{equation}
-  y = \bm{q}_a - \traj^*_a(s(\state)) \to 0.
+\nu=\dot s=\nabla\phi(x)^\top[f(x)+g(x)u].
 \end{equation}
-As $y \to 0$, the system converges toward the virtual constraints. Crucially, the rate at which it progresses along the path is entirely governed by $\dot{s}$, which is itself determined by the current momentum and state of the system, not a stopwatch.
+A useful progress condition is $\nu\geq\nu_{\min}>0$ throughout the relevant closed-loop region, with the bound checked over the admitted disturbances if robustness is claimed. This is a property of the model, policy, and region together. Requiring it along every trajectory under every physically admissible control is usually unnecessarily strong and may be impossible.
 
-% ══════════════════════════════════════════════
-\section{Hybrid Zero Dynamics}
-% ══════════════════════════════════════════════
+If $s$ ranges from zero to one and this bound holds while solutions remain admissible, arrival takes at most $1/\nu_{\min}$. Positivity at the nominal trajectory alone does not establish the same bound for perturbed trajectories. If $\nu$ approaches zero, the change of independent variable $dx/ds=\dot x/\nu$ becomes singular; a phase-domain calculation then loses its stated justification.
 
-When the virtual constraints are perfectly satisfied ($y = 0$), the entire complexity of the $n$-dimensional state space collapses down into a highly reduced dynamical system that evolves strictly along the manifold $\mathcal{Z}$. This is the \textbf{Zero Dynamics} of the system.
+A shoulder angle may reverse, a hand-path projection may repeat, and the top of a backswing may have zero angular speed. Use a restricted downswing interval, additional state information, or explicit phase charts and transition rules. A single smooth real-valued state function cannot increase strictly around an entire periodic orbit: after one period the state, and therefore that function, returns to its original value. Rhythmic models instead use a circular phase, an unwrapped phase with additional memory, or a coordinate reset.
 
-For systems that undergo discrete impacts (a foot hitting the ground, or a golf club striking a ball), the system evolves via continuous differential equations until an impact surface is triggered, followed by an instantaneous jump map (a reset) dictated by conservation of momentum.
+The phase must also be estimable from the available measurements. For a local estimate $\hat x=x+\delta x$, the first-order phase error is $\delta s\approx\nabla\phi^\top\delta x$. A poorly conditioned projection amplifies measurement error; different full states with the same marker can demand different controls. Filtering trades noise against lag, and a nominally monotone marker need not remain monotone after measurement noise. Chapter 9 develops the additional changes required for a diffusion model.
 
-\begin{principle}{Hybrid Zero Dynamics (HZD)}{hzd}
-  A control architecture achieves Hybrid Zero Dynamics if the invariant manifold $\mathcal{Z}$ (the zero dynamics surface) is invariant not just under the continuous flow of the differential equations, but also invariant under the discrete impact map. That is, an impact starting on the manifold $\mathcal{Z}$ must immediately map to a new state that is also on $\mathcal{Z}$.
-\end{principle}
+\section{Virtual Constraints Live in Configuration Space}
 
-By enforcing HZD, we can design rhythmic walking gaits that are astonishingly robust. If the robot trips, its phase slows down, but the virtual constraints remain active, keeping the limbs on the correct spatial path until the next footfall resets the sequence. The temporal sequence arises naturally from the interplay of gravity and momentum.
+Consider a mechanical model on a regular coordinate chart,
+\begin{equation}
+M(q)\ddot q+c(q,\dot q)=B(q)u ,
+\end{equation}
+where $M$ is positive definite and $c$ collects the stated velocity-dependent, gravitational, and other uncontrolled generalized loads. Physical loop constraints must already be reduced consistently or retained through a constrained dynamics formulation; they cannot be silently discarded.
 
-% ══════════════════════════════════════════════
-\section{Application: The Golf Downswing}
-% ══════════════════════════════════════════════
+Choose $k$ independent configuration outputs $y=h(q)$. An example is $h(q)=q_a-h_d(\phi(q))$, prescribing selected joint relationships as functions of a configuration-based phase. Here $Dh$ must have rank $k$ on the region of interest. A velocity-dependent phase generally produces a state-dependent output with different relative degree, so the configuration-only derivation below cannot be copied unchanged.
 
-While the golf swing is not a periodic walking gait, a phase-variable approach can still be useful if the selected marker remains monotone through the interval being modeled. A candidate phase might be shoulder angle, hand path progress, or another measured progress coordinate; none is automatically valid outside the stated model. The target event is impact, not a universal manifold $s=1.0$ independent of the coordinate choice.
+For these outputs,
+\begin{equation}
+\begin{aligned}
+\dot y&=Dh\,v,&\ddot y&=A(q)u+b(q,v),\\
+A&=Dh\,M^{-1}B,&b&=D^2h[v,v]-Dh\,M^{-1}c .
+\end{aligned}
+\end{equation}
+The Hessian term includes the acceleration generated by moving along a curved constraint. Omitting it incorrectly treats a curved joint relationship as a straight one. The zero-output state set is
+\begin{equation}
+\mathcal Z=\{(q,v):h(q)=0,\ Dh(q)v=0\}.
+\end{equation}
+Both position and velocity conditions are necessary. Starting with $y(0)=0$ and $\dot y(0)\ne0$ gives $y(t)=t\dot y(0)+O(t^2)$, so the state immediately leaves the configuration constraint. Under the stated regularity conditions, $\mathcal Z$ has dimension $2(n-k)$ for $n$ configuration coordinates.
 
-By structuring a model through virtual constraints, the analysis can separate spatial deviations from timing delays. A transverse feedback law (Chapter 4) can correct selected spatial errors, while the phase variable schedules arm actuation ($u_1$) relative to measured progress rather than clock time. This can improve timing robustness, but it does not guarantee perfect passive impact dynamics; impact quality still depends on state estimation, actuator limits, contact modeling, and the validity of the chosen phase coordinate.
+The term virtual means that actuation maintains the relationship. It does not mean that software creates an exact mechanical linkage under disturbances, saturation, delay, or imperfect state estimation. A physical ideal linkage supplies constraint reactions through a different force channel. Its feasibility and power properties cannot simply be assigned to a virtual constraint.
+
+\section{Feedback Requires Input Authority}
+
+If the number of independent inputs equals $k$ and $A$ is nonsingular, the ideal feedback
+\begin{equation}
+u=A^{-1}\bigl[-b-K_d\dot y-K_p y\bigr]
+\end{equation}
+produces $\ddot y+K_d\dot y+K_p y=0$. Positive diagonal gains give decaying output errors in this exact, unsaturated model. The on-manifold input is $u^\star=-A^{-1}b$. Its existence within the allowed input set must be checked throughout the proposed region, including any muscle activation or force-rate dynamics represented by the effective plant.
+
+Rank loss of $A$ prevents this inversion. Near rank loss, the required commands and sensitivity to estimation error can become large. With additional inputs, a right inverse and a null-space allocation may be available, but the allocation must satisfy bounds. With too few independent input directions, the prescribed output accelerations may be infeasible. A small tracking error is not evidence that all joint torques are independently controllable.
+
+This connects virtual constraints to underactuation rather than eliminating it. The controlled outputs consume input authority; the remaining dynamics still determine progress, energy, and internal motion. High gains also increase sensitivity to noisy differentiated measurements and can push the controller into saturation, invalidating the exact output equation.
+
+\section{Perfect Coordination Can Hide Unstable Motion}
+
+Consider the dimensionless two-coordinate system
+\begin{equation}
+\ddot q_1=u,\qquad \ddot q_2=q_2,\qquad y=q_1-q_2 .
+\end{equation}
+The input $u=q_2-2\dot y-y$ gives $\ddot y+2\dot y+y=0$. Output errors decay. Nevertheless, on $\mathcal Z$ the coordinates satisfy $q_1=q_2$ and the internal dynamics remains $\ddot q_2=q_2$. With $q_2(0)=\dot q_2(0)=1$, both coordinates follow $e^t$. Coordination is exact while the state grows without bound.
+
+The example separates three claims: invariance of $\mathcal Z$, attraction of output errors toward zero, and acceptable dynamics within $\mathcal Z$. Establishing the first two does not establish the third. In a golf model, correlated joint angles could coexist with insufficient club speed, excessive speed, loss of balance, or a wrong face orientation. The task determines which internal motions are acceptable.
+
+Nor does a virtual constraint make the remaining motion passive. For $\ddot q_1=u$, $\ddot q_2=0$, choose $h=q_1-q_2^2$. On $\mathcal Z$,
+\begin{equation}
+q_1=q_2^2,\qquad v_1=2q_2v_2,\qquad u^\star=2v_2^2 .
+\end{equation}
+With unit masses and no potential energy, $E=(v_1^2+v_2^2)/2$ and $\dot E=v_1u^\star=4q_2v_2^3$. At $q_2=v_2=1$, the controller supplies power $4$ in the example's units while the virtual constraint is satisfied exactly. An ideal stationary physical constraint force of the form $Dh^\top\lambda$ instead has power $\lambda^\top Dh\,v=0$ on its constraint. These are different actuation mechanisms.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../The_Geometry_of_Motion/figures/phase_coordination_limits.png}
+\caption{Coordination Does Not Determine Internal Motion}
+\end{figure}
+
+The left panel plots the exactly coordinated but unstable solution. The right panel evaluates the active power needed to maintain the parabolic virtual constraint with $q_2(0)=0$ and $v_2=1$. Both are analytic examples, not simulated human swings.
+
+\section{Impact Adds a Separate Invariance Condition}
+
+A hybrid model follows continuous dynamics until a guard $\mathcal S$ is reached and then applies a reset $x^+=\Delta(x^-)$. Hybrid zero dynamics requires continuous invariance and the additional condition
+\begin{equation}
+\Delta(\mathcal S\cap\mathcal Z^-)\subseteq\mathcal Z^+ .
+\end{equation}
+The pre- and post-impact output relationships can differ. The reset must preserve the appropriate position and velocity constraints, not merely make the configuration look similar.
+
+For illustration, an instantaneous perfectly plastic contact at unchanged configuration has
+\begin{equation}
+\begin{aligned}
+M(v^+-v^-)&=J^\top\Lambda,\qquad Jv^+=0,\\
+v^+&=\left[I-M^{-1}J^\top(JM^{-1}J^\top)^{-1}J\right]v^- ,
+\end{aligned}
+\end{equation}
+assuming independent contact rows, no other impulsive loads, and a valid sticking contact mode. This follows by solving the impulse balance and the post-impact velocity condition. A rigid ground can exchange momentum with the modeled body: its momentum is not generally conserved in isolation.
+
+For unit mass coordinates and $J=(0,1)$, the reset changes $(v_1,v_2)=(1,1)$ to $(1,0)$. A pre-impact virtual relationship $v_1-v_2=0$ is therefore broken. Continuous output regulation did not guarantee hybrid invariance.
+
+Club-ball contact needs its own model: normal restitution or compliant deformation, tangential interaction, spin, contact location, and any retained external impulse. The perfectly plastic sticking example is not a club-ball impact law. The first contact event must also be detected with the intended crossing direction, rather than selecting an arbitrary intersection of a plotted path.
+
+Even valid hybrid zero dynamics does not prove stable walking. Existence of a periodic solution, admissible contacts, progress, and stability of the relevant return map require separate analysis; attraction of the transverse output dynamics must be connected to that analysis. For a single golf strike, periodic stability is usually the wrong objective. The relevant questions concern finite-time contact, ball-launch outputs, and an admissible continuation after impact.
+
+\section{Connecting Phase Control to a Golf Outcome}
+
+Suppose a downswing model uses $s=\phi(q)$ to schedule selected arm and club relationships. First choose the modeled interval and show that the progress coordinate remains usable there. Then check $A(q)$ and the commanded forces or torques, including passive wrist assumptions, bilateral hand closure, ground contacts, and the declared actuator dynamics. A reference satisfying a geometrical relationship but requiring unavailable torque is not a realizable swing.
+
+Next retain the internal speed and energy variables. On a given configuration path, kinetic energy is
+\begin{equation}
+T(s,\nu)=\tfrac12\nu^2 q_d'(s)^\top M(q_d(s))q_d'(s).
+\end{equation}
+Doubling phase speed quadruples this kinetic energy at the same configuration. Clubhead velocity also scales with $\nu$ for that path. Equal phase and small output errors therefore do not imply equal impact. Impact evaluation must include clubface pose, relative contact velocity, strike location, and the chosen ball-launch or shot-loss objective.
+
+A phase-indexed containment function $V(x,s)\leq\rho(s)$ must be differentiated with the actual phase rate:
+\begin{equation}
+\frac{d}{dt}\bigl[V(x,s)-\rho(s)\bigr]
+=V_x\dot x+\bigl(V_s-\rho'(s)\bigr)\nu .
+\end{equation}
+Replacing $\nu$ by one without changing the dynamics is a different model. A tube can contain errors while the swing stalls; a progress condition is needed for arrival. A tube can reach contact while admitting poor face orientation; terminal output bounds are needed for accuracy. These are the same separate requirements developed in Chapters 4 and 7.
+
+The biological interpretation is a testable hypothesis: scheduling coordination by a reliably estimated progress variable may reduce sensitivity to some timing disturbances. Test it against alternatives with the same actuator limits, sensing delay, initial-state distribution, and task objective. Compare held-out impact outcomes as well as joint tracking error. Observing a common joint-angle relationship does not identify the nervous system's controller or establish that it explicitly implements a virtual constraint.
+
+\section{Primary Reading}
+
+\href{https://grizzle.robotics.umich.edu/files/HZD_HandbookApril2015.pdf}{Grizzle and Chevallereau's virtual-constraints chapter} develops configuration outputs, the decoupling condition, zero dynamics, and hybrid invariance for underactuated locomotion. Its walking-specific results require their stated hypotheses when applied to another mechanism. The examples and golf analysis above explicitly separate those ingredients rather than asserting that locomotion results transfer automatically.
+
+\begin{samepage}
+\section{Worked Checks and Exercises}
+
+\begin{enumerate}[itemsep=0.25em,parsep=0pt]
+\item Differentiate $q_d(s(t))$ twice. Identify the terms lost by treating a curved path as a velocity reference with arbitrary timing.
+\item Prove that a smooth real-valued state function cannot increase strictly around a closed periodic orbit.
+\item Show that $h=0$ alone does not define the zero dynamics for a relative-degree-two output.
+\item Derive the feedback for $y=q_1-q_2$ and verify the exact unstable internal solution.
+\item Calculate the input and mechanical power on $q_1=q_2^2$ when $v_2$ is constant.
+\item Derive the plastic-contact reset and test whether it preserves $v_1-v_2=0$.
+\item For a proposed swing phase, state the measurements, monotonicity region, reset rules, and behavior if progress stops.
+\item Explain why an invariant coordination surface, a successful contact event, and a stable periodic orbit are distinct claims.
+\end{enumerate}
+\end{samepage}
 
 \end{document}
