@@ -4,8 +4,10 @@ Updated: 2026-09-05. Current-state only; use Git and GitHub for history.
 
 ## Technical Content Review
 
-- User-directed long-form technical review is tracked under epic #4009, with concrete fixes #4148, #4149, and #4150. See `docs/development/technical-review/REVIEW.md` for equations, scope, sources, validation, and remaining route audits.
+- User-directed long-form technical review is tracked under epic #4009, with concrete fixes #4148–#4151. See `docs/development/technical-review/REVIEW.md` for equations, scope, sources, validation, and remaining route audits.
 - The current correction set repairs inverse-dynamics double subtraction, constraint-force attribution, impedance/inertia confusion, optimal-control derivations, unsupported passive-stabilization claims, and impact/measurement interpretation. Canonical LaTeX and corresponding Quarto chapters are edited together.
+- The motion-control manuscript and Geometry Volume II also receive a coordinate-consistent underactuation treatment, input-feasibility counterexample, and corrected reachability/stability scope. Four affected book PDFs have been regenerated; the complete motion manuscript needed missing chapter macro definitions to compile.
+- Validation: first-wave full suite 3,715 passed, 26 skipped, 92.62% coverage; four subsequent underactuation tests passed; final content lane 128 passed, four skipped. Repository Ruff/Black and CI mypy (74 files) pass. Revised PDF chapter pages were visually inspected; rendered foundation and impact math showed no MathJax error nodes.
 - Full-corpus #4021 and route batches #4054–#4061 remain open. Source enumeration and targeted pattern checks do not constitute a completed technical review of every article. Preserve the immutable upstream monograph boundary.
 
 ## Protected Authority
