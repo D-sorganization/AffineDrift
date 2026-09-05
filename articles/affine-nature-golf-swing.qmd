@@ -1115,878 +1115,316 @@ For researchers, the approach offers a reproducible method for evaluating model-
 
 Overall, the framework supplies hypotheses for simulation and measurement studies. Coaching, equipment-fitting, or player-development claims remain outside its present validation envelope.
 
-## Appendices: Mathematical Derivations {#sec-app-derivations}
+## Appendix A: Consistent Coupled Dynamics {#sec-app-derivations}
 
-This appendix provides detailed derivations supporting the unified control-affine formulation presented in @sec-affine. The goal is to show explicitly how the coupled rigid--flexible dynamics produce the affine decomposition
-$$
-  \dot{x} = f(x) + G(x)u
-$$
-and to document all assumptions required for the formulation.
+The purpose of these appendices is to make the mechanical calculation reproducible. An exact identity within a declared model does not prove that the model captures a golfer's physiology, contact behavior, or variability. The independent examples below separate those questions.
 
-### A.1 \quad Coupled Rigid--Flexible Equations of Motion
+### Coordinates, Loads, and the Complete Mass Matrix
 
-We partition the generalized coordinates into
-$$
-  q \in \mathbb{R}^{n}, \qquad \eta \in \mathbb{R}^{m},
-$$
-where $q$ describes the rigid-body degrees of freedom and $\eta$ contains the modal coordinates of the flexible shaft.
+Use independent local coordinates $z=(q,\eta)$, velocity $v=\dot z$, and state ordering $x=(q,\dot q,\eta,\dot\eta)$. The retained kinetic energy defines $M(z)$ by $T=\tfrac12v^\top Mv$. Assemble the rigid segments, shaft translation, and head translation and rotation using their actual placements and consistent reference frames, as developed in [Part 1](theory-part1.html). For independent coordinates with positive kinetic energy in every nonzero velocity direction, $M\succ0$. Redundant coordinates, ideal locks, singular charts, and changing constraints require an appropriate constrained formulation; adding an inverse symbol does not solve those cases.
 
-Let  
-$$
-  v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}
-$$
-denote the generalized velocity.
-
-The equations of motion for the coupled system may be written in compact form:
+Let $g_z=\partial_z U_g$ include **both rigid and modal gravity**. Keep a declared passive joint load $\tau_{\mathrm{pas}}$ in every equivalent form of the equations. With fixed modal stiffness and damping,
 
 $$
-M(q,\eta)\,\dot{v}
-+
-C(q,\dot{q},\eta,\dot{\eta})\,v
-+
-g(q)
-+
-F_{s}(\eta,\dot{\eta})
-=
-\begin{bmatrix}
-  \tau \\[0.2em]
-  0
-\end{bmatrix}.
+M(z)\dot v+C(z,v)v+g_z(z)
++\begin{bmatrix}\tau_{\mathrm{pas}}\\K_s\eta+C_s\dot\eta\end{bmatrix}
+=\begin{bmatrix}B(q)u\\0\end{bmatrix}.
 $$ {#eq-appendix_eom}
 
-where:
-- $M(q,\eta)$ is the full inertia matrix of the rigid--flexible system,
-  
-- $C(q,\dot{q},\eta,\dot{\eta})$ contains Coriolis and centrifugal terms,
-  
-- $g(q)$ contains gravitational torques acting on the rigid-body DOFs,
-  
-- $F_{s}(\eta,\dot{\eta}) = \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}$ contains shaft restoring and damping forces,
-  
-- $\tau = B(q)\,u$ is the generalized torque vector induced by the input $u$.
+The zero lower input block denotes absence of direct modal actuation. It does not eliminate modal loads or acceleration. The input matrix $G(x)$ below is different from the gravity load $g_z$. The blocks $M_{rr},M_{rf},M_{fr},M_{ff}$ are respectively $M_{qq},M_{q\eta},M_{\eta q},M_{\eta\eta}$; the rigid-coordinate block includes every body's contribution when the retained modal rates are zero. For the standard Christoffel construction in coordinate velocities, $\dot M-2C$ is skew-symmetric. Arbitrary velocity variables require their own kinematic and balance equations.
 
-The flexible DOFs have no direct torque inputs.
-
-### A.2 \quad Block Structure of the Inertia and Coriolis Matrices
-
-The inertia matrix has the block form
-$$
-  M(q,\eta)
-  =
-  \begin{bmatrix}
-    M_{rr}(q,\eta) & M_{rf}(q,\eta) \\
-    M_{fr}(q,\eta) & M_{ff}(q,\eta)
-  \end{bmatrix},
-$$
-where:
-- $M_{rr}$ is the rigid-body inertia matrix,
-  
-- $M_{ff}$ is the modal inertia matrix for the flexible shaft,
-  
-- $M_{rf}$ and $M_{fr}$ represent rigid–flexible coupling.
-
-Similarly, the Coriolis matrix has the block structure:
-$$
-  C(q,\dot{q},\eta,\dot{\eta})
-  =
-  \begin{bmatrix}
-    C_{rr} & C_{rf} \\
-    C_{fr} & C_{ff}
-  \end{bmatrix},
-$$
-with the usual property that  
-$$
-  \dot{M} - 2C \quad \text{is skew-symmetric}.
-$$
-
-These blocks arise from standard manipulator equations extended to include flexible-body contributions.
-
-### A.3 \quad Solving for Accelerations
-
-Writing $\dot{v} = [\ddot{q}^{T}, \ddot{\eta}^{T}]^{T}$, equation~@eq-appendix_eom becomes:
+Define $h=Cv+g_z+[\tau_{\mathrm{pas}};K_s\eta+C_s\dot\eta]$. Then
 
 $$
-M
-\begin{bmatrix}
-  \ddot{q} \\ \ddot{\eta}
-\end{bmatrix}
-=
--
-C
-\begin{bmatrix}
-  \dot{q} \\ \dot{\eta}
-\end{bmatrix}
--
-g(q)
--
-F_s(\eta,\dot{\eta})
-+
-\begin{bmatrix}
-  B(q)\,u \\ 0
-\end{bmatrix}.
+M\dot v=-h+\begin{bmatrix}Bu\\0\end{bmatrix}.
 $$ {#eq-appendix_accel_base}
 
-Assuming $M$ is invertible (true for all admissible configurations of a well-defined multibody system), we solve for the generalized accelerations:
+Solving the same system gives
 
 $$
-\begin{bmatrix}
-  \ddot{q} \\ \ddot{\eta}
-\end{bmatrix}
-=
-- M^{-1}
-\left(
-  C\,v + g + F_{s}
-\right)
-+
-M^{-1}
-\begin{bmatrix}
-  B(q)\,u \\ 0
-\end{bmatrix}.
+\dot v=-M^{-1}h+M^{-1}\begin{bmatrix}B\\0\end{bmatrix}u.
 $$ {#eq-appendix_accel_split}
 
-### A.4 \quad Drift Acceleration
-
-We define the drift acceleration as
+Thus the zero-input acceleration is
 
 $$
-a_{\mathrm{drift}}(x)
-=
--M^{-1}(q,\eta)
-\left(
-  C(q,\dot{q},\eta,\dot{\eta})\,v
-  + g(q)
-  + F_{s}(\eta,\dot{\eta})
-\right).
+a_{\mathrm{drift}}=-M^{-1}h,
 $$ {#eq-appendix_drift_def}
 
-All passive mechanical terms are explicitly included:
-- inertia coupling,
-  
-- Coriolis and centripetal terms,
-  
-- gravity,
-  
-- elastic and damping forces from shaft deformation.
+with every retained load included. Numerical code normally solves $M a=b$ rather than explicitly constructing $M^{-1}$.
 
-Importantly,
-$$
-  a_{\mathrm{drift}}(x) \quad \text{is independent of } u.
-$$
+### Block Elimination and First-Order Form
 
-This constitutes the *drift invariance* property formalized in @sec-drift_invariance.
-
-### A.5 \quad Explicit Block Matrix Inversion (Schur Complement)
-
-The input-driven acceleration is defined by the action of the inverse inertia matrix on the input torque vector. To show explicitly how joint torques produce flexible mode accelerations, we perform a block inversion of the partitioned mass matrix $M$.
-
-Let $H = M^{-1}$ be the mobility matrix. Given the block structure:
-$$
-M = \begin{bmatrix} M_{rr} & M_{rf} \\ M_{fr} & M_{ff} \end{bmatrix},
-$$
-we require the corresponding blocks of $H$:
-$$
-H = \begin{bmatrix} H_{rr} & H_{rf} \\ H_{fr} & H_{ff} \end{bmatrix}.
-$$
-Using the **Schur Complement** of the flexible inertia block, $\Delta = M_{rr} - M_{rf} M_{ff}^{-1} M_{fr}$, the block inversion lemma yields:
-
-1.  **Rigid-body effective mobility ($H_{rr}$):**
-    $$ H_{rr} = \Delta^{-1} = (M_{rr} - M_{rf} M_{ff}^{-1} M_{fr})^{-1}. $$
-    This term represents the inverse inertia seen at the joints, modified by the "reflected mass" of the flexible shaft.
-
-2.  **Cross-mobility ($H_{fr}$):**
-    $$ H_{fr} = -M_{ff}^{-1} M_{fr} H_{rr}. $$
-    This term is the crucial **transmission gain** that maps joint torques to flexible mode accelerations. It explicitly depends on the inertial coupling term $M_{fr}$.
-
-The input-driven acceleration is then:
-$$
-\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
-\begin{bmatrix} H_{rr} & H_{rf} \\ H_{fr} & H_{ff} \end{bmatrix}
-\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
-=
-\begin{bmatrix} H_{rr} B(q) u \\ H_{fr} B(q) u \end{bmatrix}.
-$$
-
-This result rigorously justifies the form of the input field $G(x)$:
-$$
-G(x) = \begin{bmatrix} 0 \\ H_{rr} B(q) \\ 0 \\ H_{fr} B(q) \end{bmatrix}.
-$$
-It shows that flexible mode acceleration ($\ddot{\eta} \propto H_{fr} B(q) u$) is physically caused by the torque input $u$, but mediated by the inertial coupling $M_{fr}$. If the system were decoupled ($M_{fr} = 0$), then $H_{fr} = 0$, and joint torque would not excite the shaft modes.
-
-The input matrix is:
+With $H=M^{-1}$ and $\Delta=M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q}$,
 
 $$
-A_{\mathrm{input}}(x)
-=
-\begin{bmatrix} H_{rr} B(q) \\ H_{fr} B(q) \end{bmatrix}.
+H_{qq}=\Delta^{-1},\qquad
+H_{\eta q}=-M_{\eta\eta}^{-1}M_{\eta q}\Delta^{-1}.
+$$
+
+Both $M_{\eta\eta}$ and $\Delta$ are positive definite when $M$ is. The reduction $M_{qq}-\Delta$ is positive semidefinite; uncoupled directions can remain unchanged. The acceleration input map is
+
+$$
+A_{\mathrm{input}}=
+\begin{bmatrix}\Delta^{-1}B\\-M_{\eta\eta}^{-1}M_{\eta q}\Delta^{-1}B\end{bmatrix}.
 $$ {#eq-appendix_Ainput}
 
-Linearity of the torque input is preserved even in the presence of:
-- flexible-body modes,
-  
-- rigid–flexible coupling,
-  
-- configuration-dependent $B(q)$,
-  
-- velocity-dependent $C$ terms.
+This is a same-state contribution. The complete modal balance also retains $-M_{\eta\eta}^{-1}h_\eta$. A vanishing coupling coefficient at one state is insufficient to establish decoupling throughout a motion. Coordinate normalization and sign change its components.
 
-### A.6 \quad First-Order State-Space (Affine) Form
+Using the declared state ordering,
 
-Define the full state
 $$
-  x = \begin{bmatrix}
-    q \\ \dot{q} \\ \eta \\ \dot{\eta}
-  \end{bmatrix}.
+\begin{aligned}
+f(x)&=(\dot q,a_{\mathrm{drift},q},\dot\eta,a_{\mathrm{drift},\eta}),\\
+G(x)u&=(0,A_{\mathrm{input},q}u,0,A_{\mathrm{input},\eta}u).
+\end{aligned}
 $$
 
-The first-order dynamics follow directly from the definitions:
+At fixed $x$, changing $u$ changes the derivative by $G(x)\delta u$. Along different trajectories, the states and therefore the future drift values can differ. Smooth coordinate changes transform the complete vector fields consistently. An input-baseline change changes the definition of zero input. Neither operation identifies a unique biological source from measured kinematics.
+
+## Appendix B: Beam Reduction and Boundary Conditions {#sec-app-modal}
+
+### A Declared Reference Beam
+
+Start with a straight beam of reference coordinate $s\in[0,L]$, transverse displacement $w(s,t)$, linear density $\mu(s)$, and bending rigidity $EI(s)$. The linear Euler–Bernoulli approximation neglects shear deformation and shaft cross-section rotary inertia and assumes small transverse slopes about the declared reference. A tapered or materially varying shaft has variable coefficients. A real club can require torsion, bending in two planes, head offset, and other effects; this scalar model does not include them automatically.
+
+For a stationary reference base, no damping, and distributed transverse load $\ell$,
+
 $$
-  \dot{x}
-  =
-  \begin{bmatrix}
-    \dot{q} \\ \ddot{q} \\ \dot{\eta} \\ \ddot{\eta}
-  \end{bmatrix}
-  =
-  f(x) + G(x)u,
+\mu(s)w_{tt}+\bigl(EI(s)w_{ss}\bigr)_{ss}=\ell(s,t).
+$$ {#eq-beam_equation}
+
+For constant rigidity this reduces to $\mu w_{tt}+EIw_{ssss}=\ell$. [David Parks's MIT beam lectures](https://www.ocw.mit.edu/courses/2-002-mechanics-and-materials-ii-spring-2004/bc25a56b5a91ad29ca5c7419616686f7_lec2.pdf) develop the small-deformation beam balance and vibration equation. A fourth-order spatial equation needs four boundary conditions; their choice is part of the physical model.
+
+Take a clamped base, $w(0)=w_s(0)=0$, and a tip body whose center coincides with the endpoint, with mass $m_H$ and transverse rotary inertia $I_H$. The small-motion kinetic and strain energies are
+
 $$
+\begin{aligned}
+T&=\tfrac12\int_0^L\mu w_t^2\,ds
++\tfrac12m_Hw_t(L)^2+\tfrac12I_Hw_{st}(L)^2,\\
+U_s&=\tfrac12\int_0^L EI w_{ss}^2\,ds.
+\end{aligned}
+$$
+
+For test functions $\psi$ with $\psi(0)=\psi_s(0)=0$, the weak force balance is
+
+$$
+\begin{aligned}
+&\int_0^L\mu w_{tt}\psi\,ds
++m_Hw_{tt}(L)\psi(L)+I_Hw_{stt}(L)\psi_s(L)\\
+&\qquad+\int_0^L EI w_{ss}\psi_{ss}\,ds
+=\int_0^L\ell\psi\,ds+F_H\psi(L)+N_H\psi_s(L).
+\end{aligned}
+$$
+
+The applied tip force $F_H$ and moment $N_H$ are defined by this virtual-work convention. Integration by parts gives the dynamic tip conditions
+
+$$
+\begin{aligned}
+m_Hw_{tt}(L)-(EIw_{ss})_s(L)&=F_H,\\
+I_Hw_{stt}(L)+EI(L)w_{ss}(L)&=N_H.
+\end{aligned}
+$$
+
+Only an unloaded, inertia-free tip with zero applied loads gives the usual zero-moment/zero-shear conditions. A tip carrying a body does not satisfy those conditions during arbitrary vibration. [Chatterjee, Batra, and Natarajan's moving-cantilever model](https://arxiv.org/html/2407.16195v1) explicitly retains dynamic tip mass and rotary-inertia conditions; their coordinate runs from tip to base, so derivative signs must be transformed before comparing equations. Their translating laboratory beam is not a validated model of a rotating golf club.
+
+### Prescribed Base Motion Versus Coupled Motion
+
+If the clamp translates by $a(t)$ along a fixed transverse axis, absolute displacement is $a+w$. The relative interior equation gains the inertial load $-\mu\ddot a$, and the tip mass acceleration becomes $\ddot a+w_{tt}(L)$. This is a prescribed-motion boundary problem. When the base angle changes, world acceleration also contains angular-acceleration, centrifugal, and twice-angular-velocity cross deformation-rate terms. A term merely proportional to handle translation is insufficient for that case.
+
+In the full golfer–club model, handle motion follows the coupled equations; it is not independently prescribed as well as driven by a chosen torque. Derive the world placement and its derivatives, then assemble the complete kinetic energy. This retains the feedback of shaft/head reaction loads on the moving support. A finite-stiffness grip needs relative motion and force laws rather than a simultaneous clamped condition.
+
+### Assumed Functions, Loaded Modes, and Damping
+
+Approximate the relative displacement by
+
+$$
+w(s,t)\approx\sum_{i=1}^{m}\phi_i(s)\eta_i(t).
+$$ {#eq-modal_expansion}
+
+Admissible assumed functions satisfy the essential base conditions and need not be exact eigenmodes. For the stationary, coincident-tip model above, projection gives
+
+$$
+\begin{aligned}
+(M_m)_{ij}&=\int_0^L\mu\phi_i\phi_j\,ds
++m_H\phi_i(L)\phi_j(L)+I_H\phi_i'(L)\phi_j'(L),\\
+(K_m)_{ij}&=\int_0^L EI\phi_i''\phi_j''\,ds.
+\end{aligned}
+$$
+
+For a head offset or orientation depending on deformation, use the full center-of-mass and angular Jacobians; the simple endpoint formula above has stated limits. Exact distinct-frequency eigenmodes are orthogonal under the **loaded mass inner product**, including the two tip terms. Normalizing only the shaft integral omits part of the kinetic energy. A mass-normalized basis can make the reference mass matrix identity; its amplitudes then need not have units of tip displacement. With dimensionless assumed shapes, the amplitudes here have units of length.
+
+For a declared viscous damping matrix $C_m\succeq0$, the projected linear problem is $M_m\ddot\eta+C_m\dot\eta+K_m\eta=Q_m$. Diagonal damping does not follow from mass normalization alone. When the modes also diagonalize stiffness and damping, the scalar equations may be written
+
+$$
+\ddot\xi_i+2\zeta_i\omega_i\dot\xi_i+\omega_i^2\xi_i
+=\widetilde Q_i.
+$$ {#eq-modal_eom_single}
+
+Here $\widetilde Q_i$ is the consistently transformed and mass-divided right-hand side, not an unscaled force in newtons. In the rotating coupled problem, retain its full mass and velocity terms instead of replacing it wholesale with independent constant oscillators.
+
+Choose the basis size by convergence of specified outputs and frequencies over the relevant excitation bandwidth. Tip displacement, head orientation, strain energy, and interface loads can converge differently. No universal two- or three-mode sufficiency or percentage-fidelity claim is established here. Preserving affinity in torque does not bound truncation error or validate a contact prediction.
+
+## Appendix C: Reproducible Pendulum Examples {#sec-app-toy}
+
+### Rigid Point-Mass Pendulum
+
+For a point mass $m$ at distance $L$ from a fixed pivot, a massless rod, and angle $\theta$ measured counterclockwise from the downward vertical,
+
+$$
+T=\tfrac12mL^2\dot\theta^2,\qquad U_g=mgL(1-\cos\theta).
+$$
+
+The torque-driven equation is
+
+$$
+mL^2\ddot\theta+mgL\sin\theta=u.
+$$ {#eq-pendulum_planar}
+
+Thus $\dot x=(\dot\theta,-g\sin\theta/L)+(0,1/(mL^2))u$. At the same state, the acceleration difference for two inputs is $(u_1-u_2)/(mL^2)$. At different states the sine term can differ. A spatial point-mass pendulum has configuration $S^2$; it does not acquire an independent axial orientation merely by writing a three-component angular velocity.
+
+### A Fully Specified Flexible Pendulum
+
+For a separate illustrative model, let the supporting body have positive pivot inertia $I_0$ and its center of mass at the pivot. Attach a distributed shaft with density $\mu$, a point head mass $m_H$ at the tip, and one dimensionless assumed shape $\phi(s)=(s/L)^2$. This example neglects head rotary inertia and offset; the previous foundational example retains both. Neither is calibrated golf equipment.
+
+The world placement of each shaft point is
+
+$$
+p(s,\theta,\eta)=R(\theta)
+\begin{bmatrix}\phi(s)\eta\\-s\end{bmatrix},
+$$
+
+where $R$ is the planar rotation and $\eta$ is a signed displacement in meters. Its Jacobian columns are $R(s,\phi\eta)^\top$ and $R(\phi,0)^\top$. Direct integration of $\tfrac12\mu\|\dot p\|^2$ and the head energy yields
+
+$$
+T=\tfrac12(J_0+A\eta^2)\dot\theta^2
++B\dot\theta\dot\eta+\tfrac12A\dot\eta^2,
+$$
+
 with
 
 $$
-  f(x)
-  =
-  \begin{bmatrix}
-    \dot{q} \\[0.2em]
-    \left[a_{\mathrm{drift}}(x)\right]_{1:n} \\[0.2em]
-    \dot{\eta} \\[0.2em]
-    \left[a_{\mathrm{drift}}(x)\right]_{n+1:n+m}
-  \end{bmatrix},
+\begin{aligned}
+J_0&=I_0+\mu L^3/3+m_HL^2,\\
+A&=\mu L/5+m_H,\\
+B&=\mu L^2/4+m_HL.
+\end{aligned}
 $$
 
-$$
-  G(x)
-  =
-  \begin{bmatrix}
-    0 \\[0.2em]
-    \left[A_{\mathrm{input}}(x)\right]_{1:n,:} \\[0.2em]
-    0 \\[0.2em]
-    \left[A_{\mathrm{input}}(x)\right]_{n+1:n+m,:}
-  \end{bmatrix}.
-$$
-
-This establishes the nonlinear control-affine structure used throughout the manuscript.
-
-### A.7 \quad Notes on Coordinate Choices
-
-The derivations above are independent of the coordinate representation used for the rigid-body DOFs, provided:
-- the coordinates are minimal and smooth, or
-  
-- redundant coordinates are supplemented with constraint forces.
-
-The formulation is consistent with:
-- Denavit--Hartenberg (DH) joint coordinates,
-  
-- spatial vector formulations,
-  
-- exponential coordinates for rigid-body motion,
-  
-- Euler angles (with appropriate domain restrictions),
-  
-- quaternion-based internal representations (converted to minimal coordinates for dynamics).
-
-Under a smooth state-coordinate change $y=\psi(x)$, the fields transform as $f_y=D\psi\,f$ and $G_y=D\psi\,G$. Their components change; the represented dynamics and control-affine structure are coordinate-covariant. Time-dependent frames add transport terms and require an explicit convention.
-
-### A.8 \quad Summary
-
-The derivations in this appendix demonstrate explicitly that:
-- the golfer--club--shaft system admits a nonlinear control-affine representation,
-  
-- drift forces arise solely from passive dynamics,
-  
-- input forces arise solely from the torque inputs,
-  
-- rigid–flexible coupling affects both drift and the input-to-acceleration map,
-  
-- counterfactual constructions (ZTCF and ZVCF) follow naturally from the structure.
-
-This provides the mathematical backbone for the force decomposition and torque taxonomy developed in the main text.
-
-## Modal Approximation for the Flexible Shaft {#sec-app-modal}
-
-This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid--flexible dynamics of the golfer--club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates $\eta \in \mathbb{R}^{m}$ used in @sec-affine, and why this representation preserves the linearity of the torque input in the final control-affine form.
-
-### B.1 \quad Continuous Beam Model
-
-The golf shaft is modeled as a uniform Euler--Bernoulli beam of length $L$, with transverse displacement field
-$$
-  w(s,t), \qquad s \in [0,L],
-$$
-where $s$ is the arc-length coordinate from the butt (grip) end. For small deflections, the beam equation is
+The gravity and elastic potential is
 
 $$
-\rho A \,\frac{\partial^2 w}{\partial t^2}
-+ c_b \frac{\partial w}{\partial t}
-+ EI \,\frac{\partial^4 w}{\partial s^4}
-= f_{\mathrm{base}}(s,t).
-$$ {#eq-beam_equation}
-
-where:
-- $\rho A$ is the linear mass density,
-  
-- $c_b$ is distributed damping,
-  
-- $E I$ is the bending rigidity,
-  
-- $f_{\mathrm{base}}(s,t)$ contains forces transmitted from the handle motion.
-
-Boundary conditions depend on grip modeling. We assume:
-$$
-  w(0,t) = 0, \qquad w_s(0,t) = 0,
-$$
-for a clamped handle, and free-tip conditions at $s=L$:
-$$
-  EI\,w_{ss}(L,t) = 0, \qquad EI\,w_{sss}(L,t) = 0.
+U=g\bigl[P(1-\cos\theta)+Q\eta\sin\theta\bigr]
++\tfrac12k\eta^2,
 $$
 
-These free-tip conditions define an unloaded reference beam. A shaft carrying a clubhead instead has dynamic tip force and moment conditions. If unloaded-beam shapes are used as assumed basis functions, include the clubhead mass and rotary inertia in the assembled matrices and verify convergence; they are not exact eigenmodes of the loaded club.
-
-### B.2 \quad Modal Expansion
-
-The transverse displacement is approximated using a finite set of vibration modes:
+where $P=\mu L^2/2+m_HL$ and $Q=\mu L/3+m_H$. In particular, $\partial_\eta U$ contains gravity even at zero deflection. With modal damping $c\dot\eta$, Euler–Lagrange gives
 
 $$
-w(s,t)
-\approx
-\sum_{i=1}^{m} \phi_i(s)\,\eta_i(t).
-$$ {#eq-modal_expansion}
-
-where:
-- $\phi_i(s)$ are the eigenfunctions of the beam operator with the boundary conditions above,
-  
-- $\eta_i(t)$ are the modal amplitudes,
-  
-- $m$ is the number of modes retained.
-
-The mode shapes satisfy the (fourth-order) eigenvalue problem obtained from the Euler--Bernoulli beam PDE above:
-$$
-  EI \,\phi_i'''' = \omega_i^2 \rho A \,\phi_i,
-$$
-with orthogonality relations
-$$
-  \int_0^L \rho A \,\phi_i(s)\,\phi_j(s)\,ds = \delta_{ij}.
-$$
-
-Substituting~@eq-modal_expansion into the beam equation and projecting onto each $\phi_i$ yields the modal equations of motion.
-
-### B.3 \quad Modal Equations of Motion
-
-The projected dynamics have the form:
-
-$$
-\ddot{\eta}_i
-+ 2\,\zeta_i \omega_i\,\dot{\eta}_i
-+ \omega_i^2 \eta_i
-=
-Q_i(q,\dot{q},\ddot{q},\eta,\dot\eta).
-$$ {#eq-modal_eom_single}
-
-for $i = 1,\dots,m$, where:
-- $\omega_i$ is the natural frequency of mode $i$,
-  
-- $\zeta_i$ is the modal damping ratio (derived from $c_b$),
-  
-- $Q_i(q,\dot{q},\ddot{q},\eta,\dot\eta)$ are generalized modal forces induced by handle motion.
-
-Collecting terms,
-$$
-  \ddot{\eta} + C_s \dot{\eta} + K_s \eta = Q(q,\dot{q},\ddot{q},\eta,\dot\eta),
-$$
-where:
-$$
-  K_s = \mathrm{diag}(\omega_1^2,\dots,\omega_m^2),\qquad
-  C_s = \mathrm{diag}(2\zeta_1\omega_1,\dots,2\zeta_m\omega_m).
-$$
-
-These diagonal matrices assume mass-normalized eigenmodes and damping diagonal in that basis. With general damping, tip inertia or an assumed basis, retain full modal matrices. Their role corresponds to the matrices used in @sec-affine, where the shaft forces enter the drift term.
-
-### B.4 \quad Rigid--Flexible Coupling
-
-Here $w$ is deformation relative to the moving handle; $p$ is absolute position. Motion of the hands introduces base excitation into the beam. If $r_h(q)$ denotes the handle position, the kinematic constraint yields:
-$$
-  w(0,t)=0,\quad p(0,t)=r_h(q(t)) \quad \Rightarrow \quad f_{\mathrm{base}}(s,t) \propto \ddot{r}_h(q,\dot{q},\ddot{q}).
-$$
-
-Projected modal forcings then take the form:
-$$
-  Q(q,\dot{q},\ddot{q},\eta,\dot\eta)
-  = 
-  - M_{fr}(q,\eta)\,\ddot{q}
-  - C_{fr}(q,\dot{q},\eta,\dot{\eta})\,\dot{q}
-  - \cdots,
-$$
-matching the coupling seen in the full equations of motion.
-
-Critically:
-$$
-  \ddot\eta_{\mathrm{input}}=H_{fr}B(q)u.
-$$
-
-The forcing includes base acceleration. Substituting the coupled rigid-body equations exposes its input dependence; it is not a state-only forcing independent of $u$.
-
-### B.5 \quad Preservation of Linear Torque Input
-
-From the full equations of motion:
-$$
-  M(q,\eta)\,\dot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + g(q) + F_s(\eta,\dot{\eta})
-  =
-  \begin{bmatrix}
-    B(q)u \\ 0
-  \end{bmatrix},
-$$
-the explicitly modeled elastic and damping loads enter the drift term:
-$$
-  F_s(\eta,\dot{\eta}) = 
-  \begin{bmatrix}
-    0 \\
-    K_s \eta + C_s \dot{\eta}
-  \end{bmatrix}.
-$$
-
-Because $u$ appears only in the block $B(q)u$ associated with rigid-body torques:
-$$
-  u \mapsto \ddot{\eta} \quad \text{is filtered through} \quad \ddot{q}.
-$$
-
-Hence:
-**The modal representation does not create nonlinear torque dependence under the stated direct-torque model.**
-
-Elastic and damping terms enter the drift; coupled inertia also changes $G(x)$.
-
-### B.6 \quad Influence of Mode Truncation
-
-Using $m < \infty$ modes introduces model reduction error:
-- High-frequency shaft vibration is omitted.
-  
-- Tip deflection accuracy depends on $m$.
-  
-- Stiffness estimates become approximate near impact.
-
-However, the *structure* of the drift--input decomposition is preserved for any $m$.
-
-Increasing $m$ changes the dimensions and values of both $f$ and $G$, while preserving affinity in the declared torque input.
-
-### B.7 \quad Summary
-
-The modal shaft model presented here:
-- originates from a continuous beam,
-  
-- reduces to a finite-dimensional ODE system via orthogonal mode projection,
-  
-- produces stiffness and damping forces that appear only in the drift,
-  
-- preserves the linearity of torque input,
-  
-- maintains the control-affine structure central to the force and torque taxonomy.
-
-This makes the modal approximation both computationally efficient and theoretically compatible with the full decomposition presented in the main text.
-
-## Pendulum Examples: Rigid and Flexible, 2D and 3D {#sec-app-toy}
-
-This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:
-- a planar (2D) pendulum with and without a flexible shaft, and
-  
-- a spatial (3D) pendulum with and without a flexible shaft.
-In each case, we show that the equations of motion can be written as
-$$
-  \dot{x} = f(x) + G(x)u,
-$$
-with flexible-shaft restoring terms in the drift and coupled inertia also present in the input map, preserving linearity in the torque input $u$.
-
-### C.1 \quad Planar Rigid Pendulum With Torque Input
-
-Consider a simple planar pendulum of length $L$ and mass $m$, pivoted at the origin and moving in the vertical plane. Let $\theta$ be the angle from the downward vertical, positive counterclockwise. A torque input $u$ is applied at the pivot.
-
-The kinetic and potential energy are:
-$$
-  T = \frac{1}{2} m L^2 \dot{\theta}^2, \qquad
-  V = m g L (1 - \cos\theta),
-$$
-and the Lagrangian is $\mathcal{L} = T - V$.
-
-The Euler--Lagrange equation with generalized torque $u$ is:
-
-$$
-  \frac{d}{dt}\left( \frac{\partial \mathcal{L}}{\partial \dot{\theta}} \right)
-  - \frac{\partial \mathcal{L}}{\partial \theta}
-  = u.
-$$
-
-This yields:
-
-$$
-m L^2 \ddot{\theta} + m g L \sin\theta = u.
-$$ {#eq-pendulum_planar}
-
-Defining the state $x = [\theta, \dot{\theta}]^T$, we obtain the first-order system:
-
-$$
-  \dot{x}
-  =
-  \begin{bmatrix}
-    \dot{\theta} \\
-    -\frac{g}{L} \sin\theta
-  \end{bmatrix}
-  +
-  \begin{bmatrix}
-    0 \\
-    \frac{1}{m L^2}
-  \end{bmatrix} u.
-$$
-
-Thus,
-$$
-  f(x) =
-  \begin{bmatrix}
-    \dot{\theta} \\
-    -\frac{g}{L} \sin\theta
-  \end{bmatrix},
-  \qquad
-  G(x) =
-  \begin{bmatrix}
-    0 \\
-    \frac{1}{m L^2}
-  \end{bmatrix},
-$$
-and the system is clearly control-affine.
-
-*Superposition of drift and input.*  
-For any two inputs $u_1,u_2$ and associated accelerations $\ddot{\theta}_1, \ddot{\theta}_2$ solving~@eq-pendulum_planar, we have:
-$$
-  \ddot{\theta}_i
-  =
-  -\frac{g}{L}\sin\theta
-  +
-  \frac{1}{mL^2}u_i, \quad i=1,2.
-$$
-Then for a convex combination $u_\lambda = \lambda u_1 + (1-\lambda)u_2$,
-$$
-  \ddot{\theta}_\lambda
-  =
-  -\frac{g}{L}\sin\theta
-  +
-  \frac{1}{mL^2}u_\lambda
-  =
-  \lambda \ddot{\theta}_1 + (1-\lambda)\ddot{\theta}_2,
-$$
-so the torque contribution superposes linearly on top of the same drift term. This is the simplest explicit instance of the structure used in the main manuscript.
-
-### C.2 \quad Planar Pendulum With Flexible Shaft (Single Bending Mode)
-
-We now attach a single bending mode to the pendulum to emulate a flexible shaft aligned with the pendulum rod. Let $\eta$ be the modal coordinate representing transverse deflection of the shaft relative to the rigid rod.
-
-We model the shaft deformation as a linear oscillator attached at the end of the rigid pendulum:
-
-$$
-\ddot{\eta} + 2\zeta\omega \dot{\eta} + \omega^2 \eta = -\alpha \ddot{\theta}.
-$$ {#eq-eta_planar}
-
-where:
-- $\omega$ is the natural frequency of the mode,
-  
-- $\zeta$ is its damping ratio,
-  
-- $\alpha$ scales how base rotation $\ddot{\theta}$ drives shaft bending.
-
-The augmented kinetic and potential energy can be written as
-
-$$
-\begin{align}
-  T &= \frac{1}{2} I_{\mathrm{eff}}(\eta)\,\dot{\theta}^2
-       + \frac{1}{2} m_\eta \dot{\eta}^2
-       + \text{(coupling terms)},\\
-  V &= m g L_{\mathrm{eff}}(\eta) (1 - \cos\theta)
-       + \frac{1}{2} k_\eta \eta^2,
-\end{align}
-$$
-
-where $I_{\mathrm{eff}}$ and $L_{\mathrm{eff}}$ capture the effect of shaft deformation on the effective inertia and center of mass. The exact forms are not required to demonstrate linearity in $u$.
-
-The resulting equations of motion can be written schematically as:
-
-$$
-M(\theta,\eta)
-\begin{bmatrix}
-  \ddot{\theta} \\[0.2em]
-  \ddot{\eta}
-\end{bmatrix}
-+
-C(\theta,\dot{\theta},\eta,\dot{\eta})
-\begin{bmatrix}
-  \dot{\theta} \\[0.2em]
-  \dot{\eta}
-\end{bmatrix}
-+
-G(\theta,\eta)
-+
-\begin{bmatrix}
-  0 \\[0.2em]
-  k_\eta \eta + c_\eta \dot{\eta}
-\end{bmatrix}
-=
-\begin{bmatrix}
-  u \\[0.2em]
-  0
-\end{bmatrix}.
+\begin{aligned}
+\begin{bmatrix}J_0+A\eta^2&B\\B&A\end{bmatrix}
+\begin{bmatrix}\ddot\theta\\\ddot\eta\end{bmatrix}
+&+\begin{bmatrix}2A\eta\dot\theta\dot\eta\\-A\eta\dot\theta^2\end{bmatrix}\\
+&+\begin{bmatrix}g(P\sin\theta+Q\eta\cos\theta)\\gQ\sin\theta+k\eta+c\dot\eta\end{bmatrix}
+=\begin{bmatrix}u\\0\end{bmatrix}.
+\end{aligned}
 $$ {#eq-pendulum_flex_block}
 
-where $k_\eta$ and $c_\eta$ are the modal stiffness and damping derived from $\omega,\zeta$, and all coupling terms have been absorbed into the matrices $M,C,G$.
-
-Solving for accelerations:
+The complete lower equation is therefore
 
 $$
-\begin{bmatrix}
-  \ddot{\theta} \\[0.2em]
-  \ddot{\eta}
-\end{bmatrix}
-=
--M^{-1}
-\left(
-  C
-  \begin{bmatrix}
-    \dot{\theta} \\ \dot{\eta}
-  \end{bmatrix}
-  + G +
-  \begin{bmatrix}
-    0 \\ k_\eta \eta + c_\eta \dot{\eta}
-  \end{bmatrix}
-\right)
-+
-M^{-1}
-\begin{bmatrix}
-  1 \\ 0
-\end{bmatrix} u.
+A\ddot\eta=-B\ddot\theta+A\eta\dot\theta^2
+-gQ\sin\theta-k\eta-c\dot\eta.
+$$ {#eq-eta_planar}
+
+This displays the coupling, centrifugal, modal-gravity, elastic, and damping terms explicitly. It is not generally just a base-acceleration-driven oscillator with constant frequency. With $h$ equal to all displayed non-acceleration terms,
+
+$$
+\begin{bmatrix}\ddot\theta\\\ddot\eta\end{bmatrix}
+=-M^{-1}h+M^{-1}\begin{bmatrix}1\\0\end{bmatrix}u.
 $$ {#eq-pendulum_flex_accel}
 
-Defining
-$$
-  a_{\mathrm{drift}}(x) =
-  -M^{-1}
-  \left(
-    C
-    \begin{bmatrix}
-      \dot{\theta} \\ \dot{\eta}
-    \end{bmatrix}
-    + G +
-    \begin{bmatrix}
-      0 \\ k_\eta \eta + c_\eta \dot{\eta}
-    \end{bmatrix}
-  \right),
-  \qquad
-  A_{\mathrm{input}}(x) =
-  M^{-1}
-  \begin{bmatrix}
-    1 \\ 0
-  \end{bmatrix},
-$$
-we obtain
-$$
-  \begin{bmatrix}
-    \ddot{\theta} \\ \ddot{\eta}
-  \end{bmatrix}
-  =
-  a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u.
-$$
+The energy check is $\dot E=\dot\theta u-c\dot\eta^2$, where $E=T+U$. The coupling terms cancel in total power; they do not provide an extra source of energy.
 
-*Superposition still holds.*  
-Even though the dynamics are now richer and nonlinear in $(\theta,\eta)$, the torque input still appears linearly as $A_{\mathrm{input}}(x)\,u$. At the same state, acceleration differences equal $A_{\mathrm{input}}(x)(u_1-u_2)$. Finite trajectories need not superpose; flexibility changes both drift and input sensitivity.
+### Numerical Values, Units, and a Sign Counterexample
 
-### C.3 \quad Spatial (3D) Rigid Pendulum With Torque Input
-
-We now consider a 3D rigid-body pendulum of mass $m$, pivoted at the origin, with positive-definite pivot inertia $I$ and body-fixed center of mass $(0,0,-L)$. The point-mass/massless-rod limit instead has singular axial inertia and lives on $S^2$; the inverse $I^{-1}$ below is not valid for that limit. Let $R \in SO(3)$ describe the orientation of the rod, so the center-of-mass position is
-$$
-  p = R\,\begin{bmatrix} 0 \\ 0 \\ -L \end{bmatrix}.
-$$
-
-Let $\omega \in \mathbb{R}^3$ be the body angular velocity, and let $\tau = u \in \mathbb{R}^3$ be the control torque in body coordinates.
-
-The rigid-body equations of motion for a 3D pendulum are:
+Choose $L=1.1$ m, $\mu=0.1$ kg/m, $m_H=0.2$ kg, $I_0=0.4$ kg m$^2$, $k=2500$ N/m, $c=0.8$ N s/m, and $g=9.81$ m/s$^2$. These illustrative values and the complete shape above determine every coefficient. At $\eta=0$,
 
 $$
-\begin{align}
-  \dot{R} &= R \hat{\omega}, \\
-  I \dot{\omega} + \omega \times (I\omega) &= \tau + \tau_g(R),
-\end{align}
+\begin{aligned}
+J_0&=0.686367\ \mathrm{kg\,m^2},\quad A=0.222000\ \mathrm{kg},\\
+B&=0.250250\ \mathrm{kg\,m},\\
+\Delta&=J_0-B^2/A=0.404272\ \mathrm{kg\,m^2},\\
+\Gamma&=-B/A=-1.127252\ \mathrm{m/rad}.
+\end{aligned}
 $$
 
-where:
-- $I$ is the inertia tensor about the pivot,
-  
-- $\hat{\omega}$ is the skew-symmetric matrix such that $\hat{\omega}v = \omega \times v$,
-  
-- $\tau_g(R)$ is the gravitational torque.
-
-Rewriting,
+Radians are dimensionless in SI; retaining “per radian” clarifies the angular coordinate convention. The coupling has length units, not inverse-length units. Under a $1$ N m input, the **input-induced** accelerations are
 
 $$
-  \dot{\omega}
-  =
-  I^{-1}\big( -\omega \times (I\omega) + \tau_g(R) \big)
-  +
-  I^{-1} \tau.
+\begin{aligned}
+\ddot\theta_{\mathrm{input}}&=2.473583\ \mathrm{rad/s^2},\\
+\ddot\eta_{\mathrm{input}}&=-2.788352\ \mathrm{m/s^2}.
+\end{aligned}
 $$
 
-Defining the state $x = (R,\omega)$, we have:
-$$
-  \dot{x} =
-  \begin{bmatrix}
-    R \hat{\omega} \\
-    I^{-1}\big( -\omega \times (I\omega) + \tau_g(R) \big)
-  \end{bmatrix}
-  +
-  \begin{bmatrix}
-    0 \\
-    I^{-1}
-  \end{bmatrix} u,
-$$
-i.e.,
-$$
-  f(x) =
-  \begin{bmatrix}
-    R \hat{\omega} \\
-    I^{-1}\big( -\omega \times (I\omega) + \tau_g(R) \big)
-  \end{bmatrix},
-  \qquad
-  G(x) =
-  \begin{bmatrix}
-    0 \\
-    I^{-1}
-  \end{bmatrix},
-$$
+At $\theta=-\pi/4$, $\eta=0$, and zero velocities, the **total** accelerations with that input are instead $\ddot\theta=2.708947$ rad/s$^2$ and $\ddot\eta=4.341333$ m/s$^2$. Gravity reverses the sign of the total modal acceleration relative to the input contribution in this example. An input contribution alone does not tell the reader which way the complete shaft will accelerate.
 
-Once again, the system is control-affine: all nonlinearities are encapsulated in $f(x)$, and the input enters linearly via $G(x)u$.
+![Input and Total Acceleration](figures/modal_pendulum_acceleration_components.png){#fig-modal-acceleration-components fig-alt="Two panels compare torque contribution, gravity baseline, and total acceleration. Angular values are 2.474, 0.235, and 2.709 radians per second squared; modal values are minus 2.788, 7.130, and 4.341 meters per second squared. The modal total opposes the input contribution."}
 
-### C.4 \quad Spatial (3D) Pendulum With Flexible Shaft
+The panels have different physical units and scales. Their bars are components of an instantaneous model calculation, not percentages of swing outcome or experimental estimates of muscle action.
 
-We now attach a flexible shaft (modeled via a small set of bending modes) to the 3D pendulum. The shaft deformation is represented by modal coordinates $\eta \in \mathbb{R}^m$, just as in @sec-app-modal.
+The coordinate sign is a convention: set $\xi=-\eta$ and simultaneously use shape $-\phi$. Physical displacement is unchanged, while the cross mass and coupling change sign. A positive coefficient in the transformed coordinates is equally consistent with the same physical response.
 
-The full state is
-$$
-  x = (R,\omega,\eta,\dot{\eta}),
-$$
-and the equations of motion may be written schematically as:
+Even the frequency depends on the specified boundary experiment. For the **linearized zero-gravity model at zero deflection**, holding $\theta$ fixed gives $f=\sqrt{k/A}/(2\pi)=16.8894$ Hz. Allowing the supporting angle to move freely gives one zero-frequency mode and a nonzero frequency $\sqrt{k/(A-B^2/J_0)}/(2\pi)=22.0067$ Hz. Neither number establishes a typical shaft frequency, and gravity or a controlled support changes the linearization.
+
+The [executable checks](https://github.com/D-sorganization/AffineDrift/blob/main/tests/test_modal_pendulum_rigor.py) independently integrate the distributed kinetic energy, differentiate the potential, verify the power balance and its time integral, solve the input and total accelerations, and check sign transformations and both frequency problems.
+
+### Spatial Rigid and Flexible Models
+
+A rigid spatial pendulum with orientation $R\in SO(3)$, body angular velocity $\omega$, center vector $r_C$, and positive-definite pivot inertia $I$ satisfies
 
 $$
-\begin{bmatrix}
-  I(\eta) & I_{rf}(\eta) \\
-  I_{fr}(\eta) & M_{ff}
-\end{bmatrix}
-\begin{bmatrix}
-  \dot{\omega} \\[0.2em]
-  \ddot{\eta}
-\end{bmatrix}
-+
-\begin{bmatrix}
-  C_{rr}(\omega,\eta,\dot{\eta}) & C_{rf}(\omega,\eta,\dot{\eta}) \\
-  C_{fr}(\omega,\eta,\dot{\eta}) & C_{ff}(\omega,\eta,\dot{\eta})
-\end{bmatrix}
-\begin{bmatrix}
-  \omega \\[0.2em]
-  \dot{\eta}
-\end{bmatrix}
-+
-\begin{bmatrix}
-  g_{\mathrm{flex}}(R,\eta) \\[0.2em]
-  K_s \eta + C_s \dot{\eta}
-\end{bmatrix}
-=
-\begin{bmatrix}
-  \tau \\[0.2em]
-  0
-\end{bmatrix}.
+\begin{aligned}
+\dot R&=R\widehat\omega,\\
+I\dot\omega+\omega\times(I\omega)&=u+\tau_g(R),\\
+\tau_g(R)&=r_C\times R^\top(0,0,-mg)^\top.
+\end{aligned}
+$$
+
+All torques here are body-frame components. The potential is $U_g=mg\,e_3^\top Rr_C$, and its directional derivative gives the opposite of gravitational virtual work. The gyroscopic term does no work because $\omega\cdot[\omega\times(I\omega)]=0$. The point-mass/massless-rod limit has singular pivot inertia along the rod; it does not permit this $I^{-1}$ formulation on all three angular components. A finite rigid body with the stated inertia does.
+
+For a flexible spatial model, let $T(\eta,\omega,\dot\eta)$ be assembled from the actual body-frame placements, and $U(R,\eta)$ include gravity and elasticity. Body angular velocity is a velocity variable, not the time derivative of three globally valid orientation coordinates. With $p_\omega=\partial_\omega T$ and $p_\eta=\partial_{\dot\eta}T$, the body-rotation and shape balances take the form
+
+$$
+\begin{aligned}
+\dot p_\omega+\omega\times p_\omega&=u+\tau_U-d_\omega,\\
+\dot p_\eta-\partial_\eta T+\partial_\eta U&=-d_\eta.
+\end{aligned}
+$$
+
+Here $\tau_U$ is defined by $\delta U=-\tau_U\cdot\delta\alpha$ for a body rotation $\delta R=R\widehat{\delta\alpha}$. The inertia is the Hessian of $T$ in $(\omega,\dot\eta)$.
+
+The rotational variation obeys $\delta\omega=\delta\dot\alpha+\omega\times\delta\alpha$ rather than the variation of an ordinary coordinate derivative. [Holm, Marsden, and Ratiu](https://arxiv.org/pdf/chao-dyn/9801015), equations (1.13)–(1.26), derive this constrained variation and its momentum cross term. Adding free shape-coordinate variations and the declared potential/load terms gives the two balances above.
+
+With positive-definite inertia, these equations can be collected as
+
+$$
+\widetilde M(R,\eta)
+\begin{bmatrix}\dot\omega\\\ddot\eta\end{bmatrix}
++\widetilde h(R,\eta,\omega,\dot\eta)
+=\begin{bmatrix}u\\0\end{bmatrix}.
 $$ {#eq-3d_flex_block}
 
-Solving for $(\dot{\omega},\ddot{\eta})$:
+The bias includes the rotational momentum term and **all modal potential derivatives**. Together with $\dot R=R\widehat\omega$, it is affine in the declared body torque. Do not apply the ordinary coordinate Christoffel formula to body angular velocity without the additional rotation kinematics. These are structural equations, not a solved three-dimensional golfer simulation.
 
-$$
-  \begin{bmatrix}
-    \dot{\omega} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  -\tilde{M}^{-1}(R,\eta)
-  \left(
-    \tilde{C}(\omega,\eta,\dot{\eta})
-    \begin{bmatrix}
-      \omega \\ \dot{\eta}
-    \end{bmatrix}
-    + 
-    \begin{bmatrix}
-      g_{\mathrm{flex}}(R,\eta) \\ K_s \eta + C_s \dot{\eta}
-    \end{bmatrix}
-  \right)
-  +
-  \tilde{M}^{-1}(R,\eta)
-  \begin{bmatrix}
-    I_3 \\ 0
-  \end{bmatrix} u,
-$$
+### Verification and Golf Interpretation
 
-Here $g_{\mathrm{flex}}$ is the gravitational load written on the left, opposite in sign to the applied gravitational torque $\tau_g$ in C.3. Retained modal gravitational loads must also be included if the center-of-mass height depends on deformation. $\tilde M,\tilde C$ compact the blocks and $I_3$ is the identity.
+These examples connect force transmission, shaft deformation, gravity, coordinate conventions, and energy. They show why an instantaneous torque effect, total acceleration, modal frequency, and delivered contact are different quantities. A passive mode can still accelerate under gravity and inertial coupling; changing the chosen mode coordinate cannot change physical motion; and changing support conditions can change vibration frequencies even with the same material parameters.
 
-Defining
-$$
-  a_{\mathrm{drift}}(x)
-  =
-  -\tilde{M}^{-1}(R,\eta)
-  \left(
-    \tilde{C}(\omega,\eta,\dot{\eta})
-    \begin{bmatrix}
-      \omega \\ \dot{\eta}
-    \end{bmatrix}
-    + 
-    \begin{bmatrix}
-      g_{\mathrm{flex}}(R,\eta) \\ K_s \eta + C_s \dot{\eta}
-    \end{bmatrix}
-  \right),
-$$
-$$
-  A_{\mathrm{input}}(x)
-  =
-  \tilde{M}^{-1}(R,\eta)
-  \begin{bmatrix}
-    I_3 \\ 0
-  \end{bmatrix},
-$$
-we have
-$$
-  \begin{bmatrix}
-    \dot{\omega} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u,
-$$
-and $R$ evolves as $\dot{R} = R \hat{\omega}$. The full first-order dynamics again take the control-affine form
-$$
-  \dot{x} = f(x) + G(x)u,
-$$
-with flexibility affecting both $f(x)$ and $G(x)$.
+Compare independent assemblies, force-balance residuals, energy/work residuals, coordinate transformations, timestep refinement, and mode convergence before interpreting a simulation. Then compare the specified outputs with suitable measurements under declared uncertainty. Such numerical verification does not establish empirical validity. A zero-input forward trajectory is a new initial-value problem, not generally a subtraction of two completed paths. Instantaneous zero-velocity evaluation also retains the declared configuration, parameters, and auxiliary states.
 
-*Superposition in 3D with flexibility.*  
-Despite the complexity of the 3D coupled dynamics, any change in the torque input $u$ influences $(\dot{\omega},\ddot{\eta})$ only through the linear operator $A_{\mathrm{input}}(x)$. For a given state $x$, the mapping
-$$
-  u \mapsto \dot{x}
-$$
-is affine; the difference between their instantaneous state derivatives at the same state is $G(x)(u_1-u_2)$. This is the same structural property exploited in the full golfer--club model.
-
-### C.5 \quad Summary: Superposition and Affine Structure
-
-Across all four cases—planar rigid pendulum, planar flexible pendulum, 3D rigid pendulum, and 3D flexible pendulum—the same pattern holds:
-- Flexible dynamics (shaft modes) modify the drift term $f(x)$ by adding state-dependent inertia, Coriolis, and restoring forces.
-  
-- The torque input $u$ enters linearly through an input matrix $G(x)$ that depends only on configuration and flexible coordinates, not on $u$.
-  
-- For any fixed state $x$, the acceleration (and hence $\dot{x}$) is an affine function of $u$; the passive part and active part superpose exactly.
-
-These examples provide explicit, low-dimensional realizations of the general control-affine structure used in the main text and highlight why the drift--input decomposition, ZTCF, and ZVCF constructions remain valid and interpretable in the presence of shaft flexibility.
+The [numerical consistency article](theory-part5.html) describes a reproducible evaluation procedure. No particular Simulink implementation, measured accuracy, optimal golf technique, or biological causal attribution is established by the algebra in this appendix. The primary sources support the engineering methods; the examples and limitations here state what has actually been calculated.
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation {#sec-simulink}
 
