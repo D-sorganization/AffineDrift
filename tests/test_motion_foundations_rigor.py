@@ -141,3 +141,12 @@ def test_opening_chapter_excludes_invalid_motion_foundations(edition: str) -> No
         "centrifugal acceleration of the downswing \\emph{automatically}",
     ]:
         assert phrase not in text
+
+
+def test_web_path_timing_preserves_second_derivative_primes() -> None:
+    text = (ROOT / "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd").read_text(
+        encoding="utf-8"
+    )
+    introduction = text.split("## Curves in State Space", 1)[0]
+    assert introduction.count("q_d" + chr(39) * 2) == 2
+    assert 'q_d"' not in introduction
