@@ -152,7 +152,7 @@ For acceleration $a=a_d+Hu$, subtraction gives $a-a_d=Hu$: the acceleration incr
 Finite trajectories generally do not add. For the specified linear system $\dot x=A(t)x+B(t)u+c(t)$, trajectories with the same initial state obey $x_{u_1+u_2}=x_{u_1}+x_{u_2}-x_0$, with the evolved zero-input baseline counted once. Making the columns of $G(x)$ linear in state is not enough: $\dot x=xu$ is bilinear and does not have that input-to-trajectory superposition property.
 
 
-The rest of this paper is devoted to showing that **standard rigid-body dynamics models admit the structure (2.1)**, with the controls entering as generalized forces, and that in each formulation the map from those generalized forces to accelerations is linear.
+The rest of this paper shows that **standard rigid-body dynamics models admit the structure (2.1)**, with the controls entering as generalized forces. In each formulation, the map from those applied loads to acceleration increments is linear at fixed state.
 
 ---
 
@@ -848,8 +848,8 @@ It is essential to stress what we *do not* get:
   $$
   x(t) \neq x^{(1)}(t) + x^{(2)}(t)
 $$
-  except in special linear cases.
-* Superposition in this paper refers to **linear decomposition of instantaneous generalized forces and accelerations** with respect to input channels at a fixed state, not linear combination of trajectories.
+  A linear system with a common initial state instead uses the evolved-baseline identity given above; the plain sum additionally requires that baseline to vanish. State addition itself requires a compatible vector-space representation.
+* Superposition in this paper refers to **linear decomposition of applied generalized loads and acceleration increments** with respect to input channels at a fixed state. The total acceleration includes its zero-input baseline once.
 
 Still, this local superposition is extremely useful in practice: it allows you to calculate, at each time, how much of the instantaneous acceleration or joint torque is attributable to gravity, inertial coupling, specific actuators, or external loads, etc.
 

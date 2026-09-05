@@ -58,4 +58,6 @@ def test_article_does_not_promote_affinity_to_causal_or_neural_identification() 
     assert "activation dependence must be checked" in source.lower()
     assert "the acceleration increment, not a unique input" in source
     assert "Dominant Attractor" not in source
+    assert "to accelerations is linear" not in source
+    assert "except in special linear cases" not in source
     assert "m c^\\times \\\\ \nm c^\\times" not in source
