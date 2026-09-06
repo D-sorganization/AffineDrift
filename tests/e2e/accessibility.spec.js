@@ -1,3 +1,5 @@
+// Accessibility and WCAG color-contrast verification suite.
+// Cross-reference #4139: Complementary to automated axe-core site verifier policy.
 const { test, expect } = require("@playwright/test");
 
 const CONTRAST_ROUTES = [

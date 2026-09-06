@@ -132,7 +132,7 @@ function parseArgs(argv) {
     routes: undefined,
     documentRetries: 0,
     documentRetryDelayMs: 500,
-    axe: 'warn',
+    axe: 'fail',
   };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];

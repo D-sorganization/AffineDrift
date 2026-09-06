@@ -218,6 +218,20 @@ export function initAriaLabels() {
             }
         }
     }
+
+    // Scrollable table-responsive containers (scrollable-region-focusable)
+    const responsiveTables = document.getElementsByClassName("table-responsive");
+    for (const tableRegion of responsiveTables) {
+        if (!tableRegion.hasAttribute("tabindex")) {
+            tableRegion.setAttribute("tabindex", "0");
+        }
+        if (!tableRegion.hasAttribute("role")) {
+            tableRegion.setAttribute("role", "region");
+        }
+        if (!tableRegion.hasAttribute("aria-label")) {
+            tableRegion.setAttribute("aria-label", "Scrollable table");
+        }
+    }
 }
 
 /**

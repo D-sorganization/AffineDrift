@@ -364,9 +364,9 @@ describe('axe-core policy (ISSUE-4126)', () => {
     summarizeAxeViolations,
   } = require('../scripts/verify-public-site.js');
 
-  test('defaults to warn-only and rejects unknown modes', () => {
-    expect(parseArgs([]).axe).toBe('warn');
-    expect(parseArgs(['--axe', 'fail']).axe).toBe('fail');
+  test('defaults to fail and rejects unknown modes', () => {
+    expect(parseArgs([]).axe).toBe('fail');
+    expect(parseArgs(['--axe', 'warn']).axe).toBe('warn');
     expect(parseArgs(['--axe', 'off']).axe).toBe('off');
     expect(() => parseArgs(['--axe', 'loud'])).toThrow(/--axe must be one of/);
   });

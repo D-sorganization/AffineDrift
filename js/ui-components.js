@@ -170,6 +170,7 @@ export function initAccordions() {
             header.setAttribute("aria-controls", content.id);
             const isExpanded = header.getAttribute("aria-expanded") === "true";
             content.setAttribute("aria-hidden", String(!isExpanded));
+            content.hidden = !isExpanded;
             updateHeaderAria(header, isExpanded);
         }
         index++;
@@ -184,6 +185,7 @@ export function initAccordions() {
             const isExpanded = header.getAttribute("aria-expanded") === "true";
             header.setAttribute("aria-expanded", String(!isExpanded));
             content.setAttribute("aria-hidden", String(isExpanded));
+            content.hidden = isExpanded;
             updateHeaderAria(header, !isExpanded);
         }
     });
@@ -625,12 +627,14 @@ export function initLaymansTermsToggle() {
         header.setAttribute("aria-controls", content.id);
         const isExpanded = header.getAttribute("aria-expanded") === "true";
         content.setAttribute("aria-hidden", String(!isExpanded));
+        content.hidden = !isExpanded;
         updateHeaderAria(header, isExpanded);
 
         header.addEventListener("click", () => {
             const expanded = header.getAttribute("aria-expanded") === "true";
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
+            content.hidden = expanded;
             updateHeaderAria(header, !expanded);
         });
         index++;
@@ -668,12 +672,14 @@ export function initCriticsCommentsToggle() {
         header.setAttribute("aria-controls", content.id);
         const isExpanded = header.getAttribute("aria-expanded") === "true";
         content.setAttribute("aria-hidden", String(!isExpanded));
+        content.hidden = !isExpanded;
         updateHeaderAria(header, isExpanded);
 
         header.addEventListener("click", () => {
             const expanded = header.getAttribute("aria-expanded") === "true";
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
+            content.hidden = expanded;
             updateHeaderAria(header, !expanded);
         });
         index++;
