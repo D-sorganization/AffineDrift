@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-06 | #4208 | Remediate deploy accessibility violations across routes: link underlines in bibliographies, callout/video ARIA roles, math scrollability, and token contrast (#4207). |
 | 2026-09-05 | #4206 | Resolve serious and critical axe accessibility violations across 163 routes and default site verifier axe policy to fail (#4139). |
 | 2026-09-05 | #4203 | Derive coupled air-relative ball flight, reproduce coefficient-domain examples, and correct aerodynamic evidence and conformance interpretation. |
 | 2026-09-05 | #4201 | Derive coupled impact, distinguish rotation/reference experiments, and qualify closure evidence across three articles. |
