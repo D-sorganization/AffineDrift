@@ -183,13 +183,21 @@ export function initAriaLabels() {
         }
     }
 
-    // Resource cards
+    // Resource cards (only apply aria-label if card has or is given an appropriate role)
     const resourceCards = document.getElementsByClassName("resource-card");
-    labelCardsFromHeading(resourceCards, "Resource");
+    for (const card of resourceCards) {
+        if (card.tagName.toLowerCase() === "article" || card.hasAttribute("role")) {
+            labelCardsFromHeading([card], "Resource");
+        }
+    }
 
-// Article cards
+    // Article cards (only apply aria-label if card has or is given an appropriate role)
     const articleCards = document.getElementsByClassName("article-card");
-    labelCardsFromHeading(articleCards, "Article");
+    for (const card of articleCards) {
+        if (card.tagName.toLowerCase() === "article" || card.hasAttribute("role")) {
+            labelCardsFromHeading([card], "Article");
+        }
+    }
 
     // External links opening in new tabs
     // ⚡ Bolt Optimization: Use getElementsByTagName instead of querySelectorAll for performance
@@ -219,7 +227,7 @@ export function initAriaLabels() {
         }
     }
 
-    // Scrollable table-responsive containers (scrollable-region-focusable)
+    // Scrollable containers (table-responsive, table-wrapper, and wide math)
     const responsiveTables = document.getElementsByClassName("table-responsive");
     for (const tableRegion of responsiveTables) {
         if (!tableRegion.hasAttribute("tabindex")) {
@@ -230,6 +238,58 @@ export function initAriaLabels() {
         }
         if (!tableRegion.hasAttribute("aria-label")) {
             tableRegion.setAttribute("aria-label", "Scrollable table");
+        }
+    }
+
+    const tableWrappers = document.getElementsByClassName("table-wrapper");
+    for (const wrapper of tableWrappers) {
+        if (!wrapper.hasAttribute("tabindex")) {
+            wrapper.setAttribute("tabindex", "0");
+        }
+        if (!wrapper.hasAttribute("role")) {
+            wrapper.setAttribute("role", "region");
+        }
+        if (!wrapper.hasAttribute("aria-label") && !wrapper.hasAttribute("aria-labelledby")) {
+            wrapper.setAttribute("aria-label", "Scrollable table");
+        }
+    }
+
+    // Accessible names and ARIA validity for iframe video embeds
+    const iframes = document.getElementsByTagName("iframe");
+    for (const iframe of iframes) {
+        if (!iframe.getAttribute("title")) {
+            iframe.setAttribute("title", "Video demonstration");
+        }
+        // If the iframe's parent container has an invalid aria-label, remove it
+        // since plain divs cannot carry aria-label without role
+        const parent = iframe.closest(".resource-card, .video-card");
+        if (parent && !parent.getAttribute("role") && parent.hasAttribute("aria-label")) {
+            parent.removeAttribute("aria-label");
+        }
+    }
+
+    // Quarto collapsible callout headers: ensure they have role="button" so aria-expanded is allowed
+    const calloutToggles = document.querySelectorAll(".callout-header[data-bs-toggle='collapse']");
+    for (const toggle of calloutToggles) {
+        if (!toggle.hasAttribute("role")) {
+            toggle.setAttribute("role", "button");
+        }
+        if (!toggle.hasAttribute("tabindex")) {
+            toggle.setAttribute("tabindex", "0");
+        }
+    }
+
+    // Display math blocks with horizontal scroll (scrollable-region-focusable)
+    const mathDisplays = document.querySelectorAll(".display.math, span.math.display");
+    for (const mathBlock of mathDisplays) {
+        if (!mathBlock.hasAttribute("tabindex")) {
+            mathBlock.setAttribute("tabindex", "0");
+        }
+        if (!mathBlock.hasAttribute("role")) {
+            mathBlock.setAttribute("role", "region");
+        }
+        if (!mathBlock.hasAttribute("aria-label")) {
+            mathBlock.setAttribute("aria-label", "Mathematical equation");
         }
     }
 }
@@ -291,7 +351,6 @@ export function initReadingTime() {
 
     Object.assign(timeDiv.style, {
         marginBottom: "1.5rem",
-        color: "var(--text-light)",
         fontStyle: "italic",
         display: "flex",
         alignItems: "center",
