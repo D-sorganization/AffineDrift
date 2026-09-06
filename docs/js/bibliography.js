@@ -105,6 +105,7 @@
     const links = [entry.url, entry.scholar_url].filter(Boolean);
 
     detailsEl.textContent = "";
+    detailsEl.classList.add("entry-details", "bib-detail-content");
 
     const h3 = document.createElement("h3");
     h3.className = "sidebar-heading";

@@ -63,8 +63,8 @@
   --color-primary-lightest: #e3f2fd;
 
   /* ========== Semantic Colors ========== */
-  --color-success: #28a745;
-  --color-error: #dc3545;
+  --color-success: #15803d;
+  --color-error: #c82333;
   --color-warning: #ffc107;
   --color-info: #17a2b8;
 
@@ -2305,6 +2305,11 @@ Dark mode (separate concern):
   color: var(--color-neutral-0);
 }
 
+.site-card--brand code {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-neutral-0) !important;
+}
+
 .site-card--brand:hover {
   background: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
@@ -2694,7 +2699,7 @@ Dark mode (separate concern):
   margin-left: 0.5rem;
   padding: 0.15rem 0.5rem;
   background: var(--color-neutral-100);
-  color: var(--text-secondary);
+  color: var(--color-neutral-700);
   border-radius: 4px;
   font-size: 0.7rem;
   font-weight: 600;
@@ -3282,7 +3287,7 @@ code span.va {
 .resource-caption {
   margin-top: 1rem;
   font-style: italic;
-  color: var(--text-light);
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -3290,7 +3295,7 @@ code span.va {
    color: var(--text-light);"`` and similar. */
 .page-note {
   font-style: italic;
-  color: var(--text-light);
+  color: var(--text-secondary);
 }
 
 .page-note--small {
@@ -3299,7 +3304,7 @@ code span.va {
 
 /* Section heading + paragraph helpers used widely. */
 .section-lead {
-  color: var(--text-light);
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
 
@@ -3314,7 +3319,7 @@ code span.va {
 .resource-footnote {
   margin-top: 1rem;
   font-size: 0.95rem;
-  color: var(--text-light);
+  color: var(--text-secondary);
 }
 
 .resource-footnote--italic {
@@ -3331,7 +3336,7 @@ code span.va {
 /* Contact-card body text used on /pages/contact.qmd. */
 .contact-card__body {
   margin-bottom: 0.75rem;
-  color: var(--text-light);
+  color: var(--text-secondary);
 }
 
 /* Page lede — slightly larger introduction paragraph. */
@@ -3637,12 +3642,24 @@ a {
 
 main.content p a,
 main.content li a,
+main.content td a,
+main.content th a,
+p a,
+li a,
+td a,
+th a,
+dd a,
+dt a,
+.citation a,
+a[role="doc-biblioref"],
+a[role="doc-noteref"],
 .callout-body a,
 .resource-description a,
 .laymans-item p a,
 .critic-argument a,
 .author-response a,
-.provenance-note a {
+.provenance-note a,
+div.csl-entry a {
   text-decoration: underline;
 }
 
@@ -3651,11 +3668,20 @@ a:hover {
   text-decoration: underline;
 }
 
+.reading-time-estimate,
+.reading-time-estimate span,
 .quarto-title-block .reading-time-estimate,
 .quarto-title-block .reading-time-estimate span,
 #title-block-header .reading-time-estimate,
 #title-block-header .reading-time-estimate span {
   color: var(--text-inverse) !important;
+}
+
+main.content .reading-time-estimate,
+main.content .reading-time-estimate span,
+.page-layout-full .reading-time-estimate,
+.page-layout-full .reading-time-estimate span {
+  color: var(--text-secondary) !important;
 }
 
 .sidebar nav[role="doc-toc"] ul > li > a.active,
@@ -3666,7 +3692,7 @@ a:hover {
 }
 
 .header-section-number {
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 /* ---
@@ -5258,6 +5284,19 @@ h3:hover .anchor-link,
   border-radius: 8px;
   border: 1px solid var(--border-color);
   height: fit-content;
+  color: var(--text-primary);
+}
+
+.contact-sidebar p,
+.contact-sidebar strong,
+.contact-note,
+.contact-note p,
+.contact-note strong,
+.contact-email,
+.contact-email p,
+.contact-email strong,
+.social-links p {
+  color: var(--text-primary);
 }
 
 .contact-form-container {
@@ -6580,6 +6619,13 @@ input:focus:not(:focus-visible) {
 
 #quarto-document-content :not(pre) > code {
   white-space: normal;
+}
+
+#quarto-document-content .site-card--brand :not(pre) > code,
+.site-card--brand :not(pre) > code,
+.site-card--brand .page-lede > code {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-neutral-0) !important;
 }
 
 /* Wide semantic tables scroll inside the article instead of widening the page. */

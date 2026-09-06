@@ -193,6 +193,17 @@ a {
 
 main.content p a,
 main.content li a,
+main.content td a,
+main.content th a,
+p a,
+li a,
+td a,
+th a,
+dd a,
+dt a,
+.citation a,
+a[role="doc-biblioref"],
+a[role="doc-noteref"],
 .callout-body a,
 .resource-description a,
 .laymans-item p a,
@@ -1824,6 +1835,19 @@ h3:hover .anchor-link,
   border-radius: 8px;
   border: 1px solid var(--border-color);
   height: fit-content;
+  color: var(--text-primary);
+}
+
+.contact-sidebar p,
+.contact-sidebar strong,
+.contact-note,
+.contact-note p,
+.contact-note strong,
+.contact-email,
+.contact-email p,
+.contact-email strong,
+.social-links p {
+  color: var(--text-primary);
 }
 
 .contact-form-container {
@@ -3146,6 +3170,13 @@ input:focus:not(:focus-visible) {
 
 #quarto-document-content :not(pre) > code {
   white-space: normal;
+}
+
+#quarto-document-content .site-card--brand :not(pre) > code,
+.site-card--brand :not(pre) > code,
+.site-card--brand .page-lede > code {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-neutral-0) !important;
 }
 
 /* Wide semantic tables scroll inside the article instead of widening the page. */
