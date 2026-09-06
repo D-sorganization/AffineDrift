@@ -4,8 +4,7 @@
 // axe-core policy (ISSUE-4126): one scan per route on the first evidence cell,
 // reporting only serious/critical impacts. `warn` records violations in the
 // evidence artifact without failing; `fail` turns them into cell failures.
-// TODO(2026-09-03, #4139): default to 'fail' once AffineDrift #4139 (the
-// violations this scan found) is closed. tests/e2e contrast test stays as-is.
+// Defaults to 'fail' now that AffineDrift #4139 has closed.
 const AXE_MODES = Object.freeze(['off', 'warn', 'fail']);
 const AXE_FAILING_IMPACTS = Object.freeze(['serious', 'critical']);
 
