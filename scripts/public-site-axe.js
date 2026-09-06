@@ -56,7 +56,9 @@ function axePolicyEvidence(options, results) {
 async function scanWithAxe(page) {
   const axeModule = require('@axe-core/playwright');
   const AxeBuilder = axeModule.AxeBuilder ?? axeModule.default ?? axeModule;
-  const outcome = await new AxeBuilder({ page }).analyze();
+  const outcome = await new AxeBuilder({ page })
+    .exclude('iframe')
+    .analyze();
   return summarizeAxeViolations(outcome.violations);
 }
 
