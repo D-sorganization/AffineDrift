@@ -161,7 +161,7 @@ A fundamental theorem of linear algebra states that \emph{every basis for a give
 The standard basis for $\Reals^n$ consists of the unit coordinate vectors $\mathbf{e}_1 = (1, 0, \ldots, 0)^T$, $\mathbf{e}_2 = (0, 1, 0, \ldots, 0)^T$, through $\mathbf{e}_n = (0, \ldots, 0, 1)^T$. Any vector $\mathbf{v} = (v_1, \ldots, v_n)^T$ can be written uniquely as $\mathbf{v} = v_1 \mathbf{e}_1 + \cdots + v_n \mathbf{e}_n$. The numbers $v_1, \ldots, v_n$ are the \emph{coordinates} of $\mathbf{v}$ with respect to this basis.
 
 \begin{laymansbox}{Why Basis Matters for Robotics}{basis_robotics}
-When we model a robot arm, the ``natural'' basis might be the joint angles $(\theta_1, \theta_2, \ldots, \theta_n)$. But the task might require us to think in Cartesian coordinates $(x, y, z)$. Changing basis---expressing the same physical motion in different coordinate systems---is one of the most common operations in robotics. The Jacobian matrix (Chapter~\ref{ch:configuration}) is precisely the mathematical tool that translates between these bases.
+When we model a robot arm, the ``natural'' configuration coordinates might be the joint angles $\mathbf{q} = (\theta_1, \theta_2, \ldots, \theta_n)$. But the task might require us to specify end-effector positions in Cartesian coordinates $\mathbf{x} = (x, y, z)$. The forward kinematics map $\mathbf{x} = \mathbf{f}(\mathbf{q})$ is generally non-linear due to trigonometric combinations of joint angles. However, at the velocity level, the tangent mapping between the joint velocity space $\dot{\mathbf{q}} \in \Reals^n$ and Cartesian velocity space $\mathbf{v} \in \Reals^3$ is linear: $\mathbf{v} = \mathbf{J}(\mathbf{q})\dot{\mathbf{q}}$, where $\mathbf{J}(\mathbf{q}) = \partial \mathbf{f} / \partial \mathbf{q}$ is the Jacobian matrix (Chapter~\ref{ch:configuration}). The Jacobian is the linear transformation that maps joint tangent vectors to task-space tangent vectors.
 \end{laymansbox}
 
 \subsection{Linear Transformations}
@@ -214,13 +214,13 @@ The \emph{null space} (or \emph{kernel}) of a matrix $\mathbf{M}$, denoted $\mat
 For a humanoid robot, the null space of the arm's Jacobian describes all ``internal motions'' the arm can execute (like repositioning the elbow) while keeping the hand perfectly stationary holding a cup of coffee. These null-space motions are invisible in task space but consume real joint velocities. Exploiting them is a key strategy in redundant robot control.
 
 \begin{definition}{The Determinant\index{Determinant} (Volumetric Interpretation)}{determinant}
-For a square matrix $\mathbf{M} \in \Reals^{n \times n}$, the \emph{determinant} $\det(\mathbf{M})$ is a scalar that measures the factor by which $\mathbf{M}$ scales $n$-dimensional volume. Imagine a unit hypercube $[0,1]^n$. Applying $\mathbf{M}$ to every point in that cube warps it into a parallelepiped whose signed volume equals $\det(\mathbf{M})$.
+For a square matrix $\mathbf{M} \in \Reals^{n \times n}$, the \emph{determinant} $\det(\mathbf{M})$ is a scalar whose absolute value $|\det(\mathbf{M})|$ measures the factor by which $\mathbf{M}$ scales $n$-dimensional volume, while its sign indicates whether orientation (parity) is preserved or reversed. Imagine a unit hypercube $[0,1]^n$. Applying $\mathbf{M}$ to every point in that cube warps it into a parallelepiped whose volume equals $|\det(\mathbf{M})|$.
 \end{definition}
 
 \begin{itemize}
-    \item If $\det(\mathbf{M}) = 1$, volume is perfectly preserved (like a pure rotation in space).
+    \item If $|\det(\mathbf{M})| = 1$ with $\det(\mathbf{M}) > 0$, volume and handedness are perfectly preserved (as in a pure rotation $\mathbf{R} \in \SO(n)$ where $\det(\mathbf{R}) = +1$).
     \item If $\det(\mathbf{M}) = 0$, volume is crushed completely flat---the matrix is \emph{singular} and loses rank. The transformation is not invertible.
-    \item If $\det(\mathbf{M}) < 0$, volume is preserved in magnitude but orientation is flipped (a mirror reflection).
+    \item If $\det(\mathbf{M}) < 0$, the transformation reverses spatial orientation (mirror reflection or parity inversion), while scaling volume by $|\det(\mathbf{M})|$.
 \end{itemize}
 
 Now we arrive at one of the most important structural results in linear algebra:
@@ -312,11 +312,18 @@ In control theory, the dot product appears constantly: kinetic energy is $E = \f
 
 \subsubsection{Orthogonal Projection}
 
-A common operation is projecting one vector onto another. The \textbf{scalar projection} of $\mathbf{b}$ onto $\mathbf{a}$ is:
-\begin{equation}
-    \text{proj}_{\mathbf{a}} \mathbf{b} = \frac{\mathbf{a} \cdot \mathbf{b}}{\mathbf{a} \cdot \mathbf{a}} \, \mathbf{a} = \frac{\mathbf{a}^T \mathbf{b}}{\norm{\mathbf{a}}^2} \, \mathbf{a}
-\end{equation}
-The residual $\mathbf{b} - \text{proj}_{\mathbf{a}} \mathbf{b}$ is orthogonal to $\mathbf{a}$. This decomposition---splitting a vector into a component along a direction and a component perpendicular to it---is the geometric core of the Gram-Schmidt process and underlies the QR decomposition used in numerical linear algebra.
+A common operation is projecting one vector onto another. For vectors $\mathbf{a}, \mathbf{b} \in \Reals^n$ with $\mathbf{a} \neq \mathbf{0}$, we distinguish two related quantities:
+\begin{itemize}
+    \item The \textbf{scalar projection} (or scalar component) of $\mathbf{b}$ along the direction of $\mathbf{a}$ is the signed scalar:
+    \begin{equation}
+        \text{comp}_{\mathbf{a}} \mathbf{b} = \mathbf{b} \cdot \hat{\mathbf{a}} = \frac{\mathbf{a} \cdot \mathbf{b}}{\norm{\mathbf{a}}} = \norm{\mathbf{b}}\cos\theta.
+    \end{equation}
+    \item The \textbf{vector projection} of $\mathbf{b}$ onto $\mathbf{a}$ is the vector parallel to $\mathbf{a}$:
+    \begin{equation}
+        \text{proj}_{\mathbf{a}} \mathbf{b} = (\text{comp}_{\mathbf{a}} \mathbf{b}) \hat{\mathbf{a}} = \frac{\mathbf{a} \cdot \mathbf{b}}{\norm{\mathbf{a}}^2} \, \mathbf{a} = \frac{\mathbf{a}\mathbf{a}^T}{\mathbf{a}^T\mathbf{a}} \mathbf{b}.
+    \end{equation}
+\end{itemize}
+The residual (orthogonal complement) $\mathbf{b}_{\perp} = \mathbf{b} - \text{proj}_{\mathbf{a}} \mathbf{b}$ satisfies $\mathbf{a} \cdot \mathbf{b}_{\perp} = 0$. This decomposition---splitting a vector into a parallel component along $\mathbf{a}$ and an orthogonal component perpendicular to $\mathbf{a}$---is the geometric core of the Gram-Schmidt orthogonalization process and underlies the QR decomposition used in numerical linear algebra.
 
 \subsection{The Cross Product and the Skew-Symmetric Matrix}
 \label{subsec:cross_product}
@@ -385,20 +392,20 @@ When you multiply a general vector by a matrix, the resulting vector typically c
   \draw[gray,dashed,thick] (0,0) circle (1.5cm);
 
   % Generic vector (rotated and stretched)
-  \draw[->,blue,thick] (0,0) -- (0.8,1.2) node[anchor=south west] {$\mathbf{v}$};
-  \draw[->,blue,thick,dashed] (0,0) -- (1.6,2.4) node[anchor=south west] {$\mathbf{A}\mathbf{v}$ (rotated \& stretched)};
+  \draw[->,blue,thick] (0,0) -- (1.0,1.0) node[anchor=south west] {$\mathbf{v}$};
+  \draw[->,blue,thick,dashed] (0,0) -- (2.0,0.5) node[anchor=north west] {$\mathbf{A}\mathbf{v}$ (rotated \& stretched)};
 
   % Eigenvector 1 (stretched only, not rotated)
-  \draw[->,red,thick] (0,0) -- (1.4,0) node[anchor=south] {$\mathbf{e}_1$};
-  \draw[->,red,thick,dashed] (0,0) -- (2.8,0) node[anchor=south] {$\lambda_1 \mathbf{e}_1$};
+  \draw[->,red,thick] (0,0) -- (1.5,0) node[anchor=south] {$\mathbf{e}_1$};
+  \draw[->,red,thick,dashed] (0,0) -- (2.7,0) node[anchor=south] {$\lambda_1 \mathbf{e}_1$};
 
   % Eigenvector 2 (shrunk, not rotated)
-  \draw[->,green,thick] (0,0) -- (0,1.2) node[anchor=west] {$\mathbf{e}_2$};
-  \draw[->,green,thick,dashed] (0,0) -- (0,0.6) node[anchor=west] {$\lambda_2 \mathbf{e}_2$};
+  \draw[->,green!60!black,thick] (0,0) -- (0,1.5) node[anchor=west] {$\mathbf{e}_2$};
+  \draw[->,green!60!black,thick,dashed] (0,0) -- (0,0.75) node[anchor=west] {$\lambda_2 \mathbf{e}_2$};
 
   \node at (0,-2.2) {Eigenvectors are only scaled, not rotated};
 \end{tikzpicture}
-\caption{Geometric interpretation of eigenvectors: they are special directions that are only stretched or shrunk by a matrix, never rotated. Dashed arrows show $\mathbf{A}\mathbf{v}$ for various vectors $\mathbf{v}$.}
+\caption{Geometric interpretation of eigenvectors: for a matrix with real eigenvalues, eigenvectors are invariant 1D directions that are only scaled (stretched, compressed, or reflected) without being rotated away from their line of action. In contrast, a generic vector $\mathbf{v}$ undergoes both directional rotation and scaling into $\mathbf{A}\mathbf{v}$.}
 \label{fig:eigenvector_geometry}
 \end{figure}
 
@@ -406,12 +413,12 @@ When you multiply a general vector by a matrix, the resulting vector typically c
 \label{subsec:eigen_equation}
 
 \begin{definition}{Eigenvalues and Eigenvectors\index{Eigenvalue}\index{Eigenvector}}{eigenvalue}
-Given a square matrix $\mathbf{M} \in \Reals^{n \times n}$, a nonzero vector $\mathbf{v} \in \Reals^n$ is called an \emph{eigenvector} of $\mathbf{M}$ if there exists a scalar $\lambda$ (possibly complex) such that:
+Given a square matrix $\mathbf{M} \in \Reals^{n \times n}$, a nonzero vector $\mathbf{v} \in \mathbb{C}^n$ (or $\Reals^n$ when $\lambda \in \Reals$) is called an \emph{eigenvector} of $\mathbf{M}$ if there exists a scalar $\lambda \in \mathbb{C}$ such that:
 \begin{equation}
 \label{eq:eigenvalue_equation}
    \mathbf{M}\mathbf{v} = \lambda \mathbf{v}
 \end{equation}
-The scalar $\lambda$ is the corresponding \emph{eigenvalue}. The requirement that $\mathbf{v} \neq \mathbf{0}$ is essential; otherwise the equation would be trivially satisfied for any $\lambda$.
+The scalar $\lambda$ is the corresponding \emph{eigenvalue}. When $\mathbf{M}$ has complex conjugate eigenvalues $\sigma \pm i\omega$, the associated eigenvectors are complex; in real state space, they span a 2D invariant plane on which the linear map acts as a combined stretch and rotation. The requirement that $\mathbf{v} \neq \mathbf{0}$ is essential; otherwise the equation would be trivially satisfied for any $\lambda$.
 \end{definition}
 
 \subsubsection{Deriving the Characteristic Polynomial}
@@ -463,21 +470,21 @@ For $\lambda_2 = -4$, solve $(\mathbf{A} + 4\mathbf{I})\mathbf{v}_2 = \mathbf{0}
 \begin{enumerate}
     \item \textbf{Inertia tensors and principal axes.} If $\mathbf{M}$ represents the mass-and-inertia tensor of a tumbling satellite, its eigenvectors identify the \textbf{Principal Axes}\index{Principal Axes}---the natural directions where the satellite spins stably. The eigenvalues give the moments of inertia about those axes. The famous ``tennis racket theorem'' (or Dzhanibekov effect) states that rotation about the axis with the \emph{intermediate} eigenvalue is unstable, while rotation about the axes with the largest and smallest eigenvalues is stable.
 
-    \item \textbf{Stability of dynamical systems.} If $\mathbf{A}$ is the linearized dynamics matrix of a control system ($\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$), the eigenvalues dictate stability:
+    \item \textbf{Stability of dynamical systems.} If $\mathbf{A}$ is the dynamics matrix of a continuous linear time-invariant system ($\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$), the eigenvalues dictate asymptotic behavior:
     \begin{itemize}
-        \item $\text{Re}(\lambda_i) < 0$ for all $i$: the system is \textbf{asymptotically stable} (all perturbations decay).
-        \item $\text{Re}(\lambda_i) > 0$ for any $i$: the system is \textbf{unstable} (perturbations grow exponentially).
-        \item $\text{Re}(\lambda_i) = 0$: the system is \textbf{marginally stable} (oscillations persist forever without growing or decaying).
+        \item $\text{Re}(\lambda_i) < 0$ for all $i$: the system is \textbf{strictly asymptotically stable} (all perturbations decay to zero). For nonlinear systems $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x})$, Hartman-Grobman guarantees that local trajectories mirror the linearization whenever the equilibrium is hyperbolic ($\text{Re}(\lambda_i) \neq 0$). Note also that if $\mathbf{A}$ is non-normal ($\mathbf{A}^T\mathbf{A} \neq \mathbf{A}\mathbf{A}^T$), trajectories can experience large transient energy growth before exponential decay takes over.
+        \item $\text{Re}(\lambda_i) > 0$ for any $i$: the system is \textbf{unstable} (perturbations grow exponentially along the unstable eigenspace).
+        \item $\text{Re}(\lambda_i) \leq 0$ with $\text{Re}(\lambda_k) = 0$ for some $k$: the system is \textbf{marginally (Lyapunov) stable} if and only if every imaginary-axis eigenvalue has equal algebraic and geometric multiplicity (a diagonal Jordan block, such as an undamped harmonic oscillator $\dot{\mathbf{x}} = \begin{bmatrix} 0 & \omega \\ -\omega & 0 \end{bmatrix}\mathbf{x}$). If an imaginary eigenvalue possesses non-trivial Jordan blocks of size $\geq 2$ (such as a double integrator $\dot{\mathbf{x}} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\mathbf{x}$ with repeated $\lambda = 0$), solutions grow polynomially ($t, t^2, \ldots$) and the linear system is \textbf{unstable}.
     \end{itemize}
     Eigenvalues are the fundamental heartbeat of linear dynamics. Every analysis in Chapter~\ref{ch:state_space} builds on this fact.
 \end{enumerate}
 
 \begin{example}{Visualizing Eigenvectors: The Stretching Rubber Sheet}{visualize_eigenvectors}
-Imagine printing a perfect circle onto a rubber square. You grab the edges of the rubber and stretch it wildly in various directions. The circle distorts into an ellipse.
+Imagine printing a perfect circle onto a rubber square. You grab the edges of the rubber and stretch it along two orthogonal axes. The circle distorts into an ellipse.
 
-Most straight lines drawn on the original circle have been both rotated and elongated. However, exactly two perpendicular lines---the major and minor axes of the resulting ellipse---did not rotate at all; they were only stretched. These non-rotating axes are your \textbf{eigenvectors}. The factors by which those specific lines were stretched (perhaps one stretched by $3\times$ and the other shrunk to $0.5\times$) are your \textbf{eigenvalues}. The matrix $\mathbf{M}$ is the algebraic instruction set for that stretching operation.
+If the deformation is symmetric (governed by a symmetric positive-definite matrix $\mathbf{M} = \mathbf{M}^T \succ 0$), exactly two perpendicular directions---the major and minor axes of the resulting ellipse---do not rotate at all; they are only stretched. These orthogonal non-rotating axes are your \textbf{eigenvectors}, and the stretching factors along them are the corresponding \textbf{eigenvalues}. The matrix $\mathbf{M}$ is the algebraic instruction set for that stretching operation.
 
-In $n$ dimensions, a symmetric matrix transforms a hypersphere into a hyperellipsoid. The eigenvectors point along the principal axes of the ellipsoid, and the eigenvalues are the semi-axis lengths.
+In $n$ dimensions, a symmetric positive-definite matrix transforms a unit hypersphere into a hyperellipsoid whose principal axes align exactly with its orthonormal eigenvectors, with semi-axis lengths equal to the eigenvalues. (For a general, non-symmetric or rectangular transformation, the image of the unit sphere is still an ellipsoid, but its principal axes and stretch factors are given by the \emph{singular vectors} and \emph{singular values} from the SVD, as developed in Section~\ref{sec:svd}.)
 \end{example}
 
 \subsection{The Spectral Theorem for Symmetric Matrices}
@@ -589,7 +596,7 @@ A practical consequence of positive definiteness: any positive definite matrix $
 \begin{equation}
     \mathbf{M} = \mathbf{L}\mathbf{L}^T
 \end{equation}
-where $\mathbf{L}$ is a lower triangular matrix with strictly positive diagonal entries. This is the \textbf{Cholesky decomposition}\index{Cholesky Decomposition}. It is numerically efficient (roughly half the cost of a general $LU$ factorization) and is the standard method for solving linear systems involving positive definite matrices in physics engines. When MuJoCo inverts the mass matrix $\mathbf{M}(\mathbf{q})$ to compute forward dynamics, it uses Cholesky decomposition.
+where $\mathbf{L}$ is a lower triangular matrix with strictly positive diagonal entries. This is the \textbf{Cholesky decomposition}\index{Cholesky Decomposition}. It is numerically efficient (roughly half the cost of a general $LU$ factorization) and is a standard method for solving linear systems involving symmetric positive definite matrices in physics engines. In practice, modern physics engines such as MuJoCo utilize a custom branch-induced sparse $\mathbf{L}\mathbf{D}\mathbf{L}^T$ factorization that exploits the kinematic tree topology to achieve $\mathcal{O}(n)$ complexity for forward dynamics, coupled with convex optimization solvers to handle unilateral contact constraints and impulses.
 
 The Cholesky factor $\mathbf{L}$ also provides a constructive test for positive definiteness: if the factorization completes without encountering a zero or negative diagonal element, the matrix is positive definite. If the algorithm fails, the matrix is not positive definite.
 
@@ -667,15 +674,15 @@ One of the most powerful applications of the SVD is data compression. Given a ma
 This result (the Eckart-Young-Mirsky theorem) underpins dimensionality reduction techniques like Principal Component Analysis (PCA), which identifies the dominant modes of variation in high-dimensional data such as motion capture recordings of golf swings.
 
 \begin{example}{The SVD of the Jacobian (Manipulability Ellipsoid)}{svd_jacobian}
-In robotics, the Jacobian matrix $\mathbf{J}(\mathbf{q})$ maps joint velocities to end-effector Cartesian velocity: $\mathbf{v}_{\text{hand}} = \mathbf{J} \dot{\mathbf{q}}$. For a redundant manipulator with 7 joints moving in 3D space, $\mathbf{J} \in \Reals^{3 \times 7}$. Taking the SVD $\mathbf{J} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$:
+In robotics, the Jacobian matrix $\mathbf{J}(\mathbf{q})$ maps joint velocities to end-effector Cartesian velocity: $\mathbf{v}_{\text{hand}} = \mathbf{J} \dot{\mathbf{q}}$. For a redundant manipulator with 7 joints moving in 3D space, $\mathbf{J} \in \Reals^{3 \times 7}$ is rectangular, so an eigendecomposition is not applicable. Taking the SVD $\mathbf{J} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$:
 
 \begin{itemize}
-    \item $\mathbf{U} \in \Reals^{3\times3}$: The columns define the physical 3D directions the hand can move.
-    \item $\boldsymbol{\Sigma} \in \Reals^{3\times7}$: The singular values $(\sigma_1, \sigma_2, \sigma_3)$ are the semi-axis lengths of the \textbf{Velocity Manipulability Ellipsoid}\index{Manipulability Ellipsoid}. They quantify how fast the robot can move in each $\mathbf{U}$-direction. If the arm is stretched perfectly straight, one singular value drops to $\sigma_k = 0$: the ellipsoid collapses to a pancake, and the robot loses a degree of freedom.
-    \item $\mathbf{V}^T \in \Reals^{7\times7}$: The columns define the joint velocity combinations required to produce motion along each principal direction.
+    \item $\mathbf{U} \in \Reals^{3\times3}$: The columns $\mathbf{u}_i$ are the left singular vectors; they define the principal orthogonal directions of the resulting velocity ellipsoid in Cartesian task space.
+    \item $\boldsymbol{\Sigma} \in \Reals^{3\times7}$: The non-zero singular values $(\sigma_1, \sigma_2, \sigma_3)$ are the semi-axis lengths of the \textbf{Velocity Manipulability Ellipsoid}\index{Manipulability Ellipsoid} (the image under $\mathbf{J}$ of the unit joint velocity sphere $\norm{\dot{\mathbf{q}}}_2 \leq 1$). They quantify how fast the robot can move in each $\mathbf{u}_i$-direction. (Note that the ellipsoid semi-axes are governed by singular values and left singular vectors of $\mathbf{J}$; eigenvectors only apply to square operators and coincide with singular vectors only when the matrix is symmetric positive semi-definite.) If the arm is stretched perfectly straight, one singular value drops to $\sigma_k = 0$: the ellipsoid collapses, and the robot loses a degree of freedom.
+    \item $\mathbf{V} \in \Reals^{7\times7}$: The columns $\mathbf{v}_i$ of $\mathbf{V}$ (the rows of $\mathbf{V}^T$) are the right singular vectors; they define the joint velocity directions in configuration space that map directly to each principal task-space axis $\mathbf{u}_i$ via $\mathbf{J}\mathbf{v}_i = \sigma_i \mathbf{u}_i$. The remaining $7 - 3 = 4$ columns of $\mathbf{V}$ span the null space $\mathcal{N}(\mathbf{J})$, corresponding to redundant internal self-motions.
 \end{itemize}
 
-Conversely, the \textbf{Force Manipulability Ellipsoid} has axes proportional to $1/\sigma_i$. Where the robot is fastest ($\sigma_i$ large), it is mechanically weakest. Where it is slowest (near singularities, $\sigma_i$ small), it can exert enormous force---a consequence of the conservation of mechanical power.
+Conversely, under the static force duality $\boldsymbol{\tau} = \mathbf{J}^T \mathbf{f}_{\text{ext}}$, the \textbf{Force Manipulability Ellipsoid} has principal semi-axes aligned with $\mathbf{u}_i$ but with lengths proportional to $1/\sigma_i$ (for full row-rank $\mathbf{J}$). Where the robot can move with high velocity ($\sigma_i$ large), it can exert only small static forces against the environment; where it is slow ($\sigma_i$ small, such as near a toggle or outstretched lock), mechanical advantage allows it to sustain large forces with modest joint torques.
 \end{example}
 
 % ==================================================================
@@ -724,18 +731,11 @@ it first \emph{senses} how much $\mathbf{v}$ aligns with $\mathbf{b}$
 alignment.
 
 \begin{laymansbox}{Dyads: Direction of Action and Direction of Sensitivity}{dyad_intuition}
-Imagine a spring that is stiff in one direction but compliant in
-another---say, a car suspension that resists vertical bumps but
-allows lateral flex.  The relationship ``sense displacement in
-direction $\mathbf{b}$, produce force along direction $\mathbf{a}$''
-is exactly a dyad $\mathbf{a}\,\mathbf{b}^{T}$.
+Imagine a directional stiffness or force-coupling mechanism---say, a suspension element that resists vertical bumps when displaced laterally. The relationship ``sense displacement in direction $\mathbf{b}$, produce force along direction $\mathbf{a}$'' is represented by the dyad $\mathbf{a}\,\mathbf{b}^{T}$.
 
-Think of it as a \emph{cause-and-effect pair}: the vector $\mathbf{b}$
-is the ``listening direction'' (what the spring feels) and
-$\mathbf{a}$ is the ``acting direction'' (how the spring pushes
-back). A single dyad can only do one such pairing, which is why
-its matrix has rank one---it has only one independent
-cause-to-effect channel.
+Think of it as a \emph{cause-and-effect pair}: the unit vector $\hat{\mathbf{b}}$ is the ``listening direction'' (what the mechanism senses) and $\hat{\mathbf{a}}$ is the ``acting direction'' (how the mechanism pushes back). A single dyad can only perform one such coupling, which is why its matrix has rank one.
+
+\textbf{Physical caution regarding passive springs:} In classical elasticity, a passive, conservative spring stores potential energy $U(\mathbf{u}) = \frac{1}{2}\mathbf{u}^T \mathbf{K}\mathbf{u}$, which requires the stiffness matrix to be symmetric ($\mathbf{K} = \mathbf{K}^T$) and positive semi-definite ($\mathbf{K} \succeq 0$). A single uniaxial elastic spring aligned with unit vector $\hat{\mathbf{n}}$ has the symmetric dyadic form $\mathbf{K} = k \hat{\mathbf{n}}\hat{\mathbf{n}}^T$. An asymmetric dyad $\mathbf{a}\mathbf{b}^T$ with $\mathbf{a} \neq \mathbf{b}$ has non-zero skew-symmetric (circulatory) components $\frac{1}{2}(\mathbf{a}\mathbf{b}^T - \mathbf{b}\mathbf{a}^T)$; it cannot arise from a conservative potential field and would require active or non-conservative forces (such as aerodynamic flutter or active feedback control) to sustain.
 \end{laymansbox}
 
 \begin{example}{A Rank-1 Force Model}{dyad_force}
@@ -828,18 +828,17 @@ Input: the orientation of a small area element.  Output: the force
 that the material on one side exerts on the other.
 
 \paragraph{The Stiffness Matrix.}\index{stiffness matrix}
-In structural mechanics, the stiffness matrix $\mathbf{K}$ maps a
-displacement vector $\mathbf{u}$ to a force vector $\mathbf{f}$:
-$\mathbf{f}=\mathbf{K}\,\mathbf{u}$.  For a truss with $N$ members,
-each member contributes a rank-1 dyad (stiffness along its axis),
-and the global stiffness matrix is the sum:
-\[
+In structural mechanics, the stiffness matrix $\mathbf{K}$ maps a nodal displacement vector $\mathbf{u}$ to a nodal force vector $\mathbf{f}$: $\mathbf{f}=\mathbf{K}\,\mathbf{u}$. For an assembled pin-jointed truss with $N$ bar elements connecting nodes, each bar's elongation $\delta_e$ is related to the global nodal displacements $\mathbf{u}$ by the kinematic (nodal compatibility / incidence) matrix $\mathbf{A}$: $\boldsymbol{\delta} = \mathbf{A}\mathbf{u}$. By the principle of virtual work, the global stiffness matrix is assembled as:
+\begin{equation}\label{eq:truss-stiffness-assembly}
   \mathbf{K}
   \;=\;
+  \mathbf{A}^T \mathbf{K}_{\text{bar}} \mathbf{A}
+  \;=\;
+  \sum_{e=1}^{N} k_{e}\,\mathbf{a}_e \mathbf{a}_e^T
+  \;=\;
   \sum_{e=1}^{N} k_{e}\,\hat{\mathbf{n}}_{e}\,\hat{\mathbf{n}}_{e}^{T},
-\]
-a dyadic built from the member directions $\hat{\mathbf{n}}_{e}$
-and axial stiffnesses $k_{e}$.
+\end{equation}
+where $\mathbf{a}_e$ represents the row of $\mathbf{A}$ corresponding to element $e$ (projecting nodal displacements onto the member unit axis $\hat{\mathbf{n}}_e$), and $k_e = \frac{E_e A_e}{L_e}$ is the axial bar stiffness. This shows that the global stiffness matrix is a dyadic built from the member direction vectors $\hat{\mathbf{n}}_e$ weighted by axial stiffnesses $k_e$.
 
 \begin{laymansbox}{Why Engineers Say ``Tensor''}{tensor_word}
 When a mechanical engineer refers to the ``inertia tensor'' or
@@ -899,18 +898,19 @@ The dyadic point of view recurs throughout our study of rigid-body
 mechanics:
 
 \begin{itemize}
-  \item \textbf{Screw axes and wrenches (Chapter~5).}
-    A wrench combines a force and a moment into a single six-dimensional
-    object.  The mapping from a twist (generalised velocity) to a wrench
-    (generalised force) is a $6\times6$ dyadic---the \emph{spatial
-    inertia}.
+  \item \textbf{Screw axes and spatial momentum (Chapter~5).}
+    A twist $\mathbf{v} = [\boldsymbol{\omega}^T, \mathbf{v}_O^T]^T$ combines angular and linear velocities into a 6D object. The $6\times6$ \emph{spatial inertia matrix} $\mathbf{I}$ is a dyadic mapping twists to \textbf{spatial momentum} $\mathbf{h} = [\mathbf{l}_O^T, \mathbf{p}^T]^T$:
+    \begin{equation}\label{eq:spatial-momentum-map}
+      \mathbf{h} \;=\; \mathbf{I}\,\mathbf{v}.
+    \end{equation}
+    The \textbf{spatial wrench} $\mathbf{w}$ (combining torque and force) equals the rate of change of spatial momentum, governed by the spatial Newton-Euler equation $\mathbf{w} = \dot{\mathbf{h}} - \text{ad}_{\mathbf{v}}^* \mathbf{h} = \mathbf{I}\dot{\mathbf{v}} + \mathbf{v} \times^* \mathbf{I}\mathbf{v}$, rather than mapping directly from instantaneous velocity alone.
 
   \item \textbf{Spatial algebra (Chapter~8).}
-    The $6\times6$ spatial inertia matrix is a dyadic on the space of
-    twists.  Its coordinate-free formulation uses the same
-    $m(\norm{\mathbf{r}}^{2}\,\mathbf{1}-\mathbf{r}\,\mathbf{r}^{T})$
-    building block we saw in
-    Example~\ref{ex:point_mass_inertia}, extended to six dimensions.
+    The $6\times6$ spatial inertia matrix is a symmetric positive-definite dyadic on the space of twists. Its block structure combines body mass $m$, center-of-mass first moment, and rotational inertia:
+    \begin{equation}
+      \mathbf{I} = \begin{bmatrix} \mathbf{I}_{\text{rot}} & m [\mathbf{p}_{\text{cm}}]_\times \\ -m [\mathbf{p}_{\text{cm}}]_\times & m \mathbf{1} \end{bmatrix},
+    \end{equation}
+    using the same $m(\norm{\mathbf{r}}^{2}\,\mathbf{1}-\mathbf{r}\,\mathbf{r}^{T})$ building block we saw in Example~\ref{ex:point_mass_inertia}, extended to rigid bodies in six dimensions.
 
   \item \textbf{The mass matrix (Chapter~11).}
     The joint-space mass matrix $\mathbf{M}(\mathbf{q})$ that appears
@@ -918,8 +918,7 @@ mechanics:
     $\mathbf{M}\ddot{\mathbf{q}}+\mathbf{c}=\boldsymbol{\tau}$
     is a configuration-dependent dyadic on joint-velocity space.
     Each link contributes a term built from Jacobians and spatial
-    inertias---a sum of dyads, assembled exactly as we sum member
-    stiffnesses in a truss.
+    inertias ($\mathbf{M}(\mathbf{q}) = \sum_i \mathbf{J}_i^T(\mathbf{q}) \mathbf{I}_i \mathbf{J}_i(\mathbf{q})$)---a sum of congruent dyadic transformations, assembled exactly as we sum member stiffnesses in a truss.
 
   \item \textbf{The articulated-body algorithm (Chapter~10).}
     Featherstone's algorithm propagates \emph{articulated-body inertias}
@@ -1079,11 +1078,10 @@ stable for SPD matrices---no pivoting is needed.
 
 \begin{principle}{Cholesky and the Mass Matrix}{cholesky_mass_matrix}
 The generalized mass matrix $\mathbf{M}(\mathbf{q})$ that appears in
-the manipulator equation of motion (Chapter~11) is always symmetric
-positive definite.  Therefore the Cholesky decomposition is the
-preferred solver for the forward-dynamics equation
+the manipulator equation of motion (Chapter~11) is symmetric
+positive definite for any unconstrained physical kinematic chain (provided coordinates are non-redundant and link masses are positive). Therefore, Cholesky-type decompositions are the standard solvers for unconstrained forward dynamics
 $\mathbf{M}\ddot{\mathbf{q}}=\boldsymbol{\tau}-
-\mathbf{C}\dot{\mathbf{q}}-\mathbf{g}$~\cite{nocedal2006}.
+\mathbf{C}\dot{\mathbf{q}}-\mathbf{g}$~\cite{nocedal2006}. In high-performance articulated simulators like MuJoCo, sparse tree-structured $\mathbf{L}\mathbf{D}\mathbf{L}^T$ factorizations compute unconstrained accelerations in linear time $\mathcal{O}(n)$, serving as the unconstrained step in projected Gauss or primal-dual contact solvers.
 \end{principle}
 
 % ------------------------------------------------------------------

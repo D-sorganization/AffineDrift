@@ -12,9 +12,9 @@ description: "If I had to explain the single most important idea in applied math
 
 If I had to explain the single most important idea in applied mathematics to a first-year student, I would ask them this: **how would you describe a complicated motion using only simple pieces?** A robot arm with 15 joints doesn't move as one incomprehensible blob—it moves as a cascade of independent rotations, each contributing to the final position. A human throwing a baseball doesn't rotate one giant "throwing muscle"—the shoulder rotates, then the elbow, then the wrist, each adding their own angular velocity on top of the last. The miracle of linear algebra is that you can describe any complicated motion as a combination of simple ones. That is what vectors and matrices *are*—the science of combining simple things to understand complicated things.
 
-Let me put this even more simply. If you have ever mixed paint colors, you have done linear algebra. Red plus blue makes purple. Twice as much red makes a redder purple. The "space" of all possible colors you can mix from a set of base colors is a vector space. The base colors are your basis vectors. The proportions are your coefficients. That is literally all a vector space is: a collection of things you can scale and add together, where the results behave sensibly.
+Let me put this even more simply. If you have ever mixed paint colors, you have developed intuition for linear combinations. Red plus blue makes purple. Twice as much red makes a redder purple. In linear algebra, a vector space formalizes and generalizes this idea: it is a collection of objects you can scale and add together. Physical pigments form a *convex cone* because mixing proportions must be strictly non-negative (you cannot add negative paint to unmix a color), but in a true mathematical vector space, every element has an additive inverse ($-\bm{v}$) that allows subtraction as well as addition.
 
-Now, the vectors in this book will not be colors---they will be velocities, forces, and accelerations of mechanical systems. But the principle is identical: complicated motions are built from simple components, combined by addition and scaling. If you understand mixing paint, you understand the core idea of linear algebra.
+Now, the vectors in this book will not be colors---they will be velocities, forces, and accelerations of mechanical systems. But the principle is identical: complicated motions are built from simple components, combined by addition and scaling.
 
 Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices.
 
@@ -80,9 +80,9 @@ If $M$ represents a control system's dynamics matrix ($A$), the eigenvalues comp
 
 For a linear system $\dot{\bm{x}} = A\bm{x}$, the real part of each eigenvalue $\lambda_i$ of $A$ determines stability:
 
-- $\text{Re}(\lambda_i) < 0$ for all $i$: the system is **asymptotically stable** (trajectories converge to zero)
+- $\text{Re}(\lambda_i) < 0$ for all $i$: the system is **asymptotically stable** (trajectories converge exponentially to zero)
 - $\text{Re}(\lambda_i) > 0$ for any $i$: the system is **unstable** (trajectories diverge)
-- $\text{Re}(\lambda_i) = 0$: marginal stability (requires further analysis)
+- $\text{Re}(\lambda_i) \le 0$ with $\text{Re}(\lambda_k) = 0$: **marginally stable** if and only if all imaginary eigenvalues are non-defective (algebraic multiplicity equals geometric multiplicity). If an imaginary eigenvalue has size $\ge 2$ Jordan blocks (e.g. a double integrator $\dot{\bm{x}} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\bm{x}$), solutions grow secularly/polynomially with $t$, rendering the system unstable.
 :::
 
 
@@ -94,7 +94,7 @@ $$c_1 \bm{v}_1 + c_2 \bm{v}_2 + \cdots + c_k \bm{v}_k = \bm{0} \implies c_1 = c_
 
 The **span** of a set of vectors is the collection of all possible linear combinations you can form from them. If $n$ linearly independent vectors span $\mathbb{R}^n$, they form a **basis**—a minimal complete description of that space.
 
-**Why this matters for robotics:** When a robot arm has $n$ joints, its joint velocities live in $\mathbb{R}^n$. If some combinations of joint velocities produce no end-effector motion (a singularity), those joint velocity vectors are *linearly dependent* with the others—the arm has "run out of independent directions."
+**Why this matters for robotics:** When a robot arm has $n$ joints, its joint velocities live in $\mathbb{R}^n$. If the robot is *redundant* ($n > m$, where $m$ is task-space dimension), the Jacobian null space $\mathcal{N}(J)$ is non-trivial: joint velocity combinations in $\mathcal{N}(J)$ produce zero end-effector motion, providing internal self-motion (e.g. elbow swivel) that can avoid obstacles while holding the hand steady. In contrast, a *kinematic singularity* occurs when the Jacobian loses column rank ($\text{rank}(J) < m$), meaning the manipulator instantaneously loses the ability to move the end-effector in one or more Cartesian directions.
 
 
 ## Matrix Rank and the Four Fundamental Subspaces {#sec-rank}
@@ -103,12 +103,12 @@ The **rank** of a matrix $M \in \mathbb{R}^{m \times n}$ is the number of linear
 
 For a matrix $M$, there are four fundamental subspaces:
 
-| Subspace | Definition | Physical meaning |
-|----------|-----------|-----------------|
-| Column space $\mathcal{C}(M)$ | All possible outputs $M\bm{v}$ | Reachable configurations |
-| Null space $\mathcal{N}(M)$ | Inputs $\bm{v}$ with $M\bm{v} = 0$ | Unobservable/uncontrollable modes |
-| Row space $\mathcal{C}(M^\top)$ | All possible inputs that affect output | Observable input directions |
-| Left null space $\mathcal{N}(M^\top)$ | Outputs unreachable from any input | Unobservable outputs |
+| Subspace | Definition | Physical meaning (Dynamics/Robotics) |
+|----------|-----------|-------------------------------------|
+| Column space $\mathcal{C}(M)$ | All possible outputs $M\bm{v}$ | Reachable outputs / instantaneous velocities |
+| Null space $\mathcal{N}(M)$ | Inputs $\bm{v}$ with $M\bm{v} = 0$ | Redundant internal self-motions ($J$) or unobservable modes ($C$) |
+| Row space $\mathcal{C}(M^\top)$ | Inputs orthogonal to $\mathcal{N}(M)$ | Effective input directions producing output motion |
+| Left null space $\mathcal{N}(M^\top)$ | Outputs orthogonal to $\mathcal{C}(M)$ | Unreachable output directions / constrained force modes |
 
 **The rank-nullity theorem** connects these:
 $$\text{rank}(M) + \text{nullity}(M) = n,$$
@@ -128,11 +128,13 @@ The singular values quantify how much $M$ stretches space in each independent di
 ::: {.callout-note}
 ## SVD in Robotics: The Jacobian Pseudoinverse
 
-When computing inverse kinematics for a robot, we need to invert the Jacobian $J$. If $J$ is not square or is near-singular, we use the **Moore-Penrose pseudoinverse**:
+When computing inverse kinematics for a redundant or rectangular manipulator, we resolve joint velocities using the **Moore-Penrose pseudoinverse**:
 
 $$J^+ = V \Sigma^+ U^\top,$$
 
-where $\Sigma^+$ replaces each nonzero singular value $\sigma_i$ with $1/\sigma_i$ and leaves zeros as zeros. This gives the minimum-norm solution and is numerically stable even near singularities.
+where $\Sigma^+$ inverts each non-zero singular value ($\sigma_i \to 1/\sigma_i$) and leaves exact zeros as zeros. When the Jacobian has full row rank ($m \le n$), $J^+ = J^\top (J J^\top)^{-1}$ gives the unique joint velocity vector that achieves the desired end-effector velocity with minimum Euclidean norm ($\|\dot{\bm{q}}\|_2$).
+
+**Conditioning near singularities:** Although mathematically well-defined, the unregularized pseudoinverse is *not* numerically benign near kinematic singularities. As a singular value $\sigma_{\min} \to 0$, its inverse $1/\sigma_{\min}$ diverges, causing tiny Cartesian tracking errors or measurement noise to command violently explosive joint velocities. In real-time robot control, practical implementations replace $J^+$ near singularities with **damped least-squares** (the Levenberg-Marquardt or Singularity-Robust inverse, $J^* = J^\top (J J^\top + \lambda^2 I)^{-1}$), trading exact Cartesian tracking for bounded, well-conditioned joint speeds.
 :::
 
 
