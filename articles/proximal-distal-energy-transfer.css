@@ -48,14 +48,65 @@
   overflow-y: hidden;
 }
 
-@media (max-width: 480px) {
-  #sec-advanced-bridge .math.display,
-  #sec-advanced-bridge mjx-container[display="true"] {
-    font-size: 0.78em;
+/* Keep the compact parameter table inside its reading column. */
+#quarto-document-content #model-parameters .table-wrapper > table {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+#model-parameters th,
+#model-parameters td {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+#model-parameters th:first-child {
+  width: 40%;
+}
+
+/* Avoid shrinking both the display wrapper and its MathJax child. Long
+   equations retain horizontal scrolling at a readable text size. */
+@media (max-width: 768px) {
+  #quarto-document-content .math.display {
+    font-size: 1em !important;
   }
 
-  #sec-transmission-robustness .math.display,
-  #sec-transmission-robustness mjx-container[display="true"] {
-    font-size: 0.78em;
+  #quarto-document-content .math.display mjx-container[display="true"] {
+    font-size: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #model-parameters table {
+    font-size: 0.82rem;
+  }
+
+  #model-parameters th,
+  #model-parameters td {
+    padding: 0.4rem 0.2rem;
+  }
+
+  #model-parameters th:first-child {
+    width: 31%;
+  }
+
+  #model-parameters th:nth-child(2) {
+    width: 21%;
+    white-space: nowrap;
+  }
+
+  #model-parameters th:nth-child(3) {
+    width: 30%;
+  }
+
+  #model-parameters th:nth-child(4) {
+    width: 18%;
+  }
+
+  #model-parameters td:nth-child(2),
+  #model-parameters td:nth-child(3) {
+    white-space: nowrap;
   }
 }

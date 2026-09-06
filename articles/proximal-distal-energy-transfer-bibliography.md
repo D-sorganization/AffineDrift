@@ -4,12 +4,12 @@
 
 ## Concept Map
 
-- **Proximal-to-Distal (P→D) Energy Transfer**: The mechanical handoff of energy along a linked kinematic chain from proximal segments (hips, torso) to distal segments (hands, clubhead).
-- **Zero Torque Counterfactual (ZTCF)**: The integral trajectory $x^{(0)}(t)$ of the passive drift field $f(x)$ starting from the current state $x_0$, evaluated with zero active input ($u \equiv 0$).
-- **Zero Velocity Counterfactual (ZVCF)**: The acceleration evaluated at current configuration $q$ with all velocities set to zero ($\dot{q}=0$), isolating static gravity and applied moment terms.
-- **Robertson–Winter Interface Power**: Decomposition of segment energy change rate into joint-force power $\mathbf{F} \cdot \mathbf{v}$, joint-moment power $\mathbf{\tau} \cdot \boldsymbol{\omega}$, and gravity power.
-- **Parametric Acceleration**: The amplification of distal angular speed resulting from inward centripetal joint forces and hub-path radius reduction rather than active distal muscle torque.
-- **Casting Failure Mode**: The premature release of distal joint lag, leading to early energy transfer, reduced peak clubhead speed, and negative wrist work.
+- **Proximal-to-Distal (P→D) Energy Transfer**: Energy passing between defined segments through interface force and moment power. Peak-speed order alone does not measure this flux; segment energy can also change through actuator work, gravity and dissipation.
+- **Zero Torque Counterfactual (ZTCF)**: Specify whether the term means a same-state zero-command acceleration, its values sampled along the achieved trajectory, or a new forward trajectory with zero modeled actuator torque. These are different objects. Gravity, passive impedance and contact remain according to the declared model.
+- **Zero Velocity Counterfactual (ZVCF)**: Acceleration evaluated after setting the declared generalized velocities to zero while specifying retained configuration, actuator state, load and contact mode. It removes the modeled velocity-dependent terms; elastic and other state-dependent loads need not disappear.
+- **Robertson–Winter Interface Power**: For a rigid segment, the kinetic-energy balance includes interface force power, moment power and gravity power. If gravitational potential energy is included on the left, do not add gravity power again on the right. Club-side moment power uses club angular velocity; relative joint-actuator power uses the relative angular velocity.
+- **Parametric Acceleration**: Distal angular-speed change associated with prescribed pivot motion or changing geometry in a specified model. The moving-pivot reaction may supply work. An inward force does not establish positive power without its application-point velocity, and improved delivery depends on timing and the other constraints.
+- **Early Release / Casting**: A descriptive timing pattern to test against a specified delivery objective. Early relative rotation does not necessarily imply negative wrist work, energy transfer, or reduced speed. Those claims require torque–velocity products and a matched program comparison.
 - **Force Along the Hand Path**: The signed projection of the equivalent net golfer-applied grip force onto the instantaneous hand-path tangent. This net mechanical quantity is not a measure of muscle activation or biological effort.
 
 ## References
@@ -108,7 +108,7 @@ bibliography:
 
 - id: miura2001
   title: "Parametric acceleration — the effect of inward pull of the golf club at impact stage"
-  authors: "Miura, Ken"
+  authors: "Miura, Koryo"
   year: 2001
   venue: "Sports Engineering"
   scholar_link: "https://doi.org/10.1046/j.1460-2687.2001.00071.x"
@@ -144,7 +144,7 @@ bibliography:
 
 - id: mackenzie2020energy
   title: "How Amateur Golfers Deliver Energy to the Driver"
-  authors: "MacKenzie, Sasho J., McCourt, Mike, & Champoux, Luke"
+  authors: "MacKenzie, Sasho J., McCourt, Matthew, & Champoux, Luc"
   year: 2020
   venue: "International Journal of Golf Science"
   scholar_link: "https://www.golfsciencejournal.org/article/12640-how-amateur-golfers-deliver-energy-to-the-driver"
@@ -165,7 +165,7 @@ bibliography:
   authors: "McNally, William, & McPhee, John"
   year: 2018
   venue: "Proceedings"
-  scholar_link: "https://doi.org/10.3390/proceedings2060246"
+  scholar_link: "https://doi.org/10.3390/proceedings2060243"
   clusters: ["biomechanical modeling", "optimal control"]
   concepts: ["6dof model", "direct collocation"]
 
@@ -315,10 +315,10 @@ bibliography:
 
 - id: marsan2019
   title: "Biomechanical analysis of the golf swing: methodological effect of angular velocity component on the identification of the kinematic sequence"
-  authors: "Marsan, Thibault, Bourgain, Maxime, Thoreux, Patricia, Sauret, Christophe, & Rouch, Philippe"
+  authors: "Marsan, Thibault, Thoreux, Patricia, Bourgain, Maxime, Rouillon, Olivier, Rouch, Philippe, & Sauret, Christophe"
   year: 2019
   venue: "Acta of Bioengineering and Biomechanics"
-  scholar_link: "https://www.researchgate.net/publication/333377321"
+  scholar_link: "https://doi.org/10.5277/ABB-01318-2019-02"
   clusters: ["methodology", "kinematic sequence"]
   concepts: ["angular velocity component", "method sensitivity"]
 
@@ -360,19 +360,19 @@ bibliography:
 
 - id: kenny2008
   title: "Segmental sequencing of kinetic energy in a computer-simulated golf swing"
-  authors: "Kenny, Ian C., McCloy, Adam J., Wallace, Eric S., & Otto, Steve R."
+  authors: "Kenny, Ian C., McCloy, Alex J., Wallace, Eric S., & Otto, Steve R."
   year: 2008
   venue: "Sports Engineering"
-  scholar_link: "https://doi.org/10.1007/s12283-008-0004-4"
+  scholar_link: "https://doi.org/10.1007/s12283-008-0005-0"
   clusters: ["kinetic energy", "simulation"]
   concepts: ["segmental kinetic energy", "energetic handoff"]
 
 - id: anderson2006
-  title: "Segmental kinetic energy of the golf swing"
-  authors: "Anderson, S., Wright, I. C., & Stefanyshyn, D. J."
+  title: "Segmental Sequencing of Kinetic Energy in the Golf Swing"
+  authors: "Anderson, Brady C., Wright, Ian C., & Stefanyshyn, Darren J."
   year: 2006
-  venue: "Science and Golf IV"
-  scholar_link: "https://scholar.google.com/scholar?q=Anderson+Wright+Stefanyshyn+Segmental+kinetic+energy"
+  venue: "The Engineering of Sport 6, Volume 1, pp. 167–172"
+  scholar_link: "https://doi.org/10.1007/978-0-387-46050-5_30"
   clusters: ["segmental kinetic energy", "experimental"]
   concepts: ["energy migration", "segmental energy"]
 
@@ -386,13 +386,13 @@ bibliography:
   concepts: ["joint-force power", "moment power", "energy rate balance"]
 
 - id: milburn1982
-  title: "Biomechanical analysis of the golf swing"
+  title: "Summation of segmental velocities in the golf swing"
   authors: "Milburn, Peter D."
   year: 1982
-  venue: "International Journal of Sport Biomechanics"
-  scholar_link: "https://scholar.google.com/scholar?q=Milburn+Biomechanical+analysis+of+the+golf+swing"
+  venue: "Medicine and Science in Sports and Exercise, 14(1), 60–64"
+  scholar_link: "https://doi.org/10.1249/00005768-198201000-00012"
   clusters: ["golf biomechanics", "early release"]
-  concepts: ["uncocking timing", "casting failure"]
+  concepts: ["uncocking timing", "segment velocity"]
 
 - id: kwon2013
   title: "Effect of X-factor stretch on clubhead speed in skilled male golfers"
@@ -404,11 +404,11 @@ bibliography:
   concepts: ["x-factor stretch", "methodology scrutiny"]
 
 - id: myers2008
-  title: "The role of upper torso and pelvis rotation in driving performance"
-  authors: "Myers, Joseph, Lephart, Scott, Tsai, Yung-Shen, Sell, Timothy, Smoliga, James, & Jolly, Michael"
+  title: "The role of upper torso and pelvis rotation in driving performance during the golf swing"
+  authors: "Myers, Joseph, Lephart, Scott, Tsai, Yung-Shen, Sell, Timothy, Smoliga, James, & Jolly, John"
   year: 2008
   venue: "Journal of Sports Sciences"
-  scholar_link: "https://doi.org/10.1080/02640410701624587"
+  scholar_link: "https://doi.org/10.1080/02640410701373543"
   clusters: ["torso-pelvis rotation", "driving performance"]
   concepts: ["pelvis rotation", "upper torso rotation"]
 
@@ -422,11 +422,11 @@ bibliography:
   concepts: ["downswing kinematics", "performance variance"]
 
 - id: joyce2013
-  title: "The three-dimensional kinematics of the trunk during the golf swing"
-  authors: "Joyce, Christopher, Burnett, Angus, & Ball, Kevin"
+  title: "Three-dimensional trunk kinematics in golf: between-club differences and relationships to clubhead speed"
+  authors: "Joyce, Christopher, Burnett, Angus, Cochrane, Jodie, & Ball, Kevin"
   year: 2013
-  venue: "Journal of Sports Sciences"
-  scholar_link: "https://doi.org/10.1080/02640414.2013.792949"
+  venue: "Sports Biomechanics, 12(2), 108–120"
+  scholar_link: "https://doi.org/10.1080/14763141.2012.728244"
   clusters: ["3d trunk kinematics", "clubhead speed"]
   concepts: ["trunk rotation", "3d motion"]
 
