@@ -228,6 +228,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-09-06 | #4210 | Remediate deploy accessibility violations across remaining routes: exclude third-party iframes from axe scan, underline table cell and citation links, calibrate semantic success/error color tokens, and enforce high-contrast text in contact sidebar and brand card code (#4209). |
 | 2026-09-06 | #4208 | Remediate deploy accessibility violations across routes: link underlines in bibliographies, callout/video ARIA roles, math scrollability, and token contrast (#4207). |
 | 2026-09-05 | #4206 | Resolve serious and critical axe accessibility violations across 163 routes and default site verifier axe policy to fail (#4139). |
+| 2026-09-06 | #4205 | Derive complete energy-transfer ledgers, correct sequencing and work-error interpretations, verify primary bibliography, and improve mobile equation and parameter-table readability. |
 | 2026-09-05 | #4203 | Derive coupled air-relative ball flight, reproduce coefficient-domain examples, and correct aerodynamic evidence and conformance interpretation. |
 | 2026-09-05 | #4201 | Derive coupled impact, distinguish rotation/reference experiments, and qualify closure evidence across three articles. |
 | 2026-09-05 | #4199 | Rebuild tangent-reference control and mechanical cases; verify Hamiltonian/KKT signs, discrete derivatives, DDP curvature, exact orbital LQR, arm kinematics and quadrotor hover with 23 new checks and 4,029 full-suite passes. |

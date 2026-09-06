@@ -121,7 +121,11 @@ independent verification of the original sources.
 
 ### Motivation
 
-Clubhead speed at impact is the dominant controllable determinant of drive distance, and it correlates strongly with playing standard [@fradkin2004; @hellstrom2009; @hume2005]. The golf downswing is among the most-studied examples of a *sequenced* multi-segment rotation in sport biomechanics [@mcphee2022; @dillman1994]. Across measurement systems and populations, the downswing of a skilled golfer shows a characteristic order: the pelvis reaches its peak angular speed first, then the thorax, then the lead arm, and finally the club, with each successive segment peaking faster than the one before [@cheetham2008; @tinmark2010]. This *kinematic sequence*, an instance of the general proximal-to-distal sequencing observed in throwing and striking skills [@putnam1993], is routinely interpreted as a visible signature of outward mechanical-energy transfer. That interpretation has also influenced applied swing descriptions [@smith2015].
+Clubhead speed is an important contributor to driver performance, but distance also depends on strike, delivered loft, face/path, the ball's launch state, aerodynamics and the landing surface. Associations with playing standard do not make maximum speed a complete shot objective [@fradkin2004; @hellstrom2009; @hume2005].
+
+Proximal-to-distal sequencing is a useful experimental description when the measured quantities are defined. Tinmark and colleagues studied 45 skilled golfers and reported ordered peaks of resultant angular speed for the pelvis, upper torso and hands across their shot conditions. That finding should not be expanded into a universal pelvis–thorax–arm–club sequence measured identically by every system [@tinmark2010].
+
+Marsan and colleagues tested seven angular-velocity definitions in 13 golfers and found that the identified sequence changed substantially with the chosen component. A vector magnitude, a projection onto a swing-plane normal and a segment's longitudinal component are different observables. Peak order alone cannot identify joint work or an intersegment energy flux [@marsan2019; @putnam1993].
 
 That interpretation leaves a first-order question unanswered:
 
@@ -134,12 +138,21 @@ This study approaches the question with *counterfactual dynamics*. A **pointwise
 ::: {.callout-important}
 ### Definition Alignment & Cross-Reference
 
-This article applies the canonical definitions in the [Zero-Torque Counterfactual glossary](zero-torque-counterfactual.html#sec-ztcf-canonical). The pointwise ZTCF sample is $f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$, while the same-state control contribution is $G(\mathbf{x})u$. A stitched trace evaluates $f$ at successive achieved states; it must not be used to infer persistence. A forward or branched ZTCF integrates $f$ after setting the declared applied torque channels to zero. ZVCF evaluates the declared model at zero velocity and must not be relabeled as pure control.
+This article applies the canonical definitions in the [Zero-Torque Counterfactual glossary](zero-torque-counterfactual.html#sec-ztcf-canonical). For the mechanical state $\mathbf x=(\mathbf q,\mathbf v)$, distinguish its full state derivative from the acceleration block:
+
+$$
+f(\mathbf x)=
+\begin{pmatrix}\mathbf v\\-M^{-1}(\mathbf h+\mathbf g_q+D\mathbf v)\end{pmatrix},
+\qquad
+G(\mathbf x)=\begin{pmatrix}0\\M^{-1}\end{pmatrix}.
+$$
+
+This displayed form uses the two declared torque channels and viscous damping. Other passive, contact or external loads must be retained according to the actual model. The same-state control contribution is $G(\mathbf x)u$. A stitched trace evaluates $f$ at successive achieved states; it must not be used to infer persistence. A forward or branched ZTCF integrates $f$ after setting the declared applied torque channels to zero. ZVCF evaluates the declared model at zero velocity and must not be relabeled as pure control.
 :::
 
 ### Research Questions
 
-The document is organized around four questions:
+The document is organized around seven questions:
 
 - **RQ1 — Mechanism.** By what mechanical pathways does energy generated proximally reach the club, and what does each pathway imply about the *timing* of the handoff? (@sec-mechanics)
 - **RQ2 — Evidence.** Where does the P→D transfer occur in measured swings, and how do skilled and less-skilled players differ — in sequence order, in magnitudes, or in transfer efficiency? (@sec-evidence)
@@ -151,63 +164,222 @@ The document is organized around four questions:
 
 ## Mechanics of Sequenced Swings {#sec-mechanics}
 
-### The Summation-of-Speed Principle
+Three questions must be answered separately: **what accelerates the club, what changes its energy, and where that energy comes from**. A segment can gain angular speed while losing translational energy. It can receive work through a moving joint even when that joint's net actuator torque is zero. A proximal segment can also keep gaining energy while simultaneously supplying work to a distal segment if proximal actuation supplies enough power. The following model makes these possibilities explicit.
 
-Sequential segment motion in human movement dates to Bunn's principle of summation of speed [@bunn1972]. When segments connected in series accelerate in sequence, the distal tip speed is not merely the sum of independent segment rotation rates; it is the compound result of base rotation carrying distal axes plus distal rotation relative to those axes [@putnam1991; @putnam1993].
+### Coordinates and the Summation of Velocity
 
-In a planar 2-DOF chain with arm length $L_1$ and club length $L_2$, the clubhead velocity vector is:
-$$
-\mathbf{v}_{\text{head}} = L_1 \dot{\theta}_1 \mathbf{u}_1^\perp + L_2 (\dot{\theta}_1 + \dot{\theta}_2) \mathbf{u}_2^\perp,
-$$
-where $\mathbf{u}_1^\perp, \mathbf{u}_2^\perp$ are unit tangent vectors in the swing plane. The speed magnitude squared is:
-$$
-v_{\text{head}}^2 = L_1^2 \dot{\theta}_1^2 + L_2^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 + 2 L_1 L_2 \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos\theta_2.
-$$
-The cross-term $2 L_1 L_2 \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos\theta_2$ reveals the geometric leverage of wrist cock $\theta_2$: when $\theta_2$ is near $-\pi/2$ (wrist cocked), the cross-term is small; as $\theta_2 \to 0$ (wrist uncocked), $\cos\theta_2 \to 1$, maximizing distal speed for given segment rates.
+Use a fixed-hub planar model with rigid arm and club segments. The arm angle $\theta_1$ is measured from downward vertical; $\theta_2$ is the club angle **relative to the arm**, with the same positive rotation convention. Thus
 
-### Interaction Dynamics and Torque Handoffs
+$$
+\phi=\theta_1+\theta_2,\qquad
+\omega_1=\dot\theta_1,\qquad
+\omega_2=\dot\phi.
+$$
 
-The equations of motion for the planar double pendulum express the causal coupling between joint torques and segment accelerations:
-$$
-M(\mathbf{q}) \ddot{\mathbf{q}} + C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau}.
-$$
-Explicitly expanding for the wrist acceleration $\ddot{\theta}_2$:
-$$
-\ddot{\theta}_2 = \frac{\tau_2 - C_{21}\dot{\theta}_1^2 - g_2(\mathbf{q})}{M_{22}} - \frac{M_{21}}{M_{22}}\ddot{\theta}_1.
-$$
-The term $-\frac{M_{21}}{M_{22}}\ddot{\theta}_1$ is the **inertial interaction acceleration**. Because $M_{21} = m_2 L_1 L_{c2} \cos\theta_2 + I_2 > 0$ for typical geometries, accelerating the arm ($\ddot{\theta}_1 > 0$) exerts an inertial torque on the wrist that acts to *increase* wrist cock (maintain lag). Conversely, decelerating the arm ($\ddot{\theta}_1 < 0$) uncocks the wrist and transfers energy to the club without requiring applied distal generalized torque in this model [@putnam1993; @herring1992]. This does not imply zero distal muscle force because co-contraction and passive structural loads are not identified by the generalized-torque counterfactual.
+Here $\omega_2$ is absolute club angular velocity, not relative wrist velocity. Define
 
-### Parametric Energy Transfer
+$$
+\mathbf u(\theta)=(\sin\theta,-\cos\theta),\qquad
+\mathbf u_\perp(\theta)=(\cos\theta,\sin\theta).
+$$
 
-As White [@white2006] and Miura [@miura2001] demonstrated, the dominant distal energy gain late in the downswing is *parametric*: the inward centripetal force exerted by the arm on the wrist joint performs mechanical work on the club segment as the hub path tightens and the club rotates toward alignment. Measured and optimized hub-path analyses provide golf-specific context for this geometric mechanism [@nesbit2009hub; @nesbit2014hub]. The power delivered by this joint force is:
+For lengths $L_1,L_2$, wrist position is $\mathbf r_H=L_1\mathbf u(\theta_1)$ and the distal tip is $\mathbf r_T=\mathbf r_H+L_2\mathbf u(\phi)$. Consequently,
+
 $$
-P_{\text{joint}} = \mathbf{F}_{\text{wrist}} \cdot \mathbf{v}_{\text{wrist}}.
+\mathbf v_T=L_1\omega_1\mathbf u_\perp(\theta_1)
++L_2\omega_2\mathbf u_\perp(\phi),
 $$
-Proximal speed $\dot{\theta}_1$ contributes to the centripetal acceleration
-field ($L_1 \dot{\theta}_1^2$), but high speed alone does not guarantee positive
-transfer. Force direction, hand velocity, club orientation, relative club rate,
-and swing phase determine the sign of interface power. The phase-resolved test
-below replaces the earlier unconditional statement with an explicit
-state-matched counterfactual.
+
+$$
+\|\mathbf v_T\|^2
+=L_1^2\omega_1^2+L_2^2\omega_2^2
++2L_1L_2\omega_1\omega_2\cos\theta_2.
+$$
+
+This is vector composition, not addition of angular-speed magnitudes. At fixed rates, alignment maximizes speed only when $\omega_1\omega_2>0$; when their signs oppose, alignment minimizes it. If either rate is zero, this cross term vanishes. For unit lengths, $\omega_1=2$ and $\omega_2=-1$ rad/s give 1 m/s when aligned and 3 m/s when oppositely directed.
+
+During an actual swing the rates and geometry evolve together. One cannot maximize this expression over angle while silently assuming the same rates remain dynamically attainable. Historical summation-of-speed descriptions motivate the question; they do not replace its equations [@bunn1972; @milburn1982; @putnam1993].
+
+### A Complete Inertial Interaction Equation
+
+Let $m_i$ be segment masses, $a_i=L_{ci}$ their proximal-joint-to-COM distances, and $I_i$ their **COM** moments of inertia about the plane normal. Write
+
+$$
+J_1=I_1+m_1a_1^2,\qquad
+J_2=I_2+m_2a_2^2,\qquad
+b=m_2L_1a_2.
+$$
+
+Then, for $\mathbf q=(\theta_1,\theta_2)$,
+
+$$
+M=
+\begin{pmatrix}
+J_1+J_2+m_2L_1^2+2b\cos\theta_2&
+J_2+b\cos\theta_2\\
+J_2+b\cos\theta_2&J_2
+\end{pmatrix},
+$$
+
+$$
+\mathbf h=
+b\sin\theta_2
+\begin{pmatrix}
+-2\dot\theta_1\dot\theta_2-\dot\theta_2^2\\
+\dot\theta_1^2
+\end{pmatrix}.
+$$
+
+With projected gravity $g_p>0$ and upward $y$, potential energy and its gradient are
+
+$$
+U=-g_p[(m_1a_1+m_2L_1)\cos\theta_1
++m_2a_2\cos\phi],
+$$
+
+$$
+\mathbf g_q=g_p
+\begin{pmatrix}
+(m_1a_1+m_2L_1)\sin\theta_1+m_2a_2\sin\phi\\
+m_2a_2\sin\phi
+\end{pmatrix}.
+$$
+
+For ideal shoulder and relative-wrist actuator torques $\tau_s,\tau_w$, initially omit damping:
+
+$$
+M\ddot{\mathbf q}+\mathbf h+\mathbf g_q
+=\begin{pmatrix}\tau_s\\\tau_w\end{pmatrix}.
+$$
+
+The second row gives
+
+$$
+\ddot\theta_2
+=\frac{\tau_w-b\sin\theta_2\,\dot\theta_1^2-g_{q,2}}{J_2}
+-\frac{J_2+b\cos\theta_2}{J_2}\ddot\theta_1.
+$$
+
+Using a Coriolis matrix $C$ instead would require $(C\dot{\mathbf q})_2$, not a matrix entry ambiguously multiplied by another squared speed. Likewise, $I_2$ and $J_2$ cannot be interchanged: the parallel-axis term is essential.
+
+The last term is one inertial interaction contribution. Its sign depends on geometry. With positive $J_2+b\cos\theta_2$, negative arm acceleration contributes positive relative wrist acceleration; the coefficient can become negative elsewhere. The velocity-squared term, gravity and applied torque remain present. Thus even the sign of **total** wrist acceleration does not follow from arm deceleration alone.
+
+In the baseline convention, the wrist starts at a negative relative angle and opens toward alignment. Positive relative acceleration can therefore help opening in that phase. Reversing the angle convention reverses its numerical sign without reversing the physical motion. Interaction-dynamics studies explain why joint motion cannot be read directly from its local actuator torque [@putnam1993; @herring1992].
+
+There is also a causal distinction: $\ddot\theta_1$ is an outcome of the coupled solve, not an independently specified input when $\tau_s$ is the input. A forward intervention must change a declared torque or controller and solve both accelerations. Isolating a term in one equation does not perform that intervention.
+
+### Club-Side Power and Joint-Actuator Power
+
+Let $\mathbf F$ be the force exerted by the arm on the club at the wrist, and $T_w$ the **net** wrist moment acting on the club. The opposite force and moment act on the arm. The wrist point has one common inertial velocity $\mathbf v_H$ in this ideal revolute joint.
+
+For each segment include gravitational potential in its mechanical energy:
+
+$$
+E_1=K_1+U_1,\qquad E_2=K_2+U_2.
+$$
+
+The two balances are
+
+$$
+\dot E_2=\mathbf F\cdot\mathbf v_H+T_w\omega_2,
+$$
+
+$$
+\dot E_1=T_s\omega_1-\mathbf F\cdot\mathbf v_H-T_w\omega_1.
+$$
+
+Therefore
+
+$$
+\dot E_1+\dot E_2
+=T_s\omega_1+T_w(\omega_2-\omega_1).
+$$
+
+Joint-force power cancels between the segments, although it need not vanish on either segment. The fixed hub's reaction has zero power because its point is stationary; its force need not be zero. If kinetic energy alone is reported, each balance must also include gravitational power.
+
+The **club-side moment power** $T_w\omega_2$ and **wrist-actuator power** $\tau_w(\omega_2-\omega_1)$ answer different questions. With no damping, a 3 N m moment and absolute rates 2 and 5 rad/s give 15 W to the club through the moment, remove 6 W from the arm through its reaction, and add 9 W to the combined system. If the two rates are equal, a nonzero moment can redistribute power while doing zero net joint work. None of these mechanical statements determines metabolic cost.
+
+For viscous joint damping,
+
+$$
+T_s=\tau_s-d_s\omega_1,\qquad
+T_w=\tau_w-d_w(\omega_2-\omega_1),
+$$
+
+and
+
+$$
+\dot E_1+\dot E_2
+=\tau_s\omega_1+\tau_w(\omega_2-\omega_1)
+-d_s\omega_1^2-d_w(\omega_2-\omega_1)^2.
+$$
+
+This is the appropriate total-system check. A club-energy ledger must use club-side moment power; substituting relative joint-actuator power leaves out exchange with the arm. Robertson–Winter accounting motivates this separation of generation, absorption and intersegment transfer [@robertson1980].
+
+### An Acceleration Counterexample
+
+Consider two uniform rods, each of mass 1 kg and length 1 m, with $I_i=1/12$ kg m$^2$, $a_i=1/2$ m, no gravity and no damping. Both rods initially point downward and rotate together at 2 rad/s:
+
+$$
+\mathbf q=(0,0),\qquad
+\dot{\mathbf q}=(2,0),\qquad
+(\tau_s,\tau_w)=(-1,0)\ {\rm N\,m}.
+$$
+
+The matrix above gives
+
+$$
+M=\begin{pmatrix}8/3&5/6\\5/6&1/3\end{pmatrix},
+\qquad
+\ddot{\mathbf q}=\begin{pmatrix}-12/7\\30/7\end{pmatrix}.
+$$
+
+The arm decelerates, while the club's absolute angular acceleration is $18/7$ rad/s$^2$. Nevertheless,
+
+$$
+\dot K_1=-8/7\ {\rm W},\qquad
+\dot K_2=-6/7\ {\rm W}.
+$$
+
+The club's rotational energy increases at $3/7$ W, but its COM translational energy decreases at $9/7$ W. Club-side wrist-force power is $-6/7$ W. The club is supplying energy back through the wrist at this instant, while the shoulder actuator removes 2 W from the system.
+
+A second state in the **same model**, with $\mathbf q=(0,-\pi/2)$, $\dot{\mathbf q}=(2,0)$ and both torques zero, gives $\ddot{\mathbf q}=(-1.5,7.5)$ rad/s$^2$. Now the arm loses 1 W and the club gains 1 W through wrist-force power; total energy is conserved. Passive transfer is possible, but the first example shows that arm deceleration plus club angular acceleration does not establish it.
+
+Both examples follow from the same equations and can be checked independently from COM velocities and accelerations. They are instantaneous mechanical examples, not proposed golfer trajectories.
+
+### Moving Pivots and Parametric Work
+
+“Centripetal” must name a trajectory and a reference point. A force exactly normal to the **achieved hand path** has zero dot product with hand velocity and therefore supplies no joint-force work. A force directed approximately along the club toward the hands can nevertheless have a nonzero component along the moving hand path.
+
+For an illustrative force $(-400,0)$ N, hand velocity $(0,3)$ m/s gives zero force power; adding an inward component to give $(-0.2,3)$ m/s gives +80 W. An outward component $(0.2,3)$ gives -80 W. The force label did not decide the sign; the actual velocity did.
+
+Miura's moving-pivot model added a prescribed inward motion to a driven double-link model. Its reported 0.08 m pull increased clubhead speed from 46.8 to 50.1 m/s and also increased hand force. This was an additional model input supplying work, not energy created by a constraint or a demonstrated universal human technique. White's undriven model instead illustrates redistribution of existing energy under its conservation assumptions. These mechanisms are related but have different system boundaries [@miura2001; @white2006].
+
+For a planar rigid club with COM offset $a_2\mathbf u(\phi)$ from a prescribed moving wrist,
+
+$$
+J_2\ddot\phi
+=T_w+m_2a_2\,\mathbf u(\phi)\times(\mathbf g-\mathbf a_H),
+$$
+
+where $\mathbf g=(0,-g_p)$ and the cross product denotes its out-of-plane scalar. The moving-wrist acceleration enters the rotational equation, while the work balance still uses $\mathbf F\cdot\mathbf v_H+T_w\dot\phi$. An acceleration decomposition and a power decomposition remain different.
+
+Measured and optimized hub-path studies motivate comparisons of attainable force, hand motion and delivery [@nesbit2009hub; @nesbit2014hub]. High proximal speed alone guarantees neither positive interface power nor a better shot. A fair comparison tracks preparation work, force limits, shaft response, contact state, and the resulting launch, as well as speed at a declared event.
+
 
 ## Empirical Evidence in Golfers {#sec-evidence}
 
-Empirical kinetic and kinematic studies confirm the P→D energy flow structure. Nesbit and Serrano [@nesbit2005work] showed that the torso and hips contribute 68.7–72.2% of total swing work, while shoulder and wrist joints contribute 24.3–28%. Power generation is concentrated early (torso), while clubhead speed conversion occurs late.
+Nesbit and Serrano's work analysis used four selected amateur golfers, not a population estimate of universal energy shares. Their model attributed 68.7–72.2% of summed body-joint work to lumbar/thoracic and hip joints, and **24.2–28.0% to shoulders and arms**, including elbows and wrists. Those are net modeled joint-work contributions under their kinematic and inertial assumptions, not percentages of metabolic effort or fractions independently measured crossing into the club. Their equations use relative joint motion; the segment balances above explain why that differs from club-side interface work [@nesbit2005work].
 
 Rachnavy et al. [@frontiers2026footground] report an observational regression in 30 golfers, with explained clubhead-speed variance rising from 35.5% to 75.4% after adding sequencing and their impulse-related transfer construct. This supports investigating joint relationships; it does not establish a causal mediation mechanism. The study's terminology must not turn impulse (momentum change) into energy (integrated power), or establish a thermodynamic efficiency without an explicit numerator, denominator, and system boundary.
 
-Segmental kinetic energy sequencing studies by Kenny et al. [@kenny2008] and Anderson et al. [@anderson2006] further document outward energy migration, showing that energy arrives late in the club after proximal peaks have passed.
+The segment-energy studies also require a more precise reading. Kenny and colleagues used one elite golfer's kinematics to drive a model: peak kinetic-energy magnitudes increased distally, but their timing order was **arms, hips, torso, club**, rather than a simple proximal-to-distal sequence [@kenny2008]. Anderson and colleagues studied 45 male scratch golfers and likewise reported increasing distal peak magnitudes without sequential peak timing [@anderson2006]. These studies support calculating segment energy. They do not make an energy curve a unique measurement of power crossing a joint, or turn model reconstruction into a controlled technique intervention.
 
 ### Force Along the Hand Path
 
-MacKenzie, McCourt, and Champoux [@mackenzie2020energy] analyzed 76 amateur
-golfers using three-dimensional club inverse dynamics. They reported that
-**average force along the hand path** was strongly associated with clubhead
-speed ($r=.96$ in their sample) and defined it through linear work divided by
-hand-path length. This is an important net mechanical result. It does not identify biological effort:
-the reconstructed grip force is an equivalent net
-force on the club, and a coupled model can attribute part of that load to
-configuration- and velocity-dependent interaction dynamics.
+MacKenzie, McCourt, and Champoux [@mackenzie2020energy] analyzed 76 amateur golfers, 73 men and three women, using one driver and three-dimensional club inverse dynamics. Their path-average force was strongly associated with clubhead speed ($r=.96$). The reference point was on the grip, 10 cm from its butt. The force was an equivalent net force, not a separately measured force from each hand or muscle.
+
+This association is mechanically informative but not a training-effect estimate. Force-work and club energy were reconstructed from the same movement, and their relationship is constrained by work–energy balance. Coordination, physical capacity, effort and measurement/model error can all affect the observed association. The study does not identify which intervention would increase an individual golfer's speed.
 
 For hand velocity $\mathbf{v}_H$ above a declared threshold $\epsilon$, define
 
@@ -217,7 +389,7 @@ $$
 F_{\parallel} = \mathbf{F}\mathbin{\cdot}\mathbf{e}_t.
 $$
 
-The MacKenzie-compatible path average is
+The study's average force along the hand path is the distance-weighted quantity
 
 $$
 \overline{F}_{\parallel}
@@ -226,13 +398,18 @@ $$
 = \frac{W_{\mathrm{linear}}}{L_H}.
 $$
 
-It is distinct from time-average force and from impulse. The planned
-attribution therefore reports path length, signed path-average force, vector
+It is a distance-weighted average, distinct from time-average force and impulse. The short zero-speed intervals must still be handled consistently: instantaneous force work is zero at an exactly stationary point, although the unit tangent is undefined there. A speed threshold is a numerical convention, not permission to discard finite work without reporting it.
+
+The force-work/couple-work split depends on the chosen grip point. Moving that point changes its velocity, path length and moment arm. Total wrench power is preserved under consistent reference transport, but $W_{\mathrm{linear}}/L_H$ is not a reference-point invariant. Cross-study comparisons therefore need the same point definition.
+
+The attribution therefore reports path length, signed path-average force, vector
 impulse, signed/positive/negative/absolute tangent impulse, force and couple
 power, and cumulative work as separate estimands.
 
 ::: {.callout-important}
 ### Mechanical Input Is Not Biological Effort
+
+Equivalent net grip force does not identify biological effort.
 
 Neither total force nor the modeled control residual identifies muscle
 activation, metabolic cost, or perceived effort. Muscle redundancy,
@@ -255,9 +432,9 @@ that a human motion is passive.
 Changing proximal rate is not a unique intervention, so the study registers
 two velocity contracts:
 
-- **Preserve Relative Club Rate:** hold $\dot q_2-\dot q_1$ fixed. The club is
+- **Preserve Relative Club Rate:** hold $\omega_2-\omega_1=\dot\theta_2$ fixed. The club is
   co-transported with the proximal link.
-- **Preserve Absolute Club Rate:** hold laboratory-frame $\dot q_2$ fixed. The
+- **Preserve Absolute Club Rate:** hold laboratory-frame $\omega_2=\dot\phi$ fixed. The
   relative rate changes as proximal velocity changes.
 
 Five swing phases and nine proximal rates are evaluated under each contract,
@@ -272,14 +449,15 @@ The result rejects a phase-independent benefit. With relative rate held, the
 drift-power slope is $-8.25$ W/(rad/s) in mid-downswing, then $+65.06$ in
 delivery and $+283.74$ before impact. With absolute club rate held, the delivery
 slope reverses to $-5.96$ W/(rad/s), while the pre-impact slope remains strongly
-positive at $+184.58$ W/(rad/s). Thus high proximal speed helps most reliably
-in the late reference state, and the delivery conclusion depends on relative
-motion.
+positive at $+184.58$ W/(rad/s). Higher proximal rate therefore increases this
+pointwise drift-power component in the late reference state under both contracts.
+That local result does not establish a benefit to a later delivery outcome, and
+the delivery-state sensitivity itself changes sign with the matching contract.
 
 ![High Proximal Speed Does Not Uniformly Remove Grip Braking.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_braking_map.svg){#fig-site-shoulder-velocity-braking fig-alt="A scatter plot maps total grip-force power against clubhead speed; shaded negative power identifies braking states in mid-downswing and in one delivery counterfactual."}
 
-The operational braking measure is negative grip power
-$P_G=\mathbf F_G\cdot\mathbf v_G$ and its time integral, not force magnitude.
+Here “negative grip power” means negative **grip-force** power
+$P_G=\mathbf F_G\cdot\mathbf v_G$ and its time integral, not force magnitude. A net grip couple can simultaneously supply power, so this measure alone is not total club-energy loss.
 Mid-downswing reaches $-148.8$ W under relative-rate matching and $-296.5$ W
 under absolute-rate matching. Delivery has no negative sample under
 relative-rate matching but reaches $-130.2$ W under absolute-rate matching.
@@ -311,11 +489,7 @@ auditability.
 
 ![Speed, Braking Work, and Peak Grip Force Remain in Tension.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_strategy_pareto.svg){#fig-site-shoulder-strategy-pareto fig-alt="Impact speed is plotted against negative grip work, marker size scales with peak grip force, and open red markers identify programs that are nondominated across all three objectives."}
 
-The supported strategy is conditional: build proximal speed before favorable
-geometry, enter delivery with compatible relative club motion, reduce direct
-distal opposition only when drift power is positive, and optimize club speed
-together with negative grip work, peak grip force, face/path behavior, and
-timing robustness. Torso speed is a state and possible control target, not the
+These results motivate a candidate control experiment: vary preparation, release and impedance while matching the relevant delivery state and tracking speed, negative grip work, peak force, face/path and timing sensitivity. Positive pointwise drift power alone does not prove that removing distal opposition improves a later outcome. It may alter alignment, force demand or the time of contact. Torso speed is a state and possible control target, not the
 objective itself. A rapidly rotating torso may coexist with positive transfer,
 but the fixed-hub model cannot establish its causal benefit.
 
@@ -343,17 +517,24 @@ We contrast two explicit strategies for distal energy handoff:
 
 ### What Falsifies S2?
 
-Strategy S2 would be falsified if early distal drive produced higher clubhead speed than late drive under matched proximal torque effort $\tau_1(t)$.
+An early-drive program that delivers higher speed under the same declared constraints would refute a claim that S2 always wins in that comparison. A general recommendation also needs sensitivity to timing, initial state, force limits and the delivery target. Matching the proximal torque command $\tau_1(t)$ does not match mechanical work: the programs can have different angular velocities and durations, hence different $\int\tau_1\dot\theta_1\,dt$. Neither matching rule by itself matches biological effort.
 
 ### Pointwise vs. Re-Simulation Counterfactuals
 
 The same-state affine decomposition splits instantaneous acceleration into drift and control:
 $$
-\ddot{\mathbf{q}}(t) = \underbrace{M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))}_{\text{Pointwise Drift}} + \underbrace{M(\mathbf{q})^{-1}\boldsymbol{\tau}}_{\text{Same-State Control}}.
+\begin{aligned}
+\ddot{\mathbf q}&=\mathbf a_d+\mathbf a_u,\\
+\mathbf a_d&=-M(\mathbf q)^{-1}
+ [\mathbf h(\mathbf q,\dot{\mathbf q})+\mathbf g_q(\mathbf q)+D\dot{\mathbf q}],\\
+\mathbf a_u&=M(\mathbf q)^{-1}\boldsymbol\tau.
+\end{aligned}
 $$
-The Python implementation in [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/main/src/shared/python/simulation_backends/ztcf_zvcf.py) evaluates this split pointwise along sampled trajectories. It is an instantaneous tangent-field statement, not a future zero-torque trajectory. Separate matched-state forward killswitch ensembles quantify nonlinear trajectory divergence after the command is removed.
+The Python implementation in [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/src/shared/python/simulation_backends/ztcf_zvcf.py) evaluates this split pointwise along sampled trajectories. It is an instantaneous tangent-field statement, not a future zero-torque trajectory. Separate matched-state forward killswitch ensembles quantify nonlinear trajectory divergence after the command is removed.
 
 ### Completed Model Ladder and Reporting Contract
+
+The displayed double-pendulum split uses $D=\operatorname{diag}(d_s,d_w)$, so drift retains its declared passive damping.
 
 The completed extension uses three declared tiers: an exact planar double
 pendulum, a one-arm mobile-hub/three-link point-mass model, and a mechanically
@@ -486,8 +667,7 @@ Second, bilateral compliant point forces are projected into that tree at the
 same states with zero integration steps. Peak contact force reaches 2.71 N,
 action--reaction residual is exactly zero, virtual-power residual is
 $3.9\times10^{-16}$ W, and contact dissipation power is negative everywhere
-(between $-0.0906$ and $-0.0892$ W), so the declared contact law removes energy
-rather than supplying it. A zero-preload control produces at most
+(between $-0.0906$ and $-0.0892$ W), so its damping contribution removes energy. Total compliant-contact power must additionally account for elastic storage: a passive spring can return previously stored energy even while damping remains dissipative. A zero-preload control produces at most
 $2.1\times10^{-7}$ N. Initial accelerations match across engines to
 $4.9\times10^{-13}$ relative error.
 
@@ -525,8 +705,7 @@ at 18 N$\cdot$s/m, so station count changes without silently stiffening the
 grip. Across 288 trajectories nested at 4, 10, 25, and 50 ms, peak station force
 reaches 4.03 N and the worst station carries 77.0% of the load. No opening
 transitions occur. The time residual refines 0.03119 to 0.01560, and the
-three-versus-five-station difference at the fine step is 0.00355, so the
-discretization is converging. This establishes **discretization sensitivity**;
+three-versus-five-station difference at the fine step is 0.00355, which documents the tested refinement trend. This establishes **discretization sensitivity**;
 it does not identify measured grip pressure, finger anatomy, friction, or
 tissue.
 
@@ -578,11 +757,16 @@ The preregistered estimand then returns the sharpest negative result in the
 program. Requiring a 5% match on **both** peak grip load and total dissipated
 work, coupled versus fixed, admits **0 of 384 cells**. The reason is structural
 rather than incidental: only the coupled pathway contains ground damping, so
-total dissipated work differs by a factor of 1.72--2.00 by construction. Peak
-load agrees closely — its error range is 0 to 0.49 — but the work criterion
-cannot be met. Loosening the tolerance does not rescue it at 10%, 25%, 50%, or
+the **symmetric relative difference** in dissipated work is 1.72–2.00. This is not a ratio of the two works. The pinned implementation uses
+
+$$
+e_W=\frac{|W_c-W_f|}
+{\max(10^{-6}\ {\rm J},\tfrac12(|W_c|+|W_f|))}.
+$$
+
+For example, 30 J versus 2 J gives $e_W=1.75$, although the work ratio is 15. The load screen uses the analogous expression with a 1 N denominator floor; its 0–0.492 range means up to 49.2% symmetric difference, not uniformly close agreement. The registered work criterion is not met. Loosening the tolerance does not rescue it at 10%, 25%, 50%, or
 100%; only a **200%** tolerance admits any cell at all, at which point every cell
-matches and the screen has stopped discriminating.
+matches and the screen has stopped discriminating. For nonnegative works above the floor, this symmetric difference is bounded by two; a 200% tolerance is therefore a particularly weak screen, not evidence that the pathways have comparable dissipation.
 
 A labeled post-hoc screen that redefines dissipated work as grip plus shaft only,
 excluding ground damping, admits 60 cells at 5%. Among those, club-speed
@@ -629,7 +813,7 @@ The two poles are mathematically defined actuator subspaces, not anatomical
 labels. The proximal pole permits four shoulder and elbow generalized torques
 and sets direct wrist moments to zero. The wrist pole permits two direct wrist
 moments and sets proximal generalized torques to zero. Within each subspace,
-the minimum-norm control is scaled to the common club task; convex mixtures
+the minimum-norm control, under its declared coordinate and weighting convention, is scaled to the common club task; convex mixtures
 span the interval between them.
 
 Across 19 club angles and 21 allocation fractions, the maximum task error is
@@ -639,7 +823,7 @@ internal demands are not equivalent: modeled RMS hand force spans 7.58--91.51
 N and generalized-torque norm spans 5.74--25.45 N m. The allocation minimizing
 one metric varies with geometry and need not minimize another. Consequently,
 the model supplies a tradeoff surface; it does not establish a universal
-arm-led or wrist-led technique.
+arm-led or wrist-led technique. A Euclidean torque norm is a mathematical choice, not metabolic effort; changing coordinate scales or actuator weights changes the minimum. Feasible muscle forces, actuator bounds and closed-chain constraints need separate checks.
 
 ### What “Slack” Means in This Test
 
@@ -733,9 +917,7 @@ maintained in the [open research epic](https://github.com/D-sorganization/Upstre
 
 ### One Physical Interaction, Several Coordinate Descriptions
 
-A model result should not change because a reviewer expresses it in a
-laboratory frame, a club-attached frame, or about another point on the same
-rigid body. With force-first wrench
+Changing the axes used to express a physical vector does not change its meaning. In particular, rotating components into club-attached axes while retaining the same inertial observer is different from replacing absolute velocity by velocity relative to the club. With force-first wrench
 $\mathsf W_A=[\mathbf F^T\;\mathbf M_A^T]^T$ and linear-first twist
 $\mathsf V_A=[\mathbf v_A^T\;\boldsymbol\omega^T]^T$, transport from point
 $A$ to point $B$ requires
@@ -771,6 +953,18 @@ Guide](rotation-representations-reference.html), [Screw Theory
 Reference](screw-theory-reference.html), and [cross-formalism dynamics
 treatment](calculation-framework-comparison/multibody-drift-control-v3.html#sec-cross-formalism)
 develop the underlying representation issues in greater depth.
+
+### Changing the Observer Changes Mechanical Power
+
+The preceding invariance uses the same physical velocity and observer. A new inertial observer moving at constant velocity $\mathbf U$ measures $\mathbf v'=\mathbf v-\mathbf U$. For the same force and moment,
+
+$$
+P'=P-\mathbf F\cdot\mathbf U.
+$$
+
+Kinetic energy changes consistently: $K'=K-\mathbf U\cdot\mathbf p+\tfrac12m\|\mathbf U\|^2$. Thus mechanical power is not invariant under every change of reference frame. A 2 N force acting along a point moving at 3 m/s supplies 6 W in that frame; an observer moving at 4 m/s in the same direction measures -2 W. There is no contradiction because the measured kinetic energy is different.
+
+Expressing absolute vectors in a rotating basis preserves their dot product, but their derivatives require the basis-rotation terms. Setting the club's own relative velocity to zero and calling all its power zero silently changes the question. The audit above establishes coordinate/reference-point consistency, not observer-independent work.
 
 ### The Same Net Moment Does Not Identify One Muscle Strategy
 
@@ -877,8 +1071,7 @@ Relative to clock timing, the state trigger raises held-out 10th-percentile
 delivery speed from 4.94 to 5.28 m/s and reduces mean planar face/path proxy
 error from 9.44 to 2.29 degrees. It also raises 90th-percentile peak hand force
 from 166.9 to 208.1 N. Higher impedance changes the balance again. Every
-registered program remains Pareto-nondominated, so the evidence rejects a
-universal optimum.
+registered program remains Pareto-nondominated on those outputs. This establishes a tradeoff within the finite comparison; it does not rule out a better untested program.
 
 ![Paired Clock- and State-Triggered Perturbation Response.](figures/proximal_distal_energy_transfer/fig_clock_vs_state_perturbation_response.svg){#fig-clock-state-response fig-alt="Bar charts compare state-to-clock amplification ratios and percent changes, showing lower speed and face-path sensitivity but greater force amplification."}
 
@@ -943,7 +1136,7 @@ The numerical analyses use an open-source, backend-neutral double-pendulum model
 - **E1e Command Rise-Time Sensitivity:** Every program is repeated with 20, 35, and 50 ms first-order transitions after the initial preload. These are command filters, not muscle activation or continuous optimal control.
 - **E2 Drift/Control Split & E4 Robertson–Winter Accounting:** Pointwise ZTCF decomposition and interface power balance $\mathbf{F} \cdot \mathbf{v} + \tau \omega$, following the segment-energy accounting framework of Robertson and Winter [@robertson1980], using analytic COM acceleration and an exact interpolated early/late integration boundary.
 
-The registered arm-angle rule defines the primary delivery-zone estimand; it is not an anatomical validity threshold. Every row retains its unfiltered first club-vertical crossing and a reason-coded status.
+The registered arm-angle rule defines the primary delivery-zone estimand; it is not an anatomical validity threshold. The event is the first increasing crossing of the absolute club angle through zero, subject to the registered arm-angle limit. It is a geometric delivery proxy, not ball contact at a fixed point in space. Different programs can reach it at different hand locations and times. Every row retains its unfiltered first club-vertical crossing and a reason-coded status.
 
 ## Results {#sec-results}
 
@@ -965,7 +1158,7 @@ All reported values trace to versioned JSON/NPZ data and analysis code linked in
 Key model-derived findings:
 1. **Early wrist drive is lower than passive (−15.3%).** Driving from the top drops modeled speed from 34.2 m/s to 28.9 m/s.
 2. **Identical torque applied late adds +12.4%.** Peak speed reaches 38.4 m/s at $t_{\text{on}} = 0.200$ s.
-3. **Restrain-then-drive is highest among the tested programs (+13.8%).** The grid-selected command ($R = 10$ N·m) reaches 38.9 m/s (and 46.9 m/s at $\tau_s = 100$ N·m).
+3. **Restrain-then-drive is highest among the tested programs (+13.8%).** At $\tau_s=60$ N·m, the grid-selected command ($R = 10$ N·m) reaches 38.9 m/s. A different selected program, with $R=5$ N·m and release onset 0.125 s, reaches 46.9 m/s at $\tau_s=100$ N·m; this is not the same command with shoulder torque alone changed.
 
 ### E1b — Torque-Velocity Actuator Bounds
 
@@ -979,19 +1172,19 @@ The S2 ordering survives actuator bounds intact: early drive (28.8 m/s) < passiv
 
 ![Downswing Montage in the Swing Plane.](figures/proximal_distal_energy_transfer/fig_swing_montage.svg){#fig-montage fig-alt="Stick-figure progression showing wrist lag preservation during early downswing."}
 
-![Segmental Kinetic Energy Time Courses.](figures/proximal_distal_energy_transfer/fig_segment_energies.svg){#fig-energies fig-alt="Kinetic energy builds in the arm first before transferring rapidly to the clubhead late in the swing."}
+![Segmental Kinetic Energy Time Courses.](figures/proximal_distal_energy_transfer/fig_segment_energies.svg){#fig-energies fig-alt="Time courses show the modeled arm and club kinetic energies; separate interface powers are needed to determine transfer."}
 
 ![Early-Half vs. Late-Half Energy Budget.](figures/proximal_distal_energy_transfer/fig_energy_budget.svg){#fig-budget fig-alt="Bar chart showing modeled negative early wrist-actuator work under the selected restraint command and dominant late joint-force transfer."}
 
-The energy budget shows that the grid-selected programs put the *least* energy into the club early (5.0 J vs. 23.0 J early drive) and bank energy in the arm (55.1 J shoulder work early). The selected restraint command produces −1.9 J of modeled early wrist-actuator work because its imposed torque opposes opening velocity. That sign does not identify muscle action, neural intent, eccentric physiology, or a human technique.
+In the representative selected-restraint program, early club kinetic-energy gain is 5.0 J, compared with 23.0 J in early drive. The reported 55.1 J is **shoulder-actuator work**, not energy stored in the arm; arm storage must be calculated from its own energy balance. “Early” and “late” divide each program at half of its own delivery time, so these are not identical absolute-time windows. The selected restraint command produces −1.9 J of modeled early wrist-actuator work because its imposed torque opposes opening velocity. That sign does not identify muscle action, neural intent, eccentric physiology, or a human technique.
 
 ### E4 Interface Powers & E2 Counterfactual Split
 
-![Robertson–Winter Interface Power Accounting.](figures/proximal_distal_energy_transfer/fig_wrist_interface_power.svg){#fig-wristpower fig-alt="Joint-force power surges late to 131.7 J, dwarfing late wrist actuator work of 25.7 J."}
+![Robertson–Winter Interface Power Accounting.](figures/proximal_distal_energy_transfer/fig_wrist_interface_power.svg){#fig-wristpower fig-alt="The late-window integral of wrist-force power is 131.7 joules; the separately reported relative wrist-actuator work is 25.7 joules. These are different ledger quantities."}
 
 ![Pointwise Drift/Control Split of Club Angular Acceleration.](figures/proximal_distal_energy_transfer/fig_ztcf_drift_control.svg){#fig-ztcf fig-alt="Control opposes drift early (restraint) while drift delivers acceleration late."}
 
-Robertson–Winter accounting [@robertson1980] closes pointwise with analytic COM acceleration and shows that late energy transfer is dominated by joint-force power (131.7 J) rather than wrist-actuator work (25.7 J). The E2 split shows an instantaneous S2 signature: **control opposes drift early; drift dominates late.** Forward killswitch claims come from separately integrated matched-state branches.
+The pointwise club mechanical-energy balance closes using analytic COM acceleration, wrist-force power and **club-side** moment power. The archived selected-restraint summary reports 131.7 J of late force work and 25.7 J of relative wrist-actuator work. Joules measure integrated work, not instantaneous power. These numbers are useful but are not complementary terms in the club ledger: the latter requires net moment times absolute club rate, plus gravitational work if only kinetic energy is counted. Damping must also follow the chosen boundary. The source computes these distinct powers separately [@robertson1980]. The E2 split shows an instantaneous S2 signature: **control opposes drift early; drift dominates late.** Forward killswitch claims come from separately integrated matched-state branches.
 
 ### Hand-Path Attribution Across the Model Ladder {#sec-attribution-results}
 
@@ -1170,7 +1363,7 @@ error, and omitted loads; it does not uniquely recover muscle torque.
 
 ## Discussion {#sec-discussion}
 
-The numerical results support delayed distal release as a robust mechanism within the tested planar two-link model. Early wrist drive increases the system's moment of inertia about the shoulder hub before proximal speed has developed, reducing the modeled shoulder work converted into arm speed.
+The tested programs favor delayed distal drive in this planar model, but the mechanism is a coupled change in geometry, velocities, actuator work, dissipation and delivery time. Opening generally changes the common-rotation inertia $M_{11}$; the freely moving two-coordinate system does not have one scalar inertia that alone predicts speed. Constant shoulder torque also does different work on different trajectories because shoulder angular travel changes. The observed ranking therefore does not isolate timing at matched total work or solve continuous optimal control.
 
 Qualifications and scope limits:
 - The primary timing estimand is planar 2-DOF with a rigid shaft and fixed hub. The full resource separately executes moving-base/flexible and coupled-modal-club models, a distributed-shaft reference, a 20-DOF spatial common-state comparison, and native MuJoCo/Pinocchio reduced spatial forward contact. These extensions remain model-tier evidence, not subject-calibrated human validation.
@@ -1183,8 +1376,8 @@ Qualifications and scope limits:
 
 1. In the baseline model, early distal drive produces 15% less speed than the passive condition.
 2. Grid-selected late wrist torque produces 12% to 14% more speed than the passive baseline.
-3. The selected retention program performs −1.9 J of modeled early wrist-actuator work while preserving more arm energy; this is not a physiological inference.
-4. Late club-energy gain is dominated by joint-force transfer in the representative model trajectory.
+3. The selected retention program performs −1.9 J of modeled early wrist-actuator work. Shoulder work and arm energy storage remain distinct; neither identifies physiology.
+4. Wrist-force work is a substantial late contribution in the representative trajectory. Its contribution must be assessed in the complete club-side ledger, separately from relative wrist-actuator work.
 5. The qualitative ordering survives actuator bounds, alternative impact criteria, declared one-at-a-time parameter cases, and 20–50 ms command transitions, while selected timing shifts.
 6. In the fixed-support benchmark, pointwise drift explains much of the modeled reaction waveform but not its amplitude; opposing control makes a component impulse exceed the total, so drift attribution is not a biological-effort percentage.
 
@@ -1217,6 +1410,8 @@ Work is tracked in the [upstream research registry](https://github.com/D-sorgani
 
 ### Reproducibility
 
+Run the following commands in the **UpstreamDrift checkout**, with that repository's dependencies and the study's documented revision. These modules are not a second runtime in AffineDrift. The timing and accounting records reviewed here are available at [the paper-wide pinned revision](https://github.com/D-sorganization/UpstreamDrift/tree/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer), including the parameter sources and results summary. Individual later/earlier study pins above remain authoritative for their own results.
+
 To re-run experiments and regenerate figures from source code:
 ```bash
 python3 -m scripts.research.proximal_distal_energy.run_experiments
@@ -1244,6 +1439,12 @@ python3 -m scripts.research.proximal_distal_energy.make_transmission_robustness_
 | Lower segment mass | $m_2$ | 0.35 | kg |
 | Lower COM distance | $L_{c2}$ | 0.7557 | m |
 | Projected gravity | $g_{\text{proj}}$ | 8.033 | m/s$^2$ |
+| Upper COM inertia | $I_1$ | 0.3515625 | kg m$^2$ |
+| Lower COM inertia | $I_2$ | 0.0403486 | kg m$^2$ |
+| Shoulder viscous damping | $d_s$ | 0.4 | N m s/rad |
+| Wrist viscous damping | $d_w$ | 0.25 | N m s/rad |
+
+The baseline starts from $(\theta_1,\theta_2)=(-2.2,-1.57)$ rad with both rates zero. The archived integration step is 0.001 s and maximum horizon 0.9 s. The lower segment combines a 0.15 kg shaft/grip surrogate, with COM at 0.43 m and its declared COM inertia, and a 0.20 kg distal point mass. These are synthetic model parameters, not individualized anatomical measurements.
 
 ---
 
