@@ -1001,3 +1001,6 @@ Validation: root4331 passes and one bibliography parser failure, resolved by fie
 Nonlinearity PR4246 is now protected-squash-merged as e56a4b3bb7a97230bcafb99d0d559f1f614349a4 after all checks passed; deployment34142203580 remains in progress at this checkpoint. Machine-learning publication is pending; keep the405-source corpus open.
 
 Machine-learning publication hook checkpoint: the first push failed in isolated pre-push mypy because the implicit NumPy Array alias was not recognized without NumPy installed. An explicit typing.TypeAlias declaration fixes that environment; the exact hook and normal mypy pass. Runtime and chapter excerpt are unchanged. Initial PR creation failed because the rejected push had created no branch. Full details and pre-push rebase tree-equality evidence are recorded in machine-learning-review.md. No hook bypass or force push.
+
+
+Publication checkpoint: the corrected alias and all commit/pre-push hooks passed; commit6f3dfb95 was successfully pushed without force. Ready PR #4247 now contains the complete machine-learning wave and references issue4244, epic4009, corpus4021 and Geometry4055. SPEC is keyed to PR4247. Protected merge and deployment remain pending.
