@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-07 | #4231 | Correct the complete paired superposition chapter, replacing inconsistent mechanics and pendulum tables with independent verification and precise passivity, constraints, actuator and reachability conditions; rebuild Volume I. |
 | 2026-09-07 | #4226 | Reconcile multibody motion, reactions, spatial conventions and segment energy through independent executable checks; repair excluded hybrid critique links under #4225 and main-health #4224. |
 | 2026-09-07 | #4223 | Reconcile complete hybrid reference, critique and accessible companion through impact mechanics, event-time sensitivity, contact feasibility and executable verification; record full review and layout evidence. |
 | 2026-09-07 | #4221 | Reconcile complete applications editions with kinetic-energy-consistent model, versioned rigid counterfactual, verified cross-domain derivations and evidence limits; rebuild affected PDFs and record review scope. |

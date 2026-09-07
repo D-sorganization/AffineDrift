@@ -1,8 +1,8 @@
-# Superposition Chapter: Complete Paired Read, Corrections Pending
+# Superposition Chapter: Complete Paired Correction and Verification
 
-Both complete sources were read sequentially: Volume_I/chapters/ch03_superposition.tex (10,210 original words) and quarto/ch03_superposition.qmd (9,717 original words), including their exercises. They belong to epic #4009, corpus #4021 and route batch #4055. No edits have yet been made to either chapter.
+Both complete sources were read sequentially: Volume_I/chapters/ch03_superposition.tex (10,210 original words) and quarto/ch03_superposition.qmd (9,717 original words), including their exercises. They belong to epic #4009, corpus #4021 and route batch #4055. Both chapters are fully corrected under #4227; the complete derivation and validation log is in REVIEW.md. Protected publication remains pending.
 
-## Findings to Correct
+## Findings Addressed
 
 - Separate tangent-vector addition, exact fixed-state input increments and finite trajectory effects. The affine anchor is counted once. The final chapter summary incorrectly calls the total acceleration map linear. The QMD worked example substitutes zero for a nonzero zero-torque acceleration and then declares the correct difference identity false. A gain is the derivative or incremental ratio, not total acceleration divided by torque. Finite response comparisons need the evolving baseline, a shared chart and common initial state; exceptional symmetric pendulum inputs do not prove universal trajectory superposition or its failure.
 - Declare model/input/state assumptions and retained loads. The first-order drift silently omits external loads present in the preceding equation. The body's COM and common expression frame must be specified in its kinetic energy. Body count and configuration dimension need not agree. Positive inertia is conditional on a regular independent inertial model, not a theorem covering massless freedoms, redundant charts and every configuration representation.
@@ -20,6 +20,6 @@ Both complete sources were read sequentially: Volume_I/chapters/ch03_superpositi
 - Feedback linearization is generally local and requires neighborhood relative-degree conditions, admissible effort and a valid coordinate map. Input-output linearization need not linearize internal dynamics. Nonminimum-phase behavior limits exact tracking, but does not imply every trajectory diverges or every finite-horizon use is categorically unsafe. Contraction robustness also requires an explicit perturbation margin.
 - Repair exercise assumptions: mass parameters and a chosen coordinate scale are required for a condition-number maximum; B alone does not determine underactuated bracket rank; an energy storage offset may be needed; zero-dimensional internal dynamics are vacuous rather than a hidden unstable subsystem. Preserve cross-chapter references and reconcile web/print formulas, tables and explanations.
 
-## Next Work
+## Completion Boundary
 
-Register and claim a focused correction issue, derive the uniform-rod arm and constraint equations, build independently checked pendulum numerical tables and stability counterexamples, rewrite both canonical sources, rebuild the full Volume I PDF and rendered chapter, and inspect all affected web/print output. These source reads do not clear the chapter or the broader corpus.
+The complete paired chapter, executable verification and 169-page Volume I PDF are updated. Sixteen independent chapter checks and four notation checks pass; the full suite passes 4,265 with 29 skips and 129 deselections, coverage 92.36%. All 102 section views, fifteen final targeted views, and fourteen affected print pages were inspected. The final source changes were rebuilt and rechecked. REVIEW.md records source-reading boundaries, the obsolete notation-guard failure and repair, numerical tolerances, rendering details and pending protected publication. This chapter does not clear the corpus or establish empirical validity of a golf intervention.
