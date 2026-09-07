@@ -287,3 +287,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-07 | #4251 | Reconcile finite screw displacement, instantaneous twists, dual wrench transformations, reciprocal constraints, grip power and independently checked linkage statics in both introductory editions. |
 
 > For the complete historical change log (v1.0.173 – v1.0.278), see [CHANGELOG.md](CHANGELOG.md).
+
+| 2026-09-07 | #4257 | Rebuild paired contraction proofs and metric/controller/noise hypotheses; replace unsupported golf robustness claims with checked mechanics and explicit experimental questions. |
