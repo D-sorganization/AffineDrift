@@ -6,8 +6,10 @@ from xml.etree.ElementTree import Element, SubElement, indent, tostring
 import numpy as np
 from numpy.typing import NDArray
 
+from src.core.constants import GRAVITY_M_S2
+
 type Array = NDArray[np.float64]
-STANDARD_GRAVITY = 9.81  # Example value, in metres per second squared.
+STANDARD_GRAVITY = GRAVITY_M_S2  # Example value, in metres per second squared.
 
 
 def _configuration(q: Array) -> Array:

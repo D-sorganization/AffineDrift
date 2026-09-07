@@ -8,6 +8,8 @@ import numpy as np
 import pytest
 from defusedxml import ElementTree as ET
 
+from src.core.constants import GRAVITY_M_S2
+
 
 @pytest.fixture(scope="module")
 def example() -> Any:
@@ -162,7 +164,7 @@ def test_mujoco_import_matches_independent_dynamics(example: Any) -> None:
     arm = example.TwoLinkArm()
     model = mujoco.MjModel.from_xml_string(arm.urdf())
     assert (model.nq, model.nv, model.nu) == (2, 2, 0)
-    model.opt.gravity[:] = [0, -9.81, 0]
+    model.opt.gravity[:] = [0, -GRAVITY_M_S2, 0]
     data = mujoco.MjData(model)
     data.qpos[:] = [0.3, 0.7]
     mujoco.mj_forward(model, data)
