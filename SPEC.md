@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-07 | #4219 | Correct the full contraction critique, mathematical counterexamples, noise and hybrid assumptions, unsupported evidence and mobile equations; record source and validation scope. |
 | 2026-09-07 | #4217 | Complete paired linear-algebra mechanics, temporal control/observation, spectral and inverse-sensitivity derivations; rebuild Volume 0 PDF; improve mobile math and record full review evidence. |
 | 2026-09-06 | #4211 | Remediate rotation converter formula and visualisation summary text color contrast for deploy axe accessibility gate (#4211). |
 | 2026-09-06 | #4210 | Remediate deploy accessibility violations across remaining routes: exclude third-party iframes from axe scan, underline table cell and citation links, calibrate semantic success/error color tokens, and enforce high-contrast text in contact sidebar and brand card code (#4209). |
