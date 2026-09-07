@@ -3,7 +3,7 @@
 ## Impact Dynamics and Acoustics: #4253
 
 - Review slice #4254 is locally verified on `docs/4253-impact-dynamics-acoustics`,
-  based on `39fa6cca`; PR not created. Provider: Tools #5068; consumer: UpstreamDrift #9700.
+  based on `39fa6cca`; PR #4258; initial implementation `cd0afdfa1a8fa7eda60377282dd4afc4965cd1b6`. Provider: Tools #5068; consumer: UpstreamDrift #9700.
 - Canonical continuation: `docs/development/impact-acoustics/REVIEW.md` (complete).
 - Replace universal heavy-hit decoupling claims with qualified model/measurement
   conclusions. Preserve immutable proximal-distal publication bytes and trust pins.

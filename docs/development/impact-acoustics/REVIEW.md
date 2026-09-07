@@ -95,7 +95,7 @@ claims depend on all relevant validation stages.
 
 - Workspace: `C:/Users/diete/Repositories/AffineDrift-impact-acoustics`.
 - Branch: `docs/4253-impact-dynamics-acoustics`; base `39fa6cca`.
-- Implementation commit: `SELF`; PR not created yet.
+- Implementation commit: `SELF`; PR #4258; initial implementation `cd0afdfa1a8fa7eda60377282dd4afc4965cd1b6`.
 - Completed locally: source review, primary evidence ledger, rewritten theory,
   new references, RED publication regressions followed by 5 passing tests.
 - Validation: full pytest 4,468 passed / 30 skipped / 4 integration failures;
@@ -106,7 +106,7 @@ claims depend on all relevant validation stages.
   The existing page template blocks its external polyfill under CSP and warns
   about preloads; rendered math still succeeds. Local QA artifacts/logs stay
   under this directory and are not publication evidence.
-- Remaining in this delivery: focused PR and exact revision links. Parent
+- Delivery is in PR #4258; normal protected checks/review remain pending. Parent
   research epics remain open; no physical/perceptual experiment was performed.
 - Preserve original checkouts, including AffineDrift generated untracked files
   and UpstreamDrift's modified vendor entry. Work occurs in isolated worktrees.
