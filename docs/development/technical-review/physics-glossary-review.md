@@ -1,6 +1,6 @@
 # Physics of Golf Glossary Technical Review
 
-Parent: #4009; corpus #4021; route batch #4054. Both complete canonical editions were read before correction: `articles/The_Physics_of_Golf/chapters/glossary.tex` (854 lines, 10,020 original words) and `articles/The_Physics_of_Golf/quarto/glossary.qmd` (851 lines, 9,603 original words). Reading is complete; corrections and publication remain pending.
+Parent: #4009; corpus #4021; route batch #4054; issue #4232. Both complete canonical editions were read before correction: `articles/The_Physics_of_Golf/chapters/glossary.tex` (854 lines, 10,020 original words) and `articles/The_Physics_of_Golf/quarto/glossary.qmd` (851 lines, 9,603 original words). Reading and canonical corrections are complete. The six finding groups below describe the original defects and the implemented correction scope. Protected publication remains pending; see REVIEW.md for derivations, source boundaries and verification.
 
 ## Findings and Correction Scope
 
