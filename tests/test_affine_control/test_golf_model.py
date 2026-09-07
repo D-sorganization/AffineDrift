@@ -93,17 +93,13 @@ def test_m33_matches_its_closed_form(q: np.ndarray) -> None:
 
 
 def test_club_length_is_driver_scale() -> None:
-    """Guards the regression: l3 was 0.40 m, forearm scale, where a driver is ~1.15 m.
-
-    With the short club, reaching a real clubhead speed would have needed a
-    wrist rate near 92 rad/s -- about 880 rpm.
-    """
+    """Keep the declared teaching-model length, without inferring human joint rates."""
     assert SEGMENTS.lengths[2] > 0.9
     assert SEGMENTS.lengths[2] < 1.3
 
 
-def test_clubhead_speed_is_in_the_right_regime() -> None:
-    """Below a good amateur, because the model has no torso -- but not by 4x."""
+def test_rigid_tip_speed_matches_the_manufactured_example_range() -> None:
+    """A numerical regression range, not an anthropometric validation criterion."""
     q = np.deg2rad(np.array(CH08_CONFIGURATION_DEGREES))
     speed = SEGMENTS.clubhead_speed(q, np.array(CH08_VELOCITY))
     assert 25.0 < speed < 45.0
@@ -143,10 +139,10 @@ def test_gravity_torque_matches_the_potential_gradient() -> None:
     assert SEGMENTS.gravity_torque(q) @ direction == pytest.approx(numeric, rel=1e-5)
 
 
-def test_published_velocities_are_physically_plausible() -> None:
-    """Peak segment rates in a real downswing are tens, not hundreds, of rad/s."""
+def test_published_relative_velocities_retain_the_declared_example() -> None:
+    """Check the chosen relative-coordinate example, not measured segment maxima."""
     assert max(abs(v) for v in CH08_VELOCITY) < 40.0
-    # The wrist should be the fastest segment, which is what uncocking means.
+    # This ordering belongs to this initial condition, not a universal swing rule.
     assert abs(CH08_VELOCITY[2]) == max(abs(v) for v in CH08_VELOCITY)
 
 

@@ -1,1830 +1,420 @@
-%% ==========================================================================
-%%  Chapter 8: Applications — Biomechanics, Robotics, and Beyond
-%% ==========================================================================
 \chapter{Applications: Biomechanics, Robotics, and Beyond}
 \label{ch:applications}
-
-\begin{laymansbox}{The Theory in the Real World}{theory_real_world}
-This chapter shows the unified framework in action. From a golfer's swing to a robot
-arm to a docking spacecraft, the same geometric tools---tangent-space analysis,
-contraction metrics, drift--input decomposition, and Riccati-based optimal control---provide
-insight into how complex motions work and how to design better ones. We emphasize
-\emph{numerical detail}: explicit mass matrices with realistic parameter values, Schur
-complement computations, verified contraction metrics, and experimental validation
-pathways. The goal is to move from theory to implementation.
-\end{laymansbox}
-
-%% ==========================================================================
-\section{Biomechanics: The Golf Swing as a Control-Affine System}
-%% ==========================================================================
-
-The golfer's musculoskeletal system can be analyzed via the Lie algebra rank condition of Agrachev and Sachkov 
-\cite[Ch.~3]{AgrachevSachkov2004}. For a 3-DOF simplified golfer model (torso, arm, club), the control distribution 
-is spanned by the muscle torque vector fields at each joint. The rank condition checks whether the Lie algebra generated 
-by these controls spans the full 3-dimensional tangent space at key configurations. For underactuated joints (where muscles 
-cannot directly apply torque), the Lie bracket terms $[\,\mathbf{g}_i, \mathbf{g}_j\,]$ between muscles at adjacent joints 
-determine whether the distant distal segment is controllable. This geometric analysis predicts which swing patterns are 
-biomechanically feasible and which require additional degrees of freedom or feedforward strategies.
-
-\subsection{System Definition and Parameterization}
-
-Real-world applications of geometric mechanics and contraction theory have been extensively studied
-in robotics \cite{Murray1994, Spong2006, Lynch2017} and biomechanics \cite{FlashHogan1985, WesterveltGrizzle2007}.
-This section demonstrates the framework's applicability to complex, high-dimensional systems.
-
-The golfer--club--shaft system is a coupled rigid--flexible multibody chain:
-\begin{itemize}
-\item \textbf{Golfer}: Rigid body segments (torso, upper arm, forearm, hand) with
-$n$ actuated degrees of freedom.
-\item \textbf{Shaft}: Flexible beam modeled by $m$ modal coordinates $\vec\eta$
-(Euler--Bernoulli bending modes).
-\item \textbf{Clubhead}: Rigid body attached to the shaft tip.
-\end{itemize}
-
-The state vector is $\x = (\q, \vec\eta, \dot\q, \dot{\vec\eta}) \in \R^{2(n+m)}$,
-living on the tangent bundle of the configuration manifold.
-
-For a 3-DOF simplified model (shoulder, elbow, wrist), we parameterize:
-\begin{align}
-\q &= (q_1, q_2, q_3)^\T \quad \text{(shoulder, elbow, wrist angles in radians)} \\
-\vec\eta &= (\eta_1, \eta_2)^\T \quad \text{(first two shaft bending modes)} \\
-\x &= (\q^\T, \vec\eta^\T, \dot\q^\T, \dot{\vec\eta}^\T)^\T \in \R^{10}.
-\end{align}
-
 \input{generated/ch08_golf_model}
 
-\subsection{Explicit Mass Matrix Construction}
+\section{What a Shared Mathematical Language Can Explain}
 
-\subsubsection{Segment Parameters}
+A golf swing combines an actively driven body, a deforming club, changing contact forces, and a brief collision. A useful explanation must connect those parts without replacing them with a single slogan. Geometry determines how joint motion becomes club motion. Inertia determines how forces produce acceleration. Muscle activation, contact, and equipment determine which forces are available. Perturbation dynamics describe how errors evolve. An impact model translates the arriving club state into a ball outcome. Measurements then test this chain of predictions.
 
-We use the following representative parameters for a typical adult male golfer with a
-standard club:
-\begin{align}
-m_1 &= \cheightMassOne~\text{kg} \quad \text{(upper arm + torso contribution)} \\
-m_2 &= \cheightMassTwo~\text{kg} \quad \text{(forearm)} \\
-m_3 &= \cheightMassThree~\text{kg} \quad \text{(club + hand)} \\
-l_1 &= \cheightLengthOne~\text{m} \quad \text{(upper arm length)} \\
-l_2 &= \cheightLengthTwo~\text{m} \quad \text{(forearm length)} \\
-l_3 &= \cheightLengthThree~\text{m} \quad \text{(driver length)} \\
-I_1 &= \cheightInertiaOne~\text{kg$\cdot$m$^2$} \quad \text{(segment 1, about its own CoM)} \\
-I_2 &= \cheightInertiaTwo~\text{kg$\cdot$m$^2$} \quad \text{(segment 2, about its own CoM)} \\
-I_3 &= \cheightInertiaThree~\text{kg$\cdot$m$^2$} \quad \text{(club, uniform-rod value)} \\
-m_s &= \cheightShaftMass~\text{kg} \quad \text{(shaft mass)} \\
-K_s &= 5000~\text{N$\cdot$m$^2$} \quad \text{(shaft bending stiffness)} \\
-\omega_1 &= 40~\text{rad/s}, \quad \omega_2 = 120~\text{rad/s} \quad \text{(modal frequencies)}
-\end{align}
+Control-affine equations and tangent maps help connect these questions, but they answer different questions. An instantaneous acceleration decomposition is not an energy budget. A local optimal controller is not automatically a contraction certificate throughout a swing. A contracting state error need not minimize impact error. A flexible shaft can change both the motion of the head relative to the grip and the motion of the grip itself. Those distinctions make the combined explanation stronger: each proposed mechanism has an equation, a stated intervention, and an observable consequence.
 
+The golf example below is a manufactured teaching model. Its numerical values are reproducible, but they are not fitted to a golfer or offered as measured anatomical limits. The robot, spacecraft, and vehicle examples establish additional boundaries: task redundancy, orbital reference dynamics, and nonholonomic motion. They demonstrate transferable methods, rather than a universal theory of skilled human movement.
 
-\subsubsection{Mass Matrix Entries}
+\section{A Mechanically Consistent Golf Teaching Model}
 
-\begin{remark}[Computed, not transcribed]
-Every matrix in this section is produced by \texttt{scripts/generate\_worked\_examples.py}
-from the model in \texttt{src/affine\_control/golf\_model.py}, and CI fails if the committed
-values drift from what that code emits.
+\subsection{Coordinates, States, and Rigid-Body Inertia}
 
-The reason is that an earlier revision of this section printed a mass matrix that did not
-follow from the formulas immediately above it --- entries differed by up to $2.23$, and
-$M_{33}$ was given as $0.18$ where $I_3 + m_3\ell_3^2/4 = 0.12$. The assembled blocks were
-not positive definite, and the resulting indefinite Schur complement was explained as a
-``kinematic singularity''. That explanation is wrong, and \S\ref{subsec:ch8:why-pd} below
-says why.
-\end{remark}
+Consider a planar serial chain with three revolute coordinates $q=(q_1,q_2,q_3)$. The first angle is measured from the horizontal; the second and third are relative joint angles. The absolute link orientations are $\theta_i=\sum_{j=1}^i q_j$. Three configuration degrees of freedom require six first-order states $(q,\dot q)$. Adding two bending amplitudes $\eta=(\eta_1,\eta_2)$ requires ten states $(q,\eta,\dot q,\dot\eta)$, not a six-state system with a different mass matrix.
 
-The joint-space mass matrix block $M_{qq} \in \R^{3\times 3}$ encodes kinetic energy of
-the rigid segments. It is assembled from the centre-of-mass Jacobians rather than from a
-closed form, since
+Let $l_i$ be link lengths, $r_i$ the distances from each proximal joint to its center of mass, $m_i$ the masses, and $I_i$ the moments of inertia about those centers. With translational and angular Jacobians $J_{v,i}$ and $J_{\omega,i}$,
 \begin{equation}
-M_{qq}(\q) = \sum_i \left( m_i\, J_{v,i}^\T J_{v,i} + I_i\, J_{\omega,i}^\T J_{\omega,i}\right)
-\label{eq:ch8:jacobian-assembly}
+ T_r=\frac12\sum_{i=1}^3\left(m_i\|J_{v,i}\dot q\|^2+I_i(J_{\omega,i}\dot q)^2\right),\qquad
+ M_r=\sum_{i=1}^3\left(m_iJ_{v,i}^{\mathsf T}J_{v,i}+I_iJ_{\omega,i}^{\mathsf T}J_{\omega,i}\right).
 \end{equation}
-is a sum of positive-semidefinite terms whose angular parts already span the joint space.
-Positive definiteness is therefore structural: it holds at every configuration, and needs no
-checking case by case. Expanded, the entries are:
+This expression includes both translation and rotation. Replacing each link by a point mass changes the model and must be stated. For independent coordinates and positive link inertias, nonzero joint velocity produces positive kinetic energy; a singular end-point position Jacobian does not make this joint-space inertia indefinite.
 
+An explicit formula provides a useful independent check. Define
 \begin{equation}
-M_{11} = I_1 + m_2(l_1^2 + l_{c2}^2 + 2l_1 l_{c2}\cos q_2) + m_3(l_1^2 + l_2^2 + l_3^2/4
-+ 2l_1 l_2 \cos q_2 + l_1 l_3 \cos(q_2+q_3) + l_2 l_3 \cos q_3),
-\label{eq:ch8:M11}
+\begin{aligned}
+ a&=I_1+I_2+I_3+m_1r_1^2+m_2(l_1^2+r_2^2)+m_3(l_1^2+l_2^2+r_3^2),\\
+ b&=I_2+I_3+m_2r_2^2+m_3(l_2^2+r_3^2),\qquad d=I_3+m_3r_3^2,\\
+ h&=l_1(m_2r_2+m_3l_2)\cos q_2,\\
+ j&=m_3l_1r_3\cos(q_2+q_3),\qquad k=m_3l_2r_3\cos q_3.
+\end{aligned}
 \end{equation}
-
-where $l_{c2} = l_2/2$ is the center-of-mass position of the forearm.
-
-\begin{equation}
-M_{12} = I_2 + m_2 l_{c2}^2 + m_3(l_2^2 + l_3^2/4 + l_2 l_3 \cos q_3 + l_1 l_2 \cos q_2)
-+ m_3 l_1 l_3 \cos(q_2+q_3),
-\label{eq:ch8:M12}
-\end{equation}
-
-\begin{equation}
-M_{13} = I_3 + m_3(l_3^2/4 + l_2 l_3 \cos q_3) + m_3 l_1 l_3 \cos(q_2+q_3).
-\label{eq:ch8:M13}
-\end{equation}
-
-\begin{equation}
-M_{22} = I_2 + m_2 l_{c2}^2 + m_3(l_2^2 + l_3^2/4 + l_2 l_3 \cos q_3),
-\label{eq:ch8:M22}
-\end{equation}
-
-\begin{equation}
-M_{23} = I_3 + m_3(l_3^2/4 + l_2 l_3 \cos q_3),
-\label{eq:ch8:M23}
-\end{equation}
-
-\begin{equation}
-M_{33} = I_3 + m_3 l_3^2/4.
-\label{eq:ch8:M33}
-\end{equation}
-
-\subsubsection{Numerical Example: Mid-Downswing Configuration}
-
-\begin{warningbox}
-The following numerical values are chosen for a representative 3-DOF swing model to
-illustrate the framework. They are order-of-magnitude consistent with published
-anthropometric data but are \emph{not} drawn from a specific experimental study.
-Any quantitative predictions for a real system must use measured segment parameters.
-\end{warningbox}
-
-At a representative mid-downswing state, let:
-\begin{align}
-q_1 &= 60°, \quad q_2 = -30°, \quad q_3 = -20°,
-\end{align}
-(measured from neutral posture). Then the off-diagonal Coriolis terms become significant.
-Evaluating equations~\eqref{eq:ch8:M11}--\eqref{eq:ch8:M33} numerically:
-
-\begin{equation}
-M_{qq} = \begin{bmatrix} \cheightMqq \end{bmatrix}~\text{kg$\cdot$m}^2,
-\label{eq:ch8:Mqq-numeric}
-\end{equation}
-
-with $\det(M_{qq}) = \cheightMqqDet$ and eigenvalues spanning
-$[\cheightMqqEigMin,\ \cheightMqqEigMax]$ --- all positive, as
-\eqref{eq:ch8:jacobian-assembly} guarantees.
-
-The shaft-coupling block $M_{q\eta} \in \R^{3\times 2}$ comes from integrating along the
-shaft. A material point at arclength $s$ picks up transverse velocity from joint rotation,
-with moment arm $r_i(s)$, and from bending, so
-\begin{equation}
-[M_{q\eta}]_{ik} = \rho \int_0^{\ell_3} \phi_k(s)\, r_i(s)\,\dd s,
-\qquad
-[M_{\eta\eta}]_{jk} = \rho \int_0^{\ell_3} \phi_j(s)\,\phi_k(s)\,\dd s,
-\label{eq:ch8:shaft-integrals}
-\end{equation}
-with $\rho = m_s/\ell_3$ and $\phi_k$ the clamped--free bending modes normalised to unit tip
-deflection. Deriving both blocks from the same integral is what keeps them mutually
-consistent; choosing them independently is how the earlier revision produced blocks that
-could not belong to the same system. Numerically,
-\begin{equation}
-M_{q\eta} = \begin{bmatrix} \cheightMqeta \end{bmatrix}~\text{kg$\cdot$m},
-\label{eq:ch8:Mqeta-numeric}
-\end{equation}
-
-and the modal mass matrix, diagonal because the mode shapes are orthogonal:
-
-\begin{equation}
-M_{\eta\eta} = \begin{bmatrix} \cheightMetaeta \end{bmatrix}~\text{kg$\cdot$m}^2.
-\label{eq:ch8:Metaeta-numeric}
-\end{equation}
-
-The assembled $5\times 5$ matrix has smallest eigenvalue $\cheightFullEigMin > 0$, so the
-kinetic energy $\tfrac12 \dot{\vec{z}}^\T M \dot{\vec{z}}$ is positive for every non-zero
-velocity --- the property that makes it a mass matrix at all.
-
-\subsection{Schur Complement and Articulated-Body Inertia}
-
-\subsubsection{Computing the Effective Mobility}
-
-The Schur complement yields the effective mobility (inverse of articulated-body inertia):
-
-\begin{equation}
-H_{qq} = (M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q})^{-1}.
-\label{eq:ch8:H-def}
-\end{equation}
-
-First, compute $M_{\eta\eta}^{-1}$:
-\begin{equation}
-M_{\eta\eta}^{-1} = \begin{bmatrix} \cheightMetaetaInv \end{bmatrix}.
-\end{equation}
-
-Then the coupling term is
-\begin{equation}
-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q}
-= \begin{bmatrix} \cheightCoupling \end{bmatrix},
-\end{equation}
-
-and the Schur complement is
-\begin{equation}
-M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q}
-= \begin{bmatrix} \cheightSchur \end{bmatrix},
-\label{eq:ch8:schur-numeric}
-\end{equation}
-with eigenvalues in $[\cheightSchurEigMin,\ \cheightSchurEigMax]$ --- positive definite, as
-it must be.
-
-Inverting gives the effective mobility:
-\begin{equation}
-H_{qq} = \begin{bmatrix} \cheightMobility \end{bmatrix}~\text{(rad$\cdot$s)}^2/\text{N$\cdot$m},
-\label{eq:ch8:Hqq-numeric}
-\end{equation}
-whose smallest eigenvalue is $\cheightMobilityEigMin > 0$.
-
-\subsubsection{Why This Schur Complement Cannot Be Indefinite}
-\label{subsec:ch8:why-pd}
-
-It is worth being precise about the guarantee, because an earlier revision of this section
-printed an indefinite Schur complement and attributed it to the system being ``near a
-kinematic singularity''. That diagnosis is wrong, and the distinction matters for anyone
-debugging their own model.
-
-For a symmetric block matrix with $M_{\eta\eta} \succ 0$,
-\begin{equation}
-\begin{bmatrix} M_{qq} & M_{q\eta} \\ M_{\eta q} & M_{\eta\eta}\end{bmatrix} \succ 0
-\quad\Longleftrightarrow\quad
-M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} \succ 0 .
-\label{eq:ch8:schur-iff}
-\end{equation}
-The implication runs both ways. So an indefinite Schur complement does not describe a
-configuration; it says the blocks are not the mass matrix of any mechanical system. Feeding
-the earlier revision's blocks into \eqref{eq:ch8:schur-iff} gives an assembled matrix with a
-negative eigenvalue, and hence a velocity for which the kinetic energy
-$\tfrac12\dot{\vec{z}}^\T M \dot{\vec{z}}$ comes out negative --- which is not a physical
-regime, it is an arithmetic error.
-
-Kinematic singularities are a different phenomenon entirely. At a singular configuration the
-\emph{task-space} inertia $\Lambda = (J M^{-1} J^\T)^{-1}$ blows up, because $J$ loses rank;
-the joint-space inertia $M$ stays finite and positive definite throughout. A model of
-positive masses cannot produce an indefinite $M$ at any configuration, singular or not.
-
-The practical consequence: if a Schur complement comes out indefinite, do not reach for a
-physical explanation. Check the blocks.
-
-\subsubsection{Inertial Coupling Ratio}
-
-The coupling matrix quantifies how joint torques transmit to shaft modes:
-
-\begin{equation}
-\Gamma = -M_{\eta\eta}^{-1}M_{\eta q} H_{qq} =
-\begin{bmatrix}
--0.42 & 0.18 & -0.03 \\
--0.58 & 0.42 & 0.12
-\end{bmatrix}.
-\label{eq:ch8:Gamma-numeric}
-\end{equation}
-
-Large magnitudes in $\Gamma$ indicate strong coupling: a unit torque at the shoulder
-produces modal accelerations of order 0.4--0.6~rad/s$^2$ per mode. During the downswing,
-when wrist lag is maximal, coupling becomes even more pronounced, enabling the shaft
-to store and release elastic energy.
-
-\subsection{Control-Affine Structure and Drift Composition}
-
-\subsubsection{System Dynamics}
-
-The coupled Lagrangian\index{Lagrangian Mechanics} yields the control-affine form:
-\begin{equation}
-\dot\x = \underbrace{\begin{bmatrix}
-\dot\q \\ \dot{\vec\eta} \\
-H_{qq}(q_1 + q_2 + q_3 - g_q) \\
-\Gamma H_{qq}(q_1 + q_2 + q_3 - g_q)
-\end{bmatrix}}_{f(\x)}
-+ \underbrace{\begin{bmatrix}
-0 \\ 0 \\
-H_{qq}B(\q) \\ \Gamma H_{qq}B(\q)
-\end{bmatrix}}_{G(\x)}\,\uvec,
-\label{eq:ch8:golf-affine}
-\end{equation}
-
-where:
-\begin{itemize}
-\item $H_{qq} = (M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q})^{-1}$ is the
-\textbf{articulated-body inertia} inverse (effective mobility);
-\item $\Gamma = -M_{\eta\eta}^{-1}M_{\eta q}$ is the \textbf{inertial coupling ratio}---a
-``gear ratio'' governing how joint torques transmit to shaft modes;
-\item $B(\q) = I_3$ maps control inputs (shoulder, elbow, wrist torques) to generalized
-joint forces;
-\item $g_q$ includes gravitational and elastic potential energy terms;
-\item $\dot\q$ and $\dot{\vec\eta}$ are velocities in the state vector.
-\end{itemize}
-
-\subsubsection{Drift Acceleration at Mid-Downswing}
-
-Take the configuration above with segment rates
-$\dot\q = (\cheightVelocity)^\T$ rad/s. These are near the peak of a real downswing, with
-the wrist fastest; an earlier revision of this section used
-$(50, -100, -80)^\T$, which is several times faster than any measured swing --- an elbow at
-$100$ rad/s is close to $1000$ rpm --- and inflated the Coriolis term quadratically.
-
-The bias force splits into
-\begin{align}
-\mat{C}(\q,\dot\q)\dot\q &= (\cheightCoriolisTerm)^\T~\text{N$\cdot$m}, \\
-\vec{g}(\q) &= (\cheightGravity)^\T~\text{N$\cdot$m},
-\end{align}
-summing to $(\cheightBias)^\T$ N$\cdot$m. The drift acceleration follows by solving against
-the articulated-body inertia \eqref{eq:ch8:schur-numeric}:
-\begin{equation}
-a_{\text{drift},q} = -\bigl(M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q}\bigr)^{-1}
-                      \left[\mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q)\right]
-                   = (\cheightDriftAccel)^\T~\text{rad/s}^2.
-\label{eq:ch8:drift-accel}
-\end{equation}
-
-Two things are worth reading off. The Coriolis contribution at the shoulder,
-$\cheightCoriolisShoulder$~N$\cdot$m, already exceeds gravity's
-$\cheightGravityShoulder$~N$\cdot$m at these rates, which is the quantitative form of the
-claim that the late downswing is drift-dominated. And the shoulder's drift acceleration is negative
-while the wrist's is strongly positive: the proximal segment decelerates while the distal
-one is flung outward, which is the kinetic-chain energy transfer this chapter is about.
-
-Note that solving against the Schur complement rather than $M_{qq}$ alone is what accounts
-for the shaft's inertia. Using $M_{qq}$ here would silently treat the club as rigid.
-
-\subsection{Drift-Control Ratio and Phase Decomposition}
-
-\subsubsection{Definition and Swing Phases}
-
-The drift--control ratio is defined as the ratio of drift-induced acceleration magnitude
-to control-induced acceleration magnitude:
-
-\begin{equation}
-\rho(t) = \frac{\|a_{\text{drift}}(t)\|}{\|a_{\text{control}}(t)\|} = \frac{\|f(\x(t))\|}{\|G(\x(t))\,u^*(t)\|},
-\label{eq:ch8:rho-def}
-\end{equation}
-
-where $u^*$ is the optimal control derived from the Riccati solver.
-
-A swing naturally decomposes into four qualitative phases (specific $\rho$ values
-are model-dependent and illustrative):
-
-\begin{table}[h]
-\centering
-\begin{tabular}{@{}lccccl@{}}
-\toprule
-\textbf{Phase} & \textbf{Time (s)} & $\rho$ & $\dot\q$ (rad/s) & Club speed (m/s) & \textbf{Dynamics} \\
-\midrule
-Backswing & $[0.0, 0.3]$ & $0.5$ & $0 \to 100$ & $0 \to 15$ & Muscles accelerate; drift small \\
-Transition & $[0.3, 0.45]$ & $1.0$ & $100$ & $15$ & Drift and control balanced \\
-Downswing & $[0.45, 0.95]$ & $5.0$ & $100 \to 200$ & $15 \to 60$ & Drift dominates; elastic energy builds \\
-Impact & $[0.95, 1.0]$ & $20.0$ & $200$ & $60$ & Pure drift; muscles cannot respond \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsubsection{Zero-Torque Counterfactual Trajectory}
-
-The ZTCF family is computed by integrating the dynamics with $u = 0$ starting from the
-state at each swing instant. For a 0.1-second window in the downswing (say, $t \in [0.6, 0.7]$),
-we compute the ZTCF trajectory:
-
-\begin{equation}
-\dot\x_{\text{ZTCF}} = f(\x_{\text{ZTCF}}), \quad \x_{\text{ZTCF}}(0.6) = \x_{\text{actual}}(0.6).
-\end{equation}
-
-Numerically integrating (Runge--Kutta 4th order, 1~ms time step):
-
-\begin{table}[h]
-\centering
-\cheightZtcfTable
-\caption[Zero-torque counterfactual trajectory.]
-        {ZTCF trajectory integrated from the mid-downswing state with $\uvec = 0$, RK4 at
-         $0.05$~ms. Every column is produced by the model; the wrist continues to
-         uncock under drift alone, reversing sign by $t = 0.1$~s.}
-\label{tab:ch8:ZTCF}
-\end{table}
-
-Clubhead speed holds roughly constant over the first $0.05$~s and then falls by
-$\cheightZtcfSpeedGain\%$ overall, from $\cheightZtcfSpeedStart$ to
-$\cheightZtcfSpeedEnd$~m/s. Drift alone sustains the club through the first half of this
-window and then begins to lose it --- which is the substantive version of the claim that the
-late downswing is drift-dominated. Note that the earlier revision of this table asserted a
-$3.7\%$ agreement between actual and ZTCF trajectories without integrating either.
-
-\begin{warningbox}
-\textbf{Two limitations of this table.}
-
-\textbf{There is no ``actual'' column, because the model has no torques.} Comparing a ZTCF
-trajectory against a real swing needs measured joint torques, which this chapter does not
-have. Presenting a percentage agreement between a simulated counterfactual and an
-unspecified reference --- as an earlier revision did --- states a result that was never
-computed.
-
-\textbf{The clubhead speed is below a good amateur's.} At the mid-downswing state this model
-gives $\cheightClubheadSpeed$~m/s, against roughly $45$~m/s for a driver at impact. The gap
-is the torso: this three-link chain starts at the shoulder, so the pelvis and thorax rotation
-that supplies much of the clubhead speed in a real swing is absent, and the joint rates here
-are a mid-downswing snapshot rather than the peak. The magnitudes are therefore in the right
-regime but on the low side; the \emph{structure} of the drift decomposition is what
-transfers.
-
-An earlier revision was much further out, at $12.2$~m/s, because it gave the club length as
-$\ell_3 = 0.40$~m --- forearm scale, where a driver is nearer $1.15$~m. That is worth
-recording as a diagnostic: reaching a real clubhead speed with the short club would have
-required a wrist rate near $92$~rad/s, about $880$~rpm. When a model needs a physically
-absurd input to reproduce a known output, the geometry is usually wrong, not the input.
-\end{warningbox}
-
-\subsection{Key Insights From the Framework}
-
-\paragraph{Drift Composition.}
-The drift acceleration includes inertial forces (centrifugal/Coriolis from accumulated
-velocities), gravity, and elastic restoring forces from shaft deformation:
-\begin{equation}
-a_{\text{drift}} = -H\!\left[\mat{C}\dot\q_{\text{sys}} + \vec{g}
-+ \begin{pmatrix} 0 \\ K_s\vec\eta + C_s\dot{\vec\eta} \end{pmatrix}\right].
-\label{eq:ch8:drift-golf}
-\end{equation}
-
-\paragraph{Underactuation.}
-The golfer has $n$ joint actuators but $n+m$ degrees of freedom. The shaft modes
-$\vec\eta$ are not directly controlled---they respond only through the inertial
-coupling $\Gamma$. This makes the golf swing an underactuated control problem.
-
-\paragraph{Drift Dominance at Impact.}
-At impact, the clubhead is moving at high speed. The drift--control ratio $\rho \gg 1$:
-passive dynamics dominate. The practical implication is that the golfer's skill lies
-not in applying large forces at impact, but in \emph{setting up} the state during the
-backswing and early downswing so that the drift field naturally produces the desired
-impact conditions.
-
-\paragraph{ZTCF Interpretation.}
-The Zero Torque Counterfactual for the golf swing is the ``passive shadow swing'':
-what the club would do if the golfer went limp at each instant. Comparing the actual
-swing to the ZTCF reveals when the golfer is actively driving versus passively riding
-the dynamics.
-
-\subsection{Inertial Energy Transfer: The Sequencing Principle}
-
-Off-diagonal terms in the mass matrix enable energy transfer between segments:
-\begin{equation}
-\tau_{\text{inertial},j} = -\sum_{i\neq j} M_{ji}(\q)\,\ddot{q}_i.
-\label{eq:ch8:inertial-transfer}
-\end{equation}
-
-When the proximal segment \emph{decelerates} ($\ddot{q}_i < 0$), it creates an inertial
-torque that \emph{accelerates} the distal segment. This is the mechanism behind
-sequential motion---not muscular amplification, but inertial harvesting through the
-mass matrix coupling.
-
-During the downswing transition (around $t = 0.45$~s), the shoulder begins to decelerate
-($\ddot{q}_1 < 0$) while the wrist continues to accelerate. The off-diagonal coupling
-$M_{13} = 0.28$ creates a torque:
-\begin{equation}
-\tau_{1,\text{inertial on 3}} = -M_{13} \ddot{q}_1 = -0.28 \times (-50) = 14~\text{N$\cdot$m},
-\end{equation}
-which accelerates the wrist and club, a pure geometric effect requiring no extra muscular
-work.
-
-\begin{designbox}
-Biomechanical studies suggest that skilled athletes generate clubhead speed primarily through
-\emph{sequential proximal-to-distal energy transfer} \cite{Putnam1993, NesbitSerrano2005}:
-each body segment decelerates in sequence, transferring kinetic energy to the next segment
-down the chain. By impact, the distal segments (wrist, club) can be moving faster than any
-single muscle group could produce in isolation. Published data shows that elite golfers
-generate \emph{more} total joint torque than amateur golfers, but with superior timing
-of the proximal-to-distal sequence \cite{NesbitSerrano2005}. The affine framework offers
-one lens for interpreting this as exploitation of the drift--input structure, though a
-complete biomechanical account involves many factors beyond what our simplified model captures.
-
-The proximal-to-distal sequencing principle appears across many athletic movements, including
-baseball pitching, tennis serves, and martial arts strikes \cite{Putnam1993}. The framework
-suggests that deceleration peaks should propagate from proximal to distal joints, consistent
-with experimental observations, though the degree to which violations degrade performance
-depends on the specific biomechanical context.
-\end{designbox}
-
-%% ==========================================================================
-\section{Robotics: Contraction\index{Contraction Analysis}-Certified Manipulation}
-%% ==========================================================================
-
-Contraction metrics provide certificates of stability and robustness that are dual to the control distribution's 
-controllability in the sense of Agrachev and Sachkov \cite[Ch.~4]{AgrachevSachkov2004}. Where controllability asks 
-"what is reachable?" and relies on Lie bracket accessibility, contraction asks "do trajectories converge?" and relies 
-on Riemannian geometry. A robot arm with a control metric demonstrates both properties: the Lie algebra rank condition 
-confirms that all configurations are reachable, while a contraction metric certifies that desired reference trajectories 
-are robustly attractive against perturbations. This geometric duality unifies manipulation tasks (via controllability) 
-with robust execution (via contraction).
-
-\subsection{Operational Space Control with Contraction\index{Contraction Analysis} Guarantees}
-
-For a robot manipulator tracking a task-space trajectory $\vec{y}_d(t)$ with task
-Jacobian\index{Jacobian} $J(\q)$ such that $\dot{\vec{y}} = J(\q)\dot\q$, the pullback metric from
-task space to joint space is
-\begin{equation}
-\mat{M}(\q) = J(\q)^\T\mat{W}\!\bigl(\vec{y}\bigr)\,J(\q),
-\label{eq:ch8:pullback}
-\end{equation}
-where $\mat{W}(\vec{y})\succ 0$ is a task-space metric weighting tracking errors.
-
-\subsection{Complete Worked Example: 3-DOF Planar Manipulator}
-
-\subsubsection{System Definition}
-
-Consider a 3-DOF planar robot with identical links:
-\begin{align}
-l_1 = l_2 = l_3 &= 0.3~\text{m}, \\
-m_1 = m_2 = m_3 &= 1~\text{kg}, \\
-I_1 = I_2 = I_3 &= 0.01~\text{kg$\cdot$m}^2.
-\end{align}
-
-The end-effector position is:
-\begin{align}
-x &= l_1 c_1 + l_2 c_{12} + l_3 c_{123}, \\
-y &= l_1 s_1 + l_2 s_{12} + l_3 s_{123},
-\end{align}
-where $c_i = \cos(q_1 + \cdots + q_i)$ and $s_i = \sin(q_1 + \cdots + q_i)$.
-
-The task Jacobian\index{Jacobian} is:
-\begin{equation}
-J(\q) = \begin{bmatrix}
--l_1 s_1 - l_2 s_{12} - l_3 s_{123} & -l_2 s_{12} - l_3 s_{123} & -l_3 s_{123} \\
-l_1 c_1 + l_2 c_{12} + l_3 c_{123} & l_2 c_{12} + l_3 c_{123} & l_3 c_{123}
-\end{bmatrix}.
-\label{eq:ch8:J-planar}
-\end{equation}
-
-\subsubsection{Reference Trajectory}
-
-The desired task-space trajectory is a circle:
-\begin{align}
-x_d(t) &= 0.6 + 0.2\cos(2\pi t / T), \\
-y_d(t) &= 0.6 + 0.2\sin(2\pi t / T),
-\end{align}
-with period $T = 2$~s. The robot must track this while maintaining synchronous wrist
-orientation.
-
-At $t = 0.5$~s, we have $(x_d, y_d) = (0.4, 0.8)$ and the wrist is at angle $\psi_d = 45°$.
-The corresponding joint angles are $\q_d = (30°, 30°, 15°)^\T$ (solved by inverse kinematics).
-
-\subsubsection{Pullback Metric Construction}
-
-We specify task-space weights (strong tracking in $xy$, weaker orientation control):
-\begin{equation}
-\mat{W} = \begin{bmatrix}
-100 & 0 \\
-0 & 100
-\end{bmatrix}~[\text{m}^{-2}],
-\label{eq:ch8:W-planar}
-\end{equation}
-
-yielding the pullback metric:
-\begin{equation}
-\mat{M}(\q) = J(\q)^\T \mat{W} J(\q) = \begin{bmatrix}
-M_{11} & M_{12} & M_{13} \\
-M_{12} & M_{22} & M_{23} \\
-M_{13} & M_{23} & M_{33}
-\end{bmatrix}.
-\label{eq:ch8:M-pullback}
-\end{equation}
-
-At the reference configuration $\q_d = (30°, 30°, 15°)^\T$, we compute the Jacobian:
-\begin{equation}
-J(\q_d) = \begin{bmatrix}
--0.450 & -0.321 & -0.150 \\
-0.780 & 0.556 & 0.260
-\end{bmatrix},
-\end{equation}
-
-and thus:
-\begin{equation}
-\mat{M}(\q_d) = \begin{bmatrix}
-73.5 & 52.8 & 24.7 \\
-52.8 & 48.1 & 22.4 \\
-24.7 & 22.4 & 10.6
-\end{bmatrix}~[\text{rad}^{-2}],
-\label{eq:ch8:Mpullback-numeric}
-\end{equation}
-
-with eigenvalues $\lambda = (117.8, 13.2, 1.2)$, indicating moderate conditioning
-($\kappa = 97$).
-
-\subsubsection{Regularized Metric and Singularity Avoidance}
-
-Near kinematic singularities where $\det(J) \to 0$, the pullback metric degenerates.
-We regularize with a nullspace completion:
-\begin{equation}
-\mat{M}_\varepsilon(\q) = J(\q)^\T\mat{W}\,J(\q) + \varepsilon\,\mat{I},
-\label{eq:ch8:regularized}
-\end{equation}
-
-with regularization parameter $\varepsilon = 0.01$. This yields:
-\begin{equation}
-\mat{M}_\varepsilon(\q_d) = \begin{bmatrix}
-73.6 & 52.8 & 24.7 \\
-52.8 & 48.2 & 22.4 \\
-24.7 & 22.4 & 10.7
-\end{bmatrix}~[\text{rad}^{-2}],
-\label{eq:ch8:Meps-numeric}
-\end{equation}
-
-with improved conditioning ($\kappa = 81$) and improved minimum eigenvalue ($\lambda_{\min} = 1.3$).
-
-\subsubsection{Riccati Recursion and Gain Synthesis}
-
-We solve the discrete-time finite-horizon LQR problem on the trajectory segment $t \in [0.45, 0.55]$
-(10 steps of 10~ms each). At each step $k$, the Riccati equation is:
-\begin{equation}
-\mat{S}_k = \mat{Q}_k + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k
-- \mat{A}_k^\T\mat{S}_{k+1}\mat{B}_k(\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}
-\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k,
-\label{eq:ch8:riccati-discrete}
-\end{equation}
-
-with terminal condition $\mat{S}_{N} = \mat{Q}_N = \mat{M}_\varepsilon(\q_d)$ at impact.
-
-We use process noise (disturbance rejection):
-\begin{equation}
-\mat{Q}_k = \mat{M}_\varepsilon(\q_k) + 0.001\,\mat{I}, \quad \mat{R}_k = 0.1\,\mat{I}.
-\label{eq:ch8:QR-planar}
-\end{equation}
-
-\paragraph{Step 1 (k=9, t=0.54s):}
-\begin{equation}
-\mat{Q}_9 = \begin{bmatrix}
-73.6 & 52.8 & 24.7 \\
-52.8 & 48.2 & 22.4 \\
-24.7 & 22.4 & 10.7
-\end{bmatrix}, \quad \mat{S}_{10} = \mat{Q}_{10} = \begin{bmatrix}
-73.6 & 52.8 & 24.7 \\
-52.8 & 48.2 & 22.4 \\
-24.7 & 22.4 & 10.7
-\end{bmatrix}.
-\end{equation}
-
-Assuming fixed linearization (small deviations around $\q_d$, constant $\mat{A}_k$, $\mat{B}_k$):
-\begin{equation}
-\mat{A}_k = \mat{I} + 0.01 \begin{bmatrix}
-0 & 1 & 0 \\
--5 & 0 & -3 \\
-0 & 0 & 0
-\end{bmatrix}, \quad
-\mat{B}_k = 0.01 \begin{bmatrix}
-0 & 0 & 0 \\
-10 & 0 & 0 \\
-0 & 1 & 1
-\end{bmatrix}.
-\end{equation}
-
-Then:
-\begin{equation}
-\mat{S}_9 = \mat{Q}_9 + \mat{A}_9^\T\mat{S}_{10}\mat{A}_9
-- \mat{A}_9^\T\mat{S}_{10}\mat{B}_9(\mat{R}_9 + \mat{B}_9^\T\mat{S}_{10}\mat{B}_9)^{-1}
-\mat{B}_9^\T\mat{S}_{10}\mat{A}_9.
-\end{equation}
-
-After numerical computation (see Table~\ref{tab:riccati-trace} below), we obtain the
-feedback gain:
-\begin{equation}
-\mat{K}_9 = (\mat{R}_9 + \mat{B}_9^\T\mat{S}_{10}\mat{B}_9)^{-1}\mat{B}_9^\T\mat{S}_{10}\mat{A}_9
-= \begin{bmatrix}
-1.23 & 0.45 & 0.18 \\
-0.08 & 0.92 & 0.31 \\
-0.06 & 0.22 & 0.89
-\end{bmatrix}.
-\label{eq:ch8:K9}
-\end{equation}
-
-\paragraph{Steps 2--4 (k=8,7,6):}
-Continuing the backward recursion:
-
-\begin{table}[h]
-\centering
-\caption{Riccati Solution Trace and Condition Number Over 4 Steps.}
-\label{tab:riccati-trace}
-\begin{tabular}{@{}cccc@{}}
-\toprule
-$k$ & $\text{trace}(\mat{S}_k)$ & $\kappa(\mat{S}_k)$ & $\max\,\text{eig}(K_k)$ \\
-\midrule
-10 (terminal) & 132.5 & 97.5 & --- \\
-9 & 134.2 & 102.1 & 1.23 \\
-8 & 136.8 & 108.3 & 1.31 \\
-7 & 139.5 & 115.2 & 1.39 \\
-6 & 142.3 & 123.1 & 1.48 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsubsection{Convergence Under Contraction-Certified Controller}
-
-With the Riccati gains in place, the closed-loop system is:
-\begin{equation}
-\delta\q_{k+1} = (\mat{A}_k - \mat{B}_k\mat{K}_k)\delta\q_k.
-\label{eq:ch8:closed-loop-planar}
-\end{equation}
-
-The contraction rate in the Riccati metric is:
-\begin{equation}
-\lambda_{\max}(\mat{A}_k - \mat{B}_k\mat{K}_k) \approx 0.85~(\text{eigenvalue bound}).
-\end{equation}
-
-Thus perturbations decay as $\|\delta\q_k\|_{\mat{M}_\varepsilon}^2 \le 0.85^{2k}\|\delta\q_0\|_{\mat{M}_\varepsilon}^2$,
-with half-life of roughly 7 steps or 70~ms.
-
-Numerically, starting with an initial joint-space error $\delta\q_0 = (0.1, 0.05, 0.02)^\T$ rad
-(about 6°, 3°, 1° respectively), the task-space error evolves as:
-
-\begin{table}[h]
-\centering
-\caption{Tracking Error Decay Under Riccati Control.}
-\label{tab:tracking-convergence}
-\begin{tabular}{@{}ccccc@{}}
-\toprule
-Step $k$ & Time (ms) & $\|\delta\q_k\|_2$ (rad) & $\|\delta\vec{y}_k\|_2$ (m) & $\rho_k$ \\
-\midrule
-0 & 0 & 0.111 & 0.048 & 1.0 \\
-2 & 20 & 0.098 & 0.041 & 0.88 \\
-4 & 40 & 0.082 & 0.034 & 0.74 \\
-6 & 60 & 0.064 & 0.026 & 0.57 \\
-8 & 80 & 0.046 & 0.018 & 0.39 \\
-10 & 100 & 0.028 & 0.010 & 0.21 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The task-space error decreases from 4.8 cm to 1.0 cm in 100 ms, confirming exponential
-convergence. The contraction rate $\rho_k$ (ratio of consecutive errors) stays below 0.9,
-well within the contraction margin.
-
-\subsubsection{Singularity Avoidance and Nullspace Motion}
-
-When the robot approaches a singularity (e.g., full extension), $\det(J) \to 0$. The
-unregularized pullback metric \eqref{eq:ch8:pullback} degenerates: $\lambda_{\min}(\mat{M}) \to 0$.
-
-The regularization $\mat{M}_\varepsilon = J^\T W J + \varepsilon I$ ensures:
-\begin{equation}
-\lambda_{\min}(\mat{M}_\varepsilon) \ge \varepsilon = 0.01 > 0,
-\end{equation}
-
-preserving contraction in the nullspace of $J$. The closed-loop system automatically
-maintains a buffer zone: as the robot approaches a singularity, the cost function $\mat{Q}_\varepsilon$
-increases, and the optimal control $\mat{K}$ steers away.
-
-If the task demands passage through a singularity, the designer can instead use a
-smooth penalty function:
-\begin{equation}
-\varepsilon(\q) = \varepsilon_0 \left(1 + \exp\left(-\frac{\det(J(\q))}{c}\right)\right),
-\label{eq:ch8:adaptive-reg}
-\end{equation}
-
-with tuning parameters $\varepsilon_0 = 0.01$, $c = 0.1$. This provides smooth escalation
-of the regularization as singularities are approached.
-
-%% ==========================================================================
-\section{Aerospace: Spacecraft Proximity Operations}
-%% ==========================================================================
-
-Fuel-optimal spacecraft maneuvers are solved via the Pontryagin Maximum Principle in the geometric formulation of 
-Agrachev and Sachkov \cite[Ch.~5]{AgrachevSachkov2004}. The Hamiltonian on the cotangent bundle encodes fuel consumption 
-as a costate multiplier. Optimal controls often exhibit \emph{bang-bang} structure (thrusters at maximum or minimum) 
-with \emph{singular arcs} where the control takes intermediate values determined by the Hamiltonian's flatness in control. 
-The symplectic structure of the optimal control problem guarantees that costate dynamics evolve via the adjoint of the 
-linearized state flow, making the sensitivity of optimal trajectories to perturbations predictable via the Riccati 
-equation from Chapter~\ref{ch:optimal-control}.
-
-\subsection{Clohessy-Wiltshire Equations and State-Space Form}
-
-\subsubsection{Linearized Dynamics}
-
-In the reference frame rotating with the target orbit (Hill frame), the relative motion
-of a deputy spacecraft with respect to a target is governed by the Clohessy--Wiltshire equations:
-\begin{align}
-\ddot{x} - 2n\dot{y} - 3n^2 x &= \frac{f_x}{m}, \label{eq:ch8:cw-x} \\
-\ddot{y} + 2n\dot{x} &= \frac{f_y}{m}, \label{eq:ch8:cw-y} \\
-\ddot{z} + n^2 z &= \frac{f_z}{m}, \label{eq:ch8:cw-z}
-\end{align}
-
-where:
-\begin{itemize}
-\item $x$ is radial distance, $y$ is along-track, $z$ is cross-track (out-of-plane);
-\item $n = \sqrt{GM/r_0^3}$ is the orbital mean motion;
-\item $f_x, f_y, f_z$ are thruster force components;
-\item $m$ is the deputy spacecraft mass.
-\end{itemize}
-
-For a typical low-Earth orbit at $r_0 = 6.7 \times 10^6$~m (approximately 300~km altitude):
-\begin{equation}
-n = 1.07 \times 10^{-3}~\text{rad/s}, \quad T_{\text{orbit}} = 2\pi/n \approx 5870~\text{s} \approx 98~\text{min}.
-\end{equation}
-
-\subsubsection{State-Space Representation}
-
-Define the state:
-\begin{equation}
-\x = [x, y, z, \dot{x}, \dot{y}, \dot{z}]^\T \in \R^6,
-\label{eq:ch8:spacecraft-state}
-\end{equation}
-
-and the input $\uvec = [f_x, f_y, f_z]^\T / m \in \R^3$ (accelerations). The state-space
-matrices are:
-
-\begin{equation}
-\mat{A} = \begin{bmatrix}
-0 & 0 & 0 & 1 & 0 & 0 \\
-0 & 0 & 0 & 0 & 1 & 0 \\
-0 & 0 & 0 & 0 & 0 & 1 \\
-3n^2 & 0 & 0 & 0 & 2n & 0 \\
-0 & 0 & 0 & -2n & 0 & 0 \\
-0 & 0 & -n^2 & 0 & 0 & 0
-\end{bmatrix}, \quad
-\mat{B} = \begin{bmatrix}
-0 & 0 & 0 \\
-0 & 0 & 0 \\
-0 & 0 & 0 \\
-1 & 0 & 0 \\
-0 & 1 & 0 \\
-0 & 0 & 1
-\end{bmatrix}.
-\label{eq:ch8:A-B-spacecraft}
-\end{equation}
-
-Numerically, with $n = 1.07 \times 10^{-3}$:
-
-\begin{equation}
-\mat{A} = \begin{bmatrix}
-0 & 0 & 0 & 1 & 0 & 0 \\
-0 & 0 & 0 & 0 & 1 & 0 \\
-0 & 0 & 0 & 0 & 0 & 1 \\
-3.43 \times 10^{-6} & 0 & 0 & 0 & 2.14 \times 10^{-3} & 0 \\
-0 & 0 & 0 & -2.14 \times 10^{-3} & 0 & 0 \\
-0 & 0 & -1.14 \times 10^{-6} & 0 & 0 & 0
-\end{bmatrix}~[\text{s}^{-1}].
-\label{eq:ch8:A-numeric}
-\end{equation}
-
-\subsection{Docking Scenario: 1 km to 10 m Approach}
-
-\subsubsection{Mission Profile}
-
-The deputy must approach from 1 km downrange to within 10 m of the target, then perform
-a soft rendezvous. The maneuver has three phases:
-
-\begin{table}[h]
-\centering
-\caption{Docking Approach Phases and Constraints.}
-\label{tab:docking-phases}
-\begin{tabular}{@{}lccccl@{}}
-\toprule
-\textbf{Phase} & Time (s) & Range (m) & Max thrust (N) & Min closing rate (m/s) & Goal \\
-\midrule
-Initial approach & $[0, 400]$ & $1000 \to 100$ & 500 & 2.5 & Controlled descent \\
-Fine approach & $[400, 700]$ & $100 \to 20$ & 250 & 0.5 & Smooth transition \\
-Soft docking & $[700, 900]$ & $20 \to 10$ & 100 & $0 \to 0.1$ & Contact at $<$0.1 m/s \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsubsection{Initial Condition and Reference Trajectory}
-
-At $t=0$, the deputy is 1 km downrange (along-track) with zero relative velocity:
-\begin{equation}
-\x(0) = [1000, 0, 0, 0, 0, 0]^\T~\text{m, m/s}.
-\label{eq:ch8:x0-docking}
-\end{equation}
-
-The desired trajectory is generated by a reference model with smooth acceleration profile:
-\begin{equation}
-\ddot{x}_d = -\lambda_x(\dot{x}_d - v_{\text{closing}}), \quad \dot{x}_d(0) = 0,
-\end{equation}
-
-with convergence gain $\lambda_x = 0.005$~s$^{-1}$ and nominal closing rate $v_{\text{closing}} = 2.5$ m/s
-initially, decreasing to 0.1 m/s in the soft-docking phase.
-
-\subsubsection{Cost Function and LQR Weights}
-
-The objective is to minimize fuel consumption while meeting the approach constraints:
-\begin{equation}
-J = \sum_{k=0}^{N-1}\left(\|\delta\x_k\|_{\mat{Q}_k}^2 + \|\uvec_k\|_{\mat{R}_k}^2\right),
-\label{eq:ch8:lqr-cost-docking}
-\end{equation}
-
-with adaptive weights across the three phases.
-
-\paragraph{Phase 1 (Initial Approach):}
-\begin{equation}
-\mat{Q}_1 = \diag(10, 1, 1, 1, 1, 1)~[\text{s}^{-2}], \quad \mat{R}_1 = 0.1\,\mat{I}_3~[\text{s}^{-2}].
-\label{eq:ch8:Q1-R1}
-\end{equation}
-
-High weight on radial position error ($Q_{11} = 10$) to enforce smooth descent; lower weight
-on $y$ and $z$ errors.
-
-\paragraph{Phase 2 (Fine Approach):}
-\begin{equation}
-\mat{Q}_2 = \diag(50, 5, 5, 2, 2, 2)~[\text{s}^{-2}], \quad \mat{R}_2 = 0.05\,\mat{I}_3~[\text{s}^{-2}].
-\label{eq:ch8:Q2-R2}
-\end{equation}
-
-Increased position penalties and velocity damping to slow approach.
-
-\paragraph{Phase 3 (Soft Docking):}
-\begin{equation}
-\mat{Q}_3 = \diag(100, 100, 100, 10, 10, 10)~[\text{s}^{-2}], \quad \mat{R}_3 = 0.01\,\mat{I}_3~[\text{s}^{-2}].
-\label{eq:ch8:Q3-R3}
-\end{equation}
-
-Very high position and velocity penalties to ensure near-zero contact velocity.
-
-\subsubsection{LQR Gain Computation and Contraction Verification}
-
-For each phase, we solve the discrete-time Riccati equation with sampling time $\Delta t = 1$~s.
-At the nominal operating point during phase 1, the optimal feedback gain is:
-
-\begin{equation}
-\mat{K}_1 = \begin{bmatrix}
-0.125 & 0.001 & 0.001 & 0.412 & 0.0085 & 0.0001 \\
-0.001 & 0.042 & 0.001 & 0.0085 & 0.142 & 0.0001 \\
-0.001 & 0.001 & 0.042 & 0.0001 & 0.0001 & 0.142
-\end{bmatrix}~[\text{s}^{-1}].
-\label{eq:ch8:K1-docking}
-\end{equation}
-
-The closed-loop matrix is:
-\begin{equation}
-\mat{A}_{\text{cl}} = \mat{A} - \mat{B}\mat{K}_1.
-\end{equation}
-
-Eigenvalues (characteristic rates):
-\begin{equation}
-\lambda_1 = 0.998, \quad \lambda_2 = 0.996, \quad \lambda_3 = 0.992, \quad
-\lambda_4 = -0.004, \quad \lambda_5 = -0.006, \quad \lambda_6 = -0.008.
-\label{eq:ch8:eigs-cl-docking}
-\end{equation}
-
-All eigenvalues satisfy $|\lambda_i| < 1$, confirming stability. The maximum real part
-of the critical eigenvalue is:
-\begin{equation}
-\max\{\text{Re}(\lambda_i) : |\lambda_i| = \max\} = 0.998 < 1,
-\end{equation}
-
-and the contraction margin is:
-\begin{equation}
-\mathcal{M}_{\text{contraction}} = 1 - 0.998 = 0.002.
-\end{equation}
-
-This margin is relatively small, indicating the system is on the edge of criticality.
-Adding a small damping term via regularization is recommended.
-
-\paragraph{Contraction in the Riccati Metric:}
-
-Define the Riccati solution value function:
-\begin{equation}
-V(\x) = \x^\T\mat{S}\x,
-\end{equation}
-
-where $\mat{S}$ is the terminal solution of the Riccati equation. Contraction requires:
-\begin{equation}
-V(\x_{k+1}) \le \rho V(\x_k), \quad \rho < 1.
-\end{equation}
-
-For phase 1 with $\rho_{\text{contraction}} = 0.99$, the value function decays as:
-\begin{equation}
-V(\x_k) \le 0.99^k V(\x_0),
-\end{equation}
-
-with half-life $\tau_{1/2} = \log(2)/\log(1/0.99) \approx 69$ steps or 69 seconds.
-
-\subsection{Fuel Consumption Analysis}
-
-\subsubsection{Optimal vs. Naive Approach}
-
-The optimal LQR control (phases 1--3) is compared against two baselines:
-\begin{itemize}
-\item \textbf{Naive}: Constant-acceleration approach with $a_{\text{const}} = -v_{\text{closing}}^2 / (2 \Delta x)$.
-\item \textbf{Proportional-Integral (PI)}: Standard feedback with gains tuned by Ziegler--Nichols.
-\end{itemize}
-
-Table~\ref{tab:fuel-comparison} shows the results over the full 900-second docking profile:
-
-\begin{table}[h]
-\centering
-\caption{Fuel Consumption for Three Control Strategies.}
-\label{tab:fuel-comparison}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-\textbf{Strategy} & \textbf{Total impulse} (N$\cdot$s) & \textbf{Final velocity} (m/s) & \textbf{Final distance} (m) \\
-\midrule
-Naive constant accel. & 4500 & 0.15 & 10.5 \\
-PI feedback & 3200 & 0.09 & 10.1 \\
-Optimal LQR & 2100 & 0.08 & 10.0 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The optimal controller achieves \textbf{53\% reduction} in fuel relative to naive, and
-\textbf{34\% reduction} relative to PI, while meeting the hard constraint of 0.1 m/s
-contact velocity.
-
-\subsubsection{Trade-Off Analysis}
-
-The LQR weights $\mat{Q}$ and $\mat{R}$ encode a fuel-vs.-precision trade-off. Increasing
-$\mat{R}$ (penalizing control effort) saves fuel but allows larger errors. Figure data:
-
-\begin{table}[h]
-\centering
-\caption{Fuel Consumption vs. Position Tracking Accuracy (Phase 1 Only).}
-\label{tab:fuel-tradeoff}
-\begin{tabular}{@{}ccccc@{}}
-\toprule
-$\mat{R}$ scaling & Fuel impulse (N$\cdot$s) & Max pos. error (m) & Final velocity (m/s) & Feasible \\
-\midrule
-$0.01$ & 3100 & 2.4 & 0.12 & Yes \\
-$0.05$ & 2650 & 1.8 & 0.11 & Yes \\
-$0.10$ & 2150 & 1.2 & 0.10 & Yes \\
-$0.20$ & 1850 & 0.8 & 0.09 & Yes \\
-$0.50$ & 1200 & 0.3 & 0.06 & No (violates Phase 1 path) \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The choice $\mat{R} = 0.1$ is a reasonable sweet spot, balancing fuel saving (2150 N$\cdot$s)
-against trajectory accuracy.
-
-%% ==========================================================================
-\section{Autonomous Driving: Vehicle Dynamics and Lane-Keeping}
-%% ==========================================================================
-
-The bicycle model is a canonical nonholonomic system analyzed via geometric control in Agrachev and Sachkov 
-\cite[Ch.~6]{AgrachevSachkov2004}. The constraint "velocity in the direction of heading" reduces the state-space dimension
-below the number of degrees of freedom, yet the system remains controllable through Lie bracket combinations of steering 
-and forward velocity. The Lie bracket $[\,\text{steer}, \text{forward}\,]$ generates sideways motion, enabling the 
-parallel parking maneuver. The rank condition---that the Lie algebra of the control distribution has full rank---guarantees 
-that any configuration and heading are reachable, making autonomous vehicles steerable in principle. Contraction-based 
-lane-keeping control (Chapter~\ref{ch:contraction}) ensures that perturbations from the lane centerline decay exponentially, 
-providing a robustness certificate that supplements the accessibility guarantee.
-
-\subsection{Bicycle Model Kinematics\index{Kinematics}}
-
-\subsubsection{System Definition}
-
-The bicycle model is a standard kinematic approximation for ground vehicles:
-\begin{align}
-\dot{x} &= v \cos(\psi), \label{eq:ch8:bicycle-x} \\
-\dot{y} &= v \sin(\psi), \label{eq:ch8:bicycle-y} \\
-\dot{\psi} &= \frac{v}{L} \tan(\delta), \label{eq:ch8:bicycle-psi} \\
-\dot{v} &= a, \label{eq:ch8:bicycle-v}
-\end{align}
-
-where:
-\begin{itemize}
-\item $(x, y)$ is the vehicle position in global frame;
-\item $\psi$ is the heading angle;
-\item $v$ is the longitudinal speed;
-\item $\delta$ is the front-wheel steering angle;
-\item $a$ is the acceleration (throttle/brake);
-\item $L = 3$~m is the wheelbase.
-\end{itemize}
-
-\subsubsection{Control-Affine Form}
-
-The system is control-affine with drift:
-\begin{equation}
-\dot\x = \begin{bmatrix}
-v\cos\psi \\ v\sin\psi \\ (v/L)\tan\delta \\ 0
-\end{bmatrix} + \begin{bmatrix}
-0 & 0 \\ 0 & 0 \\ 0 & v/L \sec^2\delta \\ 1 & 0
-\end{bmatrix}\begin{bmatrix}
-\uvec_1 \\ \uvec_2
-\end{bmatrix},
-\label{eq:ch8:bicycle-affine}
-\end{equation}
-
-where $\uvec_1$ and $\uvec_2$ are scaled versions of steering and acceleration inputs.
-
-The drift term $f(\x)$ encodes the vehicle's natural motion (rolling forward, rotating
-toward the steering angle). The control term $G(\x)\uvec$ modulates steering and acceleration.
-
-\subsection{Lane-Keeping as a Contraction Problem}
-
-\subsubsection{Task Definition}
-
-The vehicle must track the centerline of a highway lane. Define:
-\begin{itemize}
-\item $\psi_{\text{lane}}$ = lane heading (typically constant on straight sections).
-\item $y_{\text{lane}}(x)$ = lateral position of lane centerline as a function of
-longitudinal position.
-\end{itemize}
-
-The tracking error in lane coordinates is:
-\begin{align}
-e_y &= y - y_{\text{lane}}(x), \label{eq:ch8:error-lateral} \\
-e_\psi &= \psi - \psi_{\text{lane}}, \label{eq:ch8:error-heading}
-\end{align}
-
-With the pullback metric from task space $(e_y, e_\psi)$ to control space:
-\begin{equation}
-\mat{M}(\x) = \begin{bmatrix}
-100 & 0 \\
-0 & 10
-\end{bmatrix}~[\text{m}^{-2}, \text{rad}^{-2}],
-\label{eq:ch8:M-lane}
-\end{equation}
-
-we design the LQR controller to minimize weighted lane-tracking error.
-
-\subsubsection{Drift-Control Ratio at Highway Speeds}
-
-\paragraph{Parking (Low Speed):}
-At $v = 0.5$~m/s (walking pace), the drift is weak:
-\begin{equation}
-\|f(\x)\| = v \approx 0.5~\text{m/s}.
-\end{equation}
-
-Steering input is potent:
-\begin{equation}
-\|G(\x)\,\uvec\| \sim (v/L)\,\delta \approx (0.5/3) \times 0.4 = 0.07~\text{rad/s}.
-\end{equation}
-
-Thus:
-\begin{equation}
-\rho_{\text{parking}} = \frac{\|f(\x)\|}{\|G(\x)\,\uvec\|} \approx \frac{0.5}{0.07} \approx 7.
-\end{equation}
-
-At low speeds, control dominates, and steering is highly responsive.
-
-\paragraph{Highway Driving (High Speed):}
-At $v = 25$~m/s (90 km/h), drift is strong:
-\begin{equation}
-\|f(\x)\| = v \approx 25~\text{m/s}.
-\end{equation}
-
-Steering input produces yaw rate:
-\begin{equation}
-\|G(\x)\,\uvec\| \sim (v/L)\,\delta \approx (25/3) \times 0.1 = 0.83~\text{rad/s}.
-\end{equation}
-
-Thus:
-\begin{equation}
-\rho_{\text{highway}} = \frac{\|f(\x)\|}{\|G(\x)\,\uvec\|} \approx \frac{25}{0.83} \approx 30.
-\end{equation}
-
-At highway speeds, drift dominates: the vehicle naturally tends to roll forward, and
-steering produces only modest course corrections. The control authority is diluted.
-
-This manifests as the familiar driving experience: at low speeds, the car is ``twitchy''
-and responds instantly to steering; at high speeds, steering inputs have delayed,
-smooth effects. The framework predicts that lane-keeping controllers must have different
-gains at different speeds, a principle embodied in modern adaptive cruise-control systems.
-
-\subsection{Adaptive Gain Scheduling}
-
-A simple speed-dependent gain schedule is:
-\begin{equation}
-\mat{K}(v) = \mat{K}_0 \cdot \max\{1, v/v_{\text{ref}}\}^{\alpha},
-\label{eq:ch8:gain-schedule}
-\end{equation}
-
-where $\mat{K}_0$ is the baseline gain at reference speed $v_{\text{ref}} = 15$~m/s,
-and $\alpha \approx 0.5$ is a tuning parameter. This ensures the controller compensates
-for the increasing drift-control ratio at higher speeds, maintaining consistent lane-keeping
-performance.
-
-%% ==========================================================================
-\section{Practical Implementation Checklist}
-%% ==========================================================================
-
-This section summarizes the steps for applying the framework to a new application.
-
-\subsection{Step 1: Derive the Control-Affine Model}
-
-\begin{enumerate}
-\item \textbf{Identify the configuration space:} Choose generalized coordinates $\q \in \R^n$
-that fully parameterize the system's position and orientation.
-
-\item \textbf{Write the kinetic and potential energy:}
-\begin{equation}
-T(\q, \dot\q) = \frac{1}{2}\dot\q^\T M(\q)\dot\q, \quad V(\q).
-\end{equation}
-
-\item \textbf{Compute the Lagrangian\index{Lagrangian Mechanics}:} $L = T - V$.
-
-\item \textbf{Apply Lagrange equations with control forces:}
-\begin{equation}
-\frac{d}{dt}\frac{\partial L}{\partial\dot\q} - \frac{\partial L}{\partial\q} = \tau,
-\end{equation}
-where $\tau$ is the generalized force vector.
-
-\item \textbf{Solve for accelerations:} Invert the mass matrix to write
-\begin{equation}
-\ddot\q = M(\q)^{-1}[\tau + f_{\text{nonlinear}}(\q, \dot\q)].
-\end{equation}
-
-\item \textbf{Identify control inputs:} Decompose $\tau$ into actuated $\tau = B(\q)\,\uvec$ and
-unactuated components.
-
-\item \textbf{Augment to first-order form:} Define $\x = (\q, \dot\q)$ and write
-\begin{equation}
-\dot\x = f(\x) + G(\x)\,\uvec.
-\end{equation}
-
-\item \textbf{Verify control-affine structure:} Ensure $G(\x)$ does not depend on $\uvec$.
-\end{enumerate}
-
-\subsection{Step 2: Choose Q and R Weights}
-
-\textbf{Bryson's Rule:} A data-driven approach to setting initial weights:
-\begin{align}
-Q_{ii} &= \frac{1}{x_{{\max},i}^2}, \label{eq:ch8:bryson-Q} \\
-R_{jj} &= \frac{1}{u_{{\max},j}^2}, \label{eq:ch8:bryson-R}
-\end{align}
-
-where $x_{{\max},i}$ is the maximum tolerable error in state component $i$, and
-$u_{{\max},j}$ is the maximum available control effort in input channel $j$.
-
-\paragraph{Example:} For the spacecraft docking scenario:
-\begin{itemize}
-\item Max radial error: $x_{{\max},1} = 10$~m $\Rightarrow Q_{11} = 1/100 = 0.01$.
-\item Max lateral error: $x_{{\max},2} = 5$~m $\Rightarrow Q_{22} = 1/25 = 0.04$.
-\item Max thrust: $u_{{\max}} = 500$~N (on a 1000 kg spacecraft) $\Rightarrow R = 1/(500)^2 = 4 \times 10^{-6}$.
-\end{itemize}
-
-Then refine by trial-and-error or frequency-response analysis.
-
-\subsection{Step 3: Verify Contraction Margins Numerically}
-
-Once the Riccati solution $\mat{S}_k$ or $\mat{S}$ is computed, verify contraction:
-
-\begin{enumerate}
-\item \textbf{Compute eigenvalues of the closed-loop Jacobian:}
-\begin{equation}
-\lambda_i(\mat{A} - \mat{B}\mat{K}).
-\end{equation}
-
-\item \textbf{Check stability:} All eigenvalues must satisfy $|\lambda_i| < 1$ (discrete time) or
-$\text{Re}(\lambda_i) < 0$ (continuous time).
-
-\item \textbf{Measure contraction margin:}
-\begin{equation}
-\mathcal{M} = 1 - \max_i |\lambda_i|.
-\end{equation}
-Aim for $\mathcal{M} \ge 0.05$ (5\%) for robust control.
-
-\item \textbf{Estimate convergence time scale:}
+Then
 \begin{equation}
-\tau_{\text{conv}} = \frac{\log(2)}{-\log|\lambda_{\max}|}.
+ M_r(q)=\begin{bmatrix}
+ a+2(h+j+k)&b+h+j+2k&d+j+k\\
+ b+h+j+2k&b+2k&d+k\\
+ d+j+k&d+k&d
+ \end{bmatrix}.
 \end{equation}
+The cross terms are not optional corrections: they express the velocity of a distal mass produced by several joints simultaneously. In particular, the coefficient of $k$ in the first two entries includes contributions from both participating velocities. Energy computed from this matrix must agree with energy computed directly from the moving centers of mass.
 
-\item \textbf{Compute condition number of Riccati solution:}
+Use $m=(10,5,0.81)$ kg, $l=(0.30,0.35,1.15)$ m, $r_i=l_i/2$, and $I=(0.25,0.08,0.089)$ kg m$^2$. These represent a rigid carrier for the calculation; labeling its coordinates as particular anatomical joints does not validate that identification. At $q=(60,-30,-20)$ degrees, the reproducible result is
 \begin{equation}
-\kappa(\mat{S}) = \frac{\lambda_{\max}(\mat{S})}{\lambda_{\min}(\mat{S})}.
+ M_r=\begin{bmatrix}\cheightMqq\end{bmatrix}\ \mathrm{kg\,m^2}.
 \end{equation}
-Values $\kappa < 100$ are typical; $\kappa > 1000$ indicates ill-conditioning and may
-necessitate regularization or problem reformulation.
-\end{enumerate}
-
-\subsection{Step 4: Identify and Mitigate Common Pitfalls}
-
-\subsubsection{Poor Conditioning}
-
-\textbf{Problem:} The mass matrix $M(\q)$ or Riccati solution $\mat{S}$ has large condition number,
-leading to numerical errors and fragile gains.
-
-\textbf{Remedies:}
-\begin{itemize}
-\item Rescale coordinates: use dimensionless variables $\tilde\q = \q/\q_{\text{ref}}$.
-\item Add regularization: $\mat{S} \to \mat{S} + \varepsilon\,\mat{I}$.
-\item Use higher-precision arithmetic (e.g., quadruple precision for prototyping).
-\end{itemize}
-
-\subsubsection{Unmodeled Dynamics}
-
-\textbf{Problem:} The true system includes friction, backlash, or flexible modes not in the model.
-
-\textbf{Remedies:}
-\begin{itemize}
-\item Add process noise to the Riccati solver (see equation~\eqref{eq:ch8:QR-planar}).
-\item Include high-frequency uncertainty in the cost function: $\mat{Q} \to \mat{Q} + \Delta \mat{Q}$.
-\item Use robust control: design for a family of models rather than a single nominal model.
-\end{itemize}
-
-\subsubsection{Actuator Saturation}
-
-\textbf{Problem:} The computed control $\uvec = -\mat{K}\x$ may exceed available thrust or torque.
-
-\textbf{Remedies:}
-\begin{itemize}
-\item Anti-windup: integrate saturated control, not unsaturated commands.
-\item Gain scheduling: scale $\mat{K}$ based on saturation level.
-\item Model predictive control (MPC): explicitly constrain $\uvec$ during optimization.
-\end{itemize}
-
-\subsection{Step 5: Software Tools and Implementation}
-
-\subsubsection{MATLAB}
-
-Standard approach using the Control System Toolbox:
-\begin{verbatim}
-% Define continuous-time system
-sys = ss(A, B, C, D);
-
-% Discretize
-T_sample = 0.01;  % 10 ms
-sys_d = c2d(sys, T_sample);
-
-% Solve finite-horizon LQR
-Q = diag([100, 1, 1]);
-R = 0.1;
-N = 100;  % horizon steps
-[K, S, e] = dlqr(sys_d.A, sys_d.B, Q, R, N);
-
-% Verify contraction
-eigs(sys_d.A - sys_d.B*K)
-\end{verbatim}
-
-\subsubsection{Python With SciPy}
-
-\begin{verbatim}
-import numpy as np
-from scipy.linalg import solve_continuous_are
-
-# Define continuous-time system
-A = np.array([...])
-B = np.array([...])
-Q = np.diag([100, 1, 1])
-R = np.array([[0.1]])
-
-# Solve continuous-time algebraic Riccati equation
-S = solve_continuous_are(A, B, Q, R)
-
-# Compute gain
-K = np.linalg.inv(R) @ B.T @ S
-
-# Check stability
-eigs = np.linalg.eigvals(A - B @ K)
-print("Eigenvalues:", eigs)
-print("Margin:", 1 - np.max(np.abs(eigs)))
-\end{verbatim}
-
-\subsubsection{CasADi (Optimization-Focused)}
-
-CasADi is excellent for nonlinear MPC and trajectory optimization:
-\begin{verbatim}
-import casadi as ca
-
-# Define ODE
-x = ca.MX.sym('x', 6)
-u = ca.MX.sym('u', 3)
-xdot = A @ x + B @ u + f_nonlinear(x)
-
-# Build integrator
-integrator = ca.integrator('F', 'rk',
-  {'x': x, 'u': u, 'ode': xdot}, {'t0': 0, 'tf': 0.01})
-
-# Define cost and constraints
-cost = x.T @ Q @ x + u.T @ R @ u
-constraint = ca.norm_2(u) <= u_max
-
-# Solve finite-horizon OCP using Opti
-opti = ca.Opti()
-X = opti.variable(6, N+1)
-U = opti.variable(3, N)
-for k in range(N):
-    X_next = integrator(x0=X[:, k], u=U[:, k])['xf']
-    opti.subject_to(X[:, k+1] == X_next)
-    opti.subject_to(ca.norm_2(U[:, k]) <= u_max)
-opti.minimize(sum([...]))  # Riccati-based cost
-\end{verbatim}
+Its determinant is approximately $\cheightMqqDet$ in the corresponding cubed inertia units; its smallest eigenvalue is approximately $\cheightMqqEigMin$ kg m$^2$. These are checks on this numerical model, not clinical or performance measures.
 
-\subsubsection{Drake (Robotics-Specific)}
+\subsection{A Flexible Appendage Must Contribute All Its Kinetic Energy}
 
-Drake (from MIT) provides high-level interfaces for multibody systems and control design:
-\begin{verbatim}
-from pydrake.all import *
+For an illustrative flexible extension, add a beam of mass $m_s=0.30$ kg along the third link. This mass is additional to the specified rigid carrier. It must not also be counted inside $m_3$ when interpreting the combined model. No separate clubhead mass moving with the flexible tip is included here. A physical club would require that mass and its rotational inertia, along with an appropriate shaft model and grip boundary condition.
 
-# Load robot from URDF
-plant = MultibodyPlant()
-parser = Parser(plant)
-parser.AddModelFromFile("robot.urdf")
-plant.Finalize()
-
-# Design LQR controller
-context = plant.CreateDefaultContext()
-Q_cost = np.eye(nq)  # state cost
-R_cost = np.eye(nu)  # control cost
-controller = LinearQuadraticRegulator(plant, context, Q_cost, R_cost)
-
-# Build diagram and simulate
-diagram = DiagramBuilder()
-diagram.AddSystem(plant)
-diagram.AddSystem(controller)
-# ... connect and simulate
-\end{verbatim}
-
-%% ==========================================================================
-\section{Experimental Validation}
-%% ==========================================================================
-
-Theory predicts behavior; experiments verify. This section outlines how to validate
-the framework on real systems.
-
-\subsection{Validating Predicted Contraction Rates}
-
-\subsubsection{Measurement Protocol}
-
-\begin{enumerate}
-\item \textbf{Initialize the system at a nominal state:} $\x_0 = \x_d$ (desired state).
-
-\item \textbf{Apply a small, known perturbation:} $\x_1 = \x_d + \delta\x_0$, with
-$\|\delta\x_0\|_{\mat{M}} \approx 0.01$ (small compared to trajectory scale).
-
-\item \textbf{Record the perturbation trajectory:} Measure $\x_k$ for $k = 1, 2, \ldots, N_{\text{obs}}$
-at regular time intervals.
-
-\item \textbf{Compute predicted contraction rate:} From the Riccati solution, predict
+Let $s\in[0,l_3]$, $t=(\cos\theta_3,\sin\theta_3)$, and $n=(-\sin\theta_3,\cos\theta_3)$. Write a beam material point as
 \begin{equation}
-\rho^{\text{pred}} = \max_i |\lambda_i(\mat{A} - \mat{B}\mat{K})|.
+ p(s,q,\eta)=p_h(q)+s\,t(q)+n(q)\sum_{a=1}^2\phi_a(s)\eta_a.
 \end{equation}
-
-\item \textbf{Compute observed contraction rate:} From measurements,
+At the undeformed configuration $\eta=0$, its velocity has the form $J_q(s)\dot q+J_\eta(s)\dot\eta$, with $J_\eta=n[\phi_1\ \phi_2]$. The same material-point integral must generate every block:
 \begin{equation}
-\rho^{\text{obs}}_k = \frac{\|\delta\x_k\|_{\mat{M}}}{\|\delta\x_{k-1}\|_{\mat{M}}}.
+\begin{aligned}
+ A&=M_r+\int_0^{l_3}\rho_l J_q^{\mathsf T}J_q\,ds,\\
+ C&=\int_0^{l_3}\rho_l J_q^{\mathsf T}J_\eta\,ds,\qquad
+ D=\int_0^{l_3}\rho_l J_\eta^{\mathsf T}J_\eta\,ds,\\
+ M_f&=\begin{bmatrix}A&C\\C^{\mathsf T}&D\end{bmatrix},\qquad \rho_l=m_s/l_3.
+\end{aligned}
 \end{equation}
-
-\item \textbf{Compare:} Plot $\rho^{\text{obs}}_k$ vs. $k$. It should cluster around $\rho^{\text{pred}}$.
-\end{enumerate}
+Including $C$ and $D$ while omitting the beam contribution to $A$ does not describe that kinetic energy. It can even produce an indefinite matrix for otherwise positive physical parameters. Such a failure is an assembly error, not evidence of a kinematic singularity.
 
-\paragraph{Example (Spacecraft Docking):}
-Using a high-fidelity nonlinear simulator of the 6DOF relative dynamics (including
-$J_2$ perturbations), we apply a 1 cm radial perturbation at $t = 300$~s (mid-approach).
-Predicted: $\rho^{\text{pred}} = 0.98$. Observed over 50 steps (50 s): $\rho^{\text{obs}}_k$ averages 0.975,
-with standard deviation 0.008. \textbf{Agreement: excellent.}
+With dimensionless mode shapes and amplitudes in meters, $A$ has units kg m$^2$, $C$ has units kg m, and $D$ has units kg. Positive definiteness is preserved by invertible coordinate changes, but raw eigenvalues and condition numbers of the full mixed-unit matrix depend on the amplitude scales. Compare them only after declaring those scales.
 
-\subsubsection{Statistical Significance}
-
-To account for measurement noise and model mismatch, compute confidence intervals:
+For the displayed posture, numerical integration gives
 \begin{equation}
-\rho^{\text{obs}} \pm 1.96 \, \sigma_{\rho},
-\label{eq:ch8:ci-rho}
+ A=\begin{bmatrix}\cheightFlexibleMqq\end{bmatrix},\qquad
+ C=\begin{bmatrix}\cheightMqeta\end{bmatrix},\qquad
+ D\simeq\begin{bmatrix}\cheightMetaeta\end{bmatrix}.
 \end{equation}
-
-where $\sigma_{\rho}$ is the standard error of the observed rate. If the predicted rate
-falls within the 95\% confidence interval, the prediction is validated.
+The units follow the preceding definitions. Rounding makes $D$ appear exactly diagonal; the underlying quadrature has a small off-diagonal residual.
 
-\subsection{Estimating the Drift-Control Ratio From Sensor Data}
-
-\subsubsection{Method: Zero-Torque Experiment}
-
-The drift-control ratio $\rho(t)$ cannot be directly measured, but can be inferred
-using the following protocol:
-
-\begin{enumerate}
-\item \textbf{Run the system under optimal control:} Record $\x^{\text{opt}}(t)$ and
-$\uvec^{\text{opt}}(t)$ over the trajectory.
-
-\item \textbf{Simulate the ZTCF:} Integrate $\dot\x = f(\x)$ with $u = 0$ starting from
-the same initial condition, obtaining $\x^{\text{ZTCF}}(t)$.
-
-\item \textbf{Compute the difference:}
+The shape functions are the first two clamped-free, uniform Euler--Bernoulli beam shapes without a tip mass. They can be derived from $EI\phi''''=\rho_l\omega^2\phi$ with $\phi(0)=\phi'(0)=\phi''(l_3)=\phi'''(l_3)=0$. With $z=\beta_a s/l_3$,
 \begin{equation}
-\delta\x(t) = \x^{\text{opt}}(t) - \x^{\text{ZTCF}}(t).
+\begin{aligned}
+ \widetilde\phi_a(s)&=\cosh z-\cos z-\sigma_a(\sinh z-\sin z),\\
+ \sigma_a&=\frac{\cosh\beta_a+\cos\beta_a}{\sinh\beta_a+\sin\beta_a},\qquad
+ \cosh\beta_a\cos\beta_a=-1,\\
+ \phi_a(s)&=\widetilde\phi_a(s)/\widetilde\phi_a(l_3).
+\end{aligned}
 \end{equation}
+The first two positive roots are approximately $1.875104$ and $4.694091$. Dividing by the signed tip value makes both $\phi_a(l_3)=1$; dividing by a common positive constant leaves the second mode with the opposite sign. Either sign convention is physically acceptable if the amplitude and every coupling term transform consistently. It is inconsistent to claim a unit positive tip while using the other convention.
 
-\item \textbf{Estimate the drift acceleration:}
-\begin{equation}
-a_{\text{drift}}(t) \approx \|f(\x^{\text{opt}}(t))\|.
-\end{equation}
+Here the reduced spring matrix is defined separately as $K_\eta=\operatorname{diag}(D_{11}\,40^2,D_{22}\,120^2)$, approximately $\operatorname{diag}(120,1080)$ N/m. It is symmetric and positive. These are prescribed reduced-model frequencies in rad/s. They do not correspond to one uniform beam stiffness: that beam would have $\omega_2/\omega_1=(\beta_2/\beta_1)^2\simeq6.267$, rather than $3$. A measured nonuniform shaft, head inertia, axial loading, and rotation may require different modes and additional terms. The displayed inertia and springs alone are not a complete flexible forward-dynamics simulator.
 
-\item \textbf{Estimate the control acceleration:}
-\begin{equation}
-a_{\text{control}}(t) \approx \|G(\x^{\text{opt}}(t))\,\uvec^{\text{opt}}(t)\|.
-\end{equation}
+\subsection{Eliminate Accelerations Without Losing the Bias Terms}
 
-\item \textbf{Compute the ratio:}
+For a fully specified flexible model, collect gravity, velocity-dependent forces, elastic forces, and damping in $h_q$ and $h_\eta$, using a consistent sign convention:
 \begin{equation}
-\rho(t) = \frac{a_{\text{drift}}(t)}{a_{\text{control}}(t)}.
+ A\ddot q+C\ddot\eta+h_q=Bu,\qquad
+ C^{\mathsf T}\ddot q+D\ddot\eta+h_\eta=0.
 \end{equation}
-\end{enumerate}
-
-\paragraph{Example Protocol (Golf Swing):}
-Given motion-capture data with joint markers, one can estimate $\dot\q(t)$ and $\ddot\q(t)$
-via filtered numerical differentiation (e.g., Savitzky--Golay). Combined with a segmental
-mass matrix from published anthropometric data, inverse dynamics yields the required
-acceleration decomposition. The expected qualitative behavior is:
-
-\begin{itemize}
-\item During the backswing (low velocity), $\rho$ should be small---the motion is
-      actively driven by muscle torques.
-\item During the transition, $\rho \approx 1$---gravitational and inertial forces
-      are comparable to muscular effort.
-\item During the downswing and impact (high velocity), $\rho$ should grow rapidly,
-      reflecting the quadratic scaling of Coriolis forces with angular velocity.
-\end{itemize}
-
-The specific numerical values of $\rho$ depend on the subject's anthropometry, swing
-timing, and torque production capacity, and must be determined from the data for
-each individual case.
-
-\subsection{Shaft Flexibility as an Uncontrolled Degree of Freedom}
-
-The golf club shaft is not a rigid rod; it is a flexible beam that stores and releases
-elastic energy during the swing. This flexibility introduces uncontrolled (but exploitable)
-degrees of freedom whose analysis fits naturally into the drift--input framework.
+Here $C$ denotes an inertia cross block. It is distinct from the conventional Coriolis matrix in the product $\mat{C}\dot\q_{\text{sys}}$, where $q_{\mathrm{sys}}=(q,\eta)$. A notation change cannot remove that velocity-dependent force from the model.
 
-\subsubsection{Modal Equations}
-
-Applying Euler--Bernoulli beam theory, the shaft bending is described by modal coordinates
-$\vec\eta = (\eta_1, \eta_2, \ldots)^T$, where only the first few modes carry significant
-energy. The modal equations of motion are:
+Define $S_q=A-CD^{-1}C^{\mathsf T}$, $H=S_q^{-1}$, and $\Gamma=-D^{-1}C^{\mathsf T}$. Direct substitution gives
 \begin{equation}
-M_{\eta\eta}\ddot{\vec\eta} + C_{\eta}\dot{\vec\eta} + K_{\eta}\vec\eta
-= -M_{\eta q}\ddot\q,
-\label{eq:ch8:shaft-modal}
+\begin{aligned}
+ \ddot q&=H(Bu-h_q+CD^{-1}h_\eta),\\
+ \ddot\eta&=-D^{-1}h_\eta+\Gamma\ddot q.
+\end{aligned}
 \end{equation}
-where $K_{\eta}$ is the modal stiffness matrix, $C_{\eta}$ is modal damping, and
-the right-hand side $-M_{\eta q}\ddot\q$ is the inertial forcing from joint accelerations.
-The shaft modes are driven entirely by the coupling term $M_{\eta q}$---they are
-underactuated degrees of freedom with no direct input.
+Thus the acceleration input blocks are $HB$ and $\Gamma HB$. The definition of $\Gamma$ contains no $H$; including $H$ there and multiplying by it again counts the mobility twice. The drift also contains the modal bias $h_\eta$. Removing it would remove elastic restoring forces and any other unactuated modal forces assigned to that term.
 
-\subsubsection{Energy Storage and Release}
-
-The elastic energy in the shaft modes is
+For the ten-state ordering $x=(q,\eta,\dot q,\dot\eta)$, define $a_0=H(-h_q+CD^{-1}h_\eta)$. The first-order affine model is
 \begin{equation}
-E_{\text{shaft}}(t) = \frac{1}{2}\vec\eta(t)^T K_\eta \vec\eta(t)
-+ \frac{1}{2}\dot{\vec\eta}(t)^T M_{\eta\eta} \dot{\vec\eta}(t).
-\label{eq:ch8:shaft-energy}
+ f(x)=\begin{bmatrix}\dot q\\\dot\eta\\a_0\\-D^{-1}h_\eta+\Gamma a_0\end{bmatrix},\qquad
+ G(x)=\begin{bmatrix}0\\0\\HB\\\Gamma HB\end{bmatrix}.
 \end{equation}
+Each row has the appropriate derivative units. In particular, angles cannot be subtracted from gravity torques inside a state derivative.
 
-The energy flow is governed by the work done by the coupling forces:
+At the example posture,
 \begin{equation}
-\dot{E}_{\text{shaft}} = -\dot{\vec\eta}^T M_{\eta q}\ddot\q
-- \dot{\vec\eta}^T C_\eta \dot{\vec\eta}.
-\label{eq:ch8:shaft-power}
+ S_q=\begin{bmatrix}\cheightSchur\end{bmatrix},\qquad
+ H=\begin{bmatrix}\cheightMobility\end{bmatrix}.
 \end{equation}
-
-When the handle accelerates ($\ddot\q$ large and aligned with the coupling $M_{\eta q}$),
-energy flows from the rigid segments into the shaft (loading). When the handle decelerates,
-energy flows back out (unloading), contributing to clubhead velocity at impact. The
-timing of this exchange depends on the relationship between modal natural frequencies
-$\omega_i = \sqrt{K_{\eta,ii} / M_{\eta\eta,ii}}$ and the swing's acceleration profile.
-
-\subsubsection{Shaft Stiffness as a Design Parameter}
-
-Shaft stiffness $K_s$ (graded in golf as L, A, R, S, X from softest to stiffest)
-controls the modal natural frequencies $\omega_i$. This has a direct interpretation
-in the drift--input framework:
-
-\begin{itemize}
-\item A \emph{stiffer} shaft (high $\omega_i$) responds quickly to handle acceleration.
-      The modal response is nearly in phase with the forcing, limiting the ``whip'' effect
-      but providing better control authority.
-\item A \emph{softer} shaft (low $\omega_i$) introduces a phase lag between handle forcing
-      and shaft response. If the natural frequency is well-matched to the swing's
-      acceleration profile, energy release can be timed to coincide with impact---but
-      mismatched timing degrades performance.
-\item In this framework, shaft fitting is an exercise in tuning the \emph{passive dynamics}
-      (drift field $f(\x)$) to align with the golfer's characteristic control profile.
-\end{itemize}
-
-\begin{warningbox}
-Quantitative predictions of shaft energy exchange (e.g., the fraction of clubhead
-speed attributable to shaft kick) require a calibrated model with measured segment
-parameters. Published values in the biomechanics literature vary depending on model
-fidelity and measurement technique. The equations above provide the framework for
-such predictions; the numbers must come from experiment.
-\end{warningbox}
+Positive definiteness follows structurally: for any nonzero $v$, substitute the velocity pair $(v,-D^{-1}C^{\mathsf T}v)$ into the positive kinetic-energy quadratic form to obtain $v^{\mathsf T}S_qv>0$. This proof requires the full, consistently assembled $M_f\succ0$. Numerical inversion cannot rescue an inconsistent kinetic energy.
 
-\subsection{Sensitivity Analysis at Impact}
+\subsection{A Rigid Counterfactual Is a Different Model}
 
-\subsubsection{Impact Variables and Output Sensitivity}
-
-Ball flight is determined by a small set of impact conditions---clubhead speed,
-clubface angle, club path, angle of attack, and strike location. The ball flight
-response to perturbations in these variables can be written as a linear map for
-small deviations:
+The supplied zero-torque trajectory uses the six-state rigid chain, with
 \begin{equation}
-\delta\vec{y}_{\text{ball}} = J_{\text{impact}} \cdot \delta\vec{z}_{\text{impact}},
-\label{eq:ch8:impact-sensitivity}
+ M_r(q)\ddot q+c_r(q,\dot q)+g_r(q)=u,\qquad
+ a_{\mathrm{drift}}=-M_r^{-1}(c_r+g_r).
 \end{equation}
-where $\vec{y}_{\text{ball}}$ encodes ball flight outcomes (carry distance, lateral
-deviation, spin axis) and $\vec{z}_{\text{impact}}$ is the vector of impact conditions.
-The Jacobian $J_{\text{impact}}$ can be computed from physics-based ball flight models
-or estimated empirically from launch monitor data.
+It uses $M_r$, not the flexible Schur complement. Mixing the latter with rigid-only bias terms would generally break the energy balance. With conservative gravity and $u=0$, the rigid model conserves $E=\tfrac12\dot q^{\mathsf T}M_r\dot q+V_r(q)$. Its fixed base can exert reaction forces even when the generalized joint torques are zero.
 
-\subsubsection{Composing With the State Transition Matrix}
-
-The state transition matrix $\Phi(t_{\text{impact}}, t_0)$ from
-Chapter~\ref{ch:variational} maps an initial perturbation $\delta\x_0$ to the
-impact-time perturbation $\delta\x_{\text{impact}}$. An output matrix
-$C_{\text{impact}}$ extracts impact variables from the full state. The end-to-end
-sensitivity is then:
+Initialize $q=(60,-30,-20)$ degrees and $\dot q=(12,-18,-25)$ rad/s. The absolute angular velocities are $(12,-6,-31)$ rad/s; interpreting the three relative rates as independent measured segment speeds would be incorrect. At this state,
 \begin{equation}
-\delta\vec{y}_{\text{ball}} = J_{\text{impact}} \cdot C_{\text{impact}} \cdot
-\Phi(t_{\text{impact}}, t_0) \cdot \delta\x_0.
-\label{eq:ch8:full-sensitivity}
+\begin{aligned}
+ g_r&=(\cheightGravity)^{\mathsf T}\ \mathrm{N\,m},\\
+ c_r&=(\cheightCoriolisTerm)^{\mathsf T}\ \mathrm{N\,m},\\
+ a_{\mathrm{drift}}&=(\cheightDriftAccel)^{\mathsf T}\ \mathrm{rad/s^2}.
+\end{aligned}
 \end{equation}
-
-The singular value decomposition (SVD) of the composite matrix
-$J_{\text{impact}} \cdot C_{\text{impact}} \cdot \Phi(t_{\text{impact}}, t_0)$
-reveals the principal directions of sensitivity: which initial-state perturbations
-produce the largest changes in ball flight, and conversely, which perturbations
-are ``absorbed'' by the dynamics and produce negligible effects. This is the
-tangent-space formalization of the notion that some aspects of technique are
-critical while others are forgiving.
-
-\begin{warningbox}
-The specific entries of $J_{\text{impact}}$ and $\Phi$ are model-dependent and
-must be computed from a calibrated forward dynamics model with experimentally
-validated parameters. Claims about which swing variables are ``most sensitive''
-should be supported by such computations, not assumed a priori.
-\end{warningbox}
-
-\subsection{Conceptual Translation: Mathematics to Coaching}
-
-The mathematical framework developed in this textbook maps to concepts familiar
-in golf instruction and movement science. The following table provides a
-conceptual dictionary---not numerical predictions, but structural correspondences:
-
-\begin{table}[h]
-\centering
-\caption{Conceptual Mapping Between Mathematical Framework and Coaching Language.}
-\label{tab:ch8:math-coaching}
-\begin{tabular}{@{}p{4.5cm}p{5.5cm}p{4.5cm}@{}}
-\toprule
-\textbf{Mathematical Concept} & \textbf{Physical Interpretation} & \textbf{Coaching Analogue} \\
-\midrule
-Drift field $f(\x)$ & Passive dynamics (gravity, inertia, elasticity) & ``Let the club do the work'' \\
-Input $G(\x)\uvec$ & Active muscle torques & ``Apply force at the right time'' \\
-$\rho \gg 1$ (drift-dominated) & Physics dominates muscles & ``Don't fight the swing'' \\
-$\rho \ll 1$ (control-dominated) & Muscles dominate physics & ``Set up the swing correctly'' \\
-Contraction rate $\lambda$ & Rate of error correction & ``Forgiveness'' of a motion \\
-Condition number $\kappa(\mat{S})$ & Anisotropy of error sensitivity & ``Tight vs.\ loose dispersion'' \\
-Off-diagonal $M_{ij}\ddot{q}_i$ & Inertial energy transfer between segments & ``Kinematic sequence'' \\
-ZTCF divergence & Gap between actual and passive motion & ``Efficiency'' \\
-Modal frequency $\omega_i$ & Timing of elastic energy release & ``Shaft flex matching'' \\
-Singular values of $\Phi$ & Amplification of initial errors & ``Repeatability'' \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{intuitionbox}
-The central structural insight is this: in a fast multisegment ballistic motion, the
-controllable phases (setup, early acceleration) determine the state from which the
-\emph{uncontrolled drift} produces the terminal conditions. Since $\rho$ grows with
-velocity squared while torque capacity is bounded, there is always a transition
-beyond which the drift dominates. Skill in such motions lies not in terminal-phase
-force production but in \emph{precision during the controllable early phases}, where
-small adjustments have large downstream effects through the state transition matrix $\Phi$.
-\end{intuitionbox}
-
-\begin{designbox}
-The experimental validation protocol above is general: for \textit{any} mechanical system with
-instrumented state measurements, the same five steps (record, differentiate, compute mass matrix,
-decompose accelerations, form ratio) yield $\rho(t)$ without requiring a full analytical model.
-This makes counterfactual analysis accessible even for complex systems where closed-form dynamics
-are impractical.
-\end{designbox}
-
-\subsection{Cross-Domain Validation Methodology}
-
-The contraction rates and drift--control ratios discussed in this chapter can be validated
-experimentally across all four application domains using the protocol of the previous
-subsection. The expected qualitative signatures are:
-
-\begin{itemize}
-\item \textbf{Biomechanics (golf swing):} $\rho$ transitions from small (backswing) to large
-      (downswing/impact) within a single motion, with contraction rates that vary along the
-      trajectory as the system moves through different curvature regions.
-\item \textbf{Robotics (manipulator):} $\rho$ remains moderate throughout typical pick-and-place
-      tasks, and the contraction rate is approximately constant if the controller maintains
-      consistent closed-loop eigenvalues.
-\item \textbf{Aerospace (spacecraft):} $\rho$ is small (control-dominated) during powered
-      approach phases; contraction rates are low due to the inherently slow orbital dynamics.
-\item \textbf{Automotive (lane-keeping):} $\rho$ increases with vehicle speed, reflecting
-      the growing role of tire-road dynamics relative to steering authority.
-\end{itemize}
-
-\begin{warningbox}
-Quantitative validation requires domain-specific instrumentation and calibrated system
-models. The contraction rates $\lambda$ and drift--control ratios $\rho$ are predictions
-of the theory that should be tested against experimental data---not assumed to match.
-Reported numerical values should always cite the specific model parameters and measurement
-conditions used.
-\end{warningbox}
-
-\section{Chapter Summary}
-
-\begin{enumerate}
-\item \textbf{Biomechanics}: The golf swing, modeled as a 4-DOF control-affine mechanical system,
-      demonstrates how the drift--control ratio transitions from $\rho < 1$ (backswing, control-dominated)
-      to $\rho \gg 1$ (downswing/impact, drift-dominated). Expert performance correlates with exploiting
-      passive dynamics rather than opposing them.
-
-\item \textbf{Robotics}: A 3-DOF planar manipulator illustrates operational-space control with
-      contraction guarantees. The Riccati-based feedback law simultaneously minimizes tracking error
-      and certifies exponential convergence, with the contraction rate computable from the closed-loop
-      Jacobian's symmetric part.
-
-\item \textbf{Aerospace}: Spacecraft proximity operations using Clohessy--Wiltshire dynamics show how
-      LQR with duality-verified contraction metrics ensures safe docking trajectories. The fuel-optimal
-      solution exploits the natural orbital mechanics (drift) to minimize thruster usage.
-
-\item \textbf{Autonomous driving}: The bicycle model with adaptive gain scheduling demonstrates
-      contraction-certified lane-keeping across varying speeds. The speed-dependent $\rho(v)$ determines
-      when the vehicle is in a control-dominated (low speed) versus drift-dominated (high speed) regime.
-
-\item \textbf{Implementation checklist}: A five-step practical workflow (model, weight, verify, mitigate,
-      implement) provides a systematic procedure for applying the textbook's framework to any new system.
-
-\item \textbf{Software tools}: Julia (DifferentialEquations.jl, ControlSystems.jl), Python (scipy,
-      python-control), and MATLAB (Control System Toolbox) all support the complete workflow from
-      model definition through contraction verification.
-
-\item \textbf{Common pitfalls}: Stiff dynamics require implicit integrators; poorly conditioned Riccati
-      matrices signal weight tuning problems; linearization validity must be checked against actual
-      perturbation magnitudes.
-
-\item \textbf{Experimental validation}: Predicted contraction rates and drift--control ratios match
-      experimental observations within 15\% across all four domains, confirming the practical utility
-      of the theoretical framework.
-\end{enumerate}
+The velocity-force contribution exceeds gravity in the first component at this state. That observation neither establishes dominance in every coordinate nor proves a universal transition during human downswing.
 
-This chapter has demonstrated that the geometric framework developed throughout this book---tangent-space
-dynamics, superposition, contraction metrics, optimal control duality, and counterfactual analysis---is not
-merely theoretical elegance. It is a practical engineering toolkit that unifies analysis and design across
-biomechanics, robotics, aerospace, and automotive systems. The common thread is always the same: linearize
-exactly in the tangent space, verify contraction, exploit the drift, and let duality guarantee both
-performance and robustness from a single computation.
+A fourth-order Runge--Kutta integration over $0.10$ s uses $400$ steps of $\cheightZtcfStep$ s. Selected outputs are shown below. ``Rigid tip'' is the endpoint of this chain, not a separately modeled flexible clubhead.
 
 \begin{center}
-\begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
-  % Central system box
-  \node[draw, very thick, red, rounded corners=4pt, minimum width=3cm, minimum height=0.8cm, font=\small\bfseries] at (3, 2.5) {Nonlinear System};
-
-  % Four analytic tools radiating out
-  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (0.75, 4) {Tangent-space\\linearization};
-
-  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (5.25, 4) {Contraction\\metrics};
-
-  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (0.75, 1) {Optimal\\control};
-
-  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (5.25, 1) {Drift--input\\decomposition};
-
-  % Arrows from system to tools
-  \draw[<->, thick, black] (1.5, 2.5) -- (1.5, 4);
-  \draw[<->, thick, black] (4.5, 2.5) -- (4.5, 4);
-  \draw[<->, thick, black] (1.5, 2.5) -- (1.5, 1);
-  \draw[<->, thick, black] (4.5, 2.5) -- (4.5, 1);
-
-  % Application domains below
-  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
-    (0.2, -0.8) to (1.3, -0.8);
-  \node[font=\small, green] at (0.75, -0.8) {Golf swing};
-
-  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
-    (2, -0.8) to (3.1, -0.8);
-  \node[font=\small, green] at (2.55, -0.8) {Robotics};
-
-  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
-    (3.8, -0.8) to (4.9, -0.8);
-  \node[font=\small, green] at (4.35, -0.8) {Aerospace};
-
-  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
-    (5.6, -0.8) to (6.7, -0.8);
-  \node[font=\small, green] at (6.15, -0.8) {Automotive};
-
-  % Arrows down to applications
-  \draw[<-, thick, black] (1.5, 2.5) -- (0.75, -0.3);
-  \draw[<-, thick, black] (3, 2.5) -- (2.55, -0.3);
-  \draw[<-, thick, black] (4.5, 2.5) -- (4.35, -0.3);
-  \draw[<-, thick, black] (4.5, 2.5) -- (6.15, -0.3);
-\end{tikzpicture}
+\small
+\cheightZtcfTable
 \end{center}
 
-\section*{Exercises}
+The tip speed decreases from $\cheightZtcfSpeedStart$ to $\cheightZtcfSpeedEnd$ m/s in this particular calculation while the acceleration norm increases. Those two facts can coexist because acceleration changes direction as well as speed, and because energy redistributes between kinetic and potential terms. This table supplies no controlled comparison and no evidence that a golfer should relax their muscles. Numerical credibility requires step refinement and an energy check; physiological credibility would additionally require validated masses, contacts, passive tissues, muscle forces, and initial conditions.
+
+\section{From Drift Decomposition to a Testable Golf Argument}
+
+\subsection{Declare the Intervention and the Quantity Being Compared}
+
+At a fixed state of a torque-driven rigid model, acceleration separates exactly as $\ddot q=a_0(q,\dot q)+M_r^{-1}u$. This is additivity in the input at one state. It does not imply that the trajectories produced by two different input histories add, because their evolving states change both terms.
+
+A dimensionless drift-to-control ratio can be defined for a chosen acceleration output:
+\begin{equation}
+ \rho_a=\frac{\|W_a a_0\|_2}{\|W_a M_r^{-1}u\|_2}.
+\end{equation}
+Here $W_a$ specifies component scales or a declared projection and normalization. If the denominator is zero and the numerator is nonzero, the ratio is infinite; if both vanish, it is undefined. A numerical epsilon changes the definition and must be reported. The unforced trajectory above therefore cannot be assigned a finite drift-to-control ratio from its acceleration norm alone.
+
+The full first-order drift $f=(\dot q,a_0)$ combines rates and accelerations. Its Euclidean norm is not $\|a_0\|$, and its comparison with $(0,M_r^{-1}u)$ depends on arbitrary units unless a state metric is specified. A metric-based ratio of full vector fields is a different quantity. Even acceleration itself changes nontrivially under nonlinear coordinates: for $z=\psi(q)$,
+\begin{equation}
+ \ddot z=D\psi(q)\ddot q+D^2\psi(q)[\dot q,\dot q].
+\end{equation}
+The second term belongs to the transformed zero-input acceleration. Consequently, a large coordinate ratio is not an invariant amount of physiological effort or mechanical energy.
+
+Velocity-dependent forces are often quadratic in velocity at fixed posture. Under $\dot q\mapsto s\dot q$, the rigid $c_r$ scales as $s^2$, but it can vanish or cancel gravity in particular components. Meanwhile the applied torque and posture can change with speed. No theorem therefore makes this ratio increase through every swing or makes a particular numerical threshold a universal phase boundary.
+
+A finite counterfactual should instead specify the same initial state, model parameters, contact rules, and future input intervention, then compare a stated output. ``Set generalized active torques to zero'' is one mathematical intervention. Removing neural feedback, reducing activation, removing all muscle force, and removing contact forces are different interventions. Already developed muscle force and an ongoing motor command do not disappear merely because a new sensory correction cannot arrive before impact. A meaningful claim about late control must include the actuator and delay model.
+
+\subsection{Acceleration Sequences Are Not Energy-Transfer Measurements}
+
+For the rigid chain, actuator power is $u^{\mathsf T}\dot q$ and the total energy balance is $\dot E=u^{\mathsf T}\dot q$ under the conservative assumptions above. For a single segment, power also enters through joint forces acting at moving points and moments acting with that segment's absolute angular velocity. At an ideal joint with a shared point velocity, equal and opposite joint-force powers cancel in the combined energy balance while transferring energy between the individual segments. If the application-point velocities differ, as in a sliding contact, their sum need not vanish. Joint moments have distinct proximal and distal powers whose sum corresponds to the relative-coordinate actuator power.
+
+A proximal angular-speed decrease can accompany distal acceleration, but it does not, by itself, identify where the distal kinetic energy came from. Translational energy, potential energy, active work, and energy exchange with other segments can all matter. To establish transfer, define the bodies, reference points, sign conventions, and interval; calculate the force and moment powers; integrate them; and check each segment's energy balance. The temporal order of speed peaks is useful descriptive information, not a substitute for that accounting.
+
+This distinction also resolves an apparent paradox in the teaching trajectory. A large acceleration norm can coexist with decreasing endpoint speed, while mechanical energy stays constant. A velocity component, an endpoint speed, a segment kinetic energy, and the total system energy are four different observables. An argument must identify which one it explains.
+
+\subsection{Shaft Recovery Depends on Phase and on the Moving Grip}
+
+For a frozen-coefficient linear bending model, write
+\begin{equation}
+ D\ddot\eta+D_d\dot\eta+K_\eta\eta=-C^{\mathsf T}\ddot q.
+\end{equation}
+With constant symmetric $D,K_\eta\succ0$ and $D_d\succeq0$, the modal energy obeys
+\begin{equation}
+ E_\eta=\tfrac12\dot\eta^{\mathsf T}D\dot\eta+\tfrac12\eta^{\mathsf T}K_\eta\eta,
+ \qquad
+ \dot E_\eta=-\dot\eta^{\mathsf T}C^{\mathsf T}\ddot q-\dot\eta^{\mathsf T}D_d\dot\eta.
+\end{equation}
+The sign of the base acceleration alone does not determine the direction of energy exchange; modal velocity and coupling orientation also enter. In a rotating, deforming model, coefficient derivatives and additional inertial terms must be included before using an energy balance. The frozen equation cannot silently replace the full flexible equations during a large swing.
+
+For one mode driven harmonically at frequency $\Omega$, the displacement response to force has transfer function $(k-m\Omega^2+i c\Omega)^{-1}$. Stiffness changes amplitude and phase; damping and excitation timing matter as well. The velocity contribution at impact depends on the response at that particular instant. A greater stored elastic energy earlier in the swing does not guarantee a greater final clubhead speed or a preferred face orientation.
+
+MacKenzie and Boucher's 2016 experiment tested two shafts with similar inertial properties in 33 male golfers, using 14 drives per shaft. The more flexible shaft produced a larger deflection-related speed contribution, accompanied by lower grip angular velocity at impact; the group difference in total clubhead speed was not statistically significant ($p=0.14$). Shaft bending and grip orientation also contributed differently to delivered club orientation. The authors considered both mechanical reactions and changed motor patterns as possible explanations. This study supports analyzing the coupled golfer--club system. It does not establish equivalence between shafts, identify one neural mechanism, or guarantee an individual fitting response. Individual significance tests from one session also require attention to multiple comparisons and repeatability. See \href{https://doi.org/10.1080/02640414.2016.1157262}{MacKenzie and Boucher, The Influence of Golf Shaft Stiffness on Grip and Clubhead Kinematics}.
+
+The important modeling question is what is held fixed. Prescribing identical grip motion for two shafts estimates an equipment response under a kinematic constraint. Prescribing identical applied forces allows the grip motion to change. Allowing the golfer's controller to adapt defines a third experiment. Differences among those results are scientifically informative; they should not be collapsed into a single claim that a shaft either adds or does not add speed.
+
+\subsection{Carry Uncertainty Through the Impact Event}
+
+Let $\Phi(t,t_0)$ propagate infinitesimal state perturbations along a specified smooth trajectory. At a fixed time $T$, an output $y=h(x(T),T)$ has initial-state sensitivity $h_x\Phi(T,t_0)$. Ball contact, however, generally occurs at a state-dependent time defined by $g(x,t)=0$. Put $n=\nabla_x g$, let $F^-$ be the pre-impact vector field, and evaluate quantities at the nominal event. If $d=g_t+n^{\mathsf T}F^-\ne0$, then
+\begin{equation}
+ \delta t_e=-\frac{n^{\mathsf T}\Phi\delta x_0}{d},\qquad
+ \delta x_e=\left(I-\frac{F^-n^{\mathsf T}}{d}\right)\Phi\delta x_0.
+\end{equation}
+For an explicitly time-dependent impact output, $\delta y=h_x\delta x_e+h_t\delta t_e$. These are sensitivities of the state and output evaluated at each perturbed trajectory's own event. Comparing post-impact trajectories at a common later time instead requires the reset derivative and saltation correction. Near grazing contact, $d$ can be small and the linear event sensitivity can become large or cease to apply.
+
+An error direction invisible in today's club-position Jacobian can affect tomorrow's impact through $\Phi$. Conversely, reducing every joint error equally can waste effort on directions that have little influence on the chosen outcome. To compare sensitivities, specify scales: if $\delta x=D_x\delta\bar x$ and $\delta\bar y=D_y^{-1}\delta y$, use the singular values of $D_y^{-1}J D_x$, not an unscaled matrix mixing meters, radians, and rates. A singular value is a local worst-case directional gain under those scales, not the expected error of a population of swings.
+
+Parameter uncertainty enters alongside state uncertainty. For $\delta y=J_x\delta x+J_p\delta p$, propagate both covariance blocks and their cross covariance:
+\begin{equation}
+ \Sigma_y\simeq J_x\Sigma_xJ_x^{\mathsf T}+J_p\Sigma_pJ_p^{\mathsf T}
+ +J_x\Sigma_{xp}J_p^{\mathsf T}+J_p\Sigma_{xp}^{\mathsf T}J_x^{\mathsf T}.
+\end{equation}
+Mass properties, shaft stiffness, contact location, face orientation, ball properties, and collision assumptions can alter the final prediction. This first-order expression requires small uncertainties and a differentiable local model; it does not cover unmodeled contact changes or large distribution tails. A high-quality golf model should report which uncertainty dominates the output it seeks to explain.
+
+\section{Robotics: Reachability, Redundancy, and a Verifiable Controller}
+
+\subsection{Check the Reference Before Designing Its Controller}
+
+For a planar three-link robot with $l_i=0.30$ m, the end position is
+\begin{equation}
+ p(q)=\sum_{i=1}^3 l_i\begin{bmatrix}\cos\theta_i\\\sin\theta_i\end{bmatrix},\qquad
+ \theta_i=\sum_{j=1}^i q_j.
+\end{equation}
+A circle centered at $(0.60,0.60)$ m with radius $0.20$ m is not entirely reachable: its farthest point is about $1.049$ m from the base, beyond the $0.90$ m total link length. No feedback gain makes that reference feasible.
+
+Instead choose the manufactured two-second reference
+\begin{equation}
+ p_d(t)=\begin{bmatrix}0.45+0.05\cos(\pi t)\\0.15+0.05\sin(\pi t)\end{bmatrix}\ \mathrm{m},
+ \qquad \psi_d=\pi/4,\qquad 0\le t\le2\ \mathrm{s}.
+\end{equation}
+At a quarter period, $t=0.50$ s, the position is $(0.45,0.20)$ m. Subtract the last link to obtain the wrist target $w=p_d-0.30(\cos\psi_d,\sin\psi_d)^{\mathsf T}$. Its distance from the base stays between approximately $0.196$ and $0.296$ m, strictly within the two-link workspace and away from its folded and extended singularities.
+
+A continuous elbow branch is
+\begin{equation}
+\begin{aligned}
+ q_{2,d}&=\arccos\left(\frac{w_x^2+w_y^2-0.18}{0.18}\right),\\
+ q_{1,d}&=\operatorname{atan2}(w_y,w_x)
+ -\operatorname{atan2}(0.30\sin q_{2,d},0.30+0.30\cos q_{2,d}),\\
+ q_{3,d}&=\psi_d-q_{1,d}-q_{2,d}.
+\end{aligned}
+\end{equation}
+Angles must be unwrapped consistently when differentiating the reference. Substituting these angles into forward kinematics verifies the pose; differentiating the resulting smooth branch supplies reference velocities and accelerations. Workspace feasibility alone does not establish torque feasibility, joint-limit clearance, or collision avoidance.
+
+\subsection{A Position Pullback Has a Nullspace}
+
+The position Jacobian has columns
+\begin{equation}
+ J_{p,:,j}=\sum_{i=j}^3 l_i\begin{bmatrix}-\sin\theta_i\\\cos\theta_i\end{bmatrix}.
+\end{equation}
+It is a $2\times3$ matrix. At a regular configuration it has rank two, so the position-error pullback $Q_q=J_p^{\mathsf T}W_pJ_p$, for $W_p\succ0$, has rank two and a one-dimensional nullspace. It cannot have three positive eigenvalues merely because the robot is away from a position singularity. A determinant of $J_p$ itself is not defined; manipulability can instead use $\det(J_pJ_p^{\mathsf T})$ with declared units and scales.
+
+Adding orientation yields the square pose Jacobian with third row $(1,1,1)$. It is nonsingular when the first two links are not collinear. These are different tasks with different nullspaces. In a humanoid swing, the same distinction appears when a cost constrains club position while leaving face orientation or redundant body motion weakly penalized.
+
+Adding $\epsilon I$ to $Q_q$ makes that particular coordinate quadratic form positive definite for $\epsilon>0$. It changes the cost in every direction, not only the nullspace. It does not create a physical barrier against singularities, guarantee a feasible trajectory, or prove contraction. A state metric for a torque-driven three-joint robot also needs six-state treatment; a $3\times3$ posture penalty alone does not measure velocity error.
+
+\subsection{An Exact Local Example With Its Assumptions Exposed}
+
+For an ideal fully actuated robot with known dynamics $M(q)\ddot q+h(q,\dot q)=u$, computed torque can impose a desired acceleration:
+\begin{equation}
+ u=M(q)(\ddot q_d+v)+h(q,\dot q),\qquad \ddot e=v,\qquad e=q-q_d.
+\end{equation}
+Use normalized angle and time coordinates to consider one error channel $z=(e,e')$, where the prime denotes differentiation with respect to dimensionless time $\tau=t/t_s$. The physical virtual acceleration is $(q_s/t_s^2)v$ when $e=(q-q_d)/q_s$. In these normalized variables,
+\begin{equation}
+ z'=A_0z+B_0v,\qquad A_0=\begin{bmatrix}0&1\\0&0\end{bmatrix},\qquad B_0=\begin{bmatrix}0\\1\end{bmatrix}.
+\end{equation}
+For the infinite-horizon objective $\int_0^\infty(z^{\mathsf T}z+v^2)\,d\tau$, direct substitution into the continuous Riccati equation gives
+\begin{equation}
+ S=\begin{bmatrix}\sqrt3&1\\1&\sqrt3\end{bmatrix},\qquad
+ K=B_0^{\mathsf T}S=\begin{bmatrix}1&\sqrt3\end{bmatrix},\qquad v=-Kz.
+\end{equation}
+This standard double-integrator example is also derived in \href{https://underactuated.mit.edu/lqr.html}{MIT's Linear Quadratic Regulators notes}. The cost is on normalized error and virtual acceleration; it is not a claim about actual motor electrical energy or a human's physiological objective.
+
+Let $A_c=A_0-B_0K$ and $W=I+K^{\mathsf T}K$. The Riccati identity is
+\begin{equation}
+ A_c^{\mathsf T}S+SA_c=-W.
+\end{equation}
+It follows that the metric length of an error difference contracts at any rate $\lambda\le\tfrac12\lambda_{\min}(W,S)$ in normalized time, where the generalized eigenvalue uses $Wv=\mu Sv$. Here the smallest generalized eigenvalue is $\sqrt3-1/\sqrt2$, so $\lambda=(\sqrt3-1/\sqrt2)/2$. Physical-time rate is $\lambda/t_s$. The other common quantity, the real part of a closed-loop eigenvalue, is not interchangeable with this particular metric's instantaneous bound.
+
+For three independent ideal error channels, repeat this block in a six-state metric after fixing the state ordering. The exact error equation makes the certificate valid in the chosen unwrapped coordinate chart as long as computed torque remains realizable and the model is exact. Saturation, contact changes, uncertain inertia, actuator dynamics, and branch changes invalidate that exact cancellation and require a new residual analysis. The certificate should not be advertised as a verified global property of an arbitrary robot or human.
+
+\subsection{Finite-Horizon and Sampled Certificates Need Their Own Equations}
+
+For a time-varying linear error system with the finite-horizon Riccati solution $S(t)$ and $K(t)=R^{-1}B^{\mathsf T}S$, the closed-loop identity is
+\begin{equation}
+ \dot S+A_c^{\mathsf T}S+SA_c=-Q-K^{\mathsf T}RK.
+\end{equation}
+Uniform positive definiteness of $S$ and a uniform generalized lower bound on the right-hand quadratic form are needed for a uniform contraction statement. A zero terminal cost can make $S$ degenerate at the horizon. Plotting a decreasing Riccati trace is neither that test nor a substitute for it.
+
+For sampled error dynamics $z_{k+1}=A_{c,k}z_k$, the corresponding requirement is $A_{c,k}^{\mathsf T}S_{k+1}A_{c,k}\preceq\rho^2 S_k$ with $\rho<1$. In the fixed-metric case, compute $\rho^2$ as the largest generalized eigenvalue of $(A_c^{\mathsf T}SA_c,S)$. It is not generally the squared spectral radius of $A_c$. These distinctions matter whenever a controller designed in continuous time is executed on sampled measurements.
+
+\section{Spacecraft: Respect the Orbit and the Meaning of the Cost}
+
+\subsection{Relative Motion About a Circular Chief Orbit}
+
+Let $x$ be radial displacement, $y$ along-track displacement, and $z$ normal displacement in the rotating frame of a circular chief orbit. For small relative separation, the Clohessy--Wiltshire linearization is
+\begin{equation}
+ \ddot x=3n^2x+2n\dot y+u_x,\qquad
+ \ddot y=-2n\dot x+u_y,\qquad
+ \ddot z=-n^2z+u_z.
+\end{equation}
+The inputs are accelerations. The circular-orbit and small-separation assumptions are part of the model; a different axis convention changes the displayed signs. See \href{https://ocw.mit.edu/courses/16-346-astrodynamics-fall-2008/e4f0632a9f1c98f7e9b25492e1a30eb1_lec_26.pdf}{MIT Astrodynamics, Lecture 26} for the relative-motion derivation.
+
+For radius $r_0=6.7\times10^6$ m and $\mu=3.98600435507\times10^{14}$ m$^3$/s$^2$, $n=\sqrt{\mu/r_0^3}\simeq0.001151$ rad/s and $T=2\pi/n\simeq5458$ s, about $90.96$ minutes. This is a low Earth orbit, not a geosynchronous orbit. The Earth gravitational parameter is from \href{https://ssd.jpl.nasa.gov/astro_par.html}{JPL's DE440 astrodynamic parameters}.
+
+For $X=(x,y,z,\dot x,\dot y,\dot z)$, write $\dot X=A X+B u$ with
+\begin{equation}
+ A=\begin{bmatrix}0&I_3\\N&C_o\end{bmatrix},\quad B=\begin{bmatrix}0\\I_3\end{bmatrix},\quad
+ N=\operatorname{diag}(3n^2,0,-n^2),\quad
+ C_o=\begin{bmatrix}0&2n&0\\-2n&0&0\\0&0&0\end{bmatrix}.
+\end{equation}
+The blocks act on position and velocity with different units; it is misleading to attach a single dimensional unit to every entry of this unscaled state matrix.
+
+A reproducible reference can be manufactured rather than claimed as flight validation. Over $t_f=900$ s, set $s=t/t_f$, $p(s)=10s^3-15s^4+6s^5$, and $y_d=1000-990p(s)$ m, with $x_d=z_d=0$. Then $u_{x,d}=-2n\dot y_d$, $u_{y,d}=\ddot y_d$, and $u_{z,d}=0$ satisfy the linear equations. The reference starts and ends at rest, with zero endpoint acceleration, and ends at a 10 m along-track standoff. It is not a completed docking maneuver. Thruster limits, approach corridors, collision geometry, navigation error, and nonlinear orbital-model error still require evaluation.
+
+\subsection{Quadratic Effort Is Not Propellant Consumption}
+
+An LQR objective $\int(e^{\mathsf T}Qe+\delta u^{\mathsf T}R\delta u)\,dt$ balances weighted tracking error and squared control effort around a feasible reference. Position and velocity weights require scales; $Q$ here is a cost weight, not a process-noise covariance. A terminal penalty is a soft cost, not an exact terminal docking constraint.
+
+For an ideal thruster with constant specific impulse, $\dot m=-\|F\|/(I_{sp}g_0)$ describes propellant use. The actual thruster allocation and operating model can require modifications. With $F=mu$, mass changes can enter the dynamics. The time integral of squared acceleration is therefore not a direct fuel measurement. A fuel-optimal or fuel-limited claim requires the appropriate objective, thrust model, mass evolution, and constraints. Neither a quadratic regulator nor an unreported simulation establishes a numerical percentage of fuel savings.
+
+To implement a sampled controller under zero-order-held acceleration, compute
+\begin{equation}
+ \exp\left(\begin{bmatrix}A&B\\0&0\end{bmatrix}\Delta t\right)
+ =\begin{bmatrix}A_d&B_d\\0&I_3\end{bmatrix}.
+\end{equation}
+Design a discrete regulator for $(A_d,B_d)$ and evaluate $A_d-B_dK_d$. Subtracting a discrete gain from the continuous matrix and interpreting the result as a sampled stability certificate mixes two different systems. A covariance propagation or Monte Carlo study can then test navigation uncertainty, but it must report its noise model and cannot validate unmodeled thruster or contact physics.
+
+\section{Vehicles: Input Coordinates and Speed Change the Argument}
+
+\subsection{An Exact Affine Bicycle Model}
+
+For the kinematic bicycle with rear-axle position $(x,y)$, heading $\psi$, speed $v$, wheelbase $L$, steering angle $\delta$, and longitudinal acceleration $a$,
+\begin{equation}
+ \dot x=v\cos\psi,\quad \dot y=v\sin\psi,\quad
+ \dot\psi=\frac{v}{L}\tan\delta,\quad \dot v=a.
+\end{equation}
+This model is nonlinear in the steering-angle input. With curvature $\kappa=\tan\delta/L$, it is exactly control affine:
+\begin{equation}
+ \dot X=\begin{bmatrix}v\cos\psi\\v\sin\psi\\0\\0\end{bmatrix}
+ +\begin{bmatrix}0\\0\\0\\1\end{bmatrix}a
+ +\begin{bmatrix}0\\0\\v\\0\end{bmatrix}\kappa.
+\end{equation}
+Alternatively, append steering angle to the state and use steering rate as an input. A Taylor expansion in $\delta$ around a reference gives a local input approximation, not the exact original affine model. Steering limits transform to curvature limits, and steering-rate constraints do not disappear under this reparameterization.
+
+The no-side-slip condition restricts velocities. It does not by itself reduce the dimension of the configuration space: sequences of admissible motions can produce displacements not available instantaneously. Lie brackets describe this local mechanism, as illustrated in \href{https://modernrobotics.northwestern.edu/nu-gm-book-resource/13-3-2-controllability-of-wheeled-mobile-robots-part-3-of-4/}{Modern Robotics, Controllability of Wheeled Mobile Robots}. A rank calculation alone should not be turned into an unrestricted global parking guarantee; reversibility, admissible controls, obstacles, and the particular controllability theorem's assumptions matter.
+
+\subsection{A Speed Schedule Requires Its Own Dynamics}
+
+For a straight reference and small heading error, with fixed $v>0$, the lateral error equations are $\dot e_y=v e_\psi$ and $\dot e_\psi=v\kappa$. The curvature feedback
+\begin{equation}
+ \kappa=-\frac{\omega_n^2}{v^2}e_y-\frac{2\zeta\omega_n}{v}e_\psi
+\end{equation}
+gives $\ddot e_y+2\zeta\omega_n\dot e_y+\omega_n^2e_y=0$. For positive $\omega_n$ and $\zeta$, this linearized constant-speed model is stable. The position and heading gains decrease as speed increases for this fixed target polynomial. There is no general rule that all gains should increase with speed.
+
+If $v$ varies, differentiation introduces $(\dot v/v)\dot e_y$, and simply inserting the current speed into the same law no longer gives the stated constant-coefficient equation. The gain formula is singular at zero speed. Reverse motion, curved references, steering dynamics, and saturation also need separate treatment. Frozen-speed eigenvalues do not certify stability under arbitrary switching or rapid scheduling.
+
+At fixed steering angle, yaw rate scales as $v$ and the no-slip lateral acceleration as $v^2\tan\delta/L$. For $L=3$ m, $\delta=0.10$ rad, and $v=25$ m/s, the latter is about $20.9$ m/s$^2$. That requested acceleration signals that the simple kinematic assumptions need scrutiny; the equation does not establish that the tires can supply it. A dynamic tire model and friction constraints determine feasibility. Comparing unscaled norms that mix position rates, heading rate, and longitudinal acceleration cannot establish control dominance at high speed.
+
+The connection to golf is methodological. A parameter change can alter the dynamics, input map, feasible controls, and error metric simultaneously. A gain schedule or equipment change must be evaluated within that coupled system; conclusions from a fixed-parameter calculation do not automatically survive the change.
+
+\section{Reproducible Computation and Evidence}
+
+\subsection{Check an Equation Before Interpreting Its Output}
+
+The following complete Python example checks the normalized double-integrator result. It requires NumPy and SciPy. The residual verifies the equation solved; the generalized eigenvalue verifies the stated metric inequality. Neither check validates an unmodeled actuator.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy.linalg import eigvalsh, solve_continuous_are
+
+A = np.array([[0.0, 1.0], [0.0, 0.0]])
+B = np.array([[0.0], [1.0]])
+Q = np.eye(2)
+R = np.eye(1)
+S = solve_continuous_are(A, B, Q, R)
+K = np.linalg.solve(R, B.T @ S)
+Ac = A - B @ K
+W = Q + K.T @ R @ K
+residual = Ac.T @ S + S @ Ac + W
+assert np.linalg.norm(residual) < 1e-10
+rate = 0.5 * eigvalsh(W, S)[0]
+assert np.isclose(rate, (np.sqrt(3.0) - 1.0 / np.sqrt(2.0)) / 2.0)
+\end{lstlisting}
+
+For an equilibrium regulator, the physical command includes any nonzero equilibrium input. For a trajectory regulator, it includes a dynamically feasible reference input and the tracking correction. Omitting that feedforward term changes the error dynamics. Apply limits and actuator dynamics before interpreting simulated performance; clipping an ideal command invalidates an unconstrained certificate unless the resulting residual is bounded in a new analysis.
+
+In MATLAB, \texttt{dlqr(A,B,Q,R,N)} solves an infinite-horizon discrete LQR problem; the fifth argument is the state--input cross-weight matrix $N$, not a horizon length. A finite-horizon problem requires a backward recursion with a declared terminal cost and time-indexed gains. The \href{https://www.mathworks.com/help/control/ref/lti.dlqr.html}{MathWorks dlqr documentation} specifies the cross term and discrete Riccati equation. Likewise, an outline containing undefined model objects or placeholder matrices is an implementation sketch, not an executable validation.
+
+\subsection{Separate Verification, Calibration, and Validation}
+
+Verification asks whether the equations were implemented and solved correctly. For the golf calculation this includes Cartesian-versus-joint kinetic energy, mass symmetry and definiteness under admissible parameters, correct signed mode normalization, correct Schur elimination, unforced energy conservation, and step refinement. A reproducible table is valuable only after these model identities are satisfied.
+
+Calibration estimates model parameters from data. Validation compares held-out predictions with observations for a declared use. Fitting the same swing used to assess accuracy is not an independent prediction test. A claimed error percentage needs the measured quantity, normalization, sample, uncertainty, and protocol; it cannot be inferred from the apparent plausibility of a simulated trajectory.
+
+For perturbation experiments, align the model and measurement definitions. Separate fixed-time errors from event-time errors, and choose whether the comparison is between two closed-loop trajectories or between a trajectory and its nominal reference. Measurement noise can dominate a ratio with a small initial-error denominator. A worst-case contraction bound need not be attained by typical perturbations, and a confidence interval containing a predicted bound is not a validation criterion by itself. Test the inequality with appropriate uncertainty, check the assumed region and disturbances, and report violations as well as agreement.
+
+For the golf swing, an informative progression is to verify rigid-body energy accounting, add and identify shaft dynamics, verify contact and impact behavior, then assess the coupled model on held-out swings and equipment conditions. Measure grip and head motion together when studying shaft effects. Include force or moment information when testing an energy-transfer explanation. Include event timing and output uncertainty when testing an accuracy explanation. Each additional model component should resolve a stated discrepancy or prediction need rather than merely increase the number of states.
+
+\section{Exercises That Test the Argument}
 
 \begin{enumerate}
-\item \textbf{Mass matrix construction.}
-      For a 2-DOF planar golf model (shoulder + wrist), derive the mass matrix entries
-      symbolically using the segment parameters from the text. Verify positive definiteness
-      at three configurations.
-
-\item \textbf{Drift-control ratio computation.}
-      Implement the 5-step experimental protocol described earlier in this chapter
-      for simulated data from a double pendulum under LQR control. Plot $\rho(t)$ and identify
-      the transition from control-dominated to drift-dominated regimes.
-
-\item \textbf{Shaft modal analysis.}
-      For the shaft modal equations~\eqref{eq:ch8:shaft-modal}, compute the natural frequencies
-      for three different shaft stiffnesses. Plot the energy exchange $\dot{E}_{\text{shaft}}(t)$
-      during a prescribed handle acceleration profile.
-
-\item \textbf{Sensitivity composition.}
-      For a 2-DOF robot manipulator tracking a straight-line task-space trajectory, compute
-      the composite sensitivity $J_{\text{task}} \cdot \Phi(t_f, t_0)$. Which initial-state
-      perturbation produces the largest task-space error?
-
-\item \textbf{Contraction-certified tracking.}
-      Implement the contraction-certified operational-space controller for a 3-DOF robot.
-      Verify contraction by computing $\sym(\mat{M}\mat{A}_{\text{cl}}) + \dot{\mat{M}}$
-      along the trajectory.
-
-\item \textbf{Spacecraft proximity.}
-      Implement the CWH-based MPC controller for spacecraft proximity operations.
-      Compare performance with and without the contraction terminal cost.
-
-\item \textbf{Lane-keeping comparison.}
-      Implement the bicycle-model lane-keeping controller at two speeds. Verify that
-      the contraction rate decreases with speed, consistent with the drift-control
-      ratio analysis.
-
-\item \textbf{Cross-domain comparison.}
-      For two of the four application domains, compute the drift-control ratio $\rho(t)$
-      and contraction rate $\lambda$ using the prescribed methods. Compare the
-      qualitative signatures with the predictions in the text.
+\item Derive the six independent entries of $M_r$ from Cartesian center-of-mass velocities. Check at random postures and velocities that both kinetic-energy calculations agree. Explain why an endpoint singularity need not make $M_r$ singular.
+\item Assemble the beam's three inertia blocks from the same material-point velocity. Repeat with twice the beam mass. Show which rigid-coordinate diagonal term gains $m_s l_3^2/3$, and test the complete kinetic energy rather than only a matrix determinant.
+\item Change the sign of the second mode and transform its amplitude and coupling consistently. Show that physical displacement and kinetic energy are unchanged. Explain why assigning two arbitrary frequencies does not identify a uniform beam's $EI$.
+\item Verify the two block acceleration equations by substituting the Schur solution. Include a nonzero modal bias so an omitted elastic term cannot pass the check. Distinguish this test from integrating the rigid six-state counterfactual.
+\item Refine the rigid zero-torque integration step and report both endpoint convergence and mechanical-energy error. Explain why the displayed acceleration norm is not a finite drift-to-control ratio or an estimate of muscular effort.
+\item Construct a motion with decreasing proximal angular speed but no positive distal energy transfer across the chosen joint. State the external powers and show the segment energy balance. Identify the extra measurements required to interpret a human speed-peak sequence.
+\item For two shaft stiffnesses, compare identical prescribed grip motion, identical applied force histories, and an adapting controller. State which causal question each comparison addresses and which output would distinguish the hypotheses.
+\item Reconstruct the robot circle using the given inverse kinematics. Compute the nullspace of $J_p$ and compare position and pose pullbacks. Test whether adding $\epsilon I$ imposes any obstacle or joint-limit constraint.
+\item Verify the exact Riccati solution and its generalized metric rate. Add a torque limit to the computed-torque model and identify where the ideal proof ceases to apply rather than extending its rate by assertion.
+\item Substitute the quintic spacecraft reference into the relative-motion equations. Compare integrated squared acceleration with a declared propellant model. Report the assumptions needed before calling the final standoff a docking solution.
+\item Derive the additional lateral-error term for variable vehicle speed. Test a rapid speed change and a steering limit. Explain why frozen-speed eigenvalues and kinematic lateral acceleration do not establish dynamic feasibility.
+\item For a transverse impact event, compare finite-difference sensitivities with the event-time formula and a fixed-time formula. Repeat near grazing. Propagate parameter as well as state uncertainty, using declared input and output scales.
 \end{enumerate}

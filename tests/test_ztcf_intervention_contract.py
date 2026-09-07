@@ -19,7 +19,7 @@ from src.affine_control.ztcf_contract import (
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = REPO_ROOT / "data" / "ztcf" / "ztcf_intervention_v1.schema.json"
-FIXTURE_PATH = REPO_ROOT / "data" / "ztcf" / "planar_golf_forward_fixture_v1.json"
+FIXTURE_PATH = REPO_ROOT / "data" / "ztcf" / "planar_golf_forward_fixture_v2.json"
 PUBLIC_SOURCES = (
     REPO_ROOT / "articles" / "zero-torque-counterfactual.qmd",
     REPO_ROOT
@@ -66,6 +66,31 @@ def test_python_golden_fixture_replays_at_registered_tolerance() -> None:
     assert result.clubhead_speed == pytest.approx(
         intervention.expected.clubhead_speed, abs=tolerance
     )
+
+
+def test_historical_mixed_inertia_fixture_cannot_run_as_the_rigid_model() -> None:
+    """A corrected physical model must not silently reinterpret its old record."""
+    historical = REPO_ROOT / "data" / "ztcf" / "planar_golf_forward_fixture_v1.json"
+    intervention = ZTCFIntervention.model_validate(_load_json(historical))
+    with pytest.raises(UnsupportedZTCFEngineError, match="engine-unsupported"):
+        execute_ztcf_intervention(intervention)
+
+
+@pytest.mark.parametrize("field", ["source_revision", "frame", "internal_states", "constraints"])
+def test_rigid_adapter_rejects_a_different_declared_model_inventory(field: str) -> None:
+    """A rigid replay cannot certify a different revision, frame, or shaft state."""
+    fixture = copy.deepcopy(_load_json(FIXTURE_PATH))
+    if field == "source_revision":
+        fixture["model"][field] = "0" * 40
+    elif field == "frame":
+        fixture["state"][field] = "unregistered frame"
+    elif field == "internal_states":
+        fixture["retained"][field] = ["flexible shaft states retained"]
+    else:
+        fixture["retained"][field] = ["unregistered moving base"]
+    intervention = ZTCFIntervention.model_validate(fixture)
+    with pytest.raises(UnsupportedZTCFEngineError, match="engine-unsupported"):
+        execute_ztcf_intervention(intervention)
 
 
 def test_unavailable_intervention_fails_closed() -> None:

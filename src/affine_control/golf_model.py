@@ -1,19 +1,16 @@
-"""Three-link planar golf model with a flexible shaft, built from kinetic energy.
+"""Three-link teaching model and an undeformed flexible-appendage inertia.
 
-Volume I chapter 8 printed a mass matrix that did not follow from the formulas
-three equations above it, whose assembled blocks were not positive definite, and
-explained the resulting indefinite Schur complement as a "kinematic
-singularity". That explanation is wrong physics: for a system of positive masses
-the mass matrix is positive definite everywhere, singular configuration or not.
-A singular *Jacobian* makes a task-space inertia blow up; it never makes a
-joint-space inertia indefinite.
+The six-state counterfactual integrates the three rigid links only. A separate
+five-coordinate mass assembly demonstrates a flexible beam attached at the
+third joint, evaluated at zero deflection. Its shaft mass is additional to the
+rigid carrier masses; it is not a calibrated club/hand/shaft reconstruction.
+The assembly is an instantaneous inertia example, not a flexible simulation:
+that would also require modal states, potentials and the full velocity bias.
 
-So the model is built here from Jacobians rather than from transcribed closed
-forms, which removes the transcription step entirely and makes positive
-definiteness a property the tests can assert over the whole workspace.
-
-Coordinates: ``q = (q1, q2, q3)`` are relative joint angles (shoulder, elbow,
-wrist); ``eta`` are the amplitudes of the first two shaft bending modes.
+``q1`` is measured from the horizontal; ``q2`` and ``q3`` are relative angles;
+``eta`` contains signed modal tip-displacement amplitudes in metres. Positive
+body inertias and independent joint velocities make this model's rigid inertia
+positive definite, even at a task-Jacobian singularity.
 """
 
 from __future__ import annotations
@@ -38,21 +35,13 @@ _BETA_L = (1.8751040687, 4.6940911330)
 
 @dataclass(frozen=True)
 class GolfModel:
-    """Segment and shaft parameters for the chapter 8 worked example."""
+    """Illustrative parameters, not measured anthropometry or fitted shaft data."""
 
-    # Segment 3 is the club. An earlier revision of chapter 8 gave its length as
-    # 0.40 m, labelled "club length" -- forearm scale. A driver is about 1.15 m,
-    # and the difference is not cosmetic: at the chapter's own joint rates the
-    # short club yields a clubhead speed of 12.2 m/s (27 mph), and reaching a
-    # real 45 m/s with that geometry would require a wrist rate near 92 rad/s,
-    # roughly 880 rpm. The mass follows: a driver is about 0.31 kg and a hand
-    # about 0.5 kg, so 0.81 kg for the lumped club-plus-hand segment rather than
-    # the 2 kg previously stated.
+    # The third link is a rigid carrier; its endpoint is the rigid-tip output.
+    # The optional flexible appendage adds a separate mass distribution.
     masses: tuple[float, float, float] = (10.0, 5.0, 0.81)
     lengths: tuple[float, float, float] = (0.30, 0.35, 1.15)
-    # Segments 1 and 2 lump torso and forearm contributions, so their inertias
-    # exceed the bare uniform-rod value. Segment 3 uses the rod value for its
-    # stated mass and length.
+    # COM inertias are independent specified body parameters, not joint inertias.
     inertias: tuple[float, float, float] = (0.25, 0.08, 0.089)
     shaft_mass: float = 0.3
     modal_frequencies: tuple[float, float] = (40.0, 120.0)
@@ -115,7 +104,28 @@ class GolfModel:
         sigma = (np.cosh(beta_l) + np.cos(beta_l)) / (np.sinh(beta_l) + np.sin(beta_l))
         shape = np.cosh(beta * s) - np.cos(beta * s)
         shape -= sigma * (np.sinh(beta * s) - np.sin(beta * s))
-        return shape / 2.0
+        tip = np.cosh(beta_l) - np.cos(beta_l)
+        tip -= sigma * (np.sinh(beta_l) - np.sin(beta_l))
+        return np.asarray(shape / tip, dtype=np.float64)
+
+    def shaft_rigid_mass_matrix(self, q: Array, samples: int = 4001) -> Array:
+        """Shaft contribution to the q-q block at zero modal deflection.
+
+        Integrate both planar velocity components, not only the component
+        normal to the shaft used in the q-eta cross block.
+        """
+        length = self.lengths[2]
+        s = np.linspace(0.0, length, samples)
+        angles = self.link_angles(q)
+        normals = np.stack([-np.sin(angles), np.cos(angles)], axis=1)
+        jacobian = np.zeros((3, 2, samples))
+        for joint in range(3):
+            for link in range(joint, 2):
+                jacobian[joint] += self.lengths[link] * normals[link, :, None]
+            jacobian[joint] += normals[2, :, None] * s
+        products = np.einsum("ias,jas->ijs", jacobian, jacobian)
+        matrix: Array = self.shaft_mass / length * np.trapezoid(products, s, axis=-1)
+        return matrix
 
     def shaft_blocks(self, q: Array, samples: int = 4001) -> tuple[Array, Array]:
         """Return ``(M_qeta, M_etaeta)`` by integrating along the shaft.
@@ -148,26 +158,26 @@ class GolfModel:
         return coupling, 0.5 * (modal + modal.T)
 
     def full_mass_matrix(self, q: Array, samples: int = 4001) -> Array:
-        """The assembled 5x5 mass matrix over ``(q, eta)``."""
-        m_qq = self.rigid_mass_matrix(q)
+        """The assembled 5x5 inertia over ``(q, eta)`` at eta = 0."""
+        m_qq = self.rigid_mass_matrix(q) + self.shaft_rigid_mass_matrix(q, samples)
         m_qeta, m_etaeta = self.shaft_blocks(q, samples)
         return np.block([[m_qq, m_qeta], [m_qeta.T, m_etaeta]])
 
     def schur_complement(self, q: Array, samples: int = 4001) -> Array:
-        """``M_qq - M_qeta M_etaeta^-1 M_etaq``, the articulated-body inertia.
+        """``M_qq - M_qeta M_etaeta^-1 M_etaq``, a block-eliminated inertia.
 
         Positive definite whenever the full matrix is, since ``M_etaeta`` is.
         An indefinite result means the blocks are not a valid mass matrix -- it
-        is never a statement about the configuration.
+        is not explained by a task-Jacobian singularity in this model.
         """
-        m_qq = self.rigid_mass_matrix(q)
+        m_qq = self.rigid_mass_matrix(q) + self.shaft_rigid_mass_matrix(q, samples)
         m_qeta, m_etaeta = self.shaft_blocks(q, samples)
         reduced = m_qq - m_qeta @ np.linalg.solve(m_etaeta, m_qeta.T)
         return 0.5 * (reduced + reduced.T)
 
     def effective_mobility(self, q: Array, samples: int = 4001) -> Array:
         """``H_qq``, the inverse of the articulated-body inertia."""
-        return np.linalg.inv(self.schur_complement(q, samples))
+        return np.asarray(np.linalg.inv(self.schur_complement(q, samples)), dtype=np.float64)
 
     def potential_energy(self, q: Array, gravity: float = GRAVITY_M_S2) -> float:
         """Gravitational potential of the three rigid segments."""
@@ -204,11 +214,12 @@ class GolfModel:
     def drift_acceleration(self, q: Array, qd: Array, gravity: float = GRAVITY_M_S2) -> Array:
         """``qddot`` with zero applied torque -- the pointwise ZTCF acceleration.
 
-        Uses the articulated-body inertia, so shaft inertia is accounted for
-        rather than ignored.
+        This is the rigid three-link model. The separate shaft mass assembly
+        cannot replace its mass matrix without also replacing the bias and
+        augmenting the state and equations with the modal coordinates.
         """
         bias = self.coriolis(q, qd) @ np.asarray(qd, dtype=float) + self.gravity_torque(q, gravity)
-        return -np.linalg.solve(self.schur_complement(q), bias)
+        return -np.linalg.solve(self.rigid_mass_matrix(q), bias)
 
     def clubhead_speed(self, q: Array, qd: Array) -> float:
         """Speed of the club tip, i.e. the distal end of link three."""
@@ -227,7 +238,8 @@ class GolfModel:
         """Integrate the zero-torque counterfactual: ``u = 0`` from a given state.
 
         Returns ``(t, q, qdot, clubhead_speed)`` sampled at each step. Fixed-step
-        RK4; the drift field is smooth here so adaptive stepping buys nothing.
+        RK4. Step refinement and energy checks are needed to assess error;
+        smoothness alone does not justify a particular fixed step size.
         """
         q = np.asarray(q0, dtype=float).copy()
         qd = np.asarray(qd0, dtype=float).copy()
@@ -259,9 +271,13 @@ class GolfModel:
         return out
 
     def modal_stiffness(self, samples: int = 4001) -> Array:
-        """``K_etaeta = M_etaeta diag(omega^2)``, consistent with the modal masses."""
+        """Diagonal modal springs for the prescribed illustrative frequencies.
+
+        These frequencies are not derived from one uniform-beam EI. Discard
+        quadrature off-diagonals rather than creating an asymmetric spring.
+        """
         _, modal = self.shaft_blocks(np.zeros(3), samples)
-        stiffness: Array = modal @ np.diag(np.square(self.modal_frequencies))
+        stiffness: Array = np.diag(np.diag(modal) * np.square(self.modal_frequencies))
         return stiffness
 
 

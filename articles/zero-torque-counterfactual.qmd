@@ -96,7 +96,7 @@ Articles must qualify the construction on first use and either link to this defi
 Every executable or quantitative ZTCF result must conform to
 `affinedrift.ztcf-intervention/v1`. The
 [normative schema](../data/ztcf/ztcf_intervention_v1.schema.json) and
-[golden fixture](../data/ztcf/planar_golf_forward_fixture_v1.json) make the
+[golden fixture](../data/ztcf/planar_golf_forward_fixture_v2.json) make the
 following fields reviewable:
 
 | Contract Area | Required Declaration |
@@ -110,11 +110,13 @@ following fields reviewable:
 | Failure | `invalid_contract`, `engine-unavailable`, `engine-unsupported`, and `numerical_failure` are fail-closed states, not missing values that another result may fill |
 
 The registered fixture supports only the repository's Python
-`GolfModel.ztcf_trajectory/v1` algorithm for one declared planar model. It is a
+`GolfModel.ztcf_trajectory/v2` algorithm for one declared planar model. It is a
 deterministic software regression, not a human or cross-engine validation.
 MATLAB, Simulink, MuJoCo, Pinocchio, and other engines have no parity claim under
 this contract unless a second supported adapter, exact model translation,
 golden fixture, metric, and tolerance are registered.
+
+The current fixture uses model version 2.0: a rigid three-link chain with consistent rigid inertia and bias forces. It integrates no flexible shaft states or additional shaft inertia. The historical version 1 fixture is preserved as a record of the earlier mixed-inertia calculation and is unsupported by the current adapter. The model change requires a new result; it does not inherit the old numerical or physical interpretation.
 
 ### Interpretation Ladder
 
