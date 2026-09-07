@@ -1,1257 +1,504 @@
-%% ==========================================================================
-%%  Chapter 6: The Stability–Optimality Duality
-%% ==========================================================================
-\chapter{The Stability--Optimality Duality}
+\chapter{Stability--Optimality Duality}
 \label{ch:duality}
 
-\begin{laymansbox}{Two Sides of the Same Coin}{stability_optimality}
-The same matrix that LQR uses to score future cost can also serve as a ruler proving
-that small errors shrink under the feedback law. This chapter reveals that optimality
-and stability are not separate concerns but two views of the same geometric object: the
-Riccati solution acting simultaneously as cost curvature and contraction metric. This
-connection, recognized in the 1960s by Kalman and formalized by Willems, remains one of
-the most powerful principles in modern control: the controller that minimizes energy
-consumption guarantees robustness, and the controller that maximizes robustness often
-minimizes energy. Duality is why we can design once and verify both objectives
-simultaneously.
-\end{laymansbox}
+A useful swing should achieve its impact objective with tolerable effort and sensitivity to error. These requirements are related, but none implies the others without a model and a stated criterion. Linear quadratic control gives a particularly clear connection: the same Riccati solution describes the minimum future quadratic cost and supplies a certificate of closed-loop stability. This is a mathematical identity under declared assumptions, not evidence that a golfer solves a Riccati equation or minimizes mechanical energy.
 
-\section{The Central Bridge}
+This chapter develops that identity in continuous and discrete time, checks its rates and numerical predictions, and separates it from several tempting overextensions. An optimal-control cost need not be a physical energy; an optimal state path need not be a geodesic; a well-conditioned Riccati matrix need not imply controllability; and an observer-based implementation need not retain full-state feedback robustness. These distinctions sharpen the golf question: which perturbations can the available inputs correct, which can the measurements reveal, and at what cost within the remaining time to impact?
 
-Chapters~\ref{ch:contraction} and~\ref{ch:optimal-control} developed two apparently
-independent threads:
-\begin{itemize}
-\item \textbf{Contraction\index{Contraction Analysis} theory}: find a metric $\mat{M}$ such that
-$\mat{A}_{\text{cl}}^\T\mat{M}+\mat{M}\mat{A}_{\text{cl}}+\dot{\mat{M}}
-\preceq -2\lambda\mat{M}$.
-\item \textbf{Optimal control}: find a gain $\mat{K}$ via the Riccati equation,
-producing a cost-to-go matrix $\mat{S}$.
-\end{itemize}
+\section{What the Quadratic Problem Assumes}
 
-The duality theorem shows these are the same computation under the right interpretation.
+\subsection{State, Port and Objective}
 
-The Riccati solution $S(\x)$ is the Hessian of the value function in the symplectic structure of the Hamiltonian formulation.
-In Agrachev and Sachkov's framework \cite[Part~IV]{AgrachevSachkov2004}, the costate-adjoint dynamics and the Riccati equation 
-arise naturally from the symplectic geometry of the cotangent bundle. The value function $V^*(\x)$ satisfies the 
-Hamilton--Jacobi--Bellman equation, and its Hessian $\nabla^2 V^*$ encodes the local cost-to-go curvature. This Hessian 
-is precisely the Riccati matrix, connecting optimization and stability through the geometry of the Hamiltonian flow on 
-the symplectic manifold.
-
-\begin{intuitionbox}
-Optimal control builds a local quadratic ``cost bowl'' around the trajectory; contraction
-checks whether perturbations shrink under a metric ``bowl.'' Duality appears when those
-bowls coincide---the Riccati matrix $\mat{S}$ serves double duty as both value curvature
-and contraction metric for the closed-loop tangent dynamics.
-\end{intuitionbox}
-
-\section{Historical Context: Discovering the Duality}
-
-The connection between Lyapunov\index{Lyapunov Stability} stability and optimal control emerged gradually in the mid-twentieth century.
-Lyapunov\index{Lyapunov Stability}'s foundational work (1892) established that a suitable energy-like function can certify stability;
-nearly 70 years later, Kalman's pivotal contributions recognized that the optimal control problem and the
-stability problem share a common certificate.
-
-\subsection{Kalman's Insight (1960)}
-
-In his seminal papers on linear-quadratic regulation \cite{Kalman1960}, Kalman showed that the unique positive-definite solution
-$\mat{S}$ of the algebraic Riccati equation (ARE)
+Consider the continuous-time system
 \begin{equation}
-\mat{0} = \mat{Q} + \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}
-\label{eq:ch6:are-steady}
+\dot x=Ax+Bu,\qquad
+J(x_0,u)=\int_0^\infty (x^TQx+u^TRu)\,dt,
 \end{equation}
-is simultaneously:
-\begin{enumerate}
-\item The \textbf{cost curvature} matrix: the optimal cost-to-go for a state $\x$ is exactly $V^\star(\x) = \x^\T\mat{S}\x$.
-\item A \textbf{Lyapunov function} for the closed-loop system $\dot\x = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
-\end{enumerate}
+where $Q=Q^T\succeq0$ and $R=R^T\succ0$. Here $x$ is a deviation from an equilibrium with the equilibrium input removed. For a swing trajectory the analogous variables are deviations from a feasible time-dependent reference; that problem generally has time-dependent matrices and a finite horizon. The actuator port matters: torque, muscle excitation and motor voltage lead to different $B$, retained actuator states and admissible inputs.
 
-This insight unified two previously separate fields: \textit{the stability guarantee comes free from optimizing
-the cost}. This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize
-energy) and separately checked stability (find a Lyapunov function). Afterward, they solved it once and received both
-certifications.
-
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  % Left side: Cost
-  \draw[thick, black] (0, 1.5) rectangle (2.5, 2.5);
-  \node[font=\small, align=center] at (1.25, 2) {Cost curvature:\\$V^* = \x^\T \mat{S} \x$};
-
-  % Right side: Stability
-  \draw[thick, black] (3.5, 1.5) rectangle (6, 2.5);
-  \node[font=\small, align=center] at (4.75, 2) {Lyapunov function:\\$V = \x^\T \mat{S} \x$};
-
-  % Central object
-  \node[draw, very thick, red, rounded corners=4pt, minimum width=2cm, minimum height=0.8cm, font=\small\bfseries] at (3, 0.5) {Riccati Solution $\mat{S}$};
-
-  % Arrows
-  \draw[<->, thick, black] (1.25, 1.5) -- (2.85, 1.1);
-  \draw[<->, thick, black] (4.75, 1.5) -- (3.15, 1.1);
-
-  % Caption
-  \node[font=\small] at (3, -0.3) {One solution serves both purposes};
-\end{tikzpicture}
-\end{center}
-
-\subsection{Dissipation Inequalities and Willems' Framework (1971)}
-
-Jan Willems formalized and generalized Kalman's observation into the language of \textit{dissipation inequalities}.
-His work (Willems, 1972) showed that a system is stable if and only if there exists a positive-definite matrix $\mat{S}$
-and a cost function $\ell(x, u)$ such that the system ``dissipates'' energy at a rate determined by $\mat{S}$:
+The components of $x$ and $u$ require explicit units or reference scales. If $x=Tz$ and $u=Uv$ for invertible scale matrices, the transformed data are
 \begin{equation}
-V_{k+1} - V_k \leq -\ell(x_k, u_k),
-\label{eq:ch6:dissipation}
+A_z=T^{-1}AT,\quad B_z=T^{-1}BU,\quad
+Q_z=T^TQT,\quad R_z=U^TRU.
 \end{equation}
-where $V_k = x_k^\T \mat{S} x_k$. The LQR problem is precisely the one where the cost function $\ell$ is the stage cost
-$x^\T\mat{Q} x + u^\T\mat{R} u$, and the dissipation inequality becomes an equality:
+Consequently $S_z=T^TST$ and $K_z=U^{-1}KT$. The physical policy is unchanged by this consistent conversion. Raw eigenvalues, Euclidean norms and condition numbers of $S$ generally change. Comparing an angle gain with an angular-velocity gain by their numerical magnitudes alone compares quantities with different units.
+
+The quadratic criterion is a choice about performance. Penalizing activation squared can be an effort surrogate; penalizing torque squared is a different surrogate. Neither is automatically metabolic expenditure, joint work, tissue loading or shaft energy. For example, joint mechanical power is torque times angular velocity, with a sign and an energy-transfer interpretation absent from a positive quadratic torque penalty. State exactly which criterion an argument uses.
+
+\subsection{Existence and Positive Definiteness}
+
+For the infinite-horizon continuous-time LQR problem, standard sufficient hypotheses are stabilizability of $(A,B)$ and detectability of $(Q^{1/2},A)$. Stabilizability means that modes which cannot be controlled are already asymptotically stable. Detectability means that modes invisible to the state penalty are already asymptotically stable. Under these hypotheses the stabilizing algebraic Riccati solution is symmetric positive semidefinite, the feedback stabilizes the system, and the optimal value is $x_0^TSx_0$.
+
+Positive semidefinite is not positive definite. A stable unpenalized state can have zero value, so $S$ can be singular even when the feedback is stabilizing. Assuming $Q\succ0$ is a convenient sufficient condition for $S\succ0$ in the setting here. More generally an appropriate observability condition on the penalized state excludes zero-cost directions. We will state $S\succ0$ explicitly whenever it defines a norm or metric. Detectability alone does not justify an inverse $S^{-1}$.
+
+The corresponding discrete-time hypotheses replace asymptotic stability by the condition that eigenvalues lie strictly inside the unit circle. These assumptions concern the declared mathematical model. They do not verify that a linearization remains accurate through a large swing, actuator saturation or a contact transition.
+
+\section{The Continuous-Time Identity}
+
+\subsection{Completing the Square}
+
+Let $S=S^T$ solve
 \begin{equation}
-V_{k+1} - V_k = -\ell(x_k, u_k).
-\label{eq:ch6:lqr-dissipation}
+A^TS+SA-SBR^{-1}B^TS+Q=0,
+\qquad K=R^{-1}B^TS.
 \end{equation}
-
-Willems' perspective recast the Riccati solution as a \textbf{dissipation certificate}: proof that the system loses
-energy (in the $\mat{S}$-weighted sense) at a rate equal to the optimal cost.
-
-\subsection{Robustness Margins From LQR}
-
-Anderson and Moore's foundational book (1971) and subsequent work by Doyle and Stein emphasized that LQR not only
-optimizes the cost but also delivers remarkable robustness properties \textit{for free}:
-
-\begin{proposition}[Guaranteed Robustness Margins of LQR]
-\label{prop:ch6:lqr-margins}
-The continuous-time LQR controller $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ derived from the ARE guarantees:
-\begin{enumerate}
-\item \textbf{Gain margin}: multiplicative perturbations to the control input satisfying $\|\Delta\mat{K}\|$ remain
-      stable for any $\Delta\mat{K}$ with $\|\Delta\mat{K}\| < \|\mat{K}\|$.
-\item \textbf{Strict gain margin}: even more precisely, the loop remains stable if $\mat{K} \to \eta\mat{K}$
-      for any $\eta \in (1/2, \infty)$.
-\item \textbf{Phase margin}: the loop margin under phase perturbations is at least $60^\circ$ on both sides.
-\item \textbf{Disk margin}: the closed-loop poles lie outside a disk of radius $1/2$ centered at $(-1, 0)$.
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}[Proof Sketch (Completion of Squares)]
-The ARE states $\mat{A}^\T\mat{S} + \mat{S}\mat{A} + \mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} = 0$,
-with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$. Consider the perturbed controller
-$\uvec = -\eta\mat{K}\x$ for $\eta > 0$. Using $V = \x^\T\mat{S}\x$:
+For $V(x)=x^TSx$, direct differentiation gives
 \begin{equation}
-\dot{V} = \x^\T[(\mat{A} - \eta\mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \eta\mat{B}\mat{K})]\x.
-\label{eq:ch6:perturbed-V}
+\begin{aligned}
+\dot V&=x^T(A^TS+SA)x+2x^TSBu,\\
+x^TQx+u^TRu+\dot V&=(u+Kx)^TR(u+Kx).
+\end{aligned}
 \end{equation}
-
-Substituting the ARE ($\mat{A}^\T\mat{S} + \mat{S}\mat{A} = -\mat{Q} + \mat{K}^\T\mat{R}\mat{K}$) and
-noting $\mat{S}\mat{B}\mat{K} = \mat{K}^\T\mat{R}\mat{K}$:
-\begin{align}
-\dot{V} &= \x^\T[-\mat{Q} + \mat{K}^\T\mat{R}\mat{K} - 2\eta\mat{K}^\T\mat{R}\mat{K}]\x \notag\\
-&= -\x^\T[\mat{Q} + (2\eta - 1)\mat{K}^\T\mat{R}\mat{K}]\x.
-\label{eq:ch6:eta-perturbation}
-\end{align}
-
-Since $\mat{Q} \succeq 0$ and $\mat{R} \succ 0$, the expression is negative definite whenever $2\eta - 1 > 0$,
-i.e., $\eta > 1/2$. For $\eta \to \infty$, the quadratic term grows without bound, so stability is maintained
-for all $\eta \in (1/2, \infty)$.
-
-\begin{remark}
-This result is specific to continuous-time LQR (SISO: gain margin $[1/2, \infty)$, phase margin $\pm 60^\circ$).
-Discrete-time LQR does not enjoy such generous margins; the relevant concept there is the \emph{disk margin},
-which depends on the sampling rate and system dynamics. The two settings should not be conflated.
-\end{remark}
-\end{proof}
-
-This proposition is not academic: it explains why tuning an LQR controller by scaling the gain (increasing $\eta$ to be
-more aggressive) fails only when $\eta \leq 1/2$—and by then, the system is already far too aggressive for practical use.
-
-\section{Discrete-Time Duality: The Value Decrease Identity}
-
-\subsection{The Core Derivation}
-
-Under the optimal feedback $\du_k = -\mat{K}_k\dx_k$, the closed-loop perturbation dynamics are
+Every sign is consequential. Integrating the second identity over $[0,T]$ gives
 \begin{equation}
-\dx_{k+1} = (\mat{A}_k - \mat{B}_k\mat{K}_k)\,\dx_k.
-\label{eq:ch6:closed-loop}
+J_T=V(x_0)-V(x(T))+
+\int_0^T(u+Kx)^TR(u+Kx)\,dt.
 \end{equation}
+For the stabilizing solution and admissible infinite-horizon comparison controls with the required vanishing terminal value, this proves optimality of $u=-Kx$ and $J^*=V(x_0)$. The terminal term cannot simply be discarded for an arbitrary nondecaying trajectory. The usual LQR existence theorem supplies the admissibility and limiting argument under the preceding hypotheses.
 
-Define the quadratic Lyapunov candidate
+On the optimal closed loop $A_c=A-BK$, define $D=Q+K^TRK$. Then
 \begin{equation}
-V_k = \dx_k^\T\mat{S}_k\dx_k,
-\label{eq:ch6:lyapunov-candidate}
+A_c^TS+SA_c=-D,\qquad \dot V=-x^TDx.
 \end{equation}
-where $\mat{S}_k$ is the Riccati solution from~\eqref{eq:ch5:riccati-full}:
+The feedback effort term is part of the dissipation identity. Dropping it changes the proof and can change a claimed rate. If $S\succ0$ and $D\succ0$, this is a strict quadratic Lyapunov certificate. With $D\succeq0$, a nonpositive derivative alone is insufficient to prove asymptotic convergence; an invariance or detectability argument is needed to exclude nondecaying zero-dissipation motions.
+
+\subsection{A Value Rate Is Twice a Norm Rate}
+
+Suppose $S\succ0$ and $D\succ0$. Define
 \begin{equation}
-\mat{S}_k = \mat{Q}_k + \mat{A}_k^\T \mat{S}_{k+1} \mat{A}_k - \mat{A}_k^\T \mat{S}_{k+1} \mat{B}_k
-(\mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k)^{-1} \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k.
-\label{eq:ch6:riccati-full}
+\beta=\lambda_{\min}(S^{-1/2}DS^{-1/2})>0.
 \end{equation}
-
-Introduce the gain matrix
+Since $x^TDx\ge\beta x^TSx$, integration yields
 \begin{equation}
-\mat{K}_k = (\mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k)^{-1} \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k,
-\label{eq:ch6:gain-definition}
+V(t)\le e^{-\beta t}V(0),\qquad
+\|x(t)\|_S\le e^{-\beta t/2}\|x(0)\|_S,
 \end{equation}
-which allows us to rewrite the Riccati equation in the \textbf{alternative (or canonical) form}:
+where $\|x\|_S=\sqrt{x^TSx}$. In a fixed scaled Euclidean norm,
 \begin{equation}
-\mat{S}_k = \mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k),
-\label{eq:ch6:riccati-alt-form}
+\|x(t)\|_2\le\sqrt{\kappa_2(S)}\,
+e^{-\beta t/2}\|x(0)\|_2.
 \end{equation}
-which is a key form that appears throughout duality theory.
+A simpler, potentially more conservative, value rate is $\lambda_{\min}(D)/\lambda_{\max}(S)$. The maximum eigenvalue of $S$, rather than its minimum, belongs in this denominator. The factor of one half in the norm exponent follows from taking a square root. These are certified bounds, not necessarily the slowest pole or the observed decay along a particular initial direction.
 
-Now we compute $V_{k+1} - V_k$ step by step.
+For the scalar system $\dot x=x+u$ with $Q=R=1$, the stabilizing solution is $S=1+\sqrt2$ and $A_c=-\sqrt2$. Hence $x(t)=e^{-\sqrt2t}x_0$, while $V(t)=e^{-2\sqrt2t}V_0$. Calling $2\sqrt2$ the state-norm decay rate would be wrong even in this one-dimensional example. At $t=0.7$, the state multiplier is approximately $0.371595$.
 
-\begin{theorem}[Value Decrease = Contraction\index{Contraction Analysis} Certificate]
-\label{thm:ch6:duality}
-Under the LQR-optimal feedback with gain defined by~\eqref{eq:ch6:gain-definition}:
+\section{The Discrete-Time Identity}
+
+\subsection{Bellman Completion and the Riccati Equation}
+
+For $x_{k+1}=Ax_k+Bu_k$ with cost $\sum_{k=0}^\infty(x_k^TQx_k+u_k^TRu_k)$, set
 \begin{equation}
-\boxed{
-V_{k+1} - V_k = -\dx_k^\T\bigl(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k\bigr)\dx_k \leq -\alpha\norm{\dx_k}^2
-}
-\label{eq:ch6:value-drop}
+H=R+B^TSB,\qquad K=H^{-1}B^TSA.
 \end{equation}
-for some $\alpha > 0$ (the smallest eigenvalue of $\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k$).
-\end{theorem}
-
-\begin{proof}[Complete Step-by-Step Derivation]
-\textbf{Step 1: Compute $V_{k+1}$ using the closed-loop dynamics}. From~\eqref{eq:ch6:closed-loop}:
-\begin{align}
-\dx_{k+1} &= (\mat{A}_k - \mat{B}_k\mat{K}_k)\,\dx_k, \\
-V_{k+1} &= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
-&= \dx_k^\T(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)\dx_k.
-\label{eq:ch6:Vk1-full}
-\end{align}
-
-\textbf{Step 2: Write $V_{k+1} - V_k$}. We have $V_k = \dx_k^\T\mat{S}_k\dx_k$, so:
-\begin{align}
-V_{k+1}-V_k &= \dx_k^\T\!\left[
-(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)
-- \mat{S}_k\right]\!\dx_k.
-\label{eq:ch6:diff-raw}
-\end{align}
-
-\textbf{Step 3: Invoke the Riccati alternative form}. Equation~\eqref{eq:ch6:riccati-alt-form} states:
+The discrete algebraic Riccati equation is
 \begin{equation}
-\mat{S}_k = \mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
+S=Q+A^TSA-A^TSB(R+B^TSB)^{-1}B^TSA.
 \end{equation}
-
-Therefore:
+It differs from the continuous-time algebraic equation. A fixed point of the discrete backward Riccati recursion solves this discrete equation, not its continuous counterpart. Expanding the quadratic terms gives
 \begin{equation}
-(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k) = \mat{S}_k - \mat{Q}_k.
-\label{eq:ch6:riccati-substitution}
+\begin{aligned}
+&x^TQx+u^TRu+(Ax+Bu)^TS(Ax+Bu)-x^TSx\\
+&\hspace{2em}=(u+Kx)^TH(u+Kx).
+\end{aligned}
 \end{equation}
-
-\textbf{Step 4: Substitute back}:
-\begin{align}
-V_{k+1}-V_k &= \dx_k^\T\!\left[
-(\mat{S}_k - \mat{Q}_k) - \mat{S}_k\right]\!\dx_k \notag\\
-&= \dx_k^\T\!\left[-\mat{Q}_k\right]\!\dx_k \\
-&= -\dx_k^\T\mat{Q}_k\dx_k.
-\label{eq:ch6:first-drop}
-\end{align}
-
-\textbf{Step 5: Add the control cost}. The optimal value function satisfies a fundamental recursion:
+On $u=-Kx$, therefore,
 \begin{equation}
-V_k = x_k^\T\mat{Q}_k x_k + u_k^\T\mat{R}_k u_k + V_{k+1}.
-\label{eq:ch6:cost-recursion}
+A_c^TSA_c-S=-Q-K^TRK=-D,
+\qquad V_{k+1}-V_k=-x_k^TDx_k.
 \end{equation}
+The $K^TRK$ term follows from expanding both next-state value and input cost; it cannot be added after using an inconsistent expression for $A_c^TSA_c$.
 
-Rearranging for perturbations:
+\subsection{Discrete Norm and Value Factors}
+
+With $S\succ0$ and $D\succ0$, define $\delta=\lambda_{\min}(S^{-1/2}DS^{-1/2})$ and $\rho=1-\delta$. The identity $S-D=A_c^TSA_c\succeq0$ ensures $0<\delta\le1$. It follows that
 \begin{equation}
-V_{k+1} - V_k = -\dx_k^\T\mat{Q}_k\dx_k - \du_k^\T\mat{R}_k\du_k.
-\label{eq:ch6:value-drop-with-control}
+V_k\le\rho^k V_0,\qquad
+\|x_k\|_2\le\sqrt{\kappa_2(S)}\,\rho^{k/2}\|x_0\|_2.
 \end{equation}
+If $\rho=0$, the identity implies $A_c=0$ and the state reaches zero after one step. Otherwise the norm multiplier per step is $\sqrt\rho$, not $\rho$. Replacing $\delta$ by $\lambda_{\min}(D)/\lambda_{\max}(S)$ gives another valid, generally looser, bound. A physical decay rate per second also requires the sample period; a discrete multiplier alone has no time unit.
 
-With the optimal control $\du_k = -\mat{K}_k\dx_k$:
-\begin{align}
-V_{k+1} - V_k &= -\dx_k^\T\mat{Q}_k\dx_k - (-\mat{K}_k\dx_k)^\T\mat{R}_k(-\mat{K}_k\dx_k) \notag\\
-&= -\dx_k^\T\mat{Q}_k\dx_k - \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k \\
-&= -\dx_k^\T(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k)\dx_k.
-\label{eq:ch6:value-drop-final}
-\end{align}
+For $A=1.2$ and $B=Q=R=1$, the scalar closed-loop multiplier is approximately $0.406472$. Its squared value, approximately $0.165219$, is the value multiplier. This elementary check catches the same norm/value confusion as the continuous-time example.
 
-Since $\mat{Q}_k \succ 0$ and $\mat{R}_k \succ 0$ by assumption (Assumption from Chapter~\ref{ch:optimal-control}),
-we have $\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k \succ 0$. Let $\alpha_k = \lambda_{\min}(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k)$.
-Then:
+\section{Finite Horizons and Moving References}
+
+\subsection{The Terminal Condition Matters}
+
+For a feasible nominal trajectory, the first-order deviation dynamics are $\dot\xi=A(t)\xi+B(t)v$. With terminal penalty $\xi(T)^TS_f\xi(T)$, the local quadratic value is $V(t,\xi)=\xi^TS(t)\xi$ and
 \begin{equation}
-V_{k+1} - V_k \leq -\alpha_k \norm{\dx_k}^2.
-\label{eq:ch6:value-drop-alpha}
+-\dot S=A^TS+SA-SBR^{-1}B^TS+Q,\qquad S(T)=S_f.
 \end{equation}
-\end{proof}
-
-\begin{remark}[Interpretation]
-The value decrease identity reveals the fundamental bargain of LQR: the cost is paid in two parts at each step:
-\begin{enumerate}
-\item \textbf{State penalty}: $\dx_k^\T\mat{Q}_k\dx_k$ penalizes the state deviation from the reference.
-\item \textbf{Control penalty}: $\du_k^\T\mat{R}_k\du_k = \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k$ penalizes the energy cost of the optimal control action.
-\end{enumerate}
-
-The sum of these two terms is the rate at which the Lyapunov function (Riccati-weighted squared norm) decreases.
-This is why LQR is so well-behaved: every unit of perturbation energy is forced to be paid down via the optimal control.
-\end{remark}
-
-\subsection{Extracting Exponential Decay}
-
-Suppose there exist uniform bounds:
+Here $K(t)=R(t)^{-1}B(t)^TS(t)$. Including $\partial_t V$ restores the same completion identity. Along the local optimal feedback,
 \begin{equation}
-\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k \succeq \alpha\mat{I},
-\qquad
-\underline{s}\,\mat{I} \preceq \mat{S}_k \preceq \overline{s}\,\mat{I},
-\label{eq:ch6:bounds}
+\frac{d}{dt}(\xi^TS\xi)=-\xi^T(Q+K^TRK)\xi.
 \end{equation}
-for constants $\alpha, \underline{s}, \overline{s} > 0$ with $\alpha < \overline{s}$.
-
-Then from~\eqref{eq:ch6:value-drop}:
+This is the chosen homogeneous quadratic tracking problem in the deviation variables. Expanding a general original cost about a feasible but nonoptimal trajectory can also produce linear terms in the local value and a feedforward correction. Feasibility alone does not make those terms vanish or make the reference locally optimal.
+In discrete time use $S_{k+1}$ in $H_k=R_k+B_k^TS_{k+1}B_k$ and $K_k=H_k^{-1}B_k^TS_{k+1}A_k$, then propagate
 \begin{equation}
-V_{k+1} \leq V_k - \alpha\norm{\dx_k}^2.
-\label{eq:ch6:first-ineq}
+S_k=Q_k+A_k^TS_{k+1}A_k-
+A_k^TS_{k+1}B_kH_k^{-1}B_k^TS_{k+1}A_k.
 \end{equation}
+Both formulas run backward from the terminal condition. A finite-horizon optimum does not by itself establish infinite-time stability, recursive feasibility or stability under repeated replanning. With $S_f=0$, the value vanishes at $T$ for every terminal state. It is then impossible to regard $S(T)$ as a positive-definite metric or infer a nonzero terminal error bound from terminal value alone.
 
-Since $\underline{s}\norm{\dx_k}^2 \leq V_k = \dx_k^\T\mat{S}_k\dx_k \leq \overline{s}\norm{\dx_k}^2$, we have
-$\norm{\dx_k}^2 \leq V_k/\underline{s}$, giving:
+Uniform bounds $mI\preceq S(t)\preceq MI$ and a uniform strict differential inequality are needed for a uniform exponential norm estimate. For a nonlinear swing, the local feedback and quadratic value are approximations near the reference. Higher-order remainders, input limits, estimation error and mode transitions must be controlled on a stated neighborhood before extending the certificate to the nonlinear motion.
+
+\subsection{Impact Objectives and Remaining Control Authority}
+
+An impact objective may penalize predicted clubhead velocity, face orientation and strike location rather than all joint coordinates equally. If $y=H(x)$ is the impact output and $C_T=DH(\bar x(T))$, a local terminal penalty takes the form $S_f=C_T^TWC_T$. This matrix is often semidefinite because multiple state changes produce the same first-order impact output. Those null directions are not automatically harmless: they may affect constraints, higher-order outcomes or subsequent dynamics.
+
+This expression is exact for the squared linearized output error. For the nonlinear penalty $(H(x)-y_*)^TW(H(x)-y_*)$, its half-Hessian also contains weighted second derivatives of $H$ multiplied by the nominal output residual. Those additional terms vanish when $H(\bar x(T))=y_*$. Using only $C_T^TWC_T$ at a nonzero residual is a Gauss--Newton approximation, not the full terminal curvature.
+
+The remaining horizon and the state transition matrix determine how a torque change can affect that output. The Riccati solution combines that dynamics with chosen costs; it does not substitute for a controllability calculation. A large gain near impact may demand unavailable torque or bandwidth. For a ball-contact event whose time changes with the trajectory, output sensitivity must include the event-time correction and any reset derivative. A smooth fixed-time terminal model cannot silently stand in for this hybrid calculation.
+
+\section{A Reproducible Discrete Example}
+
+\subsection{Model and Numerical Authority}
+
+Use the declared illustrative matrices
 \begin{equation}
-V_{k+1} \leq V_k - \frac{\alpha}{\overline{s}}\,V_k
-= \left(1-\frac{\alpha}{\overline{s}}\right)V_k.
-\label{eq:ch6:exp-decay}
+A=\begin{bmatrix}1&0.1\\0.981&1\end{bmatrix},\quad
+B=\begin{bmatrix}0.005\\0.1\end{bmatrix},\quad
+Q=\begin{bmatrix}10&0\\0&1\end{bmatrix},\quad R=0.1.
 \end{equation}
+These historical pendulum-like coefficients mix approximation orders: the state matrix resembles a forward-Euler upright-pendulum step, while the position input coefficient retains a second-order term. We treat them as the definition of a discrete example, not an exact zero-order-hold discretization of a continuous pendulum. For a physical application, derive $A_d$ and $B_d$ together from the same declared continuous model and hold assumption, then verify the approximation at the chosen sample period.
 
-Define the decay rate:
-\begin{equation}
-\rho := 1-\frac{\alpha}{\overline{s}} \in (0,1).
-\label{eq:ch6:decay-rate}
-\end{equation}
+The coordinates below are scaled angle and angular-rate deviations and the input is a scaled command. A physical interpretation requires specifying those reference scales and the torque or acceleration port. The normalized initial direction $(1,0)^T$ is used to display linear homogeneity; it does not validate a one-radian upright-pendulum perturbation or a finite golf-swing intervention. Multiplying that initial direction by $\varepsilon$ multiplies the state and input by $\varepsilon$ and the value by $\varepsilon^2$.
 
-Iterating the inequality:
-\begin{equation}
-V_k \leq \rho^k V_0,
-\label{eq:ch6:Vk-bound}
-\end{equation}
-
-and converting to Euclidean norm via the bounds on $\mat{S}_k$:
-\begin{align}
-\underline{s}\norm{\dx_k}^2 &\leq V_k \leq \rho^k V_0 \leq \rho^k \overline{s}\norm{\dx_0}^2, \\
-\norm{\dx_k}^2 &\leq \frac{\overline{s}}{\underline{s}}\rho^k\norm{\dx_0}^2.
-\label{eq:ch6:norm-decay}
-\end{align}
-
-This is a \textbf{discrete contraction inequality} with the Riccati matrix as the metric. The contraction rate $\rho$ is
-determined by the smallest eigenvalue of the stage cost and the condition number of the value matrix.
-
-\begin{remark}[Decay Rate Interpretation]
-The decay rate $\rho = 1 - \alpha/\overline{s}$ reveals a trade-off:
-\begin{itemize}
-\item \textbf{Larger $\alpha$} (stronger stage cost): faster decay.
-\item \textbf{Larger $\overline{s}$} (larger Riccati solution): slower decay, but more robust (larger basin of attraction).
-\item The condition number $\kappa_S := \overline{s}/\underline{s}$ appears in the Euclidean norm bound: worse conditioning
-      means a larger factor in front of the exponential decay.
-\end{itemize}
-
-Good LQR design balances aggressiveness (large $\alpha$) with robustness (well-conditioned $\mat{S}$).
-\end{remark}
-
-\section{Worked Numerical Example: The Discrete Pendulum}
-
-We now apply the duality theory to a concrete system: the linearized discrete-time inverted pendulum from
-Chapter~\ref{ch:optimal-control}.
-
-\subsection{System Setup}
-
-\begin{equation}
-\mat{A} = \begin{bmatrix} 1 & 0.1 \\ 0.981 & 1 \end{bmatrix}, \quad
-\mat{B} = \begin{bmatrix} 0.005 \\ 0.1 \end{bmatrix}, \quad
-\mat{Q} = \begin{bmatrix} 10 & 0 \\ 0 & 1 \end{bmatrix}, \quad
-\mat{R} = 0.1.
-\label{eq:ch6:example-system}
-\end{equation}
+Both editions obtain their matrices and table from the same generator, with a separate SciPy Riccati solution and trajectory propagation used in the regression checks. Displayed values are rounded only after calculation; verifying a small residual from the rounded matrices alone is inappropriate.
 
 \input{generated/ch06_lqr_example}
-
-We apply the discrete-time Riccati recursion backward until it reaches its fixed point.
-
-\begin{remark}[Every number in this section is computed, not transcribed]
-The values below are produced by \texttt{scripts/generate\_worked\_examples.py}, which
-solves the Riccati equation with \texttt{src/affine\_control/lqr.py} and writes a LaTeX
-fragment this chapter \verb|\input|s. CI regenerates the fragment and fails if it differs
-from what is committed.
-
-That machinery exists because an earlier revision of this section did not have it. Its
-$\mat{S}$ was not a solution of the Riccati equation --- the residual norm was $16.25$
-rather than zero --- and the gain that followed produced a closed loop with spectral radius
-$1.043$, printed directly beneath the sentence ``Both eigenvalues lie inside the unit
-circle, confirming stability.'' The system was unstable and the text said otherwise.
-\end{remark}
-
-\subsection{Riccati Solution}
-
-The recursion converges to
+\subsection{Computed Matrices and Decay Bound}
+The stabilizing discrete solution and feedback are
 \begin{equation}
-\mat{S} = \begin{bmatrix} \chsixRiccati \end{bmatrix},
-\label{eq:ch6:riccati-solution}
+S=\begin{bmatrix}\chsixRiccati\end{bmatrix},\qquad
+K=\begin{bmatrix}\chsixGain\end{bmatrix}.
 \end{equation}
-which satisfies the discrete algebraic Riccati equation to a residual norm below
-$\chsixRiccatiResidual$ --- in practice it lands at machine precision, but the published
-figure is a bound the generator enforces, because the residual itself is a difference of
-nearly-equal floating-point numbers and its exact value varies with the machine. Whether the
-residual is small at all is the first property worth checking about any matrix presented as
-a Riccati solution.
-
-The eigenvalues of $\mat{S}$ are $\lambda_{\max}(\mat{S}) = \chsixRiccatiEigMax$ and
-$\lambda_{\min}(\mat{S}) = \chsixRiccatiEigMin$, both positive as they must be, giving a
-condition number
+The closed-loop and stage-cost matrices are
 \begin{equation}
-\kappa(\mat{S}) = \frac{\lambda_{\max}(\mat{S})}{\lambda_{\min}(\mat{S})}
-                = \frac{\chsixRiccatiEigMax}{\chsixRiccatiEigMin} = \chsixCondition.
-\label{eq:ch6:condition-number}
+A_c=\begin{bmatrix}\chsixClosedLoop\end{bmatrix},\qquad
+D=\begin{bmatrix}\chsixStageCost\end{bmatrix}.
 \end{equation}
-
-\subsection{Optimal Gain}
-
-From the Riccati recursion, the steady-state optimal gain is:
+The unrounded Riccati residual is below $10^{-10}$. The closed-loop eigenvalues
+are $\chsixEigOne$ and $\chsixEigTwo$, so the spectral radius is
+$\chsixSpectralRadius$. The value matrix has condition number $\chsixCondition$.
+Using the conservative ratio $\lambda_{\min}(D)/\lambda_{\max}(S)$ gives
 \begin{equation}
-\mat{K} = (\mat{R} + \mat{B}^\T\mat{S}\mat{B})^{-1}\mat{B}^\T\mat{S}\mat{A}.
-\label{eq:ch6:gain-computation}
+\rho=\chsixRho,\qquad
+\|x_k\|_2\le\chsixSqrtCondition\,\rho^{k/2}\|x_0\|_2.
 \end{equation}
-
-Computing step-by-step:
-\begin{align}
-\mat{B}^\T\mat{S} &= \begin{bmatrix} \chsixBtS \end{bmatrix}, \\
-\mat{B}^\T\mat{S}\mat{A} &= \begin{bmatrix} \chsixBtSA \end{bmatrix}, \\
-\mat{B}^\T\mat{S}\mat{B} &= \chsixBtSB, \\
-\mat{R} + \mat{B}^\T\mat{S}\mat{B} &= \chsixRplusBtSB, \\
-\mat{K} &= \frac{1}{\chsixRplusBtSB}\begin{bmatrix} \chsixBtSA \end{bmatrix}
-       = \begin{bmatrix} \chsixGain \end{bmatrix}.
-\label{eq:ch6:gain-values}
-\end{align}
-
-The optimal feedback is therefore
-$u_k = -\chsixGainAngle\,\theta_k - \chsixGainRate\,\dot\theta_k$: much more aggressive on
-the angle than on the angular velocity, which is what $\mat{Q} = \diag(10,1)$ asks for.
-
-\subsection{Closed-Loop Dynamics}
-
-The closed-loop system is:
-\begin{align}
-\mat{A}_{\text{cl}} &= \mat{A} - \mat{B}\mat{K} \\
-&= \begin{bmatrix} 1 & 0.1 \\ 0.981 & 1 \end{bmatrix}
-   - \begin{bmatrix} \chsixBK \end{bmatrix}
- = \begin{bmatrix} \chsixClosedLoop \end{bmatrix}.
-\label{eq:ch6:acl}
-\end{align}
-
-The eigenvalues of $\mat{A}_{\text{cl}}$ are:
-\begin{equation}
-\lambda_1(\mat{A}_{\text{cl}}) = \chsixEigOne, \quad \lambda_2(\mat{A}_{\text{cl}}) = \chsixEigTwo,
-\label{eq:ch6:closed-loop-eigs}
-\end{equation}
-so the spectral radius is $\chsixSpectralRadius < 1$ and the closed loop is stable. The
-dominant eigenvalue $\chsixEigTwo$ sets the asymptotic decay per step in the Euclidean
-sense, without the Riccati metric.
-
-\begin{warningbox}
-Check this rather than trusting it. A $2\times 2$ closed loop makes the check almost free:
-the eigenvalues satisfy
-$\lambda^2 - \trace(\mat{A}_{\text{cl}})\lambda + \det(\mat{A}_{\text{cl}}) = 0$, so both lie
-inside the unit circle exactly when $|\trace| < 1 + \det$ and $|\det| < 1$. A gain derived
-from a matrix that is \emph{almost} a
-Riccati solution can easily fail that test while looking entirely plausible, and the failure
-is silent --- nothing about the printed matrix announces it.
-\end{warningbox}
-
-\subsection{Stage Cost Matrix}
-
-The stage cost matrix is:
-\begin{align}
-\mat{Q} + \mat{K}^\T\mat{R}\mat{K} &= \begin{bmatrix} \chsixStageCost \end{bmatrix}.
-\label{eq:ch6:stage-cost}
-\end{align}
-
-Its eigenvalues are $\lambda_{\max} = \chsixStageEigMax$ and $\lambda_{\min} = \chsixStageEigMin$,
-so $\alpha = \chsixStageEigMin$.
-
-\subsection{Contraction Rate From Riccati Bounds}
-
-From the Riccati bounds:
-\begin{equation}
-\rho = 1 - \frac{\alpha}{\overline{s}}
-     = 1 - \frac{\chsixStageEigMin}{\chsixRiccatiEigMax} = \chsixRho.
-\label{eq:ch6:rho-example}
-\end{equation}
-
-The Euclidean norm decay is bounded by:
-\begin{equation}
-\norm{\dx_k} \leq \sqrt{\kappa(\mat{S})} \, \rho^{k/2} \norm{\dx_0}
-             = \chsixSqrtCondition \, (\chsixRho)^{k/2} \norm{\dx_0}.
-\label{eq:ch6:euclidean-decay}
-\end{equation}
-
-The prefactor $\sqrt{\kappa(\mat{S})} = \chsixSqrtCondition$ exceeds one, so for small $k$
-this bound is weaker than saying nothing at all --- an artifact of measuring decay in a norm
-that is not adapted to the dynamics. The contraction is stated cleanly in the
-Riccati-weighted norm $V_k = \dx_k^\T \mat{S} \dx_k$:
-\begin{equation}
-V_k \leq \rho^k V_0 = (\chsixRho)^k V_0.
-\label{eq:ch6:V-decay}
-\end{equation}
-
-\subsection{Bound Versus Trajectory}
-
-Starting from $\dx_0 = \begin{bmatrix} 1 & 0\end{bmatrix}^\T$ (unit angle error), the table
-below simulates the closed loop and places the bound beside it.
-
-\begin{table}[h]
-\centering
+\subsection{Actual Trajectory Versus Its Bound}
+For the normalized initial direction $x_0=(1,0)^T$, direct propagation gives:
+\begin{center}
+\small
 \chsixValueTable
-\caption[Value function under optimal feedback, simulated against its bound.]
-        {Simulated evolution of the value function under optimal feedback, with the Riccati
-         bound $\rho^k$ alongside. $V_k$ falls to $\chsixValueRatioTen V_0$ after ten steps
-         while the bound only guarantees $\chsixBoundTen V_0$ --- the bound is roughly two
-         orders of magnitude loose here.}
-\label{tab:ch6:value-trajectory}
-\end{table}
+\end{center}
+At step ten the actual value ratio $V_{10}/V_0$ is $\chsixValueRatioTen$,
+while its conservative bound is $\chsixBoundTen$.
 
-Two features of that table are worth dwelling on, because both were misrepresented in an
-earlier revision of this section.
 
-First, \textbf{the per-step ratio is not constant}. It moves between roughly $0.56$ and
-$0.60$ as the trajectory rotates through the state space, settling toward the square of the
-dominant closed-loop eigenvalue. A table whose decay-ratio column is constant to three
-decimals is not a simulation --- it is $\rho^k$ evaluated and presented as one, which is what
-the previous version of this table did.
+The Euclidean norm initially grows even though the value decreases at every step. This is compatible with a stable, nonnormal closed loop and an anisotropic value function. It refutes the claim that every norm must decrease whenever a quadratic Lyapunov function does. The bound column is $\rho^k$, a bound on $V_k/V_0$; the preceding ratio column is the actual one-step ratio $V_k/V_{k-1}$. Those quantities answer different questions and must not be compared as if both were observations of the same decay factor.
 
-Second, \textbf{the Euclidean norm initially grows}, from $1.000$ to about $1.27$ by step
-two, before decaying. That is not a contradiction: contraction is asserted in the
-$\mat{S}$-weighted norm, and $V_k$ decreases monotonically throughout. A non-normal
-$\mat{A}_{\text{cl}}$ routinely produces exactly this transient growth in the Euclidean
-norm, and a hand-filled table that shows $\norm{\dx_k}$ decreasing monotonically from the
-first step has quietly assumed the conclusion.
+\section{Geometry Without Overclaiming}
 
-\section{Continuous-Time Duality: Detailed Derivation}
+\subsection{When a Value Defines a Metric}
 
-The connection between dissipativity (Willems' framework) and accessibility can be understood through Agrachev and Sachkov's 
-analysis \cite[Ch.~4]{AgrachevSachkov2004}: a system is dissipative if it admits storage functions capturing energy-like 
-bounds, while accessibility asks whether the reachable set is large. The Riccati solution acts as a storage function from 
-the control perspective, with the contraction rate (dissipation margin) dual to how richly the control distribution generates 
-motion. Systems with high controllability---where Lie brackets unlock new directions---admit low-dissipation storage functions, 
-reflecting the geometric intuition that accessible systems can freely exchange energy without accumulation.
+For $V(x)=x^TSx$ with constant $S\succ0$, the Hessian is $2S$, not $S$. Either $S$ or $2S$ defines a positive-definite inner product after a stated constant normalization. Ellipsoids $x^TSx=c$ have axes determined by the eigenvectors of $S$, with semi-axis lengths $\sqrt{c/\lambda_i(S)}$. These are not generally eigenvectors of $A_c$. The state transition maps an initial ellipsoid to another ellipsoid, but does not generally shrink it by a common factor in every direction.
 
-\subsection{Setup and Objectives}
-
-For the continuous-time system:
+For a nonlinear value function, a Hessian need not be positive definite or even exist across changes of the optimal policy. Moreover an ordinary coordinate Hessian is not automatically a tensor. Under $x=\phi(z)$,
 \begin{equation}
-\dot\x = \mat{A}\x + \mat{B}\uvec,
-\label{eq:ch6:ct-system}
+\frac{\partial^2 V}{\partial z_i\partial z_j}
+=\frac{\partial\phi^a}{\partial z_i}
+\frac{\partial\phi^b}{\partial z_j}
+\frac{\partial^2 V}{\partial x^a\partial x^b}
++\frac{\partial V}{\partial x^a}
+\frac{\partial^2\phi^a}{\partial z_i\partial z_j},
 \end{equation}
-with cost:
+with repeated indices summed. The second term vanishes at a stationary point; away from it, a coordinate Hessian alone does not define a coordinate-independent Riemannian metric. A covariant Hessian requires a declared connection and still needs a positivity argument. A family of local Riccati matrices along one reference similarly does not automatically define a smooth positive metric over every state and direction in a neighborhood.
+
+The tangent bundle is the disjoint union $TM=\bigsqcup_{x\in M}T_xM$. A chart provides a local identification with a product; a global identification $TM=M\times\mathbb R^n$ requires additional structure and is not true for every manifold. When the state includes orientations or constrained configurations, this distinction prevents a convenient local coordinate representation from becoming a false global statement.
+
+\subsection{Optimal Paths Are Not Generally Geodesics}
+
+A Riemannian geodesic is stationary for an appropriate length or energy functional; sufficiently short regular segments locally minimize length. A geodesic need not globally minimize length or be dynamically stable. LQR minimizes a time integral of state and input penalties subject to dynamics. That functional is not generally the metric length of the state curve.
+
+A concrete counterexample is
 \begin{equation}
-J = \int_0^\infty (\x^\T\mat{Q}\x + \uvec^\T\mat{R}\uvec) \, dt,
-\label{eq:ch6:ct-cost}
+A=\operatorname{diag}(-1,-2),\quad B=I,\quad
+Q=\operatorname{diag}(3,12),\quad R=I.
 \end{equation}
-the optimal control is:
+The Riccati solution is $S=\operatorname{diag}(1,2)$ and $A_c=\operatorname{diag}(-2,-4)$. Starting from $(1,1)^T$, the optimal path is $(e^{-2t},e^{-4t})^T$, a parabola $x_2=x_1^2$. Geodesics of the constant metric $S$ are straight lines up to reparameterization. At $t=0$, velocity $(-2,-4)^T$ and acceleration $(4,16)^T$ are not collinear, so even a reparameterization cannot make this curve a straight line. Optimality here is exact; the geodesic interpretation fails.
+
+The useful geometric statement is instead local and differential. For a linear closed loop, the separation $\delta x$ obeys the same dynamics as $x$, and $\delta x^TS\delta x$ satisfies the Lyapunov inequality. For a nonlinear vector field $F_c$, a contraction certificate requires a positive metric $M(x,t)$ with uniform bounds and
 \begin{equation}
-\uvec^\star = -\mat{K}\x = -\mat{R}^{-1}\mat{B}^\T\mat{S}\x,
-\label{eq:ch6:ct-optimal-control}
+\partial_tM+D_xM[F_c]+(D_xF_c)^TM+M(D_xF_c)
+\preceq-2\alpha M.
 \end{equation}
-where $\mat{S}$ is the solution to the algebraic Riccati equation~\eqref{eq:ch6:are-steady}.
+This is a condition on the full differential dynamics throughout a stated region, together with suitable trajectory and path-domain assumptions for a finite-distance conclusion. It does not follow merely because one reference trajectory has a Riccati solution.
 
-For time-varying systems or finite-horizon problems, we use the dynamic Riccati equation (DRE):
+\subsection{Conditioning Is Not Controllability}
+
+Take $A=-I_2$, $B=0$, $Q=I_2$ and $R=1$. There is no control authority at all, yet the stable uncontrolled dynamics have $S=I_2/2$ and $\kappa_2(S)=1$. Conversely, rescaling one state coordinate can make the condition number of a perfectly valid value matrix arbitrarily large without changing the physical closed-loop system. Thus neither a universal condition-number threshold nor a small minimum eigenvalue of $S$ is a test of controllability.
+
+Weak control over an unstable penalized mode can instead make its value very large as input authority tends to zero. A large value can indicate costly correction under the chosen objective; it does not identify the cause without separating dynamics, input scaling and weights. Increasing $Q$ increases value in the positive-semidefinite order for the same admissible problem, but does not necessarily improve its condition number. Nor does a larger $S$ establish a larger nonlinear region of attraction: for a fixed level $c$, larger quadratic weights can make $\{x:x^TSx\le c\}$ smaller.
+
+For a swing, inspect finite-horizon controllability or output-reachability measures with declared state and input scales, singular directions, constraints and uncertainty. Report the resulting achievable change in the impact output. The Riccati matrix then explains the chosen tradeoff among those changes rather than serving as a universal scalar measure of coordination quality.
+
+\section{The Exact Scope of LQR Robustness}
+
+\subsection{A Common Input-Gain Margin}
+
+For clarity take $Q\succ0$ and the continuous-time full-state feedback above. If the actual applied feedback is $u=-\eta Kx$ for a common real scalar $\eta$, then
 \begin{equation}
--\dot{\mat{S}} = \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} + \mat{Q},
-\label{eq:ch6:DRE-explicit}
+(A-\eta BK)^TS+S(A-\eta BK)
+=-Q-(2\eta-1)K^TRK.
 \end{equation}
-with terminal condition $\mat{S}(T) = \mat{S}_f$ (typically zero or a penalty on final state).
+Therefore every $\eta\ge1/2$ yields a strict Lyapunov inequality under these stronger hypotheses. The usual open interval $\eta>1/2$ is a standard guaranteed sufficient range; boundary and semidefinite-$Q$ conclusions require their own assumptions. It is not a necessary stability condition. For the scalar example $A=B=Q=R=1$, stability actually requires $\eta>1/(1+\sqrt2)\approx0.414214$. Reducing $\eta$ means weaker feedback, not more aggressive feedback.
 
-\subsection{Value Function Time Derivative}
-
-Consider perturbations $\dx$ in the closed-loop system:
+This statement concerns a common scalar multiplication at the specified input port. It does not imply stability for every matrix gain perturbation satisfying an arbitrary norm comparison such as $\|\Delta K\|<\|K\|$. For an additive closed-loop perturbation $E$, the same certificate gives the different sufficient condition
 \begin{equation}
-\dot{\dx} = (\mat{A} - \mat{B}\mat{K})\,\dx = \mat{A}_{\text{cl}}\,\dx,
-\label{eq:ch6:ct-closed-loop}
+E^TS+SE\prec D.
 \end{equation}
-where $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
+One conservative scaled Euclidean test is $2\|S\|_2\|E\|_2<\lambda_{\min}(D)$. If the error is in the feedback gain, then $E=-B\Delta K$. Its direction and interaction with $B$ matter.
 
-The quadratic value function is:
+\subsection{The Return-Difference Disk Is Not a Pole Disk}
+
+For a single input, write $B=b$, $R=r>0$ and $k=r^{-1}b^TS$. At a frequency where $j\omega I-A$ is invertible, put $z=(j\omega I-A)^{-1}b$ and $L(j\omega)=kz$. Premultiplying and postmultiplying the Riccati equation by $z^*$ and $z$, using $Az=j\omega z-b$, gives
 \begin{equation}
-V(t) = \dx(t)^\T\mat{S}(t)\dx(t).
-\label{eq:ch6:ct-value}
+r\bigl(|1+L(j\omega)|^2-1\bigr)=z^*Qz\ge0.
 \end{equation}
+Thus the Nyquist curve of the nominal return ratio avoids the open unit disk centered at $-1$. This is a frequency-response statement, not a claim that the eigenvalues of $A-BK$ lie in a disk centered at $-1$ with radius $1/2$. Continuous-time pole locations also carry inverse-time units, so a universal unscaled numerical pole disk would already need a declared time scale.
 
-Taking the time derivative:
-\begin{align}
-\dot{V} &= \frac{d}{dt}[\dx^\T\mat{S}\dx] \notag\\
-&= \dot{\dx}^\T\mat{S}\dx + \dx^\T\dot{\mat{S}}\dx + \dx^\T\mat{S}\dot{\dx} \notag\\
-&= (\mat{A}_{\text{cl}}\dx)^\T\mat{S}\dx + \dx^\T\dot{\mat{S}}\dx + \dx^\T\mat{S}(\mat{A}_{\text{cl}}\dx) \notag\\
-&= \dx^\T[\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}]\dx.
-\label{eq:ch6:V-derivative}
-\end{align}
+Under the usual well-posed continuous-time single-loop assumptions, the return-difference result yields the classical full-state LQR gain and phase margin guarantees. At a unity-gain crossing, $|1+e^{j\theta}|\ge1$ keeps the return ratio at least $60$ degrees from the critical negative-real direction. This familiar phase statement uses the negative-feedback return-ratio convention above. Multiple simultaneous input-channel perturbations, structured uncertainty, delays and sampled implementations require appropriately formulated robustness analysis; a SISO circle picture is not a general structured-singular-value or disk-margin certificate.
 
-\subsection{Simplifying Using the Riccati Equation}
+\subsection{Saturation and Estimation Change the Question}
 
-Recall that $\mat{A}_{\text{cl}} = \mat{A} - \mat{B}\mat{K}$. The key is to show that:
+For $\dot x=x+u$, the unconstrained LQR law is $u=-(1+\sqrt2)x$. With $|u|\le1$, at $x=2$ the saturated law gives $\dot x=1>0$, although the unconstrained law gives $\dot x=-2\sqrt2$. A local certificate can still be useful on a region where the command stays within limits, but global stability is lost in this example. Noise amplification, torque-rate limits, activation delays and contact changes likewise require an augmented model or an explicit uncertainty analysis.
+
+When the true state is replaced by an estimate, the nominal separation principle discussed below can establish stability under its assumptions. It does not preserve all full-state LQR robustness margins. Doyle's 1978 paper \href{https://authors.library.caltech.edu/records/e39yd-evs06}{Guaranteed Margins for LQG Regulators} establishes that the general LQG class has no corresponding universal gain or phase margin guarantee. The practical conclusion is to analyze the implemented controller, estimator, sensors and actuators together.
+
+\section{Dissipativity and Disturbance Attenuation}
+
+\subsection{Storage Depends on the Supply Rate}
+
+A dissipativity statement specifies a storage function $V\ge0$ and a supply rate $w$ such that $V(T)-V(0)\le\int_0^T w\,dt$. Its meaning depends on that supply rate. It is not an unconditional equivalence between dissipativity and stability. A supply that injects energy or permits state growth does not by itself establish convergence. Conversely, a Lyapunov function can supply a useful dissipativity inequality without being a physical stored energy.
+
+The LQR completion identity relates storage to state and control costs; it does not prove that all optimal controllers stabilize every plant under every criterion. The underlying assumptions and admissible comparisons are essential. Willems's \href{https://doi.org/10.1007/BF00276493}{Dissipative Dynamical Systems, Part I} provides the general storage-and-supply framework. Its role here is conceptual: the cost, the storage and any mechanical energy must each be identified rather than merged under one label.
+
+\subsection{A Normalized Full-State H-Infinity Problem}
+
+To make the disturbance claim precise, consider
 \begin{equation}
-\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}} = -(\mat{Q} + \mat{K}^\T\mat{R}\mat{K}).
-\label{eq:ch6:key-identity}
+\dot x=Ax+Bu+Ew,\qquad
+z=\begin{bmatrix}Q^{1/2}x\\R^{1/2}u\end{bmatrix},
+\quad Q\succeq0,\ R\succ0.
 \end{equation}
-
-To prove this, we expand the left-hand side:
-\begin{align}
-&\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}} \notag\\
-&= (\mat{A} - \mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \mat{B}\mat{K}) + \dot{\mat{S}} \notag\\
-&= \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{K}^\T\mat{B}^\T\mat{S} - \mat{S}\mat{B}\mat{K} + \dot{\mat{S}}.
-\label{eq:ch6:expanded-lhs}
-\end{align}
-
-Now recall the DRE~\eqref{eq:ch6:DRE-explicit}:
+This normalized full-state setup includes control effort in the regulated output and has no additional feedthrough or cross terms. More general output-feedback plants require different formulas and additional solvability conditions. For a chosen $\gamma>0$, seek an appropriate stabilizing symmetric solution of the game Riccati equation
 \begin{equation}
--\dot{\mat{S}} = \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} + \mat{Q}.
-\label{eq:ch6:dre-rearrange}
+A^TS+SA+Q-SBR^{-1}B^TS+
+\gamma^{-2}SEE^TS=0.
 \end{equation}
-
-Rearranging:
+Choosing any positive matrix root without checking the stabilizing branch is insufficient. In the usual game formulation the associated saddle dynamics involve $A-(BR^{-1}B^T-\gamma^{-2}EE^T)S$; the existence and admissibility conditions must hold. With $u=-R^{-1}B^TSx$, completing the disturbance square yields
 \begin{equation}
-\mat{A}^\T\mat{S} + \mat{S}\mat{A} + \dot{\mat{S}} = -\mat{Q} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
-\label{eq:ch6:dre-alt}
+\dot V+z^Tz-\gamma^2w^Tw
+=-\gamma^2\|w-\gamma^{-2}E^TSx\|_2^2\le0.
 \end{equation}
-
-Substituting into~\eqref{eq:ch6:expanded-lhs}:
-\begin{align}
-&\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}} \notag\\
-&= [-\mat{Q} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}] - \mat{K}^\T\mat{B}^\T\mat{S} - \mat{S}\mat{B}\mat{K}.
-\label{eq:ch6:partial}
-\end{align}
-
-Now use $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ and the symmetry $\mat{R} = \mat{R}^\T$:
-\begin{align}
-\mat{K}^\T\mat{B}^\T\mat{S} &= \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}, \\
-\mat{S}\mat{B}\mat{K} &= \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
-\end{align}
-Hence $\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} = 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}$.
-Note also that $\mat{K}^\T\mat{R}\mat{K} = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}$.
-
-Substituting back:
-\begin{align}
-\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}
-&= -\mat{Q} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} - 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \notag\\
-&= -\mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \notag\\
-&= -\mat{Q} - \mat{K}^\T\mat{R}\mat{K}.
-\label{eq:ch6:final-identity}
-\end{align}
-
-Therefore:
+Consequently
 \begin{equation}
-\dot{V} = \dx^\T[\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}]\dx
-        = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx.
-\label{eq:ch6:ct-value-drop}
+\int_0^T z^Tz\,dt\le
+\gamma^2\int_0^T w^Tw\,dt+V(x_0)-V(x(T)).
 \end{equation}
+For zero initial state, nonnegative storage and a well-posed internally stable closed loop, this gives the induced $L^2$-gain bound. With nonzero initial state there is an additional initial-storage contribution. This is not a pointwise requirement that $\dot V<0$ for every disturbance. A disturbance can raise storage while the integrated gain bound holds.
 
-\subsection{Exponential Decay in Continuous Time}
+For example take $\dot x=-x+u+w$, $z=(x,u)^T$ and $\gamma=2$. The positive stabilizing solution satisfies $-2S+1-3S^2/4=0$, giving $S=(-2+\sqrt7)/1.5$. At $x=1$, $w=3$ and $u=-S$, the storage derivative is approximately $1.35134>0$, while $\dot V+z^Tz-4w^2\approx-33.46333$. Both facts are consistent. A smallest feasible attenuation level is generally an infimum; an exactly optimal controller at that boundary need not exist. A worst-case disturbance criterion also does not make the same controller simultaneously optimal for an unrelated expected-energy criterion.
 
-If $\mat{Q} + \mat{K}^\T\mat{R}\mat{K} \succeq \alpha\mat{I}$ and $\underline{s}\mat{I} \preceq \mat{S} \preceq \overline{s}\mat{I}$, then:
+For a golf model, identify the disturbance channel: uncertain joint torque, ground motion, shaft loading and measurement noise enter different equations. The scale of $w$ defines the meaning of $\gamma$. A numerical attenuation level with no disturbance units or output normalization cannot support a physical robustness comparison.
+
+\section{Control and Estimation Duality}
+
+\subsection{The Kalman--Bucy Model}
+
+Use an explicit stochastic model,
 \begin{equation}
-\dot{V} \leq -\alpha\norm{\dx}^2 \leq -\frac{\alpha}{\overline{s}}V.
-\label{eq:ch6:ct-decay-ineq}
+dx=(Ax+Bu)\,dt+G_w\,dW_t,\qquad
+dy=Cx\,dt+R_v^{1/2}\,dV_t,
 \end{equation}
-
-Solving the differential inequality:
+where the Wiener processes are independent, $R_v\succ0$, and $Q_w=G_wG_w^T$. With a Gaussian initial state independent of the noises, the linear Gaussian filter has
 \begin{equation}
-V(t) \leq e^{-\lambda t}V(0), \quad \text{where} \quad \lambda = \frac{\alpha}{\overline{s}}.
-\label{eq:ch6:ct-exp-decay}
+\begin{aligned}
+d\hat x&=(A\hat x+Bu)\,dt+
+PC^TR_v^{-1}(dy-C\hat x\,dt),\\
+\dot P&=AP+PA^T+Q_w-PC^TR_v^{-1}CP.
+\end{aligned}
 \end{equation}
+Here $P$ is an estimation-error covariance and the noise matrices are continuous-time intensities. Writing a white-noise sample as an ordinary differentiable signal obscures those units and the stochastic interpretation. A discrete sensor covariance per sample is not automatically the same matrix as a continuous-time intensity.
 
-Converting to Euclidean norm:
+The algebraic filter equation is the control Riccati equation with the dual pair $(A^T,C^T)$ and corresponding weights. The time-dependent comparison additionally requires reversing time and the coefficient histories, because the control equation runs backward from a terminal condition while covariance runs forward from an initial condition. A transpose alone does not remove that boundary-value distinction. Stability and bounded covariance require appropriate detectability, stabilizability or uniform time-dependent hypotheses, not merely the existence of a written Riccati differential equation.
+
+\subsection{Covariance and the Differential Metric}
+
+Covariance describes uncertainty; large covariance means a direction is uncertain. If $P\succ0$, the precision $M=P^{-1}$ provides the inverse weighting of an estimation-error norm. For the deterministic homogeneous error dynamics $A_o=A-PC^TR_v^{-1}C$, differentiate the inverse to obtain
 \begin{equation}
-\norm{\dx(t)}^2 \leq \frac{\overline{s}}{\underline{s}}e^{-2\lambda t}\norm{\dx(0)}^2,
-\label{eq:ch6:ct-euclidean-decay}
+\dot M=-M\dot P M,
+\qquad
+\dot M+A_o^TM+MA_o=-MQ_wM-C^TR_v^{-1}C.
 \end{equation}
-or:
+This identity gives a precise connection between filtering and a differential stability certificate. Uniform positivity, boundedness and an appropriate strictness or observability argument are still needed for a uniform convergence rate. It does not say that a stochastic estimation error converges to zero in the continuing presence of process and measurement noise. Instead one studies its distribution, covariance, moments or the forgetting of different initial estimates under a shared observation record.
+
+\subsection{Nonlinear Observers Need Their Full Jacobian}
+
+For a smooth deterministic observer
 \begin{equation}
-\norm{\dx(t)} \leq \sqrt{\frac{\overline{s}}{\underline{s}}} \, e^{-\lambda t}\norm{\dx(0)}.
-\label{eq:ch6:ct-norm-decay-final}
+\dot{\hat x}=F(\hat x,u)+L(\hat x,t)\bigl(y-h(\hat x)\bigr),
 \end{equation}
-
-\subsection{Comparison With Contraction LMI}
-
-Comparing~\eqref{eq:ch6:ct-value-drop} with the contraction condition from Chapter~\ref{ch:contraction}:
+the Jacobian with the measured $y$ and commanded $u$ held fixed acts on a variation $\xi$ as
 \begin{equation}
-\mat{A}_{\text{cl}}^\T\mat{M} + \mat{M}\mat{A}_{\text{cl}} + \dot{\mat{M}} \preceq -2\lambda\mat{M},
-\label{eq:ch6:contraction-lmi}
+J_o\xi=D_xF\,\xi-LD_xh\,\xi+
+D_xL[\xi]\bigl(y-h(\hat x)\bigr).
 \end{equation}
-we see that setting $\mat{M} = \mat{S}$ and $\lambda = \alpha/(2\overline{s})$ (so that $2\lambda = \alpha/\overline{s}$) gives:
+If $F=f+Gu$, then $D_xF=Df+DG[\,\cdot\,]u$. Both the input-dependent derivative and the innovation-weighted gain derivative matter. In the scalar example $F(x,u)=x^2+(1+x)u$, $h(x)=x$ and $L(x)=x^2$, at $(\hat x,u,y)=(0.3,0.7,1.2)$ the complete Jacobian is $1.75$. Omitting either derivative gives a different variational model.
+
+A contraction calculation uses this complete $J_o$ and the metric derivative along the observer field. Defining the symmetric part as $(J+J^T)/2$ requires consistent factors of two in every rate statement. A transposed nonlinear control law is not automatically an observer, and a local extended Kalman filter covariance is not a global contraction proof. Extended Kalman filters can have conditional local convergence guarantees, but those require assumptions about observability, nonlinear remainder bounds, covariance behavior and initialization. Differential dynamic programming also contains second-order dynamics terms beyond a simple linearized Riccati step; it is not exactly the nonlinear transpose of an extended Kalman filter.
+
+\subsection{Observability Requires a Sensor Model}
+
+For a linearized time-varying measurement $\delta y=C(t)\delta x$ with declared positive noise weighting $R_y(t)$, one information-like finite-horizon Gramian is
 \begin{equation}
-\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}
-= -(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})
-\preceq -\alpha\mat{I}
-\preceq -\frac{\alpha}{\overline{s}}\mat{S}.
-\label{eq:ch6:contraction-satisfied}
+W_o=\int_{t_0}^T\Phi(t,t_0)^TC(t)^T
+R_y(t)^{-1}C(t)\Phi(t,t_0)\,dt.
 \end{equation}
+Its interpretation requires a consistent continuous measurement model and state scales; a discrete measurement sequence uses a corresponding sum with its sample covariance. A weak direction means the modeled observations poorly distinguish that initial perturbation under the specified experiment. It does not establish that a body segment is intrinsically unobservable in every task.
 
-This is precisely the contraction condition: \textbf{the Riccati solution simultaneously certifies optimality and contraction}.
+Multiple muscle attachments are not, by themselves, multiple independent measurements. Claims that a shoulder is well observed while a wrist is poorly observed require a sensor map, retained states, noise assumptions and an experiment. Motion capture, inertial sensors, force plates and shaft measurements constrain different combinations of configuration, velocity and loading. Correlated sensor errors and contact modes can alter the information substantially. State estimation is therefore part of the mechanical argument, not a generic assurance that all required joint states are available.
 
-\section{Robustness Margins From LQR}
+\section{Separation, Coupling and the Swing}
 
-\subsection{Gain Margin}
+\subsection{What Linear Separation Proves}
 
-\begin{theorem}[Gain Margin of Continuous-Time LQR]
-\label{thm:ch6:gain-margin}
-The continuous-time LQR controller with gain $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ guarantees stability
-under any multiplicative perturbation $\mat{K}_\eta = \eta\mat{K}$ for $\eta \in (1/2, \infty)$.
-\end{theorem}
-
-\begin{proof}
-Consider the perturbed closed-loop system $\dot\x = (\mat{A} - \eta\mat{B}\mat{K})\x$. Using the value function
-$V = \x^\T\mat{S}\x$:
-\begin{align}
-\dot{V} &= \x^\T[(\mat{A} - \eta\mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \eta\mat{B}\mat{K})]\x \notag\\
-&= \x^\T[\mat{A}^\T\mat{S} + \mat{S}\mat{A} - \eta(\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K})]\x.
-\label{eq:ch6:eta-V-dot}
-\end{align}
-
-From the ARE:
+For the deterministic linear plant, use $u=-K\hat x$ and $\dot{\hat x}=A\hat x+Bu+L(y-C\hat x)$ with $y=Cx$. Writing $e=x-\hat x$ gives
 \begin{equation}
-\mat{A}^\T\mat{S} + \mat{S}\mat{A} = -\mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
-\label{eq:ch6:are-form}
+\frac{d}{dt}\begin{bmatrix}x\\e\end{bmatrix}
+=\begin{bmatrix}A-BK&BK\\0&A-LC\end{bmatrix}
+\begin{bmatrix}x\\e\end{bmatrix}.
 \end{equation}
+The nominal eigenvalues are the union of the controller and observer eigenvalues. If both blocks are Hurwitz, the augmented linear system is asymptotically stable. With the linear Gaussian model and appropriate quadratic expected cost, the separation principle also supports the LQG optimality construction. This is a stronger set of hypotheses than simply combining any stable controller with any stable estimator.
 
-And we showed:
+Even the triangular case does not inherit the exact smaller exponential rate with a uniform prefactor in every norm. The matrix
 \begin{equation}
-\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} = 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} = 2\mat{K}^\T\mat{R}\mat{K}.
-\label{eq:ch6:control-term}
+\begin{bmatrix}-1&1\\0&-1\end{bmatrix}
+\quad\hbox{has transition}\quad
+e^{-t}\begin{bmatrix}1&t\\0&1\end{bmatrix}.
 \end{equation}
+The polynomial factor prevents a bound $Ce^{-t}$ for all $t$ with a finite constant $C$, although any strictly slower exponential rate admits a bound. Equal block decay rates and coupling can therefore matter even without nonlinearities. In a nonlinear system, bounded coupling, compatible metrics and an appropriate cascade or small-gain argument are needed; independent local contraction claims do not automatically prove stability of their interconnection. General two-way coupling can destabilize otherwise stable isolated components.
 
-Thus:
-\begin{align}
-\dot{V} &= \x^\T[-\mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} - 2\eta\mat{K}^\T\mat{R}\mat{K}]\x \notag\\
-&= -\x^\T[\mat{Q} + (2\eta)\mat{K}^\T\mat{R}\mat{K} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}]\x.
-\label{eq:ch6:eta-perturbed-V}
-\end{align}
+\subsection{A Technically Defensible Golf Argument}
 
-The condition $\dot{V} < 0$ requires the bracketed term to be positive definite. Assuming $\eta > 1/2$, we have
-$2\eta > 1$, which means the positive definite matrix $2\eta\mat{K}^\T\mat{R}\mat{K}$ dominates, and $\dot{V} < 0$ is maintained.
-\end{proof}
+The central opportunity is to connect mechanics, control authority and information along a feasible swing. Begin with retained states and input ports, including the shaft and actuator dynamics relevant to the question. Resolve ground and hand constraints, and declare the mode before differentiating. Compute the variational dynamics along the proposed trajectory, then map those perturbations to specified impact outputs. This determines what a local control calculation is trying to correct.
 
-\subsection{Phase Margin}
+Next identify what is measured and when. An input can be mechanically effective but unavailable within the remaining activation or computation delay. A mechanically important state direction can be hard to estimate. An apparently redundant joint motion can preserve the first-order impact output while changing effort, contact forces or future sensitivity. The Riccati value expresses a selected tradeoff among such consequences; it does not establish a unique biological objective from one observed swing.
 
-\begin{theorem}[Phase Margin of Continuous-Time LQR]
-\label{thm:ch6:phase-margin}
-The continuous-time LQR controller guarantees a phase margin of at least $60^\circ$ on both sides of the nominal
-open-loop transfer function.
-\end{theorem}
+Test the proposed policy against finite perturbations in the nonlinear constrained model, with actuator limits and estimation errors included. Report the region, horizon, output changes and uncertainty under which the conclusions hold. Distinguish reducing impact dispersion from driving every joint state toward one reference: several state trajectories can be acceptable if they produce the same task outcome within physical constraints. A universal instruction to make every segment maximally stiff or every state error vanish does not follow from LQR.
 
-The proof uses the Nyquist criterion and the Riccati-induced positive real condition on the return difference
-$\mat{I} + \mat{K}(\mat{sI}-\mat{A})^{-1}\mat{B}$. We omit the technical details but note the key insight: the
-Riccati solution makes the closed-loop system ``strictly positive real,'' which bounds phase perturbations.
+Finally compare alternative hypotheses using observable predictions. Changing a weighting matrix can alter a predicted correction strategy without changing the mechanics; changing the plant can alter reachable outcomes even with fixed weights. If multiple objectives explain the same kinematics, additional measurements or perturbation experiments are needed. Technical rigor strengthens the argument by revealing which conclusion comes from mechanics, which from the chosen objective, and which still needs evidence about the golfer.
 
-\subsection{Disk Margin}
+\section{Reproducible Counterexamples}
 
-The disk margin, or $\mu$-margin, quantifies robustness in the complex plane. For LQR, the loop transfer matrix
-satisfies a disk margin condition: the poles of the closed-loop system remain in a half-plane with guaranteed clearance
-from the origin. This is a consequence of the Riccati solution being positive definite and the ARE's structure.
+The following NumPy/SciPy program checks the scalar rates, the uncontrollable but well-conditioned value, the curved optimal path, the observer cascade, the disturbance balance, the full observer derivative and the saturation failure. Its dimensionless examples isolate mathematical claims; they are not fitted physiological models. The worked discrete table above is separately generated from its declared matrices and checked against an independent algebraic Riccati solver.
 
-\subsection{Implication for Design}
+\begin{lstlisting}[language=Python]
+# Duality chapter checks
+import numpy as np
+from scipy.linalg import expm, solve_continuous_are, solve_discrete_are
 
-These robustness margins explain why LQR is ubiquitously used in practice: not only does it minimize a well-defined cost,
-but it automatically provides guardrails against model uncertainty, sensor noise, and actuator saturation. The engineer
-need not separately verify robustness---the LQR computation provides it.
 
-\section{Condition Number and Its Effect on Contraction Rate}
+def duality_cases() -> dict[str, object]:
+    """Dimensionless counterexamples; these are not fitted golf models."""
+    one = np.ones((1, 1))
+    scalar_s = float(solve_continuous_are(one, one, one, one).item())
+    scalar_closed = 1.0 - scalar_s
+    scalar_value_rate = (1.0 + scalar_s**2) / scalar_s
+    discrete_a = np.array([[1.2]])
+    discrete_s = solve_discrete_are(discrete_a, one, one, one)
+    discrete_gain = float((discrete_s @ discrete_a / (one + discrete_s)).item())
+    discrete_closed = 1.2 - discrete_gain
+    discrete_value_factor = 1.0 - (1.0 + discrete_gain**2) / discrete_s.item()
+    stable_s = solve_continuous_are(-np.eye(2), np.zeros((2, 1)), np.eye(2), one)
 
-\subsection{Definition and Interpretation}
+    # Fully actuated, but its optimal state path is a parabola rather than a line.
+    path_a = np.diag([-1.0, -2.0])
+    path_s = solve_continuous_are(path_a, np.eye(2), np.diag([3.0, 12.0]), np.eye(2))
+    path_closed = path_a - path_s
+    velocity = path_closed @ np.ones(2)
+    acceleration = path_closed @ velocity
 
-Define the condition number of the Riccati solution:
-\begin{equation}
-\kappa(\mat{S}) := \frac{\lambda_{\max}(\mat{S})}{\lambda_{\min}(\mat{S})} = \frac{\overline{s}}{\underline{s}}.
-\label{eq:ch6:kappa-S}
-\end{equation}
+    # Two decay rates of one, coupled in a triangular observer/controller cascade.
+    cascade = expm(np.array([[-1.0, 1.0], [0.0, -1.0]]) * 4.0)
 
-A well-conditioned matrix has $\kappa(\mat{S}) \approx 1$; a poorly conditioned matrix has $\kappa(\mat{S}) \gg 1$.
+    # xdot=-x+u+w, z=(x,u), gamma=2; solve the scalar game Riccati equation.
+    gamma = 2.0
+    game_s = (-2.0 + np.sqrt(7.0)) / 1.5
+    state, disturbance = 1.0, 3.0
+    control = -game_s * state
+    storage_rate = 2 * game_s * state * (-state + control + disturbance)
+    balance = storage_rate + state**2 + control**2 - gamma**2 * disturbance**2
 
-\subsection{Ill-Conditioning Signals Loss of Controllability}
+    # F=x**2+(1+x)u, h=x, L=x**2, with held u and measured y.
+    estimate, command, measurement = 0.3, 0.7, 1.2
+    observer_jacobian = (
+        2 * estimate + command + 2 * estimate * (measurement - estimate) - estimate**2
+    )
+    return {
+        "scalar_norm_rate": scalar_value_rate / 2,
+        "scalar_value_rate": scalar_value_rate,
+        "scalar_transition": np.exp(scalar_closed * 0.7),
+        "discrete_closed_loop": discrete_closed,
+        "discrete_value_factor": discrete_value_factor,
+        "discrete_norm_factor": np.sqrt(discrete_value_factor),
+        "uncontrolled_riccati": stable_s,
+        "path_velocity": velocity,
+        "path_acceleration": acceleration,
+        "cascade_transition": cascade,
+        "disturbed_storage_rate": storage_rate,
+        "hinf_balance": balance,
+        "observer_jacobian": observer_jacobian,
+        "saturated_state_rate": 2.0 - min(2 * scalar_s, 1.0),
+        "unsaturated_state_rate": 2.0 - 2 * scalar_s,
+    }
 
-When $\kappa(\mat{S})$ is large, it often indicates that:
-\begin{enumerate}
-\item The system is nearly uncontrollable in some direction (e.g., the angular velocity of the pendulum is hard to control).
-\item The Riccati matrix has very different scales along its principal directions.
-\item Perturbations in one direction (corresponding to $\lambda_{\max}(\mat{S})$) are much more costly than in another
-      (corresponding to $\lambda_{\min}(\mat{S})$).
-\end{enumerate}
 
-In the limit of complete uncontrollability, $\lambda_{\min}(\mat{S}) \to 0$, and $\kappa(\mat{S}) \to \infty$.
+if __name__ == "__main__":
+    for name, result in duality_cases().items():
+        print(name, result)
+\end{lstlisting}
 
-\subsection{Condition Number and Contraction Rate}
+\section{Summary and Further Reading}
 
-From the discrete-time analysis:
-\begin{equation}
-\rho = 1 - \frac{\alpha}{\overline{s}} = 1 - \frac{\alpha}{\kappa(\mat{S})\underline{s}}.
-\label{eq:ch6:rho-vs-kappa}
-\end{equation}
+The Riccati completion identities make stability and optimality meet in a specific quadratic problem. Their exact content includes the input-effort term, the correct continuous or discrete equation, the boundary condition, and the distinction between value and norm rates. Positive definiteness, uniformity and admissibility are assumptions to establish, not consequences of notation.
 
-As $\kappa(\mat{S})$ increases, $\overline{s}$ increases (for fixed $\underline{s}$ and $\alpha$), and the contraction rate $\rho$ increases
-(approaches 1), meaning convergence slows. More precisely:
-\begin{equation}
-1 - \rho = \frac{\alpha}{\overline{s}} \approx \frac{\alpha}{\kappa(\mat{S})\underline{s}}.
-\label{eq:ch6:contraction-loss}
-\end{equation}
+Geometry provides norms and differential certificates when the relevant matrices are positive and the coordinate construction is valid. It does not turn every optimal swing into a geodesic. Robustness requires the actual uncertainty channel and implementation; estimation requires a measurement model; and finite-horizon swing performance requires an impact objective and remaining control authority. These connections are useful precisely because their limits can be tested.
 
-The number of time steps to reduce the value by a factor of $e$ is:
-\begin{equation}
-\tau = \frac{1}{\ln(1/\rho)} \approx \frac{1}{\alpha/\overline{s}} = \frac{\overline{s}}{\alpha} = \kappa(\mat{S})\frac{\underline{s}}{\alpha}.
-\label{eq:ch6:time-constant}
-\end{equation}
+The continuous, finite-horizon and discrete LQR derivations can be compared with Russ Tedrake's \href{https://underactuated.mit.edu/lqr.html}{Linear Quadratic Regulators}. The full-state and estimator constructions and return-difference analysis appear in Alexandre Megretski's \href{https://ocw.mit.edu/courses/6-245-multivariable-control-systems-spring-2004/b49e52078cd6ec5648ce2d66dff869f2_lec4_6245_2004.pdf}{Using H2 Optimization}. Use the explicit negative-feedback algebra in this chapter when comparing sign conventions. Megretski's \href{https://ocw.mit.edu/courses/6-245-multivariable-control-systems-spring-2004/a9100bcb2c4fe5f05ef2d86007d1fd65_lec7_6245_2004.pdf}{Algorithms for H-Infinity Optimization} states the additional solvability conditions for more general plants; Tedrake's \href{https://underactuated.mit.edu/robust.html}{Robust and Stochastic Control} develops the normalized disturbance-attenuation setting. Bishop and Del Moral's \href{https://arxiv.org/abs/1610.04686}{On the Stability of Kalman--Bucy Diffusion Processes} treats the stochastic filter and conditional stability questions. These sources support particular mathematical frameworks, not an empirical identification of the golfer's objective.
 
-\textbf{Conclusion}: A large condition number $\kappa(\mat{S})$ is a warning sign. It means the system has directions
-that are hard to control, and convergence is slower. The designer should either:
-\begin{enumerate}
-\item Increase the state penalty $\mat{Q}$ in the weakly controllable direction to reduce $\overline{s}/\underline{s}$.
-\item Accept slower convergence but maintain open-loop robustness.
-\item Redesign the system (e.g., add actuators) to improve controllability.
-\end{enumerate}
-
-\section{Connections to H-Infinity and Robust Control}
-
-\subsection{The H-Infinity Problem}
-
-The $H^\infty$ optimal control problem is: given a system with disturbances $\mat{w}$,
-\begin{equation}
-\dot\x = \mat{A}\x + \mat{B}_u\uvec + \mat{B}_w\mat{w},
-\label{eq:ch6:hinf-system}
-\end{equation}
-with controlled output:
-\begin{equation}
-\mat{z} = \begin{bmatrix} \mat{C}_1 \\ \mat{D}_{uu} \end{bmatrix}\x + \begin{bmatrix} 0 \\ \mat{D}_{uw} \end{bmatrix}\mat{w},
-\label{eq:ch6:hinf-output}
-\end{equation}
-find a feedback controller $\mat{K}$ that minimizes the $L_2$-induced norm from disturbances to outputs:
-\begin{equation}
-\gamma^\star = \min_{\mat{K}} \max_{\mat{w} \neq 0} \frac{\|\mat{z}\|_{L_2}}{\|\mat{w}\|_{L_2}}.
-\label{eq:ch6:hinf-objective}
-\end{equation}
-
-\subsection{The H-Infinity Riccati Equation}
-
-The optimal $H^\infty$ controller satisfies a Riccati equation similar in structure to the LQR ARE:
-\begin{equation}
-0 = \mat{A}^\T\mat{S}_\infty + \mat{S}_\infty\mat{A} + \mat{C}_1^\T\mat{C}_1
-  - \mat{S}_\infty(\mat{B}_u\mat{D}_{uu}^{-1}\mat{B}_u^\T - \gamma^{-2}\mat{B}_w\mat{B}_w^\T)\mat{S}_\infty,
-\label{eq:ch6:hinf-are}
-\end{equation}
-where $\gamma$ is the worst-case $L_2$ gain.
-
-\subsection{Duality in the Robust Setting}
-
-The duality theorem extends to $H^\infty$ control: the Riccati solution $\mat{S}_\infty$ serves as both:
-\begin{enumerate}
-\item \textbf{Optimal performance certificate}: the value function $V = \x^\T\mat{S}_\infty\x$ guarantees that the
-      $L_2$ gain from disturbances to outputs is at most $\gamma$.
-\item \textbf{Contraction metric under disturbances}: the time-derivative of $V$ is negative even under the worst-case
-      disturbance, ensuring exponential stability.
-\end{enumerate}
-
-The key insight is the disturbance direction in the Riccati equation: $\gamma^{-2}\mat{B}_w\mat{B}_w^\T$ enters with a
-\textit{negative} sign (compared to the control input $\mat{B}_u$ which is positive). This asymmetry means the controller
-is simultaneously designed to:
-\begin{itemize}
-\item Minimize control energy (via $\mat{B}_u$).
-\item Maximize disturbance rejection (via $\mat{B}_w$ with the worst-case scaling).
-\end{itemize}
-
-\subsection{Worked Example: Pendulum With Wind Disturbance}
-
-Consider the pendulum with a wind force disturbance $w$ entering as:
-\begin{equation}
-\ddot\theta = \theta - u + w.
-\label{eq:ch6:pendulum-wind}
-\end{equation}
-
-The $H^\infty$ design seeks a controller that minimizes the gain from wind $w$ to angle tracking error $\theta$. The
-Riccati solution provides a controller that is simultaneously as energy-efficient as possible while rejecting the worst-case
-wind disturbance. The duality theorem guarantees that this single controller solves both the performance and robustness
-objectives.
-
-\section{Time-Varying vs. Steady-State Duality}
-
-\subsection{The Discrete Riccati Equation (DRE)}
-
-For finite-horizon problems (e.g., trajectory optimization over a $T$-step horizon), the cost-to-go matrix evolves backward
-according to the discrete Riccati recursion:
-\begin{equation}
-\mat{S}_k = \mat{Q}_k + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k - \mat{A}_k^\T\mat{S}_{k+1}\mat{B}_k(\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k,
-\label{eq:ch6:dre-discrete}
-\end{equation}
-with $\mat{S}_T = \mat{S}_f$ (a terminal cost, often zero).
-
-At each time $k$, the contraction property holds in the tangent space:
-\begin{equation}
-\norm{\dx_{k+1}}_{\mat{S}_{k+1}} \leq \rho_k \norm{\dx_k}_{\mat{S}_k},
-\label{eq:ch6:time-varying-contraction}
-\end{equation}
-where $\rho_k = 1 - \alpha_k/\overline{s}_k$ is \textit{time-dependent}.
-
-\subsection{The Algebraic Riccati Equation (ARE)}
-
-For infinite-horizon, time-invariant LQR, the Riccati recursion converges to a fixed point, the ARE:
-\begin{equation}
-0 = \mat{Q} + \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
-\label{eq:ch6:are-again}
-\end{equation}
-
-The solution $\mat{S}$ is \textit{constant} in time, and the contraction rate $\rho$ is also constant:
-\begin{equation}
-\norm{\dx_k}_\mat{S} \leq \rho^k \norm{\dx_0}_\mat{S},
-\label{eq:ch6:steady-state-contraction}
-\end{equation}
-with $\rho = 1 - \alpha/\overline{s}$ independent of $k$.
-
-\subsection{Geometric Interpretation}
+\section{Exercises}
 
 \begin{enumerate}
-\item \textbf{Time-varying case (DRE)}: The Riccati matrix $\mat{S}_k$ changes at each step, reflecting the changing
-      ``cost-to-go'' as we move backward in time from the final state. The tangent space metric is \textit{adapted to the
-      current time}: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
-      far from the terminal, the metric is influenced by asymptotic stability.
+\item Derive the continuous completion identity without assuming $u=-Kx$ until the final step. Keep the finite terminal value and specify when the infinite-horizon limit is legitimate. Construct a stable unpenalized state for which the Riccati value is singular.
 
-\item \textbf{Steady-state case (ARE)}: The Riccati matrix reaches a time-invariant steady state. The metric no longer
-      changes, and the contraction property is uniform in time. This is appropriate for infinite-horizon problems or
-      problems where the horizon is much longer than the natural time scale of the system.
-\end{enumerate}
+\item Expand the discrete Bellman identity and recover both $Q$ and $K^TRK$ in the value difference. For $A=1.2$ and $B=Q=R=1$, calculate the state and value multipliers and convert the state multiplier to a decay rate for a declared sample period.
 
-In both cases, the duality theorem holds: the Riccati solution (time-varying or steady-state) is simultaneously the optimal
-cost-to-go and the contraction metric.
+\item Recompute every row of the generated example. Compare the actual value ratio, the conservative bound and the spectral radius. Explain the initial Euclidean norm growth without claiming instability. Then derive a consistent exact zero-order-hold pendulum model and quantify how its LQR solution differs.
 
-\section{Tangent Bundle\index{Tangent Bundle} Geometry and Geodesics}
+\item Solve a finite-horizon problem with zero terminal cost. Show why a positive-definite metric bound fails at the endpoint, and identify additional terminal ingredients needed for a proposed receding-horizon stability argument.
 
-\subsection{The Tangent Bundle\index{Tangent Bundle}}
+\item Rescale one coordinate in the uncontrollable stable example by a factor of one thousand. Transform all matrices consistently, compare the two Riccati condition numbers, and show that the physical trajectories and control authority are unchanged.
 
-A trajectory on a state-space manifold is a curve $\gamma(t) = (x_1(t), \ldots, x_n(t))$. At each point $x$ on the trajectory,
-the \textbf{tangent space} $T_x M$ is the space of infinitesimal perturbation vectors $\dx$. The \textbf{tangent bundle}
-$TM$ is the union of all tangent spaces:
-\begin{equation}
-TM = \bigcup_{x \in M} T_x M = \{(x, \dx) : x \in M, \dx \in \mathbb{R}^n\}.
-\label{eq:ch6:tangent-bundle}
-\end{equation}
+\item Verify the curved optimal path in the constant-metric example and calculate its velocity and acceleration determinant. Explain why neither an optimal-control cost nor a quadratic value is automatically the length of that state curve.
 
-\subsection{Riemannian Metric on the Tangent Bundle}
+\item Derive the common scalar gain certificate and the SISO return-difference identity. For the scalar unstable plant, compare the guaranteed gain interval with the exact stability interval. Explain why the Nyquist disk is not a pole-location disk and why neither result covers actuator saturation.
 
-A Riemannian metric is a positive-definite inner product on the tangent space at each point. In our context, the Riccati
-solution $\mat{S}(x)$ (which may depend on the state $x$ for nonlinear systems, but is constant for linear systems) defines
-a Riemannian metric:
-\begin{equation}
-\langle \dx_1, \dx_2 \rangle_\mat{S} = \dx_1^\T\mat{S}\,\dx_2.
-\label{eq:ch6:riemannian-metric}
-\end{equation}
+\item Complete the disturbance square for the normalized H-infinity problem. Reproduce the positive storage derivative example and the negative supply balance. State the initial-state, disturbance-unit and internal-stability assumptions needed to interpret an induced gain.
 
-The length of a tangent vector is:
-\begin{equation}
-\|\dx\|_\mat{S} = \sqrt{\dx^\T\mat{S}\,\dx}.
-\label{eq:ch6:metric-norm}
-\end{equation}
+\item Derive the precision-metric identity from the Kalman--Bucy covariance equation. Distinguish decay of a homogeneous error from nonzero steady-state covariance under persistent noise. Explain the time reversal needed for finite-horizon control/filter Riccati duality.
 
-\subsection{Geodesics and Optimal Control}
+\item Differentiate the state-dependent observer with held measurements and input, including the gain derivative. Verify the scalar Jacobian by finite differences. Identify the additional assumptions required to turn a pointwise calculation into a regional contraction claim.
 
-In Riemannian geometry, a \textbf{geodesic} is a curve of shortest length (in the metric sense). For our system, the
-optimal trajectories (those minimizing the LQR cost) are precisely the \textbf{geodesics} with respect to the Riccati
-metric.
-
-Here's why: the LQR cost functional
-\begin{equation}
-J = \int_0^T \left(\x^\T\mat{Q}\x + \uvec^\T\mat{R}\uvec\right) dt
-\label{eq:ch6:lqr-cost-again}
-\end{equation}
-can be rewritten, using the Riccati solution, as a metric-weighted length:
-\begin{equation}
-J \approx \int_0^T \norm{\dot{\gamma}}_\mat{S} \, dt,
-\label{eq:ch6:geodesic-length}
-\end{equation}
-where the precise relationship depends on the details of the derivation. The Euler-Lagrange\index{Euler-Lagrange Equations} equations for minimizing this
-metric-weighted path length are equivalent to the optimal control equations.
-
-\subsection{Convergence of Neighboring Trajectories}
-
-A key property of geodesics is that they are \textit{stable} (in a local sense): neighboring geodesics maintain bounded
-separation. In our setting, the contraction property guarantees stronger convergence:
-\begin{equation}
-\|\Delta \gamma(t)\|_\mat{S} \leq \rho^{t/\tau} \|\Delta \gamma(0)\|_\mat{S},
-\label{eq:ch6:geodesic-convergence}
-\end{equation}
-where $\Delta\gamma$ is the difference between two nearby optimal trajectories, and $\tau$ is the natural time scale.
-
-This is a remarkable property: not only are the optimal trajectories geodesics (shortest paths), but \textit{they also attract
-nearby geodesics exponentially fast}. This is what makes the LQR solution so robust and widely applicable.
-
-\subsection{Visualization in 2D}
-
-For a 2D system (e.g., the pendulum with angle and angular velocity), the Riccati metric defines an elliptical ``distance
-metric.'' The level sets of the Lyapunov function $V = \dx^\T\mat{S}\,\dx = 1$ form ellipses. The principal axes of the
-ellipse are the eigenvectors of $\mat{S}$, with radii proportional to $1/\sqrt{\lambda_i(\mat{S})}$.
-
-A smaller (more negative) eigenvalue means a longer radius in that direction: perturbations along that eigenvector are
-``cheaper'' in the metric sense. Conversely, a larger eigenvalue means a shorter radius: perturbations are expensive.
-
-Under the optimal feedback, all perturbation ellipses shrink at the rate $\rho$ per time step, and the ellipses align with
-the eigenvectors of $\mat{A}_{\text{cl}}$.
-
-\section{Practical Design With Duality}
-
-\subsection{Integrated Design Workflow}
-
-The duality theorem suggests a unified design methodology:
-
-\begin{designbox}
-\textbf{Integrated Stability-Optimality Design:}
-\begin{enumerate}
-\item \textbf{Model the system}: discretize or linearize to get $(\mat{A}, \mat{B})$.
-\item \textbf{Choose weights}: select $\mat{Q}$ and $\mat{R}$ based on performance objectives (state tracking, control
-      effort).
-\item \textbf{Solve the Riccati equation}: compute $\mat{S}$ (via the ARE or DRE).
-\item \textbf{Extract the gain}: $\mat{K} = (\mat{R} + \mat{B}^\T\mat{S}\mat{B})^{-1}\mat{B}^\T\mat{S}\mat{A}$.
-\item \textbf{Verify contraction margins}:
-      \begin{itemize}
-      \item Compute $\alpha = \lambda_{\min}(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})$.
-      \item Compute $\overline{s} = \lambda_{\max}(\mat{S})$ and $\underline{s} = \lambda_{\min}(\mat{S})$.
-      \item Contraction rate: $\rho = 1 - \alpha/\overline{s}$.
-      \item Condition number: $\kappa(\mat{S}) = \overline{s}/\underline{s}$.
-      \end{itemize}
-\item \textbf{Decision point}:
-      \begin{itemize}
-      \item If $\rho$ is close to 1 (say, $\rho > 0.9$) or $\kappa(\mat{S})$ is large (say, $> 100$), the system
-            has weak controllability. Increase $\mat{Q}$ in the hard-to-control direction and re-solve.
-      \item If $\rho$ is small (say, $< 0.3$) and $\kappa(\mat{S})$ is reasonable, the design is aggressive and
-            robust. Proceed to implementation.
-      \item Otherwise, the design is balanced. Implement and tune on hardware if needed.
-      \end{itemize}
-\item \textbf{Robustness certification}: the gain margins [1/2, $\infty$) and phase margin $\geq$ $60^\circ$ apply automatically.
-\end{enumerate}
-\end{designbox}
-
-\subsection{When Duality Breaks Down}
-
-The duality requires several conditions:
-
-\begin{warningbox}
-\textbf{Limitations of the Duality:}
-\begin{enumerate}
-\item \textbf{Bounded Riccati}: If the system loses controllability near a trajectory, the Riccati matrix can become
-      unbounded or ill-conditioned. This is detected by monitoring $\kappa(\mat{S})$. If $\kappa(\mat{S}) > 10^6$ or
-      $\lambda_{\min}(\mat{S}) < 10^{-6}$, the system is nearly uncontrollable.
-
-\item \textbf{Meaningful weights}: The weights $\mat{Q}$ and $\mat{R}$ must reflect true performance objectives. If
-      weights are chosen arbitrarily (e.g., to make the Riccati well-conditioned), the resulting controller may be
-      suboptimal in practice.
-
-\item \textbf{Linearity and perturbations}: The duality holds exactly in the tangent space (linearized dynamics). For
-      large perturbations or highly nonlinear systems, the linear theory breaks down. Nonlinear generalizations (e.g.,
-      differential games with Bellman equations) exist but are more complex.
-
-\item \textbf{Measurement and state estimation}: The duality assumes perfect state knowledge ($\uvec = -\mat{K}\x$). With
-      measurement noise or partial observability, a separate state estimator (Kalman filter) is needed, and the
-      duality extends in a more subtle way (separation principle).
-
-\item \textbf{Sampling and discretization}: When continuous-time controllers are implemented on digital hardware,
-      discretization errors can break the duality. Careful Tustin or zero-order-hold discretization is required.
-\end{enumerate}
-\end{warningbox}
-
-\section{The Estimation--Control Duality}
-
-The duality developed so far connects stability to optimality on the \emph{control} side.
-But the Riccati equation has a mirror image: the \emph{estimation} Riccati, which
-determines how uncertainty propagates through the system and how observations reduce it.
-This section develops the estimation side of the duality.
-
-\subsection{The Dual Riccati Equation}
-
-Consider the system with process noise and output measurement:
-\begin{align}
-\dot\x &= \mat{A}(t)\x + \mat{B}(t)\uvec + \mat{G}_w w, \label{eq:ch6:process-noise} \\
-\vec{y} &= \mat{C}(t)\x + v, \label{eq:ch6:measurement}
-\end{align}
-where $w \sim \mathcal{N}(0, \mat{W})$ and $v \sim \mathcal{N}(0, \mat{V})$ are process
-and measurement noise. The \emph{estimation Riccati equation} governs the covariance
-$\mat{P}(t)$ of the optimal (Kalman) state estimate:
-\begin{equation}
-\dot{\mat{P}} = \mat{A}\mat{P} + \mat{P}\mat{A}^T + \mat{G}_w \mat{W} \mat{G}_w^T
-- \mat{P}\mat{C}^T \mat{V}^{-1} \mat{C}\mat{P}.
-\label{eq:ch6:estimation-riccati}
-\end{equation}
-
-Compare with the control Riccati:
-\begin{equation}
--\dot{\mat{S}} = \mat{A}^T\mat{S} + \mat{S}\mat{A} + \mat{Q}
-- \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^T\mat{S}.
-\label{eq:ch6:control-riccati-recall}
-\end{equation}
-
-The duality is exact: the estimation Riccati for $(\mat{A}, \mat{C}, \mat{W}, \mat{V})$
-is the control Riccati for $(\mat{A}^T, \mat{C}^T, \mat{G}_w \mat{W} \mat{G}_w^T, \mat{V})$.
-The estimation gain $\mat{L} = \mat{P}\mat{C}^T\mat{V}^{-1}$ is the dual of the control
-gain $\mat{K} = \mat{R}^{-1}\mat{B}^T\mat{S}$.
-
-\subsection{The Extended Kalman Filter as Tangent-Space Estimation}
-
-For nonlinear systems $\dot\x = f(\x) + G(\x)\uvec + w$, the Extended Kalman Filter (EKF)
-propagates the state estimate and covariance using the tangent-space (linearized) dynamics:
-\begin{align}
-\dot{\hat\x} &= f(\hat\x) + G(\hat\x)\uvec
-+ \mat{L}(t)\bigl(\vec{y} - h(\hat\x)\bigr), \label{eq:ch6:ekf-state} \\
-\dot{\mat{P}} &= \mat{A}(t)\mat{P} + \mat{P}\mat{A}(t)^T + \mat{G}_w \mat{W} \mat{G}_w^T
-- \mat{P}\mat{C}(t)^T \mat{V}^{-1} \mat{C}(t)\mat{P}, \label{eq:ch6:ekf-cov}
-\end{align}
-where $\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat\x(t)}$ and
-$\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat\x(t)}$.
-
-\begin{intuitionbox}
-The EKF is the estimation analogue of DDP: both linearize the system along a trajectory
-(the estimated trajectory for EKF, the nominal trajectory for DDP) and solve a Riccati
-equation in the tangent space. The key difference is the direction of information flow:
-DDP propagates \emph{cost} backward (from the terminal condition); the EKF propagates
-\emph{uncertainty} forward (from the initial condition).
-\end{intuitionbox}
-
-\subsection{Contraction-Based Observer Design}
-
-The EKF has no convergence guarantees for nonlinear systems---the estimate may diverge
-if the linearization is poor. Contraction theory provides a rigorous alternative.
-
-An observer $\dot{\hat\x} = f(\hat\x) + G(\hat\x)\uvec + L(\hat\x)(\vec{y} - h(\hat\x))$
-is a \emph{contracting observer} if the observer error dynamics
-$\dot{e} = \dot\x - \dot{\hat\x}$ are contracting in some metric $\mat{M}(\x)$:
-\begin{equation}
-\sym\left(\mat{M} \left[\frac{\partial f}{\partial \x} - L(\x)\frac{\partial h}{\partial \x}\right]\right)
-+ \dot{\mat{M}} \preceq -2\lambda \mat{M}.
-\label{eq:ch6:contracting-observer}
-\end{equation}
-
-This is precisely the contraction condition of Chapter~\ref{ch:contraction}, applied to
-the observer error dynamics. The observer gain $L(\x)$ plays the same role as the
-feedback gain $\mat{K}$ in control contraction metrics: it shapes the closed-loop
-dynamics to achieve contraction.
-
-\begin{theorem}[Observer-Controller Duality]
-\label{thm:ch6:observer-duality}
-The observer design problem --- find $L(\x)$ such that~\eqref{eq:ch6:contracting-observer}
-holds --- is the \emph{dual} of the controller design problem via the substitutions
-$\mat{A} \leftrightarrow \mat{A}^T$, $\mat{B} \leftrightarrow \mat{C}^T$,
-$\mat{K} \leftrightarrow L^T$. A contraction metric for the observer is a contraction
-metric for the dual controller, and vice versa.
-\end{theorem}
-
-\subsection{The Observability Gramian}
-
-The observability Gramian $\mathcal{W}_o(t_0, t_1)$ quantifies how much information the
-output $\vec{y}$ reveals about the initial state $\x(t_0)$:
-\begin{equation}
-\mathcal{W}_o(t_0, t_1) = \int_{t_0}^{t_1} \Phi(s, t_0)^T \mat{C}(s)^T \mat{C}(s) \Phi(s, t_0) \, \dd s,
-\label{eq:ch6:obs-gramian}
-\end{equation}
-where $\Phi$ is the state transition matrix from Chapter~\ref{ch:variational}.
-
-The system is \emph{observable} on $[t_0, t_1]$ if $\mathcal{W}_o \succ 0$. The
-eigenvectors of $\mathcal{W}_o$ reveal the most and least observable state directions;
-the condition number $\kappa(\mathcal{W}_o)$ measures the anisotropy of observability.
-
-\begin{warningbox}
-For the golf swing application (Chapter~\ref{ch:applications}), the observability
-Gramian reveals which state variables can be reliably estimated from sensor measurements.
-Joint angles near the shoulder are typically well-observed (multiple muscle attachments
-create redundant signals); wrist angular velocity and shaft bending are poorly observed
-(few sensors, high velocity). The condition number of $\mathcal{W}_o$ quantifies this
-anisotropy.
-\end{warningbox}
-
-\subsection{The Separation Principle}
-
-When both observer and controller are available, the celebrated \emph{separation principle}
-allows independent design:
-
-\begin{theorem}[Separation Principle]
-\label{thm:ch6:separation}
-For linear time-invariant systems, the optimal controller using estimated states
-$\uvec = -\mat{K}\hat\x$ achieves the same closed-loop eigenvalues as the full-state
-feedback $\uvec = -\mat{K}\x$, with additional eigenvalues from the observer error
-dynamics. The controller gain $\mat{K}$ and observer gain $\mat{L}$ can be designed
-independently.
-\end{theorem}
-
-For nonlinear systems, the separation principle does not hold in general. However,
-when both the controller and observer are designed via contraction metrics, the
-overall system (controller + observer) contracts at a rate determined by the
-\emph{minimum} of the controller and observer contraction rates:
-$\lambda_{\text{overall}} \geq \min(\lambda_{\text{control}}, \lambda_{\text{observer}})$.
-This is a practical nonlinear extension of the separation principle.
-
-
-\section{Chapter Summary}
-
-\begin{enumerate}
-\item \textbf{Historical foundation}: Kalman (1960) discovered that the LQR cost-to-go matrix is a Lyapunov function
-      for the closed-loop system. Willems (1972) formalized this via dissipation inequalities. Anderson and Moore
-      highlighted the robustness margins of LQR.
-
-\item \textbf{Discrete duality}: The value decrease identity $\Delta V = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx$
-      is both a proof of optimality and a contraction certificate. The decay rate $\rho = 1 - \alpha/\overline{s}$
-      characterizes convergence speed.
-
-\item \textbf{Continuous duality}: The time-derivative $\dot{V} = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx$ follows
-      directly from the DRE and the closed-loop dynamics. Exponential decay follows with rate $\lambda = \alpha/(2\overline{s})$.
-
-\item \textbf{Robustness margins}: LQR guarantees gain margin [1/2, $\infty$), phase margin $\geq$ $60^\circ$, and disk margin---all
-      consequences of the Riccati structure and the positive-definiteness of $\mat{S}$.
-
-\item \textbf{Condition number}: The condition number $\kappa(\mat{S}) = \overline{s}/\underline{s}$ quantifies the
-      difficulty of controlling the system. Large $\kappa$ indicates poor controllability and slow convergence.
-
-\item \textbf{H$\infty$ extension}: The duality extends to robust control: the H$\infty$ Riccati solution is simultaneously an optimal
-      performance certificate and a contraction metric under worst-case disturbances.
-
-\item \textbf{Time-varying vs. steady-state}: The DRE provides time-adapted metrics for finite-horizon problems; the ARE
-      provides a constant metric for infinite-horizon, time-invariant systems.
-
-\item \textbf{Geometric interpretation}: The Riccati matrix defines a Riemannian metric on the tangent bundle. Optimal
-      trajectories are geodesics, and the contraction property ensures neighboring geodesics converge exponentially.
-
-\item \textbf{Practical workflow}: Design with duality integrated: solve LQR once, verify contraction margins and condition
-      number, and adjust weights if needed. The single computation certifies both optimality and robustness.
-
-\item \textbf{Limitations}: Duality requires bounded, well-conditioned Riccati matrices; meaningful weights; and linearity
-      of perturbations. It breaks down near singular arcs, under large perturbations, or with hidden states.
-\end{enumerate}
-
-This chapter has shown that optimality and stability are not independent concerns but two facets of a single geometric
-object. The Riccati matrix, solved once, provides both the controller and the robustness certificate. This is the power
-of duality: one computation, two major objectives accomplished.
-
-\section*{Exercises}
-
-\begin{enumerate}
-\item \textbf{Value decrease identity.}
-      For the discrete pendulum in the worked example, verify the value decrease identity
-      numerically: compute $V_{k+1} - V_k$ and $-\dx_k^T(\mat{Q} + \mat{K}^T\mat{R}\mat{K})\dx_k$
-      and confirm equality.
-
-\item \textbf{Robustness margins.}
-      For the continuous-time system $\dot{x} = ax + bu$ with LQR weights $Q = 1$, $R = 1$,
-      compute the gain margin and phase margin as functions of $a$ and $b$. Verify the
-      theoretical bounds $[1/2, \infty)$ and $\geq 60°$.
-
-\item \textbf{Dual Riccati.}
-      For the system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -1 & -0.1 \end{bmatrix}$,
-      $\mat{C} = [1, 0]$, $W = 0.1$, $V = 1$, solve the estimation ARE for $\mat{P}$.
-      Compare with the control ARE for $(\mat{A}^T, \mat{C}^T, W, V)$.
-
-\item \textbf{Condition number and convergence.}
-      For the 2D system in the worked example, vary $\mat{Q}$ from $0.1\mat{I}$ to $100\mat{I}$
-      while keeping $\mat{R} = \mat{I}$. Plot $\kappa(\mat{S})$ and the contraction rate
-      $\lambda$ as functions of $\|\mat{Q}\|$. Explain the observed relationship.
-
-\item \textbf{EKF implementation.}
-      Implement the EKF for the nonlinear pendulum $\ddot\theta + \sin\theta = u + w$
-      with measurement $y = \theta + v$. Compare the estimated trajectory with the true
-      trajectory for different noise levels.
-
-\item \textbf{Observability Gramian.}
-      For the linearized pendulum at the upright equilibrium, compute the observability
-      Gramian $\mathcal{W}_o(0, T)$ for $T = 1, 5, 10$. How does its condition number
-      change? What does this imply about the observability of the system?
-
-\item \textbf{H$\infty$ vs LQR.}
-      Solve both the LQR and H$\infty$ Riccati equations for the double integrator with
-      disturbance input. Compare the resulting contraction rates and gain magnitudes.
-
-\item \textbf{Separation principle verification.}
-      For the discrete pendulum, implement the separated controller (LQR gain) and
-      observer (Kalman gain). Verify that the closed-loop eigenvalues are the union
-      of the controller and observer eigenvalues.
+\item Propose a swing experiment with declared retained states, actuator port, sensors, noise scales, impact outputs and contact assumptions. Identify one perturbation that is costly to correct and one that is difficult to observe. Explain which measurements could distinguish a change in mechanics from a change in the assumed objective, and which conclusions remain model-dependent.
 \end{enumerate}
