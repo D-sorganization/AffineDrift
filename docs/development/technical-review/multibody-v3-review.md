@@ -1,8 +1,8 @@
-# Multibody Drift-Control V3: Complete Read, Corrections Pending
+# Multibody Drift-Control V3: Full Correction and Verification
 
-The complete 10,924-word source `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` was read sequentially, including the final conclusion. This is a findings record, not a corrected-source clearance. It belongs to epic #4009 and corpus #4021. No edits to that article have yet been made.
+The complete 10,924-word source `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` was read sequentially, including the final conclusion. The findings below drove the complete source replacement and independent verification recorded in REVIEW.md. It belongs to epic #4009 and corpus #4021. Issue #4222 covers the corrected article, its executable model, and all 16 independent mechanics checks. Protected publication remains pending.
 
-## Findings to Derive and Correct
+## Findings Addressed
 
 - Define the input channels, zero reference, retained forces and internal state. An affine split is a model convention, not a partition into physics and human intent. A moving state need not have large drift. Inertia maps acceleration to inertial generalized force; its inverse maps an incremental force to acceleration. Gravel resistance is not an inertia analogy. Generalized forces are virtual-work covectors, not coordinate accelerations.
 - Retain the correctly derived point-mass relative-angle double-pendulum matrices, but verify them against Cartesian kinetic energy and body balances. Gravity on the left is the potential gradient; physical gravitational force has the opposite sign. Coupling strength is not universally weakest at a folded posture. A zero cosine coupling term does not eliminate the full off-diagonal inertia. Flexibility, damping and actuator states do not necessarily destroy input affinity.
@@ -16,6 +16,6 @@ The complete 10,924-word source `articles/calculation-framework-comparison/multi
 - Separate coordinate relabeling, fixed-frame representation and a change of observer. Work, kinetic energy and ordinary acceleration are not universally observer invariant. Dual adjoint twist/wrench power identity is valid for the same motion and wrench represented consistently. Noether conservation requires a variational symmetry and appropriate force/work conditions, not any time-independent dissipative dynamics.
 - Cross-formalism disagreements can reflect different assumptions, frames, retained loads, numerical tolerance or implementation; do not declare every discrepancy a software bug. Equivalence checks verify an implementation under a common model, not its physical validity for human golf.
 
-## Next Work
+## Completion Boundary
 
-Register and claim the technical issue before editing. Independently check pendulum dynamics, constrained affine decomposition with curvature, full controlled linearization, spatial twist-to-point conversion, task rank loss and body energy balances. Then rewrite all affected arguments, add primary-source support with bounded attribution, render and inspect the complete article, and record exact validation and publication status. Keep the broader source inventory open.
+Full suite: 4,248 passed, 29 skipped, 129 deselected. Content: 128 passed, four skips. Configured mypy: 74 files. All 105 section views and 12 targeted final views were inspected across desktop, mobile and dark mode. REVIEW.md records source-reading limits, red/green checks, math-rendering corrections and the linked hybrid deployment repair. The corpus inventory remains open; this article does not clear other framework articles or provide empirical human validation.
