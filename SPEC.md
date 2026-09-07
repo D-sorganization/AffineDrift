@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-07 | #4237 | Reconcile both stability–optimality editions: Riccati proofs and rates, shared checked numerical table, finite-horizon geometry, robustness, disturbance attenuation, estimation and golf evidence; rebuild Volume I and verify print/web. |
 | 2026-09-07 | #4235 | Reconcile the complete paired variational chapter: exact remainders, ordered propagation, flow derivatives, adjoint boundary terms, checked pendulum examples, stability and numerical geometry; rebuild Volume I and verify print/web. |
 | 2026-09-07 | #4233 | Reconcile all paired Physics of Golf glossary definitions across mechanics, impact, anatomy, tissue and evidence; add collision derivation and verified sources, repair aliases and reading layout, and rebuild the textbook PDF. |
 | 2026-09-07 | #4231 | Correct the complete paired superposition chapter, replacing inconsistent mechanics and pendulum tables with independent verification and precise passivity, constraints, actuator and reachability conditions; rebuild Volume I. |
