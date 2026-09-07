@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-07 | #4220 | Reconcile complete hybrid reference, critique and accessible companion through impact mechanics, event-time sensitivity, contact feasibility and executable verification; record full review and layout evidence. |
 | 2026-09-07 | #4221 | Reconcile complete applications editions with kinetic-energy-consistent model, versioned rigid counterfactual, verified cross-domain derivations and evidence limits; rebuild affected PDFs and record review scope. |
 | 2026-09-07 | #4219 | Correct the full contraction critique, mathematical counterexamples, noise and hybrid assumptions, unsupported evidence and mobile equations; record source and validation scope. |
 | 2026-09-07 | #4217 | Complete paired linear-algebra mechanics, temporal control/observation, spectral and inverse-sensitivity derivations; rebuild Volume 0 PDF; improve mobile math and record full review evidence. |
