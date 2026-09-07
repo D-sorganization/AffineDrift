@@ -1,0 +1,167 @@
+## Grip Impedance and the Guitar Analogy {#sec-impact-grip-impedance}
+
+A loosely resting finger on a guitar string can absorb energy, alter a boundary,
+and suppress modes that have motion at the finger location. Touching near a node
+can instead leave selected harmonics relatively intact. The useful analogy is
+**mode-dependent coupling to a dissipative contact**, not a rule that a looser
+golf grip always sounds worse or a tighter grip always sounds better.
+
+A club is a distributed shaft joined to a complex head. A hand near the grip may
+strongly affect low shaft modes but weakly affect a localized face or crown mode.
+It can alter damping, effective inertia, stiffness, contact area, and slipping
+simultaneously. A clubhead is also not an ideal string: bending, torsion, shell
+motion and acoustic radiation have different spatial patterns.
+
+Represent the grip by a frequency-dependent mechanical impedance
+$\mathbf Z_g(\omega)$ relating the wrench into the boundary to its relative
+velocity. A matrix is needed for translations, rotations and their coupling.
+For a passive boundary its Hermitian real part is nonnegative on the represented
+ports. In a scalar spring–damper–mass example, using $e^{i\omega t}$,
+
+$$
+Z_g(\omega)=c_g+i\omega m_g+\frac{k_g}{i\omega}.
+$$
+
+This is an illustrative network, not the impedance of a measured hand. Identify
+force and velocity at the same port, preserve phase, and distinguish active
+muscle work from passive dissipation. A moving prescribed grip can do work even
+if its displacement during the collision is small.
+
+For a frozen linear model with displacement-to-grip map $\mathbf L_g$, the grip
+adds $i\omega\mathbf L_g^T\mathbf Z_g\mathbf L_g$ to dynamic stiffness. The
+contact mobility, in velocity per force, is
+
+$$
+\mathbf Y_c(\omega)=i\omega\mathbf B_c^T
+\left[-\omega^2\mathbf M+i\omega(\mathbf C+\mathbf G)
++\mathbf K+i\omega\mathbf L_g^T\mathbf Z_g\mathbf L_g\right]^{-1}\mathbf B_c.
+$$ {#eq-impact-frequency-mobility}
+
+Do not convert this complex, frequency-dependent object into one real
+"effective mass" without specifying frequency and identification convention.
+Resonances, antiresonances and dissipative phase are central to the question.
+The frozen-frequency description also needs comparison against the time-varying
+swing when rotation, tension or contact topology changes appreciably.
+
+Chiementin and colleagues identified grip-dependent modes of one club with one
+right-handed participant. Their bending-mode table and discussion generally
+show stronger damping under firmer grip, whereas their conclusion says damping
+decreases. That inconsistency must be retained in the evidence ledger, not
+silently converted into a monotone physiological law. Their sub-500 Hz modal
+study does not qualify a broadband driver-sound model [@chiementin2019grip].
+
+## From Impact to Radiated Sound {#sec-impact-acoustic-radiation}
+
+The modeling chain is contact traction $\rightarrow$ structural motion
+$\rightarrow$ air pressure $\rightarrow$ microphone/ear $\rightarrow$ perception.
+A force spectrum alone is not sound, and a shaft accelerometer is not a
+microphone. An arbitrary audio oscillator driven by ball speed would be
+sonification, not a prediction of impact acoustics.
+
+For a mass-normalized uncoupled structural mode $j$,
+
+$$
+\ddot\eta_j+2\zeta_j\omega_j\dot\eta_j+\omega_j^2\eta_j=Q_j(t),\qquad
+Q_j(t)=\int_{S_c}\boldsymbol\phi_j(\mathbf x)^T
+\mathbf t_c(\mathbf x,t)\,dS.
+$$
+
+Strike position changes modal participation through the mode shape
+$\boldsymbol\phi_j$ and the contact patch. Contact duration and force shape
+change the excitation spectrum. At nonzero initial modal amplitude or velocity,
+the response is the sum of the homogeneous motion and forced response; their
+phase can reinforce or cancel particular components. A free-head impulse model
+omits these states.
+
+For fixed coefficients,
+
+$$
+\widehat\eta_j(\omega)=
+\frac{\widehat Q_j(\omega)}{\omega_j^2-\omega^2+2i\zeta_j\omega_j\omega}
+$$
+
+describes the forced part. Coupled modes require the matrix operator instead.
+Continue the calculation after ball separation: much of the audible ringdown
+occurs when no ball–face force remains. Changes to the boundary after separation
+can change later sound while leaving ball launch unchanged.
+
+For an exterior linear acoustic field with sound speed $c_a$, air density
+$\rho_a$ and normal surface velocity $v_n$, a frequency-domain model satisfies
+
+$$
+(\nabla^2+k_a^2)\widehat p=0,\qquad
+\frac{\partial\widehat p}{\partial n}=-i\omega\rho_a\widehat v_n,
+\qquad k_a=\omega/c_a,
+$$
+
+with $n$ pointing from the solid into the air and an outgoing-wave condition
+consistent with $e^{i\omega t}$. A boundary-element or qualified reduced
+radiation model maps the entire vibrating surface to observer pressure. Thin
+plates can be useful validation fixtures; the baffled-plate Rayleigh integral
+must not be applied to a hollow driver without checking its geometric and
+wavelength assumptions. Include cavity openings or internal air coupling where
+they materially affect the response.
+
+Mase and colleagues provide a golf-specific finite-element/boundary-element
+modeling precedent. Delaye and colleagues use a titanium plate as an intermediate
+acoustic validation fixture [@mase2012sound; @delaye2016plate]. Earlier thesis work
+also records poor correlation for a driver despite success on a simpler plate;
+this is an explicit warning against treating a plausible simulated tone as
+validation [@sharpe2010sound].
+
+A useful measured transfer model is
+
+$$
+\widehat p_{\rm mic}(\omega)=H_{\rm mic}(\omega)H_{\rm room}(\omega)
+\sum_j R_j(\omega,\mathbf x_{\rm mic})\widehat\eta_j(\omega)
++\widehat p_{\rm other}(\omega).
+$$
+
+Here $R_j$ includes radiation and propagation, with units consistent with modal
+normalization. The other-source term can contain ball vibration, air motion,
+turf/tee contact and background noise. Source movement changes distance,
+directivity and arrival time; evaluate Doppler and moving-source corrections
+where the required accuracy warrants them. One microphone cannot generally
+separate all these sources without additional measurements or assumptions.
+
+Report pressure in pascals and calibrated sound levels, analysis window, sample
+rate, filtering and microphone geometry. Peak pressure, sound exposure, spectral
+centroid, band energy, decay times and modal frequencies describe different
+features. Psychoacoustic loudness and sharpness require their specified
+algorithms; an FFT amplitude or spectral centroid is not automatically either
+quantity. Sound-pressure level uses the declared RMS window and reference
+pressure, conventionally 20 micropascals in air.
+
+## Sound Quality Is a Perception Result {#sec-impact-sweetness}
+
+Roberts and colleagues found correlations between impact sound and perceived
+feel in elite golfers. A companion study examined vibration and feel. Together
+they justify measuring auditory and tactile responses separately; they do not
+establish that one player's body mechanically adds mass to the strike
+[@roberts2005sound; @roberts2005vibration].
+
+For the reported player-to-player sound difference, first record repeated shots
+with the same head, shaft, grip and ball model. Measure actual delivery and face
+position instead of assuming that similar-looking swings are matched. Record
+grip forces, shaft strain and head/shaft vibration where feasible; their absence
+limits mechanism attribution.
+
+Use two complementary listening tests: calibrated original-level playback to
+measure the complete audible difference, and **level-matched** playback to
+investigate timbre beyond loudness. Randomize identity and order, mask player
+skill and ball-flight outcomes, balance headphone/speaker presentation, and
+test repeatability. Crossed or swapped audio/visual cues can expose expectation
+effects. Audio-only, vibration-only and combined presentations answer different
+questions. Define the population and ratings before data collection.
+
+A **matched-state** experiment fixes measured rigid delivery and then varies a
+declared elastic or boundary state. A matched-input experiment applies the same
+control program and allows delivery to change. Neither design is achieved by
+matching clubhead speed alone. Statistical matching cannot remove confounding
+from unmeasured contact location, equipment differences or elastic state.
+
+If observers distinguish players after all measured launch variables are
+controlled, that is evidence of a residual auditory difference, not yet proof
+of grip damping. Establish the mechanism by a reproducible physical
+intervention that changes the predicted modes or transfer response and produces
+the corresponding measured acoustic change.
