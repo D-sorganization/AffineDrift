@@ -934,3 +934,27 @@ All test/build/browser processes finished before staging. Generated dates were r
 Publication checkpoint: #4239 is pushed as67fc6c2d and draft PR #4243 targets fix/4238-kinetic-chain-rigor while prerequisite PR4240 finishes protected E2E. This preserves the focused ten-file diff. It must not merge into the prerequisite branch. Once4240 merges, retarget to main, synchronize protected main by an ordinary merge if needed, mark ready and use protected squash auto-merge. No force push or bypass. The next issue4242 is claimed; its source is still unchanged.
 
 Protected checkpoint14:39UTC: kinetic PR4240 merged94d8b2b427e218986008cceb12cd177853f4c067 at14:37:14UTC after every check passed. Deploy34133950325 is in progress. The incoming main tree was proved identical to prerequisite e6f96350 (empty tree diff). Ordinary merge into4239 conflicted only in three logs/spec files and generated PDF; retained the newer tested HEAD versions because they already contained that exact prerequisite tree. The staged diff against82b7c9d1 was empty, with no unresolved files. Merge7607acbc records protected ancestry without changing the validated content, and all hooks passed. No force push, bypass, discarded user edit or silent rebuild. PR4243 will now target main and proceed through ordinary protected validation.
+
+
+## Sources of Nonlinearity Reconciliation — Issue #4242
+
+Date: 2026-09-07. Parent epic: [#4009](https://github.com/D-sorganization/AffineDrift/issues/4009). Branch: ix/4242-sources-of-nonlinearity.
+
+### Confirmed Findings Reconciled in rticles/sources-of-nonlinearity.qmd:
+1. **Rigid Physical Pendulum Inertia:** Corrected generalized inertia M(theta) = I_O = I_cm + md^2, which is strictly constant and independent of angle theta. Nonlinearity enters purely through gravitational restoring torque tau_g = -mgd*sin(theta).
+2. **Planar 2R Arm Energy Consistency & Skew Symmetry:** Derived canonical two-link manipulator model from uniform slender rods:
+   - Inertia: M(q) with d = m2*l2^2/3, beta = m2*l1*l2/2, a = m1*l1^2/3 + m2*l1^2 + d.
+   - Coriolis: Christoffel symbol construction yields C(q, v), ensuring M_dot - 2C is skew-symmetric (v^T(M_dot - 2C)v = 0).
+   - Gravitational gradient: g(q) = nabla_q V(q) correctly aligned with downward vertical datum.
+3. **Friction & Stick-Slip Dynamics:** Replaced heuristic zero-velocity friction with set-valued static friction law balancing total applied load tau_applied. Reconciled kinetic Stribeck friction with velocity magnitude |v| and viscous term. Derived contact normal force coupling N(q, v, u).
+4. **Contact & Ambient State Space:** Clarified that contact transitions and impacts do not change the dimension of ambient state space R^(2n); rather, unilateral constraints restrict the accessible tangent space (dimension 2n - k). Projected dynamics under a fixed active set remain strictly control-affine.
+5. **Backlash, Deadzone & Actuators:** Formulated backlash with explicit motor and load state variables where control torque u enters linearly. Distinguished continuous deadzone from threshold deadzone. Clarified actuator saturation as bounded feasible input sets U preserving affine dynamics on the admissible domain. Reconciled electric motor back-EMF as linear drift damping under voltage drive.
+6. **Hill Muscle Mechanics:** Corrected normalized curvature parameter k = a/F0 ~ 0.15 - 0.25 (not 4), clarified isometric force F0 vs eccentric lengthening plateau (1.4 - 1.8 F0), and distinguished neural excitation u(t) from dynamic activation a(t) with finite relaxation time constants. Included tendon compliance and pennation angle.
+7. **Fluid Aerodynamics & Magnus Effect:** Corrected Magnus lift equation to dimensionally consistent form F_lift = 0.5 * C_L(S, Re) * rho * A * |v|^2 * (w_hat x v_hat) with dimensionless spin ratio S = r*|w|/|v|.
+8. **Bicycle Model & Control:** Corrected kinematic bicycle path turning radius R = L / tan(delta) and quadratic lateral acceleration a_y = v^2 / R. Formulated Taylor linearization around non-equilibrium operating trajectories with drift residual r(x*, u*), and declared rigorous feedback linearization conditions (vector relative degree, non-singular decoupling matrix, stable zero dynamics).
+9. **Primary Citations:** Connected authoritative citations: Slotine & Li (1991), Khalil (2002), Featherstone (2008), Lynch & Park (2017), Isidori (1995), Hogan (1985), Zajac (1989), Goebel, Sanfelice & Teel (2012), Lohmiller & Slotine (1998).
+
+### Independent Verification:
+- Authored unit test suite 	ests/test_sources_of_nonlinearity_rigor.py testing constant physical pendulum inertia, 2R positive definiteness, skew-symmetry M_dot - 2C, Stribeck symmetry/limits, Hill muscle boundary conditions, Magnus dimensional consistency, and kinematic bicycle turning radius. Tests passed 6/6.
+- Passed 
+uff check, lack --check, and mypy strict checks.

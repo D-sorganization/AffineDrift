@@ -50,114 +50,128 @@ In the Lagrangian formulation, kinetic energy is
 $$
 T = \frac{1}{2}\dot{q}^T M(q) \dot{q},
 $$
-where $M(q)$ is the generalized mass (or inertia) matrix. For most multibody systems, $M(q)$ is a nonlinear function of configuration.
+where $M(q)$ is the generalized mass (or inertia) matrix. For most multibody systems, $M(q)$ is a nonlinear function of configuration [@featherstone2008rigid; @lynch2017modern].
 
-**Example: Simple pendulum.** A pendulum of mass $m$, length $\ell$, with angle $\theta$ from vertical has
+**Example: Simple versus compound pendulum.** A simple point-mass pendulum of mass $m$ at distance $\ell$ from pivot has generalized inertia $M(\theta) = m\ell^2$, which is *strictly constant*. Likewise, a **compound (physical) pendulum** of total mass $m$ pivoting about a fixed axis $O$ with center of mass at distance $d$ and central moment of inertia $I_{\text{cm}}$ has generalized inertia given by the parallel axis theorem:
 $$
-M(\theta) = m\ell^2,
+M(\theta) = I_O = I_{\text{cm}} + m d^2,
 $$
-which is *constant*. But a **compound (physical) pendulum** with off-center center of mass has $M(\theta)$ that varies with $\theta$ due to changing moment of inertia contributions.
+which is **also strictly constant and independent of the swing angle $\theta$**. The nonlinearity in a physical pendulum enters entirely through the gravitational restoring torque $\tau_g = -m g d \sin\theta$, not through an angle-dependent inertia.
 
-**Example: Planar 2R robot.** For a two-link planar arm with masses $m_1, m_2$ and lengths $\ell_1, \ell_2$, the inertia matrix is
+**Example: Planar 2R robot.** Angle-dependent generalized inertia arises when multiple moving bodies have relative kinematic configurations. For a planar two-link revolute (2R) manipulator consisting of two uniform slender rods with masses $m_1, m_2$, lengths $\ell_1, \ell_2$, centers of mass at mid-span ($d_i = \ell_i/2$), and moments of inertia $I_i = m_i \ell_i^2 / 12$, the generalized inertia matrix $M(q) = M(q_1, q_2)$ is independent of $q_1$ and depends solely on relative joint angle $q_2$:
 $$
-M(q_1, q_2) = \begin{bmatrix}
-a + 2b\cos(q_2) & b\cos(q_2) \\
-b\cos(q_2) & b
+M(q) = \begin{bmatrix}
+a + 2\beta\cos(q_2) & d + \beta\cos(q_2) \\
+d + \beta\cos(q_2) & d
 \end{bmatrix},
 $$
-where $a, b$ are constants. The off-diagonal terms depend explicitly on $q_2$.
+where the constant dynamic parameters are:
+$$
+d = \frac{1}{3} m_2 \ell_2^2, \qquad \beta = \frac{1}{2} m_2 \ell_1 \ell_2, \qquad a = \frac{1}{3} m_1 \ell_1^2 + m_2 \ell_1^2 + d.
+$$
+The distal diagonal block $M_{22} = d$ reflects the link 2 inertia about joint 2, while the off-diagonal coupling terms $M_{12} = M_{21} = d + \beta\cos(q_2)$ and configuration-dependent link 1 term $M_{11} = a + 2\beta\cos(q_2)$ encode cross-coupling between arm segments.
 
-**Where it enters:** The mass matrix appears in the equation of motion as
+**Where it enters:** The mass matrix appears in the standard Lagrangian equation of motion [@slotine1991applied]:
 $$
 M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau,
 $$
-where $\tau = G(q)u$ are the control torques. This can be rewritten as
+where $\tau = G(q)u$ represents generalized control forces/torques and $g(q) = \nabla_q V(q)$ is the potential energy gradient. Solving for generalized acceleration yields:
 $$
 \ddot{q} = M(q)^{-1}[G(q)u - C(q,\dot{q})\dot{q} - g(q)],
 $$
-showing that $M(q)$ enters as a *state-dependent gain* on all forces, both control and passive.
+showing that $M(q)^{-1}$ acts as a *configuration-dependent linear operator* across all generalized torques (both active control inputs and passive dynamic forces).
 
-**Does it preserve affinity?** Yes. The mass matrix is a state-dependent linear operator on the control input. The affine structure is preserved because
+**Does it preserve affinity?** Yes. At any given instantaneous state $x = (q, \dot{q})$, $M(q)^{-1}$ is a fixed invertible symmetric positive-definite matrix. The control-affine structure is preserved because:
 $$
 \ddot{q} = M(q)^{-1}G(q)u + M(q)^{-1}[-C(q,\dot{q})\dot{q} - g(q)].
 $$
 
-Define $\tilde{G}(q) := M(q)^{-1}G(q)$. Then
+Defining $\tilde{G}(q) := M(q)^{-1}G(q)$ and drift acceleration $f_v(q,\dot{q}) := -M(q)^{-1}[C(q,\dot{q})\dot{q} + g(q)]$, the acceleration dynamics are:
 $$
-\ddot{q} = \tilde{G}(q)u + f_q(q,\dot{q}),
+\ddot{q} = \tilde{G}(q)u + f_v(q,\dot{q}),
 $$
-still affine in $u$, but with state-dependent effective input matrix.
+which remains strictly affine in the instantaneous control input $u$.
 
-**Force superposition:** The generalized forces (torques) still sum linearly:
+**Force superposition:** Generalized torques sum linearly under D'Alembert's principle and Newton's second law:
 $$
-\tau_{\text{total}} = \tau_u + \tau_C + \tau_g,
+\tau_{\text{net}} = \tau_u + \tau_C + \tau_g,
 $$
-where $\tau_u = G(q)u$, $\tau_C = -C(q,\dot{q})\dot{q}$, and $\tau_g = -g(q)$ are the input, Coriolis, and gravitational torques. At a **fixed state**, $M(q)^{-1}$ is a fixed linear operator, so the force-induced accelerations superpose **exactly for any $M(q)$** — constant or not:
+where $\tau_u = G(q)u$, $\tau_C = -C(q,\dot{q})\dot{q}$, and $\tau_g = -g(q)$. At a **fixed state** $x = (q, \dot{q})$, the linear operator $M(q)^{-1}$ preserves instantaneous acceleration superposition:
 $$
 \ddot{q} = \ddot{q}_u + \ddot{q}_g + \ddot{q}_C, \qquad
 \ddot{q}_u = \tilde{G}(q)u,\;\; \ddot{q}_g = -M(q)^{-1}g(q),\;\; \ddot{q}_C = -M(q)^{-1}C(q,\dot{q})\dot{q}.
 $$
-The reason the two-term sum $\ddot{q}_u + \ddot{q}_g$ misses the total is that it **omits the Coriolis acceleration** $\ddot{q}_C$, *not* that $M(q)$ varies. (Where $M(q)$ does matter is across *different* states: the gain $\tilde{G}(q) = M(q)^{-1}G(q)$ is state-dependent, so superposition is local to a fixed state, not global.)
+Superposition holds across instantaneous forces at any fixed state $x$. However, along an integrated time trajectory $x(t)$, different control inputs $u(t)$ drive the system along divergent paths $q(t)$, causing $M(q(t))^{-1}$ to evolve differently; thus trajectory superposition does not equal state superposition.
 
-**Implication for ZTCF:** The ZTCF is based on comparing $u = 0$ (passive drift) versus $u \neq 0$ (active input) at fixed state. The mass matrix does not invalidate this decomposition; it simply means that the effective input gain $\tilde{G}(q) = M(q)^{-1}G(q)$ is state-dependent. The passive drift $f(x) = f(q, \dot{q})$ still represents "what happens with $u = 0$," and the input $G(x)u$ still represents "the linear response to control" at that instant.
+**Implication for ZTCF:** The Zero-Torque Counterfactual (ZTCF) isolates active control authority at a fixed state $x$ by comparing the total acceleration $\ddot{q}$ with the zero-torque unforced acceleration $\ddot{q}_{\text{drift}} = f_v(q,\dot{q})$. Configuration-dependent inertia does not break ZTCF validity at a given instant; it modulates the directional control authority via $\tilde{G}(q) = M(q)^{-1}G(q)$.
 
 ### Coriolis and Centrifugal Terms
 
-The Coriolis and centrifugal terms appear in the equation of motion as
+The quadratic velocity forces $c(q, \dot{q}) = C(q, \dot{q})\dot{q}$ arise from the configuration dependence of kinetic energy. The Coriolis matrix $C(q, \dot{q})$ is defined via the Christoffel symbols of the first kind $\Gamma_{ijk}(q)$:
 $$
-C(q,\dot{q})\dot{q} + \frac{\partial g}{\partial q}(q),
+\Gamma_{ijk}(q) = \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i}\right),
 $$
-where $C(q, \dot{q})$ is the Christoffel symbol matrix and $g(q)$ is the potential-energy-gradient vector.
+with matrix elements:
+$$
+C_{ij}(q, \dot{q}) = \sum_{k=1}^n \Gamma_{ijk}(q)\dot{q}_k.
+$$
+This canonical Christoffel construction guarantees the fundamental passivity and energy-conservation property: the matrix $\dot{M}(q) - 2C(q, \dot{q})$ is **skew-symmetric**, so $v^T [\dot{M} - 2C] v = 0$ for all generalized velocities $v = \dot{q}$ [@slotine1991applied].
 
-The Coriolis term $C(q,\dot{q})\dot{q}$ is **quadratic in velocity**:
+**Example: Planar 2R robot.** For the two-link planar arm parameterization defined above with $h = \beta \sin(q_2)$, the Christoffel-consistent Coriolis matrix is:
 $$
-C_{ij}(q,\dot{q}) = \sum_k \Gamma_{ij}^k(q) \dot{q}_k,
-$$
-where $\Gamma$ are the Christoffel symbols (configuration-dependent).
-
-**Example: Planar 2R robot.** The Coriolis matrix is
-$$
-C(q,\dot{q}) = \begin{bmatrix}
--2b\dot{q}_2 \sin(q_2) & -b\dot{q}_2 \sin(q_2) \\
-b\dot{q}_1 \sin(q_2) & 0
+C(q, \dot{q}) = \begin{bmatrix}
+-h\dot{q}_2 & -h(\dot{q}_1 + \dot{q}_2) \\
+h\dot{q}_1 & 0
 \end{bmatrix}.
 $$
-
-**Where it enters:** The Coriolis torque
+Multiplying by $\dot{q} = [\dot{q}_1, \dot{q}_2]^T$ yields the generalized Coriolis and centrifugal torque vector:
 $$
-\tau_C = -C(q,\dot{q})\dot{q}
+c(q, \dot{q}) = C(q, \dot{q})\dot{q} = \beta \sin(q_2)\begin{bmatrix}
+-\dot{q}_2(2\dot{q}_1 + \dot{q}_2) \\
+\dot{q}_1^2
+\end{bmatrix},
 $$
-appears in the drift term $f(x) = f(q, \dot{q})$. It does not involve the control input $u$.
+where $-\beta\sin(q_2)\dot{q}_2^2$ is the centrifugal torque on joint 1 due to link 2 velocity, $-2\beta\sin(q_2)\dot{q}_1\dot{q}_2$ is the Coriolis torque coupling both joints, and $\beta\sin(q_2)\dot{q}_1^2$ is the centrifugal torque on joint 2 from link 1 rotation.
 
-**Does it preserve affinity?** Yes. Coriolis and centrifugal terms are purely state-dependent and do not interact with control inputs. They belong entirely in the drift.
+**Where it enters:** The Coriolis torque $\tau_C = -C(q,\dot{q})\dot{q}$ enters exclusively into the unforced drift vector field $f(x)$. It does not couple directly to the control input $u$.
 
-**Force superposition:** Coriolis forces always add to other forces in the torque sum. The issue is that the *magnitude* of Coriolis force depends nonlinearly on velocity magnitude and direction (through $\dot{q}$), making it sensitive to the trajectory history.
+**Does it preserve affinity?** Yes. Coriolis and centrifugal effects depend exclusively on state variables $(q, \dot{q})$. They do not alter the linearity of control input entering through $G(q)u$.
 
-**Implication for ZTCF:** The ZTCF comparison handles Coriolis correctly. When we turn off the input ($u = 0$), the Coriolis and centrifugal torques persist and are part of the passive drift. When we measure the effect of the input, we are comparing against the full passive dynamics including all Coriolis coupling.
+**Force superposition:** Coriolis forces add to gravitational and external forces in the generalized torque balance. Although quadratic in velocity, at any fixed state $(q, \dot{q})$ the Coriolis force $\tau_C$ is an exact constant torque vector.
+
+**Implication for ZTCF:** The ZTCF correctly preserves Coriolis coupling in the passive drift field. When setting $u = 0$ at state $(q, \dot{q})$, the unforced trajectory immediately feels the exact Coriolis torque $C(q,\dot{q})\dot{q}$.
 
 ### Gravity and Gravitational Nonlinearity
 
-For a mechanical system in a gravitational field, the potential energy is
+In a gravitational field with downward acceleration $g$, potential energy $V(q)$ is defined relative to vertical datum heights $h_i(q)$ of each component's center of mass:
 $$
-V(q) = -m g \cdot h(q),
+V(q) = \sum_{i=1}^n m_i g y_i(q).
 $$
-where $h(q)$ is the height of the center of mass. The gravitational torque is
+The generalized gravitational torque vector resisting motion is the negative gradient of potential energy:
 $$
-\tau_g = -\frac{\partial V}{\partial q} = -g(q),
+\tau_g(q) = -\nabla_q V(q) = -g(q), \qquad g(q) = \left[\frac{\partial V}{\partial q}\right]^T.
 $$
-and $g(q)$ is typically nonlinear in $q$.
 
-**Example: Simple pendulum.** With angle $\theta$ from vertical, $h(\theta) = -\ell \cos(\theta)$, so $g(\theta) = -mg\ell \sin(\theta)$, which is *sinusoidal*.
+**Example: Planar 2R robot in vertical plane.** Let joint angles $q_1, q_2$ be measured relative to the downward vertical axis. The heights of the centers of mass are $y_1 = -\frac{\ell_1}{2}\cos(q_1)$ and $y_2 = -\ell_1\cos(q_1) - \frac{\ell_2}{2}\cos(q_1 + q_2)$. The gravitational potential energy is:
+$$
+V(q) = -m_1 g \frac{\ell_1}{2}\cos(q_1) - m_2 g \left(\ell_1\cos(q_1) + \frac{\ell_2}{2}\cos(q_1 + q_2)\right).
+$$
+The potential gradient vector $g(q) = \nabla_q V$ is:
+$$
+g(q) = g \begin{bmatrix}
+\left(\frac{1}{2}m_1 \ell_1 + m_2 \ell_1\right)\sin(q_1) + \frac{1}{2}m_2 \ell_2 \sin(q_1 + q_2) \\
+\frac{1}{2}m_2 \ell_2 \sin(q_1 + q_2)
+\end{bmatrix}.
+$$
+In the equations of motion $M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau$, the gravitational restoring torque is $-\nabla_q V = -g(q)$.
 
-**Example: Double pendulum.** The gravitational torques on the two joints depend on the sine of various angular combinations, creating a nonlinear $g(q_1, q_2)$.
+**Where it enters:** Gravity enters the unforced drift vector field $f(x)$. At $u = 0$, unforced acceleration contains $-M(q)^{-1}g(q)$.
 
-**Where it enters:** Gravity is part of the drift $f(x)$. At $u = 0$, the system evolves under gravity alone.
+**Does it preserve affinity?** Yes. Gravity depends purely on configuration $q$ and does not couple with the input matrix $G(q)$.
 
-**Does it preserve affinity?** Yes. Gravity is state-dependent only and does not interact with control inputs.
+**Force superposition:** Gravitational torques superpose linearly with inertial, Coriolis, and input torques at any fixed state $x$.
 
-**Force superposition:** Gravitational forces sum linearly with other forces. The nonlinearity manifests as a state-dependent torque magnitude.
-
-**Implication for ZTCF:** The gravitational torque is a classic example of a force that can be "turned off" mathematically (or measured in a zero-gravity environment) to isolate its contribution. The ZTCF exploits this: by measuring the passive drift at $u = 0$ and subtracting it from the total motion with $u \neq 0$, one can identify the input contribution.
+**Implication for ZTCF:** Gravity is a pure drift component. Under ZTCF, setting $u = 0$ leaves the exact gravitational force vector acting on the generalized coordinates.
 
 ### Large-Angle Rotations and SO(3) Nonlinearity
 
@@ -209,210 +223,179 @@ When a system is under load or pre-stress, the effective stiffness changes. A cl
 
 ## Friction and Contact Nonlinearities
 
-Frictional and contact phenomena introduce some of the most challenging nonlinearities in mechanics, often exhibiting non-smooth behavior, discontinuities, and state-dependent switches in dynamics.
+Frictional and contact phenomena introduce some of the most challenging non-smooth and set-valued dynamics in mechanics [@khalil2002nonlinear; @goebel2012hybrid].
 
-### Static Friction and Stiction
+### Static Friction, Stiction, and Stick-Slip
 
-**Static friction** is the maximum friction force that can resist motion before sliding begins. It is characterized by a **breakaway (threshold) torque** $\tau_{\text{break}}$ below which the joint does not move.
+**Static friction** is a set-valued reaction force that enforces a zero-relative-velocity kinematic constraint ($v = \dot{q} = 0$) until the applied tangential load exceeds a breakaway threshold $\tau_s = \mu_s N$.
 
-**Where it enters:** Static friction enters as a **state-dependent, velocity-dependent discontinuity** in the control-torque response:
+**Mathematical model:** The complete friction law must account for total applied loads $\tau_{\text{applied}} = \tau_u - C(q,\dot{q})\dot{q} - g(q) - \tau_{\text{ext}}$:
 $$
-\tau_{\text{friction}} = \begin{cases}
-\tau_u & \text{if } |\tau_u| < \tau_{\text{break}} \\
-\text{sign}(\dot{q}) \cdot \tau_{\text{kinetic}} & \text{if } |\dot{q}| > 0
+\tau_{\text{friction}} \in \begin{cases}
+-\tau_{\text{applied}} & \text{if } \dot{q} = 0 \text{ and } |\tau_{\text{applied}}| \leq \tau_s, \\
+\{-\tau_s \operatorname{sign}(\tau_{\text{applied}})\} & \text{if } \dot{q} = 0 \text{ and } |\tau_{\text{applied}}| > \tau_s, \\
+-\tau_{\text{kinetic}}(\dot{q})\operatorname{sign}(\dot{q}) & \text{if } \dot{q} \neq 0.
 \end{cases}
 $$
 
-When $\dot{q} = 0$ and $|\tau_u| < \tau_{\text{break}}$, the joint "sticks," and the velocity remains zero regardless of input. This is a **discontinuity at zero velocity**.
+When the system is stuck ($\dot{q} = 0$ with $|\tau_{\text{applied}}| \leq \tau_s$), static friction exactly balances all applied torques ($\ddot{q} = 0$). Motion initiates only when $|\tau_{\text{applied}}| > \tau_s$.
 
-**Does it preserve affinity?** No. Static friction introduces a **discontinuous dependence on the input** at zero velocity. The system is not differentiable at $\dot{q} = 0$, and the control torque does not enter linearly—it determines whether motion occurs, not the magnitude of acceleration given that motion is occurring.
+**Does it preserve affinity?**
+- In the **sliding regime** ($\dot{q} \neq 0$), friction depends strictly on state velocity and normal load; control torques $u$ enter linearly into acceleration, preserving control-affinity.
+- In the **stuck regime** ($\dot{q} = 0$), acceleration remains identically zero for any input satisfying $|\tau_{\text{applied}}| \leq \tau_s$, and becomes non-zero once the threshold is crossed. This is a non-smooth projection (set-valued friction cone), breaking global $C^1$ control-affinity at the zero-velocity boundary.
 
-**Force superposition:** Forces sum, but the presence of stiction means that applying two small torques simultaneously may have a different effect than applying them sequentially. If torque 1 is below breakaway and torque 2 is below breakaway, together they might exceed breakaway, creating a nonlinear interaction.
+**Force superposition:** Physical forces always sum linearly under D'Alembert's principle. However, because static friction is bounded by $\tau_s$, applying two control inputs $u_1$ and $u_2$ individually may produce zero motion if $|\tau_{u,1}| < \tau_s$ and $|\tau_{u,2}| < \tau_s$, whereas their coherent sum $u_1 + u_2$ may exceed $\tau_s$ and trigger slip. Superposition of resulting accelerations fails across the stick-slip transition.
 
-**Implication for ZTCF:** Static friction complicates the ZTCF. The passive drift at $u = 0$ includes stiction, which "holds" the joint in place. But stiction also modifies the response to small perturbations. Careful experimental design (or high-frequency dither) is needed to separate friction effects from intrinsic dynamics.
+**Implication for ZTCF:** When evaluating unforced counterfactuals ($u = 0$), the passive drift includes stiction holding joints stationary against gravity if $|g(q)| \le \tau_s$. The counterfactual difference $\ddot{q}(x, u) - \ddot{q}(x, 0)$ is well-defined, but for inputs that do not overcome stiction, both accelerations are zero.
 
-### Stribeck Effect
+### Stribeck Effect and Sliding Friction
 
-The **Stribeck effect** is the observation that kinetic friction decreases as velocity increases from zero, reaches a minimum, and then increases slightly. The friction force is thus a nonmonotonic function of velocity.
+The **Stribeck effect** captures the continuous drop in friction force as sliding speed increases from micro-slip to boundary and hydrodynamic lubrication regimes, followed by viscous shear rise at higher speeds [@khalil2002nonlinear].
 
-**Mathematical model:** A simple empirical model is
+**Mathematical model:** For non-zero relative velocity $v = \dot{q} \neq 0$, the continuous kinetic friction model is:
 $$
-\tau_{\text{friction}} = -[\tau_c + (\tau_s - \tau_c) e^{-v/v_s}] \text{sign}(\dot{q}),
+\tau_{\text{friction}}(v) = -\left[\tau_c + (\tau_s - \tau_c) \exp\left(-\left(\frac{|v|}{v_s}\right)^\delta\right)\right]\operatorname{sign}(v) - \sigma_v v,
 $$
 where:
-- $\tau_c$ is Coulomb friction (sliding friction at moderate velocity),
-- $\tau_s > \tau_c$ is static friction,
-- $v_s$ is the Stribeck velocity scale,
-- $\dot{q}$ is the joint velocity.
+- $\tau_c = \mu_k N$ is the Coulomb sliding level,
+- $\tau_s = \mu_s N$ is the stiction breakaway level ($\tau_s \ge \tau_c$),
+- $v_s > 0$ is the characteristic Stribeck velocity scale,
+- $\delta \in [1, 2]$ is the Stribeck shape exponent (typically $\delta = 1$ or $2$),
+- $\sigma_v \ge 0$ is the viscous damping coefficient.
 
-**Where it enters:** The Stribeck effect is a friction torque that depends nonlinearly on velocity and enters the drift term.
+The speed magnitude $|v|$ guarantees proper parity: $\tau_{\text{friction}}(-v) = -\tau_{\text{friction}}(v)$ for all $v$. As $|v| \to \infty$, the exponential term vanishes and friction transitions linearly to the viscous damping regime $-(\tau_c \operatorname{sign}(v) + \sigma_v v)$.
 
-**Does it preserve affinity?** Yes, if we model friction as a known state-dependent torque. The control input enters linearly; the friction torque is part of the passive dynamics. However, the Stribeck model introduces state-dependent damping that is highly nonlinear.
+**Where it enters:** Kinetic Stribeck friction is a function of state $(q, v)$ and enters the unforced drift vector field $f(x)$ through $-M(q)^{-1}\tau_{\text{friction}}(v)$.
 
-**Force superposition:** Friction torques sum with other torques. The nonlinearity means that the magnitude of friction depends on the velocity magnitude in a nonmonotonic way.
+**Does it preserve affinity?** Yes. For any non-zero velocity trajectory, kinetic friction is purely state-dependent and does not alter the input matrix $G(q)$.
 
-**Implication for ZTCF:** The Stribeck effect is part of the passive drift. It means that the effective "passive" dynamics is highly velocity-dependent. If the system is at rest ($\dot{q} = 0$), the effective damping is zero (stiction holds it). If moving slowly, damping is high (Stribeck dip). At higher velocity, damping increases again. The ZTCF captures this behavior in $f(x)$.
+**Force superposition:** Instantaneous friction torques sum with inertial, gravitational, and control torques.
 
-### Coulomb Friction
+**Implication for ZTCF:** The Stribeck curve is fully captured in the passive drift $f(x)$.
 
-**Coulomb friction** is the simplest kinetic friction model: the friction force is proportional to normal force and *independent of velocity magnitude*:
+### Coulomb Friction and Load-Dependent Coupling
+
+Coulomb friction models dry kinetic friction proportional to normal force $N$:
 $$
-f_{\text{friction}} = -\mu_k N \text{sign}(v),
-$$
-where $\mu_k$ is the kinetic friction coefficient and $\text{sign}(v)$ indicates direction.
-
-**Where it enters:** Coulomb friction enters the drift as a state-dependent torque:
-$$
-\tau_{\text{Coulomb}} = -\tau_c \text{sign}(\dot{q}).
+\tau_{\text{Coulomb}} = -\mu_k N \operatorname{sign}(\dot{q}).
 $$
 
-The **sign function discontinuity** at $\dot{q} = 0$ is a key feature. Mathematically, this is handled via inclusion of the sign function in the set-valued analysis or by regularization.
-
-**Does it preserve affinity?** Coulomb friction preserves the control-affine structure because the friction torque depends on state (velocity direction) only, not on input.
-
-**Force superposition:** Friction torques add to other torques. The discontinuity at zero velocity means that the response near rest is singular.
-
-**Implication for ZTCF:** Coulomb friction is part of the passive dynamics and can be identified by measuring the drift at zero or low input. The ZTCF method can extract it: by comparing no-input motion against gravity/Coriolis-only predictions, one can infer the friction torque.
+**Load-dependent normal force and input coupling:** In spatial mechanisms and closed kinematic chains, the contact normal force $N$ is determined by the constraint equations:
+$$
+N = N(q, \dot{q}, \tau).
+$$
+When external control torques $\tau = G(q)u$ compress a joint or contact surface, the normal force $N$ depends directly on $u$. If $N$ depends linearly on $u$, then $\tau_{\text{Coulomb}} = -\mu_k N(q, \dot{q}, u)\operatorname{sign}(\dot{q})$ introduces an input-dependent friction force. After eliminating the normal constraint, the friction force can modulate the effective control direction $\tilde{G}(q, \operatorname{sign}(\dot{q}))$, which remains piecewise affine within fixed velocity directions.
 
 ### Viscous Friction
 
-**Viscous friction** (linear damping) is proportional to velocity:
+**Viscous friction** is linear damping resulting from fluid shear:
 $$
-f_{\text{viscous}} = -c \dot{q},
+\tau_{\text{viscous}} = -\sigma_v \dot{q}.
 $$
-where $c$ is the damping coefficient.
+Viscous friction enters the drift as a linear damping matrix $-D\dot{q}$, preserving both control-affinity and global smoothness.
 
-**Where it enters:** Viscous friction appears in the drift as a linear term in velocity.
+### Contact Nonlinearities, Unilateral Constraints, and Active Sets
 
-**Does it preserve affinity?** Yes. Viscous friction is linear in velocity and does not couple with the input.
+Physical contact imposes unilateral kinematic constraints: surfaces cannot interpenetrate. For a distance function $\phi(q) \ge 0$:
+$$
+\phi(q) \ge 0, \qquad \lambda_N \ge 0, \qquad \phi(q)\lambda_N = 0,
+$$
+which forms a linear complementarity problem (LCP) [@featherstone2008rigid; @goebel2012hybrid].
 
-**Force superposition:** Damping forces add linearly. Crucially, **viscous friction is the only friction model that is linear in velocity**. All other friction models (Coulomb, Stribeck, LuGre, bristle models) are nonlinear.
+**Impact dynamics versus smooth constraint evolution:**
+1. **Impact phase ($\phi(q) = 0, \dot{\phi}^- < 0$):** Contact initiation is an instantaneous event governed by restitution laws (e.g. Poisson or Newton restitution). The collision generates an impulsive contact force $\Lambda_N$, causing a discontinuous velocity jump from $\dot{q}^-$ to $\dot{q}^+$. This is modeled via a discrete saltation/reset map $x^+ = \Delta(x^-)$, not by altering the dimension of the ambient state space $\mathbb{R}^{2n}$.
+2. **Persistent contact phase ($\phi(q) = 0, \dot{\phi} = 0$):** While contact persists, the constraint $\ddot{\phi}(q, \dot{q}, \ddot{q}) = 0$ is maintained by a continuous normal reaction force $\lambda_N \ge 0$. The system's *ambient* state space remains $\mathbb{R}^{2n}$, but the *accessible tangent space* (manifold of admissible motions) is restricted to a submanifold of dimension $2n - k$, where $k$ is the number of active bilateralized constraints.
 
-**Implication for ZTCF:** Viscous friction is easily handled and does not complicate the ZTCF method.
+**Does it preserve affinity?**
+- Within a **fixed active set** of persistent bilateral contacts ($\phi_i(q) = 0, \lambda_{N,i} > 0$), the constrained dynamics can be solved explicitly via Lagrange multipliers:
+  $$
+  \ddot{q} = P(q) M(q)^{-1} [G(q)u - C(q,\dot{q})\dot{q} - g(q)] + a_{\text{corr}}(q, \dot{q}),
+  $$
+  where $P(q) = I - M^{-1}J_c^T(J_c M^{-1}J_c^T)^{-1}J_c$ is the mass-orthogonal projection operator onto the constraint nullspace. This projected system remains **strictly control-affine**.
+- Across **contact mode transitions** (lift-off $\lambda_N \to 0$ or impact $\dot{\phi}^- < 0$), the system is hybrid. Control authority $G(q)u$ can govern *when* transitions occur, but the jump map itself is discontinuous.
 
-### Contact Nonlinearities and Unilateral Constraints
-
-When two bodies make or break contact, the system topology changes. A **unilateral constraint** (e.g., a ball rolling on a surface can be in contact or bouncing) creates a **discontinuous change in system state and dimensionality**.
-
-**Example: Foot strike in walking.** During swing phase, the leg is free. At foot strike, the foot comes into contact with the ground, introducing contact normal forces and friction. The effective degrees of freedom change: the swing leg had 3 DOF; after contact, some of these are constrained.
-
-**Contact models:**
-
-- **Rigid contact:** The contact is perfectly inelastic; the relative velocity perpendicular to the contact normal becomes zero instantaneously.
-- **Compliant contact:** The contact region deforms elastically, modeled as springs and dampers. The contact force depends on penetration depth.
-- **Hertzian contact:** Spherical or curved surfaces in elastic contact; contact force is proportional to penetration depth to the 3/2 power.
-
-**Where it enters:** Contact forces enter as additional control-like inputs during contact phases. When contact is broken, these forces disappear.
-
-**Does it preserve affinity?** Within a contact phase, contact forces can be treated as state-dependent (depending on contact normal and penetration). Affinity may or may not hold depending on the contact model. **Across contact transitions, the system topology changes**, breaking the assumption of a fixed control-affine form.
-
-**Force superposition:** Within a contact phase, forces sum linearly. Across contact transitions, the equations of motion themselves change.
-
-**Implication for ZTCF:** Contact adds hybrid dynamics to the system. The ZTCF must account for the possibility of transitioning in and out of contact. In biomechanics (walking, running, landing), contact is episodic, and the ZTCF decomposition must be applied within contact and swing phases separately.
+**Implication for ZTCF:** Under persistent contact with a fixed active set, the ZTCF decomposition $\ddot{q} = \ddot{q}_{\text{drift}} + \tilde{G}_{\text{proj}}(q)u$ is exact. When inputs determine whether a contact separates or binds, the counterfactual comparison must be performed within each hybrid mode [@goebel2012hybrid].
 
 ---
 
 ## Backlash, Deadzone, and Transmission Nonlinearities
 
-### Backlash (Mechanical Play)
+## Backlash, Deadzone, and Transmission Nonlinearities
 
-**Backlash** is a gap or play in a mechanical transmission, typically between gear teeth or in a joint reduction. If a motor rotates by an amount less than the backlash gap, the load does not rotate at all.
+### Backlash (Mechanical Play and Lost Motion)
 
-**Mathematical model:** A simple backlash model with maximum gap $2\Delta$ is:
+**Backlash** arises from clearance gaps between meshing gear teeth or linkage couplings. It cannot be represented as a memoryless algebraic function of current positions; it is a dynamic state-dependent compliance or hysteresis system [@khalil2002nonlinear].
+
+**Dynamic model:** Let $\theta_m$ be the motor angle (referred to the output shaft) and $\theta_l$ be the load angle. The relative displacement is $\delta = \theta_m - \theta_l$, and the clearance gap half-width is $\Delta > 0$. The transmitted torque $\tau_{\text{trans}}$ is governed by contact compliance:
 $$
-q_{\text{load}} = \begin{cases}
-q_{\text{motor}} - \Delta & \text{if } q_{\text{motor}} > q_{\text{load}} + \Delta \\
-q_{\text{motor}} + \Delta & \text{if } q_{\text{motor}} < q_{\text{load}} - \Delta \\
-q_{\text{load}} & \text{otherwise}
+\tau_{\text{trans}}(\theta_m, \theta_l, \dot{\theta}_m, \dot{\theta}_l) = \begin{cases}
+k_b (\delta - \Delta) + d_b (\dot{\theta}_m - \dot{\theta}_l) & \text{if } \delta > \Delta \text{ (forward contact)}, \\
+k_b (\delta + \Delta) + d_b (\dot{\theta}_m - \dot{\theta}_l) & \text{if } \delta < -\Delta \text{ (reverse contact)}, \\
+0 & \text{if } |\delta| \le \Delta \text{ (disengaged gap)},
 \end{cases}
 $$
+where $k_b$ is tooth contact stiffness and $d_b$ is internal damping.
 
-This creates **hysteresis**: the relationship between motor and load position depends on the direction of motion.
-
-**Where it enters:** Backlash appears in the input transmission. It modifies the relationship between the control input (motor torque) and the actual generalized force applied to the load.
-
-**Does it preserve affinity?** No. Backlash introduces a **state-dependent nonlinearity in the input mapping**. The control torque $u$ does not map directly to a generalized force on the load; instead, the mapping depends on whether the motor is "pulling" or "pushing" against the gap. This breaks the affine input structure.
-
-**Force superposition:** Backlash violates input superposition. Two small torques applied simultaneously may have a different effect than one large torque equal to their sum, because the load may engage at different points in the hysteresis cycle.
-
-**Implication for ZTCF:** Backlash complicates the ZTCF significantly. The passive dynamics (observed at $u = 0$) includes the current state of the backlash engagement. Applying a perturbation $u$ may require "taking up" the backlash before affecting the load, violating the assumption that input effects are independent of engagement state.
+When both the motor state $(\theta_m, \dot{\theta}_m)$ and load state $(\theta_l, \dot{\theta}_l)$ are explicitly modeled in the extended state vector $x = (\theta_m, \theta_l, \dot{\theta}_m, \dot{\theta}_l)$, the motor is driven directly by actuator input torque $u$:
+$$
+J_m \ddot{\theta}_m = u - \tau_{\text{trans}}, \qquad J_l \ddot{\theta}_l = \tau_{\text{trans}} - \tau_{\text{load}}.
+$$
+In this state-space representation, the control input $u$ enters strictly linearly:
+$$
+\dot{x} = f(x) + \begin{bmatrix} 0 \\ 0 \\ 1/J_m \\ 0 \end{bmatrix} u,
+$$
+so the **extended system remains control-affine**.
+However, if the transmission is reduced to a single lump coordinate $q \approx \theta_l$ by attempting to project $u$ directly onto the load, the effective input mapping $\tau_l(u)$ becomes nonlinearly hysteretic and history-dependent, breaking apparent control-affinity.
 
 ### Deadzone
 
-**Deadzone** is a region of input values around zero where no output is produced. It is common in actuators with friction or threshold-based operation.
+**Deadzone** is an insensitivity band around zero. In standard control theory, two distinct models exist:
 
-**Mathematical model:**
+1. **Discontinuous threshold:**
+   $$
+   \tau(u) = \begin{cases} 0 & \text{if } |u| \le u_0, \\ u & \text{if } |u| > u_0. \end{cases}
+   $$
+2. **Continuous deadzone (canonical standard model):**
+   $$
+   \tau(u) = \begin{cases}
+   m_r (u - u_0) & \text{if } u > u_0, \\
+   0 & \text{if } -u_0 \le u \le u_0, \\
+   m_l (u + u_0) & \text{if } u < -u_0,
+   \end{cases}
+   $$
+   which is continuous everywhere but non-differentiable at $u = \pm u_0$.
+
+**Does it preserve affinity?**
+At the actuator command port $u$, deadzone is a non-affine mapping $\tau(u)$. However, if the system state equations are formulated with realized actuator torque $\tau$ as the input port, the equations of motion are affine in $\tau$, with $u$ passing through an actuator input nonlinearity.
+
+### Actuator Saturation and Feasible Input Sets
+
+Physical actuators have maximum achievable torque or force bounds $\mathcal{U} = \{u \in \mathbb{R}^m : |u_i| \le \tau_{\max,i}\}$.
+The mathematical mapping from commanded signal $u_{\text{cmd}}$ to realized torque is:
 $$
-\tau_{\text{output}} = \begin{cases}
-0 & \text{if } |u| < u_0 \\
-u & \text{if } |u| \geq u_0
+\tau_{\text{realized}} = \operatorname{sat}(u_{\text{cmd}}; \tau_{\max}) = \begin{cases}
+u_{\text{cmd}} & \text{if } |u_{\text{cmd}}| \le \tau_{\max}, \\
+\tau_{\max}\operatorname{sign}(u_{\text{cmd}}) & \text{if } |u_{\text{cmd}}| > \tau_{\max}.
 \end{cases}
 $$
 
-**Where it enters:** Deadzone is a nonlinearity in the input-to-force mapping. Unlike backlash, it is **not hysteretic**; deadzone depends only on the current input magnitude, not history.
+**Affinity vs. Admissible Input Bounds:**
+A crucial distinction must be maintained:
+- If $u_{\text{cmd}}$ is considered the input variable across $\mathbb{R}^m$, saturation is an input nonlinearity that clips control authority, breaking global linearity in $u_{\text{cmd}}$.
+- If the control input $u$ is defined as the *realized generalized force* constrained to the convex compact admissible set $\mathcal{U}$, then the underlying physical system $\dot{x} = f(x) + G(x)u$ remains **strictly control-affine on the restricted domain $u \in \mathcal{U}$**.
 
-**Does it preserve affinity?** No. The output does not depend linearly on the input when the input is near zero. The system transitions from $\tau = 0$ to $\tau = u$ at the deadzone threshold.
+### Actuator Electromechanics and Back-EMF
 
-**Force superposition:** Input superposition fails. If $u_1 = u_2 = u_0/2$, then $u_1 + u_2 = u_0$, which is at the threshold. Applying $u_1$ and $u_2$ separately produces no output, while applying their sum produces output. This is a fundamental violation of superposition.
-
-**Implication for ZTCF:** Like backlash, deadzone breaks input superposition and complicates the ZTCF. Small inputs may produce zero output effect, making it impossible to measure the input contribution to dynamics for weak control signals.
-
-### Transmission Nonlinearities
-
-**Transmission nonlinearities** include gear ratio changes, belt slip, and chain slack. In a transmission with varying gear ratio $n(q)$, the effective control torque seen by the load is
+For an electric permanent-magnet DC motor with winding resistance $R$, inductance $L_a$, motor torque constant $K_t$, and back-EMF constant $K_e$:
 $$
-\tau_{\text{load}} = n(q) \tau_{\text{input}},
+L_a \frac{di_a}{dt} + R i_a + K_e \dot{\theta}_m = v_{\text{applied}}, \qquad \tau_m = K_t i_a.
 $$
-which is **state-dependent** but still linear in the input. More severe are:
-
-- **Belt slip:** If the belt-to-pulley friction is overcome, slipping occurs, breaking the kinematic constraint.
-- **Chain slack:** A chain can develop slack, breaking the transmission of torque temporarily.
-
-**Where it enters:** Transmission dynamics modify the input matrix $G(q)$ and can introduce state-dependent or discontinuous input mappings.
-
-**Does it preserve affinity?** A fixed (possibly state-dependent) gear ratio preserves affinity. Slip or slack introduce discontinuous regimes where the input matrix changes, potentially breaking affinity.
-
----
-
-## Saturation and Limiting
-
-### Actuator Saturation
-
-**Saturation** occurs when an actuator reaches its maximum output (torque, force, or power). A **hard saturation** model is
-$$
-\tau_{\text{actuator}} = \text{sat}(u; \tau_{\max}) := \begin{cases}
-u & \text{if } |u| \leq \tau_{\max} \\
-\tau_{\max} \text{sign}(u) & \text{if } |u| > \tau_{\max}
-\end{cases}
-$$
-
-**Where it enters:** Saturation modifies the input-to-force mapping. It is a nonlinearity applied to the control input.
-
-**Does it preserve affinity?** No. The saturation function is not linear; outside the linear region $|u| \leq \tau_{\max}$, the system becomes input-nonlinear.
-
-**Force superposition:** Input superposition fails in the saturated regime. If both $u_1$ and $u_2$ individually saturate, their sum also saturates, but the output is not linear in the inputs.
-
-**Implication for ZTCF:** Saturation is critical for practical systems. The ZTCF is valid only when inputs are in the linear region. If the control signal saturates, the system is no longer affine in $u$, and the ZTCF decomposition becomes approximate. Practitioners must design controllers to avoid saturation or account for saturation nonlinearity explicitly.
-
-### Velocity and Speed Limits
-
-Many actuators have maximum velocity or speed limits, either from motor back-EMF effects or explicit mechanical limits.
-
-**Back-EMF in electric motors:** The back-EMF is proportional to motor speed, creating a relationship between current (control input to the motor) and speed that saturates.
-
-**Joint mechanical limits:** A revolute joint may be limited to a finite range $[q_{\min}, q_{\max}]$. As the joint approaches a limit, the effective velocity is constrained.
-
-**Where it enters:** Velocity limits are state-dependent constraints on the velocity evolution. They are often modeled as additional damping near the limit or as a hard constraint.
-
-**Does it preserve affinity?** Hard constraints (joint limits) break affinity because they introduce inequality constraints. Soft limiting (via increasing damping) can preserve affinity by adding state-dependent damping.
-
-### Power Limits
-
-If a system is power-limited, then $|\tau \dot{q}| \leq P_{\max}$. This creates a nonlinear relationship between torque and velocity depending on the available power.
-
-**Where it enters:** Power limits are often implicit in actuator models and affect the effective input constraint.
-
-**Does it preserve affinity?** Power limits introduce a nonlinear constraint on the $(τ, \dot{q})$ space that is not affine in $u$.
+- **Current-controlled (torque port):** When driven by a high-bandwidth current amplifier, current $i_a$ is commanded directly. The torque $\tau_m = K_t i_a$ is strictly proportional to $i_a$, preserving control-affinity in $u = i_a$ without motor velocity back-coupling.
+- **Voltage-controlled (voltage port):** If applied terminal voltage $v_{\text{applied}}$ is the control input $u$:
+  $$
+  i_a \approx \frac{u - K_e \dot{\theta}_m}{R}, \qquad \tau_m = \frac{K_t}{R} u - \frac{K_t K_e}{R} \dot{\theta}_m.
+  $$
+  The back-EMF term acts as linear viscous damping $-\frac{K_t K_e}{R} \dot{\theta}_m$, which enters the drift field $f(x)$, while the control voltage $u$ enters with constant gain $K_t / R$. The voltage-driven system remains **strictly control-affine**.
 
 ---
 
@@ -489,23 +472,25 @@ where $\rho$ is fluid density, $C_d$ is drag coefficient, $A$ is reference area,
 
 ### Structural Damping and Frequency Dependence
 
-**Structural damping** or **hysteretic damping** models energy dissipation per cycle as independent of frequency (unlike viscous damping, which depends on velocity). Mathematically, this is often represented via a **complex stiffness**:
+**Structural damping** (or hysteretic material damping) models energy loss per cycle as roughly independent of oscillation frequency, in contrast to viscous damping where loss per cycle scales linearly with frequency. In the steady-state frequency domain under harmonic excitation at frequency $\omega_0$, this is written using a **complex stiffness**:
 $$
-K_{\text{complex}} = K(1 + i \eta),
+K_{\text{complex}} = K_0(1 + i\eta),
 $$
-where $\eta$ is the loss factor. The force is then $f = K(1 + i\eta) x$, which in time domain corresponds to frequency-dependent damping.
+where $\eta > 0$ is the dimensionless loss factor.
+In the time domain for general multi-frequency or non-stationary transient motion, a constant imaginary stiffness is non-causal. A causal time-domain realization requires an augmented state-space representation—such as an internal viscoelastic relaxation state (Maxwell or standard linear solid model) or a continuum of relaxation modes:
+$$
+\tau_{\text{internal}} = K_0 q + \sum_{j=1}^m z_j, \qquad \dot{z}_j = -\frac{1}{\tau_j} z_j + \gamma_j \dot{q}.
+$$
 
-**Where it enters:** Structural damping is a frequency-dependent contribution to the drift, often modeled via an additional damping term that depends on the second derivative of displacement.
+**Where it enters:** Internal damping forces enter the unforced drift vector field $f(x)$ through $-M(q)^{-1}\tau_{\text{internal}}$.
 
-**Does it preserve affinity?** Frequency-dependent damping requires careful treatment. If modeled as a linear filter on velocity, it can be incorporated into an extended state-space model. If modeled phenomenologically, it may be difficult to make precisely affine.
+**Does it preserve affinity?** When internal relaxation states $z_j$ are included in an extended state vector $x = (q, \dot{q}, z_1, \dots, z_m)$, the state evolution is strictly linear in control input $u$, preserving **control-affinity**.
 
 ### Material Hysteresis and Viscoelasticity
 
-Materials under cyclic loading dissipate energy through internal friction and molecular rearrangement. A **viscoelastic model** (e.g., Kelvin-Voigt or Maxwell model) combines springs and dampers to capture both elastic storage and energy dissipation.
-
-**Where it enters:** Viscoelasticity introduces internal state variables and state-dependent dissipation.
-
-**Does it preserve affinity?** Viscoelastic models can be represented in affine form by extending the state space to include internal elastic or viscous variables.
+Viscoelastic materials exhibit rate-dependent stress relaxation and creep.
+- **Kelvin–Voigt model:** A parallel spring and dashpot $\sigma = E \epsilon + \eta_{\text{visc}} \dot{\epsilon}$ requires **no additional state variables**; it enters directly into the drift as state-dependent stiffness and velocity damping.
+- **Maxwell model:** A series spring and dashpot $\dot{\epsilon} = \frac{\dot{\sigma}}{E} + \frac{\sigma}{\eta_{\text{visc}}}$ requires storing internal stress or strain as an **additional state variable**.
 
 ---
 
@@ -513,176 +498,108 @@ Materials under cyclic loading dissipate energy through internal friction and mo
 
 ### Aerodynamic Drag and Pressure Forces
 
-When a body moves through a fluid, it experiences drag and pressure forces proportional to velocity squared. The drag is
+When a body moves at velocity $\vec{v}$ relative to a fluid medium with density $\rho$, the aerodynamic drag force opposes relative motion:
 $$
-\vec{F}_{\text{drag}} = -\frac{1}{2} \rho C_d A \vec{v}|\vec{v}|,
+\vec{F}_{\text{drag}} = -\frac{1}{2} \rho C_d(\operatorname{Re}) A |\vec{v}|\vec{v},
 $$
-where the orientation (captured in the unit vector $\vec{v}/|\vec{v}|$) matters for the drag coefficient $C_d$.
+where $C_d$ is the drag coefficient (dependent on Reynolds number $\operatorname{Re} = \rho |\vec{v}| L / \mu$) and $A$ is the projected frontal area.
 
-**Example: Golf swing.** The golf ball experiences aerodynamic drag proportional to $v^2$ and Magnus force (from backspin) proportional to $v$. These are quadratic and linear nonlinearities in velocity.
+**Where it enters:** Fluid drag enters the drift vector field $f(x)$.
 
-**Where it enters:** Aerodynamic forces are velocity-dependent and appear in the drift.
+**Does it preserve affinity?** Yes. Fluid drag depends strictly on system state (velocity relative to fluid) and does not interact with the control input matrix $G(q)$.
 
-**Does it preserve affinity?** Yes. Fluid drag depends on state (velocity) only, not on control input.
+### Magnus Effect and Spin-Induced Lift Forces
 
-**Force superposition:** Drag forces add with other forces, but their magnitude depends nonlinearly on velocity.
-
-### Magnus Effect and Spin-Induced Forces
-
-A spinning object moving through a fluid experiences a **Magnus force** perpendicular to both the velocity and spin axis:
+A spinning object moving through a fluid experiences a transverse lift force known as the **Magnus effect**. The magnitude of the lift force is governed by the dynamic pressure and projected area, scaled by a dimensionless lift coefficient $C_L$:
 $$
-\vec{F}_{\text{Magnus}} = C_L \rho A \vec{\omega} \times \vec{v},
+\vec{F}_{\text{lift}} = \frac{1}{2} C_L(S, \operatorname{Re}) \rho A |\vec{v}|^2 (\hat{\omega} \times \hat{v}),
 $$
-where $C_L$ is a lift coefficient and $\vec{\omega}$ is the angular velocity.
+where:
+- $\hat{\omega} = \vec{\omega}/|\vec{\omega}|$ is the unit vector along the spin axis,
+- $\hat{v} = \vec{v}/|\vec{v}|$ is the unit vector along relative airspeed,
+- $S = \frac{r |\vec{\omega}|}{|\vec{v}|}$ is the dimensionless **spin ratio** (equatorial surface speed divided by flight speed),
+- $C_L(S, \operatorname{Re})$ is a dimensionless empirical lift coefficient that increases with spin ratio $S$ before plateauing.
 
-**Where it enters:** Magnus forces are state-dependent and appear in the drift or control-input-independent part of the dynamics.
+*Dimensional verification:* $\frac{1}{2} C_L \rho A |\vec{v}|^2$ has units $\left[\frac{\text{kg}}{\text{m}^3}\right] [\text{m}^2] \left[\frac{\text{m}^2}{\text{s}^2}\right] = \frac{\text{kg}\cdot\text{m}}{\text{s}^2} = \text{N}$. (In contrast, an expression of the form $C_L \rho A \vec{\omega} \times \vec{v}$ would have units $\frac{\text{kg}}{\text{m}^3}\cdot\text{m}^2\cdot\frac{1}{\text{s}}\cdot\frac{\text{m}}{\text{s}} = \frac{\text{kg}}{\text{s}^2}$, which is missing a factor of length and dimensionally incorrect).
 
-**Does it preserve affinity?** Yes. Magnus forces depend on the state $(q, \dot{q}, \vec{\omega})$ but not on control inputs.
+**Where it enters:** Aerodynamic forces enter the drift vector field $f(x)$.
 
-### Vortex Shedding and Periodic Excitation
-
-In certain flow regimes, a bluff body sheds vortices periodically, creating oscillatory forces. These are **periodic disturbances** rather than truly state-dependent forces.
-
-**Where it enters:** Vortex shedding appears as a time-dependent forcing term added to the drift.
-
-**Does it preserve affinity?** Periodic forcing can be added as a time-dependent term without breaking affinity.
-
-### Added Mass
-
-When a body moves through a fluid, the fluid inertia effectively increases the body's inertia. This **added mass** effect modifies the mass matrix $M(q)$ to include fluid contributions:
-$$
-M_{\text{effective}}(q) = M_{\text{body}}(q) + M_{\text{added}}(q, \text{fluid properties}).
-$$
-
-**Where it enters:** Added mass modifies the inertia matrix, similar to a configuration-dependent mass matrix.
-
-**Does it preserve affinity?** Yes. Added mass is state-dependent but does not couple with control input.
+**Does it preserve affinity?** Yes. Fluid lift and drag depend on instantaneous body translation and rotation states, entering into $f(x)$ without altering control linearity.
 
 ---
 
 ## Biological and Muscle Nonlinearities
 
-Biological systems (especially skeletal muscle) exhibit rich nonlinear dynamics that are fundamental to locomotion, manipulation, and motor control.
+Biological actuators (skeletal muscles) exhibit complex force-generating mechanics governed by the sliding filament theory and neural excitation [@zajac1989determining].
 
 ### Force-Length Relationship
 
-**Hill's force-length relationship** describes how muscle force depends on its length. The force is zero at minimal length, increases to a maximum at optimal length $L_0$, and decreases at longer lengths.
-
-**Mathematical model:**
+The active isometric force of a sarcomere depends on the overlap between actin and myosin filaments. The normalized force-length curve $f_l(\tilde{l}_m)$ (where $\tilde{l}_m = l_m / l_0$ is muscle fiber length normalized by optimal fiber length $l_0$) is parameterized by an active bell-shaped curve plus a passive exponential elastic term:
 $$
-F_{\text{muscle}}(L) = F_{\max} \exp\left[-\left(\frac{L - L_0}{\sigma}\right)^2\right],
+F_m(l_m, v_m, a) = F_0 \left[ a \cdot f_l(\tilde{l}_m) f_v(\tilde{v}_m) + f_{\text{passive}}(\tilde{l}_m) \right],
 $$
-where $\sigma$ is a width parameter. More commonly, a **piecewise linear** model is used with:
-- **Ascending limb:** Force increases linearly from zero to $F_{\max}$ as length goes from $L_{\min}$ to $L_0$.
-- **Descending limb:** Force decreases linearly from $F_{\max}$ to zero as length goes from $L_0$ to $L_{\max}$.
-
-**Where it enters:** The force-length relationship modifies the control effectiveness. If a muscle is at a suboptimal length, the same neural input produces less force.
-
-**Does it preserve affinity?** No, if we treat the muscle force as the control input. The relationship $F(u) = F_{\text{max}}(L) \cdot u$ where $F_{\max}$ depends on length $L$ is **state-dependent input gain**, but the nonlinearity is multiplicative, not additive. This can be viewed as a state-dependent modification of $G(x)$.
-
-**Force superposition:** At a fixed muscle length, the force response is linear in neural activation. But because length changes during movement, the effective control gain is state-dependent.
+where $F_0$ is maximum isometric force, $a \in [0, 1]$ is active muscle activation, and $f_{\text{passive}}$ accounts for passive connective tissue (titin and collagen) stretch.
 
 ### Force-Velocity Relationship
 
-**Hill's force-velocity relationship** describes how muscle force depends on contraction velocity. As the muscle contracts faster, the force decreases. The canonical Hill hyperbola $(F + a)(v + b) = (F_0 + a)\,b$, solved for $F$, is
+**Hill's force-velocity relationship** describes active force modulation as a function of muscle shortening/lengthening velocity $v_m$ [@zajac1989determining].
+For concentric shortening ($v_m > 0$, defined positive for shortening):
 $$
-F(v) = \frac{F_0\,b - a\,v}{v + b},
+(F + a)(v_m + b) = (F_0 + a) b.
 $$
-where $v$ is shortening velocity (positive for contraction), $F_0$ is isometric force, and $a, b$ are shape parameters. The curvature constant is tied to the maximum shortening velocity by $a = F_0\,b / v_{\max}$, which fixes the two physical limits: $F(0) = F_0$ (isometric) and $F(v_{\max}) = 0$ (force vanishes at maximum shortening speed). Equivalently, in normalized form, $F(v) = F_0\,(v_{\max} - v)/(v_{\max} + k\,v)$ with $k = a/F_0 \approx 4$.
+Solving for normalized active force $f_v = F/F_0$:
+$$
+f_v(\tilde{v}_m) = \frac{1 - \tilde{v}_m / \tilde{v}_{\max}}{1 + (\tilde{v}_m / \tilde{v}_{\max}) / k}, \qquad \text{for } 0 \le \tilde{v}_m \le \tilde{v}_{\max},
+$$
+where:
+- $\tilde{v}_m = v_m / l_0$ is normalized fiber contraction speed,
+- $\tilde{v}_{\max} \approx 10\,l_0/\text{s}$ is maximum shortening speed,
+- $k = a / F_0 \approx 0.15 - 0.25$ is the dimensionless curvature parameter (experimentally established across vertebrate skeletal muscle; $k \approx 0.25$, **not** $4$).
 
-The force-velocity relationship has several regimes:
-- **Isometric** ($v = 0$): Force is maximum ($= F_0$).
-- **Shortening** ($v > 0$): Force decreases hyperbolically with velocity, reaching zero at $v = v_{\max}$.
-- **Lengthening** ($v < 0$): Force can exceed isometric force (eccentric contraction).
-
-**Where it enters:** The force-velocity relationship couples muscle force to contraction velocity. If we model neural input as specifying desired muscle force, then the velocity state modifies the achievable force.
-
-**Does it preserve affinity?** Similar to force-length, the force-velocity relationship creates state-dependent effective input gain.
-
-**Force superposition:** At a fixed contraction velocity, muscle forces sum linearly. But the velocity itself changes during motion, so the effective gain is state-dependent.
-
-**Implication for ZTCF:** The force-velocity and force-length relationships fundamentally affect how muscle forces vary with state. The ZTCF still applies: we can decompose motion into passive (muscle-off, $u = 0$) and active (muscle-on, $u > 0$) components. But the neural control signal ($u$) maps nonlinearly to muscle force due to these relationships.
+Physical regimes:
+- **Concentric shortening ($0 < v_m \le v_{\max}$):** Force drops monotonically from $F_0$ at $v_m = 0$ to $0$ at $v_m = v_{\max}$.
+- **Isometric ($v_m = 0$):** Active force equals $F_0$.
+- **Eccentric lengthening ($v_m < 0$):** Active muscle yields higher force than isometric, reaching an asymptotic plateau $F_{\text{ecc}} \approx 1.4 - 1.8\,F_0$ with steep initial slope. Calling $F_0$ the maximum attainable force is valid only for isometric/shortening regimes.
 
 ### Activation Dynamics
 
-Muscles do not respond instantaneously to neural signals. The **excitation-contraction coupling** involves:
-1. Neural signal (motor neuron firing rate) → calcium release in muscle fiber.
-2. Calcium diffusion and binding to regulatory proteins.
-3. Cross-bridge formation and force development.
-
-A simple first-order model of activation is
+Muscles do not generate force instantaneously upon neural excitation. Excitation $u(t) \in [0, 1]$ (motor unit action potential firing) triggers calcium influx into the sarcoplasm, driving muscle activation $a(t) \in [0, 1]$:
 $$
-\dot{a} = \frac{u - a}{\tau},
+\dot{a} = \frac{u - a}{\tau_{\text{act}}(u, a)}, \qquad \tau_{\text{act}} = \begin{cases}
+\tau_{\text{rise}} (0.5 + 1.5 a) & \text{if } u > a \text{ (activation)}, \\
+\tau_{\text{fall}} / (0.5 + 1.5 a) & \text{if } u \le a \text{ (deactivation)},
+\end{cases}
 $$
-where $a$ is activation level (0 to 1), $u$ is neural input (0 to 1), and $\tau$ is activation time constant (typically 10-100 ms).
+with typical time constants $\tau_{\text{rise}} \approx 10-20\text{ ms}$ and $\tau_{\text{fall}} \approx 40-50\text{ ms}$.
 
-**Where it enters:** Activation dynamics introduce an additional state variable. The muscle force is then $F = F_{\text{muscle}}(L, v, a)$, a function of length, velocity, and activation.
+**Implications for ZTCF and Affinity:**
+1. Setting neural excitation to zero ($u = 0$) does **not** cause muscle force to vanish instantaneously. Activation decays with time constant $\tau_{\text{fall}}$, so active muscle tension persists along the immediate counterfactual trajectory.
+2. If activation $a$ is included as an internal state in $x = (q, \dot{q}, a)$, the neural input $u$ enters through the activation differential equation. However, because $\tau_{\text{act}}$ and the muscle force $F_m(l_m, v_m, a)$ are state-dependent, mapping neural input to joint torque involves state-dependent gains.
 
-**Does it preserve affinity?** The activation ODE is linear in $u$ (affine), so the extended state space includes $a$. The system can remain affine by defining the state as $x = (q, \dot{q}, a)$ and writing
-$$
-\dot{x} = \begin{bmatrix}
-\dot{q} \\
-\ddot{q} \\
-\dot{a}
-\end{bmatrix} = f(x) + G(x) u,
-$$
-where now $f$ includes passive dynamics and $g$ captures how neural input affects activation. The affine structure is preserved in the extended state space.
+### Tendon Compliance and Pennation
 
-**Force superposition:** Neural inputs sum linearly in the activation ODE. But the mapping from activation to muscle force is nonlinear due to force-length and force-velocity relationships.
+Skeletal muscles attach to bones via compliant tendons. In a Hill-type muscle-tendon unit (MTU):
+- Muscle fibers insert into the tendon at a **pennation angle** $\alpha(l_m)$.
+- Assuming negligible tendon mass, force equilibrium along the tendon line of action requires:
+  $$
+  F_t = F_m \cos\alpha(l_m).
+  $$
+- The tendon acts as a nonlinear elastic spring:
+  $$
+  F_t = f_{\text{tendon}}(\epsilon_t), \qquad \epsilon_t = \frac{l_t - l_{ts}}{l_{ts}},
+  $$
+  where $l_{ts}$ is tendon slack length.
+Tendon compliance adds internal mechanical states (tendon stretch or fiber length), decoupling joint kinematics from muscle fiber velocities.
 
-### Co-Contraction and Antagonistic Muscle Pairs
+### Co-Contraction and Joint Impedance
 
-Many joints are actuated by **agonist and antagonist muscles** (e.g., biceps and triceps for elbow flexion). When both are active simultaneously (**co-contraction**), the:
-- **Net torque** is reduced (they partially cancel).
-- **Joint stiffness** increases (both muscles are active, stiffening the joint).
+When agonist and antagonist muscle pairs activate simultaneously:
+- **Net torque:** $\tau_{\text{net}} = r_{\text{agon}} F_{\text{agon}} - r_{\text{antag}} F_{\text{antag}}$.
+- **Joint stiffness:** Because muscle force-length curves have positive slope on the ascending limb and tendon compliance stiffens with load, co-contraction modulates **joint mechanical impedance** (stiffness $K$ and viscosity $D$) independently of net torque [@hogan1985impedance].
 
-This is a challenge for the affine model because stiffness is typically considered a property of the joint, not part of the control input. But in muscle-actuated systems, stiffness is actively controlled by co-contraction.
+Co-contraction demonstrates that two neural inputs $(u_1, u_2)$ cannot be replaced by their scalar difference $u_1 - u_2$: while their net torque contribution may cancel, their contribution to joint stiffness and stability does not. This is not a failure of D'Alembert force addition (forces always sum), but an intentional biomechanical modulation of tangent-space stiffness.
 
-**Where it enters:** Co-contraction appears as a nonlinear coupling between the agonist and antagonist inputs. The net torque is
-$$
-\tau_{\text{net}} = \tau_{\text{agon}} - \tau_{\text{antag}},
-$$
-while the stiffness is
-$$
-K_{\text{eff}} \approx K_0 + k_a (a_{\text{agon}} + a_{\text{antag}}),
-$$
-where $a$ denotes activation levels.
-
-**Does it preserve affinity?** The system can be modeled as affine in the neural inputs to both muscles, but the mapping from neural inputs to net torque and stiffness is nonlinear. We can write
-$$
-\dot{a}_{\text{agon}} = \frac{u_1 - a_{\text{agon}}}{\tau}, \quad \dot{a}_{\text{antag}} = \frac{u_2 - a_{\text{antag}}}{\tau},
-$$
-which is affine in $(u_1, u_2)$. The system is affine in neural inputs but the effective input-to-torque mapping is nonlinear.
-
-**Force superposition:** Co-contraction violates simple force superposition because increasing one muscle's activation affects not only the torque (additively) but also the joint stiffness (nonlinearly). The dynamics effectively change with co-contraction level.
-
-**Implication for ZTCF:** Co-contraction challenges the ZTCF because the passive dynamics (stiffness, damping) depend on activation, which is an input-driven state. The ZTCF assumes a fixed passive dynamics, but co-contraction changes it. However, if we extend the state to include activation, the ZTCF still applies by comparing dynamics at the current activation level.
-
-### Tendon Compliance
-
-Muscle is not directly attached to bone; **tendons** connect muscle to bone and are compliant. This compliance introduces additional dynamics and an elastic element in series with the muscle.
-
-**Model:** The muscle fiber produces force $F_m$, which is transmitted through the tendon. The tendon length is $\ell_t = \ell_{t0} + F_m / k_t$, where $k_t$ is tendon stiffness. The bone experiences the tendon force $F_t = F_m$.
-
-**Where it enters:** Tendon compliance introduces additional state variables (tendon length or deformation) and state-dependent elastic forces.
-
-**Does it preserve affinity?** The system can remain affine by including tendon deformation as part of the state space. The elastic force depends on tendon deformation, a state variable.
-
-**Force superposition:** Tendon forces add linearly to other forces. The nonlinearity is in the relationship between muscle shortening and tendon deformation.
-
-### Stretch-Shortening Cycle and History-Dependent Force Enhancement
-
-When a muscle is first **stretched** (lengthened) and then **shortened**, the force produced during shortening is **greater** than if the muscle had been shortened from rest. This is the **stretch-shortening cycle** (SSC) effect, exploited in jumping, plyometrics, and ballistic movements.
-
-This effect is **history-dependent**: the enhanced force depends on the pre-stretch magnitude, rate, and timing. It cannot be captured by state $(q, \dot{q}, a)$ alone; additional state variables (fiber length, passive elastic strain, etc.) must be included.
-
-**Where it enters:** SSC effects appear as history-dependent enhancement of muscle force. Mathematically, this requires extending the state space to include passive elastic strain or fiber-level mechanics.
-
-**Does it preserve affinity?** The system can be structured to remain affine by careful state-space design, but SSC effects are inherently nonlinear and history-dependent.
-
-**Force superposition:** Within a given history, muscle forces add linearly. But the history dependence means that the response to a new input depends on what came before.
-
-**Implication for ZTCF:** SSC effects are problematic for a simple ZTCF because the passive dynamics (when $u = 0$) are not a true equilibrium; they depend on prior motion history. The ZTCF can be generalized to account for this by treating the passive dynamics as a dynamical system with its own history, not a simple counteractual.
+---
 
 ---
 
@@ -842,33 +759,36 @@ x = (q, \dot{q}, a, \epsilon, s_c, \ldots)
 $$
 where $a$ is muscle activation, $\epsilon$ is elastic deformation, $s_c$ is contact state, etc. The full state-space model remains affine in the inputs (neural signals, applied torques) if we are careful about the structure.
 
-### Linearization Around Operating Points
+### Linearization Around General Operating Trajectories
 
-For control design, a common approach is to **linearize** the nonlinear dynamics around an equilibrium or operating point. At the operating point $x^*$, the linearized system is
+For control design, a common approach is to **linearize** nonlinear dynamics around a nominal state-input pair $(x^*, u^*)$ [@khalil2002nonlinear; @slotine1991applied]. If $(x^*, u^*)$ is not an equilibrium (i.e., $f(x^*) + G(x^*)u^* \neq 0$), the Taylor expansion includes the nominal drift residual $r(x^*, u^*)$:
 $$
-\delta \dot{x} \approx A(x^*) \delta x + B(x^*) \delta u,
+\dot{x} \approx \dot{x}^* + A(x^*, u^*)\delta x + B(x^*)\delta u + r(x^*, u^*),
 $$
-valid for small perturbations. This linear approximation is valid only locally.
+where:
+$$
+A(x^*, u^*) = \left.\frac{\partial f}{\partial x}\right|_{x^*} + \sum_{j=1}^m u_j^* \left.\frac{\partial g_j}{\partial x}\right|_{x^*}, \qquad B(x^*) = G(x^*), \qquad r(x^*, u^*) = f(x^*) + G(x^*)u^* - \dot{x}^*.
+$$
+Along a dynamically feasible nominal trajectory where $\dot{x}^* = f(x^*) + G(x^*)u^*$, the residual identically vanishes ($r = 0$), yielding the standard time-varying linear error system $\delta \dot{x} = A(t)\delta x + B(t)\delta u$. Omitting $u^*$ or the residual at arbitrary setpoints produces an erroneous affine offset.
 
-### Feedback Linearization and Nonlinear Control
+### Feedback Linearization and Geometric Control
 
-**Feedback linearization** uses state feedback to cancel nonlinearities:
-$$
-u = G(x)^{-1}[v - f(x)],
-$$
-where $v$ is a new control input. This transforms the system into a linear form (if the structure allows). However, feedback linearization requires:
-1. Knowledge of $f(x)$ and $G(x)$ (the model).
-2. $G(x)$ to be invertible.
-3. Assumption that the control input enters linearly.
-
-Feedback linearization fails for systems with input-level nonlinearities (saturation, backlash, deadzone).
+**Input-output feedback linearization** uses non-linear algebraic state feedback to render the closed-loop tracking error linear [@isidori1995nonlinear; @slotine1991applied].
+For a mechanical system with generalized coordinates $q \in \mathbb{R}^n$ and control inputs $u \in \mathbb{R}^m$:
+1. **Fully actuated ($m = n$, $G(q)$ invertible):** The computed torque control law:
+   $$
+   u = G(q)^{-1} \left[ M(q) v + C(q,\dot{q})\dot{q} + g(q) \right]
+   $$
+   cancels all non-linearities and reduces the physical plant to $n$ decoupled double integrators $\ddot{q} = v$.
+2. **Underactuated or multi-input non-square systems ($m < n$):** Full feedback linearization requires well-defined vector relative degree $(r_1, \dots, r_m)$, non-singular decoupling matrix $A(x) = L_G L_f^{r-1} h(x)$, and **asymptotically stable zero dynamics** (internal unforced dynamics on the constraint manifold) [@isidori1995nonlinear].
+3. **Actuator bounds and non-smoothness:** Feedback linearization relies on exact cancellation of drift terms. If realized inputs hit saturation limits $\mathcal{U}$, or encounter backlash or deadzone, cancellation fails and closed-loop stability guarantees break down.
 
 ### Accounting for Model Uncertainty
 
-Real systems are never perfectly known. Friction coefficients, mass properties, stiffness values all have uncertainty. A robust approach is to design controllers that are insensitive to these uncertainties, either through:
-- **Adaptive control:** Online estimation of unknown parameters.
-- **Robust control:** Design controllers with guaranteed performance despite uncertainty.
-- **Impedance control:** Command a desired impedance (stiffness and damping) rather than a specific torque trajectory, which naturally accommodates variability.
+Real mechanical systems are never perfectly known. Robust control methodologies include:
+- **Adaptive control:** Online estimation of unknown linear-in-the-parameters inertial and friction parameters [@slotine1991applied].
+- **Contraction theory:** Differential analysis ensuring all neighboring trajectories converge exponentially under state-dependent Riemannian metrics [@lohmiller1998contraction].
+- **Impedance and passivity-based control:** Commanding port impedance rather than fragile trajectory cancellation, guaranteeing stable interaction with arbitrary passive environments [@hogan1985impedance].
 
 ---
 
@@ -876,61 +796,28 @@ Real systems are never perfectly known. Friction coefficients, mass properties, 
 
 ### Key Principles
 
-1. **Forces superpose at the Newton's-second-law level.** Any decomposition of forces is valid.
-2. **Accelerations do not generally superpose** because of configuration-dependent mass matrices and nonlinear couplings.
-3. **Control-affine structure is preserved** if nonlinearities are state-dependent but not input-dependent.
-4. **The ZTCF is valid** for control-affine systems; it remains valid even with substantial state-dependent nonlinearities (gravity, friction, elastic stiffness) as long as the input enters linearly.
-5. **Input-level nonlinearities (saturation, backlash)** break control-affinity and require special handling.
-
-### The AffineDrift Perspective
-
-The AffineDrift framework exploits the observation that mechanical systems are typically affine in control, even with abundant state-dependent nonlinearities. This allows:
-- **Clean separation of drift and input** via the ZTCF.
-- **Force superposition analysis** to decompose the motion into contributions from gravity, Coriolis, input, etc.
-- **Interpretable model reduction** by identifying which drift terms dominate (e.g., gravity vs. Coriolis in golf swing).
-
-The framework acknowledges that nonlinearities abound but asserts that they do not invalidate the fundamental linearity of force superposition.
-
-### Connections to Related Work
-
-- **Superposition at the force level** is rigorously derived in `superposition.qmd`.
-- **Force taxonomy** (gravitational, inertial, elastic, dissipative, etc.) is detailed in `theory-part3.qmd`.
-- **Extension to flexible systems** introduces additional state variables for elastic deformation; discussed in `theory-part4.qmd`.
-- **Control-theoretic insights** on affinity and observability are in `nonlinear-control-insights.qmd`.
-- **Inverse dynamics failure** under nonlinearity is analyzed in `inverse-dynamics.qmd`.
-- **Lagrangian mechanics** formulation of nonlinearities is in `lagrangian-reference.qmd`.
-- **Screw-theoretic perspective** on spatial mechanics and nonlinearity is in `screw-theory-reference.qmd`.
+1. **Newton–Euler superposition holds at the force level:** Instantaneous generalized torques sum linearly under D'Alembert's principle across all sources.
+2. **Instantaneous accelerations superpose at a fixed state:** Because $M(q)^{-1}$ is a linear operator at any fixed configuration $q$, $\ddot{q}(x, u_1 + u_2) - \ddot{q}_{\text{drift}}(x) = (\ddot{q}(x, u_1) - \ddot{q}_{\text{drift}}(x)) + (\ddot{q}(x, u_2) - \ddot{q}_{\text{drift}}(x))$. However, finite-time integrated trajectories diverge nonlinearly due to configuration evolution.
+3. **Control-affine structure is preserved** whenever actuators act directly as generalized forces ($G(x)$ independent of $u$) and transmission states are retained.
+4. **The Zero-Torque Counterfactual (ZTCF) is exact** for control-affine systems, cleanly isolating active input authority $\tilde{G}(x)u$ from passive drift $f(x)$ at any instantaneous state.
 
 ---
 
-## Conclusions and Future Directions
+## Conclusions and Practical Implications
 
-This article has catalogued the major sources of nonlinearity in mechanical and biomechanical systems, with explicit attention to:
-- **Where each nonlinearity enters** the equations of motion (drift vs. input).
-- **Whether control-affine structure is preserved** (state-dependent nonlinearities typically preserve it; input-dependent nonlinearities typically break it).
-- **How forces and accelerations decompose** (forces superpose; accelerations couple due to inertial and geometric effects).
-- **Practical implications for the ZTCF** and force-superposition decomposition methods.
-
-The key insight is that nonlinearity in mechanical systems is nearly always **manageable within the control-affine framework** when carefully structured. The fundamental law of force summation (Newton's second law) always holds, enabling the separation of passive dynamics from active control.
-
-Future work should:
-1. **Develop systematic methods** for identifying and quantifying dominant nonlinearities from experimental data.
-2. **Create hybrid models** that smoothly transition between regimes (e.g., stick-slip friction, contact transitions).
-3. **Extend ZTCF-like methods** to systems with contact, saturation, and other input-level nonlinearities.
-4. **Provide practical tools** for practitioners to diagnose which nonlinearities matter most in their systems and how to account for them in control design.
-
-The superposition principle—applied correctly and carefully—remains a powerful tool for understanding and controlling nonlinear mechanical systems.
+This comprehensive catalog demonstrates that while mechanical and biomechanical systems exhibit pervasive non-linearities across geometry, contact, transmission, and musculotendon actuation:
+- **State-dependent non-linearities** (configuration inertia $M(q)$, Coriolis forces $C(q,\dot{q})\dot{q}$, gravitational gradients $\nabla_q V(q)$, and sliding friction) reside entirely in the passive drift vector field $f(x)$, leaving the control-affine structure $\dot{x} = f(x) + G(x)u$ intact.
+- **Input-dependent non-linearities** (actuator saturation, deadzone, and unmodeled backlash) alter the control authority mapping. Retaining actuator transmission states restores control-affinity in the augmented state space.
+- The fundamental validity of the **Zero-Torque Counterfactual (ZTCF)** is grounded in instantaneous tangent-space superposition $\dot{x}(x, u) - \dot{x}(x, 0) = G(x)u$, establishing a rigorous foundation for decomposing passive drift from active control in robotics and biomechanics.
 
 ---
 
 :::{.callout-warning}
 ## Scope and Limitations
 
-- **Many nonlinearities are modeled approximately, not derived from first principles.** The LuGre friction model, for example, is a heuristic that captures hysteresis and Stribeck effects reasonably well, but it is not a law of nature—it is an engineering compromise. Similarly, lift and drag coefficients depend on Reynolds number and surface roughness in complex ways we summarize with single scalars. When we say "friction enters the drift," we mean "a mathematical model of friction," not the actual physical phenomenon, which is microscopic contact mechanics still poorly understood.
-
-- **Thermal and biological nonlinearities have uncertain parameters.** The temperature dependence of muscle force, the activation dynamics of motor neurons, the viscoelastic properties of ligaments—all these vary substantially across individuals and even across repetitions in the same person. We present these as "known nonlinearities" but they are better described as "known sources of uncertainty." A model that fits one golfer perfectly may generalize poorly to another.
-
-- **Interaction between multiple nonlinearities creates complexity that exceeds individual analysis.** When friction, state-dependent mass effects, muscle saturation, and neural delays all act together, the system exhibits behaviors that cannot be predicted by studying each nonlinearity alone. A golf swing involves all of these simultaneously. Our catalog treats them separately for clarity, but that separability is a pedagogical convenience, not a physical truth. The actual system is coupled in ways we acknowledge but do not fully quantify.
+- **Constitutive model approximations:** Macroscopic friction laws (Stribeck, Coulomb) and Hill-type muscle equations are phenomenological representations. While capturing dominant kinetic regimes, they simplify microscopic contact asperities, cross-bridge cycling kinetics, and thermal variations.
+- **Hybrid transitions:** At contact impact boundaries and stick-slip transitions, the system undergoes discontinuous velocity saltations or non-smooth projections. Within each persistent mode, affine decomposition applies, but transitions must be modeled using hybrid dynamical systems formalism [@goebel2012hybrid].
+- **Parameter uncertainty:** Biological parameters (such as muscle maximum isometric force $F_0$, activation time constants $\tau_{\text{act}}$, and tendon slack lengths $l_{ts}$) exhibit substantial inter-subject variability. Control strategies must incorporate robust adaptive or impedance control to accommodate parametric uncertainty [@hogan1985impedance; @slotine1991applied].
 
 :::
 
@@ -941,65 +828,53 @@ The superposition principle—applied correctly and carefully—remains a powerf
 
 ---
 
----
-
 ## In Layman's Terms: Nonlinearity in Everyday Mechanical Systems
 
-The abstract notion of "nonlinearity" can feel intimidating, but it surrounds us in familiar mechanical systems. Here are some intuitive examples of the nonlinearities catalogued in this article, explained with everyday analogies:
+The abstract notion of "nonlinearity" surrounds us in familiar everyday mechanisms:
 
 ### Friction and Stiction: The Sticky Door
 
-Imagine pushing open a wooden door. The first push feels incredibly difficult—the door barely moves, even though you're applying significant force. This is **stiction** (static friction), the resistance to start moving. But once the door is moving, it glides much more smoothly. This is **kinetic friction**, which is lower than stiction. The relationship between your applied force and the door's acceleration is **nonlinear**: small forces don't work at all, then suddenly the door breaks free and accelerates. Real robots face this constantly: a motor commanded to output a tiny torque won't move the joint at all until the torque exceeds the static friction threshold; then motion suddenly begins.
+Pushing open a stiff wooden door requires an initial hard shove before it moves. This is **stiction** (breakaway static friction). Once sliding begins, kinetic friction is lower and the door glides easily. The relationship between pushing force and initial acceleration is non-smooth: below the breakaway threshold nothing moves; once exceeded, motion accelerates rapidly.
 
 ### Backlash and Deadzone: Play Before Motion
 
-Hold a car's steering wheel. You can turn it slightly—maybe 5 degrees—before the wheels actually start to move. This is **backlash**: mechanical "play" or slack in the linkages. Your input (hand angle) doesn't immediately map to output (wheel angle) because there's dead space. This is a **deadzone**: a range of inputs that produce zero output. In a poorly maintained steering system, this deadzone is large and dangerous. In precision robotic hands, engineers design systems with minimal backlash so that every input counts.
+In an old steering linkage or worn gearbox, you can wiggle the input slightly before the wheels or gears engage. This clearance is **backlash**. In an extended dynamic model tracking both motor shaft and gear teeth positions, the physics is governed by contact compliance.
 
 ### Saturation: The Faucet That Gushes
 
-Turn a faucet knob slowly at first. The flow rate increases steadily as you open it wider—force in (turn angle) maps smoothly to output (water flow). But keep turning past fully open, and nothing changes: the flow is maxed out. This is **saturation**. In robotics, every actuator (motor, hydraulic pump, pneumatic valve) has a maximum output. A command asking for 200% of maximum torque still yields only 100% of maximum—the system saturates. The input-output relationship goes from linear to flat.
+Turn a water faucet knob: flow increases steadily, but once wide open, further turning cannot yield more water. This is **actuator saturation**. In robotics, electric motors have thermal current limits and voltage ceilings. Within the admissible operating envelope, control authority remains linear; hitting the boundary clips performance.
 
-### Steering Angle at Different Speeds: State-Dependent Effectiveness
+### Steering Angle at Different Speeds: Kinematic Geometry vs. Lateral Force
 
-The most counterintuitive nonlinearity is **configuration-dependent** or **state-dependent** behavior. Turn a car's steering wheel by the same amount at 10 mph versus 70 mph, and the turning radius is completely different. At 10 mph, a small wheel angle creates a tight turn (high control authority). At 70 mph, the same wheel angle creates a gentle curve (low control authority). Your input hasn't changed, but the relationship between input and output depends on the car's state (speed). In robotics, similar state-dependence appears in Coriolis forces (faster rotations create larger sideways forces) and in gravity effects (the effort required to lift an arm depends on how far the arm is extended from the body's center).
+In a low-speed kinematic bicycle model, steering angle $\delta$ and wheelbase $L$ fix the **path turning radius** purely geometrically:
+$$
+R = \frac{L}{\tan\delta}.
+$$
+At low speeds, turning the wheel $15^\circ$ yields the exact same circular path radius $R$ whether traveling at 5 mph or 10 mph. However, because **lateral acceleration** is $a_y = v^2 / R$, the centrifugal force felt by the vehicle scales quadratically with speed $v^2$. At high speeds, tire slip angles grow nonlinearly to generate required lateral cornering forces, demonstrating how geometric kinematic linearity transitions into dynamic tire friction saturation.
 
-### Muscle Force-Velocity Curve: Power Output Depends on Speed
+### Muscle Force-Velocity Curve: Fast vs. Heavy Movements
 
-When you try to lift a heavy weight, you move slowly and use lots of force. If you punch at high speed, you can't punch as hard. This is because **muscles obey a force-velocity curve**: the faster a muscle contracts, the less force it can produce simultaneously. This is nonlinear behavior intrinsic to the biological actuator. A mathematical model of muscle must account for this nonlinearity or it will dramatically overpredict the force available during fast movements.
-
-### Key Insight
-
-All these examples—doors sticking, steering wheels, saturating faucets, speed-dependent control, and muscles tiring—are instances of the abstract nonlinearities studied in this article. The important message is that **nonlinearities are everywhere in real mechanical and biological systems**. The mathematics we've developed allows us to:
-
-1. **Identify where each nonlinearity enters** the equations (drift vs. control input).
-2. **Predict when they matter** (which trajectories and speeds are affected most).
-3. **Design control strategies that work anyway**, by exploiting the underlying control-affine structure and force superposition principle.
-
-The golf swing exemplifies all of these: friction in the joints, backlash at impact, muscle saturation near maximum effort, and state-dependent leverage that changes as the arm configuration evolves. Understanding these nonlinearities—not as obstacles, but as fundamental properties of the system—is the key to designing controllers and optimizing swing mechanics.
+Skeletal muscles generate peak force during isometric holds or slow eccentric lengthening, but available muscle force drops hyperbolically during rapid concentric shortening ($F \to 0$ as $v \to v_{\max}$). A golfer or boxer swinging at high velocity operates at reduced active muscle tension compared to isometric exertion, a biological reality captured by Hill's equation.
 
 ---
 
 ## Appendix: Notation and Definitions
 
-- $q$: Generalized coordinates (joint angles, positions).
-- $\dot{q}$: Generalized velocities.
-- $\ddot{q}$: Generalized accelerations.
-- $x = (q, \dot{q})$: State vector.
-- $M(q)$: Generalized mass (inertia) matrix.
-- $C(q, \dot{q})$: Coriolis matrix (velocity-dependent).
-- $g(q)$: Gravitational torque vector.
-- $\tau$: Generalized torque (control input or applied force).
-- $u$: Control input (typically voltage or commanded force).
-- $f(x) = (I | -M(q)^{-1}[C + g])$: Drift vector field (dynamics at $u = 0$).
-- $G(x)$: Input matrix (control effectiveness).
-- $\ell$: Length (of a segment, link, or spring).
-- $\Gamma$: Christoffel symbol (arises in Lagrangian mechanics).
-- $SO(3)$: Special orthogonal group of 3D rotations.
-- $\text{ZTCF}$: Zero-torque counterfactual; comparison of $u = 0$ vs. $u \neq 0$.
-- $\rho$: Fluid density.
-- $C_d$, $C_L$: Drag and lift coefficients.
-- $\tau_{\max}$: Maximum actuator torque (saturation limit).
-- $a$: Muscle activation level (0 to 1).
-- $F_{\text{muscle}}(L, v, a)$: Muscle force as function of length, velocity, and activation.
-- $K_t$: Tendon stiffness.
-- $\eta$: Loss factor (in structural damping).
+- $q \in \mathbb{R}^n$: Generalized coordinates (joint angles, displacements).
+- $\dot{q} = v \in \mathbb{R}^n$: Generalized velocities.
+- $\ddot{q} \in \mathbb{R}^n$: Generalized accelerations.
+- $x = \begin{bmatrix} q \\ \dot{q} \end{bmatrix} \in \mathbb{R}^{2n}$: State vector on the tangent bundle $TQ$.
+- $M(q) \in \mathbb{R}^{n \times n}$: Symmetric positive-definite generalized mass (inertia) matrix.
+- $C(q, \dot{q}) \in \mathbb{R}^{n \times n}$: Christoffel-consistent Coriolis matrix satisfying $\dot{M} - 2C = -(\dot{M} - 2C)^T$.
+- $g(q) = \nabla_q V(q) \in \mathbb{R}^n$: Gravitational torque vector (potential energy gradient).
+- $\tau \in \mathbb{R}^n$: Generalized torque vector.
+- $u \in \mathcal{U} \subseteq \mathbb{R}^m$: Control input vector.
+- $f(x) = \begin{bmatrix} \dot{q} \\ -M(q)^{-1}[C(q,\dot{q})\dot{q} + g(q) + \tau_{\text{loss}}(q,\dot{q})] \end{bmatrix}$: Unforced drift vector field (dynamics at $u = 0$).
+- $G(x) = \begin{bmatrix} 0 \\ M(q)^{-1} B(q) \end{bmatrix}$: Control input distribution matrix.
+- $\text{ZTCF}$: Zero-Torque Counterfactual; instantaneous comparison $\dot{x}(x, u) - \dot{x}(x, 0) = G(x)u$.
+- $\rho$: Fluid density ($\text{kg}/\text{m}^3$).
+- $C_d, C_L$: Dimensionless aerodynamic drag and lift coefficients.
+- $S = \frac{r|\vec{\omega}|}{|\vec{v}|}$: Dimensionless aerodynamic spin parameter.
+- $F_0$: Maximum isometric muscle force ($\text{N}$).
+- $k = a/F_0$: Dimensionless Hill muscle curvature parameter ($k \approx 0.25$).
+- $\tau_{\text{act}}$: Muscle activation time constant ($\text{s}$).
