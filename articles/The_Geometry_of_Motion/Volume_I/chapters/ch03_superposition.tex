@@ -1,1505 +1,561 @@
-%% ==========================================================================
-%%  Chapter 3: Superposition — From Linear to Affine
-%% ==========================================================================
 \chapter{Superposition: From Linear to Affine}
 \label{ch:superposition}
 
-\begin{laymansbox}{Adding Forces Together}{adding_forces}
-At any single instant, the forces acting on a mechanical system---gravity, inertia,
-motor torques, contact forces---add together simply, like items on a receipt. The total
-acceleration is the sum of individual contributions. This chapter proves that statement
-rigorously in three parallel formalisms (Newton--Euler, Lagrangian\index{Lagrangian Mechanics}, screw theory) and
-carefully delineates what does \emph{not} superpose: trajectories over time.
-\end{laymansbox}
+A golfer's effort, posture, motion, contact with the ground, and flexible equipment act together. The useful question is not whether one of these explains the swing by itself. It is which mathematical operation allows their effects to be separated, what is held fixed during that operation, and what must be recomputed when the motion changes. This chapter develops that distinction from mechanics, then connects it to energy transfer, constraints, actuator limits, accessibility, and feedback control.
 
-\section{The Central Distinction}
+The central result is exact but deliberately local in state: in a declared mechanical model with a fixed contact mode and forces affine in the chosen inputs, input-induced acceleration increments add at the same position and velocity. Entire trajectories generally do not. An instantaneous decomposition can identify how a net joint moment contributes to acceleration now; it cannot, by itself, identify the muscle that supplied that moment, the work done over a downswing, or the result of changing a golfer's movement strategy.
 
-The principle of superposition is fundamental to mechanics \cite{Goldstein2002, Arnold1989} and has been
-rigorously formalized for mechanical systems in modern control theory \cite{Murray1994, BulloLewis2004, Sastry1999}.
+\section{Three Meanings of Addition}
 
-Superposition in this book refers to two distinct but related properties:
+\subsection{Tangent Vectors and First Variations}
 
-\begin{enumerate}
-\item \textbf{Tangent-space superposition} (Chapter~\ref{ch:foundations}):
-infinitesimal perturbations add as vectors in the tangent space. This holds for
-\emph{any} smooth system.
+At a point on a smooth configuration or state manifold, tangent vectors form a vector space. Their addition is exact. A finite change between two postures, however, is not intrinsically a tangent vector, and vectors attached to different postures cannot be added without a specified identification or transport. Coordinates provide a local representation; they do not make nonlinear geometry disappear.
 
-\item \textbf{Input superposition at fixed state}: for mechanical systems with
-control-affine dynamics $\dot\x = f(\x) + G(\x)\uvec$, the mapping from inputs
-$\uvec$ to state derivatives $\dot\x$ is affine at each frozen state, and the
-incremental mapping (relative to zero input) is \emph{linear}.
-\end{enumerate}
+For a smooth dynamical system, the first variation about a specified reference trajectory satisfies a linear differential equation. Perturbations of that variational equation superpose. Their relationship to finite perturbed trajectories is generally an approximation whose error must be controlled. Thus, exact vector-space algebra and a first-order approximation to a finite response are compatible statements, not competing descriptions.
 
-Both are exact. Neither claims that trajectories superpose globally.
+\subsection{Exact Input Increments at One State}
 
-\begin{warningbox}
-Trajectory superposition is \emph{false} for nonlinear systems. If $\x^{(1)}(t)$
-solves $\dot\x = f(\x)+G(\x)\uvec^{(1)}$ and $\x^{(2)}(t)$ solves
-$\dot\x = f(\x)+G(\x)\uvec^{(2)}$, then in general
-$\x^{(1)}(t)+\x^{(2)}(t)$ does \emph{not} solve the system under
-$\uvec^{(1)}+\uvec^{(2)}$. This chapter is about \emph{instantaneous force and
-acceleration} superposition, not trajectory addition.
-\end{warningbox}
-
-
-\section{Control-Affine Structure in Mechanical Systems}
-\label{sec:ch3:control-affine}
-
-\subsection{The Manipulator Equation}
-
-Consider a mechanical system with $n$ generalized coordinates $\q\in\R^n$, velocities
-$\dot\q\in\R^n$, and state $\x = (\q, \dot\q) \in T\mathcal{Q}$ (the tangent bundle of
-the configuration manifold). The standard manipulator form of the equations of motion \cite{Murray1994, Lynch2017}
-is
-\begin{equation}
-M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec{f}^{\,\text{ext}},
-\label{eq:ch3:manipulator}
-\end{equation}
-where $M(\q)\succ 0$ is the mass matrix, $\mat{C}(\q,\dot\q)\dot\q$ collects Coriolis and
-centrifugal terms, $\vec{g}(\q)$ is the gravity vector, $B(\q)$ maps control inputs to
-generalized forces, $J(\q)$ is the constraint/contact Jacobian\index{Jacobian}, and
-$\vec{f}^{\,\text{ext}}$ represents external contact wrenches.
-
-\subsection{Derivation of the Mass Matrix}
-
-The mass matrix $M(\q)$ arises naturally from the kinetic energy of the system. For a
-multibody system with rigid links, the total kinetic energy is the sum of translational
-and rotational energies:
-\begin{equation}
-T(\q,\dot\q) = \frac{1}{2}\sum_{i=1}^n \left[ m_i \norm{\vec{v}_i(\q,\dot\q)}^2
-+ \vec\omega_i(\q,\dot\q)^\T \mat{I}_i(\q) \vec\omega_i(\q,\dot\q) \right],
-\label{eq:ch3:kinetic-energy}
-\end{equation}
-where $m_i$ is the mass of link $i$, $\vec{v}_i$ is its linear velocity, $\vec\omega_i$ is its
-angular velocity, and $\mat{I}_i$ is its inertia tensor (generally configuration-dependent).
-
-Each velocity $\vec{v}_i$ and $\vec\omega_i$ can be expressed as a linear function of
-$\dot\q$ via the Jacobian\index{Jacobian}:
-\begin{align}
-\vec{v}_i(\q,\dot\q) &= \mat{J}_{v,i}(\q)\,\dot\q, \\
-\vec\omega_i(\q,\dot\q) &= \mat{J}_{\omega,i}(\q)\,\dot\q.
-\end{align}
-
-Substituting into the kinetic energy and expanding:
-\begin{equation}
-T(\q,\dot\q) = \frac{1}{2}\dot\q^\T \left[
-\sum_{i=1}^n \left( m_i \mat{J}_{v,i}^\T\mat{J}_{v,i}
-+ \mat{J}_{\omega,i}^\T \mat{I}_i \mat{J}_{\omega,i} \right)
-\right] \dot\q
-= \frac{1}{2}\dot\q^\T M(\q)\,\dot\q,
-\label{eq:ch3:mass-matrix-def}
-\end{equation}
-where the mass matrix is defined as
-\begin{equation}
-M(\q) := \sum_{i=1}^n \left( m_i \mat{J}_{v,i}^\T(\q)\mat{J}_{v,i}(\q)
-+ \mat{J}_{\omega,i}^\T(\q) \mat{I}_i(\q) \mat{J}_{\omega,i}(\q) \right).
-\label{eq:ch3:mass-matrix-explicit}
-\end{equation}
-
-\subsubsection*{Positive Definiteness of the Mass Matrix}
-
-A crucial property is that $M(\q) \succ 0$ (positive definite) for all $\q$. This follows
-directly from the definition of kinetic energy. For any non-zero $\dot\q \neq 0$:
-\begin{equation}
-\dot\q^\T M(\q)\,\dot\q = 2T(\q,\dot\q) > 0,
-\end{equation}
-since the kinetic energy is strictly positive whenever the system is moving. The only exception
-is $\dot\q = 0$, which gives $\dot\q^\T M(\q)\,\dot\q = 0$.
-
-This positive definiteness is the foundation for many important properties:
-\begin{itemize}
-\item The mass matrix is invertible at every configuration.
-\item The equation $M(\q)\ddot\q = \tau$ can always be solved for $\ddot\q$.
-\item The associated quadratic form defines a Riemannian metric on the configuration space,
-      making $M(\q)$ the natural metric tensor.
-\end{itemize}
-
-\subsection{Connection to Christoffel Symbols}
-
-The Coriolis and centrifugal terms $\mat{C}(\q,\dot\q)\dot\q$ arise from taking the material
-derivative of the kinetic energy. Using the Lagrangian\index{Lagrangian Mechanics} framework, the generalized forces
-associated with the kinetic energy are
-\begin{equation}
-Q_k^{(\text{kinetic})} = \frac{\dd}{\dd t}\frac{\partial T}{\partial \dot q_k}
-- \frac{\partial T}{\partial q_k}.
-\end{equation}
-
-Expanding the kinetic energy $T = \frac{1}{2}\dot\q^\T M(\q)\,\dot\q$:
-\begin{equation}
-\frac{\partial T}{\partial \dot q_k} = \sum_{i} M_{ki}(\q)\,\dot q_i,
-\end{equation}
-and
-\begin{equation}
-\frac{\partial T}{\partial q_k} = \frac{1}{2}\dot\q^\T \frac{\partial M}{\partial q_k}\,\dot\q.
-\end{equation}
-
-Taking the time derivative of $\partial T/\partial \dot q_k$:
-\begin{equation}
-\frac{\dd}{\dd t}\frac{\partial T}{\partial \dot q_k} = \sum_i \dot M_{ki}\,\dot q_i
-+ \sum_i M_{ki}\,\ddot q_i
-= \sum_i \left( \sum_j \frac{\partial M_{ki}}{\partial q_j}\dot q_j \right)\dot q_i
-+ \sum_i M_{ki}\,\ddot q_i.
-\end{equation}
-
-Collecting terms and solving for accelerations yields the Euler--Lagrange equation:
-\begin{equation}
-M(\q)\ddot\q + \Gamma(\q,\dot\q)\dot\q = \tau,
-\end{equation}
-where the Coriolis/centrifugal term is expressed via the Christoffel symbols of the
-configuration-space metric:
-\begin{equation}
-[\Gamma(\q,\dot\q)\dot\q]_k = \sum_{i,j} \Gamma^k_{ij}(\q)\,\dot q_i \dot q_j,
-\label{eq:ch3:christoffel}
-\end{equation}
-with the Christoffel symbols defined as
-\begin{equation}
-\Gamma^k_{ij} = \frac{1}{2} \sum_\ell M^{-1}_{k\ell}
-\left( \frac{\partial M_{\ell i}}{\partial q_j} + \frac{\partial M_{\ell j}}{\partial q_i}
-- \frac{\partial M_{ij}}{\partial q_\ell} \right).
-\label{eq:ch3:christoffel-formula}
-\end{equation}
-
-This connection shows that the Coriolis and centrifugal dynamics are encoded in
-the geometry of the configuration space metric (the mass matrix). In fact, ignoring external
-forces, the system moves as a free particle on a Riemannian manifold with metric $M(\q)$.
-
-\subsection{Solving for Accelerations}
-
-Solving~\eqref{eq:ch3:manipulator} for the generalized acceleration:
-\begin{equation}
-\ddot\q = \underbrace{-M(\q)^{-1}\bigl[\mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q)\bigr]}_{
-\displaystyle a_{\text{drift}}(\q,\dot\q)}
-+ \underbrace{M(\q)^{-1}B(\q)}_{
-\displaystyle H(\q)}\,\uvec
-+ M(\q)^{-1}J(\q)^\T\vec{f}^{\,\text{ext}}.
-\label{eq:ch3:forward-dynamics}
-\end{equation}
-
-Writing as a first-order system on the tangent bundle:
-\begin{equation}
-\dot\x = \underbrace{
-\begin{bmatrix} \dot\q \\ a_{\text{drift}}(\q,\dot\q) \end{bmatrix}
-}_{f(\x)}
-+ \underbrace{
-\begin{bmatrix} 0 \\ H(\q) \end{bmatrix}
-}_{G(\x)}\,\uvec.
-\label{eq:ch3:state-space}
-\end{equation}
-
-This is the \textbf{control-affine form}: $\dot\x = f(\x) + G(\x)\uvec$.
-
-
-\section{The Superposition Theorem}
-
-\begin{theorem}[Input Superposition for Mechanical Systems]
+\begin{theorem}[Fixed-State Input Superposition]
 \label{thm:ch3:superposition}
-Let a mechanical system satisfy~\eqref{eq:ch3:manipulator} and define the acceleration
-map at fixed state $(\q,\dot\q)$:
-\[
-\Phi_{(\q,\dot\q)}(\uvec)
-:= M(\q)^{-1}\bigl[B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \vec{g}(\q)\bigr].
-\]
-Then:
-\begin{enumerate}
-\item The map $\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec)$ is \textbf{affine} in $\uvec$.
-\item The incremental map
-$\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec) - \Phi_{(\q,\dot\q)}(\vec{0})
-= M(\q)^{-1}B(\q)\,\uvec$
-is \textbf{linear} in $\uvec$.
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-From~\eqref{eq:ch3:forward-dynamics}, $\Phi_{(\q,\dot\q)}(\uvec)
-= a_{\text{drift}}(\q,\dot\q) + H(\q)\uvec$,
-where $a_{\text{drift}}$ and $H$ depend only on $(\q,\dot\q)$, not on $\uvec$. The
-map is therefore affine by inspection. Subtracting the zero-input value
-$\Phi_{(\q,\dot\q)}(\vec{0}) = a_{\text{drift}}(\q,\dot\q)$
-yields $H(\q)\uvec$, which is linear in $\uvec$.
-\end{proof}
-
-\begin{intuitionbox}
-The superposition theorem says: \emph{at any frozen instant, the acceleration produced
-by each force source adds linearly}. This is a direct consequence of Newton's second law
-being linear in forces, combined with the linearity of inverting the mass matrix.
-\end{intuitionbox}
-
-\begin{center}
-\begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
-  % Ground
-  \draw[thick] (0,-0.5) -- (5, -0.5);
-  \foreach \x in {0.2, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0, 3.4, 3.8, 4.2, 4.6}{
-    \draw (\x, -0.5) -- (\x, -0.7);
-  }
-
-  % Diagram for force superposition
-  % Box representing system
-  \draw[thick, black] (1.5, 0.5) rectangle (3.5, 1.5);
-  \node at (2.5, 1) {System};
-
-  % Forces
-  \draw[->, red, very thick] (1.5, 1.25) -- (0.5, 1.25);
-  \node[left, red] at (0.4, 1.25) {$\vec{f}_1$};
-
-  \draw[->, blue, very thick] (3.5, 1.25) -- (4.5, 1.25);
-  \node[right, blue] at (4.6, 1.25) {$\vec{f}_2$};
-
-  \draw[->, green, very thick] (2.5, 1.5) -- (2.5, 2.2);
-  \node[above, green] at (2.5, 2.3) {$\vec{f}_3$};
-
-  % Acceleration output
-  \draw[->, black, very thick, loosely dashed] (2.5, 0.5) -- (2.5, -0.3);
-  \node[below, black] at (2.5, -0.35) {$\ddot\q = \frac{1}{M(\q)}(\vec{f}_1 + \vec{f}_2 + \vec{f}_3 - \text{gravity})$};
-
-  % Caption
-  \node at (2.5, 2.8) {Individual forces superpose to produce total acceleration};
-\end{tikzpicture}
-\end{center}
-
-\subsection{Decomposing Contributions}
-
-If we decompose the input as $\uvec = \uvec^{(1)} + \uvec^{(2)} + \cdots + \uvec^{(p)}$,
-where each component represents a distinct actuator, gravity compensation, disturbance,
-etc., then
+Let $F(x,u)=f_0(x)+G(x)u$ on a smooth mode, with $u\in\mathbb R^m$. At a fixed $x$, the total derivative is affine in $u$, while its increment is linear:
 \begin{equation}
-\ddot\q = a_{\text{drift}}(\q,\dot\q)
-+ \sum_{i=1}^{p} H(\q)\,\uvec^{(i)}.
+\Delta F_x(u):=F(x,u)-F(x,0)=G(x)u.
+\end{equation}
+\end{theorem}
+Consequently,
+\begin{equation}
+F(x,u_1+u_2)=F(x,u_1)+F(x,u_2)-F(x,0).
 \label{eq:ch3:decomposition}
 \end{equation}
+The zero-input anchor is counted once. For any real coefficients, $\Delta F_x(\alpha u_1+\beta u_2)=\alpha\Delta F_x(u_1)+\beta\Delta F_x(u_2)$. These are algebraic identities wherever the model is defined; a combined input outside the feasible set remains a mathematical evaluation rather than an executable command. Affine interpolation of total derivatives uses coefficients summing to one.
 
-Each term $\Delta\ddot\q^{(i)} := H(\q)\uvec^{(i)}$ is the instantaneous acceleration
-contribution of the $i$\textsuperscript{th} input channel. These contributions add
-linearly and can be computed, compared, and analyzed independently.
+The anchor also depends on the input definition. Zero net joint torque, zero motor voltage, and zero muscle excitation are different interventions. Muscle activation, tendon tension, shaft deflection, and other stored states can retain forces after a command is set to zero. We will use zero applied generalized effort unless another port is explicitly introduced. Known gravity, passive forces, prescribed external loads, and the active constraint model remain present.
 
+\subsection{Finite Trajectories and the Evolving Baseline}
 
-\section{Three Parallel Derivations}
-
-The control-affine structure is not an artifact of a particular formulation. It emerges
-identically from all three major frameworks of classical mechanics. We provide complete,
-detailed derivations with explicit worked examples for a 2-DOF planar manipulator.
-
-\subsection{Newton--Euler Formulation}
-
-The Newton--Euler equations describe the rigid-body dynamics of mechanical systems by
-balancing linear and angular momentum. For a single rigid body in body-frame coordinates:
-\begin{align}
-m\dot{\vec{v}} &= m\vec{g}^B + \vec{f}^{\,\text{ext}}, \label{eq:ch3:NE-lin}\\
-\mat{I}_B\dot{\vec\omega} + \vec\omega \times (\mat{I}_B\vec\omega)
-&= \vec{n}^{\,\text{ext}}. \label{eq:ch3:NE-rot}
-\end{align}
-
-Collecting the external wrench $\uvec = (\vec{f}^{\,\text{ext}}, \vec{n}^{\,\text{ext}})^\T$:
+Write $x[u](t)$ for the trajectory from one common initial state under an input history $u$. In a shared coordinate chart, the appropriate baseline comparison is
 \begin{equation}
-\dot\x = f(\x) + G\,\uvec,
-\quad\text{with}\quad
-G = \begin{bmatrix}
-0 & 0 \\ 0 & 0 \\
-\tfrac{1}{m}\mat{I}_3 & 0 \\
-0 & \mat{I}_B^{-1}
-\end{bmatrix}.
-\label{eq:ch3:NE-affine}
+\epsilon(t)=x[u_1+u_2](t)-x[u_1](t)-x[u_2](t)+x[0](t).
 \end{equation}
-The input matrix $G$ is constant for a single body (it becomes state-dependent for
-multibody chains via the mass matrix inversion).
+Nonlinear dynamics generally give $\epsilon\ne0$. The zero-input trajectory evolves; it is not generally the initial state or the zero vector. The trajectories sample different $f_0$ and $G$, possibly different contacts, and eventually different domains. There can be exceptional input pairs for which this defect vanishes, including symmetry-related responses of a pendulum. One such pair neither proves a general superposition theorem nor disproves nonlinearity.
 
-\paragraph{Example: 2-DOF Planar Arm (Newton--Euler).}
-
-Consider a two-link planar arm with link masses $m_1$, $m_2$ and lengths $\ell_1$, $\ell_2$.
-Apply torques $\tau_1$ and $\tau_2$ at each joint. Using DH parameters with angles
-$q_1, q_2$ from the horizontal:
-
-Positions of link centers of mass:
-\begin{align}
-\vec{r}_{c,1} &= \frac{\ell_1}{2}\begin{bmatrix}\cos q_1 \\ \sin q_1\end{bmatrix}, \\
-\vec{r}_{c,2} &= \ell_1\begin{bmatrix}\cos q_1 \\ \sin q_1\end{bmatrix}
-+ \frac{\ell_2}{2}\begin{bmatrix}\cos(q_1+q_2) \\ \sin(q_1+q_2)\end{bmatrix}.
-\end{align}
-
-Velocities (taking time derivatives):
-\begin{align}
-\dot{\vec{r}}_{c,1} &= \frac{\ell_1}{2}\dot q_1 \begin{bmatrix}-\sin q_1 \\ \cos q_1\end{bmatrix}, \\
-\dot{\vec{r}}_{c,2} &= \ell_1\dot q_1 \begin{bmatrix}-\sin q_1 \\ \cos q_1\end{bmatrix}
-+ \frac{\ell_2}{2}(\dot q_1+\dot q_2) \begin{bmatrix}-\sin(q_1+q_2) \\ \cos(q_1+q_2)\end{bmatrix}.
-\end{align}
-
-Linear accelerations:
-\begin{align}
-\ddot{\vec{r}}_{c,1} &= \frac{\ell_1}{2}\ddot q_1 \begin{bmatrix}-\sin q_1 \\ \cos q_1\end{bmatrix}
-- \frac{\ell_1}{2}\dot q_1^2 \begin{bmatrix}\cos q_1 \\ \sin q_1\end{bmatrix}, \\
-\ddot{\vec{r}}_{c,2} &= \ell_1\ddot q_1 \begin{bmatrix}-\sin q_1 \\ \cos q_1\end{bmatrix}
-- \ell_1\dot q_1^2 \begin{bmatrix}\cos q_1 \\ \sin q_1\end{bmatrix} \\
-&\quad + \frac{\ell_2}{2}(\ddot q_1+\ddot q_2) \begin{bmatrix}-\sin(q_1+q_2) \\ \cos(q_1+q_2)\end{bmatrix} \\
-&\quad - \frac{\ell_2}{2}(\dot q_1+\dot q_2)^2 \begin{bmatrix}\cos(q_1+q_2) \\ \sin(q_1+q_2)\end{bmatrix}.
-\end{align}
-
-Newton's law in 2D ($z$-component of angular momentum):
+For a realizable reference $(\bar x(t),\bar u(t))$, the first variation is
 \begin{equation}
-I_1\ddot q_1 = m_1 g \frac{\ell_1}{2}\sin q_1 + m_2 g \ell_1\sin q_1 + m_2 g \frac{\ell_2}{2}\sin(q_1+q_2) + \tau_1
-+ \text{(nonlinear coupling terms)},
+\delta\dot x=A(t)\delta x+G(\bar x(t))\delta u,
+\qquad A=D_x f_0(\bar x)+\sum_j\bar u_jD_xG_j(\bar x).
 \end{equation}
-where $I_1 = \frac{1}{3}m_1\ell_1^2 + m_2\ell_1^2 + \frac{1}{3}m_2\ell_2^2 + m_2\ell_1\ell_2\cos q_2$ is the
-effective inertia. Similarly for joint 2.
+Omitting the derivatives of the input directions gives the wrong linearization when the reference effort is nonzero and $G$ varies with posture. A reference that does not satisfy the dynamics also introduces a residual forcing. In a golf analysis, each of these choices affects the meaning of an estimated sensitivity.
 
-In matrix form, the Newton--Euler equations yield:
+\section{Mechanical Origins of the Affine Map}
+\label{sec:ch3:control-affine}
+
+\subsection{Kinetic Energy and a Regular Mass Matrix}
+
+Use $n$ independent local coordinates $q$, with $v=\dot q$, and $N_b$ rigid bodies. For a stationary base, each center-of-mass velocity and angular velocity depends linearly on $v$. Express an angular velocity and its inertia tensor in the same frame, with the inertia taken about that body's center of mass. Then
 \begin{equation}
-M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = \begin{bmatrix}\tau_1 \\ \tau_2\end{bmatrix},
-\end{equation}
-demonstrating the affine structure: the acceleration depends linearly on the input torques
-(with a configuration-dependent gain $M(\q)^{-1}$).
-
-\subsection{Lagrangian Formulation}
-
-Starting from the Lagrangian $L(\q,\dot\q) = T(\q,\dot\q) - V(\q)$ with kinetic energy
-$T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$ and potential energy $V(\q)$, the Lagrange--d'Alembert equations yield
-\begin{equation}
-M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q,\dot\q)\uvec.
-\label{eq:ch3:lagrange}
-\end{equation}
-
-The key observation is that generalized forces are \emph{linear in physical forces}. If the
-physical force $\vec{f}_j$ acts at point $j$, the associated generalized force is
-\begin{equation}
-Q_k = \sum_j \vec{f}_j \cdot \frac{\partial\vec{r}_j}{\partial q_k}.
-\label{eq:ch3:generalized-force}
-\end{equation}
-This is a linear map from $\vec{f}_j$ to $Q_k$. The matrix $B(\q)$ encodes these Jacobians,
-and since the forward-dynamics solution $\ddot\q = M(\q)^{-1}[B(\q)\uvec + \ldots]$ inverts
-a linear operator, the result is linear in $\uvec$.
-
-\paragraph{Example: 2-DOF Planar Arm (Lagrangian).}
-
-For the two-link arm, kinetic energy is
-\begin{equation}
-T = \frac{1}{2}m_1 \norm{\dot{\vec{r}}_{c,1}}^2 + \frac{1}{2}I_1 \dot q_1^2
-+ \frac{1}{2}m_2 \norm{\dot{\vec{r}}_{c,2}}^2 + \frac{1}{2}I_2 (\dot q_1+\dot q_2)^2.
-\end{equation}
-
-Expanding the velocities and collecting terms by $\dot q_i \dot q_j$:
-\begin{equation}
-T = \frac{1}{2}\begin{bmatrix}\dot q_1 \\ \dot q_2\end{bmatrix}^\T
-\begin{bmatrix} M_{11} & M_{12} \\ M_{12} & M_{22}\end{bmatrix}
-\begin{bmatrix}\dot q_1 \\ \dot q_2\end{bmatrix},
+T=\frac12\sum_{i=1}^{N_b}\left(m_i\|J_{v,i}v\|^2+
+ (J_{\omega,i}v)^TI_{C,i}(J_{\omega,i}v)\right)
+ =\frac12v^TM(q)v,
+\label{eq:ch3:kinetic-energy}
 \end{equation}
 where
-\begin{align}
-M_{11} &= I_1 + m_1 \frac{\ell_1^2}{4} + m_2(\ell_1^2 + \frac{\ell_2^2}{4}) + m_2\ell_1\ell_2\cos q_2 + I_2, \\
-M_{12} = M_{21} &= m_2(\frac{\ell_2^2}{4} + \frac{1}{2}\ell_1\ell_2\cos q_2) + I_2, \\
-M_{22} &= I_2 + m_2 \frac{\ell_2^2}{4}.
-\end{align}
-
-The potential energy is
 \begin{equation}
-V = m_1 g \frac{\ell_1}{2}\sin q_1 + m_2 g(\ell_1\sin q_1 + \frac{\ell_2}{2}\sin(q_1+q_2)).
+M=\sum_i\left(m_iJ_{v,i}^TJ_{v,i}+J_{\omega,i}^TI_{C,i}J_{\omega,i}\right).
+\label{eq:ch3:mass-matrix-explicit}
 \end{equation}
+This matrix is symmetric and positive semidefinite. It is positive definite when every nonzero admissible generalized velocity produces positive modeled kinetic energy. Independent regular coordinates and a nondegenerate inertial model supply that property. Massless unconstrained freedoms, redundant coordinates, or singular charts require additional treatment. The number of bodies need not equal the number of coordinates. Quaternion coordinates also require a kinematic map $\dot q=N(q)v$ instead of identifying all coordinate rates with independent velocities.
 
-The gravity vector is
+\subsection{Force, Acceleration, and Connection Coefficients}
+
+For the independent-coordinate model, let $U(q)$ be potential energy, $D(q,v)v$ a dissipative force with $v^TDv\ge0$, and $Q_e(q,v,t)$ a prescribed external generalized force. The equation is
 \begin{equation}
-\vec{g} = \begin{bmatrix} \partial V/\partial q_1 \\ \partial V/\partial q_2\end{bmatrix}
-= \begin{bmatrix}
-g(m_1\frac{\ell_1}{2} + m_2\ell_1)\cos q_1 + m_2 g\frac{\ell_2}{2}\cos(q_1+q_2) \\
-m_2 g\frac{\ell_2}{2}\cos(q_1+q_2)
-\end{bmatrix}.
+M\dot v+c(q,v)+\nabla U+Dv=B(q)u+Q_e.
+\label{eq:ch3:manipulator}
 \end{equation}
+Here $B$ maps the chosen efforts to generalized forces. It need not be square. Velocity-dependent or time-dependent $B$ also preserves frozen-state input affinity, provided it does not depend on $u$. Unknown contact reactions are not arbitrary prescribed loads; they will be solved with constraints below.
 
-The Coriolis/centrifugal terms come from $\frac{\dd}{\dt}\frac{\partial T}{\partial\dot q_k} - \frac{\partial T}{\partial q_k}$:
+The Euler--Lagrange equations give the velocity-product force
 \begin{equation}
-\mat{C}(\q,\dot\q)\dot\q = \begin{bmatrix}
--\tfrac{1}{2}m_2\ell_1\ell_2(2\dot q_1\dot q_2 + \dot q_2^2)\sin q_2 \\
-\tfrac{1}{2}m_2\ell_1\ell_2\dot q_1^2\sin q_2
-\end{bmatrix}.
+c_i=\sum_{j,k}\Gamma_{ijk}v_jv_k,
+\qquad
+\Gamma_{ijk}=\frac12\left(\partial_jM_{ik}+\partial_kM_{ij}-\partial_iM_{jk}\right).
+\label{eq:ch3:christoffel-formula}
 \end{equation}
+These are Christoffel symbols of the first kind. The second-kind coefficients $\Gamma^i{}_{jk}=\sum_\ell(M^{-1})_{i\ell}\Gamma_{\ell jk}$ act at acceleration level. Adding $\Gamma^i{}_{jk}v_jv_k$ directly to $M\dot v$ mixes those levels. One consistent choice is $C_{ij}=\sum_k\Gamma_{ijk}v_k$, so that $Cv=c$ and $\dot M-2C$ is skew symmetric. The matrix $C$ is not unique, whereas the mechanically specified vector $c$ is fixed.
 
-The dynamics are thus
+With no potential gradient, damping, or applied nonconstraint force, the free equation is $\ddot q^i+\Gamma^i{}_{jk}\dot q^j\dot q^k=0$: a geodesic of the kinetic metric. A gravity-driven swing is not such a free geodesic merely because commanded torque is zero. For background on the force-level derivation, see the \href{https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-1-lagrangian-formulation-of-dynamics-part-2-of-2/}{Modern Robotics Lagrangian dynamics transcript}.
+
+Solving the regular equation gives
 \begin{equation}
-\begin{bmatrix} M_{11} & M_{12} \\ M_{12} & M_{22}\end{bmatrix}
-\begin{bmatrix}\ddot q_1 \\ \ddot q_2\end{bmatrix}
-+ \begin{bmatrix}
--\tfrac{1}{2}m_2\ell_1\ell_2(2\dot q_1\dot q_2 + \dot q_2^2)\sin q_2 \\
-\tfrac{1}{2}m_2\ell_1\ell_2\dot q_1^2\sin q_2
-\end{bmatrix}
-+ \begin{bmatrix}
-g(m_1\frac{\ell_1}{2} + m_2\ell_1)\cos q_1 + m_2 g\frac{\ell_2}{2}\cos(q_1+q_2) \\
-m_2 g\frac{\ell_2}{2}\cos(q_1+q_2)
-\end{bmatrix}
-= \begin{bmatrix}\tau_1 \\ \tau_2\end{bmatrix}.
+a_0=M^{-1}(Q_e-c-\nabla U-Dv),\qquad H=M^{-1}B,\qquad \dot v=a_0+Hu.
+\label{eq:ch3:forward-dynamics}
 \end{equation}
+Thus $f_0=\begin{bmatrix}v\\a_0\end{bmatrix}$ and $G=\begin{bmatrix}0\\H\end{bmatrix}$. The retained external load stays in $a_0$. This derivation establishes affinity for the declared effort variables; it does not imply that an arbitrary electrical, neural, or software command enters affinely.
 
-This clearly shows: (1) the mass matrix $M(\q)$ is configuration-dependent, (2) gravity
-and Coriolis/centrifugal terms depend on state, and (3) the torques $\tau_i$ enter linearly
-and can be inverted via $M(\q)^{-1}$.
+\subsection{Virtual Work Explains the Force Map}
 
-\subsection{Screw-Theoretic Formulation}
-
-In spatial vector notation, the dynamics of a multibody chain are elegantly written as
+If $\delta p_i=J_{v,i}\delta q$ and the infinitesimal body rotation is $\delta\theta_i=J_{\omega,i}\delta q$, virtual work gives
 \begin{equation}
-\mathcal{M}(\q)\dot{\mathcal{V}}
-+ \mathcal{C}(\q,\dot\q)\mathcal{V}
-= \mathcal{W}(\q)\uvec + \mathcal{F}^{\text{ext}}(\q),
-\label{eq:ch3:screw}
-\end{equation}
-where $\mathcal{V}$ is the stacked twist (velocity) vector, $\mathcal{M}$ is the spatial
-inertia matrix, and $\mathcal{W}$ maps generalized forces to body wrenches.
-
-Solving for the spatial acceleration:
-\begin{equation}
-\dot{\mathcal{V}} = A(\q,\dot\q)
-+ \mathcal{M}(\q)^{-1}\mathcal{W}(\q)\,\uvec,
-\label{eq:ch3:screw-affine}
-\end{equation}
-which is again affine in $\uvec$ at fixed state. The spatial inertia $\mathcal{M}(\q)$ is
-always positive definite (being composed of individual link inertias), ensuring invertibility.
-
-\paragraph{Example: 2-DOF Planar Arm (Screw Theory).}
-
-In screw notation, a 2D rigid body has state $\mathcal{V} = (v_x, v_y, \omega)^\T$ (two
-translational velocities and one angular velocity). For the two-link arm, define the
-spatial inertia matrices:
-\begin{equation}
-\mathcal{M}_1 = \begin{bmatrix}
-m_1\mat{I}_2 & 0 \\
-0 & I_1
-\end{bmatrix}, \quad
-\mathcal{M}_2 = \begin{bmatrix}
-m_2\mat{I}_2 & 0 \\
-0 & I_2
-\end{bmatrix},
-\end{equation}
-and assemble into a $6\times 6$ block matrix (3 DOF per link).
-
-The Jacobian $\mathcal{W}(\q)$ maps joint torques to spatial wrenches. For revolute joints
-in the plane, $\mathcal{W}$ has columns corresponding to joint axes. The linearity in $\uvec$
-is transparent: inverting $\mathcal{M}(\q)$ yields a linear map to $\dot{\mathcal{V}}$.
-
-\subsection{Structural Equivalence}
-
-All three formulations yield the identical abstract structure:
-\begin{equation}
-\ddot\q = f_2(\q,\dot\q) + H(\q,\dot\q)\,\uvec,
-\label{eq:ch3:universal}
-\end{equation}
-where $f_2$ collects all state-dependent terms and $H$ is the linear input-to-acceleration
-map. The linearity in $\uvec$ is inherited from three independent facts:
-\begin{enumerate}
-\item Forces and wrenches scale linearly with their magnitudes (Newton's second law).
-\item The generalized-force mapping from physical forces to $\q$-space uses Jacobians
-      (linear maps).
-\item The mass-matrix inversion $M(\q)^{-1}$ is a linear operator at fixed $\q$.
-\end{enumerate}
-
-
-\section{Energy Perspective and Power Superposition}
-
-An alternative and complementary view of superposition emerges from energy and power
-considerations. While the previous section focused on instantaneous accelerations, the
-energy framework provides deeper insight into how control inputs interact with the system.
-
-\subsection{Power and the Input Channels}
-
-The mechanical power delivered by a control force or torque is defined as
-\begin{equation}
-P_i = u_i \cdot \dot q_i,
-\label{eq:ch3:power-single}
-\end{equation}
-where $u_i$ is the generalized force and $\dot q_i$ is the generalized velocity. (For a
-vector input, this generalizes to $P = \uvec^\T \dot\q$.)
-
-For a decomposed input $\uvec = \uvec^{(1)} + \uvec^{(2)} + \cdots + \uvec^{(p)}$, the total
-power is
-\begin{equation}
-P_{\text{total}} = \uvec^\T \dot\q = \sum_{i=1}^p (\uvec^{(i)})^\T \dot\q = \sum_{i=1}^p P^{(i)}.
-\label{eq:ch3:power-superposition}
-\end{equation}
-
-This is a \emph{linear superposition of power}: the total power delivered is exactly the sum of
-powers from each input channel. This holds instantaneously at any moment in time.
-
-\subsection{Energy Flow\index{Flow (Dynamical System)} and Acceleration Contributions}
-
-By the work--energy theorem, the power $P_i$ delivered by input channel $i$ is related to the
-rate of change of kinetic energy attributed to that channel. Consider the kinetic energy:
-\begin{equation}
-T = \frac{1}{2}\dot\q^\T M(\q)\,\dot\q.
-\end{equation}
-
-Taking its time derivative:
-\begin{equation}
-\dot T = \dot\q^\T M(\q)\,\ddot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
-\label{eq:ch3:energy-rate}
-\end{equation}
-
-The second term $\frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q$ accounts for the fact that the mass
-matrix itself varies with configuration. Using the equation of motion
-\begin{equation}
-M(\q)\ddot\q = \uvec - \mat{C}(\q,\dot\q)\dot\q - \vec{g}(\q),
-\end{equation}
-we can write
-\begin{equation}
-\dot\q^\T M(\q)\,\ddot\q = \dot\q^\T \uvec - \dot\q^\T \mat{C}(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q).
-\end{equation}
-
-Substituting back:
-\begin{equation}
-\dot T = \dot\q^\T \uvec - \dot\q^\T \mat{C}(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q)
-+ \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
-\label{eq:ch3:energy-decomposition}
-\end{equation}
-
-The term $\dot\q^\T \uvec = P_{\text{total}}$ is the input power. The other terms represent
-energy dissipation or conversion due to Coriolis effects, gravity, and time variation of the
-inertia. This shows that input power superposition directly translates to the linearity of
-acceleration mapping.
-
-\subsection{Complementary View: Energy Stability}
-
-In control design, the power superposition principle has important implications for stability
-and energy-based controller design. If a controller is decomposed as
-\begin{equation}
-\uvec = \uvec^{(\text{grav})} + \uvec^{(\text{control})},
-\end{equation}
-then the energy dissipated (or supplied) by the gravity compensation channel is decoupled
-from the control effort:
-\begin{equation}
-P^{(\text{grav})} + P^{(\text{control})} = \dot\q^\T \vec{g}(\q) + P^{(\text{control})}.
-\end{equation}
-
-This decomposition is exact and enables independent analysis of each channel.
-
-
-\section{Constraint Forces and the Control-Affine DAE}
-
-In the presence of holonomic constraints, the equations of motion take the form of a
-differential-algebraic equation (DAE). Understanding how constraints interact with the
-control-affine structure is essential for systems with kinematic constraints (e.g., wheels
-rolling without slipping, closed kinematic chains).
-
-\subsection{Holonomic Constraints and Generalized Coordinates}
-
-Suppose the system is subject to $m$ holonomic (integrable) constraints:
-\begin{equation}
-\phi_a(\q) = 0, \quad a = 1,\ldots,m.
-\label{eq:ch3:constraints}
-\end{equation}
-
-Differentiating with respect to time:
-\begin{equation}
-\nabla_{\q} \phi_a(\q) \cdot \dot\q = 0,
-\label{eq:ch3:constraint-velocity}
-\end{equation}
-or in matrix form,
-\begin{equation}
-J(\q)\,\dot\q = 0, \quad J(\q) = \begin{bmatrix}
-\nabla_{\q} \phi_1(\q) \\
-\vdots \\
-\nabla_{\q} \phi_m(\q)
-\end{bmatrix} \in \R^{m \times n}.
-\label{eq:ch3:constraint-jacobian}
-\end{equation}
-
-This defines the \emph{constraint manifold}: the subspace of valid velocities.
-
-\subsection{Lagrange Multipliers and the DAE Formulation}
-
-The constrained dynamics are given by:
-\begin{equation}
-M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec\lambda,
-\label{eq:ch3:constrained-dynamics}
-\end{equation}
-where $\vec\lambda \in \R^m$ are Lagrange multipliers representing constraint forces, and we
-have
-\begin{equation}
-J(\q)\,\dot\q = 0, \quad \frac{\dd}{\dt}[J(\q)\,\dot\q] = 0.
-\label{eq:ch3:constraint-equations}
-\end{equation}
-
-Differentiating the velocity constraint:
-\begin{equation}
-\frac{\dd}{\dt}[J(\q)\,\dot\q] = \dot J(\q)\,\dot\q + J(\q)\,\ddot\q = 0,
-\end{equation}
-which gives
-\begin{equation}
-J(\q)\,\ddot\q = -\dot J(\q)\,\dot\q.
-\label{eq:ch3:constraint-acceleration}
-\end{equation}
-
-Combining with~\eqref{eq:ch3:constrained-dynamics}:
-\begin{equation}
-\begin{bmatrix} M(\q) & -J(\q)^\T \\ J(\q) & 0 \end{bmatrix}
-\begin{bmatrix} \ddot\q \\ \vec\lambda \end{bmatrix}
-= \begin{bmatrix} B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \vec{g}(\q) \\ -\dot J(\q)\,\dot\q \end{bmatrix}.
-\label{eq:ch3:DAE-system}
-\end{equation}
-
-This is the \emph{DAE form}. The key observation is:
-
-\begin{proposition}
-The input matrix $B(\q)$ appears only in the first equation. The constraint forces $J(\q)^\T\vec\lambda$
-enforce the velocity constraints $J(\q)\,\dot\q = 0$ without depending on $\uvec$ directly.
-Therefore, the control input $\uvec$ affects the system dynamics (and hence $\ddot\q$)
-through the affine map, while constraint forces \emph{passively} enforce the velocity constraint.
-\end{proposition}
-
-\subsection{Solution via Null-Space Projection}
-
-For systems with constraints, it is often useful to work directly with the reduced generalized
-coordinates $\q_r \in \R^{n-m}$ (the minimal set after eliminating constraints). The
-constrained dynamics can be written as
-\begin{equation}
-M_r(\q_r)\ddot\q_r + C_r(\q_r,\dot\q_r)\dot\q_r + \vec{g}_r(\q_r) = B_r(\q_r)\uvec,
-\label{eq:ch3:reduced-dynamics}
-\end{equation}
-which is again control-affine. The superposition property holds on the constrained submanifold.
-
-\begin{intuitionbox}
-Constraints define a lower-dimensional manifold on which the system evolves. The
-control-affine structure is preserved on this constrained manifold: inputs still map linearly
-to accelerations (in the constrained directions), but the Lagrange multipliers adjust to
-enforce the constraints.
-\end{intuitionbox}
-
-
-\section{Concrete Numerical Example: Pendulum Trajectory Non-Superposition}
-
-To illustrate the critical difference between instantaneous superposition (which is true) and
-trajectory superposition (which is false), we present a concrete numerical simulation of a
-simple pendulum system.
-
-\subsection{Pendulum Dynamics and Setup}
-
-Consider a pendulum with mass $m = 1$ kg, length $\ell = 1$ m, and gravitational acceleration
-$g = 9.81$ m/s$^2$. The equation of motion is:
-\begin{equation}
-\ddot q = -\frac{g}{\ell}\sin q + \frac{1}{m\ell^2}\tau
-= -9.81\sin q + \tau,
-\label{eq:ch3:pendulum-numerical}
-\end{equation}
-where $q$ is the angle from vertical (in radians) and $\tau$ is the applied torque.
-
-\subsection{Two Scenarios}
-
-\paragraph{Scenario 1: Constant Torque Input.}
-Apply $\tau_1 = 5$ N\textperiodcentered{}m for $t \in [0, 2]$ s starting from rest at $q_0 = 0$.
-
-\paragraph{Scenario 2: Opposite Torque Input.}
-Apply $\tau_2 = -5$ N\textperiodcentered{}m for $t \in [0, 2]$ s starting from rest at $q_0 = 0$.
-
-\subsection{Trajectory Calculations}
-
-Using a standard numerical integrator (e.g., RK45), we compute the trajectories:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{c|ccc|ccc}
-Time (s) & $q^{(1)}$ (rad) & $\dot q^{(1)}$ (rad/s) & $\ddot q^{(1)}$ (rad/s$^2$) &
-$q^{(2)}$ (rad) & $\dot q^{(2)}$ (rad/s) & $\ddot q^{(2)}$ (rad/s$^2$) \\
-\hline
-0.0 & 0.000 & 0.000 & 5.000 & 0.000 & 0.000 & -5.000 \\
-0.5 & 0.612 & 2.443 & 4.020 & -0.612 & -2.443 & -5.980 \\
-1.0 & 1.474 & 3.852 & 3.046 & -1.474 & -3.852 & -6.954 \\
-1.5 & 2.510 & 4.436 & 1.999 & -2.510 & -4.436 & -7.981 \\
-2.0 & 3.670 & 4.456 & 0.861 & -3.670 & -4.456 & -8.861 \\
-\end{tabular}
-\caption{Numerical trajectories of the pendulum under $\tau_1 = +5$ and $\tau_2 = -5$ N\textperiodcentered{}m.}
-\label{tab:ch3:pendulum-trajectories}
-\end{table}
-
-\subsection{Testing Trajectory Superposition}
-
-If trajectory superposition held, applying the combined input $\tau_1 + \tau_2 = 0$ should
-yield a trajectory that satisfies
-\begin{equation}
-q(t) + q(t) - q_0 = q_{\text{combined}}(t)
-\end{equation}
-(where the first $q(t)$ is from Scenario 1, second from Scenario 2). But this is not true!
-
-Computing the trajectory under $\tau_{\text{combined}} = 0$ (free pendulum):
-
-\begin{table}[h]
-\centering
-\begin{tabular}{c|cc|cc}
-Time (s) & $q^{(1)}+q^{(2)}$ (rad) & $q^{\text{combined}}$ (rad) & Error (rad) & Rel. Error (\%) \\
-\hline
-0.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-0.5 & 0.000 & 0.000 & 0.000 & 0.0 \\
-1.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-1.5 & 0.000 & 0.000 & 0.000 & 0.0 \\
-2.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-\end{tabular}
-\caption{Superposition test: $q^{(1)}+q^{(2)} \neq q^{\text{combined}}$ in general (shown here
-at $\tau=0$, the trajectories happen to be symmetric, but under different inputs they would differ).}
-\label{tab:ch3:superposition-test}
-\end{table}
-
-Instead, consider the more interesting case: apply $\tau_1 = 5$ N\textperiodcentered{}m and $\tau_2 = 2.5$ N\textperiodcentered{}m.
-Then the sum is $\tau_1 + \tau_2 = 7.5$ N\textperiodcentered{}m. Numerically:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{c|c|c|c|c}
-Time (s) & $q^{(1)}$ & $q^{(2)}$ & $q^{(1)}+q^{(2)}-q_0$ & $q^{(\tau_1+\tau_2)}$ \\
-\hline
-0.0 & 0.000 & 0.000 & 0.000 & 0.000 \\
-0.5 & 0.612 & 0.306 & 0.918 & 0.918 \\
-1.0 & 1.474 & 0.735 & 2.209 & 2.210 \\
-1.5 & 2.510 & 1.252 & 3.762 & 3.765 \\
-2.0 & 3.670 & 1.834 & 5.504 & 5.512 \\
-\end{tabular}
-\caption{Apparent Superposition at Discrete Times (Error Accumulates Due to Nonlinear Drift).}
-\label{tab:ch3:superposition-continuous}
-\end{table}
-
-At first glance, the superposition appears to hold at discrete times. However, the error
-grows over longer integration horizons due to the nonlinear drift $f(\x) = (\dot q, -9.81\sin q)^\T$.
-
-\subsection{Why Superposition Fails}
-
-At time $t$, trajectory $\x^{(1)}(t)$ has reached state $(\q^{(1)}, \dot\q^{(1)})$, while
-trajectory $\x^{(2)}(t)$ is at state $(\q^{(2)}, \dot\q^{(2)})$. The drift acceleration at
-these states is:
-\begin{align}
-a_{\text{drift}}^{(1)} &= -9.81\sin(\q^{(1)}), \\
-a_{\text{drift}}^{(2)} &= -9.81\sin(\q^{(2)}).
-\end{align}
-
-The sum is $a_{\text{drift}}^{(1)} + a_{\text{drift}}^{(2)}$, which in general differs from
-the drift at the "combined" state:
-\begin{equation}
-a_{\text{drift}}^{(1)} + a_{\text{drift}}^{(2)} \neq -9.81\sin(\q^{(1)} + \q^{(2)})
-\end{equation}
-unless $\sin$ is linear, which it is not. This nonlinearity accumulates over time, causing
-trajectories to diverge.
-
-
-\section{Virtual Work Principle and Generalized Forces}
-
-The virtual work principle is a classical foundation for deriving the equations of motion
-and provides deep insight into why generalized forces (and hence the control-affine structure)
-must be linear in physical forces.
-
-\subsection{Classical Virtual Work Principle}
-
-Consider a system of point masses $\{m_i\}_{i=1}^N$ subject to constraints. A \emph{virtual
-displacement} $\delta\q$ is an infinitesimal change that respects the constraints:
-\begin{equation}
-J(\q)\,\delta\q = 0.
-\label{eq:ch3:virtual-constraint}
-\end{equation}
-
-The virtual work done by all forces is
-\begin{equation}
-\delta W = \sum_{i=1}^N \vec{f}_i \cdot \delta\vec{r}_i,
-\label{eq:ch3:virtual-work-physical}
-\end{equation}
-where $\vec{f}_i$ is the force on mass $i$ and $\delta\vec{r}_i$ is its virtual displacement.
-
-The virtual displacements in physical space relate to virtual changes in generalized coordinates by
-\begin{equation}
-\delta\vec{r}_i = \frac{\partial\vec{r}_i}{\partial\q}\,\delta\q = \mat{J}_{i}(\q)\,\delta\q.
-\label{eq:ch3:virtual-jacobian}
-\end{equation}
-
-Substituting:
-\begin{equation}
-\delta W = \sum_{i=1}^N \vec{f}_i \cdot \mat{J}_i(\q)\,\delta\q
-= \left(\sum_{i=1}^N \mat{J}_i(\q)^\T\vec{f}_i\right) \cdot \delta\q
-= Q(\uvec) \cdot \delta\q,
-\label{eq:ch3:virtual-work-generalized}
-\end{equation}
-where the generalized force vector is defined as
-\begin{equation}
-Q(\uvec) := \sum_{i=1}^N \mat{J}_i(\q)^\T\vec{f}_i.
+\delta W=\sum_i(F_i^T\delta p_i+N_i^T\delta\theta_i)
+ =Q^T\delta q,\qquad
+Q=\sum_i(J_{v,i}^TF_i+J_{\omega,i}^TN_i).
 \label{eq:ch3:generalized-force-def}
 \end{equation}
+All forces, moments, velocities, and lever arms must use compatible points and frames. Generalized forces are dual to generalized velocities: their pairing is power. At fixed geometry this mapping is linear in physical wrenches. If a wrench is nonlinear in a chosen command, the Jacobian transpose does not remove that nonlinearity. Ideal stationary constraint reactions do no virtual work on allowed displacements; this is why they disappear under a valid reduction, not why their numerical values are independent of actuation.
 
-\subsection{Linearity of Generalized Forces}
+\section{One Arm, Three Consistent Formulations}
 
-The crucial observation is that $Q(\uvec)$ is a \emph{linear map} from the physical forces
-$\{\vec{f}_i\}$ to the generalized force space:
+\subsection{A Fully Specified Uniform-Rod Model}
+
+Consider two uniform planar rods with lengths $l_1,l_2>0$, masses $m_1,m_2>0$, fixed proximal endpoint, and center-of-mass inertias $I_{C,i}=m_il_i^2/12$. Let $q_1$ be counterclockwise from the horizontal and $q_2$ the relative elbow angle. Therefore the absolute angles are $q_1$ and $q_1+q_2$, and angular velocities are $v_1$ and $v_1+v_2$. These conventions determine every trigonometric sign below. Gravity is the Cartesian vector $(0,-g)$.
+
+Set $e(\theta)=(\cos\theta,\sin\theta)^T$. The centers are
 \begin{equation}
-Q(c_1\uvec^{(1)} + c_2\uvec^{(2)}) = c_1 Q(\uvec^{(1)}) + c_2 Q(\uvec^{(2)}).
-\label{eq:ch3:generalized-linearity}
+p_{C,1}=\frac{l_1}{2}e(q_1),\qquad
+p_{C,2}=l_1e(q_1)+\frac{l_2}{2}e(q_1+q_2).
 \end{equation}
-
-This linearity is guaranteed by the linearity of the Jacobian operators $\mat{J}_i(\q)$ and
-the linearity of summation. It does \emph{not} depend on the system being undamped or frictionless---only
-on geometry and the definition of generalized forces.
-
-\subsection{D'Alembert Principle and Control-Affine Structure}
-
-The d'Alembert principle states that the virtual work of all forces (including inertial forces)
-must vanish for the actual motion:
+Differentiating these positions and adding the rotational energies gives, with $\beta=m_2l_1l_2/2$, $d=m_2l_2^2/3$, and $a=m_1l_1^2/3+m_2l_1^2+d$,
 \begin{equation}
-\sum_{i=1}^N (\vec{f}_i - m_i\ddot{\vec{r}}_i) \cdot \delta\vec{r}_i = 0
-\quad\text{for all virtual displacements } \delta\q.
-\label{eq:ch3:dalembert}
+M=\begin{bmatrix}a+2\beta\cos q_2&d+\beta\cos q_2\\d+\beta\cos q_2&d\end{bmatrix},
+\qquad
+c=\beta\sin q_2\begin{bmatrix}-2v_1v_2-v_2^2\\v_1^2\end{bmatrix}.
 \end{equation}
-
-Expanding the kinetic energy term and using the generalized-force mapping:
+The potential and its gradient are
 \begin{equation}
-Q(\uvec) - Q(\text{inertia}) \cdot \delta\q = 0.
-\label{eq:ch3:dalembert-generalized}
+U=g\left[\left(\frac{m_1l_1}{2}+m_2l_1\right)\sin q_1+
+\frac{m_2l_2}{2}\sin(q_1+q_2)\right],
 \end{equation}
-
-The generalized inertial force is $Q(\text{inertia}) = M(\q)\ddot\q$ (up to Coriolis and other
-velocity-dependent corrections). Therefore:
 \begin{equation}
-M(\q)\ddot\q + \text{(nonlinear terms)} = Q(\uvec),
-\label{eq:ch3:dalembert-result}
+\nabla U=g\begin{bmatrix}
+(m_1l_1/2+m_2l_1)\cos q_1+(m_2l_2/2)\cos(q_1+q_2)\\
+(m_2l_2/2)\cos(q_1+q_2)
+\end{bmatrix}.
 \end{equation}
-which is precisely the manipulator equation~\eqref{eq:ch3:manipulator} with $Q(\uvec)$ playing
-the role of $B(\q)\uvec$. Since $Q$ is linear in the input, the forward-dynamics solution for
-$\ddot\q$ is affine in $\uvec$.
+At a horizontal posture gravity therefore gives a clockwise tendency. A sine formula associated with angles measured from the downward vertical cannot be inserted without changing the coordinate convention. Both joint accelerations appear in each coupled balance; a single-link inertia about the base cannot silently replace the two-link mass matrix.
 
-\begin{designbox}
-The virtual work principle guarantees that control-affine structure is not merely
-a computational convenience---it is a fundamental consequence of the geometry of virtual
-displacements and the linearity of Jacobians. This deep connection to classical mechanics
-provides confidence that the superposition principle is exact and universal.
-\end{designbox}
-
-
-\section{Expanded Pendulum Example With Numerical Values}
-
-We now provide a comprehensive analysis of the pendulum with concrete numerical parameters,
-demonstrating the decomposition principle and gravity compensation.
-
-\subsection{System Parameters}
-
+The determinant is
 \begin{equation}
-\begin{aligned}
-m &= 1 \text{ kg}, \\
-\ell &= 1 \text{ m}, \\
-g &= 9.81 \text{ m/s}^2, \\
-I &= m\ell^2 = 1 \text{ kg\textperiodcentered{}m}^2.
-\end{aligned}
-\label{eq:ch3:pendulum-params}
+\det M=\frac{m_1m_2l_1^2l_2^2}{9}
+ +m_2^2l_1^2l_2^2\left(\frac13-\frac14\cos^2q_2\right)>0.
 \end{equation}
+Together with $d>0$, this verifies positive definiteness for this model, including aligned rods. A task Jacobian can lose rank at alignment while $M$ remains invertible. A condition number, unlike positive definiteness, also depends on parameter values and the scaling chosen for coordinates.
 
-\subsection{Equation of Motion}
-
+Writing $h=\beta\sin q_2$, a compatible Coriolis matrix is
 \begin{equation}
-I\ddot q = -mg\ell\sin q + \tau
-\implies
-\ddot q = -9.81\sin q + \tau.
-\label{eq:ch3:pendulum-eom}
+C=\begin{bmatrix}-hv_2&-h(v_1+v_2)\\hv_1&0\end{bmatrix}.
 \end{equation}
+Direct multiplication recovers $c$, and $v^Tc=\tfrac12v^T\dot Mv$. The factor of one half in $\beta$ comes from the second rod's center-of-mass distance. Treating its entire mass as a point at the tip would define a different model and different coefficients.
 
-\subsection{Drift Acceleration at Various States}
+\subsection{Newton--Euler Balances Recover the Same Efforts}
 
-The drift acceleration (zero input) is $a_{\text{drift}} = -9.81\sin q$. Evaluating at
-several angles:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{c|cc}
-Angle $q$ (rad) & Angle $q$ (deg) & Drift acceleration $a_{\text{drift}}$ (rad/s$^2$) \\
-\hline
-0.0 & 0$^\circ$ & 0.000 \\
-$\pi/6$ & 30$^\circ$ & -4.905 \\
-$\pi/4$ & 45$^\circ$ & -6.937 \\
-$\pi/3$ & 60$^\circ$ & -8.491 \\
-$\pi/2$ & 90$^\circ$ & -9.810 \\
-$2\pi/3$ & 120$^\circ$ & -8.491 \\
-$3\pi/4$ & 135$^\circ$ & -6.937 \\
-\end{tabular}
-\caption{Drift Accelerations at Various Configurations. Maximum Magnitude Occurs at $q=\pm\pi/2$.}
-\label{tab:ch3:drift-accel}
-\end{table}
-
-\subsection{Input Acceleration and Decomposition}
-
-The input acceleration is $a_{\text{input}} = \tau / I = \tau$. Decomposing $\tau = \tau^{(g)} + \tau^{(c)}$
-(gravity compensation plus control):
-
+Let $F_{12}$ be the elbow force on rod 2, $F_{01}$ the base force on rod 1, and $\tau_2$ the counterclockwise actuator moment on rod 2, with reaction $-\tau_2$ on rod 1. The base moment is $\tau_1$. Define $\rho_1=p_{C,1}$ and $\rho_2=p_{C,2}-l_1e(q_1)$. For any proposed joint acceleration, differentiating the center positions gives their Cartesian accelerations, including velocity-product terms. Force balance requires
 \begin{equation}
-\ddot q = a_{\text{drift}} + a_{\text{input}} = -9.81\sin q + \tau^{(g)} + \tau^{(c)}.
-\label{eq:ch3:pendulum-decomp-full}
+F_{12}=m_2(a_{C,2}-g_{\rm vec}),\qquad
+F_{01}=m_1(a_{C,1}-g_{\rm vec})+F_{12}.
 \end{equation}
-
-\paragraph{Gravity Compensation.}
-To exactly cancel gravity, set $\tau^{(g)} = 9.81\sin q$. Then:
+With planar cross products interpreted as signed moments, the center-of-mass moment balances give
 \begin{equation}
-\ddot q = \tau^{(c)}.
-\label{eq:ch3:gravity-cancelled}
+\tau_2=I_{C,2}(\ddot q_1+\ddot q_2)+\rho_2\times F_{12},
 \end{equation}
-
-This is a double integrator: any control torque $\tau^{(c)}$ directly accelerates the system
-without gravitational interference. For example:
-\begin{itemize}
-\item At $q = 30^\circ$: $\tau^{(g)} = 9.81 \times 0.5 = 4.905$ N\textperiodcentered{}m to cancel gravity.
-\item At $q = 90^\circ$: $\tau^{(g)} = 9.81 \times 1.0 = 9.81$ N\textperiodcentered{}m to cancel gravity.
-\end{itemize}
-
-\paragraph{Superposition Example.}
-Suppose at state $(q, \dot q) = (30^\circ, 1 \text{ rad/s})$ we apply:
-\begin{align}
-\tau^{(g)} &= 4.905 \text{ N\textperiodcentered{}m (gravity compensation)}, \\
-\tau^{(c)} &= 2.0 \text{ N\textperiodcentered{}m (control input)}.
-\end{align}
-
-The total acceleration is:
 \begin{equation}
-\ddot q = -9.81 \times 0.5 + 4.905 + 2.0 = 2.0 \text{ rad/s}^2.
+\tau_1=I_{C,1}\ddot q_1+\tau_2+
+\rho_1\times F_{01}+(l_1e(q_1)-\rho_1)\times F_{12}.
 \end{equation}
+Eliminating the internal forces yields $\tau=M\ddot q+c+\nabla U$. Conversely, solving that equation and substituting into these body balances must recover the applied torques. The runnable example is tested in precisely this way, using independently differentiated Cartesian positions. This checks geometry, inertia, gravity signs, and coupling rather than merely evaluating the same mass-matrix formula twice.
 
-We can decompose this as:
-\begin{align}
-\Delta\ddot q^{(g)} &= -9.81\sin q + 4.905 = 0, \\
-\Delta\ddot q^{(c)} &= 2.0, \\
-\text{Total:} \quad \Delta\ddot q &= 0 + 2.0 = 2.0 \text{ rad/s}^2.
-\end{align}
+These equations used inertial-frame derivatives. In axes rotating with a body, translational balance at its center is $F=m(\dot v_C^b+\omega^b\times v_C^b)$, and rotational balance is $N_C=I_C\dot\omega^b+\omega^b\times(I_C\omega^b)$. A dot on body components alone omits the transport term. Origins away from the center require the corresponding inertia and acceleration transformations.
 
-Each component is independent and can be analyzed or designed separately.
+\subsection{Spatial Vectors Preserve the Same Constraints}
 
-\subsection{Instantaneous Superposition Example}
-
-At the same state $(q, \dot q) = (30^\circ, 1 \text{ rad/s})$, suppose we apply two independent
-disturbances:
-\begin{align}
-\tau^{(1)} &= 3.0 \text{ N\textperiodcentered{}m}, \\
-\tau^{(2)} &= 1.5 \text{ N\textperiodcentered{}m}.
-\end{align}
-
-The accelerations produced are:
-\begin{align}
-\ddot q^{(1)} &= -9.81 \times 0.5 + 3.0 = -1.905 \text{ rad/s}^2, \\
-\ddot q^{(2)} &= -9.81 \times 0.5 + 1.5 = -3.405 \text{ rad/s}^2.
-\end{align}
-
-Under the combined input $\tau^{(1)} + \tau^{(2)} = 4.5$ N\textperiodcentered{}m:
+In body axes at the center of mass, use an angular-first twist $V=(\omega,v_C^b)$ and wrench $W=(N_C,F)$. The pairing $W^TV$ is power. With $[z]_\times w=z\times w$,
 \begin{equation}
-\ddot q^{(1+2)} = -9.81 \times 0.5 + 4.5 = -4.905 + 4.5 = -0.405 \text{ rad/s}^2.
+\mathcal I=\operatorname{diag}(I_C,mI_3),\qquad
+\operatorname{ad}_V=\begin{bmatrix}[\omega]_\times&0\\{}[v_C^b]_\times&[\omega]_\times\end{bmatrix},
+\qquad W=\mathcal I\dot V-\operatorname{ad}_V^T\mathcal I V.
 \end{equation}
+The lower block contains $m(\dot v_C^b+\omega\times v_C^b)$, exactly the force balance above. Wrench transformations are dual to twist transformations; using one transformation for both would generally corrupt power.
 
-Naively checking whether total accelerations superpose:
+For a connected stationary-base chain, stack the body twists as $V=\mathcal J(q)v$. Then $\dot V=\mathcal J\dot v+\dot{\mathcal J}v$, and the assembled kinetic metric is $M=\mathcal J^T\mathcal I\mathcal J$. Project the body balances with the dual map $\mathcal J^T$, retaining their bias terms and joint compatibility. Ideal internal reactions cancel in this projection. Inverting each free body's spatial inertia without enforcing the joints instead simulates disconnected bodies. Generalized actuator efforts also do not uniquely specify an arbitrary collection of free-body wrenches.
+
+Newton--Euler, Lagrange, and spatial-vector methods are consequently different organizations of the same model. Agreement requires the same geometry, inertias, loads, coordinate conventions, and constraints. Their agreement is a verification opportunity, not three independent physical explanations of the swing.
+
+\section{Power, Work, and Intersegment Transfer}
+
+The actuation power is
 \begin{equation}
-\ddot q^{(1)} + \ddot q^{(2)} = -1.905 + (-3.405) = -5.310 \text{ rad/s}^2 \neq -0.405.
+P_u=(Bu)^Tv=u^Ty,\qquad y=B^Tv,
+\label{eq:ch3:power-superposition}
 \end{equation}
+not generally $u^Tv$. At fixed state, $P_u=\sum_j u_jy_j$. If $B=I$, each input is a joint torque and each output its corresponding relative angular velocity. Contributions can be negative: an actuator may absorb mechanical energy while the total motion continues to speed up elsewhere.
 
-The mismatch is expected: the \emph{total} accelerations $\ddot q^{(i)}$ each include the gravity drift term $a_{\text{drift}} = -g\sin q = -4.905$, so summing them double-counts gravity. Superposition applies to the \emph{input-to-acceleration map}, not to total accelerations. The correct decomposition separates the drift from the input contribution:
+For $E=T+U$, differentiating before substituting the dynamics is essential:
 \begin{equation}
-H(q) = \frac{\ddot q}{\tau} = 1 \quad \text{(constant for the pendulum)}.
-\end{equation}
-
-So the superposition property is: given state $(q, \dot q)$, the acceleration contribution
-from input $\tau$ is $H(q)\tau = \tau$, and this is linear in $\tau$. Hence:
-\begin{equation}
-H(q)(\tau^{(1)} + \tau^{(2)}) = H(q)\tau^{(1)} + H(q)\tau^{(2)}.
-\end{equation}
-
-The decomposition of the \emph{total acceleration} includes the drift:
-\begin{equation}
-\ddot q^{(\text{total})} = a_{\text{drift}}(q,\dot q) + H(q)[\tau^{(1)} + \tau^{(2)}].
-\end{equation}
-
-\subsection{Trajectory Evolution}
-
-Starting from $(q_0, \dot q_0) = (0, 0)$ with applied torque $\tau = 5$ N\textperiodcentered{}m:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{c|cccc}
-Time (s) & $q$ (rad) & $\dot q$ (rad/s) & $a_{\text{drift}}$ & $a_{\text{input}}$ \\
-\hline
-0.0 & 0.000 & 0.000 & 0.000 & 5.000 \\
-0.2 & 0.099 & 0.980 & -0.973 & 5.000 \\
-0.4 & 0.395 & 1.911 & -3.870 & 5.000 \\
-0.6 & 0.883 & 2.720 & -8.614 & 5.000 \\
-0.8 & 1.540 & 3.236 & -13.85 & 5.000 \\
-1.0 & 2.315 & 3.380 & -17.34 & 5.000 \\
-\end{tabular}
-\caption{Pendulum trajectory under $\tau = 5$ N\textperiodcentered{}m. Drift acceleration increases in magnitude as
-$q$ grows, reflecting the stronger gravitational resistance at larger angles.}
-\label{tab:ch3:pendulum-traj}
-\end{table}
-
-The table shows clearly how the drift (gravity) grows as the pendulum angle increases, while
-the input acceleration remains constant. This illustrates the exact decomposition enabled by
-the control-affine structure.
-
-
-\section{Energy Methods and Passivity}
-
-The control-affine structure of mechanical systems is intimately related to passivity theory,
-which provides a powerful framework for understanding energy flow and designing stabilizing
-controllers.
-
-\subsection{Storage Functions and Passive Systems}
-
-A system $\dot\x = f(\x) + G(\x)\uvec$ with output $\y = C(\x)$ is \emph{passive} if there
-exists a storage function $V(\x) \geq 0$ (often the total mechanical energy) such that
-\begin{equation}
-\dot V(\x) \leq \y^\T \uvec,
-\label{eq:ch3:passivity-def}
-\end{equation}
-with equality only when $\x = 0$ or under special conditions. This inequality says: the rate of
-increase of stored energy is bounded by the power input from the control.
-
-\subsection{Mechanical Energy as Storage Function}
-
-For mechanical systems, the natural storage function is the total mechanical energy:
-\begin{equation}
-E(\q,\dot\q) = T(\q,\dot\q) + V(\q)
-= \frac{1}{2}\dot\q^\T M(\q)\,\dot\q + V(\q).
-\label{eq:ch3:total-energy}
-\end{equation}
-
-Taking its time derivative:
-\begin{equation}
-\dot E = \dot\q^\T M(\q)\,\ddot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q + \nabla_{\q} V \cdot \dot\q.
-\label{eq:ch3:energy-rate-full}
-\end{equation}
-
-Substituting the equation of motion $M(\q)\ddot\q = B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)$:
-\begin{equation}
-\dot E = \dot\q^\T [B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)]
-+ \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q + \nabla_{\q} V \cdot \dot\q.
-\label{eq:ch3:energy-substituted}
-\end{equation}
-
-The gravity terms cancel, leaving:
-\begin{equation}
-\dot E = \dot\q^\T B(\q)\uvec - \dot\q^\T \mat{C}(\q,\dot\q)\dot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
-\label{eq:ch3:energy-simplified}
-\end{equation}
-
-When $\mat{C}$ is built from the Christoffel symbols of the metric $M$ --- the canonical
-choice made in~\eqref{eq:ch3:christoffel-formula}, and the one under which
-$\dot M - 2\mat{C}$ is skew-symmetric --- we have
-\begin{equation}
-\dot\q^\T \mat{C}(\q,\dot\q)\dot\q = \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q,
-\label{eq:ch3:skew-symmetry}
-\end{equation}
-which is exactly the statement $\dot\q^\T(\dot M - 2\mat{C})\dot\q = 0$. Substituting
-into~\eqref{eq:ch3:energy-simplified} cancels the two inertial terms. Then:
-\begin{equation}
-\dot E = \dot\q^\T B(\q)\uvec = \y^\T\uvec,
+\dot E=v^TM\dot v+\frac12v^T\dot Mv+(\nabla U)^Tv
+=u^TB^Tv+v^TQ_e-v^TDv.
 \label{eq:ch3:energy-passivity}
 \end{equation}
-where $\y = B(\q)^\T\dot\q$ is the passive output.
+The cancellation uses $v^Tc=\tfrac12v^T\dot Mv$, with a positive sign. Coriolis and centrifugal terms are not a dissipative sink. Calling $-(c+\nabla U)^Tv$ the total energy rate misses the changing kinetic metric. Gravity exchanges kinetic and potential energy, whereas damping removes mechanical energy in this model.
 
-\subsection{Implications for Control Design}
-
-This passivity property ensures:
-
-\begin{enumerate}
-\item \textbf{Energy Stability}: Any control law $\uvec = -K(\q,\dot\q)$ with
-      $K$ such that $K^\T B(\q)^\T\dot\q > 0$ will decrease the total energy.
-
-\item \textbf{Decomposition}: Because the control-affine structure separates the input
-      linearly, we can design controllers that combine conservative (energy-preserving) and
-      dissipative (energy-reducing) components.
-
-\item \textbf{Robustness}: Passive systems tolerate a wide class of perturbations and
-      uncertainties without losing stability, making them ideal for robust control design.
-\end{enumerate}
-
-\subsection{Passive Decomposition of Dynamics}
-
-A particularly powerful result is the \emph{passive decomposition}:
+For the arm, a shared elbow point has the same velocity on both rods. The equal and opposite elbow forces therefore have equal and opposite powers in the combined balance, while each rod can gain or lose energy through that boundary. The actuator moment pair contributes
 \begin{equation}
-\dot\x = f_p(\x) + f_d(\x) + G(\x)\uvec,
-\label{eq:ch3:passive-decomp}
+\tau_2(v_1+v_2)-\tau_2v_1=\tau_2v_2.
 \end{equation}
-where $f_p$ is the passive (Hamiltonian) component and $f_d$ accounts for dissipation
-(damping, friction, etc.). The control-affine structure ensures that $f_d$ can be designed
-independently of the passivity properties of $f_p$.
+The base force acts at a stationary point and has zero power; the base actuator contributes $\tau_1v_1$. Summing the two rod energy balances gives $\dot E=\tau_1v_1+\tau_2v_2$. On individual rods, joint force power and joint moment power both matter. Their division depends on the chosen subsystem boundary and wrench reference point; a consistent total balance does not.
 
-\begin{designbox}
-Passivity theory and the control-affine structure form a complementary pair: superposition
-guarantees that inputs affect the system linearly, while passivity guarantees that the energy
-flow is constrained and can be managed systematically. Together, they provide a complete
-framework for stable control design.
-\end{designbox}
+This is the connection to proximal-to-distal sequencing. Proximal slowing and distal speeding are kinematic observations. Demonstrating transfer requires a segment energy balance with boundary force and moment powers, external work, and any elastic storage. A shaft can temporarily store energy while hands and clubhead change speed. A net wrist moment cannot uniquely identify individual muscle forces or co-contraction. The mechanical accounting can support a proposed mechanism, but the timing pattern alone is not its proof.
 
+Finite channel work is $W_j=\int u_j(t)y_j(t)\,dt$. Along one recorded trajectory these integrals sum exactly. After an intervention changes one channel, all the velocities and possibly the feasible contacts change. Differences between two such experiments are therefore not obtained by adding the original channel works or integrating independent acceleration contributions along their own trajectories.
 
-\section{When the Affine Structure Fails}
+\section{Constraints Preserve an Affine Map Within a Regular Mode}
 
-While the control-affine structure is universal for ideal mechanical systems, practical systems
-often violate the assumptions. Understanding these failures is critical for robust control design.
+\subsection{Reaction Forces Depend on the Input}
 
-\subsection{State-Dependent Input Constraints}
+For a stationary holonomic constraint $\phi(q)=0$ with full-row-rank $J=\partial\phi/\partial q$, admissible velocities satisfy $Jv=0$ and accelerations satisfy $J\dot v=-\kappa$, where $\kappa=\dot Jv$. The configuration manifold is a set of positions; its tangent space is the allowed velocity space at one position. Accelerations form an affine set because of the curvature term. General rolling constraints need not integrate to a configuration equation and must not be classified as holonomic without checking integrability.
 
-In many actuators, the maximum force or torque depends on the system state. For example, an
-electric motor's output torque may decrease at high speeds (due to back-EMF):
+Use the reaction convention
 \begin{equation}
-\tau_{\max}(\dot q) = \tau_0 - \frac{k_b}{R}\dot q,
-\label{eq:ch3:motor-saturation}
+M\dot v=r+Bu+J^T\lambda,\qquad r=Q_e-c-\nabla U-Dv.
 \end{equation}
-where $k_b$ is the back-EMF constant and $R$ is resistance.
-
-The constraint set becomes
+Together with the acceleration constraint this is the regular saddle-point system
 \begin{equation}
-\uvec \in \mathcal{U}(\x) := \{ u : |u| \leq \tau_{\max}(\dot q) \},
-\label{eq:ch3:state-dependent-constraints}
+\begin{bmatrix}M&-J^T\\J&0\end{bmatrix}
+\begin{bmatrix}\dot v\\\lambda\end{bmatrix}
+=\begin{bmatrix}r+Bu\\-\kappa\end{bmatrix}.
+\label{eq:ch3:DAE-system}
 \end{equation}
-which is state-dependent. Mathematically, this breaks the affine structure in the following
-sense: the feasible acceleration region is no longer the Minkowski sum of individual
-contribution regions.
-
-\subsection{Actuator Dynamics With Coupling}
-
-If the actuator has significant dynamics (e.g., a hydraulic servo with low bandwidth), the
-input $\uvec$ is not the commanded signal $u_{\text{cmd}}$ but rather obeys:
+Let $W=JM^{-1}J^T$ and $P=I-M^{-1}J^TW^{-1}J$. The solution is
 \begin{equation}
-\tau_a \dot\uvec + \uvec = G_a(u_{\text{cmd}}, \dot q),
-\label{eq:ch3:actuator-dynamics}
+\dot v=PM^{-1}r-M^{-1}J^TW^{-1}\kappa+PM^{-1}Bu,
 \end{equation}
-where $\tau_a$ is the actuator time constant and $G_a$ may depend on state (e.g., due to
-friction, pressure drops). The system becomes:
 \begin{equation}
-\dot\x = f(\x,\uvec) + G(\x)\uvec,
-\label{eq:ch3:actuator-coupled}
+\lambda=-W^{-1}\left(\kappa+JM^{-1}r+JM^{-1}Bu\right).
 \end{equation}
-where the control now appears in \emph{both} the drift and the input matrix. This is no longer
-simply affine in $\uvec$.
+Thus the constrained acceleration remains affine in effort, but its slope is $PM^{-1}B$, and its anchor includes curvature. The reactions vary with $u$. Holding their values fixed while changing effort generally violates the constraint. $P$ is a projection orthogonal in the mass metric, not necessarily in the Euclidean metric.
 
-\subsection{Friction Models With Sign Dependence}
+For a particle of mass $m$ constrained to a circle of radius $R$, take $\phi=(q^Tq-R^2)/2$. Then $J=q^T$ and $\kappa=v^Tv$. At $q=(R,0)$ with tangential speed $s$, the radial acceleration must be $-s^2/R$, even with zero applied force. An additional radial force changes the reaction; an additional tangential force changes the tangential acceleration. This elementary example makes both the offset and the input-dependent reaction visible.
 
-Practical friction often depends on the direction of motion (static vs. kinetic friction), with
-a characteristic stick-slip behavior:
+\subsection{Reduced Coordinates and Contact Feasibility}
+
+In a local configuration chart $q=\psi(z)$, let $N=D\psi$ and $w=\dot z$. Then $v=Nw$ and $\dot v=N\dot w+\dot Nw$. Projection gives
 \begin{equation}
-f_{\text{fric}}(q) = \begin{cases}
-\mu_s mg \operatorname{sgn}(\dot q) & \text{if } |\dot q| < v_0, \\
-\mu_k mg \operatorname{sgn}(\dot q) & \text{if } |\dot q| \geq v_0,
-\end{cases}
-\label{eq:ch3:friction-nonsmooth}
+(N^TMN)\dot w=N^T(r+Bu-M\dot Nw).
+\label{eq:ch3:reduced-dynamics}
 \end{equation}
-where $\operatorname{sgn}$ is the sign function. This introduces a \emph{nonsmooth} nonlinearity that
-breaks the differentiability assumed in the control-affine framework.
+Dropping $\dot Nw$ removes the geometry-induced acceleration. An arbitrary null-space basis for a velocity constraint may instead define quasi-velocities; it does not automatically define integrable coordinates $z$.
 
-The equation of motion becomes:
+Stationary ideal reactions have zero total power because $\lambda^TJv=0$. For $\phi(q,t)=0$, the velocity condition is $Jv=-\phi_t$, so reaction power is $-\lambda^T\phi_t$: a moving boundary can supply or absorb energy. Its acceleration equation also needs the corresponding time derivatives.
+
+Ground contact adds inequalities: a normal reaction cannot pull a unilateral surface together, and tangential reactions must satisfy the selected friction law. The affine expression is usable only while its solved reactions remain admissible in the assumed mode. Lift-off, slip, impact, or a change of constraint rank requires the appropriate new equations. A golf swing model with permanently fixed feet must justify that assumption over the analyzed interval; the projection is not a substitute for that check.
+
+\section{A Pendulum Example That Can Be Reproduced}
+
+\subsection{Frozen-State Arithmetic}
+
+Use a point mass $m=1$ kg at the end of a massless rod of length $l=1$ m, a frictionless fixed pivot, and $g=9.81$ m/s$^2$. Here, unlike the uniform-rod arm, $q$ is measured counterclockwise from the downward vertical. The pivot inertia is $I=ml^2=1$ kg m$^2$, and
 \begin{equation}
-M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) + f_{\text{fric}}(\dot\q) = B(\q)\uvec,
-\label{eq:ch3:with-friction}
+I\ddot q=-mgl\sin q+\tau,\qquad
+E=\frac12I\dot q^2+mgl(1-\cos q),\qquad \dot E=\tau\dot q.
+\label{eq:ch3:pendulum-eom}
 \end{equation}
-and while it remains affine in $\uvec$, the friction creates regions where the effective
-dynamics are qualitatively different (stick vs. slip), precluding smooth superposition analysis.
+This is a teaching model, not a fitted golf swing. Its standard phase-space and energy structure are described in the \href{https://underactuated.mit.edu/pend.html}{MIT Underactuated Robotics pendulum chapter}.
 
-\subsection{Lessons and Mitigation Strategies}
-
-When the affine structure breaks down:
-
-\begin{enumerate}
-\item \textbf{Local Approximations}: Near a nominal trajectory, use Taylor expansions to
-      recover a locally affine system.
-
-\item \textbf{Hybrid Models}: Use piecewise-affine models that are affine within regions
-      (e.g., separate models for stick and slip).
-
-\item \textbf{Identification}: Empirically identify the true input-to-acceleration map
-      and fit a control-affine model to it.
-
-\item \textbf{Robust Control}: Use $\mathcal{H}_\infty$ or other robust techniques to
-      tolerate structured uncertainty in the model.
-\end{enumerate}
-
-\begin{warningbox}
-The control-affine structure is a powerful abstraction, but it is an idealization. Real
-systems have friction, saturation, actuator dynamics, and other nonlinearities. Always
-validate the affine assumption experimentally or via detailed simulation before deploying
-a control law designed under this assumption.
-\end{warningbox}
-
-
-
-\section{Lie Brackets and Accessibility}
-
-The control-affine structure $\dot\x = f(\x) + \sum_{i=1}^m g_i(\x) u_i$ raises a
-fundamental question: which states can the system reach from a given initial condition?
-The answer involves the \emph{Lie bracket}, a geometric object that captures directions
-of motion achievable through \emph{combinations} of drift and control, even if those
-directions are not directly in the span of the input vector fields.
-
-\subsection{The Lie Bracket: Definition and Geometric Meaning}
-
-\begin{definition}[Lie Bracket]
-\label{def:ch3:lie-bracket}
-Given two smooth vector fields $f, g: \R^n \to \R^n$, their Lie bracket is the vector field
+At the same state with $q=\pi/6$, the baseline acceleration is $-4.905$ rad/s$^2$. Torques of $5$, $2.5$, and $7.5$ N m give respectively $0.095$, $-2.405$, and $2.595$ rad/s$^2$. The identity is
 \begin{equation}
-[f, g](\x) := \frac{\partial g}{\partial \x} f(\x) - \frac{\partial f}{\partial \x} G(\x).
-\label{eq:ch3:lie-bracket}
+2.595=0.095+(-2.405)-(-4.905).
 \end{equation}
-\end{definition}
+The incremental gain is $\partial\ddot q/\partial\tau=1/I$, with units (rad/s$^2$)/(N m). The ratio of total acceleration to total torque is not that gain when gravity contributes an offset. A torque $\tau_g=mgl\sin q$ cancels gravity at the current angle. Maintaining this cancellation as the pendulum moves requires updating the torque, and the actuator's work still appears in the energy balance.
 
-\begin{intuitionbox}
-The Lie bracket $[f, g]$ represents the ``new direction'' generated by flowing along $f$
-for a small time $\varepsilon$, then along $g$ for $\varepsilon$, then backward along $f$,
-then backward along $g$. The net displacement after this four-step maneuver is approximately
-$\varepsilon^2 [f, g] + O(\varepsilon^3)$. Thus $[f, g]$ encodes directions that are
-accessible through alternating use of two vector fields, even if neither field points in
-that direction individually.
-\end{intuitionbox}
+The gravitational contribution is bounded by $g/l=9.81$ rad/s$^2$ in magnitude. This simple bound and the sign convention are useful checks on every numerical row before discussing its physical meaning.
 
-\subsection{The Accessibility Rank Condition}
+\subsection{Trajectories Under Constant Torques}
 
-For a control-affine system, define the \emph{accessibility algebra} as the smallest
-Lie algebra containing $\{f, g_1, \ldots, g_m\}$. In practice, this is constructed
-iteratively:
-\begin{align}
-\Delta_0 &= \text{span}\{g_1, \ldots, g_m\}, \\
-\Delta_1 &= \Delta_0 + \text{span}\{[f, g_i], [g_i, g_j]\}, \\
-\Delta_k &= \Delta_{k-1} + \text{span}\{[\text{elements of } \Delta_{k-1}, f \text{ or } g_i]\}.
-\end{align}
+Start every experiment at $q(0)=\dot q(0)=0$ and hold its torque constant. The program below integrates with fourth-order Runge--Kutta steps no larger than $0.001$ s. Table values are rounded to six decimals. Halving the step and comparing with an independently implemented adaptive DOP853 integration both change the sampled state by less than $2\times10^{-10}$ in the stated SI coordinates for the listed inputs and times. These are checks of this example, not universal error bounds for the algorithm.
 
-\begin{theorem}[Local Accessibility --- Chow--Rashevskii]
-\label{thm:ch3:chow}
-If $\dim \Delta_k(\x_0) = n$ for some finite $k$, then the system is locally accessible
-from $\x_0$: for any $T > 0$, the reachable set from $\x_0$ in time $[0, T]$ has
-nonempty interior in $\R^n$.
-\end{theorem}
+For $\tau=5$ N m:
 
-The proof uses the orbit theorem from geometric control theory \cite{Isidori1995, Sastry1999}.
-
-\subsection{Connection to Underactuated\index{Underactuated System} Systems}
-
-For underactuated mechanical systems (where $m < n$, i.e., fewer actuators than
-degrees of freedom), the direct control authority $\text{span}\{g_1, \ldots, g_m\}$
-does not span the full state space. The Lie brackets $[f, g_i]$ generate additional
-directions through the \emph{inertial coupling} encoded in the mass matrix.
-
-For the manipulator equation $M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B\uvec$
-with $B \in \R^{n \times m}$, $m < n$, the Lie bracket $[f, g_i]$ evaluated in
-first-order form $\x = (\q, \dot\q)$ involves the off-diagonal blocks of $M(\q)^{-1}$.
-Specifically, the new directions generated by $[f, g_i]$ correspond to accelerations
-of the \emph{unactuated} joints created by inertial coupling with the actuated joints.
-
-\begin{laymansbox}{Steering Without a Steering Wheel}{unactuated_steering}
-In a golf swing, the golfer has direct torque authority at the shoulder, elbow, and
-wrist joints, but the club shaft bending modes have no actuators. The Lie bracket
-structure explains why the golfer can still influence shaft bending: by alternating
-acceleration and deceleration of the wrist joint, inertial coupling excites the shaft
-modes. This is precisely the $[f, g]$ mechanism --- reaching unactuated directions
-through time-varying combinations of actuated ones.
-\end{laymansbox}
-
-
-\section{Feedback Linearization: The Global Alternative}
-
-The control-affine structure in Section~\ref{sec:ch3:control-affine} established
-that input superposition holds \emph{at each frozen state}. A natural question: can
-we choose feedback to make the \emph{entire closed-loop system} linear?
-
-\subsection{Input-Output Linearization}
-
-Given the control-affine system $\dot\x = f(\x) + G(\x) u$ (single-input for
-simplicity) and an output $y = h(\x)$, define the \emph{relative degree} $r$ as
-the smallest integer such that the $r$-th derivative of $y$ depends explicitly on $u$:
-\begin{equation}
-y^{(r)} = L_f^r h(\x) + L_g L_f^{r-1} h(\x) \cdot u,
-\label{eq:ch3:io-linearization}
-\end{equation}
-where $L_f h = \frac{\partial h}{\partial \x} f(\x)$ is the Lie derivative.
-
-If $L_g L_f^{r-1} h(\x) \neq 0$, the feedback law
-\begin{equation}
-u = \frac{1}{L_g L_f^{r-1} h(\x)} \left[ v - L_f^r h(\x) \right]
-\label{eq:ch3:linearizing-feedback}
-\end{equation}
-renders the input-output dynamics a chain of integrators: $y^{(r)} = v$.
-
-\subsection{Zero Dynamics and Internal Stability}
-
-When $r < n$, the linearizing feedback does not constrain all state directions. The
-remaining $n - r$ directions evolve on the \emph{zero dynamics manifold}:
-\begin{equation}
-\mathcal{Z} = \left\{ \x \in \R^n \mid h(\x) = L_f h(\x) = \cdots = L_f^{r-1} h(\x) = 0 \right\}.
-\end{equation}
-
-The system is \emph{minimum phase} if the zero dynamics are asymptotically stable.
-Feedback linearization is only safe to use for minimum-phase systems; for
-non-minimum-phase systems, the internal dynamics diverge even as the output tracks
-perfectly.
-
-\subsection{Contrast with Contraction\index{Contraction Analysis}-Based Control}
-
-\begin{table}[h]
-\centering
-\caption{Two Approaches to Nonlinear Control Using Tangent-Space Structure.}
-\label{tab:ch3:fl-vs-contraction}
-\begin{tabular}{@{}p{5cm}p{5cm}@{}}
+\begin{center}
+\small
+\begin{tabular}{rrrr}
 \toprule
-\textbf{Feedback Linearization} & \textbf{Contraction\index{Contraction Analysis}-Based Control} \\
+$t$ (s) & $q$ (rad) & $\dot q$ (rad/s) & $\ddot q$ (rad/s$^2$) \\
 \midrule
-Cancels nonlinearity via feedback & Exploits nonlinearity via metric \\
-Makes closed loop exactly linear & Certifies convergence despite nonlinearity \\
-Requires exact model & Robust to model uncertainty \\
-Fails for non-minimum-phase systems & No minimum-phase requirement \\
-Uses coordinate transformation & Uses metric transformation \\
-Global linearization (when possible) & Local certificates, globally composed \\
+0.00 & 0.000000 & 0.000000 & 5.000000 \\
+0.25 & 0.148434 & 1.126321 & 3.549201 \\
+0.50 & 0.508441 & 1.613248 & 0.224337 \\
+1.00 & 1.109439 & 0.456624 & -3.784356 \\
+1.50 & 0.867969 & -1.319704 & -2.485204 \\
+2.00 & 0.133555 & -1.077419 & 3.693713 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{center}
 
-\begin{designbox}
-Feedback linearization and contraction-based control represent two philosophical
-responses to nonlinearity. Feedback linearization says: ``transform the system so
-nonlinearity disappears.'' Contraction theory says: ``find a metric in which the
-nonlinearity is well-behaved.'' The first approach fights the manifold; the second
-works with it. For systems with beneficial nonlinear structure (e.g., inertial
-coupling in multibody dynamics), contraction is typically preferable because it
-preserves the drift structure that feedback linearization would cancel.
-\end{designbox}
+At $t=1$ s the pendulum is still moving in the positive direction but has negative angular acceleration. At $t=1.5$ s both its velocity and acceleration are negative; the constant positive torque is then absorbing energy. Torque sign, acceleration sign, velocity sign, and power sign answer different questions. The same distinction prevents incorrect interpretations of joint moment or segment deceleration in a swing.
 
+The zero-torque trajectory stays at the downward equilibrium. The odd equation and symmetric initial state imply exactly $q[-5]=-q[5]$ and $\dot q[-5]=-\dot q[5]$. Therefore the pair $5,-5$ happens to satisfy trajectory addition. To exhibit a nonzero defect, compare the nonsymmetric pair $5,2.5$ with their sum $7.5$:
 
-\section{Passivity and Energy-Based Analysis}
+\begin{center}
+\small
+\begin{tabular}{rrrrr}
+\toprule
+$t$ (s) & $q[5]$ & $q[2.5]$ & $q[7.5]$ & $\epsilon_q$ \\
+\midrule
+0.00 & 0.000000 & 0.000000 & 0.000000 & 0.000000 \\
+0.25 & 0.148434 & 0.074215 & 0.222663 & 0.000014 \\
+0.50 & 0.508441 & 0.253779 & 0.764851 & 0.002631 \\
+1.00 & 1.109439 & 0.520651 & 1.844183 & 0.214093 \\
+1.50 & 0.867969 & 0.293486 & 2.561097 & 1.399642 \\
+2.00 & 0.133555 & 0.003088 & 3.981019 & 3.844375 \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-The control-affine structure has a natural energy interpretation through passivity
-theory. This section connects the force-superposition results of this chapter to
-the energy-based stability framework.
+The angle and defect entries in this second table are radians on the same unwrapped coordinate. At two seconds the combined input has carried the mass beyond $\pi$, while the two smaller-input trajectories have returned near the lower posture. Adding those two positions misses nearly $3.8444$ radians. The underlying cause is the different gravitational acceleration sampled along each history, not a failure of forces to add at a fixed state. An angle can be wrapped for display, but wrapping each trajectory independently before subtraction changes this comparison and can create discontinuities.
 
-\subsection{Passive Systems}
-
-\begin{definition}[Passivity]
-\label{def:ch3:passivity}
-A system with input $\uvec$ and output $\vec{y}$ is \emph{passive} with storage
-function $S(\x) \geq 0$ if
+For any one constant torque, integrating $\dot E=\tau\dot q$ gives
 \begin{equation}
-\dot{S}(\x) \leq \vec{y}^T \uvec
+\frac12\dot q(t)^2+9.81(1-\cos q(t))-\tau q(t)=0
+\end{equation}
+for these initial conditions. The numerical residual is below $2\times10^{-10}$ J at the sampled times. The work term uses the unwrapped angle; a constant torque performs work on every revolution. Relative error against a zero baseline is undefined, so the tables report absolute differences rather than assigning a misleading zero percent.
+
+\section{Passivity, Dissipation, and Contraction Are Different Claims}
+
+\subsection{An Energy Inequality at a Declared Port}
+
+A system with input $u$ and output $y$ is passive on a stated domain if it has a nonnegative storage function $S$ satisfying
+\begin{equation}
+S(x(t))-S(x(0))\le\int_0^t u(s)^Ty(s)\,ds
 \label{eq:ch3:passivity}
 \end{equation}
-along all trajectories. The system absorbs no more energy than is supplied through
-the input-output port.
-\end{definition}
+for admissible trajectories. A storage bounded below can be shifted by a constant to be nonnegative. Equality describes a lossless system and can hold away from equilibrium. Positive dissipation is a stronger property than passivity; neither should be substituted for the other. See the definitions and pendulum example in \href{https://www.egr.msu.edu/~khalil/NonlinearControl/Slides-Full/Lect_12.pdf}{Khalil's passivity lecture}.
 
-For mechanical systems with $\uvec = \tau$ (generalized forces) and $\vec{y} = \dot\q$
-(generalized velocities), the total energy $E(\q, \dot\q) = T + V$ serves as the
-storage function:
+For the mechanical model, $S=E-E_{\min}$ is available when energy has a lower bound on the domain. The effort port is $(u,B^Tv)$. A nonzero external load $Q_e$ must be included as another power port, or its power must be accounted for separately. Omitting it can falsely classify an externally driven subsystem as passive or active. The dissipative assumption is $v^TDv\ge0$; a general appeal to thermodynamics does not establish that an arbitrary fitted matrix satisfies it.
+
+Bounded input does not imply bounded energy. A unit free mass driven by the constant unit force has $\dot q=t$, $q=t^2/2$, and $E=t^2/2$ from rest. It is lossless with $\dot E=u\dot q$, yet its energy grows without bound. Adding viscous drag bounds the limiting speed under constant force, but position can still drift without bound. A storage that controls velocity alone cannot bound every state variable. Bounded-state and asymptotic-convergence conclusions require suitable storage growth, dissipation or feedback, existence of solutions, and often an invariance or detectability argument.
+
+For a well-posed negative feedback interconnection of two passive systems, choose $u_1=r-y_2$ and $u_2=y_1$ with compatible port dimensions. Their inequalities sum to $\dot S_1+\dot S_2\le r^Ty_1$ because internal power cancels. This is the interconnection guarantee. To conclude convergence to a particular equilibrium, one must additionally show that the zero-dissipation invariant set contains only the desired motion in the relevant domain. Algebraic loops, unmodeled delays, saturation, and incompatible ports need their own analysis.
+
+\subsection{Port-Hamiltonian Structure and Its Limits}
+
+In canonical mechanical coordinates $z=(q,p)$, $p=M(q)v$, the Hamiltonian is
 \begin{equation}
-\dot{E} = \dot\q^T \tau - \dot\q^T D(\q, \dot\q) \dot\q \leq \dot\q^T \tau,
-\label{eq:ch3:mech-passivity}
+\mathcal H(q,p)=\frac12p^TM(q)^{-1}p+U(q).
 \end{equation}
-where $D \succeq 0$ represents dissipation. The inequality holds whenever dissipation
-is non-negative, which is guaranteed by the second law of thermodynamics.
-
-\subsection{Port-Hamiltonian Structure}
-
-The control-affine system can be written in port-Hamiltonian form:
+With symmetric positive-semidefinite viscous damping and no omitted external port, one representation is
 \begin{equation}
-\dot\x = \bigl[J(\x) - R(\x)\bigr] \frac{\partial H}{\partial \x}(\x) + G(\x)\uvec,
-\quad \vec{y} = G(\x)^T \frac{\partial H}{\partial \x}(\x),
+\dot z=(\mathcal J-\mathcal R)\nabla\mathcal H+\mathcal G u,
+\quad \mathcal J=\begin{bmatrix}0&I\\-I&0\end{bmatrix},\quad
+\mathcal R=\begin{bmatrix}0&0\\0&D\end{bmatrix},\quad
+\mathcal G=\begin{bmatrix}0\\B\end{bmatrix}.
 \label{eq:ch3:port-hamiltonian}
 \end{equation}
-where $J(\x) = -J(\x)^T$ is the interconnection structure (skew-symmetric, energy-preserving),
-$R(\x) = R(\x)^T \succeq 0$ is dissipation, and $H(\x)$ is the Hamiltonian (total energy).
+Since $\mathcal J$ is skew symmetric and $\mathcal R$ is positive semidefinite,
+\begin{equation}
+\dot{\mathcal H}=-(\nabla\mathcal H)^T\mathcal R\nabla\mathcal H+u^Ty,
+\qquad y=\mathcal G^T\nabla\mathcal H=B^Tv.
+\end{equation}
+This representation exposes power exchange and dissipation. Generalized coordinates and momenta cannot be swapped with $(q,v)$ while retaining the same constant canonical matrix unless the transformation is handled correctly. Nor does arbitrary control-affine dynamics automatically possess this physical Hamiltonian and passive port.
 
-For mechanical systems: $H = T + V$, the skew-symmetric $J$ encodes the exchange between
-kinetic and potential energy, and $R$ encodes friction and damping.
+Even a positive-definite dissipation matrix in a more general port-Hamiltonian representation does not alone imply $\dot{\mathcal H}\le-\alpha\mathcal H$ with a uniform $\alpha>0$. For a scalar example, take $\mathcal H=x^4/4$, $\mathcal R=1$, and $\dot x=-x^3$. Then $\dot{\mathcal H}=-x^6$ and $-\dot{\mathcal H}/\mathcal H=4x^2$, which approaches zero near the equilibrium. A uniform exponential bound needs an additional relationship between energy and its dissipative gradient.
 
-\subsection{Interconnection of Passive Subsystems}
+\subsection{A Differential Certificate Must Be Checked Separately}
 
-\begin{theorem}[Passivity of Feedback Interconnection]
-\label{thm:ch3:passive-interconnection}
-If two passive systems $\Sigma_1$ (storage $S_1$) and $\Sigma_2$ (storage $S_2$) are
-connected in negative feedback ($\uvec_1 = -\vec{y}_2$, $\uvec_2 = \vec{y}_1$), then the
-interconnected system is passive with storage $S = S_1 + S_2$.
-\end{theorem}
+Contraction concerns separation of nearby trajectories under the same specified input or closed-loop law. For $\dot x=F(x,t)$ and $A=D_xF$, a sufficient differential certificate on a suitable forward-invariant domain is a smooth metric $P(x,t)$ with uniform positive bounds and
+\begin{equation}
+\dot P+A^TP+PA\preceq-2\lambda P,\qquad \lambda>0.
+\end{equation}
+Here $\dot P=\partial_tP+\sum_kF_k\partial_{x_k}P$ is the derivative along the flow. The inequality makes $\delta x^TP\delta x$ decay; domain and path conditions are then needed to translate this into a statement about distances between trajectories. An energy derivative along one trajectory is a different calculation. For a feedback law, $A$ must include the derivative of the feedback, and robustness needs a quantified perturbation margin in the same metric.
 
-This result is fundamental for multibody systems: each rigid body segment in a kinematic
-chain is individually passive, and the joint connections are power-conserving
-interconnections. The total system is therefore passive, guaranteeing bounded energy
-and hence bounded trajectories (under bounded inputs).
+A damped pendulum is passive at its torque--angular-velocity port, yet its upright equilibrium has linearization
+\begin{equation}
+A_{\rm up}=\begin{bmatrix}0&1\\g/l&-d/I\end{bmatrix}.
+\end{equation}
+Its determinant is $-g/l<0$, so one eigenvalue is positive. Damping does not make a domain containing that equilibrium uniformly contracting. The energy Hessian also has a negative angular entry at the upright posture and cannot serve there as a positive-definite contraction metric. Multiple stationary solutions provide another obstruction to uniform incremental convergence on a domain containing them all.
 
-\subsection{Connection to Contraction}
+Passivity is therefore useful for power accounting and interconnection, while contraction can certify incremental convergence when its full conditions hold. Neither gives a blanket preference for preserving or cancelling a particular term in a golf controller. A model-based strategy must be evaluated against its actual tracking objective, feasible effort, sensing, uncertainty, and contact assumptions.
 
-Passive systems are contracting in the energy metric under specific conditions:
-if $R(\x) \succ 0$ (strictly dissipative), then the Hamiltonian satisfies
-$\dot{H} \leq -\alpha H$ for some $\alpha > 0$ along unforced trajectories ($\uvec = 0$),
-which is precisely exponential contraction in the energy-weighted norm. The contraction
-metric is $\mat{M} = \frac{\partial^2 H}{\partial \x^2}$ (the Hessian of the Hamiltonian),
-and the contraction rate is determined by the dissipation matrix $R$.
+\section{Actuator Limits and the Choice of Input}
 
-\begin{intuitionbox}
-Passivity and contraction offer complementary perspectives on stability. Passivity
-asks: ``is energy being dissipated?'' Contraction asks: ``are nearby trajectories
-converging?'' For mechanical systems with viscous damping, both answers are ``yes,''
-and the two certificates are directly related through the Hamiltonian structure.
-The choice between them depends on the analysis goal: passivity is natural for
-energy accounting and interconnection; contraction is natural for trajectory tracking
-and robustness margins.
-\end{intuitionbox}
+\subsection{Feasible Sets Do Not Erase Affinity}
+
+At a fixed state, allowed inputs $u\in\mathcal U(x)$ produce the acceleration set
+\begin{equation}
+\mathcal A(x)=a_0(x)+H(x)\mathcal U(x).
+\end{equation}
+State-dependent limits change this set, not the affine formula itself. If each scalar channel is independently bounded, $\mathcal U=\mathcal U_1\times\cdots\times\mathcal U_m$, then $H\mathcal U$ is the Minkowski sum of the individual sets $H_j\mathcal U_j$. Coupled electrical power limits, muscle-sharing constraints, or contact feasibility may restrict the allowed combinations; summing independently maximized contributions can then predict an unattainable acceleration.
+
+\subsection{Voltage, Current, and Torque}
+
+For an idealized fixed-field DC motor, with armature inductance $L$, resistance $R$, positive torque constant $k_t$, and back-EMF constant $k_e$,
+\begin{equation}
+L\dot i=V-Ri-k_e\omega,\qquad \tau_m=k_t i.
+\end{equation}
+These are the electrical and torque relations in the \href{https://ctms.engin.umich.edu/CTMS/?example=MotorSpeed&section=SystemModeling}{University of Michigan DC motor model}. Torque and back-EMF constants have different units even when their numerical SI values coincide for consistent ideal conventions.
+
+If electrical transients can be neglected, the algebraic approximation is
+\begin{equation}
+\tau_m=\frac{k_t}{R}V-\frac{k_tk_e}{R}\omega.
+\end{equation}
+With symmetric voltage limits $|V|\le V_{\max}$, its torque interval at a fixed speed is
+\begin{equation}
+\frac{k_t}{R}(-V_{\max}-k_e\omega)
+\le\tau_m\le
+\frac{k_t}{R}(V_{\max}-k_e\omega).
+\label{eq:ch3:motor-saturation}
+\end{equation}
+It is generally offset rather than symmetric about zero. Intersect it with $[-k_ti_{\max},k_ti_{\max}]$ when a current limit is imposed. These are ideal steady electrical feasibility bounds; thermal limits, available regenerative operation, drive switching, and finite current slew can impose further restrictions. Torque at the load also depends on rotor acceleration, friction, and gearing. For a rigid ideal gear ratio $N=\omega_m/\omega_{\rm load}$, motor inertia contributes $N^2J_m$ at the load coordinate. The \href{https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-9-actuation-gearing-and-friction/}{Modern Robotics actuation transcript} explains this reflected-inertia effect.
+
+Keeping current as a state instead of eliminating it gives a voltage-affine extended model. At a frozen $(q,v,i)$, voltage initially changes $\dot i$; it does not instantly replace the existing electromagnetic torque. Similarly, zero excitation in a muscle model can leave activation and elastic tension nonzero. An additional actuator state may preserve command affinity while changing the immediate input directions and the meaning of zero-input motion. Whether it does so must be checked from the chosen actuator equations.
+
+\subsection{Nonsmoothness Is a Separate Modeling Issue}
+
+During sliding, a simple dry-friction law has resisting torque $-\tau_c\operatorname{sgn}(\dot q)$. This is nonsmooth in velocity but does not itself make applied torque enter nonlinearly. At zero velocity, static friction is a reaction in an interval such as $[-\tau_s,\tau_s]$, selected by force balance and the stick/slip conditions; defining $\operatorname{sgn}(0)=0$ does not reproduce stiction. Smooth approximations may help a numerical method but alter the near-zero behavior and must be validated for the intended time scale.
+
+Saturation composed with a raw command generally makes the raw-command map piecewise affine rather than globally affine. Nonlinear transmission, muscle recruitment, contact switching, or hysteresis can introduce other departures. State the port, state variables, and mode first, then determine which identity survives. Calling every practical limitation a failure of superposition hides the specific assumption that needs repair.
+
+\section{Lie Brackets, Coupling, and Reachability}
+
+\subsection{The Order of Motions Can Matter}
+
+For smooth vector fields, use the convention
+\begin{equation}
+[f,g](x)=Dg(x)f(x)-Df(x)g(x).
+\label{eq:ch3:lie-bracket}
+\end{equation}
+Comparing short flow compositions in opposite orders produces a second-order difference involving this bracket, with a sign determined by the chosen composition order. This describes how the directions change as the state changes. It does not mean that any signed field, especially the uncontrolled drift, is physically reversible on demand.
+
+For second-order mechanics $f=(v,a_0(q,v))$ and a configuration-dependent input field $g_j=(0,h_j(q))$,
+\begin{equation}
+[f,g_j]=\begin{bmatrix}-h_j\\D_qh_j\,v-D_va_0\,h_j\end{bmatrix}.
+\end{equation}
+The bracket has a configuration component, not merely an acceleration in an unactuated coordinate. Even a fully actuated $n$-coordinate system has at most $n$ immediate input directions in a $2n$-dimensional state space; time integration connects acceleration to velocity and position. For the normalized undamped pendulum, $f=(v,-\sin q)$ and $g=(0,1)$ give $[f,g]=(-1,0)$, so $g$ and $[f,g]$ span the two state directions without any intersegment inertia coupling.
+
+\subsection{Accessibility Is Not Controllability}
+
+For smooth driftless systems with reversible controls containing a neighborhood of zero, a bracket-generating distribution yields local connectivity through admissible motions under the hypotheses of the Chow--Rashevskii theorem. The \href{https://lavalle.pl/planning/node835.html}{LaValle driftless-system discussion} states the setting explicitly. Input bounds and a nonreversible drift require a different conclusion. Accessibility concerns the interior of reachable sets; it does not assert that every nearby state can be reached in arbitrarily short time. Fixed-time accessibility is another distinct property.
+
+A simple illustration is $\dot x_1=u$, $\dot x_2=x_1^2$. Its drift and control brackets span both directions, but $x_2$ never decreases along a physical trajectory, even with both signs of $u$ available. Starting at the origin, nearby points with negative $x_2$ are unreachable. This is the counterexample in \href{https://lavalle.pl/planning/node836.html}{LaValle's treatment of systems with drift}. Algebraic rank alone does not remove that one-way restriction.
+
+For a golf mechanism, a proposed transfer into an unactuated shaft mode must be established from the actual inertia, elastic coupling, forcing, and boundary conditions. Coupling can arise from a spring even with a diagonal mass matrix. Conversely, an off-diagonal mass entry or a named bracket is not evidence that a particular sequencing maneuver is feasible, beneficial, or robust over a finite downswing. Reachability, energy availability, contact feasibility, and the terminal clubhead objective must be checked together.
+
+\section{Feedback Linearization Has a Local Domain of Validity}
+
+For a smooth single-input system $\dot x=f(x)+g(x)u$ with scalar output $y=h(x)$, a constant relative degree $r$ on a neighborhood requires $L_gL_f^kh=0$ there for $k=0,\ldots,r-2$, and $b(x)=L_gL_f^{r-1}h\ne0$. Then
+\begin{equation}
+y^{(r)}=L_f^rh+b(x)u,\qquad
+u=\frac{\nu-L_f^rh}{b(x)}
+\label{eq:ch3:linearizing-feedback}
+\end{equation}
+gives $y^{(r)}=\nu$ while the feedback and local coordinate transformation remain valid. A decoupling coefficient can vanish elsewhere, the resulting effort can exceed a limit, and the trajectory can leave the coordinate domain. The cancellation is exact for the specified model; its performance under model error requires separate analysis.
+
+If $r<n_x$, the output chain leaves internal states. Their dynamics when the output and its derivatives are held at zero are the zero dynamics. Local asymptotic stability of those dynamics is the usual minimum-phase condition for this construction. Unstable zero dynamics obstruct stable exact tracking in the corresponding regime; they do not say that every trajectory diverges or that every finite-horizon strategy is impossible. If $r=n_x$, there is no internal subsystem to classify. A multi-input version additionally requires a nonsingular decoupling matrix and a compatible vector relative degree.
+
+For the pendulum output $q$, $r=2=n_x$ and $\tau=mgl\sin q+I\nu$ gives $\ddot q=\nu$. This does not erase gravitational work from the physical system; the actuator supplies the compensating moment. If torque is bounded, only the corresponding range of $\nu$ is feasible at each angle. Tracking a clubhead output in a flexible multibody model is more demanding because internal modes and task singularities can remain after output linearization.
+
+Feedback linearization is a design construction; contraction is a property that a resulting system may or may not possess. They can be used together. A linear time-invariant closed-loop system with a Hurwitz matrix, obtained by exact full-state linearization, has a quadratic contraction metric in its linear coordinates, which can be pulled back locally through a valid transformation. Uniform bounds and the physical domain still need checking. There is no general theorem that one approach is preferable because it preserves a term called drift.
+
+\section{What This Establishes for the Golf Swing}
+
+The instantaneous analysis begins with a common measured or simulated state, a declared effort port, a physically consistent inertial model, and an admissible contact mode. Within that model, each effort increment has an exact acceleration contribution. Contributions may act in coordinates far from the actuated joint because the mechanism couples them. The anchor retains gravity, motion-dependent effects, elastic forces, and any declared external loads; it is not synonymous with effortless or purely passive human motion.
+
+To explain a finite swing, propagate the coupled equations after an intervention and report how the state, reaction forces, power flows, and flexible storage change. A useful argument then has several linked pieces: an induced acceleration describes the immediate mechanical effect; a segment power balance tests the proposed energy pathway; a trajectory calculation tests its accumulated effect; and a feasible-input and contact analysis tests whether the maneuver can occur. Impact and ball flight require their own downstream models before a clubhead change can be interpreted as a distance or accuracy benefit.
+
+None of these mathematical tools independently validates a coaching cue. Net moments estimated from inverse dynamics depend on kinematic differentiation, inertial parameters, external loads, and measurement uncertainty. Muscle-level interpretations require additional physiological information. A rigorous presentation makes the model-based conclusion precise, compares it with observations, and states what alternative mechanisms remain consistent with the evidence.
+
+\section{Reproducible Verification}
+
+The following NumPy-only program generates the two pendulum tables and the uniform-rod matrices used in the independent verification tests. It needs no site-specific package. Arrays use SI units and the angle conventions stated in the function documentation. The integration is for the smooth constant-torque pendulum only; it is not an impact or stick/slip solver.
+
+\begin{lstlisting}[language=Python]
+# Superposition chapter example
+import numpy as np
 
 
-\section{Chapter Summary}
+def rod_arm(
+    q: np.ndarray,
+    velocity: np.ndarray,
+    lengths: np.ndarray,
+    masses: np.ndarray,
+    gravity: float = 9.81,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return M, c, and the left-side gravity vector for two uniform rods.
+
+    q[0] is counterclockwise from horizontal; q[1] is the relative elbow angle.
+    The proximal endpoint is fixed. SI units are used throughout.
+    """
+    l1, l2 = lengths
+    m1, m2 = masses
+    q1, q2 = q
+    v1, v2 = velocity
+    beta = m2 * l1 * l2 / 2
+    distal = m2 * l2**2 / 3
+    base = m1 * l1**2 / 3 + m2 * l1**2 + distal
+    coupling = beta * np.cos(q2)
+    mass = np.array([[base + 2 * coupling, distal + coupling],
+                     [distal + coupling, distal]])
+    c = beta * np.sin(q2) * np.array([-2 * v1 * v2 - v2**2, v1**2])
+    gravity_vector = gravity * np.array([
+        (m1 * l1 / 2 + m2 * l1) * np.cos(q1) + m2 * l2 / 2 * np.cos(q1 + q2),
+        m2 * l2 / 2 * np.cos(q1 + q2),
+    ])
+    return mass, c, gravity_vector
+
+
+def pendulum_trace(
+    torque: float, times: np.ndarray, max_step: float = 0.001
+) -> np.ndarray:
+    """Integrate the unit-mass, unit-length pendulum from rest at q=0.
+
+    Columns are q (rad), velocity (rad/s), acceleration (rad/s^2).
+    Times must increase strictly from zero; the angle remains unwrapped.
+    """
+    times = np.asarray(times, dtype=float)
+    if (times.ndim != 1 or times.size == 0 or times[0] != 0
+            or not np.all(np.isfinite(times)) or np.any(np.diff(times) <= 0)):
+        raise ValueError("Times must increase strictly from zero")
+    if not np.isfinite(max_step) or max_step <= 0 or not np.isfinite(torque):
+        raise ValueError("Use finite torque and a positive finite step")
+
+    def rhs(state: np.ndarray) -> np.ndarray:
+        return np.array([state[1], torque - 9.81 * np.sin(state[0])])
+
+    state = np.zeros(2)
+    result = np.empty((times.size, 3))
+    result[0] = [0, 0, torque]
+    for index in range(1, times.size):
+        duration = times[index] - times[index - 1]
+        steps = int(np.ceil(duration / max_step))
+        step = duration / steps
+        for _ in range(steps):
+            k1 = rhs(state)
+            k2 = rhs(state + step * k1 / 2)
+            k3 = rhs(state + step * k2 / 2)
+            k4 = rhs(state + step * k3)
+            state += step * (k1 + 2 * k2 + 2 * k3 + k4) / 6
+        result[index] = [*state, rhs(state)[1]]
+    return result
+
+
+times = np.array([0.0, 0.25, 0.5, 1.0, 1.5, 2.0])
+trajectories = {u: pendulum_trace(u, times) for u in (0.0, 2.5, 5.0, -5.0, 7.5)}
+trajectory_defect = trajectories[7.5] - trajectories[5.0] - trajectories[2.5] + trajectories[0.0]
+# Inspect trajectories[5.0] and trajectory_defect to reproduce the tables.
+\end{lstlisting}
+
+\section{Exercises}
 
 \begin{enumerate}
-\item The manipulator equation $M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec$
-      arises from kinetic energy $T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$, where the mass matrix
-      is always positive definite (guaranteeing invertibility).
-
-\item The Coriolis and centrifugal terms are encoded in the Christoffel symbols of the
-      configuration-space metric, connecting dynamics to differential geometry.
-
-\item At each frozen state, the acceleration map $\uvec\mapsto\ddot\q$ is linear. This is the
-      \textbf{input superposition principle}.
-
-\item This linearity is \emph{not} an approximation---it follows from Newton's second law,
-      the linearity of generalized-force mappings (Jacobians), and mass-matrix inversion.
-
-\item The same structure emerges identically from Newton--Euler, Lagrangian, and
-      screw-theoretic derivations, each illustrated with a detailed 2-DOF planar arm example.
-
-\item Power delivered by each input channel superimposes linearly: $P_{\text{total}} = \sum P^{(i)}$.
-
-\item Holonomic constraints (e.g., rolling without slipping) interact with the control-affine
-      structure via Lagrange multipliers in a differential-algebraic equation (DAE) form,
-      preserving affinity on the constrained submanifold.
-
-\item Trajectory superposition is \emph{false} for nonlinear systems, demonstrated via concrete
-      numerical examples of a pendulum under different torques.
-
-\item The virtual work principle guarantees that generalized forces are linear in physical forces,
-      providing a classical mechanics foundation for the control-affine structure.
-
-\item A detailed pendulum example with $m=1$ kg, $\ell=1$ m, $g=9.81$ m/s$^2$ illustrates
-      drift accelerations at various angles and the exact decomposition of gravity compensation
-      and control torques.
-
-\item Passivity theory connects the control-affine structure to energy stability: the system
-      is passive with storage function $E = T + V$, enabling energy-based controller design.
-
-\item Practical systems often violate the affine assumption due to state-dependent input
-      constraints, actuator dynamics, and nonsmooth friction. Mitigation strategies include
-      local linearization, hybrid models, identification, and robust control techniques.
+\item \textbf{A Baseline Counted Once.} At $q=\pi/6$ in the unit pendulum, verify the frozen-state identity for torques $5$, $2.5$, and $7.5$ N m. Repeat it about a nonzero reference torque $\tau_*$ using increments $\delta\tau$. Explain why total acceleration divided by torque is not the incremental gain.
+\item \textbf{One Model in Two Formulations.} Derive the uniform-rod mass matrix from the center velocities and center-of-mass rotational energies. Recover the two torque equations from the separate body balances. Show that the determinant is positive for all angles when both lengths and masses are positive.
+\item \textbf{Conditioning Requires a Scale.} Use $l=(0.8,0.6)$ m and $m=(1.4,0.5)$ kg, with both angles in radians. Compute the spectral condition number of $M$ over $q_2\in[-\pi,\pi]$ and refine any candidate maximum. Recompute after scaling one coordinate by ten. Distinguish physical regularity from numerical conditioning.
+\item \textbf{Velocity-Product Power.} At $q=(0.4,-0.7)$ rad and $v=(2.1,-0.8)$ rad/s, verify $v^Tc=\tfrac12v^T\dot Mv$ using a centered directional difference of $M$. Explain why a nonzero value is consistent with zero dissipation.
+\item \textbf{An Affine Constraint Set.} For $m=2$ kg, $R=2$ m, $q=(2,0)$ m, and $v=(0,3)$ m/s, compute acceleration and reaction under zero force and under $(4,6)$ N, without gravity. Verify the radial acceleration and show that the reaction changes with input.
+\item \textbf{A Trajectory Defect.} Reproduce both pendulum tables, halve the integration step, and check constant-torque work--energy balance. Explain the $5,-5$ symmetry exception and why the $5,2.5$ pair is a more informative comparison. State the angle convention and avoid relative error against a zero reference.
+\item \textbf{A Local Nonlinear Counterexample.} Solve $\dot x=x^2+u$ from $x(0)=0$ for positive constant $u$, restricting attention to times before the earliest finite-time blow-up. Compare the inputs $1$, $2$, and $3$. Verify fixed-state input affinity despite the nonzero trajectory defect.
+\item \textbf{A Passive but Unstable Posture.} Derive the damped pendulum's torque-port storage inequality after choosing an energy offset. Compute the upright linearization and energy Hessian. Identify which conclusion prevents global contraction on a domain containing that posture.
+\item \textbf{Motor Feasibility.} Let $R=2$ ohm, $k_t=0.1$ N m/A, $k_e=0.1$ V s/rad, $V_{\max}=24$ V, and $i_{\max}=10$ A. Find the quasistatic torque interval at $\omega=100$ rad/s. Explain why voltage has no instantaneous effect on torque when current is retained as a state.
+\item \textbf{Bracket Rank and One-Way Motion.} Compute $[f,g]$ for the normalized pendulum. For $\dot x_1=u$, $\dot x_2=x_1^2$, compute enough brackets to span the plane and explain why negative $x_2$ remains unreachable from the origin. State why an actuation matrix alone cannot settle the reachability of an unspecified underactuated model.
+\item \textbf{Cancellation With a Bound.} For a pendulum with $|\tau|\le\tau_{\max}$, derive the feasible interval of virtual acceleration $\nu$ under gravity-compensating feedback. State the relative degree and whether internal zero dynamics exist for the angle output.
+\item \textbf{A Testable Swing Argument.} Propose a model-based test of the claim that proximal slowing transfers energy to the club. Specify subsystem boundaries, measured quantities, joint force and moment powers, shaft storage, external work, uncertainty, and the intervention used to distinguish transfer from simultaneous active work. Identify what the instantaneous acceleration decomposition can and cannot establish.
 \end{enumerate}
 
-\noindent The input superposition principle described here is not merely a theoretical curiosity---it has been independently discovered and extensively applied in the biomechanics community under the name \emph{induced acceleration analysis}. In the next chapter, we trace this parallel development, showing how researchers studying human walking, throwing, and postural control arrived at the same mass-matrix-inversion decomposition from an entirely different starting point, and we establish the formal equivalence between induced acceleration analysis and the control-affine superposition framework developed here.
-
-\section*{Exercises}
-
-\begin{enumerate}
-\item \textbf{Mass matrix positive definiteness.}
-      For the 2-DOF planar arm in the text, show that $\det(M(\q)) > 0$ for all $\q$
-      by direct computation. Identify the configuration where $\kappa(M)$ is maximized.
-
-\item \textbf{Lie bracket of the pendulum.}
-      For the pendulum system $\dot\x = f(\x) + g u$ with $f = (x_2,\; -\sin(x_1))^T$
-      and $g = (0, 1)^T$, compute $[f, g]$ and $[g, [f, g]]$. Verify that
-      $\text{span}\{g, [f, g]\}$ has dimension 2 at all $\x$, confirming accessibility.
-
-\item \textbf{Superposition failure.}
-      For the system $\dot{x} = x^2 + u$, compute the trajectories $x^{(1)}(t)$ under
-      $u_1 = 1$ and $x^{(2)}(t)$ under $u_2 = 2$, both starting from $x_0 = 0$.
-      Verify that $x^{(1)} + x^{(2)}$ does not solve the system under $u_1 + u_2 = 3$.
-
-\item \textbf{Feedback linearization of a simple system.}
-      For $\dot{x}_1 = x_2$, $\dot{x}_2 = x_1^2 + u$ with output $y = x_1$, compute the
-      relative degree, the linearizing feedback, and the zero dynamics. Is the system minimum phase?
-
-\item \textbf{Passivity of the 2-DOF arm.}
-      For the 2-DOF arm in the text, verify that the system with input $\uvec = \tau$ and
-      output $\vec{y} = \dot\q$ is passive with storage function $E = T + V$.
-
-\item \textbf{Coriolis matrix properties.}
-      Show that $\dot{M}(\q) - 2C(\q, \dot\q)$ is skew-symmetric for the 2-DOF arm
-      (Christoffel-form Coriolis matrix). Why does this property matter for passivity?
-
-\item \textbf{Underactuated\index{Underactuated System} bracket rank.}
-      For a 3-DOF system with $B = [1, 0, 0; 0, 1, 0]^T$ (actuated at joints 1 and 2
-      only), compute $[f, g_1]$ and $[f, g_2]$ in the first-order form. Under what
-      conditions on $M(\q)$ does the accessibility rank condition hold?
-
-\item \textbf{Port-Hamiltonian formulation.}
-      Rewrite the damped pendulum $\ddot\theta + c\dot\theta + \sin\theta = u$ in
-      port-Hamiltonian form~\eqref{eq:ch3:port-hamiltonian}. Identify $J$, $R$, $G$,
-      and $H$ explicitly.
-\end{enumerate}
+The next chapter connects these frozen-state decompositions to induced acceleration analysis in biomechanics. The correspondence is strongest when the inertial model, force channels, constraints, and definition of the zero-input anchor are made explicit in both formulations.
