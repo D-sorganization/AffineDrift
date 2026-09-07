@@ -380,66 +380,58 @@ From a control perspective, the follow-through is characterized by high DCR: the
 The deceleration forces in the follow-through are distributed across multiple joints and tissues: the hands experience reaction forces from the club they are holding; the legs and lower back experience ground reaction forces and internal joint forces. The magnitude of these constraint forces is substantial, particularly in the early follow-through \citep{Nesbit2005}. The distribution of these forces across the kinetic chain depends on the configuration and muscle activation patterns.
 
 % ─────────────────────────────────────────────────────────────────
-\section{The Complete Force Budget: Energy Flow Through the Swing}
-
+\section{The Complete Energy Budget: Work, Storage, and Transfer}
 \index{energy!flow through swing}
 \index{work}
 \index{power}
 
-Let us now account for all the energy in the swing, from backswing to follow-through.
+The swing connects a chemical energy source to mechanical work, changing body and club energy, and a collision with the ball. Those are different accounting boundaries. A ratio measured at one boundary cannot be interpreted as efficiency at another without the intervening balances. In particular, club work divided by reconstructed body joint work does not measure the fraction of metabolic energy converted to useful motion.
 
-\subsection*{Energy Sources}
+\subsection*{Define the Mechanical System and Interval}
 
-The golfer's muscles are the primary source of energy input to the system. When muscles contract, they hydrolyze ATP (adenosine triphosphate) and convert the chemical energy into mechanical work. The power output of muscles varies substantially depending on the swing speed, muscle activation patterns, and biomechanical efficiency \citep{Nesbit2005,MacKenzie2009}.
+Before contact with the ball, consider the golfer and club together. Use disjoint body segments, a declared inertial frame, and the same start and end times for all quantities. Include gravitational potential energy and whatever recoverable elastic energy the chosen model resolves. Its total mechanical energy is
+\[
+E=T_{\rm body}+T_{\rm club}+U_g+U_e.
+\]
+For ideal internal constraints, a consistent balance is
+\[
+E_f-E_i=W_{\rm act}+W_{\rm ext}-D.
+\]
+Here $W_{\rm act}$ is signed mechanical actuator work delivered to the modeled coordinates; $W_{\rm ext}$ is signed external work not already represented by the included potentials; and $D\geq0$ is the model's separately represented passive dissipation. Do not count the same loss in both negative actuator work and $D$. Gravity is already in $U_g$, so it must not also be included in $W_{\rm ext}$. A moving prescribed boundary or an inverse-dynamics residual actuator contributes work and must be recorded rather than silently omitted.
 
-During the swing, muscle power is distributed among:
+This equation is not a metabolic balance. A net joint actuator can summarize unresolved muscles and tissues, but joint motion and net moment alone do not determine individual muscle work, activation cost or heat. Such quantities require additional measurements and a physiological model.
 
-\begin{enumerate}
-\item \textbf{Potential energy:} Raising the arms and torso during the backswing stores gravitational potential energy.
+\subsection*{Follow Energy Without Assuming a Universal Phase Pattern}
 
-\item \textbf{Kinetic energy:} Accelerating the arms, torso, and club during the downswing converts potential energy and muscle power into kinetic energy. The kinetic energy peaks just before impact.
+During the backswing, positive actuator work can increase kinetic, gravitational and elastic energy while losses and negative work occur elsewhere. Raising a center of mass changes its gravitational energy by $mg\,\Delta h$; the amount must be calculated for the actual system. A turn angle alone does not identify tissue elastic energy, which depends on deformation, loading history and the constitutive model.
 
-\item \textbf{Elastic energy:} Stretching muscles, tendons, and the shaft during the backswing and early downswing stores elastic energy. This energy is released in the mid-to-late downswing.
+The top of the backswing is an event defined from a chosen observable, not simultaneous rest of every segment. Body, club and elastic energies need not attain their maxima together. Through transition and downswing, active work continues alongside conversion of previously stored energy. Whether gravity or a particular elastic element supplies substantial power is a result to calculate, not a consequence of labeling the phase as drift-dominated.
 
-\item \textbf{Heat:} The inefficiency of muscle contraction dissipates energy as heat. Muscle mechanical efficiency (mechanical work output divided by metabolic energy input) is approximately 20--25\% \citep{Nesbit2005b}; the remainder is dissipated thermally.
+At a joint, forces can redistribute energy between segments. For the club alone, power supplied by the hands includes both the dot product of force with its application-point velocity and the dot product of couple with angular velocity. That grip power is internal to the combined golfer--club system. Ideal no-slip contact with stationary ground can transmit force and angular momentum while doing zero contact work; ground reaction force is therefore not itself a dissipative mechanism. Deforming or slipping contact requires its actual power balance.
 
-\end{enumerate}
+\subsection*{What the Reported Work Ratio Measures}
 
-\subsection*{Energy Transfer During the Swing}
+Nesbit and Serrano analyzed four amateur golfers using reconstructed body and club models. Their reported swing efficiency is club work divided by total body joint work, with values of 20.2--26.8\% in Table 3 \citep{Nesbit2005b}. Neither denominator nor numerator is metabolic energy or ball energy. The remaining fraction cannot be assigned to heat, and these four cases do not establish an elite-versus-amateur metabolic advantage.
 
-In the backswing, the muscles do positive work, accelerating the body against gravity and inertia. Most of this work goes into potential energy (lifting the arms and torso) and elastic energy (stretching muscles and tendons).
+When reporting a new work ratio, state whether its denominator sums signed work, positive work only, or the absolute values of work. For actuator powers $P_j$, define positive work and the magnitude of absorbed work by
+\[
+W_+=\sum_j\int\max(P_j,0)\,dt,\qquad
+W_-=\sum_j\int\max(-P_j,0)\,dt.
+\]
+Then $W_{\rm act}=W_+-W_-$. This separation does not resolve individual muscle contributions when $P_j$ represents a net joint actuator.
 
-At the top of the backswing, the kinetic energy is moderate (the motion has slowed to a stop or reversed), but the potential and elastic energy are at their peaks.
+For an illustrative mechanical budget, let $E_i=100$ J, $W_+=500$ J, $W_-=80$ J, $W_{\rm ext}=0$ and $D=20$ J. The final energy is 500 J. If 250 J is club kinetic energy and 250 J remains in the other included energy stores, club energy divided by positive actuator work is 0.50; divided by signed actuator work it is approximately 0.595. These ratios use club energy, not the cited paper's club-work numerator. Both are compatible with the same balance, and neither determines metabolic efficiency. Initial storage also prevents treating an arbitrary output-to-new-work ratio as necessarily bounded by one.
 
-In the early downswing, gravity and elastic forces take over. The potential energy is converted to kinetic energy as the arms fall. The elastic energy in muscles is released, accelerating the body. The muscles continue to apply torques, adding additional energy.
+\subsection*{Separate Impact and Follow-Through}
 
-In the mid and late downswing, the kinetic energy is growing, approaching its peak. The potential energy is being depleted. The elastic energy in the shaft is being stored and then released. At impact, the kinetic energy of the clubhead reaches its peak.
+To include impact, enlarge the system to contain the ball and resolve an interval spanning contact. Include initial and final ball, club and body energies, work across the external boundary, and dissipative terms. Energy left in the moving club is retained energy, not collision heat. Ball translation, spin, deformation and subsequent aerodynamic flight are distinct; ball kinetic energy alone does not determine carry distance.
 
-At impact, the kinetic energy of the clubhead is transferred to the ball (minus losses due to the collision efficiency). The ball leaves the clubface with kinetic energy, which determines how far it will travel.
+During follow-through, actuator absorption, passive losses and external work alter the remaining mechanical energy. Recoverable deformation and changed gravitational potential may remain even when the golfer stops. Do not assert that every joule unaccounted for at impact has become heat. Check energy closure and identify the model's residual before interpreting a loss mechanism.
 
-In the follow-through, the kinetic energy of the body is dissipated through eccentric muscle contraction, damping, and ground reaction forces. By the time the golfer comes to rest, all the energy has been dissipated as heat, or transferred to the ball (which carries it downrange).
+\subsection*{Connect the Budget to Drift and Control}
 
-\subsection*{Where Energy Is Lost}
+The drift field describes evolution under a specified zero-input convention. It is not an energy source, and a large drift contribution does not establish low metabolic cost. Stored energy may have required earlier active work; zero net joint torque can coexist with muscle activity; and a different input convention changes what is called drift. A useful comparison holds the task and system boundary explicit, reports initial storage and signed work, and measures the resulting club state. This connects preparation, timing, geometry and active effort without assuming that reducing muscle work must increase ball energy.
 
-Not all the muscle power goes into the ball. Some is lost:
-
-\begin{enumerate}
-\item \textbf{Heat during muscle contraction:} Muscles are inefficient. About 75\% of the energy is lost as heat.
-
-\item \textbf{Damping in connective tissue:} Fascia, ligaments, and tendons absorb energy and dissipate it as heat.
-
-\item \textbf{Air resistance:} The arms and club moving through the air experience air drag, which dissipates energy.
-
-\item \textbf{Inefficiencies in joints:} Friction in the joints dissipates some energy.
-
-\item \textbf{Collision inefficiency:} Not all the kinetic energy of the club is transferred to the ball. Some is lost as heat in the ball and on the clubface.
-\end{enumerate}
-
-The overall energy transfer efficiency from muscle input to ball kinetic energy is relatively low \citep{Nesbit2005b}. This low efficiency results from multiple dissipative mechanisms: muscle thermal losses, damping in connective tissue, air resistance, and joint friction. The energy transfer efficiency depends on the swing mechanics, biomechanical parameters, and equipment properties \citep{Nesbit2005}.
-
-The trajectory of the system (state evolution $\state(t)$) is determined by the balance between the drift field $f(\state)$ (which includes gravity and elastic forces requiring no muscle work) and the control field $G(\state)\control$ (which requires muscle activation and ATP hydrolysis). Swings that rely primarily on drift rather than active control may exhibit different energy transfer characteristics due to differences in muscle activation patterns and resulting force dissipation.
-
-% ─────────────────────────────────────────────────────────────────
 \section{The Drift, Control, and Constraint Forces Through the Entire Swing}
 
 \index{drift!throughout swing}

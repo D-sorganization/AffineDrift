@@ -280,5 +280,6 @@ scientific content. Local and pre-deployment verification again default to one
 attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-07 | #4240 | Rebuild the paired kinetic-chain chapter around verified mechanics, evidence, energy budgets, and reproducible counterexamples. |
+| 2026-09-07 | #4239 | Correct paired Physics energy-work and hip-turn citation passages; derive explicit system budgets and preserve measurement and review scope. |
 
 > For the complete historical change log (v1.0.173 – v1.0.278), see [CHANGELOG.md](CHANGELOG.md).
