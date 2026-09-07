@@ -281,5 +281,6 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-07 | #4240 | Rebuild the paired kinetic-chain chapter around verified mechanics, evidence, energy budgets, and reproducible counterexamples. |
 | 2026-09-07 | #4243 | Correct paired Physics energy-work and hip-turn citation passages; derive explicit system budgets and preserve measurement and review scope. |
+| 2026-09-07 | #4245 | Reconcile sources of nonlinearity mechanics, contact models, backlash kinematics, Magnus lift, and validation test suite. |
 
 > For the complete historical change log (v1.0.173 – v1.0.278), see [CHANGELOG.md](CHANGELOG.md).
