@@ -289,3 +289,5 @@ attempt; only the revision-matched live gate opts into two retries.
 > For the complete historical change log (v1.0.173 – v1.0.278), see [CHANGELOG.md](CHANGELOG.md).
 
 | 2026-09-07 | #4257 | Rebuild paired contraction proofs and metric/controller/noise hypotheses; replace unsupported golf robustness claims with checked mechanics and explicit experimental questions. |
+
+| 2026-09-07 | #4259 | Rebuild paired articulated-body derivations, independently checked tree dynamics, contact and impact distinctions, and constrained golf-delivery interpretation. |
