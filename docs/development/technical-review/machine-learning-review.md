@@ -72,3 +72,8 @@ The first explicit-alias spelling (typing.TypeAlias) passed both mypy environmen
 
 
 Publication checkpoint: the corrected alias and all commit/pre-push hooks passed; commit6f3dfb95 was successfully pushed without force. Ready PR #4247 now contains the complete machine-learning wave and references issue4244, epic4009, corpus4021 and Geometry4055. SPEC is keyed to PR4247. Protected merge and deployment remain pending.
+
+
+### CI Image Accessibility Follow-Up
+
+The first PR4247 head passed all Python checks and all eight textbook builds, but CI34145727144 failed its every-route gate: the network figure had a caption but no HTML alt attribute. Added explicit fig-alt to the canonical Quarto figure. The same verifier now passes four local evidence items (1366px and390px, light/dark), with no serious/critical axe violations on the scanned route. This is a four-view chapter check, not a second local239-route run. The first local attempts found a missing manifest, an unrelated unpruned draft lacking an H1, then an expired local server; the first running-page check also exposed the legacy polyfill normally removed by deployment. Built a one-page manifest from the actual rendered page, restarted the localhost server and applied the existing deployment polyfill filter before the successful check. No gate was weakened. Nonlinearity deployment34142203580 has separately completed successfully.
