@@ -63,3 +63,10 @@ The final all-section browser pass rendered all50 display equations and retained
 This completes technical and visual review of these two chapter sources, not the405-source corpus. The next long source, the complete9,156-word introductory articulated-body chapter and its1,305-word web companion, has been read. Its recursion, numerical example, contact model and simulator claims require a separate issue and correction; no ABA correction is included here.
 
 Publication submitted as PR #4257. All pre-commit and pre-push hooks passed, including isolated mypy, Bandit and unit tests. Correction commit25a3a08ce198ae0d2e55bcfb4e767d1c5b5138dc was replayed onto protected main before first push; the reviewed tree d5a117295a53e7058870789d62b0b8e29d01d7ce was preserved exactly. An initial rebase stopped on a clean-content handoff index refresh; restaging that file produced no diff and the rebase then succeeded. Protected checks, merge and deployment are pending.
+
+
+## Protected Merge and Evidence Clarification
+
+PR #4257 passed all protected checks and squash-merged as 0dc9870c75b3665203c0dcca1d41cd1598d956aa at 2026-09-07T21:29:36 UTC. Deployment 34163331399 is running. Issue #4252 is closed.
+
+The reused browser helper selected desktop light, phone light and desktop dark for its 156 section captures and 51 additional targets. Any earlier description of that all-section dark pass as phone dark was incorrect. Phone dark was independently covered by the 14-cell verifier and targeted table/diagram checks. All stated captures were inspected; this clarification corrects their viewport attribution.
