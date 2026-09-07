@@ -1,6 +1,6 @@
 # Kinetic Chain Technical Review
 
-Parent epic #4009; corpus #4021; route batch #4054. Both entire Physics ch30_kinetic_chain editions are read, including every callout, numerical example, interpretation and exercise: print 9,580 original words, web 8,767. The original print figure source was read; its rendered figure has not yet been inspected. Both canonical editions are comprehensively corrected and locally validated under #4238. Protected publication remains pending; see REVIEW.md for complete derivations and evidence.
+Parent epic #4009; corpus #4021; route batch #4054. Both entire Physics ch30_kinetic_chain editions are read, including every callout, numerical example, interpretation and exercise: print 9,580 original words, web 8,767. The original print figure source was read; its rendered figure has not yet been inspected. Both canonical editions are comprehensively corrected and locally validated under #4238. Protected PR #4240 is open; publication remains pending; see REVIEW.md for complete derivations and evidence.
 
 ## Findings
 
