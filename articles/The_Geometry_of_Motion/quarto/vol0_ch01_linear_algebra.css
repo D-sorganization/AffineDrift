@@ -1,0 +1,47 @@
+/* Keep the four-subspace comparison within its reading column. */
+#quarto-document-content #sec-rank .table-wrapper > table {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
+#sec-rank th,
+#sec-rank td {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+#sec-rank th:first-child {
+  width: 36%;
+}
+
+#sec-rank th:nth-child(2) {
+  width: 49%;
+}
+
+#sec-rank th:nth-child(3) {
+  width: 15%;
+}
+
+/* Use readable math with horizontal scrolling for long displays. */
+@media (max-width: 768px) {
+  #quarto-document-content .math.display {
+    font-size: 1em !important;
+  }
+
+  #quarto-document-content .math.display mjx-container[display="true"] {
+    font-size: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #sec-rank table {
+    font-size: 0.82rem;
+  }
+
+  #sec-rank th,
+  #sec-rank td {
+    padding: 0.4rem 0.2rem;
+  }
+}

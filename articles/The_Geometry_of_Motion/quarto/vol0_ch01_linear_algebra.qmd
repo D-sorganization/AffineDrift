@@ -1,273 +1,426 @@
 ---
 title: "Chapter 1: A Primer on Linear Algebra"
-description: "If I had to explain the single most important idea in applied mathematics to a first-year student, I would ask them this: how would you describe a..."
+description: "Vectors, spectra, singular values and mechanical duality: distinguish instantaneous motion, energy, numerical sensitivity and control over time."
+css: vol0_ch01_linear_algebra.css
 ---
 
 ## A Primer on Linear Algebra {#sec-linear-algebra}
 
-> *The miracle is that nature can be described by mathematics at all. The deeper miracle is that the same mathematics describes everything from atoms to galaxies.* --- A recurring theme in physics
+Linear algebra helps us ask a precise question about a complicated swing: **at this configuration, which combinations of joint velocities produce a particular hand velocity?** The answer is a linear map. Predicting the swing that follows requires more: changing geometry, coupled inertia, applied loads, constraints and a control policy.
 
-## Vectors and Matrices
+Those distinctions organize this chapter. A Jacobian describes instantaneous velocity transmission; an inertia matrix defines kinetic energy and momentum; a dynamics matrix propagates perturbations; a measurement matrix describes what is sensed. They are all matrices, but their physical meanings are determined by the equations in which they appear.
 
+## Vectors, Coordinates and Matrices
 
-If I had to explain the single most important idea in applied mathematics to a first-year student, I would ask them this: **how would you describe a complicated motion using only simple pieces?** A robot arm with 15 joints doesn't move as one incomprehensible blob—it moves as a cascade of independent rotations, each contributing to the final position. A human throwing a baseball doesn't rotate one giant "throwing muscle"—the shoulder rotates, then the elbow, then the wrist, each adding their own angular velocity on top of the last. The miracle of linear algebra is that you can describe any complicated motion as a combination of simple ones. That is what vectors and matrices *are*—the science of combining simple things to understand complicated things.
+A vector belongs to a space closed under addition and scalar multiplication. After choosing a finite basis, we represent it by coordinates, for example
 
-Let me put this even more simply. If you have ever mixed paint colors, you have developed intuition for linear combinations. Red plus blue makes purple. Twice as much red makes a redder purple. In linear algebra, a vector space formalizes and generalizes this idea: it is a collection of objects you can scale and add together. Physical pigments form a *convex cone* because mixing proportions must be strictly non-negative (you cannot add negative paint to unmix a color), but in a true mathematical vector space, every element has an additive inverse ($-\bm{v}$) that allows subtraction as well as addition.
+$$
+\mathbf v=\begin{bmatrix}1\\2\\3\end{bmatrix}\in\mathbb R^3.
+$$
 
-Now, the vectors in this book will not be colors---they will be velocities, forces, and accelerations of mechanical systems. But the principle is identical: complicated motions are built from simple components, combined by addition and scaling.
+Velocity and displacement are vectors. Position is an affine point: subtracting two positions gives a displacement, while adding positions requires an origin convention. An array of joint angles or sensor readings is useful data, but does not automatically transform like a three-dimensional spatial vector. Bounded, nonnegative muscle activations are not a real vector space, because arbitrary negatives and sums are inadmissible.
 
-Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices.
+A matrix represents a linear map between specified coordinate spaces. It preserves sums and scalar multiples:
 
-A **vector** $\bm{v}$ is an array of numbers that can represent a position in space, a velocity, or a set of sensor readings. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$).
-\begin{equation}
-   \bm{v} = \begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix} \in \Reals^3
-\end{equation}
+$$
+M(a\mathbf v+b\mathbf w)=aM\mathbf v+bM\mathbf w.
+$$
 
-A **matrix** $M$ is a 2D grid of numbers. If a vector represents a point, a matrix acts as a set of instructions on how to transform that point—stretching it, rotating it, or moving it into an entirely different dimensional space.
-\begin{equation}
-   M = \begin{bmatrix} a_1 & b_1 & c_1 \\ a_2 & b_2 & c_2 \\ a_3 & b_3 & c_3 \end{bmatrix} \in \Reals^{3 \times 3}
-\end{equation}
+The map sends zero to zero. A translation requires an affine offset, or a homogeneous-coordinate representation; an ordinary matrix acting on position coordinates alone cannot translate every point by the same nonzero amount.
 
-When we multiply a matrix by a vector ($M\bm{v}$), the matrix literally reshapes the vector. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its bones.
+For a joint configuration $\mathbf q$ and hand position $\mathbf p=h(\mathbf q)$, forward kinematics is generally nonlinear. Its differential at a fixed configuration is linear:
 
+$$
+\mathbf v_{\mathrm{hand}}=J(\mathbf q)\dot{\mathbf q},
+\qquad J=Dh.
+$$
+
+This maps between different tangent spaces and can be rectangular. It is not generally a change of basis for one vector space. Finite joint rotations compose, usually do not commute, and do not establish independent additive joint trajectories. Angular-velocity contributions can be added only after expressing them in compatible frames and using the correct kinematic map.
 
 ## The Dot Product and Cross Product
 
+### Dot Products, Projections and Power
 
-Two fundamental operations exist for combining vectors in 3-dimensional space:
+In an orthonormal Euclidean basis,
 
+$$
+\mathbf a\cdot\mathbf b=\mathbf a^T\mathbf b
+=\|\mathbf a\|\,\|\mathbf b\|\cos\theta.
+$$
 
-### The Dot Product
+For $\mathbf a\ne0$, the scalar and vector projections are different:
 
-The dot product (or inner product) is a scalar (a single number). It measures how much two vectors "align" with each other. It is calculated by multiplying matching components and summing them.
-\begin{equation}
-   \bm{a} \cdot \bm{b} = a_x b_x + a_y b_y + a_z b_z = \norm{\bm{a}}\norm{\bm{b}}\cos(\theta)
-\end{equation}
-If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\bm{v}^T M \bm{v}$) and to project forces mathematically onto specific mechanical joints.
+$$
+\operatorname{comp}_{\mathbf a}\mathbf b
+=\frac{\mathbf a^T\mathbf b}{\|\mathbf a\|},
+\qquad
+\operatorname{proj}_{\mathbf a}\mathbf b
+=\frac{\mathbf a^T\mathbf b}{\mathbf a^T\mathbf a}\mathbf a.
+$$
 
+The residual is orthogonal to $\mathbf a$. In a nonorthonormal basis, a metric matrix is needed to compute the same physical length and angle.
 
-### The Cross Product
+Mechanical power pairs force with velocity, $P=\mathbf F^T\mathbf v$, or generalized force with generalized velocity, $P=\boldsymbol\tau^T\dot{\mathbf q}$. Kinetic energy is a quadratic form,
 
-The cross product is a vector. It takes two vectors and generates a brand new vector that is perfectly perpendicular to both of them.
-\begin{equation}
-   \bm{a} \times \bm{b} = \begin{bmatrix} a_y b_z - a_z b_y \\ a_z b_x - a_x b_z \\ a_x b_y - a_y b_x \end{bmatrix}
-\end{equation}
+$$
+T=\tfrac12\dot{\mathbf q}^T M(\mathbf q)\dot{\mathbf q}.
+$$
 
-In physics, the cross product is the mathematical engine of rotation. If you apply a force $\bm{F}$ at a distance $\bm{r}$ from a hinge, the resulting torque $\bm{\tau}$ twisting the hinge is exactly the cross product: $\bm{\tau} = \bm{r} \times \bm{F}$. 
-Crucially, the magnitude of a cross product scales with the sine of the angle ($|\bm{a} \times \bm{b}| = \norm{\bm{a}}\norm{\bm{b}}\sin \theta$).
+Here the inertia matrix is essential; an unweighted joint-speed norm is not energy. An optimal-control running cost such as $\ell=\mathbf x^TQ\mathbf x+\mathbf u^TR\mathbf u$ is a chosen penalty with declared units and weights. Its time integral is a cost functional. Neither expression is automatically muscle effort or metabolic expenditure.
 
+### Cross Products and Moment Reference Points
 
-## Eigenvalues and Eigenvectors: The Shape of the System
+In a right-handed orthonormal three-dimensional frame,
 
+$$
+\mathbf a\times\mathbf b=
+\begin{bmatrix}
+a_yb_z-a_zb_y\\a_zb_x-a_xb_z\\a_xb_y-a_yb_x
+\end{bmatrix}.
+$$
 
-When a matrix multiplies a vector, the result generally changes both the direction and magnitude of the vector. However, for most matrices, there exist special vectors whose direction is preserved under the transformation---they are only scaled.
+Its magnitude is $\|\mathbf a\|\|\mathbf b\|\sin\theta$. A nonzero result is perpendicular to both inputs; the zero result has no direction. The moment of a force about a chosen reference point is $\boldsymbol\tau=\mathbf r\times\mathbf F$, where $\mathbf r$ runs from that reference point to the force application point.
 
-These vectors are called **eigenvectors** ($\bm{v}$), and the corresponding scaling factors are called **eigenvalues** ($\lambda$).
-\begin{equation}
-   M\bm{v} = \lambda\bm{v}
-\end{equation}
+For $\mathbf r=(0.5,0,0)$ m and $\mathbf F=(0,-10,0)$ N,
 
-Here is a physical picture that makes eigenvalues unforgettable. Imagine you are standing on a trampoline and someone pushes you. In most directions, you bounce off at some angle---the trampoline redirects your motion. But there are special directions (straight down, for instance) where you bounce right back the same way you came in, just higher or lower. Those special "bounce-back" directions are the eigenvectors. How much higher or lower you bounce is the eigenvalue.
+$$
+\boldsymbol\tau=(0,0,-5)\ \mathrm{N\,m}.
+$$
 
-For a rotating gyroscope, the eigenvector of the angular momentum is the spin axis---the one direction that does not precess. For a vibrating guitar string, the eigenvectors are the harmonic modes---the shapes the string naturally wants to vibrate in. Eigenvalues and eigenvectors are not abstract mathematical curiosities; they are the skeleton of every physical system.
-
-Why do we care?
-If $M$ represents the mass and inertia of a car, its eigenvectors tell us the "Principal Axes"—the natural axes where the car is easiest and hardest to spin.
-If $M$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate if the system will explode out of control ($\lambda > 0$) or safely stabilize back to resting ($\lambda < 0$). Eigenvalues are the fundamental heartbeat of linear control theory.
-
-::: {.callout-tip}
-## Key Insight: Eigenvalues and Stability
-
-For a linear system $\dot{\bm{x}} = A\bm{x}$, the real part of each eigenvalue $\lambda_i$ of $A$ determines stability:
-
-- $\text{Re}(\lambda_i) < 0$ for all $i$: the system is **asymptotically stable** (trajectories converge exponentially to zero)
-- $\text{Re}(\lambda_i) > 0$ for any $i$: the system is **unstable** (trajectories diverge)
-- $\text{Re}(\lambda_i) \le 0$ with $\text{Re}(\lambda_k) = 0$: **marginally stable** if and only if all imaginary eigenvalues are non-defective (algebraic multiplicity equals geometric multiplicity). If an imaginary eigenvalue has size $\ge 2$ Jordan blocks (e.g. a double integrator $\dot{\bm{x}} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\bm{x}$), solutions grow secularly/polynomially with $t$, rendering the system unstable.
-:::
-
+The moment about a joint's declared unit axis $\mathbf s$ is $\mathbf s^T\boldsymbol\tau$. Calling this anatomical wrist flexion requires an anatomical axis convention; the Cartesian calculation alone does not identify it.
 
 ## Linear Independence and Span {#sec-linear-independence}
 
-A set of vectors $\{\bm{v}_1, \bm{v}_2, \ldots, \bm{v}_k\}$ is **linearly independent** if no vector in the set can be written as a combination of the others. Formally:
+Vectors are independent when
 
-$$c_1 \bm{v}_1 + c_2 \bm{v}_2 + \cdots + c_k \bm{v}_k = \bm{0} \implies c_1 = c_2 = \cdots = c_k = 0.$$
+$$
+\sum_{i=1}^k c_i\mathbf v_i=0
+\quad\Longrightarrow\quad c_1=\cdots=c_k=0.
+$$
 
-The **span** of a set of vectors is the collection of all possible linear combinations you can form from them. If $n$ linearly independent vectors span $\mathbb{R}^n$, they form a **basis**—a minimal complete description of that space.
+Their span consists of all real linear combinations. A basis is an independent spanning set. Two nonzero vectors in $\mathbb R^2$ are independent if neither is a multiple of the other; three vectors in $\mathbb R^3$ are independent if they do not lie in one plane through the origin.
 
-**Why this matters for robotics:** When a robot arm has $n$ joints, its joint velocities live in $\mathbb{R}^n$. If the robot is *redundant* ($n > m$, where $m$ is task-space dimension), the Jacobian null space $\mathcal{N}(J)$ is non-trivial: joint velocity combinations in $\mathcal{N}(J)$ produce zero end-effector motion, providing internal self-motion (e.g. elbow swivel) that can avoid obstacles while holding the hand steady. In contrast, a *kinematic singularity* occurs when the Jacobian loses column rank ($\text{rank}(J) < m$), meaning the manipulator instantaneously loses the ability to move the end-effector in one or more Cartesian directions.
-
+For a square matrix, $|\det M|$ is the volume scale factor; the sign of a nonzero determinant records orientation. The matrix $\operatorname{diag}(-2,3)$ reverses orientation and multiplies area by six. A negative determinant does not imply preservation of volume.
 
 ## Matrix Rank and the Four Fundamental Subspaces {#sec-rank}
 
-The **rank** of a matrix $M \in \mathbb{R}^{m \times n}$ is the number of linearly independent rows (equivalently, columns). It tells you how much independent information $M$ transmits.
+For $M\in\mathbb R^{m\times n}$ with rank $r$, the four subspaces are:
 
-For a matrix $M$, there are four fundamental subspaces:
+| Subspace | Mathematical Meaning | Dim. |
+|---|---|---|
+| Image $\operatorname{im}M$ | Outputs $M\mathbf v$, in $\mathbb R^m$ | $r$ |
+| Kernel $\ker M$ | Inputs mapped to zero, in $\mathbb R^n$ | $n-r$ |
+| Row space $\operatorname{im}M^T$ | Euclidean orthogonal complement of $\ker M$ | $r$ |
+| Left kernel $\ker M^T$ | Euclidean orthogonal complement of $\operatorname{im}M$ | $m-r$ |
 
-| Subspace | Definition | Physical meaning (Dynamics/Robotics) |
-|----------|-----------|-------------------------------------|
-| Column space $\mathcal{C}(M)$ | All possible outputs $M\bm{v}$ | Reachable outputs / instantaneous velocities |
-| Null space $\mathcal{N}(M)$ | Inputs $\bm{v}$ with $M\bm{v} = 0$ | Redundant internal self-motions ($J$) or unobservable modes ($C$) |
-| Row space $\mathcal{C}(M^\top)$ | Inputs orthogonal to $\mathcal{N}(M)$ | Effective input directions producing output motion |
-| Left null space $\mathcal{N}(M^\top)$ | Outputs orthogonal to $\mathcal{C}(M)$ | Unreachable output directions / constrained force modes |
+Thus rank plus nullity equals the number of columns. The left kernel contains directions orthogonal to every attainable output; it is not the set of all vectors outside the image.
 
-**The rank-nullity theorem** connects these:
-$$\text{rank}(M) + \text{nullity}(M) = n,$$
-where $\text{nullity}(M) = \dim \mathcal{N}(M)$.
+If $M=J(\mathbf q)$, its image describes instantaneous task velocities and its kernel describes task-null joint velocities. If $M=C$ is a measurement matrix, its kernel contains states invisible **at that instant**. Dynamical unobservability additionally requires that the evolving state remain invisible.
 
+### Instantaneous Rank and Finite-Time Control
+
+A $3\times7$ hand-position Jacobian can have full task rank three and a four-dimensional kernel. This is kinematic redundancy, not proof of singularity or underactuation. A kinematic singularity is a drop below the maximum rank attainable by the specified mechanism and task. An inherently lower-dimensional task image need not be a singular configuration. Underactuation concerns independent force or torque inputs relative to the system's mechanical degrees of freedom.
+
+Even instantaneous task-null motion needs care. For two unit-length planar links,
+
+$$
+h(q_1,q_2)=
+\begin{bmatrix}
+\cos q_1+\cos(q_1+q_2)\\
+\sin q_1+\sin(q_1+q_2)
+\end{bmatrix}.
+$$
+
+At $\mathbf q=0$, $J=\begin{bmatrix}0&0\\2&1\end{bmatrix}$, and $(1,-2)^T$ is in its kernel. Following the straight joint path $\mathbf q(t)=t(1,-2)^T$ gives
+
+$$
+h(\mathbf q(t))=(2\cos t,0)^T.
+$$
+
+The hand is stationary to first order at $t=0$, but it does move afterward. Finite self-motion requires a path that satisfies the changing task constraint, and a singular kernel direction need not integrate into such a path.
+
+Control over time is another question. The double integrator has
+
+$$
+\dot{\mathbf x}=A\mathbf x+Bu,\quad
+A=\begin{bmatrix}0&1\\0&0\end{bmatrix},\quad
+B=\begin{bmatrix}0\\1\end{bmatrix}.
+$$
+
+Although $B$ has rank one, $[B,AB]$ has rank two. Its finite-time controllability Gramian is
+
+$$
+W(T)=\int_0^T e^{As}BB^Te^{A^Ts}\,ds
+=\begin{bmatrix}T^3/3&T^2/2\\T^2/2&T\end{bmatrix},
+\qquad \det W(T)=T^4/12>0.
+$$
+
+With unrestricted inputs, both states can be reached over any positive interval. Finite actuator limits restrict the reachable set and required time. Similarly, measuring position with $C=[1,0]$ leaves velocity instantaneously hidden, but $[C^T,(CA)^T]^T=I_2$ makes this model observable over time. These are properties of $(A,B)$ and $(A,C)$, not of a generic matrix kernel.
+
+## Eigenvalues, Modes and Stability
+
+An eigenvector is a nonzero vector satisfying
+
+$$
+A\mathbf v=\lambda\mathbf v.
+$$
+
+For a real matrix, eigenvalues and eigenvectors may be complex. A planar quarter-turn has eigenvalues $\pm i$ and no real invariant line. A real negative eigenvalue reverses direction along its invariant line; zero annihilates that eigenvector.
+
+For a symmetric rigid-body inertia tensor about the centre of mass, eigenvectors give principal axes and eigenvalues give principal moments. Angular momentum is a vector, not a matrix with eigenvectors. The relation $\mathbf L=I\boldsymbol\omega$ makes momentum parallel to angular velocity along principal axes, but torque, inertia and initial conditions govern precession. For a torque-free rigid body with three distinct principal moments, rotation about the intermediate principal axis is unstable; identifying an inertia eigenvector alone does not prove stable rotation.
+
+### Constant Linear Dynamics and Their Limits
+
+For a constant continuous-time system $\dot{\mathbf x}=A\mathbf x$:
+
+- All eigenvalues with negative real parts give exponential asymptotic stability.
+- Any eigenvalue with positive real part gives instability.
+- If all real parts are nonpositive, stability on the imaginary-axis boundary requires every imaginary-axis eigenvalue to be semisimple: no Jordan block larger than one. Such a system is not asymptotically stable if an imaginary-axis eigenvalue is present.
+
+For example, $A=0$ has constant bounded solutions. The double-integrator $A$ above has the same two zero eigenvalues, but $\mathbf x(0)=(0,1)^T$ gives $\mathbf x(t)=(t,1)^T$, which is unbounded.
+
+For a continuously differentiable nonlinear system near an equilibrium, a Hurwitz linearization proves local asymptotic stability; a positive-real-part eigenvalue proves instability. Imaginary-axis eigenvalues leave the nonlinear conclusion undecided: $\dot x=-x^3$ and $\dot x=x^3$ have the same zero linearization and opposite stability. Eigenvalues of instantaneous matrices along a time-varying swing are not, by themselves, a finite-time stability certificate.
+
+### Stable Systems Can Amplify Perturbations
+
+For
+
+$$
+A=\begin{bmatrix}-1&10\\0&-1\end{bmatrix},
+\qquad
+e^{At}=e^{-t}\begin{bmatrix}1&10t\\0&1\end{bmatrix},
+$$
+
+both eigenvalues are $-1$, yet an initial perturbation $(0,1)^T$ has norm $\sqrt{101}/e\approx3.697$ at one second. It eventually decays. This nonnormal transient amplification can matter greatly when impact occurs before the transient subsides.
+
+A quadratic Lyapunov function $V=\mathbf x^TP\mathbf x$, $P\succ0$, satisfies
+
+$$
+\dot V=\mathbf x^T(A^TP+PA)\mathbf x.
+$$
+
+Negative definiteness of $A^TP+PA$ proves decay in that metric. Nonpositive $\dot V$ alone does not prove convergence: an undamped oscillator keeps its positive energy constant. A mathematical Lyapunov metric need not equal physical kinetic energy.
 
 ## Singular Value Decomposition {#sec-svd}
 
-The **Singular Value Decomposition (SVD)** is the most powerful factorization in applied linear algebra. Every matrix $M \in \mathbb{R}^{m \times n}$ can be written as:
+Every real $m\times n$ matrix has an SVD
 
-$$M = U \Sigma V^\top,$$
+$$
+M=U\Sigma V^T,
+$$
 
-where $U \in \mathbb{R}^{m \times m}$ and $V \in \mathbb{R}^{n \times n}$ are orthogonal matrices (pure rotations/reflections), and $\Sigma \in \mathbb{R}^{m \times n}$ is diagonal with non-negative entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$ called **singular values**.
+where $U$ and $V$ are orthogonal and can include reflections. The rectangular diagonal $\Sigma$ contains $\min(m,n)$ nonnegative singular values. The columns of $V$ are input directions; the columns of $U$ are output directions:
 
-The singular values quantify how much $M$ stretches space in each independent direction. A zero singular value indicates a direction that $M$ collapses entirely—a singularity.
+$$
+M\mathbf v_i=\sigma_i\mathbf u_i.
+$$
 
-::: {.callout-note}
-## SVD in Robotics: The Jacobian Pseudoinverse
+The image of a unit **ball** is a possibly degenerate ellipsoid. A wide full-row-rank matrix has a nontrivial kernel even when every listed singular value is positive; the remaining columns of a full $V$ also matter.
 
-When computing inverse kinematics for a redundant or rectangular manipulator, we resolve joint velocities using the **Moore-Penrose pseudoinverse**:
+Eigenvalues and singular values answer different questions. The shear
 
-$$J^+ = V \Sigma^+ U^\top,$$
+$$
+M=\begin{bmatrix}1&1\\0&1\end{bmatrix}
+$$
 
-where $\Sigma^+$ inverts each non-zero singular value ($\sigma_i \to 1/\sigma_i$) and leaves exact zeros as zeros. When the Jacobian has full row rank ($m \le n$), $J^+ = J^\top (J J^\top)^{-1}$ gives the unique joint velocity vector that achieves the desired end-effector velocity with minimum Euclidean norm ($\|\dot{\bm{q}}\|_2$).
+has eigenvalues $1,1$ but singular values $(1+\sqrt5)/2$ and $(\sqrt5-1)/2$. Its ellipse axes are singular directions. For a symmetric matrix the singular values are the absolute eigenvalues; only in the positive-semidefinite case can the sorted values agree without taking absolute values.
 
-**Conditioning near singularities:** Although mathematically well-defined, the unregularized pseudoinverse is *not* numerically benign near kinematic singularities. As a singular value $\sigma_{\min} \to 0$, its inverse $1/\sigma_{\min}$ diverges, causing tiny Cartesian tracking errors or measurement noise to command violently explosive joint velocities. In real-time robot control, practical implementations replace $J^+$ near singularities with **damped least-squares** (the Levenberg-Marquardt or Singularity-Robust inverse, $J^* = J^\top (J J^\top + \lambda^2 I)^{-1}$), trading exact Cartesian tracking for bounded, well-conditioned joint speeds.
-:::
+### Manipulability Requires a Declared Budget
 
+With a Euclidean unit joint-speed ball, $J$ maps that ball to a velocity ellipsoid with semiaxes $\sigma_i$ along $\mathbf u_i$. Changing units or mixing rotational and translational coordinates changes raw singular values.
+
+More generally, declare positive-definite joint and task metrics $H,W$:
+
+$$
+\dot{\mathbf q}^TH\dot{\mathbf q}\le1,
+\qquad
+\|\mathbf v\|_W^2=\mathbf v^TW\mathbf v.
+$$
+
+The relevant normalized map is $\bar J=W^{1/2}JH^{-1/2}$. Use its SVD to compare directions under those particular budgets. Metrics can normalize units, represent selected speed scales, or encode a physical energy model; those choices are not interchangeable.
+
+Virtual work gives the force dual $\boldsymbol\tau=J^T\mathbf F$, hence $\boldsymbol\tau^T\dot{\mathbf q}=\mathbf F^T\mathbf v$. Under a unit Euclidean joint-torque budget, full-row-rank $J$ gives a static force ellipsoid with semiaxes $1/\sigma_i$. This says nothing about unlimited structural strength or actual dynamic force production. Joint limits, contact, material loads and the torque needed for acceleration can dominate the usable force.
+
+### What the Pseudoinverse Does Not Guarantee
+
+The Moore–Penrose pseudoinverse is $J^+=V\Sigma^+U^T$. It produces the minimum-Euclidean-norm least-squares solution. It exactly realizes a requested task velocity only when that velocity lies in $\operatorname{im}J$.
+
+Small nonzero singular values still produce large inverse gains. For $J=\operatorname{diag}(1,10^{-3})$, requesting $(1,1)^T$ gives joint velocity $(1,1000)^T$. A backward-stable numerical algorithm cannot remove the underlying sensitivity.
+
+The condition number $\kappa_2(J)=\sigma_{\max}/\sigma_{\min}$ describes relative sensitivity under the specified full-rank interpretation. It does not measure absolute inverse gain: $J=\epsilon I$ has condition number one and inverse norm $1/\epsilon$.
+
+Damped least squares instead minimizes
+
+$$
+\|J\dot{\mathbf q}-\mathbf v\|_2^2
++\lambda^2\|\dot{\mathbf q}\|_2^2,\qquad\lambda>0.
+$$
+
+Its singular-direction gain obeys
+
+$$
+\frac{\sigma_i}{\sigma_i^2+\lambda^2}\le\frac1{2\lambda}.
+$$
+
+It bounds inverse gain by accepting a task residual. It does not itself enforce joint-speed limits or prove closed-loop stability. Truncating small singular values likewise requires a declared numerical tolerance; numerical rank need not equal exact physical rank.
+
+## Mechanical Matrices and Their Transformations
+
+For a nonzero velocity to have positive kinetic energy, the mass matrix in independent generalized-velocity coordinates must be SPD. Redundant coordinates, massless idealizations or singular coordinate charts can violate this premise. Constrained dynamics may instead use a reduced matrix or an indefinite augmented system.
+
+An inertia bilinear form and a dynamics endomorphism transform differently. If $\mathbf v=S\widetilde{\mathbf v}$,
+
+$$
+\widetilde M=S^TMS,\qquad
+\widetilde{\boldsymbol\tau}=S^T\boldsymbol\tau,
+\qquad
+\widetilde A=S^{-1}AS.
+$$
+
+The first two preserve energy and power; the last preserves the linear operator under a constant basis change. Congruence preserves definiteness but generally changes raw eigenvalues. Using a corresponding metric is essential when interpreting a rescaled inertia matrix.
+
+A dyad $\mathbf a\mathbf b^T$ maps an input to $\mathbf a$ times its component measured along $\mathbf b$. A stable, linear conservative spring has a symmetric PSD stiffness, such as $k\mathbf n\mathbf n^T$ with $k\ge0$. A general nonsymmetric dyad is not such a spring: the field $\mathbf F(x,y)=(0,x)$ does one unit of work around a counterclockwise unit square, so it cannot be the gradient of a single-valued potential.
+
+For an unprestressed truss, assembly must retain connectivity:
+
+$$
+K=\sum_e k_eB_e^TB_e,\qquad
+B_e=[-\mathbf n_e^T,\mathbf n_e^T]
+$$
+
+for one member's two incident nodes. This member contributes a $6\times6$ nodal stiffness with rigid-translation null modes. A $3\times3$ sum of member direction dyads describes only a special anchored-node reduction.
+
+Spatial inertia similarly needs a declared origin and velocity convention. It maps twist to spatial momentum, not directly to wrench; momentum rate and frame transport determine the wrench. These distinctions connect the chapter's algebra to the later full-body equations.
 
 ## Worked Examples {#sec-examples}
 
 ### Example 1.1: Rotation Matrix as Linear Map
 
-The $2 \times 2$ rotation matrix that rotates vectors by angle $\theta$ counterclockwise is:
+$$
+R(\theta)=\begin{bmatrix}\cos\theta&-\sin\theta\\
+\sin\theta&\cos\theta\end{bmatrix}.
+$$
 
-$$R(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}.$$
+Since $R^TR=I$, $\|R\mathbf v\|^2=\mathbf v^TR^TR\mathbf v=\|\mathbf v\|^2$. This preserves lengths and pairwise distances. Eigenvalues are $e^{\pm i\theta}$; there are no real eigenvectors unless $\theta$ is an integer multiple of $\pi$.
 
-**Verification that it preserves lengths:** For any $\bm{v} \in \mathbb{R}^2$:
-$$\|R\bm{v}\|^2 = \bm{v}^\top R^\top R \bm{v} = \bm{v}^\top I \bm{v} = \|\bm{v}\|^2,$$
-since $R^\top R = I$ (orthogonality). This shows rotation matrices preserve all distances—they are **isometries**.
+### Example 1.2: Joint Torque Projection
 
-**Eigenvalues:** The eigenvalues of $R(\theta)$ are $e^{\pm i\theta}$—complex numbers on the unit circle. For $\theta \neq 0, \pi$, there are no real eigenvectors, confirming that rotation (in 2D) has no invariant direction.
+The earlier force example gives $(0,0,-5)$ N m. A revolute joint with positive axis $(0,0,1)$ therefore receives generalized moment $-5$ N m from that force. With joint rate $2$ rad/s, its power contribution is $-10$ W. A different rate changes power without changing the instantaneous moment.
 
-### Example 1.2: Dot Product for Joint Torque Projection
+### Example 1.3: Upright Pendulum Stability
 
-A golf club shaft exerts a force $\bm{F} = [0, -10, 0]$ N (downward) at a point $\bm{r} = [0.5, 0, 0]$ m from the wrist joint. The torque about the wrist is:
+For a point mass on a massless rigid link, linearized about upright,
 
-$$\bm{\tau} = \bm{r} \times \bm{F} = \begin{bmatrix} 0.5 \\ 0 \\ 0 \end{bmatrix} \times \begin{bmatrix} 0 \\ -10 \\ 0 \end{bmatrix} = \begin{bmatrix} (0)(0) - (0)(-10) \\ (0)(0) - (0.5)(0) \\ (0.5)(-10) - (0)(0) \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ -5 \end{bmatrix} \text{ N·m}.$$
+$$
+A=\begin{bmatrix}0&1\\g/L&0\end{bmatrix},
+\qquad \lambda=\pm\sqrt{g/L}.
+$$
 
-The torque is $5$ N·m about the $-z$ axis (into the page for a standard right-handed frame), correctly representing a wrist-flexion moment.
-
-### Example 1.3: Eigenvalue Stability Analysis
-
-Consider a simplified pendulum linearized at the upright (unstable) equilibrium:
-
-$$A = \begin{bmatrix} 0 & 1 \\ g/L & 0 \end{bmatrix},$$
-
-where $g = 9.81$ m/s² and $L = 1$ m. The eigenvalues satisfy:
-
-$$\lambda^2 - g/L = 0 \implies \lambda = \pm\sqrt{g/L} \approx \pm 3.13.$$
-
-Since $\lambda_1 \approx +3.13 > 0$, the equilibrium is **unstable**—small perturbations grow exponentially. A pendulum balanced on its tip will fall. The positive eigenvalue tells you the time-scale: perturbations double roughly every $\ln(2)/3.13 \approx 0.22$ seconds.
-
+With $g=9.81$ m/s² and $L=1$ m, the growing mode has rate $3.1321$ s$^{-1}$ and doubling time $\ln2/\sqrt{g/L}\approx0.2213$ s. Perturbations with a component in that mode grow while the local approximation applies. This is not a complete fall trajectory, and an initial state exactly in the linear stable eigenspace is an exception to the claim that every perturbation grows.
 
 ## Python Implementations {#sec-python}
+
+The following blocks run in order. They report numerical properties of the declared examples rather than infer a golfer's performance.
 
 ```python
 import numpy as np
 
-# --- Vectors and basic operations ---
 v = np.array([1.0, 2.0, 3.0])
 w = np.array([4.0, 5.0, 6.0])
+print("Dot product:", v @ w)                 # 32
+print("Cross product:", np.cross(v, w))      # [-3, 6, -3]
+print("Norm:", np.linalg.norm(v))           # sqrt(14)
 
-dot_product = np.dot(v, w)          # 32.0
-cross_product = np.cross(v, w)      # [-3, 6, -3]
-v_norm = np.linalg.norm(v)         # sqrt(14) ≈ 3.742
-
-print(f"Dot product: {dot_product}")
-print(f"Cross product: {cross_product}")
-print(f"Norm of v: {v_norm:.3f}")
-```
-
-```python
-# --- Eigenvalue decomposition ---
-A = np.array([[0., 1.],
-              [9.81, 0.]])   # Inverted pendulum (L=1m)
-
-eigenvalues, eigenvectors = np.linalg.eig(A)
-print(f"Eigenvalues: {eigenvalues}")
-# [3.13, -3.13] — one positive (unstable mode), one negative
-
-# Stability check
-if np.all(np.real(eigenvalues) < 0):
-    print("System is asymptotically stable")
+GRAVITY_M_S2 = 9.81
+LENGTH_M = 1.0
+A = np.array([[0.0, 1.0], [GRAVITY_M_S2 / LENGTH_M, 0.0]])
+values = np.linalg.eigvals(A)
+spectral_abscissa = np.max(values.real)
+# This example's tolerance is in reciprocal seconds, not a universal rule.
+TOLERANCE_PER_S = 1e-10
+if spectral_abscissa < -TOLERANCE_PER_S:
+    print("Constant linear model: asymptotically stable")
+elif spectral_abscissa > TOLERANCE_PER_S:
+    print("Constant linear model: unstable")
 else:
-    print(f"System is UNSTABLE: max Re(λ) = {np.max(np.real(eigenvalues)):.3f}")
+    print("Boundary or unresolved numerically: inspect Jordan structure and model")
+print("Eigenvalues:", values)
 ```
 
 ```python
-# --- Singular Value Decomposition ---
-# Robot Jacobian (3 end-effector DOF, 4 joint DOF)
+# Dimensionless, normalized example: three task coordinates, four joints.
 J = np.array([[1.0, 0.5, 0.2, 0.0],
               [0.0, 1.0, 0.8, 0.3],
               [0.0, 0.0, 1.0, 0.9]])
+U, sigma, Vt = np.linalg.svd(J, full_matrices=True)
+print("Singular values:", sigma)
+print("Condition number:", sigma[0] / sigma[-1])
+print("Kernel residual:", np.linalg.norm(J @ Vt[-1]))
+assert np.linalg.matrix_rank(J) == 3
+assert np.allclose(J @ np.linalg.pinv(J), np.eye(3))
+# Full task rank and a nontrivial kernel coexist; no near-singularity is implied.
 
-U, sigma, Vt = np.linalg.svd(J, full_matrices=False)
-print(f"Singular values: {sigma}")
-# Smallest singular value near zero → near-singular configuration
-
-# Moore-Penrose pseudoinverse
-J_pinv = np.linalg.pinv(J)   # V Σ⁺ Uᵀ
-print(f"Pseudoinverse shape: {J_pinv.shape}")  # (4, 3)
+weak = np.diag([1.0, 1e-3])
+desired = np.ones(2)
+DAMPING = 0.1
+regularized = np.linalg.solve(
+    weak.T @ weak + DAMPING**2 * np.eye(2), weak.T @ desired
+)
+print("Undamped command:", np.linalg.pinv(weak) @ desired)
+print("Damped command:", regularized)
+print("Damped task residual:", weak @ regularized - desired)
 ```
 
 ```python
-# --- 2D Rotation matrix ---
-def rotation_2d(theta_deg):
+def rotation_2d(theta_deg: float) -> np.ndarray:
     theta = np.radians(theta_deg)
     return np.array([[np.cos(theta), -np.sin(theta)],
-                     [np.sin(theta),  np.cos(theta)]])
+                     [np.sin(theta), np.cos(theta)]])
 
-R45 = rotation_2d(45)
-v = np.array([1.0, 0.0])
-v_rotated = R45 @ v
-print(f"Rotated vector: {v_rotated}")    # [0.707, 0.707]
-print(f"Length preserved: {np.linalg.norm(v_rotated):.6f}")  # 1.000000
+R45 = rotation_2d(45.0)
+rotated = R45 @ np.array([1.0, 0.0])
+print("Rotated vector:", rotated)
+assert np.allclose(R45.T @ R45, np.eye(2))
+assert np.isclose(np.linalg.norm(rotated), 1.0)
 ```
-
 
 ## Exercises {#sec-exercises}
 
-**1.1** A force sensor on a robot wrist reads $\bm{F} = [3, -4, 0]$ N. The wrist joint axis is $\hat{\bm{z}} = [0, 0, 1]$. What is the magnitude of the force component perpendicular to the joint axis? *(Hint: decompose $\bm{F}$ into components parallel and perpendicular to $\hat{\bm{z}}$.)*
+**1.1** A wrist force sensor reads $(3,-4,0)$ N and a joint's unit axis is $(0,0,1)$. Find the force components parallel and perpendicular to that axis. Explain why a moment arm is still needed to compute the joint moment.
 
-**1.2** A $2 \times 2$ matrix has eigenvalues $\lambda_1 = -2 + 3i$ and $\lambda_2 = -2 - 3i$. Is the corresponding linear system stable? What is the frequency of oscillation (in rad/s)?
+**1.2** A constant continuous-time dynamics matrix has eigenvalues $-2\pm3i$. Determine its asymptotic stability and modal angular frequency. Explain why these eigenvalues alone do not bound the largest finite-time Euclidean amplification.
 
-**1.3** Compute the rank of the following matrix and identify a basis for its null space:
-$$M = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \\ 1 & 1 & 1 \end{bmatrix}.$$
+**1.3** Compute the rank and a kernel basis for
 
-**1.4 (Python)** Using `numpy`, compute the SVD of the $3 \times 3$ inertia matrix of a uniform rectangular plate with dimensions $a=0.4$ m, $b=0.3$ m, mass $m=2$ kg:
-$$I = \frac{m}{12}\begin{bmatrix} b^2 & 0 & 0 \\ 0 & a^2 & 0 \\ 0 & 0 & a^2+b^2 \end{bmatrix}.$$
-What are the principal moments of inertia? Which axis is easiest to spin about?
+$$
+M=\begin{bmatrix}1&2&3\\2&4&6\\1&1&1\end{bmatrix}.
+$$
 
-**1.5 (Challenge)** For the double pendulum, the linearized dynamics matrix near the downward equilibrium has the form:
-$$A = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ -g(m_1+m_2)/(m_1 L_1) & g m_2/(m_1 L_1) & 0 & 0 \\ g(m_1+m_2)/(m_1 L_2) & -g(m_1+m_2)/(m_1 L_2) & 0 & 0 \end{bmatrix}.$$
-With $m_1 = m_2 = 1$ kg, $L_1 = L_2 = 0.5$ m, $g = 9.81$ m/s²: compute the eigenvalues numerically in Python and determine the natural frequencies of the two normal modes.
+**1.4** A uniform thin rectangular plate has dimensions $a=0.4$ m, $b=0.3$ m and mass $m=2$ kg. About its centre of mass, with axes parallel to its edges and normal,
 
+$$
+I=\frac m{12}\operatorname{diag}(b^2,a^2,a^2+b^2).
+$$
+
+Compute the principal moments and identify the smallest. State what is held fixed when calling an axis “easiest to spin about.”
+
+**1.5** Consider two point masses joined by massless links, with no damping. Let $q_1,q_2$ be **absolute** link angles from vertically downward. Linearization at rest gives $M_0\ddot{\mathbf q}+K_0\mathbf q=0$, with
+
+$$
+M_0=\begin{bmatrix}
+(m_1+m_2)L_1^2&m_2L_1L_2\\
+m_2L_1L_2&m_2L_2^2
+\end{bmatrix},
+\quad
+K_0=g\operatorname{diag}((m_1+m_2)L_1,m_2L_2).
+$$
+
+Construct $A=\begin{bmatrix}0&I\\-M_0^{-1}K_0&0\end{bmatrix}$. For equal masses and lengths $L=0.5$ m, show that the two natural angular frequencies are $\sqrt{(2\pm\sqrt2)g/L}$. These are undamped normal modes, not a prescribed sequence for a golf swing.
+
+**1.6** Verify the shear SVD, transient-growth, task-null path and double-integrator Gramian examples independently. Which statements are coordinate dependent, and which retain a physical interpretation after the corresponding metric is transformed?
 
 ## Summary {#sec-summary-ch1}
 
-This chapter established the fundamental vocabulary of linear algebra needed throughout the book:
+Each matrix answers a question fixed by its domain, codomain, metric and model. A task Jacobian describes instantaneous motion; its transpose transmits force through virtual work. Inertia relates velocity to momentum and kinetic energy. A dynamics matrix describes the evolution of a state perturbation, and control or observability over time depends on the dynamics together with inputs or measurements.
 
-| Concept | Definition | Role in control/robotics |
-|---------|-----------|--------------------------|
-| Vector | Ordered array of numbers | State, velocity, force |
-| Matrix | 2D array; a linear map | Dynamics, rotation, inertia |
-| Dot product | Scalar alignment measure | Energy, projection, sensing |
-| Cross product | Perpendicular vector | Torque, angular velocity |
-| Eigenvector/value | Invariant direction / stretch | Natural modes, stability |
-| Rank | Independent information count | Controllability, observability |
-| SVD | $U\Sigma V^\top$ factorization | Pseudoinverse, conditioning |
-
-The key takeaway: **eigenvalues determine whether a system is stable or unstable**; **SVD reveals which directions a system can and cannot control**. These two facts drive almost every design decision in modern robotics control.
+For the golf investigation, this gives a sequence of questions to carry into later chapters: which motion is kinematically available, what force and energy budget produces it, how do perturbations evolve before contact, and which measurements can distinguish competing explanations? A favorable singular value, stable eigenvalue or small numerical residual answers only its own part of that chain.

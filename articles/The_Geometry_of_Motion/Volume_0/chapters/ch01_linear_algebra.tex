@@ -6,13 +6,13 @@
 \label{ch:linear_algebra}
 
 \epigraph{%
-  You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.
+  A useful model connects a mathematical description to measurements, forces and motion.
 }{}
 
-\begin{laymansbox}{Context \& Use Case: Why Linear Algebra is the Language of Motion}{context_box}
+\begin{laymansbox}{Context and Use Case: Linear Algebra for Motion}{ch1_context_box}
 \textbf{The Math You Will See:} We will cover Vectors ($\mathbf{v}$), Matrices ($\mathbf{M}$), Vector Spaces and their axioms, Linear Independence and Basis, Eigenvalues/Eigenvectors ($\lambda, \mathbf{v}$), the Singular Value Decomposition (SVD), Quadratic Forms ($\mathbf{x}^T \mathbf{M} \mathbf{x}$), Positive Definiteness, and Dyads/Dyadics (the tensor products that underpin inertia, stress, and stiffness).
 
-\textbf{Why We Need It:} A robot's joints or a car's velocity don't exist as single numbers; they exist as large arrays of interacting numbers. Linear algebra is the mathematics of these arrays. If you want to know if a drone will crash into the ground, you don't track every single rotor separately; you assemble the entire system into a single matrix and look at its eigenvalues.
+\textbf{Why We Need It:} Joint velocities, task velocities, forces and measured signals have multiple interacting components. Linear maps describe how those components relate at a specified state; matrix decompositions reveal directions, sensitivity and numerical structure. Predicting a collision or a golf shot additionally requires the dynamics, initial condition, inputs, constraints and contact event. Eigenvalues of one matrix do not answer all of those questions.
 
 \textbf{All Variables Defined:} Check the \textbf{Nomenclature} at the start of the book for standard vector and matrix conventions.
 \end{laymansbox}
@@ -22,18 +22,18 @@
 \label{sec:la_history}
 % ------------------------------------------------------------------
 
-Linear algebra---the mathematics of vectors, matrices, and linear transformations---is arguably the single most consequential mathematical framework underpinning all of modern engineering. Its roots stretch back to ancient China (the \emph{Nine Chapters on the Mathematical Art}, ca.~200 BCE, contained early row-reduction methods for solving systems of linear equations) and were formalized in the West through the work of Leibniz, Cramer, and Cayley in the 17th--19th centuries.
+Linear algebra connects the problem of solving simultaneous equations with the geometric study of linear transformations. Its importance in mechanics comes from reusing the same structure for different tasks: resolving velocities, assembling inertias, fitting measurements and propagating local perturbations.
 
-However, it was not until the mid-20th century that linear algebra assumed its central role in control theory. In 1960, Rudolf Kalman published his landmark paper introducing the \emph{state space representation} of dynamical systems, which recast classical control problems---previously analyzed using frequency-domain transfer functions---into the language of matrices and vectors~\cite{Kalman1960}. Kalman's formulation required engineers to reason about \emph{controllability} and \emph{observability} using rank conditions on matrices, placing linear algebra at the absolute foundation of modern control engineering.
+Kalman's 1960 paper \emph{A New Approach to Linear Filtering and Prediction Problems} used state-transition methods to derive a recursive linear estimation scheme and its error-covariance equations~\cite{Kalman1960}. It was a major contribution to estimation, not the first invention of state representation or a claim that every physical system is linear. Controllability and observability make the role of matrix rank precise for declared dynamical models.
 
-Today, every simulation framework discussed in this text series---from MuJoCo's articulated-body integrator to Drake's trajectory optimization engine---performs thousands of matrix operations per millisecond. Understanding the structures, decompositions, and geometric interpretations of linear algebra is not optional; it is the prerequisite upon which every subsequent chapter of \textit{The Geometry of Motion} is built.
+Modern simulation and optimization combine kinematic maps, linear solves and nonlinear updates. Solving a linear system within a nonlinear simulation does not make the entire simulated motion linear. The algebra keeps those uses distinct.
 
 % ------------------------------------------------------------------
 \section{Vectors, Matrices, and Vector Spaces}
 \label{sec:vectors_matrices}
 % ------------------------------------------------------------------
 
-Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices. More importantly, we must understand the abstract \emph{space} in which these objects live, because the geometry of that space dictates everything about how physical systems behave. Readers seeking a comprehensive undergraduate treatment of these ideas will find Strang's textbook~\cite{strang2019} an excellent companion to this chapter.
+Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices. More importantly, we must understand the abstract \emph{space} in which these objects live, because the space and its metric determine which operations and comparisons are meaningful. Readers seeking a comprehensive undergraduate treatment of these ideas will find Strang's textbook~\cite{strang2019} an excellent companion to this chapter.
 
 \begin{figure}[htb]
 \centering
@@ -60,12 +60,12 @@ Before mapping physics, we must understand the fundamental data structures of co
 
 \subsection{Vectors}
 
-A \textbf{vector}\index{Vector} $\mathbf{v}$ is an ordered array of numbers. It can represent a position in space, a velocity profile, a list of sensor readings, or the activation levels of every muscle in a golfer's forearm. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$). A generic column vector in $n$-dimensional space is denoted:
+An element of a vector space is a \textbf{vector}\index{Vector}; after choosing a finite basis, its coordinates form an ordered array of numbers. It can represent a position in space, a velocity profile, a list of sensor readings, or the activation levels of every muscle in a golfer's forearm. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$). A generic column vector in $n$-dimensional space is denoted:
 \begin{equation}
    \mathbf{v} = \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_n \end{bmatrix} \in \Reals^n
 \end{equation}
 
-It is crucial to distinguish two perspectives on what a vector ``is.'' The \emph{algebraic} perspective treats a vector as a column of numbers. The \emph{geometric} perspective treats a vector as a directed arrow in space, possessing both magnitude and direction. Both perspectives are valid and useful; throughout this text, we will switch between them freely. When we write $\mathbf{v} \in \Reals^3$, we mean both the triple of numbers $(v_1, v_2, v_3)$ and the arrow pointing from the origin to the point $(v_1, v_2, v_3)$ in three-dimensional Euclidean space.
+It is crucial to distinguish two perspectives on what a vector ``is.'' The \emph{algebraic} perspective treats a vector as a column of numbers. The \emph{geometric} perspective treats a vector as a directed arrow in space, possessing both magnitude and direction. Both perspectives are useful when the basis and metric are stated. A position is a point in an affine space; displacement and velocity are vectors. Muscle activations can be stored in an array, but their physically admissible bounded, nonnegative set is not itself a real vector space. When we write $\mathbf{v} \in \Reals^3$, we mean both the triple of numbers $(v_1, v_2, v_3)$ and the arrow pointing from the origin to the point $(v_1, v_2, v_3)$ in three-dimensional Euclidean space.
 
 \subsection{Matrices}
 
@@ -102,7 +102,7 @@ A \emph{vector space} $V$ over the real numbers $\Reals$ is a set of objects (ca
 \end{definition}
 
 \begin{laymansbox}{Why Do We Care About Abstract Axioms?}{axiom_motivation}
-You might wonder: why bother with these formal rules? Because the same mathematical structures appear over and over in radically different contexts. The set $\Reals^n$ of column vectors satisfies these axioms---but so does the set of all continuous functions $f: [0, T] \to \Reals$ (where ``addition'' means adding functions pointwise). In optimal control, the ``vectors'' we optimize over are often entire \emph{trajectories}, which are functions of time. By proving a theorem about abstract vector spaces, we prove it simultaneously for column vectors, for functions, and for trajectories. The axioms are the price of generality.
+You might wonder: why bother with these formal rules? Because the same mathematical structures appear over and over in radically different contexts. The set $\Reals^n$ of column vectors satisfies these axioms---but so does the set of all continuous functions $f: [0, T] \to \Reals$ (where ``addition'' means adding functions pointwise). In optimal control, the ``vectors'' we optimize over are often entire \emph{trajectories}, which are functions of time. By proving a theorem about abstract vector spaces, we prove it simultaneously for column vectors, for functions, and for trajectories. The axioms are the price of generality. The ambient function space may be a vector space, but trajectories satisfying nonlinear dynamics, unilateral contact or bounded actuation generally form a constrained subset that is not closed under addition and scaling.
 \end{laymansbox}
 
 \begin{example}{Verifying \texorpdfstring{$\Reals^n$}{Rn} is a Vector Space}{rn_vector_space}
@@ -129,7 +129,7 @@ A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_k\}$ in a vec
 is the trivial solution $\alpha_1 = \alpha_2 = \cdots = \alpha_k = 0$. If a nontrivial solution exists (i.e., at least one $\alpha_i \neq 0$), the vectors are \emph{linearly dependent}.
 \end{definition}
 
-Intuitively, a set of vectors is linearly independent if none of them can be ``built'' from the others. In $\Reals^2$, two vectors are linearly independent if and only if they do not point in the same (or exactly opposite) direction. In $\Reals^3$, three vectors are linearly independent if and only if they do not all lie in the same plane.
+Intuitively, a set of vectors is linearly independent if none of them can be ``built'' from the others. In $\Reals^2$, two nonzero vectors are independent exactly when neither is a scalar multiple of the other. In $\Reals^3$, three vectors are independent exactly when they do not lie in one plane through the origin.
 
 \begin{example}{Linear Independence in \texorpdfstring{$\Reals^3$}{R3}}{lin_indep_R3}
 Consider the vectors:
@@ -153,7 +153,7 @@ The third equation provides no constraint. Setting $\alpha_3 = 1$ yields $\alpha
 \label{subsec:basis_dimension}
 
 \begin{definition}{Basis\index{Basis}}{basis}
-A \emph{basis} for a vector space $V$ is a set of vectors $\mathcal{B} = \{\mathbf{b}_1, \ldots, \mathbf{b}_n\}$ that is both linearly independent and spans $V$ (i.e., every vector in $V$ can be written as a linear combination of the basis vectors). The number $n$ of vectors in any basis is called the \emph{dimension}\index{Dimension} of $V$, written $\dim(V) = n$.
+A finite \emph{basis} for a finite-dimensional vector space $V$ is a set of vectors $\mathcal{B} = \{\mathbf{b}_1, \ldots, \mathbf{b}_n\}$ that is both linearly independent and spans $V$ (i.e., every vector in $V$ can be written as a linear combination of the basis vectors). The number $n$ of vectors in any basis is called the \emph{dimension}\index{Dimension} of $V$, written $\dim(V) = n$.
 \end{definition}
 
 A fundamental theorem of linear algebra states that \emph{every basis for a given vector space has exactly the same number of elements}. This is why ``dimension'' is well-defined---it is an intrinsic property of the space, not of any particular choice of basis.
@@ -161,7 +161,8 @@ A fundamental theorem of linear algebra states that \emph{every basis for a give
 The standard basis for $\Reals^n$ consists of the unit coordinate vectors $\mathbf{e}_1 = (1, 0, \ldots, 0)^T$, $\mathbf{e}_2 = (0, 1, 0, \ldots, 0)^T$, through $\mathbf{e}_n = (0, \ldots, 0, 1)^T$. Any vector $\mathbf{v} = (v_1, \ldots, v_n)^T$ can be written uniquely as $\mathbf{v} = v_1 \mathbf{e}_1 + \cdots + v_n \mathbf{e}_n$. The numbers $v_1, \ldots, v_n$ are the \emph{coordinates} of $\mathbf{v}$ with respect to this basis.
 
 \begin{laymansbox}{Why Basis Matters for Robotics}{basis_robotics}
-When we model a robot arm, the ``natural'' configuration coordinates might be the joint angles $\mathbf{q} = (\theta_1, \theta_2, \ldots, \theta_n)$. But the task might require us to specify end-effector positions in Cartesian coordinates $\mathbf{x} = (x, y, z)$. The forward kinematics map $\mathbf{x} = \mathbf{f}(\mathbf{q})$ is generally non-linear due to trigonometric combinations of joint angles. However, at the velocity level, the tangent mapping between the joint velocity space $\dot{\mathbf{q}} \in \Reals^n$ and Cartesian velocity space $\mathbf{v} \in \Reals^3$ is linear: $\mathbf{v} = \mathbf{J}(\mathbf{q})\dot{\mathbf{q}}$, where $\mathbf{J}(\mathbf{q}) = \partial \mathbf{f} / \partial \mathbf{q}$ is the Jacobian matrix (Chapter~\ref{ch:configuration}). The Jacobian is the linear transformation that maps joint tangent vectors to task-space tangent vectors.
+Joint angles are coordinates on a configuration space, not basis vectors. A task map $\mathbf y=h(\mathbf q)$ is generally nonlinear and can change dimension. Its Jacobian $J(\mathbf q)=Dh(\mathbf q)$ maps an instantaneous joint velocity to a task velocity, $\dot{\mathbf y}=J\dot{\mathbf q}$. This is a linear map between tangent spaces at a specified configuration, and may have a nontrivial kernel. A change of basis within one finite-dimensional vector space is instead square and invertible. A seven-joint-to-three-position Jacobian cannot be a change of basis.
+
 \end{laymansbox}
 
 \subsection{Linear Transformations}
@@ -190,7 +191,7 @@ and by the compatibility of matrix multiplication with scalar multiplication:
 \begin{equation}
     T(\alpha \mathbf{v}) = \mathbf{M}(\alpha \mathbf{v}) = \alpha (\mathbf{M}\mathbf{v}) = \alpha \, T(\mathbf{v})
 \end{equation}
-Both conditions of linearity are satisfied. $\qed$
+Both conditions of linearity are satisfied.
 \end{proof}
 
 \subsection{Rank, Null Space, and the Rank-Nullity Theorem}
@@ -202,7 +203,7 @@ Not all linear transformations preserve full information about the input. Some t
 The \emph{rank} of a matrix $\mathbf{M}$, denoted $\text{rank}(\mathbf{M})$, is the number of linearly independent columns (equivalently, the number of linearly independent rows) of $\mathbf{M}$. It equals the dimension of the column space (the range of the corresponding linear transformation).
 \end{definition}
 
-If a $3 \times 3$ matrix has rank 2, it collapses full 3D space into a 2D plane. In robotics, the rank of the Jacobian matrix $\mathbf{J}(\mathbf{q})$ tells you how many independent directions the end-effector can instantaneously move in. If the rank drops below its maximum value, the robot is at a \emph{singularity}\index{Singularity}---it has lost the ability to move in at least one Cartesian direction, regardless of how its motors are commanded.
+If a $3 \times 3$ matrix has rank 2, it collapses full 3D space into a 2D plane. In robotics, the rank of the Jacobian matrix $\mathbf{J}(\mathbf{q})$ tells you how many independent directions the end-effector can instantaneously move in. If the rank drops below its maximum value, the robot is at a \emph{singularity}\index{Singularity}---some previously available instantaneous task velocities are no longer in its image. This statement concerns the chosen task and admissible joint velocities; it does not by itself prove finite-time unreachability or loss of dynamical controllability.
 
 \begin{definition}{Null Space (Kernel)\index{Null Space}}{null_space}
 The \emph{null space} (or \emph{kernel}) of a matrix $\mathbf{M}$, denoted $\mathcal{N}(\mathbf{M})$, is the set of all vectors that the matrix maps to zero:
@@ -211,16 +212,16 @@ The \emph{null space} (or \emph{kernel}) of a matrix $\mathbf{M}$, denoted $\mat
 \end{equation}
 \end{definition}
 
-For a humanoid robot, the null space of the arm's Jacobian describes all ``internal motions'' the arm can execute (like repositioning the elbow) while keeping the hand perfectly stationary holding a cup of coffee. These null-space motions are invisible in task space but consume real joint velocities. Exploiting them is a key strategy in redundant robot control.
+For a redundant arm, $\ker J(\mathbf q)$ contains instantaneous joint velocities with zero velocity in the chosen hand task. A finite self-motion must keep satisfying the evolving constraint $J(\mathbf q(t))\dot{\mathbf q}(t)=0$; a straight step along the initial kernel need not do so. At regular configurations the constant-rank theorem describes the local task-level set. At a singular configuration, even an instantaneous kernel direction need not integrate into a finite constant-task motion.
 
 \begin{definition}{The Determinant\index{Determinant} (Volumetric Interpretation)}{determinant}
-For a square matrix $\mathbf{M} \in \Reals^{n \times n}$, the \emph{determinant} $\det(\mathbf{M})$ is a scalar whose absolute value $|\det(\mathbf{M})|$ measures the factor by which $\mathbf{M}$ scales $n$-dimensional volume, while its sign indicates whether orientation (parity) is preserved or reversed. Imagine a unit hypercube $[0,1]^n$. Applying $\mathbf{M}$ to every point in that cube warps it into a parallelepiped whose volume equals $|\det(\mathbf{M})|$.
+For a square matrix $\mathbf{M} \in \Reals^{n \times n}$, the \emph{determinant} $\det(\mathbf{M})$ is a scalar whose absolute value measures the factor by which $\mathbf{M}$ scales $n$-dimensional volume. Imagine a unit hypercube $[0,1]^n$. Applying $\mathbf{M}$ to every point in that cube warps it into a parallelepiped whose signed volume equals $\det(\mathbf{M})$.
 \end{definition}
 
 \begin{itemize}
-    \item If $|\det(\mathbf{M})| = 1$ with $\det(\mathbf{M}) > 0$, volume and handedness are perfectly preserved (as in a pure rotation $\mathbf{R} \in \SO(n)$ where $\det(\mathbf{R}) = +1$).
+    \item If $\det(\mathbf{M}) = 1$, volume is perfectly preserved (like a pure rotation in space).
     \item If $\det(\mathbf{M}) = 0$, volume is crushed completely flat---the matrix is \emph{singular} and loses rank. The transformation is not invertible.
-    \item If $\det(\mathbf{M}) < 0$, the transformation reverses spatial orientation (mirror reflection or parity inversion), while scaling volume by $|\det(\mathbf{M})|$.
+    \item If $\det(\mathbf{M}) < 0$, orientation is reversed and volume is multiplied by $|\det(\mathbf M)|$. For example, $\operatorname{diag}(-2,3)$ reverses orientation and multiplies area by six; only absolute determinant one preserves volume.
 \end{itemize}
 
 Now we arrive at one of the most important structural results in linear algebra:
@@ -239,18 +240,22 @@ We claim that $\{\mathbf{M}\mathbf{w}_1, \ldots, \mathbf{M}\mathbf{w}_{m-k}\}$ i
 
 \emph{Spanning:} Any $\mathbf{y}$ in the range of $\mathbf{M}$ can be written as $\mathbf{y} = \mathbf{M}\mathbf{v}$ for some $\mathbf{v} \in \Reals^m$. Expanding $\mathbf{v}$ in our basis: $\mathbf{v} = \sum_{i=1}^k \alpha_i \mathbf{n}_i + \sum_{j=1}^{m-k} \beta_j \mathbf{w}_j$. Since $\mathbf{M}\mathbf{n}_i = \mathbf{0}$, we get $\mathbf{y} = \sum_{j=1}^{m-k} \beta_j \mathbf{M}\mathbf{w}_j$. So the $\mathbf{M}\mathbf{w}_j$ span the range.
 
-\emph{Independence:} Suppose $\sum_{j=1}^{m-k} \beta_j \mathbf{M}\mathbf{w}_j = \mathbf{0}$. Then $\mathbf{M}\left(\sum_j \beta_j \mathbf{w}_j\right) = \mathbf{0}$, meaning $\sum_j \beta_j \mathbf{w}_j \in \mathcal{N}(\mathbf{M})$. So $\sum_j \beta_j \mathbf{w}_j = \sum_{i=1}^k \gamma_i \mathbf{n}_i$ for some scalars $\gamma_i$. But $\{\mathbf{n}_1, \ldots, \mathbf{n}_k, \mathbf{w}_1, \ldots, \mathbf{w}_{m-k}\}$ is a basis for $\Reals^m$, so these vectors are linearly independent. Therefore all $\beta_j = 0$ and all $\gamma_i = 0$.
+\emph{Independence:} Suppose
+\[
+\sum_{j=1}^{m-k}\beta_j\mathbf M\mathbf w_j=0.
+\]
+Then $M(\sum_j\beta_j\mathbf w_j)=0$, so the vector $\sum_j\beta_j\mathbf w_j$ belongs to the kernel. It therefore equals $\sum_{i=1}^k\gamma_i\mathbf n_i$ for some scalars $\gamma_i$. The combined list of kernel vectors and extension vectors is a basis for $\Reals^m$, so it is independent. All $\beta_j$ and $\gamma_i$ must be zero.
 
-Thus $r = m - k$, establishing $\text{rank}(\mathbf{M}) + \dim(\mathcal{N}(\mathbf{M})) = m$. $\qed$
+Thus $r = m - k$, establishing $\text{rank}(\mathbf{M}) + \dim(\mathcal{N}(\mathbf{M})) = m$.
 \end{proof}
 
 \begin{laymansbox}{The Physical Meaning of Rank-Nullity}{rank_nullity_physical}
-For a robot with $m$ motors and an end-effector moving in $n$-dimensional task space:
+For a robot with $m$ independent joint-velocity coordinates and an $n$-dimensional task:
 \begin{itemize}
-    \item The \textbf{rank} of the Jacobian tells you how many independent task-space directions the robot can control.
+    \item The \textbf{rank} of the Jacobian tells you the dimension of the instantaneous task-velocity image when all declared joint velocities are admissible.
     \item The \textbf{nullity} (dimension of the null space) tells you how many ``extra'' internal motions remain after the task is specified.
 \end{itemize}
-If a 7-DOF arm ($m = 7$) controls a hand in 3D position space ($n = 3$), and the Jacobian has rank 3, then the nullity is $7 - 3 = 4$. The robot has 4 degrees of internal freedom to reposition its elbow, shoulder, and wrist without moving the hand at all.
+If a 7-DOF arm ($m = 7$) controls a hand in 3D position space ($n = 3$), and the Jacobian has rank 3, then the nullity is $7 - 3 = 4$. The robot has 4 degrees of internal freedom to reposition its elbow, shoulder, and wrist with zero instantaneous hand-position velocity. This does not fix hand orientation or guarantee a finite self-motion without updating the Jacobian.
 \end{laymansbox}
 
 % ------------------------------------------------------------------
@@ -266,7 +271,7 @@ Two fundamental operations exist for combining vectors. Understanding them geome
 The dot product (or inner product) takes two vectors and returns a scalar. It measures how much two vectors ``align'' with each other.
 
 \begin{definition}{Dot Product\index{Dot Product}}{dot_product}
-For vectors $\mathbf{a}, \mathbf{b} \in \Reals^n$, the \emph{dot product} is defined as:
+In an orthonormal Euclidean basis, the \emph{dot product} of vectors $\mathbf{a}, \mathbf{b} \in \Reals^n$ is:
 \begin{equation}
    \mathbf{a} \cdot \mathbf{b} = \mathbf{a}^T \mathbf{b} = \sum_{i=1}^n a_i b_i
 \end{equation}
@@ -297,7 +302,7 @@ Equating the two expressions:
 \end{equation}
 Canceling $\norm{\mathbf{a}}^2 + \norm{\mathbf{b}}^2$ from both sides and dividing by $-2$:
 \begin{equation}
-    \mathbf{a}^T\mathbf{b} = \norm{\mathbf{a}}\norm{\mathbf{b}}\cos\theta \qed
+    \mathbf{a}^T\mathbf{b} = \norm{\mathbf{a}}\norm{\mathbf{b}}\cos\theta
 \end{equation}
 \end{proof}
 
@@ -308,27 +313,20 @@ Key consequences of the dot product formula:
     \item If $\theta = 180^\circ$ (antiparallel vectors): $\mathbf{a} \cdot \mathbf{b} = -\norm{\mathbf{a}}\norm{\mathbf{b}}$ (maximum negative value).
 \end{itemize}
 
-In control theory, the dot product appears constantly: kinetic energy is $E = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q}) \dot{\mathbf{q}}$, optimal control costs are $J = \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}$, and projecting forces onto joint axes uses $\tau_i = \mathcal{F}^T \mathcal{S}_i$. In each case, a dot product computes a scalar ``alignment'' between a vector and a reference direction.
+In mechanics, $T=\frac12\dot{\mathbf q}^TM(\mathbf q)\dot{\mathbf q}$ is a kinetic-energy quadratic form. An optimal-control running cost may be $\ell=\mathbf x^TQ\mathbf x+\mathbf u^TR\mathbf u$; a trajectory cost integrates it and may add a terminal cost. Generalized-force projection $\tau_i=\mathcal F^T\mathcal S_i$ is a dual pairing of a wrench and a joint-motion direction, with consistent frame, reference point and component order. These expressions have different units and meanings; none is automatically a Euclidean angle between like physical quantities.
 
 \subsubsection{Orthogonal Projection}
 
-A common operation is projecting one vector onto another. For vectors $\mathbf{a}, \mathbf{b} \in \Reals^n$ with $\mathbf{a} \neq \mathbf{0}$, we distinguish two related quantities:
-\begin{itemize}
-    \item The \textbf{scalar projection} (or scalar component) of $\mathbf{b}$ along the direction of $\mathbf{a}$ is the signed scalar:
-    \begin{equation}
-        \text{comp}_{\mathbf{a}} \mathbf{b} = \mathbf{b} \cdot \hat{\mathbf{a}} = \frac{\mathbf{a} \cdot \mathbf{b}}{\norm{\mathbf{a}}} = \norm{\mathbf{b}}\cos\theta.
-    \end{equation}
-    \item The \textbf{vector projection} of $\mathbf{b}$ onto $\mathbf{a}$ is the vector parallel to $\mathbf{a}$:
-    \begin{equation}
-        \text{proj}_{\mathbf{a}} \mathbf{b} = (\text{comp}_{\mathbf{a}} \mathbf{b}) \hat{\mathbf{a}} = \frac{\mathbf{a} \cdot \mathbf{b}}{\norm{\mathbf{a}}^2} \, \mathbf{a} = \frac{\mathbf{a}\mathbf{a}^T}{\mathbf{a}^T\mathbf{a}} \mathbf{b}.
-    \end{equation}
-\end{itemize}
-The residual (orthogonal complement) $\mathbf{b}_{\perp} = \mathbf{b} - \text{proj}_{\mathbf{a}} \mathbf{b}$ satisfies $\mathbf{a} \cdot \mathbf{b}_{\perp} = 0$. This decomposition---splitting a vector into a parallel component along $\mathbf{a}$ and an orthogonal component perpendicular to $\mathbf{a}$---is the geometric core of the Gram-Schmidt orthogonalization process and underlies the QR decomposition used in numerical linear algebra.
+A common operation is projecting one vector onto another. For $\mathbf a\ne0$, the \textbf{scalar projection} is $\mathbf a^T\mathbf b/\|\mathbf a\|$. The \textbf{vector projection} is:
+\begin{equation}
+    \text{proj}_{\mathbf{a}} \mathbf{b} = \frac{\mathbf{a} \cdot \mathbf{b}}{\mathbf{a} \cdot \mathbf{a}} \, \mathbf{a} = \frac{\mathbf{a}^T \mathbf{b}}{\norm{\mathbf{a}}^2} \, \mathbf{a}
+\end{equation}
+The residual $\mathbf{b} - \text{proj}_{\mathbf{a}} \mathbf{b}$ is orthogonal to $\mathbf{a}$. This decomposition---splitting a vector into a component along a direction and a component perpendicular to it---is the geometric core of the Gram-Schmidt process and underlies the QR decomposition used in numerical linear algebra.
 
 \subsection{The Cross Product and the Skew-Symmetric Matrix}
 \label{subsec:cross_product}
 
-The cross product is a vector operation unique to three dimensions. It takes two vectors and generates a third vector that is perfectly perpendicular to both of them.
+The standard cross product used here is defined in oriented three-dimensional Euclidean space. Its result is orthogonal to both inputs. Parallel inputs, or a zero input, give the zero vector, which has no direction.
 
 \begin{definition}{Cross Product\index{Cross Product}}{cross_product}
 For vectors $\mathbf{a}, \mathbf{b} \in \Reals^3$, the \emph{cross product} is:
@@ -346,7 +344,7 @@ The cross product is \emph{anti-commutative}: $\mathbf{a} \times \mathbf{b} = -(
 
 Crucially, the cross product can be rewritten as a matrix multiplication using the \emph{skew-symmetric matrix}\index{Skew-Symmetric Matrix}:
 \begin{equation}
-\label{eq:skew_symmetric}
+\label{eq:ch1_skew_symmetric}
     [\mathbf{a}_\times] = \begin{bmatrix} 0 & -a_z & a_y \\ a_z & 0 & -a_x \\ -a_y & a_x & 0 \end{bmatrix} \quad \implies \quad \mathbf{a} \times \mathbf{b} = [\mathbf{a}_\times] \mathbf{b}
 \end{equation}
 
@@ -361,14 +359,14 @@ The skew-symmetric matrix $[\mathbf{a}_\times]$ satisfies:
 \end{proposition}
 
 \begin{proof}
-(i) is immediate from inspection of Equation~\eqref{eq:skew_symmetric}: transposing negates every off-diagonal element while the diagonal remains zero.
+(i) is immediate from inspection of Equation~\eqref{eq:ch1_skew_symmetric}: transposing negates every off-diagonal element while the diagonal remains zero.
 
 (ii) We compute $\mathbf{a}^T ([\mathbf{a}_\times] \mathbf{b}) = \mathbf{a}^T (\mathbf{a} \times \mathbf{b})$. Since $\mathbf{a} \times \mathbf{b}$ is perpendicular to $\mathbf{a}$ (by the geometric definition of the cross product), the dot product is zero.
 
-(iii) The characteristic polynomial $\det([\mathbf{a}_\times] - \lambda \mathbf{I}) = -\lambda^3 - \norm{\mathbf{a}}^2 \lambda = -\lambda(\lambda^2 + \norm{\mathbf{a}}^2)$. The roots are $\lambda = 0$ and $\lambda = \pm i\norm{\mathbf{a}}$. $\qed$
+(iii) The characteristic polynomial $\det([\mathbf{a}_\times] - \lambda \mathbf{I}) = -\lambda^3 - \norm{\mathbf{a}}^2 \lambda = -\lambda(\lambda^2 + \norm{\mathbf{a}}^2)$. The roots are $\lambda = 0$ and $\lambda = \pm i\norm{\mathbf{a}}$.
 \end{proof}
 
-This skew-symmetric matrix representation is absolutely pivotal for Chapters~\ref{ch:rotations} and~\ref{ch:exponential_coordinates}, where we show that the Lie Algebra $\mathfrak{so}(3)$---the tangent space to the rotation group---consists entirely of $3 \times 3$ skew-symmetric matrices. Angular velocities live in this space.
+This skew-symmetric matrix representation is absolutely pivotal for Chapters~\ref{ch:rotations} and~\ref{ch:exponential_coordinates}, where we show that the Lie algebra $\mathfrak{so}(3)$---the tangent space to the rotation group at the identity---consists entirely of $3 \times 3$ skew-symmetric matrices. An angular-velocity vector corresponds to such a matrix after choosing a body or spatial trivialization; a tangent matrix at a general rotation is not itself necessarily skew-symmetric.
 
 \subsubsection{The Scalar Triple Product}
 
@@ -383,7 +381,7 @@ If this determinant is zero, the three vectors are coplanar and linearly depende
 \label{sec:eigenvalues}
 % ------------------------------------------------------------------
 
-When you multiply a general vector by a matrix, the resulting vector typically changes both its magnitude and its direction. However, for almost every square matrix, there exist a few special directions that do \emph{not} change their orientation when the matrix acts upon them. They are only stretched, shrunk, or flipped. These invariant directions reveal the deepest structural properties of the linear transformation.
+When you multiply a general vector by a matrix, the resulting vector typically changes both its magnitude and its direction. Over the complex numbers, every square matrix of positive size has an eigenvector. Real invariant lines need not exist: a planar quarter-turn has eigenvalues $\pm i$ and no real eigenvector. A real eigenvector spans a line mapped into itself; a positive eigenvalue preserves its ray, a negative one reverses it, and zero annihilates it. These invariant directions reveal the deepest structural properties of the linear transformation.
 
 \begin{figure}[htb]
 \centering
@@ -392,20 +390,20 @@ When you multiply a general vector by a matrix, the resulting vector typically c
   \draw[gray,dashed,thick] (0,0) circle (1.5cm);
 
   % Generic vector (rotated and stretched)
-  \draw[->,blue,thick] (0,0) -- (1.0,1.0) node[anchor=south west] {$\mathbf{v}$};
-  \draw[->,blue,thick,dashed] (0,0) -- (2.0,0.5) node[anchor=north west] {$\mathbf{A}\mathbf{v}$ (rotated \& stretched)};
+  \draw[->,blue,thick] (0,0) -- (0.8,1.2) node[anchor=south west] {$\mathbf{v}$};
+  \draw[->,blue,thick,dashed] (0,0) -- (1.6,0.6) node[anchor=south west] {$\mathbf{A}\mathbf{v}$ (rotated \& stretched)};
 
   % Eigenvector 1 (stretched only, not rotated)
-  \draw[->,red,thick] (0,0) -- (1.5,0) node[anchor=south] {$\mathbf{e}_1$};
-  \draw[->,red,thick,dashed] (0,0) -- (2.7,0) node[anchor=south] {$\lambda_1 \mathbf{e}_1$};
+  \draw[->,red,thick] (0,0) -- (1.4,0) node[anchor=south] {$\mathbf{e}_1$};
+  \draw[->,red,thick,dashed] (0,0) -- (2.8,0) node[anchor=south] {$\lambda_1 \mathbf{e}_1$};
 
   % Eigenvector 2 (shrunk, not rotated)
-  \draw[->,green!60!black,thick] (0,0) -- (0,1.5) node[anchor=west] {$\mathbf{e}_2$};
-  \draw[->,green!60!black,thick,dashed] (0,0) -- (0,0.75) node[anchor=west] {$\lambda_2 \mathbf{e}_2$};
+  \draw[->,green!60!black,thick] (0,0) -- (0,1.2) node[anchor=west] {$\mathbf{e}_2$};
+  \draw[->,green!60!black,thick,dashed] (0,0) -- (0,0.6) node[anchor=west] {$\lambda_2 \mathbf{e}_2$};
 
-  \node at (0,-2.2) {Eigenvectors are only scaled, not rotated};
+  \node at (0,-2.2) {Example: positive eigenvalues preserve eigenvector rays};
 \end{tikzpicture}
-\caption{Geometric interpretation of eigenvectors: for a matrix with real eigenvalues, eigenvectors are invariant 1D directions that are only scaled (stretched, compressed, or reflected) without being rotated away from their line of action. In contrast, a generic vector $\mathbf{v}$ undergoes both directional rotation and scaling into $\mathbf{A}\mathbf{v}$.}
+\caption{Eigenvectors and a Generic Vector Under $\mathbf A=\operatorname{diag}(2,1/2)$}
 \label{fig:eigenvector_geometry}
 \end{figure}
 
@@ -413,12 +411,12 @@ When you multiply a general vector by a matrix, the resulting vector typically c
 \label{subsec:eigen_equation}
 
 \begin{definition}{Eigenvalues and Eigenvectors\index{Eigenvalue}\index{Eigenvector}}{eigenvalue}
-Given a square matrix $\mathbf{M} \in \Reals^{n \times n}$, a nonzero vector $\mathbf{v} \in \mathbb{C}^n$ (or $\Reals^n$ when $\lambda \in \Reals$) is called an \emph{eigenvector} of $\mathbf{M}$ if there exists a scalar $\lambda \in \mathbb{C}$ such that:
+Given a square matrix $\mathbf{M} \in \Reals^{n \times n}$, a nonzero vector $\mathbf{v} \in \mathbb C^n$ is called an \emph{eigenvector} of $\mathbf{M}$ if there exists a scalar $\lambda\in\mathbb C$ such that:
 \begin{equation}
 \label{eq:eigenvalue_equation}
    \mathbf{M}\mathbf{v} = \lambda \mathbf{v}
 \end{equation}
-The scalar $\lambda$ is the corresponding \emph{eigenvalue}. When $\mathbf{M}$ has complex conjugate eigenvalues $\sigma \pm i\omega$, the associated eigenvectors are complex; in real state space, they span a 2D invariant plane on which the linear map acts as a combined stretch and rotation. The requirement that $\mathbf{v} \neq \mathbf{0}$ is essential; otherwise the equation would be trivially satisfied for any $\lambda$.
+The scalar $\lambda$ is the corresponding \emph{eigenvalue}. The requirement that $\mathbf{v} \neq \mathbf{0}$ is essential; otherwise the equation would be trivially satisfied for any $\lambda$.
 \end{definition}
 
 \subsubsection{Deriving the Characteristic Polynomial}
@@ -468,23 +466,43 @@ For $\lambda_2 = -4$, solve $(\mathbf{A} + 4\mathbf{I})\mathbf{v}_2 = \mathbf{0}
 \label{subsec:eigen_physical}
 
 \begin{enumerate}
-    \item \textbf{Inertia tensors and principal axes.} If $\mathbf{M}$ represents the mass-and-inertia tensor of a tumbling satellite, its eigenvectors identify the \textbf{Principal Axes}\index{Principal Axes}---the natural directions where the satellite spins stably. The eigenvalues give the moments of inertia about those axes. The famous ``tennis racket theorem'' (or Dzhanibekov effect) states that rotation about the axis with the \emph{intermediate} eigenvalue is unstable, while rotation about the axes with the largest and smallest eigenvalues is stable.
-
-    \item \textbf{Stability of dynamical systems.} If $\mathbf{A}$ is the dynamics matrix of a continuous linear time-invariant system ($\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$), the eigenvalues dictate asymptotic behavior:
-    \begin{itemize}
-        \item $\text{Re}(\lambda_i) < 0$ for all $i$: the system is \textbf{strictly asymptotically stable} (all perturbations decay to zero). For nonlinear systems $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x})$, Hartman-Grobman guarantees that local trajectories mirror the linearization whenever the equilibrium is hyperbolic ($\text{Re}(\lambda_i) \neq 0$). Note also that if $\mathbf{A}$ is non-normal ($\mathbf{A}^T\mathbf{A} \neq \mathbf{A}\mathbf{A}^T$), trajectories can experience large transient energy growth before exponential decay takes over.
-        \item $\text{Re}(\lambda_i) > 0$ for any $i$: the system is \textbf{unstable} (perturbations grow exponentially along the unstable eigenspace).
-        \item $\text{Re}(\lambda_i) \leq 0$ with $\text{Re}(\lambda_k) = 0$ for some $k$: the system is \textbf{marginally (Lyapunov) stable} if and only if every imaginary-axis eigenvalue has equal algebraic and geometric multiplicity (a diagonal Jordan block, such as an undamped harmonic oscillator $\dot{\mathbf{x}} = \begin{bmatrix} 0 & \omega \\ -\omega & 0 \end{bmatrix}\mathbf{x}$). If an imaginary eigenvalue possesses non-trivial Jordan blocks of size $\geq 2$ (such as a double integrator $\dot{\mathbf{x}} = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix}\mathbf{x}$ with repeated $\lambda = 0$), solutions grow polynomially ($t, t^2, \ldots$) and the linear system is \textbf{unstable}.
-    \end{itemize}
-    Eigenvalues are the fundamental heartbeat of linear dynamics. Every analysis in Chapter~\ref{ch:state_space} builds on this fact.
+    \item \textbf{Inertia tensors and principal axes.} The symmetric rotational inertia tensor about the centre of mass has orthogonal principal axes and corresponding principal moments. For an isolated rigid body with three distinct principal moments, steady torque-free rotation about the intermediate axis is unstable, whereas the minimum and maximum axes are stable to small rotational perturbations. An eigenvector of inertia alone does not establish stability under applied torques, damping or feedback.
+    \item \textbf{Constant linear dynamics.} For $\dot{\mathbf x}=A\mathbf x$, all eigenvalues strictly in the open left half-plane imply exponential asymptotic stability. Any eigenvalue with positive real part implies instability. With all real parts nonpositive, stability additionally requires each eigenvalue on the imaginary axis to be semisimple: its Jordan blocks must have size one. Such modes need not decay.
+    \item \textbf{Nonlinear and time-varying systems.} At an equilibrium of a continuously differentiable autonomous system, a Hurwitz linearization establishes local exponential stability, and an eigenvalue with positive real part establishes instability. A zero real part can be inconclusive: $\dot x=-x^3$ and $\dot x=x^3$ have the same zero linearization and opposite stability. Instantaneous eigenvalues of a time-varying matrix are not a substitute for its state-transition operator.
 \end{enumerate}
 
+For example,
+\[
+A_0=\begin{pmatrix}0&1\\0&0\end{pmatrix},
+\qquad e^{tA_0}\begin{pmatrix}0\\1\end{pmatrix}
+=\begin{pmatrix}t\\1\end{pmatrix}
+\]
+is unbounded despite two zero eigenvalues. By contrast, $A=0$ has bounded constant solutions.
+
+Even negative eigenvalues do not guarantee monotone decrease in a chosen norm. For
+\[
+A=\begin{pmatrix}-1&10\\0&-1\end{pmatrix},
+\qquad
+e^{tA}=e^{-t}\begin{pmatrix}1&10t\\0&1\end{pmatrix},
+\]
+the initial vector $(0,1)^T$ has norm $\sqrt{101}/e>3.6$ at $t=1$ before eventually decaying. The transient comes from the nonorthogonal modal structure. Mixed physical units require a declared metric before interpreting its magnitude. For a fixed positive-definite $P$, the quadratic rate is
+\[
+\frac{d}{dt}(\mathbf x^TP\mathbf x)
+=\mathbf x^T(A^TP+PA)\mathbf x.
+\]
+Asymptotic stability and short-horizon amplification answer different questions in a finite swing.
+
 \begin{example}{Visualizing Eigenvectors: The Stretching Rubber Sheet}{visualize_eigenvectors}
-Imagine printing a perfect circle onto a rubber square. You grab the edges of the rubber and stretch it along two orthogonal axes. The circle distorts into an ellipse.
+A general invertible planar map sends a unit circle to an ellipse. Its output axes are \emph{left singular vectors}, while the corresponding input directions are right singular vectors. They need not be the same directions.
 
-If the deformation is symmetric (governed by a symmetric positive-definite matrix $\mathbf{M} = \mathbf{M}^T \succ 0$), exactly two perpendicular directions---the major and minor axes of the resulting ellipse---do not rotate at all; they are only stretched. These orthogonal non-rotating axes are your \textbf{eigenvectors}, and the stretching factors along them are the corresponding \textbf{eigenvalues}. The matrix $\mathbf{M}$ is the algebraic instruction set for that stretching operation.
+The shear
+\[
+S=\begin{pmatrix}1&1\\0&1\end{pmatrix}
+\]
+has eigenvalues $1,1$ but singular values $(1+\sqrt5)/2$ and $(\sqrt5-1)/2$. It stretches and contracts different directions even though both eigenvalues are one.
 
-In $n$ dimensions, a symmetric positive-definite matrix transforms a unit hypersphere into a hyperellipsoid whose principal axes align exactly with its orthonormal eigenvectors, with semi-axis lengths equal to the eigenvalues. (For a general, non-symmetric or rectangular transformation, the image of the unit sphere is still an ellipsoid, but its principal axes and stretch factors are given by the \emph{singular vectors} and \emph{singular values} from the SVD, as developed in Section~\ref{sec:svd}.)
+For a symmetric matrix one can choose an orthonormal eigenbasis. The image of the unit ball has semiaxis lengths $|\lambda_i|$; a negative eigenvalue also reverses its eigenvector, and zero gives a collapsed direction. For a positive-definite symmetric matrix the semiaxis lengths equal the positive eigenvalues. This is the special case in which the rubber-sheet picture directly matches the eigenvalue magnitudes.
+
 \end{example}
 
 \subsection{The Spectral Theorem for Symmetric Matrices}
@@ -502,7 +520,7 @@ If $\mathbf{M} \in \Reals^{n \times n}$ is symmetric ($\mathbf{M} = \mathbf{M}^T
 \end{theorem}
 
 \begin{proof}[Proof that eigenvalues of a real symmetric matrix are real]
-Let $\mathbf{M} = \mathbf{M}^T$ and suppose $\mathbf{M}\mathbf{v} = \lambda \mathbf{v}$ for some possibly complex eigenvalue $\lambda$ and eigenvector $\mathbf{v}$. We will show that $\lambda$ must be real.
+Let $\mathbf M$ be real symmetric. Suppose $\mathbf M\mathbf v=\lambda\mathbf v$ with $\mathbf v\ne0$, allowing complex entries. We will show that $\lambda$ must be real.
 
 Take the complex conjugate transpose (denoted by $^*$) of both sides of $\mathbf{M}\mathbf{v} = \lambda \mathbf{v}$:
 \begin{equation}
@@ -527,18 +545,23 @@ Equating the right-hand sides:
     \lambda \, \mathbf{v}^* \mathbf{v} = \bar{\lambda} \, \mathbf{v}^* \mathbf{v}
 \end{equation}
 
-Since $\mathbf{v} \neq \mathbf{0}$, we have $\mathbf{v}^* \mathbf{v} = \sum_i |v_i|^2 > 0$. Dividing both sides by $\mathbf{v}^*\mathbf{v}$ yields $\lambda = \bar{\lambda}$, which is true if and only if $\lambda$ is real. $\qed$
+Since $\mathbf{v} \neq \mathbf{0}$, we have $\mathbf{v}^* \mathbf{v} = \sum_i |v_i|^2 > 0$. Dividing both sides by $\mathbf{v}^*\mathbf{v}$ yields $\lambda = \bar{\lambda}$, which is true if and only if $\lambda$ is real.
 \end{proof}
 
-\begin{proof}[Proof that eigenvectors for distinct eigenvalues are orthogonal]
-Let $\mathbf{M}\mathbf{v}_1 = \lambda_1 \mathbf{v}_1$ and $\mathbf{M}\mathbf{v}_2 = \lambda_2 \mathbf{v}_2$ with $\lambda_1 \neq \lambda_2$. Compute:
+\begin{proof}[Proof of Orthogonality for Distinct Eigenvalues]
+For real symmetric $\mathbf M$, choose real eigenvectors with distinct eigenvalues:
+\[
+\mathbf M\mathbf v_1=\lambda_1\mathbf v_1,\qquad
+\mathbf M\mathbf v_2=\lambda_2\mathbf v_2,\qquad\lambda_1\ne\lambda_2.
+\]
+Compute:
 \begin{equation}
     \lambda_1 (\mathbf{v}_1^T \mathbf{v}_2) = (\mathbf{M}\mathbf{v}_1)^T \mathbf{v}_2 = \mathbf{v}_1^T \mathbf{M}^T \mathbf{v}_2 = \mathbf{v}_1^T \mathbf{M} \mathbf{v}_2 = \mathbf{v}_1^T (\lambda_2 \mathbf{v}_2) = \lambda_2 (\mathbf{v}_1^T \mathbf{v}_2)
 \end{equation}
-Therefore $(\lambda_1 - \lambda_2)(\mathbf{v}_1^T \mathbf{v}_2) = 0$. Since $\lambda_1 \neq \lambda_2$, we must have $\mathbf{v}_1^T \mathbf{v}_2 = 0$. The eigenvectors are orthogonal. $\qed$
+Therefore $(\lambda_1 - \lambda_2)(\mathbf{v}_1^T \mathbf{v}_2) = 0$. Since $\lambda_1 \neq \lambda_2$, we must have $\mathbf{v}_1^T \mathbf{v}_2 = 0$. The eigenvectors are orthogonal.
 \end{proof}
 
-The spectral decomposition $\mathbf{M} = \mathbf{Q}\boldsymbol{\Lambda}\mathbf{Q}^T$ has a clear geometric interpretation: the transformation defined by $\mathbf{M}$ can be decomposed into three steps: (1) rotate coordinates to align with the eigenvector axes ($\mathbf{Q}^T$), (2) independently scale each axis by its eigenvalue ($\boldsymbol{\Lambda}$), (3) rotate back ($\mathbf{Q}$). This is a ``rotation-stretch-rotation'' decomposition entirely analogous to the SVD, which we discuss next.
+The spectral decomposition $\mathbf M=\mathbf Q\boldsymbol\Lambda\mathbf Q^T$ applies an orthogonal coordinate change to eigenvector axes, scales each coordinate by its eigenvalue, and applies the inverse orthogonal change. Negative eigenvalues reverse signs. Unlike the SVD's nonnegative singular scaling, this diagonal scaling retains the eigenvalue signs.
 
 \subsection{Quadratic Forms and Positive Definiteness}
 \label{subsec:quadratic_forms}
@@ -555,9 +578,9 @@ Given a symmetric matrix $\mathbf{M} \in \Reals^{n \times n}$, the associated \e
 Quadratic forms appear throughout this text series:
 \begin{itemize}
     \item \textbf{Kinetic energy:} $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q}) \dot{\mathbf{q}}$, where $\mathbf{M}(\mathbf{q})$ is the mass matrix (Chapter~\ref{ch:lagrangian}).
-    \item \textbf{Optimal control cost:} $J = \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}$, where $\mathbf{Q}$ penalizes state deviations and $\mathbf{R}$ penalizes control effort.
+    \item \textbf{Optimal control running cost:} $\ell = \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}$, where $\mathbf{Q}$ penalizes state deviations and $\mathbf{R}$ penalizes control effort.
     \item \textbf{Lyapunov functions:} $V(\mathbf{x}) = \mathbf{x}^T \mathbf{P} \mathbf{x}$, used to prove stability (Volume I).
-    \item \textbf{Contraction metrics:} $\delta\mathbf{x}^T \mathbf{M}(x) \, \delta\mathbf{x}$, measuring infinitesimal distances on manifolds (Volume I).
+    \item \textbf{Contraction metrics:} $\delta\mathbf{x}^T \mathbf{M}(x) \, \delta\mathbf{x}$, measuring squared infinitesimal length on manifolds (Volume I).
 \end{itemize}
 
 \begin{definition}{Positive Definiteness\index{Positive Definite}}{positive_definite}
@@ -583,11 +606,12 @@ By the Spectral Theorem (Theorem~\ref{thm:spectral}), $\mathbf{M} = \mathbf{Q}\b
 
 $(\Rightarrow)$ If $\mathbf{M} \succ 0$, then for each eigenvector $\mathbf{v}_i$ (which is nonzero): $\mathbf{v}_i^T \mathbf{M} \mathbf{v}_i = \lambda_i \norm{\mathbf{v}_i}^2 > 0$, so $\lambda_i > 0$.
 
-$(\Leftarrow)$ If all $\lambda_i > 0$ and $\mathbf{y} \neq \mathbf{0}$, then at least one $y_i \neq 0$, so $\sum_i \lambda_i y_i^2 > 0$. $\qed$
+$(\Leftarrow)$ If all $\lambda_i > 0$ and $\mathbf{y} \neq \mathbf{0}$, then at least one $y_i \neq 0$, so $\sum_i \lambda_i y_i^2 > 0$.
 \end{proof}
 
 \begin{laymansbox}{Why Positive Definiteness Matters for Control}{pd_control}
-In control theory, if you can construct a function $V(\mathbf{x}) = \mathbf{x}^T \mathbf{P} \mathbf{x}$ with $\mathbf{P} \succ 0$ such that $V$ decreases along every trajectory of your system, you have mathematically \emph{proven} that the system is stable. The positive definiteness of $\mathbf{P}$ guarantees that $V$ has a strict minimum at the origin---it forms a ``bowl'' in state space. If the system's energy ($V$) always decreases and the bowl has a definite bottom, the system must converge to rest. This is the essence of \textbf{Lyapunov stability theory}, the single most important stability analysis tool in nonlinear control (developed in Volume I).
+Let the origin be an equilibrium and $V(\mathbf x)=\mathbf x^TP\mathbf x$ with $P\succ0$. Nonincrease of $V$ along solutions gives a stability bound on a suitable invariant neighborhood; it does not imply convergence. An undamped oscillator has constant positive energy and never comes to rest. A negative-definite derivative, with the usual autonomous-system regularity and domain hypotheses, gives asymptotic convergence; a merely semidefinite derivative needs an additional invariant-set argument. $V$ is a mathematical measure and need not be physical energy. Time-varying or global conclusions require their corresponding uniformity, domain and growth assumptions.
+
 \end{laymansbox}
 
 \subsubsection{The Cholesky Decomposition}
@@ -596,9 +620,9 @@ A practical consequence of positive definiteness: any positive definite matrix $
 \begin{equation}
     \mathbf{M} = \mathbf{L}\mathbf{L}^T
 \end{equation}
-where $\mathbf{L}$ is a lower triangular matrix with strictly positive diagonal entries. This is the \textbf{Cholesky decomposition}\index{Cholesky Decomposition}. It is numerically efficient (roughly half the cost of a general $LU$ factorization) and is a standard method for solving linear systems involving symmetric positive definite matrices in physics engines. In practice, modern physics engines such as MuJoCo utilize a custom branch-induced sparse $\mathbf{L}\mathbf{D}\mathbf{L}^T$ factorization that exploits the kinematic tree topology to achieve $\mathcal{O}(n)$ complexity for forward dynamics, coupled with convex optimization solvers to handle unilateral contact constraints and impulses.
+where $\mathbf{L}$ is a lower triangular matrix with strictly positive diagonal entries. This is the \textbf{Cholesky decomposition}\index{Cholesky Decomposition}. It is numerically efficient (roughly half the cost of a general $LU$ factorization) and is the standard method for solving linear systems involving positive definite matrices in physics engines. One usually solves the system rather than explicitly forming its inverse. MuJoCo's documented implementation uses a sparse $L^TDL$ factorization of joint-space inertia and back-substitution; this is related to, but not literally the displayed $LL^T$ algorithm.\footnote{\url{https://mujoco.readthedocs.io/en/stable/computation/index.html}}
 
-The Cholesky factor $\mathbf{L}$ also provides a constructive test for positive definiteness: if the factorization completes without encountering a zero or negative diagonal element, the matrix is positive definite. If the algorithm fails, the matrix is not positive definite.
+For a real symmetric input in exact arithmetic, Cholesky succeeds with strictly positive pivots precisely when the input is positive definite. In floating-point arithmetic, failure can also reflect rounding near the definiteness boundary, incorrect symmetry/storage assumptions or numerical scaling; inspect the data and residual before interpreting it physically. A routine that reads only one triangle does not by itself verify symmetry of the supplied array.
 
 % ------------------------------------------------------------------
 \section{The Singular Value Decomposition (SVD)}
@@ -634,7 +658,7 @@ The SVD can be derived from the spectral theorem applied to related symmetric ma
 \begin{equation}
     \mathbf{M}^T\mathbf{M} = \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^T
 \end{equation}
-where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_m)$ with $\lambda_i \geq 0$ (since $\mathbf{M}^T\mathbf{M}$ is positive semi-definite). Define the singular values as $\sigma_i = \sqrt{\lambda_i}$.
+where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_m)$ with $\lambda_i \geq 0$ (since $\mathbf{M}^T\mathbf{M}$ is positive semi-definite). Order these eigenvalues decreasingly and take their square roots. Only $\min(n,m)$ singular values are listed in the rectangular diagonal $\Sigma$; when $m>n$, the remaining eigenvalues of $M^TM$ are necessarily zero.
 
 \textbf{Step 3.} For each nonzero singular value $\sigma_i$, define the corresponding left singular vector:
 \begin{equation}
@@ -642,28 +666,36 @@ where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_m)$ with $\
 \end{equation}
 These vectors are orthonormal (a straightforward verification using $\mathbf{M}^T\mathbf{M}\mathbf{v}_i = \sigma_i^2 \mathbf{v}_i$).
 
-\textbf{Step 4.} Extend $\{\mathbf{u}_1, \ldots, \mathbf{u}_r\}$ to a complete orthonormal basis for $\Reals^n$ (where $r = \text{rank}(\mathbf{M})$). Assemble these into the columns of $\mathbf{U}$. Then $\mathbf{M} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$ follows by construction.
+\textbf{Step 4.} Extend $\{\mathbf{u}_1, \ldots, \mathbf{u}_r\}$ to a complete orthonormal basis for $\Reals^n$ (where $r = \text{rank}(\mathbf{M})$). Assemble these into the columns of $\mathbf{U}$. Then $\mathbf{M} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$ follows by construction. This is an existence proof, not a recommendation to form $M^TM$ numerically: doing so squares the condition number in the full-column-rank case and can obscure small singular values.
 
 \subsection{Geometric Interpretation of the SVD}
 
 The SVD reveals that \emph{any} linear transformation, no matter how complex, can be decomposed into exactly three simple geometric operations:
 \begin{enumerate}
-    \item \textbf{Rotate the input space} (apply $\mathbf{V}^T$): align the input with the principal directions.
+    \item \textbf{Reorient the input space by a rotation or reflection} (apply $\mathbf{V}^T$): align the input with the principal directions.
     \item \textbf{Scale each axis independently} (apply $\boldsymbol{\Sigma}$): stretch or shrink along each principal direction.
-    \item \textbf{Rotate the output space} (apply $\mathbf{U}$): reorient the result in the output space.
+    \item \textbf{Reorient the output space by a rotation or reflection} (apply $\mathbf{U}$): reorient the result in the output space.
 \end{enumerate}
 
-This geometric decomposition transforms a unit hypersphere in the input space into a hyperellipsoid in the output space. The singular values are the semi-axis lengths of this ellipsoid, and the left singular vectors point along the ellipsoid's principal axes.
+The image of the unit ball is a solid, possibly degenerate ellipsoid in the output space. Rank loss collapses some dimensions; for a rectangular map, the image of a sphere need not be only an ellipsoid's boundary. The singular values are the semi-axis lengths of this ellipsoid, and the left singular vectors point along the ellipsoid's principal axes.
 
 \subsection{The Condition Number}
 \label{subsec:condition_number}
 
-The \textbf{condition number}\index{Condition Number} of a matrix $\mathbf{M}$ is the ratio of its largest to its smallest singular value:
-\begin{equation}
-    \kappa(\mathbf{M}) = \frac{\sigma_{\max}}{\sigma_{\min}}
-\end{equation}
+For a nonzero, full-rank rectangular matrix, its 2-norm condition number is
+\[
+\kappa_2(M)=\frac{\sigma_{\max}}{\sigma_{\min}},
+\]
+where the denominator is the smallest of the $\min(n,m)$ listed singular values. Rank deficiency is conventionally assigned infinite condition number here. A wide, full-row-rank matrix may have finite condition number and a nontrivial input kernel simultaneously.
 
-If $\kappa(\mathbf{M})$ is large (say, $10^6$ or more), the matrix is \emph{ill-conditioned}: small perturbations in the input can cause enormous changes in the output. In robotics, the condition number of the Jacobian quantifies how close the robot is to a singularity. As $\sigma_{\min} \to 0$, the condition number $\to \infty$, and the numerical solution of $\mathbf{J}\dot{\mathbf{q}} = \mathbf{v}$ becomes catastrophically unreliable.
+For a nonsingular square system $M\mathbf x=\mathbf b$ with fixed $M$ and nonzero $\mathbf b$, the relative perturbation bound is
+\[
+\frac{\|\delta\mathbf x\|_2}{\|\mathbf x\|_2}
+\le \kappa_2(M)\frac{\|\delta\mathbf b\|_2}{\|\mathbf b\|_2}.
+\]
+Absolute inverse gain is instead $\|M^{-1}\|_2=1/\sigma_{\min}$. For $M=10^{-3}I$, the condition number is one but the absolute inverse gain is 1000. Forward gain is $\sigma_{\max}$, not the condition number. Matrix perturbations and general least-squares problems need additional bounds.
+
+Singular values depend on coordinate units and chosen norms. A task Jacobian mixing translation and rotation, or joint coordinates measured in degrees rather than radians, needs explicit scaling or a metric before its condition number is a physical comparison.
 
 \subsection{Truncated SVD and Low-Rank Approximation}
 
@@ -674,16 +706,52 @@ One of the most powerful applications of the SVD is data compression. Given a ma
 This result (the Eckart-Young-Mirsky theorem) underpins dimensionality reduction techniques like Principal Component Analysis (PCA), which identifies the dominant modes of variation in high-dimensional data such as motion capture recordings of golf swings.
 
 \begin{example}{The SVD of the Jacobian (Manipulability Ellipsoid)}{svd_jacobian}
-In robotics, the Jacobian matrix $\mathbf{J}(\mathbf{q})$ maps joint velocities to end-effector Cartesian velocity: $\mathbf{v}_{\text{hand}} = \mathbf{J} \dot{\mathbf{q}}$. For a redundant manipulator with 7 joints moving in 3D space, $\mathbf{J} \in \Reals^{3 \times 7}$ is rectangular, so an eigendecomposition is not applicable. Taking the SVD $\mathbf{J} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$:
-
+For seven independent joint velocities and a three-dimensional hand-position task, $J\in\Reals^{3\times7}$ maps $\dot{\mathbf q}$ to $\mathbf v_H$. With the declared budget $\|\dot{\mathbf q}\|_2\le1$:
 \begin{itemize}
-    \item $\mathbf{U} \in \Reals^{3\times3}$: The columns $\mathbf{u}_i$ are the left singular vectors; they define the principal orthogonal directions of the resulting velocity ellipsoid in Cartesian task space.
-    \item $\boldsymbol{\Sigma} \in \Reals^{3\times7}$: The non-zero singular values $(\sigma_1, \sigma_2, \sigma_3)$ are the semi-axis lengths of the \textbf{Velocity Manipulability Ellipsoid}\index{Manipulability Ellipsoid} (the image under $\mathbf{J}$ of the unit joint velocity sphere $\norm{\dot{\mathbf{q}}}_2 \leq 1$). They quantify how fast the robot can move in each $\mathbf{u}_i$-direction. (Note that the ellipsoid semi-axes are governed by singular values and left singular vectors of $\mathbf{J}$; eigenvectors only apply to square operators and coincide with singular vectors only when the matrix is symmetric positive semi-definite.) If the arm is stretched perfectly straight, one singular value drops to $\sigma_k = 0$: the ellipsoid collapses, and the robot loses a degree of freedom.
-    \item $\mathbf{V} \in \Reals^{7\times7}$: The columns $\mathbf{v}_i$ of $\mathbf{V}$ (the rows of $\mathbf{V}^T$) are the right singular vectors; they define the joint velocity directions in configuration space that map directly to each principal task-space axis $\mathbf{u}_i$ via $\mathbf{J}\mathbf{v}_i = \sigma_i \mathbf{u}_i$. The remaining $7 - 3 = 4$ columns of $\mathbf{V}$ span the null space $\mathcal{N}(\mathbf{J})$, corresponding to redundant internal self-motions.
+    \item The columns of $U$ are task-space singular directions. A direction with zero singular value is absent from the instantaneous velocity image.
+    \item The three singular values give the semiaxes of the image of that joint-speed ball. They are not actual maximum speeds without this budget, its units and actuator feasibility.
+    \item The columns of $V$, not of $V^T$, give the corresponding joint-velocity directions. Its remaining columns span the input kernel.
 \end{itemize}
 
-Conversely, under the static force duality $\boldsymbol{\tau} = \mathbf{J}^T \mathbf{f}_{\text{ext}}$, the \textbf{Force Manipulability Ellipsoid} has principal semi-axes aligned with $\mathbf{u}_i$ but with lengths proportional to $1/\sigma_i$ (for full row-rank $\mathbf{J}$). Where the robot can move with high velocity ($\sigma_i$ large), it can exert only small static forces against the environment; where it is slow ($\sigma_i$ small, such as near a toggle or outstretched lock), mechanical advantage allows it to sustain large forces with modest joint torques.
+For a positive-definite joint-speed metric $H$ and task metric $W$, normalize the map as
+\[
+\widetilde J=W^{1/2}JH^{-1/2},
+\qquad \dot{\mathbf q}^TH\dot{\mathbf q}\le1.
+\]
+Singular values of this normalized map compare declared physical budgets; unscaled Euclidean values need not survive a change of units.
+
+Virtual work gives $\boldsymbol\tau=J^T\mathbf F$ and power equality $\boldsymbol\tau^T\dot{\mathbf q}=\mathbf F^T\mathbf v_H$. Under the dual torque budget $\boldsymbol\tau^TH^{-1}\boldsymbol\tau\le1$, feasible quasistatic task forces satisfy
+\[
+\mathbf F^TJH^{-1}J^T\mathbf F\le1.
+\]
+At full row rank this gives reciprocal force/velocity semiaxes in consistent normalized coordinates. At rank loss it may be unbounded in a task-force direction supported by ideal constraints. It does not predict unlimited real force: structural strength, joint/contact limits, compliance, actuation, balance and dynamics still matter.
 \end{example}
+
+\subsection{Instantaneous Rank and Finite-Time Control}
+
+A full-row-rank $3\times7$ task Jacobian has a four-dimensional kernel without being singular. More generally, a kinematic singularity is a drop below the maximum rank attainable by the specified mechanism and task; an inherently lower-dimensional image is not itself evidence of a singular configuration. This kinematic redundancy differs from underactuation, which concerns the rank and admissible set of the actuator map in the dynamics.
+
+Initial task-null velocity also need not preserve finite position. For two unit planar links,
+\[
+\mathbf p(\mathbf q)=
+\begin{pmatrix}\cos q_1+\cos(q_1+q_2)\\
+\sin q_1+\sin(q_1+q_2)\end{pmatrix},
+\]
+the straight configuration has $J(0)=\begin{pmatrix}0&0\\2&1\end{pmatrix}$. Its kernel contains $(1,-2)^T$, but the straight coordinate step $\mathbf q(t)=t(1,-2)^T$ gives $\mathbf p(t)=(2\cos t,0)^T$, not a stationary hand.
+
+Conversely, a one-dimensional instantaneous input can control more than one state over time. For the double integrator
+\[
+A=\begin{pmatrix}0&1\\0&0\end{pmatrix},\qquad
+B=\begin{pmatrix}0\\1\end{pmatrix},
+\]
+$B$ has rank one while $[B,AB]$ has rank two. Its controllability Gramian is
+\[
+W_c(T)=\begin{pmatrix}T^3/3&T^2/2\\T^2/2&T\end{pmatrix},
+\qquad \det W_c(T)=T^4/12>0\quad(T>0).
+\]
+This unconstrained linear result does not remove finite torque bounds or contact requirements. It shows why instantaneous rank, finite-time reachability, observation and a successful golf delivery must be evaluated using their respective maps and assumptions.
+
+Observation has the same temporal distinction. If position alone is measured, $C=[1,0]$ has an instantaneous kernel containing velocity. Yet the observability matrix $\mathcal O=[C^T,(CA)^T]^T=I_2$ has full rank: position measurements over time reveal velocity in this ideal model. A kernel of $C$ is not necessarily an unobservable dynamical subspace.
 
 % ==================================================================
 %  Section: Dyads, Dyadics, and Tensor Products
@@ -731,14 +799,13 @@ it first \emph{senses} how much $\mathbf{v}$ aligns with $\mathbf{b}$
 alignment.
 
 \begin{laymansbox}{Dyads: Direction of Action and Direction of Sensitivity}{dyad_intuition}
-Imagine a directional stiffness or force-coupling mechanism---say, a suspension element that resists vertical bumps when displaced laterally. The relationship ``sense displacement in direction $\mathbf{b}$, produce force along direction $\mathbf{a}$'' is represented by the dyad $\mathbf{a}\,\mathbf{b}^{T}$.
+The dyad $\mathbf a\mathbf b^T$ measures the component of an input along $\mathbf b$ and produces a response along $\mathbf a$. It has rank one if both vectors are nonzero, and rank zero otherwise. This is an algebraic response channel, not automatically a passive spring.
 
-Think of it as a \emph{cause-and-effect pair}: the unit vector $\hat{\mathbf{b}}$ is the ``listening direction'' (what the mechanism senses) and $\hat{\mathbf{a}}$ is the ``acting direction'' (how the mechanism pushes back). A single dyad can only perform one such coupling, which is why its matrix has rank one.
+For an unprestressed conservative spring along a unit direction $\mathbf n$, stored energy $\frac12k(\mathbf n^T\mathbf u)^2$ gives restoring force $-k\mathbf n\mathbf n^T\mathbf u$. Its stiffness is symmetric. A generic cross-direction dyad is nonsymmetric and cannot by itself be the Hessian of a smooth elastic potential. For example, the field $(0,x)$ does one unit of work around the positively oriented unit square; a conservative spring would do zero net closed-path work.
 
-\textbf{Physical caution regarding passive springs:} In classical elasticity, a passive, conservative spring stores potential energy $U(\mathbf{u}) = \frac{1}{2}\mathbf{u}^T \mathbf{K}\mathbf{u}$, which requires the stiffness matrix to be symmetric ($\mathbf{K} = \mathbf{K}^T$) and positive semi-definite ($\mathbf{K} \succeq 0$). A single uniaxial elastic spring aligned with unit vector $\hat{\mathbf{n}}$ has the symmetric dyadic form $\mathbf{K} = k \hat{\mathbf{n}}\hat{\mathbf{n}}^T$. An asymmetric dyad $\mathbf{a}\mathbf{b}^T$ with $\mathbf{a} \neq \mathbf{b}$ has non-zero skew-symmetric (circulatory) components $\frac{1}{2}(\mathbf{a}\mathbf{b}^T - \mathbf{b}\mathbf{a}^T)$; it cannot arise from a conservative potential field and would require active or non-conservative forces (such as aerodynamic flutter or active feedback control) to sustain.
 \end{laymansbox}
 
-\begin{example}{A Rank-1 Force Model}{dyad_force}
+\begin{example}{A Rank-1 Linear Response}{dyad_force}
 Let $\mathbf{a} = \begin{bmatrix}0\\1\\0\end{bmatrix}$ (vertical)
 and $\mathbf{b} = \begin{bmatrix}1\\0\\0\end{bmatrix}$ (horizontal).
 Then
@@ -764,8 +831,7 @@ described above.
 \subsection{From Dyads to Dyadics}
 \label{subsec:dyadics}
 
-A single dyad is rank one, but real physical relationships---stiffness,
-inertia, stress---have full rank.  We get there by \emph{summing} dyads.
+A nonzero dyad has rank one. Physical stiffness, inertia and stress maps may have full rank or may have null directions.  We get there by \emph{summing} dyads.
 
 \begin{definition}{\texorpdfstring{Dyadic (Tensor Product Expansion)}{Dyadic (Tensor Product Expansion)}}{dyadic}
 A \textbf{dyadic}\index{dyadic} is a finite sum of dyads:
@@ -790,12 +856,7 @@ which is a dyadic with $r$ terms (the rank of $\mathbf{A}$).  The SVD
 merely chooses the \emph{orthogonal} dyad decomposition; infinitely
 many other decompositions exist.
 
-The connection to abstract algebra: the space $\Reals^{m}\otimes\Reals^{n}$
-(the \textbf{tensor product}\index{tensor product}) is isomorphic to
-$\Reals^{m\times n}$.  A dyad $\mathbf{a}\,\mathbf{b}^{T}$ corresponds
-to the elementary tensor $\mathbf{a}\otimes\mathbf{b}$, and a general
-element of the tensor product space is a sum of such elementary tensors---a
-dyadic.
+Abstractly, a linear map $V\to W$ belongs to $W\otimes V^*$: its input slot is a covector. In standard Euclidean coordinates the inner product identifies $\Reals^n$ with its dual, so $\mathbf a\mathbf b^T$ can be written using two vector coordinate arrays and identified with an elementary tensor in $\Reals^m\otimes\Reals^n$. Under general coordinate changes one must retain which slots are vectors and which are covectors.
 
 % ------------------------------------------------------------------
 \subsection{Physical Meaning in Mechanics}
@@ -806,15 +867,14 @@ of a matrix: input direction and output direction.  Three central
 objects in mechanics are dyadics.
 
 \paragraph{The Inertia Tensor.}\index{inertia tensor}
-The rotational inertia of a rigid body maps angular velocity to
-angular momentum:
+About the centre of mass, the rotational inertia of a rigid body maps angular velocity to angular momentum:
 \begin{equation}\label{eq:inertia-dyadic-map}
   \mathbf{L} \;=\; \mathbf{I}\,\boldsymbol{\omega}.
 \end{equation}
 Here $\boldsymbol{\omega}$ is the ``input'' (the axis and rate of
 spin) and $\mathbf{L}$ is the ``output'' (the direction and magnitude
-of angular momentum).  Unless the body has special symmetry,
-$\mathbf{L}$ and $\boldsymbol{\omega}$ point in different directions;
+of angular momentum).  For a generic direction in a body with unequal principal moments,
+$\mathbf{L}$ and $\boldsymbol{\omega}$ need not be parallel; they are parallel along every principal axis even without an isotropic inertia;
 the inertia tensor is the dyadic that encodes this directional coupling.
 
 \paragraph{The Stress Tensor.}\index{stress tensor}
@@ -828,22 +888,17 @@ Input: the orientation of a small area element.  Output: the force
 that the material on one side exerts on the other.
 
 \paragraph{The Stiffness Matrix.}\index{stiffness matrix}
-In structural mechanics, the stiffness matrix $\mathbf{K}$ maps a nodal displacement vector $\mathbf{u}$ to a nodal force vector $\mathbf{f}$: $\mathbf{f}=\mathbf{K}\,\mathbf{u}$. For an assembled pin-jointed truss with $N$ bar elements connecting nodes, each bar's elongation $\delta_e$ is related to the global nodal displacements $\mathbf{u}$ by the kinematic (nodal compatibility / incidence) matrix $\mathbf{A}$: $\boldsymbol{\delta} = \mathbf{A}\mathbf{u}$. By the principle of virtual work, the global stiffness matrix is assembled as:
-\begin{equation}\label{eq:truss-stiffness-assembly}
-  \mathbf{K}
-  \;=\;
-  \mathbf{A}^T \mathbf{K}_{\text{bar}} \mathbf{A}
-  \;=\;
-  \sum_{e=1}^{N} k_{e}\,\mathbf{a}_e \mathbf{a}_e^T
-  \;=\;
-  \sum_{e=1}^{N} k_{e}\,\hat{\mathbf{n}}_{e}\,\hat{\mathbf{n}}_{e}^{T},
-\end{equation}
-where $\mathbf{a}_e$ represents the row of $\mathbf{A}$ corresponding to element $e$ (projecting nodal displacements onto the member unit axis $\hat{\mathbf{n}}_e$), and $k_e = \frac{E_e A_e}{L_e}$ is the axial bar stiffness. This shows that the global stiffness matrix is a dyadic built from the member direction vectors $\hat{\mathbf{n}}_e$ weighted by axial stiffnesses $k_e$.
+For a small-displacement, unprestressed truss, let $\mathbf u$ collect all nodal displacements and $B_e\mathbf u$ be member $e$'s axial extension. The external balancing force is $\mathbf f=K\mathbf u$, with
+\[
+K=\sum_e k_e B_e^TB_e,\qquad k_e=\frac{E_eA_e}{L_e}.
+\]
+For a member between two three-dimensional nodes, its nonzero incidence blocks are $B_e=[-\mathbf n_e^T,\mathbf n_e^T]$. Thus one member contributes a rank-one \emph{nodal} matrix, not merely a $3\times3$ direction matrix. A single anchored-node star is a special case in which the free-node stiffness reduces to $\sum_e k_e\mathbf n_e\mathbf n_e^T$.
+
+Unrestrained rigid translations give null modes of the assembled matrix. Prestress, geometric stiffness, constraints and nonlinear deformation require additional terms or a tangent linearization. Summing member directions alone does not encode the connectivity of a general truss.
 
 \begin{laymansbox}{Why Engineers Say ``Tensor''}{tensor_word}
 When a mechanical engineer refers to the ``inertia tensor'' or
-``stress tensor,'' they almost always mean a $3\times3$ symmetric
-matrix that represents a dyadic.  The word \emph{tensor} signals
+``stress tensor,'' the usual rigid-body inertia and classical Cauchy stress have symmetric $3\times3$ representations. Symmetry of Cauchy stress here assumes the classical angular-momentum balance without independent couple stresses; not every tensor or linear response is symmetric.  The word \emph{tensor} signals
 that the object transforms in a specific, predictable way under
 changes of coordinate frame.
 It is not just a bag of nine numbers; it is a physical machine that
@@ -861,7 +916,7 @@ $\Reals^{n}\to\Reals^{m}$.  Choosing a basis gives it a matrix
 representation, but the underlying map does not depend on that choice.
 
 \begin{example}{Inertia Tensor of a Point Mass}{point_mass_inertia}
-A point mass $m$ at position $\mathbf{r}$ from the centre of mass has
+A point mass $m$ at displacement $\mathbf r$ from a chosen reference origin contributes
 inertia tensor
 \begin{equation}\label{eq:point-mass-inertia}
   \mathbf{I}
@@ -888,9 +943,26 @@ representation of the inertia tensor transforms by the
 The congruence form $\mathbf{R}\,(\cdot)\,\mathbf{R}^{T}$
 rotates both the input slot and the output slot of the dyadic.  It
 preserves symmetry, positive-definiteness, and---for rotations---eigenvalues
-(the principal moments of inertia).
+(the principal moments of inertia). This formula changes orientation about the same reference point; changing the origin also requires the parallel-axis contribution.
 
 % ------------------------------------------------------------------
+\subsection{Basis, Metric and Mechanical Duality}
+
+If old velocity coordinates and new coordinates satisfy $\mathbf v=S\widetilde{\mathbf v}$ for an invertible $S$, preservation of kinetic energy and power requires
+\[
+\widetilde M=S^TMS,\qquad
+\widetilde{\boldsymbol\tau}=S^T\boldsymbol\tau,
+\]
+\[
+\widetilde{\mathbf v}^T\widetilde M\widetilde{\mathbf v}
+=\mathbf v^TM\mathbf v,\qquad
+\widetilde{\boldsymbol\tau}^T\widetilde{\mathbf v}
+=\boldsymbol\tau^T\mathbf v.
+\]
+This congruence law describes the kinetic bilinear form and its vector-to-covector map. A linear endomorphism instead has the similarity law $\widetilde A=S^{-1}AS$. For an orthogonal $S$, the two transformation patterns can look alike, which can hide the distinction.
+
+Congruence preserves definiteness but generally changes ordinary matrix eigenvalues. Physical comparisons in nonorthogonal or differently scaled coordinates require the corresponding metric, not raw eigenvalues or a dot product chosen only because the arrays have equal length. This distinction connects velocity transmission through $J$ to force transmission through $J^T$, and prevents coordinate-dependent numerical norms from being labeled energy or effort without a model.
+
 \subsection{Connection to the Rest of This Book}
 \label{subsec:dyadic-connections}
 
@@ -898,19 +970,22 @@ The dyadic point of view recurs throughout our study of rigid-body
 mechanics:
 
 \begin{itemize}
-  \item \textbf{Screw axes and spatial momentum (Chapter~5).}
-    A twist $\mathbf{v} = [\boldsymbol{\omega}^T, \mathbf{v}_O^T]^T$ combines angular and linear velocities into a 6D object. The $6\times6$ \emph{spatial inertia matrix} $\mathbf{I}$ is a dyadic mapping twists to \textbf{spatial momentum} $\mathbf{h} = [\mathbf{l}_O^T, \mathbf{p}^T]^T$:
-    \begin{equation}\label{eq:spatial-momentum-map}
-      \mathbf{h} \;=\; \mathbf{I}\,\mathbf{v}.
-    \end{equation}
-    The \textbf{spatial wrench} $\mathbf{w}$ (combining torque and force) equals the rate of change of spatial momentum, governed by the spatial Newton-Euler equation $\mathbf{w} = \dot{\mathbf{h}} - \text{ad}_{\mathbf{v}}^* \mathbf{h} = \mathbf{I}\dot{\mathbf{v}} + \mathbf{v} \times^* \mathbf{I}\mathbf{v}$, rather than mapping directly from instantaneous velocity alone.
+  \item \textbf{Screw axes and wrenches (Chapter~5).}
+    A wrench combines a force and a moment into a single six-dimensional
+    object.  The spatial inertia is a $6\times6$ map from twist to spatial momentum, not directly to wrench. A wrench is related to momentum rate, including the transport terms required by a moving coordinate frame.
 
   \item \textbf{Spatial algebra (Chapter~8).}
-    The $6\times6$ spatial inertia matrix is a symmetric positive-definite dyadic on the space of twists. Its block structure combines body mass $m$, center-of-mass first moment, and rotational inertia:
-    \begin{equation}
-      \mathbf{I} = \begin{bmatrix} \mathbf{I}_{\text{rot}} & m [\mathbf{p}_{\text{cm}}]_\times \\ -m [\mathbf{p}_{\text{cm}}]_\times & m \mathbf{1} \end{bmatrix},
-    \end{equation}
-    using the same $m(\norm{\mathbf{r}}^{2}\,\mathbf{1}-\mathbf{r}\,\mathbf{r}^{T})$ building block we saw in Example~\ref{ex:point_mass_inertia}, extended to rigid bodies in six dimensions.
+    With twist ordered as $(\boldsymbol\omega,\mathbf v_O)$ and centre-of-mass displacement $\mathbf c$ from the reference origin $O$, the spatial inertia is
+    \[
+    \mathcal I_O=
+    \begin{bmatrix}
+    I_O&m[\mathbf c]_\times\\
+    -m[\mathbf c]_\times&mI_3
+    \end{bmatrix}.
+    \]
+    Here $I_O$ is rotational inertia about $O$, not about the centre of mass unless the origins coincide. The matrix maps twist to angular momentum about $O$ and linear momentum, and is SPD when every nonzero rigid-body twist has positive kinetic energy. In a body-fixed frame attached to the rigid body,
+    $\mathbf w=\mathcal I_O\dot{\mathbf v}+\mathbf v\times^*(\mathcal I_O\mathbf v)$,
+    where the force cross-product operator includes the required frame transport. The momentum map itself contains no acceleration.
 
   \item \textbf{The mass matrix (Chapter~11).}
     The joint-space mass matrix $\mathbf{M}(\mathbf{q})$ that appears
@@ -918,7 +993,7 @@ mechanics:
     $\mathbf{M}\ddot{\mathbf{q}}+\mathbf{c}=\boldsymbol{\tau}$
     is a configuration-dependent dyadic on joint-velocity space.
     Each link contributes a term built from Jacobians and spatial
-    inertias ($\mathbf{M}(\mathbf{q}) = \sum_i \mathbf{J}_i^T(\mathbf{q}) \mathbf{I}_i \mathbf{J}_i(\mathbf{q})$)---a sum of congruent dyadic transformations, assembled exactly as we sum member stiffnesses in a truss.
+    inertias through $M(\mathbf q)=\sum_i J_i^T\mathcal I_iJ_i$, with each twist Jacobian and inertia expressed about matching origins in matching frames. This is the kinetic-energy counterpart of assembling nodal stiffness through a compatibility map.
 
   \item \textbf{The articulated-body algorithm (Chapter~10).}
     Featherstone's algorithm propagates \emph{articulated-body inertias}
@@ -989,29 +1064,25 @@ A well-conditioned matrix has $\kappa\approx 1$; an ill-conditioned
 matrix has $\kappa\gg 1$.
 \end{definition}
 
-\paragraph{Physical Interpretation: Jacobian Conditioning Near Singularities.}
-\index{singularity!Jacobian conditioning}
-Consider the manipulator Jacobian $\mathbf{J}(\mathbf{q})$ from the
-SVD example (Example~\ref{ex:svd_jacobian}).  When the robot approaches
-a kinematic singularity, one or more singular values $\sigma_i\to 0$
-while others remain bounded.  The condition number $\kappa(\mathbf{J})$
-therefore grows without bound.  Because the solution to
-$\dot{\mathbf{q}}=\mathbf{J}^{-1}\mathbf{v}$ amplifies input errors by
-a factor proportional to $\kappa$, even tiny errors in the desired
-Cartesian velocity $\mathbf{v}$ produce enormous joint velocities.
-This is why real robots exhibit jerky, unstable motion near singular
-configurations~\cite{strang2019}.
+\subsection{What the Pseudoinverse Does Not Guarantee}
 
-\begin{laymansbox}{Why Does Your Robot Arm Shake Near Singularities?}{singularity_shaking}
-Why does your robot arm shake near singularities?  Because the condition
-number of the Jacobian explodes.  When $\kappa(\mathbf{J})$ is huge, the
-inverse mapping from Cartesian velocity to joint velocity amplifies every
-small measurement error, rounding error, and servo lag into wild joint
-commands.  Monitoring $\kappa(\mathbf{J})$ in real time is standard
-practice in industrial controllers: when the condition number exceeds a
-threshold, the controller switches to a damped pseudo-inverse to keep the
-motion smooth.
-\end{laymansbox}
+For $J=U\Sigma V^T$, the Moore--Penrose pseudoinverse is $J^+=V\Sigma^+U^T$, with each nonzero singular value inverted. The command $J^+\mathbf v$ is the minimum-Euclidean-norm least-squares solution. It exactly realizes $\mathbf v$ only when $\mathbf v\in\operatorname{im}J$; its notion of minimum norm depends on the declared units and metric.
+
+The pseudoinverse does not remove near-singular amplification. With $J=\operatorname{diag}(1,10^{-3})$ and desired velocity $(1,1)^T$, it requests joint velocity $(1,1000)^T$. Error in the weak task direction is amplified; error in every direction need not be. A condition-number threshold alone also misses an overall loss of scale such as $J=\epsilon I$, whose condition number stays one as $\epsilon\to0$.
+
+A damped least-squares alternative solves
+\[
+\min_{\dot{\mathbf q}}\ \|J\dot{\mathbf q}-\mathbf v\|_2^2
++\lambda^2\|\dot{\mathbf q}\|_2^2,\qquad \lambda>0,
+\]
+and applies singular-direction gains
+\[
+\frac{\sigma_i}{\sigma_i^2+\lambda^2}
+\le\frac{1}{2\lambda}.
+\]
+This bounds inverse gain by accepting a task residual. It does not enforce joint-speed limits, contact constraints or closed-loop stability by itself. Truncated SVD likewise requires an explicit tolerance for treating small measured singular values as zero; numerical rank is not automatically exact physical rank.
+
+For a golf model, a small singular value can explain why a chosen hand-velocity correction demands a large joint-velocity change at one configuration. Predicting actual motion additionally requires the inertial equations, actuator limits and controller. Neither shaking nor a beneficial release follows from the condition number alone.
 
 % ==================================================================
 %  Section: Matrix Decompositions for Computation
@@ -1054,13 +1125,12 @@ For any $\mathbf{A}\in\Reals^{m\times n}$ with $m\geq n$,
   \mathbf{A} = \mathbf{Q}\mathbf{R},
 \end{equation}
 where $\mathbf{Q}\in\Reals^{m\times m}$ is orthogonal and
-$\mathbf{R}\in\Reals^{m\times n}$ is upper triangular.
+$\mathbf{R}\in\Reals^{m\times n}$ is upper trapezoidal: an upper-triangular $n\times n$ block above zero rows.
 QR is the preferred method for solving least-squares problems
 $\min_{\mathbf{x}}\norm{\mathbf{A}\mathbf{x}-\mathbf{b}}_2$ because,
 unlike the normal equations $\mathbf{A}^{T}\mathbf{A}\mathbf{x}=
 \mathbf{A}^{T}\mathbf{b}$, it avoids squaring the condition number
-($\kappa(\mathbf{A}^{T}\mathbf{A})=\kappa(\mathbf{A})^{2}$) and is
-therefore far more numerically stable.
+($\kappa_2(\mathbf{A}^{T}\mathbf{A})=\kappa_2(\mathbf{A})^{2}$ for full column rank). A backward-stable QR solve avoids that additional conditioning penalty. Rank-deficient problems need an appropriate rank-revealing or SVD treatment, particularly when a minimum-norm solution is required.
 
 \subsection{Cholesky Decomposition}
 \label{subsec:cholesky_decomposition}
@@ -1073,20 +1143,18 @@ with positive diagonal entries such that
   \label{eq:cholesky_decomposition}
   \mathbf{M} = \mathbf{L}\mathbf{L}^{T}.
 \end{equation}
-Cholesky costs roughly half the flops of LU and is always numerically
-stable for SPD matrices---no pivoting is needed.
+Dense Cholesky costs roughly half the leading-order flops of dense LU and is backward stable under the usual floating-point assumptions for a sufficiently well-resolved SPD input. No pivoting is needed in exact arithmetic. Near-singularity, underflow, overflow and loss of definiteness through rounding remain numerical concerns.
 
 \begin{principle}{Cholesky and the Mass Matrix}{cholesky_mass_matrix}
-The generalized mass matrix $\mathbf{M}(\mathbf{q})$ that appears in
-the manipulator equation of motion (Chapter~11) is symmetric
-positive definite for any unconstrained physical kinematic chain (provided coordinates are non-redundant and link masses are positive). Therefore, Cholesky-type decompositions are the standard solvers for unconstrained forward dynamics
-$\mathbf{M}\ddot{\mathbf{q}}=\boldsymbol{\tau}-
-\mathbf{C}\dot{\mathbf{q}}-\mathbf{g}$~\cite{nocedal2006}. In high-performance articulated simulators like MuJoCo, sparse tree-structured $\mathbf{L}\mathbf{D}\mathbf{L}^T$ factorizations compute unconstrained accelerations in linear time $\mathcal{O}(n)$, serving as the unconstrained step in projected Gauss or primal-dual contact solvers.
+In independent generalized-velocity coordinates, a model with strictly positive kinetic energy for every nonzero admissible velocity has an SPD mass matrix. Redundant embedding coordinates, massless idealizations or singular coordinate charts can violate that premise. With ideal constraints one may instead solve a reduced system or an indefinite saddle-point system; Cholesky does not directly apply to every augmented matrix.
+
+For the unconstrained SPD solve $M\ddot{\mathbf q}=\boldsymbol\tau-\mathbf h-\mathbf g$, Cholesky or a structure-exploiting factorization is appropriate. An articulated-body algorithm can solve tree dynamics recursively without explicitly forming the full dense matrix. Choose the algorithm for the model and sparsity rather than treating one factorization as universal~\cite{nocedal2006}.
+
 \end{principle}
 
 % ------------------------------------------------------------------
 \section{Worked Example: Eigenvalue and SVD Analysis in Python}
-\label{sec:python_example}
+\label{sec:ch1_python_example}
 % ------------------------------------------------------------------
 
 Let us bring together the theory developed in this chapter with a concrete computational example. The following Python code constructs a $3 \times 3$ symmetric matrix (representing a simplified 3D inertia tensor), computes its eigendecomposition and SVD, and verifies the key properties we have proven.
@@ -1109,6 +1177,10 @@ assert np.allclose(M, M.T), "Matrix is not symmetric!"
 eigenvalues, eigenvectors = np.linalg.eigh(M)  # eigh for symmetric matrices
 print("Eigenvalues:", np.round(eigenvalues, 4))
 print("Eigenvectors (columns):\n", np.round(eigenvectors, 4))
+
+# Positive principal moments plus their triangle inequalities
+# are required for a physical three-dimensional inertia tensor.
+assert eigenvalues[-1] <= eigenvalues[0] + eigenvalues[1]
 
 # Verify: all eigenvalues positive => positive definite
 assert all(eigenvalues > 0), "Matrix is not positive definite!"
@@ -1152,11 +1224,11 @@ print("Verify L @ L^T = M, error:", np.linalg.norm(M - L @ L.T))
 
     \item The \textbf{dot product} measures alignment between vectors and defines orthogonality. The \textbf{cross product} in $\Reals^3$ produces a perpendicular vector and can be written as a \emph{skew-symmetric matrix} multiplication---a representation central to Lie Algebra ($\mathfrak{so}(3)$).
 
-    \item \textbf{Eigenvalues} of a dynamics matrix dictate stability; eigenvalues of an inertia tensor identify principal axes. The \textbf{Spectral Theorem} guarantees that symmetric matrices have real eigenvalues and orthogonal eigenvectors.
+    \item \textbf{Eigenvalues} characterize asymptotic stability of a constant continuous-time linear system, with Jordan structure needed on the imaginary-axis boundary. Eigenvectors of a symmetric inertia tensor give principal axes; its eigenvalues give principal moments. The \textbf{Spectral Theorem} guarantees that symmetric matrices have real eigenvalues and orthogonal eigenvectors.
 
     \item \textbf{Positive definiteness} ($\mathbf{M} \succ 0$) guarantees a quadratic form has a strict minimum---the cornerstone of Lyapunov stability proofs and energy-based control design.
 
-    \item The \textbf{SVD} decomposes any matrix into rotation-stretch-rotation. It reveals the manipulability ellipsoid of a robot and quantifies proximity to singularities via the condition number.
+    \item The \textbf{SVD} decomposes a matrix into orthogonal transformations and nonnegative scaling. Applied to a Jacobian with declared input and output metrics, it describes instantaneous velocity transmission. Relative conditioning, absolute inverse gain and finite-time controllability answer different questions.
 \end{enumerate}
 \end{principle}
 
@@ -1186,7 +1258,7 @@ stress and strain are second-order tensors built from exactly the same outer-pro
 construction. Students interested in these connections should consult any
 graduate text on continuum mechanics or tensor analysis.
 
-Finally, the eigenvalue structures and matrix exponentials that close this
+Finally, the eigenvalue structures and matrix exponentials introduced in this
 chapter are the first hints of \emph{Lie theory}. Hall~\cite{hall2015} provides
 a mathematically rigorous bridge from linear algebra to Lie groups and Lie
 algebras, foreshadowing the rotation groups ($\SO(3)$) and rigid-body
@@ -1212,7 +1284,7 @@ transformation groups ($\SE(3)$) that appear in Chapters~4 and~5.
 
     \item \textbf{(Cholesky)} Verify that $\mathbf{M} = \begin{bmatrix} 4 & 2 \\ 2 & 3 \end{bmatrix}$ is positive definite by: (a) checking all eigenvalues are positive, (b) computing the Cholesky factorization $\mathbf{L}\mathbf{L}^T$.
 
-    \item \textbf{(Python)} Write a Python script that generates a random $5 \times 5$ symmetric matrix $\mathbf{M} = \mathbf{A}^T\mathbf{A} + \epsilon \mathbf{I}$ (guaranteeing positive definiteness), computes its eigendecomposition, SVD, and Cholesky factorization, and verifies all three decompositions reproduce the original matrix within numerical tolerance.
+    \item \textbf{(Python)} Write a Python script that generates a random $5 \times 5$ symmetric matrix $\mathbf{M} = \mathbf{A}^T\mathbf{A} + \epsilon \mathbf{I}$ with $\epsilon>0$ (guaranteeing positive definiteness in exact arithmetic), computes its eigendecomposition, SVD, and Cholesky factorization, and verifies all three decompositions reproduce the original matrix within numerical tolerance.
 \end{enumerate}
 
 \subsection*{Conceptual Exercises}
@@ -1222,7 +1294,7 @@ transformation groups ($\SE(3)$) that appear in Chapters~4 and~5.
 
     \item \textbf{(Physical Interpretation)} A robot Jacobian $\mathbf{J} \in \Reals^{3 \times 5}$ has singular values $\sigma_1 = 2.0$, $\sigma_2 = 0.8$, $\sigma_3 = 0.01$. Describe the shape of the velocity manipulability ellipsoid. Is the robot near a singularity? What does the condition number tell you about the reliability of inverse kinematics computations?
 
-    \item \textbf{(Positive Definiteness in Control)} Explain in your own words why the mass matrix $\mathbf{M}(\mathbf{q})$ of any physical mechanical system must be positive definite. What would a zero eigenvalue of $\mathbf{M}(\mathbf{q})$ physically mean?
+    \item \textbf{(Positive Definiteness in Control)} Explain why strictly positive kinetic energy for every nonzero independent generalized velocity implies an SPD mass matrix. How can redundant coordinates, a massless idealization or a singular coordinate chart instead produce a zero eigenvalue? Distinguish this from an ordinary massive rigid body having a physically accessible motion with zero kinetic energy.
 
     \item \textbf{(Skew-Symmetric Matrices)} Prove that for any skew-symmetric matrix $\mathbf{S}$ ($\mathbf{S}^T = -\mathbf{S}$), the matrix $e^{\mathbf{S}} = \mathbf{I} + \mathbf{S} + \frac{1}{2!}\mathbf{S}^2 + \cdots$ is an orthogonal matrix (i.e., $(e^{\mathbf{S}})^T e^{\mathbf{S}} = \mathbf{I}$). \emph{Hint: use the fact that $(e^{\mathbf{S}})^T = e^{\mathbf{S}^T} = e^{-\mathbf{S}}$.} This result is the mathematical foundation of Chapter~\ref{ch:exponential_coordinates}.
 \end{enumerate}
@@ -1230,13 +1302,13 @@ transformation groups ($\SE(3)$) that appear in Chapters~4 and~5.
 \subsection*{Proof-Based Exercises}
 
 \begin{enumerate}[resume]
-    \item \textbf{(Rank-Nullity Application)} Prove that if $\mathbf{A} \in \Reals^{m \times n}$ with $m < n$, then $\mathbf{A}$ must have a nontrivial null space (i.e., $\mathcal{N}(\mathbf{A}) \neq \{\mathbf{0}\}$). Interpret this result for an underactuated robot with more joints than task-space dimensions.
+    \item \textbf{(Rank-Nullity Application)} Prove that if $\mathbf{A} \in \Reals^{m \times n}$ with $m < n$, then $\mathbf{A}$ must have a nontrivial null space (i.e., $\mathcal{N}(\mathbf{A}) \neq \{\mathbf{0}\}$). Interpret this result for a robot with more independent joint coordinates than task-space dimensions. Explain why this kinematic redundancy does not establish underactuation, and why a full-row-rank task Jacobian can have a nontrivial kernel.
 
-    \item \textbf{(Trace and Eigenvalues)} Prove that the trace of a matrix (sum of diagonal elements) equals the sum of its eigenvalues: $\text{tr}(\mathbf{M}) = \sum_{i=1}^n \lambda_i$. \emph{Hint: use the fact that similar matrices have the same trace.}
+    \item \textbf{(Trace and Eigenvalues)} Prove that the trace of a matrix (sum of diagonal elements) equals the sum of its eigenvalues: $\text{tr}(\mathbf{M}) = \sum_{i=1}^n \lambda_i$. Count eigenvalues with algebraic multiplicity, over $\mathbb C$ if necessary. \emph{Hint: use trace invariance under similarity and a complex Schur triangularization; do not assume that every matrix is diagonalizable.}
 
     \item \textbf{(Determinant and Eigenvalues)} Prove that the determinant of a matrix equals the product of its eigenvalues: $\det(\mathbf{M}) = \prod_{i=1}^n \lambda_i$. \emph{Hint: evaluate the characteristic polynomial at $\lambda = 0$.}
 
-    \item \textbf{(Uniqueness of SVD)} The singular values of a matrix are unique, but the singular vectors are not (when singular values are repeated). Give an example of a $2 \times 2$ matrix with a repeated singular value, and show that the corresponding singular vectors can be chosen as any orthonormal pair spanning a two-dimensional subspace.
+    \item \textbf{(Uniqueness of SVD)} The sorted singular values are unique. Even for a distinct positive singular value, a corresponding left/right pair can have both signs reversed. For a repeated positive singular value, both bases can undergo the same orthogonal change within their paired subspaces. Demonstrate this with $I_2$; also explain why bases for the left and right zero-singular-value subspaces can be chosen independently.
 
     \item \textbf{(Schur Complement and Positive Definiteness)} Let $\mathbf{M} = \begin{bmatrix} \mathbf{A} & \mathbf{B} \\ \mathbf{B}^T & \mathbf{C} \end{bmatrix}$ be a symmetric block matrix with $\mathbf{A} \succ 0$. Prove that $\mathbf{M} \succ 0$ if and only if $\mathbf{C} - \mathbf{B}^T \mathbf{A}^{-1} \mathbf{B} \succ 0$ (the \emph{Schur complement} condition). This result is used extensively in the Articulated Body Algorithm (Chapter~\ref{ch:articulated_body_algorithm}).
 \end{enumerate}
