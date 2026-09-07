@@ -1,37 +1,50 @@
-% ==========================================================================
-%  Chapter 12: Machine Learning and Neural Networks
-% ==========================================================================
 \chapter{Machine Learning and Neural Networks}
 \label{ch:machine_learning}
 
-\epigraph{%
-  We map the geometry of physics using calculus and Lie Groups. We map the geometry of behavior using function approximation and gradient descent.
-}{}
+\section{Scope of This Chapter}
 
-\begin{laymansbox}{Context \& Use Case: Learning Instead of Deriving}{context_box}
-\textbf{The Math You Will See:} We introduce \textbf{Neural Networks}, \textbf{Backpropagation} (automatic differentiation), \textbf{Reinforcement Learning}, and \textbf{Policy Optimization}. We rigorously derive the backpropagation algorithm from first principles and formalize MDPs (Markov Decision Processes).
-\textbf{Why We Need It:} Analytical physics engines (Euler-Lagrange and Newton-Euler) are flawless for rigid robots made of perfectly measured titanium. But what about a human golfer? We do not know the exact mass distribution of their shirt, the friction of the grass, or the elasticity of their muscle fibers. When equations become too clouded with uncertainty or too wildly nonlinear to solve analytically, we use Machine Learning. We build a massive, flexible mathematical structure (a neural network) and repeatedly bend its shape using calculus until it naturally approximates the correct physics without us having to write them.
-\textbf{All Variables Defined:} $W$ and $b$ are the weights and biases of the network, $\sigma$ is the nonlinear activation function (like ReLU), $\mathcal{L}$ is the Loss/Error, and $\pi(\mathbf{s})$ is the control policy (neural network).
-\end{laymansbox}
+Learning is useful when measured examples can improve a model, an estimator or a decision rule. It does not remove the need to define the physical system and the question being asked. A network that predicts a golfer's motion, a network that proposes muscle excitations, and a network that estimates joint torques solve different problems. Success at one is not evidence of success at the others.
 
-% ==========================================================================
-\section{Historical Context: From Perceptron to Deep Reinforcement Learning}
-% ==========================================================================
+This chapter develops neural function approximation, manual backpropagation, reinforcement learning and learned dynamical models in one consistent scope. It connects policy optimization to the geometric mechanics of the preceding chapters and provides a reproducible regression example. The pendulum and golf discussions specify models and experiments; they do not report a trained swing controller or new measurements of human performance.
 
-Machine learning for control has undergone several revolutions. In 1957, \textbf{Frank Rosenblatt} introduced the \textbf{Perceptron}, a single-layer neural network that could learn to classify linearly separable patterns. The perceptron learning rule was simple: adjust weights to minimize classification error.
+Use $q$ for configuration, $v$ for generalized velocity, $x$ for the complete modeled state, $o$ for observations and $u$ for the chosen physical input. In the learning equations, $\theta$ denotes network parameters, never the pendulum angle. A loss $\ell$ is an optimization criterion; a Lagrangian $L$ is a mechanical function. Their similar notation in the literature does not make them the same quantity.
 
-For decades, neural networks lay dormant due to the \textbf{XOR Problem}: a single-layer perceptron cannot represent the XOR function, and deeper networks were thought untrainable. This changed in 1986 when \textbf{David Rumelhart, Geoffrey Hinton, and Ronald Williams} published the \textbf{backpropagation algorithm}, showing how to efficiently compute gradients through many layers using the chain rule.
+\section{The Limits of Analytical Control}
 
-Backpropagation rested dormant again until the 2010s, when three factors converged:
-\begin{enumerate}
-    \item \textbf{GPU Hardware}: Graphics processors enabled training on massive datasets.
-    \item \textbf{Big Data}: ImageNet and similar datasets provided hundreds of millions of labeled examples.
-    \item \textbf{Clever Architectures}: Convolutional neural networks (CNNs) and recurrent networks (RNNs) were engineered to handle specific problem structures.
-\end{enumerate}
+Rigid-body algorithms are exact evaluations of declared mathematical models up to numerical error. Real predictions also depend on identified inertias, joint definitions, contact laws, actuator dynamics, measurement errors and the appropriateness of the rigid approximation. Even a manufactured robot is not described perfectly merely because its equations are analytical. Conversely, deformable bodies can have analytical constitutive equations and numerical models. Complexity and nonlinearity alone do not force a choice between physics and learning.
 
-In 2013, \textbf{Deep Reinforcement Learning} emerged when \textbf{Volodymyr Mnih and colleagues at DeepMind} combined deep neural networks with Q-learning, training an agent to play Atari games from raw pixel inputs. By 2016, their AlphaGo algorithm defeated Lee Sedol at Go, a game with more possible positions than atoms in the universe. This demonstrated that gradient descent, applied at scale, could discover strategies that rival human intuition.
+For a selected smooth mechanical mode, one useful model is
+\begin{equation}
+\begin{aligned}
+\dot q&=N(q)v,\\
+M(q)\dot v+c(q,v)+g(q)&=B(q)u+J(q)^T\lambda+f_{\mathrm{other}}.
+\end{aligned}
+\end{equation}
+Here $M$ is inertia, $c$ contains velocity-dependent inertial forces, $g$ is gravity, $B$ maps inputs to generalized forces, and $J^T\lambda$ represents constraint reactions. $N$ maps generalized velocities to configuration rates; it need not be an identity for quaternion coordinates. Contact feasibility and actuator or tissue states complete the model. Adding a learned residual to these equations can be more informative than replacing every term with an unconstrained network, provided the residual is identifiable and does not duplicate forces already included.
 
-Today, reinforcement learning powers robot locomotion, manipulation, autonomous driving, and optimal control across diverse domains. The mathematical foundation remains calculus: the chain rule applied iteratively through nested functions.
+\subsection{Prediction, Inversion and Policy Are Different Maps}
+
+A forward model predicts $\dot x=F_\theta(x,u)$ or a sampled transition $x_{k+1}=T_{\theta,h}(x_k,u_k)$ for a declared sampling interval $h$ and input hold. These maps have different units and different meanings. Fitting $x_{k+1}$ directly does not make the output an acceleration. A learned transition may also depend on the integration scheme and sampling interval used to produce its data.
+
+An inverse model might estimate $u$ from $(q,v,\dot v_{\mathrm{desired}})$ and the contact mode. For full actuation and known external loads, a torque-level inverse can be well-defined. Underactuation, redundant muscles and unknown reactions can make an inverse nonexistent or nonunique. A least-squares torque estimate then depends on an explicitly chosen allocation or regularization criterion. A small residual is not proof that its individual muscle forces were measured correctly.
+
+A policy instead selects an action given information and a task. Let $i_k$ contain the observation history, target and current step. A deterministic policy gives $u_k=\mu_\theta(i_k)$; a stochastic policy specifies a conditional distribution $\pi_\theta(u_k\mid i_k)$. Identical posture can require different actions when velocity, activation, target, remaining time or disturbances differ. There is no universal hidden function from posture alone to the uniquely correct motor torque.
+
+\subsection{Why State Choice Matters for Golf}
+
+Position and velocity can be a sufficient state for a specified rigid torque-driven model. A muscle-driven swing may also require activation, fiber or tendon variables and shaft deformation. Two swings with the same visible geometry can therefore have different subsequent responses. Observations of joint angles, club motion and ground forces provide incomplete and noisy information about these states.
+
+A partially observed Markov decision process retains a Markov latent state; the observation alone need not be Markov. An estimator, belief distribution or history-dependent network can use past observations to infer missing information. Recurrence does not guarantee recovery of an unobservable state. Sensor placement, synchronization and experimental excitation remain essential.
+
+This distinction links preparation to impact. An earlier action can change configuration, velocity, stored elastic energy and activation before a later interval begins. A policy may exploit that retained state. Explaining its benefit requires controlled comparisons with the retained quantities declared, not a label such as ``the network discovered passive dynamics.'' Classical optimal control can exploit the same dynamics when its model and objective include them.
+
+\section{Neural Networks as Function Approximators}
+
+With column vectors, a feedforward network composes affine maps and nonlinear activations:
+\begin{equation}
+h_0=x,\qquad z_j=W_jh_{j-1}+b_j,\qquad h_j=\sigma_j(z_j).
+\end{equation}
+For a real-valued regression output, the last layer may be affine: $\hat y=W_Lh_{L-1}+b_L$. If every activation is an identity, the whole network is affine, including a composed bias. The nonlinear activations create a richer function class. The weights have shapes determined by the input and output sizes of their respective layers.
 
 \begin{figure}[htb]
 \centering
@@ -50,1228 +63,526 @@ Today, reinforcement learning powers robot locomotion, manipulation, autonomous 
   \node[draw,circle,minimum width=0.5cm] (y1) at (4,1.5) {$y_1$};
   \node[draw,circle,minimum width=0.5cm] (y2) at (4,0.5) {$y_2$};
 
-  % Connections (sample)
-  \draw[-,thick] (x1) -- (h1);
-  \draw[-,thick] (x1) -- (h2);
-  \draw[-,thick] (x2) -- (h1);
-  \draw[-,thick] (x2) -- (h3);
-  \draw[-,thick] (x3) -- (h2);
-  \draw[-,thick] (h1) -- (y1);
-  \draw[-,thick] (h2) -- (y2);
-  \draw[-,thick] (h3) -- (y1);
-
+  % All 15 inter-layer weights are shown; biases are omitted.
+  \foreach \i in {1,2,3} {
+    \foreach \j in {1,2,3} { \draw[-,thick] (x\i) -- (h\j); }
+    \foreach \j in {1,2} { \draw[-,thick] (h\i) -- (y\j); }
+  }
   % Labels
   \node[below] at (0,-0.7) {Input};
   \node[below] at (2,-0.7) {Hidden};
   \node[below] at (4,-0.7) {Output};
 
   \node at (2,3) {Neural Network Architecture};
-  \node at (2,-1.5) {Learn weights via backpropagation: $\nabla_\mathbf{W} \mathcal{L} = \frac{\partial \mathcal{L}}{\partial \mathbf{W}}$};
+  \node at (2,-1.5) {Compute weight gradients: $\nabla_\mathbf{W} \mathcal{L} = \frac{\partial \mathcal{L}}{\partial \mathbf{W}}$};
 \end{tikzpicture}
-\caption{A Fully-Connected Neural Network With One Hidden Layer. Information Flows From Input to Output Through Weighted Connections. Backpropagation Efficiently Computes Gradients With Respect to All Weights, Enabling Gradient Descent Optimization.}
+\caption{A Fully Connected Three-Input, Three-Hidden-Unit, Two-Output Network. All Fifteen Inter-Layer Weights Are Shown; the Five Biases Are Omitted.}
 \label{fig:neural_network}
 \end{figure}
 
-% ==========================================================================
-\section{The Limits of Analytical Control}
-% ==========================================================================
+The network in the figure has three inputs, three hidden units and two outputs: nine input-to-hidden and six hidden-to-output weights, plus five biases. Its architecture alone specifies no task or training data. A torque policy, value function and forward-model residual can share an architecture while having entirely different input definitions, losses and validation requirements.
 
-By utilizing the Spatial Algebra, Exponential Coordinates, and Recursive Algorithms established in preceding chapters, we can write a perfect mathematical model of a purely rigid robotic system.
+\subsection{Universal Approximation and Its Limits}
 
-But what if the system isn't rigid? What if we are modeling the 15-DOF golf swing of an athlete with deformable muscles, unpredictable wind friction, and complex contact dynamics with the ground? The mathematical model $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} = \boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{G}(\mathbf{q})$ becomes inherently flawed. We do not know the exact friction. We do not know the exact mass of the golfer's shirt.
-
-When analytical equations fail due to extreme nonlinear complexity or uncertainty, we pivot from \textit{deriving} the control laws exactly to \textit{learning} them empirically. This is where neural networks and reinforcement learning enter.
-
-% ==========================================================================
-\section{Universal Approximation Theorem}
-% ==========================================================================
-
-\textbf{Theorem (Cybenko, 1989):} Let $f: [0,1]^n \to \mathbb{R}$ be any continuous function on a compact domain. For any $\epsilon > 0$, there exists a neural network with a single hidden layer containing finitely many neurons with sigmoid activation $\sigma(z) = \frac{1}{1+e^{-z}}$ that approximates $f$ uniformly to within $\epsilon$.
-
-\textbf{Formal Statement:} There exist weights $\mathbf{W}, \mathbf{b}$ and biases $\mathbf{c}$ such that:
-\[\left|f(\mathbf{x}) - \sum_{i=1}^N c_i \sigma(\mathbf{w}_i^T \mathbf{x} + b_i)\right| < \epsilon\]
-for all $\mathbf{x} \in [0,1]^n$.
-
-\textbf{Significance:} This theorem proves that neural networks are \emph{universal function approximators}. Given enough neurons and proper training, a network can learn any smooth function. The theorem does NOT guarantee efficient learning (the required number of neurons may be exponentially large), nor does it provide a training algorithm. But it proves the concept is sound: if we can optimize the weights, we can approximate any control policy.
-
-\textbf{Extensions:}
-\begin{itemize}
-    \item Networks with ReLU activation $\sigma(z) = \max(0, z)$ are also universal approximators (with depth requirements).
-    \item Deeper networks can be exponentially more efficient than shallow networks for certain functions (convolutional structure, compositional functions).
-    \item Recurrent networks (RNNs) can approximate dynamical systems.
-\end{itemize}
-
-% ==========================================================================
-\section{Neural Networks as Function Approximators}
-% ==========================================================================
-
-At its core, a Neural Network \cite{goodfellow2016} is a composition of parameterized linear transformations and element-wise nonlinearities. The simplest form is the feedforward network.
-
-Suppose we want a control policy $\pi$ that maps state $\mathbf{s} \in \mathbb{R}^{n_s}$ (joint positions, velocities, sensor readings) to an action $\mathbf{a} \in \mathbb{R}^{n_a}$ (motor torques):
-
+For continuous $f:[0,1]^n\to\mathbb R$ and any $\epsilon>0$, Cybenko's theorem permits a finite-width single-hidden-layer network with a continuous sigmoidal activation such that
 \begin{equation}
-\mathbf{a} = \pi(\mathbf{s}) = \text{NeuralNetwork}(\mathbf{s}; \boldsymbol{\theta})
+\sup_{x\in[0,1]^n}\left|f(x)-\sum_{i=1}^{H}c_i\sigma(w_i^Tx+b_i)\right|<\epsilon.
 \end{equation}
+The $c_i$ are output coefficients and $b_i$ are hidden biases. Width and parameter magnitudes are not fixed in advance. This is an existence result, not an algorithm for finding the coefficients or a bound on the data needed. It does not guarantee uniform approximation of a discontinuous policy by continuous networks. ReLU networks also have universal approximation results with sufficient width; a blanket requirement for extra hidden depth is inappropriate. Depth can help represent particular compositional functions efficiently, but cannot rescue missing information in the inputs.
 
-where $\boldsymbol{\theta}$ denotes all learnable parameters (weights and biases).
+For an elementary constructive example, $|x|=\max(0,x)+\max(0,-x)$. Two ReLU hidden units and one linear output represent this function exactly. That identity is a statement about representation. Learning those parameters from a finite noisy dataset is a separate optimization and generalization problem.
 
-\subsection{Feedforward Architecture}
-
-A simple multi-layer perceptron (MLP) with $L$ hidden layers processes the input through successive transformations:
-
-\begin{align}
-\mathbf{z}^{(1)} &= \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)} \\
-\mathbf{h}^{(1)} &= \sigma(\mathbf{z}^{(1)}) \\
-\mathbf{z}^{(2)} &= \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)} \\
-\mathbf{h}^{(2)} &= \sigma(\mathbf{z}^{(2)}) \\
-&\vdots \\
-\mathbf{z}^{(L)} &= \mathbf{W}^{(L)}\mathbf{h}^{(L-1)} + \mathbf{b}^{(L)} \\
-\mathbf{a} &= \mathbf{W}^{(L+1)}\mathbf{h}^{(L)} + \mathbf{b}^{(L+1)}
-\end{align}
-
-where:
-\begin{itemize}
-    \item $\mathbf{W}^{(\ell)} \in \mathbb{R}^{d_{\ell} \times d_{\ell-1}}$ is the weight matrix at layer $\ell$
-    \item $\mathbf{b}^{(\ell)} \in \mathbb{R}^{d_{\ell}}$ is the bias vector
-    \item $\sigma$ is the element-wise activation function applied to hidden layers (not the output)
-    \item $d_{\ell}$ is the width (number of neurons) at layer $\ell$
-\end{itemize}
-
-\textbf{Nonlinearity is Essential:} Without activation functions, the entire network collapses to a single linear map: $\mathbf{a} = \mathbf{W}^{(L+1)}\cdots\mathbf{W}^{(1)}\mathbf{s} + \mathbf{b} = \mathbf{W}_{\text{eff}}\mathbf{s} + \mathbf{b}$. This is insufficient to approximate nonlinear dynamics. The activation $\sigma$ introduces necessary nonlinearity and prevents this collapse.
-
-% ==========================================================================
 \section{Activation Functions}
-% ==========================================================================
 
-Different activation functions possess different properties and computational characteristics.
+ReLU is $\sigma(z)=\max(0,z)$, with derivative zero for $z<0$ and one for $z>0$; an implementation must choose a derivative convention at zero. A unit inactive on every training input supplies no local gradient through that branch. Whether it remains inactive depends on future inputs, upstream changes and the update rule. ``Dead forever'' is not a theorem for every network.
 
-\subsection{Rectified Linear Unit (ReLU)}
-
-\[\sigma_{\text{ReLU}}(z) = \max(0, z) = \begin{cases} z & \text{if } z > 0 \\ 0 & \text{if } z \leq 0 \end{cases}\]
-
-\textbf{Derivative:}
-\[\frac{d\sigma_{\text{ReLU}}}{dz} = \begin{cases} 1 & \text{if } z > 0 \\ 0 & \text{if } z < 0 \end{cases}\]
-
-\textbf{Advantages:}
-\begin{itemize}
-    \item Computationally cheap (just a comparison and zero)
-    \item Addresses vanishing gradient problem (derivative is 1, not small)
-    \item Induces sparsity in hidden activations (many outputs are exactly zero)
-    \item Proven in deep learning at scale (AlexNet, ResNet, etc.)
-\end{itemize}
-
-\textbf{Disadvantages:}
-\begin{itemize}
-    \item Dead neurons: a weight configuration can make $z \leq 0$ always, causing gradient to be permanently zero
-    \item Not differentiable at $z = 0$ (handled via subgradient in practice)
-\end{itemize}
-
-\subsection{Sigmoid}
-
-\[\sigma_{\text{sig}}(z) = \frac{1}{1 + e^{-z}}\]
-
-\textbf{Derivative:}
-\[\frac{d\sigma_{\text{sig}}}{dz} = \sigma_{\text{sig}}(z)(1 - \sigma_{\text{sig}}(z))\]
-
-\textbf{Range:} $(0, 1)$—useful for probability outputs (classification).
-
-\textbf{Disadvantages:}
-\begin{itemize}
-    \item Vanishing gradients: derivative approaches 0 for large $|z|$ (gradient $< 0.25$ everywhere)
-    \item Slow to train deep networks
-    \item Not zero-centered, causing slower convergence in gradients
-\end{itemize}
-
-\subsection{Hyperbolic Tangent (Tanh)}
-
-\[\sigma_{\text{tanh}}(z) = \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}\]
-
-\textbf{Derivative:}
-\[\frac{d\sigma_{\text{tanh}}}{dz} = 1 - \tanh^2(z)\]
-
-\textbf{Range:} $(-1, 1)$—zero-centered, better than sigmoid for training.
-
-\textbf{Still suffers from vanishing gradients for deep networks.}
-
-\subsection{Gaussian Error Linear Unit (GELU)}
-
-\[\sigma_{\text{GELU}}(z) = z \cdot \Phi(z)\]
-
-where $\Phi(z) = \frac{1}{2}\left[1 + \text{erf}\left(\frac{z}{\sqrt{2}}\right)\right]$ is the cumulative distribution function of the standard normal.
-
-Approximation (often used for efficiency):
-\[\sigma_{\text{GELU}}(z) \approx 0.5z\left(1 + \tanh\left(\sqrt{\frac{2}{\pi}}(z + 0.044715z^3)\right)\right)\]
-
-\textbf{Advantages:}
-\begin{itemize}
-    \item Smooth, differentiable everywhere
-    \item Used in modern transformers (BERT, GPT)
-    \item Better gradient flow than sigmoid/tanh
-\end{itemize}
-
-% ==========================================================================
-\section{Loss Functions}
-% ==========================================================================
-
-Training a neural network requires defining what "correct" means: a loss function $\mathcal{L}(\boldsymbol{\theta})$ that penalizes incorrect outputs.
-
-\subsection{Supervised Learning: Mean Squared Error}
-
-For control tasks with reference trajectories, the \textbf{Mean Squared Error (MSE)} loss is:
-
-\[\mathcal{L}_{\text{MSE}} = \frac{1}{N}\sum_{i=1}^N \|\pi(\mathbf{s}_i; \boldsymbol{\theta}) - \mathbf{a}_i^*\|^2\]
-
-where $\mathbf{a}_i^*$ is the desired (expert or reference) action at state $\mathbf{s}_i$, and $N$ is the batch size.
-
-\textbf{Interpretation:} Minimize the squared deviation between predicted and desired actions. Simple, differentiable, but sensitive to outliers.
-
-\subsection{Robustness: Huber Loss}
-
-The \textbf{Huber loss} is a hybrid that is quadratic for small errors and linear for large errors:
-
-\[\mathcal{L}_{\text{Huber}}(\delta) = \begin{cases} \frac{1}{2}\delta^2 & \text{if } |\delta| \leq \kappa \\ \kappa(|\delta| - \frac{\kappa}{2}) & \text{if } |\delta| > \kappa \end{cases}\]
-
-where $\delta = \pi(\mathbf{s}) - \mathbf{a}^*$ is the prediction error and $\kappa$ is a threshold (typically 1.0).
-
-\textbf{Advantage:} Robust to outliers (large errors don't dominate the loss as they do in MSE).
-
-\subsection{Reinforcement Learning: Policy Gradient and Value Loss}
-
-In reinforcement learning, we don't have reference actions $\mathbf{a}^*$. Instead, the agent receives a scalar reward $r_t$ after taking action $a_t$ in state $s_t$.
-
-The \textbf{Policy Gradient Loss} (used in algorithms like REINFORCE and PPO) is:
-
-\[\mathcal{L}_{\text{PG}} = -\mathbb{E}[\log \pi(a_t | s_t) \cdot \hat{R}_t]\]
-
-where $\hat{R}_t$ is an estimate of future discounted rewards (the \textbf{return}).
-
-The \textbf{Value Loss} (used in actor-critic methods) is:
-
-\[\mathcal{L}_{\text{Value}} = \mathbb{E}[(\hat{R}_t - V(s_t; \boldsymbol{\phi}))^2]\]
-
-where $V(s_t; \boldsymbol{\phi})$ is a learned value function predicting expected future rewards.
-
-% ==========================================================================
-\section{Backpropagation: Chain Rule for Neural Networks}
-% ==========================================================================
-
-Backpropagation is the algorithm for computing gradients $\nabla_{\boldsymbol{\theta}} \mathcal{L}$ through a neural network. It is merely systematic application of the chain rule.
-
-\subsection{Computational Graph Example}
-
-Consider a simple 2-layer network:
-\begin{align}
-\mathbf{z}^{(1)} &= \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)} \\
-\mathbf{h}^{(1)} &= \sigma(\mathbf{z}^{(1)}) \\
-\mathbf{z}^{(2)} &= \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)} \\
-\mathcal{L} &= \frac{1}{2}\|\mathbf{z}^{(2)} - \mathbf{a}^*\|^2
-\end{align}
-
-To compute $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}}$, we apply the chain rule:
-
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} \cdot \frac{\partial \mathbf{z}^{(2)}}{\partial \mathbf{h}^{(1)}} \cdot \frac{\partial \mathbf{h}^{(1)}}{\partial \mathbf{z}^{(1)}} \cdot \frac{\partial \mathbf{z}^{(1)}}{\partial \mathbf{W}^{(1)}}\]
-
-\subsection{Forward Pass}
-
-Compute all intermediate activations:
-\[\mathbf{z}^{(1)} = \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)}\]
-\[\mathbf{h}^{(1)} = \sigma(\mathbf{z}^{(1)})\]
-\[\mathbf{z}^{(2)} = \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)}\]
-\[\mathcal{L} = \frac{1}{2}\|\mathbf{z}^{(2)} - \mathbf{a}^*\|^2\]
-
-\subsection{Backward Pass (Backpropagation)}
-
-Compute gradients in reverse order:
-
-\textbf{Step 1:} Loss gradient
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} = \mathbf{z}^{(2)} - \mathbf{a}^* \in \mathbb{R}^{n_a}\]
-
-\textbf{Step 2:} Gradient w.r.t. $\mathbf{W}^{(2)}$ and $\mathbf{b}^{(2)}$
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} (\mathbf{h}^{(1)})^T\]
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}\]
-
-\textbf{Step 3:} Backprop through activation to hidden layer
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} = (\mathbf{W}^{(2)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}\]
-
-\textbf{Step 4:} Backprop through nonlinearity
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} \odot \sigma'(\mathbf{z}^{(1)})\]
-
-where $\odot$ is element-wise multiplication and $\sigma'(z) = \frac{d\sigma}{dz}$.
-
-\textbf{Step 5:} Gradient w.r.t. $\mathbf{W}^{(1)}$ and $\mathbf{b}^{(1)}$
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} \mathbf{s}^T\]
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}}\]
-
-\subsection{General Pattern}
-
-For any layer $\ell$:
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} (\mathbf{h}^{(\ell-1)})^T\]
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell-1)}} = (\mathbf{W}^{(\ell)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}}\]
-\[\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell)}} \odot \sigma'(\mathbf{z}^{(\ell)})\]
-
-The \textbf{computational cost} of backprop is roughly twice the forward pass, making gradient computation affordable even for massive networks.
-
-% ==========================================================================
-\section{Gradient Descent and Optimization}
-% ==========================================================================
-
-\subsection{Vanilla Stochastic Gradient Descent}
-
-Having computed gradients, the simplest update rule is to move opposite to the gradient:
-
-\[\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \nabla_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}_t)\]
-
-where $\alpha$ is the \textbf{learning rate}—how large a step to take. The gradient $\nabla_{\boldsymbol{\theta}} \mathcal{L}$ points in the direction of increasing loss, so moving opposite reduces it.
-
-In practice, we compute the gradient on a small batch of data (not the entire dataset) for efficiency:
-
-\[\mathcal{L}(\boldsymbol{\theta}) \approx \frac{1}{B}\sum_{i=1}^B \mathcal{L}(\boldsymbol{\theta}; \mathbf{s}_i, \mathbf{a}_i)\]
-
-This is \textbf{Stochastic Gradient Descent (SGD)}: noisy but fast.
-
-\subsection{Momentum}
-
-Adding momentum accelerates convergence and helps escape shallow local minima:
-
-\[\mathbf{m}_t = \beta \mathbf{m}_{t-1} + (1-\beta)\nabla_{\boldsymbol{\theta}} \mathcal{L}\]
-\[\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \mathbf{m}_t\]
-
-where $\beta \approx 0.9$ is the momentum decay. The momentum term $\mathbf{m}_t$ is an exponentially-weighted average of past gradients.
-
-\textbf{Intuition:} If gradients point consistently in one direction, momentum builds up, accelerating motion. If gradients oscillate, momentum dampens the oscillation.
-
-\subsection{Adam Optimizer}
-
-\textbf{Adaptive Moment Estimation (Adam)} combines momentum with adaptive learning rates per parameter:
-
-\[\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1-\beta_1)\nabla_{\boldsymbol{\theta}} \mathcal{L}\]
-\[\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1-\beta_2)(\nabla_{\boldsymbol{\theta}} \mathcal{L})^2\]
-
-(second moment is element-wise squared)
-
-\[\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \quad \hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\]
-
-(bias correction to account for initialization at zero)
-
-\[\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon}\]
-
-where division is element-wise and $\epsilon \approx 10^{-8}$ prevents division by zero.
-
-\textbf{Advantages:}
-\begin{itemize}
-    \item Adapts learning rate per parameter (small gradients get larger effective steps)
-    \item Robust to learning rate choice (works with $\alpha \approx 0.001$ across many problems)
-    \item Industry standard for deep learning
-\end{itemize}
-
-% ==========================================================================
-\section{Markov Decision Processes (MDPs)}
-% ==========================================================================
-
-Reinforcement learning operates on \textbf{Markov Decision Processes}, a mathematical framework for sequential decision-making under uncertainty.
-
-\subsection{Formal Definition}
-
-An MDP \cite{Sutton2018} is a tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$:
-
-\begin{itemize}
-    \item $\mathcal{S}$: state space (joint angles, velocities, sensor readings)
-    \item $\mathcal{A}$: action space (torques, forces applied by actuators)
-    \item $P(s' | s, a)$: transition probability—likelihood of reaching state $s'$ after taking action $a$ in state $s$
-    \item $R(s, a, s')$: immediate reward for the transition
-    \item $\gamma \in [0, 1]$: discount factor weighting immediate vs. future rewards
-\end{itemize}
-
-\subsection{Markov Property}
-
-The \textbf{Markov property} states that the future depends only on the current state, not the history:
-
-\[P(s_{t+1} | s_t, a_t, s_{t-1}, a_{t-1}, \ldots) = P(s_{t+1} | s_t, a_t)\]
-
-This is a simplifying assumption that makes the problem tractable. Partially Observable MDPs (POMDPs) relax this assumption.
-
-\subsection{Return and Value Function}
-
-The \textbf{return} from time $t$ is the sum of discounted future rewards:
-
-\[R_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \cdots = \sum_{k=0}^{\infty} \gamma^k r_{t+k}\]
-
-The \textbf{state value function} $V(s)$ estimates the expected return starting from state $s$ under a policy $\pi$:
-
-\[V^{\pi}(s) = \mathbb{E}[R_t | s_t = s, \pi]\]
-
-The \textbf{action-value function} (Q-function) estimates the expected return after taking action $a$ in state $s$, then following policy $\pi$:
-
-\[Q^{\pi}(s, a) = \mathbb{E}[R_t | s_t = s, a_t = a, \pi]\]
-
-The \textbf{advantage function} measures how much better action $a$ is compared to the policy's default:
-
-\[A^{\pi}(s, a) = Q^{\pi}(s, a) - V^{\pi}(s)\]
-
-\subsection{Bellman Equation}
-
-The fundamental recursion in MDPs is the \textbf{Bellman equation}:
-
-\[V^{\pi}(s) = \sum_{a} \pi(a|s) \sum_{s'} P(s'|s,a)[R(s,a,s') + \gamma V^{\pi}(s')]\]
-
-This expresses the value of a state as the immediate reward plus the discounted value of the next state. Solving this recursion (either iteratively or via dynamic programming) yields the optimal policy.
-
-% ==========================================================================
-\section{Policy Gradient Methods}
-% ==========================================================================
-
-\subsection{REINFORCE Algorithm}
-
-\textbf{REINFORCE} \cite{Sutton2018} is a basic policy gradient method that learns a policy $\pi_{\boldsymbol{\theta}}(a|s)$ parametrized by $\boldsymbol{\theta}$ (e.g., neural network weights).
-
-The key insight is the \textbf{policy gradient theorem}:
-
-\[\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]\]
-
-where $J(\boldsymbol{\theta})$ is the expected return and $R_t$ is the actual return from time $t$ onward.
-
-\textbf{Derivation:} The expected return is:
-\[J(\boldsymbol{\theta}) = \mathbb{E}_{s \sim \rho, a \sim \pi_{\boldsymbol{\theta}}}[R_t]\]
-
-Taking the gradient and using the log-derivative trick ($\nabla \log f = \frac{\nabla f}{f}$):
-
-\[\nabla_{\boldsymbol{\theta}} J = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]\]
-
-This gradient can be estimated from sample trajectories:
-
-\[\hat{\nabla}_{\boldsymbol{\theta}} J \approx \frac{1}{N}\sum_{i=1}^N \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a_i|s_i) \cdot R_i\]
-
-The \textbf{REINFORCE algorithm}:
-
-\begin{algorithm}{REINFORCE}{reinforce}
-\begin{algorithmic}
-\For{episode $= 1$ to $N_{\text{episodes}}$}
-    \State Initialize trajectory $\tau = \emptyset$
-    \State $s \gets s_0$ (initial state)
-    \For{step $= 1$ to $T$}
-        \State Sample $a \sim \pi_{\boldsymbol{\theta}}(a|s)$
-        \State Observe reward $r$ and next state $s'$
-        \State Append $(s, a, r)$ to $\tau$
-        \State $s \gets s'$
-    \EndFor
-    \State Compute returns: $R_t = \sum_{k=t}^T \gamma^{k-t} r_k$ for each $t$
-    \State Gradient: $\hat{g} = \frac{1}{T}\sum_t \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a_t|s_t) \cdot R_t$
-    \State Update: $\boldsymbol{\theta} \gets \boldsymbol{\theta} + \alpha \hat{g}$
-\EndFor
-\end{algorithmic}
-\end{algorithm}
-
-\textbf{Interpretation:} The gradient term $\nabla_{\boldsymbol{\theta}} \log \pi$ increases the probability of actions that achieved high returns $R_t$, and decreases the probability of actions that achieved low returns.
-
-\subsection{High Variance Problem}
-
-The return $R_t$ is a noisy estimate of expected value. If a policy is bad, it takes bad actions, gets low rewards, and the gradients become very noisy. This is the \textbf{credit assignment problem}: which actions deserve credit (or blame) for the outcome?
-
-Solutions:
-
-\begin{enumerate}
-    \item \textbf{Baseline Subtraction:} Use a learned value function to reduce variance:
-    \[\hat{\nabla}_{\boldsymbol{\theta}} J \approx \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot (R_t - V(s))]\]
-
-    This estimates the \textbf{advantage} $A(s,a) = Q(s,a) - V(s)$, which has lower variance than raw returns.
-
-    \item \textbf{N-step returns:} Use multi-step bootstrapping:
-    \[R_t^{(n)} = r_t + \gamma r_{t+1} + \cdots + \gamma^{n-1}r_{t+n-1} + \gamma^n V(s_{t+n})\]
-
-    Longer $n$ has more bias but lower variance.
-\end{enumerate}
-
-% ==========================================================================
-\section{Actor-Critic Architecture}
-% ==========================================================================
-
-The \textbf{Actor-Critic} method combines policy gradient learning (actor) with value function learning (critic), reducing variance while maintaining policy gradient convergence.
-
-\subsection{Architecture}
-
-Two neural networks:
-
-\begin{enumerate}
-    \item \textbf{Actor} $\pi_{\boldsymbol{\theta}}(a|s)$: policy network mapping state to action distribution
-    \item \textbf{Critic} $V_{\boldsymbol{\phi}}(s)$: value network predicting expected returns
-\end{enumerate}
-
-\subsection{Advantage Estimate}
-
-The critic produces an estimate of the value, allowing us to compute the advantage:
-
-\[\hat{A}_t = r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t)\]
-
-This \textbf{temporal difference (TD) error} estimates the advantage on the fly without waiting for an entire episode.
-
-\subsection{Update Rules}
-
-\textbf{Critic update:} Minimize value loss
-\[\mathcal{L}_{\text{critic}} = (r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t))^2\]
-\[\boldsymbol{\phi} \gets \boldsymbol{\phi} - \alpha_{\phi} \nabla_{\boldsymbol{\phi}} \mathcal{L}_{\text{critic}}\]
-
-\textbf{Actor update:} Maximize expected advantage
-\[\mathcal{L}_{\text{actor}} = -\log \pi_{\boldsymbol{\theta}}(a_t|s_t) \cdot \hat{A}_t\]
-\[\boldsymbol{\theta} \gets \boldsymbol{\theta} - \alpha_{\boldsymbol{\theta}} \nabla_{\boldsymbol{\theta}} \mathcal{L}_{\text{actor}}\]
-
-\subsection{Advantage}
-
-Actor-Critic has significantly lower variance than REINFORCE because:
-\begin{itemize}
-    \item The critic baseline reduces the scale of gradient estimates
-    \item TD estimates use immediate rewards + bootstrap, not full episode returns
-    \item Both networks train jointly, with the critic improving its estimates each step
-\end{itemize}
-
-% ==========================================================================
-\section{Proximal Policy Optimization (PPO)}
-% ==========================================================================
-
-\textbf{Proximal Policy Optimization (PPO)} \cite{schulman2017} is a modern policy gradient algorithm that trades off sample efficiency, stability, and ease of implementation.
-
-\subsection{Problem With Large Policy Updates}
-
-A fundamental issue in policy gradient methods: if the policy changes too much in one gradient step, the value function estimates (computed with the old policy) become stale and unreliable. This causes learning instability.
-
-\subsection{Policy Clipping}
-
-PPO addresses this using a clipped policy gradient objective:
-
-\[\mathcal{L}^{\text{clip}}(\boldsymbol{\theta}) = \mathbb{E}\left[\min\left(r_t(\boldsymbol{\theta}) \cdot \hat{A}_t, \text{clip}(r_t(\boldsymbol{\theta}), 1-\epsilon, 1+\epsilon) \cdot \hat{A}_t\right)\right]\]
-
-where the \textbf{probability ratio} is:
-
-\[r_t(\boldsymbol{\theta}) = \frac{\pi_{\boldsymbol{\theta}}(a_t|s_t)}{\pi_{\boldsymbol{\theta}_{\text{old}}}(a_t|s_t)}\]
-
-and $\epsilon \approx 0.2$ is the clipping parameter.
-
-\subsection{Interpretation}
-
-The clipping mechanism prevents the probability ratio from deviating too far from 1:
-
-\begin{itemize}
-    \item If $\hat{A}_t > 0$ (action was good): increase $\pi(a|s)$, but clip the update so $r_t \leq 1 + \epsilon$
-    \item If $\hat{A}_t < 0$ (action was bad): decrease $\pi(a|s)$, but clip so $r_t \geq 1 - \epsilon$
-\end{itemize}
-
-This prevents the policy from collapsing to a bad deterministic action or diverging to zero probability.
-
-\subsection{Full PPO Objective}
-
-The complete PPO loss combines clipped policy gradient, value loss, and entropy regularization:
-
-\[\mathcal{L}^{\text{PPO}}(\boldsymbol{\theta}, \boldsymbol{\phi}) = \mathbb{E}\left[\mathcal{L}^{\text{clip}} - c_1 \mathcal{L}_{\text{value}} + c_2 \mathcal{H}(\pi_{\boldsymbol{\theta}})\right]\]
-
-where:
-\begin{itemize}
-    \item $c_1, c_2$ are weight coefficients
-    \item $\mathcal{H}(\pi) = -\mathbb{E}[\log \pi(a|s)]$ is entropy (encourages exploration)
-\end{itemize}
-
-% ==========================================================================
-\section{Model-Based vs. Model-Free RL}
-% ==========================================================================
-
-Reinforcement learning approaches differ in whether they learn an explicit model of the environment dynamics.
-
-\subsection{Model-Free RL}
-
-The agent learns a policy or value function directly, without learning environment dynamics $P(s'|s,a)$.
-
-\textbf{Examples:} Q-learning, SARSA, Policy Gradient, Actor-Critic, PPO.
-
-\textbf{Advantages:}
-\begin{itemize}
-    \item No need to model potentially complex physics
-    \item Can leverage large amounts of real-world interaction data
-    \item Often more data-efficient than model-based methods in practice
-\end{itemize}
-
-\textbf{Disadvantages:}
-\begin{itemize}
-    \item Requires many interactions (samples) to converge
-    \item Does not leverage knowledge of physics (Lagrangian mechanics, constraints)
-    \item Hard to transfer to different tasks or environments
-\end{itemize}
-
-\subsection{Model-Based RL}
-
-The agent learns an explicit model $\hat{P}(s'|s,a)$ and uses it for planning.
-
-\textbf{Examples:} Dyna-Q, Model Predictive Control with learned models, planning with learned world models.
-
-\textbf{Advantages:}
-\begin{itemize}
-    \item Can plan multiple steps ahead without interacting with environment
-    \item Often more sample-efficient (fewer interactions needed)
-    \item Can exploit physics knowledge (e.g., reward shaping)
-\end{itemize}
-
-\textbf{Disadvantages:}
-\begin{itemize}
-    \item Model learning is itself a hard problem
-    \item Errors compound during multi-step planning (``compounding error'')
-    \item Computationally expensive for high-dimensional systems
-\end{itemize}
-
-\subsection{Hybrid Approaches}
-
-Modern approaches combine both:
-
-\begin{itemize}
-    \item Learn a model of dynamics and use it for data augmentation
-    \item Use learned models for short-horizon planning, long-horizon model-free learning
-    \item Incorporate physics priors (learned Lagrangian/Hamiltonian) into the dynamics model
-\end{itemize}
-
-% ==========================================================================
-\section{Physics-Informed Neural Networks (PINNs)}
-% ==========================================================================
-
-\textbf{Physics-Informed Neural Networks (PINNs)} encode known physics (differential equations, conservation laws) as regularization terms in the loss function.
-
-\subsection{Framework}
-
-Learn a network $u_{\boldsymbol{\theta}}(t, \mathbf{x})$ that satisfies a known PDE:
-
-\[\frac{\partial u}{\partial t} + \mathcal{N}[u] = 0\]
-
-where $\mathcal{N}$ is a nonlinear operator (e.g., $\mathcal{N}[u] = -u \frac{\partial u}{\partial x}$ for Burgers' equation).
-
-The loss combines:
-
-\[\mathcal{L} = \mathcal{L}_{\text{data}} + \lambda \mathcal{L}_{\text{physics}}\]
-
-\begin{itemize}
-    \item \textbf{Data loss:} $\mathcal{L}_{\text{data}} = \frac{1}{N}\sum_i (u_{\boldsymbol{\theta}}(t_i, \mathbf{x}_i) - u_i^{\text{obs}})^2$ (match observations)
-    \item \textbf{Physics loss:} $\mathcal{L}_{\text{physics}} = \frac{1}{M}\sum_j \left(\frac{\partial u_{\boldsymbol{\theta}}}{\partial t} + \mathcal{N}[u_{\boldsymbol{\theta}}]\right)^2$ (satisfy PDE)
-\end{itemize}
-
-Derivatives $\frac{\partial u_{\boldsymbol{\theta}}}{\partial t}$ are computed via \textbf{automatic differentiation}—backprop applied to the network output.
-
-\subsection{Application to Robotics}
-
-For learned dynamics $\dot{\mathbf{x}} = f_{\boldsymbol{\theta}}(\mathbf{x}, \mathbf{u})$:
-
-\[\mathcal{L}_{\text{physics}} = \frac{1}{M}\sum_j \left(\frac{d\mathbf{x}_j}{dt} - f_{\boldsymbol{\theta}}(\mathbf{x}_j, \mathbf{u}_j)\right)^2\]
-
-(enforces time derivatives match the learned model)
-
-For control with known Lagrangian dynamics:
-
-\[\mathcal{L}_{\text{physics}} = \left\|\mathbf{M}(\mathbf{x})\ddot{\mathbf{x}} + \mathbf{C}(\mathbf{x},\dot{\mathbf{x}})\dot{\mathbf{x}} + \mathbf{G}(\mathbf{x}) - \mathbf{u}\right\|^2\]
-
-\textbf{Benefit:} Encoding known physics greatly reduces data requirements and improves generalization to unseen configurations. This approach directly bridges Chapter~\ref{ch:lagrangian}'s Lagrangian equations of motion with data-driven learning: the analytical structure $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G} = \boldsymbol{\tau}$ derived from energy principles becomes a differentiable constraint that guides the network toward physically consistent predictions.
-
-% ==========================================================================
-\section{Neural ODEs and Adjoint Method}
-% ==========================================================================
-
-\subsection{Neural ODE Formulation}
-
-Instead of discrete layers, \textbf{Neural ODEs} define the hidden state as the solution to a continuous ODE:
-
-\[\frac{dh(t)}{dt} = f_{\boldsymbol{\theta}}(h(t), t)\]
-
-The network output is obtained by solving this ODE from $t=0$ to $t=T$:
-
-\[h(T) = h(0) + \int_0^T f_{\boldsymbol{\theta}}(h(t), t) \, dt\]
-
-Solved numerically using an ODE solver (e.g., RK45).
-
-\subsection{Adjoint Method}
-
-Training Neural ODEs requires computing gradients through an ODE solve, which is expensive. The \textbf{adjoint method} computes gradients backward in time:
-
-\[\frac{\partial \mathcal{L}}{\partial \boldsymbol{\theta}} = -\int_T^0 \left(\frac{\partial L}{\partial h(t)}\right)^T \frac{\partial f_{\boldsymbol{\theta}}}{\partial \boldsymbol{\theta}} dt\]
-
-This avoids storing intermediate activations (memory-efficient) and allows efficient backprop through ODE solvers.
-
-\textbf{Application to Control:} Dynamics are inherently continuous (governed by Lagrangian or Hamiltonian equations). Neural ODEs naturally parameterize control policies and learned dynamics, enabling efficient optimization.
-
-% ==========================================================================
-\section{Sim-to-Real Transfer and Domain Randomization}
-% ==========================================================================
-
-Policies trained in simulation---typically using physics engines such as MuJoCo \cite{todorov2012}---often fail on real robots due to:
-\begin{itemize}
-    \item Unmodeled friction and damping
-    \item Sensor noise and delays
-    \item Actuator nonlinearities and backlash
-    \item Differences in mass, inertia, and geometry
-\end{itemize}
-
-\subsection{Domain Randomization}
-
-\textbf{Domain Randomization} trains the policy on diverse simulated environments with randomized parameters:
-
-\begin{algorithmic}
-\For{training episode}
-    \State Randomize: $m_i \sim \mathcal{U}(m_i^{\text{nominal}} \pm 30\%)$
-    \State Randomize: $\mu \sim \mathcal{U}(0.5 \mu_0, 1.5 \mu_0)$ (friction)
-    \State Randomize: $\mathbf{g} \sim \mathcal{U}(0.5 g_0, 1.5 g_0)$ (gravity)
-    \State Randomize: sensor noise $\sigma_{\text{noise}} \sim \mathcal{U}(0, \sigma_{\max})$
-    \State Train policy on randomized task
-\EndFor
-\end{algorithmic}
-
-If the policy learns to succeed across this distribution of tasks, it becomes robust to a wide range of real-world variation. Domain randomization was popularized by Tobin et al.\ (2017) for visual transfer and extended by OpenAI's Dactyl project for dexterous manipulation, demonstrating that sufficiently diverse simulation can substitute for real-world data collection.
-
-\textbf{Intuition:} The policy learns invariant strategies rather than exploiting precise nominal parameters. This improves real-world performance.
-
-\subsection{System Identification}
-
-Alternatively, use real-world data to \textbf{identify} the actual system parameters:
-
-\[\hat{\boldsymbol{\theta}}_{\text{system}} = \arg\min_{\boldsymbol{\theta}} \sum_i \|f(\mathbf{s}_i, \mathbf{u}_i; \boldsymbol{\theta}) - \mathbf{s}_{i+1}^{\text{obs}}\|^2\]
-
-Then retrain the policy with identified parameters.
-
-% ==========================================================================
-\section{Worked Example: Pendulum Swing-Up Policy}
-% ==========================================================================
-
-\subsection{Problem Setup}
-
-Goal: Swing a simple pendulum from hanging (downward) to upright (upward) while minimizing energy expenditure.
-
-State: $\mathbf{s} = [\theta, \dot{\theta}]$ (angle and angular velocity)
-Action: $u \in [-1, 1]$ (normalized torque)
-
-Reward:
-\[r_t = -(\theta_t^2 + 0.1\dot{\theta}_t^2 + 0.01 u_t^2)\]
-
-This rewards reaching $\theta \approx \pi$ (upright), low velocity, and low control effort.
-
-\subsection{Policy Network}
-
-A simple 2-layer network with ReLU activations:
-
-\[\pi_{\boldsymbol{\theta}}(s) = \tanh(\mathbf{W}_2 \text{ReLU}(\mathbf{W}_1 s + b_1) + b_2)\]
-
-This maps 2D state to 1D action in $[-1, 1]$.
-
-\subsection{Training With PPO}
-
-\begin{algorithmic}
-\For{training step}
-    \State Collect trajectory: $(s_0, u_0, r_0, s_1, u_1, r_1, \ldots)$ from policy
-    \State Compute advantages: $\hat{A}_t = r_t + \gamma V(s_{t+1}) - V(s_t)$
-    \State Update critic: minimize $\sum_t (r_t + \gamma V(s_{t+1}) - V(s_t))^2$
-    \State Update actor: maximize $\sum_t \min(r_t(\boldsymbol{\theta}) \hat{A}_t, \text{clip}(...))$
-    \State Every $K$ steps: discard old policy, collect new trajectory
-\EndFor
-\end{algorithmic}
-
-After training, the policy learns to:
-\begin{enumerate}
-    \item Swing outward (build kinetic energy)
-    \item Swing upward, past the horizontal
-    \item Small corrections near the top to land upright
-\end{enumerate}
-
-This is a \textbf{learned strategy} that the algorithm discovered from reward signals, not explicit programming.
-
-% ==========================================================================
-\section{Value-Based Methods: DQN and Beyond}
-\label{sec:value_based_methods}
-\index{value-based methods}\index{DQN}\index{Deep Q-Network}
-% ==========================================================================
-
-While policy gradient methods (such as PPO) directly optimize the policy, an alternative family of algorithms learns the \textbf{value} of state-action pairs and derives the policy from these values.
-
-\textbf{Q-Learning.}\index{Q-learning} The classical tabular algorithm maintains a table $Q(s,a)$ and updates it via temporal difference:
+The logistic sigmoid satisfies
 \begin{equation}
-Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\bigr]
+s(z)=\frac{1}{1+e^{-z}},\qquad s'(z)=s(z)(1-s(z))\le\frac14,
+\end{equation}
+with equality at $z=0$. Tanh has derivative $1-\tanh^2z$, reaching one at zero and tending to zero in either tail. Both activations can saturate. GELU is $z\Phi(z)$, where $\Phi$ is the standard normal cumulative distribution; its derivative is $\Phi(z)+z\phi(z)$, with $\phi$ the corresponding density. Smoothness does not imply uniformly large or positive derivatives.
+
+For a stack of layers, the input Jacobian contains products $D_jW_j$, where $D_j$ is the diagonal activation-derivative matrix. Thus
+\begin{equation}
+\left\|\frac{\partial h_L}{\partial h_0}\right\|
+\le\prod_{j=1}^{L}\|D_j\|\,\|W_j\|.
+\end{equation}
+Ten sigmoid derivative factors alone are at most $4^{-10}=9.5367\times10^{-7}$. The actual gradient also depends on weights, inputs and loss derivatives. Large weight norms can counteract that attenuation or cause explosion; multiplying ten sigmoid bounds is not a universal estimate of a first-layer parameter gradient.
+
+\section{Loss Functions and What They Estimate}
+
+For $m$ scalar examples, use the half mean squared error
+\begin{equation}
+\ell(\theta)=\frac{1}{2m}\sum_{i=1}^{m}(\hat y_i-y_i)^2.
+\end{equation}
+Under squared loss, the ideal unrestricted predictor is the conditional mean of the target given the input. If two hidden physiological states produce different torques at the same observed posture, averaging their labels need not yield a successful action for either state. This is a representation and information problem, not necessarily inadequate network width. Supervised labels can come from calibrated measurements, a specified inverse-dynamics procedure or simulation; a human need not supply every correct answer manually.
+
+Huber loss with threshold $\delta>0$ is
+\begin{equation}
+\ell_\delta(e)=
+\begin{cases}
+e^2/2,&|e|\le\delta,\\
+\delta(|e|-\delta/2),&|e|>\delta.
+\end{cases}
+\end{equation}
+The threshold has the same units as the residual, unless residuals have been normalized. Linear growth reduces the influence of large residuals relative to squared loss; it does not identify which observations are erroneous. A contact event, a sensor fault and a rare valid swing can all create a large residual for different reasons.
+
+Multiple outputs require a declared metric. Squared radians, angular velocities and newtons cannot be added meaningfully without scale factors or a covariance model. Normalize using training data only and retain the transformations for deployment. Split evaluation by independent trajectories, sessions or participants as appropriate; random neighboring frames from one swing can leak almost identical states into both training and testing.
+
+\section{Backpropagation: Chain Rule for Neural Networks}
+
+Consider a scalar output $\hat y=W_2h+b_2$, $h=\tanh(W_1x+b_1)$, and a single-example loss $\ell=(\hat y-y)^2/2$. Set $e=\hat y-y$. Applying the chain rule gives
+\begin{equation}
+\begin{aligned}
+\nabla_{W_2}\ell&=eh^T,&\nabla_{b_2}\ell&=e,\\
+d_1&=(W_2^Te)\odot(1-h\odot h),\\
+\nabla_{W_1}\ell&=d_1x^T,&\nabla_{b_1}\ell&=d_1.
+\end{aligned}
+\end{equation}
+For a batch mean, sum the individual gradients and divide by the actual number of examples in that batch. A shorter final batch uses its own size. Compute all derivatives using the same parameter values before applying updates: changing $W_2$ before computing $d_1$ would differentiate a different network.
+
+Backpropagation efficiently accumulates these derivatives in reverse order through a computational graph. Gradient descent, momentum and Adam are optimizers that use the derivatives to update parameters. The gradient calculation itself is not a training algorithm, a guarantee of decreasing loss or a method for choosing a physically appropriate loss.
+
+Finite differences provide an independent check. For one parameter component $\theta_j$, compare backpropagation with
+\begin{equation}
+\frac{\ell(\theta+\varepsilon e_j)-\ell(\theta-\varepsilon e_j)}{2\varepsilon}.
+\end{equation}
+Choose a step large enough to avoid cancellation and small enough to control truncation error. Check every parameter group, including biases, and avoid ReLU kinks for an ordinary smooth derivative check. Passing this test validates differentiation at the checked inputs; it does not certify generalization or control stability.
+
+\section{Gradient Descent and Optimization}
+
+For a differentiable objective with gradient $g=\nabla\ell(\theta)$, the directional derivative along $-g$ is $-\|g\|^2$. A sufficiently small step decreases the same smooth objective when $g\ne0$. A fixed large step can overshoot. A mini-batch gradient is a noisy estimate, so even a reasonable stochastic step need not decrease the full-data loss on every iteration.
+
+SGD updates $\theta_{k+1}=\theta_k-\alpha_k\hat g_k$. A momentum convention is $m_k=\beta m_{k-1}+\hat g_k$, followed by $\theta_{k+1}=\theta_k-\alpha_km_k$. Other conventions multiply the new gradient by $1-\beta$; the learning-rate interpretation changes accordingly. Momentum can reduce oscillation in some directions and accelerate progress in others, but it can also overshoot.
+
+Adam maintains coordinatewise first and second moments:
+\begin{equation}
+\begin{aligned}
+m_k&=\beta_1m_{k-1}+(1-\beta_1)\hat g_k,\\
+v_k&=\beta_2v_{k-1}+(1-\beta_2)\hat g_k\odot\hat g_k,\\
+\hat m_k&=m_k/(1-\beta_1^k),\quad
+\hat v_k=v_k/(1-\beta_2^k),\\
+\theta_{k+1}&=\theta_k-\alpha_k\hat m_k/(\sqrt{\hat v_k}+\varepsilon).
+\end{aligned}
+\end{equation}
+Here $m_0=v_0=0$, operations in the last line are elementwise, and $\varepsilon>0$ prevents division by zero. Moment adaptation is different from a schedule for $\alpha_k$. Neither Adam nor momentum universally converges for every nonconvex or changing reinforcement-learning objective. Learning rate, normalization, initialization and optimizer settings remain part of the experiment.
+
+\section{Markov Decision Processes}
+
+For clarity, first use a finite horizon of $T$ decisions. At step $t$, the agent observes state $s_t$, samples action $a_t$, receives reward $r_t$, and transitions to $s_{t+1}$. The distribution $P(s_{t+1},r_t\mid s_t,a_t)$ is the environment model. The reward index here names the action that generated it; some texts use $r_{t+1}$ for the same event.
+
+The Markov property means this conditional distribution does not additionally depend on earlier history when $s_t$ is complete. Include time in the state or use time-indexed policies when the task has a deadline. A terminal state is part of the task definition, not just an accidental interruption of data collection.
+
+\subsection{Return and Value}
+
+Define $G_t=\sum_{k=t}^{T-1}\gamma^{k-t}r_k$ and $J(\theta)=\mathbb E_{\pi_\theta}[G_0]$, with $0\le\gamma\le1$. Rewards must have finite expectations. For an infinite discounted task, bounded rewards and $\gamma<1$ give a finite return; $\gamma=1$ requires additional termination or summability conditions. Continuing average-reward control is a different formulation and needs its own assumptions.
+
+Under a specified policy $\pi$, define
+\begin{equation}
+V_t^\pi(s)=\mathbb E[G_t\mid s_t=s],\qquad
+Q_t^\pi(s,a)=\mathbb E[G_t\mid s_t=s,a_t=a].
+\end{equation}
+The advantage $A_t^\pi(s,a)=Q_t^\pi(s,a)-V_t^\pi(s)$ compares an action with the policy's conditional average, not necessarily with doing nothing. Since $\mathbb E_{a\sim\pi}[A_t^\pi(s,a)]=0$, it expresses relative merit under the chosen reward, horizon and future policy.
+
+\subsection{Policy Evaluation Versus Optimality}
+
+With $V_T^\pi=0$, conditioning on the next transition gives
+\begin{equation}
+V_t^\pi(s)=\sum_a\pi_t(a\mid s)
+\mathbb E[r_t+\gamma V_{t+1}^\pi(s_{t+1})\mid s,a].
+\end{equation}
+This Bellman equation evaluates the fixed policy. It does not optimize that policy. For finite action sets, the optimal recursion replaces the average with a maximum:
+\begin{equation}
+V_t^*(s)=\max_a\mathbb E[r_t+\gamma V_{t+1}^*(s_{t+1})\mid s,a].
+\end{equation}
+Continuous spaces require integrals, and a supremum replaces the maximum unless an optimizer exists. Policy iteration alternates evaluation and improvement; value iteration applies an optimality operator. Approximate neural versions do not inherit every convergence property of finite tabular algorithms.
+
+For a one-decision example, actions return 0 and 2. The policy choosing each equally has value 1; the optimal value is 2. Solving the evaluation equation more accurately cannot improve the equal-choice policy. This simple distinction prevents a common misunderstanding when interpreting a learned critic.
+
+\section{Policy Gradient Methods}
+
+Let $\zeta=(s_0,a_0,r_0,\ldots,s_T)$ be a trajectory. Assume the initial-state and environment distributions are independent of $\theta$, the policy has differentiable positive likelihood on the sampled support, and differentiation can pass through the expectation. Its likelihood factors as
+\begin{equation}
+p_\theta(\zeta)=p_0(s_0)\prod_{t=0}^{T-1}
+\pi_\theta(a_t\mid s_t)P(s_{t+1},r_t\mid s_t,a_t).
+\end{equation}
+The log derivative is a sum of policy scores. Therefore
+\begin{equation}
+\nabla_\theta J=
+\mathbb E\left[G_0\sum_{t=0}^{T-1}\nabla_\theta\log\pi_\theta(a_t\mid s_t)\right].
+\end{equation}
+Past rewards have zero expected product with a later score, because the score has conditional mean zero before the action is sampled. Removing those terms yields the return-to-go form
+\begin{equation}
+\nabla_\theta J=
+\mathbb E\left[\sum_{t=0}^{T-1}\gamma^t
+\nabla_\theta\log\pi_\theta(a_t\mid s_t)G_t\right].
+\end{equation}
+This derivation accounts for the effect of actions on subsequent state visitation through the trajectory likelihood. It does not simply hold a policy-dependent state distribution constant. If the initial distribution, environment or reward depends directly on $\theta$, additional derivative terms are needed. The explicit $\gamma^t$ belongs to the stated start-state objective; uniform time-step averages used in practical implementations can correspond to a different weighting convention.
+
+\subsection{Baselines and REINFORCE}
+
+For an action-independent baseline $b_t(s_t)$,
+\begin{equation}
+\mathbb E_{a_t\sim\pi_\theta}
+[b_t(s_t)\nabla_\theta\log\pi_\theta(a_t\mid s_t)]
+=b_t(s_t)\nabla_\theta\int\pi_\theta(a\mid s_t)\,da=0.
+\end{equation}
+Thus $G_t-b_t(s_t)$ can replace $G_t$ without changing the expected score estimator under these assumptions. Treat the baseline and sampled returns as constants in the actor loss; differentiating through a learned baseline adds unwanted terms. A baseline fitted using the same action's outcome can also introduce finite-sample dependence unless the estimator is designed appropriately.
+
+REINFORCE samples complete returns to estimate the score-weighted update. A useful baseline can reduce variance, but an arbitrary baseline can increase it. The variance-minimizing scalar baseline generally weights returns by score magnitude; it is not always exactly $V^\pi$. Reward scale, horizon, rare successes and stochastic transitions affect estimator variance.
+
+\section{Actor-Critic Architecture}
+
+An actor represents the policy and a critic estimates value. For a transition that genuinely terminates the task, let $d_t=1$; otherwise $d_t=0$. A one-step target and temporal-difference residual are
+\begin{equation}
+y_t=r_t+\gamma(1-d_t)V_\phi(s_{t+1}),\qquad
+\delta_t=y_t-V_\phi(s_t).
+\end{equation}
+The usual semi-gradient critic step minimizes $(V_\phi(s_t)-\operatorname{stopgrad}(y_t))^2/2$. An actor loss uses a detached advantage estimate, for example $-\log\pi_\theta(a_t\mid s_t)\operatorname{stopgrad}(\delta_t)$ with the objective's appropriate weighting. A low critic training loss is not a proof that $\delta_t$ estimates the true advantage accurately on all visited states.
+
+An artificial rollout cutoff differs from task termination. If the underlying task continues, bootstrap from the final observed state; do not use a reset observation as that state. If a deadline defines the task itself, include remaining time and use zero continuation at its terminal boundary. This choice can materially change a swing policy trained around an impact deadline.
+
+\subsection{Multi-Step Returns and Bias-Variance Tradeoffs}
+
+Before a terminal boundary, an $n$-step target is
+\begin{equation}
+G_t^{(n)}=\sum_{j=0}^{n-1}\gamma^jr_{t+j}
++\gamma^nV_\phi(s_{t+n}).
+\end{equation}
+Stop the sum at termination and omit continuation there. A longer return typically relies less on an imperfect bootstrap and uses more sampled rewards, often reducing bootstrap bias while increasing variance. These are tendencies, not universal monotonic laws: reward correlations, critic errors and environment noise matter. With an exact critic under the same policy, the shorter target need not have bootstrap bias.
+
+Generalized advantage estimation forms a truncated weighted sum of TD residuals, $\hat A_t=\sum_{j=0}^{K-1}(\gamma\lambda)^j\delta_{t+j}$, with boundary masks and final bootstrap handled consistently. $\lambda$ changes the mixture of multi-step estimates. Neither this estimator nor nonlinear actor-critic training guarantees convergence without further assumptions.
+
+\section{Proximal Policy Optimization}
+
+PPO gathers data under a frozen old policy and optimizes a surrogate using those data. Define the likelihood ratio $\rho_t(\theta)=\pi_\theta(a_t\mid s_t)/\pi_{\mathrm{old}}(a_t\mid s_t)$, keeping the stored old likelihood and advantage fixed during the update. Its clipped sample objective is
+\begin{equation}
+L_t^{\mathrm{clip}}=\min\left(
+\rho_t\hat A_t,
+\operatorname{clip}(\rho_t,1-\epsilon,1+\epsilon)\hat A_t\right).
+\end{equation}
+For positive advantage this is $\hat A_t\min(\rho_t,1+\epsilon)$; for negative advantage it is $\hat A_t\max(\rho_t,1-\epsilon)$. The first branch stops rewarding a sufficiently large increase in the sampled action's likelihood. The second stops rewarding a sufficiently large decrease. Harmful changes in the opposite direction are still penalized.
+
+With $\epsilon=0.2$ and $\hat A=2$, ratios 1.2 and 2 both give 2.4. With $\hat A=-2$, ratios 0.8 and 0.1 both give $-1.6$. These plateaus do not forbid those ratios. Shared parameters, other samples and optimizer steps can move probabilities outside the interval. The clipped quantity is no greater than the corresponding unclipped sampled surrogate, but is not a lower-bound certificate for true future performance. Clipping does not enforce a hard ratio or KL-divergence constraint or guarantee that a policy cannot collapse.
+
+An actor-critic implementation can maximize the average clipped objective minus $c_V$ times a value-error loss plus $c_H$ times an entropy bonus. Equivalently, minimize its negative. Define signs and coefficients explicitly. Monitor actual likelihood ratios, KL estimates, entropy, critic errors and independent rollout performance; a plateau in the surrogate is not sufficient evaluation.
+
+\subsection{Stochastic Bounded Actions}
+
+A deterministic tanh network alone does not provide PPO's sampling likelihood. One possible continuous policy draws $z\sim\mathcal N(\mu_\theta(s),\operatorname{diag}(\sigma_\theta(s)^2))$ with positive standard deviations and maps $a_i=a_{\max,i}\tanh z_i$. Inside the bounds, change of variables gives
+\begin{equation}
+\log\pi_\theta(a\mid s)=\log p_\theta(z\mid s)
+-\sum_i\log\left[a_{\max,i}(1-\tanh^2z_i)\right].
+\end{equation}
+The action scales are positive and fixed here. Use numerically stable log-Jacobian evaluation near saturation. For old and new policies with the same transform and the same stored action, the common Jacobian cancels in their ratio; it still matters for the actual action density and entropy. Sampling an unbounded Gaussian and clipping afterward produces a different distribution, with probability mass at the boundaries, and cannot silently use this tanh density.
+
+Collect new rollouts after a bounded number of optimization epochs and freeze a new old policy for the next update. Excessive reuse of the old data, changed normalization statistics or inconsistent likelihood calculations can invalidate the intended comparison. PPO is an algorithmic design, not a guarantee that these implementation details are automatically correct.
+
+\section{Value-Based Methods and Continuous Actions}
+\label{sec:value_based_methods}
+\index{value-based methods}\index{DQN}\index{Deep Q-Network}\index{Q-learning}
+
+Tabular Q-learning uses the sampled optimality target:
+\begin{equation}
+Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha
+\left[r_t+\gamma(1-d_t)\max_{a'}Q(s_{t+1},a')-Q(s_t,a_t)\right].
 \label{eq:q_learning}
 \end{equation}
-where $\alpha$ is the learning rate, $\gamma$ the discount factor, $r$ the reward, and $s'$ the successor state.
+Its standard discounted finite-MDP convergence results require suitable learning-rate schedules and repeated exploration of the relevant state-action pairs. Replacing the table with a neural network changes the problem substantially.
 
-\textbf{Deep Q-Networks (DQN).}\index{DQN} For high-dimensional state spaces, $Q$ is approximated by a neural network $Q(s,a;\boldsymbol{\theta})$ \cite{Sutton2018}. Two key innovations stabilize training:
-\begin{itemize}
-    \item \textbf{Experience replay}\index{experience replay}: transitions $(s,a,r,s')$ are stored in a buffer and sampled uniformly for mini-batch updates, breaking temporal correlations.
-    \item \textbf{Target network}\index{target network}: a slowly-updated copy $Q(s,a;\boldsymbol{\theta}^-)$ provides stable targets, preventing oscillation.
-\end{itemize}
-
-The loss function is:
+\index{experience replay}\index{target network}
+DQN fits a network to targets from a separate target network:
 \begin{equation}
-L(\boldsymbol{\theta}) = \mathbb{E}_{(s,a,r,s') \sim \mathcal{D}}\Bigl[\bigl(r + \gamma \max_{a'} Q(s', a'; \boldsymbol{\theta}^-) - Q(s, a; \boldsymbol{\theta})\bigr)^2\Bigr]
+\ell_Q=\mathbb E_{(s,a,r,s',d)\sim\mathcal D}
+\left[\left(Q_\theta(s,a)-
+\operatorname{stopgrad}[r+\gamma(1-d)\max_{a'}Q_{\mathrm{target}}(s',a')]\right)^2\right].
 \label{eq:dqn_loss}
 \end{equation}
+Replay changes how stored experience is reused and can reduce correlations within training batches. A delayed target slows movement of the bootstrap. Neither device eliminates all statistical dependence, approximation error or instability. Exploration still determines what information enters the buffer.
 
-\textbf{Continuous Actions: DDPG.}\index{DDPG}\index{Deep Deterministic Policy Gradient} DQN requires a discrete $\max_{a'}$ operation, which is intractable for continuous action spaces (e.g., joint torques). \textbf{Deep Deterministic Policy Gradient} (DDPG) resolves this by maintaining a separate \textbf{actor} $\mu(s;\boldsymbol{\theta}^\mu)$ that directly outputs the action maximizing $Q$:
+\index{DDPG}\index{Deep Deterministic Policy Gradient}
+For continuous actions, maximizing a general nonlinear $Q$ can be an expensive nonconvex optimization at every state. It is not categorically impossible; special quadratic or concave forms can be tractable. DDPG uses a deterministic actor $\mu_\theta$ and a learned critic. A practical actor update follows
 \begin{equation}
-\nabla_{\boldsymbol{\theta}^\mu} J = \mathbb{E}_s\Bigl[\nabla_a Q(s, a; \boldsymbol{\theta}^Q)\big|_{a=\mu(s)} \cdot \nabla_{\boldsymbol{\theta}^\mu} \mu(s;\boldsymbol{\theta}^\mu)\Bigr]
+\hat g=\mathbb E_{s\sim\mathcal D}
+\left[(D_\theta\mu_\theta(s))^T
+\nabla_aQ_\phi(s,a)\big|_{a=\mu_\theta(s)}\right].
 \label{eq:ddpg_gradient}
 \end{equation}
+This is a gradient through a learned critic over replay states, not an exact global argmax or automatically an unbiased start-state performance gradient. The deterministic policy-gradient theorem uses a specified state-visitation weighting and true or suitably compatible action values. Exploration must be supplied during data collection because a deterministic actor itself does not sample alternatives.
 
-\textbf{TD3: Twin Delayed DDPG.}\index{TD3} DDPG suffers from overestimation bias (the $\max$ operation systematically inflates $Q$-values). TD3 addresses this with:
-\begin{enumerate}
-    \item \textbf{Twin critics}: two independent $Q$-networks; the minimum of the two is used as the target.
-    \item \textbf{Delayed policy updates}: the actor is updated less frequently than the critics.
-    \item \textbf{Target policy smoothing}: noise is added to the target action to prevent exploitation of $Q$-function errors.
-\end{enumerate}
-
-\textbf{SAC: Soft Actor-Critic.}\index{SAC}\index{Soft Actor-Critic}\index{maximum entropy} SAC incorporates an entropy bonus into the objective, encouraging exploration:
+\index{TD3}\index{SAC}\index{Soft Actor-Critic}\index{maximum entropy}
+TD3 addresses particular actor-critic estimation errors using two critics with a minimum target, delayed actor updates and target-policy smoothing. Taking a minimum can also create underestimation. SAC uses an entropy-regularized objective, schematically
 \begin{equation}
-J(\pi) = \mathbb{E}\!\left[\sum_{t=0}^{\infty} \gamma^t \bigl(r_t + \alpha\,\mathcal{H}(\pi(\cdot|s_t))\bigr)\right]
+J_{\mathrm{soft}}=\mathbb E\sum_t\gamma^t
+\left[r_t+\alpha_{\mathrm{ent}}\mathcal H(\pi(\cdot\mid s_t))\right].
 \label{eq:sac_objective}
 \end{equation}
-where $\mathcal{H}(\pi(\cdot|s_t)) = -\mathbb{E}_{a \sim \pi}[\log \pi(a|s_t)]$ is the entropy of the policy. The temperature $\alpha$ can be automatically tuned.
+The entropy coefficient changes the tradeoff being optimized. In continuous action coordinates this is differential entropy, which depends on action scaling and can be negative. These methods differ in policy class, objective and data reuse; there is no universal ranking of their stability or sample efficiency for every swing model.
 
-\begin{center}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Algorithm} & \textbf{Sample Efficiency} & \textbf{Stability} & \textbf{Action Space} \\
-\hline
-DQN & Moderate & Moderate & Discrete only \\
-DDPG & High & Low & Continuous \\
-TD3 & High & Moderate & Continuous \\
-SAC & High & High & Continuous \\
-PPO & Low & High & Both \\
-\hline
-\end{tabular}
-\end{center}
+\section{Exploration Strategies}
+\label{sec:exploration_strategies}
+\index{exploration strategies}\index{exploration-exploitation tradeoff}
 
-% ==========================================================================
+\index{epsilon-greedy}
+In a finite action set, epsilon-greedy exploration chooses a random action with probability $\epsilon$ and otherwise a greedy action. A uniform distribution over an unbounded continuous action space does not exist; continuous exploration requires a defined distribution and admissible bounds. For a finite action set, entropy is
+\begin{equation}
+\mathcal H(\pi(\cdot\mid s))=-\sum_a\pi(a\mid s)\log\pi(a\mid s),
+\label{eq:entropy_exploration}
+\end{equation}
+with $0\log0=0$ by continuity. Entropy regularization encourages spread according to its chosen density and coordinates, but broad action noise alone does not ensure useful coverage of long-horizon states.
+
+\index{entropy regularization}\index{curiosity-driven exploration}\index{intrinsic reward}
+A curiosity bonus can depend on forward-prediction error,
+\begin{equation}
+r_t^{\mathrm{int}}=\eta\|\hat T_\theta(s_t,a_t)-s_{t+1}\|_W^2.
+\label{eq:curiosity_reward}
+\end{equation}
+The weighting $W$ declares the state metric. Large error can indicate a new learnable transition, sensor noise, stochasticity or a deficient model class. Rewarding all such error can repeatedly attract an agent to irreducible noise. Adding the bonus also changes the optimization objective unless its role and limiting behavior are specified.
+
+For golf, define an exploratory simulation task before assigning human significance to its discoveries. A policy that gains club speed by exploiting unphysical contact penetration or unlimited torque has found a weakness in the model or reward, not a coaching principle.
+
+\section{Worked Example: Pendulum Swing-Up Objective}
+
+Use a point mass $m$ on a massless rod of length $l$, a fixed pivot, viscous rotational damping $b\ge0$, and torque $u$. The angle $q=0$ points downward and $q=\pi$ upward. With $I=ml^2$,
+\begin{equation}
+I\ddot q=u-b\dot q-mgl\sin q,\qquad |u|\le u_{\max}.
+\end{equation}
+The model's mechanical energy above hanging and its rate are
+\begin{equation}
+E=\tfrac12 I\dot q^2+mgl(1-\cos q),\qquad
+\dot E=u\dot q-b\dot q^2.
+\end{equation}
+These formulas make signs and input power checkable. A sample implementation must also declare its integration method, step size, torque hold and terminal conditions. A physical pendulum with distributed rod mass would have a different inertia and center-of-mass gravity coefficient.
+
+Let $e_q=\operatorname{atan2}(\sin(q-\pi),\cos(q-\pi))$. One dimensionless upright reward is
+\begin{equation}
+r(q,\dot q,u)=-\left[e_q^2+
+w_v(\dot q/\omega_*)^2+w_u(u/u_{\max})^2\right],
+\end{equation}
+where angular measure is in radians, $\omega_*>0$ is a declared speed scale, and $w_v,w_u\ge0$ are dimensionless weights. The wrapped error is discontinuous in sign at the opposite orientation, though its square is continuous there; its derivative has a cusp. The smooth periodic alternative $1+\cos q$ also has its minimum at upright. In either case, the objective must be examined at both equilibria before training.
+
+For illustrative $m=l=1$, $g=9.81$, $b=0$, $u_{\max}=2$, $\omega_*=1$, $w_v=0.1$, and $w_u=0.01$, upright at rest with zero torque gives reward 0, while hanging gives $-\pi^2$. Replacing $e_q$ with the raw downward angle would reverse the intended preference. At $q=\pi/2$, $\dot q=1$ and $u=2$, acceleration is $-7.81$ rad/s$^2$ and input power is 2 W. The energy difference between the two resting equilibria is 19.62 J.
+
+An action-squared penalty is an effort regularizer, not mechanical work. Work is $\int u\dot q\,dt$; it can be positive or negative, whereas $u^2$ cannot. Metabolic expenditure requires an additional physiological model. A torque-free interval may retain kinetic energy from earlier actuation; low instantaneous effort does not show that preparation was free.
+
+For a reproducible training experiment, specify an initial-state distribution, sampling interval, finite horizon, policy distribution, optimizer settings and random seeds. Compare against a declared baseline controller and evaluate unseen initial states and parameter perturbations. Report success criteria such as dwell time near upright, speed tolerance, torque feasibility and energy balance in addition to return. No PPO training run is reported here, so no learned swing-up trajectory or success rate is claimed.
+
+\section{Physics-Informed Neural Networks}
+
+A neural network can approximate a solution while a loss penalizes a specified differential-equation residual. For example, a nondimensional viscous Burgers problem is
+\begin{equation}
+\begin{aligned}
+w_t+ww_\xi-\nu w_{\xi\xi}&=0,
+&\xi\in[-1,1],\quad t\in[0,1],\\
+w(0,\xi)&=-\sin(\pi\xi),&
+w(t,-1)=w(t,1)&=0,
+\end{aligned}
+\end{equation}
+with $\nu=0.01/\pi$ in the cited example. We use $w$ rather than control input $u$ to avoid a notation collision. Given an approximation $w_\theta(t,\xi)$, its residual is $R_\theta=w_{\theta,t}+w_\theta w_{\theta,\xi}-\nu w_{\theta,\xi\xi}$. A training loss combines initial/boundary data errors and squared residuals at collocation points. The nonlinear transport sign and viscosity term must agree with the stated PDE.
+
+This is different from fitting an unknown vector field directly to derivative labels. For $\dot x=F_\theta(x,u)$, minimizing $\sum_i\|F_\theta(x_i,u_i)-\dot x_i\|_W^2$ is derivative regression. It becomes physics-informed only through additional known equations, restrictions or priors. Noisy numerical differentiation can bias those labels, and a full-state derivative includes configuration rates as well as accelerations.
+
+For the known forced pendulum, an appropriate trajectory residual is $I\ddot q_\theta+b\dot q_\theta+mgl\sin q_\theta-u(t)$. Observations and initial conditions constrain the solution as well. A small residual at finitely many points does not establish a global solution error bound, unique parameters or valid behavior at impacts. Enforcing an incorrect conservative equation on a driven dissipative swing can produce a physically misleading fit despite an apparently principled loss.
+
+\section{Neural ODEs and the Adjoint Method}
+
+A Neural ODE parameterizes a continuous vector field $\dot h=f_\theta(h,t)$ and computes states with an ODE solver. The state can be physical or latent; a latent dimension does not automatically correspond to measured joint coordinates. A policy evaluated at discrete observations is not a Neural ODE merely because it controls a continuous mechanical system.
+
+For a terminal loss $\ell=\Psi(h(T),\theta)$ with fixed endpoints, define a column adjoint $a(t)$ by
+\begin{equation}
+\dot a=-(D_hf_\theta)^Ta,\qquad
+a(T)=\nabla_h\Psi(h(T),\theta).
+\end{equation}
+Differentiating $a^T\delta h$ gives the parameter contribution after the state-variation terms cancel. The result is
+\begin{equation}
+\nabla_\theta\ell=\partial_\theta\Psi
++(D_\theta h(0))^Ta(0)
++\int_0^T(D_\theta f_\theta)^Ta\,dt.
+\end{equation}
+If the initial state is parameter-independent and the terminal loss has no direct parameter dependence, only the integral remains. Writing it as $-\int_T^0$ is equivalent; that reversed-limit notation is not itself a sign error. Running costs add source terms to the adjoint and parameter integral, while losses at intermediate observation times introduce adjoint jumps. Contact events need their own event and reset sensitivities.
+
+These equations differentiate the continuous initial-value problem. Differentiating a particular numerical solver produces the derivative of its discrete computation; the two agree only to the relevant numerical accuracy. Backward reconstruction of a forward-dissipative state can be unstable. Checkpointing and solver tolerances affect memory use, accuracy and cost, so a universal constant-memory exact-gradient claim is unwarranted.
+
+As a direct check, let $\dot h=\theta h$, $h(0)=1$, $T=1$ and $\Psi=h(T)^2/2$. Then $h(T)=e^\theta$ and $d\ell/d\theta=e^{2\theta}$. The adjoint integral gives the same value. This verifies the sign convention on a solvable example, not the accuracy of every adaptive-solver implementation.
+
 \section{Structure-Preserving Neural Networks}
 \label{sec:structure_preserving_nn}
 \index{structure-preserving neural networks}
-% ==========================================================================
 
-Standard neural networks used as dynamics models $\dot{\mathbf{x}} = f_{\boldsymbol{\theta}}(\mathbf{x})$ make no guarantees about conserving physical invariants such as energy or momentum. \textbf{Structure-preserving neural networks} embed physical laws directly into the network architecture.
+\subsection{Hamiltonian Models}
+\index{Hamiltonian Neural Network}\index{HNN}
 
-\textbf{Hamiltonian Neural Networks (HNN).}\index{Hamiltonian Neural Network}\index{HNN} An HNN learns a scalar function $H_{\boldsymbol{\theta}}(\mathbf{q}, \mathbf{p})$ and derives the dynamics via Hamilton's equations:
-\begin{align}
-\dot{\mathbf{q}} &= \frac{\partial H_{\boldsymbol{\theta}}}{\partial \mathbf{p}}, &
-\dot{\mathbf{p}} &= -\frac{\partial H_{\boldsymbol{\theta}}}{\partial \mathbf{q}}
-\label{eq:hnn_dynamics}
-\end{align}
-
-Because the dynamics are generated by a Hamiltonian, the learned system \emph{automatically conserves energy by construction}---the time derivative $\frac{dH}{dt} = \frac{\partial H}{\partial \mathbf{q}}\dot{\mathbf{q}} + \frac{\partial H}{\partial \mathbf{p}}\dot{\mathbf{p}} = 0$ vanishes identically.
-
-\textbf{Lagrangian Neural Networks (LNN).}\index{Lagrangian Neural Network}\index{LNN} An LNN learns a Lagrangian $\mathcal{L}_{\boldsymbol{\theta}}(\mathbf{q}, \dot{\mathbf{q}})$ and derives the equations of motion through the Euler-Lagrange equations via automatic differentiation \cite{goodfellow2016}:
+An autonomous Hamiltonian neural network learns a scalar $H_\theta(q,p)$ in canonical coordinates and defines
 \begin{equation}
-\frac{d}{dt}\frac{\partial \mathcal{L}_{\boldsymbol{\theta}}}{\partial \dot{\mathbf{q}}} - \frac{\partial \mathcal{L}_{\boldsymbol{\theta}}}{\partial \mathbf{q}} = \boldsymbol{\tau}
+\dot q=\nabla_pH_\theta,\qquad \dot p=-\nabla_qH_\theta.
+\label{eq:hnn_dynamics}
+\end{equation}
+Along a smooth exact solution, $dH_\theta/dt=0$ because the two cross-products cancel. The conserved quantity is the learned Hamiltonian; data and physical calibration must establish whether it equals the real energy. Canonical momentum is not generally equal to velocity. A numerical integrator need not conserve $H_\theta$ exactly or preserve the symplectic form merely because its vector field is Hamiltonian.
+
+For an explicit force $f_p$ added to $\dot p$, the balance becomes $\dot H_\theta=\nabla_pH_\theta^Tf_p$, plus $\partial_tH_\theta$ when time dependence is present. Dissipation and actuation therefore call for power balances, not a claim that an actively driven golf swing conserves total mechanical energy.
+
+\subsection{General Lagrangian Models}
+\index{Lagrangian Neural Network}\index{LNN}
+
+For a learned smooth $L_\theta(q,v)$ with $v=\dot q$, the forced Euler--Lagrange equation is
+\begin{equation}
+\frac{d}{dt}\nabla_vL_\theta-\nabla_qL_\theta=\tau.
 \label{eq:lnn_euler_lagrange}
 \end{equation}
-
-Expanding the time derivative yields the familiar manipulator equation $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$, where $\mathbf{M}$, $\mathbf{C}$, and $\mathbf{G}$ are implicitly defined by $\mathcal{L}_{\boldsymbol{\theta}}$.
-
-\begin{laymansbox}{From Analytical to Learned Lagrangians}{learned_lagrangian}
-The Lagrangian structure we derived analytically in Chapter 11 can be \emph{learned from data} when the analytical model is unavailable. This is especially valuable for systems with complex geometry, friction, or flexible components where first-principles modeling is prohibitively difficult.
-\end{laymansbox}
-
-\textbf{Deep Lagrangian Networks (DeLaN).}\index{Deep Lagrangian Networks}\index{DeLaN} DeLaN parameterizes the mass matrix as a neural network $\mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q})$ constrained to be symmetric positive definite via Cholesky decomposition\index{Cholesky decomposition}:
+Let $H_{vv}=D_v(\nabla_vL_\theta)$ and $H_{vq}=D_q(\nabla_vL_\theta)$. If $H_{vv}$ is invertible,
 \begin{equation}
-\mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q}) = \mathbf{L}_{\boldsymbol{\theta}}(\mathbf{q})\,\mathbf{L}_{\boldsymbol{\theta}}(\mathbf{q})^\top + \epsilon\,\mathbf{I}
+\dot v=H_{vv}^{-1}\left[\tau+\nabla_qL_\theta-H_{vq}v\right].
+\end{equation}
+A generic Lagrangian's velocity Hessian can depend on both $q$ and $v$ and can be indefinite or singular. It is not automatically a positive-definite mass matrix depending only on configuration. A pseudoinverse may produce a numerical vector, but does not establish that a singular system has unique physically consistent dynamics. Time-dependent Lagrangians require an additional $\partial_t\nabla_vL$ term.
+
+For an autonomous regular model, the energy function is $E_L=v^T\nabla_vL-L$, and the forced balance is $\dot E_L=v^T\tau$. Lagrangian gauge freedoms also mean that fitting trajectories need not identify one unique scalar Lagrangian. Do not interpret every learned coefficient as a measured anatomical parameter.
+
+\subsection{Natural Mechanical Models and DeLaN}
+\index{Deep Lagrangian Networks}\index{DeLaN}\index{Cholesky decomposition}
+
+A more restricted construction sets
+\begin{equation}
+M_\theta(q)=R_\theta(q)R_\theta(q)^T+\varepsilon I,
+\qquad L_\theta=\tfrac12v^TM_\theta(q)v-U_\theta(q),
 \label{eq:delan_mass}
 \end{equation}
-where $\mathbf{L}_{\boldsymbol{\theta}}$ is a lower-triangular matrix output by the network and $\epsilon > 0$ ensures strict positive definiteness. The potential energy $V_{\boldsymbol{\theta}}(\mathbf{q})$ is learned by a separate network. Together, the Lagrangian is $\mathcal{L} = \frac{1}{2}\dot{\mathbf{q}}^\top \mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q})\,\dot{\mathbf{q}} - V_{\boldsymbol{\theta}}(\mathbf{q})$, and the equations of motion are obtained by differentiating through the Euler-Lagrange equations using automatic differentiation \cite{Sutton2018, goodfellow2016}.
+where $R_\theta$ is lower triangular and $\varepsilon>0$ is defined in appropriately scaled inertia units. This guarantees a positive-definite inertia matrix. Deriving both inertial bias and gravity from this same $L_\theta$ gives a coherent natural mechanical model. It does not guarantee identified parameters or accurate contact forces outside the training regime.
 
-% ==========================================================================
-\subsection{Exploration Strategies}
-\label{sec:exploration_strategies}
-\index{exploration strategies}
-% ==========================================================================
+The original DeLaN paper parameterizes a triangular inertia factor and a separate gravity-force network. Learning a scalar potential and taking its gradient, as in the construction above, adds an integrability restriction; it should not be attributed to every original DeLaN implementation. A separately learned force vector is not automatically conservative. Likewise, an independently learned Coriolis matrix must not be assumed consistent with a learned mass matrix without verification.
 
-A central challenge in reinforcement learning is the \textbf{exploration-exploitation tradeoff}\index{exploration-exploitation tradeoff}: the agent must try new actions to discover better strategies while also exploiting known good actions to accumulate reward.
+Friction, muscle activation, tendon storage, contact and input limits require explicit representation beyond the conservative component. For the swing, a useful learned model should expose which quantities exchange power, which dissipate energy and which retain history. Structural priors can reduce certain impossible predictions while still encoding the wrong physiological mechanism.
 
-\textbf{Epsilon-Greedy.}\index{epsilon-greedy} The simplest strategy: with probability $\epsilon$ take a uniformly random action, otherwise take the greedy action $a^* = \arg\max_a Q(s,a)$. Typically $\epsilon$ is annealed from a high value (e.g., 1.0) to a small value (e.g., 0.01) over the course of training.
+\section{Sim-to-Real Transfer and System Identification}
 
-\textbf{Entropy Regularization.}\index{entropy regularization} Rather than injecting random noise externally, SAC adds an entropy term directly to the objective:
+A known analytical model or a learned forward model can support model-based planning. Model-free learning does not explicitly require that forward model in its policy/value update, but can still use physical representations, simulation, constrained actions and engineered rewards. Neither category is universally more data-efficient. Model errors, exploration cost and the precision required near impact determine the relevant tradeoffs.
+
+Domain randomization trains over a specified distribution of plausible parameters, delays, sensor errors and disturbances. The distribution is part of the model. Mass and inertia should vary consistently, and correlated subject parameters should not be replaced automatically by independent uniform noise. Terrestrial gravity is usually much better known than muscle strength or sensor bias; arbitrary gravity variation is not a default model of differences among golfers.
+
+Evaluate on withheld parameter combinations and, when claiming transfer, on appropriately governed physical observations. Training on diverse simulations does not substitute for real validation. Report failures and uncertainty rather than only mean reward. A policy may be robust to the sampled uncertainties and fragile to an omitted contact or actuator mechanism.
+
+\subsection{What Can the Data Identify?}
+
+For an unforced ideal point-mass pendulum,
 \begin{equation}
-J(\pi) = \mathbb{E}\!\left[\sum_t r_t + \alpha\,\mathcal{H}(\pi(\cdot|s_t))\right]
-\label{eq:entropy_exploration}
+\ddot q=-\kappa\sin q,\qquad \kappa=g/l.
 \end{equation}
-This encourages the policy to remain stochastic in proportion to $\alpha$, providing structured exploration that is more sample-efficient than random noise.
+Any pair $(cg,cl)$ with $c>0$ gives the same angle dynamics. Angle-only free-motion data therefore cannot identify $g$ and $l$ separately. At an exact resting equilibrium they may provide no information even about $\kappa$. A network cannot remove this structural ambiguity by having more parameters.
 
-\textbf{Curiosity-Driven Exploration.}\index{curiosity-driven exploration} The agent receives an \textbf{intrinsic reward}\index{intrinsic reward} proportional to the prediction error of a learned forward model:
-\begin{equation}
-r^{\text{intrinsic}}_t = \norm{\hat{s}_{t+1} - s_{t+1}}^2
-\label{eq:curiosity_reward}
-\end{equation}
-where $\hat{s}_{t+1}$ is the model's prediction of the next state. Novel states produce high prediction error and thus high reward, driving the agent toward unexplored regions of the state space.
+An independent length measurement, known gravity or a calibrated forced experiment can add information. With measured torque, acceleration depends on both $1/(ml^2)$ and $g/l$; which individual parameters become identifiable still depends on what else is known and whether the input sufficiently excites the system. In a golfer, redundant muscle forces and unknown external loads create analogous ambiguities. Design the measurement and intervention before giving a fitted parameter a mechanistic interpretation.
 
-\begin{laymansbox}{Why Exploration Is Critical for Robotics}{exploration_robotics}
-Real robots are expensive to operate and can be damaged by unsafe actions. Sample-efficient exploration is therefore essential: every interaction with the physical world must yield maximum information. Safe exploration---avoiding damage while learning---is an active research area combining reinforcement learning with control-theoretic safety constraints such as control barrier functions and Lyapunov stability.
-\end{laymansbox}
-
-% ==========================================================================
 \section{Python Worked Example: Backpropagation From Scratch}
-% ==========================================================================
 
-\begin{lstlisting}[language=Python, caption=Backpropagation Implementation from Scratch]
-import numpy as np
-import matplotlib.pyplot as plt
+The accompanying example fits the scalar function $y=x^2$ on $[-1,1]$ using a tanh hidden layer and a linear output. Its implementation is shared between the print and web lessons in the repository module \texttt{src.tools.learning\_examples}. This is supervised regression, not reinforcement learning, inverse dynamics or a pendulum controller.
 
-class NeuralNetwork:
-    """Simple 2-layer feedforward network with manual backprop."""
+The implementation uses row samples, so $X$ has shape $(m,1)$, the input weights have shape $(1,H)$, hidden activations have shape $(m,H)$ and output weights have shape $(H,1)$. These are the transposed storage conventions of the earlier column-vector derivation. The actual gradient core is reproduced below; training and validation use that same source.
 
-    def __init__(self, input_dim, hidden_dim, output_dim):
-        """Initialize network parameters."""
-        # Layer 1: input -> hidden (He initialization for ReLU layers)
-        self.W1 = np.random.randn(hidden_dim, input_dim) * np.sqrt(2.0 / input_dim)
-        self.b1 = np.zeros((hidden_dim, 1))
-
-        # Layer 2: hidden -> output (Xavier/Glorot for the output layer)
-        self.W2 = np.random.randn(output_dim, hidden_dim) * np.sqrt(1.0 / hidden_dim)
-        self.b2 = np.zeros((output_dim, 1))
-
-        # Cache for backprop
-        self.cache = {}
-
-    def relu(self, z):
-        """ReLU activation."""
-        return np.maximum(0, z)
-
-    def relu_derivative(self, z):
-        """Derivative of ReLU."""
-        return (z > 0).astype(float)
-
-    def forward(self, X):
-        """
-        Forward pass.
-        X: input of shape (input_dim, batch_size)
-        Returns: output of shape (output_dim, batch_size)
-        """
-        # Layer 1
-        Z1 = self.W1 @ X + self.b1
-        H1 = self.relu(Z1)
-
-        # Layer 2 (no activation, for regression)
-        Z2 = self.W2 @ H1 + self.b2
-
-        # Cache for backprop
-        self.cache = {
-            'X': X, 'Z1': Z1, 'H1': H1, 'Z2': Z2,
-            'W1': self.W1, 'W2': self.W2
-        }
-
-        return Z2
-
-    def compute_loss(self, predictions, targets):
-        """Mean squared error loss."""
-        m = targets.shape[1]
-        error = predictions - targets
-        loss = (1 / (2*m)) * np.sum(error**2)
-        return loss, error
-
-    def backward(self, dZ2, learning_rate):
-        """
-        Backward pass (backpropagation).
-        dZ2: gradient w.r.t. output layer preactivations
-        """
-        m = self.cache['X'].shape[1]
-
-        # Gradient for layer 2
-        dW2 = (1/m) * dZ2 @ self.cache['H1'].T
-        db2 = (1/m) * np.sum(dZ2, axis=1, keepdims=True)
-
-        # Backprop through H1
-        dH1 = self.W2.T @ dZ2
-
-        # Backprop through ReLU
-        dZ1 = dH1 * self.relu_derivative(self.cache['Z1'])
-
-        # Gradient for layer 1
-        dW1 = (1/m) * dZ1 @ self.cache['X'].T
-        db1 = (1/m) * np.sum(dZ1, axis=1, keepdims=True)
-
-        # Update parameters
-        self.W2 -= learning_rate * dW2
-        self.b2 -= learning_rate * db2
-        self.W1 -= learning_rate * dW1
-        self.b1 -= learning_rate * db1
-
-    def train(self, X_train, y_train, epochs=100, learning_rate=0.01,
-              batch_size=32):
-        """Train the network."""
-        m = X_train.shape[1]
-        losses = []
-
-        for epoch in range(epochs):
-            epoch_loss = 0
-
-            # Shuffle data
-            indices = np.random.permutation(m)
-            X_shuffled = X_train[:, indices]
-            y_shuffled = y_train[:, indices]
-
-            # Mini-batch training
-            for i in range(0, m, batch_size):
-                X_batch = X_shuffled[:, i:i+batch_size]
-                y_batch = y_shuffled[:, i:i+batch_size]
-
-                # Forward pass
-                predictions = self.forward(X_batch)
-
-                # Compute loss
-                loss, error = self.compute_loss(predictions, y_batch)
-                epoch_loss += loss
-
-                # Backward pass
-                dZ2 = error  # gradient of MSE w.r.t. output
-                self.backward(dZ2, learning_rate)
-
-            losses.append(epoch_loss / (m // batch_size))
-
-            if (epoch + 1) % 20 == 0:
-                print(f"Epoch {epoch+1}: Loss = {losses[-1]:.6f}")
-
-        return losses
-
-    def predict(self, X):
-        """Make predictions."""
-        return self.forward(X)
-
-# Example: Regression on y = sin(x)
-np.random.seed(42)
-
-# Generate training data
-X_train = np.random.uniform(-np.pi, np.pi, (1, 100))
-y_train = np.sin(X_train)
-
-# Reshape for batch processing
-X_train = X_train.reshape(1, -1)
-y_train = y_train.reshape(1, -1)
-
-# Create and train network
-net = NeuralNetwork(input_dim=1, hidden_dim=16, output_dim=1)
-losses = net.train(X_train, y_train, epochs=200, learning_rate=0.1,
-                   batch_size=16)
-
-# Test on new data
-X_test = np.linspace(-np.pi, np.pi, 200).reshape(1, -1)
-y_test_true = np.sin(X_test)
-y_test_pred = net.predict(X_test)
-
-# Plot
-plt.figure(figsize=(10, 4))
-
-plt.subplot(1, 2, 1)
-plt.plot(losses)
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.title('Training Loss')
-plt.grid(True)
-
-plt.subplot(1, 2, 2)
-plt.plot(X_test[0], y_test_true[0], 'b-', label='True: sin(x)', linewidth=2)
-plt.plot(X_test[0], y_test_pred[0], 'r--', label='Predicted', linewidth=2)
-plt.scatter(X_train[0], y_train[0], c='green', s=20, label='Training data')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.legend()
-plt.grid(True)
-plt.title('Function Approximation')
-
-plt.tight_layout()
-plt.show()
-
-# Print summary
-print("\n=== Network Architecture ===")
-print(f"Layer 1: {net.W1.shape}")
-print(f"Layer 2: {net.W2.shape}")
-print(f"\nFinal training loss: {losses[-1]:.6f}")
+\begin{lstlisting}[language=Python]
+prediction = predict(network, features)
+hidden = np.tanh(features @ network.input_weights + network.hidden_bias)
+error = prediction - targets
+output_derivative = error / features.shape[0]
+hidden_derivative = (output_derivative @ network.output_weights.T) * (1 - hidden**2)
+gradient = Network(
+    features.T @ hidden_derivative,
+    hidden_derivative.sum(axis=0, keepdims=True),
+    hidden.T @ output_derivative,
+    output_derivative.sum(axis=0, keepdims=True),
+)
+loss = float(np.mean(error**2) / 2)
 \end{lstlisting}
 
-This code demonstrates:
-\begin{itemize}
-    \item Forward pass through ReLU network
-    \item Manual computation of gradients via backprop
-    \item Layer-by-layer gradient computation using the chain rule
-    \item Mini-batch gradient descent with weight updates
-    \item Training a network to approximate a nonlinear function
-\end{itemize}
+Mini-batches are shuffled with an explicit random generator. Every nonempty slice is processed, including a partial final batch or one batch larger than the whole dataset. After all updates, the reported epoch loss is recomputed on the full dataset at the final parameters. Averaging batch losses computed at changing parameter values would answer a different question, and dividing by the number of full batches would misweight a remainder or divide by zero for an oversized batch.
 
-% ==========================================================================
-\section{Deep Reinforcement Learning for Robot Control}
-% ==========================================================================
+\begin{lstlisting}[language=Python]
+from src.tools.learning_examples import regression_demo
 
-Combining PPO (or other policy gradient methods) with deep neural networks enables learning of complex robot behaviors.
+result = regression_demo()
+print(result)  # Interactive lesson output; the library performs no printing.
+\end{lstlisting}
 
-\subsection{State Representation}
+The declared example uses seed 2026, 12 hidden units, 41 equally spaced training inputs, batch size 16, learning rate 0.05 and 1,200 epochs. It evaluates additional interval midpoints never used as training inputs. The numerical report is:
 
-Typical state vectors include:
-\begin{itemize}
-    \item Joint angles $\mathbf{q}$
-    \item Joint velocities $\dot{\mathbf{q}}$
-    \item End-effector position and orientation
-    \item Contact forces/torques
-    \item Goal state or target trajectory
-\end{itemize}
+Initial half MSE: $0.158078703$; final training half MSE: $0.001261210$; unseen-midpoint half MSE: $0.001021767$.
 
-\subsection{Action Parameterization}
+Tests compare manual gradients with centered finite differences for every weight and bias, check partial and oversized batches against the actual final full-data loss, and verify deterministic reproduction. Midpoint accuracy tests interpolation within this example's interval. It is not evidence for extrapolation to arbitrary inputs, a simulation throughput claim, or successful control of a physical system.
 
-For continuous control, actions are typically:
-\begin{itemize}
-    \item Desired joint torques $\boldsymbol{\tau}$ (direct)
-    \item Desired joint accelerations $\ddot{\mathbf{q}}$
-    \item Motor commands in $[-1, 1]$ (normalized)
-    \item End-effector velocity targets
-\end{itemize}
+\section{Deep Reinforcement Learning for Robot and Golf Control}
 
-\subsection{Reward Shaping}
+The technical chain begins with the task: desired impact position and time, clubhead velocity and orientation, balance or contact requirements, and allowable actuator and tissue loads. Those quantities determine what the policy must know and what its reward should value. A scalar reward is a modeling choice, not an automatic expression of ``good golf.'' Distinct combinations of speed, accuracy, repeatability and loading can produce different preferred actions.
 
-Design a reward that guides learning toward the desired behavior:
+\subsection{State Representation and Action Parameterization}
 
-\[r_t = r_{\text{task}} + r_{\text{sparse}} + r_{\text{cost}}\]
+Use consistent frames, units and phase conventions. A representation containing pelvis orientation, joint configuration, generalized velocity, club state and target information still may omit activation, shaft vibration or contact history. Test the consequences of these omissions. A periodic angle representation such as $(\sin q,\cos q)$ avoids a raw wrap discontinuity but does not uniquely represent every three-dimensional orientation; rotation encodings need their own constraints and continuity analysis.
 
-where:
-\begin{itemize}
-    \item $r_{\text{task}}$: shaped reward for progress toward goal (e.g., negative distance)
-    \item $r_{\text{sparse}}$: binary reward when task is completed
-    \item $r_{\text{cost}}$: penalties for high energy, constraint violations
-\end{itemize}
+Direct joint torque, muscle excitation and desired joint position are different action ports. A desired position normally passes through a feedback controller, so its force response depends on gains and current state. Muscle excitation passes through activation and contraction dynamics. Document these layers and their limits before comparing policies. A low excitation at impact can coexist with retained activation or tendon force, and a bounded position command need not imply a bounded joint torque.
 
-Example for reaching a target $\mathbf{x}_{\text{goal}}$:
+When comparing actions from the same frozen state in a torque-affine mechanical model, instantaneous acceleration increments can add linearly. Policies applied over time change the state, feedback and contact mode, so their full trajectories need not add. Learned strategies should respect this distinction rather than treating trajectory interaction as evidence against force addition.
 
-\[r_t = -\|\mathbf{x}_{\text{EE},t} - \mathbf{x}_{\text{goal}}\|^2 - 0.01 \|\boldsymbol{\tau}_t\|^2 + 100 \cdot \mathbb{1}[\text{reached}]\]
+\subsection{Reward Shaping and Evidence}
 
-\subsection{Training Stability}
+Adding speed bonuses, torque penalties or trajectory-tracking terms can change the optimal task. Potential-based shaping has a special telescoping structure: with $r'_t=r_t+\gamma\Phi(s_{t+1})-\Phi(s_t)$,
+\begin{equation}
+G'_0=G_0-\Phi(s_0)+\gamma^T\Phi(s_T).
+\end{equation}
+For a fixed initial distribution and an action-independent terminal term, such as zero potential at every terminal state, the added terms do not change policy ranking. In an infinite discounted task a bounded potential makes the terminal term vanish. Arbitrary penalties do not share this property. A finite-horizon impact bonus or a nonzero terminal potential must be checked explicitly.
 
-Deep RL for robot control requires careful tuning:
-\begin{itemize}
-    \item \textbf{Learning rates}: Too high causes divergence, too low causes slow learning
-    \item \textbf{Network size}: Larger networks have more expressive power but overfit easily
-    \item \textbf{Exploration}: Must balance exploiting known good actions with exploring new ones
-    \item \textbf{Value function updates}: Bad value estimates propagate through policy gradient
-\end{itemize}
+A large penalty for exceeding a limit is not a guarantee that the limit is never exceeded. Hard constraints, feasibility checks and validated safety mechanisms have separate roles. A reported simulation experiment should name its numerical tolerances, failure conditions, episode resets and contact handling. If an outcome depends on a very narrow impact timing interval, small integration or observation delays can alter the apparent strategy.
 
-Modern algorithms (PPO, SAC, DDPG) address these via:
-\begin{itemize}
-    \item Adaptive learning rates (Adam optimizer)
-    \item Clipping/normalization of advantages
-    \item Experience replay buffers
-    \item Entropy regularization
-\end{itemize}
+To explain a learned swing, compare matched models and controlled interventions: retain the initial state, define the altered input port, preserve unrelated parameters and measure the specified downstream outcome. Assess whether the explanation survives plausible modeling errors and withheld observations. A zero-torque counterfactual removes the declared torque channel; it does not erase prior work, stored energy, gravity or other active channels. Sensitivity analysis can reveal interactions, while identifiability analysis tells us which of those interactions the available measurements can distinguish.
 
-% ==========================================================================
-\section{Chapter Summary}
-% ==========================================================================
+\section{Chapter Summary and Further Reading}
 
-Neural networks and reinforcement learning provide powerful tools for learning control policies when analytical models are unavailable or too complex.
+Function approximation supplies a flexible representation; differentiation supplies parameter sensitivities; optimization uses those sensitivities to change a stated objective. Reinforcement learning adds the consequences of decisions over time. Learned mechanics adds structural assumptions about how states evolve. Each layer can be mathematically correct while the overall physical explanation remains unsupported because the state, input, objective or evidence is wrong.
+
+The preceding geometry and recursive-dynamics chapters provide coordinate maps and consistent mechanics. This chapter adds tools for fitting uncertain components and optimizing policies. Their connection is especially useful in golf because earlier actions change the conditions under which later actions operate. Technical rigor comes from making those dependencies testable, not from assigning a universal sequence or physiological interpretation to a network's behavior.
+
+The references below identify methods and assumptions, not empirical validation of a human golf policy. Cybenko's Theorem 2 supports the bounded approximation statement. Goodfellow, Bengio and Courville's chapters on feedforward networks and optimization distinguish gradient computation from training. Sutton and colleagues' policy-gradient paper explains the state-visitation weighting and compatible-critic conditions. The PPO paper's clipped surrogate and actor-critic algorithm motivate the update described here; they do not prove hard clipping or safety.
+
+\href{https://papers.baulab.info/papers/Cybenko-1989.pdf}{Cybenko (1989), Theorem 2} \cite{cybenko1989review}. Uniform approximation on the unit cube; no training guarantee.
+
+\href{https://www.deeplearningbook.org/contents/mlp.html}{Goodfellow, Bengio and Courville (2016), Chapters 6 and 8} \cite{goodfellow2016}. Feedforward models, loss functions, backpropagation and optimization; see the book navigation for Chapter 8.
+
+\href{https://proceedings.neurips.cc/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html}{Sutton and Colleagues (1999), Policy Gradients} \cite{sutton1999review}. State-visitation weighting and compatible function approximation; not a blanket deep actor-critic convergence theorem.
+
+\href{https://arxiv.org/abs/1707.06347}{Schulman and Colleagues (2017), PPO} \cite{schulman2017}. Sections 3 and 5 define the clipped surrogate and rollout/update procedure.
+
+\href{https://www.nature.com/articles/nature14236}{Mnih and Colleagues (2015), DQN}. Replay and target-network method; its game benchmarks are not golf evidence.
+
+\href{https://proceedings.mlr.press/v32/silver14.html}{Silver and Colleagues (2014), Deterministic Policy Gradients}. The deterministic policy-gradient framework and exploration distinction.
+
+\href{https://arxiv.org/abs/1509.02971}{Lillicrap and Colleagues, Continuous Control}. The DDPG actor, critic, replay and target-network implementation.
+
+\href{https://proceedings.mlr.press/v80/fujimoto18a.html}{Fujimoto, Van Hoof and Meger (2018), TD3}. Twin critics, delayed updates and target-policy smoothing; Algorithm 1.
+
+\href{https://proceedings.mlr.press/v80/haarnoja18b.html}{Haarnoja and Colleagues (2018), SAC}. Entropy-regularized objective and approximate soft actor-critic; theoretical assumptions differ from practical approximation.
+
+\href{https://maziarraissi.github.io/PINNs/}{Raissi, Perdikaris and Karniadakis, PINNs} \cite{raissi2019review}. The authors' specified Burgers problem and collocation residual; no general solution-error certificate.
+
+\href{https://arxiv.org/abs/1806.07366}{Chen and Colleagues (2018), Neural ODEs} \cite{chen2018review}. Section 2, numerical considerations and Appendix B explain adjoint calculation and its numerical limits.
+
+\href{https://arxiv.org/abs/1906.01563}{Greydanus, Dzamba and Yosinski (2019), HNNs} \cite{greydanus2019hamiltonian}. Section 2 constructs a learned conserved quantity in canonical coordinates.
+
+\href{https://arxiv.org/abs/2003.04630}{Cranmer and Colleagues (2020), LNNs} \cite{cranmer2020lagrangian}. Euler--Lagrange derivative construction and its distinction from a natural mechanical model.
+
+\href{https://www.ias.informatik.tu-darmstadt.de/uploads/Team/MichaelLutter/lutter_iclr_2019.pdf}{Lutter, Ritter and Peters (2019), DeLaN} \cite{lutter2019review}. Sections 3--4 parameterize inertia and a separate gravity force; distinguish a scalar-potential variant.
+
+\section{Exercises}
 
 \begin{enumerate}
-    \item \textbf{Universal Approximation}: Neural networks with nonlinearities can approximate any continuous function, but scalability depends on architecture and training.
-
-    \item \textbf{Backpropagation}: Efficient computation of gradients via the chain rule enables training of deep networks on massive datasets.
-
-    \item \textbf{Gradient Descent}: Simple optimization algorithm that, despite its limitations, works notably well in practice when combined with proper learning rate scheduling (Adam optimizer).
-
-    \item \textbf{Markov Decision Processes}: Formal framework for sequential decision-making under uncertainty, essential for formulating RL problems rigorously.
-
-    \item \textbf{Policy Gradient Methods}: Learn policies directly by maximizing expected return, with advantages over value-based methods (stability, continuous actions).
-
-    \item \textbf{Actor-Critic}: Combines policy learning with value estimation, reducing variance and improving sample efficiency.
-
-    \item \textbf{Proximal Policy Optimization}: Modern workhorse algorithm that balances stability, sample efficiency, and ease of implementation via policy clipping.
-
-    \item \textbf{Physics-Informed Learning}: Incorporate known dynamics as loss terms to improve generalization and reduce data requirements.
-
-    \item \textbf{Sim-to-Real Transfer}: Domain randomization and system identification bridge the gap between simulated training and real robot deployment.
+\item \textbf{Representation:} Construct $|x|$ from two ReLU units. Then explain why continuous networks cannot uniformly approximate a jump of nonzero height to arbitrarily small error on a domain containing the jump.
+\item \textbf{Backpropagation:} Derive all four parameter gradients for the tanh network. Compare them with centered finite differences at three nonzero inputs. State the loss normalization and array shapes.
+\item \textbf{Activation Functions:} Plot sigmoid, tanh, ReLU and GELU and their derivatives. Identify saturation regions and nondifferentiability. Discuss advantages and disadvantages for a specified regression problem without asserting one activation is universally best.
+\item \textbf{Gradient Bounds:} Derive the product-of-Jacobians bound for ten sigmoid layers. Evaluate the bound when every weight norm is one and when every weight norm is eight. Explain why neither is a measured parameter gradient.
+\item \textbf{Pendulum Task:} Specify an MDP with the downward angle convention, torque bounds, input hold, integrator, observation, horizon and upright reward. Check reward and energy at both resting equilibria and at the numerical state in the text.
+\item \textbf{Evaluation and Improvement:} In a 5-by-5 grid, movements are deterministic; attempted off-grid moves leave the state unchanged. The upper-right cell is absorbing with zero future reward; every preceding action earns $-1$, including the action entering the goal. Use $\gamma=0.9$. Compare uniform-random policy evaluation with optimal value iteration from all-zero initial values.
+\item \textbf{Policy Gradient:} Derive the finite-horizon score estimator for the stated discounted start-state objective. Show explicitly where the $\gamma^t$ factor and the cancellation of past rewards enter.
+\item \textbf{Bootstrap Boundaries:} For rewards $(1,2,3)$, $\gamma=0.9$, critic values $V(s_1)=4$, $V(s_2)=5$, and true termination at $s_3$, compute the one-, two- and three-step targets from $s_0$. Explain what repeated trajectories would be needed to compare their variance.
+\item \textbf{Actor-Critic:} Write pseudocode that keeps bootstrap targets and actor advantages detached. Distinguish a genuine terminal transition from a truncated continuing rollout and specify the final observation used for bootstrapping.
+\item \textbf{PPO:} Plot the clipped sample objective for $\epsilon=0.2$ and advantages $2$ and $-2$. Give ratios outside the interval that lie on its plateaus. Explain why the plot does not establish a hard probability bound or prevent policy collapse.
+\item \textbf{Physics Residual:} Write a trajectory-fitting loss for the forced damped pendulum with known input and initial conditions. Give a residual that would be incorrect if actuation or damping were omitted. Propose held-out residual checks.
+\item \textbf{Domain Randomization:} Define a physically consistent uncertainty distribution for the pendulum's mass, length, torque calibration and observation delay. Explain how inertia changes with mass and length, and separate training draws from held-out evaluation cases.
+\item \textbf{Identification:} Show that scaling both $g$ and $l$ by the same positive factor leaves free angle trajectories unchanged. Identify an additional measurement or calibrated experiment and explain which ambiguity it removes.
+\item \textbf{Adjoint and Conservation:} Verify the scalar Neural ODE derivative in the text analytically and with finite differences. Separately show that explicit Euler applied to $H=(q^2+p^2)/2$ multiplies $H$ by $1+h^2$ per step, despite the exact Hamiltonian flow conserving it.
+\item \textbf{Reproducible Learning:} Run the shared regression example with batch sizes that divide the dataset, leave a remainder and exceed its size. Then design, but do not claim to have executed, a multi-seed PPO pendulum comparison with explicit success and failure criteria.
+\item \textbf{Golf Interpretation:} A simulated policy uses less commanded torque near impact after a stronger early action. List the retained states and power flows needed to interpret that result. Design a matched counterfactual and identify which conclusions would still require independent human measurements.
 \end{enumerate}
-
-Lagrangian mechanics (Chapter 11) and neural network learning (Chapter 12) are complementary:
-\begin{itemize}
-    \item Use \textbf{Lagrangian mechanics} when analytical models are available—design explicit control laws with guaranteed properties
-    \item Use \textbf{Neural networks} when models are uncertain or too complex—let data guide the policy
-    \item Use \textbf{both together}: incorporate Lagrangian constraints as PINN losses, use learned policies to optimize Lagrangian parameters
-\end{itemize}
-
-% ==========================================================================
-\subsection{Connection to Prior Chapters}
-% ==========================================================================
-
-The machine learning methods presented in this chapter do not exist in isolation---they derive much of their power from the analytical structures developed throughout this volume. Understanding these connections is essential for the modern roboticist, who must fluidly combine model-based and data-driven approaches.
-
-\textbf{Lagrangian Structure as Physics-Informed Loss (Chapter~\ref{ch:lagrangian}).} The standard form $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$ derived in Chapter~\ref{ch:lagrangian} provides a powerful physics-informed loss function for neural network training. Rather than learning dynamics from scratch, one can penalize violations of the Euler-Lagrange equations, dramatically reducing sample complexity. The energy conservation property ($\frac{d}{dt}(T+V) = 0$ for unforced systems) serves as an additional regularizer, ensuring that learned models respect fundamental thermodynamic constraints.
-
-\textbf{Differentiable Kinematics via Product of Exponentials (Chapter 9).} The Product of Exponentials (PoE) formula expresses forward kinematics as a composition of matrix exponentials, each differentiable with respect to joint angles. This enables end-to-end gradient computation from task-space objectives (e.g., reach a target) through the kinematic chain to joint-space policy parameters. Modern differentiable robotics libraries exploit this structure to train manipulation policies with analytical Jacobians rather than finite-difference approximations.
-
-\textbf{Differentiable Dynamics from the Articulated Body Algorithm (Chapter 10).} The Articulated Body Algorithm (ABA) computes forward dynamics---mapping torques to accelerations---in $O(n)$ time. When implemented in autodifferentiation frameworks (e.g., JAX, PyTorch), ABA provides exact, efficient gradients of accelerations with respect to torques, masses, and inertial parameters. This is the computational engine behind model-based reinforcement learning: the agent can ``imagine'' trajectories by differentiating through the physics, using the gradient to optimize control inputs directly.
-
-\textbf{Emerging Frontiers.} Several active research directions sit at the intersection of geometric mechanics and deep learning. \textbf{Lagrangian Neural Networks} (LNNs) parameterize the Lagrangian $\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}})$ as a neural network and recover equations of motion via automatic differentiation of the Euler-Lagrange equations, guaranteeing energy conservation by construction. \textbf{Hamiltonian Neural Networks} (HNNs) similarly parameterize the Hamiltonian $H(\mathbf{q}, \mathbf{p})$ and evolve dynamics through Hamilton's equations, preserving symplectic structure. These architectures represent a principled fusion of the variational principles from Chapter~\ref{ch:lagrangian} with the function approximation machinery of this chapter, and in several benchmarks they have shown improved accuracy over generic neural network dynamics models on long-horizon prediction tasks \cite{cranmer2020lagrangian, greydanus2019hamiltonian}.
-
-% ==========================================================================
-\section{Further Reading and References}
-% ==========================================================================
-
-The material in this chapter draws from several foundational texts and research programs. For a comprehensive treatment of deep learning foundations---including network architectures, activation functions, backpropagation, and optimization---Goodfellow, Bengio, and Courville \cite{goodfellow2016} remains the definitive reference. Their treatment of regularization, generalization theory, and practical training methodology provides essential context for anyone applying neural networks to control problems.
-
-The reinforcement learning framework, including Markov Decision Processes, value functions, and policy gradient theory, is developed rigorously in Sutton and Barto \cite{Sutton2018}. Their text covers the full spectrum from tabular methods to function approximation, and their presentation of the policy gradient theorem is the mathematical foundation for the REINFORCE algorithm and its descendants.
-
-For modern policy optimization, the reader should consult Schulman et al.\ \cite{schulman2015} for the trust region perspective (TRPO) that motivated the development of PPO, and Schulman et al.\ \cite{schulman2017} for the proximal policy optimization algorithm itself. These papers establish the theoretical basis for stable policy updates that has become the standard in continuous control.
-
-Physics simulation for reinforcement learning training relies heavily on efficient contact dynamics engines. Todorov, Erez, and Tassa \cite{todorov2012} introduced MuJoCo, which has become the most widely used simulator for benchmarking RL algorithms in locomotion and manipulation tasks. For the physical principles underlying legged locomotion control, Raibert \cite{raibert1986} provides foundational insights on balance, gait generation, and dynamic stability that continue to inform reward shaping and curriculum design in modern RL.
-
-Several rapidly evolving research areas extend the material presented here. \textbf{Model-based RL} (Deisenroth et al., PILCO; Chua et al., PETS) learns explicit dynamics models to improve sample efficiency. \textbf{Safe RL} (Garc\'{i}a and Fern\'{a}ndez, 2015) constrains exploration to avoid catastrophic failures, critical for real hardware. \textbf{Sim-to-real transfer} continues to advance through improved domain randomization, system identification, and adaptive methods. \textbf{Inverse RL} (Ng and Russell, 2000; Ziebart et al., 2008) recovers reward functions from expert demonstrations, enabling imitation learning without hand-crafted reward engineering. The reader interested in the intersection of geometric mechanics and learning should explore Lagrangian Neural Networks (Cranmer et al., 2020) and Hamiltonian Neural Networks (Greydanus et al., 2019), which embed the variational structure of Chapter~\ref{ch:lagrangian} directly into neural network architectures.
-
-% ==========================================================================
-\section{Exercises}
-% ==========================================================================
-
-\begin{exercise}
-\textbf{Universal Approximation Intuition:} Show that a 2-layer network with ReLU activations can represent the function $f(x) = |x|$ on $[-1, 1]$. (Hint: use a positive and negative ReLU branch.)
-\end{exercise}
-
-\begin{exercise}
-\textbf{Backpropagation Trace:} For a 2-layer network computing $\hat{y} = W_2 \sigma(W_1 x + b_1) + b_2$ with loss $\mathcal{L} = \frac{1}{2}(\hat{y} - y)^2$, manually compute all gradients: $\frac{\partial \mathcal{L}}{\partial W_2}$, $\frac{\partial \mathcal{L}}{\partial b_2}$, $\frac{\partial \mathcal{L}}{\partial W_1}$, $\frac{\partial \mathcal{L}}{\partial b_1}$.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Activation Function Comparison:} Plot sigmoid, tanh, ReLU, and GELU activations and their derivatives. Explain why ReLU and GELU are preferred for deep learning.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Vanishing Gradient Problem:} Consider a deep network with sigmoid activations. Show that the gradient $\frac{\partial L}{\partial W^{(1)}}$ contains a product of $(\sigma'(z))$ terms, each $< 0.25$. For a 10-layer network, estimate the scale of the gradient.
-\end{exercise}
-
-\begin{exercise}
-\textbf{MDP Formulation:} Write down a precise MDP formulation for a simple pendulum swing-up task, specifying state space, action space, transition dynamics, and reward function.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Bellman Equation:} For a simple discrete gridworld (5x5 grid, agent moves up/down/left/right, goal at corner), write the Bellman equation for state value and solve it iteratively (value iteration).
-\end{exercise}
-
-\begin{exercise}
-\textbf{Policy Gradient Derivation:} Derive the policy gradient theorem from first principles, starting from $J(\boldsymbol{\theta}) = \mathbb{E}[R_0]$ and using log-derivative trick.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Advantage Estimation:} For a trajectory $(s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T)$, compute n-step returns $R_t^{(1)}, R_t^{(2)}, R_t^{(3)}$ and compare their bias-variance tradeoff.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Actor-Critic Implementation:} Implement a simple actor-critic algorithm for the CartPole environment (gym). Train both networks jointly and plot learning curves.
-\end{exercise}
-
-\begin{exercise}
-\textbf{PPO Clipping:} Plot the PPO clipped policy gradient objective for a range of probability ratios $r \in [0.5, 2.0]$ and advantage values $\hat{A} \in [-2, 2]$. Explain why clipping prevents policy collapse.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Physics-Informed Loss:} For a pendulum with known Lagrangian dynamics, write the PINN loss combining observed trajectories with the constraint $\ddot{\theta} + \frac{g}{\ell}\sin\theta = 0$.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Domain Randomization:} Implement training with parameter randomization (mass $\pm 30\%$, friction $\pm 50\%$) and compare final policy performance on nominal parameters vs. randomized policy.
-\end{exercise}
-
-\begin{exercise}
-\textbf{System Identification:} Given a recorded trajectory from an unknown pendulum, identify the unknown length $\ell$ and gravity $g$ by fitting a neural network dynamics model to observations.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Neural ODE:} Implement a Neural ODE for learning pendulum dynamics: $\frac{dh}{dt} = f_{\boldsymbol{\theta}}(h, t)$. Compare with discrete-layer networks on prediction accuracy.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Code Challenge:} Train a PPO agent to swing up and balance a simple pendulum. Log returns during training, final policy performance, and sample learned trajectories.
-\end{exercise}
-
-\begin{exercise}
-\textbf{Transfer Learning:} Train a policy in simulation (known mass), then test on real robot (unknown mass). Compare zero-shot transfer vs. fine-tuning on real robot data.
-\end{exercise}
