@@ -25,6 +25,7 @@ A same-state affine partition is an algebraic tool. It does not independently id
 | #4156: Constrained Geometry | Rebuild the parallel-mechanisms chapter around vector/covector duality, correct Coriolis loads, affine acceleration constraints, effective input rank, common-frame grip mechanics, floating-base contact counts, force-plate conventions, power, observability limits, and momentum-dependent geometric phase. | Unequal-mass orthogonality, centripetal acceleration, inertial power identity, weighted allocation, contact-power and COP counterexamples; paired source regression checks. |
 | #4157: Superposition Reference | Reconcile the abstract, accessible summaries, and conclusions with the incremental theorem; correct rotating-frame transport, spatial inertia, wrench duality, 2R inertia, activation/excitation scope, and causal/attractor overclaims. | Body-velocity transport, spatial kinetic-energy identity, two uniform-rod inertia calculation, affine-baseline counterexample, and an article wording guard. |
 | #4158: Contraction Reference | Correct the metric inequality and coordinate rules; distinguish Riccati cost decrease from contraction; replace invalid penalty certificates and unsupported benchmarks; repair DDP, muscle-force, covariance, task-space, and hybrid-event arguments. | Matrix-order counterexample, unstable product of stable updates, finite-horizon metric collapse, exact generalized eigenvalue rate, singular task pullback, critical-damping and noise-floor checks. |
+| #4239: Physics Ch 14 & 22 Attribution | Reconcile Nesbit2005b work-efficiency ratio (club work / total body joint work vs metabolic conversion) in ch14; reconcile Cheetham2001 (wrist/X-factor kinematics vs anatomical lead-hip internal rotation) and distinguish pelvic turn from joint ROM in ch22 across print and web. | Primary paper definitions (Nesbit & Serrano 2005, Cheetham et al. 2001, McTeigue et al. 1994, Hume et al. 2005); paired test guards. |
 
 The longest foundational monograph and its multipart/manifesto editions share five reviewed explanatory includes. The inverse-dynamics and intentional-constraint-collapse articles were revised substantially. Canonical LaTeX and Quarto editions of the optimal-control, passive-stabilization, and impact chapters were revised together; the Bosch integration copy follows its canonical chapter. The impact reference, tangent LQR chapter, proximal-distal article, and force-measurement article received targeted corrections.
 
@@ -912,3 +913,19 @@ Browser QA inspected 108 section views (36 headings in desktop light, 390-pixel 
 All tests, builds and QA processes finished before staging or publication. Date-only generated artifacts were restored only after semantic comparison. Duality PR #4237 has protected-squash-merged as 9780f2a85bc921b73979f1a16a3de2abad7dac6b; deployment 34128830965 was still in progress at this checkpoint. Kinetic publication remains pending an ordinary protected PR. Next issue #4239 is claimed through 15:54 UTC for the identified paired citation passages; full audits of those chapters remain open. The 405-source corpus is unfinished.
 
 Publication checkpoint: PR #4240 is open for #4238 after a successful single-commit rebase onto protected main9780f2a8. The first push passed all hooks, including unit tests; no force push or approval bypass was used. Duality deployment34128830965 has now completed successfully. Kinetic merge/deployment remain pending protected checks.
+
+## Physics Chapters 14 and 22 Attribution Reconciliation
+
+Issue #4239 addresses targeted empirical and biomechanical attribution errors in Physics of Golf chapters 14 (`ch14_complete_swing`) and 22 (`ch22_anatomy_joint_modeling`) across both LaTeX print and Quarto web editions:
+
+1. **Work-Efficiency Attribution in Chapter 14:**
+   - Previous text cited \citet{Nesbit2005b} for muscle metabolic efficiency ($\approx 20$--$25\%$) and treated the remainder as thermal dissipation.
+   - The primary paper (Nesbit and Serrano, JSSM 2005 4:520--533) defines mechanical swing efficiency as club work divided by reconstructed total body joint work ($\approx 20$--$25\%$), rather than a metabolic-to-mechanical conversion.
+   - Corrected both print and web editions to distinguish whole-body mechanical work transfer from physiological muscle efficiency and thermal loss mechanisms.
+
+2. **Lead-Hip Internal Rotation and X-Factor Attribution in Chapter 22:**
+   - Previous text cited \citet{Cheetham2001} for $35$--$50^\circ$ of lead-hip internal rotation in professional swings and compared it against an anatomical ROM boundary.
+   - The primary Cheetham et al. (2001) study measures wrist kinematics and kinematic sequencing; X-factor studies evaluate thorax-pelvis relative turn near transition, not femur-relative-to-pelvis hip internal rotation.
+   - Corrected both editions to distinguish segment-level pelvic rotation ($40$--$50^\circ$ by impact, \citet{Hume2005}) from true anatomical hip internal rotation ($25$--$35^\circ$ downswing peak, \citet{McTeigue1994}), properly contextualizing Cheetham et al. within thorax/wrist rotational kinematics and guarding against overestimating hip joint demands.
+
+These targeted corrections do not claim complete chapter audits for either chapter. All corpus review trackers and index statuses remain properly scoped.
