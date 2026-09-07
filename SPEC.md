@@ -291,4 +291,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-07 | #4257 | Rebuild paired contraction proofs and metric/controller/noise hypotheses; replace unsupported golf robustness claims with checked mechanics and explicit experimental questions. |
 
 | 2026-09-07 | #4259 | Rebuild paired articulated-body derivations, independently checked tree dynamics, contact and impact distinctions, and constrained golf-delivery interpretation. |
-| 2026-09-07 | #4260 | Rebuild configuration-space charts, kinematic inverses, workspace and controllability distinctions; add checked examples and connect grip geometry to feasible golf delivery. |
+| 2026-09-07 | #4262 | Rebuild configuration-space charts, kinematic inverses, workspace and controllability distinctions; add checked examples and connect grip geometry to feasible golf delivery. |

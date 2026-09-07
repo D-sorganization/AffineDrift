@@ -1067,3 +1067,8 @@ ABA PR #4259 is now protected-merged as 3a53af4838718257039699b2ad69ee4714375a51
 
 
 Configuration final QA: all 14 verifier views pass with zero serious/critical axe violations; 38 repaired target views, one display right edge and eight diagram edge views were inspected. Every mode/figure independently passes keyboard scrolling from zero. Legacy-anchor relocation preserves normalized visible web text, all 269 PDF page texts and pixel-identical chapter pages 69–83. Full root: 4,467 passed, 29 skipped, 129 deselected, 59 warnings, 712.58 seconds; source coverage 92.64%, new module 65/65 statements. The earlier existing DDP benchmark timing timeout is explicitly recorded; the complete passing run disables timing, not benchmark correctness. Publication is pending the issue-linked protected PR.
+
+
+Configuration PR #4262 is pushed at 710369a7d19409c8323c0254f62f70e22e09ff95. The one correction commit was replayed from 3c188295 onto protected ABA squash 3a53af48; the complete tree remains 8491e5d94f26a8ac34762a3ac71fe6d61bd31865. Pre-commit and pre-push hooks pass, including isolated mypy and unit tests. A content-identical handoff index refresh resolved Git's unstaged-file rebase refusal; no user content was discarded. Protected publication remains pending.
+
+Next issue #4261 now records the full original Lagrangian print/web reading and all 16 exercise defects. The prior lines-1–330 reading boundary was preliminary; subsequent reading covered the entire remaining source through the final exercise. No Lagrangian replacement or numerical test pass is yet claimed. Work will use a separate topic branch.

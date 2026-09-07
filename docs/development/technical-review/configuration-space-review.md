@@ -63,3 +63,8 @@ The legacy-anchor repair is complete: aliases attach to the nearest surviving se
 ABA deployment 34167189786 succeeded at protected merge 3a53af4838718257039699b2ad69ee4714375a51. Configuration issue #4260 is ready for its own protected PR after final static/content reruns and generated-date restoration. The corpus remains incomplete. Lagrangian preliminary reading covers print lines 1–330 and the complete original short web companion only; its remaining print source must be read before claiming a full audit.
 
 Final post-render checks: all 34 CI static contracts pass; 128 content checks pass with four skips and 4,448 deselections in 24.02 seconds; 624-source title audit and SPEC changelog check pass. All local test, render and browser QA jobs are finished before staging.
+
+
+Configuration PR #4262 is pushed at 710369a7d19409c8323c0254f62f70e22e09ff95. The one correction commit was replayed from 3c188295 onto protected ABA squash 3a53af48; the complete tree remains 8491e5d94f26a8ac34762a3ac71fe6d61bd31865. Pre-commit and pre-push hooks pass, including isolated mypy and unit tests. A content-identical handoff index refresh resolved Git's unstaged-file rebase refusal; no user content was discarded. Protected publication remains pending.
+
+Next issue #4261 now records the full original Lagrangian print/web reading and all 16 exercise defects. The prior lines-1–330 reading boundary was preliminary; subsequent reading covered the entire remaining source through the final exercise. No Lagrangian replacement or numerical test pass is yet claimed. Work will use a separate topic branch.
