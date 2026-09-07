@@ -535,3 +535,6 @@ The final applications render has 35 displays and 247 math containers with no ma
 
 
 Applications publication checkpoint: critique #4219 deployment34088584702 succeeded. Applications commits replayed onto its protected merge4f9c10d0. Corrected model source pin is now9a809cbe947d4d80be39bf31b6feaa59b53192f1 in both adapter and v2 fixture; all12 contract tests pass after this metadata-only repin.
+
+
+Applications PR #4221 is open from fix/applications-complete. All commit/pre-push hooks passed, including mypy, Bandit and unit tests. Protected CI/merge/deployment remain pending. Next issue #4220 records full substantive reads of Hybrid Tangent Spaces, its critique and accessible companion; claim expires08:39 UTC. Preliminary findings are in hybrid-partial-review.md, not a corrected-source clearance.
