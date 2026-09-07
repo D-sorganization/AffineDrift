@@ -50,7 +50,9 @@ and records non-identifiability explicitly. Unavailable or engine-unsupported
 interventions fail closed; no MATLAB, Simulink, or cross-engine parity result is
 inherited from the Python fixture. The public records are
 \url{https://affinedrift.com/data/ztcf/ztcf_intervention_v1.schema.json} and
-\url{https://affinedrift.com/data/ztcf/planar_golf_forward_fixture_v1.json}.
+\url{https://affinedrift.com/data/ztcf/planar_golf_forward_fixture_v2.json}.
+
+The current fixture uses model version 2.0: a rigid three-link chain with consistent rigid inertia and bias forces. It integrates no flexible shaft states or additional shaft inertia. The historical version 1 fixture is preserved as a record of the earlier mixed-inertia calculation and is unsupported by the current adapter. The model change requires a new result; it does not inherit the old numerical or physical interpretation.
 
 \begin{laymansbox}{Understanding the ZTCF}{inplain:ztcf_meaning}
 Think of this as a software intervention rather than a physiological event. At a selected state, the simulator sets the declared applied generalized-control vector to zero while retaining the effective plant and protocol-specified loads. It then evaluates either an instantaneous sample or a forward rollout.

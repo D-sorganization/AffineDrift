@@ -1,0 +1,14 @@
+/* Retain readable equations while allowing wide derivations to scroll. */
+main mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  font-size: inherit !important;
+}
+
+@media (max-width: 768px) {
+  #quarto-document-content .math.display,
+  #quarto-document-content .math.display mjx-container[display="true"] {
+    font-size: inherit !important;
+  }
+}

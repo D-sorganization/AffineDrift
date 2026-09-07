@@ -7,7 +7,7 @@ rigid carrier masses; it is not a calibrated club/hand/shaft reconstruction.
 The assembly is an instantaneous inertia example, not a flexible simulation:
 that would also require modal states, potentials and the full velocity bias.
 
-``q`` contains three relative planar angles measured from the horizontal;
+``q1`` is measured from the horizontal; ``q2`` and ``q3`` are relative angles;
 ``eta`` contains signed modal tip-displacement amplitudes in metres. Positive
 body inertias and independent joint velocities make this model's rigid inertia
 positive definite, even at a task-Jacobian singularity.
@@ -106,7 +106,7 @@ class GolfModel:
         shape -= sigma * (np.sinh(beta * s) - np.sin(beta * s))
         tip = np.cosh(beta_l) - np.cos(beta_l)
         tip -= sigma * (np.sinh(beta_l) - np.sin(beta_l))
-        return shape / tip
+        return np.asarray(shape / tip, dtype=np.float64)
 
     def shaft_rigid_mass_matrix(self, q: Array, samples: int = 4001) -> Array:
         """Shaft contribution to the q-q block at zero modal deflection.
@@ -177,7 +177,7 @@ class GolfModel:
 
     def effective_mobility(self, q: Array, samples: int = 4001) -> Array:
         """``H_qq``, the inverse of the articulated-body inertia."""
-        return np.linalg.inv(self.schur_complement(q, samples))
+        return np.asarray(np.linalg.inv(self.schur_complement(q, samples)), dtype=np.float64)
 
     def potential_energy(self, q: Array, gravity: float = GRAVITY_M_S2) -> float:
         """Gravitational potential of the three rigid segments."""

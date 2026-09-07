@@ -159,10 +159,10 @@ def render_ch06(solution: LQRSolution) -> str:
 
 
 CH08_CONFIGURATION_DEGREES = (60.0, -30.0, -20.0)
-# Mid-downswing segment rates. Measured peak values are of order 10-30 rad/s,
-# with the wrist fastest; anything near 100 rad/s is roughly 1000 rpm and does
-# not occur in a golf swing.
+# Manufactured relative-joint rates; these are not measured segment maxima.
 CH08_VELOCITY = (12.0, -18.0, -25.0)
+CH08_HORIZON = 0.10
+CH08_STEPS = 400
 
 
 def render_ch08(model: GolfModel) -> str:
@@ -189,11 +189,14 @@ def render_ch08(model: GolfModel) -> str:
     macro("cheightClubheadSpeed", f"{model.clubhead_speed(q, np.array(CH08_VELOCITY)):.2f}")
 
     macro("cheightMqq", _matrix(m_qq))
+    macro("cheightFlexibleMqq", _matrix(model.full_mass_matrix(q)[:3, :3]))
     macro("cheightMqqDet", f"{np.linalg.det(m_qq):.4f}")
     macro("cheightMqqEigMin", f"{np.linalg.eigvalsh(m_qq).min():.4f}")
     macro("cheightMqqEigMax", f"{np.linalg.eigvalsh(m_qq).max():.4f}")
     macro("cheightMqeta", _matrix(m_qeta))
     macro("cheightMetaeta", _matrix(m_etaeta))
+    macro("cheightGamma", _matrix(-np.linalg.solve(m_etaeta, m_qeta.T)))
+    macro("cheightModalStiffness", _matrix(model.modal_stiffness()))
     macro("cheightMetaetaInv", _matrix(np.linalg.inv(m_etaeta), fmt="{:.2f}"))
     macro("cheightCoupling", _matrix(m_qeta @ np.linalg.solve(m_etaeta, m_qeta.T)))
     macro("cheightSchur", _matrix(schur))
@@ -203,10 +206,7 @@ def render_ch08(model: GolfModel) -> str:
     macro("cheightMobilityEigMin", f"{np.linalg.eigvalsh(mobility).min():.4f}")
     macro("cheightFullEigMin", f"{np.linalg.eigvalsh(model.full_mass_matrix(q)).min():.4f}")
 
-    # Drift acceleration at a physically plausible mid-downswing velocity.
-    # Peak segment rates in a real downswing are of order 10-30 rad/s; the
-    # earlier revision used 50 to 100 rad/s, which is several times faster than
-    # any measured swing and inflated the Coriolis term accordingly.
+    # Rigid-only bias and acceleration at the declared manufactured state.
     qd = np.array(CH08_VELOCITY)
     bias = model.coriolis(q, qd) @ qd + model.gravity_torque(q)
     macro("cheightVelocity", _inline_row(qd, fmt="{:.0f}"))
@@ -222,7 +222,7 @@ def render_ch08(model: GolfModel) -> str:
     macro("cheightGravityShoulder", f"{gravity[0]:.2f}")
 
     # ZTCF trajectory: integrate with zero applied torque from the state above.
-    trajectory = model.ztcf_trajectory(q, qd, duration=0.10, steps=400)
+    trajectory = model.ztcf_trajectory(q, qd, duration=CH08_HORIZON, steps=CH08_STEPS)
     sampled = [trajectory[0], trajectory[len(trajectory) // 2], trajectory[-1]]
     lines.append("")
     lines.append("\\newcommand{\\cheightZtcfTable}{%")
@@ -230,7 +230,7 @@ def render_ch08(model: GolfModel) -> str:
     lines.append("\\toprule")
     lines.append(
         "$t$ (s) & $q_3$ (rad) & $\\dot q_3$ (rad/s) & "
-        "Clubhead speed (m/s) & $\\rho_{\\text{DCR}}$ \\\\"
+        "Rigid-Tip Speed (m/s) & $\\|a_{\\mathrm{drift}}\\|_2$ (rad/s$^2$) \\\\"
     )
     lines.append("\\midrule")
     for time, pos, vel, speed in sampled:
@@ -240,6 +240,7 @@ def render_ch08(model: GolfModel) -> str:
     lines.append("\\end{tabular}%")
     lines.append("}")
     macro("cheightZtcfSpeedStart", f"{sampled[0][3]:.2f}")
+    macro("cheightZtcfStep", f"{CH08_HORIZON / CH08_STEPS:g}")
     macro("cheightZtcfSpeedEnd", f"{sampled[-1][3]:.2f}")
     macro(
         "cheightZtcfSpeedGain",

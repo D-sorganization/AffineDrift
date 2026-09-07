@@ -11,6 +11,13 @@ from src.affine_control.golf_model import GolfModel
 
 GRAVITY_M_S2 = 9.81
 SUPPORTED_GRAVITY_LOAD = f"uniform gravity at {GRAVITY_M_S2} m/s^2"
+SUPPORTED_MODEL_REVISION = "9e4b209c8cefa804e25946af2f1da91785c51965"
+SUPPORTED_MODEL_FRAME = (
+    "right-handed planar inertial frame, x right and y up; "
+    "q1 counterclockwise from +x; q2 and q3 relative"
+)
+SUPPORTED_INTERNAL_STATES = ["no flexible modal states or additional shaft inertia are integrated"]
+SUPPORTED_CONSTRAINTS = ["fixed base", "serial three-link planar relative-angle kinematics"]
 
 __all__ = [
     "UnsupportedZTCFEngineError",
@@ -205,13 +212,15 @@ def _build_supported_model(authority: ModelAuthority) -> GolfModel:
     """Construct the only locally supported ZTCF model adapter."""
     supported = (
         "affinedrift.planar-golf",
-        "1.0",
+        "2.0",
+        SUPPORTED_MODEL_REVISION,
         "affinedrift-python",
-        "GolfModel.ztcf_trajectory/v1",
+        "GolfModel.ztcf_trajectory/v2",
     )
     declared = (
         authority.id,
         authority.version,
+        authority.source_revision,
         authority.engine,
         authority.engine_version,
     )
@@ -235,8 +244,14 @@ def _validate_supported_protocol(intervention: ZTCFIntervention) -> None:
     expected_coordinates = ("q1", "q2", "q3", "qd1", "qd2", "qd3")
     if intervention.state.coordinates != expected_coordinates:
         raise UnsupportedZTCFEngineError("engine-unsupported coordinate convention")
-    if intervention.integration.solver_version != "GolfModel.ztcf_trajectory/v1":
+    if intervention.integration.solver_version != "GolfModel.ztcf_trajectory/v2":
         raise UnsupportedZTCFEngineError("engine-unsupported solver version")
+    if intervention.state.frame != SUPPORTED_MODEL_FRAME:
+        raise UnsupportedZTCFEngineError("engine-unsupported coordinate frame")
+    if intervention.retained.internal_states != SUPPORTED_INTERNAL_STATES:
+        raise UnsupportedZTCFEngineError("engine-unsupported internal-state inventory")
+    if intervention.retained.constraints != SUPPORTED_CONSTRAINTS:
+        raise UnsupportedZTCFEngineError("engine-unsupported constraint inventory")
     if intervention.retained.controls:
         raise UnsupportedZTCFEngineError("engine-unsupported retained controls")
     if intervention.retained.contact != "none":

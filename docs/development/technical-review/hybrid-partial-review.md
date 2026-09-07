@@ -1,0 +1,7 @@
+# Hybrid Tangent Spaces — Partial Read, Not Clearance
+
+Read Advanced/Hybrid_Tangent_Spaces.qmd sequentially through line 740. Remaining text, Hybrid_Tangent_CRITIC.qmd and LAYMAN companion are unread. No issue or lease yet; do not edit until claimed.
+
+Candidates requiring derivation/source verification: state-space tangents exist independently of C1 vector fields; restitution reset derivative is -e, not undefined; Coulomb law overlaps static/kinetic branches; bang-bang fuel threshold/coast assumptions; Kelvin–Voigt contact is not automatically continuous/unilateral; penalty timestep requires mass; sigmoid times a reset is not a regularized vector field; hybrid domains, guard direction and Zeno exclusions; Filippov attracting versus repelling sliding; continuous saturation kinks; static versus kinetic friction; absolute continuity versus almost-everywhere differentiability and jump measures; guard-domain reset derivatives versus common-clock saltation; Newton versus Poisson impact laws; restitution maps are not idempotent projections; configuration dependence of impact Jacobian; saltation derivation double-counts event-time correction despite a correct bouncing-ball final matrix; transversality and same event sequence; C1 guards are not automatically infinitely smooth/global codimension-one submanifolds; tangent cone hypotheses.
+
+These are preliminary findings only, not an assertion that every candidate survives full-context review. Preserve the original learning purpose while deriving event-aligned versus common-clock perturbations carefully.
