@@ -224,7 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-09-07 | #4234 | Reconcile the complete paired variational chapter: exact remainders, ordered propagation, flow derivatives, adjoint boundary terms, checked pendulum examples, stability and numerical geometry; rebuild Volume I and verify print/web. |
+| 2026-09-07 | #4235 | Reconcile the complete paired variational chapter: exact remainders, ordered propagation, flow derivatives, adjoint boundary terms, checked pendulum examples, stability and numerical geometry; rebuild Volume I and verify print/web. |
 | 2026-09-07 | #4233 | Reconcile all paired Physics of Golf glossary definitions across mechanics, impact, anatomy, tissue and evidence; add collision derivation and verified sources, repair aliases and reading layout, and rebuild the textbook PDF. |
 | 2026-09-07 | #4231 | Correct the complete paired superposition chapter, replacing inconsistent mechanics and pendulum tables with independent verification and precise passivity, constraints, actuator and reachability conditions; rebuild Volume I. |
 | 2026-09-07 | #4226 | Reconcile multibody motion, reactions, spatial conventions and segment energy through independent executable checks; repair excluded hybrid critique links under #4225 and main-health #4224. |
