@@ -15,6 +15,7 @@ TANGENT_LINK_SOURCES = (
     Path("articles/tangent-hyperplanes-series/part-7-residual-aware.qmd"),
     Path("articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd"),
     Path("articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd"),
+    Path("articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.qmd"),
     Path("articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.qmd"),
 )
 
@@ -59,7 +60,12 @@ def test_tangent_series_links_only_to_rendered_critique_pages() -> None:
     """Visible tangent pages must not target excluded internal revision-plan pages."""
     project_config = (REPO_ROOT / "_quarto.yml").read_text(encoding="utf-8")
     hub_text = (REPO_ROOT / "pages/tangent-hyperplanes.qmd").read_text(encoding="utf-8")
-    excluded_targets = ("CRITICS_CORNER.qmd", "CRITICS_CORNER.html")
+    excluded_targets = ["CRITICS_CORNER.qmd", "CRITICS_CORNER.html"]
+    assert "!articles/tangent-hyperplane-articles/Advanced/*_CRITIC.qmd" in project_config
+    for manuscript in (REPO_ROOT / "articles/tangent-hyperplane-articles/Advanced").glob(
+        "*_CRITIC.qmd"
+    ):
+        excluded_targets.extend((manuscript.name, manuscript.with_suffix(".html").name))
     stale_links: list[str] = []
 
     assert "!articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd" in project_config

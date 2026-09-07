@@ -1,997 +1,613 @@
 ---
 title: "Multibody Dynamics: Drift, Control, and the Geometry of Physical Law"
-description: "A unified tutorial showing how standard rigid-body dynamics frameworks expose a drift-control split under stated assumptions, with a planar double-pendulum worked example throughout."
+description: "Derive the same modeled motion through energy, body forces, spatial twists and task coordinates, then use those connections to investigate golf and humanoid motion."
 author: "Dieter Olson"
 date: "2026-03-06"
+css: multibody-drift-control-v3.css
 format:
   html:
     toc: true
     toc-depth: 3
     number-sections: true
-    code-fold: true
+    code-fold: false
     html-math-method: mathjax
 ---
 
-## Introduction: A Puzzle About Separation {#sec-introduction}
+## One Mechanism, Several Questions {#sec-introduction}
 
-### A Useful Structural Fact
+A golfer's pelvis can slow while the clubhead gains speed. That observation raises several questions: what forces act between segments, where does energy go, how do current torques affect acceleration, and what would a different torque history do to impact? These questions are related, but they are not interchangeable. A segment-speed graph cannot answer all of them.
 
-One structural feature of many mechanical models is easy to miss if one focuses only on the apparent complexity of the motion.
+Multibody dynamics gives us several ways to examine the same modeled mechanism. An energy derivation exposes the inertia and generalized efforts. Body force balances recover joint reactions. Spatial twists organize three-dimensional motion and wrenches. Task coordinates reveal what the clubhead or foot can do at its current posture. Geometry clarifies which conclusions survive a change of coordinates.
 
-At any instant, within the rigid-body models considered here, you can split the modeled acceleration into two pieces: what the passive dynamics contribute at the current state, and what the applied generalized forces contribute through the input map. The two pieces add to the acceleration predicted by that model.
+The value of using several formulations is that their predictions can be compared under the **same model, state, loads, constraints and observation convention**. Agreement is a strong implementation check. It does not establish that the chosen model accurately represents a golfer. That further step requires independent measurements.
 
-The point is worth stating carefully because the models themselves are highly coupled. A robot arm swinging through space, for example, mixes link-link interactions, configuration-dependent inertia, gravity, and velocity-dependent terms. The apparent complexity can make the drift/control split look less general than it is.
+### The Shared Drift-Control Structure
 
-And yet, despite all this complexity, the stated model class still gives a clean bookkeeping separation between passive dynamics and applied inputs. The separation is not a statement about every physical effect in a real mechanism; it is a structural property of the equations once the coordinates, constraints, and actuator model have been specified.
-
-What is more, this clean separation survives across several standard derivation languages. One can write the equations using energy methods, force balance on individual bodies, spatial screws, task-space coordinates, or differential-geometric notation. The notation and assumptions differ, but the same bookkeeping split between passive dynamics and applied inputs can still be recovered within the stated model class.
-
-This article is about that separation---what it is, why it works, how to compute it, and what it reveals about the structure of mechanical systems.
-
-### The River Current
-
-The best way to think about this separation is with a river.
-
-A kayaker on a moving river experiences two kinds of motion. There is the current---the water carrying the kayaker along regardless of what they do with their paddle. And there is the paddling---the kayaker's deliberate effort to change direction or speed.
-
-In this analogy, the total motion is current plus paddling.
-
-Now, the current is not the same everywhere. It depends on where the kayaker is (some parts of the river flow faster than others) and on how the water is already moving (the local velocity field). But at any given spot, the current is what it is. The kayaker cannot change it. They can only add to it.
-
-In a mechanical system, the "current" is what we call **drift**---the motion the system undergoes on its own, determined entirely by its current state (where everything is and how fast it is going). The "paddling" is **control**---the contribution from actuator inputs (motor torques, applied forces).
-
-In mathematical notation:
+For a declared input vector $u$, many models have the form
 
 $$
-\dot{x} = f_{\text{drift}}(x) + G(x)\,u
+\dot x=f_0(x,t)+G(x,t)u.
 $$ {#eq-affine-master}
 
-Here $x$ is the state of the system (its configuration and velocity), $f_{\text{drift}}(x)$ is the drift, and $G(x)\,u$ is the control contribution. The state $x$ determines both the drift and the "effectiveness" of the control input $u$.
+At a fixed state and time, $f_0$ is the result with those input channels set to zero; $Gu$ is the incremental state derivative. This is **control affinity**. It is linear in input at that fixed state, even when the state dependence and the resulting trajectories are nonlinear.
 
-This is called a **control-affine** system, because the input enters in an affine (linear plus offset) way. The affine structure is what makes the clean separation possible.
+The river analogy can help if used carefully: paddling now changes where the kayaker goes and therefore which current they encounter later. Similarly, a torque changes future configuration and velocity, hence future drift and input effectiveness. A pointwise sum of derivatives is not a sum of independently generated finite trajectories.
 
-### A Natural Question
+The zero reference must be declared. Zero commanded motor voltage, zero joint torque and zero neural excitation are different interventions. Existing activation, passive tissue forces, shaft deformation and ground reactions can persist when a chosen command is zero. Nor does the split divide “physics” from “intent”: actuator forces are physical, and many mechanisms can produce the same net joint torque.
 
-If the kayaker stops paddling right now---just for this instant---what happens?
+### Scope of the Comparison
 
-The current carries them. That is all. The kayaker moves exactly as the river dictates.
+We first use independent local coordinates $q$, velocity $v=\dot q$, a symmetric positive-definite inertia $M(q)$, and generalized effort $\tau=B(q)u$. We then add regular stationary ideal bilateral constraints. The worked mechanism has two massless rigid rods with positive point masses at their distal ends, a fixed pivot, gravity and ideal planar revolute joints.
 
-We call this the **Zero-Torque Counterfactual (ZTCF) family**, and in this time-local context, the **pointwise ZTCF sample**: what the system would do, at this instant, with zero applied control. It is an instantaneous snapshot---a photograph of the physics at one moment---not a prediction of the future trajectory. (To trace what happens over time under zero control, one uses a forward ZTCF trajectory instead.) One moment later the kayaker has drifted to a new spot with a different current, and the answer changes.
+Damping or elastic coordinates can be included without necessarily losing input affinity. Actuator dynamics require an expanded state; affinity must then be checked with respect to the actual chosen input. Contact switching, impacts, friction and hysteresis need additional rules. The [hybrid reference](../tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html) develops the event and contact distinctions.
 
-But right now, right here, the pointwise ZTCF sample tells you exactly what the physics is contributing. And the difference between what is actually happening and the ZTCF sample tells you exactly what the controller is contributing.
+For three-dimensional floating bodies, a quaternion configuration may have more components than its generalized velocity. Then $\dot q=N(q)v$ and the equations use $\dot v$, not an unqualified identification of $v$ with $\dot q$. A humanoid also needs its base motion and a declared support mode; a joint-angle vector alone may not be a complete state.
 
-### Three Principles
+## Configuration, Effort, and Inertia {#sec-core-concepts}
 
-This article develops three interlocking ideas:
+### State Is Sufficient Only for the Declared Model
 
-**1. Every standard dynamics framework admits a clean drift--control split.** Whether you write the equations using energy methods (Euler--Lagrange), force balance on individual bodies (Newton--Euler), spatial screws, task-space coordinates, or abstract geometry, the same structural separation exists. The components look different in each language, but they encode the same physics.
+Configuration specifies the arrangement of bodies. Velocity specifies how that arrangement is changing. Under a well-posed second-order rigid model, $x=(q,v)$, the specified inputs and parameters determine the local evolution. A muscle activation or viscoelastic memory variable cannot be omitted if it affects that evolution independently of $q,v$.
 
-**2. Constraint forces are dynamically essential despite doing no net work.** There is a widespread misconception that constraint forces---like the reaction at a pin joint---are passive and unimportant because they do no net generalized work. In fact, constraint forces actively redirect motion and redistribute energy between bodies. They are the guardrails of the dynamical highway. They do not speed you up or slow you down along the road, but they absolutely determine which way the road goes.
+State summarizes the information a model retains; it does not uniquely reconstruct the historical causes of that state. Different torque histories can arrive at the same configuration and velocity.
 
-**3. The physics does not depend on the language you use to describe it.** Changing coordinates, switching reference frames, or adopting a different mathematical framework changes the appearance of the equations but not the physical predictions. This is not merely philosophical; it has concrete computational consequences, including the ability to cross-check results by computing the same quantity in two different frameworks and confirming they agree.
+### Generalized Force Is Defined by Work
 
-### Scope and Assumptions
-
-This article considers **smooth rigid multibody systems** with:
-
-- Finite-dimensional state descriptions (finitely many generalized coordinates)
-- Generalized effort inputs (torques or forces at actuated joints)
-- Standard ordinary-differential-equation models of motion
-- Ideal holonomic or Pfaffian constraints (no impacts, contact switching, or friction)
-- No actuator internal dynamics (motors respond instantaneously)
-- No dissipative effects (no damping, viscous friction, etc.)
-
-Under these assumptions, the equations of motion have the control-affine structure shown in @eq-affine-master. Systems with nonsmooth contacts, actuator dynamics, flexible bodies, or hysteresis may require modified treatments that go beyond this article's scope.
-
-### What Is Standard and What Is New
-
-The equations in this article are classical. The Euler--Lagrange equations, Newton--Euler recursions, screw theory, operational-space dynamics, and geometric mechanics are all well-established. The contribution here is:
-
-- A **unified interpretive presentation** of the drift/control structure across all these frameworks
-- An explicit **ZTCF diagnostic** as a time-local tool for separating passive dynamics from actuation effects
-- A **constraint-aware comparison** showing how passive and actuated effects appear in each representation
-- A pedagogical treatment aimed at building physical intuition alongside mathematical rigor
-
-### How This Article Is Organized
-
-We build the ideas *by concept*, not by formalism. First, we establish the vocabulary of motion in everyday language (@sec-core-concepts). Then we introduce our running example---a double pendulum---so we have something concrete to compute with (@sec-double-pendulum). Next, we develop the drift--control decomposition thoroughly in one framework (@sec-drift-control), and then show what happens when the system is constrained (@sec-constrained). With the core ideas in place, we show how they appear in four other standard frameworks (@sec-other-frameworks), compare the frameworks side by side (@sec-cross-formalism), uncover what the compact equations hide (@sec-hidden-loads), connect to symmetry and conservation (@sec-symmetry), and close with practical guidance (@sec-practical).
-
-
-## The Language of Motion {#sec-core-concepts}
-
-Before we write a single equation, let's make sure we share a common language. Every technical term in this article will be explained in plain words first. The math is a tool for making the ideas precise---but the ideas come first.
-
-### Configuration: Where Is Everything?
-
-A mechanical system's **configuration** is a complete snapshot of the spatial arrangement of all its parts. No velocities, no forces---just "where is everything right now?"
-
-For a single door, the configuration is one number: the angle the door makes with the frame. For a two-jointed robot arm, it is two numbers: the shoulder angle and the elbow angle. For a human skeleton, it might be dozens of joint angles.
-
-We collect all these numbers into a vector $q$:
+A generalized effort $Q$ satisfies
 
 $$
-q = \begin{bmatrix} q_1 \\ q_2 \\ \vdots \\ q_n \end{bmatrix}
+\delta W=Q^{\mathsf T}\delta q,\qquad P=Q^{\mathsf T}v.
 $$
 
-where $n$ is the number of degrees of freedom. Each component $q_i$ is a **generalized coordinate**---a single number that captures one aspect of the arrangement.
+An angle coordinate pairs with a moment; a translation pairs with a force. For a point load $F$ at $p(q)$, $\delta p=J\delta q$ gives $Q=J^{\mathsf T}F$. This work relation, rather than “whatever makes this coordinate accelerate,” defines generalized force. Coupling means one effort can affect several accelerations.
 
-The set of all possible configurations is the **configuration space** $Q$. Think of it as a landscape. Every point on the landscape is a different arrangement of the mechanism. As the system moves, it traces a path through this landscape. A two-jointed arm traces a path through a two-dimensional landscape; a humanoid robot traces a path through a high-dimensional one.
-
-### State: Where Is Everything, and How Fast Is It Going?
-
-Knowing the configuration is not enough to predict what happens next. A ball at the top of a hill might be sitting still or might be rolling fast toward the edge. You need to know both.
-
-The **state** combines configuration and velocity:
+The kinetic energy is
 
 $$
-x = (q, \dot{q})
+T(q,v)=\tfrac12v^{\mathsf T}M(q)v.
 $$
 
-where $\dot{q}$ is the time derivative of $q$---how fast each generalized coordinate is changing. The state is the minimal information needed to predict future motion, given the forces.
+$M$ maps an acceleration increment to an inertial generalized-force increment. Its inverse maps a force increment to acceleration when other state-dependent terms and constraints are treated consistently. A surface that adds rolling resistance changes a dissipative load, not the cart's inertia merely by being rougher.
 
-This is a deep fact. In Newtonian mechanics, the future is completely determined by the present positions and velocities (plus the forces). You do not need to know the history of how the system got here. The state is *sufficient*.
+Positive definiteness means every nonzero admissible independent velocity has positive kinetic energy. It requires the corresponding inertial assumptions. Redundant coordinates, massless degrees of freedom or a singular chart need separate treatment.
 
-### Forces: What Pushes Things Around?
+### The Manipulator Equation and Its Signs
 
-In the world of generalized coordinates, a **generalized force** (or **generalized effort**) is whatever causes a generalized coordinate to accelerate. For a rotational joint, the generalized force is a torque. For a translational joint, it is a linear force. We use $\tau$ for the vector of all generalized efforts.
-
-There are really three kinds of pushes acting on any mechanical system:
-
-**Control effort** ($\tau$ or $u$): the forces you apply on purpose, through motors, actuators, or muscles. These are the paddle strokes---the things you choose.
-
-**Constraint reactions** ($J_c^T \lambda$): the forces that come from the structure of the mechanism itself---the pin joint that holds two links together, the floor that holds up a walking robot. We will have much to say about these later, because they are more important than many people realize.
-
-**External loads** ($\tau_{\text{ext}}$): everything else---gravity, wind, contact with the environment.
-
-### The Mass Matrix: How Heavy Does It Feel?
-
-Here is a question that sounds simple but is actually deep: "If I push on this joint, how much does it accelerate?"
-
-For a single particle, the answer is just $a = F/m$---divide the force by the mass. But for a coupled multibody system, the answer depends on *which direction* you push, *what the current configuration is*, and *how the masses of all the other bodies couple to this joint*.
-
-The **mass matrix** $M(q)$ captures all of this. It is a square matrix that maps generalized forces to generalized accelerations.
-
-Think of pushing a shopping cart. On smooth tile, a small push gives a big acceleration. On gravel, the same push barely moves it. Now imagine the resistance changes depending on *which direction* you push---sideways is easy, forward is hard---and that it also changes depending on *where in the store you are*. That is what the mass matrix does: it tells you how "heavy" the system feels in each generalized direction, and it changes as the configuration changes.
-
-Two important properties:
-
-**Symmetry** ($M = M^T$): The inertial coupling between generalized coordinates is reciprocal in the kinetic-energy metric. In practice, the off-diagonal terms that describe how one coordinate's force affects another appear symmetrically.
-
-**Positive definiteness**: For an unconstrained set of independent generalized coordinates, the mass matrix assigns positive kinetic energy to every nonzero velocity direction. That property makes the acceleration solve well posed for a given force vector, as long as the coordinate chart and constraint model remain nonsingular.
-
-### The Manipulator Equation: Putting It Together
-
-For a rigid multibody system, the equations of motion take a beautiful standard form called the **manipulator equation**:
+Write
 
 $$
-M(q)\,\ddot{q} + C(q, \dot{q})\,\dot{q} + g(q) = \tau
+M(q)\ddot q+b(q,v)=B(q)u+Q_{\rm ext},\qquad
+b=c(q,v)+g_V(q),\quad g_V=\frac{\partial V}{\partial q}.
 $$ {#eq-manipulator}
 
-This is Newton's second law dressed up for generalized coordinates. Let's read each piece:
+Here $c=C(q,v)v$ contains the velocity-product terms of this coordinate description. The physical generalized gravitational force is $-g_V$; $g_V$ has the positive sign because it is on the left. $Q_{\rm ext}$ denotes additional loads, so gravity is not counted twice.
 
-**$M(q)\,\ddot{q}$** is the inertia term. It says: to produce acceleration $\ddot{q}$, you need this much generalized force. This is the multibody version of $F = ma$, except "mass" is now a matrix that depends on where you are.
+The partition of velocity products into “Coriolis” and “centripetal” terms depends on coordinates and on the nonunique choice of $C$. Centripetal acceleration points inward. Water following a circular path needs an inward net force; an outward centrifugal term belongs to a rotating-frame description. Neither term is a new source of energy.
 
-**$C(q, \dot{q})\,\dot{q}$** is the velocity-product term. These are forces that arise *because the mass distribution changes as the system moves*. Even with no applied torque, a moving system experiences these forces. There are two flavors:
+## A Double Pendulum Derived From Cartesian Motion {#sec-double-pendulum}
 
-- **Coriolis forces**: appear when *multiple* joints move simultaneously. The motion of one joint creates a force on another, through the inertial coupling.
-- **Centripetal forces**: appear from the rotation of a *single* joint. Think of water in a spinning bucket being pushed outward---nobody is "pushing" the water; the effect arises from the geometry of circular motion.
+### Geometry and Velocity
 
-Together, the Coriolis and centripetal effects mean that in a coupled mechanism, *nothing moves in isolation*. Moving one joint shakes all the others.
-
-**$g(q) = \partial V / \partial q$** is the gravity term: the generalized force due to gravity, computed as the gradient of the gravitational potential energy $V(q)$.
-
-We often bundle the velocity-product and gravity terms together as $h(q, \dot{q}) \coloneqq C(q, \dot{q})\dot{q} + g(q)$. These are the forces the system "feels" due to its current state, with no input from the actuators. In the river analogy, $h$ determines the current.
-
-
-## Running Example: The Planar Double Pendulum {#sec-double-pendulum}
-
-### Why This Example?
-
-We need a concrete system to anchor our ideas. The planar double pendulum is ideal: it is the simplest system that exhibits *all* the phenomena we will discuss. Two rigid links, two joints, two masses---and yet it produces inertial coupling between joints, velocity-dependent forces, nontrivial gravitational loading, and even chaotic motion. It is rich enough to be interesting but small enough to write down in closed form.
-
-Think of it as our laboratory notebook. Every idea we develop will be tested here first.
-
-### The Setup
-
-Two rigid links are connected in a chain. The first link hangs from a fixed pivot. The second link hangs from the end of the first. Each link has length $l_i$ and carries a point mass $m_i$ at its far end.
-
-We describe the configuration with two angles:
+Let $q=(\theta_1,\theta_2)$, with $\theta_1$ measured counterclockwise from downward vertical and $\theta_2$ the second rod's angle relative to the first. Positive vertical position points upward. Define
 
 $$
-q = \begin{bmatrix} \theta_1 \\ \theta_2 \end{bmatrix}, \qquad \dot{q} = \begin{bmatrix} \dot{\theta}_1 \\ \dot{\theta}_2 \end{bmatrix}
+r_1=l_1\begin{bmatrix}\sin\theta_1\\-\cos\theta_1\end{bmatrix},
+\qquad
+r_2=l_2\begin{bmatrix}\sin(\theta_1+\theta_2)\\-\cos(\theta_1+\theta_2)\end{bmatrix}.
 $$ {#eq-dp-coords}
 
-where $\theta_1$ is measured from the downward vertical (so $\theta_1 = 0$ means the first link hangs straight down) and $\theta_2$ is the angle of the second link *relative to the first* (so $\theta_2 = 0$ means both links are aligned).
-
-### Where Are the Masses?
-
-The first mass sits at the end of the first link:
+The mass positions are $p_1=r_1$, $p_2=r_1+r_2$. The absolute angular velocities are $\omega_1=v_1$, $\omega_2=v_1+v_2$. Confusing the second relative rate with its absolute rate changes both kinetic energy and joint power.
 
 $$
-x_1 = l_1 \sin\theta_1, \qquad y_1 = -l_1 \cos\theta_1
-$$
-
-The second mass (the endpoint of the mechanism):
-
-$$
-x_2 = l_1 \sin\theta_1 + l_2 \sin(\theta_1 + \theta_2), \qquad y_2 = -l_1 \cos\theta_1 - l_2 \cos(\theta_1 + \theta_2)
-$$ {#eq-dp-kinematics}
-
-Notice the pattern: each mass sits at a position that depends on *all the joints between it and the base*. This is where coupling comes from.
-
-The **endpoint Jacobian** relates joint velocities to endpoint velocities:
-
-$$
-J(q) = \begin{bmatrix} l_1\cos\theta_1 + l_2\cos(\theta_1+\theta_2) & l_2\cos(\theta_1+\theta_2) \\ l_1\sin\theta_1 + l_2\sin(\theta_1+\theta_2) & l_2\sin(\theta_1+\theta_2) \end{bmatrix}
+J_1=\begin{bmatrix}l_1\cos\theta_1&0\\l_1\sin\theta_1&0\end{bmatrix},
+\quad
+J_2=\begin{bmatrix}
+l_1\cos\theta_1+l_2\cos(\theta_1+\theta_2)&l_2\cos(\theta_1+\theta_2)\\
+l_1\sin\theta_1+l_2\sin(\theta_1+\theta_2)&l_2\sin(\theta_1+\theta_2)
+\end{bmatrix}.
 $$ {#eq-dp-jacobian}
 
-The Jacobian acts like a gear ratio: it translates joint-level motion into endpoint-level motion. It changes with configuration, and when it becomes singular (loses rank), the endpoint cannot move in some direction no matter what joint velocities are applied. This is a **singularity**---a configuration where the mechanism loses a degree of freedom at the task level.
-
-### The Dynamic Model
-
-Now we can write down the full equations of motion. The dynamics take the manipulator form $\tau = M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q)$ with:
-
-**Mass matrix:**
+Then $\dot p_i=J_i v$. Differentiating once more gives
 
 $$
-M(q) = \begin{bmatrix} (m_1+m_2)l_1^2 + m_2 l_2^2 + 2m_2 l_1 l_2 \cos\theta_2 & m_2 l_2^2 + m_2 l_1 l_2 \cos\theta_2 \\ m_2 l_2^2 + m_2 l_1 l_2 \cos\theta_2 & m_2 l_2^2 \end{bmatrix}
+\ddot p_1=J_1\ddot q-\omega_1^2r_1,\qquad
+\ddot p_2=J_2\ddot q-\omega_1^2r_1-\omega_2^2r_2.
+$$ {#eq-dp-kinematics}
+
+The last terms are the Cartesian curvature or bias accelerations. They remain even if both relative joint accelerations are zero.
+
+### Inertia, Bias, and Potential
+
+Start from $T=\tfrac12m_1\|\dot p_1\|^2+\tfrac12m_2\|\dot p_2\|^2$. Substitution gives $M=m_1J_1^{\mathsf T}J_1+m_2J_2^{\mathsf T}J_2$, hence
+
+$$
+M=
+\begin{bmatrix}
+(m_1+m_2)l_1^2+m_2l_2^2+2m_2l_1l_2\cos\theta_2&
+m_2l_2^2+m_2l_1l_2\cos\theta_2\\
+m_2l_2^2+m_2l_1l_2\cos\theta_2&m_2l_2^2
+\end{bmatrix}.
 $$ {#eq-dp-mass}
 
-Look at the off-diagonal entries: they are not zero. This means the two joints are *coupled*---accelerating one joint creates a force on the other. And the coupling strength depends on $\cos\theta_2$: strongest when the arm is stretched out ($\theta_2 = 0$), weakest when folded back ($\theta_2 = \pi$). You can feel this if you swing a two-section fishing rod---the resistance depends on how bent it is.
+Its determinant is $m_2l_1^2l_2^2(m_1+m_2\sin^2\theta_2)>0$. Thus straight or folded alignment does not singularize this joint inertia when all masses and lengths are positive. The off-diagonal entry can vanish or change sign for some length ratios; “weakest coupling when folded” is not a general statement about all inertial responses.
 
-**Velocity-product (Coriolis/centripetal) terms:**
+The Euler–Lagrange operation $d(\partial T/\partial v)/dt-\partial T/\partial q$ yields
 
 $$
-C(q, \dot{q})\,\dot{q} = \begin{bmatrix} -2c\,\dot{\theta}_1\dot{\theta}_2 - c\,\dot{\theta}_2^2 \\ c\,\dot{\theta}_1^2 \end{bmatrix}, \qquad c \coloneqq m_2 l_1 l_2 \sin\theta_2
+c=\beta
+\begin{bmatrix}-2v_1v_2-v_2^2\\v_1^2\end{bmatrix},
+\qquad \beta=m_2l_1l_2\sin\theta_2.
 $$ {#eq-dp-coriolis}
 
-The coupling parameter $c$ depends on $\sin\theta_2$. When $\theta_2 = 0$ (arm straight), $c = 0$ and there are no velocity-product forces---the two joints decouple at the velocity level. When $\theta_2 \neq 0$, motion of each joint creates forces on the other. This is why a moving double pendulum is so unpredictable: the joints are constantly pushing each other around.
+At $\sin\theta_2=0$, this vector vanishes at that instant, but $M$ is generally still coupled. It does not follow that the joints move independently.
 
-**Gravity terms:**
+With $V=m_1g(p_1)_y+m_2g(p_2)_y$,
 
 $$
-g(q) = \begin{bmatrix} (m_1+m_2)\,g\,l_1 \sin\theta_1 + m_2\,g\,l_2 \sin(\theta_1+\theta_2) \\ m_2\,g\,l_2 \sin(\theta_1+\theta_2) \end{bmatrix}
+g_V=g\begin{bmatrix}
+(m_1+m_2)l_1\sin\theta_1+m_2l_2\sin(\theta_1+\theta_2)\\
+m_2l_2\sin(\theta_1+\theta_2)
+\end{bmatrix}.
 $$ {#eq-dp-gravity}
 
-Both links contribute to the torque on joint 1 (because joint 1 supports everything outboard of it), but only the second link contributes to the torque on joint 2.
+These expressions can also be recovered from Cartesian inertial loads, as the executable example below checks. [MIT's multibody notes](https://underactuated.mit.edu/multibody.html) give the standard manipulator and constraint framework; signs must be translated consistently when gravity is placed on the opposite side.
 
+## Pointwise Attribution and Future Control {#sec-drift-control}
 
-## Drift and Control: Separating Physics From Intent {#sec-drift-control}
+### The Instantaneous Split
 
-This is the heart of the article. Everything we have done so far has been preparation for the ideas in this section. Take your time here---the payoff is worth it.
-
-### The Big Idea
-
-Go back to the manipulator equation: $M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau$.
-
-Now ask: "What acceleration would the system experience if I turned off all the motors?" Set $\tau = 0$ and solve for $\ddot{q}$:
+With retained additional loads independent of $u$,
 
 $$
-\ddot{q}\bigr|_{\tau=0} = -M^{-1}(q)\bigl[C(q, \dot{q})\,\dot{q} + g(q)\bigr]
-$$
+a_0=M^{-1}(Q_{\rm ext}-b),\qquad
+\Delta a=M^{-1}Bu,\qquad
+\ddot q=a_0+\Delta a.
+$$ {#eq-drift-control-split}
 
-That is the drift acceleration---the river's current.
+The pointwise Zero-Torque Counterfactual (ZTCF) sample uses the copied state and the declared zeroed channels. A forward ZTCF trajectory repeatedly solves the zero-input dynamics while evolving its own state. It is a different object from a series of pointwise samples evaluated along the original controlled motion.
 
-Now ask: "What *additional* acceleration does the torque $\tau$ produce?" From the full equation:
+High speed does not necessarily imply large $a_0$. A free particle in Cartesian coordinates can move arbitrarily fast with zero drift acceleration. In this pendulum, aligned rods have $c=0$ regardless of the rates. Posture, direction, gravity and cancellation all matter.
 
-$$
-\ddot{q} = -M^{-1}\bigl[C\dot{q} + g\bigr] + M^{-1}\tau
-$$
+A norm ratio of drift and input increments also needs units, coordinate scales and a zero-denominator convention. It does not determine energy contribution, neural effort or whether a finite torque intervention improves a shot.
 
-The total acceleration is the zero-torque acceleration plus an increment proportional to the applied torque. Let's give these pieces names:
+### Linearize the Trajectory Actually Being Used
 
-$$
-\ddot{q} = \underbrace{-M^{-1}(q)\bigl[C(q, \dot{q})\,\dot{q} + g(q)\bigr]}_{\ddot{q}_{\text{drift}}} + \underbrace{M^{-1}(q)\,\tau}_{\ddot{q}_{\text{ctrl}}}
-$$ {#eq-el-drift-control}
-
-This is the drift--control decomposition.
-
-### Why Exactness Matters
-
-This decomposition is not a local linearization of the state dynamics. Within the manipulator equation above, it is an algebraic split at a specified state and input because the torque $\tau$ enters the equation linearly. The mathematical term for this is **control-affine**: the dynamics are affine in the input. The claim depends on the stated model assumptions; actuator dynamics, nonsmooth contact, flexible modes, and hysteresis can add terms that require a different treatment.
-
-Why should you care about this algebraic split? Because it gives a precise model-level diagnostic. If your controller applies torque $\tau$ and you compute $\ddot{q}_{\text{drift}}$ and $\ddot{q}_{\text{ctrl}}$, the sum matches the acceleration predicted by the same model. Differences from measured motion then become evidence about model error, sensing error, unmodeled inputs, or violated assumptions rather than ambiguity inside the algebraic decomposition itself.
-
-### The Drift: What the River Does
-
-The drift acceleration $\ddot{q}_{\text{drift}} = -M^{-1}(C\dot{q} + g)$ has two contributions:
-
-**Inertial coupling effects** ($-M^{-1}C\dot{q}$): how the motion of each joint accelerates or decelerates the others through velocity-dependent forces. These exist because the system is *moving*. A stationary system has no Coriolis or centripetal effects.
-
-**Gravitational loading** ($-M^{-1}g$): how gravity accelerates each joint given the current configuration. These exist because the system has *weight*. Even a stationary system feels gravity.
-
-Together, these determine the river's current. The current depends on where you are (configuration $q$, which determines $M$ and $g$) and how fast you are going (velocity $\dot{q}$, which determines $C\dot{q}$).
-
-### The Control: What the Paddle Does
-
-The control acceleration $\ddot{q}_{\text{ctrl}} = M^{-1}\tau$ is the *additional* acceleration produced by the motors. The mass matrix $M^{-1}$ acts as the **input gain**: it tells you how effectively each torque translates into acceleration.
-
-Notice that the input gain depends on the configuration. The same motor torque produces different accelerations depending on the arm's pose. This is like paddling in deep water versus shallow water---the same paddle stroke has different effects depending on conditions.
-
-### The Pointwise ZTCF Sample
-
-The pointwise ZTCF sample is simply the drift evaluated at a specific moment in time:
+For a nominal solution $\bar x(t),\bar u(t)$, the first variation is
 
 $$
-\ddot{q}_{\text{ZTCF},t} \coloneqq -M^{-1}\bigl(q(t)\bigr)\bigl[C\bigl(q(t),\dot{q}(t)\bigr)\dot{q}(t) + g\bigl(q(t)\bigr)\bigr]
-$$ {#eq-ZTCF-def}
+\delta\dot x=A(t)\delta x+G(\bar x,t)\delta u,\qquad
+A=\left.\frac{\partial f_0}{\partial x}\right|_{\bar x}
++\sum_j\bar u_j\left.\frac{\partial G_j}{\partial x}\right|_{\bar x}.
+$$ {#eq-local-linearization}
 
-It answers one question: **"If I set declared control to zero right now, what acceleration would the system experience at this instant?"**
+The second term is needed even though the dynamics are affine in input. If a reference path is not a solution, the error equation also contains $f_0(\bar x,t)+G(\bar x,t)\bar u-\dot{\bar x}$. Sampling only the zero-input Jacobian on a controlled path answers a different question.
 
-Three things are important to understand about the pointwise ZTCF sample:
+Frozen eigenvalues of $A(t)$ do not establish stability of the time-varying system. For example, alternating for one time unit each between
+$A_1=\begin{bmatrix}-1&4\\0&-1\end{bmatrix}$ and $A_2=A_1^{\mathsf T}$ gives two matrices whose eigenvalues are all $-1$, but the two-step transition $e^{A_2}e^{A_1}$ has an eigenvalue greater than two. Stability concerns the transition over time, or a suitable Lyapunov/contraction bound.
 
-**It is time-local, not a trajectory prediction.** It tells you the *instantaneous* acceleration under zero torque, not where the system would end up if you stopped the motors. One millisecond later, the state has changed, and the ZTCF value is different. (To model where the system evolves over time under zero control, one computes a forward ZTCF trajectory instead.) It is a photograph, not a movie.
+### Why a Torque Change Can Matter Elsewhere
 
-**It reveals accumulated state effects.** A system moving fast has large drift accelerations---not because of anything the motors are doing right now, but because past motor commands built up the current velocity. Imagine our kayaker: they paddled hard for the last five minutes and are now cruising at high speed. Even if they stop paddling, the current at their location (which depends on their speed through the water) is substantial. The ZTCF captures this.
+A shoulder torque can affect clubhead acceleration immediately through coupled inertia. Over time it also changes posture, velocity, shaft state and when contact occurs. These changes alter subsequent control effectiveness. To investigate a proposed “release,” specify its torque or activation history, copied state, support mode and output. Then compare the resulting trajectories at a declared clock time or at each trajectory's own impact event.
 
-**It is a diagnostic tool, not a new physical concept.** The ZTCF is just the drift vector field evaluated at a particular state. But this evaluation is practically powerful because it provides a clean, computable reference for separating physics from control at every instant.
+## Constraints Redirect Acceleration and Change Reactions {#sec-constrained}
 
-### How the Past Becomes the Present
+### Stationary Ideal Bilateral Constraints
 
-Here is a subtlety worth pausing over. The drift at time $t$ depends on the current velocity $\dot{q}(t)$. But the current velocity is the accumulated result of *all past accelerations*:
-
-$$
-\dot{q}(t) = \dot{q}(t_0) + \int_{t_0}^{t} \ddot{q}(\sigma)\,d\sigma
-$$
-
-So what appears as "drift" right now is really the accumulated legacy of all past inputs, all past gravitational pulls, all past Coriolis interactions.
-
-Think of a savings account. The interest earned this month depends on the current balance, not on how the balance was accumulated. A high balance earns high interest whether it came from salary, inheritance, or a lottery win. Similarly, a high velocity produces large drift accelerations regardless of whether that velocity came from motors, gravity, or a push.
-
-The ZTCF does not care about history. It cares about the current state. But the current state remembers the history, in the form of accumulated velocity.
-
-### Putting It All Together: The Double Pendulum
-
-Let's see the drift--control split for our double pendulum. We need three ingredients: the mass matrix @eq-dp-mass, the velocity-product terms @eq-dp-coriolis, and the gravity terms @eq-dp-gravity.
-
-#### Building From Energy
-
-**Step 1: Kinetic energy.** The first mass has velocity $v_1^2 = l_1^2\dot{\theta}_1^2$. The second mass involves both joints:
+Let $\phi(q)=0$ have $k$ independent rows locally, $J_c=\partial\phi/\partial q$, and $\kappa=\dot J_c v$. An admissible state satisfies $\phi=0$, $J_cv=0$. Its acceleration satisfies
 
 $$
-v_2^2 = l_1^2\dot{\theta}_1^2 + l_2^2(\dot{\theta}_1+\dot{\theta}_2)^2 + 2l_1 l_2 \cos\theta_2\,\dot{\theta}_1(\dot{\theta}_1+\dot{\theta}_2)
-$$
-
-The total kinetic energy $T = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}m_2 v_2^2$ is a quadratic form in the velocities: $T = \frac{1}{2}\dot{q}^T M(q)\dot{q}$. Reading off the coefficients gives the mass matrix @eq-dp-mass.
-
-**Step 2: Potential energy.** $V = -m_1 g l_1\cos\theta_1 - m_2 g[l_1\cos\theta_1 + l_2\cos(\theta_1+\theta_2)]$. The gravity vector is $g_i = \partial V/\partial \theta_i$, giving @eq-dp-gravity.
-
-**Step 3: Coriolis terms.** The Coriolis matrix comes from the partial derivatives of the mass matrix:
-
-$$
-C_{ij} = \sum_{k=1}^{n} \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i}\right)\dot{q}_k
-$$
-
-This formula has a geometric origin (it comes from the Levi-Civita connection of the kinetic-energy metric---we will see what that means in @sec-geometric). For now, it is a recipe: take partial derivatives of mass matrix entries, combine them in this specific pattern, multiply by velocities.
-
-For our double pendulum, only $\partial M/\partial\theta_2$ is nonzero (because only $\cos\theta_2$ appears in $M$), giving $c = m_2 l_1 l_2 \sin\theta_2$ and the velocity-product terms in @eq-dp-coriolis.
-
-#### The Complete Split
-
-The drift acceleration:
-
-$$
-\ddot{q}_{\text{drift}} = -M^{-1}\begin{bmatrix} -2c\,\dot{\theta}_1\dot{\theta}_2 - c\,\dot{\theta}_2^2 + g_1 \\ c\,\dot{\theta}_1^2 + g_2 \end{bmatrix}
-$$
-
-For a $2\times 2$ matrix, the inverse is:
-
-$$
-M^{-1} = \frac{1}{\det M}\begin{bmatrix} M_{22} & -M_{12} \\ -M_{21} & M_{11} \end{bmatrix}
-$$
-
-with $\det M = M_{11}M_{22} - M_{12}^2 > 0$ for nonsingular independent coordinates. The control acceleration is $\ddot{q}_{\text{ctrl}} = M^{-1}\tau$, and the total is:
-
-$$
-\ddot{q} = \ddot{q}_{\text{drift}} + \ddot{q}_{\text{ctrl}}
-$$
-
-#### A Sanity Check
-
-At state $\theta_1 = \pi/4$, $\theta_2 = \pi/6$, $\dot{\theta}_1 = 2$ rad/s, $\dot{\theta}_2 = -1$ rad/s, with $m_1 = m_2 = 1$ kg, $l_1 = l_2 = 1$ m, $g = 9.81$ m/s², you can plug in the numbers and verify:
-
-1. Compute $M$, $C\dot{q}$, and $g$ numerically.
-2. Compute $\ddot{q}_{\text{drift}} = -M^{-1}(C\dot{q} + g)$.
-3. Pick any torque---say $\tau = [5, -2]^T$ N·m.
-4. Compute $\ddot{q}_{\text{ctrl}} = M^{-1}\tau$.
-5. Confirm: $\ddot{q}_{\text{drift}} + \ddot{q}_{\text{ctrl}}$ equals the total acceleration from the full equation.
-
-This works to machine precision. The decomposition is exact.
-
-### From Drift to Control Design: Linearization {#sec-linearization}
-
-The drift--control decomposition connects directly to practical control design. Here is how.
-
-Linearizing the control-affine dynamics $\dot{x} = f_{\text{drift}}(x) + G(x)u$ at the ZTCF operating point $(x(t), u = 0)$:
-
-$$
-\dot{x} \approx \dot{x}_{\text{ZTCF},t} + A_t\,(x - x(t)) + B_t\,u
-$$ {#eq-linearized}
-
-with $A_t = \partial f_{\text{drift}}/\partial x$ (how sensitive the drift is to small state changes) and $B_t = G(x(t))$ (how effectively the control input influences the dynamics at this state).
-
-Think of it as a hierarchy:
-
-- **ZTCF/drift is the zeroth-order anchor**: the baseline behavior at the current state.
-- **Linearization adds first-order sensitivity**: how the dynamics change with small perturbations from this baseline.
-
-This linearized model is the foundation for stability analysis (do the eigenvalues of $A_t$ have negative real parts?), feedback design (LQR, pole placement, MPC), observer design (EKF-style estimation), and gain-scheduled controllers along trajectories.
-
-### Procedure Checklist: Euler--Lagrange Analysis
-
-1. Define generalized coordinates $q$ and physical parameters.
-2. Derive kinetic energy $T = \frac{1}{2}\dot{q}^T M(q)\dot{q}$ and potential energy $V(q)$.
-3. Extract $M(q)$, $C(q,\dot{q})$, and $g(q)$.
-4. Evaluate drift: $\ddot{q}_{\text{drift}} = -M^{-1}(C\dot{q} + g)$ at the current state.
-5. Apply control and compute total acceleration: $\ddot{q} = \ddot{q}_{\text{drift}} + M^{-1}\tau$.
-6. Compare measured acceleration with model prediction.
-7. Use residuals (differences) to diagnose unmodeled effects (friction, flexibility, etc.).
-
-
-## When the River Has Banks: Constrained Systems {#sec-constrained}
-
-So far, our kayaker has been on an open river---free to drift in any direction. But real rivers have banks, and real mechanisms have constraints.
-
-### What Constraints Are
-
-A **constraint** is a geometric restriction on where the system can go. A door hinge forces the door to rotate about a specific axis. A ball rolling on a surface must stay on the surface. A robot end-effector might be guided along a rail.
-
-Mathematically, a **holonomic constraint** is an equation $\phi(q) = 0$ that eliminates some configurations. The system can only visit configurations where $\phi$ vanishes.
-
-The **constraint Jacobian** $J_c = \partial\phi/\partial q$ determines how the constraint restricts velocities ($J_c\dot{q} = 0$) and accelerations ($J_c\ddot{q} + \dot{J}_c\dot{q} = 0$).
-
-Think of guardrails on a mountain highway. The guardrail does zero work along the road---it neither speeds you up nor slows you down in the direction of travel. But if you drift toward the edge, the guardrail pushes you back. It *redirects* your motion without adding or removing energy from the direction you are going.
-
-Constraint forces are the dynamical equivalent of guardrails.
-
-### The Constrained Equations
-
-With constraints, the equations of motion acquire an extra term:
-
-$$
-M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau + J_c^T\lambda + \tau_{\text{ext}}
+M\ddot q+b=Bu+Q_{\rm ext}+J_c^{\mathsf T}\lambda,\qquad
+J_c\ddot q=-\kappa.
 $$ {#eq-cel-dynamics}
 
+The allowed accelerations form an affine subspace
+$\mathcal H=\{a:J_ca=-\kappa\}$ of dimension $n-k$, a hyperplane only when the rank is one. They do not generally lie in the velocity tangent space: a train following a curved track needs normal acceleration.
+
+Define $W=J_cM^{-1}J_c^{\mathsf T}$, which is positive definite under these assumptions. If $a_{\rm free}=M^{-1}(Bu+Q_{\rm ext}-b)$, substitution gives
+
 $$
-J_c(q)\ddot{q} + \dot{J}_c(q,\dot{q})\dot{q} = 0
+\lambda=-W^{-1}(J_ca_{\rm free}+\kappa),\qquad
+\ddot q=a_{\rm free}-M^{-1}J_c^{\mathsf T}W^{-1}(J_ca_{\rm free}+\kappa).
 $$ {#eq-cel-constraint}
 
-The new term $J_c^T\lambda$ is the **generalized constraint force**---the guardrail's push, expressed in generalized coordinates. The multiplier $\lambda$ tells you the *magnitude* of the push. It is not prescribed---it is determined by requiring that the constraint equation is satisfied. The constraint force is *whatever it needs to be* to keep the system on the constraint surface.
-
-### The Drift--Control Split Survives
-
-Here is the important point: the drift--control decomposition **still works** when constraints are present. It simply operates within the constrained dynamics.
-
-Setting $\tau = 0$, the **constrained drift** is:
+This is equivalently the solution of the block system
 
 $$
-\ddot{q}_{\text{drift}}^{c} = M^{-1}\bigl[-C\dot{q} - g + J_c^T\lambda_0 + \tau_{\text{ext}}\bigr]
-$$ {#eq-constrained-drift}
-
-where $\lambda_0$ is the constraint multiplier needed to satisfy the constraint *without actuation*. The **constrained control** is:
-
-$$
-\ddot{q}_{\text{ctrl}}^{c} = M^{-1}\bigl[\tau + J_c^T(\lambda - \lambda_0)\bigr]
-$$ {#eq-constrained-ctrl}
-
-Notice something subtle: the control contribution includes not just the direct effect of $\tau$ but also the *change* in constraint reaction induced by the actuation. When you apply torque to a constrained system, the constraint force adjusts to maintain compatibility under the new loading. The control "feels" this adjustment.
-
-The decomposition remains exactly additive: $\ddot{q} = \ddot{q}_{\text{drift}}^{c} + \ddot{q}_{\text{ctrl}}^{c}$.
-
-Back to the kayaker: the river now has banks. The kayaker cannot paddle toward the shore (the constraint prevents it), and even the drift is redirected by the banks. But the separation between "what the current does" and "what the paddle does" still holds---each is just projected onto the channel the banks allow.
-
-### The Highway of Admissible Accelerations
-
-At any instant, the acceleration-level constraint $J_c\ddot{q} = -\dot{J}_c\dot{q}$ defines a set of accelerations that are compatible with the constraint:
-
-$$
-\mathcal{H}_t \coloneqq \left\{\ddot{q}\;\middle|\;J_c\ddot{q} = -\dot{J}_c\dot{q}\right\}
+\begin{bmatrix}M&-J_c^{\mathsf T}\\J_c&0\end{bmatrix}
+\begin{bmatrix}\ddot q\\\lambda\end{bmatrix}
+=\begin{bmatrix}Bu+Q_{\rm ext}-b\\-\kappa\end{bmatrix}.
 $$ {#eq-hyperplane}
 
-This is an **affine hyperplane**---a flat slice through the space of all possible accelerations. Think of a train on a track. The train's acceleration must lie along the track direction. The hyperplane $\mathcal{H}_t$ is the dynamical equivalent of "the track direction"---the set of all accelerations compatible with the constraint at this instant.
+Use linear solves rather than explicitly forming inverses in numerical code. Redundant constraints need a rank-aware treatment; nonunique multipliers need not imply nonunique physical acceleration.
 
-The ZTCF gives a specific **base point** on $\mathcal{H}_t$---the passive anchor. Control then moves along allowable directions within $\mathcal{H}_t$:
+### The Constrained Input Map
+
+Let $P=I-M^{-1}J_c^{\mathsf T}W^{-1}J_c$. This projects acceleration increments onto $\ker J_c$ orthogonally in the $M$ metric: $P^2=P$, $P^{\mathsf T}M=MP$. Then
 
 $$
-\ddot{q} = \ddot{q}_{\text{ZTCF},t}^{c} + B_c(x(t))\,\tau
+a_0^c=P M^{-1}(Q_{\rm ext}-b)-M^{-1}J_c^{\mathsf T}W^{-1}\kappa,
+\qquad B_c=P M^{-1}B,
+$$ {#eq-constrained-drift}
+
+$$
+\ddot q=a_0^c+B_cu,\qquad
+\lambda(u)-\lambda(0)=-W^{-1}J_cM^{-1}Bu.
+$$ {#eq-constrained-ctrl}
+
+The input changes the reaction as well as the acceleration. $B_cu$ lies in the homogeneous tangent directions of the affine acceleration set; the curvature offset belongs to the anchor. It is incorrect to project the entire acceleration onto a zero-offset tangent plane.
+
+For a manufactured particle of mass $2$ kg at $r=(2,0)$ m with velocity $(0,3)$ m/s, constrained by $\phi=(r^{\mathsf T}r-4)/2=0$, $J_c=(2,0)$ and $\kappa=9$. With no other load, $a_0^c=(-4.5,0)$ m/s². An applied force $(4,6)$ N changes acceleration to $(-4.5,3)$ m/s². The reaction changes from $(-9,0)$ to $(-13,0)$ N: it cancels the new radial input while retaining the inward curvature acceleration.
+
+### What the Zero-Work Statement Requires
+
+For these stationary ideal constraints,
+
+$$
+P_c=(J_c^{\mathsf T}\lambda)^{\mathsf T}v
+=\lambda^{\mathsf T}J_cv=0.
 $$ {#eq-hyperplane-control}
 
-where $B_c = M^{-1}\bigl[I - J_c^T(J_c M^{-1} J_c^T)^{-1} J_c M^{-1}\bigr]$ is the **constraint-consistent input map**. It projects the unconstrained input gain $M^{-1}$ onto the admissible acceleration set. It is the "train-track version" of the mass matrix inverse: it tells you how torques translate into accelerations *within the constraint surface*.
+Zero total power does not mean zero force or zero influence on motion. For a moving constraint $\phi(q,t)=0$, $J_cv=-\phi_t$ and $P_c=-\lambda^{\mathsf T}\phi_t$, which can be nonzero. Stationary ideal Pfaffian constraints $A(q)v=0$ likewise have zero reaction power, although their velocity distribution need not integrate to a configuration submanifold.
 
-This geometric picture is exact, not an approximation.
+A real foot-ground constraint is unilateral and friction limited. A computed reaction requiring tension from the floor or excessive tangential force invalidates that assumed contact mode. Removing torque may cause release or slip; then the same fixed-mode affine formula no longer describes the complete intervention. These conditions matter to humanoid support and to a golfer's use of the ground.
 
-### Why Constraint Forces Deserve Your Respect
+For the pendulum endpoint constrained to a circle centered at $c_0$, choose $\phi=\|p_2-c_0\|^2-R^2$. Then $J_c=2(p_2-c_0)^{\mathsf T}J_2$. Differentiating the full expression, including $J_2$, gives the required curvature term. The same block solve applies wherever the constraint row is regular and the copied state is admissible.
 
-Here is one of the most surprising facts in mechanics, and it trips up a lot of people.
+## Body Forces and Spatial Motion {#sec-other-frameworks}
 
-For an ideal holonomic constraint, the total generalized power of the constraint force is:
+### Newton–Euler Reveals the Loads {#sec-newton-euler}
 
-$$
-P_{\text{constr}} = (J_c^T\lambda)^T \dot{q} = \lambda^T J_c\dot{q} = 0
-$$
-
-because $J_c\dot{q} = 0$ (the velocity satisfies the constraint). Many textbooks state this and move on, leaving the impression that constraint forces are passive and can be ignored.
-
-*This is wrong.* Or rather, the conclusion people draw from it is wrong. Let's see why.
-
-**Constraint forces redirect motion.** The constraint force $J_c^T\lambda$ appears in the equation of motion. It directly determines which accelerations are possible. Removing the constraint changes the drift baseline entirely. Imagine removing the guardrails from a mountain road---the "zero work" property does not mean the guardrails are optional.
-
-**Constraint forces redistribute energy between bodies.** While the *total* generalized power is zero, the power on *individual* generalized coordinates can be large and nonzero:
+For body $i$, take all forces acting **on that body**, expressed in a common frame. Let $r_{ik}$ run from its center of mass to the point where force $F_{ik}$ acts, and $N_{ik}$ denote applied pure moments. In a body frame fixed to the center of mass, the balances are
 
 $$
-P_{\text{constr},i} = [J_c^T\lambda]_i\,\dot{q}_i
-$$
-
-The constraint extracts energy from some coordinates and injects it into others, with the sum being zero. Energy is not created or destroyed---it is *moved around*.
-
-This is the mechanism behind whip-crack dynamics, where kinetic energy migrates from the arm (proximal segments) to the tip (distal segments) through the joint reaction forces. The constraint forces can be enormous---many times larger than any applied torque---and they are invisible in the compact generalized-coordinate formulation.
-
-**A note on interpretation:** Per-coordinate power decompositions are useful diagnostic tools, but they depend on the choice of generalized coordinates. Only the total power balance is coordinate-invariant. These decompositions should be treated as bookkeeping aids, not as absolute physical partitions.
-
-### Double-Pendulum: Endpoint on a Circle
-
-Let's constrain our double pendulum's endpoint to move on a circle of radius $R$ centered at $(x_c, y_c)$:
-
-$$
-\phi(q) = (x_2 - x_c)^2 + (y_2 - y_c)^2 - R^2 = 0
-$$
-
-The constraint Jacobian $J_c = \partial\phi/\partial q$ is a $1 \times 2$ row vector. The coupled system forms a **KKT system** (named after Karush, Kuhn, and Tucker---a standard structure in constrained optimization):
-
-$$
-\begin{bmatrix} M & -J_c^T \\ J_c & 0 \end{bmatrix}\begin{bmatrix} \ddot{q} \\ \lambda \end{bmatrix} = \begin{bmatrix} \tau - C\dot{q} - g + \tau_{\text{ext}} \\ -\dot{J}_c\dot{q} \end{bmatrix}
-$$
-
-This simultaneously determines both the constrained acceleration and the constraint force. Setting $\tau = 0$ gives the constrained drift and the passive constraint reaction---the force needed to keep the endpoint on the circle even without motors.
-
-### Procedure Checklist: Constrained Euler--Lagrange
-
-1. Define the constraint equation $\phi(q) = 0$.
-2. Compute $J_c = \partial\phi/\partial q$ and $\dot{J}_c\dot{q}$.
-3. Build the admissible hyperplane $\mathcal{H}_t$.
-4. Form and solve the KKT system for $(\ddot{q}, \lambda)$.
-5. Compute the passive anchor $\ddot{q}_{\text{ZTCF},t}^c$ by setting $\tau = 0$.
-6. Recover generalized reaction loads $J_c^T\lambda$.
-7. Compare constrained and unconstrained drift baselines.
-8. Audit power flow: verify $P_{\text{constr}} = 0$ globally; examine per-coordinate power transfer.
-
-
-## The Same Physics in Different Languages {#sec-other-frameworks}
-
-Now that we understand the drift--control decomposition thoroughly in one language (Euler--Lagrange), let's see it in four others. Each framework is like a different map of the same city. The city does not change---only what each map emphasizes.
-
-A street map shows you how to drive between intersections. A transit map shows subway connections. A topographic map shows elevation. A tourist map shows restaurants and landmarks. No map is "right" or "wrong"---each answers a different question.
-
-In the same way:
-
-- **Newton--Euler** shows you the body-level forces---where loads go and how big they are.
-- **Screw theory** shows you the spatial geometry of motion and force.
-- **Operational-space analysis** shows you what the task point experiences.
-- **Geometric mechanics** shows you what is intrinsic (independent of coordinates) and what is a choice.
-
-### Newton--Euler: Following the Forces {#sec-newton-euler}
-
-#### What Newton--Euler Uniquely Reveals
-
-Euler--Lagrange tells you *what* the generalized accelerations are. Newton--Euler tells you *how the forces get there*---which joint is pushing how hard, in what direction, to produce those accelerations. It is the force detective's toolkit.
-
-If Euler--Lagrange is a bank statement showing your account balance, Newton--Euler is the itemized list of every transaction.
-
-#### General Equations
-
-For each rigid body $i$ in the chain, Newton's second law for translation and Euler's equation for rotation apply separately:
-
-$$
-m_i\,a_{c,i} = f_i^{\text{in}} - f_i^{\text{out}} + f_i^{\text{ext}} + f_i^{\text{ctrl}}
+m_i a_{C,i}=\sum_kF_{ik},\qquad
+I_{C,i}\dot\omega_i+\omega_i\times(I_{C,i}\omega_i)
+=\sum_k\bigl(r_{ik}\times F_{ik}+N_{ik}\bigr).
 $$ {#eq-ne-trans}
 
-$$
-I_i\,\dot{\omega}_i + \omega_i \times (I_i\,\omega_i) = n_i^{\text{in}} - n_i^{\text{out}} + n_i^{\text{ext}} + n_i^{\text{ctrl}}
-$$ {#eq-ne-rot}
+The first equation's acceleration is the physical center-of-mass acceleration expressed in that frame, including the appropriate transport terms if obtained by differentiating body components. The moment equation includes the force lever arms. One cannot simply add joint moments about different origins.
 
-Here $a_{c,i}$ is the center-of-mass acceleration of body $i$, $\omega_i$ is its angular velocity, $I_i$ is its rotational inertia, and the $f$ and $n$ terms are forces and moments from inboard joints, outboard joints, external loads, and actuators.
+In the standard planar reduction, the out-of-plane axis is principal and the scalar rotational equation uses its moment of inertia. Parallel angular velocities alone would not prove $\omega\times I\omega=0$ for an arbitrary three-dimensional inertia tensor.
 
-The term $\omega_i \times (I_i\omega_i)$ is the **gyroscopic moment**---it appears because rotating bodies resist changes in their rotation axis. For planar problems (like our double pendulum), all angular velocities are parallel, so this term vanishes.
+The [recursive Newton–Euler inverse-dynamics algorithm](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-3-newton-euler-inverse-dynamics/) takes configuration, velocity and **prescribed acceleration**, propagates motion outward, and computes required loads and joint efforts inward. A tree recursion has linear cost in the number of links for this problem.
 
-#### The Recursive Algorithm
+To obtain zero-torque motion, solve a **forward-dynamics** problem. One approach obtains the bias and mass-matrix columns from inverse-dynamics evaluations, then solves $Ma=-b+Q_{\rm ext}$. An articulated-body algorithm can instead solve tree forward dynamics directly. The [forward-dynamics tutorial](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-5-forward-dynamics-of-open-chains/) explains the former construction. Setting an inverse-dynamics output torque to zero without solving for acceleration is not an algorithm.
 
-Newton--Euler naturally leads to a two-pass algorithm that is both computationally efficient (linear in the number of bodies) and physically transparent:
+Once acceleration is known, body balance recovers reactions. Additional constraints require the corresponding coupled solve. Thus Euler–Lagrange and Newton–Euler are not restricted to disjoint physical questions; their different representations make particular calculations easier to inspect.
 
-**Forward pass (base to tip):** Starting from the fixed base, propagate velocities and accelerations outward through the chain. Each body's velocity and acceleration are computed from its parent's values plus the contribution of its own joint.
+### Spatial Twists Need an Origin Convention {#sec-poe-screw}
 
-**Backward pass (tip to base):** Starting from the outermost body, compute the forces and moments at each joint. Each joint must support the weight and inertia of everything outboard of it.
-
-This recursive structure is why Newton--Euler is the workhorse algorithm for real-time simulation of large multibody systems.
-
-#### Drift via Newton--Euler
-
-To evaluate the ZTCF: set all actuator torques to zero and run the forward-backward recursion. The resulting body accelerations are the drift accelerations (in Cartesian coordinates), and the joint forces are the passive reaction forces---the forces the joints must transmit even without motors.
-
-#### Double-Pendulum Instance
-
-For the double pendulum, the backward recursion from body 2 gives the joint 2 reaction force $f_2^{\text{joint}}$---a specific Cartesian force vector that link 1 exerts on link 2. The Euler--Lagrange formulation hides this force inside the mass matrix coupling. Newton--Euler makes it explicit.
-
-Under drift conditions (zero torque), this joint force includes gravitational and centripetal loads and can be surprisingly large even with no applied torque. For structural design and understanding energy flow through the mechanism, this information is essential.
-
-#### Procedure Checklist
-
-1. Define local body frames, masses $m_i$, inertias $I_i$, and center-of-mass offsets.
-2. Forward pass: compute $\omega_i$, $\dot{\omega}_i$, $a_{c,i}$ from base to tip.
-3. Apply external/contact loads at each body.
-4. Backward pass: compute forces and moments from tip to base.
-5. Extract actuator torques $\tau_i$ and joint reaction forces/moments.
-6. Repeat with $\tau = 0$ for ZTCF: isolate passive load paths.
-7. Compare drift and total joint reactions to identify actuation-induced load changes.
-8. Map local Cartesian forces to generalized coordinates to verify agreement with Euler--Lagrange.
-
-### Product-of-Exponentials and Screw Theory: The Spatial Geometer's Toolkit {#sec-poe-screw}
-
-#### What Screw Theory Uniquely Reveals
-
-Screw theory provides a **unified language for spatial velocity and force.** Instead of separately tracking "how fast is it spinning?" and "how fast is it translating?" (as Newton--Euler does), screw theory combines them into single six-dimensional objects:
-
-- A **twist** combines angular and linear velocity into one vector.
-- A **wrench** combines moment and force into one vector.
-
-Why bother? Because any rigid-body motion---no matter how complicated---is equivalent to a rotation about some axis combined with a translation along that same axis. Like a corkscrew. This "screw motion" description is more compact and transforms more cleanly between reference frames.
-
-#### General Equations
-
-Forward kinematics on the Lie group $SE(3)$ (the group of all rigid-body transformations):
+Let $g_{sb}=[R,p;0,1]$ map body coordinates to a fixed space frame. With angular-first ordering, the space twist satisfies $\widehat{\mathcal V}_s=\dot g_{sb}g_{sb}^{-1}$, so
 
 $$
-g_{sb}(q) = e^{\hat{S}_1 q_1}\,e^{\hat{S}_2 q_2}\cdots e^{\hat{S}_n q_n}\,g_{sb}(0)
+\mathcal V_s=\begin{bmatrix}\omega_s\\v_s\end{bmatrix},
+\qquad v_s=\dot p-\omega_s\times p,\qquad
+\dot p=v_s+\omega_s\times p.
 $$ {#eq-poe-fk}
 
-Each factor $e^{\hat{S}_i q_i}$ represents the motion produced by joint $i$ moving by amount $q_i$ along its screw axis $S_i$. The product composes these motions to give the total transformation from base to end-effector.
-
-The spatial twist is $\mathcal{V}_s = J_s(q)\dot{q}$, where $J_s$ is the **space Jacobian**. The spatial acceleration:
+The linear block $v_s$ is generally **not the velocity of the body-frame origin**. The derivative of the space twist is likewise not just ordinary endpoint acceleration:
 
 $$
-\dot{\mathcal{V}}_s = J_s(q)\ddot{q} + \dot{J}_s(q,\dot{q})\dot{q}
+\ddot p=\dot v_s+\dot\omega_s\times p+\omega_s\times\dot p.
 $$
 
-The term $\dot{J}_s\dot{q}$ is the **bias acceleration**---the screw-coordinate analogue of Coriolis/centripetal effects. It is the spatial acceleration that would exist even with zero joint accelerations (constant joint velocities), arising because the screw axes shift as the configuration changes.
+The [twist tutorial](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-3-2-twists-part-2-of-2/) supplies the adjoint and matrix conventions. A product of exponentials (PoE) is a kinematic representation; inertia and loads are still needed for dynamics.
 
-The wrench balance for each body involves the **coadjoint map** $\text{ad}_{\mathcal{V}}^*(\mathcal{I}\mathcal{V})$, which expresses the same physics as Coriolis/centripetal terms but in the coordinate-free language of Lie algebras.
-
-#### Drift--Control in Screw Coordinates
-
-The ZTCF is evaluated exactly as before: freeze the state and set actuation to zero. The resulting joint-level drift acceleration is the same number as from Euler--Lagrange; the screw formulation simply expresses the spatial accelerations and wrenches in its own language.
-
-#### Double-Pendulum Instance
-
-For a planar two-revolute chain with the space frame at joint 1:
+For our downward-vertical home posture, use
 
 $$
-S_1 = \begin{bmatrix} 0\\0\\1\\0\\0\\0 \end{bmatrix}, \qquad S_2 = \begin{bmatrix} 0\\0\\1\\0\\-l_1\\0 \end{bmatrix}
+S_1=(0,0,1,0,0,0)^{\mathsf T},\qquad
+S_2=(0,0,1,-l_1,0,0)^{\mathsf T},
 $$ {#eq-dp-screws}
 
-$S_1$ is a pure rotation about the $z$-axis through the origin. $S_2$ is a rotation about $z$ through the point $(l_1, 0, 0)$---which generates both rotation and translation when expressed in the space frame.
+and home translation $p(0)=(0,-l_1-l_2,0)$. Then
+$g_{sb}(q)=e^{\widehat S_1\theta_1}e^{\widehat S_2\theta_2}g_{sb}(0)$ and
+$J_s=[S_1,\operatorname{Ad}_{e^{\widehat S_1\theta_1}}S_2]$.
+Recover $\dot p$ using the cross-position term before comparing with $J_2v$. A screw through $(l_1,0,0)$ would describe a different home geometry.
 
-The space Jacobian is $J_s = [S_1 \;\; \text{Ad}_{e^{\hat{S}_1\theta_1}}S_2]$, where the adjoint transformation $\text{Ad}$ accounts for the frame change. Extracting the planar components recovers the same endpoint velocity as the geometric Jacobian @eq-dp-jacobian. Same physics, different notation.
-
-#### Procedure Checklist
-
-1. Define home configuration $g_{sb}(0)$ and screw axes $S_i$.
-2. Build PoE forward kinematics and space/body Jacobians.
-3. Compute twist $J_s\dot{q}$ and bias acceleration $\dot{J}_s\dot{q}$.
-4. Run recursive Newton--Euler in spatial (wrench) coordinates.
-5. Project wrenches to joint torques.
-6. Evaluate ZTCF by setting actuation to zero at fixed state.
-7. Compare with Euler--Lagrange ZTCF mapped through the Jacobian.
-
-### Operational Space: The Task's Point of View {#sec-operational-space}
-
-#### What Operational-Space Analysis Uniquely Reveals
-
-Every framework we have seen so far thinks in terms of *joints*. Operational-space analysis asks a different question entirely: **"What does the world look like from the endpoint's perspective?"**
-
-When you drive a car, you think about where the car is going---speed, heading, lane position---not about individual tire rotations and engine RPM. Operational-space analysis is the driver's perspective: it translates between "what I want the task point to do" and "what the joints need to do to make that happen."
-
-#### General Equations
-
-Define task coordinates $x_{\text{task}} = \psi(q)$ with task Jacobian $J = \partial\psi/\partial q$. The task-space dynamics are:
+For dynamics in a body center-of-mass frame, write $\mathcal V_b=(\omega_b,v_{C,b})$, $\mathcal I_b=\operatorname{diag}(I_C,mI_3)$, and
 
 $$
-\Lambda(q)\,\ddot{x}_{\text{task}} + \mu(q, \dot{q}) + p(q) = F_{\text{ctrl}} + F_{\text{constr}} + F_{\text{ext}}
-$$ {#eq-os-dynamics}
+\operatorname{ad}_{\mathcal V_b}
+=\begin{bmatrix}[\omega_b]_\times&0\\{}[v_{C,b}]_\times&[\omega_b]_\times\end{bmatrix},
+\qquad
+\mathcal W_b=\mathcal I_b\dot{\mathcal V}_b
+-\operatorname{ad}_{\mathcal V_b}^{\mathsf T}\mathcal I_b\mathcal V_b.
+$$ {#eq-ne-rot}
 
-where:
+This declares the sign rather than relying on an ambiguous coadjoint-star notation. The [rigid-body dynamics tutorial](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-2-dynamics-of-a-single-rigid-body-part-2-of-2/) uses this convention. Wrenches at other points must include their translated moments.
 
-- $\Lambda(q) = (JM^{-1}J^T)^{-1}$ is the **task-space inertia**: the effective mass felt at the task point. Valid only where $JM^{-1}J^T$ is nonsingular.
-- $\mu(q, \dot{q}) = \Lambda(JM^{-1}C\dot{q} - \dot{J}\dot{q})$ is the task-space Coriolis/centripetal term.
-- $p(q) = \Lambda J M^{-1}g$ is the task-space gravity term.
+If $\mathcal V_s=\operatorname{Ad}_g\mathcal V_b$, then $\mathcal W_s=\operatorname{Ad}_g^{-\mathsf T}\mathcal W_b$, and $\mathcal W_s^{\mathsf T}\mathcal V_s=\mathcal W_b^{\mathsf T}\mathcal V_b$. This is invariance under consistent representation of the **same** wrench and motion. It does not say that mechanical power is unchanged for an observer moving with a different velocity.
 
-**An important subtlety:** We write $\Lambda$, $\mu$, and $p$ as if they are task-space primitives, but they are actually *induced from joint-space dynamics* through the Jacobian and mass matrix. They depend on the full joint configuration $q$, not just the task coordinates.
+## What the Clubhead or Foot Can Do {#sec-operational-space}
 
-The mapping between task-space forces and joint torques follows virtual work: $\tau = J^T F$. In redundant systems (more joints than task dimensions), the reverse---going from joint torques to task-space effects---is not unique, because multiple joint-torque combinations can produce the same task-space force while differing in what they do in the null space.
+### Task Dynamics as an Induced Description
 
-#### Drift--Control in Task Space
-
-The task-space drift is the image of joint-space drift under the kinematic map:
+Let $y=\psi(q)$, $J=\partial\psi/\partial q$. Direct differentiation gives
 
 $$
-\ddot{x}_{\text{drift}} = J\ddot{q}_{\text{drift}} + \dot{J}\dot{q}
+\ddot y=J M^{-1}(Bu+Q_{\rm ext}+J_c^{\mathsf T}\lambda-b)+\dot Jv.
 $$ {#eq-os-drift}
 
-The first term maps joint-level drift through the Jacobian. The second term, $\dot{J}\dot{q}$, is the **bias acceleration**: the task-space acceleration that would exist even if all joint accelerations were zero (constant joint velocities), arising because the Jacobian itself changes with configuration.
-
-#### Double-Pendulum Instance
-
-For the endpoint task $x_{\text{task}} = [x_2, y_2]^T$, the Jacobian is @eq-dp-jacobian and the task-space inertia is $\Lambda = (JM^{-1}J^T)^{-1}$---a $2\times 2$ matrix describing how "heavy" the endpoint feels, which changes with configuration.
-
-Singularities occur when $\theta_2 = 0$ or $\theta_2 = \pi$ (the links are collinear). At these configurations, $\Lambda$ becomes singular---you would need infinite force to accelerate the endpoint along the lost direction.
-
-#### Procedure Checklist
-
-1. Choose task variables $x_{\text{task}} = \psi(q)$.
-2. Derive $J$ and $\dot{J}\dot{q}$.
-3. Compute $\Lambda$, $\mu$, $p$ (checking for singularities).
-4. Evaluate task-space drift: $\ddot{x}_{\text{drift}} = J\ddot{q}_{\text{drift}} + \dot{J}\dot{q}$.
-5. Map task commands to joint torques via $J^T$ and null-space projection.
-6. Compare total and drift task-space accelerations.
-7. Examine task-space inertia variation with configuration; identify singularities.
-
-### Coordinate-Free Geometric Mechanics: The Globe, Not the Map {#sec-geometric}
-
-#### Why Coordinates Are Both Useful and Dangerous
-
-Every framework we have seen so far uses coordinates---angles, positions, task variables. Coordinates are immensely practical: they turn abstract geometric objects into concrete numbers you can compute with. But coordinates are also a choice, and different choices give different-looking equations for the same physics.
-
-This is exactly the situation with maps of the Earth. A Mercator projection makes Greenland look enormous. An equal-area projection distorts shapes to preserve area. The Earth itself does not care which map you use---it is the same globe either way. The distances, areas, and curvatures of the Earth's surface are real, physical things that exist independently of any map projection.
-
-Geometric mechanics is about working directly with the globe.
-
-#### The Configuration Manifold
-
-The set of all configurations is a **manifold** $Q$---a smooth space that may be curved. For the double pendulum, $Q = S^1 \times S^1$ (the product of two circles, which is a torus). Locally, it looks flat (you can use angles as coordinates), but globally it has a donut-like topology.
-
-You do not need to understand manifold theory in depth to follow this. The key idea is: the configuration space has an intrinsic geometry that does not depend on how you label points.
-
-#### The Kinetic Energy Metric
-
-Kinetic energy defines a notion of "distance" on the configuration manifold. The mass matrix $M(q)$ is, in geometric language, a **Riemannian metric**---it tells you the "cost" (in energy) of moving in each direction. Just as a Riemannian metric on the Earth's surface tells you the actual distance between nearby points (regardless of map projection), the kinetic-energy metric tells you the actual energy cost of a small displacement (regardless of coordinate choice).
-
-#### The Equations of Motion
-
-In coordinate-free language, the equations of motion are:
+This acceleration equation remains useful when a task inertia cannot be inverted. Where $J$ has full row rank, define mobility $H=JM^{-1}J^{\mathsf T}$ and task inertia $\Lambda=H^{-1}$. Then
 
 $$
-\nabla_{\dot{q}}\dot{q} + \text{grad}\,V(q) = \mathcal{G}(q)u + \mathcal{F}_{\text{ext}} + \mathcal{F}_{\text{constr}}
+\Lambda\ddot y+\mu+p_V
+=F_{\rm ctrl}^{\rm eff}+F_{\rm ext}^{\rm eff}+F_c^{\rm eff},
+$$ {#eq-os-dynamics}
+
+where $\mu=\Lambda(JM^{-1}c-\dot Jv)$, $p_V=\Lambda JM^{-1}g_V$, and $F^{\rm eff}=\Lambda JM^{-1}Q$ for each corresponding generalized load. These quantities depend on the full joint state; a redundant robot's task position alone does not determine them. The [task-dynamics tutorial](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-6-dynamics-in-the-task-space/) illustrates the invertible-Jacobian case.
+
+A specified generalized torque has a unique instantaneous task effect. Redundancy concerns the opposite allocation problem: many torques may produce the same task effect. In a fully actuated unconstrained model,
+
+$$
+\tau=J^{\mathsf T}F^{\rm eff}+\tau_{\rm null},
+\qquad JM^{-1}\tau_{\rm null}=0.
+$$
+
+This dynamically weighted null space differs from an arbitrary Euclidean projection. Its instantaneous lack of task acceleration does not guarantee no future task effect: it can change posture and later dynamics. Underactuation, effort bounds and support constraints further restrict which allocations are possible.
+
+### A Task Singularity Is Not an Inertia Singularity
+
+For the pendulum endpoint, $\det J_2=l_1l_2\sin\theta_2$. At straight or folded alignment $J_2$ loses rank, $H$ is singular, and $\Lambda=H^{-1}$ is **undefined**. Describing $\Lambda$ as a finite singular matrix is wrong. A diverging effective inertia may describe a limit approaching that posture, but it does not supply a finite force that creates an unavailable instantaneous increment.
+
+At the straight-down posture, the vertical row of $J_2$ is zero. Joint acceleration therefore supplies no vertical task-acceleration increment at that instant. Nevertheless,
+$(\dot J_2v)_y=l_1v_1^2+l_2(v_1+v_2)^2$ can be positive: the endpoint has inward curvature acceleration. Both joint degrees of freedom and the positive-definite $M$ remain.
+
+For a supported mechanism, use the constrained map $JB_c$ for input authority. A clubhead Jacobian can be well conditioned while input authority is restricted by contact or missing actuators. Conversely, inability to move in one direction at one instant does not settle finite-time reachability.
+
+## Geometry Without Changing the Physical Question {#sec-geometric}
+
+### The Kinetic Metric
+
+For unconstrained pendulum angles with full revolutions allowed, configuration space is $Q=S^1\times S^1$. Joint limits restrict that domain. The inertia defines a Riemannian kinetic metric when it is positive definite:
+$\langle v,w\rangle_M=v^{\mathsf T}Mw$.
+It measures squared speed through kinetic energy, not the energy consumed by a displacement without a duration or force history.
+
+With the Levi-Civita connection of this metric, the intrinsic equation is
+
+$$
+\nabla_vv=-\operatorname{grad}_M V
++(Bu+Q_{\rm ext}+Q_c)^\sharp.
 $$ {#eq-geo-eom}
 
-The symbol $\nabla_{\dot{q}}\dot{q}$ is the **covariant acceleration**: the acceleration of $\dot{q}$ as measured by the intrinsic geometry of the configuration space. In coordinates, it expands to $\ddot{q}^i + \Gamma^i_{jk}\dot{q}^j\dot{q}^k$, where the **Christoffel symbols** $\Gamma^i_{jk}$ are exactly the Coriolis/centripetal coefficients from the Euler--Lagrange formulation.
+Here $\sharp$ raises a force covector using $M^{-1}$, and
+$\operatorname{grad}_M V=M^{-1}g_V$ in coordinates. The coordinate expansion is
+$\ddot q^i+\Gamma^i_{jk}v^jv^k$, with $M\Gamma(v,v)=c$.
+Nonzero Christoffel symbols can arise in flat space, as in polar coordinates; they are not by themselves a curvature measurement.
 
-Here is the connection: the velocity-product terms $C(q,\dot{q})\dot{q}$ that we computed earlier are the coordinate expression of a geometric object---the **Levi-Civita connection**---associated with the kinetic-energy metric. In coordinates, this connection appears through the Christoffel symbols. The connection tells you how to "parallel transport" velocity vectors along curves in configuration space.
+### The Whole State Field Transforms Intrinsically
 
-An important clarification: nonzero Christoffel symbols do not necessarily mean the space is curved. Polar coordinates in flat Euclidean space have nonzero Christoffel symbols, but zero curvature. The Christoffel symbols reflect both the intrinsic geometry *and* the coordinate choice. Curvature, which depends only on the intrinsic geometry, is a deeper property.
-
-#### Drift in Geometric Form
-
-The intrinsic drift field on $TQ$ (the **tangent bundle**---the space of all possible states, i.e., all possible position-velocity pairs) is:
+In a local chart the zero-input second-order field has components
 
 $$
-f_{\text{drift}}(q, \dot{q}) = \begin{pmatrix} \dot{q} \\ -\Gamma(\dot{q}, \dot{q}) - \text{grad}\,V(q) + \mathcal{F}_{\text{ext}} \end{pmatrix}
+f_0(q,v)=
+\begin{bmatrix}
+v\\-\Gamma(v,v)-\operatorname{grad}_M V+Q_{\rm ext}^{\sharp}
+\end{bmatrix}.
 $$ {#eq-geo-drift}
 
-This is the same drift we computed in the Euler--Lagrange framework, written in a way that does not depend on any particular coordinate chart. The geometric formulation makes transparent that:
-
-- The drift field is **intrinsic** (exists independently of coordinates).
-- The connection $\Gamma$ encodes inertial coupling.
-- Constraints restrict motion to submanifolds of $Q$.
-- ZTCF with zero potential describes **geodesic motion**---the mechanical analogue of "straight-line motion" on a curved space.
-
-#### Double-Pendulum Instance
-
-The configuration manifold is $Q = S^1 \times S^1$ (a torus). The kinetic-energy metric in coordinates $(\theta_1, \theta_2)$ is the mass matrix @eq-dp-mass. The Christoffel symbols generate the same Coriolis/centripetal terms as @eq-dp-coriolis. The drift field matches the Euler--Lagrange drift exactly.
-
-To verify coordinate independence: switch to $(\phi_1, \phi_2) = (\theta_1, \theta_1 + \theta_2)$ (absolute angles instead of relative). The equations look different---different Christoffel symbols, different mass matrix entries---but the physical accelerations at any state are identical. The globe does not change when you switch map projections.
-
-#### Procedure Checklist
-
-1. Define $Q$ and the admissible state space $TQ$.
-2. Build the kinetic-energy metric from $T$.
-3. Compute the Levi-Civita connection (Christoffel symbols).
-4. Compute the potential gradient.
-5. Add control and external covector fields.
-6. Simulate intrinsic flow with and without control.
-7. Use coordinate charts only for computation and plotting.
-8. Verify key conclusions by changing charts to confirm invariance.
-
-
-## Cross-Formalism Equivalence {#sec-cross-formalism}
-
-### Five Maps, One City
-
-For the same mechanism at the same state, every formalism encodes the same force balance:
+This displays an intrinsic field in coordinates; the individual lower block is not an ordinary vector under arbitrary configuration changes. If $z=\chi(q)$, then
 
 $$
-\text{Euler--Lagrange:}\quad M\ddot{q} + C\dot{q} + g - J_c^T\lambda = \tau + \tau_{\text{ext}}
-$$ {#eq-xf-gen}
-
-$$
-\text{Screw:}\quad \mathcal{I}\dot{\mathcal{V}} + \text{ad}_{\mathcal{V}}^*(\mathcal{I}\mathcal{V}) + \mathcal{W}_g - \mathcal{W}_{\text{constr}} = \mathcal{W}_{\text{ctrl}} + \mathcal{W}_{\text{ext}}
-$$ {#eq-xf-screw}
-
-$$
-\text{Operational-space:}\quad \Lambda\ddot{x} + \mu + p = F_{\text{ctrl}} + F_{\text{constr}} + F_{\text{ext}}
-$$ {#eq-xf-os}
-
-$$
-\text{Geometric:}\quad \nabla_{\dot{q}}\dot{q} + \text{grad}\,V = \mathcal{G}u + \mathcal{F}_{\text{ext}} + \mathcal{F}_{\text{constr}}
-$$ {#eq-xf-geo}
-
-These are not four different theories. They are four descriptions of the same physics. Equivalence means that under the appropriate kinematic, coordinate, and frame mappings, they produce the same physical motion, the same admissible accelerations, the same power balance, and compatible descriptions of all reactions.
-
-### Where Each Term Lives
-
-| Physical effect | Euler--Lagrange | Newton--Euler | Screw/PoE | Op-space | Geometric |
-|:----------------|:----------------|:--------------|:----------|:---------|:----------|
-| Inertia | $M\ddot{q}$ | $m_i a_{c,i}$, $I_i\dot{\omega}_i$ | $\mathcal{I}\dot{\mathcal{V}}$ | $\Lambda\ddot{x}$ | Inertial part of $\nabla_{\dot{q}}\dot{q}$ |
-| Velocity-product | $C\dot{q}$ | $\omega \times (I\omega)$ etc. | $\text{ad}_{\mathcal{V}}^*(\mathcal{I}\mathcal{V})$ + $\dot{J}_s\dot{q}$ | $\mu$ | $\Gamma(\dot{q},\dot{q})$ |
-| Gravity | $g(q)$ | Per-body $m_i\mathbf{g}$ | Gravity wrenches | $p$ | $\text{grad}\,V$ |
-| Constraints | $J_c^T\lambda$ | Joint reactions | Constraint wrenches | $F_{\text{constr}}$ | Reaction covectors |
-| Control | $\tau$ | Applied body loads | Control wrenches | $F_{\text{ctrl}}$ | $\mathcal{G}u$ |
-
-### The ZTCF Anchor in Every Framework
-
-At a fixed state, each framework gives you the same passive anchor:
-
-- **Euler--Lagrange:** Evaluate $\ddot{q}$ with $\tau = 0$.
-- **Newton--Euler:** Run the recursion with actuator channels removed.
-- **Screw/PoE:** Evaluate spatial dynamics with zero control wrenches.
-- **Operational-space:** Map the passive acceleration to task space: $\ddot{x}_{\text{ZTCF}} = J\ddot{q}_{\text{ZTCF}} + \dot{J}\dot{q}$.
-- **Geometric:** Evaluate the intrinsic drift field.
-
-Control appears as a tangent increment from this shared baseline. The increment is expressed in different coordinates in each framework but represents the same physical change in acceleration.
-
-### Frame Changes and Invariants
-
-Twists and wrenches transform under frame changes: $V_s = \text{Ad}_g V_b$ and $F_s = \text{Ad}_g^{-T} F_b$. Instantaneous power is frame-invariant: $F_s^T V_s = F_b^T V_b$.
-
-This means different coordinate-frame expressions of "Coriolis," "centripetal," or "gravity" are not different physics---they are transformed representations of the same underlying interactions. If two frameworks give different answers for the same physical quantity at the same state, it means one of the implementations has a bug.
-
-
-## What the Equations Hide: Loads, Energy, and the Whip-Crack {#sec-hidden-loads}
-
-### The Cost of Elegance
-
-The Euler--Lagrange form $M\ddot{q} + C\dot{q} + g = \tau$ is elegantly compact. But elegance has a price: it hides some of the most physically important information.
-
-What is hidden?
-
-**Joint reaction forces.** The Cartesian forces transmitted across each joint---the actual mechanical loads that determine whether a bearing fails or a structure buckles---are buried inside the mass matrix coupling. You cannot read them off the generalized-coordinate equation.
-
-**Internal energy transfer pathways.** How does energy flow from one body to another? Which link is gaining kinetic energy, and which is losing it? The compact equation does not tell you.
-
-**The spatial distribution of contact and constraint forces.** A generalized constraint force $J_c^T\lambda$ is a projection of something real---a Cartesian force at a specific point---into generalized coordinates. The projection discards spatial information.
-
-These hidden quantities are often exactly what an engineer needs for structural design, mechanism optimization, or understanding phenomena like the whip-crack.
-
-### Power Channels
-
-Total power decomposes into channels:
-
-$$
-P_{\text{ctrl}} = \tau^T\dot{q}, \qquad P_{\text{drift}} = (C\dot{q} + g)^T\dot{q}, \qquad P_{\text{constr}} = (J_c^T\lambda)^T\dot{q} = 0
+\dot z=D\chi\,v,\qquad
+\ddot z=D\chi\,\ddot q+D^2\chi[v,v].
 $$
 
-Constraint power is globally zero. But here is the key: the per-coordinate constraint power $P_{\text{constr},i} = [J_c^T\lambda]_i\,\dot{q}_i$ can be large. Energy flows in through some coordinates and out through others, with the total balancing to zero.
+For a free Cartesian particle with coordinate $q>0$, zero acceleration becomes $\ddot z=2v^2$ in the chart $z=q^2$. The physical motion has not acquired a force. Comparing two acceleration solutions at the same $q,v$, however, cancels this Hessian term:
+$\Delta\ddot z=D\chi\,\Delta\ddot q$.
+This is why the affine acceleration-space interpretation and its tangent increments require care.
 
-**Important caveat:** Per-coordinate power decompositions depend on the choice of generalized coordinates. Only the total power balance is coordinate-invariant. Use these as diagnostic tools, not as absolute physical truths.
+The switch from relative to absolute pendulum angles is linear:
+$\alpha=(\theta_1,\theta_1+\theta_2)$.
+If $v=A^{-1}\dot\alpha$, the metric becomes
+$M_\alpha=A^{-\mathsf T}MA^{-1}$ and effort becomes
+$Q_\alpha=A^{-\mathsf T}Q$. The paired work and kinetic energy agree.
 
-### The Whip-Crack: A Story of Energy Transfer
+Zero input describes geodesic motion only when all nonconstraint forces vanish, including potential gradients, damping and additional loads. Ideal stationary holonomic constraints then give geodesics of the induced metric on the regular constraint manifold. Nonholonomic constraints require their own constrained dynamics.
 
-Here is a clear example of hidden energy transfer, and it happens in the humble double pendulum.
+## Loads and Energy Transfer Through a Joint {#sec-hidden-loads}
 
-Imagine swinging the double pendulum so that the first link decelerates sharply while the second link whips forward. What is happening inside?
+### A Body Balance Is More Informative Than a Speed Sequence
 
-1. **Link 1 decelerates.** Its kinetic energy is decreasing.
-2. **The joint 2 reaction force does negative work on link 1.** It extracts energy from link 1.
-3. **By Newton's third law**, the same reaction force does positive work on link 2. It *injects* energy into link 2.
-4. **Link 2 accelerates.** Its kinetic energy is increasing, and it can rise rapidly.
-5. **The net generalized constraint work remains zero.** Energy was not created or destroyed; it was *transferred* through the constraint force.
+For a rigid body measured in an inertial frame,
+$T_i=\tfrac12m_i\|v_{C,i}\|^2+\tfrac12\omega_i^{\mathsf T}I_{C,i}\omega_i$.
+A force $F$ at point $P$ contributes $F\cdot v_P$; a pure moment $N$ contributes $N\cdot\omega_i$. Their sum is $\dot T_i$.
 
-The Euler--Lagrange formulation says "$M\ddot{q} + C\dot{q} + g = \tau$" and nothing more. The energy transfer is invisible. But Newton--Euler, with its body-by-body accounting, makes every step of this transfer explicit.
+At an ideal common joint point $P$, force $F$ on the distal body and $-F$ on the proximal body contribute $F\cdot v_P$ and $-F\cdot v_P$. They cancel globally while transferring energy between bodies. A joint actuator moment $N$ contributes combined power $N\cdot(\omega_{\rm distal}-\omega_{\rm proximal})$, which need not vanish.
 
-This is why choosing the right framework matters. Not because one is more "correct"---they all give the same predictions---but because each makes different information visible.
+If contact points slip, their velocities differ and the summed contact-force power need not be zero. If a support moves, it can supply work. Forces and moments also have different units: “reaction forces are larger than torques” is not a meaningful magnitude comparison without a lever arm.
 
-### Recovering Hidden Loads
+Reduced coordinates eliminate ideal joint reactions from virtual work, not from the physical bodies. Recover them from body balance or a consistent redundant-coordinate formulation. Per-coordinate effort powers are coordinate-dependent bookkeeping; they are not interchangeable with segment energy balances.
 
-To bring hidden information back into view:
+### Work the Pendulum Transfer Explicitly
 
-1. Add explicit constraint and external-load channels to the equations.
-2. Solve the augmented KKT system for $(\ddot{q}, \lambda)$.
-3. Map generalized reactions to local Cartesian force/torque quantities at each joint.
-4. Audit both global and per-coordinate/per-body power flow.
+Let $F_{12}$ be the force of rod 1 on rod 2 at $p_1$, and $\mathbf g=(0,-g)$. For the point-mass model,
 
-Newton--Euler's body-by-body recursion does steps 3 and 4 naturally. This is one of its greatest practical advantages.
+$$
+F_{12}=m_2(\ddot p_2-\mathbf g),\qquad
+F_{01}=m_1(\ddot p_1-\mathbf g)+F_{12}.
+$$
+
+The absolute rod rates are $\omega_1=v_1$, $\omega_2=v_1+v_2$. Since this model concentrates each rod's mass at its endpoint, its body energy balances become
+
+$$
+\begin{aligned}
+\dot T_1&=\tau_1\omega_1-\tau_2\omega_1
+-F_{12}\cdot\dot p_1+m_1\mathbf g\cdot\dot p_1,\\
+\dot T_2&=\tau_2\omega_2
++F_{12}\cdot\dot p_1+m_2\mathbf g\cdot\dot p_2.
+\end{aligned}
+$$ {#eq-body-power}
+
+The force-transfer terms cancel. The two joint-2 moment terms sum to $\tau_2v_2$. Adding potential-energy rates gives
+$\frac{d}{dt}(T_1+T_2+V)=\tau_1v_1+\tau_2v_2$.
+The executable checks verify both body equations, including nonzero applied torques.
+
+A slowing first rod need not be supplying energy through $F_{12}$: gravity and actuator moments also enter its balance. For a general human segment, a decreasing angular speed does not alone establish decreasing total kinetic energy because its center-of-mass speed can change. Even a measured loss of segment energy does not identify its destination without the intervening power balances.
+
+This is the stronger version of the whip-chain argument: demonstrate the signed force and moment powers and reconcile each segment's energy change. Sequential speed peaks motivate that investigation; they do not prove it. A flexible shaft additionally stores strain energy and dissipates some energy. Its phase and boundary work must be included if the argument concerns transfer through the shaft.
+
+### There Is No Universal Bias-Power Channel
+
+For the ideal rigid model, the kinetic-energy identity is
+
+$$
+\dot T=v^{\mathsf T}(Bu+Q_{\rm ext}+Q_c-g_V),\qquad
+\dot E=v^{\mathsf T}(Bu+Q_{\rm ext}+Q_c),\quad E=T+V.
+$$ {#eq-energy-balance}
+
+The velocity products cancel the $\tfrac12v^{\mathsf T}\dot Mv$ term in differentiating $T$. Calling $(c+g_V)^{\mathsf T}v$ a positive “drift power” ignores that cancellation, the gravity sign and coordinate dependence. Gravity can convert potential to kinetic energy; inertial coupling changes how motion and energy are distributed. Neither is a new energy source.
+
+## Symmetry, Representation, and Conservation {#sec-symmetry}
+
+Noether's theorem relates a continuous variational symmetry of the action to a conserved quantity, with appropriate conditions on nonconservative forces. A time-independent damped system does not conserve mechanical energy merely because its equations have no explicit time dependence.
+
+For the fixed-pivot pendulum with a stationary potential and no applied work or dissipation, total mechanical energy is conserved. The pivot can exchange momentum with the support; gravity selects a direction. One must examine the actual symmetry of the specified system before asserting linear or angular momentum conservation.
+
+If a smooth quantity $I(x)$ is conserved under the declared drift, $DI\,f_0=0$, then $\dot I=DI\,Gu$ in that model. This identifies a role for input, but does not guarantee the actuators can produce every desired change: $DI\,G$ can vanish or be constrained.
+
+Changing coordinate labels preserves physical predictions after transformation. Changing observer is a different operation. Under a constant-velocity boost, a point's power transforms as $F\cdot(v-U)$ and kinetic energy changes. Under accelerating or rotating observers, acceleration components acquire additional terms. Consistent mechanics is objective; individual numerical energies, powers or accelerations are not universally identical for every observer.
+
+## Cross-Formalism Verification and Swing Investigation {#sec-cross-formalism}
+
+The useful comparison is concrete:
+
+| Question | Quantity to Compare | Conditions to Match |
+|:--|:--|:--|
+| Does the inertia represent the geometry? | $\tfrac12v^{\mathsf T}Mv$ and summed Cartesian body energy | Mass locations, inertias, coordinate rates |
+| Do the motion and loads agree? | Forward acceleration and inverse effort/body balance | Gravity signs, effort channels, external loads |
+| Is support represented consistently? | Constraint residual and reaction forces | Copied admissible state, curvature, contact mode |
+| Does a spatial calculation give the same endpoint motion? | Recovered $\dot p,\ddot p$ and geometric-Jacobian results | Home geometry, origins, twist ordering |
+| What can input change immediately? | $M^{-1}B$, $B_c$, or $JB_c$ | Coordinates, support, task rank, input limits |
+| Is energy transferred between segments? | Force/moment powers and each body-energy rate | Common frame, points of application, elastic storage |
+| Does an intervention improve impact or flight? | A declared outcome from complete alternative trajectories | Input history, event convention, uncertainty, validation data |
+
+Disagreements can reveal differing assumptions, frame conventions, load retention, integration tolerance or an implementation error. Resolve those differences before concluding that two mathematical formulations disagree physically. A check against the same formula copied twice is weaker than a Cartesian/body-balance check derived independently.
+
+For a golf study, the connected chain is: actuator and passive forces shape body and shaft motion; support determines admissible motion and reactions; the approaching club state and contact geometry determine impact; launch velocity, orientation and spin then feed aerodynamic flight. A change that increases head speed can also change face orientation or impact location. A net-torque reduction can coexist with increasing distal speed, but that coexistence does not establish an optimal torque policy.
+
+The next evidential step is to specify a measurable intervention and outcome, then ask which measurements could distinguish the proposed explanation from competing ones. Examples include joint reaction estimates reconciled with segment energy, measured grip motion and shaft deformation, repeated impact locations, and held-out launch outcomes. Do not equate an inverse-dynamics net moment with a unique muscle-force pattern or an instantaneous acceleration attribution with a finite causal effect.
+
+## Executable Verification {#sec-practical}
+
+The following self-contained NumPy example implements the declared two-point-mass model and one stationary bilateral-constraint solve. All lengths are in meters, masses in kilograms, angles in radians and times in seconds. The selected numbers are manufactured verification parameters, not measurements of a golfer.
+
+The constrained solver assumes an already admissible state, independent constraint rows and positive-definite inertia. It deliberately does not resolve unilateral contact, friction, impacts or inconsistent geometry. A singular solve or an inadmissible reaction requires reconsidering the model; a pseudoinverse is not a substitute for a missing contact law.
+
+```python
+# Multibody equivalence example
+import numpy as np
+
+GRAVITY_M_S2 = 9.81
 
 
-## Symmetry, Invariance, and Conservation Laws {#sec-symmetry}
-
-### Why Coordinates Don't Change the Physics
-
-The equations of motion are **objective**: they express physical relationships that do not depend on the observer's choice of coordinates, reference frame, or mathematical language.
-
-The distance between two cities does not depend on whether you measure it in miles or kilometers, or whether you read it from a road map or a satellite image. The measurement system is a convention; the physical distance is real. Similarly, the acceleration of a mechanical system is a physical fact that does not depend on how you parameterize the configuration space.
-
-This objectivity is the *reason* all the frameworks in this article give equivalent results. They must---they are describing the same physics.
-
-### Conservation Laws From Symmetry
-
-One of the deepest results in physics connects symmetry to conservation. **Noether's theorem** says: every continuous symmetry of a mechanical system generates a conserved quantity.
-
-- **Translational symmetry** (the physics does not change when you shift everything sideways) gives **linear momentum conservation**.
-- **Rotational symmetry** (the physics does not change when you rotate everything) gives **angular momentum conservation**.
-- **Time-translation symmetry** (the physics does not change from one moment to the next) gives **energy conservation**.
-
-For the double pendulum in a gravity field: translational symmetry is broken (the pivot is fixed) and rotational symmetry is broken (gravity picks a preferred direction). But time-translation symmetry holds (if there is no dissipation), so total energy is conserved when no actuator work is done.
-
-### Symmetry Meets Drift and Control
-
-Conservation laws interact with the drift--control decomposition in a powerful way:
-
-**If a quantity is conserved under drift** (zero control), then only control can change it. This tells the control designer exactly what the actuators must actively maintain versus what the physics preserves for free.
-
-**If energy is conserved under drift**, the drift dynamics preserve energy surfaces, and control moves the state between energy levels.
-
-**Broken symmetries identify drift contributions.** When gravity breaks a symmetry, the corresponding quantity changes under drift at a rate determined by the ZTCF.
-
-These conservation laws hold in every framework. They are properties of the physics, not of any particular coordinate system. They provide framework-independent cross-validation: if two frameworks predict different energy evolution for the same system, one of the implementations has an error.
-
-
-## Practical Guidance {#sec-practical}
-
-### Which Framework for Which Question?
-
-| Formalism | Best question answered | Core unknowns | When to use |
-|:----------|:-----------------------|:---------------|:------------|
-| Euler--Lagrange | How do inputs change generalized accelerations? | $\ddot{q}$ or $\tau$ | Energy-based analysis, system ID, joint-level control |
-| Constrained E--L | How do constraints redirect motion and loads? | $(\ddot{q}, \lambda)$ | Understanding constraint effects, reaction forces |
-| Newton--Euler | Where do local loads and transfer pathways occur? | Body forces, moments, joint torques | Structural analysis, load path identification |
-| PoE / screw | How do motion and force compose across frames? | Twists, wrenches, transformations | Spatial analysis, frame transformations |
-| Operational-space | How do task objectives map to joint effort? | Task acceleration/force | End-effector control, impedance control |
-| Coordinate-free | Which conclusions are representation-invariant? | Intrinsic drift/input fields | Theoretical analysis, verifying coordinate independence |
-
-### Cross-Validation: The Ultimate Debugging Tool
-
-In practice, the smartest thing you can do is use multiple frameworks on the same problem:
-
-1. **Derive dynamics** in one framework (usually Euler--Lagrange for its energy-based simplicity).
-2. **Verify predictions** in another (Newton--Euler for joint loads, operational-space for task behavior).
-3. **Use each for what it does best**: Euler--Lagrange for control design, Newton--Euler for structural analysis, operational-space for task planning.
-
-Any discrepancy between frameworks at the same state indicates a bug, not a failure of physics.
-
-### Traps to Avoid
-
-**Confusing drift with "the system at rest."** Drift is the acceleration under zero actuation *at the current state*. A system moving fast has enormous drift accelerations. Drift is about what the physics is doing, not about stillness.
-
-**Dismissing constraint forces because they "do no work."** They do zero *net* generalized work. They can still be the largest forces in the system, and they are responsible for all internal energy transfer. Removing them changes everything.
-
-**Treating a pointwise ZTCF sample as a trajectory prediction.** It is an instantaneous snapshot: "what would happen this instant with zero torque." One millisecond later, the snapshot is different. To simulate future evolution under zero control, integrate a forward ZTCF trajectory.
-
-**Writing $\Lambda(x_{\text{task}})$ and forgetting the joint configuration.** Task-space inertia depends on the full joint configuration $q$, not just the task coordinates. Redundant systems have infinitely many configurations for each task point.
-
-**Assuming per-coordinate power decompositions are frame-invariant.** Only total power balance is invariant. Per-coordinate breakdowns depend on the choice of generalized coordinates.
+def pendulum_data(
+    q: np.ndarray,
+    velocity: np.ndarray,
+    lengths: np.ndarray,
+    masses: np.ndarray,
+    gravity: float = GRAVITY_M_S2,
+) -> dict[str, np.ndarray]:
+    """Return the declared two-point-mass model in relative-angle coordinates."""
+    q, velocity, lengths, masses = [
+        np.asarray(value, dtype=float) for value in (q, velocity, lengths, masses)
+    ]
+    if any(value.shape != (2,) for value in (q, velocity, lengths, masses)):
+        raise ValueError("Configuration, velocity, lengths and masses must be 2-vectors")
+    if not all(np.all(np.isfinite(value)) for value in (q, velocity, lengths, masses)):
+        raise ValueError("All state and parameter values must be finite")
+    if np.any(lengths <= 0) or np.any(masses <= 0) or not np.isfinite(gravity) or gravity < 0:
+        raise ValueError("Require positive lengths/masses and nonnegative finite gravity")
+    l1, l2 = lengths
+    m1, m2 = masses
+    a1, a2 = q[0], q.sum()
+    w1, w2 = velocity[0], velocity.sum()
+    r1 = l1 * np.array([np.sin(a1), -np.cos(a1)])
+    r2 = l2 * np.array([np.sin(a2), -np.cos(a2)])
+    t1 = l1 * np.array([np.cos(a1), np.sin(a1)])
+    t2 = l2 * np.array([np.cos(a2), np.sin(a2)])
+    j1 = np.column_stack((t1, np.zeros(2)))
+    j2 = np.column_stack((t1 + t2, t2))
+    mass = np.array(
+        [
+            [
+                (m1 + m2) * l1**2 + m2 * l2**2 + 2 * m2 * l1 * l2 * np.cos(q[1]),
+                m2 * l2**2 + m2 * l1 * l2 * np.cos(q[1]),
+            ],
+            [m2 * l2**2 + m2 * l1 * l2 * np.cos(q[1]), m2 * l2**2],
+        ]
+    )
+    coupling = m2 * l1 * l2 * np.sin(q[1])
+    products = coupling * np.array(
+        [-2 * velocity[0] * velocity[1] - velocity[1] ** 2, velocity[0] ** 2]
+    )
+    potential_gradient = gravity * np.array(
+        [(m1 + m2) * l1 * np.sin(a1) + m2 * l2 * np.sin(a2), m2 * l2 * np.sin(a2)]
+    )
+    return {
+        "mass": mass,
+        "bias": products + potential_gradient,
+        "gravity": potential_gradient,
+        "points": np.array([r1, r1 + r2]),
+        "jacobians": np.array([j1, j2]),
+        "curvature": np.array([-(w1**2) * r1, -(w1**2) * r1 - w2**2 * r2]),
+    }
 
 
-## Conclusion {#sec-conclusion}
+def constrained_acceleration(
+    mass: np.ndarray, force: np.ndarray, jacobian: np.ndarray, curvature: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """Solve one stationary bilateral mode; force already includes all bias loads."""
+    mass, force, jacobian, curvature = [
+        np.asarray(value, dtype=float) for value in (mass, force, jacobian, curvature)
+    ]
+    if force.ndim != 1 or curvature.ndim != 1:
+        raise ValueError("Force and curvature must be vectors")
+    n, k = len(force), len(curvature)
+    if mass.shape != (n, n) or jacobian.shape != (k, n) or n == 0 or k == 0:
+        raise ValueError("Incompatible nonempty mass, force and constraint dimensions")
+    if not all(np.all(np.isfinite(value)) for value in (mass, force, jacobian, curvature)):
+        raise ValueError("All solve inputs must be finite")
+    if not np.allclose(mass, mass.T):
+        raise ValueError("Mass matrix must be symmetric")
+    np.linalg.cholesky(mass)
+    block = np.block([[mass, -jacobian.T], [jacobian, np.zeros((k, k))]])
+    solution = np.linalg.solve(block, np.r_[force, -curvature])
+    return solution[:n], solution[n:]
 
-Let's return to where we started.
 
-A robot arm is swinging through space. Gravity pulls on it. Its joints are coupled. Everything depends on everything else. Within a specified rigid-body model, you can still separate the modeled acceleration into two pieces: what the passive dynamics contribute at that state and what the motors contribute through the input map.
+lengths = np.array([0.8, 0.6])
+masses = np.array([1.4, 0.5])
+q = np.array([0.4, -0.7])
+velocity = np.array([3.0, -2.0])
+torque = np.array([2.0, -0.3])
+data = pendulum_data(q, velocity, lengths, masses)
+drift = np.linalg.solve(data["mass"], -data["bias"])
+increment = np.linalg.solve(data["mass"], torque)
+acceleration = np.linalg.solve(data["mass"], torque - data["bias"])
+np.testing.assert_allclose(acceleration, drift + increment)
+cartesian_acceleration = data["jacobians"] @ acceleration + data["curvature"]
+loads = masses[:, None] * (cartesian_acceleration - np.array([0.0, -GRAVITY_M_S2]))
+recovered = sum(j.T @ f for j, f in zip(data["jacobians"], loads, strict=True))
+np.testing.assert_allclose(recovered, torque, atol=1e-12)
+```
 
-That is the drift--control decomposition. It works because the torques enter the equations linearly, and the same structure can be expressed in the standard frameworks used here: Euler--Lagrange, Newton--Euler, screw theory, operational-space dynamics, and geometric mechanics. The components look different in each language, but under the appropriate coordinate and frame mappings they describe the same modeled mechanics.
+The sample compares a forward acceleration solve with Cartesian inertial loads projected back to joint efforts. The accompanying regression checks also perturb Cartesian geometry to verify Jacobians and curvature, test straight/folded configurations, reconcile individual body powers, and exercise the circular constraint's input-induced reaction change.
 
-Along the way, we saw that constraint forces---the joint reactions, the guardrails---are far more important than their "zero net work" property might suggest. They redirect motion, redistribute energy, and create the largest internal loads in the system. They deserve respect.
+These are mathematical and implementation checks. Numerical integration would need independent timestep and energy-error checks; a human or equipment model would need parameter identification, uncertainty analysis and validation against observations.
 
-We saw that the ZTCF family---in particular the pointwise sample "what would happen right now with no motors?"---provides a clean, computable reference for separating physics from intent at every instant. It is a diagnostic snapshot, not a prediction, and it works identically in every framework.
+## Exercises and a Working Research Standard {#sec-conclusion}
 
-And we saw that the underlying physics does not care which mathematical language you speak. The acceleration of a mechanism is a physical fact. The energy flowing through a joint is a physical fact. The conservation of energy under passive dynamics is a physical fact. These facts are the same in every framework, and checking them across frameworks is one of the best debugging tools available.
+1. Derive $M$ from $m_1J_1^{\mathsf T}J_1+m_2J_2^{\mathsf T}J_2$, including its determinant. Explain why task rank loss does not make this inertia singular.
+2. Recover the pendulum efforts from Cartesian inertial loads for a nonzero torque vector. Reconcile both individual body-power equations.
+3. Differentiate the endpoint-circle constraint twice. Compare the full solve with one that omits $\dot J_cv$, and identify the missing physical acceleration.
+4. Use a moving support to give an example of a constraint reaction doing nonzero work.
+5. Derive the space twist using $\dot g g^{-1}$, recover endpoint velocity and compare it with the geometric Jacobian.
+6. Transform from relative to absolute angles and preserve virtual work. Then use a nonlinear chart to expose the acceleration Hessian term.
+7. Linearize a variable-inertia model about a nonzero input. Quantify the error caused by omitting $(\partial G/\partial x)\bar u$.
+8. State a proposed golf torque intervention, retained state and loads, impact-time convention and measured outcome. Explain why a pointwise attribution alone does not answer it.
+9. Extend the body-energy balance to a shaft mode with strain energy and damping. Identify the boundary work that couples it to the grip and head.
+10. Identify which observations would falsify your proposed energy-transfer explanation, and which checks merely verify that its equations were implemented consistently.
 
-The double pendulum---two links, two joints, two masses---was rich enough to illustrate every one of these ideas. The same principles extend to larger rigid-body models, including systems with many bodies, closed kinematic loops, and complex constraint topologies, provided the assumptions behind the mass matrix, constraints, and input map remain valid. The equations get bigger, but the structural question is the same.
-
-The river analogy is useful only if its limits are kept visible: current and paddling separate cleanly in the model, the train follows the modeled track, and the coordinate map should not change the physical prediction it represents.
+The standard is to make the connections computable: declare the model, derive its motion and loads, reconcile power, propagate interventions through contact, and compare the resulting outputs with independent evidence. Each formulation then contributes something specific to understanding the swing.
