@@ -281,5 +281,6 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-07 | #4240 | Rebuild the paired kinetic-chain chapter around verified mechanics, evidence, energy budgets, and reproducible counterexamples. |
 | 2026-09-07 | #4243 | Correct paired Physics energy-work and hip-turn citation passages; derive explicit system budgets and preserve measurement and review scope. |
+| 2026-09-07 | #4246 | Reconcile the complete nonlinearity article with independent mechanics, contact and memory examples, explicit muscle input conventions, and finite-horizon golf interpretation. |
 
 > For the complete historical change log (v1.0.173 – v1.0.278), see [CHANGELOG.md](CHANGELOG.md).
