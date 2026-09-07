@@ -1,1274 +1,658 @@
-%% ==========================================================================
-%%  Chapter 4: Contraction\index{Contraction Analysis} Theory and Metric Certificates
-%% ==========================================================================
-\chapter{Contraction\index{Contraction Analysis} Theory and Metric Certificates}
+\chapter{Contraction Theory and Metric Certificates}
 \label{ch:contraction}
+\label{laymans:shrinking_mistakes}
+\index{Lyapunov Stability}
+\index{Jacobian}
+\index{Contraction Analysis}
 
-\begin{laymansbox}{Shrinking Mistakes}{shrinking_mistakes}
-Imagine running the same robot motion twice with slightly different starting conditions.
-If the system is ``contracting,'' those two runs quickly converge to the same
-trajectory---small mistakes do not snowball. This chapter develops the mathematical
-machinery for certifying that property: a metric (local ruler) that provably shrinks
-along the flow.
-\end{laymansbox}
+Contraction asks how differences between solutions evolve under the same specified dynamics. In a golf model, that question is incomplete until we identify the state, the feedback policy, the perturbation, the comparison clock and the delivery outcome. Two swings can approach the same geometric path while arriving at different times; two clubheads can arrive similarly while internal joint states differ. Full-state, same-time contraction is one precise and demanding property among these possibilities.
+
+The useful promise is conditional: a verified differential inequality can bound an entire family of perturbations without simulating every initial condition. The work is to establish that inequality over an appropriate domain, connect its metric to physical units, and show that the implemented controller and contact events satisfy its assumptions. A positive stiffness, a negative instantaneous eigenvalue or a visually repeatable motion is not that certificate.
 
 \section{Historical Context and the Shift to Trajectory Stability}
 
-\subsection{From Lyapunov\index{Lyapunov Stability} Point Stability to Trajectory Convergence}
+\subsection{From Lyapunov Point Stability to Trajectory Convergence}
 
-Classical Lyapunov\index{Lyapunov Stability} stability, as developed in the late 1800s and formalized throughout
-the twentieth century, addresses a foundational question: \emph{does the system return
-to an equilibrium point after small perturbations?} This point-stability perspective is
-powerful for understanding equilibria, but it misses a central feature of many practical
-systems: the behavior of interest is often a \emph{moving trajectory}, not a rest point.
+Lyapunov stability means that sufficiently small initial errors remain small. Asymptotic stability adds convergence; exponential stability adds a uniform exponential estimate. Lyapunov methods can analyze equilibria, moving reference trajectories, invariant sets and pairs of solutions. Contraction therefore does not repair an inability of Lyapunov theory to address motion. It provides a differential route to an incremental property: convergence of trajectories to one another.
 
-A robot executing a reaching task, a vehicle tracking a path, a biological motor system
-performing a skilled movement---these systems are intrinsically \emph{trajectory-focused}.
-A Lyapunov function certifying stability at one point does not explain why nearby
-trajectories diverge under perturbations or what determines their convergence rate.
+For example, $\dot x=-x^3$ has an asymptotically stable equilibrium, with solution $x(t)=x_0/\sqrt{1+2x_0^2t}$. Its decay is not uniformly exponential near zero. Conversely, $\dot x=-x+t$ contracts between solutions at rate one although its solutions grow approximately like $t-1$. Relative convergence and absolute boundedness are separate questions. These distinctions matter when a nominal movement is intentionally fast and far from an equilibrium.
 
-The concept of contraction---trajectories converging robustly---is fundamentally dual to the concept of 
-controllability in Agrachev and Sachkov's geometric framework \cite[Ch.~4]{AgrachevSachkov2004}. While 
-controllability asks \emph{what is reachable} from a given initial condition via forward-time controls, 
-contraction analysis asks \emph{do trajectories converge} and thus provides a certificate of robustness 
-and structural stability. Both are geometric properties: controllability relies on Lie bracket accessibility 
-in the forward direction, while contraction provides a metric-based certificate of asymptotic behavior.
-
-Contraction theory reframes the question: \textbf{do all nearby trajectories converge
-to each other, regardless of initial condition?} This is a genuinely different property,
-and it provides the certificate we need.
+Controllability asks which states can be reached by choosing inputs. Contraction asks how solutions approach under specified dynamics. They are not a general mathematical duality: $\dot x=-x$ contracts without any control input, whereas the controllable integrator $\dot x=u$ preserves offsets under a common open-loop input. Control contraction metrics connect these questions through feedback design under additional hypotheses.
 
 \subsection{The Lohmiller--Slotine Framework (1998)}
 
-The modern contraction theory for nonlinear systems was formalized by \textbf{Lohmiller and
-Slotine} in 1998 \cite{LohmillerSlotine1998}. Their key insight was to study how \emph{tangent
-vectors} between trajectories evolve under the flow \cite{ManchesterSlotine2017}. If all such vectors shrink in a
-suitably chosen metric, then the geodesic distance between any two trajectories shrinks
-exponentially.
+Lohmiller and Slotine \cite{LohmillerSlotine1998} develop convergence analysis using differential displacements and a changing metric. Their construction also explains why a differential coordinate transformation need not integrate to a global coordinate change. We use that framework while stating the domain and physical-distance assumptions explicitly below.
 
-The framework bridges classical results in differential geometry (Riemannian metrics,
-geodesic flows) with modern control and stability analysis. By allowing the metric to
-vary in space and time, Lohmiller--Slotine generalized earlier work and made contraction
-a practical tool for nonlinear system analysis and design.
+\subsection{Demidovich and Earlier Constant-Metric Conditions}
 
-\subsection{Demidovich's Condition (1961): An Historical Precursor}
-
-The mathematical seeds of contraction theory are rooted in work by \textbf{Demidovich}
-in 1961 \cite{Demidovich1961}, who studied conditions for \emph{global asymptotic stability}
-based on the symmetric part of the Jacobian\index{Jacobian}. Demidovich showed that if the symmetric part
-of the system's Jacobian\index{Jacobian} is uniformly negative definite, all nearby solutions converge
-to a single trajectory. This foundational result \cite{Khalil2002} predated modern contraction theory
-by decades and provides important context for understanding contemporary approaches.
-
-Although Demidovich did not use the language of Riemannian metrics or contraction, his
-condition is in fact a special case of modern contraction theory: it corresponds to
-contraction in the \emph{Euclidean metric} (identity matrix). The modern framework
-generalizes Demidovich's insight by relaxing the constant-metric requirement, allowing
-the ``ruler'' to change with position and time.
+Earlier convergence work includes constant-metric Jacobian conditions associated with Demidovich. The identity-metric condition is a particularly transparent sufficient case, not the entirety of that historical work. The modern control and transverse-contraction papers place these results within a longer development of incremental stability; no claim that one paper originated every version of the idea is needed for our argument.
 
 \subsection{Connection to Modern Research}
 
-Contraction theory has since become a cornerstone of:
-\begin{itemize}
-\item \textbf{Incremental stability and synchronization}: studying how coupled oscillators,
-      networked systems, and consensus algorithms achieve agreement.
-\item \textbf{Control design}: synthesis of feedback laws that guarantee contraction, leading
-      to robust and verifiable controllers.
-\item \textbf{Learning-based control}: verification of neural network controllers via metric
-      composition and convex optimization.
-\item \textbf{Robotics and autonomous systems}: design of feedback laws that are tolerant to
-      perturbations and external disturbances.
-\end{itemize}
-
+Contraction can support tracking, synchronization, observer analysis and verified controller synthesis. Each application changes what is compared. An observer compares estimated and actual states under an observation model; synchronization compares subsystems under their coupling; a controller compares a feasible reference with the controlled motion. A learned metric is a candidate mathematical certificate until its residual and domain have been verified. None of these constructions alone identifies the objective used by a nervous system.
 
 \section{From Equilibrium Stability to Trajectory Stability}
 
-Classical Lyapunov stability asks: does a system return to an equilibrium point after
-a perturbation? Contraction theory asks a more general question: do \emph{all} nearby
-trajectories converge to each other, regardless of where they start?
+Fix a physical state representation and time coordinate. If angular positions, angular velocities and activation states are mixed, first specify their scales. For dimensionless coordinates $\xi=D^{-1}x$, a metric $M_x$ becomes $M_\xi=D^T M_xD$. Euclidean error and matrix condition numbers depend on this choice. A certificate should report its physical interpretation, rather than compare a metre with a radian per second as if their raw numbers were interchangeable.
 
-This generalization is essential for systems where the behavior of interest is a
-\emph{moving trajectory}---a robot executing a task, a vehicle following a path, a
-biological organism performing a skilled movement---rather than a static rest point.
-
-\begin{intuitionbox}
-Contraction checks whether tangent vectors between nearby trajectories shrink under the
-flow. If all tangent vectors shrink in a chosen metric, the geodesic distance between
-trajectories also shrinks. Contraction is local shrinking that integrates into global
-convergence.
-\end{intuitionbox}
-
+We compare solutions under a common vector field. If $u=\pi(x,t)$ is the implemented policy, the field is $F(x,t)=f(x,t)+G(x,t)\pi(x,t)$ and its Jacobian includes the policy derivative. If instead a measured torque trace is replayed as an open-loop signal, that produces a different variational system. Both are legitimate experiments, but they answer different questions about robustness.
 
 \section{The Contraction Condition}
+\label{laymans:metric_tensor_reminder}
 
-The contraction metric $M(\x)$ acts as a Riemannian metric on the state space, defining distance and 
-angle between perturbations in the tangent space. As Agrachev and Sachkov discuss \cite[Ch.~8]{AgrachevSachkov2004}, 
-Riemannian geometry is central to sub-Riemannian optimal control problems, where the metric constrains which 
-directions are directly accessible via controls. Contraction analysis uses a metric to measure convergence rates
-in this geometric sense---a local ruler that changes from point to point, naturally extending linear 
-stability theory to nonlinear, curved state spaces.
-
-Consider the autonomous system
+Consider the generally nonautonomous system
 \begin{equation}
-\dot\x = f(\x, t), \quad \x\in\R^n.
+\dot x=f(x,t),\qquad x\in\mathcal D\subseteq\mathbb R^n.
 \label{eq:ch4:system}
 \end{equation}
-The variational dynamics (Chapter~\ref{ch:variational}) are
+Assume the field is sufficiently smooth in $x$, with unique solutions existing for the time interval considered. A tangent perturbation obeys
 \begin{equation}
-\dot\dx = \mat{A}(\x,t)\,\dx,
-\quad \mat{A}(\x,t) = \frac{\partial f}{\partial\x}(\x,t).
+\dot{\delta x}=A(x,t)\delta x,\qquad A=D_xf.
 \label{eq:ch4:variational}
 \end{equation}
-
-Let $\mat{M}(\x,t) \succ 0$ be a smooth, positive-definite \textbf{metric tensor} and
-define the Lyapunov-like function on perturbations:
+For a smooth symmetric positive-definite metric $M(x,t)$, define
 \begin{equation}
-V(\dx, \x, t) = \dx^\T \mat{M}(\x,t)\,\dx.
+V(x,\delta x,t)=\delta x^T M(x,t)\delta x.
 \label{eq:ch4:lyapunov-perturbation}
 \end{equation}
-
-\begin{laymansbox}{Mathematical Reminder: The Metric Tensor $\mat{M}(\x, t)$}{metric_tensor_reminder}
-Recall from Chapter 1 that the perturbation $\dx$ is a vector living in the flat \textbf{Tangent Space} attached to the state $\x$. But how do we measure the "length" of this vector?
-
-In standard flat Euclidean space, distance is measured using the Pythagorean theorem (represented by the identity matrix $\mathbf{I}$). But on a curved manifold, the definition of distance changes depending on where you are. The \textbf{Metric Tensor} $\mat{M}(\x, t)$ is the rigorous differential geometric "ruler" that defines the inner product, and therefore lengths and angles, inside the local Tangent Space at point $\x$. By allowing $\mat{M}$ to vary with $\x$, contraction theory mathematically warps our measurement of space to prove that trajectories are getting closer to each other.
-\end{laymansbox}
-
-Differentiating along the flow:
+The product rule gives exactly three terms:
 \begin{equation}
-\dot{V} = \dx^\T\!\left(
-\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}}
-\right)\!\dx,
+\dot V=\dot{\delta x}^{\,T}M\delta x+\delta x^T\dot M\delta x+
+\delta x^TM\dot{\delta x}
+=\delta x^T(A^TM+MA+\dot M)\delta x,
 \label{eq:ch4:Vdot}
 \end{equation}
-where $\dot{\mat{M}}$ is the total derivative of the metric along trajectories of
-\eqref{eq:ch4:system}:
+where the material derivative follows the complete field:
 \begin{equation}
-\dot{\mat{M}}(\x,t) = \frac{\partial\mat{M}}{\partial t}
-+ \sum_{i=1}^{n} \frac{\partial\mat{M}}{\partial x_i}\,f_i(\x,t).
+\dot M=\partial_tM+\sum_i f_i\partial_{x_i}M.
 \label{eq:ch4:Mdot}
 \end{equation}
 
-\begin{definition}[Contraction with Rate $\lambda$]
+\begin{definition}[Differential Contraction at Rate $\lambda$]
 \label{def:ch4:contraction}
-The system~\eqref{eq:ch4:system} is \textbf{contracting} on a forward-invariant region
-$\mathcal{D}$ with rate $\lambda>0$ in the metric $\mat{M}$ if
+A metric certifies differential contraction at rate $\lambda>0$ on a stated domain and interval when
 \begin{equation}
-\boxed{
-\mat{A}(\x,t)^\T\mat{M}(\x,t) + \mat{M}(\x,t)\mat{A}(\x,t) + \dot{\mat{M}}(\x,t)
-\preceq -2\lambda\,\mat{M}(\x,t)
-}
+A^TM+MA+\dot M\preceq-2\lambda M
 \label{eq:ch4:contraction-LMI}
 \end{equation}
-holds for all $(\x,t)\in\mathcal{D}\times[0,\infty)$.
+holds throughout them. The order is the positive-semidefinite matrix order: $H\preceq0$ means $z^THz\leq0$ for every vector $z$.
 \end{definition}
 
-\begin{remark}
-The factor of $2$ on the right-hand side is conventional and ensures that the contraction
-rate $\lambda$ corresponds directly to the exponential decay rate of perturbations. The
-condition is called a \textbf{matrix inequality} because it compares two matrices in the
-partial order defined by positive semidefiniteness.
-\end{remark}
-
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  % Draw two trajectories converging
-  \draw[very thick, black] (0, 0.5) to[out=30, in=200] (2, 1.5) to[out=0, in=130] (4, 2);
-  \draw[very thick, black] (0, -0.5) to[out=30, in=200] (2.1, 1.3) to[out=0, in=130] (4, 2);
-
-  % Mark initial separation
-  \filldraw[black] (0, 0.5) circle (0.08cm);
-  \filldraw[black] (0, -0.5) circle (0.08cm);
-  \draw[<->, red, thick] (0.15, 0.5) -- (0.15, -0.5);
-  \node[right, red, font=\small] at (0.2, 0) {$d_0$};
-
-  % Mark later separation (much smaller)
-  \filldraw[black] (4, 2) circle (0.08cm);
-  \filldraw[black] (4.05, 1.98) circle (0.08cm);
-  \draw[<->, red, thick] (4.12, 2) -- (4.12, 1.98);
-  \node[right, red, font=\small] at (4.18, 1.99) {$d(t) \approx e^{-\lambda t}d_0$};
-
-  % Time direction
-  \draw[->, gray, dashed] (0.5, -1.2) -- (3.5, -1.2);
-  \node[below, gray, font=\small] at (2, -1.3) {Time $t \to$};
-
-  % Labels
-  \node[font=\small, above] at (2, 2.5) {Contracting trajectories: distance decays exponentially};
-\end{tikzpicture}
-\end{center}
-
+The rate has units of inverse time. The factor two applies to squared length; length decays at rate $\lambda$. The inequality is linear in an unknown metric for a fixed field and fixed rate, but jointly choosing the rate and metric introduces the product $\lambda M$.
 
 \section{Complete Proof of Exponential Convergence}
 
-\begin{theorem}[Exponential Convergence of Trajectories]
+\begin{theorem}[From Transported Curves to Finite Distance]
 \label{thm:ch4:convergence}
-Assume $\mathcal{D}$ is forward-invariant and geodesically convex in the metric
-$\mat{M}(\x,t)$. Suppose there exist constants $0<\underline{m}\leq\overline{m}<\infty$
-such that
+Suppose $\mathcal D$ is path-connected and forward invariant, the flow is forward complete there, and the contraction inequality holds along all its trajectories. Define $d_{M,t}$ as the infimum of metric lengths of piecewise smooth curves contained in $\mathcal D$. Then
 \begin{equation}
-\underline{m}\,\mat{I} \preceq \mat{M}(\x,t) \preceq \overline{m}\,\mat{I}
-\quad\text{for all }(\x,t)\in\mathcal{D}\times[0,\infty).
-\label{eq:ch4:metric-bounds}
-\end{equation}
-If~\eqref{eq:ch4:contraction-LMI} holds uniformly on $\mathcal{D}$, then for any two
-trajectories $\x_1(t)$, $\x_2(t)$ remaining in $\mathcal{D}$:
-\begin{equation}
-d_{\mat{M},t}\!\bigl(\x_1(t),\x_2(t)\bigr)
-\leq e^{-\lambda t}\,
-d_{\mat{M},0}\!\bigl(\x_1(0),\x_2(0)\bigr),
+d_{M,t}(x_1(t),x_2(t))\leq e^{-\lambda(t-t_0)}
+d_{M,t_0}(x_1(t_0),x_2(t_0)).
 \label{eq:ch4:geodesic-decay}
 \end{equation}
-where $d_{\mat{M},t}$ is the geodesic distance in the Riemannian metric induced by
-$\mat{M}$ at time $t$. Moreover, in Euclidean norm:
+If additionally $\mathcal D$ is Euclidean convex and
 \begin{equation}
-\norm{\x_1(t)-\x_2(t)}
-\leq \sqrt{\frac{\overline{m}}{\underline{m}}}\,
-e^{-\lambda t}\,\norm{\x_1(0)-\x_2(0)}.
+0<\underline m I\preceq M(x,t)\preceq\overline m I<\infty
+\label{eq:ch4:metric-bounds}
+\end{equation}
+uniformly, then
+\begin{equation}
+\|x_1(t)-x_2(t)\|\leq\sqrt{\overline m/\underline m}\,
+e^{-\lambda(t-t_0)}\|x_1(t_0)-x_2(t_0)\|.
 \label{eq:ch4:euclidean-decay}
 \end{equation}
+On a finite interval, the same argument gives only the corresponding finite-interval guarantee.
 \end{theorem}
 
 \begin{proof}
-\textbf{Step 1: Geodesic Parametrization and Tangent Vector Evolution.}
-
-Let $\gamma(\x_1, \x_2; s)$ be a geodesic curve of minimal length connecting $\x_1$ and
-$\x_2$ in the Riemannian metric $\mat{M}(\x,t)$, parametrized by arc length $s \in [0,1]$.
-The tangent vector to this geodesic is $\dx(s) = \frac{\partial\gamma}{\partial s}$.
-
-By definition of arc-length parametrization,
+Choose any admissible initial curve $c_0(s)$, $0\leq s\leq1$, joining the initial states. Transport every point by the same flow: $c(s,t)=\phi_{t,t_0}(c_0(s))$. Forward invariance keeps this entire curve in the certified domain. Its tangent $w=\partial_sc$ satisfies
 \begin{equation}
-\dx(s)^\T \mat{M}(\gamma(s,t), t) \, \dx(s) = 1.
-\label{eq:ch4:unit-tangent}
-\end{equation}
-
-As the two trajectories $\x_1(t)$ and $\x_2(t)$ evolve, the geodesic connecting them also
-evolves. The tangent vector $\dx(s,t)$ at arc-length position $s$ along the geodesic at
-time $t$ satisfies the variational equation
-\begin{equation}
-\frac{\partial \dx}{\partial t}\bigg|_{s} = \mat{A}(\gamma(s,t),t) \, \dx(s,t).
+\partial_tw=A(c(s,t),t)w.
 \label{eq:ch4:tangent-evolution}
 \end{equation}
+This identity belongs to the transported curve; it is generally false for a newly minimizing geodesic independently recomputed at every time.
 
-\textbf{Step 2: Evolution of the Lyapunov-Like Quadratic Form.}
-
-Define the Lyapunov function along the geodesic:
+Set
 \begin{equation}
-V(s,t) = \dx(s,t)^\T \mat{M}(\gamma(s,t),t) \, \dx(s,t).
+V(s,t)=w(s,t)^TM(c(s,t),t)w(s,t).
 \label{eq:ch4:geodesic-V}
 \end{equation}
-
-Differentiating with respect to time:
-\begin{align}
-\dot{V}(s,t) &= \frac{\partial}{\partial t}\!\left[\dx^\T \mat{M} \dx\right] \\
-&= 2\dot{\dx}^\T \mat{M} \dx + \dx^\T \dot{\mat{M}} \dx + \dx^\T \mat{M} \dot{\dx}
-\end{align}
-
-Substituting $\dot{\dx} = \mat{A}\dx$ from \eqref{eq:ch4:tangent-evolution}:
-\begin{align}
-\dot{V} &= 2\dx^\T \mat{A}^\T \mat{M} \dx + \dx^\T \dot{\mat{M}} \dx + 2\dx^\T \mat{M} \mat{A} \dx \\
-&= \dx^\T \!\left(\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}}\right) \dx.
-\end{align}
-
-By the contraction condition \eqref{eq:ch4:contraction-LMI}:
+The product rule and the hypothesis yield
 \begin{equation}
-\dot{V}(s,t) \leq -2\lambda \, \dx^\T \mat{M} \dx = -2\lambda \, V(s,t).
+\partial_tV(s,t)\leq-2\lambda V(s,t),
 \label{eq:ch4:Vdot-bound}
 \end{equation}
-
-\textbf{Step 3: Application of Gronwall's Inequality.}
-
-The inequality $\dot{V} \leq -2\lambda V$ is a first-order scalar differential inequality.
-By Gronwall's inequality, for any $s \in [0,1]$:
+and scalar integration gives
 \begin{equation}
-V(s,t) \leq e^{-2\lambda t} V(s,0).
+V(s,t)\leq e^{-2\lambda(t-t_0)}V(s,t_0).
 \label{eq:ch4:gronwall-result}
 \end{equation}
+Integrating its square root over $s$ bounds the transported length:
+$L_t(c)\leq e^{-\lambda(t-t_0)}L_{t_0}(c_0)$.
+The shortest possible final length is no greater than this particular final length. Taking the infimum over initial curves proves the distance bound, without requiring a minimizing geodesic to exist.
 
-\textbf{Step 4: Integration Over the Geodesic.}
-
-The squared geodesic distance between $\x_1(t)$ and $\x_2(t)$ is
+For completeness, if an initial minimizing curve is parameterized at constant speed on $[0,1]$, its speed is its length, so
 \begin{equation}
-d_{\mat{M},t}^2(\x_1,\x_2) = \int_0^1 \dx(s,t)^\T \mat{M}(\gamma(s,t),t) \, \dx(s,t) \, \dd s
-= \int_0^1 V(s,t) \, \dd s.
+w(s,t_0)^TM(c_0(s),t_0)w(s,t_0)=d_{M,t_0}^2(x_1,x_2),
+\label{eq:ch4:unit-tangent}
 \end{equation}
+not generally one. Curve energy $\int_0^1V\,ds$ equals squared length only at constant speed, and the transported curve need not remain minimizing or constant-speed.
 
-Therefore,
-\begin{align}
-d_{\mat{M},t}^2(\x_1,\x_2) &\leq \int_0^1 e^{-2\lambda t} V(s,0) \, \dd s \\
-&= e^{-2\lambda t} \int_0^1 V(s,0) \, \dd s \\
-&= e^{-2\lambda t} \, d_{\mat{M},0}^2(\x_1,\x_2).
-\end{align}
-
-Taking square roots yields the geodesic decay \eqref{eq:ch4:geodesic-decay}.
-
-\textbf{Step 5: Metric Sandwich Bound.}
-
-To translate the geodesic bound into a Euclidean norm bound, we use the metric sandwich
-assumption \eqref{eq:ch4:metric-bounds}. For any vector $\dx$:
-\begin{equation}
-\underline{m}\,\dx^\T\dx \leq \dx^\T\mat{M}\dx \leq \overline{m}\,\dx^\T\dx.
-\end{equation}
-
-The straight-line distance (Euclidean norm) is related to the geodesic distance via the
-metric bounds. For any two points $\x_1,\x_2$ in the geodesically convex region:
-\begin{equation}
-\norm{\x_1 - \x_2}^2 \leq \frac{1}{\underline{m}} d_{\mat{M},t}^2(\x_1,\x_2) \leq
-\frac{1}{\underline{m}} \, e^{-2\lambda t} d_{\mat{M},0}^2(\x_1,\x_2)
-\leq \frac{\overline{m}}{\underline{m}} \, e^{-2\lambda t} \norm{\x_1(0)-\x_2(0)}^2.
-\end{equation}
-
-Taking square roots yields \eqref{eq:ch4:euclidean-decay}. \qed
+Finally, every connecting curve has metric length at least $\sqrt{\underline m}\|x_1-x_2\|$. The straight initial segment, available by Euclidean convexity, has length at most $\sqrt{\overline m}\|x_1(t_0)-x_2(t_0)\|$. Combining these bounds proves the stated physical estimate. In a nonconvex domain the intrinsic-distance result still applies, but an upper bound involving the initial Euclidean chord needs an additional path-length comparison.
 \end{proof}
 
-\begin{remark}
-The proof relies on three essential ingredients: (i) the variational equation governing
-tangent vectors, (ii) the metric-dependent Lyapunov function capturing shrinking, and
-(iii) the metric bounds providing translation between geodesic and Euclidean distance.
-The contraction condition ensures all three work together.
-\end{remark}
-
+A changing ruler must not hide physical expansion. For $\dot x=x$ and $M(t)=e^{-4t}$, the differential inequality holds with $\lambda=1$, even though physical errors grow as $e^t$. The missing lower metric bound explains the discrepancy. Its scalar condition number is always one, so a condition-number bound alone cannot replace uniform scale bounds.
 
 \section{The Identity Metric: Symmetric Jacobian Condition}
 
-The simplest choice is $\mat{M} = \mat{I}$ (constant identity), giving
-$\dot{\mat{M}}=0$. The contraction condition reduces to
+For $M=I$,
 \begin{equation}
-\sym\!\bigl(\mat{A}(\x,t)\bigr) := \tfrac{1}{2}\!\left(\mat{A}+\mat{A}^\T\right)
-\preceq -\lambda\,\mat{I}.
+\operatorname{sym}(A)=\tfrac12(A+A^T)\preceq-\lambda I.
 \label{eq:ch4:symmetric-condition}
 \end{equation}
+Negative real parts of the eigenvalues of a fixed matrix imply asymptotic linear stability, but not contraction in the identity metric. For time-varying matrices, instantaneous eigenvalues alone do not even establish asymptotic stability. The symmetric part measures instantaneous Euclidean length growth; the full variational flow determines accumulated finite-time amplification.
 
-This means all eigenvalues of the symmetric part of the Jacobian must be uniformly
-negative. While restrictive (most interesting systems do not satisfy this globally),
-it provides useful intuition: contraction in the identity metric requires that the
-vector field be ``uniformly squeezing'' in every direction.
-
-\begin{remark}
-The power of contraction theory lies in the freedom to choose $\mat{M}$. A system that
-is not contracting in the identity metric may be contracting in a different metric that
-``stretches'' certain directions to compensate for local expansion. Finding such a metric
-is the central computational challenge.
-\end{remark}
-
+More generally, the sharp signed local rate is $-\tfrac12\lambda_{\max}(H,M)$, where $H=A^TM+MA+\dot M$ and $\lambda_{\max}(H,M)$ is the largest generalized eigenvalue. It is a diagnostic at a point until a uniform bound is established on the required domain. Negative values mean that this metric allows instantaneous expansion.
 
 \section{Worked Example: A Simple Linear System}
 \label{sec:ch4:example}
 
 \subsection{Problem Setup}
 
-Consider the linear system
+In scaled coordinates, consider
 \begin{equation}
-\dot{\x} = \mat{A}\,\x, \quad \mat{A} = \begin{bmatrix} -2 & 1 \\ 0 & -3 \end{bmatrix}.
+\dot x=Ax,\qquad A=\begin{bmatrix}-2&1\\0&-3\end{bmatrix}\ \mathrm{s}^{-1}.
 \label{eq:ch4:example-system}
 \end{equation}
-
-We wish to find a constant metric $\mat{M} \succ 0$ such that the system is contracting
-with rate $\lambda > 0$. For a constant metric and autonomous linear system, the
-contraction condition is
+For a constant metric the required inequality is
 \begin{equation}
-\mat{A}^\T \mat{M} + \mat{M} \mat{A} \preceq -2\lambda \mat{M}.
+A^TM+MA\preceq-2\lambda M.
 \label{eq:ch4:example-LMI}
 \end{equation}
 
 \subsection{Checking the Symmetric Jacobian}
 
-First, compute the symmetric part:
+Here $\operatorname{sym}(A)=[[-2,1/2],[1/2,-3]]$, with eigenvalues $(-5\pm\sqrt2)/2$. Therefore the identity metric certifies
+$\lambda_I=(5-\sqrt2)/2\simeq1.792893\ \mathrm{s}^{-1}$.
+The eigenvalues of $A^T+A$ are twice those values. Its positive off-diagonal entries do not invalidate negative definiteness: the condition concerns the entire quadratic form, not the sign of each entry.
+
+\subsection{Finding the Contraction Metric via the Lyapunov Equation}
+\index{Contraction Metric}
+
+For $M=[[a,b],[b,c]]$, direct multiplication gives
 \begin{equation}
-\sym(\mat{A}) = \frac{1}{2}(\mat{A} + \mat{A}^\T) = \frac{1}{2}\begin{bmatrix}
--4 & 1 \\ 1 & -6
-\end{bmatrix} = \begin{bmatrix} -2 & 0.5 \\ 0.5 & -3 \end{bmatrix}.
+A^TM+MA=\begin{bmatrix}-4a&a-5b\\a-5b&2b-6c\end{bmatrix}.
 \end{equation}
+In the chosen numerical units, solving $A^TM+MA=-I$ gives
+$M=[[1/4,1/20],[1/20,11/60]]$.
+Its eigenvalues are $(13\pm\sqrt{13})/60$, so its sharp rate is
+$\lambda_M=30/(13+\sqrt{13})\ \mathrm{s}^{-1}$.
+The metric $M_*=[[1,1],[1,2]]$ instead gives $A^TM_*+M_*A+4M_*=[[0,0],[0,-2]]$, attaining rate $2\ \mathrm{s}^{-1}$. A larger constant-metric rate is impossible along the eigenvector whose solution decays exactly as $e^{-2t}$.
 
-The eigenvalues are the roots of
-\begin{equation}
-\det\!\left[\begin{bmatrix} -2-\mu & 0.5 \\ 0.5 & -3-\mu \end{bmatrix}\right]
-= (-2-\mu)(-3-\mu) - 0.25 = \mu^2 + 5\mu + 5.75.
-\end{equation}
-
-The roots are $\mu = \frac{-5 \pm \sqrt{25-23}}{2} = \frac{-5 \pm \sqrt{2}}{2} \approx -1.79, -3.21$.
-
-Both eigenvalues are negative, so the system is contracting in the identity metric with
-rate approximately $\lambda \approx 1.79$.
-
-\subsection{Finding the Contraction Metric\index{Contraction Metric} via the Lyapunov Equation}
-
-Now we find the metric $\mat{M}$ more explicitly. Let $\mat{M} = \begin{bmatrix} m_{11} & m_{12} \\
-m_{12} & m_{22} \end{bmatrix}$ with $m_{11}, m_{22} > 0$ and $m_{11}m_{22} > m_{12}^2$.
-
-The condition $\mat{A}^\T\mat{M} + \mat{M}\mat{A} \preceq -2\lambda\mat{M}$ becomes:
-\begin{equation}
-\begin{bmatrix} -2 & 0 \\ 1 & -3 \end{bmatrix}
-\begin{bmatrix} m_{11} & m_{12} \\ m_{12} & m_{22} \end{bmatrix}
-+
-\begin{bmatrix} m_{11} & m_{12} \\ m_{12} & m_{22} \end{bmatrix}
-\begin{bmatrix} -2 & 1 \\ 0 & -3 \end{bmatrix}
-\preceq -2\lambda \begin{bmatrix} m_{11} & m_{12} \\ m_{12} & m_{22} \end{bmatrix}.
-\end{equation}
-
-Computing the left-hand side:
-\begin{align}
-\mat{A}^\T\mat{M} + \mat{M}\mat{A} &= \begin{bmatrix} -2m_{11} & -2m_{12} + m_{12} \\ m_{11} - 3m_{12} & m_{12} - 3m_{22} \end{bmatrix}
-+ \begin{bmatrix} -2m_{11} + m_{12} & m_{11} - 3m_{12} \\ m_{12} - 3m_{22} & -3m_{22} \end{bmatrix} \\
-&= \begin{bmatrix} -4m_{11} + m_{12} & m_{11} - 5m_{12} \\ m_{11} - 5m_{12} & m_{12} - 6m_{22} \end{bmatrix}.
-\end{align}
-
-For the identity metric $\mat{M} = \mat{I}$, we have $m_{11}=m_{22}=1$ and $m_{12}=0$,
-giving
-\begin{equation}
-\mat{A}^\T\mat{I} + \mat{I}\mat{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix}.
-\end{equation}
-
-The contraction condition $\mat{A}^\T\mat{M} + \mat{M}\mat{A} \preceq -2\lambda\mat{M}$ is a
-\emph{matrix inequality} (i.e., an eigenvalue condition), not an entry-wise condition.
-For $\mat{M} = \mat{I}$, we need the eigenvalues of $\mat{A}^\T + \mat{A}$ to satisfy
-$\lambda_{\max}(\mat{A}^\T + \mat{A}) \leq -2\lambda$. The eigenvalues of
-$\mat{A}^\T + \mat{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix}$
-are approximately $-1.79$ and $-3.21$ (computed in the symmetric part analysis above), both negative.
-Therefore the identity metric \emph{does} certify contraction, with rate
-$\lambda = |\lambda_{\max}(\sym(\mat{A}))| / 2 \approx 1.79 / 2 \approx 0.895$
-(since the condition requires $\lambda_{\max} \leq -2\lambda$).
-
-\begin{designbox}
-In practice, for linear systems, one solves the LMI \eqref{eq:ch4:example-LMI} using
-semidefinite programming (e.g., \texttt{cvxpy}, \texttt{YALMIP}, \texttt{Mosek}). The
-solution yields both the metric $\mat{M}$ and the maximum feasible rate $\lambda$. For
-this simple system, the identity metric already achieves excellent contraction.
-\end{designbox}
-
+Multiplying a metric by a positive scalar does not change its certified rate. For an unknown metric, fix $\lambda$, impose positive metric bounds or a normalization, and solve a feasibility problem. Searching rates by bisection is distinct from calling a joint optimization in $(M,\lambda)$ one LMI. Nonlinear domain certification and controller constraints require further work.
 
 \section{Partial Contraction: Hierarchical Structure}
 \label{sec:ch4:partial}
 
 \subsection{When Not All Directions Contract}
 
-In many applications, the system does not contract uniformly in all directions. For
-example, consider a robot with position $q$ and velocity $\dot{q}$. The system might
-contract in velocity (feedback damping) but not in position (which can drift). This
-scenario is called \textbf{partial contraction}.
-
-Let's partition the state as $\x = [\x_1; \x_2]$ and the Jacobian as
-\begin{equation}
-\mat{A}(\x,t) = \begin{bmatrix} \mat{A}_{11} & \mat{A}_{12} \\ \mat{A}_{21} & \mat{A}_{22} \end{bmatrix}.
-\label{eq:ch4:block-jacobian}
-\end{equation}
-
-Suppose the subsystem in $\x_2$ (e.g., velocity) is contracting, but $\x_1$ (position)
-may drift. We can still harness the contraction in $\x_2$ to establish synchronization.
+Partial contraction methods establish convergence toward a specified property or subspace, often through an auxiliary contracting system. A contracting subsystem is not automatically a fully contracting system. For example, $\dot q=v$, $\dot v=-\gamma(v-u(t))$ damps velocity differences, but solutions with equal velocities and different initial positions retain their position offset forever.
 
 \subsection{The Hierarchical Contraction Theorem}
 
-\begin{theorem}[Partial Contraction via Hierarchical Decomposition]
-\label{thm:ch4:partial}
-Partition $\x = [\x_1; \x_2]$ with dimensions $n_1$ and $n_2$, and write the generalized
-Jacobian in the block form
+For a triangular variational system, write
 \begin{equation}
-\mat{F} = \begin{bmatrix} \mat{F}_{11} & \mat{F}_{12} \\ 0 & \mat{F}_{22}\end{bmatrix},
+A=\begin{bmatrix}A_{11}&A_{12}\\0&A_{22}\end{bmatrix}.
+\label{eq:ch4:block-jacobian}
+\end{equation}
+Choose block factors $M_i=\Theta_i^T\Theta_i$ whose total derivatives follow the full field. In transformed tangent coordinates,
+\begin{equation}
+F=(\dot\Theta+\Theta A)\Theta^{-1}
+=\begin{bmatrix}F_{11}&C\\0&F_{22}\end{bmatrix},\qquad
+C=\Theta_1A_{12}\Theta_2^{-1}.
 \label{eq:ch4:cascade-jacobian}
 \end{equation}
-so that the $\x_2$-dynamics do not depend on $\x_1$ (a \emph{cascade}). Suppose:
-\begin{enumerate}
-\item The reduced system for $\x_2$ is globally contracting with rate $\lambda_2 > 0$
-      in a metric $\mat{M}_2(\x_2,t)$.
-\item For any fixed trajectory $\x_2(t)$, the $\x_1$-subsystem driven by $\x_2(t)$ is
-      globally contracting with rate $\lambda_1 > 0$ in a metric $\mat{M}_1(\x_1,\x_2,t)$.
-\item \textbf{The coupling is bounded}: there is a constant $k$ with
-      $\norm{\mat{M}_1^{1/2}\mat{F}_{12}\mat{M}_2^{-1/2}} \leq k$ uniformly.
-\end{enumerate}
-Then for every $\lambda < \min(\lambda_1,\lambda_2)$ there exists a weight $\theta > 0$,
-depending on $k$, such that the full system is contracting with rate $\lambda$ in the
-\emph{weighted} block-diagonal metric
+The coupling $C$ has already been transformed; it should not receive a second metric transformation.
+
+\begin{theorem}[A Weighted Cascade Certificate]
+\label{thm:ch4:partial}
+Suppose uniformly $\operatorname{sym}(F_{ii})\preceq-\lambda_iI$, with $\lambda_i>0$, and $\|C\|\leq k$. For a target $0<\lambda<\min(\lambda_1,\lambda_2)$, choose
 \begin{equation}
-\mat{M}_\theta = \begin{bmatrix} \mat{M}_1 & 0 \\ 0 & \theta\,\mat{M}_2 \end{bmatrix}.
+M_\theta=\begin{bmatrix}M_1&0\\0&\theta M_2\end{bmatrix},\qquad
+\theta>\frac{k^2}{4(\lambda_1-\lambda)(\lambda_2-\lambda)}.
 \label{eq:ch4:block-metric}
 \end{equation}
+This metric certifies differential contraction at least at rate $\lambda$. Finite-distance conclusions retain the earlier domain and metric-bound assumptions.
 \end{theorem}
 
-\begin{proof}[Proof Sketch]
-In the metric $\mat{M}_\theta$ the symmetric part of the transformed Jacobian is block
-$\begin{psmallmatrix}-\lambda_1 & \tfrac{1}{2}\theta^{-1/2}k \\ \tfrac{1}{2}\theta^{-1/2}k & -\lambda_2\end{psmallmatrix}$
-in the two-block norm. Its largest eigenvalue is negative once
-$\theta^{-1}k^2 < 4\lambda_1\lambda_2$, which any sufficiently large $\theta$ achieves.
-Weighting the second block down is what absorbs the coupling; this is the standard
-small-gain argument, and it is the step that fails if $\theta$ is fixed at $1$.
-\end{proof}
+Indeed, the off-diagonal transformed block becomes $C/\sqrt\theta$. The excess over the desired decay is bounded by the scalar two-block quadratic form with diagonal entries $-(\lambda_1-\lambda)$, $-(\lambda_2-\lambda)$ and off-diagonal entry $k/(2\sqrt\theta)$. The displayed inequality makes it negative definite. Increasing $\theta$ weights the second block more heavily and reduces its normalized coupling into the first.
 
-\begin{warningbox}
-The weight $\theta$ is not cosmetic, and hypothesis~3 is not free. In the
-\emph{unweighted} metric ($\theta = 1$) the theorem is false. Take
+For
 \begin{equation}
-\dot x_1 = -x_1 + K x_2, \qquad \dot x_2 = -x_2 .
+\dot x_1=-x_1+4x_2,\qquad\dot x_2=-x_2,
 \label{eq:ch4:cascade-counterexample}
 \end{equation}
-Each subsystem contracts at rate $1$ in the identity metric, so hypotheses 1 and 2 hold.
-But the symmetric part of the full Jacobian is
-$\begin{psmallmatrix}-1 & K/2\\ K/2 & -1\end{psmallmatrix}$, whose eigenvalues are
-$-1 \pm K/2$. For $K \geq 2$ the larger one is non-negative and the full system is
-\emph{not} contracting in the identity metric --- for any $K$, however large, even though
-both subsystems contract at rate $1$.
+the identity metric has signed local rate $-1$, despite both eigenvalues being $-1$. With $M=\operatorname{diag}(1,25)$ the rate is $0.6$. The exact flow includes $4te^{-t}$, so a rate-one estimate with a finite uniform prefactor is impossible for all time. Rates below one are available; the minimum diagonal rate need not be attained.
 
-The system is of course still exponentially stable; a cascade of stable systems always is.
-What fails is contraction \emph{in that particular metric}. Contraction is a statement
-about a metric, not about a trajectory, and a property that holds blockwise need not
-survive assembly unless the blocks are weighted against the coupling.
-\end{warningbox}
+For initial error $\delta x(0)=(0,1)^T$, the Euclidean error is $e^{-t}\sqrt{1+16t^2}$, which rises above its initial value after a short initial decline, while the metric error divided by its own initial value is $e^{-t}\sqrt{25+16t^2}/5$. The latter stays below $e^{-0.6t}$. Normalizing each curve by its own initial norm makes the comparison legible without pretending the two rulers measure the same numerical length.
 
-\begin{example}[Cascade: Velocity Tracking Driving Position Regulation]
-Consider
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\linewidth]{../figures/contraction_cascade.pdf}
+\caption{Transient Euclidean Growth and Certified Metric Decay for the Same Cascade. Each Norm Is Divided by Its Own Initial Value; the Metric Is $\operatorname{diag}(1,25)$.}
+\label{fig:contraction_cascade}
+\end{figure}
+
+An illustrative cascade is
 \begin{equation}
-\dot{q} = -\alpha q + v, \qquad \dot{v} = -\gamma(v - u(t)),
+\dot q=-\alpha q+v,\qquad\dot v=-\gamma(v-u(t)),\qquad\alpha,\gamma>0.
 \label{eq:ch4:mech-example}
 \end{equation}
-with $\alpha,\gamma > 0$, where $u(t)$ is a time-varying reference.
-
-The Jacobian is $\mat{A} = \begin{psmallmatrix} -\alpha & 1 \\ 0 & -\gamma \end{psmallmatrix}$.
-The $v$-subsystem contracts at rate $\gamma$; the $q$-subsystem, driven by $v(t)$, contracts
-at rate $\alpha$; the coupling constant is $k = 1$. By the theorem the cascade contracts at
-any rate $\lambda < \min(\alpha,\gamma)$ in $\mat{M}_\theta$ with
-$\theta > 1/(4\alpha\gamma)$, and all solutions synchronize to the reference motion.
-
-Note what happens if the position feedback is removed ($\alpha = 0$), giving the pure
-integrator $\dot q = v$: the Jacobian has an eigenvalue at $0$, the $q$-subsystem is only
-marginally stable rather than contracting, and hypothesis~2 fails. A displacement in $q$ is
-then never forgotten --- two trajectories with the same velocity history but different
-initial positions stay a constant distance apart forever. No metric can certify contraction
-for that system, which is why $\alpha > 0$ is required rather than convenient.
-\end{example}
-
+Here $v$ is an auxiliary driving state, not literally $\dot q$ when $\alpha\ne0$. Its cascade certificate needs the target-rate-dependent weight above. Setting $\alpha=0$ recovers the offset-preserving integrator, which cannot be uniformly exponentially contracting in a uniformly nondegenerate full-state metric. A mechanical linkage's kinematic ordering alone does not establish this triangular dynamical structure.
 
 \section{Control Contraction Metrics: Design and Duality}
 \label{sec:ch4:ccm}
 
-
-Contraction metrics provide a natural dual certificate to control distributions and accessibility. 
-Agrachev and Sachkov \cite[Part~III]{AgrachevSachkov2004} analyze feedback stabilization and regulation 
-through the lens of controlled accessibility: a system is stabilizable if the drift-controlled vector field 
-admits appropriate accessibility properties. Control contraction metrics encode this geometric stabilization 
-property via a metric that contracts under feedback, providing a constructive and verifiable stability certificate.
 \subsection{Feedback Design Under Contraction}
 
-For controlled systems
+Consider
 \begin{equation}
-\dot{\x} = f(\x) + G(\x)\,\uvec,
+\dot x=f(x,t)+G(x,t)u,\qquad G=[g_1,\ldots,g_m].
 \label{eq:ch4:controlled-system}
 \end{equation}
-we wish to design feedback $\uvec = -\mat{K}(\x)\,\dx$ to achieve contraction.
-The closed-loop Jacobian is
+The differential system is $\dot{\delta x}=A(x,u,t)\delta x+G\delta u$, with
+$A=D_xf+\sum_i u_iD_xg_i$.
+For a differential feedback $\delta u=-K(x,u,t)\delta x$,
 \begin{equation}
-\mat{A}_{\text{cl}}(\x) = \frac{\partial}{\partial\x}[f(\x) - G(\x)\mat{K}(\x)\dx]\bigg|_{\dx=0}
-= \mat{A}(\x) - G(\x)\,\mat{K}(\x).
+A_{\mathrm{diff}}=A-GK.
 \label{eq:ch4:closed-loop-jacobian}
 \end{equation}
+This is not the instruction $u=-K\delta x$ for a finite state. If a smooth implemented feedback is already known, use its actual derivative. Conversely, constructing a matrix field $K$ does not guarantee that it is the Jacobian of a single feedback function; integration along state-space paths provides a more general construction.
 
-The contraction condition becomes
+The differential feedback condition is
 \begin{equation}
-(\mat{A} - G\mat{K})^\T\mat{M} + \mat{M}(\mat{A} - G\mat{K}) + \dot{\mat{M}} \preceq -2\lambda\mat{M}.
+\dot M+(A-GK)^TM+M(A-GK)+2\lambda M\preceq0,
 \label{eq:ch4:CCM-nonlinear}
 \end{equation}
+where $\dot M=\partial_tM+\partial_{f+Gu}M$. Both the input-dependent Jacobian and the metric's derivative along the controlled field are required.
 
-\subsection{The Dual Formulation: \texorpdfstring{$W = M^{-1}$}{W = M inverse}}
+\subsection{The Dual Formulation: Inverse Metric}
 
-To enable convex optimization, we introduce the dual metric $\mat{W} = \mat{M}^{-1}$.
-Pre- and post-multiply \eqref{eq:ch4:CCM-nonlinear} by $\mat{W}$ and use $\mat{M} = \mat{W}^{-1}$:
-
-\begin{align}
-\mat{W}(\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}})\mat{W} &\preceq -2\lambda\mat{W}\mat{M}\mat{W} = -2\lambda\mat{W}.
-\end{align}
-
-After expanding and simplifying (using the fact that $\mat{M} = \mat{W}^{-1}$ and
-$\dot{\mat{M}} = -\mat{W}^{-1}\dot{\mat{W}}\mat{W}^{-1}$), the condition becomes:
-
+Differentiate $MW=I$ to obtain $\dot W=-W\dot MW$. Congruence of the preceding inequality by $W$, with $Y=KW$, gives
 \begin{equation}
-\boxed{
-\mat{A}\mat{W} + \mat{W}\mat{A}^\T - 2\lambda\mat{W} + \mat{W}\dot{\mat{W}}\mat{W} \preceq -G\mat{K}\mat{W} - \mat{W}\mat{K}^\T G^\T
-}
+-\dot W+AW+WA^T-GY-Y^TG^T+2\lambda W\preceq0.
 \label{eq:ch4:W-space-LMI}
 \end{equation}
-
-This is a matrix inequality in $\mat{W}$ and $\mat{K}$ that is \emph{bilinear} in the control
-gain. By treating $\mat{Y} = \mat{K}\mat{W}$ as the decision variable (control effort weighted
-by the inverse metric), the condition becomes convex in $\mat{W}$ and $\mat{Y}$.
+The derivative is $-\dot W$, the rate term is $+2\lambda W$, and the stabilizing input terms carry minus signs for our convention $\delta u=-K\delta x$. A source using $\delta u=K\delta x$ has the corresponding plus signs. A congruence preserves the matrix order, not its raw eigenvalues.
 
 \subsection{Pointwise LMI for Feedback Synthesis}
 
-For a time-varying linear system with affine control:
+For
 \begin{equation}
-\dot{\x} = \mat{A}(t)\,\x + G(t)\,\uvec,
+\dot x=A(t)x+G(t)u,
 \label{eq:ch4:LTV-system}
 \end{equation}
-
-with state feedback $\uvec = -\mat{K}(t)\,\x$, the dual contraction condition at each point
-in space and time is:
-
+one may choose $Y=\tfrac12\rho G^T$, obtaining
 \begin{equation}
-\boxed{
-\dot{\mat{W}} - (\mat{A}\mat{W} + \mat{W}\mat{A}^\T) + \gamma G G^\T \preceq -2\lambda\mat{W}
-}
+-\dot W+AW+WA^T-\rho GG^T+2\lambda W\preceq0,\qquad
+K=\tfrac12\rho G^TW^{-1}.
 \label{eq:ch4:pointwise-LMI}
 \end{equation}
+At fixed $\lambda$, this is linear in the unknown functions $W$ and $\rho$. It is a differential matrix inequality over time, not unrelated algebraic tests that may be solved independently at each instant. The multiplier $\rho$ creates feedback authority in actuated directions; it is not automatically a penalty or bound on physical effort.
 
-where $\gamma > 0$ is a regularization parameter (often set to satisfy $\mat{W}\gamma G G^\T \mat{W}$ bounds
-control effort). This condition is \emph{linear} in $\mat{W}$ and can be enforced at a collection
-of sample points in the state space, yielding a semidefinite program (SDP).
+For nonlinear systems, one useful sufficient construction imposes the stronger conditions
+\begin{align}
+-\partial_tW-\partial_fW+(D_xf)W+W(D_xf)^T
+-\rho GG^T+2\lambda W&\prec0,\\
+\partial_{g_i}W-(D_xg_i)W-W(D_xg_i)^T&=0\quad\text{for every }i.
+\end{align}
+The equalities cancel the terms proportional to arbitrary input values. Together with a smooth uniformly bounded positive metric and the complete-space/solution hypotheses, these conditions support the control contraction metric construction of Manchester and Slotine \cite{ManchesterSlotine2017}. They are sufficient conditions, not a claim that every stabilizable system must satisfy this particular parameterization.
 
-\begin{designbox}
-Modern computational tools can solve the SDP over a parameter space or via sum-of-squares
-(SOS) decomposition for polynomial systems. The result is a metric-based controller that
-achieves guaranteed contraction and hence guaranteed trajectory tracking or synchronization
-performance.
-\end{designbox}
+The associated gain $K(x,t)=\tfrac12\rho(x,t)G(x,t)^TM(x,t)$ is independent of $u$. Given a feasible reference $(x_*,u_*)$ and a curve $c(s)$ joining $x_*$ to $x$, construct a path of controls by
+$u(s)=u_*-\int_0^sK(c(r),t)c_r(r)\,dr$.
+Transporting that curve with its controls, or recomputing suitable geodesics in a sampled/continuous construction under the theorem's conditions, converts differential contraction into finite tracking. Path existence, solution existence and controller regularity are part of the result. A domain restriction or an actuator limit must be incorporated explicitly; the unconstrained theorem does not certify saturation, muscle activation limits or unilateral ground contact.
 
 \subsection{Computational Approaches}
 
-\subsubsection{Sum-of-Squares (SOS) Method}
+For polynomial data, a domain certificate can require $M-\underline mI$ and the negative contraction residual to be positive-semidefinite through sum-of-squares representations, with suitable polynomial multipliers for the domain. The residual must include the desired $2\lambda M$ margin and all material derivatives. Such certificates are sufficient and may be conservative; failure of a selected polynomial degree does not prove that no smooth metric exists.
 
-For polynomial systems, one parameterizes $\mat{M}(\x)$ (or $\mat{W}(\x)$) as a polynomial
-matrix and uses sum-of-squares certificates:
-\begin{equation}
--\!\bigl(\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}}\bigr) = \sum_{i} \mat{p}_i(\x)^\T \mat{p}_i(\x)
-\end{equation}
-for polynomial vectors $\mat{p}_i(\x)$. This decomposition is enforced via an SDP, which
-is computationally efficient for moderate polynomial degrees.
+A neural parameterization may use $M=L(x,t)^TL(x,t)+\varepsilon I$, with $L\in\mathbb R^{p\times n}$ and $\varepsilon>0$. A vector-valued $L\in\mathbb R^p$ alone does not produce the required $n\times n$ matrix. A positive floor ensures positivity, but upper bounds and a certified contraction residual remain necessary. Optimizer convergence is not a proof of either.
 
-\subsubsection{Neural Network Parameterization}
-
-For general nonlinear systems, one can parameterize $\mat{M}(\x) = \Phi(\x)^\T \Phi(\x)$,
-where $\Phi: \R^n \to \R^{p}$ is a neural network. The contraction condition is verified
-via sampling or bounds over the domain. This enables data-driven metric synthesis.
-
-\subsubsection{Sampling and Conservative Approximation}
-
-One can sample the state space $\mathcal{D}$ at a finite grid and enforce the LMI at each
-sample point, solving a series of SDPs. The result is a conservative (but computable)
-approximation to the true metric.
-
+Sampling is useful for finding and falsifying candidates. It is not automatically conservative between samples. For a symmetric residual $H$, suppose every point is within distance $h$ of a sample and a verified operator-norm Lipschitz constant is $L_H$. A sampled margin $\lambda_{\max}(H)\leq-\eta$ extends across that coverage only if $L_Hh<\eta$, with the region, boundaries, inputs and times all covered. This follows from the eigenvalue perturbation bound. Without such an argument, report sampled feasibility as sampled feasibility.
 
 \section{Discrete-Time Contraction}
 \label{sec:ch4:discrete}
 
 \subsection{Discrete Contraction Condition}
 
-Many digital control systems and learning algorithms operate in discrete time. The
-discrete-time analogue of Theorem~\ref{thm:ch4:convergence} is:
-
-\begin{theorem}[Discrete-Time Exponential Convergence]
-\label{thm:ch4:discrete-contraction}
-Consider the discrete-time system
+Consider the actual implemented map
 \begin{equation}
-\x_{k+1} = \Phi_k(\x_k),
+x_{k+1}=\Phi_k(x_k),\qquad J_k=D_x\Phi_k.
 \label{eq:ch4:discrete-system}
 \end{equation}
-with Jacobian $\mat{J}_k(\x_k) = \frac{\partial\Phi_k}{\partial\x_k}$.
-
-Suppose there exist constants $0 < \underline{m} \leq \overline{m}$ and a contraction rate
-$0 < \rho < 1$ such that
+Assume the smooth map sends its certified path-connected domain into the next certified domain. A sequence of metrics satisfying
 \begin{equation}
-\underline{m}\,\mat{I} \preceq \mat{M}_k(\x_k) \preceq \overline{m}\,\mat{I}
+0<\underline mI\preceq M_k(x)\preceq\overline mI
 \label{eq:ch4:discrete-metric-bounds}
 \end{equation}
 and
 \begin{equation}
-\boxed{
-\mat{J}_k^\T(\x_k) \, \mat{M}_{k+1}(\x_{k+1}) \, \mat{J}_k(\x_k) \preceq \rho^2 \mat{M}_k(\x_k)
-}
+J_k(x)^TM_{k+1}(\Phi_k(x))J_k(x)\preceq\rho^2M_k(x),\qquad0<\rho<1,
 \label{eq:ch4:discrete-contraction-condition}
 \end{equation}
-hold for all $\x_k \in \mathcal{D}$.
+gives the following result.
 
-Then for any two trajectories $\x_k^{(1)}$ and $\x_k^{(2)}$ in $\mathcal{D}$:
+\begin{theorem}[Discrete Distance Contraction]
+\label{thm:ch4:discrete-contraction}
+Under these domain and differential inequalities,
 \begin{equation}
-d_{\mat{M}_k}(\x_k^{(1)}, \x_k^{(2)}) \leq \rho^k \, d_{\mat{M}_0}(\x_0^{(1)}, \x_0^{(2)}),
+d_{M_k}(x_k^{(1)},x_k^{(2)})\leq\rho^k d_{M_0}(x_0^{(1)},x_0^{(2)}).
 \label{eq:ch4:discrete-geodesic-decay}
 \end{equation}
-with Euclidean norm bound
+With a Euclidean-convex initial domain, the physical bound is
 \begin{equation}
-\norm{\x_k^{(1)} - \x_k^{(2)}} \leq \sqrt{\frac{\overline{m}}{\underline{m}}} \, \rho^k \,
-\norm{\x_0^{(1)} - \x_0^{(2)}}.
+\|x_k^{(1)}-x_k^{(2)}\|\leq\sqrt{\overline m/\underline m}\,
+\rho^k\|x_0^{(1)}-x_0^{(2)}\|.
 \label{eq:ch4:discrete-euclidean-decay}
 \end{equation}
 \end{theorem}
 
-\begin{proof}[Proof Sketch]
-The proof parallels the continuous case. The tangent vector $\dx_k = \x_{k+1}^{(1)} - \x_{k+1}^{(2)}$
-evolves via $\dx_{k+1} = \mat{J}_k \, \dx_k$. The Lyapunov function
-$V_k = \dx_k^\T \mat{M}_k \dx_k$ satisfies $V_{k+1} \leq \rho^2 V_k$ by the condition
-\eqref{eq:ch4:discrete-contraction-condition}. Iterating yields $V_k \leq \rho^{2k} V_0$.
-\end{proof}
+To prove it, map an entire connecting curve: $c_{k+1}(s)=\Phi_k(c_k(s))$. Its tangent obeys $\partial_sc_{k+1}=J_k(c_k)\partial_sc_k$. The metric length shrinks by at least $\rho$; take infima and iterate. An arbitrary finite difference does not equal one endpoint Jacobian times the previous difference. Even $\Phi(x)=\tfrac12\tanh x$ illustrates this distinction while remaining globally contractive in the identity metric.
+
+For sample period $\Delta t$, the equivalent length-decay rate is $-\log\rho/\Delta t$. An exact flow map of a continuously contracting system inherits the corresponding factor, but a numerical integrator need not. For $\dot x=-ax$, explicit Euler gives $1-a\Delta t$, which contracts only when $0<a\Delta t<2$. A digital controller must be checked as its actual sampled map, including held inputs and computation delays.
 
 \subsection{Connection to Riccati Analysis}
 
-For linear discrete-time systems, the discrete contraction metric can be related to
-the solution of a discrete-time algebraic Riccati equation (DARE), which is studied
-in detail in Chapter~\ref{ch:optimal-control}. Both frameworks certify stability and convergence,
-but contraction provides tighter guarantees on trajectory convergence rates.
-
-\begin{remark}
-Discrete-time contraction is especially relevant for iterative learning control,
-reinforcement learning, and digital controller implementations where the sampling time
-is fast enough that the discrete assumption is valid.
-\end{remark}
-
+For a stabilizing discrete LQR design, substitution into the Riccati equation gives
+$A_c^TPA_c=P-Q-K^TRK$.
+If $P\succ0$ and $Q+K^TRK\succeq(1-\rho^2)P$, this is a contraction certificate for the implemented closed loop. A semidefinite dissipation may require a multi-step argument instead of strict one-step decay. There is no universal theorem that contraction gives tighter guarantees than Riccati analysis; the latter can supply a particular metric, and both must be interpreted with their hypotheses and measured quantity.
 
 \section{Numerical Example: Van der Pol Oscillator}
 \label{sec:ch4:vdp}
 
 \subsection{System Description}
 
-Consider the Van der Pol oscillator with feedback:
+The unforced Van der Pol system is
 \begin{equation}
-\begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix}
-= \begin{bmatrix} x_2 \\ -x_1 + \epsilon(1-x_1^2)x_2 \end{bmatrix},
+\dot x_1=x_2,\qquad\dot x_2=-x_1+\epsilon(1-x_1^2)x_2,\qquad\epsilon>0,
 \label{eq:ch4:vdp-system}
 \end{equation}
-where $\epsilon > 0$ is the nonlinearity parameter. The Jacobian is
+with
 \begin{equation}
-\mat{A}(x_1,x_2) = \begin{bmatrix} 0 & 1 \\ -1 - 2\epsilon x_1 x_2 & \epsilon(1-x_1^2) \end{bmatrix}.
+A=\begin{bmatrix}0&1\\-1-2\epsilon x_1x_2&\epsilon(1-x_1^2)\end{bmatrix}.
 \label{eq:ch4:vdp-jacobian}
 \end{equation}
+No feedback input appears in this equation. It has an unstable equilibrium at the origin and an attracting nonconstant periodic orbit. Two solutions at different phases on that orbit cannot converge to each other at the same clock time. Full contraction on a domain containing the complete orbit is therefore impossible in a uniformly nondegenerate metric.
 
 \subsection{Metric Synthesis via Parameterization}
 
-We search for a metric of the form
+For a diagonal candidate
 \begin{equation}
-\mat{M}(x_1) = \begin{bmatrix} m_1(x_1) & 0 \\ 0 & m_2(x_1) \end{bmatrix},
+M(x_1)=\operatorname{diag}(m_1(x_1),m_2(x_1)),
 \label{eq:ch4:vdp-metric-ansatz}
 \end{equation}
-where $m_1, m_2 > 0$ are smooth functions. The diagonal structure is motivated by the
-special structure of the Van der Pol system (position and velocity are somewhat decoupled).
-
-The contraction condition $\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} \preceq -2\lambda\mat{M}$
-becomes element-wise:
-
+write $H=A^TM+MA+\dot M+2\lambda M$. Its entries are
 \begin{align}
-\label{eq:ch4:vdp-cc-11}
-\dot{m}_1 &\preceq -2\lambda m_1, \\
-\label{eq:ch4:vdp-cc-22}
-2\epsilon(1-x_1^2)m_2 + \dot{m}_2 &\preceq -2\lambda m_2, \\
-\label{eq:ch4:vdp-cc-12}
-m_1 + 2(1 - 2\epsilon x_1 x_2)m_2 &\preceq -2\lambda m_1 \cdot 0.
+H_{11}&=m_1'(x_1)x_2+2\lambda m_1,\label{eq:ch4:vdp-cc-11}\\
+H_{22}&=2\epsilon(1-x_1^2)m_2+m_2'(x_1)x_2+2\lambda m_2,\label{eq:ch4:vdp-cc-22}\\
+H_{12}&=H_{21}=m_1+(-1-2\epsilon x_1x_2)m_2.\label{eq:ch4:vdp-cc-12}
 \end{align}
-
-For constant metrics $m_1 = a$, $m_2 = b$ (diagonal constants), the conditions reduce to:
-\begin{align}
-0 &\preceq -2\lambda a \implies a > 0, \lambda \text{ arbitrary}, \\
-2\epsilon(1-x_1^2)b &\preceq -2\lambda b.
-\end{align}
-
-The second condition requires $\epsilon(1-x_1^2) \leq -\lambda$, which is violated when
-$|x_1| < 1$ (where the oscillator spends most of its time). Thus, a constant metric
-does not suffice.
-
-\begin{remark}[Why the Van der Pol oscillator is not globally contracting]
-The Van der Pol oscillator possesses a stable limit cycle, toward which all nonzero
-initial conditions converge. This means the system is \emph{not} globally contracting:
-global contraction would require all trajectories to converge to each other (and hence
-to a single trajectory), but the limit cycle is an attractor of dimension one, not zero.
-Instead, the system exhibits \emph{partial} contraction---trajectories converge to the
-limit cycle (contraction transverse to the cycle) while maintaining a phase offset along it.
-A state-dependent metric can certify contraction in the transverse direction, but no
-globally valid metric can certify contraction in all directions simultaneously.
-\end{remark}
+The condition is $H\preceq0$, not componentwise inequalities on its off-diagonal entries. In two dimensions this requires $H_{11}\leq0$, $H_{22}\leq0$ and $\det H\geq0$. If $m_1$ is a positive constant, $H_{11}=2\lambda m_1>0$ for every positive requested rate. That alone disproves this entire candidate class for full contraction, at every point.
 
 \subsection{Solution Strategy}
 
-We adopt a parameterized ansatz $m_1(x_1) = \alpha$ and $m_2(x_1) = \beta(1 + \gamma x_1^2)$,
-where $\alpha, \beta, \gamma > 0$ are constants to be determined. This metric \emph{amplifies}
-the velocity direction when position is near the origin (where nonlinearity is strongest).
-
-With $\dot{m}_1 = 0$ and $\dot{m}_2 = 2\beta\gamma x_1 \dot{x}_1 = 2\beta\gamma x_1 x_2$,
-the contraction conditions become (roughly):
-
+The formerly proposed example
 \begin{equation}
-2\epsilon(1-x_1^2)\beta(1+\gamma x_1^2) + 2\beta\gamma x_1 x_2 \leq -2\lambda\beta(1+\gamma x_1^2).
-\end{equation}
-
-It is tempting to now pick numbers --- say $\lambda = 0.3$, $\epsilon = 0.5$, $\gamma
-\approx 1.5$ --- and present
-\begin{equation}
-\mat{M}(x_1) = \begin{bmatrix} 1 & 0 \\ 0 & 1.2(1+1.5x_1^2) \end{bmatrix}
+M(x_1)=\operatorname{diag}\bigl(1,1.2(1+1.5x_1^2)\bigr),\quad
+\epsilon=0.5,\quad\lambda=0.3
 \label{eq:ch4:vdp-metric-solution}
 \end{equation}
-as a metric certifying global contraction. \emph{No such metric exists}, and this one is
-not close. Evaluating the condition it is supposed to satisfy,
+is retained only as a falsification exercise. At the origin its residual is
 \begin{equation}
-\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} + 2\lambda\mat{M} \preceq 0,
+H(0)=\begin{bmatrix}0.6&-0.2\\-0.2&1.92\end{bmatrix}\not\preceq0.
 \label{eq:ch4:vdp-check}
 \end{equation}
-on a grid over $[-3,3]^2$ gives a largest eigenvalue that is \emph{positive at every single
-sampled point}, reaching $+1.95$ at the origin and growing past $+130$ near the corners. The
-condition is violated everywhere, not marginally or in a small region.
+Its velocity weight increases with $|x_1|$, not toward the origin. No successful optimizer or experimentally measured rate is claimed. The diagonal obstruction is stronger than a finite grid of violations.
 
-That is exactly what the remark above predicts. The Van der Pol oscillator has an attracting
-limit cycle, so two trajectories starting at different phases along that cycle stay
-separated forever; no metric can make them converge. Searching for a global metric was never
-going to succeed, and a numerical solver that appears to return one has either been given a
-relaxed constraint set or has converged to an infeasible point.
+The appropriate orbital question allows phase alignment. Transverse contraction tests decay only for nonzero tangent directions satisfying $\delta x^TMf=0$, with the associated field/metric derivatives and domain conditions. Manchester and Slotine's transverse framework \cite{ManchesterSlotineTransverse2013} requires a compact, smoothly path-connected, strictly forward-invariant set and appropriate regularity; an absence of equilibria distinguishes a nontrivial cycle from an equilibrium limit. It establishes convergence after a time reparameterization, not same-time tracking of a prescribed phase. We do not assert that the rejected diagonal candidate satisfies a transverse certificate.
 
-The honest conclusion is the one the structure of the problem forces: the search must be
-restricted to \emph{transverse} contraction --- convergence to the limit cycle rather than
-to a single trajectory --- which requires a metric defined on directions transverse to the
-flow, and a correspondingly weaker claim.
-
-\begin{intuitionbox}
-The ansatz was not a bad idea --- weighting the velocity direction more heavily where the
-nonlinearity is strongest is exactly how a state-dependent metric buys contraction that a
-constant one cannot. It fails here because the obstruction is topological rather than
-quantitative: an attracting limit cycle means neighbouring trajectories converge \emph{to
-the cycle} but not \emph{to each other}, and no amount of reweighting changes that.
-
-The lesson generalises. When a metric search will not close, the first question is whether
-the system can possibly be contracting --- a limit cycle, multiple equilibria, or any
-invariant set of positive dimension rules it out immediately. Only then is it worth blaming
-the ansatz or the solver.
-\end{intuitionbox}
-
+A periodic orbit or multiple equilibria can obstruct a claimed global full-contraction domain. An invariant set of positive dimension by itself does not: the whole line is invariant under $\dot x=-x$ and the system contracts. An infeasible numerical search should be investigated using the actual obstruction, domain, metric class and solver residual.
 
 \section{Robustness Margins From Contraction}
 
 \subsection{Disturbance Attenuation via Contraction Rate}
 
-A key practical benefit of contraction is quantifiable robustness to disturbances.
-Consider the perturbed system
+First use a state-independent metric $M(t)$ to make the additive-disturbance claim precise. Compare the nominal $\dot x_0=f(x_0,t)$ with
 \begin{equation}
-\dot{\x} = f(\x,t) + d(t),
+\dot x_d=f(x_d,t)+d(t),\qquad\|d(t)\|\leq D.
 \label{eq:ch4:perturbed-system}
 \end{equation}
-where $d(t)$ is an unknown disturbance with $\norm{d(t)} \leq D$ for all $t \geq 0$.
+Assume both solutions and their connecting segments remain in a Euclidean-convex certified domain, the nominal Jacobian inequality holds throughout it, and the metric has the uniform bounds above. Integrating $f(x_d,t)-f(x_0,t)$ along the segment gives, for $r=\sqrt{(x_d-x_0)^TM(t)(x_d-x_0)}$, the upper derivative bound $D^+r\leq-\lambda r+\sqrt{\overline m}D$. It also holds at $r=0$ in the upper-derivative sense.
 
-If the unperturbed system $\dot{\x} = f(\x,t)$ is contracting with rate $\lambda$ in
-metric $\mat{M}$, then the perturbed system exhibits \textbf{bounded-input bounded-state}
-(BIBS) behavior and \textbf{incremental input-to-state stability} (ISS).
-
-\begin{theorem}[Disturbance Rejection Bound]
+\begin{theorem}[Nominal-to-Perturbed Error Bound]
 \label{thm:ch4:disturbance-rejection}
-Suppose $\dot{\x} = f(\x,t)$ is contracting with rate $\lambda$ in metric $\mat{M}$
-satisfying the metric bounds \eqref{eq:ch4:metric-bounds}. Consider the perturbed system
-\eqref{eq:ch4:perturbed-system} with $\norm{d(t)} \leq D$.
-
-Then for any two trajectories $\x_1(t)$ and $\x_2(t)$ of the perturbed system:
+Under the preceding assumptions, with $\tau=t-t_0$,
 \begin{equation}
-\norm{\x_1(t) - \x_2(t)} \leq \sqrt{\frac{\overline{m}}{\underline{m}}} \, e^{-\lambda t}
-\norm{\x_1(0) - \x_2(0)} + \frac{\sqrt{\overline{m}}}{\lambda\sqrt{\underline{m}}} \, D.
+\|x_d(t)-x_0(t)\|\leq\sqrt{\overline m/\underline m}\left[
+e^{-\lambda\tau}\|x_d(t_0)-x_0(t_0)\|+
+\frac{D}{\lambda}(1-e^{-\lambda\tau})\right].
 \label{eq:ch4:ultimate-bound}
 \end{equation}
-
-The ultimate bound (steady-state limit as $t \to \infty$) is
+Consequently, if the assumptions continue for all time,
 \begin{equation}
-\limsup_{t\to\infty} \norm{\x_1(t) - \x_2(t)} \leq \frac{\sqrt{\overline{m}}}{\lambda\sqrt{\underline{m}}} \, D.
+\limsup_{t\to\infty}\|x_d(t)-x_0(t)\|\leq
+\sqrt{\overline m/\underline m}\,D/\lambda.
 \label{eq:ch4:ultimate-bound-steady}
 \end{equation}
 \end{theorem}
 
-\begin{proof}[Proof Sketch]
-Perturbing the trajectory by small $d(t)$ shifts the vector field. The contraction rate
-$\lambda$ ensures that perturbations are damped exponentially at rate $\lambda$. For
-bounded disturbances, this damping is balanced by the steady-state input magnitude,
-yielding an ultimate bound proportional to $D/\lambda$.
-\end{proof}
+The proof is integration of the scalar comparison inequality, followed by the metric bounds. For two disturbed trajectories, replace $D$ by a bound on $\|d_1-d_2\|$, which may be $2D$ if each disturbance is separately bounded by $D$. A common additive disturbance cancels in the difference when the metric is state-independent. For a state-dependent metric, its material derivative changes with the disturbance; a nominal drift-only certificate does not automatically cover that change.
 
 \subsection{Practical Implications}
 
-The ultimate bound \eqref{eq:ch4:ultimate-bound-steady} shows that:
-
-\begin{itemize}
-\item \textbf{Higher contraction rate $\lambda$ } $\implies$ \textbf{smaller steady-state error}.
-      A fast-contracting system naturally rejects disturbances more aggressively.
-\item \textbf{Metric condition number } $\kappa = \overline{m}/\underline{m}$ enters
-      the bound. A well-conditioned metric (close to isotropic) improves robustness.
-\item \textbf{Design trade-off}: increasing $\lambda$ may require larger control effort
-      or more aggressive feedback. Practical design balances contraction rate and
-      control limitations.
-\end{itemize}
-
-\begin{designbox}
-In robust control applications (aircraft flight control, surgical robotics), the contraction
-rate $\lambda$ is often specified as a design requirement (e.g., ``system must reject
-disturbances at 5 rad/s''). The metric-based approach automatically translates this into
-a convex optimization problem.
-\end{designbox}
-
+Increasing a verified rate reduces this error bound when the forcing bound and metric comparison remain fixed. Controller changes can alter all three, including the disturbance generated by noisy measurements. A bounded error relative to a growing nominal trajectory is not a bounded state. Neither this inequality nor the contraction condition alone is a general guarantee that a stronger feedback gain is beneficial or feasible.
 
 \section{Incremental Input-to-State Stability (ISS)}
 
-\subsection{ISS vs.\ Contraction}
+\subsection{ISS vs. Contraction}
 
-\textbf{Input-to-state stability} (ISS) is a classical robustness property: bounded inputs
-lead to bounded states. However, ISS alone does not constrain how different trajectories
-relate to each other.
+Input-to-state stability bounds the state by a decaying function of initial error and a gain of the input magnitude, relative to an appropriate zero-input equilibrium. Bounded-input/bounded-state behavior is only part of that statement. Incremental ISS instead bounds the difference between two solutions by their initial difference and input difference. Differential ISS is a tangent-level formulation; finite-distance conclusions require integration and geometry.
 
-\textbf{Incremental ISS} (or differential ISS) is a stronger property: bounded input differences
-lead to bounded state differences. Contraction \emph{implies} incremental ISS, but not vice versa.
-
-\begin{proposition}[Contraction Implies Incremental ISS]
+\begin{proposition}[A Uniform Input-Family Certificate]
 \label{prop:ch4:contraction-iss}
-If the system $\dot{\x} = f(\x) + G(\x)\uvec$ is contracting with rate $\lambda$ in
-metric $\mat{M}$ (with metric bounds \eqref{eq:ch4:metric-bounds}), then for any two
-input signals $\uvec_1(t)$ and $\uvec_2(t)$:
+For $\dot x=f(x,t)+G(x,t)u$, assume the contraction inequality, including $A=D_xf+\sum_i u_iD_xg_i$ and $\dot M=\partial_tM+\partial_{f+Gu}M$, holds uniformly for a convex admitted input set. Assume the input-interpolated trajectories and connecting curves stay in the certified domain, and $\|M^{1/2}G\|\leq\overline G_M$. Then
 \begin{equation}
-\norm{y_1(t) - y_2(t)} \leq \sqrt{\frac{\overline{m}}{\underline{m}}} \, e^{-\lambda t}
-\norm{y_1(0) - y_2(0)} + \frac{\overline{G}}{\lambda\sqrt{\underline{m}}} \, \sup_{\tau \in [0,t]}
-\norm{\uvec_1(\tau) - \uvec_2(\tau)},
+\|x_1(t)-x_2(t)\|\leq\sqrt{\overline m/\underline m}e^{-\lambda\tau}
+\|x_1(t_0)-x_2(t_0)\|+
+\frac{\overline G_M}{\lambda\sqrt{\underline m}}(1-e^{-\lambda\tau})
+\sup_{s\in[t_0,t]}\|u_1(s)-u_2(s)\|,
 \label{eq:ch4:diff-ISS-bound}
 \end{equation}
-where $\overline{G} = \sup_{\x} \norm{G(\x)}$.
+provided the initial chord comparison is valid as above.
 \end{proposition}
 
-\begin{remark}
-Contraction is strictly stronger than ISS. A system can be ISS (bounded inputs $\implies$
-bounded states) without being contracting (different trajectories can diverge). Conversely,
-contraction guarantees not only ISS but also trajectory synchronization.
-\end{remark}
+To see the input term, interpolate $u(s,t)=(1-s)u_1(t)+su_2(t)$ along a transported family. Its tangent dynamics acquire $G\partial_su$; Cauchy--Schwarz bounds the metric-length derivative by $-\lambda$ times length plus $\overline G_M\|u_2-u_1\|$. Integrate over the path and time. If only a Euclidean bound $\|G\|\leq\overline G$ is known, use $\overline G_M\leq\sqrt{\overline m}\,\overline G$. Omitting this metric factor changes the bound under a harmless rescaling of the ruler.
 
+This proposition makes the required uniformity explicit. Contraction of one unforced field is not by itself incremental ISS of every controlled field. Ordinary ISS and contraction also have no unconditional implication ordering when their reference, input class and domains differ.
 
 \section{Extended Lyapunov Comparison}
 
 \subsection{Unified Perspective}
 
-Table~\ref{tbl:ch4:lyapunov-contraction} provides a comprehensive comparison of Lyapunov
-stability, Lyapunov asymptotic stability, incremental stability, and contraction.
-
-\begin{table}[h!]
-\centering
-\small
-\begin{tabular}{@{}lcccc@{}}
+\begin{table}[htbp]
+\centering\small
+\begin{tabular}{@{}p{0.23\linewidth}p{0.68\linewidth}@{}}
 \toprule
-\textbf{Property} & \textbf{Lyapunov Stable} & \textbf{Asymptotically Stable} & \textbf{Incremental} & \textbf{Contracting} \\
+Property & What the Stated Property Establishes\\
 \midrule
-Object & Point $\x^*$ & Point $\x^*$ & Trajectory pair & All trajectories \\
-Certificate & $V(\x)$ & $V(\x)$, $\dot{V} < 0$ & Pairwise distance & Metric $\mat{M}(\x,t)$ \\
-Decay & None (stable) & Exponential to $\x^*$ & Coupled & Exponential \\
-Scope & Local or global & Point attractor & Incremental & Global or local \\
-Requires equilibrium & Yes & Yes & No & No \\
-Implies ISS & No & Yes (under $\infty$-gain) & Differential ISS & Yes (incremental ISS) \\
+Lyapunov stability & Small initial errors remain small near the specified solution or set.\\
+Asymptotic stability & Stability and eventual convergence; an exponential rate need not exist.\\
+Exponential stability & A bound with a uniform exponential factor relative to the specified solution.\\
+Incremental stability & A relationship between solution pairs, with the common inputs or differing inputs specified.\\
+Contraction certificate & A differential metric inequality that integrates to pairwise convergence under the domain and metric assumptions.\\
 \bottomrule
 \end{tabular}
-\caption{Comparison of stability concepts: Lyapunov stability certifies return to an
-equilibrium, while contraction certifies convergence of all nearby trajectories to
-each other, independent of a particular equilibrium.}
+\caption{Distinct Stability Properties and Their Comparison Objects}
 \label{tbl:ch4:lyapunov-contraction}
 \end{table}
 
 \subsection{Formal Relationships}
 
-\begin{proposition}[Contraction Implies Lyapunov Stability]
+\begin{proposition}[An Equilibrium as the Comparison Solution]
 \label{prop:ch4:contraction-lyapunov}
-If $\dot{\x} = f(\x)$ with $f(\x^*) = 0$ is contracting with rate $\lambda$ in metric $\mat{M}$
-on a forward-invariant neighborhood $\mathcal{N}(\x^*)$, then $\x^*$ is a globally attractive
-equilibrium within $\mathcal{N}(\x^*)$. Moreover, the Lyapunov function
+If an equilibrium $x_*$ lies in the forward-invariant contraction domain with the required metric/path bounds, using $x_2(t)=x_*$ gives exponential attraction and stability relative to that domain. A suitable finite-distance Lyapunov function is
 \begin{equation}
-V(\x) = \norm{\x - \x^*}_{\mat{M}(\x)}^2 = (\x-\x^*)^\T \mat{M}(\x)(\x-\x^*)
+\mathcal V(x,t)=d_{M,t}(x,x_*)^2,
 \label{eq:ch4:induced-lyapunov}
 \end{equation}
-satisfies $\dot{V} \leq -2\lambda V$ along trajectories, certifying exponential stability
-of $\x^*$ at rate $\lambda$.
+which decays at least as $e^{-2\lambda\tau}$. At nonsmooth distance points interpret the statement through the finite-time inequality or upper derivative.
 \end{proposition}
 
-\begin{remark}
-Conversely, not every Lyapunov function induces contraction. A system can have an
-equilibrium that is exponentially stable without all trajectories converging at the
-same rate---a scenario that contraction explicitly rules out.
-\end{remark}
-
+In general $\mathcal V$ is not $(x-x_*)^TM(x)(x-x_*)$. For a concrete counterexample, let $z=\phi(x)=x+0.8\sin x$, so $0.2\leq\phi'(x)\leq1.8$, and define $\dot x=-\phi(x)/\phi'(x)$. In $z$ coordinates this is $\dot z=-z$, so $M(x)=\phi'(x)^2$ is a uniformly bounded contraction metric. The squared distance to zero is $\phi(x)^2$. The endpoint surrogate $x^2\phi'(x)^2$ has derivative
+$2x\phi'(x)[\phi'(x)+x\phi''(x)]\dot x$, which is positive at $x=2$. The distinction is a real failure of the proposed Lyapunov argument, not a notational preference.
 
 \section{Contraction in Biomechanical Systems}
 
-The theory of contraction metrics finds a natural and powerful application in the
-biomechanics of human movement. This section previews how the formal machinery developed
-above connects to the analysis and design of coordinated multisegment motions, with
-particular attention to the golf swing.
+\subsection{What Impedance Can Establish}
 
-\subsection{Why Biological Motor Systems Are Naturally Contracting}
+Mechanical impedance describes force response to motion; a contraction metric measures tangent-state error in a dynamical model. They are related through the equations of motion, but are different objects. Franklin and colleagues' arm-reaching experiment \cite{Franklin2003Stiffness} found direction-specific stiffness adaptation under unstable interactions, including changes not explained by altered net joint torque. This is evidence about an experimental task and measured mechanical response, not evidence that a golfer implements an optimal Riemannian metric.
 
-The human neuromuscular system implements contraction through several mechanisms that
-operate at different time scales:
+Consider the explicitly simplified joint model
+$I\ddot q+b\dot q+kq=\tau(t)$, with constant $I,b,k>0$ and a common torque input. For state $(q,v)$ its difference Jacobian is $A=[[0,1],[-k/I,-b/I]]$. This constant matrix is Hurwitz, so a positive solution of an appropriate Lyapunov equation supplies a full-state contraction metric. That is a model calculation; it does not require identifying the metric with muscle stiffness or joint inertia.
 
-\begin{enumerate}
-\item \textbf{Muscle impedance (passive contraction):} Skeletal muscles exhibit intrinsic
-      viscoelastic properties. Even without neural activation, a stretched muscle generates
-      a restoring force proportional to its displacement and a damping force proportional
-      to its velocity. In the language of this chapter, the Jacobian of the passive
-      dynamics has negative eigenvalues at equilibrium---the muscle constitutes a natural
-      contraction metric in joint space.
+Mechanical error energy $E=\tfrac12(k\delta q^2+I\delta v^2)$ has derivative $\dot E=-b\delta v^2$. At nonzero position error and zero velocity error this derivative is zero, so this particular energy does not establish strict instantaneous contraction in every state direction. A different full-state metric can include position--velocity cross terms.
 
-\item \textbf{Stretch reflex (active contraction):} The spinal stretch reflex provides
-      fast ($\sim$40 ms) feedback that resists perturbations. This is a feedback controller
-      that increases the contraction rate beyond the passive baseline. In our framework,
-      the reflex effectively modifies $\mat{A}_{\text{cl}} = \mat{A} - G\mat{K}_{\text{reflex}}$,
-      where $\mat{K}_{\text{reflex}}$ is the reflex gain.
+Nor does greater stiffness necessarily increase the asymptotic decay rate. In the underdamped constant model the eigenvalue real part is $-b/(2I)$, independent of $k$. Excessive damping can introduce a slow overdamped mode. Changing coactivation can alter stiffness, damping, activation state, metabolic cost and sensory response together; a verified comparison must use the resulting complete dynamics and admissible inputs.
 
-\item \textbf{Co-contraction (metric shaping):} When a person stiffens a joint by
-      simultaneously activating agonist and antagonist muscles, they are effectively
-      increasing the eigenvalues of the contraction metric in the directions of that joint.
-      This is the biological equivalent of choosing a non-identity metric $\mat{M}(\x)$:
-      co-contraction shapes the metric to provide stronger contraction where needed.
-\end{enumerate}
-
-\begin{intuitionbox}
-A novice golfer co-contracts many muscles simultaneously, creating a stiff (high $\lambda$)
-but energetically expensive controller. An expert golfer selectively stiffens only the
-joints that need contraction at each phase, creating a time-varying metric
-$\mat{M}(\x(t))$ that is optimally adapted to the swing dynamics. The transition from
-novice to expert is, in part, the learning of the optimal contraction metric.
-\end{intuitionbox}
+Reflex delays require delayed-state or augmented-state analysis; they are not generally a static subtraction $GK$ that automatically improves a rate. Nonlinear muscle force--length--velocity relations, tendon compliance and state-dependent moment arms also change the Jacobian. The preceding two-state model is a transparent teaching example, not a complete neuromusculoskeletal certificate or a clinical prescription.
 
 \subsection{Partial Contraction in Sequential Motion}
 
-The golf swing is a prime example of a hierarchically structured system where partial
-contraction (Theorem~\ref{thm:ch4:partial}) applies. The kinematic chain
-$\text{torso} \to \text{shoulder} \to \text{elbow} \to \text{wrist} \to \text{club}$
-exhibits a natural partitioning:
+The torso--arm--club chain defines kinematic relationships. Its dynamics generally couple the links in both directions through the mass matrix, interaction forces and contact constraints. Applying a cascade theorem requires an actual triangular representation or a justified approximation with quantified residual coupling. Segment size, muscular strength and the order of speed peaks do not supply those hypotheses or their contraction rates.
 
-\begin{itemize}
-\item The proximal segments (torso, shoulder) are heavily muscled and contract rapidly.
-      Their contraction rate $\lambda_{\text{proximal}}$ is high.
-\item The distal segments (wrist, club) have less muscular authority. Their contraction
-      rate $\lambda_{\text{distal}}$ is lower, and the club shaft (being passive) does
-      not contract at all without feedback.
-\item Partial contraction theory guarantees that if the proximal subsystem contracts,
-      and the distal subsystem contracts when driven by a fixed proximal trajectory,
-      then the overall chain contracts at rate
-      $\lambda = \min(\lambda_{\text{proximal}}, \lambda_{\text{distal}})$.
-\end{itemize}
+Repeatable club delivery may coexist with substantial variation in redundant joint states. That motivates task-space or transverse questions rather than automatically demanding global contraction of every coordinate. However, a projected error that happens to shrink on measured trials is not yet a certificate for all perturbations: the hidden states can feed back into the output later.
 
-This hierarchical structure explains why elite golfers focus on consistency of the
-proximal chain (stable torso rotation, repeatable shoulder turn): if the proximal
-subsystem is highly contracting, the distal response is automatically regularized.
+\subsection{Contraction and the Drift-Dominated Phase}
 
-\subsection{Contraction and the Drift--Dominated Phase}
+Whether a phase is drift-dominated must be assessed in a specified model and with a declared comparison of accelerations, work or finite-horizon control authority. Rapid motion and large Coriolis terms do not by themselves establish negligible muscular influence. In a conservative passive model, energy and phase information can persist; inertial coupling redistributes motion without necessarily dissipating all perturbations.
 
-During the late downswing, the system enters a drift-dominated regime
-(Chapter~\ref{ch:counterfactuals}). The muscular torques become negligible compared
-to centrifugal and Coriolis forces. In this regime, the contraction properties of the
-\emph{drift field} determine whether the motion is stable:
+For a specified policy and nominal swing, integrate $\dot\Phi=A_{\mathrm{cl}}(t)\Phi$, $\Phi(t_0)=I$. At a fixed terminal time, an output $y=h(x(t_f))$ has first-order sensitivity $\delta y=D h\,\Phi(t_f,t_0)\delta x_0$. This expression joins geometry, inertia, the torque/contact policy and the perturbation history. A contraction bound can upper-bound part of that map, but its usefulness depends on metric conditioning and output sensitivity. A merely contracting state metric does not optimize clubhead speed or ball-flight accuracy.
 
-\begin{enumerate}
-\item If the drift Jacobian has eigenvalues with negative real parts (natural damping),
-      the uncontrolled trajectory is contracting. This is the ``natural stability''
-      of the late downswing.
-\item If the drift Jacobian has eigenvalues with positive real parts (instability),
-      perturbations grow exponentially. At impact, even small deviations from the
-      intended trajectory can produce large clubface errors.
-\item The contraction rate of the drift determines the ``forgiveness'' of the swing:
-      a highly contracting drift absorbs perturbations, while a weakly contracting or
-      expanding drift amplifies them.
-\end{enumerate}
-
-\begin{designbox}
-The practical design principle for swing optimization is: use the controllable early
-phases (backswing, transition) to steer the system into a region of state space where
-the drift field is naturally contracting. This is the control-theoretic formalization
-of the coaching advice ``set up the swing so the physics does the work.''
-
-The contraction metric provides a quantitative tool: at each configuration, one can
-compute whether the drift is contracting (and at what rate) via the symmetric part
-of the drift Jacobian. Configurations where $\sym(\frac{\partial f}{\partial \x})$
-has uniformly negative eigenvalues are ``safe zones'' where the swing is inherently
-stable. The optimal trajectory passes through these zones during the critical
-impact phase.
-\end{designbox}
-
+Impact is often state-triggered. Then the event-time derivative and reset/contact sensitivity enter the outcome map; a flow-only certificate need not survive the event. A useful research test specifies perturbation directions, measurement uncertainty, a feasible controller and an outcome such as clubface orientation or impact location, then compares predicted response bounds with held-out perturbations. Separate trials should retain their own noise and participant structure. This is a route to testing the robustness hypothesis, not a deduction of expert strategy from a sequence plot.
 
 \section{Stochastic Contraction}
 
-Real systems are subject to process noise, sensor noise, and unmodeled disturbances. This
-section extends contraction theory to stochastic settings, providing convergence guarantees
-in the presence of randomness.
-
 \subsection{Systems With Brownian Perturbations}
 
-Consider the stochastic differential equation (SDE):
+For an It\^o model
 \begin{equation}
-\dd\x = f(\x, t)\,\dd t + \sigma(\x, t)\,\dd\vec{W},
+dx=f(x,t)\,dt+\sigma(x,t)\,dW_t,
 \label{eq:ch4:sde}
 \end{equation}
-where $\vec{W}(t)$ is a standard Wiener process and $\sigma(\x, t) \in \R^{n \times p}$ is
-the diffusion matrix. The deterministic contraction condition
-$\sym(\mat{M}\tfrac{\partial f}{\partial \x}) + \dot{\mat{M}} \preceq -2\lambda\mat{M}$
-must be augmented to account for the noise.
+state which noise is shared between the compared solutions. A common-noise comparison asks whether different initial states synchronize under the same random forcing. Independent-trial repeatability is a different quantity. Pham, Tabareau and Slotine \cite{PhamTabuadaSlotine2009} explicitly analyze independent Wiener processes using state-independent metrics and a bounded diffusion trace.
 
 \subsection{The Stochastic Contraction Condition}
 
-\begin{theorem}[Stochastic Contraction --- adapted from Pham, Tabuada, and Slotine]
+The following state-independent-metric version has an elementary generator proof. Assume well-posed solutions with the integrability needed for It\^o's formula and finite second moments, initial states independent of future noise, a common metric $M(t)$ with uniform positive bounds, and the deterministic contraction inequality globally. Suppose
+$\operatorname{tr}(\sigma(x,t)^TM(t)\sigma(x,t))\leq C$
+uniformly. Compare two solutions driven by independent Wiener processes and set $V=(x_1-x_2)^TM(t)(x_1-x_2)$.
+
+\begin{theorem}[Independent-Noise Mean-Square Bound]
 \label{thm:ch4:stochastic-contraction}
-Consider two solutions $\x_1(t), \x_2(t)$ of~\eqref{eq:ch4:sde} with different initial
-conditions but the same noise realization. If the deterministic contraction condition
-holds with rate $\lambda$, then the expected squared distance satisfies:
+With $\tau=t-t_0$, the preceding assumptions imply
 \begin{equation}
-\E\!\left[\|\x_1(t) - \x_2(t)\|_{\mat{M}}^2\right]
-\leq e^{-2\lambda(t-t_0)} \E\!\left[\|\x_1(t_0) - \x_2(t_0)\|_{\mat{M}}^2\right]
-+ \frac{C_\sigma}{\lambda},
+\mathbb E[V(t)]\leq e^{-2\lambda\tau}\mathbb E[V(t_0)]
++\frac{C}{\lambda}(1-e^{-2\lambda\tau}).
 \label{eq:ch4:stochastic-bound}
 \end{equation}
-where $C_\sigma$ depends on the diffusion coefficient $\sigma$ and the metric $\mat{M}$.
 \end{theorem}
 
-The bound~\eqref{eq:ch4:stochastic-bound} shows that contraction dominates at large
-separations (exponential decay), while noise dominates at small separations (the
-$C_\sigma / \lambda$ floor). The steady-state expected separation is
-$\sqrt{C_\sigma / \lambda}$: faster contraction (larger $\lambda$) produces tighter
-concentration of trajectories.
+The drift contribution is at most $-2\lambda V$, by the same segment argument used for deterministic forcing. It\^o's formula adds two diffusion traces, one for each independent solution, totaling at most $2C$. Thus $\frac{d}{dt}\mathbb E V\leq-2\lambda\mathbb E V+2C$ and scalar integration proves the claim. A general state-dependent metric introduces additional stochastic derivative terms and needs a separate theorem; the deterministic material derivative is not enough.
 
 \subsection{Connection to Uncertainty Propagation}
 
-The stochastic contraction bound has a direct interpretation for state estimation
-(Chapter~\ref{ch:duality}). If an observer is contracting with rate $\lambda$, and the
-process noise has intensity $C_\sigma$, then the estimation error is bounded in
-expectation by $\sqrt{C_\sigma / \lambda}$. This provides a performance guarantee for
-nonlinear observers that the EKF cannot offer.
+For the scalar Ornstein--Uhlenbeck process $dx=-ax\,dt+\sigma\,dW$, $a>0$, the solution is
+$x(t)=e^{-a\tau}x(t_0)+\sigma\int_{t_0}^te^{-a(t-s)}dW_s$.
+The It\^o isometry gives three distinct conclusions:
+\begin{itemize}
+\item One trial with deterministic initial state has variance $\sigma^2(1-e^{-2a\tau})/(2a)$ and stationary variance $\sigma^2/(2a)$.
+\item Two independent trials have mean-square difference $e^{-2a\tau}\mathbb E[(x_1(t_0)-x_2(t_0))^2]+\sigma^2(1-e^{-2a\tau})/a$.
+\item With the same additive noise realization, the difference is exactly $e^{-a\tau}(x_1(t_0)-x_2(t_0))$; the noise cancels and there is no pairwise additive floor.
+\end{itemize}
+These statements do not extend unchanged to multiplicative common noise. For $dx=-ax\,dt+bx\,dW$, the mean-square difference under common noise evolves as $e^{(-2a+b^2)\tau}\mathbb E[\delta x(t_0)^2]$. It grows when $b^2>2a$, even though the deterministic drift contracts.
 
-\begin{designbox}
-For practical controller design, the stochastic contraction bound suggests a design
-trade-off: increasing the contraction rate $\lambda$ (e.g., by increasing feedback gains)
-reduces the noise floor $\sqrt{C_\sigma / \lambda}$ but requires more control effort.
-The optimal trade-off depends on the noise intensity and the available actuator authority.
-\end{designbox}
-
+From the metric bound, an asymptotic upper bound on root-mean-square Euclidean separation is $\sqrt{C/(\lambda\underline m)}$. Expected distance is no larger than RMS distance by Jensen's inequality, but need not equal it or attain this upper bound. An observer claim additionally needs its actual error dynamics, sensor noise and observability assumptions. There is no blanket guarantee that a contracting observer outperforms an extended Kalman filter, or that increasing feedback lowers noise-driven error when the gain itself injects measurement noise.
 
 \section{Contraction Tubes and Funnel Control}
 
-The exponential convergence guarantee of contraction theory naturally defines a
-\emph{tube} around the nominal trajectory: the set of all states that are guaranteed
-to converge to the nominal at rate $\lambda$.
-
 \subsection{The Contraction Tube}
 
-Given a contracting system with rate $\lambda$ and metric $\mat{M}$, define the tube
-of radius $r$ around a nominal trajectory $\bar\x(t)$:
+For a feasible nominal solution $\bar x(t)$, define
 \begin{equation}
-\mathcal{T}_r(t) = \left\{ \x \in \R^n \mid \|\x - \bar\x(t)\|_{\mat{M}(t)} \leq r \right\}.
+\mathcal T_r(t)=\{x\in\mathcal D:d_{M,t}(x,\bar x(t))\leq r\}.
 \label{eq:ch4:tube}
 \end{equation}
+With certified scalar comparison $D^+d_{M,t}\leq-\lambda d_{M,t}+d$, the radius
+\begin{equation}
+r(t)=r_0e^{-\lambda\tau}+\frac d\lambda(1-e^{-\lambda\tau})
+\end{equation}
+bounds solutions beginning in $\mathcal T_{r_0}(t_0)$, while the entire tube stays inside the certified domain. It starts at $r_0$ and approaches $d/\lambda$. With $d=0$ it shrinks exponentially. Here $d$ is a bound on forcing in metric-length units, not automatically the raw magnitude of torque or a Euclidean disturbance.
 
-If $\x(t_0) \in \mathcal{T}_{r_0}(t_0)$, then $\x(t) \in \mathcal{T}_{r(t)}(t)$ with
-$r(t) = r_0 e^{-\lambda(t - t_0)}$ for the unperturbed system, and
-$r(t) = r_0 e^{-\lambda(t - t_0)} + d/\lambda$ for bounded disturbances with
-$\|w(t)\|_{\mat{M}} \leq d$.
+If $M$ is state-independent, these metric balls are ellipsoids in the chosen coordinates, with semi-axis lengths $r/\sqrt{\mu_i(M)}$. A state-dependent metric generally gives curved distance balls. Its endpoint matrix describes a local approximation, not an exact global ellipsoid. A condition number describes relative axis shape; absolute scale and the selected radius determine size.
 
 \subsection{Funnel Control}
 
-Funnel control prescribes a time-varying performance boundary $\varphi(t) > 0$
-(the ``funnel'') and designs a gain that guarantees the tracking error satisfies
-$\|e(t)\| < \varphi(t)$ for all $t > 0$. The connection to contraction is:
+A prescribed positive boundary $\varphi(t)$ can contain a contracting distance when the initial distance is inside it and
+$\dot\varphi(t)+\lambda\varphi(t)\geq d$.
+At a potential first boundary crossing this condition makes the outward distance derivative no larger than the boundary derivative. In the unforced case it reduces to $\lambda\geq-\dot\varphi/\varphi$. Strict containment needs an appropriate strict initial margin and regularity; the tube and control must remain feasible throughout.
 
-\begin{itemize}
-\item The funnel boundary $\varphi(t)$ defines the desired tube radius.
-\item A contracting controller with rate $\lambda \geq -\dot\varphi / \varphi$
-      guarantees that trajectories remain within the funnel.
-\item The adaptive gain $k(t) = 1/(\varphi(t) - \|e(t)\|)$ from classical funnel
-      control achieves this by increasing gain as the error approaches the boundary.
-\end{itemize}
+This comparison is not a general funnel-controller design theorem. A gain that diverges near a boundary may violate torque, activation, contact or sampling limits and may not be suitable for the plant's relative degree or internal dynamics. A certified funnel in a golf model must include those restrictions. Its radius at impact can bound a specified state error, but a bound on ball flight requires the separate impact/output map and its uncertainty.
 
-\begin{intuitionbox}
-Contraction tubes formalize the intuition that ``nearby trajectories stay nearby.''
-For trajectory tracking in robotics or biomechanics, the tube radius at impact time
-tells you the worst-case deviation from the planned motion. The condition number
-$\kappa(\mat{M})$ determines the shape of the tube: isotropic metrics give circular
-tubes; anisotropic metrics give ellipsoidal tubes that are tight in sensitive directions
-and loose in insensitive ones.
-\end{intuitionbox}
+\section{Reproducible Numerical Checks}
 
+The following program runs from the repository root with NumPy and SciPy. The helper reports a signed pointwise rate; it does not search for or certify a metric over a domain.
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy.linalg import solve_continuous_lyapunov
+from src.tools.contraction_examples import (
+    local_contraction_rate, vdp_candidate_residual,
+)
+
+A = np.array([[-2.0, 1.0], [0.0, -3.0]])
+M = solve_continuous_lyapunov(A.T, -np.eye(2))
+zero = np.zeros((2, 2))
+print(local_contraction_rate(A, np.eye(2), zero))
+print(M)
+print(local_contraction_rate(A, M, zero))
+
+cascade = np.array([[-1.0, 4.0], [0.0, -1.0]])
+print(local_contraction_rate(cascade, np.diag([1.0, 25.0]), zero))
+print(vdp_candidate_residual(np.zeros(2)))
+\end{lstlisting}
+The outputs are the identity rate approximately $1.792893$, the Lyapunov metric given above, its generalized rate $30/(13+\sqrt{13})$, the cascade rate $0.6$, and the rejected Van der Pol residual $[[0.6,-0.2],[-0.2,1.92]]$. Independent checks compare metric decay with exact matrix exponentials, differentiate the nonlinear field and candidate metric numerically, verify the dual congruence, integrate the OU variance and tube forcing, and construct the endpoint-distance counterexample. These calculations test the displayed mathematics; they are not simulated or measured golfer performance.
 
 \section{Chapter Summary}
 
-\begin{enumerate}
-\item \textbf{Historical foundations:} Contraction theory evolved from Demidovich's
-      work on the symmetric Jacobian condition (1961) and was formalized by Lohmiller
-      and Slotine (1998). It generalizes Lyapunov stability from point stability to
-      trajectory stability.
+Contraction turns a differential metric inequality into a finite-distance bound by transporting connecting curves. Its interpretation depends on the complete vector field, common comparison clock, domain, metric scales and input assumptions. Matrix order, total derivatives and length-versus-squared-length factors are essential parts of the argument.
 
-\item \textbf{The contraction condition} (Def.~\ref{def:ch4:contraction}) is a matrix
-      inequality on the Jacobian and metric:
-      $\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} \preceq -2\lambda\mat{M}$.
+A cascade needs controlled coupling as well as contracting blocks. A CCM needs a finite controller construction as well as a differential gain. A sampled residual needs a between-sample certificate; a discrete controller needs a certificate for its actual map. Orbital convergence, independent-trial repeatability and same-time full-state convergence answer different questions.
 
-\item \textbf{Exponential convergence} (Thm.~\ref{thm:ch4:convergence}): If the condition
-      holds, all trajectories converge to each other at rate $e^{-\lambda t}$. The proof
-      combines geodesic parametrization, Gronwall's inequality, and metric sandwich bounds.
+For the golf swing, the productive connection is to specify a physical model and feasible policy, propagate meaningful perturbations, and connect the result to delivery and impact. Impedance measurements and repeatable motion can inform that investigation. They do not remove the need to establish the mathematical hypotheses or validate the resulting predictions.
 
-\item \textbf{Metric freedom}: The choice of $\mat{M}$ is flexible. Many nonlinear systems
-      that do not contract in the identity metric may contract in a well-chosen metric.
-      Finding the right metric is the central computational challenge.
+\section{Further Reading}
 
-\item \textbf{Worked example} (Sec.~\ref{sec:ch4:example}): A linear system with Jacobian
-      $\mat{A} = [[-2,1],[0,-3]]$ is contracting in the identity metric at rate $\lambda \approx 1.79$.
-
-\item \textbf{Partial contraction} (Sec.~\ref{sec:ch4:partial}): Not all directions must
-      contract uniformly. Hierarchical decomposition (Thm.~\ref{thm:ch4:partial})
-      enables contraction in one subsystem to drive convergence in another.
-
-\item \textbf{Control contraction metrics (CCM)} (Sec.~\ref{sec:ch4:ccm}): For controlled
-      systems, feedback design can be posed as a convex optimization in the dual metric
-      $\mat{W} = \mat{M}^{-1}$. The pointwise LMI
-      $\dot{\mat{W}} - \mat{A}\mat{W} - \mat{W}\mat{A}^\T + \gamma GG^\T \preceq -2\lambda\mat{W}$
-      enables SDP-based controller synthesis.
-
-\item \textbf{Discrete-time contraction} (Sec.~\ref{sec:ch4:discrete}): The condition
-      $\mat{J}_k^\T \mat{M}_{k+1} \mat{J}_k \preceq \rho^2 \mat{M}_k$ certifies exponential
-      decay with rate $\rho < 1$ for iterative algorithms and digital controllers.
-
-\item \textbf{Limits of numerical metric synthesis}: The Van der Pol oscillator
-      (Sec.~\ref{sec:ch4:vdp}) shows how a parameterized metric search is set up --- and
-      why it cannot succeed here. An attracting limit cycle rules out global contraction
-      outright, so a returned ``solution'' must be checked against the condition it claims
-      to satisfy rather than trusted.
-
-\item \textbf{Robustness margins}: The contraction rate $\lambda$ directly bounds
-      disturbance rejection. For $\norm{d(t)} \leq D$, the ultimate error bound
-      is $\sqrt{\overline{m}/({\lambda\underline{m}})} \cdot D$ (Thm.~\ref{thm:ch4:disturbance-rejection}).
-
-\item \textbf{ISS relationship}: Contraction implies incremental ISS, which is strictly
-      stronger than standard ISS. Contraction certifies trajectory synchronization, not
-      just input-output boundedness.
-
-\item \textbf{Lyapunov connection}: Contraction implies Lyapunov stability, but the
-      converse does not hold. Contraction is a stronger, trajectory-focused property
-      (Prop.~\ref{prop:ch4:contraction-lyapunov}).
-\end{enumerate}
-
-In the next chapter, we turn to \textbf{input-output analysis} and transfer functions,
-exploring how tangent-space methods interface with frequency-domain techniques for
-feedback design.
+Lohmiller and Slotine \cite{LohmillerSlotine1998} provide the foundational differential treatment. Manchester and Slotine \cite{ManchesterSlotine2017} develop control contraction metrics and the path-based controller construction; their transverse paper \cite{ManchesterSlotineTransverse2013} treats orbital rather than same-time convergence. Pham, Tabareau and Slotine \cite{PhamTabuadaSlotine2009} state the noise independence and metric restrictions behind their stochastic result. Franklin and colleagues \cite{Franklin2003Stiffness} provide a specific reaching experiment on stiffness adaptation, whose measured scope should be distinguished from a contraction certificate for golf.
 
 \section*{Exercises}
 
 \begin{enumerate}
-\item \textbf{Contraction of a linear system.}
-      For $\dot\x = \mat{A}\x$ with $\mat{A} = \begin{bmatrix} -1 & 2 \\ 0 & -3 \end{bmatrix}$,
-      find the contraction rate using the identity metric $\mat{M} = \mat{I}$. Then find a
-      diagonal metric $\mat{M} = \text{diag}(m_1, m_2)$ that maximizes the contraction rate.
-
-\item \textbf{LMI feasibility.}
-      For the system $\dot\x = f(\x) + G(\x)u$ with
-      $f = (-x_1 + x_2^2,\; -2x_2)^T$ and $g = (0, 1)^T$, formulate the LMI condition
-      for finding a constant contraction metric $\mat{M}$ and rate $\lambda > 0$
-      (with $u = -kx_2$). Solve it for $k = 1$.
-
-\item \textbf{Partial contraction.}
-      For a cascade system $\dot{x}_1 = -x_1 + x_2^2$, $\dot{x}_2 = -2x_2 + u$,
-      verify partial contraction: show that the $x_2$-subsystem contracts independently,
-      and the $x_1$-subsystem contracts when $x_2(t)$ is treated as a known input.
-      What is the overall contraction rate?
-
-\item \textbf{CCM computation.}
-      For the single-input system $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1^3 + u$,
-      search for a CCM by parameterizing $\mat{W}(\x) = \mat{M}(\x)^{-1}$ as a polynomial
-      in $\x$ and solving the pointwise LMI condition.
-
-\item \textbf{Discrete-time contraction.}
-      Show that the discrete system $\x_{k+1} = \mat{A}\x_k$ is contracting if and only if
-      $\|\mat{A}\|_{\mat{M}} < 1$ for some positive definite $\mat{M}$. What is the
-      contraction rate in terms of $\|\mat{A}\|_{\mat{M}}$?
-
-\item \textbf{Stochastic contraction bound.}
-      For the scalar SDE $\dd x = -\lambda x \,\dd t + \sigma \,\dd W$ with $\lambda > 0$,
-      compute the steady-state variance $\E[x^2]$ exactly. Verify that it equals
-      $\sigma^2 / (2\lambda)$, consistent with the bound in Theorem~\ref{thm:ch4:stochastic-contraction}.
-
-\item \textbf{Tube computation.}
-      For the system in Exercise 1 with bounded disturbance $\|w\| \leq d = 0.1$,
-      compute the contraction tube radius $r(t)$ for $r_0 = 1$. At what time $t^*$
-      does the tube radius reach twice the steady-state radius?
-
-\item \textbf{Biological contraction.}
-      Consider a simplified muscle model: $\dot{x} = -kx - b\dot{x} + F(t)$ where
-      $k > 0$ (stiffness) and $b > 0$ (damping). Show this is contracting and compute
-      the contraction rate as a function of $k$ and $b$. Relate to the co-contraction
-      mechanism described in the biomechanics section.
+\item \textbf{Contraction of a Linear System.} For $A=[[-1,2],[0,-3]]$, compute the identity-metric rate. For $M=\operatorname{diag}(1,\theta)$, derive $\lambda(\theta)=2-\sqrt{1+1/\theta}$. Find the weights giving a prescribed rate below one, and explain why the supremum one is not attained by any finite positive diagonal weight. Compare with a nondiagonal metric constructed from eigenvectors.
+\item \textbf{LMI Feasibility on a Domain.} For $\dot x_1=-x_1+x_2^2$, $\dot x_2=-2x_2+u$, apply $u=-x_2$. Show that no constant positive metric certifies a fixed positive rate on all $\mathbb R^2$: the unbounded off-diagonal coupling must be addressed. On the invariant strip $|x_2|\leq R$, use $M=\operatorname{diag}(1,\theta)$ and derive a sufficient weight for any $0<\lambda<1$.
+\item \textbf{Partial and Cascade Contraction.} For the same cascade with $|u(t)|\leq U$, show that $|x_2|\leq R$ is invariant when $2R\geq U$. Bound the coupling there and find a weighted full-state certificate for a target rate below one. Explain why a statement based only on the two diagonal subsystem rates is insufficient, and contrast it with the position integrator $\dot q=v$.
+\item \textbf{From Differential to Finite Feedback.} For $\dot x_1=x_2$, $\dot x_2=-x_1^3+u$, use $u=x_1^3-k_px_1-k_dx_2$ with $k_p,k_d>0$ to obtain a linear stable closed loop. Solve its Lyapunov equation and compute $K=-D_xu$ for our differential sign convention. Verify the primal and dual identities. Explain why an arbitrary polynomial differential gain would still require a finite controller construction and an actuator-feasibility check.
+\item \textbf{Discrete-Time Contraction.} For $x_{k+1}=Ax_k$, show that a constant positive metric with induced norm $\|A\|_M<1$ exists precisely when $A$ is Schur stable. Give the length factor and its equivalent continuous-time rate for sample period $\Delta t$. Compare an exact scalar stable flow with explicit Euler and find the latter's allowable step interval.
+\item \textbf{Stochastic Comparisons.} Derive the finite-time and stationary variances for $dx=-ax\,dt+\sigma\,dW$. Compute the mean-square difference for common-noise and independent-noise pairs, retaining the initial difference. Then derive the common-noise multiplicative condition $b^2<2a$ for mean-square decay in $dx=-ax\,dt+bx\,dW$.
+\item \textbf{Tube Computation.} Use the identity rate of Exercise1, metric forcing bound $d=0.1$ and $r_0=1$. Compute the exact scalar comparison radius and the time at which it reaches twice its asymptotic radius, checking that such a positive time exists. Derive the inequality on a prescribed boundary $\varphi(t)$ and state the required initial/domain assumptions.
+\item \textbf{Mechanical Impedance and Contraction.} For $I\ddot q+b\dot q+kq=\tau(t)$ with positive constants and common torque input, derive the two-state Jacobian and a full-state Lyapunov metric. Explain why the mechanical error energy has only semidefinite dissipation and why increasing stiffness need not increase the decay rate. State what additional dynamics and measurements would be required before using this model to interpret coactivation during a golf swing.
 \end{enumerate}
