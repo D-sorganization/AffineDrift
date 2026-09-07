@@ -275,8 +275,8 @@ class TestAuditBookPhysicsOfGolf:
         assert res.total_latex_tikz == 25
         assert res.total_latex_includegraphics == 3
         assert res.total_latex_fig_labels == 28
-        assert res.total_quarto_figures == 3
-        assert res.missing_figures_count == 25
+        assert res.total_quarto_figures == 4
+        assert res.missing_figures_count == 24
         assert res.is_in_full_parity is False
 
 
