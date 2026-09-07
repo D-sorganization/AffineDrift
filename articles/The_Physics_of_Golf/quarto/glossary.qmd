@@ -1,834 +1,917 @@
 ---
-description: "Acceleration: The rate of change of velocity with respect to time. In the golf swing, the clubhead experiences enormous accelerations, especially during..."
+title: "Glossary"
+css: ../../../css/physics-glossary.css
+description: "Precise definitions connecting golf swing motion, forces, energy, control, anatomy and evidence."
 ---
 
+## Reading Across Definitions
 
+The glossary connects three questions: **what moves, what supplies or transfers energy, and what the golfer can change**. These questions share a mechanical model, but they require different evidence.
 
-# Glossary
+For example, a changing forearm-club angle is kinematics. A bending shaft adds deformation and possible elastic storage. A joint moment combined with the matching angular velocity gives net joint power. None of those observations alone identifies individual muscle forces or the nervous system's command. Read **Lag**, **Wrist cock**, **Shaft lag**, **Power transfer** and **Inverse dynamics** together when investigating release.
 
-**Acceleration**: The rate of change of velocity with respect to time. In the golf swing, the clubhead experiences enormous accelerations, especially during the downswing and impact.
+The same distinction matters for ground contact. Foot forces affect whole-body momentum and the feasible motion of a connected system. In an ideal stationary no-slip model, a contact point has zero velocity, so its contact force supplies no power there even though it changes momentum. A force can redirect motion, transmit load or enable muscle work elsewhere without itself adding mechanical energy. Read **Ground reaction force**, **Constraint forces**, **Linear momentum** and **Work** together.
 
-**Affine control system**: A system whose dynamics can be written as $\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\control$, where the control inputs enter linearly. Most mechanical systems, including the golf swing, have affine structure.
+Finally, a zero-input calculation is a model intervention. It retains the declared state, constraints and loads; it does not erase earlier muscle work, stored energy or activation states. Read **Affine decomposition**, **Drift**, **Control authority**, **DCR** and the **ZTCF family** together. The useful research question is which measured outcomes a declared mechanism explains, and what observation would distinguish it from an alternative.
 
-**Affine decomposition**: The separation of dynamics into drift (passive, autonomous) and control (active, driven by inputs) components. This decomposition is the foundation of the AffineDrift framework.
+## A Collision Check
 
-**Angular acceleration**: The rate of change of angular velocity. During the downswing, the torso and arms have large angular accelerations, causing centrifugal forces that bend the shaft and accelerate the clubhead.
+COR illustrates why definitions must be used together. Assume two translating bodies collide along one normal, external impulse is negligible, the ball starts at rest, and rotation and tangential impulse are excluded. Let $m_c$ and $m_b$ be club and ball masses, $V>0$ the incident club speed, and superscript $+$ denote the post-impact value. Momentum conservation and the COR definition give
 
-**Angular velocity**: The rate of rotation about an axis. The torso, arms, and club all have angular velocities during the swing, and these velocities change dramatically from backswing to impact.
+$$
+m_c V=m_c v_c^+ +m_b v_b^+,
+\qquad v_b^+-v_c^+=eV,
+$$
 
-**Backswing**: The phase of the golf swing where the golfer rotates the body and arms upward and backward, away from the ball. The backswing stores potential and elastic energy that is released during the downswing.
+and therefore
 
-**Ball compression**: A measure of the stiffness of a golf ball. A higher compression ball (harder ball) deforms less when struck; a lower compression ball deforms more. Ball compression affects the energy transfer to the ball and the spin imparted.
+$$
+v_b^+=\frac{(1+e)m_c}{m_c+m_b}V,
+\qquad
+\Delta T=-\frac12\frac{m_cm_b}{m_c+m_b}(1-e^2)V^2.
+$$
 
-**Beam theory**: Classical mechanics theory that describes how beams (like golf shafts) bend under load. Euler-Bernoulli beam theory is the foundation for understanding shaft flexibility.
+Thus the ball can depart faster than the incident club even when $e<1$. The loss $\Delta T$ is the change in the two bodies' total translational kinetic energy; it is not the fraction delivered to the ball. In an off-center three-dimensional impact, rotational inertia, contact direction and friction enter the calculation. This simple derivation explains the vocabulary, not a universal equipment test or launch prediction.
 
-**Catapult effect**: The phenomenon where the bent golf shaft straightens near impact, releasing stored elastic energy to accelerate the clubhead further. The timing of this snapback is critical for maximum distance.
+## Evidence and Conventions
 
-**Center of mass**: The average position of all the mass in a system, weighted by the mass at each location. The center of mass of the golfer, arms, and club moves in a complex pattern during the swing.
+Unless stated otherwise, mechanical vectors use a declared ground-based frame approximated as inertial over the swing. Anatomical motion uses local segment axes. Lead and trail refer to the golfer's target-side and opposite-side limbs.
 
-**Centrifugal acceleration**: The outward acceleration experienced by a body moving in a circular path, proportional to the square of the angular velocity and the distance from the center of rotation. In the golf swing, centrifugal acceleration pulls the clubhead outward, bending the shaft.
+The wrist entries draw on a study that measured both wrists in local coordinates under different grips [@glossaryWrist2019]. The tissue entries distinguish specimen-level mechanical evidence from whole-swing inference [@glossaryFascia2023]. The reaction-time example comes from an object-manipulation experiment, not a golf trial [@glossaryFeedback2016]. Pain terminology follows IASP's distinction between experience, nociception and tissue damage [@glossaryIASP]. Equipment and stroke definitions refer to the governing USGA resources rather than treating a glossary as a complete rule book [@glossaryUSGAEquipment; @glossaryUSGAStroke].
 
-**Centrifugal stiffening**: The phenomenon where the effective stiffness of a rotating structure (like a golf shaft) increases due to centrifugal forces. As the downswing speed increases, the shaft becomes stiffer, affecting shaft dynamics.
+## A
 
-**Cerebellum**: The part of the brain responsible for motor coordination, learning of motor patterns, and predicting the sensory consequences of movements. The cerebellum learns the drift field of the golf swing through practice.
+**Acceleration**: The time derivative of velocity in a declared reference frame. For a clubhead point, acceleration includes changes in both speed and direction; a large acceleration does not by itself imply large mechanical power.
 
-**Clubhead**: The striking end of the golf club, typically made of steel, titanium, or composite materials. The clubhead's velocity and orientation at impact determine the ball's initial trajectory.
+**Affine control system**: A model of the form $\dot{\mathbf{x}}=f(\mathbf{x})+G(\mathbf{x})\mathbf{u}$. At a fixed state, changes in the declared input produce linear changes in the state derivative; the total map includes the offset $f$. Affinity in generalized torque does not establish affinity in neural excitation or a finite swing trajectory.
 
-**Clubhead speed**: The velocity of the clubhead at impact. This is the primary determinant of ball distance (along with launch angle and spin rate). Clubhead speed varies widely: roughly 60--80 mph for recreational amateurs, approximately 110--125 mph for PGA Tour professionals, and typically 140--155 mph for long-drive competitors [@Broadie2014; @trackman_launch] (these ranges are illustrative and based on commonly cited statistics from launch monitor and tour data; individual values vary widely and depend on measurement methodology).
+**Affine decomposition**: The split into a zero-declared-input vector field and an input-dependent increment. It depends on the chosen actuator port and retained plant state. Elastic tension, damping, contact reactions and previously established activation may survive the intervention; the split does not identify biological passivity.
 
-**Coefficient of restitution (COR)**: The ratio of the separation speed to the approach speed in a collision. Golf balls have a COR of approximately 0.83 (the USGA limit), meaning the ball leaves the face at 83\% of the relative approach speed. Note: COR is a speed ratio, not an energy ratio; the fraction of kinetic energy transferred also depends on the mass ratio of ball to clubhead.
+**Angular acceleration**: The time derivative of angular velocity in a declared frame. For two points on a rigid body, $\mathbf{a}_B=\mathbf{a}_A+\boldsymbol{\alpha}\times\mathbf{r}+\boldsymbol{\omega}\times(\boldsymbol{\omega}\times\mathbf{r})$. Here $\mathbf{r}$ points from $A$ to $B$. The angular-acceleration term and the angular-speed-squared term are distinct.
 
-**Collagen**: A protein that provides tensile strength and stiffness to connective tissues like tendons and fascia. Collagen is the most abundant protein in the human body.
+**Angular velocity**: The axial vector describing instantaneous rigid-body rotation. A body's points share angular velocity but generally have different linear velocities. For three-dimensional orientations it is not generally the vector of Euler-angle derivatives.
 
-**Composite material**: A material made from two or more constituent materials with different physical and chemical properties. Golf shafts are typically carbon fiber composite (carbon fibers in an epoxy resin matrix).
+## B
 
-**Connective tissue**: Tissue that provides structural support and binds together other tissues. Includes tendons, ligaments, fascia, and cartilage. Connective tissue is made primarily of collagen and elastin.
+**Backswing**: The movement taking the club away from the ball toward the transition. It establishes configuration, velocities and tissue/shaft states. Raising mass can increase gravitational potential energy, but the amount and location of elastic storage require force-deformation evidence.
 
-**Constraint**: A restriction on the motion of a system. In golf, constraints include the kinematic structure of the skeleton, the grip (hand holding the club), and the contact with the ground.
+**Ball compression**: A rating derived from deformation under a specified compression test. It is not a universal material modulus, cover hardness or impact COR. Dynamic response also depends on loading rate, temperature, construction and the test protocol.
 
-**Constraint forces**: Forces that arise from constraints, acting to ensure the constraints remain satisfied. Constraint forces include the forces from the ground, the forces between bones at joints, and the forces transmitted through connective tissue.
+**Beam theory**: Models relating distributed loading, deformation and internal forces in slender structures. The appropriate shaft model depends on bending, torsion, shear, rotary inertia, geometric nonlinearity and boundary motion; Euler-Bernoulli theory is one approximation.
 
-**Constraint-force method**: An approach to dynamics where constraints are explicitly managed through Lagrange multipliers (constraint forces). This method separates the effects of applied forces from the effects of constraints.
+## C
 
-**Control affine**: An adjective describing a system where control inputs enter affinely (linearly). The golf swing is control affine.
+**Catapult effect**: An informal description of elastic shaft recoil contributing to clubhead motion. Recoverable energy was stored through earlier work. Its contribution depends on loading and timing; a straight shaft at impact is neither a general optimum nor proof that stored energy has all become ball energy.
 
-**Control authority**: The range of accelerations or motions that can be achieved by applying control inputs. In the golf swing, control authority is high early (slow motion, muscles fresh) and low late (fast motion, inertia large).
+**Center of mass**: The mass-weighted position $\mathbf{r}_C=\sum_i m_i\mathbf{r}_i/\sum_i m_i$. It differs from the center of pressure under the feet and from the relative vertical loads on two force plates.
 
-**Control input**: An action taken by the golfer (muscle torque) that directly affects the motion. Control inputs are the driving forces behind active motor control.
+**Centrifugal acceleration**: An apparent acceleration $-\boldsymbol{\omega}\times(\boldsymbol{\omega}\times\mathbf{r})$ introduced in a rotating frame. For fixed-axis circular motion, inertial acceleration is inward, of magnitude $\omega^2r_\perp$. Real shaft forces must be found from the complete force balance; the frame term is not an additional energy source.
 
-**Coriolis force**: A fictitious force that appears in a rotating reference frame, perpendicular to the velocity of an object. In the rotating frame of the torso, the Coriolis force deflects the arms sideways, affecting the swing plane.
+**Centrifugal stiffening**: A change in a rotating structure's transverse dynamics caused by rotation-induced axial tension. The resulting geometric stiffness depends on the configuration, loading and supports. This is not a change in the shaft material's elastic modulus, nor a universal scalar stiffness increase for every mode.
 
-**Cortical bone**: The dense, hard outer layer of bone. Cortical bone is much stiffer (higher elastic modulus) than cancellous (spongy) bone.
+**Cerebellum**: A brain structure involved in coordination, timing and sensorimotor adaptation. Internal-model descriptions are hypotheses about computation; they do not establish that the cerebellum explicitly learns AffineDrift's chosen mathematical drift field.
+
+**Clubhead**: The club's striking body. Its velocity, orientation, angular velocity, mass distribution, impact location and deformation interact with the ball and contact conditions to determine launch.
+
+**Clubhead speed**: The magnitude of velocity of a declared clubhead point at a declared time, commonly just before impact. Specify the point, sensor and measurement convention. Distance also depends on strike, ball launch and flight conditions; population averages are not individual targets.
+
+**Coefficient of restitution (COR)**: For a one-dimensional normal collision, $e=(v_b^+-v_c^+)/(v_c^--v_b^-)$, with signed velocities along the same contact normal and a positive approach denominator. Here $c$ and $b$ denote club and ball; superscripts $-$ and $+$ mean before and after impact. It compares relative separation and approach speeds, not ball speed to incident club speed. Neither a universal golf-ball COR of 0.83 nor an 83 percent energy-transfer fraction follows. Club spring-effect conformity uses governing equipment test procedures [@glossaryUSGAEquipment].
+
+**Collagen**: A family of structural proteins important in the extracellular matrix. Tissue behavior depends on collagen type, arrangement, cross-linking and interaction with other constituents; collagen content alone does not determine stiffness or recoverable energy.
+
+**Composite material**: A material combining distinct constituents, such as carbon fibers in a polymer matrix. Fiber orientation, layup, resin and geometry affect a shaft's directional bending and torsional response.
+
+**Connective tissue**: A diverse family of tissues containing cells and extracellular matrix; examples include bone, cartilage, tendon, ligament and fascia. Their constituents and mechanical functions differ, so they cannot be assigned one stiffness, strength or elastic-storage capacity.
+
+**Constraint**: A modeled restriction on configuration, velocity or contact state. Joint geometry, two-hand grip closure and foot contact impose different restrictions. A real contact may slip, separate or deform, invalidating a permanently rigid constraint assumption.
+
+**Constraint forces**: Reactions enforcing a declared constraint model. For ideal stationary bilateral constraints they do no total work on admissible motion, although they can transfer power between bodies. Moving supports, friction and deformable contacts require their own power balances.
+
+**Constraint-force method**: A dynamics formulation solving accelerations and reaction multipliers together. With $J$ the constraint Jacobian, $M\ddot{\mathbf{q}}=\mathbf{r}+B\mathbf{u}+J^\mathsf{T}\boldsymbol{\lambda}$ is supplemented by the differentiated constraints; $\mathbf{r}$ collects retained loads and velocity-dependent terms. Reactions generally change when applied input changes.
+
+**Control affine**: See affine control system.
+
+**Control authority**: The effect attainable with the admissible input set. Instantaneous acceleration authority is a set such as $a_0+H\mathcal{U}$; finite-time authority additionally depends on dynamics, time and constraints. It may vary by direction and posture. Faster motion does not itself increase the mass matrix or prove loss of authority.
+
+**Control input**: The declared external command or effort in a model, such as joint torque, motor voltage or neural excitation. These are different ports with different internal dynamics. A net joint torque is not an individual muscle force.
+
+**Coriolis force**: In a rotating frame, the apparent force $-2m\boldsymbol{\omega}\times\mathbf{v}_{\rm rel}$. The relative velocity and frame rotation must be specified. Velocity-coupling terms in generalized-coordinate equations need not correspond individually to a torso-frame force.
+
+**Cortical bone**: The relatively dense outer bone tissue, distinguished from the porous trabecular architecture. Material modulus, apparent structural stiffness and whole-bone strength are different quantities and depend on direction and geometry.
+
+## D
 
 **DCR**: Abbreviation for Drift-Control Ratio. DCR compares modeled drift with bounded modeled control in the same acceleration or task-projected space. A reproducible value declares the weighting matrix and norm, admissible control set, regularizer, effective plant, and state. A ratio using realized input rather than available control capacity is a different, policy-dependent diagnostic.
 
-**Normalized drift fraction**: A separate normalized quantity, defined as drift / (drift + control), ranging from 0 (pure control) to 1 (pure drift).
+**Degrees of freedom**: The number of independent local configuration coordinates after accounting for constraints. A free spatial rigid body has six. Counts for an arm or whole golfer depend on modeled joints, flexible modes and contacts; redundant orientation coordinates are not additional physical freedoms.
 
-**Degrees of freedom**: The number of independent ways a system can move. A single rigid body in 3D space has 6 degrees of freedom (3 translational, 3 rotational). A human arm with shoulder, elbow, and wrist joints has approximately 7--9 degrees of freedom [@Delp2007; @Rajagopal2016] (illustrative; exact counts depend on the joint model and which sub-axes are included; values vary across biomechanical models).
+**Dorsiflexion**: At the ankle, movement bringing the dorsum of the foot toward the shin. The term is also used for wrist extension. Neither use defines the forearm-shaft angle called wrist cock; wrist deviation is a separate motion.
 
-**Dorsiflexion**: Upward bending of the foot or hand at the ankle or wrist, respectively. In the golf swing, wrist dorsiflexion (extension) during the backswing cocks the wrists, storing elastic energy.
+**Downswing**: The movement from a declared transition event to ball contact. Segment reversals need not occur simultaneously. Duration is measured for the particular swing, club and event definition rather than fixed at 0.2 seconds.
 
-**Downswing**: The phase of the swing where the golfer accelerates the arms and club downward toward the ball, from the top of the backswing to impact. The downswing lasts roughly 0.2 seconds and involves dramatic acceleration.
+**Drift**: The state derivative when the declared control input is zero, with the effective plant, internal state and load protocol retained. Gravity and velocity-dependent, elastic or dissipative effects may contribute. Late-downswing dominance is a model-dependent quantitative claim requiring an explicit comparison.
 
-**Drift**: Passive dynamics driven by gravity, inertia, and constraint forces, independent of active muscle control. Drift increases in importance as the swing accelerates, dominating the late downswing.
+**Drift field**: The vector field $f(\mathbf{x})$ in a declared affine model. Its value depends on the state and retained loads. A sequence of pointwise zero-input evaluations along an actuated swing is generally not a trajectory generated by that field.
 
 **Drift-Control Ratio (DCR)**: See DCR.
 
-**Drift field**: The vector field $f(\mathbf{x})$ that describes how the state evolves in the absence of control inputs. The drift field encodes gravity, Coriolis forces, elastic restoring forces, and damping.
-
 **Dynamics**: The study of how systems evolve over time under the influence of forces. The dynamics of the golf swing are governed by Newton's laws and the constraints of the body.
 
-**Eccentric contraction**: Muscle contraction where the muscle lengthens (is pulled apart) while exerting force. This occurs during the follow-through when the muscles are decelerating the swing.
+## E
 
-**Effective mass**: An apparent mass that an actuator (like a muscle) feels when accelerating a system. Due to inertia and constraints, the effective mass can be very different from the actual mass.
+**Eccentric contraction**: Active force production while the specified muscle or fascicle lengthens. It can absorb mechanical work, but fascicle, tendon and whole muscle-tendon length changes may differ. It is not confined to follow-through.
 
-**Elastin**: A protein that provides elasticity and extensibility to tissues. Elastin comprises only 2--4\% of fascia by mass but is crucial for elastic behavior.
+**Effective mass**: Directional inertia seen at a chosen task point. For an unconstrained positive-definite $M$, task Jacobian $J$ and unit direction $\mathbf{n}$, $m_{\rm eff}^{-1}=\mathbf{n}^\mathsf{T}JM^{-1}J^\mathsf{T}\mathbf{n}$. Constraints change the mobility operator; a zero directional mobility has no finite effective mass in this sense.
 
-**Elastic energy**: Energy stored in a deformed elastic material (like a bent shaft or stretched tendon). Elastic energy is recovered when the material returns to its original shape.
+**Elastic energy**: Recoverable energy associated with deformation. A linear spring stores $U=\tfrac12 k\delta^2$; a bending beam stores $\tfrac12\int EI\kappa^2\,ds$ in the corresponding small-strain model. Viscoelastic hysteresis and continuing external work affect how much reaches another body.
 
-**Elastic modulus**: A material property quantifying the stiffness of a material. Higher elastic modulus means the material is stiffer. Tendon has much higher elastic modulus than fascia.
+**Elastic modulus**: A constitutive measure relating stress and strain under specified conditions. Young's modulus $E$ describes uniaxial elastic response; anisotropic and nonlinear tissues require directional or tangent measures. It differs from a whole structure's force-displacement stiffness.
 
-**Elasticity**: The ability of a material to return to its original shape after deformation. Elastic materials store and release energy; plastic materials do not recover.
+**Elasticity**: Reversible deformation on unloading within a material's elastic regime. A material can exhibit both elastic response and irreversible plastic deformation; viscoelastic recovery may also depend on time.
 
-**Ellipsoid**: A smooth, oval-shaped 3D surface, like a stretched sphere. In dynamics, reachability sets are sometimes described as ellipsoids in state space.
+**Elastin**: An extracellular-matrix protein contributing to reversible deformation. Its abundance varies by tissue and sampling method; a single percentage cannot characterize all fascia.
+
+**Ellipsoid**: A surface defined by a positive-definite quadratic form, with a filled ellipsoid including its interior. Higher-dimensional ellipsoids can approximate uncertainty or reachable sets; general nonlinear reachable sets need not be ellipsoidal.
 
 **Endurance**: The ability to sustain effort over time. Golf endurance depends on cardiovascular fitness, muscle endurance, and mental focus.
 
-**Epimysium**: The fascia surrounding an entire muscle. The epimysium is continuous with tendons and connects the muscle to bone.
+**Epimysium**: The connective-tissue sheath around a whole skeletal muscle, continuous with internal connective-tissue networks and attachment structures. Force can be transmitted through several paths; the sheath is not an isolated spring with a universal stiffness.
 
 **Equations of motion**: Mathematical equations describing how a system evolves over time, typically derived from Newton's laws or Lagrangian mechanics. The equations of motion for the golf swing are nonlinear and high-dimensional.
 
-**Equilibrium**: A state where a system is at rest and experiences no net force or torque. At address, the golfer is in approximate equilibrium.
+**Equilibrium**: A state at which the declared state derivative vanishes for specified inputs and loads. Static force and moment balance is one mechanical case. Ongoing rotation or translation can instead be a relative equilibrium in an appropriate frame.
 
-**Euler-Bernoulli beam theory**: Classical theory of beam bending, where a beam's deflection is related to the applied load and the beam's stiffness (EI product). This theory is the basis for understanding golf shaft flexibility.
+**Euler-Bernoulli beam theory**: A slender-beam approximation that neglects transverse shear deformation and normally rotary inertia. Bending moment and curvature satisfy $M_b=EI\kappa$ with a consistent sign convention. Shaft taper, composite anisotropy, torsion and large motion may require extensions.
 
-**Extension**: Straightening of a joint. Wrist extension (dorsiflexion) cocks the wrists during the backswing; wrist flexion (palmar flexion) uncocks the wrists during the downswing.
+**Extension**: An anatomical joint motion defined relative to local segment axes. At the wrist, the hand moves dorsally relative to the forearm. It is distinct from radial/ulnar deviation and cannot alone define cock or release.
 
-**Fascia**: Connective tissue composed of collagen, elastin, and ground substance, wrapping around and interconnecting muscles, bones, and organs. Fascia is much less stiff than tendon.
+## F
 
-**Fatigue**: Decrease in force production with repeated muscle contraction. Muscular fatigue can occur during a round of golf, affecting swing consistency late in the round.
+**Facet joint**: A synovial articulation between adjacent vertebral articular processes, also called a zygapophysial joint. It contributes to spinal guidance and load sharing.
+
+**Fascia**: Connective-tissue sheets and networks with region-specific architecture. Mechanical tests of fascia lata demonstrate direction- and time-dependent response; those results do not establish a universal fascia-versus-tendon ranking or whole-swing energy contribution [@glossaryFascia2023].
+
+**Fatigue**: An activity-related reduction in the capacity to produce force or power. Its measurement depends on the task and protocol; altered swing performance can have muscular, neural and other contributors.
 
 **Feedback**: Information about the current state or outcome that is fed back to the system for control or learning. Proprioceptive feedback informs the nervous system of body position; visual feedback informs the golfer of ball position.
 
-**Feedback control**: A control strategy where the control inputs are determined based on feedback from the system state. The golf swing uses feedback control early and mid-swing.
+**Feedback control**: Control that uses information about measured or estimated state or outcome. The useful correction depends on sensory delay, processing, actuation and time remaining. A late swing can still be influenced by feedback to earlier events.
 
-**Feedforward control**: A control strategy where the control inputs are predetermined based on prediction of the system's response. The golf swing uses feedforward control late in the downswing.
+**Feedforward control**: Control based on a reference or prediction without waiting for the resulting error. It can coexist with feedback throughout a movement; feedforward does not mean biologically passive.
 
-**First mode**: The lowest-frequency bending mode of a structure. For a golf shaft, the first mode is the primary deformation pattern, dominating the shaft's response to transverse loading.
+**First mode**: The lowest-frequency mode within the declared class and boundary conditions, such as the first elastic bending mode after excluding rigid-body modes. Whether it dominates a shaft response depends on forcing, damping, supports and the measured output.
 
-**Flexibility**: The ability to bend without breaking, or the inverse of stiffness. A flexible shaft bends more for a given load than a stiff shaft.
+**Flexibility**: In a scalar linear structural model, compliance is displacement per applied force and is the reciprocal of stiffness. Anatomical flexibility instead describes range of motion under a protocol; it is not generally one material constant.
 
-**Flexion**: Bending of a joint. Wrist flexion (palmar flexion) closes the angle between the hand and forearm.
+**Flexion**: An anatomical bending motion defined for a joint. Wrist palmar flexion moves the palm toward the anterior forearm; it is a different axis from radial/ulnar deviation.
 
-**Flight**: The trajectory of the ball in the air from impact to landing. Ball flight is determined by launch angle, spin rate, spin axis, and ball speed.
+**Flight**: Ball motion through air after separation from the club. Initial position, velocity and spin combine with gravity, aerodynamic coefficients, air properties and wind to determine the trajectory.
 
 **Follow-through**: The phase after impact where the golfer decelerates the club and body, coming to rest. The follow-through is important for balance and controlled deceleration.
 
-**Force**: A push or pull, measured in Newtons (N). Forces include gravity, muscle force, friction, and constraint forces.
+**Force**: A vector interaction, measured in newtons (N). For a fixed-mass body in an inertial frame, resultant external force equals mass times center-of-mass acceleration. Forces at different points can also create different moments.
 
-**Force plate**: A device that measures the forces and torques exerted on it, typically used to measure ground reaction forces during movement.
+**Force plate**: An instrument measuring resultant contact forces and moments in its calibrated frame. Center of pressure is derived under declared contact-plane assumptions and becomes ill-conditioned at low normal force. It is not a direct measurement of individual muscle forces.
 
-**Forward dynamics**: Computing the state of a system at a future time given the current state and applied forces. Forward dynamics integrate the equations of motion.
+**Forward dynamics**: Solving for instantaneous accelerations or the state derivative from state, input and loads, including constraint reactions when needed. Numerical integration repeatedly uses that result to predict a future state.
 
-**Forward model**: A neural model that predicts the sensory consequences of a motor command. The cerebellum is thought to learn and maintain forward models.
+**Forward model**: A model predicting motion or sensory consequences from state and command. In neuroscience it is a proposed internal computation; a useful engineering predictor is not proof of a particular neural representation.
 
-**Frame**: A reference system for describing position and motion. An inertial frame is fixed to the Earth; a rotating frame rotates with the body.
+**Frame**: A reference origin and orientation for describing quantities. A ground-fixed frame is approximately inertial over a golf swing; Earth's rotation means that it is not exactly inertial.
 
-**Frequency**: The number of oscillations per unit time, measured in Hertz (Hz). The natural frequency of a driver shaft's first bending mode is typically about 3--5 Hz (a "frequency" rating of roughly 240--280 CPM).
+**Frequency**: Cycles per unit time, in hertz (Hz). Angular frequency is $\omega=2\pi f$. A fixture rating of 240--280 cycles per minute corresponds to 4.00--4.67 Hz, but does not specify the modes of a moving, gripped club.
 
-**Friction**: A force opposing motion between surfaces in contact. Friction in the golf swing is typically small compared to inertial and gravitational forces.
+**Friction**: Contact interaction opposing relative slip or supporting a no-slip state. Static friction can be essential at the shoes and grip even when there is little relative motion. Its magnitude cannot be dismissed by comparison with other forces without a contact analysis.
 
-**Generalized coordinate**: A variable that describes the configuration of a system. Joint angles are generalized coordinates; modal coordinates (shaft deformation) are also generalized coordinates.
+## G
 
-**Generalized force**: The force conjugate to a generalized coordinate. The generalized force on a joint angle is the torque at that joint.
+**Generalized coordinate**: An independent local variable describing configuration, such as a joint angle or flexible-mode amplitude. A chosen coordinate chart and constraint reduction determine its meaning.
 
-**Generalized momentum**: The momentum conjugate to a generalized coordinate. Generalized momentum is conserved in the absence of generalized forces.
+**Generalized force**: A quantity dual to a generalized displacement, defined through virtual work $\delta W=\mathbf{Q}^\mathsf{T}\delta\mathbf{q}$. A rotational coordinate has a torque-like conjugate, but its axis and scaling must be declared.
+
+**Generalized momentum**: The conjugate quantity $p_i=\partial L/\partial\dot q_i$. Euler-Lagrange dynamics gives $\dot p_i=\partial L/\partial q_i+Q_i^{\rm nc}$. Conservation follows for a cyclic coordinate with zero nonconservative generalized force; zero applied force alone is insufficient.
 
 **Geometry of motion**: The study of how systems move in space, considering constraints and symmetries. This is the subject of a companion series to this textbook.
 
-**Glute medius**: A hip muscle responsible for hip abduction and external rotation. The glute medius is active during the transition and early downswing.
+**Glute maximus**: The gluteus maximus, contributing to hip extension and external rotation. Its swing contribution depends on activation, posture, loading and interactions with other muscles.
 
-**Glute maximus**: The largest hip muscle, responsible for hip extension. The glute maximus is active during the early downswing, driving hip extension.
+**Glute medius**: The gluteus medius, a hip abductor with region- and posture-dependent rotational actions. Its anatomical role does not specify its activation timing in an individual swing.
 
-**Golgi organ**: A sensory receptor in tendons that senses force or tension. Golgi organs provide proprioceptive feedback about muscle force.
+**Golgi organ**: A Golgi tendon organ, a receptor supplying sensory information related to muscle-tendon tension. Its signal is part of a neural circuit, not a direct conscious readout of net joint torque.
 
-**Gravitational potential energy**: Energy stored due to height in a gravitational field. As the arms rise during the backswing, gravitational potential energy increases.
+**Gravitational potential energy**: For a nearly uniform field, $U_g=\sum_i m_i g h_i$ relative to chosen zero heights. Raising one segment increases its contribution, but the whole golfer-club change requires all segment heights.
 
-**Gravity**: The force of attraction between masses. Gravity acts downward with acceleration $g \approx 9.8$ m/s$^2$ and is present throughout the swing.
+**Gravity**: The interaction between masses. Near Earth's surface, gravitational acceleration is approximately $9.81\,\mathrm{m/s^2}$ downward; weight is the associated force, not the acceleration itself.
 
 **Green**: The smooth, manicured grass surface on which the hole is cut. Golfers aim to land the ball on the green, from which they putt.
 
-**Grip**: The act of holding the golf club, or the handle of the club itself. The grip is a constraint that couples the golfer's hands to the club.
+**Grip**: The hand-club contact arrangement or the club's handle covering. A rigid two-hand grip creates loop constraints in a model; real grip compliance and slip may matter for force transmission.
 
-**Ground contact**: The contact between the golfer's feet and the ground. Ground contact provides the constraint forces that propel the body forward.
+**Ground contact**: Interaction between shoes and the ground. Normal reactions, friction and moments support and accelerate the body subject to unilateral contact and slip limits. They do not invariably propel the golfer forward.
 
-**Ground reaction force**: The force exerted by the ground on the golfer's feet in reaction to the golfer's weight and motion. Ground reaction forces are highest during the downswing.
+**Ground reaction force**: The resultant ground force on the feet. Together with other external forces it governs whole-system momentum change. Its components, peaks and timing must be measured; weight alone does not determine them.
 
-**Hamstring**: A muscle on the back of the thigh, responsible for knee flexion and hip extension. The hamstrings are active during the downswing.
+## H
 
-**Hang time**: The time the ball is in the air. Longer hang times are associated with higher launch angles and higher spin rates.
+**Hamstring**: A member of the posterior-thigh muscle group. Most cross the hip and knee and contribute to hip extension and knee flexion; the short head of biceps femoris does not cross the hip.
 
-**Heading**: The direction the golfer is facing and the direction they intend the ball to travel. Alignment at address determines heading.
+**Hang time**: The interval between ball launch and first landing. It depends jointly on launch speed and direction, spin, aerodynamic properties, wind and relative landing height.
 
-**Heel strike**: The first moment of foot contact with the ground, when the heel touches down. In the golf swing, the trailing foot may lift off the ground during the downswing, and the lead foot may heel-strike during the follow-through.
+**Heading**: An orientation or travel direction in a declared horizontal reference. Body facing direction, target direction and ball velocity direction are distinct and should not share one unlabeled angle.
 
-**Hip rotation**: Rotation of the hips (pelvis) about a vertical axis. Hip rotation is the primary driver of the golf swing, initiated by ground reaction forces.
+**Heel strike**: The onset of heel-ground contact, commonly used in gait analysis. A golf heel-contact event must be identified from the particular foot and swing rather than assigned to a universal phase.
 
-**Holonomic constraint**: A constraint that restricts position but not velocity. The kinematic structure of the skeleton (bones connected at joints) is a holonomic constraint.
+**Hip rotation**: Often used in coaching for pelvis turning, but anatomically refers to femur rotation relative to the pelvis. Pelvis orientation in the laboratory frame is a different measurement.
 
-**Hook**: A ball flight where the ball curves to the left of the intended target (for a right-handed golfer). Hooks are caused by a closed club face relative to the swing path.
+**Holonomic constraint**: A restriction expressible as $\phi(\mathbf{q},t)=0$. It also restricts velocity through $J\dot{\mathbf{q}}+\phi_t=0$ and acceleration through a further derivative. A joint or contact is holonomic only under the declared model.
 
-**Horizontal plane**: A plane parallel to the ground. The golf swing is not confined to the horizontal plane; the clubhead sweeps an **inclined swing plane** tilted between the horizontal and vertical (see *Swing plane*).
+**Hook**: Pronounced flight curvature toward the golfer's lead side: left for a right-handed golfer. For centered contact, face-to-path geometry helps determine spin-axis tilt; off-center gear effect and aerodynamic conditions also matter.
 
-**Horsepower**: A unit of power equal to 746 watts. Muscle power output during a golf swing is often expressed in horsepower.
+**Horizontal plane**: A plane perpendicular to local gravity. A sloping ground surface is not horizontal, and a golf swing generally cannot be represented by one fixed plane.
 
-**Hydration**: The amount of water in a tissue. Fascia is about 70\% water, and hydration affects its mechanical properties.
+**Horsepower**: A family of power units. Mechanical horsepower is approximately 745.7 watts; metric horsepower is approximately 735.5 watts. Use watts for an unambiguous mechanical power balance.
 
-**Hypertrophy**: Increase in muscle size due to training. Strength training causes muscle hypertrophy, increasing the force-producing capacity of muscles.
+**Hydration**: Water content or fluid status, with the tissue and measurement basis specified. It can influence tissue mechanics, but there is no single water fraction that characterizes all fascia.
 
-**Inelastic collision**: A collision where kinetic energy is not conserved. The golf club-ball collision is inelastic; some energy is lost to heat and deformation.
+**Hypertrophy**: An increase in tissue or cell size; muscle hypertrophy increases muscle cross-sectional area. Strength also depends on neural drive, architecture, leverage and the testing task.
 
-**Inertia**: The resistance of a mass to acceleration. The inertia of the clubhead resists changes in motion, and this resistance increases the forces needed to accelerate the clubhead.
+## I
 
-**Inertial frame**: A reference frame not accelerating or rotating. The Earth is approximately an inertial frame for golf swing analysis.
+**Inelastic collision**: A collision in which the bodies' modeled macroscopic kinetic energy is not conserved. Energy is redistributed into deformation, vibration, heat and other modes; it is not destroyed.
 
-**Infraspinatus**: A rotator cuff muscle responsible for external rotation of the shoulder. The infraspinatus is active during the downswing.
+**Inertia**: The mass-distribution properties relating momentum to velocity and force/moment to acceleration. In a rigid-body model, configuration changes can alter generalized inertia; speed alone does not increase mass.
 
-**Injury prevention**: Strategies that may reduce the risk of injury through training, technique, and equipment selection. Understanding force distribution can inform injury prevention strategies.
+**Inertial frame**: A frame in which free particles move at constant velocity and Newton's equations need no frame-inertia terms. A ground-fixed frame is a useful approximation over the time and distance scales of a swing.
 
-**Input-output behavior**: The relationship between system inputs and outputs. In golf, the input is muscle torque; the output is ball trajectory.
+**Infraspinatus**: A rotator cuff muscle contributing to external rotation and glenohumeral stabilization. Its activation must be measured rather than inferred from a named swing phase.
 
-**Intervertebral disc**: The cartilage disc between vertebrae that allows spinal motion and absorbs shock. Intervertebral discs are vulnerable to injury from high-speed rotational loading in the golf swing.
+**Injury prevention**: Actions intended to reduce injury risk. Mechanical analysis may identify loads and candidate mechanisms, but a claim of reduced injuries requires appropriate outcome evidence.
 
-**Intramuscular coordination**: The coordination of different muscle fibers within a single muscle. Intramuscular coordination affects the force and power output of the muscle.
+**Input-output behavior**: The relationship between a declared input history and measured output, including initial state and disturbances. Torque-to-club motion and neural-excitation-to-ball outcome are different systems.
 
-**Intermuscular coordination**: The coordination of different muscles around a joint. Good intermuscular coordination allows efficient force production and may help manage joint loading.
+**Intermuscular coordination**: The organization of activity across muscles. Coactivation can affect both net moments and stiffness; a small net moment does not imply small individual muscle forces.
 
-**Inverse dynamics**: Computing the forces or torques required to produce a given motion. Inverse dynamics solve for control inputs that achieve a desired trajectory.
+**Intervertebral disc**: A structure between adjacent vertebral bodies consisting of an annulus fibrosus and nucleus pulposus with associated endplates. It transmits load and permits motion; pain cannot be inferred from a rotation measurement alone.
 
-**Inverse kinematics**: Computing the joint angles required to position the end effector at a desired location. The golf swing requires solving inverse kinematics (implicitly) to position the hands.
+**Intramuscular coordination**: The organization of motor-unit recruitment and discharge within a muscle. Force also depends on muscle state and contraction history.
 
-**Isometric contraction**: Muscle contraction where the muscle length does not change, producing force but no motion. Isometric contraction is used to maintain posture at address.
+**Inverse dynamics**: Estimating resultant generalized forces from measured motion, inertial properties and external loads. It does not uniquely identify individual muscles, establish neural commands or guarantee that a desired motion is dynamically feasible.
 
-**Jacobian**: A matrix of partial derivatives relating the end-effector velocity to the joint velocities. The Jacobian is used in kinematics and dynamics calculations.
+**Inverse kinematics**: Finding configurations consistent with task positions and orientations. Solutions may be multiple, absent or sensitive to constraints. A mathematical inverse-kinematics solution does not prove that the nervous system uses that algorithm.
 
-**Joint**: A connection between two bones allowing relative motion. The golf swing involves multiple joints: shoulder, elbow, wrist, hip, knee, ankle, and spine.
+**Isometric contraction**: Active force production while the specified length or joint position is held fixed. A fixed joint angle does not require every fascicle and tendon to remain the same length. Zero external mechanical work does not imply zero metabolic expenditure [@glossaryMuscleTension].
 
-**Joint angle**: The angle between two bones at a joint, used as a generalized coordinate. Joint angles are the primary variables in golf swing analysis.
+## J
 
-**Joint complex**: A group of nearby joints that move together, like the shoulder complex (shoulder, scapulothoracic, and acromioclavicular joints).
+**Jacobian**: A derivative matrix connecting coordinate increments or velocities to a declared task representation. For point position, $\dot{\mathbf{r}}=J\dot{\mathbf{q}}$; the dual force mapping is $\mathbf{Q}=J^\mathsf{T}\mathbf{F}$. Orientation representations may require additional rate mappings.
 
-**Kinematic chain**: A sequence of joints and segments that transmit motion from one part of the body to another. The golf swing's kinetic chain runs from the legs to the arms to the club.
+**Joint**: An articulation between bones, permitting or restricting relative motion according to its structure. Biomechanical joints may be modeled with fewer freedoms than the real anatomy.
+
+**Joint angle**: A relative segment-orientation measure under declared anatomical axes and rotation conventions. In three dimensions it is not generally the angle between two bone centerlines.
+
+**Joint complex**: A group of articulations contributing to a motion, such as glenohumeral, acromioclavicular and sternoclavicular joints with scapulothoracic motion. A modeling label does not make the complex a single hinge.
+
+## K
+
+**Kinematic chain**: Connected bodies and joints defining possible relative motion. A two-hand grip and ground contacts can close loops. Kinematics alone does not establish the direction or amount of energy transfer.
 
 **Kinematics**: The study of motion without considering forces. Kinematics describes where the body is and how fast it is moving.
 
-**Kinetic chain**: See kinetic chain (same term).
+**Kinetic chain**: A description of interacting segments and the forces and moments transmitted between them. Demonstrating a particular energy-transfer pathway requires segment power balances, not merely an order of peak angular velocities.
 
-**Kinetic energy**: Energy of motion, proportional to mass times velocity squared. The kinetic energy of the clubhead at impact determines the ball's energy.
+**Kinetic energy**: For a rigid body, $T=\tfrac12 m\|\mathbf{v}_C\|^2+\tfrac12\boldsymbol{\omega}^\mathsf{T}I_C\boldsymbol{\omega}$, with inertia and angular velocity in the same frame. Clubhead kinetic energy is not all transferred to the ball.
 
-**Knee flexion**: Bending at the knee joint, decreasing the angle between the thigh and shin. Knee flexion allows the golfer to lower the center of mass and load the legs.
+**Knee flexion**: Bending at the knee. Its effect on body height and loading depends on the simultaneous ankle, hip and trunk configuration and the contact forces.
 
-**Lag**: The angle between the club shaft and the arm, indicating how much the clubhead lags behind the hands. Maintaining lag during the downswing stores elastic energy in the shaft.
+## L
 
-**Lagrange multiplier**: A scalar variable used to enforce a constraint. Lagrange multipliers equal the constraint forces.
+**Lag**: A coaching or geometric descriptor, often the angle between a declared forearm direction and shaft direction. Specify the lines and angle convention. The same angle is possible with a rigid shaft; it does not measure shaft strain energy.
 
-**Lagrangian mechanics**: A formulation of classical mechanics using energy (kinetic and potential) rather than forces. Lagrangian mechanics is elegant for complex systems like the golf swing.
+**Lagrange multiplier**: A scalar or vector variable enforcing a constraint. With constraint Jacobian $J$, the generalized reaction is $J^\mathsf{T}\boldsymbol{\lambda}$. Multiplier magnitude and units depend on constraint normalization; a multiplier is not automatically a physical contact-force component.
+
+**Lagrangian mechanics**: A variational formulation using the Lagrangian, commonly $L=T-U$, together with nonconservative forces and constraints. It includes forces through generalized work and is equivalent to Newtonian mechanics under the same model assumptions.
 
 **Launch angle**: The vertical angle at which the ball leaves the clubface at impact, measured from horizontal. Launch angle significantly affects carry distance and ball flight.
 
-**Launch monitor**: A device that measures the ball and club at impact using radar, cameras, or other sensors. Launch monitors provide data on ball speed, spin rate, launch angle, and ball flight.
+**Launch monitor**: An instrument estimating launch and sometimes club-delivery variables using radar, cameras or other sensors. Specify which outputs are directly measured, inferred or simulated and the calibration and uncertainty of each.
 
-**Lie angle**: The angle between the shaft and the ground at address. Lie angle affects the club face angle relative to the swing path.
+**Lie angle**: The club's shaft-to-ground geometry under a specified sole/reference condition; dynamic lie describes delivery at impact. Lie can affect the orientation of a lofted face, but it does not by itself determine club path.
 
-**Ligament**: Connective tissue connecting bone to bone. Ligaments are stiffer than fascia but have less elasticity than tendon.
+**Ligament**: Connective tissue linking bones and contributing to joint restraint and sensory function. Its response varies with site, fiber direction, rate and loading history; it has no universal elasticity ranking relative to tendon or fascia.
 
-**Limit of motion**: The maximum range of motion at a joint, determined by bone structure, joint capsule, ligaments, and muscle extensibility. Exceeding the limit of motion can cause injury.
+**Limit of motion**: The range reached under a specified active or passive measurement protocol. Anatomy, load, pain and muscle state influence that range; an observed endpoint is not a universal tissue-failure threshold.
 
 **Limiter**: Something that limits or constrains the system. In the golf swing, constraints (like the kinematic structure) act as limiters on motion.
 
-**Line of pull**: The direction in which a muscle pulls, determined by the muscle's anatomy. The line of pull affects the torque a muscle can produce at a joint.
+**Line of pull**: The local direction of muscle-tendon force at an attachment or wrapping point. It changes with posture and determines moment arms together with the joint axis.
 
-**Linear momentum**: The product of mass and velocity. Linear momentum is conserved in the absence of external forces.
+**Linear momentum**: For a fixed collection of bodies, $\mathbf{P}=\sum_i m_i\mathbf{v}_{C_i}$ and $\dot{\mathbf{P}}=\sum\mathbf{F}_{\rm ext}$ in an inertial frame. Internal forces redistribute momentum but cancel in the total.
 
-**Loop closure constraint**: A constraint that arises when a kinematic chain forms a closed loop. The hand holding the grip is a loop closure constraint.
+**Loop closure constraint**: A relation ensuring that paths through a closed kinematic chain meet consistently. Two hands connected through the arms and torso while holding the same club form a loop in a rigid-grip model.
 
-**Lordosis**: Natural inward curve of the spine, particularly in the lower back. Excessive lordosis can increase injury risk during rotation in the golf swing.
+**Lordosis**: An inward curvature of the spine viewed from the side, normally present in the cervical and lumbar regions. Its magnitude alone neither diagnoses pathology nor determines a golfer's injury risk.
 
-**Low back pain**: Pain in the lumbar spine, a common injury in golfers due to high rotational loading. Low back pain can limit swing speed and consistency.
+**Low back pain**: Pain in the lower-back region, with potentially multiple biological, psychological and social contributors. It is not synonymous with a particular injured structure or proof that swing rotation caused tissue damage [@glossaryIASP].
 
-**Lumbar spine**: The lower back portion of the spine, consisting of five vertebrae. The lumbar spine experiences high shear and rotational loads during the golf swing.
+**Lumbar spine**: The lower spinal region, usually containing five vertebrae. Its motion and loading depend on posture, external forces and muscle activity; net joint moments do not uniquely identify local tissue loads.
 
-**Magnus effect**: The sideways force on a spinning ball moving through air, caused by differential air pressure on the two sides of the ball. The Magnus effect causes the ball to curve or hook in flight.
+## M
+
+**Magnus effect**: A transverse aerodynamic force associated with rotation of a body moving through a fluid. For a golf ball, lift and side force depend on spin, relative air velocity and flow conditions; spin-axis tilt helps determine curvature.
 
 **Manipulator**: A mechanical device with joints and segments that move. A robot arm is a manipulator; the human arm is also a manipulator.
 
 **Mass**: A measure of the amount of matter in an object, measured in kilograms (kg). The mass of the clubhead and shaft affects their inertial properties.
 
-**Mass matrix**: The matrix relating accelerations to forces in the equation $\bm{M}\ddot{\bm{q}} = \bm{f}$. The mass matrix is symmetric and positive definite.
+**Mass matrix**: The generalized inertia in $T=\tfrac12\dot{\mathbf{q}}^\mathsf{T}M(\mathbf{q})\dot{\mathbf{q}}$. It is symmetric positive definite for independent coordinates with positive kinetic energy in every nonzero velocity direction. Dynamics also includes bias forces and constraints; redundant or massless coordinates can invalidate invertibility.
 
-**Measurement**: Quantitative observation of a property or behavior. Launch monitors provide detailed measurements of swing and ball properties.
+**Measurement**: A quantitative observation with a declared method, units, reference and uncertainty. Distinguish measured signals from quantities inferred through a model.
 
-**Mechanical advantage**: The ratio of output force to input force in a mechanical system. The golf swing gains mechanical advantage by using long limbs and high rotation speeds.
+**Mechanical advantage**: A force or moment ratio for a specified mechanism and configuration. Ideal power balance couples force advantage to a reciprocal velocity tradeoff. Long limbs and high rotation speed do not provide unrestricted force and speed amplification.
 
-**Mechanical coupling**: The transmission of force and motion from one part of a system to another through rigid or elastic connections. Fascia provides mechanical coupling between muscles.
+**Mechanical coupling**: Interaction through connections, constraints, inertia or material deformation. Coupling can transmit forces and redistribute energy, but its sign and usefulness depend on state and input.
 
 **Mechanoreceptor**: A sensory receptor that detects mechanical stimuli (pressure, stretch, vibration). Mechanoreceptors in fascia and tendons provide proprioceptive feedback.
 
-**Medial rotation**: Rotation inward, toward the midline of the body. Medial rotation of the hip is part of the downswing sequence.
+**Medial rotation**: Rotation toward the body's midline under the relevant anatomical convention, also called internal rotation. Joint-relative rotation must be distinguished from pelvis or trunk rotation in the laboratory frame.
 
-**Meridian**: A line or path. In anatomy, "meridians" (like in Traditional Chinese Medicine) are proposed lines of energy flow, but they lack scientific support. See myofascial meridian.
+**Meridian**: A term with several meanings. A proposed myofascial anatomical chain and a traditional medicine energy meridian are different concepts. Anatomical continuity does not establish a special energy channel; see myofascial meridian.
 
-**Modal analysis**: Mathematical analysis of vibrating systems based on eigenmodes (natural deformation patterns). Modal analysis simplifies the analysis of flexible structures like shafts.
+**Modal analysis**: Analysis using deformation modes of a declared linearized structure and boundary condition. For undamped vibration, $K\boldsymbol{\phi}=\omega^2M\boldsymbol{\phi}$. Moving supports, rotation, damping and nonlinear deformation may require a time-varying or expanded model.
 
-**Modal coordinate**: A generalized coordinate corresponding to a vibration mode. The modal coordinate $\eta$ describes the amplitude of the first bending mode of the shaft.
+**Modal coordinate**: The amplitude multiplying a chosen mode shape. In $w(s,t)=\sum_j\phi_j(s)\eta_j(t)$, rescaling $\phi_j$ changes $\eta_j$ and the modal parameters; normalization must be stated.
 
-**Modal decomposition**: Expressing a deformation as a sum of eigenmodes, each with its own amplitude. Modal decomposition is used to analyze shaft flexibility.
+**Modal damping**: Dissipation represented in modal coordinates. A linear viscous model uses terms proportional to modal velocity; the modal damping matrix is not necessarily diagonal.
 
-**Modal damping**: Damping associated with a particular mode, proportional to the mode's velocity. Modal damping causes oscillations to decay over time.
+**Modal decomposition**: Expansion of deformation in selected modes. Truncation requires checking whether omitted modes affect the forces, motion or energy relevant to the question.
 
 **Modal frequency**: See natural frequency.
 
-**Modal stiffness**: Stiffness associated with a particular mode. Modal stiffness resists deformation in that mode.
+**Modal stiffness**: The stiffness associated with a normalized mode or modal basis. For a single mode, $k_j=\boldsymbol{\phi}_j^\mathsf{T}K\boldsymbol{\phi}_j$ and $\omega_j^2=k_j/m_j$ with the matching modal mass.
 
-**Mode**: A natural deformation pattern of a structure, characterized by a natural frequency. The first (fundamental) mode is the lowest frequency and usually dominates.
+**Mode**: A characteristic deformation pattern of a specified linearized system. The lowest elastic frequency need not dominate every forced response.
 
-**Model**: A mathematical representation of a physical system. The golf swing can be modeled as a tree of rigid bodies connected by joints.
+**Model**: A deliberately simplified representation with declared variables, parameters, inputs, constraints and validity limits. A rigid-body tree may need closed-loop contacts, muscle states and flexible shaft modes for a particular golf question.
 
 **Moment**: See torque.
 
-**Moment arm**: The perpendicular distance from a force or torque to a pivot point. A longer moment arm results in more torque for the same force.
+**Moment arm**: The perpendicular distance from a force's line of action to a specified axis in the corresponding planar geometry. More generally, torque is obtained from $\mathbf{r}\times\mathbf{F}$ and projected onto the axis.
 
-**Momentum**: The product of mass and velocity. Momentum is conserved in the absence of external forces.
+**Momentum**: See linear momentum.
 
 **Motion**: Change in position over time. The golf swing involves complex 3D motion of the entire body and club.
 
 **Motor control**: The process by which the nervous system activates muscles to produce desired motion. Motor control involves feedforward and feedback mechanisms.
 
-**Motor cortex**: The region of the brain responsible for generating voluntary movement. Motor cortex sends signals to muscles through the spinal cord.
+**Motor cortex**: Cortical regions contributing to movement preparation, execution and feedback within distributed neural circuits. Movement is not generated by an isolated cortical command directly specifying every muscle force.
 
-**Motor learning**: The process of acquiring new motor skills through practice and repetition. Golf instruction leverages motor learning to improve swing performance.
+**Motor learning**: Changes in movement capability through practice and experience. Improved performance can reflect several neural and behavioral processes; it does not alone identify the internal dynamics model learned.
 
 **Motor unit**: A motor neuron and all the muscle fibers it innervates. Motor units are the basic units of muscle activation and force control.
 
-**Movement variability**: The natural variation in movement across repetitions. Some variability is inevitable; the goal is to minimize variability in the critical phases of the swing.
+**Movement variability**: Variation across repetitions. Its consequences depend on task sensitivity and coordination: different joint motions can produce similar club delivery. Reducing every component of variability is not a universal objective.
 
-**Muscle**: Tissue capable of contracting to produce force and motion. Muscles are the primary actuators of the golf swing.
+**Muscle**: Biological tissue generating active force. Skeletal muscle can shorten, hold length or lengthen while active; force depends on activation, length, velocity and history.
 
-**Muscle fiber**: An individual cell in a muscle, capable of contracting. Muscle fibers are organized into bundles (fascicles) and sheets.
+**Muscle fiber**: A skeletal-muscle cell containing contractile structures. Fibers are organized into fascicles and connected through extracellular matrix; activation is coordinated through motor units.
 
-**Muscle spindle**: A sensory receptor in muscle that senses muscle length and rate of change of length. Muscle spindles provide proprioceptive feedback.
+**Muscle spindle**: A sensory organ whose afferents provide information related to muscle length and length change, modulated by its own neural drive. Its output is not a direct measurement of whole-joint angle.
 
-**Myofascial**: Relating to both muscle and fascia together. Myofascial tissues work together to produce force and movement.
+**Myofascial**: Relating to muscle and its connective-tissue networks. Mechanical continuity permits interaction but does not quantify whole-body force transmission or recoverable energy.
 
-**Myofascial meridian**: A proposed continuous line of fascia and muscle running across the body. Myofascial meridian concepts lack strong scientific support.
+**Myofascial meridian**: A proposed chain of anatomically connected muscles and fascia. Evidence of continuity or force transmission along a particular path does not establish a dominant whole-swing energy pathway; that requires loads, deformation and power measurements.
 
-**Myofascial release**: A technique purporting to release tension or adhesions in fascia and muscle. The evidence for specific fascial release effects is limited.
+**Myofascial release**: A label for manual or self-applied soft-tissue techniques. A change in symptoms or range of motion does not by itself demonstrate rupture of adhesions or a specific fascial release mechanism.
 
-**Myth**: A belief not supported by evidence. This book debunks several myths about fascia, energy storage, and swing mechanics.
+**Myth**: An informal label for a disputed belief. Technical criticism should instead identify the precise claim, its evidence and a possible falsifying observation.
 
-**Natural frequency**: The frequency at which a system oscillates freely (without external driving). The natural frequency of a driver shaft's first bending mode is typically about 3--5 Hz ($\omega_n \approx 20$--$30$ rad/s).
+## N
+
+**Natural frequency**: An eigenfrequency of a specified linearized system. An undamped scalar oscillator has $\omega_n=\sqrt{k/m}$; its frequency in hertz is $\omega_n/(2\pi)$. Damping, shaft supports, grip and attached clubhead alter the measured response, so a fixture rating is not a universal swing frequency.
 
 **Natural motion**: The motion a declared effective plant exhibits after the declared control input is removed. A forward ZTCF trajectory is one precisely specified construction of this motion.
 
 **Neuroscience**: The scientific study of the nervous system, including the brain, spinal cord, and peripheral nerves. Neuroscience provides insight into how the golf swing is controlled.
 
-**Newton**: A unit of force (kg$\cdot$m/s$^2$). The weight of one kilogram is approximately 10 Newtons.
+**Newton**: The SI unit of force, $1\,\mathrm{N}=1\,\mathrm{kg\,m/s^2}$. A one-kilogram mass weighs approximately 9.81 N near Earth's surface.
 
-**Newton's laws**: Three fundamental laws of mechanics: inertia (Newton's first law), $\bm{F} = m\bm{a}$ (Newton's second law), and action-reaction (Newton's third law).
+**Newton's laws**: In classical mechanics, free motion is uniform in an inertial frame, net force changes momentum, and interacting bodies exert equal and opposite forces. For fixed mass, $\mathbf{F}_{\rm ext}=m\mathbf{a}_C$.
 
-**Non-holonomic constraint**: A constraint on velocity that is not derivable from a position constraint. Non-holonomic constraints arise from rolling or sliding contacts.
+**Non-holonomic constraint**: A velocity restriction that cannot be integrated into a configuration-only restriction on the relevant domain. Some rolling-without-slip models provide examples. Sliding contact does not automatically impose a non-holonomic constraint.
 
-**Nonlinear**: Describes a system where the output is not proportional to the input. The golf swing dynamics are nonlinear.
+**Non-muscular power**: A source-accounting label that must specify the boundary. Elastic recoil can deliver power while the tissue or shaft loses stored energy, but that energy may have originated in earlier muscle work. The label does not establish energy independent of muscular activity.
 
-**Non-muscular power**: Power output not directly from muscle contraction, such as from elastic rebound. The catapult effect is a form of non-muscular power.
+**Nonlinear**: A description of a map or dynamical model that does not satisfy the relevant linear superposition properties. An affine input map can coexist with nonlinear state dynamics; a constant offset also makes a map non-linear in the strict algebraic sense.
 
-**Norm**: A measure of the size of a vector or matrix. Common norms include the Euclidean norm (length of a vector).
+**Norm**: A nonnegative measure of vector magnitude satisfying definiteness, homogeneity and the triangle inequality. Comparing mixed positions, angles and velocities requires explicit scaling or weighting; a norm is not automatically an energy.
+
+**Normalized drift fraction**: A separate quantity written as drift / (drift + control), ranging from 0 (pure control) to 1 (pure drift) when these labels denote nonnegative, comparable magnitudes with a positive sum. Both zero makes the ratio undefined. It is not a vector sum, cancellation measure, work fraction or percentage of muscle activity.
 
 **Numerical integration**: Computing the future state of a system by discretizing time and integrating the equations of motion step-by-step. Numerical integration is used to simulate swings.
 
-**Objective**: A goal or target to achieve. In golf, the objective is to minimize distance to the hole and maximize consistency.
+## O
 
-**Oblique muscles**: Muscles on the sides of the torso that assist in rotation and lateral bending. The obliques are active during the backswing and downswing.
+**Objective**: A declared criterion, such as expected score, dispersion or task error. Distance and consistency can trade off; an optimization claim must state their weighting and constraints.
+
+**Oblique muscles**: The internal and external abdominal obliques, contributing to trunk rotation, lateral flexion and abdominal function. The resulting action depends on side, posture and coordination with other muscles.
 
 **Observation**: The act of measuring or perceiving something. Launch monitors provide quantitative observations of swing parameters.
 
-**Optimality**: A state of being as good as possible given constraints. An optimal swing minimizes error while using available energy efficiently.
+**Optimality**: Being best relative to a specified objective and admissible set. Local, global, nominal and robust optimality are different claims; no single swing is optimal for every criterion.
 
 **Optimization**: The process of finding the best solution to a problem given constraints. Swing optimization involves finding the control strategy that achieves the goal.
 
-**Oscillation**: Repetitive motion back and forth. A bent golf shaft oscillates about its straight configuration, with oscillations damped by material friction.
+**Oscillation**: Repeated variation around a reference or equilibrium. A moving shaft may oscillate about a changing loaded shape rather than its unloaded straight shape.
 
-**Outcome**: The result of an action, like the distance and direction of a ball flight. The swing outcome is determined by physics at impact.
+**Outcome**: A task result such as ball position or score. Impact sets launch conditions; aerodynamics, wind, terrain, bounce and roll also affect the final result.
 
-**Overload principle**: The training principle that muscles adapt to loads exceeding their normal capacity. Strength training uses progressive overload.
+**Overload principle**: Training adaptation in response to demands beyond the accustomed level. This is not an instruction to exceed tissue capacity; useful progression depends on dose, recovery and the individual.
 
-**Overstretching**: Stretching beyond the normal range of motion, which may cause strain to muscle or connective tissue. Adequate warm-up is generally recommended before vigorous activity.
+**Overstretching**: An informal term for stretching beyond the intended or tolerated range. Range alone does not determine tissue injury; load, rate, duration and individual state matter.
 
-**Oxidative metabolism**: Energy production in cells using oxygen. Oxidative metabolism provides energy for sustained muscle activity, like a full round of golf.
+**Oxidative metabolism**: Processes using oxygen to support ATP production. They contribute to sustained activity and recovery, while brief high-power actions also draw on other energy pathways.
 
-**Palmaris longus**: A forearm muscle responsible for wrist flexion and contributing to grip strength. The palmaris longus is active during the grip and late downswing.
+## P
 
-**Parallel mechanism**: A kinematic structure where multiple chains of links connect the same two bodies. The human arm, torso, and legs form a parallel mechanism.
+**Palmaris longus**: A variable forearm muscle, absent in some people, that can flex the wrist and tension the palmar aponeurosis. It is not a required late-downswing driver.
 
-**Parameter**: A constant or variable that characterizes a system. The elastic modulus of the shaft is a parameter of the swing dynamics.
+**Parallel mechanism**: A structure in which multiple linkage paths connect bodies. A golfer holding one club with two hands can form such a closed mechanism; simply having several limbs does not make every connection parallel.
 
-**Passive stiffness**: The stiffness of a tissue or joint in the absence of muscle contraction. Passive stiffness comes from connective tissue, bones, and joint structure.
+**Parameter**: A quantity characterizing a model, such as mass or elastic modulus. A parameter is distinguished from the evolving state; uncertain or time-varying parameters require explicit treatment.
+
+**Passive stiffness**: Resistance to small deformation under a protocol intended to exclude active muscle contribution. It depends on posture, loading history and tissue response. Zero net joint torque does not establish zero activation or purely passive stiffness.
 
 **Performance**: How well a goal is achieved, measured quantitatively. Golf performance is measured by score (total strokes), distance, and consistency.
 
-**Perimysium**: Fascia surrounding a bundle of muscle fibers (a fascicle). The perimysium organizes muscle fibers into functional units.
+**Perimysium**: Connective tissue surrounding and linking muscle fascicles, contributing to organization and force transmission. Its role is not described completely by a single series spring.
 
-**Periosteum**: Connective tissue covering bone. The periosteum is important for bone growth and repair.
+**Periosteum**: A connective-tissue covering on most external bone surfaces, absent from articular cartilage-covered regions. It participates in attachment, growth and repair.
 
-**Perturbation**: A small disturbance to a system. Analyzing how swings are perturbed by wind or equipment changes reveals the robustness of swing mechanics.
+**Perturbation**: A change or disturbance relative to a declared reference. Linear sensitivity describes sufficiently small perturbations; finite disturbances and contact changes require additional analysis.
 
-**Phase**: A distinct period of the swing with characteristic properties. The swing has backswing, transition, downswing, impact, and follow-through phases.
+**Phase**: A stage defined by events, such as backswing or follow-through, or an angular position within an oscillation. Event phase and oscillator phase should not be interchanged.
 
-**Phase portrait**: A plot of state variables showing how a system evolves. A phase portrait reveals the structure of dynamics and limit cycles.
+**Phase portrait**: A representation of state-space trajectories and vector fields. A low-dimensional projection can hide state variables and cannot by itself establish stability or a limit cycle.
 
-**Phase space**: The space of all possible states of a system. For a point mass in 2D, phase space is 4-dimensional (2D position, 2D velocity).
+**Phase space**: The space of dynamical states. For an unconstrained planar point mass it has two position and two velocity dimensions; canonical mechanics often uses position and momentum instead.
 
-**Phenomenological**: Describing what is observed without explaining the underlying mechanism. A phenomenological model of the swing describes swing kinematics without modeling muscles.
+**Phenomenological**: Describing observed behavior without resolving all underlying mechanisms. A phenomenological relation may be useful within its calibration range without identifying a causal neural or tissue process.
 
-**Planar motion**: Motion confined to a plane, like a 2D pendulum. The golf swing is approximately planar, though not perfectly.
+**Planar motion**: Motion confined to a plane under a declared model. A planar golf approximation must specify the phase, fitted plane and tolerated out-of-plane error; the full swing is three-dimensional.
 
-**Plane of motion**: A geometric plane in which motion occurs. The golf swing approximately traces an **inclined swing plane** — tilted between the horizontal and the vertical — rather than a purely horizontal or purely vertical plane (see *Swing plane*).
+**Plane of motion**: A plane used to describe or approximate motion. An inclined fitted plane can summarize part of a club trajectory but does not impose a physical constraint or describe every segment.
 
-**Plasticity**: Permanent deformation that does not recover. Connective tissue exhibits some plasticity under large deformation.
+**Plasticity**: Irreversible material deformation after unloading; in neuroscience, a change in neural organization or function. These are different meanings. Permanent tissue deformation should not be equated with beneficial mobility.
 
-**Position**: Location in space, typically described by Cartesian coordinates or joint angles.
+**Position**: The location of a point in a declared frame. Joint angles describe configuration; they are not Cartesian point positions.
 
-**Potential energy**: Energy stored due to position in a force field. Gravitational potential energy is stored when the arms are raised.
+**Potential energy**: A scalar energy function for conservative interactions, defined up to an additive constant. Gravity and elastic deformation can contribute. Nonconservative forces do not generally have a configuration-only potential.
 
-**Power**: The rate of doing work, measured in Watts (W). Muscle power output during the golf swing can exceed 1000 Watts.
+**Power**: The rate of energy transfer by work. A force supplies $\mathbf{F}\cdot\mathbf{v}$ at its application point, and a moment supplies $\boldsymbol{\tau}\cdot\boldsymbol{\omega}$ in matching frames. Large force with little velocity can mean little mechanical power.
 
-**Power transfer**: The transmission of power (rate of energy flow) from one part of the system to another. Power is efficiently transferred from legs to club through the kinetic chain.
+**Power transfer**: Energy flow per unit time across a declared boundary. Interface forces can transfer power between segments while cancelling in the total balance. Net joint power, individual muscle power and shaft storage are different quantities; a proximal-to-distal peak sequence alone proves none of them.
 
-**Precision**: The repeatability of movement. A golfer with good technique has consistent, repeatable swings.
+**Precision**: Closeness of repeated measurements or outcomes to one another. It differs from accuracy relative to a reference and from a causal explanation of the observed consistency.
 
-**Prediction**: Forecasting future states or outcomes. Forward models allow the cerebellum to predict the consequences of motor commands.
+**Prediction**: A forecast conditional on a model, state estimate, input and disturbances. A successful prediction does not uniquely identify the mechanism producing the motion.
 
-**Proprioception**: Awareness of body position and movement due to sensory feedback from muscles, tendons, and joints. Proprioceptive feedback is critical for real-time swing control.
+**Proprioception**: Sensory information and perception related to body configuration, motion and force. It draws on multiple receptors and neural processing; it is not a noiseless instantaneous state measurement.
 
 **Proprioceptive feedback**: Sensory information about body position and movement from mechanoreceptors in muscles and connective tissue.
 
-**Proteoglycan**: A protein-based molecule in the ground substance of connective tissue. Proteoglycans bind water and provide cushioning.
+**Proteoglycan**: A core protein with attached glycosaminoglycan chains, forming part of extracellular matrix. These molecules interact with water and other constituents and contribute to tissue behavior.
 
-**Putter**: A golf club with a short shaft and minimal loft, used for rolling the ball on the green. Putting is a low-speed, high-precision task.
+**Putter**: A club designed mainly for putting, typically with low loft. A putt can initially launch and skid before rolling; it is not necessarily pure rolling from impact.
 
-**Quadriceps**: The four muscles on the front of the thigh responsible for knee extension. The quadriceps are active during weight transfer and follow-through.
+## Q
+
+**Quadriceps**: The four anterior-thigh muscles contributing to knee extension. Rectus femoris also crosses the hip and can contribute to hip flexion; swing timing is an empirical question.
 
 **Qualitative**: Describing properties using words rather than numbers. Qualitative observations like "smooth" or "powerful" are important in coaching.
 
 **Quantitative**: Describing properties using numbers and measurements. Quantitative data from launch monitors enables objective analysis.
 
+## R
+
 **Radial deviation**: Movement of the wrist toward the thumb (radial) side. Radial deviation of the wrist is part of the wrist motion during the swing.
 
-**Range of motion (ROM)**: The maximum distance or angle through which a joint can move. Range of motion is determined by bone structure, joint capsule, ligaments, and muscle flexibility.
+**Range of motion (ROM)**: The angular or displacement range reached under a stated active or passive protocol. It depends on joint geometry, tissue state, loading and measurement convention.
 
-**Rate of force development**: How quickly a muscle can produce force. Elite golfers have higher rates of force development due to training.
+**Rate of force development**: The slope of a force-time curve over a declared interval. Measurement depends on the task, onset definition and filtering; a group difference does not establish that training caused it.
 
-**Reachability**: The set of states or configurations that can be achieved from a given starting state with available control inputs. The reachability set defines what the golfer can accomplish.
+**Reachability**: The set of states attainable from a specified initial state within a specified time using admissible controls and disturbances. It is model- and constraint-dependent, not a direct statement of an individual golfer's capability.
 
-**Reaction time**: The time lag between a stimulus and a response. Reaction time in the golf swing is typically 150--200 milliseconds, too slow for late-downswing corrections.
+**Reaction time**: The interval from a defined stimulus to a defined response onset. It differs from reflex latency, EMG onset and electromechanical delay. An object-manipulation experiment found goal-directed muscle responses around 60 ms; that is evidence against one universal delay, not a measured golf correction time [@glossaryFeedback2016].
 
-**Recoil**: The snapping back of a deformed structure when the deforming force is removed. The elastic recoil of muscles and the shaft contribute to the downswing.
+**Recoil**: Recovery motion of a deformed structure as loading changes. Returned elastic energy, damping and continuing work jointly determine the response; recovery need not occur only after complete unloading.
 
 **Recovery**: Return to normal function after fatigue or injury. Recovery time between rounds allows muscles and connective tissue to repair.
 
-**Recruitment**: The activation of muscle fibers in response to a neural command. The nervous system recruits muscle fibers progressively to achieve desired force.
+**Recruitment**: Activation of additional motor units. Muscle force is also adjusted through motor-neuron discharge rate and depends on contraction state; fibers are not independently recruited as arbitrary continuous actuators [@glossaryMuscleTension].
 
-**Reference frame**: A coordinate system used to describe positions and motions. An inertial frame is fixed to the Earth; a rotating frame rotates with the body.
+**Reference frame**: See frame.
 
-**Relaxation**: Decrease in muscle tension or activation. Muscle relaxation reduces force production and allows muscles to recover.
+**Relaxation**: A reduction in active muscle tension or, in material testing, stress decay under held deformation. A reduced command does not instantaneously remove all muscle-tendon force.
 
-**Repeatability**: How consistently a motion or outcome is repeated. A good swing has high repeatability.
+**Repeatability**: Closeness of repeated results under specified conditions. It is an observable property distinct from accuracy or the mechanism producing it.
 
-**Resistance**: Opposition to motion or change. Inertia, friction, and drag all provide resistance to motion.
+**Resistance**: A context-dependent opposition to a specified change. Inertia opposes acceleration rather than consuming energy simply because motion occurs; friction and drag can dissipate energy.
+
+**Restitution**: Recovery of relative separation motion during impact, characterized in a normal collision by COR. COR is a relative speed ratio; energy loss also requires masses and the full collision model.
 
 **Restoring force**: A force that acts to return a deformed system to equilibrium. The spring force in Hooke's law is a restoring force.
 
-**Resultant**: The vector sum of multiple forces or velocities. The resultant velocity of the clubhead depends on the velocities of all the body segments.
+**Resultant**: A sum of compatible vector quantities in a common frame. Forces can be summed, but moments also depend on their application points. Clubhead velocity follows kinematic mappings, not an unqualified sum of segment speeds.
 
-**Restitution**: The return of kinetic energy in a collision, characterized by the coefficient of restitution (COR).
+**Retraction**: Posterior movement of a structure, such as the scapula moving toward the spine. It is an anatomical description, not a universal prescription for address posture.
 
-**Retraction**: Pulling back or inward. Scapular retraction (pulling the shoulder blades back) is part of good posture at address.
+**Reverse engineering**: Inferring candidate mechanisms from observations. Swing motion alone generally does not uniquely separate drift, applied input and constraint reactions; identification needs additional measurements or assumptions and uncertainty analysis.
 
-**Reverse engineering**: Starting from an observation and working backward to infer the underlying mechanism. Reverse engineering swing data reveals the drift field.
-
-**Rhomboid**: A muscle between the shoulder blades responsible for scapular retraction. The rhomboids are active during the backswing.
+**Rhomboid**: One of the rhomboid muscles, contributing to scapular retraction and downward rotation. Its activation pattern is not determined by the name of a swing phase.
 
 **Rigid body**: An idealized object that does not deform, maintaining its shape and size. Rigid-body models simplify golf swing analysis.
 
 **Robotics**: The field of engineering and computer science concerned with the design and control of robots. Robotics provides insight into human motion control.
 
-**Rotational kinetic energy**: Kinetic energy of a rotating body, proportional to angular velocity squared. Rotational kinetic energy of the torso and arms peaks during the downswing.
+**Rotational kinetic energy**: For a rigid body about its center of mass, $T_{\rm rot}=\tfrac12\boldsymbol{\omega}^\mathsf{T}I_C\boldsymbol{\omega}$. The frame and reference point matter. A peak in angular speed need not coincide with a peak in energy when effective inertia changes.
 
 **Rotator cuff**: A group of four muscles (supraspinatus, infraspinatus, teres minor, subscapularis) surrounding the shoulder joint, responsible for shoulder stability and motion. The rotator cuff experiences significant loading during the golf swing.
 
-**Rough**: Longer grass on the golf course outside the fairway. Hitting from the rough typically results in a poorer lie and higher ball spin.
+**Rough**: Longer grass outside closely mown playing areas. Grass or moisture between face and ball can change friction, launch and spin; spin is not invariably higher than from a clean lie.
 
-**Round**: A complete game of golf, usually 18 holes. A typical round lasts 3.5--4.5 hours.
+**Round**: Play over the holes assigned for a round, commonly 18 or 9. Duration depends on the course, format and pace of play rather than a fixed biomechanical timescale.
 
-**Run**: The horizontal distance the ball travels after landing. Run is affected by the soil, grass, and slope of the landing area.
+**Run**: Distance traveled after first landing, including bounce and roll under the chosen convention. Landing velocity, spin, ground properties and slope determine it.
 
-**Saddle joint**: A type of joint that allows motion in two perpendicular planes. The thumb's basal joint is a saddle joint.
+## S
 
-**Safety**: Freedom from danger or injury. Safety in golf involves proper technique, equipment, and awareness.
+**Saddle joint**: A joint with reciprocally concave and convex articular surfaces, exemplified by the thumb carpometacarpal joint. Its motion is more complex than two independent ideal hinges.
 
-**Sagittal plane**: The vertical plane dividing the body into left and right halves. Much of the golf swing occurs in the sagittal plane.
+**Safety**: Management of the chance and consequences of harm. No single swing technique or equipment choice guarantees freedom from injury.
 
-**Sarcomere**: The basic contractile unit of muscle, bounded by Z-discs. Sarcomeres shorten during muscle contraction.
+**Sagittal plane**: An anatomical plane separating left and right portions; the midsagittal plane passes through the midline. Its orientation follows the declared anatomical reference, not every segment throughout a swing.
 
-**Scaphoid**: A small bone in the wrist. Scaphoid fractures are possible (though uncommon) in golf due to wrist loading.
+**Sarcomere**: The contractile unit between Z-discs in striated muscle. Active sarcomeres may shorten, remain approximately constant in length or lengthen; contraction means force-generating activity, not necessarily shortening [@glossaryMuscleTension].
+
+**Scaphoid**: A carpal bone on the thumb side of the wrist, participating in wrist articulation. A diagnosis cannot be inferred from swing appearance.
 
 **Scapula**: The shoulder blade, a triangular bone on the back of the ribcage. The scapula moves during shoulder rotation and contributes to arm reach.
 
-**Scapular dyskinesia**: Abnormal movement of the shoulder blade, often associated with shoulder injury. Scapular dyskinesia can increase injury risk in golf.
+**Scapular dyskinesia**: An observed alteration in scapular movement or position. Association with symptoms does not establish that it caused injury or that correcting the appearance will prevent injury.
 
-**Scapulohumeral rhythm**: The coordinated motion of the scapula and humerus during arm elevation. Proper scapulohumeral rhythm is important for shoulder health.
+**Scapulohumeral rhythm**: Coordination of scapular and humeral motion during arm movement. It varies with task, elevation and individual; a fixed ratio is not a universal health criterion.
 
-**Second moment of inertia**: A geometric property of a shape describing its resistance to bending. The second moment of inertia of the shaft cross-section appears in the EI product.
+**Second moment of inertia**: In beam bending, the area second moment $I=\int_A y^2\,dA$, measured in $\mathrm{m^4}$ about a declared section axis. It is distinct from mass moment of inertia in $\mathrm{kg\,m^2}$; bending rigidity is $EI$.
 
 **Segmentation**: Division of the system into parts. The golf swing can be segmented into phases or into body segments.
 
-**Sensitivity**: How much a system output changes in response to a change in a parameter. High sensitivity means small changes have large effects.
-
 **Sensing**: Detecting information about the system or environment. Proprioceptive sensing provides feedback about body position.
+
+**Sensitivity**: Change in an output with respect to a specified input, parameter or initial state. Derivative, finite-difference and statistical sensitivity are different measures and require units or scaling.
 
 **Sensorimotor integration**: The combination of sensory information with motor commands to produce coordinated movement. Sensorimotor integration is critical for movement control.
 
-**Series elastic element**: A spring-like element in series with a muscle, representing the compliance of tendons and connective tissue. Fascia acts as a series elastic element.
+**Series elastic element**: A compliant element in series with an actuator in a muscle-tendon model, often representing tendon and aponeurosis. Fascia includes several geometries and load paths and is not universally a series element.
 
-**Shaft**: The long, slender part of a golf club connecting the grip to the clubhead. The shaft is flexible and stores elastic energy during the swing.
+**Shaft**: The structure connecting grip and clubhead. Its bending, torsion, mass and damping interact with grip motion and head loading. Elastic energy is stored only to the extent that it deforms.
 
-**Shaft flex**: The amount a shaft bends under load. Shaft flex is characterized by a flex rating (like regular, stiff, extra stiff) or a precise stiffness value.
+**Shaft flex**: An industry label or measured flexibility under a stated test. Labels such as regular and stiff are not universal stiffness values across manufacturers; compare force-deflection behavior, geometry and boundary conditions.
 
-**Shaft lag**: The angle between the shaft and the line from the grip to the clubhead, indicating how much the clubhead lags behind the hands. Shaft lag during the downswing stores elastic energy.
+**Shaft lag**: A shaft-deformation descriptor requiring a reference axis and sign convention, such as head displacement relative to the grip-end tangent. It differs from the forearm-shaft angle called lag. Strain energy depends on curvature and torsion along the shaft.
 
-**Shaft plane**: The vertical plane containing the shaft at address. Swinging along the shaft plane is a goal for many golfers.
+**Shaft plane**: A plane defined using the shaft and an additional independent direction or point. A shaft line alone belongs to infinitely many planes. Address geometry does not constrain the subsequent club trajectory to that plane.
 
-**Shaft release**: The uncocking of the wrists and straightening of the shaft as it approaches impact. Shaft release must be timed carefully to maximize distance.
+**Shaft release**: An informal term for a phase of changing shaft deformation. It should be distinguished from wrist release: one describes flexible-body motion, the other joint/club geometry.
 
-**Shank**: A poor shot where the ball is struck with the hosel (neck) of the club, sending the ball sharply to the right (for a right-handed golfer). Shanks are often caused by poor sequencing or overactive arms.
+**Shank**: A shot struck with the club's hosel rather than the intended face region. Ball direction follows the actual contact geometry; the shot alone does not identify an arm-activation or sequencing cause.
 
-**Shape**: The trajectory or pattern of a golf ball flight, like a draw (curving left) or fade (curving right). Ball shape is determined by launch angle, spin rate, and spin axis.
+**Shape**: In ball-flight discussion, the trajectory's curvature, such as draw or fade. Launch velocity, spin-axis orientation and aerodynamic conditions determine the path.
 
-**Shear force**: A force parallel to a surface, acting to slide one part past another. Shear forces on vertebrae increase with twisting motions in golf.
+**Shear force**: A force component tangent to a declared surface or section. Its tissue effect depends on the area, direction, distribution and simultaneous loading.
 
-**Shear strain**: Deformation of an object by a shear force, measured as the angle of deformation. Shear strain in the intervertebral discs increases during twisting.
+**Shear strain**: A measure of distortion involving a change of angle between material directions. In small-strain notation, engineering shear strain is twice the corresponding tensor shear component.
 
 **Simulation**: Running a mathematical model forward in time to predict system behavior. Swing simulation uses the equations of motion to predict ball flight.
 
-**Sinus tarsi syndrome**: Inflammation or irritation of the sinus tarsi (a small space in the ankle). This can occur in golfers due to the twisting motion on the lead foot.
-
 **Sinus**: A cavity or passage in bone or other tissue. The frontal sinus is a cavity in the forehead bone.
+
+**Sinus tarsi syndrome**: A clinical label for pain and related symptoms around the sinus tarsi, a space between talus and calcaneus. The label alone does not identify one lesion or establish a golf-specific cause.
 
 **Skeletal system**: The framework of bones and connective tissue supporting the body. The skeletal system provides the structure for motion and is involved in force transmission.
 
-**Slice**: A ball flight curving significantly to the right of the intended target (for a right-handed golfer). Slices are typically caused by an open club face relative to the swing path.
+**Slice**: Pronounced flight curvature toward the golfer's trail side: right for a right-handed golfer. Centered-strike face-to-path geometry is one contributor to spin-axis tilt; contact location and gear effect also matter.
 
-**Slop**: Extra space or play in a mechanical system, like slack in a joint or bearing. Slop in the grip or joints reduces precision.
+**Slop**: Informal mechanical terminology for play, clearance or backlash. Physiological joint motion and soft-tissue compliance should be described by their actual geometry and load response.
 
-**Slow twitch**: Muscle fibers optimized for low-force, long-duration effort. Slow-twitch fibers are aerobic and fatigue-resistant.
+**Slow twitch**: See type I fiber.
 
-**Smooth**: Adjective describing a swing with minimal jerky movements, flowing from one phase to the next. A smooth swing is often more consistent and efficient.
+**Smooth**: A qualitative description of motion. A technical smoothness measure may use acceleration or jerk and must specify filtering and time scaling; visual smoothness alone does not prove efficiency.
 
-**Snap**: A sudden, jerky motion or release of tension. The wrist snap is the uncocking of the wrists during the downswing.
+**Snap**: An informal description of rapid motion or recoil. Replace it in a mechanical argument with the measured joint velocity, shaft deformation rate or contact event intended.
 
-**Soft tissue**: Non-bony tissue including muscle, fascia, tendons, and ligaments. Soft tissue injuries are common in golf.
+**Soft tissue**: A broad anatomical category including muscle, tendon, ligament and other non-bony tissues. These tissues have different mechanical and physiological properties.
 
-**Sole**: The bottom surface of a golf clubhead. The sole angle affects how the clubhead bounces off the ground during the swing.
+**Sole**: The lower clubhead surface that interacts with turf. Bounce geometry, delivery and ground properties jointly determine the contact response.
 
 **Space**: The 3D region in which motion occurs. The golf swing occurs in the 3D space of the golfer's body and the area around the ball.
 
 **Span**: The distance between two points, like the arm span (fingertip to fingertip with arms extended).
 
-**Speed**: The magnitude of velocity, measured in miles per hour (mph) or meters per second (m/s). Clubhead speed is a primary determinant of distance.
+**Speed**: The nonnegative magnitude of velocity. Speed omits direction; equal clubhead speeds can yield different impact conditions.
 
 **Splay**: To spread or open apart. Foot splay at address affects balance and weight transfer.
 
-**Sprain**: Injury to ligaments, causing partial tearing. Ankle sprains are possible in golf, especially on uneven terrain.
+**Sprain**: A ligament injury, ranging from stretching or microscopic damage to partial or complete tearing. It differs from a muscle or tendon strain.
 
-**Spread**: Distribution or diffusion of something. Force spread through fascia distributes load evenly.
+**Spread**: The spatial distribution of a quantity. Force transmission through connective tissue can be heterogeneous; continuity does not imply uniform loading.
 
-**Spring**: A device that stores elastic energy and returns it when released. The golf shaft acts like a spring, storing and releasing elastic energy.
+**Spring**: An idealized elastic element with a force-deformation relation. A shaft can behave as a distributed elastic structure; reducing it to one spring requires a declared coordinate and loading model.
 
-**Spring constant**: The stiffness of a spring, relating force to displacement. The shaft spring constant is related to EI and the length.
+**Spring constant**: The scalar force-displacement stiffness $k$ in $F=k\delta$. For a uniform small-deflection cantilever with a transverse tip force, $k=3EI/L^3$. Other supports, taper, load positions and deformation modes give different relations.
 
-**Square**: Alignment where the club face and body are perpendicular to the target line. Square alignment at address promotes consistent ball striking.
+**Square**: In a declared target reference, a square face has its horizontal normal directed along the target line. A conventional square stance has the foot-alignment line approximately parallel to that line, not perpendicular to it.
 
-**Squat**: A lowering and raising of the body by bending the knees and hips. A squat motion in the golf swing loads the legs and lower body.
+**Squat**: A movement involving hip and knee flexion and extension with coordinated ankle and trunk motion. Its contribution to swing loading requires force and motion measurements.
 
-**Stability**: Resistance to disruption or deviations from equilibrium. A stable stance at address resists falling or shifting.
+**Stability**: A property defined relative to a reference and disturbance class. Lyapunov stability keeps sufficiently small state perturbations small; attraction additionally brings them toward the reference. Balance at address and stability of a moving trajectory are different questions.
 
 **Stabilizer**: A muscle that provides stability to a joint or body part. The rotator cuff stabilizes the shoulder.
 
 **Stance**: The position of the feet at address. Stance width and position affect balance, weight transfer, and rotation.
 
-**State**: A complete description of the system at a given time, including all positions, velocities, and other relevant variables.
+**State**: Variables sufficient to determine model evolution given future input and disturbances. Positions and velocities may need muscle activation, tendon or shaft states, and contact mode; measured kinematics alone may be incomplete.
 
 **Static**: Not moving or changing with time. Static stretching holds a stretch without movement.
 
-**Stiffness**: Resistance to deformation, inverse of flexibility. Shaft stiffness determines how much the shaft bends under load.
+**Stiffness**: A local relation between load change and deformation change, such as $k=dF/d\delta$. It may be nonlinear, directional or history-dependent. Structural stiffness, material modulus and active joint impedance are distinct.
 
 **Stimulus**: A physical or sensory input that elicits a response. Proprioceptive stimuli inform the nervous system of body state.
 
-**Strain**: Deformation of a material, expressed as a fraction of the original dimension. Stress divided by elastic modulus equals strain.
+**Straightness**: A geometric description relative to a line or target. A straight ball flight and a planar or smooth club path are different properties.
 
-**Strain rate**: The rate of change of strain, relevant for materials exhibiting strain-rate dependence. Fascia is stiffer when deformed quickly.
+**Strain**: A dimensionless deformation measure relative to a reference configuration. The relation $\epsilon=\sigma/E$ applies to a uniaxial linear-elastic model, not to every tissue, loading direction or strain magnitude.
 
-**Straightness**: The quality of a swing or ball flight being linear and on target. Straight shots require precise club face angle and swing path alignment.
+**Strain rate**: The time derivative of strain. Material response may depend on this rate and loading history; the direction and size of a rate effect require a specified tissue and protocol.
 
-**Strength**: The maximum force a muscle can produce, or the ability to produce large forces. Strength training increases maximum force capacity.
+**Strength**: A maximum load or force capacity under a specified test. Muscle strength, structural failure load and material failure stress are different quantities.
 
-**Stress**: Force divided by area, measured in Pascals (Pa). Stress in the shaft and connective tissue must remain below failure strength.
+**Stress**: Internal force per area represented generally by a tensor. Uniform uniaxial stress is $F/A$; local multiaxial tissue stress cannot usually be inferred from a net joint moment alone.
 
-**Stretch**: To extend muscles or connective tissue beyond their resting length. Stretching improves flexibility and may reduce injury risk.
+**Stretch**: An increase in a specified tissue or muscle-tendon length, or a mobility exercise. Changes in range of motion do not uniquely identify a material mechanism or establish injury prevention.
 
-**Stretch-shorten cycle**: Rapid combination of muscle lengthening (eccentric contraction) followed by shortening (concentric contraction). Muscles are more powerful following a stretch-shorten cycle.
+**Stretch-shorten cycle**: Active lengthening followed by shortening. Performance effects depend on activation, tendon storage, timing and comparison conditions. A kinematic stretch alone does not quantify stored energy or guarantee enhanced power.
 
 **Striations**: Regular patterns of light and dark bands visible in skeletal muscle under a microscope. Striations result from the organized arrangement of contractile proteins.
 
-**Stroke**: A complete golf swing and the unit of scoring. The goal is to minimize the total number of strokes taken over 18 holes.
+**Stroke**: In golf rules, an intentional forward movement of the club to strike the ball, subject to the governing definition and exceptions. It need not be a full swing or make contact; scoring also includes applicable penalties [@glossaryUSGAStroke].
 
-**Structural**: Relating to the fundamental structure or organization of something. The structural design of the skeleton determines motion capabilities.
+**Structural**: Relating to component arrangement and physical properties. These constrain possible motion but do not alone determine the motion actually selected.
 
-**Structure**: The arrangement and organization of components. The skeletal structure determines the degrees of freedom and constraints.
+**Structure**: The arrangement of components and connections. Modeling choices about joint freedom, contact and deformation determine the mathematical representation.
 
-**Subscapularis**: A rotator cuff muscle responsible for internal rotation of the shoulder. The subscapularis is active during the downswing.
+**Subscapularis**: A rotator cuff muscle contributing to internal rotation and stabilization of the humeral head. Its activity depends on the task and individual.
 
 **Substrate**: The material or base on which something rests. The turf is the substrate for the golfer's swing.
 
-**Supination**: Rotation of the forearm so the palm faces upward. Supination of the forearm occurs during the follow-through.
+**Supination**: Forearm rotation at the radioulnar joints that brings the radius and ulna toward their uncrossed anatomical relationship. Palm-up describes one arm posture, not a frame-independent definition.
 
-**Supinator**: A muscle responsible for supination of the forearm. The supinator is active late in the downswing.
+**Supinator**: A forearm muscle contributing to supination. Its mechanical contribution depends on posture and coactivation; it is not assigned a universal late-downswing activation.
 
-**Supraspinatus**: A rotator cuff muscle responsible for abduction of the shoulder. The supraspinatus is frequently cited as the most commonly injured rotator cuff muscle in the clinical literature.
+**Supraspinatus**: A rotator cuff muscle contributing to arm elevation and glenohumeral stabilization. Anatomical function alone does not determine pathology or swing-phase activation.
 
-**Surface drag**: Friction between an object and the air or other fluid it moves through. Surface drag on the golfer and club is negligible compared to other forces.
+**Surface drag**: The skin-friction part of fluid drag, distinct from pressure drag. Total aerodynamic loading depends on relative air velocity, shape and flow regime; neglect requires an estimate appropriate to the body or club studied.
 
-**Sway**: Lateral shifting of the upper body during the swing. Excessive sway can reduce power and consistency.
+**Sway**: A coaching description of lateral translation, often of the pelvis or trunk. Define the segment, reference direction and time interval before evaluating its effect.
 
 **Swing**: The complete motion of the golfer with the club, from address through follow-through.
 
-**Swing plane**: The imaginary plane in which the clubhead travels during the swing. An on-plane swing has the clubhead in the swing plane throughout.
+**Swing plane**: A plane fitted to or defined from selected swing geometry. A full club trajectory can change plane and deviate from planarity; an on-plane label needs an explicit reference and tolerance.
 
-**Swing sequence**: The order and timing of body segment activation during the swing. Proper sequence (hips first, torso second, arms third) maximizes power.
+**Swing sequence**: The order of declared events, such as motion onset, peak angular speed, peak power or EMG onset. These are not interchangeable. A pelvis-to-trunk-to-arm peak sequence does not by itself prove optimality or causal energy transfer.
 
 **Swing speed**: See clubhead speed.
 
-**Symmetry**: Balanced proportions or correspondence. Bilateral symmetry in the body allows balanced motion.
+**Symmetry**: In mechanics, a transformation leaving the relevant model or action unchanged. Continuous symmetries can imply conservation laws under suitable conditions; visual bilateral similarity alone is not such a proof.
 
-**Symptom**: A sign or indication of a problem. Pain is a symptom of injury.
+**Symptom**: An experience reported by a person, such as pain. A clinical sign is an observed finding. Pain may accompany tissue injury but does not establish its presence, severity or mechanism [@glossaryIASP].
 
-**Synapse**: The junction between two neurons where communication occurs. Synaptic plasticity underlies learning of motor skills.
+**Synapse**: A junction through which a neuron communicates with another cell, chemically or electrically. Changes in synaptic function are among the processes involved in learning.
 
-**Synchronization**: Coordinated timing of multiple components. Synchronization of hip and shoulder rotation is crucial for sequencing.
+**Synchronization**: Coordination in time. Distinguish simultaneous events from a useful relative timing pattern; optimal timing depends on the task and constraints.
 
-**Synergy**: Coordinated action of multiple muscles or body parts working together. Muscle synergies simplify motor control.
+**Synergy**: Coordinated action, or a low-dimensional pattern used to describe muscle activity. A fitted synergy can summarize data without proving that the nervous system commands exactly those basis patterns.
 
-**Synthesis**: Combining multiple components or ideas into a unified whole. This chapter is a synthesis of previous chapters.
+**Synthesis**: Combining findings into a coherent explanation while preserving their assumptions and evidential limits.
 
 **System**: An organized collection of components working together. The golf swing is a biomechanical system.
 
-**Systemic**: Affecting the entire system rather than a single component. Systemic training improves overall swing performance.
+**Systemic**: Affecting the system broadly. A whole-body effect or training benefit requires evidence rather than following from the adjective.
 
-**Tangent**: Touching a curve at a point without crossing it. The trajectory is tangent to the velocity vector.
+## T
 
-**Tangential acceleration**: Component of acceleration perpendicular to the radial direction. Tangential acceleration increases the speed of motion along a curve.
+**Tangent**: A local first-order direction along a smooth curve. A tangent line can cross the curve, as at an inflection point. At nonzero speed, the velocity vector lies in the trajectory's tangent direction.
 
-**Task**: A goal or objective to be accomplished. The golf task is to minimize distance from the hole.
+**Tangential acceleration**: For a smooth path at nonzero speed, the component along its unit tangent, equal to the time derivative of speed. It can increase or decrease speed. The normal component changes direction.
 
-**Task-space**: The space of end-effector positions and orientations. Golf swing planning can occur in task-space (where the hands should be).
+**Task**: A specified goal and success criterion. Golf tasks can prioritize scoring, launch conditions or dispersion; minimizing immediate distance to the hole is not always the best scoring strategy.
 
-**Telemetry**: Remote measurement and transmission of data. Launch monitors use radar telemetry to track the ball.
+**Task-space**: The space of selected outputs, such as clubhead position, orientation or launch variables. Its dimension, units and metric depend on the task; it need not include every end-effector variable.
 
-**Tendon**: Connective tissue connecting muscle to bone, transmitting muscle force. Tendons are stiffer than fascia and store elastic energy efficiently.
+**Telemetry**: Transmission of measured data from a remote source. Radar sensing is a measurement method, not by itself telemetry; an instrument may separately transmit its results.
 
-**Tensile strength**: Maximum stress a material can withstand before failing under tension. Tendons have high tensile strength; fascia has lower tensile strength.
+**Tendon**: Connective tissue transmitting force from muscle toward its attachment. Its recoverable energy and stiffness depend on structure, loading and history. Different tendons serve different mechanical roles.
+
+**Tensile strength**: The maximum tensile stress sustained under a specified test. Specimen region, direction, strain rate and area definition matter; a universal tendon-versus-fascia ranking is unsupported.
 
 **Tension**: A pulling force applied to a material. Tension in muscles and tendons transmits force.
 
-**Test**: An experiment or trial to measure performance or understand a system. Swing tests using launch monitors provide data for analysis.
+**Teres minor**: A rotator cuff muscle contributing to external rotation and glenohumeral stabilization.
 
-**Teres minor**: A rotator cuff muscle responsible for external rotation of the shoulder. The teres minor is often overlooked in shoulder training.
+**Test**: An experiment or trial to measure performance or understand a system. Swing tests using launch monitors provide data for analysis.
 
 **Thigh**: The portion of the leg between the hip and knee. The thigh muscles (quadriceps and hamstrings) are large and powerful.
 
-**Thoracic spine**: The middle back portion of the spine, consisting of 12 vertebrae. The thoracic spine provides rotation during the swing.
+**Thoracic spine**: The spinal region usually containing 12 vertebrae and articulating with the ribs. Trunk rotation is distributed across this region and other joints.
 
-**Thoracolumbar fascia**: Deep fascia covering the lower thoracic and lumbar spine. The thoracolumbar fascia is important for trunk stability and force transmission.
+**Thoracolumbar fascia**: A connective-tissue complex in the lower trunk, linked to several muscles and skeletal attachments. Its geometry can transmit forces; its quantitative contribution to a swing requires a model or measurement.
 
 **Threading**: Passing one object through another. Threading a shot between trees requires precision.
 
-**Threshold**: A boundary or point at which something changes. The threshold for pain indicates tissue damage.
+**Threshold**: A specified boundary for an event or response. A pain threshold concerns the onset of a painful experience under a test; it is not a tissue-damage threshold [@glossaryIASP].
 
-**Thrust**: A pushing force. Ground reaction forces provide thrust to propel the golfer forward.
+**Thrust**: A pushing force along a declared direction. Ground reaction has several components and should not be reduced to universal forward propulsion.
 
-**Tibia**: The larger bone of the lower leg (shin bone). The tibia is the load-bearing bone of the lower leg.
+**Tibia**: The larger, medial lower-leg bone, transmitting most axial load between knee and ankle. The fibula also contributes to the lower leg's structure and load sharing.
 
-**Timing**: The coordination of events in time. Timing of wrist release is critical for maximum clubhead speed.
+**Timing**: The relative time of declared events. Wrist geometry, joint moment, shaft recoil and peak clubhead speed are separate events whose relationships can be investigated.
 
 **Tissue**: A collection of similar cells and their extracellular matrix. Muscle tissue, bone tissue, and connective tissue all make up the body.
 
-**Toe**: The end of the clubhead opposite the heel, away from the shaft. The ball hit near the toe is less efficient than center contact.
+**Toe**: The clubhead region opposite the heel/hosel. An off-center strike changes impact mechanics, including head rotation and potentially gear effect; its outcome depends on the design and contact location.
 
-**Topline**: The top edge of a clubhead, visible from above. A higher topline is associated with higher launch angles.
+**Topline**: The upper clubhead edge visible at address. Its appearance alone does not determine launch angle.
 
-**Torque**: A rotational force, measured in Newton-meters (N$\cdot$m). Muscle torques drive the rotation of joints during the swing.
+**Torque**: A moment, measured in newton-metres (N m). A point force contributes $\boldsymbol{\tau}=\mathbf{r}\times\mathbf{F}$ about a declared origin; a force couple can create a pure moment. Torque is not power.
 
-**Torso**: The trunk of the body, including the chest, abdomen, and back. Torso rotation is the primary driver of the golf swing.
+**Torso**: The trunk, including chest, abdomen and back. Its mechanical contribution must be evaluated with the pelvis, arms, contacts and club rather than designated the universal primary driver.
 
-**Total energy**: The sum of kinetic and potential energy in a system. Total energy is conserved in the absence of dissipation.
+**Total energy**: The sum of the energy forms included in a declared system. Mechanical $T+U$ is conserved only when the net power crossing the boundary and nonconservative conversion vanish and the model has no unaccounted explicit time dependence.
 
-**Total momentum**: The sum of all linear momentum in a system. Total momentum is conserved in the absence of external forces.
+**Total momentum**: See linear momentum.
 
-**Trajectory**: The path of motion in space. The ball trajectory is determined by launch angle, spin rate, and spin axis.
+**Trajectory**: A time-parameterized evolution of position or state. A geometric path alone omits timing; ball trajectories also depend on launch speed, environment and aerodynamic behavior.
 
-**Transition**: The phase between the backswing and downswing where the motion reverses. The transition is critical for sequencing and timing.
+**Transition**: The interval around the change from backswing to downswing. Different segments can reverse at different times, so a single event definition must identify the measured quantity.
 
-**Translation**: Movement of the center of mass without rotation. Translation of the golfer's center of mass contributes to power.
+**Translation**: Rigid-body motion with unchanged orientation. Any rigid-body motion can also be decomposed into a chosen point's translation plus rotation; center-of-mass translation can coexist with rotation.
 
 **Transmitter**: Something that sends or conveys something else. Tendons are transmitters of muscle force to bone.
 
-**Transverse plane**: A horizontal plane perpendicular to the vertical. Rotation about a vertical axis occurs in the transverse plane.
+**Transverse plane**: An anatomical plane dividing superior and inferior portions. It is horizontal in the standard upright anatomical position; a moving segment's local plane need not remain horizontal.
 
-**Trapezius**: A large muscle on the back and neck responsible for scapular elevation and rotation. The trapezius is active during the backswing and downswing.
+**Trapezius**: A muscle with upper, middle and lower regions contributing differently to scapular elevation, retraction, depression and rotation. Activity depends on the movement and load.
 
 **Trial**: A single repetition of a test or swing. Learning occurs over many trials.
 
-**Triangular ligament**: Ligaments with a triangular shape. The triangular fibrocartilage complex in the wrist is a key load-bearing structure.
+**Triangular ligament**: A shape-based description that needs an anatomical name to be specific. The wrist's triangular fibrocartilage complex contains several structures and should not be treated as one generic triangular ligament.
 
-**Triceps**: Muscle on the back of the arm responsible for elbow extension. The triceps are active during the follow-through.
+**Triceps**: The triceps brachii, contributing to elbow extension; its long head also crosses the shoulder. Its mechanical role is not confined to follow-through.
 
-**Triggering**: Initiating or starting a process. The first downswing movement triggers the rest of the downswing sequence.
+**Triggering**: Initiation of an event. The first observed downswing movement does not alone identify the neural command or mechanical cause initiating the other segments.
 
 **Trunk**: See torso.
 
-**Trust**: Confidence in the swing mechanics and the body's ability to execute. Elite golfers develop trust through practice and success.
+**Trust**: Confidence in one's ability to execute a task. It is a psychological concept rather than a mechanical measure of reliability.
 
 **Turf**: Grass and soil surface on the golf course. Turf conditions affect lie and ball contact.
 
-**Turnover**: Rapid rotation or reversal of motion. Arm turnover refers to forearm pronation during the follow-through.
+**Turnover**: An informal description of changing forearm, hand or clubface orientation. Specify lead/trail side and joint axes; it is not universally forearm pronation.
 
-**Twist**: Rotation about the long axis of a structure. Twisting loads on the spine are high during the golf swing.
+**Twist**: Rotation or deformation about a structure's longitudinal direction. Rigid rotation and material torsional strain are distinct.
 
 **Twisting moment**: Torque about the long axis of a structure, causing torsion. Twisting moments on the shaft cause torsional deformation.
 
-**Two-plane motion**: Motion that occurs primarily in two dimensions (like a 2D pendulum). Golf swings are approximately two-plane (sagittal plane motion with some transverse rotation).
+**Two-plane motion**: A coaching term requiring an explicit definition, often comparing planes of different segments or phases. It does not mean a two-dimensional pendulum. Spatial motion can involve multiple changing planes.
 
-**Type I fiber**: Slow-twitch muscle fiber optimized for low-force, long-duration activity. Type I fibers have high aerobic capacity and fatigue resistance.
+**Type I fiber**: A relatively slow-contracting skeletal-muscle fiber type with substantial oxidative capacity and fatigue resistance. Force depends on fiber size and state; slow does not mean incapable of high tension.
 
-**Type II fiber**: Fast-twitch muscle fiber optimized for high-force, short-duration activity. Type II fibers have high anaerobic capacity and fatigue quickly.
+**Type II fiber**: A relatively fast-contracting skeletal-muscle fiber category with subtypes differing in metabolism and fatigue resistance. Its contribution depends on recruitment, size and contraction conditions.
 
-**Ulna**: The larger bone of the forearm on the little-finger side. The ulna contributes to the hinge joint at the elbow.
+## U
 
-**Ulnar deviation**: Wrist motion toward the little-finger (ulnar) side. Ulnar deviation contributes to wrist cock during the backswing.
+**Ulna**: The forearm bone on the little-finger side, prominent proximally at the elbow. It should not be described simply as the larger forearm bone; the radius is broader distally.
+
+**Ulnar deviation**: Wrist motion toward the little-finger side, distinct from palmar flexion. Its relationship to club release depends on hand, grip and three-dimensional motion.
 
 **Ultrasound**: Sound waves with frequency higher than human hearing, used to image tissues. Ultrasound can assess muscle and tendon status.
 
 **Undulation**: Wavelike motion or surface variation. Green undulation affects the path and speed of putts.
 
-**Unit**: A standard quantity or measurement. The unit of force is the Newton; the unit of power is the Watt.
+**Unit**: A defined measurement standard. SI unit names include newton and watt, with symbols N and W; consistent units are required in power and energy comparisons.
 
 **Upper body**: The arms, shoulders, and torso, as opposed to the lower body (legs).
 
 **Upswing**: See backswing.
 
-**Urethane**: A synthetic polymer used as a cover material for golf balls. Urethane covers provide good feel and durability.
+**Urethane**: In golf equipment, commonly a polyurethane cover material. Performance depends on the full ball construction and contact conditions rather than the cover name alone.
 
-**Usage pattern**: How something is typically used. Ball usage patterns reveal which clubs are used most frequently.
+**Usage pattern**: The distribution of use across tasks, equipment or time. A claim about a golfer's pattern requires recorded activity.
 
-**Velocity**: The rate of change of position with respect to time, measured in meters per second (m/s) or miles per hour (mph).
+## V
 
-**Vertebra**: One of the bones of the spine. There are 7 cervical, 12 thoracic, and 5 lumbar vertebrae.
+**Velocity**: The vector time derivative of position in a reference frame. Its magnitude is speed; both magnitude and direction matter at impact.
 
-**Vertical**: Oriented perpendicular to the ground, along the direction of gravity. The vertical direction defines the up-down direction.
+**Vertebra**: One of the bones of the spinal column. The usual counts are seven cervical, twelve thoracic and five lumbar vertebrae, with sacral and coccygeal vertebrae below.
+
+**Vertical**: The local direction along gravity, with upward opposite to gravitational acceleration. It is not generally perpendicular to sloping ground.
 
 **Vibration**: Oscillatory motion about an equilibrium position. Shaft vibration can occur even after impact.
 
-**Vigorous**: Forceful and energetic. A vigorous swing uses maximal effort.
+**Vigorous**: An informal description of energetic effort. It does not specify maximal effort or a measurable mechanical intensity.
 
-**Viscosity**: Resistance to flow, characteristic of fluids. The ground substance in fascia has viscous properties.
+**Viscoelastic**: Exhibiting time-dependent mechanical response with both recoverable storage and dissipation. Loading history, rate and relaxation matter when estimating tissue or shaft energy return.
 
-**Viscoelastic**: Exhibiting both elastic and viscous properties. Fascia is viscoelastic; it stores energy elastically but also dissipates energy viscously.
+**Viscosity**: A constitutive relation between fluid stress and deformation rate; a Newtonian fluid uses a constant dynamic viscosity. Soft-tissue viscoelasticity is broader than a single fluid viscosity.
 
-**Visible**: Able to be seen. Swing mechanics are not always visible; physics reveals the invisible forces.
+**Visible**: Observable by sight. Forces and muscle activity usually require inference or instrumentation; visual appearance alone does not identify them.
 
-**Vision**: Sight, or a mental picture of something. A golfer's vision of the swing affects execution.
+**Vision**: The sensory process of sight, distinct from a mental image or goal. Visual information can guide preparation and later responses even when a current event cannot be corrected before impact.
 
-**Visual feedback**: Information about the motion or outcome obtained through sight. Visual feedback is limited during the swing (too fast to see).
+**Visual feedback**: Information obtained through sight and used to update action or learning. Seeing an event and having enough sensory-motor time to change the current strike are different questions.
 
 **Vital**: Essential or critical. The downswing is vital to swing success.
 
-**Vitality**: Strength and energy. A golfer with vitality can sustain effort over 18 holes.
+**Vitality**: An informal description of energy or wellbeing, not a defined mechanical or physiological measurement.
 
 **Volume**: The amount of space occupied by an object, measured in cubic meters or liters.
 
-**Voluntary movement**: Movement controlled consciously by the golfer. Voluntary movement is possible early in the swing but limited late in the downswing.
+**Voluntary movement**: Goal-directed movement involving voluntary control, often with substantial automatic and feedback processes. A late command's origin can precede the final downswing; short remaining time does not make the motion biologically passive.
 
 **Vortex**: A swirling motion or region of rotational flow. Air vortices around the ball affect its flight.
 
-**Vulnerable**: Susceptible to injury or attack. The shoulder is vulnerable in golf due to high rotational loads.
+**Vulnerable**: Susceptible to harm under specified conditions. Quantifying injury risk requires population, exposure and outcome evidence.
 
-**Walk**: A slow, deliberate gait from one location to another. Golfers walk between shots as part of their exercise and recovery.
+## W
 
-**Warmth**: Physical heat or emotional feeling. Warm muscles are more flexible and less prone to injury.
+**Walk**: A gait usually characterized by alternating support with periods of double support. Its energy cost and pace depend on the person, terrain and carried load.
 
-**Water**: Hydrogen and oxygen compound essential to all life. Water makes up about 70\% of muscle and 70\% of fascia.
+**Warmth**: A thermal sensation or elevated temperature. Tissue temperature can influence behavior, but feeling warm does not establish protection from injury.
+
+**Water**: The compound $\mathrm{H_2O}$, a major tissue constituent. Tissue water fraction varies by structure and measurement basis; a universal 70 percent value is inappropriate.
 
 **Wave**: An oscillation or disturbance propagating through a medium. Waves in the shaft propagate along its length.
 
-**Weakness**: Insufficient strength or power. Muscle weakness increases injury risk and limits performance.
+**Weakness**: Reduced force capacity relative to a reference and task. It may affect function, but a single strength measurement does not determine injury risk or swing quality.
 
 **Weather**: Atmospheric conditions including wind, rain, and temperature. Weather affects ball flight and playing conditions.
 
-**Weight**: The force exerted on an object by gravity, equal to mass times gravitational acceleration. The golfer's weight affects ground reaction forces.
+**Weight**: Gravitational force, approximately $m\mathbf{g}$ near Earth's surface. It differs from mass and from the time-varying ground reaction during acceleration.
 
-**Weight transfer**: Movement of body weight from one foot to another during the swing. Proper weight transfer increases power and consistency.
+**Weight transfer**: A coaching term that may refer to changing foot loads, center-of-pressure motion or center-of-mass motion. These are distinct measurements; declare which is meant.
 
 **Weighted**: Biased or emphasized. A weighted average gives more importance to certain values.
 
 **Wellness**: Overall health and wellbeing. Golf can contribute to wellness through exercise and outdoor activity.
 
-**Whip**: A rapid, flexible motion. A whippy shaft whips back to straight near impact.
+**Whip**: An analogy for rapid motion in a linked or flexible system. A flexible shaft's phase and energy exchange must be measured or simulated rather than assumed to straighten at the ideal instant.
 
-**Wobble**: An unstable, oscillatory motion. A wobbling swing is inconsistent and off-plane.
+**Wobble**: An informal description of oscillation or orientation variation. Oscillation can be stable; the word alone does not diagnose instability or poor performance.
 
-**Work**: Force times displacement in the direction of the force, measured in Joules (J). Muscles do work to move the body.
+**Work**: Energy transfer through force acting along displacement, $W=\int\mathbf{F}\cdot d\mathbf{r}$, with the corresponding moment-rotation contribution for rigid bodies. Mechanical work and metabolic energy expenditure are different.
 
-**Work-energy theorem**: The principle that the net work done equals the change in kinetic energy. This theorem relates muscle work to clubhead velocity.
+**Work-energy theorem**: The change in kinetic energy equals the total mechanical work on the modeled particles or bodies. Clubhead energy can reflect work by interface forces, gravity and other interactions, not only an isolated muscle-work term.
 
-**Workload**: The total amount of work or effort. A high workload during a tournament round can cause fatigue.
+**Workload**: An exposure or effort measure defined by its protocol, such as repetition count, duration or mechanical work. It is not generally one quantity measured in joules.
 
 **Workshop**: A place for learning and practice. A swing workshop is where golfers improve with instruction.
 
-**World record**: The best-ever performance in a category. World records show the limits of human performance.
+**World record**: A best verified performance under a category's rules and measurement conditions. It does not establish an absolute physiological limit.
 
-**Worst-case scenario**: The most unfavorable possible outcome. Planning accounts for worst-case scenarios.
+**Worst-case scenario**: The most adverse case within a declared uncertainty set and objective. A worst case is meaningful only relative to those bounds.
 
-**Wound-up**: Tense or coiled, ready to release. At the top of the backswing, the golfer is wound up and ready to explode into the downswing.
+**Wound-up**: A coaching metaphor for the configuration at the top of the backswing. Rotation or muscular tension alone does not quantify elastic energy available for recovery.
 
 **Wrap-around**: Something that wraps around another object. The fascia wraps around muscles.
 
-**Wrapping**: Applying layers of material around something. Shaft construction involves wrapping layers of carbon fiber around a core.
+**Wrapping**: In composite manufacturing, laying reinforcement around a mandrel or form. In anatomy, a muscle-tendon path can wrap around a structure, changing its force direction and moment arm.
 
-**Wrench**: A tool, or in mechanics, a 6-element spatial force (3 force, 3 torque). Wrenches are used in robotics to describe forces and torques.
+**Wrench**: The combined moment and force acting on a rigid body about a declared origin. With moment-first ordering, $\mathcal{W}=[\boldsymbol{\tau};\mathbf{F}]$ is dual to $\mathcal{V}=[\boldsymbol{\omega};\mathbf{v}]$, and power is $\mathcal{W}^\mathsf{T}\mathcal{V}$. Origin, frame and ordering must match.
 
-**Wrist**: The joint between the forearm and hand, allowing flexion, extension, and radial/ulnar deviation. The wrist is critical for club control.
+**Wrist**: A joint complex permitting flexion/extension and radial/ulnar deviation with coupled carpal motion. Forearm pronation/supination is primarily radioulnar rotation, not a third interchangeable wrist hinge.
 
-**Wrist cock**: Flexion of the wrists, increasing the angle between the forearms and club shaft. Wrist cock stores elastic energy in the forearm extensors.
+**Wrist cock**: An informal description of forearm-club geometry, often associated with radial deviation of the lead wrist. It is not synonymous with wrist flexion or extension. Grip and three-dimensional conventions matter; the angle alone does not measure tendon or shaft energy [@glossaryWrist2019].
 
-**Wrist release**: Uncocking of the wrists, extending them to strike the ball. Wrist release must be timed to maximize clubhead speed.
+**Wrist release**: An informal description of changing forearm-club geometry during the downswing. It may involve wrist deviation, flexion/extension, forearm rotation and club motion. A measured angular change does not alone identify its muscular cause or elastic energy source [@glossaryWrist2019].
 
-**Wrapping**: See wrapping.
+## X
+
+**X-factor**: A measure of relative pelvis and upper-trunk orientation using declared axes, projection and swing event. Different two- and three-dimensional definitions can yield different values. It measures geometry, not torso torque or stored energy, and a larger value is not universally better.
 
 **X-rays**: Electromagnetic radiation used to image bones. X-rays can reveal fractures or structural damage.
 
-**X-factor**: The difference between lower body rotation and upper body rotation during the downswing, a measure of torso torque build-up. A larger X-factor is associated with more distance.
+## Y
 
-**Yard**: A unit of length equal to 3 feet or about 0.91 meters. Distances in golf are often measured in yards.
+**Yard**: A unit of length exactly equal to 3 feet or 0.9144 metres.
 
 **Yardage**: Distance measured in yards. A golfer needs to know the yardage to the green to select the right club.
 
@@ -838,14 +921,16 @@ description: "Acceleration: The rate of change of velocity with respect to time.
 
 **Young's modulus**: See elastic modulus.
 
-**Zenith**: The highest point. The zenith of the backswing is the top of the swing where the motion momentarily pauses.
+## Z
 
-**Zero**: Absence of something. Zero control means drift dominates.
+**Zenith**: The highest point in a declared spatial direction. A segment's highest position need not coincide with its reversal event or with zero velocity of every other segment.
+
+**Zero**: A value defined for a particular quantity and convention. Zero declared control selects the model's drift value, which may itself be zero; it does not establish drift dominance or absence of muscle activity.
 
 **Zero-Torque Counterfactual (ZTCF) family**: Model interventions that set the declared applied generalized-control channel to zero while retaining the declared effective plant and protocol-specified loads. The family contains pointwise samples, stitched pointwise traces, forward trajectories, and achieved-state branched trajectories. Zero declared control does not imply zero muscle activation.
 
-**Zone**: An area with specific characteristics. The zone of comfort is the range of motion where the body feels stable.
+**Zone**: A region defined by explicit boundaries. A comfort zone is subjective and should not be confused with a mechanically verified stability region.
 
 **ZVCF**: The instantaneous Zero-Velocity Counterfactual acceleration evaluated at the current configuration and declared internal state with both velocity and declared control set to zero. It is neither a state nor a released trajectory.
 
-**Zygapophysial joint**: See facet joint. These small joints between vertebrae can be sources of back pain in golfers.
+**Zygapophysial joint**: See facet joint.
