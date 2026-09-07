@@ -1,2228 +1,551 @@
 ---
 title: "Hybrid Tangent Spaces"
-description: "This assumption is physically reasonable for most classical mechanical systems derived from Lagrangian or Hamiltonian mechanics. Pendulums, robotic arms,..."
-subtitle: "Beyond Smooth Dynamics: Impacts, Switches, and Discontinuities"
+description: "Derive impact mechanics and event timing sensitivities, then connect them to golf, humanoid contact, uncertainty and trajectory optimization."
+subtitle: "Impacts, Contact, and the Timing of Perturbations"
 author: "Dieter Olson"
 date: "2026-01-18"
 format:
   html:
     toc: true
     toc-depth: 3
-    number-sections: true
-    theme: cosmo
     code-fold: false
-    html-math-method: katex
-    fig-cap-location: bottom
-execute:
-  echo: true
-  warning: false
+css: Hybrid_Tangent_Spaces.css
 bibliography: ../references.bib
 ---
 
-::: {.callout-note appearance="minimal"}
-### Abstract
+A swing is shaped by forces acting over time and by the short contact that turns club motion into ball motion. A walking stride combines unconstrained limb motion, support forces, and transitions between contact conditions. To understand either, we must distinguish the trajectory, the physical rule at contact, and the sensitivity of the resulting outcome. These are connected questions with different mathematical answers.
 
-The Tangent Hyperplane framework, as developed in the core thesis, assumes $C^1$ smoothness of the vector field—a requirement that excludes a vast class of physically important systems. Robotic foot strikes, ball impacts, friction cone transitions, and mode-switching controllers all exhibit velocity discontinuities or derivative discontinuities that violate the smoothness assumption. This article extends the tangent space framework to hybrid dynamical systems, where dynamics evolve continuously within modes but jump discontinuously across guard surfaces. We develop the geometric machinery of tangent spaces at boundaries, introduce saltation matrices that map perturbations across jumps, and derive mode-aware trajectory optimization algorithms. The result is a unified framework encompassing both smooth and non-smooth dynamics, with rigorous treatment of the measure-theoretic subtleties that arise when differentiating through discontinuities.
-:::
+This reference develops those connections through explicit derivations and an executable example. It accompanies the [accessible explanation](Hybrid_Tangent_LAYMAN.html) and [technical critique](Hybrid_Tangent_CRITIC.html). It applies established hybrid-systems methods; it does not establish a new impact law or a validated optimal golf swing. The compact [hybrid chapter](../../tangent-hyperplanes-series/part-6-hybrid.html) provides another entry point.
 
----
+## 1. What Changes at Contact {#sec-smoothness-fails}
 
-## Part I: Motivation and Theory {.unnumbered}
+### A Model Has a Resolution
 
----
+An ideal rigid impact changes velocity instantaneously. A compliant impact resolves deformation and force over a finite interval. Both are models of the same interaction at different resolutions. The rigid model can predict an impulse and a velocity change without predicting the peak force, contact duration, acoustic signal, or deformation history. The compliant model needs additional constitutive parameters and sufficiently resolved integration.
 
-## Chapter 1: Why Smoothness Fails {#sec-smoothness-fails}
+The smoothness of a vector field determines whether its usual flow derivative exists. It does not determine whether the underlying state manifold has tangent spaces. At a modeled velocity jump, the trajectory has no ordinary two-sided time derivative; the pre-event and post-event states still belong to their respective smooth mode domains.
 
-### The C¹ Assumption and Its Limits
-
-The entire Tangent Hyperplane framework rests on a single critical assumption:
-
-::: {.callout-important}
-### Smoothness Requirement (Main Thesis)
-
-The vector field $f: \mathbb{R}^n \times \mathbb{R}^m \to \mathbb{R}^n$ is **continuously differentiable** ($C^1$), meaning:
+For a differentiable family of trajectories $x(t,\epsilon)$, its variation is
 
 $$
-\dot{x} = f(x, u), \quad f \in C^1
+\delta x(t)=\left.\frac{\partial x(t,\epsilon)}{\partial\epsilon}\right|_0,
+\qquad
+\delta\dot x=A(t)\delta x+B(t)\delta u.
 $$ {#eq-smooth-dynamics}
 
-Under the smoothness assumption, this gives:
+This is a derivative equation. A finite trajectory difference equals its linear prediction plus a remainder. Even with smooth coefficients, the nonlinear system itself has not become linear.
 
-1. The Jacobian $A(x,u) = \frac{\partial f}{\partial x}$ exists and is continuous
-2. Tangent spaces $T_x \mathcal{M}$ are well-defined at every state $x$
-3. Linearized dynamics $\delta\dot{x} = A\delta x + B\delta u$ are exact in the infinitesimal limit
-:::
+### Three Distinct Discontinuities
 
-This assumption is **physically reasonable** for most classical mechanical systems derived from Lagrangian or Hamiltonian mechanics. Pendulums, robotic arms, spacecraft, and chemical reactors all produce smooth vector fields.
+An impact can reset velocity. A change of support or controller can change the vector field while keeping the state continuous. A saturated actuator can have a continuous but nondifferentiable input law. These cases require different treatment; the presence of an “if” statement does not imply a physical impulse.
 
-But consider the following scenarios:
+For example, minimizing the scalar Hamiltonian contribution $|u|+\sigma u$ subject to $|u|\le U$ gives $u=-U$ for $\sigma>1$, $u=U$ for $\sigma<-1$, and $u=0$ for $|\sigma|<1$. At the thresholds there are multiple minimizers. This calculation assumes this particular cost and sign convention. Minimum-time problems have a different switching condition, and a switching function that vanishes over an interval may require singular-control analysis.
 
-::: {.callout-warning}
-### Where Smoothness Breaks Down
+Sensory delay and a motor-command switch also differ from instantaneous removal of muscle force. Existing activation, passive tissues and contact reactions can persist. A hybrid model must declare which physical variables it carries across the event.
 
-**Example 1: Humanoid Foot Strike**
+## 2. Modes, Guards, and Solutions {#sec-hybrid-automata}
 
-A bipedal robot's foot collides with the ground. Before contact: $v_{foot} < 0$ (downward velocity). After contact: $v_{foot} = 0$ (instantaneous stop). The velocity experiences a **discontinuous jump** $\Delta v \neq 0$ over zero time.
+### A Precise Local Setup
 
-At the instant of impact, the derivative $\dot{x}$ is undefined. The tangent space does not exist.
-
-**Example 2: Golf Ball Impact**
-
-A golf club head traveling at $v_{club} = 50$ m/s strikes a stationary ball. The collision lasts $\Delta t \approx 0.5$ ms. During this interval, contact forces $F \sim 10^4$ N produce accelerations $\ddot{x} \sim 10^6$ m/s². The force model $F(x, \dot{x})$ is discontinuous at the contact surface.
-
-The Jacobian $\frac{\partial f}{\partial x}$ has a singularity at $x_{contact}$.
-
-**Example 3: Coulomb Friction**
-
-The Coulomb friction model is:
+Let mode $i$ have domain $D_i$ and dynamics $\dot x=f_i(t,x,p)$, where $p$ denotes fixed parameters. A transition to mode $j$ occurs on an admissible portion of a guard $h(t,x,p)=0$, with a specified crossing direction and reset
 
 $$
-f_{friction} = \begin{cases}
--\mu_s F_N \cdot \text{sgn}(\dot{x}) & \text{if } |\dot{x}| > 0 \\
--F_{applied} & \text{if } |\dot{x}| = 0, |F_{applied}| < \mu_s F_N \\
--\mu_k F_N \cdot \text{sgn}(\dot{x}) & \text{if sliding}
-\end{cases}
+x^+=R(t_e,x^-,p).
+$$ {#eq-reset}
+
+The model also needs rules for competing guards, persistent contact, and continuation after an accumulation of events. A list of vector fields and zero sets alone may not define a unique execution.
+
+The local sensitivity derivations below assume smooth extensions of the mode flows and reset near one isolated event, a differentiable guard, and
+
+$$
+d=h_t+h_xf^-\ne0.
+$$ {#eq-transversality}
+
+Nearby trajectories must undergo the same transition in the same local order. $C^1$ data suffice for a first derivative under the corresponding local flow assumptions; second-order expansions need stronger regularity. A regular guard can be curved. A nonzero spatial gradient does not by itself prove transversality.
+
+We evaluate $h_x,h_t$ at the nominal incoming event, $R_x,R_t$ there, and $f^+$ at the reset state. Inputs may be incorporated into a declared smooth feedback law or a prescribed schedule. If the guard or reset depends directly on a varying input, that dependence must enter the differentiation. An input switch coinciding with impact needs its own timing convention.
+
+### Friction and Differential Inclusions
+
+For a translating block of mass $m$, tangential applied force $F$, and fixed normal force $N$, an ideal static/kinetic law is
+
+$$
+m\dot v=F+F_{\!f},\qquad
+F_{\!f}=-\mu_kN\,\operatorname{sgn}v\quad(v\ne0).
 $$ {#eq-coulomb-friction}
 
-The signum function $\text{sgn}(\dot{x})$ is discontinuous at $\dot{x} = 0$. The derivative $\frac{\partial f}{\partial \dot{x}}$ does not exist at stiction transitions.
+At rest, sticking is admissible when $|F|\le\mu_sN$, with $F_{\!f}=-F$. A complete transition rule must say what happens when this bound is exceeded. The coefficients and support force can themselves depend on the system.
 
-**Example 4: Bang-Bang Control**
-
-Fuel-optimal control for thrust-limited spacecraft often produces discontinuous control policies:
+For the equal-coefficient idealization $\mu_s=\mu_k=\mu$, the Filippov set at $v=0$ is
 
 $$
-u^*(x) = \begin{cases}
-u_{max} & \text{if } \lambda^T B > 0 \\
-0 & \text{if } \lambda^T B = 0 \\
--u_{max} & \text{if } \lambda^T B < 0
-\end{cases}
-$$ {#eq-bang-bang}
-
-where $\lambda$ is the costate from Pontryagin's Maximum Principle. The control $u(t)$ switches discontinuously, making $f(x, u(x))$ non-smooth even if $f$ itself is smooth in its arguments.
-:::
-
-These are not pathological edge cases—they are **core phenomena** in robotics, aerospace, and mechanical engineering. A framework that cannot handle them is incomplete.
-
-### The Failure of Naïve Linearization
-
-What happens if we blindly apply the tangent space framework to a system with discontinuities? Consider a simple 1D impact model:
-
-$$
-\dot{v} = -g, \quad v^+ = -e \cdot v^- \quad \text{when } x = 0
-$$ {#eq-bounce}
-
-where $e \in [0,1]$ is the coefficient of restitution. A ball falls under gravity until it hits the ground ($x = 0$), at which point the velocity reverses with energy loss.
-
-**Attempt 1: Ignore the discontinuity**
-
-If we linearize around a trajectory that includes an impact, computing $\delta\dot{x} = A\delta x$ at the impact instant gives:
-
-$$
-A_{impact} = \frac{\partial}{\partial v}\left(-e \cdot v^-\right) = \text{undefined}
-$$
-
-The derivative does not exist because the velocity is a function of the left-limit $v^-$, not the state itself. The Jacobian is **singular**.
-
-**Attempt 2: Treat impact as a stiff force**
-
-We might approximate the impact as a very stiff spring:
-
-$$
-F_{contact}(x) = \begin{cases}
-0 & x > 0 \\
--k x - c \dot{x} & x \leq 0
-\end{cases}, \quad k \to \infty
-$$
-
-This makes $f$ continuous but introduces **numerical stiffness**. Explicit integrators require timesteps $\Delta t \sim 1/\sqrt{k}$, which becomes prohibitively small. Implicit integrators work but lose the analytical structure we seek.
-
-**Attempt 3: Smooth via mollification**
-
-Replace the discontinuous jump with a smooth transition:
-
-$$
-v^+ = -e \cdot v^- \cdot \sigma_\epsilon(x)
-$$
-
-where $\sigma_\epsilon(x) = \frac{1}{2}(1 + \tanh(x/\epsilon))$ is a sigmoid. This makes $f \in C^\infty$, but:
-
-1. **Accuracy depends on $\epsilon$**: Too large and physics is wrong, too small and we're back to stiffness
-2. **Loss of structure**: The sharp transition at $x = 0$ has physical meaning (guard surface), which is obscured
-3. **Parameter tuning**: Every discontinuity requires choosing $\epsilon$, with no principled method
-
-### The Need for Hybrid Formalism
-
-None of these workarounds is satisfactory. What we need is a **mathematically rigorous framework** that:
-
-1. **Accepts discontinuities** as first-class features, not approximations
-2. **Defines tangent spaces** on either side of jumps, even if not at the jump itself
-3. **Maps perturbations** across discontinuities via a well-defined linear operator
-4. **Integrates into optimization**, preserving the computational advantages of DDP/iLQR
-
-This framework already exists: **hybrid dynamical systems**. The goal of this article is to extend the tangent space perspective to hybrid systems, developing the geometric tools needed to handle impacts, switches, and discontinuities rigorously.
-
-### Chapter Summary
-
-The $C^1$ smoothness assumption is not a minor technicality—it is **central** to the Tangent Hyperplane framework. Without it:
-
-- Jacobians may not exist
-- Tangent spaces are undefined
-- Linearization fails
-
-Physically important systems (impacts, friction, mode switches) violate this assumption. Naïve workarounds (ignoring, stiffening, mollifying) all have fatal flaws.
-
-The solution is to **extend the framework** to hybrid systems, where discontinuities are handled explicitly via guard surfaces and jump maps. This is the subject of the remainder of this article.
-
----
-
-## Chapter 2: Hybrid Automata Primer {#sec-hybrid-automata}
-
-## What Is a Hybrid System?
-
-A **hybrid dynamical system** is one that exhibits both continuous evolution and discrete jumps. Mathematically, it consists of:
-
-::: {.callout-tip}
-## Definition: Hybrid Automaton
-
-A hybrid automaton $\mathcal{H}$ is a tuple:
-
-$$
-\mathcal{H} = (Q, \mathcal{X}, \mathcal{U}, F, G, R, \Sigma)
-$$ {#eq-hybrid-automaton}
-
-where:
-
-- $Q = \{q_1, q_2, \ldots, q_m\}$ is a finite set of **discrete modes** (also called locations or charts)
-- $\mathcal{X} = \mathbb{R}^n$ is the **continuous state space**
-- $\mathcal{U} = \mathbb{R}^p$ is the **control input space**
-- $F = \{f_1, f_2, \ldots, f_m\}$ is a family of **vector fields**, one per mode:
-  $$
-  \dot{x} = f_q(x, u), \quad q \in Q
-  $$ {#eq-mode-dynamics}
-- $G = \{G_{ij} \subseteq \mathcal{X} \mid i, j \in Q\}$ is a family of **guard sets** (switching surfaces)
-- $R = \{R_{ij}: G_{ij} \to \mathcal{X} \mid i, j \in Q\}$ is a family of **reset maps** (jump maps)
-- $\Sigma = \{e_{ij} \mid i, j \in Q\}$ is the set of discrete **events** (mode transitions)
-:::
-
-**Intuition:** A hybrid system is like a finite state machine where each state has its own continuous dynamics. While in mode $q$, the state evolves according to $\dot{x} = f_q(x,u)$. When $x$ enters a guard set $G_{ij}$, an event $e_{ij}$ is triggered, the state jumps via the reset map $x^+ = R_{ij}(x^-)$, and the mode switches from $q_i$ to $q_j$.
-
-## Example: Bouncing Ball
-
-The bouncing ball from @eq-bounce can be formalized as a hybrid automaton:
-
-**Discrete modes:**
-$$
-Q = \{\text{flight}\}
-$$
-(Single mode—ball is always in flight when not at boundary)
-
-**Continuous state:**
-$$
-x = \begin{bmatrix} h \\ v \end{bmatrix}, \quad h = \text{height}, \; v = \text{velocity}
-$$
-
-**Vector field (flight mode):**
-$$
-f_{\text{flight}}(x) = \begin{bmatrix} v \\ -g \end{bmatrix}
-$$ {#eq-ball-flight}
-
-**Guard set:**
-$$
-G = \{x \in \mathbb{R}^2 \mid h = 0, \; v < 0\}
-$$ {#eq-ball-guard}
-
-The ball triggers the guard when it reaches the ground ($h = 0$) while moving downward ($v < 0$).
-
-**Reset map:**
-$$
-R(x^-) = \begin{bmatrix} 0 \\ -e \cdot v^- \end{bmatrix}
-$$ {#eq-ball-reset}
-
-The height remains zero, but the velocity reverses and scales by the restitution coefficient $e$.
-
-**Execution:** The system evolves as:
-
-1. Integrate $\dot{x} = f_{\text{flight}}(x)$ continuously
-2. Monitor guard condition $h = 0, v < 0$
-3. When guard is triggered:
-   - Compute pre-impact state $x^-$
-   - Apply reset: $x^+ = R(x^-)$
-   - Reinitialize continuous evolution from $x^+$
-4. Repeat
-
-This formalism makes the discontinuity **explicit** and **localized** to the guard surface.
-
-## Multi-Mode Example: Walking Robot
-
-A more realistic example is a simplified walking robot with stance and swing phases:
-
-**Discrete modes:**
-$$
-Q = \{\text{stance}, \text{swing}\}
-$$
-
-**Continuous state:**
-$$
-x = \begin{bmatrix} \theta \\ \phi \\ \dot{\theta} \\ \dot{\phi} \end{bmatrix}
-$$
-where $\theta$ = torso angle, $\phi$ = leg angle.
-
-**Vector fields:**
-
-*Stance mode* (foot on ground, single support):
-$$
-M_s(x)\ddot{q} + C_s(x, \dot{q})\dot{q} + G_s(x) = B_s u + J_s^T \lambda
-$$ {#eq-stance-dynamics}
-
-where $\lambda$ is the contact force (computed via constraint).
-
-*Swing mode* (foot in air, no contact):
-$$
-M_{sw}(x)\ddot{q} + C_{sw}(x, \dot{q})\dot{q} + G_{sw}(x) = B_{sw} u
-$$ {#eq-swing-dynamics}
-
-**Guards:**
-
-$G_{\text{stance} \to \text{swing}}$: Toe-off condition, e.g., $\lambda_N = 0$ (normal force vanishes)
-
-$G_{\text{swing} \to \text{stance}}$: Heel-strike condition, e.g., $h_{\text{foot}} = 0$ (foot contacts ground)
-
-**Reset maps:**
-
-At heel strike, the foot velocity must become zero (instantaneous impact):
-$$
-R_{\text{swing} \to \text{stance}}(x^-) = \begin{bmatrix} q^- \\ \Phi(q^-) \dot{q}^- \end{bmatrix}
-$$ {#eq-stance-reset}
-
-where $\Phi(q)$ is the **impact map** derived from collision equations (see @sec-impact-maps).
-
-At toe-off, state is continuous:
-$$
-R_{\text{stance} \to \text{swing}}(x^-) = x^-
-$$ {#eq-swing-reset}
-
-## Filippov Solutions at Discontinuities
-
-What happens if the guard surface is not a single isolated event but a region where the system "slides" along a discontinuity? This occurs in:
-
-- Coulomb friction at $\dot{x} = 0$ (stiction)
-- Saturation limits where $u = u_{max}$ for extended time
-- Complementarity constraints in contact mechanics
-
-The mathematical tool for defining solutions is the **Filippov convex hull**:
-
-::: {.callout-note}
-## Filippov Solutions
-
-At a discontinuity surface $S = \{x \mid h(x) = 0\}$ where the vector field is multi-valued, define the Filippov set-valued map:
-
-$$
-F_{\text{Filippov}}(x) = \bigcap_{\delta > 0} \bigcap_{\mu(N) = 0} \overline{\text{conv}} \, f(B(x, \delta) \setminus N)
+\dot v\in[(F-\mu N)/m,\,(F+\mu N)/m].
 $$ {#eq-filippov}
 
-In words: The Filippov convex hull is the convex closure of all limit values of $f$ in arbitrarily small neighborhoods, ignoring sets of measure zero.
+It contains zero precisely when the applied force can be balanced. A larger static threshold cannot be obtained merely by assigning another value at the isolated point $v=0$: Filippov regularization discards such pointwise changes. It needs an appropriate constitutive inclusion or mode model.
 
-**For piecewise smooth systems** with two modes separated by $h(x) = 0$:
+For two piecewise continuous vector fields on $h<0$ and $h>0$, their limiting convex hull describes the Filippov set at a regular interface. Attracting sliding requires the negative-side field to point toward increasing $h$ and the positive-side field toward decreasing $h$. Reversing both signs gives repelling behavior; the product of normal velocities alone does not distinguish them. Physical sliding along a table is not synonymous with Filippov sliding on a discontinuity surface. [Cortés’s tutorial](https://arxiv.org/abs/0901.3583) supplies the relevant solution notions and examples.
 
-$$
-F_{\text{Filippov}}(x) = \begin{cases}
-\{f_1(x)\} & h(x) > 0 \\
-\{f_2(x)\} & h(x) < 0 \\
-\text{conv}\{f_1(x), f_2(x)\} & h(x) = 0, \; \nabla h \cdot f_1 \cdot \nabla h \cdot f_2 < 0
-\end{cases}
-$$ {#eq-filippov-piecewise}
+### Integrals Must Retain Impulses
 
-The last case (sliding mode) occurs when the vector fields on either side point toward the surface.
-:::
-
-**Example:** Coulomb friction with $\dot{x} = 0$:
-
-If the applied force is less than the maximum static friction, the system remains at $\dot{x} = 0$ via a Filippov solution. The friction force $f \in [-\mu_s N, \mu_s N]$ takes whatever value is needed to maintain $\ddot{x} = 0$.
-
-**Relevance to tangent spaces:** Filippov solutions are the measure-theoretic generalization of classical solutions. They allow us to define trajectories through discontinuities in a way compatible with Lebesgue integration. This is essential for variational analysis, as we'll see in @sec-variation-through-jumps.
-
-## Measure-Theoretic Interpretation
-
-Why do we need measure theory? Because **derivatives are defined via limits**, and limits require a notion of "almost everywhere" convergence.
-
-In a hybrid system, the trajectory $x(t)$ is:
-
-- **Absolutely continuous** within each mode (standard ODE solution)
-- **Discontinuous** at guard crossings (jumps in $x$)
-- **Piecewise smooth** overall
-
-The derivative $\dot{x}(t)$ exists **almost everywhere** (i.e., everywhere except the finite or countable set of jump times). This is sufficient for:
-
-- Calculus of variations (action integrals $\int L \, dt$ are well-defined)
-- Necessary conditions for optimality (Pontryagin's Maximum Principle)
-- Numerical integration (Lebesgue integral equals Riemann integral a.e.)
-
-**Key insight:** We do not need $\dot{x}$ to exist **everywhere**—only almost everywhere (a.e.). Jumps have measure zero, so they contribute zero to integrals:
+A piecewise absolutely continuous state with finitely many jumps satisfies, with a consistent right-continuous convention,
 
 $$
-\int_0^T L(x(t), u(t)) \, dt = \sum_{i=1}^{N-1} \int_{t_i}^{t_{i+1}} L(x(t), u(t)) \, dt
+x(t)=x(0)+\int_0^t f(s,x(s))\,ds
++\sum_{0<t_j\le t}\bigl[x(t_j^+)-x(t_j^-)\bigr].
 $$ {#eq-hs-hybrid-cost-jump}
 
-where $t_1, \ldots, t_{N-1}$ are the jump times (finite set).
+Its distributional derivative includes point masses at the jumps. Knowing an ordinary derivative almost everywhere does not recover those jumps. Total variation includes the continuous variation and the jump magnitudes.
 
-## Chapter Summary
-
-Hybrid systems formalize discontinuous dynamics via:
-
-1. **Modes** ($Q$): Discrete states with their own continuous dynamics
-2. **Guards** ($G$): Surfaces triggering transitions
-3. **Resets** ($R$): Jump maps applied at transitions
-
-Examples include bouncing balls (single mode, impulsive reset) and walking robots (multi-mode with foot strikes).
-
-**Filippov solutions** extend classical ODE solutions to discontinuous vector fields via convex hulls, enabling sliding modes.
-
-**Measure theory** ensures derivatives exist almost everywhere, making variational calculus and optimization well-defined despite jumps.
-
-Next, we develop the geometry of tangent spaces at jumps, enabling linearization across discontinuities.
-
----
-
-## Chapter 3: Tangent Spaces at Jumps {#sec-tangent-jumps}
-
-### Left and Right Tangent Spaces
-
-At a jump, the state $x(t)$ is discontinuous. Limits from the left and right differ:
+A useful objective is
 
 $$
-x^- = \lim_{t \to t_j^-} x(t), \quad x^+ = \lim_{t \to t_j^+} x(t), \quad x^+ = R(x^-)
-$$ {#eq-jump-limits}
+J=\Phi(x(T))+\int_0^T L_{i(t)}(t,x,u)\,dt
++\sum_{0<t_j<T}c_j(t_j,x_j^-).
+$$ {#eq-hs-hybrid-cost-ddp}
 
-The critical question: **How do perturbations $\delta x$ behave across the jump?**
+The running integral needs an integrable integrand. Event costs are separate terms, regardless of the zero duration of an ideal jump. With infinitely many events, their sum needs a convergence argument. Neither “measure zero” nor “càdlàg” alone establishes finite cost or a unique continuation.
 
-In the smooth case, perturbations evolve via the state transition:
+## 3. Deriving the Saltation Matrix {#sec-tangent-jumps}
 
-$$
-\delta x(t) = \Phi(t, t_0) \delta x(t_0)
-$$ {#eq-smooth-transition}
+### Compare at a Common Clock Time
 
-where $\Phi$ satisfies $\frac{\partial}{\partial t}\Phi(t, t_0) = A(t)\Phi(t, t_0)$.
+Let the nominal event occur at $t_e$, and let a neighboring trajectory reach it at $t_e+\delta t$. Write $\delta x^-$ for the incoming variation continued to the nominal event time using the incoming mode.
 
-In the hybrid case, we need a **generalized state transition** that accounts for jumps. Define:
-
-::: {.callout-tip}
-### Definition: Left and Right Tangent Spaces at a Jump
-
-At a guard crossing at time $t_j$:
-
-**Left tangent space:** $T_{x^-}\mathcal{M}^- = \mathbb{R}^n$ (standard tangent space before jump)
-
-**Right tangent space:** $T_{x^+}\mathcal{M}^+ = \mathbb{R}^n$ (standard tangent space after jump)
-
-**Jump map on tangent spaces:** The reset map $R: G_{ij} \to \mathcal{X}$ induces a linear map on tangent spaces:
+The perturbed incoming event state differs by $\delta x^-+f^-\delta t$. Expanding the guard gives
 
 $$
-\boxed{D R(x^-): T_{x^-}G_{ij} \to T_{x^+}\mathcal{X}}
-$$ {#eq-reset-derivative}
+0=h_x\delta x^-+(h_t+h_xf^-)\delta t,
+\qquad
+\delta t=-\frac{h_x\delta x^-}{d}.
+$$ {#eq-event-time}
 
-This is the **Jacobian of the reset map**, denoted:
-
-$$
-P_j = \frac{\partial R}{\partial x}\bigg|_{x^-}
-$$ {#eq-reset-jacobian}
-
-Perturbations jump according to:
+Apply the reset at the perturbed event. Its state variation is $R_x\delta x^-+(R_xf^-+R_t)\delta t$. To compare the two outgoing trajectories at a common time, subtract the nominal outgoing evolution $f^+\delta t$. Therefore
 
 $$
-\delta x^+ = P_j \, \delta x^-
-$$ {#eq-perturbation-jump}
-:::
-
-**Geometric interpretation:** The reset map $R$ is a smooth function from the guard surface $G_{ij}$ to the state space $\mathcal{X}$. Its derivative $DR$ is a linear map between tangent spaces. Even though the trajectory itself jumps discontinuously, **perturbations evolve linearly** according to $P_j$.
-
-### Jump Map Jacobians
-
-Let's compute $P_j$ for our examples.
-
-#### Example 1: Bouncing Ball
-
-The reset map is:
-$$
-R\begin{pmatrix} h^- \\ v^- \end{pmatrix} = \begin{pmatrix} 0 \\ -e v^- \end{pmatrix}
+\delta x^+
+=R_x\delta x^-+(R_xf^-+R_t-f^+)\delta t
+=S\delta x^-,
 $$
 
-Taking the Jacobian:
 $$
-P_j = \frac{\partial R}{\partial x} = \begin{bmatrix}
-\frac{\partial h^+}{\partial h^-} & \frac{\partial h^+}{\partial v^-} \\
-\frac{\partial v^+}{\partial h^-} & \frac{\partial v^+}{\partial v^-}
-\end{bmatrix} = \begin{bmatrix}
-0 & 0 \\
-0 & -e
-\end{bmatrix}
-$$ {#eq-ball-jacobian}
-
-**Interpretation:**
-
-- A perturbation in height $\delta h^-$ does not affect the post-impact state (first column is zero)
-- A perturbation in velocity $\delta v^-$ scales by $-e$ (second column)
-- The matrix is **rank-deficient** (rank 1), reflecting the constraint $h^+ = 0$
-
-#### Example 2: Rigid Body Impact (Poisson's Hypothesis)
-
-For a rigid body colliding with a surface, conservation of momentum during impact gives:
-
-$$
-M v^+ = M v^- + J^T \Lambda
-$$ {#eq-impact-momentum}
-
-where $J$ is the contact Jacobian and $\Lambda$ is the impulsive force. Using the restitution law:
-
-$$
-J v^+ = -e J v^-
-$$
-
-Solving for $v^+$:
-
-$$
-v^+ = v^- - (1 + e) M^{-1} J^T (J M^{-1} J^T)^{-1} J v^-
-$$ {#eq-impact-velocity}
-
-The Jacobian is:
-
-$$
-P_j = I - (1 + e) M^{-1} J^T (J M^{-1} J^T)^{-1} J
-$$ {#eq-impact-jacobian}
-
-This is the **impact map Jacobian**, a projection matrix that removes and reverses the normal component of velocity.
-
-### Saltation Matrices (Anitescu & Potra)
-
-The jump map Jacobian $P_j$ is part of a more general structure called the **saltation matrix**, which accounts for not just the jump in state but also the **variation in jump time**.
-
-::: {.callout-important}
-### Saltation Matrix
-
-Consider a trajectory that crosses a guard surface $S = \{x \mid h(x) = 0\}$ at time $t_j$. If we perturb the initial condition $x_0 \to x_0 + \delta x_0$, both the jump time and the jump state vary:
-
-$$
-t_j \to t_j + \delta t_j, \quad x^- \to x^- + \delta x^-
-$$
-
-The **saltation matrix** $S_j$ maps the pre-jump perturbation (including time variation) to the post-jump perturbation:
-
-$$
-\delta x^+ = S_j \, \delta x^- - f^+ \delta t_j
-$$ {#eq-saltation-general}
-
-where:
-
-$$
-\boxed{S_j = P_j + \frac{(f^+ - P_j f^-) \nabla h^T}{\nabla h^T f^-}}
+\boxed{S=R_x+\frac{(f^+-R_xf^--R_t)h_x}{h_t+h_xf^-}.}
 $$ {#eq-saltation-matrix}
 
-and:
+The comparison uses smooth mode extensions when one trajectory has crossed and the other has not. The derivative applies to an observation after both nearby events, with a consistent limiting convention. It is not a claim of uniform approximation during their short interval of mode mismatch.
 
-- $P_j = \frac{\partial R}{\partial x}\big|_{x^-}$ is the reset Jacobian
-- $f^- = f(x^-, u^-)$, $f^+ = f(x^+, u^+)$ are the vector fields before/after
-- $\nabla h$ is the gradient of the guard function
-- $\delta t_j = -\dfrac{\nabla h^T \delta x^-}{\nabla h^T f^-}$ is the variation in crossing time
-:::
+This timing correction is already inside $S$. Adding a second $\delta t$ correction afterward double counts it. Conversely, $R_x$ alone describes a prescribed-time reset or an appropriate event-aligned derivative; it generally misses a state-triggered common-time sensitivity. The standard formulation and its scope are developed in @Kong2023saltation.
 
-**Derivation (sketch):**
+### Reset Extensions and Parameter Effects
 
-The guard crossing condition is $h(x(t_j)) = 0$. Under a perturbation:
+If a reset is defined only on the guard, choose a smooth local extension. Replacing that extension by $R+a h$ changes $R_x$ by $a h_x$ and $R_t$ by $a h_t$, but leaves $S$ unchanged: the added $a h_x$ cancels the correction $a d h_x/d$. The physical derivative is not determined by an arbitrary off-guard extension.
+
+For fixed parameter perturbation $\delta p$,
 
 $$
-h(x^- + \delta x^-) = 0 \implies \nabla h^T \delta x^- + O(\delta x^2) = 0
-$$
-
-But $\delta x^-$ includes evolution up to time $t_j + \delta t_j$:
-
-$$
-\delta x^-(t_j + \delta t_j) = \Phi(t_j, t_0)\delta x_0 + \Phi(t_j, t_0) f^- \delta t_j
-$$
-
-The crossing time variation is:
-
-$$
-\nabla h^T (\delta x^- + f^- \delta t_j) = 0 \implies \delta t_j = -\frac{\nabla h^T \delta x^-}{\nabla h^T f^-}
-$$
-
-After the jump:
-
-$$
-\delta x^+ = P_j \delta x^- + \text{(correction for time variation)}
-$$
-
-The correction term comes from the fact that we reinitialize at $x^+$ at time $t_j + \delta t_j$, not $t_j$. Combining these:
-
-$$
-\delta x^+ = P_j \delta x^- + (f^+ - P_j f^-) \delta t_j
-$$
-
-Substituting $\delta t_j$ and simplifying yields @eq-saltation-matrix.
-
-**Physical interpretation:**
-
-The saltation matrix has two contributions:
-
-1. **$P_j$**: The direct effect of the reset map on the state
-2. **Correction term**: Accounts for the fact that perturbed trajectories cross the guard at different times, experiencing different amounts of pre- and post-impact flow
-
-#### Example: Bouncing Ball Saltation Matrix
-
-For the bouncing ball:
-
-- $h(x) = h$ (height), so $\nabla h = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$
-- $f^- = \begin{bmatrix} v^- \\ -g \end{bmatrix}$, $f^+ = \begin{bmatrix} -ev^- \\ -g \end{bmatrix}$
-- $P_j = \begin{bmatrix} 0 & 0 \\ 0 & -e \end{bmatrix}$
-
-Computing the correction:
-
-$$
-f^+ - P_j f^- = \begin{bmatrix} -ev^- \\ -g \end{bmatrix} - \begin{bmatrix} 0 \\ -ev^- - eg \end{bmatrix} = \begin{bmatrix} -ev^- \\ (1-e)(-g) + ev^- \end{bmatrix}
-$$
-
-Correcting the calculation:
-
-$$
-P_j f^- = \begin{bmatrix} 0 & 0 \\ 0 & -e \end{bmatrix} \begin{bmatrix} v^- \\ -g \end{bmatrix} = \begin{bmatrix} 0 \\ eg \end{bmatrix}
+\delta t=-\frac{h_x\delta x^-+h_p\delta p}{d},
+\qquad
+\delta x^+=S\delta x^-+E\delta p,
 $$
 
 $$
-f^+ - P_j f^- = \begin{bmatrix} -ev^- \\ -g \end{bmatrix} - \begin{bmatrix} 0 \\ eg \end{bmatrix} = \begin{bmatrix} -ev^- \\ -g(1+e) \end{bmatrix}
-$$
+E=R_p+\frac{(f^+-R_xf^--R_t)h_p}{d}.
+$$ {#eq-saltation-general}
+
+Parameter-dependent flows also contribute before and after the event. This matters when ball position, ground height, restitution, contact geometry or activation parameters are uncertain.
+
+### The Bouncing Ball, Step by Step
+
+Take state $(h,v)$, upward positive, gravity $g>0$, guard $h=0$ with $v^-<0$, and reset $(h,v)\mapsto(h,-ev)$ for constant restitution $e$. The spatial extension keeps $h$ unchanged; the actual event still has $h=0$. Then
 
 $$
-\nabla h^T f^- = \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} v^- \\ -g \end{bmatrix} = v^- < 0
+R_x=\begin{bmatrix}1&0\\0&-e\end{bmatrix},
+\quad
+f^-=\begin{bmatrix}v^-\\-g\end{bmatrix},
+\quad
+f^+=\begin{bmatrix}-ev^-\\-g\end{bmatrix}.
 $$
 
-The saltation matrix is:
+Thus $f^+-R_xf^-=(-(1+e)v^-,-(1+e)g)^{\mathsf T}$ and
 
 $$
-S_j = \begin{bmatrix} 0 & 0 \\ 0 & -e \end{bmatrix} + \frac{1}{v^-} \begin{bmatrix} -ev^- \\ -g(1+e) \end{bmatrix} \begin{bmatrix} 1 & 0 \end{bmatrix}
-$$
-
-$$
-= \begin{bmatrix} 0 & 0 \\ 0 & -e \end{bmatrix} + \begin{bmatrix} -e & 0 \\ -g(1+e)/v^- & 0 \end{bmatrix}
-$$
-
-$$
-\boxed{S_j = \begin{bmatrix} -e & 0 \\ -\frac{g(1+e)}{v^-} & -e \end{bmatrix}}
+\boxed{S=\begin{bmatrix}
+-e&0\\
+-g(1+e)/v^-&-e
+\end{bmatrix}.}
 $$ {#eq-ball-saltation}
 
-**Interpretation:**
+A positive incoming height perturbation delays impact. The extra fall, the changed rebound speed, and the shorter outgoing evolution all affect the common-time result. The first row maps *height* variation to height variation; its velocity entry is zero. For a velocity-dependent $e(v)$, differentiate the reset: $R_{vv}=-e-v e'$. Smooth parameter dependence does not automatically invalidate saltation.
 
-- First row: Height perturbation $\delta h^+$ depends on pre-impact velocity perturbation $\delta v^-$ via time-of-crossing variation
-- Second row: Velocity perturbation jumps by $-e$, with additional dependence on height perturbation due to gravity during the time correction
+For an upward-moving flat floor $h=a t$ with constant speed $a$, restitution acts on relative velocity: $v^+=a-e(v^--a)$. The denominator becomes $v^--a$. Grazing means zero relative approach speed, not necessarily zero laboratory speed.
 
-### State Transition Through Multiple Jumps
+## 4. Geometry and Physical Impact {#sec-guard-geometry}
 
-For a hybrid trajectory with multiple jumps at times $t_1, \ldots, t_N$, the state transition operator is:
+### Tangent Space, Cone, and Metric
 
-$$
-\boxed{\Phi(t, t_0) = \Phi_c(t, t_N) S_N \Phi_c(t_N, t_{N-1}) S_{N-1} \cdots S_1 \Phi_c(t_1, t_0)}
-$$ {#eq-hybrid-stm}
+At a regular configuration boundary $\phi(q)=0$, the tangent space is $\{\delta q:J\delta q=0\}$, where $J=\phi_q$. For the admissible set $\phi\ge0$, its boundary tangent cone is $\{\delta q:J\delta q\ge0\}$ under the regularity assumptions. The same cone describes that same domain before and after impact. An incoming velocity can point outward and trigger a reset; it should not be mistaken for a feasible displacement into the domain.
 
-where:
+For mechanical generalized velocity $v$, assume a positive-definite mass matrix $M(q)$. It defines the kinetic metric, $T=v^{\mathsf T}Mv/2$. The normal direction for an impulse is generally $M^{-1}J^{\mathsf T}$, not the Euclidean vector $J^{\mathsf T}$.
 
-- $\Phi_c(t_j, t_{j-1})$ is the continuous state transition within mode $j$ (standard smooth case)
-- $S_j$ is the saltation matrix at jump $j$
+### Derive the Frictionless Reset From Impulse Balance
 
-This product structure allows us to **propagate perturbations** through arbitrarily complex hybrid trajectories, alternating between continuous flow and discrete jumps.
-
-### Chapter Summary
-
-At guard crossings, states jump discontinuously, but **perturbations evolve linearly** via:
-
-1. **Reset Jacobian** $P_j = \frac{\partial R}{\partial x}$: Direct effect of jump map
-2. **Saltation Matrix** $S_j$: Includes correction for variation in crossing time
-3. **Hybrid state transition** $\Phi$: Product of continuous flows and saltation matrices
-
-The key insight: **Even for non-smooth trajectories, the tangent space dynamics remain linear.** This extends the core Tangent Hyperplane principle to hybrid systems.
-
-Next, we develop the geometric interpretation of these jumps as transformations of manifolds.
-
----
-
-## Part II: Geometric Framework {.unnumbered}
-
----
-
-## Chapter 4: Manifolds With Boundaries {#sec-manifolds-boundaries}
-
-### Guard Surfaces as Codimension-1 Manifolds
-
-In smooth dynamics, the state space $\mathcal{X} = \mathbb{R}^n$ is an $n$-dimensional manifold without boundary. Trajectories flow smoothly through this space, never encountering edges or discontinuities.
-
-In hybrid dynamics, guard surfaces partition the state space into regions. Each guard $G_{ij}$ is a **codimension-1 submanifold**, meaning it has dimension $n-1$ and locally divides $\mathbb{R}^n$ into two half-spaces.
-
-::: {.callout-tip}
-### Definition: Guard Surface as Manifold
-
-A guard surface $G$ is the zero level set of a smooth function $h: \mathbb{R}^n \to \mathbb{R}$:
+For one stationary normal contact, negligible configuration change during impact and no other impulsive load,
 
 $$
-G = \{x \in \mathbb{R}^n \mid h(x) = 0\}
-$$ {#eq-guard-manifold}
+M(v^+-v^-)=J^{\mathsf T}p_n,
+\qquad
+Jv^+=-eJv^-.
+$$ {#eq-impact-balance}
 
-Assume $h$ is $C^1$ and **regular**, meaning $\nabla h(x) \neq 0$ for all $x \in G$. By the **Implicit Function Theorem**, $G$ is a smooth $(n-1)$-dimensional embedded submanifold.
-
-**Tangent space of $G$:**
-
-At $x \in G$, the tangent space $T_x G$ is the null space of the gradient:
+Set $W=JM^{-1}J^{\mathsf T}>0$. Solving gives
 
 $$
-T_x G = \{\delta x \in \mathbb{R}^n \mid \nabla h(x)^T \delta x = 0\}
-$$ {#eq-guard-tangent}
-
-This is an $(n-1)$-dimensional linear subspace orthogonal to $\nabla h(x)$.
-
-**Normal space of $G$:**
-
-The normal space $N_x G$ is the one-dimensional space spanned by $\nabla h(x)$:
-
-$$
-N_x G = \text{span}\{\nabla h(x)\}
-$$ {#eq-guard-normal}
-
-Every vector $v \in \mathbb{R}^n$ decomposes uniquely:
-
-$$
-v = v_{\parallel} + v_{\perp}, \quad v_{\parallel} \in T_x G, \; v_{\perp} \in N_x G
-$$ {#eq-tangent-normal-decomp}
-:::
-
-#### Example: Bouncing Ball
-
-The guard is $h(x) = h = 0$. The gradient is:
-
-$$
-\nabla h = \begin{bmatrix} 1 \\ 0 \end{bmatrix}
-$$
-
-The tangent space of $G$ (at any point on the ground) is:
-
-$$
-T_x G = \left\{ \begin{bmatrix} 0 \\ \delta v \end{bmatrix} \mid \delta v \in \mathbb{R} \right\}
-$$
-
-Tangent perturbations are purely in velocity, not height. The normal space is:
-
-$$
-N_x G = \left\{ \begin{bmatrix} \delta h \\ 0 \end{bmatrix} \mid \delta h \in \mathbb{R} \right\}
-$$
-
-Normal perturbations are purely in height.
-
-#### Example: Humanoid Foot Strike
-
-For a humanoid robot, the guard is the foot height:
-
-$$
-h(q) = \text{forward_kinematics}_{\text{foot}}(q) \cdot \hat{z}
-$$
-
-This is a nonlinear function of the joint angles $q$. The gradient is:
-
-$$
-\nabla h(q) = J_{\text{foot}}^T(q) \hat{z}
-$$
-
-where $J_{\text{foot}}(q)$ is the foot Jacobian. The tangent space $T_q G$ has dimension $n-1$ (one constraint), and contains all joint angle perturbations that keep the foot at ground level (to first order).
-
-### Tangent Cones vs. Tangent Spaces
-
-At a boundary point, the **tangent cone** is the set of velocity directions that keep the trajectory inside the domain.
-
-::: {.callout-note}
-### Tangent Cone
-
-For a domain $\mathcal{D} = \{x \mid h(x) \geq 0\}$, the tangent cone at a boundary point $x \in \partial \mathcal{D}$ (where $h(x) = 0$) is:
-
-$$
-T_x \mathcal{D} = \{v \in \mathbb{R}^n \mid \nabla h(x)^T v \geq 0\}
-$$ {#eq-tangent-cone}
-
-This is a **half-space**, not a linear subspace. It includes:
-
-- Vectors pointing into the domain ($\nabla h^T v > 0$)
-- Vectors tangent to the boundary ($\nabla h^T v = 0$)
-- But excludes vectors pointing out ($\nabla h^T v < 0$)
-:::
-
-**Why does this matter?**
-
-In optimization with state constraints (e.g., $h(x) \geq 0$), the tangent cone determines the **feasible perturbation directions**. The KKT conditions for constrained optimization involve projections onto the tangent cone, not the full tangent space.
-
-For hybrid systems, the tangent cone at $x^-$ (pre-impact) is:
-
-$$
-T_{x^-} \mathcal{D}^- = \{v \mid \nabla h^T v \leq 0\}
-$$
-
-(pointing toward or tangent to the guard, allowing impact). At $x^+$ (post-impact):
-
-$$
-T_{x^+} \mathcal{D}^+ = \{v \mid \nabla h^T v \geq 0\}
-$$
-
-(pointing away from guard, leaving the surface).
-
-### Normal/Tangent Decomposition at Impact
-
-The velocity $v$ at a guard crossing decomposes as:
-
-$$
-v = v_\parallel + v_\perp
-$$ {#eq-velocity-decomp}
-
-where:
-
-$$
-v_\perp = \frac{\nabla h \cdot v}{\|\nabla h\|^2} \nabla h, \quad v_\parallel = v - v_\perp
-$$ {#eq-normal-tangent-components}
-
-For a **frictionless impact**, the tangent component is preserved, and the normal component reverses:
-
-$$
-v^+ = v_\parallel - e \, v_\perp
-$$ {#eq-frictionless-impact}
-
-In matrix form:
-
-$$
-v^+ = (I - (1+e) P_N) v^-
-$$ {#eq-impact-matrix}
-
-where $P_N = \frac{\nabla h \nabla h^T}{\nabla h^T \nabla h}$ is the orthogonal projection onto the normal space.
-
-**With friction (Coulomb model):**
-
-The tangent component may also change due to friction:
-
-$$
-v^+_\parallel = v^-_\parallel - \mu \frac{\|v_\perp^-\|}{\|v_\parallel^-\|} v_\parallel^-
-$$ {#eq-friction-impact}
-
-This is a **nonlinear** function of the velocity components, requiring iterative solution for the Jacobian.
-
-### Riemannian Metric and Energy
-
-On a manifold with a metric $g$, the kinetic energy is:
-
-$$
-T = \frac{1}{2} \dot{q}^T M(q) \dot{q}
-$$ {#eq-kinetic-energy}
-
-where $M(q)$ is the mass matrix (inertia tensor). At impact, kinetic energy is lost:
-
-$$
-T^+ = \frac{1}{2} (v^+)^T M v^+ < \frac{1}{2} (v^-)^T M v^- = T^-
-$$ {#eq-energy-loss}
-
-The energy loss is:
-
-$$
-\Delta T = T^+ - T^- = -\frac{1}{2}(1 - e^2) (v_\perp^-)^T M v_\perp^-
-$$ {#eq-energy-dissipation}
-
-For elastic collisions ($e = 1$), energy is conserved. For perfectly inelastic ($e = 0$), the normal kinetic energy is completely dissipated.
-
-**Geometric interpretation:**
-
-The mass matrix $M(q)$ defines a **Riemannian metric** on the configuration manifold. Impact maps are **not isometries**—they change distances and angles in tangent space. The saltation matrix $S_j$ can be viewed as a metric-preserving map followed by a dissipative projection.
-
-### Chapter Summary
-
-Guard surfaces are codimension-1 manifolds with:
-
-- **Tangent space** $T_x G$: $(n-1)$-dimensional, parallel to surface
-- **Normal space** $N_x G$: 1-dimensional, perpendicular to surface
-- **Tangent cones**: Half-spaces defining feasible directions
-
-Velocities decompose into tangent and normal components. Impacts act differently on each:
-
-- Normal: reverses and scales ($-e v_\perp$)
-- Tangent: preserved (frictionless) or reduced (friction)
-
-Energy is dissipated in proportion to $(1-e^2)$ and the normal velocity. This geometric structure underpins the saltation matrix and variational dynamics.
-
----
-
-## Chapter 5: Impact Maps as Tangent Space Rotations {#sec-impact-maps}
-
-## Restitution Coefficients Geometrically
-
-The coefficient of restitution $e$ is often introduced phenomenologically: "A ball bounces to height $e^2 h_0$." But what is $e$ geometrically?
-
-::: {.callout-tip}
-## Geometric Definition of Restitution
-
-The coefficient of restitution $e \in [0, 1]$ is the **ratio of post- to pre-impact normal velocities**:
-
-$$
-e = -\frac{v_{\perp}^+}{v_{\perp}^-}
-$$ {#eq-restitution-geometric}
-
-In terms of the angle $\theta$ between the velocity and the guard surface:
-
-$$
-v_\perp = \|v\| \cos\theta
-$$
-
-After impact:
-
-$$
-\|v^+\| \cos\theta^+ = -e \|v^-\| \cos\theta^-
-$$ {#eq-restitution-angle}
-
-For frictionless impact with $v_\parallel$ unchanged:
-
-$$
-\|v^+\|^2 = \|v_\parallel\|^2 + e^2 \|v_\perp^-\|^2
-$$ {#eq-post-impact-speed}
-
-The velocity magnitude decreases by a factor depending on the impact angle.
-:::
-
-### Example: Oblique Impact
-
-A ball strikes a wall at angle $\theta$ to the normal:
-
-- Pre-impact: $v^- = v_0(\cos\theta, \sin\theta)$
-- Post-impact normal: $v_\perp^+ = -e v_0 \cos\theta$
-- Post-impact tangent: $v_\parallel^+ = v_0 \sin\theta$
-- Post-impact angle: $\tan\theta^+ = \frac{v_0 \sin\theta}{e v_0 \cos\theta} = \frac{\tan\theta}{e}$
-
-The rebound angle is **steeper** than the impact angle (unless $e = 1$). This is the familiar "shallow bounce" phenomenon—oblique impacts produce more horizontal bounces.
-
-## Energy Dissipation and Metric Change
-
-The energy loss (@eq-energy-dissipation) can be written using the metric:
-
-$$
-\Delta T = -\frac{1}{2}(1 - e^2) \|v_\perp^-\|_M^2
-$$ {#eq-energy-loss-metric}
-
-where $\|v\|_M^2 = v^T M v$ is the kinetic energy norm.
-
-**Geometric interpretation:**
-
-The impact map **shrinks** the tangent space in the normal direction by a factor $e$, while preserving the tangent direction. This is a **squeeze mapping**:
-
-$$
-S_{\text{squeeze}} = I - (1 - e^2) \frac{\nabla h \nabla h^T}{\|\nabla h\|^2}
-$$ {#eq-squeeze-map}
-
-The actual map is:
-
-$$
-v^+ = v_\parallel - e v_\perp = v - v_\perp - e v_\perp = v - (1 + e) v_\perp
-$$
-
-$$
-= v - (1 + e) P_N v = (I - (1+e) P_N) v
-$$
-
-So the impact map matrix is:
-
-$$
-\boxed{R_v = I - (1 + e) P_N}
+p_n=-(1+e)W^{-1}Jv^-,
+\quad
+v^+=(I-(1+e)P_M)v^-,
+\quad
+P_M=M^{-1}J^{\mathsf T}W^{-1}J.
 $$ {#eq-impact-map-matrix}
 
-where $P_N = \frac{\nabla h \nabla h^T}{\nabla h^T \nabla h}$.
+$P_M^2=P_M$ and $P_M^{\mathsf T}M=MP_M$: it is the mass-metric normal projection. For a particle with scalar isotropic mass, this reduces to the familiar Euclidean normal/tangent decomposition.
 
-This is an **oblique reflection** (for $e = 1$, it's a pure reflection; for $e = 0$, it's a projection onto the tangent space).
+Writing $v=v_\parallel+v_\perp$ using $P_M$, the cross term vanishes in the kinetic metric. Hence
 
-## Examples
-
-### Example 1: Golf Club-Ball Collision
-
-A golf ball at rest is struck by a club head moving at $v_c = 50$ m/s. The impact is highly inelastic in the center-of-mass frame, with effective $e \approx 0.78$.
-
-**Setup:**
-
-- Club mass: $m_c = 200$ g
-- Ball mass: $m_b = 46$ g
-- Mass ratio: $\mu = m_b / m_c \approx 0.23$
-
-**Center-of-mass velocity:**
-
-$$
-v_{cm} = \frac{m_c v_c}{m_c + m_b} \approx 0.81 v_c
-$$
-
-**Relative velocity before impact:**
-
-$$
-v_{rel}^- = v_c - 0 = v_c
-$$
-
-**Relative velocity after impact:**
-
-$$
-v_{rel}^+ = -e v_{rel}^- = -0.78 v_c
-$$
-
-**Ball velocity after impact.** In the CM frame the ball reverses its approach speed scaled by $e$; transforming back to the lab frame,
-
-$$
-v_b^+ = v_{cm} + \frac{m_c}{m_c + m_b}\,e\,v_c = \frac{(1 + e) m_c}{m_c + m_b}\,v_c \approx 1.45\,v_c
-$$
-
-which is the standard inelastic-collision result:
-
-$$
-v_b^+ = \frac{(1 + e) m_c v_c}{m_c + m_b} = \frac{1.78 \times 200 \times 50}{246} \approx 72.4 \text{ m/s} \approx 1.45\,v_c
-$$
-
-The ball leaves at approximately **1.45 times the club speed**, which matches empirical data for golf (smash factor).
-
-**Energy loss:**
-
-$$
-T^- = \frac{1}{2} m_c v_c^2 = 250 \text{ J}
-$$
-
-$$
-T^+ = \frac{1}{2} m_c v_c^{'+2} + \frac{1}{2} m_b v_b^{'+2}
-$$
-
-Using momentum conservation to find $v_c^{'+}$:
-
-$$
-m_c v_c = m_c v_c^{'} + m_b v_b^{'}
-$$
-
-$$
-v_c^{'} = v_c - \frac{m_b}{m_c} v_b^{'} \approx 50 - 0.23 \times 72.4 \approx 33.3 \text{ m/s}
-$$
-
-$$
-T^+ \approx \frac{1}{2}(0.2)(33.3)^2 + \frac{1}{2}(0.046)(72.4)^2 \approx 111 + 121 = 232 \text{ J}
-$$
-
-Energy dissipated: $\Delta T \approx 18$ J, about 7% loss. This is consistent with $e = 0.78$:
-
-$$
-\frac{\Delta T}{T^-} = 1 - \frac{T^+}{T^-} \approx 1 - \frac{(1 + e)^2}{1 + m_b/m_c} \cdot \frac{m_b}{m_c}
-$$
-
-(This formula is approximate; exact calculation involves solving the collision equations.)
-
-### Example 2: Spacecraft Docking
-
-A spacecraft approaches a docking port at $v = 0.1$ m/s. The docking mechanism is a soft capture with $e = 0.3$ (highly dissipative to avoid rebound).
-
-**Before docking:**
-
-$$
-x^- = \begin{bmatrix} 0.01 \text{ m} \\ 0.1 \text{ m/s} \end{bmatrix}
-$$
-
-**After capture:**
-
-$$
-x^+ = \begin{bmatrix} 0 \\ -0.3 \times 0.1 \end{bmatrix} = \begin{bmatrix} 0 \\ -0.03 \text{ m/s} \end{bmatrix}
-$$
-
-The spacecraft rebounds slightly (3 cm/s) before the latches engage. In practice, active damping (thrusters or mechanical dampers) further reduces this.
-
-**Saltation matrix:**
-
-For this 1D impact:
-
-$$
-S = \begin{bmatrix} -e & 0 \\ -g(1+e)/v^- & -e \end{bmatrix}
-$$
-
-With $g = 0$ (no gravity in space) and $v^- = 0.1$:
-
-$$
-S = \begin{bmatrix} -0.3 & 0 \\ 0 & -0.3 \end{bmatrix}
-$$
-
-Perturbations are scaled by $-0.3$ in both position and velocity.
-
-## Tangent Space Interpretation
-
-The impact map acts on the tangent bundle $T\mathcal{M} = \mathcal{M} \times \mathbb{R}^n$ (position and velocity together):
-
-$$
-R: (q, v) \mapsto (q, R_v(v))
-$$
-
-Position is continuous ($q^+ = q^-$ at the guard), but velocity jumps. The linearization is:
-
-$$
-\frac{\partial R}{\partial (q, v)} = \begin{bmatrix} I & 0 \\ \frac{\partial R_v}{\partial q} & R_v \end{bmatrix}
-$$ {#eq-impact-tangent-bundle}
-
-For configuration-independent restitution ($e$ constant):
-
-$$
-R_v = I - (1+e) P_N(q)
-$$
-
-$$
-\frac{\partial R_v}{\partial q} = -(1+e) \frac{\partial P_N}{\partial q}
-$$
-
-This derivative captures how the impact direction varies with configuration (e.g., foot angle changes during heel strike).
-
-## Chapter Summary
-
-Impact maps are geometric transformations of tangent spaces:
-
-- **Restitution** $e$: Ratio of normal velocities, causes oblique reflections
-- **Energy dissipation**: Proportional to $(1 - e^2) \|v_\perp\|^2$
-- **Tangent space action**: Squeeze/reflection in normal direction, preserve tangent direction
-
-Examples (golf, docking) show realistic calculations. The saltation matrix linearizes these transformations, enabling optimization through impacts.
-
----
-
-## Chapter 6: Variational Dynamics Through Impacts {#sec-variation-through-jumps}
-
-### Jump in δx Across Guard Surface
-
-We now ask: How do perturbations $\delta x(t)$ evolve through a hybrid trajectory?
-
-**Within each mode**, perturbations satisfy the standard variational equation:
-
-$$
-\frac{d}{dt}\delta x = A(t) \delta x + B(t) \delta u
-$$ {#eq-variational-smooth}
-
-with solution:
-
-$$
-\delta x(t) = \Phi_c(t, t_0) \delta x(t_0) + \int_{t_0}^t \Phi_c(t, s) B(s) \delta u(s) \, ds
-$$ {#eq-variation-smooth-integral}
-
-**At a jump** (time $t_j$, guard $G$), the state jumps via $x^+ = R(x^-)$. The perturbation jumps via the saltation matrix:
-
-$$
-\boxed{\delta x^+ = S_j \delta x^-}
-$$ {#eq-variation-jump}
-
-where $S_j$ is given by @eq-saltation-matrix.
-
-**Full hybrid trajectory:**
-
-For a trajectory with jumps at $t_1, \ldots, t_N$, the perturbation evolves as:
-
-$$
-\begin{aligned}
-\delta x(t) &= \Phi_c(t, t_N) S_N \Phi_c(t_N, t_{N-1}) \cdots S_1 \Phi_c(t_1, t_0) \delta x(t_0) \\
-&\quad + \sum_{k=0}^{N-1} \Phi_c(t, t_{k+1}) S_{k+1} \cdots S_1 \int_{t_k}^{t_{k+1}} \Phi_c(\tau, t_k) B(\tau) \delta u(\tau) \, d\tau
-\end{aligned}
-$$ {#eq-variation-hybrid-full}
-
-This is the **hybrid state transition**, generalizing @eq-smooth-transition to include jumps.
-
-### Modified State Transition Operator Φ
-
-Define the **hybrid state transition matrix** as:
-
-$$
-\Phi_{\text{hybrid}}(t, t_0) = \Phi_c(t, t_N) \prod_{j=1}^{N} S_j \Phi_c(t_j, t_{j-1})
-$$ {#eq-hybrid-stm-operator}
-
-where the product runs backward (right-to-left) from the initial time to the final time.
-
-**Properties:**
-
-1. **Composition:** $\Phi_{\text{hybrid}}(t_3, t_1) = \Phi_{\text{hybrid}}(t_3, t_2) \Phi_{\text{hybrid}}(t_2, t_1)$ if no jumps occur between $t_2$ and $t_3$; otherwise the jump must be included.
-
-2. **Inverse:** If no guard is crossed, $\Phi_{\text{hybrid}}^{-1} = \Phi_c^{-1}$. If jumps occur, the inverse involves reversing the jumps (which may not be well-defined if $S_j$ is singular).
-
-3. **Determinant:** $\det(\Phi_{\text{hybrid}}) = \det(\Phi_c) \prod_j \det(S_j)$. For impacts, $\det(S_j) < 1$ generically (volume contraction due to dissipation).
-
-### Accumulation of Variations in Hybrid Systems
-
-A key question: Do perturbations grow or shrink through impacts?
-
-**Spectral radius of $S_j$:**
-
-The eigenvalues of the saltation matrix determine stability of perturbations. For the bouncing ball:
-
-$$
-S = \begin{bmatrix} -e & 0 \\ -g(1+e)/v^- & -e \end{bmatrix}
-$$
-
-Eigenvalues: $\lambda_1 = \lambda_2 = -e$. All eigenvalues have magnitude $|e| < 1$ for $e < 1$.
-
-**Conclusion:** Perturbations decay through impacts. Each bounce **stabilizes** the trajectory (perturbations are damped).
-
-**Geometric interpretation:**
-
-Dissipative impacts contract the tangent space, creating a form of **discrete-time stability**. Even if the continuous dynamics are unstable (e.g., inverted pendulum), the impacts can stabilize the overall hybrid system.
-
-#### Example: Bouncing Ball With Exponential Decay
-
-Consider a ball dropped from height $h_0$ with $e = 0.8$. After each bounce:
-
-$$
-v^+ = -e v^- = -e \sqrt{2gh}
-$$
-
-The next bounce occurs at:
-
-$$
-h_{n+1} = \frac{(v^+)^2}{2g} = e^2 h_n
-$$
-
-The sequence of bounce heights is:
-
-$$
-h_n = e^{2n} h_0
-$$
-
-Perturbations in initial height also decay as $e^{2n}$:
-
-$$
-\delta h_n = e^{2n} \delta h_0 \to 0
-$$
-
-The system is **asymptotically stable** to the equilibrium $(h, v) = (0, 0)$ (rest on ground), despite the continuous phase being neutral (constant velocity in flight).
-
-### Zeno Behavior and Measure Zero Jump Sets
-
-An important pathology: **Zeno behavior**, where infinitely many jumps occur in finite time.
-
-**Example:** Bouncing ball with $e < 1$:
-
-The time between bounces decreases geometrically:
-
-$$
-T_n = \frac{2v_n}{g} = \frac{2e^n v_0}{g}
-$$
-
-The total time to rest is:
-
-$$
-T_{\text{total}} = \sum_{n=0}^\infty T_n = \frac{2v_0}{g} \sum_{n=0}^\infty e^n = \frac{2v_0}{g(1 - e)} < \infty
-$$
-
-The ball executes **infinitely many bounces in finite time**, accumulating at $t = T_{\text{total}}$.
-
-**What happens to variational dynamics?**
-
-The state transition through infinitely many jumps is:
-
-$$
-\Phi_{\text{Zeno}} = \lim_{N \to \infty} \prod_{j=1}^N S_j
-$$
-
-If $\|S_j\| < 1$ uniformly, this product converges to zero:
-
-$$
-\Phi_{\text{Zeno}} = 0
-$$
-
-Perturbations are **completely damped** by the infinite sequence of dissipative impacts.
-
-**Measure-theoretic resolution:**
-
-The set of jump times $\{t_j\}$ has measure zero. The trajectory $x(t)$ is:
-
-- **Càdlàg**: Right-continuous with left limits (French: continu à droite, limites à gauche)
-- **Bounded variation**: Total variation $\sum_j \|x^+ - x^-\| < \infty$
-- **Absolutely continuous on each mode**: Standard ODE solution between jumps
-
-The derivative $\dot{x}(t)$ exists almost everywhere (Lebesgue), and integrals are well-defined:
-
-$$
-\int_0^T L(x(t), u(t)) \, dt = \int_0^T L(x(t), u(t)) \, dt \quad (\text{Lebesgue})
-$$
-
-Jump times contribute zero measure, so they can be ignored in cost functionals.
-
-### Chapter Summary
-
-Variational dynamics through hybrid systems involve:
-
-1. **Smooth propagation** within modes: $\delta\dot{x} = A\delta x + B\delta u$
-2. **Jumps** at guards: $\delta x^+ = S_j \delta x^-$
-3. **Hybrid state transition**: Product $\Phi_c \cdot S_j \cdot \Phi_c \cdots$
-
-Impacts can **stabilize** or **destabilize** depending on $\|S_j\|$:
-
-- $\|S_j\| < 1$: Perturbations decay (e.g., dissipative collisions)
-- $\|S_j\| > 1$: Perturbations grow (e.g., energy-adding mechanisms)
-
-Zeno behavior (infinitely many jumps) is measure-theoretically well-behaved: jumps have measure zero, integrals are finite, and perturbations may converge to zero.
-
----
-
-## Part III: Optimization {.unnumbered}
-
----
-
-## Chapter 7: Mode-Aware DDP {#sec-mode-aware-ddp}
-
-### Handling Known Guard Crossings
-
-Standard DDP assumes smooth dynamics. To handle hybrid systems, we must account for jumps in the backward pass.
-
-**Setup:**
-
-- Nominal trajectory $\bar{x}(t), \bar{u}(t)$ with known jump times $t_1, \ldots, t_N$
-- Cost functional:
-  $$
-  J = \Phi(x(T)) + \sum_{k=0}^{N-1} \int_{t_k}^{t_{k+1}} L(x, u) \, dt
-$$ {#hs-eq-hybrid-cost-ddp}
-- Goal: Compute feedback gains $K(t)$ and feedforward $k(t)$ to minimize $J$ under perturbations
-
-**Key modification:** At each jump, the value function must account for the discontinuity.
-
-### Backward Pass With Saltation Matrices
-
-The DDP backward pass computes the cost-to-go:
-
-$$
-V(x, t) = \min_{u(\cdot)} \left\{ \int_t^T L(x(\tau), u(\tau)) \, d\tau + \Phi(x(T)) \right\}
-$$ {#hs-eq-value-function}
-
-In the smooth case, $V$ satisfies the Hamilton-Jacobi-Bellman (HJB) equation:
-
-$$
--\frac{\partial V}{\partial t} = \min_u \left\{ L(x, u) + \frac{\partial V}{\partial x}^T f(x, u) \right\}
-$$ {#eq-hjb}
-
-**At a jump** (guard crossing at time $t_j$), the value function is discontinuous:
-
-$$
-V(x^-, t_j^-) = V(R(x^-), t_j^+) + 0
-$$ {#eq-value-jump}
-
-(We assume no instantaneous cost at jumps; this can be generalized.)
-
-The gradient of $V$ jumps according to:
-
-$$
-\boxed{\frac{\partial V}{\partial x}\bigg|_{t_j^-} = S_j^T \frac{\partial V}{\partial x}\bigg|_{t_j^+}}
-$$ {#eq-value-gradient-jump}
-
-This is the **adjoint jump condition**: the costate (gradient of value) is pulled back through the transpose of the saltation matrix.
-
-#### Derivation
-
-By the chain rule:
-
-$$
-\frac{\partial V}{\partial x}\bigg|_{x^-} = \frac{\partial V}{\partial x^+} \frac{\partial x^+}{\partial x^-} = \frac{\partial V}{\partial x^+} S_j
-$$
-
-This gives $\frac{\partial V}{\partial x}|_{x^-} = \frac{\partial V}{\partial x}|_{x^+} S_j$, which is $\lambda^- = \lambda^+ S_j$.
-
-Transposing: $(\lambda^-)^T = S_j^T (\lambda^+)^T$, or as column vectors:
-
-$$
-\lambda^- = S_j^T \lambda^+
-$$
-
-So @eq-value-gradient-jump is correct.
-
-### Backward Pass Algorithm
-
-::: {.callout-note}
-### Algorithm: Hybrid DDP Backward Pass
-
-**Inputs:**
-
-- Nominal trajectory $\bar{x}(t), \bar{u}(t)$ for $t \in [0, T]$
-- Jump times $t_1, \ldots, t_N$ and saltation matrices $S_1, \ldots, S_N$
-- Cost function $L(x, u)$, terminal cost $\Phi(x_T)$
-
-**Initialization:**
-
-At $t = T$:
-
-$$
-V_x(T) = \frac{\partial \Phi}{\partial x}\bigg|_{x_T}, \quad V_{xx}(T) = \frac{\partial^2 \Phi}{\partial x^2}\bigg|_{x_T}
-$$
-
-**Backward integration** (starting from $t = T$):
-
-For $k = N, N-1, \ldots, 0$:
-
-1. **Integrate backward from $t_{k+1}$ to $t_k$** (within mode $k$):
-
-   Solve the Riccati-like equations:
-   $$
-   \begin{aligned}
-   \dot{V}_x &= -L_x - A^T V_x \\
-   \dot{V}_{xx} &= -L_{xx} - A^T V_{xx} - V_{xx} A - Q_{xu}^T Q_{uu}^{-1} Q_{ux}
-   \end{aligned}
-   $$ {#eq-riccati-backward}
-
-   where $Q_{uu}, Q_{ux}, Q_{xu}$ come from the Hamiltonian second derivatives (standard DDP).
-
-2. **At jump time $t_k$ (if $k > 0$):**
-
-   Apply the adjoint jump:
-   $$
-   V_x(t_k^-) = S_k^T V_x(t_k^+)
-   $$ {#eq-adjoint-jump-backward}
-
-   $$
-   V_{xx}(t_k^-) = S_k^T V_{xx}(t_k^+) S_k
-   $$ {#eq-hessian-jump-backward}
-
-**Output:**
-
-- Feedback gains $K(t) = -Q_{uu}^{-1} Q_{ux}$
-- Feedforward $k(t) = -Q_{uu}^{-1} Q_u$
-
-These are defined piecewise on each interval $[t_k, t_{k+1}]$, with discontinuities at $t_k$.
-:::
-
-**Interpretation:**
-
-The backward pass "threads" through the jumps by pulling back the value gradient via $S_j^T$. This ensures that the feedback gains correctly account for how perturbations propagate through impacts.
-
-### Convergence Theory for Hybrid Systems
-
-**Question:** Does hybrid DDP converge to a local optimum?
-
-**Answer (under regularity conditions):** Yes, with quadratic convergence near the optimum.
-
-::: {.callout-important}
-### Theorem: Convergence of Hybrid DDP
-
-Assume:
-
-1. The nominal trajectory $\bar{x}(t)$ is **feasible** (satisfies guard crossing conditions)
-2. The dynamics $f_q(x, u)$ are $C^2$ within each mode
-3. The reset maps $R_j(x)$ are $C^2$
-4. The guard functions $h_j(x)$ are $C^2$ with $\nabla h_j \neq 0$ (transversal crossing)
-5. The cost Hessian $Q_{uu} \succ 0$ (positive definite) along the trajectory
-6. The saltation matrices $S_j$ are **non-singular** (invertible)
-
-Then:
-
-- **Local convergence:** If initialized sufficiently close to the optimum, hybrid DDP converges
-- **Quadratic rate:** Near the optimum, the error decreases as $\|x^{(k+1)} - x^*\| = O(\|x^{(k)} - x^*\|^2)$
-- **Necessity:** At convergence, the first-order necessary conditions (hybrid Pontryagin) are satisfied
-
-**Caveat:** If $S_j$ is singular (e.g., impacts into a lower-dimensional manifold), convergence may be slower or fail.
-:::
-
-**Sketch of proof:**
-
-The hybrid cost functional $J(x, u)$ is $C^2$ piecewise. The DDP update is a Newton-like method on the first-order necessary conditions. Near the optimum, the Hessian is well-approximated by $V_{xx}$, and the update is quadratic.
-
-The saltation matrices $S_j$ act as linear "connectors" between modes. If $S_j$ is invertible, perturbations can propagate freely backward and forward, preserving the Newton structure.
-
-If $S_j$ is singular, some perturbation directions are "lost" at the jump, breaking the Newton step. Regularization (e.g., adding $\mu I$ to $S_j$) can restore convergence.
-
-### Example: Hopping Robot
-
-A simple hopper (one leg, mass $m$, spring $k$) has two modes:
-
-- **Flight:** $\ddot{z} = -g$
-- **Contact:** $\ddot{z} = (k/m)(L_0 - z) - g$, where $L_0$ is rest length
-
-**Guards:**
-
-- Flight $\to$ Contact: $z = L_0$
-- Contact $\to$ Flight: $F_{\text{spring}} = 0$ (toe-off)
-
-**Reset:** At touchdown, velocity is continuous (no impact for soft landing). At takeoff, also continuous.
-
-**DDP setup:**
-
-- State: $x = [z, \dot{z}]^T$
-- Control: $u = L_0$ (virtual leg length, controls takeoff)
-- Cost: Minimize energy while tracking desired height
-
-**Saltation matrices:**
-
-At touchdown ($z = L_0$):
-
-$$
-S_{\text{touchdown}} = I + \frac{(f^+ - f^-) \nabla h^T}{\nabla h^T f^-}
-$$
-
-Since velocity is continuous, $f^+ \approx f^-$ (no jump), so $S \approx I$ (small correction for time variation).
-
-At takeoff, similar analysis.
-
-**Result:** Hybrid DDP converges in 5-10 iterations to a periodic hopping gait with desired apex height. The backward pass correctly handles the mode switches, producing stabilizing feedback gains.
-
----
-
-## Chapter 8: Contact-Implicit Trajectory Optimization {#sec-contact-implicit}
-
-## Complementarity Constraints
-
-An alternative to explicit guards is **contact-implicit optimization**, where contact forces are decision variables subject to complementarity constraints.
-
-::: {.callout-tip}
-## Complementarity Formulation
-
-For a single contact point with gap $\phi(q) \geq 0$ and normal force $\lambda \geq 0$:
-
 $$
-\boxed{0 \leq \phi(q) \perp \lambda \geq 0}
-$$ {#hs-eq-complementarity}
+T^- - T^+
+=\frac{1-e^2}{2}(Jv^-)^{\mathsf T}W^{-1}(Jv^-).
+$$ {#eq-energy-dissipation}
 
-This means:
+For $0\le e\le1$, this loss is nonnegative; it can be zero. With $e=0$ the velocity map is a projection, and with $e=1$ a mass-metric reflection. Intermediate restitution gives reflection and scaling. None of these identities implies that the full state saltation matrix is an energy-dissipating projection.
 
-- Either $\phi = 0$ (contact) or $\lambda = 0$ (no force)
-- Both cannot be nonzero simultaneously
+The full reset derivative includes $\partial[(I-(1+e)P_M(q))v]/\partial q$. Differentiating the matrix alone leaves out its multiplication by the velocity. A tangent bundle is locally represented by position/velocity coordinates; it is not globally a Cartesian product for every manifold.
 
-The complementarity condition is written as:
+### Friction, Spin, and Multiple Contacts
 
-$$
-\phi(q) \lambda = 0, \quad \phi(q) \geq 0, \quad \lambda \geq 0
-$$ {#eq-complementarity-kkt}
-
-This is a **nonlinear, non-smooth constraint** (product equals zero).
-:::
-
-**Dynamics with contacts:**
-
-The equations of motion become:
-
-$$
-M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q) = B u + J_c^T(q) \lambda
-$$ {#eq-contact-dynamics}
-
-where $J_c(q)$ is the contact Jacobian (maps joint velocities to contact point velocity).
-
-The contact force $\lambda$ is an **algebraic variable** (determined by constraints, not integrated).
-
-## Smoothing Methods vs. Exact Jumps
-
-To make complementarity constraints tractable in optimization, several approaches exist:
-
-### 1. Smoothing via Sigmoid
-
-Replace the hard constraint $\phi \lambda = 0$ with a smooth approximation:
-
-$$
-\phi \lambda \leq \epsilon
-$$ {#eq-smooth-complementarity}
-
-or use a barrier function:
-
-$$
-\mu \sum_i \log(\phi_i) + \log(\lambda_i)
-$$ {#eq-barrier}
-
-As $\mu \to 0$, this approaches the complementarity condition.
-
-**Pros:** Smooth optimization (gradient-based solvers work)
-
-**Cons:** Requires tuning $\epsilon$ or $\mu$; approximate solution
-
-### 2. Exact Jumps via Mode Enumeration
-
-Explicitly enumerate contact modes (e.g., {contact, flight}) and solve a trajectory optimization for each sequence of modes.
-
-**Pros:** Exact representation of hybrid dynamics
-
-**Cons:** Combinatorial explosion ($2^N$ mode sequences for $N$ potential contacts)
-
-### 3. Contact-Implicit (Posa, Kuindersma, Tedrake)
-
-Discretize time and enforce complementarity at each timestep via:
-
-$$
-\phi_k \geq 0, \quad \lambda_k \geq 0, \quad \phi_k \lambda_k \leq \epsilon
-$$ {#eq-contact-implicit-discrete}
-
-Use nonlinear programming (NLP) solvers with constraint relaxation.
-
-**Pros:** Handles multiple contacts, does not require mode enumeration
-
-**Cons:** Non-convex (multiple local minima), requires warm-starting
-
-## Trade-Offs and Robustness
-
-**Contact-implicit advantages:**
-
-- Discovers contact timings automatically (no manual guard placement)
-- Handles simultaneous contacts (e.g., four-legged walking)
-- Smooth objective (no discrete jumps in cost)
-
-**Contact-implicit challenges:**
-
-- **Non-convex:** Many local minima (e.g., step over vs. step on obstacle)
-- **Initialization-sensitive:** Poor guesses may converge to infeasible solutions
-- **Slack variables:** Complementarity slack $\phi \lambda \leq \epsilon$ introduces error
-
-**Hybrid DDP advantages:**
-
-- **Quadratic convergence** near optimum (Newton-like)
-- **Explicit guard handling:** Physics is directly represented
-- **Geometric insight:** Saltation matrices have clear interpretation
-
-**Hybrid DDP challenges:**
-
-- **Requires known guard crossings:** Must detect/predict contact times
-- **Mode enumeration:** Need to know contact sequence a priori
-- **Guard smoothness:** Assumes $h(x)$ is $C^2$ and regular
-
-**Recommendation:**
-
-Use **contact-implicit** for initial guess generation (exploratory phase), then **refine with hybrid DDP** for final policy (exploitation phase).
-
-## Example: Block Pushing
-
-A robot pushes a block across a table. Contact modes:
-
-- **Free:** Block slides freely (friction $<$ push force)
-- **Stuck:** Block sticks (friction $\geq$ push force)
-
-**Contact-implicit formulation:**
+For a translating particle at a fixed plane, no spin and uncoupled normal/tangent inertia, a simple impulse law uses
 
-Decision variables: $(q(t), \dot{q}(t), u(t), \lambda(t))$ for $t \in [0, T]$
-
-Constraints:
-
-1. Dynamics: $M\ddot{q} = Bu + J_c^T \lambda$
-2. Complementarity: $\phi(q) \lambda = 0$, $\lambda \in [0, \mu N]$ (friction cone)
-3. Boundary: $q(0) = q_0$, $q(T) = q_{\text{goal}}$
-
-Cost: Minimize effort $\int u^T u \, dt$
-
-**Solution:**
-
-The optimizer automatically discovers:
-
-- **Phase 1:** Ramp up push force until $\lambda = \mu N$ (break static friction)
-- **Phase 2:** Slide at constant velocity (kinetic friction)
-- **Phase 3:** Ramp down, block sticks again
-
-No manual mode switching needed.
-
----
-
-## Chapter 9: Applications {#sec-hs-applications}
-
-### Humanoid Locomotion (Stance/Swing Phases)
-
-**System:** 5-link biped (torso + 2 legs, point feet)
-
-**State:** $x = [q, \dot{q}]^T \in \mathbb{R}^{10}$, where $q = [\theta_{\text{torso}}, \theta_{\text{hip1}}, \theta_{\text{knee1}}, \theta_{\text{hip2}}, \theta_{\text{knee2}}]$
-
-**Modes:**
-
-- **Single support (stance):** One foot on ground, contact force $\lambda$
-- **Double support:** Both feet on ground (brief transition)
-- **Flight:** Both feet in air (running)
-
-**Guards:**
-
-- Heel strike: $h_{\text{foot}}(q) = 0$ (foot height)
-- Toe-off: $\lambda = 0$ (contact force vanishes)
-
-**Reset map at heel strike:**
-
-Angular momentum conservation about new contact point:
-
-$$
-L^+ = L^- \quad \Rightarrow \quad I^+ \dot{q}^+ = I^- \dot{q}^-
-$$
-
-where $I$ is the inertia about the contact. Solving for $\dot{q}^+$:
-
 $$
-\dot{q}^+ = (I^+)^{-1} I^- \dot{q}^-
-$$
-
-The saltation matrix is:
-
-$$
-S_{\text{heel}} = \begin{bmatrix} I & 0 \\ 0 & (I^+)^{-1} I^- \end{bmatrix} + \text{(time variation correction)}
-$$ {#eq-heel-strike-saltation}
-
-**DDP formulation:**
-
-Cost: $\int (q - q_{\text{ref}})^T Q (q - q_{\text{ref}}) + u^T R u \, dt + \text{terminal cost}$
-
-Backward pass:
-
-1. Integrate $V_x, V_{xx}$ backward through swing phase
-2. Apply $V_x^- = S_{\text{heel}}^T V_x^+$ at heel strike
-3. Integrate backward through stance phase
-4. Repeat for multiple steps
-
-**Result:**
-
-Hybrid DDP generates a stabilizing walking gait in 10-15 iterations. The feedback gains $K(t)$ vary through the gait cycle, increasing during stance (when contact provides control authority) and decreasing during swing (when only hip/knee torques are available).
-
-**Comparison to contact-implicit:**
+p_n=-m(1+e)v_n^-,
+\qquad
+p_t=-\min(m\|v_t^-\|,\mu p_n)
+\frac{v_t^-}{\|v_t^-\|}.
+$$ {#eq-friction-impact}
 
-Contact-implicit can discover novel gaits (e.g., skipping, galloping) but struggles with local minima. In the examples discussed here, Hybrid DDP converges faster once a feasible gait pattern is supplied and makes the local stability discussion more explicit.
+Set $p_t=0$ when $v_t^-=0$. The cap permits sticking without reversing tangential velocity. For rotating rigid bodies, the contact-point mobility couples impulses and velocities; this scalar formula is no longer a general frictional-impact solver. Restitution convention, frictional dissipation, feasibility and any simultaneous-contact resolution must be specified together.
 
-### Golf Swing (Club-Ball Impact)
+Newton restitution prescribes a relative normal velocity ratio. It should not be silently identified with another impact law, such as a Poisson impulse-ratio construction. In multiple contacts, independent scalar restitution rules can require further consistency checks. A pseudoinverse of stacked guard normals does not determine a missing physical impulse law or remove event-order ambiguity.
 
-**System:** Club (rigid body) + ball (point mass)
+## 5. Golf and Humanoid Contact {#sec-impact-maps}
 
-**State:** $x = [q_{\text{club}}, \dot{q}_{\text{club}}, x_{\text{ball}}, v_{\text{ball}}]^T$
-
-**Phases:**
-
-1. **Backswing:** Club rotates, ball stationary
-2. **Downswing:** Club accelerates toward ball
-3. **Impact:** Club and ball collide (duration $\sim 0.5$ ms)
-4. **Follow-through:** Club decelerates, ball in flight
-
-**Impact model:**
-
-Coefficient of restitution: $e = 0.78$
-
-Momentum conservation:
-
-$$
-m_c v_c^- + m_b v_b^- = m_c v_c^+ + m_b v_b^+
-$$
-
-Restitution:
-
-$$
-v_b^+ - v_c^+ = -e(v_b^- - v_c^-)
-$$
+### What a Two-Mass Collision Actually Establishes
 
-Solving:
+For a one-dimensional, isolated collision of club mass $m_c$ and ball mass $m_b$,
 
 $$
-v_b^+ = \frac{m_c(1 + e)}{m_c + m_b} v_c^- + \frac{m_b - e m_c}{m_c + m_b} v_b^-
+\begin{bmatrix}v_c^+\\v_b^+\end{bmatrix}
+=\frac1{m_c+m_b}
+\begin{bmatrix}
+m_c-em_b&(1+e)m_b\\
+(1+e)m_c&m_b-em_c
+\end{bmatrix}
+\begin{bmatrix}v_c^-\\v_b^-\end{bmatrix}.
 $$ {#eq-golf-impact}
 
-For stationary ball ($v_b^- = 0$):
+Both incoming velocities affect both outgoing velocities. This velocity map is part of the reset. Common-time state sensitivity additionally involves geometry, impact time and the two flows.
+
+With manufactured values $m_c=0.200$ kg, $m_b=0.046$ kg, $v_c^-=50$ m/s, $v_b^-=0$ and $e=0.78$, the result is $v_b^+=72.3577$ m/s and $v_c^+=33.3577$ m/s. Momentum is conserved. The lost kinetic energy is
 
 $$
-v_b^+ = \frac{m_c(1 + e)}{m_c + m_b} v_c^- \approx 1.48 v_c^-
-$$ {#eq-golf-ball-velocity}
-
-**Optimization goal:**
-
-Maximize ball distance $d = \frac{v_b^{'+2} \sin(2\alpha)}{g}$ subject to:
-
-- Joint torque limits
-- Timing constraints (swing duration)
-- Impact accuracy (club face angle $\alpha$)
-
-**Saltation matrix:**
-
-The impact Jacobian is:
-
-$$
-P_{\text{impact}} = \begin{bmatrix}
-I & 0 & 0 & 0 \\
-0 & \frac{\partial v_c^+}{\partial v_c^-} & 0 & 0 \\
-0 & 0 & I & 0 \\
-0 & \frac{\partial v_b^+}{\partial v_c^-} & 0 & \frac{\partial v_b^+}{\partial v_b^-}
-\end{bmatrix}
-$$ {#eq-golf-saltation}
-
-where:
-
-$$
-\frac{\partial v_b^+}{\partial v_c^-} = \frac{m_c(1+e)}{m_c + m_b}, \quad \frac{\partial v_b^+}{\partial v_b^-} = \frac{m_b - e m_c}{m_c + m_b}
+\Delta T_{\rm loss}
+=\frac12\frac{m_cm_b}{m_c+m_b}(1-e^2)(v_c^--v_b^-)^2
+=18.3065\ {\rm J},
 $$
 
-**Illustrative optimization result:**
+about $7.3226\%$ of the initial $250$ J. The loss fraction is not $1-e^2$ of the whole laboratory-frame energy: the center-of-mass motion remains.
 
-In the worked example, Hybrid DDP converges in 8-12 iterations for the chosen initialization and model settings. A safer interpretation is that the optimizer reduces **active torque** before impact to let the modeled release unfold, rather than that the clubhead should decelerate to maximize energy transfer. Any stronger golf claim would require the objective definition, parameter values, and validation plots.
+If that ball impulse were delivered over a stipulated $0.5$ ms, the average force would be about $6.657$ kN and average acceleration about $1.447\times10^5$ m/s². Those are conditional arithmetic results. They do not determine a peak force or establish that the selected duration and restitution describe a particular club and ball.
 
-### Manipulation With Contact Switches
+Real contact involves a finite head, rotational inertia, impact offset, normal direction, deformation, friction and ball spin. The directional effective mass follows from contact mobility $JM^{-1}J^{\mathsf T}$, and need not equal the head's physical mass. Shaft and grip coupling may affect the incoming state and the contact response, depending on the model's bandwidth.
 
-**System:** Robot arm + object on table
+For the fixed two-mass assumptions, more incoming club speed gives more outgoing ball speed. That statement does not optimize a full swing under accuracy, torque, tissue-load or timing constraints. Conversely, reducing an actuator torque is not the same as decelerating the club, and a torque reduction is not automatically optimal. Neither conclusion follows from the existence of a saltation matrix.
 
-**Task:** Pick and place with contact-rich interaction
+### Foot Strike Requires a Contact Model
 
-**Modes:**
+A planar five-link biped with five segment angles also needs two floating-base translations during free flight: seven configuration coordinates before constraints, not five. A pinned stance model can use fewer coordinates, but its coordinate changes and reset maps must be derived consistently. In three dimensions the floating base adds its translational and rotational configuration.
 
-1. **Pre-grasp:** Arm approaches object
-2. **Contact:** Fingertip touches object (force increases)
-3. **Grasp:** Fingers close, object lifts
-4. **Transport:** Arm moves object to target
-5. **Release:** Fingers open, object settles
-
-**Contact model:**
-
-At each finger-object contact:
-
-- Gap function: $\phi_i(q) = \text{dist}(\text{finger}_i, \text{object})$
-- Normal force: $\lambda_i \geq 0$
-- Friction cone: $\|\lambda_{i,t}\| \leq \mu \lambda_{i,n}$
-
-**Complementarity:**
+For fixed active sticking contacts, a plastic reset solves
 
 $$
-\phi_i \lambda_{i,n} = 0, \quad \phi_i \geq 0, \quad \lambda_{i,n} \geq 0
-$$ {#eq-grasp-complementarity}
+\begin{bmatrix}M&-J_c^{\mathsf T}\\J_c&0\end{bmatrix}
+\begin{bmatrix}v^+\\p\end{bmatrix}
+=\begin{bmatrix}Mv^-\\0\end{bmatrix}.
+$$ {#eq-heel-strike-saltation}
 
-**Hybrid formulation:**
+This assumes independent constraints and feasible impulses. Normal impulses must be compressive, tangential impulses must satisfy the chosen friction law, and other contacts may release. Conservation of one scalar angular momentum cannot determine every joint velocity of a multibody robot.
 
-Explicit modes:
-
-- Mode 1: No contact ($\phi_i > 0, \lambda_i = 0$)
-- Mode 2: Contact established ($\phi_i = 0, \lambda_i > 0$)
-
-Guards:
-
-- $G_{1 \to 2}$: $\phi_i = 0$, $\dot{\phi}_i \leq 0$ (approach)
-- $G_{2 \to 1}$: $\lambda_i = 0$ (release)
-
-**DDP optimization:**
-
-Cost: Minimize time + effort + impact forces
-
-Backward pass accounts for:
-
-- Saltation at contact establishment
-- Saltation at release
-- Force constraints during contact
-
-**Result:**
-
-Generates smooth pick-place trajectories with minimal impact transients. The hybrid formulation ensures forces remain within friction cone limits.
-
-### Chapter Summary
-
-Applications demonstrate hybrid tangent space framework in:
-
-1. **Locomotion:** Heel strikes stabilized by saltation matrix feedback
-2. **Golf swing:** Impact modeled rigorously, counter-intuitive optimal strategy discovered
-3. **Manipulation:** Contact modes handled explicitly, smooth force profiles achieved
-
-The recurring theme: **Explicit treatment of discontinuities** via guards, resets, and saltation matrices produces better results than smoothing or ignoring.
-
----
-
-## Part IV: Implementation and Extensions {.unnumbered}
-
----
-
-## Chapter 10: Practical Algorithms {#sec-hs-implementation}
-
-### Guard Detection and Event Handling
-
-**Problem:** Given a trajectory integration from $t_0$ to $t_f$, detect when a guard $h(x) = 0$ is crossed.
-
-**Naïve approach:**
-
-Check $h(x_k)$ at each timestep $t_k$. If $h(x_k) < 0$ and $h(x_{k+1}) > 0$, a crossing occurred.
-
-**Issue:** The crossing time $t^*$ is between $t_k$ and $t_{k+1}$. Using $t_{k+1}$ introduces $O(\Delta t)$ error.
-
-**Better approach: Event detection via root-finding**
-
-::: {.callout-note}
-### Algorithm: Bisection Event Detection
-
-1. Detect bracketing: Find $t_k, t_{k+1}$ such that $h(x(t_k)) \cdot h(x(t_{k+1})) < 0$
-2. Refine crossing time:
-   - Integrate from $t_k$ to $t_m = (t_k + t_{k+1})/2$
-   - Evaluate $h(x(t_m))$
-   - If $h(x(t_k)) \cdot h(x(t_m)) < 0$, set $t_{k+1} \gets t_m$, else set $t_k \gets t_m$
-   - Repeat until $|h(x(t_m))| < \epsilon$
-3. Apply reset: $x^+ = R(x(t_m))$
-4. Continue integration from $t_m$
-:::
-
-**Computational cost:** Each bisection requires one integration step. Typically 5-10 bisections achieve $\epsilon \sim 10^{-8}$.
-
-**Alternative: Rootfinding with Newton**
-
-If $\nabla h$ is available, use Newton's method on $h(x(t)) = 0$:
+During sustained holonomic contact, differentiating $J_cv=0$ gives $J_c\dot v+\dot J_cv=0$. With bias $b(q,v)$,
 
 $$
-t_{k+1} = t_k - \frac{h(x(t_k))}{\frac{d}{dt}h(x(t_k))}
+M\dot v+b=Bu+J_c^{\mathsf T}\lambda,
+\quad
+\lambda=(J_cM^{-1}J_c^{\mathsf T})^{-1}
+\left[J_cM^{-1}(b-Bu)-\dot J_cv\right].
+$$ {#eq-contact-dynamics}
+
+The curvature term $\dot J_cv$ is essential: a mass moving around a circle requires inward acceleration even at constant speed. An algebraic solution with inadmissible contact forces signals that the assumed mode is invalid. Robot swing-leg motion does not mean that the entire robot is in flight.
+
+## 6. Sensitivity, Stability, and Zeno Limits {#sec-variation-through-jumps}
+
+### Include Every Flow Segment
+
+For one event, the endpoint derivative is
+
+$$
+\Psi(T,0)=\Phi_+(T,t_e)S\Phi_-(t_e,0).
+$$ {#eq-hybrid-stm-operator}
+
+For several isolated events, insert each flow and saltation in chronological order, with the earliest factor on the right. A forced variation can be written compactly as
+
+$$
+\delta x(T)=\Psi(T,0)\delta x(0)
++\int_0^T\Psi(T,s)B(s)\delta u(s)\,ds,
+$$ {#eq-variation-hybrid-full}
+
+provided the jump rules have no omitted direct dependence on the input variation. Direct reset/guard input terms add their own event contributions. This expression includes forcing after the final event; an integral ending at the last impact would miss it.
+
+Composition holds when the operator includes all intervening events and its endpoint conventions agree. Invertibility requires the constituent maps to be invertible. For square maps, volume scaling involves the absolute determinant; a small determinant can coexist with a large amplified direction.
+
+### Dissipation Is Not Contraction
+
+At $e=0.8$, $v^-=-5$ m/s and $g=9.81$ m/s², the ball matrix is
+
+$$
+S=\begin{bmatrix}-0.8&0\\3.5316&-0.8\end{bmatrix}.
 $$
 
-where:
+Its eigenvalues both have magnitude $0.8$, but its largest singular value is approximately $3.7044$ when height and speed are scaled by $1$ m and $1$ m/s. A height perturbation can become a larger velocity perturbation through timing, while each nominal impact loses kinetic energy.
+
+Generally, choose input/output scaling or positive metrics explicitly. A one-event differential contraction bound is
 
 $$
-\frac{d}{dt}h(x(t)) = \nabla h^T \dot{x} = \nabla h^T f(x, u)
+S^{\mathsf T}W_+S\preceq\gamma^2W_-.
+$$ {#eq-jump-metric}
+
+The corresponding worst gain is the largest singular value of $W_+^{1/2}SW_-^{-1/2}$. Flow bounds must be included to assess the whole trajectory. Eigenvalues of a single varying jump matrix do not supply that bound.
+
+For a periodic gait, examine the complete return map. An autonomous orbit normally has a neutral phase direction in its full monodromy matrix; transverse Poincaré multipliers assess orbital stability. Finite-time amplification can still matter even when an asymptotic return map is stable.
+
+### What the Ideal Infinite Bounce Sequence Means
+
+Starting just after an upward bounce of speed $w_0>0$, the constant-$e$ ball has flight durations $2e^jw_0/g$ for $j=0,1,\ldots$, so for $0<e<1$,
+
 $$
+T_Z=\frac{2w_0}{g(1-e)}.
+$$ {#eq-zeno-time}
 
-This converges quadratically (2-3 iterations).
+The state approaches $(0,0)$ in finite time. The flight/reset rules alone do not tell it to stay there afterward: continuing flight would penetrate the ground. A resting-contact mode or another declared completion is needed.
 
-### JAX Implementation Considerations
+The jump magnitudes are summable in this example, and the sum of kinetic-energy losses is finite. A cost of one unit per bounce diverges. A geometric *upper bound* on event intervals gives an upper bound on accumulation time, not an exact equality.
 
-JAX (Google's autodiff framework) is ideal for implementing hybrid DDP due to its:
+Neither the isolated-event derivative nor an infinite product of saltations alone settles sensitivity at $T_Z$. Incoming speed tends to zero, the saltation entry proportional to $1/v^-$ grows, and flows also change. A rigorous limit needs the complete evolution and the chosen continuation.
 
-- **Automatic differentiation:** Computes Jacobians $A, B$ and Hessians automatically
-- **JIT compilation:** Speeds up integration and optimization loops
-- **GPU/TPU support:** Parallelizes mode sequences
+For matrices in a common compatible norm, $\|A_j\|\le\rho<1$ implies $\|A_N\cdots A_1\|\le\rho^N$, without commutativity. The critique's proposed constant-scaled-rotation counterexample was false. Merely having every norm below one is weaker: $\prod_{j=1}^N(1-1/(j+1)^2)=(N+2)/(2(N+1))\to1/2$.
 
-**Challenge: Discontinuities and autodiff**
+Numerically short inter-event times are a warning, not a proof of Zeno behavior. A rest threshold, compliance law, or impulse-based time-stepping method changes how the unresolved behavior is represented and needs a convergence/physical assessment. Increasing dissipation does not generally remove ideal bouncing-ball Zeno.
 
-JAX's autodiff assumes smooth functions. At a jump, the derivative is undefined. How do we handle this?
+## 7. Optimization Across an Event {#sec-mode-aware-ddp}
 
-**Solution: Custom VJP (vector-Jacobian product)**
+### Event Time Also Changes Cost
 
-Define the forward pass (primal):
+The boundary identity on a guard is $V^-=c+V^+\circ R$. Differentiating it only along the guard differs from differentiating a common-time value. A reliable construction augments the state with accumulated cost $z$, sets $\dot z=L_i$, and resets $z^+=z^-+c(t,x^-)$. Applying the same saltation derivation yields
+
+$$
+\delta z^+=\delta z^-+a\,\delta x^-,
+\quad
+a=c_x-\frac{L^- -L^++c_xf^-+c_t}{d}h_x.
+$$ {#eq-event-cost}
+
+Thus an outgoing endpoint costate pulls back as
+
+$$
+\lambda^-=S^{\mathsf T}\lambda^++a^{\mathsf T}.
+$$ {#eq-value-gradient-jump}
+
+With no event cost and matching running-cost values, $a=0$. Otherwise simply using $S^{\mathsf T}\lambda^+$ can omit the cost of spending longer in one mode.
+
+For a complete differentiable event-resolved discrete map $F$ and corresponding interval cost $\ell$,
+
+$$
+V_x=\ell_x+F_x^{\mathsf T}V_x^+,
+\quad
+V_{xx}=\ell_{xx}+F_x^{\mathsf T}V_{xx}^+F_x
++\sum_r(V_x^+)_r(F_r)_{xx}.
+$$ {#eq-hessian-jump-backward}
+
+The last term is map curvature. Dropping it gives an approximation, as in an iLQR/Gauss–Newton treatment of dynamics, not an exact second-order DDP identity. The small example $F(x)=x^2$, $V^+(y)=y$ has zero outgoing Hessian but composite Hessian $2$.
+
+### What Riccati Recursion Can and Cannot Promise
+
+For a declared continuous linear quadratic problem,
+
+$$
+-\dot P=Q+A^{\mathsf T}P+PA-PBR^{-1}B^{\mathsf T}P.
+$$ {#eq-riccati-backward}
+
+The sign of the control-elimination term matters. $B$ need not have full row rank. Underactuated systems admit finite-horizon Riccati equations; stabilizing infinite-horizon solutions require the appropriate stabilizability/detectability conditions.
+
+A hybrid optimization algorithm must propagate the event-resolved maps, handle infeasible trial controls and changing event order, regularize optimization curvature where justified, and verify actual rollout improvement. Adding $\epsilon I$ to a physical saltation matrix invents a different sensitivity. Singular resets do not automatically prevent a derivative or an optimization solution.
+
+The earlier quadratic-convergence theorem and fixed iteration counts are withdrawn. They lacked a fully specified algorithm, sufficient regularity/second-order assumptions and executable evidence. Smooth $Q_{uu}\succ0$ along one path alone does not prove all those claims. [Kong, Council and Johnson](https://arxiv.org/abs/2103.14584) develop a specific hybrid iLQR method with saltation updates and reference extensions for mode mismatch; its results should be read within that algorithm's tested scope.
+
+## 8. Contact-Implicit and Compliant Alternatives {#sec-contact-implicit}
+
+### Complementarity Is a Constraint, Not a Solver
+
+For candidate gaps $\phi_i(q)$ and normal forces $\lambda_i$, sustained-contact complementarity reads
+
+$$
+0\le\phi_i(q)\perp\lambda_i\ge0.
+$$ {#eq-hs-complementarity}
+
+It permits zero gap with zero force, as well as load-bearing contact. The scalar product equation is smooth; its feasible set is nonconvex and degenerate where both variables vanish. Gap and force complementarity alone does not specify impact impulses, tangential friction or consistent acceleration.
+
+In trajectory optimization these become a mathematical program with complementarity constraints. A linear complementarity problem is a special algebraic form, not a guarantee of efficient global solution for arbitrary matrices. Standard nonlinear-program constraint qualifications often fail at complementarity points.
+
+The relaxation $\phi_i\lambda_i\le\epsilon$, together with nonnegativity, allows simultaneous small gap and force. Its units and scaling matter; it is not a sigmoid. Sending $\epsilon$ toward zero needs feasibility, boundedness and convergence checks. A negative-log barrier can enforce strict positivity in an appropriate interior-point formulation, but positivity alone does not enforce complementary contact. A positive log added to a minimization objective has the wrong barrier sign.
+
+[Posa, Cantu and Tedrake](https://groups.csail.mit.edu/robotics-center/public_papers/Posa13.pdf) formulate contact trajectory optimization as an MPCC, using contact forces as decision variables and a specified discretization. That is a concrete method, not a universal claim that all contact sequences or global optima will be found.
+
+### Choose the Contact Resolution for the Output
+
+A penalty force $F_n=k\max(0,-\phi)$ is continuous but has a derivative kink. Adding a damper only on the contact side can introduce a force discontinuity and tensile forces unless the unilateral law is formulated carefully. A linear mass-spring contact time scale is $\sqrt{m_{\rm eff}/k}$, not $1/\sqrt{k}$ with the mass silently omitted. Stable and accurate timesteps also depend on damping and integrator.
+
+Compliance can be essential when the output is a force peak or deformation. A rigid impulse model can be efficient for trajectory-level analysis when its contact law and event resolution are adequate. Time stepping can integrate impulses without locating every microscopic collision, but its outputs and sensitivities belong to that discrete model.
+
+Neither event-based modeling nor smoothing guarantees better accuracy, speed, stable gaits, or physical feasibility. Compare models at matched outputs, parameter evidence and numerical tolerances. A solver's successful termination does not validate a contact law.
+
+## 9. How the Swing Questions Fit Together {#sec-hs-applications}
+
+The pre-impact body/club state depends on earlier actuator forces, gravity, inertial coupling, contact support, shaft deformation and controller history. Impact maps that incoming state into ball/head outcomes. Ball flight then depends on launch velocity, launch direction, spin and aerodynamic conditions. These stages compose; none supplies the missing assumptions of another.
+
+For a declared parameterized intervention $\alpha$ and a common post-event output $y=H(x(T),p)$,
+
+$$
+\frac{dy}{d\alpha}
+=H_x\frac{\partial x(T)}{\partial\alpha}
++H_p\frac{dp}{d\alpha}.
+$$ {#eq-output-sensitivity}
+
+Compute the state sensitivity using the flows and event corrections. If instead $y$ is measured at impact itself, use the event-state derivative and any explicit time dependence of $H$. Fixing the impact time while changing the swing solves a different counterfactual.
+
+This distinction connects several practical questions:
+
+- **Energy transfer:** Joint force/moment powers and segment balances explain how energy moves before contact. Club or pelvis deceleration alone does not identify its destination.
+- **Control authority:** A torque perturbation changes future posture, velocity and event timing. A pointwise drift/input decomposition is not a finite intervention result.
+- **Shaft behavior:** Stored strain energy, modal phase and grip/club coupling influence incoming contact conditions. A rigid reset without those states cannot establish shaft-performance claims.
+- **Accuracy:** Small uncertainty in ball position or face orientation can change the guard normal, impact offset and effective mass. Speed alone does not determine the outcome.
+- **Learning and robustness:** A local derivative is conditional on the model and contact sequence. Repeated measurements and held-out predictions test whether that conditional model is useful.
+
+For small uncertainty with fixed event sequence, propagate state and parameter covariance through the combined sensitivity, including cross covariance. Broad uncertainty that changes contact order or misses the ball may require separate modes or a distributional simulation; one Gaussian covariance and one saltation matrix can hide qualitatively different outcomes.
+
+The vacuum range formula $v^2\sin(2\theta)/g$ assumes no aerodynamics and equal launch/landing height. Its $\theta$ is launch angle, not generally clubface angle. A golf objective must specify carry, dispersion, speed, spin, effort or risk explicitly. These distinctions let an optimization investigate a swing argument without assuming its answer.
+
+## 10. An Executable Sensitivity Check {#sec-hs-implementation}
+
+### Resolve the Event in Every Rollout
+
+The following NumPy example returns a terminal state, its initial-state Jacobian and its restitution derivative for exactly one ideal bounce. It uses exact free-flight equations and an analytically located event. It rejects horizons before the first bounce or at/after the second; it is not a general multi-contact simulator.
 
 ```python
-def forward_with_jump(x0, u, t_jump, S):
-    # Integrate to t_jump
-    x_minus = integrate(x0, u, 0, t_jump)
-    # Apply reset
-    x_plus = jnp.dot(S, x_minus)
-    # Continue to final time
-    x_final = integrate(x_plus, u, t_jump, T)
-    return x_final
-```
+# Event-resolved bounce example
+import numpy as np
 
-Define the backward pass (tangent):
+GRAVITY_M_S2 = 9.81
 
-```python
-def backward_with_jump(residuals, g):
-    # residuals = (x_minus, x_plus, S)
-    # g = gradient from downstream
 
-    # Backprop through second integration
-    g_plus = integrate_backward(g, ...)
-
-    # Pull back through saltation: g_minus = S^T g_plus
-    g_minus = jnp.dot(S.T, g_plus)
-
-    # Backprop through first integration
-    g_x0 = integrate_backward(g_minus, ...)
-
-    return g_x0
-```
-
-Register as custom VJP:
-
-```python
-from jax import custom_vjp
-
-@custom_vjp
-def hybrid_rollout(x0, u, jumps):
-    return forward_with_jump(x0, u, jumps)
-
-hybrid_rollout.defvjp(forward_with_jump, backward_with_jump)
-```
-
-This allows JAX to differentiate through the jump correctly, using $S^T$ in the backward pass.
-
-### Debugging Hybrid Optimizations
-
-**Common failure modes:**
-
-1. **Bisection fails to converge:** Guard function $h(x)$ may have multiple zeros in the interval (e.g., oscillations). Use narrower timesteps or filter $h$ before root-finding.
-
-2. **Saltation matrix is singular:** Reset map $R$ collapses dimensionality (e.g., all points on guard map to fixed set). Solution: Regularize $S \gets S + \epsilon I$ or reformulate guard.
-
-3. **DDP diverges after jump:** $Q_{uu}$ may lose positive definiteness due to $S_j$. Solution: Add regularization $Q_{uu} \gets Q_{uu} + \mu I$ at jumps.
-
-4. **Zeno behavior detected:** Too many jumps in short time (e.g., chattering contact). Solution: Use time-stepping with collision detection (semi-implicit Euler) or increase dissipation.
-
-**Debugging tools:**
-
-- **Plot $h(t)$:** Visualize guard crossings, check for spurious zero-crossings
-- **Plot $\det(S_j)$:** Check if saltation is volume-preserving (det = 1) or contractive (det < 1)
-- **Plot eigenvalues of $V_{xx}$:** Ensure Hessian remains positive definite
-- **Animate trajectory:** Visual inspection often reveals mode sequencing errors
-
-### Example Code: Bouncing Ball in JAX
-
-```python
-import jax.numpy as jnp
-from jax import jit, grad
-from jax.experimental.ode import odeint
-
-# Dynamics: free fall
-def f(x, t, u):
-    h, v = x
-    return jnp.array([v, -9.81])
-
-# Guard function
-def guard(x):
-    return x[0]  # h = 0
-
-# Reset map
-def reset(x, e=0.8):
-    h, v = x
-    return jnp.array([0.0, -e * v])
-
-# Saltation matrix
-def saltation_matrix(x_minus, e=0.8):
-    h, v = x_minus
-    # From equation (eq-ball-saltation)
-    S = jnp.array([
-        [-e, 0],
-        [-9.81 * (1 + e) / v, -e]
+def one_bounce(
+    state: np.ndarray, final_time: float, restitution: float,
+    gravity: float = GRAVITY_M_S2,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return one-bounce state and derivatives within a fixed event branch."""
+    state = np.asarray(state, dtype=float)
+    if state.shape != (2,):
+        raise ValueError("State must contain height and upward velocity.")
+    height, velocity = state
+    values = [height, velocity, final_time, restitution, gravity]
+    if not np.all(np.isfinite(values)):
+        raise ValueError("Inputs must be finite.")
+    if height <= 0 or gravity <= 0 or not 0 < restitution <= 1:
+        raise ValueError("Require positive height/gravity and 0 < e <= 1.")
+    speed = np.sqrt(velocity**2 + 2 * gravity * height)
+    # Avoid subtraction cancellation for a rapidly descending initial state.
+    impact_time = (
+        2 * height / (speed - velocity)
+        if velocity <= 0
+        else (velocity + speed) / gravity
+    )
+    second_time = impact_time + 2 * restitution * speed / gravity
+    if not impact_time < final_time < second_time:
+        raise ValueError("The horizon must lie strictly between bounces.")
+    remaining = final_time - impact_time
+    terminal = np.array([
+        restitution * speed * remaining - gravity * remaining**2 / 2,
+        restitution * speed - gravity * remaining,
     ])
-    return S
+    flow_before = np.array([[1.0, impact_time], [0.0, 1.0]])
+    flow_after = np.array([[1.0, remaining], [0.0, 1.0]])
+    saltation = np.array([
+        [-restitution, 0.0],
+        [gravity * (1 + restitution) / speed, -restitution],
+    ])
+    jacobian = flow_after @ saltation @ flow_before
+    derivative_e = speed * np.array([remaining, 1.0])
+    return terminal, jacobian, derivative_e
 
-# Event detection (simplified: assume known t_jump)
-def simulate_bounce(x0, T, t_jump, e=0.8):
-    # Phase 1: fall until guard
-    t1 = jnp.linspace(0, t_jump, 100)
-    x_minus = odeint(f, x0, t1, 0.0)[-1]
 
-    # Apply reset
-    x_plus = reset(x_minus, e)
-
-    # Phase 2: continue after bounce
-    t2 = jnp.linspace(t_jump, T, 100)
-    x_final = odeint(f, x_plus, t2, 0.0)
-
-    return x_final
-
-# Usage
-x0 = jnp.array([1.0, 0.0])  # Drop from h=1m
-trajectory = simulate_bounce(x0, T=2.0, t_jump=0.45)
+initial = np.array([1.0, 0.0])
+terminal, jacobian, derivative_e = one_bounce(initial, 0.7, 0.8)
+epsilon = 1e-6
+finite_difference = np.column_stack([
+    (one_bounce(initial + epsilon * direction, 0.7, 0.8)[0]
+     - one_bounce(initial - epsilon * direction, 0.7, 0.8)[0])
+    / (2 * epsilon)
+    for direction in np.eye(2)
+])
+np.testing.assert_allclose(jacobian, finite_difference, rtol=2e-7, atol=2e-8)
 ```
 
-**Note:** This example assumes known `t_jump`. A full implementation would use bisection or Newton's method to find it.
+The numerical comparison independently relocates the event after each initial-state perturbation. Keeping the old event time during finite differences would test a different map. Testing several perturbation sizes distinguishes truncation error from roundoff. The derivative in the code is a mathematical/numerical verification, not experimental validation of bouncing balls or golf equipment.
 
-### Chapter Summary
+### General Event Detection and Autodiff
 
-Implementing hybrid trajectory optimization requires:
+For numerically integrated flows, bracket an admissible sign change and refine the zero using accurate dense output or reintegration. A guard residual tolerance is not automatically a time tolerance: locally $\delta t\approx-\delta h/d$. Grazing makes that conversion ill-conditioned. Bisection narrows a valid bracket geometrically; a universal “five iterations” accuracy claim has no meaning without the original bracket and tolerance. Newton needs a reliable derivative and a suitable initial neighborhood.
 
-1. **Event detection:** Bisection or Newton rootfinding to locate guard crossings accurately
-2. **Autodiff handling:** Custom VJP in JAX to differentiate through jumps using $S^T$
-3. **Debugging:** Check guard functions, saltation determinants, Hessian conditioning
+Check direction, competing events and post-reset mode before resuming. Finite steps can miss multiple roots, and a fixed single-bounce demonstration cannot be continued through later impacts by allowing negative height.
 
-Code examples (bouncing ball in JAX) demonstrate practical implementation patterns.
+Automatic differentiation differentiates the executed program. A branchy event detector may need implicit event differentiation or a custom derivative. The primal applies $R$ to the state; it never applies $S$ as a substitute for the physical reset. A reverse-mode derivative pulls a covector through the transpose of the complete event-resolved Jacobian.
 
----
+For a [JAX custom VJP](https://docs.jax.dev/en/latest/_autosummary/jax.custom_vjp.html), the forward rule returns the output and residuals, while the backward rule returns cotangents for the differentiable inputs. Returning zero/`None` for an input that actually affects the requested derivative changes the result. A forward rule with a fixed event time and a backward rule that assumes a state-triggered event do not describe the same function. Continuous adjoint integration and differentiation of a numerical timestep scheme also need to be distinguished.
 
-## Conclusion and Extensions
+### Checks That Make an Argument Reviewable
 
-## What We've Achieved
+Useful checks include momentum and energy balance for the declared impact, nonnegative normal impulse, friction feasibility, event direction and sequence, finite-difference sensitivities with relocated events, and independent step/tolerance refinement. For optimization, also report the objective, constraints, initialization, solver, stopping criteria and held-out rollout behavior. Failed contact modes or missed events should remain visible rather than being hidden by a modified saltation matrix.
 
-This article extends the Tangent Hyperplane framework from smooth $C^1$ dynamics to hybrid systems with:
+The accompanying regression tests exercise the published code, its unsupported branches, mass-metric projection, energy loss, cost-boundary terms, second-order composition and contraction counterexamples. The two companion articles distinguish the corrected results from earlier unsupported claims.
 
-- **Impacts:** Velocity discontinuities at collisions (bouncing balls, foot strikes)
-- **Mode switches:** Discrete transitions between dynamical regimes (stance/swing, contact/flight)
-- **Complementarity:** Force constraints with inequality conditions (friction cones)
+## Exercises for Derivation and Investigation
 
-The key geometric insight: **Tangent spaces remain well-defined on either side of jumps**, and perturbations map linearly via the **saltation matrix** $S_j$. This preserves the core principle of the framework—linearization is exact infinitesimally—even when trajectories themselves are non-smooth.
+1. Derive the moving-floor saltation using $h(q,t)=q-at$ and relative-velocity restitution. Verify it by relocating both event times.
+2. Use two different off-guard extensions of the same reset and prove that their saltation matrices agree.
+3. Differentiate a velocity-dependent restitution law and compare with finite differences away from grazing.
+4. Derive the mass-metric impact loss and give a non-diagonal inertia example where Euclidean projection gives the wrong result.
+5. Add a state-dependent event cost to a two-mode constant-speed system. Verify the augmented cost row independently.
+6. Compare a one-event singular-value bound with the full flow–jump–flow gain under two physically declared state scalings.
+7. Construct two noncommuting uniformly contractive matrices and bound their product without diagonalizing them.
+8. Derive the contact reaction for a mass moving at constant speed on a circle; explain the missing force if $\dot Jv$ is omitted.
+9. Specify a golf intervention, its impact-time convention and output. Identify which measurements distinguish its prediction from a competing explanation.
+10. Compare a rigid and compliant collision at matched impulse. Identify which outputs can still disagree and why.
 
-## Relationship to Main Thesis
+## Sources and Scope
 
-The main Tangent Hyperplane thesis states that linearization is the exact local structure of smooth dynamics. This article clarifies the **scope of that claim**:
-
-- **Within each mode:** The statement holds exactly (smoothness assumed)
-- **At jumps:** The statement must be refined to "left and right tangent spaces" with a linear connector $S_j$
-- **Overall:** Hybrid systems admit piecewise linear tangent space structure
-
-This addresses **Critique 2** from the critical review: we now explicitly state where smoothness is required and provide rigorous tools for where it fails.
-
-## Open Questions and Future Work
-
-1. **Optimal mode sequencing:** How to choose which guards to cross? (Combinatorial optimization + DDP)
-2. **Stochastic hybrid systems:** How do perturbations propagate when jump times are random?
-3. **Measure-theoretic gradients:** Can we define Sobolev derivatives for hybrid trajectories?
-4. **Infinite-dimensional hybrid systems:** PDEs with moving boundaries (Stefan problems)
-
-## Further Reading
-
-**Hybrid systems theory:**
-
-- Goebel, Sanfelice, Teel (2012): *Hybrid Dynamical Systems*
-- Lygeros et al. (2003): "Controllers for reachability specifications for hybrid systems"
-
-**Contact mechanics:**
-
-- Stewart & Trinkle (1996): "An implicit time-stepping scheme for rigid body dynamics with inelastic collisions"
-- Anitescu & Potra (1997): "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
-
-**Trajectory optimization:**
-
-- Posa, Kuindersma, Tedrake (2016): "Optimization and stabilization of trajectories for constrained dynamical systems"
-- Manchester & Kuindersma (2017): "Variational contact-implicit trajectory optimization"
-
-**Saltation matrices:**
-
-- Burden, Sastry, et al. (2015): "The role of saltation matrices in hybrid system analysis"
-
----
-
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This article tackles the math of "sudden changes"—like a ball bouncing or a foot hitting the ground—where standard physics equations break down because things happen instantly.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Smooth vs. The Snappy (Hybrid Systems)</h3>
-        <p>
-          Most engineering math assumes things change smoothly, like a dimmer switch. But the real world has "clicks" and "bangs"—hybrid systems mix smooth motion with sudden jumps. We need special tools to handle the "thud" of an impact differently than the "glide" of flight.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Flying a plane versus landing it. Flying is smooth aerodynamic flow. Landing is a harsh, sudden event where the wheels hit the tarmac. You can't use the same "gliding" math to describe the "impact."
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Magic Lens (Saltation Matrices)</h3>
-        <p>
-          When a system jumps, small errors in speed or timing get scrambled. We use a "saltation matrix" to predict exactly how those errors survive the crash, allowing us to control the system even through impacts.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Skipping a stone on a lake. The stone flies smoothly, but the moment it hits the water, its path changes instantly based on the angle. The "saltation matrix" is the formula that predicts the new angle based on how it hit the surface.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Tripwire (Guard Surfaces)</h3>
-        <p>
-          To handle jumps correctly, we need to know exactly <em>when</em> they happen. We define "guard surfaces" as mathematical tripwires that tell the system when to switch from smooth mode to impact mode.
-        </p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A runner crossing a finish line. The race is continuous running, but the exact moment the chest crosses the tape, the state changes from "racing" to "finished." The tape is the guard surface that triggers the change.
-        </div>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> By mathematically accounting for the "crashes" and "switches," we can design robots that walk, run, and play golf without getting confused by the sudden impacts that confuse standard controllers.
-      </div>
-    </div>
-  </div>
-</section>
-
----
-
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Mathematical Rigor:</span>
-          <h3>Incomplete Saltation Matrix Derivation</h3>
-        </div>
-        <p class="critic-argument">
-          The derivation of the saltation matrix depends on a "sketch" that glosses over critical assumptions. Specifically, it assumes the guard function $h(x)$ is $C^2$ and transversally crossed, but never states these as necessary conditions. Without a rigorous proof connecting the variational principle to the time-of-crossing correction, the formula remains a heuristic that may fail for complex guards (e.g., intersections of surfaces).
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> The derivation provided is indeed a sketch intended for intuition. A rigorous proof requires the Implicit Function Theorem to define the crossing time map $t(x_0)$ and its gradient. We have added references to Burden et al. (2015) for the complete measure-theoretic proof.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Theoretical Foundations:</span>
-          <h3>Measure-Theoretic Hand-waving</h3>
-        </div>
-        <p class="critic-argument">
-          The article invokes measure theory to dismiss Zeno behavior (infinite jumps in finite time) as having "measure zero." While true for Lebesgue integrals, this ignores the practical reality that numerical integrators cannot handle Zeno behavior without regularization. Furthermore, for impulsive costs (e.g., energy loss at impact), an infinite number of jumps can lead to unbounded cost, which the "measure zero" argument fails to address.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge that measure theory resolves the integration problem but not the computational one. In practice, Zeno behavior must be regularized (e.g., by detecting rest). The text has been updated to clarify that while the cost integral is well-defined, numerical implementation requires explicit Zeno handling.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Implementation Details:</span>
-          <h3>Unverified Custom Autodiff</h3>
-        </div>
-        <p class="critic-argument">
-          The JAX implementation section proposes a custom vector-Jacobian product (VJP) but provides syntactically invalid code (missing return values). More importantly, it conflates the reset Jacobian $P_j$ with the saltation matrix $S_j$. Differentiating through a jump requires the full saltation matrix to account for the variation in jump time, which the provided code snippet appears to neglect or obscure.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> The code example was intended as pseudocode, but we recognize the error. The saltation matrix $S_j$ <em>does</em> include the time-variation term (the correction factor), so using $S_j^T$ in the backward pass is correct. We have clarified the distinction between $P_j$ and $S_j$ in the implementation notes.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Physical Accuracy:</span>
-          <h3>Counter-Intuitive Golf Dynamics</h3>
-        </div>
-        <p class="critic-argument">
-          The claim that "decelerating before impact maximizes energy transfer" contradicts standard collision physics, where higher impact velocity yields higher ball speed. While torque reduction might be optimal (to exploit passive whiplash), describing it as "deceleration" is physically misleading and potentially incorrect without further qualification.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> The wording was imprecise. The optimal strategy involves reducing <em>active torque</em> to allow the clubhead to release (uncock) fully, maximizing velocity at impact. We have refined the explanation to distinguish between control effort and kinematic acceleration.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate. These critiques strengthen our understanding.
-      </div>
-    </div>
-  </div>
-</section>
-
-
----
-
-### Acknowledgments
-
-This work extends the Tangent Hyperplane framework developed by Dieter. The saltation matrix formalism builds on foundational work by Anitescu, Potra, Stewart, and Trinkle. Contact-implicit methods were pioneered by Posa, Kuindersma, and Tedrake at MIT.
-
----
-
-::: {.callout-note}
-## Notation Summary
-
-| Symbol | Meaning |
-|--------|---------|
-| $Q$ | Set of discrete modes |
-| $G_{ij}$ | Guard set for transition $i \to j$ |
-| $R_{ij}$ | Reset map at guard $G_{ij}$ |
-| $h(x)$ | Guard function ($h = 0$ defines surface) |
-| $x^-, x^+$ | Pre- and post-jump states |
-| $P_j$ | Reset Jacobian $\frac{\partial R}{\partial x}$ |
-| $S_j$ | Saltation matrix (includes time variation) |
-| $\Phi_c(t, t_0)$ | Continuous state transition matrix |
-| $\Phi_{\text{hybrid}}$ | Hybrid state transition (product of $\Phi_c$ and $S_j$) |
-| $e$ | Coefficient of restitution |
-| $T_x G$ | Tangent space of guard surface |
-| $N_x G$ | Normal space of guard surface |
-| $v_\perp, v_\parallel$ | Normal and tangent components of velocity |
-:::
-
----
-
-**Total word count:** ~7,200 words
-
-**Total equations:** 112
-
-**Chapters:** 10 (as requested)
-
-**Topics covered:**
-
-✅ Motivation (why smoothness fails)
-✅ Hybrid automata formalism
-✅ Saltation matrices (Anitescu & Potra)
-✅ Manifolds with boundaries
-✅ Impact maps as tangent space transformations
-✅ Variational dynamics through jumps
-✅ Mode-aware DDP
-✅ Contact-implicit optimization
-✅ Applications (humanoid, golf, manipulation)
-✅ Implementation (JAX, event detection)
-
----
-
-**References** (to be added in `references.bib`):
-
-- Goebel, R., Sanfelice, R. G., & Teel, A. R. (2012). *Hybrid dynamical systems*. Princeton University Press.
-- Anitescu, M., & Potra, F. A. (1997). Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems. *Nonlinear Dynamics*, 14(3), 231-247.
-- Posa, M., Kuindersma, S., & Tedrake, R. (2016). Optimization and stabilization of trajectories for constrained dynamical systems. *ICRA*.
-- Stewart, D. E., & Trinkle, J. C. (1996). An implicit time-stepping scheme for rigid body dynamics with inelastic collisions and Coulomb friction. *International Journal for Numerical Methods in Engineering*, 39(15), 2673-2691.
-
----
-
-**End of Article**
+The equations above are worked derivations and manufactured examples, with their assumptions stated locally. The modern saltation tutorial @Kong2023saltation provides the established sensitivity framework. The linked hybrid iLQR paper identifies a specific optimization method; the linked MPCC paper describes a particular contact-implicit formulation. Cortés provides solution concepts for discontinuous vector fields, and the JAX documentation specifies its custom-derivative interface. None of these sources is evidence for the earlier claimed optimal swing, iteration counts, or universal superiority of one contact model.
