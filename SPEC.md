@@ -279,4 +279,6 @@ Corrects the first #4104 implementation without changing the site or its
 scientific content. Local and pre-deployment verification again default to one
 attempt; only the revision-matched live gate opts into two retries.
 
+| 2026-09-07 | #4240 | Rebuild the paired kinetic-chain chapter around verified mechanics, evidence, energy budgets, and reproducible counterexamples. |
+
 > For the complete historical change log (v1.0.173 – v1.0.278), see [CHANGELOG.md](CHANGELOG.md).
