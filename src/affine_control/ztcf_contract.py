@@ -11,7 +11,7 @@ from src.affine_control.golf_model import GolfModel
 
 GRAVITY_M_S2 = 9.81
 SUPPORTED_GRAVITY_LOAD = f"uniform gravity at {GRAVITY_M_S2} m/s^2"
-SUPPORTED_MODEL_REVISION = "9e4b209c8cefa804e25946af2f1da91785c51965"
+SUPPORTED_MODEL_REVISION = "9a809cbe947d4d80be39bf31b6feaa59b53192f1"
 SUPPORTED_MODEL_FRAME = (
     "right-handed planar inertial frame, x right and y up; "
     "q1 counterclockwise from +x; q2 and q3 relative"
