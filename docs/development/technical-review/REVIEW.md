@@ -538,3 +538,6 @@ Applications publication checkpoint: critique #4219 deployment34088584702 succee
 
 
 Applications PR #4221 is open from fix/applications-complete. All commit/pre-push hooks passed, including mypy, Bandit and unit tests. Protected CI/merge/deployment remain pending. Next issue #4220 records full substantive reads of Hybrid Tangent Spaces, its critique and accessible companion; claim expires08:39 UTC. Preliminary findings are in hybrid-partial-review.md, not a corrected-source clearance.
+
+
+PR4221 CI follow-up: all eight textbook builds passed, but the custom code-quality job rejected one literal gravity value in the event-time regression test. It is now a named GRAVITY_M_S2 constant; numerical behavior is unchanged and all21 applications tests, Ruff and Black pass. The same quality checker passes over the tracked Python corpus using its normal exclusions. A naive recursive local run also scanned untracked historical QA scripts and reported111 issues there; those files are not in the PR or clean CI checkout, and no quality rule was weakened.

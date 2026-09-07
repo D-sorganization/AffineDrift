@@ -10,6 +10,8 @@ from scipy.linalg import eigvalsh, expm
 from scripts.generate_worked_examples import render_ch08
 from src.affine_control.golf_model import SEGMENTS, GolfModel
 
+GRAVITY_M_S2 = 9.81
+
 
 @pytest.mark.parametrize("mode", [0, 1])
 def test_mode_amplitude_is_the_signed_tip_displacement(mode: int) -> None:
@@ -209,7 +211,7 @@ def test_constant_speed_schedule_preserves_declared_polynomial(speed: float) -> 
 
 def test_impact_time_sensitivity_includes_event_shift() -> None:
     # Falling particle: perturb both height and velocity, evaluate at its own ground event.
-    height, velocity, gravity = 2.0, -1.0, 9.81
+    height, velocity, gravity = 2.0, -1.0, GRAVITY_M_S2
     event = (velocity + np.sqrt(velocity**2 + 2 * gravity * height)) / gravity
     phi = np.array([[1, event], [0, 1]])
     field = np.array([velocity - gravity * event, -gravity])
