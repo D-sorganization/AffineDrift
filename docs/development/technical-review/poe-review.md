@@ -177,3 +177,8 @@ manuscript have been read completely; its companion audit is still in progress.
 The staged whitespace check caught trailing spaces emitted by Matplotlib in
 SVG path lines. Removed only trailing line whitespace; verified identical
 whitespace-separated SVG tokens. No coordinates, labels or visual styling changed.
+
+Source commit a80fbe1c was replayed cleanly onto protected main d7e51655 as
+77c4226c. The new main change is the other agent's qualified damping chapter
+(PR4298); it does not change PoE sources. All 17 focused tests pass again.
+PR #4300 is open; protected CI/merge/deployment remain pending.
