@@ -1,12 +1,24 @@
 # Agent Handoff — AffineDrift
 
+## Impact Dynamics and Acoustics: #4253
+
+- Review slice #4254 is locally verified on `docs/4253-impact-dynamics-acoustics`,
+  based on `39fa6cca`; PR #4258; initial implementation `cd0afdfa1a8fa7eda60377282dd4afc4965cd1b6`. Provider: Tools #5068; consumer: UpstreamDrift #9700.
+- Canonical continuation: `docs/development/impact-acoustics/REVIEW.md` (complete).
+- Replace universal heavy-hit decoupling claims with qualified model/measurement
+  conclusions. Preserve immutable proximal-distal publication bytes and trust pins.
+- Current task: primary literature, source inventory, theory correction and linked
+  implementation/experimental epics. Physical and acoustic validation is not complete.
+
 Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 
 ## Technical Content Review
 
-- Active issue #3903 cluster-gap wiring on `claude/issue-3903-cluster-gaps`, rebased onto protected `main` @ e2fa633 (the issue-named target pages exist only on `main`; staging lacks them). Intentional-constraint-collapse and passive-distributed-control wired to the proximal-distal program (companion ↔ monograph ↔ summary ↔ workbench); both research reviews linked back into the article cluster; secondary-axis-stability and strokes-gained-limitations wired into the impact/putting cluster both ways; club-fitting and heavy-hit given the canonical Related Concepts component with reference-point-problem, vendor-reference and models/repositories targets; unlinked backtick-path and bare-chapter items in the technology Related Concepts blocks converted to real links. All relative link targets verified present in the worktree; `python scripts/check_quarto_xrefs.py` passes. Composes the open sibling PRs #4265/#4266 where they touch the same pages (the `passive-distributed-control.qmd` hunk must be reconciled when #4265 merges). PR #4267 opened against `main`.
 
-- Active #4261 on fix/4261-lagrangian-mechanics-rigor, after base 1c845e87: both complete editions and all 16 exercises corrected. Root 4,501 passes, 29 skips, 129 deselections; source coverage 92.68%, new module 100%. Focused 34, static 34, content 128/four skips, mypy 82, title 625 pass. All print chapter pages 217–232 and browser section/target/edge/keyboard views inspected; 49 displays and 263-page PDF. Final bibliography-only QA and post-render checks pass; all local QA jobs have finished. PR #4263 is pushed at 4ad9bc7ec2d79cd670e5e0f44614ea85e1142465; protected checks pending. No commit/push during any QA. The single correction was replayed onto protected configuration squash 0d3db910 before first push; full tree 01616c1e0ee4ed0467f6fb5adfd9b9151cbe16ba stayed identical. Pre-commit/pre-push hooks pass. Claim expires 2026-09-08T01:38:11UTC. See lagrangian-mechanics-review.md.
+- Active issue #3903 cluster-gap wiring (PR #4267) on `claude/issue-3903-cluster-gaps`, merged with protected `main` @ 1ce02d7a. Intentional-constraint-collapse and passive-distributed-control wired to the proximal-distal program; both research reviews linked back into the article cluster; secondary-axis-stability and strokes-gained-limitations wired into the impact/putting cluster both ways; club-fitting and heavy-hit given the canonical Related Concepts component. Conflict with main rewrite of technology-heavy-hit-impact-coupling.qmd resolved by re-applying the Related Concepts block onto the qualified main version.
+- Active #4264 on fix/4264-counterfactual-rigor: both complete editions and all eight exercises corrected. Root 4,521 passes, 29 skips, 129 deselections; source coverage 92.68%. Later focused 26 includes two additional web-table checks. Mypy 82, static 34, title 625, content 128/four skips and quality pass. All 13 final chapter print pages, contents/index/bibliography, 114 section browser views and 77 final targets inspected. Final alias-only verification passes all 14 views, static 34 and content 128/four skips. Every local QA job has ended before staging. See counterfactual-review.md for exact failures, derivations and scope. Replay only new commits after bd2f767e onto protected Lagrangian squash e2fa633b before first push. Claim expires 2026-09-08T03:13:35UTC.
+
+- Lagrangian PR #4263 passed all protected checks and merged as e2fa633bfd2012eaaaa3332aca1f2da9870ba0f4. Deployment 34176729086 completed successfully. Issue #4261 is closed and needs no lease renewal.
 
 - Configuration PR #4262 passed protected checks and merged as 0d3db9107ab89f612c0cf73d02402eb5d577ee73. Deployment 34172069718 completed successfully. The issue is closed and needs no lease renewal.
 

@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-07 | #4254 | Replace universal heavy-hit claims with qualified contact/shaft/prestress/acoustic theory, primary-source review, cross-repository capability inventory and falsifiable research epics; add independent publication regressions. |
 | 2026-09-07 | #4237 | Reconcile both stability–optimality editions: Riccati proofs and rates, shared checked numerical table, finite-horizon geometry, robustness, disturbance attenuation, estimation and golf evidence; rebuild Volume I and verify print/web. |
 | 2026-09-07 | #4235 | Reconcile the complete paired variational chapter: exact remainders, ordered propagation, flow derivatives, adjoint boundary terms, checked pendulum examples, stability and numerical geometry; rebuild Volume I and verify print/web. |
 | 2026-09-07 | #4233 | Reconcile all paired Physics of Golf glossary definitions across mechanics, impact, anatomy, tissue and evidence; add collision derivation and verified sources, repair aliases and reading layout, and rebuild the textbook PDF. |
@@ -294,3 +295,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-07 | #4262 | Rebuild configuration-space charts, kinematic inverses, workspace and controllability distinctions; add checked examples and connect grip geometry to feasible golf delivery. |
 | 2026-09-07 | #4263 | Reconcile Lagrangian inertia, force and energy conventions; correct conservation and integration claims with verified rod dynamics and golf power accounting. |
 | 2026-09-07 | #4267 | Close cross-article cluster gaps from issue #3903: wire intentional-constraint-collapse and passive-distributed-control into the proximal-distal program, link both research reviews back into the article cluster, connect secondary-axis-stability and strokes-gained-limitations into the impact/putting cluster both ways, and give the technology articles the canonical Related Concepts component with fully-resolving links. |
+| 2026-09-07 | #4264 | Reconcile counterfactual interventions, directional and event-conditioned control authority, energy balances and the paired double-pendulum example. |

@@ -1,295 +1,206 @@
 ---
-title: "Multibody Impact Coupling and the Heavy Hit Hypothesis: Contact Time Scales, Wave Transit, and the Tau-Squared Decoupling Law"
-description: "Why driver-ball collision duration (450 microseconds) and elastic wave transit enforce a decoupling fraction greater than 0.99 for physiological hands and body, rendering the heavy hit mechanically impossible."
+title: "Impact Dynamics, Shaft Prestress, and the Heavy Hit Hypothesis"
+description: "A qualified theory of contact inertia, finite-duration shaft coupling, applied wrenches, vibration, sound radiation, and perceived hit sweetness."
 author: "Dieter Olson"
-date: "2026-08-19"
-categories: [technology, impact-mechanics, wave-propagation, multibody-dynamics, collision-theory]
+date: "2026-09-07"
+categories: [technology, impact-mechanics, wave-propagation, multibody-dynamics, acoustics]
 ---
 
-```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Golf folklore has long claimed that a golfer can hit the ball harder by "firming up the wrists at impact," "hitting against a firm left side," or putting their body weight behind the strike — often referred to as a "heavy hit." Physics proves this is an illusion.
-      </p>
+::: {.callout-important}
+## What We Can Currently Conclude
 
-      <div class="laymans-item">
-        <h3>The speed of contact versus the speed of sound</h3>
-        <p>
-          A golf ball stays on the driver face for only about <strong>450 microseconds</strong> (0.00045 seconds). When the clubface strikes the ball, a shock wave travels up the shaft at the speed of sound in steel or carbon fiber. By the time that wave reaches the golfer's hands, the ball has already bounced off the face and flown several inches down the fairway.
-        </p>
-      </div>
+A swing determines much more than clubhead speed: it sets orientation, angular velocity, impact position, shaft deformation and velocity, internal stress, and the mechanical conditions at the hands. Those states can affect the subsequent collision and vibration. A short contact interval restricts some mechanisms; it does not prove that every shaft or grip effect vanishes.
 
-      <div class="key-takeaway">
-          <strong>Key Takeaway:</strong> More than 99% of the momentum transfer during impact comes strictly from the clubhead itself. The golfer's body, hands, and grip pressure are mechanically isolated from the ball during the collision.
-      </div>
-
-      <div class="laymans-item">
-        <h3>Why grip pressure still matters before impact</h3>
-        <p>
-          Your hands and muscles determine the speed, orientation, and path of the clubhead <em>before</em> contact begins. But during the 450 microseconds of impact, no nerve signal can travel to your muscles, and no muscle torque can transmit meaningful energy to the ball.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-```
-
-## Why This Article Exists
-
-For over a century, golf instruction and biomechanics literature have debated the "heavy hit" hypothesis. The intuition appears plausible on the surface: in combat sports or manual labor, bracing the body or stiffening the wrists increases the effective mass behind a collision. Instructors frequently advise golfers to "hit against a firm front side," "drive through the ball with body weight," or "maintain maximum grip pressure through impact" to prevent the clubhead from twisting and to deliver more kinetic energy to the ball.
-
-However, an impact in golf is fundamentally different from a slow push or an inelastic shove. It is an ultra-short-duration, high-velocity elastic collision governed by the physics of wave propagation in slender elastic structures.
-
-This publication provides a rigorous dynamical and continuum-mechanics analysis of **Multibody Impact Coupling**. We prove through wave transit calculations, impulse-momentum formulations, the **$\tau^2$ decoupling law**, and multibody model projections that:
-1. Contact duration ($\tau_{\text{contact}} \approx 400 - 450\,\mu\text{s}$) is shorter than or comparable to the one-way elastic wave transit time from clubhead to grip.
-2. The physiological body and hand grip interface are decoupled by more than $99\%$ ($\eta_{\text{decouple}} > 0.99$) during the collision.
-3. Muscle torques applied during impact contribute less than $0.75\%$ to total ball impulse.
-4. Multibody simulation architectures (MJCF, URDF, OpenSim) can decouple the collision jump map from continuous multibody integration without sacrificing sub-millimeter trajectory fidelity.
-
-::: {.callout-note}
-## Terminology and Notation Contract
-
-In accordance with the repository semantic standard in [NOTATION.md](../NOTATION.md):
-- Dynamics are expressed in control-affine form $\dot{x} = f_p(x) + G_p(x)u$, where $f_p(x)$ is the complete autonomous drift of the declared effective plant and $u$ is the declared control input.
-- A **Zero-Torque Counterfactual (ZTCF) family** formulation evaluates system response when declared applied generalized control is set to zero ($u = 0$). In this article, our primary analytical tool is the **pointwise ZTCF sample** and **forward ZTCF trajectory** evaluating the pre-impact state and collision jump map.
-- The **Drift-Control Ratio (DCR)** ratio measures relative autonomous acceleration versus maximum control authority in the common delivery projection.
+The earlier version of this article claimed universal 99% decoupling, a universal rigid-shaft bound, and complete isolation of the hands. Those claims are withdrawn. They were not established by the available one-dimensional model or by the cited time-scale arguments. The corrected arithmetic and model boundaries appear below. No player-specific acoustic advantage has yet been established by this project.
 :::
 
----
+## What Does a Heavy or Sweet Hit Mean? {#sec-impact-estimands}
 
-## Part I: Contact Time Scales and Wave Transit Mechanics
+An observer may hear two players strike the same kind of club and describe one strike as more solid. That observation deserves investigation, but it does not identify its cause. Equipment, ball construction, impact position, speed, loft, surface condition, the turf, and the listening position can all differ. Even with those controlled, elastic state and hand contact may differ.
 
-### The Driver Impact Horizon
+Use separate estimands rather than a single inferred "heaviness":
 
-When a driver striking at $v_{\text{head}} \approx 45 - 50\,\text{m/s}$ (100–112 mph) collides with a regulation golf ball ($m_{\text{ball}} = 0.0459\,\text{kg}$), the ball undergoes extreme viscoelastic deformation. The collision force $F_{\text{contact}}(t)$ follows a near-half-sine profile peaking between $12 - 18\,\text{kN}$ ($2700 - 4000\,\text{lbf}$):
+| Question | Observable | Necessary Qualification |
+|---|---|---|
+| How much momentum reaches the ball? | Contact impulse vector $\mathbf J=\int\mathbf F_c\,dt$ | Subtract other ball impulses if material |
+| How much energy reaches the ball? | Change in translational and rotational kinetic energy | Include initial ball motion and spin |
+| How does the face move during contact? | Head recoil, rotation, local deformation, contact duration | Full inertia and contact geometry |
+| What reaches the hands? | Three-axis acceleration, force/torque spectra and ringdown | Sensor location, bandwidth and grip state |
+| What reaches a listener? | Calibrated pressure waveform and spectrum | Microphone position, directivity and room response |
+| What sounds or feels sweet? | Blinded preference and discrimination ratings | Population, stimulus level and experimental protocol |
 
-$$F_{\text{contact}}(t) \approx F_{\text{max}} \sin\left(\frac{\pi t}{\tau_{\text{contact}}}\right), \qquad t \in [0, \tau_{\text{contact}}]$$
+Smash factor is a speed ratio, not a measurement of body mass coupled to the collision. Peak force, impulse, ball energy, shaft strain energy and acoustic energy are distinct. In particular, a change in sound can be perceptible without a practically important change in ball speed.
 
-where the measured contact duration is:
+There is also no unique mechanical sweet spot. Maximum ball speed, minimum head rotation, a center of percussion for a specified support, minimum excitation of a selected mode, minimum hand vibration and preferred sound can occur at different face positions. A mode's node is not automatically the optimum for every mode or every boundary condition.
 
-$$\tau_{\text{contact}} \approx 400 - 450\,\mu\text{s} \quad (0.00040 - 0.00045\,\text{s})$$
+## Evidence That Sets the Scope {#sec-impact-evidence}
 
-```
-  Force [kN]
-    16 ┼               ▲ F_max ≈ 15 kN
-    12 ┼              / \
-     8 ┼             /   \
-     4 ┼            /     \
-     0 ┼───────────/───────\────────► Time [μs]
-       0          225     450
-                  ◄───────►
-               τ_contact ≈ 450 μs
-```
+The historical free-head approximation is a useful baseline, not an unrestricted theorem. In a flexible-club study, McNally, McPhee and Henrikson compared full-club and detached-head impacts and found altered launch and gear effect. The shaft stiffness was fitted, contact calibration used near-center strikes, and the wider face maps extend beyond that calibration region. This supports investigating coupling, not importing a universal percentage into our software [@mcnally2018shaftimpact].
 
-### Acoustic and Flexural Wave Propagation in the Shaft
+Corke and colleagues investigated strain propagation in a clamped steel-shafted 9-iron using incoming balls, motivated by robot-grip validity. Their grip-reflection result supports a limited influence of the remote clamp during that tested collision. It does not remove the local shaft, pre-existing loads, or all composite-shaft configurations [@corke2018gripping]. These studies address different mechanisms and need not contradict each other.
 
-The impact force applies a large impulsive axial force, transverse shear force, and bending moment at the hosel ($s = L$). For stress and momentum to transmit from the clubhead to the grip ($s = 0$), mechanical waves must propagate along the length of the shaft ($L \approx 1.15\,\text{m}$).
+Milne and Davis combined swing simulation with shaft-strain measurements; MacKenzie and Boucher investigated changes in delivered kinematics with shaft stiffness. Both belong in the pre-impact evidence base. Neither alone identifies a grip-dependent acoustic mechanism [@milne1992shaft; @mackenzie2017shaft]. Brown and McPhee's club–grip study provides a further reason to identify a compliant boundary rather than assume a clamp [@brown2018grip].
 
-```
-Grip (s=0)                                                    Hosel (s=L)
-  │◄──────────────────────── Length L ≈ 1.15 m ──────────────────────►│
-  ┌───────────────────────────────────────────────────────────────────┬───────┐
-  │ ◄─── Longitudinal Wave (c_L ≈ 4000-5200 m/s) ──────────────────── │ Head  │
-  │ ◄─── Flexural Wave Packet (v_g ≈ 300-800 m/s) ─────────────────── │◄─Ball │
-  └───────────────────────────────────────────────────────────────────┴───────┘
-```
+The detailed [review ledger](https://github.com/D-sorganization/AffineDrift/blob/docs/4253-impact-dynamics-acoustics/docs/development/impact-acoustics/REVIEW.md) distinguishes full-text inspection, abstract-only evidence, independent derivation, and proposed experiments. The [capability inventory](https://github.com/D-sorganization/AffineDrift/blob/docs/4253-impact-dynamics-acoustics/docs/development/impact-acoustics/INVENTORY.md) links software claims to source and tests.
 
-#### 1. Longitudinal (Acoustic) Waves
+## Rigid-Body Contact Is a Reference, Not the Whole Model {#sec-impact-mobility}
 
-The speed of dilatational/longitudinal stress waves in an elastic medium of Young's modulus $E$ and density $\rho$ is:
+Let $\mathbf r$ point from the head center of mass to the contact point, $m_h$ be head mass, and $\mathbf I_h$ be its full inertia tensor about its center of mass. All quantities use one orthonormal frame. For an impulse $\mathbf j$ **on the head**,
 
-$$c_L = \sqrt{\frac{E}{\rho}}$$
+$$
+\Delta\mathbf v_h=\frac{\mathbf j}{m_h},\qquad
+\Delta\boldsymbol\omega_h=\mathbf I_h^{-1}(\mathbf r\times\mathbf j).
+$$
 
-- **Steel Shafts** ($E \approx 210\,\text{GPa}, \rho \approx 7850\,\text{kg/m}^3$):
-  $$c_{L,\text{steel}} = \sqrt{\frac{210 \times 10^9}{7850}} \approx 5170\,\text{m/s}$$
-  The one-way transit time from hosel to grip is:
-  $$t_{\text{transit},L} = \frac{L}{c_L} = \frac{1.15}{5170} \approx 222\,\mu\text{s}$$
-  The round-trip transit time (time required for an acoustic pulse to travel to the hands, reflect off the soft-tissue boundary, and return to the clubhead) is:
-  $$t_{\text{round-trip},L} = \frac{2L}{c_L} \approx 445\,\mu\text{s} \approx \tau_{\text{contact}}$$
+The instantaneous change of contact-point velocity is therefore
 
-- **Carbon Composite / Graphite Shafts** ($E_{11} \approx 90 - 150\,\text{GPa}, \rho \approx 1500 - 1600\,\text{kg/m}^3$):
-  $$c_{L,\text{carbon}} \approx 3800 - 4500\,\text{m/s}$$
-  $$t_{\text{round-trip},L} = \frac{2(1.15)}{4000} \approx 575\,\mu\text{s} > \tau_{\text{contact}}$$
+$$
+\Delta\mathbf v_c=\mathbf W_h\mathbf j,\qquad
+\mathbf W_h=\frac{\mathbf 1}{m_h}-[\mathbf r]_\times\mathbf I_h^{-1}[\mathbf r]_\times.
+$$ {#eq-impact-point-mobility}
 
-Because the round-trip acoustic transit time exceeds or equals the contact duration, no reflected longitudinal boundary information from the hands can return to modify the clubhead during the impact.
+Here $[\mathbf r]_\times\mathbf a=\mathbf r\times\mathbf a$. The rotational contribution is positive semidefinite: for a unit normal $\mathbf n$,
 
-#### 2. Transverse (Flexural) Bending Waves
+$$
+\frac{1}{m_{h,n}}=\mathbf n^T\mathbf W_h\mathbf n
+=\frac{1}{m_h}+(\mathbf r\times\mathbf n)^T\mathbf I_h^{-1}(\mathbf r\times\mathbf n).
+$$ {#eq-impact-normal-mass}
 
-Bending stresses dominate clubhead motion and face twisting. Transverse waves in a slender beam are highly **dispersive**; their phase velocity $v_p$ and group velocity $v_g$ depend on frequency $\omega$:
+This retains products of inertia and orientation. The familiar $1/m_h+r^2/I$ is a special principal-axis case. An offset parallel to the normal produces no normal-impulse moment. Off-diagonal point mobility can nevertheless couple a normal impulse to tangential contact velocity.
 
-$$v_g(\omega) = 2 v_p(\omega) = 2 \left(\frac{EI}{\lambda}\right)^{1/4} \sqrt{\omega}$$
+For two detached bodies, add their point inverse-mass matrices: $\mathbf W=\mathbf W_h+\mathbf W_b$. Let $u_n>0$ denote normal closing speed, including both linear and angular point velocities. The frictionless Newton-restitution reference is
 
-For the frequency spectrum excited by a $450\,\mu\text{s}$ half-sine pulse (predominantly $f < 2\,\text{kHz}$, $\omega < 12500\,\text{rad/s}$), the group velocity of the dominant flexural wave packets is:
+$$
+J_n=\frac{(1+e)u_n}{\mathbf n^T\mathbf W\mathbf n},\qquad 0\le e\le1.
+$$ {#eq-impact-normal-impulse}
 
-$$v_g \approx 300 - 800\,\text{m/s}$$
+The ball receives $+J_n\mathbf n$ and the head receives $-J_n\mathbf n$. For a sphere with normal through its center, its normal inverse mass is $1/m_b$. With no other impulses, loss of kinetic energy is
 
-The one-way transit time for flexural waves to reach the hands is:
+$$
+E^- - E^+=\frac12\frac{(1-e^2)u_n^2}{\mathbf n^T\mathbf W\mathbf n}.
+$$
 
-$$t_{\text{transit,flex}} = \frac{L}{v_g} \approx \frac{1.15}{500} \approx 2.30\,\text{ms} \quad (2300\,\mu\text{s})$$
+Thus an eccentric strike can reduce ball launch and increase head rotation even when head speed is unchanged. It is not generally valid to infer the total system's effective mass by fitting a single scalar to launch data: restitution, friction, local face compliance and unmeasured initial states can compensate for each other.
 
-Because $2300\,\mu\text{s} \gg 450\,\mu\text{s}$, the bending waves generated by ball collision do not even reach the golfer's hands until long after the ball has completely left the clubface.
+For multibody generalized velocities $\dot{\mathbf q}$ with mass matrix $\mathbf M$ and contact Jacobian $\mathbf J_c$, the corresponding unconstrained point inverse mass is $\mathbf J_c\mathbf M^{-1}\mathbf J_c^T$. If the selected model imposes bilateral velocity constraints $\mathbf A\dot{\mathbf q}=0$, use the constrained inverse operator
 
----
+$$
+\mathbf M_c^{-1}=\mathbf M^{-1}-\mathbf M^{-1}\mathbf A^T
+(\mathbf A\mathbf M^{-1}\mathbf A^T)^{-1}\mathbf A\mathbf M^{-1}
+$$
 
-## Part II: The $\tau^2$ Decoupling Law and Impulse Dynamics
+on an independent constraint set, then form $\mathbf J_c\mathbf M_c^{-1}\mathbf J_c^T$. Singular or redundant constraints require an explicitly documented reduction. A rigid constraint acts instantaneously by model definition; that does not demonstrate instantaneous propagation through a physical shaft.
 
-### Multibody Equations of Motion During Impact
+The directional effective mass is $1/(\mathbf n^T\mathbf W\mathbf n)$, **not** $\mathbf n^T\mathbf W^{-1}\mathbf n$. The latter corresponds to a different condition when tangential motion is constrained. A normal restitution rule combined with friction must solve coupled normal/tangential contact consistently; independently clipping a tangential impulse need not preserve restitution or passivity.
 
-Consider the complete articulated multibody system of the human golfer, arms, hands, grip compliance, flexible shaft, and clubhead, with generalized coordinates $\mathbf{q} \in \mathbb{R}^n$:
+For frictional contact, retain ball and head spin, face curvature, local contact normal, tangential compliance and a stick/slip law. Gear effect is an outcome of rotation and tangential interaction. Adding a separate empirical gear-effect correction to a solver that already resolves it can double-count the mechanism. See the companion [impact mechanics reference](impact-mechanics-and-ball-flight.qmd).
 
-$$\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau}_{\text{control}}(t) + \mathbf{J}_c(\mathbf{q})^T \mathbf{F}_{\text{contact}}(t)$$
+## Contact Time, Wave Transit, and the Limits of a Scaling Law {#sec-impact-timescales}
 
-where:
-- $\mathbf{M}(\mathbf{q})$ is the symmetric positive-definite multibody mass matrix.
-- $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}}$ collects Coriolis and centripetal terms.
-- $\boldsymbol{\tau}_{\text{control}}(t)$ is the vector of active and passive joint torques.
-- $\mathbf{J}_c(\mathbf{q}) = \frac{\partial \mathbf{p}_{\text{impact}}}{\partial \mathbf{q}}$ is the contact Jacobian mapping generalized velocities to the linear velocity of the impact point on the clubface.
+Driver contact is commonly discussed on a sub-millisecond scale, but contact duration is an equipment- and speed-dependent measurement, not a universal constant [@roberts2001contacttime]. Distinguish the duration $T_c$, local head-mode periods, shaft wave travel, grip reflection, and the much longer decay heard or felt after separation.
 
-### Perturbation Expansion Over the Collision Horizon
+For a uniform slender rod, the elementary axial approximation is $c=\sqrt{E/\rho}$. With the earlier article's *assumed* steel values, $E=210$ GPa and $\rho=7850$ kg/m³, this gives approximately 5172 m/s. A 1.15 m shaft then has one-way transit 222 microseconds and round-trip transit 445 microseconds. It is incorrect to say the wave has not reached the hands by 450 microseconds.
 
-Integrating the equations of motion over the collision duration $[0, \tau]$ where $\tau = \tau_{\text{contact}} \to 0$:
+The earlier assumed composite inputs $E=90$–150 GPa and $\rho=1500$–1600 kg/m³ imply 7500–10000 m/s within that rod approximation, not 3800–4500 m/s. Corresponding 1.15 m round trips are approximately 230–307 microseconds. Actual tapered, anisotropic laminates require measured or derived branch-specific wave speeds, coupling, attenuation and reflection coefficients. These arithmetic examples establish neither negligible coupling nor a large effect.
 
-$$\int_0^\tau \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}}\,dt + \int_0^\tau \left[\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{g}(\mathbf{q})\right]dt = \int_0^\tau \boldsymbol{\tau}_{\text{control}}(t)\,dt + \int_0^\tau \mathbf{J}_c(\mathbf{q})^T \mathbf{F}_{\text{contact}}(t)\,dt$$
+For a uniform Euler–Bernoulli beam with mass per length $\mu$,
 
-Expanding $\mathbf{q}(t) = \mathbf{q}(0) + \mathcal{O}(\tau)$ and noting that velocities undergo a finite jump $\Delta \dot{\mathbf{q}} = \dot{\mathbf{q}}(\tau) - \dot{\mathbf{q}}(0) = \mathcal{O}(1)$:
+$$
+\omega=\sqrt{EI/\mu}\,k^2,\qquad
+v_g=2(EI/\mu)^{1/4}\sqrt{\omega}.
+$$
 
-1. **Velocity Jump (Order $\mathcal{O}(1)$)**:
-   $$\mathbf{M}(\mathbf{q}(0)) \Delta \dot{\mathbf{q}} = \mathbf{J}_c(\mathbf{q}(0))^T \mathbf{P}_{\text{contact}} + \mathcal{O}(\tau)$$
-   where $\mathbf{P}_{\text{contact}} = \int_0^\tau \mathbf{F}_{\text{contact}}(t)\,dt \approx 3.0\,\text{N}\cdot\text{s}$ is the total collision impulse.
-
-2. **Control Impulse Bound (Order $\mathcal{O}(\tau)$)**:
-   For human joint torques bounded by maximum voluntary isometric strength $\tau_{\text{joint,max}} \le 100\,\text{N}\cdot\text{m}$:
-   $$\|\mathbf{P}_{\text{control}}\| = \left\|\int_0^\tau \boldsymbol{\tau}_{\text{control}}(t)\,dt\right\| \le \tau_{\text{max}} \tau \approx (100\,\text{N}\cdot\text{m})(4.5 \times 10^{-4}\,\text{s}) = 0.045\,\text{N}\cdot\text{m}\cdot\text{s}$$
-   Expressed as equivalent linear force impulse at the clubhead radius ($r \approx 1.2\,\text{m}$):
-   $$P_{\text{control,linear}} \le \frac{0.045}{1.2} \approx 0.0375\,\text{N}\cdot\text{s}$$
-   Comparing this to the ball impulse:
-   $$\frac{P_{\text{control,linear}}}{P_{\text{contact}}} \le \frac{0.0375\,\text{N}\cdot\text{s}}{3.0\,\text{N}\cdot\text{s}} = 0.0125 \quad (1.25\%)$$
-   At realistic maximum wrist torque capacities ($\tau_{\text{wrist}} \approx 20 - 40\,\text{N}\cdot\text{m}$), this ratio is strictly under $0.5\%$.
-
-3. **Position Displacement During Impact (The $\tau^2$ Term)**:
-   $$\Delta \mathbf{q} = \int_0^\tau \dot{\mathbf{q}}(t)\,dt = \dot{\mathbf{q}}(0)\tau + \frac{1}{2}\mathbf{M}^{-1}\mathbf{J}_c^T \mathbf{P}_{\text{contact}}\tau + \mathcal{O}(\tau^2)$$
-   The spatial displacement of the clubhead during the $450\,\mu\text{s}$ impact is less than $18\,\text{mm}$. The displacement of the hands and torso during this interval is less than $0.2\,\text{mm}$.
-
----
-
-## Part III: Decoupling Fraction ($\eta_{\text{decouple}} > 0.99$)
-
-### Apparent Mass at the Point of Strike
-
-The operational space inertia (apparent striking mass) $\Lambda_c \in \mathbb{R}^{3 \times 3}$ at the contact point is:
-
-$$\mathbf{\Lambda}_c(\mathbf{q}) = \left(\mathbf{J}_c(\mathbf{q}) \mathbf{M}(\mathbf{q})^{-1} \mathbf{J}_c(\mathbf{q})^T\right)^{-1}$$
-
-We define the **Decoupling Fraction** $\eta_{\text{decouple}}$ as the fraction of effective striking inertia contributed solely by the clubhead and distal tip compared to the complete coupled biomechanical body:
-
-$$\eta_{\text{decouple}} = 1 - \frac{m_{\text{apparent,total}} - m_{\text{apparent,isolated_head}}}{m_{\text{apparent,total}}}$$
-
-```
-┌───────────────────────────────────────────────┬──────────────────────┬──────────────────────┐
-│ Model Tier                                    │ Apparent Mass [g]    │ Decoupling Fraction  │
-├───────────────────────────────────────────────┼──────────────────────┼──────────────────────┤
-│ Isolated Rigid Head (200 g)                   │ 200.0 g              │ 1.0000 (100.0%)      │
-│ Flexible Shaft + Head                         │ 200.8 g              │ 0.9960 (99.60%)      │
-│ Flexible Shaft + Compliant Grip Tissue        │ 200.9 g              │ 0.9955 (99.55%)      │
-│ Physiological Human Body (Muscles Active)     │ 201.2 g              │ 0.9940 (99.40%)      │
-│ Theoretical Rigid Shaft + Rigid Arms Bound    │ 207.5 g              │ 0.9638 (96.38%)      │
-└───────────────────────────────────────────────┴──────────────────────┴──────────────────────┘
-```
-
-Across all physiological parameter regimes (taking into account skin and soft tissue compliance of the palm $k_{\text{tissue}} \approx 2 \times 10^4\,\text{N/m}$ and grip rubber viscoelasticity), $\eta_{\text{decouple}} > 0.99$. The golfer's body contributes less than $1\,\text{gram}$ of equivalent striking mass.
-
----
-
-## Part IV: The Rigid-Shaft Upper Bound
-
-To establish the absolute mathematical ceiling of multibody coupling, we consider the hypothetical limiting case of an **infinitely rigid shaft** rigidly welded to an **infinitely rigid human arm** rotating about a fixed shoulder pivot $O$ at radius $L_{\text{arm+club}} \approx 1.8\,\text{m}$.
-
-```
-Shoulder Pivot O
-  ●
-  │
-  │ Infinitely Rigid Upper Body & Arm (m_arm ≈ 4.5 kg)
-  │
-  ● Wrist
-  │
-  │ Infinitely Rigid Shaft (m_shaft ≈ 0.1 kg)
-  │
-  ┌───▼───┐
-  │ Head  │ (m_head = 0.2 kg)
-  └───┬───┘
-      ○ Ball
-```
-
-For a rigid rod of length $L$ and distributed mass rotating about pivot $O$, the effective mass $m_{\text{eff}}$ at the tip is determined by the moment of inertia about $O$:
-
-$$m_{\text{eff}} = \frac{I_O}{L^2} = m_{\text{head}} + \frac{1}{3}m_{\text{shaft}} + \frac{I_{\text{arm}}}{L^2}$$
-
-Because $L^2 = (1.8\,\text{m})^2 = 3.24\,\text{m}^2$ appears in the denominator, the entire $4.5\,\text{kg}$ mass of the human arm adds only:
-
-$$\Delta m_{\text{eff}} \le \frac{\frac{1}{3}(4.5)(0.65)^2}{(1.8)^2} \approx 0.196\,\text{kg} \times \left(\frac{0.65}{1.8}\right)^2 \approx 7.5\,\text{g}$$
-
-Even in this physically impossible extreme of infinite rigidity, the maximum apparent mass gain is only $3.75\%$. When realistic shaft flexibility and soft-tissue grip damping are restored, this coupling collapses by over an order of magnitude to under $0.4\%$.
-
----
-
-## Part V: Runtime-Free Model Interchange From MJCF, URDF, and OpenSim
-
-Because the impact collision is dynamically decoupled from continuous multibody states, simulation architectures can avoid executing stiff, microsecond-scale penalty contact integrators across the full 40+ degree-of-freedom human skeleton.
-
-```
-┌────────────────────────────────┐
-│ Full Multibody Human Model     │
-│ (MuJoCo MJCF / Drake URDF /    │
-│  OpenSim .osim)                │
-└───────────────┬────────────────┘
-                │
-                │ 1. Forward Integration (Step size Δt ≈ 1 ms)
-                ▼
-┌────────────────────────────────┐
-│ Pre-Impact State x(t_impact⁻)  │
-│ Extract Spatial Twist se(3)    │
-└───────────────┬────────────────┘
-                │
-                │ 2. Isolated Algebraic Collision Jump Map (Closed-Form)
-                │    (Conservation of Linear/Angular Momentum + Restitution)
-                ▼
-┌────────────────────────────────┐
-│ Post-Impact Ball & Head States │
-│ x(t_impact⁺), v_ball, ω_ball   │
-└───────────────┬────────────────┘
-                │
-                │ 3. Resume Multibody Integration (Post-impact follow-through)
-                ▼
-┌────────────────────────────────┐
-│ Ball Flight Aerodynamic ODE    │
-│ (Lift, Drag, Spin Decay)       │
-└────────────────────────────────┘
-```
-
-This decoupled two-stage architecture provides:
-1. **Computational Speed**: Solves impact in $\mathcal{O}(1)$ algebraic operations ($< 1\,\mu\text{s}$ computation time) rather than requiring $100,000$ sub-microsecond integration substeps.
-2. **Model Portability**: Full interchange across Drake, MuJoCo, and OpenSim without engine-specific penalty contact tuning.
-3. **Exact Momentum Conservation**: Energy loss and impulse restitution are governed by empirical coefficient of restitution ($e$) and tangential friction ($\mu$) matrices without numerical drift.
-
----
-
-## Part VI: Summary and Biomechanical Implications
-
-The "heavy hit" hypothesis is refuted by fundamental physics:
-- The collision window ($\tau \approx 450\,\mu\text{s}$) is an order of magnitude faster than flexural wave transit from head to grip ($2300\,\mu\text{s}$).
-- The decoupling fraction exceeds $99\%$ for all physiological human-club configurations.
-- Applied muscle torques during the collision contribute less than $0.75\%$ to ball launch impulse.
-
-A golfer cannot "push" or "drive through" the ball during impact. All muscle effort, body positioning, and grip dynamics achieve their effect exclusively **prior to impact** by setting the pre-collision clubhead speed, spatial twist, delivery path, and face orientation.
+Flexural wave speed is dispersive. This low-frequency beam theory is not a causal high-frequency wavefront model; its unbounded group speed at arbitrarily high frequency marks its breakdown. Rayleigh, Timoshenko or three-dimensional elasticity is needed where rotary inertia, shear or local head/hosel wavelengths matter. One flexural transit estimate cannot bound axial, torsional and coupled branches simultaneously.
+
+A delayed reflection from the hands is only one pathway. The shaft close to the hosel responds immediately; shaft stress and motion already present at contact need no newly launched round trip. Neural feedback triggered by impact is also a different mechanism from pre-existing activation and passive grip impedance.
+
+### What the Small-Time Expansion Actually Says
+
+Over a sufficiently short interval, with smooth finite non-contact loading and fixed configuration to leading order,
+
+$$
+\mathbf M_0\Delta\dot{\mathbf q}
+=\mathbf J_{c,0}^T\mathbf J+\int_0^{T_c}\boldsymbol\tau_{\rm ext}\,dt+O(T_c).
+$$
+
+The remainder includes appropriately bounded drift and configuration variation; it is not a universal numerical error certificate. A bounded torque produces an $O(T_c)$ angular impulse. Converting it to ball impulse requires the system Jacobian and constraints, not an arbitrary division by a club length.
+
+In an initially relaxed lumped spring, a finite collision-induced velocity change gives an incremental displacement $O(T_c)$. Spring force is then $O(kT_c)$ and its accumulated impulse is $O(kT_c^2)$. This is the restricted origin of the observed quadratic trend in the Tools fixture. A damper driven by an $O(1)$ velocity change instead gives an $O(cT_c)$ impulse; pre-existing spring force also contributes $O(T_c)$. A rigid constraint is a different, singular limit. Varying contact stiffness while keeping contact damping fixed also changes restitution. Therefore a fitted quadratic trend is not a law for every grip, shaft, load history and collision law.
+
+Useful dimensionless comparisons include $k_sT_c^2/m_h$, $c_sT_c/m_h$, $\omega_jT_c$, branch-specific round-trip time divided by $T_c$, and shaft-to-contact dynamic impedance. Report their ranges with the quantities held fixed.
+
+### Two Other Corrections to the Former Argument
+
+The earlier rigid-arm example gives
+
+$$
+\frac{(4.5\,\mathrm{kg})(0.65\,\mathrm m)^2/3}{(1.8\,\mathrm m)^2}
+=0.1956\,\mathrm{kg},
+$$
+
+not 7.5 g. This is the arm contribution for that artificial common-pivot geometry; a real articulated assembly needs its actual mass matrix. A shaft segment not spanning the whole pivot-to-tip radius also needs its actual parallel-axis contribution. Neither calculation supplies a universal rigid-shaft upper bound. Prestored elastic energy, contact dynamics, resonance and different boundary conditions can invalidate an assumed monotone ordering with stiffness.
+
+Force, impulse and duration must also agree. A half-sine pulse satisfies $J=2F_{\max}T_c/\pi$. Choosing $J=3$ N s and $T_c=450$ microseconds gives $F_{\max}=10.47$ kN. These are illustrative consistent inputs, not measured peak-force limits.
+
+## Dynamic Stiffening and Applied Wrenches {#sec-impact-prestress}
+
+A tensile load increases transverse restoring force geometrically; it need not change the material's Young modulus. A small-deflection beam under a declared axial tension $N(s,t)$ has the structural terms
+
+$$
+\mu w_{tt}+(EIw_{ss})_{ss}-(Nw_s)_s=f_\perp.
+$$ {#eq-impact-tension-beam}
+
+For admissible displacement $w$, the tensile geometric energy is $\tfrac12\int_0^L Nw_s^2\,ds$. The finite-element geometric stiffness is
+
+$$
+(\mathbf K_g)_{ij}=\int_0^L N(s)\phi_i'(s)\phi_j'(s)\,ds.
+$$
+
+For nonnegative tension this contribution is positive semidefinite. Compression changes the sign and can lead to instability. Natural frequencies follow the loaded eigenproblem, with the same head inertia and grip boundary used in the dynamics; a scalar factor $1+N/P_{cr}$ is only a declared reduction.
+
+In a straight radial beam rotating steadily with angular speed $\Omega$, root offset $R_0$, tip mass $m_h$, and no additional axial loads,
+
+$$
+N(s)=m_h\Omega^2(R_0+L)+\int_s^L\mu(\xi)\Omega^2(R_0+\xi)\,d\xi.
+$$
+
+This is a useful verification case, not the tension distribution of every three-dimensional golf swing. As an illustrative scale, $m_h=0.2$ kg, $\Omega=40$ rad/s and tip radius 1.2 m give a 384 N tip centrifugal load. Determine the actual time-dependent force/moment field from the swing, including head CG eccentricity, distributed shaft inertia, base acceleration and constraints.
+
+In coordinates rotating with the shaft base,
+
+$$
+\mathbf a=\mathbf a_0+\mathbf R\left[
+\ddot{\boldsymbol\rho}+2\boldsymbol\Omega\times\dot{\boldsymbol\rho}
++\dot{\boldsymbol\Omega}\times\boldsymbol\rho
++\boldsymbol\Omega\times(\boldsymbol\Omega\times\boldsymbol\rho)\right].
+$$
+
+Coriolis terms depend on motion relative to the rotating frame. In an appropriate linearized conservative system they produce a skew-symmetric gyroscopic matrix, not material stiffness or viscous damping. The identity $\dot{\boldsymbol\eta}^T\mathbf G\dot{\boldsymbol\eta}=0$ for $\mathbf G^T=-\mathbf G$ is an energy test. Centrifugal prestress can stiffen bending, while other rotational terms can soften or split modes depending on geometry. Derive all terms from one kinetic/potential-energy formulation to avoid counting rotation twice. Rotating-beam literature supplies mathematical comparison cases, not golf calibration [@rodrigues2024spinning].
+
+For a reduced model about a declared loaded trajectory, a schematic form is
+
+$$
+\mathbf M\ddot{\boldsymbol\eta}+(\mathbf C+\mathbf G)\dot{\boldsymbol\eta}
++(\mathbf K_e+\mathbf K_g+\mathbf K_{\rm rot})\boldsymbol\eta
+=\mathbf B_c\mathbf F_c+\mathbf B_g\mathbf w_g+\mathbf f_{\rm base}.
+$$ {#eq-impact-modal-system}
+
+A time-varying reduction also needs its basis-derivative terms. Head shell/face modes, shaft axial/bending/torsional modes, and the hosel connection must be retained or condensed with demonstrated bandwidth accuracy. Contact forces and grip wrenches act at specified positions; a wrench shifted to another origin obeys $\mathbf M_O=\mathbf M_P+(\mathbf p_P-\mathbf p_O)\times\mathbf F$.
+
+For each grip, power is $P_g=\mathbf F_g\cdot\mathbf v_g+\mathbf M_g\cdot\boldsymbol\omega_g$ using colocated conjugate quantities. Compare ongoing wrench application with preloaded strain energy and delivered motion separately. Setting motor torque to zero does not erase stored elastic energy, damping or an already established constraint. Under [the notation contract](../NOTATION.md), a zero-torque counterfactual sets only the declared controls to zero; it must retain the specified plant and initial state.
+
+A mechanically meaningful energy audit is
+
+$$
+E_{\rm mech}(t)+E_{\rm diss}(0,t)+E_{\rm rad}(0,t)
+=E_{\rm mech}(0)+\int_0^t P_{\rm boundary}\,dt,
+$$
+
+with every retained energy and boundary defined. If acoustic back-reaction is neglected, do not subtract estimated acoustic energy a second time from an independently damped structural simulation. The approximation and its error must be declared.
+
+{{< include _includes/impact-acoustics.qmd >}}
+
+{{< include _includes/impact-research-program.qmd >}}
 
 ::: {.callout-note}
 ## Related Concepts
