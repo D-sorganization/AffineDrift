@@ -1091,3 +1091,15 @@ Final bibliography-only QA passes: all five web views and both changed print bib
 
 
 Lagrangian PR #4263 is pushed at 4ad9bc7ec2d79cd670e5e0f44614ea85e1142465. The one correction commit fbc65f64 was replayed onto protected configuration squash 0d3db910 before first push; the full tree remained 01616c1e0ee4ed0467f6fb5adfd9b9151cbe16ba. Pre-commit and pre-push hooks, including isolated mypy and unit tests, passed. No force push or protection bypass was used. Protected checks and publication are pending.
+
+
+Lagrangian PR #4263 passed all protected checks and merged as e2fa633bfd2012eaaaa3332aca1f2da9870ba0f4. Deployment 34176729086 completed successfully. Issue #4261 is closed and needs no lease renewal.
+
+
+## Complete Counterfactual Chapter Review — Issue #4264
+
+Both original editions were read in full (8,813/7,753 inventory words), including all eight exercises. The correction replaces the false implications from a large drift ratio to negligible control, contraction or optimal effort with explicit hypotheses, scalar counterexamples and a complete finite-horizon/event sensitivity treatment. It reconciles gravity and Coriolis signs, motor coordinates, massless-rod endpoint-mass geometry, energy/work accounting, constrained zero-velocity resets and identifiability. Print and web now share independently checked numerical trajectories. The golf synthesis links preparation, current mechanical state, passive transport, remaining actuator authority, impact timing and uncertainty without claiming empirical coaching validation.
+
+The complete derivations, all eight exercise solutions, primary-source reading boundaries, TDD failures and repair decisions are in counterfactual-review.md. Full root: 4,521 passed, 29 skipped, 129 deselected, 59 warnings, 251.13 seconds; source coverage 92.6787%. A later physical-constant rename and two additional web-table tests pass in the final 26-case focused run; they are not part of that earlier root count. No production module changes. Mypy 82, static 34, title 625, content 128/four skips and targeted quality checks pass. The 148-page PDF is rebuilt; every chapter page and relevant contents/index/bibliography page has been inspected. All 114 section views and 77 final browser targets were inspected; the 14-view verifier passes with no serious/critical axe finding. All 58 legacy web IDs and original print labels/index terms remain, with obsolete theorem links pointing to corrected treatments.
+
+Branch fix/4264-counterfactual-rigor begins after bd2f767e, the prior Lagrangian PR's metadata head. Replay only this correction's new commit(s) onto protected squash e2fa633b before first push, without a force push. No staging/commit/push while any local test, render or browser QA job remains running. The 405-source corpus remains unfinished; next longest unaudited sources include state-space (8,726 words), recursive algorithms (8,721) and exponential coordinates (8,720).

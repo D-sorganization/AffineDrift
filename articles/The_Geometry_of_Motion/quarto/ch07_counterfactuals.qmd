@@ -1,1316 +1,720 @@
 ---
-title: "Forward Dynamics, Counterfactuals, and Drift"
+pagetitle: "Forward Dynamics, Counterfactuals, and Drift"
+description: "How torque removal, geometry, energy, finite-horizon control and impact events connect in golf and humanoid models."
+css:
+  - ../../../css/machine-learning.css
+  - ../../../css/articulated-body.css
+bibliography: ../geometry_of_motion.bib
 ---
 
-\label{ch:counterfactuals}
+# Forward Dynamics, Counterfactuals, and Drift
+[]{#ch-counterfactuals}
 
+A moving club carries the consequences of everything that brought it to its present state. Removing a torque does not remove that history. Position, velocity, shaft deformation, muscle activation and contact conditions determine what happens next, together with the inputs that remain. A counterfactual simulation asks a precise question about changing one part of that continuation. It can show how a specified intervention changes an acceleration, a trajectory, an energy balance or an impact condition. Those are different measurements, and their distinctions are essential to understanding a golf swing.
 
-::: {.callout-note}
+The useful design question is how to establish a state from which the desired outcome requires manageable, feasible corrections. Passive dynamics can help carry a movement toward that outcome. They can also carry it away. This chapter develops the calculations needed to distinguish these possibilities, using a completely specified two-link example before returning to golf and humanoid modeling. No population-level claim about muscular effort follows from the algebra alone.
 
-In a golf swing, a robot arm movement, or a spacecraft maneuver, how much of the motion
-is "physics doing its thing" and how much is the controller actively steering? This
-chapter develops tools to answer that question rigorously: forward dynamics models that
-separate passive drift from active control, and thought experiments (counterfactuals) that
-ask "What if the input were removed?"
+## Defining the Intervention
 
-:::
+[]{#forward-dynamics-as-a-thought-experiment-engine}
 
-::: {.callout-note}
+[]{#mathematical-justification}
 
-A counterfactual is a "what if?" question. **What if the golfer stopped applying
-torque mid-swing?** The club would not freeze in place---it would keep moving, driven
-by momentum, gravity, and centrifugal force. That coasting trajectory is the
-"zero-torque counterfactual," and it reveals how much of the motion is *chosen*
-versus *inevitable*.
+[]{#the-zero-torque-counterfactual-ztcf-family}
 
-This is the deepest question in biomechanics: separating what the athlete *does*
-from what physics *gives for free*. A skilled golfer arranges the swing so that the
-"free" part (drift) does most of the work at the moment of impact. The counterfactual
-framework makes this intuition precise and quantitative.
-:::
+[]{#the-causal-structure-of-control-affine-systems}
+[]{#sec-ch7:intervention}
 
+### Control-Affine Dynamics and the Meaning of Zero
+[]{#def-ch7:drift}
+[]{#def-ch7:input}
+For a declared state $x$ and input $u$, write
+[]{#eq-ch7:affine}
 
-## The Causal Structure of Control-Affine Systems
+$$
+\dot x=F(x,u)=f(x)+G(x)u.
+$$
 
+Here $f(x)=F(x,0)$ is the drift and $G(x)u$ is the same-state input contribution. At a fixed state, the dependence on $u$ is affine. Both contributions obey physics; the terminology does not partition the motion into voluntary and inevitable parts. If the physical model contains explicit time dependence, write $f(x,t)$ and $G(x,t)$, or augment the state with a clock. We use autonomous notation where that is adequate.
 
-The control-affine decomposition from Chapter~\ref{ch:superposition},
-\begin{equation}
-\dot{\x} = \underbrace{f(\x)}_{\text{Drift}} + \underbrace{G(\x)\uvec}_{\text{Input}},
-\label{eq:ch7:affine}
-\end{equation}
-is not merely a mathematical convenience. It encodes a *causal structure*:
+The identity
+[]{#eq-ch7:drift-invariance}
 
+$$
+\frac{\partial f}{\partial u}=0
+$$
 
-::: {.callout-note}
+states a property of this representation. It is not evidence that observational data identify the physical effect of removing an actuator. Indeed, the input change $u=\alpha(x)+\beta(x)w$, with invertible $\beta$, gives drift $f+G\alpha$ and input matrix $G\beta$. Zero $w$ is then the physical policy $u=\alpha(x)$, not zero $u$. A control coordinate is part of the intervention definition.
 
-The **drift vector field** $f(\x)$ is the instantaneous state derivative when all
-active inputs are zero: $\dot{\x}\big|_{\uvec=0} = f(\x)$. It captures the passive dynamics
-arising from accumulated state: inertia (velocity-dependent forces), gravity (configuration-dependent),
-elastic storage (deformation-dependent), and dissipation.
+In an ideal torque-actuated rigid-body model, setting a joint motor torque to zero is well defined. In a muscle-driven model, zero neural excitation, zero activation and zero muscle force are different interventions. Existing activation can evolve after excitation is removed; elastic tissue and the shaft can retain stored energy. A prescribed grip trajectory can continue to supply boundary power even when some internal joint torques are set to zero. State which channel is removed and which dynamics, supports and inputs remain. The word “passive” should only be used with that declaration.
 
-:::
+### Four Counterfactual Objects
+[]{#def-ch7:ZTCF}
+The pointwise zero-torque counterfactual (ZTCF) evaluates $f(x(t))$ at the actual state. A stitched ZTCF collects such evaluations along the actual trajectory. It is a diagnostic field sampled on that trajectory, not generally a trajectory of $f$.
 
+A forward ZTCF starts from one specified state and integrates zero declared input:
+[]{#eq-ch7:ZTCF}
 
-::: {.callout-note}
+$$
+\dot x^{(0)}=f(x^{(0)}),\qquad x^{(0)}(t_b)=x(t_b).
+$$
+[]{#eq-ch7:ivp}
+A branched ZTCF repeats this forward experiment at different branch times $t_b$. Every branch inherits the actual history only up to its own start. Its subsequent state must be solved independently. Plotting several branch results at a common horizon answers a different question from restarting the branch at every plotted sample.
 
-The **input vector field** $G(\x)\uvec$ is the additional contribution from active
-control. Because this enters linearly in $\uvec$ at fixed $\x$, its effect is instantaneous
-and separable from the drift.
+These definitions permit exact same-state input recovery:
+[]{#eq-ch7:input-recovery}
 
-:::
+$$
+\dot x(t)-f(x(t))=G(x(t))u(t).
+$$
 
+But with $\Delta x=x-x^{(0)}$, a forward branch obeys
+[]{#eq-ch7:branch-difference}
 
-The crucial structural property is **drift invariance**:
-\begin{equation}
-\frac{\partial f(\x)}{\partial \uvec} = 0.
-\label{eq:ch7:drift-invariance}
-\end{equation}
-The drift does not depend on the current input. This is the differential version of the
-superposition principle: the passive dynamics are a fixed "background" on which the
-input is superposed.
+$$
+\Delta\dot x=f(x)-f(x^{(0)})+G(x)u.
+$$
 
+The drift changes as the two states separate. Integrating the same-state input contribution alone therefore does not recover their separation. Removing several actuators in different orders can give different marginal trajectory effects; a sum of marginal attributions requires an explicit convention for distributing those interactions.
 
-## The Zero-Torque Counterfactual (ZTCF) Family
+For smooth mechanical dynamics $\dot q=v$, $\dot v=a_0(q,v)+B_a(q,v)u$, both branches have the same position and velocity at $t_b$. For a right-continuous constant input near that time,
+[]{#eq-ch7:short-horizon}
 
+$$
+\begin{aligned}
+\Delta v(t_b+h)&=B_a(x_b)u_bh+O(h^2),\\
+\Delta q(t_b+h)&=\tfrac12 B_a(x_b)u_bh^2+O(h^3).
+\end{aligned}
+$$
 
-::: {.callout-note}
+A small short-horizon position gap is partly a consequence of this second-order onset. It does not establish negligible acceleration, velocity change or impact error. A motor can influence a sensitive output while barely changing a coarse plot of the whole trajectory.
 
-\label{def:ch7:ZTCF}
-Given a system in state $\x_0$ at time $t_0$, the **forward Zero-Torque Counterfactual**
-(ZTCF) trajectory is $\x^{(0)}(t)$ obtained by setting the declared applied control $\uvec\equiv 0$ for all
-$t\geq t_0$:
-\begin{equation}
-\dot{\x}^{(0)} = f\!\left(\x^{(0)}\right), \quad \x^{(0)}(t_0) = \x_0.
-\label{eq:ch7:ZTCF}
-\end{equation}
-This is the integral curve of the drift vector field starting from the current state.
+## When a Counterfactual Exists
 
-:::
+[]{#the-flow-map-and-properties}
 
+[]{#mathematical-foundations-existence-uniqueness-and-smoothness}
+[]{#sec-ch7:existence}
 
-The forward ZTCF trajectory answers the question: *What would the declared effective
-plant do if its declared applied-control channel were removed at this instant?* This
-does not imply zero muscle activation or removal of retained passive impedance.
+### Local Solutions and Their Domain
+[]{#thm-ch7:picard-lindelof}
+On an open domain, a locally Lipschitz drift has a unique local solution through each initial state. A continuously differentiable drift satisfies that local regularity requirement. Its solution extends to a maximal interval while it remains in the domain and does not escape every compact subset. Smoothness alone does not guarantee an arbitrarily long simulation: $\dot x=x^2$ has solution $x(t)=x_0/(1-x_0t)$ and blows up at $1/x_0$ for $x_0>0$.
 
-::: {.callout-important}
-## Implementation Note: Pointwise vs. Trajectory Semantics
+[]{#cor-ch7:ZTCF-smooth}
+For $f\in C^k$, $k\geq1$, the local flow is $C^k$ in the initial state; a trajectory is $C^{k+1}$ in time. Continuity alone is insufficient for uniqueness. Contact switching, frictional transitions, actuator saturation and impacts may require piecewise-smooth or differential-inclusion models instead of this smooth theorem.
 
-The ZTCF family contains four objects that must not be conflated: a **pointwise ZTCF sample** evaluates drift at one achieved state; a **stitched pointwise ZTCF trace** collects such samples without integrating them; a **forward ZTCF trajectory** integrates drift from a specified initial state; and an **achieved-state branched ZTCF trajectory** switches the declared control to zero at a branch time and integrates from the achieved state. The retained effective-plant terms, loads, contact mode, parameters, and horizon must be declared.
-:::
+### Flow Maps and Linearized Propagation
 
-For a mechanical system with state $\x=(\q,\dot{\q})$, the ZTCF represents the "passive
-shadow"---the motion that emerges purely from current velocities, gravity, elastic
-forces, and inertial coupling, with zero active muscular or motor effort.
+[]{#prop-ch7:flow-properties}
+Write $\phi_\tau(x_b)$ for the autonomous zero-input flow over elapsed time $\tau$. Then
+[]{#eq-ch7:flow-map}
 
+$$
+\phi_0=\mathrm{id},\qquad
+\phi_{\tau+s}(x)=\phi_\tau(\phi_s(x))
+$$
 
-::: {.callout-note}
-## Intuition
+where all expressions are defined. Negative-time inversion is also local; a global group needs a complete vector field. Prescribed time-dependent inputs instead require a two-time evolution map.
 
-The ZTCF is like releasing the steering wheel of a car on a hilly road. The car continues
-to move---driven by its momentum and the terrain---but without any active guidance.
-Comparing the actual trajectory to the ZTCF reveals exactly how much the "driver"
-(controller) contributed at each instant.
-:::
+The state-transition matrix (STM) of the drift solves
+[]{#eq-ch7:variational}
 
+$$
+\dot\Phi_0(t,t_b)=D f(x^{(0)}(t))\Phi_0(t,t_b),\qquad
+\Phi_0(t_b,t_b)=I.
+$$
 
 
-### Mathematical Foundations: Existence, Uniqueness, and Smoothness
+It gives first-order initial-state sensitivity, not the exact difference between finite perturbations. Generally it is a time-ordered product of local propagators, not the exponential of an averaged Jacobian. Eigenvalues at one instant do not determine its singular values or finite-time amplification. This distinction becomes decisive when an intervention changes both the configuration and the remaining time to impact.
 
+## Mechanical Drift, Velocity Resets, and Constraints
 
-The well-posedness of the ZTCF rests on classical existence and uniqueness theorems for
-ordinary differential equations. We formally state the conditions here.
+[]{#drift-components}
 
-::: {.theorem}
-**Picard--Lindelöf Existence and Uniqueness**
+[]{#superposition-of-drift-components}
 
-\label{thm:ch7:picard-lindelof}
-Let $f:\R^n\to\R^n$ be a vector field that is continuously differentiable (i.e., $f\in C^1$).
-Then for any initial condition $\x_0\in\R^n$, there exists a unique, continuously
-differentiable trajectory $\x^{(0)}(t)$ satisfying the initial value problem
-\begin{equation}
-\dot{\x}^{(0)} = f(\x^{(0)}), \quad \x^{(0)}(t_0) = \x_0
-\label{eq:ch7:ivp}
-\end{equation}
-defined on some open interval $(t_0-\epsilon, t_0+\epsilon)$ for some $\epsilon>0$.
-:::
+[]{#decomposition-of-the-drift-for-mechanical-systems}
 
-\noindent**Proof sketch:** The Picard--Lindelöf theorem follows from the contraction
-mapping principle. Define the sequence of successive approximations
-\begin{equation}
-\x^{(k+1)}(t) = \x_0 + \int_{t_0}^{t} f(\x^{(k)}(s))\,\mathrm{d}s,
-\end{equation}
-starting with $\x^{(0)}(t)=\x_0$. If $f$ is Lipschitz continuous (which holds under $C^1$),
-this sequence converges uniformly to the unique solution on a sufficiently small interval.
+[]{#the-zero-velocity-counterfactual-zvcf}
+[]{#sec-ch7:mechanics}
 
+### A Consistent Force Convention
+For autonomous natural mechanics with independent coordinates, use
+[]{#eq-ch7:drift-decomposition}
 
-::: {.callout-important}
-## Smoothness of ZTCF
+$$
+\begin{aligned}
+M(q)\dot v+C(q,v)v+g_q(q)+d(q,v)&=B(q)u,\\
+g_q:=\nabla_q V,\qquad a_0&=-M^{-1}(Cv+g_q+d),\\
+B_a&=M^{-1}B.
+\end{aligned}
+$$
 
-\label{cor:ch7:ZTCF-smooth}
-If $f\in C^k$ (i.e., $f$ is $k$ times continuously differentiable), then the ZTCF trajectory
-$\x^{(0)}(t)$ is also $C^k$ in both $t$ and the initial condition $\x_0$.
-:::
+Assume $M$ is positive-definite on the coordinate domain. The holding-force term $g_q$ is on the left; gravity's applied generalized force is $-g_q$. If $V$ includes springs, $g_q$ includes elastic forces as well. The dissipative term $d$ is on the left and has $v^Td\geq0$ for a passive damper. Forces excluded from this equation, such as a moving boundary's reaction or prescribed aerodynamic load, must be introduced before calling it a model of a particular swing.
 
+At a fixed state, multiplying by $M^{-1}$ is linear. For the stated force partition this yields
+[]{#eq-ch7:drift-components}
 
-This means that if the drift is smooth (which it is for mechanical systems with smooth
-mass matrices and smooth potential energy functions), then the ZTCF is smooth. This
-justifies our use of ZTCF trajectories in subsequent numerical and analytical work.
+$$
+a_0=a_{\mathrm{grav}}+a_{\mathrm{cor}}+a_{\mathrm{damp}},\qquad
+a_{\mathrm{grav}}=-M^{-1}g_q,\quad
+a_{\mathrm{cor}}=-M^{-1}Cv,\quad
+a_{\mathrm{damp}}=-M^{-1}d.
+$$
+[]{#eq-ch7:a-grav}
+[]{#eq-ch7:a-cor}
+[]{#tab-ch7:drift-decomposition}
+[]{#eq-ch7:drift-full}
+[]{#eq-ch7:drift-grav}
+[]{#eq-ch7:drift-cor}
+Here “grav” means gravity alone only when $V$ contains only gravitational potential. This is an acceleration decomposition in declared coordinates, not a unique partition of energy transferred between bodies. Individual entries of $C$ are coordinate dependent, and $C$ itself need not be the unique matrix factor of its bias vector $Cv$.
 
+### What a Zero-Velocity Counterfactual Removes
+[]{#def-ch7:ZVCF}
+A pointwise zero-velocity counterfactual (ZVCF) replaces the velocity by zero at fixed configuration and specified internal states. In the simple model above, with $C(q,0)0=0$ and $d(q,0)=0$, the zero-input version is
+[]{#eq-ch7:ZVCF}
 
-### The Flow Map and Properties
+$$
+a_{\mathrm{ZVCF}}=a_0(q,0)=-M(q)^{-1}g_q(q).
+$$
 
+A control-preserved velocity reset instead gives $a(q,0,u)=a_0(q,0)+B_a(q,0)u$. Label which version is used. “Zero velocity” is not “static equilibrium”: this acceleration can be nonzero.
 
-For systems where $f$ is defined on all of $\R^n$ or an open domain $\mathcal{X}$, we define
-the **flow map** (or **solution map**):
-\begin{equation}
-\phi_t^f(\x_0) := \x^{(0)}(t;\x_0),
-\label{eq:ch7:flow-map}
-\end{equation}
-where $\x^{(0)}(t;\x_0)$ is the solution of the IVP~\eqref{eq:ch7:ivp} at time $t$,
-starting from $\x_0$ at $t=t_0$ (assuming $t_0=0$ for notational simplicity).
+In this natural mechanical model,
+[]{#eq-ch7:velocity-contribution}
 
-The flow map has the following properties:
+$$
+a_0(q,v)-a_0(q,0)=-M^{-1}\{C(q,v)v+d(q,v)-d(q,0)\}.
+$$
 
-::: {.proposition}
-**Properties of the Flow Map**
+Thus the difference includes damping whenever it is present. More general velocity-dependent forces, actuator characteristics and internal states add their own terms. A reset may also change kinetic energy discontinuously; it is a diagnostic intervention, not a free physical operation.
 
-\label{prop:ch7:flow-properties}
-Suppose $f\in C^1(\R^n)$ and the solutions of $\dot{\x} = f(\x)$ exist for all time. Then:
-1. **Initial condition:** $\phi_0^f(\x_0) = \x_0$.
-2. **Composition (group property):** $\phi_{t_1+t_2}^f(\x_0) = \phi_{t_1}^f(\phi_{t_2}^f(\x_0))$.
-3. **Inverse:** $\phi_{-t}^f(\phi_t^f(\x_0)) = \x_0$, so $\phi_t^f$ is a diffeomorphism (invertible and smooth both ways).
-4. **Differentiability with respect to initial condition:**
-   $\frac{\partial \phi_t^f(\x_0)}{\partial \x_0}$ is the solution of the **variational equation**
-   \begin{equation}
-   \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \phi_t^f}{\partial \x_0}\right) =
-   \frac{\partial f}{\partial\x}\bigg|_{\x=\phi_t^f(\x_0)} \cdot \frac{\partial \phi_t^f}{\partial \x_0},
-   \quad
-   \frac{\partial \phi_0^f}{\partial \x_0} = I.
-   \label{eq:ch7:variational}
-   \end{equation}
-:::
+### Contact Reactions Also Respond to Input
+Suppose a fixed smooth contact mode imposes $A\dot v=-b$ and the force equation is $M\dot v=Bu-h+A^T\lambda$, with $h=Cv+g_q+d$. For independent constraint rows, define
+[]{#eq-ch7:constrained-fields}
 
-The variational equation~\eqref{eq:ch7:variational} is crucial: it shows how perturbations
-to the initial state propagate along the ZTCF trajectory. The Jacobian matrix
-$\frac{\partial \phi_t^f}{\partial \x_0}$ grows or shrinks depending on the eigenvalues of
-the drift Jacobian $\frac{\partial f}{\partial\x}$ along the trajectory. We will return to
-this when analyzing contraction.
+$$
+\begin{aligned}
+\Lambda&=(AM^{-1}A^T)^{-1},\\
+P&=I-M^{-1}A^T\Lambda A,\\
+a_0^c&=-PM^{-1}h-M^{-1}A^T\Lambda b,\\
+B_a^c&=PM^{-1}B.
+\end{aligned}
+$$
 
+These expressions follow by solving for $\lambda=-\Lambda\{b+AM^{-1}(Bu-h)\}$. A contact reaction therefore generally changes with $u$; freezing the actual reaction while deleting torque defines a different, usually inconsistent experiment.
 
-### Mathematical Justification
+For a moving holonomic constraint $\varphi(q,t)=0$, admissible velocities satisfy $Av+\varphi_t=0$. Setting $v=0$ can violate this relation. Specify an admissible reset or limit the ZVCF to a formal off-manifold diagnostic. Unilateral contact additionally requires valid force signs and friction conditions; if a branch lifts off or slips, switch models and check the new mode. A fixed-base reduced model can have no explicit multipliers while still representing physical constraints. A golfer's ground and grip conditions cannot be inferred from the appearance of the reduced equations.
 
+## Measuring Control Authority
 
-The ZTCF is well-defined precisely because of drift invariance~\eqref{eq:ch7:drift-invariance}
-and the input superposition principle (Theorem~\ref{thm:ch3:superposition}). Because
-$f(\x)$ does not depend on $\uvec$, setting $\uvec=0$ does not alter the drift field
-itself---it only removes the input contribution. The subtraction
-\begin{equation}
-G(\x)\uvec = \dot{\x} - f(\x)
-\label{eq:ch7:input-recovery}
-\end{equation}
-exactly recovers the active input contribution at each instant.
+[]{#structural-argument-why-active-torque-is-negligible-at-impact}
 
+[]{#driftcontrol-ratio-evolution}
 
-## The Zero Velocity Counterfactual (ZVCF)
+[]{#velocity-scaling}
 
+[]{#the-driftcontrol-ratio}
 
-::: {.callout-note}
+[]{#magnitude-scaling}
+[]{#sec-ch7:authority}
 
-\label{def:ch7:ZVCF}
-The **Zero Velocity Counterfactual** (ZVCF) evaluates the drift at the current
-configuration $\q$ and declared internal state but with velocity and declared control set to zero:
-\begin{equation}
-a_{\text{ZVCF}} := -M(\q)^{-1}h(\q,0,z_0;p),
-\qquad \uvec=0.
-\label{eq:ch7:ZVCF}
-\end{equation}
-This instantaneous evaluation retains configuration-dependent gravity, elastic
-preloads, and other declared loads while excluding velocity-dependent effects.
+### A Drift-Control Ratio With Declared Units
+[]{#def-ch7:DCR}
+Choose a positive-definite acceleration weight $W$, with units or normalization appropriate to the coordinates, and a compact feasible input set $\mathcal U(x)$ containing zero. Define
+[]{#eq-ch7:DCR}
 
-::: {.callout-important}
-## Zero-Velocity Control-Preserved Evaluation
+$$
+\begin{aligned}
+c_W(x)&=\max_{u\in\mathcal U(x)}\|B_a(x)u\|_W,\\
+\rho_W(x)&=\frac{\|a_0(x)\|_W}{c_W(x)},\qquad
+\|z\|_W=(z^TWz)^{1/2}.
+\end{aligned}
+$$
 
-A different diagnostic may evaluate $M(q)^{-1}(u-h(q,0,z_0;p))$ while preserving an applied control. It must be named a **zero-velocity control-preserved evaluation**, not ZVCF. This distinction keeps configuration-dependent drift separate from realized input.
-:::
+Use the constrained fields when needed. If capacity is zero and drift is nonzero, record infinite ratio with zero available capacity. If both vanish, the ratio is undefined. A numerical regularizer can help plotting but changes the statistic and must carry a declared scale. Do not hide zero authority behind an arbitrary dimensionless epsilon.
 
-:::
+A realized-input ratio uses $\|B_a u_{\mathrm{actual}}\|_W$ instead. It answers whether the current command contributes much acceleration, not whether the actuator has unused capacity. A component ratio uses one specified component and ignores orthogonal components. Mixing those definitions within one argument invalidates the comparison. Likewise, a norm of the full mechanical state drift mixes velocity and acceleration unless suitable scales are supplied; it is not interchangeable with an acceleration ratio.
 
+### Why Speed Alone Does Not Decide the Ratio
+For natural mechanics, the Christoffel bias is homogeneous quadratic in $v$. At fixed configuration and velocity direction $w$,
+[]{#eq-ch7:DCR-scaling}
 
-The difference between the full drift and the ZVCF isolates velocity-dependent forces:
-\begin{equation}
-a_{\text{drift}} - a_{\text{ZVCF}} = -M(\q)^{-1}C(\q,\dot{\q})\dot{\q},
-\label{eq:ch7:velocity-contribution}
-\end{equation}
-which captures Coriolis, centrifugal, and gyroscopic effects. These are the forces that
-arise purely from the system's inertial memory---the history encoded in $\dot{\q}$.
+$$
+a_{\mathrm{cor}}(q,sw)=s^2a_{\mathrm{cor}}(q,w).
+$$
 
+With fixed positive finite actuator capacity, the ratio grows quadratically if this coefficient is nonzero and the remaining drift terms are lower order. If capacity also depends on speed, compare its growth explicitly; a capacity proportional to speed would reduce quadratic numerator growth to linear ratio growth. An $O(s^2)$ upper bound does not supply the nonzero lower bound required for that conclusion. Along an actual swing, configuration, velocity direction, actuator capacity and contact conditions all change.
 
-## Decomposition of the Drift for Mechanical Systems
+A fixed-length simple pendulum has $\ddot q=-(g/\ell)\sin q+u/(m\ell^2)$ and no quadratic angular drift at any speed. Its Cartesian radial acceleration does grow as $\ell\dot q^2$, but torque still changes the tangential acceleration by $u/(m\ell)$. The radial constraint force and tangential task direction are different. Angular acceleration has scale $\dot q^2$ or $g/\ell$; Cartesian centripetal acceleration has scale $v_{\mathrm{linear}}^2/\ell$. These quantities cannot be substituted without the kinematic mapping.
 
+### Direction, Cancellation, and Task Sensitivity
+A large norm ratio is especially uninformative when drift and useful control point in different directions. The system $\dot x=(1000,0)^T+(0,1)^Tu$ has drift ratio $1000$ for $|u|\leq1$, yet the task $y=x_2$ is controlled entirely by $u$. For mechanical acceleration, the corresponding directional capacity is the support function
+[]{#eq-ch7:directional-capacity}
 
-For mechanical systems without damping, the drift acceleration has a clean decomposition:
-\begin{equation}
-a_{\text{drift}} = -M(\q)^{-1}\left[C(\q,\dot{\q})\dot{\q} + \vec{g}(\q)\right].
-\label{eq:ch7:drift-decomposition}
-\end{equation}
+$$
+\sigma_{\mathcal U}(B_a^T\ell)=\max_{u\in\mathcal U}\ell^TB_a u.
+$$
 
-We can write this as a sum of two components:
-\label{eq:ch7:drift-components}
-\begin{align}
-a_{\text{grav}} &:= -M(\q)^{-1}\vec{g}(\q), \label{eq:ch7:a-grav}\\
-a_{\text{cor}} &:= -M(\q)^{-1}C(\q,\dot{\q})\dot{\q}, \label{eq:ch7:a-cor}
-\end{align}
+Here $\ell$ specifies a covector for the measured acceleration. Positive and negative capacities need not agree for asymmetric actuator bounds. Exact drift cancellation requires $-a_0\in B_a\mathcal U$. A useful residual is $\min_{u\in\mathcal U}\|a_0+B_a u\|_W$, which accounts for direction as well as magnitude.
 
-so that $a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}$.
+For a position task $y=h(q)$, acceleration is $\ddot y=D h\,\dot v+D^2h[v,v]$. The curvature term can be large even when joint acceleration is small. The actuator's same-state contribution is $D h B_a u$; assessing it requires the task map, not only $M^{-1}B$. For clubface orientation, use an appropriate local rotation error and its Jacobian rather than subtracting arbitrary Euler angles across a coordinate singularity.
 
+## Finite-Horizon and Impact Counterfactuals
 
-### Superposition of Drift Components
+[]{#single-actuator-failure}
 
+[]{#sensitivity-counterfactuals-detailed-mathematics}
 
-This decomposition is valid because $M(\q)^{-1}$ is a linear operator (in the sense that
-it acts linearly on vectors). Therefore:
-\begin{equation}
-M(\q)^{-1}\left[C(\q,\dot{\q})\dot{\q} + \vec{g}(\q)\right]
-= M(\q)^{-1}C(\q,\dot{\q})\dot{\q} + M(\q)^{-1}\vec{g}(\q),
-\end{equation}
-and the two contributions add exactly, with no interaction terms. This is a mechanical
-manifestation of superposition at the drift level.
+[]{#attribution-methodology-a-formal-procedure}
 
+[]{#sensitivity-counterfactuals}
 
-::: {.callout-note}
-## Intuition
+[]{#attribution-analysis}
+[]{#sec-ch7:horizon}
 
-**Gravitational acceleration** $a_{\text{grav}}$ represents the component of drift that
-pulls the system toward lower potential energy (e.g., a pendulum hanging downward). It
-depends only on the configuration $\q$, not on velocities.
+### Inputs Act Through the Remaining Trajectory
+Along a smooth nominal trajectory with prescribed input $u(t)$, let
+[]{#eq-ch7:nominal-jacobian}
 
-**Coriolis/centrifugal acceleration** $a_{\text{cor}}$ represents inertial effects that
-arise from the system's motion. For example, in a rotating coordinate frame, a moving object
-experiences fictitious forces. Here, these emerge from the kinetic energy structure encoded
-in $C(\q,\dot{\q})$.
-:::
+$$
+A(t)=D f(x(t))+\sum_j u_j(t)D G_j(x(t)).
+$$
 
+With no initial-state perturbation, the first-order response to a small input variation is
+[]{#eq-ch7:sensitivity-eq}
 
+$$
+\delta x(t_f)=\int_{t_b}^{t_f}\Phi(t_f,s)G(x(s))\delta u(s)\,ds,
+$$
+[]{#eq-ch7:actuator-failure}
+where $\dot\Phi=A\Phi$. For feedback $u=\pi(x,t)$ plus an added perturbation, include $G D_x\pi$ in $A$. A replayed command and a feedback controller that adapts to the branch are different experiments. A failed actuator can also change friction or electrical loading; its model must say whether it is free, braked or otherwise altered.
 
-### Magnitude Scaling
+For output $y=h(x(t_f))$, premultiply the integral by $D h(x(t_f))$. A pulse of amplitude $\delta u_b$ and duration $\Delta$ has leading response $D h\Phi(t_f,t_b)G(x_b)\delta u_b\Delta$. Changing a bounded input at one isolated time has zero effect on an ordinary ODE solution; an impulse is a different model. Singular values of a pulse-response matrix require input and output weights. For distributed inputs, the finite-horizon controllability Gramian measures an $L^2$-energy problem, not automatically peak-bounded physiological feasibility.
 
+One rigorous small-gap statement uses a Lipschitz bound $L$ for $f$ on a region containing both branches and a uniform bound $\|G(x(t))u(t)\|\leq\epsilon$. Gronwall's inequality gives
+[]{#eq-ch7:gap-bound}
 
-Because $a_{\text{grav}}$ is independent of velocity while $a_{\text{cor}} \propto \dot{\q}$,
-we have:
-\begin{align}
-\norm{a_{\text{grav}}} &\approx \text{const} \sim g \, (\text{gravitational acceleration scale}),\\
-\norm{a_{\text{cor}}} &\sim \dot{\q}^2 / L \quad (\text{for a system with length scale } L).
-\end{align}
+$$
+\|\Delta x(t_b+h)\|\leq
+\begin{cases}
+\epsilon(e^{Lh}-1)/L,&L>0,\\
+\epsilon h,&L=0.
+\end{cases}
+$$
 
-At low speeds, gravity dominates the drift. At high speeds, Coriolis dominates. This
-explains why a fast-swinging pendulum experiences primarily centrifugal effects, while a
-slowly tilting pendulum experiences primarily gravity.
+These are absolute bounds in a declared norm. A ratio with a large drift numerator supplies neither a small $\epsilon$ nor a small propagation factor. For a smooth output with Lipschitz constant $L_h$, multiply the state-gap bound by $L_h$. A finite removal of a large torque generally requires nonlinear branch integration; the linear sensitivity is an approximation to be checked by perturbation refinement.
 
+### Impact Is an Event, Not Merely a Clock Time
+Let impact be the transversal event $\psi(x(t_e),t_e)=0$. If $\delta x^-$ is the fixed-time pre-event perturbation, differentiation of the event equation yields
+[]{#eq-ch7:event-sensitivity}
 
-### Worked Decomposition Table: Double Pendulum Example
+$$
+\delta t_e=-\frac{D_x\psi\,\delta x^-}{\psi_t+D_x\psi F^-},\qquad
+\delta x_e=\delta x^-+F^-\delta t_e.
+$$
 
+For $y=h(x_e,t_e)$,
+[]{#eq-ch7:event-output}
 
-We will compute these components explicitly for the double pendulum in Section~\ref{sec:ch7:double-pendulum-full}.
-For now, we show a schematic table of how the decomposition looks at various states:
+$$
+\delta y=D_xh\,\delta x^-+(D_xh F^-+h_t)\delta t_e.
+$$
 
+A post-impact comparison also differentiates the reset law and propagates its resulting perturbation. The denominator must be nonzero; near grazing, event time can be highly sensitive, and a perturbation can change whether contact happens at all.
 
-| $q_1$ | $q_2$ | $\dot{q}_1$ | $\dot{q}_2$ | $a_{\text{grav,1}}$ | $a_{\text{cor,1}}$ | $a_{\text{drift,1}}$ |
-| --- | --- | --- | --- | --- | --- | --- |
-| $0$ | $0$ | $0$ | $0$ | (grav) | $0$ | (grav) |
-| $0$ | $0$ | $2$ | $0$ | (grav) | (small) | (grav+cor) |
-| $\pi/4$ | $\pi/6$ | $2$ | $-1$ | (smaller) | (significant) | (sum) |
+For the elementary motion $q(t)=vt$ toward $q=1$, the fixed-time derivative $\partial q/\partial v=t$ is nonzero. At the crossing event the position derivative is zero, while $dt_e/dv=-1/v^2$. This is why comparing clubhead positions at the nominal impact time can answer a different question from comparing clubface orientation and speed at each branch's own ball encounter. Both are legitimate when labeled.
 
+### A Reproducible Attribution Protocol
+[]{#alg-ch7:attribution}
+First define the output and tolerance: for example, pre-impact clubhead velocity and orientation at an explicit contact event. Specify the model, coordinates, internal states, contact law, input channels and feasible limits. Reconstruct the initial state and nominal input with uncertainty, checking that the forward model reproduces the measured motion over the relevant interval.
 
+Next run the declared branches. Record branch time, horizon, remaining command or feedback policy, solver tolerances and any mode changes. Evaluate pointwise acceleration contributions separately from forward trajectory gaps. Compare task errors, event times, actuator work and constraint residuals. Refine step size or tolerances and perturb uncertain parameters; check whether the conclusion survives those changes.
 
-## The Drift--Control Ratio
+Finally state the supported claim at its actual scope. A small modeled impact change under one torque deletion is evidence about that deletion from that state. It is not a measurement of muscle inactivity, the source of earlier energy, or how a different swing should be coached. An infeasible branch or a missed ball encounter is an outcome to report, not a reason to silently compare a different event.
 
+## Energy and Parameter Interventions
 
-::: {.callout-note}
+[]{#mass-redistribution}
 
-\label{def:ch7:DCR}
-At state $\x$, in a declared acceleration or task-projected space, the **Drift-Control
-Ratio (DCR)** is
-\begin{equation}
-\mathrm{DCR}_{W,\mathcal U}(\x) :=
-\frac{\norm{W a_{\mathrm{drift}}(\x)}}
-{\sup_{u\in\mathcal U(\x)}\norm{W B_a(\x)u}+\varepsilon}.
-\label{eq:ch7:DCR}
-\end{equation}
+[]{#gravity-modification}
 
-:::
+[]{#parameter-perturbation}
 
+[]{#energy-comparison-counterfactual}
 
-The drift--control ratio quantifies the *relative dominance* of passive versus
-active dynamics:
+[]{#control-energy-input}
 
-- $\rho \ll 1$: The system is "control-dominated." The controller can dictate
-  the motion. Linearization and feedback design are straightforward.
-- $\rho \approx 1$: Drift and control are comparable. The controller must work
-  with the passive dynamics, not against them.
-- $\rho \gg 1$: The system is "drift-dominated." Passive dynamics overwhelm
-  available control authority. The controller can steer but cannot fundamentally
-  alter the motion. This is the regime of high-speed underactuated systems.
+[]{#dissipative-drift-energy-decay}
 
+[]{#conservative-drift-energy-conservation}
 
-::: {.callout-warning}
-## Caution
+[]{#energy-of-the-ztcf}
 
-In drift-dominated regimes ($\rho\gg 1$), the mathematical fact that inputs enter
-linearly can be misleading. The *mechanism* is linear, but the *magnitude*
-of influence is tiny relative to the drift. Knowing that superposition holds exactly
-does not mean the controller has significant authority---it means we can precisely
-*quantify* how little authority remains.
-:::
+[]{#energy-interpretation-of-counterfactuals}
 
+[]{#sec-ch7:energy}
 
+### Energy Is a Balance Over a Boundary
+For the autonomous natural model with fixed ideal supports,
+[]{#eq-ch7:total-energy}
 
-### Velocity Scaling
+$$
+E=T+V=\tfrac12v^TM(q)v+V(q),\qquad
+\dot E=u^TB^Tv-\mathcal D,\quad \mathcal D=v^Td\geq0.
+$$
+[]{#eq-ch7:ZTCF-energy}
+[]{#eq-ch7:energy-conservation}
+[]{#eq-ch7:energy-dissipation}
+[]{#eq-ch7:dissipation-rate}
+[]{#eq-ch7:control-power}
+[]{#eq-ch7:energy-added}
+The identity $v^TCv=\tfrac12v^T\dot Mv$ cancels the coordinate-dependent inertial terms in total power. Motor torque is power-conjugate to $B^Tv$, which is not necessarily the vector of absolute segment angular rates. Moving supports, prescribed external loads and explicit time dependence require their corresponding power terms. At a stationary, no-slip ground contact, contact force can change momentum while the contact point has zero mechanical power.
 
+For zero input and no dissipation, $E^{(0)}$ is constant. With passive damping it is nonincreasing, not strictly decreasing at every instant. Conservation does not imply periodic oscillation: free translation, rotation and separatrix motion are counterexamples. Nor does conservation imply that all nearby trajectories contract.
 
-For mechanical systems, the drift scales quadratically with velocity (due to
-$C(\q,\dot{\q})\dot{\q}$ terms), while maximum torque is roughly constant. Therefore:
-\begin{equation}
-\rho \sim \frac{\dot{\q}^2}{\text{const}} \to \infty
-\quad\text{as } \norm{\dot{\q}}\to\infty.
-\label{eq:ch7:DCR-scaling}
-\end{equation}
+For actual and zero-input trajectories starting from the same state,
+[]{#eq-ch7:energy-difference}
 
-At high speeds, every mechanical system becomes drift-dominated. This is why elite
-athletes "ride the physics" in the fast phases of movement: their skill lies in
-*setting up* the state so that the passive drift naturally produces the desired
-outcome.
+$$
+E(t)-E^{(0)}(t)=\int_{t_b}^t u^TB^Tv\,ds
+-\int_{t_b}^t(\mathcal D-\mathcal D^{(0)})\,ds.
+$$
 
+Add the difference of boundary-power terms if present. The two branches usually dissipate different amounts because their states differ. Even in the conservative case, the gap measures signed net actuator work, not metabolic cost or the sum of positive work. Positive and negative actuator work can cancel while control remains consequential.
 
-## Forward Dynamics as a Thought Experiment Engine
+To infer energy received by an individual link, draw its boundary and evaluate interface wrench power using that body's interface velocity. Equal and opposite wrenches cancel in a whole-system balance only when their conjugate velocities agree, with relative motion and deformation accounted for. Off-diagonal mass-matrix entries alone do not identify which link receives the most energy. Prescribing torso deceleration also requires whatever forces and power enforce that prescription; the torso does not become a free source by being treated as an input trajectory.
 
+### Changing Gravity, Mass, or an Actuator
+Let a parameter $p$ enter the complete vector field $F(x,u,p)$. With fixed prescribed input, the parameter sensitivity $S=\partial x/\partial p$ satisfies
+[]{#eq-ch7:parameter-sensitivity}
 
-Forward dynamics simulation---integrating~\eqref{eq:ch7:affine} given $\x_0$ and
-$\uvec(t)$---becomes a powerful analytical tool when combined with counterfactuals:
+$$
+\dot S=F_xS+F_p,\qquad S(t_b)=\partial_p x_b.
+$$
+[]{#eq-ch7:gravity-counterfactual}
+[]{#eq-ch7:mass-redistribution}
+If the command depends explicitly on $p$, add $F_u u_p$; if it is feedback, use the closed-loop state derivative as well. Differentiating only the instantaneous inverse mass matrix misses the propagated state change.
 
+Changing gravity at a fixed configuration in a fixed mode can leave $B_a$ unchanged while changing $a_0$. It does not imply a linear superposition of the new trajectory and the old one. Changing mass or geometry can change $M,C,V,B$ and contact behavior together. Such parameter dependence does not destroy affinity in the input, but it changes the counterfactual model and requires recomputation. A local sensitivity is useful for small perturbations; a substantial equipment change needs a new finite simulation and a check of whether the same event sequence persists.
 
-### Attribution Analysis
+## Identifying Drift From Data
 
+[]{#practical-considerations}
 
-Given an observed trajectory $\x(t)$ with known input $\uvec(t)$:
-1. Compute the ZTCF from each time instant: "What would happen without input?"
-2. Compute the input contribution: $\Delta\dot{\x} = G(\x)\uvec$ at each instant.
-3. Decompose the drift into gravitational, Coriolis, and elastic components.
-4. Track the drift--control ratio $\rho(t)$ along the trajectory.
+[]{#connection-to-system-identification}
 
+[]{#identification-condition-input-variation}
 
-### Sensitivity Counterfactuals
+[]{#the-regression-approach}
 
+[]{#data-driven-drift-estimation}
+[]{#sec-ch7:data-driven}
 
-- **"What if actuator $j$ failed?"**: Set $u_j=0$ and re-simulate.
-  Because input enters linearly, the effect of removing one channel is exactly
-  $-g_j(\x)u_j$---no need to re-solve the full dynamics.
-- **"What if gravity changed?"**: Modify $\vec{g}(\q)$ in the drift and
-  re-simulate. This is a drift modification, not an input modification.
-- **"What if the mass distribution changed?"**: Modify $M(\q)$ and
-  recompute both drift and input matrices. This changes the superposition
-  structure itself.
+### The Separation Must Be Identifiable
+When the analytical model is uncertain, a chosen basis can represent $f$ and $G$ in a regression
+[]{#eq-ch7:regression}
 
+$$
+\dot x_k=\Theta(x_k,u_k)\theta+r_k.
+$$
 
-## Attribution Methodology: A Formal Procedure
+For a model constrained to be control-affine, include state features and state features multiplied by each input; do not insert arbitrary quadratic input terms and still call the result affine. A unique noiseless fit of unrestricted linear coefficients requires a full-column-rank stacked regressor. Practical estimation additionally needs adequate conditioning, representative states and a defensible model for residuals and measurement errors.
 
+Feedback data can conceal the distinction. If observations use only $u=\pi(x)$, then for any compatible matrix field $H(x)$,
+[]{#eq-ch7:identifiability}
 
-To systematically attribute motion to drift versus control, we propose a five-step
-procedure that can be implemented as an algorithm or protocol.
+$$
+\widetilde f=f+H\pi,\qquad \widetilde G=G-H
+$$
 
+produce the same observed vector field. Yet their zero-input predictions differ. Repeated or nearby states under varied inputs help distinguish the effects, and structural physical constraints can reduce the ambiguity. Exact state repetition is not necessary for every parametric model; assess the actual regression rank and experiment design. Persistent excitation is meaningful relative to the chosen regressors and the estimation theorem, not a generic assurance that an input happened to vary.
 
-::: {.callout-note}
-## Drift--Control Attribution Protocol
+### Noise, Validation, and Model Choice
+For independent position noise of variance $\sigma^2$, a forward-difference velocity estimate has noise variance $2\sigma^2/\Delta t^2$. Faster sampling alone can increase derivative noise. Smoothing, integral formulations or explicit measurement models can help, but their bias and time resolution must be assessed. Inverse-dynamics torques and differentiated kinematics can share errors, so an ordinary regression may suffer errors-in-variables and feedback correlation.
 
-- **Input:** Observed state trajectory $\x(t)$ for $t\in[0,T]$, input signal $\uvec(t)$,
-- system matrices $f(\x)$ and $G(\x)$, maximum input magnitude $\norm{\uvec_{\max}}$.
-- **Output:** Drift--control ratio history $\rho(t)$, input contribution $G(\x)\uvec(t)$,
-- drift contribution $f(\x(t))$, ZTCF trajectories at key time points.
-- **for** each time step $t_i$ in the trajectory **do**:
-- 1. **Record** state $\x(t_i)$ and input $\uvec(t_i)$.
-- 2. **Evaluate** drift $f(\x(t_i))$ and input contribution $G(\x(t_i))\uvec(t_i)$.
-- 3. **Compute ZTCF**: integrate $\dot{\x}^{(0)} = f(\x^{(0)})$ from $\x(t_i)$ for a short horizon (e.g., $0.2$ sec).
-- 4. **Compute drift--control ratio**:
-- \begin{equation*}
-- \rho(t_i) = \frac{\norm{f(\x(t_i))}}{\norm{G(\x(t_i))\uvec_{\max}}}.
-- \end{equation*}
-- 5. **Classify phase**: If $\rho(t_i) < 0.5$, mark as *control-dominated*;
-- if $0.5 \le \rho(t_i) \le 2$, mark as *transition*; if $\rho(t_i) > 2$, mark as *drift-dominated*.
-- **end for**
-:::
+Sparse identification with control fits a selected library of state and input features; Kaiser, Kutz and Brunton provide a concrete formulation and numerical demonstrations [@KaiserKutzBrunton2018]. Its usefulness depends on the library and data, and its reported model comparisons do not establish universal superiority. Linear ARX, state-space realization and DMD with control have different representation assumptions. Balanced truncation reduces an existing suitable model; it does not by itself identify a nonlinear biomechanical drift.
 
+Validate on withheld trajectories and input policies, including relevant zero-input or safely approximated interventions where evidence is available. Check energy and constraint residuals, report uncertainty, and distinguish interpolation from extrapolation into states absent from training. A compelling actual-trajectory fit is necessary for some uses but cannot alone validate an unobserved counterfactual. Treat the resulting golf interpretation as a model prediction until independent evidence supports that intervention.
 
-\noindent This protocol produces a complete picture of when the controller is actively
-steering versus when it is passively managing drift. In practice, the protocol is
-implemented as a post-hoc analysis tool: you have a recorded trajectory and input, and
-you run the protocol offline to understand the causal roles of drift and control.
+## Stability and Optimal Control Are Separate Questions
 
+[]{#drift-jacobian-and-eigenvalue-analysis}
 
-## Sensitivity Counterfactuals: Detailed Mathematics
+[]{#stability-without-control}
 
+[]{#minimal-intervention-in-drift-dominated-regimes}
 
-### Single Actuator Failure
+[]{#contraction-of-drift-via-lyapunov-methods}
 
+[]{#connection-to-contraction-and-optimal-control-detailed-proofs}
 
-Suppose actuator $j$ fails, so $u_j$ drops from its nominal value to zero. The change in
-state derivative is:
-\begin{equation}
-\Delta \dot{\x} := \dot{\x}|_{u_j=0} - \dot{\x}|_{\text{nominal}} = -g_j(\x) u_j,
-\label{eq:ch7:actuator-failure}
-\end{equation}
-where $g_j(\x)$ is the $j$-th column of $G(\x)$. This is exact because of the linearity
-of $G(\x)\uvec$ in $\uvec$. No re-solving of the dynamics is needed; the effect is
-instantaneous and quantifiable.
+[]{#proof-via-optimal-control}
 
+[]{#contraction-implies-low-control-authority}
 
-### Parameter Perturbation
+[]{#contraction-analysis-of-the-drift}
+[]{#sec-ch7:stability}
+[]{#prop-ch7:minimal-intervention}
+[]{#prop-ch7:ZTCF-stability}
 
 
-When a system parameter $p$ (e.g., a mass, length, or damping coefficient) changes, the
-effect propagates via the sensitivity equation. From Chapter~\ref{ch:sensitivity}, we have:
-\begin{equation}
-\frac{\partial \dot{\x}}{\partial p} = \frac{\partial f}{\partial p} + \frac{\partial G}{\partial p}\uvec.
-\label{eq:ch7:sensitivity-eq}
-\end{equation}
+### A Contraction Statement With a Complete Proof
+[]{#def-ch7:drift-jacobian}
+Let $f$ be continuously differentiable and $J_f=D f$. On a convex forward-invariant domain, suppose solutions exist for all times of interest and
+[]{#eq-ch7:drift-jacobian}
 
-This equation shows that the sensitivity is a linear combination of the drift sensitivity
-and the input matrix sensitivity. Over time, these sensitivities compound, so a small
-parameter error leads to a growing state error. The ZTCF at perturbed parameters can be
-computed by integrating the modified drift, providing a sensitivity counterfactual.
+$$
+\tfrac12(J_f(x)+J_f(x)^T)\preceq-\alpha I,\qquad \alpha>0
+$$
 
+uniformly throughout that domain. Then any two solutions there contract in Euclidean distance. To prove this, put $\delta=x_1-x_2$ and use the exact mean-value identity
+[]{#eq-ch7:exponential-contraction}
 
-### Gravity Modification
+$$
+\begin{aligned}
+f(x_1)-f(x_2)&=\int_0^1J_f(x_2+s\delta)\delta\,ds,\\
+\frac{d}{dt}\tfrac12\|\delta\|^2&\leq-\alpha\|\delta\|^2,\\
+\|\delta(t)\|&\leq e^{-\alpha(t-t_b)}\|\delta(t_b)\|.
+\end{aligned}
+$$
+[]{#thm-ch7:drift-contraction}
+[]{#thm-ch7:drift-contraction-proof}
+Convexity keeps the connecting segment in the domain; forward invariance keeps both solutions there. No discarded Taylor remainder is needed. Pointwise negative eigenvalues without a uniform margin are insufficient: $\dot x=-x^3$ on $x>0$ has negative derivative but only algebraic decay toward zero.
 
+For a state-dependent metric $P(x,t)$, the differential condition is $\dot P+J_f^TP+PJ_f\preceq-2\alpha P$, with the derivative evaluated along the drift. Uniform positive lower and upper bounds on $P$ yield uniform equivalence to Euclidean distance. Finite-distance conclusions require admissible connecting paths and flow-domain conditions. The metric formulation and its path argument are developed by Lohmiller and Slotine [@LohmillerSlotine1998]; the kinetic-energy mass matrix is not automatically a contraction metric.
 
-Gravity affects *only* the drift, not the input matrix $G(\x)$. If we change the
-gravitational acceleration from $g$ to $g'$, then:
-\begin{equation}
-a_{\text{drift}}' = -M(\q)^{-1}[C(\q,\dot{\q})\dot{\q} + g'(\q)],
-\quad
-G(\x)' = G(\x) \quad \text{(unchanged)}.
-\label{eq:ch7:gravity-counterfactual}
-\end{equation}
+### Eigenvalues, Hamiltonian Motion, and Feedback Margins
+The constant matrix $J=\left[\begin{smallmatrix}-1&10\\0&-1\end{smallmatrix}\right]$ has two negative eigenvalues, yet $e^{Jt}=e^{-t}\left[\begin{smallmatrix}1&10t\\0&1\end{smallmatrix}\right]$ amplifies some initial errors before they decay. Its symmetric part has largest eigenvalue $4$. For time-varying systems even asymptotic stability cannot be inferred from instantaneous eigenvalues alone.
 
-The input contribution $G(\x)\uvec$ is unaffected, so the change in behavior comes entirely
-from the ZTCF:
-\begin{equation}
-\text{Motion under gravity } g' = \text{Motion under } g + \text{Effect of } (g' - g) \text{ via ZTCF}.
-\end{equation}
+Conservative canonical Hamiltonian flow preserves phase-space volume. It cannot uniformly contract every full-state direction for all time on a regular region in a uniformly equivalent metric. Some directions can contract transiently while others expand. Damping, feedback, projection onto an output, or transverse stability of an orbit are different properties; specify which one is being measured. In an undamped swing model, an observed narrowing of clubhead paths is not by itself a full-state contraction certificate.
 
-This decomposition is remarkably clean because gravity is a pure drift effect.
 
+Small feedback can preserve an existing stability margin under explicit conditions. For an equilibrium $f(x^*)=0$ and a perturbation $r(x)=G(x)K(x-x^*)$, a Euclidean contraction bound remains valid if the symmetric part of $D r$ has norm below $\alpha$ throughout the relevant invariant domain. The target remains an equilibrium because $r(x^*)=0$. Local exponential stability also survives sufficiently small smooth perturbations of a Hurwitz equilibrium Jacobian. Neither statement says that an arbitrary target is an equilibrium or that all small gains accomplish a specified finite-time task.
 
-### Mass Redistribution
+### A Large Drift Ratio Does Not Determine Optimal Effort
+For an unconstrained input and a smooth finite-horizon value function $\mathcal V(t,x)$ with running cost $\ell(x)+u^TRu$, $R\succ0$, the HJB minimization gives
+[]{#eq-ch7:bellman}
 
+$$
+\begin{aligned}
+0&=\mathcal V_t+\min_u\{\ell(x)+u^TRu+\nabla_x\mathcal V^T(f+Gu)\},\\
+u^*&=-\tfrac12R^{-1}G^T\nabla_x\mathcal V.
+\end{aligned}
+$$
+[]{#eq-ch7:opt-cost}
+[]{#eq-ch7:optimal-input}
+Appropriate terminal data and solution conditions remain necessary. With feasible input bounds, minimize over that set; for a convex set this is an $R$-weighted projection of the unconstrained minimizer. A large $\|f\|$ says nothing by itself about the value gradient or whether the drift points toward a low-cost outcome.
 
-If the mass distribution changes (e.g., a robot carrying an object), then *both*
-$M(\q)$ and therefore both $f(\x)$ and $G(\x)$ change. We have:
-\begin{equation}
-f(\x)' = -M'(\q)^{-1}[C'(\q,\dot{\q})\dot{\q} + g(\q)],
-\quad
-G(\x)' = \begin{bmatrix} 0_n \\ M'(\q)^{-1} \end{bmatrix}.
-\label{eq:ch7:mass-redistribution}
-\end{equation}
+An explicit counterexample comes from $\dot x=ax+u$ and $J=\int_0^\infty(x^2+u^2)\,dt$. Write $\mathcal V=Px^2$. Substitution gives
+[]{#eq-ch7:minimal-control-law}
 
-Now the superposition structure itself changes: the input matrix $G$ is no longer the same,
-and the drift cannot be simply subtracted. The effect is multiplicative, not additive. This
-breaks the simple linear decomposition and shows why mechanical changes (like adding inertia)
-are more subtle than external force changes (like changing gravity).
+$$
+P^2-2aP-1=0,\qquad P=a+\sqrt{a^2+1},\qquad u^*=-Px.
+$$
+[]{#thm-ch7:minimal-intervention-full}
+[]{#eq-ch7:lqr-cost}
+For $a=10$, $P\approx20.05$: strong unstable drift calls for strong stabilizing feedback. For $a=-10$, $P\approx0.04988$: favorable stable drift reduces the optimal gain for this particular objective. The sign, horizon, input cost and target matter. The Riccati/HJB construction is standard [@TedrakeLqrSupplement]; these scalar examples expose the missing implication directly.
 
+This unconstrained LQR example does not assert feasibility under a fixed torque bound. Indeed, with $a>0$ and $|u|\leq u_{\max}$, any $x>u_{\max}/a$ has $\dot x>0$ even under maximum opposing input and cannot be regulated to zero. Large drift relative to capacity can mean loss of recoverability. Even stable drift can require sustained input at a nonzero target: $\dot x=-x+u$ needs $u=1$ to hold $x=1$. Exploiting drift is therefore an optimization and feasibility question, not a universal zero-control theorem.
 
-## Data-Driven Drift Estimation
+## Worked Example: An Underactuated Double Pendulum
 
+[]{#system-parameters-and-equations}
 
-In many practical scenarios, the analytical model is unavailable or too complex to derive
-by hand. We must estimate $f(\x)$ and $G(\x)$ from data.
+[]{#ztcf-trajectory}
 
+[]{#decomposition-gravity-vs.-coriolis}
 
-### The Regression Approach
+[]{#results-ztcf-vs.-actual-trajectory}
 
+[]{#numerical-simulation}
 
-Suppose we have collected $N$ triples of data: $\{(\x_i, \uvec_i, \dot{\x}_i)\}_{i=1}^N$,
-where each $\dot{\x}_i$ is the measured state derivative (e.g., from finite differencing of
-a recorded trajectory). We want to identify the system $\dot{\x} = f(\x) + G(\x)\uvec$.
+[]{#input-matrix}
 
-One approach is to assume a parametric form for $f$ and $G$ (e.g., polynomial or neural
-network basis functions), and then solve a regression problem:
-\begin{equation}
-\min_{f, G} \sum_{i=1}^N \norm{\dot{\x}_i - f(\x_i) - G(\x_i)\uvec_i}^2.
-\label{eq:ch7:regression}
-\end{equation}
+[]{#gravitational-vector}
 
-However, this is fundamentally ill-posed unless we have sufficient variation in the input $\uvec$.
+[]{#coriolis-matrix}
 
+[]{#mass-matrix}
 
-### Identification Condition: Input Variation
+[]{#worked-example-underactuated-double-pendulum}
 
+[]{#worked-decomposition-table-double-pendulum-example}
+[]{#sec-ch7:double-pendulum-full}
+[]{#eq-ch7:initial-condition}
 
-To separate $f$ from $G$, we need the input to vary *independently* across the data.
-Specifically, if we write the regression in matrix form:
-\begin{equation}
-\dot{\x} = \Theta(\x) \cdot \theta,
-\end{equation}
-where $\Theta(\x)$ is a regressor matrix and $\theta$ is a parameter vector, then $\Theta$ must
-have full column rank. For the drift--input problem, this requires:
 
+### Geometry, Inertia, and Torque Coordinates
+Two massless rigid rods of lengths $l_1,l_2$ carry point masses $m_1$ at the first endpoint and $m_2$ at the second endpoint. The base pivot is fixed; motion is planar. The absolute angles $q_1,q_2$ are measured from the downward vertical in the same positive sense. This is a point-mass model, distinct from a model with uniformly distributed rod mass.
 
-::: {.callout-important}
-**Persistent Excitation Condition:** To identify both drift and input, the input signal
-$\uvec(t)$ must explore a region of the input space that is "large enough" relative to the
-state space. Formally, the data should include states with multiple different input values so
-that the regression can disentangle their effects.
-:::
+Let $\delta=q_1-q_2$, $k=m_2l_1l_2$. Endpoint velocities give
+[]{#eq-ch7:mass-matrix}
 
+$$
+M(q)=\begin{bmatrix}(m_1+m_2)l_1^2&k\cos\delta\\k\cos\delta&m_2l_2^2\end{bmatrix},\qquad
+V=-(m_1+m_2)gl_1\cos q_1-m_2gl_2\cos q_2.
+$$
 
-Without this condition, the regression confounds drift and input: large drift values might be
-"explained" by small imaginary input contributions, or vice versa.
+The determinant is $m_2l_1^2l_2^2(m_1+m_2\sin^2\delta)>0$ for positive masses and lengths. The Christoffel factor and holding-force vector are
+[]{#eq-ch7:coriolis-matrix}
 
+$$
+C=\begin{bmatrix}0&k\sin\delta\,v_2\\-k\sin\delta\,v_1&0\end{bmatrix},\qquad
+g_q=\begin{bmatrix}(m_1+m_2)gl_1\sin q_1\\m_2gl_2\sin q_2\end{bmatrix}.
+$$
+[]{#eq-ch7:grav-vector}
+In particular, the off-diagonal Coriolis signs are opposite. Direct differentiation verifies $\dot M-2C$ is skew-symmetric. At a small positive angle with zero rates, gravity initially accelerates a simple hanging pendulum back toward zero, consistent with the positive $g_q$ on the equation's left.
 
-### Practical Considerations
+Here a single motor acts between the base and the first rod, with torque $u=\tau_1$; the second joint is unactuated, so $B=(1,0)^T$. If an internal elbow motor were added with relative rotation $q_2-q_1$, its generalized torque column would be $(-1,1)^T$. The full-state input vector for the single base motor is the four-by-one column $(0,0,(M^{-1})_{11},(M^{-1})_{21})^T$, not a stack of two rows of $M^{-1}$.
 
+For $m_1=m_2=1\,\mathrm{kg}$, $l_1=l_2=1\,\mathrm m$ and $g=9.81\,\mathrm{m/s^2}$,
+[]{#eq-ch7:mass-matrix-numeric}
 
-1. **Noise:** Measured state derivatives $\dot{\x}_i$ are corrupted by measurement noise.
-   Regularization (e.g., $L_2$ penalty on parameters) is essential.
-2. **Sampling Rate:** Finite differencing of discrete measurements introduces errors.
-   Higher sampling rates (faster sensors) improve the estimate of $\dot{\x}$.
-3. **Excitation Requirements:** The input must visit different regions of the state
-   space with different control actions. A slowly varying or monotonic input signal will
-   not provide sufficient variation.
-4. **Model Class:** The choice of basis functions (polynomial, spline, neural network)
-   affects identifiability. More flexible models can fit noise; more rigid models may miss
-   nonlinearities.
+$$
+\begin{aligned}
+M&=\begin{bmatrix}2&\cos\delta\\\cos\delta&1\end{bmatrix},&
+M^{-1}&=\frac1{1+\sin^2\delta}\begin{bmatrix}1&-\cos\delta\\-\cos\delta&2\end{bmatrix},\\
+g_q&=\begin{bmatrix}19.62\sin q_1\\9.81\sin q_2\end{bmatrix},&
+G&=\frac1{1+\sin^2\delta}\begin{bmatrix}0\\0\\1\\-\cos\delta\end{bmatrix}.
+\end{aligned}
+$$
+[]{#eq-ch7:double-pend-params}
+[]{#eq-ch7:mass-matrix-inverse}
+[]{#eq-ch7:coriolis-matrix-numeric}
+[]{#eq-ch7:grav-vector-numeric}
+[]{#eq-ch7:input-matrix}
+The displayed numerical mass entries have units $\mathrm{kg\,m^2}$; holding torques are in $\mathrm{N\,m}$ and the acceleration entries of $G$ convert torque into angular acceleration. The state equations are $\dot q=v$, $\dot v=M^{-1}(B\tau_1-Cv-g_q)$.
 
+### Two Integrated Branches and Their Actual Evidence
+Start both branches at $q_1=\pi/4$, $q_2=\pi/6$, $v_1=2\,\mathrm{rad/s}$ and $v_2=-1\,\mathrm{rad/s}$. Apply constant $\tau_1=5\,\mathrm{N\,m}$ to the actual branch and zero torque to the ZTCF for two seconds. There is no damping or impact. Angles below are continuously unwrapped in this chart.
 
-### Connection to System Identification
+[]{#tab-ch7:double-pendulum-sim}
 
-
-The problem of estimating $f$ and $G$ from data is a standard problem in **system
-identification**. The literature provides well-developed techniques such as:
-- Subspace identification methods (Ho--Kalman, Balanced Model Reduction)
-- Autoregressive models (ARX, ARMAX)
-- Nonlinear regression (SINDy, Dynamic Mode Decomposition)
-- Neural network-based identification
-
-For control-affine systems specifically, the key is to ensure that the input variation is
-rich enough to separately identify the drift and the input gain.
-
-
-## Contraction Analysis of the Drift
-
-
-A natural question is: does the drift itself have any stability or contraction properties?
-If the ZTCF is a contracting system, then the controller's job is simplified---the passive
-dynamics already provide a restoring force.
-
-
-### Drift Jacobian and Eigenvalue Analysis
-
-
-::: {.callout-note}
-
-\label{def:ch7:drift-jacobian}
-The drift Jacobian at state $\x$ is
-\begin{equation}
-J_f(\x) := \frac{\partial f(\x)}{\partial \x},
-\label{eq:ch7:drift-jacobian}
-\end{equation}
-an $n \times n$ matrix whose eigenvalues and singular values determine how perturbations
-propagate along the ZTCF.
-
-:::
-
-
-::: {.theorem}
-**Drift Contraction via Eigenvalues**
-
-\label{thm:ch7:drift-contraction}
-Suppose the drift Jacobian $J_f(\x)$ is symmetric and negative definite (all eigenvalues
-have negative real part) along a trajectory $\x(t)$. Then the ZTCF trajectory is locally
-contracting: small perturbations $\delta\x$ perpendicular to the flow direction decay
-exponentially.
-:::
-
-\noindent**Intuition:** If the drift Jacobian has negative eigenvalues, then the
-drift vector field is "pulling inward"---a hallmark of stability. Examples include:
-- A damped pendulum where the velocity term $-c\dot{\q}$ (friction) dominates
-- A spring-mass system $\ddot{\q} = -k\q - c\dot{\q}$ with positive damping $c>0$
-- A gene regulatory network with negative feedback
-
-
-### Contraction Implies Low Control Authority
-
-
-When the drift is contracting, the optimal control strategy is often *minimal intervention*:
-
-::: {.proposition}
-**Minimal Intervention in Contracting Drift**
-
-\label{prop:ch7:minimal-intervention}
-If the ZTCF is contracting (drift Jacobian has negative eigenvalues), then the optimal
-control in the long term approaches zero: $\uvec^*(t) \to 0$ as $t\to\infty$.
-:::
-
-\noindent**Rationale:** If the passive dynamics already move the state toward a stable
-attractor, actively fighting these dynamics is wasteful. The optimal controller should allow
-the drift to do the work and apply control only to correct deviations from the desired
-attractor.
-
-
-### Proof via Optimal Control
-
-
-Consider the cost function:
-\begin{equation}
-J = \int_0^\infty \left(\norm{\x(t)}^2 + \lambda \norm{\uvec(t)}^2\right) \mathrm{d}t,
-\label{eq:ch7:opt-cost}
-\end{equation}
-where $\lambda>0$ is a regularization weight. The Bellman equation for the value function is:
-\begin{equation}
-0 = \min_{\uvec} \left[\norm{\x}^2 + \lambda\norm{\uvec}^2 + \nabla V \cdot (f(\x) + G(\x)\uvec)\right].
-\label{eq:ch7:bellman}
-\end{equation}
-
-The optimal input minimizes over $\uvec$:
-\begin{equation}
-\uvec^* = -\frac{1}{2\lambda}G(\x)^\T \nabla V.
-\label{eq:ch7:optimal-input}
-\end{equation}
-
-If the drift is contracting, the value function $V(\x)$ has a very small gradient (the
-state is close to equilibrium), so $\uvec^*$ is small. This is the mechanism of minimal
-intervention.
-
-
-## Energy Interpretation of Counterfactuals
-
-
-### Energy of the ZTCF
-
-
-For a mechanical system with kinetic energy $T(\q,\dot{\q})$ and potential energy $V(\q)$,
-the total mechanical energy is:
-\begin{equation}
-E(\q,\dot{\q}) = T(\q,\dot{\q}) + V(\q).
-\label{eq:ch7:total-energy}
-\end{equation}
-
-Along the ZTCF trajectory $(\q^{(0)}(t), \dot{\q}^{(0)}(t))$, the energy is:
-\begin{equation}
-E_{\text{ZTCF}}(t) = T(\q^{(0)}(t), \dot{\q}^{(0)}(t)) + V(\q^{(0)}(t)).
-\label{eq:ch7:ZTCF-energy}
-\end{equation}
-
-
-### Conservative Drift: Energy Conservation
-
-
-If the drift is conservative (arising from a potential and frictionless kinematics), then
-$E_{\text{ZTCF}}(t)$ is constant:
-\begin{equation}
-\frac{\mathrm{d}E_{\text{ZTCF}}}{\mathrm{d}t} = 0.
-\label{eq:ch7:energy-conservation}
-\end{equation}
-
-This means that the ZTCF does not lose or gain energy; it oscillates at constant energy.
-
-::: {.example}
-An unpowered pendulum released from angle $\theta_0$ will swing back and forth, with the
-energy divided between kinetic and potential as it swings. The ZTCF energy is constant: as
-it swings down, potential energy converts to kinetic; as it swings up, kinetic converts
-back to potential.
-:::
-
-
-### Dissipative Drift: Energy Decay
-
-
-If the drift includes damping (e.g., friction or aerodynamic drag), then:
-\begin{equation}
-\frac{\mathrm{d}E_{\text{ZTCF}}}{\mathrm{d}t} = -\mathcal{D}(t) < 0,
-\label{eq:ch7:energy-dissipation}
-\end{equation}
-where $\mathcal{D}(t) \geq 0$ is the dissipation rate (power lost to friction).
-
-For a linear damping model $\vec{f}_{\text{damp}} = -C\dot{\q}$, the dissipation rate is:
-\begin{equation}
-\mathcal{D}(t) = \dot{\q}^{(0)}(t)^\T C \dot{\q}^{(0)}(t).
-\label{eq:ch7:dissipation-rate}
-\end{equation}
-
-
-### Control Energy Input
-
-
-Along the actual trajectory (with control), the energy change due to control input is:
-\begin{equation}
-\frac{\mathrm{d}E}{\mathrm{d}t}\bigg|_{\text{control}} = \uvec(t)^\T \dot{\q}(t) = P_{\text{control}}(t),
-\label{eq:ch7:control-power}
-\end{equation}
-the power supplied by the controller (work per unit time).
-
-The energy added by control over the time interval $[0,T]$ is:
-\begin{equation}
-\Delta E_{\text{control}} := \int_0^T \uvec(t)^\T \dot{\q}(t) \, \mathrm{d}t.
-\label{eq:ch7:energy-added}
-\end{equation}
-
-If $\Delta E_{\text{control}} > 0$, the controller added energy (e.g., by accelerating the
-system). If $\Delta E_{\text{control}} < 0$, the controller removed energy (e.g., by braking).
-
-
-### Energy Comparison Counterfactual
-
-
-We can directly compare the energy of the actual trajectory to the ZTCF:
-\begin{equation}
-\Delta E_{\text{actual}} := E(t) - E_{\text{ZTCF}}(t).
-\label{eq:ch7:energy-difference}
-\end{equation}
-
-This difference quantifies how much the control has altered the energy budget. For example:
-- If $\Delta E_{\text{actual}} > 0$, the controller added energy (likely accelerating).
-- If $\Delta E_{\text{actual}} < 0$, the controller removed energy (likely braking).
-- If $\Delta E_{\text{actual}} \approx 0$, the controller is purely steering without
-  changing energy (a skillful balance).
-
-
-::: {.callout-tip}
-## Design Note
-
-Energy-optimal control often seeks to minimize the total energy input $\Delta E_{\text{control}}$
-while achieving a goal. The ZTCF provides a baseline for comparison: in the best case, the
-controller can guide the motion without adding energy, exploiting gravity and momentum. This
-is the principle behind energy-efficient movement in biomechanics and efficient trajectory
-planning in robotics.
-:::
-
-
-
-## Worked Example: Underactuated Double Pendulum
-
-\label{sec:ch7:double-pendulum-full}
-
-We now provide a complete worked example with explicit numerical computation. Consider a
-double pendulum with a motor at joint 1 only.
-
-
-### System Parameters and Equations
-
-
-\begin{equation}
-m_1 = 1 \text{ kg}, \quad m_2 = 1 \text{ kg}, \quad l_1 = 1 \text{ m}, \quad l_2 = 1 \text{ m}, \quad g = 9.81 \text{ m/s}^2.
-\label{eq:ch7:double-pend-params}
-\end{equation}
-
-The state is $\x = (q_1, q_2, \dot{q}_1, \dot{q}_2)$, where $q_i$ is the angle of joint $i$
-measured from the upright vertical position (positive downward).
-
-
-### Mass Matrix
-
-
-The kinetic energy is:
-\begin{align}
-T &= \frac{1}{2}m_1 l_1^2 \dot{q}_1^2 + \frac{1}{2}m_2[l_1^2\dot{q}_1^2 + l_2^2\dot{q}_2^2 + 2l_1 l_2 \dot{q}_1\dot{q}_2\cos(q_1-q_2)]\\
-&= \frac{1}{2}\begin{bmatrix}\dot{q}_1 & \dot{q}_2\end{bmatrix}\begin{bmatrix}
-m_1 l_1^2 + m_2 l_1^2 & m_2 l_1 l_2 \cos(q_1-q_2)\\
-m_2 l_1 l_2 \cos(q_1-q_2) & m_2 l_2^2
-\end{bmatrix}\begin{bmatrix}\dot{q}_1 \\ \dot{q}_2\end{bmatrix}.
-\end{align}
-
-Thus the mass matrix is:
-\begin{equation}
-M(\q) = \begin{bmatrix}
-(m_1 + m_2)l_1^2 & m_2 l_1 l_2 \cos(q_1-q_2)\\
-m_2 l_1 l_2 \cos(q_1-q_2) & m_2 l_2^2
-\end{bmatrix}.
-\label{eq:ch7:mass-matrix}
-\end{equation}
-
-With the given parameters:
-\begin{equation}
-M(\q) = \begin{bmatrix}
-2 & \cos(q_1-q_2)\\
-\cos(q_1-q_2) & 1
-\end{bmatrix}.
-\label{eq:ch7:mass-matrix-numeric}
-\end{equation}
-
-The determinant is:
-\begin{equation}
-\det M = 2 - \cos^2(q_1-q_2) = 1 + \sin^2(q_1-q_2) \geq 1,
-\end{equation}
-so $M$ is always invertible. The inverse is:
-\begin{equation}
-M(\q)^{-1} = \frac{1}{1+\sin^2(q_1-q_2)}\begin{bmatrix}
-1 & -\cos(q_1-q_2)\\
--\cos(q_1-q_2) & 2
-\end{bmatrix}.
-\label{eq:ch7:mass-matrix-inverse}
-\end{equation}
-
-
-### Coriolis Matrix
-
-
-The Coriolis matrix can be computed from the kinetic energy. For this system:
-\begin{equation}
-C(\q,\dot{\q}) = \begin{bmatrix}
-0 & -m_2 l_1 l_2 \sin(q_1-q_2)\dot{q}_2\\
--m_2 l_1 l_2 \sin(q_1-q_2)\dot{q}_1 & 0
-\end{bmatrix}.
-\label{eq:ch7:coriolis-matrix}
-\end{equation}
-
-With parameters:
-\begin{equation}
-C(\q,\dot{\q}) = \begin{bmatrix}
-0 & -\sin(q_1-q_2)\dot{q}_2\\
--\sin(q_1-q_2)\dot{q}_1 & 0
-\end{bmatrix}.
-\label{eq:ch7:coriolis-matrix-numeric}
-\end{equation}
-
-
-### Gravitational Vector
-
-
-The potential energy is:
-\begin{equation}
-V(\q) = -m_1 g l_1 \cos q_1 - m_2 g(l_1\cos q_1 + l_2 \cos q_2).
-\end{equation}
-
-The gravitational vector is:
-\begin{equation}
-\vec{g}(\q) = -\frac{\partial V}{\partial\q} = \begin{bmatrix}
--(m_1+m_2)g l_1 \sin q_1\\
--m_2 g l_2 \sin q_2
-\end{bmatrix}.
-\label{eq:ch7:grav-vector}
-\end{equation}
-
-With parameters:
-\begin{equation}
-\vec{g}(\q) = \begin{bmatrix}
--19.62 \sin q_1\\
--9.81 \sin q_2
-\end{bmatrix}.
-\label{eq:ch7:grav-vector-numeric}
-\end{equation}
-
-
-### Drift Components
-
-
-The full drift acceleration is:
-\begin{equation}
-a_{\text{drift}} = -M(\q)^{-1}[C(\q,\dot{\q})\dot{\q} + \vec{g}(\q)].
-\label{eq:ch7:drift-full}
-\end{equation}
-
-The gravitational component is:
-\begin{equation}
-a_{\text{grav}} = -M(\q)^{-1}\vec{g}(\q).
-\label{eq:ch7:drift-grav}
-\end{equation}
-
-The Coriolis component is:
-\begin{equation}
-a_{\text{cor}} = -M(\q)^{-1}C(\q,\dot{\q})\dot{\q}.
-\label{eq:ch7:drift-cor}
-\end{equation}
-
-
-### Input Matrix
-
-
-The input (torque $\tau_1$ at joint 1) produces acceleration via:
-\begin{equation}
-G(\x) = \begin{bmatrix}
-0 \\ 0 \\ [M(\q)^{-1}]_{1\cdot}\\
-[M(\q)^{-1}]_{2\cdot}
-\end{bmatrix} = \begin{bmatrix}
-0 \\ 0 \\ \frac{1}{1+\sin^2(q_1-q_2)}\\
-\frac{-\cos(q_1-q_2)}{1+\sin^2(q_1-q_2)}
-\end{bmatrix}.
-\label{eq:ch7:input-matrix}
-\end{equation}
-
-
-### Numerical Simulation
-
-
-**Initial condition:**
-\begin{equation}
-q_1(0) = \pi/4 \approx 0.785 \text{ rad}, \quad q_2(0) = \pi/6 \approx 0.524 \text{ rad},
-\end{equation}
-\begin{equation}
-\dot{q}_1(0) = 2 \text{ rad/s}, \quad \dot{q}_2(0) = -1 \text{ rad/s}.
-\label{eq:ch7:initial-condition}
-\end{equation}
-
-**Applied input:**
-\begin{equation}
-\tau_1(t) = 5 \text{ N·m} \quad \text{(constant torque)}.
-\end{equation}
-
-We integrate both:
-1. The actual trajectory with $\tau_1 = 5$ N·m,
-2. The ZTCF trajectory with $\tau_1 = 0$.
-
-over $T = 2$ seconds.
-
-
-### Results: ZTCF vs. Actual Trajectory
-
-
-We compute the state at several time points. Table~\ref{tab:ch7:double-pendulum-sim} shows
-the results:
-
-
-| $t$ (s) | $q_1$ (rad) | $q_2$ (rad) | $\dot{q}_1$ (rad/s) | $\dot{q}_2$ (rad/s) | $a_{\text{drift},1}$ | $\tau_1 \times [M^{-1}]_{11}$ | $\rho(t)$ |
+| Time (s) | $q_1$ | $q_2$ | $v_1$ | $v_2$ | $a_{0,1}$ | $5(M^{-1})_{11}$ | $\rho_1$ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0.0 | 0.785 | 0.524 | 2.000 | -1.000 | (eval) | (eval) | (eval) |
-| 0.5 | 0.987 | 0.401 | 2.341 | -0.512 | (eval) | (eval) | (eval) |
-| 1.0 | 1.208 | 0.256 | 2.687 | 0.031 | (eval) | (eval) | (eval) |
-| 1.5 | 1.445 | 0.102 | 3.032 | 0.612 | (eval) | (eval) | (eval) |
-| 2.0 | 1.692 | -0.048 | 3.371 | 1.197 | (eval) | (eval) | (eval) |
+| 0.0 | 0.7854 | 0.5236 | 2.0000 | -1.0000 | -9.742 | 4.686 | 2.079 |
+| 0.5 | 0.9514 | 0.3060 | -1.4024 | 0.1886 | -10.707 | 3.672 | 2.916 |
+| 1.0 | -0.0516 | 0.2870 | -0.8654 | -2.2171 | 4.953 | 4.503 | 1.100 |
+| 1.5 | -0.0242 | -1.0481 | -0.1023 | -1.0901 | -2.871 | 2.891 | 0.993 |
+| 2.0 | -0.0517 | -0.5357 | -0.3469 | 3.1249 | -6.586 | 4.110 | 1.602 |
 
+Actual Trajectory With Constant Base Torque. Angles Are in Radians, Rates in Radians per Second, and Accelerations in Radians per Second Squared. The Final Column Is the First-Coordinate Ratio.
 
+[]{#tab-ch7:double-pendulum-ZTCF}
 
-### Decomposition: Gravity vs. Coriolis
+| Time (s) | $q_1$ | $q_2$ | $v_1$ | $v_2$ | $\|\Delta q\|$ |
+| --- | --- | --- | --- | --- | --- |
+| 0.0 | 0.7854 | 0.5236 | 2.0000 | -1.0000 | 0.0000 |
+| 0.5 | 0.5263 | 0.6641 | -2.7217 | 1.2024 | 0.5558 |
+| 1.0 | -0.2760 | -0.2033 | 0.4717 | -4.6111 | 0.5393 |
+| 1.5 | -0.4161 | -1.3513 | -0.5783 | 0.2386 | 0.4955 |
+| 2.0 | -0.5652 | -0.2543 | 0.6854 | 2.8132 | 0.5855 |
 
+Zero-Torque Trajectory From the Same Initial State. The Final Column Is the Norm of Its Position Difference From the Actual Branch, in Radians.
 
-At $t = 1.0$ s, with $q_1 = 1.208$ rad, $q_2 = 0.256$ rad, $\dot{q}_1 = 2.687$ rad/s,
-$\dot{q}_2 = 0.031$ rad/s:
+The actual table's $\rho_1=|a_{0,1}|/|5(M^{-1})_{11}|$ is a first-coordinate realized-input ratio. It also equals that component's capacity ratio if the single motor limit is exactly $|\tau_1|\leq5\,\mathrm{N\,m}$. It is not the full-vector $\rho_W$. It rises from $2.079$ to $2.916$, then falls to $1.100$ and $0.993$ before reaching $1.602$. There is no monotonic progression to negligible control. The position gap is $0.5558$ rad at $0.5$ s and $0.5855$ rad at $2$ s; these are coordinate-norm separations, not a fraction of motion attributable to an actuator.
 
-1. Gravitational acceleration:
-   \begin{equation}
-   a_{\text{grav}} = -M^{-1}\vec{g} = \text{(compute from equation~\eqref{eq:ch7:drift-grav})}.
-   \end{equation}
-2. Coriolis acceleration:
-   \begin{equation}
-   a_{\text{cor}} = -M^{-1}C\dot{\q} = \text{(compute from equation~\eqref{eq:ch7:drift-cor})}.
-   \end{equation}
-3. Total drift:
-   \begin{equation}
-   a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}.
-   \end{equation}
+At $1$ s on the actual branch, the acceleration decomposition is
+[]{#eq-ch7:numerical-components}
 
-The numerical computation of these values requires evaluating the matrices at the specific state;
-the symbolic forms are provided above.
+$$
+a_{\mathrm{grav}}=\begin{bmatrix}3.271\\-5.862\end{bmatrix},\qquad
+a_{\mathrm{cor}}=\begin{bmatrix}1.682\\-1.835\end{bmatrix},\qquad
+a_0=\begin{bmatrix}4.953\\-7.698\end{bmatrix}
+\quad\mathrm{rad/s^2}.
+$$
 
+The base torque contributes approximately $4.503\,\mathrm{rad/s^2}$ to the first acceleration. It acts through both acceleration components, with coupling that changes sign or magnitude with configuration. The unactuated coordinate is not disconnected from the input.
 
-### Drift--Control Ratio Evolution
+The ZTCF conserves $E=T+V$. The actual branch obeys the independent identity
+[]{#eq-ch7:example-work}
 
+$$
+E(t)-E(0)=5\{q_1(t)-q_1(0)\}.
+$$
 
-As the system evolves:
-- Initially ($t=0$): $\rho$ depends on the velocity magnitude and gravitational loading.
-- Mid-trajectory ($t=1$): As $\dot{\q}$ increases, Coriolis terms grow, and $\rho$ increases.
-- Late trajectory ($t=2$): High velocities make $\rho \gg 1$ (drift-dominated regime).
+At two seconds this is approximately $-4.1854$ J. Positive torque has done negative net work because the net first-angle displacement is negative. The two branches consequently do not share an energy shell. Their separation need not accumulate monotonically, and this short trajectory provides no global bound on unwrapped angle differences.
 
-This demonstrates the principle: at high speeds, the motor at joint 1 has less and less
-ability to steer the passively driven joint 2.
+### Reproducing and Checking the Numbers
+The tabulated values are generated by the repository's fixed-step RK4 solver using $5{,}000$ steps over two seconds; its Coriolis matrix is derived from finite differences of the specified mass matrix. Independent validation uses the analytic bias $C v=(\sin\delta\,v_2^2,-\sin\delta\,v_1^2)^T$ with adaptive DOP853 integration. Agreement at the printed precision, tolerance refinement and the work-energy identity test different possible errors. Agreement between two solvers is useful evidence only when they implement the same declared physical model, and it does not validate a human swing model.
 
+Run this example from the repository root with Python 3.12 and the project dependencies.
 
-### ZTCF Trajectory
+```python
+import numpy as np
+from scipy.integrate import solve_ivp
+from scripts.generate_worked_examples import (
+    ch07_mass_matrix, ch07_grad_potential,
+)
+from src.affine_control.dynamics import christoffel_coriolis
 
+initial = np.array([np.pi / 4, np.pi / 6, 2., -1.])
+times = np.linspace(0, 2, 5)
+for torque in (0., 5.):
+    def rate(t: float, state: np.ndarray) -> np.ndarray:
+        q, v = state[:2], state[2:]
+        bias = christoffel_coriolis(ch07_mass_matrix, q, v) @ v
+        rhs = np.array([torque, 0.]) - bias - ch07_grad_potential(q)
+        return np.r_[v, np.linalg.solve(ch07_mass_matrix(q), rhs)]
 
-We also compute the ZTCF by integrating $\dot{\x}^{(0)} = f(\x^{(0)})$ from the same initial
-condition with $\tau_1=0$. The ZTCF represents the passive shadow: how the system would evolve
-if we released the control at $t=0$.
+    for tolerance in (1e-9, 1e-11):
+        result = solve_ivp(
+            rate, (0, 2), initial, method="DOP853",
+            t_eval=times, rtol=tolerance, atol=tolerance / 100,
+        )
+        if not result.success:
+            raise RuntimeError(result.message)
+        q1, q2, v1, v2 = result.y
+        potential = -9.81 * (2 * np.cos(q1) + np.cos(q2))
+        energy = (v1**2 + v2**2 / 2
+                  + np.cos(q1 - q2) * v1 * v2 + potential)
+        work = torque * (q1 - q1[0])
+        print(torque, tolerance, np.max(abs(energy - energy[0] - work)))
+        print(result.y.T)
+```
 
-Qualitatively:
-- The ZTCF will swing down due to gravity, accelerating faster than the controlled case
-  (since gravity pulls harder than the control torque in the initial phase).
-- The Coriolis coupling will cause joint 2 to accelerate and decelerate in a complex manner.
-- The ZTCF energy is conserved (for this frictionless system), but the energy is distributed
-  differently across the joints.
+To reproduce a finite torque removal at a later time, first integrate the actual state to that time and initialize a new zero-torque solve there. Do not substitute the original zero-input branch's state, which carries a different history. To compare impact outcomes, add the intended contact geometry and event detection before interpreting the result as a striking motion.
 
+## How the Pieces Fit Together in a Golf Swing
 
-## Connection to Contraction and Optimal Control (Detailed Proofs)
+[]{#qualitative-ztcf-structure}
 
+[]{#example-counterfactual-analysis-of-a-multisegment-swing}
+[]{#sec-ch7:golf}
 
-### Contraction of Drift via Lyapunov Methods
+### Preparation, Transport, and Correction
+Earlier muscle and ground interactions establish momentum, configuration and stored elastic energy. Configuration determines inertia, moment arms, coupling and which actuator directions can change the task. Evolving velocity changes both kinematic transport and some generalized bias forces. These facts explain why a late snapshot cannot identify how the present motion was produced.
 
+Counterfactual branching measures what additional inputs do from that snapshot onward. A short remaining interval can limit changes in clubhead position, while orientation, speed or event timing remain sensitive in particular directions. Existing motion can therefore carry much of the path while selected inputs still matter for impact. Neither observation contradicts the other: they concern different outputs and time scales.
 
-We now provide a formal proof of the condition under which the drift itself is contracting.
+At the top of the backswing, the club's reversal does not require every body segment, muscle state and elastic mode to have zero velocity. Gravitational acceleration depends on the actual configuration and supports, and need not resemble the subsequent controlled motion. During the fast phase, a large inertial or radial force does not by itself show that the useful tangential or orientational control direction is weak. The size of a wrist torque is also not the same quantity as its work, a grip force, or a muscle's metabolic demand.
 
-::: {.theorem}
-**Drift Contraction via Negative Eigenvalues**
+### A Testable Version of the Effort-to-Ease Idea
+A precise hypothesis is that a particular preparation policy places the system in states from which the desired impact can be achieved with lower subsequent effort while satisfying error, actuator and contact constraints. To test it, compare policies at a declared impact objective and evaluate their feasible continuations. Measure the remaining work or chosen effort cost, sensitivity to uncertainty, and reserve for correcting perturbations. A low nominal effort solution with no correction reserve may be fragile.
 
-\label{thm:ch7:drift-contraction-proof}
-Let $f\in C^1(\mathcal{X})$ be the drift vector field on a domain $\mathcal{X}$. Suppose the
-drift Jacobian $J_f(\x) := \frac{\partial f}{\partial\x}$ is symmetric and has all eigenvalues
-in the left half-plane (i.e., $\lambda_i(J_f) < 0$ for all $i$). Then the ZTCF trajectory is
-exponentially stable: for any two initial conditions $\x_1, \x_2$ close to a trajectory, the
-distance between the solutions satisfies
-\begin{equation}
-\norm{\x_1(t) - \x_2(t)} \leq e^{-\alpha t}\norm{\x_1(0) - \x_2(0)}
-\label{eq:ch7:exponential-contraction}
-\end{equation}
-for some $\alpha > 0$.
-:::
+Use several interventions to expose the connections: remove a specified torque after different branch times; retain or alter the feedback of the other actuators; perturb segment inertia within measured uncertainty; and compare the resulting event-conditioned task errors. These experiments can distinguish a favorable inherited state from a favorable instantaneous drift direction, and both from active correction. An apparent advantage that disappears when grip motion is no longer prescribed may have depended on uncounted boundary actuation.
 
-\noindent**Proof:** Consider the Lyapunov function $V(\delta\x) = \frac{1}{2}\norm{\delta\x}^2$,
-where $\delta\x = \x_1 - \x_2$ is the perturbation. Along the ZTCF, the time derivative is:
-\begin{equation}
-\dot{V} = \delta\x^\T \frac{\partial f}{\partial\x}\bigg|_{\x_2(t)} \delta\x + O(\norm{\delta\x}^2).
-\end{equation}
+For humanoid motions, the same logic connects balance, contact feasibility and task execution. Ground contact can redirect momentum without positive work at an ideal stationary contact, yet the internal actuation needed to maintain or exploit that contact can be substantial. For golf, any claim about a typical athlete or coaching intervention requires measurements and validation beyond this two-link illustration. The model can sharpen the experimental question and show which quantities must be measured.
 
-If $J_f$ is symmetric with all eigenvalues negative, then:
-\begin{equation}
-\dot{V} \leq -\alpha \norm{\delta\x}^2 = -2\alpha V,
-\end{equation}
-where $\alpha = -\max_i \lambda_i(J_f) > 0$. Solving the differential inequality yields:
-\begin{equation}
-V(t) \leq e^{-2\alpha t} V(0),
-\end{equation}
-which implies equation~\eqref{eq:ch7:exponential-contraction}. \quad\ensuremath{\Box}
+## Chapter Synthesis
 
+[]{#chapter-summary}
 
-### Minimal Intervention in Drift-Dominated Regimes
+[]{#summary-table-key-concepts-and-relationships}
+[]{#sec-ch7:synthesis}
+[]{#tab-ch7:summary}
+Same-state decomposition isolates a declared input's instantaneous contribution. A forward branch reveals the consequence of removing it over a specified interval. An energy balance accounts for work and storage across a defined boundary. Directional and finite-horizon sensitivities connect inputs to a task, and event sensitivities account for changes in when contact occurs. Stability and optimal control require their own metric, objective and feasibility assumptions.
 
-
-We now prove that when drift dominates, the optimal control approaches zero.
-
-::: {.theorem}
-**Minimal Intervention Control Law**
-
-\label{thm:ch7:minimal-intervention-full}
-Consider the cost functional
-\begin{equation}
-J = \int_0^\infty \left[\norm{\x(t) - \x^*}^2_Q + \norm{\uvec(t)}^2_R\right] \mathrm{d}t,
-\label{eq:ch7:lqr-cost}
-\end{equation}
-where $\x^*$ is a desired attractor, $Q$ and $R$ are positive definite weights, and $\dot{\x} = f(\x) + G(\x)\uvec$.
-
-If $\norm{f(\x)}/\norm{G(\x)u_{\max}}$ is very large (drift-dominated regime), then the
-optimal control is approximately
-\begin{equation}
-\uvec^* \approx -K(\x)[\x - \x^*],
-\label{eq:ch7:minimal-control-law}
-\end{equation}
-where the gain matrix $K(\x)$ is small: $\norm{K(\x)} \to 0$ as the drift--control ratio
-$\to\infty$.
-:::
-
-\noindent**Sketch of proof:** The Hamilton--Jacobi--Bellman equation is:
-\begin{equation}
-0 = \min_{\uvec} \left[\norm{\x-\x^*}^2_Q + \norm{\uvec}^2_R + \nabla V \cdot (f(\x) + G(\x)\uvec)\right].
-\end{equation}
-
-The minimizer over $\uvec$ is:
-\begin{equation}
-\uvec^* = -\frac{1}{2}R^{-1}G(\x)^\T\nabla V.
-\end{equation}
-
-In the drift-dominated regime, the term $\nabla V \cdot f(\x)$ dominates, and $\nabla V$ is
-small (the state is already close to the attractor). Therefore $\uvec^*$ is small, and the
-control law reduces to a small correction term. The full solution requires solving the HJB
-equation numerically, but the insight is clear: when drift dominates, the optimal control
-is minimal.
-
-
-### Stability Without Control
-
-
-::: {.proposition}
-**ZTCF Stability Implies Easy Stabilization**
-
-\label{prop:ch7:ZTCF-stability}
-If the ZTCF is exponentially stable (all drift Jacobian eigenvalues in the left half-plane),
-then any feedback law $\uvec = K[\x - \x^*]$ with $K$ sufficiently small will stabilize the
-closed-loop system.
-:::
-
-\noindent**Rationale:** If the drift already moves toward $\x^*$, then a small feedback
-perturbation will not destabilize the system; the drift does the work, and the feedback just
-fine-tunes the convergence.
-
-
-## Summary Table: Key Concepts and Relationships
-
-
-
-| **Concept** | **Equation** | **Interpretation** | **Regime** |
-| --- | --- | --- | --- |
-| Control-affine form | $\dot{\x} = f(\x) + G(\x)\uvec$ | Superposition of drift and input | All |
-| ZTCF | $\dot{\x}^{(0)} = f(\x^{(0)})$ | Passive shadow (no control) | All |
-| ZVCF | $a_{\text{ZVCF}} = -M^{-1}g(\q)$ | Static equilibrium acceleration | All |
-| Drift decomposition | $a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}$ | Gravity + inertial coupling | Mechanical |
-| Drift--control ratio | $\rho = \norm{f}/\norm{G u_{\max}}$ | Relative dominance | All |
-| Drift Jacobian | $J_f = \partial f/\partial\x$ | Local stability of ZTCF | All |
-| Minimal intervention | $\uvec^* \approx -K[\x-\x^*]$, $K\to 0$ | Optimal control when $\rho\gg 1$ | Drift-dominated |
-| ZTCF energy (conservative) | $E_{\text{ZTCF}} = \text{const}$ | Energy conservation | No damping |
-| ZTCF energy (dissipative) | $\dot{E}_{\text{ZTCF}} = -\mathcal{D} < 0$ | Energy decay due to friction | With damping |
-| Control power input | $P = \uvec^\T\dot{\q}$ | Energy added by actuators | All |
-
-
-
-## Example: Counterfactual Analysis of a Multisegment Swing
-
-
-The golf swing provides a compelling example of the counterfactual framework because it
-exhibits all three drift--control regimes within a single motion lasting roughly one
-second. We sketch how the ZTCF, ZVCF, and drift--control ratio apply to a simplified
-kinematic chain (e.g., shoulder, elbow, wrist), noting that concrete numerical
-predictions require a calibrated biomechanical model with experimentally validated
-segment parameters.
-
-
-### Qualitative ZTCF Structure
-
-
-At each instant during the swing, the ZTCF (Definition~\ref{def:ch7:ZTCF}) answers:
-*what would happen if the golfer released all muscular effort?* The qualitative
-behavior follows directly from the equations of this chapter:
-
-1. **Early motion (low velocity):** The drift field $f(\x)$ is dominated by
-   $a_{\text{grav}} = -M(\q)^{-1}\vec{g}(\q)$, which is small when the segments
-   are near their resting configuration. The ZTCF trajectory barely moves, so
-   $\|\x(t) - \x^{(0)}(t)\|$ (the gap between actual and passive motion) is large.
-   All motion is attributable to active control: $\rho \ll 1$.
-2. **Transition (direction reversal):** Near the top of the backswing, the
-   system passes through a low-velocity state. The ZTCF from this point
-   is dominated by gravitational acceleration pulling the arms back down---closely
-   resembling the actual trajectory. The gap $\|\x - \x^{(0)}\|$ is small.
-3. **Fast phase (high velocity):** As velocities grow, the Coriolis term
-   $a_{\text{cor}} = -M(\q)^{-1}C(\q,\dot{\q})\dot{\q}$ dominates the drift because
-   it scales as $\dot{\q}^2$. The ZTCF closely tracks the actual trajectory:
-   removing control barely changes the motion because the available muscle torque
-   $\|G(\x)\uvec_{\max}\|$ is small compared to $\|f(\x)\|$. The drift--control
-   ratio satisfies $\rho \gg 1$.
-
-This qualitative pattern---large ZTCF divergence early, small divergence late---follows
-from the velocity scaling of the drift--control ratio (Eq.~\ref{eq:ch7:DCR-scaling})
-and holds for any multisegment mechanical system with bounded actuator torques.
-
-
-### Structural Argument: Why Active Torque Is Negligible at Impact
-
-
-The argument is structural and does not depend on specific parameter values.
-For a mechanical system with state $\x = (\q, \dot{\q})$ and input torque $\tau$,
-the control contribution to acceleration is:
-\begin{equation}
-a_{\text{control}} = M(\q)^{-1} B(\q)\,\tau,
-\end{equation}
-which is bounded by
-\begin{equation}
-\|a_{\text{control}}\| \leq \|M(\q)^{-1} B(\q)\| \cdot \|\tau_{\max}\|.
-\end{equation}
-
-Meanwhile, the centrifugal acceleration from the drift scales as:
-\begin{equation}
-\|a_{\text{cor}}\| \sim \|M(\q)^{-1} C(\q,\dot{\q})\dot{\q}\| \sim O(\|\dot{\q}\|^2).
-\end{equation}
-
-Since $\|\tau_{\max}\|$ is bounded (physiological or actuator limits) while
-$\|\dot{\q}\|$ grows during acceleration phases, there necessarily exists a velocity
-threshold $\dot{q}^*$ beyond which $\|a_{\text{cor}}\| \gg \|a_{\text{control}}\|$,
-i.e., $\rho(\x) \gg 1$. For fast athletic motions such as throwing, striking, or
-swinging, this threshold is typically reached well before the moment of peak velocity.
-
-
-::: {.callout-note}
-## Intuition
-
-The ZTCF analysis captures a principle recognized in biomechanics: in fast
-ballistic movements, active muscular contribution is concentrated early, while the
-late phase is governed by passive inertial dynamics. The counterfactual framework
-gives this observation a precise mathematical formulation via the drift--control ratio
-$\rho(\x)$ and the ZTCF divergence $\|\x(t) - \x^{(0)}(t)\|$.
-:::
-
-
-
-::: {.callout-warning}
-## Caution
-
-Any numerical predictions of ZTCF divergence, phase timings, or drift--control
-ratios depend on the specific segment masses, lengths, inertias, and torque
-capacities of the system under study. These must be obtained from experimental
-measurements (e.g., motion capture combined with inverse dynamics). The structural
-argument above holds generically, but the quantitative details are model-dependent.
-:::
-
-
-
-## Chapter Summary
-
-
-1. The drift--input decomposition $\dot{\x} = f(\x)+G(\x)\uvec$ is a causal structure:
-   drift is the passive "memory" of the state; input is instantaneous active intervention.
-2. The Zero Torque Counterfactual (ZTCF) is the trajectory under zero input, obtained by
-   integrating the drift vector field. It is well-defined and smooth by the Picard--Lindelöf
-   theorem and reveals the passive shadow---what happens without control.
-3. The Zero Velocity Counterfactual (ZVCF) isolates static forces from velocity-dependent
-   forces, decomposing the drift into gravitational and Coriolis components.
-4. For mechanical systems, the drift decomposes linearly into gravitational and Coriolis
-   contributions because the mass matrix inverse is a linear operator. This decomposition
-   is clean and holds exactly.
-5. The drift--control ratio $\rho$ quantifies how much of the motion is determined by
-   physics versus steered by the controller. At high speeds, $\rho\to\infty$ for all
-   mechanical systems, shifting the system into a drift-dominated regime.
-6. Forward dynamics simulation with counterfactuals provides a "thought experiment engine"
-   for attribution analysis (Step 1--5 protocol), sensitivity studies (actuator failures,
-   gravity changes, mass modifications), and controller design.
-7. Data-driven drift estimation allows us to identify $f(\x)$ and $G(\x)$ from data when
-   analytical models are unavailable. The key requirement is persistent excitation:
-   the input must vary independently to separate drift from control.
-8. Contraction analysis of the drift reveals whether the passive dynamics are stable. If
-   the drift Jacobian has all negative eigenvalues, the system naturally contracts, and
-   the controller's job is to apply minimal intervention.
-9. The optimal control law in drift-dominated regimes ($\rho\gg 1$) approaches zero: the
-   controller should allow physics to do the work. This is the principle of energy-efficient
-   control and explains skillful movement in biomechanics and athletics.
-10. Energy interpretation of counterfactuals: the ZTCF energy is conserved (for frictionless
-   systems) or decays (for damped systems). Comparing ZTCF energy to actual energy reveals
-   how much the controller is adding or removing energy.
-11. A complete worked example of the underactuated double pendulum demonstrates the
-   decomposition of drift into gravity and Coriolis, computation of the drift--control ratio,
-   and the ZTCF trajectory. At high speeds, the single actuator at joint 1 can barely
-   steer the passive joint 2.
-12. The deepest design principle: the best controllers exploit the drift rather than oppose
-   it, shaping the state so that passive dynamics produce the desired behavior. This is
-   "effort-to-ease transition" in biomechanics and energy-efficient trajectory design
-   in robotics.
-
-This chapter has established that the drift--input decomposition is not merely algebraic bookkeeping but a
-causal framework for understanding, predicting, and attributing motion. The counterfactual machinery---ZTCF,
-ZVCF, and their energy interpretations---transforms abstract dynamics into actionable engineering insight:
-what would happen without control, and therefore what the controller must actually accomplish.
+Together these tools support a constructive account of skilled movement: establish useful states, understand how geometry and dynamics transport them, and retain enough feasible authority to meet the task under uncertainty. The strength of the argument comes from connecting those calculations and testing their assumptions, rather than treating a single ratio as a complete explanation of the swing.
 
 ## Exercises
 
-1. **ZTCF of a simple system.**
-   For $\ddot{x} + x^3 = u$ (Duffing oscillator), compute the ZTCF starting from
-   $(x_0, \dot{x}_0) = (1, 0)$. Plot the actual trajectory under $u = -2x$ and the
-   ZTCF side by side. Compute $\rho(t)$.
-2. **ZVCF computation.**
-   For the same system, compute the ZVCF at $t = 0$. Compare the ZVCF acceleration
-   with the full acceleration. In what regime does gravity dominate?
-3. **Drift-control ratio scaling.**
-   For the double pendulum of the worked example, show analytically that $\rho \propto
-   \|\dot{\q}\|^2 / \|\uvec\|$ when Coriolis forces dominate. What happens when $\|\dot{\q}\|
-   \to 0$?
-4. **Energy decomposition.**
-   For a 2-DOF system with known mass matrix, decompose the total kinetic energy change
-   $\Delta T = \int \dot{\q}^T \tau\,dt$ into drift and control contributions. Verify the
-   identity $\Delta T = W_{\text{drift}} + W_{\text{control}}$.
-5. **Data-driven drift estimation.**
-   Generate simulated data from a known pendulum system under random inputs. Estimate
-   the drift acceleration using the SINDy-type procedure from Section~\ref{sec:ch7:data-driven}.
-   Compare with the analytical drift.
-6. **Contraction of the drift.**
-   Compute the drift Jacobian for the undamped double pendulum at several configurations.
-   Where is the drift contracting? Where is it expanding? Relate to the physical
-   behavior of the system.
-7. **Sensitivity counterfactual.**
-   For the pendulum, compute $\frac{\partial \x(t_f)}{\partial \uvec(t_0)}$ using the
-   sensitivity STM. Which initial torque direction has the largest effect on the
-   terminal state?
-8. **Attribution in a 3-link chain.**
-   For a 3-DOF chain (torso--arm--forearm), compute the off-diagonal mass matrix terms
-   $M_{ij}$ and the inertial torques $\tau_{\text{inertial}, j}$ during a prescribed
-   deceleration of the torso. Which link receives the most inertial energy?
+1. []{#ex-ch7:duffing} **A Nonlinear Oscillator and Its Branch.** For the nondimensional model $\ddot z+z^3=u$, start at $(z,\dot z)=(1,0)$. Integrate zero input and the feedback $u=-2z$. Plot positions, velocities and $E=\dot z^2/2+z^4/4$. Verify $\dot E=u\dot z$ and conservation of $E+z^2$ on the feedback branch. With declared capacity $|u|\leq3$, compute $\rho=|z|^3/3$ along each branch, separately from the realized-input ratio. Explain why a zero actual input makes the latter undefined or infinite without implying actuator failure.
+1. []{#ex-ch7:zvcf} **Velocity Resets and Constraints.** For Exercise 1 compute zero-input and control-preserved ZVCF accelerations at the initial state; compare them with the actual acceleration. There is no gravity in this nondimensional oscillator: identify the restoring term. Next impose the moving constraint $q-t=0$ on a unit mass. Show why setting its admissible velocity to zero violates the constraint, and explain what additional reset rule a physical counterfactual would require.
+1. []{#ex-ch7:scaling} **Conditional Quadratic Scaling.** At fixed configuration, write the double-pendulum Coriolis acceleration for $v=sw$. State conditions on $q,w$ and actuator capacity under which $\rho_W/s^2$ has a positive finite limit. Give a direction or configuration where the quadratic coefficient vanishes. Compare with the constant-length single pendulum and explain the role of Cartesian radial acceleration.
+1. []{#ex-ch7:energy} **Work, Potential, and Dissipation.** For fixed ideal supports, derive $\Delta T=W_u-\Delta V-W_d$, where $W_u=\int u^TB^Tv\,dt$ and $W_d=\int\mathcal D\,dt$. Derive the actual-minus-ZTCF total-energy balance. Verify the two-link constant-torque identity numerically. Construct a nonzero control history with zero net work and explain why it need not leave the trajectory unchanged.
+1. []{#ex-ch7:identification} **Identifying an Input Channel.** Use the model $\ddot q=\theta_1\sin q+\theta_2\dot q+\theta_3u$. Generate noiseless and noisy data under two distinct input policies; examine the rank and singular values of the regressor. Fit parameters on one collection and test on the other. Construct a policy that makes a pair of columns dependent. Repeat with differentiated noisy positions and explain any bias or instability in the recovered parameters.
+1. []{#ex-ch7:contraction} **Stability in a Declared Metric.** Compute the undamped double-pendulum Jacobian near its hanging equilibrium and compare the full-state flow with a damped linearization. Explain why canonical conservative flow cannot uniformly contract every state direction in a uniformly equivalent metric. For $J=[-1,10;0,-1]$, calculate transient amplification and find a constant positive-definite $P$ satisfying $J^TP+PJ\prec0$.
+1. []{#ex-ch7:pulse} **A Torque Pulse and an Impact Event.** For a pendulum with a small constant torque pulse over $[t_b,t_b+\Delta]$, integrate the variational response to a fixed terminal time and compare it with finite differences of nonlinear trajectories as pulse amplitude decreases. Repeat for a transversal angle-crossing event, including its time shift. State the input/output weights before identifying the most influential pulse direction. Explain why a change at a single isolated time is different from a pulse or an impulse.
+1. []{#ex-ch7:chain} **A Three-Link Energy Attribution.** Specify a torso--arm--forearm model, joint coordinates, applied torques, boundary constraints and segment inertias. If torso deceleration is prescribed, solve for the required enforcing reaction. Compute each link's energy change and interface wrench power, including relative joint motion. Compare a torque-removal branch with the actual motion. Explain which results follow from off-diagonal inertia terms and which require the complete force, velocity and boundary-power calculation.
