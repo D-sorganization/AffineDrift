@@ -1,386 +1,255 @@
-% ═════════════════════════════════════════════════════════════════
-% CHAPTER 14: The Complete Golf Swing
-% ═════════════════════════════════════════════════════════════════
-
 \chapter{The Complete Golf Swing: Putting It All Together}
 \label{ch:complete_swing}
 
-\epigraph{A perfect golf swing is a masterpiece of managed drift.}{---AffineDrift}
+\begin{laymansbox}{One Swing, Interacting Mechanisms}{ch14:synthesis}
+A golfer arrives at impact with more than a clubhead speed. Position, orientation, translational and angular velocity, shaft deformation, tissue state and contact conditions have developed together. Earlier muscle work changes energy and momentum; changing geometry changes how forces act; muscle activation affects both movement and response to disturbance. The collision then converts part of the delivered mechanical state into ball motion.
 
-% ─────────────────────────────────────────────────────────────────
-\begin{laymansbox}{Integration of Theory and Observation}{ch14:synthesis}
-Chapters~1--13 developed a mathematical framework for the golf swing, examining forces, constraints, control authority, elastic dynamics, connective tissue mechanics, and connections across scientific disciplines. This framework must now be connected to the continuous golf swing as an integrated dynamic system.
-
-In this final chapter, we analyze a complete swing phase by phase, evaluating drift, control magnitude, and constraints at each moment. The analysis identifies which aspects of the swing are explained by the present framework and which aspects require future investigation.
-
-The fundamental structure is this: the golf swing is not a sequence of isolated configurations or movements. The swing is a continuous evolution of the state $\state(t)$ governed by the equations of motion $\dot{\state} = f(\state) + G(\state)\control$. Understanding the swing requires understanding this state evolution from address through follow-through.
-
-This chapter synthesizes the preceding material through analysis of each swing phase.
+The purpose of a complete-swing model is to explain these connections and make comparisons testable. It should help answer why a particular change improves delivery, which assumptions that explanation needs, and what measurements could distinguish competing explanations. Calling a phase ``drift-dominated'' does not answer those questions by itself. This chapter connects phase descriptions to equations, worked examples and an investigation protocol.
 \end{laymansbox}
 
-% ─────────────────────────────────────────────────────────────────
 \section{The Full Model: Body, Arms, Club, Shaft, and Ground}
+\index{complete model}\index{kinematic chain}\index{constraint forces}
 
-\index{complete model}
-\index{kinematic chain}
-\index{constraint forces}
+Choose a system boundary before assigning forces. For the golfer and club together, hand--club interactions are internal. Gravity, ground contact, aerodynamic loads and, during impact, ball or turf contact are external. Ground reaction is therefore not the only external force besides gravity. For the club alone, the hand wrench crosses the boundary and can supply substantial power. Both descriptions are useful, but their force and energy accounts differ.
 
-A complete model of the golf swing extends far beyond rigid segments and ideal joints. It includes:
+Let $q$ contain the modeled body configuration and shaft deformation coordinates, and let $v$ contain their corresponding generalized velocities. A floating-base orientation may require $\dot q=N(q)v$ rather than $\dot q=v$. Add internal states $z$ when activation, tendon dynamics, viscoelastic history or other memory affects subsequent evolution. A suitable continuous state within a contact mode is
+\begin{equation}
+x=(q,v,z),\qquad \dot q=N(q)v.
+\label{eq:complete_state}
+\end{equation}
+Modal positions without modal velocities do not determine shaft evolution. Likewise, identical joint angles and velocities with different muscle activation need not produce identical accelerations. Ideal contact reactions are normally algebraic unknowns, not additional independent state coordinates; compliant contact may introduce deformation and memory states.
 
-\begin{itemize}
-\item \textbf{Ground reaction forces} (Chapter~\ref{ch:grf}): the impulse foundation, providing the only external force besides gravity
-\item \textbf{Muscle-to-torque mapping} (Chapter~\ref{ch:muscle-to-torque}): the configuration-dependent moment arms that convert hundreds of muscle forces into joint torques
-\item \textbf{Muscle biology} (Chapter~\ref{ch:muscle-force-generation}): the force--length and force--velocity constraints that limit muscular control authority
-\item \textbf{Aerodynamic drag} (Chapter~\ref{ch:aerodynamic-drag}): the velocity-squared resistance that modifies the drift field at high speeds
-\item \textbf{Soft tissue compliance} (Chapter~\ref{ch:soft_tissue_pliable}): wobbling mass and viscous damping that smooth the rigid-body dynamics
-\item \textbf{Spinal mechanics} (Chapter~\ref{ch:spine_modeling}): the S-curve, flexion--rotation coupling, and intervertebral constraints
-\item \textbf{Joint models} (Chapter~\ref{ch:anatomy_joint_modeling}): appropriate idealizations for each joint, with identified breakdown regions
-\item \textbf{Degrees of freedom} (Chapter~\ref{ch:dof_urdf_models}): the full kinematic specification in URDF format
-\item \textbf{Neural control} (Chapters~\ref{ch:motor_control_brain}--\ref{ch:passive_distributed_control}): feedforward commands, impedance tuning, and distributed control via passive mechanics and spinal reflexes
-\end{itemize}
+For a declared torque-input model, write the mechanical equations as
+\begin{equation}
+M(q)\dot v=r(q,v,z)+B(q)\tau+J(q)^T\lambda,
+\qquad Jv=0.
+\label{eq:complete_dynamics}
+\end{equation}
+Here $M$ is positive definite on the chosen independent velocity coordinates. The vector $r$ includes known passive, gravity, velocity-dependent and other declared loads with their signs; $B\tau$ is the modeled applied generalized load. The rows of $J$ describe independent, stationary, active ideal constraints. A two-hand grip can close a kinematic loop; foot contact can constrain a floating base. Neither makes its reaction an independently commanded actuator.
 
-The full state vector is enormous: 20+ joint angles, 20+ joint angular velocities, plus the modal coordinates for shaft flexibility, plus the ground reaction forces (which are determined by the constraints). But despite the dimensionality, the affine structure holds:
+For a fixed feasible contact mode with full-row-rank $J$, differentiate the velocity constraint and eliminate $\lambda$. Define
+\begin{equation}
+\begin{aligned}
+A_c&=JM^{-1}J^T,\\
+D_c&=M^{-1}-M^{-1}J^TA_c^{-1}JM^{-1},\\
+a_0&=D_cr-M^{-1}J^TA_c^{-1}\dot Jv,\\
+B_c&=D_cB,\qquad \dot v=a_0+B_c\tau.
+\end{aligned}
+\label{eq:complete_reduced}
+\end{equation}
+The reaction follows from
+\begin{equation}
+\lambda=-A_c^{-1}\{JM^{-1}(r+B\tau)+\dot Jv\}.
+\label{eq:complete_reaction}
+\end{equation}
+It depends on input. Keeping the measured reaction fixed while changing torque generally violates the same constraint. The acceleration offset contains the moving-tangent term $\dot Jv$ even for a stationary curved constraint. These equations are a derivation of the torque-affine mechanics, not an assertion that every physiological model is globally control-affine in neural excitation.
 
-\[
-\dot{\state} = f(\state) + G(\state) \control
-\]
+For muscles, an excitation input can first alter $z$, with force subsequently determined by activation, length, shortening velocity, tendon state and history. The attainable torque set can therefore depend on both state and recent inputs. A zero-torque actuator intervention differs from zero excitation, which need not immediately remove muscle force. Use $\dot x=f(x)+G(x)u$ only when the selected input and constitutive model actually support that representation.
 
-The drift field $f$ includes gravity, Coriolis forces, elastic forces from the shaft, and passive damping. The control field $G$ is the mapping from muscle torques to accelerations. The constraints are managed through Lagrange multipliers (the constraint forces).
+Contact feasibility remains an additional condition: normal forces cannot pull a nonadhesive foot toward the ground, tangential forces must satisfy the chosen friction law, and a contact must be removed when its gap opens. Slip, lift-off, heel/toe changes and collision can change the governing mode. A smooth equation valid in one mode is not a complete hybrid swing model.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.9, every node/.style={align=center}]
-  % Main system box
-  \node[draw, rectangle, minimum width=5cm, minimum height=3cm, rounded corners] (system) at (0,0) {
-    \begin{tabular}{l}
-      \textbf{Complete Swing System} \\[0.2cm]
-      $\dot{\bm{q}} = \bm{v}$ \\
-      $\bm{M}\ddot{\bm{q}} = f(\bm{q},\bm{v}) + G(\bm{q})\bm{u} + \bm{J}_c^T\boldsymbol{\lambda}$
-    \end{tabular}
-  };
-
-  % Drift components
-  \node[draw, rectangle, minimum width=1.3cm] (gravity) at (-3, 2.5) {\small Gravity};
-  \node[draw, rectangle, minimum width=1.3cm] (coriolis) at (-0.8, 2.5) {\small Coriolis};
-  \node[draw, rectangle, minimum width=1.3cm] (elastic) at (1.5, 2.5) {\small Elastic};
-  \node[draw, rectangle, minimum width=1.3cm] (damping) at (4, 2.5) {\small Damping};
-
-  % Control
-  \node[draw, rectangle, minimum width=2cm] (control) at (-1.5, -2.5) {\small Muscle Torques};
-  \node[draw, rectangle, minimum width=2cm] (constraints) at (1.5, -2.5) {\small Ground Reaction};
-
-  % Connections
-  \draw[-] (-3,1.5) -- (-3,0.5);
-  \draw[-] (-0.8,1.5) -- (-0.8,0.5);
-  \draw[-] (1.5,1.5) -- (1.5,0.5);
-  \draw[-] (4,1.5) -- (4,0.5);
-
-  \draw[-] (-1.5,-1.5) -- (-1.5,-0.5);
-  \draw[-] (1.5,-1.5) -- (1.5,-0.5);
-
-  % Labels
-  \node[font=\small] at (-3.5, 3.2) {$f(\state)$};
-  \node[font=\small] at (-1.2, 3.2) {$f(\state)$};
-  \node[font=\small] at (1.0, 3.2) {$f(\state)$};
-  \node[font=\small] at (3.5, 3.2) {$f(\state)$};
-  \node[font=\small] at (-1.5, -3.2) {$G(\state)\control$};
-  \node[font=\small] at (1.5, -3.2) {Constraints};
-\end{tikzpicture}
-\caption{Structure of the complete golf swing model. The drift field $f(\state)$ comprises gravity, Coriolis effects, elastic forces, and damping. The control field $G(\state)\control$ represents muscle torques. Constraint forces $\bm{J}_c^T\boldsymbol{\lambda}$ arise from ground contact and kinematic structure.}
+\includegraphics[width=\linewidth]{figures/complete_swing_system.pdf}
+\caption{Preparation, Coupled Evolution, Delivery, and Outcome. Measurements and Model Assumptions Are Needed at Every Stage; the Arrows Describe Dependencies, Not Validated Causal Attribution.}
 \label{fig:ch14_complete_model}
 \end{figure}
 
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 1: Address (Static Configuration, Pre-Swing Dynamics)}
+\section{What a Drift Ratio Measures}
+\index{drift!throughout swing}\index{control!throughout swing}
+\index{control authority!temporal variation}
 
-\index{address}
-\index{setup}
-\index{initial conditions}
+A norm requires compatible units and an explicit metric. Comparing meters, radians, velocities and activation entries in an unscaled state vector can make a ratio depend mainly on unit choices. For one acceleration-based diagnostic, choose a positive-definite weighting $W$ and an admissible torque set $\mathcal U(x)$. Define
+\begin{equation}
+c(x)=\sup_{\tau\in\mathcal U(x)}\|B_c(x)\tau\|_W,
+\qquad D_{\rm avail}(x)=\frac{\|a_0(x)\|_W}{c(x)}.
+\label{eq:complete_dcr}
+\end{equation}
+This definition uses available input, not the torque actually applied. Using the realized torque in the denominator defines a different estimand. If $c=0$, the ratio is infinite for nonzero numerator and undefined if both vanish. Coupled muscle limits, unilateral contacts and asymmetric torque bounds cannot generally be summarized by substituting one vector called $u_{\max}$.
 
-The swing begins at address, with the golfer standing still (or nearly still) at the ball.
+The ratio loses direction. In the dimensionless system $\dot x_1=1000$, $\dot x_2=u$, $|u|\leq1$, the drift-to-available-input norm ratio is 1000. Yet the entire evolution of the output $y=x_2$ is controlled by $u$; drift contributes zero in that direction. A task-direction support function, or a finite-horizon reachable-output calculation, answers a different and often more relevant question.
 
-\subsection*{The Physics of Address}
+For fixed $q$, fixed ideal contacts and the torque-input assumptions above, the instantaneous derivative is
+\begin{equation}
+\frac{\partial\dot v}{\partial\tau}=B_c(q).
+\label{eq:complete_gain}
+\end{equation}
+Increasing speed can increase the velocity-dependent bias without reducing this derivative. Physiological torque limits may change with speed, and configuration can change $M$, $J$ and $B$; those are distinct mechanisms. ``The inertia becomes large because the body is moving fast'' is not a general property of rigid-body mass matrices.
 
-At address, the golfer's body is in static equilibrium (or near-static equilibrium) with the ground. The feet exert forces on the ground; the ground exerts reaction forces: normal force (perpendicular to the ground) and friction force (parallel to the ground). Muscles maintain the configuration against gravity through isometric contraction.
+For an independently checkable constrained example, take
+\begin{equation}
+M=\begin{bmatrix}2&0.4\\0.4&1\end{bmatrix},\qquad
+J=\begin{bmatrix}1&1\end{bmatrix},\qquad B=I.
+\label{eq:complete_gain_example}
+\end{equation}
+The constraint allows only opposite coordinate accelerations. Adding the generalized input $(10,0)^T$ changes acceleration by $(10/2.2,-10/2.2)^T$, regardless of the existing velocity-dependent bias. Equal inputs $(1,1)^T$ produce no acceleration change and are balanced by the reaction. Thus even a large available input norm says little about a particular useful direction unless constraints are included.
 
-In the affine framework at address, the state velocity $\dot{\state}$ is zero. The drift field $f(\state)$ includes gravitational acceleration. Muscle torques (control inputs $\bm{u}$) balance gravitational torques to maintain equilibrium. The control authority is maximal, as $G(\state)$ is fully determined by the biomechanical structure and muscle properties.
+There is no calculated universal DCR curve in this chapter. Earlier numerical phase bands are removed because neither a declared computation nor the cited empirical study established them. A phase trend must be computed for a stated model, metric, input set, uncertainty and contact sequence. It is not a definition of expertise, conscious effort or metabolic efficiency.
 
-The swing initiates when muscle activations change from the equilibrium pattern. New muscle activation sequences create nonzero control inputs $\bm{u}(t)$. This activation pattern initiates the backswing phase.
+\section{Phase 1: Address and Initial State Preparation}
+\index{address}\index{setup}\index{initial conditions}
 
-\subsection*{The Importance of Initial Conditions}
+At an ideal steady address, generalized velocity and acceleration vanish, but supporting muscle loads need not vanish. Equilibrium requires the applied, passive and contact loads to balance, together with feasible contact forces. The reduced zero-input acceleration need not point vertically downward: geometry and support constraints shape the permitted motion. A nearly stationary person may also have small postural motion or changing activation, so a video frame alone does not establish a full-state equilibrium.
 
-The initial configuration at address is crucial. It determines:
+Stance, ball position, grip and alignment change geometry and the reachable set of club poses. They can also change feasible support moments and muscle moment arms. Gravitational potential changes by $\sum_i m_i g\,\Delta h_i$ for the chosen segments; a wider stance or increased forward lean does not universally raise their centers of mass. The energy claim must follow the actual geometry.
 
-\begin{enumerate}
-\item \textbf{The initial potential energy:} A wider stance or more forward lean increases gravitational potential energy available to be converted to kinetic energy.
+Preparation is consequently more than selecting a photograph. The initial velocities, shaft state, activation and task intention influence what follows. Repeatable address geometry can reduce one source of variation, but movement variability, fatigue, equipment and subsequent control still matter. No claim of maximal control authority at address follows merely from knowing $G$ or standing still.
 
-\item \textbf{The initial constraint configuration:} The hand position, grip angle, and club face angle at address determine how the constraints will guide the motion.
+\section{Phase 2: Backswing and Distributed Loading}
+\index{backswing}\index{coiling}\index{potential energy}\index{kinetic energy}
 
-\item \textbf{The initial muscle state:} The baseline muscle activation level (how tensioned the muscles are) affects the rate at which muscle torques can increase.
-\end{enumerate}
+The backswing changes body and club geometry while muscles perform positive and negative work at different locations. Raising a segment can store gravitational energy. Stretching a loaded elastic element can store recoverable strain energy, while hysteresis and viscosity dissipate some work. A visible torso turn does not identify the strain energy of an individual tendon, fascia sheet or muscle fiber. Activation-dependent tissue behavior also makes ``elastic'' different from ``metabolically passive.''
 
-Small changes in address can significantly change the swing that follows. This is because the drift field is sensitive to the initial conditions. A slightly different hand position at address means a slightly different trajectory for the $\ztcf$ family, which requires different control inputs to correct.
+Angular momentum and kinetic energy develop as mass moves. They are not stored in a lag angle independently of velocity. Some segments begin decelerating or reversing while others are still moving backward. If the top is defined by reversal of a particular club-coordinate angle, that coordinate's rate crosses zero at the event; other generalized rates need not do so. The top therefore does not imply simultaneous maximal speed, maximal tissue stretch or zero kinetic energy of the entire golfer.
 
-This is why swing consistency begins with consistent setup. A golfer who is careful about address (foot position, ball position, hand position, alignment) is setting the initial conditions for a consistent drift field.
+Keep rotation references explicit. The McTeigue study's publisher abstract reports upper-body and hip rotations relative to its measurement reference; those values are not a torso rotation of 90 degrees relative to the hips \citep{McTeigue1994}. Subtracting two projected orientation angles also need not equal an anatomical spinal rotation in three dimensions. A useful analysis names the segments, axes, decomposition and event.
 
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 2: Backswing (Storing Energy, Building Momentum)}
+Backswing duration and amplitude are observations that vary with player, club and shot. A model can compare alternatives while constraining delivery, load and effort. The affine form alone does not establish an optimal duration, require a maximum stretch at the top, or show that the motor cortex has finished planning and the cerebellum has learned a specific drift field.
 
-\index{backswing}
-\index{coiling}
-\index{potential energy}
-\index{kinetic energy}
+\section{Phase 3: Transition and Coupled Sequencing}
+\index{transition}\index{downswing initiation}\index{lag}
 
-The backswing lasts roughly 0.6--0.8 seconds (longer than the downswing) \citep{Nesbit2005,McTeigue1994}. During the backswing, the golfer's muscles actively rotate the body, raising the arms and twisting the torso.
+Transition is an interval of overlapping segment reversals, not necessarily one simultaneous reversal of all angular momentum. Define it with observable events, such as pelvic rotation reversal, club reversal and a specified change in hand motion. Compare the event times with measurement uncertainty; a universal 50--100ms transition is not needed to explain the mechanics.
 
-\subsection*{Energy Loading}
+The mass matrix couples accelerations, and velocity-dependent terms reflect the changing geometry of moving segments. Active torques, tissue loads and contact reactions act within that same system. A distal acceleration can result partly from proximal actuation, but a proximal-to-distal ordering of velocity peaks does not prove a uniquely passive cascade. Joint torques at several locations can generate similar motion, and the ordering can change with task, model, initial state and actuator limits.
 
-The backswing has three simultaneous effects:
+For an explicit coupling example, a positive-definite two-coordinate inertia
+\begin{equation}
+M=\begin{bmatrix}a&b\\b&c\end{bmatrix},\qquad ac-b^2>0,
+\label{eq:complete_coupling}
+\end{equation}
+gives a second-coordinate acceleration change $-b\,\delta\tau_1/(ac-b^2)$ when only the first generalized load changes and the other loads are held fixed. Coupling can assist or oppose a chosen distal direction depending on the coordinate convention and configuration. This calculation predicts an instantaneous response, not an entire sequence of peak velocities or a causal energy-transfer story.
 
-\begin{enumerate}
-\item \textbf{Storing gravitational potential energy:} As the arms swing up, they rise in height. The center of mass of the arms, club, and torso may move upward, storing potential energy. This energy will be released during the downswing.
+Ground forces and moments enter the momentum balance. For the combined golfer--club system, about its center of mass $C$ in an inertial frame,
+\begin{equation}
+\begin{aligned}
+m\ddot r_C&=\sum F_{\rm ext},\\
+\dot H_C&=\sum\big[(r_k-r_C)\times F_k+\mu_k\big].
+\end{aligned}
+\label{eq:complete_momentum}
+\end{equation}
+Internal forces cancel from the total linear-momentum balance, but redistribute momentum among segments. A stationary foot can supply an external moment without doing contact work. For example, a vertical 800N force applied 0.2m horizontally from $C$ has a 160N m moment magnitude even when its contact-point velocity is zero. These are illustrative values, not a prescription for a golfer's ground loading.
+
+Ground reaction peaks need to be measured in a declared direction and reference interval. Total vertical force, each foot's vertical force, horizontal shear, center of pressure and free moment are different signals. They need not peak together or at transition. Muscles help create motion under support constraints; ground reaction does not directly identify which gluteal or other muscle was activated.
+
+\section{Phase 4: Early Downswing, Release Coordinates, and Shaft State}
+\index{downswing!early phase}\index{acceleration phase}\index{DCR!low}
+
+Define ``lag'' before measuring it. A projected arm--shaft angle describes one aspect of articulated geometry. Wrist flexion/extension, radial/ulnar deviation and forearm rotation are distinct anatomical motions. Flexible shaft lead/lag and toe-up/toe-down deflections describe deformation relative to a specified shaft reference. The shaft's angle to the horizontal is an absolute orientation, not a universal measure of wrist lag or elastic storage.
+
+Maintaining a projected angle does not by itself prove active resistance, nor does its release prove a particular extensor contraction. Net joint moments require a dynamic model and external loads; individual muscle forces require additional information. Motion can result from active load, transmitted segment forces, inertia and passive tissue response together. Relative angles and angular velocities are informative observables, but they do not identify the control strategy on their own.
+
+In an inertial frame, a clubhead following a curved path has an inward normal acceleration $v_h^2/R_{\rm path}$, where $R_{\rm path}$ is the local curvature radius and $v_h$ the speed. Tangential acceleration changes speed. Outward centrifugal terms arise in an appropriate rotating-coordinate description; Coriolis, Euler and frame-translation terms must then be included consistently. A large normal acceleration is not an additional source of outward power.
+
+Shaft bending is driven by the coupled hand motion, grip loads, head inertia and offset geometry. Its deformation can change sign and can differ between bending directions. Earlier loading is retained through both deformation and modal velocity. High axial tension can modify transverse dynamics through geometric stiffness, but its effect depends on loading and the structural model; it does not imply a universally monotonic shaft stiffness or bend through the downswing.
 
-\item \textbf{Creating muscular tension (elastic energy in muscles and tendons):} The muscles that were in baseline contraction are now stretched. The elastic proteins in muscle (like titin) stretch, storing elastic energy. The tendons also stretch, storing energy. At the top of the backswing, the muscles are maximally stretched and tensioned.
+The shaft-deflection simulations of MacKenzie and Sprigings show that both loading direction and previous bending matter, with radial loading capable of shifting the time of peak relative head velocity beyond a neutral shaft shape \citep{MacKenzie2010Deflection}. This is a model result with specified boundary conditions. It does not justify assigning a fixed snapback time or the same deformation pattern to every player.
 
-\item \textbf{Building rotational momentum:} The torso, arms, and club are rotating. The angular velocity increases throughout the backswing (though not uniformly). Near the top of the backswing, the angular velocity peaks, and the rotational kinetic energy is significant.
+\section[Phase 5: Mid-Downswing and the Remaining Correction Window]{Phase 5: Mid-Downswing\\and the Remaining Correction Window}
+\index{downswing!mid-phase}\index{DCR!critical}\index{decision point}
 
-\end{enumerate}
+The time available before impact matters, but it is not interchangeable with instantaneous input gain. A fixed-inertia rotor demonstrates the distinction. With inertia $I=0.1$kg m$^2$, an added constant torque of 1N m for 40ms changes angular velocity by 0.4rad/s and angle by 0.008rad, approximately $0.458$ degrees:
+\begin{equation}
+\Delta\omega=\frac{\delta\tau}{I}\Delta t,\qquad
+\Delta\theta=\frac{\delta\tau}{2I}(\Delta t)^2.
+\label{eq:complete_rotor}
+\end{equation}
+These increments are independent of the initial rotor speed. They are not measured golf responses: the model omits changing geometry, muscle dynamics, contacts and flexibility. They show why limited time reduces some corrections without proving that speed has removed input authority. Whether a fraction of a degree matters depends on the delivery variable and task tolerance.
 
-In the affine framework, the backswing is characterized by high control authority. The DCR (drift-control ratio) is low under the selected weighting: the magnitude of the available control field $\norm{G(\state)\control}$ exceeds or is comparable to the magnitude of the drift field $\norm{f(\state)}$. The muscles apply substantial torques to overcome gravity and inertial resistance and accelerate the body along the backswing trajectory.
-
-During the backswing, muscle activations alter the configuration $\bm{q}(t)$, changing which portion of configuration space the system will access. This configuration change will affect the drift field $f(\state)$ in the subsequent downswing, as the drift field is configuration-dependent: $f(\state) = f(\bm{q}(t), \dot{\bm{q}}(t))$.
-
-\subsection*{The Top of the Backswing}
-
-At the top of the backswing, the body is wound up. The torso has rotated (typically 90+ degrees relative to the hips). The arms are high. The wrists have hinge (cocked). The shaft is bent from the centrifugal loading.
-
-The moment at the top is transitional. The muscles that were driving rotation are now being loaded (stretched), and the muscles that will drive the downswing are being activated. This is where the most explosive part of the swing is prepared.
-
-From a control perspective, the top of the backswing is the end of the high-control phase. The motor cortex has finished planning the forward motion. The cerebellum has learned the drift field that will apply in the downswing. The body is configured to exploit that drift.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 3: The Transition (Critical Configuration, Drift Setup)}
-
-\index{transition}
-\index{downswing initiation}
-\index{lag}
-
-The transition is the moment when the backswing stops and the downswing begins. It lasts only about 50--100 milliseconds but is extraordinarily important \citep{Nesbit2005,McTeigue1994}.
-
-\subsection*{What Happens at the Transition}
-
-At the top of the backswing, the torso and arms are rotating with significant angular velocity. The transition is when this momentum is redirected. Instead of continuing to rotate backward, the body begins to rotate forward, toward the ball.
-
-Physically, the transition involves:
-
-\begin{enumerate}
-\item \textbf{Initiation of hip rotation:} The hip muscles (primarily the glute medius and maximus, driven by ground reaction forces) begin to drive forward rotation of the hips. This is the \textbf{lower body drive}.
-
-\item \textbf{Elastic recoil of the stretched muscles:} The stretched muscles and tendons of the torso and legs snap back, adding power to the forward rotation. The elastic energy stored during the backswing is released.
-
-\item \textbf{Lag formation:} As the hips rotate forward and the shaft springs back, the hands lag behind. The angle between the shaft and the arms (shaft lag) increases. This lag is crucial: it stores additional angular momentum in the shaft and the clubhead. The spine, driven by its S-curve geometry and intervertebral constraints (Chapter~\ref{ch:spine_modeling}), couples the hip and shoulder rotation, producing the characteristic lag pattern.
-
-\item \textbf{Ground reaction force peak:} The feet press down on the ground, and the ground pushes back. The vertical ground reaction force peaks during the transition, providing the foundation for the forward motion.
-\end{enumerate}
-
-In the affine framework, the transition marks the beginning of a shift in the relative magnitudes of control and drift. The hip and leg muscle activations represent control inputs (the $G(\state)\control$ term) that initiate forward rotation. The elastic recoil of stretched muscles and tendons, the shaft bending dynamics, and the lag formation are all components of the drift field $f(\state)$. As velocities increase through the transition, the drift field magnitude grows.
-
-\subsection*{The Kinetic Chain Sequence}
-
-The transition reveals the kinetic chain in action. The sequence is:
-
-\begin{enumerate}
-\item \textbf{Lower body:} Hips initiate rotation, driven by ground reaction forces and muscle contraction.
-\item \textbf{Torso:} The rotating hips transmit force to the torso through the spine and fascia. The torso begins to rotate.
-\item \textbf{Upper arms:} As the torso rotates, the shoulder muscles (controlled by the nervous system, but also driven passively by torso rotation) transmit force to the upper arms.
-\item \textbf{Forearms and hands:} The hands lag behind the arm rotation. This lag stores angular momentum.
-\item \textbf{Club:} The shaft bends and the clubhead lags even more than the hands. The shaft lag stores energy.
-\end{enumerate}
-
-The kinetic chain sequence emerges from the coupled equations of motion. The control input is hip initiation through ground reaction forces and muscle torques. The subsequent motion of torso, arms, and club is determined by the kinematic constraints and the inertial coupling through the mass matrix $\bm{M}(\bm{q})$ and Coriolis terms in the drift field. This coupled evolution produces the observed sequential acceleration pattern without requiring independent specification of each segment's trajectory.
-
-The affine framework captures this structure: a relatively small number of control inputs (hip and leg muscle torques) produce complex, multi-segment motion through the mechanical coupling encoded in the drift field and constraints.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 4: Early Downswing (Acceleration, Low DCR)}
-
-\index{downswing!early phase}
-\index{DCR!low}
-\index{acceleration phase}
-
-The early downswing lasts from the transition (about $t=0$) to mid-downswing (about $t=0.08$ s). During this phase, the angular velocity of the body is increasing, but it is still moderate (perhaps $4{-}6$ rad/s at the hip, $8{-}10$ rad/s at the shoulders) \citep{Nesbit2005,Coleman2007}.
-
-\subsection*{Drift and Control at Early Downswing}
-
-In the early downswing, the selected drift-control ratio (DCR) is comparatively low (illustratively about 0.2--0.4 in the cited swing model \citep{Nesbit2005}). Low DCR indicates relatively high control authority: the magnitude of the control field $G(\state)\control$ can significantly alter the state evolution compared to the drift field alone.
-
-The control inputs are primarily hip and torso rotation, driven by ground reaction forces (Chapter~\ref{ch:grf}) that push the lower body forward and upward. The muscles that drove the backswing are now being decelerated (eccentric contraction, resisting motion). The muscles that drive forward rotation are being accelerated. The transition from backward to forward motion is being managed.
-
-The drift field in the early downswing is complex. It includes:
-
-\begin{enumerate}
-\item \textbf{Gravity:} Still pulling down, still affecting the vertical position and the vertical component of velocity.
-
-\item \textbf{Coriolis forces:} The body is rotating; Coriolis forces are acting on the limbs, deflecting them sideways (in the rotating reference frame of the torso).
-
-\item \textbf{Elastic forces from the shaft:} The shaft has been bent by the backswing. Now, as the hand motion begins to catch up with the centrifugal pull on the clubhead, the shaft bends more (not less), storing additional elastic energy. The restoring force is small but growing.
-
-\item \textbf{Elastic forces from muscles and tendons:} The stretched muscles are snapping back, providing a passive restoring force.
-
-\item \textbf{Centrifugal stiffening:} As the rotation rate increases, centrifugal effects begin to stiffen the shaft.
-\end{enumerate}
-
-The observed kinetic chain sequence (hips leading, torso following, arms trailing) results from the coupled dynamics and the timing of muscle activation patterns. This sequence is consistent with the kinematic structure and the magnitude of available control inputs. The nervous system modulates muscle activation patterns throughout the downswing; proprioceptive feedback (position and velocity sensing) informs this modulation based on sensorimotor integration in spinal and supraspinal structures.
-
-\subsection*{The Lag Maintenance}
-
-A key feature of the early downswing is \textbf{lag maintenance}. The shaft lag (the angle between the shaft and the horizontal) should not decrease significantly during the early downswing. In fact, lag often increases slightly.
-
-Why? Because the centrifugal acceleration on the clubhead scales with the square of the rotation rate. As the body rotation accelerates, centrifugal loading on the shaft increases, causing increased bending. The wrist muscles apply torques that determine the hand-clubhead angle; if wrist muscle torques are insufficient to maintain the wrist angle against increasing centrifugal loading, the lag will decrease.
-
-The observed maintenance of lag during early downswing indicates that wrist muscle activation patterns produce torques that resist the centrifugal bending of the shaft and maintain the angle between the shaft and the hand. This requires quantitative analysis of the wrist torques (from the control field $G(\state)\control$) compared to the centrifugal forces (in the drift field).
-
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 5: Mid-Downswing (Critical Phase, DCR Rising)}
-
-\index{downswing!mid-phase}
-\index{DCR!critical}
-\index{decision point}
-
-Mid-downswing lasts from approximately $t=0.08$ to $t=0.12$ s. During this phase, the angular velocity of the body and the magnitudes of gravitational, Coriolis, and centrifugal accelerations increase substantially. The selected DCR rises (illustratively about 0.4--0.7 in the cited swing model \citep{Nesbit2005}), indicating that the drift field magnitude increases relative to the achievable control magnitude.
-
-\subsection*{The Drift Field Dominance}
-
-In mid-downswing, the drift field is becoming the dominant influence on the swing. The control inputs are still present (the muscles are still active, driving the motion), but the drift field is large and difficult to resist.
-
-The drift field in mid-downswing includes all the components from early downswing, plus some that are now more significant:
-
-\begin{enumerate}
-\item \textbf{High centrifugal acceleration:} The rotation rate is substantial (approximately 15--20 rad/s at the shoulder \citep{Nesbit2005}). The centrifugal acceleration scales with $\omega^2$, producing large accelerations (approximately 500--1000 m/s$^2$ \citep{Nesbit2005}). This acceleration pulls the shaft outward and, through centrifugal stiffening, increases the effective bending stiffness of the shaft.
-
-\item \textbf{High inertial forces:} The club has mass, and it is accelerating. Inertial forces on the club (the club ``wants to'' move in a straight line due to inertia, but the constraints force it to curve) are large.
-
-\item \textbf{Increasing elastic restoring force:} The shaft is bent significantly now. The elastic restoring force $-K_s \eta$ is larger. The shaft is storing more and more elastic energy.
-
-\item \textbf{Decreasing control authority:} The muscles can still produce torques, but the inertia of the system is so large that the torques have less effect. A 10 N$\cdot$m increase in torque causes a much smaller change in acceleration now than it did early in the downswing.
-\end{enumerate}
-
-\subsection*{The Shrinking Late-Correction Window}
-
-At mid-downswing, the state evolution is increasingly determined by the drift field. The inertial resistance to changes in motion is large: the magnitude of accelerations required to substantially alter the swing path may exceed the achievable magnitude of muscle-generated torques. Quantitatively, if $\norm{f(\state)} \gg \norm{G(\state)\bm{u}_{\max}}$ under the selected weighting, then the control field acts as a bounded steering term rather than as an unrestricted path-correction mechanism.
-
-This is the physical basis for the observation that mid-downswing is when the swing trajectory becomes strongly conditioned by the kinematic configuration and velocities at the transition. Changing the swing path at this point may require control inputs exceeding the physiological maximum of muscle torque production or the available time before impact.
-
-Under these conditions, the nervous system can still maintain stiffness and make small corrections, but the model predicts diminishing returns for large late corrective torques relative to earlier state preparation.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 6: Late Downswing (Drift-Dominated Phase, High DCR)}
-
-\index{downswing!late phase}
-\index{DCR!high}
-\index{drift-dominated phase}
-
-Late downswing lasts from approximately $t=0.12$ to $t=0.16$ s (40 milliseconds before impact). During this phase, angular velocities reach their maximum in the illustrative model, and late-correction authority is limited by muscle torque, activation timing, and the already large drift field. The DCR can be high under the chosen weighting, but its value is model-dependent rather than a universal 0--1 phase label \citep{Nesbit2005,MacKenzie2009}.
-
-\subsection*{The Feedforward-Dominated Swing}
-
-In late downswing, voluntary feedback has little time to reshape the path before impact. Muscle activation is still present, but most useful control has already been expressed through earlier state preparation, feedforward timing, and maintained stiffness. The state evolution may be approximated by $\dot{\state} \approx f(\state)$ with $G(\state)\control$ representing a bounded correction term, not absent muscular action.
-
-The drift field in late downswing is complex and multifaceted:
-
-\begin{enumerate}
-\item \textbf{Extremely high centrifugal acceleration:} The clubhead acceleration magnitude reaches approximately 2000 m/s$^2$ or higher \citep{Nesbit2005}. The centrifugal stiffening of the shaft is at its maximum, increasing the effective bending stiffness. The elastic restoring force of the bent shaft reaches its maximum magnitude.
-
-\item \textbf{Coriolis deflection:} In the frame rotating with the shoulders, the clubhead is being deflected sideways by Coriolis forces. This contributes to the club path at impact.
-
-\item \textbf{Shaft snapback:} The shaft, which has been bent for the entire downswing, is now snapping back toward its straight position. This snapback is releasing the stored elastic energy directly into the clubhead, giving it a final acceleration boost.
-
-\item \textbf{Wrist release:} The wrists, which have been held cocked throughout the early and mid-downswing, are now uncocking. This uncocking is driven by a combination of muscle activation (the wrist extensors are contracting) and passive forces (the Coriolis forces and the inertia of the arms are trying to extend the wrist). The result is a rapid uncocking that adds to the clubhead velocity. Concurrent with this release, the arm and shoulder muscles are increasing impedance (Chapter~\ref{ch:passive_distributed_control}), stiffening the arm in preparation for the impact forces.
-\end{enumerate}
-
-\subsection*{The Catapult Effect in Action}
-
-This is where the shaft flexibility (Chapter~\ref{ch:flexible_shaft}) matters most. The elastic energy stored in the bent shaft is now being released. As the shaft snaps back toward straight, it does work on the clubhead, accelerating it further.
-
-The magnitude of this effect depends on the shaft's stiffness and damping, which are parameters of the drift field. A more flexible shaft stores more energy and releases it more powerfully (if the timing is right). A stiffer shaft stores less energy but might be harder to bend in the first place.
-
-The timing of shaft snapback is determined by the coupled dynamics of the bent shaft and the hand-club motion. The shaft is a flexible structure with modal coordinates $\bm{\eta}(t)$ (Chapter~\ref{ch:flexible_shaft}). The evolution of the modal coordinates depends on the drift field components (elastic restoring forces, damping) and the control field (wrist torques). The timing of maximum elastic force release is determined by this coupled evolution.
-
-If the shaft modal velocities are maximum at impact, the elastic energy release contributes maximally to the clubhead acceleration. This timing depends on the initial shaft bending (determined during the backswing and early downswing) and the shaft's natural frequency and damping properties.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 7: Impact (The Collision)}
-
-\index{impact}
-\index{collision}
-\index{ball compression}
-\index{coefficient of restitution}
-
-Impact is the briefest phase, lasting about 0.5 milliseconds (half a millisecond!) \citep{Penner2003,Jorgensen1994}. During this time, the club strikes the ball, the ball compresses, and the two separate. The collision is governed by the laws of impact mechanics.
-
-\subsection*{The Impact Dynamics}
-
-At the moment of impact, the clubhead velocity is determined by the swing dynamics and typically ranges from approximately 40 m/s (irons) to 65 m/s (drivers), depending on the club specifications and the golfer's swing mechanics \citep{Nesbit2005}. The ball, initially at rest relative to the ground, experiences a sudden impulse from the clubface.
-
-The collision is governed by the elastic properties of the ball material. The ball deforms elastically during the contact phase (approximately 0.5 milliseconds), reaching maximum compression, then rebounds. The elastic modulus and damping properties of the rubber core and synthetic cover determine the compression profile and the energy recovery.
-
-The collision is characterized by the coefficient of restitution (COR), which relates the separation speed to the approach speed:
-
-\[
-\mathrm{COR} = \frac{\text{separation speed}}{\text{approach speed}}
-\]
-
-Typical golf ball COR values are approximately 0.80--0.82, as determined empirically \citep{Jorgensen1994,Penner2001}. This COR relates the separation speed $v_{\text{sep}}$ to the approach speed $v_{\text{app}}$ through the definition $\mathrm{COR} = v_{\text{sep}}/v_{\text{app}}$. The remaining kinetic energy (18--20\%) is dissipated through internal friction in the ball material and elastic vibration of the clubface.
-
-\subsection*{The Launch Conditions}
-
-At the moment of separation from the clubface, the ball possesses linear velocity and angular velocity (spin). The linear ball velocity is determined by the clubhead velocity and the COR through the conservation of momentum and the impact equation. The spin rate is determined by the friction coefficient between clubface and ball and the contact geometry \citep{Nesbit2005}.
-
-These launch conditions (ball velocity, spin rate, launch angle, spin axis, position on clubface) are the outputs of the impact mechanics. Given these conditions and the properties of the ball (drag, Magnus coefficient), the trajectory of the ball in flight is fully determined by the equations of motion under gravity and air forces.
-
-The impact phase compresses the entire swing history into a brief moment: the state trajectory $\state(t)$ for $0 < t < 0.5$ s determines the state at impact $\state_{\text{impact}}$, which determines the post-impact ball velocity and spin. Errors in $\state_{\text{impact}}$ produce errors in the launch conditions, which propagate to errors in the final ball landing position.
-
-\subsection*{The Bounce Back}
-
-After impact, the ball is on its way. The club and hands decelerate sharply. This deceleration is driven by the contact forces during impact, and by the muscles beginning to relax.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Phase 8: Follow-Through (Constraint Management and Deceleration)}
-
-\index{follow-through}
-\index{deceleration}
-\index{ground reaction forces}
-
-The follow-through lasts from impact until the golfer comes to rest. It lasts about 0.3--0.5 seconds, much longer than the swing itself.
-
-\subsection*{Deceleration}
-
-After impact, the clubhead continues to move with residual velocity (energy not transferred to the ball). The body continues to rotate at substantial angular velocity (the transition from acceleration to deceleration does not occur instantaneously). The subsequent motion involves deceleration through eccentric muscle contraction, passive damping, and constraint forces.
-
-The deceleration is managed by:
-
-\begin{enumerate}
-\item \textbf{Eccentric muscle contraction:} The muscles that were accelerating the body now contract eccentrically (lengthening under load) to slow the rotation. This requires strength and control.
-
-\item \textbf{Passive damping:} The connective tissue (fascia, tendons, ligaments) and the joints absorb energy, damping the motion.
-
-\item \textbf{Ground reaction forces:} The feet press into the ground, and the ground provides reaction forces that slow the rotation. Late in the follow-through, the golfer may lift one foot and plant the other to pivot and decelerate.
-
-\item \textbf{Collision with the ground or obstacles:} If the golfer swings hard and loses control, they might collide with the ground or obstacles. This provides a very effective (if painful) deceleration mechanism.
-\end{enumerate}
-
-\subsection*{Constraint Management}
-
-Throughout the follow-through, the constraints are active. The hands are still holding the club (grip constraint). The feet may be in contact with the ground (contact constraint). The shoulder is not dislocating from the torso (kinematic constraint).
-
-The constraint forces (Lagrange multipliers) are doing work, directing the motion and absorbing energy. The follow-through is where the constraint forces are most visible: the hands strain to hold the club, the feet push on the ground, the muscles strain to control the deceleration.
-
-From a control perspective, the follow-through is characterized by high DCR: the drift field (inertia, gravity, and constraint forces from the ground and held objects) dominates the state evolution. Muscle activations provide primarily eccentric (lengthening) contractions that resist the inertial motion, rather than generating new motion.
-
-The deceleration forces in the follow-through are distributed across multiple joints and tissues: the hands experience reaction forces from the club they are holding; the legs and lower back experience ground reaction forces and internal joint forces. The magnitude of these constraint forces is substantial, particularly in the early follow-through \citep{Nesbit2005}. The distribution of these forces across the kinetic chain depends on the configuration and muscle activation patterns.
-
-% ─────────────────────────────────────────────────────────────────
-\section{The Complete Energy Budget: Work, Storage, and Transfer}
+New sensory information, a planned command already being executed, and the intrinsic mechanical response of activated tissue act on different timelines. Delays restrict responses to a newly detected disturbance; they do not erase ongoing force or preplanned changes. An arm-perturbation experiment found multi-joint responses involving primary motor cortex on a roughly 50ms timescale \citep{Pruszynski2011Feedback}. That result does not supply a universal golf delay or demonstrate that voluntary control is absent in a named swing phase.
+
+For a first-order illustrative activation model, $\dot a=(e-a)/T_a$, zero excitation gives $a(t)=a(t_0)\exp[-(t-t_0)/T_a]$, not immediate zero activation. Force also depends on muscle and tendon state. A late zero-excitation experiment therefore differs fundamentally from replacing all joint torques by zero. Anticipatory impedance and feedforward timing may remain important even when little time is available for a new feedback response.
+
+\section{Phase 6: Late Downswing and Flexible Delivery}
+\index{downswing!late phase}\index{DCR!high}\index{drift-dominated phase}
+
+Delivery is the outcome of continued coupled dynamics. A useful flexible-coordinate representation is $p_h=p_g+R_g r_h(\eta)$, giving
+\begin{equation}
+\dot p_h=\dot p_g+\omega_g\times(R_g r_h)
+       +R_g\frac{\partial r_h}{\partial\eta}\dot\eta.
+\label{eq:complete_head_velocity}
+\end{equation}
+All terms refer to the same physical point and inertial frame. The expression separates contributions to velocity at one state. It does not show how grip motion would change if shaft flexibility were removed. That comparison requires another dynamically consistent trajectory, because the golfer and club react to one another.
+
+The shaft-stiffness study makes this distinction concrete: a relative kick contribution of several meters per second did not equal the speed difference between optimized rigid and flexible model swings, and the tested nonrigid stiffness changes produced little speed difference in that model \citep{MacKenzie2009Stiffness}. Head orientation changed as well. These findings motivate separate reporting of delivered orientation, relative deformation velocity and the outcome of a declared equipment intervention; they do not imply universal irrelevance of shaft properties or guarantee a fitting benefit.
+
+\subsection{Force, Velocity, Power, and Stored Energy Have Different Peaks}
+
+For one unforced, undamped mode of constant modal mass $m_s$ and stiffness $k_s$,
+\begin{equation}
+\eta=A\cos(\omega_s t),\quad
+\dot\eta=-A\omega_s\sin(\omega_s t),\quad
+\omega_s=\sqrt{k_s/m_s}.
+\label{eq:complete_mode}
+\end{equation}
+Elastic force is $-k_s\eta$. At maximum $|\dot\eta|$, displacement and elastic force are zero. Maximum force occurs at a turning point, where velocity and instantaneous elastic power are zero. The elastic power delivered to modal motion is
+\begin{equation}
+P_e=-k_s\eta\dot\eta
+   =-\frac{d}{dt}\left(\frac12k_s\eta^2\right).
+\label{eq:complete_modal_power}
+\end{equation}
+Its positive maximum lies between those events. A driven, damped, coupled shaft shifts them further. Maximum modal velocity at impact therefore does not imply maximum restoring force, elastic power or head acceleration at impact.
+
+For a linear spring, stored energy is $k\eta^2/2$ at prescribed deformation, but $F^2/(2k)$ under a prescribed static force. Reducing stiffness lowers the first and raises the second. Neither boundary condition describes the entire swing. If stiffness varies with an imposed preload, the derivative of stored energy also includes $\dot k\eta^2/2$; the source of that parameter work must be included in the full system account.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/complete_swing_mode.pdf}
+\caption{Displacement, Velocity, and Elastic Power Peak at Different Times. This Free Harmonic Mode Is an Illustrative Limit, Not a Measured Shaft Trajectory.}
+\label{fig:complete_mode}
+\end{figure}
+
+The coupled equations and the impact objective determine useful timing. Energy transferred back toward the hands is not automatically wasted; it can alter subsequent movement and loads. A flexible mode can affect face orientation even when its contribution to speed along a chosen direction is small. Steel and graphite are material categories, not complete mechanical specifications: geometry, mass distribution, bending and torsional rigidity, damping and grip coupling also matter.
+
+\section{Phase 7: Impact and the Delivered State}
+\index{impact}\index{collision}\index{ball compression}\index{coefficient of restitution}
+
+Impact introduces contact forces on a much shorter timescale than the preceding swing. Specify the incoming ball and club states, contact location and orientation, material model, friction, and any external impulses being neglected. A rigid impulse model approximates a short collision; a compliant model resolves deformation and time. Their parameters and output meanings are different. A clubhead spring-effect test is not a universal ball COR limit, and its pendulum characteristic time is not the ball--club contact duration.
+
+For a transparent reference calculation, consider only a central, one-dimensional collision: an initially stationary ball of mass $m$, a free translating club mass $M$ at speed $V$, no spin and negligible external impulse during collision. Conservation of momentum and restitution give
+\begin{equation}
+MV=MV_c^++mv_b^+,\qquad v_b^+-V_c^+=eV,
+\label{eq:complete_collision}
+\end{equation}
+where $e$ is the relative separation-speed to approach-speed ratio. Solving,
+\begin{equation}
+v_b^+=\frac{(1+e)M}{M+m}V,\qquad
+V_c^+=\frac{M-em}{M+m}V.
+\label{eq:complete_collision_speeds}
+\end{equation}
+Relative to the initial club kinetic energy, the ball fraction, retained club fraction and loss fraction are
+\begin{equation}
+\begin{aligned}
+\eta_b&=\frac{mM(1+e)^2}{(M+m)^2},\\
+\eta_c&=\left(\frac{M-em}{M+m}\right)^2,\\
+\eta_D&=\frac{m}{M+m}(1-e^2),\qquad
+\eta_b+\eta_c+\eta_D=1.
+\end{aligned}
+\label{eq:complete_collision_energy}
+\end{equation}
+The relative-motion kinetic energy loses the fraction $1-e^2$; the total initial laboratory-frame energy loses $\eta_D$ in this particular setup. Neither is $1-e$.
+
+For illustrative $M=0.200$kg, $m=0.04593$kg, $e=0.83$ and $V=45$m/s, the ball speed is approximately 66.970m/s and the retained club speed 29.620m/s. The club retains 65.823\% of its speed, or 43.326\% of its initial kinetic energy. Ball translation receives 50.863\%, and 5.810\% is lost from the two translational energy stores. These numbers follow from the declared two-mass model, not a population estimate or a complete driver collision.
+
+Off-center contact couples translation and rotation. Tangential contact, frictional sticking or slipping and deformation affect ball spin; the incoming face normal, local contact velocity and contact location matter. Grip and shaft impedance, clubface flexibility, ball construction, turf contact and the collision timescale can change the effective model. A single COR and clubhead speed cannot identify every launch condition.
+
+After separation, ball translation, spin and position initialize a flight model with atmospheric, wind and aerodynamic assumptions. The swing no longer exerts a contact force on the departed ball. A deterministic model gives a definite prediction only conditional on those complete inputs and parameters; uncertain launch and aerodynamic quantities produce uncertain flight. A ball curving right does not uniquely reveal which earlier joint or control phase was responsible.
+
+\section{Phase 8: Follow-Through and Energy Absorption}
+\index{follow-through}\index{deceleration}\index{ground reaction forces}
+\index{constraint forces!throughout swing}
+
+The ball removes only part of the preceding mechanical energy. Body and club motion continue, with active muscle work, passive losses, changing gravitational and elastic storage, and possible new contacts. Impact can abruptly alter clubhead motion while a finite-compliance shaft and grip transmit a time-dependent response to the hands. Muscles merely relaxing is not a complete explanation for the collision impulse or the subsequent deceleration.
+
+Eccentric muscle action can absorb mechanical energy, but the sign of one net joint power does not identify all individual muscle contractions. Opposing muscles and biarticular pathways can produce different internal work distributions for the same observed net moment. Ground reactions can change total momentum without dissipating energy when the stationary contact is ideal. Slip, deformation and collision require their own power or impulse accounts.
+
+For an ideal stationary constraint, $P_c=\lambda^TJv=0$ in the combined system. Internal joint and grip forces can perform opposite powers on adjacent subsystems, redistributing energy while their ideal total cancels. A prescribed moving boundary can do nonzero work. This distinction explains how support can redirect motion without functioning as a brake that converts all residual energy to heat.
+
+There is no mechanics-based reason to label every follow-through high-DCR, uncontrolled, or devoid of cortical involvement. Its duration and load distribution vary with the task and player. Load estimates can motivate investigation of tissue demand, but an injury-risk claim requires appropriate evidence beyond a computed reaction force. The physical objective is feasible deceleration and task completion, with explicit assumptions about support and tissue behavior.
+
+\section[The Complete Energy Budget: Work, Storage, and Transfer]{The Complete Energy Budget:\\Work, Storage, and Transfer}
+\index{energy!transfer efficiency}
+\index{drift!energy efficiency}
 \index{energy!flow through swing}
 \index{work}
 \index{power}
@@ -432,286 +301,109 @@ During follow-through, actuator absorption, passive losses and external work alt
 
 The drift field describes evolution under a specified zero-input convention. It is not an energy source, and a large drift contribution does not establish low metabolic cost. Stored energy may have required earlier active work; zero net joint torque can coexist with muscle activity; and a different input convention changes what is called drift. A useful comparison holds the task and system boundary explicit, reports initial storage and signed work, and measures the resulting club state. This connects preparation, timing, geometry and active effort without assuming that reducing muscle work must increase ball energy.
 
-\section{The Drift, Control, and Constraint Forces Through the Entire Swing}
 
-\index{drift!throughout swing}
-\index{control!throughout swing}
-\index{constraint forces!throughout swing}
 
-Let us now synthesize what we have learned, showing how drift, control, and constraint forces evolve through the swing.
-
-\subsection*{Backswing}
-
-\begin{itemize}
-\item \textbf{Drift:} Low. Gravity is pulling down; inertia resists rotation. But the body is moving slowly, so drift is not dominant.
-\item \textbf{Control:} High. Muscles are actively driving the motion, positioning the body.
-\item \textbf{Constraint forces:} Moderate. The ground is supporting the body; the grip is holding the club; the joints are connected.
-\item \textbf{DCR:} Low ($\approx 0.05{-}0.2$). Control is dominant.
-\end{itemize}
-
-\subsection*{Transition}
-
-\begin{itemize}
-\item \textbf{Drift:} Beginning to rise. Elastic energy in muscles is being released; centrifugal and Coriolis forces are beginning to act.
-\item \textbf{Control:} Still high, but changing. Hip drive is being initiated, but the elastic snap-back is adding uncontrolled energy.
-\item \textbf{Constraint forces:} High. Ground reaction force is at its peak; the body is being accelerated forward.
-\item \textbf{DCR:} Beginning to rise ($\approx 0.2{-}0.4$). Control is still dominant, but drift is rising.
-\end{itemize}
-
-\subsection*{Early Downswing}
-
-\begin{itemize}
-\item \textbf{Drift:} Moderate to high. Gravity, Coriolis forces, and elastic forces from the shaft are adding up. The body is moving faster, so these forces are more significant.
-\item \textbf{Control:} Moderate. Muscles are still active, maintaining the sequence. But the drift is significant.
-\item \textbf{Constraint forces:} High. The shaft is bending; the grip is being loaded. The body is accelerating against inertia.
-\item \textbf{DCR:} Rising ($\approx 0.2{-}0.5$). Drift and control are competitive.
-\end{itemize}
-
-\subsection*{Mid-Downswing}
-
-\begin{itemize}
-\item \textbf{Drift:} High. Centrifugal acceleration is high; Coriolis forces are large; elastic forces are significant. The body is moving fast.
-\item \textbf{Control:} Moderate. Muscles are active, but the effects of muscle torques are small compared to the drift forces.
-\item \textbf{Constraint forces:} Very high. The shaft is bent significantly; the grip is being loaded with enormous force. The body is accelerating dramatically.
-\item \textbf{DCR:} High ($\approx 0.4{-}0.8$). Drift is dominant, but control is still present.
-\end{itemize}
-
-\subsection*{Late Downswing}
-
-\begin{itemize}
-\item \textbf{Drift:} Very high. The centrifugal acceleration of the clubhead is enormous; the shaft is at its maximum bend and maximum elastic force; Coriolis forces are large.
-\item \textbf{Control:} Low. Muscles are active, but the inertia of the system is so large that muscle torques have minimal effect.
-\item \textbf{Constraint forces:} Enormous. The shaft is experiencing enormous bending moments; the grip is being loaded with kilograms of force; the body is accelerating at high rates.
-\item \textbf{DCR:} High under the selected weighting. Drift is dominant, but active stiffness and bounded corrections remain part of the model.
-\end{itemize}
-
-\subsection*{Impact and Follow-Through}
-
-\begin{itemize}
-\item \textbf{Drift:} Decreasing as the motion slows, but still significant during the follow-through.
-\item \textbf{Control:} Increasing during the follow-through. Muscles are now decelerating the motion eccentrically.
-\item \textbf{Constraint forces:} Decreasing as the motion slows, but still significant during the follow-through.
-\item \textbf{DCR:} Decreasing as the motion slows.
-\end{itemize}
-
-This analysis reveals the structure of the golf swing. The DCR parameter characterizes the relative magnitudes of drift and control only after the weighting, torque bound, and model parameters are stated. In the worked examples, the backswing is characterized by low DCR (control-dominated); the transition initiates high acceleration through ground reaction forces; the downswing often exhibits rising DCR as body speeds increase; and the late downswing can become drift-dominated under the selected weighting. This progression reflects the changing balance between inertial resistance and achievable muscle-generated torques, but the numerical trend must be verified in the specified model rather than assumed.
-
-% ─────────────────────────────────────────────────────────────────
-\section{What the Forward ZTCF Reveals About Each Phase}
-
-\index{ZTCF!throughout swing}
-
-Throughout this chapter, we have referred to the forward zero-torque counterfactual (ZTCF) trajectory. Let us be more explicit about what this model intervention reveals at each phase.
-
-\subsection*{The ZTCF as a Guide}
-
-The forward ZTCF trajectory is obtained by setting the declared applied generalized-control channel to zero from the current state onward. It depends on that initial state and the declared effective plant; it does not identify muscle activation.
-
-\begin{enumerate}
-\item \textbf{At address:} In a fixed-contact model initialized near rest, gravity and support reactions dominate the forward ZTCF. The exact direction depends on the coordinates, constraints, and retained passive terms.
-
-\item \textbf{Early in the backswing:} A same-state ZTCF branch tests which motion persists after declared control is removed; it does not prescribe the control needed to produce the observed backswing.
-
-\item \textbf{At the top of the backswing:} Low generalized velocity suppresses velocity-dependent drift terms, but gravity, elasticity, damping, contact, and internal-state effects remain model dependent.
-
-\item \textbf{In the early downswing:} The forward ZTCF can test whether the declared plant alone produces, delays, or opposes a modeled sequencing feature from the achieved state.
-
-\item \textbf{In mid-downswing:} Proximity between ZTCF and achieved motion is an estimand, not an assumption. Report it in a declared state, task metric, time window, and uncertainty model.
-
-\item \textbf{In late downswing:} The ZTCF may be close to the measured trajectory in a high-DCR model. The control inputs are bounded corrections, not literally absent.
-
-\item \textbf{At impact:} The clubhead speed and face angle are strongly constrained by the state delivered into impact; the ball outcome is determined by that state and the impact collision model.
-\end{enumerate}
-
-The zero-torque counterfactual (ZTCF) at each state represents the passive evolution of the system from that state forward. By choosing the initial configuration and the control inputs in the early swing phases (when control authority is high), the system configuration and velocity at the transition condition the ZTCF for the downswing. The ZTCF is a diagnostic for clubhead velocity and orientation in the absence of further control inputs, not a claim that active muscle contributions vanish.
-
-Control inputs in mid-to-late downswing, when DCR is high, produce relatively small perturbations to the ZTCF trajectory. Conversely, control inputs in the early swing phases (address, backswing, transition), when DCR is low, can substantially alter the ZTCF for the downswing. This DCR gradient suggests that the early swing phases are the primary locus of control authority for determining impact conditions.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Control Authority and System Observability Throughout the Swing}
-
-\index{control authority!temporal variation}
+\section{From Phase Inputs to Impact Sensitivity}
 \index{observability!golf swing}
 
-The affine control framework $\dot{\state} = f(\state) + G(\state)\control$ defines the achievable state evolution at each moment. The control authority (the magnitude of $\norm{G(\state)\control_{\max}}$ relative to $\norm{f(\state)}$) varies substantially throughout the swing.
+An endpoint sensitivity connects the whole trajectory, not just the norm of a vector field at one instant. For a nominal smooth-mode trajectory of $\dot x=F(x,u)$, let $A(t)=F_x$ and $B_x(t)=F_u$ evaluated along that trajectory. The first variation satisfies
+\begin{equation}
+\delta\dot x=A(t)\delta x+B_x(t)\delta u,\qquad
+\delta x(T)=\Phi(T,t_0)\delta x_0+
+\int_{t_0}^{T}\Phi(T,s)B_x(s)\delta u(s)\,ds.
+\label{eq:complete_variation}
+\end{equation}
+The transition matrix obeys $\partial_t\Phi(t,s)=A(t)\Phi(t,s)$ and $\Phi(s,s)=I$. For the torque-affine model, $F_x$ includes derivatives of $G(x)u$ as well as $f_x$. For an output $y=h(x(T))$, left-multiply by $h_x$ to obtain the delivered-output sensitivity. The kernel $h_x\Phi(T,s)B_x(s)$ includes later amplification, rotation, damping and task projection.
 
-\subsection*{Phases of High Control Authority (Low DCR)}
+Equal input changes at different times need not have equal effects. For a torque-driven free rotor, a fixed torque impulse changes final velocity equally wherever applied, while earlier application has more time to change angle. In the stable scalar mode $\dot x=-10x+u$ over $0\leq t\leq1$, equal-duration unit pulses in the final versus initial 0.1s have endpoint-effect ratio $e^9$, approximately 8103. This counterexample does not model golf; it disproves a universal rule that early inputs must always have greater endpoint influence.
 
-During the backswing and early downswing, control authority is high: the magnitude of achievable muscle-generated torques substantially exceeds the magnitude of uncontrolled forces (gravity, inertia, Coriolis forces). In these phases, the state evolution is largely determined by the control inputs $\control(t)$:
+Impact is usually an event rather than a prescribed clock time. Let the contact condition be $g(x,t)=0$ at nominal $T$, with a transverse crossing $g_t+g_xF^-\ne0$. The first-order event-time shift and pre-impact output change are
+\begin{equation}
+\begin{aligned}
+\delta T&=-\frac{g_x\delta x(T)}{g_t+g_xF^-},\\
+\delta y^-&=h_x\delta x(T)+(h_t+h_xF^-)\delta T.
+\end{aligned}
+\label{eq:complete_event}
+\end{equation}
+Parameter perturbations add their direct derivatives. A post-impact comparison must additionally differentiate the reset/contact solution. Near grazing contact the denominator can become small, and a perturbation may remove impact or change the contact mode entirely; one smooth derivative then ceases to describe the comparison.
 
-\begin{enumerate}
-\item \textbf{Address (setup):} The initial configuration $\bm{q}_0$ is determined by deliberate positioning. This configuration affects the potential energy $V(\bm{q}_0)$ and determines the initial kinematic constraints.
+For a simple crossing $p(t)=p_0+vt=L$, perturbing initial position and speed gives $\delta T=-(\delta p_0+T\delta v)/v$. Position at the event remains $L$ even though position at the original clock time changes. Thus fixed-time and event-matched errors can lead to different conclusions about the same perturbation. Report which one is being used.
 
-\item \textbf{Backswing:} The control inputs (muscle torques) determine the trajectory $\bm{q}(t)$ during the backswing. The configuration at the top of the backswing is largely determined by these control inputs.
+Observability is separate: do the chosen measurements distinguish nearby hidden states or parameters? One measured impact error cannot generally be uniquely decomposed into address, backswing and transition errors. Many input histories map to the same small set of outputs. A sensitivity matrix can predict effects of specified perturbations; inversion needs rank, conditioning, measurements over time and additional assumptions. A regularized inverse selects one explanation according to its penalty, not necessarily the unique physical cause.
 
-\item \textbf{Transition and early downswing:} High control authority allows substantial modulation of the muscle activation pattern. Changes in activation timing and magnitude can measurably affect the state at the start of mid-downswing.
+\section{What a Forward Zero-Torque Counterfactual Can Establish}
+\index{ZTCF!throughout swing}
 
+Initialize the measured/model-consistent state at a declared event, set the selected applied torque channel to zero, and evolve the model forward with its retained gravity, tissue, shaft and contact dynamics. Declare what happens to activation, prescribed boundaries, feedback, grip constraints and contact transitions. Compare actual and zero-channel trajectories in a named output, metric and interval, including whether each reaches the same impact event.
+
+The branch tells us what this specified model predicts under that intervention. It does not recover an observed passive trajectory, identify muscle silence or demonstrate that a player should relinquish control. Existing stored energy may have been created through earlier muscle work. Changing the control channel or retaining an active support law changes the meaning of ``zero.'' The state at which the intervention begins matters just as much as the torque being removed.
+
+A pointwise ratio alone does not guarantee close trajectories. If the zero-input field is Lipschitz with constant $L$ in a common valid region, and the removed input contribution has norm bounded by $b$ there, equal initial states obey the sufficient bound
+\begin{equation}
+\|x_u(t)-x_0(t)\|\leq
+\begin{cases}
+b\,[e^{L(t-t_0)}-1]/L,&L>0,\\
+b(t-t_0),&L=0.
+\end{cases}
+\label{eq:complete_ztcf_bound}
+\end{equation}
+This follows by bounding the difference equation and integrating the resulting scalar inequality. It needs an absolute input bound, a growth bound and a time interval. A large ratio caused by an even larger unrelated drift component provides none of those guarantees. Contact changes require a mode-aware analysis rather than silently extending this smooth bound through a collision.
+
+To investigate sequencing, compare the complete, zero-channel and carefully specified modified-input trajectories. Record whether a velocity-peak order persists, reverses or disappears, and examine the forces, work and state changes that accompany it. Persistence supports a statement about the chosen model and initial state. It does not prove that the measured player used the same intervention or that other muscle commands were unnecessary.
+
+\section{A Reproducible Complete-Swing Investigation}
+
+Begin with a concrete question: for example, whether changing a transition command improves face-orientation consistency at a specified speed, or whether a shaft change alters delivery after allowing the golfer model to respond. Define the target and tolerances before selecting the comparison. Speed, accuracy, load, robustness and effort can conflict; a claim of ``better'' needs an objective and feasible constraints.
+
+\begin{enumerate}[itemsep=3pt,topsep=4pt]
+\item \textbf{Specify the Model and Measurements.} Record segment geometry and inertias, joint definitions, body/club frames, shaft modes, muscle states and contact laws. Synchronize kinematics, ground wrenches and club/ball observations. Distinguish measured data, reconstructed quantities and fitted parameters.
+\item \textbf{Define Events and Outputs.} State the top/transition definitions, impact detection, follow-through endpoint and whether comparisons use clock time or matched events. Report speed, face orientation, path, strike location and uncertainty without substituting one for the full delivery state.
+\item \textbf{Close the Mechanical Accounts.} Check constraint residuals, contact feasibility, momentum balance and the energy budget. Identify residual actuators and moving boundaries. Reproducing motion used to drive an inverse model is not an independent forward-prediction test.
+\item \textbf{Run Declared Interventions.} Change one stated parameter or input schedule from a common initial state, or explicitly reoptimize under the same objective and constraints. A frozen-kinematics shaft comparison and a dynamically responding golfer comparison estimate different effects.
+\item \textbf{Test Sensitivity and Robustness.} Perturb plausible states, parameters and measurement errors; compare finite differences with the variational prediction where it applies. Resolve contact changes explicitly. A nominally accurate trajectory can be sensitive to timing or uncertainty, and a smaller net torque does not establish greater robustness.
+\item \textbf{Separate Mechanism From Evidence.} Report whether a conclusion is an identity, an illustrative calculation, a model-specific prediction, an observational association or an independently tested intervention. Preserve failures and alternative explanations. Extending a golf model to humanoid tasks requires rechecking actuation, contacts and task constraints.
 \end{enumerate}
 
-\subsection*{Phases of Low Control Authority (High DCR)}
+The work of Nesbit provides an instructive measurement/model example: motion reconstruction, flexible-club dynamics and work analysis reveal individual differences, while imposed motion and fitted ground support limit causal interpretations \citep{Nesbit2005}. A new complete-swing investigation should state which observations were used for fitting and which were held out for validation. Evidence for one model's joint loads is not automatically evidence for individual muscle forces or a neural policy.
 
-During the mid-to-late downswing, control authority diminishes as body velocity increases. In these phases, the drift field dominates:
+The resulting practical insight is specific: preparation changes the state from which later forces act; geometry determines their directions and coupling; activation and tissue dynamics constrain the available response; shaft state changes delivery; timing changes the contact event; and the collision and flight models translate delivery into ball outcome. These connections justify investigating the whole swing. They do not establish a universal passive sequence or a theorem that trying less must produce more speed.
 
-\begin{enumerate}
-\item \textbf{Mid-downswing:} The inertial and Coriolis terms in the drift field $f(\state)$ grow with velocity. The DCR rises under the chosen weighting. Changes to control inputs produce comparatively small alterations to the state trajectory.
-
-\item \textbf{Late downswing:} The DCR can be high in the model. The state at impact $\state_{\text{impact}}$ is strongly conditioned by the configuration and velocity at the start of this phase, while late control inputs act through bounded, time-limited corrections.
-
-\end{enumerate}
-
-This temporal variation in control authority has direct implications for the observability of the system: the early swing phases determine the late swing outcome, because the early phases have high control authority and thus determine the system state at the beginning of the drift-dominated phase.
-
-\subsection*{The Impact State as System Output}
-
-The impact state $\state_{\text{impact}}$ (clubhead velocity, club face orientation, and position) determines the post-impact ball velocity and spin through the impact equations. This impact state is output of the complete swing dynamics:
-
-\[
-\state_{\text{impact}} = \mathcal{S}(\bm{q}_0, \control_{\text{backswing}}, \control_{\text{transition}}, \control_{\text{early\_down}}, \control_{\text{mid\_down}}, \control_{\text{late\_down}})
-\]
-
-where $\mathcal{S}$ is the solution map of the swing dynamics. The sensitivity $\partial \state_{\text{impact}} / \partial \control_i$ is large when the phase $i$ has high control authority (low DCR) and small when the phase has low control authority (high DCR).
-
-% ─────────────────────────────────────────────────────────────────
-\section{Energy Transfer and Drift-Control Trade-Offs}
-
-\index{energy!transfer efficiency}
-\index{drift!energy efficiency}
-
-The affine decomposition $\dot{\state} = f(\state) + G(\state)\control$ reveals a fundamental trade-off in the swing dynamics.
-
-\subsection*{Muscle Power and Control Authority}
-
-Muscle power output (metabolic energy conversion rate) is limited by muscle physiology. Achieving high $\norm{G(\state)\control}$ (large control magnitude) requires substantial muscle activation and ATP hydrolysis. The total muscle power available is bounded.
-
-Two strategies exist for producing a given impact state $\state_{\text{impact}}$:
-
-\textbf{Strategy 1: High Control Throughout}
-If control inputs are maximized throughout the swing, the muscles must work against the drift field (gravity, inertia) continuously. The muscle power output is devoted partly to useful work (accelerating the clubhead) and partly to fighting the drift. The total metabolic cost is high.
-
-\textbf{Strategy 2: Setup for Favorable Drift}
-If the initial configuration (address) and early swing control inputs are chosen such that the drift field naturally produces a trajectory pointing toward the impact conditions, then the late downswing requires minimal control inputs. The drift field does much of the work. The total metabolic cost is lower.
-
-\subsection*{Observational Differences}
-
-The two strategies would produce measurable differences in:
-\begin{enumerate}
-\item \textbf{Muscle activation patterns:} Strategy 1 exhibits sustained high activation throughout the swing. Strategy 2 exhibits high activation in early swing and reduced activation in late downswing.
-
-\item \textbf{Energy dissipation:} Strategy 1 dissipates more energy thermally through muscle inefficiency. Strategy 2 dissipates less.
-
-\item \textbf{Movement consistency:} Strategy 1 requires continuous sensorimotor feedback (nervous system control loop frequency $\approx 10$--30 Hz). Strategy 2 relies primarily on feedforward control with minimal feedback correction.
-
-\item \textbf{Robustness to perturbations:} Strategy 1, with high control authority in late swing, can correct for mid-swing perturbations. Strategy 2, with high DCR in late swing, is less amenable to late corrections but may be more robust if the drift field is stable.
-\end{enumerate}
-
-These strategic differences arise from the fundamental structure of the equations of motion, not from biomechanical constraints per se.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Final Synthesis: The Golf Swing as a Masterpiece of Managed Drift}
-
-We began this book with a simple question: what forces are at work in the golf swing? We answered it with a mathematical framework that separates drift (passive, automatic, driven by physics) from control (active, conscious, driven by muscles).
-
-Throughout the book, we have seen how this framework illuminates every aspect of the swing:
-
-\begin{itemize}
-\item \textbf{Chapter~\ref{ch:03_double_pendulum}} showed how even a simple double pendulum exhibits drift and control.
-
-\item \textbf{Chapter~\ref{ch:05_affine_structure}} developed the affine structure that underlies all golfs physics.
-
-\item \textbf{Chapter~\ref{ch:zero_torque_counterfactual}} introduced the ZTCF as a passive reference trajectory.
-
-\item \textbf{Chapters~\ref{ch:constraint_forces}--10} showed how constraints and energy flow reshape the swing.
-
-\item \textbf{Chapter~\ref{ch:flexible_shaft}} revealed how shaft flexibility contributes entirely to drift.
-
-\item \textbf{Chapter~\ref{ch:fascia}} debunked myths about fascia and placed it correctly in the framework.
-
-\item \textbf{Chapter~\ref{ch:interdisciplinary}} showed how multiple disciplines all speak the language of drift and control.
-
-\item \textbf{This chapter} brought it all together, walking through the swing and revealing the dominance of drift in the late downswing.
-\end{itemize}
-
-The core structural insight is this: \textbf{the golf swing evolves through phases of decreasing control authority and increasing drift dominance.}
-
-The affine decomposition provides a quantitative framework for this observation. The DCR parameter quantifies the transition from control-dominated to drift-dominated regimes only after the weighting, torque bound, and model parameters are stated. The impact state (which determines ball outcome) is often most sensitive to perturbations in the early swing phases, when DCR is low and control authority is high. The impact state is less sensitive to late-downswing perturbations when modeled DCR is high and little time remains before impact.
-
-This structure has implications for the biomechanical and neural control strategies that produce high-speed, accurate swings. Strategies that minimize muscle power expenditure in late downswing while maintaining trajectory accuracy are characterized by careful control input specification in high-authority phases (address through early downswing) and minimal corrective control in low-authority phases (late downswing).
-
-The framework unifies observations from biomechanics, control theory, and motor neuroscience within a single mathematical structure: the control-affine system $\dot{\state} = f(\state) + G(\state)\control$.
-
-% ─────────────────────────────────────────────────────────────────
 \begin{principle}{Summary of Analysis}{ch14:takeaways}
-\begin{enumerate}
-\item \textbf{Swing Phases:} The golf swing can be segmented into distinct phases: address, backswing, transition, early downswing, mid-downswing, late downswing, impact, and follow-through. Each phase exhibits characteristic patterns of state evolution.
-
-\item \textbf{Control Authority by Phase:}
-   \begin{itemize}
-   \item Early phases (address, backswing, transition) exhibit low DCR: control inputs substantially alter state evolution.
-   \item Middle phases (early downswing) exhibit moderate DCR: drift and control have comparable magnitudes.
-   \item Late phases (mid-to-late downswing) exhibit high DCR: drift dominates state evolution.
-   \end{itemize}
-
-\item \textbf{DCR Evolution:} The Drift-Control Ratio often increases through the downswing in the worked models as body velocity increases. High velocities produce large inertial and Coriolis forces in the drift field, but monotonicity is a model result to verify rather than an axiom.
-
-\item \textbf{Impact State Sensitivity:} The impact state (which determines post-impact ball behavior) is most sensitive to perturbations in the early and middle swing phases and least sensitive to perturbations in the late downswing.
-
-\item \textbf{Energy Transfer:} Muscle power output is distributed among potential energy, kinetic energy, elastic energy storage, and thermal dissipation. The fraction of muscle power transferred to the ball is limited by multiple dissipative mechanisms.
-
-\item \textbf{Zero-Torque Counterfactual (ZTCF):} The ZTCF at any state represents the passive evolution under drift alone. The ZTCF in the late downswing can approximate the actual swing trajectory when DCR is high in the specified model.
-
-\item \textbf{Constraint Forces:} Ground reaction forces, joint constraint forces, and grip forces are significant throughout the swing. These constraint forces are largest during the transition and downswing phases.
-
-\item \textbf{Shaft Flexibility Effects:} The bent shaft contributes to the drift field through elastic restoring forces. The timing and magnitude of shaft elastic force release affect the clubhead acceleration near impact.
-
-\item \textbf{Kinetic Chain Sequence:} The observed sequential acceleration pattern (hip, torso, arm, club) emerges from the coupled dynamics and kinematic constraints, not from independent specification of each segment.
-
-\item \textbf{Motor Control Implications:} The temporal variation in DCR suggests that motor control strategies differ between early phases with more feedback leverage and late phases that are more feedforward dominated.
-\end{enumerate}
+The swing is a coupled, constrained, sometimes hybrid evolution of a complete mechanical and physiological state. Drift/control labels depend on the declared input model. A drift norm does not replace directional gain, finite-time sensitivity, contact feasibility or energy accounting. Segment sequencing and shaft motion must be explained with forces and evolving state, while their causal interpretation needs explicit interventions and appropriate evidence. A useful reference connects preparation to delivery through calculations that can be checked, and leaves player-specific performance claims open to measurement.
 \end{principle}
 
-% ─────────────────────────────────────────────────────────────────
 \begin{exercises}{Chapter Exercises}{ch14}
+\begin{enumerate}[leftmargin=*,itemsep=8pt,topsep=4pt]
+\item Derive the reduced acceleration and reaction formulas from the constrained equations. For the stated two-coordinate example, calculate the response to $(10,0)^T$ and $(1,1)^T$. Explain why changing velocity-dependent bias alone does not change the input derivative.
 
-\begin{exercise}
-Derive the mathematical condition for DCR as a function of state $\state$, weighting matrix $\bm{W}$, torque bound $u_{\max}$, and time $t$. Identify the assumptions under which DCR would increase through the downswing, and give one model change that could break monotonicity.
-\end{exercise}
+\item Define an available-input DCR using a metric and admissible set. Distinguish it from an actual-input ratio. Use $\dot x_1=1000$, $\dot x_2=u$ to explain why neither ratio determines authority over every output. Give conditions and measurements needed to establish a rising phase trend.
 
-\begin{exercise}
-At impact, express the clubhead velocity $\bm{v}_{\text{head}}(t_{\text{impact}})$ as a function of the drift field $f(\state)$ and control field $G(\state)$ contributions integrated from the transition to impact.
-\end{exercise}
+\item For a smooth state-dependent club-velocity output $h(x)$, integrate $\dot h=h_x[f(x)+G(x)u]$ along the actual trajectory. Explain why these same-trajectory integrals are not the velocity difference between two independently evolved swings and are not energy fractions.
 
-\begin{exercise}
-Using the affine structure, describe how changes to the initial configuration $\bm{q}_0$ (address) propagate through the swing dynamics to affect $\state_{\text{impact}}$.
-\end{exercise}
+\item Derive the first variation from address through impact, including the event-time correction. Identify the extra initial states omitted if address is represented only by joint angles. Check the ballistic-crossing example.
 
-\begin{exercise}
-Compare two swing control strategies: one with sustained high muscle activation throughout, and one with high activation in early swing and low activation in late downswing. Analyze the DCR and energy dissipation differences between these strategies.
-\end{exercise}
+\item Compare early and late equal-duration input pulses for a free rotor and for $\dot x=-10x+u$. State the output for each comparison and compute the damped-mode ratio. Explain why a desire to add 10mph does not identify the best swing phase without a model, constraints and objective.
 
-\begin{exercise}
-Describe the kinetic chain sequence in terms of the coupled equations of motion: how do the inertial coupling terms in the mass matrix $\bm{M}(\bm{q})$ and Coriolis terms in the drift field $f(\state)$ produce the observed sequential acceleration?
-\end{exercise}
+\item Use a two-coordinate inertia matrix to show how proximal input can accelerate a distal coordinate in either sign. Specify a forward experiment that tests whether a particular peak-velocity sequence persists after an input channel is removed. Explain what that result would not establish about muscles.
 
-\begin{exercise}
-Given a measured deviation in impact state $\Delta \state_{\text{impact}}$, decompose this deviation into components arising from deviations in address configuration $\Delta \bm{q}_0$, backswing control inputs $\Delta \control_{\text{backswing}}$, and transition control inputs $\Delta \control_{\text{transition}}$.
-\end{exercise}
+\item A player has rightward ball curvature or a measured face-angle error. Form a local input-to-delivery sensitivity matrix and explain why one endpoint observation cannot uniquely allocate the error among address, backswing and transition. Identify additional measurements or interventions that would distinguish candidate explanations.
 
-\begin{exercise}
-Analyze the follow-through dynamics: characterize the deceleration as arising from eccentric muscle contraction (control field), gravity and inertia (drift field), and constraint forces (Lagrange multipliers from ground contact).
-\end{exercise}
+\item For the harmonic mode, find the times of maximum displacement magnitude, velocity magnitude and positive elastic power. Explain why simultaneous maximum velocity and restoring force is impossible in this example and why a driven shaft can depart from its timing.
 
-\begin{exercise}
-Derive the condition under which the elastic restoring force in the shaft $-K_s \eta$ reaches maximum magnitude during the downswing. How does the timing of maximum elastic force affect the clubhead velocity at impact?
-\end{exercise}
+\item Compare stored spring energy under prescribed displacement and prescribed force. Then distinguish a steel/graphite material change from a controlled change in bending stiffness. Specify fixed-input and reoptimized golfer--shaft comparisons and explain why their outcomes can differ.
 
-\begin{exercise}
-Explain how ground reaction forces during the transition provide control inputs to the lower body. Why are ground reaction forces during the downswing greater than during backswing or follow-through?
-\end{exercise}
+\item Derive the three central-collision energy fractions and reproduce the illustrative speeds. Explain why $1-e$ is not a loss fraction, and list the additional information required for off-center impact and spin.
 
-\begin{exercise}
-Analyze the inverse problem: given desired impact conditions $\state_{\text{impact}}^*$, work backward to determine the required address configuration and early swing control inputs. How would changing shaft flexibility change the required control inputs?
-\end{exercise}
+\item Use total linear and angular momentum balance to explain how stationary ground contact can change motion while doing zero work. Distinguish an external support moment, muscle torque and a dissipative contact force. State how to test a claim about the phase of peak ground reaction.
 
+\item Construct a follow-through energy account with actuator absorption, passive dissipation and changing storage. Explain why ideal grip/joint reactions can redistribute subsystem energy without absorbing total energy, and why net negative joint power does not identify every muscle contraction.
+
+\item Compare high and low late muscle activation while requiring the same delivery and feasible support. Identify measurements needed to compare mechanical work, metabolic cost and robustness. Explain why neither control magnitude nor DCR alone proves one strategy faster, cheaper or more consistent.
+
+\item Derive the stated equal-initial-state counterfactual error bound. Explain its dependence on absolute input magnitude, state-transition growth and duration, and identify what fails when one branch misses impact or changes contact mode.
+
+\item Formulate an inverse design problem for a desired delivery state, with initial conditions, torque/activation constraints, contact feasibility and shaft parameters. Explain why multiple solutions can exist and what additional cost and validation would be needed to choose among them.
+
+\end{enumerate}
 \end{exercises}
-
 \cleardoublepage

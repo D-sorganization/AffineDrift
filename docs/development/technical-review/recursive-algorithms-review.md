@@ -132,3 +132,6 @@ Deployment34199401123 failed on one of956 page inspections: the unchanged Physic
 
 
 The freshly rendered isolated Forces and Torques probe passed all 14 responsive checks, with zero serious/critical axe findings. Deployment run 34199401123 attempt 1's single untypeset-equation failure remains recorded as adverse evidence; the failed job was rerun after this successful probe. Attempt 2 is in progress as of 08:11 UTC. This is not yet successful-publication evidence; a repeated failure requires diagnosis rather than repeated blind retries.
+
+
+Recursive PR #4276 / protected squash 4748e674 is published. Deployment 34199401123 attempt 2 succeeded; downloaded live artifact 10047429024 passes all 956 checks across 239 routes, with zero failures, zero serious/critical axe violations and zero navigation retries. Attempt 1's adverse evidence remains retained.

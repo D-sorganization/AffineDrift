@@ -86,3 +86,11 @@ All local test/build/render/browser QA ended before staging. Only the HTTP serve
 
 
 The freshly rendered isolated Forces and Torques probe passed all 14 responsive checks, with zero serious/critical axe findings. Deployment run 34199401123 attempt 1's single untypeset-equation failure remains recorded as adverse evidence; the failed job was rerun after this successful probe. Attempt 2 is in progress as of 08:11 UTC. This is not yet successful-publication evidence; a repeated failure requires diagnosis rather than repeated blind retries.
+
+
+Recursive PR #4276 / protected squash 4748e674 is published. Deployment 34199401123 attempt 2 succeeded; downloaded live artifact 10047429024 passes all 956 checks across 239 routes, with zero failures, zero serious/critical axe violations and zero navigation retries. Attempt 1's adverse evidence remains retained.
+
+
+## Exponential Publication Verified
+
+Exponential PR #4279 passed protected checks and squash-merged as `439695c4753cd14f97a689605aa6c675374f0ddd` at 08:43:14UTC on 2026-09-08. Deployment 34206038396 succeeded. Downloaded exact-revision live artifact 10048902701 reports 956/956 passes across 239 routes, zero serious/critical axe violations, zero retries and zero transient responses. Issue #4275 is closed; no lease renewal is needed.
