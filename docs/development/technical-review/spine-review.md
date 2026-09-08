@@ -103,3 +103,22 @@ Final custom quality checks caught two gravity literals in the independent test 
 Spine commit a2eb0e2a was replayed alone onto protected foundations squash a9e531fd, producing2072ca34. Only the current-state handoff and append-only foundations log conflicted; both were reconciled with the dependency-repair evidence retained. All spine public sources, PDF, figures and tests are byte-identical across the replay. The merged requirements.txt preserves SymPy1.14.0. The initial rebase was blocked by a phantom AGENT_HANDOFF modification; an empty diff and matching Git object hashes were confirmed before refreshing the index. No local test/build/render/browser job was active during commit or replay.
 
 Foundations publication is verified: deployment34224541139 and exact-revision live artifact10056277209 pass956/956 across239 routes, zero serious/critical axe findings, retries or transient responses. The corpus remains unfinished; the next long pending standalone article is Residual-Aware Control, followed by the remaining long geometry/biomechanics sources in the inventory.
+
+## Protected Spine Merge
+
+PR #4285 merged as 982be51d6f5bff1d6d81e671cf92e8037332d6cd.
+CI Standard 34239448765 passed all eight jobs including quality-gate. The
+protected-main Compile Textbooks run 34242260283 succeeded. Website deployment
+34242259512 is still running; exact live verification is not yet claimed.
+The first push failed with a title-checker MemoryError before creating a remote
+branch. The unchanged ordinary retry passed all hooks; no bypass was used.
+The next active correction is #4286, the four connected residual-control sources.
+
+
+## Verified Spine Publication
+
+Protected-main CI 34242259382, all textbook builds 34242260283, and deployment
+34242259512 succeeded for 982be51d6f5bff1d6d81e671cf92e8037332d6cd. Exact-revision
+live artifact 10064015023 reports 956/956 passing variants across 239 routes,
+zero serious/critical axe findings, zero retries and zero transient responses.
+Issue #4283 is closed. Its publication is verified; the corpus is unfinished.

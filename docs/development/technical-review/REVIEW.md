@@ -1225,3 +1225,42 @@ Protected foundations PR #4284 merged as a9e531fd26c30ef5e5de8727d85a1b67cc2a6d9
 Spine commit a2eb0e2a was replayed alone onto protected foundations squash a9e531fd, producing2072ca34. Only the current-state handoff and append-only foundations log conflicted; both were reconciled with the dependency-repair evidence retained. All spine public sources, PDF, figures and tests are byte-identical across the replay. The merged requirements.txt preserves SymPy1.14.0. The initial rebase was blocked by a phantom AGENT_HANDOFF modification; an empty diff and matching Git object hashes were confirmed before refreshing the index. No local test/build/render/browser job was active during commit or replay.
 
 Foundations publication is verified: deployment34224541139 and exact-revision live artifact10056277209 pass956/956 across239 routes, zero serious/critical axe findings, retries or transient responses. The corpus remains unfinished; the next long pending standalone article is Residual-Aware Control, followed by the remaining long geometry/biomechanics sources in the inventory.
+
+## Residual-Control Correction: #4286
+
+The complete advanced article, lay companion, formal critique and compact-series
+part 7 were read and corrected together. The core theorem now propagates the
+actual Taylor forcing; interval rules, state/input norms, feedback conventions,
+observer interpretation, optimization consistency, robust containment, contact
+sensitivity and golf task outputs are reconciled. The critique's own false
+RK4, norm, feedback and statistical recommendations were corrected explicitly.
+Unsupported drone, ATRIAS and golf performance tables have been replaced with
+reproducible teaching calculations and concrete evaluation protocols.
+
+The root run passed 4,769 tests with one excluded-critique-link failure, now
+repaired. The final affected lane passes 116 checks; all 35 statements in the
+new teaching helper are covered. Content130/four skips, static34, mypy86,
+Ruff and Black pass. Four-page final render and visual verification are in
+progress. Exact failure, correction, source-reading and derivation records live
+in [residual-aware-review.md](residual-aware-review.md). The private critique's
+publication exclusion and the immutable monograph remain unchanged.
+
+Spine PR #4285 is merged at 982be51d6f5bff1d6d81e671cf92e8037332d6cd; all eight
+CI jobs and the protected-main textbook builds pass. Deployment34242259512 and
+its exact live artifact remain to be verified. The corpus is unfinished.
+
+
+## Residual-Control Local Completion and Spine Publication
+
+All four residual-control sources are corrected and fully inspected. The final
+116 affected tests, 130 content checks (four skips), static34, mypy86, code/style
+checks and 56 responsive variants pass. Final card repairs pass 14 main-page
+variants and ten expanded-panel accessibility/clipping variants with no axe
+violations. All historical anchors remain. Exact full-root failure/repair and
+visual-capture boundaries are in [residual-aware-review.md](residual-aware-review.md).
+Protected publication remains pending; the corpus is unfinished.
+
+Spine #4283 / PR #4285 is now verified published at 982be51d. Protected-main CI,
+all textbook builds and deployment34242259512 succeed. Exact live artifact
+10064015023 passes956/956 across239 routes without serious/critical axe findings,
+retries or transient responses. See [spine-review.md](spine-review.md).

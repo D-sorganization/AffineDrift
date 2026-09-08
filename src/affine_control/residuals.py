@@ -1,8 +1,8 @@
 """Residual bound computation for affine drift control systems.
 
-Provides Hessian bound estimation and residual monitoring utilities used to
-certify convergence of the DDP optimiser and detect numerical instability
-during trajectory tracking.
+Provides pointwise Hessian estimates, conditional flow-remainder bounds,
+and tracking-discrepancy monitoring. These utilities alone do not certify
+optimizer convergence, controller stability, or a physical source of error.
 """
 
 import logging
@@ -37,9 +37,11 @@ def compute_hessian_bound(
     epsilon: float = FINITE_DIFF_STEP_HESSIAN_BOUND,
 ) -> float:
     """
-    Approximates the Hessian bound M for dynamics f(x, u).
-    This is a simplified numerical approximation.
-    In production, exact Hessians (via JAX/CasADi) should be used.
+    Estimate the largest component state-Hessian norm at one point.
+
+    Despite the historical name, this is not a certified regional bound.
+    Automatic differentiation also gives point derivatives, not a supremum
+    over a region. Control and mixed derivatives are not included.
 
     Args:
         f: Dynamics function dx = f(x, u)
@@ -48,7 +50,7 @@ def compute_hessian_bound(
         epsilon: Finite difference step
 
     Returns:
-        M: Spectral norm of the Hessian
+        Maximum estimated component spectral norm, with control held fixed.
     """
     check_finite_array(x, "x")
     check_finite_array(u, "u")
@@ -136,41 +138,27 @@ def compute_hessian_norm(
     u: np.ndarray[Any, Any],
     epsilon: float = FINITE_DIFF_STEP_HESSIAN_NORM,
 ) -> float:
-    """Compute numerical approximation of the Hessian norm ||H_f||.
+    """Estimate the maximum component state-Hessian spectral norm.
 
-    H_f is the tensor [d^2f / dx_i dx_j].
-    The norm used is the maximum spectral norm of the component Hessians.
-
-    **Complexity:** O(n^3) dynamics evaluations, where n = len(x).
-    The outer loop iterates n times (one per state dimension j); for each
-    iteration, ``_finite_diff_jacobian`` calls f 2n times (central
-    differences over all n state components), giving 2n^2 calls total.
-    For a 6-DOF spacecraft (n=6) this is 72 evaluations per Hessian;
-    for the double pendulum (n=4) it is 32 evaluations.
-
-    **Performance note:** This implementation is acceptable for n<=6 but
-    will not scale to higher-dimensional systems.  For production use,
-    prefer automatic differentiation via JAX (``jax.hessian``) or CasADi
-    (``casadi.hessian``), which compute exact Hessians in O(n) passes via
-    reverse-mode AD.  Jacobian caching is also worth exploring when the
-    trajectory changes slowly: if consecutive calls share the same or
-    similar (x, u), caching the Jacobian from the previous step can
-    reduce dynamics evaluations by up to n-fold.
+    The nested finite differences use 4*n**2 + 2*n + 1 dynamics calls.
+    This counts calls, not their internal cost or the subsequent matrix SVDs.
+    Automatic differentiation avoids finite-difference truncation, but its
+    cost depends on the model, dimensions, and differentiation strategy.
 
     Args:
         f: Dynamics function dx = f(x, u).
         x: State vector.
-        u: Control vector.
+        u: Control vector, held constant.
         epsilon: Finite difference step size.
 
     Returns:
-        Maximum spectral norm of the component Hessians.
+        Maximum estimated spectral norm of the component state Hessians.
 
     Notes:
-        The nested central-difference construction here requires O(n^3)
-        dynamics evaluations in the state dimension n because each of the n
-        Hessian slices is assembled from two Jacobian evaluations, and each
-        Jacobian evaluation perturbs all n state coordinates.
+        This point estimate is not a regional upper bound. Even exact component
+        norms bound the vector Hessian with Euclidean output norm only after
+        combining components (e.g. their root sum of squares). Coordinates
+        must have declared scales. Control and mixed derivatives are omitted.
     """
     n = len(x)
     dx = len(f(x, u))
@@ -178,41 +166,96 @@ def compute_hessian_norm(
     return _max_spectral_norm(H)
 
 
-def predict_residual_bound(
-    M_traj: np.ndarray[Any, Any], delta_x_traj: np.ndarray[Any, Any], dt_traj: np.ndarray[Any, Any]
-) -> float:
-    """
-    Computes the upper bound on residual norm:
-    ||r(t)|| <= sum( M_i/2 * ||delta_x_i||^2 * dt_i )
-
-    Args:
-        M_traj: List of Hessian bounds M_i
-        delta_x_traj: List of perturbation norms ||delta_x_i||
-        dt_traj: List of timesteps
-
-    Returns:
-        r_bound: Predicted residual bound at final time
-    """
-    check_finite_array(M_traj, "M_traj")
-    check_finite_array(delta_x_traj, "delta_x_traj")
-    check_finite_array(dt_traj, "dt_traj")
+def _validate_bound_intervals(
+    M_traj: np.ndarray[Any, Any],
+    delta_x_traj: np.ndarray[Any, Any],
+    dt_traj: np.ndarray[Any, Any],
+    growth_rates: np.ndarray[Any, Any],
+) -> None:
+    """Require finite interval data with an unambiguous norm convention."""
+    for name, values in (
+        ("M_traj", M_traj),
+        ("delta_x_traj", delta_x_traj),
+        ("dt_traj", dt_traj),
+        ("growth_rates", growth_rates),
+    ):
+        require(values.ndim == 1, f"{name} must be one-dimensional")
+        check_finite_array(values, name)
+        if name != "growth_rates":
+            require(bool(np.all(values >= 0)), f"{name} must be non-negative")
     require(len(dt_traj) > 0, "dt_traj must not be empty")
     require(
-        len(M_traj) == len(delta_x_traj) == len(dt_traj),
+        len(M_traj) == len(delta_x_traj) == len(dt_traj) == len(growth_rates),
         "all trajectory arrays must have equal length",
-        (len(M_traj), len(delta_x_traj), len(dt_traj)),
     )
 
-    # Vectorized: r = sum( (M_i / 2) * delta_x_i^2 * dt_i )
-    r_accum = float(np.sum((M_traj / 2.0) * (delta_x_traj**2) * dt_traj))
 
+def _propagate_remainder(
+    forcing: np.ndarray[Any, Any],
+    durations: np.ndarray[Any, Any],
+    growth_rates: np.ndarray[Any, Any],
+) -> float:
+    """Integrate the scalar comparison ODE without resetting earlier error."""
+    residual = 0.0
+    # The recurrence preserves causal accumulation without subtracting large
+    # cumulative exponents. Each interval depends on the preceding bound.
+    for source, duration, rate in zip(forcing, durations, growth_rates, strict=True):
+        if duration == 0 or (source == 0 and residual == 0):
+            continue
+        exponent = rate * duration
+        response = duration if rate == 0 else np.expm1(exponent) / rate
+        residual = np.exp(exponent) * residual + source * response
+    return float(residual)
+
+
+def predict_residual_bound(
+    M_traj: np.ndarray[Any, Any],
+    delta_x_traj: np.ndarray[Any, Any],
+    dt_traj: np.ndarray[Any, Any],
+    growth_rates: np.ndarray[Any, Any] | None = None,
+) -> float:
+    """Propagate a conditional continuous-time Taylor flow-remainder bound.
+
+    Solve R'=a_i*R + M_i*rho_i**2/2 on each interval, starting at R=0.
+    Preconditions: the actual joined state/control deviation stays below rho_i;
+    the regional vector-Hessian bilinear norm is bounded by M_i; and the
+    linear propagator obeys ||Phi(t,s)|| <= exp(a_i*(t-s)) within that interval.
+    All norms must use the same declared scaled coordinates. This computes
+    the comparison formula in floating point, not an interval-arithmetic proof.
+
+    Args:
+        M_traj: Non-negative interval Hessian upper bounds, not point samples.
+        delta_x_traj: Non-negative bounds on actual deviations, not linear predictions.
+        dt_traj: Non-negative interval durations; at least one interval is required.
+        growth_rates: Finite propagator growth bounds in inverse time. None means
+            zero: the legacy sum then requires a nonexpansive propagator.
+
+    Returns:
+        Conditional final remainder bound, excluding model and integration errors.
+
+    Raises:
+        ValueError: The comparison calculation is not representable as a finite float.
+    """
+    rates = np.zeros_like(dt_traj, dtype=float) if growth_rates is None else growth_rates
+    _validate_bound_intervals(M_traj, delta_x_traj, dt_traj, rates)
+    try:
+        with np.errstate(over="raise", invalid="raise"):
+            r_accum = _propagate_remainder(M_traj / 2.0 * delta_x_traj**2, dt_traj, rates)
+    except FloatingPointError as error:
+        raise ValueError("residual bound is not representable as a finite float") from error
+    if not np.isfinite(r_accum):
+        raise ValueError("residual bound is not representable as a finite float")
     ensure(r_accum >= 0, "residual bound must be non-negative", r_accum)
     return r_accum
 
 
 class ResidualMonitor(ContractChecker):
     """
-    Monitors residuals and triggers mode switching.
+    Label tracking discrepancies using a hysteretic state machine.
+
+    Labels request a controller mode; this class implements no controller,
+    feasibility check, observer, or stability guarantee. Input coordinates
+    must be scaled consistently before taking a Euclidean norm.
     """
 
     def __init__(
@@ -259,7 +302,7 @@ class ResidualMonitor(ContractChecker):
     def _estimate_residual(
         self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
     ) -> float:
-        """Estimate residual magnitude between measured and nominal states."""
+        """Measure tracking discrepancy, which does not isolate Taylor remainder."""
         check_finite_array(x_meas, "x_meas")
         check_finite_array(x_nom, "x_nom")
         require(x_meas.shape == x_nom.shape, "x_meas and x_nom must have same shape")
@@ -316,9 +359,11 @@ class ResidualMonitor(ContractChecker):
         self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
     ) -> tuple[str, float]:
         """
-        Update with new measurement.
-        Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error)
-        In reality: r = x_meas - (x_nom + Phi * delta_x0)
+        Update the mode label from a measured/reference discrepancy.
+
+        The reference must be constructed independently of this measurement.
+        A nominal reference measures tracking error; a prior model prediction
+        measures prediction discrepancy. Neither uniquely identifies curvature.
         """
         r_est = self._estimate_residual(x_meas, x_nom)
         self._update_hysteresis_counters(r_est)

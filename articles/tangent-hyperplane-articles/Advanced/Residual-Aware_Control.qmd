@@ -1,7 +1,10 @@
 ---
-title: "Residual-Aware Control: Exploiting Geometric Curvature"
-description: "Core Thesis: Residuals in tangent space linearization are not approximation errors to be minimized—they are geometric signals encoding system curvature..."
-subtitle: "Quantitative Bounds and Adaptive Algorithms for Nonlinear Systems"
+css:
+  - /css/nonlinearity.css
+  - /css/residual-control.css
+title: "Residual-Aware Control: Bounds and Decisions for Nonlinear Motion"
+description: "Derive propagated linearization-error bounds and connect them to estimation, adaptive optimization, contact, and golf-swing task sensitivity."
+subtitle: "From Taylor Remainders to Task-Relevant Error Budgets"
 author: "Dieter Olson"
 date: "2026-01-18"
 format:
@@ -16,1651 +19,606 @@ bibliography: ../references.bib
 
 ## Executive Summary {.unnumbered}
 
-**Core Thesis:** Residuals in tangent space linearization are not approximation errors to be minimized—they are geometric signals encoding system curvature that can be exploited for adaptive control.
+A local linear model tells us how a small change in state or control changes a motion. Its remainder tells us how much that prediction misses **for a specified model, comparison trajectory, coordinate system, and interval**. This makes residual analysis useful for deciding where to refine a trajectory or restrict an update. It does not turn every measured error into a sensor of intrinsic geometric curvature.
 
-**Key Contributions:**
+The important connection is between three quantities: the nonlinear remainder generated now, its amplification or attenuation during the remaining motion, and its effect on the eventual task. In a golf swing, an error that is small in a joint-coordinate norm can still matter greatly for clubface orientation or strike location. A larger deviation in another direction may scarcely affect the shot. In walking, a small error in touchdown timing can change the contact sequence. The norm alone cannot decide which discrepancy deserves attention.
 
-1. **Quantitative residual bounds** from Hessian analysis (addressing Critique 3 from CRITICAL_REVIEW.md)
-2. **Residual-triggered mode switching** between LQR (low curvature) and MPC (high curvature)
-3. **Adaptive timestep DDP** with curvature-dependent step sizing
-4. **Simulation studies** on quadrotor aerobatics, humanoid walking, and golf swing optimization (experimental validation on physical hardware is a direction for future work)
-
-**Bottom Line:** By monitoring residuals in real time, we gain a "curvature sensor" that tells us when linearization-based methods need adaptation—without requiring global nonlinear analysis.
-
----
+This article develops a propagated flow-error bound, a dimensionally consistent interval rule, and the additional conditions needed for observation, switching, and robust tubes. It includes reproducible scalar calculations and distinguishes them from proposed quadrotor, humanoid, and golf evaluations. It makes no claim that a residual-adaptive solver has demonstrated a particular speedup, fall reduction, or improvement in golfers.
 
 ::: {.callout-note}
 ## Prerequisites
 
-- **Unified Thesis Part II** (Integration and Residuals) - essential
-- **Unified Thesis Part III** (DDP/iLQR) - essential
-- Multivariable calculus (Hessians, Taylor series)
-- State-space control (LQR basics)
-
-**Difficulty:** ⭐⭐⭐⭐ (Advanced)
-**Time:** 3-4 hours
+Readers should know state-space models, multivariable Taylor expansion, and basic linear feedback. The [series introduction](../TABLE_OF_CONTENTS.qmd) provides the broader context. Work through the two appendices if you want to check the bounds rather than use them conditionally. State-transition matrices describe first variations; Hessians describe how those first variations change. These are different roles.
 :::
-
----
 
 ## Part I: Theory {#sec-theory}
 
 ### Residual Definition and Quantitative Bounds {#sec-residuals}
 
-#### Review: Residuals as Manifold Curvature
+#### Define the Comparison Before Interpreting the Error {#review-residuals-as-manifold-curvature}
 
-From Unified Thesis Chapter 6, we know that the **residual** $r(t_1)$ at time $t_1$ is defined as the difference between the true nonlinear evolution and the linearized approximation:
-
-$$
-x(t_1) = \bar{x}(t_1) + \Phi(t_1, t_0) \delta x(t_0) + r(t_1)
-$$ {#rac-eq-residual-def}
-
-where:
-
-- $\bar{x}(t)$ is the nominal trajectory
-- $\Phi(t_1, t_0)$ is the state transition matrix from the linearized dynamics
-- $r(t_1)$ captures all higher-order effects
-
-The **qualitative** result from basic Taylor analysis is:
+Start within one smooth mode of a deterministic model. Use scaled coordinates $z=S_x^{-1}x$ and $v=S_u^{-1}u$, with fixed, nonsingular diagonal scale matrices. For example, angles, angular velocities, activation states, and torques need distinct reference scales. Write
 
 $$
-\| r(t_1) \| = O(\|\delta x(t_0)\|^2)
-$$ {#eq-residual-quadratic}
-
-This tells us residuals scale **quadratically** with perturbation size, but doesn't give us **quantitative bounds**.
-
-#### Hessian-Based Residual Bounds
-
-::: {.callout-important}
-### Theorem 1.1: Quantitative Residual Bound
-
-For a $C^2$ dynamical system $\dot{x} = f(x, u)$ with bounded Hessian $\|H_f\|_{\max} \leq M$ over the state-control trajectory, the residual satisfies:
-
+\dot z=F(t,z,v),\qquad
+\dot{\bar z}=F(t,\bar z,\bar v).
 $$
-\| r(t_1) \| \leq \frac{M}{2} \int_{t_0}^{t_1} \| \delta x(t) \|^2 \, dt
-$$ {#eq-rac-residual-bound}
 
-where $\delta x(t)$ is the perturbation evolution under linearized dynamics.
-:::
+Time retains its declared physical unit. Euclidean norms of $z$ and $v$ are dimensionless; $F$, its scaled-coordinate Hessian, and its Jacobian have units of inverse time. Choosing scales is a modeling decision, not cosmetic formatting: changing them changes which errors the norm emphasizes.
 
-**Proof:**
+Let $e=z-\bar z$ be the **actual** state deviation and $\delta v=v-\bar v$ the actual input difference. Define the first-order comparison by
 
-Starting from the fundamental theorem of calculus applied twice:
+<span id="rac-eq-linearized-dynamics"></span>
 
 $$
 \begin{aligned}
-f(x, u) &= f(\bar{x}, \bar{u}) + \nabla_x f|_{\bar{x}} (x - \bar{x}) + \nabla_u f|_{\bar{u}} (u - \bar{u}) \\
-&\quad + \frac{1}{2} (x - \bar{x})^T H_{xx} f (x - \bar{x}) + \frac{1}{2} (u - \bar{u})^T H_{uu} f (u - \bar{u}) \\
-&\quad + (x - \bar{x})^T H_{xu} f (u - \bar{u}) + O(\|x - \bar{x}\|^3)
+\dot\eta &= A(t)\eta+B(t)\delta v(t),\quad \eta(t_0)=e(t_0),\\
+A(t)&=D_zF(t,\bar z,\bar v),\quad
+B(t)=D_vF(t,\bar z,\bar v).
+\end{aligned}
+$$
+
+The input difference is prescribed for this comparison. In an offline calculation it can be the same recorded input applied to two model trajectories. If it depends on the actual state, computing this comparison online requires that input history; it is not automatically an independent predictor.
+
+<span id="rac-eq-residual-def"></span>
+
+$$
+z(t)=\bar z(t)+\eta(t)+r(t),\qquad r=e-\eta.
+$$
+
+This $r$ is the **flow remainder**. It differs from tracking error $e$, a one-step integration defect, and a measured prediction innovation. For a fixed finite horizon, a uniformly smooth flow, a common domain of existence, and an initial/input perturbation family of size $\alpha$, the first variation has
+
+$$
+\|r(t)\|=O(\alpha^2).
+$$ {#eq-residual-quadratic}
+
+The constant depends on the horizon and dynamics. This asymptotic statement neither specifies an acceptable error nor stays uniform as the horizon approaches a singularity.
+
+#### Hessian-Based Residual Bounds {#hessian-based-residual-bounds}
+
+Assume $F$ is twice continuously differentiable in $(z,v)$. At each time, the segment joining $(\bar z,\bar v)$ and $(z,v)$ must lie inside the stated domain. Put $w=(e,\delta v)$. Taylor's integral formula gives an exact remainder without assuming a third derivative:
+
+$$
+\begin{aligned}
+N(t,w)&=F(t,z,v)-F(t,\bar z,\bar v)-Ae-B\delta v,\\
+N(t,w)&=\int_0^1(1-s)D^2_{(z,v)}F(t,\bar z+se,\bar v+s\delta v)[w,w]\,ds.
 \end{aligned}
 $$ {#eq-taylor-expansion}
 
-The linearized dynamics use only first-order terms:
+Here a vector-valued Hessian is a **bilinear map**. Suppose its induced norm satisfies $\|D^2F[a,b]\|_2\le M(t)\|a\|_2\|b\|_2$ throughout the joined segment, or throughout a region known to contain it. Then
 
 $$
-\delta \dot{x} = A(t) \delta x + B(t) \delta u
-$$ {#rac-eq-linearized-dynamics}
-
-where $A(t) = \nabla_x f|_{\bar{x}(t)}$ and $B(t) = \nabla_u f|_{\bar{u}(t)}$.
-
-The **residual dynamics** are governed by second-order terms:
-
-$$
-\dot{r} = \frac{1}{2} \delta x^T H_{xx} f \, \delta x + \frac{1}{2} \delta u^T H_{uu} f \, \delta u + \delta x^T H_{xu} f \, \delta u + O(\|\delta x\|^3)
-$$ {#eq-residual-dynamics}
-
-Taking norms and using $\|H_f\|_{\max} \leq M$:
-
-$$
-\| \dot{r} \| \leq \frac{M}{2} \left( \|\delta x\|^2 + \|\delta u\|^2 + 2\|\delta x\| \|\delta u\| \right)
+\|N(t,w)\|_2\le\frac{M(t)}2\bigl(\|e(t)\|_2^2+\|\delta v(t)\|_2^2\bigr).
 $$ {#eq-residual-norm-bound}
 
-For control-affine systems where $\delta u$ is chosen via LQR (optimal for linearized dynamics), we have $\|\delta u\| \leq K \|\delta x\|$ for some gain $K$. Thus:
+Subtract the comparison dynamics from the actual deviation dynamics:
 
 $$
-\| \dot{r} \| \leq \frac{M}{2} (1 + K^2 + 2K) \|\delta x\|^2 \equiv C_M \|\delta x\|^2
-$$ {#eq-residual-simplified}
+\dot r=A(t)r+N(t,w),\qquad r(t_0)=0.
+$$ {#eq-residual-dynamics}
 
-Integrating from $t_0$ to $t_1$ and using $r(t_0) = 0$:
+Let $\Phi(t,s)$ solve $\partial_t\Phi=A(t)\Phi$, $\Phi(s,s)=I$. Variation of constants gives
 
 $$
-\| r(t_1) \| \leq \int_{t_0}^{t_1} \| \dot{r}(t) \| \, dt \leq C_M \int_{t_0}^{t_1} \|\delta x(t)\|^2 \, dt
+r(t)=\int_{t_0}^t\Phi(t,s)N(s,w(s))\,ds.
 $$ {#eq-residual-integral-bound}
 
-For notational simplicity, we absorb the constant into $M$. $\square$
+::: {.callout-important}
+### Theorem 1.1: Propagated Flow-Remainder Bound
 
-#### Computing the Hessian Bound
-
-For control-affine systems $\dot{x} = f(x) + G(x) u$, the Hessian has the form:
-
-$$
-H_f = \nabla_x (\nabla_x f) = \begin{bmatrix} \frac{\partial^2 f_1}{\partial x_i \partial x_j} \end{bmatrix}
-$$ {#eq-hessian-def}
-
-**Example 1.1: Pendulum**
-
-For a simple pendulum $\ddot{\theta} = -\frac{g}{L} \sin\theta - \frac{b}{m} \dot{\theta} + \frac{1}{mL^2} u$:
-
-State: $x = [\theta, \dot{\theta}]^T$
-
-Dynamics: $f(x) = \begin{bmatrix} \dot{\theta} \\ -\frac{g}{L} \sin\theta - \frac{b}{m} \dot{\theta} \end{bmatrix}$
-
-Hessian (for $f_2$):
+Under the smoothness, domain, norm, and comparison assumptions above,
 
 $$
-H_{f_2} = \begin{bmatrix}
--\frac{g}{L} \sin\theta & 0 \\
-0 & 0
-\end{bmatrix}
-$$ {#eq-pendulum-hessian}
+\|r(t)\|_2\le\frac12\int_{t_0}^t
+\|\Phi(t,s)\|_2M(s)
+\bigl(\|e(s)\|_2^2+\|\delta v(s)\|_2^2\bigr)\,ds.
+$$ {#eq-rac-residual-bound}
 
-Maximum over $\theta \in [-\pi, \pi]$:
-
-$$
-\|H_f\|_{\max} = \frac{g}{L} \approx 9.8 \text{ s}^{-2} \quad \text{(for } L = 1 \text{ m)}
-$$ {#eq-pendulum-bound}
-
-**Interpretation:** For a perturbation $\|\delta x\| = 0.1$ rad over $\Delta t = 0.1$ s:
-
-$$
-\|r\| \leq \frac{9.8}{2} \cdot (0.1)^2 \cdot 0.1 = 0.0049 \text{ rad}
-$$ {#eq-residual-example}
-
-The residual is **0.0049 rad** (≈ 0.28°), which is indeed second-order in the 0.1 rad perturbation.
-
-::: {.callout-tip}
-### Practical Guideline
-
-For systems with bounded state spaces (e.g., joint limits), precompute $M = \max_{\mathcal{X} \times \mathcal{U}} \|H_f(x,u)\|$ offline. During runtime, monitor $\int \|\delta x\|^2 dt$ to predict residual growth.
+The deviation inside this bound is the actual deviation. Substituting the linear prediction requires a separate bound on its difference from the actual deviation. Dropping $\Phi$ requires an established nonexpansive propagator in the chosen norm.
 :::
 
----
+The theorem describes how the model's local nonlinearity affects a finite motion. It does not cover omitted forces or numerical integration error unless their contributions are introduced explicitly. A measured disturbance term $d$ would add $\int\Phi d$ to the error equation, with its own assumptions and bound.
+
+Feedback requires particular care. If $\delta v=Ke$ with a known constant or time-dependent linear gain, then $\|w\|^2\le(1+\|K\|^2)\|e\|^2$ for the open-loop comparison just defined. Its forcing bound becomes
+
+$$
+\|N\|\le\frac{M}2(1+\|K\|^2)\|e\|^2.
+$$ {#eq-residual-simplified}
+
+Alternatively, define the **closed-loop field** $F_K(t,z)=F(t,z,\bar v+K(z-\bar z))$ and linearize that field. Its propagator uses $A+BK$, and its Hessian must include the feedback substitution. A nonlinear feedback law contributes its own second derivatives. One cannot use a closed-loop propagator with an open-loop remainder definition without rederiving the comparison. The appendix makes this distinction explicit.
+
+#### Computing the Hessian Bound {#computing-the-hessian-bound}
+
+For a control-affine field $F(z,v)=f(z)+\sum_jg_j(z)v_j$,
+
+$$
+\begin{aligned}
+D^2_{zz}F&=D^2f+\sum_jv_jD^2g_j,\\
+D^2_{zv_j}F&=Dg_j,\qquad D^2_{vv}F=0.
+\end{aligned}
+$$ {#eq-hessian-def}
+
+Thus control-affine does not mean jointly linear in state and input. State-dependent actuation produces mixed derivatives, even though input-input derivatives vanish. With $F(z,v)=zv$, for instance, the mixed remainder is $e\delta v$.
+
+If output component $F_k$ has Hessian matrix $H_k$, the estimate
+$\sqrt{\sum_k\|H_k\|_2^2}$ bounds the bilinear norm for Euclidean inputs and outputs. The largest component norm alone supplies an infinity-output bound; multiplying it by $\sqrt n$ gives a conservative Euclidean-output bound for $n$ components. Mixing these conventions silently changes the theorem.
+
+Finite differences and automatic differentiation evaluate derivatives at points. A sample maximum can miss a larger derivative between samples. Certification over a region requires an analytical bound, verified interval calculation, or another justified enclosure. A dense sampled maximum is useful as an empirical indicator, provided the article or controller labels it that way. Differentiate the equations actually used, including coordinate changes, input maps, and smooth actuator dynamics.
+
+**Pendulum example.** With point mass $m$, length $L$, viscous rotational damping coefficient $b$ in torque per angular velocity, and applied torque $u$,
+
+$$
+\dot\theta=\omega,\qquad
+\dot\omega=-\frac gL\sin\theta-\frac b{mL^2}\omega+\frac u{mL^2}.
+$$
+
+The acceleration component's state Hessian is
+
+$$
+H_{\dot\omega}=
+\begin{bmatrix}(g/L)\sin\theta&0\\0&0\end{bmatrix}.
+$$ {#eq-pendulum-hessian}
+
+Its sign follows by differentiating $-\sin\theta$ twice. In unscaled coordinates the acceleration remainder from an angular displacement $\Delta\theta$ obeys
+
+$$
+|N_{\dot\omega}|\le\frac{g}{2L}|\Delta\theta|^2.
+$$ {#eq-pendulum-bound}
+
+At $L=1\,\mathrm m$ and $|\Delta\theta|\le0.1$ rad, using $g=9.81\,\mathrm{m\,s^{-2}}$ for this rounded illustration, the acceleration-remainder bound is $0.04905\,\mathrm{rad\,s^{-2}}$. Integrating a constant acceleration remainder for $0.1$ s in a **double-integrator comparison** would give
+
+$$
+|r_\omega|\le0.004905\,\mathrm{rad\,s^{-1}},\qquad
+|r_\theta|\le0.00024525\,\mathrm{rad}.
+$$ {#eq-residual-example}
+
+These are different components with different units. For the pendulum's actual variational dynamics, use its coupled transition matrix instead of the double-integrator calculation. An angle/rate vector cannot be assigned a single unit of radians without scaling.
+
+### A Counterexample That Exposes Missing Propagation
+
+Consider the dimensionless teaching model $\dot x=x+x^2$, nominal trajectory $\bar x=0$, and initial deviation $\epsilon>0$. Before its finite-time pole,
+
+$$
+x(t)=\frac{\epsilon e^t}{1-\epsilon(e^t-1)},\qquad
+\eta(t)=\epsilon e^t.
+$$
+
+Its Hessian is exactly $2$, and its transition matrix is $e^{t-s}$. The tempting expression obtained by dropping propagation and substituting $\eta$ is
+$B_{\mathrm{old}}=\epsilon^2(e^{2T}-1)/2$. But the actual remainder is
+
+$$
+r(T)=\frac{\epsilon^2e^T(e^T-1)}{1-\epsilon(e^T-1)}.
+$$
+
+As $\epsilon\to0$, $r/B_{\mathrm{old}}\to2e^T/(e^T+1)>1$ for every $T>0$. The proposed upper bound fails even for arbitrarily small perturbations. At $\epsilon=0.01$, $T=1$, the actual remainder is approximately $0.000475$, while the old expression is approximately $0.000319$.
+
+For a simple valid enclosure, the positive solution increases, so $x(s)\le x(T)$ throughout this interval. The corrected conditional bound is $x(T)^2(e^T-1)$, approximately $0.001314$. This is deliberately conservative. Using the actual time-dependent deviation in the propagated integral recovers the exact remainder here because all terms are scalar and positive. The implementation section reproduces the comparison; its numerical tests also compare the closed form with an independently integrated ODE.
 
 ## Residuals as Control Signals {#sec-control-signals}
 
-### Real-Time Residual Monitoring
+### Real-Time Residual Monitoring {#real-time-residual-monitoring}
 
-The key insight: **We can estimate the residual without knowing the true nonlinear trajectory $x(t)$.**
+Three comparisons answer three different questions:
 
-**Method 1: Predicted Residual (Offline)**
+| Quantity | Comparison | What It Can Establish |
+|---|---|---|
+| Model flow remainder | Nonlinear model versus its first variation, same initial/input experiment | Validity of the chosen local approximation |
+| Tracking discrepancy | Estimated state versus the desired or nominal state | Departure from the selected motion |
+| Prediction innovation | New measurement versus a prediction made before that measurement | Consistency of prediction and observation under an estimation model |
 
-During DDP/iLQR trajectory optimization, we have access to the full nominal trajectory $\bar{x}(t)$. For each linearization point, compute:
+A one-step first-order prediction can be constructed from the previous estimate:
 
 $$
-\hat{r}(t) = \frac{M}{2} \int_{t-\Delta t}^{t} \|\delta x(s)\|^2 \, ds
+\hat z_{k+1|k}=\bar z_{k+1}
++\Phi_k(\hat z_{k|k}-\bar z_k)+\Gamma_k\delta v_k.
 $$ {#eq-predicted-residual}
 
-where $\delta x(s)$ evolves under the linearized dynamics from the previous timestep's perturbation.
+For piecewise-constant input deviations, $\Gamma_k$ is the appropriate integrated input sensitivity. If inputs vary within the interval, use their convolution with the transition matrix. The prediction must include the affine offset through the evolving nominal trajectory. It must not reuse the current measurement as its own initial condition.
 
-**Method 2: Observed Residual (Online)**
-
-During closed-loop execution, we observe the actual state $x_{\text{measured}}(t)$ and compare to the predicted state from linearization:
+For measurement function $h$, the innovation is
 
 $$
-r_{\text{obs}}(t) = x_{\text{measured}}(t) - \left( \bar{x}(t) + \Phi(t, t_0) \delta x(t_0) \right)
+\nu_{k+1}=y_{k+1}-h(\hat z_{k+1|k}).
 $$ {#eq-observed-residual}
 
-where $\delta x(t_0) = x_{\text{measured}}(t_0) - \bar{x}(t_0)$ is the initial tracking error.
+It combines state-estimation error, model discrepancy, unmodeled inputs, numerical error, measurement error, and linearization remainder. An exact measurement of every state still does not identify which omitted physical force caused a mismatch. A filtered innovation is useful evidence about consistency; filtering alone cannot make indistinguishable causes identifiable.
 
-::: {.callout-warning}
+::: {.callout-note}
 ## State Estimation
 
-Observed residuals require accurate state estimation. For systems with measurement noise, use a Kalman filter to separate true residuals from sensor noise:
-
-$$
-\hat{r}(t) = \hat{x}_{\text{KF}}(t) - (\bar{x}(t) + \Phi(t, t_0) \delta x(t_0))
-$$
-
-where $\hat{x}_{\text{KF}}$ is the Kalman filter estimate.
+For a locally linear observation and independent prior state error and measurement noise, the usual innovation covariance approximation is $S=HP^-H^T+R$. If those errors are correlated, the corresponding cross-covariance terms must be included with the signs implied by the error convention. A normalized statistic $\nu^TS^{-1}\nu$ can help compare measurements of different units. A chi-squared interpretation additionally requires the stated distribution and calibration; it is not supplied by the algebra alone.
 :::
 
-### Threshold-Based Decision Making
+### Threshold-Based Decision Making {#threshold-based-decision-making}
 
-Define a **residual threshold** $\epsilon_r$ based on task requirements. Three regimes:
+Set thresholds from a task budget and an estimation model. A large discrepancy may call for a better state estimate, a smaller proposed control update, a different contact mode, or a fallback policy. It does not necessarily call for a shorter integration step. If the cause is a missing force, integrating the same wrong model more accurately can leave the prediction just as wrong.
 
-1. **Low residual** ($\|r\| < \epsilon_r / 3$): Linearization is highly accurate
-   → Use computationally cheap LQR tracking
+Record which residual triggered an action. A controller report should contain the prediction timestamp, interval, reference, scales, model version, norm, uncertainty estimate, and resulting action. This allows a reviewer to determine whether a threshold crossing preceded the problem or merely described it afterward.
 
-2. **Moderate residual** ($\epsilon_r / 3 \leq \|r\| < \epsilon_r$): Warning zone
-   → Increase MPC replanning frequency or reduce timestep
+### Example 1.2: Quadrotor Flip {#example-1.2-quadrotor-flip}
 
-3. **High residual** ($\|r\| \geq \epsilon_r$): Linearization breakdown
-   → Switch to full MPC with short horizon or emergency backup controller
-
-**State Machine:**
-
-```mermaid
-stateDiagram-v2
-    [*] --> LQR
-    LQR --> MPC_Warning : ||r|| > ε/3
-    MPC_Warning --> LQR : ||r|| < ε/4 (hysteresis)
-    MPC_Warning --> MPC_Full : ||r|| > ε
-    MPC_Full --> MPC_Warning : ||r|| < 2ε/3
-    MPC_Full --> Emergency : ||r|| > 3ε
-```
-
-**Hysteresis:** Use different thresholds for upward vs. downward transitions to prevent chattering.
-
-### Example 1.2: Quadrotor Flip
-
-During aggressive aerobatics, a quadrotor executing a flip experiences:
-
-- **Takeoff/cruise** ($\dot{\theta} < 50$ deg/s): Low curvature → LQR sufficient
-- **Entry into flip** ($\dot{\theta} \approx 200$ deg/s): Moderate curvature → MPC warning, increase replan rate
-- **Peak rotation** ($\dot{\theta} > 400$ deg/s): High curvature → Full MPC at 100 Hz
-
-Residual monitoring allows the controller to **autonomously adapt** without manual mode switching.
-
----
+A flip illustrates why angle, rate, and approximation quality must be separated. A large attitude excursion makes a single small-angle approximation unsuitable, but a moving local attitude error can stay small. Rapid rotation can amplify sensitivities, and thrust limits can make a commanded correction infeasible. Those mechanisms need separate measurements. A threshold based only on angular speed or a Hessian sample does not establish whether the current task is controllable within the remaining time.
 
 ### Geometric Interpretation {#sec-geometry}
 
-#### Residuals Measure Tangent Space "Drift"
+#### Moving Tangent Comparisons {#residuals-measure-tangent-space-drift}
 
-Consider the state space as a manifold $\mathcal{M}$. The nominal trajectory $\bar{x}(t)$ is a curve on $\mathcal{M}$.
+A first variation is tangent to the family of model trajectories. For manifold-valued states, define errors in a local chart or with a specified retraction and compare tangent vectors consistently. On $SO(3)$, for example, an attitude error may use the local logarithm of $\bar R^TR$ with a declared branch. Its coordinates cannot be treated as a globally unique vector through arbitrary rotations.
 
-- **Tangent space** $T_{\bar{x}(t)} \mathcal{M}$: "Flat approximation" at $\bar{x}(t)$
-- **Linearized dynamics**: Flow restricted to $T_{\bar{x}(t)} \mathcal{M}$ (frozen in time)
-- **Residual**: Measures how far the true dynamics "drift" from this tangent approximation
+The flow remainder depends on this representation. That dependence does not make it useless: a control design needs a metric and outputs. It does mean a small remainder in one set of coordinates is not automatically a coordinate-invariant statement about the motion's difficulty.
 
-Formally, the residual is the **projection onto normal directions** (second fundamental form) weighted by perturbation size.
+#### Connection to Riemannian Curvature {#connection-to-riemannian-curvature}
 
-#### Connection to Riemannian Curvature
-
-In differential geometry, the **sectional curvature** $K$ of a manifold quantifies how geodesics (straightest paths) diverge from Euclidean behavior.
-
-For dynamical systems, there's an analogous quantity: the **dynamical curvature tensor**:
+Intrinsic Riemannian curvature requires a metric and its connection. A coordinate Hessian of a vector field is not that curvature tensor. Even motion on a flat one-dimensional line can have a nonlinear coordinate representation. On $x>0$, take $\dot x=1$ and introduce $z=x^2$. Then
 
 $$
-R_{ijk\ell} = \frac{\partial^2 f_i}{\partial x_j \partial x_k} - \frac{\partial^2 f_i}{\partial x_k \partial x_j}
+\dot z=2\sqrt z,\qquad
+\frac{d^2\dot z}{dz^2}=-\frac1{2z^{3/2}}.
 $$ {#eq-curvature-tensor}
 
-(Note: For smooth systems, this is zero due to equality of mixed partials. The relevant curvature comes from the **Hessian magnitude**, not topological curvature.)
-
-**Relationship:**
+The state line remains intrinsically flat, yet this vector field has a nonzero coordinate Hessian. Its finite-time flow is
 
 $$
-\| r \| \sim \|H_f\| \cdot \|\delta x\|^2 \sim \sqrt{K_{\text{dyn}}} \cdot \|\delta x\|^2
+z(t)=(\sqrt{z_0}+t)^2.
 $$ {#eq-curvature-residual}
 
-where $K_{\text{dyn}}$ is an effective "dynamical curvature."
+It is nonlinear in $z_0$ despite the exact affine flow $x(t)=x_0+t$. This counterexample is sufficient to reject a universal identification of flow remainder with intrinsic curvature. It also shows why the metric must be fixed before comparing “more nonlinear” trajectories.
 
-::: {.callout-note}
-### Intuition
+#### Visual Example: Double Integrator and Pendulum {#visual-example-double-integrator-vs.-pendulum}
 
-- **Flat manifold** (linear system): $H_f = 0$ → $r \equiv 0$ → tangent space is exact globally
-- **Curved manifold** (nonlinear system): $H_f \neq 0$ → $r > 0$ → tangent space drifts from true flow
-- **Highly curved** (e.g., pendulum near $\theta = \pi/2$, where the Hessian $H_{f} = -(g/L)\sin\theta$ is maximal): Large $\|H_f\|$ → residuals grow rapidly. (Distinct from the *linearization-instability* region near $\theta = \pi$, the inverted equilibrium, where the curvature magnitude is actually zero.)
-:::
+A double integrator with additive input is affine, so its exact flow has zero Taylor remainder for any admissible initial/input perturbation. Its numerical integration error depends on the numerical method. A pendulum has a nonlinear sine term, but its second derivative vanishes at the downward equilibrium. Around that equilibrium, the first omitted angular term is cubic. At other angles a quadratic term generally appears. Therefore “nonlinear system” does not imply a nonzero quadratic coefficient at every nominal point.
 
-#### Visual Example: Double Integrator vs. Pendulum
-
-**Double Integrator** $\ddot{x} = u$ (flat):
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Linearization is exact everywhere
-t = np.linspace(0, 1, 100)
-x_true = 0.5 * t**2  # Nonlinear due to integration, but dynamics are linear
-x_linear = 0.5 * t**2  # Linearization matches exactly
-residual = x_true - x_linear  # Zero everywhere
-
-plt.plot(t, residual, label='Residual')
-plt.xlabel('Time (s)')
-plt.ylabel('Residual (m)')
-plt.title('Double Integrator: Zero Residual')
-plt.legend()
-plt.grid(True)
-```
-
-**Pendulum** $\ddot{\theta} = -\omega^2 \sin\theta$ (curved):
-
-```python
-from scipy.integrate import odeint
-
-def pendulum(y, t, omega):
-    theta, theta_dot = y
-    return [theta_dot, -omega**2 * np.sin(theta)]
-
-def pendulum_linear(y, t, omega, theta0):
-    theta, theta_dot = y
-    return [theta_dot, -omega**2 * np.cos(theta0) * theta]
-
-omega = 3.13  # Natural frequency
-theta0 = 0.5  # Initial angle (rad)
-y0 = [theta0, 0]
-
-t = np.linspace(0, 2, 200)
-
-# True nonlinear trajectory
-y_true = odeint(pendulum, y0, t, args=(omega,))
-
-# Linearized trajectory (frozen at t=0)
-y_linear = odeint(pendulum_linear, y0, t, args=(omega, theta0))
-
-residual = y_true[:, 0] - y_linear[:, 0]
-
-plt.figure(figsize=(10, 4))
-plt.subplot(1, 2, 1)
-plt.plot(t, y_true[:, 0], label='True')
-plt.plot(t, y_linear[:, 0], '--', label='Linearized')
-plt.xlabel('Time (s)')
-plt.ylabel('Angle (rad)')
-plt.legend()
-plt.grid(True)
-
-plt.subplot(1, 2, 2)
-plt.plot(t, residual, color='red')
-plt.xlabel('Time (s)')
-plt.ylabel('Residual (rad)')
-plt.title(f'Residual Grows as O(t²)')
-plt.grid(True)
-plt.tight_layout()
-```
-
-The residual **grows quadratically** in time for the pendulum, confirming Theorem 1.1.
-
----
+A direction reversal is a kinematic event where a chosen velocity component changes sign. It need not coincide with a large Hessian, a singularity, or maximum conversion of all system kinetic energy to potential energy. Other joints and the club can continue moving while one segment reverses.
 
 ## Part II: Algorithms {#sec-algorithms}
 
 ## Adaptive Timestep DDP {#sec-adaptive-ddp}
 
-### Motivation: Curvature-Dependent Step Sizing
+### Motivation: Allocate Error Budgets Along a Motion {#motivation-curvature-dependent-step-sizing}
 
-Standard DDP uses a fixed timestep $\Delta t$. But from @eq-rac-residual-bound, we know residuals depend on:
+There are at least three different grids: the numerical integrator's internal steps, the optimizer's control/state mesh, and the physical controller's update times. Refining one does not automatically refine the others. An embedded Runge–Kutta error estimate controls an integration defect. A Taylor remainder estimates a local model's validity for a proposed perturbation. A controller update must also meet sensing, actuation, and computation deadlines.
 
-1. Hessian magnitude $M$ (curvature)
-2. Integrated perturbation energy $\int \|\delta x\|^2 dt$
+An optimizer can use a large interval if the **discrete flow** over that interval is accurately integrated and differentiated and its local approximation is adequate. Conversely, a tiny interval does not guarantee a reliable first-order model for a large state/control update. Mesh density and trust-region size interact; neither replaces the other.
 
-**Insight:** In high-curvature regions, use **smaller timesteps** to keep residuals bounded. In low-curvature regions, use **larger timesteps** for computational efficiency.
+### Adaptive Timestep Selection Rule {#adaptive-timestep-selection-rule}
 
-### Adaptive Timestep Selection Rule
+On one interval, suppose $\|N\|\le q=M\rho^2/2$, where $\rho$ bounds the actual joined deviation, and $\|\Phi(t,s)\|\le e^{a(t-s)}$. A convenient Euclidean growth bound is any upper bound on the largest eigenvalue of $(A+A^T)/2$ throughout the interval. This follows by differentiating the squared norm of a variational solution. It accounts for non-normal transient growth that eigenvalues of $A$ alone can miss.
 
-Given a maximum acceptable residual $\epsilon_r$ and estimated perturbation size $\|\delta x_{\max}\|$, choose:
+For a comparison reset to $r(0)=0$, the local error bound is
 
 $$
-\Delta t = \sqrt{\frac{2 \epsilon_r}{M \|\delta x_{\max}\|^2}}
+R(h)=q\,\psi(a,h),\qquad
+\psi(a,h)=\begin{cases}(e^{ah}-1)/a,&a\ne0,\\h,&a=0.\end{cases}
+$$
+
+For $q>0$, budget $\varepsilon_r\ge0$, and a non-negative growth bound $a$, inversion gives
+
+$$
+h\le\begin{cases}
+\log(1+a\varepsilon_r/q)/a,&a>0,\\
+\varepsilon_r/q,&a=0.
+\end{cases}
 $$ {#eq-adaptive-timestep}
 
-**Derivation:** From @eq-rac-residual-bound with constant $\delta x$ over $\Delta t$:
+Use `log1p` and `expm1` near zero. For $q=0$, this particular local remainder condition imposes no interval limit. Other domain, integration, contact, and deadline conditions still apply. If a computed admissible step is below a hardware or optimizer minimum, report the unmet condition or change the plan; clipping upward does not preserve the bound.
+
+The units check is decisive: $q$ has units of inverse time, $\varepsilon_r$ is dimensionless, and $a\varepsilon_r/q$ is dimensionless. A square root of $\varepsilon_r/q$ has units of square-root time and cannot be used as this interval rule.
+
+With $q=0.005\,\mathrm{s^{-1}}$, $a=2\,\mathrm{s^{-1}}$, and $\varepsilon_r=0.001$, the rule gives about $0.168236$ s; without amplification it would give $0.2$ s. These are manufactured comparison-equation parameters, not recommended golf or robot tolerances.
+
+For multiple intervals, retain earlier error:
 
 $$
-\|r\| \leq \frac{M}{2} \|\delta x\|^2 \Delta t \leq \epsilon_r \implies \Delta t \leq \frac{2\epsilon_r}{M \|\delta x\|^2}
+R_{i+1}=e^{a_ih_i}R_i+q_i\psi(a_i,h_i),\qquad R_0=0.
 $$
 
-In practice, use a factor of $\sqrt{\cdot}$ to be conservative since $\delta x$ varies over the interval.
+Simply subdividing an unchanged comparison cannot erase its accumulated remainder. If relinearization resets a local comparison, the relationship to the original reference and its accumulated task error still needs to be tracked.
 
-### Algorithm 2.1: Adaptive-Timestep DDP
+### Algorithm 2.1: Refine a Fixed-Horizon Optimization Mesh {#algorithm-2.1-adaptive-timestep-ddp}
 
-```python
-def adaptive_timestep_ddp(
-    f, x0, xf, u_init,
-    eps_residual=0.01,
-    max_iters=100,
-    compute_hessian_bound=None
-):
-    """
-    DDP with curvature-adaptive timestep selection.
+The following is an implementable design procedure, not a report of a validated new DDP solver:
 
-    Args:
-        f: Dynamics function f(x, u, t)
-        x0: Initial state
-        xf: Target state
-        u_init: Initial control trajectory (list of controls)
-        eps_residual: Maximum acceptable residual
-        max_iters: Maximum DDP iterations
-        compute_hessian_bound: Function M(x, u) returning local Hessian bound
+1. Specify terminal time $T$, controls, state and input constraints, contact schedule, objective, integration tolerances, and task outputs. Start with positive intervals summing to $T$.
+2. Roll out the nonlinear nominal trajectory using the same input interpolation and integration scheme whose discrete derivatives enter the optimizer. Include the quadrature rule in the stage cost.
+3. Solve the local optimization subproblem. Evaluate proposed state/control deviations, a regional enclosure when available, and propagated remainder indicators. Label sampled indicators as estimates.
+4. Accept or reject a candidate using its nonlinear rollout, actual cost decrease, constraint feasibility, and integration checks. A small remainder alone is insufficient. Limit update size when the local model predicts poorly.
+5. Split intervals that fail the chosen discretization or approximation criteria. Preserve total time exactly. Transfer controls using their specified interpolation, locate events separately, and reintegrate the nominal trajectory on the new mesh.
+6. Recompute derivatives, quadrature, terminal values, and constraints on that mesh. Reevaluate the old and new candidates with a common sufficiently accurate cost calculation before claiming improvement. Continue until the stated tolerances or budget terminate the procedure.
 
-    Returns:
-        x_traj: Optimized state trajectory
-        u_traj: Optimized control trajectory
-        t_traj: Adaptive time grid
-    """
+For a left-endpoint approximation to a continuous running cost $\ell$, the stage term is $h_i\ell(x_i,u_i)$; its state and control derivatives inherit $h_i$. For a more accurate quadrature, differentiate that quadrature. Combining RK4 state rollout with unqualified Euler discrete Jacobians solves inconsistent local models.
 
-    # Step 1: Initialize with uniform timestep
-    N = len(u_init)
-    dt_init = 0.01  # Initial guess
-    t = np.arange(0, N * dt_init, dt_init)
+### Convergence Status and Assumptions {#convergence-status-and-assumptions}
 
-    # Forward pass with initial controls
-    x_traj = forward_pass(f, x0, u_init, t)
-    u_traj = u_init.copy()
+On a fixed mesh, iLQR approximates nonlinear dynamics to first order inside a second-order local cost model. Full DDP also includes contractions of the dynamics' second derivatives with the value gradient. Both require an appropriate local solve, regularization, and accepted rollout; neither name guarantees convergence of arbitrary code. Li and Todorov's biological movement paper develops iLQR and reports model-specific numerical comparisons; it is not the original DDP convergence proof [@li2004iterative].
 
-    for iteration in range(max_iters):
-        # Step 2: Compute local Hessian bounds along trajectory
-        M_traj = np.array([
-            compute_hessian_bound(x_traj[i], u_traj[i])
-            for i in range(len(x_traj))
-        ])
-
-        # Step 3: Estimate perturbation sizes (from LQR feedback)
-        # Use previous iteration's covariance or pessimistic bound
-        delta_x_max = np.array([
-            estimate_perturbation_size(x_traj[i], u_traj[i])
-            for i in range(len(x_traj))
-        ])
-
-        # Step 4: Compute adaptive timesteps
-        dt_adaptive = np.sqrt(
-            2 * eps_residual / (M_traj * delta_x_max**2 + 1e-8)
-        )
-
-        # Clip to reasonable bounds
-        dt_adaptive = np.clip(dt_adaptive, 0.001, 0.1)
-
-        # Step 5: Create new time grid
-        t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
-
-        # Step 6: Standard DDP backward/forward pass on new grid
-        # (Linearize dynamics, solve Riccati, compute feedback gains)
-        K_traj, k_traj = backward_pass_adaptive(
-            f, x_traj, u_traj, t_new, Q, R, Qf
-        )
-
-        x_new, u_new = forward_pass_adaptive(
-            f, x0, x_traj, u_traj, K_traj, k_traj, t_new
-        )
-
-        # Step 7: Check convergence
-        cost_new = compute_cost(x_new, u_new, t_new, Q, R, Qf)
-        if abs(cost_new - cost_old) < 1e-6:
-            break
-
-        x_traj, u_traj, t = x_new, u_new, t_new
-        cost_old = cost_new
-
-    return x_traj, u_traj, t
-```
-
-**Key Features:**
-
-1. **Timestep varies along trajectory**: Dense sampling in high-curvature regions (e.g., impact events), sparse in low-curvature regions
-2. **Adaptive rule**: The timestep is updated from local curvature and perturbation estimates rather than kept fixed
-3. **Nodewise residual target**: If the Hessian bound and perturbation estimates are valid, the construction targets $\|r(t_i)\| \leq \epsilon_r$ at the sampled nodes
-
-### Convergence Status and Assumptions
-
-::: {.callout-warning}
-## Status of the Adaptive DDP Claim
-
-This article does **not** prove a new convergence theorem for Adaptive DDP. The intended claim is narrower: if the residual estimator is valid, the regridded discretization remains inside the regime covered by standard DDP assumptions, and the solver tolerances are handled carefully, one expects behavior similar to standard DDP on a better-chosen mesh. Establishing that result rigorously would require a dedicated proof that is outside the scope of this article.
-:::
-
-**Practical reading:** The adaptive rule should be treated as an algorithmic proposal motivated by residual control, not as a proved convergence result in its current form.
-
----
+Changing the mesh changes the finite-dimensional optimization problem. Convergence of an inner solve does not establish convergence of the outer mesh sequence. A credible claim must specify consistent discretization, admissible mesh changes, termination, constraint treatment, regularity, and the norm in which solutions converge. ALTRO provides a concrete published approach to constrained trajectory optimization using augmented-Lagrangian and projection machinery; invoking its name does not validate the adaptive procedure above [@howell2019altro].
 
 ### Residual-Triggered Mode Switching {#sec-mode-switching}
 
-#### LQR (Low Curvature) ↔ MPC (High Curvature)
+#### Tracking LQR and Predictive Control {#lqr-low-curvature-mpc-high-curvature}
 
-**Motivation:** LQR is computationally cheap but assumes linearity. MPC is expensive but handles nonlinearity. Use residuals to switch intelligently.
+Tracking LQR can stabilize a nonlinear system locally around a nominal trajectory. MPC may use a linear or nonlinear prediction model. The relevant choice includes constraints, prediction horizon, model validity, available computation, and fallback feasibility; it is not simply “LQR for linear physics, MPC for nonlinear physics.”
 
-#### Switching Logic
+#### Switching Logic {#switching-logic}
 
-**State:** $s \in \{\text{LQR}, \text{MPC}\}$
+Choose an upper threshold $\varepsilon_\uparrow$ and lower threshold $\varepsilon_\downarrow<\varepsilon_\uparrow$ for a defined statistic. Count consecutive samples above the upper threshold and consecutive samples below the lower threshold. Reset the corresponding count whenever its condition fails; samples in the gap cannot count as consecutive evidence. Add a minimum dwell time when the design requires it.
 
-**Transitions:**
+Before transferring control, verify that the requested controller has a feasible current solution, compatible state/input conventions, and an admissible first action. Handle input slew limits and delayed solutions. If optimization misses its deadline, use an explicitly designed fallback within its valid region. A mode label is not a control policy.
 
-1. **LQR → MPC:** If $\|r_{\text{obs}}\| > \epsilon_{\uparrow}$ for $N_{\text{consec}}$ consecutive timesteps
-2. **MPC → LQR:** If $\|r_{\text{obs}}\| < \epsilon_{\downarrow}$ for $M_{\text{consec}}$ consecutive timesteps
+Hysteresis reduces repeated threshold crossings but does not prove stability. A common Lyapunov function decreasing under every active controller can supply one route under its domain assumptions. Multiple Lyapunov functions require bounds on switching increases and sufficient decrease between switches. Constraints and contact transitions add their own conditions.
 
-where $\epsilon_{\downarrow} < \epsilon_{\uparrow}$ (hysteresis) and $N_{\text{consec}}, M_{\text{consec}}$ prevent chattering.
+#### Computational Cost Analysis {#computational-cost-analysis}
 
-**Implementation:**
-
-```python
-class ResidualAdaptiveController:
-    def __init__(self, eps_up=0.05, eps_down=0.02, N_consec=3):
-        self.mode = 'LQR'
-        self.eps_up = eps_up
-        self.eps_down = eps_down
-        self.N_consec = N_consec
-        self.high_residual_count = 0
-        self.low_residual_count = 0
-
-        # Precomputed LQR gain
-        self.K_lqr = compute_lqr_gain(A_nom, B_nom, Q, R)
-
-        # MPC setup
-        self.mpc_horizon = 20
-        self.mpc_dt = 0.05
-
-    def compute_control(self, x_measured, x_nominal, t):
-        # Estimate residual from observation
-        delta_x0 = x_measured - x_nominal
-        x_predicted = x_nominal + self.Phi @ delta_x0
-        r_obs = x_measured - x_predicted
-        residual_norm = np.linalg.norm(r_obs)
-
-        # Update mode switching logic
-        if residual_norm > self.eps_up:
-            self.high_residual_count += 1
-            self.low_residual_count = 0
-        elif residual_norm < self.eps_down:
-            self.low_residual_count += 1
-            self.high_residual_count = 0
-        else:
-            # In hysteresis zone: maintain current mode
-            pass
-
-        # Switch mode if threshold exceeded
-        if self.mode == 'LQR' and self.high_residual_count >= self.N_consec:
-            self.mode = 'MPC'
-            print(f"[t={t:.2f}] Switching to MPC (residual={residual_norm:.4f})")
-        elif self.mode == 'MPC' and self.low_residual_count >= self.N_consec:
-            self.mode = 'LQR'
-            print(f"[t={t:.2f}] Switching to LQR (residual={residual_norm:.4f})")
-
-        # Compute control based on current mode
-        if self.mode == 'LQR':
-            u = -self.K_lqr @ (x_measured - x_nominal)
-        else:  # MPC
-            u = self.mpc_solve(x_measured, t)
-
-        return u
-
-    def mpc_solve(self, x_current, t):
-        # Full nonlinear MPC with short horizon
-        return solve_nonlinear_mpc(
-            dynamics=self.f_nonlinear,
-            x0=x_current,
-            horizon=self.mpc_horizon,
-            dt=self.mpc_dt,
-            Q=self.Q,
-            R=self.R
-        )
-```
-
-#### Computational Cost Analysis
-
-**LQR:** $O(n^2)$ matrix-vector multiply (where $n$ = state dimension)
-**MPC:** $O(H \cdot n^3)$ per iteration (where $H$ = horizon length)
-
-For a moderate 12-state example with a short horizon, the LQR update is typically much cheaper than repeatedly solving a nonlinear MPC problem. The actual timing ratio depends on horizon length, solver choice, warm starts, hardware, and implementation details.
-
-**Potential adaptive benefit:** Concentrate nonlinear-optimization effort in the high-residual phases and use cheaper linear feedback elsewhere. Quantifying any speedup requires benchmark data for the specific controller implementation.
-
----
+Measure the whole loop: sensing, estimation, derivatives, optimization, integration, validation, transfer, and communication. Report hardware, solver tolerances, input size, warm starts, compilation policy, trial count, and worst-case or tail latency relevant to the deadline. Average optimizer time alone cannot establish real-time feasibility. No timing table in this article is presented as an observed speedup.
 
 ## Tube MPC With Geometric Residuals {#sec-tube-mpc}
 
-### Residual-Based Tube Sizing
+### Residual-Based Tube Sizing {#residual-based-tube-sizing}
 
-Tube MPC separates planning into:
+A tube encloses possible tracking errors under feedback and disturbances. A Taylor-validity neighborhood says where a local approximation is accurate. These are different sets. The first must be invariant or reachable under the stated dynamics; the second may merely impose an upper limit on perturbations.
 
-1. **Nominal trajectory optimization** (offline or slow)
-2. **Robust tube around nominal** (accounts for disturbances)
+### Formulation {#formulation}
 
-Standard tube MPC uses worst-case disturbance bounds. **Residual-aware tube MPC** uses geometric residual bounds for tighter tubes.
-
-### Formulation
-
-Given nominal trajectory $\bar{x}(t), \bar{u}(t)$, the tube is defined by:
+For nominal state $\bar z(t)$ and error set $E(t)$, write
 
 $$
-\mathcal{X}_{\text{tube}}(t) = \{ x : \|x - \bar{x}(t)\| \leq \delta_{\max}(t) \}
+\mathcal T(t)=\bar z(t)\oplus E(t).
 $$ {#eq-tube-def}
 
-where $\delta_{\max}(t)$ is chosen such that linearization errors remain bounded.
+For a discrete local error model $e^+=A_Ke+w$, a sufficient fixed-set condition is
+$A_KE\oplus W\subseteq E$. A state constraint requires $\bar z\in\mathcal X\ominus E$; under $v=\bar v+Ke$, input admissibility requires $\bar v\in\mathcal U\ominus KE$. The disturbance set must include the bounded nonlinear remainder and all other modeled uncertainty. A state-dependent remainder often makes finding $E$ a self-consistent containment problem.
 
-**Key idea:** Set $\delta_{\max}(t)$ based on residual bound @eq-rac-residual-bound:
+By contrast, in the nonexpansive, constant-bound case a local validity calculation gives only
 
 $$
-\delta_{\max}(t) = \sqrt{\frac{2 \epsilon_r}{M(t) \Delta t}}
+\rho\le\sqrt{\frac{2\varepsilon_r}{Mh}},\qquad M>0,\ h>0.
 $$ {#eq-tube-size}
 
-### Algorithm 2.2: Residual-Aware Tube MPC
+This square root is dimensionally valid as a **deviation radius**. It does not prove that the closed-loop error remains inside that radius.
 
-```python
-def residual_tube_mpc(
-    f, x0, x_ref_traj, u_ref_traj,
-    Q, R, horizon=20, eps_residual=0.01
-):
-    """
-    Tube MPC with residual-based tube sizing.
+### Algorithm 2.2: Establish Containment Before Tightening Constraints {#algorithm-2.2-residual-aware-tube-mpc}
 
-    Returns:
-        u_opt: Optimal control at current time
-        delta_max_traj: Tube radius along horizon
-    """
+Consider the scalar teaching error dynamics $\dot e=-2e+e^2+w$, $|w|\le0.1$. For $E=[-\rho,\rho]$, the worst outward velocity at the positive boundary is $-2\rho+\rho^2+0.1$. At the negative boundary it is $-2\rho-\rho^2+0.1$, so the first expression is the larger. A sufficient and, for this interval, exact boundary condition is
 
-    # Step 1: Compute Hessian bounds along reference trajectory
-    M_traj = [compute_hessian_bound(x_ref_traj[i], u_ref_traj[i])
-              for i in range(horizon)]
+$$
+\rho^2-2\rho+0.1\le0,
+\qquad
+1-\sqrt{0.9}\le\rho\le1+\sqrt{0.9}.
+$$
 
-    # Step 2: Compute tube radii from residual bounds
-    dt = 0.05  # Timestep
-    delta_max_traj = [np.sqrt(2 * eps_residual / (M * dt))
-                      for M in M_traj]
+Thus $\rho=0.1$ gives inward boundary flow for every admissible disturbance, while $\rho=0.01$ does not. Making a tube arbitrarily small fails because disturbances can push the state out. These are dimensionless manufactured dynamics and do not certify a humanoid or golfer.
 
-    # Step 3: Tighten state/control constraints
-    # Original constraints: x ∈ X, u ∈ U
-    # Tightened: x_nom ∈ X ⊖ δ_max, u_nom ∈ U ⊖ K·δ_max
-    X_tightened = [
-        tighten_polytope(X, delta_max_traj[i])
-        for i in range(horizon)
-    ]
-    U_tightened = [
-        tighten_polytope(U, K_lqr @ delta_max_traj[i])
-        for i in range(horizon)
-    ]
+For a practical construction: propose an error set; bound the nonlinear remainder over it; propagate the full uncertainty under the chosen feedback; verify containment and admissible inputs; then tighten nominal constraints and verify the initial error belongs to the set. If any check fails, revise the set, feedback, or nominal plan rather than asserting a tube from Taylor accuracy alone.
 
-    # Step 4: Solve nominal MPC problem with tightened constraints
-    x_nom_opt, u_nom_opt = solve_mpc(
-        f, x0, x_ref_traj, u_ref_traj,
-        X_constraints=X_tightened,
-        U_constraints=U_tightened,
-        Q=Q, R=R, horizon=horizon
-    )
+### Tube-MPC Implication Under a Valid Bound {#tube-mpc-implication-under-a-valid-bound}
 
-    # Step 5: Compute actual control (nominal + LQR feedback)
-    delta_x = x0 - x_nom_opt[0]
-    u_opt = u_nom_opt[0] - K_lqr @ delta_x
-
-    return u_opt, delta_max_traj
-```
-
-### Tube-MPC Implication Under a Valid Bound
-
-::: {.callout-note}
-## Standard Tube-MPC Logic With a Residual-Derived Radius
-
-If the nominal trajectory satisfies tightened constraints and $\|x(t) - \bar{x}(t)\| \leq \delta_{\max}(t)$ is in fact maintained by the feedback controller, then the usual tube-MPC containment argument implies that the true trajectory remains inside the original constraint set $x(t) \in \mathcal{X}$.
-:::
-
-**What is new here:** not the logic of tube MPC itself, but the proposal to size $\delta_{\max}(t)$ from residual-derived quantities. The burden of proof therefore shifts to whether those residual-derived bounds are valid for the system and operating region at hand.
-
-**Possible advantage over standard tube MPC:** If the residual-derived tube radius is materially smaller than a worst-case disturbance envelope, the resulting tightened constraints may be less conservative. Whether that happens is system- and validation-dependent.
-
----
+Mayne, Seron, and Raković study constrained linear discrete-time systems with bounded disturbances, including a nominal initial state chosen by the optimization and stability of a disturbance-invariant set [@mayne2005tube]. This article's scalar boundary calculation is an independent illustration of containment. Extending tube claims to nonlinear humanoid dynamics, changing contacts, and uncertain state estimates requires corresponding invariant/reachable-set and recursive-feasibility arguments; the linear result cannot be transferred by substituting a residual radius.
 
 ## Part III: Applications {#rac-sec-applications}
 
 ### Quadrotor Aerobatics {#sec-quadrotor}
 
-#### Problem Setup
+#### Problem Setup {#problem-setup}
 
-**System:** Quadrotor with 12-state dynamics ($x = [p, v, R, \omega]$ where $p$ = position, $v$ = velocity, $R \in SO(3)$ = rotation, $\omega$ = angular velocity)
+A rigid quadrotor has configuration $(p,R)\in\mathbb R^3\times SO(3)$ and velocities $(\dot p,\omega)$. The state manifold has dimension twelve; storing all nine entries of $R$ produces eighteen numbers with six orthonormality constraints. A planar flip model has fewer states and cannot be reported as a full three-dimensional vehicle benchmark.
 
-**Task:** Execute a front flip while maintaining position tracking
+Specify mass, inertia, rotor allocation, thrust and rate limits, aerodynamic assumptions, and attitude-error convention. At a full flip, use consistent local attitude errors or manifold methods rather than a global small-angle Euler approximation.
 
-**Challenge:** During flip, angular rates reach 400 deg/s → high curvature in $SO(3)$ manifold
+#### Residual Analysis {#residual-analysis}
 
-#### Residual Analysis
+The translational acceleration depends on thrust direction, so state-input cross terms matter. The rigid-body angular equation contains $\omega\times I\omega$, whose sensitivities depend on inertia and rates. A large rotation angle alone neither gives a Hessian bound nor determines tracking difficulty. Compare predicted task errors in position and attitude, actuator saturation, and model mismatch under the same experiment.
 
-During **cruise phase** ($\|\omega\| < 50$ deg/s):
+#### Adaptive Timestep Evaluation {#adaptive-timestep-results}
 
-- Hessian bound: $M_{\text{cruise}} \approx 2.0$
-- Typical perturbation: $\|\delta x\| = 0.1$ m, 5 deg
-- Predicted residual: $\|r\| \approx 0.01$ (small)
-- **Controller:** LQR at 50 Hz
+Use identical dynamics, initial/terminal conditions, constraints, cost, tolerances, and hardware for a fixed coarse mesh, fixed fine mesh, and adaptive mesh. Keep terminal time fixed. Reintegrate accepted solutions on a finer common reference before comparing terminal error and cost. Report all failed solves and deadline misses alongside successful trajectories. Separate derivative-compilation time from steady-state execution while reporting both.
 
-During **flip phase** ($\|\omega\| > 300$ deg/s):
+#### Simulation Evidence {#simulation-results}
 
-- Hessian bound: $M_{\text{flip}} \approx 18.0$ (9× higher due to $\sin\theta, \cos\theta$ nonlinearity)
-- Perturbation: $\|\delta x\| = 0.3$ m, 20 deg (larger due to aggressive motion)
-- Predicted residual: $\|r\| \approx 0.45$ (large)
-- **Controller:** MPC at 100 Hz with horizon = 0.5 s
-
-#### Adaptive Timestep Results
-
-Using Algorithm 2.1 with $\epsilon_r = 0.05$:
-
-| Phase | $\Delta t$ | Nodes in 1s | Computation |
-|-------|-----------|-------------|-------------|
-| Cruise | 0.04 s | 25 | 2.5 ms |
-| Entry | 0.02 s | 50 | 5.0 ms |
-| Peak flip | 0.01 s | 100 | 10 ms |
-| Recovery | 0.02 s | 50 | 5.0 ms |
-
-**Interpretation of this example:** On this simplified flip setup, the adaptive grid uses fewer nodes than a uniformly fine discretization while targeting the same nodewise residual threshold. The exact savings depend on the bound estimator, solver tolerances, and implementation.
-
-#### Simulation Results
-
-```python
-# Simplified quadrotor flip simulation
-import jax
-import jax.numpy as jnp
-from jax import grad, jit
-
-# Quadrotor dynamics (simplified 2D model for illustration)
-def quadrotor_dynamics(x, u):
-    """
-    x = [px, pz, theta, vx, vz, omega]
-    u = [thrust, torque]
-    """
-    px, pz, theta, vx, vz, omega = x
-    thrust, torque = u
-
-    m, g, I = 1.0, 9.81, 0.01  # mass, gravity, inertia
-
-    # Nonlinear dynamics
-    ax = -thrust * jnp.sin(theta) / m
-    az = thrust * jnp.cos(theta) / m - g
-    alpha = torque / I
-
-    return jnp.array([vx, vz, omega, ax, az, alpha])
-
-# Compute Hessian bound
-def compute_hessian_bound_quadrotor(x, u):
-    hessian = jax.hessian(lambda x: quadrotor_dynamics(x, u))(x)
-    return jnp.linalg.norm(hessian, ord=2)
-
-# Run adaptive DDP (pseudocode - full implementation is 200+ lines)
-x0 = jnp.array([0, 0, 0, 0, 0, 0])  # Start at rest
-xf = jnp.array([0, 0, 2*jnp.pi, 0, 0, 0])  # Complete flip, same position
-
-x_traj, u_traj, t_traj = adaptive_timestep_ddp(
-    f=quadrotor_dynamics,
-    x0=x0,
-    xf=xf,
-    u_init=jnp.zeros((100, 2)),
-    eps_residual=0.05
-)
-
-# Plot results
-plt.figure(figsize=(12, 6))
-plt.subplot(2, 2, 1)
-plt.plot(t_traj, x_traj[:, 2] * 180/jnp.pi, label='Angle')
-plt.xlabel('Time (s)')
-plt.ylabel('Pitch (deg)')
-plt.grid(True)
-
-plt.subplot(2, 2, 2)
-plt.plot(t_traj, x_traj[:, 5] * 180/jnp.pi, label='Angular rate')
-plt.xlabel('Time (s)')
-plt.ylabel('Pitch rate (deg/s)')
-plt.grid(True)
-
-plt.subplot(2, 2, 3)
-M_traj = [compute_hessian_bound_quadrotor(x_traj[i], u_traj[i])
-          for i in range(len(x_traj))]
-plt.plot(t_traj, M_traj, color='red')
-plt.xlabel('Time (s)')
-plt.ylabel('Hessian bound M')
-plt.title('Curvature Along Trajectory')
-plt.grid(True)
-
-plt.subplot(2, 2, 4)
-dt_traj = jnp.diff(t_traj)
-plt.plot(t_traj[:-1], dt_traj, color='green')
-plt.xlabel('Time (s)')
-plt.ylabel('Timestep Δt (s)')
-plt.title('Adaptive Timestep Sizing')
-plt.grid(True)
-
-plt.tight_layout()
-```
-
-**Key observation:** Timestep automatically shrinks during high-curvature flip phase, matching our intuition.
-
----
+The checked calculations here concern the scalar flow and comparison equations. They establish the algebra used for residual budgeting, not a vehicle performance gain. A quadrotor evaluation needs a runnable model, solver configuration, initial conditions, saved trajectories, constraint residuals, and timing records. The evaluation above states what would make such a comparison meaningful; no synthetic percentage or unexplained table substitutes for those artifacts.
 
 ## Humanoid Walking With Impacts {#sec-humanoid}
 
-### Problem Setup
+### Problem Setup {#problem-setup-1}
 
-**System:** 2D bipedal walker (5 links, 4 actuated joints)
+Walking combines smooth constrained phases with contact events. In an ideal instantaneous impact model, positions remain continuous while generalized velocities can jump by a finite amount. A residual formed by comparing different contact modes at the same time can be large even for nearby initial states. This is a mismatch of hybrid comparisons, not an infinite physical state error.
 
-**Task:** Generate stable walking gait
-
-**Challenge:** Heel strike = instantaneous velocity jump → $\dot{x}^+ \neq \dot{x}^-$ → curvature spike
-
-### Residual Monitoring for Fall Detection
-
-During walking, **heel strike** causes:
+For a fixed contact configuration, positive-definite mass matrix $M_q$, independent contact-velocity constraints $J_c$, no impulsive actuation, and a perfectly plastic sticking impact,
 
 $$
-\Delta \dot{x} = -M^{-1} J^T (J M^{-1} J^T)^{-1} J \dot{x}^-
+\begin{aligned}
+M_q(\dot q^+-\dot q^-)&=J_c^T\Lambda,\qquad J_c\dot q^+=0,\\
+\dot q^+&=\left[I-M_q^{-1}J_c^T
+(J_cM_q^{-1}J_c^T)^{-1}J_c\right]\dot q^-.
+\end{aligned}
 $$ {#eq-impact-map}
 
-where $J$ is the contact Jacobian and $M$ is the mass matrix. (Equivalently $\dot{x}^+ = (I - M^{-1} J^T (J M^{-1} J^T)^{-1} J)\,\dot{x}^-$, the projection that zeroes the contact-normal velocity.)
+The contact impulse must also satisfy the assumed unilateral and friction conditions. If it does not, the sticking reset is not admissible; slipping, restitution, or multiple-contact models require different equations. $J_c$ denotes the full set of imposed velocity constraints, not automatically only the contact normal.
 
-This is a **discrete jump**, not smooth dynamics → linearization completely fails during impact.
+### Residual Monitoring Across Contact Events {#residual-monitoring-for-fall-detection}
 
-**Residual behavior:**
+For a smooth guard $g(t,z)=0$ and reset $R(t,z)$, event-time variation contributes to the linearized jump. At a transverse, isolated event with the same nearby mode sequence, the saltation matrix is
 
-- **Pre-impact** ($t < t_{\text{strike}} - 0.01$): $\|r\| < 0.01$ (smooth swing phase)
-- **At impact** ($t = t_{\text{strike}}$): $\|r\| \to \infty$ (discontinuous)
-- **Post-impact** ($t > t_{\text{strike}} + 0.01$): $\|r\| < 0.01$ (smooth stance phase)
+$$
+\Xi=D_zR+
+\frac{(F^+-D_zR\,F^--D_tR)D_zg}
+{D_tg+D_zg\,F^-}.
+$$
 
-**Detection strategy:** Monitor $\|r_{\text{obs}}\|$. Spike above threshold → impact detected → switch to hybrid system model (see Hybrid Tangent Spaces article).
+Use smooth transition matrices within modes and $\Xi$ at the event. The denominator must be nonzero. Grazing, simultaneous competing guards, and changes in event sequence require additional analysis. Kong and colleagues derive this event-time correction and its assumptions [@Kong2023saltation]. A smooth Hessian bound should not be integrated through an instantaneous reset as though the vector field remained smooth.
 
-### Experimental Validation
+For fall prediction, define the event to be predicted and a lead-time requirement, then compare calibrated prediction methods on held-out perturbations. Report false alarms, missed falls, lead times, contact-estimation uncertainty, and intervention outcomes. A residual spike after loss of balance is not evidence of useful early detection.
 
-**Setup:** ATRIAS bipedal robot, 1.2 m tall, 60 kg
+### Experimental Validation Requirements {#experimental-validation}
 
-**Controller:** Residual-adaptive mode switching
-
-- **Nominal:** Virtual constraint controller (assumes smooth dynamics)
-- **Impact detection:** $\|r_{\text{obs}}\| > 0.5$ → trigger impact map update
-- **Recovery:** Switch back to smooth controller after settling
-
-**Illustrative simulation summary:**
-
-| Metric | Fixed Controller | Residual-Adaptive |
-|--------|-----------------|-------------------|
-| Average speed | 0.8 m/s | 0.85 m/s |
-| Fall rate | 15% (3/20 trials) | 5% (1/20 trials) |
-| Energy per step | 12.5 J | 11.2 J |
-
-**Interpretation:** In this simulated controller-switching example, residual monitoring acts as an early warning signal for departures from the nominal smooth model and can be used to trigger a different control mode. The table is scenario-specific and should not be read as a benchmark guarantee.
-
----
+Hardware claims need an identified robot and controller, sensing and contact estimation, trial protocol, denominators, disturbances, failures, and data or traceable records. No physical ATRIAS experiment or fall-rate improvement is established here. Rigid-body teaching examples cannot establish muscle-level behavior or human fall prevention. Their value is in exposing which additional mechanisms and measurements a real evaluation needs.
 
 ### Golf Swing Optimization {#sec-golf}
 
-#### Problem Setup
+#### Problem Setup {#problem-setup-2}
 
-**System:** 6-DOF golfer model (shoulders, arms, wrists, club)
+For golf, define the output before choosing a residual norm. A useful impact-state output can include clubhead velocity, face orientation, path direction, and strike location relative to the ball. Ball launch speed, direction, and spin require a collision model and ball/club parameters; maximizing a club-speed coordinate alone does not determine them.
 
-**Task:** Maximize ball speed while maintaining accuracy
+The state model may include joint configurations and velocities, club bending/torsion, activation states, and tendon or soft-tissue states when those mechanisms are relevant. Their inclusion changes both the drift and input maps. Joint torques are not direct observations of individual muscle forces, and a torque-input model does not by itself explain neural commands or activation delay. Validate each model level against the measurements that can identify it.
 
-**Challenge:** Transition from backswing → downswing → impact involves:
+#### Residual-Aware Trajectory Refinement {#residual-aware-trajectory-refinement}
 
-1. **Change of direction** (kinetic energy → potential → kinetic)
-2. **Rapid acceleration** (peak angular velocity 3000 deg/s at wrist release)
-3. **Impact** (club-ball collision in 0.0005 s)
+Let $y=c(z(T))$ be a smooth pre-impact task output and $C_T=Dc(\bar z(T))$. To first order, the contribution of the flow remainder to the output discrepancy is $C_Tr(T)$. The norm contribution generated at time $s$ is weighted by $\|C_T\Phi(T,s)\|$, not merely by $\|N(s)\|$:
 
-All three create high-curvature regions.
+$$
+\|C_Tr(T)\|\le
+\int_{t_0}^T\|C_T\Phi(T,s)\|\,\|N(s)\|\,ds.
+$$
 
-#### Residual-Aware Trajectory Refinement
+For a fully rigorous output bound, also enclose the nonlinear remainder of $c$ over the relevant states. For a differentiable event-to-output map, include event-time and reset sensitivities. If the impact sequence changes, a single smooth map may cease to describe the comparison.
 
-**Standard DDP:** Fixed timestep $\Delta t = 0.01$ s (100 nodes over 1 s swing)
+This explains how apparently separate swing questions intertwine. Proximal motion changes the configuration and velocities from which later distal motion develops. Those changes alter moment arms, inertial coupling, control authority, and the sensitivity of impact outputs. Club compliance adds stored deformation and delayed recovery; activation dynamics restrict which torques can be changed before impact. The eventual consequence depends on this evolving system, the available time, and the output direction—not on a universal rule that all proximal motion must slow or that every local remainder must be minimized.
 
-**Residual-aware DDP:** Adaptive timestep based on curvature
+One can make this distinction precise with an adjoint. For a scalar terminal score $j(z(T))$, solve $-\dot p=A^Tp$ backward with $p(T)=\nabla j$. The leading signed contribution of a small unmodeled forcing $d(t)$ is $\int p(t)^Td(t)\,dt$. Magnitude-only bounds protect against unknown directions; signed sensitivity explains a particular modeled perturbation. Cancellation in a signed integral must not be promoted to a worst-case guarantee. For a hybrid motion, the adjoint also crosses the appropriate transpose jump maps.
 
-**Results:**
+A sound refinement study therefore varies numerical mesh, perturbation size, model complexity, and task metric separately. It checks whether a claimed improvement survives a finer integration, a richer club/body model, plausible parameter uncertainty, and repeated initial conditions. It reports both successful and failed trials. A phase-based mesh must sum to the stated total swing duration; the short collision phase should be treated with a resolved contact law or a justified impact map.
 
-| Phase | Avg $M$ | $\Delta t$ (adaptive) | Nodes |
-|-------|---------|---------------------|-------|
-| Backswing | 2.5 | 0.02 s | 25 |
-| Transition | 12.0 | 0.005 s | 40 |
-| Downswing | 45.0 | 0.002 s | 150 |
-| Impact | 200.0 | 0.0002 s | 25 |
-
-**Total nodes:** 240 (vs. 100 uniform) → **Better accuracy with only 2.4× nodes** (vs. 10× for uniform fine discretization)
-
-**Comparison:**
-
-```python
-# Simulated golf swing optimization results
-results = {
-    'Uniform coarse (Δt=0.01s)': {
-        'ball_speed': 68.2,  # m/s
-        'accuracy': 0.75,    # fraction within fairway
-        'residual_max': 0.45,
-        'nodes': 100
-    },
-    'Uniform fine (Δt=0.001s)': {
-        'ball_speed': 72.1,
-        'accuracy': 0.88,
-        'residual_max': 0.02,
-        'nodes': 1000
-    },
-    'Residual-adaptive': {
-        'ball_speed': 71.8,  # 99.6% of fine
-        'accuracy': 0.86,    # 97.7% of fine
-        'residual_max': 0.05,  # Controlled by ε_r
-        'nodes': 240         # 24% of fine
-    }
-}
-
-# Bar chart comparison
-import matplotlib.pyplot as plt
-import numpy as np
-
-methods = list(results.keys())
-ball_speeds = [results[m]['ball_speed'] for m in methods]
-accuracies = [results[m]['accuracy'] * 100 for m in methods]
-nodes = [results[m]['nodes'] for m in methods]
-
-fig, axes = plt.subplots(1, 3, figsize=(15, 4))
-
-axes[0].bar(methods, ball_speeds, color=['blue', 'green', 'orange'])
-axes[0].set_ylabel('Ball Speed (m/s)')
-axes[0].set_title('Performance')
-axes[0].tick_params(axis='x', rotation=15)
-
-axes[1].bar(methods, accuracies, color=['blue', 'green', 'orange'])
-axes[1].set_ylabel('Accuracy (%)')
-axes[1].set_title('Accuracy')
-axes[1].tick_params(axis='x', rotation=15)
-
-axes[2].bar(methods, nodes, color=['blue', 'green', 'orange'])
-axes[2].set_ylabel('Number of Nodes')
-axes[2].set_title('Computational Cost')
-axes[2].set_yscale('log')
-axes[2].tick_params(axis='x', rotation=15)
-
-plt.tight_layout()
-```
-
-**Interpretation:** In this worked example, the adaptive grid stays close to the fine-grid objective while using fewer nodes. The objective gap and timing savings are example-specific rather than universal performance guarantees.
-
----
+An expert golfer might permit variation that scarcely changes the shot while controlling other directions tightly. That is a testable task-level hypothesis. It does not establish that the nervous system computes Hessians, minimizes a coordinate residual, or implements an LQR/MPC switch. Learning, perception, fatigue, noise, and unobserved physiological states need their own evidence.
 
 ## Part IV: Implementation {#rac-sec-implementation}
 
-## JAX Implementation {#sec-jax}
+## Derivatives and Reproducible Examples {#sec-jax}
 
-### Complete Residual-Aware DDP Code
+Automatic differentiation can supply derivatives of a specified smooth program. It does not certify that the program models the golfer, that a sampled derivative bounds a neighborhood, or that a nonsmooth contact branch has an ordinary Hessian. For discrete optimal control, differentiate the actual discrete rollout and cost; for a continuous-time Taylor bound, differentiate the continuous field in the declared coordinates.
 
-Here's a production-ready implementation of Adaptive-Timestep DDP in JAX:
+### Reproducible Bound Calculations {#complete-residual-aware-ddp-code}
+
+The repository implements the comparison recurrence in `src/affine_control/residuals.py` and the two scalar teaching functions in `src/tools/residual_control_examples.py`. Run this compact example from the repository root with its Python dependencies installed:
 
 ```python
-import jax
-import jax.numpy as jnp
-from jax import grad, jit, vmap
-from functools import partial
-import matplotlib.pyplot as plt
-
-# ============================================================================
-# Dynamics and Cost Functions
-# ============================================================================
-
-@jit
-def pendulum_dynamics(x, u, params):
-    """Simple pendulum: x = [theta, theta_dot], u = torque"""
-    theta, theta_dot = x
-    g, L, m, b = params['g'], params['L'], params['m'], params['b']
-
-    theta_ddot = -g/L * jnp.sin(theta) - b/(m*L**2) * theta_dot + u/(m*L**2)
-    return jnp.array([theta_dot, theta_ddot])
-
-@jit
-def running_cost(x, u, Q, R):
-    """Quadratic running cost"""
-    return 0.5 * (x.T @ Q @ x + u.T @ R @ u)
-
-@jit
-def terminal_cost(x, Qf):
-    """Quadratic terminal cost"""
-    return 0.5 * x.T @ Qf @ x
-
-# ============================================================================
-# Hessian Bound Computation
-# ============================================================================
-
-@jit
-def compute_hessian_bound(x, u, params):
-    """
-    Compute local Hessian bound for pendulum.
-    Returns ||H_f||_max over state dimension.
-    """
-    # For pendulum, only f_2 (theta_ddot) has nonlinearity
-    # H_f2 = d²f2/dx² has element [0,0] = -(g/L) sin(theta)
-    # which has max magnitude g/L over all theta
-
-    g, L = params['g'], params['L']
-    # Conservative bound: max over theta ∈ [-π, π]
-    return g / L  # Maximum is at theta = ±π/2
-
-# More general: use JAX autodiff to compute exact Hessian
-@jit
-def compute_hessian_bound_autodiff(x, u, dynamics, params):
-    """Autodiff-based Hessian computation (works for any smooth dynamics)"""
-    hess_fn = jax.hessian(lambda x: dynamics(x, u, params))
-    H = hess_fn(x)  # Shape: (n, n, n) - Hessian for each output dimension
-    # Take maximum Frobenius norm over output dimensions
-    H_norms = vmap(lambda H_i: jnp.linalg.norm(H_i, ord='fro'))(H)
-    return jnp.max(H_norms)
-
-# ============================================================================
-# Linearization
-# ============================================================================
-
-@jit
-def linearize_dynamics(x, u, dynamics, params):
-    """Compute A = df/dx and B = df/du at (x, u)"""
-    A = jax.jacfwd(dynamics, argnums=0)(x, u, params)
-    B = jax.jacfwd(dynamics, argnums=1)(x, u, params)
-    # Handle scalar u case
-    if B.ndim == 1:
-        B = B[:, None]
-    return A, B
-
-# ============================================================================
-# Integration
-# ============================================================================
-
-@jit
-def rk4_step(f, x, u, dt, params):
-    """4th-order Runge-Kutta integration step"""
-    k1 = f(x, u, params)
-    k2 = f(x + 0.5*dt*k1, u, params)
-    k3 = f(x + 0.5*dt*k2, u, params)
-    k4 = f(x + dt*k3, u, params)
-    return x + (dt/6) * (k1 + 2*k2 + 2*k3 + k4)
-
-# ============================================================================
-# Backward Pass (Riccati Recursion)
-# ============================================================================
-
-@jit
-def backward_pass_step(x, u, A, B, dt, V_next, v_next, Q, R):
-    """
-    Single step of DDP backward pass.
-    Returns: updated V, v, feedback gain K, feedforward k
-    """
-    # Discrete-time linearization: x_{k+1} ≈ x_k + dt*(A x_k + B u_k)
-    # Approximate as: x_{k+1} = (I + dt*A) x_k + (dt*B) u_k
-    A_d = jnp.eye(len(x)) + dt * A
-    B_d = dt * B
-
-    # Q-function second derivatives
-    Q_xx = Q + A_d.T @ V_next @ A_d
-    Q_uu = R + B_d.T @ V_next @ B_d
-    Q_ux = B_d.T @ V_next @ A_d
-
-    # Q-function first derivatives (for feedforward term)
-    q_x = Q @ x + A_d.T @ v_next
-    q_u = R @ u + B_d.T @ v_next
-
-    # Regularization for numerical stability
-    Q_uu_reg = Q_uu + 1e-6 * jnp.eye(Q_uu.shape[0])
-
-    # Solve for gains
-    K = -jnp.linalg.solve(Q_uu_reg, Q_ux)  # Feedback gain
-    k = -jnp.linalg.solve(Q_uu_reg, q_u)   # Feedforward term
-
-    # Update value function
-    V = Q_xx + K.T @ Q_uu @ K + K.T @ Q_ux + Q_ux.T @ K
-    v = q_x + K.T @ Q_uu @ k + K.T @ q_u + Q_ux.T @ k
-
-    return V, v, K, k
-
-# ============================================================================
-# Adaptive Timestep DDP
-# ============================================================================
-
-def adaptive_ddp(
-    dynamics, x0, x_target,
-    params, Q, R, Qf,
-    eps_residual=0.01,
-    N_init=100,
-    dt_init=0.01,
-    max_iters=50,
-    verbose=True
-):
-    """
-    Adaptive-timestep DDP for trajectory optimization.
-
-    Returns:
-        x_traj: State trajectory (list of arrays)
-        u_traj: Control trajectory (list of arrays)
-        t_traj: Time grid (array)
-    """
-
-    n_x = len(x0)
-    n_u = 1  # Assume scalar control for simplicity
-
-    # Initialize with uniform timestep
-    t = jnp.linspace(0, N_init * dt_init, N_init+1)
-    u_traj = [jnp.zeros((n_u,)) for _ in range(N_init)]
-
-    # Forward pass to get initial trajectory
-    x_traj = [x0]
-    for i in range(N_init):
-        x_next = rk4_step(dynamics, x_traj[-1], u_traj[i], dt_init, params)
-        x_traj.append(x_next)
-
-    # DDP iterations
-    for iteration in range(max_iters):
-        N = len(x_traj) - 1
-
-        # ==================================================================
-        # Step 1: Compute Hessian bounds along trajectory
-        # ==================================================================
-        M_traj = [
-            compute_hessian_bound(x_traj[i], u_traj[i], params)
-            for i in range(N)
-        ]
-
-        # ==================================================================
-        # Step 2: Estimate perturbation sizes
-        # ==================================================================
-        # Pessimistic estimate: perturbation ~10% of state magnitude
-        delta_x_max = jnp.array([
-            jnp.linalg.norm(x_traj[i] - x_target) * 0.1 + 0.01
-            for i in range(N)
-        ])
-
-        # ==================================================================
-        # Step 3: Adaptive timestep selection
-        # ==================================================================
-        dt_adaptive = jnp.sqrt(
-            2 * eps_residual / (jnp.array(M_traj) * delta_x_max**2 + 1e-6)
-        )
-        dt_adaptive = jnp.clip(dt_adaptive, 0.001, 0.05)
-
-        # ==================================================================
-        # Step 4: Backward pass (Riccati recursion)
-        # ==================================================================
-        V = Qf
-        v = Qf @ (x_traj[-1] - x_target)
-
-        K_traj = []
-        k_traj = []
-
-        for i in range(N-1, -1, -1):
-            x_i = x_traj[i]
-            u_i = u_traj[i]
-            dt_i = dt_adaptive[i]
-
-            # Linearize dynamics
-            A, B = linearize_dynamics(x_i, u_i, dynamics, params)
-
-            # Backward pass step
-            V, v, K, k = backward_pass_step(
-                x_i, u_i, A, B, dt_i, V, v, Q, R
-            )
-
-            K_traj.insert(0, K)
-            k_traj.insert(0, k)
-
-        # ==================================================================
-        # Step 5: Forward pass with line search
-        # ==================================================================
-        alpha_candidates = [1.0, 0.5, 0.25, 0.1]
-        best_cost = float('inf')
-        best_x_new = None
-        best_u_new = None
-
-        for alpha in alpha_candidates:
-            x_new = [x0]
-            u_new = []
-
-            for i in range(N):
-                delta_x = x_new[-1] - x_traj[i]
-                u_i_new = u_traj[i] + alpha * k_traj[i] + K_traj[i] @ delta_x
-                u_new.append(u_i_new)
-
-                x_next = rk4_step(
-                    dynamics, x_new[-1], u_i_new, dt_adaptive[i], params
-                )
-                x_new.append(x_next)
-
-            # Compute total cost
-            cost = 0.0
-            for i in range(N):
-                cost += running_cost(x_new[i] - x_target, u_new[i], Q, R) * dt_adaptive[i]
-            cost += terminal_cost(x_new[-1] - x_target, Qf)
-
-            if cost < best_cost:
-                best_cost = cost
-                best_x_new = x_new
-                best_u_new = u_new
-
-        # ==================================================================
-        # Step 6: Check convergence
-        # ==================================================================
-        if iteration > 0:
-            cost_improvement = abs(cost_old - best_cost) / (abs(cost_old) + 1e-6)
-            if verbose:
-                print(f"Iter {iteration}: Cost = {best_cost:.6f}, "
-                      f"Improvement = {cost_improvement:.6f}")
-            if cost_improvement < 1e-4:
-                if verbose:
-                    print("Converged!")
-                break
-
-        x_traj = best_x_new
-        u_traj = best_u_new
-        cost_old = best_cost
-
-    # Create time grid
-    t_traj = jnp.concatenate([[0], jnp.cumsum(dt_adaptive[:len(x_traj)-1])])
-
-    return x_traj, u_traj, t_traj, dt_adaptive
-
-# ============================================================================
-# Example Usage
-# ============================================================================
-
-if __name__ == "__main__":
-    # Parameters
-    params = {
-        'g': 9.81,  # gravity
-        'L': 1.0,   # length
-        'm': 1.0,   # mass
-        'b': 0.1    # damping
-    }
-
-    # Cost matrices
-    Q = jnp.diag(jnp.array([10.0, 1.0]))  # Penalize angle more than velocity
-    R = jnp.array([[0.1]])                 # Control effort
-    Qf = jnp.diag(jnp.array([100.0, 10.0]))  # Terminal cost
-
-    # Initial and target states
-    x0 = jnp.array([jnp.pi, 0.0])      # Start at top (unstable)
-    x_target = jnp.array([0.0, 0.0])   # Swing down to bottom
-
-    # Run adaptive DDP
-    print("Running Adaptive-Timestep DDP...")
-    x_traj, u_traj, t_traj, dt_traj = adaptive_ddp(
-        dynamics=pendulum_dynamics,
-        x0=x0,
-        x_target=x_target,
-        params=params,
-        Q=Q, R=R, Qf=Qf,
-        eps_residual=0.01,
-        N_init=100,
-        dt_init=0.01,
-        max_iters=30,
-        verbose=True
-    )
-
-    # Convert to arrays for plotting
-    x_arr = jnp.array(x_traj)
-    u_arr = jnp.array(u_traj)
-
-    # Plot results
-    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-
-    # Trajectory
-    axes[0, 0].plot(t_traj, x_arr[:, 0], label='θ (rad)')
-    axes[0, 0].plot(t_traj, x_arr[:, 1], label='θ_dot (rad/s)')
-    axes[0, 0].set_xlabel('Time (s)')
-    axes[0, 0].set_ylabel('State')
-    axes[0, 0].legend()
-    axes[0, 0].grid(True)
-    axes[0, 0].set_title('State Trajectory')
-
-    # Control
-    axes[0, 1].plot(t_traj[:-1], u_arr, color='red')
-    axes[0, 1].set_xlabel('Time (s)')
-    axes[0, 1].set_ylabel('Control u (N⋅m)')
-    axes[0, 1].grid(True)
-    axes[0, 1].set_title('Control Trajectory')
-
-    # Adaptive timestep
-    axes[1, 0].plot(t_traj[:-1], dt_traj, color='green')
-    axes[1, 0].set_xlabel('Time (s)')
-    axes[1, 0].set_ylabel('Δt (s)')
-    axes[1, 0].grid(True)
-    axes[1, 0].set_title('Adaptive Timestep')
-
-    # Phase portrait
-    axes[1, 1].plot(x_arr[:, 0], x_arr[:, 1], color='purple')
-    axes[1, 1].scatter([x0[0]], [x0[1]], color='red', s=100,
-                       label='Start', zorder=5)
-    axes[1, 1].scatter([x_target[0]], [x_target[1]], color='green',
-                       s=100, label='Target', zorder=5)
-    axes[1, 1].set_xlabel('θ (rad)')
-    axes[1, 1].set_ylabel('θ_dot (rad/s)')
-    axes[1, 1].legend()
-    axes[1, 1].grid(True)
-    axes[1, 1].set_title('Phase Portrait')
-
-    plt.tight_layout()
-    plt.savefig('adaptive_ddp_results.png', dpi=150)
-    print("Results saved to adaptive_ddp_results.png")
-```
-
-### Performance Comparison
-
-To validate the adaptive approach, compare against fixed timestep:
-
-```python
-# Fixed timestep baseline
-def fixed_timestep_ddp(dynamics, x0, x_target, params, Q, R, Qf,
-                       dt=0.01, N=100, max_iters=30):
-    """Standard DDP with fixed timestep (simplified)"""
-    # ... (similar structure but dt is constant)
-    pass
-
-# Comparison
-import time
-
-# Coarse fixed
-t0 = time.time()
-x_fixed_coarse, u_fixed_coarse, _, _ = fixed_timestep_ddp(
-    pendulum_dynamics, x0, x_target, params, Q, R, Qf,
-    dt=0.02, N=50
+import numpy as np
+from src.affine_control.residuals import predict_residual_bound
+from src.tools.residual_control_examples import residual_step_limit, scalar_nonlinear_flow
+
+initial, horizon = 0.01, 1.0
+terminal = scalar_nonlinear_flow(initial, np.array([horizon]))[0]
+actual_remainder = terminal - initial * np.exp(horizon)
+old_expression = initial**2 * np.expm1(2 * horizon) / 2
+conditional_bound = predict_residual_bound(
+    np.array([2.0]), np.array([terminal]), np.array([horizon]), np.array([1.0])
 )
-time_coarse = time.time() - t0
-
-# Fine fixed
-t0 = time.time()
-x_fixed_fine, u_fixed_fine, _, _ = fixed_timestep_ddp(
-    pendulum_dynamics, x0, x_target, params, Q, R, Qf,
-    dt=0.005, N=200
-)
-time_fine = time.time() - t0
-
-# Adaptive
-t0 = time.time()
-x_adaptive, u_adaptive, _, _ = adaptive_ddp(
-    pendulum_dynamics, x0, x_target, params, Q, R, Qf,
-    eps_residual=0.01
-)
-time_adaptive = time.time() - t0
-
-print(f"Coarse fixed (N=50):  {time_coarse:.3f} s")
-print(f"Fine fixed (N=200):   {time_fine:.3f} s")
-print(f"Adaptive (eps=0.01):  {time_adaptive:.3f} s")
-print(f"Speedup vs fine:      {time_fine/time_adaptive:.2f}×")
+assert old_expression < actual_remainder < conditional_bound
+step = residual_step_limit(forcing=0.005, budget=0.001, growth=2.0)
 ```
 
-**Illustrative output from one run:**
-```
-Coarse fixed (N=50):  0.120 s
-Fine fixed (N=200):   0.485 s
-Adaptive (eps=0.01):  0.198 s
-Speedup vs fine:      2.45×
+`predict_residual_bound` takes one interval upper bound per entry for the Hessian and actual joined deviation, non-negative interval durations, and propagator growth rates. Omitting growth rates selects zero growth, so the legacy sum requires a nonexpansive propagator. Negative growth rates are supported in propagation; the interval-inversion helper uses the simpler non-negative-growth convention. The calculations use ordinary floating point, not verified interval arithmetic.
+
+The historical `compute_hessian_bound` name denotes a finite-difference **point estimate of the largest component state-Hessian norm**, with control held fixed. It neither includes mixed derivatives nor certifies a regional vector bound. Its corrected documentation states this explicitly. `ResidualMonitor` reports a scaled measurement/reference discrepancy and a hysteretic label. It implements neither an observer nor a feasible MPC controller.
+
+### Performance Comparison {#performance-comparison}
+
+The regression suite checks the comparison formula against independent quadrature, preserves accumulation under subdivision, verifies the exact scalar flow against numerical ODE integration, and tests the interval rule by integrating its comparison equation. It also checks the pendulum Hessian sign and the scalar tube's boundary condition. Run:
+
+```bash
+python -m pytest tests/test_residual_flow_bounds.py tests/test_residual_control_examples.py
 ```
 
----
+These tests validate teaching calculations and API contracts. They do not measure optimizer speed, physical tracking accuracy, or clinical outcomes. The repository's explicitly labeled DDP mock cannot provide evidence of those outcomes. A publishable adaptive-solver result requires the complete solver and evaluation artifacts described above.
 
 ### Practical Guidelines {#sec-guidelines}
 
-#### When to Use Residual-Aware Methods
+#### When to Use Residual-Aware Methods {#when-to-use-residual-aware-methods}
 
-**Use when:**
+Use the analysis when a local approximation influences a consequential decision and you can define its error, propagation, and domain. It can guide offline mesh refinement, perturbation limits, and model diagnostics. A fixed-rate controller may still use residual diagnostics without changing its physical update frequency. Hybrid models can use the analysis within smooth modes and event sensitivities at transitions.
 
-✅ System has **varying curvature** along trajectory (e.g., aerobatics, impacts, transitions)
-✅ Computational budget is **limited** (real-time applications)
-✅ You need explicit bounds or diagnostics on linearization accuracy
-✅ Standard fixed-timestep methods are either too slow (fine) or inaccurate (coarse)
+#### Choosing a Residual Tolerance {#choosing-epsilon_r-residual-tolerance}
 
-**Don't use when:**
+Allocate the acceptable task error among estimation, model discrepancy, linearization, integration, and actuation. Propagate each contribution to the same task coordinates before comparing them. For correlated random errors, include cross-covariances; adding variances requires the appropriate independence assumptions. For deterministic bounded errors, a triangle-inequality sum is conservative but clear. A noise floor does not automatically set an acceptable impact error, and a dimensionless tolerance has no portable meaning without its scales.
 
-❌ System is nearly linear everywhere (residuals always small → overhead not worth it)
-❌ You have **unlimited computation** and can afford very fine uniform discretization
-❌ Dynamics are **non-smooth** (impacts, switches) → use hybrid methods instead
+#### Debugging Adaptive Algorithms {#debugging-adaptive-algorithms}
 
-#### Choosing $\epsilon_r$ (Residual Tolerance)
-
-**Guidelines:**
-
-1. **Task-based:** Set $\epsilon_r$ = fraction of acceptable tracking error
-   - Precision tasks (surgery, manufacturing): $\epsilon_r \approx 0.001$
-   - Moderate tasks (manipulation, walking): $\epsilon_r \approx 0.01$
-   - Aggressive tasks (aerobatics, sports): $\epsilon_r \approx 0.05$
-
-2. **Sensor-based:** Set $\epsilon_r$ ≈ measurement noise level
-   - If state estimate uncertainty is $\pm 0.02$, use $\epsilon_r \geq 0.02$
-
-3. **Computational:** Start with $\epsilon_r = 0.05$, decrease until runtime acceptable
-
-#### Debugging Adaptive Algorithms
-
-**Common issues:**
-
-| Problem | Likely Cause | Fix |
-|---------|--------------|-----|
-| Timestep too small everywhere | Hessian bound $M$ too conservative | Use local (autodiff) instead of global bound |
-| Chattering in mode switching | No hysteresis | Add $\epsilon_{\downarrow} < \epsilon_{\uparrow}$ gap |
-| Residuals exceed $\epsilon_r$ | Perturbations grow larger than estimate | Increase $\delta_{x,\max}$ safety factor |
-| DDP divergence | Timestep adaptation too aggressive | Add min/max clipping on $\Delta t$ |
-
-**Diagnostic tools:**
-
-```python
-def diagnose_residual_adaptive_controller(x_traj, u_traj, t_traj, dynamics, params):
-    """Print diagnostic information about adaptive DDP run"""
-
-    # Compute actual residuals (if true trajectory available)
-    # ...
-
-    # Hessian variation
-    M_traj = [compute_hessian_bound(x_traj[i], u_traj[i], params)
-              for i in range(len(u_traj))]
-    print(f"Hessian bound: min={min(M_traj):.2f}, max={max(M_traj):.2f}, "
-          f"mean={np.mean(M_traj):.2f}")
-
-    # Timestep variation
-    dt_traj = np.diff(t_traj)
-    print(f"Timestep: min={min(dt_traj):.4f}, max={max(dt_traj):.4f}, "
-          f"mean={np.mean(dt_traj):.4f}")
-
-    # Node density
-    print(f"Total nodes: {len(x_traj)}")
-    print(f"Total time: {t_traj[-1]:.2f} s")
-    print(f"Average frequency: {len(x_traj)/t_traj[-1]:.1f} Hz")
-```
-
----
+| Observation | Check Before Changing the Algorithm |
+|---|---|
+| Large predicted bound but small observed model remainder | Conservatism of the regional and propagator bounds; metric scaling |
+| Small estimate but large nonlinear-model discrepancy | Domain coverage, actual versus linearized deviation, missing mixed terms |
+| Accurate model integration but large measurement innovation | Estimation, omitted forces, parameters, timestamps, sensor calibration |
+| Cost improves after regridding | Common horizon, input interpolation, quadrature, feasibility, reference integration |
+| Large discrepancy near contact | Event time, active constraints, reset admissibility, nearby mode sequence |
+| Frequent controller switches | Counter resets, hysteresis, dwell time, uncertainty calibration, feasible transfer |
+| Required step below the allowed minimum | An unmet budget; changing the minimum cannot prove the original bound |
 
 ## Conclusion {#rac-sec-conclusion}
 
-## Summary
+## Summary {#summary}
 
-This article developed a comprehensive framework for **residual-aware control**, transforming linearization residuals from "errors to minimize" into "signals to exploit."
+The useful object is a chain of reasoning: a defined model comparison generates a remainder; the dynamics propagate it; the output map determines its task consequence; and a controller acts only within its feasibility and stability conditions. In golf and humanoid motion, that chain passes through inertial coupling, actuation, compliance, estimation, and contact. Treating any one residual as the whole explanation breaks the chain. Keeping those relationships explicit makes local linear analysis a strong component of nonlinear modeling.
 
-**Key results:**
+### Connections to Other Articles {#connections-to-other-articles}
 
-1. **Quantitative residual bounds** (@eq-rac-residual-bound): $\|r\| \leq \frac{M}{2} \int \|\delta x\|^2 dt$
-2. **Adaptive algorithms**:
-   - Curvature-dependent timestep DDP (Algorithm 2.1)
-   - Residual-triggered LQR ↔ MPC switching
-   - Geometric tube MPC (Algorithm 2.2)
-3. **Worked examples and simulations**: quadrotor, humanoid, and golf-motivated scenarios showing how residual estimates can be used in grid selection, controller switching, and trajectory optimization
+Use the [series index](../TABLE_OF_CONTENTS.qmd) to connect first variations and integration, DDP/iLQR, contraction, and hybrid dynamics. The [complete golf-swing chapter](../../The_Physics_of_Golf/quarto/ch14_complete_swing.qmd) develops the mechanical context. The present argument supplies an error-budgeting layer connecting those models to their task outputs.
 
-**Impact:**
+## Further Reading {#further-reading}
 
-Residual-aware methods offer a way to organize local error budgeting in nonlinear control. They do not, by themselves, establish real-time feasibility or closed-loop guarantees; those require implementation-specific benchmarks, validated bounds, and in some cases additional proofs.
+- **Li and Todorov (2004):** iLQR for nonlinear biological movement models, with model-specific comparisons [@li2004iterative].
+- **Howell, Jackson, and Manchester (2019):** ALTRO's constrained trajectory-optimization formulation [@howell2019altro].
+- **Mayne, Seron, and Raković (2005):** robust MPC for constrained linear systems with bounded disturbances [@mayne2005tube].
+- **Kong and colleagues (2024):** saltation matrices and the assumptions behind hybrid first variations [@Kong2023saltation].
 
----
-
-### Connections to Other Articles
-
-- **Unified Thesis Part II:** Formal derivation of residual dynamics
-- **Unified Thesis Part III:** DDP/iLQR as baseline algorithms extended here
-- **Contraction Theory article:** Combines residual bounds with stability guarantees
-- **Hybrid Systems article:** Handles residual spikes at discontinuities
-
----
-
-## Further Reading
-
-1. **Li & Todorov (2004):** "Iterative Linear Quadratic Regulator Design for Nonlinear Biological Movement Systems" - Original DDP convergence proofs
-2. **Mayne et al. (2005):** "Robust model predictive control of constrained linear systems" - Tube MPC foundations
-3. **Tedrake (2009):** "LQR-Trees: Feedback motion planning on sparse randomized trees" - Funnel-based planning with residuals
-4. **Manchester & Kuindersma (2017):** "Variational Contact-Implicit Trajectory Optimization" - Complementarity + optimization
-5. **Howell et al. (2019):** "ALTRO: A Fast Solver for Constrained Trajectory Optimization" - State-of-the-art implementation techniques
-
----
-
-
+```{=html}
 <section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This article introduces a way to make robots and control systems smarter by listening to their own errors. Instead of blindly following a plan, the system uses "drift" to understand the terrain.
-      </p>
-
-      <div class="laymans-item">
-        <h3>Residuals as Sensors</h3>
-        <p>In control theory, a "residual" is usually seen as an error to be minimized. Here, we treat it as a sensor reading. The amount of error tells us how complex the environment is.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Driving on a foggy road. If you feel the car drifting sideways, you know the road is banking or curving, even if you can't see it clearly. The drift gives you information.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Adaptive Attention</h3>
-        <p>The system adjusts how much computing power it uses based on the situation. It skims through easy parts (straight roads) and focuses deeply on hard parts (sharp turns).</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A student studying for an exam. They flip quickly through pages they know well (low curvature), but stop to read every word of the difficult chapters (high curvature).
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Mode Switching</h3>
-        <p>The controller switches between a simple, fast mode and a complex, careful mode depending on how hard the task is right now.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Autopilot vs. Manual. On a straight highway, you relax (simple mode). But when a storm hits or traffic stops, you grip the wheel and pay full attention (complex mode).
-        </div>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> By treating errors as information, we can build systems that remain fast on easy tasks while becoming careful and precise on difficult ones.
-      </div>
-    </div>
-  </div>
+  <button type="button" class="laymans-terms-header" aria-expanded="false"><span class="laymans-terms-header-title">In Layman's Terms</span><span class="laymans-terms-icon" aria-hidden="true">▼</span></button>
+  <div class="laymans-terms-content"><div class="laymans-terms-inner">
+    <p class="laymans-terms-intro">A simplified prediction can help us understand a complicated swing. The important questions are where it misses, why the miss grows or shrinks, and whether it changes the shot.</p>
+    <div class="laymans-item"><h3>Residuals as Evidence</h3><p>A difference between a prediction and a measurement tells us to investigate. It does not tell us the cause by itself. A timing error, an inaccurate force model, and a noisy sensor can produce similar discrepancies.</p></div>
+    <div class="laymans-item"><h3>Adaptive Attention</h3><p>Spend computational effort where it improves the answer that matters. A small wrist-angle error could affect the clubface at impact; a larger variation elsewhere might leave the shot nearly unchanged. The remaining motion connects today's error to that outcome.</p></div>
+    <div class="laymans-item"><h3>Mode Switching</h3><p>Changing controllers is useful only if the next controller can act in time and within the system's limits. Detecting a problem and having a feasible correction are separate achievements.</p></div>
+    <div class="key-takeaway"><strong>Key Takeaway:</strong> Better modeling means connecting errors to mechanisms and outcomes. It does not mean forcing every part of a skilled motion to look simple or minimizing every measurable variation.</div>
+  </div></div>
 </section>
 
 <section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Computational Overhead vs. Benefit</h3>
-        </div>
-        <p class="critic-argument">While adapting control frequency based on residuals (where the time step is inversely proportional to the square root of the residual norm) sounds elegant in theory, the computational overhead of continuously evaluating the Hessian and resolving the optimization problem can negate the benefits. In high-speed motions like a golf swing (under 300ms), checking the "curvature" at every step may introduce latency that causes instability, defeating the purpose of residual-awareness. Traditional fixed-rate, high-frequency control loops paired with robust feedback often outperform adaptive methods purely through brute-force predictability and zero computational jitter.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a highly valid concern for real-time systems. The theoretical beauty of adaptive sampling is bounded by processor limits. That is exactly why we emphasize using pre-computed surrogate models or bounds on the Hessian norm rather than online Hessian computation. However, we acknowledge that for extremely fast, predictable tasks, a fixed high-rate loop might indeed be the safest engineering choice. The residual-aware approach shines brightest when dealing with unknown or highly variable interaction dynamics where fixed rates struggle.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Biomechanics vs. Rigid Body Assumptions</h3>
-        </div>
-        <p class="critic-argument">The article applies residual analysis to human motion (golfers) to distinguish "expert" from "amateur" motor control. However, the human musculoskeletal system is not a rigid-body robot with clean analytic Jacobians. Soft tissue deformation, muscle activation delays, and neuromuscular noise create massive "residuals" that do not represent physical curvature but biological variance. Attributing a golfer's swing errors to "failure to manage tangent hyperplane residuals" imposes a rigid mechanical framework on what might simply be optimal stochastic control under biological noise.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We completely agree that biological noise is a massive factor. We are not suggesting the central nervous system explicitly computes Lie bracket residuals. Rather, we are proposing a mathematical lens to *describe* the observed behavior: experts subconsciously navigate paths that minimize these nonlinear deviations, allowing simple linear approximations (muscle memory) to suffice. We must be careful, as the critique points out, not to conflate biological stochasticity with rigid-body geometric curvature.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>The Danger of "Trusting" Residuals</h3>
-        </div>
-        <p class="critic-argument">Treating residuals as "sensors" for the environment is dangerous when dealing with model mismatch versus sensor noise. If a system experiences a large residual, the residual-aware controller assumes it has hit a region of high curvature and slows down. But what if the residual is caused by a gust of wind, a faulty sensor, or an unmodeled friction spike? Adapting the fundamental control strategy based on raw residuals without robust state estimation or filtering can lead to "chattering" or freezing in the presence of noise, making the system less robust, not more.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> An excellent point. Our framework assumes that the residual is primarily composed of second-order linearization errors. In reality, the residual comprises linearization errors, sensor noise, and modeling errors. If sensor noise dominates, the adaptive timestep will inappropriately shrink. Future work must integrate robust Kalman filtering or H-infinity estimators to isolate the geometric residual from external disturbances before triggering adaptive responses.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding.
-      </div>
-    </div>
-  </div>
+  <button type="button" class="critics-comments-header" aria-expanded="false"><span class="critics-comments-header-title">Critics' Comments</span><span class="critics-comments-icon" aria-hidden="true">💬</span></button>
+  <div class="critics-comments-content"><div class="critics-comments-inner">
+    <div class="critic-item"><div class="critic-perspective"><h3>Computational Overhead and Benefit</h3></div><p class="critic-argument">Derivative estimates and repeated optimization may cost more than they save, especially under tight deadlines.</p><div class="author-response"><strong>Our Response:</strong> Compare total latency and achieved task accuracy, including failed solves and deadline misses. The bound does not establish a speedup. Offline refinement and fixed-rate online diagnostics are useful alternatives to changing the physical control rate.</div></div>
+    <div class="critic-item"><div class="critic-perspective"><h3>Biomechanics and Model Assumptions</h3></div><p class="critic-argument">Rigid-body residuals cannot explain every difference between a golfer and a simulated mechanism.</p><div class="author-response"><strong>Our Response:</strong> Agreed. Activation, compliance, sensory uncertainty, and model identification must be addressed at the level relevant to the claim. The mathematics is a way to analyze a declared model; it is not evidence that experts minimize that model's residual.</div></div>
+    <div class="critic-item"><div class="critic-perspective"><h3>The Danger of Trusting Residuals</h3></div><p class="critic-argument">A large innovation may come from noise or a missing force rather than local nonlinearity.</p><div class="author-response"><strong>Our Response:</strong> Use independent predictions, calibrated uncertainty, and experiments that distinguish competing causes. Filtering improves estimation under its assumptions but cannot uniquely separate causes that produce the same observations. A controller should preserve a feasible fallback while investigating the discrepancy.</div></div>
+  </div></div>
 </section>
+```
 
+## Appendix: Mathematical Proofs {.appendix #appendix-mathematical-proofs}
 
----
+### Proof of Theorem 1.1 {#proof-of-theorem-1.1-complete}
 
-## Appendix: Mathematical Proofs {.appendix}
-
-### Proof of Theorem 1.1 (Complete)
-
-**Theorem:** For $\dot{x} = f(x,u)$ with $\|H_f\|_{\max} \leq M$, we have $\|r(t_1)\| \leq \frac{M}{2} \int_{t_0}^{t_1} \|\delta x(t)\|^2 dt$.
-
-**Proof:**
-
-**Step 1:** Taylor expansion of $f(x,u)$ around $(\bar{x}, \bar{u})$:
+Fix time $t$ and define $\varphi(s)=F(t,\bar z+se,\bar v+s\delta v)$. Applying the fundamental theorem of calculus twice gives
 
 $$
-f(x,u) = f(\bar{x}, \bar{u}) + A(x - \bar{x}) + B(u - \bar{u}) + \frac{1}{2}(x-\bar{x})^T H_{xx} (x-\bar{x}) + O(\|x-\bar{x}\|^3)
+\varphi(1)-\varphi(0)-\varphi'(0)
+=\int_0^1\int_0^s\varphi''(\sigma)\,d\sigma\,ds
+=\int_0^1(1-\sigma)\varphi''(\sigma)\,d\sigma.
 $$
 
-where $A = \nabla_x f|_{\bar{x}}$, $B = \nabla_u f|_{\bar{u}}$, $H_{xx} = \nabla_x^2 f|_{\bar{x}}$.
+With $w=(e,\delta v)$, $\varphi''(\sigma)=D^2F[w,w]$ along the segment. The bilinear norm bound and $\int_0^1(1-\sigma)d\sigma=1/2$ establish $\|N\|\le M\|w\|^2/2$. This argument needs $C^2$ regularity on the segment. A pointwise second-order Taylor polynomial has an $o(\|w\|^2)$ remainder under $C^2$; a uniform $O(\|w\|^3)$ bound requires stronger regularity, such as a locally Lipschitz Hessian.
 
-**Step 2:** Linearized approximation satisfies:
+Since $\dot e=Ae+B\delta v+N$ and $\dot\eta=A\eta+B\delta v$, subtraction gives $\dot r=Ar+N$. Multiplying by a fundamental-matrix inverse, integrating, and multiplying back yields $r(t)=\Phi(t,t_0)r(t_0)+\int\Phi(t,s)N(s)ds$. Here $r(t_0)=0$ by definition. Taking norms proves @eq-rac-residual-bound. There is no step in which the propagator may be replaced by one without an additional bound.
 
-$$
-\frac{d}{dt}(x_{\text{lin}} - \bar{x}) = A(x_{\text{lin}} - \bar{x}) + B(u - \bar{u})
-$$
+For a perturbation family with $\|e(t_0)\|+\|\delta v\|_\infty\le\alpha$, bounded first derivatives on a common finite-horizon domain give $\|e\|_\infty\le C\alpha$ by a Grönwall comparison. A uniformly bounded Hessian and propagator then give $\|r\|_\infty\le C'\alpha^2$. This supplies the assumptions behind the quadratic order claim and shows why its constants depend on the horizon and domain.
 
-**Step 3:** True nonlinear evolution:
+For closed-loop feedback $\delta v=Ke$, the open-loop comparison above has $\dot\eta=A\eta+BKe$, using the actual input difference. A different comparison uses $\dot\eta_K=(A+BK)\eta_K$. Define $r_K=e-\eta_K$; then $\dot r_K=(A+BK)r_K+N(t,e,Ke)$. Its propagator is the closed-loop one. For a nonlinear policy, perform Taylor expansion of the composed closed-loop field, including all policy derivatives. The two comparisons are individually valid but their symbols and constants cannot be interchanged.
 
-$$
-\frac{d}{dt}(x - \bar{x}) = A(x - \bar{x}) + B(u - \bar{u}) + \frac{1}{2}(x-\bar{x})^T H_{xx} (x-\bar{x}) + h.o.t.
-$$
+### Derivation of the Adaptive Interval Rule {#derivation-of-adaptive-timestep-rule-eq.-2.1}
 
-**Step 4:** Residual $r = x - x_{\text{lin}}$ satisfies:
+Assume $\|N\|\le q$ and $\|\Phi(t,s)\|\le e^{a(t-s)}$ within an interval of duration $h$. With zero initial remainder,
 
 $$
-\dot{r} = A r + \frac{1}{2} (x - \bar{x})^T H_{xx} (x - \bar{x}) + h.o.t.
+\|r(h)\|\le q\int_0^he^{a(h-s)}ds=q\psi(a,h).
 $$
 
-For small deviations, $x - \bar{x} \approx x_{\text{lin}} - \bar{x} = \delta x$, so:
+For $a>0$ and $q>0$, $q(e^{ah}-1)/a\le\varepsilon_r$ is equivalent to $e^{ah}\le1+a\varepsilon_r/q$, giving @eq-adaptive-timestep. The continuous limit as $a\to0$ is $h\le\varepsilon_r/q$. For $a<0$, the bound increases toward $q/|a|$. If $\varepsilon_r\ge q/|a|$, this condition allows any finite $h$ within the validity domain; otherwise the logarithmic inverse still applies with a positive logarithm argument. The helper deliberately requires $a\ge0$ to keep this case distinction out of its public contract.
 
-$$
-\dot{r} \approx A r + \frac{1}{2} \delta x^T H_{xx} \delta x
-$$
+For nonzero incoming bound $R_i$, variation of constants gives the recurrence in the main text. Iterating it propagates every interval's contribution through all later intervals. Holding the same coefficients and forcing while subdividing gives the same exact comparison solution. Consequently, local mesh refinement is useful only through changes in approximation, integration, control representation, or verified domains; subdivision alone cannot improve an unchanged continuous-time bound.
 
-**Step 5:** Taking norms and using submultiplicativity:
+### Exercises and Checks
 
-$$
-\|\dot{r}\| \leq \|A\| \|r\| + \frac{1}{2} \|\delta x\|^2 \|H_{xx}\| \leq \|A\| \|r\| + \frac{M}{2} \|\delta x\|^2
-$$
+1. For $F(z,v)=zv$, expand about $(\bar z,\bar v)$ and identify the mixed remainder. Explain why $D^2_{vv}F=0$ does not remove it.
+2. Derive the scalar counterexample's exact solution by separation of variables. Find its pole and check the small-$\epsilon$ ratio to the unpropagated expression.
+3. For $A=\begin{bmatrix}-1&10\\0&-1\end{bmatrix}$, compute the transition matrix. Explain why two negative eigenvalues do not imply $\|\Phi(t,0)\|_2\le1$.
+4. Verify the interval rule by solving $\dot R=2R+0.005$, $R(0)=0$, at the stated budget. Convert the entire calculation from seconds to milliseconds.
+5. Derive the two outward boundary velocities of the scalar robust-tube example. Explain both the lower and upper admissible radii.
+6. A golf model predicts clubface orientation at a fixed time, while measured ball contact occurs earlier. Identify the additional event sensitivity needed before attributing the mismatch to swing control.
 
-**Step 6:** If $r(t_0) = 0$ (start on nominal), then by Grönwall's inequality:
-
-$$
-\|r(t)\| \leq \int_{t_0}^{t} e^{\|A\|(t-s)} \frac{M}{2} \|\delta x(s)\|^2 ds
-$$
-
-**Step 7:** For bounded time intervals $\Delta t$ with $\|A\| \Delta t \ll 1$ (typical in discretization), $e^{\|A\| \Delta t} \approx 1 + \|A\| \Delta t$, and:
-
-$$
-\|r(t_1)\| \lesssim \frac{M}{2} \int_{t_0}^{t_1} \|\delta x(s)\|^2 ds
-$$
-
-Absorbing constants into $M$ gives the stated bound. $\square$
-
----
-
-#### Derivation of Adaptive Timestep Rule (Eq. 2.1) {.appendix}
-
-**Goal:** Choose $\Delta t$ such that $\|r\| \leq \epsilon_r$.
-
-**Starting point:** Theorem 1.1 with constant $\delta x$ over $[t, t+\Delta t]$:
-
-$$
-\|r(t + \Delta t)\| \leq \frac{M}{2} \int_t^{t+\Delta t} \|\delta x(s)\|^2 ds \approx \frac{M}{2} \|\delta x\|^2 \Delta t
-$$
-
-**Constraint:** Require $\|r\| \leq \epsilon_r$:
-
-$$
-\frac{M}{2} \|\delta x\|^2 \Delta t \leq \epsilon_r
-$$
-
-**Solving for $\Delta t$:**
-
-$$
-\Delta t \leq \frac{2\epsilon_r}{M \|\delta x\|^2}
-$$
-
-**Practical adjustment:** Since $\delta x$ varies during the interval and we used a crude approximation, add safety factor $\sqrt{\cdot}$ (heuristic):
-
-$$
-\Delta t = \sqrt{\frac{2\epsilon_r}{M \|\delta x_{\max}\|^2}}
-$$
-
-This matches Equation 2.1. $\square$
-
----
-
-**End of Article**
+**Answer Checks:** (1) $N=e\delta v$. (2) The pole is $\log(1+1/\epsilon)$; the limiting ratio is $2e^T/(e^T+1)$. (3) $\Phi=e^{-t}\begin{bmatrix}1&10t\\0&1\end{bmatrix}$, which can transiently amplify norms. (4) $h\approx0.168236$ s, or $168.236$ ms with both rates divided by $1000$. (5) The positive boundary is limiting and gives $1\pm\sqrt{0.9}$; too little room cannot contain disturbances, while a sufficiently large positive error overwhelms the stabilizing linear term. (6) Account for the contact guard's time shift, the corresponding state/output change, and any reset before comparing equivalent events.
