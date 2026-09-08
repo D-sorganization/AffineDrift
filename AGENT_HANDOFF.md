@@ -2,18 +2,29 @@
 
 ## Impact Dynamics and Acoustics: #4253
 
-- A1 #4254 / PR #4258 merged as `1ce02d7ae4d916d4c598b62be78cefa83452aaa7`.
-- Active targeted follow-up #4277: `docs/4277-coriolis-energy-accounting`, worktree
-  `C:/Users/diete/Repositories/AffineDrift-impact-damping`, synced main `e69500eb`, PR #4282.
-  Corrected damping/Coriolis accounting, the paired two-joint example and portable TeX notation. Full site/PDF builds and desktop/mobile section QA pass; protected delivery remains pending.
-- Continue from `docs/development/impact-acoustics/DAMPING_REVIEW.md`; the initial
-  source/literature inventory and A1 evidence remain in `REVIEW.md` and `INVENTORY.md`.
-- Tools T1 #5077 merged as `f72544613`; T2 #5082 remains open. T3 section energy
-  and point-load tangents are pushed at `6323944ee658f1254da1a08bb899551f082c7b5c`;
-  488 golf/API tests pass with two optional CAD skips. Loaded equilibrium and later stages remain open.
-- Preserve immutable proximal-distal publication bytes and trust pins. A2 #4255,
-  Tools #5068 and UpstreamDrift #9700 require qualified models and actual evidence;
-  physical/perceptual validation is incomplete and no measured effect is inferred.
+- A1 #4254 / #4258 and Coriolis correction #4277 / #4282 are merged.
+- Active #4295: docs/4295-grip-stability-qualification, worktree
+  C:/Users/diete/Repositories/AffineDrift-impact-grip-review, base b6dc729f.
+  Both Chapter 29 editions now qualify grip, stability, friction, energy budgets,
+  sensitivity and shaft/acoustic claims. Independent counterexamples and paired
+  controls pass; full regression has 4,789 passes, 92.78% coverage and only two
+  transient render-hygiene failures, resolved by six post-render hygiene passes.
+  All 51 final targeted and 130 content-lint checks pass. Final 553-page PDF
+  chapter/bibliography review, full 238-target site build, mobile/desktop math,
+  keyboard/link and automated accessibility checks pass. Normal PR publication remains.
+- Continue from docs/development/impact-acoustics/GRIP_QUALIFICATION_REVIEW.md.
+  Earlier evidence remains in DAMPING_REVIEW.md, REVIEW.md and INVENTORY.md.
+- Tools #5072 grip-supported loaded-chain balance and full M/G/C/K operators are
+  published at eeea63b47; turnover 2ffaf243f. All 646 Linux golf/API tests pass
+  with two optional CAD skips, plus 38 focused controls and nine manual gates.
+  Private grip-supported frequency response now passes 665 Linux golf/API tests
+  and 50 focused controls; publication is pending. Stability, bandwidth and
+  nonlinear evolution remain.
+- Tools #5103/#5106 public checks pass but private consumer lookup fails before
+  tests. UpstreamDrift #9787/#9804 has concurrent ownership; do not overwrite it.
+- Preserve immutable publication bytes and trust pins. A2 #4255, Tools #5068
+  and UpstreamDrift #9700 remain open. Synthetic verification and metadata-only
+  dataset discovery do not establish physical or blinded perceptual validation.
 
 Updated: 2026-09-08. Current-state only; use Git and GitHub for history.
 

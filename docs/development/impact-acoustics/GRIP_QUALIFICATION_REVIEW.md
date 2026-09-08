@@ -1,0 +1,41 @@
+# Grip, Damping and Shaft Qualification Review
+
+## Scope and Ownership
+
+- Parent AffineDrift #4253; correction #4295; synthesis #4255 stays open.
+- Worktree C:/Users/diete/Repositories/AffineDrift-impact-grip-review.
+- Branch docs/4295-grip-stability-qualification, based on protected main b6dc729f.
+- Lease codex / impact-acoustics-01a07d8a-grip-theory, expires 2026-09-08T23:22:03.914503Z.
+- Earlier Coriolis correction #4277 / #4282 is merged as 1968897ec65044b8393705087fccdf755e3e89a2. Preserve that energy/state derivation.
+
+## Scientific Findings and Corrections
+
+The new impact article already treats grip damping as dependent on mode, frequency and participant. The paired Chapter 29 still contained incompatible universal claims. Reviewing the connected sections also found reversed Stribeck limits, missing moment arms, an unsupported physiological parameter table, a wrong sign and mph conversion in sensitivity, and contradictory material/Q rankings. These are all within the requested rigorous impact/grip/shaft theory scope.
+
+The revision separates passive loss, active muscle work, internal storage and boundary work. It preserves the previous correct state mapping and Coriolis energy cancellation. It derives constrained power and reduced damping without adding arm torques from different coordinate spaces. Positive-definite-energy stability assumptions and scalar/gyroscopic instability counterexamples replace automatic-stabilization claims. Dry sliding, zero-speed sticking, Stribeck and bristle memory have explicit signs and units. Unsupported population numbers, clinical conclusions, transition times, energy budgets and material rankings are replaced by identification requirements or explicitly synthetic calculations. Modal Q, finite-cycle loss, point mobility, preload geometry and frozen-frame limits connect the chapter to the existing implementation.
+
+## Primary Evidence
+
+- Chiementin et al., 2019, DOI 10.3390/app9102050. Primary author-repository PDF: https://orbi.umons.ac.be/bitstream/20.500.12907/18868/1/CHI2019%20-%20applsci469551.pdf. One participant/one hybrid, inconsistent damping trend between results and conclusion. Section 4.2 explicitly describes algorithmic damping and no separately specified material damping. Do not infer broad player/driver-sound or optimum-pressure conclusions. Publisher reader returned HTTP429; the university copy supplied the inspected full text.
+- Bloch et al., 1994, Dissipation Induced Instabilities, Annales IHP C 11(1), 37-90. https://www.numdam.org/item/AIHPC_1994__11_1_37_0/ and https://arxiv.org/abs/chao-dyn/9304005. Metadata/abstract verified. Full-PDF readers failed; no full-paper verification claimed. The numerical examples here are independently derived dimensionless controls, not reproduced golfer data.
+- Canudas de Wit et al., 1995, DOI 10.1109/9.376053. Primary Lund record/PDF https://portal.research.lu.se/en/publications/a-new-model-for-control-of-systems-with-friction/ and https://lup.lub.lu.se/search/ws/files/6363840/8498924.pdf. Printed pages 419-421 were visually inspected, including equations (1)-(4) and the v-to-z storage result. Bristle-state notation is mapped to a rotational port with explicit storage/sign caveats; anatomical qualification is not inferred.
+
+## TDD and Verification
+
+The new paired-content controls fail on both original editions before correction; seven independent numerical counterexamples pass (RED: 2 failed, 7 passed, 0.47 s). After correction, all nine new tests pass; the combined targeted textbook/contact/vector suite passes 43 tests in 1.16 s. Root Ruff passes, Black reports 669 unchanged Python files, and title audit passes 631 sources. Black reports unavailable optional notebook dependencies; no notebook changed.
+
+The initial complete book rebuild succeeds: 551 pages, 3,882,363 bytes. PDF pages 223-235 (printed 195-207) were all rendered and inspected. The new mathematics and table are readable. Inspection found the retained spring-damper schematic was drawn as a series/disconnected arrangement despite a parallel-oscillator equation and had overlapping labels; repair is now implemented as two branches sharing one wall and mass. The soft-tissue reference now uses a resolved chapter link; the two-link mass example states its point-mass and coordinate assumptions. Existing whole-book missing glyphs and duplicate sec:sensitivity remain outside this correction; do not claim full-book typography approval.
+
+The full CI-equivalent Python run records 4,789 passes with 92.78% coverage and 29 skips; only two hygiene checks failed because the concurrent root HTML render temporarily placed 404.html and site_libs at the root. The 238-target render completes successfully, removes those intermediates, and all six hygiene tests then pass. No allowlist or test deadline changed. The added bristle-storage identity first fails its paired-source control (1 failed, 10 passed); after adding the derivation and final wording, all 51 targeted mechanics and hygiene tests pass in 2.03 s. Final content lint passes 130 tests, with four skips and 4,819 deselected. The three cited entries now have a single home in golf_physics.bib, already included by both book and site; the structure gate scans the articles tree.
+
+Final source checks pass: syntax, display math, cross-references, title/citation/structure/parity guards, bibliography consistency and SPEC. Existing staged unsupported-claim logic checks 296 added textbook lines with zero findings; the precommit CLI's base-to-HEAD zero-line run was not counted as evidence. Paragraphs and exercises retain their own synthetic/conditional scope; no guard was weakened. CI-equivalent mypy passes 86 sources and claim-audit evidence digests/reports remain current.
+
+Final LaTeX rebuild passes: 553 pages, 3,886,010 bytes. All 14 final chapter pages 223-236 and bibliography pages 534-536 were rendered and visually inspected; corrected diagram and mathematical layout are readable. Existing unrelated book glyph/duplicate-label warnings remain. Final full root-site render passes all 238 targets using Quarto 1.8.26 and unchanged project configuration. A chapter-only preview did not resolve companion output links; the final full-site build does. Deployment CSS bundling inlines 29 files with zero imports. Unrelated generated trust/reader-study records are restored and excluded from this change.
+
+Headless browser checks at 1440 and 390 pixels report 167 MathJax containers, zero math errors and no document overflow. Nine chapter sections are captured at each width after waiting for visible lazy equations; representative desktop/mobile views were visually checked. The table and long equation retain focusable horizontal scrolling; keyboard checks move the equation through its full 24-pixel overflow. Both companion pages and three citation targets return HTTP 200. Main-content axe WCAG A/AA checks report zero violations. Existing CSP blocks the cdnjs polyfill; axe's external-font probing is also blocked by connect-src. No CSP relaxation or clean-console claim is made. Normal protected publication remains pending.
+
+## Implementation Integration and Limits
+
+Tools #5072 stationary grip-supported chain is published at eeea63b47bc505e433bf3e26ee5cb4c1708483b4; turnover commit 2ffaf243f5aad9772fc413faa91ce207f41297c2. All normal hooks pass and remote SHA is verified. Full Linux golf/API: 646 pass, two optional CAD skips; 38 focused controls, nine manual gates and API checks pass. This supports balance and frozen M/G/C/K composition, not stability, nonlinear impact or measured acoustics. Grip-supported FRF, modal/mesh/bandwidth qualification, nonlinear evolution and physical/blinded data remain required.
+
+Tools PRs #5103 and #5106 have public checks passing but private Gasification_Model repository lookup fails before tests; no credentials or bypass used. UpstreamDrift #9787/#9804 has a concurrent writer and remains hands-off. KIT datasets are metadata candidates only; payload access remains unqualified. Do not close the full epic or promote measured effect sizes from these controls.

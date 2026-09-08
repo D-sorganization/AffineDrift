@@ -1,139 +1,98 @@
 \chapter{Damping, Friction, and Energy Dissipation in the Kinematic Chain}
 \label{ch:joint_damping_friction}
 
-\begin{laymansbox}{The Messy Reality of Motion}{laybox:damping_reality}
-Your body is not a frictionless machine. Every joint has viscous resistance. Every muscle contracts against internal friction. Every tendon absorbs and releases energy with a bit of loss. When you swing a golf club, only a fraction of the energy your muscles generate actually reaches the clubhead. The rest vanishes into heat, joint compression, tissue deformation, and the subtle resistance of bodily motion.
+\section{The Messy Reality of Motion}\label{the-messy-reality-of-motion}
 
-This chapter asks three fundamental questions: Where does this energy go? How does damping at one joint propagate through the entire kinematic chain? And crucially — is damping a bug to overcome, or a feature your nervous system harnesses for control and stability?
+The golfer, club and ball exchange mechanical energy while tissues, interfaces and materials can dissipate some of it. Energy remaining in body motion, elastic storage or gravity is not automatically heat. Muscle metabolic expenditure is also distinct from the mechanical work delivered at the modeled joints. A useful damping model starts with a stated system boundary and an energy ledger.
 
-The answer is: it depends on how much damping you have and at which joints. Too little, and you can't control the swing. Too much, and you waste precious energy. The art of an efficient golf swing is tuning this damping landscape.
-\end{laymansbox}
+This chapter separates three questions: where mechanical energy is lost, how a local loss changes coupled motion, and what can be inferred about stability, impact or perceived sweetness. Passive loss does not guarantee better control, worse ball speed or a preferred sound. Those outcomes require a specified trajectory, boundary condition and comparison.
 
-\section{The Hidden Friction in Your Body}
-\label{sec:sources_damping}
+\section{The Hidden Friction in Your
+Body}\label{the-hidden-friction-in-your-body}
 
-\index{damping}
-\index{energy dissipation}
+\subsection{Viscous Damping}\label{viscous-damping}
 
-When you flex your arm, you don't just move bone. You move synovial fluid, squeeze cartilage, deform tendons, compress muscle fibers, and shift skin and subcutaneous fat. Each of these structures resists motion. None of this resistance is dramatic — the shoulder joint doesn't *feel* stuck — but it's omnipresent, and at high speeds (like the downswing), it matters enormously.
+For a translational coordinate, \(F_d=-cv\) has \(c\) in N s/m. For an angular coordinate, \(\tau_d=-c_\theta\dot q\) has \(c_\theta\) in N m s/rad. The corresponding power is \(-cv^2\) or \(-c_\theta\dot q^2\). The interpretation of a fitted joint coefficient depends on the mechanisms represented by that model; it is not a direct measurement of one tissue's viscosity.
 
-\begin{definition}{Viscous Damping}{viscous_damping}
-A damping force proportional to velocity: $F_d = -c v$, where $c$ is the damping coefficient. At the joint level, we write this as a torque opposing angular velocity: $\tau_d = -c_i \dot{q}_i$. Viscous damping dissipates energy at a rate proportional to velocity squared.
-\end{definition}
+\subsection{Synovial Fluid Viscosity}\label{synovial-fluid-viscosity}
 
-Let's catalog the sources:
+Lubrication and deformation at a joint can contribute resistance, but the phenomenological approximation \(\tau_{\rm fluid}=-c_{\rm fluid}\dot q\) requires identification over a declared posture, loading, temperature and frequency range. It does not establish a constant coefficient for a whole golf swing or a universal monotone dependence on joint size.
 
-\subsection{Synovial Fluid Viscosity}
-\index{synovial fluid}
+\subsection{Muscle Viscosity and the Hill
+Model}\label{muscle-viscosity-and-the-hill-model}
 
-Your joints are sealed capsules filled with synovial fluid — a slippery, viscous liquid that lubricates articulating surfaces. This fluid exhibits classical viscous damping. As the joint rotates, the fluid resists shearing. The damping torque is:
-\[
-\tau_{\text{synovial}} = -c_{\text{fluid}} \dot{q}_i
-\]
+An active muscle can deliver positive mechanical work. Its force-velocity relation must therefore not be relabeled as a passive damper. Hill's force-velocity experiment concerns active contraction \citep{Hill1938}; a local slope around a particular activation and operating state is an incremental impedance, not a proof of global passivity. A Hill-type implementation must declare its contraction sign, active and passive elements, moment arms and activation dynamics. A dashpot is a modeling choice, not a mandatory element implied by the historical equation.
 
-The coefficient $c_{\text{fluid}}$ depends on joint geometry (larger joints have more fluid) and fluid viscosity (which varies with temperature and joint condition).
+For a passive translational dashpot with moment arm \(r\) and local shortening speed \(v=r\dot q\), power consistency gives \(c_\theta=c r^2\). One cannot convert N s/m to N m s/rad without geometry. With multiple muscles, the corresponding Jacobian congruence retains cross-joint coupling.
 
-\subsection{Muscle Viscosity and the Hill Model}
-\index{Hill model}
-\index{muscle damping}
+\subsection{Tendon Viscoelasticity and
+Hysteresis}\label{tendon-viscoelasticity-and-hysteresis}
 
-Recall from Chapter~\ref{ch:muscle-force-generation} that the Hill muscle model \citep{Hill1938} consists of an active contractile element (CE), a parallel elastic element (PE), and a series elastic element (SE). Crucially, the Hill model also includes a \emph{dashpot} — a viscous element — in parallel with the contractile element. This dashpot represents the internal friction of muscle fiber sliding.
+For a closed measured force-extension cycle, the loop integral \(\oint F\,d\ell\) is the mechanical energy not returned over that cycle. A synthetic storage of 10 J with an explicitly assumed 8\% loss would return 9.2 J; this arithmetic supplies no measured tendon percentage or golfer energy budget.
 
-The force-velocity relationship in muscle is fundamentally a damping law:
-\[
-F_{\text{active}} = F_0 \frac{v_{\max} + v}{v_{\max} + (F/F_0) v}
-\]
-where $v$ is contraction velocity and $v_{\max}$ is maximum shortening velocity. At low velocities, this is nearly linear: $F \approx F_0 - c_m v$ — a constant force minus a damping term. The muscle itself is a source of viscous resistance to motion.
+As an illustrative nonlinear loss model, a memoryless quadratic resistance \(-b|\dot q|\dot q\) is passive for \(b\geq0\), but it does not by itself represent viscoelastic memory or identify a measured hysteresis loop across frequencies. Internal-state or hereditary models need their own stored energy, loss law and calibration. Elastic recoil, dissipation and active muscle work remain separate.
 
-When the downswing accelerates, muscles are lengthening (eccentric contraction) and simultaneously providing force. The internal friction of this process is substantial. A rough estimate: $c_m \approx 0.1$ to $0.3$ N$\cdot$s/m for a single muscle belly, which translates to a torque damping of $c_i \approx 0.02$ to $0.05$ Nm$\cdot$s/rad at a joint when all muscles are considered.
+\subsection{Ligament Damping and Cartilage
+Deformation}\label{ligament-damping-and-cartilage-deformation}
 
-\subsection{Tendon Viscoelasticity and Hysteresis}
-\index{hysteresis!tendon}
-\index{tendon damping}
+Deformation can store and return energy as well as dissipate it. A model must distinguish these contributions before assigning any residual work to friction. Tissue-specific parameters and injury or clinical conclusions require appropriate identification; this chapter supplies neither a universal joint-loss hierarchy nor an injury-risk model.
 
-Tendons are not perfectly elastic springs. When you stretch and release a tendon, the energy you get back is slightly less than the energy you put in. This loss is captured in a \emph{hysteresis loop} in the stress-strain curve.
+\subsection{Soft Tissue Wobble
+Damping}\label{soft-tissue-wobble-damping}
 
-For a typical tendon, the hysteresis loss is approximately 7--10\% of the elastic energy stored per cycle. During a fast golf swing, the wrist extensors are stretched in the early downswing and then release that energy during the late downswing and impact. If a tendon stores 10 J of elastic energy and loses 8\%, that's 0.8 J dissipated as heat. Multiply this across all the tendons involved in the swing, and the total tendon damping is non-negligible.
+Relative soft-tissue motion adds inertial and constitutive states, as discussed in Chapter~\ref{ch:soft_tissue_pliable}. A reduced damping coefficient can approximate a response only in the range over which that reduction is checked. Omitted tissue inertia or resonance must not be concealed by increasing a numerical damping parameter.
 
-Mathematically, tendon damping is \emph{nonlinear} and \emph{frequency-dependent}. It can be approximated by:
-\[
-\tau_{\text{tendon}} \approx -b_i |\dot{q}_i| \dot{q}_i
-\]
-where the magnitude-proportional term captures the energy-loss-per-cycle behavior of viscoelasticity.
+\subsection{Damping by Joint}\label{sec-sources_damping}
 
-\subsection{Ligament Damping and Cartilage Deformation}
-\index{ligament damping}
-\index{cartilage!deformation}
-
-Ligaments stabilize joints but are not perfectly inextensible. When a joint moves quickly, ligaments resist with viscous forces. Articular cartilage deforms under load, and this deformation is partly inelastic — it absorbs and dissipates energy.
-
-These sources contribute smaller damping torques individually, but collectively they matter. Cartilage damping is especially important during impact, when large forces are applied suddenly.
-
-\subsection{Soft Tissue Wobble Damping}
-\index{soft tissue wobble}
-
-From Chapter~\ref{ch:soft_tissue_pliable}, we discussed the wobble of forearm soft tissue as the arm accelerates. This wobble involves the acceleration of skin, fat, and fascia relative to the skeleton, and internal friction within these tissues dissipates the kinetic energy of wobble. This damping is configuration-dependent and is often neglected in simple models, but becomes significant in high-acceleration maneuvers.
-
-\subsection{Damping by Joint}
-
-The table below provides typical damping coefficients for major joints involved in the golf swing:
+There is no qualified table of golfer-wide joint damping coefficients in this chapter. The identification requirements are instead:
 
 \begin{center}
-\begin{tabular}{lccc}
-\hline
-\textbf{Joint} & \textbf{Typical Range (Nm$\cdot$s/rad)} & \textbf{Primary Source} & \textbf{Notes} \\
-\hline
-Shoulder (glenohumeral) & 0.5--2.0 & Synovial fluid + muscle & Large joint, high mobility \\
-Shoulder (scapulothoracic) & 0.1--0.3 & Soft tissue friction & Articulation through muscle \\
-Elbow & 0.15--0.5 & Synovial fluid + tendons & Tighter joint than shoulder \\
-Wrist & 0.05--0.15 & Synovial fluid + ligaments & Small joint, complex kinematics \\
-Trunk rotation & 2.0--5.0 & Intervertebral disc + muscle & Large muscles, distributed \\
-Grip (fingers on club) & 0.02--0.1 & Skin friction + muscle & Highly variable with grip force \\
-\hline
-\end{tabular}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}X@{}}
+\toprule
+\textbf{Modeled Element} & \textbf{Required Coordinates and Evidence} \\
+\midrule
+Shoulder and scapular motion & Declared relative rotations, posture,
+activation and coupled torque response \\
+Elbow and wrist & Joint-axis definitions, tendon routing and independent perturbation data \\
+Trunk & Distributed or reduced coordinate model and the retained
+mechanical boundary \\
+Hand-club interface & Colocated force/torque and relative motion, grip
+pressure, phase and frequency band \\
+Shaft and head & Specimen, boundary conditions, mode shapes, damping and
+instrument correction \\
+\bottomrule
+\end{tabularx}
 \end{center}
 
-These values are \textbf{illustrative estimates} compiled from passive joint impedance studies \citep{Riener1999, Amankwah2004} and should be treated as order-of-magnitude ranges rather than definitive values. They vary widely based on age, fitness, flexibility, joint angular velocity, and injury history. A person with arthritis might have 2--3 times higher damping in the affected joint. Readers requiring precise values for simulation should consult the primary literature and ideally measure damping for their specific subject population.
-
-\section{Adding Damping to the Equations of Motion}
-\label{sec:damping_eom}
+Passive lower-limb studies are not substitutes for measured shoulder, wrist or grip coefficients. Synthetic sensitivity ranges must be labeled as assumptions and cannot be promoted to physiological uncertainty bounds. \section{Adding Damping to the Equations of Motion} \label{sec:damping_eom}
 
 \index{equations of motion!with damping}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.0]
-  % Spring-dashpot system
-  \draw[thick] (0, 0) -- (1, 0);
-  \node at (0.5, -0.3) {Wall};
-
-  % Spring element
-  \draw[thick] (1, 0) -- (1.5, 0);
-  \draw[thick] (1.5, -0.2) -- (1.6, 0.2) -- (1.7, -0.2) -- (1.8, 0.2) -- (1.9, -0.2) -- (2.0, 0);
-  \node at (1.75, 0.6) {$k$ (stiffness)};
-
-  % Dashpot (damper) element
-  \draw[thick, rounded corners=0.1] (2.2, -0.2) rectangle (2.8, 0.2);
-  \draw[thick] (2.5, -0.15) -- (2.5, 0.15);
-  \node at (2.5, 0.6) {$c$ (damping)};
-
-  % Connection
-  \draw[thick] (2.8, 0) -- (3.2, 0);
-
-  % Mass element
-  \draw[thick, fill=lightgray] (3.2, -0.35) rectangle (4.0, 0.35);
-  \node at (3.6, 0) {$m$};
-
-  % Velocity vector
-  \draw[thick, ->, color=blue] (4.0, 0) -- (5.0, 0);
-  \node[color=blue] at (4.5, 0.4) {$\dot{x}$};
-
-  % Below: forces
-  \node at (1.0, -1.0) {Spring force: $F_s = -kx$};
-  \node at (2.5, -1.0) {Damping force: $F_d = -c\dot{x}$};
-  \node at (1.75, -1.5) {Equation: $m\ddot{x} + c\dot{x} + kx = 0$};
+\begin{tikzpicture}[scale=0.9]
+  % Both branches join the same fixed wall and translating mass.
+  \draw[very thick] (0,-0.9) -- (0,0.9);
+  \node[anchor=east] at (-0.1,0) {Wall};
+  \draw[thick] (0,0.5) -- (0.8,0.5);
+  \draw[thick] (0.8,0.5) -- (1.0,0.3) -- (1.2,0.7)
+    -- (1.4,0.3) -- (1.6,0.7) -- (1.8,0.3) -- (2.0,0.7)
+    -- (2.2,0.5) -- (3.5,0.5);
+  \node at (1.5,1.05) {$k$ (stiffness)};
+  \draw[thick] (0,-0.5) -- (1.0,-0.5);
+  \draw[thick] (2.1,-0.25) -- (1.0,-0.25) -- (1.0,-0.75) -- (2.1,-0.75);
+  \draw[thick] (1.7,-0.7) -- (1.7,-0.3);
+  \draw[thick] (1.7,-0.5) -- (3.5,-0.5);
+  \node at (1.5,-1.05) {$c$ (damping)};
+  \draw[thick,fill=lightgray] (3.5,-0.85) rectangle (4.5,0.85);
+  \node at (4,0) {$m$};
+  \draw[thick,->,color=blue] (4.5,0) -- (5.5,0);
+  \node[color=blue] at (5,0.4) {$\dot{x}$};
+  \node at (2.4,-1.55) {Spring force: $F_s=-kx$};
+  \node at (2.4,-2.05) {Damping force: $F_d=-c\dot{x}$};
+  \node at (2.4,-2.55) {$m\ddot{x}+c\dot{x}+kx=0$};
 \end{tikzpicture}
-\caption{Linear Spring-Dashpot (Mass-Spring-Damper) Model of a Joint With Stiffness $k$, Damping Coefficient $c$, and Inertial Mass $m$. the Damping Force Opposes Velocity; the Spring Force Opposes Displacement.}
+\caption{Parallel Spring and Damper Acting on a Translating Mass. Both Elements Share the Same Displacement and Velocity; Their Forces Add. An Angular Analogue Uses Rotational Inertia and Torques.}
 \label{fig:damping_model}
 \end{figure}
 
@@ -153,44 +112,13 @@ where the symmetric viscous model used here assumes \(\bm{D}(\bm{q})=\bm{D}(\bm{
 
 \index{damping matrix}
 
-The damping matrix $\bm{D}(\bm{q})$ has entries that represent the damping torque at joint $i$ per unit angular velocity. For a joint with pure viscous damping from synovial fluid and muscle, $\bm{D}$ is constant (independent of $\bm{q}$). But in reality, $\bm{D}$ depends on configuration:
-- When a joint is flexed deeply, more muscle is in parallel with that joint, increasing damping.
-- Tendon routing changes with posture, affecting effective damping.
-- Soft tissue compression increases with extreme angles.
+The matrix \(\bm D\) maps the declared generalized velocities to generalized dissipative forces. Geometry, activation and internal material states can change an identified response. Neither configuration dependence nor increasing damping with flexion follows merely from choosing the notation \(\bm D(\bm q)\).
 
-So $\bm{D}(\bm{q})$ is a function of joint angles, even if its variation is modest.
+\subsection{Types of Damping Models}\label{types-of-damping-models}
 
-\subsection{Types of Damping Models}
+Linear viscous damping is useful for a local, frequency-limited approximation. A coupled passive form can be parameterized as \(\bm D=\bm R^T\bm R\); this preserves nonnegative loss without assuming independent joints. Positive diagonal entries alone do not suffice.
 
-The simplest model is \emph{linear (viscous) damping}:
-\[
-\bm{f}_d = -\bm{D} \dot{\bm{q}}, \quad D_{ii} = \text{constant}
-\]
-
-In reality, damping is often \emph{nonlinear}. Common models include:
-
-\begin{definition}{Nonlinear Damping Models}{nonlinear_damping}
-\begin{enumerate}
-\item \textbf{Coulomb (kinetic) friction}: $f_d = -\mu_k |f_n| \,\text{sign}(\dot{q}_i)$. Force is constant, direction-dependent. Unphysical for continuous motion but useful for large-scale analysis.
-
-\item \textbf{Quadratic damping}: $f_d = -\rho A C_d |\dot{q}_i| \dot{q}_i$, proportional to velocity squared. Common in aerodynamics and high-speed fluid flow.
-
-\item \textbf{Power-law damping}: $f_d = -c |\dot{q}_i|^n \,\text{sign}(\dot{q}_i)$ for $n \in (0, 2)$. Many biological tissues exhibit this mixed behavior.
-
-\item \textbf{Stribeck damping}: A more realistic model with a velocity-dependent friction coefficient:
-\[
-f_d = -(\mu_s - (\mu_s - \mu_k)e^{-|\dot{q}_i|/v_s}) \,\text{sign}(\dot{q}_i) \cdot f_n
-\]
-where $\mu_s$ is static friction, $\mu_k$ kinetic, and $v_s$ a characteristic velocity. This captures the smooth transition from stiction to sliding.
-\end{enumerate}
-\end{definition}
-
-For most of this chapter, we will use linear viscous damping because:
-1. It's analytically tractable.
-2. Experimental evidence suggests it's a reasonable approximation for velocities in the middle range (not too slow, not supersonic).
-3. When velocities are high (downswing), the linear term dominates; when slow (address), the system is nearly quasi-static anyway.
-
-\subsection{Rewriting in Control-Affine Form}\label{sec-damping-state-map}
+Dry sliding friction, rate-dependent drag and viscoelastic memory are different constitutive models. For an angular coordinate, a quadratic torque law uses a coefficient in N m s\(^2\)/rad\(^2\); an aerodynamic translational force coefficient cannot be inserted unchanged. The friction section below states the sliding and sticking conventions explicitly. No universal dominance of linear damping at swing speeds is assumed. \subsection{Rewriting in Control-Affine Form}\label{sec-damping-state-map}
 
 Use local independent joint coordinates with \(\bm v=\dot{\bm q}\) and state \(\mathbf x=(\bm q,\bm v)\). Evaluate the coefficient matrices and gravity force at the current state. For a smooth mode without unresolved constraint forces, \[
 \begin{aligned}
@@ -214,8 +142,7 @@ T&=\tfrac12\bm v^T\bm M\bm v,\\
 -\bm v^T\bm D\bm v.
 \] The Coriolis contribution cancels the changing kinetic metric; it is not heat loss. Ideal stationary constraints do no work because \(\bm J_c\bm v=0\). Moving constraints can supply or remove energy, so their work must remain in the ledger. Other physical loss laws require their own power terms.
 
-Linearization about a driven trajectory can contain velocity-dependent terms that affect perturbation growth or decay. Those terms are not, by that fact alone, passive viscous damping. For \href{https://affinedrift.com/articles/technology-heavy-hit-impact-coupling.html}{impact and acoustics}, distinguish this inertial redistribution and moving-grip work from identified material/hand losses and acoustic radiation. A quieter or faster-decaying response does not by itself identify which mechanism caused it.
-\index{control-affine!with damping}
+Linearization about a driven trajectory can contain velocity-dependent terms that affect perturbation growth or decay. Those terms are not, by that fact alone, passive viscous damping. For \href{https://affinedrift.com/articles/technology-heavy-hit-impact-coupling.html}{impact and acoustics}, distinguish this inertial redistribution and moving-grip work from identified material/hand losses and acoustic radiation. A quieter or faster-decaying response does not by itself identify which mechanism caused it. \index{control-affine!with damping}
 
 \section{How Damping Propagates Through a Chain}
 \label{sec:propagation}
@@ -230,7 +157,7 @@ The most obvious effect is local. Damping at joint $i$ directly opposes angular 
 \[
 -D_{ii} \dot{q}_i
 \]
-This reduces the rate of change of $\dot{q}_i$ by an amount proportional to $D_{ii}$. No surprise here.
+This is a force contribution. The resulting acceleration requires the mass and constraint solve; other simultaneous forces can still accelerate the joint.
 
 \subsection{Coupling Through the Mass Matrix}
 \label{subsec:mass_coupling}
@@ -245,7 +172,7 @@ Here is where it gets interesting. Rearranging the damped equation of motion:
 Because $\mathbf{M}(\mathbf{q})$ is \emph{not diagonal}, the terms inside the brackets get "mixed" when inverted. Let's illustrate with a simple two-joint chain: shoulder (joint 1) and elbow (joint 2).
 
 \begin{example}{Shoulder-Elbow Damping Coupling}{shoulder_elbow_coupling}
-The mass matrix for a two-link arm is approximately:
+For a planar two-link illustration with massless links, a point mass $m_1$ at the first link's end and $m_2$ at the second link's end, use absolute first-link angle and relative elbow angle $q_2$. Its exact mass matrix is:
 \[
 \mathbf{M}(\mathbf{q}) = \begin{pmatrix} m_1 L_1^2 + m_2(L_1^2 + L_2^2 + 2L_1 L_2 \cos q_2) & m_2(L_2^2 + L_1 L_2 \cos q_2) \\ m_2(L_2^2 + L_1 L_2 \cos q_2) & m_2 L_2^2 \end{pmatrix}
 \]
@@ -276,330 +203,199 @@ The Coriolis force depends quadratically on the joint velocities at a fixed conf
 \bm C(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}
 \]
 
-Uniformly scaling all velocities by a factor scales this force by the factor squared. Changing one velocity component or the configuration can instead increase, decrease or reverse individual force components. Damping therefore changes subsequent inertial coupling through the trajectory, but it creates no additional Coriolis dissipation beyond the physical loss terms in Section~\ref{sec-damping-energy-ledger}.
-\subsection{Energy Cascade in Serial Chains}
+Uniformly scaling all velocities by a factor scales this force by the factor squared. Changing one velocity component or the configuration can instead increase, decrease or reverse individual force components. Damping therefore changes subsequent inertial coupling through the trajectory, but it creates no additional Coriolis dissipation beyond the physical loss terms in Section~\ref{sec-damping-energy-ledger}. \subsection{Energy Cascade in Serial Chains}\label{energy-cascade-in-serial-chains}
 
-Consider a serial chain: shoulder $\to$ elbow $\to$ wrist $\to$ club shaft. The kinetic energy flows from proximal (shoulder) to distal (club). At each joint, damping dissipates energy. Where does this dissipation hurt the most?
+At a prescribed state with diagonal passive joint damping, the local loss is \(P_i=c_i\dot q_i^2\). The mass matrix affects the resulting accelerations and trajectory, but does not insert an extra downstream inertia multiplier into this instantaneous loss. Neither the proximal nor the distal joint must dissipate more. Relative joint rates must not be replaced by absolute segment rates.
 
-\begin{principle}{Proximal Damping Has System-Wide Cost}{proximal_damping_cost}
-In a serial kinematic chain, damping at proximal (root-side) joints dissipates energy from the entire downstream chain. Damping at distal (tip-side) joints only affects that joint and its descendants. Quantitatively, the fractional energy loss is much larger for proximal damping than distal damping of equal coefficient magnitude.
-\end{principle}
+For a synthetic pair with equal \(c_i=0.2\) N m s/rad and rates 10 and 30 rad/s, the losses are 20 and 180 W. Reversing the rates reverses the ranking. Integrating along matched trajectories gives a loss comparison; recomputing a freely evolving swing can also change actuator work and delivered geometry. The previous shoulder/wrist speed estimate and its power ratio are withdrawn because they did not establish those coordinates or measurement conditions.
 
-\index{energy cascade}
+\subsection{Constraint Coupling in Parallel
+Mechanisms}\label{constraint-coupling-in-parallel-mechanisms}
 
-Why? Because the proximal joint has higher angular velocity (relative to body-fixed rates) and moves a larger inertia. The power dissipated by damping is $P_d = c \omega^2$. In a maximally extended arm, the shoulder rotates at $\sim 7000^\circ$/s (122 rad/s), whereas the wrist rotates at $\sim 3000^\circ$/s relative to the body \citep{Nesbit2005,Hume2005}. Even if both have the same damping coefficient $c$, the shoulder dissipates $\sim 17 \times$ more power.
-
-\subsection{Constraint Coupling in Parallel Mechanisms}
-\label{subsec:constraint_coupling}
-
-Now consider a two-handed grip on the club. The two hands are connected by the constraint that they must both hold the same club. This constraint can be written as:
-\[
-\bm{J}_L(\bm{q}_L) \bm{v}_L = \bm{J}_R(\bm{q}_R) \bm{v}_R
-\]
-where subscripts $L$, $R$ denote left and right hands.
-
-The constraint forces balance to keep the club in place:
-\[
-\bm{J}_L^T \bm{f}_L + \bm{J}_R^T \bm{f}_R = 0
-\]
-
-Now, if the left arm has damping and the right does not, the left arm "resists" motion more. This resistance gets transmitted through the constraint forces, which then increase the damping effect on the right arm. The two-handed grip creates a damping coupling path that does not exist in a single-arm open chain.
-
-Concretely, if left arm damping causes the left hand to lag behind, the constraint forces increase to pull it back, and this pulling force increases the effective damping on the right hand. The two arms are no longer independent; they are coupled through the constraint mechanism.
-
-\section{The Damping Paradox}
-\label{sec:damping_paradox}
-
-\index{stability!damping}
-
-Here is the apparent paradox: damping dissipates energy, which is bad for distance. But damping also stabilizes motion, which is good for control. How can we reconcile this?
-
-\begin{theorem}{Damping and Stability}{damping_stability}
-Consider the linearized dynamics around an equilibrium: $\dot{\bm{x}} = A\bm{x}$. The eigenvalues of $A$ determine stability. If $A$ has a term $-\bm{D}$ (damping), then damping moves the eigenvalues into the left half-plane (negative real parts), making the equilibrium stable. Without damping, eigenvalues can lie on the imaginary axis (marginal stability) or right half-plane (instability).
-
-Damping trades energy loss for stability.
-\end{theorem}
-
-\subsection{Underdamped vs. Overdamped Joints}
-
-A joint can be classified by its \emph{damping ratio}:
-\[
-\zeta = \frac{c}{2\sqrt{km}}
-\]
-where $c$ is the damping coefficient, $k$ the stiffness, and $m$ the effective mass.
-
-\begin{definition}{Damping Ratio Regimes}{damping_ratio}
-\begin{itemize}
-\item $\zeta < 1$ (\textbf{underdamped}): The joint oscillates as it returns to rest. Energy is dissipated over multiple cycles. Motion is fast but wiggly.
-
-\item $\zeta = 1$ (\textbf{critically damped}): The joint returns to rest in the shortest time without overshoot. Energy dissipation is optimal for this goal.
-
-\item $\zeta > 1$ (\textbf{overdamped}): The joint slowly creeps back to rest without oscillating. Motion is sluggish but stable.
-\end{itemize}
-\end{definition}
-
-Most human joints are \emph{underdamped}. For example, tap your knee and notice how your leg oscillates slightly. The damping is not strong enough to eliminate the wobble completely. This is actually beneficial: underdamped systems are energetically efficient at some operating points. The oscillations can store and release energy in elastic elements (tendons, muscles).
-
-During the golf swing, underdamping of the wrist allows it to cock and uncock in a near-resonant manner, storing elastic energy in the wrist extensors and releasing it at the right moment. If the wrist were overdamped (like a viscous oil-filled shock absorber), it would dissipate too much energy and would be "sluggish" — bad for clubhead speed.
-
-\subsection{Active Damping and Co-Contraction}
-\index{co-contraction}
-\index{impedance control}
-
-Your nervous system can increase damping without increasing stiffness. This is done by co-contracting antagonist muscles. When the biceps and triceps both contract simultaneously, they stiffen the joint (increase stiffness) but also increase the internal friction (increase damping). This is called \emph{active damping} or \emph{active impedance}.
-
-Why would the nervous system do this? For stability. During the transition from backswing to downswing, when the direction of motion reverses, damping helps prevent overshoot and wild oscillations. The brain increases co-contraction during this phase, sacrificing a bit of energy loss for a more controlled switch.
-
-This connects to impedance control \citep{hogan1985impedance} from Chapter~\ref{ch:passive_distributed_control}. Recall that you can write:
-\[
-\bm{f} = \bm{K}(\bm{q} - \bm{q}_d) + \bm{D}(\dot{\bm{q}} - \dot{\bm{q}}_d)
-\]
-where $\bm{K}$ and $\bm{D}$ are task-space stiffness and damping. Both are under nervous system control. The brain does not choose $\bm{K}$ and $\bm{D}$ independently; they are correlated. Higher impedance environments (like hitting off hardpan) tend to cause increased co-contraction, which increases both $\bm{K}$ and $\bm{D}$.
-
-\subsection{Grip Force and Hand-Club Interface Damping}
-
-The grip force applied by the hand to the club determines the mechanical coupling at the hand-club interface. This coupling affects the boundary condition for the shaft dynamics. A higher grip force compresses tissue in the grip region, increasing the friction between hand and club and reducing oscillation amplitude at the grip end. A lower grip force allows greater relative motion and reduced damping at the interface.
-
-The relationship can be characterized as: higher grip force \(\to\) higher interface damping \(\to\) reduced shaft oscillation amplitude but increased energy dissipation at the grip. Conversely, lower grip force \(\to\) lower interface damping \(\to\) greater shaft oscillation potential but reduced energy loss at the grip.
-
-The effective grip force during the downswing and at impact is determined by the neural control commands to the hand muscles, which are modulated based on proprioceptive feedback, swing intent, and learned patterns. The grip force dynamics interact with shaft stiffness and the inertial properties of the club to determine the overall mechanical response of the system.
-
-\section{Friction Models for Joints}
-\label{sec:friction_models}
-
-\index{friction!Coulomb}
-\index{friction!Stribeck}
-
-While damping typically refers to viscous resistance (proportional to velocity), \emph{friction} typically refers to a dry contact force (direction-dependent, velocity-independent at leading order). The difference is subtle in practice: all joint friction has both viscous and dry components.
-
-\subsection{Coulomb Friction}
-
-The simplest friction model is Coulomb (kinetic) friction: the friction force is constant in magnitude, opposing the direction of motion:
-\[
-f_{\text{friction}} = -\mu_k N \,\text{sign}(\dot{q})
-\]
-where $N$ is the normal force and $\mu_k$ the coefficient of kinetic friction.
-
-At low speeds or at reversal points (when $\dot{q} = 0$), static friction can be higher: $\mu_s > \mu_k$.
-
-\subsection{Stiction and Reversal Points}
-\index{stiction}
-
-At a reversal point — the instant when motion switches direction — static friction matters. The classic example in golf is the transition from backswing to downswing. At this instant, $\dot{q}_{\text{shoulder}} = 0$. To initiate downswing, the shoulder must overcome static friction.
-
-If static friction is very high, the joint becomes "sticky" — it resists initiating motion in the new direction. This is actually beneficial for control: it prevents the shoulder from drifting slightly backward when you intend to change direction. But if static friction is too high, you lose the smooth, continuous motion that characterizes an efficient swing.
-
-Most human joints have $\mu_s - \mu_k$ that is small enough that the stiction effect is minimal. The transition from backswing to downswing is not a sudden "sticking" event; it's nearly continuous.
-
-\subsection{The Stribeck Effect}
-\label{subsec:stribeck}
-
-\index{Stribeck effect}
-
-A more realistic friction model is the Stribeck effect, which captures the observation that friction decreases slightly with increasing velocity at very low speeds, before flattening out at higher speeds:
+For two hands on different points of a rigid club, hand-point velocities are generally different: a rotating club contributes \(\boldsymbol\omega\times\mathbf r\) at each offset. Express all twists and wrenches in declared compatible frames. Let \(\mathbf q=(\mathbf q_L,\mathbf q_R,\mathbf q_c)\) include both arms and the club, and let the no-slip closure be \(\mathbf J_c\dot{\mathbf q}=0\). Ideal reactions are \(\mathbf J_c^T\boldsymbol\lambda\), with
 
 \[
-f = -\left( \mu_s - (\mu_s - \mu_k) e^{-|\dot{q}|/v_s} \right) N \,\text{sign}(\dot{q})
+P_{\rm constraint}=\dot{\mathbf q}^{\,T}\mathbf J_c^T\boldsymbol\lambda=0.
 \]
 
-At $\dot{q} = 0$: $f = -\mu_s N$ (static friction).
-At $\dot{q} \to \infty$: $f \to -\mu_k N$ (kinetic friction).
-For $0 < \dot{q} < v_s$ (very slow motion): $f$ decreases smoothly from static to kinetic.
+Separate generalized torques of arms with different coordinate spaces cannot simply be added and set to zero. Club force and moment balance retains its inertia, external loads and both contact wrenches. Ideal internal constraints redistribute work between components without creating extra total loss.
 
-The Stribeck effect is subtle but important for joint dynamics at the reversal point. It explains why very slow movements (like address posture adjustments) feel "sticky," while faster movements feel smoother.
+If \(\dot{\mathbf q}=\mathbf N\dot{\mathbf s}\) with \(\mathbf J_c\mathbf N=0\), then \(\mathbf D_r=\mathbf N^T\mathbf D\mathbf N\) and \(\dot{\mathbf s}^{\,T}\mathbf D_r\dot{\mathbf s}=\dot{\mathbf q}^{\,T}\mathbf D\dot{\mathbf q}\). This proves preserved nonnegative loss while allowing off-diagonal reduced coupling. A changing basis also contributes kinematic terms to the dynamics. Moving constraints have prescribed nonzero velocity and can perform work; compliant or slipping contacts require explicit port laws rather than ideal no-slip closure.
 
-\subsection{LuGre Friction Model}
+\section{The Damping Paradox}\label{sec:damping_paradox}\label{the-damping-paradox}
 
-For high-fidelity modeling (beyond the scope of this book), the LuGre model captures:
-1. Stribeck effect.
-2. Bristle deflection (microscopic stiction elements).
-3. Hysteresis.
+\subsection{Damping and Stability}\label{damping-and-stability}
+
+For an autonomous linear perturbation model,
 
 \[
-\dot{z} = \dot{q} - \sigma_0 |{\dot{q}}| \frac{z}{g(v)}
-\]
-\[
-f = \sigma_0 z + \sigma_1 \dot{z} + \sigma_2 \dot{q}
+\mathbf M\ddot{\mathbf x}+(\mathbf G+\mathbf C)\dot{\mathbf x}+\mathbf K\mathbf x=0,
 \]
 
-where $z$ represents an internal "bristle deflection" state. This model is accurate for precision engineering but is overkill for biomechanics.
+assume constant symmetric positive definite \(\mathbf M,\mathbf K\), skew \(\mathbf G\), and symmetric positive semidefinite \(\mathbf C\). Then \(E=\tfrac12\dot{\mathbf x}^T\mathbf M\dot{\mathbf x}+\tfrac12\mathbf x^T\mathbf K\mathbf x\) is positive definite and \(\dot E=-\dot{\mathbf x}^T\mathbf C\dot{\mathbf x}\leq0\). This proves Lyapunov stability. Asymptotic stability additionally requires that the largest invariant set with zero dissipation contain only the equilibrium. Positive definite \(\mathbf C\) suffices under these assumptions; semidefinite damping can leave undamped modes.
 
-\subsection{Friction Criticality at the Transition}
+With negative stiffness, even the scalar dimensionless equation
+\(\ddot x+\dot x-x=0\) retains the growing rate \((\sqrt5-1)/2\). A
+stronger counterexample has \(\mathbf M=\mathbf I\),
+\(\mathbf K=-\mathbf I\) and
+\(\mathbf G=\begin{bmatrix}0&-3\\3&0\end{bmatrix}\). With
+\(\mathbf C=0\) its four distinct rates are \(\pm i(3\pm\sqrt5)/2\).
+Adding the passive \(\mathbf C=0.1\mathbf I\) produces a pair with
+positive real parts. Energy loss and instability coexist because the
+equilibrium energy is indefinite. Dissipation-induced instability is a
+documented phenomenon \citep{bloch1994dissipation}, not a claim that
+this particular instability occurs in a golf club.
 
-\index{transition!friction}
+A nonsymmetric loaded tangent, accelerating frame or time-varying swing requires its own stability analysis. Frozen eigenvalues and a nonsingular frequency response do not establish stable time evolution. Physical damping must remain separate from numerical stabilization.
 
-The backswing-to-downswing transition is the moment when friction is most critical. At this moment:
-- The shoulder, elbow, and wrist are all at peak stretch (maximum elastic energy in muscles and tendons).
-- Velocities reverse, causing stiction effects to activate.
-- Co-contraction may increase damping for stability.
-- The direction reversal means the sign of friction forces must flip.
+\subsection{Underdamped vs.~Overdamped
+Joints}\label{underdamped-vs.-overdamped-joints}
 
-A skilled golfer executes this transition in $\sim 20$ milliseconds, during which the kinetic energy of the backswing must be redirected into the downswing. Excessive friction at this moment would dissipate stored elastic energy. Insufficient friction (stiction) would allow slipping.
+For one constant-coefficient scalar oscillator with positive inertia \(I\), stiffness \(k\) and damping \(c\), define \(\omega_n=\sqrt{k/I}\) and \(\zeta=c/(2\sqrt{kI})\). Values \(0<\zeta<1\), \(\zeta=1\) and \(\zeta>1\) distinguish oscillatory, repeated-real and distinct-real decay rates. At \(c=0\) oscillations do not decay. Critical damping gives the familiar nonoscillatory step response for zero initial conditions; arbitrary initial velocity can still cause a crossing of equilibrium, and no universal optimal energy-dissipation objective follows.
 
-Empirically, most golfers find that their most consistent, repeatable swings occur when they have a smooth, unhurried transition — which is consistent with minimizing friction losses at the reversal point. Jerky transitions (common in amateurs) create brief moments of velocity reversal with high stiction, wasting energy.
+A joint embedded in a coupled active chain need not have a single independently meaningful damping ratio. Identify modes or a matrix impedance over the relevant operating range. The chapter does not infer that all human joints are underdamped or that a wrist swing exploits a particular resonance.
 
-\section{Energy Dissipation Budget}
-\label{sec:energy_budget}
+\subsection{Active Damping and
+Co-Contraction}\label{active-damping-and-co-contraction}
 
-\index{energy!budget}
+Impedance control concerns the dynamic relationship between motion and applied wrench \citep{hogan1985impedance}. For a local restoring force on the modeled limb, one convention is \(\mathbf f=-\mathbf K(\mathbf x-\mathbf x_d)-\mathbf C(\dot{\mathbf x}-\dot{\mathbf x}_d)\). The sign reverses for the reaction exerted on its environment. A moving target can perform work even when the relative loss is passive.
 
-Let's add up the numbers. A typical amateur golfer generates approximately:
-- Total muscle energy per swing: 300--400 J
-- Kinetic energy at clubhead impact: 120--150 J
-- Missing energy: 150--280 J
+Co-contraction can alter an identified impedance, but does not supply a universal independent adjustment of stiffness and damping. The identified change depends on activation, reflex delay, posture and task. Passive tissue loss and work by active control must be retained separately; an assumed change during transition is a hypothesis requiring measurement.
 
-Where does this energy go?
+\subsection{The Loose Grip Debate}\label{the-loose-grip-debate}
 
-\subsection{Sources of Dissipation}
+The relevant question is how the identified hand-club impedance depends on pressure, posture, frequency and amplitude. A grip can change storage, inertia, damping, contact area and slip together. It is not enough to assign one scalar damper or assume that tighter grip always improves control and reduces ball speed.
 
-\begin{center}
-\begin{tabular}{lrr}
-\hline
-\textbf{Dissipation Source} & \textbf{Energy (J)} & \textbf{\% of Total} \\
-\hline
-Joint damping (all joints) & 40--60 & 13--15\% \\
-Tendon hysteresis & 20--30 & 6--8\% \\
-Muscle internal friction & 30--50 & 10--13\% \\
-Body segment soft tissue & 15--25 & 5--8\% \\
-Aerodynamic drag (arm/torso) & 10--15 & 3--5\% \\
-Ground deformation / contact friction & 5--15 & 2--5\% \\
-Grip/hand friction losses & 5--10 & 2--3\% \\
-Swing-to-impact transition inefficiency & 20--40 & 7--10\% \\
-\hline
-\textbf{Total dissipation} & \textbf{145--245} & \textbf{48--65\%} \\
-\hline
-\end{tabular}
-\end{center}
+Chiementin and colleagues studied one participant and one hybrid club. Their modal results generally show increased bending damping with firmer grip, but their conclusion states the opposite trend. Their numerical impact response also contains algorithmic damping that is not independently separated from material loss. Preserve these limitations; this study does not establish a universal optimum grip pressure or broadband impact sound prediction \citep{chiementin2019grip}.
 
-\textbf{Important:} These values are \textbf{illustrative estimates} constructed from published biomechanical energy analyses \citep{Nesbit2005} and general musculoskeletal dissipation data, not from direct measurement of all dissipation channels in a single study. The exact breakdown varies widely with individual swing mechanics, body composition, and equipment. The table is intended to convey relative magnitudes and should not be cited as definitive measured values.
+The guitar analogy depends on mode-dependent contact: touching where a mode moves can change its decay, while a node can reduce coupling to that mode. A flexible head and shaft have different modes and radiation efficiencies. A shorter ringdown at the grip is not automatically quieter sound at the listener or a sweeter hit. Compare calibrated sound and hand vibration separately, then use blinded perception experiments.
 
-\subsection{Interpretation}
+\section{Friction Models for Joints}\label{sec:friction_models}\label{friction-models-for-joints}
 
-The crucial insight: roughly half of the muscular energy generated does not reach the club. This is not a failure; it's unavoidable. The question is whether the energy is dissipated efficiently (in a way that improves control and stability) or wastefully (in a way that reduces distance without improving anything).
+\subsection{Coulomb Friction}\label{coulomb-friction}
 
-Key observations:
-\begin{itemize}
-\item Joint damping accounts for 13--15\% loss. This is significant and not negligible. A $\pm 50\%$ change in damping would shift distance by roughly 6--8\%, all else being equal.
+For a scalar angular sliding coordinate, use \(\tau_f=-\tau_k\operatorname{sign}(\dot q)\) when \(\dot q\ne0\), with \(\tau_k\geq0\) in N m. At a simple interface, \(\tau_k=\mu_k N r\) requires the effective moment arm \(r\). Distributed contact requires integration of traction and lever arm. The product \(\mu_k N\) alone is a force, not a joint torque.
 
-\item Tendon hysteresis is one of the largest dissipative sources. Yet tendons also store elastic energy. The net effect of tendon mechanics is beneficial: they act as elastic accumulators, releasing energy at optimal moments.
+\subsection{Stiction and Reversal
+Points}\label{stiction-and-reversal-points}
 
-\item Body segment soft tissue wobble dissipates 5--8\%. This is the "shake" of muscle, fat, and skin. Stronger individuals with less soft tissue wobble (i.e., low body fat) dissipate less here.
+At zero slip velocity, static friction is set-valued: \(\tau_f\in[-\tau_s,\tau_s]\). Solve force balance and the sticking constraint together; slip begins when the required reaction exceeds the admissible bound. Setting \(\operatorname{sign}(0)=0\) cannot represent nonzero sticking force. Different joints need not reverse simultaneously, and a swing transition is not evidence that an anatomical joint behaves like a dry bearing.
 
-\item Aerodynamic drag is small in golf (unlike baseball). The arm and club move through air, but the drag is not the primary energy sink.
+\subsection{The Stribeck Effect}\label{subsec:stribeck}\label{the-stribeck-effect}
 
-\item The swing-to-impact transition is a hidden source of loss. The kinetic energy of the arms and trunk must be redirected and partially transferred to the club. This is not 100\% efficient. Good technique minimizes this loss; poor technique (e.g., casting the club early, losing lag) amplifies it.
-\end{itemize}
-
-\section{Implications for Swing Modeling}
-\label{sec:modeling_implications}
-
-\index{swing modeling!damping}
-
-Most biomechanical and golf models in the literature ignore joint damping. They solve the undamped equations of motion and use only muscle forces and gravity. How bad is this simplification?
-
-\subsection{When Damping Is Negligible}
-
-Damping effects are smallest when:
-1. Velocities are low (address, takeaway, follow-through).
-2. Motions are slow (a practice swing).
-3. Joints are well-lubricated and moving in a smooth, extended manner.
-
-In the address position, speeds are near zero, so damping forces are negligible. In the early takeaway, velocities are building up gradually, and inertial effects (mass matrix, Coriolis) dominate. Damping is a perturbation.
-
-\subsection{When Damping Is Critical}
-
-Damping effects are largest when:
-1. Velocities are high (late downswing, especially the final $\sim 100$ ms before impact).
-2. Joints are transitioning (reversal points like mid-downswing swing changes).
-3. Joints are moving against viscous resistance (e.g., wrist supination-pronation, which involves heavy tendon routing).
-
-During the final 100 ms of the downswing, club speed is changing at a rate of $\sim 50$ m/s$^2$ (local acceleration) \citep{Nesbit2005}. At these speeds, a damping torque of even 1 Nm becomes significant.
-
-\subsection{Sensitivity Analysis}
-
-We can estimate the effect of damping on predicted club head speed. A first-order approximation:
+An explicitly phenomenological sliding law is
 
 \[
-\Delta v_{\text{club}} \approx -\frac{\partial v_{\text{club}}}{\partial D} \cdot \Delta D
+\begin{aligned}
+h(v)&=\tau_k+(\tau_s-\tau_k)e^{-(|v|/v_s)^2},\\
+\tau_f(v)&=-h(v)\operatorname{sign}(v)-cv,\qquad v\ne0.
+\end{aligned}
 \]
 
-In the model developed in this chapter, this derivative is approximately $-0.02$ m/s per (Nm$\cdot$s/rad) of damping. It is a model output, not an empirical measurement: it follows from the damping coefficients and segment inertias assumed earlier, and a different damping model would give a different slope. The consequences below inherit that status. Thus:
-\begin{itemize}
-\item $50\%$ increase in damping ($+5$ Nm$\cdot$s/rad): $\Delta v \approx -0.1$ m/s, or $\sim 2$ mph loss.
-\item $50\%$ decrease in damping ($-5$ Nm$\cdot$s/rad): $\Delta v \approx +0.1$ m/s, or $\sim 2$ mph gain.
-\end{itemize}
+Here \(\tau_s\geq\tau_k>0\), \(v_s>0\), and \(c\geq0\). The dry-friction magnitude approaches \(\tau_s\) at vanishing nonzero speed and \(\tau_k\) at high speed; the viscous term can still grow. Power is \(-h(v)|v|-cv^2\leq0\). The separate zero-speed inclusion handles sticking. This fixes the reversed limits in the previous expression and does not identify a golfer's joint law.
 
-For a driver swing (club speed 80--90 mph), a 2 mph change is about 5\% of club speed. This is not negligible, but it's not dominant either. Most of the sensitivity in club speed comes from muscular timing and force magnitude, not from damping.
+\subsection{LuGre Friction Model}\label{lugre-friction-model}
 
-However, in a poorly timed swing, damping effects can amplify, especially if the downswing phase is extended (slow-motion downswing). In such cases, damping may account for 10--15\% of the club speed variation.
+A bristle-state model can represent presliding memory \citep{canudas1995friction}. Under a rotational convention with \(z\) in rad and \(h(v)\) in N m, one possible notation is
 
-\subsection{Recommendations for Modelers}
-
-\begin{constraintbox}{Practical Guidelines for Modeling Damping}{constraintbox:modeling_damping}
-\begin{enumerate}
-\item \textbf{If modeling the full swing (address to follow-through)}: Include a constant damping matrix with values from the table in Section~\ref{sec:sources_damping}. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
-
-\item \textbf{If modeling only the downswing or impact}: Damping becomes more important. Use configuration-dependent damping $\bm{D}(\bm{q})$ with higher coefficients when joints are flexed deeply.
-
-\item \textbf{If performing sensitivity analysis}: Vary damping coefficients by $\pm 50\%$ and report the effect on club speed and trajectory. This provides bounds on the unmodeled dynamics.
-
-\item \textbf{If comparing model predictions to experiment}: Remember that damping is one of several energy sinks. Unmodeled losses (aerodynamic, ground friction, swing-to-impact inefficiency) might dwarf damping losses. Damping alone cannot reconcile model-experiment discrepancies if other losses are large.
-
-\item \textbf{For control simulations}: Always include damping. Even though its energy cost is modest, damping dramatically improves stability of numerical simulations and realism of the control response.
-\end{enumerate}
-\end{constraintbox}
-
-\section{Damping in the Shaft}
-\label{sec:shaft_damping}
-
-\index{shaft!damping}
-
-Recall from Chapter~\ref{ch:flexible_shaft} that the shaft is a distributed elastic beam. In addition to stiffness, shafts have material damping — the internal friction of the composite material itself.
-
-\subsection{Material Damping}
-
-When you flex a golf shaft and release it, the oscillations decay over time. This decay is due to material damping: hysteresis in the material's stress-strain curve. The damping is frequency-dependent and material-dependent.
-
-\begin{definition}{Quality Factor (Q-factor)}{q_factor}
-For an oscillating beam, the quality factor is:
 \[
-Q = 2\pi \frac{\text{Peak energy stored}}{\text{Energy dissipated per cycle}} = \frac{\omega_0}{2\zeta \omega_0} = \frac{1}{2\zeta}
+\dot z=v-\sigma_0|v|z/h(v),\qquad
+\tau_{\rm resistance}=\sigma_0z+\sigma_1\dot z+\sigma_2v.
 \]
-where $\zeta$ is the damping ratio. High Q (high stiffness, low damping) means oscillations persist. Low Q means oscillations decay quickly.
-\end{definition}
 
-Typical Q-factors vary significantly depending on material composition, fiber orientation, and resin system used in the composite. Material damping in shafts is determined by both the fiber material and the matrix properties. For golf shaft applications, measured Q-factors depend on the specific design and loading conditions; direct comparisons between materials require careful experimental control \citep{MacKenzie2009}.
+The torque applied against motion is \(-\tau_{\rm resistance}\). State storage means instantaneous returned power need not be zero: passivity must be checked against a declared storage function and admissible parameters. Define initialization, units, steady sliding and numerical handling before use. This is a model option, not a validated anatomical law; its necessity depends on the measured phenomena and validation target.
 
-The relationship between material type and damping behavior is complex. While graphite composites offer design flexibility through fiber orientation and resin selection, the effective damping depends on the complete material system rather than material type alone. Modern shaft design optimizes material properties to achieve desired performance characteristics including vibration characteristics, frequency response, and feel.
+With $\sigma_0>0$ in N m/rad and $\sigma_1,\sigma_2\geq0$ in N m s/rad, the candidate storage $S=\tfrac12\sigma_0 z^2$ gives
+\[
+\tau_{\rm resistance}v-\dot S
+=\frac{\sigma_0^2|v|z^2}{h(v)}+\sigma_1\dot z\,v+\sigma_2v^2.
+\]
+For $\sigma_1=0$ this is nonnegative. With bristle damping, the cross term need not be nonnegative, so coefficient positivity alone does not make this storage a certificate for the full output. For a synthetic instantaneous state with $\sigma_0=\sigma_1=1$, $\sigma_2=0$, $z=0.2$, $v=1$ and $h(v)=0.1$ in the stated units, $\dot z=-1$ and the right-hand side is $-0.6$ W. Check the permitted initial states and constitutive operating range before accepting or rejecting a complete passivity claim.
 
-\subsection{Lead-Lag Dynamics and Damping}
+\subsection{Friction Criticality at the
+Transition}\label{friction-criticality-at-the-transition}
 
-The lead-lag angle $\alpha$ (the angle between the shaft centerline and the club head velocity) is heavily influenced by shaft damping. A high-damping shaft (steel) is less likely to oscillate in lead-lag after impact. A low-damping shaft (graphite) may ring, causing transient vibrations that affect feel and feedback.
+At sticking, friction can support a force with zero mechanical power. During sliding, loss depends on slip displacement and traction, not on counting reversals. A smooth-looking or jerky transition alone cannot quantify dissipation. No universal 20 ms transition, simultaneous peak tissue stretch or optimal friction level is inferred here. Measure motion, forces and internal states over a defined interval before assigning a transition loss.
 
-However, during the downswing (before impact), shaft damping is relatively unimportant. What matters is the elastic stiffness and mass distribution. Damping becomes critical after impact, during the deceleration phase.
+\section{Energy Dissipation Budget}\label{sec:energy_budget}\label{energy-dissipation-budget}
 
-\subsection{Practical Implications}
+\subsection{Sources of Dissipation}\label{sources-of-dissipation}
 
-A stiffer, higher-damping shaft (like a stiff steel shaft) provides:
-- Less vibration after impact (more "solid" feel).
-- Less oscillation during swing.
-- Slightly more energy dissipated (lower ball speed, all else equal).
+For a closed mechanical model with explicitly accounted boundary inputs,
 
-A lighter, lower-damping shaft (like a lightweight graphite) provides:
-- More vibration after impact (more "feedback").
-- Slightly more efficient energy transfer during swing.
-- Higher ball speed, especially for slower swing speeds (where the golfer benefits from the shaft's energy return during the downswing).
+\[
+E(t_1)-E(t_0)=W_{\rm actuators}+W_{\rm boundary}-E_{\rm losses}.
+\]
 
-Modern drivers use relatively low-damping graphite shafts precisely because the efficiency gain (higher ball speed for a given muscular effort) outweighs the aesthetic loss of transient vibrations.
+Include translational and rotational kinetic energy of every retained component, gravity, strain energy and internal constitutive storage in \(E\). Define the system boundary before allocating aerodynamic, interface and radiated-acoustic energy: a flux leaving one subsystem can be stored in another. Avoid counting the same fitted residual as both tissue damping and grip loss.
 
-\subsection{Material Damping and Shaft Behavior}
+\subsection{Interpretation}\label{interpretation}
 
-Steel and graphite shafts differ in material composition and resulting mechanical properties. The damping behavior of a shaft is determined by multiple factors including fiber orientation, resin system, wall thickness, and the frequency of vibration being examined. Direct comparisons between materials require careful specification of the frequency range, loading conditions, and measurement methods.
+For a synthetic ledger, \(E(t_0)=20\) J, actuator work 100 J, moving-boundary work 5 J and losses 15 J give \(E(t_1)=110\) J. If clubhead kinetic energy is 40 J, the other 70 J may remain in the modeled body, shaft and potential energy. It is not an additional 70 J dissipation. These numbers are an accounting example, not an amateur-golfer energy budget or a metabolic efficiency estimate.
 
-The transient vibrations observed after impact depend on the damping characteristics at the frequencies excited by the collision. Different shaft materials and designs can produce different vibration signatures. However, the dynamic behavior during the swing phase (before impact) is determined primarily by the shaft stiffness and mass distribution, with damping playing a secondary role compared to the inertial and elastic properties.
+\section{Implications for Swing
+Modeling}\label{implications-for-swing-modeling}
 
-\section{The Control-Affine Perspective on Damping}
-\label{sec:damping_control_affine}
+\subsection{When Damping Is
+Negligible}\label{when-damping-is-negligible}
+
+Neglect a loss only after a sensitivity or error-budget check for the quantity of interest. A small change in ball speed can coexist with a large change in a narrow resonance or ringdown. A zero instantaneous velocity removes a viscous power term at that instant; it does not establish negligible damping over the surrounding interval or eliminate static forces.
+
+\subsection{When Damping Is Critical}\label{when-damping-is-critical}
+
+The importance of a loss depends on the excited modes, their frequencies and motion at dissipative ports, the duration of contact and the observation window. Separate pre-impact trajectory changes, forces during contact and vibration after separation. Post-separation damping cannot change the launch state already established, although it can change sound and feel.
+
+\subsection{Sensitivity Analysis}\label{sensitivity-analysis}
+
+For a declared scalar damping parameter \(d\) and reproducible comparison protocol,
+
+\[
+\Delta v_{\rm club}\approx\frac{\partial v_{\rm club}}{\partial d}\Delta d.
+\]
+
+There is no extra minus sign: the derivative already carries its sign. A synthetic derivative of \(-0.02\) m/s per N m s/rad with \(\Delta d=5\) N m s/rad gives \(-0.1\) m/s, approximately \(-0.224\) mph using 1 mph = 0.44704 m/s. This is neither a measured derivative nor a 2 mph effect. State whether controls, delivery state, trajectory or external impulse are held fixed, and check finite-difference step convergence where used. A chosen 50\% parameter sweep is scenario analysis, not a confidence interval.
+
+\subsection{Recommendations for
+Modelers}\label{recommendations-for-modelers}
+
+Model choice depends on the requested observable and on reproducing the specified measurements within their uncertainty. Record coordinates, force signs, units, boundary work, source data and the qualified frequency/amplitude range. Distinguish calibration from held-out validation and report null effects.
+
+Separate physical damping from integration damping; refine time step, mesh and retained modes without retuning coefficients to hide numerical error. Test stationary, moving-support, free and clamped limits. Inspect stability and passivity independently of solver convergence. Unknown losses must remain unknown rather than becoming default golfer coefficients.
+
+\section{Damping in the Shaft}\label{sec:shaft_damping}\label{damping-in-the-shaft}
+
+\subsection{Material Damping}\label{material-damping}
+
+A recorded decay can combine shaft material loss, head and adhesive loss, grip/fixture dissipation, radiation and instrumentation. It is not automatically intrinsic material damping. Identify the specimen, layup, mode and boundary condition. A material name or flex rating alone cannot rank full-club decay or ball speed.
+
+\subsection{Quality Factor (Q-Factor)}\label{quality-factor-q-factor}
+
+For a lightly damped isolated mode, \(Q\approx1/(2\zeta)\) relates a conventional quality factor to modal damping ratio. With \(x(t)=A e^{-\zeta\omega_n t}\cos(\omega_d t+\phi)\) and \(\omega_d=\omega_n\sqrt{1-\zeta^2}\), the logarithmic decrement is \(\delta=2\pi\zeta/\sqrt{1-\zeta^2}\). The energy lost between corresponding peaks is a fraction \(1-e^{-2\delta}\). Thus defining \(Q\) directly as \(2\pi\) times starting energy divided by that finite-cycle loss agrees with \(1/(2\zeta)\) only in the weak-loss limit.
+
+For a synthetic 100 Hz mode with \(\zeta=0.01\), the conventional \(Q=50\), the amplitude time constant is about 0.159 s, and the corresponding peak-to-peak energy loss is about 11.8\%. Higher \(Q\) means weaker fractional damping under these conventions; it does not mean higher stiffness. The previously unsourced steel/graphite ranges and contradictory material ranking are withdrawn.
+
+\subsection{Lead-Lag Dynamics and
+Damping}\label{lead-lag-dynamics-and-damping}
+
+Before impact, mass, stiffness, pre-existing shaft deformation and velocity, applied wrenches and losses determine the delivered state together. After impact, observed motion depends on which bending, torsional and head modes were excited. A claim that shaft damping is negligible during the downswing needs a qualified calculation or measurement for that model and observable.
+
+\subsection{Practical Implications}\label{practical-implications}
+
+For a frozen small perturbation with point-motion map \(\mathbf L\) and the \(e^{i\omega t}\) convention, the impact-point mobility is
+
+\[
+\mathbf Y(\omega)=i\omega\mathbf L
+\left[\mathbf K-\omega^2\mathbf M+i\omega(\mathbf G+\mathbf C)\right]^{-1}\mathbf L^T.
+\]
+
+The transpose maps point wrench back to generalized force and preserves power. Translational and rotational rows have different units. Replacement of a constant-coefficient boundary by an identified frequency-dependent grip impedance depends on its qualification, but its storage and loss must not be counted twice. At a finite preload, differentiating the configuration-dependent port map also contributes geometric tangent terms. A singular or unresolved pencil requires refusal or a qualified alternative formulation, not an arbitrary pseudoinverse.
+
+\subsection{Material Damping and Shaft
+Behavior}\label{material-damping-and-shaft-behavior}
+
+Rotation-induced stress can change the tangent stiffness, while Coriolis terms change dynamic coupling. Tension, centrifugal terms, bending and the grip boundary must be derived from one consistent loaded configuration; they do not universally increase every frequency or create extra dissipative loss. A held pose in a rotating observer does not imply a stationary support in the laboratory.
+
+The implementation program in Tools \#5072 retains these distinctions in its loaded chain and finite grip ports. Its synthetic balance and operator tests establish numerical verification only. Contact duration and offset, flexible-head response, acoustic radiation, microphone transfer and physical validation remain separate steps. A claim that one player's strike is sweeter requires matched-delivery analysis and blinded listening evidence, not a ranking of shaft material names. \section{The Control-Affine Perspective on Damping} \label{sec:damping_control_affine}
 
 \index{control-affine!damping}
 \index{drift field!damping}
@@ -619,30 +415,21 @@ Configuration-dependent passive coefficients may represent identified losses wit
 For an unforced system with stationary ideal constraints, passive damping makes total mechanical energy nonincreasing. Gravity and joint coupling can still increase an individual joint's speed, and energy decay alone does not prove stability of every equilibrium or driven trajectory. When a particular trajectory is prescribed, inverse dynamics determines the additional actuator work associated with damping. This bookkeeping does not establish a universal muscular strategy for reversing the swing.
 \end{driftcontrol}
 
-\section{Summary: The Damping Principle}
+\section{Summary: The Damping
+Principle}\label{summary-the-damping-principle}
 
-Damping is not a bug in the golf swing; it's a feature. The right amount of damping at the right joints:
-- Stabilizes the motion, preventing wildly unstable oscillations.
-- Provides feedback and proprioceptive cues.
-- Limits the maximum accelerations, protecting joints from injury.
-- Allows the nervous system to implement impedance control, modulating stiffness and damping together.
+Passive loss, energy redistribution, active work and numerical damping are distinct. Coupling changes which motions and ports are excited, while geometry and operating state change the loaded response. Neither energy decay nor a successful solve establishes stability, a launch advantage or perceived sweetness. Report those quantities with their own assumptions and evidence.
 
-The challenge is tuning damping for the task. Too much, and you lose efficiency. Too little, and you lose stability. A good golf swing implicitly balances these two objectives through unconscious learning and adaptation.
+\section{Chapter Exercises}\label{chapter-exercises}
 
-\begin{exercises}{Chapter Exercises}{ex:ch29}
+All numerical inputs below are synthetic verification cases, not golfer parameter estimates.
 
-\begin{enumerate}
-
-\item \textbf{Damping Coefficient Estimation.} Suppose a golfer's wrist has a damping coefficient of $c_w = 0.1$ Nm$\cdot$s/rad. During the downswing, the wrist angular velocity is $\dot{q}_w = 50$ rad/s. What is the damping torque? If the maximum wrist torque the muscles can provide is 20 Nm, what percentage of the muscular torque is consumed by damping?
-
-\item \textbf{Energy Dissipation in a Two-Joint Chain.} Consider a simplified shoulder-elbow system. The shoulder has angular velocity $\dot{q}_1 = 10$ rad/s with damping coefficient $c_1 = 0.5$ Nm$\cdot$s/rad. The elbow has $\dot{q}_2 = 30$ rad/s with $c_2 = 0.15$ Nm$\cdot$s/rad. Calculate the total power dissipated by damping: $P_d = \sum c_i \dot{q}_i^2$. If the total muscular power output is 400 W, what fraction is lost to damping?
-
-\item \textbf{Damping Ratio and Step Response.} A wrist joint has mass $m = 0.05$ kg$\cdot$m$^2$, stiffness $k = 5$ Nm/rad, and damping $c = 0.2$ Nm$\cdot$s/rad. Compute the natural frequency $\omega_n = \sqrt{k/m}$, the critical damping $c_c = 2\sqrt{km}$, and the damping ratio $\zeta = c/c_c$. Is the joint underdamped, critically damped, or overdamped? Estimate the settling time (time to reach 2\% of steady-state value) using $t_s \approx 4 / (\zeta \omega_n)$.
-
-\item \textbf{Coulomb vs. Viscous Friction.} A shoulder joint experiences Coulomb friction with coefficient $\mu_k = 0.1$ and normal force $N = 50$ N, giving a constant friction torque of 5 Nm. For comparison, viscous damping at the shoulder is $c_s = 0.5$ Nm$\cdot$s/rad. At what shoulder angular velocity is the viscous damping torque equal to the Coulomb friction torque? For velocities below this threshold, which damping model dominates? Above it?
-
-\item \textbf{Configuration-Dependent Damping.} Suppose the wrist damping increases with wrist flexion angle according to $c_w(q_w) = 0.1 + 0.02 q_w$ Nm$\cdot$s/rad, where $q_w$ is in radians. If the wrist flexes from $q_w = 0$ rad to $q_w = 1$ rad during the downswing, and the wrist velocity is constant at $\dot{q}_w = 50$ rad/s, compute the instantaneous damping torque at $q_w = 0$, $q_w = 0.5$, and $q_w = 1$ rad. How much does the damping torque change over this range?
-
-\end{enumerate}
-
-\end{exercises}
+\begin{itemize}
+\item \textbf{Damping Coefficient Estimation.} For this synthetic case, use \(c_w=0.1\) N m s/rad and \(\dot q_w=50\) rad/s. Find the resisting torque and instantaneous loss power. Compare the torque magnitude with an assumed available 20 N m; explain why this fraction is not a metabolic efficiency.
+\item \textbf{Energy Dissipation in a Two-Joint Chain.} For this synthetic case, use rates 10 and 30 rad/s and coefficients 0.5 and 0.15 N m s/rad. Compute total loss power and its ratio to an assumed 400 W mechanical actuator input. Explain why joint location alone does not determine the ratio.
+\item \textbf{Damping Ratio and Step Response.} For this synthetic case, a scalar angular oscillator has inertia \(I=0.05\) kg m\(^2\), stiffness \(k=5\) N m/rad and damping \(c=0.2\) N m s/rad. Compute \(\omega_n\), \(\zeta\) and the approximate 2\% step-response settling estimate \(4/(\zeta\omega_n)\). State its assumptions and distinguish rotational inertia from mass.
+\item \textbf{Coulomb vs.~Viscous Friction.} For this synthetic case, an idealized contact has \(\mu_k=0.1\), normal force 50 N and moment arm 0.02 m. Find its sliding torque and the angular speed at which \(c=0.5\) N m s/rad gives equal viscous torque. Explain why zero-speed sticking needs a force-balance inclusion.
+\item \textbf{Configuration-Dependent Damping.} For this synthetic case, on the explicitly restricted interval \(0\leq q\leq1\) rad, let \(c(q)=0.1+0.02q\) N m s/rad and \(\dot q=50\) rad/s. Compute torque at \(q=0,0.5,1\). Check nonnegative loss and distinguish this assumed law from measured posture dependence.
+\item \textbf{Stability Counterexample.} Calculate the roots of \(\ddot x+\dot x-x=0\) and identify why the positive-stiffness energy argument fails. Repeat for the two-coordinate gyroscopic example with and without \(0.1\mathbf I\) damping.
+\item \textbf{Grip and Sound.} Design a comparison that separates changed delivery, changed impact-point mobility, radiated sound and listener preference. State which data would falsify a proposed grip-damping mechanism and which quantities a shaft accelerometer alone cannot identify.
+\end{itemize}

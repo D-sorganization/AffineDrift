@@ -313,3 +313,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-08 | #4289 | Reconcile rotation frames, Euler-rate maps, quaternion conversion and interpolation across both textbook editions; add golf-task sensitivity, independent checks and complete exercises. |
 
 | 2026-09-08 | #4293 | Reconcile inverse-dynamics manuscripts, original contact and aerodynamic examples, wrench transport, constrained input allocation, power and effort inference; regenerate PDF companions and replace stale HTML with a reading guide. |
+| 2026-09-08 | #4295 | Pending PR assignment: qualify paired Chapter 29 grip, constraint, friction, stability and shaft-acoustic claims with independent numerical counterexamples and verified publication output. |
