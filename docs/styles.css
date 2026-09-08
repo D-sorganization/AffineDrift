@@ -2431,6 +2431,16 @@ Dark mode (separate concern):
 /* Page sidebar — shared structural sidebar primitive.
    Replaces .home-sidebar, .left-sidebar, .resources-sidebar copies. */
 
+/* Quarto's docked navigation must use the same theme as its link colors. */
+#quarto-sidebar {
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+}
+
+#quarto-sidebar .sidebar-item-text {
+  color: var(--text-primary);
+}
+
 .page-sidebar {
   position: sticky;
   top: var(--space-4, 1rem);
@@ -2881,6 +2891,12 @@ Dark mode (separate concern):
 /* Accessible Quarto/Pandoc syntax highlighting in both color schemes. */
 
 /* stylelint-disable selector-class-pattern -- Quarto emits sourceCode. */
+
+/* Bootstrap's translucent inline background can clash with the custom theme. */
+main code:not(.sourceCode) {
+  background-color: var(--code-bg);
+  color: var(--code-text);
+}
 
 div.sourceCode,
 pre.sourceCode,

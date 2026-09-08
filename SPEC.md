@@ -312,4 +312,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-08 | #4286 | Correct propagated residual bounds, adaptive-control and evidence claims across the advanced article and three companions; add independently checked flow, interval, norm, stability and statistical examples. |
 | 2026-09-08 | #4289 | Reconcile rotation frames, Euler-rate maps, quaternion conversion and interpolation across both textbook editions; add golf-task sensitivity, independent checks and complete exercises. |
 
+| 2026-09-08 | #4294 | Reconcile paired biology chapters with explicit muscle-tendon state, HKB phase stability, synergy evidence limits, impedance and a proven coupling condition; rebuild Volume IV and correct reading-page theme contrast. |
 | 2026-09-08 | #4293 | Reconcile inverse-dynamics manuscripts, original contact and aerodynamic examples, wrench transport, constrained input allocation, power and effort inference; regenerate PDF companions and replace stale HTML with a reading guide. |

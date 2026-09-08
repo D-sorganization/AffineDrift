@@ -4,6 +4,8 @@ Date: 2026-09-05. Parent epic: [#4009](https://github.com/D-sorganization/Affine
 
 ## Current Checkpoint: 8 September 2026
 
+Biology #4294 corrects both complete long chapters, the Volume IV preface and public reading page. Muscle/tendon state, energy, HKB, synergies, impedance and coupled stability now have explicit assumptions, counterexamples, derivations and independent checks. All 21 final affected PDF pages pass visual QA; all 30 reading-page scroll captures were inspected. Root tests 4796/29 skips, content 130/4 skips, static 34, title 631, Ruff, Black 669 and mypy 86 pass; coverage is 79.04%. Final theme contrast fixes and protected delivery remain in progress. See `biology-review.md`.
+
 Rotations #4288 / PR #4289 is protected-merged and published as072d5076d7219ff39a8f004694f9d9a9b35a5cb8.
 Main CI34265513801, textbooks34265513761 and deployment34265513841 pass;
 exact live artifact10072974625 passes956/956 across239 routes with zero
@@ -16,7 +18,7 @@ across239 routes with zero serious/critical axe findings, retries or transient r
 QA passed, including all31 historical anchors and14 responsive/theme cases.
 See `vendor-reference-review.md`; the related technology article is unreviewed.
 
-Active inverse manuscripts #4291: four complete TeX editions, two notes, the old
+Completed inverse manuscripts #4291: four complete TeX editions, two notes, the old
 HTML, legacy PDF and twelve original images have been read and reconciled.
 All26 revised PDF pages passed visual QA, with seven changed pages rechecked
 after final fixes. Independent wrench, contact, constrained-dynamics, power,
@@ -31,7 +33,7 @@ viewing the images. Preserve the valid hypothetical39.9% result while separating
 it from unverified iron aerodynamics and video-axis assumptions. The original
 14.3% contact-position example changes the actual wrench, not its reporting point.
 See `inverse-manuscript-review.md` for the derivations and corrected decisions.
-PR #4293 is pushed; protected delivery for #4291 is pending. The405-source corpus is unfinished.
+Inverse #4291 / PR #4293 is protected-merged as b6dc729f9390793bade2b1d749e084ca2875271a and published. Main CI 34279760601 and deployment 34279760688 succeed. Exact-revision live artifact 10078282103 passes 956/956 checks across 239 routes. The closed issue needs no lease renewal. The 405-source corpus is unfinished.
 
 ## Argument Being Investigated
 
