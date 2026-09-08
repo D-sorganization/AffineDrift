@@ -27,6 +27,8 @@ Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 
 ## Technical Content Review
 
+
+- Active issue #3903 cluster-gap wiring (PR #4267) on `claude/issue-3903-cluster-gaps`, merged with protected `main` @ 1ce02d7a. Intentional-constraint-collapse and passive-distributed-control wired to the proximal-distal program; both research reviews linked back into the article cluster; secondary-axis-stability and strokes-gained-limitations wired into the impact/putting cluster both ways; club-fitting and heavy-hit given the canonical Related Concepts component. Conflict with main rewrite of technology-heavy-hit-impact-coupling.qmd resolved by re-applying the Related Concepts block onto the qualified main version.
 - Active #4264 on fix/4264-counterfactual-rigor: both complete editions and all eight exercises corrected. Root 4,521 passes, 29 skips, 129 deselections; source coverage 92.68%. Later focused 26 includes two additional web-table checks. Mypy 82, static 34, title 625, content 128/four skips and quality pass. All 13 final chapter print pages, contents/index/bibliography, 114 section browser views and 77 final targets inspected. Final alias-only verification passes all 14 views, static 34 and content 128/four skips. Every local QA job has ended before staging. See counterfactual-review.md for exact failures, derivations and scope. Replay only new commits after bd2f767e onto protected Lagrangian squash e2fa633b before first push. Claim expires 2026-09-08T03:13:35UTC.
 
 - Lagrangian PR #4263 passed all protected checks and merged as e2fa633bfd2012eaaaa3332aca1f2da9870ba0f4. Deployment 34176729086 completed successfully. Issue #4261 is closed and needs no lease renewal.
