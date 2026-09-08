@@ -286,3 +286,10 @@ the hook is retained. Local CSS budget and architecture checks pass when invoked
 as modules; direct-script attempts lacked the repository import path and failed.
 Next issue4291 is now leased to codex/session technical-review-20260906 through
 21:54:42UTC; no source edits have begun there.
+
+
+PR#4292 is open, ready for review, with agent:codex and Fixes#4290. Normal push
+hooks pass after the canonical-byte repair;18 focused inventory/evidence tests
+pass in1.03s. The first guessed test filenames did not exist (exit4); the actual
+inventory test module was discovered and used. SPEC is keyed to the actual PR.
+Protected merge and exact publication checks remain pending.
