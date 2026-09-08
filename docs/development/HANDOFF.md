@@ -8,7 +8,7 @@ Keep this file current and concise. Replace instructional placeholders; do not a
 - Working directory: `C:/tmp/AD_w3904`
 - Branch: `claude/issue-3904-series-nav` (based on `origin/main` @ `1ce02d7`)
 - Baseline commit: `1ce02d7ae4d916d4c598b62be78cefa83452aaa7`
-- Implementation commit: `SELF` — the commit containing this update; resolve with `git rev-parse HEAD`
+- Implementation commit: `f094080234cc5cc59c186c891b37ab08cd5426bb` (resolve with `git rev-parse HEAD` if amended)
 - Pull request: `not created` (opened against `main` immediately after push)
 - Governing issue/epic: `#3904` (part of epic `#3896`, Cross-Article Linking)
 

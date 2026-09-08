@@ -34,7 +34,7 @@ reachable from any live state and `abandoned` from `parked`.
   `articles/theory-part5.qmd`, `articles/appendix-applications.qmd`,
   `articles/affine-nature-golf-swing.qmd`, `tests/test_series_navigation.py`
 - **Started:** 2026-09-08
-- **Last verified:** 2026-09-08 (`4ec3a19`)
+- **Last verified:** 2026-09-08 (`f094080`)
 - **Summary:** Added three series sidebar groups (theory, tangent-space,
   Geometry of Motion volumes) for prev/next and breadcrumbs; wired the four
   isolated geometry articles into the tangent-space cluster with the canonical
