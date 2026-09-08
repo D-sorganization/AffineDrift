@@ -610,6 +610,19 @@ reachable from any live state and `abandoned` from `parked`.
   state; a live entry without a real issue is orphaned by
   definition.
 
+### DL-#3902 · Wire lateral links into Build pages: models, repositories, tools
+
+- **State:** in_review
+- **Owner:** claude (wave-6 agent W6_3902)
+- **Issue:** `#3902` (epic `#3896`)
+- **Branch:** `claude/issue-3902-models-lateral`
+- **Paths:** `models/models.qmd`, `models/models-{simulink,mujoco,drake,pinocchio,pendulum,opensim,myosim}.qmd`, `repositories/*.qmd`, `pages/tools.qmd`, `articles/upstreamdrift-educational-integration.qmd`, `articles/rotation-converter.qmd`, `articles/proximal-distal-model-workbench.qmd`
+- **Started:** 2026-09-07
+- **Last verified:** 2026-09-07 (worktree `1ce02d7`)
+- **Summary:** Added the canonical markdown `## Related Articles` component to all 8 `models/*.qmd` and all 6 `repositories/*.qmd` pages plus `pages/tools.qmd` and three isolated articles; 177 new relative markdown content links, every model↔repository pair bidirectional, every target verified to exist in the worktree. `articles/technology-heavy-hit-impact-coupling.qmd` deliberately untouched — PR #4267 (issue #3903) adds the model-interchange links there on its own branch.
+
+- **Next step:** Merge alongside sibling wave PRs (#4265/#4266/#4267) and re-run `scripts/check_quarto_xrefs.py` on the integrated main.
+
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.

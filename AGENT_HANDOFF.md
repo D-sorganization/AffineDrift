@@ -12,6 +12,19 @@
 
 Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 
+## Build-Section Lateral Links: #3902
+
+- Branch `claude/issue-3902-models-lateral` (base `1ce02d7`) adds the canonical
+  markdown `## Related Articles` component to all 8 `models/*.qmd` and all 6
+  `repositories/*.qmd` pages, plus `pages/tools.qmd` and
+  `articles/upstreamdrift-educational-integration.qmd`, `articles/rotation-converter.qmd`
+  and `articles/proximal-distal-model-workbench.qmd` — 177 new relative markdown
+  content links, every model↔repository pair bidirectional, every target verified to
+  exist in the worktree.
+- `articles/technology-heavy-hit-impact-coupling.qmd` is intentionally untouched:
+  PR #4267 (issue #3903, sibling branch) adds the model-interchange links on that
+  branch; do not duplicate them here.
+
 ## Technical Content Review
 
 - Active #4264 on fix/4264-counterfactual-rigor: both complete editions and all eight exercises corrected. Root 4,521 passes, 29 skips, 129 deselections; source coverage 92.68%. Later focused 26 includes two additional web-table checks. Mypy 82, static 34, title 625, content 128/four skips and quality pass. All 13 final chapter print pages, contents/index/bibliography, 114 section browser views and 77 final targets inspected. Final alias-only verification passes all 14 views, static 34 and content 128/four skips. Every local QA job has ended before staging. See counterfactual-review.md for exact failures, derivations and scope. Replay only new commits after bd2f767e onto protected Lagrangian squash e2fa633b before first push. Claim expires 2026-09-08T03:13:35UTC.

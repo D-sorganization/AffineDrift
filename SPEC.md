@@ -295,3 +295,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-07 | #4262 | Rebuild configuration-space charts, kinematic inverses, workspace and controllability distinctions; add checked examples and connect grip geometry to feasible golf delivery. |
 | 2026-09-07 | #4263 | Reconcile Lagrangian inertia, force and energy conventions; correct conservation and integration claims with verified rod dynamics and golf power accounting. |
 | 2026-09-07 | #4264 | Reconcile counterfactual interventions, directional and event-conditioned control authority, energy balances and the paired double-pendulum example. |
+| 2026-09-07 | #4269 | Wire lateral markdown content links into all Build-section pages (models, repositories, tools) and three isolated articles; connect every model↔repository pair with the canonical Related Articles component. |
