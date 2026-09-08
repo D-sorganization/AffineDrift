@@ -194,3 +194,15 @@ failures are retained in scratch logs and are not counted as successful checks.
 
 All local builds, tests and browser QA have ended. Protected PR submission and
 exact-revision publication verification remain pending; the corpus is unfinished.
+
+
+## Protected Integration
+
+Local commit fe7bcf2c passed normal hooks. Replaying only the rotation commit
+after residual head 5f9008e6 onto protected squash 10d4e7cb produced b2496cf9.
+The complete trees are identical; no source or artifact changed during replay.
+An initial rebase stopped on a phantom handoff modification; empty diff and
+identical blob hashes established unchanged content before refreshing the index.
+Normal push hooks passed, including unit tests. PR #4289 is open with agent:codex
+and Fixes #4288; the SPEC row is now keyed to the actual PR. Protected checks,
+merge and exact deployment remain pending.
