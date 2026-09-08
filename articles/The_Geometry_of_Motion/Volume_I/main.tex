@@ -195,6 +195,7 @@
 \hypersetup{colorlinks=true, linkcolor=chapblue, filecolor=magenta, urlcolor=chapblue, citecolor=accentred}
 
 \begin{document}
+\hypersetup{pageanchor=false}
 
 %% ---------- Title page ----------
 \begin{titlepage}
@@ -215,7 +216,7 @@ Dynamics and Control\par}
 \vspace{2cm}
 
 {\large\itshape
-A unified treatment of how exact local linearity,\\[4pt]
+A unified treatment of how first-order dynamics,\\[4pt]
 contraction metrics, and optimal control\\[4pt]
 share a common geometric foundation.\par}
 
@@ -226,6 +227,7 @@ share a common geometric foundation.\par}
 
 %% ---------- Front matter ----------
 \frontmatter
+\hypersetup{pageanchor=true}
 
 %% Epigraph / Dedication
 \thispagestyle{empty}
@@ -234,11 +236,8 @@ share a common geometric foundation.\par}
 \begin{minipage}{0.7\textwidth}
 \centering
 \itshape
-``Every nonlinear system is locally linear---not approximately, but exactly.
-The art of control is navigating between these exact local pictures.''
-
-\vspace{0.5cm}
---- The Tangent Hyperplane Manifesto
+A derivative isolates first-order response. A finite prediction must also account
+for nonlinear remainders, numerical error, and the limits of the physical model.
 \end{minipage}
 \end{center}
 \vspace*{\fill}
@@ -247,20 +246,20 @@ The art of control is navigating between these exact local pictures.''
 %% Preface
 \chapter{Preface}
 
-This book grew from a simple observation that proved surprisingly difficult to articulate cleanly: \emph{superposition is exact in tangent spaces}. Not approximately true. Not ``good enough for small perturbations.'' Exact---by the definition of what a tangent space is.
+This book studies how nearby motions respond to changes in preparation, input and physical parameters. First variations belong to tangent spaces and obey linear equations about a specified nominal trajectory. This allows their responses to be combined while retaining the coupling between coordinates. Predicting finite changes in the full nonlinear motion requires an additional accuracy assessment.
 
-That observation is not new mathematics. Calculus established it centuries ago. What is new is the insistence that control theory, dynamics, and engineering practice should fully internalize what calculus already proved. When we linearize a nonlinear system, we are not making an approximation. We are computing the exact infinitesimal structure of the dynamics at a point. The approximation enters only when we step away from that point---and even then, the error is not sloppiness but geometry: the curvature of the manifold.
+The mathematical derivative is an exact first-order object when it exists. Computing it numerically, integrating a differential equation and optimizing a local surrogate introduce separate approximations. Taylor remainders depend on the represented field, direction and scaling; they are not generally intrinsic manifold curvature. These distinctions are necessary when an elegant geometric argument is used to explain a measured golf swing or a humanoid maneuver.
 
-This book develops that perspective systematically. We show that contraction theory, trajectory optimization (LQR, DDP, MPC), and the decomposition of motion into drift and control all rest on the same geometric foundation: \emph{tangent-space dynamics with a metric}.
+The chapters connect variational dynamics, metrics, contraction analysis, local optimal control and the interpretation of drift and input contributions. Each supplies a different part of the investigation. An affine partition does not identify muscle activity, a local optimizer does not certify a global optimum, and a smooth calculation must be extended when contact events alter the motion.
 
 The treatment is aimed at graduate students and practicing engineers who have encountered linearization, Lyapunov stability, and optimal control as separate topics and want to see them unified. We assume familiarity with linear algebra, multivariable calculus, and ordinary differential equations. Differential geometry is introduced as needed, always paired with physical intuition.
 
-Every chapter follows a consistent structure: a qualitative framing of why the material matters, a plain-language explanation, a geometric intuition box, and then the formal development. This is deliberate. The mathematics must be rigorous, but the reader should always know \emph{why} a calculation is being done before seeing \emph{how}.
+Physical questions motivate the calculations. Worked models, counterexamples and numerical checks distinguish mathematical identities from finite predictions and empirical claims. The reader should know which quantity a calculation explains, which assumptions it needs, and what independent evidence would test its application.
 
-A word on notation: we are deliberately explicit. Every matrix dimension, every smoothness assumption, every domain restriction is stated. This is not pedantry---it is the scaffolding that prevents the subtle errors that plague ``hand-wavy'' treatments of linearization and superposition.
+A complete model needs explicit states, units, reference frames, actuator conventions, feasible contacts and a measurable task. The foundations chapter establishes these requirements and the distinction between flow sensitivity and geometric transport. Later chapters develop the additional structure needed for stability, optimization and biomechanical interpretation.
 
 \vspace{1cm}
-\hfill\textit{February 2026}
+\hfill\textit{September 2026}
 
 %% Table of contents
 \tableofcontents

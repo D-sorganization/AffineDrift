@@ -73,9 +73,9 @@ class TestSO3TangentSpace:
         for source in (GEOMETRY_CH01, GEOMETRY_CH01_TEX):
             chapter = source.read_text(encoding="utf-8")
 
-            assert "T_{\\mat{I}}\\SO(3) = \\mathfrak{so}(3)" in chapter
-            assert "T_{\\mat{R}}\\SO(3) = \\{\\mat{R}\\mat{S}" in chapter
-            assert "= \\mat{R}\\mathfrak{so}(3)" in chapter
+            assert r"T_I\mathrm{SO}(3)=\mathfrak{so}(3)" in chapter
+            assert r"T_R\mathrm{SO}(3)=\{RS:S\in\mathfrak{so}(3)\}" in chapter
+            assert "The ambient matrix $RS$ need not be skew" in chapter
             assert "T_{\\mat{R}}\\SO(3) = \\{\\mat{S} \\in \\R^{3 \\times 3}" not in chapter
 
 
@@ -216,13 +216,14 @@ class TestEigenvalueInvariance:
         # This nonzero P_dot is the correction term that changes effective eigenvalues
 
     def test_geometry_chapter_qualifies_eigenvalue_invariance_claim(self):
-        """Chapter text must distinguish constant and time-dependent transforms."""
+        """A time-independent nonlinear chart can still have a moving basis."""
         for source in (GEOMETRY_CH01, GEOMETRY_CH01_TEX):
             chapter = source.read_text(encoding="utf-8")
 
-            assert "For a time-independent coordinate" in chapter
-            assert "the eigenvalues of $\\mat{A}$ are unchanged" in chapter
-            assert "For a time-dependent coordinate" in chapter
-            assert "instantaneous eigenvalues of $\\mat{A}_z$ need not match" in chapter
+            assert r"A_z=TAT^{-1}+\dot TT^{-1}" in chapter
+            assert "time independence" in chapter
+            assert r"of a chart does not imply $\dot T=0$" in chapter
+            assert r"At a fixed equilibrium, or for a constant linear" in chapter
+            assert r"$\dot z=z$ and $A_z=1$" in chapter
             assert "geometric content}---eigenvalues" not in chapter
             assert "geometric content*---eigenvalues" not in chapter

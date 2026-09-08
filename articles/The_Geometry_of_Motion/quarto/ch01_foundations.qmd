@@ -1,1225 +1,1144 @@
 ---
-title: "Foundations: Tangent Spaces and Exactness"
+pagetitle: "Foundations: Tangent Spaces and Exactness"
+description: "Differentiate exact first variations from finite predictions, intrinsic geometry, optimization and hybrid contact effects in golf and humanoid mechanics."
+css:
+  - ../../../css/machine-learning.css
+  - ../../../css/articulated-body.css
+bibliography: ../geometry_of_motion.bib
 ---
 
-\label{ch:foundations}
+# Foundations: Tangent Spaces and Exactness
+[]{#ch-foundations}
 
+::: {.callout-tip}
+## Zooming in on the Map
 
-::: {.callout-note}
-
-Every curved surface, no matter how complex, has a flat patch touching it at each point.
-On that flat patch, the familiar rules of addition and scaling work perfectly.
-This chapter establishes that these flat patches---tangent spaces---are not approximations
-of the surface. They *are* the exact infinitesimal structure of the surface, by the
-very definition of what "smooth" means.
-
+[]{#tangent_patch}
+A tangent vector describes the direction and rate of a change at one state. A derivative
+describes how that change affects another quantity. These are exact mathematical objects
+when the required derivatives exist. Using them to predict a finite change is a further
+step, whose accuracy must be checked. For a golfer or humanoid robot, that distinction
+lets us ask precise questions about sensitivity without pretending that a whole swing
+is linear or that a computed derivative validates the underlying physical model.
 :::
-
 
 ## Motivation: Why Geometry Matters for Control
 
+A configuration specifies an arrangement; a state must additionally contain the information
+needed to predict its evolution under specified inputs. Joint angles alone do not determine
+the next instant of a swing. Joint rates, muscle activation, shaft deformation and modal
+rates can all matter. Contact mode and constitutive assumptions determine which states
+and forces are admissible. Geometry supplies the language for representing these objects
+and comparing nearby motions consistently.
 
-Nonlinear dynamics are often described as systems in which superposition does not apply.
-Students learn early that while linear systems permit the combination of solutions---if
-$\x_1(t)$ and $\x_2(t)$ are solutions, then so is $\alpha\x_1(t)+\beta\x_2(t)$---nonlinear
-systems deny this convenience. The narrative typically stops there, leaving the impression
-that nonlinearity and superposition are fundamentally incompatible.
+For a homogeneous linear equation $\dot x=A(t)x$, combinations of solutions are solutions.
+For $\dot x=A(t)x+B(t)u$, the corresponding initial conditions and inputs must also be
+combined. Adding two responses to the same nonzero input generally doubles that forcing.
+For a nonlinear system, trajectories expressed in Euclidean coordinates can still be
+added algebraically, but the result generally does not solve the same dynamics; on a
+general manifold, adding states has no intrinsic definition.
 
-That impression is incomplete. It is true that *trajectories* in a nonlinear system
-do not generally superpose. But at each point in state space, there exists a tangent space
-that is a genuine vector space, and within that vector space, superposition holds exactly.
-Not approximately. Not "for small enough perturbations." *Exactly*, by the axioms
-of linear algebra.
+First variations obey a different rule. If $x(t,\epsilon)$ is a differentiable family of
+solutions, then $\delta x(t)=\partial_\epsilon x(t,\epsilon)|_{\epsilon=0}$ belongs to the
+tangent space at the nominal state. The equation for this derivative is linear in
+$\delta x$ and the input variation. Its solutions superpose about the *same* nominal
+trajectory. Off-diagonal coefficients still couple wrist, shoulder, shaft and other
+coordinates: linear superposition does not mean those coordinates evolve independently.
 
-The purpose of this book is to take that geometric fact seriously and trace its consequences
-through contraction theory, optimal control, and the practical decomposition of complex
-motions into interpretable components.
+On narrow screens, scroll the figure or [open it at full size](../figures/foundations_tangent_gain.svg).
 
-
-::: {.callout-note}
-## Intuition
-
-A trajectory is a curve on a state-space manifold. At each point on that curve, there is
-a tangent plane capturing first-order motion of nearby trajectories. All local stability
-and local optimality calculations happen in these moving tangent planes. A metric is a
-local ruler; changing the metric changes which perturbation directions count as "large"
-or "small."
+::: {#fig-foundations_tangent-gain}
+::: {.aba-diagram-scroll role="region" aria-label="Tangent vectors and transient amplification; scroll horizontally" tabindex="0"}
+<img src="../figures/foundations_tangent_gain.svg" alt="Left: a circle at a marked point has a dashed tangent line and two collinear arrows. Right: the norm of a variation starting in the second coordinate of a stable triangular system rises above 3.6 before decaying, despite both eigenvalues of its generator being minus one.">
 :::
 
+Tangent Vectors and Finite-Time Amplification. Left: A One-Dimensional Circle Has a Tangent Line. Right: A Stable Linear System Can Amplify a Variation Before It Decays.
+:::
 
+A tangent space of an $n$-dimensional smooth manifold is $n$-dimensional. A curve has a
+tangent line, not a two-dimensional tangent plane. For an embedded surface, a translated
+tangent plane can touch the surface at a regular point, but is not a finite patch contained
+in it. Corners, intersecting branches and other nonsmooth sets require additional care.
+For an abstract manifold, no surrounding Euclidean space or literal touching plane is
+required. The figure is an embedded illustration, not the definition.
 
-## Historical Context: From Newton to Modern Differential Geometry
+## From the Scalar Derivative to a State-Space Model
 
+[]{#the-conceptual-shift}
 
-To appreciate the force of the tangent-space framework, it helps to understand how it emerged
-from the practical concerns of mechanics and the rigorous formalization of analysis.
+[]{#from-approximation-to-exact-structure}
 
+[]{#riemanns-vision-of-intrinsic-geometry}
 
-### Newton, Leibniz, and the Birth of the Infinitesimal
+[]{#cauchy-weierstrass-and-the-rigorous-foundation}
 
+[]{#newton-leibniz-and-the-birth-of-the-infinitesimal}
 
-The modern concept of tangent space originates in the Newton--Leibniz calculus of the late
-17th century. Newton's method of "fluxions" (rates of change) and Leibniz's differential
-notation $\dd x$ both captured an intuitive idea: at each point on a smooth curve, there is
-a direction of motion, a "tangent line." For a curve $y = f(x)$ in the plane, the tangent
-line at $(x_0, f(x_0))$ has slope $f'(x_0)$ and can be written as
-\begin{equation}
-y - f(x_0) = f'(x_0)(x - x_0).
-\label{eq:ch1:tangent-line}
-\end{equation}
+[]{#historical-context-from-newton-to-modern-differential-geometry}
 
-This is purely one-dimensional geometry. But the insight---that the tangent line is the
-"best linear approximation" to the curve at that point---proved far more general than
-the original calculus allowed.
+For a scalar function, differentiability at $x_0$ means the limit
+[]{#eq-ch1:derivative-limit}
 
+$$
+f'(x_0)=\lim_{h\to0}\frac{f(x_0+h)-f(x_0)}{h}
+$$
+exists. Its tangent line is the affine graph
+[]{#eq-ch1:tangent-line}
 
-### Cauchy, Weierstrass, and the Rigorous Foundation
+$$
+y-f(x_0)=f'(x_0)(x-x_0).
+$$
+The derivative is a linear map on displacements; the tangent-line function includes an
+offset. In several variables the analogous statement is
+[]{#eq-ch1:frechet-heuristic}
 
+$$
+f(\bar x+\delta x)=f(\bar x)+Df(\bar x)\delta x+o(\|\delta x\|).
+$$
+This defines differentiability at a point. It does not by itself assert continuity of the
+derivative nearby. A $C^1$ map has continuous first derivatives; $C^2$ has continuous
+second derivatives; smooth, without further qualification, normally means $C^\infty$.
+We state the finite regularity actually needed below.
 
-By the 19th century, Cauchy and especially Weierstrass placed the derivative on a rigorous
-footing. The limit definition
-\begin{equation}
-f'(x_0) := \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h}
-\label{eq:ch1:derivative-limit}
-\end{equation}
-made the tangent line precise: it is the unique linear function whose error vanishes faster
-than the perturbation itself.
+The numerical components in these equations depend on coordinates. Differentiability is
+preserved by compatible differentiable charts with differentiable inverses. An arbitrary
+smooth parameterization need not be a valid coordinate change: $z=x^3$ has zero derivative
+at zero and its inverse is not differentiable there. The chain rule makes the derivative
+an intrinsic map between tangent spaces; it does not make every displayed matrix or scalar
+slope independent of the chart.
 
-The power of this formulation is that it is *coordinate-free*: it depends only on the
-behavior of $f$ in a neighborhood of $x_0$, not on the choice of coordinates. A function is
-differentiable at $x_0$ if and only if the above limit exists, regardless of whether we
-write the function as $y = f(x)$ or in any other smooth parameterization.
-
-
-### Riemann's Vision of Intrinsic Geometry
-
-
-Bernhard Riemann's 1854 paper *Über die Hypothesen, welche der Geometrie zu Grunde
-liegen* (On the Hypotheses Which Lie at the Foundations of Geometry) was the pivotal moment.
-Riemann observed that just as Newton and Leibniz could construct a local approximation
-(the tangent line) at each point of a curve, one could construct a local vector space
-(the tangent space) at each point of any smooth manifold, even if the manifold itself were
-curved, high-dimensional, or not embedded in Euclidean space.
-
-Riemann's innovation---and its modern development by Élie Cartan, Hermann Weyl, and
-others---fundamentally separated two ideas:
-1. The *manifold itself*: a geometric object that may be curved.
-2. The *tangent space at a point*: a vector space, always flat and linear.
-
-This separation is conceptually profound. Curvature is not a failure of linearity; it is
-the nonlinearity of how tangent spaces connect as you move through the manifold.
-
-
-### From Approximation to Exact Structure
-
-
-For most of the 20th century, even when differential geometry was fully developed, the
-relationship between a nonlinear dynamical system and its tangent-space (linearized)
-dynamics remained framed as an *approximation*. Textbooks would write:
-
-> To study the qualitative behavior of a nonlinear system $\dot{\x} = f(\x)$ near an
-> equilibrium $\bar{\x}$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar{\x}}$.
-> This linear system is "close" to the original system for small perturbations.
-
-
-The language---"linearize," "approximate," "close to"---suggests that the tangent
-space is a crutch, a convenience for analysis. But this framing obscures the true
-mathematical situation.
-
-
-### The Conceptual Shift
-
-
-The recognition that linearization is *exact* at the infinitesimal level, not an
-approximation, came from careful attention to the definition of the Fr\'echet derivative.
-If we define smoothness via the condition
-\begin{equation}
-f(\bar{\x} + \dx) = f(\bar{\x}) + \mat{A}\,\dx + o(\norm{\dx}),
-\label{eq:ch1:frechet-heuristic}
-\end{equation}
-then there is *exactly one* matrix $\mat{A}$ satisfying this property (at the infinitesimal
-scale). The matrix $\mat{A}$ is not an approximation; it is the *definition* of what
-smoothness means at that point.
-
-This modern viewpoint---which permeates contemporary differential geometry, control theory,
-and optimization (especially gradient-based learning)---is the foundation of this book.
-We do not linearize for convenience and accept error. We recognize that linearization
-*is* the exact infinitesimal description, and we use this exactness as a structural
-principle for analyzing and controlling nonlinear systems.
-
+There is no conflict between calling a derivative an exact first-order object and calling
+its use for a finite displacement an approximation. These are standard complementary
+statements. Analytical differentiation, automatic differentiation of implemented code,
+finite differences and numerical integration have different computational errors. None
+of them establishes that an assumed muscle, contact or shaft model matches a person.
 
 ## Smooth Dynamical Systems
 
+In a local chart consider
+[]{#eq-ch1:dynamics}
 
-Consider a dynamical system
-\begin{equation}
-\dot{\x} = f(\x, \uvec), \quad \x \in \R^n, \quad \uvec \in \R^m,
-\label{eq:ch1:dynamics}
-\end{equation}
-where $\x$ is the state vector and $\uvec$ is the control input. We impose the following
-standing assumption throughout this book.
-
+$$
+\dot x=F(x,u,t),\qquad x\in\mathbb R^n,\quad u\in\mathbb R^m.
+$$
+On a manifold, $F(x,u,t)\in T_x\mathcal M$. Time-independent examples below omit $t$.
+The mechanical state space may be a tangent bundle, with additional activation or internal
+variables. It must not be confused with the smaller configuration manifold.
 
 ::: {.callout-note}
-## Smoothness
+## Regularity on a Fixed Mode
 
-The vector field $f:\R^n\times\R^m \to \R^n$ is continuously differentiable ($C^1$) in
-both arguments. Where higher-order residual bounds are needed, we assume $C^2$ smoothness.
+[]{#ass-smoothness}
+On an open neighborhood of the nominal trajectory and admissible perturbations, assume
+$F$ is continuous in time and $C^1$ in state and input, with continuous derivatives.
+Use a finite interval on which nearby solutions exist in this neighborhood. Assume $C^2$
+in the perturbed arguments for the quadratic Taylor bounds below.
 :::
 
+These are sufficient working conditions, not the weakest possible ones. Local Lipschitz
+regularity in state gives local uniqueness under the usual time regularity assumptions;
+continuous first derivatives provide it locally. Piecewise continuous prescribed inputs
+can also be handled interval by interval. If a feedback law is used, differentiate the
+closed-loop field, including the derivative of the law where it exists.
 
-This assumption is minimal yet physically reasonable. Virtually all systems derived from
-classical mechanics---Newtonian, Lagrangian, or Hamiltonian---produce smooth vector fields.
-The $C^1$ requirement is the bare mathematical condition for derivatives to exist.
+Regular holonomic constraints can define a smooth reduced manifold. Fixed sticking contacts
+can admit smooth constrained equations while the contact remains feasible and its Jacobian
+has constant rank. Thus a hard constraint does not automatically destroy differentiability.
+Touchdown, slip, liftoff, saturation boundaries and impacts require checking mode-specific
+regularity and the transition law. These events are central to golf and humanoid mechanics,
+so the smooth calculation must have an explicit boundary of application.
 
+## The Fréchet Derivative: Definition and Computation
 
-::: {.callout-warning}
-## Caution
-
-Systems with impacts, Coulomb friction, switching controllers, or hard state constraints
-violate $C^1$ smoothness. Extensions to such hybrid systems exist (saltation matrices,
-Filippov solutions, complementarity formulations) but lie outside the scope of this
-treatment. We address smooth systems exclusively and note hybrid extensions where relevant.
-:::
-
-
-
-## The Fréchet Derivative: Linearization as Exact Structure
-
+[]{#the-fréchet-derivative-linearization-as-exact-structure}
 
 ### Definition and Uniqueness
 
+[]{#prp-frechet-unique}
 
-At a fixed operating point $(\bar{\x}, \bar{\uvec})$, the **Jacobian** of the vector
-field with respect to the state is the matrix
-\begin{equation}
-\mat{A} := \frac{\partial f}{\partial \x}\bigg|_{(\bar{\x},\bar{\uvec})} \in \R^{n\times n},
-\label{eq:ch1:jacobian-A}
-\end{equation}
-defined as the unique linear map satisfying the Fréchet derivative condition:
-\begin{equation}
-f(\bar{\x} + \dx, \bar{\uvec})
-= f(\bar{\x}, \bar{\uvec}) + \mat{A}\,\dx + o(\norm{\dx}).
-\label{eq:ch1:frechet}
-\end{equation}
+[]{#proof-of-uniqueness}
 
-The notation $o(\norm{\dx})$ denotes a remainder that vanishes faster than $\norm{\dx}$
-as $\norm{\dx}\to 0$:
-\begin{equation}
-\lim_{\norm{\dx}\to 0}
-\frac{\norm{f(\bar{\x}+\dx,\bar{\uvec}) - f(\bar{\x},\bar{\uvec}) - \mat{A}\dx}}{\norm{\dx}} = 0.
-\label{eq:ch1:frechet-limit}
-\end{equation}
+At fixed $(\bar x,\bar u,t)$, the state Jacobian is
+[]{#eq-ch1:jacobian-A}
 
+$$
+A=D_xF(\bar x,\bar u,t)\in\mathbb R^{n\times n},
+$$
+provided a linear map $A$ satisfies
+[]{#eq-ch1:frechet}
 
-### Proof of Uniqueness
+$$
+F(\bar x+\delta x,\bar u,t)=F(\bar x,\bar u,t)+A\delta x+r(\delta x),
+$$
+with
+[]{#eq-ch1:frechet-limit}
 
+$$
+\lim_{\delta x\to0,\,\delta x\ne0}\frac{\|r(\delta x)\|}{\|\delta x\|}=0.
+$$
+The limit is over all approaches, not a selected finite set of directions. Norms must be
+declared; fixed norms are equivalent for existence of the derivative in finite dimensions,
+but numerical magnitudes and condition numbers depend on scaling.
 
-::: {#prp-frechet-unique}
-**Uniqueness of the Fréchet Derivative**
+::: {.callout-note}
+## Uniqueness of the Fréchet Derivative
 
-If a linear map $\mat{A}$ satisfies Eq.~\eqref{eq:ch1:frechet} at $\bar{\x}$, then $\mat{A}$
-is unique.
+[]{#prop-frechet-unique}
+There is at most one such linear map $A$.
 :::
-
 ::: {.proof}
-Suppose two matrices $\mat{A}$ and $\mat{A}'$ both satisfy
-\begin{align}
-f(\bar{\x} + \dx, \bar{\uvec}) &= f(\bar{\x}, \bar{\uvec}) + \mat{A}\,\dx + o(\norm{\dx}), \\
-f(\bar{\x} + \dx, \bar{\uvec}) &= f(\bar{\x}, \bar{\uvec}) + \mat{A}'\,\dx + o(\norm{\dx}).
-\end{align}
+If $A$ and $A'$ both satisfy the condition, subtract their expansions to obtain
+[]{#eq-ch1:diff-matrices}
 
-Subtracting these equations gives
-\begin{equation}
-(\mat{A} - \mat{A}')\,\dx = o(\norm{\dx}).
-\label{eq:ch1:diff-matrices}
-\end{equation}
+$$
+(A-A')\delta x=r'(\delta x)-r(\delta x)=o(\|\delta x\|).
+$$
+For fixed $v\ne0$ set $\delta x=sv$ with $s>0$. Then
 
-For any nonzero vector $\vec{v} \in \R^n$, set $\dx = t\vec{v}$ where $t > 0$ is small.
-Then
-\begin{equation}
-(\mat{A} - \mat{A}')\vec{v} = \frac{o(t\norm{\vec{v}})}{t} = t \cdot \frac{o(t\norm{\vec{v}})}{t \cdot \norm{\vec{v}}} \cdot \norm{\vec{v}}.
-\end{equation}
+$$
+\|(A-A')v\|\leq
+\left(\frac{\|r'(sv)\|+\|r(sv)\|}{s\|v\|}\right)\|v\|\longrightarrow0.
+$$
 
-As $t \to 0^+$, the term $\frac{o(t\norm{\vec{v}})}{t \cdot \norm{\vec{v}}} \to 0$ by definition of $o(\cdot)$.
-Therefore, $(\mat{A} - \mat{A}')\vec{v} = 0$ for all $\vec{v}$, implying $\mat{A} = \mat{A}'$.
+The left side is independent of $s$, hence is zero. This holds for every $v$, so $A=A'$.
 :::
 
-This uniqueness is the cornerstone of the book's philosophy. There is exactly one candidate
-for "the infinitesimal structure" of $f$ at $\bar{\x}$, and it is $\mat{A}$.
+### Directional Derivatives and Uniformity
 
+[]{#relationship-to-the-gâteaux-derivative}
 
-::: {.callout-important}
-## Axiom 1: The Derivative Is Exact
+The directional limit
+[]{#eq-ch1:gateaux}
 
-The linear map $\mat{A}$ is not an approximation to $f$. It *is* the exact
-infinitesimal structure of $f$ at $\bar{\x}$. There is no "better" first-order
-description---$\mat{A}$ is unique by the definition of the Fréchet derivative.
-:::
+$$
+D_vF(\bar x)=\lim_{s\to0}\frac{F(\bar x+sv)-F(\bar x)}{s}
+$$
+equals $Av$ when the Fréchet derivative exists. The term Gâteaux derivative is often
+reserved for a directional-derivative map that is linear in $v$; even that condition need
+not give the uniform remainder required here. For example, define the scalar function
 
+$$
+h(x,y)=\begin{cases}x^4y/(x^6+y^2),&(x,y)\ne(0,0),\\0,&(x,y)=(0,0).
+\end{cases}
+$$
 
-This distinction is the conceptual foundation of the entire book. The standard
-narrative---"we linearize for convenience and accept some error"---conflates two
-distinct operations:
-1. **Computing the derivative** (exact, by definition);
-2. **Using the linear model for finite perturbations** (introduces residuals
-   proportional to curvature).
+The inequality $2|x^3y|\leq x^6+y^2$ gives $|h(x,y)|\leq|x|/2$, proving continuity
+at the origin. Along any fixed ray $(x,y)=s(a,b)$, $h(sa,sb)/s\to0$; this is immediate
+when $b=0$ and follows from an $s^2$ factor when $b\ne0$. All directional derivatives
+therefore form the zero linear map. But along $y=x^3$, $h=x/2$, and for $x>0$
 
+$$
+\frac{|h(x,x^3)|}{\sqrt{x^2+x^6}}=\frac{1}{2\sqrt{1+x^4}}\longrightarrow\frac12.
+$$
 
-### Relationship to the Gâteaux Derivative
+The function is not Fréchet differentiable there. Testing several directions numerically
+cannot replace the assumptions or proof of a uniform limit.
 
+### The Input Jacobian and Joint Perturbations
 
-The Fréchet derivative is stronger than the more permissive Gâteaux derivative. The
-**Gâteaux derivative** of $f$ at $\bar{\x}$ in direction $\vec{v}$ is
-\begin{equation}
-D_{\vec{v}} f(\bar{\x}) := \lim_{t \to 0} \frac{f(\bar{\x} + t\vec{v}) - f(\bar{\x})}{t},
-\label{eq:ch1:gateaux}
-\end{equation}
-provided the limit exists. If $f$ is Fréchet-differentiable at $\bar{\x}$ with derivative
-$\mat{A}$, then the Gâteaux derivative in any direction $\vec{v}$ exists and equals $\mat{A}\vec{v}$.
+[]{#the-input-jacobian}
 
-However, the converse is false: a function can have all Gâteaux derivatives in all directions
-(even linearly) without being Fréchet-differentiable. The Fréchet condition is uniform in
-all directions; the remainder $o(\norm{\dx})$ must be small relative to $\norm{\dx}$ for
-*all* perturbations $\dx$, not just along specific rays.
+The input Jacobian is
+[]{#eq-ch1:jacobian-B}
 
-For the purposes of this book, we always assume Fréchet differentiability (part of the $C^1$
-assumption), which ensures the robust infinitesimal linearization on which all subsequent
-theory depends.
+$$
+B=D_uF(\bar x,\bar u,t)\in\mathbb R^{n\times m},
+$$
+and satisfies
+[]{#eq-ch1:frechet-u}
 
+$$
+F(\bar x,\bar u+\delta u,t)=F(\bar x,\bar u,t)+B\delta u+o(\|\delta u\|).
+$$
+Joint differentiability yields the combined derivative $[A\ B]$ and a joint remainder in
+$(\delta x,\delta u)$. Separate derivatives at one point alone do not guarantee this.
+For a control-affine field $F=f(x,t)+G(x,t)u$, $B=G(\bar x,t)$, whereas
 
-### Worked Example: The Pendulum Jacobian
+$$
+A=D_xf(\bar x,t)+\sum_i\bar u_iD_xg_i(\bar x,t).
+$$
 
+Dropping the second term would omit state-dependent input transmission. Exact affinity in
+joint torque also does not imply affinity in muscle excitation: activation dynamics and
+force-length-velocity laws intervene between those inputs.
 
-Consider a simple pendulum with friction and torque input:
-\begin{equation}
-\dot\theta = \omega, \quad \dot\omega = -g\sin(\theta) - b\omega + u,
-\label{eq:ch1:pendulum-dyn}
-\end{equation}
-where $\theta$ is angle, $\omega$ is angular velocity, $g$ is gravitational acceleration,
-$b$ is friction, and $u$ is applied torque. The state is $\x = (\theta, \omega)$ and control
-is $\uvec = u$.
+## Worked Example: A Dimensioned Pendulum
 
-The vector field is
-\begin{equation}
-f(\x, u) = \begin{pmatrix} \omega \\ -g\sin\theta - b\omega + u \end{pmatrix}.
-\label{eq:ch1:pendulum-f}
-\end{equation}
+[]{#numerical-verification}
 
-At an equilibrium $(\bar\theta, \bar\omega) = (\bar\theta, 0)$ (the pendulum at rest), with
-input $\bar{u} = g\sin\bar\theta$ (input compensating gravity), the Jacobians are:
+[]{#worked-example-the-pendulum-jacobian}
 
-\begin{equation}
-\mat{A} = \frac{\partial f}{\partial \x}\bigg|_{(\bar\theta, 0)} = \begin{pmatrix} 0 & 1 \\ -g\cos\bar\theta & -b \end{pmatrix},
-\label{eq:ch1:pendulum-A}
-\end{equation}
+Use a point mass $m$ on a massless rigid rod of length $\ell$, angle $\theta$ from downward
+vertical, gravity $g$, applied torque $u$ and viscous torque $-c\omega$. Moment balance about
+the fixed pivot gives
+[]{#eq-ch1:pendulum-dyn}
 
-\begin{equation}
-\mat{B} = \frac{\partial f}{\partial u}\bigg|_{(\bar\theta, 0)} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}.
-\label{eq:ch1:pendulum-B}
-\end{equation}
+$$
+\dot\theta=\omega,\qquad m\ell^2\dot\omega=-mg\ell\sin\theta-c\omega+u.
+$$
+Here $u$ is in N m, $c$ in N m s/rad and $I=m\ell^2$ in kg m$^2$. For a distributed
+pendulum replace $I$ by its pivot inertia and $m\ell$ in gravity torque by mass times
+pivot-to-center-of-mass distance. The point-mass state field is
+[]{#eq-ch1:pendulum-f}
 
-Now, consider a perturbation $\dx = (\delta\theta, \delta\omega)$ from the equilibrium.
-The Fréchet property says
-\begin{equation}
-f(\bar\theta + \delta\theta, 0 + \delta\omega, \bar{u}) \approx f(\bar\theta, 0, \bar{u}) + \mat{A}\,\dx
-\end{equation}
-for small $\dx$. Let us verify this numerically.
+$$
+F(x,u)=\begin{pmatrix}\omega\\-(g/\ell)\sin\theta-(c/I)\omega+u/I\end{pmatrix}.
+$$
+At a static equilibrium, $\bar\omega=0$ and $\bar u=mg\ell\sin\bar\theta$. At any state,
+not only an equilibrium, the derivatives are
+[]{#eq-ch1:pendulum-A}
 
-#### Numerical Verification
+$$
+A=\begin{pmatrix}0&1\\-(g/\ell)\cos\bar\theta&-c/I\end{pmatrix},
+$$
+[]{#eq-ch1:pendulum-B}
 
-Take $g = 10 \, \text{m/s}^2$, $b = 0.1 \, \text{s}^{-1}$, and $\bar\theta = \pi/6$ (30 degrees).
-Then $\cos(\pi/6) = \sqrt{3}/2 \approx 0.866$, so
-\begin{equation}
-\mat{A} = \begin{pmatrix} 0 & 1 \\ -10 \times 0.866 & -0.1 \end{pmatrix} = \begin{pmatrix} 0 & 1 \\ -8.66 & -0.1 \end{pmatrix}.
-\end{equation}
+$$
+B=\begin{pmatrix}0\\1/I\end{pmatrix}.
+$$
+These coefficients expose distinct effects: geometry changes the gravity derivative;
+damping changes the rate derivative; inertia scales torque authority. A high existing
+angular rate does not reduce $B$ in this model.
 
-Consider perturbations of increasing size. At equilibrium, $f(\bar\theta, 0, \bar{u}) = (0, 0)$.
+For an illustrative numerical case, set $m=1$kg, $\ell=1$m, $g=10$m/s$^2$,
+$c=0.1$N m s/rad and $\bar\theta=\pi/6$. Then $I=1$kg m$^2$, $\bar u=5$N m and
+$A_{21}=-5\sqrt3$ s$^{-2}$, evaluated without rounding in the residual calculation.
+For an angle perturbation $d$ with unchanged rate and torque, the only nonzero residual is
 
-For $\dx = (0.01, 0)$ (small angle perturbation):
-\begin{align}
-\text{True:} \quad f(\bar\theta + 0.01, 0, \bar{u}) &= \begin{pmatrix} 0 \\ -g(\sin(\pi/6 + 0.01) - \sin(\pi/6)) \end{pmatrix} \\
-&= \begin{pmatrix} 0 \\ -10(0.50866 - 0.5) \end{pmatrix} \approx \begin{pmatrix} 0 \\ -0.08635 \end{pmatrix}, \\
-\text{Linear:} \quad \mat{A}\,\dx &= \begin{pmatrix} 0 & 1 \\ -8.66 & -0.1 \end{pmatrix} \begin{pmatrix} 0.01 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ -0.0866 \end{pmatrix}, \\
-\text{Residual:} \quad r(\dx) &\approx \begin{pmatrix} 0 \\ 0.00025 \end{pmatrix}, \quad \norm{r(\dx)} \approx 0.00025, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} \approx 0.025.
-\end{align}
+$$
+r_\omega(d)=-10[\sin(\pi/6+d)-\sin(\pi/6)-\cos(\pi/6)d]
+=2.5d^2+\frac{5\sqrt3}{6}d^3+O(d^4).
+$$
 
-For $\dx = (0.001, 0)$ (one-tenth the size):
-\begin{align}
-\text{Residual:} \quad \norm{r(\dx)} &\approx 0.000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.585.
-\end{align}
+At $d=0.01$rad, the true acceleration change is approximately $-0.086351099093$rad/s$^2$,
+the first-order change is $-0.086602540378$rad/s$^2$, and the residual is
+$0.000251441285$rad/s$^2$. The ratio $r_\omega/d^2$ approaches $2.5$ s$^{-2}$ (radians treated as dimensionless), while
+$r_\omega/d\to0$. Mixing a rounded matrix with high-precision field evaluations can
+create a spurious first-order error at small $d$.
 
-For $\dx = (0.0001, 0)$:
-\begin{align}
-\text{Residual:} \quad \norm{r(\dx)} &\approx 0.0000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.0585.
-\end{align}
+| $d$ (rad) | $r_\omega$ (rad/s$^2$) | $r_\omega/d$ (s$^{-2}$) | $r_\omega/d^2$ (s$^{-2}$/rad) |
+| --- | --- | --- | --- |
+| $0.1$ | $0.02642183$ | $0.2642183$ | $2.642183$ |
+| $0.01$ | $0.0002514413$ | $0.02514413$ | $2.514413$ |
+| $0.001$ | $2.501443\times10^{-6}$ | $0.002501443$ | $2.501443$ |
+| $0.0001$ | $2.500144\times10^{-8}$ | $0.0002500144$ | $2.500144$ |
 
-The ratio $\norm{r(\dx)}/\norm{\dx}$ decreases approximately as $\norm{\dx}$ (i.e., $o(\norm{\dx})$
-behavior), confirming the Fréchet property. For a mixed perturbation like $\dx = (0.01, 0.01)$,
-we would see this same scaling: the residual is dominated by the quadratic term (curvature)
-in the $\sin$ function, which is $O(\norm{\dx}^2)$.
+: Pendulum Residuals With an Unrounded Analytic Jacobian {#tbl-foundations_pendulum}
 
-
-### The Input Jacobian
-
-
-Similarly, the Jacobian with respect to the input is
-\begin{equation}
-\mat{B} := \frac{\partial f}{\partial \uvec}\bigg|_{(\bar{\x},\bar{\uvec})} \in \R^{n\times m},
-\label{eq:ch1:jacobian-B}
-\end{equation}
-satisfying
-\begin{equation}
-f(\bar{\x}, \bar{\uvec} + \du)
-= f(\bar{\x}, \bar{\uvec}) + \mat{B}\,\du + o(\norm{\du}).
-\label{eq:ch1:frechet-u}
-\end{equation}
-
-Together, the pair $(\mat{A}, \mat{B})$ encodes the complete first-order
-sensitivity of the dynamics at $(\bar{\x}, \bar{\uvec})$. These are the objects that every
-subsequent chapter will build upon.
-
+Angles, angular rates and forces are different physical quantities. A Euclidean norm of
+their raw numerical coordinates silently chooses units and relative weights. A declared
+scale matrix $S$ defines dimensionless variations $S^{-1}\delta x$; a positive-definite
+metric $W$ defines $\|\delta x\|_W^2=\delta x^TW\delta x$. The scalar ratios above use
+only angle and angular-acceleration components, with their units retained.
 
 ## Tangent Spaces as Vector Spaces
 
 
-### Abstract Definition
+### Curves, Charts, and Derivations
 
+[]{#why-tangent-spaces-are-the-natural-home-of-superposition}
 
-::: {.callout-note}
+[]{#isomorphism-with-directional-derivatives}
 
-Let $\mathcal{M}$ be a smooth manifold and $p\in\mathcal{M}$. The **tangent space**
-$T_p\mathcal{M}$ is the vector space of all tangent vectors at $p$---equivalently, the
-space of all velocity vectors of smooth curves passing through $p$.
+[]{#abstract-definition}
+[]{#def-tangent-space}
+Let $p$ lie in a smooth $n$-manifold $\mathcal M$ and let $\psi$ be a chart near $p$.
+Two curves through $p$ represent the same tangent vector if
+[]{#eq-ch1:curve-equivalence}
 
-:::
+$$
+\left.\frac{d}{ds}\psi(\gamma_1(s))\right|_0
+=\left.\frac{d}{ds}\psi(\gamma_2(s))\right|_0.
+$$
+The chain rule makes this equivalence independent of the compatible chart. If two curve
+classes have chart velocities $a,b$, their sum has chart velocity $a+b$, represented
+locally by $\psi^{-1}(\psi(p)+s(a+b))$. Scalar multiplication is constructed similarly.
+This is not concatenation of two finite curves. These operations make $T_p\mathcal M$
+a vector space. Vectors at different base points need a specified identification before
+they can be compared or added.
 
+A tangent vector also acts on a smooth scalar function $h$ as
+[]{#eq-ch1:tangent-derivative}
 
-More formally, two smooth curves $\gamma_1, \gamma_2: (-\epsilon, \epsilon) \to \mathcal{M}$
-with $\gamma_1(0) = \gamma_2(0) = p$ are said to be *equivalent at order one* if
-they have the same velocity vector at $t=0$:
-\begin{equation}
-\dot{\gamma}_1(0) = \dot{\gamma}_2(0).
-\label{eq:ch1:curve-equivalence}
-\end{equation}
+$$
+v_p(h)=\left.\frac{d}{ds}h(\gamma(s))\right|_0.
+$$
+This action is linear in $h$ and obeys the Leibniz rule,
 
-The tangent space $T_p\mathcal{M}$ is the set of equivalence classes of such curves, where
-the equivalence relation is having the same velocity. Vector addition and scalar multiplication
-are defined by concatenating velocities: if $[\gamma_1]$ and $[\gamma_2]$ are two tangent
-vectors (equivalence classes), then $[\gamma_1] + [\gamma_2]$ is the equivalence class of
-the curve that travels at velocity $\dot{\gamma}_1(0) + \dot{\gamma}_2(0)$. This makes
-$T_p\mathcal{M}$ a vector space.
+$$
+v_p(hk)=h(p)v_p(k)+k(p)v_p(h).
+$$
 
-For systems evolving in $\R^n$, the tangent space at any point is isomorphic to $\R^n$
-itself. The distinction becomes non-trivial on curved manifolds (e.g., $\SO(3)$ for
-rotational dynamics), where the tangent space is a genuinely different object from the
-manifold.
+Conversely a derivation at $p$ is determined by its action on local coordinate
+functions and corresponds to a unique tangent vector. For a map $H:\mathcal M\to\mathcal N$,
+its derivative $dH_p:T_p\mathcal M\to T_{H(p)}\mathcal N$ maps curve velocities by composition.
 
+### Coordinate Representation Along a Trajectory
 
-### Isomorphism With Directional Derivatives
+[]{#coordinate-representation}
 
+A vector field is a section $F:\mathcal M\to T\mathcal M$, not an ordinary map back into
+$\mathcal M$. Its coordinate Jacobian is not generally an intrinsic endomorphism of
+$T_p\mathcal M$. A connection can define a covariant derivative, and at an equilibrium
+the linearization does define an intrinsic tangent endomorphism. Along a moving trajectory,
+the coordinate dependence must be handled explicitly.
 
-There is another perspective on tangent vectors: as directional derivatives of functions
-on the manifold. A tangent vector $v_p \in T_p\mathcal{M}$ can be viewed as a linear
-functional on the space of smooth functions $f: \mathcal{M} \to \R$, defined by
-\begin{equation}
-v_p(f) := \frac{\dd}{\dd t}\Big|_{t=0} f(\gamma(t)),
-\label{eq:ch1:tangent-derivative}
-\end{equation}
-where $\gamma$ is any curve representing $v_p$. This definition is independent of the choice
-of curve (by equivalence), and it gives a derivation: a linear map that satisfies the
-Leibniz rule $v_p(fg) = f(p) v_p(g) + g(p) v_p(f)$.
+For a time-independent $C^2$ diffeomorphism $z=\phi(x)$, put $T(t)=D\phi(\bar x(t))$. Then
+[]{#eq-ch1:tangent-transform}
 
-Conversely, every derivation at $p$ arises from a unique tangent vector. This isomorphism
-between geometric tangent vectors (equivalence classes of curves) and algebraic derivations
-is fundamental to modern differential geometry and will underlie our treatment of variational
-equations in Chapter~\ref{ch:variational}.
+$$
+\delta z=T(t)\delta x,
+$$
+so differentiating in time gives
+[]{#eq-ch1:jacobian-transform}
 
+$$
+A_z=TAT^{-1}+\dot TT^{-1},\qquad B_z=TB.
+$$
+Even though $\phi$ has no explicit time argument, its derivative can vary along the
+trajectory: $\dot T=D^2\phi(\bar x)[\dot{\bar x},\,\cdot\,]$. Thus time independence
+of a chart does not imply $\dot T=0$. At a fixed equilibrium, or for a constant linear
+coordinate map, the extra term vanishes and $A_z$ is similar to $A$. An explicitly
+time-dependent chart includes its partial time derivative in $\dot T$ as well.
 
-### Why Tangent Spaces Are the Natural Home of Superposition
+For example, $\dot x=1$ on $\mathbb R$ has $A_x=0$. With $z=e^x>0$, the same motion
+satisfies $\dot z=z$ and $A_z=1$. A fixed $\delta x$ becomes $\delta z=e^{\bar x(t)}\delta x$.
+There is no new physical instability. The metric representing the original ruler is
+$W_z=z^{-2}$, so $\delta z^2W_z=\delta x^2$. Coordinate-dependent instantaneous eigenvalues
+must not be treated as invariant measures of sensitivity.
 
+## Residuals: Approximation Error and Nonlinear Information
 
+[]{#residuals-geometry-not-error}
 
-::: {.callout-important}
-## Axiom 2: Superposition Lives in Tangent Spaces
+At fixed input and time define
+[]{#eq-ch1:residual-def}
 
-Vector addition $\dx_1 + \dx_2$ is only defined in vector spaces. Tangent spaces are
-vector spaces *by construction*. Therefore, superposition of infinitesimal
-perturbations is exact---not because the nonlinear system is "approximately linear,"
-but because tangent spaces are *inherently* linear.
-:::
+$$
+r(d)=F(\bar x+d)-F(\bar x)-Ad.
+$$
+For $C^2$ fields on a neighborhood containing the line segment, apply the fundamental theorem
+of calculus twice to obtain
 
+$$
+r(d)=\int_0^1(1-s)D^2F(\bar x+sd)[d,d]\,ds.
+$$
 
-When one says "superposition fails in nonlinear systems," the precise meaning is:
-*you cannot add trajectories in state space*. But you *can* add infinitesimal
-variations in the tangent space. This is not an approximation---it is the definition of
-the tangent space as a vector space.
+The norm on the Hessian is the induced bilinear operator norm for the declared domain and
+range norms. Consequently
+[]{#eq-ch1:residual-bound}
 
+$$
+\|r(d)\|\leq\frac12\sup_{0\leq s\leq1}\|D^2F(\bar x+sd)\|\,\|d\|^2.
+$$
+The integral form avoids assuming that one common intermediate point represents every
+component of a vector-valued remainder. A locally Lipschitz derivative also supplies a
+quadratic bound. Bare differentiability gives only $o(\|d\|)$; for example $h(x)=|x|^{3/2}$
+has derivative zero at zero and a remainder of order $|x|^{3/2}$, not $x^2$.
 
-### Coordinate Representation
+The residual is an error of the finite Taylor approximation and useful information about
+the represented field. It is not automatically a physical-model discrepancy, measurement
+noise, numerical integration error or intrinsic manifold curvature. Those contributions
+need separate comparisons. A large residual can signal that a chosen local prediction is
+inadequate at the tested displacement; calling it geometry does not remove that limitation.
 
+### Quadratic Bounds and Cubic Leading Terms
 
-In local coordinates $\x = (x_1,\dots,x_n)$ on a chart of $\mathcal{M}$, a tangent
-vector $\dx \in T_{\bar{\x}}\mathcal{M}$ is represented by its components
-$(\delta x_1, \dots, \delta x_n) \in \R^n$. The Jacobian $\mat{A}$ then acts as a
-linear map $\mat{A}: T_{\bar{\x}}\mathcal{M} \to T_{\bar{\x}}\mathcal{M}$, sending one
-tangent vector to another.
+[]{#residual-scaling-a-concrete-example}
 
-Under a smooth coordinate change $\vec{z} = \phi(\x)$ with Jacobian
-$\mat{T} = \partial\phi/\partial\x$, tangent vectors transform as
-\begin{equation}
-\delta\vec{z} = \mat{T}\,\dx,
-\label{eq:ch1:tangent-transform}
-\end{equation}
-and the Jacobian transforms as
-\begin{equation}
-\mat{A}_z = \mat{T}\,\mat{A}\,\mat{T}^{-1} + \dot{\mat{T}}\,\mat{T}^{-1},
-\label{eq:ch1:jacobian-transform}
-\end{equation}
-so the extra $\dot{\mat{T}}\mat{T}^{-1}$ term must be retained whenever the
-coordinate chart varies along the trajectory. For a time-independent coordinate
-change, $\dot{\mat{T}}=0$ and the transformation is a similarity transform, so
-the eigenvalues of $\mat{A}$ are unchanged. For a time-dependent coordinate
-change, the instantaneous eigenvalues of $\mat{A}_z$ need not match those of
-$\mat{A}$; invariant statements must instead be made about the underlying
-geometric dynamics, such as stability conclusions, Lyapunov exponents, or
-contraction rates.
+For
+[]{#eq-ch1:sin-example}
 
+$$
+f(x)=\sin x,
+$$
+the derivative at zero is one and
+[]{#eq-ch1:sin-residual}
 
-## Residuals: Geometry, Not Error
+$$
+r(d)=\sin d-d=-d^3/6+O(d^5).
+$$
+Thus $r/d^3\to-1/6$ and $r/d^2\to0$. The residual is both $O(d^3)$ and $O(d^2)$ on
+a bounded small neighborhood: the cubic statement is sharper, not incompatible with the
+quadratic upper bound. For $\cos x$ at zero,
 
+$$
+r(d)=\cos d-1=-d^2/2+O(d^4).
+$$
 
-When we use the linear model $\mat{A}\dx$ to predict the evolution of a *finite*
-perturbation, a residual appears:
-\begin{equation}
-f(\bar{\x} + \dx, \bar{\uvec}) - f(\bar{\x}, \bar{\uvec}) - \mat{A}\dx
-= r(\dx),
-\label{eq:ch1:residual-def}
-\end{equation}
-where $\norm{r(\dx)} = o(\norm{\dx})$ by the Fréchet property. If $f$ is $C^2$, a
-sharper bound holds via the mean-value form of Taylor's theorem:
-\begin{equation}
-\norm{r(\dx)} \leq \frac{1}{2}\,\sup_{\xi \in [\bar{\x},\,\bar{\x}+\dx]}
-\left\lVert \frac{\partial^2 f}{\partial \x^2}(\xi,\bar{\uvec})\right\rVert
-\cdot \norm{\dx}^2.
-\label{eq:ch1:residual-bound}
-\end{equation}
+| $d$ | $\sin d-d$ | $r/d^2$ | $r/d^3$ |
+| --- | --- | --- | --- |
+| $0.1$ | $-0.0001665834$ | $-0.01665834$ | $-0.1665834$ |
+| $0.01$ | $-1.666658\times10^{-7}$ | $-0.001666658$ | $-0.1666658$ |
+| $0.001$ | $-1.666667\times10^{-10}$ | $-0.0001666667$ | $-0.1666667$ |
+| $0.0001$ | $-1.666667\times10^{-13}$ | $-1.666667\times10^{-5}$ | $-0.1666667$ |
 
+: A Cubic Leading Residual Also Satisfies a Quadratic Bound {#tbl-ch1_sin-residual}
 
-::: {.callout-important}
-## Axiom 3: Residuals Are Geometry, Not Error
+For a fixed direction $v$, a $C^2$ map has $r(sv)/s^2\to D^2F(\bar x)[v,v]/2$.
+A nonzero Hessian need not act nontrivially in every direction, and an operator-norm bound
+need not be attained. A vanishing second derivative alone does not establish cubic order
+without appropriate higher regularity. At very small steps floating-point subtraction
+can obscure either limit; use a step range and an independent series or identity.
 
-The residual $r(\dx)$ measures how far the true dynamics deviate from the tangent-space
-prediction. This deviation comes from *manifold curvature* (second-order geometry),
-not from "our approximation being bad." A large residual at a point means the manifold
-is sharply curved there---it is a geometric signal, not a failure of the method.
-:::
+### Why This Is Not Intrinsic Curvature
 
+[]{#two-perspectives-on-linearization}
 
+The line with metric $dx^2$ is intrinsically flat. The field $\dot x=x^2$ on that line has
+$r(d)=d^2$, so a nonzero Taylor residual does not require intrinsic curvature. Conversely,
+a zero vector field on a curved sphere has zero residual in every coordinate chart. A
+Hessian of coordinate field components changes under nonlinear coordinate changes and
+is not the Riemann curvature tensor.
 
-### Residual Scaling: A Concrete Example
+Curvature requires a connection; the Riemannian metric supplies a particular torsion-free,
+metric-compatible connection. Its curvature measures path dependence of parallel transport
+around infinitesimal loops. Topology, the bending of an embedding, curvature of a chosen
+metric and derivatives of the dynamical field are different structures. The distinctions
+matter when a posture change, a coordinate singularity or a rapid motion is called a
+“high-curvature region” without specifying which quantity was calculated.
 
-
-To illustrate the $O(\norm{\dx}^2)$ scaling of the residual, consider the one-dimensional
-function
-\begin{equation}
-f(x) = \sin(x).
-\label{eq:ch1:sin-example}
-\end{equation}
-
-At $\bar{x} = 0$, the derivative is $f'(0) = \cos(0) = 1$. The linear approximation
-is $\hat{f}(\delta x) = \delta x$. The residual is
-\begin{equation}
-r(\delta x) = \sin(\delta x) - \delta x.
-\label{eq:ch1:sin-residual}
-\end{equation}
-
-
-| $\delta x$ | $\sin(\delta x)$ | Linear: $\delta x$ | Residual $r$ | $r / (\delta x)^2$ | $r / (\delta x)^3$ |
-| --- | --- | --- | --- | --- | --- |
-| $0.1$ | $0.0998334$ | $0.1$ | $-1.666 \times 10^{-4}$ | $-0.01666$ | $-0.1666$ |
-| $0.01$ | $0.0099998$ | $0.01$ | $-1.667 \times 10^{-7}$ | $-0.001667$ | $-0.1667$ |
-| $0.001$ | $0.001000$ | $0.001$ | $-1.667 \times 10^{-10}$ | $-0.000167$ | $-0.1667$ |
-| $0.0001$ | $0.000100$ | $0.0001$ | $-1.667 \times 10^{-13}$ | $-0.0000167$ | $-0.1667$ |
-
-: Residual scaling for $f(x) = \sin(x)$ at $\bar{x} = 0$ with linear approximation $\hat{f} = x$. Because $f''(0) = -\sin(0) = 0$, the residual is $O(\delta x^3)$, not $O(\delta x^2)$. {#tbl-ch1_sin-residual}
-
-
-
-::: {.callout-warning}
-## Caution
-
-This example is deliberately instructive. The function $\sin(x)$ has $f''(0) = -\sin(0) = 0$,
-so the second-order residual bound $\norm{r(\dx)} \leq \tfrac{1}{2}C_H\norm{\dx}^2$
-(Eq.~\eqref{eq:ch1:residual-bound}) still holds---it is simply a loose bound in this case.
-The *actual* residual is $r(\delta x) = -(\delta x)^3/6 + O(\delta x^5)$ from the
-Taylor series $\sin(\delta x) = \delta x - (\delta x)^3/6 + \cdots$.
-
-The column $r/(\delta x)^3 \to -1/6 \approx -0.1667$ confirms cubic scaling. The column
-$r/(\delta x)^2 \to 0$ shows that the $O(\delta x^2)$ bound is satisfied but not tight.
-This illustrates a general principle: *the Fréchet property guarantees
-$o(\norm{\dx})$ residuals; the actual rate depends on the local curvature tensor*.
-When curvature vanishes (flat directions), the residual shrinks even faster than the bound suggests.
-:::
-
-
-For a function with nonzero second derivative---such as $f(x) = \cos(x)$ at $\bar{x} = 0$, where
-$f''(0) = -1$---the residual *is* quadratic: $r(\delta x) = -(\delta x)^2/2 + O(\delta x^4)$,
-and the ratio $r/(\delta x)^2 \to -1/2$ exactly. The general bound
-\eqref{eq:ch1:residual-bound} is tight whenever $f''(\bar{x}) \neq 0$.
-
-The practical lesson: the residual quantifies curvature. Zero residual at second order means
-the manifold is locally "flatter than expected"---which happens precisely at inflection
-points and other geometrically special configurations.
-
-
-### Two Perspectives on Linearization
-
-
-
-|  | **Standard View** | **Tangent-Space View** |
+| Quantity | Meaning | Assessment |
 | --- | --- | --- |
-| Residual is\ldots | Approximation error | Manifold curvature |
-| Strategy | Minimize error | Measure and exploit curvature |
-| Linearization is\ldots | "Good enough" | Exact at the infinitesimal limit |
-| Goal | Better approximation | Navigate the tangent bundle |
+| Taylor residual | Finite field change minus its first-order prediction | Perturbation-size and direction study |
+| Flow sensitivity | Derivative of a solution map | Variational equation and nonlinear trajectories |
+| Intrinsic curvature | Curvature of a declared connection | Metric/connection calculation |
+| Numerical error | Computed result minus the mathematical model result | Step refinement and independent solution |
+| Physical discrepancy | Model prediction versus observations | Measurement uncertainty and independent validation |
+
+: Different Quantities Require Different Comparisons {#tbl-ch1_perspectives}
+
+## Manifold Examples: Rotations, Poses, and Joint Angles
+
+[]{#manifold-examples-from-theory-to-application}
+
+### SO(3): Rotations and Attitude Kinematics
+
+[]{#singular-configurations-on-manifolds}
+
+[]{#why-so3-matters}
+
+[]{#jacobian-on-so3}
+
+[]{#so3-rotations-and-attitude-dynamics}
+
+The rotation group is
+[]{#eq-ch1:SO3-def}
+
+$$
+\mathrm{SO}(3)=\{R\in\mathbb R^{3\times3}:R^TR=I,\ \det R=1\}.
+$$
+Differentiate $R^TR=I$ along a curve to get $R^T\delta R+(\delta R)^TR=0$. Therefore
+[]{#eq-ch1:so3-tangent}
+
+$$
+T_I\mathrm{SO}(3)=\mathfrak{so}(3)=\{S:S^T=-S\},
+$$
+and
+[]{#eq-ch1:SO3-tangent-at-R}
+
+$$
+T_R\mathrm{SO}(3)=\{RS:S\in\mathfrak{so}(3)\}.
+$$
+This space has dimension three. The ambient matrix $RS$ need not be skew; multiplying
+by $R^T$ identifies it with a skew matrix at the identity. That identification is called
+left trivialization. Matrix commutators represent Lie brackets of the corresponding
+left-invariant vector fields, not arbitrary vector fields without qualification.
+
+If $R$ maps body coordinates to space coordinates and $\omega_b$ is body angular velocity,
+[]{#eq-ch1:attitude-kinematics}
+
+$$
+\dot R=R[\omega_b]_\times,
+$$
+where
+[]{#eq-ch1:skew-symmetric}
+
+$$
+[\omega]_\times=\begin{pmatrix}0&-\omega_3&\omega_2\\\omega_3&0&-\omega_1\\-\omega_2&\omega_1&0\end{pmatrix}.
+$$
+At fixed $R$, the input derivative acts on an angular-velocity variation as
+[]{#eq-ch1:attitude-jacobian}
+
+$$
+D_{\omega_b}\dot R[\delta\omega_b]=R[\delta\omega_b]_\times.
+$$
+For simultaneous attitude and velocity variations, write $\delta R=R[\eta]_\times$.
+Differentiating this identity and the kinematic equation gives
+
+$$
+[\dot\eta]_\times=[\eta]_\times[\omega_b]_\times-[\omega_b]_\times[\eta]_\times
++[\delta\omega_b]_\times,
+\qquad \dot\eta=-[\omega_b]_\times\eta+\delta\omega_b.
+$$
+
+The resulting equation is linear in variations while retaining rotating-frame coupling.
+It is kinematics; torque-to-angular-acceleration dynamics additionally require inertia,
+external moments and any constraints.
+
+Rotation matrices satisfy redundant constraints; unit quaternions satisfy a unit-norm
+constraint and double-cover rotations. The equality of the rotations represented by $q$
+and $-q$ is not a local singularity. Euler charts can be singular, and a chosen principal
+logarithm has a branch cut at half turns, while $\mathrm{SO}(3)$ itself remains smooth.
+A smooth positive-definite Riemannian metric does not degenerate at a particular rotation.
+Compactness already prevents one global chart of $\mathrm{SO}(3)$ onto an open subset
+of $\mathbb R^3$; the hairy-ball theorem on $S^2$ is not the reason to cite here.
+
+### SE(3): Rigid-Body Poses and Twists
+
+[]{#kinematics-and-dynamics}
+
+[]{#se3-rigid-body-transformations}
+
+A pose and its Lie algebra have the forms
+[]{#eq-ch1:SE3-def}
+
+$$
+T=\begin{pmatrix}R&p\\0&1\end{pmatrix}\in\mathrm{SE}(3),
+$$
+[]{#eq-ch1:se3-tangent}
+
+$$
+\widehat\xi=\begin{pmatrix}[\omega]_\times&v\\0&0\end{pmatrix}\in\mathfrak{se}(3).
+$$
+The tangent space at $T$ is $T\mathfrak{se}(3)$, not the identity algebra itself.
+For body and space twists,
+[]{#eq-ch1:SE3-kinematics}
 
-: Two perspectives on the linearization residual. {#tbl-ch1_perspectives}
+$$
+\dot T=T\widehat\xi_b=\widehat\xi_sT,\qquad
+\widehat\xi_b=T^{-1}\dot T,\quad\widehat\xi_s=\dot TT^{-1}.
+$$
+Consequently $v_b=R^T\dot p$, $\omega_s=R\omega_b$ and
+$v_s=\dot p-\omega_s\times p$. The space-twist linear component is not generally the
+velocity $\dot p$ of the moving body origin. State the six-vector ordering; here it is
+$(\omega,v)$, with corresponding changes required for $(v,\omega)$ conventions.
+These identities follow directly by matrix multiplication and agree with the
+Modern Robotics twist convention  [@ModernRoboticsTwistsFoundations].
+
+Plücker line coordinates describe a line with additional algebraic conditions; a general
+twist additionally allows pitch and pure translation. Identifying every tangent vector
+with an unspecified set of Plücker coordinates hides these distinctions. For the club,
+one must declare both the reference point of the linear velocity and the frame of its
+components before combining it with body-segment velocities or wrenches.
+
+### A Double Pendulum: Topology and Dynamics
+
+[]{#nonlinear-effects-and-coupling}
+
+[]{#coordinates-and-tangent-space}
+
+[]{#the-double-pendulum-configuration-manifold}
+
+For two unrestricted planar revolute coordinates,
+[]{#eq-ch1:double-pend-manifold}
+
+$$
+\mathcal Q=S^1\times S^1=\mathbb T^2,\qquad
+T\mathcal Q\simeq\mathbb T^2\times\mathbb R^2.
+$$
+Each configuration tangent space is two-dimensional; the position-velocity state manifold
+is four-dimensional. Joint limits and contacts may restrict it. Intervals such as
+$[0,2\pi)$ are representatives with identified endpoints, not a single smooth chart
+across the seam. Unwrapped real angles can be useful lifted coordinates as long as
+periodic equivalence is handled when comparing configurations.
+
+For a concrete dynamics model, take massless links $\ell_1,\ell_2$, endpoint masses $m_1,m_2$
+and absolute angles from downward vertical. Define $\Delta=\theta_1-\theta_2$ and
+$b=m_2\ell_1\ell_2$. Differentiate the endpoint positions to obtain
+
+$$
+K=\tfrac12(m_1+m_2)\ell_1^2\dot\theta_1^2
++\tfrac12m_2\ell_2^2\dot\theta_2^2+b\cos\Delta\,\dot\theta_1\dot\theta_2,
+$$
+
+
+$$
+V=-(m_1+m_2)g\ell_1\cos\theta_1-m_2g\ell_2\cos\theta_2.
+$$
+
+The Lagrangian equations give
+[]{#eq-ch1:double-pend-dyn}
+
+$$
+M(q)\ddot q+c(q,\dot q)+\nabla V(q)=Q,
+$$
+with
+
+$$
+M=\begin{pmatrix}(m_1+m_2)\ell_1^2&b\cos\Delta\\b\cos\Delta&m_2\ell_2^2\end{pmatrix},
+\quad c=\begin{pmatrix}b\sin\Delta\,\dot\theta_2^2\\-b\sin\Delta\,\dot\theta_1^2\end{pmatrix}.
+$$
+
+For positive masses and lengths,
+
+
+$$
+\det M=m_2\ell_1^2\ell_2^2(m_1+m_2\sin^2\Delta)>0.
+$$
+
+Generalized forces $Q$ must match these absolute angles. If actuator torques are $\tau_1$
+at the base and $\tau_2$ at the relative elbow, virtual work gives
+$Q=(\tau_1-\tau_2,\tau_2)^T$, before adding dissipative loads. Ignoring this transformation
+would change the physical interpretation of the input Jacobian.
+
+The abstract torus admits the flat metric $d\theta_1^2+d\theta_2^2$: its local metric
+coefficients are constant and its curvature tensor vanishes. A doughnut-shaped embedding
+in three-space carries a different induced metric; the mechanical kinetic metric $M(q)$
+is another choice. Torus topology therefore does not mean intrinsic curvature is nonzero.
+Neither nonlinear pendulum motion nor inertial coupling requires that identification.
+Large potential gradients alone do not establish large Taylor residuals of the state field.
+
+## Variational Evolution and Transport
+
+[]{#nonlinearity-re-enters-through-transport}
+[]{#sec-transport}
+
+### The Derivative of the Flow
+
+[]{#state-transition-matrix-and-variational-equations}
+
+Let $\varphi_{t,t_0}$ be the local solution map for a fixed nominal input. For a fixed
+finite interval satisfying the regularity assumptions, its differential maps between
+the tangent spaces at the initial and final states. In coordinates,
+[]{#eq-ch1:perturbed-traj}
+
+$$
+\varphi_{t,t_0}(x_0+d)=\varphi_{t,t_0}(x_0)+\Phi(t,t_0)d+o(\|d\|).
+$$
+Differentiate the ODE with respect to a family parameter to obtain
+[]{#eq-ch1:variational-eq}
+
+$$
+\dot{\delta x}=A(t)\delta x+B(t)\delta u,\qquad
+\dot\Phi=A(t)\Phi,\quad\Phi(t_0,t_0)=I.
+$$
+Variation of constants gives
+[]{#eq-ch1:dx-solution}
+
+$$
+\delta x(t)=\Phi(t,t_0)\delta x(t_0)+\int_{t_0}^t\Phi(t,s)B(s)\delta u(s)\,ds.
+$$
+This is an exact identity for the first variation. It is not an exact finite difference
+between arbitrary trajectories. Its physical interpretation depends on the complete
+nominal state, input, parameters and contact mode used to compute $A$ and $B$.
+The composition law for flow derivatives is $\Phi(t,s)\Phi(s,t_0)=\Phi(t,t_0)$.
+For time-varying $A$, $\exp(\int A\,dt)$ is generally not the solution unless the relevant
+matrices commute; integration remains necessary.
+
+Under the previous coordinate change,
+
+$$
+\Phi_z(t,t_0)=T(t)\Phi_x(t,t_0)T(t_0)^{-1}.
+$$
+
+This is not generally a similarity transform because the endpoint bases differ.
+For a periodic orbit's return map with matched coordinates, Floquet multipliers have a
+specific stability interpretation. A general finite-time transition matrix instead calls
+for endpoint norms and singular-value or task-specific analysis.
+
+### Parallel Transport Is a Different Map
+
+[]{#christoffel-symbols-and-parallel-transport-intuitive-picture}
+
+[]{#transport-as-curved-geometry}
+
+Given a connection with Christoffel symbols $\Gamma^k_{ij}$, a parallel vector field
+$w$ along a curve $x(t)$ satisfies
+
+$$
+\dot w^k+\Gamma^k_{ij}(x)\dot x^i w^j=0.
+$$
+
+Levi-Civita parallel transport preserves the chosen Riemannian inner product. The flow
+derivative generally stretches and contracts perturbations. On the Euclidean line with
+$\dot x=ax$, the connection coefficients vanish, parallel transport preserves $w$, and
+the flow derivative multiplies a variation by $e^{a(t-t_0)}$. No intrinsic curvature is
+needed for that amplification. With a torsion-free connection, a flow variation satisfies
+$\nabla_{\dot x}\delta x=\nabla_{\delta x}F$; parallel transport would instead set the
+left side to zero. These equations make the difference explicit.
+
+### Finite Prediction Error and Numerical Integration
 
-
-In the standard view, we apologize for the residual: "Yes, the linear model is wrong for
-finite perturbations, but for small perturbations it is good enough." In the tangent-space
-view, the residual is information: it tells us about the curvature of the state-space manifold,
-and this information is essential for understanding transport and nonlinear phenomena.
-
-
-## Manifold Examples: From Theory to Application
-
-
-The abstract theory of tangent spaces becomes concrete and powerful when applied to specific
-manifolds that arise in dynamics and control. Three examples are essential.
-
-
-### SO(3): Rotations and Attitude Dynamics
-
-
-The special orthogonal group $\SO(3)$ is the set of all $3 \times 3$ orthogonal matrices
-with determinant $+1$:
-\begin{equation}
-\SO(3) = \{\mat{R} \in \R^{3 \times 3} : \mat{R}\T \mat{R} = \mat{I}, \, \det(\mat{R}) = 1\}.
-\label{eq:ch1:SO3-def}
-\end{equation}
-
-$\SO(3)$ is a 3-dimensional Lie group: it is a smooth manifold that is also a group under
-matrix multiplication. At the identity, the tangent space is the space of
-skew-symmetric matrices, called the Lie algebra $\mathfrak{so}(3)$:
-\begin{equation}
-T_{\mat{I}}\SO(3) = \mathfrak{so}(3)
-= \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
-\label{eq:ch1:so3-tangent}
-\end{equation}
-
-At an arbitrary rotation $\mat{R}$, the tangent space is the left translation of
-that Lie algebra:
-\begin{equation}
-T_{\mat{R}}\SO(3) = \{\mat{R}\mat{S} : \mat{S} \in \mathfrak{so}(3)\}
-= \mat{R}\mathfrak{so}(3).
-\label{eq:ch1:SO3-tangent-at-R}
-\end{equation}
-
-This space is 3-dimensional, but its elements are generally not themselves
-skew-symmetric unless $\mat{R}=\mat{I}$.
-
-#### Jacobian on SO(3)
-
-Consider a rigid body with rotation matrix $\mat{R} \in \SO(3)$ and angular velocity
-$\boldsymbol{\omega} = (\omega_x, \omega_y, \omega_z)$. The kinematic equation is
-\begin{equation}
-\dot{\mat{R}} = \mat{R} \, [\boldsymbol{\omega}]_{\times},
-\label{eq:ch1:attitude-kinematics}
-\end{equation}
-where $[\boldsymbol{\omega}]_{\times}$ is the skew-symmetric matrix representation:
-\begin{equation}
-[\boldsymbol{\omega}]_{\times} = \begin{pmatrix} 0 & -\omega_z & \omega_y \\ \omega_z & 0 & -\omega_x \\ -\omega_y & \omega_x & 0 \end{pmatrix}.
-\label{eq:ch1:skew-symmetric}
-\end{equation}
-
-The Jacobian of this system with respect to a perturbation in angular velocity is
-\begin{equation}
-\frac{\partial \dot{\mat{R}}}{\partial \boldsymbol{\omega}} = \mat{R} \, \frac{\partial [\boldsymbol{\omega}]_{\times}}{\partial \boldsymbol{\omega}}.
-\label{eq:ch1:attitude-jacobian}
-\end{equation}
-
-This reveals a key point: perturbations to the angular velocity propagate through the system
-as skew-symmetric matrices, which is precisely the tangent space structure. The linear
-perturbation dynamics lives naturally in $\mathfrak{so}(3)$, the Lie algebra.
-
-#### Why SO(3) Matters
-
-For quadcopters, satellites, and any system with rotational degrees of freedom, using Euler
-angles or quaternions often introduces artificial singularities or redundancy. By working
-directly with $\SO(3)$ and its tangent space, we eliminate these complications and gain
-access to the rich structure of Lie groups and Lie algebras, which provide exact (non-approximate)
-transport laws through the state space.
-
-
-### SE(3): Rigid Body Transformations
-
-
-The special Euclidean group $\SE(3)$ describes rigid body motions in 3D: rotations and
-translations. It is the semidirect product $\SO(3) \ltimes \R^3$, represented as $4 \times 4$
-homogeneous transformation matrices:
-\begin{equation}
-\mat{T} = \begin{pmatrix} \mat{R} & \vec{p} \\ 0 & 1 \end{pmatrix}, \quad \mat{R} \in \SO(3), \quad \vec{p} \in \R^3.
-\label{eq:ch1:SE3-def}
-\end{equation}
-
-The tangent space to $\SE(3)$ at any $\mat{T}$ is the space of Plücker coordinates or
-twist vectors, represented as $4 \times 4$ matrices of the form
-\begin{equation}
-\begin{pmatrix} [\boldsymbol{\omega}]_{\times} & \vec{v} \\ 0 & 0 \end{pmatrix},
-\label{eq:ch1:se3-tangent}
-\end{equation}
-where $[\boldsymbol{\omega}]_{\times} \in \mathfrak{so}(3)$ and $\vec{v} \in \R^3$ is a linear velocity.
-This is the Lie algebra $\mathfrak{se}(3)$, a 6-dimensional space.
-
-#### Kinematics and Dynamics
-
-For a rigid body in space with configuration $\mat{T}(t) \in \SE(3)$ and twist (spatial
-velocity) $\boldsymbol{\xi} = (\vec{v}, \boldsymbol{\omega})$, the kinematic equation is
-\begin{equation}
-\dot{\mat{T}} = \mat{T} \, \begin{pmatrix} [\boldsymbol{\omega}]_{\times} & \vec{v} \\ 0 & 0 \end{pmatrix}.
-\label{eq:ch1:SE3-kinematics}
-\end{equation}
-
-Again, the dynamics live in the tangent space (the Lie algebra), and perturbations evolve
-linearly within that space---an expression of Axiom 2. The nonlinearity re-enters through
-the composition of infinitesimal steps, as formalized in Axiom 4 (transport).
-
-
-### The Double Pendulum Configuration Manifold
-
-
-A double pendulum consists of two rigid links connected by hinges, with angles $\theta_1$
-and $\theta_2$. The configuration space is naturally a torus:
-\begin{equation}
-\mathcal{M} = T^2 = S^1 \times S^1,
-\label{eq:ch1:double-pend-manifold}
-\end{equation}
-where each $S^1$ is a circle (angle wraparound).
-
-#### Coordinates and Tangent Space
-
-Coordinates on $T^2$ are $(\theta_1, \theta_2) \in [0, 2\pi) \times [0, 2\pi)$ with wraparound
-identification. The tangent space $T_{(\theta_1, \theta_2)}(T^2)$ is a 2-dimensional space
-representing the angular velocities $(\dot\theta_1, \dot\theta_2)$.
-
-The state is $\x = (\theta_1, \theta_2, \dot\theta_1, \dot\theta_2) \in T^2 \times \R^2$.
-The dynamics come from the Lagrangian or energy conservation, with gravity and friction.
-For example:
-\begin{equation}
-\ddot\theta_1 = g(\sin\theta_1 + \frac{1}{2}\sin(\theta_1 + \theta_2)) + (\text{friction, control}) ,
-\label{eq:ch1:double-pend-dyn}
-\end{equation}
-and similarly for $\theta_2$.
-
-#### Nonlinear Effects and Coupling
-
-The double pendulum exhibits rich nonlinear phenomena:
-- **Tangent-space superposition.** Small perturbations around a nominal trajectory add linearly in the tangent space.
-- **Residual geometry.** The residual $r(\dx)$ from Eq.~\eqref{eq:ch1:residual-def} is large when
-  the nominal trajectory passes through regions of high kinetic-energy curvature or steep potential gradients.
-- **Transport and coupling.** As the system evolves, the principal directions of stability rotate
-  through the torus. The state-transition matrix (Section~\ref{sec:transport}) encodes this rotation exactly.
-
-The torus structure is essential: wraparound in angles is handled correctly only by recognizing
-that the manifold is curved (topologically), not flat. Standard treatments that treat $\theta_i$ as
-real variables miss this structure.
-
-
-## Nonlinearity Re-Enters Through Transport
-
-
-### Transport as Curved Geometry
-
-
-
-::: {.callout-important}
-## Axiom 4: Transport Between Tangent Spaces
-
-Moving along a trajectory from $\bar{\x}(t_0)$ to $\bar{\x}(t_1)$ means moving between
-tangent spaces $T_{\bar{\x}(t_0)}\mathcal{M}$ and $T_{\bar{\x}(t_1)}\mathcal{M}$. The
-connection between these spaces---parallel transport, Christoffel symbols in Riemannian
-geometry---encodes the nonlinearity. Optimal control (DDP, iLQR) is therefore
-*exact local optimization + careful transport*, not "global optimization with
-approximations."
-:::
-
-
-The relationship between successive tangent spaces is governed by the *state
-transition matrix* $\Phi(t_1, t_0)$, which we develop fully in
-Chapter~\ref{ch:variational}. For now, we sketch the idea.
-
-
-### State Transition Matrix and Variational Equations
-
-
-Consider the system $\dot{\x} = f(\x)$ and a reference trajectory $\bar{\x}(t)$. A nearby trajectory
-with initial condition $\bar{\x}(t_0) + \dx(t_0)$ follows
-\begin{equation}
-\x(t) = \bar{\x}(t) + \dx(t) + o(\norm{\dx(t_0)}),
-\label{eq:ch1:perturbed-traj}
-\end{equation}
-where $\dx(t)$ satisfies the variational equation:
-\begin{equation}
-\dot{\dx}(t) = \mat{A}(t) \, \dx(t), \quad \mat{A}(t) := \frac{\partial f}{\partial \x}\bigg|_{\bar{\x}(t)}.
-\label{eq:ch1:variational-eq}
-\end{equation}
-
-The unique solution with initial condition $\dx(t_0)$ is
-\begin{equation}
-\dx(t) = \Phi(t, t_0) \, \dx(t_0),
-\label{eq:ch1:dx-solution}
-\end{equation}
-where $\Phi(t, t_0)$ is the state transition matrix (also called fundamental matrix).
-
-
-### Christoffel Symbols and Parallel Transport (Intuitive Picture)
-
-
-In Riemannian geometry on a curved manifold, "parallel transport" means moving a tangent
-vector along a curve while keeping it "as parallel as possible" (minimizing rotation relative
-to the manifold curvature). This is formalized by the Christoffel symbols $\Gamma^k_{ij}$, which
-measure how basis vectors change as you move along the manifold.
-
-For our nonlinear dynamics, an analogous concept applies: as the reference trajectory $\bar{\x}(t)$
-evolves, the linearized dynamics at successive points are not simply comparable; they must be
-"transported" via the state transition matrix $\Phi(t, t_1)$. The transport is exact (no
-approximation), but it encodes the manifold's curvature.
-
-
-### Connection to Differential Dynamic Programming
-
-
-In Differential Dynamic Programming (DDP) and iLQR (discussed in later chapters), the algorithm
-repeatedly:
-1. Linearize the dynamics along a nominal trajectory, computing $\mat{A}(t), \mat{B}(t)$.
-2. Solve a linear-quadratic problem in the tangent spaces, obtaining optimal perturbations $\dx(t), \du(t)$.
-3. Transport these perturbations back to the full manifold via $\Phi(t, t_0)$, updating the nominal trajectory.
-4. Repeat.
-
-Each iteration solves an *exact* local problem (Axiom 1) within the tangent spaces,
-then accounts for curvature via *exact* transport (Axiom 4). The algorithm does not
-approximate; it refines the nominal trajectory by exploiting the local structure at each point.
-
-
-## Scope of Exactness: When the Tangent-Space Picture Breaks Down
-
-
-The tangent-space framework is powerful and exact for smooth systems. But it has boundaries.
-Understanding these boundaries is essential for knowing when the theory applies and when
-generalizations are needed.
-
-
-### Discontinuities and Piecewise-Smooth Systems
-
-
-The $C^1$ smoothness assumption (Assumption~\ref{ass:smoothness}) is critical. If the vector
-field $f$ or its Jacobian $\partial f / \partial \x$ jumps or is undefined at a point, the
-Fréchet derivative fails to exist. Common examples:
-
-- **Coulomb Friction.** The friction force has a discontinuous dependence on velocity:
-\begin{equation}
-f_{\text{friction}} = \begin{cases}
--\mu_s |N| \cdot \text{sign}(v), & v = 0 \text{ (static)} \\
--\mu_k |N| \cdot \text{sign}(v), & v \neq 0 \text{ (kinetic)}
-\end{cases}
-\end{equation}
-The sign function is discontinuous; hence $\partial f / \partial v$ does not exist.
-
-- **Switching Controllers.** A controller that switches between $u = u_1$ and $u = u_2$
-based on crossing a threshold introduces a discontinuity in $f$ or $\partial f / \partial u$.
-
-- **Hard Constraints.** A state constraint $x_i \leq x_{\max}$ enforced by a spring-like
-potential $V = \frac{1}{2}k(x_i - x_{\max})^2$ near the boundary is okay (smooth), but a
-hard wall (infinite force at the boundary) is not.
-
-For such systems, the Fréchet derivative and Axiom 1 do not apply. Instead, one must use
-generalized notions: Filippov solutions, saltation matrices (for impacts), or differential
-inclusions. These are beyond the scope of this book but represent important extensions.
-
-
-### Chattering and Sliding Modes
-
-
-In optimal control with control constraints (e.g., $|u| \leq u_{\max}$), the optimal control
-can be *bang-bang*: switching infinitely often between $u = u_{\max}$ and $u = -u_{\max}$.
-On a time interval where infinitely many switches occur (sliding mode), the averaged effect
-of the rapid switching can be captured by a generalized velocity constraint, but the instantaneous
-dynamics are discontinuous and do not satisfy $C^1$ smoothness.
-
-The tangent-space framework applies to the intervals between switches and to the averaged dynamics,
-but not at the switching surfaces themselves.
-
-
-### Zeno Behavior and Accumulation of Events
-
-
-In some hybrid systems, an infinite number of discrete events (impacts, mode switches) can
-accumulate in finite time, a phenomenon called Zeno behavior. At the accumulation point, the
-system's state may be well-defined (by continuity), but the dynamics are singular and do not
-admit a classical smooth vector field.
-
-
-### Singular Configurations on Manifolds
-
-
-On manifolds like $\SO(3)$ or $\SE(3)$, certain configurations are singular: the exponential
-map or logarithmic map may not be invertible, or the intrinsic metric may degenerate. For example,
-the quaternion representation of rotations has a singularity at the antipodal point: two different
-quaternions represent the same rotation. When the system passes through such a point, local
-coordinates become singular, and care must be taken to handle the transition.
-
-The tangent-space theory remains valid (the Lie group structure is smooth everywhere), but
-global coordinate charts cannot cover the entire manifold without singularities (a topological
-consequence of the Hairy Ball Theorem for $S^2$ and its generalizations).
-
-
-### Summary: Boundaries of the Theory
-
-
-
-| **Feature** | **Smooth Dynamics** | **Extension Needed** |
+For a nearby solution with the same input, let $e=x-\bar x$ and let
+$\eta=\Phi(t,t_0)e(t_0)$. Then $w=e-\eta$ obeys
+
+$$
+\dot w=A(t)w+r(e(t)),\qquad
+w(t)=\int_{t_0}^t\Phi(t,s)r(e(s))\,ds.
+$$
+
+If $\|\Phi(t,s)\|\leq K e^{\alpha(t-s)}$ and $\|r(e)\|\leq C\|e\|^2/2$ in the
+common valid region, then
+
+$$
+\|w(t)\|\leq\frac{KC}{2}\int_{t_0}^t e^{\alpha(t-s)}\|e(s)\|^2\,ds.
+$$
+
+Local residual size and subsequent amplification both matter. The interval of useful
+prediction may shrink when variations grow; a pointwise derivative supplies no uniform
+long-time accuracy guarantee.
+
+An exact integral identity is not an exact quadrature algorithm. Euler integration of
+$\dot x=ax$ gives $x_{k+1}=(1+ah)x_k$ rather than $e^{ah}x_k$, even on a flat line.
+Discretization error therefore exists without curvature or Taylor error in the vector
+field. Numerical studies should separately test derivative accuracy, time-step refinement,
+nonlinear perturbation size and physical-model discrepancy.
+
+## Local Optimal Control: What DDP and iLQR Approximate
+
+[]{#connection-to-differential-dynamic-programming}
+
+For a discretized dynamics map $x_{k+1}=f_k(x_k,u_k)$, form a quadratic local model of
+$Q_k=\ell_k+V_{k+1}\circ f_k$. Let $z=(x,u)$. Applying the chain rule twice gives
+
+$$
+Q_{zz}=\ell_{zz}+f_z^TV_{xx}^{+}f_z+\sum_a V_{x_a}^{+}(f_a)_{zz}.
+$$
+
+Full DDP retains the last term from second derivatives of dynamics; the usual iLQR
+approximation omits it. Both truncate local cost-to-go expansions. If $Q_{uu}$ is
+positive definite, the unconstrained quadratic subproblem gives
+
+$$
+\delta u=k+K\delta x,\qquad k=-Q_{uu}^{-1}Q_u,\quad K=-Q_{uu}^{-1}Q_{ux}.
+$$
+
+Solving this subproblem is not solving the original nonlinear problem exactly. A forward
+rollout evaluates candidate controls with the nonlinear dynamics, using a line search or
+trust-region mechanism and appropriate regularization. On a manifold, a retraction or
+other declared local update returns tangent increments to the configuration space;
+$\Phi$ alone does not perform that update. Constraints require an appropriate constrained
+subproblem, active-set treatment, penalty or other explicit formulation. The distinctions
+agree with the iLQR/DDP discussion in Tedrake's trajectory-optimization notes
+ [@TedrakeTrajectoryFoundations].
+
+For golf, a converged optimizer provides a candidate within its cost, actuator bounds,
+equipment model and contact assumptions. It need not find a global optimum, and it does
+not show that a golfer implements the same algorithm. A small linearized residual does
+not establish physiological plausibility, robustness to unmodeled disturbances or safe
+loads. Repeated nonlinear rollout and independent evidence remain part of the argument.
+
+## Lie Brackets and Reachable Motion
+[]{#rem-ch1:lie-brackets}
+
+For $C^1$ vector fields use the convention
+
+$$
+[f,g]=Dg\,f-Df\,g.
+$$
+
+The bracket measures the leading effect of exchanging short flows; higher-order brackets
+need correspondingly greater regularity. It can be nonzero for linear fields, so it is
+not a measure reserved for nonlinear coefficients. For a smooth driftless system
+$\dot q=\sum_i g_i(q)u_i$, a bracket-generating family with controls allowing both signs
+near zero provides local controllability through small alternating motions. This statement
+requires the control-set and smoothness assumptions; input directions alone describe
+instantaneous velocities, whereas their iterated effects concern finite reachable motion
+ [@ModernRoboticsControllabilityFoundations].
+
+With drift, full Lie rank is not by itself a small-time local controllability certificate.
+For example $\dot x=1,\dot y=u$, $|u|\leq1$, has drift and input spanning the plane.
+The set reachable within time $T$ has interior, but no state with $x<x_0$ is reachable
+forward in time. Accessibility and bidirectional local control differ. A golf model's
+torque limits, activation, unilateral ground contact and short remaining horizon all
+restrict realizable maneuvers. Brackets cannot establish them away.
+
+## Mode Changes and Boundaries of Differentiability
+
+[]{#scope-of-exactness-when-the-tangent-space-picture-breaks-down}
+
+### Friction, Constraints, and Switching
+
+[]{#zeno-behavior-and-accumulation-of-events}
+
+[]{#chattering-and-sliding-modes}
+
+[]{#discontinuities-and-piecewise-smooth-systems}
+
+For one-dimensional tangential contact with normal load $N\geq0$, ideal dry friction has
+
+$$
+F_t\in[-\mu_sN,\mu_sN]\quad(v_t=0),\qquad
+F_t=-\mu_kN\,\operatorname{sign}(v_t)\quad(v_t\ne0).
+$$
+
+During sticking, the required force is selected together with the other dynamics and must
+remain within the static bound. It is not zero because $\operatorname{sign}(0)=0$.
+Multidirectional friction uses a cone or disk and a slip-direction law. A compliant
+one-sided penalty $V=k\max(0,d)^2/2$ is $C^1$ but its force generally has a derivative
+jump at $d=0$; it must not be called smooth merely because the potential is quadratic
+on each side. Regular bilateral constraints and feasible fixed contact modes remain
+different cases.
+
+A function can be differentiable at a point while its derivative is discontinuous nearby;
+loss of $C^1$ alone does not prove failure of every point derivative. A discontinuous
+field at a point cannot be differentiable there. At a switching surface examine the
+actual one-sided fields and transition law. For prescribed switching times, propagate
+variations on successive intervals; state-triggered timing needs additional sensitivity.
+
+Bang-bang means that the input takes boundary values, often with finitely many switches.
+Chattering refers to increasingly rapid switching; Zeno means infinitely many discrete
+events in finite time. Sliding motion in a Filippov model is governed by a differential
+inclusion on a switching surface. These are distinct concepts, and none makes an
+unjustified smooth averaged model automatically valid.
+
+### Event Time and the Saltation Update
+
+[]{#summary-boundaries-of-the-theory}
+
+Suppose a nominal solution crosses a differentiable guard $g(x,t)=0$ transversely, then
+resets by $x^+=R(x^-,t)$. Write the before/after fields as $F^-,F^+$ and assume nearby
+solutions follow the same event sequence. Differentiating the guard gives
+
+$$
+\delta t=-\frac{g_x\delta x^-}{g_t+g_xF^-}.
+$$
+
+At the shifted event, the reset-state variation is
+$R_x(\delta x^-+F^-\delta t)+R_t\delta t$. Bring it to the same post-event clock time by
+subtracting $F^+\delta t$. Hence
+
+$$
+\delta x^+=\Xi\delta x^-,\qquad
+\Xi=R_x+\frac{(F^+-R_xF^--R_t)g_x}{g_t+g_xF^-}.
+$$
+
+This is the saltation matrix. The timing term is essential even for an identity reset
+when the vector fields change. For $\dot x=1$ before crossing zero and $\dot x=2$ afterward,
+$R_x=1$ but $\Xi=2$: an earlier crossing creates extra time at the faster speed. The
+derivation and transversality limits follow the treatment of Kong and colleagues
+ [@Kong2024SaltationFoundations].
+
+Grazing, simultaneous events, a changed contact sequence or Zeno accumulation can invalidate
+this derivative or require generalized sensitivities. A rigid impact model can change
+velocity discontinuously while its mode configurations remain smooth. If collision is
+instead resolved with compliant dynamics, the needed regularity and time resolution
+must be assessed for that model. The distinction changes which endpoint sensitivity
+is appropriate for a club-ball or foot-ground event.
+
+| Situation | Within a Mode | At Its Boundary |
 | --- | --- | --- |
-| Discontinuous $f$ or $\partial f/\partial\x$ | Not applicable | Filippov, differential inclusions |
-| Switching controllers | OK between switches | Saltation matrices at switch |
-| Bang-bang control | Averaged dynamics okay | Singular control on sliding surface |
-| Impacts/collisions | Not applicable | Saltation matrix, impact law |
-| Zeno behavior | Not applicable | Hybrid system theory |
-| Singular configurations | Handled locally | Global charts may be singular |
+| Regular constrained motion | Reduced or constrained derivative | Check rank and contact feasibility |
+| Prescribed finite switches | Piecewise variational propagation | Apply any reset derivative |
+| State-triggered event | Smooth variational equation | Guard timing and saltation update |
+| Sticking/sliding friction | Use the feasible mode law | Check inclusion and mode change |
+| Grazing or simultaneous events | Valid away from event ambiguity | May need generalized sensitivities |
+| Zeno accumulation | Analyze individual finite intervals | Specify continuation after accumulation |
 
-: Scope of tangent-space exactness and when extensions are needed. {#tbl-ch1_scope}
+: Mode-Specific Analysis and Transition Requirements {#tbl-ch1_scope}
 
+## What the Foundations Establish
 
-Throughout this book, we work exclusively with smooth systems and note extensions where relevant.
-The exactness of the tangent-space picture is one of its greatest strengths, and understanding
-its boundaries is essential for applying it responsibly.
+[]{#looking-ahead}
 
+[]{#important-distinction-linearization-vs.-linear-approximation}
 
-## The Five Axioms: A Summary
+[]{#when-to-use-this-framework}
 
+[]{#scope-and-limitations}
 
-The conceptual framework of this book rests on five axioms, each a consequence of
-standard differential geometry but rarely stated explicitly in control texts.
+[]{#the-five-axioms-a-summary}
 
-1. **Tangent spaces are exact, not approximate.**
-   The derivative is the unique first-order structure at a point.
-2. **Superposition lives in tangent spaces.**
-   Tangent spaces are vector spaces; perturbation addition is well-defined and exact.
-3. **Residuals are geometry, not error.**
-   Deviations from linearity measure curvature, not modeling failure.
-4. **Nonlinearity re-enters through transport.**
-   Moving between tangent spaces requires navigating the manifold's curvature.
-5. **Integration preserves exactness.**
-   Accumulating infinitesimal linear contributions is itself exact; residuals
-   arise from curvature, not from integration.
+Five working principles replace any implication that local geometry removes approximation:
 
-These axioms inform every derivation in the chapters that follow. When we write a
-Jacobian, we are not approximating. When we solve a Riccati equation in tangent
-coordinates, we are solving an exact local problem. When we iterate (as in DDP), we
-are re-centering the exact local analysis at a new base point. The "error" is always
-transport cost---the price of moving through curved space.
+1. **Derivatives Have a Precise Domain.** State differentiability, coordinates, units,
+input convention and the complete nominal state before interpreting a Jacobian.
+1. **First Variations Superpose About One Trajectory.** The linear equation retains
+coupling; finite trajectories generally do not superpose.
+1. **Residuals Quantify a Declared Approximation.** Their rates depend on regularity,
+direction and scaling; they are not intrinsic curvature or a measurement of biological control.
+1. **Flow Sensitivity and Geometric Parallel Transport Differ.** Specify the map,
+endpoint rulers and event corrections used to compare perturbations.
+1. **Computation Requires Error Control.** Derivative estimation, time integration,
+local optimization and physical-model validation answer distinct questions.
 
 
-## Scope and Limitations
+[Variational Dynamics](ch02_variational.html) develops the variational equation;
+[Contraction Analysis](ch04_contraction.html) introduces metrics and contraction;
+[Local Optimal Control](ch05_optimal_control.html) develops local optimization. These tools become more useful
+when their assumptions and finite prediction errors are visible. They do not need a claim
+of universal exactness to justify their role in analyzing human or robotic motion.
 
+## The Golf Swing: From State Variations to Delivery
 
-The mathematical framework developed here applies to smooth ($C^1$) nonlinear systems,
-including mechanical systems (Newtonian, Lagrangian, Hamiltonian), robotic manipulators,
-vehicles, aerospace systems, and chemical process control.
+[]{#preview-why-these-ideas-matter-for-the-golf-swing}
 
-The framework *does not* directly apply to discontinuous systems, impact dynamics,
-Coulomb friction, or hybrid switching systems. For these, generalizations
-exist---saltation matrices for impacts, differential inclusions for set-valued dynamics,
-complementarity systems for contact---and we note these extensions where appropriate.
+### A Complete State and a Measurable Task
 
+[]{#the-golfers-tangent-space}
 
-### When to Use This Framework
+Represent configuration, generalized velocity, shaft modes and their rates, and any required
+muscle or tissue internal states. Let $u$ mean the chosen actuator input and keep its
+bounds and activation dynamics explicit. A wrist-angle perturbation must respect the joint
+definition, while a rotation variation must respect $\mathrm{SO}(3)$ rather than add arbitrary
+matrix entries. Contact-consistent perturbations may need both position and velocity
+constraints. A change of recorded coordinates should not change the physical conclusion.
 
+For a fixed-time output $y=h(x(T))$, the first-order prediction is
 
-This textbook is most applicable when:
-- The system dynamics arise from conservation laws (energy, momentum) or classical mechanics.
-- The control inputs are continuous and bounded (not discontinuous switching).
-- The state evolves on a smooth manifold (including $\R^n$, $\SO(3)$, $\SE(3)$, and their products).
-- Local behavior around trajectories is of primary interest (not global existence or long-time stability in highly chaotic regimes).
-- Numerical precision and computational efficiency are important, justifying exploitation of local structure.
+$$
+\delta y=h_x\Phi(T,t_0)\delta x_0+
+\int_{t_0}^T h_x\Phi(T,s)B(s)\delta u(s)\,ds.
+$$
 
+This connects preparation, later input transmission, coupled evolution and delivery.
+Possible outputs include clubface orientation in a specified frame, contact-point velocity,
+or shaft deformation. A ball-flight output also requires an impact and flight model.
+If delivery is sampled at first contact instead of a fixed time, its derivative includes
+$h_xF^-\delta t$ and any explicit $h_t\delta t$; a post-impact output additionally uses
+the reset and subsequent evolution. A common-clock comparison and a common-event comparison
+can answer different questions.
 
-### Important Distinction: Linearization vs. Linear Approximation
+### Drift Magnitude Is Not a Residual or an Authority Test
 
+[]{#curvature-as-a-diagnostic}
 
-::: {.callout-note title="Remark"}
-Throughout this book, we use "linearization" to mean "computing the Jacobian
-(Fréchet derivative)"---an exact operation. We reserve "linear approximation" for
-the distinct act of using the Jacobian to predict finite perturbations, which introduces
-the residual of Eq.~\eqref{eq:ch1:residual-def}. Conflating these two operations is
-the source of most conceptual confusion about linearization in nonlinear systems.
-:::
+For $F=f+Gu$, a drift-to-realized-control ratio $\|f\|/\|Gu\|$ concerns two vectors at a
+specified state, in a specified norm. It is not the remainder $r(d)$, a Hessian, or an
+endpoint sensitivity. In $\dot x=1000+u$ with $u=1$, that ratio is 1000 while the Taylor
+residual is exactly zero. In $\dot x=x^2+u$ at $x=0,u=1$, the ratio is zero while the
+state residual is $d^2$. Neither ratio implies how much a feasible input can change a
+particular task at impact. Available input capacity, its direction and the remaining
+time must be evaluated separately.
 
-A linearization is always exact. A linear approximation introduces error (residual). By
-keeping these concepts distinct, we unlock the structural power of tangent spaces and
-avoid the psychological barrier of thinking that everything about perturbations is approximate.
+Quadratic velocity terms may become large in a downswing, but their residual depends on
+which variables are perturbed, by how much, and under which scaling. Low speed does not
+guarantee linear behavior in angle or contact; high speed does not guarantee loss of
+feedback effectiveness. Those are model-and-data questions. Recompute the trajectory
+sensitivities and validate finite perturbations rather than assigning a universal
+control-dominated or drift-dominated phase from a conceptual diagram.
 
+### Forgiving Directions, Coupling, and Uncertainty
 
-### Looking Ahead
+[]{#transport-and-the-kinematic-chain}
 
+Even a stable linear system can transiently amplify error. In dimensionless coordinates take
 
-Chapter~\ref{ch:variational} develops the theory of perturbation evolution: how infinitesimal
-variations propagate along a trajectory, quantifying the sensitivity of orbits to initial
-conditions. The state transition matrix and Lyapunov exponents emerge as central objects.
+$$
+A=\begin{pmatrix}-1&10\\0&-1\end{pmatrix},\qquad
+\Phi(1,0)=e^{-1}\begin{pmatrix}1&10\\0&1\end{pmatrix}.
+$$
 
-Chapter~\ref{ch:contraction} introduces contractivity and metric tensors, translating the
-intuition that "some directions are more stable than others" into a precise geometric
-framework.
+Both eigenvalues of $\Phi$ equal $e^{-1}<1$, but a unit variation $(0,1)^T$ grows in norm
+to $\sqrt{101}/e\simeq3.697$, and the largest singular value is about $3.715$. Eigenvalues
+alone therefore do not identify forgiving swing directions. For endpoint metrics $W_0,W_T$,
+the worst norm gain is the largest singular value of
+$W_T^{1/2}\Phi W_0^{-1/2}$. For a task, use the corresponding output Jacobian and metric.
+Lyapunov exponents concern long-time limits with further existence
+and coordinate-boundedness conditions, not a substitute for this finite swing calculation.
 
-Chapter~\ref{ch:optimal} applies these ideas to optimal control, showing how DDP and iLQR
-are exact local algorithms operating in tangent spaces, with control constraints and
-terminal costs handled via their residual geometry.
+If $K$ is the derivative from a declared uncertain parameter vector to delivery, then
+$\Sigma_y\simeq K\Sigma_pK^T$ propagates small-error covariance in the selected local
+coordinates. Correlations between joint, shaft and timing errors can reinforce or cancel
+at first order. A null direction of $K$ is locally invisible to that output, not evidence
+of no physical motion or no muscular cost. One output usually cannot identify a unique
+history of torques and activation.
 
-The journey from foundations (this chapter) to applications (later chapters) is one of increasing
-structure and pragmatism: we leverage the exactness of the tangent space to build algorithms
-that are both conceptually clear and computationally efficient.
-
-
-## Preview: Why These Ideas Matter for the Golf Swing
-
-
-Before proceeding to the formal theory, it is worth previewing how the foundations of this
-chapter connect to the book's primary application domain: the biomechanics of the golf swing.
-This preview is deliberately non-technical; the full mathematical treatment appears in
-Chapter~\ref{ch:applications}.
-
-
-::: {.callout-note}
-
-A golfer's swing is a chain of rotating body segments---torso, arms, wrists, club---that
-accelerates a clubhead to high speed and launches a ball. The physics is ferociously
-nonlinear: centrifugal forces grow as the square of rotational speed, the club shaft
-bends and rebounds elastically, and the mass distribution changes as the golfer's posture
-evolves. Yet at each instant, the tangent-space picture gives us an exact local model of
-how small changes propagate.
-
-:::
-
-
-### The Golfer's Tangent Space
-
-
-At any instant during the downswing, the golfer's state is a point on a high-dimensional
-manifold: joint angles, angular velocities, shaft bending amplitudes, and their rates.
-The tangent space at this point is the space of all infinitesimal variations---a slightly
-different wrist angle, a marginally faster shoulder rotation, a small change in shaft flex.
-
-By Axiom 1, the Jacobian at this point is the *exact* description of how these small
-variations evolve over the next instant. By Axiom 2, these variations add as vectors.
-A small wrist perturbation and a small shoulder perturbation evolve independently at
-first order, even though the full nonlinear swing couples them through centrifugal and
-Coriolis forces.
-
-
-### Curvature as a Diagnostic
-
-
-The residual---the gap between tangent-space prediction and actual evolution---measures
-the "curvature" of the swing manifold. During the early backswing, velocities are low
-and the dynamics are nearly linear (small residual). During the late downswing, when
-the clubhead is moving at high speed, centrifugal forces dominate and the residual becomes
-large. This is not a failure of the theory; it is a geometric signal that the system
-is passing through a high-curvature region.
-
-Practically, this means:
-- Controllers (biological or engineered) that linearize once and hold the gain
-  constant work well in the backswing but deteriorate in the downswing.
-- Iterative methods (DDP, iLQR) that re-linearize at each time step
-  naturally adapt to the changing curvature.
-- The transition from "control-dominated" to "drift-dominated" dynamics
-  (Chapter~\ref{ch:counterfactuals}) is precisely the transition from small
-  to large residuals.
-
-
-### Transport and the Kinematic Chain
-
-
-Axiom 4 (transport) is especially vivid in the golf swing. As the club sweeps through
-a large arc, the tangent space rotates and stretches. The state transition
-matrix $\Phi(t_1, t_0)$ maps perturbations at one phase of the swing to perturbations at
-another. A small error in wrist lag at the top of the backswing may amplify into a large
-clubface angle error at impact---or it may be "washed out" by the dynamics. The
-eigenvalues of $\Phi$ tell us which scenario applies.
-
-This is the deep connection between the abstract mathematics of this chapter and the
-practical question every golfer cares about: *which aspects of technique are
-forgiving, and which are critical*? Tangent-space analysis provides a principled,
-quantitative answer.
+A defensible investigation therefore defines the complete model and task; reconstructs
+a nominal motion with uncertainty; computes derivatives in compatible coordinates;
+tests decreasing finite perturbations and numerical step sizes; checks contact feasibility;
+and compares predicted delivery changes with independent interventions or observations.
+Only then can it assess which aspects of preparation and coordination are forgiving for
+the chosen outcome. This connects the geometry to a testable golf argument without
+turning a local identity into a universal coaching prescription.
 
 ## Exercises
 
-1. **Fréchet derivative computation.**
-   Compute the Fréchet derivative of $f(x, y) = (x^2 y,\; \sin(xy))$ at the point $(1, \pi)$.
-   Verify that the residual $\|f(\bar{\x} + \dx) - f(\bar{\x}) - Df(\bar{\x})\dx\| = O(\|\dx\|^2)$
-   by evaluating at $\dx = (0.1, 0.1)$, $(0.01, 0.01)$, and $(0.001, 0.001)$.
-2. **Residual scaling table.**
-   Construct a residual scaling table (analogous to Table~\ref{tab:ch1:sin-residual}) for
-   $f(x) = e^x$ at $\bar{x} = 0$. Compute $r/(\delta x)^2$ for $\delta x = 0.1, 0.01, 0.001, 0.0001$.
-   What value does the ratio converge to? Relate this to the Taylor series of $e^x$.
-3. **Tangent space of SO(3).**
-   The rotation group SO(3) consists of $3 \times 3$ orthogonal matrices with determinant 1.
-   Using the constraint $R^T R = I$, show that the tangent space at $R = I$ consists of
-   skew-symmetric matrices. What is the dimension of this tangent space?
-4. **Tangent space of a torus.**
-   The torus $\mathbb{T}^2$ is parameterized by two angles $(\theta_1, \theta_2) \in [0, 2\pi)^2$.
-   Describe the tangent space at an arbitrary point. Is it isomorphic to $\R^2$? Explain why
-   the tangent space is "flat" even though the torus is curved.
-5. **When linearization is not an approximation.**
-   Consider the system $\dot{x} = ax + bx^3$ for constants $a, b$. Compute the linearization
-   at $\bar{x} = 0$. In what sense is this linearization "exact"? In what sense is it "approximate"?
-   Use the language of Axiom 1 (tangent-space exactness) to articulate the distinction.
-6. **Curvature and residual.**
-   For $f(x) = \tan(x)$ at $\bar{x} = 0$, compute $f''(0)$ and predict the leading-order
-   residual behavior. Construct a scaling table to verify. Compare with the $\sin(x)$ example
-   in the text.
-7. **Connection (Axiom 3).**
-   For a 2D system $\dot{x}_1 = x_2$, $\dot{x}_2 = -\sin(x_1)$ (simple pendulum), compute
-   the Jacobian $A(\bar{\x})$ at three different equilibria: $\bar{\x} = (0,0)$, $(\pi, 0)$,
-   and $(0, 1)$. How do the eigenvalues change? Interpret the change geometrically.
-8. **Programming exercise.**
-   Implement a function that, given $f: \R^n \to \R^n$ and a point $\bar{\x}$, computes the
-   Fréchet derivative numerically using finite differences. Test it on the pendulum
-   system from Exercise 7. Compare with the analytical Jacobian.
+
+1. **A Multivariable Derivative.** Compute $Df$ for $f(x,y)=(x^2y,\sin(xy))$
+at $(1,\pi)$. Evaluate residuals for $(d,d)$ at $d=0.1,0.01,0.001$. Derive the limit
+of the residual vector divided by $d^2$ and account for $\|(d,d)\|^2=2d^2$.
+1. **Rates of Remainder Decay.** Compute the leading residuals of $e^x$, $\sin x$,
+$\tan x$ and $|x|^{3/2}$ at zero. Which have quadratic bounds? Explain why $f''(0)=0$
+alone does not establish cubic order. Compare analytical derivatives with a fixed
+finite-difference estimate across a decreasing step sequence.
+1. **Uniformity.** Verify continuity and all zero directional derivatives of
+$h=x^4y/(x^6+y^2)$ at the origin, and use $y=x^3$ to disprove Fréchet differentiability.
+1. **Dimensioned Pendulum.** Derive the equilibrium input and $A,B$ for the
+point-mass model. Reproduce the residual table using exact coefficients. Then set
+$m=2$kg and $\ell=3$m and explain why interpreting $u$ as angular acceleration changes $B$.
+1. **Equilibrium Versus Moving State.** In the dimensionless undamped model
+$\dot\theta=\omega,\dot\omega=-\sin\theta$, compare $(0,0)$, $(\pi,0)$ and $(0,1)$.
+Which are equilibria? Compute the instantaneous Jacobians, and explain why the matrix at
+the third point does not by itself determine stability of its moving trajectory.
+1. **Rotation Variations.** Differentiate $R^TR=I$, derive $T_R\mathrm{SO}(3)$,
+and derive $\dot\eta=-[\omega_b]_\times\eta+\delta\omega_b$. Explain the difference
+between a tangent matrix at $R$ and its left-trivialized algebra element.
+1. **Twist Reference Points.** Multiply out $T^{-1}\dot T$ and $\dot TT^{-1}$.
+For a body rotating in place about its own fixed origin $p\ne0$, compute $v_b$ and $v_s$.
+Explain why the nonzero space-twist component does not imply translation of that origin.
+1. **Torus and Mechanics.** Show that constant angular metric coefficients give
+zero Christoffel symbols and curvature locally on the abstract torus. Derive the two-link
+mass matrix, velocity bias and generalized actuator loads from kinetic energy and virtual work.
+1. **A Moving Chart.** Transform $\dot x=1$ by $z=e^x$. Derive $A_z$, $\Phi_z$
+and the transformed metric. Identify the missing term in an attempted similarity-only rule.
+1. **Different Transport Maps.** Compare parallel transport, the flow derivative,
+and Euler integration for $\dot x=ax$ on a Euclidean line. State which operations are
+exact mathematical maps and which computed approximations require a step-size study.
+1. **DDP and iLQR.** Differentiate $Q=\ell+V^+\circ f$ twice. Identify the
+dynamics-Hessian term omitted in iLQR. Explain why a positive-definite local control Hessian
+and a solved Riccati recursion do not certify a global optimum of the nonlinear problem.
+1. **Accessibility and Control.** Describe the reachable set within time $T$ for
+$\dot x=1,\dot y=u$, $|u|\leq1$. Explain why full spanning by drift and input does not
+allow a return to every nearby point in arbitrarily short time.
+1. **Friction and Events.** A contact needs 3N of static friction and has
+$\mu_sN=5$N. Determine whether sticking is admissible and why sign(0) is inappropriate.
+Derive the saltation factor for the speed-one/speed-two crossing example.
+1. **Transient Amplification.** Compute the eigenvalues and singular values of
+the triangular example's $\Phi(1,0)$. Compare full-state gain with gain in the first
+coordinate alone, then explain how endpoint units and error covariance affect a golf interpretation.
+1. **A Golf Sensitivity Study.** Choose one delivery quantity, a complete state,
+an input definition, an admissible perturbation and a comparison event. Specify the
+derivative calculation, finite-perturbation tests, uncertainty model and independent evidence
+needed before using it to support a technique claim. Distinguish drift magnitude, Taylor
+residual, input capacity and output sensitivity in the proposed analysis.
 
 
 ## Python Implementations {#sec-ch1-python}
 
-The following implementations demonstrate the core computations of this chapter.
+[]{#tangent-space-visualization}
 
-### Numerical Fréchet Derivative
+[]{#residual-scaling-verification}
+
+[]{#numerical-fréchet-derivative}
+
+The companion implements a dimensioned pendulum, a rectangular central-difference
+Jacobian and a residual table. Coordinate-specific positive steps make their units
+explicit. Central differences typically have $O(h^2)$ truncation error for sufficiently
+regular fields, with roundoff and function-evaluation error amplified by division by $h$.
+An arbitrarily tiny step is not automatically better. The routine is a diagnostic, not a
+test that proves differentiability. The source is
+`src/tools/foundations_examples.py`.
 
 ```python
 import numpy as np
+from src.tools.foundations_examples import (
+    central_jacobian, pendulum_field, residual_table,
+)
+
+parameters = (1.0, 1.0, 10.0, 0.1)
+state = np.array([np.pi / 6, 0.0])
 
 
-def frechet_derivative(f, x_bar, eps=1e-6):
-    """
-    Numerically compute the Fréchet derivative (Jacobian) of f at x_bar
-    using central finite differences.
-
-    Parameters
-    ----------
-    f : callable
-        Vector field f: R^n -> R^n
-    x_bar : np.ndarray, shape (n,)
-        Point at which to linearize
-    eps : float
-        Finite difference step size
-
-    Returns
-    -------
-    A : np.ndarray, shape (n, n)
-        Jacobian matrix Df(x_bar)
-    """
-    n = len(x_bar)
-    A = np.zeros((n, n))
-    for j in range(n):
-        e_j = np.zeros(n)
-        e_j[j] = 1.0
-        A[:, j] = (f(x_bar + eps * e_j) - f(x_bar - eps * e_j)) / (2 * eps)
-    return A
+def field(x: np.ndarray) -> np.ndarray:
+    return pendulum_field(x, 5.0, parameters)
 
 
-# Example: simple pendulum  dot_x = [x2, -sin(x1)]
-def pendulum(x):
-    return np.array([x[1], -np.sin(x[0])])
-
-
-x_bar = np.array([0.0, 0.0])  # downward equilibrium
-A_numerical = frechet_derivative(pendulum, x_bar)
-A_analytical = np.array([[0, 1], [-np.cos(x_bar[0]), 0]])
-
-print("Numerical Jacobian:\n", A_numerical)
-print("Analytical Jacobian:\n", A_analytical)
-print("Error:", np.max(np.abs(A_numerical - A_analytical)))
+analytic = np.array([[0.0, 1.0],
+                     [-10 * np.cos(state[0]), -0.1]])
+for step in [1e-2, 1e-3, 1e-4, 1e-5]:
+    estimated = central_jacobian(field, state,
+                                 np.full(2, step))
+    print(step, np.max(np.abs(estimated - analytic)))
+sizes = np.array([0.1, 0.01, 0.001, 0.0001])
+changes = np.column_stack((sizes, np.zeros(4)))
+print(residual_table(field, analytic, state, changes))
 ```
 
-### Residual Scaling Verification
-
-```python
-def residual_scaling_table(f, Df, x_bar, direction, deltas):
-    """
-    Verify O(||delta||^2) residual scaling for the Fréchet derivative.
-
-    Returns a table of (delta, residual, ratio) where ratio = residual / delta^2.
-    If the derivative is correct, ratio should converge to a constant.
-    """
-    results = []
-    for d in deltas:
-        dx = d * direction / np.linalg.norm(direction)
-        f_true = f(x_bar + dx)
-        f_linear = f(x_bar) + Df @ dx
-        residual = np.linalg.norm(f_true - f_linear)
-        ratio = residual / d**2 if d > 0 else float("nan")
-        results.append((d, residual, ratio))
-    return results
-
-
-g = 9.81
-L = 1.0
-x_bar = np.array([0.0, 0.0])
-Df = frechet_derivative(pendulum, x_bar)
-direction = np.array([1.0, 0.5])
-deltas = [0.1, 0.01, 0.001, 0.0001]
-
-print(f"{'delta':>10} {'residual':>12} {'ratio':>12}")
-for d, r, ratio in residual_scaling_table(pendulum, Df, x_bar, direction, deltas):
-    print(f"{d:>10.4f} {r:>12.2e} {ratio:>12.4f}")
-# ratio converges to ~0.5 * ||f''(x_bar)|| * ||direction||^2 / 2
-```
-
-### Tangent Space Visualization
-
-```python
-import matplotlib.pyplot as plt
-
-
-def plot_phase_portrait(f, x1_range, x2_range, n_grid=20):
-    """
-    Plot the phase portrait (vector field) of a 2D dynamical system.
-    """
-    x1 = np.linspace(*x1_range, n_grid)
-    x2 = np.linspace(*x2_range, n_grid)
-    X1, X2 = np.meshgrid(x1, x2)
-    U = np.zeros_like(X1)
-    V = np.zeros_like(X2)
-
-    for i in range(n_grid):
-        for j in range(n_grid):
-            dx = f(np.array([X1[i, j], X2[i, j]]))
-            U[i, j] = dx[0]
-            V[i, j] = dx[1]
-
-    fig, ax = plt.subplots(figsize=(8, 6))
-    ax.streamplot(X1, X2, U, V, density=1.2, color="steelblue", linewidth=0.8)
-    ax.set_xlabel(r"$\theta$ (rad)")
-    ax.set_ylabel(r"$\dot\theta$ (rad/s)")
-    ax.set_title("Pendulum Phase Portrait")
-    ax.axhline(0, color="k", linewidth=0.5)
-    ax.axvline(0, color="k", linewidth=0.5)
-    # Mark equilibria
-    ax.plot(0, 0, "go", markersize=8, label="Stable eq. (0,0)")
-    ax.plot(np.pi, 0, "ro", markersize=8, label="Unstable eq. (π,0)")
-    ax.legend()
-    return fig
-
-
-fig = plot_phase_portrait(pendulum, (-2 * np.pi, 2 * np.pi), (-4, 4))
-plt.tight_layout()
-```
+Use the analytic Jacobian for the residual-order experiment: substituting a fixed inaccurate
+matrix adds $(A-\widehat A)d$, which can dominate the true quadratic or cubic remainder.
+The table uses a pure angle variation, avoiding mixed-unit norms. For a phase portrait,
+plot the dimensioned field in $(\theta,\omega)$, label angle and rate axes, and distinguish
+the undamped center from an asymptotically stable damped equilibrium. A phase portrait
+depicts state velocities, not all tangent directions or a proof of contraction.
