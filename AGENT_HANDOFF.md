@@ -3,7 +3,7 @@
 ## Impact Dynamics and Acoustics: #4253
 
 - A1 #4254 / #4258 and Coriolis correction #4277 / #4282 are merged.
-- Active #4295: docs/4295-grip-stability-qualification, worktree
+- Active #4295 / PR #4298: docs/4295-grip-stability-qualification, worktree
   C:/Users/diete/Repositories/AffineDrift-impact-grip-review, base b6dc729f.
   Both Chapter 29 editions now qualify grip, stability, friction, energy budgets,
   sensitivity and shaft/acoustic claims. Independent counterexamples and paired
@@ -11,7 +11,8 @@
   transient render-hygiene failures, resolved by six post-render hygiene passes.
   All 51 final targeted and 130 content-lint checks pass. Final 553-page PDF
   chapter/bibliography review, full 238-target site build, mobile/desktop math,
-  keyboard/link and automated accessibility checks pass. Normal PR publication remains.
+  keyboard/link and automated accessibility checks pass. PR #4298 is open;
+  normal protected CI/review remain.
 - Continue from docs/development/impact-acoustics/GRIP_QUALIFICATION_REVIEW.md.
   Earlier evidence remains in DAMPING_REVIEW.md, REVIEW.md and INVENTORY.md.
 - Tools #5072 grip-supported loaded-chain balance and full M/G/C/K operators are

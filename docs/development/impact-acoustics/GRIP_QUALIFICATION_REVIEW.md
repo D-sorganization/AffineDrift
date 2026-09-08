@@ -2,7 +2,7 @@
 
 ## Scope and Ownership
 
-- Parent AffineDrift #4253; correction #4295; synthesis #4255 stays open.
+- Parent AffineDrift #4253; correction #4295 / PR #4298; synthesis #4255 stays open.
 - Worktree C:/Users/diete/Repositories/AffineDrift-impact-grip-review.
 - Branch docs/4295-grip-stability-qualification, based on protected main b6dc729f.
 - Lease codex / impact-acoustics-01a07d8a-grip-theory, expires 2026-09-08T23:22:03.914503Z.
@@ -32,7 +32,7 @@ Final source checks pass: syntax, display math, cross-references, title/citation
 
 Final LaTeX rebuild passes: 553 pages, 3,886,010 bytes. All 14 final chapter pages 223-236 and bibliography pages 534-536 were rendered and visually inspected; corrected diagram and mathematical layout are readable. Existing unrelated book glyph/duplicate-label warnings remain. Final full root-site render passes all 238 targets using Quarto 1.8.26 and unchanged project configuration. A chapter-only preview did not resolve companion output links; the final full-site build does. Deployment CSS bundling inlines 29 files with zero imports. Unrelated generated trust/reader-study records are restored and excluded from this change.
 
-Headless browser checks at 1440 and 390 pixels report 167 MathJax containers, zero math errors and no document overflow. Nine chapter sections are captured at each width after waiting for visible lazy equations; representative desktop/mobile views were visually checked. The table and long equation retain focusable horizontal scrolling; keyboard checks move the equation through its full 24-pixel overflow. Both companion pages and three citation targets return HTTP 200. Main-content axe WCAG A/AA checks report zero violations. Existing CSP blocks the cdnjs polyfill; axe's external-font probing is also blocked by connect-src. No CSP relaxation or clean-console claim is made. Normal protected publication remains pending.
+Headless browser checks at 1440 and 390 pixels report 167 MathJax containers, zero math errors and no document overflow. Nine chapter sections are captured at each width after waiting for visible lazy equations; representative desktop/mobile views were visually checked. The table and long equation retain focusable horizontal scrolling; keyboard checks move the equation through its full 24-pixel overflow. Both companion pages and three citation targets return HTTP 200. Main-content axe WCAG A/AA checks report zero violations. Existing CSP blocks the cdnjs polyfill; axe's external-font probing is also blocked by connect-src. No CSP relaxation or clean-console claim is made. Published science commit 2431769924e00f14dfa964882ff15529c43d7486 passes normal commit/push hooks and its remote SHA is verified. PR #4298 is open; exact-head protected CI/review remain. The committed unsupported-claim CLI also passes with 296 added lines.
 
 ## Implementation Integration and Limits
 
