@@ -1,0 +1,113 @@
+## A Falsifiable Modeling and Measurement Program {#sec-impact-research-program}
+
+The [AffineDrift epic](https://github.com/D-sorganization/AffineDrift/issues/4253)
+owns theory and evidence. The
+[Tools epic](https://github.com/D-sorganization/Tools/issues/5068) owns reusable
+kernels, contracts and analysis. The
+[UpstreamDrift epic](https://github.com/D-sorganization/UpstreamDrift/issues/9700)
+owns engine integration and reproducible studies. Detailed source ownership and
+existing test coverage are recorded in the linked inventory; a new solver must
+integrate with these capabilities rather than duplicate them.
+
+### Model Ladder
+
+| Tier | Retained Physics | What It Can Establish |
+|---|---|---|
+| R0 | Detached rigid bodies, full inertia, instantaneous normal impulse | Analytic limits, frame conventions and impulse accounting |
+| R1 | Existing lumped ball–head–hands chain | Sensitivity within its one-dimensional, initially relaxed assumptions |
+| R2 | Distributed loaded shaft, head inertia, grip impedance | Local shaft response, preload, modal phase and torque transmission |
+| R3 | Finite-duration frictional contact and flexible head/face | Launch, contact history and structural ringdown with spatial dependence |
+| R4 | Qualified radiation and measurement transfer | Pressure spectra, directivity and decay at declared observers |
+| R5 | Controlled physical and perceptual experiments | Equipment-specific effect sizes and population-specific sweetness ratings |
+
+Moving from one tier to the next requires evidence, not simply more degrees of
+freedom. Retain the simpler tiers as falsification references. A scalar
+restitution coefficient cannot also supply a unique contact-force waveform for
+R3 or sound prediction for R4. Several time histories can have the same impulse.
+
+### Registered Hypotheses
+
+| Hypothesis | Intervention and Control | Observable That Could Falsify It |
+|---|---|---|
+| Local shaft coupling alters eccentric impact | Same head/ball rigid state and contact law; attach/detach the shaft with declared initial conditions | Launch/spin and head rotation difference smaller than the registered equivalence margin |
+| Tensile preload changes relevant modes | Hold material properties and measurement boundary fixed; sweep measured tension | Frequency/FRF changes inconsistent with loaded-beam prediction within uncertainty |
+| Grip primarily alters later vibration in a tested regime | Match delivery; vary grip impedance; retain early and late windows | A repeatable early contact/launch change, or no predicted late modal change |
+| Elastic phase matters beyond rigid delivery | Match rigid twist/pose and contact location; vary feasible modal phase | No reproducible change over the registered phase/energy range |
+| Sound differences contain timbre information | Blind original-level and level-matched trials | Discrimination disappears after matching levels and controlling equipment/strike |
+| Proposed acoustics model predicts a mechanism | Calibrate on separate fixtures; predict withheld clubs/strikes/microphone positions | Spectral/decay errors exceed limits despite matching ball launch |
+
+Do not assume every effect is monotone. A phase-dependent or resonant response
+may change sign. Construct physically compatible prestressed initial states;
+removing the shaft without accounting for its energy is an intervention, not a
+conservation-preserving state mapping. Report both the changed energy and the
+meaning of the counterfactual.
+
+### Verification Before Fitting
+
+1. Establish analytic impulse and beam limits, dimensional consistency, common
+   frames and units, and exact source provenance. Require symmetry/positive
+   definiteness where applicable and refuse singular unsupported inputs.
+2. Demonstrate momentum and energy/work accounting; conservative gyroscopic
+   terms must do no spurious work, passive damping must not generate energy,
+   and contact must not become adhesive without a declared law.
+3. Refine time step, mesh, modal bandwidth and separation-event location
+   independently. A converged ball speed does not prove a converged high-frequency
+   pressure spectrum. Compare full and reduced frequency responses over the
+   intended band, including antiresonances and phase.
+4. Verify moving/inertial frame agreement and the mapping between engine
+   generalized velocities and exported point wrenches. Engine agreement is
+   numerical verification, not validation of tissue or shaft parameters.
+5. Use independently measured mass/inertia, stiffness, damping and radiation
+   data for calibration. Reserve configurations, trials or clubs for prediction;
+   do not fit restitution separately in every comparison and then attribute the
+   residual to shaft coupling.
+
+Every implementation follows tests first (RED → GREEN → refactor), Design by
+Contract, Law of Demeter and DRY. Shared physical laws live in Tools; UpstreamDrift
+uses thin adapters; AffineDrift presents versioned evidence without silently
+importing mutable neighboring repositories. Existing protected monograph
+artifacts and synthetic study qualification retain their present boundaries.
+
+### Measurements and Identifiability
+
+Start with static mass/CG/inertia and shaft EI/GJ profiles. Use impact-hammer or
+shaker tests for unloaded, tensioned and gripped configurations, recording
+complex force-to-velocity responses and sensor mass loading. A held-club modal
+test alone cannot identify all rotational grip impedances; excite and measure
+the necessary ports or document the unobservable parameters.
+
+Progress from a controlled plate/ball fixture to free-head and assembled-club
+impacts, then robot or repeatable launch rigs, and finally players. For each
+shot retain ball/head motion, actual contact position, force or validated
+force reconstruction, strain/acceleration and calibrated microphone recordings.
+State sampling rates and anti-alias filters relative to the retained bandwidth;
+sub-millisecond contact demands more temporal resolution than ordinary swing
+motion capture. Audio sampling does not substitute for force measurement.
+
+Synchronize clocks and estimate channel delays. Preserve raw recordings and
+calibration versions, reject clipping/double hammer hits, distinguish direct
+sound from room reflections, and record ball temperature, wear, surface
+moisture, tee/turf contact and the test environment. Wind noise and automatic
+gain control can make otherwise convincing recordings unusable for amplitude
+comparisons.
+
+Fit a sensitivity/identifiability model before asking for player effects.
+Separate equipment parameters, trial noise, sensor uncertainty and participant
+variation. Use within-player and within-club repeated trials, randomized order,
+registered primary outcomes, confidence/credible intervals, and an explicit
+multiple-comparison policy for spatial/spectral maps. Determine sample size
+from a pilot variance and a prespecified smallest meaningful effect; an
+unsupported fixed sample count is not a power calculation.
+
+### Completion Criteria and Present Status
+
+The current deliverable is a corrected theoretical treatment, a source-grounded
+inventory, linked implementation work, and the first rigid contact verification
+foundation. Distributed coupled contact, calibrated radiated sound and the
+player comparison remain research milestones. A reported small effect must come
+with a tested configuration, uncertainty and a declared equivalence margin; a
+reported large effect needs the same controls.
+
+The scientific question is therefore open in a precise way: which differences
+survive matched delivery, which originate in local elastic dynamics or the grip
+boundary, which change launch, and which remain audible only in ringdown?
