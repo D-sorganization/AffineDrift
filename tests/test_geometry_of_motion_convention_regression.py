@@ -33,10 +33,12 @@ def test_ch01_se3_kinematics_uses_body_twist_convention() -> None:
 
     text = CH01_FOUNDATIONS.read_text(encoding="utf-8")
 
-    assert "twist (body\nvelocity)" in text
+    assert "For body and space twists" in text
     assert "twist (spatial velocity)" not in text
-
-    assert r"\dot{\mat{T}} = \mat{T} \, \begin{pmatrix}" in text
+    assert r"\dot T=T\widehat\xi_b=\widehat\xi_sT" in text
+    assert r"\widehat\xi_b=T^{-1}\dot T" in text
+    assert r"v_b=R^T\dot p" in text
+    assert r"v_s=\dot p-\omega_s\times p" in text
 
 
 def test_ch07_parent_array_matches_the_described_branch_in_both_editions() -> None:

@@ -305,3 +305,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-08 | #4274 | Reconcile recursive dynamics frames, force propagation, spatial acceleration, inertia, contact feasibility and computational claims with independently checked golf-model examples. |
 
 | 2026-09-08 | #4278 | Reconcile the complete-swing synthesis with constrained input gain, event-sensitive delivery, shaft dynamics, collision energy and explicit evidence limits. |
+| 2026-09-08 | #4280 | Correct tangent-space foundations, dimensioned examples, residual bounds, moving-coordinate sensitivity, optimization and hybrid-event interpretations. |
