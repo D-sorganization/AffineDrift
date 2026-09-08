@@ -96,3 +96,10 @@ The broad corpus audit must also inspect inherited bibliography annotations that
 
 
 Final custom quality checks caught two gravity literals in the independent test module. Both now import the existing src.core.constants.GRAVITY_M_S2; all 11 numerical tests and the custom quality gate pass after that repair. Final PDF contracts pass nine cases. The root coverage report declares src as its source root, with178 files,11,944 covered lines of12,876 (92.76172724448587%); filenames are relative to src, so filtering them for an additional src/ prefix incorrectly produced zero and was discarded. All three neighboring chapter links returned HTTP200. No chapter overfull-box or unresolved-reference warning remains after the final index rebuild. Local test/build/render/browser processes have ended; the deliberate HTTP server/browser session remain available.
+
+
+## Protected Integration Checkpoint
+
+Spine commit a2eb0e2a was replayed alone onto protected foundations squash a9e531fd, producing2072ca34. Only the current-state handoff and append-only foundations log conflicted; both were reconciled with the dependency-repair evidence retained. All spine public sources, PDF, figures and tests are byte-identical across the replay. The merged requirements.txt preserves SymPy1.14.0. The initial rebase was blocked by a phantom AGENT_HANDOFF modification; an empty diff and matching Git object hashes were confirmed before refreshing the index. No local test/build/render/browser job was active during commit or replay.
+
+Foundations publication is verified: deployment34224541139 and exact-revision live artifact10056277209 pass956/956 across239 routes, zero serious/critical axe findings, retries or transient responses. The corpus remains unfinished; the next long pending standalone article is Residual-Aware Control, followed by the remaining long geometry/biomechanics sources in the inventory.
