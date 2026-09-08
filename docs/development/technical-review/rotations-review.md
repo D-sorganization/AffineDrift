@@ -206,3 +206,13 @@ identical blob hashes established unchanged content before refreshing the index.
 Normal push hooks passed, including unit tests. PR #4289 is open with agent:codex
 and Fixes #4288; the SPEC row is now keyed to the actual PR. Protected checks,
 merge and exact deployment remain pending.
+
+## Protected Publication Verified
+
+PR #4289 passed protected checks and squash-merged at18:51:17UTC as
+072d5076d7219ff39a8f004694f9d9a9b35a5cb8. Main CI34265513801, textbooks34265513761
+and deployment34265513841 all succeed. Exact deployment artifact10072974625
+contains live-every-page.json:239 routes,956/956 checks, zero failures,
+serious/critical axe findings, retries or transient responses. The rotations
+batch is published; the full corpus remains unfinished. Continue vendor-reference
+#4290, then the fully read inverse-dynamics manuscript findings filed as #4291.
