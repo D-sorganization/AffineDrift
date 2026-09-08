@@ -1088,3 +1088,6 @@ The complete root suite passes 4,501 tests, with 29 skips, 129 deselections and 
 
 
 Final bibliography-only QA passes: all five web views and both changed print bibliography pages were inspected, with one source URL per web entry. Post-render static checks pass 34/34; content checks pass 128 with four skips and 4,482 deselections in 37.89 seconds. The SPEC changelog and 625-source title checks pass. All local test, render and browser QA jobs finished before staging.
+
+
+Lagrangian PR #4263 is pushed at 4ad9bc7ec2d79cd670e5e0f44614ea85e1142465. The one correction commit fbc65f64 was replayed onto protected configuration squash 0d3db910 before first push; the full tree remained 01616c1e0ee4ed0467f6fb5adfd9b9151cbe16ba. Pre-commit and pre-push hooks, including isolated mypy and unit tests, passed. No force push or protection bypass was used. Protected checks and publication are pending.
