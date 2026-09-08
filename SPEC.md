@@ -295,3 +295,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-07 | #4262 | Rebuild configuration-space charts, kinematic inverses, workspace and controllability distinctions; add checked examples and connect grip geometry to feasible golf delivery. |
 | 2026-09-07 | #4263 | Reconcile Lagrangian inertia, force and energy conventions; correct conservation and integration claims with verified rod dynamics and golf power accounting. |
 | 2026-09-07 | #4264 | Reconcile counterfactual interventions, directional and event-conditioned control authority, energy balances and the paired double-pendulum example. |
+| 2026-09-08 | #4272 | Correct state completeness, acceleration geometry, stability, sensing and sampled-control claims with independently checked physical examples in both editions. |
