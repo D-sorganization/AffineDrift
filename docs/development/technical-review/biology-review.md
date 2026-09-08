@@ -219,3 +219,12 @@ computed. Normalize the canonical file to LF before regenerating dependent
 hashes; do not bypass the guard. Commit 887a855a repairs those dependent hashes.
 The second normal push passed all hooks, including its unit-test lane. Protected
 CI, merge and exact-revision publication remain pending.
+
+## CI Publication-Record Repair
+
+CI run 34284443244 found one failure among 4,794 passing tests: the central
+claim inventory retained the earlier book-review revision after the canonical
+book audit advanced to 00a8f13c. Synchronized the two affected routes' finding
+verification commits, review commits, review dates and reviewer identifiers;
+regenerated the claim report. No scientific content or test expectations changed.
+The focused book-publication and claim-inventory suites pass all 27 tests.
