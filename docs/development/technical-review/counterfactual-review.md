@@ -70,3 +70,6 @@ Final alias-only verification passes: all 58 legacy IDs are retained and every m
 Synchronization: correction commit 48eeace0 was replayed onto protected Lagrangian squash e2fa633b as f23b6c98; the full tree stayed 659543fcd3e3879a22728f4290d6dff0f7f0e35c. Git initially reported a phantom unstaged AGENT_HANDOFF.md; identical worktree/HEAD hashes proved there was no content difference, and refreshing its index resolved the refusal. Protected main then included the independent impact-acoustics PR #4258 (1ce02d7a). Rebase onto that published revision succeeded without conflicts as 27487355471c4bc66ad78e4a8af26011e9895545. The chapter sources, PDF, bibliography and both test files remain byte-identical to the originally tested correction. Integration checks cover the counterfactual and newly published impact contracts; full-root evidence above predates that independent merge. No force push or protection bypass was used.
 
 Post-integration results: 31 focused cases pass in 4.42 seconds; all 34 static CI contracts pass. Every local QA process finished before the metadata commit and first push.
+
+
+Counterfactual PR #4270 passed all protected checks and merged as f1f8a1773a38cc5d8f0240756d8ca223b82d9717 at 2026-09-08T02:58:34UTC. Deployment 34181895851 and CI Standard 34181895878 completed successfully. The issue is closed; no lease renewal is needed.

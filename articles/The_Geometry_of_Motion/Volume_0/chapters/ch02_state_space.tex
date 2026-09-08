@@ -1,1055 +1,531 @@
-% ==========================================================================
-%  Chapter 2: The Transition to State Space\index{State Space}
-% ==========================================================================
-\chapter{The Transition to State Space\index{State Space}}
+\chapter{The Transition to State Space}
 \label{ch:state_space}
 
-\epigraph{%
-  You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.
-}{}
+A photograph of a golfer tells us where the visible segments are. It does not tell us their velocities, the shaft's deformation rate, or the muscle activation that will persist into the next instant. Two swings can pass through nearly the same pose and then produce different clubhead motion. State-space modeling asks what information must be carried forward to predict that continuation under specified future inputs.
 
-\section{Introduction: The Physics Abstraction}
+This is a way to organize physics, not to leave physical space behind. Joint coordinates describe configuration; forward kinematics gives the clubhead pose; equations of motion describe how forces change the state; measurement equations describe what cameras or sensors reveal. These maps must agree. A useful swing model connects them before making claims about passive motion, control effort or impact accuracy.
 
-\begin{laymansbox}{Context \& Use Case: Why We Banish 3D Physics}{context_box}
-\textbf{The Math You Will See:} We will build the \textbf{State Vector} ($\mathbf{x}$), a vertical stack of numbers containing positions ($\mathbf{q}$) and velocities ($\dot{\mathbf{q}}$). We will formulate the universal control equation $\dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u}, t)$, and its linear cousin $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$.
+\section{State, Input, and Output}
+\label{sec:state_vector}
+\index{State Space}
+\label{def:statevector}
+\label{laymans:context_box}
 
-\textbf{Why We Need It:} When a robotic arm swings a bat, the shoulder, elbow, and wrist all move in weird, overlapping arcs in 3D physics space ($X, Y, Z$). This is impossibly hard to calculate directly. Instead, we map the entire robot into an abstract mathematical realm called "State Space". In State Space, the complex multi-joint swinging robot is represented by a \emph{single, infinitesimally small dot} moving along a single curved line. This abstraction makes solving incredibly complex control problems possible.
+\subsection{A State Is Sufficient Information for a Declared Model}
 
-\textbf{All Variables Defined:} $\mathbf{x}$ is the state, $\mathbf{u}$ is the control input (e.g., motor torque), and $f$ is the system dynamics mapping. See the \textbf{Nomenclature} at the start of the book for a full reference.
-\end{laymansbox}
+For a deterministic model, a state at time $t_0$, together with the future input and the model, determines the subsequent solution wherever that solution exists uniquely. State variables need not be a minimal list: redundant coordinates can be useful if their constraints are enforced. Minimal realization is a separate input--output concept introduced below. A state can be sufficient for one prediction task and insufficient for another.
 
-When a layman pictures a robotic arm throwing a ball or a drone correcting its pitch in a crosswind, they visualize physical bodies acting in 3-dimensional Euclidean space.
+For a point mass with known force law, position $q$ and velocity $v$ suffice:
+\begin{equation}
+\label{eq:state_pair}
+ x=\begin{bmatrix}q\\v\end{bmatrix},\qquad
+ \dot x=\begin{bmatrix}v\\F(q,v,u,t)/m\end{bmatrix},\qquad m>0.
+\end{equation}
 
-But control theorists and kinematic engineers almost never look at the physical space. They work in a wholly abstract, higher-dimensional mathematical realm known as \textbf{State Space}\index{State Space}. State space is arguably the most fundamental translation required in control theory. If you do not understand state space, nothing else in the subsequent volumes of \textit{The Geometry of Motion} will make sense.
+Acceleration is computed from this model. It need not be an independent state here. But a model with commanded jerk, $\dot a=u$, has state $(q,v,a)$; an actuator with current, pressure, activation or hysteresis needs its own memory variables unless a justified reduction removes them. An accelerometer measures an output related to acceleration and gravity; using that measurement does not by itself make acceleration an independent state.
 
-\section{Historical Context: The Kalman Revolution}
-\label{sec:kalman_history}
+An unconstrained natural mechanical system with an $n$-dimensional configuration manifold $Q$ has state $(q,v)\in TQ$, of intrinsic dimension $2n$. Constraints, additional electrical or elastic states, delay, distributed deformation and hybrid modes change this description. Quaternion coordinates can contain more scalar entries than the intrinsic dimension. Finite-dimensional ordinary differential equations are a valuable model class, not a universal representation of every physical system.
 
-\begin{laymansbox}{Historical Context: From Transfer Functions to State Space}{history_box}
-In the 1950s, control engineers exclusively used \textbf{transfer functions}\index{Transfer Function}, which relate outputs to inputs in the frequency domain via Laplace transforms. Transfer functions are well suited for single-input single-output (SISO) systems and for analyzing stability via Nyquist diagrams and Bode plots. However, they fail catastrophically for multi-input multi-output (MIMO) systems and provide no insight into what is happening \emph{inside} the system.
+Prediction also requires the future force or command history. A known instantaneous torque determines an instantaneous acceleration, not an entire future swing. Local Lipschitz continuity of the vector field in state is a standard sufficient condition for local uniqueness; continuity alone is insufficient. Even a smooth field can escape in finite time. Stochastic models specify conditional distributions rather than exact future realizations.
 
-In 1960, \textbf{Rudolf E. Kalman} introduced the state-space representation of linear dynamical systems and the structural concepts of \textbf{controllability}\index{Controllability} and \textbf{observability}\index{Observability}~\cite{Kalman1960}. The state-space formulation made the analysis of multi-input multi-output systems systematic, opened the door to optimal linear-quadratic control, and led within a few years to the recursive estimation problem now known as the Kalman filter. Within a decade, state space had become the standard working language of quantitative control engineering.
-\end{laymansbox}
+\subsection{What Can Be Observed Is a Different Question}
+\label{sec:output_equations}
 
-The fundamental advantage of state-space methods over transfer functions is \emph{transparency}~\cite{Khalil2002}. A transfer function $G(s) = \frac{Y(s)}{U(s)}$ tells you how the input drives the output, but it hides the internal structure. A state-space model $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$ exposes the entire flow of energy and information through the system. This transparency makes it possible to:
+Write a smooth model as
+\begin{equation}
+\label{eq:state_output_general}
+ \dot x=F(x,u,t),\qquad y=h(x,u,t).
+\end{equation}
+\label{pr:fund_eq}
+The output may be a joint encoder, a camera projection, a clubhead position, or a force measurement. A measurement can be many-to-one: one camera image does not generally determine a three-dimensional configuration, much less all its velocities. A known input is information supplied to an observer, not automatically an additional state measurement. Parameters such as segment inertia also need specification or estimation.
 
-\begin{itemize}
-  \item Design controllers that regulate internal state, not just final outputs
-  \item Detect when a system is uncontrollable or unobservable
-  \item Handle systems with multiple inputs and multiple outputs naturally
-  \item Compute optimal control laws analytically
-  \item Estimate hidden state variables from measurements (Kalman filter)
-\end{itemize}
+For golf, distinguish the modeled state, the available measurements, the uncertain estimate and the quantities of interest at impact. The same visible clubhead path can be compatible with different internal loads or activation histories. State estimation and model identification are related but different problems: reconstructing $x(t)$ for a known model does not establish that the model's parameters or zero-input counterfactual are correct.
 
-The rest of this chapter builds the state-space framework from first principles. By the end, the reader should understand why Kalman's formulation became the standard and why state space is the working representation for almost every modern control problem.
+\section{Geometry of Position, Velocity, and Acceleration}
+\label{sec:state_geometry}
 
-\begin{figure}[htb]
+\subsection{Configuration Points and Tangent Vectors}
+
+A configuration is a point of $Q$. A velocity is a vector in $T_qQ$, attached to that configuration. Two velocities at the same point can be added; vectors at different points require a specified identification or transport. General manifolds have no canonical addition of points. In a chosen Euclidean vector-space model, however, addition of position coordinates is legitimate, and solutions of a linear position equation can superpose. The validity of dynamical superposition depends on the equations, not simply on naming a variable position or velocity.
+
+For a pendulum, $Q=S^1$ and $TQ$ is a cylinder. A real-valued angle is a local coordinate or an unwrapped lift; $\theta$ and $\theta+2\pi$ denote the same configuration. The state curve $t\mapsto x(t)$ is parameterized by one time variable, but its image may be a single equilibrium point, a periodic curve, or a nonperiodic path. Under a prescribed time-dependent input, the state alone need not define an autonomous phase portrait.
+
+\subsection{Coordinate Acceleration Is Not a Vector Under General Changes}
+
+For new coordinates $z=\phi(q)$,
+\begin{equation}
+\label{eq:state_coordinate_acceleration}
+ \dot z=D\phi(q)v,\qquad
+ \ddot z=D\phi(q)\ddot q+D^2\phi(q)[v,v].
+\end{equation}
+
+The Hessian term prevents bare coordinate acceleration from transforming like a tangent vector. For example, $q(t)=1+2t$ has $\ddot q=0$, while $z=q^2$ has $\ddot z=8$ near $q=1$. With a chosen connection, covariant acceleration $\nabla_vv$ is a tangent vector; the lifted state derivative $(v,\ddot q)$ is a vector in $T_{(q,v)}TQ$. These are related objects, not interchangeable names for the same coordinate array.
+
+For natural mechanics the kinetic metric supplies the Levi-Civita connection, so the coordinate equation contains its Christoffel velocity products. Generalized forces are covectors paired with virtual displacement or velocity; the inverse mass metric converts them into acceleration contributions. At a fixed $(q,v)$, differences between accelerations produced by different inputs transform linearly because the common Hessian term cancels. Adding two entire nonlinear trajectories has no such guarantee.
+
+Clubhead position $r=h(q)$ makes the connection concrete:
+\begin{equation}
+\label{eq:state_task_acceleration}
+ \dot r=J(q)v,\qquad \ddot r=J(q)\dot v+\dot J(q,v)v.
+\end{equation}
+
+A large Cartesian radial acceleration can coexist with modest angular acceleration. Forces, coordinate acceleration, task acceleration and control authority must be compared in declared coordinates and units. The neighboring configuration and Lagrangian chapters develop this geometry further.
+
+\section{Building Models From Physical Balances}
+\label{sec:state_space_rep}
+\index{Trajectory}\index{State Space Representation}
+
+\subsection{A Point-Mass Pendulum}
+\label{ex:pendulum}
+\label{ex:pendulum_state}
+
+Take a point mass $m$ on a massless rod of length $\ell$, with a fixed pivot and angle measured from downward vertical. With applied pivot torque $\tau$ and viscous coefficient $b\geq0$,
+\begin{equation}
+\label{eq:pendulum_eom}
+ m\ell^2\ddot\theta+b\dot\theta+mg\ell\sin\theta=\tau,
+ \qquad
+ \dot x=\begin{bmatrix}v\\-(g/\ell)\sin\theta-bv/(m\ell^2)+\tau/(m\ell^2)\end{bmatrix}.
+\end{equation}
+
+Here $x=(\theta,v)$ and the input is torque, in N m. Writing the right side as $\tau$ after division by $m\ell^2$ would instead require redefining that symbol as an angular-acceleration input. A uniform rod has different inertia and center-of-mass distance. A moving pivot requires its prescribed motion and boundary force; it is not this fixed-pivot model.
+
+\subsection{A DC Motor: An Electrical State Matters}
+\label{ex:dc_motor}
+\label{ex:dcmotor_state}
+
+For an ideal voltage-driven motor without load torque,
+\begin{equation}
+\label{eq:motor_voltage}
+ L\dot i=V_{\rm in}-Ri-K_e\omega,\qquad
+ J\dot\omega=K_t i-b\omega,\qquad \dot\theta=\omega.
+\end{equation}
+\label{eq:motor_torque}
+Inductance $L$ and inertia $J$ are positive; $R$ and $b$ are nonnegative losses. The state order $(i,\theta,\omega)$ gives
+\begin{equation}
+\label{eq:motor_matrices}
+ A=\begin{bmatrix}-R/L&0&-K_e/L\\0&0&1\\K_t/J&0&-b/J\end{bmatrix},
+ \qquad B=\begin{bmatrix}1/L\\0\\0\end{bmatrix}.
+\end{equation}
+
+For speed and current predictions alone, $\theta$ can be omitted because it does not feed back into those equations. To predict absolute angle, it must be retained. A state variable does not need a derivative directly containing the input: $\dot\theta=\omega$ is enough to make angle part of that prediction.
+
+With $L=.01$ H, $R=1\,\Omega$, $K_e=K_t=.02$ in coherent SI units, $J=.001$ kg m$^2$ and $b=.001$ N m s/rad,
+\begin{equation}
+\label{eq:motor_numeric}
+ A=\begin{bmatrix}-100&0&-2\\0&0&1\\20&0&-1\end{bmatrix},
+ \quad B=\begin{bmatrix}100\\0\\0\end{bmatrix},
+ \quad \lambda(A)\approx\{0,-99.594297,-1.405703\}\,\mathrm{s}^{-1}.
+\end{equation}
+
+The zero mode is the retained angle offset. The zero-voltage full state is stable but not asymptotically stable to one selected angle; current and rate decay, and angle tends to an initial-condition-dependent constant. Voltage still controls angle through current and rate. An ideal motor with numerically equal $K_t,K_e$ satisfies
+\begin{equation}
+\label{eq:motor_power}
+ \frac{d}{dt}\left(\frac12Li^2+\frac12J\omega^2\right)
+ =V_{\rm in}i-Ri^2-b\omega^2.
+\end{equation}
+
+This power identity checks the coupling signs. Neither the matrix $B$ alone nor a state derivative is a measure of energy injection.
+
+\subsection{Two Tanks: State Domains and Flow Direction}
+\label{ex:two_tank}
+\label{ex:twotank_state}
+
+Let two open tanks have equal area $A_t>0$, nonnegative heights, and connections at the same zero-height datum. With nonnegative inflow $Q_{\rm in}$ and positive coefficients $c_t,c_o$,
+\begin{equation}
+\label{eq:tank_model}
+ \begin{aligned}
+ Q_{12}&=c_t\operatorname{sgn}(h_1-h_2)\sqrt{|h_1-h_2|},
+ &Q_o&=c_o\sqrt{h_2},\\
+ A_t\dot h_1&=Q_{\rm in}-Q_{12},
+ &A_t\dot h_2&=Q_{12}-Q_o.
+ \end{aligned}
+\end{equation}
+
+Both flow coefficients have units m$^{5/2}$/s. A check valve would require a different law. The signed square root reverses transfer when tank 2 is higher. Adding the balances gives $A_t(\dot h_1+\dot h_2)=Q_{\rm in}-Q_o$, so internal transfer cancels. At a dry tank the vector field points into the nonnegative domain. Overflow, finite connecting-pipe inertia and empty-pipe behavior are excluded.
+
+The square-root law is continuous but not locally Lipschitz at equal heads or zero outlet height. That fact alone does not establish nonuniqueness. For two solutions with the same inflow, monotonicity of each flow law gives
+\begin{equation}
+\label{eq:tank_uniqueness}
+ A_t\frac{d}{dt}\frac12\|h-\tilde h\|^2
+ =-\Delta(h_1-h_2)\Delta Q_{12}-\Delta h_2\Delta Q_o\leq0.
+\end{equation}
+
+Here each $\Delta$ is the difference between the two solutions. Equal initial states therefore remain equal. Local existence, the inward boundary field and finite volume growth under bounded inflow complete the physical continuation argument. Numerical methods must respect the domain and resolve reversals; silently replacing a negative numerical height with zero can hide mass-balance error.
+
+For $A_t=.1$ m$^2$, $c_t=.05$ and $c_o=.03$ m$^{5/2}$/s, $Q_{\rm in}=.01$ m$^3$/s and $h(0)=(.5,.2)$ m, integration gives approximately $h(10)=(.194816,.147879)$ m and $h(25)=(.153289,.112933)$ m. The equilibrium is
+\begin{equation}
+\label{eq:tank_equilibrium}
+ h_2^*=(Q_{\rm in}/c_o)^2=.111111\,\mathrm{m},\qquad
+ h_1^*=h_2^*+(Q_{\rm in}/c_t)^2=.151111\,\mathrm{m}.
+\end{equation}
+
+These are illustrative hydraulic calculations, included to show why a state-space model must retain physical balance and admissibility.
+
+\section{From Differential Equations to Linear State Models}
+\label{sec:ode_conversion}
+\label{thm:nth_order_conversion}
+
+For an explicit scalar equation $y^{(n)}=g(y,\dot y,\ldots,y^{(n-1)},u,t)$, set $x_j=y^{(j-1)}$. Then $\dot x_j=x_{j+1}$ for $j<n$ and $\dot x_n=g$. The construction requires an equation solvable for its highest derivative; an implicit singular relation may instead be a differential-algebraic system.
+
+For constant coefficients,
+\begin{equation}
+\label{eq:companion_model}
+ y^{(n)}+a_{n-1}y^{(n-1)}+\cdots+a_0y=u,
+ \quad
+ A=\begin{bmatrix}0&1&\cdots&0\\\vdots&\ddots&\ddots&\vdots\\0&\cdots&0&1\\-a_0&-a_1&\cdots&-a_{n-1}\end{bmatrix},
+ \quad B=\begin{bmatrix}0\\\vdots\\0\\1\end{bmatrix}.
+\end{equation}
+
+The shift equations prove equivalence, with initial derivatives included. This companion construction is not a uniqueness theorem for every realization of an input--output map. A nonsingular constant change $z=Tx$ gives $A_z=TAT^{-1}$, $B_z=TB$ and $C_z=CT^{-1}$; nonminimal realizations can even have different dimensions.
+
+\subsection{Matrices, Units, and Ports}
+\label{sec:linear_state_space}
+\index{Linear State Space}\index{A Matrix}\index{B Matrix}\index{Output Equation}
+
+An LTI model is
+\begin{equation}
+\label{eq:linear_state_space}
+ \dot x=Ax+Bu,\qquad y=Cx+Du,
+ \quad A\in\mathbb R^{n\times n},\ B\in\mathbb R^{n\times m},\ C\in\mathbb R^{p\times n},\ D\in\mathbb R^{p\times m}.
+\end{equation}
+\label{eq:output_standard}
+\label{def:output_eq}
+Time-varying linear models use $A(t),B(t),C(t),D(t)$. Additive offsets produce an affine model; deviations about a feasible reference can remove its nominal offset. The output equation includes direct feedthrough where the physical measurement requires it. A block diagram must feed the state back into $Ax$ and the input into both $Bu$ and $Du$; neither path is optional merely because the system is open loop.
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.1]
-  % Input
-  \node[draw,rectangle,minimum width=1.5cm, minimum height=0.8cm] (u) at (0,1.5) {$\mathbf{u}$: Input};
-
-  % Dynamics block
-  \node[draw,rectangle,minimum width=2cm, minimum height=1cm] (dyn) at (2.5,1.5) {$\dot{\mathbf{x}} = \mathbf{Ax} + \mathbf{Bu}$};
-
-  % State integrator
-  \node[draw,rectangle,minimum width=1.8cm, minimum height=0.8cm] (int) at (5,1.5) {$\int \, \dd t$};
-  \draw[->,thick] (int) -- (5,-0.5) node[anchor=north] {$\mathbf{x}(t)$: State};
-
-  % Output
-  \node[draw,rectangle,minimum width=1.5cm, minimum height=0.8cm] (out) at (7,1.5) {$\mathbf{y} = \mathbf{Cx} + \mathbf{Du}$};
-  \draw[->,thick] (out) -- (7,-0.5) node[anchor=north] {$\mathbf{y}$: Output};
-
-  % Connections
-  \draw[->,thick] (u) -- (dyn);
-  \draw[->,thick] (dyn) -- (int);
-  \draw[->,thick] (int) -- (out);
-
-  % Feedback (optional)
-  \draw[->,thick,dashed] (5,-0.3) -- (5,-1.2) -- (1.25,-1.2) -- (1.25,1) node[anchor=east,xshift=-0.5cm] {feedback};
-
-  \node at (3.75,3) {State-Space System Architecture};
-\end{tikzpicture}
-\caption{Block diagram of a continuous-time linear state-space system. The input $\mathbf{u}$ drives the dynamics, producing state changes. The state $\mathbf{x}$ is obtained by integrating the state derivative. The output $\mathbf{y}$ is a linear combination of state and input.}
+\includegraphics[width=\linewidth]{../figures/state_space_architecture.pdf}
+\caption{State, Input, and Measurement Paths. State and Input Enter Both the Dynamics and the Output Map; Integration Also Requires an Initial State.}
 \label{fig:statespace_architecture}
 \end{figure}
 
-\section{Constructing a State Vector}
-\label{sec:state_vector}
-
-Let us build a state space from the ground up using the simplest dynamical system possible: a 1-dimensional point mass (like a train on a straight track).
-
-We want to predict what the train will do. To do this, we need to know its position, $q$. Is $q$ the "state" of the system?
-
-No. If we only know that the train is at $q = 100$ meters, we cannot predict where it will be 1 second from now. It could be moving right, moving left, or stationary.
-
-Therefore, to complete our understanding, we must also know its velocity, $\dot{q}$ (the time-derivative of position). If we know $(q, \dot{q})$, we know its exact location and its exact speed.
-
-Do we need to know acceleration ($\ddot{q}$) as part of the state? According to Newton's Second Law: $F = m\ddot{q}$. Acceleration is not an independent property of the train; it is completely driven by the external forces applied at that instant. Therefore, if we know the forces (the Control Inputs, $\mathbf{u}$), we can immediately compute the acceleration. The state itself is fully defined by purely the position and velocity.
-
-\begin{definition}{The State Vector \texorpdfstring{$\mathbf{x}$}{x}}{statevector}
-  The state vector $\mathbf{x}$ is the minimum set of mathematical variables completely describing the condition of a dynamic system at a specific point in time.
-
-  For our train, it is a 2-dimensional column vector:
-  \begin{equation}
-      \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} q \\ \dot{q} \end{bmatrix} = \begin{bmatrix} \text{position} \\ \text{velocity} \end{bmatrix}
-  \end{equation}
-
-  For a general mechanical system with $n$ configuration degrees of freedom
-  $\mathbf{q} \in \Reals^n$, the state is the pair of configuration and velocity,
-  $\mathbf{x} = (\mathbf{q}, \dot{\mathbf{q}}) \in \mathcal{X} \subset \Reals^{2n}$.
-  More generally, the state space may be any manifold whose dimension equals
-  the number of first-order ODEs required to predict the future: for a
-  mechanical system that is $2n$; for an electromechanical system it is
-  typically larger (see the DC-motor example below, where the inductor current
-  adds an extra state).
-\end{definition}
-
-If you take a photograph of a system, you capture its position $\mathbf{q}$. But a state vector $\mathbf{x}$ is the "ultimate photograph"---it captures the position \emph{and} the velocity. With $\mathbf{x}$ and the laws of physics, the entire future of the system is deterministic.
-
-\subsection{Worked Example 1: Simple Pendulum}
-\label{ex:pendulum}
-
-\begin{example}{State Vector for a Simple Pendulum}{pendulum_state}
-A pendulum of length $L$ and mass $m$ is suspended from a pivot. Let $\theta$ denote the angle from vertical, and $\tau$ denote an applied torque at the pivot.
-
-The equation of motion is:
+Different state components can have different units. For $m\ddot q+c\dot q+kq=u$,
 \begin{equation}
-  \label{eq:pendulum_eom}
-  m L^2 \ddot{\theta} + mg L \sin(\theta) = \tau
+\label{eq:mass_spring_matrices}
+ x=(q,v),\qquad A=\begin{bmatrix}0&1\\-k/m&-c/m\end{bmatrix},\qquad B=\begin{bmatrix}0\\1/m\end{bmatrix}.
 \end{equation}
+\label{eq:mass_spring_damper}
+The input force changes the velocity derivative; it does not instantaneously jump position under a bounded ordinary input. An impulse needs an impulse law. Actual input power is $uv$, and mechanical energy satisfies $\dot E=uv-cv^2$. Thus signed work may be negative even for a nonzero positive input. Scaled coordinates are needed before interpreting a Euclidean norm of position and velocity as a physical error or energy.
 
-To predict the pendulum's future, what do we need?
-\begin{itemize}
-  \item The angle $\theta$ (where is it pointing?)
-  \item The angular velocity $\dot{\theta}$ (is it spinning?)
-  \item The torque $\tau$ is the control input (provided at the moment we want to predict)
-\end{itemize}
-
-Thus the state vector is:
-\begin{equation}
-  \mathbf{x} = \begin{bmatrix} \theta \\ \dot{\theta} \end{bmatrix}
-\end{equation}
-
-This is a 2-dimensional state space, even though the pendulum physically swings in a 1-dimensional arc in our visual space.
-\end{example}
-
-\subsection{Worked Example 2: DC Motor}
-\label{ex:dc_motor}
-
-\begin{example}{State Vector for a DC Motor}{dcmotor_state}
-A DC motor is driven by input voltage $V_{\text{in}}$. Let $\theta$ be the rotor angle, and let $i$ be the current flowing through the motor windings.
-
-The governing equations are:
-\begin{align}
-  L \frac{\dd i}{\dd t} &= V_{\text{in}} - R i - K_e \dot{\theta} \label{eq:motor_voltage} \\
-  J \frac{\dd \dot{\theta}}{\dd t} &= K_t i - b \dot{\theta} \label{eq:motor_torque}
-\end{align}
-
-where:
-\begin{itemize}
-  \item $L$ is the motor inductance, $R$ is resistance
-  \item $K_e$ is the back-EMF constant, $K_t$ is the torque constant
-  \item $J$ is the rotor inertia, $b$ is viscous friction
-\end{itemize}
-
-The state vector must include all variables whose time-derivatives depend on the inputs. These are:
-\begin{equation}
-  \mathbf{x} = \begin{bmatrix} i \\ \theta \\ \dot{\theta} \end{bmatrix}
-\end{equation}
-
-This is a 3-dimensional state space. Notice we include $\theta$ (rotor position) even though it does not directly appear in the governing equations—we need it to fully specify the motor's configuration, and its time-derivative $\dot{\theta}$ does appear. As noted in Definition~\ref{def:statevector}, the state space dimension (3) exactly matches the number of first-order ODEs needed to predict the system (one electrical + two mechanical), despite there being only 1 mechanical DOF.
-\end{example}
-
-\subsection{Worked Example 3: Two-Tank Fluid System}
-\label{ex:two_tank}
-
-\begin{example}{State Vector for Two Coupled Tanks}{twotank_state}
-Two tanks, each with cross-sectional area $A$, are connected by a valve. Let $h_1$ and $h_2$ be the fluid levels. Flow into tank 1 is $Q_{\text{in}}$, and flow between tanks is proportional to the height difference:
-\begin{equation}
-  Q_{1 \to 2} = C \sqrt{|h_1 - h_2|}
-\end{equation}
-
-where $C$ is a flow coefficient, and outflow from tank 2 is:
-\begin{equation}
-  Q_{\text{out}} = C_{\text{out}} \sqrt{h_2}
-\end{equation}
-
-The height rates of change are:
-\begin{align}
-  A \frac{\dd h_1}{\dd t} &= Q_{\text{in}} - Q_{1 \to 2} \\
-  A \frac{\dd h_2}{\dd t} &= Q_{1 \to 2} - Q_{\text{out}}
-\end{align}
-
-To predict the system, we need the current heights of both tanks. The state vector is:
-\begin{equation}
-  \mathbf{x} = \begin{bmatrix} h_1 \\ h_2 \end{bmatrix}
-\end{equation}
-
-This is a 2-dimensional state space. The control input is the inflow rate $Q_{\text{in}}$.
-\end{example}
-
-\section{Converting \texorpdfstring{$n$}{n}-th Order ODEs to State Form}
-\label{sec:ode_conversion}
-
-\begin{theorem}{Conversion of \texorpdfstring{$n$}{n}-th Order ODE to First-Order State Form}{nth_order_conversion}
-Any $n$-th order differential equation of the form
-\begin{equation}
-  y^{(n)} + a_{n-1} y^{(n-1)} + \cdots + a_1 \dot{y} + a_0 y = u(t)
-\end{equation}
-can be converted to a system of $n$ first-order ODEs via state-vector substitution.
-\end{theorem}
-
-\begin{proof}
-Define the state variables as consecutive derivatives of $y$:
-\begin{align}
-  x_1 &= y \\
-  x_2 &= \dot{y} \\
-  x_3 &= \ddot{y} \\
-  &\vdots \\
-  x_n &= y^{(n-1)}
-\end{align}
-
-Then:
-\begin{align}
-  \dot{x}_1 &= x_2 \\
-  \dot{x}_2 &= x_3 \\
-  &\vdots \\
-  \dot{x}_{n-1} &= x_n \\
-  \dot{x}_n &= u(t) - a_0 x_1 - a_1 x_2 - \cdots - a_{n-1} x_n
-\end{align}
-
-where the final equation is obtained by solving the original ODE for $y^{(n)} = \dot{x}_n$:
-\begin{equation}
-  \dot{x}_n = u(t) - a_0 x_1 - a_1 x_2 - \cdots - a_{n-1} x_n
-\end{equation}
-
-In matrix form, this is $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}u$ where $\mathbf{A}$ is the companion matrix:
-\begin{equation}
-  \mathbf{A} = \begin{bmatrix} 0 & 1 & 0 & \cdots & 0 \\ 0 & 0 & 1 & \cdots & 0 \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & 0 & \cdots & 1 \\ -a_0 & -a_1 & -a_2 & \cdots & -a_{n-1} \end{bmatrix}, \quad \mathbf{B} = \begin{bmatrix} 0 \\ 0 \\ \vdots \\ 0 \\ 1 \end{bmatrix}
-\end{equation}
-
-This representation is unique up to change of state variables (i.e., state transformation).
-\end{proof}
-
-\section{State Space Representations}
-\label{sec:state_space_rep}
-
-Because the state vector $\mathbf{x}$ contains $n$ variables, it naturally lives in an $n$-dimensional geometry: the State Space, denoted as $\mathcal{X} \subset \Reals^n$.
-
-An astonishing realization for beginners is that when a dynamic system (like an airplane or a robotic arm) moves through physical space over time, its entire sprawling motion is represented as a single, unified \textbf{1-dimensional curve} snaking through $n$-dimensional state space. This curve is called the system's \textbf{Trajectory}\index{Trajectory} $\mathcal{T}$.
-
-\subsection{Standard Form Differential Equations}
-
-The immense power of state space is that it allows us to convert complex, higher-order physical differential equations into simple, first-order vector math.
-
-Consider a simple mass-spring-damper system governed by a second-order differential equation:
-\begin{equation}
-  \label{eq:mass_spring_damper}
-  m\ddot{q} + c\dot{q} + kq = u
-\end{equation}
-where $q$ is position, $m$ is mass, $c$ is damping, $k$ is stiffness, and $u$ is our control force (e.g., a motor pushing the mass).
-
-By defining our state vector as $\mathbf{x} = [x_1, x_2]^T = [q, \dot{q}]^T$, we can rewrite this physical equation as purely mathematical first-order derivatives. First, isolate the highest derivative ($\ddot{q}$):
-\begin{equation}
-  \ddot{q} = \frac{1}{m}(u - c\dot{q} - kq)
-\end{equation}
-Now, substitute the state variables ($x_1 = q, x_2 = \dot{q}$):
-\begin{align}
-  \dot{x}_1 &= x_2 \\
-  \dot{x}_2 &= \frac{1}{m}(u - c x_2 - k x_1)
-\end{align}
-
-This is called the \textbf{State Space Representation}\index{State Space Representation}. It is universally written in nonlinear control literature as:
-
-\begin{principle}{The Fundamental Equation of Control Theory}{fund_eq}
-  Every forced control system can be written as a first-order vector differential equation mapping the current state and current control commands to the velocity of the state vector:
-  \begin{equation}
-      \dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u}, t)
-  \end{equation}
-  This vector field $f$ dictates how the system "flows" through the abstract geometry of the state space.
-\end{principle}
-
-\subsection{Linear State Space: The A and B Matrices}
-\label{sec:linear_state_space}
-
-\index{Linear State Space}\index{A Matrix}\index{B Matrix}
-
-When the system is perfectly linear (like the mass-spring-damper above), the function $f(\mathbf{x}, \mathbf{u}, t)$ can be split into two matrices: the Dynamics Matrix ($\mathbf{A}$) and the Input Matrix ($\mathbf{B}$).
-\begin{equation}
-    \label{eq:linear_state_space}
-    \dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}
-\end{equation}
-
-If we package our mass-spring equations into matrices, we get:
-\begin{equation}
-    \label{eq:mass_spring_matrices}
-    \begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix} =
-    \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{c}{m} \end{bmatrix}
-    \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} +
-    \begin{bmatrix} 0 \\ \frac{1}{m} \end{bmatrix} u
-\end{equation}
-
-\begin{itemize}
-    \item \textbf{The A Matrix}: $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -k/m & -c/m \end{bmatrix}$. This matrix defines the "drift" of the system. If you turn off all motors ($u=0$), the $\mathbf{A}$ matrix dictates exactly how the system will coast to a stop, oscillate, or explode. Its eigenvalues completely define the system's natural stability.
-
-    \item \textbf{The B Matrix}: $\mathbf{B} = \begin{bmatrix} 0 \\ 1/m \end{bmatrix}$. This matrix defines how your control inputs $u$ actually inject energy into the state. Notice that the top value is $0$, meaning our motor cannot instantly teleport the position ($x_1$); it can only directly push the velocity ($x_2$).
-\end{itemize}
-
-\section{Output Equations and Observability}
-\label{sec:output_equations}
-
-Often, we cannot measure the entire state vector. For example, in a DC motor, we can measure the voltage and current flowing through it, but we may not directly measure the angular position $\theta$. The \textbf{output equation}\index{Output Equation} describes what we actually measure:
-
-\begin{definition}{Output Equation}{output_eq}
-  For a linear system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$, the output equation is:
-  \begin{equation}
-    \label{eq:output_standard}
-    \mathbf{y} = \mathbf{C}\mathbf{x} + \mathbf{D}\mathbf{u}
-  \end{equation}
-
-  where:
-  \begin{itemize}
-    \item $\mathbf{y} \in \Reals^p$ is the measurement vector (what we can observe)
-    \item $\mathbf{C} \in \Reals^{p \times n}$ is the output matrix
-    \item $\mathbf{D} \in \Reals^{p \times m}$ is the feedthrough matrix (often zero)
-  \end{itemize}
-\end{definition}
-
-The question "Can we infer the full state $\mathbf{x}$ from the measurements $\mathbf{y}$?" is precisely the question of \textbf{observability}, which we formalize later in Section~\ref{sec:observability}.
-
-\section{Equilibrium Points and Linearization}
-\label{sec:equilibrium}
-
-\subsection{Equilibrium Point Definition}
-
-\begin{definition}{Equilibrium Point}{equilibrium_def}
-  An \textbf{equilibrium point}\index{Equilibrium Point} (or fixed point) $\mathbf{x}^* \in \Reals^n$ of the system $\dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u}^*)$ is a point where the vector field is zero:
-  \begin{equation}
-    \label{eq:equilibrium_condition}
-    f(\mathbf{x}^*, \mathbf{u}^*) = \mathbf{0}
-  \end{equation}
-
-  At an equilibrium, the state does not change; the system is in a "steady state."
-\end{definition}
-
-For linear systems $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$, if $\mathbf{A}$ is invertible and $\mathbf{u}^* = \mathbf{0}$, the unique equilibrium is $\mathbf{x}^* = \mathbf{0}$. For nonlinear systems, there may be multiple equilibria.
-
-\subsection{Linearization via Taylor Expansion}
-\label{subsec:linearization}
-
-To understand the local behavior near an equilibrium, we linearize via Taylor expansion. Suppose we have an equilibrium $\mathbf{x}^*$ at control input $\mathbf{u}^*$. Consider a small perturbation $\boldsymbol{\delta x} = \mathbf{x} - \mathbf{x}^*$ and $\boldsymbol{\delta u} = \mathbf{u} - \mathbf{u}^*$.
-
-Expand $f$ in a Taylor series around $(\mathbf{x}^*, \mathbf{u}^*)$:
-\begin{equation}
-  f(\mathbf{x}^* + \boldsymbol{\delta x}, \mathbf{u}^* + \boldsymbol{\delta u}) = f(\mathbf{x}^*, \mathbf{u}^*) + \mathbf{J}_f \boldsymbol{\delta x} + \mathbf{J}_u \boldsymbol{\delta u} + O(\|\boldsymbol{\delta x}\|^2, \|\boldsymbol{\delta u}\|^2)
-\end{equation}
-
-where $\mathbf{J}_f$ is the \textbf{Jacobian matrix}\index{Jacobian Matrix} of $f$ with respect to the state:
-\begin{equation}
-  \label{eq:jacobian_def}
-  \mathbf{J}_f = \frac{\partial f}{\partial \mathbf{x}}\bigg|_{(\mathbf{x}^*, \mathbf{u}^*)} = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \frac{\partial f_1}{\partial x_2} & \cdots & \frac{\partial f_1}{\partial x_n} \\ \frac{\partial f_2}{\partial x_1} & \frac{\partial f_2}{\partial x_2} & \cdots & \frac{\partial f_2}{\partial x_n} \\ \vdots & \vdots & \ddots & \vdots \\ \frac{\partial f_n}{\partial x_1} & \frac{\partial f_n}{\partial x_2} & \cdots & \frac{\partial f_n}{\partial x_n} \end{bmatrix}_{(\mathbf{x}^*, \mathbf{u}^*)}
-\end{equation}
-
-and similarly:
-\begin{equation}
-  \mathbf{J}_u = \frac{\partial f}{\partial \mathbf{u}}\bigg|_{(\mathbf{x}^*, \mathbf{u}^*)}
-\end{equation}
-
-Since $f(\mathbf{x}^*, \mathbf{u}^*) = \mathbf{0}$, the linearized dynamics are:
-\begin{equation}
-  \label{eq:linearized_dynamics}
-  \dot{\boldsymbol{\delta x}} \approx \mathbf{A}_c \boldsymbol{\delta x} + \mathbf{B}_c \boldsymbol{\delta u}
-\end{equation}
-
-where $\mathbf{A}_c = \mathbf{J}_f$ and $\mathbf{B}_c = \mathbf{J}_u$. This is a linear system describing the small-signal behavior around the equilibrium.
-
-\begin{example}{Pendulum Linearization}{pendulum_linearization}
-Consider the pendulum from Example~\ref{ex:pendulum} with $\tau = 0$ (no control). The equation is:
-\begin{equation}
-  \ddot{\theta} + \frac{g}{L} \sin(\theta) = 0
-\end{equation}
-
-State vector: $\mathbf{x} = [\theta, \dot{\theta}]^T$. The vector field is:
-\begin{equation}
-  f(\mathbf{x}) = \begin{bmatrix} x_2 \\ -\frac{g}{L} \sin(x_1) \end{bmatrix}
-\end{equation}
-
-Equilibria: $f(\mathbf{x}^*) = \mathbf{0}$ when $x_2 = 0$ and $\sin(x_1) = 0$, so $\mathbf{x}^* = [k\pi, 0]^T$ for $k \in \mathbb{Z}$.
-
-\textbf{Bottom equilibrium} ($\theta = 0$): The Jacobian is:
-\begin{equation}
-  \mathbf{J}_f = \begin{bmatrix} 0 & 1 \\ -\frac{g}{L}\cos(\theta) & 0 \end{bmatrix}\bigg|_{\theta=0} = \begin{bmatrix} 0 & 1 \\ -\frac{g}{L} & 0 \end{bmatrix}
-\end{equation}
-
-The linearized system near the bottom is $\ddot{\theta} = -\frac{g}{L}\theta$, a harmonic oscillator.
-
-\textbf{Top equilibrium} ($\theta = \pi$):
-\begin{equation}
-  \mathbf{J}_f\bigg|_{\theta=\pi} = \begin{bmatrix} 0 & 1 \\ \frac{g}{L} & 0 \end{bmatrix}
-\end{equation}
-
-The linearized system is $\ddot{\theta} = \frac{g}{L}\theta$, which has exponentially growing solutions—an unstable saddle.
-\end{example}
-
-\section{Phase Portraits and Stability Classification}
-\label{sec:phase_portraits}
-
-\index{Phase Portrait}\index{Stability}
-
-For a 2D system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$, the phase portrait is the collection of all trajectories in the $(x_1, x_2)$ plane. The behavior depends entirely on the eigenvalues of $\mathbf{A}$.
-
-\begin{theorem}{Stability Classification from Eigenvalues}{stability_classification}
-  \label{thm:stability}
-  For a 2D linear system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$ with eigenvalues $\lambda_1, \lambda_2$:
-
-  \begin{itemize}
-    \item \textbf{Stable Node}\index{Stable Node}: Both eigenvalues are real and negative ($\lambda_1, \lambda_2 < 0$). Trajectories spiral into the origin monotonically.
-
-    \item \textbf{Unstable Node}\index{Unstable Node}: Both eigenvalues are real and positive ($\lambda_1, \lambda_2 > 0$). Trajectories spiral away from the origin.
-
-    \item \textbf{Saddle Point}\index{Saddle Point}: One eigenvalue is positive, one is negative. Trajectories approach along the stable manifold (eigenvector of $\lambda < 0$) and diverge along the unstable manifold (eigenvector of $\lambda > 0$).
-
-    \item \textbf{Stable Spiral (Focus)}\index{Spiral, Stable}\index{Focus}: Eigenvalues are complex conjugates with negative real part ($\lambda = \alpha \pm i\beta$, $\alpha < 0$). Trajectories spiral inward.
-
-    \item \textbf{Unstable Spiral}\index{Spiral, Unstable}: Eigenvalues are complex conjugates with positive real part. Trajectories spiral outward.
-
-    \item \textbf{Center}\index{Center}: Eigenvalues are purely imaginary ($\lambda = \pm i\omega$). Trajectories form closed orbits (periodic motion).
-  \end{itemize}
-\end{theorem}
-
-The origin is \textbf{asymptotically stable}\index{Asymptotic Stability} if and only if all eigenvalues have negative real part. The origin is \textbf{marginally stable}\index{Marginal Stability} if the largest real part is zero. The origin is \textbf{unstable}\index{Instability} if any eigenvalue has positive real part.
-
-\section{Solution of Linear Systems: The Matrix Exponential}
+\section{Solutions, Equilibria, and Local Models}
 \label{sec:matrix_exponential}
-
 \index{Matrix Exponential}
 
-For a linear time-invariant (LTI) system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$ with initial condition $\mathbf{x}(0) = \mathbf{x}_0$, the solution is:
+\subsection{The LTI Solution and Its Limits}
 
-\begin{theorem}{Solution via Matrix Exponential}{matrix_exponential_solution}
-  \label{thm:matrix_exponential}
-  The unique solution is:
-  \begin{equation}
-    \label{eq:matrix_exp_solution}
-    \mathbf{x}(t) = e^{\mathbf{A}t} \mathbf{x}_0
-  \end{equation}
-
-  where $e^{\mathbf{A}t}$ is the \textbf{matrix exponential}\index{Matrix Exponential}, defined as:
-  \begin{equation}
-    \label{eq:matrix_exp_series}
-    e^{\mathbf{A}t} = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!} = \mathbf{I} + \mathbf{A}t + \frac{(\mathbf{A}t)^2}{2!} + \frac{(\mathbf{A}t)^3}{3!} + \cdots
-  \end{equation}
-\end{theorem}
-
-\begin{proof}
-  Consider the scalar ODE $\dot{x} = ax$ with initial condition $x(0) = x_0$. The solution is $x(t) = e^{at} x_0$.
-
-  By analogy, define $e^{\mathbf{A}t}$ as the solution to:
-  \begin{equation}
-    \frac{\dd}{\dd t} e^{\mathbf{A}t} = \mathbf{A} e^{\mathbf{A}t}, \quad e^{\mathbf{A} \cdot 0} = \mathbf{I}
-  \end{equation}
-
-  The Taylor series ansatz:
-  \begin{equation}
-    e^{\mathbf{A}t} = \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!}
-  \end{equation}
-
-  satisfies this differential equation because:
-  \begin{equation}
-    \frac{\dd}{\dd t} \sum_{k=0}^{\infty} \frac{(\mathbf{A}t)^k}{k!} = \sum_{k=1}^{\infty} \frac{k (\mathbf{A}t)^{k-1} \mathbf{A}}{k!} = \sum_{k=1}^{\infty} \frac{(\mathbf{A}t)^{k-1} \mathbf{A}}{(k-1)!} = \mathbf{A} \sum_{j=0}^{\infty} \frac{(\mathbf{A}t)^j}{j!} = \mathbf{A} e^{\mathbf{A}t}
-  \end{equation}
-
-  with $e^{\mathbf{A} \cdot 0} = \mathbf{I}$. Now verify that $\mathbf{x}(t) = e^{\mathbf{A}t} \mathbf{x}_0$ solves the original system:
-  \begin{equation}
-    \dot{\mathbf{x}}(t) = \frac{\dd}{\dd t}\left(e^{\mathbf{A}t} \mathbf{x}_0\right) = \mathbf{A} e^{\mathbf{A}t} \mathbf{x}_0 = \mathbf{A} \mathbf{x}(t) \quad \checkmark
-  \end{equation}
-\end{proof}
-
-\textbf{Practical Computation:} For small-dimensional systems, the matrix exponential can be computed via diagonalization. If $\mathbf{A} = \mathbf{P} \boldsymbol{\Lambda} \mathbf{P}^{-1}$ where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_n)$, then:
+The matrix exponential is defined for every finite square matrix, including defective and singular ones:
 \begin{equation}
-  e^{\mathbf{A}t} = \mathbf{P} e^{\boldsymbol{\Lambda}t} \mathbf{P}^{-1} = \mathbf{P} \text{diag}(e^{\lambda_1 t}, \ldots, e^{\lambda_n t}) \mathbf{P}^{-1}
+\label{eq:matrix_exp_series}
+ e^{At}=\sum_{j=0}^{\infty}\frac{A^jt^j}{j!},\qquad
+ x(t)=e^{At}x_0+\int_0^t e^{A(t-s)}Bu(s)\,ds.
+\end{equation}
+\label{thm:matrix_exponential}
+\label{thm:matrix_exponential_solution}
+\label{eq:matrix_exp_solution}
+\label{eq:forced_solution}
+Uniform convergence of the series and its derivative on bounded time intervals permits termwise differentiation; it gives $\frac{d}{dt}e^{At}=Ae^{At}$ and $e^{A0}=I$. Differentiating $e^{-At}x(t)$ and integrating proves the forced formula. This establishes superposition for this linear model, including its position components, with consistent initial data and inputs.
+
+If $A=P\Lambda P^{-1}$ is diagonalizable, exponentiating its diagonal entries is an identity. It is not a universal numerical algorithm: defective matrices lack that decomposition and ill-conditioned eigenvectors amplify error. Established matrix-exponential routines use more robust constructions. For LTV systems replace $e^{A(t-s)}$ by the state-transition matrix $\Phi(t,s)$; in general $\Phi$ is not the exponential of the time integral of $A(t)$.
+
+\subsection{Linearization About a State or a Swing}
+\label{sec:equilibrium}
+\index{Equilibrium Point}\index{Jacobian Matrix}
+\label{def:equilibrium_def}
+\label{eq:equilibrium_condition}
+\label{subsec:linearization}
+\label{eq:jacobian_def}
+
+An equilibrium under constant $u^*$ satisfies $F(x^*,u^*)=0$. For an explicitly time-dependent model, a constant state requires that equality for all relevant times. A steady rotation may be stationary in selected reduced variables while angle keeps changing; it is not an equilibrium of the full angle state.
+
+For a twice continuously differentiable field near an equilibrium,
+\begin{equation}
+\label{eq:linearized_dynamics}
+ \delta\dot x=A\delta x+B\delta u+r,\qquad
+ A=F_x(x^*,u^*),\quad B=F_u(x^*,u^*),\quad
+ \|r\|\leq c(\|\delta x\|+\|\delta u\|)^2
 \end{equation}
 
-For systems with input, $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}(t)$:
+on a sufficiently small neighborhood with a bounded Hessian. Continuous differentiability gives a little-$o$ remainder instead. A swing is usually a moving nominal solution, so its perturbations obey an LTV equation with derivatives evaluated along $(\bar x(t),\bar u(t))$. Feedback $u=\pi(x,t)$ contributes $F_u\pi_x$ to the closed-loop Jacobian. A reference that does not satisfy the dynamics leaves a residual forcing term.
+
+For the unforced undamped pendulum, the downward and upward local matrices are
 \begin{equation}
-  \label{eq:forced_solution}
-  \mathbf{x}(t) = e^{\mathbf{A}t} \mathbf{x}_0 + \int_0^t e^{\mathbf{A}(t-\tau)} \mathbf{B} \mathbf{u}(\tau) \dd \tau
+\label{eq:pendulum_linearizations}
+ A_{\rm down}=\begin{bmatrix}0&1\\-g/\ell&0\end{bmatrix},\qquad
+ A_{\rm up}=\begin{bmatrix}0&1\\g/\ell&0\end{bmatrix}.
 \end{equation}
-
-This is the superposition of free response (first term) and forced response (second term).
-
-\section{Controllability}
-\label{sec:controllability}
-
-\index{Controllability}
-
-The key question in control is: \emph{Can we steer the system from any initial state to any desired final state using our inputs?}
-
-\begin{definition}{Controllability}{controllability_def}
-  A linear system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$ is \textbf{controllable}\index{Controllable System} if for any initial state $\mathbf{x}_0$ and any final state $\mathbf{x}_f$, there exists a finite time $T > 0$ and an input sequence $\mathbf{u}(t)$ for $t \in [0, T]$ that drives the system from $\mathbf{x}_0$ to $\mathbf{x}_f$.
-\end{definition}
-
-\begin{theorem}{Kalman Controllability Rank Condition}{kalman_controllability}
-  \label{thm:controllability_rank}
-  The system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$ is controllable if and only if the \textbf{controllability matrix}
-  \begin{equation}
-    \label{eq:controllability_matrix}
-    \mathbf{C}_{\text{rank}} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} & \mathbf{A}^2\mathbf{B} & \cdots & \mathbf{A}^{n-1}\mathbf{B} \end{bmatrix}
-  \end{equation}
-  has full rank: $\text{rank}(\mathbf{C}_{\text{rank}}) = n$.
-\end{theorem}
-
-\begin{proof}[Sketch]
-  The controllability matrix $\mathbf{C}_{\text{rank}}$ has dimensions $n \times nm$. Each column $\mathbf{A}^k \mathbf{B}$ represents the "reach" of the input after $k$ applications of the dynamics. The rank condition ensures that the span of these columns covers all $n$ dimensions of state space.
-
-  The intuition is from the Cayley-Hamilton theorem: any power $\mathbf{A}^k$ for $k \geq n$ can be expressed as a linear combination of $\mathbf{A}^0, \mathbf{A}^1, \ldots, \mathbf{A}^{n-1}$. Thus, checking columns up to $\mathbf{A}^{n-1}\mathbf{B}$ is sufficient.
-
-  A rigorous proof uses the Gram matrix approach: controllability is equivalent to the controllability Gram matrix
-  \begin{equation}
-    \mathbf{W}_c = \int_0^T e^{\mathbf{A}\tau} \mathbf{B} \mathbf{B}^T e^{\mathbf{A}^T \tau} \dd \tau
-  \end{equation}
-  being positive definite, which is equivalent to $\mathbf{C}_{\text{rank}}$ having full rank.
-\end{proof}
-
-\textbf{Physical Interpretation:} If the system is not controllable, it means some mode or degree of freedom cannot be directly influenced by the available inputs. For a DC motor whose position is $\theta$ and current is $i$, if the only measurement is current and there is no direct control over electrical resistance, the position might be uncontrollable.
-
-\section{Observability}
-\label{sec:observability}
-
-\index{Observability}
-
-Observability is the dual of controllability: \emph{Can we infer the full state from measurements alone?}
-
-\begin{definition}{Observability}{observability_def}
-  A linear system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$, $\mathbf{y} = \mathbf{C}\mathbf{x} + \mathbf{D}\mathbf{u}$ is \textbf{observable}\index{Observable System} if the initial state $\mathbf{x}(0)$ can be uniquely determined from knowledge of the input $\mathbf{u}(t)$ and the output $\mathbf{y}(t)$ over a finite time interval $[0, T]$.
-\end{definition}
-
-\begin{theorem}{Kalman Observability Rank Condition}{kalman_observability}
-  \label{thm:observability_rank}
-  The system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$, $\mathbf{y} = \mathbf{C}\mathbf{x} + \mathbf{D}\mathbf{u}$ is observable if and only if the \textbf{observability matrix}
-  \begin{equation}
-    \label{eq:observability_matrix}
-    \mathbf{O} = \begin{bmatrix} \mathbf{C} \\ \mathbf{C}\mathbf{A} \\ \mathbf{C}\mathbf{A}^2 \\ \vdots \\ \mathbf{C}\mathbf{A}^{n-1} \end{bmatrix}
-  \end{equation}
-  has full rank: $\text{rank}(\mathbf{O}) = n$.
-\end{theorem}
-
-The observability matrix has dimensions $np \times n$ where $p$ is the number of measurements. Each row $\mathbf{C}\mathbf{A}^k$ represents the $k$-th time derivative of the measurement, weighted by the dynamics. If these rows span all $n$ dimensions, we can reconstruct the state.
-
-\section{The Mass-Spring-Damper System: Complete Analysis}
-\label{sec:mass_spring_complete}
-
-\index{Mass-Spring-Damper}
-
-Let us apply the concepts from this chapter to the mass-spring-damper system with stiffness $k$, damping $c$, and mass $m$:
-\begin{equation}
-  m\ddot{q} + c\dot{q} + kq = u
-\end{equation}
-
-\textbf{State vector:} $\mathbf{x} = [q, \dot{q}]^T$.
-
-\textbf{Matrices:}
-\begin{equation}
-  \mathbf{A} = \begin{bmatrix} 0 & 1 \\ -k/m & -c/m \end{bmatrix}, \quad \mathbf{B} = \begin{bmatrix} 0 \\ 1/m \end{bmatrix}
-\end{equation}
-
-\textbf{Characteristic polynomial:}
-\begin{equation}
-  \det(\mathbf{A} - \lambda \mathbf{I}) = \det\begin{bmatrix} -\lambda & 1 \\ -k/m & -c/m - \lambda \end{bmatrix} = \lambda^2 + \frac{c}{m}\lambda + \frac{k}{m}
-\end{equation}
-
-\textbf{Eigenvalues:}
-\begin{equation}
-  \lambda_{1,2} = -\frac{c}{2m} \pm \sqrt{\left(\frac{c}{2m}\right)^2 - \frac{k}{m}} = -\frac{c}{2m} \pm \sqrt{\frac{c^2}{4m^2} - \frac{k}{m}}
-\end{equation}
-
-Define the natural frequency $\omega_0 = \sqrt{k/m}$ and damping ratio $\zeta = \frac{c}{2\sqrt{km}}$. Then:
-\begin{equation}
-  \lambda_{1,2} = -\zeta \omega_0 \pm i \omega_0\sqrt{1 - \zeta^2}
-\end{equation}
-
-(assuming $\zeta < 1$ for the underdamped case; see below for other cases).
-
-\subsection{Underdamped \texorpdfstring{($0 < \zeta < 1$)}{(0 < zeta < 1)}}
-
-The discriminant is negative, so eigenvalues are complex: $\lambda = -\zeta \omega_0 \pm i \omega_d$ where $\omega_d = \omega_0 \sqrt{1-\zeta^2}$ is the damped frequency.
-
-The mass oscillates while decaying. The solution is:
-\begin{equation}
-  q(t) = e^{-\zeta \omega_0 t} \left( q_0 \cos(\omega_d t) + \frac{\dot{q}_0 + \zeta \omega_0 q_0}{\omega_d} \sin(\omega_d t) \right)
-\end{equation}
-
-The trajectory in phase space is a \textbf{stable spiral}\index{Stable Spiral}, spiraling into the origin.
-
-\subsection{Critically Damped \texorpdfstring{($\zeta = 1$)}{(zeta = 1)}}
-
-The eigenvalues coincide: $\lambda_1 = \lambda_2 = -\omega_0$. The matrix $\mathbf{A}$ is not diagonalizable; it has a Jordan block.
-
-The solution is:
-\begin{equation}
-  q(t) = (q_0 + (\dot{q}_0 + \omega_0 q_0)t) e^{-\omega_0 t}
-\end{equation}
-
-This is the fastest non-oscillatory return to equilibrium. The trajectory does \emph{not} spiral; it approaches the origin monotonically.
-
-\subsection{Overdamped \texorpdfstring{($\zeta > 1$)}{(zeta > 1)}}
-
-The eigenvalues are real and distinct:
-\begin{equation}
-  \lambda_1 = -\zeta \omega_0 + \omega_0\sqrt{\zeta^2 - 1}, \quad \lambda_2 = -\zeta \omega_0 - \omega_0\sqrt{\zeta^2 - 1}
-\end{equation}
-
-Both are negative (since $\zeta > 0$). The solution is:
-\begin{equation}
-  q(t) = C_1 e^{\lambda_1 t} + C_2 e^{\lambda_2 t}
-\end{equation}
-
-The slower eigenvalue $\lambda_1$ dominates for large times. The trajectory is a \textbf{stable node}\index{Stable Node}—no oscillation, just exponential decay. The system returns to rest more slowly than the critically damped case.
-
-\subsection{Controllability and Observability}
-
-The controllability matrix is:
-\begin{equation}
-  \mathbf{C}_{\text{rank}} = \begin{bmatrix} \mathbf{B} & \mathbf{A}\mathbf{B} \end{bmatrix} = \begin{bmatrix} 0 & 1/m \\ 1/m & -c/m^2 \end{bmatrix}
-\end{equation}
-
-Its determinant is $\det(\mathbf{C}_{\text{rank}}) = 0 - \frac{1}{m^2} = -\frac{1}{m^2} \neq 0$. Thus $\mathbf{C}_{\text{rank}}$ has full rank and the system is \textbf{controllable}. We can steer position and velocity to any desired values using the input force $u$.
-
-If we measure position only, $\mathbf{C} = [1, 0]$, the observability matrix is:
-\begin{equation}
-  \mathbf{O} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
-\end{equation}
-
-which has rank 2. The system is \textbf{observable}. We can infer both position and velocity from position measurements alone (by differentiating or using a Kalman filter).
-
-\section{Transfer Function to State Space and Back}
-\label{sec:transfer_function_conversion}
-
-\index{Transfer Function}
-
-The transfer function $G(s) = \frac{Y(s)}{U(s)}$ relates input and output in the Laplace domain. For a linear system with zero initial conditions, the transfer function is:
-\begin{equation}
-  \label{eq:transfer_function_def}
-  G(s) = \mathbf{C}(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B} + \mathbf{D}
-\end{equation}
-
-This is derived from the state-space equations by taking Laplace transforms:
-\begin{align}
-  s\mathbf{X}(s) &= \mathbf{A}\mathbf{X}(s) + \mathbf{B}\mathbf{U}(s) \\
-  \mathbf{Y}(s) &= \mathbf{C}\mathbf{X}(s) + \mathbf{D}\mathbf{U}(s)
-\end{align}
-
-Solve for $\mathbf{X}(s)$:
-\begin{equation}
-  (s\mathbf{I} - \mathbf{A})\mathbf{X}(s) = \mathbf{B}\mathbf{U}(s) \quad \Rightarrow \quad \mathbf{X}(s) = (s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B}\mathbf{U}(s)
-\end{equation}
-
-Substitute into the output equation:
-\begin{equation}
-  \mathbf{Y}(s) = \left[\mathbf{C}(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B} + \mathbf{D}\right]\mathbf{U}(s) = G(s)\mathbf{U}(s)
-\end{equation}
-
-\textbf{Conversion from transfer function to state space} is not unique—there are many valid state representations. The most common choice is the controllable canonical form (the companion matrix form from Section~\ref{sec:ode_conversion}).
-
-% ==================================================================
-%  Section: Discrete-Time State Space
-% ==================================================================
-
-\subsection{Discrete-Time State Space}
-\label{sec:discrete_time}
-
-\index{discrete-time systems}
-Every modern robot controller is implemented on a digital processor that
-reads sensors and writes actuator commands at a fixed sample rate
-$f_s=1/T_s$.  Between samples the controller holds its output constant
-(zero-order hold).  We therefore need a \emph{discrete-time} counterpart
-of the continuous state-space model.
-
-\begin{definition}{\texorpdfstring{Discrete-Time State-Space Model}{Discrete-Time State-Space Model}}{discrete_ss}
-A linear discrete-time system is
-\begin{align}
-  \label{eq:discrete_state}
-  \mathbf{x}[k+1] &= \mathbf{A}_d\,\mathbf{x}[k]
-                     + \mathbf{B}_d\,\mathbf{u}[k], \\
-  \mathbf{y}[k]   &= \mathbf{C}\,\mathbf{x}[k]
-                     + \mathbf{D}\,\mathbf{u}[k],
-\end{align}
-where $k\in\{0,1,2,\ldots\}$ indexes the sample instants
-$t_k = k\,T_s$.
-\end{definition}
-
-\paragraph{Exact Discretization (Zero-Order Hold).}
-\index{zero-order hold}
-Given the continuous system $\dot{\mathbf{x}}=\mathbf{A}\mathbf{x}
-+\mathbf{B}\mathbf{u}$ and a sampling period $T_s$, the exact
-discrete-time matrices are
-\begin{align}
-  \label{eq:exact_discretization}
-  \mathbf{A}_d &= e^{\mathbf{A}\,T_s}, &
-  \mathbf{B}_d &= \int_{0}^{T_s} e^{\mathbf{A}\,\tau}\,\mathbf{B}
-                  \;\dd\tau
-               = \mathbf{A}^{-1}\!\bigl(e^{\mathbf{A}\,T_s}
-                 - \mathbf{I}\bigr)\mathbf{B},
-\end{align}
-where the closed-form expression for $\mathbf{B}_d$ holds when
-$\mathbf{A}$ is invertible.  The matrix exponential
-$e^{\mathbf{A}\,T_s}$ connects directly to
-Theorem~\ref{thm:matrix_exponential_solution}: the free response
-over one sample period is simply propagated by $\mathbf{A}_d$.
-
-\begin{theorem}{Discrete-Time Stability Criterion}{discrete_stability}
-\index{stability!discrete-time}
-The equilibrium $\mathbf{x}^{*}=\mathbf{0}$ of the autonomous
-discrete-time system $\mathbf{x}[k+1]=\mathbf{A}_d\,\mathbf{x}[k]$ is
-asymptotically stable if and only if every eigenvalue of $\mathbf{A}_d$
-lies strictly inside the unit circle:
-\begin{equation}
-  \label{eq:discrete_stability}
-  |\lambda_i(\mathbf{A}_d)| < 1 \quad \forall\; i.
-\end{equation}
-This is the discrete analogue of requiring all eigenvalues of
-$\mathbf{A}$ to have negative real parts in continuous time
-(Theorem~\ref{thm:stability_classification}).
-\end{theorem}
-
-\begin{laymansbox}{All Robot Controllers Are Discrete}{discrete_practical}
-All modern robot controllers run in discrete time at sample rates of
-1--10\,kHz.  The continuous-time model $\dot{\mathbf{x}}=\mathbf{A}
-\mathbf{x}+\mathbf{B}\mathbf{u}$ is the physicist's description of
-reality; the discrete-time model
-$\mathbf{x}[k{+}1]=\mathbf{A}_d\mathbf{x}[k]+\mathbf{B}_d
-\mathbf{u}[k]$ is what actually executes on the real-time processor.
-A control design that ignores this distinction---for example, by using
-too low a sample rate so that eigenvalues migrate outside the unit
-circle---will destabilise an otherwise stable system.
-\end{laymansbox}
-
-\section{Nonlinear Systems and Phase Portraits}
-\label{sec:nonlinear_phase}
-
-While we have focused on linear systems, real physical systems are often nonlinear. For a nonlinear system $\dot{\mathbf{x}} = f(\mathbf{x})$, the phase portrait can be qualitatively understood by:
-
-\begin{enumerate}
-  \item Finding equilibrium points by solving $f(\mathbf{x}^*) = \mathbf{0}$
-  \item Linearizing around each equilibrium: $\dot{\boldsymbol{\delta x}} \approx \mathbf{J}_f(\mathbf{x}^*) \boldsymbol{\delta x}$
-  \item Classifying the equilibrium by its eigenvalues (Theorem~\ref{thm:stability})
-  \item Plotting the vector field $\dot{\mathbf{x}} = f(\mathbf{x})$ to visualize global behavior
-\end{enumerate}
-
-The linearization is valid in a neighborhood of the equilibrium. For large perturbations, we must rely on numerical simulation or other techniques (Lyapunov theory, bifurcation analysis).
-
-\section{Python Worked Example: State Space Simulation and Phase Portrait}
-\label{sec:python_example}
-
-Consider the underdamped mass-spring-damper system with \emph{illustrative numerical values}: $m=1\,\text{kg}$, $c=0.5\,\text{N}\cdot\text{s/m}$, $k=2\,\text{N/m}$, with initial conditions $q_0 = 1\,\text{m}$, $\dot{q}_0 = 0$.
-
-\begin{verbatim}
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import odeint
-
-# Parameters
-m, c, k = 1.0, 0.5, 2.0
-A = np.array([[0, 1], [-k/m, -c/m]])
-B = np.array([[0], [1/m]])
-
-# System dynamics
-def dynamics(x, t, u=0):
-    return A @ x + B.flatten() * u
-
-# Initial condition
-x0 = np.array([1.0, 0.0])
-t = np.linspace(0, 10, 1000)
-
-# Simulate
-x = odeint(dynamics, x0, t)
-
-# Phase portrait
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-
-# Time evolution
-ax1.plot(t, x[:, 0], label='Position q(t)')
-ax1.plot(t, x[:, 1], label='Velocity dq/dt(t)')
-ax1.set_xlabel('Time (s)')
-ax1.set_ylabel('State')
-ax1.legend()
-ax1.grid()
-ax1.set_title('Time Evolution')
-
-# Phase portrait
-ax2.plot(x[:, 0], x[:, 1], 'b-', linewidth=2)
-ax2.plot(x[0, 0], x[0, 1], 'go', markersize=10, label='Initial')
-ax2.plot(x[-1, 0], x[-1, 1], 'ro', markersize=10, label='Final')
-ax2.set_xlabel('Position q')
-ax2.set_ylabel('Velocity dq/dt')
-ax2.grid()
-ax2.legend()
-ax2.set_title('Phase Portrait (Stable Spiral)')
-
-plt.tight_layout()
-plt.show()
-
-# Eigenvalues
-eigenvalues, eigenvectors = np.linalg.eig(A)
-print(f"Eigenvalues: {eigenvalues}")
-print(f"Damping ratio zeta = {c / (2*np.sqrt(k*m)):.3f}")
-print(f"Natural freq omega_0 = {np.sqrt(k/m):.3f} rad/s")
-\end{verbatim}
-
-This code simulates the system and plots both the time evolution and the phase portrait. For the underdamped case ($\zeta = 0.177$), you should see a spiral converging to the origin with oscillation.
-
-\section{Equilibrium Analysis Summary}
+\label{ex:pendulum_linearization}
+At the top, the displacement is $\eta=\theta-\pi$, so $\ddot\eta=(g/\ell)\eta$ to first order. It is incorrect to interpret that equation as an equation for the original absolute angle with equilibrium zero.
+
+\section{Stability Requires More Than an Eigenvalue List}
+\label{sec:phase_portraits}
+\index{Phase Portrait}\index{Stability}\index{Stable Node}\index{Unstable Node}\index{Saddle Point}\index{Spiral, Stable}\index{Focus}\index{Spiral, Unstable}\index{Center}\index{Asymptotic Stability}\index{Marginal Stability}\index{Instability}\index{Stable Spiral}
+\label{thm:stability}
+\label{thm:stability_classification}
 \label{sec:equilibrium_summary}
 
-For any equilibrium point $\mathbf{x}^*$:
-\begin{itemize}
-  \item Compute the Jacobian: $\mathbf{A} = \frac{\partial f}{\partial \mathbf{x}}\big|_{\mathbf{x}^*}$
-  \item Find eigenvalues of $\mathbf{A}$
-  \item Classify the equilibrium according to Theorem~\ref{thm:stability}
-  \item If all eigenvalues have negative real part: \textbf{asymptotically stable}
-  \item If any eigenvalue has positive real part: \textbf{unstable}
-  \item If the largest real part is zero (center or boundary case): \textbf{marginally stable}
-\end{itemize}
+\subsection{Linear Classification and Jordan Blocks}
 
-\section{Summary}
-\label{sec:summary}
+For an autonomous finite-dimensional LTI system, the origin is exponentially asymptotically stable exactly when $A$ is Hurwitz: all eigenvalues have negative real part. It is Lyapunov stable exactly when every eigenvalue has nonpositive real part and every eigenvalue on the imaginary axis is semisimple (all its Jordan blocks have size one). A positive real part or a nontrivial imaginary-axis Jordan block gives instability.
 
-\begin{principle}{Key Takeaways: State Space Fundamentals}{summary_principle}
-\textbf{1. State Vector:} The state $\mathbf{x}$ is the minimum information needed to predict the system's future. For an $n$-th order ODE, the state is $n$-dimensional.
+In two real dimensions, real negative eigenvalues produce a stable node; real positive ones produce an unstable node. They do not produce spirals. Opposite signs give a saddle. Nonreal conjugates with negative or positive real part give inward or outward spirals. A nonzero purely imaginary pair gives a linear center with periodic elliptical orbits. Repeated real eigenvalues require the eigenvector/Jordan structure to distinguish node types. Zero eigenvalues require their own examination.
 
-\textbf{2. Kalman's Revolution (1960):} State-space representations replace transfer functions, enabling control of MIMO systems, design of optimal controllers, and systematic analysis of internal system structure.
+For example,
+\begin{equation}
+\label{eq:state_jordan_example}
+ A=\begin{bmatrix}0&1\\0&0\end{bmatrix},\qquad
+ e^{At}=\begin{bmatrix}1&t\\0&1\end{bmatrix}.
+\end{equation}
 
-\textbf{3. Standard Forms:} Any system can be written as $\dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u}, t)$ (nonlinear) or $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$ (linear). The $\mathbf{A}$ matrix encodes natural stability; the $\mathbf{B}$ matrix encodes control authority.
+Both eigenvalues are zero, but a nonzero initial velocity makes position grow without bound. Even when $A$ is Hurwitz, nonnormal matrices can amplify the Euclidean norm transiently. Eigenvalues describe asymptotic rates and modal structure; they do not determine every finite-time error or monotonicity property.
 
-\textbf{4. ODE Reduction:} Any $n$-th order ODE reduces to $n$ first-order state equations via companion form.
+\subsection{Nonlinear Borderline Cases}
+\label{sec:nonlinear_phase}
 
-\textbf{5. Equilibrium and Linearization:} Equilibria are found by solving $f(\mathbf{x}^*, \mathbf{u}^*) = \mathbf{0}$. Local behavior is determined by the Jacobian $\mathbf{J}_f = \partial f / \partial \mathbf{x}$.
+For a continuously differentiable autonomous nonlinear field, a Hurwitz equilibrium Jacobian implies local exponential stability; an eigenvalue with positive real part implies instability. If there are no positive real parts but some zero real parts, linearization can be inconclusive. The scalar systems $\dot x=-x^3$, $\dot x=0$ and $\dot x=x^3$ all have zero derivative at the origin, yet respectively have asymptotic stability, stability without attraction, and instability.
 
-\textbf{6. Stability from Eigenvalues:} Eigenvalues of $\mathbf{A}$ determine phase-portrait structure (node, spiral, saddle, center). Negative real parts mean stability.
+The undamped pendulum's bottom is stable but not attractive because its locally positive energy is conserved. The linear center alone is not a proof that every nonlinear system with the same imaginary eigenvalues has a center. A phase portrait can suggest a global picture, but simulations cover selected initial states and times, not every possible trajectory.
 
-\textbf{7. Matrix Exponential:} The solution $\mathbf{x}(t) = e^{\mathbf{A}t}\mathbf{x}_0 + \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\mathbf{u}(\tau)\,\dd\tau$ decomposes into free response and forced response.
+\section{Reachability, Observability, and Hidden Modes}
+\label{sec:controllability}
+\index{Controllability}\index{Controllable System}
 
-\textbf{8. Controllability (Kalman Rank Test):} The system is controllable iff $\text{rank}([\mathbf{B}, \mathbf{A}\mathbf{B}, \ldots, \mathbf{A}^{n-1}\mathbf{B}]) = n$. If not controllable, some state variables cannot be influenced by inputs.
+\subsection{Reachability and the Gramian}
 
-\textbf{9. Observability (Dual of Controllability):} The system is observable iff $\text{rank}([\mathbf{C}^T, \mathbf{A}^T\mathbf{C}^T, \ldots, (\mathbf{A}^T)^{n-1}\mathbf{C}^T]^T) = n$. If not observable, some state variables cannot be inferred from measurements.
+For a continuous-time LTI system with unrestricted inputs, controllability means that any initial state can be driven to any terminal state over any prescribed positive horizon. Its equivalent rank condition is
+\begin{equation}
+\label{eq:controllability_matrix}
+ \mathcal C=[B\ AB\ \cdots\ A^{n-1}B],\qquad \operatorname{rank}\mathcal C=n.
+\end{equation}
+\label{def:controllability_def}
+\label{thm:controllability_rank}
+\label{thm:kalman_controllability}
+To see why, define
+\begin{equation}
+\label{eq:state_gramian}
+ W(T)=\int_0^T e^{As}BB^Te^{A^Ts}\,ds,\qquad
+ z^TW(T)z=\int_0^T\|B^Te^{A^Ts}z\|^2\,ds.
+\end{equation}
 
-\textbf{10. Duality:} A system is controllable iff its dual (with $\mathbf{A}^T$, $\mathbf{C}^T$, $\mathbf{B}^T$) is observable. This duality underpins Kalman filter design.
-\end{principle}
+If the right side vanishes, continuity makes the integrand zero throughout the interval. Differentiating its analytic factor at zero gives $B^T(A^T)^jz=0$ for every $j$. Conversely, vanishing through $j=n-1$ implies vanishing for every power by Cayley--Hamilton, and hence for the exponential. Thus $W$ is positive definite exactly when $\mathcal C$ has full row rank. For $d=x_f-e^{AT}x_0$, the input
+\begin{equation}
+\label{eq:state_steering}
+ u(t)=B^Te^{A^T(T-t)}W(T)^{-1}d
+\end{equation}
 
-% ==================================================================
-%  Section: Lyapunov Stability Theory
-% ==================================================================
+reaches $x_f$. Substitution into the solution formula verifies it. It minimizes the unweighted integral of $u^Tu$ among such inputs, by orthogonality to the nullspace of the endpoint operator. This is a squared-input cost, not generally mechanical energy or metabolic effort.
 
-\section{Lyapunov Stability Theory}
+Rank alone says nothing about feasibility under torque, speed, contact or state constraints. Gramian conditioning and the remaining time matter, and require declared state/input scales. For a free unit mass, bounded force $|u|\leq U$ from rest gives $|v(T)|\leq UT$ and $|q(T)-q(0)|\leq UT^2/2$, despite full rank. The two bounds are necessary, not a complete independent description of the joint reachable set.
+
+\subsection{PBH Tests Use the Correct Side}
+
+The equivalent Popov--Belevitch--Hautus test is
+\begin{equation}
+\label{eq:state_pbh}
+ \operatorname{rank}[\lambda I-A\ \ B]=n\quad\text{for every }\lambda\in\mathbb C.
+\end{equation}
+
+A failure means there is a nonzero complex row $w^*$ with $w^*A=\lambda w^*$ and $w^*B=0$: a left eigenvector annihilates the input. Right eigenvectors do not give this test. The double integrator above with $B=(0,1)^T$ is controllable, even though its right zero-eigenvector $(1,0)^T$ is orthogonal to $B$. The rank and Gramian formulations, with unrestricted-input assumptions, are also developed in Kia's lecture notes~\cite{KiaReachabilityNotes}.
+
+\subsection{Observability Needs a Known Input and an Output History}
+\label{sec:observability}
+\index{Observability}\index{Observable System}
+
+Subtract the known forced response and direct feedthrough from the measured output. The remaining signal is $Ce^{At}x_0$. The initial state is uniquely recoverable from its noiseless history over a positive interval exactly when
+\begin{equation}
+\label{eq:observability_matrix}
+ \mathcal O=\begin{bmatrix}C\\CA\\\vdots\\CA^{n-1}\end{bmatrix},\qquad
+ \operatorname{rank}\mathcal O=n.
+\end{equation}
+\label{def:observability_def}
+\label{thm:observability_rank}
+\label{thm:kalman_observability}
+The observability Gramian $\int_0^T e^{A^Tt}C^TCe^{At}dt$ proves this by the same squared-norm argument. Formally differentiating the residual output generates the rows of $\mathcal O$; directly differentiating noisy measurements is usually a poor estimator. Independent sample noise of variance $\sigma^2$ gives variance $2\sigma^2/\Delta t^2$ in a forward difference. An observer needs a noise model, conditioning and bandwidth decisions in addition to structural observability.
+
+The duality is between reachability of $(A,B)$ and observability of $(A^T,B^T)$; similarly, observability of $(A,C)$ is reachability of $(A^T,C^T)$. In the motor example the controllability rank is three, but current-only measurement $C=(1,0,0)$ has observability rank two. An unknown constant angle offset leaves all future current measurements unchanged. Adding an angle measurement changes observability, not the open-loop pair $(A,B)$.
+
+Stabilizability allows uncontrollable modes if they are already strictly stable; detectability allows unobservable modes if they are strictly stable. Under those conditions a continuous LTI observer-based stabilizing controller exists without constraints. An unobservable angle integrator is not strictly stable, so current-only sensing does not provide asymptotic regulation of an unknown absolute angle. This distinction matters when a swing outcome depends on a face-angle component that the measurement setup cannot resolve.
+
+\section{Transfer Functions and Realization}
+\label{sec:transfer_function_conversion}
+\index{Transfer Function}
+\label{sec:kalman_history}
+\label{laymans:history_box}
+
+For zero initial conditions, Laplace transformation gives
+\begin{equation}
+\label{eq:transfer_function_def}
+ G(s)=C(sI-A)^{-1}B+D,\qquad Y(s)=G(s)U(s).
+\end{equation}
+
+With a nonzero initial state, add $C(sI-A)^{-1}x_0$ to the output. For multiple inputs and outputs, $G$ is a transfer matrix; frequency-domain methods do not fail merely because a system is MIMO. State-space and transfer descriptions answer complementary questions. A realization may use physical coordinates or abstract internal coordinates; exposing state variables does not automatically expose an energy balance.
+
+A finite-dimensional proper rational transfer matrix has state-space realizations. A minimal one is reachable and observable, and minimal realizations of the same map are related by similarity. Larger realizations can contain hidden modes. For $A=\operatorname{diag}(-1,1)$, $B=(1,0)^T$ and $C=(1,0)$, the transfer function is $1/(s+1)$, although a nonzero second state grows as $e^t$. Input--output stability does not establish internal stability of a nonminimal realization. The realization discussion in \emph{Feedback Systems} explains this distinction~\cite{AstromMurrayTransferNotes}.
+
+Kalman's 1960 paper cited here is specifically \emph{A New Approach to Linear Filtering and Prediction Problems}~\cite{Kalman1960}. It develops estimation from a state viewpoint and connects filtering with regulation. It should not be described as a paper that invented every state-space concept and only later led to a filter. This chapter uses the established framework without attributing an entire history to that one publication. Nor does it claim that transfer functions were replaced or that all optimal control problems have analytic solutions.
+
+\section{Sampling a Plant and Implementing Feedback}
+\label{sec:discrete_time}
+\index{discrete-time systems}\index{zero-order hold}\index{stability!discrete-time}
+\label{def:discrete_ss}
+\label{eq:discrete_state}
+\label{eq:discrete_stability}
+\label{thm:discrete_stability}
+\label{laymans:discrete_practical}
+
+For a fixed sample period $T_s>0$ and an input held constant between samples, exact LTI sampling gives
+\begin{equation}
+\label{eq:exact_discretization}
+ x_{k+1}=A_dx_k+B_du_k,\qquad A_d=e^{AT_s},\qquad
+ B_d=\int_0^{T_s}e^{A\tau}B\,d\tau.
+\end{equation}
+
+If $A$ is invertible, $B_d=A^{-1}(A_d-I)B$; a block exponential works without that restriction:
+\begin{equation}
+\label{eq:state_block_exponential}
+ \exp\left(T_s\begin{bmatrix}A&B\\0&0\end{bmatrix}\right)
+ =\begin{bmatrix}A_d&B_d\\0&I\end{bmatrix}.
+\end{equation}
+
+The zero-order-hold assumption concerns the input waveform, not every possible digital controller~\cite{MathWorksC2dNotes}. Real controllers can have different holds, multiple rates, delays, jitter and internal states. The discrete plant model predicts sampled states; it need not be an equation literally executed inside the controller.
+
+Discrete autonomous stability requires eigenvalues strictly inside the unit circle for asymptotic stability. Boundary eigenvalues additionally need semisimple Jordan structure for Lyapunov stability. Since $\lambda(A_d)=e^{\lambda(A)T_s}$, exact sampling of a Hurwitz autonomous plant remains stable for every positive sample period. A slow sample rate does not move those exact open-loop poles outside the unit circle. An unstable Euler approximation is a numerical issue, not a new physical instability.
+
+Held feedback is different. With $u_k=-Kx_k$, its exact sampled matrix is $A_d-B_dK$, generally different from $e^{(A-BK)T_s}$. For $\dot x=-x+u$ and $K=2$,
+\begin{equation}
+\label{eq:state_sampled_feedback}
+ x_{k+1}=(3e^{-T_s}-2)x_k.
+\end{equation}
+
+Continuous feedback is stable with pole $-3$, but held feedback is asymptotically stable only for $0<T_s<\log3$ in these time units. This is an explicit implementation effect.
+
+Sampling can also lose information or actuation directions. For $A=\left[\begin{smallmatrix}0&1\\-1&0\end{smallmatrix}\right]$, $B=(0,1)^T$, $C=(1,0)$ and $T_s=\pi$, $A_d=-I$ and $B_d=(2,0)^T$. The continuous system is reachable and observable, while both sampled ranks are one. Samples taken half a period apart miss the velocity component. There is no universal adequate sample rate: the relevant dynamics, hold, sensors, latency, noise and required accuracy must be stated.
+
+\section{Lyapunov Functions, Domains, and Convergence}
 \label{sec:lyapunov}
+\index{Lyapunov stability}\index{Lyapunov function}\index{Lyapunov!direct method}\index{pendulum!Lyapunov analysis}
+\label{def:lyapunov_function}
+\label{thm:lyapunov_direct}
+\label{laymans:lyapunov_altitude}
+\label{pr:lyapunov_foundation}
 
-\index{Lyapunov stability}
-The eigenvalue-based stability analysis of
-Theorem~\ref{thm:stability_classification} is powerful but inherently
-\emph{local}: it applies only in a neighbourhood of an equilibrium where
-the linearization is valid.  For nonlinear systems, we need a theory
-that can certify stability over large---possibly global---regions of
-state space.  \textbf{Lyapunov's direct method} provides exactly this
-by replacing spectral analysis with an energy-like argument.
-
-Linearization tells us about local stability.  Lyapunov theory works
-globally.
-
-\begin{definition}{\texorpdfstring{Lyapunov Function $V(\mathbf{x})$}{Lyapunov Function}}{lyapunov_function}
-\index{Lyapunov function}
-Consider the autonomous system $\dot{\mathbf{x}}=f(\mathbf{x})$ with
-an equilibrium at $\mathbf{x}^{*}=\mathbf{0}$.  A continuously
-differentiable function $V:\Reals^n\to\Reals$ is called a
-\textbf{Lyapunov function candidate} if
-\begin{enumerate}
-  \item $V(\mathbf{0})=0$ (zero at the equilibrium),
-  \item $V(\mathbf{x})>0$ for all $\mathbf{x}\neq\mathbf{0}$ in a
-        neighbourhood of the origin (\emph{positive definite}).
-\end{enumerate}
-Its time derivative along trajectories of the system is
+Let $F$ be locally Lipschitz on an open neighborhood of an equilibrium at zero, and let $V$ be continuously differentiable, zero at the equilibrium and positive elsewhere in that neighborhood. Then
 \begin{equation}
-  \label{eq:lyapunov_derivative}
-  \dot{V}(\mathbf{x})
-  = \frac{\partial V}{\partial \mathbf{x}}\,f(\mathbf{x})
-  = \nabla V(\mathbf{x})^{T} f(\mathbf{x}).
+\label{eq:lyapunov_derivative}
+ \dot V=\nabla V^TF.
 \end{equation}
-\end{definition}
 
-\begin{theorem}{Lyapunov's Direct Method (Second Method)}{lyapunov_direct}
-\index{Lyapunov!direct method}
-Let $\mathbf{x}^{*}=\mathbf{0}$ be an equilibrium of
-$\dot{\mathbf{x}}=f(\mathbf{x})$ and let $V(\mathbf{x})$ be a
-Lyapunov function candidate in a domain $\mathcal{D}$ containing the
-origin.
-\begin{enumerate}
-  \item If $\dot{V}(\mathbf{x})\leq 0$ in $\mathcal{D}$, the
-        equilibrium is \textbf{stable} (in the sense of Lyapunov).
-  \item If $\dot{V}(\mathbf{x})<0$ for all $\mathbf{x}\neq\mathbf{0}$
-        in $\mathcal{D}$, the equilibrium is
-        \textbf{asymptotically stable}.
-  \item If the conditions above hold with
-        $\mathcal{D}=\Reals^n$ and, in addition,
-        $V(\mathbf{x})\to\infty$ as
-        $\norm{\mathbf{x}}\to\infty$ (\emph{radially unbounded}),
-        the equilibrium is \textbf{globally asymptotically stable}.
-\end{enumerate}
-\end{theorem}
+Nonpositive $\dot V$ establishes local Lyapunov stability; negative definite $\dot V$ establishes local asymptotic stability. Global conclusions require global conditions and boundedness/completeness, for example a proper positive-definite $V$ with negative-definite derivative on all of $\mathbb R^n$. A local candidate is not automatically a global certificate. For an LTI Hurwitz matrix, solving $A^TP+PA=-Q$ with $Q>0$ gives $P>0$ and $V=x^TPx$, a metric that need not equal the physical inertia.
 
-The power of the theorem lies in the fact that we never need to solve
-the differential equation---we only need to find a single scalar
-function $V$ with the right properties.
+With a nonstrict derivative, LaSalle's principle uses a compact forward-invariant set $\Omega$: solutions approach the largest invariant subset of $\{x\in\Omega:\dot V=0\}$. They need not approach a single point. Khalil's invariance lecture gives the hypotheses and the pendulum application~\cite{KhalilInvarianceNotes}.
 
-\begin{example}{Pendulum with Damping}{lyapunov_pendulum}
-\index{pendulum!Lyapunov analysis}
-Consider a simple pendulum of mass $m$ and length $\ell$ with viscous
-damping $b>0$:
+For the fixed-pivot damped pendulum,
 \begin{equation}
-  \label{eq:damped_pendulum}
-  m\ell^{2}\ddot{\theta} + b\dot{\theta} + mg\ell\sin\theta = 0.
+\label{eq:pendulum_lyapunov}
+ V=\frac12m\ell^2v^2+mg\ell(1-\cos\theta),\qquad \dot V=-bv^2\leq0.
 \end{equation}
-The state is
-$\mathbf{x}=(\theta,\;\dot{\theta})^{T}$
-and the downward equilibrium is $\mathbf{x}^{*}=\mathbf{0}$.
+\label{ex:lyapunov_pendulum}
+\label{eq:damped_pendulum}
+\label{eq:pendulum_Vdot}
+Choose the connected sublevel around the bottom with $V\leq c$ and $0<c<2mg\ell$. It stays strictly inside $|\theta|<\pi$, bounds velocity, and is compact and forward invariant. For $b>0$, remaining in $\dot V=0$ requires $v=0$ and $\sin\theta=0$; only the bottom equilibrium lies in this component. LaSalle therefore proves attraction there. The upright equilibrium prevents a global claim to the bottom over the entire cylinder. With $b=0$, energy is conserved and nearby nonstationary trajectories do not converge.
 
-Choose the total mechanical energy as a Lyapunov candidate:
+For a golf swing, attraction to a rest equilibrium is usually not the objective. One may study a moving trajectory, a periodic orbit or a finite-time impact event. Those require tracking, orbital or event-conditioned analysis with specified inputs and uncertainty. A decreasing energy-like function is not a universal explanation of a successful swing.
+
+\section{A Reproducible Oscillator and Its Interpretation}
+\label{sec:mass_spring_complete}
+\index{Mass-Spring-Damper}
+
+For $m,k>0$ and $c\geq0$, define $\omega_0=\sqrt{k/m}$ and $\zeta=c/(2\sqrt{km})$. The eigenvalues satisfy $\lambda^2+(c/m)\lambda+k/m=0$. In the unforced underdamped case $0<\zeta<1$,
 \begin{equation}
-  \label{eq:pendulum_lyapunov}
-  V(\theta,\dot{\theta})
-  = \underbrace{\tfrac{1}{2}\,m\ell^{2}\,\dot{\theta}^{2}}_{\text{kinetic}}
-  + \underbrace{mg\ell\,(1-\cos\theta)}_{\text{potential}}.
+\label{eq:state_oscillator_solution}
+ q(t)=e^{-\zeta\omega_0t}\left[q_0\cos(\omega_dt)
+ +\frac{v_0+\zeta\omega_0q_0}{\omega_d}\sin(\omega_dt)\right],
+ \qquad\omega_d=\omega_0\sqrt{1-\zeta^2}.
 \end{equation}
-Clearly $V(\mathbf{0})=0$ and $V>0$ for
-$(\theta,\dot{\theta})\neq\mathbf{0}$ with $|\theta|<\pi$.
 
-Differentiating along trajectories:
-\begin{equation}
-  \label{eq:pendulum_Vdot}
-  \dot{V}
-  = m\ell^{2}\,\dot{\theta}\,\ddot{\theta}
-    + mg\ell\,\sin\theta\;\dot{\theta}
-  = \dot{\theta}\bigl(m\ell^{2}\ddot{\theta}+mg\ell\sin\theta\bigr)
-  = \dot{\theta}\bigl(-b\dot{\theta}\bigr)
-  = -b\,\dot{\theta}^{2}
-  \;\leq\; 0.
-\end{equation}
-Since $\dot{V}\leq 0$, the equilibrium is stable.  Because
-$\dot{V}=0$ only on the set $\{\dot{\theta}=0\}$ and no trajectory
-other than the equilibrium can stay there forever (by LaSalle's
-invariance principle), the equilibrium is in fact
-\textbf{asymptotically stable}.
+At critical damping, $q(t)=[q_0+(v_0+\omega_0q_0)t]e^{-\omega_0t}$. For overdamping the solution is a combination of two decaying real exponentials. Nonoscillatory modal structure does not mean position always approaches zero monotonically: at critical damping with $\omega_0=1$, $q_0=1$ and $v_0=-3$, $q=(1-2t)e^{-t}$ crosses zero and later turns back. The usual fastest-nonoscillatory statement concerns a specified response comparison, not every initial condition, norm or settling threshold.
 
-Physically, the damper dissipates energy at rate $b\dot{\theta}^{2}$,
-and the total energy $V$ is a non-increasing ``altitude'' that the
-system rolls down until it reaches the bottom of the energy
-landscape~\cite{Khalil2002}.
-\end{example}
+The illustrative model $m=1$ kg, $c=.5$ N s/m and $k=2$ N/m has $\zeta\approx.176777$ and poles $-.25\pm1.391941i$ s$^{-1}$. Compare numerical integration against the closed form, check $E=q^2+v^2/2$ decreases for zero input, and label position and velocity with their different units.
 
-\begin{laymansbox}{Lyapunov Functions Are Like Altitude}{lyapunov_altitude}
-Lyapunov functions are like altitude---if you can prove you are always
-going downhill, you must eventually reach the valley.  The function
-$V(\mathbf{x})$ measures how ``high'' the state is above the
-equilibrium, and the condition $\dot{V}\leq 0$ guarantees that the
-system never climbs.  Finding a good Lyapunov function is an art:
-energy is often the first candidate, but there are systematic
-construction methods for certain system classes~\cite{SlotineLi1991}.
-\end{laymansbox}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../figures/state_space_oscillator.pdf}
+\caption{An Unforced Damped Oscillator From the Analytic Solution. Time Traces Use Separate Units; the Phase Curve Connects Position and Velocity Without Treating Their Norm as Energy.}
+\label{fig:state_space_oscillator}
+\end{figure}
 
-\begin{principle}{Lyapunov Theory as Foundation}{lyapunov_foundation}
-Lyapunov stability theory is the foundation of virtually all stability
-proofs in modern control.  Every adaptive controller, every robust
-controller, and every learning-based stability certificate in
-Chapters~11--12 ultimately relies on constructing a Lyapunov (or
-Lyapunov-like) function and showing that its derivative is
-non-positive along closed-loop trajectories.
-\end{principle}
+\subsection{Running the Checks}
+\label{sec:python_example}
 
-% ------------------------------------------------------------------
-\section{Further Reading}
+Run this example from the repository root with Python 3.12 and the project dependencies. The small numerical module implements the declared motor, signed tank balance and singular-safe hold construction; it is not a swing simulator. The independent regression tests compare these results with balance identities, analytic solutions and rank counterexamples.
+
+\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
+import numpy as np
+from scipy.integrate import solve_ivp
+from scipy.linalg import expm
+from src.tools.state_space_examples import (
+    TankParameters, motor_matrices, zoh_matrices,
+)
+
+motor_a, motor_b = motor_matrices()
+print("Motor poles:", np.linalg.eigvals(motor_a))
+tank = TankParameters()
+times = np.array([0., 10., 25., 50., 100.])
+for tolerance in (1e-8, 1e-10):
+    solution = solve_ivp(
+        lambda t, h: tank.rate(h, .01), (0, 100), [.5, .2],
+        method="DOP853", t_eval=times,
+        rtol=tolerance, atol=tolerance / 100,
+    )
+    if not solution.success:
+        raise RuntimeError(solution.message)
+    print(tolerance, solution.y.T)
+
+oscillator = np.array([[0., 1.], [-2., -.5]])
+frequency = np.sqrt(2 - .25**2)
+time = 10.
+closed_q = np.exp(-.25*time) * (
+    np.cos(frequency*time) + .25/frequency*np.sin(frequency*time)
+)
+print("Position residual:", (expm(time*oscillator) @ [1, 0])[0] - closed_q)
+ad, bd = zoh_matrices(np.array([[-1.]]), np.array([[1.]]), 2.)
+print("Held feedback pole:", (ad - 2*bd).item())
+\end{lstlisting}
+
+Convergence with tighter numerical tolerances verifies the computation of this model. It does not validate its parameters against measurements. A simulator and an estimator can agree because they share the same wrong assumptions; independent physical checks remain necessary.
+
+\section{Connecting the State to a Golf Outcome}
+\label{sec:state_golf_synthesis}
+
+Start with the prediction: clubhead pose and velocity at ball contact, a shaft strain history, or a joint load. Choose a state that carries the information relevant to that quantity, and specify supports and contact modes. Recover the observable parts from measurements, attach uncertainty to the estimate, and identify the input channels and their limits. The history before a torque-removal branch is retained in its initial state; removing a command does not erase stored motion or activation.
+
+Then propagate through the remaining dynamics. With a smooth nominal motion, a perturbation obeys $\delta\dot x=A(t)\delta x+B(t)\delta u$. Its terminal effect depends on the propagated input directions, not just the size of $B$ or the instantaneous passive acceleration. For an impact guard $\psi(x,t)=0$, changes in state also change event time. Comparing two states at one clock time is different from comparing their respective ball encounters. A contact-mode change can invalidate a smooth local approximation.
+
+Preparation, sensing and late correction are therefore intertwined. Preparation changes the state from which the rest of the swing unfolds; sensing constrains which errors can be recognized; actuator dynamics and the remaining horizon constrain which corrections are feasible. A state-space model helps make these statements testable. It does not establish that a particular muscle should relax, that active torque is negligible, or that an observed proximal-to-distal sequence measures energy transfer.
+
+\section{Chapter Synthesis and Further Reading}
+\label{sec:summary}
+\label{pr:summary_principle}
 \label{sec:ch2_further_reading}
-% ------------------------------------------------------------------
 
-The state-space framework presented in this chapter traces its origins to
-Kalman's foundational 1960 paper~\cite{Kalman1960}, which introduced the
-concepts of controllability and observability that remain central to modern
-control engineering. That single paper launched an entire field; readers who
-wish to appreciate its full scope should read the original.
-
-For nonlinear extensions of the state-space ideas developed here,
-Slotine and Li~\cite{SlotineLi1991} provide an accessible treatment oriented
-toward robotic systems, covering sliding-mode control, adaptive control, and
-Lyapunov-based design---all formulated in state space. A more mathematically
-rigorous treatment of nonlinear systems theory, including stability in the
-sense of Lyapunov, input-output stability, and singular perturbation methods,
-can be found in Khalil~\cite{Khalil2002}.
-
-Spong, Hutchinson, and Vidyasagar~\cite{Spong2006} develop state-space models
-specifically for robotic manipulators and mobile robots, making explicit the
-connection between the equations of motion derived from Lagrangian or
-Newton--Euler methods and the $\dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u})$
-formalism of this chapter.
-
-Finally, readers should note the deep connection between this chapter and
-Chapter~11 (Lagrangian Mechanics): the Euler--Lagrange equations provide the
-equations of motion that, once cast in first-order form, populate the
-state-space models studied here. Understanding both perspectives---the
-energy-based derivation of dynamics and the state-space representation of
-those dynamics---is essential for modern robotics.
-
-\newpage
+A state is sufficient information for a declared prediction model under specified future inputs. A coordinate chart, a measurement and a minimal realization are different constructions. Mechanical balances determine the state equations; geometry determines how their components transform; reachability and observability determine structural possibilities; constraints, sampling, conditioning and uncertainty determine practical limits. Stability results must retain their domains and hypotheses. The Lagrangian chapter explains where the mechanical equations come from, and the counterfactual chapter explains how to compare precisely defined interventions along a swing.
 
 \section{Exercises}
 \label{sec:ch2_exercises}
 
-\subsection*{Computational Exercises}
-
 \begin{enumerate}
-  \item For the DC motor from Example~\ref{ex:dc_motor}, suppose $L = 0.01$ H, $R = 1$ $\Omega$, $K_e = 0.02$ V$\cdot$s/rad, $K_t = 0.02$ N$\cdot$m/A, $J = 0.001$ kg$\cdot$m$^2$, $b = 0.001$ N$\cdot$m$\cdot$s/rad. Write the system in the form $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}V_{\text{in}}$. Compute the eigenvalues of $\mathbf{A}$ numerically and classify the open-loop stability.
-
-  \item For the two-tank system (Example~\ref{ex:two_tank}), assume $A = 0.1$ m$^2$, $C = 0.05$, $C_{\text{out}} = 0.03$. Starting from $h_1(0) = 0.5$ m, $h_2(0) = 0.2$ m, with constant inflow $Q_{\text{in}} = 0.01$ m$^3$/s, simulate the system for 100 seconds and plot $h_1(t)$ and $h_2(t)$.
-
-  \item Consider the mass-spring-damper with $m = 2$ kg, $c = 4$ N$\cdot$s/m, $k = 3$ N/m. Compute the damping ratio $\zeta$. Is the system underdamped, critically damped, or overdamped? Plot the phase portrait for initial conditions $(q, \dot{q}) = (1, 0)$ and $(0.5, 1)$.
-
-  \item For the pendulum system (Example~\ref{ex:pendulum}) with $L = 1$ m, $g = 9.81$ m/s$^2$, write the nonlinear state equations. Linearize around both the upright ($\theta = 0$) and inverted ($\theta = \pi$) equilibria. Classify each equilibrium.
-\end{enumerate}
-
-\subsection*{Conceptual Exercises}
-
-\begin{enumerate}
-  \setcounter{enumi}{4}
-
-  \item Explain in your own words why knowledge of position alone is insufficient to specify the state of a system. Use a simple example (e.g., a mass on a spring) to illustrate why velocity must also be included.
-
-  \item Why did Rudolf Kalman's 1960 paper on state-space representations represent a breakthrough compared to classical transfer-function methods? What specific limitations of transfer functions does state space overcome?
-
-  \item Consider a 3-dimensional system with eigenvalues $\lambda_1 = -2$, $\lambda_2 = 1 + 2i$, $\lambda_3 = 1 - 2i$. Sketch a qualitative phase portrait. What will happen to a trajectory starting near the origin?
-
-  \item A system is controllable but not observable. What does this mean physically? Can you still design a feedback controller, and if so, what information would you need?
-
-  \item The Kalman rank condition for controllability checks that $\text{rank}([\mathbf{B}, \mathbf{A}\mathbf{B}, \ldots, \mathbf{A}^{n-1}\mathbf{B}]) = n$. Why is it sufficient to check only up to $\mathbf{A}^{n-1}\mathbf{B}$ and not higher powers?
-\end{enumerate}
-
-\subsection*{Proof-Based Exercises}
-
-\begin{enumerate}
-  \setcounter{enumi}{9}
-
-  \item Prove that if $\mathbf{A}$ is diagonalizable with eigenvalues $\lambda_1, \ldots, \lambda_n$, then the matrix exponential is:
-  \begin{equation}
-    e^{\mathbf{A}t} = \mathbf{P} \text{diag}(e^{\lambda_1 t}, \ldots, e^{\lambda_n t}) \mathbf{P}^{-1}
-  \end{equation}
-  where $\mathbf{P}$ is the matrix of eigenvectors.
-
-  \item Derive the Jacobian matrix for the pendulum system $\ddot{\theta} + (g/L) \sin(\theta) = \tau$ at the bottom equilibrium ($\theta = 0$). Show that the linearized system is $\ddot{\theta} = -(g/L)\theta$ and classify the equilibrium's stability.
-
-  \item Show that for a 2D system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$ with $\mathbf{A} = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, the eigenvalues are $\lambda = \frac{(a+d) \pm \sqrt{(a-d)^2 + 4bc}}{2}$. Under what conditions are the eigenvalues (i) both real, (ii) complex conjugates?
-
-  \item Prove that the controllability matrix $\mathbf{C}_{\text{rank}} = [\mathbf{B}, \mathbf{A}\mathbf{B}, \ldots, \mathbf{A}^{n-1}\mathbf{B}]$ has full rank if and only if there is no eigenvector of $\mathbf{A}$ orthogonal to $\mathbf{B}^T$.
-
-  \item Using the variation of constants formula, show that the solution to $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}(t)$ with $\mathbf{x}(0) = \mathbf{x}_0$ is:
-  \begin{equation}
-    \mathbf{x}(t) = e^{\mathbf{A}t}\mathbf{x}_0 + \int_0^t e^{\mathbf{A}(t-\tau)}\mathbf{B}\mathbf{u}(\tau)\,\dd\tau
-  \end{equation}
-
-  \item (Challenge) Prove that a system is observable (can reconstruct initial state from output) if and only if the observability matrix $\mathbf{O} = [\mathbf{C}^T, \mathbf{A}^T\mathbf{C}^T, \ldots, (\mathbf{A}^T)^{n-1}\mathbf{C}^T]^T$ has full rank. Hint: Use the dual system.
+\item \textbf{Motor State and Sensing.} Derive the three-state numerical motor matrices and their eigenvalues. Verify its controllability rank and its current-only observability rank. Explain why an angle offset is both a state and a hidden measurement mode. Add an angle sensor and recompute observability. Check the electrical--mechanical power identity.
+\item \textbf{Two-Tank Balance.} Integrate the stated tank example for 100 s. Repeat from $(.2,.5)$ m to exercise reversed flow. Verify total volume balance and nonnegative heights, derive the equilibrium, and compare two solver tolerances. Explain the square-root regularity issue and the monotonicity uniqueness argument.
+\item \textbf{Damped Motion.} For $m=2$ kg, $c=4$ N s/m and $k=3$ N/m, compute $\zeta$ and the poles, and compare phase curves from $(1,0)$ and $(.5,1)$. State axis units. Contrast modal oscillation, position monotonicity and energy decay; test the chapter's critical-damping counterexample.
+\item \textbf{Pendulum Equilibria.} With $\ell=1$ m and $g=9.81$ m/s$^2$, linearize the zero-torque undamped model at the downward angle zero and upward angle $\pi$. Use a local displacement at each. Distinguish what the eigenvalues prove from what the energy argument proves.
+\item \textbf{State Completeness.} Give two motions with the same position and different futures under the same force law. Then construct an actuator example with the same $(q,v)$ but different internal state and different acceleration. Contrast it with a jerk-controlled model and with an accelerometer output.
+\item \textbf{Representation and History.} Explain the complementary roles of state-space and MIMO transfer descriptions. For the hidden unstable-mode example, derive $G(s)$ and the nonzero-initial-state response. State the specific subject of the cited Kalman 1960 paper.
+\item \textbf{A Saddle With Rotation.} For a real three-state LTI matrix with eigenvalues $-2,1+2i,1-2i$, describe the stable subspace and unstable rotating plane. Distinguish initial conditions on the stable subspace from generic nearby states. Does the eigenvalue list specify Euclidean transient magnitudes?
+\item \textbf{Feedback With Incomplete Observation.} Explain controllability without observability. Give one unobservable stable mode that is compatible with detectability and one nondecaying hidden mode that prevents asymptotic estimation. State the information and assumptions required for a stabilizing observer-based LTI controller.
+\item \textbf{The Rank Test and Its Limits.} Use Cayley--Hamilton and the Gramian identity to prove the controllability rank condition. Derive the double-integrator bounded-input inequalities. Explain why full rank does not guarantee a chosen impact target with limited torque and time.
+\item \textbf{Exponential Propagation.} Prove the diagonalization identity where it applies, then calculate the exponential of the defective zero-eigenvalue matrix without diagonalization. Explain why both are covered by the defining series and why numerical eigendecomposition can be ill-conditioned.
+\item \textbf{Linearization and Geometry.} Derive the forced pendulum Jacobians with physical torque input. Derive the Hessian term under $z=\phi(q)$ and verify $q=1+2t$, $z=q^2$. Explain when a same-state difference in acceleration transforms as a vector.
+\item \textbf{Two-Dimensional Stability.} For $A=\left[\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\right]$, derive $\lambda=((a+d)\pm\sqrt{(a-d)^2+4bc})/2$. Include repeated and zero roots in the classification. Construct nonlinear systems with the same zero Jacobian but different stability.
+\item \textbf{The PBH Criterion.} Prove the left-eigenvector condition from the rank of $[\lambda I-A\ \ B]$, and connect it to the invariant orthogonal complement of the reachable subspace. Use the double integrator to disprove the right-eigenvector version.
+\item \textbf{Variation of Constants and Sampling.} Derive the forced solution and the block-exponential hold formula. Verify the scalar held-feedback threshold $T_s<\log3$ and the oscillator's sampled rank loss at $T_s=\pi$. Distinguish numerical discretization error from actual sample-and-hold dynamics.
+\item \textbf{Observability and Invariance.} Prove the observability rank test with its Gramian, including subtraction of known input terms. For the damped pendulum, construct a compact invariant sublevel below the upright energy and identify the largest invariant subset of $\dot V=0$. Explain why nonincreasing energy alone does not prove convergence or global attraction.
 \end{enumerate}
