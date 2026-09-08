@@ -143,3 +143,11 @@ portable-notation edit. The older mobile mass matrix is explicitly confirmed
 as a local scroll area (client width 247 px, scroll width 345 px, overflow-x:auto),
 not document overflow. The final PDF pages are all reviewed. Local QA is ended;
 normal commit/push checks and protected PR delivery remain to be completed.
+
+Current main `439695c4753cd14f97a689605aa6c675374f0ddd` merged cleanly after
+initial theory commit `f9cf6d3370dbe127cc8bb8c5f950f31470929af0`. Its changes
+affect the separate Geometry of Motion volume; the qualified golf sources,
+PDF and root publication configuration remain unchanged. All 90 combined
+textbook/impact/root-hygiene and incoming exponential-coordinate tests pass
+on the merged branch. Tools point-load checkpoint `6323944ee` is now pushed
+with all normal hooks; full golf/API verification passes 488 tests, two skips.

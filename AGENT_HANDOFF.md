@@ -4,13 +4,13 @@
 
 - A1 #4254 / PR #4258 merged as `1ce02d7ae4d916d4c598b62be78cefa83452aaa7`.
 - Active targeted follow-up #4277: `docs/4277-coriolis-energy-accounting`, worktree
-  `C:/Users/diete/Repositories/AffineDrift-impact-damping`, base `4748e674`, PR not created.
+  `C:/Users/diete/Repositories/AffineDrift-impact-damping`, synced main `439695c4`, PR not created.
   Corrected damping/Coriolis accounting, the paired two-joint example and portable TeX notation. Full site/PDF builds and desktop/mobile section QA pass; protected delivery remains pending.
 - Continue from `docs/development/impact-acoustics/DAMPING_REVIEW.md`; the initial
   source/literature inventory and A1 evidence remain in `REVIEW.md` and `INVENTORY.md`.
 - Tools T1 #5077 merged as `f72544613`; T2 #5082 remains open. T3 section energy
-  and complete internal tangent are pushed at `b625eb2cca279472795a93896776fdef6ac33995`;
-  464 golf/API tests pass with two optional CAD skips. Loaded equilibrium and later stages remain open.
+  and point-load tangents are pushed at `6323944ee658f1254da1a08bb899551f082c7b5c`;
+  488 golf/API tests pass with two optional CAD skips. Loaded equilibrium and later stages remain open.
 - Preserve immutable proximal-distal publication bytes and trust pins. A2 #4255,
   Tools #5068 and UpstreamDrift #9700 require qualified models and actual evidence;
   physical/perceptual validation is incomplete and no measured effect is inferred.
