@@ -5,8 +5,8 @@ from collections.abc import Callable
 import numpy as np
 from numpy.typing import NDArray
 
-Array = NDArray[np.float64]
-Field = Callable[[Array], Array]
+type Array = NDArray[np.float64]
+type Field = Callable[[Array], Array]
 
 
 def _vector(value: Array) -> Array:
