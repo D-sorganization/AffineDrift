@@ -1,37 +1,121 @@
-Post 1
+# Reading Inverse-Dynamics Forces and Moments
 
-Here's a calculation for a hypothetical scenario I have been considering. The scenario is: what would reverse dynamics tell us for a swing in which force was applied only at one point on the grip, but that point wasn't the mid hands point.
+Revised September 8, 2026. These two explanatory posts supersede the earlier
+interpretations. The original handwritten sheets remain as a record of the
+questions that motivated the analysis; the distinctions below govern their use.
 
-In reverse / inverse dynamics analysis, what we get is an equivalent force and couple at the mid hands point for any given swing. However, we don't exert couples, we exert forces. To determine the equivalent force and couple in "forward" dynamics at a point other than the point of application you essentially compute the moment of the force at both the locations and introduce a "couple" that accounts for the difference. This is mathematically valid and the two bodies would behave exactly the same.
+## Post 1: A Reported Moment Is Not a Unique Hand Strategy
 
-What I find interesting is that for a single force that is applied off of the point of analysis in inverse dynamics, the result you would get would be a force and a couple, despite only applying a force.
+A torque curve can be mechanically correct without telling us exactly which
+fingers pressed, which hand supplied the load or what the golfer intended.
+That is the question behind this thought experiment: suppose a force acts at
+one point on the grip, away from the point used to report inverse dynamics.
 
-It is very tempting to see a force and couple from inverse dynamics reported and to think it means that you need to push or pull to match the force component and then to twist on it to match the couple component. Unfortunately I don't think this is an entirely valid assumption to make.
+Use a rigid club and one fixed right-handed frame. A force $\mathbf F$ at $A$
+can be represented at $P$ by the same force plus the moment
 
-Obviously a single force never exists on a real golf club, but where we apply force to the club with our hands can change. For example we can pull with the pinky of the left hand or with the forefinger. We can push with the palm of the right hand or through the forefinger. Where these points of force application are relative to the midpoint of the hands are can meaningfully change the interpretation of the results one would get from reverse dynamics.
+$$
+\mathbf M_P=(\mathbf r_A-\mathbf r_P)\times\mathbf F.
+$$
 
-I've also shown an example of how the equivalent couple for a set of forces would change for forces of the same magnitude but applied by different parts of the hands. The equivalent couple here changes by about 15%. (In the calculation positive forces are up and positive torques are clockwise).
+For example, put $P$ at the origin, $A=(0.5,0,0)$ m and
+$\mathbf F=(0,4,0)$ N. The report at $P$ is a 4 N upward force and a
+2 N m counterclockwise moment. Both components are needed for equivalence.
+A pure couple alone has zero resultant force and would not give the same
+center-of-mass acceleration.
 
-Post 2
+The offset force has a real moment. It can change rotation even though no
+separate pair of opposing contact forces was applied. Conversely, a hand can
+produce a real contact couple through distributed forces. The useful conclusion
+is that a reported moment does not identify a unique contact pattern, voluntary
+command or sensation. It does not mean the rotational loading is imaginary.
 
-Here's some analysis I've done regarding how we can evaluate the meaning of the net force and couple that we get from reverse / inverse dynamics analysis. I think it could have some bearing on the alpha debate and can give a bit of framework to help understand how to translate real life implications from calculated values.
+The original two-hand calculation is also worth preserving. Keep the reporting
+midpoint fixed, take $x$ toward the head, $y$ upward and positive $z$ out of the
+page. Apply a downward 10 lbf left-hand force and an upward 15 lbf right-hand
+force. In the first case their positions relative to the midpoint are -2 and
++1 inches; in the second they are -1 and +2 inches. The resultant is 5 lbf
+upward in both cases, but the moments are
 
-Essentially, the reverse dynamics process gives a value of a force and couple at a point on the club. Typically the midpoint. This does not paint a true picture of reality as we do not exert our force at the midpoint in all cases. We exert forces at various points along the club. When we exert force somewhere along the club that is not the midpoint, it is possible to adjust the force and couple from the midpoint to a new force and couple at a different point of interest. This is done by keeping the sum of forces and sum of moments between the two points constant and solving straightforward algebraic equations.
+$$
+M_P^{(1)}=(-2)(-10)+(1)(15)=35\ \mathrm{lbf\,in},
+$$
 
-The question then arises of "where should we look at the force and couple?". I think that a good answer to that question is found with the following method using forward dynamics type reasoning.
+$$
+M_P^{(2)}=(-1)(-10)+(2)(15)=40\ \mathrm{lbf\,in}.
+$$
 
-1. Recognizing that there are multiple forces applied to the club on multiple sides, resolve these forces into equivalent forces acting on either side of the shaft. There is a mathematical way of doing this that involves summing the moments of each, but the exact details are not particularly important to this theoretical argument. What is important is that at the end of this process you are left with a force acting on either side of the shaft representing the sum of all forces acting on that side of the shaft after this process.
+These are 3.9545 and 4.5194 N m: a 14.3% increase relative to the first case.
+The handwritten sheet uses clockwise-positive signs, hence its -35 and -40.
+The earlier description of about 15% was a rounded illustrative comparison,
+not a measured effect across golfers. Moving the forces changes the wrench
+at the fixed midpoint. It does not demonstrate identical inverse-dynamics
+outputs or merely a change of reporting convention.
 
-2. Break this pair of forces down into a couple and a net force by simple vector addition / subtraction. This will leave you with two equal magnitude forces and the "leftovers" from the process which is the net force. The net force will be at whichever point in which the magnitude of the force was higher between the two vectors.
+## Post 2: Separate Three Different Experiments
 
-3. Recognize that the couple is a "free vector" and can be moved to act anywhere on the body without changing the rotational behavior of the body. The leftover force cannot. Due to this, the equivalent force and couple should be evaluated at this point where the force is left over in the forward dynamics generation of a couple.
+First, change the **reporting point** while holding the actual wrench fixed.
+The transformation is exact:
 
-4. Take reverse dynamics data and imagine completing this process in reverse to get back to a set of forces that represents reality as best as possible. To do so you would need information that you don't have like the distribution of the point of application of forces to the grip.
+$$
+\mathbf M_Q=\mathbf M_P+(\mathbf r_P-\mathbf r_Q)\times\mathbf F.
+$$
 
-It would seem that through this we haven't really done much as we don't have the data to go backwards from reverse dynamics to parse out the forces that we actually applied to the club. However, we can do two different things despite the limitations - 1. Set general bounds on the error of our assumptions to create a range of possible inputs for a set of reverse dynamics data, and 2. Conduct "what if" analysis.
+For $\mathbf F=(0,40,0)$ N and $M_{P,z}=2$ N m, points at
+$x=-0.10,0,+0.10$ m report 6, 2 and -2 N m. All three describe one loading.
+The sign change does not identify where force was applied, establish an error
+bar, or reverse the physical action. In three dimensions, a wrench with
+$\mathbf F\cdot\mathbf M\ne0$ cannot be represented by one force with no
+residual couple at any point. A presumed pressure center does not solve every
+hand-wrench problem.
 
-I have included a calculation of the bounds for the error if the point of application of force moves up and down the grip (first picture), as well as a couple of "what if" scenarios where a set of reverse dynamics data is assumed and comparisons are made between cases where the points of application of force on the club were different (last two pictures).
+Second, change the **physical contact pattern** while preserving the complete
+net wrench. At two distinct force-only contacts, add equal and opposite forces
+along the line joining them. Their force and moment sums vanish, so rigid club
+motion cannot distinguish those additions. Opposite transverse forces generally
+form a couple and are visible. Friction, compression and anatomical constraints
+limit which mathematical allocations are feasible. With distributed contacts,
+local couples and more contact points, use the corresponding grasp map rather
+than assuming the same number of degrees of ambiguity.
 
-How I think this would apply to the alpha debate is illustrated in the last picture showing a late downswing position in which reverse dynamics gives us a result of positive moment of force and negative couple. Depending on the magnitude of the moment of force, the couple, and the point of force application, a sign change in the couple at the point of interest is mathematically possible despite reverse dynamics data giving a "negative couple" at the midpoint of the grip.
+Third, change the **physical contact pattern without preserving the wrench**.
+The two-hand numerical example in Post 1 does this: the same force magnitudes
+at shifted locations produce different moments. That can affect the motion.
+It answers a different question from either of the first two experiments.
 
-Is it probable? Probably not. But the numerical values can definitely change.
+The earlier proposal to reduce all tractions to two forces, subtract the smaller
+magnitude and put the resultant at the larger force's location works only for
+suitable special force geometries. It is not a general vector decomposition of
+two arbitrary hand wrenches. Each hand may have a residual contact couple, and
+net club motion does not select a unique allocation or a preferred physical
+reporting point. A chosen optimization criterion is an assumption to test.
+
+For the alpha-torque discussion, state the point, axis, basis and hand-on-club
+versus club-on-hand convention before interpreting a sign. Wrench power combines
+force and moment terms; a single moment sign does not establish total energy
+transfer, muscular braking or a coaching instruction. Standard inverse dynamics
+already includes the declared gravity and inertial coupling. Its net joint load
+must not have a second “drift torque” subtracted as if it were unaccounted for.
+
+The next useful measurements are those that address the missing layer:
+instrumented grip loads, calibrated contact pressures and shear, full-body motion,
+external ground loads, and physiological evidence for claims about muscle action
+or perceived effort. These sources constrain different parts of the same chain.
+
+## Source and Original-Sheet Notes
+
+The wrench convention follows the
+[Modern Robotics Wrench Supplement](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-4-wrenches/).
+See the [long technical manuscript](Drafts/inverse-dynamics-claude-current/inverse_dynamics_final.pdf)
+for balances, contact maps, power and aerodynamic examples.
+
+The eight sheets in `midpoint-location-effects/` are retained unchanged.
+`IMG_8157.JPG` mixes reporting-point notation with moments about a common center
+of mass; its scalar distance-ratio formula requires signed collinear lever arms.
+The moment range for fixed force and reporting interval does not independently
+grow with distance to the center of mass. `IMG_8158.JPG` contains the restricted
+two-force decomposition discussed above. `IMG_8159.JPG` and `IMG_8160.JPG`
+explore possible reference changes, which do not identify the actual hand load.
+`IMG_8161.JPG` through `IMG_8163.JPG` illustrate the valid offset-force idea;
+“a couple does not exist” must not be read as absence of a real force moment.
+`IMG_8164.JPG` contains the two distinct physical load patterns calculated here.

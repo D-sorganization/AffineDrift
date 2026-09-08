@@ -9,19 +9,29 @@ Main CI34265513801, textbooks34265513761 and deployment34265513841 pass;
 exact live artifact10072974625 passes956/956 across239 routes with zero
 serious/critical axe findings or retries. See `rotations-review.md`.
 
-Active vendor-reference #4290 has a complete rewritten article after full source
-reading and current primary-source investigation. Corrected point/rotation/timing
-kinematics, pressure moments, covariance, median-centered tolerance interpretation,
-human repeatability and device-agreement claims connect the catalogue to the
-coupled swing model. Independent numerical derivations, title631 and static34
-pass; initial static/content failures exposed the shared bibliography evidence
-digest, now regenerated. Root coverage tests are running; render and full visual
-QA remain pending. See `vendor-reference-review.md` for exact source limits.
+Vendor-reference #4290 / PR #4292 is protected-squash-merged as
+8a7bee22e63335c305b71cbef4fdf2f82a7c89e1. Main CI34275285462 passes;
+deployment34275285576 passes. Exact live artifact10076513252 passes956/956
+across239 routes with zero serious/critical axe findings, retries or transient responses. Local article, study, math and browser
+QA passed, including all31 historical anchors and14 responsive/theme cases.
+See `vendor-reference-review.md`; the related technology article is unreviewed.
 
-During that run the next long inverse-dynamics draft was fully read. Epic child
-#4291 records incorrect wrench translation, a false equal-wrench figure, doubled
-drift subtraction, centrifugal/effort inference and inconsistent drag accounting.
-No #4291 correction or validation has begun. The405-source corpus is unfinished.
+Active inverse manuscripts #4291: four complete TeX editions, two notes, the old
+HTML, legacy PDF and twelve original images have been read and reconciled.
+All26 revised PDF pages passed visual QA, with seven changed pages rechecked
+after final fixes. Independent wrench, contact, constrained-dynamics, power,
+pendulum, radial and signed aerodynamic checks pass. Both existing PDF filenames
+now contain the same verified13-page main manuscript. The HTML is a static
+reading guide; eight width/theme views and final axe checks pass. Source titles631,
+static34, content130/4skips, Ruff, Black and mypy86 pass. Final root tests4782/29skips pass with79.04% coverage.
+
+The original aerodynamic sketch is mechanically consistent: the first reviewer
+sign-error diagnosis used an incompatible force basis and was withdrawn after
+viewing the images. Preserve the valid hypothetical39.9% result while separating
+it from unverified iron aerodynamics and video-axis assumptions. The original
+14.3% contact-position example changes the actual wrench, not its reporting point.
+See `inverse-manuscript-review.md` for the derivations and corrected decisions.
+PR #4293 is pushed; protected delivery for #4291 is pending. The405-source corpus is unfinished.
 
 ## Argument Being Investigated
 

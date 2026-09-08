@@ -1,408 +1,119 @@
-\documentclass[12pt]{article}
-\usepackage{amsmath, amssymb, amsfonts}
-\usepackage{bm}
-\usepackage{geometry}
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,bm,booktabs,microtype}
 \usepackage{tikz}
-\usepackage{physics}
-\geometry{margin=1.5in}
-
-\usetikzlibrary{arrows.meta,calc}
-\definecolor{accent}{RGB}{0,90,160}
-\definecolor{softgray}{RGB}{230,230,230}
-
-\tikzset{
-    shaft/.style---{thick},
-    forcevec/.style---{->,thick,accent},
-    couplevec/.style---{->,thick,accent},
-    refpoint/.style---{circle,fill---black,inner sep---1.5pt},
-    labelpt/.style---{circle,fill---black,inner sep---1.2pt},
-    axisline/.style---{thin},
-    boundregion/.style---{fill---softgray,draw---none,opacity---0.5}
-}
-
-\title{\Large\bfseries
-Interpreting Inverse Dynamics in Two-Handed Golf Swing Analysis:\\[4pt]
-Why Equivalent Forces and Couples Do Not Describe What the Hands Actually Do}
-
-\author{2025}
-\date{}
-
-\begin{document}
-\maketitle
-
+\usetikzlibrary{arrows.meta}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\title{Interpreting Inverse Dynamics in Two-Handed Golf Swing Analysis:\\Wrenches, Contact Allocation and Mechanical Power}
+\author{Dieter Olson}
+\date{Revised September 8, 2026}
+\begin{document}\maketitle
 \begin{abstract}
-Inverse dynamics is one of the most powerful tools available for analyzing the golf swing, yet one of the easiest to misunderstand.  
-When two hands hold the club, the system becomes a closed mechanical loop that obscures the true distribution of forces applied by the golfer.  
-Inverse dynamics reports a net force and an ``equivalent couple'' at a chosen point—typically the midpoint between the hands—but these values do not necessarily correspond to literal push, pull, or twisting actions.
-
-This article explains, for a broad technical audience, why inverse dynamics produces force--couple pairs, why the couple does not directly represent hand torque, how equivalent representations shift when forces move along the grip, and how closed-loop mechanics generate ambiguity.  
-Clean abstract diagrams illustrate each concept.
-
-We conclude by outlining what inverse dynamics can reliably tell us, what it cannot, and how to responsibly interpret wrench data in golf research.
+A recovered hand wrench constrains the combined mechanical action of the hands. It does not generally determine their individual force distributions or muscle recruitment. This technical companion derives the origin transformation, a physically valid contact null-space example, and the invariance of total wrench power. It also states when actuator inputs are unique and why subtracting drift twice is an error. The aim is to retain the useful information in inverse dynamics while preventing a torque component from becoming an unsupported instruction to twist the club.
 \end{abstract}
 
-\tableofcontents
-\newpage
-
-%---
-\section{What Inverse Dynamics Computes}
-%---
-
-For a rigid body,
+\section{Recover the Hand Wrench in One Frame}
+Take the club as a rigid body in a fixed right-handed inertial frame. Let $C$ be its center of mass, $I_C$ its consistently expressed inertia tensor, and $P$ a reporting point on the grip. If $F_a,M_{a,C}$ denote known non-hand, non-gravitational external loads, then
 \begin{align}
-    \mathbf{F}_{\mathrm{net}} &--- m \mathbf{a}_{\mathrm{COM}}, \\
-    \bm{\tau}_{\mathrm{net}} &--- \mathbf{I}\bm{\alpha} + \bm{\omega}\times(\mathbf{I}\bm{\omega}),
+F_h&=ma_C-mg-F_a,\\
+M_{h,C}&=I_C\alpha+\omega\times(I_C\omega)-M_{a,C},\\
+M_{h,P}&=M_{h,C}+(r_C-r_P)\times F_h.\label{eq:recover}
 \end{align}
-where $\mathbf{F}_{\mathrm{net}}$ and $\bm{\tau}_{\mathrm{net}}$ are the total external force and moment acting on the club.
+Uniform gravity has no moment about $C$. Include ball and turf loads when present; without their values, motion does not uniquely separate them from hand loads. The equations describe hand-on-club action; reversing to club-on-hand action reverses the wrench at the same point.
 
-Inverse dynamics then rewrites this wrench at a chosen point (usually the midpoint between the hands).  
-This is a \emph{mathematical relocation}, not a direct measurement of hand activity.
+The rotational expression is a rigid-body approximation. Shaft deformation may require segment or distributed momentum balances. A high sampling rate does not itself validate the required accelerations: filtering, motion noise, calibration, synchronization and uncertain inertias affect the result. A smooth preimpact reconstruction does not resolve collision forces merely because it can be evaluated at the nominal impact time.
 
-\subsection*{Diagram 1: Net Wrench at an Arbitrary Point}
-
-\begin{center}
-\begin{tikzpicture}[scale---1.05,>---Stealth]
-    % Club as line
-    \draw[shaft] (-3,0) -- (3,0);
-    % Reference point
-    \fill[refpoint] (0,0) circle;
-    \node[below] at (0,0) {analysis point};
-    % Net force
-    \draw[forcevec] (0,0) -- (0,1.4) node[above] {$\mathbf{F}_{\mathrm{net}}$};
-    % Net couple (drawn as a curved vector)
-    \draw[couplevec] (0.3,0) arc (0:300:0.3);
-    \node[right] at (0.5,-0.1) {$\bm{\tau}_{\mathrm{net}}$};
-\end{tikzpicture}
-\end{center}
-
-The pair $(\mathbf{F}_{\mathrm{net}},\bm{\tau}_{\mathrm{net}})$ is the \emph{combined effect} of everything acting on the club: both hands, gravity, and small aerodynamic forces.
-
-\begin{quote}
-\textbf{Inverse dynamics computes the net effect needed to reproduce the motion.  
-It does not resolve who did what at the hands.}
-\end{quote}
-
-%---
-\section{How Equivalent Couples Are Created}
-%---
-
-Any force $\mathbf{F}$ applied at point $\mathbf{r}_a$ can be rewritten at another point $\mathbf{r}_b$ as:
+\section{Derive the Reference Transformation}
+For forces $F_i$ at $r_i$ and local couples $C_i$, the moment about $P$ is
+$M_P=\sum_i[(r_i-r_P)\times F_i+C_i]$. Therefore
 \begin{align}
-    \mathbf{F}_{\mathrm{eq}} &--- \mathbf{F},\\
-    \bm{\tau}_{\mathrm{eq}} &--- (\mathbf{r}_a - \mathbf{r}_b)\times \mathbf{F}.
+M_Q-M_P
+&=\sum_i(r_P-r_Q)\times F_i\\
+&=(r_P-r_Q)\times F,
 \end{align}
+where $F=\sum_iF_i$. This establishes both the sign and the fact that the \emph{same} force must be used in the transform. Rotating the axes additionally requires rotating both vectors into the new basis. Translating the wrench is distinct from writing angular momentum about a moving point; the latter requires the appropriate transport terms.
 
-This preserves the overall moment and guarantees identical motion.
+A pure couple has zero resultant and does not change with reference. The moment component of a wrench with nonzero resultant generally does. Moving the force to $Q$ requires a changed accompanying couple; a free couple in the original representation is not an excuse to keep both components unchanged.
 
-\subsection*{Diagram 2: Single Force Relocated as Force + Couple}
+Take $P=0$, $A=(0.5,0,0)$ m and $F=(0,4,0)$ N. The wrench about $P$ is $F$ and $M_P=(0,0,2)$ N m. A force at $P$ plus that couple is equivalent to the original force at $A$. A pure couple alone is not: it lacks the $4$ N resultant. An offset force has a real rotational effect even when there is no independently applied local contact couple.
 
-\begin{center}
-\begin{tikzpicture}[scale---1.1,>---Stealth]
-    % Shaft
-    \draw[shaft] (-3,0) -- (3,0);
-    % Points
-    \fill[labelpt] (-2,0) circle;
-    \node[below] at (-2,0) {$\mathbf{r}_a$};
-    \fill[labelpt] (1.5,0) circle;
-    \node[below] at (1.5,0) {$\mathbf{r}_b$};
-    % Force at r_a
-    \draw[forcevec] (-2,0) -- (-2,1.3) node[left] {$\mathbf{F}$};
-    % Offset arrow
-    \draw[<->,thin] (-2,-0.4) -- (1.5,-0.4);
-    \node[below] at (-0.25,-0.4) {$\mathbf{r}_a - \mathbf{r}_b$};
-    % Equivalent force at r_b
-    \draw[forcevec] (1.5,0) -- (1.5,1.3) node[right] {$\mathbf{F}_{\mathrm{eq}}$};
-    % Equivalent couple at r_b
-    \draw[couplevec] (1.8,0) arc (0:300:0.3);
-    \node[right] at (2.1,-0.1) {$\bm{\tau}_{\mathrm{eq}}$};
+\begin{figure}[htbp]\centering
+\begin{tikzpicture}[>=Stealth]
+\draw[thick] (0,0)--(4,0);\fill(.5,0) circle(2pt);\fill(2.8,0) circle(2pt);
+\node[below] at(.5,0){$P$};\node[below] at(2.8,0){$A$};
+\draw[->,very thick,blue] (2.8,0)--(2.8,1.4) node[above]{$4$ N};
+\draw[->,thick] (4.4,.5)--(5.6,.5);
+\draw[thick] (6,0)--(10,0);\fill(6.5,0) circle(2pt);\node[below] at(6.5,0){$P$};
+\draw[->,very thick,blue] (6.5,0)--(6.5,1.4) node[above]{$4$ N};
+\draw[->,very thick,red] (9,.35) arc(0:270:.4);
+\node[above] at(8.6,1.3){$+2$ N m};
 \end{tikzpicture}
-\end{center}
+\caption{Alternative Representations With Identical Resultant and Moment. Positive Moment Is Counterclockwise.}
+\end{figure}
 
-Even if the golfer applied a \emph{pure force} at $\mathbf{r}_a$, the representation at $\mathbf{r}_b$ includes a couple.
+\section{A Coordinate Range Is Not a Load-Sharing Estimate}
+For $F=(0,F_y,0)$ and $Q=(s,0,0)$ relative to $P$, the exact planar rule is
+$M_{Q,z}=M_{P,z}-sF_y$. Chosen values $F_y=40$ N and $M_{P,z}=2$ N m give
+\begin{center}\begin{tabular}{rrrr}\toprule
+$s$ (m) & $-0.10$ & $0$ & $+0.10$\\
+$M_{Q,z}$ (N m) & $6$ & $2$ & $-2$\\\bottomrule
+\end{tabular}\end{center}
+The sign change does not identify a positive couple at one hand and a negative couple at the other. These are three reports of the same aggregate wrench. Their range is not a confidence interval, and a percentage change becomes unstable near a zero denominator.
 
-\begin{quote}
-\textbf{A nonzero couple reported by inverse dynamics can arise purely from force location, not from twisting.}
-\end{quote}
+For a three-dimensional wrench with $F\ne0$, $F\cdot M_P$ is invariant under translation. A zero-moment application point exists only when $F\cdot M_P=0$; even then its line of action need not intersect the grip. Thus a general hand wrench cannot always be replaced by a single force at a presumed pressure center. Distributed tractions may produce a residual torsional couple.
 
-%---
-\section{Affine Dynamics and Input Ambiguity}
-%---
-
-The club’s equations of motion can be expressed as an affine system:
+\section{Contact Redundancy Has a Specific Null Space}
+For two contacts with forces $F_1,F_2$ and couples $C_1,C_2$,
 \begin{equation}
-    \ddot{\mathbf{q}} --- \mathbf{f}(\mathbf{q},\dot{\mathbf{q}}) + \mathbf{G}(\mathbf{q})\,\mathbf{u},
+F_h=F_1+F_2,\qquad
+M_{h,P}=\sum_{i=1}^2[(r_i-r_P)\times F_i+C_i].
 \end{equation}
-where:
-\begin{itemize}
-    \item $\mathbf{u}$ represents forces and torques supplied by the hands,
-    \item $\mathbf{f}$ contains drift terms (gravity, inertial and Coriolis effects).
-\end{itemize}
+These define a grasp map $w_h=\mathcal G\lambda$ at a fixed configuration. Internal load additions invisible to the rigid club wrench lie in $\ker\mathcal G$. This is not an unspecified ``null space of the Jacobian'': a kinematic Jacobian, its transpose and a grasp map have different domains and physical meanings.
 
-Many different input histories $\mathbf{u}(t)$ can generate the same motion trajectory $\mathbf{q}(t)$.  
-Inverse dynamics provides \emph{one} net wrench consistent with the observed motion and assumed inertial properties, but that wrench may correspond to many different hand-force distributions.
+With zero local couples and distinct contact points, let $e$ be the unit vector from contact 1 to contact 2. The additions $\delta F_1=ke$ and $\delta F_2=-ke$ have zero resultant and zero moment. Opposite forces perpendicular to that line generally form a nonzero couple; equal-and-opposite forces are not automatically invisible.
 
-\subsection*{Diagram 3: Non-Unique Inputs for the Same Motion}
+The two-point force-only grasp map has rank five. A residual moment component along the contact line cannot be freely supplied by those two point forces. Allowing local couples changes that constraint. Friction, compression, finite contact area and torque limits further restrict physically admissible solutions. There is no universal count of unidentified loads that applies to every grip model.
 
-\begin{center}
-\begin{tikzpicture}[scale---1.0,>---Stealth]
-    % Block diagram style
-    \node[draw,rounded corners,minimum width---3.5cm,minimum height---1.2cm] (sys) at (0,0) {club dynamics};
-    \draw[->,thick] (-3,0) node[left] {$\mathbf{u}_1(t)$} -- (sys.west);
-    \draw[->,thick] (-3,0.7) node[left] {$\mathbf{u}_2(t)$} -- (-1.75,0.35);
-    \draw[->,thick] (-3,-0.7) node[left] {$\mathbf{u}_3(t)$} -- (-1.75,-0.35);
-    \draw[->,thick] (sys.east) -- (3,0) node[right] {same $\mathbf{q}(t)$};
-\end{tikzpicture}
-\end{center}
+For a consistent wrench, $\lambda=\mathcal G^+w_h+n$ with $n\in\ker\mathcal G$ describes an algebraic family. A chosen metric and regularizer select an allocation, not an observation of the nervous system. Force/moment scaling must be declared when minimizing such a norm. Instrumented grip and distributed contact measurements can reduce the family; club motion alone cannot usually do so.
 
-This non-uniqueness exists even before we add the complexity of two hands.
+The arms, torso and club complete the bimanual closed chain. Loop constraints can create redundant load paths, but affine dependence on input alone does not prove nonuniqueness. A fully actuated model can have a unique net input for an observed full trajectory while still admitting many muscle or hand allocations.
 
-%---
-\section{Two-Handed Grip: A Closed Mechanical Loop}
-%---
+\section{Inverse Dynamics Already Includes Its Bias Model}
+In independent coordinates, use
+\begin{equation}
+M\ddot q+h=Bu+Q_{\rm ext},\qquad
+\tau_{\rm ID}=M\ddot q+h-Q_{\rm ext}=Bu.
+\end{equation}
+Defining $a_d=M^{-1}(Q_{\rm ext}-h)$ gives
+$\tau_{\rm ID}=M(\ddot q-a_d)$. No second drift subtraction is needed. The first-order affine form for $x=(q,\dot q)$ has drift $(\dot q,a_d)$ and input gain $(0,M^{-1}B)$.
 
-With two hands on the club, we have:
-\[
-\text{left hand} \rightarrow \text{club} \rightarrow \text{right hand},
-\]
-forming a closed loop of forces and reactions.
+For a pendulum with $m=1$ kg, $L=1$ m, $g=9.81$ m/s$^2$ and $q=30^\circ$ from downward vertical, zero pivot torque gives $\ddot q=-4.905$ rad/s$^2$. Inverse dynamics returns zero, because its acceleration and gravity terms cancel. A stationary hold at that angle instead requires $4.905$ N m. This separates the applied torque from the acceleration resultant with a directly checkable example.
 
-\subsection*{Diagram 4: Two-Handed Closed Loop}
+If $B$ has full column rank and the recovered load lies in its image, the modeled input is unique. Redundancy introduces $\ker B$; a nonzero consistency residual can indicate measurement error, omitted loads or model inadequacy. A net joint torque containing unmodeled passive tissue forces is not a uniquely identified muscle command.
 
-\begin{center}
-\begin{tikzpicture}[scale---1.1,>---Stealth]
-    % Club
-    \draw[shaft] (-3,0) -- (3,0);
-    % Hands
-    \fill[labelpt] (-1.5,0) circle;
-    \node[below] at (-1.5,0) {left hand};
-    \fill[labelpt] (1.5,0) circle;
-    \node[below] at (1.5,0) {right hand};
-    % Forces
-    \draw[forcevec] (-1.5,0) -- (-1.5,1.1) node[left] {$\mathbf{F}_\ell$};
-    \draw[forcevec] (1.5,0) -- (1.5,1.1) node[right] {$\mathbf{F}_r$};
-    % Internal loop arrows
-    \draw[->,thin] (-1.5,-0.3) -- (1.5,-0.3);
-    \draw[->,thin] (1.5,-0.6) -- (-1.5,-0.6);
-    \node[below] at (0,-0.6) {internal constraints};
-\end{tikzpicture}
-\end{center}
+In constrained coordinates, reaction forces generally depend on actuation. A zero-actuator motion can have nonzero reactions, but their entire history cannot simply be designated input-independent drift. Eliminating the constraints changes both drift and input gain. Similarly, a zero-net-torque simulation is not automatically an experiment in physiological relaxation.
 
-Closed loops introduce:
-\begin{itemize}
-    \item internal constraint forces that do not affect overall motion,
-    \item redundant ways to generate the same net wrench,
-    \item fundamental non-uniqueness of hand-force distributions.
-\end{itemize}
+\section{Power Provides an Invariant Check}
+For material points of a rigid club,
+$v_Q=v_P+\omega\times(r_Q-r_P)$. Combining this with the wrench transform gives
+\begin{equation}
+F_h\cdot v_P+M_{h,P}\cdot\omega
+=F_h\cdot v_Q+M_{h,Q}\cdot\omega.
+\end{equation}
+For the $4$ N example, let $v_P=0$ and $\omega=(0,0,2)$ rad/s. At $A$, $v_A=(0,1,0)$ m/s and force power is $4$ W. At $P$, the same power appears entirely as moment power: $2$ N m times $2$ rad/s. The force and couple percentages change, but total hand power does not.
 
-\begin{quote}
-\textbf{Inverse dynamics of the club cannot uniquely determine how much force the left hand applied versus the right hand.}
-\end{quote}
+At a flexible interface, use the actual local velocities and include deformation power. Total mechanical power also does not measure metabolic effort. Co-contraction and isometric contact force can be substantial while net external power is small. In a fixed-pivot circular example, an inward contact load supplies centripetal acceleration with zero instantaneous force power; it is a real transmitted force, not a fictitious load to subtract before estimating sensation.
 
-%---
-\section{Force Decomposition and the Free Couple}
-%---
+\section{Omitted Loads and a Defensible Interpretation}
+If aerodynamic loading is omitted while motion is fixed, the no-aerodynamics inference differs from the corrected hand wrench by $(F_a,M_{a,P})$ at the same reporting point. Its correction can increase or decrease a signed component. Drag direction is defined relative to airflow, while lift, aerodynamic moment and coordinate projection require separate treatment. A driver study does not establish a universal iron correction.
 
-We can think of real hand forces as being reduced to two resultants:
-\[
-\mathbf{F}_\ell, \quad \mathbf{F}_r.
-\]
+For an analysis labelled ``alpha torque,'' state the origin, basis, positive axis, action convention and whether the output is a wrench projection or generalized torque. A torque sign alone does not reveal total power, hand allocation, muscle effort or the merit of a coaching cue. Earlier work, evolving geometry, shaft energy and changing contact conditions are intertwined through the state.
 
-These can be decomposed into:
-\begin{itemize}
-    \item a net force $\mathbf{F}_{\mathrm{net}} --- \mathbf{F}_\ell + \mathbf{F}_r$,
-    \item a couple $\bm{\tau}_c$ arising from their separation.
-\end{itemize}
+Use the recovered wrench to constrain a mechanistic hypothesis. Then test contact feasibility, propagate uncertainty and compare independent measurements. A forward/inverse round trip checks consistency of one model; independent load measurements test an additional claim. A useful result reports both what was identified and which extra measurement would distinguish the remaining explanations.
 
-\subsection*{Diagram 5: Decomposing Left/Right Forces Into Net + Couple}
-
-\begin{center}
-\begin{tikzpicture}[scale---1.1,>---Stealth]
-    % Top row: two forces
-    % Shaft
-    \draw[shaft] (-3,1.0) -- (3,1.0);
-    % Hands
-    \fill[labelpt] (-1.5,1.0) circle;
-    \fill[labelpt] (1.5,1.0) circle;
-    % Forces
-    \draw[forcevec] (-1.5,1.0) -- (-1.5,2.0);
-    \draw[forcevec] (1.5,1.0) -- (1.5,2.0);
-    \node[above] at (0,2.0) {real left/right resultants};
-    % Arrow down
-    \draw[->,thin] (0,0.7) -- (0,0.3);
-    % Bottom row: net force + couple
-    \draw[shaft] (-3,0) -- (3,0);
-    \fill[refpoint] (0,0) circle;
-    \node[below] at (0,0) {reference};
-    \draw[forcevec] (0,0) -- (0,-1.2) node[below] {$\mathbf{F}_{\mathrm{net}}$};
-    \draw[couplevec] (0.3,0) arc (0:300:0.3);
-    \node[right] at (0.7,-0.1) {$\bm{\tau}_c$};
-\end{tikzpicture}
-\end{center}
-
-The couple $\bm{\tau}_c$ is a \emph{free vector}: it can be applied at any point without changing the rotational behavior of the club.
-
-%---
-\section{Dependence on the Chosen Analysis Point}
-%---
-
-The conventional choice is to express the equivalent wrench at the midpoint between the hands.  
-This is convenient, but arbitrary.
-
-Shifting the reference point along the shaft changes the reported couple:
-\[
-\bm{\tau}_{\mathrm{new}} --- \bm{\tau}_m + \mathbf{r}\times\mathbf{F}_m.
-\]
-
-\subsection*{Diagram 6: Changing Reference Point Along the Shaft}
-
-\begin{center}
-\begin{tikzpicture}[scale---1.15,>---Stealth]
-    % Shaft
-    \draw[shaft] (-4,0) -- (4,0);
-    % Midpoint
-    \fill[refpoint] (0,0) circle;
-    \node[below] at (0,0) {midpoint};
-    % New ref points
-    \fill[labelpt] (-2,0) circle;
-    \node[below] at (-2,0) {point A};
-    \fill[labelpt] (2.5,0) circle;
-    \node[below] at (2.5,0) {point B};
-    % Net force at midpoint
-    \draw[forcevec] (0,0) -- (0,1.4) node[above] {$\mathbf{F}_m$};
-    % Couples at A and B
-    \draw[couplevec] (-1.7,0) arc (0:300:0.3);
-    \node[above left] at (-1.4,-0.1) {$\bm{\tau}_A$};
-    \draw[couplevec] (2.8,0) arc (0:300:0.3);
-    \node[above right] at (3.1,-0.1) {$\bm{\tau}_B$};
-\end{tikzpicture}
-\end{center}
-
-This is why the same motion can produce different torque values depending on the point chosen for analysis.
-
-%---
-\section{Bounds and “What-If” Scenarios}
-%---
-
-Let $C_m$ denote the couple at the midpoint and $M_{fm}$ the moment of the net force about that midpoint.  
-If we assume the real point of force application slides along the grip, the equivalent couple $C(d)$ at distance $d$ from the midpoint changes approximately linearly.
-
-\subsection*{Diagram 7: Range of Possible Couples as Force Location Shifts}
-
-\begin{center}
-\begin{tikzpicture}[scale---1.05,>---Stealth]
-    % Axes
-    \draw[axisline,->] (-3,0) -- (3.2,0) node[right] {$d$ (along grip)};
-    \draw[axisline,->] (0,-1.5) -- (0,1.7) node[left] {$C(d)$};
-    % Bound region
-    \path[boundregion] (-2.5,-1) -- (2.5,0.8) -- (2.5,0.3) -- (-2.5,-1.3) -- cycle;
-    % Nominal line
-    \draw[thick,accent] (-2.5,-1) -- (2.5,0.8);
-    % Midpoint couple
-    \draw[dashed] (-3,0.1) -- (3,0.1);
-    \node[right] at (3,0.1) {$C_m$};
-    % Labels
-    \node at (1.8,1.3) {possible $C(d)$};
-\end{tikzpicture}
-\end{center}
-
-Reasonable shifts in $d$ (different parts of the hands, fingers vs. palms) can easily change $C(d)$ by 10--20\% or more—and sometimes flip the sign.
-
-%---
-\section{Contextual Swing Examples}
-%---
-
-\subsection{Early Backswing: Force High on the Grip}
-
-Imagine an upward pull applied closer to the trail hand than to the midpoint.
-
-\subsection*{Diagram 8: Early-Backswing Upward Pull}
-
-\begin{center}
-\begin{tikzpicture}[scale---1.1,>---Stealth]
-    % Shaft slightly inclined
-    \draw[shaft] (-3,-0.2) -- (3,0.2);
-    % Midpoint
-    \coordinate (mid) at (0,0);
-    \fill[refpoint] (mid) circle;
-    \node[below] at (mid) {midpoint};
-    % Force point near trail side
-    \coordinate (fp) at (1.7,0.13);
-    \fill[labelpt] (fp) circle;
-    \node[above] at (fp) {force point};
-    % Upward-ish force
-    \draw[forcevec] (fp) -- ($(fp)+(0.1,1.1)$) node[right] {$\mathbf{F}$};
-\end{tikzpicture}
-\end{center}
-
-At the midpoint, inverse dynamics might report:
-\begin{itemize}
-    \item an upward net force, and
-    \item a negative couple (depending on sign convention).
-\end{itemize}
-The negative couple in this case simply reflects where the force acted relative to the midpoint, not a deliberate ``twisting down'' by the golfer.
-
-\subsection{Late Downswing: Large Moment, Ambiguous Couple Sign}
-
-In late downswing the external moment of force can be large.  
-Depending on the actual point of application (higher or lower on the grip), the equivalent couple evaluated at the hand locations may be positive or negative, even if the midpoint couple is negative.
-
-\subsection*{Diagram 9: Sign-Change Zone for Late Downswing}
-
-\begin{center}
-\begin{tikzpicture}[scale---1.05,>---Stealth]
-    % Axes
-    \draw[axisline,->] (-3,0) -- (3.2,0) node[right] {force location};
-    \draw[axisline,->] (0,-1.5) -- (0,1.7) node[left] {equivalent couple};
-    % Zero line
-    \draw[dashed] (-3,0) -- (3,0);
-    % Couple curve
-    \draw[thick,accent] (-2.5,1.0) .. controls (-1,0.4) and (1,-0.4) .. (2.5,-1.2);
-    % Region annotation
-    \node at (-1.8,1.2) {positive at lead side};
-    \node at (1.8,-1.4) {negative at trail side};
-\end{tikzpicture}
-\end{center}
-
-This is a key reason why debates that treat the sign of the midpoint couple as a direct indicator of how the hands twist the club are on shaky ground.
-
-%---
-\section{What Inverse Dynamics Can and Cannot Tell Us}
-%---
-
-\subsection*{It CAN Tell Us:}
-\begin{itemize}
-    \item the net wrench required to produce the measured motion,
-    \item how overall loading trends evolve during the swing,
-    \item whether the motion is more force-driven or moment-driven in aggregate,
-    \item bounds and families of plausible hand-force strategies.
-\end{itemize}
-
-\subsection*{It CANNOT Tell Us:}
-\begin{itemize}
-    \item which hand applied more force,
-    \item whether one hand was pulling while the other was pushing,
-    \item whether the golfer intentionally twisted the club,
-    \item where along the grip forces were applied,
-    \item a unique ``hand torque’’ profile or ``alpha torque’’ signal.
-\end{itemize}
-
-These limitations stem from the physics and mathematics of closed-loop affine systems, not from measurement noise.
-
-%---
-\section{Conclusion}
-%---
-
-Inverse dynamics provides the correct net wrench for a given motion, but it does not reconstruct human intent or actual contact forces.  
-Two hands on the club form a closed-loop mechanical system with internal constraints and redundant force pathways.  
-One can always transform forces into different equivalent force--couple pairs by shifting the reference point along the shaft.
-
-A nonzero couple at the midpoint:
-\begin{itemize}
-    \item may arise purely from force location,
-    \item will change if the analysis point is moved,
-    \item and does not directly measure twisting exerted by the hands.
-\end{itemize}
-
-Understanding these facts is essential for interpreting inverse dynamics torque data, for engaging with discussions of ``alpha torque’’, and for avoiding overly literal readings of equivalent couples in golf swing analysis.
-
+\section*{References and Companion}
+The wrench, dynamics and contact conventions follow K. M. Lynch and F. C. Park, \emph{Modern Robotics} (Cambridge University Press, 2017), Chapters 3, 8 and 12, and R. Featherstone, \emph{Rigid Body Dynamics Algorithms} (Springer, 2008). The longer companion, \emph{Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations}, contains the constrained-reaction derivation, signed aerodynamic worked cases and a complete evidence plan. Wrench supplement: \url{https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-4-wrenches/}.
 \end{document}
