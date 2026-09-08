@@ -28,10 +28,9 @@ import pytest
             "content/wrist-as-universal-joint/Wrist_Universal_Claude.html",
             "script.js",
         ),
-        (
-            "content/inverse-dynamics-analysis/Drafts/inverse-dynamics-claude-current/inverse_dynamics_article.html",
-            "script.js",
-        ),
+        # The inverse_dynamics_article.html companion became a static reading
+        # guide in #4291. It needs no site runtime or JavaScript to follow its
+        # PDF/article links, so it no longer belongs in this runtime-load list.
         # `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html`
         # was listed here until #3741 removed it. It was a stale Quarto build
         # artifact committed into the source tree, superseded by the `.qmd`

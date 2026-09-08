@@ -1,1131 +1,421 @@
 \documentclass[11pt,a4paper]{article}
-
-% Packages
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1.5in]{geometry}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{graphicx}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,calc,patterns,decorations.pathreplacing,shapes.geometric}
-\usepackage{pgfplots}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,bm,booktabs}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{arrows.meta,positioning,calc}
 \pgfplotsset{compat=1.18}
-\usepackage{hyperref}
-\usepackage{cleveref}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{booktabs}
-\usepackage{float}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
 \usepackage[most]{tcolorbox}
-
-% Title
-\title{\textbf{Interpretation of Inverse Dynamics: \\[0.3em] Understanding the Fundamental Limitations}}
-\author{}
-\date{}
-
-% Custom commands
-\newcommand{\bvec}[1]{\mathbf{#1}}
-\newcommand{\Feq}{\bvec{F}_{\text{eq}}}
-\newcommand{\Ceq}{C_{\text{eq}}}
-\newcommand{\Rdrift}{\mathbb{R}_{\text{drift}}}
-\newcommand{\Rinput}{\mathbb{R}_{\text{input}}}
-
-% Custom theorem environments
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{example}{Example}[section]
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{proposition}{Proposition}[section]
-
-% Custom boxes
-\newtcolorbox{keypoint}[1][]{
-  colback=blue!5!white,
-  colframe=blue!75!black,
-  fonttitle=\bfseries,
-  title=Key Point,
-  #1
-}
-
-\newtcolorbox{limitation}[1][]{
-  colback=red!5!white,
-  colframe=red!75!black,
-  fonttitle=\bfseries,
-  title=Fundamental Limitation,
-  #1
-}
-
+\newtcolorbox{keypoint}{breakable,colback=blue!3,colframe=blue!55!black,title=Interpretation,fonttitle=\bfseries}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\title{Interpretation of Inverse Dynamics:\\Understanding the Fundamental Limitations}
+\author{Dieter Olson}
+\date{Revised September 8, 2026}
 \begin{document}
-
 \maketitle
+\begin{abstract}
+A golf-club torque plot can be mechanically correct and still be given an unsupported physiological interpretation. The remedy is to separate four questions: what net hand wrench follows from measured motion and known external loads; how that wrench is represented at a chosen point; which contact distributions can produce it; and what those distributions imply about muscle activity, work and perceived effort. This article derives the relevant balances, gives explicit counterexamples and distinguishes control-affine bookkeeping from an experiment in relaxation. Aerodynamic loading provides a worked example of model error: an omitted wrench changes the inferred hand wrench, but the correction has no universal sign or percentage. The same reasoning applies to bimanual humanoid manipulation, where contact redundancy, closed-chain dynamics and actuator allocation must be treated together.
+\end{abstract}
+\tableofcontents
 
-\section{Understanding Inverse Dynamics}
+\section{What Inverse Dynamics Identifies}
+\subsection{Start With a System Boundary}
+Inverse dynamics infers loads consistent with motion under a declared mechanical model. It does not bypass that model, and it does not infer intent directly. For the isolated club, the hands are external contacts. For the combined golfer--club system, those same contacts are internal interfaces, while ground, gravity, air and ball contact remain external. A force omitted at one boundary cannot be explained away by changing its name at another.
 
-\subsection{What Inverse Dynamics Calculates}
-
-Inverse dynamics is a computational method that works backward from observed motion to calculate the forces and moments that must have produced that motion. In golf biomechanics, we observe the club's position, velocity, and acceleration through time (typically via motion capture), and inverse dynamics tells us the equivalent forces and moments acting at a chosen reference point—usually the midpoint between the hands on the grip.
-
-The method is powerful because it allows us to infer kinetic information (forces/moments) from kinematic data (motion) without requiring direct force measurement, which is technically challenging in naturalistic settings. However, understanding what these calculated forces and moments mean in terms of actual golfer effort requires careful interpretation.
-
-\subsection{The Mathematical Foundation}
-
-The equations of motion for a rigid body like a golf club are described by Euler's laws:
-
+For the first derivation, approximate the club as rigid, take uniform gravity and work in a fixed right-handed inertial frame. Let $C$ denote the center of mass, $m$ the mass, $I_C$ the inertia tensor about $C$ expressed in that frame, and $\vect\omega$ and $\vect\alpha$ the angular velocity and acceleration in that frame. The total external balances are
 \begin{align}
-\sum \bvec{F} &= m\bvec{a}_{\text{COM}} \label{eq:force_balance}\\
-\sum \bvec{M}_{\text{COM}} &= \bvec{I}\bvec{\alpha} + \bvec{\omega} \times (\bvec{I}\bvec{\omega}) \label{eq:moment_balance}
+\vect F_{\rm total}&=m\vect a_C,\label{eq:force_balance}\\
+\vect M_{{\rm total},C}&=I_C\vect\alpha+
+\vect\omega\times(I_C\vect\omega).\label{eq:moment_balance}
 \end{align}
+The rotational expression follows by differentiating angular momentum; the gyroscopic term accounts for the changing orientation of the inertia tensor. It is not a separate hand torque. An equivalent body-frame Euler equation can be used, provided every vector, derivative and tensor convention is consistent \cite{lynch,featherstone}.
 
-where:
-\begin{itemize}
-    \item $\sum \bvec{F}$ is the sum of all forces acting on the club
-    \item $m$ is the club mass
-    \item $\bvec{a}_{\text{COM}}$ is the acceleration of the center of mass
-    \item $\sum \bvec{M}_{\text{COM}}$ is the sum of moments about the center of mass
-    \item $\bvec{I}$ is the moment of inertia tensor
-    \item $\bvec{\alpha}$ is the angular acceleration
-    \item $\bvec{\omega}$ is the angular velocity (the final term is the gyroscopic effect)
-\end{itemize}
+Let $\vect F_a,\vect M_{a,C}$ collect specified non-hand, non-gravitational loads, including aerodynamic loads and, when relevant, ball or turf contact. Then
+\begin{align}
+\vect F_h&=m\vect a_C-m\vect g-\vect F_a,\label{eq:handforce}\\
+\vect M_{h,C}&=I_C\vect\alpha+
+\vect\omega\times(I_C\vect\omega)-\vect M_{a,C}.\label{eq:handmoment}
+\end{align}
+Uniform gravity has zero moment about $C$. If collision loading is unknown, club motion alone does not separate its wrench from the hand wrench. A preimpact smooth-motion model should not be extended through collision without resolving that additional load and the relevant time scale.
 
-\subsection{How Inverse Dynamics Works: Step by Step}
+The result is a \emph{hand-on-club} wrench. The club-on-hand wrench has the opposite force and moment at the same point in the same frame. Reversing the action convention halfway through an argument reverses the interpretation of a torque sign.
 
-\textbf{Step 1: Measure Kinematics}
-
-\vspace{3mm}
-
-Motion capture systems track the club's position and orientation over time, providing:
-\begin{itemize}
-    \item Position of the center of mass: $\bvec{r}_{\text{COM}}(t)$
-    \item Orientation (typically as rotation matrix or quaternion): $\bvec{R}(t)$
-\end{itemize}
-
-\vspace{3mm}
-
-\textbf{Step 2: Differentiate to Obtain Velocities and Accelerations}
-
-\vspace{3mm}
-
-Numerical differentiation yields:
-\begin{itemize}
-    \item Linear velocity: $\bvec{v}_{\text{COM}} = \dot{\bvec{r}}_{\text{COM}}$
-    \item Linear acceleration: $\bvec{a}_{\text{COM}} = \ddot{\bvec{r}}_{\text{COM}}$
-    \item Angular velocity: $\bvec{\omega}$
-    \item Angular acceleration: $\bvec{\alpha} = \dot{\bvec{\omega}}$
-\end{itemize}
-
-\vspace{3mm}
-
-\textbf{Step 3: Account for Known Forces}
-
-\vspace{3mm}
-
-Gravity is a known external force:
+\subsection{Transport the Recovered Wrench}
+For a grip reporting point $P$, summing moments of the original forces gives
 \begin{equation}
-\bvec{F}_{\text{gravity}} = m\bvec{g}
+\vect M_{h,P}=\vect M_{h,C}+(\vect r_C-\vect r_P)\times\vect F_h.
+\label{eq:transport}
 \end{equation}
-
-where $\bvec{g} = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
-
-\vspace{3mm}
-
-\textbf{Step 4: Solve for Unknown Forces}
-
-\vspace{3mm}
-
-From Equation~\ref{eq:force_balance}, the sum of unknown forces (from the golfer's hands) is:
+The sign is fixed by the vector from $P$ to $C$. The general change to another point $Q$ is
 \begin{equation}
-\bvec{F}_{\text{hands}} = m\bvec{a}_{\text{COM}} - \bvec{F}_{\text{gravity}}
-\end{equation}
-
-\vspace{3mm}
-
-\textbf{Step 5: Calculate Moments About the Reference Point}
-
-\vspace{3mm}
-
-The moment balance about an arbitrary reference point $P$ (typically the grip midpoint) is:
-\begin{equation}
-\sum \bvec{M}_{P} = \sum \bvec{M}_{\text{COM}} + (\bvec{r}_{P} - \bvec{r}_{\text{COM}}) \times \bvec{F}_{\text{hands}}
-\end{equation}
-
-Since we know $\sum \bvec{M}_{\text{COM}}$ from Equation~\ref{eq:moment_balance}, we can calculate the required moment about point $P$.
-
-\subsection{Critical Assumptions in Inverse Dynamics}
-
-For these calculations to be valid, we must assume:
-
-\begin{enumerate}
-    \item \textbf{Rigid body:} The club does not deform significantly. Shaft bending is neglected or treated separately.
-    
-    \item \textbf{Known mass properties:} We must accurately know:
-    \begin{itemize}
-        \item Total mass $m$
-        \item Center of mass location $\bvec{r}_{\text{COM}}$
-        \item Moment of inertia tensor $\bvec{I}$
-    \end{itemize}
-    
-    \item \textbf{Clean kinematic data:} Motion capture data must be:
-    \begin{itemize}
-        \item Accurate (minimal measurement error)
-        \item Smooth enough for differentiation (or properly filtered)
-        \item Sampled at sufficient frequency (typically $>$ 200 Hz)
-    \end{itemize}
-    
-    \item \textbf{Known external forces:} We account for gravity but typically neglect:
-    \begin{itemize}
-        \item Air resistance (discussed in Section 4 - often significant)
-        \item Impact forces (only applicable during ball contact)
-    \end{itemize}
-\end{enumerate}
-
-\begin{keypoint}
-Inverse dynamics provides mathematically correct values for the forces and moments at the reference point, \emph{given the assumptions above}. The challenges arise not in the calculation but in the interpretation: what do these values tell us about what the golfer is doing?
-\end{keypoint}
-
-\subsection{The Interpretive Gap}
-
-The output of inverse dynamics is:
-\begin{itemize}
-    \item A net force $\bvec{F}_{\text{hands}}$ at reference point $P$
-    \item A net couple (moment) $\bvec{C}_{P}$ at reference point $P$
-\end{itemize}
-
-What we want to understand is:
-\begin{itemize}
-    \item Where on the grip is the golfer applying force?
-    \item How much force from each hand? From each finger?
-    \item What is the golfer actively doing versus what is happening passively?
-    \item How much do unmodeled external forces (like air resistance) affect the results?
-    \item What does the golfer feel and consciously control?
-\end{itemize}
-
-Bridging this gap requires understanding three fundamental limitations.
-
-\section{Limitation 1: The Equivalent Couple Problem (Spatial Ambiguity)}
-
-\subsection{Force-Couple Equivalence in Rigid Body Mechanics}
-
-\begin{definition}[Force-Couple Equivalence]
-Any system of forces acting on a rigid body can be reduced to a statically equivalent system consisting of:
-\begin{itemize}
-    \item A single resultant force $\bvec{F}_{\text{eq}}$ acting at an arbitrary reference point
-    \item A couple $\bvec{C}_{\text{eq}}$ (pure moment) 
-\end{itemize}
-This equivalence is \emph{dynamic}: both systems produce identical translational and rotational accelerations of the rigid body.
-\end{definition}
-
-The fundamental principle is that a couple is a \emph{free vector}—it can act anywhere on the rigid body without changing the body's motion. In contrast, a force is \emph{bound} to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[>=Stealth,scale=1.2]
-    % Original force at offset point
-    \begin{scope}
-        \node[above=5mm] at (0,3.5) {\textbf{Original System}};
-        \draw[line width=2.5pt] (0,0) -- (0,3);
-        \fill (0,2) circle (2.5pt);
-        \node[right=4mm] at (0,2) {Point A};
-        \draw[->,very thick,blue] (0,2) -- (2,2);
-        \node[blue,right=2mm] at (2,2) {$\bvec{F}$};
-        
-        \node[below=3mm] at (0,0) {Rigid body};
-    \end{scope}
-    
-    % Arrow
-    \draw[->,ultra thick] (3.2,1.5) -- (4.8,1.5);
-    \node[above=2mm] at (4,1.5) {Equivalent to};
-    
-    % Equivalent system at reference point
-    \begin{scope}[shift={(7,0)}]
-        \node[above=5mm] at (0,3.5) {\textbf{Equivalent System}};
-        \draw[line width=2.5pt] (0,0) -- (0,3);
-        \fill (0,0.5) circle (2.5pt);
-        \node[right=4mm] at (0,0.5) {Reference};
-        \node[left=4mm] at (0,0.5) {point};
-        \draw[->,very thick,blue] (0,0.5) -- (2,0.5);
-        \node[blue,right=2mm] at (2,0.5) {$\bvec{F}$};
-        
-        % Couple representation - properly centered and opposed
-        \draw[->,red,very thick] (0.7,1.5) arc (30:150:0.7);
-        \draw[->,red,very thick] (-0.7,1.5) arc (150:30:0.7);
-        \node[red,above=1mm] at (0,2.3) {$\bvec{C}$};
-        
-        \node[below=3mm] at (0,0) {Same rigid body};
-    \end{scope}
-\end{tikzpicture}
-\caption{Force-couple equivalence: a force $\bvec{F}$ applied at point A (left) is dynamically equivalent to the same force applied at a reference point plus a couple $\bvec{C}$ (right). The couple accounts for the moment of the original force about the reference point.}
-\label{fig:basic_equivalence}
-\end{figure}
-
-\subsection{Coordinate Transformation of Force-Couple Pairs}
-
-For a rigid body such as a golf club, if inverse dynamics yields force $\Feq$ and couple $\Ceq$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
-
-\begin{proposition}[Couple Transformation Formula]
-For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
-\begin{equation}
+\vect M_{h,Q}=\vect M_{h,P}+(\vect r_P-\vect r_Q)\times\vect F_h.
 \label{eq:couple_transform}
-C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
 \end{equation}
-where:
-\begin{itemize}
-    \item $C_i$ = equivalent couple at point $i$
-    \item $M_m$ = moment of force about the midpoint ($M_m = F \cdot d_m$ for perpendicular force)
-    \item $d_i$ = signed distance from center of mass to point $i$
-    \item $d_m$ = signed distance from center of mass to midpoint $m$
-    \item $C_m$ = couple at midpoint from inverse dynamics
-\end{itemize}
-\end{proposition}
+The force is unchanged by a change of origin. If the axes also rotate, rotate the force and translated moment into the new basis.
 
-This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[>=Stealth,scale=0.9]
-    % Draw club grip with coordinate system
-    \draw[line width=3pt,gray!30] (-1,0) -- (9,0);
-    \draw[line width=2.5pt] (0,0) -- (8,0);
-    
-    % Mark key points
-    \fill (1.5,0) circle (2.5pt);
-    \node[below=4mm] at (1.5,0) {$t$ (top)};
-    
-    \fill (4,0) circle (2.5pt);
-    \node[below=4mm] at (4,0) {$m$ (mid)};
-    
-    \fill (6.5,0) circle (2.5pt);
-    \node[below=4mm] at (6.5,0) {$b$ (bottom)};
-    
-    % Draw COM
-    \fill[red] (5.5,0) circle (3.5pt);
-    \node[red,above=5mm] at (5.5,0) {COM};
-    
-    % Distance annotations - staggered vertically with labels closer to arrows
-    \draw[<->,thick,blue] (4,-0.9) -- (5.5,-0.9);
-    \node[blue,below=1mm] at (4.75,-0.9) {$d_m$};
-    
-    \draw[<->,thick,violet] (1.5,-1.5) -- (5.5,-1.5);
-    \node[violet,below=1mm] at (3.5,-1.5) {$d_t$};
-    
-    \draw[<->,thick,orange] (5.5,-2.1) -- (6.5,-2.1);
-    \node[orange,below=1mm] at (6.0,-2.1) {$d_b$};
-    
-    % Show force at midpoint - label to the side
-    \draw[->,very thick,green!50!black] (4,0) -- (4,1.5);
-    \node[green!50!black,right=3mm] at (4,1.5) {$\Feq$};
-    
-    % Coordinate labels
-    \node[above=7mm] at (0,0) {Grip coordinate system};
-    \draw[->,thick] (8.5,0) -- (9.5,0);
-    \node[right=2mm] at (9.5,0) {toward clubhead};
-\end{tikzpicture}
-\caption{Golf Club Grip Schematic Showing Reference Points and Distance Measures. The Center of Mass (COM) Is Closer to the Clubhead Than to the Hands. Distances Are Measured With Consistent Sign Convention.}
-\label{fig:grip_coordinates}
-\end{figure}
-
-\subsection{The Range of Equivalent Couples}
-
-From Equation~\ref{eq:couple_transform}, we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
-
-At the top of the grip:
-\begin{equation}
-C_t = M_m \left(1 - \frac{d_t}{d_m}\right) + C_m
-\end{equation}
-
-At the bottom of the grip:
-\begin{equation}
-C_b = M_m \left(1 - \frac{d_b}{d_m}\right) + C_m
-\end{equation}
+This is a transformation of a wrench, not a new angular-momentum balance about a moving pivot. In particular, substituting an arbitrary accelerating grip point into $I_P\vect\alpha+\vect\omega\times I_P\vect\omega$ generally misses transport terms. Recovering the wrench about the center of mass and then using Equation~\ref{eq:transport} avoids that mistake.
 
 \begin{keypoint}
-The range of viable equivalent couples increases linearly with the moment of force $M_m = F \cdot d_m$. For larger forces or forces acting farther from the center of mass, the spatial ambiguity grows substantially.
+A reporting point is a convention. Once the net wrench and geometry are known, its change of reference is determined exactly. Uncertainty enters through uncertain motion, calibration, inertial properties, external loads or point location; it does not arise merely because two correct reports use different origins.
 \end{keypoint}
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    width=14cm,
-    height=8.5cm,
-    xlabel={Position along grip (inches from COM)},
-    ylabel={Equivalent couple (Nm)},
-    grid=major,
-    legend pos=north west,
-    legend style={fill=white,fill opacity=0.9,font=\small},
-    xmin=0, xmax=14,
-    ymin=-25, ymax=5,
-    clip=true,
-]
+\subsection{What a Rigid Approximation Leaves Out}
+A shaft transmits bending, torsion and axial load. When those deformations matter, the whole club does not have one angular velocity and a constant body-frame inertia tensor. Use a distributed model or segment momentum balances, including deformation and the actual contact velocities. The total linear momentum balance still holds, and the angular momentum rate about the center of mass is still meaningful, but its rigid-body expression need not be accurate.
 
-% Conversion: 1 in-lb = 0.113 Nm
-% Case 1: Low moment of force
-\addplot[blue,thick,domain=0:14,samples=100] {0.113*(100*(1-x/10) - 35)};
-\addlegendentry{$M_m = 11.3$ Nm, $C_m = -4.0$ Nm}
+Motion reconstruction must therefore match the inferred quantity. Tracking only the head cannot generally recover the momentum of a flexing shaft. Tracking two shaft points does not determine rotation about their line. Marker calibration, internal mass distribution and synchronization are part of the inference. The question is whether their uncertainties are small enough for the particular load or comparison, not whether a device is generically ``accurate.''
 
-% Case 2: Medium moment of force
-\addplot[red,thick,domain=0:14,samples=100] {0.113*(150*(1-x/10) - 35)};
-\addlegendentry{$M_m = 17.0$ Nm, $C_m = -4.0$ Nm}
+\section{A Moment Is Real, but Its Representation Is Not a Hand Strategy}
+\subsection{Single Force and Force-Plus-Couple Equivalence}
+A force $\vect F$ at $A$ has moment $(\vect r_A-\vect r_P)\times\vect F$ about $P$. Replacing it by the same force at $P$ and that moment as a pure couple preserves the complete rigid-body wrench. At the same rigid-body state it therefore preserves acceleration; it preserves a trajectory when the wrench histories, initial conditions and other loads are also matched.
 
-% Case 3: High moment of force
-\addplot[green!50!black,thick,domain=0:14,samples=100] {0.113*(200*(1-x/10) - 35)};
-\addlegendentry{$M_m = 22.6$ Nm, $C_m = -4.0$ Nm}
+For a concrete planar example, use $x$ to the right, $y$ upward and positive $z$ out of the page. A force $(0,4,0)$ N at $A=(0.5,0,0)$ m has a $+2$ N m moment about $P=(0,0,0)$. The equivalent representation is a $4$ N upward force at $P$ plus a $+2$ N m counterclockwise couple. It is \emph{not} equivalent to a pure $2$ N m couple alone: that couple has zero resultant force.
 
-% Mark typical grip region
-\draw[dashed,gray,thick] (axis cs:2,-25) -- (axis cs:2,5);
-\draw[dashed,gray,thick] (axis cs:12,-25) -- (axis cs:12,5);
-
-% Label for grip region
-\node[gray,rotate=90,font=\small] at (axis cs:7,-18) {Typical grip region};
-
-\end{axis}
+\begin{figure}[htbp]\centering
+\begin{tikzpicture}[>=Stealth,scale=1]
+\draw[thick] (0,0)--(4,0);\fill (0.6,0) circle(2pt);\fill (2.8,0) circle(2pt);
+\node[below] at(.6,0){$P$};\node[below] at(2.8,0){$A$};
+\draw[->,very thick,blue] (2.8,0)--(2.8,1.5) node[above]{$4$ N};
+\node at(2,-.9){Force at $A$};
+\draw[->,thick] (4.3,.6)--(5.5,.6);
+\draw[thick] (6,0)--(10,0);\fill (6.6,0) circle(2pt);
+\node[below] at(6.6,0){$P$};
+\draw[->,very thick,blue] (6.6,0)--(6.6,1.5) node[above]{$4$ N};
+\draw[->,very thick,red] (8.9,.4) arc(0:270:.45);
+\node[above] at(8.5,1.3){$+2$ N m};
+\node at(8,-.9){Same Wrench at $P$};
 \end{tikzpicture}
-\caption{Equivalent Couple as a Function of Position Along the Grip for Three Different Moments of Force, With Constant $C_m = -4.0$ Nm at the Midpoint. The Region Between Dashed Lines Represents Typical Hand Placement. Note How the Range of Possible Couple Values Increases With $M_m$.}
-\label{fig:couple_range}
-\end{figure}
+\caption{One Offset Force and Its Equivalent Force-Plus-Couple Representation. The Two Diagrams Are Alternatives, Not Loads Applied Together.}
+\label{fig:basic_equivalence}\end{figure}
 
-\subsection{Physical Interpretation: The Non-Uniqueness Problem}
+An offset force can have a real rotational effect. Saying that its reported couple does not prove a separately applied hand couple does not mean the force has no twisting effect on the club. A hand can also apply an actual contact couple through distributed tractions. ``We only exert forces'' is therefore not a useful reason to dismiss a resultant moment: distributed forces are precisely how many physical couples are produced.
 
-The mathematical transformation in Equation~\ref{eq:couple_transform} has a profound physical consequence: \textbf{a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer}.
+\subsection{A Free Couple Versus a Wrench's Moment Component}
+A pure couple has zero resultant and is independent of origin. The moment component of a general wrench with nonzero force changes according to Equation~\ref{eq:couple_transform}. A pure couple used in one equivalent representation is a free vector; moving the \emph{force} to a different point requires changing the accompanying couple.
 
-\begin{example}[Single Force Creating Apparent Couple]
-Consider a hypothetical scenario where a golfer applies a single force $F$ at a point on the grip located at distance $d_F$ from the midpoint, with no other forces acting.
-
-\textbf{Physical reality:} Only one force exists; no couple is applied.
-
-\textbf{Inverse dynamics at midpoint:}
-\begin{itemize}
-    \item Net force: $F$
-    \item Equivalent couple: $C_m = F \cdot d_F$ (nonzero!)
-\end{itemize}
-
-The inverse dynamics creates a mathematical couple to account for the offset application point, despite no physical twisting occurring.
-\end{example}
-
-This example reveals the core issue: inverse dynamics conflates two physically distinct phenomena:
-\begin{enumerate}
-    \item \textbf{True couples:} Opposing forces applied simultaneously (e.g., left hand pulls up while right hand pushes down)
-    \item \textbf{Offset forces:} Single or net forces applied away from the reference point
-\end{enumerate}
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[>=Stealth,scale=1.0]
-    % True couple example
-    \begin{scope}
-        \node[align=center] at (0,4.8) {\textbf{True Couple}\\\small Physical twisting action};
-        
-        \draw[line width=2.5pt] (0,0) -- (0,3.5);
-        \fill (0,1.75) circle (2pt);
-        \node[right=4mm] at (0,1.75) {$m$};
-        
-        % Opposing forces
-        \draw[->,very thick,blue] (0,2.5) -- (-1.2,2.5);
-        \node[blue,left=2mm] at (-1.2,2.5) {$F$};
-        
-        \draw[->,very thick,blue] (0,1.0) -- (1.2,1.0);
-        \node[blue,right=2mm] at (1.2,1.0) {$F$};
-        
-        % Distance marker
-        \draw[<->,red,thick] (0.5,1.0) -- (0.5,2.5);
-        \node[red,right=2mm] at (0.5,1.75) {$d$};
-        
-        \node[align=center,text width=3cm] at (0,-0.9) {\small Couple: $C = F \cdot d$\\\small Net force: $0$};
-    \end{scope}
-    
-    % Offset force example
-    \begin{scope}[shift={(6,0)}]
-        \node[align=center] at (0,4.8) {\textbf{Offset Force}\\\small No physical twisting};
-        
-        \draw[line width=2.5pt] (0,0) -- (0,3.5);
-        \fill (0,1.75) circle (2pt);
-        \node[right=4mm] at (0,1.75) {$m$};
-        
-        % Single offset force
-        \draw[->,very thick,blue] (0,2.5) -- (-1.2,2.5);
-        \node[blue,left=2mm] at (-1.2,2.5) {$F$};
-        
-        % Distance to reference
-        \draw[<->,red,thick] (0.5,1.75) -- (0.5,2.5);
-        \node[red,right=2mm] at (0.5,2.125) {$d$};
-        
-        \node[align=center,text width=3.2cm] at (0,-0.9) {\small Equivalent couple: $C = F \cdot d$\\\small Net force: $F$};
-    \end{scope}
-    
-    % Comparison annotation - smaller, centered over right F arrow
-    \draw[->,thick,violet] (-0.6,3.5) to[out=60,in=120] (5.4,3.5);
-    \node[violet,align=center,font=\small] at (2.4,4.0) {Same inverse\\dynamics at $m$};
-\end{tikzpicture}
-\caption{Two Physically Distinct Force Applications That Produce Identical Inverse Dynamics Results at the Reference Point. Left: True Couple From Opposing Forces. Right: Apparent Couple From Single Offset Force. Inverse Dynamics Cannot Distinguish Between Them.}
-\label{fig:true_vs_apparent_couple}
-\end{figure}
-
-\subsection{Implications for Distributed Force Application}
-
-In reality, golfers apply forces at multiple points on the grip: individual fingers, palm heel, thumb pads, etc. Each force contributes to both the net force and the equivalent couple at any chosen reference point.
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[>=Stealth,scale=1.1]
-    % Detailed grip with multiple force application points
-    \begin{scope}
-        \node[above=3mm] at (0,5.7) {\textbf{Actual Force Distribution}};
-        
-        % Draw grip
-        \draw[line width=3pt,fill=gray!20] (-0.3,0) rectangle (0.3,5);
-        
-        % Left hand forces (blue) - labels carefully positioned
-        \draw[->,thick,blue] (0,4.2) -- (-0.85,4.2);
-        \node[blue,left=2mm,font=\small] at (-0.85,4.2) {L pinky};
-        
-        \draw[->,thick,blue] (0,4.0) -- (-0.8,4.0);
-        \node[blue,left=2mm,font=\small] at (-0.8,4.0) {L ring};
-        
-        \draw[->,thick,blue] (0,3.7) -- (-0.75,3.7);
-        \node[blue,left=2mm,font=\small] at (-0.75,3.7) {L middle};
-        
-        \draw[->,thick,blue] (0,3.5) -- (-0.7,3.5);
-        \node[blue,left=2mm,font=\small] at (-0.7,3.5) {L index};
-        
-        \draw[->,thick,blue] (0,3.2) -- (0.7,3.2);
-        \node[blue,right=2mm,font=\small] at (0.7,3.2) {L thumb};
-        
-        % Right hand forces (red) - labels carefully positioned
-        \draw[->,thick,red] (0,2.7) -- (0.8,2.7);
-        \node[red,right=2mm,font=\small] at (0.8,2.7) {R index};
-        
-        \draw[->,thick,red] (0,2.4) -- (0.75,2.4);
-        \node[red,right=2mm,font=\small] at (0.75,2.4) {R middle};
-        
-        \draw[->,thick,red] (0,2.1) -- (0.7,2.1);
-        \node[red,right=2mm,font=\small] at (0.7,2.1) {R ring};
-        
-        \draw[->,thick,red] (0,1.8) -- (0.65,1.8);
-        \node[red,right=2mm,font=\small] at (0.65,1.8) {R pinky};
-        
-        \draw[->,thick,red] (0,2.0) -- (-0.65,2.0);
-        \node[red,left=2mm,font=\small] at (-0.65,2.0) {R palm};
-        
-        % Mark midpoint
-        \fill (0,2.5) circle (3pt);
-        \draw[dashed] (0,2.5) -- (1.6,2.5);
-        \node[right=2mm,font=\small] at (1.6,2.5) {Midpoint $m$};
-    \end{scope}
-    
-    % Reduction arrow
-    \draw[->,ultra thick] (3.0,2.5) -- (4.3,2.5);
-    \node[above=2mm,align=center,font=\small] at (3.65,2.5) {Inverse\\dynamics};
-    
-    % Inverse dynamics result
-    \begin{scope}[shift={(6.5,0)}]
-        \node[above=3mm] at (0,5.7) {\textbf{Inverse Dynamics Result}};
-        
-        % Draw grip
-        \draw[line width=3pt,fill=gray!20] (-0.3,0) rectangle (0.3,5);
-        
-        % Single equivalent force - from midpoint
-        \draw[->,very thick,violet] (0,2.5) -- (1.3,2.5);
-        \node[violet,right=2mm] at (1.3,2.5) {$\Feq$};
-        
-        % Equivalent couple - centered on midpoint (0,2.5)
-        \draw[->,orange,very thick] (0.65,2.5) arc (0:180:0.65);
-        \draw[->,orange,very thick] (-0.65,2.5) arc (180:360:0.65);
-        \node[orange,above=4mm] at (0,3.2) {$\Ceq$};
-        
-        % Mark midpoint
-        \fill (0,2.5) circle (3pt);
-        \node[below=4mm,font=\small] at (0,2.5) {$m$};
-        
-        \node[align=center,text width=3.5cm,font=\small] at (0,0.8) {Single force-couple pair\\at midpoint};
-    \end{scope}
-\end{tikzpicture}
-\caption{Inverse Dynamics Reduces Distributed Forces From Multiple Fingers and Palm Contact Points to a Single Equivalent Force and Couple at the Reference Point. This Reduction Is Mathematically Valid but Loses Information About the Spatial Distribution.}
-\label{fig:distributed_forces}
-\end{figure}
-
-\begin{limitation}
-Without knowledge of where forces are applied along the grip, inverse dynamics results are fundamentally ambiguous. The same force-couple pair could arise from:
-\begin{itemize}
-    \item Strong forces applied close to the reference point
-    \item Weaker forces applied far from the reference point  
-    \item Any combination with the same resultant and moment
-\end{itemize}
-\end{limitation}
-
-\section{Limitation 2: The Control-Affine Decomposition Problem}
-
-\subsection{Control-Affine Systems: A Framework for Understanding Motion}
-
-The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge rooted in the structure of the system dynamics. The golf club-golfer system is naturally described as a \emph{control-affine system}.
-
-\begin{definition}[Control-Affine System]
-A control-affine system is a dynamical system of the form:
+There is also a three-dimensional obstruction to representing every wrench by one force. For $\vect F\ne0$, the scalar $\vect F\cdot\vect M_P$ is invariant under translation. A point with zero moment exists only if that scalar is zero. One point on the central axis is
 \begin{equation}
-\label{eq:control_affine}
-\dot{\bvec{x}} = \bvec{f}(\bvec{x}) + \bvec{G}(\bvec{x})\bvec{u}
+\vect r_0-\vect r_P=\frac{\vect F\times\vect M_P}{\|\vect F\|^2},
+\qquad
+\vect M_0=\frac{\vect F\cdot\vect M_P}{\|\vect F\|^2}\vect F.
 \end{equation}
-where:
-\begin{itemize}
-    \item $\bvec{x} \in \mathbb{R}^n$ is the state vector (positions and velocities)
-    \item $\bvec{f}(\bvec{x})$ is the \emph{drift vector field} (system dynamics without input)
-    \item $\bvec{G}(\bvec{x})$ is the \emph{input matrix} (how controls affect the state)
-    \item $\bvec{u} \in \mathbb{R}^m$ is the \emph{control input vector}
-\end{itemize}
-\end{definition}
+Other points on the axis differ by a displacement parallel to $\vect F$. Even when $\vect M_0=0$, the line need not intersect the grip or satisfy its contact constraints. A normal-pressure center is not automatically the application point of the complete frictional hand wrench.
 
-The key feature is the \textbf{additive separation} of drift and input effects. This decomposition reflects a fundamental physical distinction:
-
-\begin{itemize}
-    \item \textbf{Drift ($\bvec{f}(\bvec{x})$):} Passive dynamics arising from the system's configuration, including gravitational forces, inertial effects (centrifugal, Coriolis), and constraint forces in closed kinematic chains
-    
-    \item \textbf{Input ($\bvec{G}(\bvec{x})\bvec{u}$):} Active control—forces that the controller (golfer) can directly modulate. This is what the golfer \emph{feels} and what they exert effort toward achieving.
-\end{itemize}
-
-\begin{keypoint}
-The input component represents what the golfer consciously controls and experiences as effort. When a golfer ``feels'' like they are pulling or pushing, they are sensing the input forces they must actively generate, not the total forces (which include passive dynamics).
-\end{keypoint}
-
-\subsection{Inverse Dynamics in the Lagrangian Framework}
-
-To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $\bvec{q}$, the equations of motion are:
-
+\subsection{An Exact Planar Reference Sweep}
+Take $\vect r_P=0$, a fixed resultant $(0,F_y,0)$ and moment $M_{P,z}$. For $Q=(s,0,0)$,
 \begin{equation}
-\label{eq:lagrange}
-\bvec{M}(\bvec{q})\ddot{\bvec{q}} + \bvec{C}(\bvec{q},\dot{\bvec{q}})\dot{\bvec{q}} + \bvec{G}(\bvec{q}) = \bvec{\tau}
+M_{Q,z}=M_{P,z}-sF_y.\label{eq:sweep}
 \end{equation}
+This is exactly linear for the stated fixed wrench and straight reference line. With chosen values $F_y=40$ N and $M_{P,z}=2$ N m, points at $s=-0.10,0,+0.10$ m report $6,2,-2$ N m. The zero crossing at $s=0.05$ m is a geometric fact about this wrench; it does not reveal where the fingers pressed.
 
-where:
-\begin{itemize}
-    \item $\bvec{M}(\bvec{q})$ is the mass/inertia matrix
-    \item $\bvec{C}(\bvec{q},\dot{\bvec{q}})$ contains Coriolis and centrifugal terms
-    \item $\bvec{G}(\bvec{q})$ contains gravitational and other conservative force terms
-    \item $\bvec{\tau}$ are the generalized forces (what we want to find)
-\end{itemize}
+\begin{figure}[htbp]\centering
+\begin{tikzpicture}\begin{axis}[width=.8\linewidth,height=5.8cm,
+xlabel={Reference Position $s$ (m)},ylabel={Moment $M_{Q,z}$ (N m)},
+xmin=-.1,xmax=.1,ymin=-2.5,ymax=6.5,grid=major,
+xtick={-.1,-.05,0,.05,.1},scaled x ticks=false,
+xticklabel style={/pgf/number format/fixed,/pgf/number format/precision=2}]
+\addplot[blue,thick,domain=-.1:.1]{2-40*x};
+\addplot[only marks,red] coordinates{(-.1,6)(0,2)(.1,-2)};
+\end{axis}\end{tikzpicture}
+\caption{Deterministic Reference Change for One Chosen Wrench. All Three Marked Values Describe the Same Loading; the Range Is Not a Confidence Interval.}
+\label{fig:couple_range}\end{figure}
 
-Inverse dynamics solves for $\bvec{\tau}$ given observed $\bvec{q}(t)$, $\dot{\bvec{q}}(t)$, and $\ddot{\bvec{q}}(t)$:
-
+If positions are described relative to the center of mass by signed coordinates $d_m,d_i$, define $M_m=d_mF_y$, the moment of the force at $m$ about the center of mass. For $d_m\ne0$, Equation~\ref{eq:sweep} can be rewritten
 \begin{equation}
-\label{eq:inverse_dynamics}
-\bvec{\tau} = \bvec{M}(\bvec{q})\ddot{\bvec{q}} + \bvec{C}(\bvec{q},\dot{\bvec{q}})\dot{\bvec{q}} + \bvec{G}(\bvec{q})
+C_i=C_m+M_m\left(1-\frac{d_i}{d_m}\right).
 \end{equation}
+Here $C_m,C_i$ denote wrench moments at their respective reporting points. $M_m$ is not the moment of a force about its own application point, which is zero. For fixed force and fixed reference interval, the moment range is $|F_y|\,|s_{\max}-s_{\min}|$; it does not independently grow with the distance to the center of mass. For a general three-dimensional grip, use the cross product rather than unsigned lever-arm arithmetic.
 
-\subsection{The Fundamental Problem: Inseparability of Drift and Input}
+A coordinate sweep can support a useful sensitivity analysis when combined with a \emph{stated} possible contact region and contact model. It cannot by itself bound each hand's load. To ask where force might actually act is a different inverse problem from asking how to report the same wrench elsewhere.
 
-Here is the critical observation: \textbf{inverse dynamics computes the total generalized force $\bvec{\tau}$, which includes both drift and input components}:
-
-\begin{equation}
-\bvec{\tau}_{\text{total}} = \bvec{\tau}_{\text{drift}} + \bvec{\tau}_{\text{input}}
-\end{equation}
-
-In the control-affine formulation, these correspond to:
+\section{Two-Handed Contact and the Missing Allocation}
+\subsection{The Grasp Map}
+Let the hands contact at $\vect r_1,\vect r_2$, with forces $\vect F_i$ and local couples $\vect C_i$. About $P$,
 \begin{align}
-\bvec{\tau}_{\text{drift}} &= \text{generalized forces from } \bvec{f}(\bvec{x}) \\
-\bvec{\tau}_{\text{input}} &= \text{generalized forces from } \bvec{G}(\bvec{x})\bvec{u}
+\vect F_h&=\vect F_1+\vect F_2,\\
+\vect M_{h,P}&=\sum_{i=1}^2\left[(\vect r_i-\vect r_P)\times\vect F_i+\vect C_i\right].
 \end{align}
+Stack the contact loads in $\lambda$ and use force-first wrench ordering
+$w_h=(\vect F_h,\vect M_{h,P})$. These equations define a linear grasp map
+$w_h=\mathcal G(q)\lambda$ at a fixed configuration. With two arbitrary six-component hand wrenches, there are twelve unknown components and at most six independent resultant equations.
 
-\begin{limitation}
-Inverse dynamics cannot distinguish between these components without additional information. The calculation yields $\bvec{\tau}_{\text{total}}$, but this single measurement corresponds to infinitely many possible $(drift, input)$ pairs satisfying:
+For a consistent wrench, one algebraic family is
 \begin{equation}
-\bvec{\tau}_{\text{drift}} + \bvec{\tau}_{\text{input}} = \bvec{\tau}_{\text{total}}
+\lambda=\mathcal G^+w_h+n,\qquad n\in\ker\mathcal G.
 \end{equation}
-\end{limitation}
+A pseudoinverse selects a particular solution under a metric; it does not measure contact allocation. Mixing forces and moments in an unscaled Euclidean norm also introduces an arbitrary length scale. State the metric, friction, contact-area, compression and torque limits before assigning physical meaning to an optimized solution.
 
-\begin{figure}[H]
-\centering
+\subsection{An Invisible Load Pair That Really Is Invisible}
+Set both local couples to zero and let
+$\vect e=(\vect r_2-\vect r_1)/\|\vect r_2-\vect r_1\|$ for distinct points.
+The changes
+\begin{equation}
+\delta\vect F_1=k\vect e,\qquad\delta\vect F_2=-k\vect e
+\end{equation}
+leave the resultant zero and add moment
+$(\vect r_1-\vect r_2)\times k\vect e=0$.
+Thus a one-parameter family of contact forces has the same club wrench. Actual allowable $k$ depends on contact feasibility. Equal-and-opposite \emph{transverse} forces, by contrast, generally form a nonzero couple and are visible in the club's moment balance.
+
+\begin{figure}[htbp]\centering
 \begin{tikzpicture}[>=Stealth]
-    % Forward dynamics flow
-    \node[rectangle,draw,thick,minimum width=2.8cm,minimum height=1.2cm,fill=blue!20,align=center] (drift) at (0,3.8) {Drift\\$\bvec{f}(\bvec{x})$};
-    \node[rectangle,draw,thick,minimum width=2.8cm,minimum height=1.2cm,fill=red!20,align=center] (input) at (0,1.2) {Input\\$\bvec{G}(\bvec{x})\bvec{u}$};
-    \node[circle,draw,thick,minimum size=1.3cm,font=\Large] (sum) at (4.8,2.5) {$+$};
-    \node[rectangle,draw,thick,minimum width=2.8cm,minimum height=1.2cm,fill=green!20,align=center] (motion) at (9.5,2.5) {Motion\\$\ddot{\bvec{x}}$};
-    
-    \draw[->,very thick] (drift) -- (sum);
-    \draw[->,very thick] (input) -- (sum);
-    \draw[->,very thick] (sum) -- (motion);
-    \node[above=3mm,font=\small] at (7.15,2.5) {Forward};
-    
-    % Inverse dynamics (reverse arrow) - curved to avoid overlap
-    \draw[->,very thick,violet,dashed] (motion.south) to[out=-100,in=-10] (1.5,-0.2);
-    \node[violet,below,align=center,font=\small] at (5.5,-0.5) {Inverse\\(non-unique)};
-    
-    % Question mark for ambiguity
-    \node[violet,font=\Huge] at (1.5,-1.0) {?};
-    
-    % Labels with better positioning
-    \node[above=5mm of drift,align=center,text width=3.2cm,font=\small] {Passive dynamics\\ Gravity, inertia, constraints};
-    \node[below=5mm of input,align=center,text width=3.2cm,font=\small] {Active control\\ Golfer's input};
-    \node[above=5mm of motion,font=\small] {Observable};
+\draw[line width=2pt] (0,0)--(8,0);
+\fill (2,0) circle(2pt);\fill (6,0) circle(2pt);
+\node[below] at(2,0){Contact 1};\node[below] at(6,0){Contact 2};
+\draw[->,very thick,blue] (2,.3)--(3.6,.3) node[midway,above]{$+k\vect e$};
+\draw[->,very thick,blue] (6,.3)--(4.4,.3) node[midway,above]{$-k\vect e$};
+\node[align=center] at(4,1.5){Added Resultant $=0$\\Added Moment $=0$};
 \end{tikzpicture}
-\caption{Forward vs. Inverse Dynamics in Control-Affine Systems. Forward: Drift and Input Combine Uniquely to Produce Motion. Inverse: Given Motion Alone, We Cannot Uniquely Recover the Drift-Input Decomposition.}
-\label{fig:forward_inverse_ambiguity}
-\end{figure}
+\caption{Collinear Opposing Contact Loads in the Grasp-Map Null Space. These Additions Preserve Rigid Club Motion but Can Change Hand and Tissue Loads.}
+\label{fig:distributed_forces}\end{figure}
 
-\subsection{Why a Model Is Necessary}
+For the two-point force-only model, the grasp map generically has rank five: the moment component parallel to the line between contacts is constrained by the resultant. Adding contact couples changes the model and its rank. Statements that there are always six freely assignable resultant components, or that every closed chain necessarily has the same indeterminacy, are too broad.
 
-To separate drift from input, we need an \emph{explicit model} of the system. Specifically:
+The closed loop is completed through the two arms and torso as well as the club. Constraint geometry and redundant actuation are related, but neither the word ``affine'' nor loop closure alone proves that any arbitrary input history can generate the same trajectory. Full measured motion can identify a unique net generalized input in a fully actuated, otherwise known model. What remains nonunique may be its decomposition into contacts, actuators or muscles.
 
-\begin{enumerate}
-    \item \textbf{Kinematic model:} How the system's generalized coordinates relate to physical positions and orientations
-    
-    \item \textbf{Dynamic model:} The equations of motion including:
-    \begin{itemize}
-        \item Mass and inertia properties
-        \item Gravitational effects
-        \item Constraint forces (for closed chains)
-        \item Velocity-dependent terms (centrifugal, Coriolis)
-    \end{itemize}
-    
-    \item \textbf{Control model:} Which degrees of freedom are directly actuated and which forces are controllable
-\end{enumerate}
+\subsection{Preserving the Original Contact-Position Experiment}
+The handwritten example also asks a different, valid question: what changes if the same force magnitudes move on the grip? At a fixed midpoint $P$, let $x$ point toward the head, $y$ upward and positive $z$ out of the page. Apply $F_{L,y}=-10$ lbf and $F_{R,y}=15$ lbf. In Case 1 their signed positions are $x_L=-2$ inches and $x_R=+1$ inch; in Case 2 they are $-1$ and $+2$ inches. Both have a $+5$ lbf resultant, but
+\begin{align}
+M_{P,z}^{(1)}&=(-2)(-10)+(1)(15)=35\text{ lbf in},\\
+M_{P,z}^{(2)}&=(-1)(-10)+(2)(15)=40\text{ lbf in}.
+\end{align}
+These are approximately $3.9545$ and $4.5194$ N m, a $14.3\%$ increase relative to Case 1. The original sheet reports negative values because it uses clockwise-positive moments. Its approximate fifteen-percent comparison is a chosen example, not a measured population effect.
 
-With such a model, we can:
-\begin{enumerate}
-    \item Calculate $\bvec{\tau}_{\text{drift}}$ from the observed state $(\bvec{q}, \dot{\bvec{q}})$ using the drift dynamics
-    \item Obtain $\bvec{\tau}_{\text{input}}$ by subtraction: $\bvec{\tau}_{\text{input}} = \bvec{\tau}_{\text{total}} - \bvec{\tau}_{\text{drift}}$
-\end{enumerate}
+Here the forces physically move while the reporting point stays fixed, so the two club wrenches differ. This is not the same experiment as transporting one unchanged wrench to a new reporting point. Nor does it demonstrate two different allocations with identical inverse-dynamics output; that requires preserving both resultant force and moment, as in the collinear null-space example. Keeping these three experiments distinct preserves what the original question is trying to investigate.
 
-\begin{keypoint}
-The necessity of a model for interpreting inverse dynamics is often underappreciated. Without a model specifying how passive and active forces contribute to motion, we cannot determine ``what the golfer is doing'' from motion data alone—we only know ``what is happening to the club.''
-\end{keypoint}
+\subsection{What Extra Measurements Add}
+An instrumented grip can constrain hand resultants, and distributed pressure/shear measurements can constrain contact tractions. The sensor's calibration, bandwidth and perturbation of the grip matter. Ground-force measurements constrain the whole-body external wrench, but do not by themselves identify every hand force or muscle force. Full-body motion, segment inertias and additional contact information can reduce the family of admissible loads.
 
-\subsection{Relevance to Golf Biomechanics}
+Electromyography is evidence about electrical activity, not a direct conversion to muscle force or conscious intent. Muscle geometry, activation dynamics, force--length/velocity behavior, tendon compliance and co-contraction need their own model and validation. A model that fits the club motion can still predict implausible or unmeasured tissue loads. That mismatch is a reason to revise the model, not to rename its residual ``effort.''
 
-In the golf swing, significant forces arise from passive dynamics:
-
-\begin{itemize}
-    \item \textbf{Gravitational forces:} The club weighs approximately 0.5-1 lb, creating torques about pivot points
-    
-    \item \textbf{Centrifugal forces:} The rotating club creates substantial outward forces that the golfer must counteract or utilize
-    
-    \item \textbf{Coriolis forces:} Changes in angular velocity create velocity-dependent forces
-    
-    \item \textbf{Kinematic constraint forces:} In a double-pendulum model (common for golf swing analysis), constraint forces arise from the requirement that body segments remain connected
-\end{itemize}
-
-When inverse dynamics reports, for example, a radial force at the grip, we cannot determine without a model how much of that force is:
-\begin{itemize}
-    \item The golfer actively pulling inward (input)
-    \item Centrifugal force from the club's rotation that the golfer is passively resisting (drift)
-    \item Some combination of both
-\end{itemize}
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[>=Stealth,scale=1.3]
-    % Simplified golf swing model
-    \coordinate (O) at (0,0);
-    \coordinate (A) at (2,2);
-    \coordinate (B) at (3.5,0.5);
-    \coordinate (C) at (5.5,-0.5);
-    
-    % Draw golfer body and arms
-    \fill[gray!30] (O) circle (3pt);
-    \node[above left=4mm,font=\small] at (O) {Golfer};
-    \node[below left=2mm,font=\small] at (O) {pivot};
-    \draw[very thick] (O) -- (A);
-    \draw[very thick] (A) -- (B);
-    \fill[gray!30] (A) circle (3pt);
-    
-    % Draw club
-    \draw[line width=2.5pt,blue] (B) -- (C);
-    \fill[blue] (B) circle (3pt);
-    \node[above=4mm,font=\small] at (B) {Grip};
-    \fill[blue] (C) circle (4pt);
-    \node[below right=3mm,font=\small] at (C) {Clubhead};
-    
-    % Angular velocity - positioned clearly
-    \draw[->,red,thick] (1.3,0.4) arc (15:70:1.4);
-    \node[red,font=\small] at (0.5,1.6) {$\omega$};
-    
-    % Force at grip - drawn as arrow from grip point
-    \draw[->,green!50!black,very thick] (B) -- ++(1.4,0.4);
-    \node[green!50!black,right=2mm,font=\small] at ($(B)+(1.4,0.4)$) {$F_{\text{total}}$};
-    
-    % Decomposition annotation box
-    \node[draw,thick,fill=white,align=left,text width=5.5cm,font=\small] at (8.2,1.0) {
-        \textbf{Force decomposition:}\\[2mm]
-        $\bvec{F}_{\text{total}} = \bvec{F}_{\text{drift}} + \bvec{F}_{\text{input}}$ \\[3mm]
-        $\bvec{F}_{\text{drift}}$ includes:\\
-        \quad • Centrifugal force\\
-        \quad • Gravity\\
-        \quad • Coriolis effects\\[2mm]
-        $\bvec{F}_{\text{input}}$ is:\\
-        \quad • Golfer's active force
-    };
-    
-    % Question
-    \node[violet,font=\Large] at (8.2,-0.7) {Which is which?};
-    \draw[->,violet,thick] (7.5,-1.0) -- (5.2,-0.2);
-\end{tikzpicture}
-\caption{In a Rotating Golf Club System, Inverse Dynamics Measures Total Force at the Grip. Without a Model, We Cannot Separate Passive Forces (Centrifugal, Gravitational) From Active Control Inputs Applied by the Golfer.}
-\label{fig:golf_drift_input}
-\end{figure}
-
-\section{Limitation 3: The Air Resistance Problem}
-
-\subsection{The Neglected External Force}
-
-A factor that is often overlooked in golf swing inverse dynamics is air resistance. While air resistance cannot be significantly manipulated by the golfer, ignoring it can substantially influence our interpretation of the data. Unlike gravity, which is always included in inverse dynamics calculations, air resistance is typically neglected under the assumption that it is small. However, at the high speeds encountered in the golf swing, this assumption may not be justified.
-
-\subsection{Magnitude of Air Resistance}
-
-Research on driver aerodynamics provides insight into the magnitude of air drag forces. Henrikson and Wood measured drag forces on drivers at 100 mph ranging from 6.5 to 9 N (approximately 1.5 to 2 lbs) depending on clubhead design and orientation. A 7 iron at 95 mph likely experiences similar drag forces, as the iron's less aerodynamic profile may offset the slightly lower speed.
-
-For typical impact conditions:
-\begin{itemize}
-    \item Clubhead speed: $\approx$ 95 mph (7 iron)
-    \item Estimated drag force: $\approx$ 2 lbs
-    \item Drag acts approximately 1 inch from the end of the club (near the aerodynamic center of the clubhead)
-\end{itemize}
-
-While 2 lbs may seem small compared to the total forces on the club (which can exceed 100 lbs), the key issue is \emph{where} this force acts and how it affects the moment balance.
-
-\subsection{Effect on Force and Couple Calculations}
-
-When air resistance is neglected, inverse dynamics attributes all the force required to produce the observed acceleration to the golfer's hands. Let's examine what happens when we account for air drag using data from Sasho MacKenzie's user reference frame video.
-
-Consider impact conditions for a 7 iron:
-\begin{itemize}
-    \item Club length: 37 inches
-    \item Grip midpoint location: 3.5 inches from end of grip
-    \item COM location: 10 inches from end of club
-    \item Reported force at midpoint (no drag): $F_\alpha = 7.5$ lbs
-    \item Reported couple at midpoint (no drag): $C_\alpha = -18.4$ Nm
-\end{itemize}
-
-\textbf{Step 1: Calculate Moment of Force Without Drag}
-
-Distance from midpoint to COM: $d_m = 23.5$ inches = 0.597 m
-
-Moment of force about midpoint:
+\section{Control-Affine Dynamics Without Double Counting}
+\subsection{One Mechanical Balance, Two Useful Arrangements}
+In independent generalized coordinates, write
 \begin{equation}
-M_{mh} = F_\alpha \cdot d_m = 33.4 \text{ N} \times 0.597 \text{ m} = 19.9 \text{ Nm}
+M(q)\ddot q+h(q,\dot q)=B(q)u+Q_{\rm ext}.
+\label{eq:lagrange}
 \end{equation}
+The bias $h$ contains the terms placed on the left, such as velocity coupling, gravity and declared constitutive loads; $Q_{\rm ext}$ contains known external generalized loads not already included there. With positive-definite $M$, define
+\begin{align}
+a_d&=M^{-1}(Q_{\rm ext}-h),\\
+\tau_{\rm ID}&=M\ddot q+h-Q_{\rm ext}=Bu.\label{eq:inverse_dynamics}
+\end{align}
+Therefore $\tau_{\rm ID}=M(\ddot q-a_d)$. Standard inverse dynamics already accounts for the declared drift terms. Subtracting another ``drift torque'' from this output would double-count them.
 
-\textbf{Step 2: Account for Air Drag}
-
-Drag force: $F_{\text{drag}} = 2$ lbs = 8.9 N acting 1 inch from club end (9 inches = 0.229 m from COM)
-
-Moment contribution from drag (negative because it opposes rotation):
+For $x=(q,\dot q)$, the same system is
 \begin{equation}
-M_{\text{drag}} = -8.9 \text{ N} \times 0.229 \text{ m} = -2.0 \text{ Nm}
+\dot x=\underbrace{\begin{bmatrix}\dot q\\a_d\end{bmatrix}}_{f(x)}+
+\underbrace{\begin{bmatrix}0\\M^{-1}B\end{bmatrix}}_{G(x)}u.
+\label{eq:control_affine}
 \end{equation}
+Known time-dependent loads may make this $f(x,t),G(x,t)$. The first-order left side is $\dot x$, not $\ddot x$. Control-affine means linear in the selected instantaneous input at a fixed state; it does not mean linear state dynamics or superposable swing trajectories.
 
-\textbf{Step 3: Calculate Revised Force at Hands}
-
-If drag provides 2.0 Nm of negative moment, the remaining force at the hands must provide:
+One can instead partition the acceleration resultant:
 \begin{equation}
-M_{\text{hands}} = 19.9 - (-2.0) = 21.9 \text{ Nm}
+M\ddot q=\underbrace{(Q_{\rm ext}-h)}_{\tau_{\rm drift}}
++\underbrace{Bu}_{\tau_{\rm input}}.
 \end{equation}
+This equation is consistent if its left side is called the resultant. It becomes inconsistent if that left side is simultaneously called the inverse-dynamics applied torque $M\ddot q+h-Q_{\rm ext}$. Generalized loads are conjugate to their coordinates: not every component has units of torque.
 
-But wait—this is incorrect. The total moment must remain constant (it's determined by the observed motion). Instead:
-
-Net force at hands after accounting for drag:
+\subsection{A Pendulum Check}
+For a point mass $m$ at length $L$, measure angle $q$ from downward vertical. A pivot torque $u$ gives
 \begin{equation}
-F_{\text{hands}} = 7.5 - 2 = 5.5 \text{ lbs} = 24.5 \text{ N}
+mL^2\ddot q+mgL\sin q=u.
 \end{equation}
+Choose $m=1$ kg, $L=1$ m, $g=9.81$ m/s$^2$ and $q=30^\circ$. With $u=0$, acceleration is $-4.905$ rad/s$^2$; inverse dynamics returns
+$-4.905+4.905=0$ N m. Holding the same configuration stationary requires $u=4.905$ N m. Moving under gravity and holding against gravity are different motions, but the same inverse equation handles both correctly.
 
-Moment from hands force:
-\begin{equation}
-M_{\text{hands}} = 24.5 \text{ N} \times 0.597 \text{ m} = 14.6 \text{ Nm}
-\end{equation}
-
-Total moment (hands + drag):
-\begin{equation}
-M_{\text{total}} = 14.6 + (-2.0) = 12.6 \text{ Nm}
-\end{equation}
-
-This is 7.3 Nm less than the no-drag case! The sum of moments must equal what inverse dynamics calculated, so:
-\begin{equation}
-C_{\alpha,\text{drag}} = M_{\text{total}} - M_{mh} = 12.6 - 19.9 = -7.3 \text{ Nm}
-\end{equation}
-
-\textbf{Comparison:}
-\begin{itemize}
-    \item Without drag consideration: $C_\alpha = -18.4$ Nm
-    \item With drag consideration: $C_\alpha = -11.1$ Nm
-\end{itemize}
-
-This represents a \textbf{40\% reduction in the magnitude of the negative alpha couple}. For the sum of forces and moments to remain consistent across equivalent representations, the effect of neglecting drag would scale similarly across different reference points.
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=1.1]
-    % Club shaft
-    \draw[line width=2.5pt,gray!30] (0,0) -- (8,0);
-    \draw[line width=2pt] (0.5,0) -- (7.5,0);
-    
-    % Key points
-    \fill (1,0) circle (2.5pt);
-    \node[below=4mm,font=\small] at (1,0) {End of grip};
-    
-    \fill (2.5,0) circle (2.5pt);
-    \node[below=4mm,font=\small] at (2.5,0) {Midpoint};
-    
-    \fill (5.5,0) circle (3.5pt);
-    \node[below=4mm,font=\small,red] at (5.5,0) {COM};
-    
-    \fill (7,0) circle (2.5pt);
-    \node[below=4mm,font=\small] at (7,0) {Clubhead};
-    
-    % Forces without drag
-    \node[above=8mm,font=\small\bfseries,blue] at (2.5,0) {Without Drag};
-    \draw[->,very thick,blue] (2.5,0.3) -- (2.5,1.5);
-    \node[blue,right=2mm,font=\small] at (2.5,1.5) {$F = 7.5$ lbs};
-    
-    % Forces with drag
-    \node[above=20mm,font=\small\bfseries,green!50!black] at (2.5,0) {With Drag};
-    \draw[->,very thick,green!50!black] (2.5,2.8) -- (2.5,4.0);
-    \node[green!50!black,right=2mm,font=\small] at (2.5,4.0) {$F = 5.5$ lbs};
-    
-    \draw[->,very thick,orange] (6.8,2.8) -- (6.8,4.0);
-    \node[orange,right=2mm,font=\small] at (6.8,4.0) {$F_{\text{drag}} = 2$ lbs};
-    
-    % Annotation
-    \node[align=center,font=\small,text width=4cm] at (10.5,2) {
-        Couple changes from\\
-        $-18.4$ to $-11.1$ Nm\\
-        (40\% reduction)
-    };
-    
-    \draw[->,thick] (9,2) -- (4,3.5);
-\end{tikzpicture}
-\caption{Effect of Accounting for Air Resistance on Force and Couple Calculations. When Drag Is Neglected, Inverse Dynamics Attributes All Forces to the Golfer's Hands, Leading to Substantially Different Couple Values.}
-\label{fig:drag_effect}
-\end{figure}
-
-\subsection{Broader Implications}
-
-The air resistance effect demonstrates a third source of ambiguity in inverse dynamics interpretation:
-
-\begin{limitation}[title=Air Resistance Ambiguity]
-Neglecting air resistance leads to systematic errors in calculated forces and couples. Because drag acts far from the grip, its moment contribution is substantial despite its relatively modest magnitude. The resulting errors are:
-\begin{itemize}
-    \item Non-uniform across the swing (speed-dependent)
-    \item Most significant near impact (highest speeds)
-    \item Spatially biased (affects couples more than net forces)
-\end{itemize}
-\end{limitation}
-
-This has particular relevance for the alpha torque debate. If one researcher includes drag in their model while another neglects it, they will calculate systematically different couple values from identical motion data. The 40\% difference shown in the example could easily lead to contradictory conclusions about whether golfers apply torques ``with'' or ``against'' rotation.
-
-\subsection{Why Air Resistance Matters for Interpretation}
-
-Unlike the spatial ambiguity (which requires knowing force distribution) or the drift-input ambiguity (which requires a full dynamic model), the air resistance problem is:
-
-\begin{itemize}
-    \item \textbf{Systematic:} It always acts in a known direction (opposing motion)
-    \item \textbf{Estimable:} Magnitude can be approximated from aerodynamic studies
-    \item \textbf{Correctable:} Can be included in inverse dynamics with reasonable assumptions
-    \item \textbf{Significant:} 40\% errors are large enough to change qualitative interpretations
-\end{itemize}
-
-\begin{keypoint}
-Air resistance should not be neglected in high-speed golf swing analysis, particularly when interpreting couples/torques. Including drag in the inverse dynamics calculation provides more accurate estimates of the forces actually applied by the golfer.
-\end{keypoint}
-
-\section{The Path From Inverse Dynamics to Golfer Effort}
-
-\subsection{The Triple Indeterminacy}
-
-We have now identified three independent sources of ambiguity in inverse dynamics results:
-
-\begin{enumerate}
-    \item \textbf{Spatial ambiguity (Section 2):} Where are forces applied along the grip?
-    \item \textbf{Drift-input ambiguity (Section 3):} What portion of measured forces is passive vs. active?
-    \item \textbf{External force ambiguity (Section 4):} How much do neglected external forces (especially air resistance) affect the results?
-\end{enumerate}
-
-These ambiguities compound each other. Even perfect knowledge of one aspect leaves the others unresolved.
-
-\subsection{Required Tools and Information}
-
-To successfully interpret inverse dynamics, we need:
-
-\begin{table}[H]
-\centering
-\caption{Required Tools to Bridge From Inverse Dynamics to Golfer Effort}
-\begin{tabular}{@{}lll@{}}
-\toprule
-\textbf{Challenge} & \textbf{Required Information} & \textbf{Enables} \\ \midrule
-Spatial & Grip pressure distribution & Actual force sites \\
-Ambiguity & Finger/palm force directions & True vs. apparent couples \\
- & Contact point kinematics & Moment arms \\ \midrule
-Drift-Input & System mass/inertia & Passive dynamics \\
-Separation & Kinematic constraints & Constraint forces \\
- & Joint actuation model & Controllable DOFs \\ \midrule
-External & Aerodynamic coefficients & Drag force magnitude \\
-Forces & Wind conditions & Direction/location of drag \\
- & Speed measurements & Velocity-dependent forces \\ \bottomrule
+\begin{table}[htbp]\centering
+\begin{tabular}{lrrr}\toprule
+Scenario & $\ddot q$ (rad/s$^2$) & $M\ddot q$ (N m) & $u_{\rm ID}$ (N m)\\\midrule
+Zero Pivot Torque & $-4.905$ & $-4.905$ & $0$\\
+Stationary Hold & $0$ & $0$ & $4.905$\\\bottomrule
 \end{tabular}
-\label{tab:model_requirements}
+\caption{Resultant and Applied Torque Differ Even in a One-Link Model.}
 \end{table}
 
-\section{Quantitative Examples}
-
-\subsection{Example 1: Impact Zone Force Interpretation}
-
-Consider a typical scenario approaching impact. Motion capture yields the club's acceleration, and inverse dynamics calculates:
-\begin{itemize}
-    \item Net force at grip midpoint: $F_m = 60$ lbs = 267 N (toward target)
-    \item Couple at grip midpoint: $C_m = -4.5$ Nm (negative = counter-rotation)
-\end{itemize}
-
-Assume grip parameters:
-\begin{itemize}
-    \item Distance from midpoint to COM: $d_m = 30$ in = 0.762 m
-    \item Left hand predominantly at $d_L = 32$ in = 0.813 m from COM
-    \item Right hand predominantly at $d_R = 28$ in = 0.711 m from COM
-\end{itemize}
-
-\textbf{Spatial ambiguity analysis:}
-
-Equivalent couple at left hand:
+\subsection{Constraints Do Not Make Reactions Input-Independent}
+With redundant coordinates and ideal bilateral constraints, write
 \begin{align}
-C_L &= M_m \left(1 - \frac{d_L}{d_m}\right) + C_m \\
-&= (267 \times 0.762) \left(1 - \frac{0.813}{0.762}\right) + (-4.5) \\
-&= 203 \times (-0.067) - 4.5 \\
-&= -13.6 - 4.5 = -18.1 \text{ Nm}
+M\ddot q+h&=Bu+Q_{\rm ext}+A^T\lambda_c,\\
+A\ddot q+\dot A\dot q&=0.
 \end{align}
-
-Equivalent couple at right hand:
-\begin{align}
-C_R &= M_m \left(1 - \frac{d_R}{d_m}\right) + C_m \\
-&= 203 \times (0.067) - 4.5 \\
-&= 13.6 - 4.5 = 9.1 \text{ Nm}
-\end{align}
-
-\begin{keypoint}
-The equivalent couple \textbf{changes sign} depending on reference point! At the midpoint, inverse dynamics shows negative couple (counter-rotation). But if force is primarily applied at the right hand, the equivalent couple at that location is positive (pro-rotation).
-\end{keypoint}
-
-\subsection{Example 2: Drift vs. Input Decomposition}
-
-Consider mid-downswing with the club rotating at $\omega = 30$ rad/s. Inverse dynamics measures radial force at grip: $F_{\text{radial}} = 100$ lbs (inward).
-
-\textbf{Without a model:} We know the club experiences 100 lbs total radial force.
-
-\textbf{With a model:} Suppose the club has:
-\begin{itemize}
-    \item Mass: $m_c = 0.5$ lbs
-    \item Effective radius from pivot: $r = 3$ ft
-\end{itemize}
-
-Centrifugal force (drift component):
+When $A$ has independent rows,
 \begin{equation}
-F_{\text{centrifugal}} = \frac{m_c}{g} \omega^2 r = \frac{0.5}{32.2} \times (30)^2 \times 3 \approx 42 \text{ lbs}
+\lambda_c=-(AM^{-1}A^T)^{-1}
+\left[AM^{-1}(Bu+Q_{\rm ext}-h)+\dot A\dot q\right].
 \end{equation}
+The reaction generally depends on $u$. Eliminating it modifies both the drift and the input gain. A nonzero reaction can coexist with zero actuator torque; that does not make every reaction an input-independent passive term. Ideal workless constraints are a modeling assumption, while friction, compliant contacts and anatomical tissues can carry power or store energy.
 
-This is drift—it exists whether or not the golfer pulls. The active input component is:
+A wrist universal-joint approximation restricts rotations relative to a chosen anatomical model. Its reaction moments do not demonstrate that the golfer relaxed, and cannot be inferred merely from a diagram of two joint axes. The permitted degrees of freedom, compliances, other joints and contact conditions must be declared.
+
+\subsection{Actuator Allocation and Model Error}
+Return to the independent-coordinate balance in Equation~\ref{eq:lagrange}. If $B$ has full column rank and $\tau_{\rm ID}$ lies in its image, $u=B^+\tau_{\rm ID}$ is unique. Otherwise, redundant solutions may differ by $\ker B$, or no exact solution may exist. After eliminating constraints, apply this rank test to the reduced input map; full rank of the original redundant-coordinate $B$ alone does not resolve unknown constraint loads. Check the residual $\tau_{\rm ID}-BB^+\tau_{\rm ID}$ before interpreting an allocation. Muscle nonnegativity and other physiological restrictions can remove algebraic solutions or show that the model is infeasible.
+
+A model that omits passive tissues estimates a net joint load containing their contribution. A model that subtracts a calibrated passive constitutive load estimates a different residual. Neither convention automatically measures voluntary motor command. An impedance estimate obtained during active contraction need not represent relaxed passive tissue.
+
+If the actual and assumed models differ, their inverse outputs can differ too. With the same measured $q,\dot q,\ddot q$,
 \begin{equation}
-F_{\text{input}} = F_{\text{total}} - F_{\text{drift}} = 100 - 42 = 58 \text{ lbs}
+\widehat\tau_{\rm ID}-\tau_{\rm ID}
+=(\widehat M-M)\ddot q+(\widehat h-h)
+-(\widehat Q_{\rm ext}-Q_{\rm ext}).
 \end{equation}
+This is a model-error identity, not a proof that inverse dynamics assumes all motion is active. It shows which assumptions need sensitivity analysis.
 
-So the golfer actively pulls inward with 58 lbs (what they \emph{feel}), while 42 lbs of the measured force is passive resistance to centrifugal effects.
+\subsection{A Zero-Input Branch Is a Defined Intervention}
+A zero-torque counterfactual starts from a specified state and sets selected inputs to zero under a specified model. For actual and zero-input states $x,x_0$ in a common local chart,
+\begin{equation}
+\frac{d}{dt}(x-x_0)=f(x)-f(x_0)+G(x)u.
+\end{equation}
+Only at a common state does the drift difference vanish. Later differences include changed geometry, velocity, shaft deformation and events. Specify the horizon, output and comparison event; do not call the difference between two trajectories an instantaneous muscle force.
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    width=12.5cm,
-    height=7.5cm,
-    xlabel={Angular velocity (rad/s)},
-    ylabel={Radial force (lbs)},
-    title={Decomposition of radial force into drift and input components},
-    grid=major,
-    legend pos=north west,
-    legend style={font=\footnotesize,fill=white,fill opacity=0.9},
-    xmin=0, xmax=40,
-    ymin=0, ymax=150,
-]
+Setting a modeled net torque to zero, freezing an identified impedance, removing muscle activation and asking a person to relax are different interventions. A relaxed golfer may change grip contact, posture and feedback. An ideal model can illuminate a mechanism without establishing what that experiment would feel like.
 
-% Drift component (quadratic with omega)
-\addplot[red,very thick,domain=0:40,samples=100] {(0.5/32.2)*x^2*3};
-\addlegendentry{Drift (centrifugal)}
+\section{Mechanical Power and Radial Loading}
+\subsection{Power Survives a Consistent Reference Change}
+For material points $P,Q$ of one rigid body,
+$\vect v_Q=\vect v_P+\vect\omega\times(\vect r_Q-\vect r_P)$.
+Together with Equation~\ref{eq:couple_transform}, this gives
+\begin{equation}
+\mathcal P_h=\vect F_h\cdot\vect v_P+\vect M_{h,P}\cdot\vect\omega
+=\vect F_h\cdot\vect v_Q+\vect M_{h,Q}\cdot\vect\omega.
+\label{eq:power}
+\end{equation}
+The two transport terms cancel by the scalar triple-product identity. Force power and moment power can change separately; their sum is invariant. Thus ``force-driven'' versus ``couple-driven'' energy fractions require a reporting point and are not intrinsic physiological categories.
 
-% Assume constant active input
-\addplot[blue,very thick,domain=0:40,samples=100] {58};
-\addlegendentry{Input (active pull)}
+For the $4$ N offset-force example, choose $\vect v_P=0$ and $\vect\omega=(0,0,2)$ rad/s. Then $\vect v_A=(0,1,0)$ m/s. At $A$, force power is $4$ W and moment power is zero. At $P$, force power is zero and moment power is $2\times2=4$ W. The actual energy transfer is identical.
 
-% Total
-\addplot[green!50!black,very thick,domain=0:40,samples=100] {(0.5/32.2)*x^2*3 + 58};
-\addlegendentry{Total (measured by ID)}
+For flexible interfaces, sum force and couple powers at their actual ports and include deformation power. A rigid reference transform does not reproduce bending work at different moving cross-sections. Even in a rigid model, total mechanical hand power does not equal muscle metabolic power or perceived effort; co-contraction and isometric force can require physiological effort while contributing little net external work.
 
-% Mark example point
-\addplot[only marks,mark=*,mark size=4pt,black] coordinates {(30,100)};
-\node[above right=3mm,font=\footnotesize] at (axis cs:30,100) {Example: $\omega = 30$ rad/s};
+\subsection{Centripetal Demand Is Not an Extra Force to Subtract}
+For an ideal point mass on a massless rod with a fixed pivot, take $\vect e_r$ outward and $T>0$ as inward tension. The radial balance is
+\begin{equation}
+-T+m\vect g\cdot\vect e_r=-mL\omega^2,
+\qquad T=mL\omega^2+m\vect g\cdot\vect e_r.
+\end{equation}
+At the bottom of a vertical circle, $T=mL\omega^2+mg$. These are actual rod/contact loads. An outward centrifugal term can be introduced in a rotating-frame balance, but it is not an additional physical interaction to subtract from measured tension in an inertial balance.
 
-\end{axis}
+Choose $m=0.25$ kg, $L=1$ m and $\omega=30$ rad/s at the bottom. The required inward resultant is $225$ N, and tension is $227.4525$ N. Subtracting $225$ N and calling the remaining $2.4525$ N ``what the golfer feels'' is unjustified. The contact still transmits the full tension. The choice $m=0.25$ kg is an illustrative point-mass parameter, not a measured complete-club model.
+
+\begin{figure}[htbp]\centering
+\begin{tikzpicture}[>=Stealth]
+\fill (0,3) circle(3pt);\draw[thick] (0,3)--(0,0);
+\fill[blue] (0,0) circle(6pt);
+\draw[->,very thick,blue] (.35,0)--(.35,1.9) node[right]{$T$};
+\draw[->,very thick,red] (-.35,0)--(-.35,-.9) node[left]{$mg$};
+\draw[->,thick] (0,0)--(1.8,0) node[right]{$\vect v$};
+\node[right,align=left] at(2,2){At the Bottom:\\$T-mg=mL\omega^2$\\No Additional Physical Centrifugal Force};
 \end{tikzpicture}
-\caption{Decomposition of Measured Radial Force Into Drift (Passive Centrifugal) and Input (Active) Components. The Drift Component Grows Quadratically With Angular Velocity. The Input Component Represents What the Golfer Actively Controls and Feels.}
-\label{fig:drift_input_decomposition}
+\caption{Actual Loads and Radial Acceleration in a Fixed-Pivot Point-Mass Example.}
 \end{figure}
 
-\section{Implications and Best Practices}
+The tension is perpendicular to instantaneous velocity in this example and does zero force power on the mass. Large load and zero instantaneous power can coexist. For a club with moving hands, neither the fixed-pivot radial formula nor zero grip-force power generally applies. Earlier muscle work also establishes the current speed: present redirection cannot be separated causally from the state created earlier in the swing.
 
-\subsection{For Golf Instruction}
+\section{Aerodynamics as a Precisely Defined Omitted Wrench}
+\subsection{What the Driver Study Supports}
+Henrikson, Wood and Hart \cite{henrikson} tested two matched driver heads, one with crown features, in a wind tunnel and with forty players. Their near-impact tunnel condition was $96$ mph with the head at $90^\circ$ to the defined orientation scale; the plotted drag is about $9$ N versus $6.6$ N, with a reported $2.3$ N difference. Lift also changed, including its sign near that orientation. The player comparison reported about a $1$ mph mean club-speed increase; the approximately four-yard carry gain was modeled. These are driver/configuration results, not an iron-drag calibration or a universal aerodynamic center.
 
-When using inverse dynamics data for instruction:
-\begin{itemize}
-    \item A reported couple may not correspond to twisting sensations the golfer feels
-    \item Forces golfers ``feel'' correspond more closely to input (active control) than to total forces
-    \item Passive dynamics (drift) are often substantial but may not be consciously perceived
-    \item External forces like air resistance can significantly affect calculated values
-    \item Different golfers may achieve similar inverse dynamics outcomes through different strategies
-\end{itemize}
+A seven-iron's area, geometry, orientation history and relative airflow differ. Calling it less aerodynamic does not establish its force at another speed. A quadratic drag approximation,
+\begin{equation}
+\vect F_D=-\tfrac12\rho C_D A\|\vect v_{\rm rel}\|\vect v_{\rm rel},
+\end{equation}
+requires declared density, coefficient, reference area and relative velocity. In a rotating club, distributed local airflow can matter. Lift and aerodynamic couples require additional components. Equipment geometry and orientation can change aerodynamic loading; it is not an immutable force beyond all influence.
 
-\subsection{For Biomechanics Research}
+\subsection{The Error Is the Omitted Wrench at the Same Point}
+Hold the measured motion fixed. Let a superscript $0$ denote inference omitting aerodynamic loads, and let the corrected inference include them. Equations~\ref{eq:handforce}--\ref{eq:transport} give
+\begin{align}
+\vect F_h^0-\vect F_h&=\vect F_a,\\
+\vect M_{h,P}^0-\vect M_{h,P}&=\vect M_{a,C}
+ +(\vect r_C-\vect r_P)\times\vect F_a
+ =\vect M_{a,P}.\label{eq:aerobias}
+\end{align}
+If a force acts at $D$ with intrinsic aerodynamic couple $\vect C_a$,
+$\vect M_{a,P}=(\vect r_D-\vect r_P)\times\vect F_a+\vect C_a$.
+Do not add the center-of-mass lever-arm correction again after the aerodynamic moment has already been expressed about $P$.
 
-\textbf{Methodological recommendations:}
+The force bias has units N and the moment bias N m, so saying one is simply ``larger'' needs a scale and an intended observable. A modest aerodynamic force can produce a large \emph{fractional} correction when the original inferred moment is small or close to cancellation. It need not dominate total hand load.
 
+\subsection{Reconstructing the Earlier Forty-Percent Example}
+The earlier draft used a $37$-inch club, a grip point $3.5$ inches from the butt, a center of mass $10$ inches from the head end and a drag application point one inch from that end. Treat those as chosen geometry, not verified measurements from a video. Use a local right-handed frame with $x$ along the shaft toward the head, $y$ transverse to the shaft and $z=x\times y$. Draw $x$ rightward and $y$ upward, so positive $z$ moment is counterclockwise. Choose the original sketch's transverse hand force to point along $-y$, and put $P$ at zero. The distances are
+\begin{equation}
+x_C=23.5\text{ in}=0.5969\text{ m},\qquad
+x_D=32.5\text{ in}=0.8255\text{ m}.
+\end{equation}
+The force-to-COM separation is $9$ inches. Use $1$ lbf $=4.4482216152605$ N; pounds-force must not be inserted as a mass.
+
+Assume the no-aerodynamics inference at $P$ is
+$F_{h,y}^0=-7.5$ lbf $=-33.3616621$ N and $M_{h,P,z}^0=-18.4$ N m.
+Assume zero intrinsic aerodynamic couple. Two possible signed projections of an aerodynamic force of magnitude $2$ lbf give:
+\begin{table}[htbp]\centering
+\begin{tabular}{lrr}\toprule
+Quantity & Case A & Case B\\\midrule
+$F_{a,y}$ (N) & $+8.8964$ & $-8.8964$\\
+$M_{a,P,z}=x_DF_{a,y}$ (N m) & $+7.3440$ & $-7.3440$\\
+$F_{h,y}=F_{h,y}^0-F_{a,y}$ (N) & $-42.2581$ & $-24.4652$\\
+$M_{h,P,z}=M_{h,P,z}^0-M_{a,P,z}$ (N m) & $-25.7440$ & $-11.0560$\\\bottomrule
+\end{tabular}
+\caption{Two Signed Aerodynamic Scenarios for Chosen Geometry and the Same No-Aerodynamics Inference.}
+\label{tab:aerocases}\end{table}
+
+Case B reproduces the original sketch: both the hand-force magnitude in this transverse direction and the negative moment magnitude decrease, to $5.5$ lbf and $11.0560$ N m. The moment reduction is about $39.9\%$. Case A reverses the aerodynamic projection while holding the no-aerodynamics inference fixed; both magnitudes increase. Thus the original reduction is mechanically possible under its stated geometry and force direction. It is not evidence that every omitted aerodynamic load causes that reduction. Calling a force ``drag'' fixes its direction relative to airflow, not its sign in an analysis coordinate.
+
+The retained video stills show a $7.5$ lbf user-frame force component, $-18.4$ N m user-frame alpha torque and $97.0$ mph club speed; the handwritten note says $95$ mph. The stills do not establish the complete basis transformation, iron geometry or aerodynamic load. The numerical scenario above is therefore a transparent reconstruction of the sketch, not a validated reanalysis of that swing. Its $y,z$ labels are defined here and must not be silently equated to the video's beta and alpha axes.
+
+The same calculation can be checked about $C$. First,
+$M_{h,C}^0=M_{h,P}^0-x_CF_{h,y}^0$.
+Then subtract $M_{a,C}=(x_D-x_C)F_{a,y}$ and translate the corrected hand wrench back to $P$. The result is exactly Table~\ref{tab:aerocases}. This is an independent bookkeeping route, not an independent experiment.
+
+\begin{figure}[htbp]\centering
+\begin{tikzpicture}[>=Stealth]
+\draw[line width=2pt] (0,0)--(9,0);
+\fill (1,0) circle(2pt);\fill (6,0) circle(2pt);\fill (8,0) circle(2pt);
+\node[below] at(1,0){$P$};\node[below] at(6,0){$C$};\node[below] at(8,0){$D$};
+\draw[<->] (1,-.7)--(8,-.7) node[midway,below]{$x_D=0.8255$ m};
+\draw[->,thick,blue] (8,.15)--(8,1.6) node[above]{Case A: $F_{a,y}>0$};
+\draw[->,thick,red] (8,-1)--(8,-2) node[below]{Case B: $F_{a,y}<0$};
+\end{tikzpicture}
+\caption{Alternative Aerodynamic Force Projections About a Fixed Grip Point. The Two Arrows Represent Separate Cases.}
+\label{fig:drag_effect}\end{figure}
+
+At a new point $Q$, the bias becomes $\vect M_{a,Q}$, while the no-drag moment also changes. A percentage computed at $P$ does not generally remain the same at $Q$; it can become ill-conditioned if the denominator crosses zero. Report signed absolute corrections and uncertainty before quoting a percentage.
+
+\section{From Mechanical Loads to an Intertwined Swing Argument}
+\subsection{Why the Links Cannot Be Read in Isolation}
+Earlier muscle action changes posture, speed, contact loading and shaft deformation. Those states change the current gravity leverage, velocity coupling and input gain. The grip transmits a wrench to a flexible shaft; the shaft and head state shape the collision; the collision sets the initial ball state. A launch-monitor result constrains the end of this chain but does not uniquely recover its internal load history.
+
+A negative component labelled ``alpha torque'' is meaningful only after defining its origin, basis, axis, action convention and whether it is a wrench projection or generalized torque. An axis tied to a moving frame has its own kinematics; its coordinate rate need not equal an angular-velocity component. A negative moment component does not alone establish negative total power, an intentional braking action, an individual hand's role or an undesirable technique.
+
+A useful mechanism question is whether a hand-path change redistributes energy under matched initial state and work, or instead increases speed by requiring more work. Those possibilities can coexist, but they answer different questions. A large normal force, an angular-speed peak sequence or similarity to a zero-input trajectory does not settle the energy balance. Compute complete power and work, track stored elastic energy and state what intervention is feasible.
+
+\subsection{A Layered Evidence Plan}
 \begin{enumerate}
-    \item \textbf{Specify reference points:} Always state the reference point and acknowledge spatial ambiguity
-    
-    \item \textbf{Report ranges:} Consider reporting equivalent couples at multiple reference points
-    
-    \item \textbf{Include all external forces:} Don't neglect air resistance at high speeds
-    
-    \item \textbf{Use models:} Separate drift from input whenever possible
-    
-    \item \textbf{Seek direct measurements:} Instrumented grips reduce reliance on inverse dynamics alone
-    
-    \item \textbf{Be precise in language:} Distinguish between:
-    \begin{itemize}
-        \item ``What is happening to the club'' (inverse dynamics can tell us)
-        \item ``What the golfer is doing'' (requires additional interpretation)
-    \end{itemize}
+\item Define the outcome: a net hand wrench, an individual contact load, club speed, transferred work, muscle force or perceived effort. Specify the time or event.
+\item Define the system boundary and convention: body segments, flexible coordinates, reporting point, frame, signs, known external loads and passive-force treatment.
+\item Recover motion with an uncertainty model. Report differentiation and filtering, inertial-property uncertainty, sensor bandwidth, clock alignment and event definition.
+\item Verify mechanical consistency: center-of-mass and transported moment balances, forward/inverse round trips, zero-input analytic limits, contact feasibility and power invariance.
+\item Test identification separately from computation. Examine grasp-map and actuator-map ranks, admissible null-space loads and sensitivity to alternative contact or tissue models.
+\item Validate against independent measurements under the intended conditions. Agreement between two rearrangements of one model tests consistency; agreement with a calibrated independent sensor addresses a different evidentiary question.
+\item Test the coaching or physiological claim with the relevant intervention and measurements. Mechanical possibility is a hypothesis; performance, sensation and tissue consequences require their own evidence.
 \end{enumerate}
 
-\subsection{The Alpha Torque Debate Revisited}
+\subsection{Uncertainty and Practical Falsifiers}
+A high sample rate alone does not guarantee an accurate inverse load. Position noise is amplified by differentiation, while smoothing changes peaks and timing. The appropriate bandwidth for a preimpact swing envelope differs from that for ball contact or shaft vibration. Specify the quantity whose error matters and demonstrate sufficient temporal and spatial resolution.
 
-The alpha torque debate involves all three ambiguities:
+For a differentiable estimate $y=\Phi(z)$, a local covariance approximation is
+$\Sigma_y\approx J\Sigma_zJ^T$, with $J=D\Phi$ and all correlated inputs included. A contact-mode change or poorly localized impact event may need explicit scenario propagation rather than that local linearization. Changing a filtering cutoff, point calibration or plausible inertia can reveal whether a claimed torque-sign reversal is robust.
 
-\begin{enumerate}
-    \item \textbf{Reference point dependence:} Sign of couple changes with assumed force location
-    \item \textbf{Drift-input conflation:} Some measured torque arises from passive dynamics
-    \item \textbf{Air resistance:} Neglecting drag can cause 40\% errors in couple magnitude
-\end{enumerate}
+Concrete falsifiers include an inferred wrench outside independent sensor uncertainty, a contact allocation violating friction or compression limits, or an energy balance that fails to close within measurement and model error. A conclusion whose sign reverses under plausible aerodynamic assumptions is not ready to become a universal coaching instruction. Report the unresolved dependence and identify the measurement that would reduce it.
 
-A productive path forward requires instrumented grips, validated models including drag, analysis at multiple reference points, and recognition that different golfers may use genuinely different strategies.
+\section{What a Defensible Conclusion Looks Like}
+Inverse dynamics can estimate net mechanical loads under a declared model. It does not inherently confuse drift with actuation, and a change of reference does not make its result fictional. The interpretive limits arise when a net wrench is treated as a unique contact pattern, a model input as a muscle command, or a mechanical power as a sensation.
 
-\section{Conclusion}
+The constructive route is to retain what each layer identifies and expose what it leaves open. Wrench transformations connect reference conventions; contact maps describe load-sharing ambiguity; constrained dynamics connects those loads to motion; constitutive and physiological models connect motion and load to tissues; independent measurements test the whole argument. Golf and humanoid manipulation both benefit from this separation because it makes their interactions calculable without pretending that one output explains everything.
 
-Inverse dynamics is a valuable tool for analyzing golf swing mechanics. However, interpreting its results requires navigating three fundamental challenges:
-
-\begin{enumerate}
-    \item \textbf{Spatial ambiguity:} Force-couple pairs are reference point dependent
-    \item \textbf{Drift-input separation:} Total forces include both passive and active components
-    \item \textbf{External forces:} Neglecting air resistance introduces systematic errors
-\end{enumerate}
-
-\textbf{These are inherent properties of the inverse problem, not shortcomings of the method.} The path forward requires:
-
-\begin{itemize}
-    \item Building validated biomechanical models
-    \item Including all relevant external forces (especially drag)
-    \item Using instrumented grips for direct measurement
-    \item Specifying reference points clearly
-    \item Recognizing that what golfers ``feel'' is the input component
-\end{itemize}
-
-Understanding these limitations enables more informed use of inverse dynamics in both research and instruction.
-
+\begin{thebibliography}{9}
+\bibitem{lynch} K. M. Lynch and F. C. Park. \emph{Modern Robotics: Mechanics, Planning, and Control}. Cambridge University Press, 2017. Chapters 3, 8 and 12. Wrench video supplement: \url{https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-4-wrenches/}.
+\bibitem{featherstone} R. Featherstone. \emph{Rigid Body Dynamics Algorithms}. Springer, 2008. \url{https://doi.org/10.1007/978-1-4899-7560-7}.
+\bibitem{henrikson} E. Henrikson, P. Wood and J. Hart. ``Experimental Investigation of Golf Driver Club Head Drag Reduction Through the Use of Aerodynamic Features on the Driver Crown.'' \emph{Procedia Engineering} 72 (2014), 726--731. \url{https://doi.org/10.1016/j.proeng.2014.06.123}. The cited public author manuscript was read in full; its draft pagination differs from the published journal record.
+\end{thebibliography}
 \end{document}

@@ -1,5 +1,13 @@
 # Final Fixes Applied - Chart and Figure Corrections
 
+> **Historical Record: Superseded September 8, 2026.** This describes the
+> earlier draft, including claims corrected in issue #4291. Its declarations
+> of perfect figures, publication readiness, drift subtraction and a general
+> 40% aerodynamic correction are not current technical conclusions. Consult
+> [the current reading guide](README.md) and
+> [revised manuscript](inverse_dynamics_final.pdf). The original record is
+> retained below for provenance, not as certification of the current edition.
+
 ## All Fixes Implemented Successfully
 
 ### Figure 3 (Couple Range Plot) - Major Revision

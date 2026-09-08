@@ -1,93 +1,69 @@
-# Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations
+# Interpretation of Inverse Dynamics: Reading and Building the Manuscripts
 
-## Final Publication-Ready Package
+## Current Editions
 
-This package contains the complete, finalized article ready for immediate web publication.
+The September 8, 2026 revision distinguishes recovered net loads, reporting
+conventions, contact allocation and physiological interpretation. The complete
+source is `inverse_dynamics_final.tex`; its compiled companion is
+[inverse_dynamics_final.pdf](inverse_dynamics_final.pdf).
 
-### Contents
+The HTML file [inverse_dynamics_article.html](inverse_dynamics_article.html)
+is a reading guide linking the current PDF and maintained website articles.
+It replaces a broken independent conversion that had stale equations and missing
+figures. The legacy `../Inverse_Dynamics_Claude.pdf` filename carries the same
+current long manuscript; rebuild it from the same source rather than editing
+two independent PDF versions.
 
-1. **inverse_dynamics_final.pdf** (256 KB)
-   - Complete 17-page article
-   - All figures professionally formatted with no overlaps
-   - Consistent SI units (Nm for torque) throughout
-   - Three fundamental limitations fully developed
-   - Ready for immediate publication
+The three shorter TeX editions in the parent directory offer technical, coaching
+and constrained-dynamics treatments. Each now uses the same wrench, applied-load
+and power conventions. Their PDF builds are checked during review; their TeX
+sources remain the maintained companion artifacts.
 
-2. **inverse_dynamics_final.tex** (48 KB)
-   - Complete LaTeX source code
-   - All figures in TikZ/PGFPlots
-   - Fully documented and compilable
-   - Requires standard LaTeX packages (amsmath, tikz, pgfplots, tcolorbox, etc.)
+## Technical Scope
 
-3. **FINAL_SUMMARY.md**
-   - Complete summary of all changes from original request
-   - Details on air resistance section addition
-   - Formatting improvements
-   - Content enhancements
+- Recover the hand-on-club wrench from momentum balances and known external loads.
+- Translate moments consistently and distinguish a pure couple from an offset force.
+- Separate a reporting-point change, a changed physical wrench, and contact loads
+  in a grasp-map null space.
+- Account for gravity and velocity coupling once in standard inverse dynamics;
+  distinguish constraint reactions and actuator allocation from muscle recruitment.
+- Preserve invariant rigid-wrench power and real radial contact loading.
+- Reconstruct the original aerodynamic example with explicit axes and separate
+  hypothetical iron loading from the driver study and saved video displays.
+- State how ground, body, grip, shaft, collision and sensing constrain different
+  parts of a swing or humanoid-manipulation argument.
 
-4. **FIGURE_FIXES.md**
-   - Detailed documentation of all figure corrections
-   - Unit conversion specifications
-   - Solutions to specific visual issues
+The original approximately 40% aerodynamic moment reduction is possible for the
+specified geometry and force direction. It is not a measured seven-iron correction
+or a physiological result. The original approximately 15% hand-position example
+changes the physical wrench; it is not an uncertainty interval for one wrench.
 
-### Article Highlights
+## Rebuilding the PDFs
 
-**Title:** Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations
-
-**Structure:**
-- Section 1: Understanding Inverse Dynamics (with detailed background)
-- Section 2: Limitation 1 - The Equivalent Couple Problem (Spatial Ambiguity)
-- Section 3: Limitation 2 - The Control-Affine Decomposition Problem
-- Section 4: Limitation 3 - The Air Resistance Problem (NEW)
-- Section 5: The Path from Inverse Dynamics to Golfer Effort
-- Section 6: Quantitative Examples
-- Section 7: Implications and Best Practices
-- Section 8: Conclusion
-
-**Key Features:**
-- No abstract, table of contents, or author information (web-optimized)
-- 11 professional figures with perfect layouts
-- 3 fundamental limitations thoroughly analyzed
-- 2 detailed quantitative examples
-- Consistent SI units throughout (Nm for torque)
-- Constructive, positive tone focused on interpretive pathway
-- Emphasizes that inverse dynamics is valuable, not flawed
-
-**Air Resistance Section:**
-- Based on your calculations and Henrikson & Wood research
-- Shows 40% reduction in couple magnitude when drag is included
-- Demonstrates systematic error from neglecting air resistance
-- Fully integrated with other limitations
-
-**All Figures Corrected:**
-- Figure 1: Couple arrows properly aligned and opposed
-- Figure 2: Distance labels properly positioned
-- Figure 3: Chart centered on grip region, lines within bounds
-- Figure 4: Comparison arrow properly sized and centered
-- Figure 5: Force and couple arrows perfectly aligned
-- Figure 7: Complete redesign with clear vector addition
-- Figure 8: New drag effect diagram
-- All others: Professional quality with no overlaps
-
-### Compilation Instructions
-
-If you need to recompile the LaTeX source:
+Use a TeX installation with Latin Modern, AMS packages, TikZ/PGFPlots, microtype,
+hyperref, booktabs, geometry and tcolorbox. From this directory:
 
 ```bash
-pdflatex inverse_dynamics_final.tex
-pdflatex inverse_dynamics_final.tex
-pdflatex inverse_dynamics_final.tex
+pdflatex -interaction=nonstopmode -halt-on-error inverse_dynamics_final.tex
+pdflatex -interaction=nonstopmode -halt-on-error inverse_dynamics_final.tex
+pdflatex -interaction=nonstopmode -halt-on-error inverse_dynamics_final.tex
 ```
 
-(Three passes required for all cross-references)
+Resolve references, inspect the log for overflow or unresolved labels, render
+every PDF page to images and inspect the final layout. Copy the verified output
+to `../Inverse_Dynamics_Claude.pdf` to keep that legacy download consistent.
+Build each shorter `.tex` from the parent directory with the same three-pass
+procedure. A successful compilation alone does not verify mechanics or layout.
 
-### Ready for Publication
+## Review Record and Original Material
 
-This document is immediately ready for:
-- Website publication
-- PDF distribution
-- Educational use
-- Reference material
-- Basis for presentations
+The decision and validation record is
+[the inverse-manuscript review log](../../../../docs/development/technical-review/inverse-manuscript-review.md),
+under issue #4291 and epic #4009. It includes corrected reviewer assumptions,
+source boundaries, independent calculations and artifact checks.
 
-No further modifications needed.
+`FINAL_SUMMARY.md` and `FIGURE_FIXES.md` are historical records of an earlier
+version. Their old page counts and publication-readiness assertions do not
+certify this revision. The two Markdown posts and twelve original JPGs in the
+analysis directory document the originating questions; the revised posts explain
+how to read each group without treating exploratory notes as measurements.

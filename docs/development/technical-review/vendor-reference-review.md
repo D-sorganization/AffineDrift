@@ -293,3 +293,11 @@ hooks pass after the canonical-byte repair;18 focused inventory/evidence tests
 pass in1.03s. The first guessed test filenames did not exist (exit4); the actual
 inventory test module was discovered and used. SPEC is keyed to the actual PR.
 Protected merge and exact publication checks remain pending.
+
+## Protected Publication Verified
+
+PR4292 protected-squash-merged as8a7bee22e63335c305b71cbef4fdf2f82a7c89e1.
+Main CI34275285462, performance34275285451 and deployment34275285576 succeed.
+Downloaded exact-revision live artifact10076513252:239 routes,956/956 checks,
+zero serious/critical axe findings, retries or transient responses. Publication
+is verified. The related technology-launch-monitors article remains unreviewed.

@@ -311,3 +311,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-08 | #4283 | Reconcile paired spine anatomy, coordinate conventions, coupled dynamics, tissue-load inference and golf injury evidence with dimensioned checks. |
 | 2026-09-08 | #4286 | Correct propagated residual bounds, adaptive-control and evidence claims across the advanced article and three companions; add independently checked flow, interval, norm, stability and statistical examples. |
 | 2026-09-08 | #4289 | Reconcile rotation frames, Euler-rate maps, quaternion conversion and interpolation across both textbook editions; add golf-task sensitivity, independent checks and complete exercises. |
+
+| 2026-09-08 | #4291 | Reconcile inverse-dynamics manuscripts, original contact and aerodynamic examples, wrench transport, constrained input allocation, power and effort inference; regenerate PDF companions and replace stale HTML with a reading guide. |

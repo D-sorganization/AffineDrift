@@ -1,161 +1,119 @@
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{hyperref}
-
-\geometry{a4paper, margin=1.5in}
-
-\title{The Illusion of the Couple: Loop Closure, Drift, and the Limitations of Inverse Dynamics in Golf Biomechanics}
-\author{Biomechanical Modeling Blog}
-\date{\today}
-
-\begin{document}
-
-\maketitle
-
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,microtype}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\title{Loop Closure, Drift and the Interpretation of Inverse Dynamics in Golf Biomechanics}
+\author{Dieter Olson}\date{Revised September 8, 2026}
+\begin{document}\maketitle
 \begin{abstract}
-Inverse Dynamics (ID) serves as the foundational tool for analyzing the kinetics of the golf swing, mapping observed kinematics to net forces and torques. However, the standard application of ID relies on simplifying assumptions—specifically regarding the point of force application and the nature of the closed kinematic chain formed by the arms and club. This article critiques the "Equivalent Couple" interpretation of ID data. By exploring the mathematics of closed-loop constraints and control-affine systems, we demonstrate that the "Net Torque" reported by ID is often an aggregate of active control, passive constraint drift, and geometric offsets, rendering it an unreliable guide for specific motor instruction.
+The apparent conflict between an inverse-dynamics torque plot and a golfer's sense of pushing or pulling often combines different questions. A net wrench is not a unique hand-contact distribution; a wrench moment depends on its reporting point; and a modeled input is not automatically a muscle command. None of these facts makes the moment an illusion or means that standard inverse dynamics ignores passive motion. This companion connects the wrench, contact and constrained-dynamics descriptions and identifies what additional evidence is needed for motor interpretation.
 \end{abstract}
 
-\section{Introduction}
-In modern golf biomechanics, the transition from describing \textit{what} happened (kinematics) to explaining \textit{why} it happened (kinetics) relies almost exclusively on Inverse Dynamics. By tracking the motion of the club and the golfer, we calculate the forces required to produce that motion.
+\section{Recover the Mechanical Quantity Before Interpreting It}
+For a rigid club with center of mass $C$, mass $m$ and inertia $I_C$, use one inertial frame and hand-on-club action. After subtracting known non-hand loads,
+\begin{align}
+F_h&=ma_C-mg-F_a,\\
+M_{h,C}&=I_C\alpha+\omega\times(I_C\omega)-M_{a,C}.
+\end{align}
+Here $a$ denotes declared non-gravitational external loading, such as aerodynamics. Uniform gravity has no moment about $C$. Ball and turf loads must be included when present. If they are unknown, the motion cannot by itself separate them from the hand wrench.
 
-The standard output of this process is a set of "Net Forces" and "Net Moments" (or Couples) acting at a specific point of analysis—typically defined as the midpoint of the hands on the grip.
-
-However, a critical limitation exists in this analysis: the results are mathematically equivalent to the motion, but they do not necessarily reflect the \textit{motor intent} or the actual mechanism of force application. The biomechanical system of the golf swing acts as a \textbf{closed kinematic chain}, a configuration that introduces redundancy and indeterminacy. Furthermore, in the context of control theory, the misidentification of passive "drift" dynamics as active control inputs can lead to erroneous conclusions about swing mechanics.
-
-\section{Methodology: The Standard Inverse Dynamics Pipeline}
-
-To understand the limitations, we must first define the standard textbook application of ID. The dynamics of a rigid body system (like the golfer-club system) are governed by the equation of motion:
-
+For a reference point $P$,
 \begin{equation}
-    M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q) = \tau_{net} + J^T(q)F_{ext}
+M_{h,P}=M_{h,C}+(r_C-r_P)\times F_h.
 \end{equation}
+This convention follows the usual sum of moments of forces \cite{lynch}. It does not require forces to act physically at $P$. A midpoint report is a representation of aggregate contact loading, not an assumption that all finger pressures occur at the midpoint.
 
-Where:
-\begin{itemize}
-    \item $q, \dot{q}, \ddot{q}$ are the vectors of joint positions, velocities, and accelerations.
-    \item $M(q)$ is the mass inertia matrix.
-    \item $C(q, \dot{q})$ represents Coriolis and centrifugal forces.
-    \item $G(q)$ represents gravitational forces.
-    \item $\tau_{net}$ is the vector of generalized forces (torques) driving the joints.
-    \item $F_{ext}$ represents external forces (e.g., ground reaction forces).
-\end{itemize}
+The rigid approximation and measured accelerations require validation. A flexible shaft needs a model of its changing momentum and deformation. Filtering, timing, calibration and inertia errors can bias the recovered wrench. Those are scientific limitations of a particular inference; they should not be confused with the exact algebra of a reference change.
 
-In the typical golf analysis, we solve this equation \textbf{algebraically}. We measure motion ($q, \dot{q}, \ddot{q}$) via optical motion capture, estimate body segment parameters ($M, G$), and solve for $\tau_{net}$.
-
-\subsection{The Midpoint Assumption}
-Crucially, when analyzing the interface between the player and the club, the solver assumes a single "virtual joint" connecting the hands to the club. Because the solver cannot see the distributed pressure of the fingers or the separation of the hands, it collapses all interaction into a \textbf{Principal Vector} (Net Force) and a \textbf{Principal Moment} (Net Couple) at the geometric center of the grip.
-
-This mathematical collapse is the source of the "Illusion of the Couple."
-
-\section{The Geometry of the Grip: Force vs. Couple}
-
-In rigid body mechanics, a force applied to an object can be translated to a different point of reference if, and only if, we add a moment (couple) to account for the change in the lever arm.
-
-Let us define the variables for the grip interface:
-\begin{itemize}
-    \item $P_{mid}$: The midpoint of the hands (standard ID analysis point).
-    \item $P_{applied}$: The actual Center of Pressure (CoP) where the hand applies force.
-    \item $F_{applied}$: The linear force vector applied by the hands.
-    \item $d_{mh}$: Distance from the Club Center of Mass (COM) to $P_{mid}$.
-    \item $d_{f}$: Distance from the Club COM to $P_{applied}$.
-\end{itemize}
-
-If a golfer applies a pure linear force $F_{applied}$ at a point $P_{applied}$ that is \textit{not} the midpoint, the ID solver at $P_{mid}$ will report:
-\begin{enumerate}
-    \item An Equivalent Force $F_{eq} = F_{applied}$
-    \item An Equivalent Couple $C_{eq}$
-\end{enumerate}
-
-The magnitude of this "ghost" couple is determined by the discrepancy in the lever arms:
+\section{Reference Geometry Does Not Create a Ghost Load}
+For the same wrench at $Q$,
 \begin{equation}
-    C_{eq} = F_{applied} \cdot (d_f - d_{mh})
+M_{h,Q}=M_{h,P}+(r_P-r_Q)\times F_h.
 \end{equation}
+A pure couple has zero resultant and is independent of origin. A general wrench's moment component changes when its nonzero resultant is represented elsewhere. An off-center force can have a real rotational effect without an independently applied local couple.
 
+For example, a $4$ N upward force at $x=0.5$ m gives a $+2$ N m counterclockwise moment about the origin. Its equivalent representation there includes both $4$ N and $2$ N m. A pure $2$ N m couple alone is different because it has zero resultant. This is why a torque graph cannot generally tell whether the hands applied a separate push--pull couple, but also why calling its moment fictitious is wrong.
 
+For $F=(0,F_y,0)$ and $Q-P=(s,0,0)$, the moment change is $-sF_y$ along $z$. With a chosen $F_y=40$ N and initial moment $2$ N m, moving $0.10$ m to the right gives $-2$ N m. The sign changed because the origin changed; no hand strategy has been identified. In three dimensions, the invariant $F\cdot M$ can prevent any single-force representation with zero residual moment. A presumed pressure center is not a universal solution.
 
-\subsection{The Interpretability Crisis}
-If $d_f \neq d_{mh}$, ID reports a couple. A biomechanist reading this data sees $C_{eq}$ and infers that the player is actively "twisting" the handle. However, the physical reality might be that the player was simply pushing linearly with the index finger (a point lower on the shaft).
-
-\textbf{Key Takeaway:} The presence of a couple in ID results does not guarantee a "torquing" action (a push-pull couple). It is often an artifact of the offset between the assumed analysis point and the actual center of pressure.
-
-\section{The Closed Loop Problem}
-
-The golf swing is distinct from throwing a baseball because it involves a bimanual grip on a single object. This transforms the arm structure from an open chain (serial) to a \textbf{closed chain} (parallel).
-
-\subsection{Loop Closure Constraints}
-Mathematically, a closed loop imposes strict geometric constraints. If we model the left arm, right arm, and chest as a linkage, the position of the club handle is determined by both arms simultaneously. This creates a constraint equation $\phi(q) = 0$, and a velocity constraint:
-
+\section{The Contact Map Explains a Specific Nonuniqueness}
+For two hand contacts, collect their forces and local couples into $\lambda$. Their combined wrench satisfies $w_h=\mathcal G(q)\lambda$, where $\mathcal G$ is the grasp map. In force-first ordering,
 \begin{equation}
-    J_{loop}(q)\dot{q} = 0
+F_h=F_1+F_2,\qquad
+M_{h,P}=\sum_{i=1}^2[(r_i-r_P)\times F_i+C_i].
 \end{equation}
+At a fixed configuration, load additions in $\ker\mathcal G$ leave the rigid club wrench unchanged. This is the relevant null space; it should not be replaced by an unspecified kinematic Jacobian null space.
 
-Where $J_{loop}$ is the Jacobian of the closed loop. 
+With point forces only, add equal-and-opposite forces \emph{along the line between the contacts}. They have zero net force and moment. Transverse opposite forces generally create a couple and are not invisible. The two-point force-only model has rank five; permitting contact couples changes the rank and attainable wrenches. Contact friction, compression and geometry determine which algebraic solutions are feasible.
 
-In a closed chain, the system becomes \textbf{statically indeterminate}. We have more actuators (muscles in both arms) than degrees of freedom. This means there are infinite combinations of left-hand and right-hand forces that sum to the \textit{exact same} net force and moment on the club.
+The arms and torso complete the closed mechanical loop. Loop constraints restrict motion; redundant contact or actuator channels can leave load allocation underdetermined. These statements are related but not identical. An affine input model does not, by itself, imply infinitely many inputs for a specified full trajectory. Under suitable rank conditions, the net generalized input can be unique even when muscle recruitment is not.
 
-\subsection{Internal Forces and Null Space}
-We can define the forces in the system as:
+Independent grip measurements and a validated contact model can constrain the allocation. Ground measurements add whole-body external-load information but do not automatically resolve every internal force. An optimized allocation remains conditional on its cost and constraints; it is not a recovered intention.
+
+\section{Ordinary Inverse Dynamics Does Not Attribute All Motion to Actuation}
+Use the balance
 \begin{equation}
-    F_{total} = F_{motion} + F_{internal}
+M(q)\ddot q+h(q,\dot q)=B(q)u+Q_{\rm ext}.
 \end{equation}
-
-$F_{motion}$ causes the club to accelerate. $F_{internal}$ represents forces where the hands fight each other (e.g., the left hand pushing down while the right hand pulls up, or squeezing the grip). These internal forces exist in the \textbf{Null Space} of the Jacobian.
-
-ID can \textit{only} see $F_{motion}$. It is blind to $F_{internal}$. However, these internal forces are what generate the joint torques and stiffness required to stabilize the wrist. By analyzing only the net ID output, we miss the stabilizing "squeeze" or "twist" that may be mechanically essential but mathematically invisible in the net acceleration.
-
-\section{Control Affine Systems and "Drift"}
-
-To deepen the analysis, we view the golfer-club system through the lens of nonlinear control theory. The system can be modeled as \textbf{control affine}:
-
+The standard inverse output is
 \begin{equation}
-    \dot{x} = f(x) + g(x)u
+\tau_{\rm ID}=M\ddot q+h-Q_{\rm ext}=Bu.
 \end{equation}
+It already includes the declared gravity, velocity-coupling and other bias terms. Define $a_d=M^{-1}(Q_{\rm ext}-h)$; then
+$\tau_{\rm ID}=M(\ddot q-a_d)$. Subtracting drift again from this output is inconsistent bookkeeping.
 
-\begin{itemize}
-    \item $x$: The state of the system (position and velocity).
-    \item $u$: The control inputs (active muscle torques).
-    \item $f(x)$: The \textbf{Drift Vector Field}. This represents the passive dynamics of the system—how the system moves under its own inertia and constraints if zero muscle torque were applied ($u=0$).
-    \item $g(x)$: The control matrix (how muscles affect the state).
-\end{itemize}
-
-\subsection{Misidentifying Drift as Control}
-In a perfect Forward Dynamics model, we know $f(x)$ exactly. We know the mass of the club, the friction, and importantly, the \textbf{Constraint Torques} generated by the universal joint action of the wrist (as discussed in previous articles).
-
-However, Inverse Dynamics implicitly assumes that \textit{all} deviations from rest are caused by $u$ (the user).
-$$ u_{estimated} \approx g(x)^{-1} (\dot{x}_{observed} - f(x)_{assumed}) $$
-
-If our assumed drift model $f(x)_{assumed}$ is simplified (e.g., modeling the wrist as a spherical joint rather than a constrained U-joint, or ignoring the passive centrifugal stiffening of the club), the error term gets dumped into $u_{estimated}$.
-
-\subsection{The Implication for the Swing}
-Consider the "Passive Torque" generated by the wrist U-joint constraint. This is a purely mechanical phenomenon (part of the actual $f(x)$). If the ID model does not explicitly account for this constraint torque, the solver will conclude that the golfer \textbf{actively applied} that torque via muscle ($u$).
-
-We may be complimenting a golfer on their "active wrist release" when, in reality, they simply relaxed and allowed the constraint dynamics ($f(x)$) to drift the club into the ball. The ID analysis attributes agency to passive physics.
-
-\section{The Sign Change Possibility: A Case Study}
-
-Linking this back to the "Equivalent Couple," can ID be so misleading that it reports a negative couple when the local mechanics are positive? Yes.
-
-Consider the Late Downswing. We calculate the local couple at the actual center of pressure ($C_{local}$) versus the ID-reported couple at the midpoint ($C_{mid}$):
-
+With $x=(q,\dot q)$, the same model is control-affine:
 \begin{equation}
-    C_{local} = C_{mid} - F_{net} \cdot (d_{pressure} - d_{mid})
+\dot x=f(x)+G(x)u,
+\qquad f=(\dot q,a_d),\qquad G=\begin{bmatrix}0\\M^{-1}B\end{bmatrix}.
 \end{equation}
+The drift is defined relative to the selected input and included model terms. Calling it passive does not establish physiological relaxation. If passive tissue loading is omitted from $h$, it can appear in the estimated net load; if a constitutive model subtracts it, the residual has a different meaning.
 
-Depending on the magnitude of the net force ($F_{net}$) and the grip offset ($d_{pressure} - d_{mid}$), the sign can flip.
-If a player grips deep in the fingers (large $d_{pressure}$ offset) and applies a strong linear force, the $F_{net}$ term dominates. The ID solver at the midpoint sees a massive couple required to balance this off-axis force. The data says "twist," but the hand says "push."
+A pendulum released under gravity has nonzero acceleration but zero pivot torque. Correct inverse dynamics returns zero for that motion. Holding the same pendulum stationary requires gravity-balancing torque. This simple check directly refutes the claim that inverse dynamics inherently assumes every departure from rest is actively caused.
 
-\section{Conclusion}
+\section{Constraint Reactions Can Depend on the Input}
+For redundant coordinates and ideal bilateral constraints,
+\begin{align}
+M\ddot q+h&=Bu+Q_{\rm ext}+A^T\lambda_c,\\
+A\ddot q+\dot A\dot q&=0.
+\end{align}
+If $A$ has independent rows, solving yields
+\begin{equation}
+\lambda_c=-(AM^{-1}A^T)^{-1}
+[AM^{-1}(Bu+Q_{\rm ext}-h)+\dot A\dot q].
+\end{equation}
+The actuator term is explicit. Eliminating the reactions changes both the drift and the input gain. Zero actuator torque can coexist with nonzero reactions, but those reactions are not generally input-independent.
 
-Inverse dynamics is an invaluable tool for quantifying the \textit{net effect} of the golfer on the club, but it is fundamentally limited in diagnosing the \textit{mechanism} of generation.
+An ideal wrist universal joint is one possible kinematic approximation. Its constraint reactions do not prove a passive biological release; a physiological interpretation needs the permitted motion, tissue compliance, other joint action and grip conditions. An ideal workless reaction is also distinct from a dissipative or energy-storing anatomical force.
 
-1.  **Indeterminacy:** The closed loop allows infinite force distributions to create the same motion.
-2.  **Geometric Ambiguity:** Linear forces applied off-center masquerade as couples at the midpoint.
-3.  **Drift Confusion:** Passive constraint torques are often mislabeled as active motor control.
+For the independent-coordinate balance, if $B$ has full column rank and the inverse load is in its image, the modeled input is uniquely determined. After eliminating constraints, use the reduced input map in this test; full rank of the original $B$ alone does not identify unknown constraint loads. With redundancy, the relevant map's kernel describes alternative allocations. If no consistent admissible allocation exists, investigate the measurements or model. Do not interpret a pseudoinverse residual as a uniquely identified muscle.
 
-To move from "what happened" to "what to do," we must integrate ID with Forward Dynamics simulations that model the specific constraints of the wrist and the variable geometry of the grip. Only by closing the loop in simulation can we distinguish between the ghost couples of analysis and the real torques of the swing.
+\section{Model Error, Power and Counterfactuals}
+Holding measured motion fixed, omitted aerodynamics biases the inferred hand wrench by the aerodynamic wrench at the same reporting point. Its signed moment correction depends on force direction, lever arm and intrinsic aerodynamic couple. A percent change in a nearly canceled moment is not a universal swing correction.
 
+Total rigid-body hand power is
+\begin{equation}
+\mathcal P_h=F_h\cdot v_P+M_{h,P}\cdot\omega.
+\end{equation}
+Using $v_Q=v_P+\omega\times(r_Q-r_P)$ makes the total invariant under the reference change. Its force and moment portions are separately point-dependent. A negative named torque component therefore does not necessarily mean negative total power, and mechanical power does not directly measure metabolic effort.
+
+Similarly, an inward contact force that redirects circular motion is real even when its instantaneous power is zero. Introducing centrifugal force in a rotating frame does not create an extra physical load that can be subtracted from grip tension to recover sensation. Moving hands and a flexible shaft require the full balances rather than a fixed-pivot shortcut.
+
+A zero-input branch follows its own subsequent state. For actual and zero-input trajectories,
+\begin{equation}
+\frac{d}{dt}(x-x_0)=f(x)-f(x_0)+G(x)u.
+\end{equation}
+Only at a common state does the drift difference disappear. Specify the intervention, horizon, output and comparison event before interpreting the difference. Setting a net torque to zero and asking a golfer to relax can produce different contact, impedance and feedback changes.
+
+\section{A Stronger Golf and Humanoid Argument}
+Earlier work shapes the state from which later dynamics evolves. Body geometry, ground contact, grip loading, shaft deformation and collision therefore interact. A measured delivery state can constrain this chain without uniquely recovering all its internal causes.
+
+Use inverse dynamics to estimate the net load that the available evidence supports. Use contact and actuator maps to identify what remains ambiguous. Use complete work and energy balances to distinguish redirection, energy redistribution and added work. Then compare independent measurements and explicit interventions to test a physiological or coaching claim. A moment is neither a direct instruction nor an illusion; it is a precisely defined mechanical quantity whose interpretation needs the rest of the model.
+
+\begin{thebibliography}{9}
+\bibitem{lynch} K. M. Lynch and F. C. Park. \emph{Modern Robotics: Mechanics, Planning, and Control}. Cambridge University Press, 2017. Chapters 3, 8 and 12. \url{https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-4-wrenches/}.
+\bibitem{featherstone} R. Featherstone. \emph{Rigid Body Dynamics Algorithms}. Springer, 2008.
+\end{thebibliography}
 \end{document}
