@@ -18,11 +18,13 @@
 - Tools #5072 grip-supported loaded-chain balance and full M/G/C/K operators are
   published at eeea63b47; turnover 2ffaf243f. All 646 Linux golf/API tests pass
   with two optional CAD skips, plus 38 focused controls and nine manual gates.
-  Private grip-supported frequency response now passes 665 Linux golf/API tests
-  and 50 focused controls; publication is pending. Stability, bandwidth and
+  Grip-supported frequency response is published at Tools 12bcf3d83 with
+  665 Linux golf/API and 50 focused passes, all normal hooks passing. Stability, bandwidth and
   nonlinear evolution remain.
 - Tools #5103/#5106 public checks pass but private consumer lookup fails before
-  tests. UpstreamDrift #9787/#9804 has concurrent ownership; do not overwrite it.
+  tests. UpstreamDrift #9804 is merged as 736ec2189 from b8da0c024; the
+  preserved local authority is not validation of that differing revision.
+  Audit protected main in a fresh worktree; do not overwrite the old branch.
 - Preserve immutable publication bytes and trust pins. A2 #4255, Tools #5068
   and UpstreamDrift #9700 remain open. Synthetic verification and metadata-only
   dataset discovery do not establish physical or blinded perceptual validation.
