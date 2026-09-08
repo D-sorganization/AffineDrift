@@ -12,6 +12,19 @@
 
 Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 
+## Build-Section Lateral Links: #3902
+
+- Branch `claude/issue-3902-models-lateral` (base `1ce02d7`) adds the canonical
+  markdown `## Related Articles` component to all 8 `models/*.qmd` and all 6
+  `repositories/*.qmd` pages, plus `pages/tools.qmd` and
+  `articles/upstreamdrift-educational-integration.qmd`, `articles/rotation-converter.qmd`
+  and `articles/proximal-distal-model-workbench.qmd` — 177 new relative markdown
+  content links, every model↔repository pair bidirectional, every target verified to
+  exist in the worktree.
+- `articles/technology-heavy-hit-impact-coupling.qmd` is intentionally untouched:
+  PR #4267 (issue #3903, sibling branch) adds the model-interchange links on that
+  branch; do not duplicate them here.
+
 ## Technical Content Review
 
 - Active #4261 on fix/4261-lagrangian-mechanics-rigor, after base 1c845e87: both complete editions and all 16 exercises corrected. Root 4,501 passes, 29 skips, 129 deselections; source coverage 92.68%, new module 100%. Focused 34, static 34, content 128/four skips, mypy 82, title 625 pass. All print chapter pages 217–232 and browser section/target/edge/keyboard views inspected; 49 displays and 263-page PDF. Final bibliography-only QA and post-render checks pass; all local QA jobs have finished. PR #4263 is pushed at 4ad9bc7ec2d79cd670e5e0f44614ea85e1142465; protected checks pending. No commit/push during any QA. The single correction was replayed onto protected configuration squash 0d3db910 before first push; full tree 01616c1e0ee4ed0467f6fb5adfd9b9151cbe16ba stayed identical. Pre-commit/pre-push hooks pass. Claim expires 2026-09-08T01:38:11UTC. See lagrangian-mechanics-review.md.
