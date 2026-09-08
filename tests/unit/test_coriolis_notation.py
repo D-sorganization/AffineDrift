@@ -10,6 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 CHAPTER_3 = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_I/chapters/ch03_superposition.tex"
 CHAPTER_3_WEB = REPO_ROOT / "articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd"
 CHAPTER_7 = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_I/chapters/ch07_counterfactuals.tex"
+CHAPTER_7_WEB = REPO_ROOT / "articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.qmd"
 CHAPTER_8 = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_I/chapters/ch08_applications.tex"
 
 
@@ -26,10 +27,12 @@ def test_chapter_3_distinguishes_force_vector_from_coriolis_matrix(path: Path) -
     assert r"$v^Tc=\tfrac12v^T\dot Mv$" in text
 
 
-def test_chapter_7_uses_matrix_notation_for_coriolis_term() -> None:
-    text = _read(CHAPTER_7)
-    assert r"\mat{C}(\q,\dot\q)\dot\q" in text
-    assert r"C(\q,\dot\q)\dot\q" not in text
+@pytest.mark.parametrize("path", [CHAPTER_7, CHAPTER_7_WEB])
+def test_chapter_7_distinguishes_coriolis_matrix_and_bias(path: Path) -> None:
+    text = _read(path)
+    assert r"C(q,v)v" in text
+    assert r"C=\begin{bmatrix}0&k\sin\delta\,v_2\\-k\sin\delta\,v_1&0\end{bmatrix}" in text
+    assert r"$v^TCv=\tfrac12v^T\dot Mv$" in text
 
 
 def test_chapter_8_keeps_the_same_convention() -> None:
