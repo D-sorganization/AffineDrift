@@ -18,6 +18,33 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#3904 · Series navigation and tangent-space cluster integration
+
+- **State:** in_review
+- **Owner:** claude (wave-8 agent W8_3904)
+- **Issue:** `#3904` (epic `#3896`)
+- **PR:** not created (opens against `main` immediately after push)
+- **Branch:** `claude/issue-3904-series-nav`
+- **Paths:** `_quarto.yml`, `pages/tangent-hyperplanes.qmd`,
+  `articles/superposition.qmd`,
+  `articles/null-space-constraint-jacobian.qmd`,
+  `articles/force-mobility-matrices.qmd`,
+  `articles/degrees-of-freedom-and-dimensionality.qmd`,
+  `articles/tangent-hyperplanes-series/part-*.qmd`,
+  `articles/theory-part5.qmd`, `articles/appendix-applications.qmd`,
+  `articles/affine-nature-golf-swing.qmd`, `tests/test_series_navigation.py`
+- **Started:** 2026-09-08
+- **Last verified:** 2026-09-08 (`4ec3a19`)
+- **Summary:** Added three series sidebar groups (theory, tangent-space,
+  Geometry of Motion volumes) for prev/next and breadcrumbs; wired the four
+  isolated geometry articles into the tangent-space cluster with the canonical
+  Related Articles component and hub-side companion links; added return links
+  from tangent parts 1–7; chained appendix-applications and
+  affine-nature-golf-swing into the theory sequence. Contract test:
+  60 passed. All relative link targets verified to exist.
+- **Next step:** Merge the PR, then spot-check prev/next and breadcrumbs on
+  one page per series in the deployed site.
+
 ### DL-0035 · Impact Dynamics and Acoustics Review
 
 - **State:** in_review
