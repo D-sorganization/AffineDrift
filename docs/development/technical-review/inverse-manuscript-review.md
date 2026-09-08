@@ -224,3 +224,8 @@ Committed as67111d8d, then replayed only the inverse batch after09a2471d onto
 protected main8a7bee22. Replay had no conflicts and its final tree is identical.
 Normal first push and all hooks passed. PR4293 targets main, references Fixes4291,
 and carries agent:codex. Protected CI/merge and publication are pending.
+
+
+## Protected Publication
+
+Inverse #4291 / PR #4293 is protected-merged as b6dc729f9390793bade2b1d749e084ca2875271a and published. Main CI 34279760601 and deployment 34279760688 succeed. Exact-revision live artifact 10078282103 passes 956/956 checks across 239 routes. The closed issue needs no lease renewal.
