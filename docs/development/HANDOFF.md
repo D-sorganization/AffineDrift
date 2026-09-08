@@ -9,7 +9,7 @@ Keep this file current and concise. Replace instructional placeholders; do not a
 - Branch: `claude/issue-3899-link-checker`
 - Baseline commit: `f6adaa2` (fix(ci): add Bandit SAST and detect-secrets blocking security gates (#3029))
 - Implementation commit: `SELF` — the commit containing this update; resolve with `git rev-parse HEAD`
-- Pull request: not created — opened from this branch against `staging` immediately after this commit
+- Pull request: #4268 (https://github.com/D-sorganization/AffineDrift/pull/4268, open against `staging`)
 - Governing issue/epic: #3899 (C3 of epic #3896); defect-class reference #3906
 
 ## Objective and Status
@@ -58,7 +58,7 @@ Keep this file current and concise. Replace instructional placeholders; do not a
 
 ## Next Steps
 
-1. Merge PR (#4265 first, then rebase this branch over `origin/staging` resolving HANDOFF/DEVELOPMENT_LOG conflicts by union), then watch the `ci-standard.yml` "Verify Site Link Quality" step run green.
+1. Rebase this branch over `origin/staging` after PR #4265 lands, union-resolving the new HANDOFF/DEVELOPMENT_LOG files, then watch the `ci-standard.yml` "Verify Site Link Quality" step run green on PR #4268.
 
 ## Change Log
 

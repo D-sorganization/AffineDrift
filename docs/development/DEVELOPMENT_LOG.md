@@ -22,7 +22,7 @@ from any live state and `abandoned` from `parked`. `shipped` never returns to
 - **State:** in_review
 - **Owner:** W3_3899 (claude)
 - **Issue:** #3899 (C3 of epic #3896)
-- **PR:** not created (branch `claude/issue-3899-link-checker`; PR opens against `staging` right after the implementation commit)
+- **PR:** #4268 (open against `staging`)
 - **Paths:** `src/tools/check_links.py`, `src/tools/utils/link_checks.py`, `src/tools/utils/site_config_utils.py`, `src/tools/utils/link_utils.py`, `config/link_checker_budget.json`, `docs/LINK-CHECKER.md`, `.github/workflows/ci-standard.yml`, `docs/development/QUALITY_GATES_POLICY.md`, `tests/tools/test_link_checks.py`, `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd`
 - **Started:** 2026-09-08
 - **Last verified:** 2026-09-08 (`SELF`)
