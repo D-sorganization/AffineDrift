@@ -314,3 +314,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-08 | #4296 | Reconcile paired biology chapters with explicit muscle-tendon state, HKB phase stability, synergy evidence limits, impedance and a proven coupling condition; rebuild Volume IV and correct reading-page theme contrast. |
 | 2026-09-08 | #4293 | Reconcile inverse-dynamics manuscripts, original contact and aerodynamic examples, wrench transport, constrained input allocation, power and effort inference; regenerate PDF companions and replace stale HTML with a reading guide. |
+| 2026-09-08 | #4298 | Qualify paired Chapter 29 grip, constraint, friction, stability and shaft-acoustic claims with independent numerical counterexamples and verified publication output. |
