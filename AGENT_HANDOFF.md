@@ -4,7 +4,7 @@
 
 - A1 #4254 / PR #4258 merged as `1ce02d7ae4d916d4c598b62be78cefa83452aaa7`.
 - Active targeted follow-up #4277: `docs/4277-coriolis-energy-accounting`, worktree
-  `C:/Users/diete/Repositories/AffineDrift-impact-damping`, synced main `439695c4`, PR not created.
+  `C:/Users/diete/Repositories/AffineDrift-impact-damping`, synced main `439695c4`, PR #4282.
   Corrected damping/Coriolis accounting, the paired two-joint example and portable TeX notation. Full site/PDF builds and desktop/mobile section QA pass; protected delivery remains pending.
 - Continue from `docs/development/impact-acoustics/DAMPING_REVIEW.md`; the initial
   source/literature inventory and A1 evidence remain in `REVIEW.md` and `INVENTORY.md`.

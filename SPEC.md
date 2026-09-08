@@ -224,7 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-09-08 | #4277 | Separate conservative Coriolis coupling from physical damping in the paired Physics of Golf chapter; make the state and energy mappings explicit and correct the two-joint inverse-mass example; verify publication output and integration with current main. |
+| 2026-09-08 | #4282 | Separate conservative Coriolis coupling from physical damping in the paired Physics of Golf chapter; make the state and energy mappings explicit and correct the two-joint inverse-mass example; verify publication output and integration with current main. |
 | 2026-09-07 | #4254 | Replace universal heavy-hit claims with qualified contact/shaft/prestress/acoustic theory, primary-source review, cross-repository capability inventory and falsifiable research epics; add independent publication regressions. |
 | 2026-09-07 | #4237 | Reconcile both stability–optimality editions: Riccati proofs and rates, shared checked numerical table, finite-horizon geometry, robustness, disturbance attenuation, estimation and golf evidence; rebuild Volume I and verify print/web. |
 | 2026-09-07 | #4235 | Reconcile the complete paired variational chapter: exact remainders, ordered propagation, flow derivatives, adjoint boundary terms, checked pendulum examples, stability and numerical geometry; rebuild Volume I and verify print/web. |
