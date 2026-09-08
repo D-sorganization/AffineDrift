@@ -2,6 +2,27 @@
 
 Date: 2026-09-05. Parent epic: [#4009](https://github.com/D-sorganization/AffineDrift/issues/4009).
 
+## Current Checkpoint: 8 September 2026
+
+Rotations #4288 / PR #4289 is protected-merged and published as072d5076d7219ff39a8f004694f9d9a9b35a5cb8.
+Main CI34265513801, textbooks34265513761 and deployment34265513841 pass;
+exact live artifact10072974625 passes956/956 across239 routes with zero
+serious/critical axe findings or retries. See `rotations-review.md`.
+
+Active vendor-reference #4290 has a complete rewritten article after full source
+reading and current primary-source investigation. Corrected point/rotation/timing
+kinematics, pressure moments, covariance, median-centered tolerance interpretation,
+human repeatability and device-agreement claims connect the catalogue to the
+coupled swing model. Independent numerical derivations, title631 and static34
+pass; initial static/content failures exposed the shared bibliography evidence
+digest, now regenerated. Root coverage tests are running; render and full visual
+QA remain pending. See `vendor-reference-review.md` for exact source limits.
+
+During that run the next long inverse-dynamics draft was fully read. Epic child
+#4291 records incorrect wrench translation, a false equal-wrench figure, doubled
+drift subtraction, centrifugal/effort inference and inconsistent drag accounting.
+No #4291 correction or validation has begun. The405-source corpus is unfinished.
+
 ## Argument Being Investigated
 
 The golfer prepares and continually changes a coupled mechanical state. Geometry determines force transmission; inertia couples accelerations; activation and tissue mechanics determine forces and impedance; earlier work becomes kinetic and elastic energy; feedback and prediction manage deviations; impact selects which aspects of the delivered state matter. The useful research question is how those contributions interact under explicit constraints and measurable objectives.
@@ -1273,3 +1294,23 @@ PR #4287 passed protected checks and merged as10d4e7cb9de4633022e5cd93885cb54aca
 ### Rotation Local Review Complete: #4288
 
 The complete paired chapter, included quaternion program, 18 exercises and independent derivations pass local review. Final full-browser inspection covers 202 body views, 83 equation edges and 113 code/table/figure/answer/reference views; all 14 responsive/theme cases pass with zero serious/critical axe findings. Print pages 76–96 and bibliography 239–241 were inspected in the rebuilt 241-page volume. Focused 127 and root 4,828 tests pass; configured coverage is 79.04%. Static 34, content 130, title 631, Ruff, Black, strict typing and tracked-file quality checks pass. Historical anchors and exact rendered program are verified. Detailed derivations, source-reading boundaries and failed attempts are in rotations-review.md. Protected publication remains pending.
+
+
+## Vendor Reference Local Completion: #4290
+
+The complete launch-monitor reference is corrected, with dated primary vendor
+documents and five research-study records. The article connects point/frame/event
+conventions, rigid and flexible head motion, screw pitch, pressure moments,
+correlated uncertainty and measurement selection to defensible swing inference.
+Leach Table6's median-centered bands are distinguished from absolute error;
+comparative validation is retained with its scope and retrieval boundaries.
+Root4828/29skips,coverage79.04%;content130/4skips;static34;title631;independent
+mathematical checks and all14 responsive/theme cases pass. All31 historical
+anchors survive. Complete visual inspection and bibliography repairs are recorded
+in vendor-reference-review.md. Protected publication remains pending.
+
+Rotation#4288/PR#4289 is verified published at072d5076: main CI34265513801,
+textbooks34265513761, deployment34265513841 and exact artifact10072974625 pass;
+956/956 live checks across239 routes, no serious/critical axe findings or retries.
+Next#4291 covers the fully read inverse-dynamics manuscript and three TeX
+companions. Corrections have not begun; corpus#4021 remains unfinished.

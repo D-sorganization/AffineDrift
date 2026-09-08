@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-08 | #4290 | Correct launch-monitor definitions, point and rotation kinematics, temporal uncertainty, vendor evidence, and validation-study interpretation. |
 | 2026-09-08 | #4282 | Separate conservative Coriolis coupling from physical damping in the paired Physics of Golf chapter; make the state and energy mappings explicit and correct the two-joint inverse-mass example; verify publication output and integration with current main. |
 | 2026-09-07 | #4254 | Replace universal heavy-hit claims with qualified contact/shaft/prestress/acoustic theory, primary-source review, cross-repository capability inventory and falsifiable research epics; add independent publication regressions. |
 | 2026-09-07 | #4237 | Reconcile both stability–optimality editions: Riccati proofs and rates, shared checked numerical table, finite-horizon geometry, robustness, disturbance attenuation, estimation and golf evidence; rebuild Volume I and verify print/web. |
