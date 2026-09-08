@@ -596,6 +596,20 @@ reachable from any live state and `abandoned` from `parked`.
   state; a live entry without a real issue is orphaned by
   definition.
 
+### DL-#3903 · Close cluster gaps: proximal–distal, impact/putting, technology
+
+- **State:** in_review
+- **Owner:** claude (wave-6 agent W6_3903)
+- **Issue:** `#3903` (epic `#3896`)
+- **PR:** not created (opened against `main` immediately after push)
+- **Branch:** `claude/issue-3903-cluster-gaps`
+- **Paths:** `articles/intentional-constraint-collapse.qmd`, `articles/passive-distributed-control.qmd`, `articles/proximal-distal-a-journey-through-the-swing.qmd`, `articles/proximal-distal-energy-transfer.qmd`, `articles/proximal_distal_energy_transfer/index.qmd`, `resources/research-review-induced-acceleration-analysis.qmd`, `resources/research-review-interaction-forces.qmd`, `articles/secondary-axis-stability.qmd`, `articles/strokes-gained-limitations.qmd`, `articles/impact-mechanics-and-ball-flight.qmd`, `articles/rotation-induced-spin.qmd`, `articles/putting-roll-models.qmd`, `articles/green-simulation.qmd`, `articles/technology-club-fitting.qmd`, `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/technology-launch-monitors.qmd`, `articles/technology-force-measurement.qmd`, `articles/technology-motion-capture.qmd`
+- **Started:** 2026-09-07
+- **Last verified:** 2026-09-07 (`SELF`)
+- **Summary:** Wired the three measured cluster gaps from issue #3903: intentional-constraint-collapse and passive-distributed-control joined to the proximal-distal program (companion, monograph, summary, workbench); the two research reviews linked back into the article cluster they review; secondary-axis-stability and strokes-gained-limitations wired into the impact/putting cluster both ways; club-fitting and heavy-hit given the canonical Related Concepts component with reference-point-problem, vendor-reference, and model-interchange targets; unlinked backtick-path and bare-chapter items in the existing technology Related Concepts blocks converted to real links. All relative link targets verified to exist in the worktree; `scripts/check_quarto_xrefs.py` passes with all targets resolved. Composes the open sibling PRs #4265/#4266 where they touch the same pages.
+- **Next step:** Merge the PR, then reconcile the overlapping `passive-distributed-control.qmd` hunk with sibling PR #4265 when it merges.
+
+
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
