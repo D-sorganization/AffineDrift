@@ -87,6 +87,24 @@ Foundations #4280 was committed as `87d5874772ca6ac2f0feaa32e3e23a1b485976c0` af
 
 The first push was rejected by the isolated mypy hook before any remote branch was created. The implicit `Array = NDArray[...]` assignment was interpreted as a variable in that hook environment, generating 36 cascading type errors, although the configured local mypy run had passed. Both aliases now use explicit Python 3.12 `type` declarations, matching neighboring educational modules. The 15 focused tests pass again in 7.64 seconds, the actual isolated mypy hook passes, and local mypy/Ruff/Black pass. An initial attempt to invoke pre-commit through the Python3.12 module failed because that interpreter does not install it; the existing Python3.13 pre-commit executable was then used successfully. No hook or quality rule was disabled. The mathematical example and its output are unchanged.
 
+## Ready PR Checkpoint
+
+The second push passed every hook. Ready PR [#4284](https://github.com/D-sorganization/AffineDrift/pull/4284) is open with protected squash auto-merge enabled at head `9741f53287434efa87f659c055ec327d37e19389`. It is awaiting required checks, not yet claimed merged or deployed. The next chapter is spine issue #4283; its separate branch starts at this head and must replay only spine changes onto the eventual protected squash.
+
+
+
 ## CI Dependency Repair
 
 Ready PR #4284 opened at `9741f532` with protected squash auto-merge enabled. CI run34220497509, job102042252351 reported one failure,4671 passes,30 skips and131 deselections in187.58s: the independent symbolic Euler–Lagrange derivation imports SymPy, which was installed locally but absent from `requirements.txt`. The fix declares `sympy==1.14.0`, the exact locally validated version, in the existing test dependency list. The test remains mandatory and unchanged. All other checks available at this checkpoint passed; E2E was still running. Spine draft work is saved separately while this repair is validated and pushed. The #4280 lease was renewed through13:41:46UTC. Publication remains pending; this is not a merge/deployment claim.
+
+## CI Follow-Up During Spine Work
+
+Dependency repair34796bae passed15 focused tests in4.79s and every push hook. Compile Textbooks run34222216874 built The Physics of Golf successfully to562 pages and confirmed all included chapters, then failed while uploading its artifact: Upload progress stalled. All seven other book jobs passed. The failed upload job102047803091 was rerun through the GitHub job endpoint, with no source change or weakened check. This is an infrastructure upload failure, not a reported TeX compilation failure. Await the rerun and remaining CI before claiming publication.
+
+
+Protected PR #4284 merged as a9e531fd26c30ef5e5de8727d85a1b67cc2a6d9f. All CI jobs, including Python3.12 tests and end-to-end verification, and all eight textbook builds passed. The compiled Physics PDF's upload-stall failure was rerun successfully. Deployment34224541139 is in progress; exact-revision live evidence remains pending.
+
+
+## Publication Verified
+
+Deployment34224541139 succeeded for protected squash a9e531fd26c30ef5e5de8727d85a1b67cc2a6d9f. Downloaded exact-revision live artifact10056277209 reports956/956 passes across239 routes, zero serious/critical axe violations, zero navigation retries and zero transient responses. Issue #4280 is closed and needs no lease renewal. The original failed dependency and stalled-upload evidence remains above.

@@ -92,21 +92,20 @@ def test_fascia_energy_estimates_are_inside_display_math() -> None:
 
 
 def test_spine_display_equation_has_no_nested_math_delimiters() -> None:
-    """Keep the degree symbol inside the surrounding display equation."""
+    """Keep the dimensioned series-energy example in one math environment."""
     text = SPINE_CHAPTER.read_text(encoding="utf-8")
-
-    assert r"\times 5$^{\circ}$" not in text
-    assert r"\times 5^{\circ}" in text
+    displays = re.findall(r"\$\$(.*?)\$\$", text, flags=re.DOTALL)
+    energy = next(display for display in displays if r"U_{\mathrm{total}}" in display)
+    assert "$" not in energy
+    assert r"\frac{20\pi}{180}" in energy
+    assert r"8.38\,\mathrm{J}" in energy
 
 
 def test_spinal_ligament_cases_have_a_row_separator() -> None:
     """Keep both alternatives in separate rows of the LaTeX cases array."""
     text = SPINE_CHAPTER.read_text(encoding="utf-8")
 
-    assert (
-        r"0, & \text{if } \Delta L < L_{\mathrm{slack}}, \\" + "\n"
-        r"k_{\mathrm{ligament}} (L - L_0)^2, & \text{if } L > L_{\mathrm{slack}}."
-    ) in text
+    assert (r"0,&L\le L_0,\\" + "\n" r"k(L-L_0)^2,&L>L_0.") in text
 
 
 def test_latex_book_uses_its_declared_counterfactual_macros() -> None:
