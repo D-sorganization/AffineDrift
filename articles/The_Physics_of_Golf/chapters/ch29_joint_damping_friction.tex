@@ -137,18 +137,18 @@ These values are \textbf{illustrative estimates} compiled from passive joint imp
 \label{fig:damping_model}
 \end{figure}
 
-Recall from Chapter~\ref{ch:parallel_mechanisms} that the unforced kinematic chain is governed by:
+Recall from Chapter~\ref{ch:parallel_mechanisms} that a kinematic chain with actuator and constraint forces is governed by:
 \[
-\massmat\ddot{\bm{q}} + \cormat\dot{\bm{q}} + \gravvec = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce
+\mathbf{M}(\mathbf{q})\ddot{\bm{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\bm{q}} + \mathbf{g}(\mathbf{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\boldsymbol{\lambda}
 \]
 
-This is the drift vector field — the natural motion of the body under gravity, Coriolis effects, and muscle forces. To include damping, we simply add a damping term:
+This is a second-order force balance. Its first-order drift field is obtained after defining the state and setting the control input to zero; actuator forces belong to the input term. A phenomenological viscous model adds a separate dissipative force:
 
 \begin{principle}{Damped Kinematic Chain Equations}{damped_eom}
 \[
-\boxed{\massmat\ddot{\bm{q}} + \cormat\dot{\bm{q}} + \bm{D}(\bm{q})\dot{\bm{q}} + \gravvec = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce}
+\boxed{\mathbf{M}(\mathbf{q})\ddot{\bm{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\bm{q}} + \bm{D}(\bm{q})\dot{\bm{q}} + \mathbf{g}(\mathbf{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\boldsymbol{\lambda}}
 \]
-where $\bm{D}(\bm{q})$ is the \emph{damping matrix}, typically diagonal or nearly diagonal, with entries $D_{ii} \geq 0$.
+where the symmetric viscous model used here assumes \(\bm{D}(\bm{q})=\bm{D}(\bm{q})^T\succeq0\). Nonnegative diagonal entries alone do not establish passivity for a coupled matrix. The dissipated power is \(P_d=\dot{\bm q}^{\,T}\bm D\dot{\bm q}\geq0\).
 \end{principle}
 
 \index{damping matrix}
@@ -190,20 +190,32 @@ For most of this chapter, we will use linear viscous damping because:
 2. Experimental evidence suggests it's a reasonable approximation for velocities in the middle range (not too slow, not supersonic).
 3. When velocities are high (downswing), the linear term dominates; when slow (address), the system is nearly quasi-static anyway.
 
-\subsection{Rewriting in Control-Affine Form}
+\subsection{Rewriting in Control-Affine Form}\label{sec-damping-state-map}
+
+Use local independent joint coordinates with \(\bm v=\dot{\bm q}\) and state \(\mathbf x=(\bm q,\bm v)\). Evaluate the coefficient matrices and gravity force at the current state. For a smooth mode without unresolved constraint forces, \[
+\begin{aligned}
+\dot{\mathbf x}&=f_0(\mathbf x)+f_d(\mathbf x)+G(\mathbf x)\control,\\
+f_0&=\begin{bmatrix}\bm v\\-\bm M^{-1}(\bm C\bm v+\bm g)\end{bmatrix},\\
+f_d&=\begin{bmatrix}\bm 0\\-\bm M^{-1}\bm D\bm v\end{bmatrix},\\
+G&=\begin{bmatrix}\bm 0\\\bm M^{-1}\bm B\end{bmatrix}.
+\end{aligned}
+\] Every vector field has \(2n\) components; joint damping forces enter the acceleration block through the inverse mass matrix. A quaternion or other redundant orientation representation instead needs its declared kinematic map \(\dot{\bm q}=\bm N(\bm q)\bm v\). In a closed chain, retain \(\bm J_c^T\boldsymbol{\lambda}\) in the force balance and solve the compatible constraint equations, or eliminate the reactions consistently. The unconstrained \(G\) above cannot simply be reused after that elimination.
+
+\subsection{Conservative Coupling and Dissipated Power}\label{sec-damping-energy-ledger}
+
+The \href{https://underactuated.mit.edu/multibody.html\#the-manipulator-equations}{manipulator-equation derivation in Tedrake's MIT notes} identifies the mass and Coriolis terms together as the contribution of kinetic energy. For a time-independent Lagrangian model with a consistent Coriolis representation, \[
+\begin{aligned}
+T&=\tfrac12\bm v^T\bm M\bm v,\\
+\bm v^T\bm C\bm v&=\tfrac12\bm v^T\dot{\bm M}\bm v.
+\end{aligned}
+\] One standard choice makes \(\dot{\bm M}-2\bm C\) skew-symmetric; the matrix \(\mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\) itself is not unique. With conservative potential \(V\) and \(\mathbf{g}(\mathbf{q})=\nabla V\), differentiating \(E=T+V\) and substituting the force balance gives \[
+\dot E=\bm v^T\bm B\control
++\bm v^T\bm J_c^T\boldsymbol{\lambda}
+-\bm v^T\bm D\bm v.
+\] The Coriolis contribution cancels the changing kinetic metric; it is not heat loss. Ideal stationary constraints do no work because \(\bm J_c\bm v=0\). Moving constraints can supply or remove energy, so their work must remain in the ledger. Other physical loss laws require their own power terms.
+
+Linearization about a driven trajectory can contain velocity-dependent terms that affect perturbation growth or decay. Those terms are not, by that fact alone, passive viscous damping. For \href{https://affinedrift.com/articles/technology-heavy-hit-impact-coupling.html}{impact and acoustics}, distinguish this inertial redistribution and moving-grip work from identified material/hand losses and acoustic radiation. A quieter or faster-decaying response does not by itself identify which mechanism caused it.
 \index{control-affine!with damping}
-
-In the control-affine setting, recall that the \ztcf is:
-\[
-\dot{\state} = f_0(\state) + \sum_{i=1}^m g_i(\state) u_i = f_0(\state) + G(\state)\control
-\]
-
-The undamped drift field is $f_0(\state)$. When we add damping, we modify the drift:
-\[
-\dot{\state} = f_0(\state) - \bm{D}_{\text{eff}}(\state)\dot{\bm{q}} + G(\state)\control
-\]
-
-The "effective damping" $\bm{D}_{\text{eff}}$ includes not just $\bm{D}(\bm{q})$ but also the implicit damping from the Coriolis terms, because changing velocity changes the Coriolis forces. This is a subtle point: damping is not simply additive; it modifies the entire vector field structure.
 
 \section{How Damping Propagates Through a Chain}
 \label{sec:propagation}
@@ -227,20 +239,20 @@ This reduces the rate of change of $\dot{q}_i$ by an amount proportional to $D_{
 
 Here is where it gets interesting. Rearranging the damped equation of motion:
 \[
-\ddot{\bm{q}} = \massmat^{-1} \left[ \bm{B}\control - \cormat\dot{\bm{q}} - \bm{D}\dot{\bm{q}} - \gravvec \right]
+\ddot{\bm{q}} = \mathbf{M}(\mathbf{q})^{-1} \left[ \bm{B}\control - \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\bm{q}} - \bm{D}\dot{\bm{q}} - \mathbf{g}(\mathbf{q}) \right]
 \]
 
-Because $\massmat$ is \emph{not diagonal}, the terms inside the brackets get "mixed" when inverted. Let's illustrate with a simple two-joint chain: shoulder (joint 1) and elbow (joint 2).
+Because $\mathbf{M}(\mathbf{q})$ is \emph{not diagonal}, the terms inside the brackets get "mixed" when inverted. Let's illustrate with a simple two-joint chain: shoulder (joint 1) and elbow (joint 2).
 
 \begin{example}{Shoulder-Elbow Damping Coupling}{shoulder_elbow_coupling}
 The mass matrix for a two-link arm is approximately:
 \[
-\massmat = \begin{pmatrix} m_1 L_1^2 + m_2(L_1^2 + L_2^2 + 2L_1 L_2 \cos q_2) & m_2(L_2^2 + L_1 L_2 \cos q_2) \\ m_2(L_2^2 + L_1 L_2 \cos q_2) & m_2 L_2^2 \end{pmatrix}
+\mathbf{M}(\mathbf{q}) = \begin{pmatrix} m_1 L_1^2 + m_2(L_1^2 + L_2^2 + 2L_1 L_2 \cos q_2) & m_2(L_2^2 + L_1 L_2 \cos q_2) \\ m_2(L_2^2 + L_1 L_2 \cos q_2) & m_2 L_2^2 \end{pmatrix}
 \]
 
 The off-diagonal terms $M_{12} = M_{21}$ are nonzero and depend on the elbow angle $q_2$. When we invert this matrix to solve for $\ddot{\bm{q}}$, we get:
 \[
-\ddot{\bm{q}} = \massmat^{-1} \cdot (\ldots - \bm{D}\dot{\bm{q}} - \ldots)
+\ddot{\bm{q}} = \mathbf{M}(\mathbf{q})^{-1} \cdot (\ldots - \bm{D}\dot{\bm{q}} - \ldots)
 \]
 
 Suppose we have damping only at the elbow: $\bm{D} = \text{diag}(0, c_2)$. The damping term entering the inverse is:
@@ -248,25 +260,23 @@ Suppose we have damping only at the elbow: $\bm{D} = \text{diag}(0, c_2)$. The d
 -\bm{D}\dot{\bm{q}} = \begin{pmatrix} 0 \\ -c_2 \dot{q}_2 \end{pmatrix}
 \]
 
-After multiplication by $\massmat^{-1}$, the shoulder acceleration $\ddot{q}_1$ receives a contribution from this elbow damping force, even though the shoulder has zero damping directly. Quantitatively:
+After multiplication by $\mathbf{M}(\mathbf{q})^{-1}$, the shoulder acceleration $\ddot{q}_1$ receives a contribution from this elbow damping force, even though the shoulder has zero damping directly. Quantitatively:
 \[
-\ddot{q}_1 = \frac{1}{\det(\massmat)} \left[ (\massmat^{-1})_{11} (-c_2 \dot{q}_2) + (\massmat^{-1})_{12} (-c_2 \dot{q}_2) \right]
+(\ddot{q}_1)_d = -(\mathbf{M}(\mathbf{q})^{-1})_{12}c_2\dot{q}_2 = \frac{M_{12}}{\det(\mathbf{M}(\mathbf{q}))}c_2\dot{q}_2
 \]
 
-The cross-term $(\massmat^{-1})_{12}$ couples the two joints. Damping at the elbow affects the shoulder via this off-diagonal path.
+This is only the damping contribution to shoulder acceleration. The cross-term \((\mathbf{M}(\mathbf{q})^{-1})_{12}\) couples the two joints; its sign depends on configuration. The determinant already occurs in the inverse and must not be applied a second time. Total passive loss remains \(c_2\dot q_2^2\), even when the shoulder accelerates in the direction of its own motion.
 \end{example}
 
 This is crucial: in a multi-joint chain, you cannot treat each joint's dynamics in isolation. The mass matrix creates a network of inertial coupling. Damping at a distal joint propagates proximally.
 
-\subsection{Coupling Through Coriolis Effects}
+\subsection{Coupling Through Coriolis Effects}\label{coupling-through-coriolis-effects}
 
-The Coriolis matrix $\cormat$ also couples joints. Damping reduces velocity, which reduces Coriolis forces:
-\[
-\cormat \dot{\bm{q}}
+The Coriolis force depends quadratically on the joint velocities at a fixed configuration: \[
+\bm C(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}
 \]
 
-When $\bm{D}$ reduces $\dot{\bm{q}}$, the Coriolis term decreases, which indirectly affects accelerations everywhere. This is a second-order effect (damping $\to$ velocity $\to$ Coriolis $\to$ acceleration) but it's real.
-
+Uniformly scaling all velocities by a factor scales this force by the factor squared. Changing one velocity component or the configuration can instead increase, decrease or reverse individual force components. Damping therefore changes subsequent inertial coupling through the trajectory, but it creates no additional Coriolis dissipation beyond the physical loss terms in Section~\ref{sec-damping-energy-ledger}.
 \subsection{Energy Cascade in Serial Chains}
 
 Consider a serial chain: shoulder $\to$ elbow $\to$ wrist $\to$ club shaft. The kinetic energy flows from proximal (shoulder) to distal (club). At each joint, damping dissipates energy. Where does this dissipation hurt the most?
@@ -599,20 +609,14 @@ In the control-affine framework, damping modifies the drift field. Recall:
 \dot{\state} = f_0(\state) + G(\state)\control
 \]
 
-When we add damping, the drift field becomes:
-\[
-f_{\text{damped}}(\state) = f_0(\state) - \bm{D}_{\text{eff}} \dot{\bm{q}}
+For the independent-coordinate viscous model in Section~\ref{sec-damping-state-map}, the drift field becomes: \[
+f_{\text{damped}}(\mathbf{x}) = f_0(\mathbf{x})
++\begin{bmatrix}\bm 0\\-\mathbf{M}(\mathbf{q})^{-1}\bm D\bm v\end{bmatrix}.
 \]
 
-The effective damping $\bm{D}_{\text{eff}}$ is not simply the sum of viscous and Coulomb components. It includes:
-1. Viscous damping from joints and muscles.
-2. Implicit damping from the Coriolis terms (reducing velocity reduces Coriolis forces).
-3. Configuration-dependent effects (soft tissue compression, muscle routing changes).
-
+Configuration-dependent passive coefficients may represent identified losses within their calibration range. Coulomb friction, viscoelastic memory and active muscle dynamics need their own constitutive states or force laws; they cannot generally be folded into a constant viscous matrix. Coriolis terms remain in the conservative drift and are excluded from the dissipated-power budget.
 \begin{driftcontrol}{Damping as Drift Modification}{drift:damping_modification}
-The drift field represents the "natural" motion of the system under gravity and inertia, without any muscular control. When damping is added, the drift field is damped: the velocity naturally decays, and extreme accelerations are limited. This is why damping stabilizes the system.
-
-Equivalently, the control field $G(\state)$ must work against the damping to accelerate the joints. The control inputs must provide enough torque to overcome damping. This is one reason why the transition from backswing to downswing requires a sudden increase in muscular effort: the brain must overcome damping forces to reverse the direction of motion.
+For an unforced system with stationary ideal constraints, passive damping makes total mechanical energy nonincreasing. Gravity and joint coupling can still increase an individual joint's speed, and energy decay alone does not prove stability of every equilibrium or driven trajectory. When a particular trajectory is prescribed, inverse dynamics determines the additional actuator work associated with damping. This bookkeeping does not establish a universal muscular strategy for reversing the swing.
 \end{driftcontrol}
 
 \section{Summary: The Damping Principle}
