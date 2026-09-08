@@ -1,1002 +1,521 @@
-% ==========================================================================
-%  Chapter 3: Configuration Space and Degrees of Freedom
-% ==========================================================================
 \chapter{Configuration Space and Degrees of Freedom}
 \label{ch:configuration}
+\label{laymans:context_box}
 \index{Configuration Space}
 \index{Degrees of Freedom}
 
-\epigraph{%
-  To command a body to move, we must first establish exactly where it is. We do not use the raw atoms of the universe to map a body; we use its independent coordinates—its configuration.
-}{}
+A golfer can place the clubhead at the same point using different elbow, shoulder and torso configurations. Those postures need not permit the same next motion, require the same joint torques, or produce the same impact. Configuration space provides the language for distinguishing these questions. It describes the modeled arrangement of the bodies; kinematics maps that arrangement to a task; dynamics determines how forces change the motion.
 
-\begin{laymansbox}{Context \& Use Case: Mapping the Possible}{context_box}
-\textbf{The Math You Will See:} We define the \textbf{Configuration Space ($\mathcal{Q}$)}, count Degrees of Freedom (DOF) using Grübler's formula, establish the mathematics of \textbf{differentiable manifolds}, define \textbf{Forward Kinematics} maps, analyze reachable workspace, and distinguish \textbf{holonomic} from \textbf{non-holonomic} constraints.
+This chapter develops local coordinates, constraint counts, tangent vectors, forward and inverse kinematics, workspace and non-holonomic motion. The examples are specified mechanisms, not measurements of an anatomical golfer. Keeping that boundary explicit lets us transfer the mathematics without transferring unjustified performance claims.
 
-\textbf{Why We Need It:} If you want a robot arm to pick up a coffee cup, you know where the cup is in physical 3D space ($X, Y, Z$). But you cannot command the robot's $X, Y, Z$ position directly! You can only command the motors at its joints (its "configuration"). We must build mathematical maps that translate between the physical space where the coffee cup lives, and the abstract angular "configuration space" where the robot's motors live. The dimension of this space is determined by DOF; its topology and geometry are governed by differential geometry.
-
-\textbf{All Variables Defined:} $\mathbf{q}$ represents joint angles, $\mathcal{Q}$ is the configuration manifold, $\mathbf{p}_{end}$ is the end-effector position, and $m, n, c$ denote the number of bodies, DOF, and independent constraints in Grübler's formula.
-\end{laymansbox}
-
-% ==========================================================================
 \section{Historical Context: From Lagrange to Riemann}
 \label{sec:history}
 
-The mathematical framework of Configuration Space owes its development to three foundational ideas.
+Generalized coordinates let mechanics describe a constrained arrangement without carrying every particle coordinate independently. Manifold theory explains why a useful local coordinate description need not extend over the entire configuration space. Modern robotics combines these ideas with maps between joint arrangements and end-effector tasks~\cite{Murray1994,Lynch2017}. A coordinate system is a representation; it does not determine the underlying physical freedom.
 
-\textbf{Lagrange's Generalized Coordinates (1788):} Joseph-Louis Lagrange introduced the concept that one need not track every particle's Cartesian coordinates. Instead, for a constrained mechanical system, one could choose a minimal set of independent variables $q_1, q_2, \ldots, q_n$ whose values completely specify the system's configuration. This abstraction---choosing coordinates that \emph{already respect} the system's constraints---transformed mechanics from a coordinate-fixing discipline into a geometric one. The Lagrangian formulation of mechanics, summarized in the principle of least action, operates naturally in generalized coordinates.
+Nor does curvature define a manifold: Euclidean space is a manifold, and a torus can carry an intrinsically flat metric despite its familiar curved embedding in three dimensions. Topology, smooth structure and metric answer different questions. A model's mass matrix later supplies one physically meaningful metric; the configuration manifold itself does not select it.
 
-\textbf{Riemann's Manifold Concept (1854):} Bernhard Riemann's Habilitationsvortrag introduced the idea of manifolds: spaces that are locally Euclidean but globally curved. Riemann showed that curvature itself is intrinsic to a space, not imposed by an embedding in a higher-dimensional flat space. This insight enables us to treat Configuration Space not as a rigid subset of $\Reals^n$, but as an independent geometric object with its own metric and topology.
-
-\textbf{Modern Differential Geometry:} The 20th-century formalization by Élie Cartan, Charles Ehresmann, and others crystallized these ideas into a rigorous calculus on manifolds. Today, Configuration Space is understood as a smooth differentiable manifold, the tangent bundle $T\mathcal{Q}$ forms the state space, and the Jacobian matrix encodes the instantaneous kinematic relationship between joint velocities and end-effector velocities.
-
-% ==========================================================================
 \section{Degrees of Freedom (DOF) and Grübler's Formula}
 \label{sec:dof}
+\label{def:dof}
 
-In Chapter 2, we learned that the State Space $\mathcal{X}$ consists of both position coordinates ($\mathbf{q}$) and velocity coordinates ($\dot{\mathbf{q}}$). But how many position coordinates does our system actually have?
+\subsection{Local Freedom and Independent Constraints}
 
-\begin{figure}[htb]
-\centering
-\begin{tikzpicture}[scale=1.0]
-  % 4-bar linkage
-  \draw[thick] (0,0) -- (2,0);  % ground link
-  \draw[thick] (2,0) -- (3.5,1.5);  % link 1
-  \draw[thick] (3.5,1.5) -- (5.5,0.8);  % link 2
-  \draw[thick] (5.5,0.8) -- (5.5,0);  % link 3
-  \draw[thick] (5.5,0) -- (0,0);  % close ground
+At a regular configuration, the number of degrees of freedom is the local dimension of the configuration space. A free rigid body has three translational and three rotational freedoms. Six local coordinates suffice near a regular chart point, but there is no globally nonsingular, unique three-angle description of all orientations. A rotation matrix or unit quaternion stores more scalar entries with constraints; that storage does not add physical freedoms.
 
-  % Joints (circles)
-  \draw[fill=black] (0,0) circle (0.1);
-  \draw[fill=black] (2,0) circle (0.1);
-  \draw[fill=black] (3.5,1.5) circle (0.1);
-  \draw[fill=black] (5.5,0.8) circle (0.1);
-  \draw[fill=black] (5.5,0) circle (0.1);
+For an ambient configuration manifold of dimension $D$, suppose smooth equations $\phi(q)=0$ have locally constant derivative rank $r$ and define a regular level set. Then
+\begin{equation}
+ \dim\mathcal Q=D-r,\qquad T_q\mathcal Q=\ker D\phi(q).
+\end{equation}
+This follows from the constant-rank theorem: locally, $r$ independent coordinates are fixed by the equations and $D-r$ remain free. Counting written equations instead of their independent rank can overcount constraints.
 
-  % Labels
-  \node[below] at (2,-0.25) {$\theta_1$};
-  \node[above] at (3.8,1.7) {$\theta_2$};
-  \node[right] at (5.75,0.4) {$\theta_3$};
-  \node[below] at (1,-0.3) {Fixed ground};
+At a singular point the linearized kernel can be misleading. The equation $x^2+y^2=0$ has the single real solution $(0,0)$, while its derivative there is zero and its kernel is all of $\mathbb R^2$. A two-dimensional linearized kernel does not make the solution set locally two-dimensional. Closed linkages may similarly have singular branches or instantaneous motions that do not extend to finite motion.
 
-  % DOF indicator
-  \node[draw,rectangle,minimum width=2.5cm,minimum height=0.6cm] at (2.75,-1.5) {DOF = 1 (mechanism has 1 degree of freedom)};
-\end{tikzpicture}
-\caption{A Four-Bar Linkage Mechanism. Although There Are Three Moving Links, the Geometric Constraints From the Four Revolute Joints Reduce the Mechanism to 1 Degree of Freedom. Specifying $\theta_1$ Uniquely Determines $\theta_2$ and $\theta_3$.}
-\label{fig:fourbar_linkage}
-\end{figure}
-
-\subsection{The Concept of Degrees of Freedom}
-
-Consider a single speck of dust floating completely unconstrained in a room. To perfectly define where it is, you need 3 coordinates: $x, y, z$. If it is instead a rigid body floating in the room, knowing $x, y, z$ only fixes its center of mass. It could be pitched entirely backward, or rolled on its side. It therefore requires three additional \textbf{angles} (roll, pitch, yaw) defining its rotation.
-
-This unconstrained rigid body has exactly 6 \textbf{Degrees of Freedom (DOF)}. It requires a minimum of 6 independent parameters (or coordinates) to fully define its posture in 3D Euclidean space.
-
-\begin{definition}{Degrees of Freedom (DOF)}{dof}
-  The Degrees of Freedom of a system represents the absolute minimum number of independent scalar coordinates required to perfectly and unambiguously define the position and orientation of every single particle in that system. Equivalently, DOF is the dimension of the Configuration Space $\mathcal{Q}$.
-\end{definition}
-
-If you connect two floating rigid bodies together with a perfectly rigid bar (welded so they cannot move relative to each other), you do not have 12 DOF. Since the distance and orientation between them are perfectly locked by the weld, you still only have 6 DOF for the combined assembly. The weld acts as a geometric \emph{constraint}. Every independent constraint you add mathematically subtracts one DOF. A hinge joint locking two 6-DOF bodies together removes 5 DOF, leaving exactly 1 DOF of relative rotation between them.
+Two welded floating bodies form one rigid assembly with six freedoms. A hinge between two otherwise free spatial bodies leaves six assembly freedoms plus one relative rotation. Fixing one body to ground removes the six assembly freedoms. These counts concern the chosen mechanical model, not the number of motors or available control inputs.
 
 \subsection{Grübler's Formula}
 \label{subsec:grubler}
+\label{thm:grubler_spatial}
+\label{thm:grubler_planar}
 
-For planar mechanisms, we can count DOF systematically using \textbf{Grübler's formula}, developed by Martin Grübler in 1883. This formula gives the degrees of freedom of a kinematic chain.
-
-\begin{theorem}{Grübler's Formula for Planar Mechanisms}{grubler_planar}
-For a planar mechanism with $m$ rigid bodies (including ground as one body), $n$ movable links, and $c$ independent geometric constraints, the degrees of freedom are given by:
+Let $n$ count moving rigid links, excluding a fixed ground link. Let joint $i$ permit $d_i$ relative freedoms within a planar or spatial model. Under independent regular joint constraints, a planar count is
 \begin{equation}
-\label{eq:grubler}
-\text{DOF} = 3n - \sum_i c_i
+ \mathrm{DOF}=3n-\sum_i c_i,\qquad c_i=3-d_i,
+ \label{eq:grubler}
 \end{equation}
-where the sum is over all $c$ independent constraints imposed by joints.
-
-Equivalently, if there are $j$ joints with degrees of freedom $d_1, d_2, \ldots, d_j$:
+or, for $j$ joints,
 \begin{equation}
-\label{eq:grubler_alt}
-\text{DOF} = 3(n) - \sum_{i=1}^{j} (3 - d_i) = 3n - 3j + \sum_{i=1}^{j} d_i
+ \mathrm{DOF}=3n-3j+\sum_{i=1}^{j}d_i.
+ \label{eq:grubler_alt}
 \end{equation}
-\end{theorem}
-
-\begin{proof}
-In a planar mechanism, each of $n$ movable bodies independently has 3 DOF (2 translational + 1 rotational). If there were no constraints, the total would be $3n$. Each joint imposes geometric constraints: a revolute joint (pin joint) constrains 2 DOF of relative motion, a prismatic joint constrains 2 DOF, and higher-order joints constrain accordingly. The net DOF equals the free DOF minus the sum of imposed constraint DOF.
-\end{proof}
-
-For mechanisms with spatial (3D) linkages, the formula becomes:
-
-\begin{theorem}{Grübler's Formula for Spatial Mechanisms}{grubler_spatial}
-For a spatial mechanism with $n$ movable links and $j$ joints where joint $i$ permits $d_i$ relative DOF:
+Each moving planar body begins with two translations and one rotation. A revolute or prismatic joint removes two independent relative freedoms. Subtracting their independent constraints gives the formula. For spatial bodies, replace each $3$ by $6$:
 \begin{equation}
-\text{DOF} = 6n - \sum_{i=1}^{j} (6 - d_i)
+ \mathrm{DOF}=6n-\sum_{i=1}^{j}(6-d_i).
 \end{equation}
-\end{theorem}
+With $N=n+1$ total links including ground, both forms are $\lambda(N-1-j)+\sum_i d_i$, where $\lambda=3$ or $6$. This is a useful count, not a proof that a particular linkage has independent constraints. Redundant constraints, special geometry and singular configurations require a rank or geometric analysis~\cite{Lynch2017}.
 
-\subsection{Worked Example 1: Planar 4-Bar Linkage}
+\subsection{Worked Example 1: Planar Four-Bar Linkage}
 \label{example:4bar}
+\label{ex:ex_4bar}
 
-\begin{example}{Four-Bar Mechanism DOF}{ex_4bar}
-Consider the classic planar 4-bar linkage: a mechanism with 4 rigid links (one of which is the ground frame) connected by 4 revolute joints.
+Three moving links and four revolute joints give $3(3)-4(2)=1$ regular freedom. Write a closure equation using absolute link angles and a fixed ground displacement $d e_x$:
+\begin{equation}
+ a e(\theta_1)+b e(\theta_2)-c e(\theta_3)-d e_x=0,
+ \qquad e(\theta)=(\cos\theta,\sin\theta)^T.
+\end{equation}
+These are two scalar equations in three angles. Their derivative normally has rank two. The input $\theta_1$ determines the other angles locally only when the two-column derivative with respect to $(\theta_2,\theta_3)$ is invertible. Its determinant is $-bc\sin(\theta_3-\theta_2)$, so that choice of input coordinate fails when the coupler and output link are parallel.
 
-We have:
-\begin{itemize}
-  \item $n = 3$ movable links (link 1, 2, 3; ground is fixed)
-  \item $j = 4$ revolute joints
-  \item Each revolute joint has $d_i = 1$ (one DOF: rotation about the pin)
-\end{itemize}
+Different assembly branches can share an input angle. The branch must be specified and followed continuously; one motor does not make the global closure solution unique. At some singular postures the full closure derivative also loses rank, and finite mobility needs more than a first-order count.
 
-Applying Grübler's formula:
-\begin{align}
-\text{DOF} &= 3n - 3j + \sum_{i=1}^{4} d_i \\
-&= 3(3) - 3(4) + 4(1) \\
-&= 9 - 12 + 4 = 1
-\end{align}
-
-A four-bar linkage has exactly \textbf{1 DOF}. Once you specify the angle of one input link (the crank), the positions and angles of all other links are completely determined by the geometric constraints. This is why a four-bar can be driven by a single motor to produce a controlled path motion.
-\end{example}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{../figures/configuration_fourbar.pdf}
+\caption{Four-Bar Closure on One Regular Assembly Branch. Ground Contains Two Fixed Pivots; the Input Angle Is Only a Local Coordinate Where the Selected Closure Derivative Is Nonsingular.}
+\label{fig:fourbar_linkage}
+\end{figure}
 
 \subsection{Worked Example 2: Spatial Stewart Platform}
 \label{example:stewart}
+\label{ex:ex_stewart}
 
-\begin{example}{Stewart Platform DOF}{ex_stewart}
-The Stewart platform (also called a Gough-Stewart platform) is a parallel manipulator consisting of a base platform, a movable top platform, and six variable-length actuators connecting them.
-
-We apply the Gr\"ubler--Kutzbach formula for spatial mechanisms. Each leg connects the base to the top platform through a universal joint (2 DOF) at the base, a prismatic actuator (1 DOF), and a spherical joint (3 DOF) at the top:
-\begin{itemize}
-  \item $n = 14$ total bodies: 1 top platform + 6 upper leg segments + 6 lower leg segments + ground
-  \item $j = 18$ joints: 6 universal (2 DOF each) + 6 prismatic (1 DOF each) + 6 spherical (3 DOF each)
-  \item Total joint freedoms: $\sum d_i = 6 \times 2 + 6 \times 1 + 6 \times 3 = 36$
-\end{itemize}
-
-Applying the spatial Gr\"ubler formula ($\lambda = 6$ for spatial mechanisms):
+For an ideal six-leg UPS platform, each leg has a universal joint, a prismatic joint and a spherical joint, with $2+1+3$ freedoms. There are $N=14$ bodies including ground, $n=13$ moving bodies and $j=18$ joints. Thus the regular independent-constraint count is
 \begin{equation}
-\text{DOF} = \lambda(n - 1 - j) + \sum_{i=1}^{j} d_i = 6(14 - 1 - 18) + 36 = 6(-5) + 36 = 6.
-\label{eq:stewart_dof}
+ 6(14-1-18)+6(2+1+3)=6.
+ \label{eq:stewart_dof}
 \end{equation}
+This is a mobility count for the mechanism with variable leg lengths. Local control of all platform velocities also requires the actuator-length derivative to have rank six.
 
-A non-degenerate Stewart platform therefore has exactly \textbf{6 DOF} in its end-effector pose and requires 6 actuators (the prismatic joints) to control all 6 spatial DOF. This makes it a fully parallel manipulator: all actuators work in parallel to position and orient the top platform.
-\end{example}
+If base anchors are $a_i$, platform-frame anchors are $b_i$, and the platform pose is $(p,R)$, the required lengths are directly
+\begin{equation}
+ \ell_i=\|p+Rb_i-a_i\|.
+\end{equation}
+No coupled root-finding is needed to obtain lengths from a specified pose. The reverse problem, pose from lengths, may have multiple solutions. Joint-angle limits, leg interference and stroke limits must still be checked. A singular length-to-pose relation is not diagnosed by merely recounting bodies.
 
 \subsection{Worked Example 3: Human Arm Kinematics}
 \label{example:human_arm}
+\label{ex:ex_human_arm}
 
-\begin{example}{Human Arm DOF}{ex_human_arm}
-Consider a simplified model of the human arm: shoulder, elbow, and wrist.
-\begin{itemize}
-  \item Shoulder: ball-and-socket joint $\approx 3$ DOF (roll, pitch, yaw about the shoulder center)
-  \item Elbow: hinge joint $\approx 1$ DOF (flexion/extension)
-  \item Wrist: ball-and-socket joint $\approx 3$ DOF (pronation/supination, flexion/extension, radial/ulnar deviation)
-\end{itemize}
+A common reduced arm model assigns three shoulder rotations, one elbow flexion angle, one forearm pronation/supination angle and two wrist angles. That gives seven coordinates relative to a fixed shoulder base. Forearm rotation must not be relabeled as a third rotation of a ball-and-socket wrist. Scapular motion, shoulder translation, compliant tissues and hand joints change a more detailed model's configuration.
 
-Total: $3 + 1 + 3 = 7$ DOF in a gross anatomical model. (The human arm actually has 7 DOF, which is why we can reach and reorient objects in multiple ways---we have redundancy.)
+For a six-dimensional hand-pose task, a seven-coordinate model has a one-dimensional local inverse-kinematics family near a reachable regular point where the task derivative has rank six. This conclusion follows locally from the regular-level-set theorem. It does not say that every target is reachable or that every posture admits the same redundancy. Joint limits, singularities and grasp constraints can change the admissible set.
 
-The hand position can be specified by 3 Cartesian coordinates $(x, y, z)$ and the wrist orientation by 3 angles (roll-pitch-yaw). Thus the end-effector pose has 6 DOF. With 7 joint angles, the arm is \emph{redundant}: there are infinitely many joint configurations $\mathbf{q} \in \Reals^7$ that achieve the same end-effector pose. This redundancy is exploited in human motor control to avoid obstacles and optimize reach.
-\end{example}
+With both hands holding a rigid club, the arms and torso form a closed kinematic loop. Counting two unconstrained seven-coordinate arms and adding a club would ignore the grip constraints. Compliant grips require a different model. In either case, configuration redundancy is distinct from muscle-force redundancy and from the ability to alter a selected impact outcome.
 
-% ==========================================================================
-\section{The Configuration Space \texorpdfstring{$\mathcal{Q}$}{Q} and Topological Manifolds}
+\section{The Configuration Space and Topological Manifolds}
 \label{sec:config_space}
+\label{laymans:config_state}
+\label{ex:ex_torus}
+\label{ex:ex_sphere}
+\label{ex:ex_circle}
+\label{def:topological_manifold}
 
-The collection of all valid configurations a system can possibly achieve---accounting for all of its physical constraints, linkages, pins, and bearings---is called its \textbf{Configuration Space}, mathematically denoted by the symbol $\mathcal{Q}$.
+The configuration space $\mathcal Q$ is the set of modeled arrangements satisfying the selected geometric conditions. Its regular unconstrained regions are often smooth manifolds. Joint limits can introduce boundaries and corners; collision exclusions remove configurations; singular loop closures can create sets that are not manifolds. A contact-mode change can alter which equations apply. Therefore ``every physical configuration space is a smooth manifold'' is too strong.
 
-Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical \textbf{manifold}~\cite{Murray1994}. The number of dimensions of this space is exactly equal to the system's Degrees of Freedom.
+A topological $n$-manifold without boundary is a Hausdorff, second-countable space in which every point has a neighborhood homeomorphic to an open subset of $\mathbb R^n$. Hausdorff means distinct points have disjoint neighborhoods; second-countable means a countable basis suffices. A manifold with boundary uses a local half-space at its boundary instead.
 
-\begin{definition}{Topological Manifold}{topological_manifold}
-A \emph{topological manifold} of dimension $n$ is a topological space $\mathcal{M}$ such that:
-\begin{enumerate}
-  \item $\mathcal{M}$ is Hausdorff (any two distinct points have disjoint open neighborhoods),
-  \item $\mathcal{M}$ is second-countable (has a countable basis for its topology),
-  \item Every point $p \in \mathcal{M}$ has an open neighborhood $U$ such that $U$ is homeomorphic to an open subset of $\Reals^n$.
-\end{enumerate}
-\end{definition}
+The circle $S^1=\{(x,y):x^2+y^2=1\}$ has dimension one. The sphere $S^2$ has dimension two, including at its poles; longitude fails at the poles, not the manifold. Two independent unrestricted revolute angles give $S^1\times S^1$, a torus. With restricted joint ranges, the admissible set can instead be a rectangle or another subset of that torus. Tracking cable wind-up or accumulated revolutions introduces additional model information; an unwrapped angle is not automatically the physical orientation itself.
 
-In less formal terms: a manifold \emph{locally looks like Euclidean space}, but globally may have a curved or non-trivial topology.
+For a free spatial rigid body, position and orientation give $\mathbb R^3\times SO(3)$ as a manifold. Its group multiplication is the semidirect product $SE(3)$, because rotating one frame also changes how translations compose. The orientation space $SO(3)$ is three-dimensional and compact. Unit quaternions give a two-to-one representation: opposite quaternion points represent the same orientation.
 
-\subsection{Examples of Manifolds}
-
-\begin{example}{The Circle \texorpdfstring{$S^1$}{S1}}{ex_circle}
-The circle $S^1 = \{(x,y) \in \Reals^2 : x^2 + y^2 = 1\}$ is a 1-dimensional manifold. Globally, it closes on itself and is topologically distinct from a line. However, locally, any small arc of the circle looks like a line segment from $\Reals^1$.
-\end{example}
-
-\begin{example}{The 2-Sphere \texorpdfstring{$S^2$}{S2}}{ex_sphere}
-The 2-sphere $S^2 = \{(x,y,z) \in \Reals^3 : x^2 + y^2 + z^2 = 1\}$ is a 2-dimensional manifold (the Earth's surface). Globally, it is closed and without boundary. Locally, near any point (except the poles in certain coordinates), it looks like a flat 2D plane.
-\end{example}
-
-\begin{example}{The Torus \texorpdfstring{$T^2$}{T2}}{ex_torus}
-The torus $T^2 = S^1 \times S^1$ is the Cartesian product of two circles. It is a 2-dimensional manifold. Topologically, it can be visualized as the surface of a doughnut: closed without boundary, genus 1.
-\end{example}
-
-\begin{laymansbox}{Configuration Space vs. State Space}{config_state}
-  A system with $n$ Degrees of Freedom has a Configuration Space $\mathcal{Q}$ of dimension $n$, defined completely by the vector $\mathbf{q} = [q_1, q_2, \dots, q_n]^T$.
-
-  The corresponding \textbf{State Space} $\mathcal{X}$ (from Chapter 2) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
-
-  \[ \text{State} \ \mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T \in \mathcal{X} = T\mathcal{Q} \]
-  (Where $T\mathcal{Q}$ represents the Tangent Bundle of the configuration manifold).
-\end{laymansbox}
-
-% ==========================================================================
 \section{Charts, Atlases, and Coordinate Patches}
 \label{sec:charts}
+\label{def:atlas}
+\label{def:chart}
 
-While the configuration manifold $\mathcal{Q}$ is curved globally, our primary computational tool is always Euclidean coordinates. We use local maps called \emph{charts} to cover the manifold piecewise with flat coordinate systems.
+A chart is a homeomorphism $\varphi:U\to\varphi(U)\subset\mathbb R^n$, where both $U$ and its image are open in their respective spaces. An atlas is a collection of charts covering the manifold. A smooth atlas has smooth transition maps on every overlap; the associated maximal compatible atlas defines the smooth structure. Here ``smooth'' means $C^\infty$, although other differentiability classes can be specified.
 
-\begin{definition}{Chart}{chart}
-A \emph{chart} on a manifold $\mathcal{Q}$ is a pair $(U, \varphi)$ where:
-\begin{itemize}
-  \item $U \subseteq \mathcal{Q}$ is an open set,
-  \item $\varphi : U \to \Reals^n$ is a homeomorphism (continuous bijection with continuous inverse) onto an open subset of $\Reals^n$.
-\end{itemize}
-The map $\varphi$ assigns local coordinates (real numbers) to each point in $U$.
-\end{definition}
-
-\begin{definition}{Atlas}{atlas}
-An \emph{atlas} on a manifold $\mathcal{Q}$ is a collection of charts $\{(U_i, \varphi_i)\}_{i \in I}$ such that:
-\begin{itemize}
-  \item The sets $U_i$ cover the entire manifold: $\mathcal{Q} = \bigcup_{i \in I} U_i$,
-  \item The charts are pairwise compatible in a sense we clarify below.
-\end{itemize}
-\end{definition}
-
-\subsection{Worked Example: Charts on the Circle \texorpdfstring{$S^1$}{S1}}
+\subsection{Worked Example: Two Valid Charts on the Circle}
 \label{example:circle_charts}
+\label{ex:ex_circle_charts}
 
-\begin{example}{Two Charts Are Necessary for \texorpdfstring{$S^1$}{S1}}{ex_circle_charts}
-Consider the unit circle $S^1 = \{(x,y) : x^2 + y^2 = 1\}$. Can we use a single chart $\varphi : S^1 \to \Reals$ that maps every point on the circle to a real number?
+No single chart covers all of $S^1$. A hypothetical homeomorphism would map the compact circle onto a nonempty compact open subset of $\mathbb R$, which does not exist. The half-open interval representation $[0,2\pi)$ is a bijective labeling of circle points, but its inverse-angle assignment jumps across the cut and its image is not open. Boundedness alone is not the problem: a bounded open interval can be a valid chart image.
 
-\textbf{Attempt 1: Naive Angle Parameterization}
+Let $U_N=S^1\setminus\{(0,1)\}$ and $U_S=S^1\setminus\{(0,-1)\}$. Stereographic coordinates are
+\begin{equation}
+ u=\varphi_N(x,y)=\frac{x}{1-y},\qquad
+ v=\varphi_S(x,y)=\frac{x}{1+y}.
+\end{equation}
+Both images are all of $\mathbb R$. Their explicit inverses are
+\begin{equation}
+ \varphi_N^{-1}(u)=\frac{(2u,u^2-1)}{1+u^2},\qquad
+ \varphi_S^{-1}(v)=\frac{(2v,1-v^2)}{1+v^2}.
+\end{equation}
+Substitution verifies unit norm and recovers the original coordinate. Each point other than its chart's omitted pole has one coordinate. The two chart domains cover the circle and overlap away from both poles.
 
-Define $\varphi(\theta) = \theta$ where $\theta \in [0, 2\pi)$ is the angle from the positive $x$-axis. This gives a bijection between most of $S^1$ and $[0, 2\pi)$. However, this map has two problems:
-\begin{itemize}
-  \item The interval $[0, 2\pi)$ is not homeomorphic to $\Reals$ (it is half-open and bounded).
-  \item The map is not continuous at the boundary where $\theta = 0$ and $\theta = 2\pi$ identify the same point.
-\end{itemize}
-A single chart cannot cover all of $S^1$ continuously.
+In contrast, projecting to $x$ on a region $y>-\epsilon$ is generally not injective: for a small positive $\eta<\epsilon$, both $(\sqrt{1-\eta^2},\eta)$ and $(\sqrt{1-\eta^2},-\eta)$ belong to the region and share $x$. A smooth formula is not a valid chart unless it is also a homeomorphism onto an open image.
 
-\textbf{Solution: Two Overlapping Charts}
-
-Define two open sets:
-\begin{align}
-U_1 &= \{(x,y) \in S^1 : y > -\epsilon\} \quad \text{(excludes a small arc at the bottom)} \\
-U_2 &= \{(x,y) \in S^1 : y < \epsilon\} \quad \text{(excludes a small arc at the top)}
-\end{align}
-where $\epsilon$ is small.
-
-On $U_1$, use the chart $(U_1, \varphi_1)$ where $\varphi_1(x,y) = x$. Since $y > -\epsilon$, the $x$-coordinate alone determines the point (by the Pythagorean theorem, $x \in (-1, 1)$), and $\varphi_1$ maps homeomorphically onto the interval $(-1, 1) \subset \Reals$.
-
-On $U_2$, use the chart $(U_2, \varphi_2)$ where $\varphi_2(x,y) = -x$. This also maps homeomorphically onto $(-1, 1)$.
-
-The two charts overlap on $U_1 \cap U_2 = \{(x,y) \in S^1 : -\epsilon < y < \epsilon\}$. This overlap is essential: we have covered the entire circle with two overlapping charts, each mapping to Euclidean space $\Reals$.
-
-\textbf{Key Insight:} The necessity of two charts reflects the topological fact that the circle is not contractible: you cannot continuously shrink it to a point. This global topology cannot be captured by a single local coordinate system.
-\end{example}
-
-% ==========================================================================
 \section{Transition Maps and Smooth Compatibility}
 \label{sec:transitions}
+\label{def:differentiable_manifold}
+\label{def:transition_map}
 
-When two charts overlap, we must ensure they agree on their shared region. This is formalized by \emph{transition maps}.
+For overlapping charts, the transition map is $\varphi_j\circ\varphi_i^{-1}$ on $\varphi_i(U_i\cap U_j)$. It changes coordinates of the same point. It need not preserve their numerical values, Euclidean lengths or component velocities.
 
-\begin{definition}{Transition Map}{transition_map}
-If $(U_i, \varphi_i)$ and $(U_j, \varphi_j)$ are two charts whose domains overlap, the \emph{transition map} is defined as:
-\begin{equation}
-\tau_{ij} = \varphi_j \circ \varphi_i^{-1} : \varphi_i(U_i \cap U_j) \to \varphi_j(U_i \cap U_j)
-\end{equation}
-This map takes coordinates from one chart and converts them to coordinates in another.
-\end{definition}
-
-For a \emph{smooth} (or \emph{differentiable}) manifold, we require all transition maps to be smooth (infinitely differentiable).
-
-\begin{definition}{Differentiable Manifold}{differentiable_manifold}
-A differentiable manifold is a topological manifold equipped with a differentiable structure: an atlas where every transition map is $C^\infty$ (infinitely differentiable).
-\end{definition}
-
-\subsection{Worked Example: Transition Map on \texorpdfstring{$S^1$}{S1}}
+\subsection{Worked Example: Circle Transition and Velocity}
 \label{example:circle_transition}
+\label{ex:ex_circle_transition}
 
-\begin{example}{Transition Map on the Circle}{ex_circle_transition}
-Using the two charts from Example~\ref{example:circle_charts}:
-\begin{itemize}
-  \item Chart 1: $(U_1, \varphi_1)$ where $\varphi_1(x,y) = x$ for $y > -\epsilon$.
-  \item Chart 2: $(U_2, \varphi_2)$ where $\varphi_2(x,y) = -x$ for $y < \epsilon$.
-\end{itemize}
-
-On the overlap $U_1 \cap U_2$, we have points $(x,y)$ with $-\epsilon < y < \epsilon$.
-
-In chart 1 coordinates, a point is labeled by $x_1 = x \in (-1, 1)$.
-
-In chart 2 coordinates, the same point is labeled by $x_2 = -x \in (-1, 1)$.
-
-The transition map is:
+The circle inverses give, on $u\ne0$,
 \begin{equation}
-\tau_{12}(x_1) = -x_1
+ v=\frac1u,\qquad u=\frac1v,\qquad
+ \dot v=-\frac{\dot u}{u^2}.
 \end{equation}
+These transition maps are smooth on their open, disconnected overlap images $\mathbb R\setminus\{0\}$. Their singularity at zero lies outside the overlap: zero is the opposite chart's omitted pole.
 
-Equivalently, going the other direction:
+For example, $u=1$ corresponds to $(1,0)$ and $v=1$. If $\dot u=2$, then $\dot v=-2$. These represent the same physical tangent vector. Differentiating the inverse map also gives the circle's induced line element
 \begin{equation}
-\tau_{21}(x_2) = -x_2
+ ds^2=\frac{4}{(1+u^2)^2}\,du^2.
 \end{equation}
+The same speed is obtained in the $v$ chart after transforming both the metric and the velocity. Comparing raw coordinate rates without this transformation can create an apparent difference that is purely representational.
 
-Both are clearly $C^\infty$ (linear functions, hence infinitely differentiable). This smoothness ensures that the calculus we do with one chart's coordinates yields the same results when computed in another chart's coordinates.
-\end{example}
-
-% ==========================================================================
 \section{Tangent Vectors, Curves, and Derivations}
 \label{sec:tangent_vectors}
+\label{laymans:tangent_bundle_reminder}
+\label{def:tangent_bundle}
+\label{thm:tangent_equivalence}
+\label{def:tangent_derivation}
+\label{def:tangent_curve}
+\label{def:tangent_space}
 
-While the manifold $\mathcal{Q}$ represents all valid positions (configurations), motion requires us to talk about velocities. Because the manifold is curved, a velocity vector cannot "live" on the surface itself---it would point off the surface tangentially!
+The tangent space $T_q\mathcal Q$ is an $n$-dimensional vector space attached to a particular configuration. It describes unconstrained instantaneous directions on the smooth configuration manifold. Additional non-holonomic restrictions may allow only a subspace of these directions; an active unilateral boundary may instead admit a one-sided cone.
 
-\begin{definition}{Tangent Space \texorpdfstring{$T_q \mathcal{Q}$}{TqQ}}{tangent_space}
-At any specific configuration $q \in \mathcal{Q}$, the \emph{Tangent Space} $T_q\mathcal{Q}$ is a vector space whose elements are called \emph{tangent vectors}. It is the space of all possible velocities at $q$.
-\end{definition}
+Two smooth curves through $q$ represent the same tangent vector when their coordinate derivatives agree at zero in one chart. The chain rule for a transition map then makes them agree in every chart. The tangent vector is the equivalence class, while $\dot q$ is its coordinate representation.
 
-There are two rigorous ways to define tangent vectors: as equivalence classes of curves, and as derivations on function algebras. Both are equivalent, and understanding both perspectives is essential.
-
-\subsection{Tangent Vectors as Equivalence Classes of Curves}
-
-\begin{definition}{Tangent Vector via Curves}{tangent_curve}
-Let $q \in \mathcal{Q}$ be a point on the manifold. Two smooth curves $\gamma_1, \gamma_2 : (-\epsilon, \epsilon) \to \mathcal{Q}$ with $\gamma_1(0) = \gamma_2(0) = q$ are said to be \emph{tangent at $q$ in a chart $(U, \varphi)$} if:
+Alternatively, a tangent vector is an $\mathbb R$-linear derivation $v$ on smooth real functions satisfying
 \begin{equation}
-\frac{d}{dt}\bigg|_{t=0} \varphi(\gamma_1(t)) = \frac{d}{dt}\bigg|_{t=0} \varphi(\gamma_2(t))
+ v(fg)=v(f)g(q)+f(q)v(g).
 \end{equation}
-(The derivatives of their coordinate expressions agree at $t=0$.)
-
-A \emph{tangent vector} at $q$ is an equivalence class $[\gamma]$ of curves all tangent to each other at $q$. The value $\mathbf{v} = \frac{d}{dt}\big|_{t=0} \varphi(\gamma(t)) \in \Reals^n$ is the coordinate representation of the tangent vector in the chart.
-\end{definition}
-
-This definition is independent of the chart chosen: if two tangent vectors agree in one chart's coordinates, they agree in all charts' coordinates (by properties of transition maps).
-
-\subsection{Tangent Vectors as Derivations}
-
-An alternative algebraic viewpoint: a tangent vector is a linear operator on smooth functions.
-
-\begin{definition}{Tangent Vector via Derivations}{tangent_derivation}
-A \emph{derivation at $q$} is a linear map $v : C^\infty(\mathcal{Q}) \to \Reals$ (where $C^\infty(\mathcal{Q})$ is the algebra of smooth real-valued functions on $\mathcal{Q}$) such that:
+A curve $\gamma$ supplies $v(f)=\frac{d}{dt}|_0 f(\gamma(t))$. Conversely, in coordinates $z$ centered at $q$, a smooth function locally has the form
 \begin{equation}
-v(fg) = v(f)g(q) + f(q)v(g) \quad \text{(Leibniz rule)}
+ f(z)=f(0)+\sum_i z_i h_i(z),\qquad h_i(0)=\partial_i f(0).
 \end{equation}
+The product rule gives $v(f)=\sum_i v(z_i)\partial_i f(0)$. Constants have zero derivative, and a derivation depends only on the function near $q$; smooth cutoff functions justify using local coordinate functions. The coordinate curve $z(t)=t(v(z_1),\ldots,v(z_n))$ realizes this derivation for sufficiently small $t$. Thus curve classes and derivations are isomorphic, with $n$ independent components.
 
-A \emph{tangent vector} at $q$ can equivalently be defined as a derivation at $q$.
-\end{definition}
-
-The Leibniz rule (or product rule) encodes the essential algebraic property of derivatives. A tangent vector is "an infinitesimal displacement" in the sense that it measures the first-order change in functions along infinitesimal directions.
-
-\subsection{Equivalence of the Two Definitions}
-
-\begin{theorem}{Equivalence of Tangent Vector Definitions}{tangent_equivalence}
-The space of equivalence classes of curves passing through $q$ (Definition~\ref{def:tangent_curve}) is isomorphic, as a vector space, to the space of derivations at $q$ (Definition~\ref{def:tangent_derivation}). Both have dimension $n$ (the dimension of $\mathcal{Q}$).
-\end{theorem}
-
-\begin{proof}
-Given a curve $\gamma$ with $\gamma(0) = q$, define a derivation by:
+The tangent bundle is the disjoint union
 \begin{equation}
-v_\gamma(f) = \frac{d}{dt}\bigg|_{t=0} f(\gamma(t))
+ T\mathcal Q=\bigsqcup_{q\in\mathcal Q}T_q\mathcal Q.
 \end{equation}
-This satisfies the Leibniz rule by the product rule of calculus. Conversely, given a derivation $v$, one can construct curves tangent to that direction. The maps between these spaces are linear isomorphisms, preserving dimension.
-\end{proof}
+Its elements are pairs $(q,v_q)$ and it has dimension $2n$. Locally its coordinates transform as $(z,\dot z)\mapsto(\tau(z),D\tau(z)\dot z)$. In general it is not a global product $\mathcal Q\times\mathbb R^n$.
 
-The intuition: curves give a geometric picture of infinitesimal motion; derivations give an algebraic picture of how functions change. Both capture the same mathematical object.
+For an unconstrained second-order mechanical model, configuration and velocity can form the state in $T\mathcal Q$. With a rank-$k$ homogeneous allowed-velocity distribution, the constrained mechanical state lies in that distribution and has dimension $n+k$, under the regularity assumptions. Muscle activation, tendon deformation, flexible-shaft modes, controller memory or contact-mode variables add states. Consequently ``state always has twice the configuration dimension'' is not a general modeling rule.
 
-\subsection{The Tangent Bundle \texorpdfstring{$T\mathcal{Q}$}{TQ}}
-
-\begin{definition}{Tangent Bundle}{tangent_bundle}
-The \emph{Tangent Bundle} $T\mathcal{Q}$ is the disjoint union of all tangent spaces:
-\begin{equation}
-T\mathcal{Q} = \bigcup_{q \in \mathcal{Q}} T_q\mathcal{Q}
-\end{equation}
-Equipped with a natural smooth structure, $T\mathcal{Q}$ is itself a differentiable manifold of dimension $2n$ (if $\mathcal{Q}$ has dimension $n$).
-\end{definition}
-
-An element of $T\mathcal{Q}$ is a pair $(q, \mathbf{v})$ where $q \in \mathcal{Q}$ is a configuration and $\mathbf{v} \in T_q\mathcal{Q}$ is a velocity at that configuration.
-
-\begin{laymansbox}{Mathematical Reminder: Tangent Bundle vs. State Space}{tangent_bundle_reminder}
-Whenever you see the State Vector $\mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T$, recall its geometric meaning. The upper half ($\mathbf{q}$) is a point on the curved manifold $\mathcal{Q}$. The lower half ($\dot{\mathbf{q}}$) is a vector living in the flat tangent space $T_q\mathcal{Q}$ attached specifically to that point $\mathbf{q}$. Together, they coordinatize the Tangent Bundle $T\mathcal{Q}$, which is exactly the State Space $\mathcal{X}$.
-\end{laymansbox}
-
-% ==========================================================================
 \section{Generalized Coordinates and Forward Kinematics}
 \label{sec:generalized}
+\label{def:forward_kinematics}
+\label{def:generalized_coordinates}
 
-When we model a complex physical system (such as the 15-DOF human golfer in Volume III), we do not track the 3D $(x,y,z)$ position of the golfer's wrist, elbow, and shoulder separately, and then painstakingly write huge algebraic constraint equations ensuring their bones don't stretch or compress during simulation.
+Generalized coordinates parameterize configurations locally; they need not all be motor angles or all be independently actuated. Prismatic displacement, a passive hinge angle and a floating-base coordinate are examples. A redundant constrained representation can also be computationally useful, even though it is not a minimal chart.
 
-Instead, we use \textbf{Generalized Coordinates}. Since an elbow is a pin joint allowing only 1 DOF of rotation, we abandon $(x,y,z)$ mapping entirely and instead just track the single angle $\theta_\text{elbow}$. If we define the angle of the shoulder $\theta_\text{shoulder}$, and the fixed length of the humerus bone $L_1$, the Cartesian position of the elbow is instantly known.
+For a fixed-length arm model, joint coordinates and a base pose determine Cartesian segment positions. A shoulder angle alone is not enough for a general spatial shoulder: its orientation requires the chosen multi-coordinate representation. The anatomical elbow is approximated as a hinge only within a declared model.
 
-\begin{definition}{Generalized Coordinates}{generalized_coordinates}
-Generalized coordinates are the minimal set of independent variables $q_1, q_2, \ldots, q_n$ that perfectly span the Configuration Space, such that every point in $\mathcal{Q}$ is uniquely represented by some choice of $(q_1, \ldots, q_n)$. They are the most mathematically efficient map of the mechanism's geometry. In robotics, $\mathbf{q}$ almost always refers to the physical joint angles of the motors.
-\end{definition}
+Forward kinematics is a map $f:\mathcal Q\to\mathcal Y$ to a selected task space. Position may lie in $\mathbb R^3$, planar pose in $SE(2)$, and spatial pose in $SE(3)$. These targets are different maps, with potentially different derivative ranks.
 
-\subsection{Forward Kinematics}
-
-The mathematical function that translates generalized coordinates $\mathbf{q}$ back into the physical 3D Euclidean space of the real world is called \textbf{Forward Kinematics}.
-
-\begin{definition}{Forward Kinematics Map}{forward_kinematics}
-If $\mathbf{p}_{end} = [x, y, z]^T \in \Reals^3$ is the Cartesian workspace position of the end-effector of a robotic arm, Forward Kinematics is the generally nonlinear function $f_{kin} : \mathcal{Q} \to \Reals^3$ defined by:
+For planar links of positive lengths $L_1,L_2$ and relative joint angles,
 \begin{equation}
-\mathbf{p}_{end} = f_{kin}(\mathbf{q})
+ \begin{aligned}
+ x&=L_1\cos q_1+L_2\cos(q_1+q_2),\\
+ y&=L_1\sin q_1+L_2\sin(q_1+q_2).
+ \end{aligned}
 \end{equation}
-\end{definition}
+The final-link orientation is $q_1+q_2$ modulo $2\pi$. The position equations by themselves do not include it as a controlled task coordinate.
 
-By using trigonometry and the chain rule of coordinate composition, we stack the lengths of the links and the angles of the joints $\mathbf{q}$ to compute exactly where the end-effector sits in physical space.
-
-\subsubsection{Example: 2-Link Planar Arm}
-
-For a simple 2-link robotic arm rotating on a flat 2D plane with fixed link lengths $L_1, L_2$ and variable joint angles $q_1, q_2$:
-
-\begin{align}
-  x &= L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) \\
-  y &= L_1 \sin(q_1) + L_2 \sin(q_1 + q_2)
-\end{align}
-
-The forward kinematics map is $f_{kin}(q_1, q_2) = [x(q_1, q_2), y(q_1, q_2)]^T$.
-
-% ==========================================================================
 \section{The Jacobian Matrix and the Kinematic Derivative}
 \label{sec:jacobian}
+\label{def:jacobian_kin}
 
-To study the instantaneous kinematic relationship between joint velocities $\dot{\mathbf{q}}$ and end-effector velocities $\dot{\mathbf{p}}$, we differentiate the forward kinematics~\cite{siciliano2009}.
-
-\begin{definition}{Jacobian Matrix of Forward Kinematics}{jacobian_kin}
-The Jacobian matrix of $f_{kin} : \mathcal{Q} \to \Reals^m$ at a configuration $\mathbf{q}$ is:
+The intrinsic derivative is $Df_q:T_q\mathcal Q\to T_{f(q)}\mathcal Y$. In local coordinates its matrix has entries
 \begin{equation}
-J_{kin}(\mathbf{q}) = \frac{\partial f_{kin}}{\partial \mathbf{q}}\bigg|_{\mathbf{q}} = \begin{bmatrix}
-\frac{\partial f_1}{\partial q_1} & \cdots & \frac{\partial f_1}{\partial q_n} \\
-\vdots & \ddots & \vdots \\
-\frac{\partial f_m}{\partial q_n} & \cdots & \frac{\partial f_m}{\partial q_n}
-\end{bmatrix}
+ J_{ij}(q)=\frac{\partial f_i}{\partial q_j},\qquad
+ \dot y=J(q)\dot q.
 \end{equation}
-where $m$ is the dimension of the workspace (usually $m=3$ for position in 3D space, or $m=6$ if orientation is included).
-\end{definition}
+In particular, the bottom-left entry is $\partial f_m/\partial q_1$, not $\partial f_m/\partial q_n$. Changing nonsingular coordinate charts changes the matrix but preserves its rank. Singular coordinate representations can introduce an apparent singularity that is not a loss of physical task freedom.
 
-By the chain rule, the end-effector velocity is related to joint velocity by:
-\begin{equation}
-\dot{\mathbf{p}} = J_{kin}(\mathbf{q}) \dot{\mathbf{q}}
-\end{equation}
+For a spatial pose, Euler-angle derivatives are not generally the angular-velocity vector. A geometric Jacobian maps the declared generalized velocities to a declared twist, with its frame, reference point and angular/linear ordering specified. A six-coordinate pose derivative and a six-component twist Jacobian are related through the relevant chart map, not interchangeable by notation alone.
 
-\subsection{Worked Example: 2-Link Arm Jacobian}
+\subsection{Worked Example: Two-Link Position Jacobian}
 \label{example:2link_jacobian}
+\label{ex:ex_2link_jacobian}
 
-\begin{example}{Jacobian of 2-Link Planar Arm}{ex_2link_jacobian}
-For the 2-link planar arm from Section~\ref{sec:generalized}:
-\begin{align}
-  x(q_1, q_2) &= L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) \\
-  y(q_1, q_2) &= L_1 \sin(q_1) + L_2 \sin(q_1 + q_2)
-\end{align}
-
-Compute the partial derivatives:
-\begin{align}
-\frac{\partial x}{\partial q_1} &= -L_1 \sin(q_1) - L_2 \sin(q_1 + q_2) \\
-\frac{\partial x}{\partial q_2} &= -L_2 \sin(q_1 + q_2) \\
-\frac{\partial y}{\partial q_1} &= L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) \\
-\frac{\partial y}{\partial q_2} &= L_2 \cos(q_1 + q_2)
-\end{align}
-
-Thus, the Jacobian is:
+Differentiating the two-link equations gives
 \begin{equation}
-J_{kin}(q_1, q_2) = \begin{bmatrix}
--L_1 \sin(q_1) - L_2 \sin(q_1 + q_2) & -L_2 \sin(q_1 + q_2) \\
-L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) & L_2 \cos(q_1 + q_2)
-\end{bmatrix}
+ J_p=\begin{bmatrix}
+ -L_1\sin q_1-L_2\sin(q_1+q_2)&-L_2\sin(q_1+q_2)\\
+ L_1\cos q_1+L_2\cos(q_1+q_2)&L_2\cos(q_1+q_2)
+ \end{bmatrix},
 \end{equation}
-
-This is a $2 \times 2$ matrix (workspace dimension 2, joint DOF 2). For any joint velocity $[\dot{q}_1, \dot{q}_2]^T$, the end-effector velocity is:
+with $\det J_p=L_1L_2\sin q_2$. For $L_1=2,L_2=1,q=(0,0)$,
 \begin{equation}
-\begin{bmatrix} \dot{x} \\ \dot{y} \end{bmatrix} = J_{kin} \begin{bmatrix} \dot{q}_1 \\ \dot{q}_2 \end{bmatrix}
+ J_p=\begin{bmatrix}0&0\\3&1\end{bmatrix}.
 \end{equation}
+Only vertical endpoint velocity is available to first order. The arm still has two joint configuration freedoms. Motion in its position-Jacobian null space can alter joint posture, and second-order endpoint changes can appear even when the first-order velocity is zero.
 
-The Jacobian depends on the configuration: it changes as the arm moves through $\mathcal{Q}$.
-\end{example}
-
-\subsection{Worked Example: 3-Link Arm in 3D}
+\subsection{Worked Example: Three-Link Planar Pose}
 \label{example:3link_jacobian}
+\label{ex:ex_3link_jacobian}
 
-\begin{example}{Jacobian of 3-Link Arm with Orientation}{ex_3link_jacobian}
-Consider a 3-link planar arm (same plane), but now we also track the orientation of the end-effector (the angle of the end link).
-
-Forward kinematics:
-\begin{align}
-x &= L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) + L_3 \cos(q_1 + q_2 + q_3) \\
-y &= L_1 \sin(q_1) + L_2 \sin(q_1 + q_2) + L_3 \sin(q_1 + q_2 + q_3) \\
-\theta &= q_1 + q_2 + q_3
-\end{align}
-
-The task space is now 3-dimensional: $(x, y, \theta)$. The Jacobian is $3 \times 3$:
-
+Let $\alpha_i=\sum_{j=1}^i q_j$. A three-link planar pose is
 \begin{equation}
-J_{kin} = \begin{bmatrix}
--L_1 \sin(q_1) - L_2 \sin(q_1+q_2) - L_3 \sin(q_1+q_2+q_3) & -L_2 \sin(q_1+q_2) - L_3 \sin(q_1+q_2+q_3) & -L_3 \sin(q_1+q_2+q_3) \\
-L_1 \cos(q_1) + L_2 \cos(q_1+q_2) + L_3 \cos(q_1+q_2+q_3) & L_2 \cos(q_1+q_2) + L_3 \cos(q_1+q_2+q_3) & L_3 \cos(q_1+q_2+q_3) \\
-1 & 1 & 1
-\end{bmatrix}
+ (x,y)=\sum_{i=1}^3L_i(\cos\alpha_i,\sin\alpha_i),\qquad
+ \theta=\alpha_3\pmod{2\pi}.
 \end{equation}
+On a local angle chart, a compact expression for every Jacobian column is
+\begin{equation}
+ J_{1j}=-\sum_{i=j}^3L_i\sin\alpha_i,\qquad
+ J_{2j}=\sum_{i=j}^3L_i\cos\alpha_i,\qquad J_{3j}=1.
+\end{equation}
+Subtracting consecutive columns shows $\det J=L_1L_2\sin q_2$. Full rank gives a locally invertible planar pose map. It does not establish global uniqueness or a six-dimensional spatial pose capability.
 
-When the Jacobian is square and full rank, the arm is in a non-singular configuration: there is a unique relationship between joint velocities and task velocities. When the determinant is zero, the arm enters a singularity, and some task velocities become unreachable.
-\end{example}
-
-% ==========================================================================
 \section{Inverse Kinematics}
 \label{sec:inverse_kinematics}
+\label{thm:newton_raphson_ik}
+\label{ex:ex_2link_ik}
+\label{def:ik_problem}
 
-The forward kinematics problem is: given joint angles $\mathbf{q}$, find the end-effector position $\mathbf{p} = f_{kin}(\mathbf{q})$.
+Inverse kinematics asks for configurations satisfying $f(q)=y_d$ within the admissible set. Solutions may be absent, isolated, multiple or continuous. A mathematical solution may violate a joint limit or collision condition. Even an admissible configuration does not supply a dynamically feasible path to it.
 
-The inverse problem is fundamentally harder: given a desired end-effector position $\mathbf{p}_d$, find the joint angles $\mathbf{q}$ such that $f_{kin}(\mathbf{q}) = \mathbf{p}_d$.
+\subsection{Geometric Two-Link Inverse Kinematics}
 
-\begin{definition}{Inverse Kinematics Problem}{ik_problem}
-The Inverse Kinematics problem is: solve for $\mathbf{q}$ given $\mathbf{p}_d$:
+For a target $(x_d,y_d)$ with $r^2=x_d^2+y_d^2$, the forward equations imply
 \begin{equation}
-f_{kin}(\mathbf{q}) = \mathbf{p}_d
+ r^2=L_1^2+L_2^2+2L_1L_2\cos q_2.
 \end{equation}
-\end{definition}
-
-Inverse kinematics is harder for three reasons:
-\begin{enumerate}
-  \item \emph{Non-uniqueness:} Multiple joint configurations may reach the same end-effector position. For a 2-link arm, you can reach a target by bending the elbow forward (elbow-up) or backward (elbow-down).
-  \item \emph{Non-existence:} Some end-effector positions may be unreachable (outside the workspace).
-  \item \emph{Nonlinearity:} The forward kinematics is nonlinear (contains sines and cosines), making the inverse algebraically intractable in general.
-\end{enumerate}
-
-\subsection{Geometric Approach to 2-Link IK}
-
-For the 2-link planar arm, we can solve geometrically.
-
-\begin{example}{2-Link Arm Inverse Kinematics (Geometric)}{ex_2link_ik}
-Given $\mathbf{p}_d = [x_d, y_d]^T$ and link lengths $L_1, L_2$, find $[q_1, q_2]^T$.
-
-Step 1: Use the law of cosines to find the distance $r = \sqrt{x_d^2 + y_d^2}$ from the base to the target. The angle $q_2$ (elbow angle) satisfies:
+Therefore, defining $c_2=(r^2-L_1^2-L_2^2)/(2L_1L_2)$, a reachable target requires $|c_2|\le1$. The two generic branches are
 \begin{equation}
-r^2 = L_1^2 + L_2^2 - 2 L_1 L_2 \cos(\pi - q_2)
+ \begin{aligned}
+ s_2&=\pm\sqrt{1-c_2^2},\qquad q_2=\operatorname{atan2}(s_2,c_2),\\
+ q_1&=\operatorname{atan2}(y_d,x_d)
+       -\operatorname{atan2}(L_2s_2,L_1+L_2c_2).
+ \end{aligned}
 \end{equation}
-(Here $\pi - q_2$ is the interior angle at the elbow.)
+Angles are understood modulo $2\pi$ before applying physical joint ranges. The sign of the cosine numerator follows directly from the squared vector sum; using the opposite sign produces the wrong elbow angle.
 
-Solving:
+For $L_1=L_2=1$ and target $(1,1)$, the branches are $(0,\pi/2)$ and $(\pi/2,-\pi/2)$. Substitution recovers the same position but different final-link orientations. At ordinary inner or outer boundaries, the two branches coalesce modulo angle periodicity. At the equal-link origin, $q_2=\pi$ and any $q_1$ works, so the solution is a continuous family and $\operatorname{atan2}(0,0)$ must not be treated as a unique shoulder solution.
+
+\subsection{Numerical Inverse Kinematics and Convergence}
+
+For local Euclidean task coordinates, set $e(q)=y_d-f(q)$. Linearizing gives $J(q)\delta q\approx e(q)$. A common iteration is
 \begin{equation}
-\cos(q_2) = \frac{L_1^2 + L_2^2 - r^2}{2 L_1 L_2}
+ q_{k+1}=q_k+\alpha_kJ(q_k)^\dagger e(q_k).
 \end{equation}
+For an invertible square Jacobian, solve the linear system rather than explicitly forming an inverse. Classical Newton iteration has local quadratic convergence near a nonsingular root under suitable smoothness and sufficiently close initialization, with full steps eventually accepted. That statement is not a universal guarantee for singular, rectangular, damped or constrained iterations.
 
-Step 2: Once $q_2$ is known, the elbow position is constrained. The shoulder angle $q_1$ can be found from:
+The pseudoinverse minimizes the linearized residual, and among tied solutions chooses the smallest Euclidean coordinate step. Both choices depend on scaling and metrics. A regularized alternative solves
 \begin{equation}
-q_1 = \operatorname{atan2}(y_d, x_d) - \operatorname{atan2}(L_2 \sin(q_2), L_1 + L_2 \cos(q_2))
+ \min_{\delta q}\ \|W^{1/2}(J\delta q-e)\|^2
+             +\lambda^2\|R^{1/2}\delta q\|^2,
 \end{equation}
+with declared positive-definite task and joint weights. It trades residual against step size; it does not make an unreachable target reachable. Use meaningful stopping tolerances, step limits and admissibility checks. On an orientation manifold, use a consistent local error or retraction rather than subtracting arbitrary wrapped angles across a cut.
 
-This geometric approach yields, generically, two solutions (elbow-up and elbow-down), corresponding to the two square roots in solving the cosine equation.
-\end{example}
-
-\subsection{Numerical Inverse Kinematics: Newton-Raphson}
-
-For higher DOF arms or when geometric solutions don't exist, we use numerical optimization.
-
-\begin{theorem}{Newton-Raphson for Inverse Kinematics}{newton_raphson_ik}
-Define the error function:
-\begin{equation}
-\mathbf{e}(\mathbf{q}) = \mathbf{p}_d - f_{kin}(\mathbf{q})
-\end{equation}
-
-The Newton-Raphson iteration is:
-\begin{equation}
-\mathbf{q}_{k+1} = \mathbf{q}_k + \alpha_k J_{kin}(\mathbf{q}_k)^\dagger \mathbf{e}(\mathbf{q}_k)
-\end{equation}
-where $J_{kin}^\dagger$ is the pseudo-inverse of the Jacobian and $\alpha_k$ is a step size (often $\alpha_k = 1$ initially, or line search if convergence is slow).
-
-When $J_{kin}$ is square and full rank, $J_{kin}^\dagger = J_{kin}^{-1}$.
-\end{theorem}
-
-This iterative method starts from an initial guess $\mathbf{q}_0$ and updates it repeatedly until $\|\mathbf{e}(\mathbf{q}_k)\|$ is small. Convergence is fast (quadratic) near a solution, but global convergence is not guaranteed.
-
-% ==========================================================================
-\section{Workspace Analysis: Reachable and Dexterous Workspace}
+\section{Reachable and Dexterous Workspace}
 \label{sec:workspace}
+\label{def:dexterous_workspace}
+\label{def:reachable_workspace}
 
-Once we have a forward kinematics function, a key question is: what end-effector positions can the robot actually reach?
-
-\begin{definition}{Reachable Workspace}{reachable_workspace}
-The \emph{reachable workspace} of a robot arm is the set of all end-effector positions $\mathbf{p}$ that can be reached by at least one configuration $\mathbf{q}$:
+Let $\mathcal Q_{\rm adm}$ be the admissible configuration set and $p$ the position map. The reachable position workspace is $p(\mathcal Q_{\rm adm})$. For a required orientation set $\mathcal R_{\rm req}$, define the dexterous position workspace by
 \begin{equation}
-\mathcal{W}_{reach} = \{\mathbf{p} \in \Reals^m : \exists \mathbf{q} \in \mathcal{Q}, f_{kin}(\mathbf{q}) = \mathbf{p}\}
+ \begin{aligned}
+ p_d\in\mathcal W_{\rm dex}\quad\Longleftrightarrow\quad
+ &\text{for every }R_d\in\mathcal R_{\rm req},\\
+ &\text{there exists }q\in\mathcal Q_{\rm adm}\text{ such that}\\
+ &(p(q),R(q))=(p_d,R_d).
+ \end{aligned}
 \end{equation}
-It is the image of $f_{kin}$.
-\end{definition}
+The configuration may differ for each orientation. Existence of one full-rank Jacobian at a position is a local differential property, not this global orientation quantifier. A determinant is also undefined for a rectangular Jacobian.
 
-\begin{definition}{Dexterous Workspace}{dexterous_workspace}
-The \emph{dexterous workspace} is the subset of reachable workspace where the robot can orient the end-effector in all directions (or at least a specified set of directions):
+For two unrestricted positive-length planar links, vector geometry gives
 \begin{equation}
-\mathcal{W}_{dex} = \{\mathbf{p} : \exists \mathbf{q} \text{ reaching } \mathbf{p} \text{ with } \det(J_{kin}(\mathbf{q})) \neq 0\}
+ |L_1-L_2|\le\|p\|\le L_1+L_2.
 \end{equation}
-(Requires the Jacobian to be full rank in at least one configuration.)
-\end{definition}
+Every intermediate radius occurs as $q_2$ varies, and $q_1$ rotates the resultant through all directions. Unequal lengths give a closed annulus; equal lengths give a closed disk. With $L_1=2,L_2=1$, its area is $\pi(3^2-1^2)=8\pi$ in squared length units. This analytic argument establishes coverage; a finite sample cloud only illustrates it.
 
-For a 2-link arm with $L_1 = L_2 = 1$:
-\begin{itemize}
-  \item The reachable workspace is an annulus (ring) with inner radius $|L_1 - L_2| = 0$ and outer radius $L_1 + L_2 = 2$. Any point $(x,y)$ with $0 \le \sqrt{x^2 + y^2} \le 2$ can be reached.
-  \item The dexterous workspace is smaller: a subset of the annulus where configurations exist with full-rank Jacobian.
-\end{itemize}
+For an equal-link planar 2R arm, the folded origin is reachable with every final-link orientation by varying $q_1$ while keeping $q_2=\pi$. Yet its position Jacobian has rank one. At a generic nonzero point, the two inverse branches give only two final-link orientations, even when the position Jacobian is full rank. Thus, for the all-planar-orientations requirement and unrestricted equal links, the dexterous workspace is just the origin. The example directly separates dexterity in this defined sense from local position manipulability.
 
-% ==========================================================================
+The magnitude $|\det J_p|=L_1L_2|\sin q_2|$ measures local area scaling for the selected coordinate metrics. It is not a geometric distance to singularity or a condition number. Singular values describe directional gains; their ratio describes conditioning after choosing units and metrics. Two matrices with equal determinant can have very different conditioning, such as $I_2$ and $\operatorname{diag}(100,0.01)$. A colored determinant plot must say what it measures.
+
 \section{The Frobenius Theorem and Integrability}
 \label{sec:frobenius}
+\index{Lie bracket}
+\label{laymans:laymans_frobenius}
+\label{ex:rod_frobenius}
+\label{ex:car_frobenius}
+\label{thm:frobenius}
+\label{def:smooth_distribution}
 \index{Frobenius theorem}
 \index{integrability}
 \index{distribution!smooth}
 
-A central question in constraint analysis is: \emph{when does a velocity constraint actually reduce the reachable configuration space?} The answer lies in the \textbf{Frobenius Theorem}\index{Frobenius theorem}, which provides an algebraic test for \emph{integrability} of a set of velocity constraints.
-
-\begin{definition}{Smooth Distribution}{smooth_distribution}
-A \emph{smooth distribution}\index{distribution!smooth} $\Delta$ on a manifold $\mathcal{Q}$ assigns to each point $\mathbf{q} \in \mathcal{Q}$ a linear subspace $\Delta(\mathbf{q}) \subseteq T_{\mathbf{q}}\mathcal{Q}$ of the tangent space. If $\dim \Delta(\mathbf{q}) = k$ for all $\mathbf{q}$, the distribution has \emph{rank} $k$. A distribution is \emph{integrable} if there exists a foliation of $\mathcal{Q}$ into $k$-dimensional submanifolds (leaves) whose tangent spaces coincide with $\Delta$.
-\end{definition}
-
-Intuitively, a distribution collects the ``allowed velocity directions'' at every configuration. If the distribution is integrable, those allowed velocities confine the system to a lower-dimensional surface---the constraint genuinely eliminates degrees of freedom. If the distribution is \emph{not} integrable, the system can eventually reach any configuration despite the instantaneous velocity restriction.
-
-\begin{theorem}{Frobenius Theorem}{frobenius}
-A smooth distribution $\Delta$ is integrable if and only if it is \emph{involutive}: for every pair of smooth vector fields $X, Y$ belonging to $\Delta$, their Lie bracket\index{Lie bracket} also belongs to $\Delta$:
+A smooth constant-rank distribution $\Delta$ assigns a smoothly varying $k$-dimensional subspace $\Delta(q)\subset T_q\mathcal Q$. It is integrable when it is tangent to a foliation by $k$-dimensional leaves. The regular Frobenius theorem states that this occurs exactly when the distribution is involutive:
 \begin{equation}
-\label{eq:frobenius_condition}
-X, Y \in \Delta \quad \Longrightarrow \quad [X, Y] \in \Delta.
+ X,Y\text{ smooth sections of }\Delta
+ \quad\Longrightarrow\quad[X,Y]\text{ is a section of }\Delta.
+ \label{eq:frobenius_condition}
 \end{equation}
-\end{theorem}
+Use the convention $[X,Y]=DY\,X-DX\,Y$, equivalent to the commutator of derivations. The brackets can leave the original distribution when it is nonintegrable. They need not span the entire ambient tangent space.
 
-When the Frobenius condition \emph{fails}---that is, when there exist vector fields $X, Y \in \Delta$ whose Lie bracket $[X,Y] \notin \Delta$---the distribution is non-integrable. In mechanical terms, this means the velocity constraint is genuinely \textbf{non-holonomic}\index{non-holonomic constraint}: it restricts instantaneous motion but does \emph{not} reduce the reachable set of configurations.
-
-\begin{example}{The Car: A Non-Integrable Constraint}{car_frobenius}
-Consider a car on the plane with configuration $\mathbf{q} = (x, y, \theta) \in \Reals^2 \times S^1$. The no-lateral-slip constraint is:
+For example, on $\mathbb R^4$ with coordinates $(x,y,z,w)$, take
 \begin{equation}
-\label{eq:car_constraint_frobenius}
-\dot{y}\cos\theta - \dot{x}\sin\theta = 0.
+ X_1=\partial_x,\qquad X_2=\partial_y+x\partial_z,
+ \qquad[X_1,X_2]=\partial_z.
 \end{equation}
-This defines a rank-2 distribution $\Delta$ spanned by the vector fields:
+The rank-two distribution is nonintegrable, but every generated motion keeps $w$ fixed. Its Lie closure has rank three, not four. Nonintegrability alone cannot imply full configuration reachability.
+
+\subsection{A Specified Unicycle and Its Lie Bracket}
+
+For an ideal unicycle with independently commanded signed forward speed and heading rate, let $q=(x,y,\theta)$ and
 \begin{equation}
-X_1 = \cos\theta\,\frac{\partial}{\partial x} + \sin\theta\,\frac{\partial}{\partial y}, \qquad X_2 = \frac{\partial}{\partial \theta}.
+ X_1=(\cos\theta,\sin\theta,0)^T,\qquad X_2=(0,0,1)^T.
 \end{equation}
-Computing the Lie bracket:
+The no-lateral-slip restriction is
 \begin{equation}
-[X_1, X_2] = -\sin\theta\,\frac{\partial}{\partial x} + \cos\theta\,\frac{\partial}{\partial y}.
+ -\sin\theta\,\dot x+\cos\theta\,\dot y=0,
+ \label{eq:car_constraint_frobenius}
 \end{equation}
-Since $[X_1, X_2]$ is \emph{not} a linear combination of $X_1$ and $X_2$, the Frobenius condition fails. Therefore the constraint is \textbf{non-integrable}: despite the velocity restriction, the car can reach \emph{any} configuration $(x, y, \theta)$ in $\Reals^2 \times S^1$.
-\end{example}
+so the allowed-velocity distribution has rank two in a three-dimensional configuration space. Its bracket is
+\begin{equation}
+ [X_1,X_2]=(\sin\theta,-\cos\theta,0)^T.
+\end{equation}
+These three vectors span the tangent space everywhere. For the smooth driftless system with reversible controls around zero, the bracket-generating condition yields local controllability; appropriate connected, obstacle-free models admit connections by concatenated admissible motions~\cite{Murray1994,BulloLewis2004}. This conclusion uses more than failure of Frobenius.
 
-\begin{example}{A Rigid Rod: An Integrable Constraint}{rod_frobenius}
-Consider two particles in $\Reals^3$ connected by a rigid rod of length $L$. The constraint $\norm{\mathbf{r}_1 - \mathbf{r}_2}^2 = L^2$ depends only on positions (not velocities). Differentiating yields a velocity constraint, but this velocity constraint \emph{is} integrable---the original position-level equation defines a submanifold of the full configuration space. The Frobenius condition is satisfied, and the constraint permanently reduces the DOF from 6 to 5.
-\end{example}
+The four-step sequence forward, rotate, backward, reverse-rotate, each for duration $\epsilon$ with unit magnitudes, produces
+\begin{equation}
+ \Delta q=\epsilon^2[X_1,X_2]+O(\epsilon^3).
+\end{equation}
+Every segment obeys the velocity constraint. The net sideways displacement is not instantaneous sideways slipping. Its order also matters: a small maneuver does not provide a first-order sideways velocity channel. Finite time, speed limits, collision clearance and lack of reverse motion can change the practical or local reachability question.
 
-\begin{laymansbox}{Parallel Parking and Reachability}{laymans_frobenius}
-A car can parallel park into any spot despite only being able to drive forward/backward and turn---non-holonomic constraints restrict velocity but not reachability. The Frobenius theorem makes this precise: because the car's velocity constraint is non-integrable, repeated manoeuvres (sequences of steering and driving) generate motion in \emph{every} direction of configuration space. This is why parallel parking works, even though you cannot slide the car sideways.
-\end{laymansbox}
+For two points connected by a positive-length rigid rod, $\|r_1-r_2\|^2=L^2$ is a regular position constraint in six-dimensional particle space. Its tangent constraint is integrable and the selected length level set has dimension five. The differentiated velocity equation alone preserves whichever separation was selected initially; an initial position constraint chooses the physical leaf.
 
-The Frobenius theorem thus provides the rigorous dividing line between constraints that reduce configuration space dimension (holonomic, integrable) and those that merely shape the geometry of feasible paths (non-holonomic, non-integrable). For a comprehensive treatment, see \cite{Murray1994} Chapter~8 and \cite{BulloLewis2004}.
-
-% ==========================================================================
 \section{Holonomic and Non-Holonomic Constraints}
 \label{sec:constraints}
+\index{non-holonomic constraint}
+\label{ex:ex_car_pfaffian}
+\label{def:pfaffian}
+\label{ex:ex_ball_plate}
+\label{ex:unicycle}
+\label{ex:rolling_coin}
+\label{def:nonholonomic}
+\label{def:holonomic}
 
-It is critical to distinguish between constraints that restrict position versus those that restrict velocity.
+A holonomic equality constraint can be written $\phi(q,t)=0$. At regular points it defines the corresponding position set or time-dependent family. Differentiation gives $D_q\phi\,\dot q+\partial_t\phi=0$. Time-dependent constraints are generally affine in velocity. Joint-limit and separation inequalities need their own admissibility and active-set treatment; an inequality is not simply another equality that always subtracts a dimension.
 
-\begin{definition}{Holonomic Constraint}{holonomic}
-A \emph{holonomic constraint} is a geometric constraint that restricts the actual position of the system. It can be expressed as an equation $\phi(\mathbf{q}) = 0$ involving only the generalized coordinates (not their derivatives). Holonomic constraints permanently reduce the dimension of the Configuration Space.
-\end{definition}
+A genuinely non-holonomic velocity restriction cannot locally be replaced by a family of position equalities of the same codimension. It restricts paths in the ambient configuration space. Which positions a controlled system can reach still depends on all its vector fields, their Lie closure, control bounds, drift and obstacles.
 
-\textbf{Example:} A train locked to a physical track cannot deviate sideways; if $x(t)$ is its position along the track and $y(t)$ is its lateral deviation, the constraint $y(t) = 0$ for all time is holonomic. This is a geometric constraint on position.
+\subsection{Upright Rolling Wheel}
 
-\begin{definition}{Non-Holonomic Constraint}{nonholonomic}
-A \emph{non-holonomic constraint} is a constraint on the system's velocity but not its position. It cannot be integrated to a geometric constraint. Non-holonomic constraints do not reduce the dimension of the Configuration Space, but they severely restrict instantaneous motion.
-\end{definition}
-
-\textbf{Example:} A car's wheels have a no-slip condition: the car cannot move purely sideways. If $(X, Y, \Theta)$ are the car's position and heading, the constraint is:
+For an ideal upright wheel of radius $r>0$, use configuration $(x,y,\theta,\varphi)$, with heading $\theta$ and signed rolling angle $\varphi$. Choose the sign of $\varphi$ so positive rolling advances along heading. No slip then requires
 \begin{equation}
-\dot{X} \sin(\Theta) - \dot{Y} \cos(\Theta) = 0
+ \dot x=r\dot\varphi\cos\theta,\qquad
+ \dot y=r\dot\varphi\sin\theta.
 \end{equation}
+These are two independent velocity constraints on a four-dimensional configuration. The factors have units of speed. Replacing the signed rolling relation by an unspecified length ratio times speed gives the wrong units and loses the direction of rotation. An actual coin that can lean needs additional configuration and contact dynamics; this is the upright-wheel idealization.
 
-This is a differential constraint on velocities. However, by parallel parking (going forward, turning, reversing), a car can eventually reach any $(X, Y, \Theta)$ on the plane. The Configuration Space remains 3-dimensional, but instantaneous motion is constrained to 1 DOF (forward speed, with heading changing as a function of steering angle).
+\subsection{Unicycle Versus Bicycle Steering}
 
-\subsection{More Examples of Non-Holonomic Systems}
-
-\begin{example}{Rolling Coin Without Slipping}{rolling_coin}
-A coin rolling without slipping on a table has constraints:
-\begin{itemize}
-  \item Position: $(X, Y, \Theta)$ (center location and heading)
-  \item Rotation: $\phi$ (angle rotated)
-\end{itemize}
-
-No-slip condition: the coin's rotation is proportional to distance traveled:
+The independently driven unicycle has two controls:
 \begin{equation}
-\frac{d\phi}{dt} = \frac{R}{r} \sqrt{\dot{X}^2 + \dot{Y}^2}
+ \dot x=v\cos\theta,\qquad \dot y=v\sin\theta,\qquad\dot\theta=\omega.
 \end{equation}
-where $R$ is the coin's radius and $r$ is some reference length.
+A kinematic bicycle with wheelbase $L>0$ and steering angle $\delta$ instead uses $\dot\theta=v\tan\delta/L$. Its admissible $(v,\dot\theta)$ pairs depend on steering bounds, and it cannot turn in place with finite steering angle. If steering rate is the input, $\delta$ becomes a state. Neither model is accurately described as a one-input unicycle while simultaneously treating speed and steering as independent inputs.
 
-This is a velocity constraint; it does not reduce the position configuration space. But it is very restrictive: the coin cannot instantaneously move sideways while rotating.
-\end{example}
+\subsection{Ball and Moving-Surface Contact}
 
-\begin{example}{Unicycle Model}{unicycle}
-A unicycle has configuration $(X, Y, \Theta)$ and one input (pedal). The kinematics are:
-\begin{align}
-\dot{X} &= v \cos(\Theta) \\
-\dot{Y} &= v \sin(\Theta) \\
-\dot{\Theta} &= \frac{v}{L} \tan(\delta)
-\end{align}
-where $v$ is velocity, $L$ is wheelbase, and $\delta$ is steering angle.
-
-The non-holonomic constraint is $\dot{X} \sin(\Theta) - \dot{Y} \cos(\Theta) = 0$. The system has 3 DOF position space but only 2 inputs $(v, \delta)$, yielding a 2-dimensional input-reachable set in velocity space at each configuration.
-\end{example}
-
-\begin{example}{Ball on a Tilted Plate}{ex_ball_plate}
-A ball rolling (without slipping) on an inclined or moving rigid plate in 3D. The ball's position is $(x, y)$ and orientation is a rotation matrix $R \in SO(3)$.
-
-The no-slip constraint couples the ball's linear velocity to its angular velocity:
+Let $C$ be the ball center and $P$ its contact point, all expressed in the same inertial frame. No slip equates velocities of the contacting material points:
 \begin{equation}
-\dot{\mathbf{r}} = \omega \times \mathbf{c}
+ v_C+\omega\times r_{CP}=v_{\rm surface}(P,t).
 \end{equation}
-where $\mathbf{c}$ is the contact point and $\omega$ is the angular velocity.
+Here $r_{CP}$ is the vector from center to contact, not the contact's absolute position. For a sphere of radius $r$ on a fixed plane with unit normal $n$ toward the center, $r_{CP}=-rn$, giving $v_C=r\omega\times n$. Rotation about $n$ is not excluded by no slip at an ideal point; a no-twist or finite-patch law would add a condition.
 
-This is again a velocity constraint. The 5-dimensional position space (3 for position, 3 for orientation minus 1 for the fixed contact constraint) is not reduced to lower dimension, but instantaneous motion is restricted to a lower-dimensional subset.
-\end{example}
+Maintained sphere-plane contact leaves two center-position coordinates plus three orientation freedoms, a five-dimensional configuration manifold. Tangential no slip removes two velocity directions, leaving rank three and an eight-dimensional constrained mechanical state under this idealization. A tilted fixed plane changes gravitational dynamics, not the algebra of the contact-velocity equality. A moving plate requires its actual surface velocity and maintained-contact geometry. Friction and normal-force feasibility must be checked separately.
 
 \subsection{Pfaffian Constraints}
 
-Non-holonomic constraints are often written in Pfaffian form.
+A homogeneous Pfaffian constraint is $A(q)\dot q=0$. Its independent rows are covectors that annihilate allowed velocities. If the rank is $r$ on an $n$-dimensional manifold, $\ker A$ has dimension $n-r$. Calling velocities ``orthogonal to the rows'' uses the Euclidean metric of a chosen coordinate representation; the intrinsic statement is covector-vector pairing equal to zero.
 
-\begin{definition}{Pfaffian Constraint}{pfaffian}
-A \emph{Pfaffian constraint} is a linear constraint on velocity of the form:
-\begin{equation}
-\mathbf{A}(\mathbf{q}) d\mathbf{q} = \mathbf{0}
-\end{equation}
-or equivalently:
-\begin{equation}
-\mathbf{A}(\mathbf{q}) \dot{\mathbf{q}} = \mathbf{0}
-\end{equation}
-where $\mathbf{A}(\mathbf{q}) \in \Reals^{k \times n}$ is a matrix of constraint coefficients (typically $k < n$), and the rows are assumed to be linearly independent.
-\end{definition}
+For the unicycle, $A=(-\sin\theta,\cos\theta,0)$ has one independent row and a two-dimensional kernel. A holonomic constraint's differentiated equation can also be written in Pfaffian form. Thus the appearance of $A\dot q=0$ alone does not prove non-holonomy; integrability is the additional question.
 
-\textbf{Interpretation:} The constraint eliminates $k$ directions of velocity from the tangent space. The system can only move in directions orthogonal to the rows of $\mathbf{A}$.
-
-\begin{example}{Car Non-Holonomic Constraint in Pfaffian Form}{ex_car_pfaffian}
-For a car with configuration $\mathbf{q} = [X, Y, \Theta]^T$, the no-slip constraint is:
-\begin{equation}
-\dot{X} \sin(\Theta) - \dot{Y} \cos(\Theta) = 0
-\end{equation}
-
-In Pfaffian form:
-\begin{equation}
-\begin{bmatrix} \sin(\Theta) & -\cos(\Theta) & 0 \end{bmatrix} \begin{bmatrix} \dot{X} \\ \dot{Y} \\ \dot{\Theta} \end{bmatrix} = 0
-\end{equation}
-
-This single row eliminates one velocity direction. The car can move in any direction tangent to the constraint (i.e., perpendicular to $[\sin(\Theta), -\cos(\Theta), 0]^T$).
-\end{example}
-
-% ==========================================================================
-\section{Python Worked Example: Forward Kinematics and Workspace of a 2R Arm}
+\section{Python Example: Kinematics and Workspace}
 \label{sec:python_example}
+\label{ex:ex_python_2r}
 
-\begin{example}{Computing Workspace of 2-Link Arm}{ex_python_2r}
+The repository module implements the stated planar chain, two-link inverse branches, circle charts and exact constant-input unicycle step. Its tests compare Jacobians with finite differences, close both inverse branches through the forward map, verify chart transitions and recover the finite-motion bracket sign. No numerical sample replaces the geometric proofs.
 
-Below is a complete Python script that computes and visualizes the workspace of a 2-link planar robot arm.
-
-\begin{verbatim}
+\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
 import numpy as np
-import matplotlib.pyplot as plt
+from src.tools.configuration_examples import (
+    planar_pose, planar_jacobian, inverse_two_link,
+    circle_point, circle_coordinate, unicycle_step,
+)
 
-# Parameters
-L1, L2 = 1.0, 1.0  # link lengths
-n_samples = 100    # samples per joint angle
+lengths = np.ones(2)
+angles = np.array([np.pi / 4, np.pi / 3])
+pose = planar_pose(lengths, angles)
+print(pose)
+print(np.linalg.det(planar_jacobian(lengths, angles)[:2]))
+for branch in inverse_two_link(lengths, pose[:2]):
+    np.testing.assert_allclose(
+        planar_pose(lengths, branch)[:2], pose[:2]
+    )
+    print(branch)
+point = circle_point(0.7, 1)
+print(point, circle_coordinate(point, -1))
+state = np.zeros(3)
+for speed, turn in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+    state = unicycle_step(state, speed, turn, 0.01)
+print(state / 0.01**2)
+\end{lstlisting}
 
-# Create a grid of joint angles
-q1 = np.linspace(0, 2*np.pi, n_samples)
-q2 = np.linspace(0, 2*np.pi, n_samples)
-Q1, Q2 = np.meshgrid(q1, q2)
+For the published unit-link example at $q=(\pi/4,\pi/3)$, the endpoint is approximately $(0.448287736,1.673032607)$, with final-link orientation $7\pi/12$. The position determinant is $\sqrt3/2$. The two-link inverse reproduces the position on both branches; comparing their orientations illustrates why a position task is not a pose task.
 
-# Forward kinematics
-X = L1 * np.cos(Q1) + L2 * np.cos(Q1 + Q2)
-Y = L1 * np.sin(Q1) + L2 * np.sin(Q1 + Q2)
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{../figures/configuration_workspace.pdf}
+\caption{A Sampled Unit-Link Position Workspace and Its Local Area Scaling. The Exact Reachable Set Is a Disk; Determinant Magnitude Is Not Dexterous Workspace or Distance to Singularity.}
+\label{fig:configuration_workspace}
+\end{figure}
 
-# Plot workspace
-plt.figure(figsize=(10, 5))
+The figure samples an unrestricted unit-link arm and colors configurations by $|\det J_p|$. The analytic reachable set is the disk of radius two. Joint-angle samples are not uniformly distributed in workspace, and overlapping points can hide branch information. This is an area-scaling illustration, not a dexterous-workspace plot, a singularity-distance map or evidence of a human swing strategy.
 
-# Left: scatter plot of all reachable points
-plt.subplot(1, 2, 1)
-plt.scatter(X, Y, s=1, alpha=0.5, c='blue')
-plt.axis('equal')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('Reachable Workspace (2R Arm)')
-plt.grid(True)
+\section{From Configuration Geometry to a Golf-Swing Argument}
 
-# Right: compute Jacobian determinant at each configuration
-# J = [[-L1*sin(q1) - L2*sin(q1+q2), -L2*sin(q1+q2)]
-#      [ L1*cos(q1) + L2*cos(q1+q2),  L2*cos(q1+q2)]]
-J11 = -L1*np.sin(Q1) - L2*np.sin(Q1+Q2)
-J12 = -L2*np.sin(Q1+Q2)
-J21 = L1*np.cos(Q1) + L2*np.cos(Q1+Q2)
-J22 = L2*np.cos(Q1+Q2)
+A defensible analysis first names the modeled bodies, joint coordinates, admissible contact and grip modes, and the task. Clubhead position, face orientation, path direction, impact speed and contact location are different outputs. Their Jacobians and tolerances differ. A change invisible to one task may matter to another.
 
-det_J = J11*J22 - J12*J21
+At a fixed regular posture, $\delta y=J\delta q$ describes first-order geometric sensitivity. A null-space displacement can leave that task unchanged to first order while changing joint leverage, mass distribution, available muscle force or contact feasibility. It need not preserve the task after a finite displacement; following a level set requires integrating a compatible direction field or resolving the nonlinear constraint.
 
-# Plot dexterous workspace (where det(J) != 0)
-plt.subplot(1, 2, 2)
-# Color points by Jacobian determinant
-plt.scatter(X, Y, s=1, c=np.abs(det_J), cmap='viridis', alpha=0.6)
-plt.colorbar(label='|det(J)|')
-plt.axis('equal')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('Workspace colored by Singularity Distance')
-plt.grid(True)
+Kinematic freedom is also not torque authority. Ground reactions and two-hand grip forces couple the body and club. Joint torques act through the mass matrix and the constraint equations; muscle activation and tendon dynamics restrict how those torques can change. A desired endpoint velocity in the Jacobian image may demand unavailable joint rates or forces. Conversely, a singular instantaneous map need not eliminate all finite-motion options.
 
-plt.tight_layout()
-plt.show()
+Finally, club delivery is evaluated along a trajectory, often at an impact event. The same posture reached with different velocities, activation states or shaft deformation can produce different outcomes. A claim that a geometric feature improves delivery must specify a feasible intervention, propagate the controlled dynamics and evaluate the selected outcome under measurement uncertainty. This connects configuration geometry to dynamics and control while keeping their distinct evidential roles clear.
 
-# Demonstrate forward kinematics at a specific configuration
-q = np.array([np.pi/4, np.pi/3])  # example configuration
-p = np.array([L1*np.cos(q[0]) + L2*np.cos(q[0]+q[1]),
-              L1*np.sin(q[0]) + L2*np.sin(q[0]+q[1])])
-print(f"Configuration q = {q}")
-print(f"End-effector position p = {p}")
-\end{verbatim}
-
-This script:
-\begin{enumerate}
-  \item Defines link lengths $L_1 = L_2 = 1$.
-  \item Evaluates forward kinematics at $100\times100$ = 10,000 configurations in the joint space $[0, 2\pi]^2$.
-  \item Scatters the resulting end-effector positions to visualize the reachable workspace (should be an annulus).
-  \item Computes the Jacobian determinant at each configuration and colors points by singularity distance (higher determinant = further from singularities = more dexterous).
-  \item Demonstrates kinematics at a specific configuration.
-\end{enumerate}
-
-The output shows that the 2-link arm can reach any point in the annulus $0 \le r \le L_1 + L_2 = 2$, and the dexterous workspace (colored region) is concentrated in the interior where the Jacobian is well-conditioned.
-\end{example}
-
-% ==========================================================================
 \section{Chapter Summary and Key Principles}
 \label{sec:summary}
+\label{princ:principle_config}
 
-\begin{principle}{Configuration Space Essentials}{principle_config}
-\textbf{Core Concepts:}
-\begin{itemize}
-  \item The \textbf{Configuration Space} $\mathcal{Q}$ is a manifold of dimension equal to the system's DOF. Every point represents a unique configuration.
-  \item \textbf{Degrees of Freedom} are counted via Grübler's formula and represent the minimal number of independent coordinates needed.
-  \item \textbf{Generalized coordinates} $\mathbf{q}$ span $\mathcal{Q}$ efficiently, avoiding explicit constraint equations.
-  \item \textbf{Forward Kinematics} $\mathbf{p} = f_{kin}(\mathbf{q})$ maps configurations to workspace positions.
-  \item The \textbf{Jacobian} $J_{kin} = \frac{\partial f_{kin}}{\partial \mathbf{q}}$ relates joint and task-space velocities.
-  \item The \textbf{Tangent Bundle} $T\mathcal{Q}$ (pairs of configurations and velocities) is the state space.
-\end{itemize}
+Configuration dimension is local freedom under a stated model. Charts represent it locally; topology and constraints determine where those charts work. Tangent vectors transform with chart derivatives, and state requires all variables needed to predict motion. Kinematic maps and their ranks depend on the selected task. Inverse solutions and workspace require global admissibility checks beyond local rank.
 
-\textbf{Practical Insights:}
-\begin{itemize}
-  \item \textbf{Charts and atlases} provide local Euclidean coordinates for curved manifolds.
-  \item \textbf{Inverse Kinematics} is generally nonlinear and may have multiple (or no) solutions.
-  \item \textbf{Workspace} divides into reachable and dexterous regions; singularities mark the boundary.
-  \item \textbf{Holonomic constraints} reduce dimension; \textbf{non-holonomic constraints} restrict velocity but not position.
-  \item Pfaffian constraints encode velocity restrictions algebraically: $\mathbf{A}(\mathbf{q}) \dot{\mathbf{q}} = \mathbf{0}$.
-\end{itemize}
-\end{principle}
+Frobenius tests integrability of a regular distribution. Reachability additionally requires the controlled vector fields and their admissible inputs. Geometric freedom, instantaneous velocity authority and dynamically feasible golf delivery are related through explicit maps and equations, not interchangeable descriptions of the same quantity.
 
-% ==========================================================================
 \section{Further Reading}
 \label{sec:ch3_further_reading}
-% ==========================================================================
 
-The configuration-space perspective developed in this chapter has its roots in
-differential geometry. Chapters~2--3 of Murray, Li, and
-Sastry~\cite{Murray1994} provide a rigorous treatment of configuration
-manifolds, tangent spaces, and the kinematic maps that connect joint space to
-task space, all within the robotics context. Their development of
-Gr\"{u}bler's formula and the topology of common joint types directly
-complements the material presented here.
+Lynch and Park~\cite{Lynch2017} distinguish configuration topology, independent-constraint counts, task space and workspace. Their official task-space supplement~\cite{MRWorkspaceSupplement} explains the orientation requirement in dexterous workspace. The numerical inverse-kinematics supplement~\cite{MRNumericalIKSupplement} develops the pseudoinverse's local linear role; the mobile-robot controllability supplement~\cite{MRControllabilitySupplement} connects bracket rank to admissible control sets.
 
-Lynch and Park~\cite{Lynch2017} offer a modern, self-contained treatment of
-configuration-space analysis with extensive worked examples for serial and
-parallel mechanisms. Their textbook is particularly strong on workspace
-computation and kinematic singularities.
+Murray, Li and Sastry~\cite{Murray1994}, Siciliano and colleagues~\cite{siciliano2009}, and Bullo and Lewis~\cite{BulloLewis2004} provide broader treatments of robot kinematics and geometric mechanics/control. The explicit chart inverses, triangle derivation and nonintegrability counterexample here can be checked directly. A source citation does not remove the need to state regularity, coordinate conventions or the physical model used in an application.
 
-For Jacobian analysis, velocity kinematics, and workspace characterization,
-Siciliano et al.~\cite{siciliano2009} provide detailed algorithms and
-case studies drawn from industrial manipulators. Their treatment of
-singularity classification is especially useful for practical applications.
-
-Bullo and Lewis~\cite{BulloLewis2004} develop geometric control theory on
-configuration manifolds, extending the ideas of this chapter into the realm
-of controllability and motion planning on curved spaces. Their framework
-unifies the holonomic and non-holonomic constraint analysis introduced in
-Section~\ref{sec:constraints} with modern tools from differential geometry.
-
-More broadly, the configuration manifolds studied here are special cases of
-the smooth manifolds treated in any graduate text on differential geometry.
-Readers seeking mathematical depth beyond the robotics context will find that
-the manifold, chart, and atlas concepts introduced in this chapter transfer
-directly to the general theory.
-
-% ==========================================================================
 \section{Exercises}
 \label{sec:ch3_exercises}
 
-\subsection*{Foundational Tier}
-
 \begin{enumerate}
-
-\item \label{ex:ch3_1}
-A system consisting of a single rigid body in 3D space (not subject to constraints) has how many degrees of freedom? Explain why.
-
-\item \label{ex:ch3_2}
-For the planar 4-bar linkage, verify Grübler's formula:
-\begin{enumerate}
-  \item Identify $n$ (movable links), $j$ (joints), and $d_i$ (DOF per joint).
-  \item Compute DOF = $3n - 3j + \sum d_i$.
-  \item Explain why the result matches your intuition.
+\item\label{ex:ch3_1} Explain the six local freedoms of a free spatial rigid body. Why do a rotation matrix's nine entries and a unit quaternion's four entries not increase its three rotational freedoms?
+\item\label{ex:ch3_2} Count the regular mobility of a planar four-bar with three moving links and four revolute joints. Differentiate its two closure equations. State when the input angle is a valid local coordinate and why assembly branches can share its value.
+\item\label{ex:ch3_3} Prove that no single chart covers the circle using compactness and openness of a chart image. Explain why the angle labeling on $[0,2\pi)$ is not such a chart. Give a bounded open interval that is a valid possible chart image.
+\item\label{ex:ch3_4} Show that $T_{(x,y)}S^1=\{(a,b):xa+yb=0\}$ has dimension one. Compare this tangent space with the derivative kernel of $x^2+y^2=0$ at its isolated solution.
+\item\label{ex:ch3_5} For two unit links at $q=(0,0)$, compute position and position Jacobian. Identify the available first-order endpoint velocity direction and a nonzero joint velocity giving zero endpoint velocity.
+\item\label{ex:ch3_6} A standard planar slider-crank has three moving links, three revolute joints and one prismatic joint. Sketch its connectivity and obtain the regular count. Explain why the mobility count alone does not uniquely identify these joint types.
+\item\label{ex:ch3_7} For two unit links at $q=(\pi/2,0)$, compute the singular position Jacobian and its image. Describe the missing radial velocity direction. Does the mechanism lose a joint configuration coordinate?
+\item\label{ex:ch3_8} Derive the inner radius, outer radius and area of the unrestricted planar workspace with $L_1=2,L_2=1$. State what changes when the lengths are equal or the joint angles are limited.
+\item\label{ex:ch3_9} Verify both stereographic inverses, derive $v=1/u$ on the overlap and transform the velocity. Recover the same circle speed using the induced metric in either chart.
+\item\label{ex:ch3_10} Write the ideal unicycle's Pfaffian constraint and count its kernel dimension. Compute $[X_1,X_2]$ using the stated convention. Explain which additional control hypotheses permit a local controllability conclusion, and test the four-step finite maneuver numerically.
+\item\label{ex:ch3_11} Prove the reachable-radius bounds for arbitrary positive $L_1,L_2$ and show every intermediate radius occurs. For equal links, determine the all-planar-orientations dexterous workspace and explain why it differs from the nonsingular position workspace.
+\item\label{ex:ch3_12} For a planar arm with lengths $(1,1,0.5)$ and target $(x,y,\theta)=(2,0.5,\pi/4)$, subtract the final-link vector to obtain the two-link wrist target. Solve both branches geometrically. Compare with a safeguarded Newton iteration starting at $(\pi/6,\pi/6,\pi/6)$, reporting residuals and any rejected steps rather than assuming convergence.
+\item\label{ex:ch3_13} For a sphere of radius $r$ on a fixed horizontal plane, write its five-dimensional configuration, no-slip velocity equation and rank-three allowed-velocity space. Explain the eight-dimensional constrained mechanical state and how no twist or a moving plate would change the model.
+\item\label{ex:ch3_14} Complete the curve/derivation equivalence proof using the local expansion $f(z)=f(0)+\sum_i z_i h_i(z)$. Explain why the equivalence is independent of chart choice and why tangent vectors at different base points are not automatically interchangeable.
+\item\label{ex:ch3_15} For specified Stewart platform anchors, derive the six lengths directly from a requested pose. Then differentiate them with respect to translational velocity and angular velocity, identifying each row's moment arm and direction. State the rank test for local platform control and distinguish direct length calculation from solving pose from lengths.
 \end{enumerate}
-
-\item \label{ex:ch3_3}
-The circle $S^1$ is a 1-dimensional manifold. Why can you not cover $S^1$ with a single chart $(U, \varphi)$ where $\varphi : U \to \Reals$? (Hint: think about continuity at the wraparound point.)
-
-\item \label{ex:ch3_4}
-For a point $q \in S^1$ (the circle), what is the dimension of the tangent space $T_q S^1$? Why?
-
-\item \label{ex:ch3_5}
-A 2-link planar arm has link lengths $L_1 = 1, L_2 = 1$. At the configuration $q_1 = 0, q_2 = 0$, what is the end-effector position $\mathbf{p}_{end}$? What is the Jacobian at this configuration?
-
-\end{enumerate}
-
-\subsection*{Intermediate Tier}
-
-\begin{enumerate}
-
-\item \label{ex:ch3_6}
-Grübler's formula for planar mechanisms: DOF $= 3n - 3j + \sum d_i$.
-\begin{enumerate}
-  \item A planar slider-crank mechanism has 3 moving links, 4 joints (one revolute, three other). What must the other three joints be to have DOF $= 1$? Show your calculation.
-  \item Sketch such a mechanism.
-\end{enumerate}
-
-\item \label{ex:ch3_7}
-For the 2-link arm from Example~\ref{example:2link_jacobian}, show that at configuration $q_1 = \pi/2, q_2 = 0$, the Jacobian is singular (det$J = 0$). What does this singularity represent geometrically? (Hint: what is the end-effector orientation?)
-
-\item \label{ex:ch3_8}
-Consider the reachable workspace of a 2-link arm with $L_1 = 2, L_2 = 1$.
-\begin{enumerate}
-  \item What is the inner radius (minimum distance from origin)?
-  \item What is the outer radius (maximum distance)?
-  \item What is the area of the annular workspace?
-\end{enumerate}
-
-\item \label{ex:ch3_9}
-Transition maps on $S^1$: Using the two charts from Example~\ref{example:circle_charts}, show that the transition map $\tau_{12}$ is smooth. What would happen if you tried to use a chart $(U, \varphi)$ with $\varphi(\theta) = \theta$ (angle in radians) covering the entire circle? Why does this fail to be a valid chart?
-
-\item \label{ex:ch3_10}
-For a unicycle model (Example~\ref{ex:unicycle}), write the non-holonomic constraint in Pfaffian form $\mathbf{A}(\mathbf{q}) \dot{\mathbf{q}} = \mathbf{0}$. How many velocity constraints are there? What is the dimension of the allowed velocity subspace?
-
-\end{enumerate}
-
-\subsection*{Advanced Tier}
-
-\begin{enumerate}
-
-\item \label{ex:ch3_11}
-Prove that for a 2-link arm, the workspace is indeed an annulus (not a disk or other shape).
-\begin{enumerate}
-  \item Show that the reachable set is $\{(x, y) : |L_1 - L_2| \le r \le L_1 + L_2\}$ where $r = \sqrt{x^2+y^2}$.
-  \item Hint: parameterize by $q_1, q_2 \in [0, 2\pi)$ and use the constraint that the sum of two vectors of fixed length $L_1, L_2$ has magnitude bounded by $L_1 + L_2$ and at least $|L_1 - L_2|$.
-\end{enumerate}
-
-\item \label{ex:ch3_12}
-Inverse Kinematics for a 3-link planar arm: Suppose we augment the 2-link arm with a third link of length $L_3 = 0.5$.
-\begin{enumerate}
-  \item Write the forward kinematics: $x, y, \theta$ in terms of $q_1, q_2, q_3$.
-  \item If the target is $\mathbf{p}_d = [2.0, 0.5, \pi/4]^T$ (position and orientation), set up the Newton-Raphson iteration $\mathbf{q}_{k+1} = \mathbf{q}_k + J_{kin}^{-1}(\mathbf{q}_k) \mathbf{e}(\mathbf{q}_k)$.
-  \item Numerically solve (using Python or Matlab) starting from an initial guess $\mathbf{q}_0 = [\pi/6, \pi/6, \pi/6]^T$.
-\end{enumerate}
-
-\item \label{ex:ch3_13}
-For a rolling ball on a 2D plane with no-slip condition (Example~\ref{ex:rolling_coin}), write the full state (configuration + velocity) and state the non-holonomic constraint in Pfaffian form. Does this constraint reduce the dimension of the configuration space?
-
-\item \label{ex:ch3_14}
-Prove the equivalence (Theorem~\ref{thm:tangent_equivalence}) by constructing explicit isomorphisms:
-\begin{enumerate}
-  \item Given a curve $\gamma(t)$ with $\gamma(0) = q$ and local coordinates $\varphi(\gamma(t))$, define a derivation $v_\gamma$ on smooth functions.
-  \item Conversely, given a derivation $v$, show you can construct a family of curves whose tangent vectors represent $v$.
-  \item Verify that these maps are mutual inverses (up to equivalence).
-\end{enumerate}
-
-\item \label{ex:ch3_15}
-Stewart Platform Inverse Kinematics: A Stewart platform has a desired end-effector pose (position $\mathbf{p} \in \Reals^3$ and orientation $R \in SO(3)$). Given 6 attachment points on the base and 6 on the platform, the inverse kinematics problem is to find the 6 actuator lengths $\ell_1, \ldots, \ell_6$.
-\begin{enumerate}
-  \item Write the constraint equations (distance constraints).
-  \item Discuss why this nonlinear system is easier to solve than general 6-DOF arm IK (Hint: it is a set of independent distance constraints, not a chain of rotations).
-  \item Sketch an algorithm (e.g., Newton-Raphson or geometric approach) and discuss convergence.
-\end{enumerate}
-
-\end{enumerate}
-
-% ==========================================================================
-

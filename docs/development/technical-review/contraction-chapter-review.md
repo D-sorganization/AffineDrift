@@ -70,3 +70,6 @@ Publication submitted as PR #4257. All pre-commit and pre-push hooks passed, inc
 PR #4257 passed all protected checks and squash-merged as 0dc9870c75b3665203c0dcca1d41cd1598d956aa at 2026-09-07T21:29:36 UTC. Deployment 34163331399 is running. Issue #4252 is closed.
 
 The reused browser helper selected desktop light, phone light and desktop dark for its 156 section captures and 51 additional targets. Any earlier description of that all-section dark pass as phone dark was incorrect. Phone dark was independently covered by the 14-cell verifier and targeted table/diagram checks. All stated captures were inspected; this clarification corrects their viewport attribution.
+
+
+Deployment34163331399 completed successfully at the protected contraction squash. Publication is confirmed; the closed claim needs no renewal.

@@ -63,3 +63,8 @@ Protected publication for issue #4256 remains pending. All render, test and brow
 Final post-repair checks passed: all 43 display equations and 10 legacy IDs verified; the corrected exercise was inspected in 22 captures across desktop light and both phone themes, plus its right equation edge. The final browser verifier passed 14/14 cells with zero serious/critical axe findings. Final content lint passed 128 tests with four skips. No test, render or browser QA job remained running before staging.
 
 Publication submission: all hooks passed for commit 438875ff79c70c1e8a4828caad432f002fce6490. It was replayed onto protected contraction squash 0dc9870c as 871a3f3e91e9b8e7b2802a1b8f07ebbfe945ef62, preserving reviewed tree e19cf92b1ac473515f4492f4e0bf92632dde8058 exactly. PR #4259 is pushed with protected squash auto-merge enabled at the full commit SHA. Checks, merge and deployment remain pending.
+
+
+## Protected Publication
+
+PR #4259 passed all protected checks and merged as 3a53af4838718257039699b2ad69ee4714375a51. Deployment34167189786 completed successfully at that revision. No bypass or force push was used. The closed claim needs no renewal.
