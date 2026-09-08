@@ -206,3 +206,5 @@ Inverse #4291 / PR #4293 is now published after protected squash b6dc729f.
 Main CI 34279760601 and deployment 34279760688 succeed. Exact live artifact
 10078282103 passes 956/956 checks across 239 routes. Delivery of this biology
 batch remains pending; the next commit records its source revision.
+
+Content commit f1430afe replayed onto protected main b6dc729f as 00a8f13c814062765ac2a41326ae2a72f3de3923; final trees are identical. Book audit source/render revision fields now bind that content commit; this is local render evidence, not a claim of deployment.
