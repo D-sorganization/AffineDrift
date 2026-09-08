@@ -123,3 +123,12 @@ Final web repair and verification: the historical quarto-bibliography alias dupl
 All36 final target views (15 equation right edges plus21 figure/code/title views) and all31 last repair/keyboard views were visually inspected, in addition to the84 section views. The final14-view verifier passes with zero serious/critical axe findings. Content130/four skips passes again after the three web-only displays, in40.30s; static34 passes after the alias repair. The final changes affect web equation layout only, with unchanged tested mechanics and print. Generated timestamps/formatting were restored only after semantic equality checks. All local chapter test/build/render/browser QA processes ended before staging; the local HTTP server remains available. Other agents' unrelated repository processes are outside this checkout.
 
 The complete recursive chapter is locally corrected and verified; protected publication is pending. Branch base is a71e09d83c341daee14023ad93935ccfcc889614. Replay only this issue's new commit(s) onto protected main7d78f6b036251c91b0d188494ec9c0ec6ebc1fbc before first push. Claim renewed through2026-09-08T08:45:57UTC. No force push or branch-protection bypass.
+
+
+Protected recursive PR #4276 passed all required checks and merged as4748e674db5c3f7d0c981282f6cf4a8ea9dd86ed. Deployment34199401123 is running; publication is not yet verified. Issue4274 is closed and no longer needs a lease.
+
+
+Deployment34199401123 failed on one of956 page inspections: the unchanged Physics ch04 forces-and-torques page had one visible equation untypeset on mobile/dark, with HTTP200, zero overflow and no serious/critical axe violations across239 routes. The artifact was downloaded and inspected. A freshly rendered isolated-route probe is pending before deciding whether this is a transient typesetting failure or a reproducible defect. Do not claim successful publication.
+
+
+The freshly rendered isolated Forces and Torques probe passed all 14 responsive checks, with zero serious/critical axe findings. Deployment run 34199401123 attempt 1's single untypeset-equation failure remains recorded as adverse evidence; the failed job was rerun after this successful probe. Attempt 2 is in progress as of 08:11 UTC. This is not yet successful-publication evidence; a repeated failure requires diagnosis rather than repeated blind retries.

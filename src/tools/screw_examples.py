@@ -13,7 +13,7 @@ ROTATION_TOLERANCE = 1e-10
 MINIMUM_AXIS_ANGLE = 1e-8
 
 
-def _rigid_transform(transform: Array) -> Array:
+def rigid_transform(transform: Array) -> Array:
     """Require a finite proper rigid transform, mapping B coordinates to A."""
     value = np.asarray(transform, dtype=float)
     if value.shape != (4, 4) or not np.isfinite(value).all():
@@ -30,7 +30,7 @@ def _rigid_transform(transform: Array) -> Array:
 
 def adjoint(transform: Array) -> Array:
     """Map the same physical twist V_B to V_A with T_AB."""
-    value = _rigid_transform(transform)
+    value = rigid_transform(transform)
     rotation, offset = value[:3, :3], value[:3, 3]
     return np.block([[rotation, np.zeros((3, 3))], [skew(offset) @ rotation, rotation]])
 
@@ -66,7 +66,7 @@ def finite_screw(displacement: Array) -> ScrewDisplacement:
     axis, and axis estimation becomes ill-conditioned near zero. At pi the axis
     direction follows SciPy's choice; its opposite describes the same line.
     """
-    value = _rigid_transform(displacement)
+    value = rigid_transform(displacement)
     rotvec = Rotation.from_matrix(value[:3, :3]).as_rotvec()
     angle = float(np.linalg.norm(rotvec))
     if angle <= MINIMUM_AXIS_ANGLE:
