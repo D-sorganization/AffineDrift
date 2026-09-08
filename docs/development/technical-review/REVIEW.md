@@ -1264,3 +1264,12 @@ Spine #4283 / PR #4285 is now verified published at 982be51d. Protected-main CI,
 all textbook builds and deployment34242259512 succeed. Exact live artifact
 10064015023 passes956/956 across239 routes without serious/critical axe findings,
 retries or transient responses. See [spine-review.md](spine-review.md).
+
+## Protected Publication: Residual #4286
+
+PR #4287 passed protected checks and merged as10d4e7cb9de4633022e5cd93885cb54aca8a34ba at16:50:25UTC. Main CI34253504820 and deployment34253504940 succeed. Exact live artifact10068131804 passes956/956 across239 public routes, zero serious/critical axe findings, retries or transient responses. Textbook run34253504790 attempt1 compiled every volume, but Physics artifact finalization received an intermediary403. Its failed-job-only rerun succeeds; attempt2 is green. No source change or bypass was required. The issue is closed and needs no lease renewal. Continue the unfinished corpus under #4009/#4021; active paired rotations #4288 is not yet published.
+
+
+### Rotation Local Review Complete: #4288
+
+The complete paired chapter, included quaternion program, 18 exercises and independent derivations pass local review. Final full-browser inspection covers 202 body views, 83 equation edges and 113 code/table/figure/answer/reference views; all 14 responsive/theme cases pass with zero serious/critical axe findings. Print pages 76–96 and bibliography 239–241 were inspected in the rebuilt 241-page volume. Focused 127 and root 4,828 tests pass; configured coverage is 79.04%. Static 34, content 130, title 631, Ruff, Black, strict typing and tracked-file quality checks pass. Historical anchors and exact rendered program are verified. Detailed derivations, source-reading boundaries and failed attempts are in rotations-review.md. Protected publication remains pending.
