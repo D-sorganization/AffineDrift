@@ -299,3 +299,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-08 | #4271 | Add series navigation sidebars and wire the tangent-space hyperplanes cluster; refresh trust-surface and claim-audit digests for the wired sources. |
 | 2026-09-07 | #4269 | Wire lateral markdown content links into all Build-section pages (models, repositories, tools) and three isolated articles; connect every model↔repository pair with the canonical Related Articles component. |
 | 2026-09-08 | #4272 | Correct state completeness, acceleration geometry, stability, sensing and sampled-control claims with independently checked physical examples in both editions. |
+
+| 2026-09-08 | #4274 | Reconcile recursive dynamics frames, force propagation, spatial acceleration, inertia, contact feasibility and computational claims with independently checked golf-model examples. |

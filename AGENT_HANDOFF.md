@@ -27,7 +27,9 @@ Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 
 ## Technical Content Review
 
-- Active #4272 on fix/4272-state-space-rigor: both complete editions and all15 exercises corrected. Full root4562 passes/29 skips/131 deselections, coverage92.7074%; new module50/50 statements. Focused36, mypy83, static34, title628 and content130/four skips pass. All14 final print chapter pages plus contents/index/bibliography,93 section views,85 targets,24 equation edges and13 repair views inspected. Final14-view verifier passes; zero serious/critical axe findings and no inline-math overflow. Keyboard diagram scrolling reaches both ends. All local QA jobs have ended. See state-space-review.md for exact derivations, source boundaries and caught failures. Replay only new commits after d633fe3d onto protected main before first push. Claim expires2026-09-08T04:46:06UTC.
+- Active #4274 on fix/4274-recursive-dynamics-rigor, based on a71e09d8. Both complete recursive editions/all15 exercises are corrected and locally verified. Full root4632 passes/two hygiene failures resolved by67-case affected rerun; content130, mypy83, static34, title628 and complete print/web QA pass. See recursive-algorithms-review.md for exact evidence. All QA ended; commit only this correction and replay after a71e09d8 onto main7d78f6b0 before first push. Claim expires2026-09-08T08:45:57UTC. Protected PR/publication pending. Next exponential-coordinate editions fully read, original numerical failures reproduced, no correction yet. Never commit/push while this checkout's QA runs.
+
+- State-space PR #4273 passed protected checks and merged as 7d78f6b036251c91b0d188494ec9c0ec6ebc1fbc at 2026-09-08T05:55:01UTC. Deployment 34192478973 completed successfully at 06:21:08UTC. Issue #4272 is closed and needs no lease renewal. Integration-race evidence remains in state-space-review.md.
 
 - Counterfactual PR #4270 passed protected checks and merged as f1f8a1773a38cc5d8f0240756d8ca223b82d9717. Deployment 34181895851 completed successfully. Issue #4264 is closed; its full derivations and validation are in counterfactual-review.md.
 
