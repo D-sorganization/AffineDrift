@@ -270,3 +270,19 @@ Northwestern Modern Robotics section3.4 full video transcript was read on
 2026-09-08: https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-4-wrenches/.
 Its frame/power derivation supports the general wrench convention; numerical
 examples and golf interpretations must be independently derived.
+
+
+## Integration and Byte-Evidence Repair
+
+Commit b31f0b09 passed normal hooks; replay onto protected rotation squash072d5076
+produced255e6a50 with an identical Git tree. A phantom handoff modification had
+empty diff and matching file/HEAD blob hashes; refreshing its index entry allowed
+the rebase. No content was discarded. The first normal push was correctly stopped
+by the evidence hook: the authored bibliography had CRLF working bytes when its
+digest was generated, whereas the committed/replayed file is canonical LF.
+The evidence generator was rerun against canonical LF bytes, changing only the
+inventory and matching generated-report digest. No scientific content changed;
+the hook is retained. Local CSS budget and architecture checks pass when invoked
+as modules; direct-script attempts lacked the repository import path and failed.
+Next issue4291 is now leased to codex/session technical-review-20260906 through
+21:54:42UTC; no source edits have begun there.
