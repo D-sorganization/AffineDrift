@@ -136,6 +136,13 @@ Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 - Regenerate controlled outputs from canonical source, run exact-head gates,
   and verify the protected merge plus post-merge deployment before claiming
   publication.
+- PR #4271 (series navigation sidebars, tangent-space cluster, issue #3904)
+  branch repair 2026-09-08: regenerated stale trust-surface/claim-audit
+  digests (`python -m scripts.regenerate_claim_audit_evidence`), replaced the
+  raw `::: {.callout-note}` fenced div in `articles/affine-nature-golf-swing.qmd`
+  that fails `test_target_pages_do_not_use_raw_fenced_div_markers`, and added
+  the #4271 SPEC.md change-log row. Focused suites
+  (textbook quality, trust surface, claim audit, series navigation) pass locally.
 
 ## Website and Companion Program
 
