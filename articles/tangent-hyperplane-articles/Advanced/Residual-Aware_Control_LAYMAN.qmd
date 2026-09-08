@@ -1,472 +1,158 @@
 ---
 title: "In Layman's Terms: Residual-Aware Control"
-description: "A non-technical explanation of residual-aware control and geometric curvature."
----
-
-**Target Audience:** Non-technical readers, practitioners, students
-**Source:** Residual-Aware_Control.qmd
-**Date:** January 18, 2026
-
+description: "How prediction errors, changing motion, and task sensitivity connect in golf and robotics."
 ---
 
 ## The Big Idea in One Sentence
 
-**"Instead of treating residuals from simplified plans only as errors to minimize, we can use them as diagnostic signals that indicate when a local model may need smaller steps, a richer controller, or new validation."**
+**Use a simplified model's errors to decide what needs closer examination, while checking how those errors affect the outcome that matters.**
 
----
+This is a companion to [Residual-Aware Control](Residual-Aware_Control.qmd). It explains the same argument without requiring differential equations. The central question is not whether every part of a golf swing follows a simple pattern. It is whether a particular simplification helps us predict and understand the shot.
 
 ## The Core Problem
 
-Imagine you're driving on a road trip using GPS. Your GPS gives you directions based on a simplified map: "Drive straight for 10 miles." But reality is messier:
+A model simplifies a motion so we can reason about it. Near a planned state, a linear model predicts how a small change in angle, velocity, or applied force changes what happens next. That is useful even when the full motion is nonlinear. A moving local model can describe small departures from a large swing; the swing itself does not have to be small.
 
-- The road has gentle curves
-- There are hills you can't see on the flat map
-- Sometimes there's a sharp hairpin turn
+But there are several different kinds of error. A golfer may depart from a desired movement. A detailed simulation may differ from its local linear approximation. A measurement may differ from a prediction. These comparisons answer different questions, and calling all of them “drift” can hide the distinction.
 
-If you blindly follow "drive straight," you'll drift off course. The worse the curves, the worse your drift.
+For example, a large difference between a measured clubhead position and a predicted position could come from an incorrect force model, a timing offset, a noisy sensor, or a poor local approximation. The difference tells us to investigate. It does not identify the cause by itself.
 
-**Traditional approach:** Use the simplified map anyway, accept some error, and hope it doesn't get too bad.
+## What a Residual Can Reveal {#the-key-insight-drift-reveals-curvature}
 
-**This article's approach:** Monitor how much you're drifting in real-time, and use that drift as a signal:
-- Small drift? Keep using the simple map (cheap, fast)
-- Big drift? Switch to detailed navigation (expensive, accurate)
-- Massive drift? You're on a hairpin turn—zoom in and slow down!
+<span id="the-amount-you-drift-tells-you-how-curvy-the-road-is."></span>
+<span id="mathematical-connection"></span>
 
-This is **residual-aware control**: treating "drift from the plan" not as failure, but as valuable information about the terrain you're navigating.
+Imagine two maps predicting where a traveler will be after the same journey: a detailed map and a simplified local map. Their disagreement measures the simplification's consequence under that comparison. It does not tell us whether the traveler's actual GPS measurement is reliable or whether a road was closed.
 
----
+The mathematical residual in the technical article is this kind of **model-to-model discrepancy**. It compares the nonlinear model with its first-order prediction using the same initial/input experiment. Under stated smoothness and finite-horizon conditions, sufficiently small perturbations produce a residual that scales quadratically with perturbation size. Doubling the perturbation then gives approximately four times the leading remainder. This is not a rule that doubling elapsed time always quadruples error.
 
-## The Key Insight: Drift Reveals Curvature
+The discrepancy is not a universal measurement of physical curvature. Changing coordinates can turn a simple equation into a nonlinear one without changing the physical system. Likewise, a golfer's curved hand path, a joint's direction reversal, and a model's nonlinear remainder are different quantities.
 
-Here's the central idea that makes everything work:
+### Why Earlier Errors Matter Later
 
-### The Amount You Drift Tells You How Curvy the Road Is.
+An error generated early can grow during the rest of a motion, or feedback and dynamics can reduce it. Adding local errors without accounting for that subsequent evolution can underestimate the final error. The technical article gives an exact scalar example where the old unpropagated bound fails even for very small perturbations.
 
-**Straight road (low curvature):**
-- Your simplified map says "go straight"
-- Reality is actually straight
-- Drift = nearly zero
-- **Strategy:** Trust the simple map, drive fast and confidently
-
-**Gentle curve (moderate curvature):**
-- Your map says "go straight"
-- Reality curves slightly
-- Drift = small but noticeable
-- **Strategy:** Check the map more often, be ready to adjust
-
-**Hairpin turn (high curvature):**
-- Your map says "go straight"
-- Reality curves sharply
-- Drift = large and growing fast
-- **Strategy:** Stop trusting the simple map! Use detailed turn-by-turn navigation, slow down, zoom in
-
-### Mathematical Connection
-
-In control systems, the "simplified map" is called **linearization**—treating your complex system as if it were simple and linear.
-
-- **Linear system** = straight road (double the gas → double the acceleration)
-- **Nonlinear system** = curvy road (double the gas might triple the acceleration, depending on conditions)
-
-The **residual** is the drift: the difference between where the simplified (linear) model says you should be and where the complex (nonlinear) reality actually puts you.
-
-**Key discovery:** The residual isn't random noise. It's directly related to the **curvature** of the system:
-- Low curvature → small residuals
-- High curvature → large residuals
-
-By monitoring residuals, you have a **curvature sensor** that tells you when your simple model is breaking down.
-
----
+Golf makes the consequence concrete. A change in a proximal segment changes the configuration and velocities from which later motion develops. That can alter the effect of forces, the club's deformation, and the time available for correction. Whether the shot changes depends on those connections and on the eventual impact state.
 
 ## Why Does This Matter?
 
-### 1. **Adaptive Efficiency**
+<span id="early-warning-system"></span>
 
-Simple controllers (like "LQR" in control theory) are cheap to compute but assume linearity. Complex controllers (like "MPC" in control theory) handle nonlinearity but are expensive.
+### Adaptive Efficiency
 
-**Without residual awareness:**
-- Use cheap controller everywhere → fail on sharp curves
-- Use expensive controller everywhere → waste 99% of computation on straight roads
+Error analysis can help allocate computational effort. A simulation might use a finer mesh where its output is sensitive or its approximation is inadequate. Another part may need little refinement. The benefit must be measured against the cost of computing the error estimates themselves.
 
-**With residual awareness:**
-- Use a cheaper controller when residual estimates stay below a stated tolerance
-- Switch to a richer controller, smaller timestep, or re-plan when residuals exceed that tolerance
-- **Possible result:** lower computation for comparable accuracy, if the switching rule and thresholds are validated on the task
+There is no universal division into a cheap controller for linear physics and an expensive controller for nonlinear physics. Tracking LQR can work locally on a nonlinear system. Predictive control can use either linear or nonlinear models. Constraints, available time, and feasible corrections also determine the choice.
 
-### 2. **Automatic Timestep Adjustment**
+### Automatic Timestep Adjustment
 
-When planning a complex motion (like a robot backflip or a golf swing), you need to break time into steps. But how small should the steps be?
+A numerical integrator's internal steps, an optimizer's mesh, and a physical controller's update times are distinct. Smaller integration steps calculate the chosen model more accurately. They do not repair a missing force or create faster muscle activation. A refined planning mesh also needs consistent costs, controls, and terminal time.
 
-**Traditional approach:**
-- Fixed timestep everywhere
-- Too large → inaccurate on curves
-- Too small → wasteful on straight sections
+The article derives an interval rule from an error budget and a bound on error growth. If that rule demands an interval shorter than the implementation permits, the budget has not been met. Changing the allowed minimum does not make the original claim true.
 
-**Residual-aware approach:**
-- Monitor predicted residuals
-- Shrink timestep where residual bounds are too large
-- Expand timestep where residual bounds remain comfortably below tolerance
-- **Possible result:** fewer computation steps for comparable accuracy, subject to the curvature model and error tolerance
+### Early Warning
 
-### 3. **Early Warning System**
+A prediction discrepancy may be a useful warning, but useful warning must come early enough to support action. A contact-related spike after a fall is not evidence that a method predicted the fall. Evaluate false alarms, missed events, lead time, and whether the available response succeeds.
 
-When a real system deviates from your model (unexpected wind, slippery floor, worn motor), residuals spike.
+### Quantitative Bounds
 
-**Traditional controller:** Doesn't notice until it's too late
-**Residual-aware controller:** Detects the spike immediately
-- "This drift is too large for current conditions"
-- Switches to a more robust mode if that rule has been implemented and validated
-- Or triggers an alert for human intervention
+A bound states a maximum error under explicit assumptions. It needs a specified model, coordinate scales, neighborhood, perturbation size, and propagation interval. A derivative measured at one state does not automatically bound all nearby states. A numerical sample that appears reassuring may miss a worse case between samples.
 
-**Evidence needed:** A walking-robot claim would need the robot model, terrain protocol, baseline controller, trial count, and failure statistics before reporting a fall-rate reduction.
+The corrected bound combines how much nonlinear error is generated with how strongly the remaining dynamics propagate it. It does not assert that all observed motion errors have that source.
 
-### 4. **Quantitative Bounds**
-
-The article provides mathematical bounds: If the system curvature is M and you step for time Δt with perturbation δx, then:
-
-**Drift ≤ (M/2) × δx² × Δt**
-
-This is a conditional upper bound, not a blanket guarantee. It is useful only when the curvature constant, timestep, perturbation size, and model assumptions have been established. You can then:
-- Estimate a maximum residual before a step is taken
-- Set task-specific residual thresholds
-- Identify what additional verification would be needed before making a safety-critical certification claim
-
----
-
-## Real-World Examples
+## Application Questions {#real-world-examples}
 
 ### Example 1: Quadrotor Doing a Flip
 
-**System:** A drone (quadrotor) executing an aerial flip
+A flip involves large attitude changes, but a local attitude error can remain small if the reference follows the motion. Thrust limits, angular dynamics, sensor uncertainty, and the remaining recovery time all matter. A large angle or high angular speed alone does not determine whether the controller needs changing.
 
-**Phases of motion:**
+A useful evaluation would compare fixed and adaptive planning methods on the same model, task, constraints, accuracy target, and hardware. It would report failures and deadlines as well as average performance. The companion article does not establish measured drone tracking errors, controller rates, or speedups.
 
-**Cruising (flying straight):**
-- Curvature: Low (gentle, predictable motion)
-- Predicted drift: 0.01 meters
-- **Controller:** Simple LQR at 50 Hz (20ms updates)
-- **Computational cost:** 2.5 milliseconds per second
+### Example 2: Robot Walking {#example-2-robot-walking-detecting-falls-early}
 
-**Entering the flip:**
-- Curvature: Moderate (starting to rotate fast)
-- Predicted drift: 0.15 meters
-- **Controller:** Switch to MPC at 100 Hz (10ms updates)
-- **Computational cost:** 5 milliseconds per second
+When a foot touches the ground, an ideal impact model can reset velocity by a finite amount. The model should represent this event explicitly. Nearby motions may touch down at slightly different times; that timing difference must enter their comparison.
 
-**Peak of flip (spinning 400 deg/sec):**
-- Curvature: High (extreme rotation in 3D space)
-- Predicted drift: 0.45 meters
-- **Controller:** Full MPC with tiny timesteps
-- **Computational cost:** 10 milliseconds per second
-
-**Recovery:**
-- Curvature drops → drift decreases
-- **Controller:** Switches back to cheap LQR under the stated residual rule
-
-**Illustrative result:** In this toy calculation, the adaptive plan uses less computation than fine timesteps everywhere while keeping the modeled residual under the chosen threshold.
-
-**The key:** The controller uses residual thresholds to identify the sharpest part of the maneuver and switch policies according to a rule that should be tested before deployment.
-
-### Example 2: Robot Walking (Detecting Falls Early)
-
-**System:** Two-legged robot walking across a room
-
-**Challenge:** When the robot's foot hits the ground (heel strike), there's a sudden impact—a discontinuity that breaks the smooth assumptions.
-
-**Without residual monitoring:**
-- Controller assumes smooth motion
-- Heel strike happens
-- Model is completely wrong for a brief moment
-- By the time error is noticed, robot is already falling
-
-**With residual monitoring:**
-- Controller watches drift continuously
-- Heel strike causes drift to **spike** (predicted drift ≈ 0.01, actual drift jumps to 0.5+)
-- **Immediate detection:** "Something discrete just happened"
-- Switch to hybrid model that accounts for impacts
-- Robot adjusts and stays balanced
-
-**Experimental result:** ATRIAS robot (60kg, 1.2m tall)
-- Fixed controller: 15% fall rate (3 out of 20 trials)
-- Residual-aware controller: 5% fall rate (1 out of 20 trials)
-
-**Analogy:** It's like a driver who notices "the steering wheel is shaking way more than it should" and immediately pulls over, versus a driver who ignores warning signs until they're in a ditch.
+Residual monitoring can supplement contact estimation, but it does not replace a contact model or a feasible balance controller. The earlier claim of an ATRIAS fall-rate reduction was not supported by an identified experiment. It is not evidence for the approach. A real study needs the robot, terrain and perturbation protocol, controllers, trial records, and uncertainty analysis.
 
 ### Example 3: Golf Swing Optimization
 
-**System:** A hypothetical optimization of a golfer-arm model with ball speed as one objective
+Start with the outcome: clubhead velocity, face orientation, path direction, and strike location at impact. Predicting ball speed, launch direction, and spin additionally requires a collision model. A change in joint motion cannot be judged solely by whether it looks smooth or reduces a coordinate error.
 
-**Challenge:** A golf swing has radically different curvature in different phases:
+The same joint-angle error may matter differently at different phases because the subsequent motion changes its effect. Club bending and torsion add deformation states. Muscle activation restricts how quickly a force can change. A late correction may be mathematically imaginable but unavailable within the remaining time.
 
-**Backswing:** Slow, smooth motion
-- Curvature: Low (M ≈ 2.5)
-- Adaptive timestep: 0.02 seconds
-- Computation nodes needed: 25
+An adaptive swing calculation should therefore assess task error, model fidelity, integration accuracy, and control feasibility separately. It should keep the total swing duration and collision assumptions consistent when comparing meshes. No reduction in node count alone proves a better shot or an explanation of expert technique.
 
-**Transition (top of backswing):** Changing direction
-- Curvature: Moderate (M ≈ 12)
-- Adaptive timestep: 0.005 seconds in this example
-- Computation nodes needed: 40
+## How It Works Without Advanced Mathematics {#how-it-works-without-math}
 
-**Downswing:** Explosive acceleration
-- Curvature: High (M ≈ 45)
-- Adaptive timestep: 0.002 seconds in this example
-- Computation nodes needed: 150
+<span id="step-1-predict-drift"></span>
+<span id="step-2-set-thresholds"></span>
+<span id="step-3-monitor-in-real-time"></span>
+<span id="step-4-adapt-by-rule"></span>
 
-**Impact (club hits ball in 0.5 milliseconds):**
-- Curvature: Extreme (M ≈ 200)
-- Adaptive timestep: 0.0002 seconds in this example
-- Computation nodes needed: 25
+1. **Define the comparison.** State which prediction is being compared with which model or measurement, at what time and in what units.
+2. **Define the outcome.** Identify the error that matters for the task, such as strike location rather than an arbitrary whole-body norm.
+3. **Propagate uncertainty.** Account for how the remaining motion amplifies or reduces each discrepancy.
+4. **Check the proposed response.** Refinement, re-estimation, replanning, and changing controllers solve different problems. Verify that the selected response is feasible and timely.
+5. **Test the result.** Use independent checks, a common baseline, and all trials, including failures. Keep a model result separate from physical evidence.
 
-**Total with adaptive timesteps in this example:** 240 computation points
-**Total with uniform fine timesteps in this example:** 1000 computation points
-**Savings in this toy calculation:** 76% fewer nodes
+## Common Objections and Answers {#common-objections-and-answers}
 
-**Performance claims:** Ball-speed and runtime comparisons would require the underlying model, optimizer settings, and validation data. The numbers here should be read as an illustration of how an adaptive discretization study would be reported, not as measured golf evidence.
+<span id="this-sounds-complicated.-why-not-just-use-a-good-controller-all-the-time"></span>
+<span id="cant-we-just-predict-the-hard-parts-in-advance"></span>
+<span id="what-if-residuals-are-always-large-doesnt-this-just-mean-always-use-the-expensive-controller"></span>
+<span id="this-seems-like-it-only-works-for-smooth-systems.-what-about-impacts-switches-constraints"></span>
 
-**The key:** The algorithm uses residual thresholds to allocate more nodes near impact and fewer nodes during smoother phases.
+### Why Not Always Use the Most Detailed Model?
 
----
+Detail costs computation and requires parameters and measurements. More detail can improve prediction when the added mechanisms are relevant and identifiable; it can also add uncertainty. Choose the level of detail needed for the question and verify the trade-off. A simpler model with a known range of validity can be highly informative.
 
-## How It Works (Without Math)
+### Can the Difficult Parts Be Predicted in Advance?
 
-### Step 1: Predict Drift
+Sometimes. Offline analysis can identify sensitive intervals and prepare plans. Unexpected forces and estimation errors still require online assessment. A predicted contact event and a measured prediction discrepancy provide different information, so both may be useful.
 
-Before you move, estimate how much drift you'll have:
-1. Measure the "curvature" of your system at your current state (how nonlinear is it right now?)
-2. Estimate how far you'll move (perturbation size)
-3. Calculate predicted drift using the relationship:
-   - **Drift grows with curvature**
-   - **Drift grows with the square of perturbation size** (double the step → 4× the drift)
+### What If Residuals Are Always Large?
 
-### Step 2: Set Thresholds
+First check the comparison, timestamps, units, coordinate scales, and model. Large measured discrepancies could indicate noise or omitted mechanisms. Large model-to-model remainders could indicate an unsuitable approximation, a large perturbation, or strong subsequent amplification. Always choosing a more expensive controller is not a diagnosis.
 
-Decide what's acceptable for your task:
-- Precision surgery robot: Maximum drift = 1mm
-- Delivery drone: Maximum drift = 10cm
-- Sports motion analysis: Maximum drift = 5cm
+### What About Impacts and Constraints?
 
-Define three zones:
-- **Green zone:** Drift < threshold/3 → "Within tolerance, use simple controller"
-- **Yellow zone:** Drift between threshold/3 and threshold → "Warning, increase attention"
-- **Red zone:** Drift > threshold → "Danger, switch to complex controller"
+Use smooth analysis between events and an explicit event/reset model at impact. Constraints must remain feasible under uncertainty. A small local approximation error cannot prove that the system stays inside a permitted region; that requires an additional containment argument.
 
-### Step 3: Monitor in Real-Time
+## What Is Established Here? {#whats-new-here}
 
-Two ways to monitor:
+<span id="old-idea-linearization-error-is-quadratic-in-perturbation-size"></span>
+<span id="whats-new"></span>
+<span id="quantitative-bounds-1"></span>
+<span id="residuals-as-control-signals"></span>
+<span id="adaptive-algorithms"></span>
+<span id="geometric-interpretation"></span>
 
-**A) Predicted monitoring (offline planning):**
-- During trajectory design, calculate predicted drift at each step
-- Adjust timesteps/controller complexity accordingly
-- Build the plan with the right level of detail everywhere
+The contribution is an explanation linking standard local approximation tools to task-relevant decisions. The technical article derives the error propagation, tests small reproducible examples, and states what would establish a practical benefit. It does not claim that Taylor analysis, adaptive integration, prediction-error monitoring, or robust MPC are new inventions.
 
-**B) Observed monitoring (online execution):**
-- As the system runs, compare:
-  - Where the simple model predicted you'd be
-  - Where you actually are
-- The difference is the observed drift
-- If it's bigger than predicted → something changed (disturbance, model error, damage)
-
-### Step 4: Adapt by Rule
-
-Based on residual levels, the controller follows a specified switching rule:
-
-**Low drift → Efficient mode:**
-- Use cheap LQR controller
-- Large timesteps (fast updates)
-- Minimal computation
-
-**High drift → Careful mode:**
-- Use expensive MPC controller
-- Small timesteps (slow, precise updates)
-- Maximum computation
-
-**Critical drift → Emergency mode:**
-- Full nonlinear optimization
-- Backup safety controller ready
-- Alert human operator
-
-The system smoothly transitions between modes with **hysteresis** (different thresholds for going up vs. down) to prevent "chattering" (rapid switching back and forth).
-
----
-
-## Common Objections (And Answers)
-
-### **"This Sounds Complicated. Why Not Just Use a Good Controller All the Time?"**
-
-**Answer:** Good controllers are expensive.
-
-For a quadrotor:
-- Simple controller (LQR): 0.01 milliseconds per update
-- Complex controller (MPC): 5-10 milliseconds per update
-
-If you update at 100 Hz (every 10ms), the complex controller barely fits in real-time!
-
-**Residual-aware approach:** If a validated threshold lets the simple controller run most of the time and the complex controller run only during high-residual phases, the average cost can be lower than using the complex controller everywhere. The actual speedup is task- and implementation-dependent.
-
-**Analogy:** It is like using a simpler driving strategy on predictable roads and a more cautious strategy in dense traffic. The switch is useful only if the condition detector is reliable.
-
-### **"Can't We Just Predict the Hard Parts in Advance?"**
-
-**Sometimes yes, sometimes no:**
-
-**Yes, if:** Motion is repeatable (robot on assembly line, choreographed drone show)
-- Pre-compute curvature along trajectory
-- Build adaptive plan offline
-- Execute it
-
-**No, if:** Environment is unpredictable (walking on rocky terrain, wind gusts, opponent in a game)
-- Can't pre-plan for unknown disturbances
-- Need real-time residual monitoring to detect "actual drift is way bigger than expected"
-- Triggers adaptation even if plan said it would be smooth
-
-**Practical split:** Use predicted drift for planning and observed drift as a runtime diagnostic, while recognizing that neither one is a substitute for a validated safety case.
-
-### **"What If Residuals Are Always Large? Doesn't This Just Mean 'Always Use the Expensive Controller'?"**
-
-**Answer:** If residuals are always large, it means:
-1. Your system is highly nonlinear everywhere, OR
-2. Your perturbations are too large
-
-**Solutions:**
-- **Reduce perturbation size:** Take smaller steps (reduce timestep for planning, reduce deviation tolerance for tracking)
-- **Improve linearization points:** Relinearize more frequently (update the "tangent plane" before you drift too far)
-- **Accept complexity:** Yes, some systems need expensive methods most of the time
-
-**But:** Even then, residual monitoring can help:
-- You *know* when you're in high-curvature regions (no surprises)
-- You can check whether the stated drift bounds remain credible
-- You can diagnose problems ("Why are residuals so high? Is my model wrong?")
-
-### **"This Seems Like It Only Works for Smooth Systems. What About Impacts, Switches, Constraints?"**
-
-**Answer:** You're right—the math assumes smooth (differentiable) dynamics.
-
-**For impacts (like robot walking):**
-- Residuals **spike** at impact
-- Use residual spike as a **detector**: "Impact just happened"
-- Switch to hybrid system model for that moment
-- Resume smooth control after impact settles
-
-**For switches (like gear changes, valve opening):**
-- Separate the system into modes (gear 1, gear 2, etc.)
-- Apply residual-aware control within each mode
-- Use separate logic for mode transitions
-
-**For constraints (like joint limits, obstacles):**
-- Residual-aware control tells you *if linearization is accurate*
-- Constraint satisfaction is a separate problem (handled by MPC formulation)
-- The two work together: residuals tell you when to switch to constrained MPC
-
-**Bottom line:** Residual awareness is a tool, not a complete solution. It combines with other techniques.
-
----
-
-## What's New Here?
-
-### Old Idea: "Linearization Error Is Quadratic in Perturbation Size"
-
-This has been known for centuries (Taylor series, calculus 101).
-
-### What's New:
-
-#### 1. **Quantitative Bounds**
-**Old:** "Error is O(δx²)" (order-of-magnitude)
-**New:** "Error ≤ (M/2) × δx² × Δt" as a conditional upper bound after a valid curvature constant M has been established
-
-**Impact:** You can compute a model-bound residual estimate instead of relying only on a qualitative "probably small" statement.
-
-#### 2. **Residuals as Control Signals**
-**Old:** Residuals are errors to minimize
-**New:** Residuals are sensors that reveal system curvature
-
-**Impact:** Shift from "fight the error" to "use the error as information."
-
-#### 3. **Adaptive Algorithms**
-**Old:** Fixed timestep, fixed controller
-**New:** Timestep and controller complexity adapt based on real-time residuals
-
-**Impact:** Potential efficiency gains if the thresholds, fallback controller, and validation data support the switching rule.
-
-#### 4. **Geometric Interpretation**
-**Old:** Residuals are "leftover terms in Taylor series"
-**New:** Residuals measure "drift from tangent space" and quantify manifold curvature
-
-**Impact:** The interpretation connects control theory to differential geometry while leaving performance claims to be established by analysis or experiment.
-
----
+Nor does it establish that an expert golfer's nervous system minimizes a residual. A testable alternative is that skilled performance tolerates some variations while regulating directions that affect the shot. Establishing that claim requires suitable measurements and experiments, including competing explanations.
 
 ## Who Should Care?
 
-### **Robotics Engineers**
-- Build adaptive controllers that are fast on easy motions, careful on hard motions
-- Detect possible contact/impact events from residual spikes, subject to false-positive and false-negative checks
-- State tracking-accuracy bounds when the assumptions behind those bounds are verified
+<span id="robotics-engineers"></span>
+<span id="aerospace-engineers"></span>
+<span id="sports-scientists"></span>
+<span id="algorithm-developers"></span>
+<span id="students"></span>
 
-### **Aerospace Engineers**
-- Optimize spacecraft trajectories with adaptive discretization
-- Switch between simple and complex guidance modes based on flight phase
-- Use residual bounds as one input to a mission-safety argument
+Engineers can use these distinctions to design and evaluate a diagnostic. Sports scientists can use them to separate a model's numerical limitations from a hypothesis about human movement. Students can use the worked examples to understand why local approximation and successful task performance are connected but not identical.
 
-### **Sports Scientists**
-- Optimize athlete motions (golf, gymnastics, throwing)
-- Identify candidate high-curvature phases of a complex motion
-- Treat training implications as hypotheses until supported by motion-capture or intervention data
+## The Main Connection {#the-bottom-line}
 
-### **Algorithm Developers**
-- Implement DDP/iLQR with adaptive timesteps for faster convergence
-- Build mode-switching MPC that's efficient and robust
-- Create general-purpose tools for residual monitoring
-
-### **Students**
-- Understand why some phases of motion are harder to control than others
-- See the connection between calculus (second derivatives, curvature) and real systems
-- Learn a principled way to trade off computation vs. accuracy
-
----
-
-## The Bottom Line
-
-**Complex systems have varying complexity.** Some parts are nearly linear (easy). Some parts are highly nonlinear (hard).
-
-Instead of treating everything the same, **residual-aware control** uses drift as a real-time measurement of "how hard is this moment?" and adjusts strategy accordingly:
-
-- **Low drift:** Simple, fast controller
-- **High drift:** Complex, careful controller
-- **Rule-based switching:** Based on quantitative thresholds
-
-The possible result:
-- **Efficiency:** lower computation than always-careful approaches when high-residual phases are sparse
-- **Robustness:** Early detection of model errors and disturbances
-- **Bounds:** Quantitative residual estimates under stated assumptions
-
-This is not a finished safety argument. It is a way to turn residuals into explicit evidence about when a local model is being used within, or outside, its credible range.
-
----
+A motion prepares the state from which later motion unfolds. Geometry, inertia, force production, compliance, timing, and feedback jointly determine what deviations become important. Residual analysis contributes by checking a particular prediction within that system. Its value depends on connecting the discrepancy to the mechanism and the outcome.
 
 ## Analogies to Remember
 
-### **The GPS Navigator**
-- Straight highway → trust simple directions, drive fast
-- Winding mountain road → check map constantly, drive carefully
-- Hairpin turn → zoomed-in navigation, slow to a crawl
-- **Drift from straight line tells you which mode you're in**
+<span id="the-gps-navigator"></span>
+<span id="the-staircase"></span>
+<span id="the-hiking-trail"></span>
 
-### **The Staircase**
-- Each step is simple (linear: push → go up)
-- A tall building is complex (nonlinear: path spirals)
-- But climb enough simple steps → reach the top
-- **Residual = how far you drifted from straight-line prediction when you account for the twist in the stairs**
+**A weather forecast:** Comparing a simplified forecast with a detailed one tells us about the simplification. Comparing either forecast with a weather station also involves model and measurement limitations. The two disagreements should not be interpreted as the same quantity.
 
-### **The Hiking Trail**
-- Flat meadow → big strides, don't check map every step
-- Rocky slope → small steps, watch your footing
-- Cliff edge → tiny steps, full attention
-- **Your stumble rate (residual) tells you the terrain difficulty (curvature)**
+**A delayed journey:** An early delay can be recovered or amplified by later connections. Its eventual cost depends on the route and the appointment, not just its original size. Likewise, a swing perturbation must be propagated to impact before its task consequence can be assessed.
 
----
-
-**For the full technical details:** See [Residual-Aware_Control.qmd](Residual-Aware_Control.html)
-
-**For the underlying framework:** See [Tangent_Hyperplanes_Unified_Thesis.qmd](../Tangent_Hyperplanes_Unified_Thesis.html)
-
-**For related concepts:** See [Contraction_Tangent_Unification.qmd](Contraction_Tangent_Unification.html) (stability and control geometry)
+Continue with the [full derivation and checked examples](Residual-Aware_Control.qmd) or the [series reading order](../TABLE_OF_CONTENTS.qmd).

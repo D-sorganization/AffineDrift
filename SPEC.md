@@ -308,3 +308,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-08 | #4280 | Correct tangent-space foundations, dimensioned examples, residual bounds, moving-coordinate sensitivity, optimization and hybrid-event interpretations. |
 
 | 2026-09-08 | #4283 | Reconcile paired spine anatomy, coordinate conventions, coupled dynamics, tissue-load inference and golf injury evidence with dimensioned checks. |
+| 2026-09-08 | #4286 | Correct propagated residual bounds, adaptive-control and evidence claims across the advanced article and three companions; add independently checked flow, interval, norm, stability and statistical examples. |
