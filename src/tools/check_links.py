@@ -4,21 +4,29 @@ This tool scans files for both Markdown-style [text](url) links and
 HTML href="url" links, then validates that internal links resolve to
 existing files and external links are properly formatted.
 
-Usage:
-    python check_links.py <file_path>
+Source-level site link quality checks (include-aware internal link
+resolution, path-style normalization, related coverage, orphan detection —
+issue #3899) live in ``src.tools.utils.link_checks`` and are exposed here:
 
-Example:
-    python check_links.py docs/articles/my-article.html
+Usage:
+    python -m src.tools.check_links                 # legacy broken-link scan
+    python -m src.tools.check_links --source-checks # site link quality gate
+
+Exit codes:
+    0 — no violations; 1 — violations found. See docs/LINK-CHECKER.md.
 """
 
+import argparse
 import logging
 import sys
 from pathlib import Path
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
+from src.tools.utils.link_checks import DEFAULT_CONFIG_NAME, run_source_checks
 from src.tools.utils.link_utils import (
-    ALL_LINK_PATTERNS,
+    find_links,
+    html_target_resolvable,
     normalize_internal_url,
     path_exists_in_search_roots,
     resolve_relative_path,
@@ -38,20 +46,6 @@ SKIP_FILES = {
     "EMBEDDING_GUIDE.md",
     "CONTRIBUTING.md",
 }
-
-
-def find_links(file_path: Path) -> list[tuple[str, int]]:
-    """Extract links and exact source line numbers from a file."""
-    require(file_path is not None, "file_path must not be None")
-    with open(file_path, encoding="utf-8") as f:
-        lines = f.read().splitlines()
-
-    links: list[tuple[str, int]] = []
-    for line_number, line in enumerate(lines, start=1):
-        for pattern in ALL_LINK_PATTERNS:
-            for match in pattern.findall(line):
-                links.append((match.strip(), line_number))
-    return links
 
 
 def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:
@@ -98,15 +92,7 @@ def _path_exists_in_search_roots(*, root_path: Path, target_path: Path) -> bool:
 
 def _is_html_link_resolvable(*, root_path: Path, target_path: Path) -> bool:
     """Check whether an HTML link can map to source or generated files."""
-    p_qmd = target_path.with_suffix(".qmd")
-    p_md = target_path.with_suffix(".md")
-    if _path_exists_in_search_roots(root_path=root_path, target_path=p_qmd):
-        return True
-    if _path_exists_in_search_roots(root_path=root_path, target_path=p_md):
-        return True
-    if _path_exists_in_search_roots(root_path=root_path, target_path=target_path):
-        return True
-    return target_path.is_dir() and (target_path / "index.qmd").exists()
+    return html_target_resolvable(root=root_path, target=target_path)
 
 
 def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
@@ -145,12 +131,42 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
     return unique_broken(broken_links)
 
 
-if __name__ == "__main__":
+def _build_parser() -> argparse.ArgumentParser:
+    """Build the CLI argument parser."""
+    parser = argparse.ArgumentParser(
+        prog="python -m src.tools.check_links",
+        description=(
+            "Legacy broken-link scan by default; --source-checks runs the "
+            "site link quality gate (issue #3899)."
+        ),
+    )
+    parser.add_argument(
+        "--source-checks",
+        action="store_true",
+        help=("run source-level checks: internal links, path style, " "related coverage, orphans"),
+    )
+    parser.add_argument(
+        "--config",
+        default=DEFAULT_CONFIG_NAME,
+        help="budget config name resolved under config/ (default: %(default)s)",
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Run link checks and return an exit code (0 pass, 1 violations)."""
+    args = _build_parser().parse_args(argv)
+    if args.source_checks:
+        return run_source_checks(".", args.config)
     broken = check_links(".")
     if broken:
         logger.info("\nBroken Links Found:")
         for file, line, link in broken:
             logger.info(f"{file}:{line} -> {link}")
-        sys.exit(1)
-    else:
-        logger.info("\nNo broken internal links found.")
+        return 1
+    logger.info("\nNo broken internal links found.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

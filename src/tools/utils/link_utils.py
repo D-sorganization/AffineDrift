@@ -16,6 +16,8 @@ import re
 from pathlib import Path
 from urllib.parse import unquote, urldefrag
 
+from src.core.contracts import require
+
 logger = logging.getLogger(__name__)
 
 # ─── Compiled regex patterns for link extraction ────────────────
@@ -157,3 +159,175 @@ def path_exists_in_search_roots(*, root: Path, target: Path) -> bool:
         return False
     relative = target.relative_to(root)
     return (root / "src" / relative).exists() or (root / "docs" / relative).exists()
+
+
+#: Quarto ``{{< include path >}}`` shortcode (path captured without quotes)
+INCLUDE_SHORTCODE_PATTERN: re.Pattern[str] = re.compile(r'\{\{<\s*include\s+"?([^">\s]+)"?\s*>\}\}')
+
+#: A ``## Related Articles`` (or ``###``) section heading
+RELATED_HEADING_PATTERN: re.Pattern[str] = re.compile(
+    r"^#{2,4}\s+Related Articles\s*$", re.MULTILINE
+)
+
+#: Any Markdown heading line
+HEADING_PATTERN: re.Pattern[str] = re.compile(r"^(#{1,6})\s+(.*?)\s*$")
+
+#: Inner heading of the canonical component (does not end the section)
+SEE_ALSO_TEXT: str = "See Also"
+
+#: Suffixes that mark a link target as a rendered site page
+PAGE_SUFFIXES: tuple[str, ...] = (".html", ".qmd", ".md")
+
+
+def find_links(file_path: Path) -> list[tuple[str, int]]:
+    """Extract links and exact source line numbers from a file.
+
+    Args:
+        file_path: The file to scan for markdown and HTML links.
+
+    Returns:
+        A list of ``(url, line_number)`` tuples in document order.
+
+    Raises:
+        AssertionError: If ``file_path`` is None (contract).
+    """
+    require(file_path is not None, "file_path must not be None")
+    with open(file_path, encoding="utf-8") as f:
+        lines = f.read().splitlines()
+
+    links: list[tuple[str, int]] = []
+    for line_number, line in enumerate(lines, start=1):
+        for pattern in ALL_LINK_PATTERNS:
+            for match in pattern.findall(line):
+                links.append((match.strip(), line_number))
+    return links
+
+
+def find_include_paths(text: str) -> list[str]:
+    """Return the include targets of ``{{< include path >}}`` shortcodes.
+
+    Args:
+        text: The text of the including document.
+
+    Returns:
+        Include target paths in order of appearance (may be relative).
+    """
+    return [match.group(1) for match in INCLUDE_SHORTCODE_PATTERN.finditer(text)]
+
+
+def extract_related_section_links(text: str) -> list[str]:
+    """Extract link URLs from canonical ``Related Articles`` sections.
+
+    The canonical component (issue #3897) is a ``## Related Articles``
+    heading whose callout body carries the links; an inner ``## See Also``
+    heading does not end the section. Links from every occurrence are
+    concatenated in document order.
+
+    Args:
+        text: The full text of a rendered source page.
+
+    Returns:
+        Raw link URLs found inside Related Articles sections.
+    """
+    urls: list[str] = []
+    lines = text.splitlines()
+    in_section = False
+    for line in lines:
+        heading = HEADING_PATTERN.match(line)
+        if heading:
+            if in_section and heading.group(2).strip() == SEE_ALSO_TEXT:
+                continue
+            in_section = bool(RELATED_HEADING_PATTERN.match(line))
+            continue
+        if in_section:
+            urls.extend(MARKDOWN_LINK_PATTERN.findall(line))
+    return urls
+
+
+def html_target_resolvable(*, root: Path, target: Path) -> bool:
+    """Check whether an ``.html`` link target maps to renderable source.
+
+    Args:
+        root: The project root directory.
+        target: The resolved target path (``.html`` suffix).
+
+    Returns:
+        True if a ``.qmd``/``.md`` source, the raw target, or an
+        ``index.qmd`` under the target directory exists.
+    """
+    for candidate in (target.with_suffix(".qmd"), target.with_suffix(".md"), target):
+        if path_exists_in_search_roots(root=root, target=candidate):
+            return True
+    return target.is_dir() and (target / "index.qmd").exists()
+
+
+def internal_link_resolvable(*, root: Path, source_file: Path, url: str) -> bool:
+    """Return True when an internal link resolves from its source context.
+
+    Mirrors the historical ``check_links._is_broken_link`` semantics:
+    ``.html`` targets may map to ``.qmd``/``.md`` sources; all other
+    targets must exist under the root, ``src/``, or ``docs/`` search trees.
+
+    Args:
+        root: The project root directory.
+        source_file: The file whose directory the URL is relative to.
+        url: The already-normalized internal URL.
+
+    Returns:
+        True if the link target resolves.
+    """
+    target = resolve_relative_path(root=root, source_file=source_file, url=url)
+    if target.suffix == ".html":
+        return html_target_resolvable(root=root, target=target)
+    return path_exists_in_search_roots(root=root, target=target)
+
+
+def page_target_key(*, root: Path, source_file: Path, url: str) -> str | None:
+    """Map a link to the canonical page key it renders to, if any.
+
+    Resolution follows browser semantics: the URL is joined against the
+    source directory, over-traversal above the root is clamped, and the
+    target is normalized to a ``.qmd``/``.md`` source key relative to the
+    root (``.html`` targets map onto their source, directory targets onto
+    their ``index.qmd``).
+
+    Args:
+        root: The project root directory.
+        source_file: The file containing the link.
+        url: The already-normalized internal URL.
+
+    Returns:
+        The root-relative POSIX page key, or None when the target does not
+        exist as a rendered page.
+    """
+    parts: list[str] = []
+    if url.startswith("/"):
+        parts = url.lstrip("/").split("/")
+    else:
+        for part in (*source_file.parent.parts, *url.split("/")):
+            if part == "..":
+                if parts:
+                    parts.pop()
+            elif part not in ("", "."):
+                parts.append(part)
+    candidate = root.joinpath(*parts)
+    return page_key_for_target(root=root, target=candidate)
+
+
+def page_key_for_target(*, root: Path, target: Path) -> str | None:
+    """Return the canonical page key for a resolved target, if it exists.
+
+    Args:
+        root: The project root directory.
+        target: A candidate target path (any suffix).
+
+    Returns:
+        Root-relative POSIX key of the existing ``.qmd``/``.md`` source,
+        else None.
+    """
+    stem = target.with_suffix("") if target.suffix else target
+    for suffix in (".qmd", ".md"):
+        candidate = stem.with_suffix(suffix) if target.suffix else stem / f"index{suffix}"
+        if candidate.exists() and candidate.is_relative_to(root):
+            return candidate.relative_to(root).as_posix()
+    return None

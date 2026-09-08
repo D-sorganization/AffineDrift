@@ -12,6 +12,14 @@ This policy defines the blocking quality gates used to keep code quality from re
   - `scripts.generate_sitemap` (>= 75%)
 - Rule: coverage may not regress below per-module thresholds.
 
+## Site Link Quality Gate
+- Gate command: `python3 -m src.tools.check_links --source-checks` (in `ci-standard.yml`)
+- Checks: include-aware internal link resolution, page-link path style,
+  Related Articles coverage, orphan detection. Semantics and budgeting are
+  documented in `docs/LINK-CHECKER.md`.
+- Baseline violations are budgeted in `config/link_checker_budget.json`;
+  violations beyond budget fail the build.
+
 ## Module Size and Complexity Gates
 - Global budget gate: `scripts/check_module_size_budget.py`
 - Changed-file gate: `scripts/check_changed_file_size_budget.py`
