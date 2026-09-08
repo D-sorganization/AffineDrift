@@ -68,3 +68,6 @@ Final post-render checks: all 34 CI static contracts pass; 128 content checks pa
 Configuration PR #4262 is pushed at 710369a7d19409c8323c0254f62f70e22e09ff95. The one correction commit was replayed from 3c188295 onto protected ABA squash 3a53af48; the complete tree remains 8491e5d94f26a8ac34762a3ac71fe6d61bd31865. Pre-commit and pre-push hooks pass, including isolated mypy and unit tests. A content-identical handoff index refresh resolved Git's unstaged-file rebase refusal; no user content was discarded. Protected publication remains pending.
 
 Next issue #4261 now records the full original Lagrangian print/web reading and all 16 exercise defects. The prior lines-1–330 reading boundary was preliminary; subsequent reading covered the entire remaining source through the final exercise. No Lagrangian replacement or numerical test pass is yet claimed. Work will use a separate topic branch.
+
+
+Configuration PR #4262 passed protected checks and merged as 0d3db9107ab89f612c0cf73d02402eb5d577ee73. Deployment 34172069718 completed successfully. The issue is closed and needs no lease renewal.

@@ -1072,3 +1072,22 @@ Configuration final QA: all 14 verifier views pass with zero serious/critical ax
 Configuration PR #4262 is pushed at 710369a7d19409c8323c0254f62f70e22e09ff95. The one correction commit was replayed from 3c188295 onto protected ABA squash 3a53af48; the complete tree remains 8491e5d94f26a8ac34762a3ac71fe6d61bd31865. Pre-commit and pre-push hooks pass, including isolated mypy and unit tests. A content-identical handoff index refresh resolved Git's unstaged-file rebase refusal; no user content was discarded. Protected publication remains pending.
 
 Next issue #4261 now records the full original Lagrangian print/web reading and all 16 exercise defects. The prior lines-1–330 reading boundary was preliminary; subsequent reading covered the entire remaining source through the final exercise. No Lagrangian replacement or numerical test pass is yet claimed. Work will use a separate topic branch.
+
+
+## Complete Lagrangian Chapter Review — Issue #4261
+
+Both original editions and all 16 exercises were read completely. The replacement derives consistent inertia, first-/second-kind Christoffel terms, gravity signs, power, forced Noether balance, moving constraints, coordinate transformations and symplectic integration. It corrects the indefinite original code mass matrix, uniform-rod inertia coefficients, physical motor mapping, false symmetry exercises and unsupported performance claims. The golf synthesis distinguishes interface power, whole-system momentum, muscle work, elastic storage and coordinate-dependent coefficient stories. Full derivations, exercise solutions, source boundaries and failed checks are in lagrangian-mechanics-review.md.
+
+TDD: 24 missing-module errors and three independent counterexamples, then26 passes/one offset-sign failure, then27 passes after the independently caught coordinate correction. Additional boundaries/stability cases give34 passes. Published5s energy/work residuals decrease from about3e-9J to1e-10J with tighter tolerances. Ruff/Black/custom quality and625-source title checks pass after documented repairs. Print262pages and web45displays build; full suite and visual review remain pending. Branch starts after1c845e87 and must replay only new commits onto the protected configuration squash before first push. Configuration PR#4262 remains under protected checks with autosquash enabled. The405-source corpus remains unfinished.
+
+
+Configuration PR #4262 passed protected checks and merged as 0d3db9107ab89f612c0cf73d02402eb5d577ee73. Deployment 34172069718 completed successfully. The issue is closed and needs no lease renewal.
+
+
+The complete root suite passes 4,501 tests, with 29 skips, 129 deselections and 59 warnings in 885.85 seconds. It uses a 300-second per-test limit after the prior unchanged PDF extraction timeout; the passing extraction took 86.72 seconds. Benchmark timing is disabled, with correctness paths still executed. Source coverage is 92.67871170463472%, and the new Lagrangian module covers all 70 statements (100%). All 24 original print labels, 11 index terms, four generated box aliases and nine web entry IDs remain. Final 263-page print edition has a 16-page chapter, inspected throughout with contents, index and bibliography. All 84 section views, 52 initial targets, 72 repair targets, equation edges and four keyboard figure views have been inspected; no remaining oversized inline formula. Two 14-view verifiers pass with zero serious/critical accessibility findings. Focused 34, static 34, content 128/four skips, mypy 82 and title 625 pass. The final bibliography-only deduplication is under targeted verification. The 405-source corpus remains unfinished.
+
+
+Final bibliography-only QA passes: all five web views and both changed print bibliography pages were inspected, with one source URL per web entry. Post-render static checks pass 34/34; content checks pass 128 with four skips and 4,482 deselections in 37.89 seconds. The SPEC changelog and 625-source title checks pass. All local test, render and browser QA jobs finished before staging.
+
+
+Lagrangian PR #4263 is pushed at 4ad9bc7ec2d79cd670e5e0f44614ea85e1142465. The one correction commit fbc65f64 was replayed onto protected configuration squash 0d3db910 before first push; the full tree remained 01616c1e0ee4ed0467f6fb5adfd9b9151cbe16ba. Pre-commit and pre-push hooks, including isolated mypy and unit tests, passed. No force push or protection bypass was used. Protected checks and publication are pending.
