@@ -31,7 +31,7 @@ viewing the images. Preserve the valid hypothetical39.9% result while separating
 it from unverified iron aerodynamics and video-axis assumptions. The original
 14.3% contact-position example changes the actual wrench, not its reporting point.
 See `inverse-manuscript-review.md` for the derivations and corrected decisions.
-Protected delivery for #4291 is pending. The405-source corpus is unfinished.
+PR #4293 is pushed; protected delivery for #4291 is pending. The405-source corpus is unfinished.
 
 ## Argument Being Investigated
 

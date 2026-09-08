@@ -217,3 +217,10 @@ Vendor main CI34275285462 and deployment34275285576 both succeed for exact
 squash8a7bee22e63335c305b71cbef4fdf2f82a7c89e1. Downloaded artifact10076513252
 contains956/956 passing checks across239 routes, zero serious/critical axe
 findings and zero retries/transient responses. The previous batch is published.
+
+## Pull Request Delivery
+
+Committed as67111d8d, then replayed only the inverse batch after09a2471d onto
+protected main8a7bee22. Replay had no conflicts and its final tree is identical.
+Normal first push and all hooks passed. PR4293 targets main, references Fixes4291,
+and carries agent:codex. Protected CI/merge and publication are pending.
