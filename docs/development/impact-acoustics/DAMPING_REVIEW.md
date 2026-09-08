@@ -151,3 +151,24 @@ PDF and root publication configuration remain unchanged. All 90 combined
 textbook/impact/root-hygiene and incoming exponential-coordinate tests pass
 on the merged branch. Tools point-load checkpoint `6323944ee` is now pushed
 with all normal hooks; full golf/API verification passes 488 tests, two skips.
+
+
+## Shared Book Integration for PR #4282
+
+Main then advanced to `e69500eb` with the complete-swing correction in PR #4281.
+The paired chapter sources merged cleanly, but both branches changed the golf
+PDF. The binary conflict is resolved by rebuilding the complete book from both
+sets of sources, not by selecting either previous PDF. The combined PDF has
+562 pages and 3,901,774 bytes. Changed damping pages remain 226–229 and 237–238;
+all six were rendered and visually reviewed again. Existing missing-glyph and
+duplicate-reference warnings persist and are not reported as resolved.
+
+The 36-target root Physics of Golf website rebuild passes with --no-clean.
+Eight screenshots were reviewed after font readiness and settled layout;
+an earlier first screenshot caught a transient animation and was superseded.
+The final review has 177 MathJax containers, no undefined-math errors, no whole
+page overflow at 1440/390 px and zero axe violations in the two new sections.
+Existing local overflow and root CSP/stylesheet issues remain as recorded above.
+The temporary root stylesheet copy was restored and this task's browser/server
+were stopped. Its scratch directory was moved into docs/development; no unrelated
+tracked generated evidence was changed. All 128 post-integration textbook, impact, root-hygiene, exponential-coordinate, complete-swing and figure-parity tests pass.

@@ -1170,3 +1170,30 @@ All local test/build/render/browser QA ended before staging. Only the HTTP serve
 
 
 The freshly rendered isolated Forces and Torques probe passed all 14 responsive checks, with zero serious/critical axe findings. Deployment run 34199401123 attempt 1's single untypeset-equation failure remains recorded as adverse evidence; the failed job was rerun after this successful probe. Attempt 2 is in progress as of 08:11 UTC. This is not yet successful-publication evidence; a repeated failure requires diagnosis rather than repeated blind retries.
+
+
+Recursive PR #4276 / protected squash 4748e674 is published. Deployment 34199401123 attempt 2 succeeded; downloaded live artifact 10047429024 passes all 956 checks across 239 routes, with zero failures, zero serious/critical axe violations and zero navigation retries. Attempt 1's adverse evidence remains retained.
+
+
+## Complete-Swing Synthesis: #4278
+
+Both complete editions and both original ten-question exercise sets were read. Their phase-specific mechanics, shaft timing, input-gain, observability, collision and coaching/efficiency claims have been corrected in a complete paired draft, preserving the earlier sound energy budget. Fifteen revised exercises cover all substantive original topics. The treatment connects constrained dynamics to time-transported delivery sensitivity, hybrid events, work/momentum accounts and a reproducible investigation protocol. Fifteen independent numerical cases pass using existing implementations and direct calculations; full root and print/web QA remain pending. Sources, explicit reading limits, derivations, all exercise solutions and caught test/command issues are in complete-swing-review.md. The 405-source corpus remains unfinished.
+
+
+## Exponential Publication Verified
+
+Exponential PR #4279 passed protected checks and squash-merged as `439695c4753cd14f97a689605aa6c675374f0ddd` at 08:43:14UTC on 2026-09-08. Deployment 34206038396 succeeded. Downloaded exact-revision live artifact 10048902701 reports 956/956 passes across 239 routes, zero serious/critical axe violations, zero retries and zero transient responses. Issue #4275 is closed; no lease renewal is needed.
+
+## Complete-Swing Local Verification, 2026-09-08
+
+Both complete editions and 15 reconciled exercises are corrected. The prior #4239 energy-budget body is preserved; its print section title has a layout-only line break. The source is included as Chapter 33 in the main book; the introduction no longer calls it the final chapter after thirteen predecessors. Derivations and all exercise answers above distinguish identities, illustrative limits, model predictions and empirical findings.
+
+Full-root validation produced 4,701 passes, two failures, 29 skips, 131 deselections and 59 warnings in 526.07s. Both failures were stale expected figure-inventory counts after replacing one unpaired TikZ figure with two paired explanatory figures. The inventory expectations were updated to the actual 29 print figures (24 TikZ, five includegraphics), six web figures and 23 unpaired figures. The complete affected audit file and new numerical file then passed all 38 tests. This is not a claimed all-green full-root rerun. Coverage remains 92.72784019975032%. No production code was added. Final content tests pass 130 with four skips, 4,684 deselections in 43.60s; mypy passes 84 files; all 34 CI contracts, title audit629, Ruff, Black100 and custom quality checks pass.
+
+The rebuilt Physics PDF has 562 pages. All chapter pages493–509 and blank verso510 were visually inspected, plus contents23–24, figure list27, changed bibliography549–551 and index555–562. The initial inspection caught undersized figure labels and unnumbered exercises; resized figures and numbered exercises are verified in the final build. No chapter overfull-box or unresolved-reference warning remains; inherited warnings elsewhere are outside this slice.
+
+All 66 section browser captures (22 headings in desktop/mobile/mobile-dark), 34 final title/figure/exercise/bibliography captures and ten keyboard figure captures were inspected. Both figure regions reach the full331px keyboard scroll extent. All47 historical heading/reference anchors occur exactly once. A first screenshot attempt timed out before the completed capture run; a fresh probe and bounded60-second capture timeout succeeded without source or safety-gate changes.
+
+Visual inspection caught three raw-text energy displays despite a passing responsive verifier: the scratch LaTeX-to-Quarto conversion introduced blank lines inside display delimiters. Those three math bodies were preserved and delimiter whitespace repaired. After a fresh root-config render, all22 expected displays typeset and no raw dollar delimiters remain. All nine targeted energy views were inspected. The final responsive verifier passes14/14, with zero serious/critical axe findings. Ten overflowing display equations reach their right edge at17.78px; no oversized inline formulas remain. Source conversion is recorded in the local scratch builder, which is not a production utility.
+
+Six generated trust/summary files were restored only after comparing semantic contents, ignoring generated dates/JSON formatting. Root configuration was restored after each selected render. Immutable monograph and original checkout are untouched. Protected publication of #4278 is pending. Replay only this issue's commits after742a12a2 onto current protected main before first push; never commit/push during this checkout's running QA.
