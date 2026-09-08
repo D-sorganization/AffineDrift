@@ -18,6 +18,7 @@ from scripts.generate_worked_examples import (
     VOL0_CH07_QDD,
     VOL0_RNEA_TOLERANCE,
 )
+from src.affine_control.dynamics import motion_cross
 from src.affine_control.rnea import GRAVITY_M_S2, PlanarChain, PlanarLink
 
 CHAINS = {
@@ -121,14 +122,13 @@ def test_static_torque_equals_the_gravity_gradient(name: str) -> None:
     )
 
 
-def test_velocity_product_term_vanishes_for_a_planar_chain() -> None:
-    """The claim the chapter now makes: V x S qdot is zero, not "(0.1,0,0) approx".
-
-    Both vectors lie along the out-of-plane axis for every link of a planar arm.
-    """
-    velocity = np.array([0.0, 0.0, 0.5])
-    axis_rate = np.array([0.0, 0.0, 0.2])
-    np.testing.assert_allclose(np.cross(velocity, axis_rate), np.zeros(3), atol=0.0)
+def test_parallel_angular_axes_do_not_cancel_spatial_velocity_product() -> None:
+    """A moving proximal origin leaves a nonzero linear part of the Lie bracket."""
+    velocity = np.array([0.0, 0.0, 0.5, 0.4, 0.0, 0.0])
+    joint_motion = np.array([0.0, 0.0, 0.2, 0.0, 0.0, 0.0])
+    np.testing.assert_allclose(
+        motion_cross(velocity) @ joint_motion, [0, 0, 0, 0, -0.08, 0], atol=1e-15
+    )
 
 
 def test_published_agreement_bound_actually_holds() -> None:

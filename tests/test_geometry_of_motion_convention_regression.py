@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -38,15 +39,19 @@ def test_ch01_se3_kinematics_uses_body_twist_convention() -> None:
     assert r"\dot{\mat{T}} = \mat{T} \, \begin{pmatrix}" in text
 
 
-def test_ch07_humanoid_parent_array_examples_match_their_descriptions() -> None:
-    """Humanoid examples should describe the same topology encoded by the parent arrays."""
-
-    text = CH07_RECURSIVE_ALGORITHMS.read_text(encoding="utf-8")
-
-    assert r"\lambda = [-1, 0, 1, 0, 3, 0, \ldots]" in text
-    assert "with link 0 as the pelvis, links 1-2 the left leg, links 3-4 the right leg," in text
-    assert "link 5 the torso, etc." in text
-
-    assert "A humanoid robot with a main body/torso (link 0), two legs (links 1–2 and 3–4)," in text
-    assert "and two arms (links 5–7 and 8–10) has the parent array:" in text
-    assert r"In the inward pass, when computing $\mathcal{F}_0$ (torso wrench), we sum:" in text
+def test_ch07_parent_array_matches_the_described_branch_in_both_editions() -> None:
+    """The illustrated siblings and descendant must match the encoded tree."""
+    web = CH07_RECURSIVE_ALGORITHMS.parents[2] / "quarto/vol0_ch07_recursive_algorithms.qmd"
+    for source in (CH07_RECURSIVE_ALGORITHMS, web):
+        text = source.read_text(encoding="utf-8")
+        match = re.search(r"\\lambda=\((\d+(?:,\d+)+)\).*?four moving bodies", text)
+        assert match is not None
+        parents = [int(value) for value in match[1].split(",")]
+        children = {
+            parent: [child for child, value in enumerate(parents, 1) if value == parent]
+            for parent in range(len(parents) + 1)
+        }
+        assert all(parent < child for child, parent in enumerate(parents, 1))
+        assert children == {0: [1], 1: [2, 3], 2: [], 3: [4], 4: []}
+        assert "bodies 2 and 3 branch from body 1" in text
+        assert "body 4 attaches to body 3" in text

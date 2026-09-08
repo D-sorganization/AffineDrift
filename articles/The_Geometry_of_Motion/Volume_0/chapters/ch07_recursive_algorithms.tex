@@ -1,1078 +1,509 @@
-% ==========================================================================
-%  Chapter 7: Recursive Algorithms for Kinematics\index{Kinematics} and Dynamics
-% ==========================================================================
 \chapter{Recursive Algorithms}
 \label{ch:recursive_algorithms}
 
-\epigraph{%
-  You do not solve the equations of motion for a 15-DOF robot in a single monolithic formula. You walk from the base to the tip, and then from the tip back to the base.
-}{}
+The same equations can be expressed as a large joint-space calculation or as a sequence of local rigid-body balances. Recursion organizes that calculation around the connections between bodies. It lets us ask, in order, how motion reaches a segment and what wrench its motion requires from the rest of the mechanism. These are complementary questions: adding segment velocities without changing frames is wrong, and adding forces without shifting their moments is equally wrong.
 
-\begin{laymansbox}{Context \& Use Case: Beating the Math Explosion}{context_box}
-\textbf{The Math You Will See:} We will introduce the \textbf{Adjoint Matrix} ($[\text{Ad}_{\mathbf{T}}]$), the \textbf{Spatial Inertia Matrix} ($\mathcal{I}$), the formal representation of kinematic trees, and the two-pass \textbf{Recursive Newton-Euler Algorithm (RNEA)}.
+For a golf model, this organization makes the physical dependencies inspectable. A hand changes the club's motion through an interface wrench; the equal and opposite wrench loads the arm. Ground forces enter through the feet. Joint torques are projections of transmitted wrenches onto allowed relative motions. Computing those quantities reliably is a prerequisite for studying coordination, power, constraints and delivery. It does not by itself establish which muscular strategy a golfer used, or which change would improve the next swing.
 
-\textbf{Why We Need It:} If you try to write down the exact algebra connecting the shoulder motor of a robot to the tip of its finger, the equation takes up a whole page. If you try to write the equation for a 15-joint humanoid robot, the trigonometric math expands to fill \emph{tens of thousands} of pages of dense algebra. No computer can solve that in real-time. Instead, we use "Recursive Algorithms" that only ever look at two bones at a time. By chaining these tiny, fast calculations together sequentially, we can simulate complex physics at 1,000 frames per second.
-
-\textbf{All Variables Defined:} $\mathcal{V}_i$ is the velocity of link $i$, $\mathcal{F}_i$ is the force on link $i$, $\mathbf{T}_{i, i-1}$ is the relative pose between them, and $\dot{\mathcal{V}}_i$ is the spatial acceleration.
-\end{laymansbox}
-
-\section{Historical Context: The Computational Revolution}
+\section{What Is Being Computed?}
 \label{sec:history_rnea}
+\label{laymans:context_box}
 
-The computational efficiency crisis in robotics was born in the 1970s. As robotic arms grew from simple planar mechanisms to fully 6-DOF industrial manipulators, researchers faced a brutal truth: the Lagrangian equations of motion, when expanded symbolically, produced expressions so massive they literally filled computers' memory banks.
+We distinguish three operations. Forward kinematics maps joint configuration to body poses and, with joint rates, body velocities. Inverse dynamics maps prescribed motion and known external loads to the generalized forces required by a specified mechanical model. Forward dynamics maps applied forces and the current state to acceleration. A time integrator then advances the state; an inverse-dynamics evaluation alone does not simulate a swing.
 
-In the early 1980s, \textbf{Orin}, \textbf{McGhee}, and \textbf{Luh} \cite{luh1980} independently developed recursive formulations of robot dynamics. Instead of solving the global inverse dynamics problem as a monolithic matrix equation, they recognized that the sequential tree structure of a kinematic chain could be exploited: each joint only directly interacts with its immediate neighbors. Their key insight was that by organizing calculations to respect this local structure, one could reduce the computational complexity from $O(N^3)$ (matrix inversion) or even $O(N^4)$ (symbolic algebra) down to $O(N)$ (linear in the number of joints).
-
-In 1987, \textbf{Roy Featherstone} completed this revolution \cite{Featherstone2008}. His reformulation using spatial vector algebra (Chapter \ref{ch:spatial_algebra}) and adjoint transformations made recursive dynamics not merely efficient, but \emph{concise}. The Recursive Newton-Euler Algorithm (RNEA) became the standard approach used in every modern physics engine: MuJoCo, PyBullet, Drake, Gazebo, and UpstreamDrift all rely fundamentally on Featherstone's recursive framework, executed as purely numerical matrix operations rather than symbolic manipulation.
-
-\section{The Curse of Dimensionality in Dynamics}
-
-As systems scale in complexity—from a simple pendulum (1 DOF) to a fully modeled anatomical golf swing (15+ DOF) or a humanoid Atlas robot (30+ DOF)—the monolithic, closed-form equations of physics become mathematically intractable.
-
-In standard Lagrangian mechanics (which we review in a later chapter), the equations of motion are written as a massive matrix equation:
+For a fixed-base rigid tree with independent scalar joints, write
 \begin{equation}
-   \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}
-   \label{eq:lagrange_matrix}
+ M(q)\ddot q+h(q,\dot q)=\tau+\sum_i J_i(q)^T f_i^{\rm ext}.
+ \label{eq:lagrange_matrix}
 \end{equation}
-Here, $\mathbf{M}$ is the $N \times N$ mass matrix, $\mathbf{C}$ contains Coriolis and centrifugal forces, $\mathbf{G}$ is gravity, and $\boldsymbol{\tau}$ are the motor torques.
 
-If you attempt to write the analytical Coriolis matrix explicitly for a 15-DOF human model on a piece of paper, the resulting trigonometric expansion ($\sin(\theta_1 + \theta_2)\cos(\theta_3)\dots$) will literally fill thousands of pages. Each entry in $\mathbf{C}$ is a sum of products of sines, cosines, and Denavit-Hartenberg parameters; for even a moderately complex chain, these expressions become unmaintainable.
+Here $h$ includes velocity-product and gravitational terms; $f_i^{\rm ext}$ is a wrench applied to body $i$, and $J_i$ maps joint rates to that body's twist in the same frame and about the same origin as the wrench. Joint friction, springs and actuator dynamics must be specified separately. In particular, a computed net joint torque is not a uniquely identified muscle force.
 
-To control complex mechanisms in the real world at thousands of Hertz, modern engines (such as MuJoCo, Drake, Pinocchio, and UpstreamDrift) completely abandon building these massive equations explicitly. Instead, they rely entirely on \textbf{Recursive Algorithms} executing purely numerical matrix multiplications in $O(N)$ time.
+Recursive Newton--Euler inverse dynamics (RNEA) evaluates the left-hand side and known-load subtraction without constructing $M$. Its arithmetic cost grows linearly with the number of bodies when joint dimensions and per-joint calculations are bounded. This is an algorithmic property of a tree, not a claim that Lagrangian mechanics becomes intractable beyond some number of joints. Factored expressions, automatic differentiation and numerical matrix methods also avoid enormous symbolic expansions. No universal control frequency follows from an asymptotic complexity class.
 
-\begin{figure}[htb]
+Luh, Walker and Paul's 1980 paper is an important historical reference for manipulator dynamics computation; Featherstone's spatial-vector treatment and Lynch and Park's geometric formulation provide systematic accounts of the algorithms~\cite{luh1980,Featherstone2008,Lynch2017}. The derivation below fixes its conventions explicitly because superficially similar published recursions can use opposite transform directions or external-force signs.
+
+\section{A Tree and Its Traversal Order}
+\label{sec:tree_structure}
+\label{sec:branching_trees}
+
+A kinematic tree is connected and has no cycles. Let body $0$ be a fixed base, and let bodies $1,\ldots,N$ each attach through one joint to a parent $\lambda(i)$. Choose any numbering with $\lambda(i)<i$. This ordering is not unique: siblings can be exchanged. It ensures that a parent's motion is available during an outward pass and that every child's accumulated wrench is available during a reverse pass. The inward pass therefore visits children before parents.
+
+For example, $\lambda=(0,1,1,3)$ describes four moving bodies: body 1 attaches to the base, bodies 2 and 3 branch from body 1, and body 4 attaches to body 3. A list of parent indices is enough for the recursions; one can accumulate each child's contribution directly into its parent without searching the whole list for children. A three-body chain instead has $\lambda=(0,1,2)$. Adding a serial gripper joint at its end does not create a branch; two separate children attached to the same body do.
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.0]
-  % Base
-  \draw[fill=gray] (-0.5,-0.5) rectangle (0.5,0) node[pos=0.5] {Base (0)};
-
-  % Link 1
-  \draw[thick,->,black] (0,0) -- (0,1.2) node[midway,right,xshift=0.2cm] {Joint 1};
-  \draw[fill=blue] (-0.3,1.2) rectangle (0.3,1.8) node[pos=0.5] {Link 1};
-
-  % Children of Link 1
-  \draw[thick,->,black] (-0.3,1.8) -- (-1.2,2.8) node[midway,left,xshift=-0.2cm] {Joint 2};
-  \draw[fill=blue] (-1.5,2.8) rectangle (-0.9,3.4) node[pos=0.5] {Link 2};
-
-  \draw[thick,->,black] (0.3,1.8) -- (1.2,2.8) node[midway,right,xshift=0.2cm] {Joint 3};
-  \draw[fill=blue] (0.9,2.8) rectangle (1.5,3.4) node[pos=0.5] {Link 3};
-
-  % Children of Link 3
-  \draw[thick,->,black] (1.5,3.4) -- (2.0,4.4) node[midway,right,xshift=0.2cm] {Joint 4};
-  \draw[fill=blue] (1.7,4.4) rectangle (2.3,5.0) node[pos=0.5] {Link 4};
-
-  \node at (3.5,2.5) {Kinematic Tree: Parent-Child Relationships};
-\end{tikzpicture}
-\caption{A Kinematic Tree Representation of a Robot With a Base Link and Three Movable Links Forming a Branching Structure. Each Link Connects to Its Parent Through a Joint. Recursive Algorithms Exploit This Tree Structure to Compute Dynamics in Linear Time O(N) Rather Than Cubic Time.}
+\includegraphics[width=\linewidth]{../figures/recursive_tree.pdf}
+\caption{A Four-Body Tree With Parent Array (0, 1, 1, 3). Motion Propagates Outward; Subtree Wrenches Accumulate Inward.}
 \label{fig:kinematic_tree}
 \end{figure}
 
-\section{Kinematic Tree Representation}
-\label{sec:tree_structure}
+Each body frame is rigidly attached to that body. Its origin may be at a joint, the center of mass, or another fixed point, provided its inertia, joint subspace and loads all use that choice. The base is a boundary condition, not an extra actuated joint. A floating pelvis or a robot in flight requires a moving-base formulation. Treating a foot as a permanently welded base is a physical assumption with consequences for the reaction forces and allowed motion.
 
-Before we can implement recursive algorithms, we must formalize how to represent a kinematic chain as a tree structure. Unlike the Lagrangian approach, which treats the system globally, the recursive approach exploits the \emph{local} structure: each link $i$ has at most one parent (the link it is directly connected to by a joint) and zero or more children.
-
-\begin{definition}{Kinematic Tree}{tree_def}
-A kinematic tree is a directed, acyclic graph in which:
-\begin{itemize}
-  \item Each link (node) $i$ has at most one parent link, denoted $\text{parent}(i)$ or $\lambda(i)$.
-  \item Link 0 is the \textbf{base link} (the root of the tree), and has no parent.
-  \item A joint $i$ connects link $i$ to its parent link $\lambda(i)$ via a transformation $\mathbf{T}_{i, \lambda(i)}(q_i)$.
-  \item The motion of link $i$ is determined entirely by the motion of its parent, plus the motion of joint $i$ itself.
-\end{itemize}
-\end{definition}
-
-\subsection{Parent Arrays and Numbering Conventions}
-
-To implement this structure efficiently in code, we maintain a simple \textbf{parent array} $\lambda: \{1, 2, \ldots, N\} \to \{0, 1, \ldots, N-1\}$, where $\lambda(i)$ is the index of link $i$'s parent. For the base link, $\lambda(0) = -1$ or is undefined.
-
-\begin{example}{Parent Array for a 3-Link Arm}{parent_array_ex}
-Consider a planar robotic arm: Base (link 0) $\to$ Shoulder (link 1) $\to$ Elbow (link 2) $\to$ Wrist (link 3).
-
-The parent array is:
-\[
-  \lambda = [-1, 0, 1, 2]
-\]
-Read as: Link 0 has no parent, link 1's parent is link 0, link 2's parent is link 1, link 3's parent is link 2.
-
-For a humanoid with two legs, the parent array might be:
-\[
-  \lambda = [-1, 0, 1, 0, 3, 0, \ldots]
-\]
-with link 0 as the pelvis, links 1-2 the left leg, links 3-4 the right leg,
-link 5 the torso, etc.
-\end{example}
-
-Once the kinematic tree structure is defined via $\lambda$, the recursive algorithms simply iterate: for each link $i = 1, 2, \ldots, N$, they access data from the parent link $\lambda(i)$ and compute updated values for link $i$.
-
-\section{The Adjoint Map \texorpdfstring{($[\text{Ad}_{\mathbf{T}}]$)}{([Ad_T])}}
+\section{Frame Changes and Their Power Dual}
 \label{sec:adjoint}
 
-Before we can compute recursive mechanics, we need to know how to shift a 6D spatial Twist ($\mathcal{V}$) or 6D Wrench ($\mathcal{F}$) from one reference frame to another. This is done using the \textbf{Adjoint Representation} of $SE(3)$.
-
-\begin{principle}{Change of Frame for Spatial Vectors}{adjoint_principle}
-If a physical motion (e.g., a velocity) is the same regardless of which frame we measure it from, but its \emph{numerical representation} changes because the frame itself has rotated and translated, we need a matrix to shift the numbers without changing the physics.
-\end{principle}
-
-\subsection{Derivation of the Adjoint Matrix}
-
-Suppose Frame $B$ is related to Frame $A$ by a homogeneous transformation $\mathbf{T}_{BA} \in SE(3)$, decomposed as:
-\[
-  \mathbf{T}_{BA} = \begin{bmatrix} \mathbf{R}_{BA} & \mathbf{p}_{BA} \\ \mathbf{0} & 1 \end{bmatrix}
-\]
-where $\mathbf{R}_{BA} \in SO(3)$ and $\mathbf{p}_{BA} \in \Reals^3$.
-
-A spatial velocity $\mathcal{V}_A = (\boldsymbol{\omega}_A, \mathbf{v}_A) \in \se(3)$ describes the motion of a point in Frame $A$. When measured from Frame $B$, the same physical motion is represented numerically as $\mathcal{V}_B = (\boldsymbol{\omega}_B, \mathbf{v}_B)$.
-
-The angular velocity transforms purely by rotation:
-\[
-  \boldsymbol{\omega}_B = \mathbf{R}_{BA} \boldsymbol{\omega}_A
-\]
-
-The linear velocity, however, must account for the fact that the origin of Frame $A$ is moving relative to Frame $B$. If Frame $A$'s origin has velocity $\mathbf{v}_{o,A}$ and the point is at offset $\mathbf{r}$ from Frame $A$'s origin, then in Frame $B$'s coordinates:
-\[
-  \mathbf{v}_B = \mathbf{R}_{BA}(\mathbf{v}_A + \boldsymbol{\omega}_A \times \mathbf{r})
-\]
-
-For the origin of Frame $A$ itself (where $\mathbf{r} = \mathbf{0}$), this becomes:
-\[
-  \mathbf{v}_B = \mathbf{R}_{BA}\mathbf{v}_A - \mathbf{R}_{BA}(\boldsymbol{\omega}_A \times \mathbf{p}_{BA})
-\]
-
-Rewriting the cross product as a matrix multiplication and using the property $\mathbf{a} \times \mathbf{b} = -[\mathbf{b}]\mathbf{a}$:
-\[
-  \mathbf{v}_B = \mathbf{R}_{BA}\mathbf{v}_A + \mathbf{R}_{BA}[\mathbf{p}_{BA}]\boldsymbol{\omega}_A = \mathbf{R}_{BA}\mathbf{v}_A + [\mathbf{R}_{BA}\mathbf{p}_{BA}](\mathbf{R}_{BA}\boldsymbol{\omega}_A)
-\]
-
-But we can group this as a matrix acting on the 6D vector:
-\[
-  \begin{bmatrix} \boldsymbol{\omega}_B \\ \mathbf{v}_B \end{bmatrix} = \begin{bmatrix} \mathbf{R}_{BA} & \mathbf{0} \\ [\mathbf{p}_{BA}]\mathbf{R}_{BA} & \mathbf{R}_{BA} \end{bmatrix} \begin{bmatrix} \boldsymbol{\omega}_A \\ \mathbf{v}_A \end{bmatrix}
-\]
-
-This is the \textbf{Adjoint Matrix}:
-
-\begin{definition}{Adjoint Representation}{adjoint_def}
-The Adjoint Matrix $[\text{Ad}_{\mathbf{T}}] \in \Reals^{6 \times 6}$ for a transformation $\mathbf{T} = (\mathbf{R}, \mathbf{p})$ is:
+Define $T_{AB}=(R,p)\in SE(3)$ by $x_A=Rx_B+p$: it maps point coordinates from frame $B$ to frame $A$. Thus $p$ locates the origin of $B$ in $A$. Use angular-first motion vectors $V=(\omega,v)$ and moment-first wrenches $f=(n,F)$. A rigid velocity field in $B$ has point velocity $u_B(x_B)=v_B+\omega_B\times x_B$. Reexpressing that same field in $A$ gives
 \begin{equation}
-   [\text{Ad}_{\mathbf{T}}] = \begin{bmatrix} \mathbf{R} & \mathbf{0}_{3 \times 3} \\ [\mathbf{p}]\mathbf{R} & \mathbf{R} \end{bmatrix}
-   \label{eq:adjoint_matrix}
-\end{equation}
-where $[\mathbf{p}]$ is the $3 \times 3$ skew-symmetric cross product matrix of $\mathbf{p}$.
-
-If Frame $A$ has spatial velocity $\mathcal{V}_A$, the numerically equivalent velocity as measured by Frame $B$ is:
-\begin{equation}
-    \mathcal{V}_B = [\text{Ad}_{\mathbf{T}_{BA}}] \mathcal{V}_A
-    \label{eq:adjoint_velocity}
-\end{equation}
-\end{definition}
-
-\subsection{The Adjoint for Forces (Wrenches)}
-
-For forces, the situation is dual. A wrench $\mathcal{F} = (\mathbf{m}, \mathbf{f})$ (moment and force) transforms using the \textbf{coadjoint} representation, which is the transpose-inverse:
-
-\begin{equation}
-    \mathcal{F}_B = [\text{Ad}_{\mathbf{T}_{BA}}]^{-T} \mathcal{F}_A = \begin{bmatrix} \mathbf{R}^T & [\mathbf{p}]^T\mathbf{R}^T \\ \mathbf{0} & \mathbf{R}^T \end{bmatrix} \mathcal{F}_A
-    \label{eq:adjoint_force}
+ \begin{aligned}
+ u_A(x_A)&=R v_B+(R\omega_B)\times(x_A-p),\\
+ \omega_A&=R\omega_B,\qquad v_A=Rv_B+p\times R\omega_B.
+ \end{aligned}
+ \label{eq:adjoint_velocity}
 \end{equation}
 
-This ensures that the power (work rate) $\mathcal{F}^T \mathcal{V}$ is invariant under frame changes, as it must be for physical consistency.
+This is a coordinate change of the same physical motion field. If we instead compare the velocities of two bodies moving relative to each other, their relative twist must also be included.
+
+With $[p]_\times a=p\times a$, the motion transform is
+\begin{equation}
+ X_{AB}=\operatorname{Ad}_{T_{AB}}
+ =\begin{bmatrix}R&0\\{}[p]_\times R&R\end{bmatrix},\qquad
+ X_{AB}^{-1}=\begin{bmatrix}R^T&0\\-R^T[p]_\times&R^T\end{bmatrix}.
+ \label{eq:adjoint_matrix}
+\end{equation}
+
+Every rigid transform has an invertible adjoint. The matrix is generally not orthogonal: moving an origin mixes angular motion and linear velocity. Its numerical condition number depends on the origin and on the relative scaling of angular and translational units. This is different from loss of rank of a mechanism's task Jacobian.
+
+\subsection{Wrenches Follow From Virtual Power}
+
+Demand that $f_A^T V_A=f_B^T V_B$ for every twist. Since $V_A=X_{AB}V_B$, the two equivalent force relations are
+\begin{equation}
+ f_A=X_{AB}^{-T}f_B
+ =\begin{bmatrix}R&[p]_\times R\\0&R\end{bmatrix}f_B,
+ \qquad f_B=X_{AB}^{T}f_A.
+ \label{eq:adjoint_force}
+\end{equation}
+
+The force rotates as $F_A=RF_B$; the moment also acquires the lever arm $p\times RF_B$. For a child-motion transform $X_i$ that maps parent coordinates into child coordinates, the child's wrench returns to the parent as $X_i^T f_i$. The inverse transpose maps a wrench in the same direction as the motion-coordinate change; the transpose maps it in the reverse direction. Keeping the direction explicit prevents a common sign and lever-arm error.
+
+A force sensor reporting a force at a hand or clubhead must be converted to a wrench about the chosen body origin. If a force $F$ acts at body-coordinate point $r$ with applied couple $n_0$, then $f=(n_0+r\times F,F)$. Merely rotating the measured force leaves out its moment. The identity $f^T J\dot q=(J^Tf)^T\dot q$ then explains the generalized-load mapping in the equations of motion.
 
 \section{Recursive Forward Kinematics}
 \label{sec:forward_kinematics}
+\index{Kinematics}
+\label{laymans:recursive_intuition}
 
-\begin{laymansbox}{The Breadcrumb Strategy}{recursive_intuition}
-  To find the absolute speed of the end-effector relative to the ground, we don't jump straight from the ground to the end-effector.
+Let $T_{i\lambda}$ map parent coordinates to body $i$, and set $X_i=\operatorname{Ad}_{T_{i\lambda}}$. A joint model supplies this relative transform at $q_i$ and a local motion subspace $S_i$. For an ideal revolute joint through the child-frame origin about its unit $z$ axis, $S_i=(0,0,1,0,0,0)^T$; for translation along local $x$, $S_i=(0,0,0,1,0,0)^T$. An offset rotation axis has a nonzero linear part. Revolute and prismatic coordinates have different units, so their generalized forces are torques and forces respectively.
 
-  We ask: How fast is the pelvis moving relative to the feet? Then, we add the speed of the torso relative to the pelvis. Then we add the speed of the shoulder relative to the torso. Chain by chain, link by link, we compose the velocities.
-\end{laymansbox}
-
-\subsection{Recursive Velocity Propagation}
-
-Suppose we want to find the exact spatial position and velocity of the golf clubhead at the very end of a 15-link robotic golfer. Instead of deriving a massive equation relating the base of the feet directly to the clubhead, we use our $4 \times 4$ Transforms and $6 \times 6$ Adjoints, and we propagate them sequentially outwards.
-
-The fundamental recursion for spatial velocity is:
-
-\begin{theorem}{Recursive Velocity Propagation}{velocity_recursion}
-For a kinematic tree, the spatial velocity of link $i$ is given by:
+Absolute poses and body velocities propagate as
 \begin{equation}
-   \mathcal{V}_i = [\text{Ad}_{\mathbf{T}_{i, \lambda(i)}}] \mathcal{V}_{\lambda(i)} + \mathcal{S}_i \dot{q}_i
-   \label{eq:velocity_recursion}
+ T_{Wi}=T_{W\lambda(i)}T_{i\lambda}^{-1},\qquad
+ V_i=X_iV_{\lambda(i)}+V_{Ji},\qquad V_{Ji}=S_i\dot q_i.
+ \label{eq:velocity_recursion}
 \end{equation}
-where:
-\begin{itemize}
-  \item $\mathcal{V}_{\lambda(i)}$ is the velocity of the parent link (already computed).
-  \item $[\text{Ad}_{\mathbf{T}_{i, \lambda(i)}}]$ transforms the parent's velocity into the coordinate frame of link $i$.
-  \item $\mathcal{S}_i \in \Reals^6$ is the motion subspace (axis of joint $i$) expressed in link $i$'s frame.
-  \item $\dot{q}_i$ is the scalar joint velocity.
-\end{itemize}
 
-\textbf{Derivation}: The velocity of link $i$ can be decomposed as the velocity it inherits from its parent (carried through the transformation $\mathbf{T}_{i, \lambda(i)}$), plus the additional velocity generated by joint $i$ spinning.
-\end{theorem}
+The inverse in the pose equation follows from our declared direction; using the same local matrix without inversion would describe a different mapping. Relative transforms suffice for RNEA. Absolute poses are useful for visualization, world-frame loads and contact geometry, but need not be reconstructed during every force accumulation.
 
-For a revolute joint about axis $\mathbf{z}$ in the joint frame, the screw axis is:
-\[
-  \mathcal{S}_i = \begin{bmatrix} \mathbf{z} \\ \mathbf{0} \end{bmatrix} \in \Reals^6
-\]
+At a body-fixed point $r$, the body's local Cartesian velocity is $v_i+\omega_i\times r$. Rotate this vector into world coordinates for a clubhead-speed calculation. Segment angular speeds alone omit both origin motion and the point's lever arm. Adding speeds as scalar magnitudes also discards directions and can turn cancellation into apparent amplification.
 
-For a prismatic joint along axis $\mathbf{z}$:
-\[
-  \mathcal{S}_i = \begin{bmatrix} \mathbf{0} \\ \mathbf{z} \end{bmatrix} \in \Reals^6
-\]
+\subsection{Exponentials and Numerical Representation}
 
-\subsection{Algorithm: Forward Kinematics in O(N) Time}
+For fixed space screws $\xi_j$, a serial-chain body pose has the product-of-exponentials form $T_{Wi}(q)=\exp(\widehat\xi_1q_1)\cdots\exp(\widehat\xi_iq_i)M_i$, with its own home pose $M_i$. Partial exponential products without those home poses are not generally the physical link poses. Body screws, space screws and relative joint transforms are interchangeable only through the appropriate coordinate conversions.
 
-\begin{algorithm}{Forward Kinematics Recursion}{alg_fk}
-\begin{lstlisting}
-function ForwardKinematics(q, dq, T_rel, S, lambda):
-    // Input: joint positions q, velocities dq, relative transforms T_rel,
-    //        screw axes S, parent array lambda
-    // Output: link transforms T, spatial velocities V
+Pure translation is regular: if $\widehat\xi=\left[\begin{smallmatrix}0&v\\0&0\end{smallmatrix}\right]$, then $\widehat\xi^2=0$ and $\exp(q\widehat\xi)=I+q\widehat\xi$. There is no rank test or pseudoinverse to perform on a prismatic screw. Use a stable matrix exponential or a properly implemented closed form with small-angle limits. Rotation matrices and quaternions both accumulate finite-precision error; quaternion integration does not maintain unit norm automatically. Normalization or suitable geometric integration is a numerical policy, not a replacement for consistent frames.
 
-    T[0] <-Identity               // Base link is at the origin
-    V[0] <-Zero 6D vector         // Base link is stationary (or has gravity/base motion)
-
-    for i <-1 to N:
-        // Compose transforms sequentially
-        T[i] <-T[lambda[i]] * T_rel[i]
-
-        // Propagate velocity using Adjoint
-        V_parent_in_i <-Ad[T_rel[i]] * V[lambda[i]]
-        V[i] <-V_parent_in_i + S[i] * dq[i]
-
-    return (T, V)
-\end{lstlisting}
-\end{algorithm}
-
-\section{Spatial Acceleration and Coriolis Terms}
+\section{Acceleration and the Spatial Velocity Product}
 \label{sec:spatial_acceleration}
 
-Once velocities are propagated outward, we need to compute accelerations. However, computing $\ddot{\mathcal{V}}_i$ (spatial acceleration) is not as simple as taking a time derivative of $\dot{\mathcal{V}}_i$. The presence of rotating reference frames introduces non-inertial terms.
-
-\subsection{The Lie Bracket and Centrifugal Forces}
-
-In a non-inertial frame rotating with velocity $\mathcal{V}$, any object with velocity $\mathcal{W}$ experiences an apparent "fictitious" acceleration due to the rotation. This is captured by the \textbf{spatial cross product}, which we will define rigorously in Chapter \ref{ch:spatial_algebra}.
-
-The spatial acceleration must satisfy:
+For a rigid tree with constant local $S_i$, differentiating the velocity recursion in the moving coordinates gives
 \begin{equation}
-    \dot{\mathcal{V}}_i = [\text{Ad}_{\mathbf{T}_{i, \lambda(i)}}] \dot{\mathcal{V}}_{\lambda(i)} + [\mathcal{V}_i \times] \mathcal{S}_i \dot{q}_i + \mathcal{S}_i \ddot{q}_i
-    \label{eq:acceleration_recursion}
+ a_i=X_i a_{\lambda(i)}+S_i\ddot q_i+c_i,
+ \qquad c_i=\operatorname{ad}_{V_i}V_{Ji}.
+ \label{eq:acceleration_recursion}
 \end{equation}
 
-The term $[\mathcal{V}_i \times] \mathcal{S}_i \dot{q}_i$ captures the Coriolis acceleration: the acceleration felt by the joint motion when embedded in a frame that is itself rotating.
+Here $a_i$ is spatial acceleration expressed in body coordinates. Without the gravity convention introduced below, it is the time derivative of that body's twist components. Its linear part is not the ordinary acceleration of the body origin: the latter is $\dot v_i+\omega_i\times v_i$ in body coordinates. For a fixed body point $r$, add $\dot\omega_i\times r+\omega_i\times(\omega_i\times r)$. These distinctions matter when comparing model arrays with an accelerometer.
 
-More explicitly, if $\mathcal{V}_i = (\boldsymbol{\omega}_i, \mathbf{v}_i)$ is the spatial velocity of link $i$, the motion cross product operator is:
+For $V=(\omega,v)$, define the motion cross operator and its force dual by
 \begin{equation}
-    [\mathcal{V}_i \times] = \begin{bmatrix} [\boldsymbol{\omega}_i] & \mathbf{0}_{3 \times 3} \\ [\mathbf{v}_i] & [\boldsymbol{\omega}_i] \end{bmatrix}
-    \label{eq:motion_cross}
+ \operatorname{ad}_{V}=
+ \begin{bmatrix}[\omega]_\times&0\\{}[v]_\times&[\omega]_\times\end{bmatrix},
+ \qquad V\times^*=-\operatorname{ad}_{V}^T.
+ \label{eq:motion_cross}
 \end{equation}
 
-When this acts on the screw axis $\mathcal{S}_i$, it produces the non-inertial acceleration term.
+The order matters: $\operatorname{ad}_{V_i}V_{Ji}=-\operatorname{ad}_{V_{Ji}}V_i$. One way to obtain the acceleration term is to use $\dot X_i=-\operatorname{ad}_{V_{Ji}}X_i$ for a constant local joint screw, then substitute $X_iV_\lambda=V_i-V_{Ji}$. A varying joint subspace requires an additional joint-bias term, commonly denoted $c_{Ji}$; spherical or other multiple-degree-of-freedom joints need their full joint model rather than an unqualified scalar formula.
 
-\begin{algorithm}{Forward Acceleration (Outward Pass)}{alg_acceleration}
-\begin{lstlisting}
-function ForwardAcceleration(V, ddq, S, lambda, Gravity):
-    // Input: spatial velocities V (from forward kinematics),
-    //        joint accelerations ddq, screw axes S, gravity vector
-    // Output: spatial accelerations dV
+Parallel angular axes do not make the six-dimensional product zero. Consider the following twists and their bracket:
+\begin{equation}
+ \begin{aligned}
+ V&=(0,0,\omega,v_x,0,0)^T,\\
+ V_J&=(0,0,\dot q,0,0,0)^T,\\
+ \operatorname{ad}_{V}V_J&=(0,0,0,0,-v_x\dot q,0)^T.
+ \end{aligned}
+ \label{eq:planar_spatial_bias}
+\end{equation}
 
-    dV[0] <-Gravity              // Base link has gravitational acceleration
+The angular cross product vanishes, but the linear component need not. At the first joint of a fixed-base arm with its origin on the axis, $V_1=V_{J1}$ and this particular term is zero. Farther along the arm, inherited origin velocity makes it nonzero even for perfectly planar motion. Centripetal acceleration of the center of mass also remains present when the joint-frame linear acceleration is zero.
 
-    for i <-1 to N:
-        // Velocity-dependent term (Coriolis)
-        Coriolis <-[V[i]x] * S[i] * dq[i]
-
-        // Compose from parent
-        dV_parent_in_i <-Ad[T_rel[i]] * dV[lambda[i]]
-
-        // Total acceleration
-        dV[i] <-dV_parent_in_i + Coriolis + S[i] * ddq[i]
-
-    return dV
-\end{lstlisting}
-\end{algorithm}
-
-\section{Spatial Inertia}
+\section{Spatial Inertia and Rigid-Body Balance}
 \label{sec:spatial_inertia_intro}
 
-Before we compute forces, we must define mass in 6D. In 3D space, an object has:
-\begin{itemize}
-  \item Scalar mass $m$, resisting linear acceleration ($F = ma$).
-  \item $3 \times 3$ rotational inertia tensor $\mathbf{I}_c$ (about the center of mass), resisting angular acceleration ($\boldsymbol{\tau} = \mathbf{I}_c \boldsymbol{\alpha}$).
-\end{itemize}
-
-Spatial Inertia unifies these into a single $6 \times 6$ matrix:
-
-\begin{definition}{Spatial Inertia Matrix}{spatial_inertia_def}
-For a rigid body with mass $m$, center of mass offset $\mathbf{c}$, and rotational inertia tensor $\mathbf{I}_c$ about the CoM, the Spatial Inertia Matrix is:
+Let a body have mass $m$, center-of-mass offset $c$ measured from the body origin to the center of mass, and central rotational inertia $I_C$, all expressed in the body axes. Expanding the kinetic energy $\tfrac12\omega^TI_C\omega+\tfrac12m\|v+\omega\times c\|^2$ gives
 \begin{equation}
-    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c & \mathbf{0}_{3 \times 3} \\ \mathbf{0}_{3 \times 3} & m\mathbf{I}_{3 \times 3} \end{bmatrix}
-    \label{eq:spatial_inertia_simple}
+ \mathcal I=
+ \begin{bmatrix}
+ I_C-m[c]_\times^2&m[c]_\times\\
+ -m[c]_\times&mI_3
+ \end{bmatrix},\qquad K=\tfrac12 V^T\mathcal I V.
+ \label{eq:spatial_inertia_parallel_axis}
 \end{equation}
-when expressed at the center of mass. When expressed at an arbitrary origin (offset by $\mathbf{c}$ from the CoM), the parallel axis theorem in 6D gives:
+\label{eq:spatial_inertia_simple}
+At the center of mass, $c=0$ and $\mathcal I=\operatorname{diag}(I_C,mI_3)$. The spatial matrix mixes rotational inertia, first moments and mass; its blocks do not all have the same units. It is symmetric positive definite for $m>0$ and positive-definite $I_C$. Ideal point masses and infinitely thin rods can have singular spatial inertias, even when a restricted planar joint-space inertia is nonsingular. A general-purpose teaching implementation may reasonably reject such spatial degeneracies while a dedicated planar model supports them.
+
+The net wrench required to accelerate one body is
 \begin{equation}
-    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}] & m[\mathbf{c}] \\ -m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
-    \label{eq:spatial_inertia_parallel_axis}
+ f^{\rm net}=\mathcal I a+V\times^*(\mathcal I V).
+ \label{eq:spatial_newton_euler}
 \end{equation}
-\end{definition}
 
-This matrix is symmetric and positive definite, encoding the complete resistance of a rigid body to any spatial acceleration.
+At a center-of-mass origin its moment equation is $n=I_C\dot\omega+\omega\times I_C\omega$; the gyroscopic term cannot generally be dropped. Its force equation is $F=m(\dot v+\omega\times v)$, which recovers ordinary Newtonian acceleration. Shifting the origin with the power-dual transform recovers the full matrix formula above. This also shows why force cross products use a negative transpose, while finite frame changes use the inverse transpose: they are related infinitesimal and finite operations, not the same matrix.
 
-\section{The Recursive Newton-Euler Algorithm (RNEA)}
+\section{The Complete Recursive Newton--Euler Algorithm}
 \label{sec:rnea}
 
-Inverse Dynamics asks: If we know the trajectory the robot is currently taking ($\mathbf{q}, \dot{\mathbf{q}}, \ddot{\mathbf{q}}$), how much torque $\boldsymbol{\tau}$ must the motors output at this exact millisecond to execute it?
+Assume prescribed $q,\dot q,\ddot q$, a fixed base, ideal scalar joints, rigid inertias and known external wrenches applied to every body. All external loads must already be expressed in their respective body frames. Uniform physical gravity is a base-frame vector $g$. Set $V_0=0$ and the effective spatial base acceleration $a_0=(0,-g)^T$. This incorporates gravity into the inertial calculation; it does not mean that the actual base accelerates, and gravity never belongs in $V_0$.
 
-This is solved by the crowning jewel of computational mechanics: the \textbf{Recursive Newton-Euler Algorithm (RNEA)} \cite{luh1980, Featherstone2008}. It executes in exactly two sweeps.
+\subsection{The Outward Pass: Motion and Local Wrenches}
 
-\subsection{The Outward Pass: Velocity and Acceleration Propagation}
-
-Like Forward Kinematics, we cast a sweeping algorithm from the heavy base (the ground) outwards to the lightest tip (the end-effector). For every link $i$, we compute its absolute velocity $\mathcal{V}_i$ and its absolute spatial acceleration $\dot{\mathcal{V}}_i$.
-
-This outward pass perfectly calculates the exact inertial, Coriolis, and centrifugal accelerations dragging on every single link of the mechanism as it flails through space.
-
-\begin{theorem}{Outward Pass Computation}{outward_pass}
-The outward pass computes, for each link $i = 1, 2, \ldots, N$:
-\begin{align}
-  \mathcal{V}_i &= [\text{Ad}_{\mathbf{T}_{i, \lambda(i)}}] \mathcal{V}_{\lambda(i)} + \mathcal{S}_i \dot{q}_i \\
-  \dot{\mathcal{V}}_i &= [\text{Ad}_{\mathbf{T}_{i, \lambda(i)}}] \dot{\mathcal{V}}_{\lambda(i)} + [\mathcal{V}_i \times] \mathcal{S}_i \dot{q}_i + \mathcal{S}_i \ddot{q}_i
-\end{align}
-
-At the tip (link $N$), external contact forces $\mathcal{F}_{\text{ext}}$ may be applied.
-\end{theorem}
-
-\subsection{The Inward Pass: Force and Torque Propagation}
-
-Once the outward pass finishes at the tip, we reverse direction. We perform a second loop starting from the tip of the robot back down to the ground.
-
-At the very tip (leaf node), we initialize the spatial wrench. If there is external ground contact or an applied force, we begin with:
-\[
-  \mathcal{F}_N = \mathcal{F}_{\text{ext}}
-\]
-
-Otherwise, we begin with zero wrench at the tip and let it propagate inward.
-
-For each internal link $i$ (processed from $N$ down to $1$), we compute the spatial wrench (combined 6D force/torque) required to make link $i$ accelerate at $\dot{\mathcal{V}}_i$ while supporting the forces from all its children. The key Newton-Euler equation in spatial form is:
-
-\begin{theorem}{Spatial Newton-Euler Equation}{spatial_newton_euler}
-The spatial wrench (force and torque) required to accelerate a rigid body with spatial inertia $\mathcal{I}$ at acceleration $\dot{\mathcal{V}}$ is:
+Visit bodies in parent-before-child order. Compute $V_{Ji}$, $V_i$, $c_i$ and $a_i$ from the recursions above. Initialize each body's own required wrench as
 \begin{equation}
-    \mathcal{F} = \mathcal{I} \dot{\mathcal{V}} + [\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})
-    \label{eq:spatial_newton_euler}
-\end{equation}
-where $[\mathcal{V} \times]^*$ is the force cross product (transpose-negative of the motion cross product).
-
-\textbf{Interpretation}: The first term is the "inertial force" ($m\mathbf{a}$); the second term is the centrifugal and Coriolis bias—the apparent force due to the fact that the body is rotating or moving.
-\end{theorem}
-
-\subsection{Force Recursion and Extraction of Joint Torques}
-
-For a link $i$ with one child $j = \text{children}(i)$, the wrench recursion is:
-\begin{equation}
-    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
-    \label{eq:wrench_recursion}
+ f_i=\mathcal I_i a_i+V_i\times^*(\mathcal I_iV_i)-f_i^{\rm ext}.
+ \label{eq:wrench_recursion}
 \end{equation}
 
-For a branching tree, we sum over all children:
+The minus sign follows because the external load supplies part of the net wrench required for the prescribed motion. A force applied by the body to its environment has the opposite sign. Do not subtract gravity again if it is already represented through $a_0$.
+
+\subsection{The Inward Pass: Subtree Loads and Joint Efforts}
+
+Visit bodies in reverse order. Project the accumulated wrench and then propagate it to the parent:
 \begin{equation}
-    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + \sum_{j \in \text{children}(i)} [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
-    \label{eq:wrench_recursion_tree}
+ \tau_i=S_i^T f_i,\qquad
+ f_{\lambda(i)}\mathrel{+}=X_i^T f_i.
+ \label{eq:joint_torque_extraction}
 \end{equation}
 
-Once we have the total wrench $\mathcal{F}_i$ acting on link $i$, the scalar torque (or force) required at joint $i$ is extracted by projecting onto the joint's screw axis:
+Equivalently, once every child has contributed,
 \begin{equation}
-    \tau_i = \mathcal{F}_i^T \mathcal{S}_i
-    \label{eq:joint_torque_extraction}
+ f_i=\mathcal I_i a_i+V_i\times^*(\mathcal I_iV_i)-f_i^{\rm ext}
+       +\sum_{j:\lambda(j)=i}X_j^Tf_j.
+ \label{eq:wrench_recursion_tree}
 \end{equation}
 
-\begin{algorithm}{RNEA: Recursive Newton-Euler Algorithm}{alg_rnea}
-\begin{lstlisting}
-function RNEA(q, dq, ddq, T_rel, S, I, lambda, gravity, F_ext):
-    // Outward pass: compute velocities and accelerations
-    V[0] <-gravity               // Base link has gravitational acceleration
-    dV[0] <-gravity
+A leaf starts with its own inertia and its own external load; it is not initialized to zero or just an end-effector force. An external force on a nonleaf body is equally valid. Store all local wrenches before the inward pass so that child accumulation cannot overwrite a known load.
 
-    for i <-1 to N:
-        // Compute relative transform
-        T[i] <-T[lambda[i]] * ForwardKin(q[i], S[i])
+The wrench $f_i$ includes the support required by the whole subtree across joint $i$. The projection $S_i^Tf_i$ extracts its component doing work in that joint's allowed relative motion. Ideal constrained directions do no relative work but can transmit substantial forces and moments. A fixed base has a six-component support wrench, not an extra scalar actuator torque. If the base itself has modeled inertia or applied loads, include them when reporting its complete reaction.
 
-        // Velocity recursion
-        V_parent_in_i <-Ad[T_rel[i]] * V[lambda[i]]
-        V[i] <-V_parent_in_i + S[i] * dq[i]
+For viscous joint damping $-d_i\dot q_i$ and an ideal reflected armature kinetic term $\tfrac12 A_i\dot q_i^2$, actuator effort becomes $S_i^Tf_i+d_i\dot q_i+A_i\ddot q_i$. These additions assume diagonal joint damping and armature. Real muscle activation, tendon compliance and general rotor/body coupling require their own state and force equations.
 
-        // Acceleration recursion (Coriolis term)
-        dV_parent_in_i <-Ad[T_rel[i]] * dV[lambda[i]]
-        Coriolis <-[V[i]x] * S[i] * dq[i]
-        dV[i] <-dV_parent_in_i + Coriolis + S[i] * ddq[i]
-
-    // Inward pass: compute forces and extract torques
-    F[N] <-F_ext[N]             // External forces at tip
-
-    for i <-N down to 1:
-        // Bias force (centrifugal + Coriolis)
-        bias <-[V[i]x]* * (I[i] * V[i])
-
-        // Inertial force
-        inertial <-I[i] * dV[i]
-
-        // Total wrench at link i
-        F[i] <-inertial + bias
-
-        // Add forces from children
-        for j in children[i]:
-            F[i] <-F[i] + Ad[T_rel[j]]^{-T} * F[j]
-
-        // Extract joint torque
-        tau[i] <-F[i]^T * S[i]
-
-    return tau
-\end{lstlisting}
-\end{algorithm}
-
-\section{Computational Complexity Analysis}
+\section{What Linear Complexity Does and Does Not Mean}
 \label{sec:complexity}
+\label{laymans:why_not_build_M}
 
-\begin{principle}{Algorithmic Efficiency}{algo_eff}
-The Recursive Newton-Euler algorithm allows the inverse dynamics for a system with $N$ joints to be solved in absolutely perfect $O(N)$ operations. The time to compute scales linearly, regardless of complexity. This algorithmic breakthrough is the fundamental mathematical reason robotics and physics engines work in the real world.
-\end{principle}
+Each body has one parent edge. The outward pass performs a bounded number of fixed-size spatial operations per body; the inward pass performs one projection and one parent accumulation per edge. With $N$ bodies the total is $O(N)$ arithmetic and $O(N)$ storage for the intermediate arrays. A node may have many children, but the sum of child counts over the whole tree is $N$ including the base edges. A loop that scans all bodies to rediscover every node's children unnecessarily introduces quadratic work.
 
-\subsection{Why \texorpdfstring{$O(N)$}{O(N)} and not \texorpdfstring{$O(N^2)$}{O(N\^{}2)}?}
+Computing $M\ddot q+h$ from an already assembled dense $M$ costs $O(N^2)$, not a matrix inversion. Solving the dense forward problem by a generic factorization has $O(N^3)$ factorization cost, with cheaper solves if the factorization is reused. Structured sparse methods change that cost. Neither comparison justifies claiming that inverse dynamics is always thousands of times faster than another method.
 
-In the naive Lagrangian approach, we would:
-1. Compute the mass matrix $\mathbf{M}(q)$: Each entry $M_{ij}$ requires traversing the kinematic chain from joint $i$ to joint $j$. This is $O(N^2)$.
-2. Compute the Coriolis matrix $\mathbf{C}(q, \dot{q})$: This is $O(N^2)$ as well.
-3. Solve the linear system $\mathbf{M}(q)\ddot{\mathbf{q}} = \boldsymbol{\tau} - \mathbf{C}(q, \dot{q})\dot{\mathbf{q}} - \mathbf{G}(q)$: Gaussian elimination is $O(N^3)$.
+One can recover $M$ by repeated RNEA calls: subtract the same bias from responses to coordinate accelerations. There are $N$ columns, each costing $O(N)$, so the full construction is $O(N^2)$. The composite-rigid-body algorithm (CRBA) is a different algorithm. It first accumulates locked subtree inertias as $\mathcal I_i^C=\mathcal I_i+\sum_jX_j^T\mathcal I_j^CX_j$, then projects and transports quantities along ancestor paths to fill the joint-space matrix. The composite-inertia pass is linear; explicitly forming a generally dense serial-chain matrix is quadratic. Its $N^2$ output entries already rule out a generic linear-time full-matrix claim.
 
-In the RNEA:
-1. \textbf{Outward pass}: For each link $i$, we perform a constant number of $6 \times 6$ matrix multiplications and additions. Total: $O(N)$.
-2. \textbf{Inward pass}: For each link $i$, we compute the wrench and extract the torque, again with $O(1)$ operations per link. Total: $O(N)$.
+The articulated-body algorithm (ABA) solves smooth tree forward dynamics with linear arithmetic by eliminating joint accelerations and recovering them in another outward pass. Alternatively, CRBA plus a suitable factorization solves the same model. Contact detection, constraint solving, actuator dynamics, integration and optimization derivatives add work beyond these rigid-tree kernels. For a concrete engine, inspect its documented pipeline: MuJoCo, for example, documents RNE bias evaluation, CRB inertia assembly and sparse factorization rather than a universal all-ABA pipeline~\cite{MuJoCoComputationReview}.
 
-The key is that we \emph{never} assemble the global mass matrix. Instead, we exploit the tree structure to compute forces locally at each link, with no coupling except through the sequential parent-child relationships.
+\section{Why RNEA Agrees With Lagrangian Mechanics}
+\label{sec:rnea_lagrangian_equivalence}
+\index{RNEA!Lagrangian equivalence}\index{Lagrangian mechanics!RNEA equivalence}\index{RNEA}\index{mass matrix!column extraction}
 
-\subsection{Proof of Linearity}
-
-\begin{theorem}{RNEA is O(N)}{complexity_theorem}
-The RNEA algorithm, applied to a serial kinematic chain or tree, requires at most $c \cdot N$ floating-point operations, where $c$ is a constant (approximately 100–150, depending on implementation) and $N$ is the number of joints.
-
-\textbf{Proof sketch}:
-\begin{enumerate}
-  \item Each outward pass step performs: 1 Adjoint matrix-vector multiplication ($\approx 18$ flops for $6 \times 6 \times 6D$ vector), 1 vector addition ($\approx 6$ flops), 1 screw scaling ($\approx 6$ flops). Total per step: $\sim 30$ flops.
-  \item Each inward pass step performs: 1 spatial cross product ($\approx 18$ flops), 1 inertia product ($\approx 36$ flops for $6 \times 6 \times 6D$), 1 wrench addition and children summation ($\sim 30$ flops for a typical branching). Total per step: $\sim 84$ flops.
-  \item Total: $(30 + 84) \times N = 114N$ flops, independent of $N$.
-\end{enumerate}
-\end{theorem}
-
-This is why modern physics engines can simulate 15–30 DOF robots at 1,000 Hz: $O(N)$ algorithms are fundamentally different from $O(N^3)$ algorithms at scale.
-
-\section{Branching Kinematic Trees}
-\label{sec:branching_trees}
-
-While we've presented the RNEA for serial chains, the algorithm extends seamlessly to branching trees (e.g., humanoids with two legs and two arms branching off a pelvis).
-
-\subsection{Handling Multiple Children}
-
-The modification is minimal: in the inward pass (force recursion), if link $i$ has $k$ children, we sum the wrenches from all children:
-
+At fixed configuration, the body velocities satisfy $V_i=J_i(q)\dot q$ for a fixed base. Their kinetic energies therefore give
 \begin{equation}
-    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + \sum_{j=1}^{k} [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
+ K=\tfrac12\sum_i\dot q^TJ_i^T\mathcal I_iJ_i\dot q,
+ \qquad M(q)=\sum_iJ_i^T\mathcal I_iJ_i.
+ \label{eq:rnea_mass_energy}
 \end{equation}
 
-The rest of the algorithm remains identical. Because the tree is acyclic, there is a unique topological ordering, and all parents are processed before their children in the inward pass.
+This constructs the same mass matrix as the Lagrangian kinetic-energy definition. It is positive definite when every nonzero generalized velocity produces positive kinetic energy; massless degrees of freedom can violate that condition.
 
-\begin{example}{Humanoid Robot with Branching}{humanoid_branch}
-A humanoid robot with a main body/torso (link 0), two legs (links 1–2 and 3–4),
-and two arms (links 5–7 and 8–10) has the parent array:
-\[
-  \lambda = [-1, 0, 1, 0, 3, 0, 5, 6, 0, 8, 9]
-\]
+To establish the full force equivalence, use virtual velocities satisfying the joint constraints. At each interface, the parent and child contributions cancel except for the relative motion $S_i\delta\dot q_i$; power-preserving transforms are essential to this cancellation. Summing the rigid-body balances leaves $\sum_i\tau_i\delta\dot q_i$ and the external virtual power. The same sum of inertial virtual powers is the Euler--Lagrange expression of the total kinetic energy, while conservative gravity contributes the gradient of the potential. Since the independent variations are arbitrary, the generalized equations coincide. This argument uses ideal constraints and the same masses, frames, loads and gravity on both routes; merely observing an affine dependence on acceleration would not prove equivalence.
 
-In the inward pass, when computing $\mathcal{F}_0$ (torso wrench), we sum:
-\[
-  \mathcal{F}_0 = (\text{torso inertia term}) + [\text{Ad}_{1,0}]^{-T}\mathcal{F}_1 + [\text{Ad}_{3,0}]^{-T}\mathcal{F}_3 + [\text{Ad}_{5,0}]^{-T}\mathcal{F}_5 + [\text{Ad}_{8,0}]^{-T}\mathcal{F}_8
-\]
+Let $\operatorname{ID}(q,v,a)$ include fixed known external loads with our sign convention. It is affine in $a$:
+\begin{equation}
+ \begin{aligned}
+ b&=\operatorname{ID}(q,v,0),\\
+ M(q)e_j&=\operatorname{ID}(q,v,e_j)-b,\\
+ \operatorname{ID}(q,v,a)&=M(q)a+b.
+ \end{aligned}
+ \label{eq:rnea_mass_columns}
+\end{equation}
 
-Still $O(N)$ in the total number of links.
-\end{example}
+The loads must be held fixed when taking this difference. If a contact or actuator model itself depends on acceleration, the complete inverse map has additional terms. The columns of $M$ do not depend on the chosen velocity, gravity or fixed applied wrench after bias subtraction. Testing that invariance is a useful implementation check.
 
-\section{Contact Forces and External Disturbances}
+For the conservative rigid model, energy supplies a further independent diagnostic: $\dot E=\tau^T\dot q+\sum_i(f_i^{\rm ext})^TV_i$, with ideal fixed support doing zero power. Add dissipative losses or compliant storage explicitly. Agreement of torque vectors is necessary; agreement of energy and virtual power can expose frame or sign mistakes hidden by a single special pose.
+
+\section{External Loads, Closed Loops, and Contact}
 \label{sec:contact_forces}
-
-In practice, robots interact with the world. A foot experiences ground reaction forces; a manipulator might push against an object. These external forces $\mathcal{F}_{\text{ext}}$ are incorporated at the point of contact.
-
-\subsection{Initialization at Leaf Nodes}
-
-For a leaf node (a link with no children) experiencing an external wrench $\mathcal{F}_{\text{ext}}$:
-\[
-  \mathcal{F}_{\text{leaf}} = \mathcal{I}_{\text{leaf}} \dot{\mathcal{V}}_{\text{leaf}} + [\mathcal{V}_{\text{leaf}} \times]^* (\mathcal{I}_{\text{leaf}} \mathcal{V}_{\text{leaf}}) + \mathcal{F}_{\text{ext}}
-\]
-
-For an intermediate link $i$ with one child $j$:
-\[
-  \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j + \mathcal{F}_{\text{ext},i}
-\]
-
-This allows the algorithm to compute the joint torques needed not just to move the robot, but to support external loads.
-
-% ------------------------------------------------------------------
-\section{RNEA Equivalence to the Lagrangian Equations}
-\label{sec:rnea_lagrangian_equivalence}
-\index{RNEA!Lagrangian equivalence}
-\index{Lagrangian mechanics!RNEA equivalence}
-% ------------------------------------------------------------------
-
-The Lagrangian formulation of manipulator dynamics writes the joint
-torques as
-\[
-  \boldsymbol{\tau}
-  = \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}}
-  + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\,\dot{\mathbf{q}}
-  + \mathbf{G}(\mathbf{q}),
-\]
-where $\mathbf{M}$ is the mass matrix, $\mathbf{C}\dot{\mathbf{q}}$
-collects Coriolis and centrifugal terms, and $\mathbf{G}$ is the gravity
-vector.  Computing $\mathbf{M}$ explicitly costs $O(N^3)$; for a
-30-DOF humanoid this is prohibitive at real-time rates.
-
-\begin{theorem}{RNEA Computes the Lagrangian Inverse Dynamics}{rnea_lagrangian}
-Let $\mathrm{RNEA}(\mathbf{q},\dot{\mathbf{q}},\ddot{\mathbf{q}})$
-denote the output of the Recursive Newton--Euler Algorithm\index{RNEA}
-with gravity acceleration included in the base boundary condition.
-Then
-\[
-  \mathrm{RNEA}(\mathbf{q},\dot{\mathbf{q}},\ddot{\mathbf{q}})
-  = \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}}
-    + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\,\dot{\mathbf{q}}
-    + \mathbf{G}(\mathbf{q}).
-\]
-That is, the RNEA computes
-$\boldsymbol{\tau} = \mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G}$
-without ever assembling $\mathbf{M}$, $\mathbf{C}$, or $\mathbf{G}$
-explicitly.
-\end{theorem}
-
-\textbf{Proof sketch.}
-Because the RNEA is \emph{linear} in $\ddot{\mathbf{q}}$ (the
-acceleration appears only in the outward pass and propagates linearly
-through the inward pass), we can decompose its output via three
-evaluations:
-\begin{enumerate}
-  \item \textbf{Gravity vector.}
-        Set $\dot{\mathbf{q}} = \mathbf{0}$ and
-        $\ddot{\mathbf{q}} = \mathbf{0}$:
-        \[
-          \mathbf{G}(\mathbf{q})
-          = \mathrm{RNEA}(\mathbf{q},\,\mathbf{0},\,\mathbf{0}).
-        \]
-        All velocity-dependent terms vanish; only the gravitational
-        wrench propagates inward.
-
-  \item \textbf{Coriolis and centrifugal terms.}
-        Set $\ddot{\mathbf{q}} = \mathbf{0}$:
-        \[
-          \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\,\dot{\mathbf{q}}
-          = \mathrm{RNEA}(\mathbf{q},\,\dot{\mathbf{q}},\,\mathbf{0})
-            - \mathbf{G}(\mathbf{q}).
-        \]
-
-  \item \textbf{Inertial torques.}
-        The remainder is the mass-matrix contribution:
-        \[
-          \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}}
-          = \mathrm{RNEA}(\mathbf{q},\,\dot{\mathbf{q}},\,\ddot{\mathbf{q}})
-            - \mathbf{C}\dot{\mathbf{q}} - \mathbf{G}.
-        \]
-\end{enumerate}
-
-\textbf{Column-by-column extraction of $\mathbf{M}$.}\index{mass matrix!column extraction}
-Because the RNEA is linear in $\ddot{\mathbf{q}}$, column~$j$ of
-$\mathbf{M}$ can be obtained as
-\[
-  \mathbf{M}(\mathbf{q})\,\mathbf{e}_j
-  = \mathrm{RNEA}(\mathbf{q},\,\mathbf{0},\,\mathbf{e}_j)
-    - \mathbf{G}(\mathbf{q}),
-\]
-where $\mathbf{e}_j$ is the $j$-th standard basis vector.  This gives
-the full $N \times N$ mass matrix in $N+1$ calls to the $O(N)$ RNEA,
-yielding an $O(N^2)$ algorithm for $\mathbf{M}$---the best possible
-without exploiting sparsity~\cite{Featherstone2008}.
-
-\begin{laymansbox}{\texorpdfstring{Why Not Just Build $\mathbf{M}$ Directly?}{Why Not Just Build M Directly?}}{why_not_build_M}
-For a single inverse-dynamics query (``given $\mathbf{q}$,
-$\dot{\mathbf{q}}$, $\ddot{\mathbf{q}}$, what torques are needed?''),
-one RNEA call at $O(N)$ suffices.  Forming the entire mass matrix
-$\mathbf{M}$ and then multiplying $\mathbf{M}\ddot{\mathbf{q}}$ would
-be slower ($O(N^2)$) and wasteful.  The Lagrangian form is primarily
-useful for analysis---stability proofs, passivity arguments---while
-the RNEA is the workhorse for simulation and control~\cite{Lynch2017}.
-\end{laymansbox}
-
-% ------------------------------------------------------------------
-\section{Contact Forces and Constraint Handling}
+\index{contact forces}\index{constraint handling}
 \label{sec:contact_constraint_handling}
-\index{contact forces}
-\index{constraint handling}
-% ------------------------------------------------------------------
+\label{laymans:contact_hard_box}
 
-Real robots do not float in free space.  Walking, grasping, and
-assembly all involve contact, and modelling contact correctly is one of
-the hardest problems in robot simulation.
+RNEA accepts a known external wrench; it does not determine every unknown contact force from kinematics. With two feet on the ground or two hands gripping one club, force sharing may be indeterminate without measurements, compliance, constitutive laws or an additional force-selection criterion. A closed kinematic loop can be cut to produce a tree, but the missing connection must then be restored by constraints and unknown interface loads. Simply traversing the cut tree changes the physical model.
 
-\subsection{Bilateral Constraints}
+\subsection{Bilateral Constraints and Feasibility}
 \label{sec:bilateral_constraints}
-\index{bilateral constraints}
+\index{bilateral constraints}\index{constraint!bilateral}
 
-A \emph{bilateral}\index{constraint!bilateral} constraint removes
-degrees of freedom permanently.  For example, if a foot is bolted to
-the ground, the spatial velocity of that link is zero.  In the RNEA
-framework this amounts to modifying the base boundary condition:
-\[
-  \mathcal{V}_{\text{foot}} = \mathbf{0}, \qquad
-  \dot{\mathcal{V}}_{\text{foot}} = \mathbf{0}.
-\]
-The algorithm then propagates \emph{outward} from the pinned foot
-(which temporarily acts as the base) and the ground reaction wrench
-$\mathcal{F}_{\text{grf}}$ emerges from the inward pass as the
-``joint torque'' at the virtual fixed joint.
+For a smooth stationary bilateral constraint $\phi(q)=0$, let $J_c=\partial\phi/\partial q$. Consistent states obey $J_c\dot q=0$, and accelerations obey $J_c\ddot q+\dot J_c\dot q=0$. Using $r$ for all known generalized applied forces minus the rigid-body bias, the constrained forward equations are
+\begin{equation}
+ \begin{bmatrix}M&-J_c^T\\J_c&0\end{bmatrix}
+ \begin{bmatrix}\ddot q\\\lambda\end{bmatrix}
+ =\begin{bmatrix}r\\-\dot J_c\dot q\end{bmatrix}.
+ \label{eq:rnea_contact_solve}
+\end{equation}
 
-\subsection{Unilateral Constraints and Friction}
+If $M$ is positive definite and the constraint rows are independent, elimination gives the positive-definite constraint matrix $W=J_cM^{-1}J_c^T$ and
+\begin{equation}
+ W\lambda=-\dot J_c\dot q-J_cM^{-1}r.
+ \label{eq:rnea_contact_schur}
+\end{equation}
+
+Implement the inverse actions by solves. Redundant constraint rows make $W$ singular and can leave individual reactions nonunique even when the acceleration is determined. Constraint stabilization addresses numerical drift; it does not justify inconsistent initial positions or guarantee accurate physical forces. A moving constraint adds explicit time derivatives and may do work through its moving support.
+
+In constrained inverse dynamics, a prescribed acceleration must first satisfy the constraint. If $B(q)u$ represents available actuator forces, solve $M\ddot q+h=B(q)u+J_c^T\lambda+Q_{\rm known}$ subject to actuation and contact limits. There can be no solution, one solution, or many force allocations. A floating base has unactuated equations that must balance; an arbitrary six-component residual cannot be silently treated as a pelvis motor. A fixed-foot model is appropriate only for the declared support regime, and additional foot or grip contacts require their own treatment.
+
+\subsection{Unilateral Contact, Friction, and Impact}
 \label{sec:unilateral_constraints}
-\index{unilateral constraints}
-\index{Coulomb friction}
+\index{unilateral constraints}\index{Coulomb friction}\index{friction cone}\index{Linear Complementarity Problem}
 
-Contact with the ground or with objects is \emph{unilateral}: the
-surface can push but not pull.  Denote the contact normal force by
-$f_n$ and the tangential (friction) force by
-$\mathbf{f}_t \in \Reals^2$.  The fundamental constraints are:
-\begin{itemize}
-  \item \textbf{Non-penetration:} the signed gap $\phi \geq 0$.
-  \item \textbf{Compressive normal force:} $f_n \geq 0$ (the ground
-        pushes up, never pulls down).
-  \item \textbf{Complementarity:} $\phi \cdot f_n = 0$ (force is zero
-        when not in contact, gap is zero when in contact).
-  \item \textbf{Coulomb friction cone\index{friction cone}:}
-        $\norm{\mathbf{f}_t} \leq \mu\, f_n$, where $\mu$ is the
-        coefficient of friction.
-\end{itemize}
+For an ideal nonadhesive normal contact, let gap $\phi_n\geq0$ mean separation and $\lambda_n\geq0$ mean compression. Position-level complementarity, $\phi_n\lambda_n=0$, states that separated bodies cannot carry this normal force. It is not a complete dynamical solver. At a closed contact with zero normal velocity, acceleration-level conditions can be written
+\begin{equation}
+ 0\leq\lambda_n\ \perp\ a_n=J_n\ddot q+\dot J_n\dot q\geq0.
+ \label{eq:rnea_normal_complementarity}
+\end{equation}
 
-\begin{definition}{Linear Complementarity Problem (LCP)}{lcp_def}
-\index{Linear Complementarity Problem}
-Given $\mathbf{A} \in \Reals^{k \times k}$ and
-$\mathbf{b} \in \Reals^k$, find $\mathbf{f} \in \Reals^k$ such that
-\[
-  \mathbf{f} \geq \mathbf{0}, \qquad
-  \mathbf{A}\mathbf{f} + \mathbf{b} \geq \mathbf{0}, \qquad
-  \mathbf{f}^T (\mathbf{A}\mathbf{f} + \mathbf{b}) = 0.
-\]
-The matrix $\mathbf{A}$ encodes the coupled dynamics of all contacts;
-$\mathbf{b}$ captures the ``free'' accelerations from the RNEA in the
-absence of contact forces~\cite{Featherstone2008}.
-\end{definition}
+These conditions concern a smooth contact mode. An approaching contact with negative normal velocity needs an impact law or a resolved compliant collision. One cannot apply the zero-normal-velocity acceleration rule indiscriminately at impact.
 
-Modern physics engines---MuJoCo~\cite{todorov2012}, Bullet, and
-Drake---solve a variant of the LCP (or a convex relaxation of it) at
-every simulation timestep.  The RNEA supplies the $O(N)$ inverse
-dynamics needed to build the LCP data, making the overall cost
-dominated by the number of active contacts, not the number of joints.
+Coulomb friction imposes $\|\lambda_t\|\leq\mu\lambda_n$ for sticking. During nonzero slip, a conventional isotropic law selects $\lambda_t=-\mu\lambda_n v_t/\|v_t\|$. The cone inequality alone does not choose a sliding direction or a sticking force. Linear complementarity formulations often use polyhedral friction approximations; an exact circular cone leads to a different constrained formulation. Rigid frictional contact can also have existence or uniqueness difficulties. Engine-specific regularization and compliance affect predictions, so the contact model and solver tolerance belong in a reproducible report.
 
-\begin{laymansbox}{Why Contact is Hard}{contact_hard_box}
-Contact is the hardest part of robot simulation.  A walking robot must
-solve, at every millisecond: Am I touching the ground?  How hard?  In
-what direction?  Is the foot sliding or stuck?  All of these questions
-couple together---the force depends on the motion, but the motion
-depends on the force---and must be answered simultaneously within one
-simulation timestep.
-\end{laymansbox}
+Across an ideal instantaneous impact, configuration is continuous while velocity can jump:
+\begin{equation}
+ M(q)(\dot q^+-\dot q^-)=J_c^T P,
+ \label{eq:rnea_impact_impulse}
+\end{equation}
 
-\section{Worked Example: 3-Link Planar Arm}
+with impulse $P$ determined by a specified restitution/friction/impact law. An impulse is not an ordinary RNEA force, and a smooth torque integral over a vanishing interval cannot be substituted without a justified collision limit. Club--ball impact therefore needs a separate event model or a contact-resolved simulation. The pre-impact delivery state and the impact constitutive assumptions jointly determine the result.
+
+For compliant contact, a force law may depend on penetration, rate and internal deformation state. Such a load can enter the dynamics once those variables are defined. Increasing stiffness creates a faster timescale, approximately $\sqrt{m_{\rm eff}/k}$ in a simple normal mode. A force law alone does not establish integration stability: test timestep refinement, energy and contact work, force convergence and sensitivity to damping. It is also essential to prevent unintended tensile forces when the intended contact is nonadhesive.
+
+\section{Worked Example: Three Planar Links}
 \label{sec:example_3link}
 
-\input{generated/ch07_rnea_example}
+Consider a fixed-base serial mechanism in the $xy$ plane, with $+y$ upward and physical gravity $(0,-9.81,0)\,\mathrm{m\,s^{-2}}$. Each relative joint angle is a counterclockwise rotation about $+z$; at zero joint angles the links point along $+x$. This convention gives nonzero gravity torques. Gravity along $-z$ would instead be perpendicular to the plane and would give no generalized gravity torque about these ideal $z$ joints.
 
-Let us trace through a complete RNEA computation for a 3-link planar arm in 2D (which we embed in 3D with $z$-axis rotation).
-
-\begin{remark}[The torques below are computed]
-The result is produced by \texttt{src/affine\_control/rnea.py} via
-\texttt{scripts/generate\_worked\_examples.py}, and cross-checked against an independent
-Lagrangian computation; CI fails if the committed values drift from what the code emits.
-\end{remark}
-
-\subsection{Setup}
-
-Links: Base (link 0), Upper arm (link 1), Forearm (link 2), Hand (link 3).
-\begin{itemize}
-  \item Link 1: mass $m_1 = 1$ kg, length $L_1 = 1$ m, CoM at $0.5$ m from joint, $I_z^{(1)} = 0.083$ kg$\cdot$m$^2$.
-  \item Link 2: mass $m_2 = 0.5$ kg, length $L_2 = 0.8$ m, CoM at $0.4$ m from joint, $I_z^{(2)} = 0.027$ kg$\cdot$m$^2$.
-  \item Link 3: mass $m_3 = 0.2$ kg, point mass at tip ($0.6$ m from joint), $I_z^{(3)} = 0$.
-\end{itemize}
-
-Joint positions: $\mathbf{q} = [30^\circ, 45^\circ, 0^\circ]^T = [0.524, 0.785, 0]$ rad.
-Joint velocities: $\dot{\mathbf{q}} = [0.5, 0.3, 0.2]$ rad/s.
-Joint accelerations: $\ddot{\mathbf{q}} = [1.0, 0.5, 0.1]$ rad/s$^2$.
-
-\subsection{Outward Pass: Velocities and Accelerations}
-
-\begin{itemize}
-  \item Base link: $\mathcal{V}_0 = (0, 0, 0, 0, 0, 0)^T$, $\dot{\mathcal{V}}_0 = (0, 0, 0, 0, 0, -9.81)^T$ (gravity down the $z$ axis).
-
-  \item Link 1: the joint axis is $\mathcal{S}_1 = (0,0,1,0,0,0)^T$, so
-    \begin{align}
-      \mathcal{V}_1 &= \mathcal{V}_0 + \mathcal{S}_1 \dot q_1 = (0, 0, 0.5, 0, 0, 0)^T \\
-      \mathcal{V}_1 \times \mathcal{S}_1 \dot{q}_1 &= 0 .
-    \end{align}
-    That product vanishes here, and it vanishes for \emph{every} link of a planar chain:
-    $\mathcal{V}_i$ and $\mathcal{S}_i \dot q_i$ both lie along the same out-of-plane axis,
-    and the cross product of parallel vectors is zero. The bias acceleration in a planar arm
-    comes entirely from the centripetal $\omega^2 r$ terms that appear when the recursion
-    moves the origin from one link to the next.
-
-  \item Links 2 and 3: the same recursion, with a nonzero translation between link frames,
-    which is where those centripetal terms enter.
-\end{itemize}
-
-\begin{warningbox}
-An earlier revision gave
-$\mathcal{V}_1 \times \mathcal{S}_1 \dot q_1 = (0,0,0.5)\times(0,0,0.2) = (0.1, 0, 0)$,
-marked ``(approx)''. The product is exactly zero, since the vectors are parallel; no
-approximation is involved. The spurious $(0.1,0,0)$ was then carried into
-$\dot{\mathcal{V}}_1$, and three-vectors were added to six-vectors in the same line.
-\end{warningbox}
-
-\subsection{Inward Pass: Forces and Torques}
-
-Assuming no external forces at the tip ($\mathcal{F}_{\text{ext}} = 0$):
-
-\begin{itemize}
-  \item Link 3 (tip): $\mathcal{F}_3 = \mathcal{I}_3 \dot{\mathcal{V}}_3 + [\mathcal{V}_3 \times]^* (\mathcal{I}_3 \mathcal{V}_3)$.
-
-  \item Link 2: $\mathcal{F}_2 = (\text{inertia and bias of link 2}) + [\text{Ad}_{3,2}]^{-T} \mathcal{F}_3$.
-
-  \item Link 1: $\mathcal{F}_1 = (\text{inertia and bias of link 1}) + [\text{Ad}_{2,1}]^{-T} \mathcal{F}_2$.
-\end{itemize}
-
-The required joint torques are:
-\begin{align}
-  \tau_1 &= \mathcal{F}_1^T \mathcal{S}_1 = \mathcal{F}_1^T (0, 0, 1, 0, 0, 0)^T \\
-  \tau_2 &= \mathcal{F}_2^T \mathcal{S}_2 \\
-  \tau_3 &= \mathcal{F}_3^T \mathcal{S}_3
-\end{align}
-
-Running the recursion at the stated configuration, velocity and acceleration gives
-\[
-  \boldsymbol{\tau} = (\volzeroRneaTorque)^T \text{ N$\cdot$m},
-\]
-the torques the three joint motors must produce to execute this trajectory.
-
-The shoulder torque dominates, at $\volzeroRneaTorqueOne$~N$\cdot$m against
-$\volzeroRneaTorqueThree$~N$\cdot$m at the wrist. That is mostly gravity: the shoulder
-carries the weight of the whole arm at a moment arm of roughly a metre, while the wrist
-carries only the $0.2$~kg hand.
-
-\begin{warningbox}
-An earlier revision of this section omitted the arithmetic --- ``detailed numerical
-computation omitted for brevity'' --- and then stated
-$\boldsymbol{\tau} = [2.3, 1.1, 0.08]^T$ prefaced by ``the output \emph{might} be'',
-immediately followed by ``These are the torques the three joint motors must produce''.
-
-The stipulated values are not close. The shoulder torque is off by roughly a factor of six.
-A worked example that hedges with ``might be'' and then asserts the result as fact is worse
-than one that shows no numbers at all, because a reader checking their own implementation
-against it will conclude their code is broken.
-\end{warningbox}
-
-\section{Validation: RNEA vs. Lagrangian}
-\label{sec:validation}
-
-To verify the RNEA is correct, we compare its output to the direct Lagrangian formulation for a simple 2-link planar arm.
-
-\subsection{2-Link Planar Arm}
-
-System: Two identical links, each mass $m = 1$ kg, length $L = 1$ m, uniform density.
-
-Joint positions: $\mathbf{q} = [\theta_1, \theta_2]^T$.
-
-The kinetic energy is:
-\[
-  T = \frac{1}{2}m(\dot{x}_{\text{CoM,1}}^2 + \dot{y}_{\text{CoM,1}}^2) + \frac{1}{2}I_1 \dot{\theta}_1^2 + \frac{1}{2}m(\dot{x}_{\text{CoM,2}}^2 + \dot{y}_{\text{CoM,2}}^2) + \frac{1}{2}I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
-\]
-
-where $I_1 = I_2 = \frac{1}{12}mL^2$ (uniform rod), and the CoM velocities depend on the joint angles and velocities through kinematics.
-
-Expanding and simplifying (details omitted), the mass matrix is:
-\[
-  \mathbf{M}(q) = \begin{bmatrix} m_1 + m_2 + 2m_2 L \cos(\theta_2) & m_2 + m_2 L \cos(\theta_2) \\ m_2 + m_2 L \cos(\theta_2) & m_2 \end{bmatrix}
-\]
-
-The Coriolis matrix contains terms like $-m_2 L \sin(\theta_2) \dot{\theta}_1$, etc.
-
-\textbf{Test case}: $\mathbf{q} = [0, 0]$ (horizontal), $\dot{\mathbf{q}} = [1, 0.5]$ rad/s, $\ddot{\mathbf{q}} = [0.5, 0.2]$ rad/s$^2$.
-
-\textbf{Lagrangian}: Substitute into $\mathbf{M}(q)\ddot{\mathbf{q}} + \mathbf{C}(q, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(q) = \boldsymbol{\tau}$, solve for $\boldsymbol{\tau}$.
-
-\textbf{RNEA}: Run the algorithm with the same inputs.
-
-\textbf{Result}: The torques match to numerical precision, confirming the algorithm.
-
-This check is executed rather than asserted. For the 3-link arm of
-Section~\ref{sec:example_3link}, the recursion gives
-$(\volzeroRneaTorque)^T$ N$\cdot$m and the Lagrangian route gives
-$(\volzeroLagrangianTorque)^T$ N$\cdot$m, agreeing to better than
-$\volzeroRneaAgreement$~N$\cdot$m --- a bound the generator enforces, since the residual
-itself is a difference of nearly-equal floating-point numbers and its exact value depends on
-the machine.
-
-The agreement is evidence because the two routes share no machinery. The recursion never
-forms a mass matrix; it propagates accelerations outward and forces inward, link by link.
-The Lagrangian route never recurses; it assembles $M(\mathbf{q})$ from centre-of-mass Jacobians and
-obtains the Coriolis term by differentiating it. A transcription error in either would show
-up here, which is exactly what a validation section is for --- and is why stating the
-agreement without running it defeats the purpose.
-
-\section{Adjoint Matrix Derivation From Geometry}
-\label{sec:adjoint_derivation}
-
-We derived the Adjoint matrix above through velocity transformation. Here we provide a deeper geometric interpretation.
-
-\subsection{Infinitesimal Rotations in SE(3)}
-
-The Lie algebra $\se(3)$ consists of $4 \times 4$ matrices of the form:
-\[
-  \hat{\xi} = \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{v} \\ \mathbf{0} & 0 \end{bmatrix}
-\]
-representing infinitesimal twists (rotation $\boldsymbol{\omega}$ and translation $\mathbf{v}$).
-
-The exponential map $\exp(\hat{\xi} t)$ generates a one-parameter family of poses in $SE(3)$.
-
-\subsection{Adjoint as Conjugation}
-
-If $\mathbf{T} \in SE(3)$ and $\mathbf{S} \in SE(3)$, the conjugation $\mathbf{T} \mathbf{S} \mathbf{T}^{-1}$ maps elements of the Lie algebra. The induced action on 6D vectors is the Adjoint:
-
+The physical parameters, ordered from proximal to distal, are
 \begin{equation}
-    [\text{Ad}_{\mathbf{T}}]: \se(3) \to \se(3), \quad \hat{\xi} \mapsto \mathbf{T} \hat{\xi} \mathbf{T}^{-1}
+ \begin{aligned}
+ L&=(1,0.8,0.6)\,\mathrm m,\\
+ m&=(1,0.5,0.2)\,\mathrm{kg},\\
+ c&=(0.5,0.4,0.6)\,\mathrm m,\\
+ I_C&=(0.083,0.027,0)\,\mathrm{kg\,m^2}.
+ \end{aligned}
+ \label{eq:rnea_planar_parameters}
+\end{equation}
+ These are the specified teaching parameters: the first two moments are rounded, and the third link is a massless rod with an endpoint mass. It is not a uniform three-rod arm, a fitted golfer or a compliant club.
+
+Use the exact numerical inputs $q=(0.524,0.785,0)$ radians, approximately $(30,45,0)$ degrees, with $\dot q=(0.5,0.3,0.2)\,\mathrm{s^{-1}}$ and $\ddot q=(1,0.5,0.1)\,\mathrm{s^{-2}}$. The cumulative angular rates are $(0.5,0.8,1.0)\,\mathrm{s^{-1}}$ and accelerations $(1,1.5,1.6)\,\mathrm{s^{-2}}$. Rounding the input angles and then calling them exact degree values would specify a slightly different numerical problem.
+
+For body frames at the proximal joints, the linear part of the second spatial velocity and the linear parts of the two distal joint-bias terms are
+\begin{equation}
+ \begin{aligned}
+ v_2&=(0.353413,0.353694,0)\,\mathrm{m\,s^{-1}},\\
+ (c_2)_{\rm lin}&=(0.106108,-0.106024,0)\,\mathrm{m\,s^{-2}},\\
+ (c_3)_{\rm lin}&=(0.198739,-0.070683,0)\,\mathrm{m\,s^{-2}}.
+ \end{aligned}
+ \label{eq:rnea_distal_bias_values}
 \end{equation}
 
-In matrix form, this action is represented by the $6 \times 6$ matrix $[\text{Ad}_{\mathbf{T}}]$.
+Both angular bias parts vanish. This is a concrete instance of nonzero planar spatial coupling despite parallel joint axes.
 
-\section{Python Implementation of RNEA}
+\subsection{An Independent Cartesian Recursion}
+
+The planar implementation provides a second route without six-vector transforms. Let $e_i=(\cos\theta_i,\sin\theta_i)$, where $\theta_i=\sum_{j\leq i}q_j$, and let $e_i^\perp=(-\sin\theta_i,\cos\theta_i)$. Propagate the effective joint-origin acceleration $A_i$ from $A_1=-g_{xy}$. With cumulative angular rate $\omega_i$ and acceleration $\alpha_i$,
+\begin{equation}
+ \begin{aligned}
+ A_{Ci}&=A_i+\alpha_i c_i e_i^\perp-\omega_i^2c_i e_i,\\
+ A_{i+1}&=A_i+\alpha_i L_i e_i^\perp-\omega_i^2L_i e_i.
+ \end{aligned}
+ \label{eq:rnea_planar_cartesian}
+\end{equation}
+
+In this subsection $c_i$ is a scalar center-of-mass distance, not the spatial bias vector. Summing each segment's $m_iA_{Ci}$ force and $I_i\alpha_i$ moment inward, with the actual lever arms to the center of mass and next joint, gives the joint torques. An independent Lagrangian route assembles $M$ from differentiated Cartesian center-of-mass positions and differentiates energy for gravity and velocity-product terms.
+
+The resulting decomposition, in newton metres, is
+\begin{equation}
+ \begin{aligned}
+ G&=(11.411202,\ 1.218713,\ 0.304678)^T,\\
+ C\dot q&=(-0.162853,\ 0.084819,\ 0.021205)^T,\\
+ M\ddot q&=(2.655655,\ 1.104846,\ 0.344087)^T,\\
+ \tau&=(13.904004,\ 2.408379,\ 0.669970)^T.
+ \end{aligned}
+ \label{eq:rnea_three_link_values}
+\end{equation}
+
+The recursive and finite-difference Lagrangian torques agree within $10^{-8}\,\mathrm{N\,m}$ for these inputs. That is a checked numerical tolerance, not a symbolic proof or a physiological validation. Gravity is the largest contribution at the proximal joint in this particular pose, while acceleration contributes slightly more than gravity at the third joint. Those ratios change with pose and prescribed acceleration; the example cannot establish a general proximal-to-distal energy-transfer strategy.
+
+\clearpage
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{../figures/recursive_torque.pdf}
+\caption{Required Torque Components for the Specified Planar Example. Signed Contributions Depend on the Chosen Pose, Rates, and Accelerations; Each Joint Uses Its Own Torque Scale.}
+\label{fig:recursive_torque}
+\end{figure}
+
+\section{Validation With Two Uniform Rods}
+\label{sec:validation}
+
+Use two rods of unit length and unit mass, with centers halfway along each rod and central planar moments $1/12\,\mathrm{kg\,m^2}$. Keep the same horizontal-zero angle and upward-$y$ gravity convention. The first center is $e_1/2$ and the second is $e_1+e_{12}/2$, where $e_{12}=(\cos(q_1+q_2),\sin(q_1+q_2))$. Differentiating these positions and adding rotational kinetic energy yields
+\begin{equation}
+ M(q)=\begin{bmatrix}
+ 5/3+\cos q_2&1/3+\tfrac12\cos q_2\\
+ 1/3+\tfrac12\cos q_2&1/3
+ \end{bmatrix}\,\mathrm{kg\,m^2}.
+ \label{eq:rnea_two_rod_mass}
+\end{equation}
+
+The potential is $U=g[\tfrac32\sin q_1+\tfrac12\sin(q_1+q_2)]$ in SI units. The velocity-product and gravitational generalized forces are
+\begin{equation}
+ \begin{aligned}
+ b_v&=\tfrac12\sin q_2
+ \begin{bmatrix}-2\dot q_1\dot q_2-\dot q_2^2\\\dot q_1^2\end{bmatrix},\\
+ G&=g\begin{bmatrix}\tfrac32\cos q_1+\tfrac12\cos(q_1+q_2)\\
+ \tfrac12\cos(q_1+q_2)\end{bmatrix}.
+ \end{aligned}
+ \label{eq:rnea_two_rod_bias}
+\end{equation}
+
+The numerical coefficients in $b_v$ carry the unit-rod inertia factors, and those in $G$ carry mass times length. For other dimensions, restore the physical $m,L,c,I_C$ factors before using the formulas. The two-link mass matrix is not obtained by treating each rod as a point mass or omitting its central inertia.
+
+At $q=(0,0)$, $\dot q=(1,0.5)\,\mathrm{s^{-1}}$ and $\ddot q=(0.5,0.2)\,\mathrm{s^{-2}}$, the velocity-product generalized force happens to vanish. The gravity torques are $(19.62,4.905)\,\mathrm{N\,m}$, the acceleration torques are $(1.5,0.483333)\,\mathrm{N\,m}$, and the required torques are $(21.12,5.388333)\,\mathrm{N\,m}$. Vanishing net generalized velocity-product force at this pose does not imply that every local centripetal or spatial-bias term vanishes. Tests at nonzero relative angles are necessary to expose those terms.
+
+\section{The Adjoint From Lie-Group Geometry}
+\label{sec:adjoint_derivation}
+
+The same frame law follows by differentiating group conjugation. For a twist matrix $\widehat\xi$, a fixed rigid transform satisfies
+\begin{equation}
+ T\exp(t\widehat\xi)T^{-1}
+ =\exp(tT\widehat\xi T^{-1}),\qquad
+ (\operatorname{Ad}_T\xi)^{\wedge}=T\widehat\xi T^{-1}.
+ \label{eq:rnea_adjoint_conjugation}
+\end{equation}
+
+Conjugation acts on the group; its derivative at the identity acts on the Lie algebra. Composition immediately gives $\operatorname{Ad}_{T_1T_2}=\operatorname{Ad}_{T_1}\operatorname{Ad}_{T_2}$. This makes successive frame changes agree with a single composed change, an important numerical consistency check.
+
+For the differential of the matrix exponential, the noncommutative formula is
+\begin{equation}
+ D\exp_A[H]=\int_0^1e^{(1-s)A}He^{sA}\,ds.
+ \label{eq:rnea_dexp}
+\end{equation}
+
+With $A=\widehat\xi$, $H=\widehat\eta$ and $T=\exp(\widehat\xi)$, define the right- and left-trivialized increments explicitly:
+\begin{equation}
+ \begin{aligned}
+ (\delta T\,T^{-1})^{\vee}
+ &=\int_0^1\operatorname{Ad}_{\exp(s\widehat\xi)}\eta\,ds,\\
+ (T^{-1}\delta T)^{\vee}
+ &=\int_0^1\operatorname{Ad}_{\exp(-s\widehat\xi)}\eta\,ds.
+ \end{aligned}
+ \label{eq:rnea_dexp_trivialization}
+\end{equation}
+
+These operators are often named left and right Jacobians according to perturbation conventions; the multiplication order above removes that naming ambiguity. They equal the identity at $\xi=0$. The differential can lose rank at particular exponential-coordinate values even though $T$ and $\operatorname{Ad}_T$ remain invertible. Do not confuse coordinate-chart behavior, a physical task-Jacobian singularity and a rigid frame transformation.
+
+\section{Reproducible Python Examples}
 \label{sec:python_rnea}
 
-\begin{lstlisting}[language=Python, caption=RNEA Implementation in Python]
+Run the following from the repository root with its Python dependencies. The first calculation uses the dedicated planar recursion, which permits the endpoint point mass. The second uses the shared spatial-tree RNEA and ABA on three uniform solid cylinders with radius $0.025\,\mathrm m$. These are different mass distributions and therefore have different torques. The spatial example checks a forward/inverse round trip; the analytic two-rod and Cartesian-energy tests supply independent validation rather than relying on that round trip alone.
+
+\clearpage
+\begin{lstlisting}[language=Python,basicstyle=\ttfamily\small]
 import numpy as np
+from scripts.generate_worked_examples import (
+    VOL0_CH07_CHAIN, VOL0_CH07_Q,
+    VOL0_CH07_QD, VOL0_CH07_QDD,
+)
+from src.tools.articulated_body_examples import (
+    DynamicsLoads, forward_dynamics, inverse_dynamics,
+)
+from src.tools.articulated_chain_examples import cylinder_chain
 
-def skew(v):
-    """Convert 3D vector to skew-symmetric matrix."""
-    return np.array([
-        [0, -v[2], v[1]],
-        [v[2], 0, -v[0]],
-        [-v[1], v[0], 0]
-    ])
+q, velocity, acceleration = VOL0_CH07_Q, VOL0_CH07_QD, VOL0_CH07_QDD
+recursive = VOL0_CH07_CHAIN.inverse_dynamics(q, velocity, acceleration)
+lagrangian = VOL0_CH07_CHAIN.inverse_dynamics_lagrangian(
+    q, velocity, acceleration,
+)
+print("Planar torques:", recursive)
+np.testing.assert_allclose(recursive, lagrangian, atol=1e-8, rtol=0)
 
-def adjoint(T):
-    """Compute 6x6 Adjoint matrix from 4x4 SE(3) transform."""
-    R = T[:3, :3]
-    p = T[:3, 3]
-    Ad = np.zeros((6, 6))
-    Ad[:3, :3] = R
-    Ad[3:, :3] = skew(p) @ R
-    Ad[3:, 3:] = R
-    return Ad
-
-def motion_cross(V):
-    """Spatial cross product for motion (velocity)."""
-    omega = V[:3]
-    v = V[3:]
-    Vx = np.zeros((6, 6))
-    Vx[:3, :3] = skew(omega)
-    Vx[3:, :3] = skew(v)
-    Vx[3:, 3:] = skew(omega)
-    return Vx
-
-def force_cross(V):
-    """Spatial cross product for forces (Wrenches)."""
-    return -motion_cross(V).T
-
-def spatial_inertia_6d(m, c, I_c):
-    """Build 6x6 spatial inertia from mass, CoM offset, and inertia tensor."""
-    I_spatial = np.zeros((6, 6))
-    I_spatial[:3, :3] = I_c - m * (skew(c) @ skew(c))
-    I_spatial[:3, 3:] = m * skew(c)
-    I_spatial[3:, :3] = -m * skew(c)
-    I_spatial[3:, 3:] = m * np.eye(3)
-    return I_spatial
-
-def rnea(q, dq, ddq, links, joints, gravity=np.array([0, 0, -9.81])):
-    """
-    Recursive Newton-Euler Algorithm.
-
-    Args:
-        q: joint positions (N,)
-        dq: joint velocities (N,)
-        ddq: joint accelerations (N,)
-        links: list of dicts with 'mass', 'com_offset', 'inertia'
-        joints: list of dicts with 'type' ('revolute' or 'prismatic'),
-                'axis', 'parent', 'T_local'
-        gravity: gravitational acceleration vector
-
-    Returns:
-        tau: required joint torques (N,)
-    """
-    N = len(links)
-
-    # Base link has zero velocity; gravity enters as a fictitious
-    # base acceleration (Featherstone convention: a_0 = -g so that
-    # the algorithm produces correct gravity-compensating torques).
-    V = [np.zeros(6) for _ in range(N)]
-    # V[0] remains zero -- the base is stationary
-
-    dV = [np.zeros(6) for _ in range(N)]
-    dV[0] = np.concatenate([np.zeros(3), -gravity])
-
-    # Outward pass: compute velocities and accelerations
-    T = [np.eye(4) for _ in range(N)]
-    for i in range(1, N):
-        j = joints[i]['parent']
-
-        # Compute relative transform
-        axis = joints[i]['axis']
-        if joints[i]['type'] == 'revolute':
-            S = np.concatenate([axis, np.zeros(3)])
-            # Rotation matrix from rotation axis and angle
-            angle = q[i]
-            K = skew(axis)
-            R = np.eye(3) + np.sin(angle) * K + (1 - np.cos(angle)) * (K @ K)
-            T_rel = np.eye(4)
-            T_rel[:3, :3] = R
-        else:  # prismatic
-            S = np.concatenate([np.zeros(3), axis])
-            T_rel = np.eye(4)
-            T_rel[:3, 3] = q[i] * axis
-
-        T[i] = T[j] @ T_rel
-        Ad = adjoint(T_rel)
-
-        # Velocity
-        V[i] = Ad @ V[j] + S * dq[i]
-
-        # Acceleration (including Coriolis)
-        dV[i] = Ad @ dV[j] + motion_cross(V[i]) @ S * dq[i] + S * ddq[i]
-
-    # Inward pass: compute forces and extract torques
-    F = [np.zeros(6) for _ in range(N)]
-    tau = np.zeros(N)
-
-    for i in range(N - 1, -1, -1):
-        # Link inertia
-        I = spatial_inertia_6d(
-            links[i]['mass'],
-            links[i]['com_offset'],
-            links[i]['inertia']
-        )
-
-        # Inertial wrench
-        F[i] = I @ dV[i] + force_cross(V[i]) @ (I @ V[i])
-
-        # Add wrenches from children
-        for k in range(i + 1, N):
-            if joints[k]['parent'] == i:
-                T_rel = np.eye(4)
-                # Recompute T_rel (simplified; in real code, cache this)
-                Ad_inv_T = adjoint(np.linalg.inv(T_rel)).T
-                F[i] += Ad_inv_T @ F[k]
-
-        # Extract joint torque
-        axis = joints[i]['axis'] if i > 0 else np.array([0, 0, 1])
-        if i > 0 and joints[i]['type'] == 'revolute':
-            S = np.concatenate([axis, np.zeros(3)])
-        elif i > 0:
-            S = np.concatenate([np.zeros(3), axis])
-        else:
-            S = np.array([0, 0, 1, 0, 0, 0])
-
-        tau[i] = F[i] @ S
-
-    return tau
+tree = cylinder_chain(
+    np.array([1., .8, .6]), np.array([1., .5, .2]), q, .025,
+)
+loads = DynamicsLoads(velocity, np.zeros(3))
+torque = inverse_dynamics(tree, loads, acceleration)
+recovered = forward_dynamics(tree, DynamicsLoads(velocity, torque))
+print("Cylinder torques:", torque)
+np.testing.assert_allclose(
+    recovered.joint_acceleration, acceleration, atol=1e-11, rtol=0,
+)
 \end{lstlisting}
 
-\section{Summary}
+The cylinder torques for these inputs are approximately
+\begin{equation}
+ \tau_{\rm cylinder}=(13.447676,1.977061,0.315835)^T\,\mathrm{N\,m}.
+ \label{eq:rnea_cylinder_torques}
+\end{equation}
+ The helper builds transforms that map parent motion into child coordinates and positive-definite cylindrical inertias. Its parent array uses zero-based Python indexing and $-1$ for the base. It accepts constant local one-degree-of-freedom subspaces, known body-frame external loads, uniform gravity, nonnegative diagonal damping and ideal armature. It does not solve contact, floating-base motion, closed loops or flexible-shaft dynamics. Array shape and inertia checks do not prove that an arbitrary supplied transform or inertia is a physically valid model; those remain explicit preconditions.
+
+\section{Interpreting a Golf or Humanoid Model}
 \label{sec:ch7_summary}
 
-In this chapter, we learned:
+The outward and inward recursions describe two sides of one coupled mechanism. Geometry determines each joint's motion direction, each point's lever arm and the frame transformations. Mass distribution turns the resulting body velocities and accelerations into momentum and required wrench. The inward pass combines every downstream load, so proximal effort depends on what the distal bodies are doing. Conversely, in forward dynamics, a torque at one joint can accelerate several joints through the coupled inertia and constraints. A temporal sequence of segment-speed peaks alone does not identify which term caused the next peak.
 
-\begin{enumerate}
-  \item \textbf{Historical Context}: The RNEA, developed by Orin, McGhee, Luh, and formalized by Featherstone, reduced robot dynamics computation from $O(N^3)$ to $O(N)$, making real-time control possible.
+For the club considered as a separate system, hand and shaft-interface wrenches are external loads whose power changes the club's mechanical energy, alongside gravity and other modeled effects. For golfer and club considered together, the paired interface contributions are internal; relative deformation or motion determines whether their summed power transfers, stores or dissipates energy. An ideal stationary ground contact may exchange momentum through force while doing zero power at a nonmoving contact point. Large ground reaction, large joint torque and large positive mechanical work are therefore different observations. A causal argument must state the system boundary, the power pair and the measured or modeled motion.
 
-  \item \textbf{Kinematic Trees}: A parent array $\lambda(i)$ describes the acyclic structure of multi-body systems, including branching topologies.
+Joint-space inverse dynamics estimates net mechanical requirements once motion, inertia and external loads are supplied. It does not separate agonist and antagonist muscle forces or determine activation from torque alone. Biarticular muscles distribute forces across joints; activation history and tendon storage can change what torques are feasible at the same mechanical state. Measurement differentiation also amplifies noise, especially in acceleration, so report filtering, uncertainty, synchronization and sensitivity to segment inertias and contact forces.
 
-  \item \textbf{Adjoint Matrix}: The $6 \times 6$ Adjoint $[\text{Ad}_{\mathbf{T}}]$ transforms spatial velocities between frames; wrenches transform via the coadjoint (negative transpose).
+To investigate a proposed swing mechanism, first reproduce a measured or otherwise specified trajectory within the model's uncertainty. Then define an intervention: alter a particular actuator input, initial state, grip constraint or inertial parameter while stating what is held fixed. Use constrained forward dynamics to calculate the resulting trajectory, and evaluate delivery quantities at the relevant impact event. An instantaneous torque decomposition is useful evidence about required balance; a finite-horizon intervention is needed to support a claim about an outcome. Both contact-mode changes and impact-time shifts can change that conclusion.
 
-  \item \textbf{Recursive Forward Kinematics}: Velocities propagate outward via $\mathcal{V}_i = [\text{Ad}_{\mathbf{T}_{i, \lambda(i)}}] \mathcal{V}_{\lambda(i)} + \mathcal{S}_i \dot{q}_i$.
-
-  \item \textbf{Spatial Acceleration}: Includes Coriolis and centrifugal terms via the motion cross product $[\mathcal{V} \times]$.
-
-  \item \textbf{RNEA}: Two passes—outward (velocities, accelerations) and inward (forces, torques)—compute inverse dynamics in $O(N)$ time.
-
-  \item \textbf{Branching Trees}: Multiple children are handled by summing child wrenches in the inward pass.
-
-  \item \textbf{Contact Forces}: External forces are incorporated at leaf nodes.
-
-  \item \textbf{Complexity}: Strict $O(N)$ proof makes the algorithm scalable.
-
-  \item \textbf{Implementation}: Python code shows practical RNEA execution.
-\end{enumerate}
-
-Throughout the subsequent volumes of \textit{The Geometry of Motion}, physical phenomena like Contraction Metrics, Sums-of-Squares Programming, and LQR-Trees are discussed dynamically. Behind the curtain of those advanced trajectory optimizations, the physics engines governing the simulated bodies are invariably relying on Quaternions to map their angles, Adjoints to shift their coordinates, and Recursive Algorithms to execute their algebraic realities in $O(N)$ time.
+The quality of the argument rests on a chain of checkable statements: coordinate consistency, local balance, constraint and actuator feasibility, numerically converged trajectories, and an output tied to the golf question. Recursive algorithms make that chain economical and inspectable. They do not remove uncertainty in anatomy, sensing, constitutive models or human intent.
 
 \section{Further Reading}
 \label{sec:further_reading_ch7}
 
-The original computational Newton-Euler formulation for robot manipulators was presented by Luh, Walker, and Paul \cite{luh1980}, who demonstrated that recursive structure could reduce the cost of inverse dynamics from $O(N^3)$ to $O(N)$. Their paper remains a landmark in computational robotics and is essential reading for understanding the historical development of real-time robot control.
+Featherstone's \textit{Rigid Body Dynamics Algorithms} develops spatial inertia and tree algorithms; the author's accompanying coordinate-transform notes distinguish motion and force directions explicitly~\cite{Featherstone2008,FeatherstoneSpatialReview}. Lynch and Park's \textit{Modern Robotics}, Chapter 8, provides a complementary body-twist derivation and separates inverse dynamics from simulation~\cite{Lynch2017}. When consulting code, check whether an external wrench is applied to the body or by the end effector, and whether it is expressed in body or base coordinates. Correct implementations can differ in these conventions.
 
-The definitive modern treatment of recursive dynamics is Featherstone \cite{Featherstone2008}, which develops the RNEA, the Articulated Body Algorithm (ABA), and the Composite Rigid Body Algorithm within a unified spatial vector framework. Featherstone's monograph is the primary reference for anyone implementing multi-body dynamics from scratch and contains detailed pseudocode, complexity proofs, and numerical considerations that go well beyond our presentation here.
-
-Lynch and Park \cite{Lynch2017}, Chapter~8, present inverse dynamics within the product of exponentials framework, offering a complementary geometric perspective to Featherstone's spatial vector approach. Their treatment emphasizes the connection between the Lie-algebraic formulation of kinematics (Chapters~\ref{ch:screw_axes}--\ref{ch:exponential_coordinates}) and the recursive dynamics algorithms developed here.
-
-For practical implementation considerations---including numerical conditioning, joint friction models, and real-time scheduling---Siciliano et al.\ \cite{siciliano2009} provide an engineering-oriented treatment with extensive discussion of industrial applications.
-
-The forward dynamics problem, which is the computational inverse of the RNEA, requires the more sophisticated Articulated Body Algorithm developed in Chapter~\ref{ch:articulated_body_algorithm}. Readers eager to understand how physics engines like MuJoCo, Drake, and PyBullet actually simulate forward in time should proceed to that chapter after mastering the RNEA presented here.
+The following articulated-body chapter develops acceleration elimination and recovery for forward dynamics. Together with the state-space, configuration-space and Lagrangian chapters, it supplies the mechanical basis for later work on control, sensitivity and constrained delivery. A chosen simulator's documentation should supplement these mathematical references with its actual joint, contact, actuation and integration assumptions.
 
 \section{Exercises}
 
-\subsection{Tier 1 (Foundation)}
-
-\begin{enumerate}
-  \item Show that the Adjoint matrix $[\text{Ad}_{\mathbf{T}}]$ is invertible and compute its inverse in closed form.
-
-  \item For a 2-link planar arm, write out the parent array $\lambda$ and the screw axes $\mathcal{S}_1, \mathcal{S}_2$ for two revolute joints.
-
-  \item Compute the Coriolis term $[\mathcal{V}_i \times] \mathcal{S}_i \dot{q}_i$ for a simple 1-link revolute joint with $\mathcal{V} = (0, 0, \omega, v_x, 0, 0)^T$ and $\mathcal{S} = (0, 0, 1, 0, 0, 0)^T$.
-
-  \item Verify that $[\text{Ad}_{\mathbf{T}}]^{-T}$ transforms wrenches correctly: show that power $\mathcal{F}^T \mathcal{V}$ is invariant under frame changes.
-
-  \item For a 3-link arm with known link masses and dimensions, compute the spatial inertia matrices using the parallel axis theorem.
+\subsection{Tier 1: Foundations}
+\begin{enumerate}[itemsep=3pt,topsep=4pt]
+\item \textbf{Invertible Frame Changes.} Derive the inverse adjoint from $T^{-1}$. Show directly that a pure translation gives an invertible motion transform, even though its angular screw component is zero.
+\item \textbf{Tree and Joint Conventions.} Give the one-based parent array for a two-link planar chain with base 0. Write its local revolute subspaces at the proximal origins and the relative motion transforms for horizontal-zero angles. Explain how the Python indexing differs.
+\item \textbf{A Nonzero Planar Bracket.} For angular-first $V=(\omega,v)$, take $\omega=(0,0,0.5)$ and $v=(0.4,0,0)$. A revolute joint at the origin about local $+z$ has rate $\dot q=0.2$. Calculate all six components of $\operatorname{ad}_VV_J$. Identify the physical units of the nonzero component and explain why an angular-only cross product misses it.
+\item \textbf{Power and Wrench Direction.} Starting from $V_A=X_{AB}V_B$, derive both force transformation directions. Use a translated origin and a nonzero force to show why inverse-transpose child-to-parent propagation would give the wrong moment.
+\item \textbf{Inertia and Degeneracy.} Construct the planar inertias of the three-link example from its masses, center offsets and central moments. Explain why its endpoint point mass is compatible with a nonsingular restricted joint-space mass matrix but does not have a positive-definite six-dimensional spatial inertia.
 \end{enumerate}
 
-\subsection{Tier 2 (Intermediate)}
-
-\begin{enumerate}
-  \item Derive the spatial Newton-Euler equation from first principles using Lagrangian mechanics and show that the bias term $[\mathcal{V} \times]^*(\mathcal{I}\mathcal{V})$ captures centrifugal and Coriolis forces.
-
-  \item For a 2-link arm with a branching third link (e.g., an end-effector with a gripper that has one degree of freedom), write out the full RNEA inward pass, including the summation of forces from the gripper to the main arm.
-
-  \item Implement the motion cross product $[\mathcal{V} \times]$ and force cross product $[\mathcal{V} \times]^*$ numerically and verify they are consistent (i.e., $[\mathcal{V} \times]^* = -[\mathcal{V} \times]^T$).
-
-  \item Compare the computational time of the RNEA ($O(N)$) to matrix inversion ($O(N^3)$) for systems with $N = 5, 10, 20, 50$ joints, both analytically and experimentally.
-
-  \item Extend the RNEA algorithm to handle closed-loop mechanisms (systems with cycles), discussing the additional constraints required.
+\subsection{Tier 2: Mechanics and Verification}
+\begin{enumerate}[itemsep=3pt,topsep=4pt]
+\item \textbf{Newton--Euler From Energy and Momentum.} Derive the center-of-mass force and moment equations, including the gyroscopic term, and transform them to a noncentral origin. Use virtual power to explain their equivalence to the generalized Lagrangian equations.
+\item \textbf{A Genuine Branch.} For parents $(0,1,1,3)$, write the complete inward accumulation, including a known external load on body 1 and on both leaves. Identify which body efforts are influenced by each leaf load.
+\item \textbf{Dual Operators.} Verify $V\times^*=-\operatorname{ad}_V^T$ numerically. Check preservation of power under a nontrivial rotation and translation, then compare the two uniform-rod torques with the closed forms at three nonsymmetric configurations.
+\item \textbf{Like-for-Like Computational Comparisons.} For $N=5,10,20,50$, compare RNEA with a preassembled $M\ddot q+h$ evaluation as inverse-dynamics tasks. Separately compare ABA with a mass-matrix forward solve. Report model preparation, factorization reuse, hardware, repetitions and numerical agreement; distinguish expected arithmetic growth from measured timing.
+\item \textbf{A Cut Loop.} Introduce a bilateral closure constraint into an otherwise open tree. Derive the acceleration constraint and coupled force solve. State what changes if the constraint rows are redundant or the prescribed inverse-dynamics motion is inconsistent.
 \end{enumerate}
 
-\subsection{Tier 3 (Advanced)}
-
-\begin{enumerate}
-  \item Prove that the Adjoint map is a Lie group homomorphism: $[\text{Ad}_{\mathbf{T}_1 \mathbf{T}_2}] = [\text{Ad}_{\mathbf{T}_1}][\text{Ad}_{\mathbf{T}_2}]$.
-
-  \item Derive the relationship between the Adjoint matrix and the differential of the exponential map $\exp: \se(3) \to SE(3)$.
-
-  \item For a humanoid robot with 30 DOFs, design the kinematic tree structure (parent array), define all joint axes, and outline how the RNEA would compute inverse dynamics.
-
-  \item Implement the composite rigid body algorithm (CRB), which pre-computes the mass matrix $\mathbf{M}(q)$ in $O(N)$ time using RNEA-like recursion, and compare its performance to direct computation.
-
-  \item Extend the RNEA to handle soft contacts (e.g., compliant ground) by modifying the boundary conditions at contact points and verifying numerical stability.
+\subsection{Tier 3: Modeling and Extension}
+\begin{enumerate}[itemsep=3pt,topsep=4pt]
+\item \textbf{Composition.} Prove the adjoint homomorphism using group conjugation and verify it with two translated, rotated frames. Show that the corresponding force transforms preserve the same composition order in the same direction.
+\item \textbf{Differentiating the Exponential.} Derive the integral formula for $D\exp_A[H]$, then both explicitly ordered trivializations. Compare with centered finite differences for noncommuting $A,H$ and explain why $e^AH$ is insufficient in general.
+\item \textbf{A Declared Humanoid Tree.} Specify a teaching humanoid with 30 independent velocity degrees of freedom, stating whether six belong to a floating base. Provide a parent structure, joint types, axes, body inertias, actuation map and contact assumptions. Explain which accelerations can be prescribed consistently and which base-force equations remain unactuated.
+\item \textbf{Composite Versus Repeated Inverse Dynamics.} Implement composite-inertia accumulation and ancestor projection to form $M$. Compare it with the bias-subtracted RNEA columns and the kinetic-energy construction. Separate the linear composite pass from worst-case quadratic full-matrix output, and identify the zero couplings between independent branches of a fixed-base tree.
+\item \textbf{Compliant Contact and Delivery.} Add a specified nonadhesive compliant contact law to a simple forward-dynamics model. Perform timestep refinement and check contact work and force convergence. Explain how stiffness, damping, effective mass, actuator limits and an event-defined delivery output interact; do not infer numerical stability from the force law alone.
 \end{enumerate}

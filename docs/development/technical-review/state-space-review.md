@@ -71,3 +71,15 @@ Final web-only verification passes all14 views with zero serious/critical axe fi
 
 
 Synchronization: correction444f543700eee25342abe67e158ccc15f5d74330 was replayed as27546db4ca2294ce32ced4bb5614c5c6daeb7d9d onto protected main aee26e0117acc4abddd4af0c5fc32a0e360d9ce4. Only five dependency/workflow files differ from the reviewed correction tree; all chapter artifacts and numerical sources are byte-identical. Those independent main changes update deploy-pages, Jest/html-validate, Hypothesis, Ruff and Pydantic. Local runtimes were not reinstalled for this integration; protected PR CI will exercise pinned dependencies. Focused integration36 passes in26.49s and static34 passes. The initial rebase was blocked by a phantom AGENT_HANDOFF modification: worktree and HEAD object hashes both72d93f07789fa381e4b430ba6cc9e9a728debc8f. Refreshing that index entry cleared it without discarding content. All local QA ended before commit/push.
+
+
+PR #4273 reported a main-branch conflict after independent content-navigation PRs #4267, #4269 and #4271 landed. Integrating protected main5aedc884 with a merge commit (no force push). Conflicts are confined to SPEC changelog rows and handoff status: preserve every independent row and cluster work, retain verified counterfactual publication and current state-space status. Chapter artifacts and numerical sources are unchanged. Combined focused/navigation and static checks are pending. The next recursive chapter has been read completely; #4274 is filed and leased, with its two test changes safely stashed during this integration.
+
+
+Protected-main integration checks pass: 96 state-space/navigation tests in39.47s and all34 static contracts. The state-space print/web/PDF/module/tests remain byte-identical. Every local QA process ended before the merge commit and push.
+
+
+Integration race: the local push process handle disappeared before completion. Remote inspection showed a separate merge commit a71e09d83c341daee14023ad93935ccfcc889614, with parents618ad69d and5aedc884, had reached PR #4273. The local d5964ab4 merge is not claimed pushed. Its reviewed chapter tree is identical to the remote integration; differences are limited to metadata and row order. Preserve the local validation/turnover evidence here, adopt a71e09d8 as the next chapter branch base, and allow existing protected checks to finish without another push or force update. Recursive test changes were restored from their explicit stash.
+
+
+State-space PR #4273 passed protected checks and merged as 7d78f6b036251c91b0d188494ec9c0ec6ebc1fbc at 2026-09-08T05:55:01UTC. Deployment 34192478973 completed successfully at 06:21:08UTC. Issue #4272 is closed and needs no lease renewal.
