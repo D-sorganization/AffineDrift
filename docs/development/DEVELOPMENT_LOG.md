@@ -601,7 +601,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** claude (wave-6 agent W6_3903)
 - **Issue:** `#3903` (epic `#3896`)
-- **PR:** not created (opened against `main` immediately after push)
+- **PR:** [#4267](https://github.com/D-sorganization/AffineDrift/pull/4267) (against `main`)
 - **Branch:** `claude/issue-3903-cluster-gaps`
 - **Paths:** `articles/intentional-constraint-collapse.qmd`, `articles/passive-distributed-control.qmd`, `articles/proximal-distal-a-journey-through-the-swing.qmd`, `articles/proximal-distal-energy-transfer.qmd`, `articles/proximal_distal_energy_transfer/index.qmd`, `resources/research-review-induced-acceleration-analysis.qmd`, `resources/research-review-interaction-forces.qmd`, `articles/secondary-axis-stability.qmd`, `articles/strokes-gained-limitations.qmd`, `articles/impact-mechanics-and-ball-flight.qmd`, `articles/rotation-induced-spin.qmd`, `articles/putting-roll-models.qmd`, `articles/green-simulation.qmd`, `articles/technology-club-fitting.qmd`, `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/technology-launch-monitors.qmd`, `articles/technology-force-measurement.qmd`, `articles/technology-motion-capture.qmd`
 - **Started:** 2026-09-07
