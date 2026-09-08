@@ -73,3 +73,22 @@ def test_is_broken_link_returns_false_for_external_links(tmp_path: Path) -> None
     source.write_text("", encoding="utf-8")
     # External links are normalized to None so should not be broken
     assert not _is_broken_link(root_path=tmp_path, file_path=source, link="https://example.com")
+
+
+def test_main_reports_broken_links_and_exits_one(tmp_path: Path, monkeypatch) -> None:
+    """main() legacy scan should exit 1 when a broken internal link exists."""
+    from src.tools.check_links import main
+
+    (tmp_path / "page.qmd").write_text("[Ghost](ghost.html)\n", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    assert main([]) == 1
+
+
+def test_main_clean_tree_exits_zero(tmp_path: Path, monkeypatch) -> None:
+    """main() legacy scan should exit 0 when no broken links exist."""
+    from src.tools.check_links import main
+
+    (tmp_path / "page.qmd").write_text("[Home](index.html)\n", encoding="utf-8")
+    (tmp_path / "index.qmd").write_text("", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    assert main([]) == 0

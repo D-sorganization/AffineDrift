@@ -113,6 +113,13 @@ jobs:
         run: |
           python3 scripts/check_quarto_xrefs.py --xrefs-only
           python3 scripts/check_quarto_xrefs.py --orphans-only --warn-orphans
+      - name: Verify Site Link Quality (links, path style, related, orphans)
+        # Issue #3899: source-level checks on rendered .qmd sources —
+        # include-aware internal links, page-link path style, Related
+        # Articles coverage, orphan detection. Known baseline violations
+        # are budgeted in config/link_checker_budget.json; anything beyond
+        # budget fails the build. Exit codes: docs/LINK-CHECKER.md.
+        run: python3 -m src.tools.check_links --source-checks
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then

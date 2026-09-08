@@ -31,7 +31,7 @@ from any live state and `abandoned` from `parked`. `shipped` never returns to
 
 ### DL-#3900 · Wire the reference cluster cross-links
 
-- **State:** in_review
+- **State:** shipped (PR #4266 squash-merged to staging 2026-09-08)
 - **Owner:** claude (W6 session)
 - **Issue:** `#3900` (epic `#3896`)
 - **PR:** [#4266](https://github.com/D-sorganization/AffineDrift/pull/4266) (against `staging`)
@@ -40,6 +40,18 @@ from any live state and `abandoned` from `parked`. `shipped` never returns to
 - **Started:** 2026-09-08
 - **Summary:** Added the canonical Related Articles callout to the five reference-cluster pages with inbound links from ten consumer pages so every reference page has >= 3 outbound and >= 3 inbound (non-hub) edges. All relative link targets verified in the worktree.
 - **Next step:** Merge the PR (protected merge closes #3900 via `Fixes #3900`).
+
+### DL-#3899 · Site Link Quality Gate (include-aware links, path style, related coverage, orphans)
+
+- **State:** in_review
+- **Owner:** W3_3899 (claude)
+- **Issue:** #3899 (C3 of epic #3896)
+- **PR:** #4268 (open against `staging`)
+- **Paths:** `src/tools/check_links.py`, `src/tools/utils/link_checks.py`, `src/tools/utils/site_config_utils.py`, `src/tools/utils/link_utils.py`, `config/link_checker_budget.json`, `docs/LINK-CHECKER.md`, `.github/workflows/ci-standard.yml`, `docs/development/QUALITY_GATES_POLICY.md`, `tests/tools/test_link_checks.py`, `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd`
+- **Started:** 2026-09-08
+- **Last verified:** 2026-09-08 (`SELF`)
+- **Summary:** Extends the existing link checker with source-level checks (include-aware internal link resolution, page-link path style, Related-Articles coverage, orphan detection), wired into `ci-standard.yml` with baselines budgeted in `config/link_checker_budget.json` and exit codes documented in `docs/LINK-CHECKER.md`.
+- **Next step:** Merge once protected checks pass (closes #3899).
 
 ## Shipped (Last 90 Days)
 
