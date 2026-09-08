@@ -5,53 +5,52 @@ Keep this file current and concise. Replace instructional placeholders; do not a
 ## Identity
 
 - Repository: `D-sorganization/AffineDrift`
-- Working directory: `C:/tmp/AD_w3901`
-- Branch: `claude/issue-3901-motor-control-cluster` (based on `origin/staging` @ `f6adaa2`)
-- Baseline commit: `f6adaa29277708b8b16a7a59b6cf4a9bbdcf50f5`
+- Working directory: `C:/tmp/AD_w3905`
+- Branch: `claude/issue-3905-reference-cluster` (based on `origin/staging`)
+- Baseline commit: `f6adaa2` (fix(ci): add Bandit SAST and detect-secrets blocking security gates (#3029))
 - Implementation commit: `SELF` — the commit containing this update; resolve with `git rev-parse HEAD`
-- Pull request: `not created` (opened against `staging` immediately after push)
-- Governing issue/epic: `#3901` (part of epic `#3896`, Cross-Article Linking)
+- Pull request: opened against `staging` immediately after this commit (see PR body for number/URL)
+- Governing issue/epic: #3900 (Wire the reference cluster), part of epic #3896 (Cross-Article Linking)
 
 ## Objective and Status
 
-- Objective: Wire the motor-control/neuro content cluster (6 pages with zero outbound links) with a canonical Related Articles component, an explicit standalone-article ↔ book-chapter relation, and resolved theory-part links.
-- Status: `ready for review`
-- Completed: All six cluster pages carry a `## Related Articles` callout (≥5 outbound links each); `articles/passive-distributed-control.qmd` ↔ `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd` link both ways; `articles/nonlinear-control-insights.qmd` "Related Theoretical Sections" Part 1/2/3/5 entries are real page links.
-- Remaining: Merge; add `resources/learning-path-biomechanics.qmd` links once the learning-path pages exist on `staging` (they are on `main` only, see Risks).
+- Objective: Wire the five reference-cluster pages (notation, Lagrangian reference, screw theory reference, rotation representations reference, Physics-of-Golf glossary) into the site graph with the canonical Related Articles component and inbound links from consuming content pages.
+- Status: complete
+- Completed: Related Articles component appended to all five cluster pages (4-6 outbound links each, all targets verified to exist); inbound links added from 10 consumer pages (theory-part1, drifter-manifesto, force-mobility-matrices, null-space-constraint-jacobian, vol0_ch11_lagrangian_mechanics, ch02, ch03, ch05, ch21, ch31). Every cluster member now has >= 3 outbound and >= 3 inbound (non-hub) edges; all relative link targets resolve in the worktree.
+- Remaining: none for this issue; cluster wiring verified.
 
 ## Files and Decisions
 
 - Files changed:
-  - `articles/ideomotor-theory-and-predictive-brain.qmd` — Related Articles (cluster, PoG ch24–26, Volume IV book page)
-  - `articles/passive-distributed-control.qmd` — Related Articles (PoG ch27 counterpart, intentional-constraint-collapse, cluster, Volume III, Reference Books)
-  - `articles/degrees-of-freedom-and-dimensionality.qmd` — Related Articles (cluster, PoG ch25, Volume IV)
-  - `articles/nonlinear-control-insights.qmd` — Related Theoretical Sections converted to real links (theory-part1/2/3/5.html); Related Articles added
-  - `books/human-motor-control.qmd` — Related Articles (article companions for its ch1/2/5/6/7, PoG ch24–26, Volume III)
-  - `books/biomechanics-biology-to-systems.qmd` — Related Articles (cluster, PoG ch26, Volume IV)
-  - `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd` — Companion Article callout linking back to the standalone article (reciprocal of the article→chapter link)
+  - `articles/lagrangian-reference.qmd`, `articles/screw-theory-reference.qmd`, `articles/rotation-representations-reference.qmd`, `pages/notation-conventions.qmd`, `articles/The_Physics_of_Golf/quarto/glossary.qmd` — appended canonical `## Related Articles` callout (same `::: {.callout-note}` See-Also pattern used by theory parts/manifesto).
+  - `articles/theory-part1.qmd`, `articles/drifter-manifesto.qmd` — See-Also bullets to lagrangian-reference, notation-conventions, PoG glossary.
+  - `articles/force-mobility-matrices.qmd`, `articles/null-space-constraint-jacobian.qmd` — screw-theory-reference links.
+  - `articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.qmd` — Related Articles to lagrangian-reference + notation-conventions.
+  - `articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.qmd`, `ch03_double_pendulum.qmd`, `ch05_affine_structure.qmd` — glossary/notation/lagrangian-reference links.
+  - `articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.qmd`, `ch31_swing_plane_launch.qmd` — rotation-representations-reference links.
+  - `docs/development/DEVELOPMENT_LOG.md` — new DL-#3900 entry.
 - Key decisions:
-  - Canonical component mirrored from `articles/theory-part1.qmd`: `## Related Articles` + `::: {.callout-note}` `## See Also` bulleted markdown links. No new include was introduced (the site has no shared related-articles include; DRY handled by copying the exact existing markup pattern).
-  - Theory Parts 1/2/3/5 use resolved page links (`theory-partN.html`) rather than `@sec-` cross-page refs, matching `articles/zero-torque-counterfactual.qmd` practice and avoiding cross-page crossref fragility.
-  - `resources/learning-path-biomechanics.qmd` (named in the issue) does NOT exist on `staging` — it exists on `main` (added in `0d3db91`). Linking it would 404 the staging build, so `resources/resources-books.html#biomechanics` (existing, anchor verified) is used as the biomechanics resource target instead.
-  - `scripts/link-checker.py` intentionally untouched (owned by a sibling agent).
-- User-owned or unrelated worktree changes: `none observed`
+  - Used the repo's existing `### Related Articles` / `::: {.callout-note}` See-Also pattern (theory parts, drifter-manifesto) rather than inventing a new component — DRY.
+  - Links to `pages/` use root-absolute `/pages/notation-conventions.html` (matches existing ch03 preface convention); sibling-article links use directory-relative paths (matches ch06/ch07 `../../` convention).
+  - Issue scope item 3 (add front matter to `pages/notation.qmd`) was already satisfied upstream: the file now lives at `pages/notation-conventions.qmd` with `title:`/`description:` front matter; no change needed.
+  - Deliberately did NOT touch `scripts/link-checker.py` (sibling-owned) or the motor-control cluster.
+- User-owned or unrelated worktree changes: none observed.
 
 ## Validation
 
-- Inline Python link audit (ad-hoc, not committed) over the 7 changed files — 106 relative links checked; every `.html` target resolves to an existing `.qmd` source in the worktree; `#biomechanics` anchor present in `resources/resources-books.qmd`. Result: `ALL TARGETS EXIST`.
-- Outbound relative links per page: ideomotor 7, passive-distributed-control 6, degrees-of-freedom 5, nonlinear-control-insights 8, human-motor-control 7, biomechanics 5 (issue gate: ≥3 each). Inbound from non-hub content pages: every cluster page ≥2.
-- Not run locally: Quarto render (Quarto not installed in this environment); CI renders the site.
+- Worktree acceptance check (inline script): outbound >= 3 and non-hub inbound >= 3 per cluster page, every relative target resolved to an existing file — 5/5 PASS (see PR body for exact counts and commands).
+- `python scripts/check_quarto_xrefs.py` — exits 0; unresolved-@sec- and orphan-page findings are pre-existing baseline conditions in files not touched by this change (verified no touched file appears in the error list).
+- No automated test enforces the link-minimum acceptance criteria; evidence is the RED/GREEN edge-count check in the PR body.
 
 ## Blockers and Risks
 
-- Blockers: `none`
-- Risks/assumptions: learning-path links deferred until `resources/learning-path-*.qmd` land on `staging`; the staging/main divergence is documented in the PR body.
+- Blockers: none
+- Risks/assumptions: root-absolute `/pages/...` links rely on Quarto site-url rewriting (same assumption as the existing ch03 preface link). Link checker CI will confirm; flagged in PR body for review.
 
 ## Next Steps
 
-1. Open PR to `staging` (`Fixes #3901`) and monitor CI render once.
-2. After the learning-path pages merge to `staging`, swap the Reference Books link in `articles/passive-distributed-control.qmd` for `resources/learning-path-biomechanics.html`.
+1. Merge PR (Fixes #3900) so the protected merge closes the issue; then wire the remaining clusters of epic #3896 per their own leases.
 
 ## Change Log
 
-- `SELF` — Initial handoff for issue #3901: motor-control cluster cross-linking wired and verified.
+- `SELF` — Reference cluster wired: Related Articles components added to all five reference pages; inbound links added from ten consumer pages; DEVELOPMENT_LOG DL-#3900 created.
