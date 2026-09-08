@@ -12,6 +12,19 @@
 
 Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 
+## Build-Section Lateral Links: #3902
+
+- Branch `claude/issue-3902-models-lateral` (base `1ce02d7`) adds the canonical
+  markdown `## Related Articles` component to all 8 `models/*.qmd` and all 6
+  `repositories/*.qmd` pages, plus `pages/tools.qmd` and
+  `articles/upstreamdrift-educational-integration.qmd`, `articles/rotation-converter.qmd`
+  and `articles/proximal-distal-model-workbench.qmd` — 177 new relative markdown
+  content links, every model↔repository pair bidirectional, every target verified to
+  exist in the worktree.
+- `articles/technology-heavy-hit-impact-coupling.qmd` is intentionally untouched:
+  PR #4267 (issue #3903, sibling branch) adds the model-interchange links on that
+  branch; do not duplicate them here.
+
 ## Technical Content Review
 
 - Active #4272 on fix/4272-state-space-rigor: both complete editions and all15 exercises corrected. Full root4562 passes/29 skips/131 deselections, coverage92.7074%; new module50/50 statements. Focused36, mypy83, static34, title628 and content130/four skips pass. All14 final print chapter pages plus contents/index/bibliography,93 section views,85 targets,24 equation edges and13 repair views inspected. Final14-view verifier passes; zero serious/critical axe findings and no inline-math overflow. Keyboard diagram scrolling reaches both ends. All local QA jobs have ended. See state-space-review.md for exact derivations, source boundaries and caught failures. Replay only new commits after d633fe3d onto protected main before first push. Claim expires2026-09-08T04:46:06UTC.
@@ -125,6 +138,13 @@ Updated: 2026-09-07. Current-state only; use Git and GitHub for history.
 - Regenerate controlled outputs from canonical source, run exact-head gates,
   and verify the protected merge plus post-merge deployment before claiming
   publication.
+- PR #4271 (series navigation sidebars, tangent-space cluster, issue #3904)
+  branch repair 2026-09-08: regenerated stale trust-surface/claim-audit
+  digests (`python -m scripts.regenerate_claim_audit_evidence`), replaced the
+  raw `::: {.callout-note}` fenced div in `articles/affine-nature-golf-swing.qmd`
+  that fails `test_target_pages_do_not_use_raw_fenced_div_markers`, and added
+  the #4271 SPEC.md change-log row. Focused suites
+  (textbook quality, trust surface, claim audit, series navigation) pass locally.
 
 ## Website and Companion Program
 
