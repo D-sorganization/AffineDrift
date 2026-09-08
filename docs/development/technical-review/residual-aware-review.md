@@ -261,3 +261,13 @@ in the new teaching helper are covered. No local test, render or browser-QA
 process remains running before staging; the deliberate server/browser can stay
 available. Protected PR integration and live publication are next. The broader
 405-source corpus remains unfinished.
+
+## Protected Integration
+
+Commit 4e2444e8 passed ordinary commit hooks and was replayed alone onto protected
+main 982be51d, yielding 16b1ba474602af3f0f84c90d482aaaa15945b990. The entire tree
+is byte-identical across the replay, including all four sources, both bibliography
+files, code, tests and CSS. No conflicts or force push were needed. The first
+rebase was stopped by a phantom handoff modification; its empty diff and identical
+Git object hashes were checked before refreshing the index. No QA process was
+active during either commit or replay. The codex lease expires 18:25:42 UTC.

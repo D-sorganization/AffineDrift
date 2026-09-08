@@ -32,7 +32,7 @@ Updated: 2026-09-08. Current-state only; use Git and GitHub for history.
 
 ## Technical Content Review
 
-- Active #4286 on fix/4286-residual-aware-rigor (base 113a63a5): all four connected sources corrected and fully inspected. Focused116, content130/four skips, static34, mypy86, responsive56 and final expanded-panel10 pass. Root4769 passes/one public-link failure repaired; exact evidence in docs/development/technical-review/residual-aware-review.md. Local QA ended. Commit then replay only #4286 commits after113a63a5 onto protected main before first push. Protected PR/publication pending. Corpus unfinished; no commit/push/switch during QA.
+- Active #4286 on fix/4286-residual-aware-rigor (base 113a63a5): all four connected sources corrected and fully inspected. Focused116, content130/four skips, static34, mypy86, responsive56 and final expanded-panel10 pass. Root4769 passes/one public-link failure repaired; exact evidence in docs/development/technical-review/residual-aware-review.md. Local QA ended. Commit4e2444e8 replayed alone onto protected main982be51d as16b1ba47 with an identical full tree. Ordinary push and protected PR are next. Claim expires18:25:42UTC. Protected PR/publication pending. Corpus unfinished; no commit/push/switch during QA.
 
 - Spine #4283 / PR #4285 protected-merged and published as982be51d6f5bff1d6d81e671cf92e8037332d6cd. Protected-main CI34242259382, all textbooks34242260283 and deployment34242259512 succeed. Exact live artifact10064015023 passes956/956 across239 routes, zero serious/critical axe findings, retries or transient responses. Full paired-edition derivations and local evidence remain in docs/development/technical-review/spine-review.md. Closed issue needs no lease renewal.
 
