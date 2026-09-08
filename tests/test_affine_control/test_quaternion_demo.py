@@ -174,3 +174,82 @@ def test_point_cloud_interpolation_returns_one_frame_each() -> None:
     # A rigid rotation preserves every pairwise distance.
     for frame in frames:
         np.testing.assert_allclose(np.linalg.norm(frame[0] - frame[1]), math.sqrt(2.0), atol=1e-12)
+
+
+@pytest.mark.parametrize("scale", [3.0, -2.0, 1e300, 1e-300])
+def test_scaled_quaternion_rotation_preserves_vector_lengths(scale: float) -> None:
+    """All rotation entry points must agree on finite nonzero quaternion scaling."""
+    quaternion = scale * np.array([0.5, 0.5, 0.5, 0.5])
+    vector = np.array([2.0, -3.0, 5.0])
+    rotated = qd.rotate(quaternion, vector)
+    np.testing.assert_allclose(rotated, [5.0, 2.0, -3.0], atol=1e-12)
+    np.testing.assert_allclose(qd.to_matrix(quaternion) @ vector, rotated, atol=1e-12)
+    assert np.linalg.norm(qd.normalize(quaternion)) == pytest.approx(1.0)
+
+
+@pytest.mark.parametrize(
+    "invalid", [[1, 0, 0], [[1, 0, 0, 0]], [math.nan, 0, 0, 0], [math.inf, 0, 0, 0]]
+)
+def test_quaternion_shape_and_finiteness(invalid: list) -> None:
+    """Invalid stored orientations must be rejected rather than becoming NaNs."""
+    with pytest.raises(ValueError):
+        qd.normalize(np.asarray(invalid))
+
+
+@pytest.mark.parametrize("axis", [[0, 0, 0], [1, 0], [math.inf, 0, 0]])
+def test_axis_angle_rejects_invalid_axis(axis: list[float]) -> None:
+    with pytest.raises(ValueError):
+        qd.from_axis_angle(np.array(axis), 0.3)
+
+
+@pytest.mark.parametrize("angle", [math.nan, math.inf])
+def test_axis_angle_requires_finite_angle(angle: float) -> None:
+    with pytest.raises(ValueError):
+        qd.from_axis_angle(np.array([1.0, 0.0, 0.0]), angle)
+
+
+@pytest.mark.parametrize("fraction", [-0.1, 1.1, math.nan, math.inf])
+def test_slerp_has_an_explicit_interpolation_domain(fraction: float) -> None:
+    with pytest.raises(ValueError):
+        qd.slerp(np.array([1.0, 0.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0, 0.0]), fraction)
+
+
+def test_antipodal_representatives_describe_a_stationary_rotation() -> None:
+    quaternion = np.array([0.5, 0.5, 0.5, 0.5])
+    for fraction in np.linspace(0, 1, 7):
+        np.testing.assert_allclose(qd.slerp(quaternion, -quaternion, fraction), quaternion)
+
+
+@pytest.mark.parametrize("axis", AXES)
+@pytest.mark.parametrize("angle", [0.0, 1e-12, 0.7, math.pi - 1e-12, math.pi, math.pi + 1e-12])
+def test_matrix_conversion_round_trip_including_half_turns(axis: np.ndarray, angle: float) -> None:
+    """SciPy provides independent matrices; the result must reproduce their action."""
+    from scipy.spatial.transform import Rotation
+
+    matrix = Rotation.from_rotvec(angle * axis / np.linalg.norm(axis)).as_matrix()
+    quaternion = qd.from_matrix(matrix)
+    assert np.isfinite(quaternion).all()
+    assert np.linalg.norm(quaternion) == pytest.approx(1.0)
+    np.testing.assert_allclose(qd.to_matrix(quaternion), matrix, atol=1e-12)
+
+
+@pytest.mark.parametrize(
+    "matrix", [np.diag([1.0, 1.0, -1.0]), np.eye(3) * 2, np.eye(4), np.full((3, 3), math.nan)]
+)
+def test_matrix_conversion_rejects_nonrotations(matrix: np.ndarray) -> None:
+    with pytest.raises(ValueError):
+        qd.from_matrix(matrix)
+
+
+@pytest.mark.parametrize("frames", [0, 1, -1, 2.5, True])
+def test_point_cloud_requires_at_least_two_integer_frames(frames: int) -> None:
+    identity = np.array([1.0, 0.0, 0.0, 0.0])
+    with pytest.raises(ValueError):
+        qd.interpolate_point_cloud(np.eye(3), identity, identity, frames)
+
+
+@pytest.mark.parametrize("points", [np.ones(3), np.ones((2, 4)), np.full((2, 3), math.nan)])
+def test_point_cloud_requires_finite_three_dimensional_points(points: np.ndarray) -> None:
+    identity = np.array([1.0, 0.0, 0.0, 0.0])
+    with pytest.raises(ValueError):
+        qd.interpolate_point_cloud(points, identity, identity, 3)

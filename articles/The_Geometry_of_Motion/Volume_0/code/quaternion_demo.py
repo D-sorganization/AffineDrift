@@ -17,10 +17,28 @@ from numpy.typing import NDArray
 
 type Array = NDArray[np.float64]
 
-# Below this angle the small-angle expansion of SLERP is better conditioned
-# than the closed form: sin(Omega) appears in a denominator, so the closed form
-# loses precision as the two quaternions approach each other.
+# Above this sign-aligned dot product, use normalized linear interpolation.
+# It approximates SLERP near coincident endpoints without dividing by sin(Omega).
 SLERP_LINEAR_THRESHOLD = 1.0 - 1.0e-9
+ROTATION_TOLERANCE = 1.0e-10
+
+
+def _finite_vector(value: Array, size: int, name: str) -> Array:
+    """Validate a vector before applying the chapter's algebra."""
+    vector = np.asarray(value, dtype=float)
+    if vector.shape != (size,) or not np.isfinite(vector).all():
+        raise ValueError(f"{name} must be a finite vector of length {size}")
+    return vector
+
+
+def _unit_vector(value: Array, size: int, name: str) -> Array:
+    """Normalize after scaling to avoid overflow and underflow in the norm."""
+    vector = _finite_vector(value, size, name)
+    scale = float(np.max(np.abs(vector)))
+    if scale == 0.0:
+        raise ValueError(f"the zero {name} cannot be normalized")
+    scaled = vector / scale
+    return scaled / np.linalg.norm(scaled)
 
 
 def hamilton_product(p: Array, q: Array) -> Array:
@@ -29,8 +47,8 @@ def hamilton_product(p: Array, q: Array) -> Array:
     Both arguments are ordered [w, x, y, z]. The product is not commutative;
     ``hamilton_product(p, q)`` applies ``q`` first, then ``p``.
     """
-    pw, px, py, pz = p
-    qw, qx, qy, qz = q
+    pw, px, py, pz = _finite_vector(p, 4, "quaternion")
+    qw, qx, qy, qz = _finite_vector(q, 4, "quaternion")
     return np.array(
         [
             pw * qw - px * qx - py * qy - pz * qz,
@@ -42,17 +60,13 @@ def hamilton_product(p: Array, q: Array) -> Array:
 
 
 def normalize(q: Array) -> Array:
-    """Project onto the unit sphere, which is where rotations live."""
-    norm = float(np.linalg.norm(q))
-    if norm == 0.0:
-        msg = "the zero quaternion represents no rotation and cannot be normalised"
-        raise ValueError(msg)
-    return q / norm
+    """Normalize a finite nonzero quaternion; q and -q represent one rotation."""
+    return _unit_vector(q, 4, "quaternion")
 
 
 def conjugate(q: Array) -> Array:
     """For a unit quaternion this is also the inverse."""
-    w, x, y, z = q
+    w, x, y, z = _finite_vector(q, 4, "quaternion")
     return np.array([w, -x, -y, -z])
 
 
@@ -62,7 +76,9 @@ def from_axis_angle(axis: Array, angle: float) -> Array:
     Note the half-angle: a quaternion covers SO(3) twice, so q and -q are the
     same rotation.
     """
-    unit = normalize(np.asarray(axis, dtype=float))
+    if not np.isfinite(angle):
+        raise ValueError("angle must be finite and expressed in radians")
+    unit = _unit_vector(axis, 3, "axis")
     return np.concatenate([[np.cos(angle / 2.0)], np.sin(angle / 2.0) * unit])
 
 
@@ -79,9 +95,47 @@ def to_matrix(q: Array) -> Array:
 
 
 def rotate(q: Array, v: Array) -> Array:
-    """Rotate a vector by the sandwich product q v q*, without forming a matrix."""
-    pure = np.concatenate([[0.0], np.asarray(v, dtype=float)])
-    return hamilton_product(hamilton_product(q, pure), conjugate(q))[1:]
+    """Normalize q, then rotate a finite vector by the unit sandwich product."""
+    unit = normalize(q)
+    pure = np.concatenate([[0.0], _finite_vector(v, 3, "point")])
+    return hamilton_product(hamilton_product(unit, pure), conjugate(unit))[1:]
+
+
+def from_matrix(matrix: Array) -> Array:
+    """Convert a proper rotation using the largest quaternion component.
+
+    Finite 3-by-3 inputs must satisfy orthogonality and determinant +1 within
+    ROTATION_TOLERANCE. This checks a representation; it does not fit noisy data.
+    The selected component is nonnegative. Signs can change between samples,
+    so a time series needs a separate continuity choice.
+    """
+    value = np.asarray(matrix, dtype=float)
+    if value.shape != (3, 3) or not np.isfinite(value).all():
+        raise ValueError("matrix must be finite with shape (3, 3)")
+    if not np.allclose(value.T @ value, np.eye(3), atol=ROTATION_TOLERANCE, rtol=0):
+        raise ValueError("matrix must be orthogonal")
+    if not np.isclose(np.linalg.det(value), 1, atol=ROTATION_TOLERANCE, rtol=0):
+        raise ValueError("matrix must have determinant +1")
+    trace = float(np.trace(value))
+    squares = np.r_[1 + trace, 1 + 2 * np.diag(value) - trace] / 4
+    selected = int(np.argmax(squares))
+    result = np.zeros(4)
+    result[selected] = np.sqrt(squares[selected])
+    divisor = 4 * result[selected]
+    if selected == 0:
+        result[1:] = (
+            np.array(
+                [value[2, 1] - value[1, 2], value[0, 2] - value[2, 0], value[1, 0] - value[0, 1]]
+            )
+            / divisor
+        )
+    else:
+        i = selected - 1
+        j, k = (i + 1) % 3, (i + 2) % 3
+        result[0] = (value[k, j] - value[j, k]) / divisor
+        result[j + 1] = (value[j, i] + value[i, j]) / divisor
+        result[k + 1] = (value[k, i] + value[i, k]) / divisor
+    return normalize(result)
 
 
 def slerp(q0: Array, q1: Array, t: float) -> Array:
@@ -97,6 +151,8 @@ def slerp(q0: Array, q1: Array, t: float) -> Array:
       closed form loses precision, so below a threshold we fall back to
       normalised linear interpolation, which agrees to first order.
     """
+    if not np.isfinite(t) or not 0 <= t <= 1:
+        raise ValueError("interpolation fraction must be finite and in [0, 1]")
     a = normalize(np.asarray(q0, dtype=float))
     b = normalize(np.asarray(q1, dtype=float))
 
@@ -109,16 +165,21 @@ def slerp(q0: Array, q1: Array, t: float) -> Array:
 
     omega = float(np.arccos(np.clip(dot, -1.0, 1.0)))
     sin_omega = np.sin(omega)
-    return (np.sin((1.0 - t) * omega) / sin_omega) * a + (np.sin(t * omega) / sin_omega) * b
+    return np.asarray(
+        (np.sin((1.0 - t) * omega) / sin_omega) * a + (np.sin(t * omega) / sin_omega) * b,
+        dtype=float,
+    )
 
 
 def interpolate_point_cloud(points: Array, q0: Array, q1: Array, frames: int) -> list[Array]:
     """Carry a point cloud through the interpolated frames.
 
-    Returns one rotated copy of ``points`` per frame, which is what the
-    chapter's visualisation plots.
+    Returns one rotated copy of ``points`` per sample, including both endpoints.
+    Plotting these arrays is a separate operation.
     """
-    return [
-        (to_matrix(slerp(q0, q1, t)) @ np.asarray(points, dtype=float).T).T
-        for t in np.linspace(0.0, 1.0, frames)
-    ]
+    if isinstance(frames, bool) or not isinstance(frames, (int, np.integer)) or frames < 2:
+        raise ValueError("frames must be an integer of at least two")
+    values = np.asarray(points, dtype=float)
+    if values.ndim != 2 or values.shape[1] != 3 or not np.isfinite(values).all():
+        raise ValueError("points must be a finite array with shape (n, 3)")
+    return [(to_matrix(slerp(q0, q1, t)) @ values.T).T for t in np.linspace(0.0, 1.0, frames)]

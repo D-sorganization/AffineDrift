@@ -271,3 +271,7 @@ files, code, tests and CSS. No conflicts or force push were needed. The first
 rebase was stopped by a phantom handoff modification; its empty diff and identical
 Git object hashes were checked before refreshing the index. No QA process was
 active during either commit or replay. The codex lease expires 18:25:42 UTC.
+
+## Protected Publication: Residual #4286
+
+PR #4287 passed protected checks and merged as10d4e7cb9de4633022e5cd93885cb54aca8a34ba at16:50:25UTC. Main CI34253504820 and deployment34253504940 succeed. Exact live artifact10068131804 passes956/956 across239 public routes, zero serious/critical axe findings, retries or transient responses. Textbook run34253504790 attempt1 compiled every volume, but Physics artifact finalization received an intermediary403. Its failed-job-only rerun succeeds; attempt2 is green. No source change or bypass was required. The issue is closed and needs no lease renewal. Continue the unfinished corpus under #4009/#4021; active paired rotations #4288 is not yet published.

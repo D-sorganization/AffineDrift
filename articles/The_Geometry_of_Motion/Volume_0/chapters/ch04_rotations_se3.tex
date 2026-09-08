@@ -1,899 +1,629 @@
-% ==========================================================================
-%  Chapter 4: Rotations, Quaternions, and SO(3)
-% ==========================================================================
 \chapter{Rotations, Quaternions, and SO(3)}
 \label{ch:rotations}
 
-\epigraph{%
-  The tragedy of Euclidean space is that it works perfectly until you spin.
-}{}
 
-\begin{laymansbox}{Context \& Use Case: The Problem with Spinning}{context_box}
-\textbf{The Math You Will See:} We introduce \textbf{Rotation Matrices} ($\mathbf{R}$), the \textbf{Special Orthogonal Group} $\SO(3)$, and \textbf{Quaternions} ($\mathbf{q}$).
-\textbf{Why We Need It:} Moving a robot arm up, down, left, or right is easy; you just add numbers to $X, Y, Z$. But calculating what happens when a drone performs a backflip while spinning like a top is a mathematical nightmare. The most intuitive way to track rotation (Euler angles like Roll, Pitch, Yaw) literally breaks the laws of math in certain positions, causing flight controllers to crash. To solve this, we must map rotations using completely different objects: $3 \times 3$ matrices and 4-dimensional Quaternions.
-\textbf{All Variables Defined:} $\mathbf{R} \in \SO(3)$ is a rotation matrix, and $\mathbf{q} \in \Reals^4$ is a quaternion.
-\end{laymansbox}
+A golfer's clubface orientation, a robot's hand orientation and a walking model's foot orientation all require more than a point in space. Two bodies can occupy the same position and face different directions. Conversely, changing the numbers used to describe an orientation need not change the physical body at all. This chapter separates the orientation, its coordinates, its rate of change and its effect on a task.
 
-\index{rotation!history!Euler}
-\index{rotation!history!Hamilton}
+We use right-handed frames and column vectors. Every formula states which frame supplies its components and which multiplication order it uses. These conventions are essential: a transposed rotation can still be orthogonal, have determinant one and look numerically reasonable while transforming a clubface in the wrong direction. Representation checks and physical interpretation must work together.
+
 \section{Historical Context: From Euler to Hamilton}
 \label{sec:rotation_history}
+\label{laymans:context_box}
+\index{rotation!history!Euler}
+\index{rotation!history!Hamilton}
 
-The mathematics of 3D rotation has been refined over centuries by some of history's greatest mathematicians. In \textbf{1775}, Leonhard Euler published his groundbreaking \emph{Euler's Rotation Theorem}, establishing that any finite rotation in 3D space can be described as a single rotation about a fixed axis by some angle—a foundational geometric insight that remains central to modern rotation calculus.
+Euler's rotation theorem describes a finite proper rotation by an axis and an angle. Rodrigues' 1840 memoir studied rigid displacements~\cite{rodrigues1840}. Hamilton's letter to Graves dated 17 October 1843 records the preceding day's discovery of quaternion algebra; the letter was published in 1844~\cite{HamiltonQuaternionLetterReview}. These are related developments, not interchangeable inventions of the modern matrix notation.
 
-However, Euler's representation (axis-angle form) requires solving nonlinear equations and computing trigonometric functions. In \textbf{1843}, the Irish mathematician \textbf{William Rowan Hamilton} invented \textbf{Quaternions} ($\mathcal{H}$), an extension of complex numbers to four dimensions. Quaternions elegantly encode rotations as multiplication operations on 4-tuples, bypassing the singularities that plague other representations. Almost simultaneously, \textbf{Olinde Rodrigues} (1795–1853) derived the famous \textbf{Rodrigues rotation formula}, expressing how a vector rotates about an axis—a result that connects Euler's axis-angle theorem to matrix algebra.
+Matrices, axis-angle descriptions and unit quaternions represent the same orientations with different constraints and ambiguities. Their computational value depends on the operation. A matrix applies directly to a collection of vectors; a quaternion gives compact constrained storage; a local rotation vector is useful for perturbations. None makes dynamics linear, guarantees a controller's stability or removes the need to identify the body's actual motion.
 
-These three frameworks—rotation matrices, quaternions, and axis-angle representations—are \emph{mathematically equivalent} but offer different computational and conceptual advantages. Modern robotics and computer graphics employ all three, often switching between them fluidly.
-
-\index{coordinate frame!body frame}
-\index{coordinate frame!spatial frame}
 \section{The Coordinate Frame}
 \label{sec:coordinate_frame}
+\index{coordinate frame!body frame}
+\index{coordinate frame!spatial frame}
 
-When we model movement or control robotic systems, we are not looking at the physical object itself; we are tracking a \textbf{Coordinate Frame} rigidly attached to the object, often denoted as the Body Frame ($\{b\}$).
+Let $\{s\}$ be a chosen spatial or laboratory frame and $\{b\}$ a frame rigidly attached to a modeled body. The laboratory frame is a reference, not an absolute stationary universe. For inertial dynamics we must either choose an adequate inertial approximation or account for the reference frame's acceleration. The kinematic transformations below do not themselves assert that a frame is inertial.
 
-\begin{figure}[htb]
+Write $R=R_{sb}$ for the orientation of $\{b\}$ expressed in $\{s\}$. For a geometric vector with component columns $v_b$ and $v_s$,
+\begin{equation}
+ v_s=R_{sb}v_b,\qquad v_b=R_{sb}^Tv_s.
+ \label{eq:frame_vector_rotation}
+\end{equation}
+If $p_{sb}$ is the body origin's spatial position and $r_b$ is a point's body-relative position, the point's spatial position is $x_s=p_{sb}+R_{sb}r_b$. A direction such as a face normal transforms with $R$ alone; a point generally also requires the translation.
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.2]
-  % Spatial frame
-  \draw[->,thick,black] (0,0,0) -- (2,0,0) node[anchor=north] {$x_s$};
-  \draw[->,thick,black] (0,0,0) -- (0,2,0) node[anchor=east] {$y_s$};
-  \draw[->,thick,black] (0,0,0) -- (0,0,2) node[anchor=south] {$z_s$};
-
-  % Body frame (rotated)
-  \draw[->,thick,blue] (2.5,0.5,0.5) -- (3.8,0,0.3) node[anchor=north,xshift=0.3cm] {$x_b$};
-  \draw[->,thick,blue] (2.5,0.5,0.5) -- (2.2,1.5,0) node[anchor=south,xshift=-0.2cm] {$y_b$};
-  \draw[->,thick,blue] (2.5,0.5,0.5) -- (2.3,0.2,1.8) node[anchor=south] {$z_b$};
-
-  % Position vector
-  \draw[->,thick,red,dashed] (0,0,0) -- (2.5,0.5,0.5) node[anchor=south west] {$\mathbf{p}$};
-
-  % Labels
-  \node at (0,-0.5,-0.5) {Spatial Frame};
-  \node at (2.5,0.5,1.3) {Body Frame};
-\end{tikzpicture}
-\caption{Spatial and body frames: The spatial frame is fixed in the world; the body frame is rigidly attached to a moving object. The relationship between them is encoded by a rotation matrix $\mathbf{R}$ and a position vector $\mathbf{p}$.}
+\includegraphics[width=\linewidth]{../figures/rotation_frames_review.pdf}
+\caption{Spatial and Body Frames With a Declared Component Map. The Body Axes Are the Columns of R; the Origin Offset Is p.}
 \label{fig:coordinate_frames}
 \end{figure}
 
-To know where the Body Frame $\{b\}$ is relative to the absolute stationary universe—the Spatial (or World) Frame ($\{s\}$)—we must define two mathematical properties:
-\begin{enumerate}
-    \item The \textbf{translation} vector $\mathbf{p} \in \Reals^3$ pointing from the origin of $\{s\}$ to the origin of $\{b\}$.
-    \item The \textbf{rotation} of the axes of $\{b\}$ relative to the axes of $\{s\}$.
-\end{enumerate}
+For a third frame, $R_{sc}=R_{sb}R_{bc}$. The inner frame subscripts match because $R_{bc}$ first produces body components, which $R_{sb}$ then converts to spatial components. The same matrix can also act as an active rotation on a vector while retaining its coordinate frame. State which interpretation applies; an active rotation and a passive component change use related algebra but describe different operations~\cite{Lynch2017}.
 
-Unlike the straightforward $(X, Y, Z)$ translation vector, rotation is mathematically subtle and surprisingly difficult to parameterize.
+If a spatial rotation increment $Q_s$ acts on a body orientation, $R^+=Q_sR$. If the increment is expressed about the current body axes, $R^+=RQ_b$. Their equality for the same physical increment requires $Q_s=RQ_bR^T$. This is the source of the intrinsic/extrinsic convention distinctions used below.
 
-\index{rotation matrix!definition}
 \section{Rotation Matrices: From First Principles}
 \label{sec:rotation_matrices}
+\index{rotation matrix!definition}
 
 \subsection{What Is a Rotation Matrix?}
 
-To represent a rotation, we examine the three orthonormal basis vectors (axes) of the body frame $\{b\}$: the unit vectors $\hat{\mathbf{x}}_b, \hat{\mathbf{y}}_b,$ and $\hat{\mathbf{z}}_b$, each expressed in the coordinates of the spatial frame $\{s\}$. Stack these three column vectors side-by-side:
-
+The columns of $R_{sb}$ are the three unit body axes expressed in spatial components:
 \begin{equation}
-\label{eq:rotation_matrix_def}
-   \mathbf{R} = \begin{bmatrix} | & | & | \\ \hat{\mathbf{x}}_b & \hat{\mathbf{y}}_b & \hat{\mathbf{z}}_b \\ | & | & | \end{bmatrix} \in \Reals^{3 \times 3}
+ R_{sb}=\begin{bmatrix}|&|&|\\ \hat x_b^s&\hat y_b^s&\hat z_b^s\\|&|&|\end{bmatrix}.
+ \label{eq:rotation_matrix_def}
 \end{equation}
-
-This is a \textbf{Rotation Matrix}. Each column is a unit vector, and any two columns are orthogonal to each other. This orthonormality is the key property.
+They are columns, not vertically stacked row vectors. Thus $Re_1$ is the body's first axis in the spatial frame. Orthonormal columns imply $R^TR=I$, so $R^{-1}=R^T$ and $\|Rv\|_2=\|v\|_2$. Requiring $\det R=1$ preserves handedness. An orthogonal matrix of determinant $-1$ reverses orientation and is not a proper rotation.
 
 \subsection{Orthonormality Constraints}
+\label{thm:orthonormality}
 
-\begin{theorem}{Orthonormality Conditions}{orthonormality}
-A matrix $\mathbf{R} \in \Reals^{3 \times 3}$ is a valid rotation matrix if and only if:
-\begin{enumerate}
-    \item \textbf{Orthogonality:} $\mathbf{R}^T \mathbf{R} = \mathbf{I}$, which means $\mathbf{R}^{-1} = \mathbf{R}^T$.
-    \item \textbf{Determinant Constraint:} $\det(\mathbf{R}) = +1$.
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-Let $\mathbf{R} = [\mathbf{c}_1 \mid \mathbf{c}_2 \mid \mathbf{c}_3]$, where $\mathbf{c}_i$ are the columns. The product $\mathbf{R}^T \mathbf{R}$ yields a $3 \times 3$ matrix whose $(i,j)$ entry is $\mathbf{c}_i^T \mathbf{c}_j$. For this to equal $\mathbf{I}$:
-\begin{itemize}
-    \item Diagonal: $\mathbf{c}_i^T \mathbf{c}_i = 1$ for each $i$ (each column is unit length).
-    \item Off-diagonal: $\mathbf{c}_i^T \mathbf{c}_j = 0$ for $i \neq j$ (columns are mutually orthogonal).
-\end{itemize}
-These are exactly 6 independent constraints on the 9 matrix entries, leaving $9 - 6 = 3$ degrees of freedom.
-
-The determinant condition $\det(\mathbf{R}) = 1$ distinguishes \emph{proper rotations} (right-handed orientation preserving) from reflections, which would have $\det(\mathbf{R}) = -1$.
-\end{proof}
+The three unit-length equations and three pairwise orthogonality equations impose six independent scalar constraints at an orthogonal matrix. Independence needs a derivative argument, supplied in the manifold section; counting equations alone is insufficient. The determinant condition selects one component of the orthogonal group. It does not reduce its local dimension by one more.
 
 \subsection{The Three Elementary Rotation Matrices}
-
-Any rotation in 3D can be decomposed into rotations about the principal axes. We derive the three elementary rotation matrices.
-
+\label{thm:rotation_x_axis}
+\label{thm:rotation_y_axis}
+\label{thm:rotation_z_axis}
 \index{rotation matrix!Rx}
-\begin{theorem}{Rotation About the \texorpdfstring{$x$}{x}-Axis}{rotation_x_axis}
-A rotation by angle $\theta$ about the $x$-axis, with the rotation viewed as right-hand rule (counterclockwise when looking from positive $x$ toward the origin), is given by:
-\begin{equation}
-\label{eq:Rx}
-\mathbf{R}_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix}
-\end{equation}
-
-\textbf{Geometric Interpretation:}
-\begin{itemize}
-    \item \textbf{Column 1:} $[1, 0, 0]^T$ is the $x$-axis, unchanged by rotation about itself.
-    \item \textbf{Column 2:} $[0, \cos\theta, \sin\theta]^T$ is where the original $y$-axis rotates to.
-    \item \textbf{Column 3:} $[0, -\sin\theta, \cos\theta]^T$ is where the original $z$-axis rotates to.
-\end{itemize}
-\end{theorem}
-
-\begin{derivation}
-The $x$-axis unit vector $\hat{\mathbf{e}}_x = [1, 0, 0]^T$ is invariant. The $y$ and $z$ axes lie in the $yz$-plane, which undergoes a 2D rotation:
-\[\begin{bmatrix} y' \\ z' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} y \\ z \end{bmatrix}.\]
-Embedding this in 3D yields equation \eqref{eq:Rx}.
-\end{derivation}
-
 \index{rotation matrix!Ry}
-\begin{theorem}{Rotation About the \texorpdfstring{$y$}{y}-Axis}{rotation_y_axis}
-A rotation by angle $\theta$ about the $y$-axis is:
-\begin{equation}
-\label{eq:Ry}
-\mathbf{R}_y(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}
-\end{equation}
-\end{theorem}
-
 \index{rotation matrix!Rz}
-\begin{theorem}{Rotation About the \texorpdfstring{$z$}{z}-Axis}{rotation_z_axis}
-A rotation by angle $\theta$ about the $z$-axis is:
+
+For active right-hand rotations in a fixed right-handed basis, the elementary matrices are
 \begin{equation}
-\label{eq:Rz}
-\mathbf{R}_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}
+ R_x(\alpha)=\begin{bmatrix}1&0&0\\0&\cos\alpha&-\sin\alpha\\0&\sin\alpha&\cos\alpha\end{bmatrix},
+ \label{eq:Rx}
 \end{equation}
-\end{theorem}
+\begin{equation}
+ R_y(\beta)=\begin{bmatrix}\cos\beta&0&\sin\beta\\0&1&0\\-\sin\beta&0&\cos\beta\end{bmatrix},
+ \label{eq:Ry}
+\end{equation}
+\begin{equation}
+ R_z(\gamma)=\begin{bmatrix}\cos\gamma&-\sin\gamma&0\\\sin\gamma&\cos\gamma&0\\0&0&1\end{bmatrix}.
+ \label{eq:Rz}
+\end{equation}
+For $R_x$, the $x$ component is unchanged and the $yz$ components undergo the ordinary planar rotation $(y,z)\mapsto(y\cos\alpha-z\sin\alpha,y\sin\alpha+z\cos\alpha)$. The other formulas follow by cyclic permutation. This construction immediately verifies their columns, orthogonality and determinants. A positive rotation appears counterclockwise when viewed from the positive axis toward the origin.
 
-Each elementary matrix satisfies $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ and $\det(\mathbf{R}) = 1$ by construction (they encode orthonormal bases).
+Rotation order matters. For example,
+\begin{equation}
+\begin{aligned}
+R_x(\pi/2)R_y(\pi/2)e_z&=e_x,\\
+R_y(\pi/2)R_x(\pi/2)e_z&=-e_y.
+\end{aligned}
+\end{equation}
+Noncommutativity is a property of the composition law. It is not by itself a proof that a manifold is non-Euclidean: some noncommutative Lie groups have Euclidean underlying manifolds. For $SO(3)$, the topology and constraints give the relevant global obstruction.
 
-\index{SO(3)!definition}
 \section{The Special Orthogonal Group: SO(3)}
 \label{sec:SO3}
+\index{SO(3)!definition}
 
 \subsection{SO(3) as a Group}
+\label{def:SO3_group}
+\label{thm:SO3_is_group}
 
-\begin{definition}{The Group \texorpdfstring{$\SO(3)$}{SO(3)}}{SO3_group}
-The \textbf{Special Orthogonal Group} $\SO(3)$~\cite{Murray1994} is the set of all $3 \times 3$ real matrices satisfying:
-\begin{equation}
-\SO(3) = \{\mathbf{R} \in \Reals^{3 \times 3} : \mathbf{R}^T \mathbf{R} = \mathbf{I}, \, \det(\mathbf{R}) = 1\}
-\end{equation}
-\end{definition}
-
-\begin{theorem}{\texorpdfstring{$\SO(3)$}{SO(3)} is a Group}{SO3_is_group}
-The set $\SO(3)$ forms a mathematical group under matrix multiplication.
-\end{theorem}
-
-\begin{proof}
-We verify the four group axioms:
-
-\textbf{Closure:} If $\mathbf{R}_1, \mathbf{R}_2 \in \SO(3)$, then:
-\begin{align}
-(\mathbf{R}_1 \mathbf{R}_2)^T (\mathbf{R}_1 \mathbf{R}_2) &= \mathbf{R}_2^T \mathbf{R}_1^T \mathbf{R}_1 \mathbf{R}_2 = \mathbf{R}_2^T \mathbf{I} \mathbf{R}_2 = \mathbf{I}, \\
-\det(\mathbf{R}_1 \mathbf{R}_2) &= \det(\mathbf{R}_1) \det(\mathbf{R}_2) = 1 \cdot 1 = 1.
-\end{align}
-Thus $\mathbf{R}_1 \mathbf{R}_2 \in \SO(3)$.
-
-\textbf{Associativity:} Matrix multiplication is associative: $(\mathbf{R}_1 \mathbf{R}_2) \mathbf{R}_3 = \mathbf{R}_1 (\mathbf{R}_2 \mathbf{R}_3)$.
-
-\textbf{Identity:} The identity matrix $\mathbf{I}$ satisfies $\mathbf{I}^T \mathbf{I} = \mathbf{I}$ and $\det(\mathbf{I}) = 1$, so $\mathbf{I} \in \SO(3)$.
-
-\textbf{Inverses:} For $\mathbf{R} \in \SO(3)$, we have $\mathbf{R}^T \mathbf{R} = \mathbf{I}$, so $\mathbf{R}^{-1} = \mathbf{R}^T$. Moreover:
-\begin{equation}
-\det(\mathbf{R}^T) = \det(\mathbf{R}) = 1,
-\end{equation}
-so $\mathbf{R}^{-1} \in \SO(3)$.
-\end{proof}
+Define $SO(3)=\{R\in\mathbb R^{3\times3}:R^TR=I,\det R=1\}$. If $R_1,R_2$ satisfy these constraints, then $(R_1R_2)^T(R_1R_2)=R_2^TR_1^TR_1R_2=I$ and $\det(R_1R_2)=1$. Matrix multiplication is associative; $I$ belongs to the set; and $R^{-1}=R^T$ belongs to it. These facts establish the group axioms. Multiplication and inversion are smooth on this set, giving a Lie group~\cite{Murray1994}.
 
 \subsection{SO(3) as a Smooth Manifold}
+\label{thm:SO3_manifold}
+\label{princ:so3_principle}
 
-\begin{theorem}{\texorpdfstring{$\SO(3)$}{SO(3)} is a 3-Dimensional Smooth Manifold}{SO3_manifold}
-The set $\SO(3)$ is a smooth, compact manifold of dimension 3.
-\end{theorem}
-
-\begin{argument}
-The orthogonality constraint $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ imposes 6 independent scalar equations (the symmetric matrix $\mathbf{I}$ has 6 independent entries) on the 9 entries of $\mathbf{R}$. Additionally, $\det(\mathbf{R}) = 1$ is one equation, but it is redundant: for orthogonal matrices with real entries, $\det(\mathbf{R}) = \pm 1$ automatically, and we select the component with determinant $+1$ by continuity and connectedness.
-
-Thus, the effective number of independent constraints is 6, leaving:
+Consider $G:\mathbb R^{3\times3}\to\operatorname{Sym}(3)$, $G(R)=R^TR-I$. Its derivative is
 \begin{equation}
-\dim(\SO(3)) = 9 - 6 = 3.
+ DG_R[H]=R^TH+H^TR.
+ \label{eq:rotation_constraint_derivative}
 \end{equation}
+At an orthogonal $R$, any symmetric $S$ is attained by $H=RS/2$. Thus $DG_R$ has rank six, the dimension of $\operatorname{Sym}(3)$. The regular-level-set theorem gives dimension $9-6=3$. Orthogonal matrices have determinant $\pm1$; the continuous determinant separates the two components, and restricting to $+1$ preserves local dimension. The set is closed and bounded in $\mathbb R^9$, hence compact.
 
-Each point in $\SO(3)$ admits a local parameterization by 3 parameters (e.g., Euler angles in a suitable domain), confirming that $\SO(3)$ is a smooth 3-dimensional manifold.
-\end{argument}
+Its tangent vectors are the matrices $H$ satisfying $R^TH+H^TR=0$, equivalently
+\begin{equation}
+ T_RSO(3)=\{R\Omega:\Omega^T=-\Omega\}.
+ \label{eq:rotation_tangent_space}
+\end{equation}
+The local map $\delta\mapsto R\exp([\delta]_\times)$ has an invertible three-dimensional derivative at $\delta=0$ and supplies a local chart. It does not give a unique global three-vector coordinate system. In particular, compact $SO(3)$ cannot be globally diffeomorphic to an open subset of $\mathbb R^3$. A body that is free to rotate about a fixed point has configuration space $SO(3)$, while a hinge-constrained body has a different, lower-dimensional space.
 
-\begin{principle}{The SO(3) Manifold}{so3_principle}
-  The continuous, infinite geometric space of all possible valid $3 \times 3$ rotation matrices satisfying $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ and $\det(\mathbf{R}) = 1$ is a mathematical \textbf{manifold} called the \textbf{Special Orthogonal Group in 3 Dimensions}, denoted as $\SO(3)$.
-
-  If a Configuration Space $\mathcal{Q}$ is simply a rigid body freely rotating around a fixed point, we say $\mathcal{Q} = \SO(3)$.
-\end{principle}
-
-\index{Euler angles}
 \section{Euler Angles: Gimbal Lock and Beyond}
 \label{sec:euler_angles}
+\index{Euler angles}
 
 \subsection{Definition of Euler Angles}
 
-The most intuitive way for a human to describe the orientation of an aircraft or robotic arm is to split rotation into three successive rotations about primary axes. This is known as an \textbf{Euler Angle} representation: $\boldsymbol{\theta} = [\phi, \theta, \psi]^T$.
-
-While highly intuitive for human pilots, Euler Angles harbor a fatal mathematical flaw known as \textbf{Gimbal Lock}.
+Euler-type coordinates describe an orientation by three sequential rotations. A convention must specify the axis sequence, whether axes are fixed or moving, active versus passive interpretation, and angle/rate ordering. ZYX uses three distinct axes and is also called a Tait--Bryan convention; ZXZ repeats the first axis. Merely writing ``roll, pitch, yaw'' does not settle these choices.
 
 \subsection{The ZYX Convention}
 
-One common convention is \textbf{ZYX Euler angles} (also called \emph{yaw-pitch-roll}):
-\begin{enumerate}
-    \item Rotate by $\psi$ (yaw) about the original $z$-axis.
-    \item Rotate by $\theta$ (pitch) about the \emph{current} $y$-axis (after yaw).
-    \item Rotate by $\phi$ (roll) about the \emph{current} $x$-axis (after yaw and pitch).
-\end{enumerate}
-
-The composite rotation matrix is:
+Start with aligned frames, yaw by $\psi$ about $z_s$, pitch by $\theta$ about the resulting current $y$ axis, then roll by $\phi$ about the resulting current $x$ axis. Each body-axis increment postmultiplies the current orientation, giving
 \begin{equation}
-\label{eq:euler_zyx}
-\mathbf{R}(\phi, \theta, \psi) = \mathbf{R}_x(\phi) \mathbf{R}_y(\theta) \mathbf{R}_z(\psi).
+ R(\phi,\theta,\psi)=R_z(\psi)R_y(\theta)R_x(\phi).
+ \label{eq:euler_zyx}
 \end{equation}
-
-Computing this product explicitly:
+This is intrinsic ZYX, and equivalently fixed-axis XYZ applied in chronological order roll, pitch, yaw. Using $c_a=\cos a$ and $s_a=\sin a$, direct multiplication gives
 \begin{equation}
-\label{eq:euler_zyx_full}
-\mathbf{R}(\phi, \theta, \psi) = \begin{bmatrix}
-\cos\psi \cos\theta & -\sin\psi \cos\phi + \cos\psi \sin\theta \sin\phi & \sin\psi \sin\phi + \cos\psi \sin\theta \cos\phi \\
-\sin\psi \cos\theta & \cos\psi \cos\phi + \sin\psi \sin\theta \sin\phi & -\cos\psi \sin\phi + \sin\psi \sin\theta \cos\phi \\
--\sin\theta & \cos\theta \sin\phi & \cos\theta \cos\phi
-\end{bmatrix}
+ R=\begin{bmatrix}
+ c_\psi c_\theta&c_\psi s_\theta s_\phi-s_\psi c_\phi&c_\psi s_\theta c_\phi+s_\psi s_\phi\\
+ s_\psi c_\theta&s_\psi s_\theta s_\phi+c_\psi c_\phi&s_\psi s_\theta c_\phi-c_\psi s_\phi\\
+ -s_\theta&c_\theta s_\phi&c_\theta c_\phi
+ \end{bmatrix}.
+ \label{eq:euler_zyx_full}
 \end{equation}
+For $(\phi,\theta,\psi)=(45^\circ,30^\circ,60^\circ)$ this is approximately
+\begin{equation}
+ R=\begin{bmatrix}
+ .433013&-.435596&.789149\\
+ .750000&.659740&-.047367\\
+ -.500000&.612372&.612372
+ \end{bmatrix}.
+ \label{eq:euler_numeric_example}
+\end{equation}
+The unrounded product is exactly orthogonal. Reversing the factors generally gives a different orientation, although that wrong-convention result is also orthogonal. This illustrates why checking only $R^TR$ cannot detect a frame convention error.
 
 \subsection{The ZXZ Convention}
 
-Another standard convention is \textbf{ZXZ Euler angles} (symmetric, used in physics and astronomy):
-\begin{enumerate}
-    \item Rotate by $\phi$ about the original $z$-axis.
-    \item Rotate by $\theta$ about the \emph{current} $x$-axis.
-    \item Rotate by $\psi$ about the \emph{current} $z$-axis (after the first two rotations).
-\end{enumerate}
+If the chronological current-axis rotations are $\phi$ about $z$, $\theta$ about the new $x$, and $\psi$ about the new $z$, then $R=R_z(\phi)R_x(\theta)R_z(\psi)$. This convention's singular sets occur when $\sin\theta=0$, unlike ZYX's $\cos\theta=0$. A statement about gimbal lock must name its convention.
 
-The composite rotation is:
-\begin{equation}
-\mathbf{R}(\phi, \theta, \psi) = \mathbf{R}_z(\psi) \mathbf{R}_x(\theta) \mathbf{R}_z(\phi).
-\end{equation}
-
-\index{gimbal lock}
 \subsection{Gimbal Lock: Singularity and Proof}
 \label{sec:gimbal_lock}
+\label{laymans:gimballock}
+\label{thm:gimbal_lock_proof}
+\index{gimbal lock}
 
-\begin{laymansbox}{Gimbal Lock: Physical Intuition}{gimballock}
-  If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth).
-
-  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this singularity, the Jacobian mapping Euler angle rates to angular velocity becomes singular, producing undefined or numerically unstable results (NaN values, wildly large rate commands).
-\end{laymansbox}
-
-\begin{theorem}{Gimbal Lock at \texorpdfstring{$\theta = \pm 90^\circ$}{theta = +/- 90 degrees}}{gimbal_lock_proof}
-For ZYX Euler angles, the Jacobian matrix relating angular velocity components to Euler angle rate components becomes singular when $\theta = \pm 90^\circ$.
-\end{theorem}
-
-\begin{derivation}
-The relationship between angular velocity $\boldsymbol{\omega} = [\omega_x, \omega_y, \omega_z]^T$ in the spatial frame and Euler angle rates $\dot{\boldsymbol{\theta}} = [\dot{\phi}, \dot{\theta}, \dot{\psi}]^T$ is given by:
+For intrinsic ZYX, express angular velocity in spatial components and order the coordinate rates as $(\dot\phi,\dot\theta,\dot\psi)$. Each angle contributes about its current spatial axis. Therefore
 \begin{equation}
-\boldsymbol{\omega} = \mathbf{J}(\boldsymbol{\theta}) \, \dot{\boldsymbol{\theta}},
+ \omega_s=J_s\begin{bmatrix}\dot\phi\\\dot\theta\\\dot\psi\end{bmatrix},\qquad
+ J_s=\begin{bmatrix}
+ c_\psi c_\theta&-s_\psi&0\\
+ s_\psi c_\theta&c_\psi&0\\
+ -s_\theta&0&1
+ \end{bmatrix}.
+ \label{eq:euler_spatial_rate_map}
 \end{equation}
-where $\mathbf{J}(\boldsymbol{\theta})$ is the Jacobian. For ZYX angles, it can be shown that:
+The columns are $R_zR_ye_x$, $R_ze_y$ and $e_z$, respectively. Expanding the determinant gives $\det J_s=\cos\theta$. At $\theta=\pi/2$, the roll column is $-e_z$ and the yaw column is $e_z$: only their difference contributes about that direction, and $(1,0,1)^T$ lies in the kernel. Rank is two. At $-\pi/2$, the two columns coincide instead.
+
+The singular values follow from
 \begin{equation}
-\mathbf{J}(\phi, \theta, \psi) = \begin{bmatrix}
-0 & -\sin\psi & \cos\psi \cos\theta \\
-0 & \cos\psi & \sin\psi \cos\theta \\
-1 & 0 & -\sin\theta
-\end{bmatrix}
+ J_s^TJ_s=\begin{bmatrix}1&0&-\sin\theta\\0&1&0\\-\sin\theta&0&1\end{bmatrix}.
+ \label{eq:euler_rate_conditioning}
 \end{equation}
+Away from the singular set, the 2-norm condition number is $\sqrt{(1+|\sin\theta|)/(1-|\sin\theta|)}$. It is about 114.59 at 89 degrees of pitch. The forward map remains bounded; its inverse becomes ill-conditioned. Small orientation-rate or measurement errors can demand very large changes in the inferred Euler rates. This is different from claiming that small angle changes inevitably cause arbitrarily large physical rotations.
 
-When $\theta = 90^\circ$, we have $\cos\theta = 0$, so:
-\begin{equation}
-\mathbf{J}\left(\phi, 90^\circ, \psi\right) = \begin{bmatrix}
-0 & -\sin\psi & 0 \\
-0 & \cos\psi & 0 \\
-1 & 0 & -1
-\end{bmatrix}.
-\end{equation}
+The freely rotating body still has three physical rotational freedoms. The selected chart fails to represent all instantaneous directions regularly at that point. A mechanical three-gimbal device can also lose instantaneous actuation directions when its physical axes align, but that is a statement about the mechanism. Neither phenomenon makes the laws of mathematics fail or guarantees a computer crash. Controllers must handle the relevant coordinate and actuator maps explicitly.
 
-The third column is linearly dependent on the first two, so $\text{rank}(\mathbf{J}) < 3$ and $\det(\mathbf{J}) = 0$. The Jacobian is singular, making it impossible to invert: given $\boldsymbol{\omega}$, we cannot solve uniquely for $\dot{\boldsymbol{\theta}}$. Physically, the yaw and roll rates become indistinguishable.
-\end{derivation}
+Euler coordinates are useful on a domain that stays away from their singularity, including local estimation and control with monitored conditioning. Quaternions or matrices allow global orientation storage; local perturbation charts remain useful alongside them. Choosing a representation does not prove controllability, robustness or numerical integration accuracy.
 
-Since our control theory and geometric motion algorithms fundamentally rely on continuous trajectories twisting through all possible spatial angles (like chaotic golf club arcs or throwing motions), we must completely abandon Euler angles for internal calculations. We cannot afford mathematical singularities.
-
-\index{Lie group!definition}
-\index{Lie algebra!definition}
 \section{Differential Geometry Primer: Lie Groups and Lie Algebras}
 \label{sec:lie_groups_algebras}
-
-We have established that $\SO(3)$ is a manifold. However, it is not just any manifold. Because you can combine two rotations to get a third rotation (via matrix multiplication), and every rotation can be smoothly inverted, $\SO(3)$ possesses both algebraic structure (it is a mathematical \emph{group}) and geometric structure (it is a \emph{smooth manifold}).
-
-\begin{definition}{Lie Group}{lie_group}
-A \emph{Lie Group} is a smooth manifold that is also a mathematical group, where the group operations (multiplication and inversion) are smooth functions. As a result, we can perform calculus on them. $\SO(3)$ is the preeminent example of a Lie Group in mechanics.
-\end{definition}
+\label{def:lie_group}
+\index{Lie group!definition}
+\index{Lie algebra!definition}
 
 \subsection{The Tangent Space and Lie Algebra}
+\label{def:lie_algebra}
+\label{laymans:group_vs_algebra_reminder}
 
-If $\SO(3)$ is a curved manifold of positions (rotations), what is its velocity space? By our earlier definition in Chapter 3, the velocities must live in the Tangent Space.
-
-If we examine the tangent space at the identity rotation (the "zero" rotation, matrix $\mathbf{I}$), we discover an incredibly special mathematical object called the \textbf{Lie Algebra}, denoted by lowercase $\so(3)$.
-
-\begin{definition}{Lie Algebra \texorpdfstring{$\so(3)$}{so(3)}}{lie_algebra}
-The \emph{Lie Algebra} $\so(3)$ is the tangent space to the Lie Group $\SO(3)$ at the identity element. Physically, it represents the space of all possible angular velocities (spin rates) when the object is currently unrotated. Mathematically, it consists of all $3 \times 3$ \emph{skew-symmetric} matrices: matrices $[\boldsymbol{\omega}]_\times$ satisfying $[\boldsymbol{\omega}]_\times^T = -[\boldsymbol{\omega}]_\times$.
-\end{definition}
-
-A skew-symmetric matrix representing a vector $\boldsymbol{\omega} = [\omega_x, \omega_y, \omega_z]^T$ is:
+The Lie algebra is the tangent space at identity, $\mathfrak{so}(3)=\{\Omega:\Omega^T=-\Omega\}$. The hat map identifies a three-vector with a skew matrix:
 \begin{equation}
-\label{eq:skew_symmetric}
-[\boldsymbol{\omega}]_\times = \begin{bmatrix} 0 & -\omega_z & \omega_y \\ \omega_z & 0 & -\omega_x \\ -\omega_y & \omega_x & 0 \end{bmatrix}
+ [\omega]_\times=\begin{bmatrix}0&-\omega_z&\omega_y\\\omega_z&0&-\omega_x\\-\omega_y&\omega_x&0\end{bmatrix},
+ \qquad [\omega]_\times v=\omega\times v.
+ \label{eq:skew_symmetric}
 \end{equation}
+For any orientation, left or right multiplication transports a tangent vector to this identity-space representation. The object need not be unrotated. A rotation vector has units of angle; an angular-velocity vector has units of angle per time. The vector space can represent either, but their physical meanings differ.
 
-\begin{laymansbox}{Mathematical Reminder: Group vs. Algebra}{group_vs_algebra_reminder}
-Whenever you hear \textbf{Lie Group} (like $\SO(3)$ or $\SE(3)$), think of the curved, global manifold of \emph{Positions/Configurations}.
-Whenever you hear \textbf{Lie Algebra} (like $\so(3)$ or $\se(3)$), think of the perfectly flat, linear tangent space of \emph{Velocities}. We can do standard linear control math in the Lie Algebra, but we map the results back onto the curved Lie Group using the \emph{Exponential Map} (covered next) to actually rotate the physical robot.
-\end{laymansbox}
+The Lie bracket is the matrix commutator. Applying the vector triple-product identity to an arbitrary vector yields $[[a]_\times,[b]_\times]=[a\times b]_\times$. Although the algebra is a linear space, a nonlinear rigid-body dynamical equation expressed through it does not become a linear dynamical system. The exponential reconstructs finite rotations from constant increments, with ordering needed for changing noncommuting rates.
 
-% ==========================================================================
 \section{Rodrigues' Rotation Formula: Full Derivation}
 \label{sec:rodrigues}
 \index{Rodrigues' rotation formula}
 \index{matrix exponential!rotation}
 
-We now prove the celebrated \textbf{Rodrigues' rotation formula}\index{Rodrigues' rotation formula}, which gives a closed-form expression for the matrix exponential of a skew-symmetric matrix. This result, first obtained by Olinde Rodrigues in 1840~\cite{rodrigues1840}, is the computational backbone of the exponential map for $\SO(3)$.
+\subsection{The Key Identity}
+\label{thm:skew_cubic}
 
-\subsection{The Key Identity: \texorpdfstring{$[\hat{\omega}]^3 = -[\hat{\omega}]$}{[omega-hat]\^{}3 = -[omega-hat]}}
-
-Let $\hat{\boldsymbol{\omega}} \in \Reals^3$ be a unit vector ($\norm{\hat{\boldsymbol{\omega}}} = 1$) and $[\hat{\omega}] \in \so(3)$ the corresponding skew-symmetric matrix. We first establish a crucial algebraic identity.
-
-\begin{theorem}{Cyclic Property of Skew-Symmetric Matrices}{skew_cubic}
-For any unit vector $\hat{\boldsymbol{\omega}}$ with skew-symmetric matrix $[\hat{\omega}]$:
+Let $a$ be a unit axis and $A=[a]_\times$. For every vector $v$, $A^2v=a\times(a\times v)=a(a^Tv)-v$. Consequently
 \begin{equation}
+ A^2=aa^T-I,\qquad A^3=-A.
+ \label{eq:skew_squared}
+\end{equation}
 \label{eq:skew_cubic}
-[\hat{\omega}]^3 = -[\hat{\omega}].
-\end{equation}
-\end{theorem}
-
-\begin{proof}
-Recall that for a skew-symmetric matrix, the action $[\hat{\omega}]\mathbf{v} = \hat{\boldsymbol{\omega}} \times \mathbf{v}$. Thus:
-\begin{equation}
-[\hat{\omega}]^2 \mathbf{v} = \hat{\boldsymbol{\omega}} \times (\hat{\boldsymbol{\omega}} \times \mathbf{v}).
-\end{equation}
-By the vector triple product identity $\mathbf{a} \times (\mathbf{a} \times \mathbf{v}) = \mathbf{a}(\mathbf{a} \cdot \mathbf{v}) - \mathbf{v}(\mathbf{a} \cdot \mathbf{a})$ with $\norm{\hat{\boldsymbol{\omega}}} = 1$:
-\begin{equation}
-\label{eq:skew_squared}
-[\hat{\omega}]^2 = \hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}.
-\end{equation}
-Therefore:
-\begin{equation}
-[\hat{\omega}]^3 = [\hat{\omega}](\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}) = [\hat{\omega}]\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - [\hat{\omega}].
-\end{equation}
-Since $[\hat{\omega}]\hat{\boldsymbol{\omega}} = \hat{\boldsymbol{\omega}} \times \hat{\boldsymbol{\omega}} = \mathbf{0}$, we obtain $[\hat{\omega}]^3 = -[\hat{\omega}]$.
-\end{proof}
-
-This identity implies that all higher powers of $[\hat{\omega}]$ reduce to either $[\hat{\omega}]$ or $[\hat{\omega}]^2$:
-\begin{equation}
+Multiplying repeatedly gives $A^4=-A^2$, $A^5=A$, $A^6=A^2$, and the cycle continues. The unit-axis condition matters; for arbitrary $u$, $[u]_\times^3=-\|u\|^2[u]_\times$.
 \label{eq:skew_power_cycle}
-[\hat{\omega}]^4 = -[\hat{\omega}]^2, \quad [\hat{\omega}]^5 = [\hat{\omega}], \quad [\hat{\omega}]^6 = [\hat{\omega}]^2, \quad \ldots
-\end{equation}
 
 \subsection{Taylor Expansion and Regrouping}
+\label{thm:rodrigues_formula}
 
-The matrix exponential is defined by its Taylor series:
+The absolutely convergent matrix exponential series is
 \begin{equation}
-\label{eq:exp_taylor}
-e^{[\hat{\omega}]\theta} = \mathbf{I} + \theta[\hat{\omega}] + \frac{\theta^2}{2!}[\hat{\omega}]^2 + \frac{\theta^3}{3!}[\hat{\omega}]^3 + \frac{\theta^4}{4!}[\hat{\omega}]^4 + \cdots
+ \exp(\alpha A)=I+\alpha A+\frac{\alpha^2}{2}A^2+\frac{\alpha^3}{6}A^3+\cdots.
+ \label{eq:exp_taylor}
 \end{equation}
-
-Substituting $[\hat{\omega}]^3 = -[\hat{\omega}]$, $[\hat{\omega}]^4 = -[\hat{\omega}]^2$, $[\hat{\omega}]^5 = [\hat{\omega}]$, etc., and grouping by powers of $[\hat{\omega}]$:
+Regrouping its odd powers gives $(\alpha-\alpha^3/6+\cdots)A=\sin\alpha A$. Regrouping its positive even powers gives $(\alpha^2/2-\alpha^4/24+\cdots)A^2=(1-\cos\alpha)A^2$. Thus
 \begin{equation}
-e^{[\hat{\omega}]\theta} = \mathbf{I} + \underbrace{\left(\theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \cdots\right)}_{\sin\theta}[\hat{\omega}] + \underbrace{\left(\frac{\theta^2}{2!} - \frac{\theta^4}{4!} + \frac{\theta^6}{6!} - \cdots\right)}_{1 - \cos\theta}[\hat{\omega}]^2.
+ \exp(\alpha[a]_\times)=I+\sin\alpha[a]_\times+(1-\cos\alpha)[a]_\times^2.
+ \label{eq:rodrigues}
 \end{equation}
-
-The odd-power series is exactly $\sin\theta$ and the even-power series is exactly $1 - \cos\theta$.
-
-\begin{theorem}{Rodrigues' Rotation Formula}{rodrigues_formula}
-\index{Rodrigues' rotation formula}
-For a unit axis $\hat{\boldsymbol{\omega}} \in \Reals^3$ and angle $\theta \in \Reals$, the rotation matrix is:
+Its vector action is
 \begin{equation}
-\label{eq:rodrigues}
-\boxed{e^{[\hat{\omega}]\theta} = \mathbf{I} + \sin\theta\,[\hat{\omega}] + (1 - \cos\theta)\,[\hat{\omega}]^2.}
+ Rv=v\cos\alpha+(a\times v)\sin\alpha+a(a^Tv)(1-\cos\alpha).
+ \label{eq:rodrigues_vector}
 \end{equation}
-Equivalently, using~\eqref{eq:skew_squared}, the action on a vector $\mathbf{v}$ is:
-\begin{equation}
-\label{eq:rodrigues_vector}
-\mathbf{R}\mathbf{v} = \mathbf{v}\cos\theta + (\hat{\boldsymbol{\omega}} \times \mathbf{v})\sin\theta + \hat{\boldsymbol{\omega}}(\hat{\boldsymbol{\omega}} \cdot \mathbf{v})(1 - \cos\theta).
-\end{equation}
-\end{theorem}
+The parallel component stays fixed and the perpendicular component rotates in its plane. This independently derived matrix proof is the modern form used here; citing Rodrigues' historical memoir does not imply that the memoir used modern matrix exponentials.
 
-The vector form~\eqref{eq:rodrigues_vector} has a geometric interpretation: decompose $\mathbf{v}$ into a component along $\hat{\boldsymbol{\omega}}$ (unchanged by rotation) and a component perpendicular to $\hat{\boldsymbol{\omega}}$ (rotated by $\theta$ in the plane normal to $\hat{\boldsymbol{\omega}}$). See \cite{rodrigues1840} for the original derivation and \cite{Murray1994} for the modern Lie-theoretic perspective.
+For a rotation vector $u=\alpha a$, use $I+\operatorname{sinc}(\alpha)[u]_\times+\operatorname{cosc}(\alpha)[u]_\times^2$, with $\operatorname{sinc}(\alpha)=\sin\alpha/\alpha$ and $\operatorname{cosc}(\alpha)=(1-\cos\alpha)/\alpha^2$. Their limits at zero are 1 and 1/2. Stable implementations use series or equivalent cancellation-resistant formulas near zero rather than divide by a tiny number after subtracting nearly equal cosines.
 
-% ==========================================================================
-\index{quaternion!definition}
-\index{quaternion!algebra}
 \section{Quaternion Algebra}
 \label{sec:quaternions}
+\index{quaternion!definition}
+\index{quaternion!algebra}
 
 \subsection{Definition and Representation}
 
-A \textbf{quaternion} $\mathbf{q} \in \mathbb{H}$ is a 4-tuple written as:
-\begin{equation}
+Use scalar-first Hamilton quaternions $q=(w,v)=(w,x,y,z)\in\mathbb H$, with $i^2=j^2=k^2=ijk=-1$. Then $ij=k$ while $ji=-k$, and cyclic permutations give the other products. Quaternion addition is componentwise. Unit quaternions form $S^3\subset\mathbb R^4$, not all of $\mathbb H$.
 \label{eq:quaternion_def}
-\mathbf{q} = \begin{bmatrix} q_w \\ q_x \\ q_y \\ q_z \end{bmatrix} = q_w + q_x \mathbf{i} + q_y \mathbf{j} + q_z \mathbf{k}
-\end{equation}
-
-where $\mathbf{i}, \mathbf{j}, \mathbf{k}$ are the three \emph{imaginary units} satisfying:
-\begin{equation}
-\mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{i}\mathbf{j}\mathbf{k} = -1, \quad \mathbf{i}\mathbf{j} = \mathbf{k}, \quad \mathbf{j}\mathbf{k} = \mathbf{i}, \quad \mathbf{k}\mathbf{i} = \mathbf{j}.
-\end{equation}
-
-Note that quaternion multiplication is \emph{non-commutative}: $\mathbf{i}\mathbf{j} = \mathbf{k}$ but $\mathbf{j}\mathbf{i} = -\mathbf{k}$.
 
 \subsection{Quaternion Operations}
 
-\subsubsection{Addition}
-
-Quaternion addition is component-wise:
+Distributing products and collecting real and imaginary parts gives
 \begin{equation}
-(q_w + q_x \mathbf{i} + q_y \mathbf{j} + q_z \mathbf{k}) + (r_w + r_x \mathbf{i} + r_y \mathbf{j} + r_z \mathbf{k}) = (q_w + r_w) + (q_x + r_x) \mathbf{i} + (q_y + r_y) \mathbf{j} + (q_z + r_z) \mathbf{k}.
+ (w,v)\otimes(s,u)=(ws-v^Tu,\;wu+sv+v\times u).
+ \label{eq:hamilton_product}
 \end{equation}
+The conjugate is $q^*=(w,-v)$ and $q\otimes q^*=(w^2+v^Tv,0)$. Define $\|q\|=\sqrt{w^2+v^Tv}$. For $q\ne0$, the inverse is $q^{-1}=q^*/\|q\|^2$; for a unit quaternion it is simply $q^*$. Zero has no inverse and cannot be normalized to an orientation.
 
-\subsubsection{Hamilton Product (Multiplication)}
-
-The product of two quaternions $\mathbf{q} = q_w + \mathbf{q}_v$ and $\mathbf{r} = r_w + \mathbf{r}_v$, where $\mathbf{q}_v = [q_x, q_y, q_z]^T$ and $\mathbf{r}_v = [r_x, r_y, r_z]^T$, is:
-
-\begin{equation}
-\label{eq:hamilton_product}
-\mathbf{q} \otimes \mathbf{r} = \begin{bmatrix}
-q_w r_w - \mathbf{q}_v^T \mathbf{r}_v \\
-q_w \mathbf{r}_v + r_w \mathbf{q}_v + \mathbf{q}_v \times \mathbf{r}_v
-\end{bmatrix}
-\end{equation}
-
-where $\times$ denotes the 3D cross product. In component form:
-\begin{equation}
-\mathbf{q} \otimes \mathbf{r} = \begin{bmatrix}
-q_w r_w - q_x r_x - q_y r_y - q_z r_z \\
-q_w r_x + q_x r_w + q_y r_z - q_z r_y \\
-q_w r_y - q_x r_z + q_y r_w + q_z r_x \\
-q_w r_z + q_x r_y - q_y r_x + q_z r_w
-\end{bmatrix}
-\end{equation}
-
-\subsubsection{Conjugate}
-
-The \textbf{conjugate} of $\mathbf{q} = q_w + q_x \mathbf{i} + q_y \mathbf{j} + q_z \mathbf{k}$ is:
-\begin{equation}
-\mathbf{q}^* = q_w - q_x \mathbf{i} - q_y \mathbf{j} - q_z \mathbf{k} = \begin{bmatrix} q_w \\ -q_x \\ -q_y \\ -q_z \end{bmatrix}
-\end{equation}
-
-\subsubsection{Norm and Magnitude}
-
-The \textbf{norm} (or magnitude) of a quaternion is:
-\begin{equation}
-\|\mathbf{q}\| = \sqrt{q_w^2 + q_x^2 + q_y^2 + q_z^2}
-\end{equation}
-
-A \textbf{unit quaternion} satisfies $\|\mathbf{q}\| = 1$.
-
-\subsubsection{Inverse}
-
-For a unit quaternion $\mathbf{q}$, the inverse is:
-\begin{equation}
-\mathbf{q}^{-1} = \mathbf{q}^*
-\end{equation}
-
-since $\mathbf{q} \otimes \mathbf{q}^* = \mathbf{q}^* \otimes \mathbf{q} = 1$ (the multiplicative identity quaternion).
-
-For a non-unit quaternion, the inverse is $\mathbf{q}^{-1} = \mathbf{q}^* / \|\mathbf{q}\|^2$.
+For example, with $c=1/\sqrt2$, $(c,c,0,0)\otimes(c,0,c,0)=(1,1,1,1)/2$. The factors represent 90-degree rotations about $x$ and $y$, respectively. Their product applies the $y$ rotation first and then the $x$ rotation. Its unit norm follows exactly; replacing $c$ by rounded 0.7071 does not preserve exact unit norm.
 
 \subsection{Unit Quaternions and Rotation}
-
+\label{thm:quaternion_rotation}
+\label{laymans:quaternion_half_angle}
 \index{quaternion!unit quaternion}
 \index{quaternion!rotation representation}
-\begin{theorem}{Unit Quaternions Represent Rotations}{quaternion_rotation}
-Every unit quaternion $\mathbf{q}$ can be written as:
+
+Every unit quaternion can be written
 \begin{equation}
-\label{eq:quaternion_rotation}
-\mathbf{q} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\boldsymbol{\omega}} \sin(\theta/2) \end{bmatrix} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\omega}_x \sin(\theta/2) \\ \hat{\omega}_y \sin(\theta/2) \\ \hat{\omega}_z \sin(\theta/2) \end{bmatrix}
+ q=(\cos(\alpha/2),\;a\sin(\alpha/2)),\qquad \|a\|=1,\quad 0\le\alpha\le 2\pi.
+ \label{eq:quaternion_rotation}
 \end{equation}
-where $\hat{\boldsymbol{\omega}}$ is a unit vector (the rotation axis) and $\theta \in [0, 2\pi)$ is the rotation angle. This quaternion represents a rotation of angle $\theta$ about the axis $\hat{\boldsymbol{\omega}}$.
-\end{theorem}
+For nonzero vector part, choose $\alpha=2\operatorname{atan2}(\|v\|,w)$ and $a=v/\|v\|$. At $q=1$ and $q=-1$, choose any axis, with $\alpha=0$ and $2\pi$, respectively. Both endpoints are required if the statement covers every unit quaternion.
 
-\begin{laymansbox}{Why the Half-Angles?}{quaternion_half_angle}
-  You might notice $\theta/2$ in the formula instead of just $\theta$. This is because applying a quaternion rotation to a vector $\mathbf{v}$ requires multiplying it from the front \emph{and} the back ($\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^{-1}$, where $\mathbf{v}$ is viewed as the quaternion $[0, v_x, v_y, v_z]^T$). The half-angles combine during this double-multiplication to give the perfect full-angle $\theta$ rotation!
+Represent a three-vector by the pure quaternion $(0,r)$. Two applications of the Hamilton product give the vector part of $q\otimes(0,r)\otimes q^*$ as
+\begin{equation}
+ (w^2-v^Tv)r+2v(v^Tr)+2w(v\times r).
+ \label{eq:quaternion_sandwich_expansion}
+\end{equation}
+Substituting the half-angle representation reproduces Rodrigues' vector formula. This proves both the action and the half-angle factor. Using $q^*$ instead of $q^{-1}$ without first normalizing a nonunit quaternion would scale the rotated vector by $\|q\|^2$. That is a concrete numerical error, not merely a different convention.
 
-  Note also that the quaternions $\mathbf{q}$ and $-\mathbf{q}$ represent the exact same physical rotation in 3D space.
-\end{laymansbox}
-
+\subsection{Double Cover: q and -q Represent the Same Rotation}
+\label{thm:quaternion_double_cover}
 \index{quaternion!double cover}
-\subsection{Double Cover: \texorpdfstring{$q$ and $-q$}{q and -q} Represent the Same Rotation}
 
-\begin{theorem}{Quaternion Double Cover}{quaternion_double_cover}
-The unit quaternions $\mathbf{q}$ and $-\mathbf{q}$ represent the same rotation in 3D space. Thus, the map from unit quaternions to $\SO(3)$ is a 2-to-1 covering map, and we say that $S^3$ (the unit sphere in $\mathbb{H}$) is a \emph{double cover} of $\SO(3)$.
-\end{theorem}
+Negating both factors in the sandwich product changes nothing. To show that these are the only two representatives, suppose two unit quaternions have the same action. Their quotient commutes with every pure quaternion. The Hamilton formula then forces its vector part to vanish, so the quotient is $+1$ or $-1$. Every proper rotation has an axis-angle representation, proved below, so the map is onto. Locally its derivative has rank three; globally $SO(3)$ is $S^3$ with antipodal points identified.
 
-\begin{proof}
-The rotation action of a unit quaternion $\mathbf{q}$ on a pure-imaginary quaternion $\mathbf{v} = [0, \vec{v}]$ is:
-\begin{equation}
-\mathbf{v}' = \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*.
-\end{equation}
+For a time series, align a new quaternion's sign to its predecessor when their dot product is nonzero and the intended step is the short rotation. This avoids a representation jump. It cannot infer full revolutions or resolve an exactly 180-degree ambiguity from endpoint orientations alone. A continuous physical turn through 360 degrees can lift from $q$ to $-q$; resetting every sample's scalar component to nonnegative can introduce an artificial discontinuity.
 
-For $-\mathbf{q}$, we compute:
-\begin{align}
-(-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^*
-  &= (-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q}^*) \\
-  &= (-1)(\mathbf{q}) \otimes \mathbf{v} \otimes (-1)(\mathbf{q}^*) \\
-  &= (-1)(-1)\,\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^* \\
-  &= \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*,
-\end{align}
-where we used the fact that $(-\mathbf{q})^* = -\mathbf{q}^*$ and that the scalar factor $(-1)$ commutes with quaternion multiplication and appears twice, yielding $(-1)^2 = 1$.
-
-Thus $\mathbf{q}$ and $-\mathbf{q}$ induce the identical rotation on every vector $\vec{v} \in \Reals^3$.
-\end{proof}
-
-\index{rotation matrix!quaternion conversion}
 \section{Conversion Between Quaternions and Rotation Matrices}
 \label{sec:quat_to_matrix}
+\index{rotation matrix!quaternion conversion}
 
 \subsection{Quaternion to Rotation Matrix}
+\label{thm:quat_to_matrix}
 
-\begin{theorem}{Quaternion-to-Matrix Conversion}{quat_to_matrix}
-A unit quaternion $\mathbf{q} = [q_w, q_x, q_y, q_z]^T$ with $q_w^2 + q_x^2 + q_y^2 + q_z^2 = 1$ corresponds to the rotation matrix:
+The sandwich expansion gives the sign-safe polynomial formula $R=(w^2-v^Tv)I+2vv^T+2w[v]_\times$. For unit $q=(w,x,y,z)$ this becomes
 \begin{equation}
-\label{eq:quat_to_matrix}
-\mathbf{R}(\mathbf{q}) = \begin{bmatrix}
-1 - 2(q_y^2 + q_z^2) & 2(q_x q_y - q_w q_z) & 2(q_x q_z + q_w q_y) \\
-2(q_x q_y + q_w q_z) & 1 - 2(q_x^2 + q_z^2) & 2(q_y q_z - q_w q_x) \\
-2(q_x q_z - q_w q_y) & 2(q_y q_z + q_w q_x) & 1 - 2(q_x^2 + q_y^2)
-\end{bmatrix}
+ R(q)=\begin{bmatrix}
+ 1-2(y^2+z^2)&2(xy-wz)&2(xz+wy)\\
+ 2(xy+wz)&1-2(x^2+z^2)&2(yz-wx)\\
+ 2(xz-wy)&2(yz+wx)&1-2(x^2+y^2)
+ \end{bmatrix}.
+ \label{eq:quat_to_matrix}
 \end{equation}
-\end{theorem}
-
-\begin{derivation}
-A rotation by angle $\theta$ about unit axis $\hat{\boldsymbol{\omega}} = [\omega_x, \omega_y, \omega_z]^T$ can be expressed via the Rodrigues formula~\cite{rodrigues1840}:
-\begin{equation}
-\mathbf{R} = \mathbf{I} + \sin\theta \, [\hat{\boldsymbol{\omega}}]_\times + (1 - \cos\theta) \, [\hat{\boldsymbol{\omega}}]_\times^2.
-\end{equation}
-
-With $q_w = \cos(\theta/2)$ and $\hat{\boldsymbol{\omega}} \sin(\theta/2) = [q_x, q_y, q_z]^T$, one can expand using the identities $\sin\theta = 2\sin(\theta/2)\cos(\theta/2) = 2 q_w \sqrt{q_x^2 + q_y^2 + q_z^2}$ and $(1 - \cos\theta) = 2\sin^2(\theta/2) = 2(q_x^2 + q_y^2 + q_z^2)$ to obtain equation \eqref{eq:quat_to_matrix}.
-\end{derivation}
+This avoids choosing a square-root sign for a half-angle. It also proves $R(p\otimes q)=R(p)R(q)$ by composition of the sandwich actions. Always verify scalar ordering and active/passive conventions at a software boundary.
 
 \subsection{Rotation Matrix to Quaternion}
+\label{thm:matrix_to_quat}
 
-\begin{theorem}{Matrix-to-Quaternion Conversion}{matrix_to_quat}
-From a rotation matrix $\mathbf{R}$, the unit quaternion can be recovered (up to sign) via:
+Let $R\in SO(3)$ and $t=\operatorname{tr}R$. The diagonal entries determine four squared components:
 \begin{equation}
-q_w = \frac{1}{2}\sqrt{1 + R_{11} + R_{22} + R_{33}},
+ (w^2,x^2,y^2,z^2)=\tfrac 14(1+t,\;1+2R_{11}-t,\;1+2R_{22}-t,\;1+2R_{33}-t).
+ \label{eq:quaternion_component_squares}
 \end{equation}
-with $q_x, q_y, q_z$ determined by:
+Choose the largest square and take its nonnegative root. Since the squares sum to one, this component is at least 1/2. The subsequent divisor is therefore at least 2 in exact arithmetic, including at half turns.
+
+If $w$ is selected, recover $x=(R_{32}-R_{23})/(4w)$, $y=(R_{13}-R_{31})/(4w)$ and $z=(R_{21}-R_{12})/(4w)$. If vector component $v_i$ is selected, let $(i,j,k)$ be a cyclic permutation of $(1,2,3)$ and use
 \begin{equation}
-\begin{aligned}
-q_x &= \frac{R_{32} - R_{23}}{4 q_w}, \\
-q_y &= \frac{R_{13} - R_{31}}{4 q_w}, \\
-q_z &= \frac{R_{21} - R_{12}}{4 q_w}.
-\end{aligned}
+ w=\frac{R_{kj}-R_{jk}}{4v_i},\qquad
+ v_j=\frac{R_{ji}+R_{ij}}{4v_i},\qquad
+ v_k=\frac{R_{ki}+R_{ik}}{4v_i}.
+ \label{eq:quaternion_largest_component}
 \end{equation}
-\end{theorem}
+For $R=\operatorname{diag}(1,-1,-1)$, the algorithm selects $x=1$ and returns $(0,1,0,0)$. The trace-only branch would divide by $w=0$. In floating point, validate shape, finite entries, orthogonality and determinant within a stated tolerance. A final normalization removes small roundoff; it cannot make an arbitrary nonrotation into valid measured data. Fitting noisy matrices is a separate problem.
 
-For numerical stability, a more robust algorithm selects the largest diagonal element to compute first, then back-solves for the others.
-
-% --------------------------------------------------------------------------
 \subsection{Rotation Representation Comparison}
 \label{sec:rotation_comparison}
 \index{rotation representations!comparison}
 
-Having introduced four rotation representations, we now compare their properties systematically. The choice of representation has significant practical consequences for storage, computation, and numerical stability.
-
 \begin{table}[htbp]
 \centering
-\caption{Comparison of Rotation Representations in $\Reals^3$.}
+\caption{Rotation Storage and Its Conditions. All Rows Describe Three Physical Rotational Freedoms.}
 \label{tab:rotation_comparison}
-\begin{tabular}{lcccc}
+\begin{tabular}{p{.24\linewidth}p{.14\linewidth}p{.46\linewidth}}
 \toprule
-\textbf{Property} & \textbf{Rotation Matrix} & \textbf{Euler Angles} & \textbf{Axis-Angle} & \textbf{Quaternion} \\
+Representation & Entries & Conditions and Ambiguities \\
 \midrule
-Parameters & 9 & 3 & 3 & 4 \\
-Constraints & 6 (orthonormality) & 0 & 0 & 1 (unit norm) \\
-Singularities & None & Gimbal lock & $\theta = \pi$ & None \\
-Composition & Matrix multiply & Complex & Via exp map & Quaternion multiply \\
-Interpolation & Difficult & Nonuniform & Via exp map & SLERP \\
-Storage cost & High & Low & Low & Low \\
-Unique & Yes & No (periodic) & No ($\theta > \pi$) & No ($\pm\mathbf{q}$) \\
+Matrix & 9 & Six independent orthogonality constraints; determinant selects proper rotations. \\
+Euler angles & 3 & Convention-specific local chart; singular rate maps and periodic branches. \\
+Axis and angle & 4 & Unit axis; arbitrary axis at identity and sign ambiguity at half turns. \\
+Rotation vector & 3 & Principal-log branch at $\pi$; exponential derivative degenerates at nonzero $2\pi$ multiples. \\
+Unit quaternion & 4 & Unit norm; two opposite representatives of each orientation. \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{When to use each representation:}
-\begin{itemize}
-  \item \textbf{Rotation matrices} are the natural choice for \emph{composing} transformations (chain of rigid-body transforms) and for direct application to vectors. Their $9$-parameter redundancy is the cost of a singularity-free, algebraically closed representation.
-  \item \textbf{Euler angles} remain useful for \emph{human interpretation} (roll, pitch, yaw) and low-DOF joints, but gimbal lock (Section~\ref{sec:gimbal_lock}) makes them unsuitable for general-purpose computation.
-  \item \textbf{Axis-angle} (equivalently, exponential coordinates) is the natural parameterisation of the Lie algebra $\so(3)$ and is essential for optimisation on $\SO(3)$, perturbation analysis, and control.
-  \item \textbf{Quaternions} offer the best trade-off for \emph{interpolation} (via SLERP, Section~\ref{sec:slerp}), \emph{storage} (4 parameters, 1 constraint), and \emph{numerical stability} (no singularities, cheap renormalisation). Modern simulation frameworks---including MuJoCo, Drake, and Bullet---typically store orientations as unit quaternions internally and convert to rotation matrices only when matrix operations are required.
-\end{itemize}
+An axis plus an angle stores four scalar entries with a unit-axis constraint and branch redundancy. A rotation vector $u=\alpha a$ stores three. They are related, but should not be given the same raw parameter count. The principal rotation vector has norm at most $\pi$, with opposite boundary axes identified; its inverse logarithm is ambiguous at half turns. At identity the rotation vector is zero while the separate axis is arbitrary.
 
-\index{SLERP}
+The derivative of the exponential has a different singularity. In spatial trivialization,
+\begin{equation}
+ J_l(u)=I+\frac{1-\cos\alpha}{\alpha^2}[u]_\times
+       +\frac{\alpha-\sin\alpha}{\alpha^3}[u]_\times^2,\qquad \alpha=\|u\|,
+ \label{eq:rotation_exponential_differential}
+\end{equation}
+with the continuous limit at zero. One derivation differentiates the matrix exponential and transports the result to identity, obtaining $J_l(u)=\int_0^1\exp(s[u]_\times)\,ds$. Along $u$ its eigenvalue is one; on the perpendicular plane its singular values are $2|\sin(\alpha/2)|/\alpha$. Thus
+\begin{equation}
+ \det J_l(u)=\left(\frac{2\sin(\alpha/2)}{\alpha}\right)^2.
+ \label{eq:rotation_exponential_rank}
+\end{equation}
+It is nonsingular at $\pi$ and singular at nonzero multiples of $2\pi$. The principal-log cut and exponential differential singularity are distinct. A quaternion's double cover is yet another issue. Keeping these distinctions explicit prevents a coordinate choice from being mistaken for a physical singularity.
+
 \section{Spherical Linear Interpolation (SLERP)}
 \label{sec:slerp}
+\label{def:slerp_def}
+\index{SLERP}
 
-In computer graphics and animation, we often need to smoothly interpolate between two rotations. For quaternions, the natural interpolation is \textbf{Spherical Linear Interpolation (SLERP)}.
-
-\begin{definition}{SLERP Formula}{slerp_def}
-The SLERP between two unit quaternions $\mathbf{q}_0$ and $\mathbf{q}_1$ at parameter $t \in [0, 1]$ is:
+Normalize the two nonzero endpoints. Set $a=q_0$ and choose $b=q_1$ if $q_0^Tq_1\ge0$, otherwise $b=-q_1$. With $c=a^Tb\in[0,1]$ and $\Omega=\arccos c$, short-arc interpolation is
 \begin{equation}
-\label{eq:slerp}
-\text{SLERP}(\mathbf{q}_0, \mathbf{q}_1; t) = \frac{\sin((1-t) \Omega)}{\sin \Omega} \, \mathbf{q}_0 + \frac{\sin(t \Omega)}{\sin \Omega} \, \mathbf{q}_1
+ q(u)=\frac{\sin((1-u)\Omega)}{\sin\Omega}a+
+      \frac{\sin(u\Omega)}{\sin\Omega}b,\quad 0\le u\le 1.
+ \label{eq:slerp}
 \end{equation}
-where $\Omega = \arccos(|\mathbf{q}_0 \cdot \mathbf{q}_1|)$ is the (acute) angle between the quaternions on the unit sphere.
-\end{definition}
+Changing only the dot product's sign without changing $b$ is incorrect. At $\Omega=0$, define $q(u)=a$. Antipodal quaternion inputs then describe a stationary orientation after sign alignment, not a mandatory full revolution. At $c=0$, both endpoint signs define equally short 180-degree physical rotations; the data or application must select a path.
 
-\begin{derivation}
-Two unit quaternions $\mathbf{q}_0$ and $\mathbf{q}_1$ lie on the unit sphere $S^3 \subset \mathbb{H}$. The angle between them is $\Omega = \arccos(\mathbf{q}_0 \cdot \mathbf{q}_1)$ (taking absolute value ensures we pick the shorter arc).
+To derive the formula, take $n=(b-ca)/\sin\Omega$ for $\Omega>0$. Then $a,n$ are orthonormal and $q(u)=a\cos(u\Omega)+n\sin(u\Omega)$. Resolving $n$ into $a,b$ gives the displayed sine weights. Moreover $\|dq/du\|=\Omega$; the quaternion remains on the unit sphere and traverses its great-circle arc at constant speed. The corresponding physical rotation angle is $2\Omega$, so over a duration $T$ with $u=t/T$ the angular-speed magnitude is $2\Omega/T$~\cite{Shoemake1985RotationReview}.
 
-A geodesic (great circle arc) on $S^3$ is the shortest path between two points. Parameterizing the geodesic by arc length with $t \in [0,1]$ (where $t=0$ at $\mathbf{q}_0$ and $t=1$ at $\mathbf{q}_1$) gives the SLERP formula.
+Near coincident endpoints, the program uses normalized linear interpolation. This is a controlled small-angle approximation, not exact constant-speed SLERP. For $\ell(u)=(1-u)a+ub$, the angle swept on the great circle satisfies $d\beta/du=\sin\Omega/\|\ell(u)\|^2$, which generally varies with $u$. As $\Omega\to0$ the discrepancy vanishes. The stated threshold makes the approximation explicit and testable.
 
-If $\Omega \approx 0$ (very close quaternions), use linear interpolation $\text{LERP}(\mathbf{q}_0, \mathbf{q}_1; t) = (1-t) \mathbf{q}_0 + t \mathbf{q}_1$ followed by normalization to avoid numerical division by zero.
-\end{derivation}
+Consecutive SLERP segments are orientation-continuous at a shared endpoint, but their angular velocities generally jump. Shoemake's work motivates higher-continuity quaternion curves; merely naming SLERP does not give a smooth acceleration history. Nor does interpolation enforce torque, contact, joint-range or muscle-activation limits. A measured trajectory and a dynamically feasible planned trajectory require additional information.
 
-SLERP is constant-speed interpolation and is the standard for smooth rotational animations in robotics and graphics.
-
-\index{angular velocity}
 \section{Angular Velocity and the Matrix Exponential}
 \label{sec:angular_velocity}
+\index{angular velocity}
 
 \subsection{Angular Velocity in the Spatial Frame}
-
+\label{thm:matrix_derivative_spatial}
 \index{angular velocity!spatial frame}
-When a rigid body rotates, its instantaneous rotational motion is characterized by the \textbf{angular velocity} vector $\boldsymbol{\omega} \in \Reals^3$. The magnitude $\|\boldsymbol{\omega}\|$ is the rate of rotation (rad/s), and the direction of $\boldsymbol{\omega}$ is the instantaneous axis of rotation.
 
-The rate of change of the rotation matrix $\mathbf{R}(t)$ with respect to time is related to angular velocity by:
-
-\begin{theorem}{Matrix Derivative in Spatial Frame}{matrix_derivative_spatial}
+For a differentiable $R(t)=R_{sb}(t)$, differentiating $RR^T=I$ shows that $\dot RR^T$ is skew. Define $[\omega_s]_\times=\dot RR^T$. Multiplying by $R$ yields
 \begin{equation}
-\label{eq:R_dot_spatial}
-\dot{\mathbf{R}}(t) = [\boldsymbol{\omega}]_\times \, \mathbf{R}(t)
+ \dot R=[\omega_s]_\times R.
+ \label{eq:R_dot_spatial}
 \end{equation}
-where $\boldsymbol{\omega}$ is expressed in the spatial frame and $[\boldsymbol{\omega}]_\times$ is the skew-symmetric matrix defined in equation \eqref{eq:skew_symmetric}.
-\end{theorem}
-
-\begin{proof}
-Differentiating the orthogonality constraint $\mathbf{R}^T(t) \mathbf{R}(t) = \mathbf{I}$ with respect to time:
-\begin{equation}
-\frac{d}{dt}[\mathbf{R}^T \mathbf{R}] = \dot{\mathbf{R}}^T \mathbf{R} + \mathbf{R}^T \dot{\mathbf{R}} = \mathbf{0}.
-\end{equation}
-
-Rearranging:
-\begin{equation}
-\mathbf{R}^T \dot{\mathbf{R}} = -(\mathbf{R}^T \dot{\mathbf{R}})^T,
-\end{equation}
-
-so $\mathbf{R}^T \dot{\mathbf{R}}$ is skew-symmetric. Define $[\boldsymbol{\omega}]_\times := \mathbf{R}^T \dot{\mathbf{R}}$. Then:
-\begin{equation}
-\dot{\mathbf{R}} = \mathbf{R} [\boldsymbol{\omega}]_\times.
-\end{equation}
-
-However, by convention in robotics, we often write $\dot{\mathbf{R}} = [\boldsymbol{\omega}]_\times \mathbf{R}$ where $\boldsymbol{\omega}$ is the spatial frame angular velocity. Both are correct; the difference is in the choice of frame.
-\end{proof}
+Each column obeys $\dot r_i=\omega_s\times r_i$, the velocity of a rotating unit axis. When $\omega_s\ne0$, its direction gives the instantaneous spin axis and its magnitude the angular speed in radians per second. At zero angular velocity there is no unique instantaneous axis.
 
 \subsection{Angular Velocity in the Body Frame}
-
 \index{angular velocity!body frame}
-When the angular velocity is expressed in the body-fixed frame, the differential equation becomes:
+
+Differentiating $R^TR=I$ similarly makes $R^T\dot R$ skew. Define $[\omega_b]_\times=R^T\dot R$, giving
 \begin{equation}
-\label{eq:R_dot_body}
-\dot{\mathbf{R}}(t) = \mathbf{R}(t) [\boldsymbol{\omega}_b]_\times
+ \dot R=R[\omega_b]_\times,\qquad \omega_s=R\omega_b.
+ \label{eq:R_dot_body}
 \end{equation}
-where $\boldsymbol{\omega}_b$ is the angular velocity in the body frame.
+The second relation follows from $[\omega_s]_\times=R[\omega_b]_\times R^T$ and preservation of cross products by proper rotations. These are two component descriptions of the same angular velocity relative to the spatial frame. They cannot be interchanged in a numerical formula without transforming the components.
 
-\subsection{Proof that Angular Velocity Lives in \texorpdfstring{$\so(3)$}{so(3)}}
+\subsection{Proof That Angular Velocity Lives in the Lie Algebra}
+\label{thm:angular_velocity_so3}
 
-\begin{theorem}{Angular Velocity is a Lie Algebra Element}{angular_velocity_so3}
-For any rotation matrix $\mathbf{R}(t) \in \SO(3)$, the quantity $\mathbf{R}^T \dot{\mathbf{R}} \in \so(3)$ is a skew-symmetric matrix, i.e., an element of the Lie algebra $\so(3)$.
-\end{theorem}
+The derivative $\dot R$ itself lies in $T_RSO(3)$. The products $R^T\dot R$ and $\dot RR^T$ lie in $\mathfrak{so}(3)$. For example, $\dot R^TR+R^T\dot R=0$ implies $(R^T\dot R)^T=-R^T\dot R$. This proof applies at every orientation and explains precisely what is meant by an angular velocity ``in the Lie algebra.''
 
-\begin{proof}
-From $\mathbf{R}^T \mathbf{R} = \mathbf{I}$, differentiate:
+For a unit quaternion carrying the same orientation, differentiation of the sandwich action gives
 \begin{equation}
-\dot{\mathbf{R}}^T \mathbf{R} + \mathbf{R}^T \dot{\mathbf{R}} = \mathbf{0}.
+ \dot q=\tfrac 12(0,\omega_s)\otimes q
+       =\tfrac 12q\otimes(0,\omega_b).
+ \label{eq:quaternion_kinematics}
 \end{equation}
+Indeed, a short body rotation has increment $(1,\omega_b\,dt/2)+O(dt^2)$ and postmultiplies $q$; a spatial increment premultiplies it. This also explains the factor of two in the Lie bracket of pure quaternions: their commutator is $(0,2a\times b)$. The Lie-algebra isomorphism from skew matrices to pure quaternions is $[a]_\times\mapsto(0,a/2)$ when both use their ordinary commutators.
 
-Taking the transpose of the second term:
-\begin{equation}
-(\mathbf{R}^T \dot{\mathbf{R}})^T = \dot{\mathbf{R}}^T \mathbf{R}.
-\end{equation}
+For constant spatial rate, $R(t+h)=\exp(h[\omega_s]_\times)R(t)$. For constant body rate, $R(t+h)=R(t)\exp(h[\omega_b]_\times)$. A changing noncommuting rate generally requires an ordered product or an appropriate numerical integrator. Substituting the integral of the rate into one exponential is not generally exact. Quaternion normalization controls a representation constraint; it does not remove integration phase error.
 
-From the differentiated constraint, $\dot{\mathbf{R}}^T \mathbf{R} = -\mathbf{R}^T \dot{\mathbf{R}}$, so:
-\begin{equation}
-(\mathbf{R}^T \dot{\mathbf{R}})^T = -\mathbf{R}^T \dot{\mathbf{R}}.
-\end{equation}
-
-Thus $\mathbf{R}^T \dot{\mathbf{R}}$ is skew-symmetric, confirming it belongs to $\so(3)$.
-\end{proof}
-
-\index{axis-angle representation}
-\section{Axis-Angle Representation and Euler's Rotation Theorem}
+\section{Axis-Angle Form and Euler's Theorem}
 \label{sec:axis_angle}
+\label{thm:euler_rotation_theorem}
+\index{axis-angle representation}
 
-\begin{theorem}{Euler's Rotation Theorem}{euler_rotation_theorem}
-Every rotation in 3D can be expressed as a rotation about a single axis by some angle. That is, for any $\mathbf{R} \in \SO(3)$, there exist a unit vector $\hat{\boldsymbol{\omega}} \in \Reals^3$ (the rotation axis) and an angle $\theta \in [0, \pi]$ such that the rotation is completely described by this pair $(\hat{\boldsymbol{\omega}}, \theta)$.
-\end{theorem}
+A real orthogonal 3-by-3 matrix has eigenvalues of unit magnitude. Nonreal eigenvalues occur in conjugate pairs with product one. Since the dimension is odd, at least one eigenvalue is real and hence $\pm1$. Determinant $+1$ forces at least one $+1$ eigenvalue, including the all-real case. Choose a unit eigenvector $a$ with $Ra=a$.
 
-\begin{proof}
-The rotation axis $\hat{\boldsymbol{\omega}}$ is an eigenvector of $\mathbf{R}$ with eigenvalue 1:
+Its perpendicular plane is invariant because $a^TRv=(R^Ta)^Tv=a^Tv$. The restriction to that plane is a proper two-dimensional rotation and therefore has an angle. Choosing the axis sign allows the angle $\alpha$ to lie in $[0,\pi]$. This establishes existence without assuming a fixed axis at the start. Its trace is $1+2\cos\alpha$.
+
+For $0<\alpha<\pi$, $[a]_\times=(R-R^T)/(2\sin\alpha)$. At identity the axis is arbitrary; at a half turn the sign of the axis is ambiguous and the antisymmetric formula fails. Use an eigenvector or the stable quaternion conversion there. The finite endpoint axis need not equal the instantaneous angular-velocity axis anywhere along a general intervening trajectory. An orientation pair alone does not recover the body's path or accumulated turns.
+
+\section{Numerical Stability and Software Contracts}
+\label{sec:rotation_numerics}
+
+Store a matrix, quaternion or local chart according to the operation and domain. There is no universal fastest or most stable representation. MuJoCo, for example, documents scalar-first unit quaternions and distinguishes quaternion position storage from three-dimensional angular-velocity coordinates~\cite{MuJoCoRotationReview}. That interface fact does not establish a speed comparison or the representation used by every other engine.
+
+If a near-rotation matrix $M$ needs projection, an SVD $M=U\Sigma V^T$ gives the Frobenius-nearest proper rotation $U\operatorname{diag}(1,1,\det(UV^T))V^T$, with descending singular values. The determinant adjustment prevents a reflection. Projection can be nonunique at degenerate data, and a chosen branch need not vary continuously there. Plain QR without sign and orientation conventions is not this nearest-rotation solution.
+
+A numerical tolerance should reflect the expected error scale. The teaching converter rejects matrices outside its declared tolerance instead of silently fitting them. A quaternion normalization should first scale by its largest absolute component, then normalize the scaled vector; this prevents overflow or underflow of the intermediate norm for finite nonzero inputs. Neither operation validates the motion-capture calibration that produced the data.
+
+\section{Interpreting Golf and Humanoid Motion}
+\label{sec:rotation_tasks}
+
+Let a fixed body-frame clubface normal be $n_b$ and a fixed clubhead point be $r_b$. Their spatial values are $n_s=Rn_b$ and $x_s=p+Rr_b$. Under a small spatial orientation perturbation $R^+=\exp([\delta\alpha_s]_\times)R$,
 \begin{equation}
-\mathbf{R} \hat{\boldsymbol{\omega}} = \hat{\boldsymbol{\omega}}.
+ \delta n_s=-[n_s]_\times\delta\alpha_s+O(\|\delta\alpha_s\|^2),
+ \qquad
+ \delta x_s=\delta p-[Rr_b]_\times\delta\alpha_s+O(\|\delta\alpha_s\|^2).
+ \label{eq:clubface_point_sensitivity}
 \end{equation}
+A perturbation parallel to $n_s$ changes the full body orientation but leaves that normal unchanged to first order. The same perturbation can move an off-axis point. Face normal, strike position and complete orientation are related but different tasks. For a one-metre lever arm perpendicular to a small 0.01-radian rotation, the leading point displacement is 0.01 metres. This is a geometric example, not a measured swing or a prediction of ball dispersion.
 
-Such an eigenvector exists because $\det(\mathbf{R} - \mathbf{I}) = 0$ for any rotation (a rotation always leaves one axis invariant). The angle $\theta$ can be recovered from $\text{trace}(\mathbf{R}) = 1 + 2\cos\theta$.
-\end{proof}
+For a small zero-mean orientation error represented in body components, $\delta\alpha_s=R\delta\alpha_b$ gives $\Sigma_s=R\Sigma_bR^T$. A normal's first-order covariance is $[n_s]_\times\Sigma_s[n_s]_\times^T$. Position and orientation correlations must be included when propagating the point expression. Subtracting Euler angles or quaternion entries across a branch cut does not provide a consistent global orientation error. These linear covariance formulas require a sufficiently concentrated distribution within a common perturbation convention.
 
-The axis-angle representation is compact and intuitive but computationally less efficient than quaternions for repeated operations.
+Timing is intertwined with geometry. Comparing a nominal face at $t$ with the same trajectory at $t+\delta t$ adds $\dot n_s\delta t=(\omega_s\times n_s)\delta t$ to first order. Near ball impact or foot contact, the event time itself depends on state and geometry. Compare equivalent events and use the appropriate event sensitivity before attributing an orientation mismatch to a golfer's control. The hybrid chapters develop that additional calculation.
 
+Orientation specifies arrangement; angular velocity specifies its rate. Inertia, torques, activation, compliance and constraints determine which rates and accelerations are feasible. A smooth quaternion interpolant does not establish a feasible human movement, and a compact endpoint orientation error does not identify the forces that produced it. These distinctions let geometric analysis inform the golf question without claiming that representation mathematics explains skilled coordination by itself.
+
+\section{Worked Example: Quaternion Interpolation}
+\label{sec:python_example}
 \index{SLERP!Python example}
 \index{Python!quaternion}
-\section{Worked Example: Quaternions and SLERP in Python}
-\label{sec:python_example}
 
-Below is a complete Python implementation of quaternion operations and rotation interpolation.
+The following self-contained NumPy program is the actual file exercised by the repository tests. It uses scalar-first Hamilton multiplication, normalizes nonzero rotation inputs consistently, validates domains, converts matrices by the largest-component rule and returns point-cloud frames. It generates no plot by itself and reports no performance benchmark.
 
-\lstinputlisting[language=Python, basicstyle=\ttfamily\small, numbers=left]%
-  {code/quaternion_demo.py}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\small,numbers=left]{code/quaternion_demo.py}
 
-\textbf{Key points from the code:}
-
-\begin{enumerate}
-    \item \textbf{Quaternion representation:} We store $\mathbf{q} = [q_w, q_x, q_y, q_z]$ as a NumPy array.
-    \item \textbf{Hamilton product:} Custom function implements the quaternion multiplication rule (equation \eqref{eq:hamilton_product}).
-    \item \textbf{Normalization:} Unit quaternions are enforced by dividing by norm.
-    \item \textbf{Quaternion-to-matrix:} Uses equation \eqref{eq:quat_to_matrix}.
-    \item \textbf{SLERP:} Implements equation \eqref{eq:slerp} with fallback to linear interpolation for nearby quaternions.
-    \item \textbf{Visualization:} The example rotates a point cloud through interpolated frames.
-\end{enumerate}
+The interpolation fraction lies in $[0,1]$; at least two integer frames are required to include both endpoints. Near coincident endpoints the documented normalized-linear branch approximates SLERP. The test suite checks matrix action against independent Rodrigues and SciPy constructions, half turns, sign-equivalent endpoints, large and tiny quaternion scales, invalid data and constant-speed behavior away from the approximation branch. Finite floating-point arithmetic remains distinct from exact symbolic identities.
 
 \section{Chapter Summary}
 \label{sec:ch4_summary}
 
-This chapter has developed the complete mathematical framework for 3D rotations:
+A rotation matrix carries body components to spatial components under the stated convention. Its orthogonality and determinant define a three-dimensional Lie group. Euler coordinates are local and their rate maps can lose rank; the body's freedom is a separate question. Unit quaternions provide a constrained double cover, with explicit sign and interpolation choices. Spatial and body angular velocities are related by $R$, and their multiplication sides follow from that relation.
 
-\begin{itemize}
-    \item \textbf{Rotation Matrices ($\SO(3)$):} We defined the Special Orthogonal Group as the set of $3 \times 3$ orthogonal matrices with determinant $+1$, proved it is both a group and a 3-dimensional smooth manifold, and derived the three elementary rotations $\mathbf{R}_x(\theta), \mathbf{R}_y(\theta), \mathbf{R}_z(\theta)$.
+For golf and humanoid modeling, the practical chain is orientation representation, consistent angular rate, task sensitivity, uncertainty and event timing, followed by a dynamical feasibility analysis. The next chapter combines $R$ and $p$ into $SE(3)$ and distinguishes rigid-body twists, origins and finite screw displacements.
 
-    \item \textbf{Euler Angles and Gimbal Lock:} We presented the ZYX and ZXZ conventions and rigorously proved that the Jacobian relating angular velocities to Euler angle rates becomes singular at $\theta = \pm 90^\circ$, making Euler angles unsuitable for continuous control.
-
-    \item \textbf{Lie Groups and Algebras:} We identified $\SO(3)$ as a Lie Group (smooth manifold + group structure) and its Lie algebra $\so(3)$ as the space of skew-symmetric matrices, which represent angular velocities.
-
-    \item \textbf{Quaternion Algebra:} We introduced the quaternion representation of rotations, defined all quaternion operations (addition, Hamilton product, conjugate, norm, inverse), and proved that $\mathbf{q}$ and $-\mathbf{q}$ represent the same rotation (the double cover property).
-
-    \item \textbf{Conversions:} We derived explicit formulas for converting between quaternions and rotation matrices in both directions.
-
-    \item \textbf{SLERP:} We presented spherical linear interpolation as the natural way to smoothly interpolate between rotations.
-
-    \item \textbf{Angular Velocity:} We connected the time-derivative of rotation matrices to angular velocity vectors, showing that $\dot{\mathbf{R}} = [\boldsymbol{\omega}]_\times \mathbf{R}$ and that $\mathbf{R}^T \dot{\mathbf{R}} \in \so(3)$.
-
-    \item \textbf{Euler's Theorem:} We stated and sketched the proof that every 3D rotation can be expressed as a rotation about a single axis by a single angle.
-\end{itemize}
-
-These tools eliminate the singularities of Euler angles while providing efficient computational representations. The next chapter combines rotation matrices with translation vectors into the full rigid body transformation group $\SE(3)$.
-
-% ------------------------------------------------------------------
 \section{Further Reading}
 \label{sec:ch4_further_reading}
-% ------------------------------------------------------------------
 
-The rotation group $\SO(3)$ and its extension to rigid-body transformations
-$\SE(3)$ are treated in depth by Murray, Li, and Sastry~\cite{Murray1994},
-whose Chapter~2 develops the group-theoretic and differential-geometric
-foundations that underpin this chapter. Lynch and Park~\cite{Lynch2017},
-Chapters~3--4, provide a complementary modern treatment with numerous worked
-examples of rotation matrices, homogeneous transformation matrices, and
-their application to serial kinematic chains.
+Murray, Li and Sastry~\cite{Murray1994} and Lynch and Park~\cite{Lynch2017} give the broader robotics treatment of rotation and rigid transformations. The official Modern Robotics frame and angular-velocity transcripts are directly relevant to the conventions used here. Shoemake~\cite{Shoemake1985RotationReview} develops quaternion interpolation and explains why joining great-circle segments alone does not ensure higher-order continuity. MuJoCo's documentation~\cite{MuJoCoRotationReview} supplies a concrete software convention to check against an implementation.
 
-The Lie group structure of $\SO(3)$ and its Lie algebra $\so(3)$ are part of
-a much larger mathematical framework. Hall~\cite{hall2015} offers a
-self-contained introduction to Lie groups and Lie algebras accessible to
-engineers with the linear algebra background developed in Chapter~1 of this
-text. For the geometric and symplectic perspective on rotation groups and
-their role in mechanics, Marsden and Ratiu~\cite{marsden1999} provide the
-definitive reference.
+Hall~\cite{hall2015} develops Lie-group theory, and Marsden and Ratiu~\cite{marsden1999} place these structures in geometric mechanics. They are further study, not evidence that the present examples have validated an anatomical golfer. Historical references identify the original works; the proofs and numerical checks in this chapter state their own assumptions.
 
-The Rodrigues rotation formula derived in this chapter has a distinguished
-history: it was first published by Olinde Rodrigues in
-1840~\cite{rodrigues1840}, predating the modern matrix formalism by nearly a
-century. Rodrigues' original derivation used purely geometric reasoning; the
-matrix exponential form $e^{[\hat{\boldsymbol{\omega}}]_\times \theta}$
-that we derive in Chapter~6 provides the modern algebraic counterpart.
+\section{Exercises and Answer Checks}
+\label{sec:rotation_exercises}
 
-Finally, readers implementing rotation representations in software should be
-aware that quaternion arithmetic is the \emph{de facto} standard in modern
-robotics and game-engine frameworks (e.g., Eigen, ROS~tf2, Unity) precisely
-because it avoids the gimbal-lock singularity and requires only four
-parameters with a single unit-norm constraint. The SLERP algorithm
-presented in this chapter is the core interpolation primitive in all of
-these libraries.
-
+\begingroup
+\newcounter{rotationexercise}
+\renewenvironment{exercise}{\par\medskip\refstepcounter{rotationexercise}\noindent\textbf{Exercise \therotationexercise.}\itshape}{\par\medskip}
 \begin{exercises}{Rotations, Quaternions, and SO(3)}{ch4}
 
 \subsection{Foundation Tier}
 
 \begin{exercise}
 \label{ex:orthogonal_matrices}
-Verify that $\mathbf{R}_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}$ satisfies $\mathbf{R}_z^T \mathbf{R}_z = \mathbf{I}$ and $\det(\mathbf{R}_z) = 1$. Interpret each column as a rotated basis vector.
+Verify $R_z(\theta)^TR_z(\theta)=I$ and $\det R_z(\theta)=1$. Interpret its columns under $R=R_{sb}$. Explain why these checks alone cannot distinguish $R_{sb}$ from $R_{bs}$.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:rotation_composition}
-Show that the composition of two rotations $\mathbf{R}_1$ and $\mathbf{R}_2$ (applied as $\mathbf{R}_1 \mathbf{R}_2 \mathbf{v}$) is itself a rotation by verifying closure in $\SO(3)$.
+Prove that $R_1R_2\in SO(3)$ when both factors are proper rotations. Apply $R_x(\pi/2)R_y(\pi/2)$ and the reversed product to $e_z$. State which rotation acts first in each expression.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:euler_angles_zyx}
-Compute the full ZYX Euler angle rotation matrix for $\phi = 45^\circ$, $\theta = 30^\circ$, $\psi = 60^\circ$ by multiplying $\mathbf{R}_x(\phi) \mathbf{R}_y(\theta) \mathbf{R}_z(\psi)$. Verify orthogonality numerically.
+Compute the intrinsic ZYX product $R_z(\psi)R_y(\theta)R_x(\phi)$ for $(\phi,\theta,\psi)=(45^\circ,30^\circ,60^\circ)$. Check orthogonality and compare the third column with the reversed product's third column. Explain what that column could represent for an attached club frame.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:gimbal_lock_jacobian}
-At $\theta = 90^\circ$ in ZYX Euler angles, show that $\dot{\phi}$ and $\dot{\psi}$ are indistinguishable in their effect on the body frame by examining which rows of the Jacobian become parallel.
+At $\theta=\pi/2$, identify the dependent columns of the spatial ZYX rate map in roll/pitch/yaw order. Find a nonzero kernel vector and the rank. Explain why the result does not remove a freely rotating body's physical degree of freedom.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:skew_symmetric}
-For $\boldsymbol{\omega} = [1, 2, 3]^T$, construct the skew-symmetric matrix $[\boldsymbol{\omega}]_\times$ and verify that it is skew-symmetric by checking $[\boldsymbol{\omega}]_\times^T = -[\boldsymbol{\omega}]_\times$.
+Construct $[\omega]_\times$ for $\omega=(1,2,3)^T$. Verify skew symmetry and show that its action on an arbitrary vector equals the cross product. State the units if $\omega$ is an angular velocity.
 \end{exercise}
 
 \subsection{Intermediate Tier}
 
 \begin{exercise}
 \label{ex:quaternion_product}
-Compute the Hamilton product $\mathbf{q}_1 \otimes \mathbf{q}_2$ for $\mathbf{q}_1 = [0.7071, 0.7071, 0, 0]^T$ and $\mathbf{q}_2 = [0.7071, 0, 0.7071, 0]^T$ by hand and verify that the result is unit norm.
+Let $c=1/\sqrt2$, $q_1=(c,c,0,0)$ and $q_2=(c,0,c,0)$. Compute $q_1\otimes q_2$ and its exact norm. Repeat with $c=0.7071$ and quantify the norm difference. Why should an exact theorem not be checked by demanding exact equality from rounded input?
 \end{exercise}
 
 \begin{exercise}
 \label{ex:quaternion_double_cover}
-Show that $\mathbf{q} = [0.7071, 0.7071, 0, 0]^T$ and $-\mathbf{q} = [-0.7071, -0.7071, 0, 0]^T$ represent the same rotation by computing the axis and angle for each and verifying they are identical (modulo $2\pi$).
+For $q=(\cos(\pi/4),\sin(\pi/4),0,0)$, find axis-angle descriptions of $q$ and $-q$ using angles in $[0,2\pi]$. Verify identical matrix actions. Explain why the axis-angle pairs themselves need not be identical.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:quat_to_matrix}
-Convert the quaternion $\mathbf{q} = [\cos(45^\circ/2), \sin(45^\circ/2), 0, 0]^T$ (rotation about the $x$-axis by $45^\circ$) to a rotation matrix using equation \eqref{eq:quat_to_matrix} and verify it matches $\mathbf{R}_x(45^\circ)$.
+Convert $(\cos(\pi/8),\sin(\pi/8),0,0)$ to a matrix and recover it using the largest-component algorithm. Then apply the algorithm to $\operatorname{diag}(1,-1,-1)$ and explain why the scalar-only conversion fails.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:slerp_interpolation}
-Interpolate between $\mathbf{q}_0 = [1, 0, 0, 0]^T$ (identity) and $\mathbf{q}_1 = [\cos(45^\circ/2), \sin(45^\circ/2), 0, 0]^T$ at $t = 0.5$ using SLERP and verify the result represents a $22.5^\circ$ rotation about the $x$-axis.
+Interpolate from identity to a 45-degree rotation about $x$ at fraction $u=1/2$. Repeat with a negated endpoint quaternion. Then interpolate from $q$ to $-q$: what physical path does the short-arc convention choose, and what information would be needed to request a full turn instead?
 \end{exercise}
 
 \begin{exercise}
 \label{ex:angular_velocity_skew}
-If $\mathbf{R}(t) = \mathbf{R}_z(t)$ (rotation about $z$-axis with unit angular velocity), compute $\dot{\mathbf{R}}$ and verify that $[\boldsymbol{\omega}]_\times = \mathbf{R}^T \dot{\mathbf{R}}$ with $\boldsymbol{\omega} = [0, 0, 1]^T$.
+For $R(t)=R_z(t)R_x(\pi/2)$, compute spatial and body angular velocity from the two matrix products. Verify $\omega_s=R\omega_b$. Explain why using $R(t)=R_z(t)$ alone would not expose a confusion between the two component conventions.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:axis_angle_from_matrix}
-From the rotation matrix $\mathbf{R}_x(60^\circ)$, extract the rotation axis (should be $[1, 0, 0]^T$) and angle (should be $60^\circ$) using the eigenvector method and $\text{trace}(\mathbf{R})$ formula.
+Recover an axis-angle description of $R_x(\pi/3)$ from its trace and antisymmetric part. Treat $R_x(\pi)$ and $I$ separately. Explain what a finite endpoint axis says, and does not say, about an intervening swing trajectory.
 \end{exercise}
 
 \subsection{Advanced Tier}
 
 \begin{exercise}
 \label{ex:so3_manifold_dimension}
-Prove rigorously that $\SO(3)$ is a 3-dimensional manifold by counting independent constraints and showing a 3-parameter local chart. Consider both the orthogonality constraints and determinant condition.
+Prove the rank-six statement for $DG_R[H]$. Characterize its kernel, account for the determinant condition and construct a three-parameter local chart. Explain why counting written scalar equations would not suffice at a general singular constraint set.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:quaternion_lie_algebra}
-Show that the set of pure quaternions $\{\mathbf{q} : q_w = 0\}$ forms a 3-dimensional vector space that is isomorphic to $\so(3)$. Under what operation does this isomorphism hold?
+Compute the ordinary commutator of pure quaternions $(0,a)$ and $(0,b)$. Find the scale factor in the map $[a]_\times\mapsto(0,ca)$ that makes it a nonzero Lie-algebra isomorphism. Relate the result to the quaternion angular-velocity equation.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:matrix_exponential}
-For small $t$, the matrix exponential provides $\mathbf{R}(t) = e^{t [\boldsymbol{\omega}]_\times}$ where $\boldsymbol{\omega} = [0, 0, 1]^T$ (unit rotation about $z$). Expand the series $e^{t [\boldsymbol{\omega}]_\times} = \mathbf{I} + t[\boldsymbol{\omega}]_\times + \frac{t^2}{2}[\boldsymbol{\omega}]_\times^2 + \cdots$ and verify it matches $\mathbf{R}_z(t)$ to second order in $t$.
+Expand $\exp(t[e_z]_\times)$ through second order and compare it with $R_z(t)$. Then consider one interval rotating about $x$ followed by one about $y$. Explain why one exponential of the sum is generally different from the ordered product.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:rodrigues_derivation}
-Derive the Rodrigues rotation formula $\mathbf{R} = \mathbf{I} + \sin\theta \, [\hat{\boldsymbol{\omega}}]_\times + (1 - \cos\theta) \, [\hat{\boldsymbol{\omega}}]_\times^2$ by expanding the rotation of an arbitrary vector about an axis, using the decomposition $\mathbf{v} = (\hat{\boldsymbol{\omega}} \cdot \mathbf{v}) \hat{\boldsymbol{\omega}} + \mathbf{v}_\perp$.
+Derive Rodrigues' vector formula by decomposing $v$ into components parallel and perpendicular to a unit axis. Derive the singular values of $J_l(u)$ on the axis and its perpendicular plane. Distinguish the behavior at $\|u\|=\pi$ and $2\pi$.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:quaternion_interpolation_constant_speed}
-Prove that SLERP produces constant-speed interpolation: the quaternion at parameter $t$ moves along the geodesic at constant angular velocity. Hint: compute the derivative $\frac{d}{dt}\text{SLERP}(\mathbf{q}_0, \mathbf{q}_1; t)$ and show its norm is constant.
+Differentiate the great-circle form of SLERP and show that its quaternion speed is $\Omega$. Convert this to physical angular speed over duration $T$. Derive the normalized-linear angular rate and explain why consecutive SLERP segments need not have continuous angular velocity.
+\end{exercise}
+
+\begin{exercise}
+\label{ex:rotation_task_sensitivity}
+Let $R=I$, $n_b=e_z$, $r_b=L e_x$ and $\delta\alpha_s=\varepsilon e_z$. Compare the first-order normal change with the point displacement. If $\Sigma_s=\sigma^2I$, compute the first-order normal covariance and its rank. Identify the physical perturbation that this normal-only task cannot observe.
+\end{exercise}
+
+\begin{exercise}
+\label{ex:rotation_timing}
+A body has $n_s=e_x$ and $\omega_s=10e_z$ radians per second at a nominal event. Compute the first-order normal difference due solely to a 1-millisecond timestamp shift. Explain why this does not establish a golfer's control error or determine the true state-dependent impact-time sensitivity.
 \end{exercise}
 
 \end{exercises}
+\endgroup
+
+\subsection{Answer Checks}
+
+\begin{enumerate}
+\item \textbf{Rotation Constraints.} The planar sine/cosine columns have unit norm and zero inner product; the third column is $e_z$. The determinant is $\cos^2\theta+\sin^2\theta=1$. The transpose satisfies the same constraints, so frame direction needs an independent convention or known vector-action check.
+\item \textbf{Composition.} $(R_1R_2)^T(R_1R_2)=I$ and the determinant is the product of the determinants. The rightmost factor acts first. The two actions on $e_z$ are $e_x$ and $-e_y$ respectively.
+\item \textbf{ZYX Example.} The worked example gives the full matrix. The two third columns are
+\begin{equation}
+\begin{aligned}
+R_z(\psi)R_y(\theta)R_x(\phi)e_z&\approx(.789149,-.047367,.612372)^T,\\
+R_x(\phi)R_y(\theta)R_z(\psi)e_z&\approx(.5,-.612372,.612372)^T.
+\end{aligned}
+\end{equation}
+A body $z$ axis aligned with a face normal would therefore be predicted differently by the two conventions.
+\item \textbf{Gimbal Lock.} Columns 1 and 3 are opposite; $(1,0,1)^T$ is in the kernel and rank is two. This is the derivative of the chosen orientation coordinates, not a proof of reduced configuration dimension or loss of physical actuation authority.
+\item \textbf{Skew Map.} The rows are $(0,-3,2)$, $(3,0,-1)$ and $(-2,1,0)$. Multiplication by $(v_x,v_y,v_z)^T$ gives $(2v_z-3v_y,3v_x-v_z,v_y-2v_x)^T$. Rate components carry inverse-time units with radians as the angle convention.
+\item \textbf{Quaternion Product.} The exact result is $(1,1,1,1)/2$ with norm one. Rounded factors yield each component $0.49999041$ and norm $0.99998082$. Floating-point tolerances must account for the input approximation as well as arithmetic.
+\item \textbf{Double Cover.} One pair is $(e_x,\pi/2)$; the negated quaternion gives $(-e_x,3\pi/2)$. Their sandwich actions and matrices are identical. Their coordinates are different representatives of the same orientation.
+\item \textbf{Conversion.} The first matrix is $R_x(\pi/4)$ and the largest component is its positive scalar part. The half-turn matrix selects $x=1$ and returns $(0,1,0,0)$; its scalar part is zero, so division by $4w$ is invalid.
+\item \textbf{Interpolation.} The midpoint is $(\cos(\pi/16),\sin(\pi/16),0,0)$, a 22.5-degree rotation. Negating the endpoint changes no short-arc physical path. Sign-aligned $q,-q$ gives a constant orientation; a full turn requires path or turn-count information beyond the endpoints.
+\item \textbf{Rate Frames.} $\omega_s=e_z$ and $\omega_b=R_x(-\pi/2)e_z=e_y$. The relation $Re_y=e_z$ verifies consistency. For $R_z(t)$ both component columns happen to be $e_z$, hiding a convention error.
+\item \textbf{Axis and Angle.} At $\pi/3$, trace is 2 and the antisymmetric formula gives $e_x$. At $\pi$, use the fixed eigenvector or quaternion branch and retain axis-sign ambiguity. At identity any axis is permissible. Endpoints do not identify the path or its changing instantaneous axes.
+\item \textbf{Manifold Rank.} For every symmetric $S$, choose $H=RS/2$, proving surjectivity. The kernel is $R\mathfrak{so}(3)$ and has dimension three. Determinant $+1$ selects a component. The map $\delta\mapsto R\exp([\delta]_\times)$ is locally invertible at zero; irregular constraints need separate analysis.
+\item \textbf{Lie Bracket.} The pure-quaternion commutator is $(0,2a\times b)$. Requiring $2c^2=c$ gives $c=1/2$ for a nonzero isomorphism. This is the same half factor in $\dot q=q\otimes(0,\omega_b)/2$.
+\item \textbf{Exponential.} The upper-left block is $\left[\begin{smallmatrix}1-t^2/2&-t\\t&1-t^2/2\end{smallmatrix}\right]+O(t^3)$, with the third diagonal entry one. Nonzero commutators produce second-order ordered-product terms that an exponential of the summed generators does not generally match.
+\item \textbf{Rodrigues and Differential.} The parallel component is fixed and the perpendicular plane has ordinary sine/cosine rotation. For $J_l$, the axial singular value is 1 and the perpendicular values are $2|\sin(\alpha/2)|/\alpha$. At $\pi$ they are $2/\pi$; at $2\pi$ they vanish. The first case concerns a principal-log branch boundary, not a rank loss of the exponential derivative.
+\item \textbf{Speed.} Differentiation gives $\|q'(u)\|=\Omega$ and physical speed $2\Omega/T$. For normalized linear interpolation, $\beta'(u)=\sin\Omega/\|(1-u)a+ub\|^2$. Its denominator generally varies. At a piecewise join, both axis and speed can change even though orientation is continuous.
+\item \textbf{Task Sensitivity.} The normal change is zero to first order, while $\delta x_s=L\varepsilon e_y$. The normal covariance is $\sigma^2\operatorname{diag}(1,1,0)$ with rank two for $\sigma>0$. Rotation about the normal is invisible to the normal alone, although it can move an off-axis strike point.
+\item \textbf{Timing.} The first-order difference is $10e_z\times e_x\,(.001)=.01e_y$. This is a timestamp-shift calculation on the given trajectory. An actual contact event requires the event surface, its state dependence and the corresponding event-time derivative; control error cannot be inferred from this number alone.
+\end{enumerate}
 
