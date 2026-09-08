@@ -208,3 +208,14 @@ Main CI 34279760601 and deployment 34279760688 succeed. Exact live artifact
 batch remains pending; the next commit records its source revision.
 
 Content commit f1430afe replayed onto protected main b6dc729f as 00a8f13c814062765ac2a41326ae2a72f3de3923; final trees are identical. Book audit source/render revision fields now bind that content commit; this is local render evidence, not a claim of deployment.
+
+
+## Pull Request Delivery
+
+PR #4296 is pushed from `fix/4294-biology-nonlinear-dynamics` at 887a855a.
+The first push was correctly rejected because a metadata helper wrote the book
+audit with Windows CRLF and formatting then normalized it after hashes had been
+computed. Normalize the canonical file to LF before regenerating dependent
+hashes; do not bypass the guard. Commit 887a855a repairs those dependent hashes.
+The second normal push passed all hooks, including its unit-test lane. Protected
+CI, merge and exact-revision publication remain pending.

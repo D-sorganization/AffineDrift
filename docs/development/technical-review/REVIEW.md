@@ -4,7 +4,7 @@ Date: 2026-09-05. Parent epic: [#4009](https://github.com/D-sorganization/Affine
 
 ## Current Checkpoint: 8 September 2026
 
-Biology #4294 corrects both complete long chapters, the Volume IV preface and public reading page. Muscle/tendon state, energy, HKB, synergies, impedance and coupled stability now have explicit assumptions, counterexamples, derivations and independent checks. All 21 final affected PDF pages pass visual QA; all 30 reading-page scroll captures were inspected. Root tests 4796/29 skips, content 130/4 skips, static 34, title 631, Ruff, Black 669 and mypy 86 pass; coverage is 79.04%. Final theme contrast repairs pass 14 responsive cases and both serious/critical axe gates; 54 theme tests pass. Protected delivery remains in progress. See `biology-review.md`.
+Biology #4294 / PR #4296 corrects both complete long chapters, the Volume IV preface and public reading page. Muscle/tendon state, energy, HKB, synergies, impedance and coupled stability now have explicit assumptions, counterexamples, derivations and independent checks. All 21 final affected PDF pages pass visual QA; all 30 reading-page scroll captures were inspected. Root tests 4796/29 skips, content 130/4 skips, static 34, title 631, Ruff, Black 669 and mypy 86 pass; coverage is 79.04%. Final theme contrast repairs pass 14 responsive cases and both serious/critical axe gates; 54 theme tests pass. Protected delivery remains in progress. See `biology-review.md`.
 
 Rotations #4288 / PR #4289 is protected-merged and published as072d5076d7219ff39a8f004694f9d9a9b35a5cb8.
 Main CI34265513801, textbooks34265513761 and deployment34265513841 pass;
