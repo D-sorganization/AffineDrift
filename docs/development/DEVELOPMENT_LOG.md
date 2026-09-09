@@ -20,20 +20,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4322 · Rotation Conventions, Stable Conversion and Golf Interpretation
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4322 (epic #4009; corpus #4021)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4323 (open)
 - **Branch:** `fix/4322-rotation-converter-reference`
 - **Paths:** `articles/rotation-converter.qmd`, `articles/rotation-representations-reference.qmd`, `js/rotation-converter.js`, `js/rotation-converter-ui.js`, `js/rotation-converter-viz.js`, `css/rotation-converter.css`, `scripts/sync_frontend_assets.py`, `src/tools/rotation_reference_examples.py`, `tests/test_rotation_representations_reference.py`, `tests/test_rotation_reference_kinematics.py`, `tests/rotation-converter-rigor.test.js`, `tests/rotation-converter-ui.test.js`, `docs/development/technical-review/rotation-converter-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`f0a5b6c2a9fab22d5b410ab233032f2ea72f3c39` plus validated #4322 working tree; implementation SHA pending first commit)
+- **Last verified:** 2026-09-09 (`12169b9b8d0a36138d5b27bbdd493a58314d34ea`)
 - **Summary:** Both complete articles derive stable boundary conversions and connect calibrated orientation, angular velocity, face sensitivity, uncertainty and physical work. Converter rejects malformed inputs, preserves labeled prior results and supports optional-3D failure. Root 5,078 passes, 79.19% coverage; final numerical/UI/content/static/style/type/link checks and complete bounded web QA pass.
-- **Next step:** Publish the validated correction through a focused protected PR fixing #4322.
+- **Next step:** Verify protected PR #4323 checks and exact production evidence after merge.
 
 ### DL-#4320 · Textbook Energy Transfer and Work Ledgers
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4320 (epic #4009)
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4321 (merged)
@@ -42,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-09
 - **Last verified:** 2026-09-09 (`4aea9755711b462498d8cddae531dab3131f5989`)
 - **Summary:** Both complete editions now derive consistent whole-system, physical segment and interface ledgers, full two-link dynamics, lag/elasticity and collision boundaries. Two shared figures and six worked answers have independent numerical verification. Root 5,061 passes, 79.17% coverage; all final affected/content/static/title/style/type/quality/link checks and complete bounded print/web QA pass.
-- **Next step:** Verify exact production evidence from deployment 34406274993 after completion.
+- **Next step:** Continue the corpus review; exact live artifact 10126445934 verifies energy publication (956/956 records, 239 routes, no failures or serious/critical axe findings).
 
 ### DL-#4318 · Spatial Algebra, Physical Inertia and Recursive Dynamics
 

@@ -213,7 +213,7 @@ pass. The first push stopped on Bandit B102 in the untracked local publication
 example executor; its reviewed-local-source boundary is now documented with a
 specific B102 annotation. The normal push was rerun successfully. No hook was
 bypassed. SPEC has exactly one actual-PR row. Final-head and main CI pass; exact production
-verification for energy remains pending; never mutate Git during local QA.
+verification for energy is complete as recorded below; never mutate Git during local QA.
 
 Spatial #4318 / PR #4319 merged normally on 2026-09-09 at 20:01:13Z as
 c4c1fee6db8915eee49a80b3572ece9ccfe57cd5. Main CI 34398520012, textbooks
@@ -225,4 +225,4 @@ Main CI 34393037135, textbooks 34393037136, performance 34393037120 and deployme
 239 routes with zero failures, serious/critical axe findings or retries.
 Keep the corpus epic open; 217 indexed sources still await complete review.
 
-Energy #4320 / PR #4321 merged normally at 2026-09-09T21:19:27Z as 4aea9755711b462498d8cddae531dab3131f5989. Final-head CI 34403603438 and main CI 34406274957 pass; main textbooks 34406274978 and performance 34406275036 pass. Deployment 34406274993 is still running; exact production verification remains pending.
+Energy #4320 / PR #4321 merged normally at 2026-09-09T21:19:27Z as 4aea9755711b462498d8cddae531dab3131f5989. Final-head CI 34403603438 and main CI 34406274957 pass; main textbooks 34406274978 and performance 34406275036 pass. Deployment 34406274993 passes. Exact live artifact 10126445934 was downloaded and all 956 records across 239 routes were read and checked: HTTP 200, zero failures, serious/critical axe findings, retries, transients or exhausted retries; axe ran on all 239 routes.
