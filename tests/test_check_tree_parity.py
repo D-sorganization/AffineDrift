@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.check_tree_parity import (
     Finding,
     check_coverage,
@@ -126,6 +128,18 @@ class TestSupersededValues:
             {"glossary": "COR: the ball returns 82% of the kinetic energy."},
         )
         assert kinds(check_superseded_values(tmp_path)) == ["superseded-value"]
+
+    @pytest.mark.parametrize("percentage", ["0.785", "180", "1085"])
+    def test_energy_ratio_pattern_does_not_match_part_of_a_number(
+        self, tmp_path: Path, percentage: str
+    ) -> None:
+        """The brain chapter's 0.785% gravity budget is not an 85% COR claim."""
+        build_tree(
+            tmp_path,
+            {"ch26_brain": f"Gravity supplies {percentage}\\% of its kinetic energy."},
+            {"ch26_brain": f"Gravity supplies {percentage}% of its kinetic energy."},
+        )
+        assert check_superseded_values(tmp_path) == []
 
     def test_a_superseded_value_inside_a_latex_comment_is_ignored(self, tmp_path: Path) -> None:
         build_tree(tmp_path, {"ch10_energy": "% old text said a 150-gram ball\nFixed."}, {})

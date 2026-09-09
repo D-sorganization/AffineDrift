@@ -1337,3 +1337,25 @@ textbooks34265513761, deployment34265513841 and exact artifact10072974625 pass;
 956/956 live checks across239 routes, no serious/critical axe findings or retries.
 Next#4291 covers the fully read inverse-dynamics manuscript and three TeX
 companions. Corrections have not begun; corpus#4021 remains unfinished.
+
+## Computational Brain: Paired Technical Review #4303
+
+Both complete editions and all14 exercises now connect prepared state, delay,
+activation, mechanical impedance, feasible muscle commands, prediction and
+learning. Independent models correct schedule arithmetic, late-correction
+capacity, drift/input sensitivity, stiffness-modulation energy and antagonist
+torque. Neural and AI claims use identified primary sources with reading-depth
+limits; proposed experiments replace unsupported universal explanations.
+The550-page PDF, chapter403–419, affected front matter and bibliography are
+inspected. Root4867/29 skips,src92.98%,content130,affected64,static34,title631
+and code/style/type gates pass. Responsive14,113 typeset expressions,30 unique
+historical anchors and figure keyboard scrolling pass. A number-boundary bug
+in the COR scanner and chapter-specific web contrast/math sizing are repaired.
+See [brain-review.md](brain-review.md) for all14 worked solutions, source
+boundaries, failed checks and exact visual evidence. Protected delivery remains.
+
+Wrist PR4304 is still open. Its exact CI artifact10085985439 identifies missing
+canonical/navigation/theme support on two standalone HTML companions; ordinary
+browser and numerical suites pass. Save the brain checkpoint, repair wrist on
+its branch, then resume brain delivery. Corpus405 is unfinished;224 sources
+still have only an index, and partially reviewed sources require further work.
