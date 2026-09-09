@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4318 · Spatial Algebra, Physical Inertia and Recursive Dynamics
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4318 (epic #4009)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4319 (open)
 - **Branch:** `fix/4318-spatial-algebra`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_0/chapters/ch08_spatial_algebra.tex`, `articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.qmd`, `articles/The_Geometry_of_Motion/figures/spatial_*`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `articles/The_Geometry_of_Motion/Volume_0/main.pdf`, `src/affine_control/dynamics.py`, `src/tools/spatial_inertia_examples.py`, `tests/test_spatial_algebra_rigor.py`, `docs/development/technical-review/spatial-algebra-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`dc73460f606682abf1a7a75296c0f46f07d9f4ce`)
-- **Summary:** Complete paired correction connects frame/power duality, physical inertia, momentum derivatives, planar restriction, composite/joint inertia and constraints. Two figures, fifteen worked answers and shared routines have independent numerical checks. Root 5,050 passes, 79.14% coverage; final affected 37, content 130, static 34, titles 634, style/type/quality/link and complete affected print/web QA pass. The verified SHA is the current committed base; the implementation checkpoint is pending.
-- **Next step:** Commit, replay this batch onto protected main before first push, open a focused PR and complete normal checks, merge and production verification.
+- **Last verified:** 2026-09-09 (`245926b2c107d560be1f64d5df56954204053e50`)
+- **Summary:** Complete paired correction connects frame/power duality, physical inertia, momentum derivatives, planar restriction, composite/joint inertia and constraints. Two figures, fifteen worked answers and shared routines have independent numerical checks. Root 5,050 passes, 79.14% coverage; final affected 37, content 130, static 34, titles 634, style/type/quality/link and complete affected print/web QA pass. Implementation was replayed alone onto protected main b6578132 before first push; all normal commit/push hooks pass.
+- **Next step:** Complete PR #4319 protected checks/review, merge normally and verify production.
 
 ### DL-#4315 · Soft-Tissue Dynamics and Pressure Mechanics
 

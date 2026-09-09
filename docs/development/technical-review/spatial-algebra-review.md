@@ -148,3 +148,17 @@ b657813291e89def6269d9bb0f258a9e26c3dd8a. Main textbook 34393037136 and
 performance 34393037120 pass; CI 34393037135 and deployment 34393037121 remain
 running at this checkpoint. Replay only #4318 after dc73460f onto protected
 main before first push. Keep the corpus epic open; remaining sources need review.
+
+## Protected Delivery Checkpoint
+
+Implementation 36159f73 was replayed alone after dc73460f onto protected
+main b6578132 before first push, producing 245926b2c107d560be1f64d5df56954204053e50.
+The parent trees were identical and no reviewed content changed. An empty
+AGENT_HANDOFF index-stat difference initially prevented rebase; refreshing the
+index cleared it without discarding content. SVG trailing whitespace was
+normalized before the commit, with token-identical geometry preserved. All
+normal commit and push hooks, including mypy, bandit and pytest, passed.
+
+Ready PR #4319: https://github.com/D-sorganization/AffineDrift/pull/4319.
+The actual PR has one SPEC change-log row. Protected checks/review, normal
+merge and exact live verification remain; no corpus completion is claimed.
