@@ -76,6 +76,21 @@ def window(qapp: Any) -> MainWindow:
     return MainWindow()
 
 
+def test_sweep_separates_units_and_clears_secondary_axis(qapp: Any) -> None:
+    from src.tools.wrist_universal_joint.qt_canvases import PlotCanvas
+
+    canvas = PlotCanvas(40, 17, 0.2, 0.1)
+    canvas.set_signal_visible("accel_alpha_ratio", True)
+    canvas.set_plot_type("Transmission Ratio")
+    assert len(canvas.figure.axes) == 2
+    assert "Dimensionless" in canvas.figure.axes[0].get_ylabel()
+    assert "(rad/s²)/(N·m)" in canvas.figure.axes[1].get_ylabel()
+    assert len(canvas.figure.axes[1].lines) == 1
+    canvas.set_plot_type("Torque")
+    assert len(canvas.figure.axes) == 1
+    canvas.close()
+
+
 def test_build_main_widget_populates_all_widget_fields(window: MainWindow) -> None:
     """Every UiWidgets field must be a constructed (non-None) widget."""
     ui = window.ui
@@ -126,6 +141,17 @@ def test_plot_type_enables_relevant_checkboxes(window: MainWindow) -> None:
     window.update_plot_type("Angular Acceleration")
     assert window.ui.show_alpha_accel_check.isEnabled()
     assert not window.ui.show_input_check.isEnabled()
+    from PyQt6.QtWidgets import QComboBox
+
+    selector = next(
+        combo
+        for combo in window.findChildren(QComboBox)
+        if any("Transmission" in combo.itemText(i) for i in range(combo.count()))
+    )
+    index = next(i for i in range(selector.count()) if "Transmission" in selector.itemText(i))
+    selector.setCurrentIndex(index)
+    assert window.ui.show_transmission_check.isEnabled()
+    assert window.ui.show_accel_alpha_ratio_check.isEnabled()
 
 
 def test_build_main_widget_returns_widget_and_widgets(qapp: Any) -> None:

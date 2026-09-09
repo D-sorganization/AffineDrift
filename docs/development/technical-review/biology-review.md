@@ -228,3 +228,8 @@ book audit advanced to 00a8f13c. Synchronized the two affected routes' finding
 verification commits, review commits, review dates and reviewer identifiers;
 regenerated the claim report. No scientific content or test expectations changed.
 The focused book-publication and claim-inventory suites pass all 27 tests.
+
+
+## Protected Publication
+
+Biology #4294 / PR #4296 is published via descendant protected main d7e51655d47d37a092b1bcd29d25972ce373b244 (one commit ahead of biology squash c02463f0). Deployment34289532320 succeeds. Exact-head live artifact10081509020 passes956/956 across239 routes, zero failures, serious/critical axe findings, retries or transient responses. The original biology deployment34287893043 was superseded before publication; do not report it as successful.

@@ -18,7 +18,11 @@ from .enhanced_model_kinematics import (
     compute_torque_signals,
     compute_transmission_sweep,
 )
-from .torque_calculator import calculate_moments_of_inertia, generate_sample_torque
+from .torque_calculator import (
+    calculate_moments_of_inertia,
+    generate_sample_torque,
+    universal_joint_transmission_ratio,
+)
 
 # Do not force "QtAgg" if already configured to a non-interactive backend
 # (like "headless" during tests). Must be called before importing backend.
@@ -148,6 +152,8 @@ class PlotCanvas(FigureCanvas):
     def update_plot(self) -> None:
         """Update the plot based on current settings."""
         self.ax.clear()
+        for axis in self.figure.axes[1:]:
+            axis.remove()
         if self.current_plot_type == "Torque":
             self._plot_torque()
         elif self.current_plot_type == "Angular Acceleration":
@@ -155,7 +161,12 @@ class PlotCanvas(FigureCanvas):
         else:
             self._plot_transmission_sweep()
         self.ax.grid(True, alpha=0.3)
-        self.ax.legend(loc="best", fontsize=9)
+        handles, labels = [], []
+        for axis in self.figure.axes:
+            axis_handles, axis_labels = axis.get_legend_handles_labels()
+            handles.extend(axis_handles)
+            labels.extend(axis_labels)
+        self.ax.legend(handles, labels, loc="best", fontsize=9)
         self.figure.tight_layout()
         self.draw()  # type: ignore[no-untyped-call]
 
@@ -170,7 +181,7 @@ class PlotCanvas(FigureCanvas):
             self.ax.plot(
                 self.t,
                 self.input_torque,
-                label="Input Torque (forearm)",
+                label="Input Torque",
                 color="gray",
                 alpha=0.7,
                 linewidth=1.5,
@@ -187,7 +198,7 @@ class PlotCanvas(FigureCanvas):
             self.ax.plot(
                 self.t,
                 signals.torque_alpha,
-                label="τ_α (higher MOI axis)",
+                label="τ_α (alpha component)",
                 color="red",
                 linewidth=2,
             )
@@ -195,14 +206,14 @@ class PlotCanvas(FigureCanvas):
             self.ax.plot(
                 self.t,
                 signals.torque_gamma,
-                label="τ_γ (lowest MOI axis)",
+                label="τ_γ (gamma component)",
                 color="blue",
                 linewidth=2,
             )
         self.ax.set_title(
             (
                 "Torque vs Time "
-                f"(Grip: {self.grip_angle_deg:.0f}°, Wrist: {self.wrist_angle_deg:.0f}°)"
+                f"(Demo Angle: {self.grip_angle_deg:.0f}°, Phase: {self.wrist_angle_deg:.0f}°)"
             ),
             fontsize=12,
             fontweight="bold",
@@ -240,7 +251,7 @@ class PlotCanvas(FigureCanvas):
         self.ax.set_title(
             (
                 "Angular Acceleration vs Time "
-                f"(Grip: {self.grip_angle_deg:.0f}°, Wrist: {self.wrist_angle_deg:.0f}°)"
+                f"(Demo Angle: {self.grip_angle_deg:.0f}°, Phase: {self.wrist_angle_deg:.0f}°)"
             ),
             fontsize=12,
             fontweight="bold",
@@ -262,6 +273,10 @@ class PlotCanvas(FigureCanvas):
 
     def _plot_transmission_sweep_lines(self, sweep: TransmissionSweep) -> None:
         """Plot the visible transmission sweep data series."""
+        gain_ax = self.ax
+        if self.visible_signals["accel_alpha_ratio"] or self.visible_signals["accel_gamma_ratio"]:
+            gain_ax = self.ax.twinx()
+            gain_ax.set_ylabel("Acceleration Gain (rad/s²)/(N·m)", fontsize=10)
         if self.visible_signals["transmission_ratio"]:
             self.ax.plot(
                 sweep.wrist_angle_deg,
@@ -279,39 +294,37 @@ class PlotCanvas(FigureCanvas):
                 linewidth=2,
                 linestyle="--",
             )
-        if self.visible_signals["accel_alpha_ratio"]:
-            self.ax.plot(
-                sweep.wrist_angle_deg,
-                sweep.accel_alpha_ratios,
-                label="Accel_α ratio (rad/s²)/(N·m)",
-                color="red",
-                linewidth=1.5,
-                alpha=0.7,
-            )
-        if self.visible_signals["accel_gamma_ratio"]:
-            self.ax.plot(
-                sweep.wrist_angle_deg,
-                sweep.accel_gamma_ratios,
-                label="Accel_γ ratio (rad/s²)/(N·m)",
-                color="blue",
-                linewidth=1.5,
-                alpha=0.7,
-            )
+        for key, values, symbol, color in (
+            ("accel_alpha_ratio", sweep.accel_alpha_ratios, "α", "red"),
+            ("accel_gamma_ratio", sweep.accel_gamma_ratios, "γ", "blue"),
+        ):
+            if self.visible_signals[key]:
+                gain_ax.plot(
+                    sweep.wrist_angle_deg,
+                    values,
+                    label=f"Accel_{symbol} Gain (rad/s²)/(N·m)",
+                    color=color,
+                    linewidth=1.5,
+                    alpha=0.7,
+                )
 
     def _plot_current_wrist_marker(self, sweep: TransmissionSweep) -> None:
         """Plot the current wrist-angle marker on the sweep graph."""
-        current_idx = int(np.argmin(np.abs(sweep.wrist_angle_deg - self.wrist_angle_deg)))
+        del sweep
+        current_ratio = universal_joint_transmission_ratio(
+            np.radians(self.wrist_angle_deg), np.radians(self.grip_angle_deg)
+        )[1]
         self.ax.axvline(
             self.wrist_angle_deg,
             color="green",
             linestyle=":",
             linewidth=2,
-            label=f"Current wrist angle ({self.wrist_angle_deg:.0f}°)",
+            label=f"Current Input Phase ({self.wrist_angle_deg:.0f}°)",
         )
         if self.visible_signals["transmission_ratio"]:
             self.ax.plot(
                 self.wrist_angle_deg,
-                sweep.tau_ratios[current_idx],
+                current_ratio,
                 "go",
                 markersize=10,
                 markerfacecolor="lime",
@@ -322,14 +335,14 @@ class PlotCanvas(FigureCanvas):
         """Set labels and title for the transmission sweep graph."""
         self.ax.set_title(
             (
-                "Universal Joint Transmission vs Wrist Deviation Angle "
-                f"(Grip={self.grip_angle_deg:.0f}°)"
+                "Universal Joint Transmission vs Input Shaft Phase "
+                f"(Demo Angle={self.grip_angle_deg:.0f}°)"
             ),
             fontsize=12,
             fontweight="bold",
         )
-        self.ax.set_xlabel("Wrist Deviation Angle (degrees)", fontsize=10)
-        self.ax.set_ylabel("Transmission Ratio", fontsize=10)
+        self.ax.set_xlabel("Input Shaft Phase (degrees)", fontsize=10)
+        self.ax.set_ylabel("Dimensionless Ratio", fontsize=10)
 
     def update_parameters(
         self,

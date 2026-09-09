@@ -323,7 +323,9 @@ def _setup_diagram_axes(ax: Any) -> None:
     ax.set_ylim(-0.2, 1.2)
     ax.set_aspect("equal")
     ax.axis("off")
-    ax.set_title("Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20)
+    ax.set_title(
+        "Historical Hand Sketch (Not Cardan Geometry)", fontsize=12, fontweight="bold", pad=20
+    )
 
 
 # Cache figure generation to prevent expensive redraws

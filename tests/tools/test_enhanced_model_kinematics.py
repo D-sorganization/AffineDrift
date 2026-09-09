@@ -52,5 +52,5 @@ def test_compute_transmission_sweep_marks_current_domain() -> None:
 def test_build_info_html_includes_current_configuration() -> None:
     """Info panel helper should embed the current grip and wrist angles."""
     html = build_info_html(grip_angle_deg=25, wrist_angle_deg=-5)
-    assert "Grip=25°" in html
-    assert "Wrist=-5°" in html
+    assert "Bend/Projection=25°" in html
+    assert "Input Phase=-5°" in html

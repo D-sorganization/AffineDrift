@@ -18,7 +18,7 @@ class DocumentationDialog(QDialog):
     def __init__(self, parent: QWidget | None = None) -> None:
         """Initialize documentation dialog."""
         super().__init__(parent)
-        self.setWindowTitle("Universal Joint Model - Mathematics & Physics")
+        self.setWindowTitle("Cardan Demonstration: Mathematics and Scope")
         self.setGeometry(150, 150, 900, 800)
         self._init_ui()
 
@@ -51,8 +51,15 @@ class DocumentationDialog(QDialog):
         </style>
         </head>
         <body>
-        <h1>Enhanced Wrist Universal Joint Model</h1>
-        <p>See the full documentation in the README_ENHANCED_MODEL.md file.</p>
+        <h1>Cardan and Torque Projection Demonstration</h1>
+        <p>The speed ratio is cos(δ)/(1 − sin²(δ) sin²(φ)) for supported shafts
+        at fixed bend δ and input phase φ. Its reciprocal is the ideal
+        delivered-torque ratio only when joint storage and losses are negligible.</p>
+        <p>The extra torque projection is synthetic. The hand sketch is historical;
+        it does not define the supported-shaft mechanism. Scalar inertia responses
+        do not integrate a golf swing, determine face yaw or rank human grips.</p>
+        <p>See content/wrist-as-universal-joint/MATHEMATICAL_DERIVATION.md and
+        README_ENHANCED_MODEL.md for the full derivation and model boundaries.</p>
         </body>
         </html>
         """

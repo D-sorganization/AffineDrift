@@ -4,9 +4,18 @@ Date: 2026-09-05. Parent epic: [#4009](https://github.com/D-sorganization/Affine
 
 ## Current Checkpoint: 8 September 2026
 
-Product-of-exponentials #4297 is locally corrected and verified in both complete editions: 17 focused tests; root 4813/29 skips, explicit src coverage 92.78%; 34 static checks, 130 content checks, title 631, Ruff, Black and mypy pass. All 34 affected/related PDF pages, 77 initial web scroll views and 40 final target/edge views have been inspected. Final 42 display equations, code parity, historical anchors, keyboard scrolling and 14 responsive/theme checks pass. Protected delivery is next. Full derivations and adverse evidence: `poe-review.md`. Biology PR #4296 has protected-merged as c02463f0; main/deployment remain in progress.
+Wrist #4299 is locally corrected in the complete article, print/HTML companions,
+four technical guides, bibliography, two critiques and interactive calculators.
+Independent derivations connect moving reciprocal directions, actuator-dependent
+reactions, segment power, moving-point inertia, face sensitivity and correlated
+uncertainty. Root 4850, content 130, JavaScript 351, static 34, title 631,
+Black/Ruff/mypy and all ten critical coverage gates pass. All 14 PDF pages,
+143 web captures and four Qt views were inspected. Human grip-performance
+qualification remains open. See `wrist-review.md`; protected delivery is next.
 
-Biology #4294 / PR #4296 corrects both complete long chapters, the Volume IV preface and public reading page. Muscle/tendon state, energy, HKB, synergies, impedance and coupled stability now have explicit assumptions, counterexamples, derivations and independent checks. All 21 final affected PDF pages pass visual QA; all 30 reading-page scroll captures were inspected. Root tests 4796/29 skips, content 130/4 skips, static 34, title 631, Ruff, Black 669 and mypy 86 pass; coverage is 79.04%. Final theme contrast repairs pass 14 responsive cases and both serious/critical axe gates; 54 theme tests pass. Protected delivery remains in progress. See `biology-review.md`.
+PoE #4297 / PR #4300 is protected-merged and published as f07bf036a9e2d8a8fb8f20953c756efd7b53f2e1. Main CI 34292478876, textbooks 34292478858 and deployment 34292478895 pass. Exact live artifact 10082702228 passes 956/956 across 239 routes, with zero serious/critical axe findings, failures, retries or transient responses.
+
+Biology #4294 / PR #4296 corrects both complete long chapters, the Volume IV preface and public reading page. Muscle/tendon state, energy, HKB, synergies, impedance and coupled stability now have explicit assumptions, counterexamples, derivations and independent checks. All 21 final affected PDF pages pass visual QA; all 30 reading-page scroll captures were inspected. Root tests 4796/29 skips, content 130/4 skips, static 34, title 631, Ruff, Black 669 and mypy 86 pass; coverage is 79.04%. Final theme contrast repairs pass 14 responsive cases and both serious/critical axe gates; 54 theme tests pass. Published through descendant d7e51655: deployment 34289532320 and live artifact 10081509020 pass 956/956 checks across 239 routes. The original biology deployment was superseded. See `biology-review.md`.
 
 Rotations #4288 / PR #4289 is protected-merged and published as072d5076d7219ff39a8f004694f9d9a9b35a5cb8.
 Main CI34265513801, textbooks34265513761 and deployment34265513841 pass;

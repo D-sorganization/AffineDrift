@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         """Initialize the main window."""
         super().__init__()
-        self.setWindowTitle("Enhanced Universal Joint Model - Wrist Biomechanics")
+        self.setWindowTitle("Cardan and Torque Projection Demonstration")
         self.setGeometry(100, 100, 1600, 1000)
         self.init_ui()
 
@@ -220,7 +220,7 @@ class MainWindow(QMainWindow):
         self.ui.plot_canvas.set_plot_type(plot_type)
         is_torque = plot_type == "Torque"
         is_accel = plot_type == "Angular Acceleration"
-        is_transmission = plot_type == "Transmission Ratio vs Wrist Angle"
+        is_transmission = plot_type.startswith("Transmission Ratio")
 
         self.ui.show_input_check.setEnabled(is_torque)
         self.ui.show_transmitted_check.setEnabled(is_torque)

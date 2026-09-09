@@ -65,7 +65,7 @@ def _plot_torque_lines(
     """Draw torque signal lines on the given axes."""
     if show_input:
         ax.plot(
-            t, input_torque, label="Input Torque (forearm)", color="gray", alpha=0.7, linewidth=1.5
+            t, input_torque, label="Input Torque", color="gray", alpha=0.7, linewidth=1.5
         )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_transmitted:
         ax.plot(
@@ -76,9 +76,9 @@ def _plot_torque_lines(
             linewidth=2,
         )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_alpha:
-        ax.plot(t, torque_alpha, label="\u03c4_\u03b1 (higher MOI axis)", color="red", linewidth=2)
+        ax.plot(t, torque_alpha, label="\u03c4_\u03b1 (alpha component)", color="red", linewidth=2)
     if show_gamma:
-        ax.plot(t, torque_gamma, label="\u03c4_\u03b3 (lowest MOI axis)", color="blue", linewidth=2)
+        ax.plot(t, torque_gamma, label="\u03c4_\u03b3 (gamma component)", color="blue", linewidth=2)
 
 
 # Cache figure generation to prevent expensive redraws
@@ -120,7 +120,7 @@ def plot_torque(
         show_gamma,
     )
     ax.set_title(
-        f"Torque vs Time (Grip: {grip_angle_deg:.0f}\u00b0, Wrist: {wrist_angle_deg:.0f}\u00b0)",
+        f"Torque vs Time (Demo Angle: {grip_angle_deg:.0f}\u00b0, Phase: {wrist_angle_deg:.0f}\u00b0)",
         fontsize=12,
         fontweight="bold",
     )
@@ -194,8 +194,8 @@ def plot_acceleration(
             linestyle="--",
         )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     ax.set_title(
-        f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}\u00b0, "
-        f"Wrist: {wrist_angle_deg:.0f}\u00b0)",
+        f"Angular Acceleration vs Time (Demo Angle: {grip_angle_deg:.0f}\u00b0, "
+        f"Phase: {wrist_angle_deg:.0f}\u00b0)",
         fontsize=12,
         fontweight="bold",
     )
@@ -231,7 +231,9 @@ def _compute_transmission_sweep(
     accel_gamma_ratios_list: list[float] = []
 
     for phi_rad in phi_sweep_rad:
-        omega_r, tau_r = universal_joint_transmission_ratio(theta_grip_rad, phi_rad)
+        omega_r, tau_r = universal_joint_transmission_ratio(
+            phi_rad=phi_rad, delta_rad=theta_grip_rad
+        )
         omega_ratios_list.append(omega_r)
         tau_ratios_list.append(tau_r)
 
@@ -264,6 +266,9 @@ def _plot_transmission_series(
     show_accel_gamma: bool,
 ) -> None:
     """Draw transmission ratio series lines on the given axes."""
+    gain_ax = ax.twinx() if show_accel_alpha or show_accel_gamma else ax
+    if gain_ax is not ax:
+        gain_ax.set_ylabel("Acceleration Gain (rad/s²)/(N·m)", fontsize=10)
     if show_transmission:
         ax.plot(
             phi_sweep,
@@ -282,7 +287,7 @@ def _plot_transmission_series(
             linestyle="--",
         )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_accel_alpha:
-        ax.plot(
+        gain_ax.plot(
             phi_sweep,
             accel_alpha_ratios,
             label="Accel_\u03b1 ratio (rad/s\u00b2)/(N\u00b7m)",
@@ -291,7 +296,7 @@ def _plot_transmission_series(
             alpha=0.7,
         )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_accel_gamma:
-        ax.plot(
+        gain_ax.plot(
             phi_sweep,
             accel_gamma_ratios,
             label="Accel_\u03b3 ratio (rad/s\u00b2)/(N\u00b7m)",
@@ -307,19 +312,21 @@ def _annotate_current_wrist_angle(
     wrist_angle_deg: float,
     tau_ratios: np.ndarray[Any, Any],
     show_transmission: bool,
+    bend_rad: float,
 ) -> None:
     """Annotate the current wrist angle with a vertical line and optional dot."""
-    current_idx = np.argmin(np.abs(phi_sweep - wrist_angle_deg))
+    del phi_sweep, tau_ratios  # Retained for the existing plotting-helper interface.
+    current_ratio = universal_joint_transmission_ratio(np.radians(wrist_angle_deg), bend_rad)[1]
     ax.axvline(
         wrist_angle_deg,
         color="green",
         linestyle=":",
         linewidth=2,
-        label=f"Current wrist angle ({wrist_angle_deg:.0f}\u00b0)",
+        label=f"Current Input Phase ({wrist_angle_deg:.0f}\u00b0)",
     )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_transmission:
         ax.plot(
-            wrist_angle_deg, tau_ratios[current_idx], "go", markersize=10, markerfacecolor="lime"
+            wrist_angle_deg, current_ratio, "go", markersize=10, markerfacecolor="lime"
         )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
@@ -362,15 +369,22 @@ def plot_transmission_sweep(
         show_accel_alpha,
         show_accel_gamma,
     )
-    _annotate_current_wrist_angle(ax, phi_sweep, wrist_angle_deg, tau_ratios, show_transmission)
+    _annotate_current_wrist_angle(
+        ax, phi_sweep, wrist_angle_deg, tau_ratios, show_transmission, theta_grip_rad
+    )
     ax.set_title(
-        f"Universal Joint Transmission vs Wrist Deviation Angle (Grip={grip_angle_deg:.0f}\u00b0)",
+        f"Universal Joint Transmission vs Input Shaft Phase (Demo Angle={grip_angle_deg:.0f}\u00b0)",
         fontsize=12,
         fontweight="bold",
     )
-    ax.set_xlabel("Wrist Deviation Angle (degrees)", fontsize=10)
-    ax.set_ylabel("Transmission Ratio", fontsize=10)
+    ax.set_xlabel("Input Shaft Phase (degrees)", fontsize=10)
+    ax.set_ylabel("Dimensionless Ratio", fontsize=10)
     ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
+    handles, labels = [], []
+    for axis in fig.axes:
+        axis_handles, axis_labels = axis.get_legend_handles_labels()
+        handles.extend(axis_handles)
+        labels.extend(axis_labels)
+    ax.legend(handles, labels, loc="best", fontsize=9)
     fig.tight_layout()
     return fig
