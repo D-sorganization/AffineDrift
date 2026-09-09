@@ -4,11 +4,18 @@ Date: 2026-09-05. Parent epic: [#4009](https://github.com/D-sorganization/Affine
 
 ## Current Checkpoint: 9 September 2026
 
+Rotation #4322 completes the converter and cross-reference guide: stable
+identity/half-turn/gimbal-lock extraction, explicit frame/quaternion conventions,
+strict finite inputs, and the link from orientation to velocity, face direction,
+uncertainty and physical power. Root 5,078 passes, 79.19% coverage; all final
+local checks and complete bounded web review pass. PR #4323 is open;
+see `rotation-converter-review.md`. The other corpus sources remain in progress.
+
 Energy #4320 completes both textbook editions with consistent whole-system,
 segment/interface, elastic-storage and collision ledgers. Independent two-link
 calculations, two figures and six worked answers connect sequencing and lag to
 testable dynamics. Root 5,061 passes, 79.17% coverage; all final checks and
-complete affected print/web review pass. PR #4321 is open with normal squash auto-merge enabled; see
+complete affected print/web review pass. PR #4321 merged as 4aea9755; final-head and main CI, textbooks and performance pass. Deployment passes; exact live artifact 10126445934 verifies 956/956 records across 239 routes with zero failures or serious/critical axe findings; see
 `energy-chapter-review.md`.
 
 Spatial algebra #4318 corrects both complete Volume 0 Chapter 8 editions and
@@ -27,7 +34,7 @@ across 239 routes with zero failures or serious/critical accessibility findings.
 Soft-tissue #4315/#4317 is published as b6578132; main CI, textbooks, performance
 and deployment pass. Exact artifact 10121457373 passes 956/956 records across
 239 routes with zero failures, serious/critical axe findings or retries.
-The 405-row corpus has 217 Indexed rows plus partially reviewed
+The 405-row corpus has 215 Indexed rows plus partially reviewed
 sources; this is not a completed-corpus count.
 
 ## Earlier Checkpoint: 8 September 2026

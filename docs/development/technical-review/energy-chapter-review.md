@@ -208,12 +208,12 @@ Implementation e4e1e3143860db3b9d680304b1c9f7c9ce827b1a was saved after all
 local QA completed, then replayed alone after parent anchor 4f8ce5a3 onto
 protected main c4c1fee6 as 989bf4580bf07b4032e0a3a987d774a59679b5c2. The old and merged parent
 trees were identical. PR https://github.com/D-sorganization/AffineDrift/pull/4321
-is open with normal squash auto-merge enabled. All normal commit and push hooks
+merged normally as 4aea9755711b462498d8cddae531dab3131f5989 at 21:19:27Z. All normal commit and push hooks
 pass. The first push stopped on Bandit B102 in the untracked local publication
 example executor; its reviewed-local-source boundary is now documented with a
 specific B102 annotation. The normal push was rerun successfully. No hook was
-bypassed. SPEC has exactly one actual-PR row. Protected CI and exact production
-verification for energy remain pending; never mutate Git during local QA.
+bypassed. SPEC has exactly one actual-PR row. Final-head and main CI pass; exact production
+verification for energy is complete as recorded below; never mutate Git during local QA.
 
 Spatial #4318 / PR #4319 merged normally on 2026-09-09 at 20:01:13Z as
 c4c1fee6db8915eee49a80b3572ece9ccfe57cd5. Main CI 34398520012, textbooks
@@ -224,3 +224,5 @@ Main CI 34393037135, textbooks 34393037136, performance 34393037120 and deployme
 34393037121 pass. Exact live artifact 10121457373 passes 956/956 records across
 239 routes with zero failures, serious/critical axe findings or retries.
 Keep the corpus epic open; 217 indexed sources still await complete review.
+
+Energy #4320 / PR #4321 merged normally at 2026-09-09T21:19:27Z as 4aea9755711b462498d8cddae531dab3131f5989. Final-head CI 34403603438 and main CI 34406274957 pass; main textbooks 34406274978 and performance 34406275036 pass. Deployment 34406274993 passes. Exact live artifact 10126445934 was downloaded and all 956 records across 239 routes were read and checked: HTTP 200, zero failures, serious/critical axe findings, retries, transients or exhausted retries; axe ran on all 239 routes.

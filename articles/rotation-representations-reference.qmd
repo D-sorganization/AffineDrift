@@ -1,289 +1,285 @@
 ---
 title: "Rotation Representations: A Cross-Reference Guide"
-description: "Comprehensive reference for conversion between rotation matrices, quaternions, Euler angles, and screw/axis-angle representations."
+description: "Rotation conventions, stable conversions, angular velocity, uncertainty, and their role in golf and humanoid mechanics."
 author: "Dieter Olson"
 date: today
+css:
+  - ../css/machine-learning.css
+  - ../css/rotation-converter.css
 categories:
 - reference
 ---
 
 ## Overview
 
-Every volume of *Tangent-Space Methods* uses rotations. Different representations
-are optimal for different purposes:
+A rotation describes an orientation or an orientation change. It does not, by itself, describe the path taken, the location of a joint, the forces that produced the motion, or the energy transferred. These distinctions matter when comparing pelvis and thorax motion, interpreting a clubface angle, or building a humanoid model.
 
-| Representation | DoF stored | Pros | Cons |
-|----------------|-----------|------|------|
-| Rotation matrix $R \in SO(3)$ | 9 numbers | Intuitive; composition = multiplication | Over-parameterized; need orthogonality constraint |
-| Quaternion $\mathbf{q} \in S^3$ | 4 numbers | No singularities; efficient composition | Less intuitive; double cover of $SO(3)$ |
-| Euler angles $(\phi, \theta, \psi)$ | 3 numbers | Minimal; human-readable | Gimbal lock; 12 conventions; non-unique |
-| Axis-angle $(\hat{\mathbf{n}}, \theta)$ | 4 numbers (or 3 compact) | Geometric intuition | Singularity at $\theta = 0$ |
-| Exponential coordinates $\omega \in \mathfrak{so}(3)$ | 3 numbers | Lie algebra; first-order dynamics | Non-unique for large angles |
+This reference and the [interactive converter](rotation-converter.html) use **right-handed active rotations of column vectors**. For a vector rotated within one coordinate system, $v'=Rv$. For coordinates of the same physical vector in different frames, $v^A=R_{AB}v^B$: the columns of $R_{AB}$ are the axes of frame $B$ expressed in $A$. These interpretations share the same algebra; declare which one a measurement or calculation uses. All mathematical angles below are in radians. Quaternions use Hamilton multiplication and scalar-first order $(w,x,y,z)$.
 
-This reference follows Park & Lynch (*Modern Robotics*, 2017) in preferring the
-screw/exponential approach as the primary formalism, while showing equivalences
-to all other conventions.
+| Representation | Numbers Stored | Constraints and Ambiguities |
+|---|---|---|
+| $R\in SO(3)$ | 9 | $R^TR=I$, $\det R=1$; three independent degrees of freedom |
+| Unit quaternion $q\in S^3$ | 4 | Unit norm; $q$ and $-q$ give the same orientation |
+| Euler angles | 3 | Axis order and moving/fixed-axis convention are essential; singular coordinate charts |
+| Axis-angle $(n,\theta)$ | 4 | Unit axis; identity axis undefined; equivalent angle/axis choices |
+| Rotation vector $\rho=\theta n\in\mathbb R^3$ | 3 | $[\rho]_\times\in\mathfrak{so}(3)$; logarithm branches and a half-turn ambiguity |
 
+The number of stored scalars is not the number of physical degrees of freedom. A unit quaternion avoids Euler gimbal lock, but choosing a unique quaternion from every orientation cannot also give a globally continuous choice.
 
 ## Rotation Matrices
 
-A rotation matrix $R \in SO(3)$ satisfies $R^\top R = I$ and $\det(R) = +1$.
+The special orthogonal group is
 
-**Composition:** $R_{AC} = R_{AB} R_{BC}$ (rotate $B$-to-$C$ first, then $A$-to-$B$).
+$$SO(3)=\{R\in\mathbb R^{3\times3}:R^TR=I,\ \det R=1\}.$$
 
-**Inverse:** $R^{-1} = R^\top$ (orthogonality).
+Orthogonality alone also admits reflections with determinant $-1$. A reflection is not a rotation. Composition follows frame cancellation:
 
-**Rotation of a vector:** $\mathbf{v}' = R\mathbf{v}$.
+$$v^A=R_{AB}(R_{BC}v^C),\qquad R_{AC}=R_{AB}R_{BC},\qquad R_{BA}=R_{AB}^T.$$
+
+The rightmost transformation acts first. In a single frame, $R_z(\pi/2)R_x(\pi/2)e_y=e_z$, whereas reversing the factors gives $R_x(\pi/2)R_z(\pi/2)e_y=-e_x$. The two valid compositions describe different motions.
 
 ### Standard Rotation Matrices
 
-Rotation by angle $\theta$ about the $x$, $y$, $z$ axes respectively:
+$$R_x(\alpha)=\begin{bmatrix}1&0&0\\0&\cos\alpha&-\sin\alpha\\0&\sin\alpha&\cos\alpha\end{bmatrix},$$
 
-$$R_x(\theta) = \begin{bmatrix}1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta\end{bmatrix}, \quad
-R_y(\theta) = \begin{bmatrix}\cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta\end{bmatrix}, \quad
-R_z(\theta) = \begin{bmatrix}\cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1\end{bmatrix}.$$
+$$R_y(\beta)=\begin{bmatrix}\cos\beta&0&\sin\beta\\0&1&0\\-\sin\beta&0&\cos\beta\end{bmatrix},$$
 
+$$R_z(\gamma)=\begin{bmatrix}\cos\gamma&-\sin\gamma&0\\\sin\gamma&\cos\gamma&0\\0&0&1\end{bmatrix}.$$
+
+For any $a,b$, $[a]_\times b=a\times b$, where
+
+$$[a]_\times=\begin{bmatrix}0&-a_z&a_y\\a_z&0&-a_x\\-a_y&a_x&0\end{bmatrix}.$$
 
 ## Euler Angles
 
-**ZYX (aerospace / yaw-pitch-roll):** $R = R_z(\psi) R_y(\theta) R_x(\phi)$.
+**Intrinsic ZYX** means yaw about the initial $z$ axis, pitch about the resulting $y$ axis, then roll about the resulting $x$ axis:
 
-**ZYZ (physics / precession-nutation-spin):** $R = R_z(\alpha) R_y(\beta) R_z(\gamma)$.
+$$R=R_z(\psi)R_y(\theta)R_x(\phi).$$
+
+It is equivalent to fixed-axis XYZ rotations applied in the temporal order roll, pitch, yaw. Calling either sequence merely “ZYX” without saying which axes move is incomplete. Here $(\psi,\theta,\phi)$ always means yaw, pitch, roll in that matrix product.
+
+### Converting Euler Angles to Rotation Matrix
+
+With $c_a=\cos a$ and $s_a=\sin a$,
+
+$$R=\begin{bmatrix}
+c_\psi c_\theta&c_\psi s_\theta s_\phi-s_\psi c_\phi&c_\psi s_\theta c_\phi+s_\psi s_\phi\\
+s_\psi c_\theta&s_\psi s_\theta s_\phi+c_\psi c_\phi&s_\psi s_\theta c_\phi-c_\psi s_\phi\\
+-s_\theta&c_\theta s_\phi&c_\theta c_\phi
+\end{bmatrix}.$$
+
+On the principal chart $-\pi/2<\theta<\pi/2$,
+
+$$\psi=\operatorname{atan2}(R_{21},R_{11}),\qquad
+\phi=\operatorname{atan2}(R_{32},R_{33}),$$
+
+$$\theta=\operatorname{atan2}\!\left(-R_{31},\sqrt{R_{11}^2+R_{21}^2}\right).$$
+
+The familiar $-\arcsin(R_{31})$ is algebraically equivalent on this chart for an exact rotation. The atan2 form retains information in the small cosine terms when $R_{31}$ rounds to $\pm1$.
 
 ::: {.callout-warning}
 ## Gimbal Lock
 
-Euler angles become singular (gimbal lock) when the middle rotation equals $\pm 90°$.
-For ZYX: singularity at $\theta = \pm\pi/2$. Near singularity, small physical rotations
-require large Euler angle changes — numerical differentiation fails.
+At ZYX pitch $+\pi/2$, orientation determines $\psi-\phi$; at $-\pi/2$, it determines $\psi+\phi$. Choose $\phi=0$ and $\psi=\operatorname{atan2}(-R_{12},R_{22})$ at either lock. The rigid body retains its physical rotational freedom; the three-angle chart loses local independence.
 
-**Rule of thumb:** avoid Euler angles for dynamics integration. Use quaternions or
-exponential coordinates instead.
+The condition depends on the convention. Proper Euler ZYZ, $R_z(\alpha)R_y(\beta)R_z(\gamma)$, locks at $\beta=0$ or $\pi$, not at $\pi/2$. Near a chart singularity, coordinate uncertainty can be large even when orientation uncertainty is small. Changing representation does not remove sensor noise.
 :::
 
-### Converting Euler Angles to Rotation Matrix
+### Euler Rates and Angular Velocity
 
-ZYX convention:
-$$R = R_z(\psi) R_y(\theta) R_x(\phi) = \begin{bmatrix}
-c_\psi c_\theta & c_\psi s_\theta s_\phi - s_\psi c_\phi & c_\psi s_\theta c_\phi + s_\psi s_\phi \\
-s_\psi c_\theta & s_\psi s_\theta s_\phi + c_\psi c_\phi & s_\psi s_\theta c_\phi - c_\psi s_\phi \\
--s_\theta & c_\theta s_\phi & c_\theta c_\phi
-\end{bmatrix},$$
-where $c_\alpha = \cos\alpha$, $s_\alpha = \sin\alpha$.
+Differentiating the declared product gives spatial angular velocity
 
+$$\omega_s=\begin{bmatrix}
+0&-\sin\psi&\cos\psi\cos\theta\\
+0&\cos\psi&\sin\psi\cos\theta\\
+1&0&-\sin\theta
+\end{bmatrix}
+\begin{bmatrix}\dot\psi\\\dot\theta\\\dot\phi\end{bmatrix}.$$
+
+The columns are the successive rotation axes expressed in the same frame. Their determinant magnitude is $|\cos\theta|$. At yaw $\pi/2$, pitch zero and only $\dot\phi=1$ rad/s, $\omega_s=(0,1,0)$ rad/s: a roll-coordinate rate is not automatically the world $x$ component. Peak Euler-coordinate rates from different conventions therefore cannot be treated as interchangeable segment-speed measurements.
 
 ## Axis-Angle Representation
 
-A rotation by angle $\theta$ about unit axis $\hat{\mathbf{n}} = [n_x, n_y, n_z]^\top$:
+For a unit axis $n$ and angle $\theta$,
 
-$$R = I + \sin\theta \, [\hat{\mathbf{n}}]_\times + (1-\cos\theta) \, [\hat{\mathbf{n}}]_\times^2,$$
+$$R=I+\sin\theta[n]_\times+(1-\cos\theta)[n]_\times^2
+=\exp(\theta[n]_\times).$$
 
-where $[\hat{\mathbf{n}}]_\times$ is the skew-symmetric matrix:
+This is Rodrigues' formula. The identity $1-\cos\theta=2\sin^2(\theta/2)$ is useful for small angles. Any nonzero input axis can first be normalized; a zero axis cannot define a nonzero rotation.
 
-$$[\hat{\mathbf{n}}]_\times = \begin{bmatrix}0 & -n_z & n_y \\ n_z & 0 & -n_x \\ -n_y & n_x & 0\end{bmatrix}.$$
+A principal representation uses $0\leq\theta\leq\pi$. For $0<\theta<\pi$ the directed axis is determined. At identity any axis gives the same zero rotation; at a half-turn both $n$ and $-n$ give the same rotation. Outside the principal range, equivalent descriptions include $(n,\theta+2k\pi)$ and $(-n,-\theta)$.
 
-This is the **Rodrigues formula** (also called the matrix exponential):
-$R = \exp(\theta [\hat{\mathbf{n}}]_\times)$.
-
+A matrix fixes the direction of this equivalent rotation axis, not its location in physical space. Rotating a club about different parallel lines produces the same orientation change and different translations. A full rigid-body displacement needs position as well as orientation; see the [screw-theory reference](screw-theory-reference.html).
 
 ## Exponential Coordinates (Lie Algebra $\mathfrak{so}(3)$)
 
-The compact exponential coordinates store the rotation as a single 3-vector
-$\boldsymbol{\omega} = \theta \hat{\mathbf{n}} \in \mathbb{R}^3$:
+The **rotation vector** $\rho=\theta n$ has three real components; its skew matrix belongs to the Lie algebra:
 
-$$R = \exp([\boldsymbol{\omega}]_\times).$$
+$$\rho\in\mathbb R^3,\qquad [\rho]_\times\in\mathfrak{so}(3),\qquad R=\exp([\rho]_\times).$$
 
-**Key properties:**
-- $\boldsymbol{\omega} = \mathbf{0}$ gives $R = I$ (identity)
-- The inverse map: $\boldsymbol{\omega} = \log(R)$ (matrix logarithm of $SO(3)$)
-- Angular velocity in body frame: $\dot{R} = R [\boldsymbol{\omega}_b]_\times$
-- Angular velocity in world frame: $\dot{R} = [\boldsymbol{\omega}_w]_\times R$
+Where a selected logarithm branch is defined, $[\rho]_\times=\log R$ and $\rho=(\log R)^\vee$, with vee the inverse of the skew map. A vector is not literally a $3\times3$ matrix logarithm. The principal vector cannot describe accumulated revolutions: 0 and $2\pi n$ exponentiate to the same orientation.
 
-This is the formalism used throughout *Tangent-Space Methods* and in the
-screw theory reference.
+For a differentiable orientation history,
 
+$$[\omega_s]_\times=\dot R R^T,\qquad [\omega_b]_\times=R^T\dot R,\qquad \omega_s=R\omega_b.$$
+
+Angular velocity has units rad/s; a rotation vector uses radians. In a smooth rotation-vector chart,
+
+$$\omega_s=J_l(\rho)\dot\rho,\qquad \omega_b=J_l(-\rho)\dot\rho,$$
+
+$$J_l(\rho)=I+\frac{1-\cos\theta}{\theta^2}[\rho]_\times+
+\frac{\theta-\sin\theta}{\theta^3}[\rho]_\times^2,\qquad \theta=\|\rho\|.$$
+
+At zero use coefficient limits $1/2$ and $1/6$. For fixed-axis motion $\rho=\theta(t)n$, the cross terms annihilate $\dot\rho$, giving $\omega=\dot\theta n$. For a changing axis, simply differentiating rotation-vector components generally gives the wrong angular velocity. Crossing a principal-logarithm branch requires a continuity strategy; exponential coordinates do not provide a global singularity-free three-parameter chart.
 
 ## Quaternions
 
-A unit quaternion $\mathbf{q} = (w, x, y, z)$ with $w^2 + x^2 + y^2 + z^2 = 1$
-represents a rotation by angle $\theta = 2\arccos(w)$ about axis $\hat{\mathbf{n}} = (x,y,z)/\sin(\theta/2)$.
+A unit Hamilton quaternion is
+
+$$q=(w,v)=\left(\cos\frac\theta2,\ n\sin\frac\theta2\right),\qquad w^2+v^Tv=1.$$
 
 ### Quaternion to Rotation Matrix
 
-$$R = \begin{bmatrix}
-1-2(y^2+z^2) & 2(xy-wz) & 2(xz+wy) \\
-2(xy+wz) & 1-2(x^2+z^2) & 2(yz-wx) \\
-2(xz-wy) & 2(yz+wx) & 1-2(x^2+y^2)
+$$R=\begin{bmatrix}
+1-2(y^2+z^2)&2(xy-wz)&2(xz+wy)\\
+2(xy+wz)&1-2(x^2+z^2)&2(yz-wx)\\
+2(xz-wy)&2(yz+wx)&1-2(x^2+y^2)
 \end{bmatrix}.$$
+
+Normalize a finite nonzero quaternion first. Rescaling by its largest component before taking the norm prevents avoidable floating-point overflow or underflow.
 
 ### Quaternion Composition
 
-$$\mathbf{q}_1 \otimes \mathbf{q}_2 = \begin{bmatrix}
-w_1 w_2 - x_1 x_2 - y_1 y_2 - z_1 z_2 \\
-w_1 x_2 + x_1 w_2 + y_1 z_2 - z_1 y_2 \\
-w_1 y_2 - x_1 z_2 + y_1 w_2 + z_1 x_2 \\
-w_1 z_2 + x_1 y_2 - y_1 x_2 + z_1 w_2
-\end{bmatrix}.$$
+For $p=(p_w,p_v)$ and $q=(q_w,q_v)$,
+
+$$p\otimes q=(p_wq_w-p_v^Tq_v,\ p_wq_v+q_wp_v+p_v\times q_v).$$
+
+Then $R(p\otimes q)=R(p)R(q)$, so $q$ acts first. For unit $q$, the conjugate $(w,-v)$ represents the inverse. Scalar-last libraries require reordering; changing component order does not change the declared multiplication convention automatically.
 
 ### Quaternion Derivative
 
-In the Hamilton convention, **left** multiplication corresponds to angular velocity in the **space (world) frame** $\boldsymbol{\omega}_s$, while **right** multiplication corresponds to the **body frame** $\boldsymbol{\omega}_b$ (consistent with $\dot{R} = R[\boldsymbol{\omega}_b]_\times$ above):
+For body-to-world orientation, the Hamilton convention gives
 
-$$\dot{\mathbf{q}} = \frac{1}{2} \begin{bmatrix}0 \\ \boldsymbol{\omega}_s\end{bmatrix} \otimes \mathbf{q}
-\qquad\text{(space frame)}, \qquad
-\dot{\mathbf{q}} = \frac{1}{2}\, \mathbf{q} \otimes \begin{bmatrix}0 \\ \boldsymbol{\omega}_b\end{bmatrix}
-\qquad\text{(body frame)}.$$
+$$\dot q=\tfrac12(0,\omega_s)\otimes q
+=\tfrac12 q\otimes(0,\omega_b).$$
+
+Both velocities describe the same physical rotation in different frames. Mixing one velocity's components with the other's multiplication side changes the motion.
 
 ::: {.callout-note}
 ## Double Cover
 
-Both $\mathbf{q}$ and $-\mathbf{q}$ represent the same rotation. When interpolating
-or integrating quaternions, always check that consecutive quaternions have positive
-dot product $\mathbf{q}_1 \cdot \mathbf{q}_2 > 0$; if not, negate one before
-interpolating to take the short path.
+$q$ and $-q$ describe one orientation. For nearby sampled orientations, negating a sample when its dot product with the previous one is negative selects a locally continuous, shorter quaternion arc. This assumes the physical increment is resolved by the sampling. At a zero dot product the shortest rotation is not unique. Sparse samples do not reveal extra revolutions or the actual path; a shortest-path interpolation is a modeling choice. An integrated continuous quaternion history need not be forced into the half-sphere $w\geq0$ at every step.
 :::
-
 
 ## Conversion Summary Table
 
-| From → To | Formula |
-|-----------|---------|
-| $R$ → axis-angle | $\theta = \arccos\frac{\text{tr}(R)-1}{2}$, $\hat{\mathbf{n}} = \frac{1}{2\sin\theta}\begin{bmatrix}R_{32}-R_{23}\\R_{13}-R_{31}\\R_{21}-R_{12}\end{bmatrix}$ |
-| $R$ → quaternion | $w=\frac{1}{2}\sqrt{1+\text{tr}(R)}$, $(x,y,z)=\frac{1}{4w}(R_{32}-R_{23}, R_{13}-R_{31}, R_{21}-R_{12})$ |
-| $R$ → ZYX Euler | $\psi=\text{atan2}(R_{21},R_{11})$, $\theta=-\arcsin(R_{31})$, $\phi=\text{atan2}(R_{32},R_{33})$ |
-| quaternion → $R$ | Quaternion-to-rotation-matrix formula (see *Quaternion to Rotation Matrix* above) |
-| quaternion → axis-angle | $\theta=2\arccos(w)$, $\hat{\mathbf{n}}=(x,y,z)/\sin(\theta/2)$ |
-| axis-angle → $R$ | Rodrigues: $R=I+\sin\theta[\hat{\mathbf{n}}]_\times+(1-\cos\theta)[\hat{\mathbf{n}}]_\times^2$ |
-| ZYX Euler → $R$ | $R=R_z(\psi)R_y(\theta)R_x(\phi)$ |
+| Conversion | Stable Procedure and Limits |
+|---|---|
+| Axis-angle → $R$ | Normalize a nonzero axis; apply Rodrigues or its equivalent half-angle formula |
+| Quaternion → $R$ | Normalize a nonzero quaternion; use the unit formula above |
+| $R$ → quaternion | Validate $SO(3)$; recover the largest quaternion component first, then normalize |
+| $R$ → axis-angle | From a quaternion with $w\geq0$, use $\theta=2\operatorname{atan2}(\|v\|,w)$; $n=v/\|v\|$ unless identity |
+| $R$ → ZYX | Use atan2 pitch and the declared generic or gimbal-lock branch |
+| Rotation vector → $R$ | Identity at zero; otherwise normalize its direction and use its norm as angle |
 
+### Why the Largest Quaternion Component Matters
+
+For an exact rotation,
+
+$$\begin{bmatrix}w^2\\x^2\\y^2\\z^2\end{bmatrix}
+=\frac14\begin{bmatrix}1+\operatorname{tr}R\\1+2R_{11}-\operatorname{tr}R\\1+2R_{22}-\operatorname{tr}R\\1+2R_{33}-\operatorname{tr}R\end{bmatrix}.$$
+
+The four squares sum to one, so the largest component has magnitude at least $1/2$. Choose it positive and recover the other components from identities such as
+
+$$4wx=R_{32}-R_{23},\quad4wy=R_{13}-R_{31},\quad4wz=R_{21}-R_{12},$$
+
+$$4xy=R_{12}+R_{21},\quad4xz=R_{13}+R_{31},\quad4yz=R_{23}+R_{32}.$$
+
+Divide only by four times the selected component, then normalize. The denominator is at least two for an exact rotation. Always dividing by $4w$ fails near a half-turn. The trace-based angle $\arccos((\operatorname{tr}R-1)/2)$ and axis formula using $1/(2\sin\theta)$ are useful derivations, but lose numerical information near zero or $\pi$; they are not unconditional algorithms.
 
 ## Python Implementation
+
+Run this example from the AffineDrift repository root with its Python dependencies installed. The small reference adapter reuses the [reviewed Volume 0 quaternion implementation](The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html). The complete implementation and tests are in `src/tools/rotation_reference_examples.py` and `tests/test_rotation_representations_reference.py`.
+
+The Python matrix tolerance is $10^{-10}$. The browser accepts maximum entry orthogonality and determinant residuals below $10^{-5}$ to accommodate rounded editable matrices. Those residuals are not confidence intervals. Approximate accepted matrices and normalized output representations may differ by rounding; neither adapter promises a statistically justified or nearest-rotation fit. The numerical lock threshold is $|\cos\theta|<10^{-12}$.
 
 ```python
 import numpy as np
 
+from src.tools.rotation_reference_examples import (
+    axis_angle_to_rotation as axis_angle_to_R,
+    euler_zyx_to_rotation as euler_zyx_to_R,
+    quaternion_to_rotation as quaternion_to_R,
+    rotation_to_axis_angle as R_to_axis_angle,
+    rotation_to_euler_zyx as R_to_euler_zyx,
+    rotation_to_quaternion as R_to_quaternion,
+)
 
-def skew(v):
-    """Skew-symmetric matrix from 3-vector."""
-    return np.array([[0, -v[2], v[1]],
-                     [v[2], 0, -v[0]],
-                     [-v[1], v[0], 0]])
+# --- Verification: compare reconstructed orientations, not ambiguous coordinates.
+axis = np.array([-1.0, 2.0, -3.0]) / np.sqrt(14)
+for angle in [1e-12, 0.7, np.pi - 1e-8, np.pi, np.pi + 1e-8]:
+    original = axis_angle_to_R(axis, angle)
+    recovered_axis, recovered_angle = R_to_axis_angle(original)
+    recovered_q = R_to_quaternion(original)
+    np.testing.assert_allclose(
+        axis_angle_to_R(recovered_axis, recovered_angle), original, atol=2e-14
+    )
+    np.testing.assert_allclose(quaternion_to_R(recovered_q), original, atol=2e-14)
 
-
-def axis_angle_to_R(n_hat, theta):
-    """Rodrigues formula: rotation matrix from axis n_hat and angle theta."""
-    K = skew(n_hat)
-    return np.eye(3) + np.sin(theta) * K + (1 - np.cos(theta)) * K @ K
-
-
-def R_to_axis_angle(R):
-    """Extract axis and angle from rotation matrix."""
-    theta = np.arccos(np.clip((np.trace(R) - 1) / 2, -1, 1))
-    if abs(theta) < 1e-10:
-        return np.array([0, 0, 1.0]), 0.0
-    n_hat = np.array([R[2, 1] - R[1, 2],
-                      R[0, 2] - R[2, 0],
-                      R[1, 0] - R[0, 1]]) / (2 * np.sin(theta))
-    return n_hat, theta
-
-
-def R_to_quaternion(R):
-    """Convert rotation matrix to unit quaternion (w, x, y, z)."""
-    tr = np.trace(R)
-    if tr > 0:
-        scale = 2 * np.sqrt(1 + tr)
-        w = 0.25 * scale
-        x = (R[2, 1] - R[1, 2]) / scale
-        y = (R[0, 2] - R[2, 0]) / scale
-        z = (R[1, 0] - R[0, 1]) / scale
-    elif R[0, 0] > R[1, 1] and R[0, 0] > R[2, 2]:
-        scale = 2 * np.sqrt(1 + R[0, 0] - R[1, 1] - R[2, 2])
-        w = (R[2, 1] - R[1, 2]) / scale
-        x = 0.25 * scale
-        y = (R[0, 1] + R[1, 0]) / scale
-        z = (R[0, 2] + R[2, 0]) / scale
-    elif R[1, 1] > R[2, 2]:
-        scale = 2 * np.sqrt(1 + R[1, 1] - R[0, 0] - R[2, 2])
-        w = (R[0, 2] - R[2, 0]) / scale
-        x = (R[0, 1] + R[1, 0]) / scale
-        y = 0.25 * scale
-        z = (R[1, 2] + R[2, 1]) / scale
-    else:
-        scale = 2 * np.sqrt(1 + R[2, 2] - R[0, 0] - R[1, 1])
-        w = (R[1, 0] - R[0, 1]) / scale
-        x = (R[0, 2] + R[2, 0]) / scale
-        y = (R[1, 2] + R[2, 1]) / scale
-        z = 0.25 * scale
-    return np.array([w, x, y, z])
-
-
-def quaternion_to_R(q):
-    """Convert unit quaternion (w, x, y, z) to rotation matrix."""
-    w, x, y, z = q / np.linalg.norm(q)
-    return np.array([
-        [1 - 2*(y**2 + z**2),     2*(x*y - w*z),     2*(x*z + w*y)],
-        [    2*(x*y + w*z), 1 - 2*(x**2 + z**2),     2*(y*z - w*x)],
-        [    2*(x*z - w*y),     2*(y*z + w*x), 1 - 2*(x**2 + y**2)]
-    ])
-
-
-def R_to_euler_zyx(R):
-    """Extract ZYX Euler angles (psi, theta, phi) from rotation matrix."""
-    psi = np.arctan2(R[1, 0], R[0, 0])
-    theta = -np.arcsin(np.clip(R[2, 0], -1, 1))
-    phi = np.arctan2(R[2, 1], R[2, 2])
-    return psi, theta, phi
-
-
-def euler_zyx_to_R(psi, theta, phi):
-    """ZYX Euler angles to rotation matrix: R = Rz(psi) Ry(theta) Rx(phi)."""
-    Rz = np.array([[np.cos(psi), -np.sin(psi), 0],
-                   [np.sin(psi),  np.cos(psi), 0],
-                   [0,            0,            1]])
-    Ry = np.array([[ np.cos(theta), 0, np.sin(theta)],
-                   [0,              1, 0             ],
-                   [-np.sin(theta), 0, np.cos(theta)]])
-    Rx = np.array([[1, 0,           0          ],
-                   [0, np.cos(phi), -np.sin(phi)],
-                   [0, np.sin(phi),  np.cos(phi)]])
-    return Rz @ Ry @ Rx
-
-
-# --- Verification: round-trip conversion ---
-n_hat = np.array([1, 1, 1]) / np.sqrt(3)
-theta = np.radians(47.3)
-R_orig = axis_angle_to_R(n_hat, theta)
-
-n_hat_back, theta_back = R_to_axis_angle(R_orig)
-q = R_to_quaternion(R_orig)
-R_from_q = quaternion_to_R(q)
-psi, th, phi = R_to_euler_zyx(R_orig)
-R_from_euler = euler_zyx_to_R(psi, th, phi)
-
-axis_pi = np.array([-1.0, 2.0, -3.0])
-axis_pi = axis_pi / np.linalg.norm(axis_pi)
-q_pi = R_to_quaternion(axis_angle_to_R(axis_pi, np.pi))
-expected_q_pi = np.concatenate(([0.0], axis_pi))
-assert np.allclose(q_pi, expected_q_pi) or np.allclose(q_pi, -expected_q_pi)
-
-print(f"Axis-angle round-trip error:  {abs(theta - theta_back):.2e}")
-print(f"Quaternion round-trip error:  {np.max(np.abs(R_orig - R_from_q)):.2e}")
-print(f"Euler ZYX round-trip error:   {np.max(np.abs(R_orig - R_from_euler)):.2e}")
+for pitch in [np.pi / 2, -np.pi / 2, np.pi / 2 - 1e-8]:
+    original = euler_zyx_to_R(0.7, pitch, -0.9)
+    angles = R_to_euler_zyx(original)
+    np.testing.assert_allclose(euler_zyx_to_R(*angles), original, atol=2e-14)
 ```
 
+## From Orientation to Golf Mechanics
+
+For calibrated segment-to-world matrices $R_{WA}$ and $R_{WB}$, relative segment orientation is
+
+$$R_{AB}=R_{WA}^TR_{WB}.$$
+
+This is more precise than subtracting independently extracted yaw angles. With both segment angular velocities expressed in world coordinates,
+
+$$\omega_{B/A}^{B}=R_{WB}^T(\omega_B^W-\omega_A^W).$$
+
+Anatomical axis calibration, measurement times, filtering and Euler convention must be declared before a relative angle is called pelvic rotation, thorax rotation or a joint excursion. A common fixed world-frame rotation cancels from $R_{AB}$; independent segment-calibration errors do not.
+
+For a clubface normal fixed in the club frame, $n_W=R_{WC}n_C$ and
+
+$$\dot n_W=\omega_C^W\times n_W.$$
+
+Angular velocity parallel to the normal does not change that normal instantaneously. Thus an orientation component, angular-speed magnitude and the rate of change of a delivery direction answer different questions. A face normal alone also leaves rotation about that normal undetermined.
+
+For small spatial orientation error $\delta\vartheta$,
+
+$$R_{\mathrm{measured}}\approx\exp([\delta\vartheta]_\times)R_{\mathrm{true}},\qquad
+\delta n\approx-[n]_\times\delta\vartheta.$$
+
+Its normal covariance is approximately $[n]_\times\Sigma_\vartheta[n]_\times^T$ in that same frame. Shared calibration and synchronization errors create correlations; treating each segment's uncertainty as independent can misstate relative-motion uncertainty. Differencing successive orientations requires a declared time interval and a local logarithm branch, and amplifies noise as the interval shrinks. An isolated orientation cannot determine angular velocity.
+
+Finally, rotational kinetic energy needs physical central inertia and angular velocity in a common basis:
+
+$$K=\tfrac12m\|v_C\|^2+\tfrac12\omega^TI_C\omega.$$
+
+Moment power is $\tau\cdot\omega$, with force power at its actual application point added where appropriate. Neither a large rotation angle nor a peak Euler rate demonstrates proximal-to-distal energy transfer. Those arguments require the [segment and interface work ledger](The_Physics_of_Golf/quarto/ch10_energy_transfer.html), contact constraints, continuing actuator work and uncertainty. Representation changes preserve the physical problem when every vector, inertia and derivative is transformed consistently.
 
 ## Cross-Reference With Book Chapters
 
-::: {.callout-note}
-## Tangent-Space Methods — Forthcoming Textbook Series
-The "Vol I", "Vol II", etc. references in this table point to chapters in *Tangent-Space Methods for Nonlinear Control and Biomechanics* — a book-length treatment of control-affine biomechanics currently in development. These volumes are not yet publicly available. The table is included to show the structural connections between the AffineDrift articles and the forthcoming textbook.
-:::
+| Topic | Published Reading |
+|---|---|
+| Frames, quaternion algebra, interpolation and rotational sensitivity | [Volume 0: Rotations and SE(3)](The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html) |
+| Ordered joint rotations and space/body Jacobians | [Volume 0: Product of Exponentials](The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html) |
+| Power duality and physical inertia | [Volume 0: Spatial Algebra](The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html) |
+| Physical energy and intersegment work | [Physics of Golf: Energy Transfer](The_Physics_of_Golf/quarto/ch10_energy_transfer.html) |
 
-| Chapter | Rotation representation used | Cross-reference |
-|---------|------------------------------|-----------------|
-| Vol 0, Ch 3–4 | $SO(3)$, $\mathfrak{so}(3)$, $SE(3)$ | Primary formalism |
-| Vol 0, Ch 5 | Exponential coordinates $e^{[\omega]}$ | Product of Exponentials |
-| Vol I, Ch 1 | Fréchet derivative of $R$ | Tangent space of $SO(3)$ |
-| Vol I, Ch 7 | Counterfactual: what if no rotation? | Drift-control decomposition |
-| Vol II, Ch 3 | All four representations side-by-side | Multi-representation derivations |
-| Screw Theory Ref. | Twists as $\mathfrak{se}(3)$ elements | Joint screw axes |
+## Sources and Scope
+
+Kevin M. Lynch and Frank C. Park, *Modern Robotics* (2017), provide the rotation, frame and exponential framework. The official [rotation-exponential transcript](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-2-3-exponential-coordinates-of-rotation-part-2-of-2/) explains the constant-axis construction; the [angular-velocity transcript](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-2-2-angular-velocities/) distinguishes body and spatial representations. The numerical branches and verification examples here are specified explicitly rather than attributed wholesale to those transcripts.
+
+SciPy's [Euler conversion documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.as_euler.html) explains intrinsic/extrinsic sequences and its singularity convention. Its [matrix conversion documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.from_matrix.html) describes fitting an approximate rotation; that behavior must not be mistaken for the stricter input validation used here. These mathematical and software sources do not validate a golfer-specific anatomical calibration, coaching intervention or energy-transfer claim.
+
+## Related Articles
+
+- [Interactive Rotation Converter](rotation-converter.html)
+- [Screw Theory Reference](screw-theory-reference.html)
+- [Volume 0: Rotations and SE(3)](The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html)
