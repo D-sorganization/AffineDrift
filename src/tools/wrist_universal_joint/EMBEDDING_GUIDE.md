@@ -18,7 +18,7 @@ For a page at the site root:
 <iframe
   src="src/tools/wrist_universal_joint/grip_angle_simulator.html"
   title="Cardan and Torque Projection Demonstration"
-  width="100%"
+  style="width: 100%;"
   height="1000"
   loading="lazy"
 >
