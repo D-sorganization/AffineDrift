@@ -341,3 +341,22 @@ Fresh browser checks confirm one main, one named plot section, zero axe
 violations, no viewport overflow at320/390/768/1440px, and40px keyboard plot
 scroll. Desktop and mobile screenshots were inspected. These two new views
 supplement the earlier143; protected CI must still validate the updated head.
+
+
+## Protected-Main Replay and Wrist Publication, 2026-09-09
+
+The saved brain checkpoint 2a5ec6fb was pushed with every hook passing. Remote
+inspection then showed that PR #4304 had already merged as a11abdbf, after another
+task changed the auxiliary HTML publication policy. That task removed the old
+HTML guide from deployment and excluded content/src HTML from the Quarto page
+manifest. The simulator remains linked as an auxiliary resource. This supersedes
+the earlier instruction to repair an open wrist PR; no competing wrist repair
+was made. The manifest no longer claims those auxiliary routes as Quarto pages.
+
+Main deployment 34310520642 at descendant 19170f82 succeeded. Its exact live
+artifact 10088805870 was downloaded and inspected: 956/956 checks, 239 routes,
+zero failures, serious/critical axe findings, retries or transient responses.
+Auxiliary simulator validation rests on the earlier direct browser checks,
+not on the reduced page manifest. The wrist merge itself had a failed deploy;
+the successful descendant contains the critique-link repair from PR #4305.
+

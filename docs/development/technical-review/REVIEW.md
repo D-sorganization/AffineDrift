@@ -1337,3 +1337,53 @@ textbooks34265513761, deployment34265513841 and exact artifact10072974625 pass;
 956/956 live checks across239 routes, no serious/critical axe findings or retries.
 Next#4291 covers the fully read inverse-dynamics manuscript and three TeX
 companions. Corrections have not begun; corpus#4021 remains unfinished.
+
+## Computational Brain: Paired Technical Review #4303
+
+Both complete editions and all14 exercises now connect prepared state, delay,
+activation, mechanical impedance, feasible muscle commands, prediction and
+learning. Independent models correct schedule arithmetic, late-correction
+capacity, drift/input sensitivity, stiffness-modulation energy and antagonist
+torque. Neural and AI claims use identified primary sources with reading-depth
+limits; proposed experiments replace unsupported universal explanations.
+The550-page PDF, chapter403–419, affected front matter and bibliography are
+inspected. Root4867/29 skips,src92.98%,content130,affected64,static34,title631
+and code/style/type gates pass. Responsive14,113 typeset expressions,30 unique
+historical anchors and figure keyboard scrolling pass. A number-boundary bug
+in the COR scanner and chapter-specific web contrast/math sizing are repaired.
+See [brain-review.md](brain-review.md) for all14 worked solutions, source
+boundaries, failed checks and exact visual evidence. Protected delivery remains.
+
+Wrist PR4304 is still open. Its exact CI artifact10085985439 identifies missing
+canonical/navigation/theme support on two standalone HTML companions; ordinary
+browser and numerical suites pass. Save the brain checkpoint, repair wrist on
+its branch, then resume brain delivery. Corpus405 is unfinished;224 sources
+still have only an index, and partially reviewed sources require further work.
+
+
+## Protected-Main Replay and Wrist Publication, 2026-09-09
+
+The saved brain checkpoint 2a5ec6fb was pushed with every hook passing. Remote
+inspection then showed that PR #4304 had already merged as a11abdbf, after another
+task changed the auxiliary HTML publication policy. That task removed the old
+HTML guide from deployment and excluded content/src HTML from the Quarto page
+manifest. The simulator remains linked as an auxiliary resource. This supersedes
+the earlier instruction to repair an open wrist PR; no competing wrist repair
+was made. The manifest no longer claims those auxiliary routes as Quarto pages.
+
+Main deployment 34310520642 at descendant 19170f82 succeeded. Its exact live
+artifact 10088805870 was downloaded and inspected: 956/956 checks, 239 routes,
+zero failures, serious/critical axe findings, retries or transient responses.
+Auxiliary simulator validation rests on the earlier direct browser checks,
+not on the reduced page manifest. The wrist merge itself had a failed deploy;
+the successful descendant contains the critique-link repair from PR #4305.
+
+Only brain commit 2a5ec6fb was cherry-picked onto 19170f82, becoming 52f80227
+on fix/4303-computational-brain-review. No force push or history replacement.
+The replay passes 4,900 root tests, 29 skips, 131 deselections and 50 warnings
+in 383.16 seconds. All 64 affected checks, 34 static contracts and the new site
+link gate pass. The first direct link-checker invocation lacked the package
+import path; invoking it as a module passes without changing its source.
+No new scientific assertions or equation changes were introduced by the replay.
+Both complete original swing-plane/launch editions were read while these
+checks ran; their fixes belong to the next focused issue, not this PR.
