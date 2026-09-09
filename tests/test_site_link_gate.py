@@ -15,7 +15,6 @@ import yaml
 
 from src.tools.site_link_gate import (
     BASELINE_PATH,
-    CONTENT_DIRS,
     expand_includes,
     extract_links,
     find_content_pages,
@@ -23,6 +22,7 @@ from src.tools.site_link_gate import (
     load_vocabulary,
     run_site_gate,
 )
+from src.tools.site_page_scan import CONTENT_DIRS
 
 
 def write_page(path: Path, body: str, **front: object) -> Path:

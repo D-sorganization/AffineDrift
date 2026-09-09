@@ -19,28 +19,22 @@ from __future__ import annotations
 import json
 import logging
 import re
-from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
 
 from src.tools.site_page_scan import (
-    CONTENT_DIRS,
     _resolve_target,
     _target_exists,
-    Link,
     expand_includes,
     extract_links,
     find_content_pages,
     is_book_chapter,
     is_external_url,
-    is_rendered,
     page_body,
     parse_front_matter,
-    rendered_relative_paths,
     strip_code,
 )
-from src.tools.utils.link_utils import normalize_internal_url
 
 logger = logging.getLogger(__name__)
 
