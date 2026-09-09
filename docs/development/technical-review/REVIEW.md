@@ -1387,3 +1387,31 @@ import path; invoking it as a module passes without changing its source.
 No new scientific assertions or equation changes were introduced by the replay.
 Both complete original swing-plane/launch editions were read while these
 checks ran; their fixes belong to the next focused issue, not this PR.
+
+## Swing Plane, Contact and Launch: #4307
+
+Both complete editions and eight worked problems now connect declared delivery
+geometry, continuing actuation, contact impulse, spin, flight and uncertainty.
+The review corrects plane/lie definitions, face-angle gains, launch-ratio evidence,
+spin dimensions and sign, local optimization and variance arithmetic. Its
+manufactured launch surface is explicitly separated from measured fitting data.
+Two paired figures and the rebuilt 552-page PDF support the derivations.
+
+See [swing-plane-review.md](swing-plane-review.md) for the complete argument,
+thirteen derivation groups, source-reading boundaries and failed checks. Visual
+inspection discovered unnumbered equations lost by a converter whitespace bug;
+the paired-equation test now checks all 31 display expressions. The corrected
+browser run has 221 typeset expressions, 14 responsive/theme cases, 31 preserved
+historical headings, 52 body captures and 19 scroll-edge captures; final table
+layout inspection remains. Static contracts and repaired focused checks pass;
+the final broad regression is running. Do not infer whole-corpus completion.
+
+PR #4306 is confirmed merged as 022fc21c, but its exact production artifact
+still needs verification. GitHub CLI credentials and the GitHub connector now
+require reauthentication, preventing claim renewal and protected delivery checks.
+The user has been notified while local validation and documentation continue.
+The next long article has been read completely; its preliminary findings and
+independent counterexamples are in [launch-monitors-preaudit.md](launch-monitors-preaudit.md).
+
+
+Final swing verification: 4,925 root tests pass, 92.65% coverage, all 34 static contracts and 51 final affected checks pass. PDF, complete web reading, 12 final table views and both long-expression scroll/keyboard checks are inspected. The failed CSS/verification attempts and remaining inherited warnings are documented in swing-plane-review.md. Authentication has recovered and both active issue leases were verified. Brain #4306 is published as 022fc21c with exact live artifact 10095422596 passing 956/956. Next correction is launch-monitor #4309; the corpus remains unfinished.
