@@ -42,6 +42,10 @@ jobs:
         continue-on-error: true
         id: internal-refs
 
+      - name: Site gate (cross-page links, related coverage, orphans, categories)
+        run: |
+          PYTHONPATH=. python3 scripts/link-checker.py --site-gate --root .
+
       - name: Check external URLs
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         timeout-minutes: 5
