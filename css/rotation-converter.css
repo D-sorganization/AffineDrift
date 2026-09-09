@@ -1,0 +1,75 @@
+.rc-panel input[type="text"] {
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: 0.88rem;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-primary, #fff);
+  color: var(--text-primary, #111);
+  transition: border-color 0.15s;
+}
+.rc-panel input[type="text"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+}
+.rc-panel input.rc-input-active {
+  border-color: #3b82f6;
+  background: var(--bg-secondary);
+}
+.rc-input-invalid { border-color: #dc2626 !important; }
+.rc-load-btn, .rc-preset-btn {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: var(--bg-secondary, #f9fafb);
+  color: var(--text-primary, #374151);
+  cursor: pointer;
+  font-size: 0.83rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rc-load-btn:hover, .rc-preset-btn:hover {
+  background: var(--bg-secondary);
+  border-color: #6366f1;
+}
+.rc-panel-active {
+  border-color: #3b82f6 !important;
+  background: rgba(59,130,246,0.03);
+}
+.rc-formula-box {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-secondary, #f8fafc);
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: monospace;
+  color: var(--text-secondary, #334155);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+#rc-app { --rc-error: #991b1b; --rc-success: #166534; }
+[data-theme="dark"] #rc-app { --rc-error: #fca5a5; --rc-success: #86efac; }
+#rc-app .rc-main-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 1.25rem; }
+#rc-app .rc-panel { min-width: 0; }
+#rc-app input[type="text"] { color: var(--text-primary); background: var(--bg-primary); }
+#rc-app #rc-status { border: 1px solid currentColor; }
+#rc-status[data-valid="false"] { color: var(--rc-error); }
+#rc-status[data-valid="true"] { color: var(--rc-success); }
+#rc-app #rc-formula-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+#rc-app #rc-formula-content { max-width: 100%; box-sizing: border-box; }
+#rc-toolbar { flex-wrap: wrap; }
+#quarto-document-content table,
+#quarto-document-content table th,
+#quarto-document-content table td {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+#quarto-document-content p { max-width: 80ch; }
+@media (max-width: 760px) {
+  #rc-app .rc-main-grid { grid-template-columns: minmax(0,1fr); }
+  #rc-app #rc-canvas { height: 320px; }
+}

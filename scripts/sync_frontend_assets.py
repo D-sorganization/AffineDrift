@@ -42,6 +42,8 @@ CANONICAL_JS_NAMES = (
     "notes-workspace.js",
     "pdf.js",
     "rotation-converter.js",
+    "rotation-converter-ui.js",
+    "rotation-converter-viz.js",
     "service-worker-updates.js",
     "service-worker-utils.js",
     "ui-components.js",
@@ -50,6 +52,7 @@ CANONICAL_JS_NAMES = (
 
 
 SYNC_MAPS: tuple[SyncMap, ...] = (
+    SyncMap(source="css/rotation-converter.css", mirrors=("docs/css/rotation-converter.css",)),
     # css/ is the canonical source; docs/css/ is the Quarto-served mirror.
     # src/css/ has been removed (issue #1382); deploy_assets.py now reads from css/ directly.
     SyncMap(
