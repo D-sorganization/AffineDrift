@@ -1,0 +1,33 @@
+/* Table explanations follow the selected reading theme. */
+#quarto-document-content table caption {
+  color: var(--bs-body-color);
+}
+
+/* Explanatory tables should wrap within the reading column. */
+#quarto-document-content table.table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
+
+#quarto-document-content table.table :is(th, td) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+/* Four numerical columns retain whole header words on phones. */
+#tbl-launch-angle-opt table.table :is(th, td) {
+  padding: 0.4rem 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* Keep long inline expressions reachable inside narrow list items. */
+#quarto-document-content .long-inline-math {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+  padding-block: 0.15em;
+}
