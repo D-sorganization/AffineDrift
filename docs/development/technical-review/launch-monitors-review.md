@@ -230,3 +230,13 @@ Swing PR #4310 is protected-merged and published as
 textbook build 34371089313 and deployment 34371089396 succeed. Exact live
 artifact 10113084054 passes 956/956 checks across 239 routes, with zero
 failures, axe violations, retries or transient responses.
+
+## Protected Publication — September 9, 2026
+
+Launch-monitor issue #4309 closed through PR #4312, protected-squash-merged as
+bc25229735029116fde0c8c81ffaf0a1fe5043b1 at 16:34:44 UTC. Main CI 34377610736,
+performance 34377610709 and deployment 34377610683 succeed. Exact live artifact
+10115787738 (live-public-site-verification-bc25229735029116fde0c8c81ffaf0a1fe5043b1)
+was downloaded and read: 956/956 evidence checks across 239 routes, no failures,
+axe violations, navigation retries or transient responses. This completes this
+article batch; the corpus and research-validation epics remain open.

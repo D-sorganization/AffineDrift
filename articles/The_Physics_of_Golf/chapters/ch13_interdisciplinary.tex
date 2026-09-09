@@ -1,631 +1,413 @@
-% ═════════════════════════════════════════════════════════════════
-% CHAPTER 13: Where Disciplines Collide
-% ═════════════════════════════════════════════════════════════════
-
-\chapter{Where Disciplines Collide: An Interdisciplinary Perspective}
+\chapter[Where Disciplines Collide: An Interdisciplinary Perspective]{Where Disciplines Collide:\\An Interdisciplinary Perspective}
 \label{ch:interdisciplinary}
+\index{interdisciplinary}
+\index{biomechanics!control theory perspective}
+\index{control theory!golf}
 
-\epigraph{Golf is a microcosm where physics, engineering, neuroscience, and biomechanics all collide. Understanding the collision is understanding the game.}{---AffineDrift}
+\section{Why Disciplines Matter}
 
-% ─────────────────────────────────────────────────────────────────
+A golfer changes a cue, a shaft, or a training routine and the ball flies differently. What changed between the intention and the outcome? The answer may involve the chosen movement, muscle activation, contact with the ground, elastic deformation, club delivery, ball impact, or the measurement itself. Several of these can change together. A convincing explanation must follow the connections without treating a successful shot as proof of every proposed mechanism.
+
+The central question of this book is how a golfer prepares and regulates a coupled mechanical system so that its evolving motion delivers a useful impact. Momentum, gravity, constraints and elasticity can help carry a movement forward. Muscles prepare that motion, continue to exchange energy with it, and alter its response to disturbances. The interesting comparison is therefore between specified movement strategies under specified conditions, with their benefits and costs measured at the appropriate level.
+
 \begin{laymansbox}{Multiple Disciplines, One Framework}{ch13:disciplines}
-Throughout this book, we have developed a mathematical framework (control-affine dynamics) that describes the golf swing. This framework connects multiple scientific disciplines, each contributing essential insights.
-
-Control theory provides the decomposition of forces into drift and control components. Biomechanics describes the mechanical properties of muscles, bones, and connective tissue. Robotics demonstrates analogous mathematical structures in human and engineered systems. Neuroscience describes how the nervous system encodes and executes motor commands. Material science characterizes the mechanical behavior of shafts and impact dynamics. Data science provides methods to estimate parameters of the drift field from measurements.
-
-The subsequent sections show how these disciplines connect through the affine framework. The framework provides a unifying language that can express concepts from engineering, biology, and neuroscience in consistent mathematical terms. This consistency enables precise comparison of phenomena across domains.
+A mechanical model connects forces to motion. A controller connects information and goals to actions. A measurement model connects physical events to recorded data. An injury study connects exposure and other factors to health outcomes. These models can inform one another, but their conclusions are not interchangeable. A mathematically valid simulation can motivate an experiment without establishing what a person's nervous system does or which technique prevents injury.
 \end{laymansbox}
 
-% ─────────────────────────────────────────────────────────────────
+This chapter builds those connections explicitly. Its numerical examples are declared teaching models, not measured golf populations or fitting recommendations. The worked answers also show how to challenge the framework: specify an alternative mechanism that predicts the same observation, then identify a measurement or intervention that could distinguish them.
+
 \section{Interdisciplinary Connections: Overview}
 
-\index{interdisciplinary}
+The useful common structure is a chain of interacting models. The golfer's policy selects commands using goals, observations and internal state. The body and club transform commands and external forces into motion. Impact converts a particular delivery and contact configuration into club and ball changes. Flight, landing and subsequent motion determine the result. Sensors observe selected parts of this process, and their reports feed into subsequent decisions.
 
-The golf swing connects multiple scientific disciplines through shared mathematical structures. Figure~\ref{fig:ch13_interdisciplinary_map} illustrates how these fields intersect at the core dynamics $\dot{\state} = f(\state) + G(\state)\control$.
-
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.0, every node/.style={align=center}]
-  % Central equation
-  \node[draw, rectangle, minimum width=4cm, minimum height=0.8cm, font=\small] (core) at (0,0) {$\dot{\state} = f(\state) + G(\state)\control$};
-
-  % Discipline nodes
-  \node[draw, circle, minimum width=1.2cm] (control) at (-4, 2) {Control\\Theory};
-  \node[draw, circle, minimum width=1.2cm] (biomech) at (-1.5, 2.5) {Biomechanics};
-  \node[draw, circle, minimum width=1.2cm] (robotics) at (1.5, 2.5) {Robotics};
-  \node[draw, circle, minimum width=1.2cm] (neuro) at (4, 2) {Neuroscience};
-  \node[draw, circle, minimum width=1.2cm] (materials) at (-2.5, -2) {Material\\Science};
-  \node[draw, circle, minimum width=1.2cm] (data) at (2.5, -2) {Data\\Science};
-
-  % Connection lines
-  \draw[-] (core) -- (control);
-  \draw[-] (core) -- (biomech);
-  \draw[-] (core) -- (robotics);
-  \draw[-] (core) -- (neuro);
-  \draw[-] (core) -- (materials);
-  \draw[-] (core) -- (data);
-
-  % Key contributions
-  \node[font=\small, right=0.3cm of control] {Drift/Control\\Decomposition};
-  \node[font=\small, right=0.3cm of biomech] {Force\\Generation};
-  \node[font=\small, left=0.3cm of robotics] {Hierarchical\\Structure};
-  \node[font=\small, left=0.3cm of neuro] {Motor\\Commands};
-  \node[font=\small, right=0.3cm of materials] {Elastic\\Properties};
-  \node[font=\small, left=0.3cm of data] {Parameter\\Estimation};
-\end{tikzpicture}
-\caption{The Affine Control Framework Provides a Common Language for Multiple Scientific Disciplines, Each Contributing Essential Insights to Understanding the Golf Swing.}
+\includegraphics[width=\linewidth]{figures/interdisciplinary_model_map.pdf}
+\caption{Connected Models Link Commands, Motion, Impact and Outcome. Measurements Observe Selected Stages and Inform Decisions; the Map Does Not Assign These Functions to Brain Regions.}
 \label{fig:ch13_interdisciplinary_map}
 \end{figure}
 
-% ─────────────────────────────────────────────────────────────────
-\section{Control Theory and Biomechanics: The Affine Bridge}
+Figure~\ref{fig:ch13_interdisciplinary_map} is a map of questions, not a diagram of brain anatomy. Materials enter both the moving system and contact law. Ground and grip conditions constrain the motion. Neural and mechanical responses operate during the swing, while learning changes future policies. Uncertainty propagates through every stage; a precise final number does not imply that every upstream quantity was observed.
 
-\index{control theory!golf}
-\index{biomechanics!control theory perspective}
+This chain also explains why one scalar cannot represent overall swing quality. Ball speed, directional dispersion, joint loading, effort, robustness and learning are different outcomes. Improving one may change another. A rigorous argument names the outcome, comparison and operating conditions before it calls a movement efficient, stable, safe or optimal.
 
-Control theory originated in engineering: how do you design a system that reliably achieves a goal, even when it is subject to disturbances and uncertainties? A thermostat must heat a house to a target temperature despite changing weather. A spacecraft must orient itself despite thruster failures. A robot must move its end-effector to a target position despite friction and inertia.
+\section[Control Theory and Biomechanics: The Affine Bridge]{Control Theory and Biomechanics:\\The Affine Bridge}
 
-The golf swing is a control problem: the goal is to direct the ball toward the target, despite uncertainties in initial conditions and disturbances like wind.
+In a local coordinate description, a constrained multibody model may be written
+\[
+M(q)\ddot q+c(q,\dot q)+g(q)+d(q,\dot q)
+=B(q)\tau+J(q)^T\lambda+Q_{\rm ext}.
+\]
+Here $q$ describes configuration, $M$ is the inertia matrix, $c$ collects velocity-dependent inertial terms, $g$ is gravity, and $d$ represents the explicitly modeled dissipative forces. Joint torques $\tau$, contact reactions $\lambda$, and other external generalized forces must be assigned to the correct system boundary. Ideal constraints can be eliminated locally or retained with their acceleration equations. Contact creation, separation and slip may require different modes.
 
-The key insight of control theory is the separation of controllable and uncontrollable effects. The controllable effects (control inputs) are the torques the muscles can apply. The uncontrollable effects (drift) are everything else---gravity, inertia, centrifugal force, elastic restoring forces. The art of control is to set up the drift (through the initial backswing) such that drift alone (the zero-torque counterfactual) points toward the target. Then, in execution, small control inputs make small corrections to keep on track.
+After choosing independent states and inputs, one possible model is
+\[
+\dot x=f(x)+G(x)u.
+\]
+This form says that the instantaneous state derivative is affine in the selected input. It does not say that motion is linear in initial conditions, that muscle force is globally linear in excitation, or that every biological model has this form. If the input is joint torque, muscle activation and tendon behavior may lie outside that simplified plant. If the input is neural excitation, activation and elastic states generally belong inside it. An input-dependent activation time constant can require a more general or piecewise description.
 
-Biomechanics had historically treated the swing as a list of muscle activations: ``the supraspinatus fires, then the pectoralis major, then the forearm extensors,'' and so on. This is descriptive but not explanatory. Why does the supraspinatus fire at that moment? How does its activation contribute to the clubhead trajectory?
+\subsection{Input Coordinates and the Meaning of Zero}
 
-Control theory reframes these questions. The muscle activations are the control inputs. The question is not ``what fires when?'' but ``what is the control objective, and how do the muscle activations achieve it?'' The answer is: by exploiting drift.
+The drift $f$ is the vector field obtained when the declared input is zero. It is not the set of effects that cannot be controlled. Control can change the state at which drift acts, and feedback can change the baseline used to describe the system. Under the input substitution
+\[
+u=\alpha(x)+\beta(x)\nu,
+\qquad
+\dot x=\underbrace{f(x)+G(x)\alpha(x)}_{\widetilde f(x)}
+       +\underbrace{G(x)\beta(x)}_{\widetilde G(x)}\nu,
+\]
+zero residual input $\nu$ retains the baseline action $\alpha(x)$. For an invertible $\beta$, this is an equivalent input description if the admissible input set is transformed as well. If $\beta$ restricts input directions, it also restricts the controller.
 
-\begin{example}{The Supraspinatus Activation}{ch13:supraspinatus}
-The supraspinatus (one of the rotator cuff muscles) initiates external rotation of the shoulder during the transition and early downswing. Traditionally, biomechanists say ``the supraspinatus activates to control external rotation.''
+Consider a rotor with inertia $I$ and torque $u=-kq+\nu$. Zero $\nu$ retains the restoring torque $-kq$; zero physical torque removes it. At $I=0.05\,\mathrm{kg\,m^2}$, $k=2\,\mathrm{N\,m/rad}$ and $q=0.1\,\mathrm{rad}$, the former gives an angular acceleration of $-4\,\mathrm{rad/s^2}$. The two zero-input experiments answer different questions. A zero-excitation muscle model likewise retains whatever activation and tendon strain already exist; it is not an instantaneous zero-force intervention.
 
-From a control theory perspective: the early downswing is a phase of high control authority and low drift (many muscle groups are active, and gravity has not yet accelerated the clubhead much). The supraspinatus activation is part of the overall control strategy to set up a drift field that will naturally lead to the desired clubhead trajectory by mid-downswing. Once the swing is moving fast (mid to late downswing), the supraspinatus activation ceases or decreases; the drift dominates, and control authority is low.
+Changing the state at the top of the backswing changes the trajectory through a fixed vector field. Changing equipment or tissue parameters changes the plant itself. Changing a feedback policy changes the resulting closed-loop vector field. These are three distinct ways to obtain a different swing, even though all can change the club's eventual delivery.
 
-This perspective explains why the supraspinatus is most active early in the swing, not late---it is setting up the drift, not fighting it.
-\end{example}
+\subsection{Control Authority Requires a Task and a Time}
 
-The affine framework establishes mathematical correspondence between control theory and biomechanics through the shared structure: $\dot{\state} = f(\state) + G(\state)\control$.
+A large nominal drift term does not prove that additional input has little effect. For the constant-inertia rotor,
+\[
+\ddot q=\tau/I,\qquad
+\delta q(T)=\frac{\delta\tau}{2I}(T-t_0)^2
+\]
+for a constant added torque starting at $t_0$, with zero initial perturbation. The torque-to-acceleration gain is $1/I$ at every angular speed. With $I=0.05\,\mathrm{kg\,m^2}$, a $0.5\,\mathrm{N\,m}$ increment acting for $0.1\,\mathrm{s}$ changes angle by $0.05\,\mathrm{rad}$ and angular speed by $1\,\mathrm{rad/s}$, whether the initial speed is zero or $100\,\mathrm{rad/s}$.
 
-For control theorists, this structure clarifies the biological instantiation: the drift $f(\state)$ comprises gravity, Coriolis forces, elastic forces in the shaft, and passive damping in connective tissue. The control field $G(\state)$ represents muscle torques distributed across multiple joints.
+A late intervention can nevertheless have little effect because little time remains, the command arrives after contact, activation develops slowly, torque is saturated, or available directions poorly affect the desired output. For a linearization about a specified trajectory, a fixed-time output perturbation has the form
+\[
+\delta y(T)=C(T)\Phi(T,t_0)\delta x(t_0)
+ +\int_{t_0}^{T}C(T)\Phi(T,s)G(x(s))\delta u(s)\,ds.
+\]
+The state-transition matrix $\Phi$ propagates perturbations through the coupled dynamics; $C$ maps state changes to the chosen output. A state-triggered impact also requires event-time sensitivity. Input limits, delays and units must be included before comparing authority across phases or joints. The computational-brain chapter (Chapter~\ref{ch:remarkable_brain}) develops a delayed-activation example that makes this distinction quantitative.
 
-For biomechanists, this structure provides a principled organization of empirical observations. Rather than cataloging muscle activations as an unconnected sequence, the framework supports systematic inquiry: what control objectives does each swing phase present, and how do observed muscle activation patterns achieve these objectives?
+\subsection{Minimum Effort Requires a Cost and a Horizon}
 
-% ─────────────────────────────────────────────────────────────────
+Preparing a useful trajectory can reduce later correction, but proximity to the zero-input endpoint is not a universal minimum-effort criterion. For a controllable linear system with an unconstrained quadratic input cost, the minimum cost of an endpoint correction $e$ is
+\[
+J_{\min}=e^T W^{-1}e,
+\qquad
+W=\int_0^T e^{A(T-s)}BR^{-1}B^T e^{A^T(T-s)}\,ds,
+\]
+where the cost is $\int_0^T u^TRu\,dt$ and $R$ is positive definite. A singular Gramian requires a reachable endpoint and the corresponding restricted solution. Saturation, nonlinear dynamics and path constraints can invalidate this unconstrained formula.
+
+The result follows by minimizing the cost subject to the endpoint integral constraint. A Lagrange multiplier gives
+\[
+u_*(s)=R^{-1}B^T e^{A^T(T-s)}W^{-1}e.
+\]
+Substitution into the endpoint integral returns $WW^{-1}e=e$, and substitution into the cost returns $e^TW^{-1}e$. The weighting therefore comes from the dynamics and input cost, not an arbitrary distance between poses.
+
+To see why the metric matters, nondimensionalize a double integrator using a one-unit horizon, a chosen position scale and its associated velocity scale. With unit input weight,
+\[
+W=\begin{bmatrix}1/3&1/2\\1/2&1\end{bmatrix},
+\qquad
+W^{-1}=\begin{bmatrix}12&-6\\-6&4\end{bmatrix}.
+\]
+The correction $(0.1,-0.1)^T$ is shorter in Euclidean distance than $(0.2,0.3)^T$, yet costs $0.28$ rather than $0.12$. Position and velocity errors can reinforce or oppose what the available input can accomplish. Even this input cost is not metabolic expenditure or injury risk. Those require additional models and evidence.
+
 \section{Robotics: What Golf Can Learn From Machines}
 
-\index{robotics!golf analogy}
-\index{manipulator}
-\index{anthropomorphic robot}
+Robotics provides explicit ways to connect task objectives, constraints, actuator limits and feedback. A robot can be designed with rigid or compliant transmissions, delayed sensing, learned policies and adaptive parameter estimates. Human-versus-machine comparisons should specify the systems being compared rather than assign flexibility exclusively to people or fixed control exclusively to robots.
 
-A robot arm is, in many ways, a simplified human arm. It has joints (usually revolute, or rotating joints). It has actuators (motors) that apply torque at the joints. It has a rigid endpoint (the end effector) that must reach a target position.
+\subsection{Principle 1: Hierarchical Control}
 
-The math that describes a robot is nearly identical to the math that describes a human arm. The main differences are:
+A useful design can separate a task objective, a movement policy and an actuator controller. For example, a target distribution may constrain acceptable launch conditions; a trajectory optimizer may search for feasible club delivery; a lower-level controller may regulate torque or interaction dynamics. Information can also pass between levels during execution.
 
-\begin{enumerate}
-\item \textbf{Humans have more degrees of freedom.} A robot arm might have 6 or 7 joints; a human arm plus torso and legs has 20+.
-\item \textbf{Humans have elastic elements.} Tendons, muscle fibers, and connective tissue stretch and store energy. A robot typically does not.
-\item \textbf{Humans have feedback.} The nervous system uses proprioceptive feedback to adjust motion in real time. A robot's feedback loop is engineered, often simpler.
-\item \textbf{Humans learn.} A human can adapt their motor control strategy in response to repeated practice. A robot's control law is typically fixed.
-\end{enumerate}
+This is an engineering decomposition, not proof that the motor cortex, cerebellum and spinal cord implement those stages in that order. Nor is a hierarchy mathematically necessary for every controller. A feedback policy can map estimated state directly to actuator commands. The important questions are whether its commands are feasible, whether it handles uncertainty, and whether it produces the intended response under disturbances.
 
-But the structure is the same. Both humans and robots must overcome inertia, gravity, and friction to move. Both have a cascade of control: high control authority at the beginning of the motion (when speeds are low), fading to low control authority near the end (when momentum is high).
+For golf, a hierarchy is useful when it keeps the instruction at the right level. A target direction is an outcome goal; an intended club path is an intermediate task; a particular muscle activation is an implementation hypothesis. A coach who changes one level should measure the outcome at the others before attributing success to a specific mechanism.
 
-From robotics, the golf swing inherits several key principles:
+\subsection{Principle 2: Controlling Interaction Dynamics}
 
-\subsection*{Principle 1: Hierarchical Control}
+Mechanical impedance describes a force--velocity relation. For a scalar linear mass--damper--spring perturbation with zero initial conditions, $M>0$, $B\geq0$ and $K\geq0$,
+\[
+F(s)=(Ms+B+K/s)V(s).
+\]
+The force--displacement relation instead has dynamic stiffness $Ms^2+Bs+K$. These quantities depend on frequency, direction, operating state and the chosen mechanical port. A compliant shaft, an activated muscle and a feedback controller need not have the same response merely because each can resist displacement.
 
-\index{hierarchical control}
+For an elastic rotational controller with error $e=q-q_d$, nonnegative stiffness $K(t)$ and damping $D$,
+\[
+\tau=-Ke-D\dot e,\qquad V_{\rm stored}=\tfrac12Ke^2,
+\]
+and direct differentiation gives
+\[
+\tau\dot q+\dot V_{\rm stored}
+=-D\dot e^2+\tau\dot q_d+\tfrac12\dot K e^2.
+\]
+With fixed reference and stiffness, damping removes energy at this port. Moving the reference or increasing stiffness while displaced can supply energy. At a clamped error of $0.1\,\mathrm{rad}$, raising $K$ from $10$ to $30\,\mathrm{N\,m/rad}$ increases storage by $0.1\,\mathrm{J}$. Calling all such behavior passive would hide an energy source.
 
-A robot does not calculate the joint torques directly from the desired end-effector trajectory. Instead, it uses a hierarchy:
+Impedance control therefore suggests a research question: what response to a specified perturbation is useful at each phase? It does not prescribe maximal stiffness at impact or a universal early-soft/late-stiff schedule. Resistance in one direction may help face orientation while affecting another degree of freedom or increasing internal loading. The biology and computational-brain treatments discuss the mechanical and experimental distinctions behind this question.
 
-\begin{enumerate}
-\item High level: specify the desired end-effector trajectory (where the hand should be).
-\item Middle level: compute the joint angles needed to achieve this trajectory (inverse kinematics).
-\item Low level: compute the joint torques needed to move the joints to those angles (inverse dynamics).
-\end{enumerate}
+\subsection{Principle 3: Task-Space vs. Joint-Space Planning}
 
-The human nervous system appears to use a similar hierarchy. Motor cortex encodes the desired hand trajectory. The cerebellum and other structures compute the joint angles (through cerebellar forward models). The spinal cord and muscles apply the torques.
+Let a chosen club task coordinate be $y=h(q)$. Locally,
+\[
+\dot y=J(q)\dot q,\qquad \tau_{\rm task}=J(q)^TF_{\rm task},
+\]
+where the task force and velocity must use compatible coordinates and units. The second relation follows from virtual work. Full orientation requires an appropriate local representation or a geometric treatment on the rotation group. A three-dimensional club pose cannot be reconstructed from face azimuth and path azimuth alone.
 
-This hierarchy is present in the golf swing. The golfer's intention is to swing along a particular plane and reach a particular hand position at impact. The nervous system translates this into a desired hand trajectory. The trajectory specifies required joint angles. The joint angles (through forward dynamics, or perhaps through learned inverse models) suggest which muscles to activate.
+Redundancy means that different joint motions can satisfy the same instantaneous task velocity. Such alternatives may differ in posture, contact feasibility, energy, sensitivity and tissue loading. A kinematic null direction is not automatically dynamically harmless: moving in it can change inertia, future reachability or the next task Jacobian. This is why a good club-level result does not uniquely identify a whole-body technique.
 
-The affine framework enriches this picture. The golfer does not need to specify the desired hand trajectory perfectly; they only need to set up the drift. The drift handles the large-scale, passive dynamics. The control inputs make smaller corrections to the drift.
+\section{Why Robots Teach Us About Muscles}
+\label{laymans:ch13:robot_lesson}
+\label{ex:ch13:supraspinatus}
 
-\subsection*{Principle 2: Impedance Matching}
+The analogy becomes productive when actuator dynamics are made explicit. Torque is an input in one model and an output of activation, force--length--velocity behavior, tendon deformation and moment arms in another. A command can change immediately while muscle force develops over time; stored elastic energy can persist after a command changes.
 
-\index{impedance}
-\index{compliance}
+Muscle recordings add evidence but need their own observation model. Pink, Jobe and Perry's shoulder EMG study reports muscle- and phase-dependent activity; its abstract does not establish that a particular muscle simply turns off once drift takes over \citep{Pink1990Shoulder}. EMG is not a direct measurement of tendon force or joint torque. Electrode placement, normalization, activation dynamics and muscle geometry matter when connecting it to a mechanical model.
 
-A robot's impedance is the resistance it presents to external forces. A stiff robot (high impedance) resists being pushed; a compliant robot (low impedance) yields easily.
+The useful robot experiment is correspondingly precise. Compare a torque-controlled rotor, a motor with series elasticity, and an actuator with delayed activation under the same output task. Match initial states and input limits, then perturb each system. Similar trajectories may coexist with different internal forces and correction capacities. Differences reveal which modeling elements matter, rather than which machine resembles a golfer in appearance.
 
-The choice of impedance depends on the task. For a precision surgery, you want high impedance (stiff, repeatable). For gentle object handling, you want low impedance (compliant, adaptive). For force control tasks, you might want intermediate impedance.
-
-The human arm has adjustable impedance. When you contract your muscles maximally, your impedance is high (your arm is stiff and resists being pushed). When you relax, your impedance is low (your arm yields easily). The nervous system adjusts muscle co-contraction to tune the impedance.
-
-In the golf swing, the impedance changes throughout the motion. Early in the backswing, the arm is relatively compliant (low impedance), allowing gravity and inertia to stretch the muscles and store energy. As the downswing approaches, the impedance increases (muscle contraction stiffens the arm), preparing for the high forces of impact. At impact, the impedance is very high (the muscles contract strongly, the arm is rigid), protecting against the shock of the ball strike.
-
-This impedance tuning is not conscious; it emerges from the control strategy. But it is crucial: if the arm is too stiff throughout (high impedance everywhere), the swing will be slow and weak, and the muscles will fatigue quickly. If the arm is too compliant (low impedance everywhere), the swing will be unpredictable and uncontrolled. The optimal impedance is matched to the phase of the swing.
-
-\subsection*{Principle 3: Task-Space vs. Joint-Space Planning}
-
-\index{task space}
-\index{joint space}
-
-A robot can plan its motion in either task space (the space of end-effector positions and orientations) or joint space (the space of joint angles). The choice affects the trajectory, the control effort, and the robustness to disturbances.
-
-Task-space planning is intuitive: specify where you want the end effector to go, and the robot figures out how to get there. But task-space planning is computationally harder and can result in complicated joint trajectories.
-
-Joint-space planning is computationally simpler: specify the joint trajectories, and the end effector follows. But it is less intuitive (what does a desired elbow angle mean to a golfer?).
-
-The human nervous system seems to plan in task space (where the hand should be) and then translate into joint space (what angles are needed). But for repetitive, well-practiced motions like the golf swing, the nervous system may learn a direct joint-space trajectory that it can execute very quickly.
-
-The affine framework adds a third layer: control affine planning. Instead of specifying a complete trajectory, the golfer specifies an initial configuration (the backswing position) and a control strategy (which muscles to activate when). The drift field does much of the work automatically. The control inputs make corrections to keep on track.
-
-\begin{laymansbox}{Robots as Mathematical Models}{ch13:robot_lesson}
-A robot designer must explicitly specify every system component: kinematics (joint configuration), dynamics (torque-to-motion mapping), and control law (torque-time sequences). Malfunction requires systematic debugging of each component.
-
-The human locomotor system exhibits analogous structure: skeleton defines kinematics; muscles, tendons, and connective tissue implement dynamics; the nervous system encodes control law (learned through practice and neural adaptation). The evolutionary refinement differs from engineering design, but the underlying mathematical structures are similar.
-
-Robotics provides formal methods for analyzing the design space: which system parameters must be specified explicitly? Which behaviors emerge automatically from physical structure? What design trade-offs relate kinematics to achievable control authority?
-
-Robotics does not provide answers to these questions in the biological context, but it provides a formal framework within which the questions can be precisely formulated.
-\end{laymansbox}
-
-% ─────────────────────────────────────────────────────────────────
 \section{Neuroscience: Motor Control and the Cerebellum}
 
-\index{neuroscience!motor control}
-\index{cerebellum}
-\index{forward models}
+Control theory offers computational hypotheses about prediction, estimation and action selection. Neuroscience asks how those functions are implemented and how they interact. Mechanical equations alone cannot assign an algorithm to a brain region or rank one region as more important because a swing is fast.
 
-The nervous system is not a passive executor of predefined motor commands. It is an active controller that uses feedback and prediction to guide motion.
+\subsection{The Cerebellum and Feedforward Control}
 
-Two neural structures are particularly relevant:
+A forward model predicts consequences of a state and command. An inverse model or policy selects commands intended to achieve an outcome. Inverse kinematics solves a geometric configuration problem; it is not synonymous with either a forward dynamics model or a complete motor controller. Planning a joint trajectory also leaves the force and activation problem unresolved.
 
-\subsection*{The Cerebellum and Feedforward Control}
+Predictive control is useful when sensory information is delayed, but feedforward action need not be independent of feedback. A policy may use a state estimate that combines prior commands with new observations. The mechanical model then helps explain what information would be useful, while physiological experiments are needed to establish where and how such computations occur. Learning a useful prediction need not mean explicitly storing the functions named $f$ and $G$ in this book.
 
-\index{cerebellum!golf swing}
+\subsection{Motor Cortex and Feedback Control}
 
-The cerebellum is a small structure (about 10\% of brain volume) at the back of the brain. Despite its small size, it contains more neurons than the rest of the brain combined. Its primary function is motor coordination and learning.
+The value of feedback depends on its information, noise, latency, the task, and the time remaining. The distant location of the ball's eventual landing is not an explanation for absent visual control: vision can also concern the target, body, club or environment. Proprioception and other sensory channels provide different information and can be combined with prediction.
 
-The cerebellum is thought to learn \textbf{forward models}---internal models that predict the consequences of motor commands. When you issue a muscle command, the forward model predicts how the body will respond. If the actual response differs from the prediction (an error), the error is used to update the forward model.
+Controlled reaching experiments demonstrate online visual corrections, and multijoint perturbation experiments show task-relevant responses involving motor cortex \citep{Saunders2003Feedback,Pruszynski2011Feedback}. These results support studying feedback in context; they do not supply a universal golf-swing latency. A command triggered too late to affect impact cannot correct that impact, while forces and feedback processes initiated earlier can still be acting. Feedback after impact can also affect follow-through and subsequent learning.
 
-This is why practice matters. Each swing, the nervous system compares the actual trajectory to the predicted trajectory. If there is an error, the forward model is refined. After hundreds of repetitions, the forward model becomes very accurate, and the cerebellum can predict the swing outcome before it happens.
+\subsection{Learning and Adaptation}
 
-The affine framework provides a clear picture of what the cerebellar forward model must learn: the drift field $f(\state)$. The control field $G(\state)$ is relatively fixed (the muscles can always produce force in approximately the same directions). But the drift field is complex and depends on the current state in nonlinear ways. The cerebellum's job is to learn $f(\state)$ well enough that it can predict future states and plan control inputs that will achieve the goal.
+A different shot after practice may reflect an explicit aiming strategy, implicit adaptation, altered coactivation, a changed state estimate, or a different movement policy. Mazzoni and Krakauer's adaptation experiment illustrates that explicit strategy and implicit adaptation can coexist and conflict \citep{Mazzoni2006Strategy}. One successful trial therefore does not identify what was learned.
 
-\subsection*{Motor Cortex and Feedback Control}
+A discriminating golf experiment records the cue or perturbation, actual delivery and outcome, then examines retention, transfer and behavior when the perturbation is removed. If the claim concerns improved mechanical robustness, apply a controlled perturbation and measure the response. If it concerns implicit learning, use appropriate behavioral comparisons rather than infer it from a fitted trajectory. If it concerns a neural location, behavioral and mechanical evidence alone is insufficient.
 
-\index{motor cortex}
-\index{feedback control}
-
-Motor cortex (the part of the brain that controls voluntary movement) encodes the desired motion, not the detailed muscle commands. Neurons in motor cortex fire at rates that correlate with hand position, hand velocity, hand acceleration, and the direction of motion.
-
-This is consistent with the affine framework. The motor cortex specifies the desired hand trajectory (or perhaps the desired phase of the swing---early, mid, late downswing). The cerebellum translates this high-level instruction into joint trajectories and muscle activation patterns.
-
-The motor cortex also uses feedback. If the hand trajectory deviates from the desired trajectory, proprioceptive feedback (from the arms) and visual feedback (from watching the ball or the swing) provide error signals. The motor cortex adjusts the muscle activation to correct the error.
-
-In the golf swing, visual feedback is largely absent (the ball is small and far away; the hands are moving too fast to track visually). So proprioceptive feedback dominates. The golfer feels the position and velocity of the arms and makes real-time adjustments to stay on track.
-
-The control authority is highest early in the swing (when velocities are low and the nervous system can respond quickly to errors) and lowest late in the swing (when velocities are high and feedback delays make adjustment impossible). This is exactly what the affine framework predicts: drift dominates late in the swing, when control authority is low.
-
-\subsection*{Learning and Adaptation}
-
-\index{learning!motor learning}
-\index{adaptation}
-
-The nervous system is not fixed. It learns and adapts. A golfer who practices the swing hundreds of times develops a more accurate forward model. They also learn the control strategy that works best for their body and environment.
-
-This learning happens at multiple timescales:
-\begin{enumerate}
-\item \textbf{Within a swing:} Real-time feedback control, using proprioceptive error signals.
-\item \textbf{Across swings:} The cerebellum learns from swing to swing, refining its forward model.
-\item \textbf{Across sessions:} Motor learning over days and weeks, including muscle adaptation (strength and hypertrophy).
-\item \textbf{Across seasons:} Long-term adaptation to club and shaft changes, swing changes, and biomechanical constraints.
-\end{enumerate}
-
-The affine framework provides a model for separating state-dependent plant dynamics from declared applied control. It does not establish what the nervous system learns. At each state, $G(\state)$ maps the declared control coordinates, while $f(\state)$ specifies the autonomous vector field of the effective plant.
-
-% ─────────────────────────────────────────────────────────────────
 \section{Material Science: Shaft Design and Ball Physics}
 
-\index{material science!golf}
-\index{composite materials}
-\index{ball compression}
+Equipment changes both the plant and, potentially, the golfer's policy. A comparison with prescribed identical grip motion asks how two shafts respond mechanically. A comparison in which a golfer freely adapts asks how each golfer--club combination performs. Both are useful, but they estimate different effects.
 
-The golf club is not just a biomechanical system; it is a material structure. The shaft is typically made of carbon fiber (a composite material: carbon fibers embedded in epoxy resin). The clubhead is made of steel or titanium or a composite. The ball is made of a synthetic rubber or urethane cover over a rubber core.
+\subsection{Shaft Materials and Design}
 
-These materials have mechanical properties that directly affect the swing and the outcome.
+An anisotropic laminate has direction-dependent stiffness. Axially aligned fibers can strongly support axial loading; off-axis plies can contribute importantly to shear and torsional response. A statement that angled fibers are more compliant is incomplete until the loading direction, constraints and response quantity are specified. Laminate analysis combines transformed ply constitutive laws with through-thickness force and moment balances \citep{Roylance2000Laminates}.
 
-\subsection*{Shaft Materials and Design}
-
-\index{shaft!carbon fiber}
-\index{composite materials!golf shaft}
-
-Carbon fiber composites are strong, stiff, and light. This is why they are used in golf shafts. A carbon shaft can be engineered to have specific stiffness properties: the bending stiffness (described by $EI$ in Chapter~\ref{ch:flexible_shaft}) can be tuned by varying the fiber orientation and the resin matrix.
-
-A shaft with fibers oriented primarily in the lengthwise direction (along the shaft) is very stiff in bending and torsion. A shaft with fibers oriented at an angle (spirally wrapped) is more compliant and can absorb more deformation. A shaft with a variable fiber orientation (stiffer near the grip, more flexible near the tip) produces a specific bending profile.
-
-These design choices are not arbitrary. They are chosen to produce the desired bending dynamics (the modal coordinates $\eta$ and their evolution) that work well with a particular golfer's swing speed and swing characteristics.
-
-Material science has also improved shaft design by reducing weight. A lighter shaft requires less energy from the muscles to accelerate, freeing up energy that can be directed to the clubhead. But a lighter shaft is also more whippy and harder to control. The optimization is a trade-off between weight and stiffness.
-
-\subsection*{Ball Compression and the Coefficient of Restitution}
-
-\index{ball!compression}
-\index{coefficient of restitution}
-\index{impact}
-
-When the club strikes the ball, the ball deforms (compresses). This deformation is governed by the elastic properties of the ball's rubber core. A softer ball (lower compression) deforms more easily; a harder ball (higher compression) deforms less.
-
-The compression affects how much energy is transferred to the ball and how much is lost to heat and deformation. The relationship is quantified by the \textbf{coefficient of restitution} (COR), which is the ratio of the velocity at which the ball leaves the clubface to the velocity at which the club hits the ball:
-
+For a declared plane-stress orthotropic ply, use engineering shear strain and
 \[
-\mathrm{COR} = \frac{v_{\text{out}}}{v_{\text{in}}}
+\begin{bmatrix}\sigma_1\\\sigma_2\\\tau_{12}\end{bmatrix}
+=
+\begin{bmatrix}Q_{11}&Q_{12}&0\\Q_{12}&Q_{22}&0\\0&0&Q_{66}\end{bmatrix}
+\begin{bmatrix}\epsilon_1\\\epsilon_2\\\gamma_{12}\end{bmatrix}.
 \]
+Take illustrative constants $E_1=135$, $E_2=10$, $G_{12}=5$ in GPa and $\nu_{12}=0.3$, with $\nu_{21}=\nu_{12}E_2/E_1$. Inverting the compliance matrix gives $Q_{11}=135.9060$, $Q_{22}=10.0671$, $Q_{12}=3.0201$ and $Q_{66}=5$ in GPa.
 
-A COR of 1.0 would mean perfectly elastic collision (no energy loss). A COR less than 1.0 means some energy is lost. Modern golf ball and clubface technology has COR values of about 0.8--0.82 (about 80\% of the impact energy is transferred to the ball; 20\% is lost).
+For a $45^\circ$ ply, rotation gives the constrained-strain coefficients
+\[
+\begin{aligned}
+\overline Q_{11}&=\frac{Q_{11}+Q_{22}+2Q_{12}+4Q_{66}}4=43.0034,\\
+\overline Q_{66}&=\frac{Q_{11}+Q_{22}-2Q_{12}}4=34.9832
+\end{aligned}
+\]
+in GPa. Axial response decreases while the shear coefficient increases. These are stiffness-matrix entries, not freely contracting Young's and shear moduli: extension--shear coupling can matter. A balanced layup can cancel some couplings, and ply positions determine bending response. A shaft's full bending and torsional behavior additionally depends on tube geometry, layup, boundary conditions, damping and frequency.
 
-The COR depends on both the ball and the clubface:
-\begin{itemize}
-\item Softer balls (lower compression) have higher COR (more energy transfer).
-\item Harder balls (higher compression) have lower COR (less energy transfer).
-\item Faster clubhead speeds increase the effective COR (the ball deforms more and recovers more completely).
-\end{itemize}
+For an ideal uniform Euler--Bernoulli beam, a mode frequency scales as $\sqrt{EI/(\mu L^4)}$, with a boundary-dependent factor, bending rigidity $EI$, mass per length $\mu$, and length $L$. Reducing mass does not logically require reducing stiffness. Nor does a lighter shaft automatically transfer a fixed saved-energy amount to the clubhead: the golfer may change work, speed and timing. A shaft stiffness label or an undefined shaft COR cannot settle that coupled comparison.
 
-This is where ball fitting meets swing physics. A slower golfer (for illustration, consider a driver swing speed around 80 mph) benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer (for illustration, around 100 mph or above) can use a harder ball with lower COR, gaining better control and tighter dispersion. The specific thresholds vary by manufacturer and golfer; the general principle---that ball compression should be matched to swing speed---is widely discussed in equipment fitting literature \citep{Penner2001}.
+\subsection{Ball Compression and the Coefficient of Restitution}
+\label{ex:ch13:ball_fitting}
 
-\begin{example}{Coefficient of Restitution and Ball Compression}{ch13:ball_fitting}
-The relationship between ball compression and coefficient of restitution can be expressed through the impact equations. For a rigid clubface striking a compressible ball, the COR depends on the elastic and damping properties of the ball material \cite{Penner2001}.
+For a one-dimensional normal collision, restitution is the ratio of separating to approaching relative speed,
+\[
+e=\frac{v_b'-v_c'}{v_c-v_b},
+\]
+under the declared positive direction and an initially approaching pair. Smash factor is outgoing ball speed divided by incoming club speed, a different quantity. Restitution also is not the fraction of initial club energy transferred to the ball.
 
-Empirically, lower-compression balls exhibit higher COR (approximately 0.82) compared to higher-compression balls (approximately 0.78) when struck at comparable speeds \cite{Jorgensen1994}. This relationship arises from the nonlinear viscoelastic response of the rubber core: softer materials deform more readily and recover more completely from small deformations.
+Derive the distinction in a free two-mass model: positive mass $M$ moves at speed $U>0$ into stationary positive mass $m$, external impulse is negligible, and there is no rotation or tangential contact. Take $0\leq e\leq1$ for this dissipative collision example. Momentum conservation and the restitution law give
+\[
+v_b'=\frac{(1+e)M}{M+m}U,\qquad
+v_c'=\frac{M-em}{M+m}U.
+\]
+The ball's fraction of initial kinetic energy and the total dissipated fraction are
+\[
+\eta_b=\frac{mM(1+e)^2}{(M+m)^2},
+\qquad
+\eta_{\rm loss}=(1-e^2)\frac{m}{M+m}.
+\]
+Equivalently, lost energy is $(1-e^2)\mu_r U^2/2$, where the reduced mass is $\mu_r=Mm/(M+m)$. Restitution squared governs retention of relative translational kinetic energy in this model, not the ball's share of the initial laboratory-frame energy.
 
-The COR is also speed-dependent: faster impact speeds can increase the effective COR because the ball experiences greater deformation and the elastic recovery is more efficient. This speed-dependence reflects the frequency-dependent viscoelasticity of polymer materials.
+With illustrative $M=0.200\,\mathrm{kg}$, $m=0.04593\,\mathrm{kg}$ and $e=0.83$, the speed ratio is $1.48823$, the ball fraction is $0.5086$, and the dissipated fraction is $0.0581$. The remaining approximately $43.33\%$ stays in the moving first mass. These identities can be checked directly from both outgoing velocities.
 
-The material science of ball design thus determines the energy transfer coefficient $\mathrm{COR}$, which is one parameter in the impact model that relates clubhead velocity at impact to ball velocity after impact.
-\end{example}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/interdisciplinary_collision_energy.pdf}
+\caption{Restitution Does Not Equal Energy Transfer. The Free Two-Mass Teaching Model Uses a 0.200 kg Incoming Mass and a Stationary 0.04593 kg Ball; Fractions Sum to One.}
+\label{fig:interdisciplinary_collision_energy}
+\end{figure}
 
-% ─────────────────────────────────────────────────────────────────
+A real club--ball impact can include rotation, off-center contact, tangential impulse, elastic waves and external coupling. Its effective normal inertia is not necessarily the head mass, much less the whole golfer's mass. The impact chapter (Chapter~\ref{ch:impact_collision_collision}) treats those distinctions. The number $0.83$ here is a model input, not a statement of a current equipment-conformance rule.
+
+Compression describes deformation under a specified test; it does not alone determine restitution, launch, spin or dispersion. Arakawa and colleagues' normal impacts against a rigid steel target showed decreasing restitution with increasing inbound speed while normal compression increased \citep{Arakawa2006Impact}. That experiment contradicts a universal rule linking greater compression to greater restitution, but does not rank modern balls in a golfer's driver or wedge. Fitting requires defined impact conditions and measured outcomes, including variation across strikes.
+
 \section{Data Science and Launch Monitor Analysis}
 
-\index{data science!golf}
-\index{launch monitor}
-\index{machine learning}
+Data science enters through an observation equation,
+\[
+z_k=h(x(t_k),\theta,\kappa)+\epsilon_k,
+\]
+where $\theta$ contains physical parameters, $\kappa$ calibration parameters, and $\epsilon_k$ measurement error. A launch report can combine directly observed signals with estimates and model-derived quantities. A ball-flight sensor is not automatically a full-body motion-capture system or a measurement of muscle force. The \href{https://affinedrift.com/articles/technology-launch-monitors.html}{launch-monitor article} explains the geometry and observability of several measurement approaches.
 
-Modern launch monitors (like TrackMan, FlightScope, and GCQuad) measure the ball's trajectory with high precision, capturing data like:
-\begin{itemize}
-\item Clubhead speed, clubhead path, and club face angle (at impact).
-\item Ball speed, spin rate, spin axis, and launch angle.
-\item Carry distance, total distance, and accuracy (dispersion).
-\end{itemize}
+\subsection{Identifying Dynamics From Data}
 
-These measurements are direct windows into the physics of the swing and impact. But to interpret them, we need a predictive model.
+Even complete noiseless motion need not separate a plant parameter from an unobserved input. Consider
+\[
+I\ddot q+kq=u(t).
+\]
+If one stiffness $k_1$ and input $u_1(t)$ reproduce an observed motion, any alternative $k_2$ reproduces it with
+\[
+u_2(t)=u_1(t)+(k_2-k_1)q(t),
+\]
+provided that alternative input is admissible. A hundred terminal launch reports do not remove this structural ambiguity. More samples of the same confounded experiment may improve numerical precision while leaving the underlying cause unidentified.
 
-The model that predicts ball trajectory from swing parameters is essentially a solution to the equations of motion for the ball under gravity, air drag, and spin-induced lift (Magnus effect). This is a well-understood physics problem.
+Identification can improve with independently measured input or force, calibrated geometry, known boundary conditions, purposeful excitation, repeated conditions and external parameter measurements. Its success must be checked for the particular parameterization and experiment. Strong regularization can select one plausible model without making it uniquely supported by the data. An optimizer's convergence is not an observability result.
 
-But there is an inverse problem: given the observed ball trajectory, what can we infer about the club and ball at impact? This is where data science and machine learning come in.
+\subsection{Predicting Ball Outcome From Swing Data}
 
-\subsection*{Learning the Drift Field From Data}
+Prediction is a legitimate goal even when the internal mechanism is not identified. Its evaluation must match the intended use. A model trained on one golfer, club and session may interpolate well within that setting but fail after a shaft change, injury, different sensor, or new movement strategy. Separate training and evaluation by the units over which generalization is claimed, such as golfer, session or equipment condition.
 
-\index{drift field!estimation from data}
+The complete prediction chain is body/club state, delivery, contact, flight and landing. Each stage needs its own assumptions and uncertainty. Face angle and path do not specify attack angle, dynamic loft, strike location, angular velocity or all contact properties. Ball speed, launch angle and spin magnitude do not uniquely specify wind, aerodynamic coefficients or the full spin vector. Carry estimates require an explicit flight model; total distance additionally depends on landing and surface interaction.
 
-Suppose a golfer takes 100 swings with launch monitor data collected. Each swing has:
-\begin{itemize}
-\item Pre-swing state: hand position, hand velocity, shoulder angle, etc. (the state $\state_0$).
-\item Impact state: clubhead speed, club face angle, club path, etc. (the state $\state_{\text{impact}}$).
-\item Post-impact: ball speed, spin rate, launch angle, ball position at various times.
-\end{itemize}
+A model should also be compared with simpler alternatives. If a regression from measured delivery predicts ball flight as well as a personalized full-body model, the extra body parameters have not yet demonstrated predictive value for that output. They may still be useful for other questions, but that requires separate evaluation.
 
-From the 100 data points, can we learn the drift field $f(\state)$?
+\subsection{Personalizing the Model}
 
-The answer is: partially, yes. We can use the pre-impact states and post-impact measurements to estimate how the state evolves over the swing. We can fit a model to the data and extract estimates of the drift field.
+Personalization means estimating quantities the available experiment can support, with uncertainty and a record of calibration. Segment dimensions, inertial properties, joint constraints, actuator capacity, elastic response and policy parameters have different measurement requirements. Their estimates can be correlated.
 
-More precisely, we can estimate unknown parameters of the drift field. The drift field structure is determined by physical principles: gravity, Coriolis forces, elastic forces from the shaft, and damping. Most of these can be computed from biomechanical measurements and material properties. For unknown parameters (such as shaft stiffness $K_s$ or tissue damping coefficients $D_s$), launch monitor data can constrain parameter estimates through inverse problems \cite{Nesbit2005}.
+Keep an explicit inventory of measured, estimated, assumed and unidentifiable quantities. Report held-out errors and failure conditions alongside parameter intervals. When an equipment change modifies both mechanics and behavior, distinguish a fixed-policy simulation from observed adaptation. A credible personalized model may be deliberately modest: for example, predicting a distribution of launch conditions within a calibrated range without claiming to recover every muscle's action.
 
-This approach uses data to inform a physics-based model, contrasting with purely empirical machine learning: a physics-informed parameter estimation method constrains the solution space using the known structure of the drift field.
+\section{Sports Medicine: From Force Estimates to Health Outcomes}
 
-\subsection*{Predicting Ball Outcome From Swing Data}
+\subsection{Net Torque Is Not Tissue Load}
+\label{ex:ch13:rotator_cuff_training}
 
-\index{launch monitor!prediction}
+Inverse dynamics estimates net generalized forces under its model and measurements. Multiple muscles, passive tissues and contact reactions can contribute to the same result. A low net moment therefore does not establish low tendon force or low joint compression.
 
-Once the drift field is estimated, we can use it to predict the outcome of future swings. Given a measurement of the early downswing state (hand position, hand velocity, shoulder angle, etc.), we can integrate the dynamics forward to predict:
-\begin{enumerate}
-\item The state at impact (club face angle, club path, etc.).
-\item The ball speed and spin after impact.
-\item The ball's landing position.
-\end{enumerate}
+Consider a planar teaching model with two parallel muscle forces that both compress a joint but have opposite $0.03\,\mathrm{m}$ moment arms. Forces of $200$ and $100\,\mathrm{N}$ produce a net moment of $3\,\mathrm{N\,m}$ and a total compressive muscle contribution of $300\,\mathrm{N}$. Forces of $500$ and $400\,\mathrm{N}$ produce the same moment and a $900\,\mathrm{N}$ contribution. Additional external loads and joint reactions must still be included in a full balance. The example establishes non-uniqueness, not a clinical injury threshold.
 
-This is how a launch monitor can give feedback in real time. After each swing, it measures the early downswing and predicts what will happen at impact, even before the ball lands.
+Similarly, greater torque-to-acceleration gain does not imply that a larger torque is required for the same acceleration. In torque coordinates, strength limits primarily change the feasible torque set; in normalized activation coordinates, force capacity can also appear in the input map. Coordinate choice must be settled before interpreting a change in control authority as strength or tissue demand.
 
-This predictive power comes from understanding the drift field. The launch monitor is not just measuring outcomes; it is capturing the physics of the swing.
+Injury risk concerns exposure, tissue capacity, recovery, prior injury and other factors over time. Robinson and colleagues followed 910 amateur golfers for five months and reported associations involving age, osteoarthritis and previous injury \citep{Robinson2024Injuries}. They did not measure swing biomechanics. Self-report, population selection and incomplete questionnaire response further limit interpretation. Such surveillance helps define relevant outcomes; it does not validate a zero-torque technique as an injury-prevention intervention.
 
-\subsection*{Personalizing the Model}
+A mechanics-based hypothesis can propose that a change reduces a specified load under matched conditions. Testing prevention additionally requires suitable prospective health outcomes, exposure accounting and comparison groups. A decrease in one joint's estimated moment may shift demand elsewhere or accompany higher internal coactivation. The chapter consequently cannot derive a rehabilitation exercise, return-to-play decision or universally safer sequence from its equations. Those questions require individualized clinical assessment and relevant intervention evidence.
 
-\index{personalization!swing models}
-
-The structure of the drift field is universal (it applies to every golfer). But the parameters are personal. Different golfers have different shaft stiffness values (because of their equipment), different effective masses (because of their biomechanics), and different muscle activation patterns (because of their training and technique).
-
-Data science can personalize the model. By collecting launch monitor data from a single golfer over many swings, the model can adapt to that golfer's specific drift field. The result is a personalized swing model that predicts that golfer's outcomes better than a generic model.
-
-This is the future of swing coaching: personalized physics models, fitted to each golfer's data, providing feedback and suggestions that are specific to that golfer's drift and control.
-
-% ─────────────────────────────────────────────────────────────────
-\section{Sports Medicine: Injury Prevention Through Force Understanding}
-
-\index{sports medicine!injury prevention}
-\index{injury!overuse}
-\index{force analysis}
-
-The golf swing subjects the body to enormous forces. The rotational acceleration of the torso, the stress on the shoulder joint, the load on the lower back, and the impact force from the ground all pose injury risks.
-
-A sports medicine physician must understand these forces to prevent injury. The affine framework provides a principled way to think about force distribution.
-
-Consider the rotator cuff, which must stabilize the shoulder joint against the large forces generated during the swing. If the golfer has poor technique (swinging too hard, using primarily the arms instead of the legs and torso), the rotator cuff is overloaded. If the golfer has good technique (sequencing the motion correctly, distributing the load across the whole body), the rotator cuff load is distributed and safe.
-
-The difference between these two scenarios can be quantified using the affine framework:
-
-\begin{enumerate}
-\item \textbf{Poor technique:} High control inputs in the arm and shoulder, swinging primarily with arm muscles. This means high $\control$ in the shoulder joints. The control authority $G$ in the shoulder is high, so the required torques are large. The resulting forces in the rotator cuff tendons are large.
-
-\item \textbf{Good technique:} High control inputs in the legs and torso, swinging with the whole body. This means high $\control$ in the hip and spine joints, but lower $\control$ in the shoulder. The drift field carries much of the motion automatically. The forces in the rotator cuff are lower.
-\end{enumerate}
-
-Sports medicine can use this framework to design injury prevention programs. The goal is to train the golfer to use technique (good sequencing, high drift) rather than pure force (high control inputs). This reduces the load on vulnerable structures and allows the golfer to swing harder and longer without injury.
-
-\begin{example}{Rotator Cuff Training for Golfers}{ch13:rotator_cuff_training}
-A golfer with a history of shoulder pain needs rotator cuff strengthening. The standard prescription is to do external rotation exercises with a resistance band: stand sideways, bend the elbow to 90 degrees, and rotate the forearm outward against resistance.
-
-This exercise is valuable, but incomplete. It strengthens the rotator cuff muscles in isolation, improving the control authority $G$ at the shoulder. But the injury often arises not from weakness, but from poor force distribution.
-
-A better program combines strength training with technique training:
-\begin{enumerate}
-\item \textbf{Strength:} External rotation exercises, as above.
-\item \textbf{Technique:} Slow-motion swings, focusing on hip-and-torso-driven rotation, allowing the upper body to rotate first before the arms. This trains the drift field to handle more of the motion, reducing reliance on shoulder control.
-\item \textbf{Proprioception:} Balance and stabilization exercises that sharpen proprioceptive feedback, allowing the nervous system to adjust muscle activation in real time.
-\item \textbf{Sport-specific:} Gradual return to full-speed swinging, starting with short shots and progressing to full swings.
-\end{enumerate}
-
-This integrated approach addresses both the control authority and the drift field, reducing the overall force on the shoulder joint.
-\end{example}
-
-% ─────────────────────────────────────────────────────────────────
 \section{Coaching Science: Translating Physics Into Cues}
 
-\index{coaching!physics-informed}
-\index{motor cues}
-\index{feedback}
+Coaching connects a proposed mechanism to a learnable action and a measurable outcome. A cue is an intervention on behavior, not a boundary condition that guarantees a particular joint trajectory. Different golfers can interpret the same words differently, and a familiar cue can affect several mechanical variables at once.
 
-A golf coach's job is to help a golfer improve. But improvement requires understanding what to improve and how. The affine framework provides a language for this.
+\subsection{Phase-Specific Coaching}
 
-Instead of giving vague advice (``keep your head still,'' ``rotate your hips,'' ``smooth rhythm''), a physics-informed coach can give specific guidance based on the drift and control at each phase of the swing.
+An early change can alter the initial state for later motion, including momentum and elastic strain. A late change has less remaining time to propagate and may encounter activation or torque limits. Those observations motivate phase-specific experiments; they do not establish that speed problems are always drift problems or face errors are always late control problems.
 
-\subsection*{Phase-Specific Coaching}
+For example, a changed setup might affect path, strike location and available torque directions together. An apparent improvement in face delivery might result from an earlier trajectory change rather than a conscious correction near impact. Record the relevant timing and delivery before deciding which mechanism explains the result.
 
-\index{swing phases}
+\subsection{Cue Design}
+\label{ex:ch13:cue_design}
 
-The early backswing is a phase of high control authority and low drift. The golfer can choose to load the swing (increase potential energy) or conserve it. The coach should focus on positioning and setup, not on speed or power.
+Start with an observable difficulty, such as excessive variation in a specified face-to-path measure under a repeatable task. Propose one understandable cue, state its intended effect, and alternate or randomize comparable blocks with and without it. Record delivery, strike, ball outcome and perceived effort; include retention or transfer when the claim concerns learning.
 
-The transition (from backswing to downswing) is critical. This is where the drift field is set up. The coach should give cues that help the golfer establish the correct hand position and velocity to put the body on a trajectory where the drift will naturally produce the desired clubhead motion.
+Interpretation then has three levels. First, did the outcome improve beyond normal variability? Second, did the proposed intermediate variable change? Third, did that change plausibly account for the outcome under the experiment's controls? A positive answer to the first question does not settle the other two. Fatigue, order, familiarization and changed strike quality can explain part of an observed benefit.
 
-The downswing itself is divided into phases:
-\begin{enumerate}
-\item \textbf{Early downswing (transition to mid-downswing):} Still moderate control authority. The golfer should be thinking about positioning (keeping the club on plane, maintaining lag, etc.). Muscle activation is sequenced (legs first, then torso, then arms).
+Physics makes a cue more testable by identifying those intermediate variables and alternatives. It does not establish that a particular wording, more aggressive hip motion, grip change or release timing is universally effective. An unsuccessful cue can still teach something if the experiment reveals which assumed link failed.
 
-\item \textbf{Mid-downswing:} Control authority is decreasing, drift is increasing. The golfer should be committed to the swing path. Last-minute adjustments are possible but dangerous (they can throw the drift field off track).
+\section{Synthesis: The ZTCF Family Connects Testable Questions}
 
-\item \textbf{Late downswing:} Drift dominates. The golfer is effectively on autopilot. Muscle activation is at a peak, but the nerves are essentially just executing a pre-planned sequence. Control inputs will have little effect on the clubhead trajectory.
-\end{enumerate}
+A zero-torque counterfactual is most useful as a specified intervention in a specified model. Start from a declared state at a declared time, replace selected active torques with zero, retain or modify other mechanisms explicitly, and integrate to a defined horizon or event. Report what happens if balance, contact or joint constraints fail before the intended event.
 
-A coach who understands this structure can give phase-appropriate cues. In the early downswing, talk about positioning. In the late downswing, stop talking (the golfer cannot adjust anyway). This improves the golfer's confidence and reduces the cognitive load during the swing.
+Zero joint torque does not mean zero gravity, zero ground reaction, zero passive tissue force or zero previously stored energy. A branch with zero new excitation generally differs from one with zero activation or zero actuator force. These choices should be separate members of a counterfactual family, not silently conflated as the body's natural motion.
 
-\subsection*{Cue Design}
+The contact mode matters for equipment comparisons too. Before any physical interaction with the ball, its compression law does not directly enter the golfer--club mechanical equations. A different ball can change the golfer's expectations, policy or prepared state, and its material response enters once contact begins. Assigning a direct pre-contact mechanical effect to ball compression would mix those pathways.
 
-\index{motor cues}
-\index{instruction}
+The comparison asks how the modeled future changes under that intervention. It does not uniquely apportion the actual club speed among muscles or prove that muscles did not create the motion. For a mechanically consistent model, an energy balance has the schematic form
+\[
+\dot E=\dot q^T B\tau+P_{\rm ext}-P_{\rm diss},
+\]
+with elastic storage included in $E$ and appropriate work terms for moving constraints. Velocity-dependent inertial coupling can redistribute energy among coordinates without creating energy for the complete conservative system. Energy present at the branch point can reflect substantial earlier muscle work.
 
-A good coaching cue is one that:
-\begin{enumerate}
-\item \textbf{Addresses the right phase.} If the problem is in the downswing, give downswing cues, not backswing cues.
+Different counterfactual interventions can interact nonlinearly. Removing two torques together need not produce the sum of their separately removed effects. A chosen attribution rule can summarize such interactions, but its result depends on the rule and baseline. This is particularly important when a zero-torque branch leaves the range in which the fitted model was validated.
 
-\item \textbf{Changes the drift, not the control.} The most effective cues set up the drift field so that the golfer naturally produces the desired motion. Poor cues require high control inputs to overcome a bad drift field.
+The framework is therefore a common language for posing connected questions: what state was prepared, what forces remain, what alternatives are feasible, what can be observed, and what outcomes follow? Its strongest contribution is a reproducible comparison with explicit limits. Neural, coaching and clinical claims remain subject to their own experiments.
 
-\item \textbf{Is actionable.} A cue must describe something the golfer can actually do. ``Swing faster'' is not actionable (how do you swing faster?). ``Rotate your hips more aggressively'' is more actionable (the golfer knows to use their leg and hip muscles more).
-
-\item \textbf{Is memorable.} A good cue is simple and easily recalled under pressure. ``Drive your knees'' is better than ``increase the angular acceleration of your hips during the transition phase.''
-\end{enumerate}
-
-The affine framework helps a coach design better cues by making the physics explicit. Instead of guessing at what might help, a coach can analyze the golfer's swing, identify where the drift is off target, and design a cue that adjusts the drift.
-
-\begin{example}{Coaching Cue Design}{ch13:cue_design}
-A golfer is producing a clubhead path that is too far inside (too much hook potential). The coach needs to adjust the drift field so that the natural motion (without excessive control input) points the clubhead path more down the line.
-
-The coach could give a cue like ``keep your arms extended through the downswing'' or ``rotate your torso more.'' But these are somewhat generic. A more effective cue is ``think about swinging down on a line that is parallel to your target line.'' This mental cue helps the golfer set up a drift field that is naturally aligned with the target.
-
-Or, if the problem is in the grip (the hands are too far inside at the top of the backswing), the coach could cue ``move your hands more toward the ball at address'' or ``feel like your hands are in front of your torso at the top.'' This changes the initial condition, which in turn changes the entire drift field for that swing.
-
-The most effective coach is one who understands the drift field structure and designs cues that change the drift, not the control.
-\end{example}
-
-% ─────────────────────────────────────────────────────────────────
-\section{Synthesis: The ZTCF Family Framework Unifies These Perspectives}
-
-\index{ZTCF!unification}
-
-How do all these disciplines fit together? Through the zero-torque counterfactual.
-
-Recall that a forward ZTCF trajectory integrates the effective plant after setting the declared applied generalized-control channel to zero. It depends on $f(\state)$, the branch state, parameters, contact mode, and retained constraints; it does not specify muscle activation.
-
-Now:
-
-\begin{enumerate}
-\item \textbf{Control theory:} The ZTCF is the starting point. By making the ZTCF point toward the target, the golfer minimizes the control effort needed to stay on track.
-
-\item \textbf{Biomechanics:} The ZTCF is determined by muscle properties (how they distribute force through connective tissue), joint mechanics (how they move), and equipment (the shaft, the club).
-
-\item \textbf{Robotics:} The ZTCF is analogous to a robot's natural trajectory under gravity and inertia. Just as engineers design robots to have favorable natural dynamics, golfers should develop techniques that produce favorable ZTCF trajectories.
-
-\item \textbf{Neuroscience:} The cerebellum learns the drift field (the ZTCF). Motor cortex plans a control strategy to correct the ZTCF to reach the target. The integration of these is the golf swing.
-
-\item \textbf{Material science:} The ZTCF depends on equipment (shaft stiffness, ball compression, etc.). Different equipment produces different ZTCF trajectories.
-
-\item \textbf{Data science:} Launch monitors measure the outcome of the swing, which depends on the ZTCF. By analyzing launch monitor data, we can infer the golfer's ZTCF and predict future swings.
-
-\item \textbf{Sports medicine:} Injuries arise when the forces required to execute the swing exceed the tissues' capacity. By optimizing the ZTCF (through technique) or through equipment changes, we can reduce the forces and prevent injury.
-
-\item \textbf{Coaching:} A coach's job is to help the golfer achieve a ZTCF that points toward the target, using the available control authority to make small corrections.
-\end{enumerate}
-
-The ZTCF is the common currency. Every discipline contributes insights into how to compute, predict, or optimize the ZTCF.
-
-% ─────────────────────────────────────────────────────────────────
 \section{The Expanded Framework: From Rigid Bodies to Living Systems}
 
-\index{biomechanics!expanded framework}
-\index{muscle forces!full complexity}
-\index{soft tissue!role in dynamics}
+Rigid segments are a modeling approximation, not a denial of deformation. Add degrees of freedom when they improve the questions the model can answer: spinal motion for segment-level loading, tendon or shaft states for elastic exchange, actuator states for delayed force development, or soft-tissue modes for measured relative motion. Each addition requires parameters and observations; a larger model can be less identifiable.
 
-The first twelve chapters of this book developed the control-affine framework using idealized rigid-body models. Chapters~\ref{ch:grf}--27 extend this framework to the full complexity of the living golfer.
+There is no universal anatomical degree-of-freedom count that follows by counting vertebrae or muscles. Define bodies, joints, constraints and contact modes, then determine the local independent coordinates. Redundant constraints or special configurations can change a simple counting argument. The spine and inverse-dynamics chapters (Chapters~\ref{ch:spine_modeling} and~\ref{ch:inverse_dynamics_parallel}) develop these issues.
 
-\textbf{External forces.} The ground reaction force (Chapter~\ref{ch:grf}) is the only external force besides gravity, providing impulse without doing mechanical work. Aerodynamic drag (Chapter~\ref{ch:aerodynamic-drag}) adds a velocity-squared resistance that is often neglected but introduces systematic bias in inverse dynamics estimates.
+For a system containing the golfer and club, ground interaction and gravity are external, but so are aerodynamic loads and, during impact, the ball's action unless the ball is included in the system. A stationary ideal no-slip contact point can exert force and exchange momentum while doing zero point-contact mechanical work. That does not mean the ground force has no effect on center-of-mass kinetic energy: center-of-mass force times center-of-mass velocity is a different decomposition from the total body's external contact power. Real foot deformation, contact moments, slipping or moving supports require their own work accounting.
 
-\textbf{Internal forces.} Muscle forces map to joint torques through configuration-dependent moment arms (Chapter~\ref{ch:muscle-to-torque}), with each muscle's force limited by biology---the force--length and force--velocity relationships of Hill-type muscle models (Chapter~\ref{ch:muscle-force-generation}). Recovering individual muscle forces from motion can be nonunique even in an open limb; closed contacts add load-sharing questions whose identifiability depends on the dynamic and measurement maps (Chapter~\ref{ch:inverse_dynamics_parallel}).
+The same discipline applies to energy stored in tissue. Specify deformation relative to a reference, constitutive behavior, dissipation and active sources before describing recoil. Changes in mechanical work are not automatically changes in metabolic cost. A living system can maintain force while doing little external work, and the relation between those quantities is itself a physiological question.
 
-\textbf{The physical system.} Soft tissues add wobbling mass, viscous damping, and intra-abdominal pressure effects that modify the drift field (Chapter~\ref{ch:soft_tissue_pliable}). The spine is not a single rigid link but an S-shaped chain of 33 vertebrae with coupled flexion and rotation (Chapter~\ref{ch:spine_modeling}). Joint models must balance fidelity against tractability---a revolute knee, a spherical hip, a gimbal shoulder---and these simplifications break down at the extremes of range of motion (Chapter~\ref{ch:anatomy_joint_modeling}). Counting degrees of freedom rigorously, using the Grübler--Kutzbach formula, reveals that the golfer's body has approximately 30 independent DOF even after accounting for closed kinematic loops (Chapter~\ref{ch:dof_urdf_models}).
-
-\textbf{The controller.} The brain operates under severe constraints: 150~ms sensory delays, 40--60~ms electromechanical delays, and noise at every stage (Chapter~\ref{ch:motor_control_brain}). Motor learning is the process of building internal models of the drift field and discovering impedance profiles that make the swing self-correcting (Chapter~\ref{ch:motor_learning}). The brain's computational capacity is substantial---managing 200+ muscles in real time---yet fragile, as the yips and choking under pressure demonstrate (Chapter~\ref{ch:remarkable_brain}). Perhaps most importantly, the brain does not solve the control problem alone: passive mechanics, muscle pre-tension, and spinal reflexes provide distributed control that reduces the brain's computational burden (Chapter~\ref{ch:passive_distributed_control}).
-
-This expanded picture---from rigid-body physics through soft-tissue biomechanics to neural control---is what makes the golf swing one of the most interdisciplinary problems in human movement science.
-
-% ─────────────────────────────────────────────────────────────────
 \section{The Future: Personalized Physics Models}
 
-\index{personalization}
-\index{adaptive systems}
+A defensible development programme proceeds from calibrated measurements to identifiable models and then to tested interventions. Publish coordinate conventions, sensor timing, reference points, contact assumptions and parameter uncertainty. Verify the numerical implementation on problems with known solutions. Validate predictions against independent measurements in the intended operating range.
 
-Imagine a future where every golfer has a personalized physics model. The model is learned from launch monitor data collected over months of play. It encodes that golfer's specific drift field and control authority.
+Next ask whether the model improves decisions. Compare a model-guided intervention with a suitable alternative, using outcomes that matter to the golfer and an evaluation long enough for the claim. Better explanation, improved launch consistency, lower estimated load and reduced injury incidence are separate milestones. Existing sensing and modeling methods make parts of this programme possible; their availability does not mean that comprehensive personalized diagnosis has already been validated.
 
-With this model, a coach or teaching robot could:
-\begin{enumerate}
-\item \textbf{Analyze a swing:} After each shot, measure the early swing state and predict where the ball will land. If it lands off target, the model explains why: either the drift was off (in which case technique change is needed) or the control was suboptimal (in which case practice is needed).
+The most useful model may change with the task. A launch predictor, a shaft bench model, a full-body inverse-dynamics model and a clinical study answer different questions. Their integration should preserve their individual validation boundaries rather than hide them inside one impressive-looking simulation.
 
-\item \textbf{Prescribe improvement:} Instead of vague advice, the model recommends specific adjustments (to hand position, to hip rotation, to club angle) that would move the ZTCF toward the target.
+\section[Worked Example: What a Launch Report Can Establish]{Worked Example:\\What a Launch Report Can Establish}
 
-\item \textbf{Predict the impact of changes:} If the golfer changes clubs or shafts, the model can predict how the ZTCF will change and how much retraining will be needed.
+\subsection{The Scenario}
 
-\item \textbf{Adapt in real time:} Over a round, environmental factors (wind, lie, green speed) change. The model can adapt to these factors and suggest adjusted swing targets.
+Suppose a report gives ball speed $145\,\mathrm{mph}$, launch angle $14^\circ$, spin magnitude $2500\,\mathrm{RPM}$, club path $3^\circ$ right and face azimuth $2^\circ$ right of the target. Treat these as reported quantities whose measurement definitions and uncertainty must be checked. They do not specify the complete delivery, spin vector, atmosphere or body motion.
 
-\item \textbf{Identify injury risk:} By analyzing the force distribution at each joint, the model can warn when a particular part of the body is being overloaded. This allows preventive action before injury occurs.
+The golfer wants more carry while maintaining directional consistency. That is a useful objective, but the report alone does not establish present carry, an achievable distance increase, a unique spin optimum, or whether a particular muscle should act earlier.
+
+\subsection{The Physics}
+
+If the declared two-mass collision model applies with the illustrative parameters above, the $1.48823$ speed ratio implies an incoming mass speed of $97.4313\,\mathrm{mph}$. This is a conditional model calculation, not an independent club-speed measurement. A different effective mass, restitution or contact configuration changes the inferred value.
+
+In an explicitly horizontal, positive-right angle convention, the face is $1^\circ$ left of the path. A local illustrative direction model
+\[
+\ell=w f+(1-w)p
+\]
+with $w=0.76$, $f=2^\circ$ and $p=3^\circ$ gives launch azimuth $\ell=2.24^\circ$ right. The selected weight is a local modeling assumption, not a universal law. Dynamic loft, attack angle, strike location and tangential contact remain unspecified. Face-to-path in this horizontal calculation does not by itself explain the reported backspin magnitude.
+
+To predict carry, choose and validate a flight model with appropriate launch velocity, spin vector, aerodynamic behavior and atmosphere. To predict a zero-torque branch, additionally obtain an adequate pre-impact body/club state and a declared intervention. Neither calculation can be reconstructed uniquely from the five reported values.
+
+\subsection{The Feedback}
+
+A useful next session first establishes measurement reliability and repeatability, then tests a limited hypothesis. For example, compare strike-location and delivery distributions under matched conditions, determine which variation contributes most to the outcome uncertainty, and evaluate a cue or equipment change against that baseline. If the hypothesis concerns shaft response, measure that response or use an independently calibrated shaft model.
+
+Report what improved, its variability, and what mechanism remains unresolved. A measured club-speed change can be a result; a simulation can suggest a cause; a controlled comparison can test that suggestion. Keeping these steps distinct makes the feedback actionable without pretending that a launch report uniquely diagnoses the entire swing.
+
+\section{Key Takeaways}
+\label{princ:ch13:takeaways}
+
+\begin{enumerate}[leftmargin=*]
+\item The affine description depends on state, input and baseline choices. Drift is not synonymous with uncontrollability or absence of prior muscle work.
+\item Control authority concerns feasible changes in a specified output over a specified time. High speed alone does not imply a smaller input gain.
+\item Mechanical impedance, internal tissue load, input effort and metabolic cost are different quantities, with different models and measurements.
+\item Equipment affects material response, system dynamics, contact and behavior. Restitution, smash factor, compression and energy transfer must be distinguished.
+\item More data do not resolve a structural ambiguity without informative observations or interventions. Prediction accuracy is not unique identification.
+\item A counterfactual can connect disciplines by making assumptions testable. It does not replace neural evidence, coaching evaluation or prospective clinical research.
 \end{enumerate}
 
-This is not science fiction. The technology exists today. What is missing is the widespread adoption of the physics framework and the data infrastructure to support it.
+\section{Chapter Exercises}
+\label{exercises:ch13}
 
-% ─────────────────────────────────────────────────────────────────
-\section{Worked Example: How a Launch Monitor Measures What ZTCF Predicts}
-
-\index{example!launch monitor}
-
-Let us walk through a concrete example showing how launch monitors measure what the ZTCF predicts.
-
-\subsection*{The Scenario}
-
-A golfer hits a driver from a tee. A launch monitor records:
-\begin{itemize}
-\item Ball speed: 145 mph (65 m/s).
-\item Spin rate: 2500 RPM.
-\item Launch angle: 14 degrees.
-\item Club path: 3 degrees right of target (open).
-\item Club face angle: 2 degrees right of target (open).
-\end{itemize}
-
-\subsection*{The Physics}
-
-The clubhead must have been traveling at about $145 / 1.48 \approx 98$ mph just before impact,
-dividing by the smash factor rather than by the coefficient of restitution --- ball speed
-\emph{exceeds} clubhead speed for a driver, so the two are not interchangeable and the ratio
-does not run the other way (Chapter~\ref{ch:impact_collision_collision}). From the club path and face angle, we can infer the club's orientation and velocity in 3D.
-
-The ZTCF predicted that the clubhead would reach this speed and orientation at impact. This is the natural, passive trajectory (drift field) at this point in the swing. The muscle torques did not produce this speed; the drift field did.
-
-The ball speed, spin rate, and launch angle are determined by the impact dynamics: the clubhead speed, the contact with the ball's center, and the club face orientation. These are all predicted by the impact physics, not by the swing mechanics.
-
-\subsection*{The Feedback}
-
-The launch monitor displays the carry distance: 280 yards. The golfer wants 300 yards. Why is the ball not going as far?
-
-The model can identify the root cause:
-\begin{enumerate}
-\item \textbf{Ball speed is low.} At 145 mph, the ball speed is below the target (say, 155 mph for this golfer). This suggests the clubhead speed was low, or the club made off-center contact.
-
-\item \textbf{Spin rate is high.} At 2500 RPM, the spin rate is adding backspin, reducing carry distance. For a 14-degree launch angle, the optimal spin rate is closer to 2000--2200 RPM. The extra spin is likely because the club face was slightly closed relative to the club path, imparting extra spin.
-
-\item \textbf{Launch angle is optimal.} At 14 degrees, the launch angle is close to the optimal 13--15 degrees for this golfer's swing speed.
+\begin{enumerate}[leftmargin=*]
+\item For the two antagonist force pairs in this chapter, compute net moment and compressive muscle contribution. Explain what each result does and does not say about injury.
+\item Compare a torque-controlled rotor with one described by $u=-kq+\nu$. Identify the two zero-input interventions and propose a perturbation experiment that could distinguish their responses.
+\item For the $145\,\mathrm{mph}$ worked example, calculate the conditional incoming speed and launch azimuth. List the additional quantities needed for carry prediction and for a whole-body counterfactual.
+\item A golfer improves after a cue. Give three explanations that do not require learning an explicit drift field, and design observations that help distinguish them.
+\item Reproduce the $45^\circ$ ply coefficients and the collision energy fractions. Explain why neither a shaft stiffness label nor ball compression alone determines distance.
+\item Compute the two double-integrator endpoint costs. Explain why the closer endpoint can require more effort and why neither result gives a universally effective coaching cue.
+\item A new command arrives after the impact event. Under what assumptions is its effect on that impact zero? Explain why this does not imply that feedback or muscle force was absent earlier.
+\item Design a study that separates a change in estimated joint loading from a claim of injury prevention. Include exposure, comparison, uncertainty and the possibility of shifted internal loads.
 \end{enumerate}
 
-The diagnosis: the golfer's ZTCF is producing the correct launch angle and spin axis, but the clubhead speed is too low, and the club face is slightly closed. To improve:
-\begin{enumerate}
-\item \textbf{Increase clubhead speed:} This is a drift issue. The golfer's swing sequence (the order in which body parts accelerate) is determining the drift field. Adjusting the sequence (more aggressive hip rotation, earlier lag release) could increase the clubhead speed.
+\section{Worked Answers}
 
-\item \textbf{Open the club face relative to the path:} This is a control issue. At impact, the club face angle is not matching the desired orientation. A small adjustment to the grip (slightly weakening the grip, or adjusting the wrist angle during the downswing) could align the club face better.
+\begin{enumerate}[leftmargin=*]
+\item The moments are $0.03(200-100)=3$ and $0.03(500-400)=3\,\mathrm{N\,m}$. Compressive muscle contributions are $300$ and $900\,\mathrm{N}$. Net moment cannot identify the individual forces; neither force sum supplies a tissue-specific injury threshold, exposure history or clinical outcome.
+\item Zero physical torque gives $\ddot q=0$ in the ideal rotor. Zero residual command retains $\ddot q=-kq/I$, which is $-4\,\mathrm{rad/s^2}$ at the declared initial displacement. Release both from matched state and measure acceleration or apply a known displacement perturbation. Distinguish a real passive spring from active feedback using power, actuator and timing measurements; matching motion alone need not distinguish them.
+\item Dividing $145\,\mathrm{mph}$ by the conditional speed ratio $1.48822836$ gives $97.4313\,\mathrm{mph}$. The illustrative horizontal launch is $0.76(2)+0.24(3)=2.24^\circ$ right. Carry additionally needs a sufficient three-dimensional launch state, aerodynamic model and atmosphere. A body counterfactual needs configuration, velocity, relevant activation/elastic states, physical parameters, external/contact conditions, an intervention and a stopping rule. None is uniquely supplied by the report.
+\item Possible explanations include explicit re-aiming, a different movement policy, changed coactivation, altered strike location or ordinary trial variation. Measure aiming reports, delivery and strike, compare repeated conditions, and test retention, transfer or removal of the perturbation. A mechanical perturbation can probe impedance. These observations narrow hypotheses; neural localization requires additional evidence.
+\item Substitution into the two rotated-ply expressions gives axial and shear numerators of $172.0134$ and $139.9329\,\mathrm{GPa}$. Dividing each by four gives $43.0034$ and $34.9832\,\mathrm{GPa}$, respectively. With the stated masses and restitution, the ball and lost-energy fractions are $0.5086$ and $0.0581$, leaving about $0.4333$ in the other mass. Laminate/shaft boundary conditions, golfer adaptation and contact/flight conditions prevent a universal distance inference from either material label.
+\item Multiplying by $W^{-1}$ gives costs $0.28$ and $0.12$. The corresponding optimal dimensionless inputs are $0.8-1.8t$ and $0.6-0.6t$ for $0\leq t\leq1$; integrating each input and its remaining-time-weighted value recovers the requested velocity and position corrections. The first correction reverses part of its acceleration, making its smaller Euclidean endpoint error more expensive. These unconstrained, scaled calculations are not metabolic costs or verified human strategies.
+\item If the command is causally generated after the event, initial perturbations are zero, and the model has no anticipatory dependence, it cannot alter the already completed event. Earlier activation, stored energy, prior feedback and ongoing contact forces may still have affected that event. Post-impact feedback can affect later motion and future trials. A time constant is not automatically an additional pure delay.
+\item First validate the load estimate against suitable independent measurements and vary uncertain muscle-force allocations. Compare interventions under matched tasks while recording strike, performance, exposure and relevant symptoms. A prospective prevention claim requires appropriately defined health outcomes, sufficient follow-up and a suitable comparison design, with prior injury and other confounders addressed. Randomization where feasible strengthens causal interpretation. Lower estimated net moment alone cannot substitute for that study.
 \end{enumerate}
-
-The launch monitor and the personalized physics model together provide diagnostic feedback that goes beyond ``hit it harder.'' The feedback is specific, actionable, and grounded in physics.
-
-% ─────────────────────────────────────────────────────────────────
-\begin{principle}{Key Takeaways}{ch13:takeaways}
-\begin{enumerate}
-\item \textbf{Control theory and biomechanics speak the same language:} the affine decomposition of dynamics into drift and control.
-
-\item \textbf{Robotics teaches us about hierarchical control, impedance matching, and task/joint space planning.} These principles apply to human motion as well.
-
-\item \textbf{Neuroscience reveals how the nervous system learns the drift field} (via the cerebellum) and plans control inputs (via motor cortex).
-
-\item \textbf{Material science explains how equipment design} (shaft stiffness, ball compression) affects the swing and its outcome.
-
-\item \textbf{Data science and machine learning allow us to learn personalized drift fields from launch monitor data.}
-
-\item \textbf{Sports medicine uses force analysis to prevent injury:} good technique distributes load across the body, reducing injury risk.
-
-\item \textbf{Coaching science translates physics into actionable cues,} phase-specific guidance that improves the drift field.
-
-\item \textbf{The ZTCF is the unifying concept:} every discipline contributes to understanding and optimizing the zero-torque counterfactual.
-
-\item \textbf{The future is personalized:} every golfer will have a model of their own drift field and control authority, enabling precise diagnosis and targeted improvement.
-
-\item \textbf{Technology enables insight:} launch monitors, motion capture, and machine learning make the invisible physics visible, allowing golfers and coaches to learn from data rather than just intuition.
-\end{enumerate}
-\end{principle}
-
-% ─────────────────────────────────────────────────────────────────
-\begin{exercises}{Chapter Exercises}{ch13}
-
-\begin{exercise}
-Explain in plain language why a golfer with good technique (high drift, low control effort) is less prone to injury than a golfer with poor technique (low drift, high control effort), even if both golfers hit the same clubhead speed.
-\end{exercise}
-
-\begin{exercise}
-Describe the hierarchical control structure that a golfer's nervous system might use to execute a swing. How do high-level goals (target direction, distance) get translated to joint angles and muscle activations?
-\end{exercise}
-
-\begin{exercise}
-A golfer's launch monitor shows: ball speed 140 mph, spin rate 3000 RPM, launch angle 18 degrees, carry distance 250 yards. The golfer wants 280 yards. Using the physics framework, identify possible root causes (drift issues vs. control issues) and suggest improvements.
-\end{exercise}
-
-\begin{exercise}
-Explain why the cerebellum's role (learning the drift field) is more important than motor cortex's role (planning control inputs) in the golf swing, especially in the late downswing.
-\end{exercise}
-
-\begin{exercise}
-A golfer is considering two shafts: Shaft A (stiffer, lower COR), and Shaft B (more flexible, higher effective rebound). Using the affine framework, explain how each shaft would change the ZTCF and what control adjustments would be needed.
-\end{exercise}
-
-\begin{exercise}
-Design a coaching cue that addresses a golfer's problem (e.g., ``swinging too much inside'') from the perspective of the drift field. What would you want the golfer to focus on?
-\end{exercise}
-
-\begin{exercise}
-Explain why proprioceptive feedback is more useful than visual feedback in the golf swing. What role do mechanoreceptors in fascia play in this feedback?
-\end{exercise}
-
-\begin{exercise}
-In the context of injury prevention, explain how optimizing the ZTCF (through technique) is more effective long-term than simply strengthening muscles.
-\end{exercise}
-
-\end{exercises}
 
 \cleardoublepage

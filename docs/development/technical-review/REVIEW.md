@@ -1439,3 +1439,31 @@ Protected delivery remains; 221 corpus sources still have only an index.
 Swing #4307 / PR #4310 is now published as 6b6876c0. Main CI, textbook build
 and deployment pass; exact live artifact 10113084054 passes 956/956 checks
 across 239 routes with zero failures, axe violations, retries or transients.
+
+## Interdisciplinary Synthesis: #4313
+
+Both complete editions of the long interdisciplinary chapter and every exercise
+were read. The paired correction connects physical dynamics, input conventions,
+finite-horizon control, impedance, neural evidence, composite materials, impact,
+measurement, coaching and health outcomes through explicit model boundaries.
+Independent counterexamples replace unsupported universal claims. Two shared
+figures and eight worked answers make the arguments reproducible. The derivation
+record includes the initial failing checks, corrected provisional arithmetic,
+primary-source reading limits and final publication inspection.
+
+All 25 focused mathematical/publication checks pass. Full regression passes
+4,974 tests with 29 skips and 92.65% coverage; final affected checks pass 48,
+content 130, static 34 and titles 633. Format, style, type, code-quality and
+site-link checks pass. The rebuilt 551-page PDF has 17 affected chapter pages,
+all visually inspected, plus relevant contents, figures, bibliography and index.
+Complete web reading and final responsive checks cover 158 math expressions,
+22 displays, 29 historical destinations and 14 viewport/theme combinations.
+Equation glyph clearance, long inline scrolling and paired figures are verified.
+See [interdisciplinary-review.md](interdisciplinary-review.md). Protected delivery
+remains; this batch does not complete the corpus.
+
+Launch #4309 / PR #4312 is published as bc252297. Main CI, performance and
+deployment succeed; exact live artifact 10115787738 passes 956/956 across
+239 routes with no failures, axe violations, retries or transients. Registry
+reconciliation gives 223 rows beginning 'Indexed;' out of 405, superseding the
+earlier narrative 221 under that definition. Other rows include partial audits.
