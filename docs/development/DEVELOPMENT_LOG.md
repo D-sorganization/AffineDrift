@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4326 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** not created
+- **Branch:** `fix/4326-motor-learning-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch25_motor_learning.tex`, `articles/The_Physics_of_Golf/quarto/ch25_motor_learning.qmd`, `docs/development/technical-review/motor-learning-review.md`
+- **Started:** 2026-09-09
+- **Last verified:** 2026-09-09 (`1693a3f3`, complete original sources read; working-tree audit notes)
+- **Summary:** Both complete editions and twelve exercises read. Confirmed errors conflate sensory, task and reward errors, make unsupported neural and clinical claims, misstate learning/practice evidence and diverge across editions. Correction will connect mechanics, sensation, prediction and measurable learning outcomes.
+- **Next step:** Verify primary evidence and derive discriminating motor-learning examples.
+
 ### DL-#4327 · Nonlinear Control Explanation Publication Repair
 
 - **State:** in_review
