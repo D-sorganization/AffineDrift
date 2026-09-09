@@ -2,7 +2,25 @@
 
 Date: 2026-09-05. Parent epic: [#4009](https://github.com/D-sorganization/AffineDrift/issues/4009).
 
-## Current Checkpoint: 8 September 2026
+## Current Checkpoint: 9 September 2026
+
+Spatial algebra #4318 corrects both complete Volume 0 Chapter 8 editions and
+all fifteen exercises. Frame conventions, force duality, inertia signs and
+physical realizability, momentum transport, planar reduction and recursive
+joint inertia are derived consistently. Independent numerical tests, two
+reproducible figures and fifteen worked answers connect the equations to golf
+and humanoid constraints without inferring anatomical validity. Root 5,050
+passes, 79.14% coverage; all required final checks and complete affected print/web
+QA pass. Protected delivery is next; see `spatial-algebra-review.md`.
+
+Synthesis #4313/#4314 is published as fc76f2e1. Main CI, textbooks, performance
+and deployment pass; exact live artifact 10119982807 passes 956/956 records
+across 239 routes with zero failures or serious/critical accessibility findings.
+Soft-tissue #4315/#4317 merged as b6578132; main CI and deployment verification
+remain pending. The 405-row corpus has 219 Indexed rows plus partially reviewed
+sources; this is not a completed-corpus count.
+
+## Earlier Checkpoint: 8 September 2026
 
 Wrist #4299 is locally corrected in the complete article, print/HTML companions,
 four technical guides, bibliography, two critiques and interactive calculators.

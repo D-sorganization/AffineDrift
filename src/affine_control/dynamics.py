@@ -66,18 +66,22 @@ def spatial_inertia(mass: float, com: Array, inertia_com: Array) -> Array:
                [ m [c]^T          , m 1     ]]
 
     ``[c][c]^T = |c|^2 I - c c^T`` is positive semi-definite, so the top-left
-    block grows with the offset. Writing it with a minus sign yields a matrix
-    that is not positive definite -- physically impossible for an inertia, and
-    the error the review found in the published worked example.
+    block grows with the offset. Subtracting that term can produce negative
+    kinetic energy, the error found in the published worked example. Physical
+    point or line-mass idealizations can have singular positive-semidefinite
+    inertia; positive definiteness additionally requires positive-definite I_c.
 
     Args:
         mass: Body mass, strictly positive.
         com: Centre of mass expressed in the frame whose origin the inertia is
             taken about.
-        inertia_com: 3x3 rotational inertia about the centre of mass.
+        inertia_com: Physically realizable 3x3 rotational inertia about the
+            centre of mass. Symmetry, nonnegative principal moments and their
+            triangle inequalities are caller preconditions, not checked here.
 
     Returns:
-        The 6x6 spatial inertia, symmetric positive definite.
+        The 6x6 spatial inertia. It is symmetric positive semidefinite for
+        physical inputs and positive definite exactly when inertia_com is.
     """
     if mass <= 0.0:
         raise ValueError(f"mass must be positive, got {mass}")

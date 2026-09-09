@@ -18,31 +18,44 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4318 · Spatial Algebra, Physical Inertia and Recursive Dynamics
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4318 (epic #4009)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4319 (open)
+- **Branch:** `fix/4318-spatial-algebra`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_0/chapters/ch08_spatial_algebra.tex`, `articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.qmd`, `articles/The_Geometry_of_Motion/figures/spatial_*`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `articles/The_Geometry_of_Motion/Volume_0/main.pdf`, `src/affine_control/dynamics.py`, `src/tools/spatial_inertia_examples.py`, `tests/test_spatial_algebra_rigor.py`, `docs/development/technical-review/spatial-algebra-review.md`
+- **Started:** 2026-09-09
+- **Last verified:** 2026-09-09 (`245926b2c107d560be1f64d5df56954204053e50`)
+- **Summary:** Complete paired correction connects frame/power duality, physical inertia, momentum derivatives, planar restriction, composite/joint inertia and constraints. Two figures, fifteen worked answers and shared routines have independent numerical checks. Root 5,050 passes, 79.14% coverage; final affected 37, content 130, static 34, titles 634, style/type/quality/link and complete affected print/web QA pass. Implementation was replayed alone onto protected main b6578132 before first push; all normal commit/push hooks pass.
+- **Next step:** Complete PR #4319 protected checks/review, merge normally and verify production.
+
 ### DL-#4315 · Soft-Tissue Dynamics and Pressure Mechanics
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4315 (epic #4009)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4317 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4317 (merged)
 - **Branch:** `fix/4315-soft-tissue-mechanics`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch20_soft_tissue_pliable.tex`, `articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.qmd`, `articles/The_Physics_of_Golf/figures/soft_tissue_*`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_soft_tissue_mechanics_rigor.py`, `docs/development/technical-review/soft-tissue-review.md`
 - **Started:** 2026-09-09
 - **Last verified:** 2026-09-09 (`0f89dad6529a314644abc9f93adc613a8d3c8661`)
 - **Summary:** Both editions now derive consistent tissue, pressure, inertia and energy models with bounded primary evidence, two shared figures and seven worked answers. Regression passes 4,991 tests with 92.65% coverage; final affected, content, static, style, type, title and site-link checks pass. Complete print/web inspection includes accessible math and corrected exercise numbering.
-- **Next step:** Complete #4317 protected checks/review, merge normally and verify production; continue the remaining corpus review.
+- **Next step:** Verify main CI 34393037135, deployment 34393037121 and exact live evidence for merged b6578132; continue the remaining corpus review.
 
 ### DL-#4313 · Interdisciplinary Golf Synthesis and Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4313 (epic #4009)
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4314 (merged)
 - **Branch:** `fix/4313-interdisciplinary-synthesis`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch13_interdisciplinary.tex`, `articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.qmd`, `articles/The_Physics_of_Golf/figures/interdisciplinary_*`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `css/interdisciplinary-synthesis.css`, `tests/test_interdisciplinary_synthesis_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/interdisciplinary-review.md`, `docs/development/technical-review/build_interdisciplinary_figures.py`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`58c2419a`)
+- **Last verified:** 2026-09-09 (`fc76f2e1d214fd66101e616ae94fce6d31d6af26`)
 - **Summary:** Both editions now connect mechanics, finite-horizon control, impedance, materials, impact and evidence using independently checked examples, two figures and eight worked answers. Local regression passes 4,974 tests with 92.65% coverage; complete affected print/web review and all normal hooks pass.
-- **Next step:** PR #4314 merged as fc76f2e1 after a contributor corrected apt setup and all checks passed in 34386484598. Verify main, textbook, deployment and exact live evidence.
+- **Next step:** Published: main CI, textbooks, performance and deployment pass. Exact artifact 10119982807 passes 956/956 records across 239 routes with zero failures, serious/critical axe findings or retries. Continue the remaining corpus; no further delivery work for this batch.
 
 ### DL-#3904 · Series navigation and tangent-space cluster integration
 
