@@ -1,754 +1,442 @@
-\chapter{Motor Control III: The Computational Brain}
+\chapter[Motor Control III: The Computational Brain]{Motor Control III:\\The Computational Brain}
 \label{ch:remarkable_brain}
-
-\epigraph{The brain does more in three hundred milliseconds than any computer in the world can do in three seconds. And yet, it shanks. This is the deepest truth about golf.}{A reflection on biological control}
+\index{yips}
+\index{world models}
+\index{synergies}
+\index{self-supervised learning}
+\index{robotics}
+\index{reinforcement learning}
+\index{pressure}
+\index{predictive processing}
+\index{predictive control}
+\index{performance anxiety}
+\index{passive dynamics}
+\index{options framework}
+\index{nonlinear control}
+\index{neural networks}
+\index{neural delay}
+\index{muscle coupling}
+\index{motor synergies}
+\index{motor program corruption}
+\index{motor learning}
+\index{motor failures}
+\index{motor control}
+\index{morphology}
+\index{model-based reinforcement learning}
+\index{joint stiffness}
+\index{inverse model}
+\index{internal models}
+\index{intelligence}
+\index{impedance control}
+\index{hierarchical control}
+\index{generalization}
+\index{forward model}
+\index{focal dystonia}
+\index{feedforward control}
+\index{feedforward}
+\index{feedback delay}
+\index{embodied cognition}
+\index{drift field}
+\index{dimensionality reduction}
+\index{damping}
+\index{control systems}
+\index{control problem}
+\index{constraints}
+\index{conclusion}
+\index{complexity}
+\index{cognition}
+\index{co-contraction}
+\index{choking}
+\index{brain-inspired AI}
+\index{brain}
+\index{bandwidth limitation}
+\index{ballistic movement}
+\index{artificial intelligence}
+\index{anticipatory control}
+\index{adaptation}
+\index{ZTCF family}
 
 \begin{laymansbox}{What This Chapter Is About}{box:ch26_intro}
-We've learned how the brain controls the golf swing and how it learns. Now we step back and ask: what does the brain actually accomplish during a golf swing?
+A golf swing asks the nervous system to prepare a moving body, estimate what it is doing, and influence a club whose delivery depends on the whole evolving system. The interesting question is how those operations cooperate. A successful swing does not show that the brain solved a particular optimization problem, stored a complete physics engine, or stopped using feedback near impact.
 
-When you swing a golf club, your brain is simultaneously:
-\begin{itemize}
-\item Controlling roughly 200 muscles across 20+ joints
-\item Working with 30--50 millisecond neural delays
-\item Processing 80--150 millisecond sensory delays
-\item Generating force within 50--100 millisecond muscle activation delays
-\item Solving a nonlinear optimal control problem in real time
-\item Managing transitions between high-control and high-drift phases
-\item Doing all of this in 300 milliseconds with only 20 watts of power
-\end{itemize}
+This chapter connects the control and learning models to mechanics. We will count the variables in an explicitly chosen model, calculate how much time a delayed correction has to act, distinguish drift from energy supply, and examine what stiffness and muscle coordination can accomplish. We will then ask which experiments distinguish competing explanations. Every numerical controller below is an illustrative model, not a measured neural controller or a prescription for grip pressure.
 
-No humanoid robot currently matches human performance across this full range of demands, though specialized golf-swinging machines and modern robotic systems continue to advance rapidly. Yet your brain accomplishes this every day, without conscious effort. This is the chapter that asks: how? And what does this biological achievement suggest about the nature of intelligence?
-
-We also ask the inverse question: why does the brain occasionally fail catastrophically? Why do the yips happen? Why do skilled golfers sometimes choke? The answers reveal surprising truths about how the brain works.
-
-Finally, we consider what artificial intelligence could learn from the brain, and what the golf swing reveals about the future of AI.
+The resulting picture is more useful than a contest between conscious control and passive physics. Preparation changes the state from which the swing develops; mechanics changes the consequences of commands; prediction helps interpret delayed observations; feedback can alter the remaining trajectory; learning changes future preparation and responses. Each contribution has limits that can be investigated.
 \end{laymansbox}
 
 \section{The Scale of the Problem the Brain Solves}
 \label{sec:ch26_scale}
 
-\index{control problem}
-\index{complexity}
-\index{nonlinear control}
-
-Let's quantify exactly what the brain accomplishes in a 300 millisecond downswing.
-
 \subsection{The Dimensionality of the System}
 \label{subsec:ch26_dimensionality}
 
-\begin{principle}{The Golf Swing Control Problem: Numbers}{box:ch26_numbers}
-\begin{enumerate}
-\item \textbf{Degrees of freedom:} The golf swing involves roughly 7 major joints: shoulders (2 DOF each = 4), elbows (1 each = 2), wrists (2 each = 4), torso rotation (1), hip rotation (1), knee bend (1), ankle (1). Total: $\sim$13 DOF for major joints. Including smaller joints (fingers, feet) and the club as a separate dynamic object: 20+ DOF.
+Start by distinguishing a body from a model of that body. A coordinate count depends on which segments, joint motions, contacts and flexible modes the model retains. A shoulder represented by a ball joint has three rotational coordinates; a restricted two-axis shoulder is a different approximation. Two hands holding one club form a closed chain, and fixed-foot contact further restricts feasible motion. The club's pose is not an additional set of independent coordinates if those same coordinates have already been determined by the hands and shaft model.
 
-\item \textbf{Muscles:} Roughly 200 muscles are involved in the swing, from large muscles (pectoralis, latissimus dorsi) to small stabilizer muscles. Each muscle can be activated at a different level, producing roughly 7 ordinal levels (off, 1/6, 2/6, ..., 6/6 maximum). The muscle activation space is a 200-dimensional continuous manifold $[0,1]^{200}$. Even discretizing each muscle to just 7 activation levels gives $7^{200} \approx 10^{169}$ states---a number so large it exceeds the number of atoms in the observable universe ($\sim 10^{80}$). The brain cannot search this space; it must exploit structure.
+Let $\bm q$ describe a configuration, $\bm v$ its independent generalized velocity, $\bm a$ muscle activation, and $\bm z$ additional tissue or actuator state. Flexible coordinates and their velocities must also be retained when their history affects delivery. A possible state is $\bm x=(\bm q,\bm v,\bm a,\bm z)$. Its precise dimension follows from a declared model and constraint rank, not from counting named body parts. Orientation coordinates may be redundant even when the physical velocity dimension is minimal.
 
-\item \textbf{Time points during the swing:} At 100 Hz temporal resolution (10 milliseconds per time step, reasonable for neural control), a 300 ms downswing has 30 time points. At each time point, you could independently command each muscle.
+A count that mixes bilateral joints with aggregate trunk or lower-limb coordinates is incomplete until each coordinate and constraint is specified. A defensible report supplies the actual joints, axes, constraints and retained states so that another reader can reproduce the count.
 
-\item \textbf{Control space size:} If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. This is an astronomically large space: $\approx 10^{4000}$ distinct swings.
+\begin{principle}{Count Schedules, Dimensions and Feasible Motions Separately}{box:ch26_numbers}
+Suppose, purely for a combinatorial illustration, that a controller chooses among seven command levels for each of 200 channels over 30 intervals. The number of discrete command schedules is
+\[
+N=(7^{200})^{30}=7^{6000},\qquad
+\log_{10}N=6000\log_{10}7\approx5070.58824.
+\]
+There are $6000$ scalar command entries, not $10^{5070}$ dimensions. The continuous command cube would be $[0,1]^{6000}$; at one instant it is $[0,1]^{200}$, a set with a boundary and corners. Neither number is an empirical count of neural commands or distinct successful swings. Activation dynamics, force limits, collisions and contacts make many schedules infeasible, and different schedules can produce indistinguishable observations.
 
-\item \textbf{Computational challenge:} To find the optimal swing by exhaustive search would require evaluating $10^{4000}$ candidates. Even if each evaluation took a nanosecond, this would take $10^{3991}$ seconds---far longer than the age of the universe.
-\end{enumerate}
+Thirty 10ms intervals cover 300ms; a trajectory sampled at both endpoints has 31 sample instants. Selecting a numerical discretization does not establish a 100Hz neural clock. Evaluating every schedule at one nanosecond each would take approximately $10^{5061.58824}$ seconds. This illustrates why that particular enumeration is impractical, not why all other solution methods are impossible.
 \end{principle}
-
-Yet the brain finds a good solution in milliseconds. How?
 
 \subsection{Constraints Reduce the Space}
 \label{subsec:ch26_constraints}
 
-\index{constraints}
-\index{dimensionality reduction}
-\index{synergies}
+A smooth parameterization, a learned policy and a physical constraint simplify different parts of a problem. Five coefficients at each of 30 intervals, each with seven levels, give $7^{150}$ schedules, with logarithm $126.76471$. Five unconstrained cubic time functions have 20 coefficients before boundary conditions, amplitude bounds and shared timing are imposed. These are alternative parameterizations, not equivalent estimates of what the brain stores.
 
-The brain doesn't solve this high-dimensional problem directly. Instead, it exploits structure in the problem. Several constraints dramatically reduce the effective dimensionality:
+Reducing the number of decision variables can make a numerical search easier while excluding a necessary motion. Conversely, a high-dimensional feedback policy may evaluate quickly after training, without searching over whole trajectories during execution. Learning cost, planning cost, online evaluation cost and physical response time are separate quantities. A large schedule count therefore motivates exploiting structure; it does not identify the structure or demonstrate human optimality.
 
-\begin{enumerate}
-\item \textbf{Synergies:} Instead of controlling 200 muscles independently, the brain activates muscle \textit{synergies}---fixed patterns of muscle co-activation. Within a given movement class (e.g., reaching tasks), synergies account for roughly 80--90\% of the variance in muscle activations \citep{bizzi2008motor, cheung2009simultaneous}. Across diverse movement types, the explained variance drops to 60--75\%, suggesting that synergies are context-dependent building blocks rather than universal motor primitives.
-
-  A synergy might be: ``activate shoulder internal rotator + elbow extensor + wrist extensor,'' which produces a synergistic motion. By reducing from 200 independent muscles to 8 synergies, the dimensionality drops from $7^{200}$ to $7^8 \approx 5.7$ million.
-
-\item \textbf{Temporal structure:} The brain doesn't command each of the 30 time points independently. Instead, it specifies a \textit{trajectory}---a smooth function of time. Smooth functions can be represented with fewer parameters. For example, a cubic polynomial has 4 parameters but can describe a complex trajectory.
-
-  By using smooth trajectories for each synergy, the control dimensionality drops to perhaps 30--50 parameters.
-
-\item \textbf{Physics constraints:} The dynamics are highly nonlinear, but they have structure. The drift field dominates; control is weak. This means many motor commands produce nearly the same outcome. The brain exploits this: it only needs to set initial conditions and let physics do the rest.
-
-\item \textbf{Learned motor primitives:} The brain doesn't solve the problem from scratch each swing. It retrieves a learned primitive---a pre-computed motor program---and applies it. This is like having a solution template that only needs minor tuning.
-\end{enumerate}
-
-These constraints reduce the effective dimensionality from $10^{4000}$ to something manageable: perhaps 30--50 parameters to optimize.
+For golf, the meaningful reduction is tied to the task. A family of motions that preserves clubhead speed but changes face orientation is not redundant for a directional shot. A family that preserves the full delivery state may still differ in balance, contact feasibility, tissue load or repeatability. The chosen outputs and constraints determine which differences can be ignored.
 
 \subsection{The Constraint of Time}
 \label{subsec:ch26_time_constraint}
 
-\index{neural delay}
-\index{feedback delay}
-\index{ballistic movement}
+Feedback uses information about a state or disturbance to change subsequent action. It need not be conscious, visual, or organized into a sequence of complete serial correction cycles. A continuous delayed loop can have many signals in transit simultaneously. Counting how often the movement duration can be divided by a latency is not a general measure of its control capacity.
 
-The most severe constraint is temporal:
+\begin{constraintbox}{Separate Delay, Activation and Remaining Time}{box:ch26_time_constraint}
+For a perturbation at $t_p$, let $L$ be the total delay before its corrective command reaches the actuator. Let $T$ be the impact time of the nominal example. Then $T-t_p-L$ is the time available for that command's mechanical effect, if positive. Muscle activation and force development can further attenuate the response during that interval.
 
-\begin{constraintbox}{The Time Constraint}{box:ch26_time_constraint}
-\begin{itemize}
-\item The downswing lasts 300 milliseconds.
-
-\item Neural transmission from brain to muscle: 30--50 milliseconds.
-
-\item Muscle activation delay: 50--100 milliseconds.
-
-\item Sensory feedback delay: 30--150 milliseconds (proprioception is fast, vision is slow).
-
-\item By the time visual feedback about the swing reaches your brain, the swing is over. By the time proprioceptive feedback produces a corrective motor command, the swing is over.
-
-\item The brain can process maybe 1--2 feedback correction cycles during the swing. This is barely enough for any feedback-based control.
-
-\item Conclusion: the swing \textit{must} be ballistic---pre-planned and executed without real-time feedback correction.
-\end{itemize}
+A first-order activation time constant is not a dead time. In $T_a\dot a+a=e$, a step in excitation starts changing activation immediately and reaches about 63.2\% of its eventual change after $T_a$. Measured latency to an EMG change, force change or detectable movement are different observables. Adding published values for all three may count the same physiological processes more than once.
 \end{constraintbox}
 
-This is not a limitation of the brain; it's a fundamental constraint of the system. Even with infinite neural processing power, real-time feedback control of the downswing is impossible. The solution: learn a feedforward program that works. Optimal-control accounts of sensorimotor behaviour reach the same place from the other direction: what correction the nervous system does apply is concentrated on the dimensions that affect the task and withheld elsewhere, so a movement can be both tightly controlled where it matters and largely uncorrected everywhere else \cite{todorov2004optimality}.
+Primary experiments show why the distinction matters. Pruszynski and colleagues found rapid integration of shoulder and elbow information in arm perturbation tasks, with responses on a timescale of about 50ms \citep{Pruszynski2011Feedback}. Saunders and Knill found online corrections to virtual-hand perturbations during reaching. Their mean detected latency was 163ms; their analysis estimated a positive detection bias of about 25ms \citep{Saunders2003Feedback}. These are different tasks, signals and measurements. Neither result supplies a universal downswing latency, but both contradict the premise that fast movement categorically excludes feedback.
 
-\section{How the Brain Manages: Strategies for a Bandwidth-Limited Controller}
+\section[How Prediction, Feedback and Mechanics Cooperate]{How Prediction, Feedback\\and Mechanics Cooperate}
 \label{sec:ch26_strategies}
 
-\index{bandwidth limitation}
-\index{impedance control}
-\index{synergies}
-\index{predictive control}
+\subsection{A Worked Remaining-Time Calculation}
 
-Given these constraints, how does the brain manage to swing a golf club?
+Consider the change in a single rotational coordinate caused by a corrective torque command. The illustrative actuator and rotor satisfy
+\[
+I\delta\ddot\theta=\tau_m,\qquad
+T_a\dot\tau_m+\tau_m=U\,H(t-t_p-L),
+\]
+where $H$ is the unit step, all perturbation states initially vanish, and the command remains on until $T$. This is a response calculation after a correction has been chosen; it is not a complete feedback policy. Set $h=\max(T-t_p-L,0)$. Integration gives
+\[
+\delta\theta(T)=\frac{U}{I}
+\left[\frac{h^2}{2}-T_a h+T_a^2(1-e^{-h/T_a})\right].
+\]
+The bracket has units of time squared. For $h\ll T_a$, expansion of the exponential gives $h^3/(6T_a)$ to leading order: activation filtering makes a very late angular correction smaller than the ideal instantaneous-torque result $Uh^2/(2I)$.
 
-\subsection{Strategy 1: Exploit Drift---Use Physics as the Primary Actuator}
-\label{subsec:ch26_exploit_drift}
+Take $T=0.300$s, $L=0.060$s, $T_a=0.040$s, $I=0.050$kg\,m$^2$ and $U=0.50$N\,m. Perturbations at 40, 180, 220 and 260ms give available times of 200, 60, 20 and 0ms. Their final angular changes are approximately 0.135892, 0.006430, 0.000296 and 0rad, respectively. The first is 7.786 degrees; the third is only 0.01693 degrees. Those differences arise with the same actuator and command amplitude. They are not measured golf corrections.
 
-\index{drift field}
-\index{feedforward control}
-\index{ZTCF family}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/brain_correction_window.pdf}
+\caption{Remaining Time Changes the Same Command's Effect. The Declared Rotor Model Compares Instantaneous Torque With Activation Filtering After the Same 60ms Delay. These Are Illustrative Responses, Not Measured Golf Data.}
+\label{fig:brain_correction_window}
+\end{figure}
 
-This is the central insight of the entire textbook, viewed from the motor control perspective.
+This example explains the value of advance preparation without declaring all feedback useless. Early errors can have an appreciable correction window; late errors may have little or none. Mechanical stiffness already present at the time of a disturbance can respond before a newly generated command arrives. A correction that changes final angular velocity may have little effect on final angle, so response capacity must name the output. The real golfer also has coupled coordinates, changing leverage, force bounds, measurement uncertainty and an impact time that may itself shift.
 
-\begin{theorem}{Drift Exploitation in Neural Control}{ch26_drift_exploitation}
-The golf swing is drift-dominated. The drift forces (gravity, centrifugal effects, elastic restoring forces) are much larger than the control forces (muscle torques).
-
-This is an enormous advantage for the brain. The brain doesn't need to generate the whole trajectory. It only needs to:
-\begin{enumerate}
-\item Set the initial conditions correctly (address position, grip orientation, muscle stiffness).
-\item Apply an early-swing control input that initiates the acceleration.
-\item Let the drift field carry the system through the mid- and late-swing phases.
-\end{enumerate}
-
-The ball's final position is determined primarily by the drift field physics, not by precise real-time muscle control. The brain exploits this by using a \textit{high-level setpoint control strategy}: specify where the system \textit{should be} at key points, and let physics carry it there.
-\end{theorem}
-
-This is why the ZTCF framework (Chapter \ref{ch:zero_torque_counterfactual}) is so important. The brain is using the mathematical structure of drift-dominated systems to simplify its control problem.
-
-Compare this to trying to control a tennis racket where control forces are comparable to drift forces. This would require much more sophisticated real-time feedback control. The brain couldn't handle it. Tennis players would have no consistency. But golf players do, because gravity (drift) dominates, and the brain exploits this.
-
-\subsection{Strategy 2: Impedance Control---Command Stiffness, Not Position}
-\label{subsec:ch26_impedance}
-
-\index{impedance control}
-\index{joint stiffness}
-\index{damping}
-\index{co-contraction}
-
-A second strategy the brain uses is \textit{impedance control}. Instead of commanding exact joint angles or forces, the brain commands \textit{stiffness}.
-
-\begin{definition}{Mechanical Impedance}{ch26_impedance}
-The resistance of a joint to perturbation. A very stiff joint (high co-contraction of agonist and antagonist muscles) is hard to move and resists external forces. A compliant joint (low co-contraction) is easy to move and absorbs forces.
-\end{definition}
-
-\begin{principle}{Impedance Control Strategy}{box:ch26_impedance_control}
-Instead of the brain commanding: ``Move the shoulder to 90 degrees at 3 degrees per millisecond,'' it commands: ``Set shoulder stiffness to 2.3 N$\cdot$m per degree'' (an illustrative example value; for empirical ranges from impedance-control experiments see \citet{Hogan:1985}).
-
-This is a passive control strategy. The stiffness is a mechanical property of the musculoskeletal system. Once set, the joint naturally resists perturbations without requiring active correction.
-
-Mathematically, impedance control commands the effective stiffness $\bm{K}$ and damping $\bm{D}$:
-\begin{equation}
-\bm{u} = -\bm{K}(\bm{q} - \bm{q}_d) - \bm{D}\dot{\bm{q}}
-\end{equation}
-
-where $\bm{q}_d$ is a desired (but ``soft'') target position. Small deviations from $\bm{q}_d$ produce restoring torques. Large deviations don't.
-
-This is much simpler than controlling exact position because the stiffness is set once, not recomputed at each time step.
-\end{principle}
-
-For the golf swing, impedance control explains several phenomena:
-
-\begin{example}{Impedance Control in Golf}{ch26_impedance_golf}
-\begin{itemize}
-\item \textbf{Grip pressure:} A light grip (low impedance) allows wrist hinge freedom but makes the club unstable. A firm grip (high impedance) locks the wrist but limits power. Great golfers learn the optimal grip stiffness---high enough to stabilize the club, low enough to allow hinge.
-
-\item \textbf{Address posture:} Setting up with relaxed muscles (low impedance) vs. rigid muscles (high impedance) changes how the swing unfolds. Low impedance is generally better because it allows the system to find optimal paths. Too-rigid posture constrains motion.
-
-\item \textbf{Reactive responses:} If the ball suddenly moves (unlikely in golf, but imagine it), or if wind perturbs the swing, a joint with higher impedance resists the perturbation more. The golfer doesn't need to consciously correct; the mechanical impedance does it.
-
-\item \textbf{Injury prevention:} High-impedance impact absorption spreads forces across multiple joints, reducing injury risk at the point of impact.
-\end{itemize}
-\end{example}
-
-Setting impedance is more efficient than precise position control because it doesn't require fast computation. The brain can set impedance once and let mechanics handle the rest \citep{hogan1985impedance, mussa1998modular}.
-
-
-\subsection{Strategy 3: Synergies---Reduce Dimensionality Through Coordination}
-\label{subsec:ch26_synergies}
-
-\index{synergies}
-\index{motor synergies}
-\index{muscle coupling}
-
-We mentioned synergies earlier. Let's examine them in detail.
-
-\begin{definition}{Motor Synergy}{ch26_synergy}
-A fixed pattern of muscle activations that produces a coordinated action. Instead of independently controlling each muscle, the brain activates predefined synergy vectors.
-\end{definition}
-
-\begin{example}{Synergies in the Golf Swing}{ch26_synergies_example}
-Synergy 1 (pulling): ``Activate latissimus dorsi + pectoralis + internal shoulder rotators.'' This produces a pulling motion---useful in the downswing.
-
-Synergy 2 (pushing): ``Activate deltoid (posterior) + triceps + wrist extensors.'' This produces a pushing/extending motion.
-
-Synergy 3 (stabilizing): ``Co-activate all shoulder muscles equally.'' This stabilizes the shoulder without moving it.
-
-By combining these 3--5 synergies at different activation levels across time, the brain produces the full complexity of the golf swing.
-
-The advantage: instead of commanding 200 muscles independently, the brain commands 4--5 synergies. Dimensionality drops dramatically.
-\end{example}
-
-Evidence for synergies comes from electromyography (EMG) recordings of muscle activation during movement. Researchers have found that most of the variance in muscle activations across many different movements can be explained by 4--8 synergy vectors \cite{bizzi2008motor, cheung2009simultaneous}.
-
-Why would synergies evolve? One hypothesis: they simplify learning. Instead of learning a 200-dimensional control space, the brain learns a 5-dimensional space. This is much easier and happens faster \citep{bizzi2008motor, cheung2009simultaneous, torres2013beyond}.
-
-
-\subsection{Strategy 4: Predictive Control and Anticipatory Activation}
+\subsection{Predictive Control and Anticipatory Activation}
 \label{subsec:ch26_predictive}
 
-\index{predictive control}
-\index{anticipatory control}
-\index{feedforward}
-
-The brain uses its internal model to predict what will happen and pre-activate stabilizing muscles.
-
-\begin{principle}{Anticipatory Motor Control}{box:ch26_anticipatory}
-Suppose you know that lifting a heavy object will create a sudden force. Instead of waiting for the force and reacting, the brain pre-activates core muscles \textit{before} the perturbation. This is anticipatory control.
-
-For the golf swing:
-\begin{itemize}
-\item The transition is coming. The brain pre-activates muscles that will resist the sudden acceleration.
-
-\item The clubhead will soon hit the ball. The brain pre-activates muscles that will stabilize impact.
-
-\item These pre-activations happen 50--100 ms before the event, anticipating it using the forward model.
-
-\item By pre-positioning muscles, the brain avoids the neural delays. The muscles are already primed when the event occurs.
-\end{itemize}
+\begin{principle}{Prediction Uses Information Already Available}{box:ch26_anticipatory}
+A forward model predicts a future state from a state estimate and a command. An estimator can propagate an old observation using intervening commands to improve feedback despite sensory delay. Prediction cannot reveal an unpredictable disturbance before information about it is available.
 \end{principle}
 
-This is why the pre-swing motion and address posture are so critical. Elite golfers spend 5--10 seconds setting up precisely. They're not just getting comfortable; they're pre-positioning the musculoskeletal system and pre-activating muscles. The actual swing, when it comes, unfolds from a precisely prepared state.
+For example, a model may propagate $\hat{\bm x}(t-L)$ through $\dot{\bm x}=F(\bm x,\bm u)$ using recorded commands to estimate $\hat{\bm x}(t)$. A discrepancy between predicted and observed signals can then update the estimate. Errors in initial state, activation, contact and the model accumulate during propagation. Replacing the unknown current state with a prediction is therefore useful only together with an account of prediction error.
+
+Anticipatory activation changes the state before an expected event. It shifts work and information requirements earlier; it does not abolish neural conduction or muscle dynamics. A model of advance stabilization must say which muscles or actuators change, how that changes torque and impedance, and what the preparation costs. Neither address posture nor the duration of a pre-shot routine identifies those hidden quantities by itself.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/brain_control_loop.pdf}
+\caption{Preparation, Mechanics, Estimation, Feedback and Learning Interact. Within-Trial Responses and Changes Across Trials Must Be Distinguished Experimentally.}
+\label{fig:brain_control_loop}
+\end{figure}
+
+\subsection{Drift Is a Model Term, Not a Free Actuator}
+\label{subsec:ch26_exploit_drift}
+
+For an input-affine model,
+\[
+\dot{\bm x}=\bm f(\bm x)+\bm G(\bm x)\bm u,
+\]
+$\bm f$ is the evolution when the declared input coordinates are zero. If the input is joint torque, this differs from a model whose input is neural excitation and whose state includes nonzero muscle activation. Zero new excitation does not instantly eliminate active force. Contact reactions and tissue forces must be treated consistently with the chosen coordinates and state.
+
+An instantaneous ratio between drift and applied input can describe a trajectory under a declared scaling. It does not prove weak available control, low metabolic cost, or low sensitivity at impact. Linearizing a smooth, fixed-contact model around a nominal trajectory gives
+\[
+\delta\dot{\bm x}=\bm A(t)\delta\bm x+\bm B(t)\delta\bm u,
+\]
+\[
+\delta\bm y(T)=\bm C_T\bm\Phi(T,0)\delta\bm x_0+
+\int_0^T\bm C_T\bm\Phi(T,s)\bm B(s)\delta\bm u(s)\,ds.
+\]
+Here $\bm\Phi$ propagates perturbations, and $\bm C_T$ maps state changes into the selected delivery outputs. The kernel $\bm C_T\bm\Phi(T,s)\bm B(s)$, together with feasible inputs and their delays, determines first-order influence on those outputs. A norm of $\bm f$ alone omits that propagation and output geometry. Impact-event sensitivity adds a time-shift term when $T$ changes.
+
+An abstract counterexample makes the logical issue explicit. Let $\dot x=c+ax+u$, with $x(0)=0$, $a=10$s$^{-1}$, $c=1$rad/s and $T=0.3$s. The sensitivity of $x(T)$ to a constant input $u$ is $(e^{aT}-1)/a\approx1.90855$s. Near the end, the nominal drift is about 20.0855rad/s. An input of 0.01rad/s is small compared with that drift but still changes the endpoint by about 0.01909rad. Large drift and appreciable input sensitivity coexist. This is a mathematical counterexample, not a proposed golf trajectory.
+
+The \hyperref[ch:zero_torque_counterfactual]{zero-torque counterfactual framework} can test a specified intervention in a golfer model. It must start from the same complete state, define the channels removed, evolve the resulting trajectory and verify that the assumed contacts remain feasible. Agreement with an observed phase ordering does not establish that the golfer silenced muscles or consciously relinquished control. Those are separate hypotheses requiring separate observations.
+
+\subsection{Mechanical Impedance During a Moving Task}
+\label{subsec:ch26_impedance}
+
+Mechanical impedance describes the relation between motion and interaction force or torque. In a local linear model it can include inertia, damping and stiffness. Stiffness is a derivative of restoring force with respect to displacement under specified conditions, not simply a synonym for grip pressure. Impedance control addresses the dynamics of interaction with an environment \citep{hogan1985impedance}.
+
+\begin{principle}{A Moving Reference and Its Local Response}{box:ch26_impedance_control}
+An illustrative joint-torque law is
+\[
+\bm\tau=\bm\tau_{\rm ff}(t)
+-\bm K(t)(\bm q-\bm q_d(t))
+-\bm D(t)(\dot{\bm q}-\dot{\bm q}_d(t)).
+\]
+The feedforward term supports the nominal motion; the other terms respond to position and velocity errors. This is a generalized-torque model, not a claim that the nervous system independently commands every matrix entry. If the displayed linear law is valid, larger errors produce larger restoring torques. Saturation or a limited range of validity must be modeled explicitly.
+\end{principle}
+
+For a scalar spring-damper with fixed reference, positive constant stiffness $K$, nonnegative damping $D$, and no feedforward torque, write $e=q-q_d$ and $V=Ke^2/2$. Then
+\[
+\tau\dot q+\dot V=-D\dot q^2\leq0.
+\]
+This storage balance shows passivity at that mechanical port. Positive stiffness stores energy; it does not dissipate it. A compliant element may store and return energy, whereas damping dissipates it. Nor does this passive mechanical description imply zero metabolic cost in the muscles maintaining the state.
+
+If $K$ varies, $\dot V$ contains $\dot K e^2/2$. At a clamped error of 0.1rad, increasing stiffness from 10 to 30N\,m/rad increases stored energy by 0.1J despite zero joint motion. That energy has to come from the mechanism changing stiffness. If the reference moves, its work also enters. With constant $K,D$, no feedforward term and $\dot e=\dot q-\dot q_d$,
+\[
+\tau\dot q+\dot V=-D\dot e^2+\tau\dot q_d.
+\]
+The moving-reference term can be positive. A controller cannot be called passive merely because its torque equation contains a spring and a damper.
+
+\begin{example}{What This Means for Grip and Balance}{ch26_impedance_golf}
+Changing grip can change local hand-club compliance, available friction, muscle activation, posture and transmission of disturbances. These changes need not have the same effect on clubhead speed, face orientation and tissue loading. A firmer grip does not necessarily lock a wrist coordinate; a lighter grip does not necessarily destabilize the club. The comparison requires a specified load, contact model, perturbation direction and outcome.
+
+In a whole-body model, an apparently helpful local correction may alter the contact wrench needed at the feet. A controller that corrects face angle while violating friction or losing balance has not solved the original task. Joint and endpoint impedance also differ through the configuration-dependent Jacobian and, under load, geometric stiffness terms.
+\end{example}
+
+Burdet and colleagues investigated arm movement in an unstable robotic environment and found adaptation of impedance geometry \citep{Burdet2001Impedance}. That supports investigating directional stabilization. It does not establish a universal optimal grip stiffness, a fixed impedance throughout a swing, or an injury-prevention rule. Those require golf-specific measurements and appropriately matched comparisons.
+
+\subsection{Synergies, Feasible Commands and Neural Evidence}
+\label{subsec:ch26_synergies}
+
+One meaning of a muscle synergy is a low-dimensional description of recorded muscle activity. Another is a hypothesis that neural circuitry restricts commands to coordinated groups. A third is a deliberately chosen control basis in a simulation. These uses should not be interchanged.
+
+For a data matrix $\bm E$ of processed EMG signals, a factorization $\bm E\approx\bm W\bm H$ can summarize patterns. Its result depends on the recorded muscles, filtering, normalization, task set, chosen rank and validation procedure. EMG is an electrical observation, not a direct measurement of muscle force, excitation, joint torque or mechanical work. A good reconstruction of the training recordings need not predict another posture or a novel perturbation.
+
+Kutch and Valero-Cuevas used cadaveric measurements and computational models to show that biomechanics and task selection can produce low-dimensional patterns without a controller that groups muscles \citep{Kutch2012Synergies}. This is a counterexample to a particular inference, not a disproof of all neural coordination. It motivates testing the mechanical alternatives alongside the neural hypothesis.
+
+In a model, let $\bm R(\bm q)$ map muscle forces to generalized torque, with moment-arm sign convention $R_{ji}=-\partial l_i/\partial q_j$ for musculotendon length $l_i$. Even the simplified isometric relation
+\[
+\bm\tau=\bm R(\bm q)\operatorname{diag}(\bm F_{\max})\bm a,
+\qquad 0\leq a_i\leq1,
+\]
+shows why equal activation need not mean zero net torque. Antagonists with moment arms 0.04 and $-0.03$m, force capacities 1000 and 800N, and equal activation 0.2 produce $8-4.8=3.2$N\,m. Force-length-velocity effects, pennation, tendon state and history make the real relation more involved.
+
+\begin{example}{A Compact Basis Can Remove the Needed Action}{ch26_synergies_example}
+Consider two normalized opposing actuators with $\tau=a_1-a_2$. Independent commands in $[0,1]^2$ can produce any torque in $[-1,1]$. Restricting activation to the single coactivation vector $\bm a=c(1,1)^\top$ gives zero torque for every $c$. The basis has one dimension, yet it loses both directions of net torque. The same coactivation could change stiffness in a richer muscle model; that property is absent from this simple torque map and cannot be inferred from it.
+\end{example}
+
+For $\bm a=\bm W\bm c$, the admissible coefficient set must satisfy $0\leq\bm W\bm c\leq1$ and any excitation-rate or activation constraints. Rank alone does not describe its feasible torque set. A claim that a small basis simplifies learning should therefore report both held-out prediction and the motions, forces and recovery actions the restriction excludes. No fixed number of golf synergies or universal explained-variance percentage is assumed here.
 
 \section{The Brain as an Internal Model: What It Learns}
 \label{sec:ch26_internal_model_what}
 
-\index{internal models}
-\index{forward model}
-\index{inverse model}
-\index{motor learning}
+Predicting sensory consequences, selecting a command and evaluating an outcome are different computational functions. They can be represented by a forward model, a policy and a value or cost model, respectively. A controller may combine learned dynamics, cached actions, explicit aiming strategies and feedback corrections. Good performance does not uniquely identify which combination produced it.
 
-Chapters \ref{ch:motor_control_brain} and \ref{ch:motor_learning} established that the brain learns internal models. Let's now think carefully about what, exactly, the brain learns.
+Writing $\hat{\bm f}$ and $\hat{\bm G}$ is useful when building an estimator for an affine mechanical model. It does not establish that the brain separately stores those functions or that a particular brain region implements each one. Many parameter combinations can explain the same observed movement. Changes in posture, activation or contact can also look like a change in the fitted dynamics if the state is incomplete.
 
-\begin{theorem}{Three Things the Brain Learns}{ch26_what_learned}
-Through practice, the brain learns three things about the golf swing:
-
-\begin{enumerate}
-\item \textbf{The drift field $\hat{f}(\bm{x})$:} What physics does for free. Which parts of the trajectory are gravity-driven, which are active. Where the trajectory curves naturally.
-
-  Evidence: when you change clubs (different weight, different mass distribution), your swing is bad for the first few attempts. The internal model for the drift field is wrong for the new club. After a few dozen swings, your internal model updates, and performance recovers.
-
-\item \textbf{The control effectiveness $\hat{G}(\bm{x})$:} What muscles can accomplish. How much force each muscle can produce, how long it takes to produce it, which joints are coupled.
-
-  Evidence: a beginning swimmer thrashes ineffectively; muscles are firing in opposition. An elite swimmer flows efficiently; muscles fire in synergy. The internal model of $\hat{G}(\bm{x})$ is much more accurate.
-
-\item \textbf{The optimal policy $\bm{u}^*(\bm{x})$:} What to do at each state to reach the goal. This is the learned motor program.
-
-  Evidence: after thousands of swings, your golf swing becomes automatic. You've learned the policy---given any state during the swing, fire these muscles.
-\end{enumerate}
-\end{theorem}
-
-Learning the drift field IS learning physics. The brain becomes a physicist, even if it doesn't use equations. The neural encoding in the cerebellum and motor cortex approximates the nonlinear dynamics of the golf swing.
-
-\subsection{How Do We Know the Brain Learns Physics?}
+\subsection{What Adaptation Experiments Can Establish}
 \label{subsec:ch26_brain_learns_physics}
 
-\index{motor learning}
-\index{adaptation}
-\index{generalization}
-
-Several lines of evidence show that the brain learns a model of physics:
-
-\begin{example}{Evidence That the Brain Learns Physics}{ch26_physics_evidence}
-
-\textbf{Experiment 1: Novel tool learning.} A golfer learns to swing a driver for years. Then they pick up a putter. The putter is dramatically different: much shorter, much lighter, different mass distribution. The golfer's first few putts are terrible---they overshoot, undershoot, or miss entirely.
-
-Within 10--20 putts, performance recovers. The internal model has updated for the new tool dynamics.
-
-Within 100 putts, the golfer has learned the putter physics. They can hit putts of different distances, on sloping greens, etc.
-
-If the brain didn't learn physics, this wouldn't happen. The brain would have no way to generalize from driver swings to putter strokes. But it does generalize, by updating its internal model.
-
-\textbf{Experiment 2: Perturbed feedback.} Researchers study learning in a 2D reaching task where the visual feedback is systematically rotated. For example, when you try to move your hand right, the feedback shows it moving at a 30-degree angle.
-
-Initially, people make large errors. But within 30--40 trials, they adapt. Their reaching becomes accurate again.
-
-Critically, when the perturbation is removed, performance is initially poor (negative aftereffects), then recovers. This shows that the brain has internally updated its model to compensate for the perturbation.
-
-This adaptation is too fast and too precise to be explained by conscious trial-and-error. It's the cerebellum updating the forward model.
-
-\textbf{Experiment 3: Generalization to novel contexts.} After adapting to a rotated feedback perturbation in one movement direction, the brain partially adapts to other movement directions, without explicit practice in those directions.
-
-Why? The internal model has learned something about the general transformation---not just memorized the specific case. This is learning the underlying physics, not memorizing a response \citep{wolpert2011motor, shadmehr2010computational}.
+\begin{example}{Separate Task Error From Prediction Error}{ch26_physics_evidence}
+Mazzoni and Krakauer introduced a visuomotor rotation and supplied an explicit aiming strategy that initially corrected it. Continued implicit adaptation subsequently interfered with that strategy \citep{Mazzoni2006Strategy}. This demonstrates that explicit and implicit processes can coexist and conflict in that task. It does not show that all rapid learning is unconscious or that successful golf requires a uniquely identified internal physics model.
 \end{example}
 
+A task error compares achieved and desired outcomes. A sensory prediction error compares an observation with its expected consequence. They can differ: a deliberate aiming offset may put a cursor on target while the cursor still appears away from the position predicted from the hand command. Removing a perturbation and observing an aftereffect helps distinguish adaptation from immediate compensation, but aftereffects alone do not reveal every learned variable or neural location.
+
+Switching clubs is a useful proposed experiment, not a completed experiment with a universal trial count. The new club may change inertia, geometry, contact, visual cues and the shot objective. Comparing a driver swing with a putt changes the task as well as the tool. A stronger design perturbs a measured club property within a matched task, randomizes conditions, measures the initial response and learning curve, includes washout and retention tests, and assesses transfer to conditions withheld from training.
+
+For a simple trial-to-trial model $z_{n+1}=az_n+be_n$, retention $a$ and error sensitivity $b$ are parameters to estimate under a declared observation model. Similar performance curves can arise from different hidden states, explicit strategies or changes in exploration. Fit quality is insufficient: compare predictions for error clamps, altered feedback, changed loads and delayed retention. The investigation should expose where the models disagree.
 
 \section{Comparison With Artificial Intelligence: What Can Machines Learn?}
 \label{sec:ch26_brain_vs_ai}
 
-\index{artificial intelligence}
-\index{reinforcement learning}
-\index{neural networks}
-\index{robotics}
-
-The brain is an existence proof that biological neural networks can learn to control the golf swing. Can artificial neural networks do the same?
-
 \subsection{How Brain Learning Differs From AI Learning}
 \label{subsec:ch26_brain_vs_ai_learning}
 
-\begin{principle}{Brain vs. AI: Learning Mechanisms}{box:ch26_brain_ai_learning}
-
-\begin{tabular}{|l|l|l|}
-\hline
-Aspect & Brain & AI (Reinforcement Learning) \\
-\hline
-Data efficiency & 10,000--100,000 trials & $10^6$--$10^8$ simulated episodes \\
-\hline
-Learning time & Hours to years & Seconds to hours (simulated) \\
-\hline
-Sensory input & Rich (proprioception, vision, touch, vestibular) & Impoverished (usually joint angles only) \\
-\hline
-Built-in structure & Yes (cerebellar circuit, motor cortex hierarchy) & Often not (generic architecture) \\
-\hline
-Error signals & Multiple (proprioceptive error, outcome error, dopamine) & Usually single reward signal \\
-\hline
-Learning rule & Local (synaptic level) & Global (backpropagation) \\
-\hline
-Online vs. offline & Both & Typically offline \\
-\hline
-Interpretability & Some (we understand cerebellar circuit) & Poor (black box) \\
-\hline
-\end{tabular}
-
+\begin{principle}{Specify a Comparable Benchmark}{box:ch26_brain_ai_learning}
+A meaningful comparison declares the task, body and actuators, observations, prior experience, allowed feedback, training data, computation budget and success criterion. It separates real interactions from simulated interactions and separates training from execution. A trial, an episode, a sensor sample and a gradient update are not interchangeable units of experience.
 \end{principle}
 
-The brain is \textit{sample-efficient}. It learns from roughly 10,000 repetitions. Reinforcement learning algorithms often need $10^6$ to $10^8$ simulated episodes. Why?
+An experienced adult learning a shot brings prior motor and perceptual experience. A pretrained robot can also bring demonstrations or learned representations. Counting only the final practice session on one side and all training on the other gives a misleading efficiency comparison. Conversely, a simulator can generate information unavailable to the physical agent; privileged state or perfect contact parameters must be disclosed.
 
-Several factors:
+There is no generic rule that reinforcement learning uses joint angles only, lacks internal models, or learns only from a final scalar reward. Dreamer, published in 2020, learned a world model from images and trained behavior using imagined latent trajectories \citep{dreamer2020scalable}. This is a concrete counterexample to that characterization, not evidence that it reproduces human golf learning or a claim about the best current algorithm.
 
-\begin{enumerate}
-\item \textbf{Richer feedback:} The brain gets proprioceptive feedback at every moment (prediction errors on the trajectory), not just a final reward. This means more learning signals per trial.
-
-\item \textbf{Built-in structure:} The brain's neural circuits are not random. The cerebellum has a stereotyped architecture that's good for learning dynamics. This prior structure accelerates learning.
-
-\item \textbf{Transfer learning:} The brain leverages prior knowledge from other movements. A tennis player learning golf already has some internal models for rotational motion. An AI starting from random weights has no prior knowledge.
-
-\item \textbf{Hierarchical control:} The brain decomposes the problem. High-level planning, mid-level trajectory generation, low-level muscle control. This decomposition makes learning at each level easier.
-\end{enumerate}
-
-\subsection{What the Brain Does Better}
+\subsection{What Human Performance Contributes to the Comparison}
 \label{subsec:ch26_brain_better}
 
-\begin{principle}{Dimensions Where the Brain Excels}{box:ch26_brain_excel}
-\begin{itemize}
-\item \textbf{Transfer learning:} Humans transfer skills across very different contexts (tennis to golf, squash to badminton). AI systems are often brittle and task-specific.
-
-\item \textbf{Robustness:} Humans handle perturbations gracefully. If the wind blows during your swing, you adjust. If you're tired, you adapt. AI systems often fail on out-of-distribution inputs.
-
-\item \textbf{Compositionality:} Humans combine learned skills in novel ways. A golfer who's played tennis and baseball might discover a unique swing combining elements of both. AI systems rarely compose skills.
-
-\item \textbf{One-shot learning:} Humans can sometimes learn from a single demonstration (``Do it this way''). Deep RL typically needs thousands of examples.
-
-\item \textbf{Physical understanding:} Humans develop intuitive physics through play and exploration. ``That club is heavier, so I need to swing slower.'' AI systems don't naturally develop this understanding.
-\end{itemize}
+\begin{principle}{Measure Adaptation and Transfer}{box:ch26_brain_excel}
+Useful comparisons ask how performance changes with altered club properties, uncertain ground contact, restricted sensing, fatigue or a new target. Report error distributions, recovery time, failures and retained learning. Transfer from another sport is a hypothesis to measure, not an assumed benefit for every learner. A demonstration that communicates a goal is also different from one that supplies an executable full-body policy.
 \end{principle}
 
-\subsection{What AI Does Better}
+Humans and machines have different embodiments, sensing and learning histories. Those differences are scientifically interesting and need not be hidden to make a comparison. A specialized machine that repeats one swing may answer a repeatability question while saying little about general adaptation. A human who adapts successfully to a changed task does not thereby establish global optimality or robustness to every disturbance.
+
+\subsection{What Computation Does and Does Not Guarantee}
 \label{subsec:ch26_ai_better}
 
-\begin{principle}{Dimensions Where AI Excels}{box:ch26_ai_excel}
-\begin{itemize}
-\item \textbf{Consistency:} A trained neural network produces the same output for the same input, every time. The brain sometimes gets the yips.
-
-\item \textbf{Speed:} Modern AI can evaluate millions of candidates per second. The brain processes at 10--40 Hz.
-
-\item \textbf{Global optimization:} AI can find globally optimal solutions using large-scale search. The brain may find local optima. (Though in practice, local optima are often good enough.)
-
-\item \textbf{Scalability:} AI can be trained on massive datasets. The brain's learning is limited by the time humans can spend practicing.
-
-\item \textbf{Precise control:} AI can command exact forces with millisecond precision. The brain has noise and delays.
-\end{itemize}
+\begin{principle}{Deterministic Evaluation Is Not a Deterministic Shot}{box:ch26_ai_excel}
+A deterministic policy returns the same command for an identical represented input. Sensor noise, hidden tissue or actuator state, contact variability, model error and numerical or hardware differences can still change the physical outcome. Likewise, evaluating many candidate actions does not guarantee a global optimum for a nonlinear constrained problem. Such a guarantee requires a suitable problem class, algorithm and certificate.
 \end{principle}
 
-\cite{lake2017building, hassibi2017intelligence}
+Frequency comparisons need equal care. A neural firing rate, a sampled command update rate, a feedback bandwidth and a shaft natural frequency describe different processes. For the delay-plus-activation part of our illustrative controller,
+\[
+H(i\omega)=\frac{e^{-i\omega L}}{1+i\omega T_a},\qquad
+\arg H=-\omega L-\arctan(\omega T_a).
+\]
+With $L=0.06$s and $T_a=0.04$s, the phase contributions sum to approximately $-35.7$, $-101.8$ and $-159.5$ degrees at 1, 3 and 5Hz. The mechanical plant, sensor processing and controller add their own dynamics. These numbers are not a stability certificate, but they show why comparing an alleged neural clock with a shaft mode does not determine correction capacity. Sampling faster cannot by itself remove propagation delay.
+
+Power comparisons must use a common system boundary. An illustrative processor drawing 20W for 0.3s consumes 6J. A 0.2kg clubhead moving at 50m/s has 250J of translational kinetic energy. Neither calculation measures human brain power or whole-body metabolic expenditure, and the 6J cannot be substituted for the mechanical energy supplied to the club. A fair embodied comparison includes the actuator energy, preparation, losses, support equipment and any energy recovered, with training energy reported separately when relevant.
 
 \section{What Artificial Intelligence Could Learn From the Brain}
 \label{sec:ch26_ai_from_brain}
 
-\index{artificial intelligence}
-\index{brain-inspired AI}
-\index{embodied cognition}
-
-If the brain is so impressive at learning motor control, what could AI learn from it?
-
 \subsection{Hierarchical Control}
 \label{subsec:ch26_hierarchical}
 
-\index{hierarchical control}
-\index{options framework}
-
-The brain doesn't try to solve one massive optimization problem. Instead, it decomposes:
-
-\begin{principle}{Hierarchical Decomposition in the Brain}{box:ch26_hierarchical_brain}
-\begin{enumerate}
-\item \textbf{Strategic level} (prefrontal cortex): Choose goal. ``I want to hit my target 150 yards away with a smooth swing.''
-
-\item \textbf{Tactical level} (premotor cortex): Plan trajectory. ``I need the club to reach maximum speed at impact, with face angle matching target line.''
-
-\item \textbf{Execution level} (motor cortex + cerebellum + spinal cord): Generate commands. ``Fire these muscles in this sequence.''
-\end{enumerate}
-
-This hierarchy reduces the problem at each level. The strategic level doesn't think about muscles; the execution level doesn't think about goals.
-
-Modern AI research has begun exploring similar hierarchies. The \textit{options framework} in reinforcement learning formalizes this: high-level actions (options) are themselves learned policies for lower-level control \citep{barto2003recent, sutton2011temporal}.
+\begin{principle}{Organize Decisions by Their Role}{box:ch26_hierarchical_brain}
+A practical controller can separate shot selection, desired delivery, feasible motion generation and actuator feedback. Each layer passes constraints and uncertainty as well as a target. The lower layer must be able to reject an infeasible request. This is an engineering decomposition; a one-to-one map from those software layers to prefrontal, premotor and motor regions is not established by drawing the diagram.
 \end{principle}
 
+For example, an outer planner may request a delivery distribution rather than one exact club pose. A motion planner then considers contact, balance and muscle limits; a faster estimator and feedback law respond to the current observations. If the estimator detects a changed support condition, that information may need to modify the motion goal itself. Hierarchy does not mean that task information disappears from lower-level responses.
 
 \subsection{Internal Models and Model-Based RL}
 \label{subsec:ch26_model_based}
 
-\index{model-based reinforcement learning}
-\index{world models}
-\index{internal models}
-
-The brain builds an explicit forward model of the world. Modern AI has been dominated by \textit{model-free} RL (like Q-learning), which learns value functions without learning a model.
-
-But there's growing recognition that model-based RL is more sample-efficient. If an agent has a forward model, it can imagine many trajectories without actually executing them.
-
-\begin{example}{Model-Based vs. Model-Free RL}{ch26_model_based_rl}
-\textbf{Model-free approach:} The robot tries a motor command. It gets a reward. It updates its value function. It tries another command. After a million trials, it learns which commands are good.
-
-\textbf{Model-based approach:} The robot learns a forward model: ``If I move in this direction with this force, I'll end up here.'' Now it can \textit{imagine} many trajectories using the model, without physically executing them. It can plan offline and execute online.
-
-The brain uses model-based approach. Modern AI is moving toward it \citep{deisenroth2013tutorial, dreamer2020scalable}.
+\begin{example}{Use Prediction Where It Is Reliable}{ch26_model_based_rl}
+A model-based controller predicts consequences before selecting an action; a model-free policy or value estimate can select actions without an explicit dynamics rollout at decision time. Learned models, policies and value functions can be combined. The practical question is which combination performs well with the available data and computation, not whether every biological or artificial learner belongs to one category.
 \end{example}
 
+An inaccurate model can recommend actions that exploit its own errors. Evaluate multi-step prediction at the speeds and contacts relevant to delivery, not only one-step accuracy on a familiar trajectory. Uncertainty estimates should widen outside measured conditions, and optimization should respect actuator and contact feasibility. A cached policy can reduce online computation while still relying on substantial prior optimization or training.
 
 \subsection{Embodiment and Physics Exploitation}
 \label{subsec:ch26_embodiment}
 
-\index{embodied cognition}
-\index{morphology}
-\index{passive dynamics}
-
-A striking insight from motor control research is that it doesn't try to control every DOF. Instead, it exploits the body's morphology and the environment's physics.
-
-\begin{principle}{Embodied Control: Using Physics as Actuator}{box:ch26_embodiment}
-The golf swing works because gravity does most of the work. The brain doesn't fight gravity; it uses it.
-
-More generally, the brain exploits:
-\begin{itemize}
-\item \textbf{Passive dynamics:} The body's natural resonance frequencies and elasticity. Swinging your arm is easy because the arm naturally oscillates at a certain frequency. Swing at that frequency and forces are minimized.
-
-\item \textbf{Environmental affordances:} Properties of the environment that enable action. The golf ball's elasticity, the club's elasticity, the ground's firmness---all of these enable efficient control.
-
-\item \textbf{Morphological computation:} The shape of the body itself computes control. A limb with elastic tendons and springy muscles stores and releases energy with minimal neural control.
-\end{itemize}
+\begin{principle}{Mechanics Redistributes and Stores Energy}{box:ch26_embodiment}
+Geometry, inertia, compliant elements and contact determine how commands affect motion. They can make a task easier to execute or harder to recover from. Inertial coupling transfers influence and energy between coordinates; it is not an independent energy source. Elastic return requires earlier storage. A low-dimensional control description does not remove those energy requirements.
 \end{principle}
 
-Most roboticists try to control everything actively. A better approach: design the robot to exploit passive dynamics, and use active control only for the fine adjustments \citep{ijspeert2013biorobotics, ghazi2009central}.
+For the illustrative 0.2kg head above, a 1m drop supplies only $m g\Delta h=1.962$J of gravitational work, about 0.785\% of its 250J kinetic energy at 50m/s. This calculation concerns the head alone. A complete golfer-club budget must include all segments, their height changes, initial kinetic energy, elastic storage, actuator work and losses. It does not follow that gravity is negligible everywhere; it does rule out crediting the head's own 1m fall with supplying its full final energy.
 
+Similarly, a natural frequency is a property of a specified linearization and boundary condition. A rapid, nonperiodic swing with changing supports and nonlinear muscle dynamics cannot be optimized simply by matching one resonance. A compliant design that filters high-frequency disturbances may also delay the desired action or amplify another frequency range. Mechanical design and control design must be assessed together against delivery and load constraints.
 
 \subsection{Prediction-Driven Learning}
 \label{subsec:ch26_prediction_learning}
 
-\index{predictive processing}
-\index{self-supervised learning}
-
-The brain learns from \textit{prediction errors}. At every moment during the swing, the brain predicts what proprioceptive signals it expects, compares to actual signals, and learns from the mismatch.
-
-This is \textit{self-supervised learning}: the agent generates its own learning signal by predicting its own sensory feedback.
-
-Modern AI has begun exploring self-supervised learning. Instead of learning from hand-labeled data (expensive) or reward signals (sparse), agents learn by predicting future observations.
-
-\begin{example}{Self-Supervised Learning in AI}{ch26_self_supervised}
-\textbf{Traditional approach:} Train a robot arm on 1000 manually labeled examples of ``reaching to target.''
-
-\textbf{Self-supervised approach:} Let the robot arm move randomly for an hour. For each action, predict the resulting arm configuration. Learn a forward model by predicting its own sensory consequences. Now the robot can use this forward model for planning without any labeled data.
-
-This is closer to how the brain learns. A baby doesn't have labeled data. Instead, it acts, observes consequences, and builds a forward model of its body \citep{pathak2016curiosity, dreamer2020scalable}.
+\begin{example}{Learn From Consequences, Then Test Transfer}{ch26_self_supervised}
+A robot can record commands and subsequent observations to train a predictive model without manually labeling every desired action. That does not make the task objective unnecessary, guarantee useful exploration, or eliminate model bias. The learned representation still needs testing on the loads, viewpoints and contact transitions relevant to the task.
 \end{example}
 
+The analogous scientific question for human learning is which error signals alter which future behaviors. A changed sensory prediction, a missed target and an undesirable effort cost need not drive the same update. Experiments that manipulate them separately provide more information than describing every improvement as the brain learning physics. Predictive models are powerful tools for posing these questions; their success is not automatic evidence that the biological implementation uses the same variables.
 
 \section{The Golf Swing as a Window Into Intelligence}
 \label{sec:ch26_window_into_intelligence}
 
-\index{intelligence}
-\index{cognition}
-\index{motor control}
-
-The golf swing is a perfect test case for understanding intelligence. Let's see why.
-
 \subsection{Why Golf Is a Useful Scientific Tool}
 \label{subsec:ch26_golf_science}
 
-\begin{principle}{Golf as a Model System for Motor Control Research}{box:ch26_golf_model_system}
-\begin{itemize}
-\item \textbf{Complexity:} Golf involves dozens of joints, hundreds of muscles, nonlinear dynamics, and high-dimensional optimization. It's complex enough to be challenging.
-
-\item \textbf{Simplicity:} Unlike real-world tasks (catching a ball while running), golf is highly controlled. The ball doesn't move. The environment is constant. This simplicity makes analysis tractable.
-
-\item \textbf{Measurability:} The outcome is objective and easy to measure: where did the ball land? How far? The consistency of expert performance can be quantified precisely.
-
-\item \textbf{Universal expertise:} Golf is learned and practiced by millions. There's enormous variability in skill levels, from novices to world champions. This variation provides a natural experiment in learning and expertise.
-
-\item \textbf{Introspection:} Golfers are highly self-aware about their performance. They can report on what they feel, what they think about, what works and what doesn't. This introspection is valuable data.
-
-\item \textbf{Failure modes:} Golf has interesting failure modes (slumps, yips, choking) that reveal how the nervous system works. Understanding why a skilled player suddenly can't hit a 3-footer illuminates nervous system function.
-
-\item \textbf{Timescale:} Learning golf takes years. This allows studying learning over long timescales that are hard to access in the lab.
-
-\item \textbf{Robustness testing:} Golf tests robustness to perturbations. Wind, uneven lies, fatigue, emotion, pressure---all degrade performance. A comprehensive theory of motor control must explain robustness.
-\end{itemize}
+\begin{principle}{Measure the Chain From Action to Outcome}{box:ch26_golf_model_system}
+Golf supplies a visible target and measurable delivery and ball-flight outcomes, but a stationary ball does not make the environment constant. Lie, friction, wind, club properties, contact location and the golfer's state vary. Differences between experts and novices also confound practice, age, strength, selection and other history unless the study design addresses them.
 \end{principle}
 
-Several research groups have used golf to study motor control. Examples:
+Ball landing position alone is a poor identifier of the preceding control. Different combinations of face, path, strike location, speed and spin can produce similar landing points. Synchronized club, body, force and shaft measurements can narrow the possibilities, but estimating internal muscle state and separating causes still requires assumptions. Introspective reports are observations about experience; they are not direct measurements of neural commands.
 
-\begin{example}{Golf in Motor Control Research}{ch26_golf_research}
-\begin{itemize}
-\item \textbf{Vickers (quiet eye):} Studied gaze fixation in expert golfers, showing that the quiet eye (prolonged fixation on the ball) predicts performance.
-
-\item \textbf{Schöllhorn (differential learning):} Used golf to study whether practice variability improves learning better than blocked practice.
-
-\item \textbf{Bayes (swing biomechanics):} Developed kinematic models of the golf swing to understand inter-individual variability.
-
-\item \textbf{McLennan (neurocognitive factors):} Studied cortical activation during golf using fMRI to understand how the brain changes with expertise.
-\end{itemize}
+\begin{example}{A Discriminating Golf Experiment}{ch26_golf_research}
+To investigate a claimed grip-related reduction in face-angle sensitivity, measure the grip condition and a calibrated perturbation, randomize its timing and direction, and retain the same declared shot objective. Record pre-perturbation state, delivery, contact feasibility and trial-to-trial dispersion. Compare immediate mechanical response, delayed correction and adaptation across later trials. A smaller error can then be tested against alternatives such as changed initial state, increased stiffness, different input gain or a changed policy.
 \end{example}
 
-\cite{vickers2007perception, schoellhorn2015learning}
+A feasible experiment need not apply a hazardous disturbance during a full-speed swing. Instrumented slow tasks and controlled simulator studies can establish parts of the mechanism first, with their task boundaries stated. A simulator can verify a derivation and generate competing predictions; independent physical measurements are needed to validate those predictions for people.
 
-\subsection{Open Questions in Motor Control That Golf Helps Address}
+\subsection{Open Questions That Golf Helps Address}
 \label{subsec:ch26_open_questions}
 
-\begin{principle}{Unsolved Questions in Motor Control}{box:ch26_open_questions}
-\begin{enumerate}
-\item \textbf{How is the drift field represented neurally?} The brain clearly has an internal model of physics. But how? What neural population codes encode the drift field? How does this encoding change with learning?
-
-\item \textbf{How does the brain choose among redundant solutions?} Given that there are many ways to swing a club (many motor programs that produce good outcomes), how does the brain choose one? Is it minimum effort? Minimum variance? Something else?
-
-\item \textbf{What causes the yips?} Why do skilled golfers suddenly lose the ability to hit 3-footers? Is it a corrupted motor program? Excessive conscious attention? Fear-induced changes in the cerebellum?
-
-\item \textbf{How do experts avoid choking under pressure?} Under pressure, performance sometimes degrades (choking). The neural mechanisms underlying performance under pressure remain an active area of investigation.
-
-\item \textbf{Can we use brain imaging to see the internal model?} With fMRI or other neuroimaging, can we decode what forward model the brain has learned? Can we see differences between experts and novices in their neural representations?
-
-\item \textbf{How is motor learning consolidated?} Learning progresses from highly variable (cognitive stage) to highly consistent (autonomous stage). What neural changes underlie this consolidation? How does sleep affect consolidation?
-
-\item \textbf{What is the nature of motor skill transfer?} Why do tennis players learn golf faster? What knowledge transfers? Is it the internal model of rotational dynamics? The sense of timing?
-\end{enumerate}
+\begin{principle}{Ask Questions That Could Change the Model}{box:ch26_open_questions}
+Which delivery directions remain correctable at each perturbation time? Does an apparent improvement come from a more favorable prepared state, altered passive response or delayed feedback? Does a compact activation basis predict responses to unfamiliar loads? Which parameters transfer between clubs, and which must be relearned? Do competing estimators predict different effects when visual and proprioceptive information disagree?
 \end{principle}
 
-These are deep questions in neuroscience and motor control. Each has implications for understanding intelligence itself.
+For small errors, a useful analysis combines the propagated initial-state covariance, disturbance covariance and the delivery Jacobian. More repeated swings do not cure systematic calibration bias. Correlated state and command errors must be retained when present; treating them as independent can misstate outcome variance. Near a grazing contact or a change of contact mode, a smooth linear covariance approximation may fail. Those limits are part of the model's domain, not inconvenient exceptions to ignore.
 
-\section{Why the Brain Sometimes Fails: Instructive Failures}
+The same investigation applies to humanoid modeling. Contact constraints shape feasible accelerations and forces; geometry maps joint motion to an end-effector task; internal actuator state changes future force; estimation determines which corrections can be chosen; delay determines when they act. A golf swing is a demanding instance of this general coupled problem, not proof of one universal neural solution.
+
+\section{Why Skilled Performance Sometimes Fails}
 \label{sec:ch26_failures}
 
-\index{motor failures}
-\index{yips}
-\index{choking}
-
-The brain solves the golf swing problem with high consistency, most of the time. But sometimes it fails spectacularly. These failures are informative.
-
-\subsection{The Yips: A Corrupted Motor Program}
+\subsection{The Yips: Describe the Phenotype Before the Mechanism}
 \label{subsec:ch26_yips}
 
-\index{yips}
-\index{focal dystonia}
-\index{motor program corruption}
+The term yips is used for task-related disruptions such as involuntary movements or loss of control during putting and other skilled actions. It does not by itself identify one cause. A missed putt, performance anxiety and a task-specific movement disorder are not interchangeable observations.
 
-The yips are a condition where a golfer loses the ability to perform a previously automatic task. Typically, it strikes short putting (4-footers and closer) but can affect other aspects of the swing.
-
-A golfer with the yips will address a 3-footer that they've made hundreds of times before. They address the ball. They begin the stroke. Their hands suddenly jerk involuntarily. The ball skids left or right or backward.
-
-\begin{definition}{The Yips}{ch26_yips}
-A sudden, involuntary disruption of motor control in a previously learned, automatic movement. The disruption is specific to the task (golfers with putting yips can hit drives fine). It worsens under pressure. It often persists for years.
-\end{definition}
-
-What causes the yips?
-
-\begin{principle}{Theories of the Yips}{box:ch26_yips_theories}
-\begin{enumerate}
-\item \textbf{Motor program corruption:} The reference trajectory stored in the cerebellum has become corrupted or unstable. Each time the golfer tries the motion, they get a different proprioceptive feedback pattern. This mismatch produces an error signal that can't be resolved. The result is jerky, unstable motion as the motor system tries to correct continuous errors.
-
-\item \textbf{Excessive conscious attention:} The golfer is thinking about mechanics instead of feel. This overthinking bypasses the automatic motor system and engages the explicit, conscious system. The conscious system is slow and unstable for fast movements. Result: yips.
-
-\item \textbf{Fear-induced changes:} Repeated failures (missing putts) produce stress and fear. The amygdala becomes hyperactive. Fear signals modulate cerebellar function, impairing the normal learning and stability of motor programs.
-
-\item \textbf{Focal dystonia:} The yips might be a form of focal dystonia---an involuntary muscle contraction disorder. This is a neurological condition (disorder of basal ganglia and motor cortex) rather than a psychological one.
-\end{enumerate}
+\begin{principle}{Evidence Does Not Support a Single Corrupted Program}{box:ch26_yips_theories}
+Adler and colleagues studied 50 golfers using movement recordings and surface EMG. Findings depended on whether grouping used self-report or video-defined involuntary movement; the latter groups differed in pronation-supination movement, while the co-contraction comparison was a statistical trend \citep{Adler2011Yips}. This supports careful phenotype measurement, not a universal diagnosis or a demonstrated corrupted cerebellar trajectory.
 \end{principle}
 
-The yips teach us that motor control is fragile. Once you've learned a movement, you can't easily unlearn it or consciously control it. The more automatic the movement, the harder it is to consciously correct.
-
-This has a notable implication: overanalyzing your swing is dangerous. The more you think about mechanics, the more you disrupt the automatic system. Paradoxically, the best way to improve is often to stop thinking and just feel \citep{beilock2010choke, adler2011focus}.
-
+A model with an unstable reference, excessive gain or delayed correction can generate jerky motion. That establishes what the model can do, not what caused a particular golfer's symptoms. Several mechanisms can produce similar traces, and psychological and neurological factors need not form mutually exclusive categories. Persistent involuntary movement is a clinical assessment question; this chapter's equations do not identify its cause or treatment.
 
 \subsection{Choking Under Pressure}
 \label{subsec:ch26_choking}
 
-\index{choking}
-\index{pressure}
-\index{performance anxiety}
-
-Another interesting failure mode is choking---a sudden, temporary decrement in performance under high pressure.
-
-\begin{example}{Choking in Golf}{ch26_choking_golf}
-You're 1-down in a match. You have an 8-footer to win. You address the ball. Your heart is pounding. Your hands are shaking. You swing and miss the putt. You lose the match.
-
-Later, on the range, you hit that same putt 9 times out of 10.
-
-What happened? Under pressure, something changed in how your brain controlled the movement.
+\begin{example}{A Miss Is Not Its Own Explanation}{ch26_choking_golf}
+Imagine an all-square match on the last hole, with a putt that would win it. The golfer misses. That one outcome does not establish choking: a skill with a high success probability can still fail. Investigating a pressure effect requires a comparison with an appropriate performance distribution under matched conditions, preferably with pressure manipulated or measured independently.
 \end{example}
 
-Choking is well-studied in psychology. The leading theory: \textit{conscious processing hypothesis} \cite{beilock2010choke}.
-
-\begin{principle}{Why We Choke Under Pressure}{box:ch26_choking_theory}
-Normally, skilled movements are automatic. The golf swing unfolds without conscious attention. The golfer thinks about the target, not the mechanics.
-
-Under pressure, the golfer becomes anxious. Anxiety triggers conscious, explicit attention. Instead of automatically swinging, the golfer starts thinking about mechanics: ``Keep your head still. Smooth tempo. Follow through.''
-
-But explicit, conscious control is slow and imprecise. The autonomous system, which is fast and precise, is disrupted by the explicit system trying to micromanage.
-
-The result: the normally smooth, automatic swing becomes jerky and error-prone.
-
-This is called the \textit{processing trade-off}: expertise involves automaticity. Conscious attention disrupts automaticity. Under pressure, conscious attention increases, so automaticity is disrupted.
+\begin{principle}{Compare Attention and Pressure Hypotheses}{box:ch26_choking_theory}
+Explicit-monitoring accounts propose that attention to execution can disrupt some well-practiced skills. Distraction, altered arousal, changed risk preferences and mechanical changes in preparation are other candidate pathways. Beilock and Carr's putting experiments investigated skill knowledge, pressure and training conditions \citep{Beilock2001Fragility}. Their task-specific evidence does not establish that technical thought always harms performance or that one explanation covers every pressure-related miss.
 \end{principle}
 
-How do experts resist choking? Several strategies:
+Studying mechanics between trials, learning a new movement and monitoring a highly practiced action during execution are different activities. The fact that one attention instruction changes performance cannot justify a blanket instruction to stop analyzing the swing. Nor can an observed benefit from a routine identify a particular amygdala or cerebellar mechanism without matching neural evidence.
 
-\begin{principle}{How Experts Avoid Choking}{box:ch26_avoid_choking}
-\begin{itemize}
-\item \textbf{Pre-performance routines:} A structured routine (deep breaths, target selection, waggle) keeps conscious attention directed at the task goal, not mechanics. The routine is automatic, so it doesn't disrupt the swing.
-
-\item \textbf{Attention control:} Training to direct attention externally (on the target) rather than internally (on mechanics). This is ideomotor theory in practice.
-
-\item \textbf{Stress inoculation:} Practice under pressure conditions. High-level golfers practice in tournaments, with gallery watching, with real stakes. This trains the nervous system to perform under stress.
-
-\item \textbf{Memory of success:} Recalling previous success under pressure. ``I've made this putt in high-pressure situations before. I can do it.'' This activates the learned automatic program.
-
-\item \textbf{Reappraisal:} Reframing pressure as excitement. ``My heart is pounding because I'm excited and ready,'' not ``because I'm nervous and afraid.'' This changes how the amygdala modulates motor control.
-\end{itemize}
+\begin{principle}{Test an Intervention Against the Intended Outcome}{box:ch26_avoid_choking}
+Compare a specific routine or attention instruction with a matched control condition, randomize order, account for skill and practice effects, and measure both performance and the intended manipulation. Distinguish immediate success from retention and transfer. A technique can be useful for a particular person or task without being a universal prevention strategy or proving the proposed neural explanation.
 \end{principle}
 
-These observations have led to coaching approaches that emphasize routine, external focus, and stress management \citep{beilock2010choke, baumeister1984choking}.
-
-\section{The Humbling Conclusion}
+\section{What the Combined Account Establishes}
 \label{sec:ch26_conclusion}
 
-\index{conclusion}
-\index{brain}
-\index{control systems}
-
-Let's return to the central observation. Every time you swing a golf club, your brain accomplishes the following in 300 milliseconds:
-
-\begin{principle}{The Neural Computation}{box:ch26_extraordinary}
-\begin{itemize}
-\item \textbf{Solves a 20+ DOF nonlinear optimal control problem.}
-
-\item \textbf{Works with 30--50 millisecond neural delays.}
-
-\item \textbf{Receives feedback delayed by 30--150 milliseconds, too late for feedback correction.}
-
-\item \textbf{Manages the transition from high-control (high-impedance, slow) to high-drift (low-impedance, fast) regimes.}
-
-\item \textbf{Coordinates 200 muscles across dozens of joints simultaneously.}
-
-\item \textbf{Maintains consistency: elite golfers produce clubhead speeds within 1--3\% of their average, swing after swing} \cite{jorgensen1994physics}.
-
-\item \textbf{Exploits physics: uses the drift field (gravity, centrifugal effects) to do most of the work, rather than fighting physics.}
-
-\item \textbf{Uses minimal power: accomplishes all of this with $\sim$20 watts of energy.}
-
-\item \textbf{Does this automatically, without conscious attention, often while thinking about something completely different.}
-\end{itemize}
+\begin{principle}{The Computation Is Distributed Across Time and Mechanisms}{box:ch26_extraordinary}
+Preparing the state can reduce what must be corrected later. Existing mechanical impedance can shape a disturbance before a new command arrives. Prediction can improve estimates from delayed observations. Feasible feedback can change the remaining trajectory, and learning can improve future preparation and correction. The usefulness of each contribution depends on the task, state, uncertainty and time remaining.
 \end{principle}
 
-No humanoid robot currently matches this combination of speed, precision, adaptability, and energy efficiency. Specialized robots can swing a golf club repeatably, but none yet approaches the brain's ability to generalize across conditions, adapt to perturbations, and learn from sparse feedback.
-
-And yet, the brain shanks.
-
-This is the deepest truth about the golf swing. It is, simultaneously, the most impressive control task your brain ever accomplishes and the easiest thing to suddenly fail at. A 6-year-old can sometimes hit a golf ball further than a golfer with 20 years of experience. Under pressure, an expert player can miss putts that a beginner would make.
-
-This is not a flaw in the design. It's a fundamental feature of how biological intelligence works. The brain solves control problems by exploiting structure, learning patterns, and operating automatically. These same features make it fragile to disruption---overthinking, excessive conscious attention, and fear can all disrupt automatic performance.
-
-The lesson: the brain is not a universal, robust controller. It's a specialized, evolved system optimized for learning and automatic execution. It's fast and efficient because it's automatic. It's automatic because it has learned patterns from thousands of repetitions. Those same patterns can be disrupted.
-
-Understanding this---that power and fragility are two sides of the same coin---is perhaps the most important insight motor control science offers \citep{nicholson2005human}.
-
+This account does not require gravity to supply most swing energy, the brain to enumerate all muscle schedules, or feedback to switch off at a universal phase boundary. It also does not require a perfect internal model. It asks for a model detailed enough to make a discriminating prediction and measurements capable of testing it.
 
 \begin{principle}{Key Takeaways}{box:ch26_takeaways}
-\begin{enumerate}
-\item The brain solves the golf swing by exploiting structure: synergies (reducing from 200 muscles to 5 dimensions), feedforward control (pre-planning to avoid feedback delays), impedance control (commanding stiffness rather than position), and physics exploitation (letting drift do the work).
-
-\item The brain learns three things through practice: the drift field (physics), the control effectiveness of muscles, and the optimal motor policy for achieving goals.
-
-\item The brain is sample-efficient, building accurate models from 10,000--100,000 repetitions, while AI methods often require millions. The brain achieves this through built-in structure, hierarchical control, and rich sensory feedback.
-
-\item Artificial intelligence could benefit from the brain's approaches: hierarchical control, model-based planning, embodied exploitation of physics, and prediction-driven learning.
-
-\item The golf swing is an ideal model system for studying intelligence because it's complex, measurable, learnable, and has interesting failure modes.
-
-\item The yips and choking reveal that motor control is fragile. The same automaticity that makes skilled performance powerful makes it vulnerable to disruption.
-
-\item The ultimate irony: the most impressive control achievement your brain makes is a golf swing. And yet, you can blow it.
-\end{enumerate}
+The coordinate dimension, command parameter count and number of discretized schedules are different. A finite delay limits when an observed disturbance can affect delivery; it does not forbid every correction. Drift magnitude, energy supply and terminal sensitivity require different calculations. Impedance includes dynamics and energy exchange, and its modulation can require work. A compact EMG factorization is not unique evidence of neural grouping. Adaptation, transfer and performance under pressure need controlled comparisons. Human and artificial controllers should be compared on declared tasks with common information and energy boundaries.
 \end{principle}
 
-\begin{exercises}{Chapter Exercises}{ex:ch26_exercises}
-\begin{enumerate}
-\item Calculate the control problem dimensionality. If you naively controlled 200 muscles at 7 activation levels each, across 30 time points, how many possible swings would there be? Express in powers of 10.
+The purpose of understanding these connections is practical as well as scientific: to know which change a model predicts, why it predicts it, and which observation could show that the explanation is wrong. That is the footing on which a useful reference for golf and general humanoid control can be built.
 
-\item Explain how synergies reduce the dimensionality problem. If synergies reduce from 200 muscles to 5 synergies, and you control each synergy's activation at 7 levels across 30 time points, how many swings are possible? Compare to the naive case.
+\section{Chapter Exercises}
+\label{ex:ch26_exercises}
+\label{exercises:ex:ch26_exercises}
 
-\item Why can the brain exploit the drift field to simplify control? How does understanding drift change the problem from a control perspective?
-
-\item What are the three constraints that make feedback control impossible during the downswing? (Hint: latency, timing, and sensory delay.)
-
-\item Explain impedance control. Why might commanding stiffness be simpler than commanding exact position?
-
-\item How does the brain demonstrate that it learns physics? What experiments provide evidence?
-
-\item Compare model-based and model-free reinforcement learning. Which approach is the brain using? Which approach is modern AI typically using?
-
-\item What could AI systems learn from the brain's approach to motor control? List three specific strategies.
-
-\item Explain the yips using the setpoint hypothesis. Why might a corrupted reference trajectory lead to jerky, unstable movements?
-
-\item According to the conscious processing hypothesis, why do expert golfers sometimes choke under pressure? How can this be prevented?
-
-\item Design an experiment to test whether golfers can consciously control their putting stroke or whether conscious attention disrupts automatic performance.
-
-\item The nervous system modulates output at 10--40 Hz while the shaft's first bending mode is only 3--5 Hz, so the controller is \emph{faster} than the plant. Explain why the golfer still cannot correct the swing in flight, in terms of loop delay against movement duration. What does the brain do instead of correcting?
-
-\item What would a robot need to match human golf performance? List at least 5 capabilities and explain why each is difficult.
-
-\item Explain the paradox: your brain solves an extraordinarily complex control problem while also being vulnerable to failure under pressure. Why are these two things related?
+\begin{enumerate}[leftmargin=*,itemsep=8pt]
+\item Compute the schedule count for 200 channels, seven levels and 30 intervals. Repeat for five channels. Explain why neither result is a dimension or a count of successful swings.
+\item For $\bm a=\bm W\bm c$, derive the coefficient constraints induced by $0\leq\bm a\leq1$. Use $\tau=a_1-a_2$ to explain why the basis $(1,1)^\top$ loses torque authority despite reducing the command dimension.
+\item Derive the constant-input endpoint sensitivity for $\dot x=c+ax+u$. Why does a large nominal drift not prove a small endpoint response? Identify the additional quantities needed for a golf delivery calculation.
+\item Integrate the delayed actuator/rotor model. Reproduce the four perturbation-time examples and derive the $h^3/(6T_a)$ short-time limit. State precisely when this model predicts zero response before impact.
+\item Derive the spring-damper storage balance for fixed and moving references. Calculate the energy added when stiffness increases from 10 to 30N\,m/rad at a clamped 0.1rad error.
+\item Explain how task error can vanish while sensory prediction error remains. Propose measurements that distinguish explicit aiming, implicit adaptation and a change in mechanical impedance after a club perturbation.
+\item Compare model-based rollout, a cached policy and a learned value function. Which observations would be needed before attributing one of these computational descriptions to a neural implementation?
+\item Propose a hierarchy for a humanoid golf controller. Describe information flowing upward as well as downward, and specify how the controller handles an infeasible delivery request.
+\item A delayed feedback model produces jerky putting. Give two competing explanations and design a measurement that could distinguish them. Explain why simulation alone does not diagnose the yips.
+\item Contrast explicit-monitoring and distraction accounts of performance under pressure. State a result that would count against each account in a specified task.
+\item Design an attention experiment with novice and experienced putters. Include randomization, a pressure manipulation, a manipulation check, a performance outcome, and retention or transfer testing.
+\item Derive the magnitude and phase of the delay-plus-activation transfer function at 1, 3 and 5Hz. Explain why neither neural firing rate nor shaft resonance alone specifies closed-loop bandwidth or stability.
+\item Specify a human/robot golf benchmark with at least five matched conditions. Include prior experience, sensing, actuation, delivery uncertainty and energy boundaries. Distinguish processor energy from actuator work.
+\item Design one experiment that separates prepared-state sensitivity, immediate mechanical response, delayed feedback and adaptation across trials. State which parts require additional measurements and where the inference could remain ambiguous.
 \end{enumerate}
-\end{exercises}
 
-\newpage
+\subsection{Worked Checks and Answer Guidance}
+
+For Exercise 1, the logarithms are 5070.58824 and 126.76471; the continuous schedule dimensions are 6000 and 150 before further constraints. Exercise 2 requires $0\leq\bm W\bm c\leq1$, plus any separately declared sign, rate or physiological bounds on $\bm c$; its example gives $\tau=0$ for every feasible coefficient.
+
+For Exercise 3, differentiate $x(T)=(c+u)(e^{aT}-1)/a$ with respect to $u$, taking the limit $T$ when $a=0$. In a multi-state swing, use the propagated input kernel, the output Jacobian, feasible controls, latency and any event-time correction. For Exercise 4, integrate $\tau_m=U(1-e^{-s/T_a})$ over the remaining interval twice. Zero response occurs when $t_p+L\geq T$ under the stated zero initial perturbation and causal command assumptions. It does not assert zero motion or zero pre-existing muscle force.
+
+For Exercise 5, differentiate $Ke^2/2$ and retain $\dot K e^2/2$ and the reference-work term. The clamped stiffness change adds 0.1J. For Exercise 6, record both aiming behavior and the sensory transformation; include aftereffects and controlled loads rather than interpreting a single improved outcome. Exercises 7 and 8 require distinguishing a useful computational architecture from evidence for its neural implementation, and passing contact/actuator feasibility information back to the planner.
+
+Exercises 9--11 need explicit competing predictions, not a presupposed corrupted motor program. Baseline variability, involuntary movement, attention and pressure must be measured separately. For Exercise 12, the illustrative actuator magnitudes are approximately 0.970, 0.798 and 0.623; the unwrapped phases are $-35.7$, $-101.8$ and $-159.5$ degrees. These omit the remaining loop dynamics. Exercise 13 must account for the 6J processor example and the separate 250J clubhead energy without treating their ratio as an efficiency. Exercise 14 should use perturbation timing and within-trial versus between-trial responses to distinguish mechanisms while acknowledging hidden-state and measurement ambiguity.

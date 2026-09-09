@@ -113,7 +113,7 @@ SUPERSEDED_VALUES = [
     ),
     SupersededValue(
         name="COR as an energy ratio",
-        pattern=r"(?:8[0-9])\s*\\?%[^.\n]{0,60}(?:impact\s+)?kinetic\s+energy",
+        pattern=r"(?<![\d.,])8[0-9]\s*\\?%[^.\n]{0,60}(?:impact\s+)?kinetic\s+energy",
         correct="COR is a speed ratio",
         note="COR relates speeds, not energies; ch28's own calculation gives ~50% energy transfer",
     ),

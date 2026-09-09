@@ -270,14 +270,15 @@ class TestAuditBookPhysicsOfGolf:
         # #4149 removes two unsupported physiological diagrams from chapter 9b.
         # #4238 replaces the universal sequence diagram with checked counterexamples.
         # #4278 replaces one unpaired TikZ schematic with two paired figures.
-        assert res.chapters_with_latex_figures == 27
-        assert res.total_latex_figures == 29
+        # #4303 adds two paired computational-brain model diagrams.
+        assert res.chapters_with_latex_figures == 28
+        assert res.total_latex_figures == 31
         # #4160, #4161, and #4164 replace diagrams with shared print/web images.
         # #4283 replaces the spine schematic with a shared evidence/model diagram.
         assert res.total_latex_tikz == 23
-        assert res.total_latex_includegraphics == 6
-        assert res.total_latex_fig_labels == 29
-        assert res.total_quarto_figures == 7
+        assert res.total_latex_includegraphics == 8
+        assert res.total_latex_fig_labels == 31
+        assert res.total_quarto_figures == 9
         assert res.missing_figures_count == 22
         assert res.is_in_full_parity is False
 
@@ -360,7 +361,7 @@ class TestCLI:
         data = json.loads(captured.out)
         assert data["book_name"] == "The_Physics_of_Golf"
         assert data["total_chapters"] == 34
-        assert data["total_latex_figures"] == 29
+        assert data["total_latex_figures"] == 31
 
     def test_cli_check_mode_fails_when_discrepancy(self) -> None:
         repo_root = Path(__file__).resolve().parent.parent
