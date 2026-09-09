@@ -321,3 +321,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-09 | #4306 | Reconcile paired computational-brain chapters with delayed activation, output sensitivity, impedance energy, constrained synergies and qualified neural evidence; independently verify fourteen exercises and rebuild the print book. |
 | 2026-09-09 | #4310 | Reconcile paired swing-plane geometry, contact impulse, launch optimization and uncertainty; independently verify eight exercises, preserve web mathematics and rebuild the print book. |
 | 2026-09-09 | #4312 | Reconcile launch-monitor observability, spin reconstruction, point-referenced motion, ordered rotations and contact-model uncertainty; add independent counterexamples and accessible scientific figures. |
+| 2026-09-09 | #4314 | Reconcile paired interdisciplinary chapters with explicit control, impedance, material, collision and evidence models; add verified derivations, shared figures and eight worked answers. |

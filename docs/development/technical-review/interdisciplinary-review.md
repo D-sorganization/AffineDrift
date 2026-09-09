@@ -181,3 +181,29 @@ restored after comparison and are not part of this technical correction.
 The first commit hook rejected five unexplained E402 suppressions in the figure
 generator. Each now states why the headless backend must be selected before
 plotting imports. No runtime or scientific result changed; normal hooks are rerun.
+
+## Protected Delivery Checkpoint
+
+All commit hooks pass at e1fa05c3. Only that implementation commit was replayed
+after parent head 3cce3cb7 onto published main bc252297, producing 58c2419a.
+The reviewed implementation tree is unchanged; the only whole-tree differences
+are main's new fleet-managed AGENTS.md and CLAUDE.md sections, read before
+further work. Their development-log requirement is recorded as DL-#4313.
+The central communication CLI and guide are absent locally, as is the local
+portable development-log checker; the existing issue lease remains in force.
+The central portable checker is available. No local codemap is present.
+
+The first push's filesystem-wide Bandit scan found an unqualified urlopen in
+an untracked primary-source download helper. The helper now explicitly requires
+HTTPS and documents its fixed source URL; no source, evidence or public model
+changed. All normal push hooks, including Bandit and pytest, then pass.
+Ready PR #4314 is open at
+https://github.com/D-sorganization/AffineDrift/pull/4314. Protected checks, review,
+merge and production verification remain. SPEC receives exactly one PR-keyed
+row; no spec-version field or other contributor's row is changed.
+
+The central development-log checker predates SELF support and requires a literal
+issue token. The new entry uses #4313 and the verified implementation SHA
+58c2419a. Remaining checker findings concern pre-existing #3903/#3902 entries;
+their owners' records are preserved. This local checker limitation is not a
+failure of the chapter's mathematical or publication checks.
