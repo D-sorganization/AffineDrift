@@ -1431,8 +1431,10 @@ pass. Complete source and rendered reading, all 34 display equations, responsive
 themes and keyboard-accessible figures/tables are checked. Visual QA caught and
 fixed clipped transpose glyphs, font substitution and cramped table wrapping.
 See [launch-monitors-review.md](launch-monitors-review.md) for derivations,
-source-reading boundaries, failed attempts and validation limits. Protected
-delivery remains; 221 corpus sources still have only an index.
+source-reading boundaries, failed attempts and validation limits. Ready PR
+#4312 is pushed after all hooks pass. Only checkpoint 70f0d252 was replayed
+onto published main 6b6876c0 as 382daa9e, with an identical complete tree.
+Protected delivery remains; 221 corpus sources still have only an index.
 
 Swing #4307 / PR #4310 is now published as 6b6876c0. Main CI, textbook build
 and deployment pass; exact live artifact 10113084054 passes 956/956 checks

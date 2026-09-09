@@ -11,13 +11,23 @@ All 20 historical heading destinations are retained.
 Issue #4309 is a native child of #4009, part of corpus #4021 and measurement
 batch #4059. Issue-filing exemption is false. An unheld claim check preceded
 the codex lease, which expires September 9, 2026 at 16:53:26 UTC.
-Branch fix/4309-launch-monitor-estimation starts at swing PR #4310 head
-5499b61b. Replay only this issue's commits onto protected main after that
-parent merges; never replay the swing/brain ancestors.
+Branch fix/4309-launch-monitor-estimation originally started at swing PR
+#4310 head 5499b61b. Reviewed checkpoint 70f0d252 is retained on
+checkpoint/launch-4309-reviewed-70f0d252. Only that issue commit was replayed
+onto published main 6b6876c0, producing 382daa9e with an identical complete
+tree. No swing/brain ancestors were replayed.
 
 The complete manuscript, derivation checks and local publication QA are finished.
-Protected PR delivery remains. This article's local completion does not establish
-completion of the other corpus sources.
+Ready PR #4312 is pushed, references #4309 and carries agent:codex. All commit
+and push hooks pass, including Bandit and unit tests. SPEC.md has exactly one
+row keyed to this PR. Protected CI/review, merge and production verification
+remain. This article's local completion does not establish completion of the
+other corpus sources.
+
+The first replay attempt stopped because Git reported an unstaged handoff file
+despite an empty content diff. The working file and HEAD normalized to the same
+blob 828243d38a00c8a111fcc4420ecdc5e112f03172. Restaging that identical
+file refreshed the index without changing content; replay then succeeded.
 
 ## Editorial Argument
 
