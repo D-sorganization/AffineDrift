@@ -51,25 +51,75 @@
   word-break: break-all;
 }
 
-#rc-app { --rc-error: #991b1b; --rc-success: #166534; }
-[data-theme="dark"] #rc-app { --rc-error: #fca5a5; --rc-success: #86efac; }
-#rc-app .rc-main-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 1.25rem; }
-#rc-app .rc-panel { min-width: 0; }
-#rc-app input[type="text"] { color: var(--text-primary); background: var(--bg-primary); }
-#rc-app #rc-status { border: 1px solid currentColor; }
-#rc-status[data-valid="false"] { color: var(--rc-error); }
-#rc-status[data-valid="true"] { color: var(--rc-success); }
-#rc-app #rc-formula-text { white-space: pre-wrap; overflow-wrap: anywhere; }
-#rc-app #rc-formula-content { max-width: 100%; box-sizing: border-box; }
-#rc-toolbar { flex-wrap: wrap; }
+#rc-app {
+  --rc-error: #991b1b;
+  --rc-success: #166534;
+}
+
+[data-theme="dark"] #rc-app {
+  --rc-error: #fca5a5;
+  --rc-success: #86efac;
+}
+
+#rc-app .rc-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+#rc-app .rc-panel {
+  min-width: 0;
+}
+
+#rc-app input[type="text"] {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+#rc-app #rc-status {
+  border: 1px solid currentColor;
+}
+
+#rc-status[data-valid="false"] {
+  color: var(--rc-error);
+}
+
+#rc-status[data-valid="true"] {
+  color: var(--rc-success);
+}
+
+#rc-app #rc-formula-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+#rc-app #rc-formula-content {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#rc-toolbar {
+  flex-wrap: wrap;
+}
+
 #quarto-document-content table,
 #quarto-document-content table th,
 #quarto-document-content table td {
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
-#quarto-document-content p { max-width: 80ch; }
-@media (max-width: 760px) {
-  #rc-app .rc-main-grid { grid-template-columns: minmax(0,1fr); }
-  #rc-app #rc-canvas { height: 320px; }
+
+#quarto-document-content p {
+  max-width: 80ch;
 }
+
+@media (max-width: 760px) {
+  #rc-app .rc-main-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #rc-app #rc-canvas {
+    height: 320px;
+  }
+}
+
