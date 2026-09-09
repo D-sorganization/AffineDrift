@@ -44,7 +44,7 @@ jobs:
 
       - name: Site gate (cross-page links, related coverage, orphans, categories)
         run: |
-          python3 -m pip install pyyaml
+          python3 -m pip install pyyaml pydantic
           PYTHONPATH=. python3 scripts/link-checker.py --site-gate --root .
 
       - name: Check external URLs
