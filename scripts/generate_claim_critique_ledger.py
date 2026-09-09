@@ -19,7 +19,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_LEDGER = ROOT / "data/trust/claim_critique_ledger.json"
-STATUS_DIR = "critiques/_generated"
+STATUS_DIR = "critiques"
 DEFAULT_SCHEMA = ROOT / "schemas/claim-critique-ledger-v1.schema.json"
 DEFAULT_CLAIMS = ROOT / "data/trust/claim_registry.json"
 
