@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4324 · Motion Capture, Uncertainty and Scientific Interpretation
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4324 (epic #4009; corpus #4021)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4325 (open)
 - **Branch:** `fix/4324-motion-capture-rigor`
 - **Paths:** `articles/technology-motion-capture.qmd`, `tests/test_motion_capture_rigor.py`, `docs/development/technical-review/motion-capture-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`2e0fe28ffac9f94c514ec052f434812a467a178a`, parent plus uncommitted correction; full regression and final publication checks)
+- **Last verified:** 2026-09-09 (`b1a4a030a03044158aea1af747782d53d913c02a`, implementation; full regression and final publication checks)
 - **Summary:** Complete article review connects camera geometry, anatomy, timing, conventions and correlated uncertainty to defensible golf-mechanics inference. Bounded primary claims replace categorical accuracy and energy assertions. Root 5,097 passes, 79.19% coverage; final focused 19, content 130, static 34, style/type/link checks and complete bounded web QA pass. Native Quarto explanation expands visibly.
-- **Next step:** Commit the verified correction and open its protected PR.
+- **Next step:** Verify protected checks and exact production for PR #4325.
 
 ### DL-#4322 · Rotation Conventions, Stable Conversion and Golf Interpretation
 

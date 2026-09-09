@@ -326,4 +326,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-09 | #4319 | Correct paired spatial-algebra, physical-inertia and recursive-dynamics derivations; add independent energy checks, shared routines, two figures and fifteen worked answers. |
 | 2026-09-09 | #4321 | Correct paired energy-transfer, segment/interface power, metric cancellation, moving-constraint, lag and collision ledgers with two reproducible figures and six independently verified worked answers. |
 | 2026-09-09 | #4323 | Correct rotation conversion singularities, frame/quaternion conventions, input validity and golf interpretation with tested Python/browser implementations and complete responsive web review. |
-| 2026-09-09 | #4324 | Correct motion-capture geometry, timing, anatomical inference, correlated uncertainty and scientific interpretation with verified primary claims and independently checked examples. |
+| 2026-09-09 | #4325 | Correct motion-capture geometry, timing, anatomical inference, correlated uncertainty and scientific interpretation with verified primary claims and independently checked examples. |

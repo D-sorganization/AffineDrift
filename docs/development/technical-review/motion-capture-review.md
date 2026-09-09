@@ -7,7 +7,7 @@ Branch: fix/4324-motion-capture-rigor, worktree
 C:/Users/diete/Repositories/AffineDrift-technical-review. Initial parent is
 2e0fe28ffac9f94c514ec052f434812a467a178a. Rotation PR #4323 merged as
 625b0fc4ff1135eaef3bf81b0852089f4129c1f1; its production checks are running.
-PR: not created. The original 333-line, indexed 6,174-word
+PR: https://github.com/D-sorganization/AffineDrift/pull/4325 (open). The original 333-line, indexed 6,174-word
 articles/technology-motion-capture.qmd was read completely before correction.
 The camera-selection companion is outside this complete-review scope.
 
@@ -163,3 +163,14 @@ only this issue's commits after2e0fe28f onto the resulting main state before
 first push. Its remote branch gained
 ba7e7b1d (a formatting-only CSS commit) from another actor; preserve it through
 the parent merge. PR creation,protected checks and exact publication remain.
+
+## Protected Delivery Checkpoint
+
+Implementation6c004373 was replayed alone after2e0fe28f onto rotation squash
+625b0fc4, producing b1a4a030a03044158aea1af747782d53d913c02a before first push.
+The parent-tree difference was inspected: only rotation-converter.css formatting
+changed, and that peer change is preserved. The first rebase attempt stopped
+on an empty-diff handoff index mismatch; an index refresh resolved it without
+altering content. No force push or hook bypass was used. All normal commit and
+push hooks pass. Full PR4325 is open with Fixes#4324 and agent/scientific labels.
+The SPEC row is keyed once to4325. Protected checks and exact publication remain.
