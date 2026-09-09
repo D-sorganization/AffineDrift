@@ -44,7 +44,8 @@ def test_prune_internal_deploy_artifacts_removes_excluded_html_trees(tmp_path: P
     public = docs / "articles/theory-part1.html"
     draft = docs / "articles/tangent-hyperplane-articles/Drafts_Original_Articles/draft.html"
     retired = docs / "articles/tangent-hyperplane-contraction/index.html"
-    for path in (public, draft, retired):
+    wrist_claude = docs / "content/wrist-as-universal-joint/Wrist_Universal_Claude.html"
+    for path in (public, draft, retired, wrist_claude):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("<h1>Page</h1>", encoding="utf-8")
 
@@ -53,7 +54,12 @@ def test_prune_internal_deploy_artifacts_removes_excluded_html_trees(tmp_path: P
     assert public.is_file()
     assert not draft.exists()
     assert not retired.exists()
-    assert {path.name for path in deleted} == {"draft.html", "index.html"}
+    assert not wrist_claude.exists()
+    assert {path.name for path in deleted} == {
+        "draft.html",
+        "index.html",
+        "Wrist_Universal_Claude.html",
+    }
 
 
 def test_strip_legacy_math_polyfill_preserves_local_runtime_gate(tmp_path: Path) -> None:

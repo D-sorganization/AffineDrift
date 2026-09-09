@@ -18,7 +18,7 @@ from typing import Any
 from bs4 import BeautifulSoup, Tag
 
 MANIFEST_SCHEMA_VERSION = "affinedrift/public-site-manifest/v1"
-IGNORED_HTML_DIRECTORIES = frozenset({"coverage", "lcov-report", "site_libs"})
+IGNORED_HTML_DIRECTORIES = frozenset({"content", "coverage", "lcov-report", "site_libs", "src"})
 EVERY_PAGE_VIEWPORTS = (
     {"id": "mobile", "width": 390, "height": 844},
     {"id": "desktop", "width": 1440, "height": 900},

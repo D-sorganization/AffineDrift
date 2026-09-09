@@ -40,6 +40,8 @@ def test_build_manifest_classifies_and_sorts_every_public_html_page(tmp_path: Pa
     )
     _write_page(docs / "404.html", title="Not Found", h1="Page Not Found")
     _write_page(docs / "site_libs/quarto-nav/help.html", title="Support", h1="Support")
+    _write_page(docs / "src/tools/simulator.html", title="Simulator", h1="Simulator")
+    _write_page(docs / "content/auxiliary.html", title="Auxiliary", h1="Auxiliary")
 
     manifest = build_manifest(
         docs,
