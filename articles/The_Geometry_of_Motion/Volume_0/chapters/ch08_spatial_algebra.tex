@@ -1,801 +1,401 @@
-% ==========================================================================
-%  Chapter 8: Spatial Vector Algebra and Inertia
-% ==========================================================================
 \chapter{Spatial Vector Algebra and Inertia}
 \label{ch:spatial_algebra}
 
-\epigraph{%
-  Why manage six tiny numbers loosely floating in space when you can forge them into an unbreakable, 6-dimensional spear?
-}{}
+\section{The Physical Question and the Coordinate Contract}
+\label{laymans:context_box}
 
-\begin{laymansbox}{Context \& Use Case: Unifying Translation and Rotation}{context_box}
-\textbf{The Math You Will See:} We introduce \textbf{Spatial Vector Algebra}, defining the $6 \times 6$ \textbf{Spatial Cross Product} ($[\mathcal{V} \times]$), the \textbf{Spatial Inertia Matrix} ($\mathcal{I}$), and their role in transforming forces and accelerations across frames.
+A golfer's hand both translates and rotates. A force at the grip can change linear momentum and angular momentum about a shoulder, while a couple changes angular momentum without adding a resultant force. These are connected effects of one mechanical interaction. Spatial algebra packages them so that changing the reporting frame does not change predicted power, kinetic energy or motion. The packaging does not remove the need to specify the body, the reference point, the coordinate axes, the loads and the approximation being made.
 
-\textbf{Why We Need It:} In classical 3D mechanics, linear motion ($F = ma$) and angular motion ($\boldsymbol{\tau} = \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times \mathbf{I}\boldsymbol{\omega}$) are computed separately, leading to a tangled web of cross products and messy offsets when bodies are connected together. Spatial Algebra fuses them. A "Spatial Vector" describes pushing and turning simultaneously. By doing math in 6D, the complex gyroscopic and Coriolis forces of a multi-joint robot swinging through space are resolved with a single matrix multiplication.
+Throughout this chapter, motion is angular-first, $\mathcal V=(\boldsymbol\omega,\mathbf v)^T$, and force is moment-first, $\mathcal F=(\mathbf n,\mathbf f)^T$. The blocks have different units: angular velocity in rad/s, linear velocity in m/s, moment in N m and force in N. Their six-dimensional Euclidean lengths are therefore not intrinsic physical magnitudes. A norm or condition number that mixes these blocks needs an explicit length scale and a stated purpose.
 
-\textbf{All Variables Defined:} $\mathcal{V}$ is a spatial velocity (Twist), $\mathcal{F}$ is a spatial force (Wrench), and $\mathcal{I}$ is the combined 6D mass/inertia tensor.
-\end{laymansbox}
+Write $[\mathbf a]\mathbf b=\mathbf a\times\mathbf b$. A pose $T_{AB}=(R_{AB},\mathbf p_{AB})$ maps point coordinates in B into A: $\mathbf r_A=R_{AB}\mathbf r_B+\mathbf p_{AB}$. Here $\mathbf p_{AB}$ locates B's origin in A. Both rotation and offset are part of the convention. We will use two motion maps: $A=\operatorname{Ad}_{T_{AB}}$ maps B to A, whereas $X_i$ in a tree maps parent coordinates to child coordinates. Naming the direction prevents an inverse or transpose from becoming an apparently harmless implementation choice.
 
-\section{Historical Context: From Plücker to Featherstone}
+\section[Historical Context and the Role of the Representation]{Historical Context and the\\Role of the Representation}
 \label{sec:history_spatial_algebra}
 
-The roots of spatial algebra reach deep into classical geometry. In the 1860s, \textbf{Julius Plücker} studied lines in 3D space as geometric objects, discovering that a line can be represented as a 6-dimensional vector satisfying certain constraints. This \textbf{Plücker coordinate} representation remained mostly a curiosity in algebraic geometry for over a century.
+Line coordinates, screw theory and recursive dynamics provide complementary viewpoints. Pl\"ucker coordinates describe a line independently of a chosen point on it; screw theory adds coupled translation and rotation; spatial-vector methods organize the resulting mechanics into small, structured operations. Featherstone's textbook develops these operations and recursive algorithms; the accompanying software makes transform conventions inspectable. This chapter derives the identities and verifies them independently rather than treating a software name as evidence of a physical model's accuracy. See the selected references at the end.
 
-In 1900, Sir \textbf{Robert Stawell Ball} \cite{ball1900} developed the theory of ``screws''—geometric objects unifying rotation and translation—and showed that Plücker's coordinates naturally describe instantaneous screw motions. Ball's work connected to mechanics through the wrench (force + torque) dual to the twist (angular + linear velocity).
+The benefit is disciplined composition. A six-vector can carry a body's motion or its net loading, but a whole articulated system still needs joint kinematics, external loads and equations of motion. The golf swing is three-dimensional; a planar mechanism is an explicit teaching approximation. Matching a simulated club path does not independently validate tissue parameters, grip reactions or internal joint loading.
 
-However, the true synthesis came when \textbf{Roy Featherstone}, in the 1980s and 1990s, recognized that Ball's geometric screws and Plücker's algebraic coordinates could be married with Lie algebra to create a unified computational framework for multi-body dynamics. Featherstone's \textbf{Spatial Vector Algebra} \cite{Featherstone2008} standardized the representation, showed how to compose inertias of linked chains (composite rigid body algorithm), and proved that careful use of spatial algebra enables $O(N)$ inverse dynamics.
+\section{Pl\"ucker Coordinates and Screw Axes}
+\label{sec:plucker}
+\label{def:plucker_def}
 
-Modern robotics and physics engines (MuJoCo \cite{todorov2012}, Drake, Pinocchio) are built entirely on Featherstone's spatial framework. The companion platform accompanying this textbook builds on the same foundation.
+For a finite line, choose a nonzero direction $\mathbf d$ and any point $\mathbf r$ on the line. Its homogeneous coordinates are $(\mathbf d,\mathbf m)$ with $\mathbf m=\mathbf r\times\mathbf d$. Replacing $\mathbf r$ by $\mathbf r+s\mathbf d$ leaves $\mathbf m$ unchanged, and
+\begin{equation}
+\mathbf d^T\mathbf m=0,\qquad
+(\mathbf d,\mathbf m)\sim(\lambda\mathbf d,\lambda\mathbf m),\quad\lambda\ne0.
+\end{equation}
+Thus equal geometric lines need proportional coordinates, not identical six numerical entries. Unit normalization removes the scale magnitude; simultaneous sign reversal still represents the same unoriented line. An oriented unit line retains the direction sign. These are finite Euclidean lines within the projective representation, not every point of projective five-space.
 
-\begin{figure}[htb]
+A general twist is not a zero-pitch line coordinate. If $\boldsymbol\omega\ne0$, define
+\begin{equation}
+h=\frac{\boldsymbol\omega^T\mathbf v}{\|\boldsymbol\omega\|^2},\qquad
+\mathbf r_\perp=\frac{\boldsymbol\omega\times\mathbf v}{\|\boldsymbol\omega\|^2},\qquad
+\mathbf v=\mathbf r_\perp\times\boldsymbol\omega+h\boldsymbol\omega.
+\end{equation}
+The screw axis passes through $\mathbf r_\perp$ parallel to $\boldsymbol\omega$, and points on it have velocity $h\boldsymbol\omega$. Pitch $h$ has length per radian. The corresponding line coordinates use the perpendicular part $\mathbf v-h\boldsymbol\omega$. Only zero pitch gives $\boldsymbol\omega^T\mathbf v=0$. Pure translation has $\boldsymbol\omega=0$ and no unique finite rotation axis; the zero twist determines no axis.
+
+For a wrench with $\mathbf f\ne0$, $\mathbf r_\perp=\mathbf f\times\mathbf n/\|\mathbf f\|^2$ locates its central axis. The residual moment there is $h_F\mathbf f$, where $h_F=\mathbf f^T\mathbf n/\|\mathbf f\|^2$. A single applied force has zero residual couple and satisfies $\mathbf f^T\mathbf n=0$. A general wrench need not. A pure couple has $\mathbf f=0$ and can be reported about any origin without changing its moment. Motion and force occupy dual vector spaces; neither the units nor their coordinate-transformation rules are interchangeable.
+
+\section{Twists, Wrenches and Invariant Power}
+\label{sec:spatial_vectors}
+\label{def:twist_def}
+\label{def:wrench_def}
+
+In one coordinate frame, a rigid velocity field is $\mathbf v(\mathbf r)=\mathbf v+\boldsymbol\omega\times\mathbf r$. If the reporting origin is attached to the body, $\mathbf v$ is that body's origin velocity relative to the inertial observer, expressed in the reporting axes. If the origin is elsewhere, it is the value of the body's extended rigid velocity field at that location. It is not necessarily the velocity of the coordinate frame itself. In a fixed world frame with body-origin position $\mathbf p$, the spatial-twist linear block is $\dot{\mathbf p}-\boldsymbol\omega\times\mathbf p$, not simply $\dot{\mathbf p}$.
+
+For forces $\mathbf f_k$ applied at offsets $\mathbf r_k$ and free couples $\boldsymbol\tau_k$, define $\mathbf f=\sum_k\mathbf f_k$ and $\mathbf n=\sum_k(\mathbf r_k\times\mathbf f_k+\boldsymbol\tau_k)$. The moment block already includes the force moment. Adding $\mathbf r\times\mathbf f$ to it a second time double-counts that contribution. Summing the powers of the applied loads gives
+\begin{equation}
+P=\sum_k\left[\mathbf f_k^T(\mathbf v+\boldsymbol\omega\times\mathbf r_k)+\boldsymbol\tau_k^T\boldsymbol\omega\right]
+=\mathcal F^T\mathcal V.
+\end{equation}
+This is the actual power when the forces act on the specified rigid velocity field. A deformable contact patch or sliding interface can require separate local velocities.
+
+Using the declared pose direction,
+\begin{equation}
+A=\operatorname{Ad}_{T_{AB}}=
+\begin{bmatrix}R&0\\{}[\mathbf p]R&R\end{bmatrix},\qquad
+\mathcal V_A=A\mathcal V_B,\qquad
+\mathcal F_A=A^{-T}\mathcal F_B.
+\end{equation}
+The last equation follows from requiring $\mathcal F_A^T\mathcal V_A=\mathcal F_B^T\mathcal V_B$ for every motion. It gives $\mathbf f_A=R\mathbf f_B$ and $\mathbf n_A=R\mathbf n_B+\mathbf p\times R\mathbf f_B$. A force sensor reading cannot be compared with a shoulder moment until both the axes and the moment reference point are reconciled.
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.0]
-  % Coordinate frame
-  \draw[->,thick,black] (0,0,0) -- (2,0,0) node[anchor=north] {$x$};
-  \draw[->,thick,black] (0,0,0) -- (0,2,0) node[anchor=east] {$y$};
-  \draw[->,thick,black] (0,0,0) -- (0,0,2) node[anchor=south] {$z$};
-
-  % Force vector at center
-  \draw[->,thick,red,scale=1.2] (0,0,0) -- (1.2,0.8,0) node[anchor=west] {$\mathbf{f}$ (linear force)};
-
-  % Torque/moment vector
-  \draw[->,thick,blue,scale=1.2] (0,0,0) -- (0,0,1.5) node[anchor=south] {$\boldsymbol{\tau}$ (torque/moment)};
-
-  % Spatial wrench = [f; tau]
-  \node[draw,rectangle,minimum width=2cm,minimum height=1cm] at (3.5,0.5) {Wrench $\mathcal{F} = \begin{bmatrix} \mathbf{f} \\ \boldsymbol{\tau} \end{bmatrix}$};
-
-  % Similarly for velocity
-  \node at (0,-1.5,-0.5) {Spatial vectors unify translation (linear) and rotation (angular) quantities};
-\end{tikzpicture}
-\caption{A Spatial Wrench Is a 6-Dimensional Vector Combining Linear Forces and Torques (Moments). Similarly, Spatial Twists Combine Linear and Angular Velocities. This Unification Allows Forces and Velocities to Be Manipulated Using Unified Algebraic Operations.}
+\includegraphics[width=\linewidth]{../figures/spatial_wrench_power.pdf}
+\caption{Changing the Reporting Origin Changes the Moment and the Twist's Linear Block. Both Pairings Give the Same 20 W for This Rigid Motion.}
 \label{fig:spatial_wrench}
 \end{figure}
 
-\section{Plücker Coordinates and Lines in 3D}
-\label{sec:plucker}
-
-Before we discuss spatial vectors as physical quantities, it helps to understand their geometric origin: the Plücker representation of lines.
-
-\begin{definition}{Plücker Coordinates of a Line}{plucker_def}
-A line $\ell$ in 3D can be represented as a 6-vector in \textbf{Plücker coordinates}:
-\begin{equation}
-    \mathbf{L} = \begin{bmatrix} \mathbf{d} \\ \mathbf{m} \end{bmatrix} \in \mathbb{P}^5
-\end{equation}
-where:
-\begin{itemize}
-  \item $\mathbf{d}$ is the direction vector of the line (unit vector).
-  \item $\mathbf{m} = \mathbf{r} \times \mathbf{d}$ is the moment (or Plücker moment), where $\mathbf{r}$ is any point on the line.
-\end{itemize}
-
-The Plücker coordinates satisfy the \textbf{Plücker relation}:
-\begin{equation}
-    \mathbf{d}^T \mathbf{m} = 0
-\end{equation}
-This constraint encodes the fact that the direction and moment are related geometrically.
-
-\textbf{Geometric Insight}: The direction $\mathbf{d}$ specifies the "orientation" of the line; the moment $\mathbf{m}$ encodes the line's location in space. Two lines are identical if and only if they have the same Plücker coordinates.
-\end{definition}
-
-\subsection{Connection to Spatial Vectors}
-
-A spatial velocity (Twist) $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$ can be viewed as the instantaneous motion of a rigid body. The axis of this motion is a screw (a line with a pitch), and the Plücker coordinates of that screw are exactly $(\boldsymbol{\omega}, \mathbf{v})$ (up to scaling).
-
-Similarly, a spatial force (Wrench) $\mathcal{F} = (\mathbf{m}, \mathbf{f})$ is the dual concept: it represents a force $\mathbf{f}$ applied at some point in space, creating a torque $\mathbf{m}$ about the origin. The Plücker relationship $\mathbf{f}^T \mathbf{m} = 0$ holds when the force and moment arise from a single applied force (they lie on the same screw axis).
-
-\section{Spatial Vectors: Twists and Wrenches}
-\label{sec:spatial_vectors}
-
-In Chapter~\ref{ch:exponential_coordinates}, we introduced spatial vectors as elements of the Lie algebras $\se(3)$ and $\se^*(3)$. Here we formalize them as vectors and define their algebra.
-
-\begin{definition}{Spatial Velocity (Twist)}{twist_def}
-A spatial velocity or Twist is a 6D vector:
-\begin{equation}
-    \mathcal{V} = \begin{bmatrix} \boldsymbol{\omega} \\ \mathbf{v} \end{bmatrix} \in \se(3) \cong \Reals^6
-\end{equation}
-where:
-\begin{itemize}
-  \item $\boldsymbol{\omega} \in \Reals^3$ is the angular velocity.
-  \item $\mathbf{v} \in \Reals^3$ is the linear velocity of the origin of the reference frame.
-\end{itemize}
-
-\textbf{Physical Interpretation}: A point at position $\mathbf{r}$ relative to the origin has absolute velocity $\mathbf{v} + \boldsymbol{\omega} \times \mathbf{r}$.
-\end{definition}
-
-\begin{definition}{Spatial Force (Wrench)}{wrench_def}
-A spatial force or Wrench is a 6D vector:
-\begin{equation}
-    \mathcal{F} = \begin{bmatrix} \mathbf{m} \\ \mathbf{f} \end{bmatrix} \in \se^*(3) \cong \Reals^6
-\end{equation}
-where:
-\begin{itemize}
-  \item $\mathbf{m} \in \Reals^3$ is the moment (torque) about the origin.
-  \item $\mathbf{f} \in \Reals^3$ is the linear force.
-\end{itemize}
-
-\textbf{Physical Interpretation}: A force $\mathbf{f}$ applied at a point $\mathbf{r}$ creates a moment $\mathbf{m} + \mathbf{r} \times \mathbf{f}$ about the origin.
-\end{definition}
-
-\section{The Spatial Cross Product}
+\section{The Two Spatial Cross Products}
 \label{sec:spatial_cross}
+\label{def:motion_cross_def}
 
-In classical 3D mechanics, cross products appear everywhere. When a body rotates with angular velocity $\boldsymbol{\omega}$, the velocity of a point at offset $\mathbf{r}$ includes the term $\boldsymbol{\omega} \times \mathbf{r}$. When a force $\mathbf{f}$ is applied at point $\mathbf{r}$, it creates a torque $\mathbf{r} \times \mathbf{f}$.
-
-Spatial Algebra extends the cross product to 6D, but because Twists and Wrenches live in dual spaces (with different transformation laws), there are actually \textit{two} distinct spatial cross products.
-
-\subsection{Motion Cross Product}
-
-The \textbf{motion cross product} acts on Twists and related vectors (velocities, accelerations). If a frame has spatial velocity $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, a point with position offset $\mathbf{r}$ has velocity $\mathbf{v} + \boldsymbol{\omega} \times \mathbf{r}$.
-
-We represent this as a matrix operator:
-
-\begin{definition}{Motion Cross Product Operator}{motion_cross_def}
-For a spatial velocity Twist $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, the motion cross product operator is:
+For two motion vectors $\mathcal V=(\boldsymbol\omega,\mathbf v)$ and $\mathcal W=(\boldsymbol\eta,\mathbf w)$, their Lie bracket is represented by
 \begin{equation}
-    [\mathcal{V} \times] = \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{0}_{3 \times 3} \\ [\mathbf{v}] & [\boldsymbol{\omega}] \end{bmatrix} \in \Reals^{6 \times 6}
-    \label{eq:motion_cross_matrix}
+[\mathcal V\times]=\operatorname{ad}_{\mathcal V}
+=\begin{bmatrix}[\boldsymbol\omega]&0\\{}[\mathbf v]&[\boldsymbol\omega]\end{bmatrix}.
+\label{eq:motion_cross_matrix}
 \end{equation}
-where $[\boldsymbol{\omega}]$ and $[\mathbf{v}]$ are the standard $3 \times 3$ skew-symmetric cross product matrices.
-
-\textbf{Action on a spatial velocity}: If $\mathcal{W} = (\boldsymbol{\alpha}, \mathbf{a})$ is another spatial quantity, then:
+Its action is
 \begin{equation}
-    [\mathcal{V} \times] \mathcal{W} = \begin{bmatrix} \boldsymbol{\omega} \times \boldsymbol{\alpha} \\ \mathbf{v} \times \boldsymbol{\alpha} + \boldsymbol{\omega} \times \mathbf{a} \end{bmatrix}
-    \label{eq:motion_cross_action}
+[\mathcal V\times]\mathcal W=
+\begin{bmatrix}\boldsymbol\omega\times\boldsymbol\eta\\
+\mathbf v\times\boldsymbol\eta+\boldsymbol\omega\times\mathbf w\end{bmatrix}.
+\label{eq:motion_cross_action}
 \end{equation}
-\end{definition}
+The motion operator is not generally a skew-symmetric matrix under the ordinary six-dimensional dot product. It is also not an operation that takes the position of a point as its six-vector argument. In particular, $[\mathcal V\times]\mathcal V=0$ by antisymmetry, but a body with constant angular speed can have substantial centripetal acceleration.
 
-\subsection{Force Cross Product}
-
-Wrenches are the dual to Twists. Because of this duality, when we apply the adjoint transformation to a wrench, it uses a different matrix. Correspondingly, the force cross product is defined differently:
-
-\begin{definition}{Force Cross Product Operator}{force_cross_def}
-The force cross product (coadjoint cross product) for a spatial velocity $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$ acting on Wrenches is:
+\label{def:force_cross_def}
+The associated force operator is defined by negative transpose:
 \begin{equation}
-    [\mathcal{V} \times^*] = -[\mathcal{V} \times]^T = \begin{bmatrix} [\boldsymbol{\omega}] & [\mathbf{v}] \\ \mathbf{0}_{3 \times 3} & [\boldsymbol{\omega}] \end{bmatrix}
-    \label{eq:force_cross_matrix}
+[\mathcal V\times^*]=-[\mathcal V\times]^T
+=\begin{bmatrix}[\boldsymbol\omega]&[\mathbf v]\\0&[\boldsymbol\omega]\end{bmatrix}.
+\label{eq:force_cross_matrix}
 \end{equation}
-
-\textbf{Action on a spatial force}: If $\mathcal{G} = (\mathbf{m}, \mathbf{f})$ is a Wrench, then:
+For $\mathcal G=(\mathbf n,\mathbf f)$,
 \begin{equation}
-    [\mathcal{V} \times^*] \mathcal{G} = \begin{bmatrix} \boldsymbol{\omega} \times \mathbf{m} + \mathbf{v} \times \mathbf{f} \\ \boldsymbol{\omega} \times \mathbf{f} \end{bmatrix}
-    \label{eq:force_cross_action}
+[\mathcal V\times^*]\mathcal G=
+\begin{bmatrix}\boldsymbol\omega\times\mathbf n+\mathbf v\times\mathbf f\\
+\boldsymbol\omega\times\mathbf f\end{bmatrix}.
+\label{eq:force_cross_action}
 \end{equation}
-\end{definition}
-
-\subsection{Why Two Cross Products?}
-
-The reason for the asymmetry is that power (work rate) must be invariant:
+\label{princ:duality_principle}
+Consequently the differential duality identity has a minus sign:
 \begin{equation}
-    \text{Power} = \mathcal{F}^T \mathcal{V}
+\mathcal G^T[\mathcal V\times]\mathcal W
+=-([\mathcal V\times^*]\mathcal G)^T\mathcal W.
 \end{equation}
+The two contributions cancel when differentiating an invariant pairing. This is consistent with finite transforms preserving power; it does not mean the two individual terms are equal. For $\mathcal V=(0,0,1,1,0,0)$, $\mathcal G=(0.1,0.2,0.3,1,2,3)$ and $\mathcal W=(0.5,0.5,0.5,0.1,0.1,0.1)$, the two unnegated expressions evaluate to $0.65$ and $-0.65$ in compatible units.
 
-Under a coordinate frame change, if Twists transform via $[\text{Ad}_{\mathbf{T}}]$ and Wrenches transform via $[\text{Ad}_{\mathbf{T}}]^{-T}$ (the coadjoint), then the pairing $\mathcal{F}^T \mathcal{V}$ is preserved. The cross product operators must respect this dual structure.
+\label{princ:ad_vs_Ad}
+Uppercase $\operatorname{Ad}_T$ depends on a pose and re-expresses a vector. Lowercase $\operatorname{ad}_{\mathcal V}$ depends on a motion and generates its bracket action. In a recursive algorithm, one transports quantities between frames and the other supplies velocity-dependent terms. Their matrices have related structure but different inputs, units and uses.
 
-\begin{principle}{Duality of Motion and Force Cross Products}{duality_principle}
-The motion and force cross products are dual in the sense that:
-\begin{equation}
-    \mathcal{G}^T ([\mathcal{V} \times] \mathcal{W}) = ([\mathcal{V} \times^*] \mathcal{G})^T \mathcal{W}
-\end{equation}
-for any Twist $\mathcal{V}$, Twist-like vector $\mathcal{W}$, and Wrench $\mathcal{G}$. This ensures that the bilinear form (power) is preserved under transformations.
-\end{principle}
-
-\begin{principle}{$\text{Ad}$ vs.\ $\text{ad}$: Two Distinct Operators}{ad_vs_Ad}
-The notation in spatial algebra distinguishes two fundamentally different operators that are easily confused:
-\begin{itemize}
-  \item $[\text{Ad}_{\mathbf{T}}] \in \Reals^{6 \times 6}$: The \textbf{Adjoint} of a rigid body transform $\mathbf{T} \in \SE(3)$. This is a coordinate transformation that re-expresses a spatial velocity (or acceleration) measured in one frame into another frame. It depends on a \emph{pose} (position and orientation).
-  \item $[\text{ad}_{\mathcal{V}}] = [\mathcal{V} \times] \in \Reals^{6 \times 6}$: The \textbf{adjoint} (lowercase), also called the \emph{Lie bracket} or \emph{spatial motion cross product}. This maps a spatial velocity $\mathcal{V}$ to its cross-product operator, which computes Coriolis and centrifugal accelerations. It depends on a \emph{velocity}, not a pose.
-\end{itemize}
-In recursive dynamics algorithms such as the RNEA, both operators appear: $[\text{Ad}_{\mathbf{T}}]$ propagates velocities across frames (a coordinate change), while $[\text{ad}_{\mathcal{V}}] = [\mathcal{V} \times]$ computes the velocity-dependent acceleration terms (Coriolis). Confusing the two produces incorrect dynamics \cite{Featherstone2008, Murray1994}.
-\end{principle}
-
-\section{The Spatial Inertia Matrix}
+\section{Spatial Inertia From Kinetic Energy}
 \label{sec:spatial_inertia}
-
-Just as scalar mass $m$ resists linear acceleration ($F = ma$), and a $3 \times 3$ inertia tensor $\mathbf{I}_c$ resists angular acceleration ($\boldsymbol{\tau} = \mathbf{I}_c \boldsymbol{\alpha}$), Spatial Algebra unifies them into a single $6 \times 6$ \textbf{Spatial Inertia Matrix} $\mathcal{I}$.
-
-\subsection{Definition and Properties}
-
-\begin{definition}{Spatial Inertia Matrix}{spatial_inertia_matrix_def}
-For a rigid body with:
-\begin{itemize}
-  \item Mass $m$,
-  \item Center of mass (CoM) at position $\mathbf{c}$ relative to the reference frame origin,
-  \item Rotational inertia tensor $\mathbf{I}_c$ (about the CoM),
-\end{itemize}
-the Spatial Inertia Matrix expressed at the frame origin is:
-\begin{equation}
-    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}] & m[\mathbf{c}] \\ -m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
-    \label{eq:spatial_inertia_full}
-\end{equation}
-
-Using the identity $[\mathbf{c}][\mathbf{c}] = -\mathbf{c}\mathbf{c}^T + (\mathbf{c}^T\mathbf{c})\mathbf{I}_{3 \times 3}$, this can be rewritten as:
-\begin{equation}
-    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c + m(|\mathbf{c}|^2\mathbf{I}_{3 \times 3} - \mathbf{c}\mathbf{c}^T) & m[\mathbf{c}] \\ -m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
-    \label{eq:spatial_inertia_alt}
-\end{equation}
-
-When the reference frame origin is \emph{at} the center of mass ($\mathbf{c} = \mathbf{0}$), this simplifies to:
-\begin{equation}
-    \mathcal{I}_{\text{CoM}} = \begin{bmatrix} \mathbf{I}_c & \mathbf{0}_{3 \times 3} \\ \mathbf{0}_{3 \times 3} & m\mathbf{I}_{3 \times 3} \end{bmatrix}
-    \label{eq:spatial_inertia_cocom}
-\end{equation}
-\end{definition}
-
-\subsection{Symmetric and Positive Definite}
-
-\begin{theorem}{Spatial Inertia is SPD}{spatial_inertia_spd}
-The Spatial Inertia Matrix $\mathcal{I}$ is symmetric and positive definite.
-
-\textbf{Proof (Symmetry)}:
-Write the spatial inertia in standard form:
-\[
-  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}] \\ m[\mathbf{c}]^T & m\mathbf{I}_{3 \times 3} \end{bmatrix}.
-\]
-Since $[\mathbf{c}]$ is skew-symmetric ($[\mathbf{c}]^T = -[\mathbf{c}]$), each block is symmetric or correctly transposed:
-\begin{itemize}
-  \item Top-left block: $\mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T$ is symmetric (both $\mathbf{I}_c$ and the product $[\mathbf{c}][\mathbf{c}]^T$ are symmetric).
-  \item Off-diagonal blocks: The top-right block is $m[\mathbf{c}]$, and the bottom-left block is $m[\mathbf{c}]^T = -m[\mathbf{c}]$. Their transposes satisfy $(m[\mathbf{c}])^T = m[\mathbf{c}]^T$, confirming $\mathcal{I}^T = \mathcal{I}$.
-  \item Bottom-right block: $m\mathbf{I}_{3 \times 3}$ is trivially symmetric.
-\end{itemize}
-
-\textbf{Proof (Positive Definite)}:
-For any non-zero spatial vector $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, we compute:
-\[
-  \mathcal{V}^T \mathcal{I} \mathcal{V} = \boldsymbol{\omega}^T (\mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T) \boldsymbol{\omega} + 2m\boldsymbol{\omega}^T[\mathbf{c}]\mathbf{v} + m\mathbf{v}^T\mathbf{v}
-\]
-
-This can be rewritten as the rotational kinetic energy plus the translational kinetic energy:
-\[
-  \mathcal{V}^T \mathcal{I} \mathcal{V} = \boldsymbol{\omega}^T \mathbf{I}_c \boldsymbol{\omega} + m|\mathbf{v} + [\mathbf{c}]\boldsymbol{\omega}|^2
-\]
-
-Since $\mathbf{I}_c$ is positive definite (non-zero $\boldsymbol{\omega}$ implies $\boldsymbol{\omega}^T \mathbf{I}_c \boldsymbol{\omega} > 0$), the entire expression is positive whenever $\mathcal{V} \neq 0$.
-\end{theorem}
-
-\section{The Parallel Axis Theorem in 6D}
-\label{sec:parallel_axis_6d}
-
-\subsection{Derivation From First Principles}
-
-The classical parallel axis theorem states that if the inertia tensor about the center of mass is $\mathbf{I}_c$, then the inertia tensor about a point at distance $\mathbf{c}$ from the CoM is:
-\[
-  \mathbf{I}_{\text{origin}} = \mathbf{I}_c + m(c^2 \mathbf{I}_{3 \times 3} - \mathbf{c}\mathbf{c}^T)
-\]
-
-In spatial form, the parallel axis theorem extends to both translational and rotational terms. If we define:
-\[
-  \mathcal{I}_0 = \text{Spatial inertia at origin}
-\]
-\[
-  \mathcal{I}_c = \text{Spatial inertia at CoM}
-\]
-
-then the relationship is:
-
-\begin{theorem}{Parallel Axis Theorem in 6D}{parallel_axis_6d}
-\begin{equation}
-    \mathcal{I}_0 = \begin{bmatrix} \mathbf{R} & \mathbf{0} \\ \mathbf{0} & \mathbf{R} \end{bmatrix} \begin{bmatrix} \mathbf{I}_c & \mathbf{0} \\ \mathbf{0} & m\mathbf{I}_{3 \times 3} \end{bmatrix} \begin{bmatrix} \mathbf{R}^T & \mathbf{0} \\ \mathbf{0} & \mathbf{R}^T \end{bmatrix} + \begin{bmatrix} -m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & \mathbf{0} \end{bmatrix}
-    \label{eq:parallel_axis_6d}
-\end{equation}
-
-When $\mathbf{R} = \mathbf{I}$ (same orientation):
-\begin{equation}
-    \mathcal{I}_0 = \begin{bmatrix} \mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}] \\ m[\mathbf{c}]^T & m\mathbf{I}_{3 \times 3} \end{bmatrix}
-\end{equation}
-
-\textbf{Interpretation}: The top-left block contains the parallel axis correction to rotational inertia; the off-diagonals encode the coupling between angular and linear motion due to the offset CoM.
-\end{theorem}
-
-\section{Composite Rigid Body Algorithm}
-\label{sec:composite_rigid_body}
-
-In Chapter 7, we computed inverse dynamics using the RNEA. An alternative and equally important algorithm is the \textbf{Composite Rigid Body Algorithm (CRB)}, which builds up the spatial inertia of linked chains recursively.
-
-\subsection{Concept: Bottom-Up Inertia Assembly}
-
-Instead of computing torques directly, the CRB first assembles the inertia of composite structures: e.g., the forearm link is rigidly attached to the hand, so the hand's inertia is added to the forearm's. By recursively building composite inertias from tips to base, we can pre-compute the total mass matrix $\mathbf{M}(q)$ in $O(N)$ time.
-
-\begin{algorithm}{Composite Rigid Body Algorithm}{alg_crb}
-\begin{lstlisting}
-function CompositeRigidBody(links, joints, lambda):
-    // Input: link inertias, joint structure
-    // Output: composite inertias I_c for each link
-
-    I_c = [None] * (N+1)         // Will store composite inertia of link i and all descendants
-
-    for i <-N down to 1:         // Traverse from tips to base
-        I_c[i] <-I[i]            // Start with link i's own inertia
-
-        for j in children[i]:
-            // Add inertia of child j to link i
-            T_j_to_i <-relative transform from j to i
-            Ad_j_to_i <-Adjoint of T_j_to_i
-            I_c[i] <-I_c[i] + Ad_j_to_i^T * I_c[j] * Ad_j_to_i
-
-    return I_c
-\end{lstlisting}
-\end{algorithm}
-
-\subsection{Use in Computing the Mass Matrix}
-
-Once the composite inertias are assembled, the mass matrix can be extracted via:
-\[
-  \mathbf{M}_{ij}(q) = \mathcal{S}_i^T [\text{Ad}_{\mathbf{T}_{i,j}}]^{-T} \mathcal{I}_{c,j}(q) [\text{Ad}_{\mathbf{T}_{i,j}}]^{-1} \mathcal{S}_j
-\]
-
-where $\mathcal{I}_{c,j}$ is the composite inertia of link $j$ and all its descendants.
-
-\begin{theorem}{CRB Complexity}{crb_complexity}
-The Composite Rigid Body Algorithm computes the mass matrix $\mathbf{M}(q)$ in $O(N^2)$ time (because there are $N^2$ entries), but the inertia assembly itself (bottom-up recursion) is $O(N)$. Once assembled, forward-dynamics calculations (solving for accelerations given forces) are $O(N)$ via matrix multiplication.
-\end{theorem}
-
-\section{Spatial Algebra for Planar Systems}
-\label{sec:planar_spatial}
-
-For systems constrained to a plane (e.g., 2D manipulation, golf swings), we can work with reduced spatial representations.
-
-\subsection{3D Vectors for 2D Motion}
-
-A planar motion has:
-\begin{itemize}
-  \item Angular velocity $\omega$ (a scalar, rotation about the $z$-axis).
-  \item Linear velocity $\mathbf{v} = (v_x, v_y) \in \Reals^2$.
-\end{itemize}
-
-We can embed this in a 3D twist:
-\[
-  \mathcal{V}_{\text{planar}} = (\omega, v_x, v_y)^T \in \Reals^3
-\]
-
-The motion cross product for planar motion simplifies:
-\[
-  [\mathcal{V} \times]_{\text{planar}} = \begin{bmatrix} 0 & -v_y & v_x \\ v_y & 0 & \omega \\ -v_x & -\omega & 0 \end{bmatrix}
-\]
-
-A planar spatial inertia matrix is $3 \times 3$:
-\[
-  \mathcal{I}_{\text{planar}} = \begin{bmatrix} I_z & 0 & 0 \\ 0 & m & 0 \\ 0 & 0 & m \end{bmatrix}
-\]
-when the CoM is at the origin. With offset $\mathbf{c} = (c_x, c_y)$:
-\[
-  \mathcal{I}_{\text{planar}} = \begin{bmatrix} I_z + m(c_x^2 + c_y^2) & mc_y & -mc_x \\ mc_y & m & 0 \\ -mc_x & 0 & m \end{bmatrix}
-\]
-
-\subsection{Computational Advantage}
-
-Working in 3D (instead of 6D) reduces memory and computation by a factor of 4, making planar mechanisms extremely fast to simulate.
-
-\section{Newton-Euler Equations in Spatial Form}
-\label{sec:spatial_newton_euler_full}
-
-The fundamental equations of dynamics in spatial form are elegant and reveal the unity of linear and angular motion.
-
-\subsection{Spatial Momentum and the Equation of Motion}
-
-The spatial momentum of a rigid body with spatial inertia $\mathcal{I}$ and spatial velocity $\mathcal{V}$ is:
-\begin{equation}
-    \mathcal{P} = \mathcal{I} \mathcal{V}
-    \label{eq:spatial_momentum}
-\end{equation}
-
-The equation of motion (Newton-Euler in spatial form) states that the time derivative of spatial momentum equals the applied wrench:
-\begin{equation}
-    \frac{d\mathcal{P}}{dt} = \mathcal{F}_{\text{ext}}
-    \label{eq:spatial_newton_euler_basic}
-\end{equation}
-
-However, because $\mathcal{I}$ itself may be time-varying (when expressed in a rotating frame), the full equation includes a bias term:
-\begin{equation}
-    \frac{d}{dt}(\mathcal{I} \mathcal{V}) = \mathcal{I} \dot{\mathcal{V}} + \dot{\mathcal{I}} \mathcal{V}
-    \label{eq:spatial_momentum_full}
-\end{equation}
-
-In a \emph{body-fixed frame} (rotating with the body), $\mathcal{I}$ is constant, but velocities are measured in the rotating frame, introducing the bias term $[\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})$:
-
-\begin{theorem}{Spatial Newton-Euler Equation}{spatial_ne_theorem}
-For a rigid body in a body-fixed frame, the equation of motion is:
-\begin{equation}
-    \mathcal{F} = \mathcal{I} \dot{\mathcal{V}} + [\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})
-    \label{eq:spatial_newton_euler_final}
-\end{equation}
-
-\textbf{Interpretation}:
-\begin{itemize}
-  \item First term: the inertial wrench (like $F = ma$ in 6D).
-  \item Second term: the "bias" or "gyroscopic" wrench, capturing Coriolis and centrifugal effects.
-\end{itemize}
-
-\textbf{Derivation}: In an inertial frame:
-\[
-  \mathcal{F}_{\text{inertial}} = \frac{d}{dt}(\mathcal{I}_{\text{inertial}} \mathcal{V}_{\text{inertial}})
-\]
-
-Transforming to a body-fixed frame using the adjoint, the time derivative picks up the Lie bracket (commutator) of spatial velocities, which manifests as $[\mathcal{V} \times]^*$.
-\end{theorem}
-
-\section{Connection to Dual Quaternions}
-\label{sec:dual_quaternions}
-
-\subsection{Brief Overview}
-
-Dual quaternions extend quaternions (Section~\ref{sec:quaternions}) by using dual numbers instead of real numbers. A dual quaternion is:
-\[
-  \mathbf{q}_d = q_0 + q_1 \mathbf{i} + q_2 \mathbf{j} + q_3 \mathbf{k} + \epsilon(q_4 + q_5 \mathbf{i} + q_6 \mathbf{j} + q_7 \mathbf{k})
-\]
-where $\epsilon$ is the dual unit satisfying $\epsilon^2 = 0$ (and $\epsilon \neq 0$).
-
-Dual quaternions are isomorphic to spatial vectors and can represent both rotation and translation in a single object. Some robotics frameworks use dual quaternions for inertia and screw calculations, though the $6 \times 6$ matrix representation is more standard for computation.
-
-\textbf{Key property}: The spatial inertia can be represented as a dual-quaternion-valued linear form, and Featherstone's spatial algorithms can be rewritten using dual quaternions, often with elegant geometric interpretations.
-
-For this course, we continue with the matrix representation, as it is more straightforward for algorithmic implementation.
-
-\section{Worked Example: Spatial Inertia of a Multi-Link System}
-\label{sec:worked_example_multi_inertia}
-
-Consider a two-link arm where:
-\begin{itemize}
-  \item Link 1 (upper arm): mass $m_1 = 2$ kg, CoM at $(0.3, 0, 0)$ m from joint 1, rotational inertia $\mathbf{I}_c^{(1)} = \text{diag}(0.05, 0.05, 0.01)$ kg$\cdot$m$^2$.
-  \item Link 2 (forearm): mass $m_2 = 1$ kg, CoM at $(0.25, 0, 0)$ m from joint 2, rotational inertia $\mathbf{I}_c^{(2)} = \text{diag}(0.02, 0.02, 0.005)$ kg$\cdot$m$^2$.
-\end{itemize}
-
-\subsection{Building Link Spatial Inertias}
-
-For link 1, with CoM offset $\mathbf{c}_1 = (0.3, 0, 0)^T$:
-\[
-  [\mathbf{c}_1] = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -0.3 \\ 0 & 0.3 & 0 \end{bmatrix}
-\]
-
-\[
-  [\mathbf{c}_1][\mathbf{c}_1]^T = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0.09 & 0 \\ 0 & 0 & 0.09 \end{bmatrix}
-\]
-
-\[
-  \mathcal{I}^{(1)} = \begin{bmatrix} \mathbf{I}_c^{(1)} + m_1[\mathbf{c}_1][\mathbf{c}_1]^T & m_1[\mathbf{c}_1] \\ m_1[\mathbf{c}_1]^T & m_1\mathbf{I}_{3 \times 3} \end{bmatrix}
-\]
-
-\[
-  \mathcal{I}^{(1)} = \begin{bmatrix} 0.05+2(0) & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.05+2(0.09) & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.01+2(0.09) & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
-\]
-
-\[
-  \mathcal{I}^{(1)} = \begin{bmatrix} 0.05 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.23 & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.19 & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
-\]
-
-Note the structure of the correction. Since $[\mathbf{c}][\mathbf{c}]^T = \lvert\mathbf{c}\rvert^2\mathbf{I} - \mathbf{c}\mathbf{c}^T$ is positive semi-definite, the parallel axis term always \emph{adds} to the rotational inertia. With $\mathbf{c}_1 = (0.3, 0, 0)$ the correction vanishes about the offset direction itself ($x$) and contributes $m_1 d^2 = 2(0.3)^2 = 0.18$ about $y$ and $z$ --- exactly the classical parallel axis theorem. A spatial inertia is symmetric positive definite by Theorem~\ref{thm:spatial_inertia_spd}, so a negative diagonal entry would signal an algebraic error, not a physical configuration.
-
-Similarly, $\mathcal{I}^{(2)}$ is computed with $\mathbf{c}_2 = (0.25, 0, 0)$ and $m_2 = 1$ kg.
-
-\subsection{Composite Inertia}
-
-If link 2 is rigidly attached to link 1 (e.g., they are the same rigid body or perfectly welded), the composite inertia is:
-\[
-  \mathcal{I}_{\text{composite}} = \mathcal{I}^{(1)} + \mathcal{I}^{(2)}
-\]
-This is simple summation when expressed in the same reference frame.
-
-If the links are separated by a relative transform $\mathbf{T}_{1 \to 2}$, we must first transform $\mathcal{I}^{(2)}$ to the frame of link 1:
-\[
-  \mathcal{I}_{\text{composite}} = \mathcal{I}^{(1)} + [\text{Ad}_{\mathbf{T}_{1 \to 2}}]^{-T} \mathcal{I}^{(2)} [\text{Ad}_{\mathbf{T}_{1 \to 2}}]^{-1}
-\]
-
-\section{Physical Interpretation of Spatial Inertia Elements}
-\label{sec:inertia_interpretation}
-
-The $6 \times 6$ spatial inertia matrix has a clear physical meaning for each block:
-
-\begin{itemize}
-  \item \textbf{Top-left} ($3 \times 3$): Rotational inertia (analogous to the $3 \times 3$ inertia tensor). It relates angular acceleration to the torque required.
-  \item \textbf{Top-right} ($3 \times 3$): Coupling between linear and rotational motion due to CoM offset. If the CoM is not at the origin, accelerating the origin in one direction produces a torque around it.
-  \item \textbf{Bottom-left} ($3 \times 3$): Transpose of top-right (due to symmetry).
-  \item \textbf{Bottom-right} ($3 \times 3$): Mass matrix ($m\mathbf{I}_{3 \times 3}$). It relates linear acceleration of the origin to the force required.
-\end{itemize}
-
-% ------------------------------------------------------------------
-\subsection{Kinetic Energy and the Origin of Spatial Inertia}
 \label{sec:kinetic_energy_spatial_inertia}
+\label{def:spatial_inertia_matrix_def}
 \index{kinetic energy!spatial form}
 \index{spatial inertia!kinetic energy derivation}
-% ------------------------------------------------------------------
-
-The $6 \times 6$ spatial inertia matrix is not an arbitrary packaging of
-mass properties.  It is the \emph{unique} object that makes kinetic
-energy a quadratic form in spatial velocity.  We now prove this from
-first principles.
-
-\textbf{Classical kinetic energy.}
-For a rigid body with mass $m$, centre-of-mass velocity
-$\mathbf{v}_{cm}$, angular velocity $\boldsymbol{\omega}$, and
-rotational inertia $\mathbf{I}_c$ about the centre of mass:
-\[
-  T = \frac{1}{2}\,m\,\norm{\mathbf{v}_{cm}}^2
-    + \frac{1}{2}\,\boldsymbol{\omega}^T \mathbf{I}_c\,\boldsymbol{\omega}.
-\]
-
-\textbf{Re-express about a body-fixed frame origin.}
-Let the body frame origin $O$ be offset from the centre of mass by
-$\mathbf{c} \in \Reals^3$.  Then the centre-of-mass velocity is
-\[
-  \mathbf{v}_{cm}
-  = \mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{c},
-\]
-where $\mathbf{v}_O$ is the linear velocity of $O$.  Substituting into
-$T$ and expanding:
-\begin{align*}
-  T &= \frac{1}{2}\,m\,\norm{\mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{c}}^2
-     + \frac{1}{2}\,\boldsymbol{\omega}^T \mathbf{I}_c\,\boldsymbol{\omega} \\
-    &= \frac{1}{2}\,m\,\mathbf{v}_O^T \mathbf{v}_O
-     + m\,\mathbf{v}_O^T (\boldsymbol{\omega} \times \mathbf{c})
-     + \frac{1}{2}\,m\,(\boldsymbol{\omega} \times \mathbf{c})^T
-       (\boldsymbol{\omega} \times \mathbf{c})
-     + \frac{1}{2}\,\boldsymbol{\omega}^T \mathbf{I}_c\,\boldsymbol{\omega}.
-\end{align*}
-
-Using the skew-symmetric matrix $[\mathbf{c}]_\times$ so that
-$\boldsymbol{\omega} \times \mathbf{c} = [\mathbf{c}]_\times^T \boldsymbol{\omega}$,
-and collecting the angular and linear components into the spatial
-velocity $\mathcal{V} = (\boldsymbol{\omega},\, \mathbf{v}_O)^T$, we
-obtain:
-
-\begin{theorem}{Kinetic Energy as a Spatial Quadratic Form}{ke_spatial_quadratic}
 \index{spatial inertia!quadratic form}
-The kinetic energy of a rigid body equals
-\[
-  T = \frac{1}{2}\,\mathcal{V}^T \mathcal{I}\, \mathcal{V},
-\]
-where the $6 \times 6$ \textbf{spatial inertia matrix}\index{spatial inertia} is
-\[
-  \mathcal{I}
-  = \begin{pmatrix}
-      \mathbf{I}_c + m\,[\mathbf{c}]_\times [\mathbf{c}]_\times^T
-        & m\,[\mathbf{c}]_\times \\[4pt]
-      m\,[\mathbf{c}]_\times^T
-        & m\,\mathbf{I}_{3 \times 3}
-    \end{pmatrix}.
-\]
-\end{theorem}
+\index{spatial inertia}
 
-This derivation proves that $\mathcal{I}$ is the \emph{correct} inertial
-object for spatial dynamics: it is determined entirely by the requirement
-that kinetic energy be a quadratic form in $\mathcal{V}$.
+Let $m>0$, let $\mathbf c$ point from the reporting origin O to the body's center of mass C, and let $I_C$ be the rotational inertia about C expressed in the same axes. With $\mathbf v_C=\mathbf v_O+\boldsymbol\omega\times\mathbf c=\mathbf v_O-[\mathbf c]\boldsymbol\omega$,
+\begin{equation}
+2K=\boldsymbol\omega^T I_C\boldsymbol\omega
++m\|\mathbf v_O-[\mathbf c]\boldsymbol\omega\|^2
+=\mathcal V^T\mathcal I_O\mathcal V.
+\label{thm:ke_spatial_quadratic}
+\end{equation}
+Expansion fixes the signs of all blocks:
+\begin{equation}
+\mathcal I_O=
+\begin{bmatrix}I_C-m[\mathbf c][\mathbf c]&m[\mathbf c]\\
+-m[\mathbf c]&mI_3\end{bmatrix}.
+\label{eq:spatial_inertia_full}
+\end{equation}
+The correct skew-square identity is $[\mathbf c]^2=\mathbf c\mathbf c^T-\|\mathbf c\|^2I_3$. Equivalently,
+\begin{equation}
+\mathcal I_O=
+\begin{bmatrix}I_C+m(\|\mathbf c\|^2I_3-\mathbf c\mathbf c^T)&m[\mathbf c]\\
+m[\mathbf c]^T&mI_3\end{bmatrix}.
+\label{eq:spatial_inertia_alt}
+\end{equation}
+At the center of mass,
+\begin{equation}
+\mathcal I_C=\operatorname{diag}(I_C,mI_3).
+\label{eq:spatial_inertia_cocom}
+\end{equation}
+The rotational block has units kg m$^2$, the coupling blocks kg m and the translational block kg. Multiplying by a twist produces angular and linear momentum, not a wrench; multiplying by a compatible spatial acceleration gives the inertial part of the wrench. Velocity-dependent terms still matter.
 
-The \textbf{off-diagonal blocks} $m[\mathbf{c}]_\times$ encode the
-cross-coupling between rotation and translation that arises whenever the
-centre of mass does not coincide with the frame origin ($\mathbf{c} \neq
-\mathbf{0}$).  When the frame is placed at the centre of mass
-($\mathbf{c} = \mathbf{0}$), these blocks vanish and the spatial inertia
-becomes block-diagonal---rotational and translational energies
-decouple~\cite{Featherstone2008}.
+\subsection{Positive Definiteness and Physical Realizability}
+\label{thm:spatial_inertia_spd}
 
-\section{Python Implementation}
+For a physical mass distribution, $I_C$ is symmetric positive semidefinite. The energy identity proves that $\mathcal I_O$ is symmetric positive semidefinite and, for $m>0$, positive definite exactly when $I_C$ is positive definite. To prove the converse, take a nonzero $\boldsymbol\omega$ in the nullspace of $I_C$ and set $\mathbf v_O=[\mathbf c]\boldsymbol\omega$. Both energy terms then vanish. To prove strict positivity when $I_C>0$, separate $\boldsymbol\omega\ne0$ from $\boldsymbol\omega=0,\mathbf v_O\ne0$.
+
+A point mass has $I_C=0$ and spatial inertia of rank three. All twists $\mathcal V=(\boldsymbol\omega,[\mathbf c]\boldsymbol\omega)$ leave its point stationary and cost zero kinetic energy. A straight, ideal line mass has a zero rotational moment about its own line and typically spatial rank five. Neither is an invalid idealization merely because its six-dimensional inertia is singular. A numerical solver that requires positive-definite body inertias has a narrower model contract.
+
+Positive definiteness alone also does not establish physical realizability. The principal rotational moments must satisfy the triangle inequalities $J_1\le J_2+J_3$ and their cyclic versions. For example, $J_2+J_3-J_1=2\int x_1^2\,dm\ge0$. A diagonal tensor with moments $(1,1,3)$ is positive definite but violates this condition. Equivalently the central second-moment matrix $\Sigma=\tfrac12\operatorname{tr}(I_C)I_3-I_C$ must be positive semidefinite. Even physically realizable inertias do not prove that a chosen segment model represents a particular golfer.
+
+\section{Changing the Inertia Reference Frame}
+\label{sec:parallel_axis_6d}
+\label{thm:parallel_axis_6d}
+
+Kinetic energy is invariant under re-expression. Substituting $\mathcal V_B=A^{-1}\mathcal V_A$ gives the congruence
+\begin{equation}
+\mathcal I_A=A^{-T}\mathcal I_B A^{-1},\qquad
+\mathcal I_B=A^T\mathcal I_A A.
+\label{eq:parallel_axis_6d}
+\end{equation}
+This is not a similarity transformation. Rank and positive definiteness are preserved, but the six-dimensional eigenvalues and a raw condition number generally are not. A pure rotation changes the components of an anisotropic inertia; the quadratic energy remains unchanged when the velocity is rotated consistently.
+
+If B is centered at the mass center and $T_{AB}=(R,\mathbf c_A)$, the upper-left block is $RI_C^BR^T+m(\|\mathbf c_A\|^2I_3-\mathbf c_A\mathbf c_A^T)$, with upper-right $m[\mathbf c_A]$ and lower-left its transpose. Rotational transport and the parallel-axis addition must use the same destination axes. Moving a body actively while holding the reporting frame fixed is a different physical operation from re-expressing the same body and velocity.
+
+\section{Planar Motion as a Consistent Restriction}
+\label{sec:planar_spatial}
+
+Choose the x-y plane and motion coordinates $\nu=(\omega_z,v_x,v_y)^T$. Let $E=[e_3\ e_4\ e_5]$ embed those coordinates in the angular-first six-vector: $\mathcal V=E\nu$. Restrict motion by $E$ and restrict forces by the dual map $E^T$. This preserves $\mathcal F^TE\nu=(E^T\mathcal F)^T\nu$ and gives
+\begin{equation}
+[\nu\times]_p=E^T[E\nu\times]E
+=\begin{bmatrix}0&0&0\\v_y&0&-\omega_z\\-v_x&\omega_z&0\end{bmatrix},\qquad
+[\nu\times^*]_p=-[\nu\times]_p^T.
+\end{equation}
+For $\mathbf c=(c_x,c_y,0)$ and central perpendicular moment $J_C$,
+\begin{equation}
+\mathcal I_p=E^T\mathcal I E
+=\begin{bmatrix}
+J_C+m(c_x^2+c_y^2)&-mc_y&mc_x\\
+-mc_y&m&0\\mc_x&0&m
+\end{bmatrix}.
+\end{equation}
+For $m=2$ kg, $J_C=0.1$ kg m$^2$ and $(c_x,c_y)=(0.3,0.4)$ m, the first row is $(0.6,-0.8,0.6)$ with the respective block units above. Directly calculating $m\|\mathbf v_O+\omega_z(-c_y,c_x)\|^2/2+J_C\omega_z^2/2$ checks these signs.
+
+A dense $3\times3$ matrix stores a quarter as many entries as a $6\times6$ matrix, but that ratio is not a universal runtime speedup: sparsity, algorithm, language and memory behavior matter. A real golf swing's projected trajectory does not establish planar dynamics. Omitted out-of-plane velocities, loads and constraints must be justified separately.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{../figures/spatial_inertia_energy.pdf}
+\caption{A Point Mass Has Zero-Energy Rotations About Itself; an Extended Body Also Has Rotational Energy. In the Two-Link Example, Elbow Configuration Changes the Joint Inertia and Its Coupling.}
+\label{fig:spatial_inertia_energy}
+\end{figure}
+
+\section[Momentum, Acceleration and Newton--Euler Dynamics]{Momentum, Acceleration and\\Newton--Euler Dynamics}
+\label{sec:spatial_newton_euler_full}
+
+Spatial momentum has angular momentum about the reporting origin in its upper block and total linear momentum in its lower block:
+\begin{equation}
+\mathcal P=\mathcal I\mathcal V.
+\label{eq:spatial_momentum}
+\end{equation}
+For a fixed inertial origin with inertial axes, the derivative of these components is the net applied wrench about that same origin:
+\begin{equation}
+\dot{\mathcal P}_s=\mathcal F_s.
+\label{eq:spatial_newton_euler_basic}
+\end{equation}
+This statement cannot be copied unchanged to a rotating frame or a moving moment origin. For example, with world-oriented axes at a point O moving with velocity $\mathbf u_O$, angular momentum obeys $\dot{\mathbf H}_O=\mathbf n_O-\mathbf u_O\times\mathbf p_{\rm lin}$. Even without rotating axes, shifting the moment origin introduces a transport term.
+
+In a body-fixed frame B, rigid-body inertia is constant. Write $\mathcal V_B=(\boldsymbol\omega_B,\mathbf v_B)$, with $\mathbf v_B$ the inertial velocity of B's origin expressed in B. The dot in $\dot{\mathcal V}_B$ differentiates these body-coordinate components. The physical origin acceleration expressed in B is
+\begin{equation}
+\mathbf a_O^B=\dot{\mathbf v}_B+\boldsymbol\omega_B\times\mathbf v_B.
+\end{equation}
+Thus the lower three entries of $\dot{\mathcal V}_B$ are not the ordinary Cartesian acceleration of O. Likewise an accelerometer measures specific force, with gravity and sensor orientation requiring separate treatment.
+
+Let $A=\operatorname{Ad}_{T_{sB}}$, where the body pose is measured in the inertial frame. Momentum and wrench transform as $\mathcal P_s=A^{-T}\mathcal P_B$ and $\mathcal F_s=A^{-T}\mathcal F_B$. Differentiating, using $\dot A=A\operatorname{ad}_{\mathcal V_B}$, gives
+\label{thm:spatial_ne_theorem}
+\begin{equation}
+\mathcal F_B=\dot{\mathcal P}_B-[\mathcal V_B\times]^T\mathcal P_B
+=\mathcal I_B\dot{\mathcal V}_B+[\mathcal V_B\times^*](\mathcal I_B\mathcal V_B).
+\label{eq:spatial_newton_euler_final}
+\end{equation}
+The bias term incorporates the coordinate transport. At the mass center, its lower block becomes $\boldsymbol\omega\times m\mathbf v_B$, restoring $\mathbf f=m\mathbf a_C$; its upper block gives $\boldsymbol\omega\times I_C\boldsymbol\omega$. Away from C, the coupling blocks recover the force moment and centripetal contributions.
+
+In inertial coordinates the inertia generally changes as the body moves, so the ordinary product rule is instead
+\begin{equation}
+\dot{\mathcal P}_s=\mathcal I_s\dot{\mathcal V}_s+\dot{\mathcal I}_s\mathcal V_s.
+\label{eq:spatial_momentum_full}
+\end{equation}
+This and the body-frame equation are compatible descriptions, not extra terms to add together. The body-frame bias also does no instantaneous power by itself: $\mathcal V^T[\mathcal V\times^*]\mathcal I\mathcal V=0$, since $[\mathcal V\times]\mathcal V=0$. Consequently $\mathcal F_B^T\mathcal V_B=d(\mathcal V_B^T\mathcal I_B\mathcal V_B/2)/dt$ for a rigid body. This does not make all components of the bias zero or imply that contact work vanishes.
+
+\section{Composite Inertias and the Joint Mass Matrix}
+\label{sec:composite_rigid_body}
+\label{alg:alg_crb}
+
+Consider an open tree of N rigid bodies with a fixed base, one scalar degree of freedom per joint and constant local joint-motion direction $S_i$. Let $\lambda(i)$ be the parent, indexed before its child. Define $X_i$ to map the parent's motion coordinates into the child's frame, and express each body inertia $\mathcal I_i$ in its own frame. At a fixed configuration, the motion recursion is $\mathcal V_i=X_i\mathcal V_{\lambda(i)}+S_i\dot q_i$.
+
+The composite inertia $\mathcal I_i^C$ describes the subtree below i with its internal joints instantaneously locked. Initialize every composite to its own body inertia, visit children before parents, and accumulate
+\begin{equation}
+\mathcal I_{\lambda(i)}^C\mathrel{+}=X_i^T\mathcal I_i^C X_i.
+\end{equation}
+The transpose direction follows directly from energy: a parent twist $\mathcal V_p$ induces $X_i\mathcal V_p$ in the locked child. It is equally valid to use a child-to-parent map A, but then the child's inertia must be transformed by $A^{-T}\mathcal I_i^C A^{-1}$. The two formulas agree only when the directions are defined consistently.
+
+An articulated forearm and hand do not actually move as one rigid body whenever the wrist moves. Locking is an intermediate construction used to assemble the generalized inertia, not a claim that all joints remain fixed during the swing. Let $J_i$ map all joint rates to body i's twist in its own frame. Summing physical body energies gives the independent identity
+\begin{equation}
+M(q)=\sum_i J_i(q)^T\mathcal I_i J_i(q),\qquad
+K=\tfrac12\dot q^T M(q)\dot q.
+\end{equation}
+For each i, form $F_i=\mathcal I_i^C S_i$ and set $M_{ii}=S_i^T F_i$. Carry this force-like column up through each ancestor using $F_p=X_i^TF_i$, project onto that ancestor's $S_p$, and place the result in both symmetric mass-matrix entries. Continue to the base. Distinct branches have no direct off-diagonal coupling when neither joint is an ancestor of the other in this fixed-base tree; a floating base or constraint elimination changes that structure.
+
+\label{thm:crb_complexity}
+Composite assembly takes $\mathcal O(N)$ fixed-size operations. Filling the joint matrix takes $\mathcal O(N^2)$ operations in a serial chain, and dense storage alone costs $\mathcal O(N^2)$. Tree structure can reduce the nonzero work and storage when exploited. Solving a generic dense system $M\ddot q=\tau-b$ uses $\mathcal O(N^3)$ factorization and $\mathcal O(N^2)$ triangular solves; multiplying by a precomputed inverse is neither free nor a linear-time algorithm. Articulated-body forward dynamics achieves $\mathcal O(N)$ for the applicable unconstrained tree by eliminating joints recursively. Closed loops and contact require additional equations and a specified solver.
+
+\section[Worked Example: A Two-Link Teaching Mechanism]{Worked Example: A Two-Link\\Teaching Mechanism}
+\label{sec:worked_example_multi_inertia}
+
+Use two illustrative links with the original mass properties. The first has mass $m_1=2$ kg and center offset $\mathbf c_1=(0.3,0,0)$ m. Its central tensor is $I_{C1}=\operatorname{diag}(0.05,0.05,0.01)$ kg m$^2$.
+
+The second has mass $m_2=1$ kg and center offset $\mathbf c_2=(0.25,0,0)$ m. Its central tensor is $I_{C2}=\operatorname{diag}(0.02,0.02,0.005)$ kg m$^2$. These are declared teaching values, not subject-specific anatomical measurements. Both central tensors satisfy the physical inertia inequalities.
+
+The first link's inertia is
+\begin{equation}
+\mathcal I_1=\begin{bmatrix}
+0.05&0&0&0&0&0\\
+0&0.23&0&0&0&-0.6\\
+0&0&0.19&0&0.6&0\\
+0&0&0&2&0&0\\
+0&0&0.6&0&2&0\\
+0&-0.6&0&0&0&2
+\end{bmatrix}.
+\end{equation}
+The displayed entries carry their respective block units. A unit angular velocity about z with O stationary has energy $0.19/2=0.095$ J: central rotation contributes $0.005$ J and center-of-mass translation contributes $0.09$ J. This physical split checks the matrix more directly than symmetry alone.
+
+Now specify the missing geometry: joint 2 lies $L_1=0.6$ m along link 1's x-axis and rotates about the local z-axis by the relative angle $q_2$. Link 1's joint is also a z-axis rotation. Then $T_{12}=(R_z(q_2),(0.6,0,0))$ maps link-2 coordinates to link 1, and $X_2=\operatorname{Ad}_{T_{12}}^{-1}$. Direct differentiation of the two center-of-mass positions gives
+\begin{equation}
+M(q_2)=\begin{bmatrix}
+0.6175+0.3\cos q_2&0.0675+0.15\cos q_2\\
+0.0675+0.15\cos q_2&0.0675
+\end{bmatrix}\ \mathrm{kg\,m^2}.
+\end{equation}
+At $q_2=0$, this is $\left[\begin{smallmatrix}0.9175&0.2175\\0.2175&0.0675\end{smallmatrix}\right]$. At $q_2=\pi/2$, the entries are $0.6175$, $0.0675$ and $0.0675$. The matrix is independent of the first angle because rotating the entire unconstrained mechanism preserves its kinetic energy. Gravity loading generally still depends on both angles. With rates $(1,-2)$ rad/s at $q_2=0$, $K=0.15875$ J. Link 2's relative rotation changes the energy substantially; its locked composite inertia alone cannot replace the two-rate calculation.
+
+\subsection{The Cylinder Example and the Meaning of a Shape Model}
+
+A uniform solid cylinder with symmetry axis z, mass $m$, radius $r$ and length L has $I_C=\operatorname{diag}(m(3r^2+L^2)/12,m(3r^2+L^2)/12,mr^2/2)$. For $m=2$ kg, $r=0.05$ m and $L=0.30$ m, these moments are $(0.01625,0.01625,0.0025)$ kg m$^2$. Reporting at an end with $\mathbf c=(0,0,0.15)$ m adds $0.045$ kg m$^2$ to each transverse rotational moment. The upper-right block has entries $-0.3$ and $+0.3$ kg m in positions (1,2) and (2,1). A cylinder can be a useful teaching approximation; it does not establish a humerus or whole forearm's mass distribution.
+
+\section{Physical Interpretation and Constrained Motion}
+\label{sec:inertia_interpretation}
+
+The off-diagonal inertia blocks describe energy coupling caused by the reporting origin's offset. They disappear at the mass center, while joint-space coupling can remain because connected links share motion. A coordinate choice can remove some matrix entries without removing a physical interaction. Conversely, a large entry alone does not identify a muscle's causal contribution or prove energy transfer between particular tissues.
+
+For ideal stationary constraints, write $M\ddot q+b=B u+J_c^T\lambda$ and $J_c\dot q=0$. If N spans the allowed velocity directions, $\dot q=N\nu$ and $\ddot q=N\dot\nu+\dot N\nu$. Projection gives
+\begin{equation}
+(N^TMN)\dot\nu+N^T(M\dot N\nu+b)=N^TB u.
+\end{equation}
+The reaction drops out because $J_cN=0$, not because it is physically absent. Its generalized power is $\lambda^TJ_c\dot q=0$ for an ideal stationary constraint. A moving support, sliding friction, compliance or an impact needs its own power or impulse accounting. Rolling constraints can restrict velocities without reducing to globally independent position coordinates; N may therefore parameterize allowed velocities without being the derivative of a reduced configuration chart.
+
+For a two-hand grip or feet in contact with the ground, the unconstrained open-tree mass matrix is only one ingredient. Muscle activation, tendon and shaft compliance, and external reaction forces determine what motion is feasible. Solving inverse dynamics estimates net generalized loading under those assumptions; it does not uniquely distribute the result among redundant muscles or contacts. Spatial algebra makes these dependencies consistent, but experimental identification and uncertainty remain separate tasks.
+
+\section[Dual Quaternions: Poses and Velocities Are Different Objects]{Dual Quaternions: Poses and\\Velocities Are Different Objects}
+\label{sec:dual_quaternions}
+
+A dual quaternion has eight real components, written $\widehat q=q_r+\epsilon q_d$ with $\epsilon^2=0$. In a common Hamilton convention, a rigid pose is represented by a unit real quaternion $q_r$ and $q_d=\tfrac12 p\,q_r$, where p is the pure translation quaternion. The constraints $q_r^Tq_r=1$ and $q_r^Tq_d=0$ leave six local degrees of freedom; $\widehat q$ and $-\widehat q$ represent the same pose. Multiplication conventions and whether translation is expressed before or after rotation must be stated.
+
+This constrained pose representation is not a linear isomorphism between all dual quaternions and six-component spatial velocities. Velocities belong to the tangent algebra and forces to its dual. An inertia is a linear map from motion to momentum; rewriting it in dual-quaternion notation requires an explicitly defined operator and pairing, not an unspecified multiplication by a pose quaternion. The six-vector treatment here provides the needed inertia and energy calculations without that additional machinery.
+
+\section{Checked Python Implementation}
 \label{sec:python_spatial_algebra}
 
-\begin{lstlisting}[language=Python, caption=Spatial Algebra and Inertia Computation in Python]
+The companion uses the shared functions for skew matrices, motion/force cross products and rigid spatial inertia. The additional module supplies frame re-expression, subtree assembly and joint mass-matrix construction; their contracts name the frame direction. The prepared-tree example requires positive-definite physical body inertias, parent-before-child indexing and constant one-DOF local joint directions. The separate inertia re-expression function also permits ideal singular body inertias. Neither routine infers anatomical parameters or solves contact.
+
+\begin{lstlisting}[language=Python,columns=fullflexible,basicstyle=\ttfamily\footnotesize,keywordstyle=\color{chapblue},stringstyle=\color{purplehaze},commentstyle=\color{chapblue},numberstyle=\tiny\color{black!65}]
 import numpy as np
 
-def skew(v):
-    """Convert 3D vector to skew-symmetric matrix."""
-    return np.array([
-        [0, -v[2], v[1]],
-        [v[2], 0, -v[0]],
-        [-v[1], v[0], 0]
-    ])
+from src.affine_control.dynamics import spatial_inertia
+from src.tools.articulated_body_examples import PreparedTree
+from src.tools.screw_examples import adjoint
+from src.tools.spatial_inertia_examples import joint_mass_matrix
 
-def motion_cross(V):
-    """
-    Spatial cross product for motion (Twists).
-    V: 6D spatial velocity (omega, v)
-    Returns: 6x6 operator [Vx]
-    """
-    omega = V[:3]
-    v = V[3:]
-    Vx = np.zeros((6, 6))
-    Vx[:3, :3] = skew(omega)
-    Vx[3:, :3] = skew(v)
-    Vx[3:, 3:] = skew(omega)
-    return Vx
-
-def force_cross(V):
-    """
-    Spatial cross product for forces (Wrenches).
-    Returns: 6x6 operator [Vx*] = -[Vx]^T
-    """
-    return -motion_cross(V).T
-
-def spatial_inertia(m, c, I_c):
-    """
-    Construct 6x6 spatial inertia matrix.
-    Args:
-        m: scalar mass
-        c: 3D center of mass offset from origin
-        I_c: 3x3 rotational inertia about CoM
-    Returns:
-        I: 6x6 spatial inertia matrix
-    """
-    I_spatial = np.zeros((6, 6))
-    c_skew = skew(c)
-
-    # Top-left: I_c + m[c][c]^T (parallel axis theorem).
-    # [c][c]^T = |c|^2 I - c c^T is positive semi-definite, so this ADDS to
-    # the rotational inertia. Equivalently I_c - m[c][c], since [c]^T = -[c].
-    I_spatial[:3, :3] = I_c + m * (c_skew @ c_skew.T)
-
-    # Top-right: m[c]
-    I_spatial[:3, 3:] = m * c_skew
-
-    # Bottom-left: m[c]^T
-    I_spatial[3:, :3] = m * c_skew.T
-
-    # Bottom-right: m * I_3
-    I_spatial[3:, 3:] = m * np.eye(3)
-
-    return I_spatial
-
-def transform_inertia(I, T):
-    """
-    Transform spatial inertia from one frame to another.
-    I: 6x6 spatial inertia in source frame
-    T: 4x4 transformation matrix (to target frame)
-    Returns: transformed 6x6 spatial inertia
-    """
-    R = T[:3, :3]
-    p = T[:3, 3]
-
-    # Construct transformation for inertia
-    # I' = [Ad_T]^-T I [Ad_T]^-1
-    Ad = np.zeros((6, 6))
-    Ad[:3, :3] = R
-    Ad[3:, :3] = skew(p) @ R
-    Ad[3:, 3:] = R
-
-    Ad_inv_T = np.linalg.inv(Ad).T
-    return Ad_inv_T @ I @ np.linalg.inv(Ad)
-
-def composite_rigid_body(link_inertias, link_transforms, parent_array):
-    """
-    Assemble composite rigid body inertias.
-    Args:
-        link_inertias: list of 6x6 inertia matrices
-        link_transforms: list of 4x4 transforms to parent frames
-        parent_array: parent[i] = index of parent of link i (or -1 for root)
-    Returns:
-        composite_inertias: list of 6x6 composite inertias
-    """
-    N = len(link_inertias)
-    composite_inertias = [np.copy(I) for I in link_inertias]
-
-    # Process from leaves to root (reverse order)
-    for i in range(N - 1, -1, -1):
-        parent = parent_array[i]
-        if parent >= 0:
-            # Transform this link's composite inertia to parent frame
-            I_in_parent = transform_inertia(
-                composite_inertias[i],
-                np.linalg.inv(link_transforms[i])
-            )
-            # Add to parent's inertia
-            composite_inertias[parent] += I_in_parent
-
-    return composite_inertias
-
-# Example: Two-link arm
-if __name__ == "__main__":
-    # Link 1: upper arm
-    m1 = 2.0
-    c1 = np.array([0.3, 0.0, 0.0])
-    I_c1 = np.diag([0.05, 0.05, 0.01])
-    I1 = spatial_inertia(m1, c1, I_c1)
-
-    # Link 2: forearm
-    m2 = 1.0
-    c2 = np.array([0.25, 0.0, 0.0])
-    I_c2 = np.diag([0.02, 0.02, 0.005])
-    I2 = spatial_inertia(m2, c2, I_c2)
-
-    print("Link 1 Spatial Inertia:\n", np.round(I1, 4))
-    print("\nLink 2 Spatial Inertia:\n", np.round(I2, 4))
-
-    # Test motion cross product
-    V = np.array([0.0, 0.0, 1.0, 1.0, 0.0, 0.0])  # Rotating around z, translating in x
-    Vx = motion_cross(V)
-    print("\nMotion Cross Product [Vx]:\n", np.round(Vx, 4))
-
-    # Test duality
-    F = np.array([0.1, 0.2, 0.3, 1.0, 2.0, 3.0])
-    W = np.array([0.5, 0.5, 0.5, 0.1, 0.1, 0.1])
-
-    lhs = F @ (motion_cross(V) @ W)
-    rhs = (force_cross(V) @ F) @ W
-    print("\nDuality test (should be equal):")
-    print(f"  F^T [Vx] W = {lhs:.6f}")
-    print(f"  [Vx*] F)^T W = {rhs:.6f}")
+first = spatial_inertia(
+    2.0, np.array([0.3, 0, 0]), np.diag([0.05, 0.05, 0.01])
+)
+second = spatial_inertia(
+    1.0, np.array([0.25, 0, 0]), np.diag([0.02, 0.02, 0.005])
+)
+pose_12 = np.eye(4)  # Zero relative angle in this example.
+pose_12[0, 3] = 0.6  # Link-2 origin expressed in link 1 (m).
+tree = PreparedTree(
+    parents=(-1, 0),
+    transform=np.array([np.eye(6), adjoint(np.linalg.inv(pose_12))]),
+    subspace=np.tile([0, 0, 1, 0, 0, 0], (2, 1)),
+    inertia=np.array([first, second]),
+)
+mass = joint_mass_matrix(tree)
+rates = np.array([1.0, -2.0])  # rad/s
+energy = float(rates @ mass @ rates / 2)
+assert np.allclose(mass, [[0.9175, 0.2175], [0.2175, 0.0675]])
+assert np.isclose(energy, 0.15875)  # J
 \end{lstlisting}
 
-\section{Summary}
-\label{sec:ch8_summary}
+The scalar energy checks are frame invariant. The tree checks compare the recursive joint matrix against independently propagated body Jacobians, including a branched tree with nontrivial rotations and offsets. Point-particle energy sums independently verify inertia transport. These checks deliberately exercise off-center and noncommuting cases: all-zero offsets or identical axes can hide a reversed transform. A successful self-consistency test does not by itself validate the underlying physical parameter values.
 
-In this chapter, we developed Spatial Vector Algebra—the mathematical language for unified 6D mechanics:
+\section{Fifteen Exercises}
+\label{sec:spatial_exercises}
+
+Use the ordering and transform directions defined in this chapter. Every numerical value is an illustrative model input unless stated otherwise.
 
 \begin{enumerate}
-  \item \textbf{Historical Context}: Plücker's 19th-century line geometry, Ball's screws, and Featherstone's modern synthesis created a computationally elegant framework.
-
-  \item \textbf{Plücker Coordinates}: Lines in 3D are represented as 6D vectors satisfying a constraint, naturally connecting to spatial twists and wrenches.
-
-  \item \textbf{Spatial Vectors}: Twists (velocity) and Wrenches (force) are the fundamental 6D objects, living in dual spaces $\se(3)$ and $\se^*(3)$.
-
-  \item \textbf{Motion and Force Cross Products}: Two distinct $6 \times 6$ cross product operators capture the geometry of relative motion and force application; they are dual to preserve power.
-
-  \item \textbf{Spatial Inertia}: A single symmetric, positive-definite $6 \times 6$ matrix unifies mass and rotational inertia, including the parallel axis theorem as a block structure.
-
-  \item \textbf{Parallel Axis Theorem in 6D}: The full theorem includes coupling terms between angular and linear motion due to CoM offset.
-
-  \item \textbf{Composite Rigid Body Algorithm}: Inertias of linked chains are assembled bottom-up in $O(N)$ time via adjoint transformations.
-
-  \item \textbf{Planar Reduction}: 2D systems use 3D spatial algebra, reducing computation by a factor of 4.
-
-  \item \textbf{Newton-Euler in Spatial Form}: A single matrix equation $\mathcal{F} = \mathcal{I}\dot{\mathcal{V}} + [\mathcal{V} \times]^*(\mathcal{I}\mathcal{V})$ unifies linear and angular dynamics.
-
-  \item \textbf{Dual Quaternions}: Brief connection to an alternative 8D representation with elegant geometric properties.
-
-  \item \textbf{Physical Interpretation}: Each block of the spatial inertia matrix has clear mechanical meaning.
-
-  \item \textbf{Python Implementation}: Full code for inertia computation, transformation, and composite body assembly.
+\item \textbf{Motion Operator.} For $\nu=(2,3,5)$ in planar coordinates, construct the embedded six-dimensional motion cross product and its planar restriction. Apply the planar operator to $(1,0,0)^T$.
+\item \textbf{Force Duality.} Derive the negative-transpose identity from differentiation of an invariant pairing. Check the numerical example yielding $0.65$ and $-0.65$.
+\item \textbf{Point-Mass Inertia.} For mass m at $\mathbf c$, find the rank and all zero-energy spatial motions. Explain why positive definiteness is the wrong criterion for this idealization.
+\item \textbf{Rod and Cylinder.} Derive the inertia of a uniform thin rod along x at its center and one end. Compare its rank with the finite-radius cylinder example.
+\item \textbf{Power Transport.} A force $(0,10,0)$ N acts through B's origin, which is at $(0.2,0,0)$ m in parallel A axes. With $\mathcal V_B=(0,0,3,1,2,0)$, compute wrench and twist in A and verify power.
+\item \textbf{Rotation and Realizability.} Rotate $I_C=\operatorname{diag}(1,2,2.5)$ through 90 degrees about z. Compare components and energy. Explain why $(1,1,3)$ cannot be principal moments of a nonnegative mass distribution.
+\item \textbf{Two-Link Inertia.} Derive M from the two center-of-mass velocities and compare it with composite recursion at $q_2=0$ and $\pi/2$.
+\item \textbf{Numerical Duality.} Construct a numerical check of duality for nonzero offsets and mixed angular/linear motion. State what changing the sign would violate.
+\item \textbf{Block Interpretation.} Derive the center-of-mass energy decomposition and identify every block's units and sign. Give an independent check that is stronger than symmetry.
+\item \textbf{Humanoid Tree.} Describe a bottom-up composite-inertia pass for a torso with two arms. Explain what is locked in this intermediate object and what changes when the feet and both hands impose constraints.
+\item \textbf{Line and Screw.} Derive the Pl\"ucker relation and scale equivalence. For $\boldsymbol\omega=(0,0,2)$ and $\mathbf v=(0,-2,1)$, recover screw axis and pitch.
+\item \textbf{Dual-Quaternion Scope.} Count the local degrees of freedom of a unit dual quaternion pose. Explain why that does not make arbitrary dual quaternions a vector space of six velocity components.
+\item \textbf{Congruence and Recursion.} Derive $A^{-T}\mathcal I A^{-1}$ from energy and show why a parent-to-child motion map appears as $X^T\mathcal I_C X$ in upward assembly.
+\item \textbf{Constraint Reduction.} Derive the projected equation for $\dot q=N\nu$. In the illustrative planar metric $M=\operatorname{diag}(2,3)$ and constraint $\dot q_1+\dot q_2=0$, calculate the reduced inertia and response to load $(1,0)^T$ with zero bias.
+\item \textbf{Dynamics Validation.} Design checks for a spatial-algebra simulator covering frame transformations, inertia, inverse/forward consistency, energy and contact assumptions. Distinguish verification of equations from validation of a golfer model.
 \end{enumerate}
 
-With Spatial Vector Algebra in hand, the Recursive Newton-Euler Algorithm of Chapter \ref{ch:recursive_algorithms} becomes a straightforward loop of matrix multiplications, without a single transcendental function or explicit cross product in sight. This unity—where complex nonlinear dynamics reduce to structured linear algebra—is the deep beauty of modern computational mechanics.
+\section{Worked Answers}
+\label{sec:spatial_answers}
 
-\section{Further Reading}
+\begin{enumerate}
+\item \textbf{Motion Operator.} Embed as $(0,0,2,3,5,0)^T$ and use the block formula. The planar matrix is $\left[\begin{smallmatrix}0&0&0\\5&0&-2\\-3&2&0\end{smallmatrix}\right]$; its action on $(1,0,0)^T$ is $(0,5,-3)^T$. Its first row is zero because two planar z-axis angular velocities commute. A skew-symmetric three-dimensional Cartesian cross matrix would give a different result.
+\item \textbf{Force Duality.} If the infinitesimal motion update is $\delta\mathcal W=\operatorname{ad}_{\mathcal V}\mathcal W\,\delta t$, preservation of $\mathcal G^T\mathcal W$ requires $\delta\mathcal G=-\operatorname{ad}_{\mathcal V}^T\mathcal G\,\delta t$. Thus the two unnegated scalar terms sum to zero. For the supplied vectors, $\operatorname{ad}_{\mathcal V}\mathcal W=(-0.5,0.5,0,-0.1,-0.4,0.5)^T$, giving $0.65$; the force-side scalar is $-0.65$.
+\item \textbf{Point-Mass Inertia.} Write $\mathcal I=mD^TD$ with $D=(-[\mathbf c]\ I_3)$. D has rank three, so does $\mathcal I$. Its nullspace is $(\boldsymbol\omega,[\mathbf c]\boldsymbol\omega)$ for arbitrary $\boldsymbol\omega$. The point stays still even while the notional surrounding rigid frame rotates about it. Negative energy would be nonphysical; zero energy in these idealized directions is expected.
+\item \textbf{Rod and Cylinder.} Integrating $x^2$ over a uniform rod centered on zero gives $mL^2/12$. The central tensor is $\operatorname{diag}(0,mL^2/12,mL^2/12)$. At one end, use $\mathbf c=(L/2,0,0)$: the two transverse rotational entries become $mL^2/3$, and retain the coupling blocks $m[\mathbf c]$. Spatial rank is five. A cylinder with positive radius, length and mass has all central moments positive and spatial rank six. Its thin-radius limit recovers the appropriate rod after aligning the axes.
+\item \textbf{Power Transport.} In A, the force is unchanged and the moment is $(0,0,2)$ N m. The twist's linear block becomes $(1,1.4,0)$ m/s because $\mathbf p\times\boldsymbol\omega=(0,-0.6,0)$. Power in B is $10(2)=20$ W; in A it is $2(3)+10(1.4)=20$ W. Keeping the moment shift while leaving the linear twist block unchanged would give a spurious 26 W.
+\item \textbf{Rotation and Realizability.} The rotated central tensor is $\operatorname{diag}(2,1,2.5)$, which differs componentwise. Rotating $\boldsymbol\omega=(1,0,0)$ to $(0,1,0)$ preserves the energy at $0.5$ in consistent SI units. For $(1,1,3)$, the implied second moment associated with the third axis is $(1+1-3)/2=-0.5$, impossible for an integral of a squared coordinate against nonnegative mass.
+\item \textbf{Two-Link Inertia.} The link velocities yield central rotations $J_1\dot q_1^2/2+J_2(\dot q_1+\dot q_2)^2/2$ and translational energies with $\mathbf v_{C1}=\dot q_1 e_z\times\mathbf c_1$ and $\mathbf v_{C2}=\dot q_1 e_z\times(L_1 e_x+R_z(q_2)\mathbf c_2)+\dot q_2 e_z\times R_z(q_2)\mathbf c_2$, expressed after removing the common first rotation. Expanding gives the stated M. At zero elbow angle and rates $(1,-2)$, half the quadratic form is $0.15875$ J; this includes both links' actual motion.
+\item \textbf{Numerical Duality.} Generate finite random motion and force vectors. Evaluate the two scalar terms in the duality identity and check that their sum is zero to a tolerance scaled by the operands' magnitudes. Include an explicit nonzero example so a degenerate zero does not hide a sign error. The incorrect positive equality violates infinitesimal power invariance; it does not define a different consistent convention while the other matrices remain fixed.
+\item \textbf{Block Interpretation.} Expanding $m\|\mathbf v_O-[\mathbf c]\boldsymbol\omega\|^2$ fixes the off-diagonal signs. The blocks have units kg m$^2$, kg m and kg. Verify $K$ against a direct sum of point-mass energies $\sum_k m_k\|\mathbf v_O+\boldsymbol\omega\times\mathbf r_k\|^2/2$. A symmetric matrix with both coupling signs reversed can pass a symmetry test while predicting the wrong energy.
+\item \textbf{Humanoid Tree.} Add finger/hand subtrees to forearms, forearms to upper arms and upper arms to the torso, always transporting child inertia to the parent frame before summation. Lock only the subtree's relative motions for this intermediate composite. The joint mass matrix restores the independent rates through the motion subspaces. A free torso requires floating-base coordinates; ground contact and a two-hand closed chain require constraint equations, not additional summation of inertia alone.
+\item \textbf{Line and Screw.} Since $\mathbf d^T(\mathbf r\times\mathbf d)=0$, the line relation follows. Moving along the line or multiplying both blocks by the same nonzero scale preserves it. In the supplied twist, $h=2/4=0.5$ m/rad and $\mathbf r_\perp=(1,0,0)$ m. Velocity on that z-directed axis is $(0,0,1)$ m/s. Its nonzero axial velocity is why the full twist fails the zero-pitch line relation.
+\item \textbf{Dual-Quaternion Scope.} Eight components minus the two independent normalization and orthogonality constraints leave six local degrees of freedom. The simultaneous sign identification is discrete and does not change that local count. Adding two unit poses generally violates the constraints, so this set is not a six-dimensional vector space. Velocity coordinates describe a tangent object, and inertia needs a map and a dual pairing on such objects.
+\item \textbf{Congruence and Recursion.} Insert $\mathcal V_B=A^{-1}\mathcal V_A$ into $K=\mathcal V_B^T\mathcal I_B\mathcal V_B/2$. Equality for every $\mathcal V_A$ fixes the symmetric inertia congruence. In the tree, $\mathcal V_C=X\mathcal V_P$ for locked relative motion, so the child's energy in parent coordinates is $\mathcal V_P^TX^T\mathcal I_CX\mathcal V_P/2$. Apply this to every child and induct upward.
+\item \textbf{Constraint Reduction.} Substitute both velocity and acceleration expressions before multiplying by $N^T$; this retains $N^TM\dot N\nu$. For $N=(1,-1)^T$, the reduced inertia is 5, the projected load is 1 and $\dot\nu=1/5$, so $\ddot q=(0.2,-0.2)^T$. With $J_c=(1,1)$, the required reaction multiplier is $-0.6$ in the declared generalized units, and the reaction power is zero for allowed motion. Choosing a normalized N changes the reduced coordinate and matrix entries while preserving the physical acceleration.
+\item \textbf{Dynamics Validation.} First compare transformed force power and particle energy, including anisotropic inertia and nonzero offsets. Compare recursive M with body-Jacobian energy and inverse-dynamics columns; compare forward dynamics against a linear solve under identical loads. Check work/energy residuals as the integration step is reduced and distinguish numerical drift from modeled damping. Verify constraint residuals and impulse/work rules for the chosen contact model. Finally compare independent experimental observables with uncertainty: agreement among algorithms using the same incorrect anatomy is verification of implementation, not validation of that anatomy.
+\end{enumerate}
+
+\section{Synthesis and Further Reading}
+\label{sec:ch8_summary}
 \label{sec:further_reading_ch8}
 
-The primary reference for spatial vector algebra is Featherstone \cite{Featherstone2008}, whose monograph develops the full $6 \times 6$ framework from first principles and demonstrates its application to recursive multi-body dynamics algorithms. Featherstone's treatment of spatial inertia, the motion and force cross products, and the composite rigid body algorithm is definitive, and readers seeking to implement spatial algebra in production code should consult his detailed pseudocode and numerical recipes.
+Geometry specifies how motion and loads are reported; inertia turns motion into momentum; energy fixes the coupling signs; recursive dynamics assembles connected bodies; constraints and actuators determine the admissible response. These layers explain why apparently separate questions about grip force, shoulder moment, club delivery and muscular effort are intertwined. They also explain why the same kinematic observation can be compatible with several internal loading patterns.
 
-The mathematical foundations connecting spatial vectors to the Lie algebra $\se(3)$ and its dual $\se^*(3)$ are developed rigorously by Murray, Li, and Sastry \cite{Murray1994}. Their perspective clarifies why twists and wrenches live in dual vector spaces and why the adjoint and coadjoint representations have the specific transformation properties used throughout this chapter.
-
-For the classical treatment of rigid body dynamics, inertia tensors, and the parallel axis theorem in their traditional $3 \times 3$ form, Goldstein, Poole, and Safko \cite{Goldstein2002} remains the standard graduate-level reference. Comparing their development with the $6 \times 6$ spatial inertia formulation of this chapter illuminates how spatial algebra unifies and streamlines results that classically require separate angular and translational analyses.
-
-Marsden and Ratiu \cite{marsden1999} place spatial algebra within the broader framework of geometric mechanics, connecting spatial inertia to momentum maps and showing how the Euler equations for rigid body motion arise naturally from reduction on $\SE(3)$. Their treatment is more abstract but reveals the deep geometric structures underlying the computational framework.
-
-It is worth emphasizing that spatial algebra is the computational backbone of modern physics engines. MuJoCo \cite{todorov2012}, in particular, implements spatial vector arithmetic as its core computational primitive, using the $6 \times 6$ framework to achieve real-time simulation of complex contact-rich robotic systems. Understanding the material in this chapter is therefore essential not only for theoretical mechanics but for practical work with any modern simulation platform.
-
-\section{Exercises}
-
-\subsection{Tier 1 (Foundation)}
-
-\begin{enumerate}
-  \item Construct the motion cross product $[\mathcal{V} \times]$ for $\mathcal{V} = (0, 0, \omega, v_x, v_y, 0)^T$ and verify its action on a unit spatial vector.
-
-  \item Verify that the force cross product $[\mathcal{V} \times^*]$ is the negative transpose of the motion cross product.
-
-  \item For a point mass $m$ at location $\mathbf{c}$ with no rotational inertia (zero $\mathbf{I}_c$), compute the spatial inertia matrix and verify it is positive definite.
-
-  \item Compute the spatial inertia of a uniform rod of mass $m$ and length $L$ at its center of mass, and again at one end (using the parallel axis theorem).
-
-  \item Verify that power $\mathcal{F}^T \mathcal{V}$ is invariant under the frame transformation: compute it in two different frames and confirm they are equal.
-\end{enumerate}
-
-\subsection{Tier 2 (Intermediate)}
-
-\begin{enumerate}
-  \item Prove that the spatial inertia matrix is invariant under orthogonal rotations of the reference frame (i.e., only the CoM offset affects the matrix structure).
-
-  \item For a two-link arm where link 2 is offset from link 1 by transform $\mathbf{T}_{1 \to 2}$, use the composite rigid body algorithm to express the total inertia as a function of both link inertias and the relative pose.
-
-  \item Implement the duality property: compute $\mathcal{G}^T ([\mathcal{V} \times] \mathcal{W}) = ([\mathcal{V} \times^*] \mathcal{G})^T \mathcal{W}$ numerically for random spatial vectors and verify to machine precision.
-
-  \item Derive the relationship between the classical 3D inertia tensor and the spatial inertia matrix; show how the 3x3 blocks correspond to standard mechanics quantities.
-
-  \item For a humanoid robot, conceptually design the composite inertia computation: which links would be aggregated together, and in what order?
-\end{enumerate}
-
-\subsection{Tier 3 (Advanced)}
-
-\begin{enumerate}
-  \item Prove the Plücker relation $\mathbf{d}^T \mathbf{m} = 0$ geometrically: interpret the direction and moment of a line and show why their dot product must vanish.
-
-  \item Show that the spatial inertia matrix $\mathcal{I}$ can be expressed as a dual-quaternion-valued bilinear form, and compute inertial effects using dual quaternion multiplication.
-
-  \item Derive the composite inertia algorithm from the perspective of the Adjoint map: show that $\mathcal{I}_{\text{composite}} = \sum_j [\text{Ad}_{\mathbf{T}_{j,\text{origin}}}]^{-T} \mathcal{I}_j [\text{Ad}_{\mathbf{T}_{j,\text{origin}}}]^{-1}$ reduces to the recursive algorithm.
-
-  \item For a system with articulated contact (e.g., foot on ground with rolling constraints), extend the spatial inertia formalism to include constraint forces and derive the reduced dynamics.
-
-  \item Implement a multi-body dynamics simulator using purely spatial algebra: compose RNEA (Chapter 7) with the spatial inertia formalism, and validate against a reference physics engine.
-\end{enumerate}
+Featherstone's \emph{Rigid Body Dynamics Algorithms} is the main algorithm reference \cite{Featherstone2008}. The public companion's transform rules and small planar/rigid-inertia routines provide directly inspectable conventions \cite{FeatherstoneSpatialV1Review}. Lynch and Park's wrench supplement derives the power-preserving frame change from an applied-force example \cite{MRWrenchSpatialSupplement}. Their textbook and Murray, Li and Sastry provide broader rigid-motion context \cite{Lynch2017,Murray1994}. These are mathematical and computational references, not empirical validation of golf-specific tissue, joint or contact models.
