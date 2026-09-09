@@ -1,48 +1,44 @@
-# Grip Angle Torque Transmission Simulator
+# Cardan and Torque Projection Demonstration
 
-Interactive tool for analyzing how grip angle affects torque transmission and angular acceleration in golf swing biomechanics.
+Explore the phase-dependent speed and ideal delivered-torque ratios of a
+supported Cardan shaft. A separate synthetic projection resolves the delivered
+torque into two components and applies illustrative scalar inertia responses.
+This does not calculate human wrist reactions, integrate a golf swing or rank
+grip quality. The historical hand sketch is not the Cardan geometry.
+
+## Model Boundaries
+
+- The demo angle supplies both the shaft bend and the projection angle by
+  choice. The input phase is not anatomical wrist flexion or deviation.
+- Fixed supported shafts and negligible joint storage/losses condition the
+  reciprocal torque ratio. A requested 90-degree bend is evaluated at 89 degrees.
+- Time traces multiply an input signal by a fixed-phase gain; they do not
+  integrate shaft phase or clubface motion.
+- Alpha uses a point-head/thin-rod transverse grip inertia. Gamma is an
+  illustrative half of alpha, not a measured shaft-axis inertia.
+- Torque component amplitudes are not shares of energy. Acceleration gains
+  have units (rad/s²)/(N·m); transmission ratios are dimensionless.
 
 ## Files
 
-### Python Modules (Streamlit App)
+| File                      | Purpose                                                        |
+| ------------------------- | -------------------------------------------------------------- |
+| torque_calculator.py      | Cardan ratio, illustrative inertia and projection calculations |
+| plots.py                  | Matplotlib traces and phase sweep                              |
+| streamlit_app.py          | Optional Streamlit interface                                   |
+| qt_window.py              | Qt interface used by the legacy enhanced-model launcher        |
+| grip_angle_simulator.html | Browser interface with Plotly charts                           |
+| requirements.txt          | Optional Python dependencies                                   |
 
-- **`streamlit_app.py`** - Streamlit UI entry point (layout, sidebar, callbacks)
-- **`torque_calculator.py`** - Core torque transmission physics calculations
-- **`visualization.py`** - Matplotlib plotting and diagram functions
-- **`constants.py`** - Physical constants and configuration
+## Run and Embed
 
-### Other
+See the [embedding guide](EMBEDDING_GUIDE.md) for the actual paths and runtime
+requirements. The browser page uses an external Plotly script; it is not
+dependency-free or guaranteed to work offline.
 
-- **`grip_angle_simulator.html`** - JavaScript/HTML5 standalone version (runs on GitHub Pages)
-- **`requirements.txt`** - Python dependencies for Streamlit
-- **`EMBEDDING_GUIDE.md`** - Complete instructions for embedding both versions
-- **`EMBED_INSTRUCTIONS.md`** - Quick reference for embedding
-- **`embed_example.html`** - Example HTML snippet for embedding
+## Technical Context
 
-## Features
-
-- Adjustable club properties (clubhead weight, shaft weight, length, CG distance)
-- Real-time moment of inertia calculations
-- Grip angle sliders (0° to 90°)
-- Multiple noise input types (golf-like random, burst, step, sinusoidal)
-- Dual plots: transmitted torque and angular acceleration
-- Side-by-side comparison of different grip angles
-- Beautiful visualizations with Plotly.js (JavaScript) or Matplotlib (Streamlit)
-
-## Quick Start
-
-### JavaScript Version (Recommended for GitHub Pages)
-
-Simply link to or embed `grip_angle_simulator.html` in any HTML page.
-
-### Streamlit Version
-
-1. Deploy to [Streamlit Cloud](https://streamlit.io/cloud)
-2. Set main file: `Grip_Angle_Torque_Transmission_Streamlit.py`
-3. Embed via iframe using the URL provided by Streamlit Cloud
-
-See `EMBEDDING_GUIDE.md` for detailed instructions.
-
-## Article
-
-This tool is featured in: [Wrists Behave as Universal Joints](../../../docs/articles/wrist-universal-joint.html)
+Read [Constraint Torques at the Wrist](https://affinedrift.com/articles/wrist-universal-joint.html)
+and the [companion derivation](../../../content/wrist-as-universal-joint/MATHEMATICAL_DERIVATION.md)
+before interpreting the demo. Independent derivative and full-turn tests check
+the ratio; they do not validate a human grip hypothesis.

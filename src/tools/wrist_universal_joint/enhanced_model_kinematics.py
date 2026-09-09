@@ -138,14 +138,12 @@ def build_info_html(
         delta_rad=np.radians(grip_angle_deg),
     )
     return f"""
-        <b>Current Configuration:</b><br>
-        Grip={grip_angle_deg}°, Wrist={wrist_angle_deg}° → Transmission Ratio = {tau_ratio:.3f}<br>
-        <br>
-        <b>Key Insights:</b><br>
-        • Transmission ratio <b>varies with wrist angle</b> (see transmission plot)<br>
-        • At neutral wrist (φ≈0°): Maximum transmission efficiency<br>
-        • At extreme radial/ulnar deviation: Reduced transmission<br>
-        • Grip angle determines <b>which axes</b> receive transmitted torque<br>
-        • Lower grip angle (fingers) → more torque to lowest MOI axis (γ) (stability)<br>
-        • Higher grip angle (palm) → more torque to higher MOI axis (α) (face angle control)
+        <b>Synthetic Configuration:</b><br>
+        Bend/Projection={grip_angle_deg}°, Input Phase={wrist_angle_deg}°;
+        Ideal Delivered-Torque Ratio={tau_ratio:.3f}<br>
+        Fixed supported shafts; phase is not wrist deviation or flexion.<br>
+        A requested 90° bend is evaluated at the numerical 89° limit.<br>
+        Time traces apply a fixed-phase gain, not integrated shaft or swing motion.<br>
+        Alpha is a transverse grip inertia estimate; gamma uses an illustrative ratio.<br>
+        Torque projections and scalar responses do not determine face yaw or grip quality.
         """

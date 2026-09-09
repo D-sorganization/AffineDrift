@@ -1,8 +1,11 @@
 ---
-title: "Constraint Torques at the Wrist: How Grip Angle Influences Force Transmission and Face Angle Variability in the Golf Swing"
-description: "Biomechanical model of the left wrist as a universal joint, analyzing how grip angle influences force transmission and clubface angle variability."
+title: "Constraint Torques at the Wrist: Grip Geometry, Energy Transfer and Face Control"
+description: "Derive how wrist constraints, grip geometry, inertia, actuation and uncertainty interact in golf, with explicit limits on grip-performance claims."
 author: "Dieter Olson"
 date: "2025-11-28"
+date-modified: "2026-09-08"
+css:
+  - ../css/articulated-body.css
 format:
   html:
     toc: true
@@ -13,731 +16,743 @@ format:
 
 {{< include _generated/trust/critique-annotations/wrist-universal-joint.qmd >}}
 
-::: {.abstract-section}
 ## Abstract
 
-The left wrist in the golf swing can be approximated as a universal joint with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). Through theoretical analysis and component-level simulation in MATLAB Simulink, this article examines how universal-joint models generate constraint torques: passive torques about the constrained axis that arise from the interaction of applied torques, system momentum, and geometric constraints. These torques may contribute to force and torque transmission from proximal to distal segments, but their magnitude and direction are model-dependent. The grip-angle hypothesis is that the angle at which the club is gripped relative to the wrist joint axes changes how these constraint torques project onto high-inertia axes or face-sensitive axes. This analysis offers a mechanical model for the widely taught distinction between gripping "in the fingers" and "in the palm"; validating that model requires full-swing 3D data.
+Grip geometry can change how the golfer's motion and forces affect the clubface.
+Understanding that effect requires more than resolving a torque into two axes.
+The wrist's allowed motion determines its reaction loads; the hand–club attachment
+transforms those loads; the club's inertia and moving support determine its
+response; and the face-orientation map determines which response matters at
+impact. Muscle action, compliance and correlations between disturbances enter
+the same chain. This article derives those connections using an ideal two-axis
+wrist model, then identifies the measurements needed to qualify it. The result
+is a testable grip-geometry hypothesis, not a demonstrated ranking of finger
+and palm grips. Mechanical identities and illustrative numerical examples are
+verified here; human performance and the author's historical Simscape model
+are not validated by those checks.
 
-*Scope note: this analysis is developed and validated for **planar (2D) swing dynamics only**. The universal-joint reduction ignores ligament compliance, treats the wrist as a passive transmission (no active wrist torques), and couples flexion/extension with radial/ulnar deviation differently from the biological wrist. Full 3D swing validation against marker-cluster kinematics remains future work --- see §7.4 for the detailed limitations list.*
+::: {.callout-note}
+## In Plain Language
 
+A joint can pass a load between body segments without behaving like an extra
+motor. Changing how the club sits in the hand can change the motion that this
+load produces. But a load that is less disruptive in one configuration may
+become larger there, and the golfer may change muscle action at the same time.
+The useful question is therefore: **which measured grip geometry produces the
+desired club delivery, with manageable effort and sensitivity, for this golfer?**
+The equations below make each part of that question explicit.
 :::
-
-```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Why might gripping in the fingers versus the palm matter? In this model, the choice changes the mechanical pathway by which wrist and club loads may be transmitted.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Wrist is a Universal Joint</h3>
-        <p>
-          This model treats the wrist like a universal joint in a car's driveshaft. It can bend in two directions (up/down, left/right) but does not directly twist at the wrist joint itself. Under that simplification, some torque can be transmitted through constraints rather than through an actively commanded wrist twist.
-        </p>
-        <div class="analogy">
-          <strong>Analogy:</strong> Think of a U-joint connecting a truck's engine to its wheels. It can transmit torque while bent. The wrist model asks whether a similar constraint pathway contributes to arm-to-club transmission.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Grip Trade-Off</h3>
-        <p>
-          This constraint torque is not directly commanded at the wrist in the simplified model.
-        </p>
-        <ul>
-            <li><strong>Finger Grip:</strong> May project more of this torque into axes associated with swing-path motion.</li>
-            <li><strong>Palm Grip:</strong> May project more of this torque into axes coupled to face rotation.</li>
-        </ul>
-        <div class="key-takeaway">
-          The hypothesis is that grip geometry may act as a mechanical filter. That claim still needs full-swing validation.
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Anatomical Critique:</span>
-          <h3>The "Sloppy Joint" Reality</h3>
-        </div>
-        <p class="critic-argument">
-          Modeling the wrist as a perfect mechanical universal joint simplifies the complex reality of the carpus. The eight carpal bones and their ligamentous/capsular constraints allow for significant "slop" and coupled motions that do not exist in steel U-joints. Skeptics argue that soft tissue compliance absorbs or redirects much of the theoretical "constraint torque," rendering the rigid-body predictions overstated.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge the biological complexity. Soft tissue compliance may damp, redirect, or delay constraint transmission, and a rigid-joint model cannot settle how large those effects are in vivo. The lower-dimensional wrist actuation remains a useful modeling starting point, but its dominance must be tested.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Single Plane Advocacy:</span>
-          <h3>The Moe Norman Counterpoint</h3>
-        </div>
-        <p class="critic-argument">
-          The paper suggests that "Single Plane" swings (which geometrically align the shaft with the forearm, similar to a palm grip) are mechanically disadvantageous due to face-angle sensitivity. Yet, legends like Moe Norman and moderns like Bryson DeChambeau excel with exactly this alignment. They argue that "locking" the wrist reduces the number of moving parts, providing a consistency benefit that outweighs the constraint torque cost.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This highlights a possible trade-off. Single-plane golfers may reduce input variance through simplified kinematics even if the model predicts higher sensitivity to some torque projections. Testing that trade-off would require measured face-angle variability, grip geometry, and equipment properties.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Motor Control View:</span>
-          <h3>Active Compensation vs. Passive Victim</h3>
-        </div>
-        <p class="critic-argument">
-          The analysis treats constraint torques as "uncontrollable disturbances." However, the forearm rotation axis <em>is</em> actuated proximally by the supinator/pronator muscles. A skilled golfer generates massive active torque about this axis. Critics argue that players don't just "suffer" constraint torques; they actively overpower them with proximal muscle activation.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> While the axis is actuated proximally, the control loop matters. Reflex and voluntary response times are long relative to the late downswing and impact interval, so high-frequency corrections may rely more on feedforward preparation and mechanics than on online feedback. Whether grip angle is the primary filter remains an empirical question.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding by refining the boundaries of the model.
-      </div>
-    </div>
-  </div>
-</section>
-```
 
 ## Introduction
 
-Force and torque transmission through multi-segment kinematic chains presents important challenges in both robotics and human movement. In the golf swing, torques generated by large proximal muscles are transmitted through multiple joints before they influence the speed and orientation of the clubhead. Understanding the mechanical pathways through which this transmission occurs is necessary before making strong claims about performance or consistency.
+The investigation began with a concrete simulation problem. A model was driven
+with prescribed joint motion, and the joint reported forces and torques. Could
+those recorded values be fed back as actuator inputs to reproduce the motion
+in forward dynamics? The obstacle was that a measured joint wrench and a set
+of actuator inputs are different quantities. A joint can report three torque
+components while having only two rotational coordinates. Some of its load
+enforces the joint geometry rather than driving an independent rotation.
 
-Traditional biomechanical analysis often focuses on actively generated torques: those produced by muscular contraction about joints with actuated degrees of freedom. In constrained multibody systems, passive constraint forces and torques may also affect force transmission. These constraint forces arise at joints where motion is restricted, serving to maintain kinematic constraints while transmitting loads between connected segments.
+That observation motivates a broader golf question. Does the hand–club
+attachment direct these loads into motion that develops useful clubhead speed,
+or into motion that makes face control more sensitive? This is a worthwhile
+mechanical hypothesis. Its answer depends jointly on geometry, dynamics and
+the task. We will retain the question while replacing claims of automatic
+transmission efficiency, inevitable variability accumulation and universal
+grip superiority with quantities that can actually be calculated and tested.
 
-This paper explores constraint torques at the left wrist joint during the golf swing, modeled as a universal joint with two actuated rotational degrees of freedom. Within that simplified model, the analysis argues that:
-
-1. Universal joints generate constraint torques about their constrained axes
-
-2. These constraint torques may provide force-transmission pathways
-
-3. The angle at which the club is gripped may influence how constraint torques project into clubhead motion
-
-4. Grip orientation may affect clubhead speed generation and face-angle variability, but the size of that effect must be measured
+[]{#wrist-coordinate-system}
 
 ### The Wrist as a Universal Joint
 
-The radiocarpal (wrist) joint exhibits two primary degrees of freedom:
-- **Flexion/Extension**: Movement in the sagittal plane relative to the forearm
+We distinguish the **wrist complex** from the **forearm's radioulnar joints**.
+Flexion–extension and radial–ulnar deviation describe two prominent directions
+of hand motion relative to the forearm. Pronation–supination involves the
+radius and ulna and changes the frame carried to the wrist. It should be modeled
+at the appropriate forearm joints, not counted as an unactuated third wrist
+coordinate after it has already been prohibited by a two-coordinate model.
 
-- **Radial/Ulnar Deviation**: Movement in the frontal plane
+The ideal wrist used here consists of two intersecting revolute axes. Near a
+chosen neutral posture, associate flexion–extension with a mediolateral axis
+and deviation with an approximately dorsopalmar axis. Declare the anatomical
+calibration and signs for the particular limb. These are modeling coordinates,
+not a claim that anatomical or mechanical axes remain perfectly perpendicular
+and fixed throughout a swing. Crisco and colleagues found oblique mechanical
+axes in a six-cadaver-wrist study; their separate in-vivo study examined carpal
+kinematics during dart-throwing motions. Neither study validates the present
+golf model. [Crisco et al., 2011](https://pubmed.ncbi.nlm.nih.gov/21248214/),
+[Crisco et al., 2005](https://pubmed.ncbi.nlm.nih.gov/16322624/).
 
-These two rotational degrees of freedom occur about approximately perpendicular axes, making the wrist kinematically similar to a universal joint (U-joint) in mechanical systems. The third rotational degree of freedom—forearm pronation/supination—occurs at the radioulnar joints proximal to the wrist, not at the wrist itself.
+[]{#note-on-3d-validation-scope}
+[]{#limitations-of-the-analysis}
+[]{#model-simplification}
 
-From a control perspective, muscles can directly generate torques about the flexion/extension and radial/ulnar axes at the wrist. However, rotation about the forearm axis occurs through forearm muscles acting at the proximal radioulnar joint. This configuration is critical: the wrist joint itself has no direct actuation about the forearm rotation axis, making this a *constrained* rather than *actuated* degree of freedom at the wrist.
+### Limitations of the 2-DOF Wrist Model
 
-::: {.callout-note}
-## Limitations of the 2-DOF Wrist Model
+A rigid joint is an approximation to motion under specified loads and time
+scales. It can be useful when omitted relative motions have negligible influence
+on the output being studied. That must be checked, especially for tissue loads,
+contact transients and impact. A compliant extension introduces extra states,
+constitutive parameters and possibly activation-dependent stiffness. Calling
+an approximation “rigid” neither validates it nor makes it inherently invalid.
 
-Modeling the wrist as a 2-DOF universal joint is a deliberate simplification. The full human wrist system has three rotational degrees of freedom (flexion/extension, radial/ulnar deviation, and forearm pronation/supination). This model sets aside two additional considerations:
-
-1. **Soft-tissue compliance**: Ligaments and cartilage introduce deformability that a rigid universal joint ignores. This affects the *transmission* of constraint torques at high loads (e.g., impact).
-
-2. **Coupled motion**: In practice, wrist DOFs exhibit kinematic coupling (e.g., the dart-thrower's motion follows an oblique diagonal path, not a pure cardinal axis). The rigid 2-DOF model treats the axes as independent.
-
-These limitations do not affect the core thesis—that constraint torques arise at the constrained axis regardless of actuation—but they do mean the quantitative predictions from this model should be treated as order-of-magnitude estimates rather than precise biomechanical predictions.
-:::
+Two coordinates with two independent generalized torque inputs describe a
+locally fully actuated wrist subsystem. Underactuation must instead be assessed
+on the independent coordinates of the complete model, including its floating
+base, contacts and actuator map. This is also a **spatial** model: a two-axis
+joint is not a planar swing simply because it has two rotational coordinates.
+Planar tests elsewhere in the project cannot validate its out-of-plane
+face-orientation predictions.
 
 ## Universal Joints and Constraint Torques
 
 ### Mechanical Properties of Universal Joints
 
-A universal joint connects two rotating shafts whose axes are perpendicular (or nearly so) and typically intersect. The joint permits rotation about two axes while constraining rotation about a third axis and translation along all axes. This configuration is widely used in mechanical systems—most famously in automotive drive shafts—specifically because of its ability to transmit torque through the constrained rotational axis.
+The perpendicular axes in a universal joint belong to its cross pins. The
+centerlines of the connected shafts can form a range of bend angles; they
+are not required to be perpendicular. Furthermore, a freely moving two-axis
+relative joint and a driveshaft held in two fixed bearings are different
+mechanisms. The bearings impose additional constraints. The familiar Cardan
+speed-ratio formula describes the latter assembly and is derived separately
+below. It cannot be assigned directly to wrist flexion and grip angle.
 
-The key property of a universal joint is that torque applied about the longitudinal axis of one shaft is transmitted to the longitudinal axis of the connected shaft through *constraint torques* rather than through actively applied forces. These constraint torques arise because the joint geometry enforces kinematic constraints; when the system attempts to violate these constraints, reaction forces and torques automatically emerge to maintain the constraints.
+Let $R={}^{F}R_H=R_x(\phi)R_y(\psi)$ map hand-frame vectors into the
+forearm frame. At the joint's common point, the two allowed relative angular
+velocity directions, expressed in the forearm frame, are
+
+$$
+\mathbf a=\mathbf e_x,\qquad
+\mathbf b=R_x(\phi)\mathbf e_y,\qquad
+\boldsymbol\omega_{H/F}=\mathbf a\dot\phi+\mathbf b\dot\psi.
+$$
+
+The ideal reaction couple must do zero power against every allowed relative
+angular velocity. Thus it lies along the reciprocal direction
+
+$$
+\mathbf n_c=\mathbf a\times\mathbf b=R_x(\phi)\mathbf e_z,
+\qquad \boldsymbol\tau_c=\lambda_r\mathbf n_c,
+\qquad \mathbf n_c^T\boldsymbol\omega_{H/F}=0.
+$$
+
+For this convention a local holonomic orientation constraint is
+$\mathbf e_x^TR\mathbf e_y=0$. Its derivative gives the same instantaneous
+restriction. The joint also imposes three translational constraints at the
+common point, whose reactions are forces. If a wrench is reported at a
+different point, those forces contribute an additional moment.
+
+### Derivation for the Wrist Universal Joint
+
+At $\phi=30^\circ$, $\psi=20^\circ$, the reciprocal unit direction is
+
+$$
+{}^F\mathbf n_c=(0,-0.5,0.866025)^T,
+\qquad
+{}^H\mathbf n_c=R^T{}^F\mathbf n_c=(-0.342020,0,0.939693)^T.
+$$
+
+It is generally neither a fixed forearm $z$-axis nor a fixed hand $z$-axis.
+The constraint does not say that a chosen Euler angle rate or the forearm-frame
+component $\omega_z$ vanishes. For example, the allowed deviation direction
+$\mathbf b=(0,\cos\phi,\sin\phi)^T$ has a nonzero $z$ component when the
+wrist is flexed. Confusing coordinate rates with angular-velocity components
+would therefore label permitted motion “constrained.”
+
+Because $\mathbf a$ and $\mathbf b$ are orthogonal unit vectors, this joint's
+$3\times2$ angular-velocity Jacobian has rank two. Straight shaft alignment
+does not cause gimbal lock in this model. Singularities of a supported
+driveshaft assembly, an Euler chart, and a chosen golf task require their own
+analyses. They are not interchangeable.
+
+::: {.aba-diagram-scroll role="region" aria-label="Wrist and Cardan mechanisms; scroll horizontally" tabindex="0"}
+![Two Different Mechanisms](../content/wrist-as-universal-joint/wrist-mechanisms.png){style="min-width: 1000px;" fig-alt="Left: in the forearm y-z plane at 30 degrees of flexion, allowed axis b and reciprocal direction n are perpendicular and both rotate with flexion; axis a points out of the page. Right: supported Cardan shaft speed ratios vary with input phase for bends of zero, 30 and 60 degrees."}
+:::
+
+The left panel shows the freely moving ideal wrist. The right panel includes
+fixed shaft supports and therefore describes a different mechanism. Its phase
+is not an anatomical wrist angle; the two panels must not be identified by
+matching their angle symbols.
+
+[]{#general-constraint-dynamics}
+[]{#constraint-forces-in-the-equations-of-motion}
 
 ### Theoretical Formulation of Constraint Torques
 
-To understand the origin of these torques, we model the wrist dynamics using the Newton-Euler formulation for constrained rigid bodies.
-
-#### General Constraint Dynamics
-In constrained mechanical systems, the equations of motion can be written in the form:
-
-$$
-\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}_{\text{applied}} + \boldsymbol{\tau}_{\text{constraint}}
-$$
-
-where:
-- $\mathbf{q}$ represents generalized coordinates (joint angles)
-- $\mathbf{M}$ is the mass/inertia matrix
-- $\mathbf{C}$ contains Coriolis and centrifugal terms
-- $\mathbf{G}$ contains gravitational terms
-- $\boldsymbol{\tau}_{\text{applied}}$ represents actively applied torques (e.g., from muscles)
-- $\boldsymbol{\tau}_{\text{constraint}}$ represents constraint torques maintaining kinematic constraints
-
-The constraint torques can be expressed using Lagrange multipliers:
+Use redundant local generalized coordinates $\mathbf q\in\mathbb R^n$,
+an independent constraint Jacobian $A\in\mathbb R^{k\times n}$, and an
+actuator map $B\in\mathbb R^{n\times m}$. For stationary ideal constraints,
 
 $$
-\boldsymbol{\tau}_{\text{constraint}} = \mathbf{J}_c^T(\mathbf{q})\boldsymbol{\lambda}
+M\ddot{\mathbf q}+\mathbf h
+=B\mathbf u+\mathbf f+A^T\boldsymbol\lambda,
+\qquad A\dot{\mathbf q}=0.
 $$
 
-where $\mathbf{J}_c = \partial \Phi / \partial \mathbf{q}$ is the constraint Jacobian matrix derived from the holonomic constraints $\Phi(\mathbf{q}) = 0$, and $\boldsymbol{\lambda}$ is the vector of Lagrange multipliers.
+$M$ is positive definite in this coordinate chart. The bias $\mathbf h$
+includes gravity and velocity-dependent inertial terms; $\mathbf f$ contains
+other declared generalized forces, including modeled passive forces if they
+are not placed in $\mathbf h$. Use one convention consistently. The components
+of $\boldsymbol\lambda$ are multipliers, not automatically anatomical torque
+components: their units and meaning depend on how the constraint equations
+are scaled. The physical generalized reaction is $A^T\boldsymbol\lambda$.
 
-#### Derivation for the Wrist Universal Joint
-We define a local coordinate frame $\mathcal{F}_h$ attached to the hand, where:
-*   $\hat{x}$: Flexion/Extension axis (Actuated)
-*   $\hat{y}$: Radial/Ulnar Deviation axis (Actuated)
-*   $\hat{z}$: Pronation/Supination axis (Constrained)
-
-The kinematic constraint of the wrist joint dictates that no relative rotation occurs about the local $\hat{z}$ axis. Consequently, the wrist muscles cannot generate torque about this axis:
-$$
-\boldsymbol{\tau}_{\text{active}} = \tau_x \hat{x} + \tau_y \hat{y} + 0 \hat{z}
-$$
-However, the dynamics of the hand (and attached club) require a specific net torque to satisfy the equation of motion. Projecting Euler's equation onto the constrained $\hat{z}$ axis:
-$$
-(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})) \cdot \hat{z} = \boldsymbol{\tau}_{\text{net}} \cdot \hat{z}
-$$
-Substituting the torque decomposition $\boldsymbol{\tau}_{\text{net}} = \boldsymbol{\tau}_{\text{active}} + \boldsymbol{\tau}_{\text{constraint}} + \boldsymbol{\tau}_{\text{interaction}}$:
-$$
-(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega}))_z = \underbrace{(\boldsymbol{\tau}_{\text{active}})_z}_{0} + (\boldsymbol{\tau}_{\text{constraint}})_z + (\boldsymbol{\tau}_{\text{interaction}})_z
-$$
-Solving for the constraint torque $\tau_{c,z}$:
-$$
-\tau_{c,z} = \underbrace{(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega}))_z}_{\text{Dynamic Requirement}} - \underbrace{(\boldsymbol{\tau}_{\text{interaction}})_z}_{\text{External Load}}
-$$
-Within this idealized universal-joint model, the balance shows that the constrained-axis torque $\tau_{c,z}$ need not be zero. Rather, it is the torque required by the modeled constrained-axis dynamics after accounting for the external interaction term. The "Dynamic Requirement" term depends on $\boldsymbol{\omega}$ and $\dot{\boldsymbol{\omega}}$, which in turn depend on the applied torques $\tau_x$ and $\tau_y$.
-
-Under these assumptions, **active torques about the x and y axes can induce a modeled constraint torque about the z axis** via the gyroscopic coupling term $\boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})$. That is one possible mathematical pathway for transmission in the simplified model; it is not, by itself, a validation of full-swing wrist behavior.
-
-These constraint torques have several important properties:
-
-1. **No mechanical work**: Constraint torques act in directions where motion is prevented, so they perform no work: $\boldsymbol{\tau}_{\text{constraint}} \cdot \dot{\mathbf{q}} = 0$
-
-2. **Load transmission**: Despite doing no work, constraint torques can redistribute loads between segments through the constraint equations
-
-3. **Nonlinearity**: Constraint torques depend nonlinearly on system configuration, velocities, and applied torques via the Coriolis term $\boldsymbol{\omega} \times \mathbf{I} \boldsymbol{\omega}$.
-
-4. **Uncontrollability**: Because they arise from constraints rather than actuation, constraint torques cannot be directly controlled. They exist in the null space of the control input matrix $B(\mathbf{q})$.
-
-5. **Variability**: The dependence on multiple system states makes constraint torques inherently variable.
-
-### Constraint Torques in Forward Dynamics Simulation
-
-::: {.callout-note}
-## Note on 3D Validation Scope
-The constraint torque analysis presented in this section is derived from the theoretical equations of motion for a 3D universal joint. While the underlying physics are demonstrated here using isolated joint simulations, the full-swing validation model presented in **Part 5** is currently restricted to 2D planar dynamics ($q \in \mathbb{R}^3$) and does not yet capture these out-of-plane "Beta axis" effects. Verification of the "Grip Angle" hypothesis in a full-swing context requires future 3D multibody implementation.
-:::
-
-In MATLAB Simulink's Simscape Multibody environment, joint blocks allow specification of input torques and sensing of output torques. For a universal joint driven by input torques about its two actuated axes, the sensed output torques include three components:
+Differentiate the velocity constraint and substitute the dynamics:
 
 $$
-\begin{align}
-\tau_{\text{sensed},x} &= \tau_{x,\text{applied}} + \tau_{x,\text{passive}} \\
-\tau_{\text{sensed},y} &= \tau_{y,\text{applied}} + \tau_{y,\text{passive}} \\
-\tau_{\text{sensed},z} &= \tau_{z,\text{constraint}}
-\end{align}
+AM^{-1}A^T\boldsymbol\lambda
+=-\dot A\dot{\mathbf q}-AM^{-1}(B\mathbf u+\mathbf f-\mathbf h).
 $$
 
-where:
-- Subscripts $x$ and $y$ represent the two actuated axes (e.g., flexion/extension and radial/ulnar)
+With independent rows of $A$, the left matrix is positive definite. Solve
+this system rather than forming numerical inverses. In analytical notation,
 
-- Subscript $z$ represents the constrained axis (forearm rotation)
+$$
+\frac{\partial\boldsymbol\lambda}{\partial\mathbf u}
+=-(AM^{-1}A^T)^{-1}AM^{-1}B.
+$$
 
-- $\tau_{\text{passive}}$ represents passive dynamic effects (inertial, Coriolis, etc.)
+**A reaction can depend immediately on actuator input even though the joint
+has no actuator along its reciprocal direction.** For a transparent local
+example, take $A=(0,0,1)$, $B=(\mathbf e_x,\mathbf e_y)$, zero bias,
+and the illustrative inertia matrix
 
-- $\tau_{\text{constraint}}$ is the constraint torque about the constrained axis
+$$
+M=\begin{bmatrix}2&0&0.5\\0&2&0\\0.5&0&2\end{bmatrix}.
+$$
 
-The presence of $\tau_{z,\text{constraint}} \neq 0$ despite no direct actuation about the $z$-axis is the signature of constraint torque generation. This torque emerges from the interaction of:
-1. Applied torques about the actuated axes
+An input $(u,0)^T$ gives $\ddot q_x=u/2$, $\ddot q_z=0$ and
+$\lambda=u/4$. A changed actuator input changes the constraint torque at
+the same state. This counterexample is enough to disprove the blanket claim
+that all constraint loads belong to uncontrollable drift. It does not show
+that every desired reaction can be prescribed independently of motion.
 
-2. System momentum and inertial effects
-
-3. Joint geometry and constraint equations
-
-4. Configuration-dependent coupling between axes
-
-### Physical Demonstration of Constraint Torque Generation
-
-The generation of constraint torques at a universal joint can be demonstrated with a simple physical experiment:
-
-1. Grasp your left wrist firmly with your right hand
-
-2. Actively prevent any forearm rotation (pronation/supination)
-
-3. With your left hand, simultaneously apply:
-- Flexion torque (curling palm toward forearm)
-
-- Ulnar deviation torque (moving hand toward pinky side)
-
-4. Observe the rotational force felt by the restraining right hand
-
-The torque felt by the right hand about the forearm rotation axis is a constraint torque. It arises not from any muscular effort to rotate the forearm, but from the simultaneous application of torques about the two perpendicular wrist axes. The right hand must apply an equal and opposite constraint torque to maintain the no-rotation constraint.
-
-This demonstration reveals an important principle: *constraint torques can be generated through coordinated actuation of permitted degrees of freedom, even though the constrained degree of freedom cannot be directly actuated at that joint*.
+Reactions annihilate allowed virtual velocities. They are not generally in
+the null space of $B$, which acts on input vectors, or Euclidean-orthogonal
+to every applied generalized force. Using a tangent basis $Z$ with $AZ=0$
+eliminates ideal reactions from the reduced equations by multiplication with
+$Z^T$. To compute actual joint loads, recover them from the full balance.
+This is the distinction between reduced motion equations and reaction
+reconstruction. [Modern Robotics, §8.7](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/).
 
 ## Constraint Torque Transmission in the Golf Swing
 
 ### The Wrist as a Torque Transmission Pathway
 
-In the golf swing, torques generated by proximal segments (trunk rotation, shoulder internal rotation, forearm pronation) must be transmitted to the club. The wrist joint, positioned between the forearm and hand, serves as a critical link in this transmission chain.
+At a common joint point $P$, let $(\mathbf F,\boldsymbol\tau)$ be the
+ideal constraint wrench exerted on the hand by the forearm, expressed in one
+inertial frame. The opposing wrench acts on the forearm. Their combined power is
 
-The constraint-torque property of universal joints provides one possible mechanism for this transmission. Torque about the forearm rotation axis (generated by forearm pronation/supination muscles) can be transmitted through the wrist to the hand in the model without requiring wrist muscles to actively generate the same torque locally. Whether this mechanism is large enough to matter in vivo depends on soft-tissue compliance, joint geometry, grip configuration, and swing dynamics.
+$$
+P_{c,H}+P_{c,F}
+=\mathbf F^T(\mathbf v_{P,H}-\mathbf v_{P,F})
++\boldsymbol\tau^T(\boldsymbol\omega_H-\boldsymbol\omega_F)=0.
+$$
 
-However, this passive transmission comes with a critical caveat: because constraint torques cannot be directly controlled at the wrist, they inherit all the variability present in the proximal segments that generate them. As noted in discussion of this phenomenon:
+The first term vanishes because the joint points coincide and have equal
+velocity; the second vanishes for the reciprocal couple. Yet the individual
+body powers need not be zero. For example, a $2\,\mathrm{N\,m}$ couple along
+$\mathbf n_c$ and a common $10\,\mathrm{rad/s}$ angular-velocity component
+along that direction give $+20\,\mathrm W$ to one body and $-20\,\mathrm W$
+to the other. The ideal constraint redistributes energy without generating it.
 
-> *"[Constraint torques] are dependent on motion of other components—any rotation or torque in the forearm will directly affect these and there are no degrees of freedom in the wrist to modulate or control any of these torques induced from the forearm axis. It is forced to transmit whatever it receives on the rotational axis."*
+This resolves the apparent contradiction between “does no work” and
+“transmits energy.” Zero **combined** work is not zero work on each segment.
+If a proximal motion is externally prescribed, its driving actuator can supply
+energy to the modeled subsystem. For a moving constraint, the reduced subsystem
+reaction power need not vanish. Muscle work, tissue energy storage, dissipation,
+gravity and external contact power must be included in the appropriate system
+boundary. A large transmitted torque alone measures none of those efficiencies.
 
-This creates a control challenge: the wrist transmits constraint torques from proximal segments to the club, but has no mechanism to filter or modulate these torques. Whatever variability exists in forearm motion, trunk rotation, or their interaction will be transmitted directly through the wrist via constraint torques.
+### Inertia, Wrench Transport and a Moving Wrist
 
-### Variability Accumulation Through the Kinematic Chain
+Describe grip attachment by a full rigid transform ${}^{H}T_C(g)$, where $g$
+collects measured grip parameters. The attachment rotation and translation, along with any separate compliance model,
+cannot generally be reconstructed from a single “finger versus palm” label.
+For a force applied at $P$, a moment reported about club center of mass $C$ is
 
-The constraint torques measured at the wrist include contributions from variability in:
+$$
+\boldsymbol\tau_C=\boldsymbol\tau_P+
+(\mathbf p_P-\mathbf p_C)\times\mathbf F.
+$$
 
-1. **Shoulder motion**: Variations in shoulder internal/external rotation timing and magnitude
+Then rotate both force and moment into the desired frame. A pure couple is
+independent of reference point, but a wrench with nonzero force is not.
+Similarly, express and transport the full club inertia tensor:
 
-2. **Forearm rotation**: Variability in pronation/supination velocity and acceleration
+$$
+I_P=I_C+m\big[(\mathbf r^T\mathbf r)\,\mathrm{Id}
+-\mathbf r\mathbf r^T\big],\qquad
+\mathbf r=\mathbf p_C-\mathbf p_P.
+$$
 
-3. **Wrist actuation**: Variations in flexion/extension and radial/ulnar deviation torques
+At the center of mass, Euler's equation is
+$\sum\boldsymbol\tau_C=I_C\dot{\boldsymbol\omega}
++\boldsymbol\omega\times(I_C\boldsymbol\omega)$.
+For a body-fixed point $P$ accelerating with $\mathbf a_P$, the corresponding
+balance is
 
-4. **Dynamic coupling**: Nonlinear interactions between all segment motions
+$$
+\sum\boldsymbol\tau_P
+=I_P\dot{\boldsymbol\omega}
++\boldsymbol\omega\times(I_P\boldsymbol\omega)
++m\mathbf r\times\mathbf a_P.
+$$
 
-5. **System configuration**: Dependence on instantaneous joint angles throughout the chain
+All vectors in an equation must share a frame. The last term is why dividing
+a wrist moment by a grip-point inertia is not a complete moving-club model.
+Off-diagonal inertia and velocity coupling can also matter. For a fixed pivot,
+zero instantaneous angular velocity and a free rotational response,
+$\dot{\boldsymbol\omega}=I_P^{-1}\boldsymbol\tau_P$. A one-axis constrained
+response instead uses that axis's scalar inertia and supporting reactions.
 
-Because the wrist cannot modulate constraint torques, it effectively acts as a passive transmission mechanism that accumulates variability from all upstream sources. The critical question then becomes: *where do these variable constraint torques go?* 
+For scale, a point head of mass $0.200\,\mathrm{kg}$ at $0.85\,\mathrm m$
+from the grip and a thin uniform $0.100\,\mathrm{kg}$ shaft of length
+$1.0\,\mathrm m$ give a **transverse** grip-point inertia
 
-The answer depends critically on the angle at which the club is gripped relative to the wrist joint axes.
+$$
+I_\perp=0.200(0.85)^2+\tfrac13(0.100)(1.0)^2
+=0.177833\,\mathrm{kg\,m^2}.
+$$
+
+This idealized geometry does not determine a realistic shaft-axis inertia.
+That needs shaft radius, the head's intrinsic tensor and its offset from the
+shaft. The earlier $0.005\,\mathrm{kg\,m^2}$ value cannot be called the
+whole club's transverse grip inertia for this geometry. An assumed inertia
+ratio of 2, 0.5 or 30 does not become a measured club property by appearing
+in a simulator.
 
 ## The Grip Angle Hypothesis
 
+[]{#club-coordinate-system}
+
 ### Coordinate System Definitions
 
-To analyze grip angle effects, we must define coordinate systems for the relevant segments:
+Define a ground frame with $x$ toward the target, $z$ upward and $y$ completing
+a right-handed frame. Let $\mathbf s$ denote the unit shaft direction and
+$\mathbf n_f$ the outward face normal. A swing plane, when used, needs an
+explicit construction and time interval. Rotation within that plane is about
+its **normal**, not an axis lying in it. Shaft rotation is about $\mathbf s$.
+Neither axis is automatically a principal inertia axis or a pure face-yaw axis.
 
-#### Wrist Coordinate System:
-- $x$-axis: Flexion/extension rotation axis (approximately dorsal-palmar direction)
-
-- $y$-axis: Radial/ulnar deviation axis (approximately medial-lateral direction)  
-
-- $z$-axis: Constrained axis (approximately aligned with forearm long axis)
-
-#### Club Coordinate System:
-- Shaft axis: Along the club shaft from grip to clubhead
-
-- Alpha axis: Perpendicular to shaft, in the swing plane (controls in-plane angular motion)
-
-- Beta axis: Perpendicular to shaft, perpendicular to swing plane (controls face rotation)
-
-Near impact, when the club shaft is roughly aligned with the forearm, these coordinate systems have a particular relationship. However, the critical parameter is how the *hand* coordinate system (distal end of the wrist universal joint) aligns with the club coordinate system, which depends on grip position.
-
-### Case 1: Grip in the Fingers (Deep Grip)
-
-When the club is gripped predominantly in the fingers:
-
-- The butt of the club sits below the heel of the palm
-
-- The shaft passes through or near the base of the fingers
-
-- The hand's $z$-axis (emerging from the wrist constraint torques) is approximately perpendicular to the shaft
-
-In this configuration, constraint torques transmitted through the wrist's constrained axis are directed approximately along the club's **alpha axis**—the axis of in-plane rotational motion. The alpha axis has high moment of inertia because it represents rotation that moves the clubhead through its maximum radius of gyration.
-
-The angular acceleration produced by a constraint torque $\tau_c$ about the alpha axis is:
+Define face yaw by the horizontal projection of its normal:
 
 $$
-\alpha_{\text{swing plane}} = \frac{\tau_c}{I_{\alpha}}
+\gamma=\operatorname{atan2}(n_{f,y},n_{f,x}),\qquad
+n_{f,x}^2+n_{f,y}^2>0.
 $$
 
-where $I_{\alpha}$ is the club's moment of inertia about the alpha axis (typically $0.004-0.006 \text{ kg}\cdot\text{m}^2$ for drivers).
-
-Because $I_{\alpha}$ is large, even substantial constraint torques produce relatively modest angular accelerations. More importantly, rotation about the alpha axis produces *translation* of the clubhead through the impact zone—the very motion we want for generating clubhead speed. The constraint torques are channeled into productive work.
-
-Furthermore, face angle is minimally affected by alpha axis rotation near impact (when the shaft is near the ball). The relationship between alpha rotation and face angle change is approximately:
+For a small spatial orientation perturbation $\delta\boldsymbol\theta$,
+$\delta\mathbf n_f=\delta\boldsymbol\theta\times\mathbf n_f$, so
 
 $$
-\Delta \theta_{\text{face}} \approx \Delta \alpha \cdot \sin(\text{shaft angle})
+\delta\gamma=
+\frac{n_{f,x}\delta n_{f,y}-n_{f,y}\delta n_{f,x}}
+{n_{f,x}^2+n_{f,y}^2}
+=H_\gamma\,\delta\boldsymbol\theta.
 $$
 
-Near impact, shaft angle is small, so $\sin(\text{shaft angle}) \approx 0$, making face angle relatively insensitive to alpha axis rotation.
+At a square face with loft $\ell$, choose
+$\mathbf n_f=(\cos\ell,0,\sin\ell)^T$. Then
+$H_\gamma=(-\tan\ell,0,1)$. Rotation about the vertical changes yaw;
+rotation about the target direction also changes yaw when loft is nonzero.
+Rotation about the face normal itself does not change that normal. This
+derivation replaces an undefined “shaft angle” multiplier. A local derivative
+also becomes poorly conditioned when the normal is nearly vertical; changing
+the output definition may then be necessary.
 
-### Case 2: Grip in the Palm (Shallow Grip)
+[]{#case-1-grip-in-the-fingers-deep-grip}
+[]{#case-2-grip-in-the-palm-shallow-grip}
 
-When the butt of the club extends into the palm:
+### Grip Position Is a Geometric Parameter, Not a Verdict
 
-- The butt of the club sits in or near the heel of the palm
+In the ideal attachment, $R_{WC}=R_{WF}R_{FH}R_{HC}(g)$. Grip changes can alter
+the expressed reaction direction, the moment arm of transmitted forces, the
+effective inertia and the face measurement map. In a complete model they can
+also alter allowable wrist posture, passive impedance, muscle moment arms
+and contact closure through the second hand. A torque projection holds only
+the first of these effects in view.
 
-- The shaft passes through or above the base of the fingers
-
-- The hand's $z$-axis is more closely aligned with the shaft axis
-
-In this configuration, constraint torques transmitted through the wrist are directed more closely along the club's **beta axis**—the shaft rotation axis that controls face angle. This axis has low moment of inertia (typically $0.0001-0.0002 \text{ kg}\cdot\text{m}^2$ about shaft rotation).
-
-The angular acceleration produced by the same constraint torque $\tau_c$ is now:
+Under an intentionally restricted short-time calculation—fixed pivot,
+frozen geometry, zero initial angular velocity and no other torque change—
+a perturbation of a reaction couple gives
 
 $$
-\alpha_{\text{face rotation}} = \frac{\tau_c}{I_{\beta}}
+\delta\ddot\gamma
+\simeq H_\gamma I_P^{-1}\mathbf n_c\,\delta\lambda_r.
 $$
 
-where $I_{\beta} \ll I_{\alpha}$. The ratio is typically:
+The scalar $H_\gamma I_P^{-1}\mathbf n_c$ is a **local sensitivity**, not a
+universal inertia ratio. A direction can have a small yaw sensitivity because
+of geometry, not simply because its inertia is large. The same direction may
+still change path, loft, strike location or speed. Moreover, $\lambda_r$
+itself changes with grip and inputs; comparing identical reaction noise
+between grips is an extra experimental assumption, not a consequence of the
+constraint equations.
 
-$$
-\frac{I_{\alpha}}{I_{\beta}} \approx 20-30
-$$
-
-This means the *same magnitude of constraint torque* produces 20-30 times greater angular acceleration when directed into face rotation versus swing plane rotation. Moreover, face rotation directly controls clubface orientation—the variable most critical for shot dispersion.
+[]{#finger-grip-perpendicular-to-shaft}
+[]{#palm-grip-aligned-with-shaft}
 
 ### Implications for Speed and Consistency
 
-The grip angle hypothesis predicts fundamentally different outcomes for the two grip configurations:
+The hypothesis can now be stated precisely: some measured hand–club
+attachments may reduce the sensitivity of selected impact outputs to a
+specified perturbation distribution while preserving feasible delivery and
+effort. Another attachment may perform better under different disturbances,
+equipment or control policies. This is a design and identification problem.
 
-#### Finger Grip (Perpendicular to Shaft):
-1. Constraint torques directed into high-inertia alpha axis
+Larger inertia reduces instantaneous acceleration for the same scalar torque
+in a specified one-axis model. It also changes the torque needed to achieve
+a desired motion. Inertia alone is not damping, does not dissipate energy,
+and does not guarantee less terminal angle error. Likewise, a smaller yaw
+sensitivity can coexist with greater speed variation. Study the joint output
+vector—speed, direction, face normal and strike—before calling a perturbation
+“performance-irrelevant.”
 
-2. Variable constraint torques produce modest, bounded angular accelerations
+Descriptions such as “in the fingers,” “in the palm,” “strong” or “weak” can
+help an instructor communicate, but they do not uniquely specify $T_{HC}$.
+They should be accompanied by measured geometry when testing this mechanism.
+No general optimum of 20–40 degrees, unavoidable palm-grip instability, or
+increase in clubhead speed follows from the derivation above.
 
-3. Alpha rotation contributes to clubhead translation and speed
+## Variability Accumulation Through the Kinematic Chain
 
-4. Face angle remains relatively stable despite constraint torque variability
-
-5. Lower control burden: variability is channeled into performance-relevant direction
-
-#### Palm Grip (Aligned With Shaft):
-1. Constraint torques directed into low-inertia beta axis
-
-2. Variable constraint torques produce large angular accelerations
-
-3. Beta rotation contributes primarily to face rotation, not clubhead speed
-
-4. Face angle highly sensitive to constraint torque variability
-
-5. Higher control burden: precise coordination required to manage face angle
-
-The fundamental trade-off is between an axis where constraint torques are *useful but less variable in their effect* (alpha) versus an axis where constraint torques are *amplified and directly affect the critical performance variable* (beta).
+State dependence and nonlinearity do not by themselves imply randomness,
+unpredictability or chaos. Let $\boldsymbol\lambda=L(\mathbf x,\mathbf u,g,p)$,
+where $p$ contains model parameters. A local perturbation has the form
+$\delta\boldsymbol\lambda=L_x\delta\mathbf x+L_u\delta\mathbf u
++L_g\delta g+L_p\delta p$. Its covariance includes all cross terms.
+Correlated variations can reinforce or cancel; a serial chain is not an
+arithmetic accumulator of independent errors.
 
 ### Quantitative Example
 
-These are illustrative order-of-magnitude figures, not measured values; the point is the *ratio* between the two axes, which follows directly from their moments of inertia. Consider a constraint-torque fluctuation with standard deviation $\sigma_{\tau_c} = 0.15$ N·m transmitted through the wrist during the final $\Delta t \approx 10$ ms before impact. We track how that torque noise propagates to an angular deviation by integrating twice (torque → angular acceleration → angular velocity → angle), using the rough estimates $\sigma_\omega \approx \sigma_{\ddot\theta}\,\Delta t$ and $\sigma_\theta \approx \sigma_\omega\,\Delta t$.
-
-For a finger grip directing this torque into the **alpha axis** (swing-plane rotation), where the club's moment of inertia is large ($I_\alpha = 0.005$ kg·m²):
-
-$$
-\begin{align}
-\sigma_{\ddot\alpha} &= \frac{\sigma_{\tau_c}}{I_{\alpha}} = \frac{0.15 \text{ N·m}}{0.005 \text{ kg·m}^2} = 30 \text{ rad/s}^2 \\
-\sigma_{\dot\alpha} &\approx \sigma_{\ddot\alpha}\,\Delta t = 30 \times 0.01 = 0.30 \text{ rad/s} \\
-\sigma_{\alpha} &\approx \sigma_{\dot\alpha}\,\Delta t = 0.30 \times 0.01 = 0.003 \text{ rad} \approx 0.17°
-\end{align}
-$$
-
-This sub-tenth-of-a-degree variation lies in the swing plane: it perturbs clubhead speed slightly but has minimal effect on face angle near impact.
-
-For a palm grip directing the *same* torque into the **beta axis** (face rotation about the shaft), where the club's moment of inertia is roughly 33× smaller ($I_\beta = 0.00015$ kg·m²):
+To isolate integration, suppose a scalar torque error $\eta$ is constant
+through a short interval $T$, has zero mean and standard deviation
+$\sigma_\tau$, and acts on a single inertia $I$. Initial angle and velocity
+errors are zero. Direct integration gives
 
 $$
-\begin{align}
-\sigma_{\ddot\beta} &= \frac{\sigma_{\tau_c}}{I_{\beta}} = \frac{0.15 \text{ N·m}}{0.00015 \text{ kg·m}^2} = 1000 \text{ rad/s}^2 \\
-\sigma_{\dot\beta} &\approx \sigma_{\ddot\beta}\,\Delta t = 1000 \times 0.01 = 10 \text{ rad/s} \\
-\sigma_{\text{face angle}} &\approx \sigma_{\dot\beta}\,\Delta t = 10 \times 0.01 = 0.10 \text{ rad} \approx 5.7°
-\end{align}
+\delta\omega(T)=\frac{T}{I}\eta,\qquad
+\delta\theta(T)=\frac{T^2}{2I}\eta,
+\qquad \sigma_\theta=\frac{T^2}{2I}\sigma_\tau.
 $$
 
-The face-angle deviation is larger than the alpha-axis deviation by exactly the inertia ratio $I_\alpha/I_\beta \approx 33$, turning a negligible $0.17°$ wobble into a swing-ruining $5.7°$ of face variation. A $5.7°$ open or closed face at impact moves a drive tens of yards offline. This example illustrates how *identical* constraint-torque variability produces drastically different model outcomes depending on grip orientation: the beta axis amplifies torque noise because there is so little rotational inertia to resist it.
+Using the earlier article's **illustrative**, unmeasured values
+$\sigma_\tau=0.15\,\mathrm{N\,m}$ and $T=0.010\,\mathrm s$:
+
+| Assumed Scalar Inertia | Acceleration SD | Velocity SD at $T$ | Angle SD at $T$ |
+|---|---:|---:|---:|
+| $0.005\,\mathrm{kg\,m^2}$ | $30\,\mathrm{rad/s^2}$ | $0.300\,\mathrm{rad/s}$ | $0.0015\,\mathrm{rad}=0.08594^\circ$ |
+| $0.00015\,\mathrm{kg\,m^2}$ | $1000\,\mathrm{rad/s^2}$ | $10.000\,\mathrm{rad/s}$ | $0.0500\,\mathrm{rad}=2.86479^\circ$ |
+
+These are rotations of the hypothetical scalar coordinate, not measured
+clubface yaw or shot dispersion. Their ratio is $33.333$, and the integration
+factor is one-half. They establish a sensitivity under declared assumptions;
+they establish neither typical club inertias nor a grip comparison. Converting
+face orientation to ball flight would additionally require impact geometry,
+club velocity, ball/face interaction and aerodynamics.
+
+[]{#dynamic-complexity}
+
+### Temporal Correlation and Feedback
+
+For a time-varying scalar torque error with covariance
+$C_\tau(s,t)=\mathbb E[\eta(s)\eta(t)]$, the same linear integrator gives
+
+$$
+\operatorname{Var}[\delta\theta(T)]
+=\frac{1}{I^2}\int_0^T\int_0^T
+(T-s)(T-t)C_\tau(s,t)\,ds\,dt.
+$$
+
+Frozen error gives $\sigma_\tau^2T^4/(4I^2)$. Ideal white torque noise with
+$C_\tau(s,t)=Q_\tau\delta(s-t)$ instead gives
+$Q_\tau T^3/(3I^2)$; $Q_\tau$ has torque-squared times time units and is not
+a pointwise torque variance. A sampled random trace also needs its sample
+interval, filtering and covariance specified. Resampling arbitrary independent
+values without those choices changes the physical disturbance model.
+
+For a nonlinear swing linearized along a nominal trajectory, collect all
+perturbations in $\mathbf z$ and write
+$\delta\dot{\mathbf x}=A(t)\delta\mathbf x+E(t)\delta\mathbf z$.
+The transition matrix $\Phi(T,t)$ gives the terminal effect
+
+$$
+\delta\mathbf y(T)=C_T\Phi(T,0)\delta\mathbf x(0)
++\int_0^T C_T\Phi(T,t)E(t)\delta\mathbf z(t)\,dt.
+$$
+
+Grip affects $A$, $E$ and $C_T$, not just an isolated torque direction.
+Feedback changes the state evolution; feedforward preparation changes the
+nominal trajectory and correlations. Delays and actuator limits restrict
+compensation, but they do not justify labeling every reaction uncontrollable.
+If impact time itself changes, account for that event-time perturbation rather
+than sampling every trial at a fixed clock time and calling it “impact.”
 
 ## Connection to Arm-Club Plane Separation
 
-An interesting corollary of this analysis relates to the commonly observed separation between arm plane and club plane during the downswing. Many golfers maintain distinct planes for arm swing and club rotation, with the club plane typically more upright than the arm plane in the delivery position.
+Two vectors can lie in the same plane without being parallel. Consequently,
+“single plane” does not mathematically imply shaft–forearm collinearity, a
+palm grip, or alignment with the wrist's reciprocal direction. A plane defined
+by body landmarks and a plane fitted to a clubhead trajectory are also
+different constructions. Declare the definition before comparing them.
 
-This plane separation may provide a mechanical advantage related to constraint torque transmission. When arms and club are constrained to the same plane (a "single plane" swing), the geometric relationship between forearm axis and club shaft is more constrained. Specifically, maintaining the club on the arm plane tends to position the shaft more parallel to the forearm axis throughout the downswing.
+Coleman and Rankin's seven-golfer kinematic study found that the chosen
+left-arm plane changed during the downswing and the clubhead did not remain
+in it. That challenges a fixed-plane representation for those observations;
+it is not an experiment showing that deliberately creating plane separation
+improves grip transmission. [Coleman and Rankin, 2005](https://pubmed.ncbi.nlm.nih.gov/15966340/).
 
-This geometric constraint effectively creates a palm-grip-like mechanical situation even with a physically correct finger grip. The constraint torques transmitted through the wrist will still be directed more toward shaft rotation simply due to the geometric relationship enforced by the single-plane constraint.
-
-By allowing the arm and club planes to separate, the golfer can:
-
-1. Position the club shaft more perpendicular to the forearm axis during delivery
-
-2. Maintain alignment between wrist constraint torques and the club alpha axis
-
-3. Preserve the mechanical advantages of the finger grip configuration
-
-4. Reduce sensitivity of face angle to constraint torque variability
-
-This provides a dynamical explanation—based on torque transmission mechanics—for why "single plane" swings may be mechanically disadvantageous, independent of other kinematic or comfort considerations.
+MacKenzie's later simulation examined how club position relative to the swing
+plane affects club delivery. Such a model can investigate a specific geometric
+mechanism under its imposed torques and objective, but does not establish a
+universal coaching rule or a causal finger-versus-palm effect.
+[MacKenzie, club-position study](https://pubmed.ncbi.nlm.nih.gov/22900397/).
 
 ## Mathematical Framework: From Kinematics to Kinetics
 
+### Constraint Torques in Forward Dynamics Simulation
+
+In Simscape Multibody, a primitive's actuator-torque output concerns its
+generalized actuation. Composite constraint torque and total torque are
+three-component vectors resolved in a selected base or follower frame.
+Total torque includes actuation, internal mechanics, limits and constraints.
+Changing “base on follower” to “follower on base” reverses the composite sign.
+These are software definitions; they do not identify which options were used
+in a historical model. [MathWorks, Universal Joint](https://www.mathworks.com/help/sm/ref/universaljoint.html),
+[force and torque sensing](https://www.mathworks.com/help/sm/ug/force-and-torque-sensing.html).
+
+Consequently, a difference between a two-input torque vector and a sensed
+three-component wrench is not evidence that mysterious extra torque has
+appeared. Their dimensions, bases and roles differ. Map the physical wrench
+to generalized forces by virtual power, and account separately for passive
+elements. Do not add “inertial torque” or “Coriolis torque” to a measured total
+wrench simply because those terms occur on the left of the equations of motion.
+
 ### The Forward-Inverse Dynamics Challenge
 
-The investigation of constraint torques emerged from a practical modeling challenge: converting between kinematically-driven and kinetically-driven simulations. 
-
-In a **kinematic simulation**, joint angles are prescribed as functions of time:
-
-$$
-\mathbf{q}(t) = \mathbf{q}_{\text{prescribed}}(t)
-$$
-
-The inverse dynamics problem then yields the required torques:
+For a prescribed, constraint-consistent trajectory, define
+$\mathbf d=M\ddot{\mathbf q}+\mathbf h-\mathbf f$. Inverse dynamics must solve
 
 $$
-\boldsymbol{\tau}_{\text{total}} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
+\begin{bmatrix}B&A^T\end{bmatrix}
+\begin{bmatrix}\mathbf u\\\boldsymbol\lambda\end{bmatrix}
+=\mathbf d.
 $$
 
-However, $\boldsymbol{\tau}_{\text{total}}$ includes both actively applied and constraint torques:
+The pair may be unique, underdetermined or infeasible, depending on actuation,
+contacts and the prescribed motion. Closed chains and two-hand grip loads can
+introduce internal-force indeterminacy. A least-squares answer with residual
+is not exact physical replay; report the residual and any force-allocation
+criterion. Reduced-coordinate inverse dynamics can determine net generalized
+joint torques without uniquely identifying muscle forces or internal contact
+loads.
+
+To replay in forward dynamics, retain the same geometry, inertias, gravity,
+passive forces, external loads, contact mode and compatible initial conditions.
+Supply the recovered actuator inputs at their correct ports and allow reactions
+to be solved again. Remove prescribed-motion drivers that would otherwise
+overconstrain the replay. Compare motion, actuator work, joint loads and
+constraint residuals under tighter solver tolerances. The distinction is
+developed further in the [inverse-dynamics article](inverse-dynamics.qmd).
+
+### Physical Demonstration of Constraint Torque Generation
+
+An instrumented mechanical jig can make this distinction tangible. Support a
+known two-axis joint, measure its configuration and applied primitive torques,
+and record the six-component load at a calibrated sensor. Compare the measured
+reaction with the constrained dynamics, including support motion and sensor
+moment arms. Use zero-load, quasi-static and dynamic trials to isolate terms.
+
+Holding one's wrist with the opposite hand can suggest that loads are coupled,
+but it does not isolate a passive constraint torque. Voluntary co-activation,
+forearm action, external restraint and tissue deformation are all involved.
+The sensation is not an identification experiment or evidence that muscular
+effort about another axis is absent.
+
+## The Cardan Driveshaft Analogy
+
+With shafts supported at a fixed bend $\delta$, $|\delta|<\pi/2$, choose
+input phase $\varphi$ and output phase $\chi$ so that
 
 $$
-\boldsymbol{\tau}_{\text{total}} = \boldsymbol{\tau}_{\text{active}} + \boldsymbol{\tau}_{\text{constraint}}
+\chi=\operatorname{atan2}(\cos\delta\sin\varphi,\cos\varphi),
+\qquad
+\frac{\dot\chi}{\dot\varphi}
+=\frac{\cos\delta}{1-\sin^2\delta\sin^2\varphi}.
 $$
 
-In a **kinetic simulation**, only the active torques should be specified as inputs:
+Continue the angle through branch cuts for complete revolutions. The derivative
+has **no square root**. A phase origin shifted by $90^\circ$ yields the
+cosine-squared form used in the Simscape Driveline documentation. Compare
+phase definitions before comparing extrema.
+[MathWorks, Driveline Universal Joint](https://www.mathworks.com/help/sdl/ref/universaljoint.html).
 
-$$
-\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} = \boldsymbol{\tau}_{\text{active}} + \boldsymbol{\tau}_{\text{constraint}} - \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{G}(\mathbf{q})
-$$
+For a lossless, negligibly inertial coupling with stationary supports,
+power-conjugate driving and delivered load magnitudes obey
+$\tau_{\rm out}/\tau_{\rm in}=\dot\varphi/\dot\chi$. With both port
+torques defined positive into the device, use the opposite sign in their
+power balance. Finite component inertia, compliance, losses or moving supports
+require their additional energy terms. Torque multiplication is not efficiency
+greater than one.
 
-where $\boldsymbol{\tau}_{\text{constraint}}$ emerges automatically from the constraint equations.
+At $\delta=30^\circ$, the speed ratio is $0.866025$ at
+$\varphi=0$ and $1.154701$ at $\varphi=90^\circ$; the ideal torque ratios
+are their reciprocals. Straight alignment gives a ratio of one everywhere.
+The limiting right-angle assembly is outside this operating model. Neither
+its degeneration nor an artificial 89-degree numerical clip represents an
+extreme anatomical palm grip.
 
-The challenge is decomposing $\boldsymbol{\tau}_{\text{total}}$ into active and constraint components. For a universal joint at the wrist:
-
-$$
-\begin{align}
-\tau_{\text{sensed},x} &= \tau_{\text{active},x} + \tau_{\text{passive},x} \\
-\tau_{\text{sensed},y} &= \tau_{\text{active},y} + \tau_{\text{passive},y} \\
-\tau_{\text{sensed},z} &= \tau_{\text{constraint},z}
-\end{align}
-$$
-
-The $z$-component is purely constraint torque (no actuation exists). But the $x$ and $y$ components include passive dynamic terms that arise from motion, not from actuation. Separating these requires detailed knowledge of the system dynamics—exactly the topic addressed in robotics courses on constrained dynamics.
-
-### Constraint Forces in the Equations of Motion
-
-For a holonomic constraint (one expressible as a function of positions):
-
-$$
-\phi(\mathbf{q}) = 0
-$$
-
-The constraint force/torque is:
-
-$$
-\boldsymbol{\tau}_{\text{constraint}} = \mathbf{J}^T(\mathbf{q})\boldsymbol{\lambda}
-$$
-
-where the constraint Jacobian is:
-
-$$
-\mathbf{J}(\mathbf{q}) = \frac{\partial \phi}{\partial \mathbf{q}}
-$$
-
-The Lagrange multipliers $\boldsymbol{\lambda}$ are determined by enforcing the constraint at the acceleration level:
-
-$$
-\mathbf{J}(\mathbf{q})\ddot{\mathbf{q}} + \dot{\mathbf{J}}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} = 0
-$$
-
-For a universal joint constraining rotation about the $z$-axis and all translations, the constraint equations and resulting constraint torques involve complex geometric relationships between segment orientations and the joint constraint structure.
-
-Fortunately, MATLAB Simulink computes these constraint torques automatically and provides them as sensed outputs. This removes the burden of manual calculation but requires understanding what these values represent and how they emerge from system dynamics.
+The [companion derivation](https://github.com/D-sorganization/AffineDrift/blob/main/content/wrist-as-universal-joint/MATHEMATICAL_DERIVATION.md)
+separates this driveshaft calculation from the wrist hypothesis. A demo that
+uses its bend angle also as a torque-projection angle makes an additional
+synthetic choice. It does not solve wrist reactions, simulate the whole swing,
+or validate grip recommendations. Independent derivative and full-revolution
+checks are needed; multiplying two deliberately reciprocal formulas is only
+an internal consistency check.
 
 ## Implications and Future Directions
 
+[]{#proof-limitations}
+
 ### Testable Predictions
 
-The grip angle hypothesis generates several testable predictions:
+Define a baseline participant, club, contact configuration, task and measured
+perturbation model. Then compare three questions separately:
 
-1. **Face angle variability**: Golfers using palm grips should exhibit greater face angle variability at impact compared to finger grip users, even with similar overall swing kinematics
+| Comparison | Held Fixed | Allowed to Change | What It Tests |
+|---|---|---|---|
+| Fixed-Input Forward Simulation | Actuator policy, initial state specification and external conditions | Motion and reactions under feasible new geometry | Response to a particular intervention |
+| Fixed-Motion Inverse Analysis | A feasible target motion and external loads | Required actuation and internal-load allocation | Effort and load consequences of reproducing motion |
+| Reoptimized Control | Objective, constraints and resource limits | Policy, trajectory and reactions | Best achievable result within the chosen model |
 
-2. **Constraint torque magnitude**: Forward dynamics simulations with different grip angles should show that identical applied torques produce different constraint torque distributions depending on grip configuration
-
-3. **Clubhead speed**: For the same applied torques and overall swing kinematics, finger grips should produce higher clubhead speeds due to more efficient channeling of constraint torques into translational motion
-
-4. **Variability sensitivity**: Introducing random noise into applied torques (as in Sasho MacKenzie's shaft lean variability studies) should produce larger face angle effects for palm versus finger grip configurations
-
-5. **Control burden**: Finger grip users should show lower variability in face angle relative to their variability in applied torques, indicating more effective passive "filtering" of variability
+Changing grip while imposing both all original torques and all original motion
+is generally not an independently specifiable comparison. Even initial states
+must be reconstructed to satisfy the new attachment and contact constraints.
+Report failures of feasibility rather than quietly relaxing the task for one
+condition. Speed and accuracy comparisons need the same definitions and units.
 
 ### Simulation Studies
 
-Comprehensive simulation studies could quantify these effects:
+Start with an analytic joint whose reactions and power balance are known.
+Verify the spatial wrist kinematics, wrench transforms, inertia transport,
+constraint residuals and inverse-to-forward replay. Add the second hand and
+floating base with explicit closure, then add compliant structures when the
+question requires them. Test time-step, differentiation and parameter
+sensitivity before interpreting small differences between grips.
 
-1. Build full 3D kinetic model of golfer-club system in MATLAB Simulink
+A useful result reports terminal-output covariance, actuator demand, tissue
+or contact loads within the model, and the perturbations responsible for each
+change. Check held-out perturbations and alternate plausible joint/club
+parameters. A result that reverses when a reasonable assumption changes is
+informative: it identifies what needs measuring before drawing a conclusion.
 
-2. Define grip angle as a parametric variable (0° = perpendicular to shaft, 90° = parallel to shaft)
-
-3. Apply realistic torque profiles to all actuated joints
-
-4. Introduce random noise to applied torques
-
-5. Measure:
-- Constraint torque magnitudes and variability
-
-- Clubhead speed and variability
-
-- Face angle at impact and variability
-
-- Angular accelerations about club axes
-
-6. Vary grip angle systematically and assess performance metrics
-
-A key challenge is defining realistic input torques for kinetic simulation. As discussed, this is not straightforward when working from kinematic data, requiring careful decomposition of sensed torques into active and passive components.
+[]{#individual-variability-and-optimization}
+[]{#measurement-challenges}
 
 ### Experimental Validation
 
-Experimental approaches face significant challenges due to the difficulty of measuring constraint torques in vivo. However, indirect validation might be possible through:
+Measure the hand–club transform, wrist/forearm motion, club delivery and
+repeat-trial variability. Choose instrumentation and calibration appropriate
+to the predicted effect. Separate measurement error from between-trial motor
+variation, use participant-level comparisons, allow adaptation to grip changes,
+and report uncertainty rather than selecting only successful shots.
 
-1. **Performance studies**: Compare clubhead speed and face angle variability across grip positions using high-speed motion capture and face impact measurement
+Motion capture and force plates help constrain a whole-body inverse problem,
+but they do not automatically identify how two hands share an internal grip
+load. Instrumented grip wrenches or justified contact/load-sharing models may
+be required. EMG measures electrical activity; it is not joint torque, muscle
+force or “control burden” without an additional measurement/model relationship.
+Use it as complementary evidence with its own normalization and uncertainty.
 
-2. **Perturbation studies**: Introduce controlled perturbations to forearm rotation and measure resulting face angle effects across different grip configurations
-
-3. **EMG studies**: Assess muscle activation patterns across grip conditions to evaluate control burden
-
-4. **Inverse dynamics**: Use motion capture and force plates to estimate joint torques, comparing sensed torque patterns across grip positions
+The hypothesis would be weakened if a predicted sensitivity change failed
+in held-out trials after measurement uncertainty and adaptation were accounted
+for. It would also be weakened if equally plausible contact or compliance
+models reversed the ranking. Finding a benefit for one participant or output
+would support that scoped result, not a universal rule for all golfers.
 
 ### Extension to Other Joints
 
-The constraint torque analysis framework applies to any constrained joint in the kinematic chain:
+The same accounting applies to humanoid feet, elbows, the spine and robot
+grippers. A contact can remove motion directions while carrying forces;
+actuation changes both motion and reactions; compliant elements add storage
+and dissipation; and the chosen task decides which sensitivity matters.
+Changing contact mode can invalidate a local linearization. Contact force
+limits, friction and lift-off therefore belong in a whole-body analysis.
 
-- **Elbow**: Often modeled as a hinge joint (one rotational DOF) with constraints on other rotations
-
-- **Shoulder complex**: Complex multi-axis joint with various constraints depending on model
-
-- **Spine**: Multiple segments with constrained translations and certain rotations
-
-- **Ankle/hip**: Lower body joints transmitting ground reaction forces
-
-Understanding constraint force/torque transmission throughout the entire kinematic chain could provide a comprehensive framework for optimizing both force generation and control in the golf swing.
-
-## Relationship to Instructional Practice
-
-### The "Grip in the Fingers" Principle
-
-Golf instruction has long emphasized gripping the club "in the fingers" rather than "in the palm." This is one of the most consistently taught fundamentals across instructional methods and eras. However, the mechanical basis for this advice has typically been explained through:
-
-- Hand mobility and "feel"
-
-- Wrist hinge mechanics
-
-- Leverage considerations
-
-- Empirical observation of skilled players
-
-The constraint torque framework provides an additional mechanical explanation: finger grips may be advantageous specifically because they direct uncontrollable, variable constraint torques into an axis where those torques contribute to speed while having minimal impact on face control.
-
-This is significant because it suggests the finger grip principle is not just about comfort, feel, or wrist mechanics, but about fundamental force transmission properties of constrained multi-body systems.
-
-### Individual Variability and Optimization
-
-While the analysis predicts general trends, individual optima may vary due to:
-
-- Hand size and finger length
-
-- Wrist anatomy and axis orientations  
-
-- Club design (grip thickness, shaft properties)
-
-- Swing style and applied torque patterns
-
-- Skill level and control capabilities
-
-The optimal grip angle for a given golfer might be determined through:
-1. Measurement of constraint torque variability in their swing
-
-2. Assessment of face angle sensitivity to grip changes
-
-3. Simulation studies with their specific anthropometry and swing pattern
-
-### Limitations of the Analysis
-
-Several limitations should be acknowledged:
-
-#### Model Simplification
-The wrist is more complex than a simple universal joint. Ligamentous constraints, intercarpal joint mechanics, and muscle co-activation all influence behavior. Some constraint-force features may persist in more detailed models, but that persistence should be demonstrated rather than assumed.
-
-#### Measurement Challenges
-Direct measurement of constraint torques in vivo is extremely difficult. While simulation provides these values directly, validating them against experimental data requires sophisticated inverse dynamics and careful error analysis.
-
-#### Dynamic Complexity
-The golf swing involves complex dynamic coupling between all body segments. Isolating the specific effect of wrist constraint torques requires careful experimental design or comprehensive simulation.
-
-#### Proof Limitations
-As noted in the original hypothesis statement: "it may be impossible to prove one way or the other." The variability and complexity of the system make definitive proof challenging. However, the hypothesis is testable through the predictions it generates.
-
-## Conclusion
-
-This paper proposes a mechanical hypothesis for understanding force and torque transmission in the golf swing, focusing on constraint torques at the wrist joint. Within a simplified universal-joint model with two actuated and one constrained degree of freedom, the analysis argues that:
-
-1. Universal-joint models can generate constraint torques about constrained axes through the interaction of applied torques, system momentum, and geometric constraints
-
-2. These constraint torques may provide force-transmission pathways, but their magnitude and direction are model-dependent and not directly commanded
-
-3. The angle at which the club is gripped may influence whether constraint torques project more strongly into high-inertia axes or into axes coupled to face variability
-
-4. A finger grip may be mechanically advantageous in this model if it directs constraint torques into the club's alpha axis, where high inertia can reduce sensitivity to torque variability
-
-5. A palm grip may be disadvantageous in this model if it directs constraint torques into the shaft rotation axis, where low inertia can amplify face-angle sensitivity
-
-6. Arm-club plane separation may provide mechanical advantages related to constraint-torque transmission geometry, but this remains a modeling prediction until tested against measured swings
-
-This analysis connects robotics theory (constraint dynamics, universal-joint mechanics) with golf biomechanics, but it should be read as a mechanically explicit hypothesis rather than a validated account of grip instruction. Empirical validation would require 3D motion capture, club-face measurements, inverse dynamics, and sensitivity tests across grip configurations.
-
-More broadly, this work illustrates why constraint analysis can matter in biomechanics. Constraint forces and torques often perform no work, but they can still redistribute loads within a model. Understanding these passive mechanical pathways may help identify testable technique mechanisms and the challenges faced by performers attempting to control complex, nonlinear multibody systems.
-
-The golf swing presents a difficult coordination problem: generating clubhead speed while controlling face orientation using a redundant, nonlinear kinematic chain with passive degrees of freedom. If the grip-orientation hypothesis is supported by data, it would describe one possible mechanism by which performers reduce control sensitivity: not by coordinating every variable perfectly, but by choosing mechanical configurations that channel some variability into less performance-relevant directions.
+[]{#conceptual-cross-references}
 
 ## Theoretical Synthesis
 
 ### Affine Decomposition of Constraint Forces
-Within the control-affine formalism $\dot{x} = f(x) + G(x)u$, constraint torques occupy a unique position. Although they arise from the interaction of input forces, they are mathematically orthogonal to the local control inputs $u_{wrist}$. Consequently, they function as a component of the **Velocity Drift** (per the Part 3 Force Taxonomy)—a passive dynamic response that the controller must anticipate but cannot directly command. The 'uncontrollability' of the forearm rotation axis at the wrist means that the dimensionality of the control input ($m=2$) is lower than the dimensionality of the operational space ($n=3$), defining the wrist as a classic **underactuated subsystem**.
+
+At a fixed state and contact mode, a torque-driven constrained model can be
+affine in its independent inputs. Eliminating reactions modifies both its
+input map and bias. Input-dependent muscle activation, stiffness, geometry or
+contact transitions may require a larger state or a different local model.
+“Not independently commanded” does not mean “independent of command.”
 
 ### Geometric Rejection of Disturbance
-The grip-angle hypothesis is analogous to **disturbance decoupling** in geometric control theory. In the simplified model, aligning the grip so that variable constraint torque projects more strongly onto the Alpha axis may reduce the sensitivity of the output $y$ (face angle) to the disturbance $d$ (constraint torque). This would be a passive mechanical contribution to stability, not a substitute for active control unless the decoupling is demonstrated in a full swing model.
+
+Geometry can reduce a chosen output's response to a particular load. To claim
+disturbance rejection over an interval, examine the complete propagation
+$C_T\Phi(T,t)E(t)$, not merely the instantaneous projection of a torque. A
+direction initially invisible to face yaw can affect it later through velocity,
+orientation or feedback coupling. This explains why the promising local idea
+needs a full dynamical treatment.
 
 ### The Null Space of Performance
-The distinction between the 'safe' Alpha axis and the 'critical' Beta axis illustrates the **Task-Null Space** principle. In optimal control, variance is sometimes tolerated in dimensions that weakly affect the cost function. In this model, the finger-grip configuration would need to make the constrained axis map predominantly into the null space of the face-orientation task before one could claim that high variance in $\tau_{constraint}$ can coexist with low variance in impact conditions.
 
-**Implicit Assumption: Ideal Constraints**
-This analysis relies on the idealization of the wrist as a perfect universal joint with holonomic constraints. In reality, soft tissue compliance introduces viscoelastic 'slop' that may relax these constraints, potentially adding damping and delay to the transmission. The lower-dimensional actuation argument remains useful as a modeling constraint, but its quantitative effect needs validation in anatomically detailed models.
+For a task map $\mathbf y=h(\mathbf q)$, directions in
+$\ker(Dh)$ preserve the task to first order at that configuration. They need
+not preserve it after a finite step or preserve other delivery variables.
+The uncontrolled-manifold approach analyzes how observed variance relates
+to a specified task; it does not prove that the nervous system ignores those
+directions or that constraint noise automatically enters them.
+[Scholz and Schöner, 1999](https://pubmed.ncbi.nlm.nih.gov/10382616/).
 
-### Conceptual Cross-References
-*   **Underactuated Robotics:** *Lynch & Park (2017), Ch 13.5* - For formal definitions of nonholonomic and Pfaffian constraints.
-*   **Null Space Control:** *Todorov (2004)* - "Optimality principles in sensorimotor control" regarding the uncontrolled manifold hypothesis.
-*   **Drift Invariance:** *Theory Part 3* - For the definition of passive force decomposition.
+[]{#the-grip-in-the-fingers-principle}
+
+## Relationship to Instructional Practice
+
+Grip advice may remain useful on the basis of practice, comfort, observation
+or other evidence. This article neither proves nor disproves that broader
+advice. It supplies a way to test one proposed mechanism. In practical terms,
+measure what changes with the grip, decide which delivery variables matter,
+and distinguish a geometrical explanation from evidence that an intervention
+improves a golfer's performance. A more complete model should sharpen that
+decision, not conceal assumptions behind more equations.
+
+## Conclusion
+
+The wrist can transmit constraint loads while retaining two independent motion
+coordinates. Those loads are jointly determined by geometry, inertia, support
+motion, external forces and actuation. Their effect on golf delivery depends
+on the hand–club transform, the club's spatial dynamics, the face measurement
+map and the time structure of perturbations. The resulting grip hypothesis is
+conditional but constructive: identify geometries that make a feasible desired
+delivery less sensitive to specified disturbances, and test that prediction
+against measurements and alternative models. That connects the original
+simulation puzzle to a rigorous program for golf and humanoid mechanics.
 
 ## Acknowledgments {.unnumbered}
 
-Thanks to Mike Duffey for insightful discussion regarding the dependence of constraint torques on proximal segment motion. The Modern Robotics course and textbook from Northwestern University (Kevin Lynch and Frank Park) provided essential background on constrained dynamics in mechanical systems.
+The original discussion with Mike Duffey motivated questions about proximal
+motion and wrist reactions. Lynch and Park's Modern Robotics material provided
+the constrained-dynamics starting point. Discussion and analogy motivate the
+investigation; they are not substitutes for the derivations or validation.
+
+## Print and Interactive Companions
+
+[Download the Revised Print Companion](../content/wrist-as-universal-joint/Wrist_Universal_Claude.pdf).
+The [Cardan and Torque Projection Demonstration](../src/tools/wrist_universal_joint/grip_angle_simulator.html)
+illustrates the supported-shaft calculation and a synthetic torque projection.
+It does not calculate human wrist reactions or integrate clubface motion.
 
 ## References {.unnumbered}
 
-1. Lynch, K. M., \& Park, F. C. (2017). *Modern Robotics: Mechanics, Planning, and Control*. Cambridge University Press.
-
-2. Northwestern University Modern Robotics Course. "Constrained Dynamics." Available at: <https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/>
-
-3. Murray, R. M., Li, Z., \& Sastry, S. S. (1994). *A Mathematical Introduction to Robotic Manipulation*. CRC Press.
-
-4. MacKenzie, S. J., \& Sprigings, E. J. (2009). Understanding the mechanisms of shaft deflection in the golf swing. *Sports Engineering*, 12(2), 69-75.
-
-5. Nesbit, S. M. (2005). A three dimensional kinematic and kinetic study of the golf swing. *Journal of Sports Science and Medicine*, 4(4), 499-519.
-
-6. Sprigings, E., \& Neal, R. (2000). An insight into the importance of wrist torque in driving the golf ball: A simulation study. *Journal of Applied Biomechanics*, 16(4), 356-366.
-
-7. Koike, S., Iida, H., \& Shiraki, H. (2006). Analysis of the wrist action in golf swing. *Theoretical and Applied Mechanics Japan*, 55, 267-274.
-
-8. Tinmark, F., Hellström, J., Halvorsen, K., \& Thorstensson, A. (2010). Elite golfers' kinematic sequence in full-swing and partial-swing shots. *Sports Biomechanics*, 9(4), 236-244.
-
-9. Kwon, Y. H., Han, K. H., Como, C., Lee, S., \& Singhal, K. (2012). Validity of the X-Factor computation methods and relationship between the X-Factor parameters and clubhead velocity in skilled golfers. *Sports Biomechanics*, 11(1), 1-18.
-
-10. Coleman, S. G., \& Rankin, A. J. (2005). A three-dimensional examination of the planar nature of the golf swing. *Journal of Sports Sciences*, 23(3), 227-234.
+The [annotated bibliography](https://github.com/D-sorganization/AffineDrift/blob/main/articles/wrist-universal-joint-bibliography.md) states which
+source supports which claim and distinguishes abstract-level review, technical
+documentation and empirical evidence. The main sources are linked at their
+points of use above. The [companion validation guide](https://github.com/D-sorganization/AffineDrift/blob/main/content/wrist-as-universal-joint/VALIDATION_AND_TESTING.md)
+defines reproducible mechanical checks and the remaining empirical questions.

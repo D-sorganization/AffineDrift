@@ -182,3 +182,8 @@ Source commit a80fbe1c was replayed cleanly onto protected main d7e51655 as
 77c4226c. The new main change is the other agent's qualified damping chapter
 (PR4298); it does not change PoE sources. All 17 focused tests pass again.
 PR #4300 is open; protected CI/merge/deployment remain pending.
+
+
+## Protected Publication
+
+PoE #4297 / PR #4300 is protected-merged and published as f07bf036a9e2d8a8fb8f20953c756efd7b53f2e1. Main CI 34292478876, textbooks 34292478858 and deployment 34292478895 pass. Exact live artifact 10082702228 passes 956/956 across 239 routes, with zero serious/critical axe findings, failures, retries or transient responses.

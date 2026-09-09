@@ -1,4 +1,4 @@
-"""Enhanced Wrist Universal Joint Model - Streamlit Web App.
+"""Cardan and Torque Projection Demonstration - Streamlit Web App.
 
 # mypy: disable-error-code="no-any-unimported"
 
@@ -52,7 +52,7 @@ def _init_page() -> None:
     Separating this from module level prevents side effects on import.
     """
     st.set_page_config(
-        page_title="Enhanced Wrist Universal Joint Model",
+        page_title="Cardan and Torque Projection Demonstration",
         page_icon="🏌️",
         layout="wide",
         initial_sidebar_state="expanded",
@@ -76,7 +76,7 @@ def _inject_custom_css() -> None:
 
 def _render_header() -> None:
     """Render the main app header and description."""
-    st.title("🏌️ Enhanced Wrist Universal Joint Model")
+    st.title("🏌️ Cardan and Torque Projection Demonstration")
     template_dir = Path(__file__).parent / "templates"
     header_path = template_dir / "header.html"
     if header_path.exists():
@@ -90,24 +90,24 @@ def _render_angle_controls() -> dict[str, float]:
     Returns:
         Dictionary with 'grip_angle' and 'wrist_angle' values.
     """
-    st.subheader("Grip Angle \u03b8_grip")
+    st.subheader("Demo Angle \u03b8")
     grip_angle = st.slider(
-        "Grip Angle (degrees)",
+        "Demo Angle (degrees)",
         0,
         90,
         30,
         1,
-        help="0\u00b0 = parallel to fingers, 90\u00b0 = perpendicular to fingers",
+        help="Synthetic bend/projection angle; 90 degrees is evaluated at89 degrees",
     )
 
-    st.subheader("Wrist Deviation Angle \u03c6")
+    st.subheader("Input Shaft Phase \u03c6")
     wrist_angle = st.slider(
-        "Wrist Deviation (degrees)",
+        "Input Shaft Phase (degrees)",
         -60,
         60,
         0,
         1,
-        help="+ values = radial deviation, - values = ulnar deviation",
+        help="Input shaft phase, not anatomical wrist motion",
     )
 
     return {"grip_angle": grip_angle, "wrist_angle": wrist_angle}
@@ -206,7 +206,7 @@ def _render_sidebar() -> dict[str, Any]:
         st.subheader("Plot Type")
         params["plot_type"] = st.selectbox(
             "Select Plot",
-            ["Torque", "Angular Acceleration", "Transmission Ratio vs Wrist Angle"],
+            ["Torque", "Angular Acceleration", "Transmission Ratio vs Input Phase"],
         )
 
         st.markdown("---")
@@ -230,8 +230,8 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
         return {
             "show_input": st.checkbox("Input Torque", value=True),
             "show_transmitted": st.checkbox("Transmitted Torque", value=True),
-            "show_alpha": st.checkbox("Torque α (higher MOI axis)", value=True),
-            "show_gamma": st.checkbox("Torque γ (lowest MOI axis)", value=True),
+            "show_alpha": st.checkbox("Torque α (alpha component)", value=True),
+            "show_gamma": st.checkbox("Torque γ (gamma component)", value=True),
             "show_velocity": False,
             "show_accel_alpha": False,
             "show_accel_gamma": False,
@@ -357,7 +357,7 @@ def _render_main_content(params: dict[str, Any]) -> None:
     col1, col2 = st.columns([1, 1])
 
     with col1:
-        st.subheader("Forearm-Hand-Club Diagram")
+        st.subheader("Historical Sketch (Not Cardan Kinematics)")
         diagram_fig = draw_diagram(params["grip_angle"], params["wrist_angle"])
         st.pyplot(diagram_fig)
         plt.close(diagram_fig)
@@ -394,7 +394,7 @@ def _compute_info_metrics(params: dict[str, Any], input_torque: Any) -> dict[str
         "torque_gamma": torque_gamma,
         "pct_alpha": np.abs(np.sin(theta_grip_rad)) * 100,
         "pct_gamma": np.abs(np.cos(theta_grip_rad)) * 100,
-        "deviation": "radial" if wrist_angle > 0 else "ulnar" if wrist_angle < 0 else "neutral",
+        "deviation": "positive" if wrist_angle > 0 else "negative" if wrist_angle < 0 else "zero",
     }
 
 
@@ -407,29 +407,29 @@ def _render_info_markdown(params: dict[str, Any], info: dict[str, Any]) -> None:
     st.markdown(
         f"""
     ### Current Parameters
-    - **Grip Angle (θ_grip):** {grip_angle}°
-    - **Wrist Deviation Angle (φ):** {wrist_angle}° ({info["deviation"]} deviation)
+    - **Demo Angle (θ):** {grip_angle}°
+    - **Input Shaft Phase (φ):** {wrist_angle}° ({info["deviation"]} phase)
 
     ### Transmission Ratios
     - **Angular Velocity Ratio (ω_out/ω_in):** {info["omega_ratio"]:.4f}
     - **Torque Transmission Ratio (τ_out/τ_in):** {info["tau_ratio"]:.4f}
 
     ### Torque Distribution (at mean input torque)
-    - **Torque to α-axis (higher MOI):** {info["torque_alpha"]:.4f} N·m
-    ({info["pct_alpha"]:.1f}% of transmitted)
-    - **Torque to γ-axis (lowest MOI):** {info["torque_gamma"]:.4f} N·m
-    ({info["pct_gamma"]:.1f}% of transmitted)
+    - **Torque to α-axis (chosen alpha inertia):** {info["torque_alpha"]:.4f} N·m
+    ({info["pct_alpha"]:.1f}% component amplitude; not an energy share)
+    - **Torque to γ-axis (chosen gamma inertia):** {info["torque_gamma"]:.4f} N·m
+    ({info["pct_gamma"]:.1f}% component amplitude; not an energy share)
 
     ### Angular Acceleration (at mean torque)
     - **α-axis acceleration:** {info["torque_alpha"] / i_alpha:.4f} rad/s²
     - **γ-axis acceleration:** {info["torque_gamma"] / i_gamma:.4f} rad/s²
 
     ### Model Assumptions
-    - Universal joint (Hooke/Cardan) kinematics
-    - Rigid body model
-    - Power conservation (P = τω)
-    - Constant grip angle during motion
-    - Wrist angle represents radial/ulnar deviation
+    - Fixed supported shafts; θ sets bend and a synthetic projection
+    - Alpha is transverse grip inertia; gamma uses an illustrative ratio of 0.5
+    - Ideal quasistatic torque ratio, with no coupling storage, losses or support work
+    - Fixed-phase gain traces and scalar responses, not integrated club motion
+    - φ is input shaft phase; requested90-degree bend is clipped to89 degrees
     """,
     )
 

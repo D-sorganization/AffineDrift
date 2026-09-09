@@ -5,6 +5,10 @@ const {
 } = require('../src/tools/wrist_universal_joint/grip_angle_polynomial_evaluator.js');
 
 describe('grip_angle_polynomial_evaluator', () => {
+  test.each(['1/(t-0.5)', 'sqrt(-1)', 'exp(1000)'])(
+    'rejects nonfinite results from %s', expression => {
+      expect(() => evaluatePolynomialExpression(expression, 0.5)).toThrow(/finite/);
+    });
   test('evaluates supported polynomial and math expressions', () => {
     expect(evaluatePolynomialExpression('t**2 - t', 3)).toBe(6);
     expect(evaluatePolynomialExpression('Math.sin(t) + Math.PI', Math.PI / 2)).toBeCloseTo(1 + Math.PI);

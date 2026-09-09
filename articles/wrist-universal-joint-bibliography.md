@@ -1,344 +1,72 @@
-# Bibliographic Analysis: Constraint Torques at the Wrist (Universal Joint Model)
+# Evidence Map: Wrist Constraints, Grip Geometry and Face Control
 
-## A) Concept Map
+This companion to [the wrist article](wrist-universal-joint.qmd) separates
+mechanical identities, software definitions and empirical observations. A
+reference that explains a method does not establish that a particular golf
+model implements it correctly. A simulation alone does not establish a human
+performance advantage.
 
-- **Mechanism Analysis**
+## Mechanics and Software Definitions
 
-  - **Universal Joint (Cardan Joint)**: Modeling the wrist as two actuated orthogonal axes + one constrained axis.
-  - **Constraint Torques**: Passive torques $\tau_{constraint}$ arising purely from geometric constraints ($\lambda$) to enforce non-holonomic or holonomic restrictions.
-  - **Underactuation**: The wrist has $n=3$ rotational DOFs but only $m=2$ controls; the third (forearm rotation relative to hand) is constrained.
+| Source                                                                                                                                  | Reviewed Material and Supported Use                                                   | Boundary                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Lynch and Park, _Modern Robotics_, [Section 8.7](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/) | Technical transcript: workless constraints, multipliers and projected dynamics        | Does not make reactions independent of actuator inputs                                                          |
+| MathWorks, [Universal Joint: Multibody](https://www.mathworks.com/help/sm/ref/universaljoint.html)                                      | Joint rotations, actuation, internal mechanics and sensing                            | Two rotational primitives; documentation does not validate the author's historical model                        |
+| MathWorks, [Force and Torque Sensing](https://www.mathworks.com/help/sm/ug/force-and-torque-sensing.html)                               | Technical documentation: primitive/composite signals, measurement frame and direction | Three measured torque components are not three actuator commands                                                |
+| MathWorks, [Universal Joint: Driveline](https://www.mathworks.com/help/sdl/ref/universaljoint.html)                                     | Supported-shaft description and kinematic relation                                    | A different assembly from a freely moving two-axis wrist; reconcile phase conventions before comparing formulas |
 
-- **Dynamics & Transmission**
+The article independently derives its moving reaction axis, actuator-dependent
+multiplier, joint-pair power balance, wrench transport and face sensitivity.
+The [Cardan derivation](../content/wrist-as-universal-joint/MATHEMATICAL_DERIVATION.md)
+checks its phase convention by differentiating the angle relation and
+integrating the speed ratio over a revolution. Multiplication by a deliberately
+defined reciprocal is only an internal consistency check.
 
-  - **Force Transmission**: Constraint forces perform zero work ($\tau \cdot \dot{q} = 0$) but transmit energy/momentum between links.
-  - **Disturbance Decoupling**: Aligning the system geometry so that "noise" (variable constraint torque) enters the dynamics via a "safe" subspace (Alpha axis).
-  - **Inertia Tensor Shaping**: The distinction between high-inertia (swing plane, $I_{\alpha}$) and low-inertia (face rotation, $I_{\beta}$) axes.
+## Anatomical and Motor-Control Evidence
 
-- **Control Theory Interpretation**
+| Source                                                                                                                                                           | Evidence Reviewed and Appropriate Use                                                        | What It Does Not Establish                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Crisco et al. (2011), [_The Mechanical Axes of the Wrist Are Oriented Obliquely to the Anatomical Axes_](https://pubmed.ncbi.nlm.nih.gov/21248214/)              | Abstract and record; six cadaver wrists; motivates separating mechanical and anatomical axes | Golf-specific dynamic muscle control or superiority of a grip                 |
+| Crisco et al. (2005), [_In Vivo Radiocarpal Kinematics and the Dart Thrower's Motion_](https://pubmed.ncbi.nlm.nih.gov/16322624/)                                | Abstract and record; in-vivo carpal motion; motivates qualification of ideal hinge geometry  | The separate 2011 mechanical-axes experiment or a calibrated golf wrist model |
+| Scholz and Schöner (1999), [_The Uncontrolled Manifold Concept: Identifying Control Variables for a Functional Task_](https://pubmed.ncbi.nlm.nih.gov/10382616/) | Abstract and record; sit-to-stand task; analysis of variability relative to a task variable  | That golf constraint loads automatically occupy a harmless subspace           |
 
-  - **Null Space / Uncontrolled Manifold**: Channelling variability into dimensions that do not affect the task variable (face angle).
-  - **Geometric Rejection**: Using static configuration (grip) to solve a dynamic control problem.
+The Crisco studies must not be blended into one date, sample or experiment.
+Uncontrolled-manifold analysis does not prove that the nervous system ignores
+all variation in a task Jacobian's instantaneous null space. Such directions
+can also influence the task later through the dynamics.
 
-- **Biomechanics Applications**
-  - **Grip Mechanics**: "Finger Grip" vs "Palm Grip" as mechanical filters.
-  - **Planar Constraints**: The functional role of arm-club plane separation.
+## Golf Evidence and Validation Scope
 
-## B) Bibliography (YAML)
+| Source                                                                                                                                                                                                                          | Evidence Reviewed and Appropriate Use                                                 | Remaining Limit                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Coleman and Rankin (2005), [_A Three-Dimensional Examination of the Planar Nature of the Golf Swing_](https://pubmed.ncbi.nlm.nih.gov/15966340/), _Journal of Sports Sciences_ 23(3), 227–234; DOI 10.1080/02640410410001730179 | Abstract and record; seven golfers; changing swing geometry                           | Does not test a finger-versus-palm grip intervention                                                                                                           |
+| MacKenzie and Sprigings (2009), [_A Three-Dimensional Forward Dynamics Model of the Golf Swing_](https://doi.org/10.1007/s12283-009-0020-9), _Sports Engineering_ 11(4), 165–175                                                | Record and author-hosted methods excerpt; full paper not reviewed for this correction | The excerpt describes single-camera two-dimensional comparison with one golfer; this cannot establish population-level three-dimensional face-control accuracy |
+| MacKenzie (2012), [_Club Position Relative to the Golfer's Swing Plane Meaningfully Affects Swing Dynamics_](https://pubmed.ncbi.nlm.nih.gov/22900397/), _Sports Biomechanics_ 11(2), 149–164; DOI 10.1080/14763141.2011.638388 | Abstract and record; model comparison of club positions                               | Does not isolate grip geometry as a causal human intervention                                                                                                  |
+| Nesbit and Serrano (2005), [_Work and Power Analysis of the Golf Swing_](https://www.jssm.org/hfabst.php?id=jssm-04-520.xml)                                                                                                    | Abstract; four amateur golfers; context for work/power accounting                     | Does not identify an optimal grip or justify the demonstration inertia ratio                                                                                   |
 
-```yaml
-- id: lynch2017modern
-  title: "Modern Robotics: Mechanics, Planning, and Control"
-  authors:
-    - "Kevin M. Lynch"
-    - "Frank C. Park"
-  year: 2017
-  venue: "Cambridge University Press"
-  scholar_link: "https://scholar.google.com/scholar?q=Modern+Robotics+Mechanics+Planning+and+Control+Lynch"
-  clusters: ["robotics", "mechanics"]
-  concepts: ["constrained dynamics", "universal joints", "pfaffian constraints"]
-  related_ids: ["murray1994mathematical", "kane1985dynamics"]
-  references_out_ids: ["murray1994mathematical", "featherstone2008rigid"]
+Publication dates follow the cited journal records. No numerical example in
+the wrist article is presented as a measured result from an abstract-only review.
 
-- id: kane1985dynamics
-  title: "Dynamics: Theory and Applications"
-  authors:
-    - "Thomas R. Kane"
-    - "David A. Levinson"
-  year: 1985
-  venue: "McGraw-Hill"
-  scholar_link: "https://scholar.google.com/scholar?q=Dynamics+Theory+and+Applications+Kane"
-  clusters: ["multibody dynamics", "foundational"]
-  concepts: ["nonholonomic constraints", "constraint forces", "kane's method"]
-  related_ids: ["udwadia1996analytical"]
-  references_out_ids: ["udwadia1996analytical"]
+## Reading Sequence
 
-- id: udwadia1996analytical
-  title: "Analytical Dynamics: A New Approach"
-  authors:
-    - "Firdaus E. Udwadia"
-    - "Robert E. Kalaba"
-  year: 1996
-  venue: "Cambridge University Press"
-  scholar_link: "https://scholar.google.com/scholar?q=Analytical+Dynamics+A+New+Approach+Udwadia"
-  clusters: ["mechanics", "mathematical theory"]
-  concepts:
-    [
-      "fundamental equation of constrained motion",
-      "gauss principle",
-      "generalized inverse",
-    ]
-  related_ids: ["kane1985dynamics"]
-  references_out_ids: ["kane1985dynamics"]
+1. Define independent joint coordinates and allowed relative velocities. Two
+   coordinates with two independent inputs can be fully actuated. Removing a
+   prohibited spatial rotation does not add an unactuated independent coordinate.
+2. Derive reactions from complete dynamics. A holonomic constraint may be
+   expressed as a velocity equation. Its reaction annihilates allowed relative
+   velocities, not necessarily actuator input directions.
+3. Transform the complete wrench and inertia to a declared point and frame;
+   include support acceleration for a moving grip point.
+4. Define the delivery variable and propagate perturbations to impact. Torque
+   projection alone does not determine face yaw or its variance.
+5. Use anatomical and golf evidence to choose calibration and measurements.
+   Separate fixed-input, fixed-motion and reoptimized-control comparisons.
 
-- id: mackenzie2009three
-  title: "A three-dimensional forward dynamics model of the golf swing"
-  authors:
-    - "Sasho J. MacKenzie"
-    - "Eric J. Sprigings"
-  year: 2009
-  venue: "Sports Engineering"
-  scholar_link: "https://scholar.google.com/scholar?q=A+three-dimensional+forward+dynamics+model+of+the+golf+swing+MacKenzie"
-  clusters: ["golf biomechanics", "simulation"]
-  concepts: ["forward dynamics", "shaft deflection", "structural dynamics"]
-  related_ids: ["nesbit2005three"]
-  references_out_ids: ["nesbit2005three", "sprigings2000insight"]
+## Bibliographic Integrity
 
-- id: sprigings2000insight
-  title: "An insight into the importance of wrist torque in driving the golf ball: a simulation study"
-  authors:
-    - "Eric J. Sprigings"
-    - "Robert J. Neal"
-  year: 2000
-  venue: "Journal of Applied Biomechanics"
-  scholar_link: "https://scholar.google.com/scholar?q=An+insight+into+the+importance+of+wrist+torque+in+driving+the+golf+ball+Sprigings"
-  clusters: ["golf biomechanics", "simulation"]
-  concepts: ["wrist kinetics", "torque generation", "impact"]
-  related_ids: ["mackenzie2009three"]
-  references_out_ids: ["mackenzie2009three"]
-
-- id: koike2006analysis
-  title: "Analysis of the wrist action in golf swing"
-  authors:
-    - "Sekiya Koike"
-    - "H. Iida"
-    - "H. Shiraki"
-  year: 2006
-  venue: "Theoretical and Applied Mechanics Japan"
-  scholar_link: "https://scholar.google.com/scholar?q=Analysis+of+the+wrist+action+in+golf+swing+Koike"
-  clusters: ["golf biomechanics", "kinematics"]
-  concepts: ["wrist angles", "3d kinematics", "cocking"]
-  related_ids: ["nesbit2005three"]
-  references_out_ids: []
-
-- id: todorov2004optimality
-  title: "Optimality principles in sensorimotor control"
-  authors:
-    - "Emanuel Todorov"
-  year: 2004
-  venue: "Nature Neuroscience"
-  scholar_link: "https://scholar.google.com/scholar?q=Optimality+principles+in+sensorimotor+control+Todorov"
-  clusters: ["motor control", "neuroscience"]
-  concepts:
-    [
-      "uncontrolled manifold",
-      "minimal intervention",
-      "task-relevant variability",
-    ]
-  related_ids: ["latash2008synergy"]
-  references_out_ids: ["latash2008synergy", "bernstein1967coordination"]
-
-- id: coleman2005three
-  title: "A three-dimensional examination of the planar nature of the golf swing"
-  authors:
-    - "S. G. Coleman"
-    - "A. J. Rankin"
-  year: 2005
-  venue: "Journal of Sports Sciences"
-  scholar_link: "https://scholar.google.com/scholar?q=A+three-dimensional+examination+of+the+planar+nature+of+the+golf+swing+Coleman"
-  clusters: ["golf biomechanics", "kinematics"]
-  concepts: ["swing plane", "planar motion", "kinematic geometry"]
-  related_ids: ["kwon2012validity"]
-  references_out_ids: []
-
-- id: kwon2012validity
-  title: "Validity of the X-Factor computation methods and relationship between the X-Factor parameters and clubhead velocity in skilled golfers"
-  authors:
-    - "Young-Hoo Kwon"
-    - "K. H. Han"
-    - "C. Como"
-  year: 2012
-  venue: "Sports Biomechanics"
-  scholar_link: "https://scholar.google.com/scholar?q=Validity+of+the+X-Factor+computation+methods+Kwon"
-  clusters: ["golf biomechanics", "kinematics"]
-  concepts: ["x-factor", "kinematic sequence", "torso rotation"]
-  related_ids: ["coleman2005three"]
-  references_out_ids: []
-
-- id: tinmark2010elite
-  title: "Elite golfers' kinematic sequence in full-swing and partial-swing shots"
-  authors:
-    - "F. Tinmark"
-    - "J. Hellström"
-    - "K. Halvorsen"
-    - "A. Thorstensson"
-  year: 2010
-  venue: "Sports Biomechanics"
-  scholar_link: "https://scholar.google.com/scholar?q=Elite+golfers'+kinematic+sequence+Tinmark"
-  clusters: ["golf biomechanics", "motor control"]
-  concepts: ["kinematic sequence", "coordination", "proximal-to-distal"]
-  related_ids: ["nesbit2005three"]
-  references_out_ids: []
-
-- id: murray1994mathematical
-  title: "A Mathematical Introduction to Robotic Manipulation"
-  authors:
-    - "Richard M. Murray"
-    - "Zexiang Li"
-    - "S. Shankar Sastry"
-  year: 1994
-  venue: "CRC Press"
-  scholar_link: "https://scholar.google.com/scholar?q=A+Mathematical+Introduction+to+Robotic+Manipulation+Murray"
-  clusters: ["robotics", "control theory"]
-  concepts: ["so(3)", "twist coordinates", "exponential map"]
-  related_ids: ["lynch2017modern"]
-  references_out_ids: ["lynch2017modern", "featherstone2008rigid"]
-
-- id: latash2008synergy
-  title: "Synergy"
-  authors:
-    - "Mark L. Latash"
-  year: 2008
-  venue: "Oxford University Press"
-  scholar_link: "https://scholar.google.com/scholar?q=Synergy+Latash"
-  clusters: ["motor control", "biomechanics"]
-  concepts: ["principle of abundance", "motor synergies", "variability"]
-  related_ids: ["todorov2004optimality"]
-  references_out_ids: ["todorov2004optimality"]
-
-- id: zatsiorsky1998kinematics
-  title: "Kinematics of Human Motion"
-  authors:
-    - "Vladimir M. Zatsiorsky"
-  year: 1998
-  venue: "Human Kinetics"
-  scholar_link: "https://scholar.google.com/scholar?q=Kinematics+of+Human+Motion+Zatsiorsky"
-  clusters: ["biomechanics", "textbook"]
-  concepts: ["joint coordinate systems", "euler angles", "helical axes"]
-  related_ids: ["winter2009biomechanics"]
-  references_out_ids: []
-
-- id: nesbit2005three
-  title: "A three dimensional kinematic and kinetic study of the golf swing"
-  authors:
-    - "Steven M. Nesbit"
-  year: 2005
-  venue: "Journal of Sports Science and Medicine"
-  scholar_link: "https://scholar.google.com/scholar?q=A+three+dimensional+kinematic+and+kinetic+study+of+the+golf+swing+Nesbit"
-  clusters: ["golf biomechanics", "inverse dynamics"]
-  concepts: ["joint torques", "work and power", "full-body model"]
-  related_ids: ["mackenzie2009three"]
-  references_out_ids: ["mackenzie2009three"]
-
-- id: winter2009biomechanics
-  title: "Biomechanics and Motor Control of Human Movement"
-  authors:
-    - "David A. Winter"
-  year: 2009
-  venue: "John Wiley & Sons"
-  scholar_link: "https://scholar.google.com/scholar?q=Biomechanics+and+Motor+Control+of+Human+Movement+Winter"
-  clusters: ["biomechanics", "motor control"]
-  concepts: ["kinematics", "kinetics", "electromyography"]
-  related_ids: ["zajac1993muscle"]
-  references_out_ids: []
-
-- id: featherstone2008rigid
-  title: "Rigid Body Dynamics Algorithms"
-  authors:
-    - "Roy Featherstone"
-  year: 2008
-  venue: "Springer"
-  scholar_link: "https://scholar.google.com/scholar?q=Rigid+Body+Dynamics+Algorithms+Featherstone"
-  clusters: ["multibody dynamics", "simulation"]
-  concepts:
-    ["recursive algorithms", "spatial vectors", "articulated body algorithm"]
-  related_ids: ["murray1994mathematical"]
-  references_out_ids: ["pinocchio_lib"]
-
-- id: shabana2020dynamics
-  title: "Dynamics of Multibody Systems"
-  authors:
-    - "Ahmed A. Shabana"
-  year: 2020
-  venue: "Cambridge University Press"
-  scholar_link: "https://scholar.google.com/scholar?q=Dynamics+of+Multibody+Systems+Shabana"
-  clusters: ["multibody dynamics", "flexible bodies"]
-  concepts:
-    ["floating frame of reference", "flexible multibody", "assumed modes"]
-  related_ids: ["featherstone2008rigid"]
-  references_out_ids: []
-
-- id: isidori1995nonlinear
-  title: "Nonlinear Control Systems"
-  authors:
-    - "Alberto Isidori"
-  year: 1995
-  venue: "Springer"
-  scholar_link: "https://scholar.google.com/scholar?q=Nonlinear+Control+Systems+Isidori"
-  clusters: ["nonlinear control", "mathematical theory"]
-  concepts: ["affine systems", "zero dynamics", "drift vector field"]
-  related_ids: ["slotine1991applied"]
-  references_out_ids: []
-
-- id: bernstein1967coordination
-  title: "The Co-ordination and Regulation of Movements"
-  authors:
-    - "Nikolai A. Bernstein"
-  year: 1967
-  venue: "Pergamon Press"
-  scholar_link: "https://scholar.google.com/scholar?q=The+Co-ordination+and+Regulation+of+Movements+Bernstein"
-  clusters: ["motor control", "foundational"]
-  concepts: ["degrees of freedom problem", "motor control", "coordination"]
-  related_ids: ["latash2008synergy"]
-  references_out_ids: []
-
-- id: mathworks2024simscape
-  title: "Simscape Multibody Documentation"
-  authors:
-    - "MathWorks"
-  year: 2024
-  venue: "MathWorks Website"
-  scholar_link: "https://scholar.google.com/scholar?q=Simscape+Multibody+Documentation"
-  clusters: ["software", "simulation"]
-  concepts: ["universal joint block", "sensed torque", "multibody simulation"]
-  related_ids: []
-  references_out_ids: []
-
-- id: delp2007opensim
-  title: "OpenSim: open-source software to create and analyze dynamic simulations of movement"
-  authors:
-    - "Scott L. Delp"
-    - "et al."
-  year: 2007
-  venue: "IEEE Transactions on Biomedical Engineering"
-  scholar_link: "https://scholar.google.com/scholar?q=OpenSim+Delp"
-  clusters: ["software", "biomechanics"]
-  concepts: ["musculoskeletal modeling", "simulation", "wrist model"]
-  related_ids: ["mackenzie2009three"]
-  references_out_ids: []
-```
-
-## C) Reading Paths
-
-### Path 1: Fast Ramp (The Mechanics of Constraints)
-
-_Target: Understand why "locking" a degree of freedom creates a torque._
-
-1.  **Lynch & Park (2017)** - _Modern Robotics_ (Chapter 8.7: Constrained Dynamics). The best modern text explaining $\tau = J^T \lambda$.
-2.  **Kane & Levinson (1985)** - _Dynamics_. Explicitly deals with "nonholonomic" constraints which is how universal joints are often treated in advanced dynamics.
-3.  **Todorov (2004)** - _Optimality principles_. Explains the "Null Space" concept—how the brain exploits dimensions that don't matter (or matter less).
-4.  **Koike et al. (2006)** - _Analysis of wrist action_. Specific data on what the wrist actually does during the swing.
-5.  **MacKenzie & Sprigings (2009)** - _Forward dynamics_. Context for how these torques drive the Club.
-
-### Path 2: Deep Technical (Advanced Dynamics)
-
-_Target: Calculating the Lagrange Multipliers and modeling the system._
-
-1.  **Udwadia & Kalaba (1996)** - _Analytical Dynamics_. Provides the "Fundamental Equation of Constrained Motion"—the explicit closed-form solution for constraint forces.
-2.  **Murray, Li, Sastry (1994)** - _Mathematical Introduction_. Geometric view of constraints and rigid body systems.
-3.  **Zatsiorsky (1998)** - _Kinematics of Human Motion_. Detailed joint modeling issues (Cardan angles vs U-joints).
-4.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_. The computational implementation of constrained multibody systems (e.g., recursive constraints).
-5.  **Shabana (2020)** - _Dynamics of Multibody Systems_. General formulation for constrained systems including flexible bodies.
-6.  **Isidori (1995)** - _Nonlinear Control Systems_. For understanding "drift invariance" and affine control structures.
-7.  **Bernstein (1967)** - _The Co-ordination and Regulation of Movements_. The foundational framing of the "Degrees of Freedom Problem" that constraints help solve.
-8.  **Coleman & Rankin (2005)** - _Planar nature_. Geometry of the swing plane which relates to the "Alpha" axis.
-9.  **Sprigings & Neal (2000)** - _Importance of wrist torque_. Validation of the torque magnitudes.
-
-### Path 3: Implementation (Simulation)
-
-_Target: Building the Universal Joint model._
-
-1.  **Simscape Multibody Documentation** (`mathworks2024simscape`) - Specifically the "Universal Joint" block reference, which explains the "sensed torque" outputs.
-2.  **MacKenzie (2009)** - Parameters for the club inertia ($I_{\alpha}$ vs $I_{\beta}$).
-3.  **Nesbit (2005)** - Inverse dynamics data to check against.
-4.  **Kwon (2012)** - Kinematic data for validation.
-5.  **OpenSim (Delp)** (`delp2007opensim`) - For comparing with detailed wrist muscle models.
+The previous bibliography included speculative citation-network edges, with
+older sources purportedly citing later publications. Those edges have been
+removed. Relationships here are editorial connections, not assertions about
+papers' reference lists. Unverified peripheral entries have also been removed
+rather than used as evidence for numerical parameters or grip recommendations.
+Restore them only after checking the original source and the precise claim.

@@ -184,6 +184,9 @@
             const token = currentToken();
             throw new Error(`Unexpected token '${token.value}'`);
         }
+        if (!Number.isFinite(result)) {
+            throw new Error('Expression must produce a finite value at every sample');
+        }
         return result;
     }
 
