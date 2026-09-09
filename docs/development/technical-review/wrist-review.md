@@ -317,3 +317,7 @@ resolved the errors: the unchanged pre-push mypy hook passes. No type-check
 configuration, ignores or hooks were weakened or bypassed. The first push's
 Bandit and unit-test hooks also passed. This environment repair is distinct
 from the completed Python 3.12 project validation recorded above.
+
+All hooks passed on the retry and the branch was pushed. Ready PR #4304 is open
+with Fixes #4299 and agent:codex. Its actual PR-keyed SPEC row is now recorded.
+Protected review, CI and deployment remain; this is not a publication claim.
