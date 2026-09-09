@@ -303,3 +303,18 @@ check found #4307 unheld; its codex lease was renewed through September 9,
 recorded in brain-review.md. Launch-monitor issue #4309 is a native child of
 #4009, with a verified codex lease through 16:53:26 UTC. Its preliminary
 review remains distinct from a completed correction.
+
+## PR #4310 and Checkpoint
+
+The complete correction was saved as 3e270aa0, retained on
+checkpoint/swing-4307-reviewed-3e270aa0. Replaying only that commit onto
+protected main 022fc21c produced 66f1fa43 with an identical complete tree;
+no brain ancestors were replayed. The first push was blocked by Bandit finding
+dynamic execution in the untracked conversion helper wrap_swing_math.py.
+That helper now performs the explicit transformations without dynamic execution.
+The first unit-test hook passed. The retry passed every push hook, including
+Bandit and unit tests, and published the topic branch without a force push.
+
+Ready PR #4310 references #4307 and carries agent:codex. SPEC.md adds exactly
+one row keyed to this PR. Protected CI/review, merge and production verification
+remain; local completion does not substitute for those delivery checks.

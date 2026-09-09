@@ -319,3 +319,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-08 | #4298 | Qualify paired Chapter 29 grip, constraint, friction, stability and shaft-acoustic claims with independent numerical counterexamples and verified publication output. |
 | 2026-09-08 | #4304 | Reconcile wrist constraint reactions, power, grip and face-angle sensitivity across article and print companions; correct Cardan transmission, dimensional plots and interactive input handling with independent mechanics checks. |
 | 2026-09-09 | #4306 | Reconcile paired computational-brain chapters with delayed activation, output sensitivity, impedance energy, constrained synergies and qualified neural evidence; independently verify fourteen exercises and rebuild the print book. |
+| 2026-09-09 | #4310 | Reconcile paired swing-plane geometry, contact impulse, launch optimization and uncertainty; independently verify eight exercises, preserve web mathematics and rebuild the print book. |
