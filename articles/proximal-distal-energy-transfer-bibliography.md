@@ -180,7 +180,7 @@ bibliography:
 
 - id: nesbit2005work
   title: "Work and power analysis of the golf swing"
-  authors: "Nesbit, Steven M., & Serrano, Rafael"
+  authors: "Nesbit, Steven M., & Serrano, Monika"
   year: 2005
   venue: "Journal of Sports Science and Medicine"
   scholar_link: "https://www.jssm.org/volume04/iss4/cap/jssm-04-520.pdf"
