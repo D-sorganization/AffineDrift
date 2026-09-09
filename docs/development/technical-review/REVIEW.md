@@ -1359,3 +1359,31 @@ canonical/navigation/theme support on two standalone HTML companions; ordinary
 browser and numerical suites pass. Save the brain checkpoint, repair wrist on
 its branch, then resume brain delivery. Corpus405 is unfinished;224 sources
 still have only an index, and partially reviewed sources require further work.
+
+
+## Protected-Main Replay and Wrist Publication, 2026-09-09
+
+The saved brain checkpoint 2a5ec6fb was pushed with every hook passing. Remote
+inspection then showed that PR #4304 had already merged as a11abdbf, after another
+task changed the auxiliary HTML publication policy. That task removed the old
+HTML guide from deployment and excluded content/src HTML from the Quarto page
+manifest. The simulator remains linked as an auxiliary resource. This supersedes
+the earlier instruction to repair an open wrist PR; no competing wrist repair
+was made. The manifest no longer claims those auxiliary routes as Quarto pages.
+
+Main deployment 34310520642 at descendant 19170f82 succeeded. Its exact live
+artifact 10088805870 was downloaded and inspected: 956/956 checks, 239 routes,
+zero failures, serious/critical axe findings, retries or transient responses.
+Auxiliary simulator validation rests on the earlier direct browser checks,
+not on the reduced page manifest. The wrist merge itself had a failed deploy;
+the successful descendant contains the critique-link repair from PR #4305.
+
+Only brain commit 2a5ec6fb was cherry-picked onto 19170f82, becoming 52f80227
+on fix/4303-computational-brain-review. No force push or history replacement.
+The replay passes 4,900 root tests, 29 skips, 131 deselections and 50 warnings
+in 383.16 seconds. All 64 affected checks, 34 static contracts and the new site
+link gate pass. The first direct link-checker invocation lacked the package
+import path; invoking it as a module passes without changing its source.
+No new scientific assertions or equation changes were introduced by the replay.
+Both complete original swing-plane/launch editions were read while these
+checks ran; their fixes belong to the next focused issue, not this PR.
