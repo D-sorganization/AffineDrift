@@ -25,6 +25,17 @@
   editorial sweeps; #4299 held by codex lease until 2026-09-09T01:19Z;
   #4253/#4255 remain evidence-gated (Tools #5068, UpstreamDrift #9700).
 
+## Rate-of-Closure Release Cross-Link
+
+- Branch `bot/roc-release-article-update`: `articles/green-simulation.qmd` §4
+  gains an "Interactive web companion" bullet linking the live
+  rate-of-closure-explorer putting tab and its "Import green…" heightfield
+  import (ADR-0045 F2 web behavior), completing the article-side item of
+  D-sorganization/public-web-management#2. `scripts/link-checker.py --root .
+  --internal-only` passes ("All links valid!"). No other articles touched
+  (trajectory record import is desktop Qt, not live web — not written into
+  any web-facing article).
+
 ## Impact Dynamics and Acoustics: #4253
 
 - A1 #4254 / #4258 and Coriolis correction #4277 / #4282 are merged.
