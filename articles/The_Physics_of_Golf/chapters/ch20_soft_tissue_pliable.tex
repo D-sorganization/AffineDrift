@@ -1,604 +1,410 @@
-\chapter{Soft Tissue and Pliable Systems: Beyond the Rigid Body}
+\chapter[Soft Tissue and Pliable Systems: Beyond the Rigid Body]{Soft Tissue and Pliable Systems:\\Beyond the Rigid Body}
 \label{ch:soft_tissue_pliable}
-
-\epigraph{The human body is an engineer's nightmare and a physicist's playground.}{David Hautamäki}
+\index{soft tissue deformation}
+\index{wobbling mass}
 
 \begin{laymansbox}{Why Soft Tissue Matters in Golf}{intro:softtissue}
-Throughout this textbook, we have treated the golfer's body as a system of rigid links---bones connected by joints, each link rotating or translating with respect to its neighbors. This model works well for understanding the gross mechanics of the swing, the flow of power from the ground up, and the trajectory of the club. But there is a secret the rigid body model does not tell you: everything wiggles, squishes, and sloshes.
+A body segment can move approximately as a rigid object while its skin, muscle and other tissues move relative to its bones. That relative motion matters in two different ways: it changes forces and stored energy, and it changes what a surface-mounted sensor reports. A marker can therefore give a repeatable measurement without being a faithful measurement of the underlying bone.
 
-When you accelerate a limb, the soft tissue hanging on that limb---muscle, fat, connective tissue, blood, organs---does not move in lockstep with the bone. It oscillates, it lags, it creates internal stresses and alters the distribution of mass. Your torso is not a solid block; it is a flexible container of viscera and fluid that shifts during violent rotation. And when you brace your core, you are not just tensing muscles; you are creating a hydraulic pressure that acts as a structural support system for your spine.
+Abdominal pressure adds another connection. Pressure acts on the surrounding structures, while muscles and connective tissues help contain that pressure. The resulting support depends on the whole force balance. A large pressure reading does not, by itself, reveal the load on a spinal joint, the energy reaching the club, or the likelihood of an injury.
 
-This chapter explores what happens when we acknowledge that the human body is \emph{pliable}. We will see where the rigid body model remains an excellent approximation and where it breaks down. We will learn the physics of wobbling tissue, the mechanics of abdominal pressure, and how these effects modify the drift field that governs your swing. The good news: for most questions about swing mechanics, the rigid body model is still your best tool. The better news: understanding soft tissue gives you insights into injury prevention and why certain coaching cues work.
+This chapter builds small models that make those distinctions calculable. Their purpose is to decide which effects a golf or humanoid model must resolve and what evidence would validate it. The numerical examples are declared teaching systems, not measured anatomical parameters or instructions to change breathing or muscle activation.
 \end{laymansbox}
 
-\section{The Rigid Body Assumption---Where It Works and Where It Fails}
+\section{The Rigid Body Assumption: Where It Works and Where It Fails}
 \label{sec:rigid_assumption}
+\label{constr:constraint:rigid_fails}
 
-\index{rigid body assumption}
-\index{soft tissue deformation}
+Rigid-segment modeling assumes that distances between material points assigned to a segment remain fixed. It does not require all joints to be hinges, all muscles to be inactive, or the club shaft to be rigid. A model can combine rigid bones, multiaxis joints, deformable tendons and a flexible club. The choice should follow the question and the available measurements.
 
-Let us begin by reviewing what the rigid body assumption has given us. Every chapter of this textbook---from kinematics to energy to inverse dynamics---has rested on a foundation: that each body segment (torso, upper arm, forearm, hand) can be treated as an undeformable solid object. The bones are stiff. The joints are well-defined hinges. Mass is distributed within each segment according to anthropometric tables, and that mass is constant.
+Stiffness and strength are different properties. A bone's failure load does not establish how accurately a rigid approximation predicts its deformation under a particular load. Likewise, a rigid segment's center of mass and inertia must include the tissue assigned to it. Adding a wobbling mass to an anthropometric segment without subtracting that same mass from the rigid part counts tissue twice.
 
-This is an \emph{excellent} first approximation. Bone is stiff: a typical human long bone can sustain a tensile load of several thousand newtons before yielding. The major joints of the skeleton---the hip, shoulder, knee, elbow---are indeed reasonably well-modeled as constrained hinges when you are not probing for subtle details. And in most everyday motions, the soft tissue jiggles around the bones quietly, causing no trouble.
+A useful rigid approximation reproduces specified outputs over a specified operating range. It may be adequate for a gross pose while inadequate for tissue stress or an impact peak. A small pose error does not guarantee a small force error, especially when forces depend on acceleration or contact deformation. There is no universal 15-degree-of-freedom model, or universal percentage accuracy, for coaching, inverse dynamics or injury assessment.
 
-But during the golf swing---one of the fastest, most forceful voluntary motions the human body produces---the assumptions begin to strain.
+Pain and Challis modeled two heel-first drop landings by one man using subject-specific segment estimates and a partly calibrated wobbling-mass model \citep{Pain2006Wobble}. Their model and a rigid alternative produced similar gross kinematics but substantially different computed loading. Separate controlled impacts supplied tissue-motion comparisons; the trunk response lacked equivalent independent data. This is evidence that model choice can matter under those impact conditions. It does not establish a correction percentage or tissue-motion amplitude for golf.
 
-\begin{principle}{Where Rigid Body Models Remain Valid}{principle:rigid_valid}
-The rigid body approximation works well for:
-\begin{itemize}
-\item Predicting club head speed and trajectory
-\item Understanding energy flow and power sequencing
-\item Analyzing gross swing kinematics (hip turn, shoulder turn, X-factor)
-\item Inverse dynamics of the skeleton itself (bone accelerations)
-\item Pedagogical applications (the mental model provides clear intuitive understanding)
-\end{itemize}
-\end{principle}
+The practical decision is therefore output-specific. Predicting where the ball flies requires a sufficiently accurate launch state and flight model; it does not automatically require every internal tissue mode. Predicting how the golfer creates that state, or estimating a particular tissue load, introduces different requirements. Validation must follow that distinction.
 
-\begin{constraintbox}{Where Rigid Body Models Begin to Fail}{constraint:rigid_fails}
-The rigid body approximation breaks down when we need to:
-\begin{itemize}
-\item Predict high-frequency dynamics (oscillations of limbs after impact)
-\item Calculate internal soft tissue stresses (tissue shearing, compression)
-\item Process marker-based motion capture data (the markers are on skin, which moves relative to bone)
-\item Assess injury risk and spine loading (soft tissue deformation is part of injury mechanism)
-\item Model very high accelerations (inertial forces cause tissue to lag behind bone)
-\end{itemize}
-\end{constraintbox}
+\section{Wobbling Mass: A Coupled Mechanical Model}
+\label{eq:wobble_eom}
+\label{sec:wobbling_mass}
 
-So when does the rigid body assumption actually break? The fundamental issue is \emph{inertial mismatch}. The bones are stiff, but they are connected to large masses of soft tissue---muscle, fat, connective tissue, organs, blood. When a bone accelerates rapidly, the soft tissue does not instantly follow. Instead, it lags behind, creating internal stresses and relative motion.
+Begin with two positive masses moving along a horizontal line. Let $x_r$ be the rigid part's position and $x_w$ the effective tissue mass's position. A spring of stiffness $k>0$ and a damper with coefficient $c\geq0$ connect them. Coordinates are measured from a configuration in which the spring is unstrained. The applied force $u$ acts on the rigid part. Gravity has no component along this particular line; that is a boundary assumption, not a property of soft tissue.
 
-Consider the upper arm during the downswing. The humerus (upper arm bone) is accelerating forward and down at perhaps 500 m/s$^2$ during peak downswing acceleration \citep{Nesbit2005}. The soft tissue hanging on the arm---the muscles, the fat, the skin---has inertial mass. This soft tissue experiences an inertial force that tries to keep it moving in its old direction. The tissue oscillates relative to the bone, creating a secondary motion superimposed on the primary swing motion.
+Define relative displacement $z=x_w-x_r$. The spring and damper exert equal and opposite forces, so the closed equations are
+\[
+\begin{aligned}
+m_r\ddot x_r&=u+kz+c\dot z,\\
+m_w\ddot x_w&=-kz-c\dot z.
+\end{aligned}
+\]
+Adding them gives $(m_r+m_w)\ddot x_{\mathrm{COM}}=u$. Internal coupling can redistribute motion but cannot accelerate the complete system's center of mass without an external force. An effective tissue mass represents a selected deformation mode; it is not automatically the mass of every anatomically soft structure in the segment.
 
-Similarly, the torso during a full downswing rotation is not a solid block. It contains approximately 35 kg of additional mass beyond the skeletal framework: viscera, organs, blood, fat distributed throughout the abdomen \citep{DeLeva1996,Winter2009}. During the violent rotation of a golf downswing (torso angular velocity reaching 600${}^\circ$/s \citep{Hume2005}), this soft mass does not rotate in perfect lockstep with the skeletal torso. It shifts, it redistributes, it creates time-varying inertial properties that the rigid body model assumes away.
+The mechanical energy and its rate are
+\[
+E=\tfrac12m_r\dot x_r^2+\tfrac12m_w\dot x_w^2+\tfrac12kz^2,
+\qquad
+\dot E=u\dot x_r-c\dot z^2.
+\]
+The spring stores energy; the damper removes mechanical energy at a nonnegative rate. Energy entering tissue motion is not necessarily already dissipated. It can return through the coupling. Over a simulation, integrated actuator work must equal the change in mechanical energy plus accumulated dissipation. This balance provides a stronger implementation check than a plausible-looking trajectory.
 
-The chest wall is deformable. It breathes. Under the compressive forces of the swing, the ribs flex, the intercostal spaces narrow, and the thoracic volume changes. The spine itself is not a rigid rod; the intervertebral discs are compressible and can shear. When the spine undergoes the extreme loading of a golf downswing, these deformations become non-negligible.
+\subsection{Prescribed Motion and Free Motion Have Different Modes}
 
-\section{Wobbling Mass---The Muscle Jiggle Problem}
+If the rigid part follows an externally prescribed trajectory, the tissue equation becomes
+\[
+m_w\ddot z+c\dot z+kz=-m_w\ddot x_r.
+\]
+The base acceleration drives relative motion. Maintaining that prescribed base requires whatever reaction force the model predicts; it is not the same experiment as applying a fixed force to a freely moving rigid part.
 
-\begin{figure}[h]
+For a fixed base, the undamped natural angular frequency and damping ratio are
+\[
+\omega_n=\sqrt{k/m_w},\qquad
+\zeta=\frac{c}{2\sqrt{km_w}}.
+\]
+Take $m_w=1\,\mathrm{kg}$, $k=5000\,\mathrm{N/m}$ and $c=200\,\mathrm{N\,s/m}$. Then $\omega_n=70.7107\,\mathrm{rad/s}$, equivalent to $11.2540\,\mathrm{Hz}$, and $\zeta=1.4142$. The homogeneous roots are $-29.2893\,\mathrm{s^{-1}}$ and $-170.7107\,\mathrm{s^{-1}}$. This system is overdamped. A positive displacement released from rest decays without repeated oscillation. Describing these same parameters as an underdamped system with several cycles would contradict the equation.
+
+If both masses move freely, subtract their acceleration equations. With reduced mass $\mu=m_rm_w/(m_r+m_w)$,
+\[
+\mu\ddot z+c\dot z+kz=-\frac{m_w}{m_r+m_w}u.
+\]
+The unforced relative mode uses $\sqrt{k/\mu}$, not $\sqrt{k/m_w}$. For $m_r=1.5\,\mathrm{kg}$ and the preceding tissue parameters, $\mu=0.6\,\mathrm{kg}$ and the undamped relative frequency is $91.2871\,\mathrm{rad/s}$. Boundary conditions change the mode even when the component properties stay the same.
+
+These examples do not identify a golfer's tissue parameters. A large acceleration also does not specify high-frequency excitation: a sustained acceleration and a short pulse can have the same peak and very different spectra. Oscillation amplitude additionally depends on initial conditions, forcing history, damping and the validity of the linear approximation.
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.0]
-  \draw[fill=blue!30, thick] (0,-0.3) rectangle (0.5,0.3);
-  \node[midway] {\small Bone};
-  \draw[thick] (0.5,0) -- (2,0);
-  \draw[fill=red!30, thick] (2,-0.4) rectangle (2.6,0.4);
-  \node[midway, font=\tiny] {Soft};
-  \draw[thick] (2.6,-0.4) -- (3.2,-0.4);
-  \draw[thick] (2.6,0.4) -- (3.2,0.4);
-  \draw[thick] (3.2,-0.4) rectangle (3.5,0.4);
-  \node[below] at (0.25,-0.6) {$m_r$};
-  \node[below] at (1.25,-0.4) {$k$};
-  \node[below] at (2.3,-0.7) {$m_w$};
-\end{tikzpicture}
-\caption{Two-Mass Model: Rigid Core (Bone) Coupled to Soft Shell (Tissue).}
+\includegraphics[width=\linewidth]{figures/soft_tissue_response.pdf}
+\caption{Boundary Conditions and Damping Determine Tissue Response. Both Plots Use a Fixed or Prescribed Base, a 1 kg Tissue Mass and 5000 N/m Stiffness; Parameters Illustrate a Model, Not Measured Golf Anatomy.}
 \label{fig:soft_tissue_model}
 \end{figure}
 
-\label{sec:wobbling_mass}
-
-\index{wobbling mass}
-\index{secondary oscillation}
-\index{soft tissue inertia}
-
-The most tractable way to model soft tissue effects is the \emph{wobbling mass} framework. Here is the key idea: partition each body segment into two parts:
-\begin{enumerate}
-\item \textbf{Rigid core:} the bones and rigid skeletal structures
-\item \textbf{Soft shell:} the muscles, fat, connective tissue, and other deformable material surrounding the bone
-\end{enumerate}
-
-The rigid core has mass $m_{\mathrm{rigid}}$ and is positioned at the joint as described by the usual kinematic chain. The soft shell has mass $m_{\mathrm{wobble}}$ and is coupled to the rigid core by soft tissue properties: springs (elasticity) and dampers (viscosity).
-
-\begin{definition}{The Wobbling Mass Model}{wobbling_mass}
-Each body segment is decomposed into:
-\begin{align}
-m_{\mathrm{total}} &= m_{\mathrm{rigid}} + m_{\mathrm{wobble}} \\
-\text{Position of rigid core:} \quad &\bm{x}_r \\
-\text{Position of wobble mass:} \quad &\bm{x}_w \\
-\text{Relative displacement:} \quad &\Delta \bm{x} = \bm{x}_w - \bm{x}_r
-\end{align}
-
-The wobble mass is driven by the rigid core through a viscoelastic coupling (Kelvin-Voigt model):
-\begin{equation}
-\bm{F}_{\mathrm{coupling}} = -k_w \Delta\bm{x} - c_w \Delta\dot{\bm{x}}
-\end{equation}
-where $k_w$ is the stiffness (spring constant) and $c_w$ is the damping coefficient.
-\end{definition}
-
-For a single wobble mass element, the equation of motion is:
-\begin{equation}
-m_{\mathrm{wobble}} \ddot{\bm{x}}_w + c_w(\dot{\bm{x}}_w - \dot{\bm{x}}_r) + k_w(\bm{x}_w - \bm{x}_r) = 0
-\label{eq:wobble_eom}
-\end{equation}
-
-This is the equation of a driven harmonic oscillator with damping. The forcing comes from the rigid core motion $(\bm{x}_r, \dot{\bm{x}}_r)$. When the rigid core accelerates, the wobble mass oscillates about an equilibrium position that lags slightly behind the rigid core.
-
-\begin{example}{Wobble Dynamics During Downswing}{wobble_downswing}
-Consider the upper arm during a fast downswing:
-\begin{itemize}
-\item Rigid core (humerus + attached muscles): $m_{\mathrm{rigid}} \approx 1.5$ kg
-\item Soft shell (arm tissue, fat): $m_{\mathrm{wobble}} \approx 1.0$ kg
-\item Estimated stiffness (tissue elasticity): $k_w \approx 5,000$ N/m
-\item Estimated damping (viscous dissipation): $c_w \approx 200$ N$\cdot$s/m
-\item Natural frequency: $\omega_n = \sqrt{k_w/m_w} \approx 70$ rad/s $\approx$ 11 Hz
-\item Damping ratio: $\zeta = c_w/(2\sqrt{k_w m_w}) \approx 0.38$ (underdamped)
-\end{itemize}
-
-During the downswing (which lasts $\sim$0.15 seconds), the arm accelerates at peak rates of 500 m/s$^2$. This high-frequency content excites the wobble mass oscillation. Typical wobble amplitudes are 1--3 cm during the swing and post-swing phases. The wobble mass will oscillate for several cycles after the swing ends, dissipating energy through damping.
-\end{example}
-
 \subsection{Effects of Wobbling Mass on Inverse Dynamics}
 
-\index{inverse dynamics}
-\index{accelerometer noise}
+Soft-tissue motion is physical, while its contribution to a bone-motion estimate is a measurement artifact. Those statements are compatible. A surface marker follows its local attachment, not necessarily the bone or the center of mass of an effective tissue mode.
 
-When you use accelerometers or motion capture to measure the motion of a limb, you are typically measuring the motion of a \emph{marker on the skin} or an accelerometer attached to the surface. You are not measuring the rigid core bone motion directly. The marker is attached to soft tissue, which wobbles. The accelerometer experiences both the rigid core acceleration and the oscillation of the soft tissue.
+In a local one-dimensional observation model,
+\[
+y(t)=x_r(t)+z_{\mathrm{marker}}(t)+\epsilon(t).
+\]
+The sensor observes their sum. Without additional information, changing the proposed bone trajectory by $a(t)$ and changing marker motion by $-a(t)$ leaves the same observation. A fitted decomposition therefore needs calibration, independent observations or justified constraints. Adding a tissue model does not automatically make the components identifiable.
 
-This is why inverse dynamics calculations often produce noisy, high-frequency artifacts. The mathematical differentiation amplifies high-frequency noise. When you differentiate position (from markers) to get velocity, and differentiate velocity to get acceleration, any small oscillation in the marker position gets magnified enormously. A wobble amplitude of 1 cm becomes an acceleration artifact of several m/s$^2$.
+Differentiation magnifies rapid motion and noise. For a sinusoidal marker displacement of amplitude $A$ and frequency $f$, acceleration amplitude is $A(2\pi f)^2$. At $A=0.01\,\mathrm{m}$ and $f=10\,\mathrm{Hz}$, it is $39.4784\,\mathrm{m/s^2}$. The same displacement at another frequency gives a different acceleration; an amplitude alone is insufficient.
 
-The solution is to either:
-\begin{enumerate}
-\item \textbf{Filter the data:} apply a low-pass filter to remove high-frequency wobble artifacts
-\item \textbf{Use a wobbling mass model:} in post-processing, decompose the measured motion into rigid core and wobble components
-\item \textbf{Measure the rigid body directly:} use imaging (X-ray, MRI) to track bone motion rather than skin markers (expensive and not practical during swing)
-\end{enumerate}
+Filtering can reduce noise or an identifiable transient, but tissue artifact need not occupy a separate frequency band. Fuller and colleagues compared skin-mounted and bone-pin marker arrays and found overlapping spectral content \citep{Fuller1997Markers}. Their results oppose a universal rule that low-pass filtering recovers skeletal motion. The task, attachment, smoothing method and reference measurement all matter.
+
+An accelerometer further measures specific force in its sensor frame. Converting it to a point's coordinate acceleration requires orientation, gravity and reference-point conventions. Rotational motion, sensor offset, attachment motion, bias and timing errors can all enter. Neither a marker nor an accelerometer alone directly measures an individual muscle force.
+
+For inverse dynamics, distinguish errors in motion, external forces, inertial parameters and the mechanical model. A net generalized-force estimate remains a combined result of muscles, passive tissues and constraints. Estimating individual tissue loads requires additional constitutive and force-allocation assumptions. The inverse-dynamics chapters (Chapter~\ref{ch:inverse_dynamics_parallel}) develop that distinction.
 
 \subsection{Effects of Wobbling Mass on the Drift Field}
 
-\index{drift field}
-\index{effective inertia}
+A useful frequency-domain calculation exposes what an effective inertia means. Prescribe a small harmonic base displacement $x_r(t)=\operatorname{Re}(X_r e^{i\omega t})$ in the preceding linear model. Substitution into the tissue equation gives
+\[
+H(\omega)=\frac{X_w}{X_r}
+=\frac{k+ic\omega}{k-m_w\omega^2+ic\omega},
+\qquad
+m_{\mathrm{dyn}}(\omega)=m_r+m_wH(\omega).
+\]
+The required external force amplitude is $U=-\omega^2m_{\mathrm{dyn}}X_r$. Both the spring and damper transmit base motion, so both belong in the numerator. Omitting its damping term changes the phase, reaction and energy balance.
 
-The wobbling mass also changes the effective inertia of the system. From the perspective of the joint torques driving the motion, the presence of wobbling mass increases the effective moment of inertia of the segment.
+At low frequency, $H$ approaches one and the dynamic mass approaches $m_r+m_w$. At sufficiently high frequency, $H$ approaches zero and the response approaches that of $m_r$, within this model's valid range. Around a mode, amplitude and phase depend on damping. A complex dynamic mass is a compact input-output description under harmonic forcing, not a new physical mass; its real part need not behave monotonically.
 
-Recall the fundamental equation of motion for a rigid body rotating about a joint:
-\begin{equation}
-I_{\mathrm{eff}} \ddot{\theta} + d \dot{\theta} + \tau_{\mathrm{gravity}} = \tau_{\mathrm{muscle}}
-\end{equation}
+The mean input power provides an independent check:
+\[
+\overline P
+=\tfrac12\operatorname{Re}\!\left[U(i\omega X_r)^*\right]
+=\tfrac12c\omega^2|X_w-X_r|^2.
+\]
+The star denotes complex conjugation. In steady harmonic motion the average stored-energy change is zero, so input power equals damper loss. This identity and direct time integration test the response without relying on the same algebraic rearrangement.
 
-With a wobbling mass, the effective moment of inertia is not simply the rigid body moment of inertia. The wobble mass contributes an additional inertial term, and the coupling stiffness and damping modify the effective resistance to acceleration.
+Here $\omega$ is the frequency of a small imposed oscillation. It is not simply the golfer's angular speed. A rapid rotation need not excite the same mode as a rapidly varying perturbation, and a measured swing is not a steady sinusoid. The calculation therefore supplies a testable coupling mechanism, not an explanation that elite athletes exploit tissue decoupling.
 
-For a simple rotating segment with a single wobble mass:
-\begin{equation}
-I_{\mathrm{eff}} = I_{\mathrm{rigid}} + I_{\mathrm{wobble}} \frac{1}{1 - \omega^2/\omega_n^2 + 2i\zeta\omega/\omega_n}
-\end{equation}
+In a state-space model, adding $z$ and $\dot z$ changes the state and the equations. It can also change the input map and observation map. Eliminating those states can introduce memory; a complex harmonic response should not be inserted into a time-domain equation as an ordinary constant inertia. Drift still means the vector field at the declared zero input, with the retained contact, gravity, elastic and activation mechanisms specified.
 
-where $\omega$ is the frequency of rotation you are trying to impose. At low frequencies (typical joint rotation speeds), the wobble mass contributes fully to the effective inertia. At high frequencies approaching the natural frequency $\omega_n$, the inertia increases dramatically (resonance effect). Above the natural frequency, the inertia drops off.
-
-\textbf{In plain language:} as you accelerate a limb faster and faster, the soft tissue initially moves with you, increasing the effective inertia. But if you accelerate too fast (above the natural frequency of the tissue), the soft tissue cannot keep up and effectively decouples, reducing the inertia the muscles must overcome. This is why elite athletes can produce extremely fast limb accelerations---they are partly exploiting this high-frequency inertia reduction.
-
-The drift field $f(\bm{x})$ is modified because the effective stiffness and damping of each segment change with the wobbling mass. A segment with significant wobble is effectively ``softer'' and more ``damped'' than a rigid segment.
-
-\section{The Fluid Torso---Visceral Dynamics}
+\section{Internal Motion in the Torso}
 \label{sec:fluid_torso}
-
 \index{viscera}
-\index{torso inertia}
-\index{centrifugal effects}
 
-Now consider a much larger effect: the torso itself. The human torso is not a solid block of muscle and bone. It is a container filled with organs, blood, other fluids, and fat. The total visceral mass (everything inside the ribcage and abdomen excluding the spine) is approximately:
-\begin{itemize}
-\item Heart: $\sim$0.3 kg
-\item Lungs: $\sim$1.2 kg
-\item Liver: $\sim$1.5 kg
-\item Kidneys: $\sim$0.3 kg
-\item Stomach, intestines, spleen, pancreas: $\sim$2 kg
-\item Blood: $\sim$5 kg (in the torso cavity)
-\item Abdominal fat and other organs: $\sim$3--8 kg
-\item \textbf{Total: approximately 13--18 kg out of the torso's total mass of $\sim$25--35 kg}
-\end{itemize}
+The torso contains deformable organs, muscles, connective tissues and fluids, with different attachments and material properties. It is not adequately characterized by assigning a single fraction of its mass to an unrestrained liquid. Total-body blood mass is not all located in the torso cavity, and organ masses cannot be added to an existing whole-torso estimate without checking what that estimate already includes.
 
-That is roughly 50\% of torso mass in the form of \emph{fluid or semi-fluid organs}. These are not rigidly attached to the skeleton. They can move, shift, and redistribute during motion.
+For a declared rotating-frame illustration, a point at radius $r=0.15\,\mathrm{m}$ in a frame rotating steadily at $\omega=10.5\,\mathrm{rad/s}$ has a centripetal acceleration magnitude $\omega^2r=16.5375\,\mathrm{m/s^2}$ if it remains fixed in that frame. In rotating-frame force balance the corresponding centrifugal term points outward. This calculation gives an acceleration scale; it does not give an organ displacement or stress.
 
-During the golf swing, the torso undergoes extreme angular acceleration. At the peak of the downswing, the torso rotates at angular velocities approaching 600${}^\circ$/s (10.5 rad/s). Consider the centrifugal acceleration experienced by a structure 15 cm from the rotation axis:
-\begin{equation}
-a_{\mathrm{centrifugal}} = \omega^2 r = (10.5)^2 \times 0.15 = 16.5 \text{ m/s}^2 \approx 1.7 g
-\end{equation}
+The complete acceleration transformation is
+\[
+\begin{aligned}
+\mathbf a={}&\mathbf a_O+R\bigl[
+\ddot{\boldsymbol\rho}
++2\boldsymbol\omega\times\dot{\boldsymbol\rho}
++\dot{\boldsymbol\omega}\times\boldsymbol\rho\\
+&\hspace{35mm}
++\boldsymbol\omega\times(\boldsymbol\omega\times\boldsymbol\rho)
+\bigr].
+\end{aligned}
+\]
+Here $R$ maps components from the moving frame to the inertial frame, $\boldsymbol\rho$ is position relative to its origin, and the dotted relative quantities and $\boldsymbol\omega$ use moving-frame components. Frame translation, angular acceleration and relative motion add terms that a centrifugal-only argument omits. Attachment forces, gravity, contact and material response must balance the resulting dynamics.
 
-\textbf{A liver in the rotating torso experiences nearly 2 gravitational accelerations of centrifugal force pulling it outward.} The liver is suspended by ligaments and tissue connections; it shifts and stretches in response to this loading.
-
-\begin{example}{Visceral Mass Redistribution}{visceral_redistribution}
-During a fast downswing torso rotation:
-\begin{itemize}
-\item Angular velocity: $\omega = 600^{\circ}$/s $= 10.5$ rad/s
-\item Abdominal radius (centroid of viscera): $r \approx 0.12$ m
-\item Centrifugal acceleration: $a = \omega^2 r = 13$ m/s$^2$
-\item Centrifugal force on 15 kg of viscera: $F = m a = 15 \times 13 = 195$ N (outward)
-\item This is equivalent to a sideways shove of about 20 kg force on the internal organs
-\end{itemize}
-
-The organs shift outward and laterally. The liver (normally on the right side) can shift 2--3 cm further toward the right boundary of the abdomen. The stomach, intestines, and other mobile organs redistribute. This creates a time-varying mass distribution within the torso.
-
-The key consequence: the inertia tensor of the torso is \emph{not constant}. It changes during the swing as visceral mass redistributes.
-\end{example}
+Predicting deformation requires a constitutive law and boundary conditions. In a continuum description, local momentum balance is $\rho\mathbf a=\nabla\!\cdot\boldsymbol\sigma+\rho\mathbf b$, where $\rho$ is density, $\boldsymbol\sigma$ stress and $\mathbf b$ body force per unit mass. An approximately incompressible fluid can transmit pressure while having no static shear modulus; surrounding tissues can resist shear and tension. A lumped oscillator, a deformable solid and a fluid model make different assumptions.
 
 \subsection{Time-Varying Inertia Tensor}
 
-\index{inertia tensor}
-\index{time-varying properties}
+A rigid body's inertia about its center of mass is constant in a fixed body frame, while its components rotate in an inertial frame. Deformation can change even the body-frame inertia. Those are separate effects, and neither alone determines the complete angular momentum of a deforming body.
 
-For a rigid body, the moment of inertia about the principal axes is constant. It can be computed once and used forever:
-\begin{equation}
-I = \int_V r_\perp^2 \, \mathrm{d}m
-\end{equation}
+Choose an origin at the complete modeled system's center of mass and a rotating frame. With all quantities below expressed in that frame,
+\[
+\mathbf H=I\boldsymbol\omega+\mathbf h_{\mathrm{rel}},
+\qquad
+\boldsymbol\tau_{\mathrm{ext}}
+=I\dot{\boldsymbol\omega}+\dot I\boldsymbol\omega
++\dot{\mathbf h}_{\mathrm{rel}}
++\boldsymbol\omega\times(I\boldsymbol\omega+\mathbf h_{\mathrm{rel}}).
+\]
+The relative angular momentum $\mathbf h_{\mathrm{rel}}$ comes from material motion relative to the chosen frame. It generally cannot be inferred from the instantaneous inertia alone. Changing the system boundary or using an accelerating origin away from its center of mass requires the appropriate additional accounting.
 
-For the torso with shifting viscera, the moment of inertia changes as the mass distribution changes:
-\begin{equation}
-I_{\mathrm{torso}}(t) = I_{\mathrm{skeleton}}(t) + I_{\mathrm{viscera}}(t)
-\end{equation}
+A special scalar model with no relative angular momentum gives $\tau=d(I\omega)/dt$. At zero external torque, angular momentum is conserved. If $I$ changes from $3.00$ to $3.18\,\mathrm{kg\,m^2}$ with initial angular speed $10\,\mathrm{rad/s}$, the final speed is $9.43396\,\mathrm{rad/s}$. The associated rotational energy falls from $150$ to $141.5094\,\mathrm J$. Reversing the shape change reverses that energy change in an ideal reversible process. It is not automatically heat.
 
-During the downswing, as the torso accelerates and then decelerates, and as centrifugal forces shift the viscera, the moment of inertia can change by 5--10\% of its nominal value. This might seem small, but it has cascading effects on the dynamics.
-
-Recall the equation of rotational motion:
-\begin{equation}
-I(t) \ddot{\theta} + \dot{I}(t) \dot{\theta} + d\dot{\theta} + \tau_{\mathrm{gravity}} = \tau_{\mathrm{muscle}}
-\end{equation}
-
-When $I(t)$ is time-varying, a new term appears: $\dot{I}(t) \dot{\theta}$. This is an effective ``damping'' term that arises purely from the changing inertia. The muscles must account for this variation; the swing dynamics become more complex.
-
-For the drift field, a time-varying inertia means that the effective stiffness and damping of the torso change throughout the motion. The drift at one instant is slightly different from the drift at the next instant, purely because the mass distribution has shifted.
+If instead an actuator holds angular speed at $10\,\mathrm{rad/s}$ while that inertia rises uniformly over $0.2\,\mathrm s$, it must supply a $9\,\mathrm{N\,m}$ torque in this scalar model. Work associated with the shape change must also be accounted for. The term $\dot I\omega$ is not a viscous damper merely because it appears next to a velocity.
 
 \subsection{Practical Implications}
 
-The fluid torso effect is subtle but real. In detailed biomechanical simulations used for injury risk assessment, the time-varying inertia of the torso is sometimes included as a correction term. In most coaching and teaching contexts, it is safely ignored---the rigid body model remains an excellent approximation.
+Internal motion can affect momentum, energy, sensor observations and local loading together. Its importance must be estimated from measurements or sensitivity analysis for the intended task. The chapter does not assign a universal percentage change to torso inertia or a measured displacement to organs during a golf transition.
 
-However, there is one context where the fluid torso becomes very relevant: \textbf{the transition}, the moment between backswing and downswing. During the transition, the torso must suddenly reverse its direction and accelerate forward. The viscera are still sloshing from the backswing. They have momentum in the ``wrong'' direction (backward). The muscles must overcome this inertial lag. The vertebral discs, already loaded from the backswing stretch, are compressed further as the viscera shift. Understanding the fluid torso helps explain why the transition is both so powerful (energy is being loaded into the stretched spinal structures) and so dangerous (extreme forces on the spine).
+Transition deserves investigation because velocities, activation and contact forces evolve there; a claim that visceral motion makes it the most dangerous or most powerful phase needs separate evidence. The spine chapter (Chapter~\ref{ch:spine_modeling}) develops segment-level loading models. The damping chapter (Chapter~\ref{ch:joint_damping_friction}) distinguishes elastic storage, local dissipation and effects on the complete coupled system.
 
-The energy absorbed by wobbling mass is one component of the total dissipation budget. Chapter~\ref{ch:joint_damping_friction} provides a complete accounting of all damping and friction sources in the kinetic chain, showing how energy dissipation at each joint propagates through the coupled system.
-
-\section{Intra-Abdominal Pressure (IAP)---The Hydraulic Cylinder}
+\section[Intra-Abdominal Pressure: Define the Pressure Boundary]{Intra-Abdominal Pressure:\\Define the Pressure Boundary}
 \label{sec:iap}
-
 \index{intra-abdominal pressure}
-\index{core stabilization}
-\index{hydraulic cylinder}
-\index{pelvic floor}
 
-Now we come to one of the most underappreciated physical mechanisms in the human body: \textbf{intra-abdominal pressure} (IAP). This is the pressure inside the abdominal cavity, created and maintained by the muscles of the ``core.''
+Intra-abdominal pressure is pressure within the abdominal compartment. Its measured value depends on the measurement method, reference pressure, location, posture and task. Gastric or bladder measurements can provide useful information under defined protocols, but a pressure reading is not a direct measurement of every boundary traction.
 
 \subsection{Anatomy of the Pressure-Generating System}
 
-The abdominal cavity is bounded by:
-\begin{itemize}
-\item \textbf{Top (superior):} the diaphragm (the large dome-shaped muscle that controls breathing)
-\item \textbf{Bottom (inferior):} the pelvic floor muscles (a sheet of muscles spanning the pelvis)
-\item \textbf{Sides:} the abdominal wall muscles, especially the transversus abdominis (the deepest layer, running horizontally around the abdomen)
-\item \textbf{Back:} the multifidus and erector spinae muscles along the spine
-\end{itemize}
+The diaphragm separates thoracic and abdominal compartments; the abdominal wall and pelvic floor complete much of the surrounding boundary. Vertebral, fascial and muscular structures provide additional attachments and constraints. These structures deform and exert forces together. Treating the abdomen as a pressure vessel can clarify force balance, but a literal hydraulic cylinder with rigid end plates is only a simplified model.
 
-When you contract the diaphragm (pulling it down), you increase the volume of the thoracic cavity and decrease the volume of the abdominal cavity---at least, that is what happens during normal breathing. But in a braced posture, you can contract the diaphragm WHILE ALSO contracting the transversus abdominis and pelvic floor. This creates a pressure vessel: the diaphragm pushes down, the pelvic floor pushes up, the transversus wraps around like a corset, and the spine is braced against the multifidus.
-
-The result: pressure builds inside the abdominal cavity. This is intra-abdominal pressure.
-
-\begin{definition}{Intra-Abdominal Pressure (IAP)}{iap}
-IAP is the hydrostatic pressure within the abdominal cavity, created by coordinated contraction of the core muscles:
-\begin{itemize}
-\item \textbf{Resting state:} IAP $\approx$ 5--10 mmHg (slightly above atmospheric)
-\item \textbf{Normal daily activities:} IAP $\approx$ 10--20 mmHg
-\item \textbf{Heavy lifting or maximal exertion:} IAP can reach 50--150 mmHg
-\item \textbf{Valsalva maneuver (breath-held straining):} IAP can spike to 200+ mmHg
-\end{itemize}
-\end{definition}
-
-During maximal exertion such as the golf downswing, IAP is reported to reach values in the range of 80--120 mmHg \cite{intra_abdominal_pressure_golf}. This is slightly below a heavy deadlift (where IAP can exceed 200 mmHg) but still substantial.
+Contraction and respiratory motion can change pressure, geometry and muscular tension at the same time. Their mechanical effects must be distinguished rather than assigned to pressure alone. The pressure difference across the diaphragm involves thoracic pressure as well as abdominal pressure. Raising an abdominal pressure relative to atmosphere does not specify that difference if thoracic pressure changes too.
 
 \subsection{IAP as a Structural Support System}
 
-\index{spinal stability}
-\index{compression loading}
+For a surface patch $S$ with unit normal $\mathbf n$ pointing from the cavity into its wall, the net pressure force and moment on the wall are
+\[
+\mathbf F_p=\int_S\Delta p\,\mathbf n\,dA,\qquad
+\boldsymbol\tau_p=\int_S(\mathbf r-\mathbf r_O)
+\times(\Delta p\,\mathbf n)\,dA.
+\]
+The pressure difference $\Delta p$ must compare the two sides of that wall. Wall tension, muscle forces and attachments remain separate terms. The force direction varies across a curved surface, so multiplying pressure by its total curved area does not usually give the vertical resultant.
 
-Here is the key physics: a pressurized fluid cavity acts as a \emph{structural element}. The pressure creates outward forces on all surfaces of the cavity. In particular, the pressure acts upward on the diaphragm and downward on the pelvic floor, and it acts in all directions on the abdominal wall and back.
+For uniform $\Delta p$, the vertical force uses signed projected area:
+\[
+F_{p,z}=\Delta p\int_S n_z\,dA
+=\Delta p\,A_{\mathrm{proj}}.
+\]
+A hemispherical cap of radius $R$ has curved area $2\pi R^2$ but vertical projected area $\pi R^2$. Its axial resultant is therefore $\Delta p\pi R^2$, not twice that value. Numerical surface integration verifies the distinction.
 
-The pressurized abdomen effectively braces the lumbar spine from the front. Without IAP, the spine must rely entirely on muscle strength and ligament tension to resist compressive and shear loads. With IAP, the pressurized fluid transmits some of those loads directly to the abdominal wall and pelvic floor, reducing the load that must be borne by the spine itself.
+Using $1\,\mathrm{mmHg}\approx133.3224\,\mathrm{Pa}$, a declared pressure difference of $100\,\mathrm{mmHg}$ over projected area $0.04\,\mathrm{m^2}$ gives approximately $533.29\,\mathrm N$. Rounding pressure to $13{,}300\,\mathrm{Pa}$ gives $532\,\mathrm N$. Neither number is automatically a reduction in spinal compression; it is one patch's resultant under the stated pressure and geometry.
 
-Quantitatively, the force generated by IAP acting on the diaphragm is:
-\begin{equation}
-F_{\mathrm{IAP, diaphragm}} = P \times A_{\mathrm{diaphragm}}
-\end{equation}
+For a complete closed boundary under uniform pressure,
+\[
+\oint_S p\,\mathbf n\,dA=\mathbf0,\qquad
+\oint_S(\mathbf r-\mathbf r_O)\times(p\,\mathbf n)\,dA=\mathbf0.
+\]
+Opposing regions balance globally while individual regions remain loaded. A nonuniform pressure field can have a resultant associated with fluid weight or acceleration; the corresponding fluid balance must then be included. For the complete body, internal action-reaction pairs do not create a net external supporting force. They can nevertheless redistribute loads between structures.
 
-where $P$ is the pressure and $A_{\mathrm{diaphragm}}$ is the area of the diaphragm. The diaphragm is a broad, dome-shaped muscle with a surface area of approximately 0.03--0.05 m$^2$. At an IAP of 100 mmHg (approximately 13,300 Pa):
-\begin{equation}
-F_{\mathrm{IAP}} = 13,300 \text{ Pa} \times 0.04 \text{ m}^2 = 532 \text{ N}
-\end{equation}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/soft_tissue_pressure.pdf}
+\caption{Pressure Acts Normal to a Surface. A Hemispherical Cap Has an Axial Resultant Based on Its Projected Disk; a Complete Uniform-Pressure Boundary Has Zero Net Force and Moment Despite Local Loading.}
+\label{fig:soft_tissue_pressure}
+\end{figure}
 
-\textbf{A pressurized abdomen at 100 mmHg generates an upward force of roughly 530 newtons on the diaphragm.} For comparison, the force exerted by the back extensor muscles during a golf downswing is typically 300--500 newtons. The IAP force is \emph{comparable to the total back extensor force}. This is enormous.
-
-\begin{example}{IAP Force Calculation for Golf Downswing}{iap_force}
-Scenario: 80 kg golfer, torso mass 35 kg, during downswing peak loading.
-\begin{itemize}
-\item IAP pressure: 100 mmHg = 13,300 Pa (representative mid-range value during exertion)
-\item Diaphragm area: 0.04 m$^2$
-\item Upward force on diaphragm: $F = 13,300 \times 0.04 = 532$ N
-\item Pelvic floor area: $\sim$0.03 m$^2$
-\item Downward force on pelvic floor: $532 \times (0.03/0.04) \approx 400$ N
-\end{itemize}
-
-The pressurized cavity creates forces that:
-\begin{enumerate}
-\item Reduce the net compressive load on the intervertebral discs
-\item Increase the stiffness of the torso (the pressure resists deformation)
-\item Create an extensor moment about the lumbar spine (via the force on the diaphragm)
-\item Distribute loads to the abdominal wall and pelvic floor rather than concentrating them on the spine
-\end{enumerate}
-\end{example}
+This is why a diaphragm force cannot simply be subtracted from a joint load. The muscles and connective tissues containing the pressure contribute their own forces and moments. Their effects depend on geometry and activation. A comparison with one supposed typical back-extensor force omits that balance.
 
 \subsection{IAP and Torso Stiffness}
 
-\index{torso stiffness}
-\index{energy transmission}
+Pressure can contribute to the response of a deformable structure through geometry and wall prestress. The work calculation shows the limit of a pressure-only explanation. For uniform internal pressure relative to a constant external reference, the pressure power delivered to a moving boundary is
+\[
+P_p=\int_S p\,\mathbf n\cdot\mathbf v\,dA=p\dot V,
+\qquad
+Q_{p,j}=p\frac{\partial V}{\partial q_j}.
+\]
+Here $V$ is cavity volume and $q_j$ a boundary-deformation coordinate. If a proposed ideal twist preserves volume, its direct hydrostatic pressure torque is zero. A fluid does not acquire a static shear modulus merely because its pressure is high.
 
-A pressurized torso is a stiffer torso. This is a direct consequence of the hydraulic cylinder mechanism: pressure resists deformation. If you try to bend a pressurized abdomen forward, you must work against the internal pressure. If you try to twist a pressurized abdomen, the pressure creates a restoring torque.
+The surrounding wall can still resist that twist through its material stiffness, tension and constrained geometry. Pressure can change those quantities and the resulting tangent response. A model must include them to predict the change. It cannot replace that derivation with a universal stiffness proportional to pressure or assume that damping increases by the same rule.
 
-Why does this matter for the golf swing? A stiffer torso is a more efficient energy transmitter. Power generated by the hip rotation must be transmitted to the shoulders and arms. If the torso is loose and floppy, much of that power is lost to torso deformation. If the torso is stiff and braced, the power flows directly through to the upper body.
-
-This connects to one of the fundamental principles of the modern golf swing: the need to \emph{brace the core}. Coaches talk about ``engaging the core'' or ``bracing for impact.'' The physics is clear: by raising IAP and stiffening the torso, the golfer becomes a more efficient power transmitter.
-
-Mathematically, the torsional stiffness of the torso can be modeled as a nonlinear spring:
-\begin{equation}
-\tau_{\mathrm{resist}} = k_0 \theta + k_{\mathrm{IAP}}(P) \theta
-\end{equation}
-
-where $k_0$ is the baseline stiffness (from muscles, ligaments, disc elasticity) and $k_{\mathrm{IAP}}(P)$ is the additional stiffness contributed by IAP. The second term is roughly linear in the pressure $P$ over the typical operating range.
+Hodges and colleagues used phrenic-nerve stimulation to raise pressure in three prone subjects and measured an increase in posteroanterior lumbar indentation stiffness \citep{Hodges2005IAPStiffness}. This supports a mechanical contribution under their controlled conditions. It does not supply a golf-specific torsional stiffness, prove stability of a moving swing, or establish an optimum pressure profile.
 
 \subsection{Breathing Coordination and the Exhale Cue}
 
-\index{breathing}
-\index{Valsalva maneuver}
+Inspiration, expiration, glottal state, abdominal activation and posture interact. Inhalation does not universally reduce IAP, and exhalation does not uniquely determine it. The diaphragm's action and pressure difference depend on what the surrounding structures do.
 
-Elite golfers often exhale during the downswing. This is not arbitrary. The exhalation serves to \textbf{maintain IAP}.
+Shirley and colleagues measured a composite posteroanterior spinal response during respiratory tasks in eight subjects \citep{Shirley2003Respiration}. Both inspiratory and expiratory efforts could increase stiffness. Their analysis distinguished pressure, muscle activity and the measurement's composite nature. This contradicts a simple account in which inhalation necessarily removes support while exhalation guarantees it.
 
-Here is the physiology: when you take a deep breath (inhalation), you expand the thoracic cavity, and the diaphragm descends. If the abdominal muscles are relaxed, this pulls the pressure down---IAP drops. Once IAP drops, the torso becomes less stiff, and some of the structural support is lost.
+A breathing cue is therefore a behavioral intervention with several possible pathways. It may change timing, attention, muscle activity, pressure or comfort together. To explain its effect, measure the intended intermediate variables and the outcome. A plausible physiological account does not establish increased club speed or protection from a cardiovascular event.
 
-A golfer's breathing pattern during the swing is typically:
-\begin{enumerate}
-\item \textbf{Address to backswing:} normal breathing or a preparatory breath
-\item \textbf{Transition:} breath-hold (Valsalva maneuver begins)
-\item \textbf{Downswing through impact:} exhale forcefully while maintaining abdominal contraction
-\item \textbf{Follow-through:} release, return to normal breathing
-\end{enumerate}
-
-The exhale-during-downswing cue does two things:
-\begin{enumerate}
-\item It prevents the lungs from over-expanding, which would otherwise drop IAP
-\item The forceful exhalation involves contraction of the internal intercostal muscles (between ribs), which couples to the transversus abdominis, enhancing IAP further
-\end{enumerate}
-
-\section{How IAP Helps the Golf Swing}
+\section{Pressure, Support and Golf Performance}
 \label{sec:iap_helps}
 
-We have established the mechanisms. Now let us see how IAP contributes to swing performance.
+The central question is how pressure and muscle action jointly change a specified outcome. Local stiffness, stability, tissue load, club speed and perceived effort are different outcomes. Evidence about one can guide the next experiment but does not settle it.
 
-\subsection{1. Spine Stabilization and Load Distribution}
+\subsection{Spine Stabilization and Load Distribution}
 
-During the downswing, the lumbar spine is subjected to enormous compressive loads. A 80 kg golfer can experience compression forces exceeding 8 times body weight at the L4/L5 disc. That is roughly 6,400 newtons of compression. The disc can withstand this (discs are designed to handle heavy loads), but the vertebrae, facet joints, and ligaments are stressed.
+Stokes and colleagues' static model included curved abdominal muscle paths, specified pressures and a force-allocation objective \citep{Stokes2010AbdominalPressure}. It predicted lower spinal compression when pressure increased under its tested loads. The authors also explained that optimized activation may underestimate real coactivation and compression. The result is conditional on the complete model, not on pressure alone.
 
-By raising IAP, the golfer creates a cushioning effect. The pressurized fluid distributes loads more evenly throughout the abdominal cavity rather than concentrating them on the spine. The result: reduced peak stress on the disc and vertebrae, and lower shear forces on the facet joints.
+An experiment by Nachemson and colleagues measured pressures and muscle activity in four subjects performing five isometric tasks \citep{Nachemson1986Valsalva}. Four tasks showed increased rather than decreased compression during Valsalva maneuvers. The two studies ask related questions under different activation and task conditions. Together they motivate explicit force balance and experimental validation rather than a universal unloading percentage.
 
-Research in spinal biomechanics has shown that appropriate IAP can reduce the compressive load on the L4/L5 disc by 20--40\%, depending on the IAP level and the direction of loading.
+Stability additionally concerns how perturbations evolve. A larger measured indentation stiffness does not by itself establish stability for a multiaxis moving system with delays, muscle limits and changing contacts. Nor does lower estimated compression prove lower injury risk: the relevant tissue, loading direction, duration, exposure and capacity still matter.
 
-\subsection{2. Torso Stiffness and Energy Transmission}
+\subsection{Torso Stiffness and Energy Transmission}
 
-A stiffer torso means that energy flows from the hips to the shoulders without dissipation. During the downswing, the hips start rotating first (kinetic sequencing). The rotation of the hips must be transmitted to the torso, which transmits it to the shoulders, which transmits it to the arms and club. If the torso is compliant (soft, floppy), each link in the chain loses some energy to deformation. If the torso is stiff, the energy flows directly through.
+An elastic deformation can store recoverable energy. A dissipative process converts mechanical energy into other forms. A compliant connection can therefore transmit and return energy without being a source of loss, while a stiff connection can still dissipate energy or demand substantial muscle work.
 
-The result: for the same hip torque, a stiffer torso produces greater shoulder rotation speed and greater club head speed. Or equivalently, less muscular effort is needed to achieve the same club speed if the torso is stiff.
+For a linear torsional spring with fixed reference,
+\[
+\tau_{\mathrm{spring}}=-K\theta,\qquad
+V=\tfrac12K\theta^2.
+\]
+At fixed deformation, increasing $K$ increases stored energy. At fixed applied torque magnitude $T$ in static equilibrium, however, $\theta=T/K$ and $V=T^2/(2K)$, so increasing $K$ decreases the stored energy. The comparison changes when its boundary condition changes.
 
-\subsection{3. The X-Factor Stretch Mechanism}
+Neither result establishes that a stiffer torso produces greater shoulder speed for the same hip torque. The delivered motion also depends on timing, inertia, geometry, muscle activation, damping and constraints. A finite-horizon simulation or experiment should compare the desired output under matched conditions and include the work needed to produce the changed mechanical response.
 
+\subsection{The X-Factor Stretch Mechanism}
 \index{X-factor}
-\index{stretch-reflex}
 
-One of the most important concepts in modern golf biomechanics is the ``X-factor stretch.'' During the backswing, the golfer creates a large hip-shoulder separation: hips rotate 40--50${}^\circ$, shoulders rotate 70--90${}^\circ$, creating a 30--50${}^\circ$ relative angle. This loading stretches the torso muscles and stores elastic strain energy in the tissues.
+A measured thorax-pelvis separation depends on the segment definitions and angle convention. It is not automatically the strain of a single spring or the sum of lumbar joint rotations. A three-dimensional motion can change that reported angle through several coupled rotations.
 
-At the transition, the golfer reverses this motion and taps into the stored elastic energy. But for elastic energy to be stored and released effectively, the tissue must have adequate stiffness. A loose, low-IAP torso cannot store much elastic energy. A stiff, high-IAP torso can store significant energy.
+To calculate elastic storage, identify a tissue or an effective constitutive element, its reference configuration and its force-deformation relation. For a nonlinear one-dimensional elastic element, stored energy is the integral of its restoring-force magnitude over deformation along the defined loading path. Hysteresis or active force production requires additional accounting.
 
-The sequence is:
-\begin{enumerate}
-\item Backswing: shoulders rotate more than hips, stretching the torso muscles and tissue
-\item Transition: raise IAP, stiffening the torso and locking in the stored elastic energy
-\item Early downswing: the torso, now stiff, acts as a powerful spring releasing its energy as it uncoils
-\end{enumerate}
+If stiffness changes while the element is deformed,
+\[
+\frac{d}{dt}\left(\tfrac12K(t)\theta^2\right)
+=K\theta\dot\theta+\tfrac12\dot K\theta^2.
+\]
+The last term is not free energy. Raising $K$ from $100$ to $200\,\mathrm{N\,m/rad}$ at a clamped $0.1\,\mathrm{rad}$ deformation adds $0.5\,\mathrm J$ to this ideal storage element. The source of that energy and any losses must be modeled. Pressure or muscle activation can participate in such a change, but naming the mechanism does not remove its work cost.
 
-For a high-stiffness torso, the elastic energy stored is:
-\begin{equation}
-E_{\mathrm{elastic}} = \frac{1}{2} k_{\mathrm{torso}} \theta_{\mathrm{sep}}^2
-\end{equation}
+\subsection{Breathing Coordination as a Performance Cue}
 
-where $\theta_{\mathrm{sep}}$ is the hip-shoulder separation angle. A 30${}^\circ$ separation with a stiff torso stores substantially more energy than the same separation with a loose torso.
+A useful test starts with a reproducible outcome and a tolerable intervention that the participant can perform consistently. Record delivery, ball outcome and the relevant timing or pressure measurements over comparable trials. Separate an immediate performance change from retention, adaptation and changes in reported effort.
 
-\subsection{4. Breathing Coordination as a Performance Cue}
+Within-person comparisons should address order, fatigue, familiarization and strike variability. Generalization requires additional golfers and sessions. If a cue changes pressure and activation together, the result identifies the combined intervention unless the design can distinguish their contributions. A single better shot cannot establish the proposed internal mechanism.
 
-The exhalation cue used by many elite golfers is effective precisely because it maintains IAP and torso stiffness throughout the critical downswing phase. Golfers who hold their breath (Valsalva) maintain maximum IAP but at a higher cardiovascular cost. Golfers who exhale while contracting the abdomen reduce IAP slightly but still maintain sufficient stiffness and avoid breath-holding stress.
-
-\section{How IAP Can Hurt}
+\section{Pressure and Health Outcomes}
 \label{sec:iap_risks}
 
-\index{IAP risks}
-\index{blood pressure}
-\index{pelvic floor}
+Mechanical models are useful for formulating loading hypotheses. They do not establish a safe pressure threshold, a disease mechanism or a rehabilitation prescription without relevant clinical evidence. The chapter's teaching examples consequently do not prescribe breath holding, maximal bracing or a core-training protocol.
 
-But excessive IAP, or inappropriate IAP management, can cause problems.
+\subsection{IAP and Cardiovascular Pressures}
 
-\subsection{1. Acute Blood Pressure Spike}
+Abdominal, thoracic, arterial and intracranial pressures are different quantities, with different reference boundaries and time courses. Blood flow depends on pressure gradients and vascular properties; a pressure reading in one compartment cannot simply be assigned to another. Changes during a strain and its release need not have the same cardiovascular effect.
 
-When you rapidly raise IAP (as in a Valsalva maneuver), the increased intrathoracic pressure is transmitted to the blood vessels. Venous return to the heart is temporarily impeded, blood pressure can spike acutely, and the heart experiences a sudden afterload increase. For most healthy individuals, this is tolerable; the cardiovascular system adapts. But for someone with hypertension or cardiac vulnerability, a blood pressure spike during a golf swing can be dangerous.
+Haykowsky and colleagues reported three cases of subarachnoid hemorrhage associated with weight training and discussed a possible relation to straining \citep{haykowsky2003resistance}. A case report can identify a concern but cannot estimate a golfer's event probability or show that a particular exhalation cue prevents it. The physiological and clinical question requires its own measurements and study design.
 
-\subsection{2. Hernias and Pelvic Floor Dysfunction}
+\subsection{Pelvic-Floor and Hernia Claims}
 
-Chronic excessive IAP can weaken the pelvic floor. The pelvic floor muscles are not designed to sustain maximum contraction for long periods. If a golfer trains with maximum IAP every swing, multiple times per day, the pelvic floor muscles fatigue and can weaken. Over years, this can lead to:
-\begin{itemize}
-\item Inguinal hernia (a bulge in the groin where abdominal tissue protrudes through weakness)
-\item Pelvic floor dysfunction (inability to contract or relax the pelvic floor muscles appropriately)
-\item Incontinence (in severe cases, especially in women)
-\end{itemize}
+Pressure loads pelvic-floor and abdominal-wall structures, but loading is not identical to injury. Tissue properties, geometry, activation, exposure and individual history affect response. A mechanical force calculation does not show that repeated golf swings cause pelvic-floor weakness, hernia or incontinence.
 
-\subsection{3. The Balance: Optimal IAP Strategy}
+Measurement also matters. B{\o} and Sherburn's review concerns methods for assessing pelvic-floor function and strength \citep{bo2004pelvic}; those are distinct outcomes, measured with different instruments. It does not establish a long-term golfer injury rate or an optimum swing-pressure schedule. A study claiming prevention must measure the relevant health outcome, not substitute a pressure peak or a model's preferred activation pattern.
 
-The key is \textbf{modulation}. IAP should be:
-\begin{itemize}
-\item \textbf{Low at rest:} no need for maximum pressure when the swing is not underway
-\item \textbf{Ramped up during the transition:} increase IAP as the downswing begins
-\item \textbf{Peaked during downswing and impact:} maximum IAP from early downswing through impact
-\item \textbf{Released after impact:} relaxation of core muscles in the follow-through
-\end{itemize}
+\subsection{Testing Pressure Strategies}
 
-This ramp-and-release pattern:
-\begin{enumerate}
-\item Provides maximum stiffness when needed (downswing and impact)
-\item Reduces chronic stress on the pelvic floor (not maintained maximum pressure for long)
-\item Allows normal breathing and circulation between swings
-\item Aligns with natural neuromuscular sequencing (hip muscles activate first, core braces in response)
-\end{enumerate}
+Specify what the proposed strategy should improve and how that effect will be measured. Pressure control may compete with mobility, comfort, fatigue or task performance, and a policy can shift load between structures. A numerical optimum is only an optimum for the chosen objective, constraints and model.
+
+Clinical testing requires an appropriate population, exposure accounting, comparison and follow-up. Mechanical verification should precede that step, but it cannot replace it. The synthesis chapter (Chapter~\ref{ch:interdisciplinary}) distinguishes a plausible mechanism, an identified intervention effect and evidence of improved health outcomes.
 
 \section{Modifying the Equations of Motion for Pliable Systems}
 \label{sec:eom_pliable}
-
-\index{equations of motion}
-\index{soft tissue coupling}
-
-Throughout this textbook, we have used the standard form of the equations of motion for a multi-body system:
-\begin{equation}
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q}) \bm{u}
 \label{eq:standard_eom}
-\end{equation}
 
-where:
-\begin{itemize}
-\item $\bm{q}$ is the vector of generalized coordinates (joint angles)
-\item $\bm{M}(\bm{q})$ is the mass matrix (inertia tensor of each segment)
-\item $\bm{C}(\bm{q}, \dot{\bm{q}})$ is the Coriolis/centrifugal terms
-\item $\bm{g}(\bm{q})$ is the gravitational term
-\item $\bm{B}(\bm{q})$ is the actuation matrix (muscle moment arms)
-\item $\bm{u}$ is the vector of muscle torques
-\end{itemize}
-
-When we introduce wobbling mass, time-varying inertia, and IAP effects, we must modify this structure.
+Start from a coordinate and energy definition. For independent generalized coordinates $\mathbf q$ and a declared input $\mathbf u$, a mechanical model can take the form
+\[
+M(\mathbf q)\ddot{\mathbf q}
++\mathbf c(\mathbf q,\dot{\mathbf q})
++\mathbf g(\mathbf q)+\mathbf f_{\mathrm{passive}}
+=B(\mathbf q)\mathbf u+J(\mathbf q)^T\boldsymbol\lambda+\mathbf Q_{\mathrm{ext}}.
+\]
+The generalized mass matrix is not merely a list of segment inertia tensors. The vector $\mathbf c$ contains the velocity-dependent terms consistent with those coordinates. If $\mathbf u$ contains muscle forces, $B$ can contain moment-arm mappings; if it contains generalized torques, the corresponding map has a different meaning. Contact reactions, external loads and passive forces must be assigned once to the intended system boundary.
 
 \subsection{Wobbling Mass Extension}
 
-If we include wobbling mass in the model, we introduce additional degrees of freedom: the position (or displacement) of each wobble mass element relative to its rigid core. Let $\bm{q}_{\mathrm{soft}}$ be the vector of soft tissue displacements.
+For the earlier two-mass example, choose coordinates $(x_r,z)$, with $x_w=x_r+z$. Substitution into the kinetic energy gives
+\[
+M=
+\begin{bmatrix}
+m_r+m_w&m_w\\
+m_w&m_w
+\end{bmatrix}.
+\]
+Its determinant is $m_rm_w>0$, and its off-diagonal terms express inertial coupling. The equations are
+\[
+M\begin{bmatrix}\ddot x_r\\\ddot z\end{bmatrix}
++\begin{bmatrix}0\\kz+c\dot z\end{bmatrix}
+=\begin{bmatrix}u\\0\end{bmatrix}.
+\]
+The zero second input does not mean that the relative mode is uncontrollable; force on the rigid part acts through the coupled dynamics. It also does not mean that living tissue is passive in general. An active contractile element would require an explicit force law and activation state.
 
-The augmented equation becomes:
-\begin{equation}
-\begin{bmatrix} \bm{M}_{\mathrm{rigid}} & \bm{M}_{\mathrm{coupling}} \\ \bm{M}_{\mathrm{coupling}}^T & \bm{M}_{\mathrm{wobble}} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \ddot{\bm{q}}_{\mathrm{soft}} \end{bmatrix} + \begin{bmatrix} \bm{C}_1 \\ \bm{C}_2 \end{bmatrix} + \begin{bmatrix} \bm{g} \\ \bm{0} \end{bmatrix} = \begin{bmatrix} \bm{B}\bm{u} \\ -\bm{K}(\bm{q}_{\mathrm{soft}} - \bm{q}_0) - \bm{D}\dot{\bm{q}}_{\mathrm{soft}} \end{bmatrix}
-\end{equation}
-
-The soft tissue displacements are no longer driven by muscle torques; they are driven by the coupling springs and dampers. The right-hand side for the soft tissue equations includes the elastic restoring force $-\bm{K}(\bm{q}_{\mathrm{soft}} - \bm{q}_0)$ and the viscous damping force $-\bm{D}\dot{\bm{q}}_{\mathrm{soft}}$.
+If these same coordinates instead point vertically upward, gravitational potential is $g[(m_r+m_w)x_r+m_wz]$. The generalized gravity vector is therefore $(g(m_r+m_w),gm_w)^T$. Its soft-coordinate component is not zero. Coordinate transformations determine which equations receive gravity and other forces.
 
 \subsection{Time-Varying Inertia}
 
-If the inertia tensor varies with time (due to visceral redistribution during rotation), then:
-\begin{equation}
-\bm{M}(\bm{q}, t) \ddot{\bm{q}} + \frac{\mathrm{d}\bm{M}}{\mathrm{d}t} \dot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q}) \bm{u}
-\end{equation}
+For a Lagrangian $L(\mathbf q,\dot{\mathbf q},t)$, derive
+\[
+\frac{d}{dt}\frac{\partial L}{\partial\dot q_i}
+-\frac{\partial L}{\partial q_i}=Q_i.
+\]
+If $L=\tfrac12\dot{\mathbf q}^TM(\mathbf q,t)\dot{\mathbf q}-V(\mathbf q,t)$, this gives
+\[
+\sum_j M_{ij}\ddot q_j
++\sum_{j,k}\Gamma_{ijk}\dot q_j\dot q_k
++\sum_j\frac{\partial M_{ij}}{\partial t}\dot q_j
++\frac{\partial V}{\partial q_i}=Q_i,
+\]
+where $\Gamma_{ijk}=\tfrac12(\partial_kM_{ij}+\partial_jM_{ik}-\partial_iM_{jk})$. The explicit partial time derivative is separate from the coordinate-dependent terms. Adding the full total $\dot M\dot{\mathbf q}$ to an already consistent Coriolis vector generally counts part of the inertia variation twice.
 
-The new term $\frac{\mathrm{d}\bm{M}}{\mathrm{d}t} \dot{\bm{q}}$ represents the effect of changing inertia. This term acts like an additional damping or external force, depending on whether the inertia is increasing or decreasing.
+For a nondimensional example, $L=\tfrac12(1+q^2)\dot q^2$ gives $(1+q^2)\ddot q+q\dot q^2=u$. At $q=1$, $\dot q=2$ and $u=0$, acceleration is $-2$. Appending an extra $\dot M\dot q$ incorrectly gives $-6$ and violates conservation of this system's kinetic energy.
+
+When shape coordinates evolve dynamically, including them in the augmented state is often clearer than prescribing an unexplained $M(t)$. If their motion is prescribed, the actuation and work maintaining that prescription remain part of the model boundary. The general angular-momentum relation above is another way to expose omitted relative-motion terms.
 
 \subsection{IAP Effects}
 
-The effect of IAP is to modify the effective stiffness and damping of spinal segments. Rather than introducing new DOF, IAP modifies the restoring torques in the drift term. The modified equation for torso rotation is:
-\begin{equation}
-I_{\mathrm{torso}} \ddot{\theta}_{\mathrm{torso}} + [d_0 + d_{\mathrm{IAP}}(P)] \dot{\theta}_{\mathrm{torso}} + [k_0 + k_{\mathrm{IAP}}(P)] \theta_{\mathrm{torso}} = \tau_{\mathrm{muscle}}
-\end{equation}
+Pressure can enter generalized forces through boundary tractions and can influence wall geometry, prestress and activation-dependent material response. It is not necessarily an independent control input. A pressure state requires a closure relation involving cavity volume, wall motion and the chosen physiological approximation.
 
-where:
-\begin{itemize}
-\item $d_0, k_0$ are the baseline damping and stiffness (from muscles, ligaments, discs)
-\item $d_{\mathrm{IAP}}(P), k_{\mathrm{IAP}}(P)$ are the IAP-dependent contributions (roughly linear in pressure $P$)
-\end{itemize}
+A fitted local torsional impedance may summarize small perturbations around one posture and activation condition. Its coefficients require identification, uncertainty estimates and a stated frequency range. Labeling coefficients $k_{\mathrm{IAP}}(P)$ and $d_{\mathrm{IAP}}(P)$ does not establish their signs, linearity, causal interpretation or portability to a golf swing.
 
-Higher IAP increases both stiffness and damping, making the torso stiffer and more resistant to perturbation.
+\subsection{Model Error Requires Validation}
 
-\subsection{The Key Insight: Soft Tissue Effects Are Corrections}
+More detail can improve representation while increasing uncertainty or making parameters harder to identify. A model with many soft-tissue states can fit surface motion without correctly estimating internal forces. A simpler model can also be adequate for one output and inadequate for another.
 
-Here is the fundamental point: most soft tissue effects are \emph{small corrections} to the rigid body model. For the purpose of predicting club head speed, analyzing the X-factor, or understanding gross swing kinematics, the rigid body model is accurate to within a few percent. The wobbling mass, time-varying inertia, and IAP effects are second-order corrections.
-
-They matter critically for:
-\begin{enumerate}
-\item \textbf{Injury risk assessment:} spine loading and internal stresses
-\item \textbf{High-precision inverse dynamics:} when you need accurate muscle forces
-\item \textbf{Post-impact vibration:} the high-frequency oscillations after club-ball contact
-\item \textbf{Coaching refinement:} understanding why certain cues work physiologically
-\end{enumerate}
-
-They matter minimally for:
-\begin{enumerate}
-\item \textbf{Gross swing mechanics:} does the swing produce high club head speed?
-\item \textbf{Trajectory prediction:} where does the ball go?
-\item \textbf{Conceptual understanding:} what are the fundamental biomechanical principles?
-\end{enumerate}
+Use a sequence of checks: conservation and units, numerical convergence, parameter sensitivity, independent measurements, and performance on held-out tasks or participants. Validation should specify the output, reference method, error measure, sampling and uncertainty. A universal error percentage attached to a model class conceals those choices.
 
 \section{When to Use Which Model}
 \label{sec:model_choice}
 
-\index{model selection}
-\index{modeling trade-offs}
+For gross kinematics, begin with segment and joint definitions that match the observations and assess attachment error. For inverse dynamics, add synchronized external forces, consistent inertial properties and sensitivity to filtering and tissue motion. For local loading, specify the tissues, constitutive laws, geometry and force-allocation assumptions. For impact vibration, resolve the modes and contacts relevant to the measured bandwidth.
 
-Let me conclude this chapter with a practical guide to model selection. Here is a table summarizing the choice of models for different applications:
+For a pressure hypothesis, compare measured pressure and activation with the complete modeled boundary forces; test whether the predicted intermediate response occurs. For a clinical claim, add the corresponding exposure and health outcomes. For a ball-flight question, first determine whether uncertainty in the launch state already dominates the proposed internal-model refinement.
 
-\begin{example}{Model Selection Guide}{model_selection}
-\begin{center}
-\begin{tabular}{|l|l|l|l|}
-\hline
-\textbf{Application} & \textbf{Recommended Model} & \textbf{Complexity} & \textbf{Typical Error} \\
-\hline
-Coaching analysis & Rigid body, 15 DOF & Low & 5--10\% \\
-Swing mechanics research & Rigid body, 15 DOF & Low & 5--10\% \\
-Club head speed prediction & Rigid body, 15 DOF & Low & 2--5\% \\
-\hline
-Inverse dynamics & Rigid body + filtering & Medium & 10--20\% \\
-Muscle force estimation & Rigid body + optimization & Medium & 15--25\% \\
-Impact analysis & Rigid body + local damping & Medium & 10--15\% \\
-\hline
-Injury risk assessment & Multi-segment + wobble & High & 10--20\% \\
-Spine loading prediction & Multi-segment + FEA & Very High & 5--15\% \\
-Detailed biomechanics & Multi-segment + soft tissue & Very High & 5--15\% \\
-\hline
-\end{tabular}
-\end{center}
+These choices can be connected without forcing every investigation into one maximum-detail model. The strongest connection is a shared record of coordinates, system boundaries, measurements, uncertainty and the outputs each model has actually reproduced.
 
-\textbf{Key Decision Points:}
-\begin{itemize}
-\item \textbf{Need high accuracy on club speed?} Use rigid body model; it is fast and accurate.
-\item \textbf{Need to process motion capture data?} Use rigid body + low-pass filter to remove wobble artifacts.
-\item \textbf{Need to assess spine injury risk?} Add multi-segment spine model (at least 3 segments: lumbar, thoracic, cervical).
-\item \textbf{Need to optimize IAP strategy?} Model IAP as a modifier of effective stiffness and damping; use optimal control to find the IAP profile that minimizes spine loading while maximizing power transmission.
-\end{itemize}
-\end{example}
+\subsection{Looking Ahead}
 
-\begin{principle}{Key Takeaways: Soft Tissue and Pliable Systems}{principle:softtissue_takeaway}
-\begin{enumerate}
-\item The rigid body model is an excellent approximation for gross swing mechanics, accurate to within 5--10\%.
-\item Soft tissue wobbles and oscillates relative to bone, introducing high-frequency artifacts in motion capture data; filter or model these effects separately.
-\item The torso contains $\sim$50\% fluid-like material (viscera, blood) that redistributes during rotation, creating time-varying inertial properties.
-\item Intra-abdominal pressure acts as a hydraulic cylinder, providing spine stability and increasing torso stiffness, which enhances power transmission.
-\item IAP can reach 80--120 mmHg during a golf downswing, generating forces of 400--500 newtons that help support the spine.
-\item The exhale-during-downswing cue is physiologically sound: it maintains IAP while preventing blood pressure spikes.
-\item Soft tissue effects are small corrections to the rigid body model for predicting club head speed, but they are critical for understanding spine loading and injury risk.
-\item Choose your model based on application: rigid body for coaching and swing mechanics, multi-segment for injury assessment, full soft tissue for detailed biomechanics.
+Soft tissues link dynamics, estimation and load distribution. The spine chapter develops a more detailed anatomical model, while the interdisciplinary synthesis explains how to connect its predictions to control, measurement and outcomes. Neither a rigid approximation nor a soft-tissue extension earns general authority from complexity alone.
+
+\section{Chapter Exercises}
+\label{ex:ch20_exercises}
+\begin{enumerate}[leftmargin=*]
+\item For a tissue mass of $1\,\mathrm{kg}$ attached to a fixed base by $k=5000\,\mathrm{N/m}$ and $c=200\,\mathrm{N\,s/m}$, calculate $\omega_n$, frequency in hertz, damping ratio and characteristic roots. Does release from a positive displacement at zero velocity ring? How does the unforced relative natural frequency change if a $1.5\,\mathrm{kg}$ base is free to move?
+\item Derive the closed two-mass momentum and energy balances. Then use $(x_r,z)$ coordinates with a vertically upward axis to derive the mass matrix and gravity vector. Explain why zero direct input to $z$ does not mean zero response to force applied at $x_r$.
+\item Derive $H(\omega)$ for prescribed harmonic base motion and verify that its mean input power equals damper loss. For a skin displacement of $0.01\,\mathrm m$ at $10\,\mathrm{Hz}$, calculate acceleration amplitude. Explain why filtering alone need not identify bone motion.
+\item A hemispherical cap has radius $0.1\,\mathrm m$ and a uniform pressure difference of $100\,\mathrm{mmHg}$. Calculate its axial pressure resultant using $133.3224\,\mathrm{Pa/mmHg}$. Explain why total curved area gives the wrong answer and why a closed surface under the same uniform pressure has no net force or torque.
+\item In the declared zero-external-torque scalar model, inertia increases from $3.00$ to $3.18\,\mathrm{kg\,m^2}$ from an initial $10\,\mathrm{rad/s}$. Calculate final speed and rotational-energy change. Contrast this with constant-speed motion over a $0.2\,\mathrm s$ inertia change, and explain why neither calculation proves viscous dissipation.
+\item Compare a torsional spring with stiffness $100$ and $200\,\mathrm{N\,m/rad}$ under a fixed $0.1\,\mathrm{rad}$ deformation and under a fixed $10\,\mathrm{N\,m}$ torque. Calculate the energy in each case. What additional energy term appears when stiffness changes while deformed?
+\item Design an evidence chain for the claim that a breathing intervention reduces a specified spinal load and improves a golfer's outcome. Distinguish pressure, activation, load estimation, performance and clinical outcomes; identify a measurement ambiguity and an alternative explanation that the experiment must address.
 \end{enumerate}
-\end{principle}
 
-\subsection*{Looking Ahead}
-Soft tissues make the body pliable and compliant, adding distributed mass and damping to the rigid skeleton model. The most complex soft-tissue structure in the golfer's body is the \emph{spine}---an S-shaped chain of 33 vertebrae with tightly coupled flexion and rotation. Chapter~\ref{ch:spine_modeling} develops mathematical models of spinal mechanics and reveals why the transition from backswing to downswing is the most mechanically demanding phase of the swing.
-
-\begin{exercises}{Chapter Exercises}{ex:ch20_exercises}
-\begin{enumerate}
-\item \textbf{Wobbling Mass Calculation:} Estimate the natural frequency of wobble for the forearm during the downswing. Assume: mass of soft tissue = 0.8 kg, stiffness = 3000 N/m. What is the period of oscillation?
-
-\item \textbf{Visceral Centrifugal Force:} Calculate the total centrifugal force on 15 kg of viscera in a rotating torso at 500${}^\circ$/s, with the centroid 0.1 m from the axis of rotation. How does this compare to the weight of the viscera?
-
-\item \textbf{IAP Structural Force:} If IAP reaches 110 mmHg and the diaphragm area is 0.045 m$^2$, what is the total upward force on the diaphragm? Compare this to a typical back extensor muscle force of 350 newtons.
-
-\item \textbf{Torso Stiffness:} Assume a baseline torsional stiffness of the torso (without IAP) is $k_0 = 150$ N$\cdot$m/rad. Estimate the additional stiffness contribution from IAP at 100 mmHg, assuming $k_{\mathrm{IAP}}(P) = 50 P/\mathrm{mmHg}$ N$\cdot$m/rad. What is the percentage increase in stiffness?
-
-\item \textbf{Time-Varying Inertia:} A torso with 35 kg total mass has a nominal moment of inertia about the vertical axis of $I_0 = 3.0$ kg$\cdot$m$^2$. During downswing rotation at 10 rad/s, the viscera shift outward, increasing the moment of inertia by 6\%. If the torso is rotating at constant angular velocity, what is the effective damping-like term $\dot{I}(t) \dot{\theta}$? (Assume $\dot{I}/dt \approx -0.01$ kg$\cdot$m$^2$/s during the initial downswing acceleration.)
-
-\item \textbf{Wobble Resonance:} Suppose a limb segment has natural wobble frequency $\omega_n = 12$ Hz. If the joint is rotating at a frequency approaching $\omega_n$, how does the effective inertia change compared to low-frequency rotation?
-
-\item \textbf{Design a Core Training Protocol:} Given the physics of IAP and the risks of excessive pressure, propose a core training protocol for a golfer that:
-   \begin{enumerate}
-   \item Builds up the ability to generate high IAP during the swing
-   \item Avoids chronic pelvic floor dysfunction
-   \item Maintains normal cardiovascular function
-   \end{enumerate}
-   Justify your protocol using the biomechanics covered in this chapter.
+\section{Worked Answers}
+\begin{enumerate}[leftmargin=*]
+\item The fixed-base values are $70.7107\,\mathrm{rad/s}$, $11.2540\,\mathrm{Hz}$ and $\zeta=1.4142$. Roots are $-29.2893$ and $-170.7107\,\mathrm{s^{-1}}$; the stated release decays without ringing. A free base gives reduced mass $0.6\,\mathrm{kg}$ and relative undamped frequency $91.2871\,\mathrm{rad/s}$. This comparison changes the boundary condition, not the material.
+\item Adding the two force equations gives external force equal to total momentum rate. Multiplying each by its velocity and adding gives actuator power equal to mechanical-energy rate plus $c\dot z^2$. The transformed mass matrix is the one derived above, and the gravity vector is $(g(m_r+m_w),gm_w)^T$. Off-diagonal inertia couples the base force to the relative motion.
+\item Substitution of $e^{i\omega t}$ motion gives the stated numerator $k+ic\omega$ and denominator $k-m_w\omega^2+ic\omega$. Averaging force times velocity over a cycle gives the nonnegative loss $\tfrac12c\omega^2|X_w-X_r|^2$. The marker acceleration amplitude is $39.4784\,\mathrm{m/s^2}$. Bone and marker-relative motions can share a frequency and sum to the same observation, so removing high frequencies cannot uniquely separate them.
+\item Projected area is $\pi(0.1)^2\,\mathrm{m^2}$, giving approximately $418.84\,\mathrm N$. Curved area is twice as large, but its normals do not all point axially. On a complete uniform-pressure boundary, opposite contributions cancel in the vector force and moment integrals. Local loading remains even though the resultant is zero.
+\item Angular momentum is $30\,\mathrm{kg\,m^2/s}$, final speed is $9.43396\,\mathrm{rad/s}$ and rotational energy changes by $-8.49057\,\mathrm J$. Holding speed constant during the specified change instead requires $9\,\mathrm{N\,m}$ in the scalar angular equation. Internal shape work and actuator work complete the energy budget. Reversing an ideal shape change can restore the rotational energy; a viscous-loss explanation would require an actual dissipative mechanism.
+\item At fixed angle the energies are $0.5$ and $1.0\,\mathrm J$. At fixed torque they are $0.5$ and $0.25\,\mathrm J$. The stiffness-change contribution to storage rate is $\tfrac12\dot K\theta^2$; clamping the angle while increasing stiffness in this example adds $0.5\,\mathrm J$. Identify its source before attributing later motion to passive recoil.
+\item Calibrate the pressure reference and synchronize pressure, activation, motion and external load measurements. Validate the load estimate against independent information and vary uncertain force allocations. Compare matched intervention and control trials, including order, fatigue and strike variability. A change in pressure can accompany altered muscle coactivation, so reduced compression cannot be inferred from pressure alone. Better ball performance is another outcome, and a prevention claim additionally requires appropriate prospective health outcomes and exposure accounting.
 \end{enumerate}
-\end{exercises}

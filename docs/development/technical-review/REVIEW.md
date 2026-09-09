@@ -1467,3 +1467,28 @@ deployment succeed; exact live artifact 10115787738 passes 956/956 across
 239 routes with no failures, axe violations, retries or transients. Registry
 reconciliation gives 223 rows beginning 'Indexed;' out of 405, superseding the
 earlier narrative 221 under that definition. Other rows include partial audits.
+
+## Soft-Tissue Mechanics and Pressure: #4315
+
+Both complete editions of the long soft-tissue chapter and every exercise were
+read. The paired correction derives coupled mass dynamics, measurement ambiguity,
+changing inertia, pressure tractions and work, wall stiffness and consistent
+augmented equations. It separates those mechanics from claims about spinal
+compression, performance and health. Two reproducible figures and seven worked
+answers replace the unpaired schematic and unsupported numerical prescriptions.
+Source reading boundaries and independent counterexamples are recorded in
+[soft-tissue-review.md](soft-tissue-review.md).
+
+Root regression passes 4,991 tests with 29 skips and 92.65% coverage; final
+affected checks pass 40, content 130, static 34 and titles 633. Style, format,
+type, code-quality and site-link checks pass. The 552-page print build's complete
+affected chapter and references are inspected. Complete web reading verifies
+181 math expressions, 21 displays, 31 preserved destinations and 14 responsive
+theme/width combinations. Both ends of long inline math and keyboard scrolling
+are checked. The final question and answer lists each contain seven items.
+
+Protected delivery remains. Parent PR #4314's textbooks and static checks pass,
+but two CI attempts stop before Python tests at a Google apt package-index hash
+mismatch. Its normal squash auto-merge remains enabled. The corpus still has
+221 rows beginning Indexed; among 405 sources. A completed chapter does not
+complete the epic or validate the remaining partially reviewed sources.

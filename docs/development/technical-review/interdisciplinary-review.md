@@ -207,3 +207,18 @@ issue token. The new entry uses #4313 and the verified implementation SHA
 58c2419a. Remaining checker findings concern pre-existing #3903/#3902 entries;
 their owners' records are preserved. This local checker limitation is not a
 failure of the chapter's mathematical or publication checks.
+
+Protected CI 34383426258 attempts 1 and 2 stopped before Python tests at
+Google Chrome apt package-index Hash Sum mismatch. The associated e2e jobs
+are cancelled. All textbook compilation jobs, static checks, spec, links and
+performance pass. A normal failed-job retry was accepted after the first
+workflow finished; an earlier per-job retry while it ran returned 403. No
+reviewed content changed, and no protection was bypassed. The codex lease for
+#4313 is renewed through 2026-09-09T20:11:26Z. Recheck the external dependency
+at a natural breakpoint while continuing the next isolated content correction.
+
+Subsequent protected result: a separate contributor added apt-source/lock repair
+66681652 and triggered 6373aff3. CI Standard 34386484598 and all required
+checks passed; #4314 merged at 2026-09-09T18:23:52Z as
+fc76f2e1d214fd66101e616ae94fce6d31d6af26. Main/deployment/live verification
+remains; preserve the contributor's CI correction.
