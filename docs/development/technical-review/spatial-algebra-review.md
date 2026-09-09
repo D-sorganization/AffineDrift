@@ -170,3 +170,7 @@ normal commit and push hooks, including mypy, bandit and pytest, passed.
 Ready PR #4319: https://github.com/D-sorganization/AffineDrift/pull/4319.
 The actual PR has one SPEC change-log row. Protected checks/review, normal
 merge and exact live verification remain; no corpus completion is claimed.
+
+## Exact Production Verification
+
+Deployment 34398520017 passes. Exact live artifact 10123816915 was downloaded and all 956 records across 239 routes were read and checked: zero failures, serious/critical axe findings, retries, transients or exhausted retries. Main CI 34398520012, textbooks 34398520049 and performance 34398520065 also pass for merged c4c1fee6db8915eee49a80b3572ece9ccfe57cd5. The local evidence is spatial-live-c4c1fee6/live-every-page.json. This closes spatial delivery, not the corpus epic.

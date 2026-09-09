@@ -324,3 +324,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-09 | #4314 | Reconcile paired interdisciplinary chapters with explicit control, impedance, material, collision and evidence models; add verified derivations, shared figures and eight worked answers. |
 | 2026-09-09 | #4317 | Correct paired soft-tissue, pressure, inertia and energy models with bounded primary evidence, two reproducible figures and seven independently checked worked exercises. |
 | 2026-09-09 | #4319 | Correct paired spatial-algebra, physical-inertia and recursive-dynamics derivations; add independent energy checks, shared routines, two figures and fifteen worked answers. |
+| 2026-09-09 | #4321 | Correct paired energy-transfer, segment/interface power, metric cancellation, moving-constraint, lag and collision ledgers with two reproducible figures and six independently verified worked answers. |

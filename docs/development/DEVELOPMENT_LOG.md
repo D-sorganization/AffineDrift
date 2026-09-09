@@ -20,20 +20,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4320 · Textbook Energy Transfer and Work Ledgers
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4320 (epic #4009)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4321 (open; normal squash auto-merge)
 - **Branch:** `fix/4320-textbook-energy-transfer`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch10_energy_transfer.tex`, `articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.qmd`, `src/tools/energy_ledger_examples.py`, `tests/test_textbook_energy_ledger_rigor.py`, `docs/development/technical-review/energy-chapter-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`4f8ce5a3e254a4bc18f7b5b3c7c87c53f0b14a9d`)
+- **Last verified:** 2026-09-09 (`989bf4580bf07b4032e0a3a987d774a59679b5c2`)
 - **Summary:** Both complete editions now derive consistent whole-system, physical segment and interface ledgers, full two-link dynamics, lag/elasticity and collision boundaries. Two shared figures and six worked answers have independent numerical verification. Root 5,061 passes, 79.17% coverage; all final affected/content/static/title/style/type/quality/link checks and complete bounded print/web QA pass.
-- **Next step:** Save the validated checkpoint, replay only this issue after 4f8ce5a3 onto protected main, open a focused PR and verify production. Lease expires 2026-09-09T21:37:23Z.
+- **Next step:** Verify protected PR #4321 checks and exact production evidence after merge.
 
 ### DL-#4318 · Spatial Algebra, Physical Inertia and Recursive Dynamics
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4318 (epic #4009)
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4319 (merged)
@@ -42,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-09
 - **Last verified:** 2026-09-09 (`c4c1fee6db8915eee49a80b3572ece9ccfe57cd5`)
 - **Summary:** Complete paired correction connects frame/power duality, physical inertia, momentum derivatives, planar restriction, composite/joint inertia and constraints. Two figures, fifteen worked answers and shared routines have independent numerical checks. Root 5,050 passes, 79.14% coverage; final affected 37, content 130, static 34, titles 634, style/type/quality/link and complete affected print/web QA pass. Implementation was replayed alone onto protected main b6578132 before first push; all normal commit/push hooks pass.
-- **Next step:** Main CI, textbooks and performance pass for merged c4c1fee6. Deployment 34398520017 is verifying every public page; inspect exact live evidence when complete.
+- **Next step:** Continue the remaining corpus under epic #4009; spatial delivery is verified by live artifact 10123816915 (956/956, 239 routes, zero failures or serious/critical axe findings).
 
 ### DL-#4315 · Soft-Tissue Dynamics and Pressure Mechanics
 

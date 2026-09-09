@@ -8,7 +8,7 @@ Energy #4320 completes both textbook editions with consistent whole-system,
 segment/interface, elastic-storage and collision ledgers. Independent two-link
 calculations, two figures and six worked answers connect sequencing and lag to
 testable dynamics. Root 5,061 passes, 79.17% coverage; all final checks and
-complete affected print/web review pass. Protected publication is next; see
+complete affected print/web review pass. PR #4321 is open with normal squash auto-merge enabled; see
 `energy-chapter-review.md`.
 
 Spatial algebra #4318 corrects both complete Volume 0 Chapter 8 editions and
@@ -19,7 +19,7 @@ reproducible figures and fifteen worked answers connect the equations to golf
 and humanoid constraints without inferring anatomical validity. Root 5,050
 passes, 79.14% coverage; all required final checks and complete affected print/web
 QA pass. PR #4319 merged as c4c1fee6; main CI, textbooks and performance
-pass. Exact deployment verification remains pending; see `spatial-algebra-review.md`.
+pass. Deployment passes; exact live artifact 10123816915 verifies 956/956 records across 239 routes with zero failures or serious/critical accessibility findings. See `spatial-algebra-review.md`.
 
 Synthesis #4313/#4314 is published as fc76f2e1. Main CI, textbooks, performance
 and deployment pass; exact live artifact 10119982807 passes 956/956 records

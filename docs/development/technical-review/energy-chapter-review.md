@@ -202,24 +202,25 @@ research validation. Root configuration is restored; immutable sources and the
 original checkout are untouched. No local test/build/browser processes remain
 at this validation checkpoint.
 
-## Parent Delivery Status Update
+## Protected Delivery Checkpoint
 
-Spatial PR #4319 merged normally on 2026-09-09 at 20:01:13Z as
-c4c1fee6db8915eee49a80b3572ece9ccfe57cd5. Final-head CI 34395988083 passes.
-Main textbooks 34398520049, performance 34398520065 and CI 34398520012 pass.
-Deployment 34398520017 is running its every-public-page verification stage.
-Replay only #4320 after 4f8ce5a3 before its first push; exact production proof
-for spatial remains pending.
+Implementation e4e1e3143860db3b9d680304b1c9f7c9ce827b1a was saved after all
+local QA completed, then replayed alone after parent anchor 4f8ce5a3 onto
+protected main c4c1fee6 as 989bf4580bf07b4032e0a3a987d774a59679b5c2. The old and merged parent
+trees were identical. PR https://github.com/D-sorganization/AffineDrift/pull/4321
+is open with normal squash auto-merge enabled. All normal commit and push hooks
+pass. The first push stopped on Bandit B102 in the untracked local publication
+example executor; its reviewed-local-source boundary is now documented with a
+specific B102 annotation. The normal push was rerun successfully. No hook was
+bypassed. SPEC has exactly one actual-PR row. Protected CI and exact production
+verification for energy remain pending; never mutate Git during local QA.
 
-Spatial #4318 / PR #4319 is open at 4f8ce5a3 with normal squash auto-merge
-allowed. All normal local hooks passed; spec, textbook, link, performance and
-policy checks pass. CI Standard 34395988083 remains running at the last natural
-checkpoint. Rebase only #4320 after the parent anchor before first push if it
-merges. Never switch, commit or push while local tests/build/browser QA run.
+Spatial #4318 / PR #4319 merged normally on 2026-09-09 at 20:01:13Z as
+c4c1fee6db8915eee49a80b3572ece9ccfe57cd5. Main CI 34398520012, textbooks
+34398520049 and performance 34398520065 pass. Deployment 34398520017 passes. Exact live artifact 10123816915 was downloaded and all 956 records across 239 routes were read and checked: zero failures, serious/critical axe findings, retries, transients or exhausted retries.
 
 Soft-tissue #4315 / PR #4317 is published as b657813291e89def6269d9bb0f258a9e26c3dd8a.
 Main CI 34393037135, textbooks 34393037136, performance 34393037120 and deployment
-34393037121 pass. Exact live artifact 10121457373 was downloaded and read:
-956/956 records, 239 routes, zero failures, serious/critical axe findings,
-retries, transients or exhausted retries. Local soft-tissue-live-b6578132/
-live-every-page.json preserves the evidence. Keep the corpus epic open.
+34393037121 pass. Exact live artifact 10121457373 passes 956/956 records across
+239 routes with zero failures, serious/critical axe findings or retries.
+Keep the corpus epic open; 217 indexed sources still await complete review.
