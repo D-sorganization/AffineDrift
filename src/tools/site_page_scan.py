@@ -6,6 +6,7 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -54,7 +55,7 @@ def _pattern_to_regex(pattern: str) -> re.Pattern[str] | None:
     return None
 
 
-def rendered_relative_paths(root: Path) -> set[str] | None:
+def rendered_relative_paths(root: Path) -> dict[str, list[re.Pattern[str]]] | None:
     """Return the site's rendered source paths per _quarto.yml, or None.
 
     Returns None when no render list is declared, meaning every
@@ -87,7 +88,7 @@ def rendered_relative_paths(root: Path) -> set[str] | None:
     return {"positives": positives, "negatives": negatives}
 
 
-def is_rendered(rel: str, render_set: dict | None) -> bool:
+def is_rendered(rel: str, render_set: dict[str, list[re.Pattern[str]]] | None) -> bool:
     """Return True if a POSIX source path is covered by the render list."""
     if render_set is None:
         return True
@@ -141,6 +142,7 @@ def is_book_chapter(rel: Path | str) -> bool:
 
 
 def _has_front_matter(path: Path) -> bool:
+    """Check whether a file begins with a YAML front matter delimiter."""
     try:
         text = path.read_text(encoding="utf-8", errors="ignore")
     except OSError as exc:
@@ -149,7 +151,7 @@ def _has_front_matter(path: Path) -> bool:
     return text.startswith("---\n")
 
 
-def parse_front_matter(text: str) -> dict:
+def parse_front_matter(text: str) -> dict[str, Any]:
     """Parse the YAML front matter block of a page; empty dict when absent."""
     if not text.startswith("---\n"):
         return {}
@@ -228,6 +230,7 @@ def expand_includes(root: Path, page: Path, _depth: int = 0) -> str:
     text = page.read_text(encoding="utf-8", errors="ignore")
 
     def _sub(match: re.Match[str]) -> str:
+        """Expand an individual include directive."""
         target = page.parent / match.group(1)
         if not target.is_file():
             return match.group(0)
@@ -247,6 +250,7 @@ def _resolve_target(root: Path, source_file: Path, url: str) -> Path | None:
 
 
 def _target_exists(root: Path, target: Path) -> bool:
+    """Check whether a resolved target exists on disk or as a rendered page."""
     if target.exists():
         return True
     # A rendered .html target may map back to a .qmd or .md source page.

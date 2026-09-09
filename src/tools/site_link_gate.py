@@ -30,11 +30,11 @@ from src.tools.site_page_scan import (
     extract_links,
     find_content_pages,
     is_book_chapter,
-    is_external_url,
     page_body,
     parse_front_matter,
     strip_code,
 )
+from src.tools.utils.link_utils import is_external_url
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +77,7 @@ def check_internal_links(root: Path, pages: list[Path]) -> list[str]:
 
 
 def _related_section(content: str) -> str | None:
+    """Extract the Related Articles section content from a page body."""
     body = page_body(content)
     marker = body.find("## Related Articles")
     if marker == -1:
@@ -89,6 +90,7 @@ def _related_section(content: str) -> str | None:
 
 
 def _related_errors_for_page(root: Path, page: Path, expanded: str) -> str | None:
+    """Validate that the Related Articles section exists and has sufficient valid links."""
     section = _related_section(expanded)
     if section is None:
         return f"{_rel(root, page)}: missing Related Articles section"
@@ -135,6 +137,7 @@ def _nav_targets(root: Path) -> set[Path]:
         return targets
 
     def _walk(node: object) -> None:
+        """Recursively traverse navigation YAML nodes to collect targets."""
         if isinstance(node, dict):
             href = node.get("href")
             if isinstance(href, str) and href.endswith(".html"):
@@ -158,6 +161,7 @@ def check_orphans(root: Path, pages: list[Path]) -> list[str]:
     """
 
     def _norm(path: Path) -> Path:
+        """Normalize a filesystem path resolving symlinks when possible."""
         try:
             return path.resolve()
         except OSError:
@@ -225,6 +229,7 @@ def check_categories(root: Path, pages: list[Path]) -> list[str]:
 
 
 def _rel(root: Path, path: Path) -> str:
+    """Return POSIX relative path representation from repository root."""
     return path.relative_to(root).as_posix()
 
 
