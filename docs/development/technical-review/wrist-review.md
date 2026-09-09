@@ -301,3 +301,19 @@ computational-brain editions and all 14 exercises have been read. Arithmetic,
 feedback, impedance, neural-evidence and AI-comparison defects are recorded in
 the issue; correction and deep source review remain. Do not treat the whole
 corpus as completed.
+
+
+## Protected Delivery Checkpoint
+
+The wrist commit was replayed from 284c33fb onto protected main a37f5cae as
+be5612c6. Git range-diff reports an identical patch. No tracked source changed
+during the replay and no local test/build/QA process was active.
+
+The first push did not publish: Prettier normalized one inherited handoff line,
+and the isolated pre-push mypy environment lacked the optional PyQt6, Matplotlib
+and Streamlit dependencies. Its nine errors were Any-base classes and untyped
+decorators. Installing those actual dependencies in that local hook environment
+resolved the errors: the unchanged pre-push mypy hook passes. No type-check
+configuration, ignores or hooks were weakened or bypassed. The first push's
+Bandit and unit-test hooks also passed. This environment repair is distinct
+from the completed Python 3.12 project validation recorded above.
