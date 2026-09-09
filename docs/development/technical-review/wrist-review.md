@@ -321,3 +321,23 @@ from the completed Python 3.12 project validation recorded above.
 All hooks passed on the retry and the branch was pushed. Ready PR #4304 is open
 with Fixes #4299 and agent:codex. Its actual PR-keyed SPEC row is now recorded.
 Protected review, CI and deployment remain; this is not a publication claim.
+
+
+## PR Website Lint Repair
+
+PR CI34300841286 job102307300320 found three HTML-validity errors that the
+earlier local static-contract checks did not cover. The embed used percentage
+width in a numeric HTML attribute, and the simulator used div role=main/region
+where the repository requires native elements. The iframe now uses CSS width,
+including the documented snippet; the simulator uses main and a named section.
+No numerical behavior changed. The exact HTML lint command now passes.
+
+The full CSS glob encountered 12,740 findings in untracked generated textbook
+assets left by earlier QA. It is not a passing clean-checkout test. Running the
+same Stylelint engine over all62 git-tracked CSS/SCSS files passes with zero
+warnings. No generated third-party stylesheet was changed or deleted.
+
+Fresh browser checks confirm one main, one named plot section, zero axe
+violations, no viewport overflow at320/390/768/1440px, and40px keyboard plot
+scroll. Desktop and mobile screenshots were inspected. These two new views
+supplement the earlier143; protected CI must still validate the updated head.
