@@ -1,0 +1,40 @@
+/* Keep high superscripts clear of the horizontal scroll container's edge. */
+main .math.display mjx-container[display="true"] {
+  padding-top: 0.25em;
+}
+
+/* Preserve diagram labels and allow keyboard access at narrow widths. */
+.launch-diagram-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  background-color: white;
+}
+
+.launch-diagram-scroll img {
+  width: 100%;
+  min-width: 780px;
+}
+
+/* The two-column evidence tables wrap within the article's reading column. */
+#quarto-document-content table.table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
+
+#quarto-document-content table.table :is(th, td) {
+  padding: 0.5rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+#quarto-document-content table.table th {
+  font-size: 0.9em;
+}
+
+@media (max-width: 374px) {
+  #quarto-document-content table.table {
+    min-width: 270px;
+  }
+}
