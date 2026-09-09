@@ -3,7 +3,8 @@ title: "Simulating the Green"
 description: "A survey of green-simulation approaches — ODE roll models, surface meshes with gradient fields, and stochastic treatments of grain and imperfection — with an honest account of what the project's interactive putting model implements, what it omits, and how Monte Carlo dispersion studies apply to putting."
 author: "Dieter Olson"
 date: "2026-08-04"
-categories: [simulation, putting, modeling, golf]
+categories:
+- impact-ball-flight
 ---
 
 ```{=html}
@@ -141,6 +142,7 @@ The putting vertical of the project's [Tools golf suite](https://github.com/D-so
 - **Geometric capture test** using the speed-dependent effective hole width, applied on hole-disc crossing.
 - **Deterministic roll-out visualisation** — trajectory, phase boundaries (skid end, capture or stop), and pace/aim sweeps.
 - **Dual implementations under shared numeric tests**, following the project's parity convention: the same model in the Python engine and the TypeScript front end, pinned together by a shared test suite so the two cannot drift apart silently — the same discipline used for the [rate-of-closure explorer](https://github.com/D-sorganization/rate-of-closure-explorer).
+- **Interactive web companion** — the [Rate of Closure Impact Explorer's putting tab](https://d-sorganization.github.io/rate-of-closure-explorer/) (live site) runs the same roll model in the browser under the same parity discipline, including an "Import green…" action that loads a heightfield green — including greens authored in the project's `putting_green` engine — rather than only the built-in example surfaces.
 
 ### What It Honestly Does Not Contain
 
