@@ -18,18 +18,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4324 · Motion Capture, Uncertainty and Scientific Interpretation
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4324 (epic #4009; corpus #4021)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4325 (open)
+- **Branch:** `fix/4324-motion-capture-rigor`
+- **Paths:** `articles/technology-motion-capture.qmd`, `tests/test_motion_capture_rigor.py`, `docs/development/technical-review/motion-capture-review.md`
+- **Started:** 2026-09-09
+- **Last verified:** 2026-09-09 (`b1a4a030a03044158aea1af747782d53d913c02a`, implementation; full regression and final publication checks)
+- **Summary:** Complete article review connects camera geometry, anatomy, timing, conventions and correlated uncertainty to defensible golf-mechanics inference. Bounded primary claims replace categorical accuracy and energy assertions. Root 5,097 passes, 79.19% coverage; final focused 19, content 130, static 34, style/type/link checks and complete bounded web QA pass. Native Quarto explanation expands visibly.
+- **Next step:** Verify protected checks and exact production for PR #4325.
+
 ### DL-#4322 · Rotation Conventions, Stable Conversion and Golf Interpretation
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4322 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4323 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4323 (merged; production verification pending)
 - **Branch:** `fix/4322-rotation-converter-reference`
 - **Paths:** `articles/rotation-converter.qmd`, `articles/rotation-representations-reference.qmd`, `js/rotation-converter.js`, `js/rotation-converter-ui.js`, `js/rotation-converter-viz.js`, `css/rotation-converter.css`, `scripts/sync_frontend_assets.py`, `src/tools/rotation_reference_examples.py`, `tests/test_rotation_representations_reference.py`, `tests/test_rotation_reference_kinematics.py`, `tests/rotation-converter-rigor.test.js`, `tests/rotation-converter-ui.test.js`, `docs/development/technical-review/rotation-converter-review.md`
 - **Started:** 2026-09-09
 - **Last verified:** 2026-09-09 (`12169b9b8d0a36138d5b27bbdd493a58314d34ea`)
 - **Summary:** Both complete articles derive stable boundary conversions and connect calibrated orientation, angular velocity, face sensitivity, uncertainty and physical work. Converter rejects malformed inputs, preserves labeled prior results and supports optional-3D failure. Root 5,078 passes, 79.19% coverage; final numerical/UI/content/static/style/type/link checks and complete bounded web QA pass.
-- **Next step:** Verify protected PR #4323 checks and exact production evidence after merge.
+- **Next step:** Verify exact production evidence for squash 625b0fc4ff1135eaef3bf81b0852089f4129c1f1.
 
 ### DL-#4320 · Textbook Energy Transfer and Work Ledgers
 

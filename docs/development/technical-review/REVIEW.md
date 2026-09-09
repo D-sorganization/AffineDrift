@@ -1527,3 +1527,25 @@ but two CI attempts stop before Python tests at a Google apt package-index hash
 mismatch. Its normal squash auto-merge remains enabled. The corpus still has
 221 rows beginning Indexed; among 405 sources. A completed chapter does not
 complete the epic or validate the remaining partially reviewed sources.
+
+## Motion Capture: #4324
+
+The complete long article now develops a measurement chain from camera or IMU
+observation to anatomical reconstruction, kinematic definition and mechanical
+inference. Primary-source checks correct commercial-system descriptions,
+correlation/agreement confusion, cross-study accuracy rankings and unbounded
+markerless claims. Worked examples connect triangulation, exposure, aliasing,
+correlated uncertainty, derivatives, screw-axis conditioning and grip power.
+Coordinate-invariant pitch is explicitly separated from temporal conservation
+and energy-transfer evidence. See [motion-capture-review.md](motion-capture-review.md).
+
+The configured regression passes5,097tests with29skips and79.19%coverage.
+Final focused19, content130, static34, titles636, style/type/quality/link checks
+pass. Whole-article visual reading,70math expressions,26historical destinations,
+14responsive cases, keyboard tables and both themes are verified. A native
+Quarto callout repairs the original invisible expanded explanation. Detailed
+source-reading boundaries, numerical checks, failed attempts and remaining
+minor/moderate accessibility findings are recorded. Protected delivery remains.
+
+The405-source corpus remains unfinished, with214statuses beginning Indexed.
+This count does not equate all other rows with complete technical audits.
