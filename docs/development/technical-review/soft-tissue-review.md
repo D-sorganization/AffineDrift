@@ -198,3 +198,10 @@ checks/review, merge normally and verify exact production evidence. This
 chapter does not complete the corpus: 221 of 405 index rows remain Indexed;
 other rows can represent partial audits. No subagents, immutable-source edits,
 managed-policy edits or branch operation during local QA.
+
+Delivery checkpoint: ready PR #4317, https://github.com/D-sorganization/AffineDrift/pull/4317, targets main. Implementation
+0f89dad6529a314644abc9f93adc613a8d3c8661 replays only d75c7ec2 after 082f9589 onto fc76f2e1.
+The before/after comparison differs only by inherited CI and managed-policy
+changes; all reviewed content and assets are identical. Normal commit/push
+hooks pass. This documentation checkpoint adds the single actual PR-keyed
+SPEC row and updates the current implementation handoff and development log.

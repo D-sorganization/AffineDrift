@@ -322,3 +322,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-09 | #4310 | Reconcile paired swing-plane geometry, contact impulse, launch optimization and uncertainty; independently verify eight exercises, preserve web mathematics and rebuild the print book. |
 | 2026-09-09 | #4312 | Reconcile launch-monitor observability, spin reconstruction, point-referenced motion, ordered rotations and contact-model uncertainty; add independent counterexamples and accessible scientific figures. |
 | 2026-09-09 | #4314 | Reconcile paired interdisciplinary chapters with explicit control, impedance, material, collision and evidence models; add verified derivations, shared figures and eight worked answers. |
+| 2026-09-09 | #4317 | Correct paired soft-tissue, pressure, inertia and energy models with bounded primary evidence, two reproducible figures and seven independently checked worked exercises. |

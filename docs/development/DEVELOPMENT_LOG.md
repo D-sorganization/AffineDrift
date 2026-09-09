@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4315 · Soft-Tissue Dynamics and Pressure Mechanics
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4315 (epic #4009)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4317 (open)
 - **Branch:** `fix/4315-soft-tissue-mechanics`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch20_soft_tissue_pliable.tex`, `articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.qmd`, `articles/The_Physics_of_Golf/figures/soft_tissue_*`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_soft_tissue_mechanics_rigor.py`, `docs/development/technical-review/soft-tissue-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (reviewed working tree based on `082f9589`)
+- **Last verified:** 2026-09-09 (`0f89dad6529a314644abc9f93adc613a8d3c8661`)
 - **Summary:** Both editions now derive consistent tissue, pressure, inertia and energy models with bounded primary evidence, two shared figures and seven worked answers. Regression passes 4,991 tests with 92.65% coverage; final affected, content, static, style, type, title and site-link checks pass. Complete print/web inspection includes accessible math and corrected exercise numbering.
-- **Next step:** Commit and replay only #4315 onto merged main fc76f2e1 before first push, then open its PR.
+- **Next step:** Complete #4317 protected checks/review, merge normally and verify production; continue the remaining corpus review.
 
 ### DL-#4313 · Interdisciplinary Golf Synthesis and Evidence
 
