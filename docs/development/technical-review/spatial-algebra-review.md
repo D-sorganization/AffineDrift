@@ -1,5 +1,13 @@
 # Spatial Algebra, Inertia and Recursive Dynamics Review
 
+## Current Delivery
+
+PR #4319 merged normally on 2026-09-09 at 20:01:13Z as
+c4c1fee6db8915eee49a80b3572ece9ccfe57cd5. Main CI 34398520012,
+textbooks 34398520049 and performance 34398520065 pass. Deployment
+34398520017 is verifying every public page; exact live evidence remains
+pending. Earlier pending-merge statements below are implementation history.
+
 Issue #4318, native child of #4009; corpus #4021. Worktree
 C:/Users/diete/Repositories/AffineDrift-technical-review, branch
 fix/4318-spatial-algebra starts at pending parent #4317 head

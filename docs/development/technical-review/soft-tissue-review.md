@@ -1,5 +1,16 @@
 # Soft-Tissue Mechanics and Evidence Review
 
+## Verified Publication
+
+PR #4317 merged normally on 2026-09-09 at 19:06:05Z as
+b657813291e89def6269d9bb0f258a9e26c3dd8a. Main CI 34393037135,
+textbooks 34393037136, performance 34393037120 and deployment 34393037121
+pass. Downloaded exact live artifact 10121457373 passes all 956 records
+across 239 routes, with zero failures, serious/critical axe findings,
+retries, transients or exhausted retries. Evidence is preserved in
+soft-tissue-live-b6578132/live-every-page.json. Earlier pending statements
+below describe the implementation history, not the current delivery state.
+
 Issue #4315; native child of #4009, corpus #4021, Physics #4054.
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review, branch
 fix/4315-soft-tissue-mechanics, starting at parent PR #4314 head
