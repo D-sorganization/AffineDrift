@@ -146,10 +146,11 @@ def test_low_rank_length_changes_do_not_require_grouped_neural_commands() -> Non
 
 def test_energy_boundaries_cannot_be_substituted_for_each_other() -> None:
     """Separate illustrative processor energy, head energy and head gravity work."""
-    power, duration, head_mass, head_speed, height_drop, gravity = 20, 0.3, 0.2, 50, 1, 9.81
+    GRAVITY_M_S2 = 9.81
+    power, duration, head_mass, head_speed, height_drop = 20, 0.3, 0.2, 50, 1
     processor_energy = power * duration
     head_energy = head_mass * head_speed**2 / 2
-    gravity_work = head_mass * gravity * height_drop
+    gravity_work = head_mass * GRAVITY_M_S2 * height_drop
     assert processor_energy == 6
     assert head_energy == 250
     assert gravity_work == pytest.approx(1.962)
