@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4327 · Nonlinear Control Explanation Publication Repair
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4327 (epic #4009; corpus #4021)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4329 (open)
 - **Branch:** `fix/4327-nonlinear-callouts`
 - **Paths:** `articles/nonlinear-control-insights.qmd`, `css/technical-explanations.css`, `docs/development/technical-review/nonlinear-callouts-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`1693a3f366db439ac44fb8a9c8f61782e53f03c3`, parent plus working-tree correction; render/content/static checks)
+- **Last verified:** 2026-09-09 (`1dec5dd8fe602d17a7aeeb7c48b13559eb6e40be`, complete bounded publication validation)
 - **Summary:** Exact rotation deployment artifact identifies malformed nonlinear-control explanation HTML as a publication blocker. Native disclosures replace escaped markup and unsupported muscle-work, torso-stop and validation claims. Root 5,097 tests pass at79.19%coverage; final content130/static34 and12expanded keyboard/theme cases pass. The article is only partially reviewed.
-- **Next step:** Commit the validated repair and open its protected PR.
+- **Next step:** Verify protected PR #4329 checks and exact publication after merge.
 
 ### DL-#4324 · Motion Capture, Uncertainty and Scientific Interpretation
 

@@ -3,7 +3,7 @@
 Issue #4327, native child of #4009, within corpus #4021. Branch
 fix/4327-nonlinear-callouts starts at1693a3f366db439ac44fb8a9c8f61782e53f03c3
 (motion PR4325). Worktree C:/Users/diete/Repositories/AffineDrift-technical-review.
-PR not created. This is a bounded publication repair, not a full technical
+PR https://github.com/D-sorganization/AffineDrift/pull/4329 (open). This is a bounded publication repair, not a full technical
 audit of articles/nonlinear-control-insights.qmd.
 
 ## Failure and Reproduction
@@ -84,3 +84,13 @@ serious/critical axe violations. Motion PR4325 merged as
 4cf3514dc82a6c267f43df39a89b57247cc0ba27; its production verification remains.
 The broader site's Quarto disclosure keyboard behavior remains a follow-up;
 this repair changes only the two panels on the identified failing route.
+
+## Protected PR Checkpoint
+
+Implementation a15358ef was replayed alone after1693a3f3 onto motion squash
+4cf3514d, producing1dec5dd8fe602d17a7aeeb7c48b13559eb6e40be before first push.
+The parent trees were identical. Normal commit/push hooks pass; no force push.
+PR4329 is ready for review with Fixes#4327 and agent/scientific labels. The SPEC
+row is keyed once to4329. Portable devlog validation still reports only the
+preexisting peer DL-#3903 missing SHA and DL-#3902 missing PR/Last verified.
+Protected checks and exact publication remain; the corpus is unfinished.
