@@ -125,10 +125,7 @@ class TestExpandIncludes:
 
 class TestExtractLinks:
     def test_finds_markdown_and_html_links(self) -> None:
-        content = (
-            "[text](page.html) ![img](pic.png) <a href=\"x.html\">x</a> "
-            "<img src=\"y.png\">"
-        )
+        content = '[text](page.html) ![img](pic.png) <a href="x.html">x</a> ' '<img src="y.png">'
         urls = [link.url for link in extract_links(content)]
         assert urls == ["page.html", "pic.png", "x.html", "y.png"]
 
@@ -164,9 +161,7 @@ class TestInternalResolution:
         assert any("missing.html" in e for e in report["broken-links"])
 
     def test_broken_link_inside_include_is_caught(self, site: Path) -> None:
-        (site / "articles" / "part.qmd").write_text(
-            "[x](nope/missing.html)\n", encoding="utf-8"
-        )
+        (site / "articles" / "part.qmd").write_text("[x](nope/missing.html)\n", encoding="utf-8")
         write_raw_page(
             site / "articles" / "host2.qmd",
             "title: H\ncategories:\n- theory-core\n",
@@ -179,9 +174,7 @@ class TestInternalResolution:
 class TestRelatedCoverage:
     def test_missing_related_section_fails(self, site: Path) -> None:
         report = run_site_gate(site, use_baseline=False)
-        assert any(
-            e.startswith("articles/alpha.qmd") for e in report["related-coverage"]
-        )
+        assert any(e.startswith("articles/alpha.qmd") for e in report["related-coverage"])
 
     def test_undersized_related_section_fails(self, site: Path) -> None:
         page = site / "resources" / "learning-paths.qmd"
@@ -191,24 +184,17 @@ class TestRelatedCoverage:
             encoding="utf-8",
         )
         report = run_site_gate(site, use_baseline=False)
-        assert any(
-            e.startswith("resources/learning-paths.qmd")
-            for e in report["related-coverage"]
-        )
+        assert any(e.startswith("resources/learning-paths.qmd") for e in report["related-coverage"])
 
     def test_book_chapter_is_exempt(self, site: Path) -> None:
         chapter = site / "articles" / "The_Physics_of_Golf" / "chapters" / "ch01.qmd"
         write_page(chapter, "[x](../alpha.html)\n", title="Chapter 1")
         report = run_site_gate(site, use_baseline=False)
-        assert not any(
-            "The_Physics_of_Golf" in e for e in report["related-coverage"]
-        )
+        assert not any("The_Physics_of_Golf" in e for e in report["related-coverage"])
 
     def test_index_pages_are_exempt(self, site: Path) -> None:
         report = run_site_gate(site, use_baseline=False)
-        assert not any(
-            e.startswith("books/index.qmd") for e in report["related-coverage"]
-        )
+        assert not any(e.startswith("books/index.qmd") for e in report["related-coverage"])
 
 
 class TestOrphans:
@@ -260,9 +246,7 @@ class TestCategories:
             title="M1",
         )
         report = run_site_gate(site, use_baseline=False)
-        assert any(
-            e.startswith("models/m1.qmd") for e in report["categories"]
-        )
+        assert any(e.startswith("models/m1.qmd") for e in report["categories"])
 
     def test_inline_list_syntax_is_rejected(self, site: Path) -> None:
         write_raw_page(
@@ -271,9 +255,7 @@ class TestCategories:
             "[alpha](../articles/alpha.html)\n",
         )
         report = run_site_gate(site, use_baseline=False)
-        assert any(
-            e.startswith("models/m2.qmd") for e in report["categories"]
-        )
+        assert any(e.startswith("models/m2.qmd") for e in report["categories"])
 
 
 class TestBaseline:
@@ -283,19 +265,12 @@ class TestBaseline:
         assert report["related-coverage"]
 
     def test_baseline_entries_filter(self, site: Path, tmp_path: Path) -> None:
-        baseline = {
-            "related-coverage": ["articles/alpha.qmd: missing Related Articles section"]
-        }
+        baseline = {"related-coverage": ["articles/alpha.qmd: missing Related Articles section"]}
         path = tmp_path / "baseline.json"
         path.write_text(json.dumps(baseline), encoding="utf-8")
         report = run_site_gate(site, baseline_path=path)
-        assert not any(
-            e.startswith("articles/alpha.qmd") for e in report["related-coverage"]
-        )
-        assert any(
-            e.startswith("resources/learning-paths.qmd")
-            for e in report["related-coverage"]
-        )
+        assert not any(e.startswith("articles/alpha.qmd") for e in report["related-coverage"])
+        assert any(e.startswith("resources/learning-paths.qmd") for e in report["related-coverage"])
 
     def test_default_baseline_path_is_in_tests(self) -> None:
         assert BASELINE_PATH.as_posix() == "tests/link_gate_baseline.json"

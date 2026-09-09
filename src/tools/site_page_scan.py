@@ -42,21 +42,16 @@ BOOK_TREES: tuple[str, ...] = (
     "articles/tangent-hyperplane-contraction/chapters",
 )
 
+
 def _pattern_to_regex(pattern: str) -> re.Pattern[str] | None:
     """Translate a Quarto render glob into a regex over POSIX paths."""
     pattern = pattern.strip()
     if pattern.startswith("!"):
         pattern = pattern[1:]
-    regex = (
-        re.escape(pattern)
-        .replace(r"\*\*/", r"(?:[^/]+/)*")
-        .replace(r"\*", r"[^/]+")
-    )
+    regex = re.escape(pattern).replace(r"\*\*/", r"(?:[^/]+/)*").replace(r"\*", r"[^/]+")
     if regex.endswith(r"\.qmd") or regex.endswith(r"\.md"):
         return re.compile(rf"^{regex}$")
     return None
-
-
 
 
 def rendered_relative_paths(root: Path) -> set[str] | None:
@@ -74,9 +69,7 @@ def rendered_relative_paths(root: Path) -> set[str] | None:
         logger.warning("Could not parse %s: %s", NAV_FILE, exc)
         return None
     project = data.get("project")
-    render_list = (
-        project.get("render") if isinstance(project, dict) else None
-    )
+    render_list = project.get("render") if isinstance(project, dict) else None
     if not isinstance(render_list, list):
         return None
     positives: list[re.Pattern[str]] = []
@@ -121,10 +114,6 @@ def find_content_pages(root: Path) -> list[Path]:
     return pages
 
 
-
-
-
-
 RELATED_MIN_LINKS = 3
 
 MAX_INCLUDE_DEPTH = 8
@@ -149,8 +138,6 @@ def is_book_chapter(rel: Path | str) -> bool:
         return False
     posix = rel.as_posix()
     return posix.startswith(tuple(f"{tree}/" for tree in BOOK_TREES))
-
-
 
 
 def _has_front_matter(path: Path) -> bool:
@@ -215,6 +202,7 @@ def strip_code(content: str) -> str:
         out.append(line)
     return "".join(out)
 
+
 def extract_links(content: str) -> list[Link]:
     """Extract link URLs (markdown links, HTML href/src) from content."""
     urls: list[Link] = []
@@ -274,4 +262,3 @@ def _target_exists(root: Path, target: Path) -> bool:
     if (target / "index.html").exists():
         return True
     return path_exists_in_search_roots(root=root, target=target)
-
