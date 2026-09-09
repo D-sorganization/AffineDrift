@@ -1415,3 +1415,25 @@ independent counterexamples are in [launch-monitors-preaudit.md](launch-monitors
 
 
 Final swing verification: 4,925 root tests pass, 92.65% coverage, all 34 static contracts and 51 final affected checks pass. PDF, complete web reading, 12 final table views and both long-expression scroll/keyboard checks are inspected. The failed CSS/verification attempts and remaining inherited warnings are documented in swing-plane-review.md. Authentication has recovered and both active issue leases were verified. Brain #4306 is published as 022fc21c with exact live artifact 10095422596 passing 956/956. Next correction is launch-monitor #4309; the corpus remains unfinished.
+
+## Launch-Monitor Observability and Inference: #4309
+
+The complete long article is rewritten around a declared measurement chain and
+independent validation. Twenty derivation groups connect radar/camera information,
+reference-point motion, spin, ordered rotations, reflection geometry, contact
+predictions and correlated uncertainty. Exact counterexamples expose the
+single-location Doppler nullspace and two-groove pose ambiguity. Two reproducible
+figures preserve those constructions. All 20 historical heading links remain.
+
+All 24 focused checks and 4,949 root tests pass, with 29 skips and 92.65%
+coverage. Content 130, static 34, title 633, format/style/type and site-link checks
+pass. Complete source and rendered reading, all 34 display equations, responsive
+themes and keyboard-accessible figures/tables are checked. Visual QA caught and
+fixed clipped transpose glyphs, font substitution and cramped table wrapping.
+See [launch-monitors-review.md](launch-monitors-review.md) for derivations,
+source-reading boundaries, failed attempts and validation limits. Protected
+delivery remains; 221 corpus sources still have only an index.
+
+Swing #4307 / PR #4310 is now published as 6b6876c0. Main CI, textbook build
+and deployment pass; exact live artifact 10113084054 passes 956/956 checks
+across 239 routes with zero failures, axe violations, retries or transients.

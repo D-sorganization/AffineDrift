@@ -318,3 +318,14 @@ Bandit and unit tests, and published the topic branch without a force push.
 Ready PR #4310 references #4307 and carries agent:codex. SPEC.md adds exactly
 one row keyed to this PR. Protected CI/review, merge and production verification
 remain; local completion does not substitute for those delivery checks.
+
+PR #4310 subsequently protected-squash-merged at 15:34:03 UTC on September 9,
+2026 as 6b6876c03f85b9db59d89a835983ca3a3250c1ef. Every check on final
+PR head 5499b61b passed, including CI Standard 34367933458, all textbook
+builds, links, specification freshness and the guard workflows. Main textbook
+build 34371089313 also passes. Main CI 34371089520 and deployment
+34371089396 subsequently succeeded. Exact live artifact 10113084054 is
+downloaded as swing-live-6b6876c0/live-every-page.json: all 956 of 956 checks
+pass across 239 routes, with zero failures, retries or transient responses.
+The correction is published. This route-manifest check is publication evidence,
+not a replacement for the detailed chapter/PDF and scientific review above.

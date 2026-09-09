@@ -1,5 +1,10 @@
 # Launch Monitor Technology: Complete Reading and Next Audit
 
+Historical preparation record. Authentication subsequently recovered, issue
+#4309 was created and leased, and the complete canonical manuscript was rewritten.
+Use [launch-monitors-review.md](launch-monitors-review.md) for current derivations,
+validation and delivery status; the initial constraints below are historical.
+
 Read the full `articles/technology-launch-monitors.qmd` on September 9, 2026,
 including all equations, tables, references and related-concept links. No
 canonical edits or new issue yet: GitHub authentication currently fails and
