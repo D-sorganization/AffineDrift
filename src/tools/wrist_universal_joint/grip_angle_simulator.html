@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Wrist Universal Joint Model</title>
+    <title>Cardan and Torque Projection Demonstration</title>
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
     <style>
         * {
@@ -79,7 +79,7 @@
             border-bottom: none;
         }
 
-        .control-group h3 {
+        .control-group h2 {
             color: #0f4c75;
             margin-bottom: 10px;
             font-size: 1.1em;
@@ -138,13 +138,13 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.85em;
-            color: #6c757d;
+            color: #505a63;
             margin-top: 5px;
         }
 
         .value-display {
             display: inline-block;
-            background: #3282b8;
+            background: #07527c;
             color: white;
             padding: 5px 12px;
             border-radius: 20px;
@@ -165,7 +165,7 @@
 
         .number-input:focus {
             outline: none;
-            border-color: #3282b8;
+            border-color: #07527c;
         }
 
         select {
@@ -181,7 +181,7 @@
 
         select:focus {
             outline: none;
-            border-color: #3282b8;
+            border-color: #07527c;
         }
 
         .checkbox-group {
@@ -219,6 +219,7 @@
         }
 
         .plots-area {
+            min-width: 0;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -232,7 +233,7 @@
             margin-bottom: 10px;
         }
 
-        .diagram-container h3 {
+        .diagram-container h2 {
             color: #0f4c75;
             margin-bottom: 8px;
             font-size: 1.1em;
@@ -247,15 +248,21 @@
             margin-bottom: 10px;
         }
 
-        .plot-card h3 {
+        .plot-card h2 {
             color: #0f4c75;
             margin-bottom: 8px;
             font-size: 1.1em;
             font-weight: 600;
         }
 
+        .plot-scroll {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
         .plot-container {
-            height: 400px;
+            min-width: 600px;
+            height: 550px;
             border-radius: 8px;
             overflow: hidden;
         }
@@ -267,7 +274,7 @@
             margin-top: 10px;
         }
 
-        .info-panel h3 {
+        .info-panel h2 {
             color: #0f4c75;
             margin-bottom: 10px;
             font-size: 1.1em;
@@ -282,7 +289,7 @@
             margin-bottom: 8px;
         }
 
-        .info-item h4 {
+        .info-item h3 {
             color: #0f4c75;
             margin-bottom: 10px;
         }
@@ -351,44 +358,44 @@
     <script src="grip_angle_polynomial_evaluator.js"></script>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <div class="header">
-            <h1>Enhanced Wrist Universal Joint Model</h1>
-            <p>Interactive visualization of universal joint (Hooke/Cardan) transmission with grip angle and wrist deviation</p>
+            <h1>Cardan and Torque Projection Demonstration</h1>
+            <p>A fixed-bend Cardan ratio followed by a synthetic torque projection. This is not a calibrated wrist or golf-swing model.</p>
         </div>
 
         <div class="main-content">
             <div class="sidebar">
                 <div class="control-group">
-                    <h3>Parameters</h3>
+                    <h2>Parameters</h2>
                     
                     <div class="input-group">
-                        <label>Grip Angle θ_grip (degrees) <span class="value-display" id="grip-value">30</span></label>
+                        <label for="grip-angle">Demo Angle θ (degrees) <span class="value-display" id="grip-value">30</span></label>
                         <input type="range" id="grip-angle" min="0" max="90" value="30" step="1">
                         <div class="slider-labels">
                             <span>0°</span>
                             <span>45°</span>
                             <span>90°</span>
                         </div>
-                        <small style="color: #6c757d; font-size: 0.85em;">0° = parallel to fingers, 90° = perpendicular to fingers</small>
+                        <small style="color: #505a63; font-size: 0.85em;">Synthetic bend/projection angle; 90° bend is evaluated at 89°</small>
                     </div>
 
                     <div class="input-group">
-                        <label>Wrist Deviation φ (degrees) <span class="value-display" id="wrist-value">0</span></label>
+                        <label for="wrist-angle">Input Shaft Phase φ (degrees) <span class="value-display" id="wrist-value">0</span></label>
                         <input type="range" id="wrist-angle" min="-60" max="60" value="0" step="1">
                         <div class="slider-labels">
                             <span>-60°</span>
                             <span>0°</span>
                             <span>60°</span>
                         </div>
-                        <small style="color: #6c757d; font-size: 0.85em;">+ values = radial deviation, - values = ulnar deviation</small>
+                        <small style="color: #505a63; font-size: 0.85em;">Input shaft phase, not anatomical wrist motion</small>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <h3>Club Properties</h3>
+                    <h2>Club Properties</h2>
                     <div class="input-group">
-                        <label>Clubhead Weight (g) <span class="value-display" id="clubhead-value">200</span></label>
+                        <label for="clubhead-weight">Clubhead Weight (g) <span class="value-display" id="clubhead-value">200</span></label>
                         <input type="range" id="clubhead-weight" min="50" max="500" value="200" step="1">
                         <div class="slider-labels">
                             <span>50g</span>
@@ -396,7 +403,7 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label>Shaft Weight (g) <span class="value-display" id="shaft-value">100</span></label>
+                        <label for="shaft-weight">Shaft Weight (g) <span class="value-display" id="shaft-value">100</span></label>
                         <input type="range" id="shaft-weight" min="30" max="200" value="100" step="1">
                         <div class="slider-labels">
                             <span>30g</span>
@@ -404,7 +411,7 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label>Club Length (m) <span class="value-display" id="length-value">1.00</span></label>
+                        <label for="club-length">Club Length (m) <span class="value-display" id="length-value">1.00</span></label>
                         <input type="range" id="club-length" min="0.5" max="1.5" value="1.0" step="0.01">
                         <div class="slider-labels">
                             <span>0.5m</span>
@@ -412,7 +419,7 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label>CG Distance (m) <span class="value-display" id="cg-value">0.85</span></label>
+                        <label for="cg-distance">CG Distance (m) <span class="value-display" id="cg-value">0.85</span></label>
                         <input type="range" id="cg-distance" min="0.3" max="1.2" value="0.85" step="0.01">
                         <div class="slider-labels">
                             <span>0.3m</span>
@@ -426,9 +433,9 @@
                 </div>
 
                 <div class="control-group">
-                    <h3>Input Signal Generator</h3>
+                    <h2>Input Signal Generator</h2>
                     <div class="input-group">
-                        <label>Signal Type</label>
+                        <label for="noise-type">Signal Type</label>
                         <select id="noise-type">
                             <option value="golf">Golf-like Random</option>
                             <option value="step">Step</option>
@@ -440,27 +447,27 @@
                         </select>
                     </div>
                     <div class="polynomial-input" id="polynomial-section" style="display: none;">
-                        <label>Polynomial Expression</label>
+                        <label for="polynomial-expr">Polynomial Expression</label>
                         <input type="text" id="polynomial-expr" value="t**2 - t" placeholder="e.g., t**2 - t" autocorrect="off" autocapitalize="none" spellcheck="false">
-                        <small style="color: #6c757d; font-size: 0.85em;">Use 't' as variable. Functions: sin, cos, exp, sqrt, log, pi, e</small>
+                        <small style="color: #505a63; font-size: 0.85em;">Use 't' as variable. Functions: sin, cos, exp, sqrt, log, pi, e</small>
                         <div id="polynomial-error" class="error-message" style="display: none;"></div>
                     </div>
                     <button type="button" class="button" onclick="regenerateNoise()">Regenerate Signal</button>
                 </div>
 
                 <div class="control-group">
-                    <h3>Plot Type</h3>
+                    <h2 id="plot-type-label">Plot Type</h2>
                     <div class="input-group">
-                        <select id="plot-type">
+                        <select id="plot-type" aria-labelledby="plot-type-label">
                             <option value="torque">Torque</option>
                             <option value="acceleration">Angular Acceleration</option>
-                            <option value="transmission">Transmission Ratio vs Wrist Angle</option>
+                            <option value="transmission">Transmission Ratio vs Input Phase</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <h3>Show Signals</h3>
+                    <h2>Show Signals</h2>
                     <div id="signal-checkboxes">
                         <!-- Dynamically populated based on plot type -->
                     </div>
@@ -469,24 +476,28 @@
 
             <div class="plots-area">
                 <div class="diagram-container">
-                    <h3>Forearm-Hand-Club Diagram</h3>
+                    <h2>Historical Sketch (Not Cardan Kinematics)</h2>
+                    <p>The drawing is not a derivation of the shaft-phase model below.</p>
                     <canvas id="diagram-canvas" width="1200" height="400"></canvas>
                 </div>
 
                 <div class="plot-card">
-                    <h3 id="plot-title">Torque vs Time</h3>
-                    <div id="plot" class="plot-container"></div>
+                    <h2 id="plot-title">Torque vs Time</h2>
+                    <p>On narrow screens, scroll the plot horizontally.</p>
+                    <section class="plot-scroll" aria-label="Demonstration plot; scroll horizontally" tabindex="0">
+                        <div id="plot" class="plot-container"></div>
+                    </section>
                 </div>
 
                 <div class="info-panel">
-                    <h3>Model Information</h3>
+                    <h2>Model Information</h2>
                     <div id="model-info">
                         <!-- Dynamically populated -->
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
         // Global state
@@ -546,13 +557,6 @@
             document.getElementById('length-value').textContent = length.toFixed(2);
             document.getElementById('cg-value').textContent = cg.toFixed(2);
 
-            const [I_alpha, I_gamma] = calculateInertia(clubhead, shaft, length, cg);
-            const inertiaDisplay = document.getElementById('inertia-display');
-            inertiaDisplay.textContent = '';
-            inertiaDisplay.appendChild(document.createTextNode(`Iα = ${I_alpha.toFixed(4)} kg·m²`));
-            inertiaDisplay.appendChild(document.createElement('br'));
-            inertiaDisplay.appendChild(document.createTextNode(`Iγ = ${I_gamma.toFixed(4)} kg·m²`));
-
             updateAll();
         }
 
@@ -563,13 +567,17 @@
             const I_shaft_alpha = (1/3) * m_shaft * length_m * length_m;
             const I_head_alpha = m_head * cg_m * cg_m;
             const I_alpha = I_shaft_alpha + I_head_alpha;
-            // Gamma is lowest MOI axis, alpha is higher MOI axis
+            // Gamma uses an illustrative inertia ratio; alpha is transverse
             const I_gamma = 0.5 * I_alpha;
             
             return [I_alpha, I_gamma];
         }
 
         function universalJointTransmissionRatio(phi_rad, delta_rad) {
+            if (!Number.isFinite(phi_rad) || !Number.isFinite(delta_rad)) {
+                throw new RangeError("Cardan angles must be finite");
+            }
+            // d/dphi atan2(cos(delta) sin(phi), cos(phi)); fixed supported shafts.
             // Avoid singularities
             if (Math.abs(delta_rad) > Math.PI * 89 / 180) {
                 delta_rad = Math.sign(delta_rad) * Math.PI * 89 / 180;
@@ -579,7 +587,7 @@
             const cos_delta = Math.cos(delta_rad);
             const sin_phi = Math.sin(phi_rad);
 
-            const denominator = Math.sqrt(1.0 - sin_delta * sin_delta * sin_phi * sin_phi);
+            const denominator = 1.0 - sin_delta * sin_delta * sin_phi * sin_phi;
             const omega_ratio = cos_delta / denominator;
             const tau_ratio = denominator / cos_delta;
 
@@ -650,7 +658,8 @@
                     }
                 } catch (error) {
                     polynomialError = `Error: ${error.message}`;
-                    // Fallback
+                    // Replace any partial evaluation so samples stay aligned with time.
+                    noise.length = 0;
                     for (let i = 0; i < length; i++) {
                         noise.push(t[i] * t[i] - t[i]);
                     }
@@ -697,8 +706,8 @@
             if (plotType === 'torque') {
                 addCheckbox(container, 'show-input', 'Input Torque', true);
                 addCheckbox(container, 'show-transmitted', 'Transmitted Torque', true);
-                addCheckbox(container, 'show-alpha', 'Torque α (higher MOI axis)', true);
-                addCheckbox(container, 'show-gamma', 'Torque γ (lowest MOI axis)', true);
+                addCheckbox(container, 'show-alpha', 'Torque α (alpha component)', true);
+                addCheckbox(container, 'show-gamma', 'Torque γ (gamma component)', true);
             } else if (plotType === 'acceleration') {
                 addCheckbox(container, 'show-alpha', 'Acceleration α', true);
                 addCheckbox(container, 'show-gamma', 'Acceleration γ', true);
@@ -737,6 +746,11 @@
             const length = parseFloat(document.getElementById('club-length').value);
             const cg = parseFloat(document.getElementById('cg-distance').value);
             const [I_alpha, I_gamma] = calculateInertia(clubhead, shaft, length, cg);
+            const inertiaDisplay = document.getElementById('inertia-display');
+            inertiaDisplay.textContent = '';
+            inertiaDisplay.appendChild(document.createTextNode(`Iα = ${I_alpha.toFixed(4)} kg·m²`));
+            inertiaDisplay.appendChild(document.createElement('br'));
+            inertiaDisplay.appendChild(document.createTextNode(`Iγ = ${I_gamma.toFixed(4)} kg·m²`));
 
             const grip_angle = parseInt(document.getElementById('grip-angle').value);
             const wrist_angle = parseInt(document.getElementById('wrist-angle').value);
@@ -778,7 +792,7 @@
                 traces.push({
                     x: timeData,
                     y: noiseData,
-                    name: 'Input Torque (forearm)',
+                    name: 'Input Torque',
                     line: { color: 'gray', width: 2 },
                     opacity: 0.7
                 });
@@ -795,7 +809,7 @@
                 traces.push({
                     x: timeData,
                     y: torque_alpha,
-                    name: 'τ_α (higher MOI axis)',
+                    name: 'τ_α (alpha component)',
                     line: { color: 'red', width: 2.5 }
                 });
             }
@@ -803,22 +817,22 @@
                 traces.push({
                     x: timeData,
                     y: torque_gamma,
-                    name: 'τ_γ (lowest MOI axis)',
+                    name: 'τ_γ (gamma component)',
                     line: { color: 'blue', width: 2.5 }
                 });
             }
 
             const layout = {
-                height: 500,
-                margin: { l: 60, r: 20, t: 40, b: 50 },
-                title: `Torque vs Time (Grip: ${grip_angle}°, Wrist: ${wrist_angle}°)`,
+                height: 550,
+                margin: { l: 70, r: 70, t: 45, b: 150 },
+                title: `Demo Angle: ${grip_angle}° · Input Phase: ${wrist_angle}°`,
                 xaxis: { title: 'Time (s)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
                 yaxis: { title: 'Torque (N·m)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
                 paper_bgcolor: 'white',
                 plot_bgcolor: 'white',
                 font: { family: 'Arial', size: 12 },
                 showlegend: true,
-                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' }
+                legend: { x: 0, y: -0.25, orientation: 'h', bgcolor: 'white' }
             };
 
             document.getElementById('plot-title').textContent = 'Torque vs Time';
@@ -859,16 +873,16 @@
             }
 
             const layout = {
-                height: 400,
-                margin: { l: 50, r: 15, t: 30, b: 40 },
-                title: `Angular Acceleration vs Time (Grip: ${grip_angle}°, Wrist: ${wrist_angle}°)`,
+                height: 550,
+                margin: { l: 70, r: 70, t: 45, b: 150 },
+                title: `Demo Angle: ${grip_angle}° · Input Phase: ${wrist_angle}°`,
                 xaxis: { title: 'Time (s)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
                 yaxis: { title: 'Angular Acceleration (rad/s²)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
                 paper_bgcolor: 'white',
                 plot_bgcolor: 'white',
                 font: { family: 'Arial', size: 12 },
                 showlegend: true,
-                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' }
+                legend: { x: 0, y: -0.25, orientation: 'h', bgcolor: 'white' }
             };
 
             document.getElementById('plot-title').textContent = 'Angular Acceleration vs Time';
@@ -925,6 +939,7 @@
                 traces.push({
                     x: phi_sweep,
                     y: accel_alpha_ratios,
+                    yaxis: 'y2',
                     name: 'Accel_α ratio (rad/s²)/(N·m)',
                     line: { color: 'red', width: 1.5, opacity: 0.7 }
                 });
@@ -933,34 +948,41 @@
                 traces.push({
                     x: phi_sweep,
                     y: accel_gamma_ratios,
+                    yaxis: 'y2',
                     name: 'Accel_γ ratio (rad/s²)/(N·m)',
                     line: { color: 'blue', width: 1.5, opacity: 0.7 }
                 });
             }
 
-            // Mark current wrist angle
-            const currentIdx = phi_sweep.findIndex(p => Math.abs(p - wrist_angle) < 0.6);
-            if (currentIdx >= 0 && showTransmission) {
+            // Evaluate the marker at the requested phase, not a nearby sampled point.
+            const currentRatio = universalJointTransmissionRatio(
+                wrist_angle * Math.PI / 180, theta_grip_rad).tau_ratio;
+            if (showTransmission) {
                 traces.push({
                     x: [wrist_angle],
-                    y: [tau_ratios[currentIdx]],
-                    name: `Current wrist angle (${wrist_angle}°)`,
+                    y: [currentRatio],
+                    name: `Current Input Phase (${wrist_angle}°)`,
                     mode: 'markers',
                     marker: { color: 'lime', size: 12, symbol: 'circle' }
                 });
             }
 
             const layout = {
-                height: 400,
-                margin: { l: 50, r: 15, t: 30, b: 40 },
-                title: `Universal Joint Transmission vs Wrist Deviation Angle (Grip=${grip_angle}°)`,
-                xaxis: { title: 'Wrist Deviation Angle (degrees)' },
-                yaxis: { title: 'Transmission Ratio' },
+                height: 550,
+                margin: { l: 70, r: 70, t: 45, b: 150 },
+                title: `Demo Angle: ${grip_angle}°`,
+                xaxis: { title: 'Input Shaft Phase (degrees)' },
+                yaxis: { title: 'Dimensionless Ratio' },
+                yaxis2: {
+                    title: 'Acceleration Gain (rad/s²)/(N·m)',
+                    overlaying: 'y', side: 'right', showgrid: false,
+                    visible: showAccelAlpha || showAccelGamma
+                },
                 paper_bgcolor: 'white',
                 plot_bgcolor: 'white',
                 font: { family: 'Arial', size: 12 },
                 showlegend: true,
-                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
+                legend: { x: 0, y: -0.25, orientation: 'h', bgcolor: 'white' },
                 shapes: [{
                     type: 'line',
                     x0: wrist_angle,
@@ -973,7 +995,7 @@
                 grid: { show: true, alpha: 0.3 }
             };
 
-            document.getElementById('plot-title').textContent = 'Transmission Ratio vs Wrist Deviation Angle';
+            document.getElementById('plot-title').textContent = 'Transmission Ratio vs Input Shaft Phase';
             Plotly.newPlot('plot', traces, layout, { responsive: true, displayModeBar: true });
         }
 
@@ -1223,7 +1245,7 @@
             const accel_alpha = I_alpha > 1e-6 ? torque_alpha / I_alpha : 0;
             const accel_gamma = I_gamma > 1e-6 ? torque_gamma / I_gamma : 0;
 
-            const wrist_label = wrist_angle > 0 ? 'radial' : (wrist_angle < 0 ? 'ulnar' : 'neutral');
+            const wrist_label = wrist_angle > 0 ? 'positive' : (wrist_angle < 0 ? 'negative' : 'zero');
 
             const container = document.getElementById('model-info');
             container.textContent = '';
@@ -1231,7 +1253,7 @@
             const createInfoItem = (title, lines) => {
                 const div = document.createElement('div');
                 div.className = 'info-item';
-                const h4 = document.createElement('h4');
+                const h4 = document.createElement('h3');
                 h4.textContent = title;
                 div.appendChild(h4);
                 lines.forEach(line => {
@@ -1250,8 +1272,8 @@
             };
 
             container.appendChild(createInfoItem('Current Parameters', [
-                { strong: 'Grip Angle (θ_grip):', text: `${grip_angle}°` },
-                { strong: 'Wrist Deviation Angle (φ):', text: `${wrist_angle}° (${wrist_label} deviation)` }
+                { strong: 'Demo Angle (θ):', text: `${grip_angle}°` },
+                { strong: 'Input Shaft Phase (φ):', text: `${wrist_angle}° (${wrist_label} phase)` }
             ]));
 
             container.appendChild(createInfoItem('Transmission Ratios', [
@@ -1260,8 +1282,8 @@
             ]));
 
             container.appendChild(createInfoItem('Torque Distribution (at mean input torque)', [
-                { strong: 'Torque to α-axis (higher MOI):', text: `${torque_alpha.toFixed(4)} N·m (${(Math.abs(Math.sin(theta_grip_rad))*100).toFixed(1)}% of transmitted)` },
-                { strong: 'Torque to γ-axis (lowest MOI):', text: `${torque_gamma.toFixed(4)} N·m (${(Math.abs(Math.cos(theta_grip_rad))*100).toFixed(1)}% of transmitted)` }
+                { strong: 'Torque to α-axis (chosen alpha inertia):', text: `${torque_alpha.toFixed(4)} N·m (${(Math.abs(Math.sin(theta_grip_rad))*100).toFixed(1)}% component amplitude; not an energy share)` },
+                { strong: 'Torque to γ-axis (chosen gamma inertia):', text: `${torque_gamma.toFixed(4)} N·m (${(Math.abs(Math.cos(theta_grip_rad))*100).toFixed(1)}% component amplitude; not an energy share)` }
             ]));
 
             container.appendChild(createInfoItem('Angular Acceleration (at mean torque)', [
@@ -1270,11 +1292,11 @@
             ]));
 
             container.appendChild(createInfoItem('Model Assumptions', [
-                { text: '• Universal joint (Hooke/Cardan) kinematics' },
-                { text: '• Rigid body model' },
-                { text: '• Power conservation (P = τω)' },
-                { text: '• Constant grip angle during motion' },
-                { text: '• Wrist angle represents radial/ulnar deviation' }
+                { text: '• Fixed supported shafts: θ sets bend and a separate synthetic projection' },
+                { text: '• Alpha is transverse grip inertia; gamma is an illustrative half of alpha' },
+                { text: '• Ideal quasistatic torque ratio: no coupling storage, losses or support work' },
+                { text: '• Fixed-phase gain traces and scalar responses; no swing or face integration' },
+                { text: '• φ is input shaft phase; a requested 90° bend is numerically clipped to 89°' }
             ]));
         }
     </script>

@@ -10,7 +10,7 @@ import streamlit as st
 def configure_page() -> None:
     """Configure the Streamlit page metadata."""
     st.set_page_config(
-        page_title="Enhanced Wrist Universal Joint Model",
+        page_title="Cardan and Torque Projection Demonstration",
         page_icon="🏌️",
         layout="wide",
         initial_sidebar_state="expanded",

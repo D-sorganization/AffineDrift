@@ -309,8 +309,8 @@ def _build_parameter_group(
     left_column.setContentsMargins(0, 0, 0, 0)
 
     grip_layout, widgets.grip_slider, widgets.grip_textbox = _build_angle_section(
-        title="Grip Angle θ<sub>grip</sub>:",
-        info_text="0° = parallel to fingers, 90° = perpendicular to fingers",
+        title="Bend/Projection Angle θ:",
+        info_text="Synthetic bend/projection angle; 90° bend is evaluated at 89°",
         minimum=0,
         maximum=90,
         initial_value=_DEFAULT_GRIP_ANGLE_DEG,
@@ -322,8 +322,8 @@ def _build_parameter_group(
     left_column.addLayout(grip_layout)
 
     wrist_layout, widgets.wrist_slider, widgets.wrist_textbox = _build_angle_section(
-        title="Wrist Deviation Angle φ:",
-        info_text="+ values = radial deviation, - values = ulnar deviation",
+        title="Input Shaft Phase φ:",
+        info_text="Input shaft phase, not anatomical wrist motion",
         minimum=-60,
         maximum=60,
         initial_value=_DEFAULT_WRIST_ANGLE_DEG,
@@ -460,7 +460,7 @@ def _build_plot_controls_group(
     plot_type_combo = QComboBox()
     suppress_wheel_on_widgets(plot_type_combo)
     plot_type_combo.addItems(
-        ["Torque", "Angular Acceleration", "Transmission Ratio vs Wrist Angle"]
+        ["Torque", "Angular Acceleration", "Transmission Ratio vs Input Phase"]
     )
     plot_type_combo.currentTextChanged.connect(callbacks.update_plot_type)
     widgets.plot_type_combo = plot_type_combo
@@ -600,6 +600,14 @@ def build_main_widget(callbacks: UiCallbacks) -> tuple[QWidget, UiWidgets]:
     main_layout = QVBoxLayout(main_widget)
     main_layout.setSpacing(15)
 
+    scope_label = QLabel(
+        "Cardan and Torque Projection Demonstration: fixed supported shafts and "
+        "synthetic angles, not a calibrated wrist model. The historical hand sketch "
+        "does not supply the Cardan geometry or a grip recommendation."
+    )
+    scope_label.setWordWrap(True)
+    main_layout.addWidget(scope_label)
+
     top_bar = QHBoxLayout()
     top_bar.addStretch()
     doc_btn = QPushButton("📘 Model Documentation & Mathematics")
@@ -610,7 +618,7 @@ def build_main_widget(callbacks: UiCallbacks) -> tuple[QWidget, UiWidgets]:
     top_bar.addStretch()
     main_layout.addLayout(top_bar)
 
-    diagram_group = QGroupBox("Forearm-Hand-Club Diagram")
+    diagram_group = QGroupBox("Historical Sketch (Not Cardan Kinematics)")
     diagram_layout = QVBoxLayout()
     diagram_canvas = DiagramCanvas(
         grip_angle_deg=_DEFAULT_GRIP_ANGLE_DEG,

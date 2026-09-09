@@ -28,10 +28,11 @@ def _compute_i_alpha(
     club_length_m: float,
     cg_distance_m: float,
 ) -> float:
-    """Compute the total moment of inertia about the shaft axis (I_alpha).
+    """Compute transverse grip-point inertia for a thin rod and point head.
 
-    Uses the thin-rod formula for the shaft and the point-mass formula for
-    the clubhead.
+    Both components lie along the shaft in this approximation. The rotation
+    axis passes through the grip and is perpendicular to the shaft. This
+    formula cannot determine inertia about the shaft's longitudinal axis.
 
     Args:
         m_head_kg: Clubhead mass in kilograms.
@@ -62,7 +63,8 @@ def calculate_moments_of_inertia(
         shaft_weight_g: Shaft weight in grams.
         club_length_m: Total club length in meters.
         cg_distance_m: Distance from grip to clubhead center of mass in meters.
-        i_gamma_ratio: Ratio of I_gamma to I_alpha. Defaults to 0.5 (ref: Jorgensen 1994).
+        i_gamma_ratio: User-selected illustrative ratio of I_gamma to I_alpha.
+            The compatibility default 0.5 is not a measured club property.
 
     Returns:
     -------
@@ -87,7 +89,15 @@ def universal_joint_transmission_ratio(
     phi_rad: float,
     delta_rad: float,
 ) -> tuple[float, float]:
-    """Calculate transmission ratios for a universal (Hooke/Cardan) joint.
+    """Calculate fixed-bend Cardan speed and ideal quasistatic torque ratios.
+
+    The phase convention is psi = atan2(cos(delta)*sin(phi), cos(phi)),
+    continued over revolutions. Differentiating gives dpsi/dphi, without a
+    square root. Torque reciprocity assumes negligible joint energy storage
+    and losses, fixed shaft supports and power-conjugate shaft torques.
+    This one-DOF driveshaft mechanism is not a calibrated two-DOF wrist model.
+    Finite bends beyond MAX_DELTA_DEGREES are clipped for legacy demo callers;
+    their output describes the clipped angle, not the requested geometry.
 
     Args:
     ----
@@ -101,7 +111,10 @@ def universal_joint_transmission_ratio(
             - tau_ratio: τ_out / τ_in (torque transmission ratio).
 
     """
-    # Avoid singularities at delta = 90°
+    if not np.isfinite(phi_rad) or not np.isfinite(delta_rad):
+        raise ValueError("Cardan angles must be finite")
+
+    # Legacy display limit; the 90-degree mechanism is outside this model.
     if np.abs(delta_rad) > np.radians(MAX_DELTA_DEGREES):
         delta_rad = np.sign(delta_rad) * np.radians(MAX_DELTA_DEGREES)
 
@@ -110,7 +123,7 @@ def universal_joint_transmission_ratio(
     sin_phi = np.sin(phi_rad)
 
     # Angular velocity ratio: ω_out/ω_in
-    denominator = np.sqrt(1.0 - sin_delta**2 * sin_phi**2)
+    denominator = 1.0 - sin_delta**2 * sin_phi**2
     omega_ratio = cos_delta / denominator
 
     # Torque ratio: τ_out/τ_in = 1/(ω_out/ω_in) from power conservation
@@ -123,7 +136,11 @@ def distribute_torque_by_grip_angle(
     torque_transmitted: float | np.ndarray[Any, Any],
     theta_grip_rad: float,
 ) -> tuple[float | np.ndarray[Any, Any], float | np.ndarray[Any, Any]]:
-    """Distribute transmitted torque to club axes based on grip angle.
+    """Resolve a torque vector onto two orthogonal illustrative axes.
+
+    This preserves vector magnitude, not energy by itself. Neither axis is
+    automatically a face-angle or speed axis; that needs an orientation and
+    inertia model. The angle is a coordinate projection, not a grip diagnosis.
 
     Args:
     ----
@@ -133,8 +150,8 @@ def distribute_torque_by_grip_angle(
     Returns:
     -------
         A tuple containing:
-            - torque_alpha: Torque to higher MOI axis (N·m).
-            - torque_gamma: Torque to lowest MOI axis (N·m).
+            - torque_alpha: Sine component (N·m).
+            - torque_gamma: Cosine component (N·m).
 
     """
     torque_alpha = torque_transmitted * np.sin(theta_grip_rad)

@@ -15,7 +15,10 @@ INTERNAL_DEPLOY_DIRECTORIES = (
     Path("articles/tangent-hyperplane-contraction"),
     Path("articles/tangent-hyperplane-articles/Drafts_Original_Articles"),
 )
-INTERNAL_DEPLOY_FILES = (Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes.html"),)
+INTERNAL_DEPLOY_FILES = (
+    Path("articles/tangent-hyperplane-articles/Tangent_Hyperplanes.html"),
+    Path("content/wrist-as-universal-joint/Wrist_Universal_Claude.html"),
+)
 LEGACY_MATH_POLYFILL = re.compile(
     r"\s*<script\s+src=[\"']https://cdnjs\.cloudflare\.com/polyfill/v3/"
     r"polyfill\.min\.js\?features=es6[\"']></script>\s*",

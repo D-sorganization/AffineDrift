@@ -24,10 +24,8 @@ import pytest
             "service-worker.js",
             "/script.js",
         ),
-        (
-            "content/wrist-as-universal-joint/Wrist_Universal_Claude.html",
-            "script.js",
-        ),
+        # The wrist companion became a static reading guide in #4299 and
+        # needs no site runtime. Its no-script contract is checked below.
         # The inverse_dynamics_article.html companion became a static reading
         # guide in #4291. It needs no site runtime or JavaScript to follow its
         # PDF/article links, so it no longer belongs in this runtime-load list.
@@ -48,3 +46,13 @@ def test_runtime_files_do_not_reference_legacy_script(relative_path, legacy_snip
     content = path.read_text(encoding="utf-8")
     assert legacy_snippet not in content
     assert "js/main.js" in content
+
+
+def test_wrist_reading_guide_needs_no_script_runtime() -> None:
+    """The static guide exposes usable article and print links without scripts."""
+    content = Path("content/wrist-as-universal-joint/Wrist_Universal_Claude.html").read_text(
+        encoding="utf-8"
+    )
+    assert "<script" not in content.lower()
+    assert 'href="Wrist_Universal_Claude.pdf"' in content
+    assert 'href="https://affinedrift.com/articles/wrist-universal-joint.html"' in content
