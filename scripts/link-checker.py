@@ -228,7 +228,31 @@ def main() -> None:
     )
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
     parser.add_argument("--file", help="Check specific file")
+    parser.add_argument(
+        "--site-gate",
+        action="store_true",
+        help="Run the cross-page site gate (#3899): link resolution, related coverage, orphans, path style, categories",
+    )
     args = parser.parse_args()
+
+    if args.site_gate:
+        from src.tools.site_link_gate import run_site_gate
+
+        root = Path(args.root)
+        report = run_site_gate(root)
+        failures = 0
+        for check, entries in report.items():
+            if not entries:
+                continue
+            print(f"ERRORS ({check}):", file=sys.stderr)
+            for entry in entries:
+                print(f"  ERROR {entry}", file=sys.stderr)
+            failures += len(entries)
+        if failures:
+            print(f"\n{failures} site gate errors", file=sys.stderr)
+            return 1
+        print("Site gate passed!")
+        return 0
 
     root_dir = args.root
 

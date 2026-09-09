@@ -191,6 +191,8 @@ class CatalogGenerator:
 title: "Programming Companion Catalog"
 description: "{desc}"
 page-layout: full
+categories:
+- models
 ---
 
 ```{{=html}}
@@ -306,6 +308,8 @@ page-layout: full
         return f"""---
 title: "Engines and Runtime Support"
 description: "Physics solvers, support tiers, and runtime environments supported by UpstreamDrift"
+categories:
+- models
 ---
 
 {self._notice_markdown()}
@@ -354,6 +358,8 @@ description: "Physics solvers, support tiers, and runtime environments supported
         return f"""---
 title: "Programs and Models Directory"
 description: "Authoritative inventory of 70 UpstreamDrift simulation programs, solvers, and models"
+categories:
+- models
 ---
 
 {self._notice_markdown()}
@@ -382,6 +388,8 @@ description: "Authoritative inventory of 70 UpstreamDrift simulation programs, s
         return f"""---
 title: "Feature Parity Matrix"
 description: "{desc}"
+categories:
+- models
 ---
 
 {self._notice_markdown()}
@@ -451,6 +459,8 @@ not validation.
         return f"""---
 title: "Governed Workflows and Verification Tasks"
 description: "{desc}"
+categories:
+- models
 ---
 
 {self._notice_markdown()}
@@ -489,6 +499,8 @@ description: "{desc}"
         return f"""---
 title: "Companion Provenance and Cryptographic Digests"
 description: "Exact-commit provenance, generator versions, and cryptographic input digests"
+categories:
+- models
 ---
 
 {self._notice_markdown()}

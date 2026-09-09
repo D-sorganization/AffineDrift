@@ -49,7 +49,7 @@ categories:
 
 ## Scope and Intent
 
-The companion article, [The Physics of the Rolling Putt](putting-roll-models.qmd), derives the roll model itself: skid, the five-sevenths transition, the stimpmeter deceleration map, slope as a gravity component, and the capture bound at the hole. This article is about **turning that model into software**: the representational choices a green simulator must make, the numerical machinery that integrates the model on a real surface, the stochastic layer that separates a physics demo from a useful predictor, and a plain statement of what the project's own implementation does and does not contain.
+The companion article, [The Physics of the Rolling Putt](putting-roll-models.html), derives the roll model itself: skid, the five-sevenths transition, the stimpmeter deceleration map, slope as a gravity component, and the capture bound at the hole. This article is about **turning that model into software**: the representational choices a green simulator must make, the numerical machinery that integrates the model on a real surface, the stochastic layer that separates a physics demo from a useful predictor, and a plain statement of what the project's own implementation does and does not contain.
 
 The survey is organised around the three decisions every green simulator takes, whether or not its authors noticed taking them:
 
@@ -60,12 +60,12 @@ The survey is organised around the three decisions every green simulator takes, 
 ::: {.callout-note}
 ## Conventions
 
-Frames and constants follow the [roll-model article](putting-roll-models.qmd): $x$ along the intended start line, $y$ up, $z$ right; ball and hole dimensions are the openly published equipment and Rules specifications; stimp $S$ maps to rolling deceleration $a = 5.49/S$ m/s². Claims about specific software below are confined to this project's own repositories, which are public and linkable; commercial simulators are discussed only in terms of the modelling choices any implementation must make, since their internals are not publicly documented and this site does not cite what cannot be verified.
+Frames and constants follow the [roll-model article](putting-roll-models.html): $x$ along the intended start line, $y$ up, $z$ right; ball and hole dimensions are the openly published equipment and Rules specifications; stimp $S$ maps to rolling deceleration $a = 5.49/S$ m/s². Claims about specific software below are confined to this project's own repositories, which are public and linkable; commercial simulators are discussed only in terms of the modelling choices any implementation must make, since their internals are not publicly documented and this site does not cite what cannot be verified.
 :::
 
 ## 1. The Ball Model: A Hybrid ODE With Two Phases and an Event
 
-Strip the [roll-model derivation](putting-roll-models.qmd) to its computational skeleton and what remains is a **hybrid dynamical system** — two smooth vector fields separated by a discrete transition:
+Strip the [roll-model derivation](putting-roll-models.html) to its computational skeleton and what remains is a **hybrid dynamical system** — two smooth vector fields separated by a discrete transition:
 
 **Skid phase** (contact point sliding at $\mathbf{u} = \mathbf{v} - \omega R\,\hat{\mathbf v}_{\text{spin}}$):
 
@@ -123,9 +123,9 @@ With $\mathbf s(\mathbf x)$ in hand, the simulator's deterministic loop is compl
 
 The deterministic machine of §1–§2 answers "what would this putt do on the modelled surface". It cannot answer "what fraction of well-struck putts go in", because the gap between those questions is precisely the unmodelled variability: launch execution noise, surface structure below mesh resolution, and slow environmental drift. Three stochastic treatments appear in simulation practice, in increasing order of ambition:
 
-**Input dispersion (execution noise).** Perturb launch speed and start line with small zero-mean errors and propagate each sample through the deterministic model. This is a direct transplant of the Monte Carlo methodology used elsewhere on this site for [swing-parameter variation studies](../models/models.qmd): the model is the function, the stroke errors are the input distribution, and make probability is the pushforward measure of the capture set. It requires no new physics, and it already reproduces the dominant structure of real make-rate curves — in particular the interaction between pace dispersion and the speed-dependent effective hole width $b_{\max}(v)$: aggressive pace narrows the target *and* widens the miss cost simultaneously.
+**Input dispersion (execution noise).** Perturb launch speed and start line with small zero-mean errors and propagate each sample through the deterministic model. This is a direct transplant of the Monte Carlo methodology used elsewhere on this site for [swing-parameter variation studies](../models/models.html): the model is the function, the stroke errors are the input distribution, and make probability is the pushforward measure of the capture set. It requires no new physics, and it already reproduces the dominant structure of real make-rate curves — in particular the interaction between pace dispersion and the speed-dependent effective hole width $b_{\max}(v)$: aggressive pace narrows the target *and* widens the miss cost simultaneously.
 
-**Parameter noise (surface statistics).** Let the friction constants and the slope field carry spatial noise — $a(\mathbf x)$ and $\mathbf s(\mathbf x)$ as random fields with short correlation lengths — representing footprints, repair marks, mowing bands, and the general granularity of living turf. The physical footprint of such noise is well defined even where its parameters are not: perturbations act on the trajectory in proportion to the *remaining time to the hole*, so late-path noise deflects the ball more than early-path noise for a given amplitude, and slow-arriving putts integrate more surface noise precisely when they are most capturable. That trade-off — dying speed maximises effective hole width but also maximises exposure to surface noise — is the honest formulation of the pace-past-the-hole folklore discussed in the [roll-model article](putting-roll-models.qmd), and it only exists in a model that carries a stochastic layer at all.
+**Parameter noise (surface statistics).** Let the friction constants and the slope field carry spatial noise — $a(\mathbf x)$ and $\mathbf s(\mathbf x)$ as random fields with short correlation lengths — representing footprints, repair marks, mowing bands, and the general granularity of living turf. The physical footprint of such noise is well defined even where its parameters are not: perturbations act on the trajectory in proportion to the *remaining time to the hole*, so late-path noise deflects the ball more than early-path noise for a given amplitude, and slow-arriving putts integrate more surface noise precisely when they are most capturable. That trade-off — dying speed maximises effective hole width but also maximises exposure to surface noise — is the honest formulation of the pace-past-the-hole folklore discussed in the [roll-model article](putting-roll-models.html), and it only exists in a model that carries a stochastic layer at all.
 
 **Directional bias (grain).** Grass with a lie direction resists rolling anisotropically: deceleration is larger into the grain than down-grain, and a cross-grain component deflects the ball independently of gravity. Structurally this is a small modification — $a$ becomes a function of the angle between $\hat{\mathbf v}$ and a grain field $\hat{\mathbf g}(\mathbf x)$ — but calibrating the anisotropy honestly requires paired stimpmeter readings with and against grain on the actual turf, and generic constants are folklore until so measured. The model slot exists; the public data to fill it does not.
 
@@ -135,7 +135,7 @@ A dispersion study is only as honest as its input distributions, and the reporti
 
 ## 4. What Our Implementation Contains
 
-The putting vertical of the project's [Tools golf suite](https://github.com/D-sorganization/Tools) implements the model of §1–§2 as specified by the [roll-model derivation](putting-roll-models.qmd), as part of the broader shared-tools putting simulation program:
+The putting vertical of the project's [Tools golf suite](https://github.com/D-sorganization/Tools) implements the model of §1–§2 as specified by the [roll-model derivation](putting-roll-models.html), as part of the broader shared-tools putting simulation program:
 
 - **Hybrid skid–roll ODE** with the event-detected five-sevenths transition, stimp-parameterised rolling deceleration, and the static-friction stopping condition — with the skid initial condition taken from a low-speed putter impact model (loft-dominated, near-zero launch spin).
 - **Slope and break** as in-plane gravity components over the surface model, including the runaway-grade check for hole and start positions.
@@ -156,16 +156,16 @@ This list is maintained deliberately in public view: each item is a falsifiable 
 
 ## 5. Where This Sits on the Site
 
-The putting material now forms a closed loop with the impact-mechanics corpus. The [impact article](impact-mechanics-and-ball-flight.qmd) establishes the collision physics and the face-dominance of the start line; the [reference-point article](reference-point-problem.qmd) explains why delivered direction must name its reference point — a caution that applies verbatim to putter deliveries, where a degree of start-line error is a missed three-metre putt; the [rotation-induced-spin supplement](rotation-induced-spin.qmd) derives the sphere impulse partition whose surface-side twin is the skid phase; the [roll-model article](putting-roll-models.qmd) carries that partition across the turf to the hole; and this article turns the assembled physics into software with a stated error budget. The unifying habit is the same one the [technology section](../pages/technology.qmd) applies to instruments: say what is measured, what is derived, and what is assumed — and keep the three lists separate.
+The putting material now forms a closed loop with the impact-mechanics corpus. The [impact article](impact-mechanics-and-ball-flight.html) establishes the collision physics and the face-dominance of the start line; the [reference-point article](reference-point-problem.html) explains why delivered direction must name its reference point — a caution that applies verbatim to putter deliveries, where a degree of start-line error is a missed three-metre putt; the [rotation-induced-spin supplement](rotation-induced-spin.html) derives the sphere impulse partition whose surface-side twin is the skid phase; the [roll-model article](putting-roll-models.html) carries that partition across the turf to the hole; and this article turns the assembled physics into software with a stated error budget. The unifying habit is the same one the [technology section](../pages/technology.html) applies to instruments: say what is measured, what is derived, and what is assumed — and keep the three lists separate.
 
-Two companions round out the loop from the putter side: [secondary-axis stability](secondary-axis-stability.qmd) constrains the inertial design of the delivery state this software simulates, and the [strokes-gained critique](strokes-gained-limitations.qmd) prices what the simulated shots are worth in score terms.
+Two companions round out the loop from the putter side: [secondary-axis stability](secondary-axis-stability.html) constrains the inertial design of the delivery state this software simulates, and the [strokes-gained critique](strokes-gained-limitations.html) prices what the simulated shots are worth in score terms.
 
 ## References
 
-- Companion derivation: [The Physics of the Rolling Putt](putting-roll-models.qmd) — all physical constants and closed forms used here, with their assumption ledger.
+- Companion derivation: [The Physics of the Rolling Putt](putting-roll-models.html) — all physical constants and closed forms used here, with their assumption ledger.
 - Project repositories: [D-sorganization/Tools](https://github.com/D-sorganization/Tools) (putting vertical; shared-tools putting simulation suite); [D-sorganization/rate-of-closure-explorer](https://github.com/D-sorganization/rate-of-closure-explorer) (the dual-implementation parity pattern).
 - R&A and USGA. *Rules of Golf* and *Equipment Rules* — hole and ball specifications; USGA *Stimpmeter Instruction Booklet* — the green-speed measurement the deceleration map calibrates against.
 
 ---
 
-*Implementation companion to [The Physics of the Rolling Putt](putting-roll-models.qmd).*
+*Implementation companion to [The Physics of the Rolling Putt](putting-roll-models.html).*

@@ -162,3 +162,43 @@ find . -name "*.md" -o -name "*.qmd"
 - [ ] Integration with Quarto render process
 - [ ] Reporter output formats (JSON, SARIF)
 - [ ] Performance: Parallel URL validation
+
+## Site Gate (Cross-Page Link Validation, #3899)
+
+`--site-gate` extends the checker into the maintainability lock for the
+Cross-Article Linking Program (#3896). Run from the repository root:
+
+```bash
+PYTHONPATH=. python scripts/link-checker.py --site-gate --root .
+```
+
+Checks (all fail CI on any violation not in the committed baseline):
+
+- **broken-links** — every relative `.html`/`.qmd`/asset link in rendered
+  content sources resolves. Include-aware: content spliced in via
+  `{{< include >}}` resolves relative to the *including* page (the bug class
+  that shipped the monograph figure-path defects, #3906). Rendered `.html`
+  targets may map back to `.qmd`/`.md` sources listed in the Quarto render
+  list.
+- **path-style** — internal links must be bare or parent-relative `.html`;
+  root-absolute (`/...`) and `.qmd` link extensions are rejected.
+- **related-coverage** — every rendered content page carries the canonical
+  Related Articles component (#3897) with ≥ 3 resolving internal links.
+  Book-chapter interiors and index/hub pages are exempt.
+- **orphans** — every rendered page has in-degree ≥ 1 from content pages,
+  nav (`_quarto.yml`), or index/hub pages.
+- **categories** — every rendered content page carries a YAML block-list
+  `categories:` front matter whose values are all in the controlled
+  vocabulary (`config/categories.yml`, #3898).
+
+### Baseline
+
+Pre-existing Related-Article gaps live in `tests/link_gate_baseline.json`
+(exact error strings). The gate is fail-closed: any violation not in the
+baseline fails CI. As related-coverage work lands (#3900, #3901, #3905),
+remove the corresponding baseline entries in the same PR.
+
+### Exit Codes
+
+Same semantics as the reference checker: `0` pass, `1` critical
+site-gate/reference errors.

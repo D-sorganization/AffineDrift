@@ -1,5 +1,30 @@
 # Agent Handoff — AffineDrift
 
+## Cross-Article Linking Gate: #3898 / #3899
+
+- PR #4302 (branch `bot/3898-3899-link-gate`) adds `config/categories.yml`
+  (15-category controlled vocabulary) applied as canonical YAML block-list
+  `categories:` front matter to every rendered content page (195 pages; book
+  chapters exempt), plus the C3 site gate in
+  `src/tools/site_link_gate.py` + `src/tools/site_page_scan.py` wired as
+  `scripts/link-checker.py --site-gate` and a CI step in
+  `.github/workflows/link-checker.yml`.
+- The gate is green on main state: 0 broken links, 0 path-style violations,
+  0 orphans, 0 unknown categories. Fixes shipped along the way: generated
+  critique-annotation routes made parent-relative
+  (scripts/generate_claim_critique_ledger.py), monograph chapter
+  `data/<experiment>/figures/` paths corrected to `figures/`,
+  companion-chapter workbench links, and ~50 stale `.qmd`/root-absolute
+  links normalized.
+- Pre-existing Related-Article gaps (106 pages) are enumerated in
+  `tests/link_gate_baseline.json`; shrink it when #3900/#3901/#3905 land.
+- Still open from the 34-issue wave-2 backlog: #3898/#3899 close via PR
+  #4302; #3900/#3901 implementable next (lease claim:claude active);
+  #3905 (book bridges), #4025-#4029 (COMP-B), #4031/#4032 (C10/C11),
+  TRUST-AUDIT #4054-#4061 + #4021 depend on provider evidence or large
+  editorial sweeps; #4299 held by codex lease until 2026-09-09T01:19Z;
+  #4253/#4255 remain evidence-gated (Tools #5068, UpstreamDrift #9700).
+
 ## Rate-of-Closure Release Cross-Link
 
 - Branch `bot/roc-release-article-update`: `articles/green-simulation.qmd` §4

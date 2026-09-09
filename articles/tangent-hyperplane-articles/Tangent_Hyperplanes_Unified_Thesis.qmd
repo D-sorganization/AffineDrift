@@ -21,6 +21,8 @@ format:
 execute:
   echo: false
 bibliography: references.bib
+categories:
+- tangent-space
 ---
 
 ::: {.callout-warning}
@@ -346,7 +348,7 @@ At an equilibrium, a differentiable nonlinear system has a linear first variatio
 
 A $C^2$ cost has a second-order Taylor model. Its linear term vanishes at an unconstrained stationary minimum, but the Hessian may be singular or zero: $\ell(x)=x^4$ has no nonzero quadratic leading term. Along a general nominal trajectory, retain cost gradients and state-input cross derivatives rather than assuming each stage is at a minimum.
 
-Along a dynamically feasible moving reference, time-varying LQR propagates a value approximation backward from the terminal cost. Solving independent equilibrium Riccati equations at each instant is a different design. The finite-horizon recursion, nonlinear rollout, input constraints, and stability argument must be checked separately. See the [reviewed optimal-control chapter](../The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd).
+Along a dynamically feasible moving reference, time-varying LQR propagates a value approximation backward from the terminal cost. Solving independent equilibrium Riccati equations at each instant is a different design. The finite-horizon recursion, nonlinear rollout, input constraints, and stability argument must be checked separately. See the [reviewed optimal-control chapter](../The_Geometry_of_Motion/quarto/ch05_optimal_control.html).
 
 #### Gain Scheduling Requires Its Own Check
 
@@ -1532,7 +1534,7 @@ With active input limits, solve the appropriate constrained quadratic subproblem
 
 ### Convergence Requires More Than Positive Input Curvature
 
-Positive $Q_{uu}$ makes a particular local control minimization well posed. It does not alone prove convergence of the nonlinear iteration. Local quadratic Newton convergence requires a nonsingular reduced Hessian, sufficient derivative regularity, a close initialization, and eventually accepted full steps. DDP convergence results depend on the particular algorithm and assumptions. iLQR's Hessian approximation does not generally give superlinear convergence. See the [worked control chapter](../The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd) for the precise distinction.
+Positive $Q_{uu}$ makes a particular local control minimization well posed. It does not alone prove convergence of the nonlinear iteration. Local quadratic Newton convergence requires a nonsingular reduced Hessian, sufficient derivative regularity, a close initialization, and eventually accepted full steps. DDP convergence results depend on the particular algorithm and assumptions. iLQR's Hessian approximation does not generally give superlinear convergence. See the [worked control chapter](../The_Geometry_of_Motion/quarto/ch05_optimal_control.html) for the precise distinction.
 
 Use nonlinear rollout, a sufficient-decrease acceptance rule, bounded line search, regularization, and a declared failure exit. If regularization changes the computed policy, evaluate that actual policy in the quadratic model rather than substituting an unregularized Schur-complement formula indiscriminately. Constraints require a compatible constrained subproblem.
 
