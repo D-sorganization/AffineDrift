@@ -315,3 +315,5 @@ import path; invoking it as a module passes without changing its source.
 No new scientific assertions or equation changes were introduced by the replay.
 Both complete original swing-plane/launch editions were read while these
 checks ran; their fixes belong to the next focused issue, not this PR.
+
+Ready PR #4306 is open. Replay coverage is 92.65% with the new site-link modules included. Four unrelated generated outputs changed during validation (dates, formatting and hashes of pre-existing inputs); those local generated changes were restored, preserving their protected-main versions. Every push hook passed. Protected PR checks and publication remain.
