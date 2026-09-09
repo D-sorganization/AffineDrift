@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4313 · Interdisciplinary Golf Synthesis and Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4313 (epic #4009)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4314 (open)
+- **Branch:** `fix/4313-interdisciplinary-synthesis`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch13_interdisciplinary.tex`, `articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.qmd`, `articles/The_Physics_of_Golf/figures/interdisciplinary_*`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `css/interdisciplinary-synthesis.css`, `tests/test_interdisciplinary_synthesis_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/interdisciplinary-review.md`, `docs/development/technical-review/build_interdisciplinary_figures.py`
+- **Started:** 2026-09-09
+- **Last verified:** 2026-09-09 (`58c2419a`)
+- **Summary:** Both editions now connect mechanics, finite-horizon control, impedance, materials, impact and evidence using independently checked examples, two figures and eight worked answers. Local regression passes 4,974 tests with 92.65% coverage; complete affected print/web review and all normal hooks pass.
+- **Next step:** Resolve the protected checks and review for PR #4314.
+
 ### DL-#3904 · Series navigation and tangent-space cluster integration
 
 - **State:** in_review

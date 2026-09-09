@@ -272,15 +272,16 @@ class TestAuditBookPhysicsOfGolf:
         # #4278 replaces one unpaired TikZ schematic with two paired figures.
         # #4303 adds two paired computational-brain model diagrams.
         # #4307 replaces an unpaired plane sketch with two checked figure pairs.
+        # #4313 replaces one unpaired synthesis map with two checked figure pairs.
         assert res.chapters_with_latex_figures == 28
-        assert res.total_latex_figures == 32
+        assert res.total_latex_figures == 33
         # #4160, #4161, and #4164 replace diagrams with shared print/web images.
         # #4283 replaces the spine schematic with a shared evidence/model diagram.
-        assert res.total_latex_tikz == 22
-        assert res.total_latex_includegraphics == 10
-        assert res.total_latex_fig_labels == 32
-        assert res.total_quarto_figures == 11
-        assert res.missing_figures_count == 21
+        assert res.total_latex_tikz == 21
+        assert res.total_latex_includegraphics == 12
+        assert res.total_latex_fig_labels == 33
+        assert res.total_quarto_figures == 13
+        assert res.missing_figures_count == 20
         assert res.is_in_full_parity is False
 
 
@@ -362,7 +363,7 @@ class TestCLI:
         data = json.loads(captured.out)
         assert data["book_name"] == "The_Physics_of_Golf"
         assert data["total_chapters"] == 34
-        assert data["total_latex_figures"] == 32
+        assert data["total_latex_figures"] == 33
 
     def test_cli_check_mode_fails_when_discrepancy(self) -> None:
         repo_root = Path(__file__).resolve().parent.parent
