@@ -321,16 +321,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-0035 · Impact Dynamics and Acoustics Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** https://github.com/D-sorganization/AffineDrift/issues/4255; parent4253; initial4254/4258 merged
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4356 (ready)
-- **Branch:** docs/4255-contact-force-regularity
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4356 (merged)
+- **Branch:** docs/4255-impact-handoff
 - **Paths:** `articles/_includes/impact-acoustics.qmd`, `references/impact-acoustics.bib`, `docs/development/impact-acoustics/`, SPEC and turnover
 - **Started:** 2026-09-07
-- **Last verified:** 2026-09-10 (b14f1a392e446211da3ca402951f7aa147495922; publication checkpoint SELF):5229PASS/29SKIP/132deselected,79.29% coverage; five focused and131 content checks pass; citations/title/xrefs and pinned Quarto article render pass. Actual-route browser tree verifies new section/equation/citations; full-site/protected review remains. Source/JUnit/render identities and access limits are in FORCE_REGULARITY_RESULTS.json and FORCE_REGULARITY_REVIEW.md.
+- **Last verified:** 2026-09-10 (963867d7c78e544799ef4b6070eb1779e64c0452; turnover SELF): PR4356 merged after all 15 checks passed, including full-site browser/accessibility qualification. Original local receipts remain source-identified in FORCE_REGULARITY_RESULTS.json.
 - **Summary:** Extends the existing theory with contact-force regularity, finite-jump versus impulse, spectral-tail derivation and externally forced candidate-law limits; retains source-identified synthetic status and distinct physical/radiation/perception requirements.
-- **Next step:** Qualify protected site and review checks on PR4356.
+- **Next step:** Resume open #4255 evidence-gated synthesis after reviewed Tools/consumer results; canonical HANDOFF records the checkpoint and outstanding physical/acoustic work.
 
 ### DL-0001 · Audit Quality Fixes
 
