@@ -198,3 +198,7 @@ artifact 10144974541 were inspected. That successor also verifies the retained
 fascia/DCR corrections after their original run's isolated CSS HTTP 503 and
 cancelled retry. Continue the affine/constraint chapters and queued DCR critiques
 #4340. The corpus remains unfinished.
+
+## Verified Publication
+
+Exact deployment 34460868604 succeeded at squash 688dda81c3f0c38759d9994cbc0d5c0cd0478bd2. Independently inspected all 956 records across 239 routes in live artifact 10146654751: all HTTP 200 and passed, no DOM failures, no retries, and all 239 axe-scanned records have no violations. DL-#4347 is shipped.

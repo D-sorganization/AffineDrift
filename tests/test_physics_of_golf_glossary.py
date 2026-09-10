@@ -71,4 +71,8 @@ def test_ecrb_anatomical_expansion_and_grf_units() -> None:
 
     assert "extensor carpi radialis brevis (ECRB)" in ch17_qmd.read_text(encoding="utf-8")
     assert "extensor carpi radialis longus (ECRB)" not in ch17_qmd.read_text(encoding="utf-8")
-    assert "ground reaction forces ($1300$--$1800$ N)" in ch07_qmd.read_text(encoding="utf-8")
+    constraint_text = ch07_qmd.read_text(encoding="utf-8")
+    assert "Ground reaction forces are measured in newtons" in constraint_text
+    assert "944.8" in constraint_text
+    assert "not a typical golfer value" in constraint_text
+    assert "ground reaction forces ($1300$--$1800$ N)" not in constraint_text
