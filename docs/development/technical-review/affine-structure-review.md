@@ -233,4 +233,4 @@ The actual CI log identifies only the renamed tracked constant.
 
 ## Protected Merge
 
-All checks passed at final head 18c3840c58ef1a151f7288813fd612176dcbfeff. PR #4350 squash-merged as 60d0298826880ca24580908127e8032565407216. Exact live verification remains pending; implementation and reading evidence above are retained.
+All checks passed at final head 18c3840c58ef1a151f7288813fd612176dcbfeff. PR #4350 squash-merged as 60d0298826880ca24580908127e8032565407216. Exact deployment 34466267456 succeeded. All 956 records across 239 routes in live artifact 10148726944 were independently inspected: HTTP 200 and pass, no failures, retries or axe violations. Implementation and reading evidence above are retained; DL-#4349 is shipped.

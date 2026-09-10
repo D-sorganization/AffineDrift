@@ -18,31 +18,44 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4353 · Complete Double-Pendulum Derivation and Task Mechanics
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4353 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** pending
+- **Branch:** `fix/4353-double-pendulum-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch03_double_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/double_pendulum_verified.*`, `tests/test_double_pendulum_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/double-pendulum-review.md`, `docs/development/technical-review/build_double_pendulum_figures.py`, `docs/development/technical-review/double-pendulum-numerics.json`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (working tree based on `266bad5919a53b5b998de54ac027ef6e635bb05c`; root 5,243 passed, coverage 79.29%; focused 37, content 131, static 34, titles 636, mypy 91; full paired reading and final browser heading correction)
+- **Summary:** Corrects COM versus hinge inertia, gravity signs, Coriolis rate factors, coupled input response, physical interface power and endpoint curvature. Six worked answers and primary-source boundaries distinguish anatomical interpretation, task sensitivity and chaos. Audit records independent derivations, numerical checks and rendering defects found by complete reading.
+- **Next step:** Commit validated chapter, replay onto verified constraint squash and open a protected PR.
+
 ### DL-#4351 · Complete Constraint Forces, Compatible Dynamics and Power
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4351 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4352 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4352 (merged; live verification pending)
 - **Branch:** `fix/4351-constraint-forces-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch07_constraint_forces.tex`, `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/constraint_forces_verified.*`, `tests/test_constraint_forces_rigor.py`, `tests/test_physics_of_golf_glossary.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/constraint-forces-review.md`, `docs/development/technical-review/build_constraint_forces_figures.py`, `docs/development/technical-review/constraint-forces-numerics.json`
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-10 (`004676b40889c7dee980fefd3ebf039663f40a0c`; validated tree preserved on affine squash replay; normal commit/push hooks passed; complete paired reading; root 5,229 passed and 79.29% configured coverage; focused 55, content 131, static 34, titles 636, mypy 91; style, links and 14 actual-route browser records pass)
 - **Summary:** Rebuilds acceleration compatibility, rank/scaling, mass-metric projection, moving-contact power, physical segment energy, actuation/reaction coupling and plastic capture/release. Six worked answers and independently checked examples distinguish mechanical coupling from muscle and coaching inference. Full audit preserves derivation and evidence limits.
-- **Next step:** Verify protected checks and squash merge for PR #4352.
+- **Next step:** Verify exact deployment 34470677053 for constraint squash b5362af0005c8ae1ad00e81390e9151991157155.
 
 ### DL-#4349 · Complete Affine Structure, Drift and Optimality
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4349 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4350 (merged; live verification pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4350 (merged; published)
 - **Branch:** `fix/4349-affine-structure-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch05_affine_structure.tex`, `articles/The_Physics_of_Golf/quarto/ch05_affine_structure.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/affine_structure_verified.*`, `tests/test_affine_structure_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/affine-structure-review.md`, `docs/development/technical-review/build_affine_structure_figures.py`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`60d0298826880ca24580908127e8032565407216`, protected squash; all checks passed; implementation audit and full reading retained)
+- **Last verified:** 2026-09-10 (`60d0298826880ca24580908127e8032565407216`; exact deployment 34466267456 succeeded; all 956 records/239 routes in artifact 10148726944 independently inspected, HTTP 200 and pass with no failures/retries or axe violations)
 - **Summary:** Re-derives complete coupled drift, inverse inertia and constrained vector fields; separates capacity, realized input, energy and finite-time task authority. Seven worked answers and a reproduced figure replace unsupported phase/optimality claims. Full print/web reading corrected conversion defects missed by layout checks; all 30 historical web destinations now verified. The audit records source limits, numerical derivations and failure history.
-- **Next step:** Inspect exact live publication evidence for affine squash 60d0298826880ca24580908127e8032565407216.
+- **Next step:** None for this chapter; preserve audit and continue corpus review.
 
 ### DL-#4347 · Complete Brain Control and Neuroscience Evidence
 

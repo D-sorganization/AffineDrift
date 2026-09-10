@@ -287,11 +287,11 @@ class TestAuditBookPhysicsOfGolf:
         # #4347 pairs functional control roles and a verified activation-response plot.
         # #4349 pairs a computed reduced drift field and proved optimal-control examples.
         # #4351 replaces the dimensionally incorrect hinge sketch with verified trajectories.
-        assert res.total_latex_tikz == 10
-        assert res.total_latex_includegraphics == 28
+        assert res.total_latex_tikz == 9
+        assert res.total_latex_includegraphics == 29
         assert res.total_latex_fig_labels == 38
-        assert res.total_quarto_figures == 29
-        assert res.missing_figures_count == 9
+        assert res.total_quarto_figures == 30
+        assert res.missing_figures_count == 8
         assert res.is_in_full_parity is False
 
 
