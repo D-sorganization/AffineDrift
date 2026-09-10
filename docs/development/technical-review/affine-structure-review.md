@@ -221,3 +221,12 @@ PR #4350 closes #4349; verify protected checks and exact publication next.
 The central development-log checker initially rejected SELF as a verifying SHA;
 the entry now names the implementation commit. Only pre-existing peer #3903/#3902
 metadata omissions remain. No hook or protection bypass was used.
+
+## Static CI Follow-Up
+
+PR #4350 static job 102824664610 rejected the gravity constant name at head
+83d9fd47. Renamed it to GRAVITY_M_S2 without changing its value or formulas.
+All 11 numerical/chapter regressions, focused code-quality, Ruff and Black pass.
+The unrestricted local quality scan also sees 174 findings in untracked scratch
+files; these are excluded from commits and absent from the clean CI checkout.
+The actual CI log identifies only the renamed tracked constant.

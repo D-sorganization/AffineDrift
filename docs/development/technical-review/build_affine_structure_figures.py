@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[3]
 FIGURES = ROOT / "articles/The_Physics_of_Golf/figures"
-GRAVITY = 9.81
+GRAVITY_M_S2 = 9.81
 MASS_FIRST, MASS_SECOND = 2.5, 0.4
 LENGTH_FIRST, COM_FIRST, COM_SECOND = 0.35, 0.175, 0.5
 INERTIA_FIRST, INERTIA_SECOND = 0.025, 0.03
@@ -32,15 +32,15 @@ def operators(q: np.ndarray, velocity: np.ndarray) -> tuple[np.ndarray, ...]:
         * np.sin(q[1])
         * np.array([-2 * velocity[0] * velocity[1] - velocity[1] ** 2, velocity[0] ** 2])
     )
-    distal = GRAVITY_SECOND * GRAVITY * np.sin(q[0] + q[1])
-    gravity = np.array([GRAVITY_FIRST * GRAVITY * np.sin(q[0]) + distal, distal])
+    distal = GRAVITY_SECOND * GRAVITY_M_S2 * np.sin(q[0] + q[1])
+    gravity = np.array([GRAVITY_FIRST * GRAVITY_M_S2 * np.sin(q[0]) + distal, distal])
     return mass, bias, gravity
 
 
 def locked_derivative(time: float, state: np.ndarray) -> np.ndarray:
     """Reduced q2=0 dynamics, with zero proximal input and ideal lock reaction."""
     inertia = A + D + 2 * B
-    restoring = GRAVITY * (GRAVITY_FIRST + GRAVITY_SECOND)
+    restoring = GRAVITY_M_S2 * (GRAVITY_FIRST + GRAVITY_SECOND)
     return np.array([state[1], -restoring * np.sin(state[0]) / inertia])
 
 
@@ -61,7 +61,7 @@ def locked_trajectory(refined: bool = False):
 def locked_energy(state: np.ndarray) -> np.ndarray:
     """Mechanical energy of the stationary-lock reduced system, in joules."""
     inertia = A + D + 2 * B
-    restoring = GRAVITY * (GRAVITY_FIRST + GRAVITY_SECOND)
+    restoring = GRAVITY_M_S2 * (GRAVITY_FIRST + GRAVITY_SECOND)
     return 0.5 * inertia * state[1] ** 2 - restoring * np.cos(state[0])
 
 
@@ -74,7 +74,7 @@ def minimum_energy_input(time: float | np.ndarray, rate: float) -> np.ndarray:
 def draw_phase(ax: plt.Axes) -> None:
     """Draw normalized directions and a computed reduced-system integral curve."""
     angles, rates = np.meshgrid(np.linspace(-1.2, 1.2, 13), np.linspace(-4, 4, 13))
-    restoring = GRAVITY * (GRAVITY_FIRST + GRAVITY_SECOND) / (A + D + 2 * B)
+    restoring = GRAVITY_M_S2 * (GRAVITY_FIRST + GRAVITY_SECOND) / (A + D + 2 * B)
     accelerations = -restoring * np.sin(angles)
     magnitude = np.hypot(rates, accelerations)
     nonzero = magnitude > 1e-12
