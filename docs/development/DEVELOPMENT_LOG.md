@@ -25,24 +25,24 @@ reachable from any live state and `abandoned` from `parked`.
 - **Issue:** #4336 (epic #4009; corpus #4021; Physics #4054)
 - **PR:** not created
 - **Branch:** `fix/4336-passive-impedance-rigor`
-- **Paths:** `articles/The_Physics_of_Golf/chapters/ch27_passive_distributed_control.tex`, `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd`, `docs/development/technical-review/passive-distributed-control-review.md`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch27_passive_distributed_control.tex`, `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/passive_damping_regimes.svg`, `articles/The_Physics_of_Golf/figures/passive_damping_regimes.pdf`, `tests/test_passive_distributed_control_rigor.py`, `docs/development/technical-review/passive-distributed-control-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`cbd611369542cb3c63a1b4bf171936e8b665867c`, complete original editions and 12 exercises; working-tree audit)
-- **Summary:** Confirmed double-counted state derivative, undefined drift percentages, incomplete stability/energy proofs, critical-damping error, neural bandwidth and impedance overclaims, and unsupported impact/coaching prescriptions. Primary source limits and independent derivation plan recorded; no canonical corrections or validation yet.
-- **Next step:** Finish primary reading and visual source checks, independently verify replacement examples, then correct both editions and exercises.
+- **Last verified:** 2026-09-10 (`0d214594c8b7e0a4d2431c8a09d471adaa761d72`, parent plus validated implementation working tree)
+- **Summary:** Complete paired correction connects intrinsic mechanics, maintained activation, distributed feedback, input counterfactuals, energy and finite-time outcomes. Proper storage/tracking proofs, independently checked damping/delay examples, one reproducible figure and all 12 worked answers. Root discovery 5,155 passes; final tests-directory run 5,111 passes, 92.68% coverage; final focused 36, content 131, 34 static contracts, title/style/type/link and complete affected PDF/web QA pass. Initial conversion/BibTeX failures and bounded primary evidence documented. Peer impact work and immutable publication excluded.
+- **Next step:** Commit and replay only passive commits onto protected shaft squash de57acae49ea206d0232ecf4de8a7f9cd0b5da03 for PR delivery.
 
 ### DL-#4333 · Flexible Shaft Dynamics and Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4333 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4335 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4335 (merged and published)
 - **Branch:** `fix/4333-flexible-shaft-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch11_flexible_shaft.tex`, `articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.qmd`, `docs/development/technical-review/flexible-shaft-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`b58e86af6bfbbc7d7ea3d8d22e88150452e09b65`, validated implementation, replayed onto protected main; normal hooks passed)
-- **Summary:** Both editions corrected with explicit beam assumptions, modal normalization, coupled input mechanics, energy accounting and bounded fitting evidence; two reproducible figures and six worked answers. Root 5,143 passes / 29 skips; content, 34 static contracts, 636 title checks, style/type/link checks and complete affected print/web QA pass. Initial failures and residual shared accessibility finding documented. Peer impact/acoustic work and immutable publication are excluded.
-- **Next step:** Verify protected PR #4335 checks, normal auto-merge and exact publication.
+- **Last verified:** 2026-09-10 (`de57acae49ea206d0232ecf4de8a7f9cd0b5da03`, exact live artifact 10137269737; all 956 records / 239 routes passed)
+- **Summary:** Both editions corrected with beam assumptions, modal normalization, coupled input mechanics, energy accounting and bounded fitting evidence; two reproducible figures and six worked answers. Root 5,143 passes / 29 skips; content, 34 static contracts, 636 title checks, style/type/link checks and complete affected print/web QA pass. Protected deploy 34437073824 passed; all live records and 239 axe routes passed without failures/retries. Peer impact/acoustic work and immutable publication excluded.
+- **Next step:** Complete; continue the corpus review.
 
 ### DL-#4331 · Muscle Force Models, Tendon Energy and Control Inference
 

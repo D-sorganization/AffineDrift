@@ -1,651 +1,514 @@
 ---
-description: "In the motor-control chapters we encountered the bandwidth problem: the brain has limited computational resources, slow feedback..."
+pagetitle: "Passive and Distributed Control: Mechanics, Feedback and Stability"
+description: "Connect impedance, muscle activation, distributed feedback, counterfactuals and stability through explicit energy balances, worked examples and bounded evidence."
+css:
+  - ../../../css/articulated-body.css
+  - ../../../css/computational-brain.css
+bibliography: ../golf_physics.bib
 ---
 
-# Passive and Distributed Control: A Self-Organizing Swing Model {#sec-passive_distributed_control}
+# Passive and Distributed Control: Mechanics, Feedback and Stability {#sec-passive_distributed_control}
+[]{#ch-passive_distributed_control}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ::: {.callout-note}
 ## What You'll Learn
 
-Most people think the brain controls the golf swing by sending constant commands to every muscle: "tighten this, relax that, rotate here, extend there." But this view ignores a fundamental problem: the brain is slow and its bandwidth is limited. This chapter reveals an alternative---one that explains why expert golfers look effortless while novices look tense.
+[]{#lab-intro_passive}
+A golfer's response to a disturbance depends on more than a corrective command. The initial posture, muscle activation, tendon strain, club flexibility and contact conditions already influence what moves next. Sensory feedback then changes the response on its own time scales. The useful question is how these mechanisms cooperate to deliver the club while resisting relevant disturbances.
 
-The body does not need to control the swing by micromanaging every degree of freedom. A plausible alternative is that the nervous system sets mechanical conditions---including stiffness, damping, and baseline tension of muscles and tendons---before and during the swing. Those tissue properties can help resist perturbations and reduce the need for high-bandwidth feedback. This is the passive-control perspective; its golf-specific claims require empirical support from measured swings.
-
+This chapter distinguishes mechanical passivity, muscle impedance and distributed neural feedback. It derives what each model can establish, explains how to measure the distinctions, and separates those results from hypotheses about expert golf. Apparent effortlessness is an observation to explain, not a measurement of passive contribution.
 :::
 
-## The Computational Problem: Why the Brain Can't Micromanage
+## Time Scales and the Distribution of Control {#the-computational-problem-why-the-brain-cant-micromanage}
+[]{#sec-comp_problem}
 
-In the motor-control and motor-learning chapters, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback loops (100--300 ms latency), and a maximum processing rate around 10--40 bits per second. The golf swing involves roughly 20 degrees of freedom, each of which must be controlled. If the brain tried to compute independent torques for each joint at the rate of swing execution (1000 Hz or faster near impact), it would require simultaneous processing of about 20,000 decisions per second.
+Conscious instructions, descending motor commands, spinal processing, muscle activation and mechanical deformation are different processes. Their rates cannot be compared by treating a joint sample as a conscious decision. Multiplying a model's joint count by its numerical sampling frequency gives a sample count; it does not establish the brain's information capacity or the computational cost of biological control. A behavioral information-rate estimate is not a universal ceiling on neural activity.
 
-
-This exceeds the brain's capacity by orders of magnitude. Yet skilled golfers execute repeatable swings that hit the ball in the same location, with the same contact pattern, swing after swing. How?
-
-::: {.callout-warning}
-## The Central Control Myth
-**The Myth:** The brain is a master computer that calculates the optimal torques for every muscle at every millisecond of the swing.
-
-**The Alternative:** The nervous system can use mechanical impedance---muscle stiffness, damping, and co-contraction patterns---to configure the body into a more self-stabilizing system. During execution, tissue mechanics can handle part of the moment-to-moment stabilization burden.
-:::
-
-The alternative is to treat impedance---the mechanical properties of muscles and joints---as part of the control strategy. Once these properties are set or modulated, passive mechanical effects can carry part of the stabilization load. The muscles and tendons can be modeled partly as springs and dampers, but the real swing still includes active control, sensory feedback, and subject-specific variability.
-
-## Passive Mechanical Systems: Springs and Dampers
-
-::: {.callout-note}
-## Passive Control
-
-A system exhibits *passive control* when it achieves stability and converges to a desired trajectory *without active feedback or real-time control signals*. Stability emerges from the mechanical properties of the system itself---springs, dampers, and mass distribution.
-
-:::
-
-
-Consider a simple example: a pendulum hanging at rest. It is passively stable. If you displace it, gravity and the support structure automatically create a restoring force. The pendulum swings back to equilibrium without any external controller. The source of stability is potential energy stored in the gravitational field and kinetic energy dissipated by air resistance.
-
-Similarly, a spring-mass-damper system is passively stable:
-$$
-m\ddot{x} + c\dot{x} + kx = 0.
-$$
-If displaced, the spring force $kx$ restores the mass toward equilibrium, and the damper $c\dot{x}$ dissipates kinetic energy. With the right parameters, the system oscillates back to rest. No external controller is needed.
-
-
-::: {.callout-note}
-## Building Stability Into Hardware
-
-Think of a skilled golfer's body as a pre-tuned spring-mass-damper system. Before the swing, the golfer's muscles are pre-tensioned to create the right amount of stiffness (via the "spring" component) and damping. This is not voluntary muscular effort during the swing---it's the *baseline condition* set before the swing begins.
-
-Once set, this mechanical system can be partly self-correcting. If a perturbation moves the club, muscle and tendon stiffness can resist some of that displacement. If the downswing is slightly faster than average, damping can dissipate some extra energy. This reduces the required feedback burden; it does not eliminate active neural control.
-
-This is why expert golfers can swing with apparent ease. They are not working harder; they have tuned the mechanical system better.
-
-:::
-
-## Impedance Control: The Brain's Real Job
-
-In the 1980s, the control theorist Neville Hogan proposed a radical insight: the brain does not control *position* and does not control *force*. Instead, it controls *impedance*.[@Hogan:1984; @Hogan:1985]
-
+Prediction, learned feedforward commands, intrinsic mechanics and feedback can operate together. A command prepared before movement can continue to require neural activity and muscle energy during movement. Automatic execution does not mean zero active input. Conversely, an immediate force response to imposed stretch need not await a newly generated neural correction.
 
 ::: {.callout-important}
-## Mechanical Impedance
-Mechanical impedance is the relationship between a position perturbation and the restoring force. Formally, for a joint, impedance is characterized by:
-$$
-\bm{\tau}_{\mathrm{resist}} = -\bm{K}(\bm{q} - \bm{q}_0) - \bm{D}\dot{\bm{q}},
-$$
-where $\bm{K}$ is the stiffness matrix, $\bm{D}$ is the damping matrix, $\bm{q}$ is the joint position, $\bm{q}_0$ is the reference position, and $\dot{\bm{q}}$ is the joint angular velocity.
+## Separate Preparation From Execution
 
-This equation assumes the desired velocity is zero ($\dot{\bm{q}}_d = 0$), appropriate for posture maintenance. During the swing, the full impedance control law includes a feedforward term and desired trajectory:
-$$\bm{\tau} = \bm{\tau}_{\mathrm{ff}}(t) - \bm{K}(\bm{q} - \bm{q}_d(t)) - \bm{D}(\dot{\bm{q}} - \dot{\bm{q}}_d(t))$$
-where $\bm{\tau}_{\mathrm{ff}}$ is the feedforward torque computed from the internal model, and $\bm{q}_d(t)$, $\dot{\bm{q}}_d(t)$ are the desired trajectory and velocity. The brain sets all three---feedforward torque, desired trajectory, and impedance gains---before the downswing begins.
-
-**High impedance:** stiff, resistant to perturbation, low compliance.
-**Low impedance:** soft, compliant, allows motion.
+[]{#lab-myth_central}
+A useful model can place a learned policy above a fast neuromechanical system. This is a modeling architecture, not proof that all gains are selected once, that the cortex is uninvolved during the downswing, or that every joint receives an independent millisecond instruction. Compare architectures using measured inputs, responses and prediction error.
 :::
 
-The impedance parameters $\bm{K}$ and $\bm{D}$ are not commands the brain sends moment-to-moment. They are *properties set by muscle co-contraction*. When antagonist muscles (agonist and antagonist) both activate, they pull against each other, creating stiffness. More co-contraction $\rightarrow$ higher $\bm{K}$ and $\bm{D}$ $\rightarrow$ stiffer, more damped joints [@Bosch:2015].
+In a primary study of humans and rhesus monkeys, Pruszynski and colleagues found evidence for multi-joint feedback processing through primary motor cortex at roughly 50 ms after a mechanical perturbation [@Pruszynski2011Feedback]. This establishes that fast feedback need not be exclusively spinal. It does not identify the controller of a golf swing or imply that a response triggered by ball contact can alter the preceding impact state.
 
-::: {.callout-important}
-## The Impedance Control Hypothesis
-The primary job of the motor cortex is not to compute torques but to *select the impedance profile* for the task at hand. Once impedance is set, the passive mechanical system executes the motion with minimal real-time oversight.
-:::
-
-### The Impedance Profile of the Golf Swing
-{#subsec:impedance_profile}
-
-
-Different phases of the golf swing require different impedance profiles. Understanding this reveals why expert golfers move the way they do.
-
-
-| **Phase** | **Proximal Impedance** | **Distal Impedance** | **Purpose** |
-| --- | --- | --- | --- |
-| Address | Moderate | Moderate | Stable stance, ready position |
-| Backswing | Low | Low | Smooth, fluid motion, low effort |
-| Transition | **Rapid Increase** | Increasing | "Load" the system, store elastic energy |
-| Downswing | **High** | Decreasing | Drive from the large muscles, release at the small joints |
-| Impact | Very High | Very High | Resist collision forces, may help distribute impact loads |
-| Follow-through | Decreasing | Decreasing | Decelerate smoothly, dissipate energy |
-
-
-The critical distinction is the *proximal-to-distal impedance gradient*. Look at the downswing:
-- **High proximal impedance:** The torso, hips, and shoulders are stiff. The large muscles can transfer power without deforming.
-- **Low distal impedance:** The wrists and forearms are compliant. They release and accelerate under the inertial load of the proximal segments.
-
-
-This gradient is the physical signature of the kinetic chain. It allows energy to flow from large, powerful proximal segments to smaller, faster distal segments---a cascade that produces the high speed required at impact.
-
-The damping component of impedance---the $\bm{D}\dot{\bm{q}}$ term---is not merely a passive energy sink. As we explore in [Chapter 29](./ch29_joint_damping_friction.qmd#sec-joint_damping_friction), damping at each joint propagates through the mass matrix coupling to affect every other joint in the chain. The brain's choice of co-contraction level at one joint therefore has system-wide consequences for the dynamics of every other joint.
+## Passive Mechanical Systems: Springs and Dampers {#passive-mechanical-systems-springs-and-dampers}
+[]{#sec-passive_mechanics}
 
 ::: {.callout-note}
-## Why Novices Grip Too Hard
-A beginning golfer, anxious about controlling the club, sets *uniformly high impedance*---they grip tightly, tense the wrists, tense the shoulders. All joints are stiff, which is consistent with Bosch's description of novice movement strategies that freeze degrees of freedom and over-stabilize the system [@bosch2020agility; @Bosch:2015].
+## Mechanical Passivity
 
-This prevents the distal release. The wrists cannot accelerate because they are held rigid. The proximal muscles cannot unload their energy efficiently because the distal joints will not accept it. The result: a slow, tense, inefficient swing.
+[]{#lab-def_passive_control}
+Declare an input/output power port and a nonnegative storage function $S$. A mechanically passive model satisfies
 
-An expert golfer, by contrast, maintains high proximal impedance while actively *reducing* distal impedance during the downswing. This allows the whip---the distal segments accelerate and release after the proximal segments have done their work.
+$$
+S(t)-S(0)\leq\int_0^t \tau_{\mathrm{ext}}(s)\dot q(s)\,ds.
+$$
+
+It cannot deliver more mechanical energy through that port than it initially stores plus the energy supplied to it. Passivity is a work inequality; it is not a synonym for lack of consciousness, absence of neural feedback or convergence to a desired trajectory.
 :::
 
-## The Pre-Tuned System: Setting the Springs Before Execution
-{#sec-pretuned}
-
-Here is the key idea: *before the downswing begins*, the brain computes the *impedance parameters* and activates the muscles to set those parameters. Once set, the muscles maintain those stiffness and damping values throughout the swing.
-
-
-Mathematically, the control input changes from a time-varying torque signal $\bm{u}(t)$ to a set of fixed impedance parameters:
+For a fixed-base translational spring and damper,
 
 $$
-\{\bm{K}, \bm{D}, \bm{q}_0\} \quad \text{(set once before the swing)}
+m\ddot x+c\dot x+kx=F_{\mathrm{ext}},\qquad
+S=\frac12m\dot x^2+\frac12kx^2,
 $$
 
-During the downswing, the actual torque at each joint is then:
+with $m,k>0$ and $c\geq0$, differentiation gives
 
 $$
-\bm{\tau}(t) = -\bm{K}(\bm{q}(t) - \bm{q}_0) - \bm{D}\dot{\bm{q}}(t) + \bm{\tau}_{\mathrm{feedforward}}(t).
+\dot S=F_{\mathrm{ext}}\dot x-c\dot x^2.
 $$
 
+The spring can return stored energy; the damper dissipates it. With no input and no damping, motion can oscillate indefinitely. A damped pendulum near its downward equilibrium can converge, whereas its upright equilibrium can be unstable despite the same passive components. Storage, dissipation and stability require separate statements.
 
-The three terms break down as follows:
+::: {.callout-note}
+## What Mechanical Preparation Can Do
 
+[]{#lab-hardware_stability}
+Preparation changes the conditions under which a disturbance acts. At a declared activation and geometry, muscle-tendon mechanics can resist some imposed motions immediately. Maintaining activation still uses physiological resources. The response also depends on stretch direction, amplitude, velocity and history. A local spring approximation should not be extended to an entire swing without checking those dependencies.
+:::
 
-- **Spring term:** $-\bm{K}(\bm{q} - \bm{q}_0)$ is the restoring force when the joint deviates from the reference position $\bm{q}_0$. This term is *automatic*---it requires no neural computation during the swing.
-- **Damping term:** $-\bm{D}\dot{\bm{q}}$ is the energy dissipation when the joint moves. Again, automatic.
-- **Feedforward term:** $\bm{\tau}_{\mathrm{feedforward}}(t)$ is a pre-computed trajectory drive based on the desired swing pattern. This is computed once before the swing, not updated in real time.
+## Impedance as Part of Motion Control {#impedance-control-the-brains-real-job}
+[]{#sec-impedance_control}
 
+Hogan's impedance-control framework treats motion and mechanical interaction together. His 1985 manipulation paper explicitly includes both physical hardware and a real-time controller; it does not establish that the cortex controls impedance exclusively [@hogan1985impedance]. Earlier work examined coactivation of antagonist muscles as a way of modulating mechanical impedance [@Hogan:1984].
 
-Compare this to the traditional view:
+::: {.callout-note}
+## Specify the Mechanical Port
 
-
-**Traditional View**
-
-The brain computes $\bm{u}(t)$ at every millisecond:
-
-$$
-\begin{aligned}
-\text{Computational} &\text{ cost:} \\
-&\approx 20 \text{ DOF} \times 1000 \text{ Hz} \\
-&= 20{,}000 \text{ decisions/s}
-\end{aligned}
-$$
-
-Requires:
-- Fast forward models
-- Accurate state feedback
-- High-bandwidth neural communication
-
-
-Vulnerable to:
-- Latency
-- Noise
-- Model error
-
-
-**Impedance Control View**
-
-The brain computes impedance parameters once:
+[]{#lab-def_impedance}
+For a small rotational perturbation $e$ about a declared operating condition, a constant-coefficient teaching model is
 
 $$
-\begin{aligned}
-\text{Computational} &\text{ cost:} \\
-&\approx 40 \text{ parameters} \\
-&\text{ (20 stiffness + 20 damping)} \\
-&+ \text{pre-computed feedforward}
-\end{aligned}
+I\ddot e+D\dot e+Ke=\tau_{\mathrm{ext}}.
 $$
 
-Requires:
-- Coarse models (body morphology)
-- Proprioceptive feedback (low bandwidth)
-- Moderate bandwidth communication
+Here $I$ is rotational inertia, $K$ has units N m/rad, and $D$ has units N m s/rad. With zero initial perturbation, its dynamic stiffness and mechanical impedance are respectively
 
+$$
+\frac{\tau_{\mathrm{ext}}(s)}{e(s)}=Is^2+Ds+K,
+\qquad
+Z(s)=\frac{\tau_{\mathrm{ext}}(s)}{\dot e(s)}=Is+D+\frac{K}{s}.
+$$
 
-Robust to:
-- Small perturbations (spring restores)
-- Latency (pre-tuned system)
-- Noise (damping absorbs)
+The first is torque per angle; the second is torque per angular velocity. They differ by a factor of $s$. State the convention when comparing reports. A static stiffness number alone does not specify the full frequency-dependent response.
+:::
 
+Real joint response can include activation-dependent intrinsic muscle mechanics, passive tissues, tendon compliance, reflex feedback, inertia and device dynamics. The fitted components depend on the observation window. A matrix model must also retain cross-joint effects when they matter. A single label such as "high impedance" is incomplete without direction, frequency and operating state.
 
-The impedance control view reduces the brain's computational burden by orders of magnitude. The brain sets the conditions, and the pre-tuned mechanical system handles execution.
+For idealized opposing muscles with a constant moment arm $r$, net torque is $r(F_1-F_2)$. Increasing both forces equally can leave that torque unchanged while changing the local stiffness. If each muscle has positive local length stiffness $k_i$, the corresponding restoring joint stiffness in this simplified geometry is $r^2(k_1+k_2)$. Variable moment arms add geometric terms; tendon compliance changes the series response. This example explains why net torque cannot uniquely identify coactivation. It does not imply that stiffness and damping increase by the same factor or that coactivation has no metabolic cost.
+
+::: {.callout-important}
+## A Testable Impedance Hypothesis
+
+[]{#lab-princ_impedance}
+The nervous system may adjust mechanical response to the task's instability, uncertainty and costs. Test this with imposed perturbations and an identified response, while controlling for posture, mean force and movement. A plausible mechanism becomes stronger when it predicts a response that an alternative model does not.
+:::
+
+### The Impedance Profile of the Golf Swing {#the-impedance-profile-of-the-golf-swing}
+[]{#subsec-impedance_profile}
+
+There is no universal proximal-high, distal-low schedule established by the equations above. Different phases impose different objectives: preparation, transport, club delivery, collision and deceleration. Those objectives motivate measurements, not predetermined stiffness values. A phase-dependent response may reflect changing activation, geometry, feedback gains and shaft state simultaneously.
+
+Burdet and colleagues studied horizontal arm reaching in a robot-created divergent force field. Participants adapted endpoint stiffness geometry in the destabilized direction; the setup constrained the trunk and wrist, and the learning analysis used five naive participants. The stiffness estimate used the interval 120--180 ms after perturbation onset [@Burdet2001Impedance]. That measured response should not be described as purely immediate intrinsic tissue stiffness. The experiment supports task-dependent impedance adaptation, not a measured golf-phase prescription.
+
+::: {.callout-note}
+## Interpreting Grip Tension
+
+[]{#lab-novice_tension}
+A firm grip can change contact and muscle activation, but visible tension does not identify a joint's dynamic impedance. A compliant wrist can still experience substantial torque, and a stiff joint can move under sufficient load. Compare club delivery and measured response within a golfer before inferring that a particular grip pattern improves speed or control.
+:::
+
+## Preparation, Reference Motion and Power {#the-pre-tuned-system-setting-the-springs-before-execution}
+[]{#sec-pretuned}
+
+A commonly used torque model is
+
+$$
+\tau=\tau_{\mathrm{ff}}(t)-K(t)(q-q_d(t))-D(t)(\dot q-\dot q_d(t)).
+$$
+
+It specifies a feedforward drive and a response around a moving reference. It is a candidate controller or local approximation, not a physiological identity. Even if its parameters are prepared in advance, its time-varying command remains an input. Updating gains during execution, or through feedback, changes the model again.
+
+For $e=q-q_d$, the spring-like storage is $U_s=K(t)e^2/2$, giving
+
+$$
+\dot U_s=Ke\dot q-Ke\dot q_d+\frac12\dot K e^2.
+$$
+
+The second term accounts for motion of the reference; the third is parameter power. Holding a displaced spring while increasing its stiffness requires an energy source. For $e=0.1$ rad and $\dot K=20$ N m/(rad s), the parameter contribution is $0.1$ W. If $K=50$ N m/rad and $\dot q_d=0.2$ rad/s, the reference contribution is $-1$ W at the same error. The signs depend on the state and the prescribed change.
+
+A damper relative to a moving reference also exchanges power with that reference. Its torque on the joint is $-D(\dot q-\dot q_d)$, so power delivered to the joint is $-D(\dot q-\dot q_d)\dot q$. This need not be negative. Dissipation in the relative damper coordinate is $D(\dot q-\dot q_d)^2$; the reference supplies or receives the remaining power.
 
 ::: {.callout-tip}
-## Why Pre-Tuning Works
-Pre-tuning is effective because the golf swing is a *highly stereotyped, repeatable task*. The desired swing trajectory is similar from one execution to the next. The impedance parameters that worked last time will work again.
+## What Parameter Counts Establish
 
-If the task were novel or required real-time adaptation (e.g., hitting a moving target), pre-tuning alone would not suffice. But for the repeated, self-generated golf swing, pre-tuning is an excellent solution.
-
-This is why training and practice are so important: they allow the motor system to discover and *encode* the impedance parameters that work best for each golfer's body morphology and swing style.
+[]{#lab-constraint_pretuning}
+Twenty diagonal stiffnesses and twenty diagonal dampers give 40 scalar parameters. Two general symmetric $20\times20$ matrices instead have $2(20\cdot21/2)=420$ independent entries. Neither count includes a moving reference, a drive, muscle state or an estimator. Parameter count is not decisions per second, and dividing these quantities does not establish a neural speedup. Reduced models are useful when their predictions remain adequate for the chosen task.
 :::
 
-## Passive Control in the ZTCF Family Framework
-{#sec-passive_ztcf}
+## Passive Forces in the Forward Counterfactual {#passive-control-in-the-ztcf-family-framework}
+[]{#sec-passive_ztcf}
 
-Recall from [Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual) the Zero Torque Counterfactual (ZTCF) decomposition:
-
-$$
-\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}.
-$$
-
-The drift $f(\bm{x})$ represents the system's natural evolution without control. If you released the golfer's muscles, the arms would fall under gravity and Coriolis forces---this is the drift.
-
-How do passive impedance forces fit into this framework?
-
-
-If the golfer pre-sets muscle stiffness $\bm{K}$ and damping $\bm{D}$, these are *automatic forces*. They are not part of the feedforward control $G(\bm{x})\bm{u}$. Instead, they modify the *drift field itself*:
+Let $x=(q,v)$ and consider an ideal generalized-torque-input model
 
 $$
-\dot{\bm{x}} = f_{\mathrm{original}}(\bm{x}) + f_{\mathrm{impedance}}(\bm{x}) + G(\bm{x})\bm{u}_{\mathrm{feedforward}}.
+M(q)\dot v+h(q,v)=\tau_{\mathrm{imp}}(q,v)+B(q)u,
+\qquad \dot q=v.
 $$
 
-The impedance-augmented drift becomes:
+Then the additive impedance vector field is
 
 $$
-f_{\mathrm{impedance}}(\bm{x}) = \begin{bmatrix} \dot{\bm{q}} \\ -\bm{M}^{-1}(\bm{q})[\bm{K}(\bm{q}-\bm{q}_0) + \bm{D}\dot{\bm{q}}] \end{bmatrix}.
+f_{\mathrm{imp}}(x)=\begin{bmatrix}0\\M^{-1}(q)\tau_{\mathrm{imp}}(q,v)\end{bmatrix},
+\qquad
+\dot x=f_{\mathrm{bare}}(x)+f_{\mathrm{imp}}(x)+G(x)u.
 $$
 
-
-In this illustrative simulation summary, this means the ZTCF---the fraction of the motion explained by gravity, inertia, and Coriolis forces *alone*---increases dramatically when impedance is included. The original drift accounts for maybe 40--50\% of the swing. The impedance-augmented drift accounts for 70--80\% (estimated from simulation studies comparing ZTCF trajectories with and without pre-set impedance; experimental validation with EMG-derived stiffness profiles remains an active area of research).
+The zero in the top block matters: the bare field already contains $\dot q=v$. Adding another copy would double the kinematic velocity. Coupled inertia also means an impedance torque at one coordinate can alter accelerations elsewhere.
 
 ::: {.callout-note}
-## Bare Drift vs. Impedance-Augmented Drift
+## Declare What Is Held and What Is Zeroed
 
-
-**Bare ZTCF (gravity + inertia only):**
-- Represents a completely passive arm: muscles off, no co-contraction
-- Shows the trajectory a relaxed arm would follow
-- Explains $\sim40$--50\% of the actual swing
-- Unrealistic because muscles are never completely off
-
-
-**Impedance-Augmented ZTCF (gravity + inertia + preset stiffness + preset damping):**
-- Represents an arm with pre-set muscle tension and co-contraction
-- Shows the trajectory the arm follows with no additional muscular effort
-- Explains $\sim70$--80\% of the actual swing (estimated from simulation studies comparing ZTCF trajectories with and without pre-set impedance; experimental validation with EMG-derived stiffness profiles remains an active area of research)
-- Realistic because muscles are always at some baseline tone
-- Allows small feedforward corrections to fine-tune the motion
-
-
-The impedance-augmented drift is a much better predictor of the golfer's actual swing because it accounts for the muscle tension that is actually present.
-
+[]{#lab-drift_impedance}
+A forward zero-torque counterfactual (ZTCF) sets a specified active torque channel to zero from a declared initial state and integrates the resulting equations. Stored elastic energy and passive forces remain. If a maintained muscle controller is included in a closed-loop baseline, label that controller explicitly: zero additional command about this baseline is not zero muscle activation. In an excitation-driven model, zero excitation does not instantaneously erase activation or tendon strain.
 :::
 
-## Muscle Tone and Spinal Feedback
-{#sec-muscle_tone}
+An augmented closed-loop drift can be a useful comparison, but it is a different counterfactual from removing all modeled active torque. A feedback law depends on measured or estimated state; representing it inside an autonomous augmented model does not make it physiologically passive. Delays require history or an appropriate augmented realization. Counterfactual comparisons must retain the initial activation, deformation, velocity and contact conditions relevant to the chosen intervention.
 
-Even a "relaxed" muscle is not inert. It maintains baseline activity called *muscle tone*. This tone serves multiple purposes, and understanding it reveals how the body distributes control away from the brain.
+ZTCF denotes a counterfactual construction, not a fraction of the swing. If comparing trajectories, define an observable, time horizon, units, alignment and error statistic. A smaller trajectory error after adding fitted impedance does not uniquely identify the true mechanism or a percentage of motion caused by passive forces. It may also reflect additional fitting flexibility; evaluate prediction on held-out perturbations.
 
+## Muscle Tone and Distributed Feedback {#muscle-tone-and-spinal-feedback}
+[]{#sec-muscle_tone}
 
-### The Stretch Reflex Loop
-{#subsec:stretch_reflex}
+Resistance to imposed movement can contain non-neural tissue mechanics and ongoing neural activity. A relaxed instruction does not establish zero activation, and measurable resistance does not prove active contraction. Distinguish EMG, muscle force, short-range stiffness, tendon strain and the complete joint response; each measurement constrains a different part of the model.
 
-Skeletal muscles contain specialized sensory receptors called *muscle spindles*. These spindles detect stretch---the lengthening of the muscle. When a muscle is stretched:
+### The Stretch Reflex Loop {#the-stretch-reflex-loop}
+[]{#subsec-stretch_reflex}
 
-- Spindles fire (increase firing rate)
-- Sensory signals travel to the spinal cord (10--20 ms in this illustrative reflex timing budget)
-- Spinal circuits activate the motor neurons of the *same muscle*
-- Muscle contracts and resists the stretch
+Muscle spindles provide information affected by muscle length, velocity, history and fusimotor activity. The homonymous short-latency pathway includes spindle afferents exciting motor neurons to the same muscle. Actual limb responses also involve other muscles, spinal interneurons, descending modulation and longer pathways. It is not a set of independent identical controllers with one latency for every muscle.
 
+An intrinsic force response, an EMG response and a later change in force have different onset times. Neither an EMG latency nor a conscious reaction-time estimate can stand in for all of them. Rapid multi-joint responses involving cortex further weaken a simple contrast between "spinal reflex" and "slow conscious control" [@Pruszynski2011Feedback].
 
-In this illustrative reflex timing budget, this is called the *monosynaptic stretch reflex* because it involves only one synapse in the spinal cord. The latency is remarkably short: 20--30 ms. By contrast, conscious reflexes (routing through the brain) have latencies of 100--300 ms [@Kandel2013; @enoka2002neuromechanics].
+### Gamma Drive and Task-Dependent Sensitivity {#gamma-drive-configuring-the-reflex}
+[]{#subsec-gamma_drive}
 
-The stretch reflex is a *local, automatic, distributed controller*. Each muscle has its own feedback loop built into the spinal cord. The brain does not have to manage it.
+Alpha motor neurons innervate force-producing extrafusal fibers; gamma motor neurons act on intrafusal spindle fibers. They are spinal motor neurons influenced by descending and local circuitry, not two direct commands emitted by the motor cortex. Gamma activity helps tune spindle encoding; overall reflex gain also depends on afferent transmission, motor-neuron excitability, background activation and mechanics.
 
-### Gamma Drive: Configuring the Reflex
-{#subsec:gamma_drive}
-
-The brain does not bypass the stretch reflex. Instead, it *configures* the reflex sensitivity via *gamma motor neurons*. The motor cortex sends two types of commands:
-
-
-- **Alpha motor neurons** Innervate the main muscle fibers. They produce the primary contractile force.
-- **Gamma motor neurons** Innervate the spindle fibers themselves. They adjust the sensitivity of the stretch reflex.
-
-
-High gamma drive:
-- Increases spindle sensitivity
-- Makes the stretch reflex stronger
-- Creates a stiff, resistant muscle
-
-
-Low gamma drive:
-- Decreases spindle sensitivity
-- Weakens the stretch reflex
-- Creates a soft, compliant muscle
-
-
-Before the golf swing, the motor cortex sets the gamma drive for each muscle group. This determines the baseline stiffness and the sensitivity to perturbations. Once set, the spinal circuits handle the automatic response to perturbations.
-
-::: {.callout-note}
-## The Spinal Cord as a Distributed Controller
-The spinal cord is not just a cable transmitting messages from the brain to the muscles. It is a sophisticated control system in its own right.
-
-The stretch reflex is a feedback controller operating at the spinal level. The brain configures it (via gamma drive) but does not need to manage it moment-to-moment. If an external force perturbs the arm during the swing, the spinal circuits automatically adjust muscle tension to resist the perturbation.
-
-This helps explain why a golfer can often swing smoothly even if wind gusts occur mid-swing. The spinal reflexes help handle small perturbations automatically, without requiring conscious cortical involvement.
-:::
-
-## Self-Organization in the Kinetic Chain
-{#sec-self_organization}
-
-A properly pre-tuned kinetic chain exhibits remarkable emergent behaviors. These are not taught or controlled explicitly; they arise naturally from the mechanical properties and the physics of the system.
-
-
-### Energy Flow From Proximal to Distal
-{#subsec:energy_flow}
-
-In [Chapter 10](./ch10_energy_transfer.qmd#sec-energy_transfer), we saw that power flows from proximal segments (large muscles, high inertia) to distal segments (small muscles, low inertia). The mechanism is the inertial load on the distal joints.
-
-When the proximal joint rotates, the distal segment experiences a centripetal acceleration (and thus an inertial force) in the rotating frame. If the proximal impedance is high and the distal impedance is low, the distal segment will accelerate. The transfer of energy is a consequence of the impedance gradient and the rotational kinematics.
-
-
-This is not a controlled transfer. The brain does not send a command "transfer power to the forearm." Instead, by setting the impedance ratio (high proximal, low distal), the physics of the kinetic chain ensures that power flows naturally.
-
-### The Whip Effect: Emergent Distal Acceleration
-{#subsec:whip_effect}
-
-One of the most striking features of an expert golf swing is the whip: the distal segments accelerate rapidly, often reaching peak velocity *after* the proximal segments have decelerated.
-
-
-How does this happen? It is not because the brain sends a command to the wrists at the right moment. Instead:
-
-- The proximal joints (hips, torso) decelerate due to increasing impedance and muscle activation opposing the motion.
-- As the proximal joint torque decreases, the inertial load on the distal joint decreases.
-- With low distal impedance and decreasing proximal torque, the distal joint accelerates freely under the remaining inertial forces.
-- Peak distal velocity occurs when proximal velocity has nearly reached zero.
-
-
-This is a pure consequence of the kinetic chain kinematics and the impedance profile. It emerges automatically.
-
-::: {.callout-important}
-## Emergent Properties of Self-Organized Motion
-When the body is pre-tuned with the correct impedance profile, complex behaviors like the whip effect emerge without explicit neural control. The physics of the kinetic chain, combined with the preset mechanical properties, produces the desired motion automatically.
-
-This is the insight of the dynamical systems approach to motor control: *the brain does not compute the detailed trajectory; it computes the conditions under which the desired trajectory emerges from the physics*.
-:::
-
-### Impact Protection Through High Distal Impedance
-{#subsec:impact_protection}
-
-At impact, the club strikes the ball with a force of hundreds of kilograms. This force propagates back up the kinetic chain through the shaft and toward the hands.
-
-If the wrist and forearm impedance were low at impact, the force would propagate further up the chain. The golfer's arm and shoulder would decelerate more abruptly, which biomechanical reasoning suggests could increase stress on the elbow and shoulder joints.
-
-Instead, skilled golfers *increase* distal impedance at the moment of impact. The wrists become stiff, the forearms co-contract, and the hands grip firmly. This impedance barrier limits the propagation of impact force up the chain. The energy is dissipated locally at the wrist and hand, which may help distribute loads across the elbow and shoulder.
-
-
-A biomechanical hypothesis is that beginners who do not stiffen at impact may experience higher peak loads at the elbow and shoulder, potentially contributing to conditions such as lateral epicondylitis or rotator cuff stress. An expert, by automatically stiffening, distributes the impact force more broadly. This hypothesis is consistent with the mechanical analysis but has not been directly validated through controlled clinical studies.
-
-## Stability Analysis: Is the Swing Self-Correcting?
-{#sec-stability}
-
-How can we quantify whether a pre-tuned swing is self-correcting? The language of control theory offers a rigorous approach: *Lyapunov stability*.
-
-
-### The Lyapunov Function
-{#subsec:lyapunov}
-
-A *Lyapunov function* is a scalar-valued function $V(\bm{x})$ that measures "distance" from a desired state. If the Lyapunov function decreases along the system's trajectories, the system is stable: perturbations shrink and the system returns to the desired state.
-
-For a passively controlled system with stiffness $\bm{K}$, damping $\bm{D}$, and desired trajectory $\bm{q}_d(t)$, a natural Lyapunov function is the sum of kinetic and potential energy:
-
-$$
-V(\bm{q}, \dot{\bm{q}}) = \frac{1}{2}\dot{\bm{q}}^T \bm{M}(\bm{q}) \dot{\bm{q}} + \frac{1}{2}(\bm{q} - \bm{q}_d)^T \bm{K} (\bm{q} - \bm{q}_d).
-$$
-
-
-The first term is the kinetic energy. The second term is the "elastic potential energy" stored in the impedance (spring-like stiffness).
-
-Now, compute the time derivative along the trajectory:
-
-$$
-\dot{V} = \dot{\bm{q}}^T \bm{M} \ddot{\bm{q}} + \frac{1}{2}\dot{\bm{q}}^T \dot{\bm{M}} \dot{\bm{q}} + (\bm{q} - \bm{q}_d)^T \bm{K} \dot{\bm{q}}.
-$$
-
-Substituting the equation of motion $\bm{M}\ddot{\bm{q}} = -\bm{K}(\bm{q}-\bm{q}_d) - \bm{D}\dot{\bm{q}} + \text{other forces}$:
-
-$$
-\dot{V} = -\dot{\bm{q}}^T \bm{D} \dot{\bm{q}} + \text{other force terms}.
-$$
-
-If damping is sufficiently large, the term $-\dot{\bm{q}}^T \bm{D} \dot{\bm{q}}$ dominates. Since this term is negative (damping always dissipates energy), we have $\dot{V} < 0$.
-
-::: {.callout-important}
-## Passive Stability Condition
-If a linearized impedance-controlled model is locally accurate and the damping term dominates the neglected perturbation terms in a neighborhood, then:
-
-$$
-\dot{V} = -\dot{\bm{q}}^T \bm{D} \dot{\bm{q}} + \text{(small perturbation terms)} < 0.
-$$
-
-This supports a local Lyapunov-stability claim for the model. It does not by itself establish exponential return of a full golf swing under large perturbations, delayed feedback, contact changes, or parameter uncertainty.
-:::
-
-### Conditions for Self-Correction
-{#subsec:self_correction}
-
-For a modeled golf swing to show partly self-correcting behavior, three conditions should hold:
-
-- **Sufficient stiffness:** The spring constant $\bm{K}$ must be large enough that restoring forces overcome small perturbations. Too soft, and the swing drifts off course.
-- **Sufficient damping:** The damping matrix $\bm{D}$ must dissipate perturbation energy. Without damping, perturbations oscillate indefinitely.
-- **Correct equilibrium:** The reference position $\bm{q}_0$ must be chosen so the spring's natural rest position aligns with the desired swing trajectory. Misalignment introduces systematic errors.
-
-
-Elite golfers may approximate all three conditions more closely than novices. In that case, damping can absorb part of an over-speed perturbation and passive stiffness can resist part of a displacement. That is a robustness hypothesis, not a proof that every elite swing self-corrects.
-
-Novices often fail at condition 1 or 2. A weak golfer may have insufficient co-contraction, leading to low stiffness and a drifting swing. A tense golfer may have excessive co-contraction, leading to high damping and a slower, more rigid swing.
-
-::: {.callout-note}
-## Why Expert Swings Look Effortless
-The paradox is striking: an expert golfer swings with apparent ease, while a novice looks tense and strains.
-
-The resolution may be that an expert has a better-matched impedance profile, so fewer large active corrections are needed once the swing starts. Passive tissues and fast local feedback then carry more of the stabilization burden.
-
-A novice, without practice, has not yet learned the optimal impedance parameters. They compensate by increasing overall muscle tension---trying to muscle the swing under voluntary control. This looks effortful because it *is* effortful.
-
-With training, the novice's motor system may discover a better impedance profile. The swing can then become more automatic, more robust, and apparently easier.
-:::
-
-## Training and the Discovery of Impedance
-{#sec-training}
-
-If passive control is so effective, how do golfers learn it? The answer lies in motor learning and practice.
-
-
-### The Pre-Training Problem
-{#subsec:pre_training}
-
-A beginning golfer has little practice-derived knowledge about the impedance parameters that work for their body. They face a high-dimensional search problem: what combination of muscle stiffness, damping, and co-contraction produces the desired swing?
-
-Without knowledge, they often default to high impedance everywhere---the "grip it and rip it" approach. This is suboptimal but safe: high stiffness prevents wild motions and keeps the club on a repeatable path.
-
-### Practice as Impedance Search
-{#subsec:practice_impedance}
-
-Through repetitive practice, the motor system gradually discovers the impedance parameters that work. This is a slow process, often involving:
-
-- **Coarse tuning:** The golfer learns rough impedance levels (low/medium/high) for each phase and body region.
-- **Fine tuning:** The motor system refines the parameters based on feedback (visual, proprioceptive, kinesthetic).
-- **Skill consolidation:** With sufficient repetition, the impedance parameters become fixed (automatic) in the motor program. The golfer no longer has to think about them.
-
-
-The brain's role is to *search for and encode* the impedance parameters, not to compute them in real time during execution.
-
-### Strength and Speed Training
-{#subsec:strength_speed}
-
-Understanding impedance reframes how we think about golf training.
-
-**Strength training** increases the maximum stiffness and damping the muscles can produce. A stronger golfer has a broader range of impedance options. If their current impedance is too low, they can increase it. This flexibility is valuable.
-
-
-**Speed training** teaches the motor system to reduce unnecessary co-contraction. A fast, coordinated golfer uses just enough impedance to stabilize the swing---no more. This reduces effort and increases the kinetic energy available for the club.
+An instructed-delay human experiment reported goal-dependent changes in spindle afferent activity and stretch responses during preparation [@Papaioannou2021Preparation]. This supports preparatory sensory tuning. It does not directly measure gamma motor-neuron firing or establish a fixed gamma schedule for golf. Avoid a one-to-one rule equating greater gamma drive with a known joint stiffness.
 
 ::: {.callout-tip}
-## The Bosch Philosophy: Coach the Conditions, Not the Movement
-Frans Bosch, in his influential work on strength training and coordination, argues that coaches should not attempt to prescribe the detailed movement pattern. Instead, they should:
+## A Restoring Sign Does Not Guarantee Passivity
 
-- Design the setup (grip, stance, posture) to create favorable mechanical conditions
-- Develop the strength and speed capacities that give the motor system more impedance options
-- Allow the motor system to discover and execute the motion that emerges from these conditions
+[]{#lab-spinal_controller}
+For an imposed sinusoidal perturbation $e=A\cos(\omega t)$ and a delayed feedback torque $\tau_r=-k_r e(t-\Delta)$, mean power delivered to the moving coordinate over a cycle is
 
+$$
+\overline P_r=\frac12 k_r A^2\omega\sin(\omega\Delta).
+$$
 
-This is the opposite of the detailed video analysis approach, which tries to manually adjust every body segment. The Bosch approach trusts the body's self-organizing capacity once the conditions are right [@Bosch:2015].
-
+It is positive when $0<\omega\Delta<\pi$. Immediate viscous damping instead gives $\overline P_D=-DA^2\omega^2/2$. The controller can supply energy because the delayed torque is out of phase with current displacement. This manufactured calculation neither estimates human reflex gains nor proves instability of a complete delayed system; it demonstrates why a restoring sign alone is insufficient.
 :::
 
-## Practical Implications: The Art of Pre-Tuning
-{#sec-practical}
+## Coordination in the Coupled Chain {#self-organization-in-the-kinetic-chain}
+[]{#sec-self_organization}
 
+### Interpreting Proximal and Distal Energy Flow {#energy-flow-from-proximal-to-distal}
+[]{#subsec-energy_flow}
 
-Understanding passive control and impedance reshapes how we think about golf instruction and training. Here are the key practical implications:
+Geometry and inertia couple segment accelerations, while active and passive forces determine the complete trajectory. An impedance gradient alone does not prescribe the direction or amount of energy transfer. A centripetal acceleration also does not, by itself, establish positive work: force must be paired with the velocity of its point of application.
 
-### Grip Pressure: Not Light or Firm, but Appropriate
-{#subsec:grip_pressure}
+For a chosen segment, evaluate work rates from forces and moments, changes in its kinetic and gravitational energy, and any stored elastic energy. At a shared joint, equal-and-opposite forces can exchange energy between segments even when their contribution cancels in the total system balance. With the same conventions, a joint couple's net power on the two segments depends on their relative angular velocity. Check these balances before assigning a proximal deceleration to energy received by a distal segment.
 
+### The Whip Effect and Distal Acceleration {#the-whip-effect-emergent-distal-acceleration}
+[]{#subsec-whip_effect}
 
-A common coaching cue is "light grip" to encourage wrist release. But from the impedance perspective, the goal is not light---it is *appropriate*.
+A distal speed peak can follow a proximal peak in a coupled mechanism. That timing is compatible with several combinations of active torque, passive torque and geometry. It does not show that proximal speed is nearly zero, that a wrist command is absent, or that energy necessarily passes through a single cascade.
 
-- **Too light:** Insufficient distal impedance at impact. The impact force causes jerk and potential injury. The club twists unpredictably in the hands.
-- **Too firm:** High distal impedance during the downswing. This prevents wrist release and slows the club. The entire swing becomes rigid.
-- **Appropriate:** Moderate impedance during the swing (allowing fluid wrist motion), increasing at impact (protecting against impact forces).
+::: {.callout-important}
+## Test the Mechanism Behind the Sequence
 
+[]{#lab-princ_emergent}
+Compare a model's force, power and acceleration histories with perturbation responses and held-out motion. If reducing distal impedance changes release timing in that model, report the initial state, input and contact conditions. The result is a model prediction, not a universal instruction to relax the wrists. The flexible-shaft state and grip motion can change the club response even with identical joint-level parameters.
+:::
 
-An expert golfer automatically modulates grip pressure, increasing it at the moment of impact. A beginner grips uniformly, either too loosely or too tightly.
+### Impedance and Impact Transmission {#impact-protection-through-high-distal-impedance}
+[]{#subsec-impact_protection}
 
-### The Address Position: Setting the Baseline Impedance
-{#subsec:address}
+Force is measured in newtons, not kilograms. A collision impulse is the time integral of force; peak force additionally depends on its time profile and contact compliance. Neither a force magnitude nor a short impact duration determines how much load reaches a particular tissue.
 
+Stiffness stores and returns energy; it is not a dissipator. Increasing distal stiffness can change contact motion, resonances and transmitted loads, but it does not form a universal barrier that absorbs an impact. Damping, shaft waves, grip contact, geometry and the golfer's initial activation all matter. A response initiated by the collision arrives after a finite delay; anticipatory preparation and reactions after contact are distinct mechanisms.
 
-The address position (stance and posture at setup) establishes the baseline impedance profile. A golfer with good posture---neutral spine, balanced stance, relaxed but alert muscles---begins with an impedance profile that is well-tuned for the swing.
+No injury-prevention prescription follows from the simplified impedance model. Inertia and impact duration alone cannot identify a safe wrist stiffness, because the loading, allowable motion, damping, contacts and tissue outcomes are unspecified. The separate impact and damping chapters develop their own system boundaries; this chapter does not substitute a spring analogy for those operators or for measured clinical outcomes.
 
-A golfer with poor posture---slouched spine, asymmetrical stance, tense shoulders---begins with misaligned impedance. They must compensate during execution, reducing efficiency.
+## Stability Analysis: What the Model Establishes {#stability-analysis-is-the-swing-self-correcting}
+[]{#sec-stability}
 
-### The Waggle: Calibrating the Impedance
-{#subsec:waggle}
+### Equilibrium Storage and Lyapunov Stability {#the-lyapunov-function}
+[]{#subsec-lyapunov}
 
+Consider a time-invariant mechanical model with fixed reference $q_0$:
 
-Professional golfers often waggle the club before swinging---a small oscillatory movement of the club and hands. Why? From the impedance perspective, the waggle is a *calibration check*. The golfer is testing the current impedance profile, feeling the club's inertia and the muscles' stiffness.
+$$
+M(q)\ddot q+C(q,\dot q)\dot q+\nabla U_g(q)+K(q-q_0)+D\dot q
+=\tau_{\mathrm{ext}}.
+$$
 
-If the feel is right, the golfer proceeds. If not, they adjust the setup and waggle again. The waggle is a low-cost way to verify that the impedance has been set correctly before committing to the swing.
+Assume $M$ is positive definite, $K$ and $D$ are symmetric, and $\dot M-2C$ is skew-symmetric, as in a consistent Lagrangian representation. Write
 
-### Feedback for Training: Proprioceptive Cues
-{#subsec:feedback}
+$$
+U(q)=U_g(q)+\frac12(q-q_0)^TK(q-q_0),\qquad
+V=\frac12\dot q^TM(q)\dot q+U(q)-U(q_*),
+$$
 
+where $q_*$ is a strict isolated local minimum of $U$. The equilibrium need not be $q_0$: gravity can shift it. A positive-definite Hessian of the combined potential is sufficient for a strict local minimum; spring stiffness alone does not establish this condition. A semidefinite Hessian requires higher-order analysis.
 
-Modern golf instruction often over-emphasizes visual feedback (video analysis, launch monitors) and under-emphasizes proprioceptive feedback (the feel of the swing).
+Differentiating along the equations gives
 
-From the impedance perspective, proprioceptive feedback is crucial. The golfer must learn to *feel* the impedance changes throughout the swing. Increased muscle tension signals increased stiffness. Smooth, effortless motion signals well-tuned impedance.
+$$
+\dot V=\dot q^T\tau_{\mathrm{ext}}-\dot q^TD\dot q.
+$$
 
-Training should include:
-- Sensitivity drills (e.g., "hit 10 balls and notice the changing tension in your hands")
-- Targeted strength and flexibility work (to expand impedance options)
-- Minimal external cueing (allowing the motor system to self-organize)
+The kinetic derivative's $\dot M$ term cancels the corresponding Coriolis contribution; it must not simply be discarded as a small force. With no external torque and positive-definite damping, $\dot V\leq0$. This is *negative semidefinite*, because it is zero whenever velocity is zero, including some displaced states.
 
+::: {.callout-important}
+## A Bounded Equilibrium Result
 
-## Toward a Unified Picture: Control, Physics, and Self-Organization
-{#sec-unified}
+[]{#lab-thm_passive_stability}
+In a compact invariant energy sublevel set contained in the neighborhood of an isolated strict minimum, the energy argument gives Lyapunov stability. With positive-definite damping and no other equilibria in that set, the largest invariant subset of $\dot V=0$ is the equilibrium, so invariant-set reasoning gives asymptotic convergence. If damping is only semidefinite, undamped motions must be examined separately. A non-increasing energy does not imply that each coordinate error decreases monotonically.
+:::
 
+Unknown external work cannot be removed by saying that damping is sufficiently large. A persistent load can shift equilibrium; an active environment can destabilize it. For example, $\ddot e+D\dot e-e=0$ has one positive real pole for every finite $D\geq0$. Damping does not turn a potential maximum into a minimum.
 
-We have now surveyed the motor control system across four chapters:
+### Tracking and Finite-Time Recovery {#conditions-for-self-correction}
+[]{#subsec-self_correction}
 
-- **[Chapter 24](./ch24_motor_control_brain.qmd#sec-motor_control_brain):** The brain and spinal cord have limited bandwidth. Real-time independent control of 20+ DOF is infeasible within the available time budget.
-- **[Chapter 25](./ch25_motor_learning.qmd#sec-motor_learning):** The motor system learns and adapts by modifying forward models and internal representations.
-- **[Chapter 25](./ch25_motor_learning.qmd#sec-motor_learning):** Movement inherently exhibits variability; the motor system manages it through noise shaping and regularization.
-- **@sec-passive_distributed_control:** The motor system avoids micromanagement by pre-tuning mechanical properties and distributing control to spinal and local circuits.
+A golf swing is a moving, finite-duration task. Absolute kinetic energy is nonzero on its desired trajectory, so it is generally unsuitable as a positive-definite tracking-error measure. To make the distinction exact, use a constant-inertia teaching plant $I\ddot q=\tau+d$ with
 
+$$
+\tau=I\ddot q_d-D\dot e-Ke,\qquad e=q-q_d.
+$$
 
-Passive control is the *final piece*. It shows how the brain solves the fundamental control problem: not by computing fast, but by computing smart. By setting mechanical conditions that allow the physics and the body's own passive dynamics to do most of the work.
+Then
 
-The golf swing emerges from the interaction of three elements:
+$$
+I\ddot e+D\dot e+Ke=d,\qquad
+V_e=\frac12I\dot e^2+\frac12Ke^2,\qquad
+\dot V_e=-D\dot e^2+d\dot e.
+$$
 
+For $d=0$ and positive constants, error converges. Actual motion still requires the feedforward power and any reference work. This certificate is for the specified plant/controller pair; extending it to a variable-inertia humanoid requires consistent compensation or a different proof. Time-varying $K$ adds $\dot K e^2/2$ to the error-storage derivative.
 
-**Physics**
+With $I=1$ kg m$^2$ and $K=100$ N m/rad, the poles solve $Is^2+Ds+K=0$. At $D=5$ N m s/rad they are $-2.5\pm9.6825i$ s$^{-1}$; at $D=20$ the repeated pole is $-10$ s$^{-1}$; at $D=50$ they are approximately $-2.0871$ and $-47.9129$ s$^{-1}$. The middle case is critically damped, not a spiral. Excess damping produces a slower dominant decay. These values are manufactured examples, not wrist estimates.
 
-Gravity, inertia, and Coriolis forces shape the motion through the drift field $f(\bm{x})$.
+On narrow screens, scroll the figure or [open it at full size](../figures/passive_damping_regimes.svg).
 
-The kinetic chain physics couples the segments; energy flows from proximal to distal naturally.
+::: {#fig-passive-damping-regimes}
+::: {.aba-diagram-scroll role="region" aria-label="Damping regimes; scroll horizontally" tabindex="0"}
+<img src="../figures/passive_damping_regimes.svg" alt="Three phase portraits share position-error and velocity-error axes. Damping five produces a spiral, damping twenty a critical non-oscillatory return, and damping fifty an overdamped return. All use inertia one and stiffness one hundred.">
+:::
 
-**Impedance**
+Manufactured Recovery With Equal Inertia and Stiffness: Only the Underdamped Case Spirals. All Curves Start at 0.1 rad With Zero Velocity; Orange Arrows Indicate Time Direction Over a Two-Second Interval.
+:::
 
-The muscles pre-set stiffness and damping, augmenting the drift and enabling passive stability.
-
-Spinal circuits maintain baseline control with minimal brain oversight.
-
-**Feedforward Drive**
-
-The motor cortex pre-computes a trajectory and provides a feedforward command $\bm{\tau}_{\mathrm{ff}}$ that biases the motion.
-
-This small feedforward signal, combined with passive stability, produces the final swing.
-
-This is a fundamentally different view from the traditional picture of the brain as an all-knowing controller. Here, the brain is a *smart configurator*. It sets conditions and allows the laws of physics and the body's mechanical properties to produce the desired motion.
+For a linearized trajectory perturbation, $\delta\dot x=A(t)\delta x$ gives $\delta x(t)=\Phi(t,t_0)\delta x(t_0)$. The transition matrix $\Phi$ can amplify some perturbations over a short interval even when a related equilibrium is asymptotically stable. Use a declared norm and physically meaningful state scales, then examine clubface orientation, strike position or another output through its local output map. A recovery that happens after impact may not improve the shot. Contact switches, delays and uncertain parameters require additional treatment.
 
 ::: {.callout-note}
-## Why Effortless Movement Can Look Stable
-Why do expert golfers swing with such apparent ease? Why does their swing repeat so reliably, even without conscious thought?
+## What Apparent Ease Can Tell Us
 
-The answer need not be that the swing is fully self-organizing. A more careful interpretation is that skilled golfers tune stiffness, damping, reflex gain, and coordination so passive impedance and fast local feedback handle part of the stabilization problem. That can create a local basin of attraction in a simplified model, but the size of that basin depends on the model, perturbation type, and measured task conditions.
-
-Once set, this system can reduce the amount of explicit moment-to-moment cortical correction required, but it does not eliminate neural control.
-
-This is not instinct or magic. It is physics, tuned through practice.
+[]{#lab-effortless_swing}
+Smooth motion and repeatable delivery are useful observations. They do not reveal how much muscle activation, elastic exchange or feedback was required. The explanatory target is a model that predicts both the motion and its response to relevant changes. A model that fits only an unperturbed swing can hide compensating errors in its controller and mechanics.
 :::
+
+## Learning and Identifying Impedance {#training-and-the-discovery-of-impedance}
+[]{#sec-training}
+
+### The Identification Problem {#the-pre-training-problem}
+[]{#subsec-pre_training}
+
+Impedance must be estimated from input and response, not assigned from experience level. Specify the perturbation, operating point, measurement bandwidth, noise and model class. For the local equation $I\ddot e+D\dot e+Ke=\tau$, measured angle alone cannot identify all three coefficients without information about the applied torque.
+
+Even known torque at a single sinusoidal frequency does not necessarily identify all parameters: because $\ddot e=-\omega^2e$, inertia and stiffness enter through $K-I\omega^2$. Multiple informative frequencies or independent inertia information are needed to separate them. Neural delays and nonlinear mechanics can require richer models; a good fit of a spring-damper curve does not prove purely passive tissue behavior.
+
+### Practice and Task-Dependent Adaptation {#practice-as-impedance-search}
+[]{#subsec-practice_impedance}
+
+Learning can change planned drive, sensory prediction, feedback policy and mechanical response. Burdet's directional adaptation is an example of measured task dependence [@Burdet2001Impedance]; it is not evidence that practice freezes all impedance parameters permanently. Compare adaptation, retention and transfer separately, including changes in mean force and posture that could explain an apparent gain change.
+
+### Strength, Speed and Mechanical Capacity {#strength-and-speed-training}
+[]{#subsec-strength_speed}
+
+Strength and speed training can change the forces and motions a golfer can produce, but those labels do not uniquely specify changes in stiffness, damping or coactivation. A larger capacity can alter the feasible control strategies; which strategy is used remains a measurement question. Mechanical power, metabolic cost and variability are separate outcomes and need not improve together.
+
+::: {.callout-important}
+## Mechanical Conditions and Learning
+
+[]{#lab-principle_conditions}
+Changing a task's constraints can help investigate coordination, while motion and outcome measurements can test the result. Treat a coaching interpretation as a hypothesis unless supported by an appropriate comparison. A mechanically plausible story is not evidence that a particular instructional method outperforms another.
+:::
+
+## Practical Interpretation of Measurements {#practical-implications-the-art-of-pre-tuning}
+[]{#sec-practical}
+
+### Grip Pressure and Joint Response {#grip-pressure-not-light-or-firm-but-appropriate}
+[]{#subsec-grip_pressure}
+
+Grip sensors measure pressure or force at a contact. They do not directly measure wrist impedance. The same contact force can accompany different coactivation, posture and tendon state. Evaluate grip observations alongside club motion and, where appropriate, controlled identification data. There is no safe stiffness range or universal impact-timing instruction available from the equations in this chapter.
+
+### Posture and the Mechanical Map {#the-address-position-setting-the-baseline-impedance}
+[]{#subsec-address}
+
+Posture changes moment arms, inertia and the Jacobian linking joint to hand motion. Virtual work gives $\tau=J^TF$. Differentiating this relation includes both $J^T\delta F$ and $(\delta J)^TF$; under preload, geometric terms can change tangent stiffness. A simple Jacobian transformation that omits them may be inadequate. A posture label alone does not identify these quantities or establish an efficient swing.
+
+### What a Waggle Can Reveal {#the-waggle-calibrating-the-impedance}
+[]{#subsec-waggle}
+
+A waggle provides sensory information during a small movement, potentially about contact, load and familiarity. Describing it as an impedance calibration is a hypothesis. Its frequency, amplitude and activation differ from a downswing, so a familiar sensation does not demonstrate correct stiffness for impact. Repeated observations can test associations without turning subjective feel into an identified mechanical parameter.
+
+### Combining Sensation and External Feedback {#feedback-for-training-proprioceptive-cues}
+[]{#subsec-feedback}
+
+Proprioception, video, launch measurements and EMG answer different questions. A sensation of increased tension does not supply a stiffness matrix; video does not directly identify force; EMG is not a complete torque or impedance measurement. Combine information according to the hypothesis, report uncertainty and test predictions outside the data used to fit the model. Simulations and existing controlled datasets are appropriate teaching tools for perturbation analysis.
+
+## A Connected Model of Mechanics and Control {#toward-a-unified-picture-control-physics-and-self-organization}
+[]{#sec-unified}
+
+The muscle chapter explains how excitation, activation, geometry and tendon state produce force. The shaft chapter shows how those forces act through grip motion and flexible-club dynamics. Motor learning changes the policies and predictions used in repeated movement. Here, impedance describes a response around an operating condition, while stability analysis asks what happens to perturbations under explicitly stated dynamics.
 
 ::: {.callout-important}
 ## Key Takeaways
-- **The bandwidth problem:** The brain cannot compute torques for 20 DOF at 1000 Hz. The traditional control model is unrealistic.
 
-- **Impedance control:** One plausible strategy is to set impedance before and during the swing so passive mechanics and fast local feedback handle part of the execution burden.
-
-- **Pre-tuning reduces computation:** Pre-tuning can shift some stabilization burden to mechanics and local feedback, though the exact dimensionality depends on the model.
-
-- **Passive stability:** With well-chosen impedance, some perturbations can be partly resisted by spring forces and damping.
-
-- **Distributed control:** Spinal reflexes, muscle spindles, and local feedback circuits are candidate mechanisms for part of the moment-to-moment stabilization.
-
-- **Emergent behaviors:** Complex behaviors like the whip effect and distal acceleration can emerge from the kinetic chain physics and the impedance profile without being scripted joint by joint.
-
-- **Training discovers impedance:** Through practice, the motor system discovers the impedance parameters that work best for each golfer's body. Expert performance reflects discovered, encoded impedance.
-
-- **Effortlessness is tuning:** Expert golfers look effortless because their passive impedance profile is well-tuned, not because they are stronger or faster.
-
+[]{#label-key_takeaways_ch27}
+Mechanical passivity is an energy property of a declared port. Impedance can include active muscle mechanics and delayed feedback. A forward counterfactual requires a specific input intervention and full initial state. Equilibrium convergence does not establish finite-time club-delivery accuracy. Measured force, motion, EMG and pressure constrain different parts of the model. Together, these distinctions make coordination hypotheses testable without assuming that the entire swing is either consciously commanded or mechanically autonomous.
 :::
 
-## Chapter Exercises
+## Chapter Exercises and Worked Answers {#chapter-exercises}
 
-**Conceptual Questions**
+[]{#label-ex_ch27}
 
-- {#ex:impedance_phase}
-Explain why the impedance profile changes across the phases of the golf swing (address, backswing, transition, downswing, impact, follow-through). For each phase, explain what impedance changes are necessary and why.
+**1. Phase-Dependent Hypotheses**
+[]{#ex-impedance_phase}
+For address, backswing, transition, downswing, impact and follow-through, propose an observation that would constrain a phase-dependent model. Explain why the phase name alone does not prescribe stiffness.
 
-- {#ex:lyapunov_intuition}
-A Lyapunov function measures "distance from the desired state." Explain in plain language why a decreasing Lyapunov function ($\dot{V} < 0$) implies that perturbations shrink and the system returns to the desired trajectory.
+**Answer.** Address constrains posture, mean load and initial activation; backswing constrains transport and changing geometry; transition constrains reversals and elastic state; downswing constrains delivery motion and available correction time; impact constrains contact impulse and initial mechanical state; follow-through constrains dissipation and deceleration. Perturbation response, when available from an appropriately controlled study, adds information beyond ordinary motion. Different combinations of drive, tissue response and feedback can produce similar unperturbed trajectories, so no universal stiffness schedule follows.
 
-- {#ex:bandwidth_reduction}
-The traditional control model requires the brain to compute $\sim20,000$ decisions per second. The impedance control model requires the brain to compute $\sim40$ parameters once. Explain how this 500-fold reduction in computational rate is achieved, and why it does not sacrifice precision.
+**2. What a Decreasing Storage Function Means**
+[]{#ex-lyapunov_intuition}
+For the unforced spring-damper model, consider a displaced state with zero velocity. Is the energy derivative strictly negative? What further argument is needed for convergence?
 
-- {#ex:spinal_reflex}
-What is the stretch reflex? Explain how it operates without conscious involvement of the brain. How does the brain modulate the stretch reflex using gamma motor neurons?
+**Answer.** The energy is positive but $\dot V=-D\dot e^2=0$ at that instant. The restoring acceleration subsequently creates motion. In a bounded invariant neighborhood with an isolated energy minimum and positive damping, the only trajectory that can remain in the zero-derivative set is the equilibrium. That invariant-set argument establishes asymptotic convergence. It does not make every coordinate error decrease at every instant, nor does it establish tracking of a different moving reference.
 
-- {#ex:novice_expert}
-Why do novices grip too hard while experts grip with appropriate pressure? Relate this to the impedance control framework.
+**3. Parameters, Samples and Information**
+[]{#ex-bandwidth_reduction}
+Count stiffness and damping parameters for 20 independent scalar joints and for two symmetric coupled matrices. Compare these counts with a 1 kHz record of 20 joint variables.
 
+**Answer.** The diagonal approximation has 40 parameters; the symmetric coupled case has 420. The record contains 20,000 scalar samples per second. Samples per second and a one-time parameter count have different units. Neither specifies bits without a coding/precision model, and neither establishes a brain-wide processing limit or a guaranteed reduction in biological computation.
 
-**Mathematical Problems**
+**4. Distributed Feedback**
+[]{#ex-spinal_reflex}
+Distinguish an intrinsic force response, spindle afferent activity, a short-latency muscle response and a longer multi-joint response. Does lack of conscious correction imply mechanical passivity?
 
-- {#ex:impedance_equation}
-Write the equation for passive joint torque in the form $\bm{\tau} = -\bm{K}(\bm{q} - \bm{q}_0) - \bm{D}\dot{\bm{q}}$. For a single joint with $K = 50$ N$\cdot$m/rad, $D = 5$ N$\cdot$m$\cdot$s/rad, reference angle $q_0 = 0$, current angle $q = 0.1$ rad, and angular velocity $\dot{q} = 1$ rad/s, compute the restoring torque. Is the torque in the direction of decreasing $q$ (i.e., does it resist the perturbation)?
+**Answer.** Intrinsic mechanics act through the existing tissue state. Spindle afferents encode signals influenced by motion and fusimotor state. Short-latency pathways can alter motor-neuron activity; longer pathways can integrate information across joints and include cortex. Their measured onsets and force consequences differ. An automatic neural controller can supply mechanical energy, so lack of consciousness does not establish passivity.
 
-- {#ex:lyapunov_derivative}
-For the Lyapunov function $V = \frac{1}{2}m\dot{q}^2 + \frac{1}{2}K(q-q_0)^2$, compute $\dot{V}$ along a trajectory governed by $m\ddot{q} = -K(q-q_0) - D\dot{q}$. Simplify and show that $\dot{V} = -D\dot{q}^2$. Explain why $\dot{V} < 0$ ensures Lyapunov stability.
+**5. Net Torque and Coactivation**
+[]{#ex-novice_expert}
+Two idealized opposing muscles have constant moment arm $r=0.03$ m and equal force. Initially each has local length stiffness 1000 N/m; after a change each has 2000 N/m. Compute net torque and restoring joint stiffness in both states. Can the result identify expertise?
 
-- {#ex:phase_portrait}
-Sketch the phase portrait (velocity $\dot{q}$ vs.\ position $q$) for a spring-mass-damper system with $K=100$, $D=20$, $m=1$. Indicate the direction of motion and show how trajectories spiral toward equilibrium. How does the trajectory change if damping is increased to $D=50$? Decreased to $D=5$?
+**Answer.** Net torque is zero in both states because the forces cancel. Joint stiffness is $r^2(k_1+k_2)$, giving 1.8 and 3.6 N m/rad. Changing equal activation can change resistance without changing net torque; muscle energy consumption is not measured by net joint work. These manufactured states do not identify an expert or a novice, and the calculation omits variable moment arms and tendon compliance.
 
-- {#ex:impedance_tuning}
-Suppose a golfer's wrist joint requires $(K_{\mathrm{wrist}}, D_{\mathrm{wrist}})$ such that the wrist releases smoothly during the downswing but is stiff enough to resist impact forces. If $K$ is too low, the wrist collapses at impact (risk of injury). If $K$ is too high, the wrist does not release (loss of club head speed). For a wrist with moment of inertia $I = 0.01$ kg$\cdot$m$^2$ and impact duration $\tau = 0.005$ s, estimate the range of reasonable $K$ values. (Hint: the system should respond to the impact without unstable resonance.)
+**6. Torque and Instantaneous Power**
+[]{#ex-impedance_equation}
+For a fixed reference $q_0=0$, let $K=50$ N m/rad, $D=5$ N m s/rad, $q=0.1$ rad and $\dot q=1$ rad/s. Find $\tau=-K(q-q_0)-D\dot q$ and its power. Does the spring always remove kinetic energy?
 
+**Answer.** The spring and damper each contribute $-5$ N m, so total torque is $-10$ N m and power on the coordinate is $-10$ W. Spring storage increases at 5 W and the damper dissipates 5 W. When the same displaced spring moves toward its reference, spring power can be positive; viscous dissipation remains nonnegative. Resisting displacement and resisting velocity are different statements.
 
-**Experimental / Applied Questions**
+**7. Differentiate the Correct Storage**
+[]{#ex-lyapunov_derivative}
+Derive the energy identity for $I\ddot q=-K(q-q_0)-D\dot q$ with fixed positive constants. Then let $q_0(t)$ and $K(t)$ vary while retaining damping against absolute velocity.
 
--
-Perform the waggle before your next round of golf. As you waggle, pay attention to the *feel* of the impedance (muscle tension, stiffness). If the feel is "off" (too tense or too loose), adjust your setup and waggle again. After practice, does your awareness of impedance improve? Does the correlation between "good waggle feel" and "good swing" improve?
+**Answer.** For fixed reference, differentiation of $I\dot q^2/2+K(q-q_0)^2/2$ and substitution cancel the spring work, leaving $-D\dot q^2$. For varying reference and stiffness the derivative becomes
 
--
-Using an instrumented grip pressure sensor (or your subjective feeling), track how grip pressure changes across the phases of your swing: address, backswing, downswing, impact, follow-through. Does your grip pressure profile match the expected impedance profile? Where do you need to adjust?
+$$
+\dot V=-D\dot q^2-K(q-q_0)\dot q_0+\frac12\dot K(q-q_0)^2.
+$$
 
--
-Have a partner apply a small, unexpected perturbation (gentle push on your arm or shoulder) during different phases of your swing: backswing, downswing, impact. Can you recover and hit a good shot? What does this reveal about the passive stability of your swing? Is the stability due to impedance (spring forces) or to active corrective muscle engagement?
+Reference motion and parameter changes can supply energy. Omitting these terms would turn an actively driven system into an incorrectly passive one on paper. Tracking requires a separate error-coordinate argument.
+
+**8. Damping Regimes**
+[]{#ex-phase_portrait}
+Classify $\ddot e+D\dot e+100e=0$ for $D=5,20,50$. For the critical case with $e(0)=0.1$ and $\dot e(0)=0$, obtain $e(t)$ and $e(0.1)$.
+
+**Answer.** The cases are underdamped, critically damped and overdamped. Only the first has complex poles and spiralling phase trajectories. The critical solution is $e(t)=0.1(1+10t)\exp(-10t)$, so $e(0.1)=0.2/\mathrm e\approx0.07358$. The overdamped system's slow pole is approximately $-2.0871$ s$^{-1}$, slower than the critical decay scale. Increasing damping indefinitely does not guarantee faster recovery.
+
+**9. An Underdetermined Impact Estimate**
+[]{#ex-impedance_tuning}
+Given only rotational inertia $I=0.01$ kg m$^2$ and a time interval $T=0.005$ s, can one estimate a safe stiffness range? Interpret the dimensional scale $I/T^2$.
+
+**Answer.** One cannot identify a safe range. The scale is 400 N m/rad under the usual dimensionless-radian convention; choosing $K=I/T^2$ merely imposes $\sqrt{K/I}\,T=1$. It supplies no loading, allowable excursion, damping, contact mechanics or tissue outcome. The interval is not automatically a forcing period, and resonance is not automatically instability. No injury or grip recommendation follows.
+
+**10. A Waggle Association**
+[]{#ex-waggle_experiment}
+Suppose a golfer records perceived waggle tension and subsequent delivery error over repeated sessions. What can this association establish, and how might it be tested without treating sensation as stiffness?
+
+**Answer.** It can describe a within-golfer association under the recorded conditions. Separate sessions used to formulate the hypothesis from those used to test it; record task, equipment and relevant setup changes. Fatigue, expectation and preparation may affect both sensation and outcome. No mechanical stiffness is identified without a known perturbation and force/motion response, and association alone does not show that changing the sensation causes improved delivery.
+
+**11. What Identifies the Response?**
+[]{#ex-grip_pressure}
+For a simulated joint, let $e=A\cos(\omega t)$ and measure the required torque. Show why an unknown inertia and stiffness are confounded at that frequency. Does adding grip pressure solve this automatically?
+
+**Answer.** The torque is $(K-I\omega^2)A\cos(\omega t)-DA\omega\sin(\omega t)$. The in-phase term identifies a combination of $I$ and $K$, not each separately. Known inertia or informative additional frequencies can resolve this within the stated model. Grip pressure does not automatically provide the missing rotational inertia, joint torque or operator; its relation to those quantities must be modeled and validated.
+
+**12. Simulated Perturbation Recovery**
+[]{#ex-perturbation_recovery}
+Use a simulation of $\ddot e+20\dot e+100e=0$. At $t=0$, apply an initial velocity error of 0.1 rad/s with zero position error. Find the largest position error. How would delayed feedback change the inference?
+
+**Answer.** The solution is $e(t)=0.1t\exp(-10t)$. It peaks at $t=0.1$ s with $e=0.01/\mathrm e\approx0.003679$ rad. Position error initially grows even though mechanical energy decreases. Adding delayed feedback requires a new response calculation and stability analysis; the undelayed result cannot certify it. Use a numerical perturbation or an existing controlled dataset for this exercise. A partner should not introduce an unexpected physical disturbance during a live golf swing.

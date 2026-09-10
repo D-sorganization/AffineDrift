@@ -275,17 +275,17 @@ class TestAuditBookPhysicsOfGolf:
         # #4313 replaces one unpaired synthesis map with two checked figure pairs.
         # #4315 replaces one unpaired tissue sketch with two checked figure pairs.
         # #4320 replaces an unpaired energy-flow sketch with two checked figure pairs.
-        assert res.chapters_with_latex_figures == 28
+        assert res.chapters_with_latex_figures == 29
         # #4326 replaces an unpaired learning-stage sketch with two checked figure pairs.
         # #4331 replaces an unpaired muscle schematic with two checked figure pairs.
-        assert res.total_latex_figures == 37
+        assert res.total_latex_figures == 38
         # #4160, #4161, and #4164 replace diagrams with shared print/web images.
         # #4283 replaces the spine schematic with a shared evidence/model diagram.
-        # #4333 replaces both shaft TikZ figures with checked print/web pairs.
+        # #4333 pairs the shaft figures; #4336 adds a paired damping-regime figure.
         assert res.total_latex_tikz == 15
-        assert res.total_latex_includegraphics == 22
-        assert res.total_latex_fig_labels == 37
-        assert res.total_quarto_figures == 23
+        assert res.total_latex_includegraphics == 23
+        assert res.total_latex_fig_labels == 38
+        assert res.total_quarto_figures == 24
         assert res.missing_figures_count == 14
         assert res.is_in_full_parity is False
 
@@ -368,7 +368,7 @@ class TestCLI:
         data = json.loads(captured.out)
         assert data["book_name"] == "The_Physics_of_Golf"
         assert data["total_chapters"] == 34
-        assert data["total_latex_figures"] == 37
+        assert data["total_latex_figures"] == 38
 
     def test_cli_check_mode_fails_when_discrepancy(self) -> None:
         repo_root = Path(__file__).resolve().parent.parent
