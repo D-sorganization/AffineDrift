@@ -170,3 +170,20 @@ nullspace (~5,174), curiosity (~5,123), and the many indexed/partial sources in
 `articles/proximal_distal_energy_transfer/`, bound DCR evidence, authority pins,
 peer impact/acoustics #4253/#4255 and Chapter29, original checkout, and all peer
 handoff/DL sections untouched.
+
+## Committed Handoff Checkpoint
+
+Implementation c46453792a2fe87cd2c3ad382090e93ee0a78836 is pushed in draft
+PR #4360. The first commit13e0a098 was normally replayed before first push onto
+published main0c753400; the scoped article, critique, bibliography, numerical
+builder and tests did not change, while merged peer impact/acoustics work was
+preserved. Root/content checks above ran before replay; all14 focused tests
+passed again afterward. Normal commit and push hooks passed. The first commit
+attempt required only Prettier formatting of the bibliography companion.
+
+The final documentation checkpoint is identified by SELF in AGENT_HANDOFF.
+The issue lease and central presence were released successfully for takeover:
+receipts5621007068 and5621008118, September10 at15:16:52Z. This is a complete
+save-and-handoff operation, not completion of the scientific corpus review.
+Do not auto-merge draft4360 until its outstanding review and delivery work is
+finished. The full goal remains active; no new agent was spawned.

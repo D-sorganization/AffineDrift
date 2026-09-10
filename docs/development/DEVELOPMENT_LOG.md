@@ -23,11 +23,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** codex (handoff requested)
 - **Issue:** #4358 (epic #4009; corpus #4021; applied routes #4059)
-- **PR:** not created; intermediate draft checkpoint
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4360 (draft; handoff checkpoint)
 - **Branch:** `fix/4358-strokes-gained-rigor`
 - **Paths:** `articles/strokes-gained-limitations.qmd`, `articles/strokes-gained-limitations-bibliography.md`, `critiques/strokes_gained_non_ergodic.md`, `references/strokes-gained-rigor.bib`, `tests/test_strokes_gained_article_rigor.py`, `docs/development/technical-review/strokes-gained-review.md`, `docs/development/technical-review/build_strokes_gained_examples.py`, `docs/development/technical-review/strokes-gained-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`a8869e35`; parent of working draft, not a claim of committed draft verification; focused14, Ruff/Black100, title636 and content131 pass; root5269 pass/29 skip/132 deselected/59 warnings, coverage79.29%; rendered review pending)
+- **Last verified:** 2026-09-10 (`c46453792a2fe87cd2c3ad382090e93ee0a78836`; focused 14 passed again after replay onto current main; scoped source/code preserved; pre-replay root 5269 pass/29 skip/132 deselected/59 warnings, coverage 79.29%; Ruff/Black100, title 636 and content 131 pass; normal commit/push hooks passed; rendered review pending)
 - **Summary:** Rebuilds accounting, penalties, category transfers, policy values, distributional proximity, player heterogeneity and causal limits. Complete original article/companion/critique reading; independent numerical examples saved. User requested intermediate handoff before browser and publication verification; governed critique remains open and route inventory deferred.
 - **Next step:** Render the revised article and critique under the root Quarto configuration and complete their full visual technical review.
 
