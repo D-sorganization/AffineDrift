@@ -18,31 +18,44 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4355 · Complete Forces, Torques and Physical Attribution
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4355 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4357 (open)
+- **Branch:** `fix/4355-forces-torques-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch04_forces_and_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/forces_torques_verified.*`, `tests/test_forces_torques_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/forces-torques-review.md`, `docs/development/technical-review/build_forces_torques_figures.py`, `docs/development/technical-review/forces-torques-numerics.json`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`3a9a87af9d28fc0728cf0b4a23e0f932660752d3`; validated tree preserved on replay; normal commit/push hooks passed; root 5,254 passed, coverage 79.29%; focused 35, content 131, static 34, titles 636, mypy 91; complete paired reading and final exercise/units browser verification passed; all 14 canonical route records individually passed)
+- **Summary:** Rebuilds physical and generalized load attribution, moving-frame signs, gravity work, muscle-state and contact feasibility, whole-club grip wrench and segment power. Independent Newton–Euler and energy checks support a declared two-link example and seven worked answers. Full audit records derivations, source limits and validation failure history.
+- **Next step:** Verify PR #4357 protected checks, squash merge and revision-matched live publication.
+
 ### DL-#4353 · Complete Double-Pendulum Derivation and Task Mechanics
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4353 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4354 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4354 (merged; live verification pending)
 - **Branch:** `fix/4353-double-pendulum-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch03_double_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/double_pendulum_verified.*`, `tests/test_double_pendulum_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/double-pendulum-review.md`, `docs/development/technical-review/build_double_pendulum_figures.py`, `docs/development/technical-review/double-pendulum-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`96ae7eb69c9622b176aabf8507c4fa293a296298`; replay preserved validated tree; normal commit/push hooks passed; root 5,243 passed, coverage 79.29%; focused 37, content 131, static 34, titles 636, mypy 91; full paired reading and final browser heading correction)
+- **Last verified:** 2026-09-10 (`e9ad402e50f111589252292178e5f45ac58b427c`; protected checks passed and squash tree matches final head; normal commit/push hooks passed; root 5,243 passed, coverage 79.29%; focused 37, content 131, static 34, titles 636, mypy 91; full paired reading and final browser heading correction)
 - **Summary:** Corrects COM versus hinge inertia, gravity signs, Coriolis rate factors, coupled input response, physical interface power and endpoint curvature. Six worked answers and primary-source boundaries distinguish anatomical interpretation, task sensitivity and chaos. Audit records independent derivations, numerical checks and rendering defects found by complete reading.
-- **Next step:** Verify PR #4354 protected checks, squash merge and exact live publication.
+- **Next step:** Verify exact deployment 34473831404 for double-pendulum squash e9ad402e50f111589252292178e5f45ac58b427c.
 
 ### DL-#4351 · Complete Constraint Forces, Compatible Dynamics and Power
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4351 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4352 (merged; live verification pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4352 (merged; published)
 - **Branch:** `fix/4351-constraint-forces-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch07_constraint_forces.tex`, `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/constraint_forces_verified.*`, `tests/test_constraint_forces_rigor.py`, `tests/test_physics_of_golf_glossary.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/constraint-forces-review.md`, `docs/development/technical-review/build_constraint_forces_figures.py`, `docs/development/technical-review/constraint-forces-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`004676b40889c7dee980fefd3ebf039663f40a0c`; validated tree preserved on affine squash replay; normal commit/push hooks passed; complete paired reading; root 5,229 passed and 79.29% configured coverage; focused 55, content 131, static 34, titles 636, mypy 91; style, links and 14 actual-route browser records pass)
+- **Last verified:** 2026-09-10 (`b5362af0005c8ae1ad00e81390e9151991157155`; exact deployment 34470677053 succeeded; all 956 records/239 routes in artifact 10150223079 independently inspected, HTTP 200/pass and no failures/retries or axe violations)
 - **Summary:** Rebuilds acceleration compatibility, rank/scaling, mass-metric projection, moving-contact power, physical segment energy, actuation/reaction coupling and plastic capture/release. Six worked answers and independently checked examples distinguish mechanical coupling from muscle and coaching inference. Full audit preserves derivation and evidence limits.
-- **Next step:** Verify exact deployment 34470677053 for constraint squash b5362af0005c8ae1ad00e81390e9151991157155.
+- **Next step:** None for this chapter; preserve its audit and continue corpus review.
 
 ### DL-#4349 · Complete Affine Structure, Drift and Optimality
 
