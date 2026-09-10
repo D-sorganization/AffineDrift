@@ -197,3 +197,7 @@ Implementation 96ae7eb69c9622b176aabf8507c4fa293a296298 preserves validated tree
 ## Protected Merge
 
 All required checks passed. PR #4354 squash-merged as e9ad402e50f111589252292178e5f45ac58b427c; final head fe8ee652 and squash share tree d8932835286b0ed9ed2e31bc4066073d6b9fbd94. Exact deployment 34473831404 is in progress; revision-matched live verification remains.
+
+## Verified Publication at Handoff
+
+Exact deployment34473831404 was cancelled before publication when superseded. Successful later deployment34477888759 at0c753400190cf330533bffc12e9b035162f37749 includes the chapter: GitHub comparison proves e9ad402e ancestry and both Chapter3 canonical sources unchanged. All956 records/239 routes of artifact10153444359 individually passed, including all four Chapter3 records. This is verified descendant publication, not success of the cancelled exact run.
