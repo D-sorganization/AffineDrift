@@ -147,3 +147,15 @@ polish web verification again passed all 14 cases with no serious/critical axe
 finding; rendered forward-counterfactual wording and proper name were checked.
 The development-log checker reports only the preserved #3903/#3902 metadata
 defects; this feature has a concrete verifying SHA and PR.
+
+
+## Protected Publication
+
+PR #4335 merged normally as de57acae49ea206d0232ecf4de8a7f9cd0b5da03.
+Deployment 34437073824 succeeded. Exact production artifact 10137269737 was
+inspected record by record: all 956 records across 239 routes passed HTTP 200
+with no inspection failures, axe findings, retries or transients; 239 routes
+were scanned by axe. This closes the publication check for #4333.
+Parent muscle publication is also verified through a81f99c0 and exact live
+artifact 10135966540; earlier pending statements above describe the delivery
+checkpoint, not the current release state.

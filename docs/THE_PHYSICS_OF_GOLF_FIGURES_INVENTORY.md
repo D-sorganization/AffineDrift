@@ -7,15 +7,15 @@ This document provides the formal audit and inventory of all figures across the 
 | Metric | Value |
 |---|---|
 | **Total Chapters Audited** | 34 |
-| **Chapters with Figures** | 28 |
-| **Total LaTeX Figures** | 37 |
+| **Chapters with Figures** | 29 |
+| **Total LaTeX Figures** | 38 |
 | **TikZ Figures** | 15 |
-| **Raster / Includegraphics Figures** | 22 |
-| **LaTeX Figure Labels** | 37 |
+| **Raster / Includegraphics Figures** | 23 |
+| **LaTeX Figure Labels** | 38 |
 | **LaTeX Prose Figure Refs** | 3 |
-| **Total Quarto Figures** | 23 |
-| **Quarto Figure Defs (Divs / Imgs / Cells)** | 23 |
-| **Quarto Prose Figure Mentions** | 20 |
+| **Total Quarto Figures** | 24 |
+| **Quarto Figure Defs (Divs / Imgs / Cells)** | 24 |
+| **Quarto Prose Figure Mentions** | 21 |
 | **Missing Figures in Quarto** | **14** |
 
 ## Chapter Parity Matrix
@@ -49,7 +49,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch24_motor_control_brain` | Motor Control I: The Brain as Controller | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch25_motor_learning` | Motor Control II:\\Learning the Swing | 2 | 0 | 2 | ✅ Parity |
 | `ch26_remarkable_brain` | Motor Control III:\\The Computational Brain | 2 | 0 | 2 | ✅ Parity |
-| `ch27_passive_distributed_control` | Passive and Distributed Control: A Self-Organizing Swing Model | 0 | 0 | 0 | ✅ Parity |
+| `ch27_passive_distributed_control` | Passive and Distributed Control:\\Mechanics, Feedback and Stability | 1 | 0 | 1 | ✅ Parity |
 | `ch28_impact_collision` | Impact: The Collision That Matters | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch29_joint_damping_friction` | Damping, Friction, and Energy Dissipation in the Kinematic Chain | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch30_kinetic_chain` | The Kinetic Chain: Motion, Work, and Control in the Golf Swing | 0 | 0 | 0 | ✅ Parity |
@@ -94,6 +94,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch25_motor_learning` | 2 | `fig:ch25_learning_stages` | Includegraphics | Manufactured Trial Updates With $a=1$, $r=4$ and $m_0=0$. Gains of 0.25 and 1.5 Converge; ... |
 | `ch26_remarkable_brain` | 1 | `fig:brain_correction_window` | Includegraphics | Remaining Time Changes the Same Command's Effect. The Declared Rotor Model Compares Instan... |
 | `ch26_remarkable_brain` | 2 | `fig:brain_control_loop` | Includegraphics | Preparation, Mechanics, Estimation, Feedback and Learning Interact. Within-Trial Responses... |
+| `ch27_passive_distributed_control` | 1 | `fig:passive-damping-regimes` | Includegraphics | Manufactured Recovery With Equal Inertia and Stiffness: Only the Underdamped Case Spirals.... |
 | `ch28_impact_collision` | 1 | `fig:impact_collision` | TikZ Diagram | Isolated One-Dimensional Impact Before and After Contact. Momentum and Relative-Speed Rest... |
 | `ch29_joint_damping_friction` | 1 | `fig:damping_model` | TikZ Diagram | Parallel Spring and Damper Acting on a Translating Mass. Both Elements Share the Same Disp... |
 | `ch31_swing_plane_launch` | 1 | `fig:swing_plane_geometry` | Includegraphics | Fixed-Plane Geometry Links Path and Attack Angle. Curves Use the Declared Positive-Left Fr... |
