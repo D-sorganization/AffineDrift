@@ -36,7 +36,7 @@ def test_configure_page_forwards_metadata() -> None:
     st.set_page_config.assert_called_once()
     kwargs = st.set_page_config.call_args.kwargs
     assert kwargs["layout"] == "wide"
-    assert "Wrist" in kwargs["page_title"]
+    assert kwargs["page_title"] == "Cardan and Torque Projection Demonstration"
 
 
 def test_initialize_session_state_sets_defaults_when_empty() -> None:

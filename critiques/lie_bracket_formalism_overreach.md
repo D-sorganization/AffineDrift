@@ -47,3 +47,15 @@ The text claims that "As drift increases... $\dim(\mathcal{V}(x)) \longrightarro
 2.  **Replace with "Reachability Analysis":** Frame the "Control Cone" in terms of the **Hamiltonian** $H(x,p,u) = p^T (f(x) + g(x)u)$ and the reachable set boundary, rather than Lie Algebra rank.
 3.  **Correct the Dimensionality Claim:** Instead of "dim -> 1", state "The **volume** of the reachable set (relative to drift displacement) shrinks."
 4.  **Clarify Actuation:** If the wrist is considered passive (flexible hinge) in this specific derivation, state it clearly. But Section 2 says "q3: wrist/club hinge", implying actuation.
+
+## Editorial Adjudication and Evidence Boundaries
+
+1. **Historical Versus Corrected State:**
+   The historical article text conflated instantaneous control vector fields with state-space rank conditions and made erroneous assertions that "dimension collapses" ($\dim(\mathcal{V}(x)) \to 1$). In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), the invalid claims regarding Lie bracket dimension collapse were excised. The text now distinguishes instantaneous acceleration input distributions from full-state controllability, double-integrator Lie bracket brackets, and reachable set geometries.
+
+2. **Critique Boundary and Counterexamples:**
+   While the critique accurately flagged the category error of using local accessibility to model saturation, several assertions in the critique are themselves technically deficient:
+   - **Acceleration actuation vs. full-state input rank:** For mechanical systems $\ddot{q} = f_2(q, \dot{q}) + M(q)^{-1} \tau$, the input matrix $B = [0, M^{-1}]^T$ has rank $m \le n$ on the $2n$-dimensional state space. Lie brackets $[f, g_i]$ are essential to generate motion in configuration directions ($\dot{q}$). For the canonical double integrator, $\mathrm{rank}(B) = 1$, but $\mathrm{rank}([B, AB]) = 2$, proving that Lie brackets and commutators are not "irrelevant" even for fully torque-actuated systems (`tests/test_dcr_article_rigor.py::test_double_integrator_rank_and_horizon_are_not_given_by_dcr`).
+   - **Reachable volume shrinkage under drift:** The critique's assertion that reachable volume shrinks as drift increases is false without state-dependent input bounds. Constant additive drift simply translates the center of the reachable set without changing its volume or width (`tests/test_dcr_reachability_contract.py::test_constant_additive_drift_translates_without_shrinking_reachable_interval`).
+   - **Nonconvex input sets:** Fast switching among nonconvex extremal inputs convexifies the leading endpoint set in short time, precluding simplistic cone shrinkage formulations (`tests/test_dcr_article_rigor.py::test_nonconvex_instantaneous_inputs_have_convexified_short_time_endpoints`).
+

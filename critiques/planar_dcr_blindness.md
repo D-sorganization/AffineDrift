@@ -45,3 +45,15 @@ By asserting that "late downswing is effectively uncontrollable" based on planar
 2.  **Axial Decoupling Hypothesis**: Speculate that the "Control Cone" is not isotropic; it may flatten into a "pancake"—uncontrollable in path (Planar DCR High) but controllable in orientation (Axial DCR Low).
 3.  **Rename**: Change "Clubface Closure Variance" to "Release Timing Variance" (which is the planar projection of closure).
 4.  **Future Work**: Admit that a 3D model is required to determine if axial drift forces scale identically to planar drift forces.
+
+## Editorial Adjudication and Evidence Boundaries
+
+1. **Historical Versus Corrected State:**
+   The historical article extrapolated planar 2D/3-link DCR calculations to 3D clubface orientation and ball dispersion at impact. In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), all unvalidated extensions to 3D shot dispersion, face squaring, or empirical golfer precision were excised. The article explicitly scopes its synthetic models and analytical calculations to declared planar coordinates and manufactured mechanical test cases, noting that spatial 3D kinematics require separate coordinate charts, inertia properties, and task-space mappings.
+
+2. **Critique Boundary and Counterexamples:**
+   While the critique validly cautions against extending planar models to 3D orientation, the critique itself introduces unsupported assumptions:
+   - **Hypothesis of axial decoupling:** Forearm pronation/supination and shaft longitudinal rotation are not dynamically decoupled from planar shoulder and elbow torques in a 3D multibody chain; Coriolis and centrifugal cross-terms couple swing-plane velocity into off-plane axes.
+   - **Unsupported golfer precision numbers:** The critique claims elite golfers square the clubface to $\pm 0.5^\circ$ at 120 mph without citing a governed dataset, metrology protocol, or instrument uncertainty bounds.
+   - The canonical model retains strict evidence boundaries: it does not accept speculative "control pancake" models or uncalibrated golfer claims without reproducible empirical or simulation-ready evidence.
+

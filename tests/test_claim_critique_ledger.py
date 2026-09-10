@@ -63,8 +63,8 @@ def test_every_public_critique_has_exactly_one_ledger_record() -> None:
 def test_canonical_statuses_do_not_overstate_adjudication() -> None:
     statuses = [normalized_status(str(item["disposition"])) for item in _critiques(_canonical())]
 
-    assert statuses.count("open") == 33
-    assert statuses.count("responded") == 2
+    assert statuses.count("open") == 29
+    assert statuses.count("responded") == 6
     assert statuses.count("resolved") == 0
     assert statuses.count("rejected") == 0
 

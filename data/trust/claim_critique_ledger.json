@@ -185,9 +185,32 @@
       "critique_id": "crit-lie-bracket-formalism-overreach",
       "source_path": "critiques/lie_bracket_formalism_overreach.md",
       "severity": "high",
-      "disposition": "open",
+      "disposition": "responded",
       "affected_pages": ["articles/controllability-drift-ratio.qmd"],
-      "related_claim_ids": ["ad-dcr-001"]
+      "related_claim_ids": ["ad-dcr-001"],
+      "adjudication": {
+        "rationale": "The DCR article excises claims of continuous dimension collapse under drift, distinguishes acceleration actuation rank from full-state controllability, and bounds reachable sets under declared inputs.",
+        "evidence_paths": [
+          "tests/test_dcr_reachability_contract.py",
+          "tests/test_dcr_article_rigor.py",
+          "articles/controllability-drift-ratio.qmd"
+        ],
+        "verification_commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+        "verified_on": "2026-09-10",
+        "reviewer": "protected AffineDrift review",
+        "falsifier": "The maintained text reintroduces dimension-collapse claims or treats instantaneous input rank as state controllability.",
+        "uncertainty": "The response does not compute global reachable sets for spatial underactuated models.",
+        "next_gate": "Run declared finite-horizon three-dimensional perturbation studies with uncertainty and impact outcomes."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-09-10",
+          "commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+          "rationale": "Protected PR #4339 corrected DCR Lie bracket claims, actuation rank distinctions, and reachability boundaries."
+        }
+      ]
     },
     {
       "critique_id": "crit-misattribution-stability-gravity",
@@ -201,12 +224,35 @@
       "critique_id": "crit-normative-ambiguity-drift",
       "source_path": "critiques/normative_ambiguity_drift.md",
       "severity": "medium",
-      "disposition": "open",
+      "disposition": "responded",
       "affected_pages": [
         "articles/controllability-drift-ratio.qmd",
         "articles/theory-part1.qmd"
       ],
-      "related_claim_ids": ["ad-dcr-001"]
+      "related_claim_ids": ["ad-dcr-001"],
+      "adjudication": {
+        "rationale": "The canonical theory removes normative claims that high drift constitutes motor failure or passenger status, treating DCR strictly as a descriptive acceleration ratio without conflating vector alignment with free energy or psychological flow.",
+        "evidence_paths": [
+          "tests/test_dcr_reachability_contract.py",
+          "tests/test_dcr_article_rigor.py",
+          "articles/controllability-drift-ratio.qmd"
+        ],
+        "verification_commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+        "verified_on": "2026-09-10",
+        "reviewer": "protected AffineDrift review",
+        "falsifier": "The maintained text reintroduces normative claims equating passive drift with motor failure or ungrounded psychological flow states.",
+        "uncertainty": "The response does not model biological motor coordination or neuromuscular objective functions.",
+        "next_gate": "Run declared finite-horizon three-dimensional perturbation studies with uncertainty and impact outcomes."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-09-10",
+          "commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+          "rationale": "Protected PR #4339 removed normative drift interpretations and framed DCR as an unvalidated geometric scalar."
+        }
+      ]
     },
     {
       "critique_id": "crit-nullspace-interpretation",
@@ -244,17 +290,63 @@
       "critique_id": "crit-planar-dcr-blindness",
       "source_path": "critiques/planar_dcr_blindness.md",
       "severity": "high",
-      "disposition": "open",
+      "disposition": "responded",
       "affected_pages": ["articles/controllability-drift-ratio.qmd"],
-      "related_claim_ids": ["ad-dcr-001"]
+      "related_claim_ids": ["ad-dcr-001"],
+      "adjudication": {
+        "rationale": "The canonical article scopes DCR derivations strictly to declared planar coordinates and manufactured mechanical cases, rejecting unvalidated extensions to 3D clubface orientation while noting that 3D dynamics couple planar velocities to off-plane axes.",
+        "evidence_paths": [
+          "tests/test_dcr_reachability_contract.py",
+          "tests/test_dcr_article_rigor.py",
+          "articles/controllability-drift-ratio.qmd"
+        ],
+        "verification_commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+        "verified_on": "2026-09-10",
+        "reviewer": "protected AffineDrift review",
+        "falsifier": "The maintained text reasserts planar DCR as a proxy for 3D clubface closure or asserts uncoupled axial dynamics without evidence.",
+        "uncertainty": "The response does not solve full spatial 3D multibody reachability under musculoskeletal actuation.",
+        "next_gate": "Run declared finite-horizon three-dimensional perturbation studies with uncertainty and impact outcomes."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-09-10",
+          "commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+          "rationale": "Protected PR #4339 scoped DCR to declared planar models and excised unverified 3D clubface variance claims."
+        }
+      ]
     },
     {
       "critique_id": "crit-precision-gross-control",
       "source_path": "critiques/precision_vs_gross_control.md",
       "severity": "high",
-      "disposition": "open",
+      "disposition": "responded",
       "affected_pages": ["articles/controllability-drift-ratio.qmd"],
-      "related_claim_ids": ["ad-dcr-001"]
+      "related_claim_ids": ["ad-dcr-001"],
+      "adjudication": {
+        "rationale": "The canonical article withdraws claims that late downswing is locked into a ballistic trajectory with no meaningful correction possible, while clarifying that DCR does not equate to velocity percentages or bypass transversality in event-time sensitivities.",
+        "evidence_paths": [
+          "tests/test_dcr_reachability_contract.py",
+          "tests/test_dcr_article_rigor.py",
+          "articles/controllability-drift-ratio.qmd"
+        ],
+        "verification_commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+        "verified_on": "2026-09-10",
+        "reviewer": "protected AffineDrift review",
+        "falsifier": "The maintained text claims high DCR locks the trajectory or derives ball dispersion directly from scalar acceleration ratios.",
+        "uncertainty": "The response does not establish empirical feedback correction thresholds for human golfers in late downswing.",
+        "next_gate": "Run declared finite-horizon three-dimensional perturbation studies with uncertainty and impact outcomes."
+      },
+      "history": [
+        {
+          "from": "open",
+          "to": "responded",
+          "on": "2026-09-10",
+          "commit": "06ad67134fb08841281640d4373d9df1d7cc56ae",
+          "rationale": "Protected PR #4339 removed locked-in trajectory claims and distinguished scalar ratios from event sensitivities."
+        }
+      ]
     },
     {
       "critique_id": "crit-sequencing-lie-bracket-fallacy",

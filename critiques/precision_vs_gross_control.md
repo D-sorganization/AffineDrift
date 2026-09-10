@@ -60,3 +60,14 @@ Calculate the radius of the reachable set at impact. If it's $\pm 2^\circ$, admi
 **Location:** Abstract and Intro.
 **Suggestion:**
 Change "Practical Controllability collapses" to "Gross Trajectory Authority collapses."
+
+## Editorial Adjudication and Evidence Boundaries
+
+1. **Historical Versus Corrected State:**
+   The historical article asserted that late in the downswing "no meaningful correction is possible" and claimed that the golfer becomes "locked into a ballistic trajectory". In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), these claims were removed. The article explicitly specifies that instantaneous acceleration ratios do not quantify finite-horizon reachability sets, task-space clubhead delivery tolerances, or terminal impact sensitivity.
+
+2. **Critique Boundary and Counterexamples:**
+   While the critique properly distinguishes gross kinetic deflection from fine terminal adjustments, the critique itself oversteps its evidence boundaries:
+   - **Simplistic kinematic integration:** The critique posits a constant acceleration integration over 50 ms ($\Delta \theta \approx 0.5 \cdot a \cdot \Delta t^2$) yielding $0.7^\circ$ of face angle change. In a coupled multibody system, control torques pass through configuration-dependent inertia and Coriolis matrices; single-channel acceleration cannot be directly integrated into face orientation without accounting for dynamic coupling and neuromuscular force development rate limits.
+   - **Velocity percentage fallacy:** The critique claims that "1% authority on 45 m/s is 0.45 m/s". DCR is a ratio of acceleration vectors, not velocity magnitudes; control authority cannot be interpreted as a percentage scalar of clubhead linear speed.
+   - **Impact sensitivity:** As derived in `tests/test_dcr_article_rigor.py::test_task_event_time_response_matches_an_exact_contact_solution`, terminal impact outcomes require exact event-time sensitivity analysis with transversality conditions ($\frac{\partial t^*}{\partial x}$), which are entirely absent from both the original DCR text and the critique's back-of-the-envelope calculations.
