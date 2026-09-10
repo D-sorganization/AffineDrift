@@ -339,4 +339,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-10 | #4346 | Re-derive complete triple-pendulum dynamics, release and power accounting with verified examples and bounded wrist-control evidence. |
 
-| 2026-09-10 | #4347 | Correct brain-control prediction, inverse feasibility, delayed response and neuroscience evidence with ten worked answers and complete paired reading. |
+| 2026-09-10 | #4348 | Correct brain-control prediction, inverse feasibility, delayed response and neuroscience evidence with ten worked answers and complete paired reading. |

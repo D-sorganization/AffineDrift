@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4347 · Complete Brain Control and Neuroscience Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4347 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4348 (open)
 - **Branch:** `fix/4347-brain-control-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch24_motor_control_brain.tex`, `articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/brain_control_verified.*`, `tests/test_brain_control_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/brain-control-review.md`, `docs/development/technical-review/build_brain_control_figures.py`
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-10 (`261925d2`, complete paired reading; 5,202 tests; configured src/scripts coverage 79.29%, src-only 92.9%; focused 34, content 131, static 34, titles 636, configured mypy and 14 final brain-route browser records pass)
 - **Summary:** Corrects prediction/inverse dimensions, torque versus neural inputs, delayed observations, activation and finite-horizon/event response. Replaces unsupported neural algorithms, timing/noise constants and coaching conclusions with bounded primary evidence. Ten worked answers and shared functional/activation figure connect mechanics, observation, actuation, learning and task uncertainty. Audit records derivations, failures and exact reading limits.
-- **Next step:** Create the focused PR closing #4347 after normal hooks and parent-squash replay.
+- **Next step:** Verify PR #4348 protected CI, squash merge and revision-matched live evidence.
 
 ### DL-#4345 · Complete Triple-Pendulum Dynamics and Evidence
 
