@@ -342,4 +342,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-10 | #4348 | Correct brain-control prediction, inverse feasibility, delayed response and neuroscience evidence with ten worked answers and complete paired reading. |
 
 | 2026-09-10 | #4350 | Correct paired affine dynamics, drift capacity, energy and optimality with complete worked examples and verified vector fields. |
-| 2026-09-10 | #4351 | Rebuild paired constraint dynamics, interface power, reaction loads and capture with verified examples and complete worked answers. |
+| 2026-09-10 | #4352 | Rebuild paired constraint dynamics, interface power, reaction loads and capture with verified examples and complete worked answers. |

@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4351 · Complete Constraint Forces, Compatible Dynamics and Power
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4351 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4352 (open)
 - **Branch:** `fix/4351-constraint-forces-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch07_constraint_forces.tex`, `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/constraint_forces_verified.*`, `tests/test_constraint_forces_rigor.py`, `tests/test_physics_of_golf_glossary.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/constraint-forces-review.md`, `docs/development/technical-review/build_constraint_forces_figures.py`, `docs/development/technical-review/constraint-forces-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (working tree based on `18c3840c58ef1a151f7288813fd612176dcbfeff`; complete paired reading; root 5,229 passed and 79.29% configured coverage; focused 55, content 131, static 34, titles 636, mypy 91; style, links and 14 actual-route browser records pass)
+- **Last verified:** 2026-09-10 (`004676b40889c7dee980fefd3ebf039663f40a0c`; validated tree preserved on affine squash replay; normal commit/push hooks passed; complete paired reading; root 5,229 passed and 79.29% configured coverage; focused 55, content 131, static 34, titles 636, mypy 91; style, links and 14 actual-route browser records pass)
 - **Summary:** Rebuilds acceleration compatibility, rank/scaling, mass-metric projection, moving-contact power, physical segment energy, actuation/reaction coupling and plastic capture/release. Six worked answers and independently checked examples distinguish mechanical coupling from muscle and coaching inference. Full audit preserves derivation and evidence limits.
-- **Next step:** Open the protected implementation PR for #4351.
+- **Next step:** Verify protected checks and squash merge for PR #4352.
 
 ### DL-#4349 · Complete Affine Structure, Drift and Optimality
 
