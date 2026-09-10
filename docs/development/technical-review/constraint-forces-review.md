@@ -182,3 +182,7 @@ only canonical chapter sources, numerical evidence, tests and review records.
 ## Protected Delivery Checkpoint
 
 Implementation 004676b40889c7dee980fefd3ebf039663f40a0c preserves validated tree d15d6f93fe09346c203f6ebe437b36711bcaf189 after replay onto affine squash 60d0298826880ca24580908127e8032565407216. Parent/squash trees matched. Normal commit/push hooks passed. Ready PR #4352 closes #4351; protected checks and exact live publication remain. Git whitespace inspection reports Matplotlib-generated SVG path-line trailing spaces; these are inert serializer formatting, not prose or rendering defects.
+
+## Protected Merge
+
+All protected checks passed; PR #4352 squash-merged as b5362af0005c8ae1ad00e81390e9151991157155. Exact deployment 34470677053 remains in progress. Preserve the complete local implementation and reading evidence above.
