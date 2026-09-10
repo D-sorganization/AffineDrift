@@ -92,4 +92,5 @@ Keep this file current and concise. Replace instructional placeholders; do not a
 
 ## Change Log
 
-- `SELF` — Initial handoff for issue #3904: series sidebars, tangent-cluster wiring, and theory-chain links implemented and validated.
+- `SELF` — Adopt maintainable Mermaid C4 architecture map contract (docs/architecture/C4.md, scripts/architecture_map_contract.py, tests/test_architecture_map_contract.py, .github/workflows/architecture-map-contract.yml) for Repository_Management #1595.
+- `f094080234cc5cc59c186c891b37ab08cd5426bb` — Initial handoff for issue #3904: series sidebars, tangent-cluster wiring, and theory-chain links implemented and validated.

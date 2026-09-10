@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#1595 · Mermaid C4 Architecture Map Contract
+
+- **State:** in_progress
+- **Owner:** local
+- **Issue:** D-sorganization/Repository_Management#1595 (epic #1594)
+- **PR:** not created
+- **Branch:** `feat/1595-c4-architecture-map`
+- **Paths:** `docs/architecture/C4.md`, `scripts/architecture_map_contract.py`, `tests/test_architecture_map_contract.py`, `.github/workflows/architecture-map-contract.yml`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`SELF`; all contract tests passed; C4Context and C4Container validated)
+- **Summary:** Adopts the maintainable Mermaid C4 architecture-map contract for AffineDrift, providing C4Context, C4Container, Feature Map, and Architecture Change Log.
+- **Next step:** Push branch, open PR referencing Fixes D-sorganization/Repository_Management#1595, and verify CI passes.
+
 ### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 
 - **State:** in_progress
