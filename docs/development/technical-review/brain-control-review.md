@@ -190,11 +190,11 @@ Replay onto the parent squash preserved tree 50912a2fcdba0fae0f4c4331bd98ca4c74d
 The central development-log validator found a missing SHA in this new entry,
 now corrected, plus pre-existing peer #3903/#3902 metadata omissions. The local
 shared-script path is absent; the central checker was run explicitly. Peer entries
-were preserved. Create the focused PR closing #4347 after normal push hooks, verify protected
-CI and squash merge, then inspect revision-matched deployment evidence. Parent
-triple PR #4346 merged as 8808f68ab8b7e39c5110ce260473d02dbff63c45; its deployment
-34456863592 is running. Fascia/DCR PR #4344 merged as 0e30c134; first live evidence
-had one unrelated Geometry CSS HTTP 503 among 956 records. Failed-job retry of
-34452462094 was cancelled when the newer deployment started. Neither record is
-silently promoted to complete live verification. Continue the next long chapter
-and the queued DCR critiques #4340. The corpus remains unfinished.
+were preserved. PR #4348 passed protected checks and squash-merged as
+688dda81c3f0c38759d9994cbc0d5c0cd0478bd2. Exact deployment 34460868604 is in
+progress; live verification remains pending. Parent triple PR #4346 published
+successfully in deployment 34456863592 at 8808f68a; all 956 live records in
+artifact 10144974541 were inspected. That successor also verifies the retained
+fascia/DCR corrections after their original run's isolated CSS HTTP 503 and
+cancelled retry. Continue the affine/constraint chapters and queued DCR critiques
+#4340. The corpus remains unfinished.
