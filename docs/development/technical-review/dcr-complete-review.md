@@ -169,5 +169,7 @@ commit. The canonical-byte digest and its readiness/atlas dependents were
 regenerated before retrying. No mathematical or rendered content changed.
 The standalone development-log checker still reports the preserved peer
 #3903/#3902 metadata omissions; this feature's entry has its concrete SHA.
-Normal protected PR delivery is next.
+PR #4339 is open at canonical-evidence checkpoint c1df356c. Normal commit
+and push hooks pass; protected squash auto-merge is enabled. Exact protected
+checks, merge and live publication remain to be verified.
 The corpus and companion critiques remain unfinished.

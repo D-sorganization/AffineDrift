@@ -334,4 +334,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-10 | #4335 | Correct paired shaft beam, modal, coupled-input and energy models; distinguish relative recoil from measured fitting outcomes with two reproducible figures and six worked answers. |
 
 | 2026-09-10 | #4337 | Correct paired passive-control energy, drift and stability arguments; distinguish intrinsic mechanics from delayed feedback with a reproducible damping figure and 12 worked exercises. |
-| 2026-09-10 | #4338 | Correct the complete DCR article with explicit scaling, coordinate and capacity assumptions, reproducible counterexamples and finite-time impact sensitivity. |
+| 2026-09-10 | #4339 | Correct the complete DCR article with explicit scaling, coordinate and capacity assumptions, reproducible counterexamples and finite-time impact sensitivity. |
