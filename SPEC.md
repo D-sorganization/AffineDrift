@@ -352,6 +352,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-10 | #4362 | Adjudicate five DCR companion critiques with explicit mechanical boundaries, metric transport counterexamples and updated trust ledgers. |
 | 2026-09-10 | #4363 | Adopt maintainable Mermaid C4 architecture-map contract (C4Context, C4Container, Feature Map, Change Log, validator and workflow) (#1595). |
 | 2026-09-10 | #4364 | Wire reference cluster cross-article links (closes #3900). |
+| 2026-09-10 | #3901 | Wire motor-control and neuroscience cluster cross-article links, book chapter bridges, and theoretical section references (closes #3901). |
 
 
 
