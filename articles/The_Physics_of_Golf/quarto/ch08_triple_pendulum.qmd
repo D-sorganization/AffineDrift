@@ -1,446 +1,506 @@
 ---
-description: "Each segment has an inertia. The shoulder is hard to move (large , since it includes the torso). The forearm is easier (smaller ). The club is easiest..."
+pagetitle: "The Triple Pendulum: Coupling, Release and Control"
+description: "Derive three-link golf-swing dynamics, constraint release, segment power and task sensitivity, with verified counterfactuals and bounded wrist-control evidence."
+css:
+  - ../../../css/articulated-body.css
+  - ../../../css/computational-brain.css
+bibliography: ../golf_physics.bib
 ---
 
+# The Triple Pendulum: Coupling, Release and Control {#sec-triple_pendulum}
+[]{#ch-triple_pendulum}
 
-# The Triple Pendulum: Adding the Wrists {#sec-triple_pendulum}
 
-::: {.callout-tip}
-## Why Two DOF Isn't Enough
 
-In [Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual) and 7, we modeled the arm as a double pendulum: shoulder and elbow. This was useful for illustration, but it's incomplete.
 
-In a real swing, there's a third crucial articulation: the wrist.
 
-The wrist matters because:
-1. **Timing:** The wrist unlocks last, after the shoulders and hips. This sequential unlocking is the essence of the kinetic chain.
-2. **Speed amplification:** The wrist and club can achieve speeds that far exceed what the arm alone could produce.
-3. **Stored energy:** During the backswing and early downswing, the wrist is cocked (constrained). This cocking stores elastic potential energy that's released later.
-4. **Control:** The wrist is where the golfer has the most precise control, because the club's motion is most sensitive to wrist angles.
 
-A triple pendulum (shoulder, elbow, wrist) is the minimum model needed to capture the whip effect—the dramatic acceleration of the club in the final phase of the downswing.
 
-For a comprehensive counterfactual modeling sweep of distal timing and energy transfer on the companion 2-DOF system, see [Proximal-to-Distal Energy Transfer in the Golf Swing(../../proximal-distal-energy-transfer.html).
 
-:::
 
-## The Triple Pendulum Model
+
+
 
 ::: {.callout-note}
-## Triple Pendulum System
+## What an Additional Joint Lets Us Investigate
 
-The triple pendulum consists of three rigid segments:
-1. **Segment 1 (torso/arm):** Length $L_1$, mass $m_1$, moment of inertia $I_1$ (about the shoulder joint). Rotates by angle $q_1$ relative to vertical.
-2. **Segment 2 (forearm):** Length $L_2$, mass $m_2$, moment of inertia $I_2$ (about the elbow). Rotates by angle $q_2$ relative to segment 1.
-3. **Segment 3 (club):** Length $L_3$, mass $m_3$, moment of inertia $I_3$ (about the wrist). Rotates by angle $q_3$ relative to segment 2.
+[]{#context:triple_pendulum_motivation}
+A moving arm and club exchange energy through their connections. Muscles can add or absorb mechanical energy, while joint forces redirect motion and transfer power between bodies. An additional joint gives the system another way to change its shape and redistribute its motion. It does not guarantee a faster club, a particular release sequence or less muscular work.
 
-The configuration is fully specified by $\bm{q} = (q_1, q_2, q_3)^T \in \mathbb{R}^3$.
+The useful question is therefore specific: for the same bodies, initial state, admissible inputs and task, how does allowing an additional relative rotation change the attainable club motion? This chapter builds the mechanics needed to answer that question. A two-link arm–club model already includes a wrist hinge. Here the third link resolves an upper arm and forearm separately; it is a choice of resolution, not a universal minimum for explaining golf speed.
 
 :::
 
-### Understanding the Three Segments {#inplain:triple_pendulum_segments}
-In a real golfer:
-- Segment 1 represents the rotation of the shoulders and torso about the spine. This is the largest, slowest segment.
-- Segment 2 represents the rotation of the arm at the elbow. It's smaller and faster than segment 1.
-- Segment 3 represents the rotation of the club at the wrist. It's the smallest and fastest.
 
-Each segment has an inertia. The shoulder is hard to move (large $I_1$, since it includes the torso). The forearm is easier (smaller $I_2$). The club is easiest (tiny $I_3$).
+Our investigation connects four quantities that are often conflated: joint torque, segment power, angular velocity and clubhead velocity. A large club angular velocity need not imply large contemporaneous wrist power. Conversely, small net wrist work does not establish that the wrist is uncontrolled or mechanically unimportant. The configuration and the history of applied forces determine how those quantities relate.
 
-But the masses are also ordered: the torso is much heavier than the arm, which is much heavier than the club. These two facts—inertia decreases and lever arm decreases—create a situation where small forces at the wrist can produce enormous club speeds.
+## The Triple Pendulum Model {#the-triple-pendulum-model}
+[]{#sec-triple_pendulum_setup}
 
-## Equations of Motion for the Triple Pendulum
+::: {.callout-note}
+## Three Rigid Links and Three Relative Angles
 
-### Triple Pendulum Dynamics {#theorem:triple_pendulum_dynamics}
-The equations of motion for a planar triple pendulum are:
+[]{#triple_pendulum}
+Use a fixed shoulder pivot and three ideal planar revolute joints. Link 1 represents an upper arm, link 2 a forearm-and-hand aggregate, and link 3 a rigid club. Each link has length $L_i$, positive mass $m_i$, COM distance $c_i$ from its proximal joint, and positive planar rotational inertia $I_i$ about its own center of mass. These are independent specified body properties. An inertia measured about a proximal joint must first be converted using $I_{i,\mathrm{joint}}=I_i+m_i c_i^2$; adding that offset again would double-count it.
+
+The angle $q_1$ is measured counterclockwise from downward vertical. The angles $q_2$ and $q_3$ are measured from the preceding link. Thus $q_2=0$ means aligned links, whereas $q_2=90^\circ$ means a right angle. The absolute orientations are
 
 $$
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = \bm{u}
-$$ {#eq-triple_pendulum_eom}
+\theta_1=q_1,\qquad \theta_2=q_1+q_2,\qquad
+\theta_3=q_1+q_2+q_3.
+$$
 
-where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm{q}})$ is the Coriolis/centrifugal vector, $\bm{g}(\bm{q})$ is gravity, and $\bm{u} = (\tau_1, \tau_2, \tau_3)^T$ are the applied torques at the three joints.
+
+The configuration space of these ideal unrestricted hinges is a three-torus; computations use local or unwrapped radian coordinates in $\mathbb R^3$. Anatomical limits would restrict this domain. Relative joint rates $v=\dot q$ differ from absolute segment rates $\omega_i=\dot\theta_i$.
+
+:::
+
+
+### Understanding the Three Segments {#inplain:triple_pendulum_segments}
+[]{#inplain-triple_pendulum_segments}
+The shoulder is fixed in this example. There is no rotating torso, moving pelvis, second arm, shaft bending or ground-contact model hidden inside its parameters. The grip hinge is an ideal planar coordinate, not a measurement of anatomical wrist extension, radial deviation or forearm rotation. In particular, it cannot predict three-dimensional clubface orientation. Those features require additional bodies, coordinates and constraints.
+
+Mass alone does not order rotational inertia: the distance of mass from the reference axis matters. A long light club can have greater inertia about its grip than a heavier compact body about another axis. Nor does an inertia ranking establish which segment must move fastest in a coupled chain. The relevant kinetic energy includes COM motion and all absolute angular velocities.
+
+On narrow screens, scroll the figure or [open it at full size](../figures/triple_pendulum_verified.svg).
+
+
+::: {#fig-triple_pendulum_diagram}
+
+::: {.aba-diagram-scroll role="region" aria-label="Three-link geometry and computed rates; scroll horizontally" tabindex="0"}
+<img src="../figures/triple_pendulum_verified.svg" alt="A fixed-pivot upper-arm, forearm and club chain at relative angles 50, 80 and 100 degrees. Over a computed 50-millisecond unforced continuation, absolute club rate falls from 57 to 15.12 radians per second while proximal rates rise.">
+
+:::
+
+
+Three-Link Geometry and an Unforced Continuation From the Declared Initial State. Absolute Club Angular Velocity Decreases in This Example; an Additional Joint Does Not Guarantee Distal Acceleration. These Are Manufactured Dynamics, Not a Measured Golf Swing.
+
+:::
+
+
+Write the direction of a link as $e(\theta)=(\sin\theta,-\cos\theta)^T$. The COM position and its Jacobian are
+
+$$
+r_i=\sum_{k<i}L_k e(\theta_k)+c_i e(\theta_i),\qquad
+J_i=\frac{\partial r_i}{\partial q}.
+$$
+
+
+For $j\le i$, column $j$ of $J_i$ contains $\sum_{k=j}^{i-1}L_k e'(\theta_k)+c_i e'(\theta_i)$; later columns are zero. Let $s_i$ be the vector with its first $i$ entries equal to one and all later entries zero. Then $\dot r_i=J_i v$ and $\omega_i=s_i^T v$. This construction fixes the meaning of every subsequent term.
+
+## Equations of Motion for the Triple Pendulum {#equations-of-motion-for-the-triple-pendulum}
+[]{#sec-triple_pendulum_eom}
+
+::: {.callout-note}
+## Kinetic Energy, Gravity and Applied Torque
+
+[]{#theorem:triple_pendulum_dynamics}
+
+
+For the rigid, frictionless chain,
+
+$$
+T=\frac12\sum_i\left(m_i\lVert J_i v\rVert^2+I_i(s_i^T v)^2\right)
+ =\frac12 v^T M(q)v,\qquad V=\sum_i m_i g_0(r_i)_y,
+$$
+
+
+where $g_0=9.81\ \mathrm{m/s^2}$ and upward height is positive. Define $g(q)=\nabla_q V$. Lagrange's equations give
+
+$$
+M(q)\ddot q+c(q,v)+g(q)=\tau.
+$$
+[]{#eq-triple_pendulum_eom}
+
+The vector $c$ contains the velocity-dependent inertial terms; it is not itself a Coriolis matrix. The input $\tau_i$ is the net applied joint couple conjugate to relative rate $v_i$, so its mechanical power is $\tau_i v_i$. It is not an individual muscle force or neural excitation.
+
+:::
+
+
+To verify the gravity convention, set $h_1=m_1c_1+(m_2+m_3)L_1$, $h_2=m_2c_2+m_3L_2$ and $h_3=m_3c_3$. Then $V=-g_0\sum_i h_i\cos\theta_i$ and
+
+$$
+g=g_0\begin{bmatrix}
+h_1\sin\theta_1+h_2\sin\theta_2+h_3\sin\theta_3\\
+h_2\sin\theta_2+h_3\sin\theta_3\\h_3\sin\theta_3
+\end{bmatrix}.
+$$
+
+
+At rest with every link pointing down, gravity torque is zero. Displacing the chain slightly requires a holding torque with the sign of this potential gradient; the unforced acceleration uses its negative after solving through $M$.
 
 ## The Mass Matrix: Understanding Coupling {#sec-triple_pendulum_mass_matrix}
 
+
 ::: {.callout-note}
-## The $3 \times 3$ Mass Matrix for a Triple Pendulum
+## Complete Three-Link Inertia
 
-The mass matrix is:
-
-$$
-\bm{M}(\bm{q}) = \begin{bmatrix}
-M_{11} & M_{12} & M_{13} \\
-M_{12} & M_{22} & M_{23} \\
-M_{13} & M_{23} & M_{33}
-\end{bmatrix}
-$$ {#eq-triple_mass_matrix_structure}
-
-The diagonal entries are:
+[]{#triple_pendulum_mass_matrix}
+The COM construction yields
 
 $$
-\begin{aligned}
-M_{11} &= I_1 + m_1 L_{1,\text{cm}}^2 + (m_2 + m_3) L_1^2 + m_2 L_{2,\text{cm}}^2 + m_3 L_2^2 + m_3 L_{3,\text{cm}}^2 \notag\\
-       &\quad + 2 m_2 L_1 L_{2,\text{cm}} \cos q_2 + 2 m_3 L_1 L_2 \cos q_2 + 2 m_3 L_1 L_{3,\text{cm}} \cos(q_2 + q_3) + 2 m_3 L_2 L_{3,\text{cm}} \cos q_3 \\
-M_{22} &= I_2 + m_2 L_{2,\text{cm}}^2 + m_3 L_2^2 + m_3 L_{3,\text{cm}}^2 + 2 m_3 L_2 L_{3,\text{cm}} \cos q_3 \\
-M_{33} &= I_3 + m_3 L_{3,\text{cm}}^2
-\end{aligned}
+M=\sum_i\left(m_i J_i^T J_i+I_i s_i s_i^T\right)
+=\begin{bmatrix}M_{11}&M_{12}&M_{13}\\M_{12}&M_{22}&M_{23}\\M_{13}&M_{23}&M_{33}\end{bmatrix}.
 $$
+[]{#eq-triple_mass_matrix_structure}
 
-The off-diagonal terms capture the coupling between segments:
+For compact complete entries, define
 
 $$
 \begin{aligned}
-M_{12} &= m_2 L_1 L_{2,\text{cm}} \cos q_2 + m_3 L_1 L_2 \cos q_2 + m_3 L_1 L_{3,\text{cm}} \cos(q_2 + q_3) \notag\\
-       &\quad + I_2 + m_2 L_{2,\text{cm}}^2 + m_3 L_2^2 + m_3 L_{3,\text{cm}}^2 + 2 m_3 L_2 L_{3,\text{cm}} \cos q_3 \\
-M_{13} &= I_3 + m_3 L_{3,\text{cm}}^2 + m_3 L_1 L_{3,\text{cm}} \cos(q_2 + q_3) + m_3 L_2 L_{3,\text{cm}} \cos q_3 \\
-M_{23} &= I_3 + m_3 L_{3,\text{cm}}^2 + m_3 L_2 L_{3,\text{cm}} \cos q_3
+a&=I_1+m_1c_1^2+(m_2+m_3)L_1^2,\\
+b&=I_2+m_2c_2^2+m_3L_2^2,\qquad d=I_3+m_3c_3^2,\\
+\alpha&=m_2L_1c_2+m_3L_1L_2,\quad
+\beta=m_3L_1c_3,\quad \gamma=m_3L_2c_3.
 \end{aligned}
 $$
 
-(These expressions simplify if we ignore the inertias of distal segments about proximal joints, which is reasonable for golf swings.)
 
-Here $L_{3,\text{cm}} = L_3/2$, so the club terms correctly depend on the relative wrist angle $q_3$.
+Every constant has units $\mathrm{kg\,m^2}$. The entries are
+
+$$
+\begin{aligned}
+M_{11}&=a+b+d+2\alpha\cos q_2+2\beta\cos(q_2+q_3)+2\gamma\cos q_3,\\
+M_{22}&=b+d+2\gamma\cos q_3,\qquad M_{33}=d,\\
+M_{12}&=b+d+\alpha\cos q_2+\beta\cos(q_2+q_3)+2\gamma\cos q_3,\\
+M_{13}&=d+\beta\cos(q_2+q_3)+\gamma\cos q_3,\\
+M_{23}&=d+\gamma\cos q_3.
+\end{aligned}
+$$
+
+
+In particular, $M_{11}$ includes all three COM inertias, and both $M_{22}$ and $M_{12}$ include $I_2+I_3$. Their presence follows from the absolute angular rates. Omitting them requires an explicitly justified point-mass approximation, not merely the observation that a club is light. A club generally does not have $c_3=L_3/2$; that is only an assumption in the manufactured examples below.
 
 :::
 
+
+For any nonzero $v$, the angular contribution $\sum_i I_i(s_i^T v)^2$ is positive because the three $s_i$ span the velocity space. Thus the declared model has a symmetric positive-definite $M$ at every configuration. This property survives a task-Jacobian singularity: the tip may lose an instantaneous motion direction even while the joint-space inertia remains invertible.
+
 ### What the Mass Matrix Entries Mean {#inplain:mass_matrix_meaning}
-The diagonal entry $M_{ii}$ is the "effective inertia" of segment $i$ as seen from joint $i$. It includes:
-- The intrinsic inertia of segment $i$ ($I_i$).
-- The contribution of all distal segments (via their masses and positions).
+[]{#inplain-mass_matrix_meaning}
+At a fixed state, an incremental applied torque produces $\delta\ddot q=M^{-1}\delta\tau$. The inverse, rather than an isolated entry of $M$, determines acceleration response. Off-diagonal entries describe inertial coupling in the stated coordinates; they do not guarantee simultaneous motion, a universal ordering such as $M_{13}>M_{12}$, or diagonal dominance. Torques or constraints can hold selected coordinates fixed while others move.
 
-The off-diagonal entry $M_{ij}$ (with $i < j$) quantifies how much moving joint $j$ affects the acceleration of joint $i$. If $M_{ij}$ is large, the two joints are tightly coupled. If $M_{ij}$ is small, they're loosely coupled.
-
-For golf:
-- $M_{12}$ is large because the elbow and shoulder are mechanically coupled by the forearm mass.
-- $M_{13}$ is even larger because the club's mass contributes to both shoulder and elbow inertia.
-- $M_{23}$ is moderate because the wrist couples the club to the arm.
-
-This coupling means: **accelerating one joint automatically affects the others.** You can't rotate the shoulder without also rotating the elbow, even if the elbow muscles are relaxed. The inertia matrix ensures this coupling.
-
-**Example: Numerical Triple Pendulum Mass Matrix**
-
-Assume:
-- Segment 1 (arm): $L_1 = 0.4$ m, $m_1 = 2$ kg, $I_1 = 0.05$ kg$\cdot$m$^2$.
-- Segment 2 (forearm): $L_2 = 0.3$ m, $m_2 = 0.5$ kg, $I_2 = 0.01$ kg$\cdot$m$^2$.
-- Segment 3 (club): $L_3 = 0.5$ m, $m_3 = 0.2$ kg, $I_3 = 0.01$ kg$\cdot$m$^2$.
-
-These numbers are a specific worked example that extends the counterfactual two-link setup from Chapter 6. They are intentionally different from Chapter 03's two-link table values, because Chapter 08 models the wrist explicitly and uses a compact demonstration parameter set.
-
-At a downswing configuration where $q_2 = 90°$ (elbow straight, perpendicular to arm), the mass matrix is approximately:
+The diagonal $M_{ii}$ describes the inertia for accelerating coordinate $i$ while all other accelerations are held zero, with the necessary reaction torques supplied. If the other joints instead respond freely to an incremental torque only at $i$, the apparent inertia is
 
 $$
-\bm{M} \approx \begin{bmatrix}
-0.5 & 0.15 & 0.10 \\
-0.15 & 0.08 & 0.05 \\
-0.10 & 0.05 & 0.02
-\end{bmatrix} \text{ kg} \cdot \text{m}^2
-$$ {#eq-triple_mass_numerical}
+I_{i,\mathrm{free}}=\frac{1}{(M^{-1})_{ii}}
+=M_{ii}-M_{ir}M_{rr}^{-1}M_{ri},
+$$
 
-The diagonal entries decrease as we move down (from shoulder to club). The off-diagonal terms show decreasing coupling strength.
 
-To see this more clearly, let's invert:
+the Schur complement of the remaining coordinates $r$. These are different experiments. Neither quantity alone measures anatomical strength, energetic efficiency or control precision.
+
+
+::: {.callout-tip}
+## A Computed Matrix and Its Inverse
+
+[]{#triple_pendulum_mass_numerical}
+Use $L=(0.4,0.3,0.5)\ \mathrm m$, $m=(2,0.5,0.2)\ \mathrm{kg}$, $I=(0.05,0.01,0.01)\ \mathrm{kg\,m^2}$ and $c_i=L_i/2$. This is a manufactured short-club chain, not calibrated adult-driver anthropometry. At $q=(50,90,100)^\circ$,
 
 $$
-\bm{M}^{-1} \approx \begin{bmatrix}
-15.0 & -20.0 & 10.0 \\
--20.0 & 50.0 & -10.0 \\
-10.0 & -10.0 & 80.0
-\end{bmatrix}
-$$ {#eq-triple_mass_inverse_numerical}
+M\simeq\begin{bmatrix}
+0.259148&0.036844&0.000199\\
+0.036844&0.056541&0.019895\\
+0.000199&0.019895&0.022500
+\end{bmatrix}\ \mathrm{kg\,m^2}.
+$$
+[]{#eq-triple_mass_numerical}
 
-The entry $(\bm{M}^{-1})_{33} = 80$ is much larger than $(\bm{M}^{-1})_{11} = 15$. This means the wrist (joint 3) is much easier to accelerate than the shoulder (joint 1). In other words, it takes far less torque to get the wrist spinning at high speed than to spin the shoulders.
+The unrounded matrix has eigenvalues approximately $0.012310$, $0.060183$ and $0.265696\ \mathrm{kg\,m^2}$. Its computed inverse is
+
+$$
+M^{-1}\simeq\begin{bmatrix}
+4.45187&-4.19125&3.66665\\
+-4.19125&29.62083&-26.15467\\
+3.66665&-26.15467&67.53886
+\end{bmatrix}\ (\mathrm{kg\,m^2})^{-1}.
+$$
+[]{#eq-triple_mass_inverse_numerical}
+
+An incremental $1\ \mathrm{N\,m}$ at joint 3 therefore changes the acceleration vector by approximately $(3.67,-26.15,67.54)\ \mathrm{rad/s^2}$. The free apparent inertia at that coordinate is $0.01481\ \mathrm{kg\,m^2}$, compared with $M_{33}=0.02250$ when the other accelerations are fixed. A large response can amplify disturbances as well as useful inputs; it does not prove high precision.
+
+:::
+
 
 ## Coriolis Terms in the Triple Pendulum {#sec-triple_pendulum_coriolis}
 
-### Why Coriolis Gets Complicated With Three Segments {#inplain:triple_coriolis_complexity}
-With three segments, the Coriolis terms become much richer. The basic structure is still:
+### The Velocity-Dependent Terms and Their Signs {#inplain:triple_coriolis_complexity}
+[]{#inplain-triple_coriolis_complexity}
+The complete Christoffel expression is
 
 $$
-C_i = \sum_{j, k} \frac{\partial M_{ij}}{\partial q_k} \dot{q}_j \dot{q}_k
+c_i=\sum_{j,k}\frac12\left(
+\frac{\partial M_{ij}}{\partial q_k}
++\frac{\partial M_{ik}}{\partial q_j}
+-\frac{\partial M_{jk}}{\partial q_i}\right)v_jv_k.
 $$
+[]{#eq-coriolis_general_form}
 
-But now there are many terms. The key new effect is *cross-coupling*: the wrist velocity can influence shoulder and elbow accelerations through Coriolis.
+Keeping only $\sum_{j,k}(\partial M_{ij}/\partial q_k)v_jv_k$ omits the kinetic-energy gradient. A useful independent check is $v^T c=\tfrac12v^T\dot Mv$. Multiplying the equation of motion by $v^T$ then gives $\dot T+\dot V=\tau^T v$. Velocity-dependent inertia can redistribute motion while satisfying this energy balance; it is not an additional energy source.
 
-Physically, this manifests as the whip effect. When you rotate your shoulders while the wrist is extending, Coriolis creates a tangential acceleration on the club. This is why the club reaches such high speeds: it's not pushed by muscular torque, but yanked by Coriolis, which scales as velocity squared.
-
-**Example: Coriolis Whip at the Club**
-
-Suppose at a moment in the downswing:
-- Shoulder: $\dot{q}_1 = 15$ rad/s (shoulder rotating fast).
-- Elbow: $\dot{q}_2 = 20$ rad/s (arm extending).
-- Wrist: $\dot{q}_3 = 30$ rad/s (club rotating).
-
-The Coriolis term affecting the club (joint 3) includes contributions like:
+For the distal coordinate the cancellations simplify considerably:
 
 $$
-C_3 \approx \frac{\partial M_{23}}{\partial q_2} \dot{q}_2 \dot{q}_3 + \text{(cross terms)}
+c_3=\beta\sin(q_2+q_3)v_1^2
++\gamma\sin q_3(v_1+v_2)^2.
 $$
+[]{#eq-coriolis_club_example}
 
-The term $\frac{\partial M_{23}}{\partial q_2}$ depends on how the elbow angle affects the coupling between forearm and club. When $q_2$ is near $90°$ (arm extended), this derivative is large. The product $\dot{q}_2 \dot{q}_3 = 20 \times 30 = 600$ rad$^2$/s$^2$ is enormous.
+There is no $\partial M_{23}/\partial q_2$ contribution because $M_{23}=d+\gamma\cos q_3$ is independent of $q_2$. Also, $v_3$ cancels from this particular generalized component, although it remains in the other components and therefore can affect $\ddot q_3$ through the coupled solve. Neither $c_3$ nor $-c_3/M_{33}$ alone is the freely responding club acceleration.
 
-Even if $\frac{\partial M_{23}}{\partial q_2} \approx 0.01$ (a small number), the Coriolis torque is:
+
+::: {.callout-tip}
+## A Signed Inertial Term
+
+[]{#triple_coriolis_whip}
+At $q=(50,80,100)^\circ$ and $v=(12,20,25)\ \mathrm{rad/s}$ with the preceding parameters, $\beta=0.02$ and $\gamma=0.015\ \mathrm{kg\,m^2}$. Therefore
 
 $$
-C_3 \approx 0.01 \times 600 = 6 \text{ Nm}
+c_3=0.02\sin180^\circ(12)^2+0.015\sin100^\circ(32)^2
+\simeq15.127\ \mathrm{N\,m}.
 $$
+[]{#eq-coriolis_club_magnitude}
 
-This is comparable to or exceeding muscular torque, and it's purely a consequence of the kinematics, not active effort. The club is yanked forward by the rotating arm, and this yank is encoded in the Coriolis term.
-
-## The Whip Effect: Sequential Joint Unlocking
-
-::: {.callout-important}
-## The Whip Effect Explained
-
-The **whip effect** is the dramatic increase in club speed at the end of the downswing. It happens because the joints unlock in sequence:
-
-1. **Early downswing (0--0.2 s):** The shoulder unlocks first. The torso rotates forward, building angular momentum.
-2. **Mid-downswing (0.2--0.35 s):** The elbow unlocks (extends). The arm momentum is released, and the arm accelerates forward. The club, still locked at the wrist, comes along with the arm.
-3. **Late downswing (0.35--0.45 s):** The wrist unlocks (releases the club). Now the club can rotate independently. But it inherits all the momentum from the arm's rotation. Coriolis torques at the wrist are enormous, catapulting the club forward.
-
-The key insight: **each unlocking transfers momentum to the next segment via constraint forces.** The shoulder's momentum accelerates the arm (via the elbow constraint). The arm's momentum accelerates the club (via the wrist constraint).
-
-By the time the club is free, it has accumulated momentum from all three segments, all channeled through constraints that do zero net work.
+This term sits on the left of the equation of motion. It is not a measured wrist-muscle torque or proof of distal acceleration. Reversing both relative configuration angles reverses its sign at fixed rates; at straight alignment it vanishes. In the full unforced example below, the club's absolute angular rate decreases despite its initially large value.
 
 :::
 
-### Why Sequential Matters {#inplain:sequential_unlocking_why}
-If all three joints unlocked simultaneously, the momentum wouldn't be efficiently transferred. Each segment would accelerate independently, and the distal segments (arm and club) would be slower.
 
-But by unlocking in sequence—hips first, then shoulders, then elbows, then wrists—each segment inherits the momentum from the previous segment. This is called the *summation of speed principle*.
-
-A crude analogy: imagine a train with three cars. If all three cars accelerate forward at the same time (equal torque on each), each one reaches a moderate speed. But if the engine accelerates, then pushes the second car (which then accelerates), then the second car pushes the third car (which accelerates), the third car ends up faster than any single car would if it had been accelerated alone.
-
-In the golf swing, the "engine" is the legs and hips (driven by muscle). The hips push the shoulders (via the spine, a constraint). The shoulders push the arms (via the shoulder joint, a constraint). The arms push the club (via the wrist, a constraint). By the end, the club is moving at $50$--$60$ mph, far faster than any single muscle could achieve.
-
-And the beautiful part: this transfer happens *automatically*, due to constraints and inertia, with minimal active muscular effort once the sequence is initiated.
-
-## Wrist Cock and Release as a Constraint Mechanism
+## The Whip Effect: What Constraint Release Changes {#the-whip-effect-sequential-joint-unlocking}
+[]{#sec-whip_effect}
 
 ::: {.callout-note}
-## Wrist Cock and Release
+## An Ideal Release Event
 
-**Wrist cock:** During the backswing and early downswing, the wrist is held in a bent position (typically $80°--120°$ of extension relative to neutral). This position is maintained by muscular torque, which acts against the spring force of the wrist tendons.
+[]{#whip_effect}
+Suppose a mechanical lock holds $q_3=\bar q_3$ with $v_3=0$. With $A=(0,0,1)$, its equations are
 
-**Wrist release:** Late in the downswing, the wrist muscles relax, and the elastic spring force dominates, causing the wrist to extend rapidly.
+$$
+\begin{bmatrix}M&-A^T\\A&0\end{bmatrix}
+\begin{bmatrix}\ddot q\\\lambda\end{bmatrix}
+=\begin{bmatrix}\tau-c-g\\0\end{bmatrix}.
+$$
 
-From a constraint perspective:
-- While cocked, the wrist is *actively constrained* by muscular torque.
-- When released, the wrist is *passively freed* to follow the natural dynamics.
+
+The multiplier supplies the joint reaction required to maintain the lock. Because $Av=0$, its power $\lambda^T Av$ is zero. This is a stationary ideal constraint; a driven constraint can do work.
+
+Remove the lock with no impulse and no instantaneous change in potential or body properties. Position and velocity are continuous: $q^+=q^-$ and $v^+=v^-$. Mechanical energy is consequently continuous. Acceleration can jump when the reaction is removed. There is no instantaneous inheritance of another body's momentum and no injection of energy by the removal itself.
 
 :::
 
-### Wrist Cock as Energy Storage {#inplain:wrist_cock_energy}
-When the wrist is held in a cocked position, the wrist tendons are stretched. This is elastic potential energy. When the wrist is released, this energy is converted to kinetic energy, accelerating the club.
 
-However—and this is important—the elastic energy in the wrist is *tiny* compared to the kinetic energy of the club at impact. A rough calculation:
-- Wrist elastic potential energy: $\sim 5$--$10$ J (depends on flexibility).
-- Club kinetic energy at impact: $\sim 200$ J.
+### Why the State at Release Matters {#inplain:sequential_unlocking_why}
+[]{#inplain-sequential_unlocking_why}
+The state reached before release reflects all earlier inputs and constraints. Changing a holding interval can change that state, the subsequent force transmission and the timing of a useful tip trajectory. That provides a mechanism by which release timing can matter. It does not imply that a later release always improves speed or that shoulder, elbow and wrist must unlock at universal times.
 
-So the wrist cock is NOT the primary source of club speed. Instead, it's a *timing mechanism*.
-
-By cocking the wrist and holding it through mid-downswing, the golfer creates a "lag"—a delay in the club's rotation relative to the arm's rotation. This lag stores a relationship (not energy): when released at the right moment, the club's large moment of inertia means it's moving slower than the arm, so it accelerates rapidly when freed.
-
-This is why wrist cock matters: it's about timing the release to maximize the arm-to-club momentum transfer, not about storing energy.
-
-**Example: Wrist Cock Timing and Club Speed**
-
-Scenario A: Early wrist release
-- At $t = 0.2$ s (early downswing), the wrist is released.
-- The arm is rotating at $\dot{q}_1 = 8$ rad/s, $\dot{q}_2 = 10$ rad/s.
-- The club, now free, initially has the same angular velocity as the arm constraint would dictate.
-- But the club's small inertia means it quickly adopts the arm's velocity, with minimal acceleration.
-
-Scenario B: Late wrist release
-- At $t = 0.40$ s (late downswing), the wrist is released.
-- The arm is rotating at $\dot{q}_1 = 20$ rad/s, $\dot{q}_2 = 35$ rad/s (much faster).
-- The club is released when the arm is already moving very fast.
-- Coriolis torques at the club are now enormous, catapulting the club to $\dot{q}_3 = 60$ rad/s.
-
-In this illustrative scenario, the difference is that by releasing late, the club inherits the arm's higher velocity, and Coriolis amplifies it further. A release that's 200 ms later can result in 20--30% higher club speed.
-
-**Insight:** This is why wrist release timing is so important in teaching. It's not about how hard you release (muscular effort), but about *when* you release relative to the arm's motion. A golfer who releases too early (before the arm has built up speed) will have a slower club at impact. A golfer who releases at the optimum moment will achieve maximum speed.
-
-## Triple Pendulum ZTCF Family: Passive Dynamics Become Even More Dominant {#sec-triple_pendulum_ztcf}
-
-**Example: ZTCF for the Triple Pendulum**
-
-Starting from a downswing configuration:
+For the manufactured chain, use $q=(50,80,100)^\circ$ and the compatible locked rate $v=(12,20,0)\ \mathrm{rad/s}$ with zero applied joint torques. Immediately before removal,
 
 $$
-\begin{aligned}
-q_1 &= 50° \quad \dot{q}_1 = 12 \text{ rad/s} \quad \tau_1 = 0\\
-q_2 &= 80° \quad \dot{q}_2 = 20 \text{ rad/s} \quad \tau_2 = 0\\
-q_3 &= 100° \quad \dot{q}_3 = 25 \text{ rad/s} \quad \tau_3 = 0
-\end{aligned}
+\ddot q^-\simeq(199.109,-308.438,0)^T\ \mathrm{rad/s^2},\qquad
+\lambda\simeq8.594\ \mathrm{N\,m}.
 $$
 
-Set the declared applied generalized control $\bm{u} = \mathbf{0}$ and solve:
+
+Immediately afterward the same state gives
 
 $$
-\bm{M}(\bm{q}) \ddot{\bm{q}} = -\bm{C}(\bm{q}, \dot{\bm{q}}) - \bm{g}(\bm{q})
-$$ {#eq-triple_ztcf_ode}
-
-Using a numerical solver with the mass matrix and Coriolis terms from @sec-triple_pendulum_mass_matrix and @sec-triple_pendulum_coriolis, the accelerations are approximately:
-
-$$
-\begin{aligned}
-\ddot{q}_1^{\text{ZTCF}} &\approx -2 \text{ rad/s}^2 \quad \text{(shoulder decelerating)}\\
-\ddot{q}_2^{\text{ZTCF}} &\approx 15 \text{ rad/s}^2 \quad \text{(elbow accelerating)}\\
-\ddot{q}_3^{\text{ZTCF}} &\approx 40 \text{ rad/s}^2 \quad \text{(club accelerating rapidly)}
-\end{aligned}
+\ddot q^+\simeq(158.666,-65.564,-596.883)^T\ \mathrm{rad/s^2}.
 $$
 
-**Interpretation:**
 
-Under this declared zero-control intervention, the modeled shoulder decelerates slightly while the elbow and club accelerate through the retained inertial coupling. This result does not identify muscle activation.
+The negative relative wrist acceleration is a computed result, not a release rule. The change in acceleration satisfies $M(\ddot q^- -\ddot q^+)=A^T\lambda$. Both sides of the event have the same energy. In contrast, suddenly imposing a lock on an incompatible nonzero $v_3$ generally requires an impulse and a separately specified impact law; that is a different event.
 
-Integrating this trajectory forward 0.05 seconds (50 ms, roughly late downswing), the ZTCF predicts:
+## Wrist Cock and Release as a Constraint Mechanism {#wrist-cock-and-release-as-a-constraint-mechanism}
+[]{#sec-wrist_cock_release}
 
-$$
-\begin{aligned}
-q_1(0.05) &\approx 50° + 12 \times 0.05 - 0.5 \times 2 \times 0.0025 \approx 50.6°\\
-q_2(0.05) &\approx 80° + 20 \times 0.05 + 0.5 \times 15 \times 0.0025 \approx 81.0°\\
-q_3(0.05) &\approx 100° + 25 \times 0.05 + 0.5 \times 40 \times 0.0025 \approx 102.9°
-\end{aligned}
-$$
+::: {.callout-note}
+## A Pose, a Lock and a Spring Are Different Models
 
-And velocities:
+[]{#wrist_cock_release}
+A bent wrist pose by itself specifies neither a force nor stored energy. In these relative coordinates, a fixed wrist angle is $q_3=\bar q_3$. Fixing the sum of the second and third relative angles would instead fix the club orientation relative to the upper arm, a different constraint. Neither condition should be inferred merely from a projected video angle.
 
-$$
-\begin{aligned}
-\dot{q}_1(0.05) &\approx 12 - 2 \times 0.05 = 11.9 \text{ rad/s}\\
-\dot{q}_2(0.05) &\approx 20 + 15 \times 0.05 = 20.75 \text{ rad/s}\\
-\dot{q}_3(0.05) &\approx 25 + 40 \times 0.05 = 27 \text{ rad/s}
-\end{aligned}
-$$
-
-The club's angular velocity increased by 2 rad/s (from 25 to 27) in just 50 ms, with *zero* muscle torque. This is the whip effect: passive Coriolis acceleration at the club. The specific values depend on the assumed initial conditions; the qualitative result — that passive Coriolis forces accelerate the club without muscular input — is robust [@Nesbit2005].
-
-### The DCR Blows Up Even Larger With Three Segments {#constraint:triple_dcr_blowup}
-With a third segment, the Drift-Control Ratio at the club becomes even more extreme. In the final 30 ms before impact:
-- Coriolis torque at the club: $\sim 800$--$1000$ Nm.
-- Muscular torque available at the club: $\sim 10$--$20$ Nm.
-- DCR: on the order of $50:1$ to $100:1$ (model-dependent).
-
-In this regime the club is effectively ballistically committed; attempting to "accelerate" it at impact through muscle torque alone would have negligible effect. The vast majority of speed comes from the passive dynamics of the prior segments.
-
-## Comparison: Double vs. Triple Pendulum
-
-**Example: DCR and Club Speed: Double vs. Triple**
-
-Consider the same initial arm motion in both models. For a double pendulum (shoulder and elbow):
-
-At mid-downswing ($\dot{q}_1 = 12$ rad/s, $\dot{q}_2 = 20$ rad/s), the elbow accelerates due to gravity and Coriolis. The ZTCF predicts $\ddot{q}_2 \approx 20$ rad/s$^2$.
-
-For a triple pendulum with the wrist initially locked (constraint $q_2 + q_3 = \text{const}$):
-
-At the same instant, the wrist constraint couples the club to the arm. When released mid-downswing, the club's acceleration is constrained by the arm's motion. Once released, Coriolis at the wrist produces $\ddot{q}_3 \approx 40$ rad/s$^2$ or higher.
-
-**Numerical comparison:**
-
-| | **Double Pendulum** | **Triple Pendulum** |
-| --- | --- | --- |
-| Club velocity at 0.35 s | 35 rad/s | 25 rad/s (wrist locked) |
-| Club velocity at 0.40 s (post-release) | 35 rad/s (still 2 segments) | 40 rad/s (wrist free) |
-| DCR at 0.40 s | $\sim 20:1$ | $\sim 50:1$ |
-| Impact speed (linear, at club tip) | 70 mph | 90 mph |
-
-*Comparison of double vs. triple pendulum swing speeds.*
-
-**Insight:** The triple pendulum model predicts higher club speeds because the wrist release creates an additional acceleration phase. The double pendulum saturates (the elbow can't accelerate any faster), but the triple pendulum still has room to accelerate the club via the wrist mechanism.
-
-This is why adding the wrist model is crucial: it explains how the club reaches professional-level speeds ($80$--$100$ mph) without requiring implausibly large muscular torques.
-
-## Energy Redistribution in the Triple Pendulum
-
-::: {.callout-important}
-## Energy Flows From Proximal to Distal
-
-In the triple pendulum, energy flows in sequence:
-
-1. **Early downswing:** The legs and hips accelerate the torso, building kinetic energy in the shoulder rotation.
-2. **Mid-downswing:** As the shoulder continues to rotate and the elbow unlocks, energy is transferred from shoulder kinetic energy to elbow kinetic energy. The shoulder slows slightly (kinetic energy decreases), while the arm speeds up (kinetic energy increases).
-3. **Late downswing:** As the wrist unlocks, energy is transferred from the arm to the club. The arm slows, the club accelerates.
-4. **At impact:** The club has the highest kinetic energy, and the torso is slowing down significantly.
-
-This energy redistribution happens through constraint forces, which do zero net work but transfer energy between segments.
+An ideal lock enforces a geometric condition. An active joint controller uses torque to maintain an approximate pose. A passive elastic joint supplies a configuration-dependent torque and stores recoverable energy. A viscoelastic joint also depends on deformation history and dissipates energy. These mechanisms can produce similar-looking motion while having different power and control requirements.
 
 :::
 
-### Why Distal Segments Move Faster {#inplain:distal_faster_explanation}
-A common observation: the club moves faster than the arm, which moves faster than the shoulders. This seems counterintuitive if you think of torques cascading down—shouldn't the hips push the shoulders, which push the arms, so everything moves at similar speeds?
 
-The explanation: the segments have different inertias. The shoulder has much larger inertia than the arm, which has much larger inertia than the club.
-
-If the same kinetic energy is distributed among different inertias, the one with smaller inertia will have higher velocity:
+### Wrist Cock and Recoverable Energy {#inplain:wrist_cock_energy}
+[]{#inplain-wrist_cock_energy}
+For a declared linear torsional spring with natural angle $q_{3,0}$,
 
 $$
-T = \frac{1}{2} I \omega^2 \implies \omega = \sqrt{\frac{2T}{I}}
+U_s=\frac12 k(q_3-q_{3,0})^2,\qquad
+\tau_s=-k(q_3-q_{3,0}).
 $$
 
-So if the arm transfers energy to the club, the club's velocity will be higher (since its inertia is smaller).
 
-Over the course of the downswing, as the shoulder slows (losing kinetic energy) and the club speeds up (gaining kinetic energy), this is exactly what we see: proximal segments decelerate, distal segments accelerate. It's not magic—it's just energy conservation and inertia differences.
+With parallel damping $\tau_d=-b v_3$, the rigid-chain balance becomes
 
-## Summary: The Triple Pendulum and the Kinetic Chain
+$$
+\frac{d}{dt}(T+V+U_s)=\tau_{\mathrm{active}}^T v-bv_3^2,
+\qquad b\ge0.
+$$
 
-::: {.callout-important}
-## Key Takeaways: The Triple Pendulum
 
-1. **Three segments are necessary:** A double pendulum can't explain professional club speeds. The wrist is essential.
-2. **The mass matrix captures coupling:** Off-diagonal terms show how accelerating one joint affects others. This coupling is automatic—no muscle effort needed.
-3. **Coriolis whips the club:** Coriolis torques at the wrist are enormous ($\sim 500$--$1000$ Nm) and scale with velocity squared. They're the primary driver of club acceleration in late downswing.
-4. **Sequential unlocking is key:** The hips, shoulders, elbows, and wrists unlock in sequence. Each unlocking transfers momentum to the next segment via constraint forces. By the time the club is free, it has accumulated momentum from all prior segments.
-5. **Wrist cock is a timing mechanism:** Wrist cock stores minimal elastic energy. Its real function is to delay the club's release until the arm is moving fast, maximizing the arm-to-club momentum transfer.
-6. **The whip effect is passive:** The dramatic club acceleration at the end of the downswing is not driven by muscular effort but by Coriolis forces in a three-segment system. The DCR explodes to 50:1 or higher—the motion is ballistic.
-7. **Energy redistributes, not increases:** The total mechanical energy of the system is (roughly) constant. But energy redistributes from shoulder to arm to club. Distal segments move fastest because they have smallest inertia.
-8. **Control is in the setup and timing:** Once the swing is in motion, there's almost no active control over club speed. Control happens through:
+Recoil can supply power when $U_s$ decreases. Estimating how much a human wrist supplies requires measured torque–angle behavior, its natural configuration, rate/history effects and the actual multi-axis motion. A cock angle or a generic tendon stiffness is insufficient to establish a universal 5–10 J store or its fraction of club energy.
 
+An actively held posture can have zero joint mechanical power while muscles consume metabolic energy or exchange energy internally. Net joint power also cannot identify co-contraction. This is why mechanical work, motor commands, tissue loading and subjective effort must remain separate in the explanation. The muscle-force and fascia chapters develop the actuator and material states needed to connect them.
+
+## Triple Pendulum ZTCF Family: A Computed Counterfactual {#sec-triple_pendulum_ztcf}
+
+Setting the declared generalized input to zero gives
+
+$$
+\dot q=v,\qquad \dot v=-M(q)^{-1}\bigl(c(q,v)+g(q)\bigr).
+$$
+[]{#eq-triple_ztcf_ode}
+
+Here the model is frictionless and has no spring, muscle-activation or material-memory state. Gravity remains. If those states or passive forces are added, they must remain in the appropriate counterfactual equations; zero neural excitation would not mean zero muscle force. A pointwise zero-torque acceleration and a forward trajectory that keeps torque zero for 50 ms answer different questions. The trajectory evolves through states different from any actively controlled continuation.
+
+Use the preceding manufactured body parameters with $q(0)=(50,80,100)^\circ$ and $v(0)=(12,20,25)\ \mathrm{rad/s}$. Convert initial angles to radians before integration. The initial acceleration is approximately $(131.936,809.896,-1371.119)\ \mathrm{rad/s^2}$, computed from the complete equations rather than assigned independently.
+
+
+::: {.table-wrapper role="region" aria-label="Computed absolute rates and tip speed; scroll horizontally" tabindex="0"}
+| Time (ms) | Upper Arm (rad/s) | Forearm (rad/s) | Club (rad/s) | Tip Speed (m/s) |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 12.000 | 32.000 | 57.000 | 23.976 |
+| 25 | 17.382 | 46.411 | 41.051 | 12.937 |
+| 50 | 22.961 | 49.001 | 15.120 | 7.924 |
 
 :::
 
-**What comes next:** The triple pendulum assumes the body is a serial chain: hips → shoulders → arms → club. But the body is actually more complex—it forms closed kinematic loops. The pelvis and shoulders are connected through the spine, creating a parallel mechanism. Understanding these parallel structures is the key to explaining phenomena like the X-factor and why some golfers are more effective than others despite similar arm motion.
 
-## Chapter Exercises: The Triple Pendulum
+Manufactured Zero-Torque Continuation: Absolute Rates and Tip Speed.
 
-{Conceptual}
-Explain in plain language: Why does releasing the wrist late in the downswing produce a faster club speed than releasing it early, even though the muscular effort is the same?
 
-(Hint: Think about what velocity the club inherits when it's released.)
+The angle vectors at 25 and 50 ms are approximately $(70.582,117.600,113.367)^\circ$ and $(99.942,157.321,85.308)^\circ$. At 50 ms the relative rates are $(22.961,26.041,-33.881)\ \mathrm{rad/s}$; the club's absolute rate is their sum, $15.120\ \mathrm{rad/s}$. Confusing $v_3$ with $\omega_3$ would reverse the interpretation of its rotation.
 
-{Mass Matrix}
-For the triple pendulum with parameters:
-- $I_1 = 0.1$, $m_1 = 3$, $L_1 = 0.4$.
-- $I_2 = 0.02$, $m_2 = 1$, $L_2 = 0.3$.
-- $I_3 = 0.01$, $m_3 = 0.2$, $L_3 = 0.5$.
+The reproducible calculation uses DOP853 with relative tolerance $10^{-10}$, absolute tolerance $10^{-12}$ and maximum step 1 ms, sampled every 0.1 ms. Tightening those tolerances to $10^{-12}$ and $10^{-13}$ and halving the maximum step changes each state component by less than $10^{-8}$ in its own radian or radian-per-second units. The variation of $T+V$ stays below $10^{-7}$ J. COM-Jacobian inertia is independently compared with the printed closed entries, and recursive Newton–Euler bias with the Christoffel expression. These checks verify this manufactured calculation; they do not validate it as a golfer.
 
-At configuration $q_2 = 90°, q_3 = 100°$:
-1. Compute the diagonal entries $M_{11}, M_{22}, M_{33}$.
-2. Compute the off-diagonal entry $M_{23}$.
-3. What does a large $M_{23}$ tell you about the coupling between wrist and arm?
+The tip speed falls from 23.976 to 7.924 m/s in this interval. The club kinetic energy falls from 31.241 to 5.419 J, while upper-arm kinetic energy rises from 9.360 to 34.268 J. This is a counterexample to inevitable proximal-to-distal energy concentration. Other initial states and torque histories can produce distal acceleration; the equations specify how to test them. Reversibility of ideal mechanics does not supply a universal preferred direction of energy transfer.
 
-{Coriolis Term}
-The Coriolis term at the club includes a cross term like $\frac{\partial M_{23}}{\partial q_2} \dot{q}_2 \dot{q}_3$.
+### Drift, Available Control and the Task Output {#constraint:triple_dcr_blowup}
+[]{#constraint-triple_dcr_blowup}
+The six-state dynamics are control-affine for this torque-input model:
 
-1. Estimate $\frac{\partial M_{23}}{\partial q_2}$ numerically by computing $M_{23}$ at $q_2 = 89°$ and $q_2 = 91°$ and taking the difference.
-2. At $\dot{q}_2 = 20$ rad/s and $\dot{q}_3 = 25$ rad/s, compute the Coriolis torque.
-3. Compare to a typical muscular torque at the wrist ($\sim 10$ Nm). Is the Coriolis term dominant?
+$$
+\dot x=f(x)+G(x)\tau,\qquad
+f=\begin{bmatrix}v\\-M^{-1}(c+g)\end{bmatrix},\qquad
+G=\begin{bmatrix}0\\M^{-1}\end{bmatrix}.
+$$
 
-{Whip Effect}
-Simulate the triple-pendulum forward ZTCF trajectory, with the declared applied generalized-control channel set to zero, from the state given in @sec-triple_pendulum_ztcf.
 
-1. Integrate forward 50 ms and plot all three angles and angular velocities.
-2. At what time does the club angular velocity reach its maximum? Does it occur near the very end?
-3. Explain: Why does the club accelerate most in the final phase?
+Adding a coordinate does not automatically increase a drift-to-control ratio. The ratio requires a stated output or state metric, input units, admissible torque set and regularization scale. Comparing $f$ with an unspecified control vector conflates available control capacity with the particular torque a golfer happened to apply. A large instantaneous drift contribution cannot establish negligible future control authority or explain neuromuscular effort by itself.
 
-{Energy Partition}
-At three time points during a simulated downswing (early, mid, late):
-1. Compute the kinetic energy of each segment: $T_i = \frac{1}{2} I_i \dot{q}_i^2$.
-2. Plot the energy distribution as a stacked bar chart (percentage of total energy in each segment).
-3. Describe the trend: does the energy flow from proximal to distal segments?
+For the rigid tip position $y=r_{\mathrm{tip}}(q)$, where $c_3$ is replaced by $L_3$ in the COM-position construction,
 
-{Application: Wrist Release Timing}
-Watch two slow-motion videos of golf swings (e.g., from PGA Tour):
-1. One video of a golfer with a high club head speed (90+ mph).
-2. One video of an amateur golfer with lower club head speed (70--80 mph).
+$$
+\dot y=J_{\mathrm{tip}}v,\qquad
+\ddot y=-J_{\mathrm{tip}}M^{-1}(c+g)+\dot J_{\mathrm{tip}}v
++J_{\mathrm{tip}}M^{-1}\tau.
+$$
 
-In each video, identify the moment of wrist release (when the club face suddenly "catches up" to the arm's rotation). Is the professional golfer releasing earlier or later relative to the arm's acceleration peak?
+
+The geometric acceleration $\dot J_{\mathrm{tip}}v$ matters as well as joint acceleration. Speed, direction, strike location and three-dimensional face orientation are distinct task quantities. This planar model represents only the first two and a planar tip location. It cannot justify claims about minimal clubface-control effort.
+
+A useful comparison propagates a bounded torque perturbation over a specified time interval and measures its effect on the chosen output, with identical starting state and mechanics. If the endpoint is a ball-contact event, changing the trajectory also changes contact time; evaluate the event consistently. Sensitivity to a joint angle may amplify both intended corrections and sensor or execution error. High sensitivity is therefore not synonymous with precision or easy control.
+
+## Comparison: Double vs. Triple Pendulum {#comparison-double-vs.-triple-pendulum}
+[]{#sec-double_vs_triple_pendulum}
+The comparison must specify what the two-link model represents. An upper-arm/forearm chain has no club. An arm/club chain has a wrist hinge but lumps arm shape. A torso/arm/club model has three segments but resolves different anatomy from this chapter. Counting links does not make these models interchangeable.
+
+A controlled reduction of our model locks $q_3=\bar q_3$ and writes
+
+$$
+q=N z+\bar q,\qquad
+N=\begin{bmatrix}1&0\\0&1\\0&0\end{bmatrix},\qquad
+\bar q=(0,0,\bar q_3)^T.
+$$
+
+
+The reduced inertia is $M_r=N^T M N$, with projected bias, gravity and input, and $\dot q=N\dot z$. This preserves the full mass distribution and its kinetic energy. Deleting the club mass or its rotational inertia is not the same reduction. For a different locked coordinate, use its corresponding embedding.
+
+Allowing the third coordinate enlarges the kinematic possibilities. An optimization over a truly larger feasible set cannot reduce the optimum only if every previous trajectory remains feasible, the objective is unchanged, and sufficient admissible torque can reproduce the old lock. Removing a mechanical lock while keeping tight torque bounds need not satisfy that inclusion. A free joint is not an actuator with unlimited holding capacity.
+
+Comparisons should therefore match initial energy and state mapping, body parameters, input and power limits, duration or contact event, and task objective. Report both attainable speed and strike constraints. A universal percentage improvement, fixed mph table or DCR increase cannot be deduced from link count.
+
+## Energy Redistribution in the Triple Pendulum {#energy-redistribution-in-the-triple-pendulum}
+[]{#sec-triple_energy_redistribution}
+
+::: {.callout-note}
+## Segment Energy and Joint Power
+
+[]{#triple_energy_flow}
+For segment $i$,
+
+$$
+T_i=\frac12m_i\lVert J_i v\rVert^2+\frac12 I_i\omega_i^2,
+\qquad \omega_i=\sum_{j\le i}v_j.
+$$
+
+
+Using only $\tfrac12 I_i v_i^2$ omits COM translation and substitutes relative for absolute rotation. The correct segment energies sum to $T$; coordinate cross terms in $\tfrac12v^T Mv$ are not additional stores to assign independently to bodies.
+
+:::
+
+
+At an ideal joint, the connected bodies share the velocity $v_P$ of the joint point. A reaction force $F$ can supply power $F\cdot v_P$ to one body and $-F\cdot v_P$ to the other. These powers cancel for the complete chain but can substantially change individual segment energies. Equal and opposite joint couples have total power $\tau_i(\omega_i-\omega_{i-1})=\tau_i v_i$, with the fixed base rate zero. A joint force can thus transfer substantial power to the club while the local wrist couple also adds or absorbs power. These contributions are compatible, not competing descriptions of a single quantity.
+
+To identify a particular transfer, compute each body's external and intersegment force/couple power and include gravitational and elastic terms in the chosen balance. A sequence of angular-speed peaks alone does not identify the transfer path, amount of work or actuator responsible. Nor does one body's decrease in rotational kinetic energy prove its muscles actively brake to accelerate another body.
+
+### When a Distal Segment Can Move Faster {#inplain:distal_faster_explanation}
+[]{#inplain-distal_faster_explanation}
+For a single rotation with an identified rotational energy $E_{\mathrm{rot}}$,
+
+$$
+|\omega|=\sqrt{\frac{2E_{\mathrm{rot}}}{I}}.
+$$
+[]{#eq-energy_velocity_relation}
+
+This explains how a smaller inertia can support a larger rate at the same allocated rotational energy. In a moving chain, however, that allocation is an outcome of dynamics, and total segment energy also includes translation. Neither the equal-energy premise nor monotonic distal acceleration follows from the formula. Clubhead linear speed further depends on the vector sum of all upstream velocity contributions.
+
+### What Golf Research Adds
+Sprigings and Mackenzie used an optimized planar torso–arm–club model with bounded muscle-torque generators to compare release strategies. Their reported advantage from delaying release was modest, and active wrist torque after release was advantageous. They also reported substantial power transfer into the club through wrist-joint forces. This model result illustrates why transferred power and local actuator power must be assessed together; it does not validate our upper-arm/forearm/club parameters or prescribe an individual golfer's release time.  [@SprigingsMackenzie2002Release]
+
+Nesbit's motion-driven three-dimensional analysis examined 85 amateur golfers using a full-body model and flexible club. The study reported marked individual differences and identified wrist motion, hand trajectory and work as relevant to club motion. Its modeled forces and torques depend on measured kinematics and mechanical assumptions; they are not direct measurements of separate muscle forces or the result of randomly assigning release strategies. Its richer model also exposes quantities that a planar hinge cannot resolve, including clubface orientation.  [@Nesbit2005]
+
+The common lesson is methodological. First define the mechanical system and power ports. Then ask which observed quantities constrain it, which counterfactuals it can support, and which intervention would distinguish alternative explanations. A passive power-transfer pathway does not make the whole golfer passive. Conversely, active control can exploit coupled dynamics without supplying all of a distal segment's instantaneous power locally.
+
+## Summary: The Triple Pendulum and the Kinetic Chain {#summary-the-triple-pendulum-and-the-kinetic-chain}
+[]{#sec-triple_pendulum_summary}
+Three links let us resolve an additional relative motion. A consistent model connects mass distribution to coupled acceleration, joint forces to segment power, torque to mechanical work, and the resulting configuration and rates to the club's task-space motion. Release changes an admissible motion or a force law; ideal impulse-free removal preserves the instantaneous state and energy. Whether subsequent motion helps the strike remains a question for the specified state, inputs and task.
+
+The investigation should track preparation, energy supply, timing, material storage, feedback and strike constraints together. None is reducible to a count of links or an instantaneous drift ratio. The next step toward a golfer can add a moving base, three-dimensional wrist and shoulder motion, both arms, flexible tissues and contact. A spine connecting pelvis to shoulders is a serial connection; closed loops arise when an additional path reconnects bodies, as when both hands couple the arms through a shared club. The topology and constraint forces must be modeled explicitly.
+
+Continue with [Zero-Torque Counterfactuals](ch06_zero_torque_counterfactual.html), [Constraint Release](ch07_constraint_forces.html), [Passive Distributed Control](ch27_passive_distributed_control.html), [Fascia Mechanics](ch12_fascia.html), and [Proximal-to-Distal Energy Transfer in the Golf Swing](../../proximal-distal-energy-transfer.html).
+
+## Chapter Exercises and Worked Answers {#chapter-exercises-the-triple-pendulum}
+### 1. Release Timing and the Comparison Being Made
+Explain why the statement “later release gives greater club speed at the same effort” is not a consequence of adding a third link. State what would make a comparison meaningful.
+
+**Worked answer.** Removing a stationary ideal lock with no impulse preserves $q$, $v$ and mechanical energy at that instant. Any benefit must come from the state reached before removal and the subsequent dynamics. Equal subjective effort does not specify equal joint work, equal torque bounds or equal initial energy. Compare the same bodies, state mapping, input limits, initial energy and strike objective; report the resulting torque histories, work, duration and club output. Some states benefit from a given timing change and others do not. The chapter's release example initially accelerates the relative wrist coordinate in the negative direction.
+
+### 2. Complete Inertia With Different Body Parameters
+Set $m=(3,1,0.2)\ \mathrm{kg}$, $L=(0.4,0.3,0.5)\ \mathrm m$, $I=(0.1,0.02,0.01)\ \mathrm{kg\,m^2}$, $c_i=L_i/2$, $q_2=90^\circ$ and $q_3=100^\circ$. Compute the three diagonal entries and $M_{23}$. Explain the difference between a mass-matrix entry and an acceleration response.
+
+**Worked answer.** Substitution gives $M_{11}=0.450398$, $M_{22}=0.077791$, $M_{33}=0.022500$ and $M_{23}=0.019895\ \mathrm{kg\,m^2}$. The first entry includes $I_1+I_2+I_3$, not just $I_1$; the second includes $I_2+I_3$. At fixed state, freely responding acceleration increments satisfy $\delta\ddot q=M^{-1}\delta\tau$. Holding other accelerations fixed instead requires their reaction torques. The size of $M_{23}$ by itself cannot determine the sign or size of wrist acceleration under an arbitrary torque vector.
+
+### 3. Differentiate the Actual Coupling
+For the worked-example parameters, estimate $\partial M_{23}/\partial q_2$ from $q_2=89^\circ$ and $91^\circ$ at fixed $q_3=100^\circ$. Compute $c_3$ at the initial state of the counterfactual example.
+
+**Worked answer.** Both values of $M_{23}=d+\gamma\cos q_3$ are identical. Their difference divided by $2\pi/180$ radians is zero. Multiplying that derivative by any velocity product still gives zero. The nonzero complete component is instead $c_3=\beta\sin(q_2+q_3)v_1^2+\gamma\sin q_3(v_1+v_2)^2=15.127\ \mathrm{N\,m}$ at $(50,80,100)^\circ$ and $(12,20,25)\ \mathrm{rad/s}$. To compute acceleration, solve all three coupled equations, including gravity and the other bias components. Comparing this single generalized component with an unsupported “typical wrist torque” would not establish passive dominance.
+
+### 4. Integrate Before Interpreting the Whip
+Reproduce the 50 ms zero-torque continuation. Report relative and absolute club rates and tip speed at the final time. Compare a constant-initial-acceleration approximation with the integration and explain the difference.
+
+**Worked answer.** The final relative rate is $v_3=-33.881\ \mathrm{rad/s}$, the absolute club rate is $\omega_3=15.120\ \mathrm{rad/s}$, and the tip speed is $7.924\ \mathrm{m/s}$. The initial absolute club rate was $57\ \mathrm{rad/s}$. On the specified 0.1 ms output grid, its maximum is at the initial sample, not at the end. A quadratic Taylor step must use $q(0)+v(0)\Delta t+\tfrac12\ddot q(0)\Delta t^2$ entirely in radians. For $q_3$ it predicts approximately $73.421^\circ$, compared with the integrated $85.308^\circ$. The changing configuration, velocity-dependent bias and coupled inertia make the initial acceleration a poor constant approximation over this interval. Numerical refinement and energy checks address integration error; they do not remove uncertainty in the physical model.
+
+### 5. Track Segment Energy and Whole-System Balance
+Compute segment kinetic energies at 0, 25 and 50 ms. Does this example concentrate energy in the club? Does the sum of kinetic energies have to stay constant?
+
+**Worked answer.** In upper-arm, forearm, club order, the kinetic energies in joules are approximately $(9.360,18.640,31.241)$, $(19.639,23.758,13.886)$ and $(34.268,15.457,5.419)$. The club fraction of total kinetic energy decreases, so this example does not show obligatory distal concentration. Kinetic energy totals change from $59.241$ to $57.283$ to $55.144$ J because gravitational potential changes. The sum $T+V$ is conserved within the reported numerical tolerance. Include moving-COM energy and absolute segment rotation; $\tfrac12I_i v_i^2$ does not reproduce either ledger.
+
+### 6. What a Video Can and Cannot Establish
+Design a study of wrist-release timing and club speed. Specify a measurable event, coordinate convention and comparison, and identify what ordinary slow-motion video cannot resolve.
+
+**Worked answer.** One possible event is the first crossing of a declared three-dimensional arm–club angle during the downswing, with an explicit rule for multiple crossings. This is a kinematic event, not proof that a lock vanished or muscle torque became zero. Estimate it from calibrated synchronized observations, report frame timing and reconstruction uncertainty, and align it to a separately measured strike event. Measure clubhead speed and strike outcomes independently. Compare repeated trials within golfers or a controlled intervention with matched equipment and a defined task; model individual variation rather than inferring a universal rule from one professional and one amateur. A single projected video cannot identify a three-dimensional joint angle, muscle force, elastic energy store or the causal effect of timing. Inverse dynamics additionally needs inertial parameters and external/contact forces; estimating separate muscle contributions needs further assumptions or measurements.

@@ -18,12 +18,26 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4345 · Complete Triple-Pendulum Dynamics and Evidence
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4345 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** not created
+- **Branch:** `fix/4345-triple-pendulum-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch08_triple_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/triple_pendulum_verified.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_triple_pendulum_rigor.py`, `tests/test_ch08_triple_pendulum_mass_matrix.py`, `docs/development/technical-review/triple-pendulum-review.md`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`SELF`, complete paired reading; 5,146 tests, 92.88% coverage; focused 31, content 131, static 34, titles 636, configured types and canonical browser 14/14 pass)
+- **Summary:** Defines one consistent planar model, derives complete inertia and Christoffel bias, computes a converged zero-torque counterexample and ideal lock release, separates segment power from local actuation, and bounds wrist-control claims with primary evidence. Six worked answers and historical destinations are preserved. Derivation and failure history are recorded in the audit.
+- **Next step:** Commit, replay onto the verified parent squash with tree equality, then submit for protected CI and live verification.
+
+
 ### DL-#4342 · Durable Claim-Review Evidence Through Deployment
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4342 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (merged; live verification pending)
 - **Branch:** `fix/4341-fascia-mechanics-rigor`
 - **Paths:** `reports/technical-review/dcr-complete-review.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `tests/test_claim_audit_output_boundary.py`
 - **Started:** 2026-09-10
@@ -36,7 +50,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4341 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (merged; live verification pending)
 - **Branch:** `fix/4341-fascia-mechanics-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch12_fascia.tex`, `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/fascia_viscoelastic_memory.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_fascia_mechanics_rigor.py`, `tests/test_physics_of_golf_pdf_contract.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/fascia-mechanics-review.md`
 - **Started:** 2026-09-10
