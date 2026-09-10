@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4331 · Muscle Force Models, Tendon Energy and Control Inference
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4331 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** not created
+- **Branch:** `fix/4331-muscle-force-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch17_muscle_force_generation.tex`, `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `docs/development/technical-review/muscle-force-review.md`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`71e80bb9`, complete original editions and seven exercises read; working-tree audit)
+- **Summary:** Confirmed errors in velocity normalization, Hill limits, muscle/tendon force balance, energy units, activation timing and control-affine interpretation. Citation checks also reveal an incorrectly described gait model used for forearm parameters. No corrected chapter or validation yet.
+- **Next step:** Derive and independently test the replacement muscle/tendon examples.
+
 ### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
 
 - **State:** in_review
