@@ -65,3 +65,7 @@ Continue under Affine4255/4253, Tools5073/5074/5068 and UpstreamDrift9700.
 The remaining numerical work includes event-resolved force/work accuracy and
 runtime qualification; physical force/FRF, calibrated radiation and blinded
 perception remain distinct acceptance requirements.
+
+## Publication Checkpoint
+
+Source b14f1a392e446211da3ca402951f7aa147495922 is published in ready PR4356; all normal commit/push hooks pass. The standalone central development-log validator initially rejected the SELF-only verification field; the checkpoint now records this exact verified source. Remaining errors belong to pre-existing peer entries3903/3902 and are retained without modifying their scope. Full-site/protected CI and review remain required.

@@ -3,7 +3,8 @@
 - Repository/worktree: D-sorganization/AffineDrift,
   C:/Users/diete/Repositories/AffineDrift-impact-regularity.
 - Branch: docs/4255-contact-force-regularity; baseline b5362af0005c8ae1ad00e81390e9151991157155;
-  implementation SELF; PR not created. Governing issue4255, parent4253.
+  implementation b14f1a392e446211da3ca402951f7aa147495922; publication checkpoint SELF; ready PR4356
+  https://github.com/D-sorganization/AffineDrift/pull/4356. Governing issue4255, parent4253.
   Existing development entry DL-0035 is updated in place.
 - Adds the force-jump/impulse distinction, spectral derivation, candidate-law
   external-forcing limits and source-identified numerical evidence to the
@@ -23,8 +24,11 @@
   performance investigation is a bounded Jacobian/Frechet matrix series with
   the existing routine as fallback; no law/grid/deadline change is authorized
   by this theory note. Physical/perceptual requirements remain open.
-- Next: publish this source through normal hooks and open a ready review PR.
-  Then qualify protected site/review checks; do not close4255 from this increment.
+- All normal commit/push hooks pass. The central development-log check initially
+  rejected SELF without a source SHA; this checkpoint names the verified source.
+  Existing peer entries3903/3902 have separate metadata failures and are unchanged.
+- Next: qualify protected site/review checks on ready PR4356; do not close4255
+  from this increment.
 
 ## Preserved Earlier Turnover
 

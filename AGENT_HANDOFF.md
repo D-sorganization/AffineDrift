@@ -41,7 +41,7 @@
 - Initial theory4258, Coriolis4282 and grip qualification4298 are merged.
 - Active4255 synthesis: docs/4255-contact-force-regularity in
   C:/Users/diete/Repositories/AffineDrift-impact-regularity, baseline b5362af0,
-  implementation SELF; PR not created. Extends the existing acoustic include
+  implementation b14f1a392e; ready PR4356. Extends the existing acoustic include
   with force regularity and externally forced contact-law limits.
 - Full Python3.12:5229 passes,29 skips,79.29% coverage; five focused and131
   content checks pass. Bibliography/title/xrefs and Quarto1.8.26 article render
