@@ -5,7 +5,7 @@
 Issue #4345 under #4009, #4021 and Physics #4054. Both original editions were
 read completely, prioritizing the approximately 5,821-word print chapter.
 The paired replacement is implemented; complete print/web reading and all final
-local checks pass. Protected CI, merge and live deployment remain pending. Branch `fix/4345-triple-pendulum-rigor`, stacked parent
+local checks pass. PR #4346 protected-squash-merged as 8808f68ab8b7e39c5110ce260473d02dbff63c45. Exact deployment 34456863592 succeeded; all 956 live records across 239 routes in artifact 10144974541 were independently inspected, with no failures, retries or serious/critical axe findings. Branch `fix/4345-triple-pendulum-rigor`, stacked parent
 5a58618418479fc27ec23b93f0ad3e07983858c0. Preserve peer Chapter 29/impact work,
 immutable publication bytes and scientific-authority pins. Related caption
 finding #4320 is included in this complete chapter scope.

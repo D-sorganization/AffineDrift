@@ -9,14 +9,14 @@ This document provides the formal audit and inventory of all figures across the 
 | **Total Chapters Audited** | 34 |
 | **Chapters with Figures** | 29 |
 | **Total LaTeX Figures** | 38 |
-| **TikZ Figures** | 12 |
-| **Raster / Includegraphics Figures** | 26 |
+| **TikZ Figures** | 11 |
+| **Raster / Includegraphics Figures** | 27 |
 | **LaTeX Figure Labels** | 38 |
 | **LaTeX Prose Figure Refs** | 3 |
-| **Total Quarto Figures** | 27 |
-| **Quarto Figure Defs (Divs / Imgs / Cells)** | 27 |
-| **Quarto Prose Figure Mentions** | 26 |
-| **Missing Figures in Quarto** | **11** |
+| **Total Quarto Figures** | 28 |
+| **Quarto Figure Defs (Divs / Imgs / Cells)** | 28 |
+| **Quarto Prose Figure Mentions** | 29 |
+| **Missing Figures in Quarto** | **10** |
 
 ## Chapter Parity Matrix
 
@@ -26,7 +26,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch02_language_of_motion` | The Language of Motion | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch03_double_pendulum` | The Double Pendulum: Golf's Simplest Useful Model | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch04_forces_and_torques` | Forces and Torques: Where They Come From | 1 | 1 | 0 | ❌ Missing 1 |
-| `ch05_affine_structure` | The Affine Structure: Drift and Control | 1 | 1 | 0 | ❌ Missing 1 |
+| `ch05_affine_structure` | The Affine Structure:\\Drift and Control | 1 | 0 | 1 | ✅ Parity |
 | `ch06_zero_torque_counterfactual` | The Zero-Torque Counterfactual | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch07_constraint_forces` | Constraint Forces: The Hidden Engines of the Swing | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch08_triple_pendulum` | The Triple Pendulum:\\Coupling, Release and Control | 1 | 0 | 1 | ✅ Parity |
@@ -65,7 +65,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch02_language_of_motion` | 1 | `fig:ch02_arm_diagram` | TikZ Diagram | Double Pendulum Model of the Arm in Generalized Coordinates. The Shoulder Angle $\theta_1$... |
 | `ch03_double_pendulum` | 1 | `fig:ch03_double_pendulum` | TikZ Diagram | Double Pendulum Model of the Golf Swing. Link 1 (Upper Arm, Blue) Rotates About the Should... |
 | `ch04_forces_and_torques` | 1 | `fig:ch04_force_decomposition` | TikZ Diagram | The Five Sources of Torque in the Manipulator Equation. The Passive Forces (Inertial, Velo... |
-| `ch05_affine_structure` | 1 | `fig:ch05_drift_vector_field` | TikZ Diagram | Qualitative drift vector field in a 2D slice of state space (shoulder angle $\theta_1$ and... |
+| `ch05_affine_structure` | 1 | `fig:ch05_drift_vector_field` | Includegraphics | Declared Models of Drift and Optimal Timing. The Upper Panel Shows Normalized Directions a... |
 | `ch06_zero_torque_counterfactual` | 1 | `fig:ch06_ztcf_timeline` | TikZ Diagram | Schematic model comparison of a declared drift-equivalent generalized quantity (red) and a... |
 | `ch07_constraint_forces` | 1 | `fig:constraint_forces_hinge` | TikZ Diagram | Constraint Forces at a Hinge Joint. The constraint force $\bm{F}_c$ acts at the joint, per... |
 | `ch08_triple_pendulum` | 1 | `fig:triple_pendulum_diagram` | Includegraphics | Three-Link Geometry and an Unforced Continuation From the Declared Initial State. Absolute... |

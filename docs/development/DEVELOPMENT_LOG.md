@@ -18,71 +18,84 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4349 · Complete Affine Structure, Drift and Optimality
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4349 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4350 (open)
+- **Branch:** `fix/4349-affine-structure-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch05_affine_structure.tex`, `articles/The_Physics_of_Golf/quarto/ch05_affine_structure.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/affine_structure_verified.*`, `tests/test_affine_structure_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/affine-structure-review.md`, `docs/development/technical-review/build_affine_structure_figures.py`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (working tree based on `83d9fd47`; static-CI gravity-name correction verified by 11 focused tests, code quality, Ruff and Black; complete paired reading; 5,213 root tests and 79.29% configured coverage; focused 34, content 131, static 34, titles 636, mypy 91, style and site links pass)
+- **Summary:** Re-derives complete coupled drift, inverse inertia and constrained vector fields; separates capacity, realized input, energy and finite-time task authority. Seven worked answers and a reproduced figure replace unsupported phase/optimality claims. Full print/web reading corrected conversion defects missed by layout checks; all 30 historical web destinations now verified. The audit records source limits, numerical derivations and failure history.
+- **Next step:** Verify PR #4350 protected checks, squash merge and exact live publication.
+
 ### DL-#4347 · Complete Brain Control and Neuroscience Evidence
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4347 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4348 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4348 (merged; live verification pending)
 - **Branch:** `fix/4347-brain-control-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch24_motor_control_brain.tex`, `articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/brain_control_verified.*`, `tests/test_brain_control_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/brain-control-review.md`, `docs/development/technical-review/build_brain_control_figures.py`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`261925d2`, complete paired reading; 5,202 tests; configured src/scripts coverage 79.29%, src-only 92.9%; focused 34, content 131, static 34, titles 636, configured mypy and 14 final brain-route browser records pass)
+- **Last verified:** 2026-09-10 (`688dda81c3f0c38759d9994cbc0d5c0cd0478bd2`, protected squash; deployment 34460868604 in progress; implementation checks and full reading remain recorded in the audit)
 - **Summary:** Corrects prediction/inverse dimensions, torque versus neural inputs, delayed observations, activation and finite-horizon/event response. Replaces unsupported neural algorithms, timing/noise constants and coaching conclusions with bounded primary evidence. Ten worked answers and shared functional/activation figure connect mechanics, observation, actuation, learning and task uncertainty. Audit records derivations, failures and exact reading limits.
-- **Next step:** Verify PR #4348 protected CI, squash merge and revision-matched live evidence.
+- **Next step:** Inspect revision-matched live evidence from deployment 34460868604.
 
 ### DL-#4345 · Complete Triple-Pendulum Dynamics and Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4345 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4346 (merged; live verification pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4346 (merged and published)
 - **Branch:** `fix/4345-triple-pendulum-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch08_triple_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/triple_pendulum_verified.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_triple_pendulum_rigor.py`, `tests/test_ch08_triple_pendulum_mass_matrix.py`, `docs/development/technical-review/triple-pendulum-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`90f06e2b`, complete paired reading; 5,146 tests, 92.88% coverage; focused 31, content 131, static 34, titles 636, configured types and canonical browser 14/14 pass)
+- **Last verified:** 2026-09-10 (`8808f68ab8b7e39c5110ce260473d02dbff63c45`, successful deploy 34456863592; all 956 live records / 239 routes in artifact 10144974541 independently inspected with no failures or retries)
 - **Summary:** Defines one consistent planar model, derives complete inertia and Christoffel bias, computes a converged zero-torque counterexample and ideal lock release, separates segment power from local actuation, and bounds wrist-control claims with primary evidence. Six worked answers and historical destinations are preserved. Derivation and failure history are recorded in the audit.
-- **Next step:** Inspect revision-matched live evidence from deployment 34456863592 for merge 8808f68ab8b7e39c5110ce260473d02dbff63c45.
+- **Next step:** Retain the published derivation while reviewing the remaining constraint and affine chapters.
 
 
 ### DL-#4342 · Durable Claim-Review Evidence Through Deployment
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4342 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (merged; live verification pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (merged; verified in published successor 8808f68a)
 - **Branch:** `fix/4341-fascia-mechanics-rigor`
 - **Paths:** `reports/technical-review/dcr-complete-review.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `tests/test_claim_audit_output_boundary.py`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`87956740`, RED reproduced deployment 34447587020's missing-review failure; GREEN after relocation; 35 affected checks and 239-route scoped publication gate pass)
+- **Last verified:** 2026-09-10 (`8808f68ab8b7e39c5110ce260473d02dbff63c45`, successful deploy 34456863592; all 956 live records / 239 routes in artifact 10144974541 independently inspected with no failures or retries) Retained fascia sources/figure, DCR article/bound review/inventory and pruning test are byte-identical between 0e30c134 and this successor.
 - **Summary:** Quarto output pruning removed the DCR review because it was stored under docs/. Move durable bound evidence to reports/technical-review, update references/digests and enforce survival of actual pruning for every reviewed route. Scientific authority and publication gates remain intact.
-- **Next step:** Inspect successful successor deployment evidence for the retained DCR review after run 34452462094 retry was cancelled.
+- **Next step:** Continue the remaining corpus review, including companion DCR critiques #4340.
 
 ### DL-#4341 · Fascia Mechanics and Biological Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4341 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (merged; live verification pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (merged; verified in published successor 8808f68a)
 - **Branch:** `fix/4341-fascia-mechanics-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch12_fascia.tex`, `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/fascia_viscoelastic_memory.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_fascia_mechanics_rigor.py`, `tests/test_physics_of_golf_pdf_contract.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/fascia-mechanics-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`87956740`, committed fascia implementation; 5,137 tests passed, 92.88% coverage; affected 45, content 131, static 34, titles 636, canonical browser 14/14 and full paired reading pass)
+- **Last verified:** 2026-09-10 (`8808f68ab8b7e39c5110ce260473d02dbff63c45`, successful deploy 34456863592; all 956 live records / 239 routes in artifact 10144974541 independently inspected with no failures or retries) Retained fascia sources/figure, DCR article/bound review/inventory and pruning test are byte-identical between 0e30c134 and this successor.
 - **Summary:** Replaces the complete paired chapter with explicit force/power/energy distinctions, correct SI examples, nonlinear and viscoelastic derivations, directional coupling, augmented control/sensing states and bounded primary evidence. Eight worked answers and a shared reproducible figure preserve historical links. Corrects the legacy regression that preserved the erroneous 1.25 J calculation. Source boundaries, failures and validation are documented. Companion DCR critiques remain separately queued as #4340.
-- **Next step:** Inspect successful successor deployment evidence for the retained DCR review after run 34452462094 retry was cancelled.
+- **Next step:** Continue the remaining corpus review, including companion DCR critiques #4340.
 
 ### DL-#4338 · DCR Scaling, Coordinates and Correction Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4338 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4339 (merged)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4339 (merged; verified in published successor 8808f68a)
 - **Branch:** `fix/4338-dcr-complete-rigor`
 - **Paths:** `articles/controllability-drift-ratio.qmd`, `tests/test_dcr_article_rigor.py`, `tests/test_scientific_trust_metadata.py`, `src/affine_control/research_readiness/fixtures.py`, `data/research_protocols`, `data/trust/claim_audit_inventory.json`, `reports/technical-review/dcr-complete-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`06ad67134fb08841281640d4373d9df1d7cc56ae`, protected squash verified; live deployment failed before publication; implementation 92e92d6577edc6ca501ba290645b67ecf767aa0f; normal hooks passed; 5,124 tests passed, 92.88% coverage; final affected 84 and canonical browser 14/14 pass)
+- **Last verified:** 2026-09-10 (`8808f68ab8b7e39c5110ce260473d02dbff63c45`, successful deploy 34456863592; all 956 live records / 239 routes in artifact 10144974541 independently inspected with no failures or retries) Retained fascia sources/figure, DCR article/bound review/inventory and pruning test are byte-identical between 0e30c134 and this successor.
 - **Summary:** Complete replacement withdraws unsupported downswing growth and derives scaling, coordinate Hessians, transported metrics, regularization, finite-time reachability and event sensitivity. Thirteen independent tests support the argument. Readiness now names the actual route reviewer with coherent manufactured chronology; scientific protocol states and immutable authority pins remain unchanged. Full reading, mobile/table/disclosure QA, content, static, titles, links, style and types pass. Initial digest/date failures and visually detected dark-panel defect were corrected and documented. Companion critiques and remaining corpus stay open.
-- **Next step:** Verify corrected publication through PR #4344 and its exact live evidence.
+- **Next step:** Continue the remaining corpus review, including companion DCR critiques #4340.
 
 ### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
 

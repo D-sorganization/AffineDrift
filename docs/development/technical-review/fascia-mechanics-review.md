@@ -137,10 +137,16 @@ The preceding DCR PR #4339 protected-squash-merged at
 
 ## Delivery Checkpoint
 
-Fascia implementation 4996252605900afafef908877e101e7368941a01 and deployment
-repair 87956740 are submitted as PR #4344. All normal commit and push hooks
-passed; protected squash auto-merge is enabled. The moved audit needed one
-Prettier normalization; its evidence digest was regenerated before retrying
-commit, with no bypass. The parent/squash and validated implementation trees
-were independently compared during rebase. Protected CI and exact live
-publication remain pending. No other chapter is marked complete by this PR.
+PR #4344 protected-squash-merged as 0e30c134de1ae491e4fce245308983c5ef7df090.
+Normal commit and push hooks passed. The first live run 34452462094 had one
+unrelated Geometry CSS HTTP 503 among 956 cases; its failed-job retry was
+cancelled by the successor deployment. This failure is retained in the record.
+
+Successor 8808f68ab8b7e39c5110ce260473d02dbff63c45 deployed successfully in
+34456863592. All 956 live records across 239 routes in artifact 10144974541
+were independently inspected: no failures, retries or serious/critical axe
+findings. Fascia paired sources/figure and the DCR article, bound review,
+inventory and pruning regression are byte-identical between the fascia merge
+and this verified successor. This is successful successor publication evidence,
+not a retroactive success claim for the original failed run. Companion critiques
+#4340 and the remaining corpus are still open.

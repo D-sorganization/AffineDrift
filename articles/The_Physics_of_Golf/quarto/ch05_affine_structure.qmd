@@ -1,567 +1,487 @@
 ---
-description: "To write the system in control-affine form, we need to convert the second-order manipulator equation into a first-order system in state space."
+pagetitle: "The Affine Structure: Drift and Control"
+description: "Derive the affine input structure, coupled response, energy budget and task-specific control limits with reproducible examples and worked answers."
+css:
+  - ../../../css/articulated-body.css
+  - ../../../css/computational-brain.css
+bibliography: ../golf_physics.bib
 ---
 
 # The Affine Structure: Drift and Control {#sec-05_affine_structure}
+[]{#ch-05_affine_structure}
 
-::: {.callout-tip}
+::: {.callout-note}
+
 ## The Big Reveal
 
-We've been building toward this chapter for four chapters. Now it's time to reveal the structure that makes the golf swing work.
+[]{#box:ch05_big_reveal}
 
-The manipulator equation:
+A swing combines energy supplied by muscles with motion shaped by inertia, gravity, contact and tissue mechanics. The control-affine description makes one part of this interaction explicit: at a fixed state, how does a chosen input change the state derivative? It is a useful mathematical structure, not proof that skilled movement is predominantly passive.
 
-$$
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
-$$
-
-can be rewritten in a form that separates passive physics from active control:
+For an ideal unconstrained rigid model in local coordinates,
 
 $$
-\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+M(q)\ddot q+c(q,\dot q)+g(q)=B(q)u.
 $$
+[]{#eq-ch05_manipulator_repeat}
 
-This is the **control-affine form**. It says:
-- The system evolves in state space ($\bm{x}$).
-- Left alone, the system follows the **drift** $\bm{f}(\bm{x})$.
-- Your muscles add a **control** term $\bm{G}(\bm{x}) \bm{u}$ on top.
+The same model can be written
 
-This decomposition is the key to understanding the golf swing. It's where drift and control become concrete.
+$$
+\dot x=f(x)+G(x)u.
+$$
+[]{#eq-ch05_affine_repeat}
+
+The meaning of zero input, the admissible inputs and the retained state must accompany this equation. It does not decide which part of the swing supplies energy, which control is optimal, or how the nervous system implements a policy. Those questions require additional calculations and evidence.
 
 :::
 
-## From Equations of Motion to State Space
+## From Equations of Motion to State Space {#from-equations-of-motion-to-state-space}
 
-To write the system in control-affine form, we need to convert the second-order manipulator equation into a first-order system in state space.
-
-### Defining State
-
-Recall from [Chapter 2](./ch02_language_of_motion.qmd#sec-02_language_of_motion) that the state is:
+### Defining State {#defining-state}
+For $n$ independent local joint coordinates, write $v=\dot q$ and
 
 $$
-\bm{x} = \begin{bmatrix} \bm{q} \\ \dot{\bm{q}} \end{bmatrix}
-= \begin{bmatrix} \theta_1 \\ \theta_2 \\ \dot{\theta}_1 \\ \dot{\theta}_2 \end{bmatrix}
+x=\begin{bmatrix}q\\v\end{bmatrix}\in\mathbb R^{2n}.
 $$
+[]{#eq-ch05_state_def}
 
-The state evolves in time:
-
-$$
-\dot{\bm{x}} = \begin{bmatrix} \dot{\bm{q}} \\ \ddot{\bm{q}} \end{bmatrix}
-$$
-
-The first line is trivial: $\frac{d}{dt}[\theta_1, \theta_2]^T = [\dot{\theta}_1, \dot{\theta}_2]^T$.
-
-The second line requires us to solve for $\ddot{\bm{q}}$ from the manipulator equation.
-
-### Solving for Accelerations
-
-From:
+A two-joint planar example has $x=(q_1,q_2,v_1,v_2)^T$. This is a local chart, not a complete human description or a globally unique representation of periodic angles. A general rigid-body implementation may instead use $\dot q=N(q)v$, with different position and velocity dimensions. Activation, flexible tissues and shaft deformation require their own state variables.
 
 $$
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+\dot x=\begin{bmatrix}v\\\dot v\end{bmatrix}.
 $$
+[]{#eq-ch05_state_derivative}
 
-we get:
+A zero velocity at one instant is not a zero acceleration. The top block describes the rate of position change; the lower block determines how velocity changes.
 
-$$
-\ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ \bm{\tau} - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]
-$$
-
-This is the full equation. Now separate the passive and active terms:
+### Solving for Accelerations {#solving-for-accelerations}
+Assume $M$ is symmetric positive definite on the independent coordinates. Define $c$ as the complete velocity-dependent inertial bias, and $g=\nabla_q V$ for the gravitational potential. A matrix $C$ may satisfy $c=Cv$, but that factorization is not unique; dropping selected entries without deriving their product changes the dynamics. The standard manipulator formulation and its coordinate limitations are developed in  [@TedrakeMultibodyEnergy].
 
 $$
-\begin{aligned}
-\ddot{\bm{q}} &= \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right] + \bm{M}(\bm{q})^{-1} \bm{\tau} \\
-&= \underbrace{\bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]}_{\text{drift}} + \underbrace{\bm{M}(\bm{q})^{-1} \bm{\tau}}_{\text{control}}
-\end{aligned}
+\dot v=M^{-1}(Bu-c-g).
 $$
+[]{#eq-ch05_solve_accel}
 
-### The Control-Affine Form
-
-Let's define:
-- **Drift dynamics**:
+Numerically, solve the mass-matrix system rather than explicitly forming its inverse. The inverse notation is useful for analysis:
 
 $$
-\bm{f}(\bm{x}) =
-\begin{bmatrix}
-\dot{\bm{q}} \\
-\bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]
-\end{bmatrix}
+\dot v=\underbrace{-M^{-1}(c+g)}_{a_0(q,v)}+
+          \underbrace{M^{-1}Bu}_{a_u(q,v,u)}.
 $$
+[]{#eq-ch05_accel_decomposed}
 
-- **Control input**: $\bm{u} = \bm{\tau}$ (the applied torques).
-- **Control matrix**:
+Additional declared passive generalized forces belong in the corresponding bias; a moving base or contact introduces further terms or constraints.
 
-$$
-\bm{G}(\bm{x}) =
-\begin{bmatrix}
-0 & 0 \\
-0 & 0 \\
-M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) \\
-M^{-1}_{21}(\bm{q}) & M^{-1}_{22}(\bm{q})
-\end{bmatrix}
-$$
-
-(all zeros in the top rows, $M^{-1}$ in the bottom).
-
-Then:
+### The Control-Affine Form {#the-control-affine-form}
 
 $$
-\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+f(x)=\begin{bmatrix}v\\a_0\end{bmatrix},\qquad
+ G(x)=\begin{bmatrix}0_{n\times m}\\M^{-1}B\end{bmatrix},\qquad
+ \dot x=f(x)+G(x)u.
 $$
+[]{#eq-ch05_control_affine_form}
 
-This is the **control-affine form**, standard in nonlinear control theory [@Isidori1995; @BulloLewis2004]. It's called "affine" (not "linear") because the dependence on control is linear, but the dependence on state is not linear.
+Drift contains the kinematic block $v$ as well as the uncontrolled acceleration. The zero position block of $G$ means torque changes acceleration immediately in this ideal model; later position changes follow through integration. It does not mean position is uncontrollable over time.
 
 ::: {.callout-note}
+
 ## Control-Affine Systems
 
-A system of the form:
+[]{#ch05_control_affine}
+
+At each fixed state, an affine input map has a constant offset and a linear part:
 
 $$
-\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+F(x,u)=f(x)+G(x)u.
 $$
+[]{#eq-ch05_control_affine_def}
 
-where:
-- $\bm{f}(\bm{x})$ is the **drift vector field**: the system dynamics with no control.
-- $\bm{G}(\bm{x})$ is the **control matrix**: how the control input affects the state.
-- $\bm{u}$ is the **control input**.
-
-The term "affine" means the system is linear in the control but possibly nonlinear in the state.
+Its state dependence may be nonlinear or linear. The linear system $\dot x=Ax+Bu$ is also control-affine, with $f=Ax$. An affine combination of two inputs produces the corresponding affine combination of derivatives at the same state; this does not imply superposition of complete nonlinear trajectories. Nonzero $f$ means the input-to-derivative map is generally not a homogeneous linear map.
 
 :::
 
-::: {.callout-tip}
-## Why "Affine" Matters
+::: {.callout-note}
 
-Why is this form so important?
+## Why Affine Matters
 
-Because it separates two different types of dynamics:
+[]{#box:ch05_why_affine}
 
-1. **What the system wants to do on its own** ($\bm{f}$): gravity pulling down, inertia resisting, velocity-dependent forces coupling the joints.
+The columns of $G$ describe local directions available through the chosen inputs. The set $f+G\mathcal U$ describes attainable derivatives when inputs lie in $\mathcal U$. This separates the local mechanics from the problem of selecting an input for a particular goal. Torque limits, muscle redundancy and delayed activation make $\mathcal U$ and its evolution as important as the matrix itself.
 
-2. **What you add on top** ($\bm{G} \bm{u}$): muscular commands.
-
-This separation lets you reason about controllability, stability, optimal control, and learning.
-
-In robotics, this form is the starting point for designing controllers. In golf, it's the starting point for understanding what you actually control and what physics does for you.
+Here $u$ is generalized actuator torque. It is not automatically muscle excitation. Two muscle patterns can yield the same net joint torque but different stiffness, metabolic cost and future force capacity. Defining zero torque therefore does not identify a relaxed muscle state.
 
 :::
 
-## Explicit Form for the Double Pendulum
+## Explicit Form for the Double Pendulum {#explicit-form-for-the-double-pendulum}
+Define two rigid links joined by ideal planar hinges, with the proximal pivot fixed. Let $q_1$ measure the first link from downward vertical and $q_2$ the second link relative to the first, so its absolute angle is $q_1+q_2$. Link masses are $m_i$, proximal-to-COM distances $r_i$, first-link length $l_1$, and COM inertias $I_i$. Torques $u_1,u_2$ are conjugate to these relative coordinates; $B=I$. This idealization retains coupling but does not resolve anatomical wrist planes, both arms or a flexible club.
 
-Let's write out the control-affine form explicitly for the double pendulum.
-
-### The Drift Vector Field
+Set
 
 $$
-\bm{f}(\bm{x}) = \begin{bmatrix}
-\dot{\theta}_1 \\
-\dot{\theta}_2 \\
-f_3(\bm{x}) \\
-f_4(\bm{x})
-\end{bmatrix}
+A=I_1+m_1r_1^2+m_2l_1^2,\qquad D=I_2+m_2r_2^2,\qquad b=m_2l_1r_2.
 $$
 
-where:
+The COM positions are $p_1=r_1(\sin q_1,-\cos q_1)^T$ and $p_2=l_1(\sin q_1,-\cos q_1)^T+r_2(\sin(q_1+q_2),-\cos(q_1+q_2))^T$. Their translational energies and the absolute angular rates $v_1,v_1+v_2$ give
+
+$$
+M=\begin{bmatrix}A+D+2b\cos q_2&D+b\cos q_2\\D+b\cos q_2&D\end{bmatrix},
+ \qquad T=\tfrac12 v^TMv.
+$$
+
+The potential and complete bias are
 
 $$
 \begin{aligned}
-f_3(\bm{x}) &= -M^{-1}_{11} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{12} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right] \\
-f_4(\bm{x}) &= -M^{-1}_{21} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{22} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right]
-\end{aligned}
+ V&=-g_0\big[(m_1r_1+m_2l_1)\cos q_1+m_2r_2\cos(q_1+q_2)\big],\\
+ c&=b\sin q_2\begin{bmatrix}-2v_1v_2-v_2^2\\v_1^2\end{bmatrix},\\
+ g&=g_0\begin{bmatrix}(m_1r_1+m_2l_1)\sin q_1+m_2r_2\sin(q_1+q_2)\\m_2r_2\sin(q_1+q_2)\end{bmatrix}.
+ \end{aligned}
 $$
 
-These are complicated expressions, but they encode all the passive dynamics: gravity pulling, inertia resisting, and velocity-dependent coupling.
+Here $g_0$ is gravitational acceleration, while $g$ is a generalized-force vector. The second bias component can be nonzero when $v_2=0$; a rotating first link still affects the second. All inertias are about the COM, avoiding double-counting parallel-axis terms.
 
-The key insight: **$\bm{f}$ depends on the current state but does not depend on your muscular control.**
-
-### The Control Matrix
-
-$$
-\bm{G}(\bm{x}) =
-\begin{bmatrix}
-0 & 0 \\
-0 & 0 \\
-M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) \\
-M^{-1}_{21}(\bm{q}) & M^{-1}_{22}(\bm{q})
-\end{bmatrix}
-$$
-
-where $\bm{M}^{-1}(\bm{q})$ is the inverse of the mass matrix.
-
-The control input is:
+### The Drift Vector Field {#the-drift-vector-field}
+With $h=c+g$ and $K=M^{-1}$,
 
 $$
-\bm{u} = \begin{bmatrix} \tau_1 \\ \tau_2 \end{bmatrix}
+f(x)=\begin{bmatrix}v_1\\v_2\\-K_{11}h_1-K_{12}h_2\\-K_{21}h_1-K_{22}h_2\end{bmatrix}.
+$$
+[]{#eq-ch05_drift_vector}
+
+Both bias components enter each acceleration through inverse inertia. Dependence on the current state does not erase the effect of prior control: earlier torques helped create that state.
+
+### The Control Matrix {#the-control-matrix}
+
+$$
+G=\begin{bmatrix}0&0\\0&0\\K_{11}&K_{12}\\K_{21}&K_{22}\end{bmatrix}.
+$$
+[]{#eq-ch05_control_matrix}
+
+$$
+u=(u_1,u_2)^T.
+$$
+[]{#eq-ch05_control_input}
+
+$$
+(\dot q_1,\dot q_2,\dot v_1,\dot v_2)^T=f(x)+G(x)u.
+$$
+[]{#eq-ch05_full_affine}
+
+The off-diagonal entries express coupled acceleration. They do not assign the net joint torque to a unique muscle or determine the club's Cartesian acceleration without kinematics.
+
+::: {.callout-tip}
+
+## Drift in the Double Pendulum at Rest
+
+[]{#ch05_drift_at_rest}
+
+Use manufactured parameters $m_1=2.5$ kg, $m_2=0.4$ kg, $l_1=0.35$ m, $r_1=0.175$ m, $r_2=0.5$ m, $I_1=0.025$ and $I_2=0.030$ kg m$^2$, and $g_0=9.81$ m/s$^2$. They are a declared calculation, not fitted golfer data.
+
+At $q=(0,0)$ and $v=0$, both gravity torques vanish, so $f=0$. The vertical downward configuration is a modeled equilibrium, not every golfer's address posture. At $q=(45^\circ,0)$ and $v=0$,
+
+$$
+\begin{aligned}
+ M&=\begin{bmatrix}0.4205625&0.2\\0.2&0.13\end{bmatrix}\ \mathrm{kg\,m^2},\\
+ g&\simeq\begin{bmatrix}5.3933\\1.3873\end{bmatrix}\ \mathrm{N\,m},\qquad
+ a_0\simeq\begin{bmatrix}-28.8732\\33.7484\end{bmatrix}\ \mathrm{rad/s^2}.
+ \end{aligned}
 $$
 
-So the full system is:
+The relative second-joint acceleration is positive even though gravity draws the total system toward lower potential. It cannot be calculated from the first gravity component and $K_{11}$ alone. An inverse inertia has units $(\mathrm{kg\,m^2})^{-1}$; angular units should accompany reported rates.
 
-$$
-\begin{bmatrix}
-\dot{\theta}_1 \\
-\dot{\theta}_2 \\
-\ddot{\theta}_1 \\
-\ddot{\theta}_2
-\end{bmatrix}
-= \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \begin{bmatrix} \tau_1 \\ \tau_2 \end{bmatrix}
-$$
+:::
 
-## Drift as a Vector Field
-
-The drift $\bm{f}(\bm{x})$ is a vector field on state space. At each point $\bm{x}$, it specifies a direction and magnitude of motion.
+## Drift as a Vector Field {#drift-as-a-vector-field}
 
 ::: {.callout-note}
+
 ## Vector Field
 
-A function that assigns a vector to each point in space. In our case, at each state $\bm{x}$ in phase space, $\bm{f}(\bm{x})$ tells you which direction the state is moving if there's no control.
+[]{#ch05_vector_field}
+
+A state vector field assigns a tangent vector to each state. Its integral curves satisfy the differential equation at every time. A drawn path through some arrows is not necessarily such a curve. A projection of a four-dimensional trajectory can be displayed in two coordinates, but its apparent derivative may also depend on the hidden coordinates.
 
 :::
-
-**Example: Drift in the Double Pendulum at Rest**
-
-Suppose you're at address ($\theta_1 = 0°, \theta_2 = 0°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$) and you suddenly remove all muscular control ($\bm{\tau} = 0$).
-
-The drift says what happens next. Let's compute:
-- $\dot{\theta}_1 = 0$ (velocity doesn't change in this instant).
-- $\dot{\theta}_2 = 0$ (velocity doesn't change).
-- $\ddot{\theta}_1 = ?$ Determined by $\bm{f}$.
-- $\ddot{\theta}_2 = ?$ Determined by $\bm{f}$.
-
-At rest, there's no inertia acceleration (velocities are zero). The only terms in $\bm{f}$ are the gravity terms:
-
-$$
-\begin{aligned}
-\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-g_1) \\
-&= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(0°)) \\
-&= 0
-\end{aligned}
-$$
-
-So the arm doesn't accelerate if it's at rest and perfectly vertical. That makes sense: gravity is balanced.
-
-Now suppose you're at an angle, say $\theta_1 = 45°$. Then:
-
-$$
-\begin{aligned}
-\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) \\
-&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) \\
-&\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} \\
-&\approx -9 \text{ rad/s}^2
-\end{aligned}
-$$
-
-Negative means the arm wants to rotate back toward vertical. Gravity is pulling it down.
-
-### Flowing Along the Drift
-
-If you start at some state $\bm{x}_0$ and let the system drift with $\bm{\tau} = 0$, the state will flow along a trajectory determined by $\bm{f}$.
-
-This trajectory is called an **integral curve** or **orbit** of the vector field.
-
-In the golf swing, the drift is what happens if you let go of the club at any point. Gravity will pull it down. The momentum will carry it forward. The trajectory is set by $\bm{f}$.
-
-::: {.callout-tip}
-## Why Understanding Drift Matters
-
-Here's the profound thing: elite golfers understand the drift.
-
-When they release the club, they're not fighting the physics. They're timing the release so that gravity and momentum naturally accelerate the club toward impact.
-
-When they stop muscles at the top of the backswing, they're not "pausing"—they're *catching* the drift. The drift is already accelerating them down. They're just riding it.
-
-Novices, on the other hand, often fight the drift. They generate muscular torques that oppose the natural accelerations. This is exhausting and inconsistent.
-
-By understanding $\bm{f}(\bm{x})$, you can plan your muscular control ($\bm{u}$) to work *with* the drift, not against it.
-
-:::
-
-## Control as a Steering Input
-
-The control term $\bm{G}(\bm{x}) \bm{u}$ is what you add on top of drift. It's a steering input.
-
-Think of it like driving a car. The car naturally rolls forward due to gravity and rolling resistance. That's the drift. You turn the wheel to steer. That's the control. Together, they determine where the car goes.
-
-In the golf swing, the drift is the natural motion of your arm under gravity and inertia. Your muscles steer that motion toward the target.
-
-### The Control Matrix as Leverage
-
-The control matrix $\bm{G}(\bm{x})$ depends on the state (specifically, on the configuration $\bm{q}$). This is the leverage: how much does a given muscle torque affect the state acceleration?
-
-**Example: Control Leverage at Different Configurations**
-
-The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ tells you the leverage.
-
-**At address** ($\theta_1 = 0°, \theta_2 = 0°$): the arm is extended. The moment of inertia is high ($M_{11} \approx 2.22$ kg m$^2$). So $M^{-1}_{11} \approx 0.45$ rad/s$^2$ per N m. A 50 N m torque produces $50 \times 0.45 = 22.5$ rad/s$^2$ of acceleration.
-
-**At the top of the backswing** ($\theta_1 = 150°, \theta_2 = -70°$): the arm is bent. The effective moment of inertia is lower. So $M^{-1}_{11}$ is higher. A given muscle torque produces a larger acceleration.
-
-Wait, that doesn't sound right. If the arm is shorter (bent), shouldn't it be harder to accelerate?
-
-Actually, no. The **moment of inertia** is lower (because the mass is closer to the axis). So $M^{-1}$ is higher (easier to accelerate). This is why it's easier to accelerate a bent arm than an extended one.
-
-## The Drift-Control Ratio (DCR)
-
-The **Drift-Control Ratio (DCR)** is a modeling diagnostic, not a coordinate-free physical constant.
 
 ::: {.callout-note}
+
+## What Is a Vector Field?
+
+[]{#box:ch05_vector_field}
+
+A two-dimensional slice of a double-pendulum state space is not generally invariant: the trajectory can leave it immediately. To obtain a genuine two-state example, impose the ideal stationary constraint $q_2=0$, $v_2=0$. Its reaction maintains the lock and performs zero work. With zero proximal torque, the reduced equation is
+
+$$
+(A+D+2b)\ddot q_1+g_0(m_1r_1+m_2l_1+m_2r_2)\sin q_1=0.
+$$
+
+The figure integrates this equation from $(q_1,v_1)=(0.9,0)$. This is drift of a different, constrained effective plant; it is not the free two-joint system with both torques set to zero. Arrow lengths are normalized for visibility after the displayed coordinate scaling; the computed curve retains the dynamics.
+
+:::
+
+On narrow screens, scroll the figure or [open it at full size](../figures/affine_structure_verified.svg).
+
+::: {#fig-ch05_drift_vector_field}
+::: {.aba-diagram-scroll role="region" aria-label="Reduced drift and optimal timing examples; scroll horizontally" tabindex="0"}
+<img src="../figures/affine_structure_verified.svg" alt="A computed closed orbit follows the directional field of the ideal locked-distal pendulum. Below, minimum-energy input grows late for a decaying scalar plant, stays constant for an integrator and is greatest early for an amplifying plant.">
+:::
+
+Declared Models of Drift and Optimal Timing. The Upper Panel Shows Normalized Directions and a Computed Orbit for the Reduced Plant With an Ideal Distal Lock. The Lower Panel Shows Exact Minimum-Energy Inputs for Three Normalized Scalar Plants With the Same Endpoint Task. Neither Panel Contains Measured Golfer Data.
+:::
+
+### Flowing Along the Drift {#flowing-along-the-drift}
+Setting an actuator torque to zero retains the declared joints and contact. Releasing a mechanical lock changes the constraints; letting go of the club removes grip forces and changes the physical system. Neither operation is represented merely by setting $u=0$ in the same fixed-pivot model. A muscle's neural drive can also become zero while activation and tendon force persist.
+
+::: {.callout-note}
+
+## Why Understanding Drift Matters
+
+[]{#box:ch05_drift_importance}
+
+For the ideal free rigid model, $v^Tc=\tfrac12v^T\dot Mv$. Differentiating $E=T+V$ therefore gives
+
+$$
+\dot E=v^TBu.
+$$
+
+Velocity-dependent inertial terms redistribute motion and kinetic energy within the model; they do not create mechanical energy. Gravity exchanges potential and kinetic energy. A stationary ideal constraint has zero reaction power, while moving support, damping or deformation changes the energy budget.
+
+Acceleration, speed and power answer different questions. A force perpendicular to point velocity can bend a path without doing work. Torque can increase or decrease mechanical energy according to its power $u^TB^Tv$. A large acceleration term is not proof that its source supplied most of the energy in the swing.
+
+:::
+
+## Control as a Steering Input {#control-as-a-steering-input}
+Control can steer, accelerate, brake or maintain a constraint. Which effect matters depends on the input direction, configuration, velocity and task. Calling every muscular contribution “steering” hides its energetic role. The useful question is how an admissible change in input changes the outcome.
+
+### The Control Matrix as Leverage {#the-control-matrix-as-leverage}
+
+::: {.callout-tip}
+
+## Control Leverage at Different Configurations
+
+[]{#ch05_leverage}
+
+For a perturbation $\delta u=(\delta u_1,0)^T$ with both joints free, $\delta\dot v_1=K_{11}\delta u_1$. In a coupled two-joint system,
+
+$$
+K_{11}=\frac{1}{M_{11}-M_{12}^2/M_{22}}.
+$$
+
+The denominator is the Schur complement. If the second coordinate is held fixed instead, the proximal acceleration response is $\delta u_1/M_{11}$ and a constraint reaction supplies the required second torque. These are different experiments.
+
+At $q_2=0$ in the manufactured example, $M_{11}=0.4205625$ kg m$^2$ and the free effective inertia is approximately $0.1128702$ kg m$^2$. Unit proximal torque produces approximately $8.860$ rad/s$^2$ of free proximal response, versus $2.378$ rad/s$^2$ with the distal coordinate locked. At $q_2=90^\circ$, the free effective inertia becomes $A=0.1505625$ kg m$^2$, so the free response is smaller, approximately $6.642$ rad/s$^2$, despite a smaller $M_{11}$. “More folded means more leverage” is not a general rule.
+
+These are incremental control responses at the same state. The total acceleration also includes $a_0$, and a prescribed distal torque would add its own off-diagonal contribution. Full club acceleration additionally requires the Jacobian and its velocity-dependent term.
+
+:::
+
+## The Drift-Control Ratio (DCR) {#the-drift-control-ratio-dcr}
+
+::: {.callout-note}
+
 ## Drift-Control Ratio
 
-At any point in the state space, DCR compares modeled drift against bounded modeled control under an explicit norm or weighting. In this chapter, use either the acceleration block alone or a stated state-space weighting matrix $\bm{W}$:
+[]{#ch05_dcr}
+
+Specify the input origin, admissible set $\mathcal U$, state and an output/scaling map $W$. Define a capacity and a ratio by
 
 $$
-\mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
-=
-\frac{\lVert \bm{W}\bm{f}(\bm{x}) \rVert}
-{\max_{\lVert \bm{u}\rVert \le u_{\max}} \lVert \bm{W}\bm{G}(\bm{x})\bm{u} \rVert + \varepsilon}
+C_W(x)=\max_{u\in\mathcal U}\|WG(x)u\|_2,\qquad
+ D_W(x)=\frac{\|Wf(x)\|_2}{C_W(x)},\quad C_W>0.
 $$
+[]{#eq-ch05_dcr_def}
 
-If DCR is high under the chosen weighting, modeled drift dominates. If DCR is low, modeled control has greater leverage. Numerical thresholds depend on the model, parameters, torque limits, and selected norm.
+Here $W$ may select the acceleration block or normalize all derivative components using declared reference scales. Position rates and angular accelerations cannot simply be combined as unscaled numbers. A ratio using the realized input $\|WG u(t)\|$ answers a different question from a capacity ratio. Report which one is intended.
+
+This ratio is not a work fraction, a measure of skill, or a complete reachability test. If capacity is zero, report that condition explicitly; an arbitrary epsilon changes the diagnostic and must have compatible units. Both numerator and capacity zero is indeterminate. A positive numerator with zero capacity indicates no authority through the selected map, not a finite numerical ratio.
 
 :::
 
-The DCR varies throughout the swing.
+For a centered Euclidean torque ball $\|u\|_2\le u_{\max}$, $C_W=u_{\max}\sigma_{\max}(WG)$. A componentwise torque box or muscle-force polytope gives a different optimization. In particular, a 30 N m two-joint Euclidean bound does not mean both joints may independently apply 30 N m.
 
-### Address: Low DCR
+::: {.callout-note}
 
-At address, the arm is static ($\dot{\bm{q}} = 0$). There's no velocity-dependent drift. Gravity is balanced (assuming vertical arm). The drift is small.
+## Reading the DCR
 
-To accelerate the backswing, you must generate a large muscular torque. DCR is low (muscles doing most of the work).
+[]{#box:ch05_reading_dcr}
 
-### Top of Backswing: Transitioning DCR
+A large capacity ratio says the chosen drift norm exceeds the largest chosen control norm at that state. A small ratio says some admissible input has a larger norm; it does not show that the actual input is large or points in the useful direction. Two vectors can reinforce, oppose or be orthogonal, so their norm ratio is not an additive attribution of the observed motion.
 
-At the top, velocities are near zero. Gravity is pulling strongly ($\theta_1 = 150°$). The drift is moderate.
+For example, in normalized coordinates let $f=(1,0)^T$, $G=\mathrm{diag}(100,0.01)$ and $\|u\|_2\le1$. The capacity ratio is 0.01. Yet the available second-component response is at most 0.01: large first-direction authority does not help a task requiring second-direction correction. A directional capacity can instead use $\max_{u\in\mathcal U} d^TWGu$ for a declared task direction $d$.
 
-As you initiate the downswing, you generate muscular torques. But gravity is already helping. DCR starts to increase (drift contributes more).
+:::
 
-### Downswing: High DCR
+A state-coordinate change $z=h(x)$ gives $f_z=Dh\,f$ and $G_z=Dh\,G$. Euclidean norms generally change. Equivalent physical comparisons require transporting the metric or the specified output; discarding different blocks after a coordinate change can define a different diagnostic. For nonlinear changes of configuration coordinates, acceleration also acquires a velocity-quadratic transformation term.
 
-During the rapid downswing, velocities are high. Gravity and centrifugal forces create large accelerations. Your muscular torques are now mostly steering, not accelerating.
+The split depends on the chosen input origin too. Under $u=u_0(x)+R(x)w$, the same dynamics become $\dot x=[f+Gu_0]+GRw$. The admissible input set must be transformed with it. The physical attainable-derivative set can remain the same while the designated drift changes. A nominal feedback policy used as a new zero input is not evidence that its energy supply became passive.
 
-DCR is very high (drift is doing most of the work).
+### Address: A Defined Equilibrium {#address-low-dcr}
+The manufactured downward equilibrium has zero drift and nonzero torque capacity. Its capacity ratio is zero. It is equally true whether the realized torque is zero or is about to change. This does not establish a universal large torque requirement: the required torque depends on the desired acceleration and available time.
 
-### Impact and Beyond: Extremely High DCR
+### Top of Backswing: A Specified State {#top-of-backswing-transitioning-dcr}
+For the manufactured state $q=(150^\circ,-70^\circ)$ and $v=0$, $a_0\simeq(-16.9466,5.2045)^T$ rad/s$^2$. With the stated 30 N m Euclidean torque bound and an unweighted angular-acceleration norm, capacity is approximately 651.113 rad/s$^2$ and the ratio is 0.02723. This is a counterexample calculation, not a measured golfer's top position or a realistic muscle-capacity estimate.
 
-At impact, the clubhead is accelerating at 180 $g$. This is primarily from:
-- Centrifugal force (from the high rotation speed): $\approx 50$ N m equivalent.
-- Gravity: $\approx 10$ N m equivalent.
+### Downswing: Velocity Bias and Coupled Response {#downswing-high-dcr}
+At $q=(140^\circ,-60^\circ)$ and $v=(5,0)$ rad/s in the same model, $c=(0,-1.51554)^T$ N m and $g\simeq(5.57376,1.93219)^T$ N m. The complete drift acceleration is approximately $(-35.7444,42.1629)^T$ rad/s$^2$. Its capacity ratio is 0.07705. A faster state need not cross any universal threshold; geometry, velocity direction, gravity and the admissible input set all matter.
 
-In this illustrative estimate, your muscular contribution is maybe 20 N m (estimates vary widely; exact values depend on golfer strength and technique — see [@Nesbit2005] for inverse-dynamics measurements). DCR is extremely high under this simplified comparison, but the conclusion should be checked against the stated model and torque bounds.
+### Impact and Beyond: Specify the Event and System {#impact-and-beyond-extremely-high-dcr}
+Club-point acceleration is $\ddot p=J(q)\dot v+\dot J(q,v)v$. Its normal and tangential components are not interchangeable with joint torque. Neither 180 m/s$^2$ nor 180 times gravitational acceleration is a universal impact value; an acceleration alone cannot supply an equivalent torque without geometry and force mapping. The pre-impact smooth model does not represent the collision impulse. Contact and post-impact muscle activity require their own model and evidence.
+
+::: {.callout-note}
+
+## The Three Comparisons
+
+[]{#box:ch05_three_regimes}
+
+Distinguish three computations: the instantaneous drift/control decomposition, the accumulated mechanical work, and the attainable change in a task before impact. Each can be useful; none substitutes for the others. Increasing a capacity ratio by reducing the torque bound makes the actuator weaker. It cannot by itself improve the best attainable outcome. Universal early/middle/late DCR categories and elite-versus-novice sensations do not follow from the equations.
+
+:::
+
+## Riding the Drift: A Hypothesis to Test {#riding-the-drift-the-essence-of-skill}
+Mechanical structure can reduce the input needed for a specified task. A pendulum descending under gravity is an elementary example of exchanging stored potential for kinetic energy. But an energy-efficient movement may also require opposing drift to stop, change direction, avoid an obstacle or stabilize an unstable state. “Align with drift” is therefore a candidate strategy whose costs and outcomes must be calculated.
+
+A work/power study by Nesbit and Serrano used kinematically driven full-body and club models for four amateur golfers to estimate work and energy transfer  [@Nesbit2005b]. That scope supports distinguishing modeled joint/club work from instantaneous acceleration; it does not establish a universal DCR phase law, individual muscle activation or a globally optimal neural strategy. Net joint work is not a direct measurement of metabolic expenditure.
+
+## The Geometry of the Golf Swing {#the-geometry-of-the-golf-swing}
+
+::: {.callout-warning}
+
+## The Reachability Problem
+
+[]{#box:ch05_reachable}
+
+Reachability asks which states can be attained from a specified initial state over a specified time under admissible inputs and state constraints. A golf task also maps those states into club pose, velocity, impact conditions and ball outcome. Strength is one constraint, not a complete distance prediction.
+
+If $\mathcal U_1\subseteq\mathcal U_2$ with the same plant, initial condition, horizon and other constraints, every trajectory feasible under the smaller set remains feasible under the larger. Increasing available control cannot worsen the best achievable objective under these assumptions. It does not guarantee improvement, tell a golfer which input to use, or rank technique against strength across different people.
+
+:::
+
+Along a nominal trajectory, a smooth local model has $\delta\dot x=A(t)\delta x+B_x(t)\delta u$. At a fixed terminal time,
+
+$$
+\delta x(T)=\Phi(T,0)\delta x(0)+\int_0^T\Phi(T,s)B_x(s)\delta u(s)\,ds.
+$$
+
+A terminal task map projects this result into the outcome. The kernel determines how an input at each time affects the task; its direction and size can change or cancel. Delay and activation restrict which inputs can occur. If impact time changes with the trajectory, event-time sensitivity must also be included. These considerations explain why an instantaneous norm ratio cannot rank early versus late control.
+
+## Optimal Control and the Swing {#optimal-control-and-the-swing}
+Specify a terminal cost $\phi$, running cost $L$, horizon and constraints:
+
+$$
+\min_{u(\cdot)}J=\phi(x(T))+\int_0^T L(x,u,t)\,dt,\qquad
+ \dot x=f(x)+G(x)u,\quad u(t)\in\mathcal U.
+$$
+
+An effort surrogate such as $u^TRu$ has declared scaling and is not mechanical power. Mechanical work integrates $u^TB^Tv$ over time; summing several torque values in N m gives neither work nor integrated effort. A model may also constrain torque rate, activation, contact, joint limits, terminal state or uncertainty. An optimizer needs all of them to define what “best” means.
+
+::: {.callout-note}
+
+## Solving the Optimal Control Problem
+
+[]{#box:ch05_learning}
+
+For a smooth normal fixed-horizon problem, define the control Hamiltonian
+
+$$
+H=L+p^T(f+Gu),\qquad \dot p=-\partial_x H,\qquad
+ u^*(t)\in\arg\min_{u\in\mathcal U}H.
+$$
+
+Pontryagin's principle supplies necessary conditions, with the appropriate terminal/transversality conditions; a candidate is not automatically a global optimum. With a free terminal state, $p(T)=\nabla\phi$ in this simple formulation; terminal constraints add multipliers. This Hamiltonian is not generally mechanical energy  [@TedrakeTrajectoryOptimality].
+
+Dynamic programming instead reasons about a value function. Under suitable smoothness its finite-horizon equation is $-\partial_t V=\min_u[L+\nabla_x V^T(f+Gu)]$ with terminal data $V(x,T)=\phi(x)$. Verification needs the stated boundary, admissibility and regularity conditions; nonsmooth values require more general treatment. It is not just another name for solving a single trajectory's two-point boundary-value equations  [@TedrakeDynamicProgramming].
+
+Numerical solutions require feasibility, integration/discretization checks and assessment of local versus global optimality. A successful fit to a golfer's movement does not establish that the nervous system solved the optimizer or shares its cost function. Learning and feedback need independently testable predictions.
+
+:::
 
 ::: {.callout-tip}
-## The Three Regimes
 
-We can characterize the golf swing by DCR:
+## A Solved Comparison of Control Timing
 
-**Regime 1: Low DCR (Address, Backswing)**
-- Drift is minimal (arm at rest, gravity balanced or nearly so).
-- Muscles do most of the work.
-- Feel: effortful, conscious control.
-- What elite golfers do: smooth, controlled acceleration building tension.
-- What novices do: jerky, trying to generate force without understanding drift.
+[]{#ch05_tour_pro}
 
-**Regime 2: Medium DCR (Transition)**
-- Drift is ramping up (gravity pulling, velocities increasing).
-- Muscles and drift work together.
-- Feel: transitional, sensing acceleration.
-- What elite golfers do: smoothly integrate drift into the motion, "letting it happen."
-- What novices do: fight or ignore the drift, maintaining muscle-only control.
+In normalized variables consider $\dot z=az+u$, $z(0)=0$, $z(1)=1$, and minimize $\int_0^1u^2dt$ with no active input bound. The endpoint condition is $1=\int_0^1e^{a(1-t)}u(t)dt$. Cauchy--Schwarz gives
 
-**Regime 3: High DCR (Downswing, Impact, Follow-through)**
-- Drift is dominant (gravity, centrifugal forces accelerating the arm faster than muscles could alone).
-- Muscles mostly steer, not accelerate.
-- Feel: effortless, on autopilot, the club "taking over."
-- What elite golfers do: trust the drift, apply minimal corrective torques, let physics happen.
-- What novices do: continue to fight the drift, braking when they should accelerate, inconsistent results.
+$$
+J\ge\frac1{W_a},\qquad W_a=\int_0^1e^{2a(1-t)}dt,\qquad
+ u^*(t)=\frac{e^{a(1-t)}}{W_a}.
+$$
+
+Equality proves the global minimum for this specified linear task. For $a=0$, $W_a=1$ and the optimal input is constant. For $a<0$, earlier effects decay and the optimal input grows toward the end. For $a>0$, earlier effects grow and the optimal input is larger early. The figure compares $a=-2,0,2$.
+
+These plants are all control-affine. The timing follows the task sensitivity and cost, not the word “affine” or a universal DCR threshold. Bounds below the displayed input peaks change the solution. A golf model has more states, constraints and uncertainty; the example disproves a universal timing rule rather than prescribing a swing.
 
 :::
 
-## Riding the Drift: The Essence of Skill
+## Putting It All Together: The Unified Picture {#putting-it-all-together-the-unified-picture}
 
-Here's the secret that elite golfers know (often intuitively, not necessarily consciously):
+### The System {#the-system}
+Define the body, club, supports, contacts and energy boundary before splitting forces. Drift is the zero-input derivative of that declared plant.
 
-**The best golf swing is one that maximizes DCR while maintaining control.**
+### The State Space {#the-state-space}
+Include the states needed to predict force and motion: joint configuration and velocity alone may omit activation, material memory and shaft modes. Specify coordinate charts and observation uncertainty.
 
-In other words:
-- Understand the drift (where gravity and momentum are pushing you).
-- Generate muscular torques that work *with* the drift.
-- Minimize muscular work by letting physics do what it wants to do.
-- Use muscles only to steer, not to force.
+### The Drift {#the-drift}
+Prior input shaped the current state. Large present drift does not mean little past muscle work, little current energy expenditure or weak future control.
 
-This is what coaches mean by "let the club do the work," "don't muscle the swing," "trust the process," and "flow with the motion."
+### The Control {#the-control}
+The full inverse inertia, actuator mapping and admissible set determine instantaneous response. Contact and constraints can change it, while activation and delay change the time at which input is available.
 
-It's not mystical. It's physics.
-
-**Example: A Tour Pro Descending**
-
-A tour professional at the top of the backswing:
-
-1. **Recognizes** the state: $\theta_1 = 150°$, velocities near zero, gravity pulling with $\approx 30$ N m.
-
-2. **Initiates transition**: in this illustrative transition, applies modest muscular torque at the transition, maybe 20 N m.
-
-3. **Feels the drift accelerating**: as the arm starts to rotate, centrifugal forces build. These add to gravity, accelerating the arm faster than the initial muscular torque would.
-
-4. **Modulates control**: instead of increasing muscular force, the pro *decreases* it or even applies a small braking force. The drift is already accelerating faster than desired.
-
-5. **Releases at impact**: at the optimal moment, applies a final muscular acceleration at the wrist (the release) to synchronize the clubhead speed with the target.
-
-6. **Follow-through**: after impact, gravity and momentum carry the club. No more muscular effort needed.
-
-Total muscular effort: in this illustrative summary, maybe 60–80 N m generated over the whole swing, with a nice distribution that works with physics.
-
-Compare to a novice:
-
-1. At the top, in this illustrative scenario, applies 40 N m to start the downswing.
-2. Applies 40 N m throughout, in this illustrative scenario, fighting the increasing drift.
-3. At impact, applies 50 N m, overaccelerating.
-4. Total muscular effort: maybe 150+ N m, much more, and inconsistent because the novice is constantly fighting the passive forces instead of working with them.
-
-## The Geometry of the Golf Swing
-
-The control-affine form gives us a geometric picture of the golf swing.
-
-Phase space is a 4D manifold (for a 2-DOF arm). On this manifold:
-- The drift vector field $\bm{f}$ is "painted" at each point, showing the natural flow.
-- Your control $\bm{u}$ perturbs this flow locally via $\bm{G}(\bm{x})$.
-- A swing is a path through phase space from start (address) to impact and finish.
-
-Elite golfers have learned to follow a path that:
-1. Uses small control perturbations.
-2. Exploits high-DCR regimes where drift helps.
-3. Avoids fighting the vector field.
-
-### The Reachability Problem {#box:ch05_reachable}
-A key question: given a starting state (address) and control constraints (max muscle torque), what states are reachable?
-
-In control theory, this is the **reachability problem**. For the golf swing, it translates to: given my muscle strength, how far can I hit?
-
-The manipulator equation tells us that reach depends not just on max muscle torque, but also on how well we exploit the drift. An optimized swing that rides the drift reaches farther than one that fights it.
-
-This is why technique matters more than strength.
-
-## Optimal Control and the Swing
-
-In principle, you could pose the golf swing as an optimal control problem [@Penner2001]:
-
-**Problem**: Given the dynamics $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$ and constraints on $\bm{u}$ (muscle strength), find the control $\bm{u}^*(t)$ that maximizes distance (or minimizes dispersion, or achieves a target).
-
-**Solution**: Solve the Hamiltonian equations from optimal control theory.
-
-**Result**: An optimal control $\bm{u}^*(t)$ that tells you what torques to apply at each instant.
-
-::: {.callout-tip}
-## Why Brains Learn Better Than Equations
-
-In principle, we could compute $\bm{u}^*(t)$ exactly using optimal control theory. In practice, no golfer does this consciously.
-
-Instead, golfers learn through practice. Over thousands of reps, the nervous system implicitly solves the optimal control problem. Golfers develop a feel for the drift, for how to apply forces at the right time.
-
-This is why coaching and practice are valuable: they accelerate the learning of the implicit optimal control solution.
-
-But here's the thing: the physics—the equations $\bm{M}, \bm{C}, \bm{g}$—is the same for everyone. So while individual golfers vary in strength, flexibility, and body geometry, the fundamental structure of drift and control is universal.
-
-Understanding this structure is the shortcut to improvement. Instead of endless practice, you can understand what you're optimizing (DCR) and practice the specific things that maximize it.
-
-:::
-
-## Putting It All Together: The Unified Picture
-
-Let's step back and see the whole picture.
-
-### The System
-
-Your arm + club is a mechanical system described by:
-
-$$
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
-$$
-
-### The State Space
-
-The system evolves in 4D state space: two angles and two angular velocities. Every swing is a path in this space.
-
-### The Drift
-
-Without muscular control, the system follows the drift:
-
-$$
-\dot{\bm{x}} = \bm{f}(\bm{x})
-$$
-
-Drift encodes:
-- Gravity pulling the arm down.
-- Inertia resisting accelerations.
-- Velocity-dependent (Coriolis, centrifugal) forces coupling the joints.
-
-At high speeds, drift dominates. At low speeds, muscles must do most of the work.
-
-### The Control
-
-Your muscles generate torques $\bm{\tau}$ that perturb the drift:
-
-$$
-\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
-$$
-
-Control is linear in the input but couples to state through $\bm{G}(\bm{x})$.
-
-### The Skill
-
-Elite golf is the art of choosing $\bm{u}(t)$ (the control trajectory) such that:
-1. The resulting swing path $\bm{x}(t)$ reaches impact with the desired orientation and speed.
-2. The control effort (sum of $|\bm{u}|$ over time) is minimized.
-3. The swing is robust to perturbations (small errors don't derail the outcome).
-
-All of this is encoded in understanding and exploiting the drift.
+### The Skill {#the-skill}
+A proposed strategy should predict measured task outcomes, energy costs or robustness under specified conditions. None of these is identified by an effortless feeling, a low input in one model or a large ratio alone.
 
 ::: {.callout-important}
+
 ## Key Takeaways
 
-1. **Control-affine form** separates drift and control: $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$.
-2. **Drift $\bm{f}(\bm{x})$** is what the system does without control: gravity, inertia, and velocity-dependent forces.
-3. **Control $\bm{G}(\bm{x}) \bm{u}$** is what muscles add: steering, not accelerating (mostly).
-4. **The Drift-Control Ratio (DCR)** varies through the swing:
-   - Low at address and backswing (muscles do most of the work).
-   - Medium at transition (drift ramping up).
-   - High at impact and beyond (drift dominates).
-5. **Skilled golfers exploit high-DCR phases** by preparing initial conditions and transition timing that let drift assist rather than fight the intended trajectory.
-6. **The golf swing is an optimal control problem**. The nervous system implicitly solves it through learning and practice.
-7. **Technique is about riding the drift**. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
-8. **The model structure is shared** [@Featherstone2008; @Murray1994]. While individual golfers vary in geometry and strength, smooth multibody models commonly share the manipulator-equation structure $\bm{M}, \bm{C}, \bm{g}$; the numerical predictions remain individual and model-dependent.
+[]{#pr:ch05_key_takeaways}
+
+Control-affine form is a precise local input structure. It makes useful calculations possible, but those calculations must still be done: complete mechanics, feasible control, energy accounting, task sensitivity and evidence. The strongest argument for exploiting mechanical structure shows how it improves a defined task under constraints. It does not require declaring muscles irrelevant or DCR the quantity every golfer should maximize.
 
 :::
 
-## Chapter Exercises
+Continue with [Induced Acceleration](ch30b_induced_acceleration.html), [Triple-Pendulum Dynamics](ch08_triple_pendulum.html), [Brain Control](ch24_motor_control_brain.html), and [Controllability and Drift](../../controllability-drift-ratio.html).
 
-1. **Drift at Address**. At address ($\theta_1 = 0°, \theta_2 = 0°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$), compute the drift $\bm{f}(\bm{x})$. What are the resulting accelerations if you remove all muscular control?
-2. **Drift at the Top**. At the top of the backswing ($\theta_1 = 150°, \theta_2 = -70°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$), compute the drift. Is the system accelerating? In which direction?
-3. **Drift During Downswing**. Compute the drift at the transition ($\theta_1 = 140°, \theta_2 = -60°, \dot{\theta}_1 = 5$ rad/s, $\dot{\theta}_2 = 0$). How much do Coriolis forces contribute compared to gravity?
-4. **DCR at Different Phases**. For each of the following states, estimate the drift magnitude and the control effect magnitude (assuming 30 N m muscular effort):
-   - Address (arm at rest, vertical)
-   - Top of backswing (arm up, at rest)
-   - Transition (arm rotating, accelerating)
-   - Impact (arm rotating fast, wrist releasing)
+## Chapter Exercises and Worked Answers {#chapter-exercises}
 
-   What is the DCR in each phase?
-5. **Optimal Control Intuition**. If you were solving the optimal control problem to maximize distance, when would you apply maximum muscular torque? Would it be early (backswing) or late (downswing)? Why?
-6. **Weak vs. Strong Golfer**. A weak golfer has less max muscular torque (say, 30 N m vs. 50 N m for a strong golfer). How would this affect:
-   - The swing speed?
-   - The reliance on drift in the downswing?
-   - The optimal control strategy?
-7. **Comparison to Throwing**. How is the control-affine structure of the golf swing similar to or different from the baseball throw? In both, you accelerate a mass. Are the regimes of DCR different?
+### 1. Compute the Declared Rest State
+For the manufactured two-link model at $q=(0,0)$, $v=0$, compute $f$. Does setting torque to zero mean releasing the club?
 
-## Closing Thoughts: The Unity of Physics and Swing
+**Worked answer.** The bias is zero because velocity is zero, and both potential gradients vanish at downward vertical. Thus $a_0=0$ and all four components of $f$ are zero. The ideal hinges and fixed pivot remain. Releasing the club changes contact and requires a different model. Zero net torque also does not specify muscle activation or coactivation.
 
-We've traveled from first principles through the double pendulum model to the control-affine structure that unifies drift and control.
+### 2. Compute a Raised Rest State
+Use $q=(150^\circ,-70^\circ)$ and $v=0$. Why must both gravity components enter both accelerations?
 
-The takeaway is this: **the golf swing is not a mystery. It's mechanics.**
+**Worked answer.** The defined potential gives $g\simeq(4.76483,1.93219)^T$ N m, and $M\simeq\left[\begin{smallmatrix}0.328445&0.153941\\0.153941&0.130000\end{smallmatrix}\right]$ kg m$^2$. Solving $Ma_0=-g$ gives $a_0\simeq(-16.9466,5.2045)^T$ rad/s$^2$. Inverse-inertia coupling mixes both loads. The first two state-derivative components remain zero at this instant even though velocity begins to change.
 
-Every great golfer, whether they know it in equations or in their bones, has internalized the structure we've described:
+### 3. Separate Velocity Bias From Gravity
+For $q=(140^\circ,-60^\circ)$ and $v=(5,0)$ rad/s, compare the two acceleration contributions.
 
-1. Recognize where gravity and momentum are pushing.
-2. Generate muscular forces that work with this push, not against it.
-3. Time the application of force to exploit maximum DCR.
-4. Trust the physics to do what it's designed to do.
+**Worked answer.** Although $v_2=0$, $c_2=b\sin(q_2)v_1^2=-1.51554$ N m. The complete contributions are $-M^{-1}c\simeq(-13.6289,28.9563)^T$ and $-M^{-1}g\simeq(-22.1155,13.2066)^T$ rad/s$^2$. Their vector sum is $(-35.7444,42.1629)^T$. Comparing only torque magnitudes or omitting $c_2$ loses the coupled response. This instantaneous decomposition is not an energy-source fraction.
 
-This is the physics of golf. Now go apply it.
+### 4. Interpret a Capacity Ratio
+Use the acceleration-only norm and 30 N m Euclidean input ball for the four reported states: downward rest, $(45^\circ,0)$ at rest, raised rest, and the moving state in Exercise 3. Does the ratio identify actual muscular work?
+
+**Worked answer.** The ratios are approximately $0$, $0.04158$, $0.02723$ and $0.07705$. They use the largest singular value of $M^{-1}$ multiplied by 30, rather than an assumed realized torque. They are not monotone in the listed angle changes and do not define golf phases. Work requires a realized torque history and the associated joint rates. Reducing the input bound increases a nonzero capacity ratio while reducing available control.
+
+### 5. Determine Optimal Timing From a Defined Task
+For the normalized scalar endpoint problem, derive the least-energy input and determine whether early input is always preferred.
+
+**Worked answer.** The terminal solution is $z(1)=\int_0^1e^{a(1-t)}u(t)dt$. Cauchy--Schwarz bounds its square by $W_a\int_0^1u^2dt$. Equality requires $u$ proportional to $e^{a(1-t)}$; enforcing the endpoint gives $u^*=e^{a(1-t)}/W_a$ and cost $1/W_a$. Positive, zero and negative $a$ respectively favor early, constant and late input. These are exact results for the stated normalized, unconstrained task, not a golf timing prescription.
+
+### 6. Compare Larger and Smaller Input Sets
+If otherwise identical models have torque balls of radius 30 and 50 N m, what can be concluded about their best feasible performance and DCR?
+
+**Worked answer.** Every 30 N m-admissible trajectory is also 50 N m-admissible. The optimum cannot become worse for the same maximization objective, or higher for the same minimization cost, when the feasible set expands. Improvement is not guaranteed. At the same state with nonzero drift, the 30 N m capacity ratio is $50/30$ times the 50 N m ratio. A larger ratio therefore cannot be a universal performance objective. Comparing different people additionally changes geometry, force capacity, coordination and uncertainty.
+
+### 7. Compare Golf With Throwing
+What transfers from this chapter to throwing, and what must be modeled again?
+
+**Worked answer.** A smooth torque-driven multibody phase can share the manipulator and control-affine structure. Segment geometry, actuation, constraints, initial conditions, costs and task outputs differ. Ball release changes contact and introduces event timing; golf impact adds collision mechanics. No DCR values, optimal control schedule or strength-versus-technique ranking transfers without those specifications. The same mathematical form supports different physical predictions.
+
+## Closing Thoughts: The Unity of Physics and Swing {#closing-thoughts-the-unity-of-physics-and-swing}
+The affine decomposition connects a mechanical model to a control question. It is most useful when the reader can follow the entire chain: define the physical system, derive its dynamics, identify feasible inputs, propagate their effects to the task, account for energy and compare predictions with data. A simple model can reveal an important mechanism while remaining incomplete as a description of a golfer.
+
+Induced acceleration analysis applies these mappings to specified generalized-force contributions at a given state. It must retain the same constraints and cannot infer individual muscle forces from net joint torque alone. The following chapters develop these connections; the purpose of the common framework is to make their assumptions and consequences comparable.
