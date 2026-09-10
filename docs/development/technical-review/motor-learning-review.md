@@ -6,7 +6,7 @@ branch fix/4326-motor-learning-rigor, initial parent 1693a3f3 (motion PR #4325).
 Audit fb417372 was replayed alone onto repair checkpoint
 aa8ae5b30a5f46ff3aae228cd7ff3ac727ab5e75 as335e48b4. Preserve the repair
 and motion delivery records when replaying this branch after PR #4329 merges.
-PR: not created. Both complete original editions have been read: 688 LaTeX
+PR: https://github.com/D-sorganization/AffineDrift/pull/4330 (open). Both complete original editions have been read: 688 LaTeX
 lines and 636 Quarto lines, including all twelve exercises. Both canonical
 editions are now corrected, with two paired figures and twelve worked answers.
 Local validation is complete; protected delivery remains. The original long print
@@ -158,7 +158,17 @@ impact/joint-friction work remain untouched. No subagents were used.
 
 ## Protected Delivery
 
-PR not created yet. All local QA must finish before commit, fetch, replay or push.
-Replay only the motor audit/implementation commits after aa8ae5b3 onto the
-protected repair squash 1fe7997eba9d7059dc9b68582643653cee0ec2d0 before first push.
-The corpus remains unfinished; publication of this chapter cannot close the epic.
+Only audit 335e48b4 and implementation 45c81769 were replayed after aa8ae5b3
+onto repair squash 1fe7997eba9d7059dc9b68582643653cee0ec2d0 before first push.
+The parent trees were identical. Final implementation is
+fafad3fce308215ff52b9db0c271d96749a62285. All normal commit/push hooks pass.
+PR #4330 is ready for review with Fixes #4326 and agent/scientific labels.
+SPEC has one actual-PR row. Protected checks and exact publication remain.
+No force push, direct-main push, self-approval or protection bypass occurred.
+
+The portable devlog check still reports only preexisting peer DL-#3903 missing
+SHA and DL-#3902 missing PR/Last verified; their entries were preserved. Render
+side effects in six generated trust files were inspected and restored: only
+run dates, platform-dependent source hashes and formatting changed. Canonical
+trust inputs were untouched. The corpus remains unfinished (405 rows, 212
+Indexed statuses plus partially reviewed sources and whole-book follow-ups).

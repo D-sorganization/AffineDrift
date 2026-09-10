@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4326 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4330 (open)
 - **Branch:** `fix/4326-motor-learning-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch25_motor_learning.tex`, `articles/The_Physics_of_Golf/quarto/ch25_motor_learning.qmd`, `docs/development/technical-review/motor-learning-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-10 (`335e48b4`, parent plus fully validated implementation working tree)
+- **Last verified:** 2026-09-10 (`fafad3fce308215ff52b9db0c271d96749a62285`, implementation; complete local validation)
 - **Summary:** Complete paired correction connects mechanics, feel, prediction and practice through bounded primary evidence, independent examples, two shared figures and twelve worked answers. Root 5,118 passes at 79.19% coverage; final focused 44, content 130, static 34, style/type/link checks and complete affected PDF/web QA pass.
-- **Next step:** Commit the validated correction for a protected pull request.
+- **Next step:** Verify protected PR #4330 checks and exact publication.
 
 ### DL-#4327 · Nonlinear Control Explanation Publication Repair
 
