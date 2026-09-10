@@ -25,24 +25,24 @@ reachable from any live state and `abandoned` from `parked`.
 - **Issue:** #4341 (epic #4009; corpus #4021; Physics #4054)
 - **PR:** not created
 - **Branch:** `fix/4341-fascia-mechanics-rigor`
-- **Paths:** `articles/The_Physics_of_Golf/chapters/ch12_fascia.tex`, `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `tests/test_fascia_mechanics_rigor.py`, `docs/development/technical-review/fascia-mechanics-review.md`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch12_fascia.tex`, `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/fascia_viscoelastic_memory.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_fascia_mechanics_rigor.py`, `tests/test_physics_of_golf_pdf_contract.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/fascia-mechanics-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`7ba2db42c76da91b8db563fcf6ee0647b334c327`, original paired source inspected; ten independent analytic controls pass and two publication checks fail as intended)
-- **Summary:** Full review identifies false force/elasticity claims, a tenfold area conversion error, unsupported whole-body energy fractions, missing anisotropy and tissue memory, incorrect control-coupling assumptions and overstated training/clinical conclusions. Primary experiments and their boundaries are recorded; paired rewrite, all eight answers and print/web QA remain. Companion DCR critiques separately queued as #4340.
-- **Next step:** Write the complete paired chapter using the audited energy, memory and load-path derivations.
+- **Last verified:** 2026-09-10 (`f97be759`, implementation working tree; 5,137 tests passed, 92.88% coverage; affected 45, content 131, static 34, titles 636, canonical browser 14/14 and full paired reading pass)
+- **Summary:** Replaces the complete paired chapter with explicit force/power/energy distinctions, correct SI examples, nonlinear and viscoelastic derivations, directional coupling, augmented control/sensing states and bounded primary evidence. Eight worked answers and a shared reproducible figure preserve historical links. Corrects the legacy regression that preserved the erroneous 1.25 J calculation. Source boundaries, failures and validation are documented. Companion DCR critiques remain separately queued as #4340.
+- **Next step:** Open the validated fascia correction as a protected pull request.
 
 ### DL-#4338 · DCR Scaling, Coordinates and Correction Evidence
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4338 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4339 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4339 (merged)
 - **Branch:** `fix/4338-dcr-complete-rigor`
 - **Paths:** `articles/controllability-drift-ratio.qmd`, `tests/test_dcr_article_rigor.py`, `tests/test_scientific_trust_metadata.py`, `src/affine_control/research_readiness/fixtures.py`, `data/research_protocols`, `data/trust/claim_audit_inventory.json`, `docs/development/technical-review/dcr-complete-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`c1df356c`, pushed canonical-evidence checkpoint; implementation 92e92d6577edc6ca501ba290645b67ecf767aa0f; normal hooks passed; 5,124 tests passed, 92.88% coverage; final affected 84 and canonical browser 14/14 pass)
+- **Last verified:** 2026-09-10 (`06ad67134fb08841281640d4373d9df1d7cc56ae`, protected squash verified; live deployment failed before publication; implementation 92e92d6577edc6ca501ba290645b67ecf767aa0f; normal hooks passed; 5,124 tests passed, 92.88% coverage; final affected 84 and canonical browser 14/14 pass)
 - **Summary:** Complete replacement withdraws unsupported downswing growth and derives scaling, coordinate Hessians, transported metrics, regularization, finite-time reachability and event sensitivity. Thirteen independent tests support the argument. Readiness now names the actual route reviewer with coherent manufactured chronology; scientific protocol states and immutable authority pins remain unchanged. Full reading, mobile/table/disclosure QA, content, static, titles, links, style and types pass. Initial digest/date failures and visually detected dark-panel defect were corrected and documented. Companion critiques and remaining corpus stay open.
-- **Next step:** Verify PR #4339 protected checks, normal auto-merge and exact live publication.
+- **Next step:** Relocate bound DCR review evidence outside the pruned docs/ output and test that boundary.
 
 ### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
 

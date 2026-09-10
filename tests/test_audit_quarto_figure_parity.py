@@ -282,11 +282,12 @@ class TestAuditBookPhysicsOfGolf:
         # #4160, #4161, and #4164 replace diagrams with shared print/web images.
         # #4283 replaces the spine schematic with a shared evidence/model diagram.
         # #4333 pairs the shaft figures; #4336 adds a paired damping-regime figure.
-        assert res.total_latex_tikz == 15
-        assert res.total_latex_includegraphics == 23
+        # #4341 replaces the unpaired fascia layers with a shared material-response plot.
+        assert res.total_latex_tikz == 14
+        assert res.total_latex_includegraphics == 24
         assert res.total_latex_fig_labels == 38
-        assert res.total_quarto_figures == 24
-        assert res.missing_figures_count == 14
+        assert res.total_quarto_figures == 25
+        assert res.missing_figures_count == 13
         assert res.is_in_full_parity is False
 
 

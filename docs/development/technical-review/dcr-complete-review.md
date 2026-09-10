@@ -169,7 +169,7 @@ commit. The canonical-byte digest and its readiness/atlas dependents were
 regenerated before retrying. No mathematical or rendered content changed.
 The standalone development-log checker still reports the preserved peer
 #3903/#3902 metadata omissions; this feature's entry has its concrete SHA.
-PR #4339 is open at canonical-evidence checkpoint c1df356c. Normal commit
-and push hooks pass; protected squash auto-merge is enabled. Exact protected
-checks, merge and live publication remain to be verified.
+PR #4339 protected-squash-merged from head 7ba2db42 as
+06ad67134fb08841281640d4373d9df1d7cc56ae. Normal commit/push hooks and protected
+checks passed. Exact deployment 34447587020 failed before publication: docs/ output pruning removed the bound review document. Relocate durable evidence outside generated output and test that boundary before retrying publication.
 The corpus and companion critiques remain unfinished.

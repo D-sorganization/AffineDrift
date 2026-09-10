@@ -5,7 +5,7 @@
 Issue #4341 under #4009, #4021 and Physics #4054. Branch
 `fix/4341-fascia-mechanics-rigor`, parent 7ba2db42c76da91b8db563fcf6ee0647b334c327.
 The long original LaTeX chapter and Quarto differences have been inspected.
-Implementation and print/web validation remain. Preserve chapter labels,
+The paired replacement and complete chapter reading are implemented. Preserve chapter labels,
 historical links, eight exercises, peer ch29/impact work and immutable publication.
 The DCR companion critique review is separately queued as #4340.
 
@@ -76,17 +76,60 @@ The DCR companion critique review is separately queued as #4340.
 Full-text XML for the two open-access fascia papers is held as local scratch
 reading material. Missing BeautifulSoup XML support was bypassed using the
 standard-library XML parser; no dependency was installed. Source retrieval
-alone does not count as full reading. Biological study summaries will be
+alone does not count as full reading. Biological study summaries are
 bounded; the comprehensive derivations are independent constructions.
+
+## Implemented Argument and Reproduction
+
+Both editions now connect anatomy, constitutive law, internal state, whole-body
+forces, sensing and the impact task. The 13 independent checks derive the SI
+energy examples, fixed-stress/fixed-strain reversal, nonlinear tangent modulus,
+Kelvin ramp loss, standard-linear-solid energy balance and memory equation,
+virtual-power identity and directional coupling counterexamples. The harmonic
+solution gives storage/loss moduli and cycle loss; increasing frequency does
+not monotonically increase loss per cycle. Perturbations are explicitly about
+a tensile bias, and the parameters are manufactured examples.
+
+The shared SVG/PDF replaces a misleading anatomical stack with exact relaxation
+and harmonic loops. Reproduce it with
+`py -3.12 -X utf8 docs/development/technical-review/build_fascia_mechanics_figures.py`.
+Figure parity improves from 14 to 13 missing web figures; other chapters' gaps
+remain in the generated inventory. All original print labels and 22 web heading
+destinations remain. All eight exercises have worked answers. Five primary
+bibliography records were added; the existing Bonaldi entry is reused.
 
 ## Validation and Delivery
 
-Independent controls cover SI conversion, boundary-condition dependence,
-nonlinear modulus, viscoelastic dissipation, memory, virtual power and coupling.
-Publication regressions must fail against the original paired sources before
-replacement. Full numerical, repository, HTML and affected PDF QA are pending.
+- Initial RED: ten analytic controls passed; both paired publication checks
+  failed against the original text. A harmonic identity check was then added.
+- The first full suite found one legacy test that asserted the incorrect area
+  and 1.25 J result. Its display-math purpose is retained with the corrected
+  area, volume and 0.125 J equations; the independent SI calculation supplies
+  the numerical check. Final full suite: **5,137 passed, 29 skipped, 132
+  deselected**, 50 existing warnings, **92.88% coverage**. Command:
+  `py -3.12 -X utf8 -m pytest tests/ --cov=src --cov-report=xml --timeout=60`.
+- Affected fascia/PDF/figure contracts: **45 passed**. Content lint **131**,
+  static checks **34**, title audit **636**, links, configured mypy and code
+  quality pass. Ruff found one unused test variable and Black one formatting
+  change; both were corrected and their checks rerun successfully.
+- The complete 546-page book compiles with BibTeX and repeated pdflatex.
+  Physical chapter pages **286–298** were visually read in full, plus the
+  affected bibliography pages 533 and 537. Missing citation spaces and a
+  print line overflow were corrected; affected pages were rerendered and read.
+  Existing warnings elsewhere in the book are not claimed resolved.
+- Full Quarto chapter: **25 overlapping reading captures**, all visually read;
+  113 math spans, 15 display equations, one loaded accessible figure, all
+  historical headings, no duplicate IDs or broken internal fragments.
+- Canonical public-site gate: **14/14 passed**, zero serious/critical axe
+  findings. Independent seven-width/two-theme checks show no document overflow
+  or math errors. All 17 display/figure/table regions were exercised at 320,
+  390 and 1440 pixels in both themes, including 48 keyboard-scroll checks wherever
+  overflow occurred. Representative figure/table/equation endpoints were read
+  in both themes. Shared moderate `landmark-unique` and persistent browser
+  console findings remain; no zero-console or zero-all-severity claim is made.
 
-Prior DCR PR #4339 remains open at 7ba2db42 with normal squash auto-merge;
-static, JavaScript, links and benchmark checks pass at the last checkpoint,
-with Python and browser checks still running. Continue exact delivery
-verification at natural checkpoints; do not report the corpus complete.
+Local captures and build drivers are scratch. Canonical chapter sources,
+reproducible vector figure, tests, bibliography, book PDF and this audit carry
+the implementation. Protected PR delivery is next; the corpus is unfinished.
+The preceding DCR PR #4339 protected-squash-merged at
+06ad67134fb08841281640d4373d9df1d7cc56ae; exact deployment 34447587020 failed before publication because the docs/ output pruning removed its bound development review. A durable-source relocation and boundary regression are required. Companion critiques remain queued as #4340.

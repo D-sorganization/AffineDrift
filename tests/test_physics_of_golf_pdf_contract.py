@@ -85,10 +85,12 @@ def test_fascia_energy_estimates_are_inside_display_math() -> None:
     text = FASCIA_CHAPTER.read_text(encoding="utf-8")
 
     for expression in (
-        r"E_{\text{stored}} = \frac{1}{2} E \times \epsilon^2 \times V = \frac{1}{2} \times 1 \, \mathrm{MPa} \times (0.05)^2 \times (0.01 \, \mathrm{m}^2 \times 0.1 \, \mathrm{m})",
-        r"E_{\text{stored}} = \frac{1}{2} \times 10^6 \, \mathrm{Pa} \times 0.0025 \times 10^{-3} \, \mathrm{m}^3 = 1.25 \, \mathrm{J}",
+        r"A=10(10^{-2}\,\mathrm m)^2=10^{-3}\,\mathrm m^2,",
+        r"V=AL=10^{-4}\,\mathrm m^3.",
+        r"S=\tfrac12(10^6)(0.05)^2(10^{-4})=0.125\,\mathrm J.",
     ):
-        assert f"$$\n{expression}\n$$" in text
+        assert any(expression in block for block in text.split("$$")[1::2])
+    assert r"=1.25\,\mathrm J" not in text
 
 
 def test_spine_display_equation_has_no_nested_math_delimiters() -> None:
