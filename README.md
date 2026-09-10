@@ -133,6 +133,7 @@ AffineDrift/
 - [Public site verification](docs/development/public-site-verification.md) — every-route visual,
   responsive, and revision-bound deployment contract.
 - [Git workflow](docs/development/git-workflow-guide.md) — branch strategy, commits, and pull requests.
+- [Architecture map](docs/architecture/C4.md) — maintainable Mermaid C4Context and C4Container views and feature-evidence map.
 - [API reference](docs/api-reference.md) — the public API of the modules under `src/`.
 - [Repository inventory](docs/development/repository_inventory.md) — component status and known gaps.
 - [Security guidelines](docs/development/security-guidelines.md) — secrets handling, input validation, static analysis.

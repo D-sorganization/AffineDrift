@@ -350,5 +350,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-10 | #4361 | Record merged force-regularity evidence and a source-identified impact-program takeover checkpoint; preserve open physical and acoustic requirements. |
 | 2026-09-10 | #4360 | Save intermediate strokes-gained correction with exact accounting, category transfers, individual inference limits, verified counterexamples and an explicit unfinished-review handoff. |
 | 2026-09-10 | #4362 | Adjudicate five DCR companion critiques with explicit mechanical boundaries, metric transport counterexamples and updated trust ledgers. |
+| 2026-09-10 | #4363 | Adopt maintainable Mermaid C4 architecture-map contract (C4Context, C4Container, Feature Map, Change Log, validator and workflow) (#1595). |
 
 
