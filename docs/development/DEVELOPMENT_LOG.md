@@ -297,15 +297,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **Issue:** https://github.com/D-sorganization/AffineDrift/issues/4254
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4258
-- **Branch:** docs/4253-impact-dynamics-acoustics
-- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-*.qmd`, `references/impact-acoustics.bib`, `docs/development/impact-acoustics/`, `tests/test_heavy_hit_evidence_boundaries.py`
+- **Issue:** https://github.com/D-sorganization/AffineDrift/issues/4255; parent4253; initial4254/4258 merged
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4356 (ready)
+- **Branch:** docs/4255-contact-force-regularity
+- **Paths:** `articles/_includes/impact-acoustics.qmd`, `references/impact-acoustics.bib`, `docs/development/impact-acoustics/`, SPEC and turnover
 - **Started:** 2026-09-07
-- **Last verified:** 2026-09-07 (`cd0afdfa`)
-- **Summary:** Corrected theory, source inventory and linked epics; publication regressions pass. Validation completed; PR #4258 in review; physical research remains open.
-
-- **Next step:** Resolve protected PR #4258 review/check results, then follow the separately scoped research dependencies.
+- **Last verified:** 2026-09-10 (b14f1a392e446211da3ca402951f7aa147495922; publication checkpoint SELF):5229PASS/29SKIP/132deselected,79.29% coverage; five focused and131 content checks pass; citations/title/xrefs and pinned Quarto article render pass. Actual-route browser tree verifies new section/equation/citations; full-site/protected review remains. Source/JUnit/render identities and access limits are in FORCE_REGULARITY_RESULTS.json and FORCE_REGULARITY_REVIEW.md.
+- **Summary:** Extends the existing theory with contact-force regularity, finite-jump versus impulse, spectral-tail derivation and externally forced candidate-law limits; retains source-identified synthetic status and distinct physical/radiation/perception requirements.
+- **Next step:** Qualify protected site and review checks on PR4356.
 
 ### DL-0001 · Audit Quality Fixes
 

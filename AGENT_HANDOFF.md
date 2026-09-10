@@ -38,34 +38,21 @@
 
 ## Impact Dynamics and Acoustics: #4253
 
-- A1 #4254 / #4258 and Coriolis correction #4277 / #4282 are merged.
-- Active #4295 / PR #4298: docs/4295-grip-stability-qualification, worktree
-  C:/Users/diete/Repositories/AffineDrift-impact-grip-review, base b6dc729f.
-  Both Chapter 29 editions now qualify grip, stability, friction, energy budgets,
-  sensitivity and shaft/acoustic claims. Independent counterexamples and paired
-  controls pass; full regression has 4,789 passes, 92.78% coverage and only two
-  transient render-hygiene failures, resolved by six post-render hygiene passes.
-  All 51 final targeted and 130 content-lint checks pass. Final 553-page PDF
-  chapter/bibliography review, full 238-target site build, mobile/desktop math,
-  keyboard/link and automated accessibility checks pass. PR #4298 is open;
-  normal protected CI/review remain.
-- Continue from docs/development/impact-acoustics/GRIP_QUALIFICATION_REVIEW.md.
-  Earlier evidence remains in DAMPING_REVIEW.md, REVIEW.md and INVENTORY.md.
-- Tools #5072 grip-supported loaded-chain balance and full M/G/C/K operators are
-  published at eeea63b47; turnover 2ffaf243f. All 646 Linux golf/API tests pass
-  with two optional CAD skips, plus 38 focused controls and nine manual gates.
-  Grip-supported frequency response is published at Tools 12bcf3d83 with
-  665 Linux golf/API and 50 focused passes, all normal hooks passing. Stability, bandwidth and
-  nonlinear evolution remain.
-- Tools #5103/#5106 public checks pass but private consumer lookup fails before
-  tests. UpstreamDrift #9804 is merged as 736ec2189 from b8da0c024; the
-  preserved local authority is not validation of that differing revision.
-  Audit protected main in a fresh worktree; do not overwrite the old branch.
-- Preserve immutable publication bytes and trust pins. A2 #4255, Tools #5068
-  and UpstreamDrift #9700 remain open. Synthetic verification and metadata-only
-  dataset discovery do not establish physical or blinded perceptual validation.
-
-Updated: 2026-09-09. Current-state only; use Git and GitHub for history.
+- Initial theory4258, Coriolis4282 and grip qualification4298 are merged.
+- Active4255 synthesis: docs/4255-contact-force-regularity in
+  C:/Users/diete/Repositories/AffineDrift-impact-regularity, baseline b5362af0,
+  implementation b14f1a392e; ready PR4356. Extends the existing acoustic include
+  with force regularity and externally forced contact-law limits.
+- Full Python3.12:5229 passes,29 skips,79.29% coverage; five focused and131
+  content checks pass. Bibliography/title/xrefs and Quarto1.8.26 article render
+  pass. Actual-route browser tree verifies equation/citations; protected site
+  and review remain. See canonical HANDOFF.md and FORCE_REGULARITY_REVIEW.md.
+- Tools279926e95 passes1481 Windows controls/2 optional CAD skips but hosted
+  entry240 still times out at60s in both Python shared shards. Its numerical
+  evidence does not qualify acoustics; runtime repair remains in its own tree.
+- Preserve protected publication bytes/pins and peer scopes. Affine4253/4255,
+  Tools5068 and UpstreamDrift9700 remain open for numerical, physical and
+  blinded-perception acceptance. Existing review/inventory ledgers are retained.
 
 ## Build-Section Lateral Links: #3902
 
