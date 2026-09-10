@@ -7,7 +7,7 @@ editions were read completely, prioritizing the approximately 5,681-word print
 chapter. The replacement covers every section and all seven exercises in both
 editions. Branch `fix/4349-affine-structure-rigor`, initially stacked on brain
 PR #4348 head `4f73040fa9ecccd1b9f25f84b4db7168e4e895b9`.
-Protected delivery remains pending. The corpus is unfinished.
+PR #4350 is open; protected delivery remains pending. The corpus is unfinished.
 
 The central purpose is to connect mechanical structure to a defined control
 question. Affine dependence on input is useful, but does not prove that skilled
@@ -210,3 +210,14 @@ and this audit carry the correction. Use normal protected PR delivery, then
 inspect revision-matched live evidence. Continue the constraint-forces chapter,
 queued DCR critiques #4340 and remaining corpus without promoting unreviewed
 material to complete.
+
+## Delivery Checkpoint
+
+Normal commit and push hooks passed. Original implementation 8bb4d042 replayed
+onto brain squash 688dda81c3f0c38759d9994cbc0d5c0cd0478bd2 as
+332bfe2ffdcde038a0a4b5ee0577845c4ad73ef7, preserving validated tree
+8d8b2fedeae9fa3c761e2beae1d021e3c4021119. Parent head and squash trees matched.
+PR #4350 closes #4349; verify protected checks and exact publication next.
+The central development-log checker initially rejected SELF as a verifying SHA;
+the entry now names the implementation commit. Only pre-existing peer #3903/#3902
+metadata omissions remain. No hook or protection bypass was used.

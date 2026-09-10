@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4349 · Complete Affine Structure, Drift and Optimality
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4349 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4350 (open)
 - **Branch:** `fix/4349-affine-structure-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch05_affine_structure.tex`, `articles/The_Physics_of_Golf/quarto/ch05_affine_structure.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/affine_structure_verified.*`, `tests/test_affine_structure_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/affine-structure-review.md`, `docs/development/technical-review/build_affine_structure_figures.py`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (working tree based on `4f73040fa9ecccd1b9f25f84b4db7168e4e895b9`, complete paired reading; 5,213 root tests and 79.29% configured coverage; focused 34, content 131, static 34, titles 636, mypy 91, style and site links pass)
+- **Last verified:** 2026-09-10 (`332bfe2ffdcde038a0a4b5ee0577845c4ad73ef7`, complete paired reading; 5,213 root tests and 79.29% configured coverage; focused 34, content 131, static 34, titles 636, mypy 91, style and site links pass)
 - **Summary:** Re-derives complete coupled drift, inverse inertia and constrained vector fields; separates capacity, realized input, energy and finite-time task authority. Seven worked answers and a reproduced figure replace unsupported phase/optimality claims. Full print/web reading corrected conversion defects missed by layout checks; all 30 historical web destinations now verified. The audit records source limits, numerical derivations and failure history.
-- **Next step:** Submit the validated affine correction as a focused protected PR closing #4349.
+- **Next step:** Verify PR #4350 protected checks, squash merge and exact live publication.
 
 ### DL-#4347 · Complete Brain Control and Neuroscience Evidence
 
