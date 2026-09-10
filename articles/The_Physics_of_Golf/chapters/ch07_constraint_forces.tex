@@ -1,590 +1,430 @@
-% Chapter~\ref{ch:constraint_forces}: Constraint Forces: The Hidden Engines of the Swing
-% The Physics of Golf: Force, Drift, and Control in the Golf Swing
-
-\chapter{Constraint Forces: The Hidden Engines of the Swing}
+\chapter[Constraint Forces: Coupling, Work and Control]{Constraint Forces:\\Coupling, Work and Control}
+\raggedbottom
 \label{ch:constraint_forces}
 
-\epigraph{%
-The grip doesn't accelerate the club by pushing it. \\
-It redirects your arm's momentum into the club's momentum. \\
-This transfer happens through constraint forces that do zero net work.
-}{---The paradox of the kinetic chain}
+\begin{laymansbox}{Why Constraint Forces Matter}{context:constraint_forces_motivation}
+The hand can accelerate the club by exerting a force and a moment on it. The same interaction loads the hand in the opposite direction. Understanding the swing requires both sides of that interaction: how the bodies remain connected, how their motion determines the required reaction, and how muscles and external supports influence that motion.
 
-\begin{laymansbox}{Why Constraint Forces Matter Most}{context:constraint_forces_motivation}
-You learned in Chapter~\ref{ch:zero_torque_counterfactual} that the downswing is passive—gravity and Coriolis drive acceleration. But Chapter~\ref{ch:zero_torque_counterfactual} left a critical question unanswered:
+The zero-torque counterfactual in the preceding chapter asks what a specified model would do when its declared control input is removed. It does not establish that the human downswing is passive. Here we ask a different question: what forces are necessary to maintain a specified connection, and what work do those forces perform on each part of the system?
 
-\textbf{How does the arm's momentum become the club's momentum?}
-
-If gravity is pulling the whole system downward, why does the club accelerate \emph{faster} than the arm? Where does that extra speed come from?
-
-The answer is constraint forces. They are the \emph{hidden engines} of the kinetic chain.
-
-Constraint forces are:
-\begin{itemize}
-\item \textbf{Forces that enforce joint connections:} Your elbow joint connects the upper arm to the forearm. This connection is not free-floating; it's constrained. The constraint produces a force.
-\item \textbf{Forces that do zero net work:} This is paradoxical but true. Constraints don't \emph{add} energy to the system. Yet they \emph{redistribute} energy from one segment to another.
-\item \textbf{Forces that are enormous:} Constraint forces at joints can reach hundreds of Newtons during dynamic movement, substantially exceeding individual muscle forces \citep{Nesbit2005}.
-\item \textbf{Forces that are model-independent:} You don't need to know muscle physiology to compute them. They follow directly from the equations of motion and the constraints.
-\end{itemize}
-
-This chapter reveals the mathematics and physics of constraint forces, then shows why they're the real story of the kinetic chain.
+A connection can carry considerable load while supplying no net power to the combined bodies. It can nevertheless supply positive power to the club and negative power to the arm. That distinction is central to understanding a kinetic chain. It does not make muscles irrelevant: muscle forces influence both the motion and the reactions, and ideal constraints themselves supply no energy source.
 \end{laymansbox}
 
-%============================================================================
 \section{Holonomic Constraints and Their Jacobians}
 \label{sec:holonomic_constraints}
 
 \begin{definition}{Holonomic Constraint}{holonomic_constraint}
-A \textbf{holonomic constraint} is an algebraic equation that restricts the configuration of the system. It has the form:
+For local configuration coordinates $\bm q\in\mathbb R^n$, a holonomic constraint is a restriction
 \begin{equation}
-\bm{\Phi}(\bm{q}) = \mathbf{0}
+\bm\Phi(\bm q,t)=\bm0.
 \label{eq:holonomic_constraint_general}
 \end{equation}
+The constraint is scleronomic when it has no explicit time dependence. A prescribed moving support generally gives a time-dependent, or rheonomic, constraint. Both descriptions require a choice of system boundary: a hand represented as a prescribed trajectory is an external support for a club-only model; the same hand represented as a moving body belongs inside a coupled hand--club model.
 
-For a golf swing, examples include:
-\begin{itemize}
-\item \textbf{Joint connection:} The wrist connects the arm to the club. This means the endpoint of the arm coincides with the base of the club: $\bm{\Phi}_{\text{wrist}}(\bm{q}) = \bm{x}_{\text{arm}}(\bm{q}) - \bm{x}_{\text{club}}(\bm{q}) = \mathbf{0}$.
-\item \textbf{Grip constraint:} Your hand is fixed on the grip, so the grip point cannot move relative to your palm: $\bm{\Phi}_{\text{grip}}(\bm{q}) = \bm{x}_{\text{grip}} - \text{const} = \mathbf{0}$.
-\item \textbf{Ground contact:} Your feet are in contact with the ground: $z_{\text{feet}} = 0$ (vertical position is fixed).
-\end{itemize}
+An ideal point attachment satisfies $\bm x_A(\bm q)-\bm x_B(\bm q)=\bm0$, where the two material points belong to different bodies. They coincide but can move through space. A no-slip hand--grip point constraint therefore equates hand and grip positions; it does not hold the grip stationary in the world. A rigid grasp additionally constrains relative orientation. A point attachment alone permits relative rotation and cannot represent all moments that a distributed grasp can transmit.
 \end{definition}
 
 \begin{laymansbox}{What a Constraint Is}{inplain:constraint_meaning}
-A constraint is a rule that limits where your body can go. The elbow joint is a constraint: your forearm can't be at two different distances from your shoulder. The constraint \emph{enforces} that the forearm is always, say, exactly 30 cm from the shoulder.
+A joint connects specified locations on adjacent bodies. In a rigid-link model, the distance between a body's own joint centers is fixed. The elbow does not keep every point of the forearm at one fixed distance from the shoulder: that distance changes as the elbow bends. A free hinge keeps its two attachment points together while allowing relative rotation. Free rotation and physical separation are different models.
 
-Now here's the key insight: to enforce a constraint, the joint must \emph{push}. If your arm wants to fly away from your shoulder due to centrifugal effects, the elbow joint must push inward to prevent it. That push is the constraint force.
-
-And here's the paradox: this push does zero net work. Why? Because the push acts along the direction of the constraint. The forearm can't move away from the shoulder (the constraint prevents it), so the constraint force that acts in that direction doesn't actually move the endpoint—it's doing work, but zero net work, because the constrained motion is zero.
-
-Yet this zero-net-work force \emph{does} redirect energy between segments.
+The idealization matters. Real cartilage, tendons, skin and grip material deform; contact can slip or separate. A perfectly rigid connection is an approximation whose validity depends on the motion, loads and time scale being studied. Increasing muscular stiffness is not literally the creation of a new exact holonomic equation.
 \end{laymansbox}
 
 \begin{definition}{The Constraint Jacobian}{constraint_jacobian}
-The \textbf{constraint Jacobian} is the matrix of partial derivatives of the constraint with respect to configuration:
+Define
 \begin{equation}
-\bm{J}_c(\bm{q}) = \frac{\partial \bm{\Phi}}{\partial \bm{q}}
+\bm J_c=\frac{\partial\bm\Phi}{\partial\bm q},
+\qquad \bm J_c\dot{\bm q}+\bm\Phi_t=\bm0.
 \label{eq:constraint_jacobian_definition}
 \end{equation}
+With $m$ equations, $\bm J_c$ has $m$ rows and $n$ columns. The derivative $\bm\Phi_t$ is taken at fixed configuration. For a stationary constraint, allowed velocities lie in $\ker\bm J_c$. For a moving constraint they instead satisfy an affine equation, generally an offset of that null space.
 
-If there are $n_c$ constraint equations and $n$ configuration variables, then $\bm{J}_c$ is $n_c \times n$.
+These equations use local coordinates with $\dot{\bm q}$ as the velocity variables. A model with quaternion configurations and a separate generalized velocity $\bm v$ must include its kinematic map $\dot{\bm q}=\bm N(\bm q)\bm v$; the velocity Jacobian is then $\bm\Phi_q\bm N$. Quaternion normalization is not an extra physical joint restraint.
 \end{definition}
 
-\begin{example}{Wrist Constraint Jacobian}{wrist_constraint_jacobian}
-For a double pendulum (shoulder and elbow), suppose the wrist constraint enforces that the endpoint of the arm is at a fixed angle relative to the global frame (simplified—imagine the wrist is locked at a specific orientation).
+\begin{example}{Relative Lock or World-Orientation Guide?}{wrist_constraint_jacobian}
+For the two-link model, let $q_1$ be the first link's angle from downward vertical and $q_2$ the second link's angle relative to the first. The second body's absolute angle is $\theta_2=q_1+q_2$.
 
-The constraint might be:
+A relative joint lock has $q_2=q_{2*}$ and Jacobian $[0\;1]$: both bodies share the same absolute angular velocity. A different constraint is
 \begin{equation}
-\bm{\Phi}(q_1, q_2) = q_1 + q_2 - \theta_{\text{fixed}}
+\Phi=q_1+q_2-\theta_* =0,
 \label{eq:wrist_constraint_example}
 \end{equation}
-
-Then the constraint Jacobian is:
+with
 \begin{equation}
-\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
+\bm J_c=\begin{bmatrix}1&1\end{bmatrix},
+\qquad \dot q_2=-\dot q_1.
 \label{eq:wrist_jacobian_example}
 \end{equation}
-
-This tells us: to maintain the constraint, motion in $q_1$ and $q_2$ must be coupled—they must move together. The rows of $\bm{J}_c$ define the directions in which motion is forbidden (the normal space) and allowed (the null space).
+This holds the second body at a fixed world orientation. Its relative angle changes as the first link rotates. It is an ideal world-orientation guide, not a locked wrist. In these coordinates a pure external moment on the second body contributes equal generalized moments to $q_1$ and $q_2$, explaining the column $\bm J_c^T$. By contrast, an internal relative-joint moment contributes to $q_2$ alone: its opposite effects on the two bodies are already encoded by the coordinate definition.
 \end{example}
 
-%============================================================================
 \section{The Constrained Equations of Motion}
 \label{sec:constrained_eom}
 
 \begin{laymansbox}{What Are Constraint Forces, Really?}{box:ch07_constraint_intuition}
-Place a book on a table. Gravity pulls it down, but it doesn't fall. The table pushes back with exactly the right force to keep the book stationary. That upward push is a \textbf{constraint force}.
-
-Now imagine you push the book sideways. The table doesn't resist that---you can slide the book freely. The table only constrains the book in the direction it cannot move (through the table).
-
-This is the essence of all constraint forces: they act perpendicular to the allowed motion, providing exactly the force needed to prevent impossible motion, and they do no work. In the golf swing, the joints are the ``tables.'' They redirect enormous forces without adding or removing energy from the system.
+A stationary frictionless table can support a book without doing work on it. The normal reaction prevents penetration, while tangential motion remains free. A rough table can exert friction and remove mechanical energy during sliding. A rising table can do positive work on the book. Thus the phrase ``constraint force'' alone does not determine the power: we need the contact law, the motion of its point of application and the system boundary.
 \end{laymansbox}
 
 \begin{theorem}{Constrained Lagrangian Dynamics}{theorem:constrained_lagrangian}
-When constraints are present, the equations of motion take the form:
+In a fixed ideal bilateral constraint mode, assume a positive-definite mass matrix, smooth local coordinates and a velocity bias vector $\bm c$. Write
 \begin{equation}
-\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^T \bm{\lambda}
+\bm M(\bm q)\ddot{\bm q}+\bm c(\bm q,\dot{\bm q})+\bm g(\bm q)
+=\bm B(\bm q)\bm u+\bm Q_o+\bm J_c^T\bm\lambda.
 \label{eq:constrained_eom_full}
 \end{equation}
+Here $\bm g=\nabla V$ is the potential gradient; its force contribution after rearrangement is $-\bm g$. The vector $\bm Q_o$ contains other declared loads, such as damping or an applied wrench. The vector $\bm c$ contains the velocity-dependent inertial terms; these terms are not independent energy sources. Define $\bm r=\bm B\bm u+\bm Q_o-\bm c-\bm g$ so that $\bm M\ddot{\bm q}=\bm r+\bm J_c^T\bm\lambda$.
 
-where:
-\begin{itemize}
-\item $\bm{M}(\bm{q})$ is the mass matrix.
-\item $\bm{C}(\bm{q}, \dot{\bm{q}})$ contains Coriolis and centrifugal terms.
-\item $\bm{g}(\bm{q})$ is gravity.
-\item $\bm{B}(\bm{q})\bm{u}$ is the applied torque (muscles).
-\item $\bm{J}_c(\bm{q})^T \bm{\lambda}$ is the constraint force term.
-\end{itemize}
-
-The vector $\bm{\lambda} \in \mathbb{R}^{n_c}$ contains the \textbf{Lagrange multipliers}, one for each constraint. These are the magnitudes of the constraint forces, expressed in the constraint coordinate directions.
+The multiplier is conjugate to the chosen constraint equation. It is a force in newtons for a suitably normalized positional constraint, or a moment in newton-metres for an angular constraint. Rescaling or mixing equations changes multiplier values. The physically meaningful generalized reaction is $\bm J_c^T\bm\lambda$, together with an explicitly defined map to a spatial wrench. Multipliers are not universally force magnitudes.
 \end{theorem}
 
 \begin{laymansbox}{Reading the Constrained EOM}{inplain:constrained_eom_reading}
-The equation says: acceleration (left side, $\bm{M}\ddot{\bm{q}}$) comes from four sources (right side):
+The same dynamics determine motion and reaction together. Applied muscle moments enter the load vector; the joint reaction is whatever the specified ideal connection requires in response. A large reaction is therefore not evidence that the load is independent of muscle action. Nor does a large numerical force in newtons establish dominance over a moment in newton-metres: those quantities need a common mechanical mapping before comparison.
 
-\begin{enumerate}
-\item \textbf{Gravity and Coriolis} ($\bm{C}, \bm{g}$): passive forces we've already discussed.
-\item \textbf{Muscle torques} ($\bm{B}\bm{u}$): active control.
-\item \textbf{Constraint forces} ($\bm{J}_c^T \bm{\lambda}$): the mysterious term.
-\end{enumerate}
-
-The constraint force term is special: it's multiplied by $\bm{J}_c^T$. This means the constraint force acts in the directions perpendicular to motion (normal to the constraint surface). That's why it does zero net work—the motion is always tangent to the constraint surface, perpendicular to the force.
-
-But because the force is perpendicular, it can have a large magnitude while doing zero work. It's like pressing on a table: you push down hard, the table pushes back with equal force, but nothing moves, so zero work is done. Yet the force is there, enormous, redistributing internal stresses.
+An ideal reaction has zero virtual work on admissible virtual displacements. This statement is about a force--displacement pairing. With mixed angular and translational coordinates it is safer than imagining ordinary perpendicular arrows in a Euclidean picture of configuration space.
 \end{laymansbox}
 
-%============================================================================
 \section{Solving for the Constraint Forces}
 \label{sec:solving_constraint_forces}
 
 \begin{algorithm}{Computing Lagrange Multipliers}{proc:compute_multipliers}
-To find $\bm{\lambda}$, we use the constraint that $\bm{\Phi}(\bm{q}) = \mathbf{0}$ must be maintained at all times. Taking the time derivative twice:
+For a stationary constraint, differentiation gives
 \begin{equation}
-\bm{J}_c(\bm{q}) \ddot{\bm{q}} = -\dot{\bm{J}}_c(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{J}_c(\bm{q}) \ddot{\bm{q}}_{\text{unconstrained}}
+\bm J_c\ddot{\bm q}=-\dot{\bm J}_c\dot{\bm q}.
 \label{eq:constraint_acceleration_consistency}
 \end{equation}
+There is no additional unconstrained-acceleration term in this kinematic identity. For the general time-dependent constraint, define the vector
+\[
+\bm\gamma=\bm\Phi_{qq}[\dot{\bm q},\dot{\bm q}]
++2\bm\Phi_{qt}\dot{\bm q}+\bm\Phi_{tt},
+\qquad \bm J_c\ddot{\bm q}+\bm\gamma=\bm0.
+\]
+Each component of $\bm\Phi_{qq}[\dot{\bm q},\dot{\bm q}]$ is the corresponding constraint Hessian contracted with velocity twice. For stationary constraints, $\bm\gamma=\dot{\bm J}_c\dot{\bm q}$.
 
-where $\ddot{\bm{q}}_{\text{unconstrained}}$ is what the acceleration \emph{would} be without the constraint.
-
-Substituting the constrained EOM:
+Substitution of the dynamics gives
 \begin{equation}
-\bm{J}_c \bm{M}^{-1} \left[ \bm{B}\bm{u} + \bm{J}_c^T \bm{\lambda} - \bm{C} - \bm{g} \right] = -\dot{\bm{J}}_c \dot{\bm{q}} - \bm{J}_c \ddot{\bm{q}}_{\text{unconstrained}}
+\bm J_c\bm M^{-1}(\bm r+\bm J_c^T\bm\lambda)=-\bm\gamma,
 \label{eq:constraint_lambda_equation}
 \end{equation}
-
-Rearranging:
+and hence the Schur-complement system
 \begin{equation}
-\bm{J}_c \bm{M}^{-1} \bm{J}_c^T \bm{\lambda} = -\bm{J}_c \bm{M}^{-1} (\bm{B}\bm{u} - \bm{C} - \bm{g}) - \dot{\bm{J}}_c \dot{\bm{q}} - \bm{J}_c \ddot{\bm{q}}_{\text{unconstrained}}
+\underbrace{\bm J_c\bm M^{-1}\bm J_c^T}_{\bm S}\bm\lambda
+=-\bm J_c\bm a_0-\bm\gamma,
+\qquad \bm a_0=\bm M^{-1}\bm r.
 \label{eq:lambda_linear_system}
 \end{equation}
-
-Solving this linear system gives $\bm{\lambda}$.
+Solve for $\bm\lambda$ and recover $\ddot{\bm q}=\bm a_0+\bm M^{-1}\bm J_c^T\bm\lambda$. The free acceleration appears once. Subtracting it a second time produces the wrong reaction.
 \end{algorithm}
 
 \begin{laymansbox}{Why This Procedure Works}{inplain:lambda_computation}
-The constraint equation $\bm{\Phi} = 0$ is an algebraic restriction. If you differentiate it twice, you get an equation involving $\ddot{\bm{q}}$. This equation says: ``the acceleration must be consistent with maintaining the constraint.''
+The free dynamics predict an acceleration. The constraint specifies the correction needed to keep the connection compatible. If $\bm M$ is positive definite and $\bm J_c$ has full row rank, then $\bm S$ is positive definite: for nonzero $\bm y$, $\bm y^T\bm S\bm y=(\bm J_c^T\bm y)^T\bm M^{-1}(\bm J_c^T\bm y)>0$. The reaction is then unique for those equations and loads.
 
-You plug in the EOM (which relates $\ddot{\bm{q}}$ to forces) and solve for the unknown constraint forces $\bm{\lambda}$.
-
-The matrix $\bm{J}_c \bm{M}^{-1} \bm{J}_c^T$ is symmetric and positive definite (in well-posed problems). It's invertible, so the linear system has a unique solution.
+With redundant rows, multipliers may be nonunique even when the generalized reaction and acceleration are unique. A minimum-norm multiplier selected by a pseudoinverse depends on constraint scaling; it is not automatically the real distribution of contact forces or muscle loads. Remove redundant equations or state the additional physical model that resolves load sharing. Near rank loss, inspect conditioning and residuals rather than treating a large multiplier as a biological discovery.
 \end{laymansbox}
 
-%============================================================================
+The coupled calculation can also be checked without the Schur reduction:
+\[
+\begin{bmatrix}\bm M&-\bm J_c^T\\\bm J_c&\bm0\end{bmatrix}
+\begin{bmatrix}\ddot{\bm q}\\\bm\lambda\end{bmatrix}
+=\begin{bmatrix}\bm r\\-\bm\gamma\end{bmatrix}.
+\]
+Compare both residuals, $\bm M\ddot{\bm q}-\bm r-\bm J_c^T\bm\lambda$ and $\bm J_c\ddot{\bm q}+\bm\gamma$. Initial position and velocity must also be compatible: acceleration-level enforcement does not repair an already separated joint or an inadmissible incoming velocity. Numerical drift control and physical constraint activation are distinct operations. Standard multibody treatments discuss bilateral constraints, contact modes and their acceleration/impulse formulations; the equations here are derived with the sign convention above. \citep{TedrakeMultibodyEnergy}
+
 \section{The Null Space and Range of the Constraint Jacobian}
 \label{sec:jacobian_null_range}
 
-\begin{definition}{Null Space and Range of $\bm{J}_c$}{jacobian_spaces}
-The constraint Jacobian $\bm{J}_c$ defines two fundamental subspaces:
-
-\begin{itemize}
-\item \textbf{Null space:} $\text{null}(\bm{J}_c) = \{\bm{v} : \bm{J}_c \bm{v} = \mathbf{0}\}$. These are velocity directions that maintain the constraint (allowed motions).
-
-\item \textbf{Range:} $\text{range}(\bm{J}_c^T)$. This is the space of possible constraint forces. Constraint forces must lie in this subspace.
-\end{itemize}
-
-A fundamental property: $\text{null}(\bm{J}_c) \perp \text{range}(\bm{J}_c^T)$. Allowed motions are perpendicular to constraint forces—which is exactly why constraint forces do zero work.
+\begin{definition}{Allowed Velocities and Reaction Covectors}{jacobian_spaces}
+For stationary constraints, $\ker\bm J_c$ is the tangent velocity space. Ideal reaction covectors belong to $\operatorname{range}(\bm J_c^T)$ and annihilate every tangent velocity:
+\[
+(\bm J_c^T\bm\lambda)^T\bm v=0
+\quad\text{whenever}\quad\bm J_c\bm v=0.
+\]
+Acceleration is generally not tangent. A point travelling around a circle needs a normal centripetal acceleration even though its velocity is tangent. The curvature term $\bm\gamma$ expresses precisely that requirement.
 \end{definition}
 
-\begin{example}{Null Space for the Wrist Hinge}{wrist_null_space}
-For a double pendulum with the constraint $q_1 + q_2 = \theta_{\text{fixed}}$, the constraint Jacobian is:
-\begin{equation}
-\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
-\end{equation}
-
-The null space is found by solving:
-\begin{equation}
-\begin{bmatrix} 1 & 1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = 0 \implies v_1 = -v_2
-\end{equation}
-
-So the null space is one-dimensional:
-\begin{equation}
-\text{null}(\bm{J}_c) = \text{span}\left\{ \begin{bmatrix} 1 \\ -1 \end{bmatrix} \right\}
-\end{equation}
-
-\textbf{Interpretation:} The only way to move while maintaining the constraint is to increase $q_1$ and decrease $q_2$ by the same amount (or vice versa). This keeps their sum constant.
-
-The range of $\bm{J}_c^T$ is:
-\begin{equation}
-\text{range}(\bm{J}_c^T) = \text{span}\left\{ \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right\}
-\end{equation}
-
-\textbf{Interpretation:} The constraint force acts along the direction $(1, 1)$—i.e., simultaneously at both joints. This makes sense: the constraint couples the two joints, so forces must be applied at both to maintain coupling.
+\begin{example}{Null Space for the Orientation Guide}{wrist_null_space}
+The guide $q_1+q_2=\theta_*$ has tangent basis $\bm n=(1,-1)^T$ and reaction covectors proportional to $(1,1)^T$. The relative lock $q_2=q_{2*}$ instead has tangent basis $(1,0)^T$ and reaction covectors proportional to $(0,1)^T$. An ordinary free two-link chain already includes its point attachment in the coordinates and has neither of these extra restrictions. Its joint force must be recovered from body force balance; no extra angular-lock multiplier is needed to make the bodies remain attached.
 \end{example}
 
 \begin{constraintbox}{Constraints Restrict the Effective DOF}{constraint:effective_dof}
-A system with $n$ configuration variables and $n_c$ holonomic constraints has only $n - n_c$ \emph{effective degrees of freedom}.
+At a regular configuration with constant Jacobian rank $r$, the constraint manifold has local dimension $n-r$. Counting equations gives $n-m$ only when all $m$ equations are independent. Contact activation and singular configurations can change that local description.
 
-For example:
-\begin{itemize}
-\item A double pendulum has $n = 2$ DOF (shoulder and elbow angles).
-\item If you lock the wrist (adding one constraint), you have $n_c = 1$, leaving $2 - 1 = 1$ effective DOF.
-\item Motion can only occur along the null space of the constraint Jacobian.
-\end{itemize}
-
-The constraint forces are whatever is needed to project the "free" dynamics onto the null space—they're automatic consequences of maintaining the constraint.
+The acceleration solves a mass-weighted least-change problem:
+\[
+\min_{\bm a}\ \frac12(\bm a-\bm a_0)^T\bm M(\bm a-\bm a_0)
+\quad\text{subject to}\quad \bm J_c\bm a=-\bm\gamma.
+\]
+Its solution is $\bm a=\bm a_0-\bm M^{-1}\bm J_c^T\bm S^{-1}(\bm J_c\bm a_0+\bm\gamma)$. This is a projection onto an affine set of compatible accelerations in the mass metric. It is not an ordinary Euclidean projection of acceleration into the velocity null space. The distinction matters whenever constraints curve or move.
 \end{constraintbox}
 
-%============================================================================
 \section{Energy Transfer via Constraint Forces}
 \label{sec:energy_transfer_constraints}
 
 \begin{theorem}{Zero Power Constraint Condition}{theorem:zero_power_constraint}
-For ideal, scleronomic (time-independent) constraints $\bm{\Phi}(\bm{q}) = \mathbf{0}$, the power delivered by a constraint force is:
+The instantaneous power supplied by an ideal reaction is
 \begin{equation}
-P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c(\bm{q}) \dot{\bm{q}}
+P_c=(\bm J_c^T\bm\lambda)^T\dot{\bm q}
+=\bm\lambda^T\bm J_c\dot{\bm q}
+=-\bm\lambda^T\bm\Phi_t.
 \label{eq:constraint_power}
 \end{equation}
-
-Since $\bm{J}_c(\bm{q}) \dot{\bm{q}} = \frac{d\bm{\Phi}}{dt}$ and $\bm{\Phi}(\bm{q}(t)) = \mathbf{0}$ for all $t$ (with no explicit time dependence $\frac{\partial \bm{\Phi}}{\partial t} = \mathbf{0}$), we have:
+For a compatible stationary ideal constraint,
 \begin{equation}
-\frac{d\bm{\Phi}}{dt} = \mathbf{0}
-\end{equation}
-
-Therefore:
-\begin{equation}
-P_{\text{constraint}} = \mathbf{0}
+P_c=0.
 \label{eq:constraint_zero_power}
 \end{equation}
-
-Under ideal scleronomic conditions, constraint forces do \emph{zero} net power to the system.
+This concerns the sum of reaction powers over the declared system. It does not say that each body receives zero power, or that total energy is constant when other forces do work. For time-independent rigid-body kinetic energy $T=\tfrac12\dot{\bm q}^T\bm M\dot{\bm q}$, conservative potential $V$, and a consistent velocity bias, the complete balance is
+\[
+\frac{d}{dt}(T+V)=\dot{\bm q}^T(\bm B\bm u+\bm Q_o)
+-\bm\lambda^T\bm\Phi_t.
+\]
+The identity uses $\dot{\bm q}^T\bm c=\tfrac12\dot{\bm q}^T\dot{\bm M}\dot{\bm q}$. A moving boundary, friction, damping, deformation or impact needs its own work or energy accounting; the stationary ideal theorem does not remove those effects.
 \end{theorem}
 
 \begin{laymansbox}{The Power Paradox}{inplain:power_paradox}
-Here's where the magic happens. Constraint forces:
-\begin{itemize}
-\item Do zero \emph{net} work on the system (total energy is unchanged).
-\item Yet they \emph{redistribute} energy between segments dramatically.
-\end{itemize}
+Suppose an ideal point connection moves with common velocity $\bm v_J$. Let $\bm F$ be the force on body B from body A. The powers at the connection are $P_B=\bm F\cdot\bm v_J$ and $P_A=-\bm F\cdot\bm v_J$. Positive power adds mechanical energy to the receiving body; negative power removes it. The sum is zero although either term can be large.
 
-Think of it this way: The constraint force on the arm at the wrist might do positive work (removing kinetic energy from the arm). Simultaneously, the reaction force on the club does negative work of the same magnitude (adding kinetic energy to the club). These cancel out globally, but locally, energy has been transferred.
+For an entirely illustrative instant, $\bm F=(100,0,0)$ N and $\bm v_J=(4,0,0)$ m/s give $P_B=400$ W and $P_A=-400$ W. The force is parallel to the common velocity, not perpendicular to it. Cancellation comes from the opposite forces acting at equal point velocities. If those powers persisted for 0.01 s, 4 J would cross the interface; an instantaneous power value alone does not establish that integrated transfer.
 
-This is the fundamental mechanism of the kinetic chain. The arm slows down (losing energy) while the club speeds up (gaining energy). The total is constant, but the distribution shifts dramatically.
+The direction can reverse during a swing. A proximal segment slowing down while a distal segment speeds up is not by itself proof of this power pathway: gravity, muscle work, changes in each body's translation and rotation, and other joint loads also contribute.
 \end{laymansbox}
 
 \begin{definition}{Energy Partition}{energy_partition}
-At any instant, for a partitioned system $\bm{q} = \begin{bmatrix} \bm{q}_1 \\ \bm{q}_2 \end{bmatrix}$ with mass matrix $\bm{M}(\bm{q}) = \begin{bmatrix} \bm{M}_{11} & \bm{M}_{12} \\ \bm{M}_{21} & \bm{M}_{22} \end{bmatrix}$, the total kinetic energy is:
+For each rigid body $i$, define its physical kinetic energy using its center-of-mass velocity $\bm v_{G_i}$ and angular velocity $\bm\omega_i$:
 \begin{equation}
-T = T_{\text{arm}} + T_{\text{club}} + T_{\text{cross}} = \frac{1}{2}\dot{\bm{q}}_1^T \bm{M}_{11}(\bm{q}) \dot{\bm{q}}_1 + \frac{1}{2}\dot{\bm{q}}_2^T \bm{M}_{22}(\bm{q}) \dot{\bm{q}}_2 + \dot{\bm{q}}_1^T \bm{M}_{12}(\bm{q}) \dot{\bm{q}}_2
+T_i=\frac12m_i\|\bm v_{G_i}\|^2
++\frac12\bm\omega_i^T\bm I_{G_i}\bm\omega_i,
+\qquad T=\sum_iT_i.
 \label{eq:energy_partition_definition}
 \end{equation}
-where $T_{\text{cross}} = \dot{\bm{q}}_1^T \bm{M}_{12}(\bm{q}) \dot{\bm{q}}_2$ accounts for cross-coupling kinetic energy between the segments due to the off-diagonal mass matrix block $\bm{M}_{12}$.
+Express inertia and angular velocity in the same frame. The separate terms $\tfrac12M_{11}\dot q_1^2$, $\tfrac12M_{22}\dot q_2^2$ and $M_{12}\dot q_1\dot q_2$ in a coordinate expansion are not generally the energies of body 1, body 2 and a third physical ``coupling reservoir.'' Each body's COM velocity may depend on several generalized velocities. Cross terms change with the coordinate choice; physical body energies do not.
 
-The power going to each segment is:
-\begin{align}
-\frac{dT_{\text{arm}}}{dt} &= \bm{\tau}_{\text{arm}} \cdot \dot{\bm{q}}_1 + \bm{F}_{\text{constraint, arm}} \cdot v_{\text{arm}}\\
-\frac{dT_{\text{club}}}{dt} &= \bm{\tau}_{\text{club}} \cdot \dot{\bm{q}}_2 + \bm{F}_{\text{constraint, club}} \cdot v_{\text{club}}
-\end{align}
-
-The constraint forces ensure that:
+For a connection transmitting both a force $\bm F$ and a moment $\bm\mu$ on B, write both moments about the same joint point. The interface sum is
 \begin{equation}
-\bm{F}_{\text{constraint, arm}} \cdot v_{\text{arm}} + \bm{F}_{\text{constraint, club}} \cdot v_{\text{club}} = 0
+P_A+P_B=\bm F\cdot(\bm v_B-\bm v_A)
++\bm\mu\cdot(\bm\omega_B-\bm\omega_A).
 \label{eq:energy_transfer_constraint}
 \end{equation}
+An ideal coincident point joint cancels the force term. A frictionless hinge has no reaction moment along its free rotation axis, so the ideal moment also has zero relative power. A rigid lock cancels both relative velocities. A motor acting across a rotating joint can instead supply power $\bm\mu\cdot(\bm\omega_B-\bm\omega_A)$; a damper can remove it. Those are distinct from the ideal zero-power reaction.
 
-But individually, each term can be nonzero, allowing energy to transfer from arm to club.
+To compute a body's mechanical-energy change, integrate all of its nonconservative boundary powers and include changes in its potential energy. The club can gain energy from a moving hand even when ideal hand--club interaction contributes zero net power to the combined model. Whole-system and segment statements must never silently exchange boundaries.
 \end{definition}
 
-%============================================================================
-\section{Constraint Force in a Double Pendulum Wrist Hinge}
+\section{A Compatible Two-Link Constraint Example}
 \label{sec:double_pendulum_constraint_force}
 
-\begin{example}{Wrist Constraint Force in the Double Pendulum}{double_pend_constraint_force}
-Return to the double pendulum from Chapter~\ref{ch:zero_torque_counterfactual}, but now add a constraint: the wrist is locked so that $q_1 + q_2 = \text{const} = 115°$. This forces the club to move relative to the arm in a coordinated way.
+\begin{example}{Reaction of a World-Orientation Guide}{double_pend_constraint_force}
+Use the complete manufactured model from the affine chapter: $m_1=2.5$ kg, $m_2=0.4$ kg, $l_1=0.35$ m, COM distances $r_1=0.175$ m and $r_2=0.5$ m, centroidal inertias $I_1=0.025$ and $I_2=0.03$ kg m$^2$, and $g=9.81$ m/s$^2$. The first pivot is fixed. The two bodies are attached at a frictionless point hinge; there is no applied joint torque, damping or impact during the following interval. These are illustrative rigid links, not fitted human segments.
 
-The constraint Jacobian is:
+For reproducibility, put $a=I_1+m_1r_1^2+m_2l_1^2$, $d=I_2+m_2r_2^2$, $b=m_2l_1r_2$, $h_1=m_1r_1+m_2l_1$, and $h_2=m_2r_2$. The operators are
+\[
+\bm M=\begin{bmatrix}a+d+2b\cos q_2&d+b\cos q_2\\d+b\cos q_2&d\end{bmatrix},
+\quad
+\bm c=b\sin q_2\begin{bmatrix}-2\dot q_1\dot q_2-\dot q_2^2\\\dot q_1^2\end{bmatrix},
+\]
+\[
+V=-g[h_1\cos q_1+h_2\cos(q_1+q_2)],\qquad \bm g=\nabla V.
+\]
+The companion calculation reuses that chapter's operator implementation, which is checked against independent recursive Newton--Euler dynamics.
+
+Add the world-orientation guide $q_1+q_2=115^\circ$. Start at $\bm q=(45^\circ,70^\circ)$ with $\dot{\bm q}=(8,-8)$ rad/s. Both position and velocity are compatible, and
 \begin{equation}
-\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
-\end{equation}
-
-At the configuration from Chapter~\ref{ch:zero_torque_counterfactual} ($q_1 = 45°$, $\dot{q}_1 = 8$ rad/s, $q_2 = 70°$, $\dot{q}_2 = 12$ rad/s), the unconstrained accelerations (from the ZTCF family) are:
-\begin{align}
-\ddot{q}_1^{\text{unconstrained}} &\approx -5.56 \text{ rad/s}^2\\
-\ddot{q}_2^{\text{unconstrained}} &\approx 21.9 \text{ rad/s}^2
-\end{align}
-
-With the constraint, $\ddot{q}_1 + \ddot{q}_2 = 0$ must hold. But the unconstrained accelerations are $-5.56$ and $21.9$, which sum to $16.34 \neq 0$. The constraint must enforce this.
-
-Using the procedure from Section \ref{sec:solving_constraint_forces}, we solve for $\lambda$. The constraint acceleration condition is:
-\begin{equation}
-\bm{J}_c \ddot{\bm{q}} = -\dot{\bm{J}}_c \dot{\bm{q}} = 0 \quad \text{(since $\bm{J}_c$ is constant)}
+\bm J_c=\begin{bmatrix}1&1\end{bmatrix},\quad
+\bm J_c\dot{\bm q}=0,\quad \bm J_c\ddot{\bm q}=0.
 \label{eq:constraint_consistency_wrist}
 \end{equation}
-
-Thus:
-\begin{equation}
-\ddot{q}_1 + \ddot{q}_2 = 0
-\end{equation}
-
-From the constrained EOM:
-\begin{align}
-\bm{M}_{11} \ddot{q}_1 + \bm{M}_{12} \ddot{q}_2 + C_1 + g_1 &= 0 + \lambda\\
-\bm{M}_{21} \ddot{q}_1 + \bm{M}_{22} \ddot{q}_2 + C_2 + g_2 &= 0 + \lambda
-\end{align}
-
-(The constraint force acts as $\bm{J}_c^T \lambda = \begin{bmatrix} 1 \\ 1 \end{bmatrix} \lambda$.)
-
-With the constraint $\ddot{q}_2 = -\ddot{q}_1$, we have two equations and two unknowns ($\ddot{q}_1$ and $\lambda$):
-\begin{align}
-\bm{M}_{11} \ddot{q}_1 - \bm{M}_{12} \ddot{q}_1 + C_1 + g_1 &= \lambda\\
--\bm{M}_{21} \ddot{q}_1 + \bm{M}_{22} \ddot{q}_1 + C_2 + g_2 &= \lambda
-\end{align}
-
-Solving (using values from Chapter~\ref{ch:zero_torque_counterfactual}):
-\begin{align}
-(0.71 - 0.014) \ddot{q}_1 + (-1.09) + 2.51 &= \lambda\\
-(-0.014 + 0.016) \ddot{q}_1 + 0 + (-0.27) &= \lambda
-\end{align}
-
-From the second equation:
-\begin{equation}
-0.002 \ddot{q}_1 = \lambda + 0.27
-\end{equation}
-
-From the first equation:
-\begin{equation}
-0.696 \ddot{q}_1 = \lambda + 1.09 - 2.51 = \lambda - 1.42
-\end{equation}
-
-Eliminating $\lambda$:
-\begin{equation}
-0.696 \ddot{q}_1 - 0.002 \ddot{q}_1 = -1.42 - 0.27
-\end{equation}
-
-\begin{equation}
-0.694 \ddot{q}_1 = -1.69 \implies \ddot{q}_1 \approx -2.44 \text{ rad/s}^2
-\end{equation}
-
-And:
-\begin{equation}
-\lambda = 0.002 \times (-2.44) + 0.27 \approx -0.005 + 0.27 \approx 0.265 \text{ Nm}
-\end{equation}
-
-\textbf{Interpretation:}
-
-With the constraint in place, the shoulder decelerates more slowly ($-2.44$ rad/s$^2$ vs unconstrained $-5.56$), and the elbow accelerates less ($+2.44$ rad/s$^2$ vs unconstrained $+21.9$).
-
-The constraint force magnitude is $\lambda \approx 0.265$ Nm. This is the ``effort'' required to maintain the constraint. It's distributed equally at both joints ($\bm{J}_c^T \lambda = \begin{bmatrix} 0.265 \\ 0.265 \end{bmatrix}$ Nm).
-
-Now let's compute the power transfer. The power flowing to each segment through the constraint is:
-\begin{align}
-P_{\text{arm, constraint}} &= \lambda \cdot \dot{q}_1 = 0.265 \times 8 = 2.12 \text{ W}\\
-P_{\text{club, constraint}} &= \lambda \cdot \dot{q}_2 = 0.265 \times 12 = 3.18 \text{ W}
-\end{align}
-
-Note: these individual terms do not sum to zero. This is because the constraint velocity condition $\dot{q}_1 + \dot{q}_2 = 0$ must hold when the constraint is active. The initial velocities ($\dot{q}_1 = 8$, $\dot{q}_2 = 12$) do not satisfy this condition, indicating that the constraint was imposed on a state that was not on the constraint manifold. When the constraint is properly enforced, $P_{\text{constraint}} = \lambda(\dot{q}_1 + \dot{q}_2) = 0$, confirming zero net work.
-
-\textbf{Key Finding:} The constraint force is small ($\sim 0.3$ Nm) but its \emph{role} is crucial: it couples the two joints, redistributing energy between them while doing zero net work on the system. Over the course of the downswing, these coupling forces accumulate to produce the energy transfer from arm to club.
+At this instant,
+\[
+\bm M\approx\begin{bmatrix}0.32844532&0.15394141\\0.15394141&0.13000000\end{bmatrix}\ \mathrm{kg\,m^2},
+\]
+\[
+\bm c\approx\begin{bmatrix}4.20982294\\4.20982294\end{bmatrix}\ \mathrm{N\,m},
+\qquad
+\bm g\approx\begin{bmatrix}5.78413025\\1.77817588\end{bmatrix}\ \mathrm{N\,m}.
+\]
+Without the orientation guide, but retaining the hinge attachment, the free acceleration is
+\[
+\bm a_0\approx(-19.86390770,-22.53939122)\ \mathrm{rad/s^2}.
+\]
+Solving the constrained system gives
+\[
+\lambda\approx5.35099959\ \mathrm{N\,m},\qquad
+\ddot{\bm q}\approx(-26.60658776,26.60658776)\ \mathrm{rad/s^2}.
+\]
+The equal generalized moments have powers $\lambda\dot q_1\approx42.80799674$ W and $\lambda\dot q_2\approx-42.80799674$ W. Their sum is zero. These are coordinate powers, not arm and club powers. Physically the guide supplies a moment to the second body, whose absolute angular velocity is zero, so the guide does no work on that body either. The body's hinge-force power can still be nonzero because its COM translates. Calling the two coordinate products a measured transfer from arm to club would repeat the energy-partition error.
 \end{example}
 
-\begin{laymansbox}{Why the Wrist Hinge Matters}{inplain:wrist_constraint_meaning}
-The wrist isn't just a joint that holds the club. It's a \emph{constraint} that couples the arm and club together. This coupling allows the inertia of the arm to slow down while the inertia of the club speeds up—energy is transferred through the constraint force.
+\begin{laymansbox}{Why the Hinge and Lock Distinction Matters}{inplain:wrist_constraint_meaning}
+Both the free and guided cases above keep the bodies attached. Removing the guide permits the second body's absolute orientation to change; it does not disconnect the club. A true relative lock instead fixes $q_2$ and starts with $\dot q_2=0$. It is a third experiment with a different compatible initial velocity. Comparing it with the first two without stating that change would confuse an initial-condition effect with a constraint effect.
 
-If the wrist were completely free (unconstrained), the arm and club would move independently. The arm would decelerate under gravity, while the club would whip around due to Coriolis. But they wouldn't exchange energy efficiently.
-
-By constraining the wrist (even just partially, as it is in a real swing where the wrist has limited flexibility), you create a mechanism for energy transfer. The constraint force is the agent of that transfer.
+The numerical comparison uses exact reduced coordinates for each linear constraint. For the guide, $\bm q=\bm q_0+(1,-1)^Ts$ and $\dot{\bm q}=(1,-1)^T\dot s$; the equation is $(\bm n^T\bm M\bm n)\ddot s=-\bm n^T(\bm c+\bm g)$. This satisfies position and velocity constraints directly. Independently solving the full saddle-point equations checks the multiplier signs.
 \end{laymansbox}
 
-\begin{figure}[h!]
+\begin{figure}[p]
 \centering
-\begin{tikzpicture}[scale=1.0]
-  % Draw the two segments
-  \draw[thick, blue] (0,0) -- (2,0) node[midway, above] {Segment 1 (arm)};
-  \draw[thick, red] (2,0) -- (3.5,-1.5) node[midway, right] {Segment 2 (club)};
-
-  % Draw hinge joint
-  \draw[fill=black] (2,0) circle (0.1);
-
-  % Draw constraint force vectors at the joint
-  % Force on segment 1 (pointing left and down)
-  \draw[->, line width=2pt, green!60!black] (2,0) -- (1.3,-0.5) node[left] {$\bm{F}_c$ (on arm)};
-  % Force on segment 2 (pointing right and up)
-  \draw[->, line width=2pt, green!60!black] (2,0) -- (2.7,0.5) node[right] {$\bm{F}_c$ (on club)};
-
-  % Draw velocity vectors to show motion
-  \draw[->, line width=1.5pt, blue] (1,0) -- (0.5,-0.5) node[left, blue] {$\dot{\bm{q}}_1$};
-  \draw[->, line width=1.5pt, red] (2.8,-0.75) -- (2.3,-1.3) node[below right, red] {$\dot{\bm{q}}_2$};
-
-  % Add labels
-  \node at (0,-0.5) {Shoulder};
-  \node at (3.7,-2) {Wrist (hinge)};
-
-  % Illustrate constraint: annotation
-  \node[above right=2cm and 1cm] {\small Constraint: $\dot{\bm{q}}_1 \parallel \dot{\bm{q}}_2$};
-  \node[above right=2.8cm and 1cm] {\small Constraint forces do zero net work};
-  \node[above right=3.6cm and 1cm] {\small but redirect energy between segments};
-
-\end{tikzpicture}
-\caption{Constraint Forces at a Hinge Joint. The constraint force $\bm{F}_c$ acts at the joint, perpendicular to the allowed motion direction. On segment 1 (arm), the force opposes motion; on segment 2 (club), it drives motion. These action-reaction pair forces satisfy zero net power: $\bm{F}_c \cdot \dot{\bm{q}}_1 + (-\bm{F}_c) \cdot \dot{\bm{q}}_2 = 0$, yet they enable energy transfer from segment 1 to segment 2.}
+\includegraphics[width=0.9\linewidth,height=0.72\textheight,keepaspectratio]{figures/constraint_forces_verified.pdf}
+\caption{Compatible Free and Guided Two-Link Motion. Both Runs Start From the Same Position and Velocity With Zero Applied Joint Torque. The Guide Holds the Second Body at a Fixed World Orientation; It Is Not a Relative Wrist Lock. Its Reaction Moment Changes the Motion While Its Power Remains Zero. The Curves Are Manufactured Model Results, Not Golfer Measurements.}
 \label{fig:constraint_forces_hinge}
 \end{figure}
 
-%============================================================================
-\section{Constraint Forces vs. Joint Reaction Forces}
+\subsection{Engaging and Releasing a Constraint}
+
+A new stationary lock cannot be imposed smoothly on a velocity that violates it without specifying an engagement process. In a perfectly inelastic ideal capture at a compatible configuration, let $\bm\Lambda$ be the constraint impulse and neglect bounded forces during the instantaneous event. Then
+\[
+\bm M(\dot{\bm q}^{+}-\dot{\bm q}^{-})=\bm J_c^T\bm\Lambda,
+\qquad \bm J_c\dot{\bm q}^{+}=0,
+\]
+\[
+\bm\Lambda=-\bm S^{-1}\bm J_c\dot{\bm q}^{-},\qquad
+\dot{\bm q}^{+}=\dot{\bm q}^{-}-\bm M^{-1}\bm J_c^T\bm S^{-1}\bm J_c\dot{\bm q}^{-}.
+\]
+Using the unchanged configuration and inertia across the impulse,
+\[
+T^{+}-T^{-}=-\frac12(\bm J_c\dot{\bm q}^{-})^T\bm S^{-1}(\bm J_c\dot{\bm q}^{-})\le0.
+\]
+This is a kinetic-energy loss, representing unresolved dissipation in this ideal capture law. It does not contradict zero reaction power during subsequent smooth compatible motion. An elastic, compliant or actively controlled engagement requires a different event model and energy budget.
+
+For the same configuration but the incompatible incoming velocity $(8,12)$ rad/s, capture by the world-orientation guide gives $\dot{\bm q}^{+}\approx(11.18026202,-11.18026202)$ rad/s and $\Lambda\approx-2.52386004$ N m s. The total kinetic energy falls from 34.64862561 J to 9.41002518 J, a loss of 25.23860043 J. This is not a zero-work redistribution between bodies.
+
+Conversely, releasing an ideal constraint without an impulse preserves position and velocity at that instant. Acceleration may jump because the reaction disappears. No energy is automatically added at release. Real releases can involve stored elastic energy or active work, which must be represented explicitly rather than attributed to removal of an algebraic equation.
+
+\section{Constraint Forces and Joint Reaction Forces}
 \label{sec:constraint_vs_reaction_forces}
 
-\begin{principle}{Constraint Forces Are Internal}{principle:constraint_forces_internal}
-An important distinction: constraint forces are \emph{internal} to the system. They arise from the geometry and inertia of the coupled system, not from external muscles pushing or pulling.
+\begin{principle}{Define the Reaction, Frame and System Boundary}{principle:constraint_forces_internal}
+A joint reaction is a force and moment transmitted across a specified interface. Whether it is internal depends on the system: hand--club interaction is internal to a model containing both bodies and external to the club alone. Ground contact is external to a golfer--club system that excludes Earth. Muscle forces can be internal to the whole body yet external to an isolated segment. Internal and active are not opposite categories.
 
-By contrast, a \textbf{joint reaction force} is often measured experimentally—it's the force that one segment (e.g., the arm) exerts on another (e.g., the club) across the joint.
-
-In a biomechanical analysis, you might measure the force at the wrist using an instrumented grip. This measurement captures the constraint force, but it's expressed as a force (in Newtons) rather than a torque (in Newton-meters).
-
-The relationship is:
+To relate a spatial wrench to generalized force, define a twist $\bm t=\begin{bmatrix}\bm v_P^T&\bm\omega^T\end{bmatrix}^T=\bm J_P\dot{\bm q}$ and wrench $\bm w=\begin{bmatrix}\bm F^T&\bm\mu_P^T\end{bmatrix}^T$ at the same point $P$, in the same frame and ordering. Power duality gives
 \begin{equation}
-\bm{F}_{\text{joint}} = \bm{J}_c^T \bm{\lambda} / L_{\text{joint}}
+\bm Q=\bm J_P^T\bm w,
+\qquad \bm Q^T\dot{\bm q}=\bm F\cdot\bm v_P+\bm\mu_P\cdot\bm\omega.
 \label{eq:joint_force_from_constraint}
 \end{equation}
+For an internal pair, use the relative twist and both bodies' contributions. A generalized moment does not determine a unique three-dimensional joint force by division by one lever arm. Even $\bm\mu=\bm r\times\bm F$ leaves the component of force along $\bm r$ unresolved; a pure couple is another possible source of moment.
 
-where $L_{\text{joint}}$ is the lever arm (moment arm) of the force about the joint.
+If $\bm r$ points from $P$ to $P'$, then $\bm\mu_{P'}=\bm\mu_P-\bm r\times\bm F$ and $\bm v_{P'}=\bm v_P+\bm\omega\times\bm r$. These transformations preserve wrench power. Mixing a moment about one point with velocity at another does not. Report the receiving body, point, frame, sign and whether the value is a net wrench, ideal reaction or muscle-resolved contact estimate.
 \end{principle}
 
-%============================================================================
-\section{Why Constraint Forces Are the Real Story of the Kinetic Chain}
+OpenSim's Joint Reactions Analysis illustrates the distinction in practice: reported joint forces and moments depend on the loads included in the model and the selected reporting frame/body. They are not the same output as inverse-dynamics generalized joint moments. Muscle forces and even actuator representation affect the interpretation of the reported reaction. A rigid-body balance inferred from motion is therefore not a direct measurement of every anatomical contact load. \citep{OpenSimJointReactions2019}
+
+\section{Coupling and Control in the Kinetic Chain}
 \label{sec:why_constraints_dominate}
 
-\begin{principle}{The Kinetic Chain is Constraint-Driven}{principle:kinetic_chain_constraint_driven}
-The traditional understanding of the kinetic chain says: ``The hips drive the shoulders, which drive the arms, which drive the club.'' This is taught as a sequence of muscular activations—hip muscles accelerate the pelvis, which mechanically couples to the torso, which couples to the shoulders, etc.
+\begin{principle}{The Kinetic Chain Combines Actuation and Coupling}{principle:kinetic_chain_constraint_driven}
+Mechanical coupling lets forces applied in one region influence motion elsewhere. Muscles supply and absorb work, maintain or change posture, alter joint loading, and influence contact conditions. Inertia and geometry determine how those actions propagate. Gravity contributes according to the changing potential energy. These mechanisms coexist in a single equation rather than competing as separate explanations of the swing.
 
-The correct understanding, revealed by constraint force analysis, is:
+The multiplier calculation makes this interdependence explicit. At fixed configuration, velocity and regular constraint mode, suppose the input enters as $\bm B\bm u$ and other terms are independent of $\bm u$. Then
+\[
+\frac{\partial\bm\lambda}{\partial\bm u}
+=-\bm S^{-1}\bm J_c\bm M^{-1}\bm B,
+\]
+\[
+\frac{\partial\ddot{\bm q}}{\partial\bm u}
+=\left[\bm I-\bm M^{-1}\bm J_c^T\bm S^{-1}\bm J_c\right]\bm M^{-1}\bm B.
+\]
+Actuation changes the reaction and its permitted acceleration effect simultaneously. Part of an input can be balanced by a reaction rather than producing acceleration in a forbidden direction. The constraint-dependent map is the appropriate local input map for a drift/control comparison. Changing a contact mode can change that map abruptly; changing muscular activation can also alter the underlying force law and future state.
 
-\textbf{The kinetic chain works because constraints redirect inertia.}
-
-Here's why:
-\begin{enumerate}
-\item You build momentum in your torso by rotating your hips.
-\item The shoulder constraint (the joint connecting arm to torso) prevents the arm from flying away radially. Instead, it couples the arm's motion to the torso's rotation.
-\item This coupling creates a constraint force, which acts on the arm. This force is what \emph{actually} accelerates the arm—not a muscular torque, but a constraint force arising from the torso's inertia.
-\item Similarly, the wrist constraint couples the club to the arm. The arm's inertia, via the constraint force, accelerates the club.
-\item By the time the club reaches the club, the constraint force is enormous (hundreds of Newtons), far exceeding what any muscle can produce.
-\end{enumerate}
-
-This is why the kinetic chain works: it's not about muscular effort cascading down from the hips. It's about \emph{mechanical coupling}—constraints that efficiently redirect the momentum of proximal segments to distal segments.
-
-And this is why active muscular control is secondary: muscles are too weak compared to the constraint forces. Muscles set up the initial conditions and make fine adjustments. Constraints do the heavy lifting.
+These derivatives hold within the stated ideal mode. They do not say that the complete physiological system is affine in neural excitation: activation dynamics, muscle force--length--velocity behavior, compliance and contact transitions require additional states and constitutive laws.
 \end{principle}
 
 \begin{constraintbox}{Energy and Momentum Transfer Through Constraints}{constraint:energy_momentum_transfer}
-A constraint does zero net work. But in a multi-segment system, it can transfer energy from one segment to another.
+To substantiate a proposed kinetic-chain mechanism, identify the receiving body and compute interface force and moment powers over an interval. Close its mechanical-energy balance using all other loads and potential changes. Separately check whole-system momentum: linear momentum changes with external force, and angular momentum about a fixed inertial point changes with external moment. Ground and gravity can make those totals nonconserved even when internal reaction powers cancel.
 
-The mechanism is simple:
-\begin{itemize}
-\item Segment A (proximal, e.g., arm) has kinetic energy.
-\item The constraint force acts on A, reducing its kinetic energy.
-\item By Newton's third law, an equal and opposite force acts on B (distal, e.g., club).
-\item This force accelerates B, increasing its kinetic energy.
-\item The magnitudes are such that the total energy is conserved (zero net work), but the distribution shifts: A loses energy, B gains energy.
-\end{itemize}
+Angular speed is not angular momentum, and neither is kinetic energy. Changes in body configuration and velocity direction can increase one while decreasing another. A sequence of speed peaks does not uniquely identify energy flow, muscular timing or an optimal sequence of joint locks. Likewise, a large ideal reaction can be necessary to turn a trajectory while doing little work. Its magnitude alone is not a measure of useful energy transfer or efficiency.
 
-This transfer is most efficient when the proximal segment is large and slow, and the distal segment is small and fast. The golf swing achieves this through the staggered unlocking of joints: the hips unlock first, building momentum; then the shoulders, then the arms, then the wrists. Each step transfers momentum to the next, and by the time the club is freed, it has accumulated enormous speed from the prior segments' momentum—all via constraint forces, not muscular effort.
+A useful coaching hypothesis connects an action to a measurable result: for example, a change in hand trajectory may alter both club loading and interface work. Testing it requires comparable task conditions, a declared system model, uncertainty estimates and a controlled comparison. The equations do not establish a universal instruction to grip harder, relax muscles or unlock joints in a prescribed order.
 \end{constraintbox}
 
-%============================================================================
 \section{Constraint Forces in Real Swings: Grip Forces and Ground Reaction Forces}
 \label{sec:constraint_forces_real_swing}
 
 \begin{example}{Grip Force During a Golf Swing}{grip_force}
-Instrumented measurements of grip force during the downswing show forces ranging from tens to hundreds of Newtons depending on swing phase and player characteristics. This force is \emph{not} a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club. The magnitude of this force is determined by the inertial dynamics of the coupled system rather than by the instantaneous level of muscle activation.
+``Grip force'' can mean local normal pressure integrated over contact, a net hand force, a six-axis resultant wrench, or an internal wrench measured between two grip sections. These are different observables. Opposing forces from two hands can partly cancel in their resultant while creating a moment through their separation. Neither a pressure total nor a net wrench directly identifies the individual muscle forces supporting the grasp.
 
-During the downswing:
-\begin{enumerate}
-\item The golfer's hands are constrained to the grip (the grip doesn't slip relative to the hand).
-\item The hand itself is accelerating as part of the arm rotation.
-\item To keep the club moving with the hand (enforcing the constraint), the hand must push on the grip.
-\item This push is the grip force.
-\end{enumerate}
+Choi and Park measured an internal six-axis grip wrench in nine professional golfers using a split instrumented grip, then combined it with kinematics and a rigid-body inverse-dynamics model. They observed counteracting hand forces, demonstrating why net club motion alone need not reveal how the two hands share load. The instrumented club differed in mass from a regular club; foam balls, hand overlap and rigid-segment assumptions limit interpretation. Their results support measuring internal load sharing, not a universal grip-force range or a conclusion that muscles are inactive. \citep{Choi2020GripKinetics}
 
-The grip force arises \emph{automatically} from the constraint, without explicit muscular effort to "grip harder." It's a consequence of the kinematics and inertias.
-
-However—and this is important—the golfer \emph{can} modulate the grip force by changing muscle tension or by allowing some slip. A gentle grip (low force) allows some flexibility; a firm grip (high force) enforces the constraint tightly. This modulation is a control knob.
-
-\textbf{Insight:} The large grip forces in a golf swing are not primarily evidence of active muscular contraction driving the motion. Rather, they reflect the inertial forces that must be channeled through the grip constraint to maintain the coupling between hand and club. The magnitude of these forces is determined by the system's kinematics and inertias, not by muscle activation level.
+In a real grasp, normal pressure helps sustain the frictional tractions needed for the required wrench. A no-slip model is valid only while the demanded loads are feasible for that contact. Greater squeezing force may change friction capacity and tissue stiffness, but does not by itself specify the net club wrench or work. With a given kinematic trajectory and inertial model, inverse dynamics can infer a resultant load; it cannot uniquely recover activation, co-contraction or every local contact traction.
 \end{example}
 
 \begin{example}{Ground Reaction Forces and the Closed Kinematic Chain}{ground_reaction_forces}
-The golfer's feet are in contact with the ground, which is a constraint: the feet cannot move downward (the ground prevents it).
+For a golfer--club system of total mass $M_T$, the external force balance is
+\[
+\bm F_{\mathrm{ground}}+M_T\bm g_0+\bm F_{\mathrm{other}}
+=M_T\bm a_G,
+\]
+where $\bm g_0$ is the downward gravitational acceleration vector and $\bm a_G$ the whole-system COM acceleration. Ground reaction forces are measured in newtons; normalization by body weight must specify whose weight and whether the club is included. As an illustrative SI check, with $M_T=80$ kg, no other vertical force and upward COM acceleration $2$ m/s$^2$, the summed vertical reaction is $80(9.81+2)=944.8$ N. This is a calculated state, not a typical golfer value. Zero vertical COM acceleration gives 784.8 N for the same system.
 
-During the downswing, the ground constraint produces reaction forces that substantially exceed the player's static weight, scaling with the inertial acceleration of the player's body segments during the swing. These forces are constraint forces—they arise from the geometry of contact with the ground and the dynamics of the motion, not from muscle activation directly.
+Ordinary nonadhesive contact can push but cannot sustain an arbitrary tensile normal force. A candidate active-contact solution must have nonnegative normal reaction; otherwise that contact mode is inadmissible and separation must be considered. Sticking also requires feasible tangential traction, commonly approximated by $\|\bm F_t\|\le\mu F_n$. Sliding requires a friction law, and a finite foot contact patch restricts the admissible center of pressure and moments. Writing only $z_{\mathrm{foot}}=0$ does not establish no slip, no rotation or feasible support.
 
-These ground reaction forces are crucial because they close the kinetic chain. Without the ground, the golfer would slide backward as they rotate forward. The ground reaction force (a constraint force) prevents this, keeping the lower body anchored while the upper body rotates.
+If all contacting material points are stationary on rigid ground, ideal contact power is zero. Muscles can still do internal work and change total mechanical energy. COM power $\bm F_{\mathrm{ground}}\cdot\bm v_G$ is not the ground's point-of-application power; it appears in the COM translational energy balance and must not be substituted for the full multibody energy budget. Deforming footwear, moving ground and slip modify that budget.
 
-\textbf{Insight:} The ground reaction force is not something the golfer's muscles produce. It's a constraint force that the ground produces in reaction to the golfer's motion. Muscles control how the golfer moves, but the ground handles the constraint enforcement.
+Muscular action changes body motion and contact demand, so ground reaction and muscle action remain coupled. The ground need not keep the entire lower body stationary, and the feet can redistribute pressure or rotate. Without ground contact, a golfer--club system can still reorient its segments subject to external-force and angular-momentum balances; absence of contact does not imply a universal backward slide.
 \end{example}
 
-%============================================================================
 \section{Summary and Key Insights}
 \label{sec:constraint_forces_summary}
 
 \begin{principle}{Key Takeaways: Constraint Forces}{principle:constraint_forces_key_takeaways}
+\textbf{Define the connection.} Attachment, free rotation, a relative lock and a world-orientation guide impose different conditions. Contact additionally needs feasibility and mode rules.
 
-\begin{enumerate}
-\item \textbf{What constraints are:} Holonomic constraints are algebraic restrictions on configuration. They enforce that joints are connected, grips don't slip, feet stay on the ground, etc.
+\textbf{Solve compatible dynamics.} Use position, velocity and acceleration consistency, the correct curvature term and one free-acceleration contribution. Interpret rank, conditioning and multiplier units before interpreting magnitudes.
 
-\item \textbf{The constraint Jacobian:} $\bm{J}_c$ maps the constraint equations to configuration space. Its null space defines allowed motions; its range defines constraint force directions.
+\textbf{Account for power at a boundary.} Stationary ideal reactions have zero net power on their declared system. Individual bodies can exchange energy, moving supports can do work, and constraint activation can dissipate energy through an impulse.
 
-\item \textbf{Constrained EOM:} Constraint forces appear as $\bm{J}_c^T \bm{\lambda}$ in the equations of motion. The Lagrange multipliers $\bm{\lambda}$ are the constraint force magnitudes.
+\textbf{Keep physical and coordinate quantities distinct.} Generalized reaction powers are not automatically segment powers. Use COM kinetic energies and wrenches paired with velocities at matching points and frames.
 
-\item \textbf{Zero net power:} Constraint forces do zero net work to the system. But locally, they redistribute energy between segments—this is the kinetic chain.
-
-\item \textbf{Double pendulum example:} The wrist constraint couples shoulder and elbow, producing a small constraint force ($\sim 0.3$ Nm) that redirects energy from arm to club.
-
-\item \textbf{Grip and ground forces:} Grip forces ($50$--$150$ N) and ground reaction forces ($1300$--$1800$ N) are constraint forces, not muscular efforts. Muscles hold the constraints, but physics enforces them.
-
-\item \textbf{The kinetic chain is constraint-driven:} Energy transfers from hips to shoulders to arms to club through constraints, not through muscular cascades. Muscles set up initial momentum; constraints redirect it.
-
-\item \textbf{Control through constraints:} A golfer controls the swing by modulating constraint rigidity (grip firmness, body stiffness) and by controlling the initial momentum building. Once momentum is built, constraints take over, and the motion becomes nearly deterministic.
-\end{enumerate}
+\textbf{Connect mechanics to control and evidence.} Muscles, geometry, inertia and external support jointly determine the motion and reaction. Use measured loads and reproducible balances to test claims about a swing; neither a speed sequence nor a large reaction establishes a passive or optimal mechanism.
 \end{principle}
 
-\textbf{What comes next:} Understanding constraints, we now ask: what if there are \emph{multiple} constraints forming a closed loop? What if the body is not just a serial chain (hips → shoulders → arms → club) but a parallel mechanism with closed kinematic chains? That's the subject of Chapter~\ref{ch:parallel_mechanisms}.
-
-But first, Chapter~\ref{ch:triple_pendulum} extends the double pendulum to a triple pendulum, adding the wrists, and shows how the constraint-driven energy transfer becomes even more dramatic with an additional segment.
+The next chapter extends the model to three links. The chapters on parallel mechanisms, induced acceleration, muscle force generation and motor control develop the closed-chain, loading and physiological parts of this argument.
 
 \begin{exercises}{Chapter Exercises: Constraint Forces}{ex:chapter_7_exercises}
 
-\begin{exercise}{Conceptual}
-Explain in plain language: Why can a grip force (for example, 100 N---a representative value used here for illustration; actual grip forces depend on swing speed and grip technique) do zero net work on the system, yet transfer energy from the arm to the club?
+\subsection*{1. Explain Interface Power}
+An ideal connection moves at $(4,0,0)$ m/s. Body B receives $(100,0,0)$ N from A. Compute the powers and explain their signs.
 
-(Hint: Think about the direction of the grip force and the direction of motion. Are they parallel or perpendicular?)
-\end{exercise}
+\textbf{Worked answer.} B receives $+400$ W and A receives $-400$ W at this interface. The pair sums to zero because the point velocities coincide and the forces oppose each other. Positive work adds mechanical energy to the receiving body. Perpendicularity of force and point velocity is not required. A statement about energy transferred over time requires integrating power, while a statement about either body's total energy change requires its other loads as well.
 
-\begin{exercise}{Geometric}
-For the wrist constraint in the double pendulum (Section \ref{sec:double_pendulum_constraint_force}), sketch the configuration of the arm and club when $q_1 + q_2 = 115°$. Identify the null space (allowed motion) and the direction of the constraint force.
-\end{exercise}
+\subsection*{2. Distinguish the Two Angular Constraints}
+With $q_1$ measured from downward vertical and $q_2$ relative, compare $q_1+q_2=115^\circ$ with $q_2=70^\circ$ at $(45^\circ,70^\circ)$.
 
-\begin{exercise}{Quantitative}
-A single-segment arm has mass $m = 2$ kg, length $L = 0.7$ m, and moment of inertia $I = 0.08$ kg$\cdot$m$^2$. It's rotating at $\omega = 10$ rad/s and experiences an inward centrifugal acceleration.
+\textbf{Worked answer.} Both pass through this configuration. The first has $\bm J_c=[1\;1]$ and tangent direction $(1,-1)$: the second body stays at fixed world orientation as the first moves. The second has $\bm J_c=[0\;1]$ and tangent direction $(1,0)$: the relative angle stays fixed and both absolute angles turn together. Their generalized reactions are respectively $(\lambda,\lambda)$ and $(0,\lambda)$. These columns are coordinate representations, not sketches of two physical forces in space.
 
-The centrifugal force at the endpoint is $F_c = m L \omega^2$. Compute this force. How does it compare to the arm's weight? Why must the shoulder joint provide a large constraint force to prevent the arm from flying outward?
-\end{exercise}
+\subsection*{3. Compute a Pivot Reaction}
+Consider a uniform slender rod of mass 2 kg and length 0.7 m rotating about a fixed end in a vertical plane. At the instant it points straight down, its angular speed is 10 rad/s. With no applied moment, find the upward pivot force.
 
-\begin{exercise}{Computational}
-Set up a double pendulum with and without a wrist constraint.
-\begin{enumerate}
-\item First case: free double pendulum (unconstrained). Start from the same initial condition as the constrained case.
-\item Second case: double pendulum with $q_1 + q_2 = \text{const}$ constraint.
-\item Integrate both forward for 0.1 seconds.
-\item Plot the trajectories and the computed Lagrange multiplier $\lambda(t)$.
-\item Interpret: When is $|\lambda|$ large? When is it small? Why?
-\end{enumerate}
-\end{exercise}
+\textbf{Worked answer.} The COM is 0.35 m from the pivot and has upward centripetal acceleration $r_G\omega^2=35$ m/s$^2$. Gravity has zero moment about the pivot at this instant, so the angular acceleration is zero. Upward force balance gives $F_P-mg=mr_G\omega^2$, hence $F_P=70+19.62=89.62$ N. The 70 N term is the required net radial force, not the full reaction. The endpoint acceleration cannot be multiplied by the entire rod mass to obtain its COM force balance. In an inertial frame the acceleration is inward and is called centripetal; an outward centrifugal term belongs to an appropriate rotating-frame description. The consistent centroidal inertia is $mL^2/12\approx0.08167$ kg m$^2$ and pivot inertia is $mL^2/3\approx0.32667$ kg m$^2$.
 
-\begin{exercise}{Application: Real-World Measurement}
-Watch a high-speed video of a golfer's swing (at least 1000 fps). Identify moments when:
-\begin{enumerate}
-\item The wrist is locked (constraint is tight).
-\item The wrist is free (constraint is loose).
-\end{enumerate}
+\subsection*{4. Compare Compatible Trajectories}
+Integrate the chapter's complete two-link model for 0.1 s from $(45^\circ,70^\circ)$ and $(8,-8)$ rad/s, first with free relative rotation and then with the world-orientation guide. Keep all other assumptions fixed.
 
-How does the arm motion change in each case? How does the club behave when the wrist constraint is tight vs. loose?
-\end{exercise}
+\textbf{Worked answer.} The free and guided final states are
+\[
+\begin{aligned}
+\bm q_{\mathrm{free}}&\approx(83.88564444^\circ,22.75882070^\circ),\\
+\dot{\bm q}_{\mathrm{free}}&\approx(5.31225354,-7.54851685)\ \mathrm{rad/s},\\
+\bm q_{\mathrm{guide}}&\approx(81.73079376^\circ,33.26920624^\circ),\\
+\dot{\bm q}_{\mathrm{guide}}&\approx(4.64868766,-4.64868766)\ \mathrm{rad/s}.
+\end{aligned}
+\]
+Both conserve their initial total mechanical energy to numerical precision. The guide enforces the 115-degree sum throughout; the free case does not. The reproduced figure plots both angles and the guide moment. A large multiplier means a large corrective moment is needed for that state and mode, not that the guide supplies large work.
 
-\begin{exercise}{Analysis: Energy Transfer}
-For the double pendulum with constraint (Section \ref{sec:double_pendulum_constraint_force}):
-\begin{enumerate}
-\item Compute the kinetic energy of the arm before and after applying the constraint.
-\item Compute the kinetic energy of the club before and after.
-\item How much energy has been transferred from arm to club? Is it consistent with zero net power for the constraint?
-\end{enumerate}
-\end{exercise}
+Use exact reduced coordinates for the guide, check the full dynamics residual independently, and refine integration tolerance and step size. Here DOP853 with relative tolerances $10^{-10}$ and $10^{-12}$ and maximum steps 0.002 and 0.001 s gives state differences below $10^{-9}$ and energy ranges below $10^{-9}$ J. These numerical checks verify this manufactured example, not human-swing validity. A separate relative-lock run starts from $(8,0)$ rad/s and ends at $q_1\approx85.34277402^\circ$, $q_2=70^\circ$, $\dot q_1\approx6.04969667$ rad/s; its different initial energy prevents a like-for-like comparison with the first two.
+
+\subsection*{5. Interpret a Nearly Constant Wrist Angle}
+A video shows a nearly constant relative wrist angle during part of the downswing. Does that establish an ideal lock or identify its reaction?
+
+\textbf{Worked answer.} It establishes an approximately constant measured angle within the reconstruction error and time resolution. Similar motion can arise from active stabilization, passive stiffness, an external constraint or a momentary dynamic balance. Frame rate alone does not resolve those alternatives. Define three-dimensional segment frames, estimate orientation and derivative uncertainty, and combine kinematics with external-load measurements and a stated inertial/contact model. Perturbation-response measurements can help distinguish stiffness and active regulation. Even then, net inverse-dynamics moments do not uniquely identify muscle forces or prove a perfect lock.
+
+\subsection*{6. Account for Energy During Capture}
+Apply the chapter's perfectly inelastic orientation-guide capture to the incompatible incoming velocity $(8,12)$ rad/s. Partition kinetic energy by physical body and determine whether all lost club energy reaches the first link.
+
+\textbf{Worked answer.} Use $\bm v_{G_1}=r_1\dot q_1(\cos q_1,\sin q_1)$ and
+\[
+\bm v_{G_2}=l_1\dot q_1(\cos q_1,\sin q_1)
++r_2(\dot q_1+\dot q_2)(\cos(q_1+q_2),\sin(q_1+q_2)).
+\]
+The absolute angular rates are $\dot q_1$ and $\dot q_1+\dot q_2$. Before capture, $T_1=3.25$ J and $T_2\approx31.39862561$ J. After capture, $T_1\approx6.34756783$ J and $T_2\approx3.06245734$ J. Body 1 gains about 3.09756783 J while body 2 loses about 28.33616826 J. The difference, 25.23860043 J, is dissipated by the assumed capture law. Position and potential are unchanged during the impulse. Subsequent smooth guide motion has zero guide power; that theorem must not be applied across the incompatible capture event.
 
 \end{exercises}
 
@@ -599,3 +439,5 @@ For the double pendulum with constraint (Section \ref{sec:double_pendulum_constr
 \index{Zero net work}
 \index{Null space}
 \index{Null space of Jacobian}
+
+\flushbottom{}

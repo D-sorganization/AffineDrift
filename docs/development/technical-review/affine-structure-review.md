@@ -230,3 +230,7 @@ All 11 numerical/chapter regressions, focused code-quality, Ruff and Black pass.
 The unrestricted local quality scan also sees 174 findings in untracked scratch
 files; these are excluded from commits and absent from the clean CI checkout.
 The actual CI log identifies only the renamed tracked constant.
+
+## Protected Merge
+
+All checks passed at final head 18c3840c58ef1a151f7288813fd612176dcbfeff. PR #4350 squash-merged as 60d0298826880ca24580908127e8032565407216. Exact live verification remains pending; implementation and reading evidence above are retained.
