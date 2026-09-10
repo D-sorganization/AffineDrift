@@ -94,3 +94,14 @@ PR4329 is ready for review with Fixes#4327 and agent/scientific labels. The SPEC
 row is keyed once to4329. Portable devlog validation still reports only the
 preexisting peer DL-#3903 missing SHA and DL-#3902 missing PR/Last verified.
 Protected checks and exact publication remain; the corpus is unfinished.
+
+## Protected Merge
+
+PR #4329 merged normally as 1fe7997eba9d7059dc9b68582643653cee0ec2d0.
+Protected PR CI 34418043760 and main CI 34419937009 pass. Main performance
+34419936962 and deployment 34419937018 pass. Exact live artifact 10131240380
+was downloaded and all 956 records across 239 routes were read and checked:
+HTTP 200, zero failures, inspection failures, serious/critical axe violations,
+retries, transients or exhausted retries. Axe ran on every route. Repair
+publication is verified. Motion/rotation publication through 4cf3514d
+is independently verified by all 956 records of live artifact 10130399466.

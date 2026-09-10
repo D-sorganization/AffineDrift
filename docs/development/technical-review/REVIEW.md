@@ -1565,3 +1565,23 @@ keyboard/theme cases and20detail captures are inspected; no escaped code remains
 and all prior IDs survive. Failed intermediate approaches and exact deployment
 artifact10128793137 are recorded. Protected delivery remains; motor-learning
 #4326 resumes from its preserved audit branch after this repair.
+
+## Motor Learning: #4326
+
+Both complete editions now distinguish state estimation, desired motion,
+sensory prediction, task success and reward prediction. Manufactured examples
+connect covariance, task geometry, update stability, forgetting and uncertainty;
+bounded primary evidence separates putting/pitching results from full-swing
+claims. Two figures and twelve worked answers are paired across print and web.
+See [motor-learning-review.md](motor-learning-review.md) for derivations,
+source-access limits, failed intermediate checks and complete local validation.
+
+Root regression passes 5,118 tests with 29 skips and 79.19% coverage. Final
+focused 44, content 130, static 34, title/style/type/link and affected print/web
+checks pass. Protected delivery remains. Motion and rotation are published
+through 4cf3514d, verified by all 956 records of live artifact 10130399466.
+Repair #4327 is published as 1fe7997e, verified by all 956 records of live artifact 10131240380.
+
+The 405-source corpus remains unfinished, with 212 statuses beginning
+Indexed. Other statuses include partial audits and whole-book follow-ups;
+their complement must not be reported as a count of completed full reviews.
