@@ -184,3 +184,17 @@ only. No broad deployment-pruning command was run against the worktree.
 The canonical sources, numerical tests and figure builder carry the durable
 implementation. Scratch browser captures, render drivers and downloaded papers
 are local QA evidence and are not staged wholesale. Corpus review is unfinished.
+
+
+## Delivery Checkpoint
+
+Implementation 62dac6686f3fa70de59ec88f682cde3ea38ba591 is in PR #4337.
+The shaft parent and squash trees were identical; only the two passive commits
+were replayed onto de57acae49ea206d0232ecf4de8a7f9cd0b5da03. The validated
+implementation tree before and after replay is identical. Normal commit and
+push hooks passed, including the push test suite. SVG whitespace normalization
+preserved all non-whitespace content and is now part of its builder. No force
+push, hook bypass or direct-main operation was used. Protected CI/merge and
+exact publication remain to be verified. The development-log checker still
+reports only the preserved #3903/#3902 metadata defects; this feature has its
+concrete implementation SHA and PR.
