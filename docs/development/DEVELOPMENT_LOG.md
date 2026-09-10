@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4333 · Flexible Shaft Dynamics and Evidence
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4333 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** not created
+- **Branch:** `fix/4333-flexible-shaft-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch11_flexible_shaft.tex`, `articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.qmd`, `docs/development/technical-review/flexible-shaft-review.md`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`3bbd540408133dd142625be27386d9e107e06f8f`, complete original editions and six exercises read; working-tree audit)
+- **Summary:** Confirmed coupled-input, modal-unit, energy, state-index, prescribed-trajectory and fitting-evidence errors. Primary paper review has begun; no corrected chapter or validation yet. Peer impact/acoustic work and immutable publication are excluded.
+- **Next step:** Complete primary-source checks and independently derive replacement shaft examples.
+
 ### DL-#4331 · Muscle Force Models, Tendon Energy and Control Inference
 
 - **State:** in_review
