@@ -1,34 +1,33 @@
-# Contact-Force Regularity Synthesis #4255
+# Impact Program Handoff Checkpoint — 2026-09-10
 
-- Repository/worktree: D-sorganization/AffineDrift,
-  C:/Users/diete/Repositories/AffineDrift-impact-regularity.
-- Branch: docs/4255-contact-force-regularity; baseline b5362af0005c8ae1ad00e81390e9151991157155;
-  implementation b14f1a392e446211da3ca402951f7aa147495922; publication checkpoint SELF; ready PR4356
-  https://github.com/D-sorganization/AffineDrift/pull/4356. Governing issue4255, parent4253.
-  Existing development entry DL-0035 is updated in place.
-- Adds the force-jump/impulse distinction, spectral derivation, candidate-law
-  external-forcing limits and source-identified numerical evidence to the
-  existing impact-acoustics include; two bibliography entries. No code, trust
-  pin or protected monograph changes. Peer turnover below is preserved.
-- Full Python3.12 coverage:5229PASS/29SKIP/132deselected in219.88s;79.29% above
-  unchanged75%. Five focused and131 content checks pass. Bibliography,
-  title636 and xref1161 audits pass; Quarto1.8.26 article render succeeds.
-  Actual-route browser tree verifies section/equation/citations; visual/mobile
-  and exhaustive accessibility qualification are not claimed.
-- FORCE_REGULARITY_REVIEW.md and FORCE_REGULARITY_RESULTS.json record exact
-  commands, hashes, source-access limits, render cleanup and failed initial
-  invocation. This clean isolated worktree avoids the generated artifacts
-  retained in the earlier impact worktrees. Do not delete peer files.
-- Tools279926e95 is published with1481 Windows passes/2 optional CAD skips,
-  but Standard34471450139 both shared shards fail at60s in entry240. Next
-  performance investigation is a bounded Jacobian/Frechet matrix series with
-  the existing routine as fallback; no law/grid/deadline change is authorized
-  by this theory note. Physical/perceptual requirements remain open.
-- All normal commit/push hooks pass. The central development-log check initially
-  rejected SELF without a source SHA; this checkpoint names the verified source.
-  Existing peer entries3903/3902 have separate metadata failures and are unchanged.
-- Next: qualify protected site/review checks on ready PR4356; do not close4255
-  from this increment.
+- Worktree: C:/Users/diete/Repositories/AffineDrift-impact-regularity.
+- Branch: docs/4255-impact-handoff; checkpoint SELF; PR not created.
+- Governing issue #4255, parent #4253. This checkpoint changes turnover only.
+- Theory PR #4356 merged as 963867d7c78e544799ef4b6070eb1779e64c0452.
+  All 15 checks passed, including full-site Chromium, visual invariants and
+  every-route axe. Standard run 34473407616 qualifies published a03f6078a7b7946e94282d306684f843db358d38.
+- Source b14f1a392e446211da3ca402951f7aa147495922 passed 5229 Python tests,
+  29 skips, 132 deselections and 79.29% coverage; five focused and 131 content
+  checks passed. Exact receipts and source-access limits remain in
+  impact-acoustics/FORCE_REGULARITY_RESULTS.json and FORCE_REGULARITY_REVIEW.md.
+- Tools #5146/#5149/#5152/#5154/#5156/#5159 are merged. Friction PR #5162
+  contains the bounded SE(3) evaluator at ef796bf327386f2f4db0105c42fd039ef2869feb;
+  integration with main and exact-head hosted qualification remain pending at
+  this checkpoint. Read its live PR and Tools canonical HANDOFF before reuse.
+- Preserve protected publication sources, trust evidence, pins and peer work.
+  Earlier impact-acoustics, impact-damping and impact-grip-review worktrees
+  retain generated site output only; no uncommitted source work was found.
+- Resume from current main in an isolated topic worktree, read repository policy,
+  check/claim the selected child issue, register presence and inspect its inbox.
+  Refresh the capability inventory and source identities before extending theory.
+
+The program remains open. Next work must retain TDD, explicit contracts, shared
+provider mechanics and independent reference controls. Prioritize event-resolved
+force/work accuracy, general sliding/reversal/recontact, spatial and modal
+convergence, measured shaft/grip/contact identification, calibrated structural
+and acoustic transfer, then controlled blinded perception. Force spectrum,
+radiated pressure and perceived sweetness are separate quantities. Synthetic
+convergence cannot establish a player-dependent sound or heavy-hit effect.
 
 ## Preserved Earlier Turnover
 

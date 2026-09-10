@@ -38,21 +38,15 @@
 
 ## Impact Dynamics and Acoustics: #4253
 
-- Initial theory4258, Coriolis4282 and grip qualification4298 are merged.
-- Active4255 synthesis: docs/4255-contact-force-regularity in
-  C:/Users/diete/Repositories/AffineDrift-impact-regularity, baseline b5362af0,
-  implementation b14f1a392e; ready PR4356. Extends the existing acoustic include
-  with force regularity and externally forced contact-law limits.
-- Full Python3.12:5229 passes,29 skips,79.29% coverage; five focused and131
-  content checks pass. Bibliography/title/xrefs and Quarto1.8.26 article render
-  pass. Actual-route browser tree verifies equation/citations; protected site
-  and review remain. See canonical HANDOFF.md and FORCE_REGULARITY_REVIEW.md.
-- Tools279926e95 passes1481 Windows controls/2 optional CAD skips but hosted
-  entry240 still times out at60s in both Python shared shards. Its numerical
-  evidence does not qualify acoustics; runtime repair remains in its own tree.
-- Preserve protected publication bytes/pins and peer scopes. Affine4253/4255,
-  Tools5068 and UpstreamDrift9700 remain open for numerical, physical and
-  blinded-perception acceptance. Existing review/inventory ledgers are retained.
+- Theory #4258/#4282/#4298 and force-regularity #4356 are merged; #4356 is
+  963867d7c78e544799ef4b6070eb1779e64c0452, with all 15 protected checks passed.
+- Current turnover-only branch docs/4255-impact-handoff, checkpoint SELF.
+  Canonical docs/development/HANDOFF.md contains source/CI identities and resume steps.
+- Tools contact, load-history, FRF and calibration foundations are merged.
+  Friction #5162 still needs final integration and exact-head hosted qualification
+  at this checkpoint; consult its live PR before advancing a consumer pin.
+- All program parents remain open for event-work, physical, calibrated radiation
+  and blinded-perception evidence. Preserve protected sources and peer scopes.
 
 ## Build-Section Lateral Links: #3902
 
