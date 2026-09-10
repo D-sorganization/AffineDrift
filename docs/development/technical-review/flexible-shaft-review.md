@@ -22,30 +22,31 @@ No subagents and no Git mutation during tests, rendering or visual QA.
 - Print/web figures and qualifications differ; six exercises include a false premise, an ambiguous decay/envelope question and underdetermined fitting conclusions.
 
 
-## Source Review in Progress
+## Primary Source Review
 
 - [MacKenzie and Sprigings (2009), shaft stiffness](https://people.stfx.ca/smackenz/Publications/MacKenzie%202009%20Understanding%20the%20role%20of%20shaft%20stiffness%20in%20the%20golf%20swing.pdf):
   full primary prose from abstract through methods, results, discussion and
-  conclusion read. Tables/figures not yet visually verified. Four torque
+  conclusion read. Table 2 and Figures 5--7 visually checked on PDF page 5. Four torque
   generators, three flexible-shaft fits and a rigid comparison; stiffness fit
   to static loading, damping chosen for agreement. Kick velocity and the
   difference between complete flexible/rigid simulations are different quantities.
   The authors explicitly discuss changing grip motion and possible model limits.
   Do not use their simulation as proof of universal golfer benefit or impotence.
 - [MacKenzie and Sprigings (2010), shaft deflection](https://people.stfx.ca/smackenz/Publications/MacKenzie%202010%20Understanding%20the%20mechanisms%20of%20shaft%20deflection%20in%20the%20downswing.pdf):
-  full primary prose through conclusion read. No claim of complete visual figure
-  inspection yet. Offset head mass and grip forces explain why radial loading
+  full primary prose through conclusion read. Table 1 and Figures 6--8 visually checked on PDF pages 4--5. Offset head mass and grip forces explain why radial loading
   can also bend the shaft. The force-isolation interventions are specified
   replays, not a unique energy attribution or a general human control proof.
 - [MacKenzie and Boucher (2017)](https://people.stfx.ca/smackenz/Publications/MacKenzie%202017%20The%20influence%20of%20golf%20shaft%20stiffness%20on%20grip%20and%20clubhead%20kinematics.pdf):
-  abstract/introduction and methods through participant blinding and matched
-  club inertial properties read. Remaining methods/results/discussion and
-  visual tables are pending; do not report full-paper review yet.
+  complete primary prose through conclusion read; Figures 2--6 visually
+  checked on PDF pages 4--5. The matched-assembly study supports a distinction
+  between relative kick and whole-club speed. Nonsignificance is not equivalence;
+  the design does not uniquely distinguish passive reaction from motor adaptation.
 - [Parks, MIT beam lecture (2004)](https://www.ocw.mit.edu/courses/2-002-mechanics-and-materials-ii-spring-2004/bc25a56b5a91ad29ca5c7419616686f7_lec2.pdf):
-  text extraction inspected; equations did not extract. Visual review pending.
+  text extraction inspected; the cantilever derivation (slide 9) and vibration
+  equation (slide 15) were visually read because equations did not extract.
   It covers elementary beam theory, not validation of rotating composite clubs.
 
-## Derivation Plan
+## Derivation Rationale
 
 Use a declared small-deflection beam with variable EI, mass per length and
 boundary conditions; identify modal normalization and tip-mass contributions.
@@ -75,16 +76,63 @@ peer-owned full impact/prestress operators.
 
 ## Validation and Delivery
 
-No chapter replacement, numerical suite or new rendering is complete yet.
-Next: finish primary source checks, derive independent examples and write
-failing paired-content/numerical controls before replacement.
+Both canonical editions now contain the connected beam, modal, coupled-input,
+energy, counterfactual, measured-evidence and fitting treatment. All six exercises
+have corrected premises and worked answers. Historical print labels and all 18
+web heading/reference destinations are retained. Two computed SVG/PDF pairs
+replace both unpaired TikZ figures. The figure inventory now records 14 remaining
+book-wide gaps; those other chapters are not certified by this change.
 
-Parent muscle PR #4332 is open at 3bbd5404 with normal squash auto-merge.
-Its implementation 88fc30ea passed complete local checks, normal hooks and
-final print/web QA. Only the two muscle commits after 71e80bb9 were replayed
-onto motor squash 8c383f9c; the relevant trees matched. Replay only shaft commits
-after 3bbd5404 onto the eventual muscle squash before first shaft push.
+The new tests independently integrate static curvature/energy, check mode
+normalization, invert the coupled mass matrix, verify momentum and power,
+contrast force/displacement control, convert frequency units, compare a forced
+ODE with a matrix exponential and work quadrature, differentiate parameter
+energy and rotating-frame kinematics, and find the decay zero independently.
+The first RED run caught an inaccurate expected decimal in the new decay test;
+replacing it with a numerical root check gave 10 numerical passes and the two
+intended publication failures. Corrected chapters then passed all 12 new tests.
+Combined figure/tree checks passed 59 tests after updating the inventory's
+explicit counts for the two converted figures.
+
+Initial full regression: 5,141 passed, 29 skipped, 132 deselected; two old
+notation contracts failed. The inertia guard expected constant-EI expanded
+notation; it now checks variable-EI inertia and its uniform limit. The old
+stiffness-subscript guard now also requires the time-varying storage derivative,
+while retaining rejection of the invalid adjacent-subscript form. Final root regression passed 5,143 tests, with 29 skips and 132 deselections.
+The final content suite passed 131 tests (four skips); all 34 static contracts,
+636 title checks, link gate and affected tests passed. Black, quality and
+configured mypy checks passed; Ruff identified
+an assert in the figure builder, replaced with a checked solver error.
+
+Four-pass full-book compilation succeeds. Final current PDF has 550 pages;
+all 13 revised chapter pages 273--285 were visually read. Two initial inline
+math overflows were repaired by shorter notation; the chapter's final log has
+zero overfull boxes. Other chapter warnings remain outside scope. The chapter
+is numbered 20 in the assembled book; an initial extraction script incorrectly
+looked for literal Chapter 12 and was corrected to the actual adjacent chapter.
+
+Initial canonical web verification passed 14 width/theme cases with no serious
+or critical axe finding in its sampled checks. A separate full-page light/dark
+axe pass caught dark reference contrast, showing why that narrower result was
+insufficient. The chapter now includes the existing computational-brain.css
+reference-background fix; no shared CSS was changed. Final full-page axe checks
+in both themes have zero serious or critical findings; the shared moderate
+landmark-unique finding remains. All 14 width/theme cases and 16 keyboard scroll
+checks passed. All 24 complete-reading captures and 46 targeted left/right
+captures were visually read, covering 186 math expressions and 23 displays.
+Final PDF polish retained 550 pages; the changed counterfactual and bibliography
+pages were read again. A scratch manifest setup first
+used a regex object as a string replacement and failed before creating its
+manifest; the corrected setup uses the deployment regex's sub method. These
+local QA setup failures are not hidden as successful validation.
+
+Parent muscle PR #4332 merged normally as
+fd464eed3dc493b3e31363cfb1396ac69e849142. Exact production verification remains
+pending: its deploy run 34432094332 was cancelled; descendant deployment
+34433303512 is running. Main CI 34432094338 and textbook compilation 34432094441
+passed. Do not infer publication from the protected merge. Replay only shaft commits after 3bbd5404 onto this squash (or a checked
+descendant) before first shaft push; do not replay the muscle commits.
 
 Motor PR #4330 is published as 8c383f9c with exact live artifact 10133005315:
-all 956 records / 239 routes verified. Corpus remains 405 rows with 210 Indexed
-statuses, plus partial sources and whole-book follow-ups. Do not mark complete.
+all 956 records / 239 routes verified. Corpus remains unfinished. No subagents,
+Git mutation during QA, peer ch29 edits or immutable-publication edits.

@@ -9,14 +9,14 @@ This document provides the formal audit and inventory of all figures across the 
 | **Total Chapters Audited** | 34 |
 | **Chapters with Figures** | 28 |
 | **Total LaTeX Figures** | 37 |
-| **TikZ Figures** | 17 |
-| **Raster / Includegraphics Figures** | 20 |
+| **TikZ Figures** | 15 |
+| **Raster / Includegraphics Figures** | 22 |
 | **LaTeX Figure Labels** | 37 |
 | **LaTeX Prose Figure Refs** | 3 |
-| **Total Quarto Figures** | 21 |
-| **Quarto Figure Defs (Divs / Imgs / Cells)** | 21 |
-| **Quarto Prose Figure Mentions** | 17 |
-| **Missing Figures in Quarto** | **16** |
+| **Total Quarto Figures** | 23 |
+| **Quarto Figure Defs (Divs / Imgs / Cells)** | 23 |
+| **Quarto Prose Figure Mentions** | 20 |
+| **Missing Figures in Quarto** | **14** |
 
 ## Chapter Parity Matrix
 
@@ -33,7 +33,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch09_parallel_mechanisms` | Parallel Mechanisms\\and Loop Constraints | 1 | 0 | 1 | ✅ Parity |
 | `ch09b_passive_stabilization` | Passive Stabilization in Parallel Loops | 0 | 0 | 0 | ✅ Parity |
 | `ch10_energy_transfer` | Energy Transfer: How Power Flows\\Through the Kinetic Chain | 2 | 0 | 2 | ✅ Parity |
-| `ch11_flexible_shaft` | The Flexible Shaft: Elastic Energy and the Catapult Effect | 2 | 2 | 0 | ❌ Missing 2 |
+| `ch11_flexible_shaft` | The Flexible Shaft: Elastic Energy and the Catapult Effect | 2 | 0 | 2 | ✅ Parity |
 | `ch12_fascia` | Fascia and Connective Tissue: Separating Myth From Mechanics | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch13_interdisciplinary` | Where Disciplines Collide:\\An Interdisciplinary Perspective | 2 | 0 | 2 | ✅ Parity |
 | `ch14_complete_swing` | The Complete Golf Swing: Putting It All Together | 2 | 0 | 2 | ✅ Parity |
@@ -72,8 +72,8 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch09_parallel_mechanisms` | 1 | `fig:parallel_mechanical_graph` | Includegraphics | Actual Closed Paths and the Connecting Spine Path. Arms and Legs Represent Jointed Paths; ... |
 | `ch10_energy_transfer` | 1 | `fig:energy-sankey` | Includegraphics | Both Sides of the Internal Boundary Must Balance. Hinge-Force Power Cancels Between Bodies... |
 | `ch10_energy_transfer` | 2 | `fig:energy_passive_transfer` | Includegraphics | An Explicit Passive Mechanism Redistributes Energy in Both Directions. The Outer Rod Gains... |
-| `ch11_flexible_shaft` | 1 | `fig:shaft_bending` | TikZ Diagram | Shaft Bending Modes: Fundamental Bending Creates Elastic Energy Storage. |
-| `ch11_flexible_shaft` | 2 | `fig:ch11:ztcf_comparison` | TikZ Diagram | Qualitative Comparison of Rigid vs.\ Flexible Shaft ZTCF Trajectories. The Flexible Shaft ... |
+| `ch11_flexible_shaft` | 1 | `fig:shaft_bending` | Includegraphics | A Tip-Normalized Static Cantilever Shape and Its Slope. This Is an Admissible Approximatio... |
+| `ch11_flexible_shaft` | 2 | `fig:ch11:ztcf_comparison` | Includegraphics | Position and Velocity Under the Declared Prescribed Base. The Flexible Response Includes C... |
 | `ch12_fascia` | 1 | `fig:fascia_layers` | TikZ Diagram | Fascia Tissue Composition: Layers of Connective Tissue With Structural Proteins. |
 | `ch13_interdisciplinary` | 1 | `fig:ch13_interdisciplinary_map` | Includegraphics | Connected Models Link Commands, Motion, Impact and Outcome. Measurements Observe Selected ... |
 | `ch13_interdisciplinary` | 2 | `fig:interdisciplinary_collision_energy` | Includegraphics | Restitution Does Not Equal Energy Transfer. The Free Two-Mass Teaching Model Uses a 0.200 ... |

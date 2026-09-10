@@ -1,583 +1,326 @@
-% ═════════════════════════════════════════════════════════════════
-% CHAPTER 11: The Flexible Shaft
-% ═════════════════════════════════════════════════════════════════
-
 \chapter{The Flexible Shaft: Elastic Energy and the Catapult Effect}
 \label{ch:flexible_shaft}
+\raggedbottom
+\index{state space!with shaft}
+\index{shaft!flexibility}
+\index{shaft stiffness}
+\index{shaft fitting!physics perspective}
+\index{shaft fitting}
+\index{shaft damping}
+\index{rotating reference frame}
+\index{modal coordinates}
+\index{generalized coordinates!with flexibility}
+\index{example!rigid vs flexible shaft}
+\index{energy!storage in shaft}
+\index{energy conservation}
+\index{elastic energy!release}
+\index{elastic energy}
+\index{drift!shaft flexibility}
+\index{drift field!with flexibility}
+\index{control authority!shaft}
+\index{centrifugal stiffening}
+\index{catapult effect}
+\index{beam theory}
+\index{forward ZTCF!with flexible shaft}
+\index{Euler-Bernoulli beam}
+\index{EI product}
 
-\epigraph{A rigid shaft is an abstraction; a flexible shaft is a machine.}{---AffineDrift}
-
-% ─────────────────────────────────────────────────────────────────
 \begin{laymansbox}{Why the Shaft Matters}{ch11:why_shaft}
-For most of this book, we have treated the golf club as if it were a rigid stick. This simplification has been valuable---it let us understand the fundamental forces and constraints that shape the swing. But a real golf shaft is not rigid. It bends, twists, and vibrates. These are not small corrections. The shaft's flexibility is responsible for a significant fraction of the energy transfer to the ball, especially in slower swings. Worse, ignoring shaft flexibility leads to wildly inaccurate predictions of the trajectory, spin, and accuracy.
+A shaft connects a moving golfer to a moving clubhead through a deformable structure. Its bending changes the position and orientation of the head, stores some of the work exchanged through the grip, and returns or dissipates that energy as loading changes. The reaction also acts on the golfer. Understanding this two-way connection is essential: motion of the head relative to the grip is not automatically an increase in the head's speed relative to the ground.
 
-The shaft is not a passive passenger in the swing; it is an energy storage and release mechanism---a catapult that supplements the muscles and gravity.
-
-In this chapter, we develop a mathematical model of shaft flexibility, show how it enters the drift and control equations, and explain why shaft fitting is fundamentally a question about which trajectory you want the $\ztcf$ family to produce.
+This chapter connects beam mechanics, coupled dynamics, energy accounting and control. The word ``catapult'' describes temporary elastic storage and subsequent motion; it does not establish a universal speed bonus. The useful question is which shaft, golfer, input history and impact outcome are being compared, and which measurements can distinguish the proposed mechanisms.
 \end{laymansbox}
 
-% ─────────────────────────────────────────────────────────────────
-\section{Why Rigid Models Fail}
+\section{When a Rigid Model Is Adequate}
+A rigid club model is a deliberate approximation. It can explain gross segment motion or provide a reference for a more detailed calculation. Its adequacy depends on the output: an error acceptable for overall swing timing may be unacceptable for face orientation, strike location or strain. Assess the difference against an explicit tolerance and measurement uncertainty. Adding flexibility without identifying its parameters does not by itself improve predictive accuracy.
 
-\begin{figure}[h]
+Separate bending in two transverse directions, torsion about the shaft, and axial extension. Composite construction can couple these deformations. A planar bending model is useful for deriving principles, but it cannot independently predict three-dimensional face delivery. Even the direction called ``lead'' needs a reference frame; a camera projection alone can mix shaft motion, perspective and grip rotation.
+
+\begin{example}{Shaft Deflection Magnitudes}{ch11:deflection}
+For a straight, uniform, nonrotating cantilever under a static transverse tip force $F$, let $L$ be its free length and $EI$ its bending rigidity. Integrating the moment-curvature relation gives
+\[
+w(z)=\frac{Fz^2(3L-z)}{6EI},\qquad
+\delta=w(L)=\frac{FL^3}{3EI},\qquad
+w_z(L)=\frac{FL^2}{2EI}.
+\]
+These relations require small slopes, a fixed clamp, no tip moment and negligible shear deformation. They establish the strong length dependence and connect displacement to tip rotation; they are not a measured range for all golf shafts. For the illustrative values $L=1\,\mathrm{m}$, $EI=40\,\mathrm{N\,m^2}$ and $F=2\,\mathrm{N}$, the tip deflects $16.67\,\mathrm{mm}$ and rotates $0.025\,\mathrm{rad}$. Changing the support or loading changes the answer. Elementary cantilever theory is developed in \citep{Parks2004Beam}.
+\end{example}
+
+\begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=1.2]
-  \draw[thick, color=blue] (0,0) -- (5,0);
-  \draw[dashed, gray, thin] (0,-1) -- (5,-1);
-  \draw[thick, color=red] (0,0) .. controls (1.5,-0.3) and (3.5,-0.8) .. (5,-1);
-  \node at (2.5,-1.5) {\small Bending mode 1 (lowest frequency)};
-  \node at (2.5,-2) {\small Elastic deformation};
-  \fill[black] (0,0) circle (0.15);
-  \node[above] at (0,0) {\small Grip};
-  \fill[black] (5,-1) circle (0.15);
-  \node[above right] at (5,-1) {\small Clubhead};
-\end{tikzpicture}
-\caption{Shaft Bending Modes: Fundamental Bending Creates Elastic Energy Storage.}
+\includegraphics[width=\linewidth]{figures/shaft_bending_shape.pdf}
+\caption{A Tip-Normalized Static Cantilever Shape and Its Slope. This Is an Admissible Approximation, Not an Exact Vibration Eigenmode.}
 \label{fig:shaft_bending}
 \end{figure}
 
+An acceleration magnitude does not specify a bending load. A force along the centerline of an ideal straight beam produces axial loading. A transverse force or an offset force can produce a bending moment. The clubhead center of mass is generally offset from the shaft axis, so a grip force described as radial can participate in bending. MacKenzie and Sprigings varied this offset and replayed selected grip-force components in a three-dimensional model, demonstrating the importance of geometry and the declared loading intervention \citep{MacKenzie2010Deflection}. A large centripetal acceleration alone cannot establish the sign or size of shaft bend.
 
-\index{shaft!flexibility}
-\index{Euler-Bernoulli beam}
-
-When we modeled the golf swing as a double or triple pendulum, we implicitly assumed that the club shaft is infinitely stiff. This is like modeling a trampoline as rigid---the model works fine for a heavy wooden block, but fails spectacularly for a person jumping.
-
-A typical golf shaft is made of composite fibers (carbon fiber or graphite) wrapped in resin. When you swing, the shaft experiences:
-\begin{enumerate}
-\item \textbf{Bending} due to centrifugal force pulling the clubhead outward while the grip end is held at a different acceleration.
-\item \textbf{Twisting} (torsion) as the hands rotate and the clubhead lags.
-\item \textbf{Damping} as energy is dissipated by internal friction in the composite material.
-\end{enumerate}
-
-All three effects matter. The bending deformation is largest and most relevant to the swing trajectory, so we focus primarily on that.
-
-\begin{example}{Shaft Deflection Magnitudes}{ch11:deflection}
-During the late downswing, the clubhead experiences centripetal accelerations on the order of $2000$--$2500 \, \mathrm{m/s^2}$ ($\sim$200--250$g$), while the grip end accelerates at only $\sim$300~m/s$^2$ ($\sim$30$g$). (Note: these are substantially larger than the $\sim$18$g$ swing-phase acceleration computed in Chapter~\ref{ch:04_forces_and_torques} because they include the full centripetal acceleration of the clubhead about the instantaneous center of rotation, not just the shoulder-referenced centripetal term.) This huge difference in acceleration means the shaft experiences an enormous differential force that bends it.
-
-For a modern driver shaft (typically around 44--46 inches long, with shaft mass on the order of 50--80\,g depending on flex and material), this can produce a deflection of several inches at the clubhead. Published estimates range from roughly 1--5 inches depending on shaft flex, clubhead mass, and swing speed \citep{Penner2001,MacKenzie2009}.
-In shorter, stiffer shafts (like driver shafts designed to be whip-resistant), this is reduced but never eliminated.
-\end{example}
-
-The rigid model predicts that the clubhead would be at the end of a straight line from the grip. The flexible model correctly predicts that the clubhead lags behind, causing shaft lag at impact. This lag is where the catapult effect comes in: the shaft is storing elastic energy as it bends, and that energy is released as the shaft snaps back toward impact.
-
-% ─────────────────────────────────────────────────────────────────
 \section{Beam Theory Basics: How Shafts Deform}
-
-\index{beam theory}
-\index{EI product}
-\index{modal coordinates}
-
-To model shaft flexibility mathematically, we use \textbf{Euler-Bernoulli beam theory}, a classical result from mechanics. A beam (our shaft) can be described by how much it bends at each point along its length.
-
-The governing dynamic equation for transverse shaft deflection is:
+Let $z\in[0,L]$ denote distance along a straight reference shaft, $w(z,t)$ a transverse displacement, and $\mu(z)$ mass per length. For small bending about a stationary configuration, an Euler--Bernoulli teaching model with prescribed tensile prestress $N(z)$ is
 \[
-EI \frac{\partial^4 w}{\partial z^4}(z,t) + \rho A \frac{\partial^2 w}{\partial t^2}(z,t) = q(z,t)
+\mu w_{tt}+\partial_z^2(EI w_{zz})-\partial_z(Nw_z)=q(z,t).
 \]
+Here $q$ is transverse load per length in $\mathrm{N/m}$. Spatial variation of $EI$ stays inside the derivatives. For constant $EI$, zero prestress and a nonrotating frame this reduces to $\mu w_{tt}+EIw_{zzzz}=q$. This scalar model neglects shear deformation and cross-section rotary inertia within the beam; it is not a complete equation for a rotating, anisotropic golf club. Moving-frame inertial terms, boundary motion, torsion and head inertia must be added consistently when those effects matter.
 
-where:
-\begin{itemize}
-\item $w(z,t)$ is the vertical deflection of the shaft at position $z$ and time $t$.
-\item $E$ is the material's elastic modulus (stiffness).
-\item $I$ is the second moment of inertia of the cross-section (how the material is distributed around the neutral axis).
-\item $\rho$ is the material density.
-\item $A$ is the shaft cross-sectional area.
-\item $q(z,t)$ is the distributed load on the shaft (in our case, inertial forces from acceleration).
-\item The product $EI$ is called the \textbf{bending stiffness}.
-\end{itemize}
-
-For quasi-static approximations where inertial effects are negligible, we use the reduced form
-\[
-EI \frac{\partial^4 w}{\partial z^4}(z) = q(z)
-\]
-
-Modal decomposition assumes each mode shape $\phi_j(z)$ satisfies the eigenproblem implied by the dynamic beam equation, and projection onto these modes produces the coupled ODEs in terms of $\eta_j(t)$.
+At a fixed clamp, $w(0)=w_z(0)=0$. For an unloaded bare tip with $N=0$, the bending moment and shear vanish: $EIw_{zz}(L)=0$ and $\partial_z(EIw_{zz})(L)=0$. A head with mass and rotational inertia supplies dynamic end forces and moments instead. A compliant grip supplies different boundary relations again. A frequency measured with a bench clamp therefore belongs to that assembled test, including clamp length, tip attachment and measurement procedure.
 
 \begin{laymansbox}{Why $EI$ Matters}{ch11:ei_product}
-Imagine two shafts of the same length. One is thin and hollow; one is thick and solid. Both are made of the same material. The thin shaft bends a lot for the same force. The thick shaft is much stiffer. The product $EI$ captures this: a thicker shaft has a larger $I$, so a larger $EI$, and thus is stiffer.
-
-In practical terms: a stiffer shaft ($higher$ $EI$) requires a larger force to achieve the same deflection. A flexible shaft ($lower$ $EI$) stores less elastic energy during the swing and releases it later (closer to impact).
+Bending rigidity $EI$ has units $\mathrm{N\,m^2}$; a translational spring stiffness $k$ has units $\mathrm{N/m}$; a rotational spring coefficient has units $\mathrm{N\,m/rad}$. They cannot be substituted for one another. In the static cantilever above, $k=3EI/L^3$. A tapered composite shaft has a stiffness profile, and two shafts with similar tip compliance can have different local curvature, tip slope, torsion or vibration response.
 \end{laymansbox}
 
-In a golf swing, we don't need to solve this equation pointwise along the entire shaft. Instead, we use a technique called \textbf{modal decomposition}: we express the total deformation as a sum of a small number of deformation patterns (modes), each with its own amplitude.
-
-For a free cantilever beam (clamped at one end, free at the other---like a golf shaft), the first few modes have known shapes. Rather than solving the full PDE, we can write:
+The elastic bending energy is
 \[
-w(z, t) = \sum_{j=1}^{N} \eta_j(t) \, \phi_j(z)
+U_b=\frac12\int_0^L EI(z)w_{zz}^2\,dz.
 \]
-
-where:
-\begin{itemize}
-\item $\eta_j(t)$ are the \textbf{modal coordinates}, the time-varying amplitudes of each mode.
-\item $\phi_j(z)$ are the \textbf{mode shapes}, fixed functions that describe the spatial deformation pattern.
-\item $N$ is the number of modes we keep (typically 1--3 in practice).
-\end{itemize}
-
-For a golf shaft, we almost always use just the first mode, the fundamental bending mode, because it dominates the energy transfer. So:
-\[
-w(z, t) \approx \eta(t) \, \phi_1(z)
-\]
-
-The modal coordinate $\eta(t)$ is treated as a generalized coordinate, just like a joint angle. It evolves according to its own differential equation, coupled to the rest of the swing dynamics.
+For a fixed tensile prestress, the quadratic transverse contribution is $U_N=\tfrac12\int_0^L N(z)w_z^2\,dz$. Varying these functionals yields the stiffness terms in the PDE, including the boundary terms. Positive tension penalizes transverse slope in this idealization. Compression contributes with the opposite sign and can invalidate a stable small-deflection approximation near buckling. A rotating shaft requires the prestress and associated work to be derived from the same mechanical system.
 
 \begin{definition}{Modal Coordinates}{ch11:modal}
-A modal coordinate $\eta$ is a single number that describes how much the shaft is deforming. When $\eta = 0$, the shaft is straight. When $\eta$ increases, the shaft bends more in the shape of the first mode. The rate of change $\dot{\eta}$ describes how quickly the deformation is changing.
+Approximate $w(z,t)=\sum_{j=1}^{n}\phi_j(z)\eta_j(t)$ using declared admissible shapes. For a mode with nonzero tip displacement, choose dimensionless $\phi_j$ with $\phi_j(L)=1$; its amplitude $\eta_j$ is then in metres. With several such modes, the tip displacement is their sum. The amplitudes are signed coordinates, and zero displacement in one coordinate does not imply that every deformation is absent.
 \end{definition}
 
-% ─────────────────────────────────────────────────────────────────
-\section{The Extended State Vector}
-
-\index{state space!with shaft}
-\index{generalized coordinates!with flexibility}
-
-Previously, we wrote the state as $\state = [\configvec, \configdot]^T$, where $\configvec$ is the vector of joint angles and $\configdot$ is the vector of joint angular velocities.
-
-With shaft flexibility, we extend the state to include the modal coordinates and their velocities:
+For a stationary planar beam with a centered point head mass $m_h$, projection gives
 \[
-\state = \begin{bmatrix} \configvec \\ \configdot \\ \shaftflex \\ \shaftflexdot \end{bmatrix}
+M_{ij}=\int_0^L\mu\phi_i\phi_j\,dz+m_h\phi_i(L)\phi_j(L),
 \]
+\[
+K_{ij}=\int_0^L EI\phi_i''\phi_j''\,dz+
+\int_0^L N\phi_i'\phi_j'\,dz.
+\]
+A tip rotational inertia $J_h$, when included about the appropriate bending axis with coincident mass center and attachment, adds $J_h\phi_i'(L)\phi_j'(L)$ to $M_{ij}$. An offset mass needs the full tip kinematics and its translational-rotational coupling. These expressions show why the loaded modes need not equal those of a bare clamped-free shaft.
 
-where $\shaftflex = \eta$ and $\shaftflexdot = \dot{\eta}$. If we keep multiple modes, $\shaftflex$ and $\shaftflexdot$ are vectors.
+The static shape in the first example, normalized by its tip displacement, is $\phi=(3s^2-s^3)/2$ with $s=z/L$. It is an admissible single-coordinate approximation, not an exact vibration eigenmode. For uniform $\mu$ and zero prestress it gives $M=33/140\,\mu L+m_h$ and $K=3EI/L^3$. This is a useful consistency check linking the static compliance, distributed kinetic energy and modal stiffness.
 
+Mode normalization is bookkeeping. Replacing $\phi$ by $a\phi$ and $\eta$ by $\eta/a$ multiplies the corresponding single-mode mass and stiffness by $a^2$, while preserving displacement, energy and frequency. Reporting an effective mass without the coordinate normalization is incomplete. Add modes until the outputs of interest converge: tip slope and rapid transients may need more resolution than gross displacement. Validate against measurements after numerical convergence; one does not substitute for the other.
+
+\section{The Extended State Vector}
+Let $\mathbf q$ contain skeletal coordinates and $\boldsymbol\eta$ the retained elastic coordinates. One ordering is
+\[
+\mathbf x=(\mathbf q,\dot{\mathbf q},\boldsymbol\eta,
+\dot{\boldsymbol\eta}).
+\]
 \begin{example}{State Dimension Growth}{ch11:state_dim}
-A double pendulum has $\configvec \in \mathbb{R}^2$ (two joint angles). So $\state_{\text{rigid}} \in \mathbb{R}^4$.
-
-The same double pendulum with a flexible shaft has $\configvec \in \mathbb{R}^2$ and $\shaftflex \in \mathbb{R}^1$ (just the first mode). So $\state_{\text{flexible}} \in \mathbb{R}^6$.
-
-The system of differential equations is now larger, but it is still affine in the muscle torques (control inputs). We can still separate drift from control.
+Two joint coordinates plus one bending coordinate give six mechanical states. In the order $(q_1,q_2,\dot q_1,\dot q_2,\eta,\dot\eta)$, the fifth derivative is $\dot x_5=x_6$. Its value is a velocity, not $x_5$ itself. Additional bending directions, torsion, muscle activation or tendon dynamics require additional states. Count coordinates separately from their velocities and actuator states.
 \end{example}
 
-The dynamics of the modal coordinates are themselves driven by the joint motion and by the modal stiffness and damping. In the absence of any active control of the shaft (and there is no muscle that controls $\eta$ directly), the modal equations are:
+With a stationary, uncoupled single mode,
 \[
-\ddot{\eta} + 2 \zeta \omega_n \dot{\eta} + \omega_n^2 \eta = f_{\text{modal}}(\configvec, \configdot)
+m\ddot\eta+c\dot\eta+k\eta=Q_\eta,
+\qquad \omega_n=\sqrt{k/m},\qquad \zeta=\frac{c}{2\sqrt{km}}.
 \]
+For a displacement coordinate, $Q_\eta$ is a force. Dividing by $m$ gives an acceleration on the right of $\ddot\eta+2\zeta\omega_n\dot\eta+\omega_n^2\eta=Q_\eta/m$. In a coupled model, skeletal accelerations also enter the elastic equations; these accelerations depend on applied input. They cannot generally be hidden in a function of joint position and velocity alone.
 
-where:
-\begin{itemize}
-\item $\omega_n$ is the natural frequency of the first bending mode (a property of the shaft material and geometry).
-\item $\zeta$ is the damping ratio (how much the vibration is damped by material friction).
-\item $f_{\text{modal}}$ is the generalized force on the modal coordinate, arising from inertial and Coriolis forces in the joint motion.
-\end{itemize}
+A rating of 240--280 cycles per minute converts to $4.00$--$4.67\,\mathrm{Hz}$, or approximately $25.13$--$29.32\,\mathrm{rad/s}$. This conversion says nothing about whether that bench frequency equals an in-swing mode. Nor does multiplying a free-vibration frequency by downswing duration establish how many loading/recovery cycles a driven shaft executes. Forcing, initial state, damping and changing configuration all matter.
 
-For a typical driver shaft, the first bending mode natural frequency is about 3--5 Hz ($\omega_n \approx 20$--$30$ rad/s), corresponding to a shaft ``frequency'' rating of roughly 240--280 CPM (cycles per minute). The downswing lasts about 0.2--0.25 seconds, so at $\sim 4$ Hz the shaft passes through roughly \emph{one} bending cycle (load, then recover) during the downswing --- the basis of the familiar ``kick'' at impact.
-
-% ─────────────────────────────────────────────────────────────────
 \section{How Shaft Flexibility Enters the Drift Field}
-
-\index{drift field!with flexibility}
-\index{elastic energy}
-
-The extended dynamics are still affine:
+Collect all mechanical coordinates into $\mathbf r=(\mathbf q,\boldsymbol\eta)$. For an ideal torque-input model, write
 \[
-\dot{\state} = f(\state) + G(\state) \control
+\mathbf M(\mathbf r)\ddot{\mathbf r}+\mathbf h(\mathbf r,\dot{\mathbf r})
++\nabla U(\mathbf r)+\mathbf D\dot{\mathbf r}
+=\mathbf B(\mathbf r)\mathbf u.
 \]
+Here $\mathbf h$ contains the remaining velocity and load terms, and $U$ includes the retained conservative potentials. The acceleration input map is $\mathbf M^{-1}\mathbf B$. An elastic coordinate can have a zero row in $\mathbf B$ but a nonzero row in this map. Virtual work identifies where forces are applied; solving the coupled inertia problem identifies how every coordinate accelerates.
 
-The drift field $f$ now includes terms from the modal dynamics. Specifically:
-
-\begin{enumerate}
-\item The first four components of $f$ (joint angles and velocities) are almost the same as before, except they now include the effect of the bent shaft on the inertia and constraints.
-
-\item The fifth component is $\dot{\eta}$ (the rate of shaft deformation), which is always equal to the fifth component of $\state$ by definition.
-
-\item The sixth component is $\ddot{\eta}$, which is driven by:
-   \begin{equation}
-   \ddot{\eta} = -2\zeta\omega_n\dot{\eta} - \omega_n^2\eta + f_{\text{modal}}(\configvec, \configdot)
-   \end{equation}
-\end{enumerate}
-
-The term $f_{\text{modal}}$ deserves attention. When the hands are accelerating upward and the shaft is relatively straight, $f_{\text{modal}} > 0$, which causes $\eta$ to increase (the shaft bends in response to the acceleration mismatch). As the swing slows and the shaft geometry changes, the effective load on the shaft changes, and $f_{\text{modal}}$ may change sign, causing the shaft to snap back.
+An exact translation example makes the distinction concrete. Let a base of mass $m_b$ have position $x$, and a head of mass $m_h$ have position $x+\eta$. Connect them with a spring and damper, and apply an external force $u$ to the base. There is no gravity along this axis. Then
+\[
+T=\frac12m_b\dot x^2+\frac12m_h(\dot x+\dot\eta)^2,
+\quad U=\frac12k\eta^2,\quad \delta W=u\,\delta x.
+\]
+The mass matrix and generalized input are
+\[
+\mathbf M=\begin{bmatrix}m_b+m_h&m_h\\m_h&m_h\end{bmatrix},
+\quad \mathbf B=\begin{bmatrix}1\\0\end{bmatrix},
+\quad \mathbf M^{-1}\mathbf B=\begin{bmatrix}1/m_b\\-1/m_b\end{bmatrix}.
+\]
+Solving gives
+\[
+\ddot x=\frac{u+k\eta+c\dot\eta}{m_b},
+\qquad
+\ddot\eta=-\frac{u}{m_b}
+-\left(\frac1{m_b}+\frac1{m_h}\right)(k\eta+c\dot\eta).
+\]
+At $m_b=1\,\mathrm{kg}$, $m_h=0.2\,\mathrm{kg}$, $u=2\,\mathrm N$ and initially zero bend and relative velocity, the base acceleration is $2\,\mathrm{m/s^2}$ and relative acceleration is $-2\,\mathrm{m/s^2}$. The head's absolute acceleration is initially zero. There is no actuator in the shaft, yet the input immediately changes the bending-coordinate acceleration.
 
 \begin{laymansbox}{The Catapult Mechanism}{ch11:catapult}
-Think of the shaft as a spring that has been compressed and is waiting to release. During the backswing and early downswing, the shaft is bent by the acceleration mismatch between the hands and the clubhead. This bending costs energy---the shaft is doing work against its bending stiffness, storing elastic energy like a stretched rubber band.
-
-Later in the swing, as the hands slow slightly and the clubhead catches up, the shaft begins to snap back. This snapback releases the stored elastic energy back into the clubhead, giving it an extra boost at a critical moment. This is the ``catapult effect.''
-
-The timing of the snapback depends on the shaft's stiffness and damping. A very stiff shaft snaps back early and weakly; a very flexible shaft snaps back late and more powerfully, but it might still be bending as the ball is struck (which is bad for accuracy).
+Recoil pushes on both sides of the connection. A head can move forward relative to the grip while the grip slows relative to another trial. Comparing relative recoil alone omits that reaction. In the two-mass example, zero external force conserves total momentum, while damping removes mechanical energy. Internal motion can redistribute energy and momentum among the bodies without creating either.
 \end{laymansbox}
 
-\begin{driftcontrol}{Shaft Flexibility in Drift vs.\ Control}{ch11:shaft_drift_control}
-\textbf{Drift:} The shaft bends and unbends in response to acceleration mismatches and gravity. This is fully passive---no muscle is controlling the deformation. The shaft dynamics are part of the drift field $f(\state)$. Once you set the initial conditions in the backswing, the shaft bending evolves on autopilot.
+This distinction also clarifies the affine form $\dot{\mathbf x}=f(\mathbf x)+G(\mathbf x)\mathbf u$. Elastic restoring forces contribute to the drift under the declared input convention. Flexibility changes the state space, and inertia coupling can give elastic accelerations direct dependence on the same input. If muscle excitation is the input, activation and force dynamics must be included before making statements about immediacy or control bandwidth. An ideal torque channel and a physiological excitation channel are different models.
 
-\textbf{Control:} The muscles can change the joint angles, and this changes the rate of change of $f_{\text{modal}}$, which indirectly influences the shaft dynamics. But there is no direct muscle control of the shaft deformation. You cannot command the shaft to bend more or less at a given moment.
-
-In other words: shaft flexibility is almost entirely in the drift. This is why shaft fitting matters to the drift field, not the control field.
-\end{driftcontrol}
-
-% ─────────────────────────────────────────────────────────────────
 \section{Elastic and Damping Terms}
-
-\index{shaft stiffness}
-\index{shaft damping}
-
-In the equations above, the terms $-\omega_n^2\eta$ and $-2\zeta\omega_n\dot{\eta}$ are the elastic restoring force and the damping force on the shaft, respectively. Let's make them more explicit.
-
-The \textbf{elastic term} can be written as:
+For a fixed linear modal stiffness $k>0$ and viscous damping $c\geq0$,
 \[
-F_{\text{elastic}} = -\shaftstiff \eta
+Q_{\rm elastic}=-k\eta,\qquad Q_{\rm damp}=-c\dot\eta,
+\qquad U=\frac12k\eta^2.
 \]
-
-where $\shaftstiff = \omega_n^2 m_{\text{eff}}$ is an effective shaft stiffness. (Here $m_{\text{eff}}$ is the effective mass of the clubhead as ``seen'' by the bending mode.)
-
-The \textbf{damping term} can be written as:
-\[
-F_{\text{damping}} = -\shaftdamp \dot{\eta}
-\]
-
-where $\shaftdamp = 2\zeta\omega_n m_{\text{eff}}$ is an effective damping coefficient.
-
-These are the terms that slow down the shaft's oscillation and dissipate its energy. In the absence of any driving force ($f_{\text{modal}} = 0$), the shaft would oscillate and gradually come to rest. The damping ratio $\zeta$ controls how quickly the oscillation decays.
+Restoring force opposes signed displacement; damping force opposes relative velocity. Their powers are $-\dot U$ and $-c\dot\eta^2$, respectively. A shaft can therefore absorb mechanical work while loading, return some while unloading, and dissipate some throughout motion. A single viscous coefficient is a chosen approximation to measured dissipation, not a universal material constant independent of frequency or assembly.
 
 \begin{principle}{Elastic and Damping Forces}{ch11:elastic_damp}
-The shaft experiences two passive forces:
-\begin{itemize}
-\item An elastic restoring force $-\shaftstiff\eta$ that tries to straighten the shaft.
-\item A damping force $-\shaftdamp\dot{\eta}$ that opposes the shaft's deformation rate.
-\end{itemize}
-These forces are proportional to the deformation and its rate, respectively. Neither requires muscle action. Both are part of the drift field.
+For the complete two-mass example,
+\[
+\frac{d}{dt}(T+U)=u\dot x-c\dot\eta^2.
+\]
+For multiple elastic coordinates, passive viscous dissipation requires the symmetric part of the damping matrix to be positive semidefinite. Check the full power balance before interpreting a plot of individual energy components. Nonzero elastic energy is storage at that instant; release over an interval is a decrease in storage, and head kinetic-energy gain also depends on the other bodies and external work.
 \end{principle}
 
-% ─────────────────────────────────────────────────────────────────
+At a fixed deflection, increasing $k$ increases $U$. At a fixed force in static equilibrium, $\eta=F/k$ and $U=F^2/(2k)$, so increasing $k$ decreases $U$. These are different experiments. With stiffnesses $80$ and $160\,\mathrm{N/m}$, a fixed deflection of $0.02\,\mathrm m$ stores $0.016$ and $0.032\,\mathrm J$. A fixed force of $1.6\,\mathrm N$ instead gives deflections $0.02$ and $0.01\,\mathrm m$, storing $0.016$ and $0.008\,\mathrm J$. In a swing, force and deformation evolve together; neither static comparison alone predicts the result of changing shafts.
+
 \section{Shaft Loading During the Downswing: Centrifugal Stiffening}
+In an inertial frame, centripetal acceleration is produced by real applied forces. A rotating-frame description introduces inertial terms often described using centrifugal loading. Those descriptions must agree when transformed consistently. Gravity remains approximately constant near the ground; changes in its projection onto a shaft-fixed direction arise from rotation, not an increase in gravitational acceleration during the downswing.
 
-\index{centrifugal stiffening}
-\index{rotating reference frame}
-
-Here is a subtle but important effect: as the shaft rotates faster and faster during the downswing, the centrifugal force on the shaft itself increases. This centrifugal force acts like an additional stiffness, making the shaft harder to bend.
-
-Consider a small element of the shaft at distance $r$ from the pivot, rotating with angular velocity $\omega$. The centrifugal acceleration on that element is $\omega^2 r$. When the shaft bends, this centrifugal force has a component that tries to straighten the shaft, increasing its effective stiffness.
-
-Mathematically, the effective bending stiffness becomes:
-\[
-K_{s,\text{eff}} = K_{s,0} + \Delta K_{s,\text{centrifugal}}(\omega)
-\]
-
-where $K_{s,0}$ is the passive bending stiffness and $\Delta K_{s,\text{centrifugal}}$ is the additional stiffness due to centrifugal effects.
-
-Early in the downswing, $\omega$ is small, so the effective stiffness is close to $K_{s,0}$. The shaft bends easily. Later in the downswing, $\omega$ grows, the centrifugal stiffening kicks in, and the shaft becomes harder to bend. This is another reason the shaft might snap back: it is not just that the driving force $f_{\text{modal}}$ changes sign, but also that the shaft becomes stiffer.
+Tensile prestress can increase tangent bending stiffness through $U_N$. It does not remove transverse forcing or the moment of an offset head mass. In the deflection model discussed earlier, radial loading and head geometry affected lead and toe-down deflection near impact; the model did not reduce to a spring freely snapping straight \citep{MacKenzie2010Deflection}. The magnitude of prestress effects must be compared with bending stiffness and the other inertial terms over a declared trajectory.
 
 \begin{example}{Centrifugal Stiffening in a Driver Swing}{ch11:centrifugal_numbers}
-Consider a driver with a 45-inch shaft. At address, the clubhead is stationary. Early in the downswing, at the transition, the hands might be rotating at $\omega = 2$ rad/s. Later, at mid-downswing, $\omega = 8$ rad/s. At impact, $\omega \approx 30$ rad/s.
-
-The centrifugal acceleration at the clubhead (distance $r \approx 1.1$ m from the shoulder joint) ranges from:
-\begin{itemize}
-\item At transition: $a_c = \omega^2 r = 2^2 \times 1.1 = 4.4 \, \mathrm{m/s^2}$ (negligible)
-\item At mid-downswing: $a_c = 8^2 \times 1.1 = 70 \, \mathrm{m/s^2}$ (significant)
-\item At impact: $a_c = 30^2 \times 1.1 = 990 \, \mathrm{m/s^2}$ (huge)
-\end{itemize}
-
-This centrifugal acceleration stiffens the shaft. Combine this with the increasing downward acceleration from gravity and the deceleration of the hands, and you have multiple mechanisms all working to snap the shaft back into its straight configuration near impact.
+If a reduced model prescribes $k(t)$ externally, its storage is $U=\tfrac12k(t)\eta^2$. Therefore
+\[
+\dot U=k\eta\dot\eta+\frac12\dot k\eta^2.
+\]
+The second term is parameter power. Increasing stiffness while holding a nonzero bend requires energy from the mechanism changing that stiffness. For $\eta=0.02\,\mathrm m$ and $\dot k=10\,\mathrm{N/(m\,s)}$, this contribution is $0.002\,\mathrm W$. A full rotating model accounts for the corresponding exchange through its coupled coordinates. Inserting a speed-dependent stiffness into a constant-parameter energy balance omits that exchange.
 \end{example}
 
-% ─────────────────────────────────────────────────────────────────
 \section{The Catapult Effect: Energy Release Near Impact}
+For an isolated, undamped oscillator, speed is maximal at its equilibrium position. A driven, rotating golf club with moving supports and an offset head is a different system. Peak head speed need not occur when the shaft is straight, and the sign of bend at impact need not be lag. An equilibrium position under current loading can itself be deflected.
 
-\index{catapult effect}
-\index{elastic energy!release}
+To connect deformation to observable motion, let $\mathbf r_g$ and $R_g$ be the grip position and rotation, and let $\mathbf a(\boldsymbol\eta)$ locate a selected head point in the grip frame. Its inertial position and velocity are
+\[
+\mathbf r_h=\mathbf r_g+R_g\mathbf a,\qquad
+\mathbf v_h=\mathbf v_g+R_g\left(
+\boldsymbol\omega_g\mathbin\times\mathbf a+
+J_\eta\dot{\boldsymbol\eta}\right),
+\]
+where $\boldsymbol\omega_g$ is expressed in the grip frame and $J_\eta=\partial\mathbf a/\partial\boldsymbol\eta$. Include tip slope, twist and the offset from shaft attachment to the chosen head point when constructing $\mathbf a$. A clubface center, head center of mass and impact point are different points. The moving-frame rotation term remains even when relative deflection stops changing.
 
-We are now in a position to explain the catapult effect precisely.
-
-In the mid-downswing phase (high drift, low control), the golfer's hands are still accelerating forward and downward, but at a decreasing rate. The centrifugal acceleration of the clubhead, however, is still increasing (because the rotation rate $\omega$ is increasing faster than the hand deceleration). This mismatch---hands slowing, clubhead accelerating---causes the shaft to bend more and more, storing elastic energy.
-
-Then, near impact, the hands slow sharply (they are being decelerated by the ground reaction forces through the legs and torso). Suddenly, the driving force $f_{\text{modal}}$ becomes very large and positive. At the same time, the centrifugal stiffening reaches its maximum. The shaft, which has been bent for 100+ milliseconds of the downswing, suddenly has every incentive to snap back: the inertial driving force is trying to straighten it, and the increased stiffness makes the elastic restoring force huge.
-
-The result: the shaft unbends very rapidly. As it does, it does work on the clubhead, accelerating it further. This is the catapult effect.
-
-\begin{equation}
-\text{Energy released by shaft} = \frac{1}{2}\shaftstiff\eta^2 \quad \text{(at the moment before snapback)}
-\end{equation}
-
-The magnitude of this energy depends on how much the shaft is bent ($\eta$) and how stiff it is ($\shaftstiff$). A very flexible shaft bends a lot ($high$ $\eta$) but stores less energy per unit deflection (low $\shaftstiff$). A very stiff shaft bends less but packs more energy into that small deformation.
+The norm $\|\mathbf v_h\|$ is not generally the sum of the norms of these terms. A projected deformation contribution is a kinematic decomposition within one trajectory. A speed gain from changing equipment is a difference between two complete trajectories and may include different grip motion, timing and impact states.
 
 \begin{laymansbox}{Why Shaft Flex Profiles Matter}{ch11:flex_profile}
-Real golf shafts are not uniformly flexible. They are often stiffer at the grip end (where they need to handle the hand loads) and more flexible toward the tip (the free end). This creates a nonuniform bending profile.
-
-The consequences are far-reaching: a more flexible tip means more bend and more stored energy, but the bend is concentrated near the clubhead, which affects the timing of energy release and the orientation of the clubhead at impact. A stiffer tip means less stored energy but potentially better control of the clubhead orientation.
-
-Shaft fitting is fundamentally the art of choosing the right combination of length, overall stiffness, flex profile, and weight to match your swing speed and swing characteristics. Different profiles produce different $f_{\text{modal}}$ functions, which means different $\ztcf$ trajectories.
+In MacKenzie and Sprigings' optimized model, a sizable relative kick velocity coexisted with a much smaller difference between flexible- and rigid-club speed; the grip motion also differed. The tested flexible shafts produced very similar maximum speeds despite different deflections and presentation \citep{MacKenzie2009Stiffness}. This supports measuring the coupled response. It does not establish a universal percentage benefit, a universal best stiffness, or that flexibility never matters.
 \end{laymansbox}
 
-% ─────────────────────────────────────────────────────────────────
 \section{Shaft Flex Profiles and Forward ZTCF Trajectories}
+A forward zero-torque counterfactual (ZTCF) begins at a declared full state and sets a specified active torque channel to zero from that instant. The shaft retains its initial deformation and deformation velocity, passive forces remain, and the grip evolves under the coupled equations. A measured or prescribed grip trajectory supplies continuing external influence and is not that full-system counterfactual.
 
-\index{ZTCF!with flexible shaft}
-\index{shaft fitting}
-
-Here, $\ztcf$ denotes the forward trajectory obtained after setting the model's declared applied generalized-control channel to zero. Gravity, velocity-dependent inertial terms, shaft elasticity and damping, and constraint reactions remain in the drift. The trajectory therefore depends on the initial state, including shaft deformation and deformation rate.
-
-Different shaft flex profiles lead to different drift fields, and thus different $\ztcf$ trajectories.
+In the two-mass example with $u=0$, the center of mass travels at constant velocity and the internal coordinate obeys
+\[
+m_{\rm red}\ddot\eta+c\dot\eta+k\eta=0,
+\qquad m_{\rm red}=\frac{m_bm_h}{m_b+m_h}.
+\]
+This reduced mass differs from the head mass used when the base is externally fixed. With $m_b=1\,\mathrm{kg}$, $m_h=0.2\,\mathrm{kg}$ and $k=80\,\mathrm{N/m}$, the undamped internal frequency is $21.91\,\mathrm{rad/s}$; a fixed-base model gives $20\,\mathrm{rad/s}$. Boundary freedom changes dynamics even though the spring and head are unchanged.
 
 \begin{example}{Comparing Shaft Profiles}{ch11:shaft_comparison}
-Consider two golfers with identical biomechanics (same joint angles, angular velocities, and torque patterns) but different shafts.
-
-\textbf{Golfer A:} Very stiff shaft ($\shaftstiff = 10,000$ N/m, $\zeta = 0.1$).
-\begin{itemize}
-\item The shaft bends less during the swing.
-\item Less elastic energy is stored.
-\item The shaft behavior is more ``predictable'' (closer to the rigid case).
-\item The clubhead is more firmly controlled throughout the swing.
-\item But less of the shaft's elastic energy is available for catapult effect at impact.
-\end{itemize}
-
-\textbf{Golfer B:} More flexible shaft ($\shaftstiff = 6,000$ N/m, $\zeta = 0.1$).
-\begin{itemize}
-\item The shaft bends more during the swing.
-\item More elastic energy is stored.
-\item The shaft behavior is more oscillatory (larger deviations from rigid case).
-\item More of the shaft's elastic energy is released at impact, boosting the clubhead.
-\item But if the shaft is still bending as impact occurs, the clubhead orientation is less predictable, causing dispersion.
-\end{itemize}
-
-For a high-speed golfer (say, 90+ mph swing speed), the centrifugal stiffening effect is so large that even a relatively flexible shaft is effectively stiff by mid-downswing. So a flexible shaft is useful. For a slower golfer, the centrifugal stiffening is weaker, and a flexible shaft might still be oscillating at impact, causing control problems.
-
-For a given swing speed, the goal is to have the shaft reach its maximum elasticity just before impact, releasing all its energy at the optimal moment. The choice of shaft characteristics (flex, profile, weight) should match the golfer's swing parameters (speed, acceleration profile) to optimize energy transfer.
+Specify whether a comparison holds joint torques, muscle excitations, measured grip motion, initial mechanical energy or task objective fixed. Holding the same bend across different stiffnesses changes initial elastic energy. Holding the same force changes initial bend. Reoptimizing each swing changes the controller. Each comparison answers a legitimate but different question. Report its initial state, input channel, constraints, event time and output before attributing an improvement to the shaft.
 \end{example}
 
-% ─────────────────────────────────────────────────────────────────
+Changing stiffness alone can leave $G$ unchanged at a matched state in a particular fixed-mass model, while altering its later trajectory and therefore task sensitivity. Changing shaft mass or geometry can also change the mass matrix and input map directly. Neither possibility licenses an inference about control authority from the size of the zero-input motion alone.
+
 \section{Shaft Fitting Through the Lens of Drift}
+Shaft fitting is a coupled equipment-and-movement comparison. Relevant outcomes include clubhead velocity vector, face presentation, strike location, ball launch, dispersion and the golfer's ability to reproduce the task. A deterministic model can predict a trajectory or local sensitivity. Shot dispersion requires a distribution of inputs, states or parameters, together with an observation and impact model; oscillation in a single trajectory is not dispersion.
 
-\index{shaft fitting!physics perspective}
+MacKenzie and Boucher studied 33 golfers using two shaft-stiffness conditions with matched club inertial properties. Greater relative kick in the more flexible condition accompanied lower grip angular velocity, while the group clubhead-speed comparison was not statistically significant. Individual results varied. This was not an equivalence test, and individual significance in repeated trials is not proof of a stable fitting response across future sessions. The study also distinguished bend-induced loft from total delivered loft \citep{mackenzie2017shaft}.
 
-Traditional shaft fitting focuses on swing speed, carry distance, and feel. These are important, but they are symptoms. The underlying physics asks: \emph{which drift field $f(\state)$ best matches your swing?}
-
-Changing shaft stiffness changes the declared effective plant and therefore its drift field and forward $\ztcf$ trajectory. Whether that change improves a delivery objective is an empirical, golfer-specific question. Within a calibrated model, the following outcomes can be tested:
-
-\begin{itemize}
-\item \textbf{Higher stiffness:} The shaft generally bends less and the $\ztcf$ approaches the corresponding rigid-shaft trajectory. The sign and magnitude of the delivery-speed change depend on excitation timing, damping, mass distribution, and initial state.
-
-\item \textbf{Lower stiffness:} Larger deformation may store more elastic energy, but its release can occur before or after the delivery window. A deterministic $\ztcf$ has no statistical variance by itself; dispersion requires a declared distribution of initial states, parameters, or controls.
-
-\item \textbf{Task-matched stiffness:} A candidate shaft is supported only when calibrated simulations and held-out measurements show improved task metrics while respecting orientation, load, and robustness constraints.
-\end{itemize}
-
-The task of shaft fitting is to adjust $\shaftstiff$, $\zeta$, the flex profile, and the total shaft mass to produce a drift field whose $\ztcf$ closely matches the golfer's target trajectory for their measured swing speed and swing geometry.
-
-\begin{principle}{Shaft Fitting as Drift Design}{ch11:shaft_fitting}
-The shaft design should accomplish the following:
-\begin{enumerate}
-\item It aligns the drift field $f(\state)$ with your swing characteristics, so that the zero-torque counterfactual (the autopilot trajectory) naturally points toward the target.
-\item It maximizes the energy transfer from the muscles and gravity to the clubhead by timing the catapult effect to release its energy at the optimal moment.
-\end{enumerate}
-Shaft fitting is not an art; it is physics. The wrong shaft changes your drift field in ways that pull your $\ztcf$ off target.
+\begin{principle}{Shaft Fitting as Coupled System Design}{ch11:shaft_fitting}
+Define the desired outcome and an improvement threshold before comparing shafts. Record the assembly and measured properties, counterbalance trial order, allow familiarization, retain repeated shots and quantify uncertainty. To distinguish passive reaction from altered motor behavior, grip/head kinematics alone may be insufficient; additional force or physiological measurements and a validated model are needed. A simulator's reoptimized solution is a hypothesis about achievable behavior, not evidence that a golfer has learned it.
 \end{principle}
 
-% ─────────────────────────────────────────────────────────────────
+This connects shaft dynamics to the muscle and motor-learning chapters. Muscle force depends on activation, length, shortening velocity and tendon state. Shaft reaction changes skeletal loading and can change those states even with the same neural command. The golfer may also adapt commands through practice and sensation. Separating these pathways requires an explicit intervention; a changed shot outcome alone cannot identify which pathway caused it.
+
 \section{The Shaft as an Energy Buffer}
+For a declared golfer-club mechanical system, energy accounting over an interval has the form
+\[
+\Delta(T+U_g+U_{\rm shaft}+U_{\rm tissue})
+=W_{\rm active}+W_{\rm external}-E_{\rm diss}.
+\]
+Choose the system boundary before classifying grip work as internal or external. If the golfer and club are both inside, their grip interaction is internal and must not be counted again as an external energy source. If only the club is inside, grip work crosses the boundary. Avoid double-counting active work and the release of elastic energy previously stored by that work.
 
-\index{energy!storage in shaft}
-\index{energy conservation}
+An isometric fiber contraction is not itself a reservoir of potential energy: zero fiber shortening implies zero fiber mechanical power in the idealized description, although metabolic energy is consumed and series tissues may change length. Muscle, tendon and shaft need separate storage and power terms. During recoil, head kinetic energy can rise while another segment slows, stored energy falls, external work continues and dissipation remains positive.
 
-Let us step back and think about energy flow in the golf swing.
-
-At the top of the backswing, the golfer has stored potential energy in the muscles (through their isometric contraction) and positional energy (the body is wound up, arms are high). During the downswing, the muscles apply torques, doing work. But not all the muscle work goes directly into the clubhead's kinetic energy. Some of it goes into deforming the shaft.
-
-The shaft acts as a temporary storage device, holding energy as elastic deformation and returning it later.
-
-\begin{equation}
-\text{Muscle work} = \Delta KE_{\text{clubhead}} + E_{\text{stored in shaft}} + E_{\text{dissipated by damping}}
-\end{equation}
-
-For a flexible shaft, the term $E_{\text{stored in shaft}}$ is significant. In a fast swing, the shaft absorbs and releases energy very quickly (within milliseconds of mid-downswing). In a slow swing, the shaft might remain bent for most of the downswing, absorbing a larger fraction of the muscle work temporarily.
-
-The benefit of this storage mechanism is that it allows the muscles to do work earlier in the downswing (when the torque levers are shorter and the muscles are fresh) and have that energy released later, when the clubhead can best use it (near impact, when the lever arm is longest).
-
-\begin{laymansbox}{Why Flexible Shafts Help Slower Golfers More}{ch11:slow_golfer}
-A slower golfer (for illustration, consider a driver swing speed around 70 mph, which is below tour-professional levels \citep{Jorgensen1994}) has less centrifugal stiffening throughout the swing. The shaft remains more flexible. This means:
-\begin{enumerate}
-\item The shaft can absorb and hold more energy per unit bend (because $\shaftstiff$ is lower).
-\item The catapult effect, when it occurs, releases this energy directly to the clubhead at a critical moment.
-\item Without the flexible shaft, the golfer would have to do all the work of accelerating the clubhead with muscle torque alone, and they would have less momentum to work with (lower joint velocities).
-\end{enumerate}
-A flexible shaft essentially lets a slower golfer borrow energy from the shaft dynamics, partially compensating for lower muscle power.
-
-Conversely, a faster golfer has high centrifugal stiffening and high momentum already. A flexible shaft still helps, but the relative benefit is smaller.
+\begin{laymansbox}{Why Swing Speed Alone Cannot Select a Shaft}{ch11:slow_golfer}
+A slower swing does not by itself establish greater elastic benefit. Available work, loading direction, head offset, grip response, shaft properties, timing and the chosen performance outcome are intertwined. Static energy comparisons reverse when the controlled quantity changes. Treat a swing-speed fitting rule as an empirical rule to test under stated conditions; it does not follow from the spring-energy equation or from centrifugal stiffening alone.
 \end{laymansbox}
 
-% ─────────────────────────────────────────────────────────────────
-\section{Worked Example: Comparing Rigid and Flexible Shaft ZTCF}
+\section{Worked Example: A Prescribed Base and a Flexible Head}
+\subsection{Rigid Shaft Case}
+Use a one-dimensional horizontal translation model to isolate base excitation. The axis is a declared transverse teaching direction, not simultaneously a vertical coordinate and a rotating swing plane. A massless spring-damper connects a prescribed base $y_b(t)$ to a point head of mass $m$. The rigid comparison imposes $y_h=y_b$ and requires whatever actuator force maintains that constraint. It is not a free golfer-club simulation.
 
-\index{example!rigid vs flexible shaft}
-
-Let us work through a concrete example to see how shaft flexibility changes the $\ztcf$.
-
-Consider a simplified model: a point mass (the clubhead) at the end of a shaft, with the grip end following a prescribed motion (from a human swing).
-
-\subsection*{Rigid Shaft Case}
-
-The grip position follows $\bm{r}_{\text{grip}}(t)$ with velocity $\bm{v}_{\text{grip}}(t)$ and acceleration $\bm{a}_{\text{grip}}(t)$. The clubhead is constrained to be at distance $L$ from the grip (shaft length), so:
-
+Choose the smooth observed interval
 \[
-\bm{r}_{\text{head}} = \bm{r}_{\text{grip}} + L \, \bm{\hat{n}}
+y_b(t)=A\sin(\Omega t),\quad A=0.02\,\mathrm m,
+\quad \Omega=\frac{\pi}{0.2\,\mathrm s},\quad 0\leq t\leq0.4\,\mathrm s.
 \]
+The base starts and ends with nonzero velocity $A\Omega$. We do not abruptly stop it at either endpoint. At $t=0.1\,\mathrm s$ its velocity is zero and acceleration is maximally negative; negative acceleration already occurs throughout $0<t<0.2\,\mathrm s$. Calling $0.1\,\mathrm s$ the onset of deceleration would misdescribe the function.
 
-where $\bm{\hat{n}}$ is the unit vector along the shaft direction. In the rigid case, $\bm{\hat{n}}$ is determined by the hand orientation alone.
-
-The clubhead acceleration includes gravity and constraint forces:
+\subsection{Flexible Shaft Case}
+Define the relative displacement $\eta=y_h-y_b$. Newton's law on the head is
 \[
-m_{\text{head}} \bm{a}_{\text{head}} = m_{\text{head}}\bm{g} + \bm{F}_{\text{constraint}}
+m(\ddot y_b+\ddot\eta)=-k\eta-c\dot\eta,
+\quad
+\ddot\eta+\frac cm\dot\eta+\frac km\eta=-\ddot y_b.
 \]
+Set $\eta(0)=\dot\eta(0)=0$. The head initially shares the base velocity, so the initial absolute kinetic energy is nonzero. Use $m=0.2\,\mathrm{kg}$, $k=80\,\mathrm{N/m}$ and $c=0.64\,\mathrm{N\,s/m}$, giving $\omega_n=20\,\mathrm{rad/s}$ and $\zeta=0.08$. These are manufactured teaching parameters, not fitted golfer measurements. By comparison, combining $k=7000\,\mathrm{N/m}$ with the same mass would give $\omega_n=187.08\,\mathrm{rad/s}$, not $15\,\mathrm{rad/s}$.
 
-where $\bm{F}_{\text{constraint}}$ is the force keeping the clubhead at distance $L$ from the grip.
-
-The forward $\ztcf$ is the trajectory obtained with the declared applied generalized-control channel set to zero. Constraint reactions are retained together with gravity, inertia, and any passive shaft or joint terms included in the effective plant. This is a model intervention, not a claim of absent muscle activity.
-
-\subsection*{Flexible Shaft Case}
-
-Now the grip motion is the same, but the shaft can bend. The clubhead is no longer constrained to be exactly at distance $L$ from the grip. Instead:
+\subsection{Numerical Example}
+The forcing is $A\Omega^2\sin(\Omega t)$. Introduce $s_\Omega=\sin(\Omega t)$ and $c_\Omega=\cos(\Omega t)$. A reproducible independent solution uses the state $\mathbf z=(\eta,\dot\eta,s_\Omega,c_\Omega)$:
 \[
-\bm{r}_{\text{head}} = \bm{r}_{\text{grip}} + L \, \bm{\hat{n}} + \eta(t) \bm{\phi}(z=L)
+\dot{\mathbf z}=\begin{bmatrix}
+0&1&0&0\\
+-400&-3.2&A\Omega^2&0\\
+0&0&0&\Omega\\
+0&0&-\Omega&0
+\end{bmatrix}\mathbf z,
+\qquad \mathbf z(0)=\begin{bmatrix}0\\0\\0\\1\end{bmatrix}.
 \]
+Thus $\mathbf z(t)=\exp(Ht)\mathbf z(0)$ for the displayed matrix $H$. Its rows have the units appropriate to the mixed state components; the matrix is not dimensionless. The figure uses a direct ODE integration, checked against this matrix exponential. Displacement, velocity and energy must agree under tighter tolerances, rather than merely producing a plausible-looking curve.
 
-where $\bm{\phi}(z=L)$ is the lateral displacement at the tip of the mode shape $\phi_1(z)$.
-
-The shaft deformation $\eta(t)$ evolves according to:
-\[
-\ddot{\eta} + 2\zeta\omega_n\dot{\eta} + \omega_n^2\eta = f_{\text{modal}}(\text{grip motion})
-\]
-
-This is a second-order ODE coupled to the grip motion.
-
-\subsection*{Numerical Example}
-
-Let us use realistic numbers:
-\begin{itemize}
-\item Clubhead mass: $m_h = 0.2$ kg (about 7 oz).
-\item Shaft length: $L = 1.1$ m (about 43 inches).
-\item Shaft stiffness: $\shaftstiff = 7000$ N/m (typical for a mid-flex shaft).
-\item Damping ratio: $\zeta = 0.08$.
-\item Natural frequency: $\omega_n = 15$ rad/s, so $\shaftdamp = 2 \times 0.08 \times 15 \times m_{\text{eff}} \approx 0.3$ N$\cdot$s/m.
-\end{itemize}
-
-Suppose the hand (grip) starts at $y = 0$ and is prescribed to move with:
-\begin{equation}
-y_{\text{grip}}(t) = 0.5 \sin\left(\pi t / 0.2\right) \quad \text{for } t \in [0, 0.2]
-\text{ s}
-\end{equation}
-
-This describes a hand moving upward from $t=0$ to $t=0.1$ s, then downward from $t=0.1$ to $t=0.2$ s, reaching a maximum height of 0.5 m at mid-swing.
-
-For the \textbf{rigid shaft}, the clubhead follows the hand motion plus a lag due to the centrifugal acceleration. The clubhead trajectory is smooth and nearly sinusoidal.
-
-For the \textbf{flexible shaft}, the clubhead additionally experiences the shaft deformation. Early in the swing, as the hand accelerates, the shaft bends (positive $\eta$). At $t \approx 0.1$ s, the hand reaches peak height and begins to decelerate. The shaft begins to unbend, and if we plot the clubhead position $y_{\text{head}} = y_{\text{grip}} + L + \eta \times \phi_1(L)$, we see an extra oscillation superimposed on the hand motion. This oscillation is the catapult effect.
-
-The magnitude of the effect depends on the hand acceleration profile and the shaft parameters. For typical golfer numbers, the extra clubhead displacement due to shaft flex is 5--15 cm (2--6 inches) at the moment of maximum deflection, and the extra velocity at impact is 5--15\% of the clubhead speed.
-
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.8]
-  \begin{axis}[
-    xlabel={Time (s)},
-    ylabel={Clubhead position (m)},
-    title={Rigid vs.\ Flexible Shaft ZTCF},
-    ymajorgrids=true,
-    legend pos=south east
-  ]
-  % Rigid shaft trajectory (smooth sine)
-  \addplot[color=driftblue, thick, mark=none]
-    table {
-      0    0.0
-      0.05 0.24
-      0.10 0.50
-      0.15 0.26
-      0.20 0.0
-    };
-  \addlegendentry{Rigid shaft}
-
-  % Flexible shaft trajectory (sine with oscillation)
-  \addplot[color=shaftsilver, thick, mark=none, dashed]
-    table {
-      0    0.0
-      0.05 0.23
-      0.08 0.52
-      0.10 0.48
-      0.12 0.51
-      0.15 0.27
-      0.20 0.0
-    };
-  \addlegendentry{Flexible shaft}
-  \end{axis}
-\end{tikzpicture}
-\caption{Qualitative Comparison of Rigid vs.\ Flexible Shaft ZTCF Trajectories. The Flexible Shaft Shows Oscillation Near the Maximum Height, Characteristic of the Catapult Effect.}
+\includegraphics[width=\linewidth]{figures/shaft_base_response.pdf}
+\caption{Position and Velocity Under the Declared Prescribed Base. The Flexible Response Includes Continuing Boundary Work; No Ball-Impact Event Is Modeled.}
 \label{fig:ch11:ztcf_comparison}
 \end{figure}
 
-The key insight: the flexible shaft does not produce a lower ZTCF trajectory; it produces a \emph{different} ZTCF trajectory, one that includes oscillations due to shaft dynamics. If your swing muscles and gravity are tuned to work with a particular drift field, using a shaft with different stiffness changes that drift field, and you must adjust your muscle activation (control inputs) to compensate.
+Two energy descriptions answer different questions. Relative oscillator energy satisfies
+\[
+E_{\rm rel}=\frac12m\dot\eta^2+\frac12k\eta^2,
+\qquad \dot E_{\rm rel}=-m\ddot y_b\dot\eta-c\dot\eta^2.
+\]
+The effective forcing term is work in the base-relative description. For absolute head kinetic energy plus spring storage,
+\[
+E_{\rm abs}=\frac12m(\dot y_b+\dot\eta)^2+\frac12k\eta^2,
+\]
+\[
+\dot E_{\rm abs}=P_b-c\dot\eta^2,
+\qquad P_b=-(k\eta+c\dot\eta)\dot y_b.
+\]
+Here $P_b$ is power supplied through the prescribed base to the spring-damper/head system. It can have either sign. Integrating this balance, including initial head kinetic energy, checks the forcing sign and reveals the source of motion. The example shows a response to continuing boundary input. It provides neither a ZTCF of the full golfer nor a percentage speed benefit at ball impact, which is absent from this model.
 
-% ─────────────────────────────────────────────────────────────────
-\section{Why Shaft Flex Is in the Drift, Not the Control}
-
-\index{drift!shaft flexibility}
-\index{control authority!shaft}
-
-It is tempting to think of shaft flexibility as something a golfer can ``control,'' the way a professional tennis player might control the vibration of their racket strings. But golf is different.
-
-There is no muscle in the human arm that directly controls the shaft's deformation. The deformation happens passively, in response to inertial forces. The golfer can \emph{indirectly} influence the deformation by changing the acceleration profile of the hands (which changes $f_{\text{modal}}$), but this is done by controlling the joint angles, not by directly commanding the shaft.
-
-Therefore, shaft flexibility belongs entirely in the drift field. It is passive and automatic.
-
-Shaft flexibility changes $f(\state)$ because elastic and damping effects belong to the declared effective plant. The generalized-coordinate input map $G(\state)$ may remain unchanged in a particular actuation model, but task-space authority can still change through configuration, Jacobians, constraints, and admissible-input bounds. A different shaft therefore implies a different drift field and forward $\ztcf$; it does not justify a universal claim about control capacity.
-
-\begin{driftcontrol}{Shaft Flexibility: Drift Only}{ch11:drift_only}
-\textbf{Why shaft is drift:}
-\begin{enumerate}
-\item No muscle controls the shaft deformation directly.
-\item The shaft bends in response to acceleration mismatches, which are consequences of the hand motion (determined by joint angles, which are controlled).
-\item The stiffness and damping of the shaft are passive properties.
-\item The shaft dynamics add to the drift field $f(\state)$, not the control field $G(\state)$.
-\end{enumerate}
-
-\textbf{Consequence:}
-For a declared actuation model, compare drift and bounded admissible control capacity in the same generalized-acceleration or task-projected metric. Shaft parameters always alter the retained passive dynamics; they may also alter task-space control capacity through the state and constraint geometry. These effects must be reported separately rather than inferred from the $\ztcf$ alone.
+\section{Passive Flexibility and Ongoing Control}
+\begin{driftcontrol}{Shaft Flexibility: Passive Forces and Coupled Inputs}{ch11:drift_only}
+The golfer does not command a bending coordinate independently. The golfer can influence its evolution through forces and motion at the grip, subject to muscle dynamics, constraints and finite time. Restoring and damping forces are passive, while their coordinate accelerations can still respond to active inputs through $\mathbf M^{-1}\mathbf B$. These facts are compatible.
 \end{driftcontrol}
 
-% ─────────────────────────────────────────────────────────────────
+Evaluate control over a specified remaining time, task output and admissible input set. A large passive contribution is not proof that an active perturbation has no effect, and a nonzero input-map row is not proof that an arbitrarily large correction is feasible. With excitation inputs, propagation through activation, muscle force, skeletal motion and shaft deformation can limit the attainable change before impact. This is where the beam, muscle and control descriptions must meet within one model.
+
 \begin{principle}{Key Takeaways}{ch11:takeaways}
-\begin{enumerate}
-\item \textbf{Real shafts bend.} A rigid model ignores a significant source of energy and trajectory variation.
-
-\item \textbf{Shaft deformation is described by modal coordinates.} A single coordinate $\eta$ captures the first (most important) bending mode. The modal coordinate evolves according to its own differential equation, coupled to the joint motion.
-
-\item \textbf{The extended state includes the modal coordinates:} $\state = [\configvec, \configdot, \eta, \dot{\eta}]^T$.
-
-\item \textbf{Shaft flexibility is part of the drift field.} No muscle controls the deformation directly. The shaft bends and unbends passively, responding to inertial forces.
-
-\item \textbf{The catapult effect is real.} Elastic energy stored in the bent shaft is released near impact, providing 5--15\% extra clubhead speed (depending on swing speed and shaft fit).
-
-\item \textbf{Shaft fitting designs the drift field.} The choice of stiffness, damping, and flex profile changes which $\ztcf$ trajectory the swing naturally produces. Matching these to your swing speed and biomechanics puts the autopilot trajectory close to your target.
-
-\item \textbf{Shaft flexibility helps slower golfers more.} Because centrifugal stiffening is weaker, the shaft remains more flexible throughout the swing and can store more elastic energy. This energy is returned at impact, partially compensating for lower muscle power.
-
-\item \textbf{The shaft is an energy buffer between the muscles and the clubhead.} Some of the work done by the muscles is temporarily stored as elastic deformation and released later. This allows the muscles to do work when the levers are shorter and then have that work released when the clubhead can best use it.
-\end{enumerate}
+The shaft stores and exchanges energy; it creates no mechanical energy. Its deformation changes position and orientation, and its reaction changes the grip response. Specify boundary conditions, normalized coordinates, inertia and input channels before discussing drift. Distinguish relative recoil from equipment-induced speed differences, a prescribed boundary from zero input, and deterministic sensitivity from measured dispersion. Model checks establish internal consistency; measured comparisons establish how well the model describes golfers.
 \end{principle}
 
-% ─────────────────────────────────────────────────────────────────
 \begin{exercises}{Chapter Exercises}{ch11}
-
-\begin{exercise}
-A golf shaft has a first bending mode with natural frequency $\omega_n = 12$ rad/s and damping ratio $\zeta = 0.05$. If the shaft is initially bent to $\eta_0 = 0.03$ m (3 cm) and released from rest, how long does it take for the deflection to decay to $e^{-1} \approx 37\%$ of its initial value?
-
-\emph{Hint:} In a damped oscillator, the envelope decays as $e^{-\zeta\omega_n t}$.
-\end{exercise}
-
-\begin{exercise}
-Explain in plain language why a stiffer shaft stores less elastic energy for a given deflection than a more flexible shaft. What is the trade-off in terms of timing and control?
-\end{exercise}
-
-\begin{exercise}
-Two golfers have identical swing speeds (85 mph) and identical biomechanics, but one uses a 65-gram shaft and the other uses a 75-gram shaft. How might the different shaft mass affect the modal dynamics? (Consider how mass affects $\omega_n$ and the effective driving force $f_{\text{modal}}$.)
-\end{exercise}
-
-\begin{exercise}
-A golfer notices that with a stiffer shaft, they hit the ball farther, but with less dispersion. With a more flexible shaft, the ball goes slightly farther on a perfect swing but much farther when they swing a bit faster. Explain these observations in terms of the drift field and the catapult effect.
-\end{exercise}
-
-\begin{exercise}
-In the worked example (Section~\ref{ch:flexible_shaft}), suppose the hand acceleration profile is changed so that the hand decelerates earlier (starting at $t=0.08$ s instead of $t=0.1$ s). How would you expect the shaft deformation to change? Would the catapult effect occur earlier or later?
-\end{exercise}
-
-\begin{exercise}
-Explain why centrifugal stiffening is negligible early in the downswing but becomes dominant near impact. What does this imply for when and how much the shaft can bend during a typical swing?
-\end{exercise}
-
+\begin{enumerate}
+\item An unforced underdamped mode has $\omega_n=12\,\mathrm{rad/s}$, $\zeta=0.05$, $\eta(0)=0.03\,\mathrm m$ and $\dot\eta(0)=0$. Find the time for the exponential envelope to shrink by a factor $e^{-1}$, and distinguish it from the first zero of displacement.
+\item Compare spring energy for $k=80$ and $160\,\mathrm{N/m}$ under a fixed deflection of $0.02\,\mathrm m$ and under a fixed force of $1.6\,\mathrm N$. Explain why a dynamic fitting conclusion requires more information.
+\item If total shaft mass changes but its spatial distribution, stiffness profile and grip/head boundaries are unknown, can the new modal frequency be computed? State the conditional result when only a known modal mass increases.
+\item A repeated-shaft trial reports a change in distance and dispersion. Identify measurements and controls needed to distinguish relative shaft recoil, altered grip motion and impact-location effects. Does a nonsignificant group speed test demonstrate equivalence?
+\item In the prescribed-base example, translate the whole forcing and its matched initial state earlier by $\Delta t$. Contrast this with changing only a local part of the acceleration history while keeping the initial state fixed. Must the latter shift peak deformation by $\Delta t$?
+\item For externally prescribed $k(t)$, derive the additional energy term. Explain why tensile stiffening cannot establish that the shaft becomes straight at impact.
+\end{enumerate}
 \end{exercises}
 
-\cleardoublepage
+\section{Worked Answers}
+\begin{enumerate}
+\item With $\omega_d=\omega_n\sqrt{1-\zeta^2}$, the displacement is $\eta_0e^{-\zeta\omega_nt}[\cos(\omega_dt)+(\zeta\omega_n/\omega_d)\sin(\omega_dt)]$. The envelope reduction time is $1/(\zeta\omega_n)=1.6667\,\mathrm s$. Writing $\alpha=\arctan(\zeta\omega_n/\omega_d)$, the first zero is $(\pi/2+\alpha)/\omega_d\approx0.13524\,\mathrm s$. The sine term enforces release from rest; the exponential alone is not the displacement.
+\item Fixed deflection gives $0.016$ and $0.032\,\mathrm J$; fixed force gives $0.016$ and $0.008\,\mathrm J$. During a swing, changes in loading, timing, grip response and initial state must also be solved or measured.
+\item No. For a fixed single-coordinate stiffness and all other model assumptions unchanged, $\omega_n=\sqrt{k/m}$ falls as modal mass increases. Total shaft mass does not determine that modal mass without its spatial weighting and normalization.
+\item Record grip and head kinematics, delivered face and velocity, strike location and ball launch, with repeated, counterbalanced trials and uncertainty estimates. Force measurements and model interventions can test competing mechanisms. Nonsignificance alone does not establish equivalence; that requires a prespecified practical margin and an appropriate uncertainty analysis.
+\item Translating the complete input and matched state history of a time-invariant system translates its response. A local change adds a new forced response and can change both amplitude and phase. Its peak must be recomputed; it need not move by the same amount as the edited feature.
+\item Differentiation gives $\dot U=k\eta\dot\eta+\tfrac12\dot k\eta^2$. The second term accounts for parameter power. Transverse loads, head offsets, initial state and ongoing boundary motion can sustain bend even when tangent stiffness increases.
+\end{enumerate}
+\clearpage
+\flushbottom{}

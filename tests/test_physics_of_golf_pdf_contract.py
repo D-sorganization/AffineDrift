@@ -72,12 +72,12 @@ def test_elastic_and_constraint_expressions_are_inside_display_math() -> None:
         assert any(expression in display for display in displays)
 
 
-def test_shaft_stiffness_has_one_grouped_subscript() -> None:
+def test_shaft_stiffness_uses_valid_notation_and_parameter_power() -> None:
     """Avoid invalid adjacent subscripts in the passive-stiffness symbol."""
     text = FLEXIBLE_SHAFT_CHAPTER.read_text(encoding="utf-8")
 
     assert r"k_{\text{shaft}}_0" not in text
-    assert r"k_{\text{shaft},0}" in text
+    assert r"\dot U=k\eta\dot\eta+\frac12\dot k\eta^2" in text
 
 
 def test_fascia_energy_estimates_are_inside_display_math() -> None:

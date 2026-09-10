@@ -281,11 +281,12 @@ class TestAuditBookPhysicsOfGolf:
         assert res.total_latex_figures == 37
         # #4160, #4161, and #4164 replace diagrams with shared print/web images.
         # #4283 replaces the spine schematic with a shared evidence/model diagram.
-        assert res.total_latex_tikz == 17
-        assert res.total_latex_includegraphics == 20
+        # #4333 replaces both shaft TikZ figures with checked print/web pairs.
+        assert res.total_latex_tikz == 15
+        assert res.total_latex_includegraphics == 22
         assert res.total_latex_fig_labels == 37
-        assert res.total_quarto_figures == 21
-        assert res.missing_figures_count == 16
+        assert res.total_quarto_figures == 23
+        assert res.missing_figures_count == 14
         assert res.is_in_full_parity is False
 
 
