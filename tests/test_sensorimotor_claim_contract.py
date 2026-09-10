@@ -58,8 +58,24 @@ def test_motor_control_chapter_states_pathway_phase_and_evidence_boundaries(
         assert claim.casefold() in source, f"{chapter.name} lacks governed boundary: {claim}"
 
 
-def test_muscle_chapter_keeps_the_latency_example_model_bounded() -> None:
-    source = MUSCLE_CHAPTER.read_text(encoding="utf-8")
+@pytest.mark.parametrize(
+    "chapter",
+    (
+        MUSCLE_CHAPTER,
+        ROOT_DIR / "articles/The_Physics_of_Golf/chapters/ch17_muscle_force_generation.tex",
+    ),
+    ids=("quarto", "latex"),
+)
+def test_muscle_chapter_keeps_the_latency_example_model_bounded(chapter: Path) -> None:
+    source = chapter.read_text(encoding="utf-8")
 
-    assert "This illustrative serial budget does not describe every feedback pathway" in source
-    assert "does not prove that all within-swing feedback is ineffective" in source
+    # The revised example specifies a delay and activation response separately,
+    # without equating either to a universal serial sensory-feedback budget.
+    assert "a separately specified pure transmission delay" in source
+    assert "not a measured sequence of events in every downswing" in source
+    assert (
+        "Preparation and a new response must be compared from their actual initial states" in source
+    )
+    assert "double-count processes" in source
+    assert "no response time remains" in source
+    assert "all within-swing feedback is ineffective" not in source
