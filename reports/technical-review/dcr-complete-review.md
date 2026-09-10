@@ -63,7 +63,7 @@ zero leading displacement, outside the nonconvex instantaneous input set.
 
 For y0=1,v0=-1,a=-8, downward event speed is -sqrt(17), with derivative
 1/sqrt(17) versus fixed-time derivative t*=0.3904. The event-map expansion
-uses delta_t=-(g_x*delta_x)/(g_t+g_x*fminus); grazing or missing events need
+uses delta_t=-(g_x*delta_x)/(g_t+g_x\*fminus); grazing or missing events need
 explicit failure handling. Covariance propagation requires that event map
 and a declared joint covariance, neither of which is supplied by DCR.
 
@@ -173,3 +173,40 @@ PR #4339 protected-squash-merged from head 7ba2db42 as
 06ad67134fb08841281640d4373d9df1d7cc56ae. Normal commit/push hooks and protected
 checks passed. Exact deployment 34447587020 failed before publication: docs/ output pruning removed the bound review document. Relocate durable evidence outside generated output and test that boundary before retrying publication.
 The corpus and companion critiques remain unfinished.
+
+## Deployment Source Boundary: #4342
+
+Run 34447587020 for protected DCR merge 06ad67134fb08841281640d4373d9df1d7cc56ae
+failed before publication at the scientific claim-audit coverage step. The
+review path was under `docs/`, both a development-document location and Quarto's
+configured output directory. The deployment's internal-Markdown pruning removed
+it before the final evidence validator. The article and mathematical checks
+were valid; the evidence storage boundary was not.
+
+This canonical review now resides under `reports/technical-review/`, outside
+rendered output. The ledger binds the same reviewed content at its durable
+path with current digests. No authority pin, review disposition, publication
+gate or pruning rule is relaxed. Development handoff/logs reference this source.
+The new integration regression copies every reviewed route's bound evidence
+into an isolated temporary root, validates it, runs the real output-pruning
+function and validates again. It reproduced the exact missing-review failure
+before relocation. It additionally excludes all durable evidence from the
+configured output directory, covering full clean renders as well as pruning.
+Never run the destructive output pruner against a development checkout merely
+to reproduce this failure; the test's fixture is sufficient.
+
+This delivery repair accompanies fascia #4341 in the same protected PR, with
+separate issue #4342 and DL-#4342 tracking. The fascia implementation replay
+preserved tree 140a424c7be130df564fd6a8b3ccabfc807e5786 when moved from the DCR
+PR head onto its identical protected squash. Full publication verification
+remains pending the corrected protected deployment.
+
+The boundary test is GREEN after relocation; 35 combined boundary, trust,
+presentation and fascia checks pass. Ruff and Black pass. The publication
+coverage command (`generate_claim_audit_inventory --manifest ... --check
+--enforce-publication`) passes for all 239 previously published routes using
+current local HTML records. This is a scoped local check: a manifest of the
+entire long-lived preview cache also included 14 stale or local-only HTML
+files and correctly failed coverage. They were excluded by matching the
+independently verified prior live-route set, not by weakening the validator.
+The clean protected deployment remains authoritative for the new render.
