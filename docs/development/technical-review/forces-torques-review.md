@@ -236,3 +236,12 @@ root-selected Quarto render through `render_selected.py`, and
 `pdflatex -interaction=nonstopmode -halt-on-error main.tex` with BibTeX and two
 resolution passes in the book directory. The normal production gate is
 `node scripts/verify-public-site.js` with the actual Chapter 4 route manifest.
+
+## Protected Delivery Checkpoint
+
+Implementation 3a9a87af9d28fc0728cf0b4a23e0f932660752d3 preserves validated tree
+790ac9c2af748557d23d4e522742f4fe26053baf after replay onto double-pendulum
+squash e9ad402e50f111589252292178e5f45ac58b427c. Parent/squash trees matched.
+Normal commit/push hooks passed. Ready PR #4357 closes #4355; protected checks,
+merge and exact live publication remain. The final exercise changed only PDF
+page 79, which was reread; every final actual-route record passed.

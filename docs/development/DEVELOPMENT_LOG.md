@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4355 · Complete Forces, Torques and Physical Attribution
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4355 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4357 (open)
 - **Branch:** `fix/4355-forces-torques-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch04_forces_and_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/forces_torques_verified.*`, `tests/test_forces_torques_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/forces-torques-review.md`, `docs/development/technical-review/build_forces_torques_figures.py`, `docs/development/technical-review/forces-torques-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`fe8ee652`; working-tree implementation; root 5,254 passed, coverage 79.29%; focused 35, content 131, static 34, titles 636, mypy 91; complete paired reading and final exercise/units browser verification passed; all 14 canonical route records individually passed)
+- **Last verified:** 2026-09-10 (`3a9a87af9d28fc0728cf0b4a23e0f932660752d3`; validated tree preserved on replay; normal commit/push hooks passed; root 5,254 passed, coverage 79.29%; focused 35, content 131, static 34, titles 636, mypy 91; complete paired reading and final exercise/units browser verification passed; all 14 canonical route records individually passed)
 - **Summary:** Rebuilds physical and generalized load attribution, moving-frame signs, gravity work, muscle-state and contact feasibility, whole-club grip wrench and segment power. Independent Newton–Euler and energy checks support a declared two-link example and seven worked answers. Full audit records derivations, source limits and validation failure history.
-- **Next step:** Commit the validated canonical files and open a ready protected PR.
+- **Next step:** Verify PR #4357 protected checks, squash merge and revision-matched live publication.
 
 ### DL-#4353 · Complete Double-Pendulum Derivation and Task Mechanics
 
