@@ -9,14 +9,14 @@ This document provides the formal audit and inventory of all figures across the 
 | **Total Chapters Audited** | 34 |
 | **Chapters with Figures** | 29 |
 | **Total LaTeX Figures** | 38 |
-| **TikZ Figures** | 13 |
-| **Raster / Includegraphics Figures** | 25 |
+| **TikZ Figures** | 12 |
+| **Raster / Includegraphics Figures** | 26 |
 | **LaTeX Figure Labels** | 38 |
 | **LaTeX Prose Figure Refs** | 3 |
-| **Total Quarto Figures** | 26 |
-| **Quarto Figure Defs (Divs / Imgs / Cells)** | 26 |
-| **Quarto Prose Figure Mentions** | 24 |
-| **Missing Figures in Quarto** | **12** |
+| **Total Quarto Figures** | 27 |
+| **Quarto Figure Defs (Divs / Imgs / Cells)** | 27 |
+| **Quarto Prose Figure Mentions** | 26 |
+| **Missing Figures in Quarto** | **11** |
 
 ## Chapter Parity Matrix
 
@@ -46,7 +46,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch21_spine_modeling` | Modeling the Spine: Motion, Load, and Evidence | 1 | 0 | 1 | ✅ Parity |
 | `ch22_anatomy_joint_modeling` | Anatomy and Joint Modeling: Choosing the Right Idealization | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch23_dof_urdf_models` | Degrees of Freedom\\and Robot Models\\of the Human Body | 1 | 1 | 1 | ✅ Parity |
-| `ch24_motor_control_brain` | Motor Control I: The Brain as Controller | 1 | 1 | 0 | ❌ Missing 1 |
+| `ch24_motor_control_brain` | Motor Control I:\\The Brain as Controller | 1 | 0 | 1 | ✅ Parity |
 | `ch25_motor_learning` | Motor Control II:\\Learning the Swing | 2 | 0 | 2 | ✅ Parity |
 | `ch26_remarkable_brain` | Motor Control III:\\The Computational Brain | 2 | 0 | 2 | ✅ Parity |
 | `ch27_passive_distributed_control` | Passive and Distributed Control:\\Mechanics, Feedback and Stability | 1 | 0 | 1 | ✅ Parity |
@@ -89,7 +89,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch21_spine_modeling` | 1 | `fig:spine_segment` | Includegraphics | From Motion to Tissue Response: Each Stage Requires Its Own Evidence. A Single Measured Sh... |
 | `ch22_anatomy_joint_modeling` | 1 | `fig:joint_primitives` | TikZ Diagram | Joint Primitives: Revolute (1R) One Axis, Universal (2R) Two Axes, Spherical (3R) Three Ax... |
 | `ch23_dof_urdf_models` | 1 | `fig:urdf_tree` | TikZ Diagram | Upper-Body Tree and Two-Hand Closure. Numbers Indicate Compound-Joint Freedoms; the Dashed... |
-| `ch24_motor_control_brain` | 1 | `fig:ch24_hierarchy` | TikZ Diagram | Motor Control Hierarchy in the Brain. Top-Down Commands Flow From Prefrontal Cortex (Goal ... |
+| `ch24_motor_control_brain` | 1 | `fig:ch24_hierarchy` | Includegraphics | Functional Roles in Control and a Manufactured Activation Example. Preparation, Prediction... |
 | `ch25_motor_learning` | 1 | `fig:ch25_coordination_covariance` | Includegraphics | Manufactured Covariance Ellipses for the Task $y=q_1+q_2$. Greater Joint Variation Can Coe... |
 | `ch25_motor_learning` | 2 | `fig:ch25_learning_stages` | Includegraphics | Manufactured Trial Updates With $a=1$, $r=4$ and $m_0=0$. Gains of 0.25 and 1.5 Converge; ... |
 | `ch26_remarkable_brain` | 1 | `fig:brain_correction_window` | Includegraphics | Remaining Time Changes the Same Command's Effect. The Declared Rotor Model Compares Instan... |

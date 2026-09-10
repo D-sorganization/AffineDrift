@@ -18,18 +18,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4347 · Complete Brain Control and Neuroscience Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4347 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4348 (open)
+- **Branch:** `fix/4347-brain-control-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch24_motor_control_brain.tex`, `articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/brain_control_verified.*`, `tests/test_brain_control_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/brain-control-review.md`, `docs/development/technical-review/build_brain_control_figures.py`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`261925d2`, complete paired reading; 5,202 tests; configured src/scripts coverage 79.29%, src-only 92.9%; focused 34, content 131, static 34, titles 636, configured mypy and 14 final brain-route browser records pass)
+- **Summary:** Corrects prediction/inverse dimensions, torque versus neural inputs, delayed observations, activation and finite-horizon/event response. Replaces unsupported neural algorithms, timing/noise constants and coaching conclusions with bounded primary evidence. Ten worked answers and shared functional/activation figure connect mechanics, observation, actuation, learning and task uncertainty. Audit records derivations, failures and exact reading limits.
+- **Next step:** Verify PR #4348 protected CI, squash merge and revision-matched live evidence.
+
 ### DL-#4345 · Complete Triple-Pendulum Dynamics and Evidence
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4345 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4346 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4346 (merged; live verification pending)
 - **Branch:** `fix/4345-triple-pendulum-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch08_triple_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/triple_pendulum_verified.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_triple_pendulum_rigor.py`, `tests/test_ch08_triple_pendulum_mass_matrix.py`, `docs/development/technical-review/triple-pendulum-review.md`
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-10 (`90f06e2b`, complete paired reading; 5,146 tests, 92.88% coverage; focused 31, content 131, static 34, titles 636, configured types and canonical browser 14/14 pass)
 - **Summary:** Defines one consistent planar model, derives complete inertia and Christoffel bias, computes a converged zero-torque counterexample and ideal lock release, separates segment power from local actuation, and bounds wrist-control claims with primary evidence. Six worked answers and historical destinations are preserved. Derivation and failure history are recorded in the audit.
-- **Next step:** Verify PR #4346 protected CI, merge and live evidence; normal hooks and parent replay tree equality passed.
+- **Next step:** Inspect revision-matched live evidence from deployment 34456863592 for merge 8808f68ab8b7e39c5110ce260473d02dbff63c45.
 
 
 ### DL-#4342 · Durable Claim-Review Evidence Through Deployment
@@ -43,7 +56,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-10 (`87956740`, RED reproduced deployment 34447587020's missing-review failure; GREEN after relocation; 35 affected checks and 239-route scoped publication gate pass)
 - **Summary:** Quarto output pruning removed the DCR review because it was stored under docs/. Move durable bound evidence to reports/technical-review, update references/digests and enforce survival of actual pruning for every reviewed route. Scientific authority and publication gates remain intact.
-- **Next step:** Verify PR #4344 protected checks and deployment.
+- **Next step:** Inspect successful successor deployment evidence for the retained DCR review after run 34452462094 retry was cancelled.
 
 ### DL-#4341 · Fascia Mechanics and Biological Evidence
 
@@ -56,7 +69,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-10 (`87956740`, committed fascia implementation; 5,137 tests passed, 92.88% coverage; affected 45, content 131, static 34, titles 636, canonical browser 14/14 and full paired reading pass)
 - **Summary:** Replaces the complete paired chapter with explicit force/power/energy distinctions, correct SI examples, nonlinear and viscoelastic derivations, directional coupling, augmented control/sensing states and bounded primary evidence. Eight worked answers and a shared reproducible figure preserve historical links. Corrects the legacy regression that preserved the erroneous 1.25 J calculation. Source boundaries, failures and validation are documented. Companion DCR critiques remain separately queued as #4340.
-- **Next step:** Verify PR #4344 protected checks and deployment.
+- **Next step:** Inspect successful successor deployment evidence for the retained DCR review after run 34452462094 retry was cancelled.
 
 ### DL-#4338 · DCR Scaling, Coordinates and Correction Evidence
 

@@ -284,11 +284,12 @@ class TestAuditBookPhysicsOfGolf:
         # #4333 pairs the shaft figures; #4336 adds a paired damping-regime figure.
         # #4341 replaces the unpaired fascia layers with a shared material-response plot.
         # #4345 replaces the triple-chain sketch with a shared verified trajectory.
-        assert res.total_latex_tikz == 13
-        assert res.total_latex_includegraphics == 25
+        # #4347 pairs functional control roles and a verified activation-response plot.
+        assert res.total_latex_tikz == 12
+        assert res.total_latex_includegraphics == 26
         assert res.total_latex_fig_labels == 38
-        assert res.total_quarto_figures == 26
-        assert res.missing_figures_count == 12
+        assert res.total_quarto_figures == 27
+        assert res.missing_figures_count == 11
         assert res.is_in_full_parity is False
 
 

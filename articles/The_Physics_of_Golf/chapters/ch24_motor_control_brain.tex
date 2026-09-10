@@ -1,488 +1,368 @@
-\chapter{Motor Control I: The Brain as Controller}
+\chapter[Motor Control I: The Brain as Controller]{Motor Control I:\\The Brain as Controller}
 \label{ch:motor_control_brain}
-
-\epigraph{The brain is the ultimate controller---a device of considerable subtlety that solves the golf swing problem every time you play, without you ever consciously knowing the equations.}{Adapted from Richard Feynman}
+\index{spinal cord}
+\index{sampling rate}
+\index{recruitment order}
+\index{predictive processing}
+\index{prediction error}
+\index{optimal control}
+\index{open-loop control}
+\index{nonlinear control}
+\index{neural computation}
+\index{muscle unit recruitment}
+\index{motor units}
+\index{motor planning}
+\index{motor cortex}
+\index{inverse model}
+\index{internal models}
+\index{ideomotor theory}
+\index{free energy principle}
+\index{forward model}
+\index{feedforward control}
+\index{feedback control}
+\index{dopamine}
+\index{control bandwidth}
+\index{computational capacity}
+\index{closed-loop control}
+\index{cerebellum}
+\index{cerebellar learning}
+\index{brain power consumption}
+\index{basal ganglia}
+\index{bandwidth limitation}
+\index{active inference}
+\index{action selection}
+\index{action effect}
+\index{Purkinje cells}
+\index{Henneman's size principle}
+\raggedbottom
 
 \begin{laymansbox}{What This Chapter Is About}{box:ch24_intro}
-We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: \textit{the brain solves this problem}. Not perfectly---golfers miss---but with high consistency. An elite golfer produces clubhead speeds within 2\% of their average, swing after swing \cite{jorgensen1994physics}, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
+A golf swing joins a physical system to a nervous system that prepares, senses, predicts and learns. Muscles supply and absorb energy; the body's geometry and connections distribute force and motion. A useful controller must work with both. The scientific question is how preparation and ongoing regulation combine to achieve a strike despite uncertainty and limited time.
 
-This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer is instructive: the brain does not try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
+Engineering models make this question precise. They do not establish that a particular brain region literally solves our equations. We will distinguish a mechanical identity, a proposed control architecture and an experimental finding. The strongest argument for exploiting mechanical structure comes from showing what it changes in the task, not from declaring the swing passive or the brain too slow to participate.
 \end{laymansbox}
 
 \section{The Control Problem: What the Brain Must Solve}
 \label{sec:ch24_control_problem}
-
-\index{nonlinear control}
-\index{optimal control}
-\index{feedforward control}
-\index{feedback control}
-
-Recall from Chapters \ref{ch:zero_torque_counterfactual} and \ref{ch:zero_torque_counterfactual} that the golf swing is a control-affine system:
+\label{constr:box:ch24_constraints}
+For an unconstrained rigid model in local generalized coordinates, let $q\in\mathbb R^n$ and $v=\dot q$. With generalized torque $u\in\mathbb R^m$ applied through $B(q)$,
 \begin{equation}
-\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}(t)
+\dot x=f(x)+G(x)u,\qquad
+x=\begin{bmatrix}q\\v\end{bmatrix},\quad
+f=\begin{bmatrix}v\\-M^{-1}(c+g)\end{bmatrix},\quad
+G=\begin{bmatrix}0\\M^{-1}B\end{bmatrix}.
 \label{eq:ch24_control_affine}
 \end{equation}
+Here $M$ is the positive-definite mass matrix, $c$ is the complete velocity-dependent bias and $g$ is gravitational loading. Drift includes the kinematic block $v$; it is not a source of free energy or a substitute for muscle work. Contact constraints change the equations and admissible motions. A moving base, both arms, flexible tissues and a flexible club require their corresponding states and force laws.
 
-The state vector $\bm{x}$ contains all joint angles and angular velocities. The drift term $f(\bm{x})$ represents gravity and centrifugal effects---the physics does for free. The control term $G(\bm{x})\bm{u}(t)$ represents what the muscles can accomplish. The control input $\bm{u}(t)$ is the vector of muscle torques, subject to physical bounds: $|\bm{u}| \leq \bm{u}_{\mathrm{max}}$.
+The input in this equation is generalized torque, not a cortical spike or a muscle excitation. A more physiological model might use neural drive $e$, activation $a$, muscle-tendon state $z$ and muscle forces $F_m$:
+\[
+\dot a=\mathcal A(a,e),\qquad \dot z=\mathcal Z(z,q,v,a),\qquad
+\tau_m=R(q)F_m(q,v,a,z).
+\]
+The moment-arm matrix $R$ maps muscle forces to joint torques. This map is generally redundant, state dependent and subject to unilateral force and activation bounds. Two activation patterns can produce the same net torque but different stiffness, metabolic cost and future force capacity. Adding activation and material memory to the state changes the control problem; a torque-level affine representation does not automatically remain affine in every proposed neural input.
 
-The brain's problem: compute $\bm{u}(t)$ as a function of time to produce a desired motion that puts the ball at the target.
+The task is also more specific than reproducing a joint trajectory. Club position, velocity, face orientation and contact conditions jointly influence a strike; ball flight and ground interaction then introduce further states and uncertainty. A state estimate, an admissible input set and a defined task loss are needed before an optimal-control comparison is meaningful.
 
-This is not a simple problem. It is a \textit{nonlinear optimal control problem in real time}, subject to harsh constraints:
+\begin{definition}{Feedback and Feedforward in One Policy}{ch24_feedback}
+Feedback makes a command depend on available observations or an estimate derived from them. A local engineering example is
+\[
+u(t)=\operatorname{proj}_{\mathcal U}
+\left[u_{\rm ff}(t)+K(t)\bigl(x_d(t)-\hat x(t)\bigr)\right].
+\]
+The projection denotes the nearest admissible torque under a declared metric and a closed convex set $\mathcal U$; more complicated actuator constraints require their own allocation rule. $K$ maps state error into torque with compatible units. Neither this proportional law nor its stability is a universal property of neural control.
+\end{definition}
+\begin{definition}{Prepared Commands and Feedback Policies}{ch24_feedforward}
+A feedforward component is prepared without depending on the corresponding newly arriving sensory consequence. It can be learned without explicitly identifying a physical model. A prepared command and a prepared feedback policy can operate together: learning the latter does not make execution open-loop.
+\end{definition}
+\label{subsec:ch24_ff_vs_fb}
+\label{myth:box:ch24_feedback_fantasy}
 
-\begin{constraintbox}{Constraints on the Brain's Control Problem}{box:ch24_constraints}
-\begin{enumerate}
-\item \textbf{Neural delay:} Motor commands must travel from the motor cortex to the muscles via the spinal cord. Typical conduction time: 30--50 milliseconds. If the downswing lasts 300 milliseconds, the motor command that initiates the acceleration phase must be generated 50 milliseconds before the transition.
-
-\item \textbf{Activation dynamics:} Once a motor neuron fires, the muscle doesn't instantly produce torque. Muscle force rises with a time constant of 50--100 milliseconds. The brain cannot produce torque changes faster than this.
-
-\item \textbf{Sensory feedback delay:} Sensorimotor feedback is not one serial channel. Short-latency stretch responses begin at roughly 20--45 ms, long-latency responses at roughly 50--100 ms, and voluntary responses at greater than 100 ms in the upper limb; visually guided responses usually enter later and depend on the task and response being measured \citep{kurtzer2014longlatency,pruszynski2012longlatency}. These are exemplar onset bands, not universal golf-swing constants.
-
-\item \textbf{Noisy sensors:} Proprioceptive acuity varies by joint. Illustrative estimates suggest detection thresholds on the order of 1--2$^{\circ}$ at the wrist and 3--5$^{\circ}$ at the shoulder, though exact values depend on testing methodology \citep{proske2012proprioceptive}. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
-
-\item \textbf{Noisy actuators:} Muscle force variability is 5--10\% even when you're trying to produce exactly the same torque twice. This is called \textit{signal-dependent noise} and increases with force level.
-
-\item \textbf{Bounded control:} Maximum torques are limited. The shoulder can produce roughly 100--200 N$\cdot$m of torque, the elbow 100--150 N$\cdot$m, the wrist 30--50 N$\cdot$m \cite{enoka2002neuromechanics}. The brain cannot exceed these.
-\end{enumerate}
-\end{constraintbox}
+The sensory system observes outputs rather than an exact instantaneous state. A schematic channel $\ell$ gives
+\[
+y_\ell(t)=h_\ell\bigl(x(t-d_\ell)\bigr)+\nu_\ell(t),
+\]
+where $d_\ell$ is its defined delay and $\nu_\ell$ is measurement error. A delayed observation must be compared with a prediction for the same time and sensory quantity. An estimator may correct its past estimate and propagate the correction forward using intervening commands. It cannot remove uncertainty merely by predicting, and it cannot infer unobservable states uniquely from insufficient measurements.
 
 \begin{example}{Delays in the Golf Swing}{ch24_delay_golf}
-In an illustrative 250--300~ms downswing, several parallel pathways may contribute:
-\begin{itemize}
-\item Short-latency stretch response: approximately 20--45 ms
-\item Long-latency response: approximately 50--100 ms
-\item Voluntary response: greater than 100 ms
-\item Muscle activation and force development: additional, muscle- and task-dependent dynamics
-\item Visually guided response: typically late relative to the downswing, with timing and mechanical effect dependent on stimulus, response definition, and swing phase
-\end{itemize}
-The onset bands must not be added into one ``round-trip'' total: the pathways are partly parallel and close through different circuitry \citep{kurtzer2014longlatency,pruszynski2012longlatency}. Timing alone also does not establish response authority---whether a response begins before impact is different from whether it can materially change club or body state. The defensible conclusion is narrower: late visually guided gross corrections are strongly constrained, while short- and long-latency feedback may still regulate muscle activity, limb impedance, or a local trajectory error. Which effects matter in golf remains a phase- and task-specific empirical question.
+Short-latency upper-limb stretch responses are often discussed in approximate onset bands of 20--45 ms, long-latency responses in 50--100 ms, and voluntary responses at greater than 100 ms. These are exemplar EMG-response bands from specific experiments, not universal golf constants or complete times to change club motion \citep{kurtzer2014longlatency,pruszynski2012longlatency}. Parallel pathways do not form a single serial sum.
+
+Neural conduction, sensory processing, activation and force transmission must be defined separately. If a measured latency already ends at force onset, adding a second full electromechanical delay would double-count processes. Late visually guided corrections may have little time to affect impact, while earlier task-dependent feedback may influence muscle activity, impedance or trajectory. Response authority means the attainable change in a specified mechanical outcome, not simply whether an EMG response has begun.
 \end{example}
 
-\subsection{Feedforward and Feedback: Complementary Contributions}
-\label{subsec:ch24_ff_vs_fb}
-
-\index{feedforward control}
-\index{feedback control}
-\index{closed-loop control}
-\index{open-loop control}
-
-Feedforward and feedback are useful analytical components, but biological control can combine them rather than choosing one exclusively:
-
-\begin{definition}{Feedback (Closed-Loop) Control}{ch24_feedback}
-The controller measures the current state $\bm{x}(t)$, compares it to the desired state $\bm{x}_d(t)$, computes an error $\bm{e}(t) = \bm{x}_d(t) - \bm{x}(t)$, and adjusts the control input based on this error:
-\begin{equation}
-\bm{u}(t) = \bm{K}\bm{e}(t) = \bm{K}[\bm{x}_d(t) - \bm{x}(t)]
-\end{equation}
-where $\bm{K}$ is a gain matrix.
-
-This is reactive: if things are going wrong, the controller corrects.
-\end{definition}
-
-\begin{definition}{Feedforward (Open-Loop) Control}{ch24_feedforward}
-The controller uses a \textit{model} of the system to compute the required control input in advance:
-\begin{equation}
-\bm{u}(t) = \bm{u}_{\mathrm{planned}}(t)
-\end{equation}
-
-This component is prepared before the corresponding sensory consequence arrives. It can operate alongside feedback during execution.
-\end{definition}
-
-The useful hypothesis is that learned preparation and feedforward commands carry substantial responsibility for the downswing, while feedback remains pathway- and phase-dependent.
-
-For example, a new visual error presented at $t=100$ ms may not produce a mechanically important correction before a $t\approx300$ ms impact. That scenario bounds one late visually guided loop; it does not rule out faster proprioceptive pathways or responses already in progress. Long-latency responses are task-dependent and can incorporate limb mechanics and behavioral goals \citep{kurtzer2014longlatency,pruszynski2012longlatency}.
-
-\begin{mythreality}{What Timing Does and Does Not Establish}{box:ch24_feedback_fantasy}
-\textbf{Unsupported extreme:} A golfer continuously sees clubface error and fully replans the downswing in real time.
-
-\textbf{Bounded interpretation:} A late visual perturbation is unlikely to support a complete replan before impact. Faster feedback can still modulate the ongoing action, and post-shot feedback supports learning. The response authority of each pathway depends on perturbation onset, swing phase, task, response measure, and mechanical outcome.
-\end{mythreality}
-
-Short- and long-latency proprioceptive responses can begin within a downswing, but onset is not equivalent to a successful clubhead correction. Establishing their golf-specific role requires time-locked perturbations, muscle and motion measurements, and an outcome definition. Until golf-specific perturbation evidence is available, claims about elite golfers suppressing or relying on a pathway are hypotheses, not established facts.
-
-This timing picture motivates careful study of pre-swing preparation, initial conditions, impedance, and learned commands without assuming that execution is open-loop or deterministic.
-
-\section{Internal Models: The Brain's Simulator}
+\section{Internal Models: Prediction, Inversion and Feasibility}
 \label{sec:ch24_internal_models}
+An internal forward model is a functional hypothesis about prediction. Evidence for prediction does not imply a conscious simulation, an exact neural copy of rigid-body mechanics or one unique implementation. In a human hand-localization experiment with movements in darkness and externally imposed forces, Wolpert and colleagues tested state estimation that combines sensory information with motor-command information \citep{Wolpert1995Integration}. That task supports a predictive-estimation account; it does not identify a golf-swing control law.
 
-\index{internal models}
-\index{forward model}
-\index{inverse model}
-\index{cerebellum}
-
-If the golf swing is feedforward, how does the brain know what command to send? It has a model. The brain maintains an \textit{internal model}---a neural simulation of the body's dynamics.
-
-\begin{definition}{Forward Model}{ch24_forward_model}
-A forward model predicts the sensory consequences of a motor command. Given the current state $\bm{x}(t)$ and a motor command $\bm{u}(t)$, the forward model predicts the next state:
-\begin{equation}
-\hat{\bm{x}}(t+\Delta t) = \hat{f}(\bm{x}(t)) + \hat{G}(\bm{x}(t))\bm{u}(t)
-\end{equation}
-
-Mathematically, this is analogous to solving the nonlinear dynamics equation. The neural implementation is of course very different from symbolic computation, but the functional result is similar: the brain generates predictions consistent with physical dynamics.
+\begin{definition}{A Dimensionally Consistent Forward Model}{ch24_forward_model}
+If $\hat f$ and $\hat G$ predict a continuous-time state derivative, a first-order discrete prediction is
+\[
+\hat x_{k+1}^{-}=\hat x_k^{+}
++\Delta t\left[\hat f(\hat x_k^{+})+\hat G(\hat x_k^{+})u_k\right].
+\]
+The superscripts distinguish before and after measurement correction. A derivative must be multiplied by time and added to a state. Alternatively define a discrete transition $\hat x_{k+1}^{-}=F_{\Delta t}(\hat x_k^{+},u_k)$; it is a different object from the vector field. For a smooth model, one Euler step has local error of order $\Delta t^2$, while accumulated error over a fixed interval is generally first order.
 \end{definition}
 
-\begin{definition}{Inverse Model}{ch24_inverse_model}
-An inverse model computes the motor command needed to achieve a desired sensory outcome. Given a desired state change $\bm{x}_d(t)$, the inverse model computes:
-\begin{equation}
-\bm{u}(t) = \hat{G}(\bm{x}(t))^{-1}[\dot{\bm{x}}_d(t) - \hat{f}(\bm{x}(t))]
-\end{equation}
+A sensory prediction is $\hat y_k=h(\hat x_k^-)$, not necessarily $\hat x_k^-$. For a linear measurement, an illustrative estimator update is $\hat x_k^+=\hat x_k^-+L_k(y_k-H\hat x_k^-)$. The innovation is a sensory discrepancy. Its gain depends on modeled uncertainty, observability and the estimation objective; it is not obtained by treating every sensory channel as equally reliable. In nonlinear, constrained or delayed systems this simple update needs appropriate extensions.
 
-This is the inverse dynamics problem: ``What muscles do I fire to move the club from here to there?''
+\begin{definition}{Inverse Control With a Feasibility Residual}{ch24_inverse_model}
+For a desired derivative, define $b=\dot x_d-\hat f(\hat x)$. The matrix $\hat G$ is $2n\times m$ in the torque model and has a zero position block. It generally has no ordinary inverse. Exact instantaneous realization requires $b\in\hat G\mathcal U$. A bounded allocation can instead solve
+\[
+u^\star=\arg\min_{u\in\mathcal U}
+\left[\tfrac12\lVert\hat G u-b\rVert_W^2+
+\tfrac\lambda2\lVert u\rVert_V^2\right],\qquad
+r=b-\hat G u^\star.
+\]
+$W$ and $V$ specify units, scaling and priorities; $\lambda\geq0$ sets regularization. The feasibility residual $r$ must be reported. A pseudoinverse alone supplies neither actuator feasibility nor an exact solution outside the range. When an exact solution exists without bounds, null-space inputs may remain undetermined.
 \end{definition}
 
-The forward and inverse models are intimately related. The brain learns them together. A forward model is easy to differentiate numerically to obtain an approximate inverse model: $\bm{u} \approx \hat{G}^{-1}(\bm{x}_d - \hat{f})$.
+For full joint actuation, inverse dynamics can instead compute $u=M\ddot q_d+c+g$ along a kinematically consistent desired trajectory. This still requires torque feasibility and a controller for deviations. It does not identify individual muscles. Differentiating a forward model yields sensitivities; turning those into a useful inverse requires a well-posed constrained problem, not merely writing an inverse symbol.
 
-\subsection{The Cerebellum as a Candidate Substrate for Internal Models}
-\label{subsec:ch24_cerebellum}
+\begin{example}{A Rectangular Input Cannot Set Every Derivative}{ch24_no_model}
+Use explicitly normalized state and input coordinates, $f=(v_1,v_2,0,0)^T$, and $G=(0,0,1,1)^T$. Suppose $b=(0,1,3,0)^T$. No input can realize the requested extra position derivative, and one shared input cannot simultaneously produce accelerations 3 and 0. With identity weighting the unconstrained least-squares input is 1.5; with $|u|\leq1$ it is 1, leaving $r=(0,1,2,-1)^T$. This residual is a physical limitation of the declared map, not a numerical solver failure.
 
-\index{cerebellum}
-\index{cerebellar learning}
-\index{Purkinje cells}
-
-Where in the brain do these internal models live? The leading candidate is the \textit{cerebellum}, a structure at the base of the brain.
-
-The cerebellum is notable for several reasons:
-
-\begin{principle}{Cerebellar Architecture}{box:ch24_cerebellum_arch}
-\begin{itemize}
-\item \textbf{Size:} The cerebellum is only $\sim$10\% of the brain's volume, but contains $\sim$80\% of all neurons---about 69 billion of the brain's 86 billion, the overwhelming majority of them granule cells \cite{azevedo2009equal}. That makes it the most neuron-dense structure in the brain. It also contains roughly 15 million Purkinje cells, the large output neurons that project to the deep cerebellar nuclei \cite{eccles1967cerebellum}.
-
-\item \textbf{Computational density:} This makes the cerebellum the most densely packed neural tissue in the brain---a massively parallel neural processor.
-
-\item \textbf{Simple circuit:} The cerebellar circuit is highly stereotyped and mathematically simple. It's one of the few neural circuits we nearly understand.
-
-\item \textbf{Learning rule:} The cerebellum uses a clear, identified learning mechanism: long-term depression (LTD) of synapses. When a Purkinje cell receives simultaneous input from a climbing fiber (error signal) and parallel fibers (motor plan), the parallel fiber--Purkinje synapses are weakened. This is an error-correction learning rule.
-
-\item \textbf{Timing:} The cerebellum operates fast, with learning that can occur within a single trial for simple adaptation tasks.
-\end{itemize}
-\end{principle}
-
-Cerebellar damage produces catastrophic loss of motor coordination---a condition called \textit{ataxia}. Patients with cerebellar ataxia cannot perform smooth, coordinated movements. They cannot hit a golf ball. They cannot reach smoothly for a cup. This is because they have lost their internal model of how their body works.
-
-The cerebellar learning rule is thought to implement the following algorithm:
-\begin{equation}
-\label{eq:ch24_cerebellar_learning}
-\Delta w_{ij} = -\eta \cdot e(t) \cdot x_i(t) \cdot y_j(t)
-\end{equation}
-
-where $w_{ij}$ is the synaptic weight between parallel fiber $i$ and Purkinje cell $j$, $e(t)$ is the climbing fiber error signal, $x_i(t)$ is the firing rate of parallel fiber $i$, and $y_j(t)$ is the firing rate of the Purkinje cell. The negative sign indicates that errors drive depression of relevant synapses. Over time, this makes the forward model more accurate.
-
-This is a simplified form of the Marr-Albus-Ito hypothesis. More precisely, the climbing fiber carries an error signal, and parallel fiber synapses that are co-active with climbing fiber input undergo long-term depression (LTD). The learning rule above captures the essential structure: weights decrease when error and pre-synaptic activity coincide \citep{wolpert1998internal, flanagan2003control, kawato1999internal}.
-
-
-\subsection{Why Internal Models Matter}
+Instantaneous rank deficiency does not by itself prove finite-time uncontrollability. The double-integrator position block is zero, yet acceleration changes later position. That distinction is essential when connecting drift, instantaneous ratios and reachable strike outcomes.
+\end{example}
 \label{subsec:ch24_why_models_matter}
 
-Without an internal model, the brain cannot solve the golf swing. Here's why:
+\subsection{The Cerebellum and the Limits of a Neural Interpretation}
+\label{subsec:ch24_cerebellum}
+\label{princ:box:ch24_cerebellum_arch}
+The cerebellum contributes to coordination and adaptation, but ``the body's simulator'' is a functional metaphor, not a complete anatomical explanation. A lesion does not selectively delete a line of pseudocode. Symptoms and retained skills vary; a diagnosis cannot establish that every affected person is unable to strike a ball or make a smooth reach.
 
-\begin{example}{Controlling Without a Model}{ch24_no_model}
-Suppose you didn't have an internal model. You swing the club and see (after 150 ms) that the clubface was open. You generate a correction. But this correction is based on what your muscles did 150 milliseconds ago, when the club was in a different position. The dynamics are nonlinear---the effect of a torque at position $\bm{x}_1$ is different from the effect of the same torque at position $\bm{x}_2$. Applying a correction based on delayed feedback at the wrong state is futile.
+A widely studied hypothesis links climbing-fiber activity, Purkinje-cell activity and plasticity at parallel-fiber synapses. It is not a universal scalar gradient-descent algorithm. In experiments on three genetically altered mouse lines lacking the tested form of cerebellar long-term depression, Schonewille and colleagues found preserved learning in their tested paradigms; they also explicitly considered alternative and compensatory mechanisms \citep{schonewille2011ltd}. This limits a claim that that one plasticity mechanism is necessary for all cerebellar learning. It does not show that the cerebellum or LTD is irrelevant to learning.
 
-With an internal model, you \textit{predict} what will happen before it happens. You mentally simulate the swing. If the simulation predicts an open clubface, you adjust the plan \textit{before} you swing.
+\begin{example}{A Learning Rule Requires a Defined Objective}{box:ch24_cerebellum_arch}
+For a declared linear predictor $\hat y=w^T\phi$ and target $y$, set $e=\hat y-y$ and $\mathcal L=\tfrac12 e^2$. Gradient descent gives
+\begin{equation}
+\Delta w=-\eta e\phi.
+\label{eq:ch24_cerebellar_learning}
+\end{equation}
+This is a mathematical derivation for that predictor. If the output nonlinearity or loss changes, so does the gradient. An additional postsynaptic-rate factor requires a justified model. A signed error can yield positive or negative updates; a minus sign alone does not establish synaptic depression, stable learning or a biological implementation. Temporal credit assignment additionally requires specifying which past activity is eligible for modification.
 \end{example}
 
-The forward model enables \textit{predictive control}. The inverse model enables \textit{planning}. Together, they enable the feedforward computation of motor commands that reliably produce desired outcomes.
-
-\section{The Predictive Processing Framework}
+\section{Predictive Processing and Distinct Kinds of Error}
 \label{sec:ch24_predictive_processing}
+Prediction enters several theories of motor control. Predictive processing, active inference and optimal feedback control are related research programs with different assumptions; success on one prediction task does not establish them as interchangeable or settled descriptions of the whole brain. A forward model can appear inside a feedback controller without committing to a free-energy account.
 
-\index{predictive processing}
-\index{free energy principle}
-\index{prediction error}
-\index{active inference}
-
-Modern neuroscience has converged on a powerful unifying idea: the brain is fundamentally a \textit{prediction machine}. This framework, developed by Karl Friston and others, is called the \textit{free energy principle} and the \textit{predictive processing} framework \cite{friston2010action, clark2013whatever}.
-
-\begin{definition}{Predictive Processing}{ch24_predictive_processing}
-The brain doesn't passively receive sensory information. Instead, it constantly generates predictions about what it expects to sense. Perception works by comparing predictions with actual sensations. When they match, the brain's model of the world is good. When they don't match, a \textit{prediction error} occurs, and the brain updates its model.
+\begin{definition}{Prediction, Task and Reward Errors}{ch24_predictive_processing}
+A sensory prediction error compares an observation with its predicted sensory consequence. A task error compares an achieved outcome with a desired outcome. A reward prediction error compares received and expected value. These quantities can disagree. A golfer may correctly predict a miss, producing little sensory surprise but a large target error. A successful shot may still be unexpectedly good or entirely expected.
 \end{definition}
 
-For the golf swing, this framework explains several phenomena:
+For a normalized belief distribution $q(z)$ over latent states and a generative joint probability $p(y,z)$, variational free energy is
+\[
+\mathcal F[q]=\mathbb E_q[\log q(z)-\log p(y,z)]
+=D_{\rm KL}\bigl(q(z)\Vert p(z\mid y)\bigr)-\log p(y).
+\]
+This identity requires suitable support and finite expectations. Its nonnegative KL term makes it an upper bound on negative log evidence. It is an information quantity, not tissue energy measured in joules. Active-inference models must additionally specify actions, beliefs, preferred outcomes and their optimization; simply imagining a target is not a mathematical definition of active inference \citep{Friston2010ActionModel}.
 
-\begin{enumerate}
-\item \textbf{Pre-swing planning:} Before you swing, your brain generates a predicted trajectory. This is your forward model running forward: ``If I fire these muscles at these times, the club will follow this path, and the ball will land there.'' This is an \textit{active inference}---you're inferring which motor command will make the world match your prediction (the target).
+The identity does not prove that biological neurons minimize this objective. Nor does low prediction error imply a good golf shot: an accurately predicted error remains an error relative to the task. A useful scientific comparison asks competing models to predict different responses to sensory changes, rewards or mechanical perturbations, then tests those responses.
 
-\item \textbf{During-swing monitoring:} As you swing, your brain continuously compares predicted sensory signals with actual signals. The proprioceptive feedback is compared against the forward model's predictions. If they match, all is well. If they don't, there's a prediction error.
-
-\item \textbf{Post-swing learning:} After the swing, a large prediction error is available: the ball lands at location $\bm{x}_{\mathrm{actual}}$ instead of the predicted location $\bm{x}_{\mathrm{predicted}}$. This error drives learning. The brain updates its internal model to reduce the error on the next swing.
-
-\item \textbf{Limited time for some corrections:} A 300 ms downswing constrains late voluntary and visually guided responses, while faster parallel pathways can still contribute. Prior learning is important, but the number and effect of within-swing responses cannot be inferred by dividing duration by one nominal delay.
-\end{enumerate}
-
-This framework has far-reaching implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the \textit{feeling} of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
-
-\section{Ideomotor Theory: Think the Result, Not the Process}
+\section{Ideomotor Theory and Task-Oriented Instruction}
 \label{sec:ch24_ideomotor}
+\label{thm:ch24_ideomotor}
+Ideomotor accounts propose that learned links between actions and their sensory effects contribute to action selection \citep{hommel2009theory}. This motivates a hypothesis about recalling an action through a desired effect. It is not a theorem that all movement is represented only as effects, that mechanical instruction confuses a motor system, or that thinking about a target selects a uniquely correct muscle sequence.
 
-\index{ideomotor theory}
-\index{action effect}
-\index{motor planning}
+\begin{principle}{Effects Do Not Determine One Motor Solution}{ch24_ideomotor}
+Several body motions may produce similar ball flights, while similar felt motions may produce different strikes. Selecting an effect leaves questions about state estimation, feasible actuation, robustness and credit assignment. An outcome goal and mechanical knowledge can inform the same learning process.
+\end{principle}
 
-William James, in his 1890 \textit{Principles of Psychology}, proposed a radical idea: \textbf{actions are represented by their effects, not by their motor commands}. When you think about throwing a ball, you think about the trajectory of the ball, not the sequence of muscle contractions. Your motor system then computes the commands needed to produce that trajectory.
+In an engineering formulation, a task objective can penalize strike error and effort without requiring every joint to follow a prescribed path. Stochastic optimal feedback control provides one formal account of allowing variation in directions that do not interfere with the goal \citep{Todorov2002}. That prediction depends on the cost, dynamics and uncertainty model. It does not imply that any joint can be ignored throughout a swing or that all variation is beneficial.
 
-Modern ideomotor theory \cite{prinz2002perception, hommel2009theory} has formalized this insight:
+A coaching comparison therefore needs more than two attractive slogans. Specify the cue, skill level, task and outcome; compare retention and transfer as well as immediate performance. A cue about club motion may be an external effect even though it contains mechanics. A cue about bodily feeling may direct attention internally even though it contains no joint terminology. Ideomotor theory alone cannot rank these instructions or prescribe one for every golfer. The chapter's role is to identify testable alternatives.
 
-\begin{theorem}{Ideomotor Principle (Theoretical Framework)}{ch24_ideomotor}
-According to modern ideomotor theory---a framework with substantial experimental support but ongoing debate regarding its scope and mechanisms---an action is coded as a set of desired sensory consequences (the effect). When the action goal is activated, the motor system retrieves the motor commands that, in the past, produced those consequences. The action is executed by commands designed to minimize discrepancy between the predicted sensory consequences and the desired consequences.
-\end{theorem}
-
-The ideomotor principle connects to the drift field. In the ZTCF family framework, the brain doesn't need to control every detail of the trajectory. Instead, it specifies the initial conditions and lets physics (the drift field) carry the system to the outcome. In ideomotor terms, the brain specifies the desired sensory consequence (impact with the ball, ball trajectory), and the motor system retrieves the commands that, given physics, produce that consequence \citep{prinz2002perception, hommel2009theory, wolfensteller2016action}.
-
-
-\section{The Nervous System Architecture: Hardware Specifications}
+\section{Distributed Neural Contributions and the Mechanical System}
+\label{sec:ch24_architecture}
 \label{sec:ch24_hardware}
+The nervous system contains interacting cortical, subcortical, brainstem, cerebellar and spinal circuits. A serial diagram from ``goal center'' to ``muscles'' omits recurrent communication and sensory dependence. The figure separates functional roles without assigning each role to a single neural structure or inventing one clock rate for each box.
 
-\index{motor cortex}
-\index{spinal cord}
-\index{basal ganglia}
-\index{muscle unit recruitment}
-
-To understand how the brain controls movement, we need to understand its hardware architecture. The nervous system is not a single, monolithic controller. It's a hierarchy of controllers, each operating at a different timescale and with different capabilities.
-
-\begin{figure}[h]
+\begin{figure}[p]
 \centering
-\begin{tikzpicture}[node distance=2cm, thick]
-  % Prefrontal Cortex
-  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!20] (pfc) {Prefrontal Cortex (Goal Selection)};
-
-  % Motor Cortex
-  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!30, below of=pfc] (m1) {Primary Motor Cortex M1 (Motor Commands)};
-
-  % Spinal Cord
-  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!40, below of=m1] (spinal) {Spinal Cord (Local Control)};
-
-  % Muscles
-  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!50, below of=spinal] (muscles) {Muscles (Force Production)};
-
-  % Cerebellum (side)
-  \node[draw, rectangle, minimum width=4cm, minimum height=0.8cm, fill=red!30, right of=m1, xshift=4cm] (cerebellum) {Cerebellum (Internal Models)};
-
-  % Basal Ganglia (side)
-  \node[draw, rectangle, minimum width=4cm, minimum height=0.8cm, fill=red!30, right of=spinal, xshift=4cm] (basal) {Basal Ganglia (Action Selection)};
-
-  % Arrows - feedforward
-  \draw[->] (pfc) -- (m1);
-  \draw[->] (m1) -- (spinal);
-  \draw[->] (spinal) -- (muscles);
-
-  % Feedback loops
-  \draw[<-, color=green, dashed] (cerebellum) -- (spinal);
-  \draw[<-, color=green, dashed] (cerebellum) -- (m1);
-  \draw[<-, color=green, dashed] (basal) -- (pfc);
-
-  % Label timescales
-  \node[anchor=west, font=\footnotesize] at (7.5, 1.2) {100--250 ms};
-  \node[anchor=west, font=\footnotesize] at (7.5, -0.6) {10--50 ms};
-  \node[anchor=west, font=\footnotesize] at (7.5, -2.4) {30--100 ms};
-  \node[anchor=west, font=\footnotesize] at (7.5, -4.2) {50--200 ms};
-
-\end{tikzpicture}
-\caption{Motor Control Hierarchy in the Brain. Top-Down Commands Flow From Prefrontal Cortex (Goal Selection) Through Motor Cortex to Spinal Circuits and Muscles. The Cerebellum (Red, Right) Monitors Movement and Provides Error Signals. The Basal Ganglia Select Which Action to Execute. Each Level Operates on a Different Timescale.}
+\includegraphics[width=0.9\linewidth,height=0.75\textheight,keepaspectratio]{figures/brain_control_verified.pdf}
+\caption{Functional Roles in Control and a Manufactured Activation Example. Preparation, Prediction and Feedback Interact; the Diagram Does Not Assign Each Role to One Brain Region. The Curves Show Normalized Impulse After a Declared Delay, Not Measured Golf Responses.}
 \label{fig:ch24_hierarchy}
 \end{figure}
 
 \subsection{The Motor Cortex}
 \label{subsec:ch24_motor_cortex}
+\label{princ:box:ch24_pop_coding}
+Motor-cortical activity participates in movement preparation, execution and feedback. A preferred-direction population vector is a useful decoding model under specified conditions, not a complete law that every movement is the vector sum of neuronal votes. Churchland and colleagues reported structured population dynamics during monkey reaching \citep{Churchland2012Dynamics}. This motivates alternatives to a fixed movement-parameter code; it does not establish a unique neural representation for golf or imply that losing neurons has negligible consequences.
 
-The primary motor cortex (M1) is located in the frontal lobe, just in front of the central sulcus. The corticospinal tract contains approximately one million fibers per hemisphere (estimates vary by source and methodology), with axons projecting down through the spinal cord to synapse onto motor neurons and interneurons.
-
-\begin{definition}{Corticospinal Tract}{ch24_corticospinal}
-The major pathway for voluntary motor control. Fibers originate in the motor cortex, travel through the brain and brainstem, cross the midline (decussate) in the medulla, and descend the spinal cord. Each M1 neuron controls the muscles on the \textit{opposite} side of the body.
+\begin{definition}{Descending Pathways and Feedback}{ch24_corticospinal}
+The corticospinal tract is one important descending pathway among several. Its origins and connections are more diverse than one M1 neuron controlling one contralateral muscle. Conduction velocity, path length, synapses, recruitment and muscle mechanics all matter when interpreting a response latency. A fastest-fiber speed alone cannot establish the time from an intention to useful joint torque.
 \end{definition}
 
-Signal transmission in these fibers is fast---roughly 120 m/s in myelinated fibers. This means a motor command takes about 30 ms to reach the hand muscles, and about 50 ms to reach the foot muscles \citep{Kandel2013}.
+Pruszynski and colleagues used mechanical perturbations in monkeys and stimulation in humans to investigate rapid multijoint feedback. Their findings support an M1 contribution to integrating shoulder and elbow information in responses around 50 ms in those experiments \citep{Pruszynski2011Feedback}. This is evidence that some rapid responses reflect coupled limb mechanics. It does not measure correction of clubface orientation during a golf downswing.
 
-An important principle:
-
-\begin{principle}{Motor Cortex Population Coding}{box:ch24_pop_coding}
-The motor cortex doesn't work one neuron per muscle. Instead, it uses \textit{population coding}. Thousands of neurons, each with slightly different directional preferences, are active simultaneously. The vector sum of their activity encodes the direction and magnitude of the desired motion. This population code is robust: loss of individual neurons has little effect because the information is distributed.
-\end{principle}
-
-\subsection{The Spinal Cord: Local Control Centers}
+\subsection{The Spinal Cord: Local Regulation Within a Larger Network}
 \label{subsec:ch24_spinal_cord}
-
-The spinal cord is not just a cable carrying commands down and feedback up. It contains \textit{local circuits} that can coordinate movement independently of the brain.
-
-\begin{definition}{Central Pattern Generator}{ch24_cpg}
-A neural circuit that produces rhythmic output without rhythmic input. CPGs in the spinal cord generate patterns like walking, swimming, or scratching. They can operate autonomously, though they're normally modulated by brain signals.
+\begin{definition}{Stretch Responses and Prepared Gain}{ch24_stretch_reflex}
+The monosynaptic stretch-reflex pathway includes a muscle-spindle afferent connection to an alpha motor neuron. The observed response also depends on background activation, spinal circuitry and descending modulation. A short response need not await a new conscious decision, but its gain and the state in which it occurs can be prepared beforehand. Calling it wholly independent of the brain loses that distinction.
 \end{definition}
 
-\begin{definition}{Stretch Reflex (Monosynaptic Reflex)}{ch24_stretch_reflex}
-A rapid response to muscle stretch. When a muscle is stretched, spindle receptors send a signal directly to motor neurons in the spinal cord, which fire and contract the muscle. This entire loop happens in about 30 milliseconds, \textit{without brain involvement}. The brain doesn't know about it until after it happens.
+\begin{definition}{Central Pattern Generators and Scope}{ch24_cpg}
+A central pattern generator is a circuit capable of generating patterned rhythmic output without a matching rhythmic input. Evidence about rhythmic behaviors does not by itself identify a golf-swing CPG. A single prepared swing, a learned feedback policy and a rhythm-generating circuit are different hypotheses.
 \end{definition}
 
-For the golf swing, short-latency spinal pathways may contribute local stabilizing responses to a perturbation. Longer-latency supraspinal and visually guided contributions would enter later. Whether any pathway materially changes the club state requires a defined perturbation, phase, and measured outcome.
+Local regulation matters because it acts through the mechanical system. Increasing coactivation may alter impedance before an unexpected perturbation, but also changes force demand, metabolic cost and available torque reserve. Tissue viscosity or stiffness can produce an immediate mechanical response while neural feedback arrives later. Neither guarantees stability: geometry, constraints, damping, delay and active energy supply determine the combined response.
 
-\subsection{The Basal Ganglia: Action Selection}
+\subsection{The Basal Ganglia, Reward and Credit Assignment}
 \label{subsec:ch24_basal_ganglia}
+The basal ganglia participate in interacting circuits involved in action and learning; reducing them to an isolated routine selector leaves out that interaction. Dopaminergic activity has been related to reward prediction errors, not simply whether an outcome is objectively good \citep{schultz1997dopamine}.
 
-\index{basal ganglia}
-\index{action selection}
-\index{dopamine}
-
-The basal ganglia are a set of nuclei deep in the brain. Their primary function is \textit{action selection}---deciding which motor program to execute.
-
-\begin{definition}{Motor Program}{ch24_motor_program}
-A learned sequence of muscle activations that produces a stereotyped action (like a golf swing). Once selected and initiated, the program unfolds with minimal brain intervention.
+\begin{definition}{A Motor Program as a Modeling Abstraction}{ch24_motor_program}
+A learned action can be represented by a command sequence, a parameterized policy or a combination. Familiarity and automaticity do not establish that brain activity ceases after initiation. Different representations make different predictions when the body or task is perturbed.
 \end{definition}
 
-The basal ganglia use a neurochemical signal called \textit{dopamine} to encode reward prediction errors. When you execute a motor program and it produces a better-than-expected outcome (a good shot), dopamine neurons fire. This signal reinforces the basal ganglia circuits that led to that action. Over time, actions that produce rewards become more likely.
+A simple temporal-difference learning model uses
+\[
+\delta_k=r_k+\gamma V(s_{k+1})-V(s_k),\qquad 0\leq\gamma<1.
+\]
+Here $r_k$ is reward, $V$ expected future return and $\delta_k$ the reward prediction error. These symbols are not joint angles, muscle energy or sensory discrepancies. Neural reward signals vary by population and task; this model is not a complete dopamine theory.
 
-\begin{example}{Basal Ganglia in Golf}{ch24_bg_golf}
-The pre-shot routine involves several motor programs:
-\begin{enumerate}
-\item The waggle (small oscillations of the club)
-\item The step(s) to position
-\item The alignment checks
-\item The final address
-\end{enumerate}
+\begin{example}{Reward Does Not Identify the Effective Part of a Routine}{ch24_bg_golf}
+A good shot can follow a poor routine by chance, and a good routine can precede an unlucky outcome. A predicted success need not produce a positive prediction error. Assigning learning to a particular waggle, alignment step or muscle command requires information about what caused the result. Delayed outcomes create a credit-assignment problem; a scalar reward alone does not label the responsible action.
 
-Each of these is a learned motor program. The basal ganglia select which routine to execute and in what order. Once the routine is selected, it unfolds automatically.
-
-When you hit a great shot, dopamine neurons fire (reward). The basal ganglia strengthen the circuits that selected that particular pre-shot routine. Over time, the routine becomes more automatic.
-
-When you hit a poor shot, dopamine neurons are quiet (no reward). The circuits that selected that routine weaken. You're less likely to use that routine next time.
-
-This is \textit{reinforcement learning} implemented in neural circuits.
+For a terminal outcome with $V(s_{k+1})=0$, expected value 0.8 and reward 1 give $\delta_k=0.2$. Expected value 0.2 with the same reward gives 0.8. The identical result can therefore give different updates in the model. This is not a direct prediction of dopamine firing in a golfer.
 \end{example}
 
-Parkinson's disease, which damages dopamine neurons, produces severe difficulty in action selection. Patients know what they want to do, but they cannot initiate movement. They can stand frozen, unable to take a step. This illustrates how critical the basal ganglia are for movement initiation.
+Clinical disorders can affect several aspects of movement and learning. They are not controlled deletions of ``action selection'' or ``the internal model,'' and cannot establish universal inability to initiate or perform a particular movement. Mechanistic claims require specific tasks, measurements and appropriate comparison groups.
 
-\subsection{Motor Unit Recruitment: Henneman's Size Principle}
+\subsection{Motor Unit Recruitment and Force Development}
 \label{subsec:ch24_recruitment}
+\label{princ:box:ch24_size_principle}
+A motor unit consists of a motor neuron and the muscle fibers it innervates. Recruitment order and discharge rate both shape the developing force. The size principle describes a tendency for lower-threshold units to be recruited before higher-threshold units under common drive; it is not a serial queue with a compulsory 100--500 ms wait before large units can act. Neural inputs, task and recruitment history matter.
 
-\index{motor units}
-\index{Henneman's size principle}
-\index{recruitment order}
+Del Vecchio and colleagues decomposed high-density EMG in tibialis anterior during explosive isometric contractions in 20 men. Recruitment speed and early discharge behavior were associated with rapid force development \citep{DelVecchio2019Recruitment}. Those measurements challenge a universal long recruitment wait. They do not provide recruitment times for every golf muscle, and a motor-unit discharge frequency is not a closed-loop movement bandwidth.
 
-A motor unit is a motor neuron and all the muscle fibers it innervates. A single motor neuron controls 10--1000 muscle fibers, depending on the muscle. The smaller the motor neuron, the fewer fibers it controls.
+Force development also involves excitation-contraction coupling, contractile behavior, tendon loading and prior activation. Low force does not guarantee precise task control; high force does not prove open-loop control. Signal-dependent variability is a model of how variation changes with drive, not a universal 5--10 percent noise constant. It must specify the measured signal, averaging interval, muscle, task and dependence on force.
 
-\begin{principle}{Henneman's Size Principle}{box:ch24_size_principle}
-Motor neurons are recruited in order of size: small (slow, weak) units first, large (fast, strong) units last \cite{henneman1965relation}. This ordering is automatic and doesn't require brain control. It's determined by the electrophysiology of the motor neuron pool.
-\end{principle}
-
-This principle has important consequences:
-
-\begin{enumerate}
-\item \textbf{You can't produce maximum force instantly.} To achieve high forces, you must recruit the large motor units. But you can't recruit them without first recruiting all the small units. This takes time---typically 100--500 milliseconds.
-
-\item \textbf{At low effort, you have precision control.} With only small units active, forces are fine-graded and controllable. This is why you can write with a pen or play piano (low forces, high precision).
-
-\item \textbf{High effort can constrain force grading.} Recruiting larger motor units changes the available force increments and signal-dependent variability. The effect on movement precision depends on task and coordination; it is not a universal proof that maximum-effort movement is ballistic.
-
-\item \textbf{The golf swing transitions from lower to higher modeled force demand.} During setup and the backswing, forces are often lower than in the downswing. Higher effort may constrain force grading, but the control architecture and feedback contribution remain task- and phase-dependent.
-\end{enumerate}
-
-\section{Bandwidth Limitations: The Brain's Processing Speed}
+\section{Delay, Bandwidth and Time Remaining Before Impact}
 \label{sec:ch24_bandwidth}
+\label{constr:box:ch24_bandwidth_problem}
+Control bandwidth concerns the frequency response of a specified closed loop, with a declared performance criterion. Reaction time is not a neural clock. A flicker-detection threshold is not a motor sampling frequency. Neither the inverse of a response latency nor the frequency of a single shaft mode determines the bandwidth of a coupled golfer-club feedback loop.
 
-\index{bandwidth limitation}
-\index{control bandwidth}
-\index{sampling rate}
-
-A fundamental constraint on any controller is its bandwidth---the rate at which it can process information and generate corrections.
-
-\begin{definition}{Control Bandwidth}{ch24_bandwidth}
-The maximum frequency at which a controller can detect errors and generate corrective responses. For the brain, the limiting factor is not neural transmission speed (which is fast---30--120 m/s) but the time taken to process information and compute responses.
+\begin{definition}{Delay Adds Phase to a Defined Loop}{ch24_bandwidth}
+For a locally linear, time-invariant single-loop approximation,
+\[
+L(s)=C(s)P(s)e^{-sd},\qquad
+\arg e^{-i\omega d}=-\omega d.
+\]
+The pure delay has unit magnitude and a frequency-dependent phase lag. With $d=0.05$ s, it contributes $-90^\circ$ at 5 Hz and $-180^\circ$ at 10 Hz. Other controller and plant dynamics also contribute phase and gain. These numbers alone do not establish a crossover frequency, stability margin or a maximum human correction rate.
 \end{definition}
 
-The conscious brain updates motor plans at roughly 4--10~Hz (one update every 100--250~ms). These values are illustrative estimates from reaction-time studies; the exact rate depends on task complexity and attentional demands. Visual flicker fusion occurs at $\sim$60~Hz, but conscious decision-making and motor replanning are far slower. This mismatch is critical: sensory data arrives faster than the conscious brain can act on it.
+A shaft frequency also depends on boundary conditions, loading and the mode being measured. The relevant plant includes the body's coupled inertia, contact, actuator dynamics and task output, with properties changing through the swing. For a short nonstationary movement, finite-horizon sensitivity is often more informative than a steady-state bandwidth analogy.
 
-\begin{example}{Flicker Fusion Frequency}{ch24_flicker}
-A light flickering at 60 Hz appears steady to your eye, even though it's actually off half the time. This is because 60 Hz exceeds your conscious bandwidth. Each on--off cycle is too fast to perceive as distinct.
+Linearizing an augmented model around a declared nominal motion gives $\delta\dot x=A(t)\delta x+B(t)\delta u$. At a fixed terminal time $T$,
+\[
+\delta x(T)=\Phi(T,t_0)\delta x(t_0)
++\int_{t_0}^T\Phi(T,s)B(s)\delta u(s)\,ds.
+\]
+The transition matrix $\Phi$ transports both initial errors and control effects through the changing dynamics. If new information cannot affect $u$ until $t_0+d$, its new-response integral starts there; already prepared commands and other pathways still contribute. Torque limits, activation and output sensitivity determine the attainable change. A norm ratio at one instant does not determine this integral.
+
+\begin{example}{An Actuator Can Begin Responding Without Completing a Correction}{ch24_flicker}
+In a manufactured incremental model, let $\dot a=(1-a)/\tau_a$ with $a(0)=0$ after a separately specified pure delay. If the remaining time is $h\geq0$, then
+\[
+a(h)=1-e^{-h/\tau_a},\qquad
+I_a(h)=\int_0^h a(s)\,ds
+=h-\tau_a(1-e^{-h/\tau_a}).
+\]
+$I_a$ has units of time. Multiplication by a constant torque scale gives angular impulse, not directly club-speed change. With $\tau_a=50$ ms, remaining times of 10, 40 and 100 ms give normalized impulses of approximately 0.937, 12.466 and 56.767 ms. Instant actuation would give 10, 40 and 100 ms. Prior activation, state-dependent torque transmission or a different force law changes this comparison.
 \end{example}
 
-For the golf swing, this bandwidth limitation is catastrophic:
+The impulse example assumes constant mechanical mapping. In the actual linearized chain the kernel $\Phi(T,s)B(s)$ can rotate, amplify or cancel contributions. An EMG onset before impact therefore establishes opportunity for influence, not its sign, size or usefulness.
 
-\begin{constraintbox}{The Bandwidth Problem in Golf}{box:ch24_bandwidth_problem}
-A 300 millisecond downswing at 10 Hz bandwidth means the brain can process roughly 3 distinct time windows during the swing:
-\begin{itemize}
-\item $t=0$--100 ms: transition phase (beginning of acceleration)
-\item $t=100$--200 ms: acceleration phase (maximum force)
-\item $t=200$--300 ms: deceleration phase (approaching impact)
-\end{itemize}
+Impact may also occur at an event time rather than a prescribed clock time. For a smooth event $\psi(x,t)=0$ with transverse nominal crossing,
+\[
+\delta T=-\frac{\psi_x\,\delta x(T)}{\psi_t+\psi_x F(T)},\qquad
+\delta y_{\rm event}=y_x\delta x(T)+(y_t+y_xF(T))\delta T.
+\]
+$F(T)$ is the nominal state derivative and $\delta x(T)$ the fixed-time perturbation just before the event. These formulas require a nonzero denominator and differentiability; grazing or changing contact modes need separate treatment. A controller can alter arrival time as well as state. Speed at a fixed time and speed at impact are consequently different comparisons.
 
-This three-window sketch is a coarse pedagogical partition, not a count of feedback cycles. Different feedback pathways overlap these windows and have different response authority.
-
-It is tempting to blame a bandwidth mismatch --- a controller too slow for a fast plant --- but the numbers do not support that reading. A driver shaft's first bending mode is about 3--5 Hz, and the gross swing dynamics are slower still: the whole downswing is a single acceleration--deceleration cycle lasting roughly a quarter of a second. The plant is therefore \emph{slower} than the 10--40 Hz at which the nervous system can modulate its output, not faster.
-
-Transport delay is an important constraint, but it must be interpreted by pathway. A short-latency response can begin at roughly 20--45 ms, a long-latency response at 50--100 ms, and a voluntary response at greater than 100 ms \citep{kurtzer2014longlatency,pruszynski2012longlatency}. Late visually guided gross corrections may have little response authority before impact, while earlier proprioceptive feedback may modulate impedance or local trajectory. Timing alone does not determine the mechanical outcome.
-
-This is the classic problem of a control loop whose delay is comparable to the duration of the task itself.
-\end{constraintbox}
-
-One model-based response is to exploit drift and mechanical structure. When a motion is partly drift-dominated, a slow controller can perform better by preparing initial conditions, stiffness, and feedforward commands rather than relying on moment-by-moment correction. This does not mean initial conditions are the only thing that matters \citep{todorov2005generalized, shadmehr2005computational}.
-
-
-\section{The Brain's Processing Power: Energy and Computation}
+\section{Variability, Energy and Computation}
 \label{sec:ch24_power}
+Movement variability does not pass unchanged from a muscle to a club. A local task map with sensitivity $J$ gives $\delta y\simeq J\delta x$, hence
+\[
+\Sigma_y\simeq J\Sigma_xJ^T.
+\]
+The covariance includes correlations, not just marginal standard deviations. For two normalized state components with equal standard deviation 0.02 and correlation $\rho$, take $y=(x_1+x_2)/\sqrt2$. Then $\operatorname{var}(y)=0.0004(1+\rho)$. Correlations 0, $-0.75$ and 0.9 give standard deviations 0.0200, 0.0100 and approximately 0.0276. Equal component variability can therefore produce substantially different task variability.
 
-\index{brain power consumption}
-\index{computational capacity}
-\index{neural computation}
+This is a geometric calculation, not evidence that golfers use those correlations. Large sensitivity in one direction can amplify errors while variation in another direction has little immediate effect. Under the same local approximation, the law of total covariance also separates trial-to-trial state uncertainty from conditional observation noise. Measurement error, changing conditions and systematic bias must be accounted for before attributing consistency to a neural strategy.
 
-How much ``horsepower'' does the brain have for controlling movement?
+A coefficient of variation is standard deviation divided by the magnitude of a nonzero mean. A claimed club-speed percentage needs a defined golfer sample, club, instruction, number of trials and instrument uncertainty. It cannot be derived by comparing an unrelated muscle-force percentage with a proprioceptive detection threshold. Drift can amplify or attenuate perturbations depending on the trajectory; its magnitude alone proves neither robustness nor precision.
 
-\begin{principle}{Brain Power Budget}{box:ch24_power_budget}
-\begin{itemize}
-\item \textbf{Energy consumption:} The brain uses roughly 20 watts of power at rest, about 20\% of the body's total metabolic rate. This seems like a lot, but it's actually quite efficient for the amount of computation being performed.
+Mechanical structure influences the controller through these mappings. The same torque can cause different acceleration in different configurations; free acceleration depends on the full inverse inertia, including a Schur-complement effect when other coordinates respond. A constraint changes admissible response, stiffness changes local dynamics, and an actuator's state changes available force. Preparation can alter all of them, while feedback uses information about the resulting state. These mechanisms are intertwined without being interchangeable explanations.
 
-\item \textbf{Computational capacity:} Estimates of the brain's computational capacity vary widely depending on what counts as an `operation.' If each of the brain's $\sim 10^{14}$ synapses fires at $\sim$10~Hz, the brain performs roughly $10^{15}$ synaptic operations per second \citep{wolpert2011motor}. Under more liberal definitions (including subthreshold integration), estimates reach $10^{16}$--$10^{18}$. These numbers are uncertain, but the order of magnitude is instructive.
+\begin{principle}{Separate Mechanical Work, Metabolic Cost and Computation}{box:ch24_power_budget}
+Joint mechanical power is torque times joint rate; net negative work, positive work and coactivation have different physiological implications. A controller's metabolic expenditure is a different quantity. An estimate of whole-brain power cannot be assigned entirely to swing computation or converted into a known number of optimization iterations.
 
-\item \textbf{Per-neuron computation:} With $\sim$86 billion neurons \cite{azevedo2009equal}, this yields roughly $10^4$--$10^5$ synaptic operations per neuron per second. Direct comparison with digital processors is misleading: neurons are analog, parallel, and asynchronous, while CPUs/GPUs perform discrete, clocked operations. The brain compensates for slower individual operations with massive parallelism ($\sim$86 billion units operating simultaneously).
-\end{itemize}
+Counting neurons, synapses or spikes does not identify the arithmetic operations needed by a digital optimizer. Even a specified state dimension does not determine solve time: horizon, discretization, constraints, sparsity, numerical conditioning, solver, hardware and accuracy all matter. A valid efficiency comparison specifies the task, performance, energy boundary and measurement protocol.
 \end{principle}
 
-The brain need not solve the explicit engineering optimization written here at every instant. Learned policies, state estimation, prediction, and task-dependent feedback can all contribute online.
+\begin{example}{Online Control and Learning Across Trials}{ch24_online_vs_offline}
+A robot with a 1 ms command period needs sensing, estimation, computation and command transmission to meet that deadline, or an explicitly designed asynchronous policy. A 20-state description alone does not show whether this is feasible. A learned policy can be quick to evaluate and still depend on feedback; an optimizer can also be warm-started from previous solutions. Neither architecture follows from the word ``robot.''
 
-\begin{example}{Online Optimization vs. Offline Learning}{ch24_online_vs_offline}
-A robotic arm might use real-time trajectory optimization: at each time step (every millisecond), solve a local optimal control problem to compute the next motor command. This requires substantial computation per time step.
-
-Biological control can learn over repeated trials and reuse prepared policies during execution. That does not imply simple playback: prediction and task-dependent feedback can modify the ongoing command.
-
-Robot and human adaptation rates depend on controller, task, perturbation, and learning history. This comparison is conceptual; it is not a measured energy or adaptation-time benchmark.
+Likewise, practice can alter prepared commands, prediction, sensory weighting and feedback gains. The relevant test is what changes in behavior and response to perturbations, including retention and transfer, rather than whether the action appears effortless.
 \end{example}
-
-Practice can shape prepared commands and feedback policies. During a swing, their relative contributions remain an experimental question rather than a strict offline/online divide.
 
 \begin{principle}{Key Takeaways}{box:ch24_takeaways}
-\begin{enumerate}
-\item Learned preparation and feedforward commands are likely important in a short downswing, but feedback remains active through parallel pathways. The mechanical response authority of each pathway depends on latency, phase, task, and outcome.
+The mechanical model defines what force can do; the observation model defines what can be inferred; the actuator model and time remaining define which changes are feasible. A policy connects them to a task, and learning changes the policy or model over experience. No one instantaneous ratio, neural delay or brain region replaces this chain of reasoning.
 
-\item The brain controls movement using internal models---forward models that predict sensory consequences, and inverse models that compute motor commands. The cerebellum is the leading candidate neural substrate for these models, supported by substantial evidence from lesion studies and neuroimaging, though the full picture likely involves multiple brain regions.
-
-\item The brain operates as a predictive processing system. It constantly generates predictions and compares them to actual sensory input. Prediction errors drive learning.
-
-\item Actions are represented by their effects (ideomotor theory), not by motor commands. The brain specifies a desired outcome, and the motor system retrieves the commands that produce that outcome.
-
-\item The nervous system is a hierarchy: the motor cortex (high-level planning), the spinal cord (local control), and the basal ganglia (action selection) all contribute.
-
-\item Delay and plant dynamics jointly constrain control. Late visually guided gross corrections may have little time before impact; faster proprioceptive pathways may still modulate the ongoing action. Golf-specific perturbation evidence is needed to quantify those contributions.
-
-\item Practice shapes prepared commands, state estimation, and feedback policies that can all contribute during performance; this is not a strict offline-learning/online-playback split.
-\end{enumerate}
+Golf-specific perturbation evidence is needed to quantify the relative contributions of parallel pathways during a downswing. A useful study measures perturbation time, muscle response, force or torque, body and club motion, event time and strike outcome. Similar motions can be produced by different controllers, so a successful fit is not automatically identification of the neural mechanism.
 \end{principle}
 
-\begin{exercises}{Chapter Exercises}{ex:ch24_exercises}
-\begin{enumerate}
-\item The nervous system modulates output at 10--40 Hz, while the shaft's first bending mode is only 3--5 Hz --- so the controller is \emph{faster} than the plant. Why, then, can the golfer not correct the swing in flight? Frame your answer in terms of loop delay against movement duration rather than bandwidth, and state which reflex loops could close within a 250 ms downswing and what they could actually accomplish.
 
-\item A professional golfer produces clubhead speeds with a coefficient of variation of 1--3\%. Given the neural noise (5--10\% muscle force variability) and sensory noise ($\sim$1--5 degree proprioceptive acuity), explain how this high consistency is possible. Hint: what does the drift field contribute?
 
-\item Suppose you wanted to teach a robot to swing a golf club using online optimal control (computing the motor command at each millisecond). What would be the minimum computation time required? Assume the downswing lasts 300 ms and the robot must solve a 20-dimensional optimal control problem at each millisecond.
+\begin{exercises}{Chapter Exercises and Worked Answers}{ex:ch24_exercises}
+\subsection*{1. Correct the Forward Prediction}
+A model outputs $\dot x=(2,-4)^T$ in the appropriate state units per second, with current state $x=(1,3)^T$ and step $\Delta t=0.01$ s. Compute one Euler step and explain its limit.
 
-\item In Section \ref{subsec:ch24_recruitment}, we discussed Henneman's size principle: motor units are recruited in order of size. Why is this principle important for control? What would happen if large motor units were recruited first?
+\textbf{Worked answer.} The prediction is $(1.02,2.96)^T$. It adds a change to the existing state. Equating the next state directly to $(2,-4)^T$ is dimensionally wrong. Smoothness gives local error of order $\Delta t^2$; this estimate alone does not verify the model or numerical stability over a whole swing.
 
-\item Compare a short-latency proprioceptive response, a long-latency response, and a late visually guided response during a 300 ms downswing. What additional measurement is needed to determine whether each response has useful mechanical authority?
+\subsection*{2. Diagnose an Infeasible Inverse}
+For the normalized rectangular example above, compute the bounded input and residual. Does failure of instantaneous position control prove that positions can never be controlled?
 
-\item According to ideomotor theory, what should a golf coach emphasize: mechanical details of the swing, or the desired outcome and feel? Why?
+\textbf{Worked answer.} Minimizing $1+(u-3)^2+u^2$ gives unconstrained $u=1.5$, or bounded $u=1$ with $|u|\leq1$. The desired-minus-achieved residual is $(0,1,2,-1)^T$. It exposes both the kinematic mismatch and conflicting acceleration requests. Over time, acceleration affects position; finite-time reachability must be analyzed through the dynamics, not from the zero position block alone.
 
-\item The cerebellum contains 70\% of all brain neurons but is only 10\% of brain volume. What does this suggest about the cerebellum's computational strategy?
+\subsection*{3. Compare Delay With Activation}
+A new response has a separately defined delay of 50 ms. Impact is 90 ms after the perturbation. In the chapter's zero-initial-state actuator with $\tau_a=50$ ms, what time remains, and what is its normalized impulse?
 
-\item A golfer with cerebellar damage cannot hit a golf ball. They can move their arms, and they can understand the task. What is missing? How does this relate to the concepts of forward and inverse models?
+\textbf{Worked answer.} The remaining time is 40 ms. The normalized impulse is $0.04-0.05(1-e^{-0.8})\simeq0.012466$ s. Multiplying by a constant 10 N m scale gives approximately 0.12466 N m s. Computing a club velocity additionally requires the mechanical response map. The example does not erase pre-existing activation or responses in other pathways.
 
-\item Sketch a block diagram of the golf swing control system. Include the motor cortex, motor command, muscles, dynamics, sensory feedback, and feedback delays. Indicate which components operate on which timescale.
+\subsection*{4. Interpret a Frequency Comparison}
+A pure delay is 50 ms. Calculate its phase at 5 Hz and explain why a shaft mode at that frequency does not determine whether the full loop is stable.
 
-\item Compare feedforward and feedback components in a golf swing. Which pathways could respond within a 250--300 ms downswing, and what experiment would distinguish response onset from useful mechanical correction?
-\end{enumerate}
+\textbf{Worked answer.} The lag is $-2\pi(5)(0.05)=-\pi/2$ radians, or $-90^\circ$. Stability depends on the full open-loop gain and phase, including the plant and controller, and on the chosen approximation. A shaft mode under one support condition is neither the whole plant nor a sampling rate. Nonstationary strike tasks also need finite-time analysis.
+
+\subsection*{5. Explain Consistency Without Inventing a Noise Constant}
+Use the two-component covariance example. What happens when the correlation changes from 0 to $-0.75$, and what would be needed to apply the result to golf?
+
+\textbf{Worked answer.} Task variance falls from 0.0004 to 0.0001 and its standard deviation halves. The marginal component deviations remain 0.02. A golf application requires a measured covariance in declared coordinates, a validated task sensitivity and instrument uncertainty. It also needs event-time effects if trials are compared at impact. The example cannot establish a universal club-speed coefficient of variation or an automatic stabilizing role for drift.
+
+\subsection*{6. Distinguish Three Errors}
+A player correctly predicts that a shot will miss the target. The outcome is nevertheless better than expected in the scoring system. Identify the sensory prediction, task and reward errors.
+
+\textbf{Worked answer.} The observed consequence can have a small sensory prediction error, a substantial task error and a positive reward prediction error. Their dimensions and reference values differ. One scalar reward does not specify which muscle, state estimate or pre-shot action should change.
+
+\subsection*{7. Test the Free-Energy Identity}
+For joint probabilities $p(y,z)=(0.12,0.18)$, compute the evidence and the minimizing belief. Does minimizing variational free energy demonstrate a reduction in mechanical energy?
+
+\textbf{Worked answer.} The evidence is 0.30 and the posterior belief is $(0.4,0.6)$. At that belief the KL term vanishes and $\mathcal F=-\log0.30\simeq1.204$ with natural logarithms. A different belief adds a nonnegative KL term. This is an information-theoretic identity, not a mechanical or metabolic energy budget and not proof of a neural implementation.
+
+\subsection*{8. Evaluate a Recruitment Claim}
+Does size-ordered recruitment require waiting a fixed interval before higher-threshold units contribute? What measurements distinguish recruitment from force development?
+
+\textbf{Worked answer.} Recruitment order does not prescribe a universal serial waiting time. Recruitment speed, discharge behavior, prior activation and contractile transmission jointly affect force. Measure motor-unit or appropriately interpreted EMG activity and force with synchronized timing. Evidence from an explosive isometric leg task cannot simply be assigned to a wrist during a swing.
+
+\subsection*{9. Design a Controller Comparison}
+Compare a prepared command sequence with a learned feedback policy. What information is missing from a proposal to solve a 20-state optimization every millisecond?
+
+\textbf{Worked answer.} Perturb the movement in a controlled way and compare subsequent commands and task outcomes, accounting for delays and actuator state. Similar unperturbed trajectories need not reveal which architecture generated them. For computation, specify horizon, objective, constraints, discretization, solver tolerance, hardware and sensing/transmission time. State dimension and movement duration alone cannot yield a minimum computation time.
+
+\subsection*{10. What Would Establish Useful Within-Swing Correction?}
+Design a golf experiment that separates response onset from useful response authority, while allowing learning between trials.
+
+\textbf{Worked answer.} Apply safe, controlled perturbations at declared phases with randomized timing and appropriate comparison trials. Record synchronized muscle activity, mechanical response, club pose and velocity, impact time and strike outcome. Estimate uncertainty and distinguish local changes from improvements in the task. Compare early and late perturbations, repeated exposure and retention; control equipment, instruction and starting state. An early EMG difference shows a response, while a reliable task improvement requires mechanical and outcome evidence. Attribution to a particular neural pathway requires additional evidence beyond timing alone.
 \end{exercises}
-
+\flushbottom{}
 \newpage
