@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4338 · DCR Scaling, Coordinates and Correction Evidence
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4338 (epic #4009; corpus #4021)
+- **PR:** not yet created
+- **Branch:** `fix/4338-dcr-complete-rigor`
+- **Paths:** `articles/controllability-drift-ratio.qmd`, `tests/test_dcr_article_rigor.py`, `docs/development/technical-review/dcr-complete-review.md`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`06c7742b741e9a79d2856c9b8de51e98e73f9716`, original article fully read; 10 analytic checks pass, two publication regressions RED)
+- **Summary:** Complete audit identifies unsupported growth, coordinate/metric mistakes, regularizer ambiguity and missing finite-time/event distinctions. Replacement derives exact mechanical, coordinate, rank and event examples, preserves six governed cases, and bounds primary evidence. Companion critique defects are queued separately; corpus remains unfinished.
+- **Next step:** Assemble the complete article replacement and run the affected regressions.
+
 ### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
 
 - **State:** in_review
