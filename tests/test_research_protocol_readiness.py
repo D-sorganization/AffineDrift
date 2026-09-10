@@ -479,14 +479,14 @@ def test_superseded_state_requires_an_existing_revision_pinned_successor() -> No
             "custodian": "Protocol owner",
             "disclosure_boundary": "No private content is disclosed.",
             "reviewed_by": "Protocol owner",
-            "reviewed_on": "2026-08-29",
+            "reviewed_on": history[-1]["on"],
         }
     )
     history.append(
         {
             "from": "simulation-ready",
             "to": "superseded",
-            "on": "2026-08-29",
+            "on": history[-1]["on"],
             "rationale": "Adversarial supersession without a successor.",
             "evidence_ids": [evidence_id],
         }
@@ -531,14 +531,14 @@ def test_supersession_evidence_must_pin_the_exact_successor_revision() -> None:
             "custodian": "Protocol owner",
             "disclosure_boundary": "No private content is disclosed.",
             "reviewed_by": "Protocol owner",
-            "reviewed_on": "2026-08-29",
+            "reviewed_on": history[-1]["on"],
         }
     )
     history.append(
         {
             "from": "simulation-ready",
             "to": "superseded",
-            "on": "2026-08-29",
+            "on": history[-1]["on"],
             "rationale": "Adversarial stale successor revision.",
             "evidence_ids": [evidence_id],
         }

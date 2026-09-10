@@ -5,8 +5,7 @@
 Issue #4338, native child of epic #4009, corpus #4021. Branch
 `fix/4338-dcr-complete-rigor`, parent `06c7742b741e9a79d2856c9b8de51e98e73f9716`.
 The complete 5,940-word original article, governed reachability and event
-protocols, and related critique records were inspected. The article's full
-replacement is being prepared. No calibrated golfer result is available.
+protocols, and related critique records were inspected. The article's complete replacement is implemented and locally validated. No calibrated golfer result is available.
 Preserve the canonical DCR definition, six bounded cases, negative/null
 results, claim-authority pins, peer impact work and immutable publication.
 
@@ -96,11 +95,69 @@ confuses acceleration actuation with full state input rank;
 These are queued for a separate complete critique review under #4009/#4021.
 They are not accepted as factual merely because a critique ledger lists them.
 
+## Provenance and Compatibility
+
+The readiness factory had attributed every fresh evidence digest to a fixed
+August review, even after the named route reviewer and review date changed.
+An independent regression first failed on that stale attribution. The factory
+now uses the actual route review metadata and places manufactured transition
+and rejection events no earlier than that review. Existing lifecycle tests
+now choose dates relative to the event being tested; they still reject missing
+successors, stale revisions, revoked evidence and reversed chronology.
+
+Regeneration follows the actual dependency chain: source and calculation
+artifacts, route inventory, readiness library, the atlas readiness digest,
+and finally all dependent route digests. Only the atlas's readiness dependency
+is rebound. Its publication claims, source-manifest and critique-authority
+pins are unchanged, as are scientific protocol specifications, all six
+bounded cases, simulation-ready states and rejected promotion attempts.
+No unavailable provider or golfer-validation evidence is manufactured.
+
+The authored summary uses the site's native disclosure component. Its trust
+test reads that component and retains the same claim-amplification validation.
+A temporary legacy wrapper passed that old selector but caused pale text on a
+light background in dark mode. Visual inspection found it; removing the wrapper
+and adapting the selector restored contrast. All three wide tables use the
+existing keyboard-focusable scrolling region. No CSS or JavaScript was added.
+
 ## Validation and Delivery
 
-Initial independent suite: 10 analytic checks passed; two publication checks
-failed against the original unsupported wording, as intended (RED).
-Implementation, rendering, complete reading QA and repository validation are
-pending. Prior passive PR #4337 is open at head 06c7742b; Python, static,
-JavaScript, links and textbook builds pass, with browser CI still running at
-the latest check. Normal protected delivery only; no bypass or direct main.
+Initial independent suite: ten analytic checks passed and two publication
+checks failed against the unsupported original wording (RED). Thirteen new
+checks now cover mechanics, coordinates, metrics, regularization, finite-time
+control, event sensitivity, publication bounds and actual review attribution.
+The first complete run exposed stale readiness digests and legacy summary
+bindings; a later run exposed the dependent atlas digest and calendar-fixed
+lifecycle tests. These were corrected at their source, not waived.
+
+- Full required run: `py -3.12 -X utf8 -m pytest tests/ --cov=src --cov-report=xml --timeout=60`:
+  **5,124 passed, 29 skipped, 132 deselected, 50 warnings; 92.88% coverage**.
+- After the final disclosure markup and trust-test selector correction:
+  **84 affected tests passed** across article rigor, DCR reachability, scientific
+  trust metadata, readiness, lifecycle and falsification-atlas suites.
+- Final content lint: **131 passed**; all **34 static contracts**, **636 title
+  checks**, internal site links, Ruff, Black100, quality and configured mypy pass.
+  The final independent article/reachability suite also passes.
+- Selected Quarto HTML render passes. All 31 historical heading destinations
+  are retained, with no duplicate IDs or missing local fragments; 220 math
+  items, including 31 displays, render without MathJax errors.
+- Complete article read through 31 overlapping browser captures. Table clipping
+  found during that reading was repaired and the tables inspected at both ends.
+  Seven viewport widths in both themes pass without document overflow. The
+  polished interaction run verifies 42 keyboard-scroll cases and both native
+  disclosure controls. Representative final mobile equation endpoints were
+  visually read; capture creation alone is not counted as visual inspection.
+- Final canonical browser gate: **14/14 passed**, no serious/critical axe
+  violations. Separate full-page axe scans with both disclosures expanded pass
+  in both themes at that severity. A shared moderate `landmark-unique` finding
+  remains. All four final expanded-panel captures were inspected and dark
+  text/background contrast is restored. The persistent browser reports four
+  console errors and two warnings; no zero-console claim is made.
+
+Local logs and captures are scratch evidence. Canonical source, tests and this
+review record carry the reproducible argument. No textbook PDF changed in this
+article-only correction. Prior passive PR #4337 is now protected-merged and
+published at a1ef3f22ce38d148064b0c0b5c29c6db30f46168; deploy 34441497877
+succeeded, and all 956 records in exact artifact 10138837491 were independently
+checked. This issue's implementation commit and protected PR are next.
+The corpus and companion critiques remain unfinished.

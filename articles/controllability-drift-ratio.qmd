@@ -1,6 +1,6 @@
 ---
-title: "A Control-Theoretic and Multibody Dynamics Analysis of the Drift-Control Ratio in the Golf Swing"
-description: "A model-bounded drift-control ratio analysis that distinguishes instantaneous velocity sets, control effects, and finite-horizon reachability."
+title: "Drift, Control Capacity and Golf-Swing Correction"
+description: "Derive the drift-control ratio with explicit coordinates, input bounds and metrics, then distinguish acceleration magnitude from finite-time club-delivery capability."
 author:
   - name: "Dieter Olson"
     affiliations: "Affine Golf Swing Analysis Project"
@@ -9,488 +9,329 @@ format:
     toc: true
     toc-depth: 4
     number-sections: true
+css:
+  - ../css/technical-explanations.css
+  - ../css/articulated-body.css
+  - ../css/computational-brain.css
 categories:
-- theory-core
+  - theory-core
 ---
 
 {{< include _generated/trust/critique-annotations/controllability-drift-ratio.qmd >}}
 
-<!--
-Revision History:
-- v4: Added the bounded validation protocol, six system regressions, structured event/task/uncertainty declarations, hypothesis tiers, and null/negative-result preservation.
-- v3: Corrected the reachability contract; added the constant-additive-drift counterexample; withdrew unsupported control-cone, threshold, Gramian-scaling, timing, and face-variance claims.
-- v2: Added cross-joint DCR comparison caveat; clarified accessibility vs. controllability in Lie bracket analysis; refined norm-dependence discussion; added DCR threshold switching condition for ICC transition.
-- v1: Initial publication with core DCR definition, relativistic analogy, and numerical example.
--->
-
 ::: abstract
+The **drift-control ratio (DCR)** compares modeled acceleration under a declared zero-input baseline with the largest acceleration contribution available from a declared input set. It can help describe a state of the golfer-club model, but it does not establish that control has disappeared, that stored energy is being used efficiently, or that a shot can be corrected before impact. Those questions involve direction, time, activation, geometry, contact and the outcome being corrected.
 
-High-speed golf swings represent nonlinear biomechanical systems in which passive dynamics (drift) increasingly dominate over active torques (control) as angular velocities rise. We formalize this phenomenon using the **Drift-Control Ratio (DCR)**,
-
-$$
-\mathrm{DCR}_{W,\mathcal U}(x)=
-\frac{\|W a_{\mathrm{drift}}(x)\|}
-{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|+\varepsilon},
-$$
-
-Within the simplified planar model used here, example calculations suggest that DCR can increase by more than two orders of magnitude from the top of the backswing to impact. This is a statement about the relative magnitudes of two modeled acceleration sets in a declared projection. **DCR alone does not determine finite-horizon reachability**, path-correction authority, or an impact outcome.
-
-We distinguish the drift-affected instantaneous velocity set, the input-only control-effect set, and the finite-horizon reachable set. A constant-additive-drift counterexample shows why large scalar DCR can translate a reachable set without shrinking it. The former control-cone, pancake, and drift-tube descriptions are retained only as **unvalidated hypotheses** whose evaluation requires a horizon, admissible controls, task metric, uncertainty model, and event-level outcome.
-
+This article derives the distinction between available capacity and realized input, explains why quadratic velocity terms need not produce monotone drift growth, and shows how coordinates and metrics change the reported number. Exact examples connect those issues to finite-horizon reachability and event-time sensitivity. **No calibrated golf-swing growth factor is established here.** The earlier numerical downswing-growth claim is withdrawn because no complete parameter set, state history, input history and reproducible model result supported it. The governed analytic and synthetic validation cases remain useful evidence about mathematical limits, with golfer-level effects left to measurement.
 :::
 
 {{< include _generated/trust/ad-dcr-reachability.qmd >}}
 
-```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This article asks a narrow modeling question: how large is passive acceleration relative to the acceleration available from a declared input set? That ratio does not, by itself, say whether a golfer can correct a path or outcome.
-      </p>
+<details class="technical-explanation">
+<summary>In Layman's Terms</summary>
 
-      <div class="laymans-item">
-        <h3>The Drift-Control Ratio (One Magnitude Comparison)</h3>
-        <p>
-          DCR compares modeled drift acceleration with the largest modeled input acceleration in the same chosen coordinates. It is not a muscle-power measurement, and a large value is not a certificate that control has disappeared.
-        </p>
-        <div class="analogy">
-          <strong>Think of a uniform river current:</strong> A stronger current moves every possible canoe endpoint downstream, but it does not automatically reduce the range of endpoints the paddles can add around that downstream motion. Whether the endpoint range actually narrows depends on how the current, boat, paddle limits, and route change over time.
-        </div>
-      </div>
+A moving golfer and club already have velocity, configuration and tissue state. New muscle commands act on that existing state. DCR asks how large one modeled acceleration contribution is compared with the capacity of another; it does not divide a swing into percentages supplied by physics and the golfer.
 
-      <div class="laymans-item">
-        <h3>Three Different Questions</h3>
-        <p>
-          The possible velocity right now, the change attributable to the available input right now, and the states reachable by impact are different mathematical objects. DCR summarizes neither their shape nor their future evolution.
-        </p>
-        <div class="analogy">
-          <strong>Practical consequence:</strong> A late correction may be small in a particular model, but that conclusion must come from a bounded trajectory calculation tied to the impact task—not from the scalar ratio alone.
-        </div>
-      </div>
+Imagine a canoe in a uniform current. Increasing the current shifts the possible endpoints downstream. With the same paddling limits and travel time, it need not reduce the range of endpoints around that shifted center. A real river can have banks and changing flow; a real swing has changing geometry, muscle capacity and an impact event. Those details decide which corrections are possible.
 
-      <div class="laymans-item">
-        <h3>Path and Face Hypotheses</h3>
-        <p>
-          The idea that path corrections become narrow while face corrections remain wide is a testable hypothesis. It has not been established here with a three-dimensional golfer-club model or measured admissible controls.
-        </p>
-        <div class="analogy">
-          <strong>What the test needs:</strong> Declare the time remaining to impact, allowable inputs, coordinates and task metric, parameter uncertainty, and the impact quantity being corrected.
-        </div>
-      </div>
+<a data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">DCR alone does not establish which endpoints remain reachable.</a>
 
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> A large DCR flags a modeled magnitude imbalance worth investigating. It does not prescribe technique or prove that a future correction is unavailable.
-        <a class="trust-claim-link" data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">Review the governed technical claim and its limits.</a>
-      </div>
-    </div>
-  </div>
-</section>
+A small available correction can matter if the required adjustment is small. Conversely, a large acceleration capacity in the wrong direction or with too little time remaining can be ineffective. A useful investigation therefore reports the desired change in club delivery alongside the forces, directions and time available to make it.
 
-<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
+</details>
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Motor Control Theory:</span>
-          <h3>Is "Loss of Control" Actually "Gain of Precision"?</h3>
-        </div>
-        <p class="critic-argument">
-          Critics citing the **Signal-Dependent Noise** theory (Wolpert et al.) argue that high torque generation introduces proportional motor noise. Therefore, the high DCR observed in the late downswing (where active torque is minimal relative to drift) may be a functional adaptation to *minimize* noise, not a loss of agency. By "riding the drift," the golfer avoids the inaccuracy inherent in high-force corrections.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> DCR does not measure trajectory controllability or signal-to-noise ratio. Those require a controller, an admissible input set, a noise model, a horizon, and a task-level correction target. The noise-minimization interpretation and the loss-of-agency interpretation are both hypotheses until tested under the same declared model and data.
-        </div>
-      </div>
+<details class="technical-explanation">
+<summary>Questions About Noise, Face Control and Impedance</summary>
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Dimensionality Critique:</span>
-          <h3>The "Steering Wheel" Fallacy (Axial Decoupling)</h3>
-        </div>
-        <p class="critic-argument">
-          The DCR analysis focuses on the high inertia of the swing plane. Skeptics argue that accuracy depends primarily on the **Clubface Angle** (axial rotation), which has very low inertia ($I_{axial} \ll I_{plane}$). Since the golfer retains high authority over axial rotation throughout the downswing, the "loss of path control" is irrelevant to the outcome.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> Planar DCR does not determine arrival-time reachability or face-angle variance. Testing that coupling requires a spatial model, bounded path and axial inputs, event-time sensitivity, and an impact metric. The present planar ratio cannot adjudicate the critique.
-        </div>
-      </div>
+**Does less realized torque imply less noise?** Harris and Wolpert proposed a model in which control-signal noise influences eye and arm movement planning. It does not measure DCR or demonstrate that golfers minimize noise by maximizing that ratio. A capacity denominator is also different from the command producing noise. Compare complete policies under the same noise and task model. [Primary paper](https://www.nature.com/articles/29528).
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Impedance Control:</span>
-          <h3>Stiffness vs. Torque</h3>
-        </div>
-        <p class="critic-argument">
-          The affine model $\dot{x} = f(x) + G(x)u$ treats control purely as torque ($u$). Critics argue that skilled golfers modulate **Mechanical Impedance** (stiffness/damping) to reject disturbances without active feedback. By stiffening the wrists ("Effective Plant"), the golfer can maintain control even when DCR suggests torque authority is lost.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> Changing stiffness or damping changes the effective plant, its drift field, and potentially its admissible input set. A DCR value is therefore conditional on the declared impedance model. Subject-specific perturbation, kinematic, kinetic, and activation measurements would be needed to identify that plant in golfers.
-        </div>
-      </div>
+**Can face control remain effective when path control is limited?** This is a spatial, task-dependent hypothesis. Forearm motion, wrist configuration, grip and shaft deformation contribute to club orientation; a small isolated axial inertia does not establish the control authority of the coupled chain. The planar model below cannot calculate those omitted effects.
 
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding by defining the boundaries of the model.
-      </div>
-    </div>
-  </div>
-</section>
-```
+**Does impedance provide another form of control?** Activation, tendon mechanics and feedback can change the response to a perturbation. A held controller can be included in a declared baseline, but that does not make it mechanically passive or eliminate its energy cost. Moving references and changing stiffness can supply energy. See the corrected [passive-control chapter](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html).
 
-## Introduction
+These are authored modeling questions. They are not quotations from unnamed critics or evidence that any one mechanism explains expert golf.
 
-Golf swings can involve large clubhead and segment velocities. Sensorimotor and electromechanical delays constrain some feedback pathways, but they do not establish that every within-downswing adjustment is impossible.
+</details>
 
-This mirrors a common theme in high-speed movement: **the system transitions from control-dominated to drift-dominated dynamics** as velocity increases.
+## Introduction {#introduction}
 
-Building on the foundational framework established in *Affine Control Interpretation of the Golf Swing*, we analyze the relative magnitude of declared drift and bounded input acceleration in $\dot{x} = f(x) + G(x)u$. The decomposition is model-based bookkeeping; it does not identify physiological cause or quantify controllability by itself.
+The central investigation is how a golfer prepares and guides a rapidly moving coupled system. The same motion can be compatible with different combinations of active torque, elastic response and feedback. A useful account should predict what changes when an input, initial state or constraint changes, and should connect that prediction to a measured club-delivery outcome.
 
-Our goal is to provide a model-bounded treatment of this phenomenon through:
-
-1. **Multibody dynamic derivations** of drift and control.
-2. **Accessibility and Gramian boundaries** for interpreting the scalar ratio.
-3. **Reachable-set distinctions** and an executable counterexample to scalar-DCR overreach.
-4. **Validation requirements** for path, event-time, and clubface-outcome hypotheses.
-
-This approach treats the Drift-Control Ratio as a useful diagnostic for the model's drift-versus-input balance. Its empirical value depends on calibration against measured swing data.
-
-## System Modeling: The 3-Link Arm–Forearm–Club Model
-
-We model the golfer–club chain as a 3-DOF planar system:
-
-- $q_1$: shoulder rotation
-- $q_2$: elbow rotation
-- $q_3$: wrist/club hinge
-
-Generalized coordinates:
+The control-affine form
 
 $$
-q = (q_1, q_2, q_3)^T,\quad \dot{q} \in \mathbb{R}^3.
+\dot x=f(x)+G(x)u
 $$
 
-### Forward Kinematics
+organizes that calculation once the state and input have been specified. Here drift means evolution under the **selected zero-input convention**. It is not a direct measurement of physiological passivity, stored energy, intention or effort. A high-speed state may have large velocity-dependent accelerations, but no universal transition from active control to autonomous motion follows from speed alone.
 
-The clubhead position is:
+DCR is a local magnitude diagnostic. A forward zero-torque counterfactual instead integrates a changed input condition from a declared initial state. A reachable-set calculation explores a family of admissible inputs over time. These tools answer related questions and require different evidence.
 
-$$
-\begin{aligned}
-x &=
-\ell_1\cos q_1
-+ \ell_2\cos(q_1+q_2)
-+ \ell_3\cos(q_1+q_2+q_3), \\
-y &=
-\ell_1\sin q_1
-+ \ell_2\sin(q_1+q_2)
-+ \ell_3\sin(q_1+q_2+q_3).
-\end{aligned}
-$$
+## System Modeling: The 3-Link Arm–Forearm–Club Model {#system-modeling-the-3-link-armforearmclub-model}
 
-Velocity:
+Consider a fixed-base, open, planar chain with three rigid links. Let $q_1$ be the first link's angle from a fixed axis, and $q_2,q_3$ the relative elbow and distal hinge angles. These are model coordinates, not a complete anatomical description of shoulder, elbow, forearm and wrist motion. The lengths are $\ell_i$, masses $m_i$, center-of-mass distances $r_i$ along each link, and planar center-of-mass inertias $I_i$. All must be specified before a numerical swing result can be reproduced.
+
+### Forward Kinematics {#forward-kinematics}
+
+With $\theta_i=\sum_{j=1}^i q_j$, a modeled clubhead point is
 
 $$
-\dot{x} = J(q)\dot{q}.
-$$
-
-### Lagrangian Dynamics
-
-The equation of motion is:
-
-$$
-M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = \tau.
-$$
-
-The drift term is:
-
-$$
-f(x)=
-\begin{bmatrix}
-\dot{q} \\
-M^{-1}(-C\dot{q}-G)
-\end{bmatrix},
-$$
-
-and the control term is:
-
-$$
-G(x)u=
-\begin{bmatrix}
-0 \\
-M^{-1}\tau
+p(q)=\begin{bmatrix}
+\ell_1\cos q_1+\ell_2\cos(q_1+q_2)+\ell_3\cos(q_1+q_2+q_3)\\
+\ell_1\sin q_1+\ell_2\sin(q_1+q_2)+\ell_3\sin(q_1+q_2+q_3)
 \end{bmatrix}.
 $$
 
-::: {.callout-important}
-## Dimensional Consistency Note
-A naïve application of the Euclidean norm to the full state vector drift $\|f(x)\|$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). To ensure physical meaningfulness, we restrict our definition to the **dynamic fiber** of the tangent bundle (the acceleration subspace), comparing the **generalized forces** (or equivalent accelerations) of drift against the available control authority.
-:::
-
-### Dominance of Quadratic Velocity Terms
-
-Centripetal and Coriolis terms satisfy:
+Write $J=\partial p/\partial q$. Differentiation gives both
 
 $$
-C(q,\dot{q})\dot{q} \sim \mathcal{O}(\dot{q}^2)
+\dot p=J(q)\dot q,
+\qquad
+\ddot p=J(q)\ddot q+\dot J(q,\dot q)\dot q.
 $$
 
-Hence, the acceleration block satisfies:
+The curvature term is essential. A unit-radius point with angle $q=t$ has zero angular acceleration but Cartesian acceleration $(-\cos t,-\sin t)$. Thus projecting joint acceleration with $J$ alone does not recover the total task acceleration. If $\ddot q=a_d+B_a u$, the Cartesian decomposition is
 
 $$
-\|a_{\text{drift}}(x)\| \sim k\|\dot{q}\|^2.
+a_{d,p}=J a_d+\dot J\dot q,
+\qquad B_{a,p}=J B_a.
 $$
 
-Contrast with:
+A joint-space projection and a Cartesian-acceleration DCR are different declared diagnostics. The latter includes the curvature term in its drift numerator.
+
+### Lagrangian Dynamics {#lagrangian-dynamics}
+
+For this open-chain model, center-of-mass positions follow by replacing the last link length in each partial chain with $r_i$. Define
 
 $$
-\|G(x)u\| = \|M^{-1}\tau\| \sim \|\tau\|.
+T=\frac12\sum_{i=1}^3\left(m_i\|J_{c,i}(q)\dot q\|^2+I_i\dot\theta_i^2\right)
+=\frac12\dot q^T M(q)\dot q,
+\qquad U_g=\sum_{i=1}^3m_i g_0 y_{c,i}(q).
 $$
 
-The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.
+Here $g_0>0$ is gravitational acceleration and the fixed vertical axis points upward. These definitions determine the mass matrix and potential; they do not determine a motion or an input history. With $v=\dot q$, the equations are
 
-The full state-space norm $\|f(x)\|$ is dimensionally heterogeneous, so this scaling argument applies only to the acceleration block $a_{\text{drift}}(x)$.
+$$
+M(q)\dot v+c(q,v)+g(q)=B(q)u,\qquad g=\nabla U_g.
+$$
 
-This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in Part 3 of the framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces ($\tau_{\text{config}}$) and the velocity-dependent Coriolis/centripetal forces ($\tau_{\text{vel.\,drift}}$). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) can become large relative to the "Current Agency" available through $G(x)u$. In this model, that scaling supports the early-delivery interpretation used by the ZTCF family baseline, but it does not by itself prove a universal coaching rule.
+The vector $c=Cv$ is quadratic in velocity for this rigid, time-independent Lagrangian model; a particular matrix $C$ is not unique. The standard manipulator equations and their assumptions are developed in [MIT's multibody notes](https://underactuated.mit.edu/multibody.html).
 
-::: {.callout-note}
-## Scope Limitation: Planar vs. Axial Dynamics
-This planar model ($q \in \mathbb{R}^3$) captures transport mechanics (path velocity) but excludes axial shaft rotation (supination/pronation). As discussed in @sec-anisotropy, planar DCR is only a path-projected magnitude ratio. It does not establish path controllability, and it provides no certificate for face controllability in the omitted spatial subsystem.
-:::
+Assume independent coordinates and positive-definite $M$. Then
 
-## Drift-Control Ratio (DCR)
+$$
+a_d=-M^{-1}(c+g),\qquad B_a=M^{-1}B,
+$$
 
-We define the Drift-Control Ratio (DCR) as the ratio of modeled drift to bounded modeled control capacity in the same declared acceleration or task-projected space.
+$$
+f(x)=\begin{bmatrix}v\\a_d\end{bmatrix},
+\qquad G(x)=\begin{bmatrix}0\\B_a\end{bmatrix},
+\qquad x=(q,v).
+$$
 
-::: {.callout-important}
-## Dimensional Consistency Note
-A naïve application of the Euclidean norm to the full state vector drift $\|f(x)\|$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). To ensure physical meaningfulness, we restrict our definition to the **dynamic fiber** of the tangent bundle (the acceleration subspace), comparing the **generalized forces** (or equivalent accelerations) of drift against the available control authority.
-:::
+Three independent ideal joint torques correspond to $B=I_3$ and full actuation of the three modeled acceleration coordinates. Bounds on those torques restrict achievable acceleration; they do not by themselves remove an input channel or change the six-dimensional state-space dimension. A deliberately passive hinge, excitation-driven muscle model or flexible shaft requires a different input map and possibly additional states.
+
+A zero excitation command does not instantly erase activation or tendon strain. Likewise, writing $u=u_0(x,t)+w$ moves $G u_0$ into a baseline only after declaring that held policy and its shifted admissible set for $w$. Drift is unique for a fixed vector field and input origin; it is not invariant under arbitrary changes of that modeling convention. Muscle and shaft state connect this bookkeeping to the [muscle-force](The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html) and [flexible-shaft](The_Physics_of_Golf/quarto/ch11_flexible_shaft.html) chapters.
+
+### Quadratic Velocity Terms and Their Limits {#dominance-of-quadratic-velocity-terms}
+
+At a **fixed configuration** and fixed velocity direction $\bar v$, scaling speed by a dimensionless $\lambda$ gives
+
+$$
+c(q,\lambda\bar v)=\lambda^2c(q,\bar v),
+\qquad
+W a_d(q,\lambda\bar v)=\lambda^2 A+b,
+$$
+
+where $A=-WM^{-1}c(q,\bar v)$ and $b=-WM^{-1}g(q)$. The triangle inequality gives
+
+$$
+\|\lambda^2 A+b\|\leq\lambda^2\|A\|+\|b\|.
+$$
+
+If $A\neq0$, the numerator divided by $\lambda^2$ tends to $\|A\|$ as $\lambda\to\infty$. That asymptotic statement does not imply monotone growth over a finite downswing. Gravity and the velocity term may cancel at intermediate speeds; $A$ may vanish in a chosen direction or projection; a constant-inertia model can have $c=0$. Configuration, velocity direction, weights and admissible muscle forces also vary along a real trajectory.
+
+A capacity denominator remains constant under this speed scaling only if $M$, $B$, $W$ and the input set are held fixed. Muscle force-velocity behavior can change the admissible set, but shortening, lengthening, activation and geometry must be modeled together. The magnitude of the realized torque need not equal capacity or decline with speed. Therefore neither an inevitable DCR blow-up nor a specific downswing growth factor follows from quadratic velocity dependence alone.
+
+## Drift-Control Ratio (DCR) {#drift-control-ratio-dcr}
 
 ::: {.callout-important}
 ## Canonical DCR Definition (Site-Wide)
 
-Across this website the canonical Drift-Control Ratio is
+In a declared acceleration space, the canonical definition is
+
 $$
-\boxed{\;\mathrm{DCR}_{W,\mathcal U}(x) \;:=\;
+\mathrm{DCR}_{W,\mathcal U}(x)=
 \frac{\|W a_{\mathrm{drift}}(x)\|}
-{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|+\varepsilon}\;}
+{\sup_{u\in\mathcal U(x)}\|W B_a(x)u\|+\varepsilon}.
 $$
-where $a_{\mathrm{drift}}$ and $B_a u$ are expressed in the same acceleration space, $W$ selects and weights the reported coordinates or task directions, $\mathcal U(x)$ is the admissible control set, and $\varepsilon$ is a declared regularizer. A mass-weighted norm, Euclidean norm, or task projection is permitted only when reported explicitly. The denominator is available capacity, not the instantaneous policy realization. DCR is therefore conditional on the state, effective plant, projection, norm, and capacity model. The normative definition is maintained in the [Mathematical Notation Reference](../pages/notation.html).
+
+The drift and input effects are evaluated at the same state. $W$ selects/scales the coordinates or task directions; the norm and admissible input set $\mathcal U(x)$ are part of the definition. In the equations above, $a_{\mathrm{drift}}=a_d$. The denominator describes **available capacity**, not the current command. See the [Mathematical Notation Reference](../pages/notation.html).
 :::
 
-$$
-\mathrm{DIR}_{W}(t)
-=
-\frac{\|W a_{\mathrm{drift}}(x(t))\|}
-{\|W B_a(x(t))u(t)\|+\varepsilon}
-\approx
-\frac{\|M^{-1}(C\dot{q} + g)\|}{\|M^{-1}\tau\|}
-$$
-
-This policy-dependent **drift-to-realized-input ratio** (DIR) describes what a controller actually did. It is not DCR and does not measure remaining capacity.
-
-Using approximations where drift forces scale quadratically with velocity ($C\dot{q} \sim \dot{q}^2$):
+Let $d=\|Wa_d\|$, $c_{\max}=\sup_{u\in\mathcal U}\|WB_a u\|$ and $r=\|WB_a u_{\mathrm{used}}\|$. Assume the capacity is finite. The policy-dependent drift-to-realized-input ratio is
 
 $$
-\|f_{acc}\| \sim b\|\dot{q}\|^2,\quad
-\|G_{acc} u\| \sim c\|\tau\|,
+\mathrm{DIR}_W=\frac{d}{r+\varepsilon},\qquad
+\mathrm{DCR}_{W,\mathcal U}=\frac{d}{c_{\max}+\varepsilon}.
 $$
 
-we have:
+For an admissible realized input and the same nonnegative regularizer, $r\leq c_{\max}$, so DIR is at least DCR whenever both are defined. Small realized input can make DIR large while substantial capacity remains unused. For example, $d=3$, $c_{\max}=1$, $r=0.2$ and $\varepsilon=0$ give DCR $3$ and DIR $15$. Neither number identifies why that policy used a small input.
+
+The regularizer has the **same units as the weighted acceleration norm**. It must change consistently when units or scaling change. For $c_{\max}>0$,
 
 $$
-\boxed{
-\mathrm{DIR}_{W}(t)
-\approx
-\frac{b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
-}
+\mathrm{DCR}_{\varepsilon}
+=\frac{\mathrm{DCR}_{0}}{1+\varepsilon/c_{\max}}.
 $$
 
-If available torque decreases during peak velocity because of force-velocity constraints, the denominator shrinks while the numerator grows. The timing and magnitude of that effect should be checked against subject-specific data.
+Thus a regularized value of 10 means $d=10(c_{\max}+\varepsilon)$, not necessarily $d=10c_{\max}$. With $d=11$, $c_{\max}=1$ and $\varepsilon=0.1$ in common units, the regularized ratio is 10 while the unregularized ratio is 11.
 
-**Estimated result (planar model):**
-$$
-\mathrm{DIR}_{W}(t) \text{ increases by approximately } 100\times-300\times \text{ across the downswing.}
-$$
-*(This policy-dependent estimate is derived from the planar model above with typical parameter values; it is not a DCR capacity estimate, and empirical validation against instrumented swing data is needed.)*
+Report **zero capacity** explicitly. If $c_{\max}=0$, positive $d$ has no finite unregularized ratio and $d=0$ gives an undefined $0/0$. A positive regularizer returns a finite display value, but it creates no physical capacity. State the regularizer and flag this condition rather than interpreting the number as control authority. Unknown input bounds likewise cannot be replaced by a physiological estimate inferred from motion alone.
 
 ### Dimensional Analysis and Norm Dependence {#sec-norms}
 
-Now, a careful reader will wonder: does this ratio depend on how we measure things? Of course it does—and that's worth thinking about carefully, because the answer reveals what's really going on.
+The full state derivative combines coordinate velocities and accelerations. An unscaled Euclidean norm of those blocks mixes unlike units. Restricting the ratio to accelerations removes that particular inconsistency; it does not make every coordinate choice or metric equivalent. Mixed rotational/translational coordinates require declared scaling, and rank-deficient $W$ intentionally discards some directions.
 
-#### The Norm Problem (Stated Clearly)
+#### A Reproducible Norm Comparison {#the-norm-problem-stated-clearly}
 
-The Euclidean 2-norm is our default choice:
+Take drift $(3,4)$ and the admissible input effects $\{(u,0):|u|\leq2\}$, in common acceleration units, with no regularization. The Euclidean ratio is $5/2=2.5$; the infinity-norm ratio is $4/2=2$. With positive-definite weight matrix $H=\operatorname{diag}(1,9)$ and $\|a\|_H=\sqrt{a^THa}$, it is $\sqrt{153}/2\approx6.185$. These numbers describe the same state and input set under different metrics. They are not estimated values for golfers.
+
+A scalar directional ratio can also differ because it asks a different question. In this example, the second coordinate has nonzero drift but zero input capacity. The overall Euclidean capacity is nevertheless positive. A large denominator in one direction cannot supply an unavailable correction in another.
+
+#### Force Metrics and Inertia Weighting {#an-inertia-weighted-option}
+
+For a Euclidean outer norm, let $a=M^{-1}\tau$ and let the acceleration metric be $H=W^TW$. Transporting it to generalized forces gives
+
 $$
-\|f_{acc}\|_2 = \sqrt{\sum_i (f_{acc})_i^2}.
-$$
-
-But alternative norms yield numerically different DCR values:
-- **Infinity norm** (max absolute value): $\|f_{acc}\|_\infty = \max_i |f_{acc}|_i$
-- **Weighted norm** (inertia-scaled): $\|f_{acc}\|_M = \sqrt{f_{acc}^\top M f_{acc}}$
-- **Task-space norm**: norms defined in operational space (e.g., clubhead acceleration)
-
-A system with DCR$_2 = 47.3$ might have DCR$_\infty = 89.2$ or DCR$_M = 12.1$. The absolute numbers depend on the measuring stick.
-
-#### An Inertia-Weighted Option
-
-For golf biomechanics, we recommend the **inertia-weighted norm**:
-$$
-\|f_{acc}\|_M = \sqrt{f_{acc}^\top M(q) f_{acc}}.
+\|Wa\|^2=\tau^T M^{-T}H M^{-1}\tau.
 $$
 
-Because $M(q)$ is the mass matrix, this weighting incorporates configuration-dependent inertia.
-It does not turn acceleration into kinetic energy, and it is not uniquely preferred for every task.
-A task-space metric may be more appropriate when the declared outcome is clubhead path or an
-impact variable.
+The corresponding force metric is $M^{-T}HM^{-1}$, not automatically the identity. For $M=\operatorname{diag}(1,10)$, drift force $(1,1)$ and input forces $(u,0)$ with $|u|\leq1$, the unweighted force ratio is $\sqrt2$, whereas the unweighted acceleration ratio is $\sqrt{1.01}$. Applying the transported force metric recovers the acceleration result.
 
-#### Statement and Recommendation
+For an inertia-weighted acceleration norm, $H=M$, the force metric is $M^{-1}$. This weighting incorporates inertia, but $a^TMa$ is not kinetic energy: acceleration has different units from velocity. It is not uniquely preferred for every task, and it does not automatically solve comparisons across joints, coordinate charts or omitted directions.
 
-The physically meaningful conclusion is therefore:
+#### Coordinate Changes and Reporting {#statement-and-recommendation}
 
-**"In the planar examples considered here, the ratio of drift-generated acceleration to control-available acceleration increases strongly from the top of the backswing to impact. The qualitative pattern is robust in these examples, but exact monotonicity and numerical thresholds remain norm- and model-dependent."**
+A nonlinear coordinate change $z=\psi(q)$ obeys
 
-For practice:
-1. **Always report the norm** used in DCR calculations.
-2. **Report growth ratio** (e.g., "100× increase from top to impact") rather than absolute threshold values.
-3. **Justify the metric for the task** rather than treating any one norm as universal.
+$$
+\ddot z=D\psi(q)\ddot q+D^2\psi(q)[\dot q,\dot q].
+$$
 
-::: {.callout-warning}
-## Cross-Joint Comparison Caveat
+The second term contains the Hessian of the coordinate map. Ordinary coordinate acceleration therefore does not transform as a tangent vector. In the free scalar system $\ddot q=u$, the original drift acceleration is zero. On the valid chart $q>0$, choose $z=q^2$. Then
 
-DCR values for different degrees of freedom (e.g., shoulder rotation vs. wrist flexion) are **not directly comparable** without normalization. Rotational DOFs (rad/s²) and translational DOFs (m/s²) have different physical units; even within the rotational subspace, joints with different inertias will exhibit different DCR magnitudes for identical mechanical situations. The inertia-weighted norm $\|f_{acc}\|_M$ partially addresses this by weighting by $M(q)$, but comparisons across subsystems should still be interpreted cautiously. DCR is most reliable as a **within-DOF, temporal** measure (tracking how a single DOF's drift-control ratio evolves over the swing) rather than as a cross-DOF comparison.
-:::
+$$
+\ddot z=2\dot q^2+2qu.
+$$
 
----
+At $q=1$, $\dot q=1$ and $|u|\leq1$, the unregularized scalar ratio in $q$ is zero, while in $z$ it is one. The physical motion and controls have not changed; the measured coordinate acceleration has. A tensorial acceleration construction would require a declared connection and corresponding decomposition. That is a different specification from silently applying a Euclidean norm to chart accelerations.
 
-**Both the reported number and its interpretation remain conditional on the declared measuring stick and model.**
+For a constant invertible linear change $z=Lq$, the Hessian term vanishes. Transporting the metric as $H_z=L^{-T}H_qL^{-1}$ preserves the norm; changing units also requires consistent input and regularizer units. Report the chart/frame, physical output, weights, norm, input set, baseline and regularization. Growth ratios do not remove these dependencies, and a growth ratio with a zero initial numerator is undefined.
+
 
 ## DCR and Reachability: What the Scalar Does Not Prove {#claim-ad-dcr-001}
 
-For $\dot{x}=f(x)+G(x)u$ with admissible control set $\mathcal{U}(x)$, three
-objects must remain separate:
+For the control-affine system $\dot x=f(x)+G(x)u$, keep three objects distinct:
 
-1. The **drift-affected instantaneous velocity set**
-   $f(x) + G(x)\mathcal{U}(x)$.
+1. The **drift-affected instantaneous velocity set** $f(x) + G(x)\mathcal{U}(x)$.
 2. The **input-only control-effect set** $G(x)\mathcal{U}(x)$.
 3. The **finite-horizon reachable set**
 
    $$
-   \mathcal{R}(T;x_0)=
-   \left\{x(T):u(t)\in\mathcal{U}(x(t)),\;t\in[0,T]\right\}.
+   \mathcal{R}(T;x_0)=\{x(T):x(0)=x_0,\;u(t)\in\mathcal U(x(t)),\;0\leq t\leq T\}.
    $$
 
-The drift translates the first set relative to the origin. It does not change the shape of the
-second set at the same state. Over a finite horizon, state dependence in $f$, $G$, and
-$\mathcal{U}$ can translate, rotate, stretch, or contract the reachable set. A scalar norm ratio
-does not encode those effects. **DCR alone does not determine finite-horizon reachability.**
+Admissibility must also include any state, contact and input-rate constraints in the chosen model. At a fixed state, adding drift translates the first set and leaves the second unchanged. Over time, state dependence in $f$, $G$ and $\mathcal U$ can translate, rotate, stretch or contract reachable outcomes. **DCR alone does not determine finite-horizon reachability.**
 
-The Hamiltonian support function makes the same distinction:
+For a dual direction $p$, the instantaneous support function is
 
 $$
-H(x,p)=p^\top f(x)+\sup_{u\in\mathcal{U}(x)}p^\top G(x)u.
+H(x,p)=p^T f(x)+\sup_{u\in\mathcal U(x)}p^T G(x)u.
 $$
 
-The first term shifts support in direction $p$; the second supplies directional control support.
-Their norm ratio cannot recover the support function or its evolution to an impact event.
+The first term supplies drift support in that direction and the second supplies control support. Their separate norms cannot recover this directional information or its propagation to impact. A set with the same largest control-effect norm can have very different support along the required correction direction.
 
-### Executable Constant-Drift Counterexample
+### Executable Constant-Drift Counterexample {#executable-constant-drift-counterexample}
 
-Consider $\dot{x}=d+u$ with $|u(t)|\leq\bar{u}$. For constant $d$,
-
-$$
-\mathcal{R}(T;x_0)=
-\left[x_0+(d-\bar{u})T,\;x_0+(d+\bar{u})T\right].
-$$
-
-Its center is $x_0+dT$, while its width is $2\bar{u}T$, independent of $d$. With
-$x_0=0$, $\bar{u}=1$, and $T=1$, zero drift gives $[-1,1]$ and $d=100$ gives
-$[99,101]$. The DCR-like magnitude ratio changes from $0$ to $100$, but the reachable width
-remains $2$. The checked implementation is
-`src/affine_control/reachability.py::constant_additive_drift_interval`, exercised by
-`tests/test_dcr_reachability_contract.py`.
-
-This counterexample does not claim that golf-swing drift is constant. It proves the narrower
-logical point: drift magnitude alone cannot establish reachable-set shrinkage.
-
-### What a DCR Threshold Means
-
-If a declared DCR equals 10, the reported drift norm is ten times the largest input-effect norm
-in that projection and metric. Nothing discontinuous happens at 10. It is not a controllability,
-accessibility, saturation, or reachable-set threshold.
-
-Claims about whether path correction becomes too small for a specified task remain unavailable
-until a governed trajectory study declares the horizon, state-dependent admissible control set,
-state coordinates, task metric, model and measurement uncertainty, and impact-event outcome with
-its acceptable tolerance.
-
-DCR also does not predict separation between an observed trajectory and a **Zero Torque
-Counterfactual (ZTCF)**. That separation must be obtained from the declared forward interventions,
-with divergent states and model assumptions reported.
-
-## The Control-Cone Analogy as an Unvalidated Hypothesis
-
-For fixed $x$, the short-time limit $\mathcal{R}(\Delta t;x)\to\{x\}$ is a singleton, not a
-direction cone. A first-order rescaling instead gives the drift-affected velocity set:
+For $\dot x=d+u$ with constant $d$, $|u(t)|\leq\bar u$ and no state constraints,
 
 $$
-\lim_{\Delta t\to0^+}
-\frac{\mathcal{R}(\Delta t;x)-x}{\Delta t}
-=f(x)+G(x)\mathcal{U}(x),
+\mathcal R(T;x_0)=[x_0+(d-\bar u)T,\;x_0+(d+\bar u)T].
 $$
 
-under the usual local regularity assumptions. Subtracting the nominal drift contribution leaves
-the control-effect set $G(x)\mathcal{U}(x)$. Neither set is generally a cone; bounded controls more
-often produce a translated compact set.
+Its center is $x_0+dT$ and its width is $2\bar uT$, independent of $d$. With $x_0=0$, $\bar u=1$ and $T=1$, zero drift gives $[-1,1]$ and $d=100$ gives $[99,101]$. The DCR-like first-order magnitude ratio rises from 0 to 100 while the reachable width remains 2. The checked implementation is `src/affine_control/reachability.py::constant_additive_drift_interval`, exercised by `tests/test_dcr_reachability_contract.py`.
 
-The earlier **control-cone**, **drift-tube**, and **pancake** pictures can therefore serve only as
-names for possible finite-horizon anisotropy. They are **unvalidated hypotheses**, not consequences
-of high DCR or analogues of relativistic causal structure. A governed computation might support a
-narrow task-projected reachable corridor in a particular model, but it must report the horizon,
-admissible controls, task metric, uncertainty, and impact-event outcome.
+The word *like* matters: $x$ is a scalar first-order state here, whereas the canonical mechanical DCR is defined in an acceleration space. The example refutes the general inference from drift/input magnitude to reachable-set shrinkage. It does not claim that a golf swing has constant drift. A fixed target near the original center can become unreachable even though the width is unchanged; translation and loss of width are different effects.
 
-### Accessibility and Gramian Boundaries {#sec-anisotropy}
+### What a DCR Threshold Means {#what-a-dcr-threshold-means}
 
-Lie-bracket rank conditions concern local accessibility under their stated regularity assumptions.
-They do not show that multiplying the drift magnitude reduces accessibility rank, nor do they
-turn a norm ratio into a finite-horizon controllability certificate.
+Without regularization, a DCR of 10 means the reported drift norm is ten times the largest input-effect norm in the selected acceleration metric. With positive regularization, the exact relation is $d=10(c_{\max}+\varepsilon)$. Nothing discontinuous occurs at that number. It is not an accessibility, saturation or reachable-set threshold.
 
-For a trajectory-linearized perturbation model
+Whether correction is sufficient depends on the **requested change**, remaining horizon, state-dependent admissible control set, task metric, model and measurement uncertainty, and impact-event outcome with its acceptable tolerance. An acceleration norm cannot supply all of those declarations.
+
+DCR also does not predict separation from a **forward Zero Torque Counterfactual (ZTCF)**. That separation requires integrating the declared intervention with its diverging state, contact rules and held-controller assumptions. The original trajectory's instantaneous drift is not the future counterfactual trajectory.
+
+## Short-Time Sets and Finite-Time Correction {#the-control-cone-analogy-as-an-unvalidated-hypothesis}
+
+As $\Delta t\to0^+$, the unscaled reachable set approaches the initial state. For smooth $f,G$, a fixed compact **convex** input set, unconstrained local motion and measurable admissible inputs, the first-order rescaled reachable sets have the limit
 
 $$
-\delta\dot{x}=A(t)\delta x+B(t)\delta u,
+\lim_{\Delta t\to0^+}\frac{\overline{\mathcal R(\Delta t;x)}-x}{\Delta t}
+=f(x)+G(x)\mathcal U,
 $$
 
-a controllability Gramian depends on $A(t)$, $B(t)$, the time horizon, and the input metric.
-There is no general law making its planar eigenvalues or ellipsoid aspect ratio a scalar function
-of DCR. Establishing a pancake-shaped nonlinear reachable set would require an explicit spatial
-model, converged reachability computation, admissible controls, and uncertainty treatment.
+in the Hausdorff sense. Closure accounts for endpoint limits. A Taylor expansion makes the reason visible: the leading displacement is drift times $\Delta t$ plus the input map times the time integral of $u$; the average input belongs to the convex set. Local uniform bounds make the remainder smaller than order $\Delta t$.
 
-### Event-Level Path and Face Tests
+Convexity cannot be silently dropped. In $\dot x=u$, with instantaneous inputs restricted to $\{-1,1\}$, half a short interval at each input produces zero net displacement. The rescaled endpoints therefore include zero, although the instantaneous velocity set does not. Arbitrarily fast switching gives the convexified leading-order set. Input-rate restrictions, a state-dependent input set or an active state boundary need their own analysis; the displayed assumptions do not cover them.
 
-Different path and axial inertias can motivate a hypothesis that late path authority and face
-authority differ. DCR does not validate that hypothesis. A suitable study would apply the same
-declared bounded controls to a spatial model through an impact event, then report directional
-changes in path, arrival time, and face angle in the impact-event outcome. It would also test
-sensitivity to inertial parameters, shaft dynamics, impedance assumptions, and uncertainty.
-Neither planar DCR nor a quoted closure rate supplies those missing results.
+Subtracting the nominal drift leaves the control-effect set at first order. A bounded set of this kind is generally not a cone. Earlier **control-cone**, **drift-tube** and **pancake** pictures can at most name possible finite-horizon anisotropy. They remain **unvalidated hypotheses** about golfer-club outcomes, not consequences of high DCR or counterparts of relativistic causal limits.
+
+### Accessibility, Actuation and Gramians {#sec-anisotropy}
+
+An acceleration input acts immediately on velocity and subsequently on position. This distinction explains why full mechanical actuation does not mean the state input matrix has full row rank. In the scalar double integrator,
+
+$$
+\dot x=Ax+Bu,\qquad x=(q,v),\qquad
+A=\begin{bmatrix}0&1\\0&0\end{bmatrix},\quad
+B=\begin{bmatrix}0\\1\end{bmatrix},
+$$
+
+$B$ has rank one, while $[B\;AB]$ has rank two. The acceleration drift is zero, so DCR is zero for a positive input capacity, but that fact alone does not describe how far position and velocity can change in a short time. With $|u|\leq u_{\max}$, deviations from the unforced endpoint obey
+
+$$
+\delta v(T)=\int_0^T u(s)\,ds,\qquad
+\delta q(T)=\int_0^T(T-s)u(s)\,ds,
+$$
+
+$$
+|\delta v(T)|\leq u_{\max}T,\qquad
+|\delta q(T)|\leq\tfrac12u_{\max}T^2.
+$$
+
+These are marginal bounds, not a claim that every pair in the enclosing rectangle is jointly attainable. They show why remaining time matters even when the drift ratio does not change.
+
+For a trajectory-linearized perturbation model $\delta\dot x=A(t)\delta x+B(t)\delta u$, let $\Phi(T,s)$ be the state-transition matrix and $R(s)$ a positive-definite input-cost metric. The weighted controllability Gramian is
+
+$$
+W_c(T)=\int_0^T\Phi(T,s)B(s)R(s)^{-1}B(s)^T\Phi(T,s)^T\,ds.
+$$
+
+For the double integrator with $R=1$,
+
+$$
+W_c(T)=\begin{bmatrix}T^3/3&T^2/2\\T^2/2&T\end{bmatrix},\qquad
+\det W_c=T^4/12>0\quad(T>0).
+$$
+
+The Gramian describes the endpoint map under an integrated quadratic input budget. Its ellipsoids are not automatically the reachable sets for pointwise torque, rate or contact constraints. Eigenvalues also depend on state scaling and the input metric. Lie-bracket accessibility tests address another question, under their own hypotheses; neither input-map rank nor a scalar drift norm substitutes for those tests. In particular, multiplying a drift field by a large constant does not generally reduce accessibility rank.
+
+### Event-Level Path and Face Tests {#event-level-path-and-face-tests}
+
+Path and face are coupled outputs of a spatial golfer-club model. The planar chain can illustrate one projected motion, but it omits forearm axial rotation, much of wrist motion and spatial shaft deformation. It cannot establish preserved face authority, universal face error or a three-dimensional reachable-set shape.
+
+A suitable comparison would start from the same state and admissible controls, propagate through a declared impact event, and report changes in clubhead velocity direction, face orientation and arrival time. It would vary inertial parameters, activation, shaft properties and impedance assumptions within declared uncertainty. A small correction should be compared with the required delivery tolerance; a quoted closure rate or isolated axial inertia does not supply that comparison.
+
 
 ## Bounded DCR Validation Protocol {#sec-bounded-dcr-validation}
 
@@ -512,6 +353,8 @@ and golfer task outcomes remain unavailable. This exploratory output is
 
 Every run fails closed unless it records all of the following fields before results are examined:
 
+::: {.table-wrapper role="region" aria-label="Required Protocol Declarations" tabindex="0"}
+
 | Required Field | Declaration |
 |---|---|
 | **State and coordinates** | Named initial-state values, coordinate frame or chart, and units. |
@@ -523,6 +366,8 @@ Every run fails closed unless it records all of the following fields before resu
 | **Uncertainty model** | Declared parameter/model set or probability model; unavailable uncertainty is reported as unavailable. |
 | **Solver and tolerance** | Engine, solver and revision, step or analytic method, convergence test, and numerical tolerance. |
 
+:::
+
 The executable `ReachabilityProtocol` binds those declarations. The scalar and planar system
 regressions extend `src/affine_control/reachability.py`; the zero-gradient and rank-deficient
 cases call the protected #4013 `constant_additive_drift_interval` API rather than defining a
@@ -533,6 +378,8 @@ orchestration layer `src/affine_control/reachability_protocol.py`.
 
 The regression suite fixes six systems before any positive interpretation:
 
+::: {.table-wrapper role="region" aria-label="Six Analytic and Synthetic Cases" tabindex="0"}
+
 | System | Frozen Regression | What It Can and Cannot Establish |
 |---|---|---|
 | **constant additive drift** | With $x_0=0$, $\bar u=1$, and $T=1$, drift 0 and 100 give $[-1,1]$ and $[99,101]$; both widths are 2. | Drift can translate a reachable set without shrinking it. This refutes universal scalar sufficiency, not a golf-specific effect. |
@@ -541,6 +388,8 @@ The regression suite fixes six systems before any positive interpretation:
 | **saturation** | A requested scalar correction of 2 with gain 1 and input bound 0.5 applies 0.5 and preserves an unmet residual of 1.5. | Constrained optimal correction depends on the task request and bounds, not DCR alone. |
 | **contact and event timing** | Two height-1 cases with velocities $-1$ and $-3$, drift acceleration $-9$, and control acceleration $+1$ reach the event at about 0.3904 and 0.25. Event-velocity sensitivities to control acceleration are about 0.2425 and 0.2. | The same drift/control magnitude comparison can accompany different event maps because baseline state and speed differ. |
 | **model and parameter perturbations** | For $\dot x=ax+u$, $x_0=1$, $\bar u=1$, $T=1$, and $a\in\{0.8,1.0,1.2\}$, center spans $[2.2255,3.3201]$ and width spans $[3.0639,3.8669]$. | Assumed parameter variation is published as an envelope rather than hidden behind one ratio. |
+
+:::
 
 All values above are analytic or modeled quantities from declared synthetic systems. They are not
 measurements. The exact numeric checks are in
@@ -574,212 +423,102 @@ speed, and control authority model with the same model plus DCR. Uncertainty mus
 error and declared parameter/model perturbations. A result can be promoted only within that
 dataset, model, event, task metric, and uncertainty envelope.
 
-## Stability and Clubface Variance: Required Model
+## Stability and Clubface Variance: Required Model {#stability-and-clubface-variance-required-model}
 
-Let clubface angle be $\phi=h(q)$. A local event-variance analysis may start from
+A local perturbation analysis can begin with $\delta\dot x=A(t)\delta x+B(t)\delta u$. It still needs a feedback policy, disturbances, measurement noise, initial uncertainty and an output map. For a local representation of face orientation $\phi=h(x,t)$, $\delta\phi=h_x\delta x$ describes a fixed-time state perturbation when there is no explicit time perturbation. It does not yet describe an impact-event output.
+
+Let a smooth pre-impact trajectory cross the event surface $g(x,t)=0$ at $t_*$. If the crossing is transverse,
 
 $$
-\delta\dot{x}=A(t)\delta x+B(t)\delta u,
+g_t+g_x f^-\neq0,
+$$
+
+where $f^-$ is the complete pre-event velocity field, including the nominal input. With a small state perturbation $\delta x^-$ evaluated at the nominal event time and a fixed event definition, first-order expansion gives
+
+$$
+\delta t_*=-\frac{g_x\delta x^-}{g_t+g_x f^-},
+$$
+
+$$
+\delta h_*=h_x\delta x^-+(h_t+h_xf^-)\delta t_*.
+$$
+
+All derivatives are evaluated on the nominal pre-event trajectory. Parameter changes in $g$ or $h$ add their own direct terms. A post-impact output additionally requires the reset/contact-map derivative and its timing convention. Near a grazing event the denominator can be small; the event sensitivity becomes ill-conditioned and the local approximation may fail. A trial that misses the event cannot be assigned a fabricated impact output.
+
+For a check independent of golf assumptions, take height $y_0=1$, initial vertical velocity $v_0=-1$ and constant acceleration $a=-8$ in consistent units. At the downward crossing of $y=0$,
+
+$$
+v_*=-\sqrt{v_0^2-2ay_0}=-\sqrt{17},\qquad
+\frac{\partial v_*}{\partial a}=\frac{y_0}{\sqrt{v_0^2-2ay_0}}=\frac1{\sqrt{17}}.
+$$
+
+This includes the changed event time. Holding the nominal time fixed instead would give $\partial v(t_*)/\partial a=t_*\approx0.3904$, rather than the event derivative $0.2425$. This difference is precisely why a same-time comparison and an impact comparison must not be interchanged.
+
+If the resulting event-output Jacobian is $J_e$ and the relevant small perturbations have covariance $\Sigma$, a first-order covariance approximation is $J_e\Sigma J_e^T$. Include the dependence between state, input and parameter errors when forming that covariance; do not add correlated uncertainties as if independent. DCR contains neither this map nor the covariance. A large drift magnitude does not imply a large state Jacobian or exponential error growth. The previous claim that path drift enforces face error remains withdrawn pending an event-level uncertainty study.
+
+## A Mechanical Counterexample to Monotone Growth {#schematic-illustration-drift-vs-control-magnitude}
+
+The earlier phase plot used arbitrary functions, and its description did not match their shapes. The following declared mechanical example replaces it with equations that can be checked exactly. **This is a manufactured model and a family of states, not a golfer trajectory or a downswing measurement.**
+
+Use dimensionless coordinate $q$ and time $s$, obtained after selecting reference coordinate, time and energy scales. Dots in this example refer to $s$. Define normalized inertia $I(q)=e^{2q}$, kinetic energy $T=\tfrac12 I(q)\dot q^2$ and potential $U=-\tfrac12e^{2q}$. The generalized input $u$ is normalized consistently with those scales. Euler–Lagrange gives
+
+$$
+e^{2q}\ddot q+e^{2q}\dot q^2-e^{2q}=u,
 \qquad
-\delta\phi=H(t)\delta x,
+\ddot q=1-\dot q^2+e^{-2q}u.
 $$
 
-but it must also declare the feedback policy, disturbances, measurement noise, initial covariance,
-state-transition model, and impact-event sensitivity. DCR contains none of these objects. In
-particular, a large norm ratio does not imply a large state Jacobian or exponential error growth.
-The previous claim that path drift enforces face error is therefore withdrawn; that relationship is
-unavailable pending an event-level uncertainty study.
+The positive inertia makes this a valid local scalar Lagrangian model. The chosen potential is a mathematical construction, not a claim about gravitational geometry in a golfer. At the fixed configuration $q=0$, with $|u|\leq1$, a scalar absolute-value metric and $\varepsilon=0$, the available acceleration capacity is one. Writing $\nu=\dot q$,
 
-## Schematic Illustration: Drift vs Control Magnitude
+$$
+\mathrm{DCR}=|1-\nu^2|.
+$$
 
-::: {.callout-note}
-## Schematic Only — Not Real Data
-The plot below is a **schematic illustration** generated from qualitatively motivated mathematical functions. It is **not** output from a real biomechanical model or motion-capture measurement. The functional forms (exponential growth of drift near impact, gradual decay of control authority) are chosen to reflect the qualitative pattern described in the theoretical analysis. Calibrated curves from an instrumented swing model would be needed to validate the specific magnitudes and timing.
+It takes values $1,0,3,8$ at speeds $\nu=0,1,2,3$. The velocity-dependent term is quadratic, yet drift magnitude first falls to zero through cancellation and then rises. If the realized input is fixed at $u=0.2$, DIR is $5|1-\nu^2|$. That larger ratio reflects the unused capacity in this declared policy, not a loss of available actuation.
+
+::: {.table-wrapper role="region" aria-label="Manufactured Drift and Capacity Values" tabindex="0"}
+
+| Speed $\nu$ | Signed Drift | Available Capacity | DCR | DIR for $u=0.2$ |
+|---|---|---|---|---|
+| 0 | 1 | 1 | 1 | 5 |
+| 1 | 0 | 1 | 0 | 0 |
+| 2 | $-3$ | 1 | 3 | 15 |
+| 3 | $-8$ | 1 | 8 | 40 |
+
 :::
 
-```{python}
-#| fig-alt: "Schematic curves show drift magnitude rising sharply near impact while available control magnitude gradually declines; the values are illustrative rather than measured."
-import numpy as np
-import matplotlib.pyplot as plt
+Each row is a separate state at the same configuration. It is not possible to traverse these rows as a continuous motion while keeping $q=0$ and having nonzero $\dot q$. The table isolates speed dependence intentionally. The symbolic derivation, metric comparisons, coordinate examples, Gramian and event derivative are checked independently in `tests/test_dcr_article_rigor.py`; the six governed cases above retain their separate executable evidence.
 
-t = np.linspace(0, 1, 500)
-drift = 0.2 + 2.5 * np.exp(-((t - 0.80)**2) / 0.002)
-control = 0.6 - 0.3 * np.exp(-((t - 0.10)**2) / 0.01)
+## Limitations of This Analysis {#limitations-of-this-analysis}
 
-plt.figure(figsize=(10, 5))
-plt.plot(t, drift, label="Drift Magnitude (schematic)", linewidth=3)
-plt.plot(t, control, label="Control Magnitude (schematic)", linewidth=3)
-plt.title("Drift vs Control Magnitude Throughout the Golf Swing\n"
-          "[Schematic illustration — not real model output]")
-plt.xlabel("Normalized Swing Phase (0 = address, 1 = impact)")
-plt.ylabel("Relative Magnitude (arbitrary units)")
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-```
+The three-link geometry supplies a transparent model structure. It supplies no calibrated golfer parameter set, measured input history or validated finite-horizon golf result. Its planar rigid-link assumptions omit spatial coordination, activation dynamics, tendon and shaft states, and contact changes unless those are explicitly added. Adding them can change the state, input map, baseline and admissible controls, rather than merely adjusting a single inertia number.
 
-## Limitations of This Analysis
+No universal physiological torque envelope is assumed. Ideal bounded inputs in the exact examples are declared mathematical inputs. Estimating an individual's capacity requires measurements and a muscle/joint model; observed motion alone does not separate all internal forces or identify unused capacity. An inverse-dynamics net torque is not automatically a muscle activation or a signal-dependent noise level.
 
-::: {.callout-warning}
-## Limitations of This Analysis
+The local derivatives and linearizations apply to small perturbations within their assumptions. They do not certify global correction, stability through contact, or uncertainty coverage for an unmeasured golfer. The deterministic counterexamples establish limits on universal reasoning. They leave open whether a carefully specified DCR adds useful predictive information in a particular measured dataset.
 
-1. **Planar model only:** The 3-DOF model captures path dynamics but excludes axial rotation. A spatial model is required before any directional reachable-set shape can be assessed; the pancake picture remains an unvalidated hypothesis.
+## How the Mechanisms Connect {#conceptual-linkages}
 
-2. **Norm and model dependence:** DCR values and their time trend depend on the declared projection, norm, input bounds, and model. No scalar DCR threshold establishes reachable-set collapse.
+Preparation changes configuration, velocity, activation and elastic state. Those states determine the subsequent drift and the input map in a chosen model. Activation and geometry also help determine admissible force; remaining time and directional coupling determine how that force can change club delivery. Contact then determines when and how the delivery outcome is evaluated. Measurement uncertainty affects each step.
 
-3. **Static torque bounds:** We assume fixed physiological torque limits. In reality, torque capacity varies with joint angle and velocity (the force-velocity relationship), which could modify the DCR profile.
+This chain gives DCR a useful, bounded place: report a local acceleration comparison while retaining the underlying state, metric and input bounds. Use forward interventions for questions about removing or holding an input, energy balances for questions about storage and transfer, and event-level reachable or sensitivity calculations for questions about correction. A large ratio does not answer all three.
 
-4. **No stochastic analysis:** This deterministic analysis does not account for motor noise. The interplay between DCR and signal-dependent noise (Wolpert et al.) deserves separate treatment.
+For example, early activation can prepare impedance and tendon strain that affect a late perturbation response. Calling that response part of a held baseline does not make its physiological preparation irrelevant. Similarly, shaft deformation can affect the face and path together without establishing that flexibility improves a player's result. These connections motivate testable comparisons between complete models and measured outcomes.
 
-5. **Rigid body assumption:** Shaft flexibility and soft tissue compliance may modify the effective inertia and hence the DCR, particularly near impact.
+## Primary Sources and Reproduction {#external-resources}
 
-6. **No golf-model finite-horizon result:** The bounded protocol above contains analytic and deterministic synthetic cases, not a governed reachable set for a calibrated golfer-club model. Path correction, arrival-time adjustment, and impact tolerances in golfers remain unavailable pending the spatial, event-level study described in @sec-anisotropy.
-:::
+The [MIT multibody dynamics notes](https://underactuated.mit.edu/multibody.html) provide the Lagrangian and manipulator-equation foundation used here. They are mathematical course notes, not evidence for a golf-specific DCR trajectory. The original [Harris and Wolpert paper](https://www.nature.com/articles/29528) introduces the signal-dependent-noise hypothesis discussed above; its eye and arm modeling does not validate a golfer DCR claim.
 
-## Conceptual Linkages
+The worked mathematical examples are derived in this article with explicit assumptions and independently checked in the repository tests. The bounded protocol retains analytic, null, negative and unavailable outcomes. The previous video descriptions and timestamps have been removed because they were not verified as supporting the claims attributed to them. A general dynamics or relativity resource cannot serve as evidence for a golf-swing correction limit.
 
-To place this analysis within the broader AffineDrift framework:
+## See Also {#see-also}
 
-1.  **Implicit Assumptions**:
-    *   **Drift Invariance**: We assume that the passive drift field $f(x)$ remains structurally independent of the input mechanism, a condition formally proven in **Proposition 1** of the core theory.
-    *   **Torque Bounds**: The DCR analysis assumes physiological limits on $\tau$. Bounded inputs do not by themselves make the modeled system structurally underactuated or establish a ballistic phase.
+- [Proximal-to-Distal Energy Transfer in the Golf Swing](proximal-distal-energy-transfer.html) for a related counterfactual modeling study.
+- [Mathematical Notation Reference](../pages/notation.html) for the canonical DCR and input conventions.
+- [Muscle Force Generation](The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html) for activation, force capacity and tendon state.
+- [Flexible Shaft Dynamics](The_Physics_of_Golf/quarto/ch11_flexible_shaft.html) for coupled shaft motion and energy accounting.
+- [Passive and Distributed Control](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html) for impedance, held controllers and stability assumptions.
 
-2.  **Cross-References**:
-    *   **The Drifter Manifesto**: For the foundational derivation of the affine form $\dot{x} = f(x) + G(x)u$.
-    *   **Theory Part 3 (Force Taxonomy)**: For the detailed breakdown of the drift components (Inertial, Coriolis, Centripetal) that drive the DCR explosion.
-    *   **Intentional Constraint Collapse**: A separate hypothesis about early organization that must not be treated as a reachable-set consequence of DCR.
-    *   **Zero Torque Counterfactual (ZTCF)**: A declared input-removal intervention. It is not an infinite-DCR limit and must be reported with its model assumptions.
-
-## External Resources
-
-::: {.callout-note icon=false}
-## Curator's Note
-The following resources are selected to provide authoritative grounding for the concepts of Drift-Control Ratio (DCR), Signal-Dependent Noise, and the Relativistic Analogy.
-:::
-
-<div class="resource-list">
-<div class="resource-card video-card has-media">
-  <div class="resource-media">
-    <div class="youtube-embed">
-      <iframe src="https://www.youtube.com/embed/vuZmaSyJpUY"
-              title="Phase Portrait for Double Well Potential"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-    </div>
-  </div>
-  <div class="resource-content">
-    <h3>Phase Portrait for Double Well Potential - Steve Brunton</h3>
-    <div class="resource-description">
-      <p>
-        <strong>Why it fits:</strong> A masterclass in visualizing nonlinear dynamics. Brunton demonstrates how to construct the "Drift Field" ($f(x)$) for a system with multiple equilibria, directly analogous to visualizing the swing's drift dynamics.
-      </p>
-      <ul>
-        <li><strong>Seek:</strong> 0:00 (Problem Setup), 10:48 (Global Phase Portrait).</li>
-        <li><strong>Prereqs:</strong> Basic ODEs, Linearization.</li>
-      </ul>
-    </div>
-    <a href="https://www.youtube.com/watch?v=vuZmaSyJpUY"
-       class="resource-link"
-       target="_blank"
-       rel="noopener">
-      Watch Video →
-    <span class="sr-only">(opens in a new tab)</span></a>
-  </div>
-</div>
-
-<div class="resource-card video-card has-media">
-  <div class="resource-media">
-    <div class="youtube-embed">
-      <iframe src="https://www.youtube.com/embed/ikEzzJLrGWU"
-              title="Computational Principles of Sensorimotor Control"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-    </div>
-  </div>
-  <div class="resource-content">
-    <h3>Computational Principles of Sensorimotor Control - Daniel Wolpert</h3>
-    <div class="resource-description">
-      <p>
-        <strong>Why it fits:</strong> The canonical source for Signal-Dependent Noise. Wolpert explains why "trajectory planning" fails in high-noise regimes and why optimal control (managing the variance) replaces it.
-      </p>
-      <ul>
-        <li><strong>Seek:</strong> 19:37 (Motor Noise is Signal Dependent), 29:04 (The Demise of the Desired Trajectory).</li>
-        <li><strong>Prereqs:</strong> Probability, Control Theory basics.</li>
-      </ul>
-    </div>
-    <a href="https://www.youtube.com/watch?v=ikEzzJLrGWU"
-       class="resource-link"
-       target="_blank"
-       rel="noopener">
-      Watch Video →
-    <span class="sr-only">(opens in a new tab)</span></a>
-  </div>
-</div>
-
-<div class="resource-card video-card has-media">
-  <div class="resource-media">
-    <div class="youtube-embed">
-      <iframe src="https://www.youtube.com/embed/_Az608TI-NI"
-              title="The Paradox of Human Performance"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-    </div>
-  </div>
-  <div class="resource-content">
-    <h3>The Paradox of Human Performance - Neville Hogan</h3>
-    <div class="resource-description">
-      <p>
-        <strong>Why it fits:</strong> Hogan articulates the fundamental conflict between slow biological hardware and fast performance, introducing Impedance Control as the solution—a key parallel to the "Effective Plant" concept.
-      </p>
-      <ul>
-        <li><strong>Seek:</strong> 0:00 (The Paradox), 15:00 (Impedance as a Dynamic Primitive).</li>
-        <li><strong>Prereqs:</strong> Mechanical Impedance concepts.</li>
-      </ul>
-    </div>
-    <a href="https://www.youtube.com/watch?v=_Az608TI-NI"
-       class="resource-link"
-       target="_blank"
-       rel="noopener">
-      Watch Video →
-    <span class="sr-only">(opens in a new tab)</span></a>
-  </div>
-</div>
-
-<div class="resource-card video-card has-media">
-  <div class="resource-media">
-    <div class="youtube-embed">
-      <iframe src="https://www.youtube.com/embed/hZsIwDXaN0E"
-              title="What is Relativity?"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-    </div>
-  </div>
-  <div class="resource-content">
-    <h3>What is Relativity? - Sean Carroll</h3>
-    <div class="resource-description">
-      <p>
-        <strong>Why it fits:</strong> Explains relativistic light cones and clarifies why they should not be used as evidence for mechanical reachable-set geometry. The comparison is pedagogical only; the systems do not share a reachability contract.
-      </p>
-      <ul>
-        <li><strong>Seek:</strong> 20:30 (What are Light Cones?), 28:45 (Implications of Relativity).</li>
-        <li><strong>Prereqs:</strong> None (Conceptual).</li>
-      </ul>
-    </div>
-    <a href="https://www.youtube.com/watch?v=hZsIwDXaN0E"
-       class="resource-link"
-       target="_blank"
-       rel="noopener">
-      Watch Video →
-    <span class="sr-only">(opens in a new tab)</span></a>
-  </div>
-</div>
-</div>
-
-## See Also
-
-For an applied counterfactual modeling study examining how drift and active torque split during proximal-to-distal energy handoffs in the golf downswing, see [Proximal-to-Distal Energy Transfer in the Golf Swing](proximal-distal-energy-transfer.html).
-
-## Acknowledgments
+## Acknowledgments {#acknowledgments}
 
 Computational modeling assistance and structured drafting support for this article were provided by ChatGPT (OpenAI). All theoretical content, arguments, and conclusions are the work of the named author.

@@ -25,24 +25,24 @@ reachable from any live state and `abandoned` from `parked`.
 - **Issue:** #4338 (epic #4009; corpus #4021)
 - **PR:** not yet created
 - **Branch:** `fix/4338-dcr-complete-rigor`
-- **Paths:** `articles/controllability-drift-ratio.qmd`, `tests/test_dcr_article_rigor.py`, `docs/development/technical-review/dcr-complete-review.md`
+- **Paths:** `articles/controllability-drift-ratio.qmd`, `tests/test_dcr_article_rigor.py`, `tests/test_scientific_trust_metadata.py`, `src/affine_control/research_readiness/fixtures.py`, `data/research_protocols`, `data/trust/claim_audit_inventory.json`, `docs/development/technical-review/dcr-complete-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`06c7742b741e9a79d2856c9b8de51e98e73f9716`, original article fully read; 10 analytic checks pass, two publication regressions RED)
-- **Summary:** Complete audit identifies unsupported growth, coordinate/metric mistakes, regularizer ambiguity and missing finite-time/event distinctions. Replacement derives exact mechanical, coordinate, rank and event examples, preserves six governed cases, and bounds primary evidence. Companion critique defects are queued separately; corpus remains unfinished.
-- **Next step:** Assemble the complete article replacement and run the affected regressions.
+- **Last verified:** 2026-09-10 (`b09c98b82e6ee3b386266560e5a947bbb38b5d56`, audit parent plus complete validated working-tree implementation; 5,124 tests passed, 92.88% coverage; final affected 84 and canonical browser 14/14 pass)
+- **Summary:** Complete replacement withdraws unsupported downswing growth and derives scaling, coordinate Hessians, transported metrics, regularization, finite-time reachability and event sensitivity. Thirteen independent tests support the argument. Readiness now names the actual route reviewer with coherent manufactured chronology; scientific protocol states and immutable authority pins remain unchanged. Full reading, mobile/table/disclosure QA, content, static, titles, links, style and types pass. Initial digest/date failures and visually detected dark-panel defect were corrected and documented. Companion critiques and remaining corpus stay open.
+- **Next step:** Commit and submit the validated #4338 correction for protected review.
 
 ### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4336 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4337 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4337 (merged)
 - **Branch:** `fix/4336-passive-impedance-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch27_passive_distributed_control.tex`, `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/passive_damping_regimes.svg`, `articles/The_Physics_of_Golf/figures/passive_damping_regimes.pdf`, `tests/test_passive_distributed_control_rigor.py`, `docs/development/technical-review/passive-distributed-control-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`62dac6686f3fa70de59ec88f682cde3ea38ba591`, validated implementation; identical tree after rebase; normal commit/push hooks passed)
-- **Summary:** Complete paired correction connects intrinsic mechanics, maintained activation, distributed feedback, input counterfactuals, energy and finite-time outcomes. Proper storage/tracking proofs, independently checked damping/delay examples, one reproducible figure and all 12 worked answers. Root discovery 5,155 passes; final tests-directory run 5,111 passes, 92.68% coverage; final focused 36, content 131, 34 static contracts, title/style/type/link and complete affected PDF/web QA pass. Initial conversion/BibTeX failures and bounded primary evidence documented. Peer impact work and immutable publication excluded.
-- **Next step:** Verify PR #4337 protected checks, normal auto-merge and exact publication.
+- **Last verified:** 2026-09-10 (`a1ef3f22ce38d148064b0c0b5c29c6db30f46168`, protected squash; exact deploy 34441497877 succeeded; all 956 live records / 239 routes in artifact 10138837491 independently verified)
+- **Summary:** Complete paired correction connects intrinsic mechanics, maintained activation, distributed feedback, input counterfactuals, energy and finite-time outcomes. Proper storage/tracking proofs, independently checked damping/delay examples, one reproducible figure and all 12 worked answers. Final tests-directory run 5,111 passes, 92.68% coverage; focused 36, content 131, 34 static contracts, title/style/type/link and complete affected PDF/web QA pass. Protected merge and exact publication verified without retries or serious/critical accessibility findings. Peer impact work and immutable publication excluded.
+- **Next step:** Retain this published derivation as a cross-reference during the remaining corpus review.
 
 ### DL-#4333 · Flexible Shaft Dynamics and Evidence
 

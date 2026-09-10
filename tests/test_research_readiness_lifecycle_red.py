@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import date, timedelta
 from typing import cast
 
 import pytest
@@ -33,9 +34,10 @@ def test_current_verification_cannot_retroactively_authorize_a_transition() -> N
     library = canonical_library()
     record = protocol(library)
     evidence = cast(list[dict[str, object]], record["evidence"])
+    event_on = date.fromisoformat(str(evidence[0]["reviewed_on"]))
     evidence[0]["status_history"] = [
-        {"status": "rejected", "on": "2026-08-28"},
-        {"status": "verified", "on": "2026-08-30"},
+        {"status": "rejected", "on": (event_on - timedelta(days=1)).isoformat()},
+        {"status": "verified", "on": (event_on + timedelta(days=1)).isoformat()},
     ]
     evidence[0]["status"] = "verified"
     reseal(record)
@@ -49,8 +51,9 @@ def test_history_event_dates_are_monotonic() -> None:
     library = canonical_library()
     record = protocol(library)
     history = cast(list[dict[str, object]], record["history"])
-    history[0]["on"] = "2026-08-30"
-    history[1]["on"] = "2026-08-29"
+    event_on = date.fromisoformat(str(history[0]["on"]))
+    history[0]["on"] = (event_on + timedelta(days=1)).isoformat()
+    history[1]["on"] = event_on.isoformat()
     reseal(record)
 
     with pytest.raises(ResearchReadinessError, match="history.*chronolog|non-monotonic"):
@@ -76,17 +79,19 @@ def test_later_revocation_preserves_verified_transition_history_when_superseded(
     successor = protocol(library, "ad-protocol-hybrid-impact-001")
     evidence = cast(list[dict[str, object]], record["evidence"])
     history = cast(list[dict[str, object]], record["history"])
+    event_on = date.fromisoformat(str(history[-1]["on"]))
+    revoked_on = (event_on + timedelta(days=1)).isoformat()
     reviewed = evidence[0]
     reviewed["status"] = "revoked"
     reviewed["status_history"] = [
         {
             "status": "verified",
-            "on": "2026-08-29",
+            "on": event_on.isoformat(),
             "rationale": "Evidence was verified when the transition occurred.",
         },
         {
             "status": "revoked",
-            "on": "2026-08-30",
+            "on": revoked_on,
             "rationale": "Later review withdrew the evidence.",
         },
     ]
@@ -94,13 +99,13 @@ def test_later_revocation_preserves_verified_transition_history_when_superseded(
     supersession = opaque_evidence(record, supersession_id, "supersession-record")
     supersession["related_protocol_id"] = successor["protocol_id"]
     supersession["related_record_revision"] = successor["record_revision"]
-    supersession["reviewed_on"] = "2026-08-30"
+    supersession["reviewed_on"] = revoked_on
     evidence.append(supersession)
     history.append(
         {
             "from": "simulation-ready",
             "to": "superseded",
-            "on": "2026-08-30",
+            "on": revoked_on,
             "rationale": "Withdraw the current protocol after evidence revocation.",
             "evidence_ids": [supersession_id],
         }
