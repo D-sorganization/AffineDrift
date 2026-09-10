@@ -1,3 +1,33 @@
+# Contact-Force Regularity Synthesis #4255
+
+- Repository/worktree: D-sorganization/AffineDrift,
+  C:/Users/diete/Repositories/AffineDrift-impact-regularity.
+- Branch: docs/4255-contact-force-regularity; baseline b5362af0005c8ae1ad00e81390e9151991157155;
+  implementation SELF; PR not created. Governing issue4255, parent4253.
+  Existing development entry DL-0035 is updated in place.
+- Adds the force-jump/impulse distinction, spectral derivation, candidate-law
+  external-forcing limits and source-identified numerical evidence to the
+  existing impact-acoustics include; two bibliography entries. No code, trust
+  pin or protected monograph changes. Peer turnover below is preserved.
+- Full Python3.12 coverage:5229PASS/29SKIP/132deselected in219.88s;79.29% above
+  unchanged75%. Five focused and131 content checks pass. Bibliography,
+  title636 and xref1161 audits pass; Quarto1.8.26 article render succeeds.
+  Actual-route browser tree verifies section/equation/citations; visual/mobile
+  and exhaustive accessibility qualification are not claimed.
+- FORCE_REGULARITY_REVIEW.md and FORCE_REGULARITY_RESULTS.json record exact
+  commands, hashes, source-access limits, render cleanup and failed initial
+  invocation. This clean isolated worktree avoids the generated artifacts
+  retained in the earlier impact worktrees. Do not delete peer files.
+- Tools279926e95 is published with1481 Windows passes/2 optional CAD skips,
+  but Standard34471450139 both shared shards fail at60s in entry240. Next
+  performance investigation is a bounded Jacobian/Frechet matrix series with
+  the existing routine as fallback; no law/grid/deadline change is authorized
+  by this theory note. Physical/perceptual requirements remain open.
+- Next: publish this source through normal hooks and open a ready review PR.
+  Then qualify protected site/review checks; do not close4255 from this increment.
+
+## Preserved Earlier Turnover
+
 # Implementation Handoff
 
 Keep this file current and concise. Replace instructional placeholders; do not append an unbounded transcript.

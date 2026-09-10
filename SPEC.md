@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-10 | #4255 | Extend impact acoustics with contact-force regularity, finite-jump versus impulse and spectral-tail derivation; qualify continuous-onset candidate laws under external forcing and link source-identified numerical evidence without promoting physical or sweetness claims. |
 | 2026-09-10 | #4332 | Correct paired muscle-force models, activation, tendon energy and control inference with independently checked examples and figures. |
 | 2026-09-10 | #4330 | Correct both motor-learning editions with distinct error models, bounded golf evidence, paired figures and worked answers. |
 | 2026-09-08 | #4292 | Correct launch-monitor definitions, point and rotation kinematics, temporal uncertainty, vendor evidence, and validation-study interpretation. |

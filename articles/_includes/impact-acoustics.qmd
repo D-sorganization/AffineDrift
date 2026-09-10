@@ -50,6 +50,80 @@ decreases. That inconsistency must be retained in the evidence ledger, not
 silently converted into a monotone physiological law. Their sub-500 Hz modal
 study does not qualify a broadband driver-sound model [@chiementin2019grip].
 
+## Contact-Force Regularity and Acoustic Bandwidth {#sec-impact-force-regularity}
+
+A contact model can predict ball impulse adequately while misrepresenting the
+force waveform that excites audible modes. Consider the unilateral clipped
+Kelvin–Voigt baseline: for compression $\delta>0$ its force is
+$F_n=\max(0,k_n\delta+c_n\dot\delta)$, with zero force outside contact.
+At a closing first touch with finite incoming speed $v_0>0$, its incoming
+force limit is $c_n v_0$. Assigning zero force at the single instant
+$\delta=0$ does not remove this right-hand limit.
+
+This finite force jump is **not a Dirac impulse**. Momentum and accumulated
+work can remain continuous across first touch. Its spectral consequences
+nevertheless differ from those of a continuous-onset force. With
+$\widehat F(\omega)=\int F(t)e^{-i\omega t}\,dt$, a compactly supported,
+piecewise smooth force with finitely many jumps $\Delta F_j$ satisfies
+
+$$
+i\omega\widehat F(\omega)=
+\sum_j\Delta F_j e^{-i\omega t_j}
++\int F'_{\mathrm{regular}}(t)e^{-i\omega t}\,dt.
+$$ {#eq-impact-force-jump-spectrum}
+
+This follows by integrating the distributional derivative. If the regular
+derivative is integrable, its transform tends to zero, leaving an oscillatory
+$1/\omega$ leading contribution from the jumps. Cancellation can create spectral
+zeros; this is not a monotone amplitude law or a pointwise lower bound. Units
+agree: $\widehat F$ and $\Delta F/\omega$ both have units N s. For a continuous
+force whose first derivative has the corresponding bounded-variation and
+integrability properties, a second integration gives an $O(\omega^{-2})$ bound.
+Other events and the analysis-window endpoints can determine the overall tail,
+so smooth onset alone does not qualify the full pulse spectrum.
+
+Equal impulse or restitution therefore does not imply equal modal excitation.
+An equal-area rectangular pulse and triangular pulse provide a simple
+analytical comparison: the former has force jumps, whereas the latter has
+continuous force and slope jumps. No player, club material or perception model
+is needed for that distinction. It motivates testing force-history bandwidth
+in addition to final ball speed, spin and work.
+
+A continuous-onset candidate is $F_n=\delta^n(k+\lambda\dot\delta)$ for
+$\delta>0$ and $n>0$. Simbody documents a sphere/sphere-plane Hunt–Crossley
+implementation with $n=3/2$, $\lambda=(3/2)kc$ and recoverable storage
+$U=(2/5)k\delta^{5/2}$; its restitution-versus-speed parameterization is a
+low-speed approximation. These geometry, parameter and speed conventions are
+part of the model, not measured properties of a multilayer golf ball and
+flexing clubface [@simbody2019huntcrossley].
+
+Continuity does not guarantee nonadhesion under arbitrary external forcing:
+$k+\lambda\dot\delta$ can become negative during sufficiently rapid unloading.
+Carvalho and Martins report this limitation and propose extensions and an
+exponential contact law. Their institutional abstract supports that caution;
+it does not supply a fully inspected derivation for adopting an exact
+restitution mapping here [@carvalho2019restitution]. A free, frictionless
+two-body calibration must not silently become a guarantee for a rotating,
+externally loaded shaft/grip system. Clipping a candidate force also requires
+an explicit storage and dissipation audit.
+
+Before comparing acoustic outcomes, resolve first touch, unloading and
+separation, and establish separate convergence of impulse, peaks, waveform
+amplitude and phase over a declared frequency band. Retain the force-law
+identity, contact patch, time resolution, sampling, filtering and window.
+Windowing can suppress a numerical artifact without validating its physical
+origin. A smoother candidate law needs held-out force measurements; a more
+pleasant simulated tone is not evidence that its mechanics are more accurate.
+
+The [source-identified coupled-contact study](https://github.com/D-sorganization/Tools/blob/279926e95e8a17cc42702a53c30ea03bf4638bec/docs/development/impact-acoustics/FRICTION_ENTRY.md)
+resolves first-touch and sliding-entry reference events, while explicitly
+retaining unresolved production event-history and cutoff-work limits.
+Its [regularity research note](https://github.com/D-sorganization/Tools/blob/279926e95e8a17cc42702a53c30ea03bf4638bec/docs/development/impact-acoustics/CONTACT_FORCE_REGULARITY.md)
+connects these findings to the contact and acoustic epics. These are bounded
+synthetic results and analytical requirements. A force spectrum still needs
+structural and acoustic transfer functions before it becomes pressure, and
+blinded listener evidence before it supports a sweetness claim.
+
 ## From Impact to Radiated Sound {#sec-impact-acoustic-radiation}
 
 The modeling chain is contact traction $\rightarrow$ structural motion
