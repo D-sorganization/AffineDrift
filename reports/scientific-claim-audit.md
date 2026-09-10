@@ -24,7 +24,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | Route | Canonical Source | Evidence Files |
 |---|---|---:|
 | `/` | `index.qmd` | 3 |
-| `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 5 |
+| `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 7 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |

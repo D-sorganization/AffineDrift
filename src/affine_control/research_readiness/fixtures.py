@@ -187,6 +187,8 @@ def _protocol(
     review = cast(dict[str, object], audit["review"])
     evidence_map = cast(dict[str, str], review["evidence_sha256"])
     source_path = str(review["source_path"])
+    # Regenerated manufactured transitions cannot precede their latest reviewed evidence.
+    fixture_on = max(str(review["reviewed_on"]), "2026-08-29")
     protocol: dict[str, object] = {
         "protocol_id": protocol_id,
         "title": seed.title,
@@ -244,8 +246,8 @@ def _protocol(
                 "evidence_origin": seed.evidence_origin,
                 "path": source_path,
                 "sha256": evidence_map[source_path],
-                "reviewed_by": f"AffineDrift issue #{seed.issue} protected review",
-                "reviewed_on": "2026-08-29",
+                "reviewed_by": str(review["reviewer"]),
+                "reviewed_on": str(review["reviewed_on"]),
             },
             {
                 "evidence_id": f"evidence-{seed.slug}-schema",
@@ -276,14 +278,14 @@ def _protocol(
             {
                 "from": "concept",
                 "to": "evidence-reviewed",
-                "on": "2026-08-29",
+                "on": fixture_on,
                 "rationale": "Exact reviewed route evidence and authority boundaries are joined.",
                 "evidence_ids": [f"evidence-{seed.slug}-review"],
             },
             {
                 "from": "evidence-reviewed",
                 "to": "simulation-ready",
-                "on": "2026-08-29",
+                "on": fixture_on,
                 "rationale": (
                     "The strict schema and adverse manufactured dry run validate " "mechanics only."
                 ),
@@ -295,7 +297,7 @@ def _protocol(
                 "attempt_id": f"attempt-{seed.slug}-pilot",
                 "target": "pilot-ready",
                 "outcome": "rejected",
-                "on": "2026-08-29",
+                "on": fixture_on,
                 "rationale": (
                     "Qualified measurement, calibration, risk, power, and governance "
                     "evidence are unavailable."

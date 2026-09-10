@@ -172,7 +172,7 @@ def test_authored_lay_summary_cannot_amplify_the_governed_claim() -> None:
     page = ROOT / "articles/controllability-drift-ratio.qmd"
     source = page.read_text(encoding="utf-8")
     section = re.search(
-        r'<section class="laymans-terms">(?P<body>.*?)</section>',
+        r'<details class="technical-explanation">(?P<body>.*?)</details>',
         source,
         flags=re.DOTALL,
     )

@@ -194,7 +194,11 @@ were replayed onto de57acae49ea206d0232ecf4de8a7f9cd0b5da03. The validated
 implementation tree before and after replay is identical. Normal commit and
 push hooks passed, including the push test suite. SVG whitespace normalization
 preserved all non-whitespace content and is now part of its builder. No force
-push, hook bypass or direct-main operation was used. Protected CI/merge and
-exact publication remain to be verified. The development-log checker still
+push, hook bypass or direct-main operation was used. Protected CI and squash merge succeeded at
+a1ef3f22ce38d148064b0c0b5c29c6db30f46168. Deployment 34441497877 completed
+successfully for that exact revision. Live artifact 10138837491 contains
+956/956 passing records across 239 routes. Every record was independently
+checked for HTTP 200, empty inspection/axe failures and one successful
+navigation, with no retries or transient responses. The development-log checker still
 reports only the preserved #3903/#3902 metadata defects; this feature has its
 concrete implementation SHA and PR.
