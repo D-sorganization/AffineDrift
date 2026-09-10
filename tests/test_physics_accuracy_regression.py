@@ -141,9 +141,10 @@ class TestEulerBernoulliBeam:
         chapter_text = chapter_path.read_text(encoding="utf-8")
 
         expected_fragments = [
-            "EI \\frac{\\partial^4 w}{\\partial z^4}(z,t) + \\rho A \\frac{\\partial^2 w}{\\partial t^2}(z,t)",
-            "q(z,t)",
-            "w(z,t)",
+            r"\mu w_{tt}+\partial_z^2(EI w_{zz})-\partial_z(Nw_z)=q(z,t)",
+            "mass per length",
+            "Spatial variation",
+            r"\mu w_{tt}+EIw_{zzzz}=q",
         ]
         for fragment in expected_fragments:
             assert fragment in chapter_text, f"Missing expected chapter fragment: {fragment}"

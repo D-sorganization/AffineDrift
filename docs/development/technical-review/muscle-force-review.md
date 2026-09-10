@@ -194,3 +194,8 @@ joint-friction work and immutable publication. No subagents or Git mutation
 during QA. The corpus has 405 rows and 210 Indexed statuses; partial sources
 and whole-book consistency audits remain additional work. The next longest
 unreviewed chapter is shaft flexibility, followed by passive dynamics.
+
+Protected PR #4332 merged normally as fd464eed3dc493b3e31363cfb1396ac69e849142.
+Main CI 34432094338 and textbook build 34432094441 passed. Deployment
+34432094332 was cancelled; descendant run 34433303512 remains in progress.
+Exact live publication is pending and is not inferred from the merge.
