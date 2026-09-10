@@ -1,553 +1,425 @@
-\chapter{Muscle Force Generation: The Biological Engine}
+\chapter[Muscle Force Generation: The Biological Engine]{Muscle Force Generation:\\The Biological Engine}
 \label{ch:muscle-force-generation}
-
-\epigraph{``The power of a golf swing does not come from the club, nor from the body's size. It comes from the orchestra of muscles, each tuned to fire at the precise moment, each limited by the physics of how molecules generate force.''}{Adapted from biomechanics principle}
+\raggedbottom
+\index{wrist torque}
+\index{slow-twitch}
+\index{shoulder torque}
+\index{series elastic element}
+\index{sequencing}
+\index{sarcomere overlap}
+\index{sarcomere}
+\index{pre-activation}
+\index{physiological cross-sectional area}
+\index{pennation angle}
+\index{peak torques}
+\index{parallel elastic element}
+\index{neural command}
+\index{neural activation}
+\index{muscle architecture}
+\index{force-velocity curve}
+\index{force-length curve}
+\index{fiber types}
+\index{fast-twitch}
+\index{excitation-contraction coupling}
+\index{elbow torque}
+\index{eccentric contraction}
+\index{drift field}
+\index{control field}
+\index{control affine}
+\index{contractile element}
+\index{concentric contraction}
+\index{activation time constant}
+\index{actin-myosin}
+\index{PCSA}
+\index{Hill's equation}
+\index{Hill muscle model}
 
 \begin{laymansbox}{Why Muscle Biology Matters for Your Swing}{context:muscle-matters}
-Muscle tissue has speed-dependent force limits. During concentric shortening, faster contraction generally reduces available force, while activation dynamics delay the conversion of neural command into joint torque. These facts do not by themselves prove a specific coaching rule, but they help explain why late-downswing corrections are difficult and why impact-phase control claims require model-specific support.
+The nervous system prepares muscle activity; muscles pull on tendons; tendon forces act through changing moment arms; the coupled body and club respond. Each link matters. A fast clubhead does not tell us how fast a particular muscle fiber is shortening. A small net joint torque does not tell us that the surrounding muscles are relaxed. Understanding these distinctions lets us ask a useful golf question: which changes in preparation or ongoing activation can still change the impact conditions, by how much, and with what consequences elsewhere in the body?
 \end{laymansbox}
+
+This chapter develops a reproducible teaching model before discussing measurements and training. Its numerical examples are manufactured calculations, not estimates of a particular golfer. The purpose is to connect biological limitations to mechanics without turning a plausible mechanism into an unsupported claim that every player must use one sequence. The model omits fatigue, injury, detailed neural circuitry and many tissue effects; those omissions define the questions it can answer.
 
 \section{Muscle Architecture: What a Muscle Actually Is}
 
-\index{muscle architecture}
-\index{sarcomere}
-\index{actin-myosin}
-
-To understand how muscles generate the forces that drive the golf swing, we must zoom from the whole muscle down to its molecular machinery. Every muscle is a hierarchical structure, and force generation happens at every level.
-
 \begin{definition}{The Muscle Hierarchy}{muscle-hierarchy}
-A muscle is organized in nested layers:
-\begin{center}
-\begin{tabular}{ll}
-\toprule
-Level & Scale \\
-\midrule
-Muscle (whole) & cm scale \\
-Fascicle (bundle) & mm scale \\
-Muscle fiber (cell) & $10$--$100$ $\mu$m diameter \\
-Myofibril (protein filaments) & $1$--$2$ $\mu$m diameter \\
-Sarcomere (force unit) & $2$--$3$ $\mu$m length \\
-Actin--myosin complex & nm scale \\
-\bottomrule
-\end{tabular}
-\end{center}
-The \emph{sarcomere} is the fundamental force-generating unit. All voluntary muscle force is produced by trillions of sarcomeres contracting in parallel.
+A skeletal muscle contains fascicles, which contain muscle fibers. Each fiber is a cell containing myofibrils with sarcomeres arranged along their length. Actin and myosin interact within these repeating units. Sarcomeres in series contribute length and shortening excursion; contractile structures in parallel contribute force. A muscle can produce active tension while shortening, holding approximately constant length or being lengthened by its load. The word contraction does not require visible shortening.
 \end{definition}
 
-At the molecular level, two protein filaments—actin and myosin—interlock and pull past each other. Myosin heads act like molecular motors, powered by ATP hydrolysis. When activated, each myosin head attaches to an actin site, rotates (pulling actin along), detaches, and resets. Millions of these heads firing in sequence create the continuous force we feel as muscle contraction. This is the actin-myosin cross-bridge mechanism, and it is pure chemistry converted to mechanical work.
-
-\index{fiber types}
-\index{slow-twitch}
-\index{fast-twitch}
-
-Not all muscle fibers are created equal. The human body contains three main fiber types:
+An electrical signal initiates processes that raise calcium availability within the fiber. Cross-bridge cycling couples chemical energy to force and motion. ATP binding allows myosin to detach from actin, hydrolysis prepares another cycle, and calcium handling also consumes energy. This mechanism is different from stretching a passive rubber band. The band can return energy previously stored in it; an activated muscle can convert chemical energy into mechanical work. A loaded muscle also contains passive structures, so measured total tension need not disappear when neural excitation stops. \citep{OpenStax2022Contraction}
 
 \begin{principle}{Muscle Fiber Types and Their Roles}{principle:fiber-types}
-\begin{description}
-\item[Type I (slow-twitch, oxidative)] Lower maximum shortening velocity, high fatigue resistance, moderate force production. Power primarily from aerobic metabolism. Used for endurance, posture, smooth sustained effort. About 40--50\% of most muscles. \cite{Neumann2017}
-
-\item[Type IIa (fast-twitch oxidative)] Higher shortening velocity than Type I, high force production, moderate fatigue resistance. Oxidative capacity good. Important for athletic power movements. About 20--30\% of muscles. \cite{Neumann2017}
-
-\item[Type IIx (fast-twitch glycolytic)] Highest maximum shortening velocity, highest force production per fiber, rapid fatigue. Power from anaerobic glycolysis. Most powerful for brief bursts. About 5--15\% of untrained muscles (training and selection can increase this). \cite{Neumann2017}
-\end{description}
-
-Elite golfers often exhibit higher proportions of Type II fibers, especially IIa, which are suited to explosive movements. However, individual variation is large, and golf performance depends more on skill and technique than on fiber type distribution. \cite{Hume2005}
+Fiber classifications summarize differences in contractile speed and metabolic properties. Slow oxidative fibers tend to resist fatigue; fast oxidative and fast glycolytic categories describe different combinations of speed and energy supply. These categories do not give a universal percentage composition for every muscle or golfer. Nor does a fast clubhead establish the player's fiber composition. Fiber size, recruitment, architecture, training history and task coordination are separate quantities. \citep{OpenStax2022FiberTypes}
 \end{principle}
 
-\index{PCSA}
-\index{physiological cross-sectional area}
-\index{pennation angle}
-
-Most muscles do not run straight from origin to insertion. Instead, muscle fibers attach to a tendon at an \emph{angle}—the \emph{pennation angle} $\alpha$. This angled architecture allows many more fibers to pack into a given space, increasing the muscle's force capacity. However, it introduces a geometric coupling: only the component of fiber force along the tendon direction contributes to the joint torque.
-
 \begin{definition}{Muscle Architectural Parameters}{muscle-architecture}
-\begin{itemize}
-\item $\ell^M$ = physiological fiber length (along the fiber direction), typically 5--15 cm
-\item $\ell^M_{\mathrm{opt}}$ = optimal fiber length, where force is maximal
-\item $\alpha$ = pennation angle, the angle between fibers and the tendon
-\item $A_{\mathrm{PCSA}}$ = physiological cross-sectional area, $\approx \frac{M}{\rho \ell^M}$ where $M$ is muscle mass and $\rho \approx 1.06$ g/cm$^3$
-\item $\sigma_{\max}$ = specific tension (force per unit area), typically 30--60 N/cm$^2$ for healthy muscle
-\item Maximum isometric force: $F_0 = \sigma_{\max} \times A_{\mathrm{PCSA}}$
-\end{itemize}
-
-For example, the latissimus dorsi (primary force generator in the downswing) has been studied extensively in biomechanical literature. \cite{Delp1990, Rajagopal2016} Using typical anatomical parameters from cadaver studies, maximum isometric force values can be estimated from PCSA and specific tension, though individual variation is substantial.
+Let $\ell^M$ be fiber length in meters, $\ell^M_{\mathrm{opt}}$ its reference optimal length, and $\alpha$ the angle between fibers and the tendon line. For approximately parallel, equal-length fibers at the reference configuration, a volume-based physiological cross-sectional area is
+\[
+A_{\mathrm{PCSA}}=\frac{V_M}{\ell^M_{\mathrm{opt}}}
+=\frac{m_M}{\rho_M\ell^M_{\mathrm{opt}}},
+\qquad F_0=\sigma_0 A_{\mathrm{PCSA}}.
+\]
+Here $m_M$ is muscle mass, $\rho_M$ density, and $\sigma_0$ specific tension in compatible units. We define $F_0$ along the fiber direction. Its tendon-direction projection at the reference pennation is $F_0\cos\alpha_0$. Some sources incorporate this projection in their area or maximum-force convention; applying it again would double-count pennation. These reference parameters are not recalculated by substituting the instantaneous fiber length into the area formula.
 \end{definition}
+
+For an explicitly hypothetical area of $3\,\mathrm{cm^2}$ and specific tension of $30\,\mathrm{N/cm^2}$, $F_0=90\,\mathrm{N}$. At $\alpha_0=20^\circ$ its projection is about $84.6\,\mathrm{N}$. This arithmetic is transparent; interpreting either input as a measured value for a named golf muscle would require anatomical evidence. Increasing fiber length at fixed muscle volume trades parallel area for excursion capacity in this simplified architecture. Increasing pennation changes both packing and projection, so the cosine alone does not establish whether one architecture is stronger.
+
+The source of anatomical parameters matters. Holzbaur and colleagues' upper-extremity model includes shoulder-to-finger geometry and comparisons with moment arms and isometric moment capacity. Its tendon slack lengths were selected using additional constraints, and the authors identify sensitivity and shoulder-geometry limitations. It is a starting model, not validation of muscle force during a golf swing. \citep{Holzbaur2005} Rajagopal and colleagues' gait model instead uses muscle-tendon actuators in the lower limbs and ideal torque actuators for the upper body. It cannot supply evidence for detailed forearm muscle parameters merely because its title says full-body. \citep{Rajagopal2016}
 
 \section{The Force-Length Relationship}
 
-\index{force-length curve}
-\index{sarcomere overlap}
-
-The fundamental principle: muscle force depends on the length of the muscle. At certain lengths, all the actin--myosin overlap is optimal. At other lengths, fibers are overextended (poor overlap) or compressed (loss of overlap), producing less force. This is the \emph{force-length relationship}.
-
-\begin{laymansbox}{Why Muscle Strength Changes with Joint Angle}{context:force-length-intuition}
-Imagine stretching a rubber band. At first, as you stretch, the polymer chains align better and resist harder. But if you stretch too far, the chains break apart and resistance drops. Muscle works similarly. There's a \emph{sweet spot}—the length at which all sarcomeres are optimally positioned to generate force. Shorter or longer, and force decreases. This is why you feel strongest at certain joint angles and weaker at others. The golf swing exploits this: positions are chosen to put key muscles near their optimal length when they need to apply the most force.
+\begin{laymansbox}{Strength Changes With Joint Angle}{context:force-length-intuition}
+Changing joint angle changes muscle paths, fiber lengths and moment arms. Active force depends in part on filament interaction, while passive tension increases as passive structures are loaded. Joint strength therefore need not peak at the angle where one muscle's active fiber force peaks. Antagonists, other muscles crossing the joint and the test apparatus also contribute to the measured moment.
 \end{laymansbox}
 
-The active force-length relationship can be modeled as:
+Normalize fiber length as $\lambda=\ell^M/\ell^M_{\mathrm{opt}}$. A convenient illustrative active curve is
 \begin{equation}
-f_L(\tilde{\ell}) = \exp\left(-\left(\frac{\tilde{\ell} - 1}{\gamma}\right)^2\right)
+f_L(\lambda)=\exp\!\left[-\left(\frac{\lambda-1}{\gamma}\right)^2\right],
+\qquad \gamma=0.5.
 \label{eq:active-force-length}
 \end{equation}
-where $\tilde{\ell} = \ell^M / \ell^M_{\mathrm{opt}}$ is the normalized fiber length, and $\gamma \approx 0.5$ is a width parameter. This bell-curve function captures the plateau region near optimal length and the declining force at shorter or longer lengths.
-
-The Gaussian is an approximation. In reality, the force-length curve is \emph{asymmetric}: force drops off more steeply when the muscle is shorter than optimal (due to myosin-actin overlap geometry) than when it is stretched beyond optimal (where passive elastic elements in titin and connective tissue contribute additional force). For most golf-swing analyses, the symmetric Gaussian is adequate, but be aware that this simplification underestimates passive forces in highly stretched muscles---which matters for the trail shoulder external rotators at the top of the backswing.
-
-The force-length curve has three distinct regions:
+This Gaussian has a maximum of one at $\lambda=1$. It has neither an exactly flat plateau nor a finite length at which it becomes exactly zero. At $\lambda=0.8$ and $1.2$, it gives $e^{-0.16}\approx0.8521$; at $0.5$ and $1.5$, it still gives $e^{-1}\approx0.3679$. Thus it should not be extrapolated as a literal prediction of filament overlap at extreme lengths. The parameter $\gamma$ is a declared teaching choice, not a universal tissue measurement.
 
 \begin{principle}{Regions of the Force-Length Curve}{principle:fl-regions}
-\begin{description}
-\item[Ascending limb ($\tilde{\ell} < 1$)] Muscle shorter than optimal. Sarcomere overlap incomplete. Force increases with length. This is where muscles are weak because they cannot be fully recruited.
-
-\item[Plateau ($0.9 < \tilde{\ell} < 1.1$)] Near optimal length. Force is constant and maximal. Minimal sensitivity to small length changes. Most powerful configuration.
-
-\item[Descending limb ($\tilde{\ell} > 1.1$)] Muscle longer than optimal. Excessive stretch reduces sarcomere overlap. Passive elastic elements begin to dominate. Force decreases with further lengthening. At extreme stretch, passive force dominates.
-\end{description}
+Distinguish the active-force curve from total force. Activation can scale active force while passive structures contribute separately. A low active-force multiplier at short length is not the same mechanism as low neural recruitment. At longer lengths, decreasing active force can coexist with increasing passive tension. A model should state both contributions and the lengths over which its fitted curves are supported.
 \end{principle}
 
-Parallel to the active force-length curve, muscles exhibit \emph{passive} force from connective tissue (collagen), which resists excessive stretch:
+For a nonnegative passive teaching curve, choose $k_P=4$ and $\epsilon_P=0.6$:
 \begin{equation}
-F_{\mathrm{passive}}(\tilde{\ell}) = F_0 \left[ \exp(k(\tilde{\ell} - 1)) - 1 \right]
+f_P(\lambda)=
+\begin{cases}
+0,&\lambda\leq1,\\
+\dfrac{e^{k_P(\lambda-1)}-1}{e^{k_P\epsilon_P}-1},&\lambda>1.
+\end{cases}
 \label{eq:passive-force-length}
 \end{equation}
-where $k \approx 4$ sets the exponential growth rate. Passive force becomes significant at $\tilde{\ell} > 1.2$.
+The threshold, shape and normalization are explicit: $f_P(1)=0$ and $f_P(1.6)=1$. At $1.2$ it is about $0.12227$. The expression never generates passive compression below its slack threshold. Its right derivative at the threshold differs from the left derivative; a differentiable simulation model would require an appropriate transition if a solver or sensitivity calculation needs one.
 
-The total force from a muscle is:
+With dimensionless activation $a\in[0,1]$ and the velocity multiplier defined next, total fiber-direction force is
 \begin{equation}
-F = a \cdot F_0 \cdot f_L(\tilde{\ell}) + F_{\mathrm{passive}}(\tilde{\ell})
+F_M=F_0\{a f_L(\lambda)f_V(w)+f_P(\lambda)\}.
 \label{eq:total-muscle-force}
 \end{equation}
-where $a \in [0,1]$ is the neural \emph{activation level}.
+This expression deliberately omits viscous damping and history effects. It distinguishes the active component from passive tension but does not resolve every structure inside a real muscle.
 
 \begin{example}{Latissimus Dorsi Through the Swing}{lat-force-length}
-The latissimus dorsi, a major pulling muscle in the downswing, is longest (most stretched) near the top of the backswing and shortest during the finish. Research on golf swings shows that the lat reaches near-optimal length ($\tilde{\ell} \approx 1.0$) during the transition and early downswing—precisely when it is recruited most heavily (activation $a \approx 0.7$--$0.8$). This is not accident; the swing is structured to place powerful muscles at their optimal lengths when peak torque is needed. By contrast, the triceps (elbow extensor) is positioned at a mechanically disadvantaged length (short, ascending limb) at mid-downswing, producing less peak force despite high neural activation. This architectural constraint is one reason why arm geometry and swing plane are so important.
+A statement that the latissimus is near its optimal length at a particular swing phase requires more than an image of the pose. The shoulder girdle configuration, muscle path, tendon extension, pennation and reference fiber length all affect the inference. Suppose a model gives $\lambda=1.2$ and $a=0.7$ at zero fiber velocity. Our chosen curves give
+\[
+F_M/F_0\approx0.7(0.8521)+0.12227=0.7188.
+\]
+ That is a calculation conditional on model inputs; it does not establish either input for a golfer. Testing the claim requires checking the modeled geometry and measured motion, and reporting sensitivity to uncertain parameters.
 \end{example}
 
 \section{The Force-Velocity Relationship: Hill's Equation}
 
-\index{force-velocity curve}
-\index{Hill's equation}
-\index{concentric contraction}
-\index{eccentric contraction}
-
-Here is the critical insight that links muscle biology to the drift-control ratio: \emph{faster contraction produces less force}. This is the force-velocity relationship, discovered by A.V. Hill in 1938, and it remains one of the most important principles in biomechanics.
-
-\begin{laymansbox}{The Central Constraint: You Cannot Be Strong and Fast}{context:force-velocity-intuition}
-When a muscle fiber contracts, each myosin head must attach, rotate, and detach. This cycle takes finite time—roughly 1--2 milliseconds per cycle. If the muscle is shortening quickly (fast contraction velocity), the rate at which new cross-bridges can be formed lags behind the rate at which they're being broken. Fewer bridges bear the load, so total force drops. At very high speeds, the contraction is so rapid that almost no force is produced—the muscle is sliding past the load without gripping it. This is why a person can punch fast but a punch is weak, while a slow, heavy push against a wall produces more force. The golf swing experiences this limit acutely: at the fastest part of the downswing (near impact), muscle force capacity is at its minimum, yet the gravitational and inertial drift forces are at their maximum. This is the physical reason why control fails at impact.
+\begin{laymansbox}{The Central Constraint: Force Depends on Fiber Speed}{context:force-velocity-intuition}
+A muscle fiber shortening rapidly generally has less active force capacity than the same fiber shortening slowly under comparable conditions. This statement concerns local fiber velocity. A muscle can move quickly through the room while its fiber length barely changes, and a moving tendon can stretch while the fibers shorten. Clubhead speed alone identifies neither motion.
 \end{laymansbox}
 
-Hill's hyperbolic relationship, in its normalized form for \emph{concentric contraction} (shortening under load), is:
+Choose the shortening-positive convention
+\[
+w=-\frac{\dot\ell^M}{V_{\max}},
+\qquad V_{\max}=\nu\ell^M_{\mathrm{opt}},
+\]
+where $\dot\ell^M$ is positive for lengthening, $V_{\max}$ is in $\mathrm{m/s}$, and $\nu$ is in fiber lengths per second. For example, $2$--$4$ lengths/second for a $0.10\,\mathrm{m}$ reference fiber means $0.2$--$0.4\,\mathrm{m/s}$. Confusing these units produces order-of-magnitude errors.
+
+A normalized concentric Hill-type relation is
 \begin{equation}
-f_V(\tilde{v}) = \frac{1 - \tilde{v}/V_{\max}}{1 + \tilde{v}/(V_{\max} \cdot k)}
+f_V(w)=\frac{1-w}{1+w/k},
+\qquad 0\leq w\leq1,\quad k=0.4.
 \label{eq:hill-concentric}
 \end{equation}
-where:
-\begin{itemize}
-\item $\tilde{v} = \dot{\ell}^M$ is the fiber shortening velocity (positive for shortening)
-\item $V_{\max}$ is the maximum fiber shortening velocity (typically $2$--$4$ times the fiber length per second for fast fibers, e.g., $V_{\max} \approx 5$ m/s for a 10 cm fiber)
-\item $k$ is a dimensionless parameter, typically $0.3$--$0.5$
-\item $f_V$ ranges from 1 at zero velocity to 0 at $\tilde{v} = V_{\max}$
-\end{itemize}
-
-For \emph{eccentric contraction} (lengthening under load, e.g., a muscle applying brakes), Hill's equation is different and shows a counterintuitive result: force \emph{increases} beyond $F_0$. \cite{Hill1938}
-
-The force-velocity relationship for eccentric contractions shows that muscle can produce supermaximum forces when forced to lengthen. This has been widely confirmed in biomechanical experiments. The magnitude of the enhancement depends on velocity and muscle type, with typical values reported as 1.2--1.5 times isometric force at moderate eccentric velocities. \cite{Hill1938}
+It is hyperbolic, not linear. It equals one at zero shortening velocity and zero at the declared unloaded shortening limit. Extrapolating it above $w=1$ would produce negative active force; that extrapolation is outside this teaching law's domain. A simulation encountering that condition needs a stated treatment and a check that the assumed force equilibrium is physically and numerically admissible.
 
 \begin{principle}{Concentric vs. Eccentric: The Asymmetry}{principle:ecc-vs-conc}
-\begin{itemize}
-\item \textbf{Concentric (shortening):} Force decreases linearly with velocity. At $\tilde{v} = V_{\max}$, force is zero.
-\item \textbf{Eccentric (lengthening):} Force increases with velocity, plateauing at $1.2$--$1.5 \times F_0$.
-\item \textbf{Implication:} A muscle braking (resisting) can produce more force than one accelerating. This asymmetry is used in the swing: during the transition, muscles that have just accelerated the upper body now switch to eccentric mode to slow the lower body and transfer energy upward.
-\end{itemize}
+For lengthening, use the following explicitly constructed illustration:
+\[
+f_V(w)=1+(F_\infty-1)\frac{-w}{c-w},\qquad w\leq0,
+\]
+with $F_\infty=1.4$. Choose $c=4/35$ so that $c(1+1/k)=F_\infty-1$. It approaches $1.4$ as $w\to-\infty$, equals one at zero and has the same derivative there as the concentric branch. These choices make the joined velocity curve continuously differentiable at zero. They are not the published Thelen equation and do not establish a universal eccentric-force ceiling. Particular muscle models use different fitted curves, constraints and numerical regularizations. \citep{millard2013flexing}
 \end{principle}
 
-\begin{driftcontrol}{Why Drift Wins at Impact}{drift:muscle-fv}
-\noindent\begin{minipage}[t]{0.48\textwidth}
-\textbf{Drift (gravitational + inertial) forces:}
-\begin{itemize}
-\item Scale as $\approx m v^2$ for inertial (quadratic in speed)
-\item Grow as $\approx v^{1/2}$ for gravitational (sublinear)
-\item Peak at impact when clubhead speed $v_{\mathrm{club}} \approx 50$ m/s
-\item Drift torque at wrist: $\sim 50$--$100$ N$\cdot$m
-\end{itemize}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\textwidth}
-\textbf{Muscle force capacity:}
-\begin{itemize}
-\item Scales as $f_V(\tilde{v}) \approx (1 - \tilde{v}/V_{\max})$ (linear decrease)
-\item At impact, clubhead speed $\sim 50$ m/s, wrist muscles $V_{\max} \sim 10$ m/s
-\item Normalized velocity ratio: $\tilde{v}/V_{\max} \sim 5$ (OFF THE CHART)
-\item Available force: $f_V \approx 0$ or negative (muscles cannot hold on)
-\item Peak controllable torque: $\sim 5$--$10$ N$\cdot$m
-\end{itemize}
-\end{minipage}
+Active shortening power is $P_{\mathrm{CE}}=-F_{\mathrm{CE}}\dot\ell^M$. At full activation and optimal length, normalized power is
+\[
+P_{\mathrm{CE}}/(F_0V_{\max})=w f_V(w).
+\]
+ Differentiating gives the interior maximum
+\[
+w_* = \sqrt{k^2+k}-k\approx0.34833,
+\qquad \frac{P_*}{F_0V_{\max}}\approx0.12133.
+\]
+Maximum force and maximum shortening power occur at different speeds. Isometric force can be substantial while fiber shortening power is zero. During active lengthening, this sign convention gives negative mechanical power: the contractile component absorbs mechanical energy while still requiring metabolic processes.
 
-\noindent\textbf{Result:} The drift-control ratio at impact is $\approx 5$--$10$:$1$, meaning inertial and gravitational forces dominate. No amount of muscular effort can overcome this—it is written into the physics of muscle tissue itself.
-\end{driftcontrol}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/muscle_force_curves.pdf}
+\caption{Declared Teaching Curves: Active and Passive Length Multipliers, and the Joined Velocity Law. The Parameters Are Illustrative, Not Golfer Measurements.}
+\label{fig:muscle-force-curves}
+\end{figure}
 
-\begin{example}{Numerical Estimate: Wrist Muscle Force at Impact}{wrist-fv}
-\textbf{Illustrative example:} Consider the extensor carpi radialis brevis (ECRB), a wrist extensor involved in club control. The following parameters are representative values typical of forearm muscles, but individual variation is substantial and depends on anatomical variation, training, and measurement technique. \cite{Delp1990, Rajagopal2016}
-\begin{itemize}
-\item Maximum isometric force: estimated from PCSA and specific tension (individual values vary)
-\item Maximum fiber velocity: model- and muscle-specific; use the fiber-velocity parameter from the selected Hill-type model rather than a generic hand/wrist constant \cite{Thelen2006, Rajagopal2016}
-\item Moment arm about wrist: configuration-dependent; use the value from the selected musculoskeletal model or measurement source rather than treating 0.015--0.035 m as universal \cite{Delp1990, Delp2007, Rajagopal2016}
-\item Maximum isometric torque: product of force and moment arm, varies with position and individual
-\end{itemize}
+\begin{principle}{What High Club Speed Does and Does Not Establish}{drift:muscle-fv}
+High club speed changes the mechanical problem, but it does not insert that speed directly into $f_V$. First obtain each muscle-tendon path velocity from joint motion, then separate tendon and fiber motion. Likewise, $mv^2$ has units of energy, not force; a centripetal force estimate needs a radius, $mv^2/R$, and a specified trajectory. Gravitational force near Earth's surface does not grow with swing speed. Configuration-dependent inertial and velocity-coupling effects require the equations of motion, not a comparison of unlike speed scales.
+\end{principle}
 
-Now, at impact (late downswing):
-\begin{itemize}
-\item Clubhead speed: $v_{\mathrm{club}} \approx 50$ m/s
-\item Wrist angular velocity: $\dot{\theta}_{\mathrm{wrist}} \approx v_{\mathrm{club}} / r_{\mathrm{shaft}} \approx 50 / 0.7 \approx 70$ rad/s
-\item Muscle shortening velocity: $\dot{\ell}^M = r \cdot \dot{\theta}_{\mathrm{wrist}} \approx 0.02 \times 70 = 1.4$ m/s
-\item Normalized velocity: $\tilde{v} = 1.4 / 8 = 0.175$
-\item Force-velocity factor: $f_V \approx (1 - 0.175) = 0.825 \approx 0.8$
-\end{itemize}
-
-So at impact, the ECRB produces $\approx 80\%$ of its isometric force? No---this example assumes only the wrist moves. The entire arm is moving, so the actual velocity is much higher. If we account for full arm kinematics, $\dot{\ell}^M$ can reach 3--4 m/s, giving $\tilde{v} \approx 0.4$--$0.5$ and $f_V \approx 0.5$--$0.6$. At the very end of the downswing, as velocity peaks and acceleration drops, muscles are contracting at near-maximal speed, producing minimal force precisely when they are needed most.
+\begin{example}{Numerical Estimate: Local Wrist Muscle Force}{wrist-fv}
+Consider a hypothetical unpennated muscle with a rigid tendon, constant moment arm $r=0.02\,\mathrm{m}$, reference fiber length $0.10\,\mathrm{m}$ and $\nu=10\,\mathrm{s^{-1}}$. If the relevant joint alone rotates at $8.75\,\mathrm{rad/s}$ in the shortening direction, $-\dot\ell^M=r\dot q$, giving $0.175\,\mathrm{m/s}$ and $V_{\max}=1\,\mathrm{m/s}$. Therefore $w=0.175$ and
+\[
+f_V=0.825/1.4375\approx0.5739.
+\]
+ With $F_0=100\,\mathrm{N}$, $a=1$, $\lambda=1$ and no passive force, the tendon force is $57.39\,\mathrm{N}$ and moment $1.148\,\mathrm{N\,m}$. These inputs do not describe measured extensor carpi radialis brevis (ECRB) force at impact. Dividing clubhead speed by a guessed lever length cannot replace the required joint and path kinematics.
 \end{example}
 
 \section{Muscle Activation Dynamics}
 
-\index{neural activation}
-\index{excitation-contraction coupling}
-\index{activation time constant}
-
-The force we computed above assumes instantaneous muscle activation. In reality, muscles have a \emph{time lag} between the neural command and force production. This delay is called the \emph{electromechanical delay} (EMD) and is a fundamental constraint on motor control.
-
 \begin{laymansbox}{Why Muscles Are Slow to Respond}{context:activation-delay-intuition}
-When a nerve fires, it releases neurotransmitter chemicals at the muscle fiber membrane. These chemicals diffuse, bind to receptors, and trigger a cascade of molecular events: the sarcoplasmic reticulum releases stored calcium, calcium binds to regulatory proteins, the proteins shift to expose myosin-binding sites on actin, and only then do cross-bridges form and force develops. Each step takes time—the whole process is asynchronous. The activation time constant for human muscle is typically 10--50 ms. A golf swing downswing is only 200--300 ms long. This means that if you want to apply a corrective torque at the midpoint of the downswing, by the time the muscle activates (50 ms later), the club has moved significantly further. You're always playing catch-up.
+Neural excitation $u$ is an input to the muscle model. Activation $a$ describes its evolving active state; it is not identical to the command or to measured electromyography (EMG) amplitude. Tendon force follows from activation together with length, velocity and elastic loading. Consequently, a command change, an EMG onset and an external force onset are different events.
 \end{laymansbox}
 
-The standard model for muscle activation dynamics is a first-order linear system:
+For an elementary model, choose a fixed time constant $\tau_a>0$:
 \begin{equation}
-\dot{a} = \frac{u_{\mathrm{neural}} - a}{\tau_{\mathrm{act}}} \quad \text{if } u_{\mathrm{neural}} > a
+\dot a=\frac{u-a}{\tau_a},\qquad 0\leq u,a\leq1.
 \label{eq:activation-rise}
 \end{equation}
+For a constant command starting at $t=0$, direct integration gives
 \begin{equation}
-\dot{a} = \frac{u_{\mathrm{neural}} - a}{\tau_{\mathrm{deact}}} \quad \text{if } u_{\mathrm{neural}} \leq a
+a(t)=u+(a_0-u)e^{-t/\tau_a}.
 \label{eq:activation-fall}
 \end{equation}
-where:
-\begin{itemize}
-\item $u_{\mathrm{neural}} \in [0, 1]$ is the normalized neural input (command to the muscle)
-\item $a \in [0, 1]$ is the muscle activation level (the output we measure)
-\item $\tau_{\mathrm{act}} \approx 10$--$30$ ms is the activation time constant (rising phase)
-\item $\tau_{\mathrm{deact}} \approx 40$--$200$ ms is the deactivation time constant (falling phase)
-\end{itemize}
+The same equation describes decay when $u<a_0$. This fixed-constant model is intentionally simpler than activation-dependent rise and fall laws. Published implementations differ; the chosen law and any minimum activation must be specified before comparing simulations. \citep{OpenSimActivationDynamics}
 
-The asymmetry—faster rise than fall—reflects the biology: calcium is rapidly released but must be slowly pumped back into the sarcoplasmic reticulum.
+For $a_0=0$, $u=1$ and $\tau_a=25\,\mathrm{ms}$, activation reaches $63.2\%$ after one time constant, $50\%$ after $17.33\,\mathrm{ms}$ and $95\%$ after $74.89\,\mathrm{ms}$. At $50\,\mathrm{ms}$ it is about $0.8647$. Exact equality to one occurs only asymptotically. A time constant therefore is not a period of complete inactivity followed by full force. Nor does $95\%$ activation imply $95\%$ of isometric joint torque during a moving, compliant task.
+
+A numerical solver adds another issue. Forward Euler with a $5\,\mathrm{ms}$ step gives $a_n=1-0.8^n$, reaching $95\%$ at step 14, or $70\,\mathrm{ms}$. The exact continuous solution crosses that threshold at $74.89\,\mathrm{ms}$. Refining the time step or using a suitable integrator reduces this numerical discrepancy. It is not evidence for a faster physiological response.
 
 \begin{definition}{Electromechanical Delay}{emd}
-The total time from neural command $u_{\mathrm{neural}}$ to force production includes:
-\begin{enumerate}
-\item Synaptic delay: $\sim 1$ ms (neurotransmitter diffusion)
-\item Activation phase: $\sim 5$--$10$ ms (calcium release and binding)
-\item Rise-to-peak: $\sim 30$--$50$ ms (cross-bridge formation)
-\item Total EMD: $\sim 40$--$60$ ms for initial force rise
-\end{enumerate}
-
-For the \emph{full} activation curve to reach steady-state, add the time constant $\tau_{\mathrm{act}}$, giving $\sim 50$--$100$ ms for full recruitment.
+An experimentally reported delay depends on the selected start and end events, detection thresholds, contraction protocol and loading. Nordez and colleagues used ultrasound during electrically evoked gastrocnemius contractions to distinguish aspects of fascicle and tendon onset. That experiment does not supply a universal visual-reaction delay or golf-wrist latency. \citep{Nordez2009Delay} Adding an EMG-to-force delay to an activation time constant can double-count processes if both quantities already describe overlapping parts of the response. A pure delay may be added to a model, but its location and measurement basis must be explicit.
 \end{definition}
 
 \begin{example}{Reaction Time in the Golf Downswing}{reaction-time}
-Suppose an elite golfer detects a swing error at $t = 100$ ms into the downswing (midpoint, halfway to impact). The brain processes this signal and sends a corrective neural command at $t = 100 + 100 = 200$ ms (100 ms is a reasonable central processing delay). The muscle begins to activate:
-\begin{itemize}
-\item $t = 200$ ms: Neural command $u_{\mathrm{neural}} = 1$ is issued
-\item $t = 230$ ms: Force begins to rise (synaptic + activation delay)
-\item $t = 250$ ms: Force reaches 50\% of maximum (rise phase)
-\item $t = 300$ ms: Impact occurs; total downswing time $\sim$300 ms
-\end{itemize}
-
-In this scenario, the modeled corrective force reaches 50\% of maximum only \emph{at impact}, so that particular command has little opportunity to change the modeled impact state. This illustrative serial budget does not describe every feedback pathway and does not prove that all within-swing feedback is ineffective. Faster proprioceptive responses can begin earlier, while their mechanical effect depends on perturbation timing, muscle state, swing phase, and the chosen outcome. The example supports advance preparation; it does not establish purely open-loop execution.
+Suppose a command changes $70\,\mathrm{ms}$ before impact and a separately specified pure transmission delay is $20\,\mathrm{ms}$. Our activation model then has $50\,\mathrm{ms}$ to respond. Its activation increment from zero is $0.8647$ at impact. If the same command had already established activation earlier, the starting state would be different. Conversely, a sensory correction requiring additional detection and processing could leave less time. This timing ledger is a conditional example, not a measured sequence of events in every downswing. Preparation and a new response must be compared from their actual initial states.
 \end{example}
 
 \section{The Hill-Type Muscle Model}
 
-\index{Hill muscle model}
-\index{contractile element}
-\index{series elastic element}
-\index{parallel elastic element}
-
-To predict how a muscle produces torque at a joint, we must integrate architecture, force-length, force-velocity, and activation dynamics into a single unified model. The standard tool is the \emph{Hill-type muscle model}, which consists of three mechanical elements in a specific configuration.
-
 \begin{definition}{Hill-Type Muscle Model Components}{hill-model}
-\begin{itemize}
-\item \textbf{Contractile Element (CE):} The sarcomere machinery (actin-myosin cross-bridges). Produces active force $F_{\mathrm{CE}}$ determined by neural activation $a(t)$, muscle length $\ell_{\mathrm{CE}}$, and velocity $\dot{\ell}_{\mathrm{CE}}$.
-
-\item \textbf{Series Elastic Element (SEE):} The tendon and aponeurosis. Transmits force from CE to the bone with slight elasticity. Provides mechanical compliance that stores and releases elastic potential energy.
-
-\item \textbf{Parallel Elastic Element (PEE):} Passive connective tissue (endomysium, perimysium, epimysium). Develops force when the muscle is stretched beyond its optimal length, resisting extreme lengthening. Important during explosive movements where muscles are loaded beyond their optimal length.
-
-\end{itemize}
-
-The CE and SEE are in \textit{series}; their forces are equal. The PEE is in \textit{parallel} to the CE. The total muscle force is:
+The contractile element (CE) and passive parallel element (PEE) act along the fiber direction. Their combined force is projected through pennation onto the series tendon, also called the series elastic element (SEE). With a massless connection and no extra damper in this teaching model,
 \begin{equation}
-F^M = F_{\mathrm{CE}} + F_{\mathrm{PEE}}
+F_T=(F_{\mathrm{CE}}+F_{\mathrm{PE}})\cos\alpha=F_M\cos\alpha.
 \label{eq:total-hill}
 \end{equation}
+Equality of CE and tendon force alone would neglect loaded passive fibers and pennation. A generic Hill-type model is a family of approximations, not a unique set of equations. Equilibrium, damping and rigid-tendon variants can behave differently numerically. \citep{millard2013flexing}
 \end{definition}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=1.2]
-  % Draw the Hill muscle model schematically
-
-  % Contractile element (spring-like, showing sarcomeres)
-  \draw[fill=blue!30] (1, 2) rectangle (2, 2.5) node[midway, font=\small] {CE};
-  \node[below, font=\small] at (1.5, 1.8) {Sarcomeres};
-
-  % Series elastic element (tendon, shown as spring)
-  \draw (2, 2.1) -- (2.3, 2.1);
-  \draw (2.3, 1.9) -- (2.3, 2.3) -- (2.5, 1.9) -- (2.5, 2.3) -- (2.7, 2.1);
-  \node[above, font=\small] at (2.5, 2.5) {SEE (Tendon)};
-
-  % Bone attachment
-  \draw[very thick] (2.7, 1.9) rectangle (3, 2.3);
-  \node[right, font=\small] at (3.1, 2.1) {Bone};
-
-  % Parallel elastic element (damper symbol in parallel)
-  \draw (1, 1.2) -- (1.3, 1.2);
-  \draw (1.3, 1) -- (1.3, 1.4) -- (1.5, 1) -- (1.5, 1.4) -- (1.7, 1.2);
-  \draw (1.7, 1.2) -- (2, 1.2);
-  \node[above, font=\small] at (1.5, 1.6) {PEE};
-
-  % Connect PEE in parallel with CE
-  \draw (1, 2) -- (1, 1.2);
-  \draw (2, 2) -- (2, 1.2);
-
-  % Labels and annotations
-  \node[left, font=\small] at (0.8, 2.25) {\textbf{Force Input}};
-  \node[right, font=\small] at (3.2, 2.25) {\textbf{Force Output}};
-
-  % Length labels
-  \draw[<->] (0.5, 1.5) -- (0.5, 2.5) node[midway, left, font=\tiny] {$\ell^M$};
-  \draw[<->] (2.2, 0.6) -- (2.7, 0.6) node[midway, below, font=\tiny] {$\varepsilon_{\mathrm{SEE}}$};
-
-\end{tikzpicture}
-\caption{Hill-Type Muscle Model. The Contractile Element (CE) Is Sarcomere Machinery That Produces Force Determined by Activation, Length, and Velocity. The Series Elastic Element (SEE, Tendon) Stores Elastic Energy. The Parallel Elastic Element (PEE, Connective Tissue) Resists Stretching. The CE and SEE Are in Series (Equal Force); PEE Is in Parallel.}
+\includegraphics[width=\linewidth]{figures/muscle_force_network.pdf}
+\caption{Force and Energy Connections in the Teaching Model. Active and Passive Fiber Forces Add Before Pennation Projection; the Tendon Is in Series.}
 \label{fig:hill-muscle-model}
 \end{figure}
 
-The contractile element generates active force:
+The active and passive forces used here are
 \begin{equation}
-F_{\mathrm{CE}} = a(t) \cdot F_0 \cdot f_L(\ell_{\mathrm{CE}}) \cdot f_V(\dot{\ell}_{\mathrm{CE}})
+F_{\mathrm{CE}}=aF_0 f_L(\lambda)f_V(w),
 \label{eq:ce-force}
 \end{equation}
-where $a(t)$ evolves according to Eqs.~\eqref{eq:activation-rise}--\eqref{eq:activation-fall}.
-
-The series elastic element stores elastic energy and returns it during rebound. Its force-extension relationship is:
 \begin{equation}
-F^{\mathrm{SEE}} = F^{\mathrm{SEE}}_0 \left[ \exp(k_{\mathrm{SEE}} \varepsilon_{\mathrm{SEE}}) - 1 \right]
-\label{eq:see-force}
-\end{equation}
-where $\varepsilon_{\mathrm{SEE}}$ is the tendon strain (fractional elongation). The tendon is \emph{stiff}, with $k_{\mathrm{SEE}} \approx 20$--$50$, so it stretches only a few percent under full load but stores significant energy.
-
-The parallel elastic element resists lengthening:
-\begin{equation}
-F_{\mathrm{PEE}} = F_0 \left[ \exp(k_{\mathrm{PEE}}(\tilde{\ell}_{\mathrm{CE}} - 1)) - 1 \right] \quad \text{for } \tilde{\ell}_{\mathrm{CE}} > 1
+F_{\mathrm{PE}}=F_0f_P(\lambda).
 \label{eq:pee-force}
 \end{equation}
-with $k_{\mathrm{PEE}} \approx 3$--$5$. This force is zero (or negligible) when the muscle is at or shorter than its optimal length.
+Let tendon slack length be $L_s$ and strain be $\epsilon=(\ell^T-L_s)/L_s$. Define a tendon force law independently of the passive fiber curve:
+\begin{equation}
+F_T(\epsilon)=
+\begin{cases}
+0,&\epsilon\leq0,\\
+F_{\mathrm{ref}}\dfrac{e^{k_T\epsilon/\epsilon_{\mathrm{ref}}}-1}{e^{k_T}-1},&\epsilon>0.
+\end{cases}
+\label{eq:see-force}
+\end{equation}
+Here $F_{\mathrm{ref}}$ is the tendon force at positive reference strain $\epsilon_{\mathrm{ref}}$, and $k_T$ is dimensionless. Tendon tangent stiffness is $dF_T/d\ell^T$, measured in $\mathrm{N/m}$; it is not $k_T$. On the loaded branch,
+\[
+\frac{dF_T}{d\ell^T}
+=\frac{F_{\mathrm{ref}}k_T e^{k_T\epsilon/\epsilon_{\mathrm{ref}}}}
+{L_s\epsilon_{\mathrm{ref}}(e^{k_T}-1)}.
+\]
+The idealization stores energy without hysteretic loss. Actual loading and unloading may require a richer constitutive model. As with the passive fiber curve, the slack transition is continuous but not differentiable here.
+
+\subsection{Geometry Connects Fiber, Tendon and Joint Motion}
+
+Write the total path length as $\ell^{MT}=\ell^T+\ell^M\cos\alpha$. To differentiate it, specify how pennation changes. In a fixed-height model, $h=\ell^M\sin\alpha$ is constant, so
+\[
+\ell^M\cos\alpha=\sqrt{(\ell^M)^2-h^2}.
+\]
+Differentiating gives
+\[
+\dot\ell^M=\cos\alpha\,(\dot\ell^{MT}-\dot\ell^T).
+\]
+The relation applies for $\ell^M>h$; approaching $90^\circ$ pennation is a degenerate geometry, not an ordinary operating state. Assuming constant angle instead would give a different velocity relation. Combining fixed-height kinematics with the force projection gives the power identity
+\[
+F_T\dot\ell^{MT}=F_M\dot\ell^M+F_T\dot\ell^T.
+\]
+For example, $\ell^M=0.10\,\mathrm{m}$ and $h=0.06\,\mathrm{m}$ give $\cos\alpha=0.8$. If the path shortens at $0.10\,\mathrm{m/s}$ while the tendon lengthens at $0.02\,\mathrm{m/s}$, the fiber shortens at $0.096\,\mathrm{m/s}$. With $F_M=100\,\mathrm{N}$ and $F_T=80\,\mathrm{N}$, the identity is $-8=-9.6+1.6\,\mathrm{W}$. Of the fiber's mechanical output, $1.6\,\mathrm{W}$ is going into tendon storage at that instant. Tendon compliance therefore changes the fiber's velocity and its force capacity as well as storing energy.
+
+For independent joint coordinates $q$ with $v=\dot q$, virtual work connects path length to moment arms:
+\[
+r_{ji}(q)=-\frac{\partial\ell_i^{MT}}{\partial q_j},
+\qquad \dot{\boldsymbol\ell}^{MT}=-r^T v,
+\qquad \boldsymbol\tau_M=r\boldsymbol F_T.
+\]
+For angular coordinates, entries of $r$ have units of meters per radian, conventionally written meters. Generalized coordinates that include translations require the corresponding force units; a model using $\dot q=N(q)v$ must include that mapping. The convention above ensures
+\[
+\boldsymbol\tau_M^T v=-\boldsymbol F_T^T\dot{\boldsymbol\ell}^{MT}.
+\]
+Shortening under positive tension can deliver positive power to the skeleton. Tendon lengthening can instead absorb part of that work. These equations also reveal multi-joint coupling: a muscle crossing two joints can generate moments at both, and motions at the two joints can reinforce or cancel its path-length change.
+
+Take the local path in meters, with angles in radians:
+\[
+\ell^{MT}=0.30-0.02q_1+0.01q_2.
+\]
+ Its moment arms are $(0.02,-0.01)\,\mathrm{m}$. At $v=(10,20)\,\mathrm{rad/s}$, the path velocity is zero despite motion at both joints. At $v=(10,0)$, it is $-0.20\,\mathrm{m/s}$. Rigid translation of the entire arm and muscle together contributes no intrinsic path-length change. These examples explain why a clubhead or hand speed is insufficient to calculate muscle force.
 
 \begin{principle}{Energy Storage and Release in the Tendon}{principle:see-energy}
-The series elastic element is crucial for athletic performance. When a muscle contracts against a stiff load (like at ground contact in running or the bottom of a squat), the muscle fibers shorten quickly, stretching the tendon and storing elastic potential energy. This energy is released in the subsequent rebound or upward phase, amplifying the mechanical output. In the golf swing, the tendons of the forearm muscles are stretched during the cocking phase and early downswing, then released at impact, contributing to clubhead acceleration. This energy storage is one reason why a ``whippy'' shaft and flexible wrists are advantageous—they encourage tendon loading and elastic recoil.
+Stored energy is the integral of force over extension, not force over dimensionless strain alone:
+\[
+U_T(\epsilon)=L_s\int_0^\epsilon F_T(s)\,ds.
+\]
+For positive strain in our law,
+\[
+U_T=\frac{F_{\mathrm{ref}}L_s}{e^{k_T}-1}
+\left[\frac{\epsilon_{\mathrm{ref}}}{k_T}
+\left(e^{k_T\epsilon/\epsilon_{\mathrm{ref}}}-1\right)-\epsilon\right].
+\]
+Set $F_{\mathrm{ref}}=100\,\mathrm{N}$, $L_s=0.20\,\mathrm{m}$, $\epsilon_{\mathrm{ref}}=0.04$ and $k_T=3$. At the reference strain, extension is $0.008\,\mathrm{m}$ and stored energy is $0.22475\,\mathrm{J}$. Differentiating energy with respect to extension recovers force. This provides a direct check on the units and expression.
 \end{principle}
+
+For the lossless model, $\dot U_T=F_T\dot\ell^T$. Substituting into the power identity shows that tendon recoil can add to instantaneous power delivered to the skeleton while its stored energy falls. It does not create energy. A shaft also stores and returns elastic energy, but its distributed bending and torsion, boundary conditions and contact with the golfer are different from a tendon model. Neither elastic mechanism by itself proves a universal benefit from a particular wrist action or shaft flexibility. The timing and direction of energy delivery must serve the impact task.
+
+Force equilibrium must hold throughout this calculation. Arbitrarily prescribing activation, fiber length, fiber velocity and tendon extension independently can violate it. Some equilibrium formulations solve an inverse force-velocity relation for fiber velocity; zero activation or extreme geometry can make that inversion singular or impossible. A simulator must document how it handles such states. A numerical minimum activation is a modeling choice, not evidence that a person cannot cease neural excitation. \citep{millard2013flexing}
 
 \section{How Muscle Biology Maps to Control Theory}
 
-\index{control affine}
-\index{drift field}
-\index{control field}
-\index{neural command}
-
-Now we connect muscle biology to the control-affine mathematical framework. Recall from earlier chapters that the system dynamics are:
+Mechanical position and velocity alone do not generally specify the future of an activated, compliant muscle system. Two otherwise identical poses can have different activation and tendon loading because of their histories. A useful state for this teaching model is
 \begin{equation}
-\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}
+x=(q,v,\boldsymbol a,\boldsymbol\ell^M),\qquad \dot x=f(x)+G(x)\boldsymbol u.
 \label{eq:control-affine-remit}
 \end{equation}
-
-In our golf model, $\bm{x} = (\bm{q}, \dot{\bm{q}})$ is the state (joint angles and angular velocities), $\bm{u}$ is nominally the joint torque vector, and:
-\begin{align}
-f(\bm{x}) &= \text{gravity, inertial, and dissipative forces (drift)} \\
-G(\bm{x}) &= \text{control input gain (how control affects state)}
-\end{align}
-
-But muscles do not directly produce joint torques—they produce \emph{neural activation commands} $u_{\mathrm{neural}}(t)$. The chain from neural command to joint torque is:
-
-\begin{center}
-\begin{tabular}{ccccc}
-$u_{\mathrm{neural}}$ & $\to$ & $a(t)$ & $\to$ & $F_{\mathrm{muscle}}$ \\
-neural command & activation dynamics & muscle force & moment arm & joint torque
-\end{tabular}
-\end{center}
-
-More precisely:
+For $n$ independent mechanical coordinates and $m$ modeled muscle compartments,
 \begin{equation}
-u_{\mathrm{neural}} \in \mathbb{R}^n \quad \text{(typically } n = 10\text{--}20 \text{ muscles per joint)}
+\boldsymbol u\in[0,1]^m,
 \label{eq:neural-command}
 \end{equation}
 \begin{equation}
-\dot{a}_i = \frac{u_{\mathrm{neural},i} - a_i}{\tau_i} \quad \text{(activation dynamics for each muscle)}
+\boldsymbol a\in[0,1]^m,
 \label{eq:activation-vector}
 \end{equation}
 \begin{equation}
-F_i = a_i F_{0,i} f_{L,i} f_{V,i} \quad \text{(force for muscle } i \text{)}
+\boldsymbol F_T\in\mathbb R_{\geq0}^m,
 \label{eq:force-vector}
 \end{equation}
 \begin{equation}
-\tau_j = \sum_{i} r_{j,i}(\bm{q}) F_i \cos(\alpha_i) \quad \text{(net torque at joint } j \text{)}
+\boldsymbol\tau_M=r(q)\boldsymbol F_T\in\mathbb R^n.
 \label{eq:torque-from-muscles}
 \end{equation}
+There is no fixed universal number of actuators per joint. One anatomical muscle may be split into compartments, and one compartment may span multiple joints. Excitations are bounded; tendon forces are tensile; admissible forces also depend on equilibrium and the current state. They are not arbitrary unconstrained control vectors.
 
-where $r_{j,i}(\bm{q})$ is the moment arm of muscle $i$ about joint $j$ (which depends on configuration), and $\alpha_i$ is the pennation angle.
+Away from an impact event, a specified unconstrained mechanical model may take the form
+\[
+\dot v=A(x)=M(q)^{-1}\{r(q)\boldsymbol F_T(x)
++\boldsymbol b_{\mathrm{ext}}(x)-\boldsymbol c(q,v)-\boldsymbol g(q)\}.
+\]
+$M$ is the mass matrix, $\boldsymbol c$ the velocity-dependent inertial terms, $\boldsymbol g$ the gravitational terms and $\boldsymbol b_{\mathrm{ext}}$ specified external generalized forces. Contact constraints, unknown reaction forces or a flexible shaft require the corresponding additional equations. A collision may require an impulse or compliant-contact treatment; the smooth equation should not silently be applied across it.
 
-The key insight: when we write the control-affine system as $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$ and treat $\bm{u}$ as the control input, we are implicitly assuming that $\bm{u}$ is the \emph{effective} joint torque. But the actual control is $u_{\mathrm{neural}}$, which is filtered through the entire chain above. This means:
-
+Suppose a well-defined muscle equilibrium solution gives $\dot{\boldsymbol\ell}^M=\Phi(x)$, and activation constants form the diagonal matrix $T_a$. Then the actual augmented control-affine expression is
 \begin{equation}
-G(\bm{x})\bm{u} = \sum_{i} r_{j,i}(\bm{q}) a_i(\bm{q}, \dot{\bm{q}}, u_{\mathrm{neural}}, t) F_{0,i} f_{L,i}(\tilde{\ell}_i(\bm{q})) f_{V,i}(\dot{\ell}_i(\bm{q}, \dot{\bm{q}})) \cos(\alpha_i)
+f(x)=\begin{bmatrix}v\\A(x)\\-T_a^{-1}\boldsymbol a\\\Phi(x)\end{bmatrix},
+\qquad
+G(x)=\begin{bmatrix}0_{n\times m}\\0_{n\times m}\\T_a^{-1}\\0_{m\times m}\end{bmatrix}.
 \label{eq:control-affine-full}
 \end{equation}
+Excitation enters the activation derivative, not the mechanical acceleration directly. Its mechanical effect develops as the state evolves. The component units differ appropriately: position rate, acceleration, activation rate and fiber-length rate. Equating $G\boldsymbol u$, a state-rate vector, with a scalar joint torque would be dimensionally incorrect. This expression also depends on a fixed $T_a$ and an admissible $\Phi$ independent of instantaneous excitation. If the activation time constant switches with $u$ and $a$, global affinity in $u$ no longer follows from this display.
 
-\begin{laymansbox}{Why the Control Gain Decreases at High Speed}{context:gain-decreases}
-The effective control gain is not constant. It depends on state $\bm{x}$ through muscle length, contraction velocity, activation, pennation, and moment arms. In concentric shortening, the force-velocity factor $f_V(\dot{\ell})$ usually decreases as shortening speed increases, so the available torque in a chosen direction can be smaller when the system is moving fast. Combined with inertial terms that grow with speed, this can increase a model's drift-control ratio near impact. The conclusion depends on the selected muscle-tendon model and should not be inferred from clubhead speed alone.
+\begin{laymansbox}{Why Effective Control Depends on State and Time}{context:gain-decreases}
+At fixed length and velocity, the active force's sensitivity to activation is proportional to $F_0 f_L f_V$. During shortening, that sensitivity can decline as local fiber speed rises. The resulting joint effect also depends on moment arms, the mass matrix, tendon dynamics and other joints. A new excitation change has no instantaneous jump effect on activation in this model. A previously prepared activation can still produce force, and a loaded tendon can still recoil, even if the current excitation is zero.
 \end{laymansbox}
 
-\begin{example}{Numerical Estimate: Effective Control Gain at Wrist}{control-gain}
-Consider the wrist joint with activation $a = 1$ (fully recruited):
-\begin{itemize}
-\item At rest ($\dot{\theta}_{\mathrm{wrist}} = 0$): $f_V = 1$, so torque scales as $\sum r_i F_0 f_L = \tau_{\max}^{\mathrm{iso}} \approx 20$ N·m
-\item At modest speed ($\dot{\theta}_{\mathrm{wrist}} = 30$ rad/s): $f_V \approx 0.7$, torque $\approx 14$ N·m
-\item At impact speed ($\dot{\theta}_{\mathrm{wrist}} = 70$ rad/s): $f_V \approx 0.3$--$0.4$, torque $\approx 6$--$8$ N·m
-\item At maximum speed ($\dot{\theta}_{\mathrm{wrist}} = 100$ rad/s): $f_V \approx 0.1$, torque $\approx 2$ N·m
-\end{itemize}
-
-These numbers are illustrative parameter choices, not subject-independent measurements. A defensible estimate would use fiber velocity, tendon compliance, moment arms, and activation timing from a declared musculoskeletal model. Under the illustrative assumptions above, the available concentric torque drops sharply as shortening speed rises. Meanwhile, the drift force (inertial torque from swinging the club) is:
-\begin{equation}
-\tau_{\mathrm{drift}} = I_{\mathrm{club}} \ddot{\theta} + \text{(centrifugal, Coriolis)}
-\label{eq:drift-torque}
-\end{equation}
-At impact, $I_{\mathrm{club}} \ddot{\theta}$ can reach 50--100 N·m for deceleration of the club. So the ratio is:
-\begin{equation}
-\frac{\tau_{\mathrm{drift}}}{\tau_{\mathrm{control}}} \approx \frac{100}{6} \approx 17:1
-\end{equation}
-
-Under these illustrative assumptions, late concentric wrist torque has limited modeled authority. The calculation does not establish that the full impact state is uncontrollable.
+\begin{example}{Numerical Estimate: Finite-Horizon Joint Response}{control-gain}
+Consider a deliberately simple joint with constant inertia $I=0.10\,\mathrm{kg\,m^2}$. An added actuator torque is $\tau_{\max}a(t)$, with $\tau_{\max}=2\,\mathrm{N\,m}$, $a_0=0$, $u=1$ and $\tau_a=0.025\,\mathrm{s}$. Holding all other torques equal between two trajectories, the changes after a remaining response duration $T$ are
+\[
+\Delta v=\frac{\tau_{\max}}{I}\left[T-\tau_a(1-e^{-T/\tau_a})\right],
+\]
+\[
+\Delta q=\frac{\tau_{\max}}{I}
+\left[\frac{T^2}{2}-\tau_aT+\tau_a^2(1-e^{-T/\tau_a})\right].
+\]
+At $T=0.050\,\mathrm{s}$, $\Delta q=0.0108083\,\mathrm{rad}$, or about $0.6193^\circ$. This is a finite-horizon response from explicit initial conditions, not a predicted golf correction. A specified pure delay is removed from the available interval before using $T$; if no response time remains, this command produces no pre-impact effect in this model. Existing activation, elastic loading and configuration-dependent dynamics require a different calculation.
 \end{example}
 
-\section{Muscle Force in the Golf Swing: Realistic Numbers}
+\subsection{Drift, Cancellation and Reachability}
 
-\index{peak torques}
-\index{shoulder torque}
-\index{elbow torque}
-\index{wrist torque}
+In the mechanical equation, a conventionally defined non-muscle generalized term is
+\begin{equation}
+\boldsymbol b_{\mathrm{mech}}=
+\boldsymbol b_{\mathrm{ext}}-\boldsymbol c-\boldsymbol g.
+\label{eq:drift-torque}
+\end{equation}
+Its definition must say which external forces and passive effects it includes. In the augmented state equation, the zero-input drift also includes ongoing activation and stored elastic state. Therefore zero excitation is not equivalent to zero muscle force or purely gravitational motion. And $I\ddot q$ inferred from observed acceleration is the total required inertial balance in a scalar model, not an independently measured free-drift torque.
 
-Let's put numbers on actual muscle forces and torques during a golf swing. These come from biomechanical studies using motion capture, force plates, and inverse dynamics \citep{Nesbit2005,Gatt1998,McTeigue1994}.
+Suppose a scalar mechanical term is $-80\,\mathrm{N\,m}$ and an added control moment can range from $-4$ to $4\,\mathrm{N\,m}$. With positive constant inertia, all available accelerations have the same sign. Nevertheless, their magnitudes differ and their velocity and position trajectories separate over time. Inability to cancel the current acceleration is not inability to influence the eventual state. Conversely, a favorable instantaneous torque ratio does not guarantee that the required impact state is reachable within the remaining time and actuator bounds.
+
+For the golf question, compare admissible policies over a stated horizon with the same starting mechanical, activation and elastic states. Measure their effects on clubface orientation, impact location and velocity, while checking other joint loads and contact conditions. A linearized sensitivity of these outputs to excitation can be informative, but it must follow the trajectory and its state transitions. A ratio evaluated at one joint at one instant cannot establish nonlinear controllability, global optimality or injury risk.
+
+\section{Muscle Force in the Golf Swing: What Numbers Establish}
 
 \begin{principle}{Peak Torques at Major Golf Joints}{principle:peak-torques}
-\begin{description}
-\item[Shoulder (internal rotation):] Peak torque $\approx 100$--$150$ N·m. This rotates the upper arm to accelerate the club. Generated primarily by the subscapularis and latissimus dorsi. Occurs around mid-downswing when acceleration is high but speed is still manageable.
-
-\item[Elbow (extension):] Peak torque $\approx 50$--$80$ N·m. The triceps extends the arm to apply force to the club. Occurs late in downswing as the arm releases. At this point, the arm is moving fast, so force-velocity effects reduce available force.
-
-\item[Wrist (extension/radial deviation):] Peak torque $\approx 15$--$30$ N·m. The wrist muscles must control the club's motion about the wrist joint. Very high speeds mean very low force capacity. This is the most vulnerable joint for loss of control.
-
-\item[Hip (internal rotation):] Peak torque $\approx 80$--$120$ N·m. The lower body initiates the downswing by rotating the hips, driving the torso. Large muscles (glutes, hip flexors) and favorable moment arms allow high torque despite high speeds.
-
-\end{description}
-
-Note: Peak torques vary with swing speed (professional vs. amateur), body composition, and training.
+Three kinds of number answer different questions. A maximum isometric test estimates capacity in a specified posture and protocol. Inverse dynamics estimates the net generalized moment consistent with measured motion and external forces under a chosen model. A force plate measures an external ground wrench, which must be transformed and combined with segment dynamics before assigning internal joint moments. Comparing them requires matched coordinate conventions, units, populations and loading conditions. None is automatically an individual muscle-force measurement.
 \end{principle}
 
-\begin{driftcontrol}{Where Muscles Are Strongest vs. Drift-Dominated}
-{drift:muscle-strength-profile}
-\noindent\begin{minipage}[t]{0.48\textwidth}
-\textbf{Transition \& early downswing:}
-\begin{itemize}
-\item Angular velocities: $\lesssim 50$ rad/s
-\item $f_V \approx 0.7$--$1.0$
-\item Full activation: $a \approx 0.6$--$0.8$
-\item Muscle force: STRONG
-\item Control torque: HIGH ($\sim 30$--$100$ N$\cdot$m)
-\item Drift torque: MODERATE ($\sim 10$--$30$ N$\cdot$m)
-\item Result: \textbf{CONTROL DOMINANT}
-\end{itemize}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\textwidth}
-\textbf{Late downswing \& impact:}
-\begin{itemize}
-\item Angular velocities: $\gtrsim 80$ rad/s
-\item $f_V \approx 0.1$--$0.4$
-\item Full activation: $a \approx 1.0$ (maximized too late)
-\item Muscle force: WEAK
-\item Control torque: LOW ($\sim 2$--$10$ N$\cdot$m)
-\item Drift torque: DOMINANT ($\sim 50$--$150$ N$\cdot$m)
-\item Result: \textbf{DRIFT DOMINANT}
-\end{itemize}
-\end{minipage}
-\end{driftcontrol}
+For two antagonists with moment arms $(0.02,-0.02)\,\mathrm{m}$, tendon forces $(100,0)\,\mathrm{N}$ and $(200,100)\,\mathrm{N}$ both produce $2\,\mathrm{N\,m}$ net torque. Their summed tensions are $100$ and $300\,\mathrm{N}$. Thus a low net torque can coexist with substantial opposing forces. Joint compression, stiffness and metabolic cost require their own geometry and constitutive models; they cannot be recovered from that torque equality. An optimization algorithm may select one force allocation, but its objective and constraints provide information that inverse dynamics alone does not contain.
 
-This pattern explains the fundamental structure of the efficient golf swing:
-\begin{enumerate}
-\item \textbf{Address--Transition:} Passive setup. Muscles are mostly inactive ($a \approx 0$).
-\item \textbf{Transition--Early Downswing:} Heavy muscle recruitment ($a \to 0.7$--$0.9$) in hip, torso, and shoulder to initiate acceleration. Control is available. Careful muscle sequencing: hips first, then torso, then arm.
-\item \textbf{Late Downswing:} Arm muscles approach full activation, but force-velocity effects have reduced their effectiveness. Drift torques now dominate. The swing is coasting; muscles are ``holding on'' rather than accelerating.
-\item \textbf{Impact:} Peak speeds. Muscle control is minimal. The wrist is nearly locked (isometric or eccentric). The only role muscles play is \emph{damage control}—preventing catastrophic joint failure due to impact forces.
-\end{enumerate}
+EMG is useful for investigating electrical activity, but it is not a calibrated force meter. Roberts and Gabaldón's direct force, fascicle and EMG measurements in turkey hindlimb muscles illustrate that their relationships can vary across movement conditions. That finding supports distinguishing the signals; it does not calibrate human forearm force during golf. \citep{RobertsGabaldon2008EMG} A golf study needs its own measurement model, normalization choices and uncertainty analysis.
+
+\begin{principle}{Muscle Capacity and Mechanical Demand}{muscle-demand-phases}
+Earlier actions can change later geometry, velocity, activation and tendon loading. Later actions can change the trajectory within their remaining response time and bounds. A sequence that reduces one muscle's shortening speed may improve its active-force capacity while increasing demand elsewhere. A motion that increases elastic storage may also change joint loading or mistime recoil. These are coupled tradeoffs, so no universal early-effort/late-coast rule follows from a single force curve.
+\end{principle}
+
+To evaluate a proposed sequence, first state the desired impact outputs and acceptable variability. Next estimate the mechanical and muscle states consistently, identifying parameters inferred rather than measured. Finally compare alternatives with the same task and initial conditions, including sensitivity to moment arms, slack lengths, activation constants and measurement error. Agreement with a net torque curve is useful but insufficient validation of every internal force. A stronger claim should survive independent observations relevant to the proposed mechanism.
 
 \section{Implications for Swing Mechanics and Training}
 
-\index{sequencing}
-\index{pre-activation}
-
-Understanding muscle force generation reveals why certain coaching cues are effective and others are counterintuitive.
-
-\begin{mythreality}{Myth: ``Accelerate the club all the way to impact''}{accelerate-to-impact}
-\begin{description}
-\item[\textbf{The Myth:}] A golfer should produce maximum muscle torque all the way to impact. Bigger muscles = bigger torque = longer drive.
-
-\item[\textbf{Model-bounded interpretation:}] Force-velocity limits and activation delay make late concentric corrections less effective than earlier planned acceleration in many musculoskeletal models. Stronger claims about injury risk, exact force loss, or an ideal coaching cue need swing-speed data, joint kinematics, EMG timing, and subject-specific muscle parameters.
-
-\item[\textbf{Coaching cue reframe:}] The model supports caution about over-interpreting late muscular effort. It does not by itself prescribe a universal cue for every golfer.
-\end{description}
-\end{mythreality}
-
-\begin{principle}{Key Takeaways: Muscle Force Generation}{principle:muscle-takeaways}
-\begin{enumerate}
-\item \textbf{Muscle force is generated by sarcomeres.} Millions of actin--myosin cross-bridges pulling in parallel create the total force. This process is chemical (ATP hydrolysis) converted to mechanical work.
-
-\item \textbf{Force depends on length.} Muscle length changes with joint configuration, so available torque is posture-dependent. Specific claims about favorable length require measured kinematics and muscle geometry.
-
-\item \textbf{Force decreases with speed during concentric shortening.} Hill-type force-velocity behavior can reduce torque authority during rapid motion. The amount of reduction is model- and muscle-specific.
-
-\item \textbf{Muscles have activation delays.} From neural command to force takes time, and the downswing is short. Feedback-based correction is therefore limited, especially late in the motion.
-
-\item \textbf{The drift-control ratio can increase near impact.} Inertial terms grow with speed while concentric control authority can fall. Whether impact is effectively controllable depends on the full model.
-
-\item \textbf{Efficient swings likely exploit timing windows.} Early planned actuation, passive dynamics, stiffness regulation, and eccentric braking should be analyzed together rather than reduced to a single late-impact force claim.
-\end{enumerate}
+\begin{principle}{Interpreting the Cue to Accelerate Through Impact}{accelerate-to-impact}
+A coaching cue is not a direct report of muscle force or clubhead acceleration. Continuing effort can coexist with a declining shortening-force multiplier, and clubhead speed can increase through coupled motion while a particular muscle does little positive work. Evaluate the cue by its repeatable effect on the intended impact outcomes and by an appropriate mechanical explanation. The equations here neither require every muscle to accelerate the club until contact nor prove that all late effort is harmful.
 \end{principle}
 
-\subsection*{Looking Ahead}
-Muscle biology sets the envelope of what is physically possible: maximum forces, activation speeds, and the velocity--force tradeoff. But there is one more force we have not yet accounted for---aerodynamic drag. Chapter~\ref{ch:aerodynamic-drag} shows why drag is \emph{not} negligible in the golf swing, and why omitting it leads to systematic errors in inverse dynamics calculations.
+Training can alter capacity, coordination and how a player prepares the state entering the downswing. These mechanisms need different tests. Greater isometric strength does not by itself establish greater available force at the relevant fiber lengths and velocities; a successful practice swing does not establish improved retention or transfer. A useful investigation links the proposed change to a measured outcome and checks whether the inferred mechanism is consistent with the full movement. This keeps practical instruction informative while leaving uncertainty visible.
+
+\begin{principle}{Key Takeaways: Muscle Force Generation}{principle:muscle-takeaways}
+Trace the chain from excitation to activation, fiber force, tendon force, joint moments and task outputs. Keep local fiber velocity distinct from club speed. Preserve force equilibrium and virtual work when joining geometry to mechanics. Account for the energy and activation already present at the start of a comparison. Interpret net moments, EMG and capacity measurements according to what each measures. Judge control over the remaining trajectory, and test proposed golf sequences against alternatives rather than declaring one optimal from an instantaneous ratio.
+\end{principle}
+
+\subsection{Looking Ahead}
+The muscle-to-joint and movement-control chapters use these distinctions at larger scales. Multi-joint geometry determines how muscle forces influence motion; activation and tendon memory determine what the same current command can do; learning determines how a player prepares and adjusts those states. Together they make the golf swing a question about coordinated trajectories and impact outcomes, not an isolated contest between one muscle and one inertial number.
 
 \begin{exercises}{Chapter Exercises}{ex:muscle-chapter}
-
+All numerical parameters below belong to the teaching model, not a golfer dataset.
 \begin{enumerate}
-
-\item \textbf{Force-Length Curve.} A muscle at optimal length ($\tilde{\ell} = 1.0$) produces maximum isometric force $F_0 = 200$ N. Using Eq.~\eqref{eq:active-force-length} with $\gamma = 0.5$, compute $f_L(\tilde{\ell})$ at $\tilde{\ell} = 0.8, 1.0, 1.2$. Which configuration is strongest? Which produces zero force (theoretically)?
-
-\item \textbf{Hill's Equation.} The latissimus dorsi has $V_{\max} = 6$ m/s and $k = 0.4$. At a contraction velocity of $\dot{\ell}^M = 3$ m/s (mid-downswing pace), compute $f_V(\tilde{v})$ using Eq.~\eqref{eq:hill-concentric}. What fraction of maximum force is available?
-
-\item \textbf{Activation Dynamics.} A muscle with $\tau_{\mathrm{act}} = 25$ ms receives a step neural command $u_{\mathrm{neural}} = 1$ at $t = 0$. Solve Eq.~\eqref{eq:activation-rise} numerically (Euler method, $dt = 5$ ms) for $t = 0$ to $150$ ms. Sketch $a(t)$. At what time does activation reach 95\% of steady-state?
-
-\item \textbf{Muscle Torque Under Load.} The triceps has $F_0 = 350$ N, moment arm $r = 0.025$ m, and is at near-optimal length ($f_L \approx 0.95$). At elbow angular velocity $\dot{\theta} = 40$ rad/s, the muscle velocity is $\dot{\ell}^M = r \dot{\theta} = 1$ m/s. If $V_{\max} = 5$ m/s, compute the force and torque available. How much does this change if velocity doubles?
-
-\item \textbf{Drift-Control Ratio.} At impact, the wrist experiences an inertial drift torque of 80 N·m (from swinging the club). The wrist muscles (fully activated, $a = 1$) have maximum isometric torque of 20 N·m. At impact wrist speed, $f_V = 0.2$. What is the actual available torque? What is the drift-control ratio? Is control possible?
-
-\item \textbf{Tendon Energy Storage.} A 10 cm forearm muscle with $F_0 = 100$ N contracts fully (100 N force). The tendon has stiffness parameter $k_{\mathrm{SEE}} = 30$ and initial strain $\varepsilon_0 = 0$. If the muscle shortens by 2 cm (the SAW extends by 2 cm in the direction opposite to motion), compute the elastic energy stored: $E = \int F \, d\varepsilon$. How much energy is released during rebound?
-
-\item \textbf{Muscle Sequencing in Golf.} The hip produces peak torque at $t = 75$ ms (early downswing), the shoulder at $t = 100$ ms, and the wrist at $t = 150$ ms. If the downswing is 250 ms, why is this sequence advantageous? What would happen if the wrist activated first?
-
+\item For the Gaussian with $\gamma=0.5$, calculate $f_L$ at $\lambda=0.8$, $1.2$ and $1.5$. Does it have any finite zero? At $\lambda=1.2$, calculate total force divided by $F_0$ for $a=0.7$, $w=0$ and the stated passive curve.
+\item Use $r=0.02\,\mathrm{m}$, $\dot q=8.75\,\mathrm{rad/s}$, $\ell^M_{\mathrm{opt}}=0.10\,\mathrm{m}$ and $\nu=10\,\mathrm{s^{-1}}$. Assume a rigid tendon, zero pennation and shortening in the positive joint direction. Calculate $w$, $f_V$ and torque for $F_0=100\,\mathrm{N}$ at optimal length and full activation.
+\item For $\tau_a=25\,\mathrm{ms}$, $a_0=0$ and $u=1$, find the $50\%$ and $95\%$ activation times. Compare the latter with forward Euler using $5\,\mathrm{ms}$ steps. Explain why neither is a pure neural delay.
+\item A path shortens by $0.02\,\mathrm{m}$ per radian of $q_1$ and lengthens by $0.01\,\mathrm{m}$ per radian of $q_2$. Find both moment arms and path velocity at $v=(10,20)\,\mathrm{rad/s}$. With $F_T=100\,\mathrm{N}$, calculate the two joint powers and their sum. Assume no other path dependence.
+\item Derive the finite-horizon formulas by integrating $\Delta\ddot q=K a(t)$, where $K=\tau_{\max}/I$ and $a(t)=1-e^{-t/\tau_a}$. Use zero initial position and velocity differences. Evaluate $\Delta q$ after $50\,\mathrm{ms}$ using the chapter's parameters. Explain why a small instantaneous torque ratio does not set this result to zero.
+\item Use $F_{\mathrm{ref}}=100\,\mathrm{N}$, $L_s=0.20\,\mathrm{m}$, $\epsilon_{\mathrm{ref}}=0.04$ and $k_T=3$. Find force, extension and energy at the reference strain. Verify $dU_T/d\ell^T=F_T$, and identify the dimensional error in integrating force over strain without $L_s$.
+\item Design a comparison of two proposed swing sequences. State the common initial conditions, task outcomes, muscle-state estimates and uncertain parameters. Identify one observation that would distinguish a change in muscle timing from a change in geometry or tendon loading.
 \end{enumerate}
-
 \end{exercises}
+
+\subsection{Worked Answers}
+\begin{enumerate}
+\item The multipliers are $0.8521$, $0.8521$ and $0.3679$; none is zero. Total normalized force is approximately $0.7188$, including $0.12227$ passive force. The Gaussian remains positive at every finite argument.
+\item $V_{\max}=1\,\mathrm{m/s}$, $w=0.175$, $f_V\approx0.5739$, force $57.39\,\mathrm{N}$ and moment $1.148\,\mathrm{N\,m}$. A linear calculation would give a different answer because it is a different law.
+\item $t_{50}=17.33\,\mathrm{ms}$ and $t_{95}=74.89\,\mathrm{ms}$. Euler first exceeds $95\%$ at step 14, $70\,\mathrm{ms}$. The continuous response begins immediately in this model; the time constant controls its rate of approach.
+\item The moment arms are $(0.02,-0.01)\,\mathrm{m}$ and path velocity is zero. Torques $(2,-1)\,\mathrm{N\,m}$ produce powers $(20,-20)\,\mathrm{W}$, summing to zero. Opposite joint powers can coexist with no net muscle-tendon shortening power.
+\item Integrate once for velocity and again for position, retaining both integration constants fixed by the initial conditions. The position difference is $0.0108083\,\mathrm{rad}$, about $0.6193^\circ$. A torque too small to cancel another term can still accumulate a trajectory difference.
+\item Force is $100\,\mathrm{N}$, extension $0.008\,\mathrm{m}$ and energy $0.22475\,\mathrm{J}$. Since $d\epsilon/d\ell^T=1/L_s$, differentiating the energy cancels the slack-length factor and returns force. Without that factor, the strain integral has units of newtons rather than joules.
+\item One defensible design matches the task and starting body, club, activation and elastic states, then compares feasible excitation histories. Record impact orientation, location and velocity as well as relevant loads. Use synchronized motion and electrical signals, with a validated force/geometry model and, where feasible, independent fascicle or tendon measurements. Test parameter sensitivity and predictions not used for fitting. A timing claim should explain observations that an alternative geometry or elastic-state change does not explain equally well; otherwise the mechanism remains underdetermined.
+\end{enumerate}
+\clearpage
+\flushbottom{}

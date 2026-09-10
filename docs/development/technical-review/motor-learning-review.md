@@ -162,13 +162,19 @@ Only audit 335e48b4 and implementation 45c81769 were replayed after aa8ae5b3
 onto repair squash 1fe7997eba9d7059dc9b68582643653cee0ec2d0 before first push.
 The parent trees were identical. Final implementation is
 fafad3fce308215ff52b9db0c271d96749a62285. All normal commit/push hooks pass.
-PR #4330 is ready for review with Fixes #4326 and agent/scientific labels.
-SPEC has one actual-PR row. Protected checks and exact publication remain.
+PR #4330 merged normally as 8c383f9cfb46cc19be832ce81e8fe356279c29c7.
+SPEC has one actual-PR row. Protected PR CI 34422803729 passed. Main CI
+34424752081, performance 34424752088, textbook compilation 34424752116 and
+deployment 34424752073 passed at that exact squash. Live artifact 10133005315
+contains 956 records across 239 routes: every record was checked for HTTP 200,
+passing inspection, no failure, one navigation attempt and no serious/critical
+axe violation; all 239 routes were scanned. No retries, transient responses or
+exhausted retries occurred. This establishes publication, not empirical validity.
 No force push, direct-main push, self-approval or protection bypass occurred.
 
 The portable devlog check still reports only preexisting peer DL-#3903 missing
 SHA and DL-#3902 missing PR/Last verified; their entries were preserved. Render
 side effects in six generated trust files were inspected and restored: only
 run dates, platform-dependent source hashes and formatting changed. Canonical
-trust inputs were untouched. The corpus remains unfinished (405 rows, 212
+trust inputs were untouched. The corpus remains unfinished (405 rows; after the paired muscle review, 210
 Indexed statuses plus partially reviewed sources and whole-book follow-ups).

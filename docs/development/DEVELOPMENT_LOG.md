@@ -27,22 +27,22 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/4331-muscle-force-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch17_muscle_force_generation.tex`, `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `docs/development/technical-review/muscle-force-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`71e80bb9`, complete original editions and seven exercises read; working-tree audit)
-- **Summary:** Confirmed errors in velocity normalization, Hill limits, muscle/tendon force balance, energy units, activation timing and control-affine interpretation. Citation checks also reveal an incorrectly described gait model used for forearm parameters. No corrected chapter or validation yet.
-- **Next step:** Derive and independently test the replacement muscle/tendon examples.
+- **Last verified:** 2026-09-10 (`0897c9a04793b0419ea30de41aa217c9c0b30905` plus validated implementation working tree)
+- **Summary:** Both editions now connect muscle architecture, force curves, activation, tendon energy and joint/control mechanics through bounded evidence, independent examples, two figures and seven worked answers. Root 5,131 passes, 79.2% coverage; final affected, content, static, style/type/link and complete print/web QA pass. Initial conversion/manifest failures and evidence limits are documented.
+- **Next step:** Replay only muscle commits after 71e80bb9 onto motor squash 8c383f9c before first push.
 
 ### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4326 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4330 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4330 (merged)
 - **Branch:** `fix/4326-motor-learning-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch25_motor_learning.tex`, `articles/The_Physics_of_Golf/quarto/ch25_motor_learning.qmd`, `docs/development/technical-review/motor-learning-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-10 (`fafad3fce308215ff52b9db0c271d96749a62285`, implementation; complete local validation)
-- **Summary:** Complete paired correction connects mechanics, feel, prediction and practice through bounded primary evidence, independent examples, two shared figures and twelve worked answers. Root 5,118 passes at 79.19% coverage; final focused 44, content 130, static 34, style/type/link checks and complete affected PDF/web QA pass.
-- **Next step:** Verify protected PR #4330 checks and exact publication.
+- **Last verified:** 2026-09-10 (`8c383f9cfb46cc19be832ce81e8fe356279c29c7`, protected merge and exact production artifact 10133005315)
+- **Summary:** Complete paired correction connects mechanics, feel, prediction and practice through bounded primary evidence, independent examples, two shared figures and twelve worked answers. Root 5,118 passes at 79.19% coverage; final focused 44, content 130, static 34, style/type/link checks and complete affected PDF/web QA pass. Protected main/deployment checks pass; all 956 exact live records across 239 routes pass with no serious/critical axe findings or navigation retries.
+- **Next step:** Continue the adjacent computational-brain chapter audit under the corpus epic.
 
 ### DL-#4327 · Nonlinear Control Explanation Publication Repair
 
