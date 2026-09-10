@@ -18,31 +18,44 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4358 · Strokes-Gained Accounting and Individual Inference
+
+- **State:** in_progress
+- **Owner:** codex (handoff requested)
+- **Issue:** #4358 (epic #4009; corpus #4021; applied routes #4059)
+- **PR:** not created; intermediate draft checkpoint
+- **Branch:** `fix/4358-strokes-gained-rigor`
+- **Paths:** `articles/strokes-gained-limitations.qmd`, `articles/strokes-gained-limitations-bibliography.md`, `critiques/strokes_gained_non_ergodic.md`, `references/strokes-gained-rigor.bib`, `tests/test_strokes_gained_article_rigor.py`, `docs/development/technical-review/strokes-gained-review.md`, `docs/development/technical-review/build_strokes_gained_examples.py`, `docs/development/technical-review/strokes-gained-numerics.json`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`a8869e35`; parent of working draft, not a claim of committed draft verification; focused14, Ruff/Black100, title636 and content131 pass; root5269 pass/29 skip/132 deselected/59 warnings, coverage79.29%; rendered review pending)
+- **Summary:** Rebuilds accounting, penalties, category transfers, policy values, distributional proximity, player heterogeneity and causal limits. Complete original article/companion/critique reading; independent numerical examples saved. User requested intermediate handoff before browser and publication verification; governed critique remains open and route inventory deferred.
+- **Next step:** Render the revised article and critique under the root Quarto configuration and complete their full visual technical review.
+
 ### DL-#4355 · Complete Forces, Torques and Physical Attribution
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4355 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4357 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4357 (merged; published)
 - **Branch:** `fix/4355-forces-torques-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch04_forces_and_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/forces_torques_verified.*`, `tests/test_forces_torques_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/forces-torques-review.md`, `docs/development/technical-review/build_forces_torques_figures.py`, `docs/development/technical-review/forces-torques-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`3a9a87af9d28fc0728cf0b4a23e0f932660752d3`; validated tree preserved on replay; normal commit/push hooks passed; root 5,254 passed, coverage 79.29%; focused 35, content 131, static 34, titles 636, mypy 91; complete paired reading and final exercise/units browser verification passed; all 14 canonical route records individually passed)
+- **Last verified:** 2026-09-10 (`0c753400190cf330533bffc12e9b035162f37749`; exact deployment34477888759 succeeded; independently inspected all956 records/239 routes in artifact10153444359, all HTTP200/pass, no record/inspection failures, retries or axe violations)
 - **Summary:** Rebuilds physical and generalized load attribution, moving-frame signs, gravity work, muscle-state and contact feasibility, whole-club grip wrench and segment power. Independent Newton–Euler and energy checks support a declared two-link example and seven worked answers. Full audit records derivations, source limits and validation failure history.
-- **Next step:** Verify PR #4357 protected checks, squash merge and revision-matched live publication.
+- **Next step:** None for this chapter; preserve the complete audit.
 
 ### DL-#4353 · Complete Double-Pendulum Derivation and Task Mechanics
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4353 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4354 (merged; live verification pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4354 (merged; published through verified descendant)
 - **Branch:** `fix/4353-double-pendulum-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch03_double_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/double_pendulum_verified.*`, `tests/test_double_pendulum_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/double-pendulum-review.md`, `docs/development/technical-review/build_double_pendulum_figures.py`, `docs/development/technical-review/double-pendulum-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`e9ad402e50f111589252292178e5f45ac58b427c`; protected checks passed and squash tree matches final head; normal commit/push hooks passed; root 5,243 passed, coverage 79.29%; focused 37, content 131, static 34, titles 636, mypy 91; full paired reading and final browser heading correction)
+- **Last verified:** 2026-09-10 (`0c753400190cf330533bffc12e9b035162f37749`; published descendant of e9ad402e with both Chapter3 sources unchanged; deployment34477888759/artifact10153444359 all956/239 individually verified; original exact run34473831404 was cancelled when superseded)
 - **Summary:** Corrects COM versus hinge inertia, gravity signs, Coriolis rate factors, coupled input response, physical interface power and endpoint curvature. Six worked answers and primary-source boundaries distinguish anatomical interpretation, task sensitivity and chaos. Audit records independent derivations, numerical checks and rendering defects found by complete reading.
-- **Next step:** Verify exact deployment 34473831404 for double-pendulum squash e9ad402e50f111589252292178e5f45ac58b427c.
+- **Next step:** None for this chapter; preserve its derivation audit and cancellation history.
 
 ### DL-#4351 · Complete Constraint Forces, Compatible Dynamics and Power
 

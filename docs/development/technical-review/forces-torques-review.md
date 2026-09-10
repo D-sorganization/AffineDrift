@@ -245,3 +245,7 @@ squash e9ad402e50f111589252292178e5f45ac58b427c. Parent/squash trees matched.
 Normal commit/push hooks passed. Ready PR #4357 closes #4355; protected checks,
 merge and exact live publication remain. The final exercise changed only PDF
 page 79, which was reread; every final actual-route record passed.
+
+## Verified Publication at Handoff
+
+Exact protected squash0c753400190cf330533bffc12e9b035162f37749 deployed successfully in34477888759. Artifact10153444359 was independently inspected: all956 records/239 routes HTTP200/pass, no record/inspection failures, retries or axe violations. This supersedes the pending delivery checkpoint above.

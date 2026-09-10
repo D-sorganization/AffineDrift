@@ -1,57 +1,110 @@
 ---
 title: "Critique: Strokes Gained Limitations and Ecological Fallacy"
-description: "Critique and response context for Strokes Gained Limitations and Ecological Fallacy in AffineDrift's control-affine golf-swing framework."
+description: "Corrected critique distinguishing strokes-gained accounting from individual forecasting, hidden-state models, and tournament objectives."
 ---
 
 ## Critique: Strokes Gained Limitations and Ecological Fallacy
 
 ## Summary of Concern
 
-The article `articles/strokes-gained-limitations.qmd` correctly identifies the "Ecological Fallacy" (applying population statistics to individuals) but fails to address the deeper problem of **Non-Ergodicity** and **Statistical Non-Stationarity** in human performance.
-Strokes Gained assumes that a player's skill state is a fixed random variable sampled from a distribution. In reality, skill is time-varying (fatigue, psychology, "hot streaks").
-Furthermore, the "Value Function" $J(x)$ assumes a **Markov Property** (state depends only on current lie). Real golf involves hidden states (confidence, previous hole outcome) that violate the Markov assumption.
+**Technical correction, September 10, 2026:** The original critique correctly
+raised questions about forecasting a changing golfer and choosing tournament
+strategies. It incorrectly presented stationarity, full observation, and risk
+neutrality as requirements of strokes-gained accounting. Those claims are
+withdrawn. This correction preserves the critique's identity and its governed
+open status; it does not silently adjudicate the trust ledger.
+
+The revised [article](../articles/strokes-gained-limitations.html) separates
+three questions: how recorded strokes are allocated, what a golfer is likely
+to do next, and what would change under an intervention. The remaining concern
+is whether a particular predictive or decision model has adequate states,
+validated transitions, an appropriate objective, and uncertainty estimates.
 
 ## Location
 
-- **File:** `articles/strokes-gained-limitations.qmd`
-- **Section:** "Strokes gained as a population conditional expectation" & "A concrete putting example"
+- **Article:** `articles/strokes-gained-limitations.qmd`.
+- **Relevant Sections:** Policy Evaluation; Individual Continuation and
+  Category Boundaries; Heterogeneity, Selection, and Causal Inference; Hidden
+  States and Tournament Objectives.
 
 ## Nature of the Issue
 
-- **Hidden State / Non-Markovian Dynamics:** The formulation $J(d, c)$ assumes the state is fully observable. It ignores $S_t$ (Internal State).
-- **Ergodicity Violation:** The "Expected Value" is an ensemble average. An individual player is a single time-series. If the process is not ergodic, the time-average does not equal the ensemble average.
-- **Risk Neutrality Assumption:** The Bellman equation assumes risk-neutral minimization of expected strokes. Real players optimize a utility function $U(S)$ that includes variance minimization (avoiding double bogeys) or "hero shots" (convex utility) depending on tournament position.
+For a fixed benchmark $B$ and complete hole with counted costs $c_t$,
+
+$$
+\sum_t[B(s_t)-c_t-B(s_{t+1})]=B(s_0)-\sum_t c_t,
+$$
+
+because the final holed-state value is zero. This holds without assuming an
+optimal policy, stationary skill, or a Markov process. Omitted factors can
+limit how well the benchmark predicts or interprets individual shots without
+invalidating that cancellation.
+
+A policy value $V_i^\pi$ requires a specified continuation policy and transition
+model. Its state may need environmental conditions, player identity, history,
+or beliefs about hidden variables. A distance-and-lie conditional mean can
+still be defined when those observations are insufficient for a closed Markov
+recursion. Adding a symbol for confidence does not establish its causal effect.
 
 ## Why This Is a Problem
 
-The article critiques the "Slope Mismatch" ($J'_i \neq J'_{ref}$) but misses the **Structure Mismatch**.
-Even if we calculate a personal $J_i$, the _functional form_ is likely wrong because it assumes risk neutrality and state independence.
-A player leading a tournament plays differently than one missing the cut. Strokes Gained treats a 5-footer on Thursday the same as a 5-footer to win the Masters. This is a failure of the **Cost Function Definition**.
+The same physical leave can have different continuation values for different
+players. Yet “worse putter” does not establish a larger proximity benefit:
+probability levels do not order distance derivatives. A pooled regression also
+mixes state-dependent player weights and observed conditions. Calling that
+regression an individual treatment-response function needs justification beyond
+its fit to the observed data.
 
-## Evidence / References
+Time variation can undermine a static forecast, but an individual's mean need
+not equal a heterogeneous population mean even under stationarity. Dependence
+alone does not establish non-ergodicity. The earlier argument conflated these
+distinct issues and provided no golf-specific stochastic model establishing
+its proposed non-ergodicity conclusion.
 
-- **Taleb, N. N.** - "Statistical Consequences of Fat Tails" (Ergodicity economics).
-- **Kahneman & Tversky** - Prospect Theory (Loss aversion in putting).
-- **Todorov** - "Optimal Feedback Control" (Risk-sensitive control).
+## Evidence and References {#evidence-references}
+
+- [Broadie's author preprint, Section 2](https://www.columbia.edu/~mnb2/broadie/Assets/strokes_gained_pga_broadie_20110408.pdf)
+  establishes the benchmark definition and additivity and describes the
+  additional near-optimal-strategy approximation in its DP discussion.
+- [Sutton and Barto, Sections 3.5–3.6](https://www.andrew.cmu.edu/course/10-703/textbook/BartoSutton.pdf)
+  distinguish policy evaluation from optimal values.
+- [Gelman (2006)](https://sites.stat.columbia.edu/gelman/research/published/multi2.pdf)
+  separates predictive pooling from causal interpretation of observational
+  coefficients.
+
+The previous general references to fat tails, prospect theory, and optimal
+feedback control did not establish the claimed failure of SG accounting.
+They are not retained as evidence for those withdrawn assertions.
 
 ## Severity
 
-- **Medium** (The current article is good, but misses the "Control Theory" perspective on _why_ the metrics fail).
+**Medium, governed open.** The concern is consequential when making individual
+forecasts or prescriptions. It is not evidence that complete SG totals cease
+to account for counted strokes.
 
 ## Suggested Remedies
 
-### 1. Address Non-Markovian Hidden States
+### 1. Test State Sufficiency {#address-non-markovian-hidden-states}
 
-Explicitly state that $J(x)$ is actually $J(x, \theta)$ where $\theta$ is a hidden internal state.
+Compare predictions across relevant conditions and future time periods. Examine
+whether omitted history improves held-out predictions and whether measured
+changes support the proposed mechanism. Avoid interpreting a negative SG value
+as a diagnosis of anxiety or mechanical error.
 
-> "The Markov assumption—that the next shot depends only on the ball's position—ignores the 'hot hand', fatigue, and psychological pressure, which act as hidden state variables."
+### 2. State the Decision Objective {#discuss-risk-sensitivity}
 
-### 2. Discuss Risk Sensitivity
+Expected-score minimization and maximizing the chance of beating a threshold
+can prefer different actions. The article's constructed four-stroke safe
+outcome versus a three-or-seven risky outcome demonstrates this without
+assigning universal risk preferences to golfers. Counted score is a cost;
+worse expected scoring means a higher stroke count. SG can report either
+policy's consequences without deciding which objective the golfer should use.
 
-The objective function isn't just $E[Score]$. It's $E[U(Score)]$.
+### 3. Separate Time Variation From Population Differences {#differentiate-ensemble-vs-time-averages}
 
-> "Strokes Gained assumes a linear utility function (risk neutrality). However, tournament dynamics often induce risk-averse (concave) or risk-seeking (convex) behaviors that fundamentally alter the optimal policy $\mu^*$, making the benchmark policy irrelevant."
-
-### 3. Differentiate Ensemble vs Time Averages
-
-> "Strokes Gained is an ensemble metric. A single player's season is a single realization of a stochastic process. Assuming this time-series converges to the population mean requires ergodicity, which is far from guaranteed in biological systems."
+Specify the process and time horizon before claiming nonstationarity or
+non-ergodicity. Use repeated measurements, time-ordered validation, and
+uncertainty that respects dependence. Personalization can improve forecasting;
+causal claims still require a defined intervention and an identification
+argument. The source and numerical review is tracked in
+[issue #4358](https://github.com/D-sorganization/AffineDrift/issues/4358).
