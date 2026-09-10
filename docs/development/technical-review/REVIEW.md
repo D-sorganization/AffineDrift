@@ -1549,3 +1549,19 @@ minor/moderate accessibility findings are recorded. Protected delivery remains.
 
 The405-source corpus remains unfinished, with214statuses beginning Indexed.
 This count does not equate all other rows with complete technical audits.
+
+## Nonlinear Explanation Publication Repair: #4327
+
+Rotation deployment exposed escaped HTML and inaccessible regions in the
+nonlinear-control article. Both explanations now use keyboard-native disclosures
+with scoped theme styling. They withdraw unsupported work percentages, a torso-
+stop prescription, a95%validation claim and a unique physiological baseline.
+The remainder of the article is not fully reviewed; its Indexed status is
+retained. See [nonlinear-callouts-review.md](nonlinear-callouts-review.md).
+
+Root5,097tests pass at79.19%coverage, final content130/static34 pass, and the
+canonical deployment-cleaned14-case verifier has no failures. Twelve expanded
+keyboard/theme cases and20detail captures are inspected; no escaped code remains
+and all prior IDs survive. Failed intermediate approaches and exact deployment
+artifact10128793137 are recorded. Protected delivery remains; motor-learning
+#4326 resumes from its preserved audit branch after this repair.

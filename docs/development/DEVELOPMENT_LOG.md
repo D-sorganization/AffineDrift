@@ -18,12 +18,25 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4327 · Nonlinear Control Explanation Publication Repair
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4327 (epic #4009; corpus #4021)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4329 (open)
+- **Branch:** `fix/4327-nonlinear-callouts`
+- **Paths:** `articles/nonlinear-control-insights.qmd`, `css/technical-explanations.css`, `docs/development/technical-review/nonlinear-callouts-review.md`
+- **Started:** 2026-09-09
+- **Last verified:** 2026-09-09 (`1dec5dd8fe602d17a7aeeb7c48b13559eb6e40be`, complete bounded publication validation)
+- **Summary:** Exact rotation deployment artifact identifies malformed nonlinear-control explanation HTML as a publication blocker. Native disclosures replace escaped markup and unsupported muscle-work, torso-stop and validation claims. Root 5,097 tests pass at79.19%coverage; final content130/static34 and12expanded keyboard/theme cases pass. The article is only partially reviewed.
+- **Next step:** Verify protected PR #4329 checks and exact publication after merge.
+
 ### DL-#4324 · Motion Capture, Uncertainty and Scientific Interpretation
 
 - **State:** in_review
 - **Owner:** codex
 - **Issue:** #4324 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4325 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4325 (merged; production pending)
 - **Branch:** `fix/4324-motion-capture-rigor`
 - **Paths:** `articles/technology-motion-capture.qmd`, `tests/test_motion_capture_rigor.py`, `docs/development/technical-review/motion-capture-review.md`
 - **Started:** 2026-09-09

@@ -9,6 +9,7 @@ format:
     toc-depth: 3
     number-sections: false
     code-fold: true
+    css: /css/technical-explanations.css
 categories:
 - motor-control
 ---
@@ -233,52 +234,37 @@ Data-driven identification can reveal conserved quantities under drift, offering
 
 Nonlinear control theory provides a rigorous conceptual and analytical framework for understanding the structure and dynamics of the golfer--club--shaft system. The affine decomposition motivates a large set of future research directions that can greatly enhance biomechanical understanding, experimental measurement, and data-driven modeling of the golf swing.
 
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Imagine surfing. You don't create the wave—the ocean does. You just position yourself, feel the wave's motion, and at the right moment, you lean in a particular direction. The wave does almost all the work. Your paddle strokes are tiny adjustments compared to the wave's power.
-      </p>
-      <p>
-        A golf swing works exactly the same way. Gravity and your body's momentum create a "wave" of motion. Your muscles make tiny adjustments to that wave, steering it toward the ball. This article explains what scientists discovered: your muscles do maybe 10–20% of the work. Physics does the rest. Here is how.
-      </p>
+<details class="technical-explanation">
+<summary>In Layman's Terms</summary>
 
-      <div class="laymans-item">
-        <h3>Drift vs. Input</h3>
-        <p>The "Drift" is everything the club wants to do on its own because of gravity and momentum. The "Input" is what you force it to do with your muscles. In a good swing, Drift does most of the heavy lifting.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Riding a bicycle down a hill. Gravity (Drift) provides the speed. You just use the handlebars (Input) to steer. You don't need to pedal hard to go fast if you let the hill do the work.
-        </div>
-      </div>
+A golfer prepares motion and stored energy before impact. Later muscle action,
+inertia, gravity, elastic forces and contact constraints act together. A useful
+model asks how the club would move from a specified state under a specified
+change in input. That comparison can reveal sensitivity to an intervention;
+it does not measure a universal percentage of work supplied by muscles.
 
-      <div class="laymans-item">
-        <h3>Underactuation</h3>
-        <p>Your body can't control every single motion of the club directly because the club is flexible and moves freely at the wrist. You have to guide it rather than force it.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Pushing a child on a playground swing. You can't hold the swing the whole time. You have to wait for the right moment to push, working <em>with</em> the swing's motion, not fighting it.
-        </div>
-      </div>
+**Drift and input.** In a declared model, drift is the instantaneous evolution
+when the selected input is zero. Existing velocity, muscle activation and tissue
+state do not disappear merely because a new command is set to zero. Zero joint
+torque, zero excitation and zero activation define different interventions.
 
-      <div class="laymans-item">
-        <h3>Energy Transfer (Sequencing)</h3>
-        <p>To speed up the club, you actually have to slow down your body. This transfers your energy out to the clubhead.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A car crash test. When the car (your body) suddenly slams into a wall and stops, the crash dummy (the club) flies forward through the windshield. By "crashing" (stopping) your body rotation, you launch the club.
-        </div>
-      </div>
+**Underactuation.** Having fewer independent inputs than modeled motions can
+limit immediate acceleration choices. Coupling and time can still allow useful
+motion. A flexible club adds dynamics; a human wrist is not automatically a
+passive hinge with no active torque.
 
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> Don't try to muscle the club through the whole swing; build up speed and then let physics take over to snap it through impact.
-      </div>
-    </div>
-  </div>
-</section>
+**Energy transfer.** Joint forces and moments can redistribute energy between
+segments while muscles add work and tissue stores or dissipates energy. A
+slowing torso and accelerating club do not, by themselves, establish the source
+or amount of that transfer. Deliberately stopping the torso is not a conclusion
+of the mass-matrix equations.
+
+**Practical meaning.** Compare clearly defined models against measurements,
+including timing and uncertainty. Coordinated motion is a question to explain,
+not proof that most effort is unnecessary or that one sequence is optimal.
+
+</details>
+
 
 :::{.callout-warning}
 ## Scope and Limitations
@@ -291,64 +277,34 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
 
 :::
 
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
+<details class="technical-explanation">
+<summary>Critics' Comments</summary>
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Biomechanics Critique:</span>
-          <h3>Is "Drift Invariance" Physiologically Valid?</h3>
-        </div>
-        <p class="critic-argument">
-          The core assumption of "Drift Invariance"—that passive dynamics $f(x)$ are independent of input $u$—oversimplifies muscle physiology. Muscles are not pure torque generators; their stiffness and damping properties change with activation (Hill-type muscle models). Therefore, "passive" drift is not truly independent of the "active" input.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a valid physiological nuance. However, at the system level of joint torques, the control-affine approximation ($\tau = G(x)u$) remains robust. The "Skeletal Baseline" validation (Part 5) shows that treating inputs as additive torques captures over 95% of the variance in clubhead motion, suggesting that variable stiffness effects are second-order at high swing speeds.
-        </div>
-      </div>
+**Does the model represent activation-dependent mechanics?** Muscle force,
+stiffness and damping can depend on activation, length and velocity. A joint-
+torque model is an abstraction whose input definition and omitted states must
+be stated. An additive input equation alone does not validate that abstraction.
+This article does not establish a 95% accuracy result for a skeletal baseline.
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Practical Critique:</span>
-          <h3>Complexity vs. Utility</h3>
-        </div>
-        <p class="critic-argument">
-          Introducing concepts like "Lie Brackets" and "Nonholonomic Constraints" to golf instruction is unnecessary. Elite golfers have developed optimal swings for centuries based on feel and simple mechanical cues. This mathematical formalism adds complexity without offering actionable new drills.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We agree that a golfer should not think about Lie Brackets on the tee. This framework is for <em>analysts and designers</em>, not players. By rigorously defining "why" certain feels work (e.g., why "waiting" for the club loads the shaft), we can filter out bad advice and optimize equipment design with precision that intuition alone cannot achieve.
-        </div>
-      </div>
+**What does the mathematics add to coaching?** It can make assumptions and
+counterfactual comparisons testable. It cannot establish that a cue improves
+performance without an appropriate comparison, nor infer an optimal golf swing
+from the general existence of an optimal-control formulation. Prediction,
+explanation and intervention efficacy are different standards of evidence.
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Theoretical Critique:</span>
-          <h3>The "Zero Torque" Fallacy</h3>
-        </div>
-        <p class="critic-argument">
-          The "Zero Torque Counterfactual" (ZTCF) describes a swing where the golfer does nothing. Since no golfer actually does this, the baseline is a fantasy. A more realistic baseline would be a "constant effort" or "pure rotation" model.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> The ZTCF is not a proposed swing; it is a <em>measuring stick</em>. Just as we measure a table's height relative to the ground (even if the table never touches the ground), we measure the golfer's effort relative to the system's natural drift. It provides the only objective zero-point for quantifying "added" effort.
-        </div>
-      </div>
+**Is zero torque the only objective baseline?** No. A baseline is objective
+only in the sense that its model, initial state and intervention are reproducible.
+Holding a specified physical intervention fixed under a smooth change of
+coordinates preserves its physical trajectory. That invariance does not select
+a unique physiological intervention, measure muscular effort, or make another
+clearly specified baseline invalid.
 
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate. These critiques strengthen our understanding of the model's limits.
-      </div>
-    </div>
-  </div>
-</section>
+These questions remain part of the research program. Resolving them requires
+explicit system boundaries, feasible interventions, mechanical work accounting
+and independent validation of the output being interpreted.
+
+</details>
+
 
 ## Related Theoretical Sections
 
