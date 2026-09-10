@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4331 · Muscle Force Models, Tendon Energy and Control Inference
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4331 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4332 (open)
 - **Branch:** `fix/4331-muscle-force-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch17_muscle_force_generation.tex`, `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `docs/development/technical-review/muscle-force-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`0897c9a04793b0419ea30de41aa217c9c0b30905` plus validated implementation working tree)
+- **Last verified:** 2026-09-10 (`88fc30eae28ae0b9bfc463e5a47c5ce504a38087`, implementation; complete local validation and normal hooks)
 - **Summary:** Both editions now connect muscle architecture, force curves, activation, tendon energy and joint/control mechanics through bounded evidence, independent examples, two figures and seven worked answers. Root 5,131 passes, 79.2% coverage; final affected, content, static, style/type/link and complete print/web QA pass. Initial conversion/manifest failures and evidence limits are documented.
-- **Next step:** Replay only muscle commits after 71e80bb9 onto motor squash 8c383f9c before first push.
+- **Next step:** Verify protected PR #4332 checks and exact publication.
 
 ### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
 

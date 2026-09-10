@@ -224,7 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-09-10 | #4331 | Correct paired muscle-force models, activation, tendon energy and control inference with independently checked examples and figures. |
+| 2026-09-10 | #4332 | Correct paired muscle-force models, activation, tendon energy and control inference with independently checked examples and figures. |
 | 2026-09-10 | #4330 | Correct both motor-learning editions with distinct error models, bounded golf evidence, paired figures and worked answers. |
 | 2026-09-08 | #4292 | Correct launch-monitor definitions, point and rotation kinematics, temporal uncertainty, vendor evidence, and validation-study interpretation. |
 | 2026-09-08 | #4282 | Separate conservative Coriolis coupling from physical damping in the paired Physics of Golf chapter; make the state and energy mappings explicit and correct the two-joint inverse-mass example; verify publication output and integration with current main. |

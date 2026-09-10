@@ -2,7 +2,7 @@
 
 Issue #4331 is a native child of epic #4009; corpus #4021 and Physics textbook
 #4054 remain unfinished. Branch `fix/4331-muscle-force-rigor` starts from motor
-delivery checkpoint `71e80bb98531798d6d7c438d2858e932697fe469`; PR not created.
+delivery checkpoint `71e80bb98531798d6d7c438d2858e932697fe469`; PR #4332.
 Both complete original chapter editions and all seven exercises have been read.
 The print source is indexed at 6,139 words. Peer joint-friction work is excluded.
 
@@ -184,8 +184,12 @@ dates, platform-dependent source hashes and JSON formatting only. Claim-audit
 freshness passes. The portable devlog checker reports only preserved peer
 DL-#3903 missing SHA and DL-#3902 missing PR/Last verified.
 
-Before first muscle push, replay only commits after 71e80bb9 onto the motor
-squash or a checked descendant. Use protected PR delivery and preserve peer
+Only audit 0897c9a0 and implementation 762a5b51 were replayed after 71e80bb9
+onto motor squash 8c383f9c before first push. Parent trees and resulting
+implementation trees were identical. Final implementation is
+88fc30eae28ae0b9bfc463e5a47c5ce504a38087. All normal commit/push hooks pass.
+PR #4332 references Fixes #4331 and has agent/scientific labels; SPEC has one
+actual-PR row. Protected checks and exact publication remain. Preserve peer
 joint-friction work and immutable publication. No subagents or Git mutation
 during QA. The corpus has 405 rows and 210 Indexed statuses; partial sources
 and whole-book consistency audits remain additional work. The next longest
