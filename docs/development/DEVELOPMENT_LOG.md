@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4333 · Flexible Shaft Dynamics and Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4333 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4335 (open)
 - **Branch:** `fix/4333-flexible-shaft-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch11_flexible_shaft.tex`, `articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.qmd`, `docs/development/technical-review/flexible-shaft-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`98a4cd538881be1368c9de4b2d3b4a4b6d4d40cb`, audit parent plus validated implementation working tree)
+- **Last verified:** 2026-09-10 (`b58e86af6bfbbc7d7ea3d8d22e88150452e09b65`, validated implementation, replayed onto protected main; normal hooks passed)
 - **Summary:** Both editions corrected with explicit beam assumptions, modal normalization, coupled input mechanics, energy accounting and bounded fitting evidence; two reproducible figures and six worked answers. Root 5,143 passes / 29 skips; content, 34 static contracts, 636 title checks, style/type/link checks and complete affected print/web QA pass. Initial failures and residual shared accessibility finding documented. Peer impact/acoustic work and immutable publication are excluded.
-- **Next step:** Commit normally, replay only shaft commits onto muscle squash, push and create protected PR for #4333; verify CI and exact publication.
+- **Next step:** Verify protected PR #4335 checks, normal auto-merge and exact publication.
 
 ### DL-#4331 · Muscle Force Models, Tendon Energy and Control Inference
 

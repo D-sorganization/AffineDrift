@@ -331,4 +331,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-09 | #4325 | Correct motion-capture geometry, timing, anatomical inference, correlated uncertainty and scientific interpretation with verified primary claims and independently checked examples. |
 | 2026-09-09 | #4329 | Repair nonlinear-control explanations with keyboard-native disclosure markup, theme-aware titles and qualified mechanical interpretation. |
 
-| 2026-09-10 | #4333 | Correct paired shaft beam, modal, coupled-input and energy models; distinguish relative recoil from measured fitting outcomes with two reproducible figures and six worked answers. |
+| 2026-09-10 | #4335 | Correct paired shaft beam, modal, coupled-input and energy models; distinguish relative recoil from measured fitting outcomes with two reproducible figures and six worked answers. |

@@ -136,3 +136,14 @@ descendant) before first shaft push; do not replay the muscle commits.
 Motor PR #4330 is published as 8c383f9c with exact live artifact 10133005315:
 all 956 records / 239 routes verified. Corpus remains unfinished. No subagents,
 Git mutation during QA, peer ch29 edits or immutable-publication edits.
+
+Implementation b58e86af6bfbbc7d7ea3d8d22e88150452e09b65 is in PR #4335.
+Only the two shaft commits were replayed onto protected a81f99c0 after proving
+the muscle parent and squash trees identical. The validated shaft implementation
+tree differs only in the two subsequently synced fleet policy files; those
+changes were read. The agent-context catalog is absent, so direct source
+inspection remains the fallback. Normal commit and push hooks passed. Final
+polish web verification again passed all 14 cases with no serious/critical axe
+finding; rendered forward-counterfactual wording and proper name were checked.
+The development-log checker reports only the preserved #3903/#3902 metadata
+defects; this feature has a concrete verifying SHA and PR.
