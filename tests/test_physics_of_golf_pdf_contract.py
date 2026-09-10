@@ -46,18 +46,14 @@ def test_bold_prose_does_not_leak_into_bold_math_argument() -> None:
 def test_christoffel_expression_is_inside_display_math() -> None:
     """Prevent Pandoc from escaping mathematical subscripts as prose."""
     text = TRIPLE_PENDULUM_CHAPTER.read_text(encoding="utf-8")
-    expression = r"C_i = \sum_{j, k} \frac{\partial M_{ij}}{\partial q_k} \dot{q}_j \dot{q}_k"
-
-    assert f"$$\n{expression}\n$$" in text
-
-    for expression in (
-        r"C_3 \approx \frac{\partial M_{23}}{\partial q_2} \dot{q}_2 \dot{q}_3 + \text{(cross terms)}",
-        r"C_3 \approx 0.01 \times 600 = 6 \text{ Nm}",
-    ):
-        assert f"$$\n{expression}\n$$" in text
-
-    inertia_expression = r"T = \frac{1}{2} I \omega^2 \implies \omega = \sqrt{\frac{2T}{I}}"
-    assert f"$$\n{inertia_expression}\n$$" in text
+    displays = re.findall(r"\$\$\s*\n(.*?)\n\$\$", text, flags=re.DOTALL)
+    # Preserve the display-math contract using the corrected Christoffel
+    # expression, not the old missing-gradient formula or zero derivative.
+    christoffel = next(block for block in displays if block.startswith(r"c_i=\sum_{j,k}"))
+    assert r"-\frac{\partial M_{jk}}{\partial q_i}" in christoffel
+    assert any(block.startswith(r"c_3=\beta\sin(q_2+q_3)v_1^2") for block in displays)
+    assert any(r"\simeq15.127\ \mathrm{N\,m}" in block for block in displays)
+    assert any(r"|\omega|=\sqrt{\frac{2E_{\mathrm{rot}}}{I}}" in block for block in displays)
 
 
 def test_elastic_and_constraint_expressions_are_inside_display_math() -> None:

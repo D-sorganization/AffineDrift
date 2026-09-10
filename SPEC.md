@@ -336,3 +336,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-10 | #4337 | Correct paired passive-control energy, drift and stability arguments; distinguish intrinsic mechanics from delayed feedback with a reproducible damping figure and 12 worked exercises. |
 | 2026-09-10 | #4339 | Correct the complete DCR article with explicit scaling, coordinate and capacity assumptions, reproducible counterexamples and finite-time impact sensitivity. |
 | 2026-09-10 | #4344 | Correct paired fascia mechanics and biological evidence; keep bound DCR reviews outside pruned deployment output (#4342). |
+
+| 2026-09-10 | #4346 | Re-derive complete triple-pendulum dynamics, release and power accounting with verified examples and bounded wrist-control evidence. |

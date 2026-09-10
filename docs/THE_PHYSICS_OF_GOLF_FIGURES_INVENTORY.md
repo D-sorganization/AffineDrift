@@ -9,14 +9,14 @@ This document provides the formal audit and inventory of all figures across the 
 | **Total Chapters Audited** | 34 |
 | **Chapters with Figures** | 29 |
 | **Total LaTeX Figures** | 38 |
-| **TikZ Figures** | 14 |
-| **Raster / Includegraphics Figures** | 24 |
+| **TikZ Figures** | 13 |
+| **Raster / Includegraphics Figures** | 25 |
 | **LaTeX Figure Labels** | 38 |
 | **LaTeX Prose Figure Refs** | 3 |
-| **Total Quarto Figures** | 25 |
-| **Quarto Figure Defs (Divs / Imgs / Cells)** | 25 |
-| **Quarto Prose Figure Mentions** | 23 |
-| **Missing Figures in Quarto** | **13** |
+| **Total Quarto Figures** | 26 |
+| **Quarto Figure Defs (Divs / Imgs / Cells)** | 26 |
+| **Quarto Prose Figure Mentions** | 24 |
+| **Missing Figures in Quarto** | **12** |
 
 ## Chapter Parity Matrix
 
@@ -29,7 +29,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch05_affine_structure` | The Affine Structure: Drift and Control | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch06_zero_torque_counterfactual` | The Zero-Torque Counterfactual | 1 | 1 | 0 | ❌ Missing 1 |
 | `ch07_constraint_forces` | Constraint Forces: The Hidden Engines of the Swing | 1 | 1 | 0 | ❌ Missing 1 |
-| `ch08_triple_pendulum` | The Triple Pendulum: Adding the Wrists | 1 | 1 | 0 | ❌ Missing 1 |
+| `ch08_triple_pendulum` | The Triple Pendulum:\\Coupling, Release and Control | 1 | 0 | 1 | ✅ Parity |
 | `ch09_parallel_mechanisms` | Parallel Mechanisms\\and Loop Constraints | 1 | 0 | 1 | ✅ Parity |
 | `ch09b_passive_stabilization` | Passive Stabilization in Parallel Loops | 0 | 0 | 0 | ✅ Parity |
 | `ch10_energy_transfer` | Energy Transfer: How Power Flows\\Through the Kinetic Chain | 2 | 0 | 2 | ✅ Parity |
@@ -68,7 +68,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch05_affine_structure` | 1 | `fig:ch05_drift_vector_field` | TikZ Diagram | Qualitative drift vector field in a 2D slice of state space (shoulder angle $\theta_1$ and... |
 | `ch06_zero_torque_counterfactual` | 1 | `fig:ch06_ztcf_timeline` | TikZ Diagram | Schematic model comparison of a declared drift-equivalent generalized quantity (red) and a... |
 | `ch07_constraint_forces` | 1 | `fig:constraint_forces_hinge` | TikZ Diagram | Constraint Forces at a Hinge Joint. The constraint force $\bm{F}_c$ acts at the joint, per... |
-| `ch08_triple_pendulum` | 1 | `fig:triple_pendulum_diagram` | TikZ Diagram | Triple Pendulum Model: The Three-Link Kinetic Chain. Segment 1 (Upper Arm, Blue) Rotates a... |
+| `ch08_triple_pendulum` | 1 | `fig:triple_pendulum_diagram` | Includegraphics | Three-Link Geometry and an Unforced Continuation From the Declared Initial State. Absolute... |
 | `ch09_parallel_mechanisms` | 1 | `fig:parallel_mechanical_graph` | Includegraphics | Actual Closed Paths and the Connecting Spine Path. Arms and Legs Represent Jointed Paths; ... |
 | `ch10_energy_transfer` | 1 | `fig:energy-sankey` | Includegraphics | Both Sides of the Internal Boundary Must Balance. Hinge-Force Power Cancels Between Bodies... |
 | `ch10_energy_transfer` | 2 | `fig:energy_passive_transfer` | Includegraphics | An Explicit Passive Mechanism Redistributes Energy in Both Directions. The Outer Rod Gains... |
