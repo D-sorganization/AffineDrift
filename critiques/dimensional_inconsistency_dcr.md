@@ -50,3 +50,15 @@ If the time unit is changed from seconds to milliseconds:
 2.  **Nondimensionalization:** Introduce a characteristic time constant $\tau_c$ (e.g., swing duration $\approx 0.2\text{s}$) to nondimensionalize the state vector before computing norms:
     $$ \tilde{\dot{q}} = \tau_c \dot{q}, \quad \tilde{\ddot{q}} = \tau_c^2 \ddot{q} $$
 3.  **Explicit Caveat:** If the current definition is retained for simplicity, an explicit caveat must be added stating that the metric is valid only under the specific SI unit system (seconds, radians) and acts as a heuristic rather than a rigorous tensor quantity.
+
+## Editorial Adjudication and Evidence Boundaries
+
+1. **Historical Versus Corrected State:**
+   The historical article formulation mixed velocity and acceleration components in Euclidean norms across the state derivative $\dot{x}$. In the corrected canonical article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md` under PR #4339), DCR is strictly defined as an acceleration-space magnitude ratio $\frac{\|a_{\text{drift}}(x)\|_H}{\|a_{\text{ctrl}}(x, u)\|_H}$ evaluated under an explicitly declared metric tensor $H$ and declared control capacity.
+
+2. **Critique Boundary and Counterexamples:**
+   While the critique correctly identified dimensional inhomogeneity in the unweighted state derivative, its suggested remedy to define DCR on the "dynamic fiber" and equate unweighted generalized forces to accelerations is physically and geometrically flawed:
+   - Coordinate acceleration $\ddot{q}$ is not a tangent vector under nonlinear coordinate changes without Christoffel connection terms.
+   - Force ratios cannot be equated to acceleration ratios without transporting the metric through the inertia tensor: for $M = \mathrm{diag}(1, 10)$, drift force $F_d = [1, 1]^T$, and control force $F_u = [1, 0]^T$, the unweighted force ratio is $\sqrt{2} \approx 1.414$, whereas the acceleration ratio is $\sqrt{1.01} \approx 1.005$ (executable contract in `tests/test_dcr_article_rigor.py::test_force_ratio_requires_transporting_acceleration_metric`).
+   - Scalar DCR does not substitute for finite-horizon reachability analysis or task-space impact sensitivity.
+

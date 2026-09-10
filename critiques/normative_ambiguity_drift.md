@@ -47,3 +47,16 @@ Currently, DCR penalizes _all_ passive dynamics equally.
     If $\cos \theta \approx 1$, High DCR is desirable (Free Energy).
 2.  **Reframe DCR Conclusion:** Explicitly state that High DCR implies "Commitment" rather than "Failure". It marks the point of no return where the strategy must be correct, not where the golfer fails.
 3.  **Flow State Interpretation:** Link "Drift Dominance" to the psychological state of "Flow" or "Letting go".
+
+## Editorial Adjudication and Evidence Boundaries
+
+1. **Historical Versus Corrected State:**
+   The historical article used rhetorical flourishes ("passenger", "collapse") that suggested passive dynamics inherently signify motor failure. In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), normative interpretations have been removed. DCR is presented strictly as an unvalidated geometric scalar measuring the instantaneous ratio between uncontrolled acceleration and available control acceleration. The article explicitly notes that high drift acceleration is a natural characteristic of high-velocity passive mechanics rather than a pathology.
+
+2. **Critique Boundary and Counterexamples:**
+   The critique correctly identifies that high passive drift is necessary for ball speed and that motor control exploits passive mechanics (e.g., Bernstein 1967). However, the critique introduces ungrounded conceptual leaps:
+   - Conflating vector alignment with thermodynamic or variational "free energy."
+   - Introducing psychological constructs like "flow state", "letting go", or teleological "commitment" without empirical task evidence or behavioral measures.
+   - Proposing an inner-product alignment metric $\cos \theta = \frac{f(x) \cdot \dot{x}^*}{\|f\| \|\dot{x}^*\|}$ that depends on an unstated, arbitrary choice of Riemannian metric tensor on the state space.
+   The canonical framework confines itself to verifiable mechanical definitions and explicitly records that DCR alone neither establishes motor failure nor proves optimal biological compliance.
+
