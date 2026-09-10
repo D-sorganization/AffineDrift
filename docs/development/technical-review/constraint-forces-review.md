@@ -185,4 +185,4 @@ Implementation 004676b40889c7dee980fefd3ebf039663f40a0c preserves validated tree
 
 ## Protected Merge
 
-All protected checks passed; PR #4352 squash-merged as b5362af0005c8ae1ad00e81390e9151991157155. Exact deployment 34470677053 remains in progress. Preserve the complete local implementation and reading evidence above.
+All protected checks passed; PR #4352 squash-merged as b5362af0005c8ae1ad00e81390e9151991157155. Exact deployment 34470677053 succeeded. All 956 records covering 239 routes in revision-matched live artifact 10150223079 were independently inspected: HTTP 200/pass, no failures, retries or axe violations. Parent head and squash share tree 2a9a8515b25be8562aaca24c86438bae93095b14. This chapter is shipped. Preserve the complete local implementation and reading evidence above.

@@ -193,3 +193,7 @@ longer articles and the five read-but-uncorrected critiques under #4340.
 ## Protected Delivery Checkpoint
 
 Implementation 96ae7eb69c9622b176aabf8507c4fa293a296298 preserves validated tree 272e173c046e86a64893219a43d726c0e2c26b15 after replay onto constraint squash b5362af0005c8ae1ad00e81390e9151991157155. Parent/squash trees matched. Normal commit/push hooks passed. Ready PR #4354 closes #4353; protected checks, merge and exact live publication remain. Final heading-only web revision was reread; all final actual-route records passed.
+
+## Protected Merge
+
+All required checks passed. PR #4354 squash-merged as e9ad402e50f111589252292178e5f45ac58b427c; final head fe8ee652 and squash share tree d8932835286b0ed9ed2e31bc4066073d6b9fbd94. Exact deployment 34473831404 is in progress; revision-matched live verification remains.

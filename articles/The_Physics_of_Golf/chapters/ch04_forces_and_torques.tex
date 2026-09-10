@@ -1,521 +1,359 @@
 \chapter{Forces and Torques: Where They Come From}
 \label{ch:04_forces_and_torques}
-
-\epigraph{``Force is the source of all motion and change. Understanding where forces come from is understanding how things work.''}{}
+\raggedbottom
 
 \begin{laymansbox}{Decomposing the Forces}{box:ch04_decompose}
-Here's a central insight: the equation
+The golf swing combines applied forces, coupled motion and contact. To understand that combination, first specify what is being balanced: a physical body's linear momentum, its angular momentum, a generalized joint equation, or mechanical energy. These are connected descriptions, but their terms are not interchangeable.
 
+This chapter builds on the two-link model of Chapter~\ref{ch:03_double_pendulum}. It explains how to recover physical loads, distinguish them from coordinate-dependent terms, and map the resulting motion to an endpoint task. A large force need not supply large power, a negative torque need not remove energy, and a net joint moment does not identify individual muscle forces. Keeping those distinctions explicit makes the connection to golf more informative.
+\end{laymansbox}
+
+\section{Five Parts of a Mechanical Accounting}
+
+For the declared fixed-pivot, planar two-link model,
 \begin{equation}
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+\bm M(\bm q)\ddot{\bm q}+\bm c(\bm q,\dot{\bm q})+\bm g(\bm q)=\bm\tau,
+\qquad \bm c=\bm C\dot{\bm q},\quad \bm g=\nabla V.
 \label{eq:ch04_euler_lagrange}
 \end{equation}
+The coordinates are \(q_1=\theta_1\), measured counterclockwise from downward vertical, and relative angle \(q_2=\theta_2\). Neither is automatically an anatomical shoulder or elbow angle. The following five parts organize the equation and its physical interpretation:
+\begin{itemize}
+\item \textbf{Acceleration terms} \(\bm M\ddot{\bm q}\) come from differentiating momentum. They are not an additional external agency pushing the body.
+\item \textbf{Velocity-bias terms} \(\bm c\) arise from the same kinetic-energy model in moving generalized coordinates. Their decomposition into individual \(C_{ij}\) entries is not unique.
+\item \textbf{Gravity} has physical generalized moment \(-\bm g\). The positive gradient appears on the left because it has been moved there.
+\item \textbf{Applied generalized moments} \(\bm\tau\) represent the declared actuators and other loads included in that input convention. In a muscle-driven model, their production has additional geometry and internal dynamics.
+\item \textbf{Constraint reactions} act at physical interfaces. Ideal hinge reactions eliminated by compatible coordinates still exist, but must not be added a second time to the same reduced equation.
+\end{itemize}
 
-contains \emph{all} the forces that act on your arm. But they're not all the same type. Some come from your muscles. Some come from gravity. Some come from your arm's own motion. Some come from constraints.
+These are not five independent physical force sources to add without regard to signs and body boundaries. The kinetic terms together play the role of \(m\bm a\). A more general model can include elastic and dissipative loads, external wrenches, and explicit contact reactions on the right. The standard manipulator formulation provides this organization; the actual terms depend on the declared model. \citep{TedrakeMultibodyEnergy}
 
-If you can attribute each force to its source, you gain enormous insight. You understand what you're actually controlling. You see which forces help you and which fight you. You can diagnose problems.
+\section{Inertial Terms and Coupled Acceleration}
 
-This chapter is about that decomposition.
-\end{laymansbox}
-
-\section{The Five Sources of Force}
-
-In the manipulator equation, every torque comes from one of five sources:
-
-\begin{enumerate}
-\item \textbf{Inertial forces} (from $\bm{M}(\bm{q})$): forces that resist acceleration. To speed up your arm, you must overcome its inertia.
-\item \textbf{Velocity-dependent forces} (from $\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}$): Coriolis and centrifugal forces that arise when you move fast. They couple the motion of different joints.
-\item \textbf{Gravitational forces} (from $\bm{g}(\bm{q})$): torques that arise because gravity pulls on your mass. These depend on position.
-\item \textbf{Muscular forces} (from $\bm{\tau}$): torques you generate by contracting muscles. These are your \textbf{control}.
-\item \textbf{Constraint forces} (from rigid hinges, rigid bones, etc.): reactive forces that enforce mechanical constraints. These don't appear explicitly in the equation but appear as reaction torques at hinges.
-\end{enumerate}
-
-\begin{figure}[H]
-\centering
-% every node/.style={align=center}: several nodes below break their text with
-% \\, and a node's text is set in LR mode unless it is told how to align
-% multiple lines -- without this each one is "LaTeX Error: Not allowed in LR
-% mode". Matches the convention in Volume V, whose diagrams compile.
-\begin{tikzpicture}[scale=1.2, every node/.style={align=center}]
-% Title and force decomposition
-\node at (0, 4) [anchor=center, font=\large\bfseries] {Decomposition of Torques in the Manipulator Equation};
-
-% Main equation
-\node at (0, 3) [anchor=center] {$\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$};
-
-% Five source boxes arranged vertically
-\node (inertial) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=blue!15] at (0, 1.5) {\textbf{Inertial}\\$\bm{M}(\bm{q}) \ddot{\bm{q}}$};
-
-\node (velocity) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=green!15] at (0, 0.3) {\textbf{Velocity-Dependent}\\$\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}$};
-
-\node (gravity) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=yellow!15] at (0, -0.9) {\textbf{Gravitational}\\$\bm{g}(\bm{q})$};
-
-\node (muscular) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=red!15] at (0, -2.1) {\textbf{Muscular (Control)}\\$\bm{\tau}$};
-
-\node (constraint) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=gray!15] at (0, -3.3) {\textbf{Constraint}\\(implicit in $\ddot{\bm{q}}$)};
-
-% Vertical line showing they sum to zero (or equal control)
-\draw [thick, -] (-1.5, 1.8) -- (-1.5, -3);
-\node at (-1.8, -0.6) {Sum:};
-
-\end{tikzpicture}
-\caption{The Five Sources of Torque in the Manipulator Equation. The Passive Forces (Inertial, Velocity-Dependent, Gravitational) Sum to Determine What Muscular Control (Constraint Force) Is Needed at Each Instant.}
-\label{fig:ch04_force_decomposition}
-\end{figure}
-
-Let's understand each one.
-
-\section{Inertial Forces: Resisting Acceleration}
-
-Newton's second law in the simplest form is:
+For a body of constant mass, expressed in an inertial frame,
 \begin{equation}
-F = m a
+\sum\bm f_{\rm ext}=m\bm a_C.
 \label{eq:ch04_newton}
 \end{equation}
-
-To accelerate a mass, you must apply a force proportional to its mass and acceleration. The same is true for rotation:
+Here \(C\) is its COM. For a rigid body in planar motion, moments about its COM satisfy
 \begin{equation}
-\tau = I \alpha
+\sum n_C=I_C\dot\omega.
 \label{eq:ch04_newton_rot}
 \end{equation}
+The corresponding spatial equation in body axes is \(\sum\bm n_C=\bm I_C\dot{\bm\omega}+\bm\omega\times(\bm I_C\bm\omega)\). A scalar \(I\alpha\) formula is therefore a planar or fixed-axis specialization, not a universal three-dimensional joint equation. Choosing a moving point instead of the COM requires the appropriate moment-transport terms.
 
-where $I$ is the moment of inertia and $\alpha = \ddot{\theta}$ is the angular acceleration.
+\begin{example}{Specified Acceleration and Required Moments}{ch04_inertia_shoulder}
+Use Chapter 3's manufactured parameters, not a measured golfer: masses \((2.5,0.4)\) kg, proximal length 0.35 m, distal endpoint length 1 m, COM distances \((0.175,0.5)\) m, centroidal inertias \((0.025,0.03)\) kg m\(^2\), and \(g=9.81\) m/s\(^2\).
 
-In the manipulator equation, the terms $\bm{M}(\bm{q}) \ddot{\bm{q}}$ are exactly these inertial terms.
-
-\begin{example}{Inertia at the Shoulder}{ch04_inertia_shoulder}
-Recall from Chapter~\ref{ch:03_double_pendulum} that the effective moment of inertia at the shoulder is about $M_{11} \approx 1.54 \text{ kg m}^2$.
-
-If you want to accelerate the shoulder at $\ddot{\theta}_1 = 1000 \text{ deg/s}^2 = 17.45 \text{ rad/s}^2$, the inertial torque you must overcome is:
-\begin{align}
-\tau_{\text{inertia}} &= M_{11} \cdot \ddot{\theta}_1 = 1.54 \times 17.45 = 26.9 \text{ N m}
-\end{align}
-
-This is the baseline. Just to accelerate the arm at this rate requires 26.9 N m. If there's also gravity pulling ($\sim$5 N m backward), then you need to generate at least $26.9 + 5 = 31.9$ N m of muscular torque to achieve this acceleration.
-
-In addition, Coriolis and centrifugal forces contribute further terms.
+At \(\bm q=(0,-5^\circ)\), with both rates zero, prescribe \(\ddot{\bm q}=(1000\pi/180,0)\) rad/s\(^2\). Full inverse dynamics gives
+\[
+\bm M\ddot{\bm q}\approx(7.33090223,3.48600945)\ {\rm N\,m},\qquad
+\bm\tau\approx(7.15990266,3.31500988)\ {\rm N\,m}.
+\]
+The second moment is needed to maintain the prescribed zero relative acceleration. Applying only the first moment with a free distal actuator produces a different motion. For an incremental proximal input at fixed state with distal input unchanged, the acceleration gain is the inverse Schur inertia, approximately \(8.83731762\ ({\rm rad/s^2})/({\rm N\,m})\), rather than \(1/M_{11}\). Constraints change this comparison, as developed in Chapter 7.
 \end{example}
 
-\subsection*{Why Inertia Increases With Mass}
+\subsection*{Why Mass Distribution Matters}
 
-Here's a fundamental insight: inertia is \emph{resistance to acceleration}. A heavier arm is harder to accelerate. A longer arm (higher moment arm) is also harder to accelerate because the mass is farther from the axis of rotation.
+For a fixed axis, \(I=\int r_\perp^2\,dm\). Adding mass while preserving geometry increases that inertia; moving mass outward can increase it without changing total mass. In a multibody system, off-diagonal inertia, distal freedom and the requested task also matter. A lighter club does not by itself establish greater speed, lower physiological effort or shorter ball flight: those conclusions require a player's input response, impact properties and a flight model. Compare equipment under a declared task and constraints, not from mass alone.
 
-The moment of inertia $I$ depends on both the mass and its distribution. For a point mass at distance $r$: $I = m r^2$. For an extended body like the arm, $I$ is the integral of all mass elements weighted by their distances from the rotation axis.
+\section{Velocity-Dependent Terms: Coriolis and Centrifugal}
 
-This explains practical observations: lighter clubs require less muscular effort to accelerate but deliver less momentum to the ball. The control problem becomes one of choosing club properties and muscular effort to optimize overall performance.
+\subsection*{Centrifugal Force and Inertial Acceleration}
 
-\section{Velocity-Dependent Forces: Coriolis and Centrifugal}
+A particle moving uniformly on a circle has inward acceleration. The force of a taut string on the particle is inward; the particle's outward force on the string acts on a different body. In a frame rotating with the particle, an outward centrifugal inertial term can balance the inward physical force. These are compatible descriptions once the body and frame are named.
 
-When you move fast, magical things happen. Forces appear that don't exist in the equations for slow motion.
-
-\subsection*{Centrifugal Force}
-
-The most intuitive is centrifugal force. If you spin a weight on a string, the weight pulls outward on the string. That outward pull is the centrifugal force.
-
-In the golf swing, when your shoulder rotates fast ($\dot{\theta}_1$ large), the forearm experiences an outward centrifugal acceleration. This tries to straighten your elbow.
-
-\begin{definition}{Centrifugal Acceleration}{ch04_centrifugal}
-For a point rotating at angular velocity $\omega$ at distance $r$ from the axis, the centrifugal acceleration is:
+\begin{definition}{Circular-Motion Acceleration}{ch04_centrifugal}
+For radius \(r\) and constant angular rate \(\omega\), let \(\bm e_r\) point outward. Then
 \begin{equation}
-a_c = \omega^2 r
+\bm a_{\rm inertial}=-\omega^2r\bm e_r,
+\qquad \bm f_{\rm centrifugal}=+m\omega^2r\bm e_r
 \label{eq:ch04_centrifugal_accel}
 \end{equation}
-
-This is always positive (outward). It's not a ``real'' force in the sense that no object is pushing outward; instead, it's a consequence of circular motion.
+in the corresponding rotating-frame force balance. The second expression is an inertial force term, not an extra physical outward force on the particle. Nonuniform circular motion also has tangential acceleration \(r\dot\omega\).
 \end{definition}
 
-\begin{example}{Centrifugal Force in a Driver Swing}{ch04_centrifugal_numbers}
-Consider a driver swing where the clubhead (mass $m = 0.2$~kg) is at effective distance $r = L_1 + L_2 = 1.35$~m from the shoulder (canonical parameters, Chapter~\ref{ch:03_double_pendulum}). At $\omega = 30$~rad/s---the angular velocity of the clubhead \emph{about the shoulder}, corresponding to roughly 110~mph clubhead speed---just before impact:
-
-The centrifugal force pulling the club outward is:
-$$F_{\text{centrifugal}} = m \omega^2 r = 0.2 \times 30^2 \times 1.35 = 243 \text{ N} \approx 55 \text{ lbs}$$
-
-This large outward force arises purely from the geometry and velocity of rotational motion. It manifests as tension in the hands and arms, and it loads the shaft. This is one of the largest forces during the swing, and it emerges automatically from the system dynamics without explicit muscular generation. The hands must supply the centripetal reaction force to maintain the curved trajectory.
-
-As documented in biomechanical studies \citep{Jorgensen1994, Penner2001}, these velocity-dependent forces are a significant part of the swing dynamics and must be accounted for in forward models of the motion.
+\begin{example}{A Declared Circular Particle}{ch04_centrifugal_numbers}
+For a separate 0.2 kg particle, \(r=1.35\) m and \(\omega=30\) rad/s imply speed 40.5 m/s and inward acceleration 1215 m/s\(^2\). Its required inward resultant is 243 N. This is an ideal circular-particle calculation. It is not a whole-club grip measurement, and it does not establish shaft stress or muscle activity. Gravity and other applied loads must be included when finding a particular support force.
 \end{example}
 
-\begin{example}{Centrifugal Force in the Golf Swing}{ch04_centrifugal_golf}
-At impact, the shoulder rotates at $\dot{\theta}_1 = 10.47 \text{ rad/s}$. The forearm is at distance roughly $L_1 = 0.35$ m from the shoulder.
-
-The centrifugal acceleration is:
-\begin{align}
-a_c &= \dot{\theta}_1^2 \cdot L_1 = 10.47^2 \times 0.35 = 38.3 \text{ m/s}^2 = 3.9 g
-\end{align}
-
-The centrifugal effect on the forearm+club is more precisely captured by the centrifugal term in the manipulator equation. The relevant entry of $\bm{C}$ is:
-\begin{equation}
-M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 = 1.5 \times 0.35 \times 0.5 \times 10.47^2 \times \sin(-5°)
-\approx -4.0 \text{ N m}
-\end{equation}
-
-This creates a torque at the elbow that helps straighten the arm if $\theta_2 < 0$ (bent elbow).
+\begin{example}{Curvature in the Two-Link Model}{ch04_centrifugal_golf}
+The hinge H at distance 0.35 m from the fixed pivot has normal acceleration \(0.35\dot q_1^2\) toward that pivot. The distal endpoint has a further normal term about moving H involving \((\dot q_1+\dot q_2)^2\). Their vector sum need not point toward the fixed pivot. A velocity-bias term in a generalized equation cannot be renamed a physical elbow reaction or assumed to straighten a human arm; first solve the coupled accelerations and use the actual geometry.
 \end{example}
 
-\subsection*{Coriolis Force}
+\subsection*{Coriolis Force and the Moving Frame}
 
-Coriolis forces are more subtle. They arise from the interaction of two rotating motions.
-
-Imagine you're on a rotating platform. You walk toward the center. From an outside observer's perspective, you don't actually move toward the center—you curve to the side (deflected by the Coriolis force).
-
-In the golf swing, the Coriolis terms in $\bm{C}$ represent the coupling between shoulder and elbow rotation.
-
-\begin{definition}{Coriolis Force (in Rotating Frames)}{ch04_coriolis}
-In a rotating reference frame, the Coriolis acceleration is:
+Let a frame have moving origin O, angular velocity \(\bm\Omega\) and angular acceleration \(\dot{\bm\Omega}\). Express every vector in common axes at the instant of evaluation. For relative position \(\bm r\), velocity \(\bm v_{\rm rel}\) and acceleration \(\bm a_{\rm rel}\), transport gives
+\[
+\bm a=\bm a_O+\bm a_{\rm rel}
++\dot{\bm\Omega}\times\bm r
++\bm\Omega\times(\bm\Omega\times\bm r)
++2\bm\Omega\times\bm v_{\rm rel}.
+\]
+The Coriolis contribution here has a positive sign. When solving Newton's law for relative acceleration, it moves to the other side:
 \begin{equation}
-\bm{a}_{\text{Coriolis}} = -2 \bm{\omega} \times \bm{v}
+\bm f_{\rm Cor}=-2m\bm\Omega\times\bm v_{\rm rel}.
 \label{eq:ch04_coriolis_accel}
 \end{equation}
+This is the rotating-frame inertial force. The other transport terms likewise change sides. An inertial observer attributes the particle's acceleration to its physical applied forces; the rotating observer uses the added inertial terms. Omitting the frame or mixing these two equations reverses the interpretation.
 
-where $\bm{\omega}$ is the rotation rate and $\bm{v}$ is the velocity in the rotating frame.
+\begin{definition}{Generalized Velocity Bias}{ch04_coriolis}
+The two-link expression uses \(b=m_2L_1r_2=0.07\) kg m\(^2\):
+\[
+\bm c=b\sin q_2
+\begin{bmatrix}-2\dot q_1\dot q_2-\dot q_2^2\\ \dot q_1^2\end{bmatrix}.
+\]
+The cross-rate product is often called Coriolis coupling and the squared-rate terms centrifugal coupling. These labels organize the generalized equation. They do not identify independent physical contact forces or a unique \(\bm C\) matrix.
 \end{definition}
 
-In the manipulator equation, the Coriolis term $C_{12} \dot{\theta}_2$ represents how the elbow's angular velocity ($\dot{\theta}_2$) creates a reaction torque at the shoulder when the shoulder is rotating. This coupling is what makes the kinetic chain possible—each joint's motion affects the forces at other joints.
-
-\begin{example}{Coriolis Torque in the Downswing}{ch04_coriolis_golf}
-The Coriolis term in the shoulder equation is:
-\begin{equation}
-\text{(from $\bm{C}$)} = -M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2
-\end{equation}
-
-At impact ($\dot{\theta}_1 = 10.47 \text{ rad/s}, \dot{\theta}_2 = 8.73 \text{ rad/s}, \theta_2 = -5°$):
-\begin{align}
-\text{Coriolis} &= -1.5 \times 0.35 \times 0.5 \times (2 \times 10.47 + 8.73) \times 8.73 \times \sin(-5°) \\
-&= -1.5 \times 0.35 \times 0.5 \times 29.67 \times 8.73 \times (-0.087) \\
-&\approx +2.0 \text{ N m}
-\end{align}
-
-This torque at the shoulder is positive (forward), helping the shoulder rotation. Why? Because the elbow is releasing (increasing $\dot{\theta}_2$) in a direction that's compatible with the shoulder rotation.
-
-The kinetic chain works through such velocity coupling: each joint's motion influences the forces at other joints through Coriolis terms.
+\begin{example}{The Sign of a Bias Is Not Assistance}{ch04_coriolis_golf}
+At \(\bm q=(0,-5^\circ)\) and rates \((10,9)\) rad/s, the bias is
+\[
+\bm c\approx(1.59233542,-0.61009020)\ {\rm N\,m}.
+\]
+Positive \(c_1\) is on the left of the equation. In inverse dynamics it increases the required first input for a fixed acceleration; in forward dynamics its contribution is \(-\bm M^{-1}\bm c\). A positive first component therefore cannot be described as a positive applied shoulder torque helping motion. Joint coupling also means an isolated component's sign does not determine the full acceleration.
 \end{example}
 
-\subsection*{The Velocity Dependence Is Crucial}
+\subsection*{What Quadratic Scaling Establishes}
 
-The key distinction between these force sources is how they depend on the system state:
+At fixed configuration, scaling every rate by \(s\) gives \(\bm c(\bm q,s\dot{\bm q})=s^2\bm c(\bm q,\dot{\bm q})\). This statement does not apply to every velocity-dependent physical load: viscous damping is typically linear and aerodynamic laws require their own assumptions. Scaling one rate alone also does not scale all cross terms uniformly.
 
-Here's the key insight: \textbf{velocity-dependent forces scale with the square of the velocity}. At address ($\dot{\theta}_i = 0$), they're zero. During the downswing, they grow enormously.
+\begin{laymansbox}{Speed, Power and the Chosen Task}{box:ch04_speed_helps}
+Larger bias terms need not help the desired endpoint motion or reduce required input. Reversing all rates leaves this quadratic bias unchanged but reverses its contraction with velocity. Direction matters as much as magnitude.
 
-This is why the golf swing is dynamic. The faster you move, the larger these forces become. A slow swing has small Coriolis and centrifugal forces, so you have to generate large muscular torques to accelerate. A fast swing has large velocity-dependent forces helping you.
-
-\begin{laymansbox}{How Forces Vary Through the Swing}{box:ch04_speed_helps}
-The magnitude and composition of forces changes dramatically as the swing progresses. This qualitative accounting illustrates the principle (exact values depend on individual biomechanics and swing parameters):
-
-\textbf{Address (no motion)}:
-\begin{itemize}
-\item Gravity: $\sim 10$ N m
-\item Velocity-dependent: $\sim 0$ (no motion)
-\item Muscular control: $\sim 10$ N m (needed to overcome gravity)
-\end{itemize}
-
-\textbf{Top of backswing} (arm elevated, velocities low):
-\begin{itemize}
-\item Gravity: $\sim 30$ N m (arm extended, pulled by gravity)
-\item Velocity-dependent: $\sim 0$ (velocities near zero)
-\item Muscular control: $\sim 30$ N m (to hold elevated position)
-\end{itemize}
-
-\textbf{Transition} (acceleration ramping up):
-\begin{itemize}
-\item Gravity: $\sim 20$ N m
-\item Velocity-dependent: $\sim 5$ N m (emerging as velocity increases)
-\item Muscular control: $\sim 15$ N m (to modulate accelerations)
-\end{itemize}
-
-\textbf{Late downswing} (high speeds):
-\begin{itemize}
-\item Gravity: $\sim 5$ N m (arm approaching vertical)
-\item Velocity-dependent: $\sim 50$ N m (strong Coriolis/centrifugal effects)
-\item Muscular control: $\sim -25$ N m (restraining, not accelerating)
-\end{itemize}
-
-As velocity increases, velocity-dependent forces grow as $v^2$. Muscles must often apply \emph{braking} torques in the late downswing to prevent excessive acceleration, rather than driving acceleration forward.
-
-This transition—from muscles driving motion to muscles restraining it—is a fundamental feature of the swing dynamics.
+The kinetic-energy identity is \(\dot T=\dot{\bm q}^{T}(\bm M\ddot{\bm q}+\bm c)\), so \(\dot E=\bm\tau^T\dot{\bm q}\) when gravitational potential is included. Bias terms can mediate coupling without being a new energy supply. Calling a motion easy, economical or optimal requires a specified effort measure and comparison; the manipulator equation alone supplies none of those conclusions.
 \end{laymansbox}
 
-\section{Gravitational Forces: Position-Dependent}
+\section{Gravitational Forces and Potential}
 
-Gravity is the force you feel constantly. It depends on position but not on velocity.
-
-The gravitational torque in the double pendulum is:
+In a uniform field, each body experiences \(m\bm g_0\), where \(\bm g_0=(0,-9.81)\) m/s\(^2\) in this inertial plane. Its magnitude does not depend on joint configuration; its generalized moments do. With COM distances \(r_1,r_2\),
 \begin{equation}
-\bm{g}(\bm{q}) = \begin{bmatrix}
-(M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
-M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
-\end{bmatrix}
+\bm g(\bm q)=g\begin{bmatrix}
+(m_1r_1+m_2L_1)\sin q_1+m_2r_2\sin(q_1+q_2)\\
+m_2r_2\sin(q_1+q_2)
+\end{bmatrix},\qquad \bm Q_g=-\bm g.
 \label{eq:ch04_gravity}
 \end{equation}
 
 \subsection*{Reading the Gravity Terms}
 
-\begin{itemize}
-\item $(M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1$: This is the torque of the entire arm+club about the shoulder. It depends on how much mass is hanging below the shoulder and how far it hangs.
+The first component contains both the motion of H and the distal COM relative to H. Setting \(q_1=0\) removes only the first sine term; a tilted distal body retains a gravity moment. At \((0,0)\) both gradients vanish and the configuration is a stable hanging equilibrium for this conservative model. At \((\pi,0)\) both vanish but the equilibrium is unstable. Zero moment does not imply zero weight or zero joint force.
 
-When $\theta_1 = 0°$ (arm vertical), $\sin \theta_1 = 0$, so gravity exerts zero torque. The arm is balanced.
+At \((150^\circ,-70^\circ)\), physical generalized gravity moments are
+\[
+\bm Q_g\approx(-4.76483031,-1.93219281)\ {\rm N\,m}.
+\]
+These signs refer to the declared coordinates. Translating them to forward or backward golf motion requires a target-frame convention and the full coupled dynamics.
 
-When $\theta_1 = 90°$ (arm horizontal), $\sin \theta_1 = 1$, so gravity exerts maximum torque. The arm wants to fall.
+\subsection*{Gravity Work and the Complete Cycle}
 
-When $\theta_1 = 180°$ (arm vertical, pointing up), $\sin \theta_1 = 0$ again. The arm is balanced (but unstable).
-
-\item $M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)$: This is the torque of the forearm+club about the shoulder. It also appears in the elbow equation, contributing to the torque at the elbow.
-\end{itemize}
-
-\subsection*{Gravity Does Work During the Downswing}
-
-From address to impact, your arm goes from down to down (the angles return to near their starting values). But the \emph{speed} increases dramatically. This happens because gravity does positive work, converting potential energy to kinetic energy.
-
-The work done by gravity is:
+Define \(\Delta V=V_{\rm final}-V_{\rm initial}\). Then
 \begin{equation}
-W = \Delta V = V_{\text{initial}} - V_{\text{final}}
+W_g=-\Delta V=V_{\rm initial}-V_{\rm final},\qquad
+P_g=-\bm g^T\dot{\bm q}.
 \label{eq:ch04_work_gravity}
 \end{equation}
+A lower final potential gives positive gravity work. Returning both coordinates to the same configuration gives zero net gravity work, regardless of the final speed. Actuator work, initial kinetic energy, storage and dissipation explain changes in the full energy balance; gravity cannot supply net energy over a closed configuration cycle.
 
-If the arm is lower at the end (lower height), then $\Delta V < 0$, and gravity does positive work. But if the angles are the same, the heights are the same, so $\Delta V = 0$.
+For the declared model, descent from \((150^\circ,-70^\circ)\) to \((0,0)\) releases 12.192849345 J. The reverse ascent costs that potential increase. Without a trajectory, one cannot determine whether gravity supplies or absorbs power early or late in a downswing. Nor does its work specify how much energy ends in the distal body.
 
-This seems to contradict the observation that gravity helps. The resolution: gravity \emph{does} do positive work during the downswing (arm goes from up at the top to down during transition), but \emph{all that work is already done by the time you reach impact}. So the conversion of potential energy to kinetic energy happens early in the downswing.
+\section{Muscular Forces and the Input Model}
 
-Later in the downswing, gravity is actually fighting you (pulling the arm down when you want to pull it forward). But by that point, the arm has so much kinetic energy that gravity's resistance is small.
-
-\section{Muscular Forces: Your Control}
-
-The right side of the manipulator equation is where control is applied:
 \begin{equation}
-\bm{\tau} = \text{applied torques from muscles}
+\bm\tau=\bm R(\bm q)\bm F_T+\bm\tau_{\rm other}.
 \label{eq:ch04_tau_def}
 \end{equation}
-
-Muscles pull on bones. Tendons transfer that pull to create torques at joints. The sum of all these muscular torques is $\bm{\tau}$. This is the control signal that can be varied over time.
+Here \(\bm F_T\) contains nonnegative tendon tensions, \(\bm R\) contains signed moment arms, and \(\bm\tau_{\rm other}\) collects other loads included in the chosen convention. An inverse-dynamics net moment does not uniquely recover the tendon tensions. Equal antagonist moments can cancel while both tensions remain substantial. The result also depends on which passive loads, external wrenches and residual actuators have already been modeled.
 
 \subsection*{Constraints on Muscular Forces}
 
-Muscles can only pull, not push. There are therefore constraints on what $\bm{\tau}$ can be:
-\begin{itemize}
-\item $\tau_i \geq -\tau_{\text{max}, i}$ (muscles can pull in one direction up to a maximum).
-\item $\tau_i \leq +\tau_{\text{max}, i}$ (muscles can pull in the opposite direction up to a maximum).
-\end{itemize}
+A simple torque box \(\tau_i^{\min}\leq\tau_i\leq\tau_i^{\max}\) can be an engineering approximation, but muscle tension being nonnegative does not imply symmetric independent bounds. Moment arms depend on configuration; multiarticular muscles couple joints; force capacity depends on activation, fiber length and shortening velocity, with tendon mechanics introducing further states. Numerical capacity bounds require measurements or an explicitly validated actuator model for the population and state of interest.
 
-The maximum available torque depends on the muscle physiology, cross-sectional area, and lever arm. These values would be determined empirically through biomechanical measurement.
+Consider a manufactured antagonist pair with signed moment arms \((0.03,-0.03)\) m. Tensions \((100,100)\) N and \((200,200)\) N both produce zero net moment. They are not the same internal loading state. Net zero moment or net zero joint power cannot demonstrate muscle inactivity or zero metabolic cost.
 
-\subsection*{Muscular Forces Are the Control Input}
+\subsection*{From Excitation to Realized Moment}
 
-This is the fundamental point: \textbf{you directly control only $\bm{\tau}$. The forces from gravity, inertia, and velocity-dependence arise automatically from the system dynamics.}
+A muscle-driven state description can include excitation \(\bm u\), activation \(\bm a\), fiber/tendon states \(\bm z\), and their dynamics:
+\[
+\dot{\bm a}=\bm f_a(\bm a,\bm u),\quad
+\dot{\bm z}=\bm f_z(\bm q,\dot{\bm q},\bm a,\bm z),\quad
+\bm F_T=\bm f_T(\bm q,\dot{\bm q},\bm a,\bm z).
+\]
+This is a model structure, not a universal physiological law. OpenSim's documented activation and forward-dynamics workflows distinguish excitation, activation, fiber state and realized force. They motivate retaining these states rather than assuming an arbitrarily prescribed net torque is an instantaneous neural command. \citep{OpenSimActivationDynamics,OpenSimForward2024}
 
-Given $\bm{\tau}(t)$ at each instant, the manipulator equation determines the accelerations $\ddot{\bm{q}}$. Integrating these gives velocities and positions:
+Once inputs, initial states and an admissible contact mode are specified, forward integration gives
 \begin{equation}
-\dot{\bm{q}}(t) = \dot{\bm{q}}(0) + \int_0^t \ddot{\bm{q}}(s) ds, \quad \bm{q}(t) = \bm{q}(0) + \int_0^t \dot{\bm{q}}(s) ds
+\dot{\bm q}(t)=\dot{\bm q}(0)+\int_0^t\ddot{\bm q}(s)\,ds,\qquad
+\bm q(t)=\bm q(0)+\int_0^t\dot{\bm q}(s)\,ds.
 \label{eq:ch04_integration}
 \end{equation}
+The acceleration is evaluated along the evolving state, not held at its initial value. Feedback and activation dynamics change that evolution. Chapter 24 develops the relation to observation and motor control.
 
-The fundamental control problem is: given the system dynamics and constraints on $\bm{\tau}$, what control trajectory $\bm{\tau}(t)$ produces a desired swing outcome?
+\section{Constraint Forces and Contact Feasibility}
 
-\section{Constraint Forces: The Reactive Forces}
-
-Finally, there are forces that appear automatically to enforce mechanical constraints. These don't show up explicitly in the manipulator equation (as written in terms of generalized coordinates), but they're present as reaction forces at hinges and joints.
-
-\begin{definition}{Constraint Forces}{ch04_constraint_forces}
-Reaction forces that enforce mechanical constraints (like rigidity, inextensibility, or friction). They're \emph{reactive}: they appear only as much as needed to enforce the constraint.
-
-In the golf swing:
-\begin{itemize}
-\item The hinge at the shoulder exerts a force on the upper arm to keep it attached.
-\item The hinge at the elbow exerts a force on the forearm to keep it attached.
-\item The ground exerts a normal force on your feet to keep you from sinking.
-\item Friction at the grip exerts a force on the club to keep it from slipping.
-\end{itemize}
+\begin{definition}{Constraint Reactions}{ch04_constraint_forces}
+An ideal reaction enforces an assumed compatible motion. A revolute hinge can transmit forces while allowing free relative rotation about its axis; an actuator moment about that axis is a separate load. A rigid attachment has a different constraint set. Real contact must also satisfy unilateral and friction conditions, so an arbitrary computed reaction may be infeasible.
 \end{definition}
 
-\subsection*{Why Constraint Forces Don't Appear in the Equation}
+\subsection*{Why Some Reactions Disappear From Reduced Equations}
 
-We derived the manipulator equation using \textbf{generalized coordinates}: variables that automatically satisfy the constraints.
+Compatible angular coordinates solve the ideal hinge geometry. Equal-and-opposite interface forces cancel in virtual work over compatible motions, eliminating them from the reduced generalized equations. They can be recovered from physical body force and moment balances. This elimination does not make them zero, and not every choice of generalized coordinates eliminates every constraint.
 
-For example, by using angles $\theta_1$ and $\theta_2$ instead of Cartesian coordinates of the clubhead, we automatically enforced that the links are rigid and hinged correctly. The constraint forces are implicitly accounted for.
+For explicit stationary constraints, a common formulation is
+\[
+\bm M\ddot{\bm q}+\bm c+\bm g=\bm\tau+\bm J_c^T\bm\lambda,\qquad
+\bm J_c\ddot{\bm q}+\dot{\bm J}_c\dot{\bm q}=0.
+\]
+The reaction depends on motion, applied loads and the constraint mode. A frictional contact additionally needs compressive normal force and tangential force within its friction limit. If the required load lies outside the admissible set, use a slip/separation model. Simply lowering applied torque does not necessarily cause slip; nor does increasing it monotonically increase every reaction component.
 
-However, if you wanted to know the actual force at the grip (the force the hand exerts on the club), you'd need to solve for it separately. The manipulator equation doesn't directly give you constraint forces.
+\section{Putting It Together: Attribution Before Contact}
 
-\section{Putting It Together: Force Attribution in Impact}
+Use \(\bm q=(0,-5^\circ)\), \(\dot{\bm q}=(10,9)\) rad/s and prescribed \(\ddot{\bm q}=(20,-30)\) rad/s\(^2\). This is a manufactured state before contact, not a measured impact. It fixes all quantities needed for an instantaneous inverse-dynamics calculation:
+\[
+\begin{aligned}
+\bm M\ddot{\bm q}&\approx(2.40858629,0.09467258)\ {\rm N\,m},\\
+\bm c&\approx(1.59233542,-0.61009020)\ {\rm N\,m},\\
+\bm g&\approx(-0.17099957,-0.17099957)\ {\rm N\,m},\\
+\bm\tau&\approx(3.82992214,-0.68641719)\ {\rm N\,m}.
+\end{aligned}
+\]
+Each row is a two-component vector with the same convention. Both off-diagonal inertia contributions are included. The input power is 32.12146671 W. The negative distal input at positive relative rate absorbs 6.17775470 W in that generalized channel; positive proximal power more than offsets it. A negative torque at a negative rate would instead supply positive power.
 
-Let's do a complete force attribution at impact. For this numerical example, we use a representative clubhead speed of 100 mph (44.7 m/s)---a value in the range for skilled golfers \citep{Jorgensen1994}. The clubhead acceleration is enormous.
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=0.75\textheight,keepaspectratio]{figures/forces_torques_verified.pdf}
+\caption{One Declared State, Two Different Questions. Top: Inverse-Dynamics Moment Components at the Two Joints. Bottom: Fixed-State Contributions to Horizontal and Vertical Endpoint Acceleration. Input and Bias Contributions Must Be Mapped Through Inverse Inertia and the Endpoint Jacobian; Curvature Remains a Separate Kinematic Term. The State Is Manufactured, Not a Measured Golf Swing.}
+\label{fig:ch04_force_decomposition}
+\end{figure}
 
-\subsection*{The Clubhead Acceleration}
+\subsection*{The Endpoint Acceleration}
 
-The clubhead is at distance $r = L_1 + L_2 = 1.35$ m from the shoulder. At impact, the shoulder is rotating at $\omega = \dot{\theta}_1 = 10.47 \text{ rad/s}$.
-
-The centripetal acceleration (toward the shoulder) is:
+With \(\bm e(\alpha)=(\sin\alpha,-\cos\alpha)^T\), the endpoint acceleration is
 \begin{equation}
-a_c = \omega^2 r = 10.47^2 \times 1.35 = 147.6 \text{ m/s}^2 = 15.0 g
+\ddot{\bm p}=\bm J_P\ddot{\bm q}
+-L_1\dot q_1^2\bm e(q_1)-L_2(\dot q_1+\dot q_2)^2\bm e(q_1+q_2).
 \label{eq:ch04_centripetal_impact}
 \end{equation}
-
-But the elbow is also rotating, and the arm is accelerating, so the total acceleration is higher:
+Here \(\bm J_P\) is the full endpoint Jacobian from Chapter 3. The speed and distance to the base alone do not determine local path curvature; \(v^2/r\) requires the appropriate curvature radius, not an assumed shoulder-to-head distance.
 \begin{equation}
-a_{\text{total}} \approx 180 \text{ m/s}^2 \approx 18 g
+\ddot{\bm p}\approx(28.50127615,395.49784344)\ {\rm m/s^2}.
 \label{eq:ch04_total_accel_impact}
 \end{equation}
-
-\textit{Note:} This $\sim$18$g$ is the clubhead acceleration \emph{during the swing}. During the brief ball--club collision ($\sim$0.5 ms), the ball experiences accelerations of $\sim$10\,000--30\,000$g$, and the clubhead decelerates at 100--200$g$.
+The total includes vector normal and tangential contributions; their magnitudes must not be added as scalars. Smooth swing acceleration and collision acceleration are separate regimes. Predicting the ball–club contact impulse, duration or peak force requires contact mechanics and incident states absent from this two-link model.
 
 \subsection*{Where Do These Accelerations Come From?}
 
-At impact, the accelerations arise from the balance of terms in the manipulator equation:
+At this fixed state, an algebraic decomposition of the same endpoint acceleration is
+\[
+\ddot{\bm p}=\bm J_P\bm M^{-1}\bm\tau
+-\bm J_P\bm M^{-1}\bm c
+-\bm J_P\bm M^{-1}\bm g
++\dot{\bm J}_P\dot{\bm q}.
+\]
+The four vectors, in horizontal/vertical m/s\(^2\), are approximately
+\[
+\begin{aligned}
+\bm a_{\rm input}&\approx(-13.21865815,2.47827787),\\
+\bm a_{\rm bias}&\approx(8.79688124,-1.45418002),\\
+\bm a_{\rm gravity}&\approx(1.45982994,-0.15254042),\\
+\bm a_{\rm curvature}&\approx(31.46322313,394.62628601).
+\end{aligned}
+\]
+They sum to the endpoint value above. The large curvature term does not correspond to an independent applied force or energy source. This is instantaneous attribution with the state held fixed. Removing an input throughout a swing changes the state, Jacobian and every subsequent contribution, so terminal causal comparisons require a new forward solution. Imposed constraints also alter the acceleration map.
+
+\subsection*{Recovering the Distal Body's Interface Load}
+
+For an actual club, use the whole-club COM and whole-club mass. Let \(\bm f_H\) be the resultant hand force on the club and \(\bm f_{\rm other}\) other non-gravitational external forces. Then
 \begin{equation}
-\bm{M}(\bm{q}) \ddot{\bm{q}} = \bm{\tau} - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q})
-\end{equation}
-
-Each term contributes:
-\begin{itemize}
-\item \textbf{Inertial term} $\bm{M} \ddot{\bm{q}}$: The mass matrix scaled by acceleration. At impact, the clubhead acceleration is $\approx 180 \text{ m/s}^2 = 18.3 g$. Given moment of inertia $M_{11} \approx 1.54 \text{ kg m}^2$, the inertial term is on the order of $\ddot{\theta}_1 \approx 40 \text{ rad/s}^2$.
-
-\item \textbf{Coriolis/Centrifugal forces} $\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}$: At high speeds ($\dot{\theta}_1 \approx 10 \text{ rad/s}$, $\dot{\theta}_2 \approx 8 \text{ rad/s}$), these velocity-dependent terms contribute torques on the order of 10–20 N m.
-
-\item \textbf{Gravitational forces} $\bm{g}(\bm{q})$: At impact ($\theta_1 \approx 0°$), the arm is nearly vertical. Gravity contributes 5–10 N m.
-
-\item \textbf{Muscular torque} $\bm{\tau}$: The applied torque that must satisfy the equation of motion.
-
-\textbf{Numerical illustration:} If $\ddot{\theta}_1 = 40 \text{ rad/s}^2$, $M_{11} = 1.54 \text{ kg m}^2$, $\bm{C} \dot{\bm{q}} \approx 10 \text{ N m}$, and $\bm{g} \approx 5 \text{ N m}$, then:
-\begin{equation}
-\tau_1 = M_{11} \ddot{\theta}_1 + C \dot{\bm{q}} + g = 1.54 \times 40 + 10 + 5 = 61.6 + 10 + 5 \approx 77 \text{ N m}
-\end{equation}
-
-This represents the total muscular torque required at the shoulder. These magnitudes would be determined or validated through measurement or detailed simulation.
-\end{itemize}
-
-\subsection*{The Constraint Force at the Grip}
-
-The hand is holding the club. The clubhead is accelerating at $\sim$18$g$. To estimate the grip force, we decompose into centripetal and tangential components:
-\begin{itemize}
-\item \textbf{Centripetal}: pulling the club toward the axis of rotation (toward the shoulder).
-\item \textbf{Tangential}: in the direction of motion (pulling the club forward/backward).
-\end{itemize}
-
-The centripetal force is:
-\begin{equation}
-F_c = M_{\text{club}} \omega^2 r = 0.2 \times 10.47^2 \times 1.35 = 29.5 \text{ N}
+\bm f_H=m_c(\bm a_C-\bm g_0)-\bm f_{\rm other}.
 \label{eq:ch04_grip_centripetal}
 \end{equation}
-
-The tangential force is:
+For a planar rigid club, its required hand moment at H also satisfies
 \begin{equation}
-F_t = M_{\text{club}} \times a_t = 0.2 \times (\text{tangential acceleration})
+n_H=I_C\dot\omega-(\bm r_H-\bm r_C)\times\bm f_H-n_{\rm other,C}.
 \label{eq:ch04_grip_tangential}
 \end{equation}
+The planar cross product denotes its out-of-plane component. Multiplying clubhead acceleration by a nominal head mass omits shaft/grip mass distribution, COM motion and moment balance. A guessed tangential acceleration cannot establish a numerical grip-force range.
 
-The total grip force is the vector sum. For this illustrative example (using the representative impact parameters above), the grip force is on the order of 40--60~N. That figure is not measured: it is what the two components computed above require for the $0.2$~kg clubhead at the stated impact parameters. The force a golfer actually applies is larger and varies widely with swing speed, grip technique, and club configuration, so read this as what the model demands rather than as what an instrumented grip would record.
+For the declared distal link, \(\bm a_{C2}\approx(17.75063808,215.24892172)\) m/s\(^2\), giving \(\bm f_H\approx(7.10025523,90.02356869)\) N and \(n_H=\tau_2\approx-0.68641719\) N m. Recovering the proximal body's balance gives base force \((15.85025523,158.29856869)\) N and the same \(\tau_1\) obtained from the generalized equation. Independent Newton–Euler and energy calculations check these results.
 
-\begin{laymansbox}{Why the Grip Matters}{box:ch04_grip_physics}
-The grip is a constraint force. The hand-club interface is modeled as a rigid connection (or nearly rigid, neglecting slip). Given the muscular torques applied at the shoulder and elbow, the dynamics of the system determine what constraint force (grip force) must arise to maintain this connection.
+\begin{laymansbox}{Resultant Load Is Not Grip Squeeze}{box:ch04_grip_physics}
+A resultant wrench constrains the sum of contact loads, not the distribution of finger pressure or the forces supplied by each hand. Opposing hand forces can change internal loading while preserving the same net force and moment on the club. Grip squeeze can also change frictional capacity and compliance, which a perfectly rigid attachment model omits.
 
-\textbf{Key insight:} The grip force is not a direct control variable; it is an output of the system dynamics. If the shoulder torques $\tau_1$ and $\tau_2$ are specified, the manipulator equation determines the accelerations $\ddot{\bm{q}}$. To enforce the kinematic constraint that the hand remains attached to the club, a constraint force (the grip force) emerges automatically.
+Choi and Park's instrumented-grip study combines measured internal grip loading with spatial upper-limb inverse dynamics, illustrating why separate hand loads need information beyond a net club wrench. Its nine professional participants and modified 551 g club with foam balls limit direct transfer to ordinary driver swings. It does not establish a universal squeeze prescription. \citep{Choi2020GripKinetics}
 
-This has an important consequence: the grip force depends sensitively on the control torques. If $\bm{\tau}$ is too large, the constraint force becomes large. If $\bm{\tau}$ is too small and insufficient to support the required kinematics, the constraint would be violated (slip or separation).
-
-The control design problem thus includes implicit constraints: choose $\bm{\tau}(t)$ such that the resulting grip force remains within reasonable bounds (e.g., hand strength limits) and maintains contact with the club.
+OpenSim likewise distinguishes net generalized forces from the structural reaction loads produced after actuator forces are specified. Reports must identify the receiving body, frame and included actuators. Neither output alone is tissue stress or proof of muscle inactivity. \citep{OpenSimJointReactions2019}
 \end{laymansbox}
 
-\section{Wrenches: Forces and Torques Unified}
+\section{Wrenches: Forces, Moments and Power}
 
-Until now, we've talked about torques at joints. But forces at the grip are different. To unify the description, engineers use the concept of a \textbf{wrench}\index{wrench}.
-
-\begin{definition}{Wrench}{ch04_wrench}
-A wrench is the combination of a force $\bm{f}$ (3D vector) and a torque $\bm{\tau}$ (3D vector). It completely describes the mechanical interaction at a point.
-
-$$\text{Wrench} = \begin{bmatrix} \bm{f} \\ \bm{\tau} \end{bmatrix}$$
+\begin{definition}{A Wrench With a Declared Reference}{ch04_wrench}
+Use force-first ordering \(\bm w_H=(\bm f,\bm n_H)\) and matching twist \(\bm V_H=(\bm v_H,\bm\omega)\), expressed in the same axes. The moment is about H, not an unspecified point. The rigid-body power is
+\[
+P=\bm w_H^T\bm V_H=\bm f\cdot\bm v_H+\bm n_H\cdot\bm\omega.
+\]
+For offset \(\bm d=\bm r_K-\bm r_H\), shift to K using
+\[
+\bm n_K=\bm n_H-\bm d\times\bm f,\qquad
+\bm v_K=\bm v_H+\bm\omega\times\bm d.
+\]
+These transformations preserve power. Rotating axes rotates both three-vectors consistently. Other texts use moment-first ordering; the matching twist must change too. A resultant wrench describes the net rigid-body load, not its detailed contact-pressure distribution. \citep{LynchParkWrenches}
 \end{definition}
 
-The grip exerts a wrench on the club. The club exerts a reaction wrench on the hand.
-
-During the downswing, the grip wrench has:
-\begin{itemize}
-\item A large centripetal force (pulling the club inward).
-\item A tangential force (in the direction of swing motion).
-\item A torque that's trying to twist the club (from wrist torque).
-\end{itemize}
-
-At impact, the ground (your feet) exerts a wrench on your body. Your body must balance all the forces and torques.
+At ideal hinge H, force power into the distal body is \(\bm f_H\cdot\bm v_H\), and the proximal body receives its negative. Here those powers are \(\pm24.85089331\) W. Hinge moment powers are \(\tau_2(\dot q_1+\dot q_2)\) on body 2 and \(-\tau_2\dot q_1\) on body 1. Their sum is \(\tau_2\dot q_2\). The individual body kinetic-energy derivatives are approximately 20.3125 and 15.05795849 W; together they equal input power plus 3.24899178 W of gravity power. A zero net internal force power does not imply zero power into each body.
 
 \begin{laymansbox}{The Full-Body Problem}{box:ch04_full_body}
-In reality, the golf swing is a full-body problem. Your feet push on the ground (ground reaction force). Your core muscles generate torques to rotate your torso. Your shoulder muscles pull your arms. All of these must be coordinated.
+For the combined golfer–club system, hand–club forces are internal and cancel in the total momentum balance. Ground contact, weight, aerodynamic loads and ball contact are external. The total external force equals total mass times system-COM acceleration; external moments about the COM equal the rate of total angular momentum about it. Dynamic balance does not generally mean that the force and moment sums are zero.
 
-The manipulator equation for the arm alone is part of a larger system. Your torso rotation affects the reference frame in which the arm swings. The ground reaction force affects whether you stay balanced.
-
-To fully understand the golf swing, you'd need to extend the manipulator equation to include the full body: torso, hips, legs, feet.
-
-But here is the key point: the physics is the same. Each joint has an equation of the form $\bm{M} \ddot{\bm{q}} + \bm{C} \dot{\bm{q}} + \bm{g} = \bm{\tau}$. The forces are attributed to the same sources: inertia, gravity, velocity-dependent, muscular, constraint.
-
-Understanding the arm's forces is a stepping stone to understanding the full swing.
+A floating-body model commonly uses generalized velocity \(\bm v\), kinematics \(\dot{\bm q}=\bm N(\bm q)\bm v\), actuator map \(\bm S^T\), and contact map \(\bm J_c^T\). Its base equations are not directly actuated by muscle moments. Ground reactions connect internal actuation to motion while satisfying contact feasibility. A moving torso also changes arm-base motion; treating it as fixed changes the question being answered. The physics remains consistent across this hierarchy when frames, loads and omitted mechanisms are declared.
 \end{laymansbox}
 
-\section{Numerical Summary: Forces Throughout the Swing}
+\section{Numerical Summary: Compare Declared States}
 
-Let's tabulate the major forces at different phases. \textit{Note: The values in this table are order-of-magnitude illustrations based on the representative model parameters established in Chapter~\ref{ch:03_double_pendulum}. They should not be interpreted as precise measurements; actual values vary substantially by golfer, swing speed, and technique. See \citep{Nesbit2005} for inverse-dynamics measurements of joint torques during the golf swing.}
-
-\begin{center}
-\begin{tabular}{|l|r|r|r|r|}
-\hline
-\textbf{Phase} & $\tau_{\text{inertia}}$ & $\tau_{\text{grav}}$ & $\tau_{\text{Cor/Cent}}$ & $\tau_{\text{muscle needed}}$ \\
-\hline
-Address & 5 N m & -10 N m & 0 & +15 N m \\
-Backswing & 20 N m & -30 N m & 0 & +50 N m \\
-Top & 2 N m & -30 N m & 0 & +32 N m \\
-Transition & 50 N m & -20 N m & +5 N m & $-35$ N m$^*$ \\
-Early downswing & 100 N m & -10 N m & +10 N m & $-80$ N m$^*$ \\
-Late downswing & 60 N m & 0 N m & +15 N m & $-45$ N m$^*$ \\
-Impact & 40 N m & +5 N m & +20 N m & $-35$ N m$^*$ \\
-\hline
-\end{tabular}
-\end{center}
-
-$^*$ Negative muscle torque means the muscles are braking, not accelerating. This is counterintuitive but happens because gravity and velocity-dependent forces are doing most of the accelerating.
+Instead of assigning unsupported torques to named swing phases, hold \(\bm q=(0,-5^\circ)\) and \(\ddot{\bm q}=(20,-30)\) fixed while scaling rates \((10,9)\) by \(s\). Every row is independently reproducible inverse dynamics, not a time history:
+\[
+\begin{array}{c|rr|rr|r}
+s&c_1&c_2&\tau_1&\tau_2&P_{\rm input}\\\hline
+0&0&0&2.237587&-0.076327&0\\
+1&1.592335&-0.610090&3.829922&-0.686417&32.121467\\
+2&6.369342&-2.440361&8.606928&-2.516688&126.838188
+\end{array}
+\]
+Moments are N m and power is W. The inertia contribution and gravity gradient are unchanged, whereas bias scales by \(s^2\). In this example greater speed requires greater first input and more positive total input power for the prescribed acceleration. This is a counterexample to inevitable passive assistance, not a claim that faster golf always requires more effort. A phase name alone specifies neither configuration, rate, acceleration nor input.
 
 \section{The Fundamental Insight}
 
-The core principle emerging from this analysis is:
-
-\textbf{The golf swing is a dynamics problem in which muscular forces provide control input to a complex nonlinear mechanical system.}
-
-The arm+club system has substantial inertia, operates over large distances, and achieves high speeds. These characteristics create significant forces. The manipulator equation $\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$ predicts that no single force source (muscular, gravitational, or velocity-dependent) dominates throughout the swing. Instead, they combine.
-
-The control problem is to determine the muscle torques $\bm{\tau}(t)$ such that the resulting motion $\bm{q}(t)$ achieves the objective (e.g., clubhead velocity and orientation at impact). Given the constraints on muscular force and the nonlinear dynamics, not all objectives are equally achievable. The feasible outcomes depend on the control input design and the initial conditions.
+The useful argument connects levels of description: applied loads change body momentum; geometry and inertia couple that change across joints; endpoint kinematics map it to a task; actuator dynamics and contact determine which motions are feasible. Physical power balances then track energy supplied, transferred, stored or dissipated. Measurements test the parts of that model relevant to the intended conclusion.
 
 \begin{principle}{Key Takeaways}{pr:ch04_key_takeaways}
-\begin{enumerate}
-\item \textbf{Forces come from five sources}: inertia, velocity-dependent (Coriolis/centrifugal), gravity, muscular, and constraint.
-
-\item \textbf{Inertial forces resist acceleration}. To accelerate a heavier/longer arm, you need larger torques.
-
-\item \textbf{Velocity-dependent forces grow with the square of speed}. At high speeds, they dominate. They often help, not hinder.
-
-\item \textbf{Gravity does work during the downswing}. It's a free source of energy, converting potential to kinetic.
-
-\item \textbf{Muscular forces are your only control}. You can't directly control gravity or inertia; you can only control $\bm{\tau}$.
-
-\item \textbf{Constraint forces appear automatically}. The grip force is determined by the dynamics, not by conscious effort.
-
-\item \textbf{At impact, $\sim$18$g$ swing-phase clubhead accelerations require careful force balance}. No single source (gravity, muscle, velocity-dependence) does it alone. All work together.
-
-\item \textbf{Optimal control strategies exploit passive dynamics}. The manipulator equation predicts that control inputs aligned with passive forces (rather than opposed to them) achieve desired trajectories with lower muscular effort.
-\end{enumerate}
+Name the body and frame before naming a force. Use full coupled dynamics rather than a single diagonal inertia. Distinguish physical gravity from the gradient moved to the left. Keep normal acceleration in the endpoint map. Recover whole-body COM loads and moments before interpreting grip measurements. Evaluate signed power rather than torque sign alone, and distinguish a net wrench from individual contact or muscle forces. Claims about optimal effort, skill or passive dominance require a stated task, admissible inputs and independent evidence.
 \end{principle}
 
 \subsection*{Looking Ahead}
-We have catalogued five sources of force in the golf swing: inertial, velocity-dependent, gravitational, muscular, and constraint. But which forces dominate at each phase of the swing? Chapter~\ref{ch:05_affine_structure} introduces the control-affine framework that separates all passive forces (the \emph{drift}) from muscular forces (the \emph{control}), revealing a notable structural feature: by impact, passive forces substantially exceed muscular control in magnitude.
+Chapter 5 separates a declared zero-input drift from applied input response. Chapter 7 develops compatible motion and reaction power, and Chapter 24 adds the observation and actuation states needed for motor control. These extensions can test how the mechanisms combine over a swing; they do not follow from a universal table of helpful and opposing forces.
+
+
 
 \begin{exercises}{Chapter Exercises}{ex:ch04}
-\begin{enumerate}
+\subsection*{1. Prescribed Inertial Moments}
+At \(\bm q=(0,0)\), zero rates, prescribe \(\ddot{\bm q}=(500\pi/180,0)\) rad/s\(^2\). The generalized gravity moment vanishes, and inverse dynamics requires approximately \((3.67010017,1.74532925)\) N m. The distal input is essential to the prescribed zero relative acceleration. One first-coordinate acceleration alone would leave the problem underdetermined.
 
-\item \textbf{Inertial Torque}. The shoulder has moment of inertia $M_{11} = 1.54$ kg m$^2$. What muscular torque is needed just to accelerate the shoulder at $\ddot{\theta}_1 = 500 \text{ deg/s}^2 = 8.7 \text{ rad/s}^2$, ignoring all other forces?
+\subsection*{2. Circular Motion and the Receiving Body}
+For a separate 1 kg particle in uniform circular motion at 10.47 rad/s and radius 1.35 m, acceleration is 147.988215 m/s\(^2\) inward and the resultant force is 147.988215 N inward. Its outward reaction on a string acts on the string. The rotating-frame centrifugal term on the particle is outward; do not add it to the inertial-frame force balance.
 
-\item \textbf{Centrifugal Force}. At impact, the shoulder rotates at $\dot{\theta}_1 = 600 \text{ deg/s} = 10.47 \text{ rad/s}$. The forearm+club is 1.35 m from the shoulder. What is the centrifugal acceleration? What force would a 1 kg mass experience at that distance?
+\subsection*{3. Specified Coriolis Coupling}
+Specify \(q_2=-5^\circ\) and rates \((8,5)\) rad/s. Then \(c_1=0.64059471\) and \(c_2=-0.39045773\) N m. These are left-side bias components, not standalone applied moments. Without configuration, the original rate-only request has no numerical answer. A sudden change in rate additionally needs an impulse or a finite acceleration history.
 
-\item \textbf{Coriolis Coupling}. Suppose the shoulder rotates at constant rate $\dot{\theta}_1 = 8 \text{ rad/s}$. The elbow suddenly starts rotating at $\dot{\theta}_2 = 5 \text{ rad/s}$. Using the Coriolis term from Chapter~\ref{ch:03_double_pendulum}, estimate the torque this creates at the shoulder.
+\subsection*{4. Gravity and Coordinate Signs}
+At \((150^\circ,-70^\circ)\), \(\bm Q_g\approx(-4.76483031,-1.93219281)\) N m. The gradient is its negative. To infer acceleration, solve with the mass matrix, velocity terms and applied loads. To call it forward or backward, first define the golf target frame.
 
-\item \textbf{Gravity Torque}. At the top of the backswing, $\theta_1 = 150°, \theta_2 = -70°$. Compute the gravitational torque at the shoulder (use parameters from Chapter~\ref{ch:03_double_pendulum}). Is gravity trying to rotate the shoulder forward (into the downswing) or backward?
+\subsection*{5. Complete Inverse Dynamics}
+Using the chapter's declared before-contact state and acceleration, add \(\bm M\ddot{\bm q}\), \(\bm c\) and \(\bm g\) componentwise to obtain \((3.82992214,-0.68641719)\) N m. The power is 32.12146671 W. Omitting \(M_{12}\ddot q_2\) would add 5.99200887 N m to the first estimate and solve a different problem.
 
-\item \textbf{Force Balance at Impact}. At impact, the total shoulder acceleration is $\ddot{\theta}_1 = 200 \text{ rad/s}^2$. The gravity torque is about 5 N m (small). The Coriolis/centrifugal torques total about 20 N m. Using $M_{11} = 1.54$ kg m$^2$, how much muscular torque is needed?
+\subsection*{6. COM Force, Moment and Contact}
+Use the distal-link COM acceleration from the worked example: subtract gravity and multiply by 0.4 kg to obtain \((7.10025523,90.02356869)\) N. Balance moments about its COM to recover \(-0.68641719\) N m at H. These determine a resultant in the ideal model, not finger pressure. Assess actual contact using a friction/compliance model and appropriate measurements.
 
-\item \textbf{Grip Force}. The club (mass 0.2 kg) is 1.35 m from the shoulder and accelerating at 150 $g$ (centripetal). What force is the hand exerting on the club?
-
-\item \textbf{Work Done by Gravity}. From address ($\theta_1 = 0°$) to the top ($\theta_1 = 150°$), how much does the potential energy increase? (Use parameters from Chapter~\ref{ch:03_double_pendulum}.) From the top to impact ($\theta_1 = 0°$), how much does gravity do in work?
-
-\end{enumerate}
+\subsection*{7. Gravity Over a Closed Configuration Cycle}
+Specify both endpoints as \((0,0)\) and \((150^\circ,-70^\circ)\). Potential rises 12.192849345 J on ascent. Gravity work is negative that amount on ascent and positive on return; net gravity work is zero. If the final speed differs, explain it using the rest of the energy balance. Specifying only \(q_1\) leaves the distal COM height unknown.
 \end{exercises}
+
+\flushbottom{}

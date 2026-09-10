@@ -344,3 +344,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-10 | #4350 | Correct paired affine dynamics, drift capacity, energy and optimality with complete worked examples and verified vector fields. |
 | 2026-09-10 | #4352 | Rebuild paired constraint dynamics, interface power, reaction loads and capture with verified examples and complete worked answers. |
 | 2026-09-10 | #4354 | Re-derive paired double-pendulum inertia, gravity, task kinematics and sensitivity with six worked answers and bounded golf interpretation. |
+| 2026-09-10 | #4355 | Rebuild paired forces and torques with independent body balances, moving-frame signs, complete grip wrench and power attribution, seven worked answers and bounded golf evidence. |
