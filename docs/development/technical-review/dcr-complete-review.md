@@ -159,5 +159,15 @@ review record carry the reproducible argument. No textbook PDF changed in this
 article-only correction. Prior passive PR #4337 is now protected-merged and
 published at a1ef3f22ce38d148064b0c0b5c29c6db30f46168; deploy 34441497877
 succeeded, and all 956 records in exact artifact 10138837491 were independently
-checked. This issue's implementation commit and protected PR are next.
+checked. Implementation 92e92d6577edc6ca501ba290645b67ecf767aa0f is on the protected
+passive squash; its tree is identical to the validated pre-rebase tree
+f7ee966d5c83bdf5310af9595718824e5e978c49. The initial rebase lacked that
+locally fetched commit and was retried after fetching it. No remote branch
+was created by the interrupted push. A later push correctly rejected the
+article digest: Git normalized the editor's CRLF source to canonical LF at
+commit. The canonical-byte digest and its readiness/atlas dependents were
+regenerated before retrying. No mathematical or rendered content changed.
+The standalone development-log checker still reports the preserved peer
+#3903/#3902 metadata omissions; this feature's entry has its concrete SHA.
+Normal protected PR delivery is next.
 The corpus and companion critiques remain unfinished.

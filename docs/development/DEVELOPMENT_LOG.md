@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/4338-dcr-complete-rigor`
 - **Paths:** `articles/controllability-drift-ratio.qmd`, `tests/test_dcr_article_rigor.py`, `tests/test_scientific_trust_metadata.py`, `src/affine_control/research_readiness/fixtures.py`, `data/research_protocols`, `data/trust/claim_audit_inventory.json`, `docs/development/technical-review/dcr-complete-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`b09c98b82e6ee3b386266560e5a947bbb38b5d56`, audit parent plus complete validated working-tree implementation; 5,124 tests passed, 92.88% coverage; final affected 84 and canonical browser 14/14 pass)
+- **Last verified:** 2026-09-10 (`92e92d6577edc6ca501ba290645b67ecf767aa0f`, complete validated implementation; identical tree after replay onto protected passive squash; 5,124 tests passed, 92.88% coverage; final affected 84 and canonical browser 14/14 pass)
 - **Summary:** Complete replacement withdraws unsupported downswing growth and derives scaling, coordinate Hessians, transported metrics, regularization, finite-time reachability and event sensitivity. Thirteen independent tests support the argument. Readiness now names the actual route reviewer with coherent manufactured chronology; scientific protocol states and immutable authority pins remain unchanged. Full reading, mobile/table/disclosure QA, content, static, titles, links, style and types pass. Initial digest/date failures and visually detected dark-panel defect were corrected and documented. Companion critiques and remaining corpus stay open.
-- **Next step:** Commit and submit the validated #4338 correction for protected review.
+- **Next step:** Push the validated #4338 correction and open its protected pull request.
 
 ### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
 
