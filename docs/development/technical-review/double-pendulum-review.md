@@ -189,3 +189,7 @@ merge and revision-matched live verification remain. Preserve peer-owned
 authority pins. Next review should prioritize Chapter 4 because it directly
 reuses this chapter's old numerical assumptions; the corpus queue also retains
 longer articles and the five read-but-uncorrected critiques under #4340.
+
+## Protected Delivery Checkpoint
+
+Implementation 96ae7eb69c9622b176aabf8507c4fa293a296298 preserves validated tree 272e173c046e86a64893219a43d726c0e2c26b15 after replay onto constraint squash b5362af0005c8ae1ad00e81390e9151991157155. Parent/squash trees matched. Normal commit/push hooks passed. Ready PR #4354 closes #4353; protected checks, merge and exact live publication remain. Final heading-only web revision was reread; all final actual-route records passed.

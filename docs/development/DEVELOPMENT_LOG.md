@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4353 · Complete Double-Pendulum Derivation and Task Mechanics
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4353 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** pending
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4354 (open)
 - **Branch:** `fix/4353-double-pendulum-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch03_double_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/double_pendulum_verified.*`, `tests/test_double_pendulum_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/double-pendulum-review.md`, `docs/development/technical-review/build_double_pendulum_figures.py`, `docs/development/technical-review/double-pendulum-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (working tree based on `266bad5919a53b5b998de54ac027ef6e635bb05c`; root 5,243 passed, coverage 79.29%; focused 37, content 131, static 34, titles 636, mypy 91; full paired reading and final browser heading correction)
+- **Last verified:** 2026-09-10 (`96ae7eb69c9622b176aabf8507c4fa293a296298`; replay preserved validated tree; normal commit/push hooks passed; root 5,243 passed, coverage 79.29%; focused 37, content 131, static 34, titles 636, mypy 91; full paired reading and final browser heading correction)
 - **Summary:** Corrects COM versus hinge inertia, gravity signs, Coriolis rate factors, coupled input response, physical interface power and endpoint curvature. Six worked answers and primary-source boundaries distinguish anatomical interpretation, task sensitivity and chaos. Audit records independent derivations, numerical checks and rendering defects found by complete reading.
-- **Next step:** Commit validated chapter, replay onto verified constraint squash and open a protected PR.
+- **Next step:** Verify PR #4354 protected checks, squash merge and exact live publication.
 
 ### DL-#4351 · Complete Constraint Forces, Compatible Dynamics and Power
 
