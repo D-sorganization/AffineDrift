@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4336 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** not created
+- **Branch:** `fix/4336-passive-impedance-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch27_passive_distributed_control.tex`, `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd`, `docs/development/technical-review/passive-distributed-control-review.md`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`cbd611369542cb3c63a1b4bf171936e8b665867c`, complete original editions and 12 exercises; working-tree audit)
+- **Summary:** Confirmed double-counted state derivative, undefined drift percentages, incomplete stability/energy proofs, critical-damping error, neural bandwidth and impedance overclaims, and unsupported impact/coaching prescriptions. Primary source limits and independent derivation plan recorded; no canonical corrections or validation yet.
+- **Next step:** Finish primary reading and visual source checks, independently verify replacement examples, then correct both editions and exercises.
+
 ### DL-#4333 · Flexible Shaft Dynamics and Evidence
 
 - **State:** in_review
@@ -33,16 +46,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4331 · Muscle Force Models, Tendon Energy and Control Inference
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4331 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4332 (merged; publication pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4332 (merged and published)
 - **Branch:** `fix/4331-muscle-force-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch17_muscle_force_generation.tex`, `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `docs/development/technical-review/muscle-force-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`88fc30eae28ae0b9bfc463e5a47c5ce504a38087`, implementation; complete local validation and normal hooks)
+- **Last verified:** 2026-09-10 (`a81f99c06c34d3a98ad215a26218537861e49d1a`, exact live artifact 10135966540; all 956 records / 239 routes passed)
 - **Summary:** Both editions now connect muscle architecture, force curves, activation, tendon energy and joint/control mechanics through bounded evidence, independent examples, two figures and seven worked answers. Root 5,131 passes, 79.2% coverage; final affected, content, static, style/type/link and complete print/web QA pass. Initial conversion/manifest failures and evidence limits are documented.
-- **Next step:** Protected merge fd464eed3dc493b3e31363cfb1396ac69e849142 passed main CI and textbook build. Deploy 34432094332 was cancelled; verify descendant deployment 34433303512 and exact live artifact.
+- **Next step:** Complete; continue corpus review. Original deployment was cancelled; descendant deploy 34433303512 succeeded with exact live verification.
 
 ### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
 

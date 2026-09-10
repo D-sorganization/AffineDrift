@@ -199,3 +199,9 @@ Protected PR #4332 merged normally as fd464eed3dc493b3e31363cfb1396ac69e849142.
 Main CI 34432094338 and textbook build 34432094441 passed. Deployment
 34432094332 was cancelled; descendant run 34433303512 remains in progress.
 Exact live publication is pending and is not inferred from the merge.
+
+Production verified through a81f99c06c34d3a98ad215a26218537861e49d1a, whose only
+changes beyond the muscle squash are fleet policy documentation. Deploy
+34433303512 succeeded; exact live artifact 10135966540 passed all 956 records
+across 239 routes, including 239 axe route checks, with HTTP 200, no inspection
+failures, no axe findings, no retries and no transient responses.
