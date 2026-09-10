@@ -133,3 +133,14 @@ reproducible vector figure, tests, bibliography, book PDF and this audit carry
 the implementation. Protected PR delivery is next; the corpus is unfinished.
 The preceding DCR PR #4339 protected-squash-merged at
 06ad67134fb08841281640d4373d9df1d7cc56ae; exact deployment 34447587020 failed before publication because the docs/ output pruning removed its bound development review. A durable-source relocation and boundary regression are required. Companion critiques remain queued as #4340.
+
+
+## Delivery Checkpoint
+
+Fascia implementation 4996252605900afafef908877e101e7368941a01 and deployment
+repair 87956740 are submitted as PR #4344. All normal commit and push hooks
+passed; protected squash auto-merge is enabled. The moved audit needed one
+Prettier normalization; its evidence digest was regenerated before retrying
+commit, with no bypass. The parent/squash and validated implementation trees
+were independently compared during rebase. Protected CI and exact live
+publication remain pending. No other chapter is marked complete by this PR.

@@ -20,29 +20,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4342 · Durable Claim-Review Evidence Through Deployment
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4342 (epic #4009; corpus #4021)
-- **PR:** not created; combined delivery with #4341
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (open)
 - **Branch:** `fix/4341-fascia-mechanics-rigor`
 - **Paths:** `reports/technical-review/dcr-complete-review.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `tests/test_claim_audit_output_boundary.py`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`4996252605900afafef908877e101e7368941a01`, RED reproduced deployment 34447587020's missing-review failure; GREEN after relocation; 35 affected checks and 239-route scoped publication gate pass)
+- **Last verified:** 2026-09-10 (`87956740`, RED reproduced deployment 34447587020's missing-review failure; GREEN after relocation; 35 affected checks and 239-route scoped publication gate pass)
 - **Summary:** Quarto output pruning removed the DCR review because it was stored under docs/. Move durable bound evidence to reports/technical-review, update references/digests and enforce survival of actual pruning for every reviewed route. Scientific authority and publication gates remain intact.
-- **Next step:** Open the combined protected PR for #4341 and #4342.
+- **Next step:** Verify PR #4344 protected checks and deployment.
 
 ### DL-#4341 · Fascia Mechanics and Biological Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4341 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4344 (open)
 - **Branch:** `fix/4341-fascia-mechanics-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch12_fascia.tex`, `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/fascia_viscoelastic_memory.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_fascia_mechanics_rigor.py`, `tests/test_physics_of_golf_pdf_contract.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/fascia-mechanics-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`4996252605900afafef908877e101e7368941a01`, committed fascia implementation; 5,137 tests passed, 92.88% coverage; affected 45, content 131, static 34, titles 636, canonical browser 14/14 and full paired reading pass)
+- **Last verified:** 2026-09-10 (`87956740`, committed fascia implementation; 5,137 tests passed, 92.88% coverage; affected 45, content 131, static 34, titles 636, canonical browser 14/14 and full paired reading pass)
 - **Summary:** Replaces the complete paired chapter with explicit force/power/energy distinctions, correct SI examples, nonlinear and viscoelastic derivations, directional coupling, augmented control/sensing states and bounded primary evidence. Eight worked answers and a shared reproducible figure preserve historical links. Corrects the legacy regression that preserved the erroneous 1.25 J calculation. Source boundaries, failures and validation are documented. Companion DCR critiques remain separately queued as #4340.
-- **Next step:** Open the validated fascia correction as a protected pull request.
+- **Next step:** Verify PR #4344 protected checks and deployment.
 
 ### DL-#4338 · DCR Scaling, Coordinates and Correction Evidence
 
@@ -55,7 +55,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-10 (`06ad67134fb08841281640d4373d9df1d7cc56ae`, protected squash verified; live deployment failed before publication; implementation 92e92d6577edc6ca501ba290645b67ecf767aa0f; normal hooks passed; 5,124 tests passed, 92.88% coverage; final affected 84 and canonical browser 14/14 pass)
 - **Summary:** Complete replacement withdraws unsupported downswing growth and derives scaling, coordinate Hessians, transported metrics, regularization, finite-time reachability and event sensitivity. Thirteen independent tests support the argument. Readiness now names the actual route reviewer with coherent manufactured chronology; scientific protocol states and immutable authority pins remain unchanged. Full reading, mobile/table/disclosure QA, content, static, titles, links, style and types pass. Initial digest/date failures and visually detected dark-panel defect were corrected and documented. Companion critiques and remaining corpus stay open.
-- **Next step:** Relocate bound DCR review evidence outside the pruned docs/ output and test that boundary.
+- **Next step:** Verify corrected publication through PR #4344 and its exact live evidence.
 
 ### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
 
