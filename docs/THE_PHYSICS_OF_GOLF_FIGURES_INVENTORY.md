@@ -9,14 +9,14 @@ This document provides the formal audit and inventory of all figures across the 
 | **Total Chapters Audited** | 34 |
 | **Chapters with Figures** | 29 |
 | **Total LaTeX Figures** | 38 |
-| **TikZ Figures** | 15 |
-| **Raster / Includegraphics Figures** | 23 |
+| **TikZ Figures** | 14 |
+| **Raster / Includegraphics Figures** | 24 |
 | **LaTeX Figure Labels** | 38 |
 | **LaTeX Prose Figure Refs** | 3 |
-| **Total Quarto Figures** | 24 |
-| **Quarto Figure Defs (Divs / Imgs / Cells)** | 24 |
-| **Quarto Prose Figure Mentions** | 21 |
-| **Missing Figures in Quarto** | **14** |
+| **Total Quarto Figures** | 25 |
+| **Quarto Figure Defs (Divs / Imgs / Cells)** | 25 |
+| **Quarto Prose Figure Mentions** | 23 |
+| **Missing Figures in Quarto** | **13** |
 
 ## Chapter Parity Matrix
 
@@ -34,7 +34,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch09b_passive_stabilization` | Passive Stabilization in Parallel Loops | 0 | 0 | 0 | ✅ Parity |
 | `ch10_energy_transfer` | Energy Transfer: How Power Flows\\Through the Kinetic Chain | 2 | 0 | 2 | ✅ Parity |
 | `ch11_flexible_shaft` | The Flexible Shaft: Elastic Energy and the Catapult Effect | 2 | 0 | 2 | ✅ Parity |
-| `ch12_fascia` | Fascia and Connective Tissue: Separating Myth From Mechanics | 1 | 1 | 0 | ❌ Missing 1 |
+| `ch12_fascia` | Fascia and Connective Tissue:\\Material Mechanics and Evidence | 1 | 0 | 1 | ✅ Parity |
 | `ch13_interdisciplinary` | Where Disciplines Collide:\\An Interdisciplinary Perspective | 2 | 0 | 2 | ✅ Parity |
 | `ch14_complete_swing` | The Complete Golf Swing: Putting It All Together | 2 | 0 | 2 | ✅ Parity |
 | `ch15_ground_reaction_forces` | Ground Reaction Forces: The Silent Foundation | 0 | 0 | 0 | ✅ Parity |
@@ -74,7 +74,7 @@ This document provides the formal audit and inventory of all figures across the 
 | `ch10_energy_transfer` | 2 | `fig:energy_passive_transfer` | Includegraphics | An Explicit Passive Mechanism Redistributes Energy in Both Directions. The Outer Rod Gains... |
 | `ch11_flexible_shaft` | 1 | `fig:shaft_bending` | Includegraphics | A Tip-Normalized Static Cantilever Shape and Its Slope. This Is an Admissible Approximatio... |
 | `ch11_flexible_shaft` | 2 | `fig:ch11:ztcf_comparison` | Includegraphics | Position and Velocity Under the Declared Prescribed Base. The Flexible Response Includes C... |
-| `ch12_fascia` | 1 | `fig:fascia_layers` | TikZ Diagram | Fascia Tissue Composition: Layers of Connective Tissue With Structural Proteins. |
+| `ch12_fascia` | 1 | `fig:fascia_layers` | Includegraphics | Manufactured Standard-Linear-Solid Response With Equilibrium Modulus 1 MPa, Branch Modulus... |
 | `ch13_interdisciplinary` | 1 | `fig:ch13_interdisciplinary_map` | Includegraphics | Connected Models Link Commands, Motion, Impact and Outcome. Measurements Observe Selected ... |
 | `ch13_interdisciplinary` | 2 | `fig:interdisciplinary_collision_energy` | Includegraphics | Restitution Does Not Equal Energy Transfer. The Free Two-Mass Teaching Model Uses a 0.200 ... |
 | `ch14_complete_swing` | 1 | `fig:ch14_complete_model` | Includegraphics | Preparation, Coupled Evolution, Delivery, and Outcome. Measurements and Model Assumptions ... |
