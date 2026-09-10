@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4345 · Complete Triple-Pendulum Dynamics and Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4345 (epic #4009; corpus #4021; Physics #4054)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4346 (open)
 - **Branch:** `fix/4345-triple-pendulum-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch08_triple_pendulum.tex`, `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/triple_pendulum_verified.*`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_triple_pendulum_rigor.py`, `tests/test_ch08_triple_pendulum_mass_matrix.py`, `docs/development/technical-review/triple-pendulum-review.md`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`SELF`, complete paired reading; 5,146 tests, 92.88% coverage; focused 31, content 131, static 34, titles 636, configured types and canonical browser 14/14 pass)
+- **Last verified:** 2026-09-10 (`90f06e2b`, complete paired reading; 5,146 tests, 92.88% coverage; focused 31, content 131, static 34, titles 636, configured types and canonical browser 14/14 pass)
 - **Summary:** Defines one consistent planar model, derives complete inertia and Christoffel bias, computes a converged zero-torque counterexample and ideal lock release, separates segment power from local actuation, and bounds wrist-control claims with primary evidence. Six worked answers and historical destinations are preserved. Derivation and failure history are recorded in the audit.
-- **Next step:** Commit, replay onto the verified parent squash with tree equality, then submit for protected CI and live verification.
+- **Next step:** Verify PR #4346 protected CI, merge and live evidence; normal hooks and parent replay tree equality passed.
 
 
 ### DL-#4342 · Durable Claim-Review Evidence Through Deployment
