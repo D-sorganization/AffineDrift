@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4341 · Fascia Mechanics and Biological Evidence
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4341 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** not created
+- **Branch:** `fix/4341-fascia-mechanics-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch12_fascia.tex`, `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `tests/test_fascia_mechanics_rigor.py`, `docs/development/technical-review/fascia-mechanics-review.md`
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (`7ba2db42c76da91b8db563fcf6ee0647b334c327`, original paired source inspected; ten independent analytic controls pass and two publication checks fail as intended)
+- **Summary:** Full review identifies false force/elasticity claims, a tenfold area conversion error, unsupported whole-body energy fractions, missing anisotropy and tissue memory, incorrect control-coupling assumptions and overstated training/clinical conclusions. Primary experiments and their boundaries are recorded; paired rewrite, all eight answers and print/web QA remain. Companion DCR critiques separately queued as #4340.
+- **Next step:** Write the complete paired chapter using the audited energy, memory and load-path derivations.
+
 ### DL-#4338 · DCR Scaling, Coordinates and Correction Evidence
 
 - **State:** in_review

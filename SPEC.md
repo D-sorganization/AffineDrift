@@ -335,3 +335,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-10 | #4337 | Correct paired passive-control energy, drift and stability arguments; distinguish intrinsic mechanics from delayed feedback with a reproducible damping figure and 12 worked exercises. |
 | 2026-09-10 | #4339 | Correct the complete DCR article with explicit scaling, coordinate and capacity assumptions, reproducible counterexamples and finite-time impact sensitivity. |
+| 2026-09-10 | #4341 | Correct the complete paired fascia chapter with explicit material, energy, memory, coupling and biological-evidence boundaries. |
