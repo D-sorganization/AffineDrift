@@ -174,3 +174,15 @@ on an empty-diff handoff index mismatch; an index refresh resolved it without
 altering content. No force push or hook bypass was used. All normal commit and
 push hooks pass. Full PR4325 is open with Fixes#4324 and agent/scientific labels.
 The SPEC row is keyed once to4325. Protected checks and exact publication remain.
+
+## Verified Publication
+
+PR #4325 merged as 4cf3514dc82a6c267f43df39a89b57247cc0ba27.
+Main CI 34417379928, performance 34417380016 and deployment 34417379941 pass.
+Exact live artifact 10130399466 was downloaded and all 956 records across 239
+routes were read and checked: HTTP 200, passed=true, zero failures, inspection
+failures, serious/critical axe violations, retries, transients or exhausted
+retries. Each case took one attempt; axe ran on all 239 routes. This verifies
+both the motion article and the earlier rotation release through this descendant.
+The initial rotation deployment failure remains historical evidence; this later
+pass does not negate the separately reproduced escaped-markup defect in #4327.

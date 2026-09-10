@@ -18,44 +18,57 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4327 · Nonlinear Control Explanation Publication Repair
+### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
 
 - **State:** in_review
 - **Owner:** codex
+- **Issue:** #4326 (epic #4009; corpus #4021; Physics #4054)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4330 (open)
+- **Branch:** `fix/4326-motor-learning-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch25_motor_learning.tex`, `articles/The_Physics_of_Golf/quarto/ch25_motor_learning.qmd`, `docs/development/technical-review/motor-learning-review.md`
+- **Started:** 2026-09-09
+- **Last verified:** 2026-09-10 (`fafad3fce308215ff52b9db0c271d96749a62285`, implementation; complete local validation)
+- **Summary:** Complete paired correction connects mechanics, feel, prediction and practice through bounded primary evidence, independent examples, two shared figures and twelve worked answers. Root 5,118 passes at 79.19% coverage; final focused 44, content 130, static 34, style/type/link checks and complete affected PDF/web QA pass.
+- **Next step:** Verify protected PR #4330 checks and exact publication.
+
+### DL-#4327 · Nonlinear Control Explanation Publication Repair
+
+- **State:** shipped
+- **Owner:** codex
 - **Issue:** #4327 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4329 (open)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4329 (merged)
 - **Branch:** `fix/4327-nonlinear-callouts`
 - **Paths:** `articles/nonlinear-control-insights.qmd`, `css/technical-explanations.css`, `docs/development/technical-review/nonlinear-callouts-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`1dec5dd8fe602d17a7aeeb7c48b13559eb6e40be`, complete bounded publication validation)
+- **Last verified:** 2026-09-10 (`1fe7997eba9d7059dc9b68582643653cee0ec2d0`, protected merge and all 956 records of exact live artifact 10131240380)
 - **Summary:** Exact rotation deployment artifact identifies malformed nonlinear-control explanation HTML as a publication blocker. Native disclosures replace escaped markup and unsupported muscle-work, torso-stop and validation claims. Root 5,097 tests pass at79.19%coverage; final content130/static34 and12expanded keyboard/theme cases pass. The article is only partially reviewed.
-- **Next step:** Verify protected PR #4329 checks and exact publication after merge.
+- **Next step:** Continue the remaining corpus review under epic #4009.
 
 ### DL-#4324 · Motion Capture, Uncertainty and Scientific Interpretation
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4324 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4325 (merged; production pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4325 (merged)
 - **Branch:** `fix/4324-motion-capture-rigor`
 - **Paths:** `articles/technology-motion-capture.qmd`, `tests/test_motion_capture_rigor.py`, `docs/development/technical-review/motion-capture-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`b1a4a030a03044158aea1af747782d53d913c02a`, implementation; full regression and final publication checks)
+- **Last verified:** 2026-09-10 (`4cf3514dc82a6c267f43df39a89b57247cc0ba27`, published descendant; all 956 records of exact live artifact 10130399466)
 - **Summary:** Complete article review connects camera geometry, anatomy, timing, conventions and correlated uncertainty to defensible golf-mechanics inference. Bounded primary claims replace categorical accuracy and energy assertions. Root 5,097 passes, 79.19% coverage; final focused 19, content 130, static 34, style/type/link checks and complete bounded web QA pass. Native Quarto explanation expands visibly.
-- **Next step:** Verify protected checks and exact production for PR #4325.
+- **Next step:** Continue the remaining corpus review under epic #4009.
 
 ### DL-#4322 · Rotation Conventions, Stable Conversion and Golf Interpretation
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4322 (epic #4009; corpus #4021)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4323 (merged; production verification pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4323 (merged)
 - **Branch:** `fix/4322-rotation-converter-reference`
 - **Paths:** `articles/rotation-converter.qmd`, `articles/rotation-representations-reference.qmd`, `js/rotation-converter.js`, `js/rotation-converter-ui.js`, `js/rotation-converter-viz.js`, `css/rotation-converter.css`, `scripts/sync_frontend_assets.py`, `src/tools/rotation_reference_examples.py`, `tests/test_rotation_representations_reference.py`, `tests/test_rotation_reference_kinematics.py`, `tests/rotation-converter-rigor.test.js`, `tests/rotation-converter-ui.test.js`, `docs/development/technical-review/rotation-converter-review.md`
 - **Started:** 2026-09-09
-- **Last verified:** 2026-09-09 (`12169b9b8d0a36138d5b27bbdd493a58314d34ea`)
+- **Last verified:** 2026-09-10 (`4cf3514dc82a6c267f43df39a89b57247cc0ba27`, published descendant; all 956 records of exact live artifact 10130399466)
 - **Summary:** Both complete articles derive stable boundary conversions and connect calibrated orientation, angular velocity, face sensitivity, uncertainty and physical work. Converter rejects malformed inputs, preserves labeled prior results and supports optional-3D failure. Root 5,078 passes, 79.19% coverage; final numerical/UI/content/static/style/type/link checks and complete bounded web QA pass.
-- **Next step:** Verify exact production evidence for squash 625b0fc4ff1135eaef3bf81b0852089f4129c1f1.
+- **Next step:** Continue the remaining corpus review under epic #4009.
 
 ### DL-#4320 · Textbook Energy Transfer and Work Ledgers
 

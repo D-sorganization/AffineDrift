@@ -207,3 +207,15 @@ The central communication CLI became available before commit. Inbox read returne
 The portable development-log checker rejects SELF as a development-log SHA; the entry records the actual parent plus validated working tree until the implementation commit is resolved. Unchanged peer DL-#3903 lacks a usable SHA and DL-#3902 lacks PR/Last verified fields; those pre-existing entries are preserved.
 
 Energy parent publication: Deployment 34406274993 passes. Exact live artifact 10126445934 was downloaded and all 956 records across 239 routes were read and checked: HTTP 200, zero failures, serious/critical axe findings, retries, transients or exhausted retries; axe ran on all 239 routes.
+
+## Verified Publication
+
+PR #4325 merged as 4cf3514dc82a6c267f43df39a89b57247cc0ba27.
+Main CI 34417379928, performance 34417380016 and deployment 34417379941 pass.
+Exact live artifact 10130399466 was downloaded and all 956 records across 239
+routes were read and checked: HTTP 200, passed=true, zero failures, inspection
+failures, serious/critical axe violations, retries, transients or exhausted
+retries. Each case took one attempt; axe ran on all 239 routes. This verifies
+both the motion article and the earlier rotation release through this descendant.
+The initial rotation deployment failure remains historical evidence; this later
+pass does not negate the separately reproduced escaped-markup defect in #4327.
