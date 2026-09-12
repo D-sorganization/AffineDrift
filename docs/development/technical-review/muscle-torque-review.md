@@ -6,7 +6,7 @@ Issue #4369, under epic #4009 and corpus #4021. September12,2026.
 Both original Chapter16 sources were read completely: print5283 and web4636
 approximate original whitespace words. No revised source or rendered chapter has
 yet been reviewed. The chapter is not complete. PR4368 covers the preceding
-strokes-gained review and is still awaiting its E2E job, run34714267081.
+strokes-gained review and has a Python artifact-reproduction failure in run34714267081; E2E job103608499603 has now passed. The Linux discrepancy is at the last floating-point digits, not an altered scientific result.
 
 ## Original Source Findings
 
@@ -91,3 +91,53 @@ The discussion identifies path approximation, measurement and sample limitations
 Do not turn model/specimen discrepancies or population-size unknowns into coaching
 rules. The author publication list located this exact PDF; a general lower-limb
 model citation was inadequate evidence for the chapter's elbow-specific numbers.
+
+
+## Independent Mechanics Checkpoint
+
+Eight tests in `tests/test_muscle_torque_rigor.py` pass locally (September 12).
+They verify constructed mechanics examples, not the still-unrevised chapter or
+empirical golfer parameters. Black100 formats the file; no production utility is added.
+
+1. A rotating insertion and fixed anchor give the same torque from the physical
+   cross product and minus tension times a central finite difference of length.
+2. With muscle-by-coordinate L=[[-.05,0],[-.02,-.04]], tensions (500,300) N
+   produce (31,12) Nm through -L transpose. At speeds (2,-3) rad/s, path rates
+   are (-.10,.08) m/s and skeletal power is 26 W, equal to -F dot length rate.
+3. The second muscle alone produces joint powers (12,-12) W at speeds (2,-1),
+   but absorbs 24 W at (2,-3). Biarticular anatomy does not determine power flow.
+4. For A=[[.04,.02,-.03],[0,.03,.02]], F0=(100,200,50) N, capacity
+   (400,300,250) N, and null vector (13,-8,12), F0+t*n preserves torque
+   (6.5,7) Nm. Nonnegative capacity bounds restrict t to [-25/6,50/3].
+5. Independent linear programs give coordinate maxima (22,14) Nm, yet that
+   simultaneous torque pair is infeasible. A rectangle of separate limits is
+   insufficient for coupled muscle feasibility.
+6. The constraint q=(s,2s) changes effective arms to (.05,.10) m and reduced
+   torque to 55 Nm; virtual work agrees with the unreduced torque projection.
+7. A fitted arm field (.02+.01*q2,.01) has a nonzero closed-loop work integral
+   (-1 J at fixed 100 N tension around the unit square). It cannot be minus the
+   gradient of one smooth, single-valued path length on that region.
+8. A taut positive-stiffness spring between an anchor and rotating insertion
+   has negative angular energy curvature at its maximum-length alignment:
+   Kq=k*(length derivative)^2+F*(length curvature)=-20/3 Nm/rad.
+   Finite differences of energy confirm the geometric term. Positive material
+   stiffness alone does not establish a stable joint equilibrium.
+
+These independent examples will guide the correction and worked exercises.
+For configuration-only workless paths, derive skeletal power explicitly; for
+moving guides or explicit time dependence, include the additional guide work.
+Do not promote a fixed-state elastic example into a universal physiological law.
+
+## Upper-Extremity Model Source: Bounded Reading
+
+Holzbaur, Murray and Delp (2005), DOI10.1007/s10439-005-3320-7, author PDF:
+https://nmbl.stanford.edu/publications/pdf/Holzbaur2005.pdf
+The prior reading covered extracted pages1-3,5-9 (one figure caption truncated),
+and pages10-11 through the discussion/conclusion. Table page4 was subsequently rendered and fully inspected; its footnotes distinguish measured architecture from compartment PCSA distribution fitted to maximum isometric moments. Full visual figure/reference review remains outstanding. The model has15 degrees of freedom
+and50 muscle compartments; it omits intrinsic hand muscles. Muscle parameters
+were partly adjusted against joint-moment measurements, while selected coupling
+comparisons offered separate checks. Prescribed scapular motion, generic geometry
+and tendon-slack-length sensitivity limit inference. This is useful evidence for
+stating what was calibrated and tested; it does not validate golf grip prescriptions.
+
+Checkpoint root validation: 5305 passed,29 skipped,132 deselected,59 warnings; exit0. Log: `muscle-checkpoint-root.log`. Six unrelated generated outputs were checked and restored: date-only JSON or formatting/line endings.
