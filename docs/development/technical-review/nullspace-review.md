@@ -232,3 +232,35 @@ production source-selection helper to establish selection. The public HTML
 route and reviewed prose are unchanged. Earlier local reports retain the old
 source path at their explicitly named commit; record the rename lineage in
 new binding evidence rather than pretending the old commit contains the new path.
+
+
+## Bound Review and Source-Rename Verification
+
+The durable reports are committed at783254f3815b82d147c77d48ff449b48613497fa;
+the byte-identical QMD rename and production-selection regression are committed
+at75cf41fcba74cbf686863a2f8c701788d4db561c. Every one of nine evidence files
+was compared with that commit before binding both route reviews. Existing
+article findings cover regularity/speeds, dynamics/duality/curvature,
+finite-time control, grasp/task/synergy and power/inference; TOC4370 stays open.
+The new companion route records the provenance correction and source rename.
+Every other inventory route record is semantically unchanged.
+
+The historical partition first failed at196 versus197 deferred routes; its
+explicit completed-article list and counts now include this article. The new
+companion is separately checked outside that original census. Focused43
+inventory/render-selection/numerical tests pass. The prior complete root run
+passes5335,29 skipped,132 deselected,59 warnings in192.62s, coverage79.29%.
+Renamed-source render46538 exits0 and preserves the complete main text, all
+main links and IDs compared with the visually read Markdown render. Root
+configuration is unchanged. Run the final bound-root before pushing.
+
+
+Final bound-root12597 completed exit0:5335 passed,29 skipped,132 deselected,
+59 warnings in191.85s, coverage79.29%. All735 tracked Python files pass the
+actual static checker;637 publication titles pass. Generated registry/summary
+changes were restored only after line-ending or parsed-JSON equivalence checks.
+All validation/browser handles are closed. The central development-log checker
+still reports only peer DL1595/3903 SHA gaps and DL3902 missing PR/verification
+metadata; these entries remain untouched. No draft PR and no hook bypass.
+Next: push this binding, inspect exact-head hosted CI, protected merge and
+verify the deployed new bibliography route as well as the revised article.
