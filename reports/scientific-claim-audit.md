@@ -4,13 +4,13 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 38
-- Deferred: 198
+- Reviewed: 39
+- Deferred: 197
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
-- [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 36 routes
+- [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 35 routes
 - [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055): 26 routes
 - [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056): 16 routes
 - [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057): 39 routes
@@ -27,6 +27,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 7 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
+| `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
@@ -167,7 +168,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-4b5f92354a9e` | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-17268df76f0d` | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-a9e0bb2b2321` | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-a9e0bb2b2321` | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | Reviewed | — | None | None | 5 |
 | `ad-route-0c1fc851ee95` | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-80ef06755aaa` | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-ef14cf95e2cc` | `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |

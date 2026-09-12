@@ -351,3 +351,17 @@ fixes typing without changing the plot. Direct mypy, Ruff and Black pass;
 all51 boundary/inventory/mechanics/figure checks pass. No pruning gate was
 weakened. The source relocation must be committed before binding its real SHA;
 the subsequent full root run remains required before push.
+
+
+The source relocation is now committed as a2d482bff6252be13cbced65cddb3b3f353027ac.
+All nine declared evidence paths and hashes were independently compared with
+that commit before updating review_commit and all four verification_commit
+fields. Original and rebuilt PDF figure rasters are pixel-identical at1500x780;
+SVG drawing bytes differ only in timestamp metadata. The route retains an
+open p2 TOC finding for4370. The repaired full root gate is the final local
+push gate; its exact result is recorded in the current handoff and DL-#4369.
+
+Final repaired root `muscle-torque-boundary-root.log`:5318 passed,29 skipped,
+132 deselected,59 warnings,187.39s,coverage79.35%; session78917 reaped exit0.
+All local verification handles are closed. Generated unrelated timestamp/format
+drift was compared semantically with HEAD before restoring only those six files.
