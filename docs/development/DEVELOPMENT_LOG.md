@@ -23,11 +23,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** codex
 - **Issue:** #4371 (epic #4009; corpus #4021; core articles #4058)
-- **PR:** not created
+- **PR:** #4373 OPEN, regular (https://github.com/D-sorganization/AffineDrift/pull/4373)
 - **Branch:** `fix/4371-nullspace-rigor`
 - **Paths:** `articles/null-space-constraint-jacobian.qmd`, `articles/null-space-constraint-jacobian-bibliography.md`, `references/nullspace-rigor.bib`, `scripts/build_nullspace_examples.py`, `tests/test_nullspace_article_rigor.py`, `reports/technical-review/nullspace-examples.json`, `docs/development/technical-review/nullspace-review.md`
 - **Started:** 2026-09-12
-- **Last verified:** 2026-09-12 (`5a576fc612541a3ab0c72c0f2f7441fcd95d1e7c` integrates protected muscle squash; nullspace focused16 checks and title636 pass; selected article render exits0, all44 original destinations and five references present; root5334 pass/79.29%, Ruff/Black709/mypy91 plus builder1/content lint pass; dark appendix contrast corrected and209 expressions typeset with zero errors, no serious/critical axe findings; final full visual review remains pending)
+- **Last verified:** 2026-09-12 (`7253d6671b0b7f69d36178578664a1478e66b0ce` implementation committed/pushed with normal hooks; regular PR4373 open; protected muscle squash integrated; nullspace focused16 checks and title636 pass; selected article render exits0, all44 original destinations and five references present; root5334 pass/79.29%, Ruff/Black709/mypy91 plus builder1/content lint pass; dark appendix contrast corrected and209 expressions typeset with zero errors, no serious/critical axe findings; final full visual review remains pending)
 - **Summary:** Rewrites the full article and bibliography around regular constraints, reduced speeds, force/velocity duality, curvature-complete drift, task acceleration, reaction power and finite-time control. Replaces inconsistent golf coordinates with a declared planar mechanism and removes unsupported synergy/coaching claims and citation-graph edges. Independent examples are constructed, not fitted golfer data.
 - **Next step:** Complete the rendered null-space article review across desktop/mobile and both themes.
 

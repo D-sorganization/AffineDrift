@@ -224,7 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-09-12 | #4371 | Re-derive constraint null spaces, curvature-complete drift, force/velocity duality and finite-time control with checked examples and bounded golf inference. |
+| 2026-09-12 | #4373 | Re-derive constraint null spaces, curvature-complete drift, force/velocity duality and finite-time control with checked examples and bounded golf inference. |
 | 2026-09-12 | #4372 | Rebuild paired muscle-torque geometry, bounded feasibility, geometric stiffness and biarticular power; qualify anatomical and grip inference; preserve worked answers and bind complete rendered review evidence. |
 | 2026-09-12 | #4368 | Complete strokes-gained joint-intervention and dispersion qualifications; repair accessible table headers, expanded explanations and dark-theme reading; bind the completed route review to reproducible evidence. |
 | 2026-09-10 | #4356 | Extend impact acoustics with contact-force regularity, finite-jump versus impulse and spectral-tail derivation; qualify continuous-onset candidate laws under external forcing and link source-identified numerical evidence without promoting physical or sweetness claims. |
