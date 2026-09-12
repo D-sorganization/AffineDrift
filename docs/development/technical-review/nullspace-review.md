@@ -285,3 +285,26 @@ were visually read. The initial light screenshot captured a reveal animation;
 a1200ms settled repeat is fully legible and has no page overflow. Browser
 nullspace-links is closed. Only the reviewed companion digest changes; the
 mathematical source and all other route evidence remain intact.
+
+
+## Final Source Identity and Sitemap Repair
+
+The related-links source is committed atfdd6effabcb6f955d2d18bc2587e1208c4cddcd2.
+All nine declared evidence files were checked byte-for-byte against this actual
+commit before rebinding both reviews and six corrected findings (eight commit
+fields). An initial bookkeeping assertion expected nine fields; it failed
+before writing. The corrected count is derived from the records themselves.
+Generated reports were refreshed after the identities changed. Root50274 was
+intentionally stopped following a known stale-report check; it is not a pass.
+The subsequent repaired root54532 passes5335,29 skipped,132 deselected,
+59 warnings in188.68s, coverage79.29%.
+
+Static CI103639310151 at47b637ae failed the root sitemap/source coverage check:
+the new companion source was not registered in sitemap.xml. One entry now uses
+the canonical generator's date, frequency and priority rules. All239 previous
+XML entries are unchanged; the stale total-count comment now correctly states
+240. The actual full bidirectional checker passes240 URLs, and the complete
+site link gate passes. Focused sitemap/render/inventory checks cover the final
+metadata change. No shared build configuration or prior route review changed.
+All local validation/browser handles are closed. Next: push, inspect exact-head
+CI, protected merge and verify the newly published bibliography on the live site.
