@@ -8,6 +8,7 @@ import pytest
 from defusedxml.common import DefusedXmlException
 
 from scripts import check_quarto_render_coverage as render_coverage
+from scripts.check_companion_pins import _is_site_source
 from scripts.check_quarto_render_coverage import (
     find_missing_sitemap_sources,
     find_unindexed_sources,
@@ -135,3 +136,12 @@ def test_find_unindexed_sources_reports_missing_from_sitemap(tmp_path, monkeypat
         repo_root,
     )
     assert unindexed == [Path("articles/page1.qmd")]
+
+
+def test_nullspace_linked_bibliography_is_selected_for_production_render() -> None:
+    """A successful explicit preview must not hide an omitted production page."""
+    source = "articles/null-space-constraint-jacobian-bibliography.qmd"
+    assert _is_site_source(REPO_ROOT / source, REPO_ROOT)
+    assert (REPO_ROOT / source).is_file()
+    article = (REPO_ROOT / "articles/null-space-constraint-jacobian.qmd").read_text()
+    assert "null-space-constraint-jacobian-bibliography.html" in article

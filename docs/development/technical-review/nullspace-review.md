@@ -207,3 +207,28 @@ now passes at that exact head; Python/E2E were still running at the last check.
 Bind the route inventory only after these reports have an actual commit.
 Full corpus and shared issues4370/4374 remain open. No empirical or live
 publication attestation is inferred from these local results.
+
+
+## Default-Build Publication Omission
+
+Inventory inspection found no bibliography route. Root _quarto.yml selects
+article QMD files but not article Markdown; a direct request confirmed HTTP404
+at the public bibliography URL. The explicit two-page preview bypassed that
+selection, so its successful route check cannot establish production inclusion.
+A regression in tests/test_check_quarto_render_coverage.py first fails because
+the linked companion is absent from the production rules. Adding only this
+reviewed Markdown source to project.render repairs the omission. Recheck the
+full hosted build, create the new route's inventory entry, and verify its live
+publication after merge. Do not claim that all earlier bibliography companions
+are published; they require a separate corpus-wide linkage audit.
+
+
+The first config-based repair was stopped by the evidence hook because
+_quarto.yml belongs to earlier bound atlas evidence. No hook was bypassed and
+no old digest was blindly refreshed. The one-line config edit was restored.
+Instead the identical bibliography bytes move from .md to canonical .qmd;
+the existing articles/**/*.qmd rule now selects it. The regression uses the
+production source-selection helper to establish selection. The public HTML
+route and reviewed prose are unchanged. Earlier local reports retain the old
+source path at their explicitly named commit; record the rename lineage in
+new binding evidence rather than pretending the old commit contains the new path.
