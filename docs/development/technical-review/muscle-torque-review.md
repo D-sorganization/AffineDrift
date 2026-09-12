@@ -335,3 +335,19 @@ record was inspected: HTTP200/pass, no inspection/record failures, overflow,
 navigation retries or axe violations. Both the strokes article and critique
 have all four expected records. DL-#4358 is shipped; its governed critique
 remains open. This supersedes the earlier pending-deployment observation.
+
+
+## Deployment-Evidence Boundary Repair
+
+The completed review/report checkpoint447634a4 is pushed. Inventory binding
+first exposed a deployment-survival failure: root run96214 had5317 passes
+and one failure because its evidence included the drawing script under docs/.
+That directory is generated output and cannot hold durable bound evidence.
+The builder is now `scripts/build_muscle_torque_figures.py`, with its CLI root
+adjusted to preserve the same publication destination. Its exact SVG drawing
+bytes match the reviewed asset after excluding date metadata. Direct mypy
+exposed pyplot.Axes as an invalid exported type; importing matplotlib.axes.Axes
+fixes typing without changing the plot. Direct mypy, Ruff and Black pass;
+all51 boundary/inventory/mechanics/figure checks pass. No pruning gate was
+weakened. The source relocation must be committed before binding its real SHA;
+the subsequent full root run remains required before push.

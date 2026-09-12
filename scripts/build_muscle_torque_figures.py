@@ -8,10 +8,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 from scipy.spatial import ConvexHull
 
 
-def _plot_torque_set(axis: plt.Axes) -> None:
+def _plot_torque_set(axis: Axes) -> None:
     """Map the independently verified force box into its torque polygon."""
     moment_arms = np.array([[0.04, 0.02, -0.03], [0, 0.03, 0.02]])
     capacity = np.array([400, 300, 250])
@@ -45,7 +46,7 @@ def _plot_torque_set(axis: plt.Axes) -> None:
     )
 
 
-def _plot_power(axis: plt.Axes) -> None:
+def _plot_power(axis: Axes) -> None:
     """Compare coordinate powers at the two declared velocity pairs."""
     positions = np.arange(2)
     axis.bar(positions - 0.18, [12, 12], 0.36, label="Coordinate 1", color="#17608a")
@@ -86,4 +87,4 @@ def build_figures(destination: Path) -> None:
 
 
 if __name__ == "__main__":
-    build_figures(Path(__file__).resolve().parents[3] / "articles/The_Physics_of_Golf/figures")
+    build_figures(Path(__file__).resolve().parents[1] / "articles/The_Physics_of_Golf/figures")
