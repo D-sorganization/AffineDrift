@@ -317,3 +317,7 @@ Complete implementation commit: `e079999a136b5b8dc2c63c37f7c3989adb5603c0`. All 
 independently recomputed from `git show` of that revision before updating the two
 review_commit and four verification_commit fields. This separates immutable
 implementation evidence from its later inventory reconciliation.
+
+Regular PR #4368 opened after all normal push hooks passed. It targets main
+without bypass; source/evidence checkpoint e079999a is retained in branch history.
+The SPEC row is keyed to #4368. CI and exact publication remain pending.
