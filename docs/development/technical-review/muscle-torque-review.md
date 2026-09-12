@@ -288,3 +288,50 @@ evidence and reconcile inventory, then open a regular PR and verify protected
 merge/publication. The broader corpus remains unfinished. Preceding strokes
 deployment34717587828 has completed build103617517729 and is running deploy
 job103620128020; this is not yet evidence of live publication.
+
+## Completed Local Reading and Delivery Checkpoint
+
+The final reading boundary now includes all29 web captures00-28, all fifteen
+chapter PDF pages179-193 and the four new bibliography entries on530-533.
+The previous paragraph's partial reading status is historical. The full536-page
+book is not certified: only this chapter and the named bibliography pages were
+visually reviewed. The final image28 includes all five web references without
+clipping or unresolved citations.
+
+The first attempt to prevent an orphaned exercise line, clubpenalty10000 before
+the enumerate environment, had no visible effect. It was removed. An explicit
+tcolorbox break before exercise4 now keeps the question on physical page192.
+The complete changed ending was reread in `muscle-torque-explicit-break-191.png`
+through193. Build `muscle-torque-explicit-break-pass1.log` exits0, remains536
+pages and has no unresolved citations or changed-chapter overfull boxes.
+
+Production-style gate47646 was reaped with exit0. Its14 records were each
+checked for HTTP200, pass, empty record/inspection failures, zero overflow,
+one successful navigation attempt, no retries and no axe violations. The gate
+scans axe once for the route; the separate final browser QA scans both themes
+and retains the existing moderate landmark-unique result. Do not describe
+that as fourteen independent axe scans.
+
+A fresh browser `muscle-torque-nav` reproduced incorrect settled TOC selection:
+clicking the muscle-Jacobian link reaches its heading but highlights Grip
+Stiffness and Impact. The generated Quarto tracker compares pageYOffset with
+section.offsetTop despite positioned parent sections. Example: the late grip
+heading has offset2037 but document top18280. This is now native subissue4370
+under4009; no shared site files were changed. The browser is closed. This
+known presentation defect is explicit in the durable scientific review.
+
+Durable records are `reports/technical-review/muscle-torque-complete-review.md`
+and `muscle-torque-render-verification.json`. The latter retains structured
+browser evidence, every local route record and actual source SHA-256 values.
+An actual committed implementation revision must be bound in the inventory
+before recording the route as reviewed. Hosted CI, protected merge and live
+publication remain separate gates. Ruff, Black100(706), configured mypy91 and
+title636 pass; the fresh delivery root test result is recorded in the handoff.
+
+Strokes delivery is now independently verified: exact run34717587828 for
+93bbfd29d3e69147dedef153749a47a1b650dfe9 succeeded. Downloaded live artifact
+10305443224 contains956 unique viewport/theme records across239 routes. Every
+record was inspected: HTTP200/pass, no inspection/record failures, overflow,
+navigation retries or axe violations. Both the strokes article and critique
+have all four expected records. DL-#4358 is shipped; its governed critique
+remains open. This supersedes the earlier pending-deployment observation.

@@ -38,24 +38,24 @@ reachable from any live state and `abandoned` from `parked`.
 - **Issue:** #4369 (epic #4009; corpus #4021)
 - **PR:** not created
 - **Branch:** `fix/4369-muscle-torque-rigor`
-- **Paths:** `articles/The_Physics_of_Golf/chapters/ch16_muscle_to_joint_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd`, `docs/development/technical-review/muscle-torque-review.md`, `tests/test_muscle_torque_rigor.py`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.svg`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.pdf`, `docs/development/technical-review/build_muscle_torque_figures.py`, `tests/test_audit_quarto_figure_parity.py`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch16_muscle_to_joint_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd`, `docs/development/technical-review/muscle-torque-review.md`, `tests/test_muscle_torque_rigor.py`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.svg`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.pdf`, `docs/development/technical-review/build_muscle_torque_figures.py`, `tests/test_audit_quarto_figure_parity.py`, `reports/technical-review/muscle-torque-complete-review.md`, `reports/technical-review/muscle-torque-render-verification.json`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-12
-- **Last verified:** 2026-09-12 (`84640cab` integrated base plus final typography/contact refinement; root5318 passed/29 skipped/132 deselected, coverage79.35%; title636 and changed lint/Black100 pass; final HTML14 cases/68 regions/24 keyboard scrolls pass; corrected bibliography yields536-page full book with resolved citations; final visual reading remains partial)
+- **Last verified:** 2026-09-12 (`bd42b1ab6ac9a5b95f245199d0399e3d337376b2` plus final print break; all29 web captures,15 chapter pages and4 bibliography pages read; all14 production-route records individually pass; Ruff/Black706/mypy91/title636 pass; final delivery root5318 passed/29 skipped/132 deselected in306.11s; coverage79.35%; TOC defect tracked separately in #4370)
 - **Summary:** Rewrites both editions and all11 exercise answers around signed virtual work, feasible force sharing, coupled coordinates, stiffness and power. Adds a checked feasibility/power figure and four primary-source bibliography entries. Removes unsupported anatomical/grip prescriptions and separates inverse estimates, calibration, recruitment and control hypotheses. Preserves original destinations.
-- **Next step:** Visually review all fifteen final chapter PDF pages and the four new bibliography entries using the corrected536-page build.
+- **Next step:** Bind the committed complete review and exact source hashes in the route inventory.
 
 ### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4358 (epic #4009; corpus #4021; applied routes #4059)
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4368 (regular follow-up; #4360 previously merged)
 - **Branch:** `fix/4358-strokes-delivery`
 - **Paths:** `articles/strokes-gained-limitations.qmd`, `articles/strokes-gained-limitations-bibliography.md`, `critiques/strokes_gained_non_ergodic.md`, `references/strokes-gained-rigor.bib`, `css/strokes-gained.css`, `tests/test_strokes_gained_article_rigor.py`, `docs/development/technical-review/strokes-gained-review.md`, `scripts/build_strokes_gained_examples.py`, `reports/technical-review/strokes-gained-numerics.json`, `reports/technical-review/strokes-render-verification.json`, `reports/technical-review/strokes-complete-review.md`, `scripts/claim_audit_evidence.py`, `tests/test_claim_audit_markdown_sources.py`, `tests/test_claim_audit_inventory.py`, `data/trust/claim_audit_inventory.json`, `.prettierignore`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-12 (`713a4ca5eeb13e0b8d4b43a79d3832e8e73a14f4` repair committed and all bound file hashes independently verified from git;47 numerical tests and69 combined tests pass after12 RED-to-GREEN precision regressions; root5309/79.35%, Ruff/Black100/mypy91 pass; prior `e079999a136b5b8dc2c63c37f7c3989adb5603c0` complete implementation, with committed evidence bytes independently verified; root5297 pass/29 skip/132 deselected/59 warnings, coverage79.35%; focused57 pass, builder100%; Ruff/Black100, configured mypy91 and changed-module mypy2; title636, content131 pass; rendered actual-route gate28/28 passes)
+- **Last verified:** 2026-09-12 (`93bbfd29d3e69147dedef153749a47a1b650dfe9`; protected PR4368 merge and exact deployment34717587828 succeeded; live artifact10305443224 independently checked: all956 unique records/239 routes HTTP200/pass, no record/inspection failures, overflow, retries or axe violations; numerical repair713a4ca5 and bound evidence retained)
 - **Summary:** Corrects accounting and individual inference, including joint shot-cost/distribution/continuation effects and attribution-order dependence. Resumed after PR4360 merged without its pending rendered audit; repairs reference/panel dark contrast and invisible expanded text. All future PRs regular. Governed critique remains open; both route reviews now bind complete review evidence outside generated docs output, with Markdown-source support matching publication precedence.
-- **Next step:** PR4368 merged at93bbfd29d3e69147dedef153749a47a1b650dfe9 after every required check passed. Inspect exact live-publication evidence before marking shipped.
+- **Next step:** Preserve the published sources and bound review while continuing the corpus audit.
 
 ### DL-#4355 · Complete Forces, Torques and Physical Attribution
 
