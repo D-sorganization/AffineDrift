@@ -1,8 +1,9 @@
 ---
 title: "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
-description: "Analysis of unconstrained motion within constrained biomechanical systems using null space projections, applied to golf swing joint coordination."
+description: "A rigorous account of admissible motion, constrained acceleration, reduced speeds and control authority, with checked examples and explicit limits on golf inference."
 author: "Dieter Olson"
 date: "2025-11-28"
+bibliography: ../references/nullspace-rigor.bib
 format:
   html:
     toc: true
@@ -16,746 +17,507 @@ categories:
 ::: {.abstract-section}
 ## Abstract
 
-The golf swing represents one of the most complex coordinated movements in human biomechanics, involving multiple body segments connected through joints with varying degrees of freedom. When modeled as a multi-body system with loop closure constraints, the constraint Jacobian and its null space become central to understanding which motions are kinematically permissible. This article develops the mathematical foundations of the null space of the constraint Jacobian, demonstrates its role in reducing system dimensionality, and establishes connections to nonlinear control theory---particularly the drift dynamics in control-affine systems. We show how the null space projection naturally separates the "free" dynamics from constraint forces, providing both theoretical insight and practical computational methods for simulating and analyzing the golf swing.
-
+A constraint null space describes admissible instantaneous velocities. Turning that geometry into a prediction of a golf swing requires additional information: inertia, applied forces, constraint curvature, contact mode and an input model. This article derives the connections explicitly. It distinguishes reduced speeds from coordinates, force projections from velocity projections, instantaneous acceleration authority from controllability over time, and kinematic redundancy from measured physiological coordination. Independently checked examples expose errors that these distinctions prevent. A declared planar two-arm and club model provides a reproducible closed-chain example; it is a teaching model, not a fitted golfer.
 :::
 
 ## Conceptual Overview
 
-Before diving into the mathematics, here's the core idea: a constrained mechanical system can only move in certain directions. The null space of the constraint Jacobian tells us exactly which directions are "free"—and understanding these free directions is how we decompose forces into useful categories. In the golf swing, your hands gripping the club, your feet on the ground, and your spine's connection to the pelvis all create constraints. These constraints don't eliminate motion; they channel it. The null space reveals which joint motions produce actual clubhead movement, and which muscle efforts are wasted fighting against the system's own geometry. This distinction is central to understanding effortless technique.
+Holding a club with two hands couples the possible motions of the arms and club. A small movement of one grip must agree with the movement of the same point on the club. The constraint Jacobian expresses that agreement locally. Its null space collects combinations of joint and club velocities that preserve it.
+
+This answers **which motions are compatible with a chosen model**. It does not identify which muscles should activate, which motion maximizes clubhead speed, or which forces cost metabolic energy. Those questions involve dynamics, actuation and an objective. The connection is useful precisely when we keep these layers separate and then join them through explicit equations.
+
+::: {.callout-note collapse="true"}
+## In Layman's Terms
+
+Imagine two articulated drawing arms attached to a ruler. Their joint motions must agree about where the ruler's attachment points are going. There may be several compatible ways to move. Some move a selected point on the ruler; some rotate the ruler while leaving that point instantaneously stationary. None of this tells us how hard the motors must work. To answer that, we need the masses, velocities, applied loads and available motor forces.
+:::
 
 ## Introduction
 
-The human body during a golf swing can be modeled as a kinematic chain of rigid bodies connected by joints. Unlike a simple serial chain, the golf swing involves *loop closures*---the hands gripping the club create a closed kinematic loop, and the interaction between the feet and ground introduces additional constraint surfaces. These constraints reduce the effective degrees of freedom of the system and introduce algebraic relationships between the generalized coordinates.
+We begin with independent generalized coordinates $q\in\mathbb R^n$ before loop constraints are imposed, a symmetric positive-definite mass matrix $M(q)$, and smooth bilateral constraints of locally constant rank. Unless a section says otherwise, the constraints are stationary and ideal, and the contact mode is fixed. Ideal means that the reaction does no work on admissible virtual displacements. It does not mean that a biological joint or grip is perfectly rigid.
 
-Mathematically, constraints manifest through the *constraint Jacobian* $\mathbf{J}_c$, a matrix that maps generalized velocities to constraint violation rates. The *null space* of this Jacobian, denoted $\operatorname{null}(\mathbf{J}_c)$, represents the subspace of velocity directions that are kinematically admissible---motions that satisfy all constraints to first order. Understanding this null space is essential for:
+A generalized force $f$ is defined by its work pairing $f^\top\delta q$. Some components may be forces and others torques. Coordinate scaling therefore matters when interpreting Euclidean norms, singular values or “orthogonality.” The mass metric supplies the dynamically relevant pairing of velocities.
 
-- Reducing the dimension of the equations of motion
-    
-- Projecting applied forces onto the feasible motion space
-    
-- Designing control strategies that respect kinematic limitations
-    
-- Analyzing the coordination patterns in human movement
-
-This article develops these concepts systematically, with particular attention to their application in golf swing biomechanics and their deep connection to nonlinear control theory.
+The derivations below are independently checkable from these assumptions. For complementary formulations, see the generalized-speed and bilateral-constraint sections of Tedrake's multibody notes [@TedrakeMultibody]. The worked examples are reproduced by the [numerical builder](https://github.com/D-sorganization/AffineDrift/blob/main/scripts/build_nullspace_examples.py) and checked against direct saddle solves, analytic trajectories, finite differences and forward integration in the [verification suite](https://github.com/D-sorganization/AffineDrift/blob/main/tests/test_nullspace_article_rigor.py).
 
 ## Holonomic Constraints and the Constraint Jacobian
 
 ### Constraint Formulation
 
-Consider a mechanical system with $n$ generalized coordinates $\mathbf{q} = (q_1, q_2, \ldots, q_n)^\top \in \mathbb{R}^n$. In the absence of constraints, the system has $n$ degrees of freedom. However, physical constraints restrict the admissible configurations to a subset of the configuration space.
-
-**definition:** [Holonomic Constraint]
-A *holonomic constraint* is an algebraic relationship among the generalized coordinates:
-
+A holonomic constraint is a position relation
 $$
-    \phi_i(\mathbf{q}, t) = 0, \quad i = 1, 2, \ldots, m
+\Phi(q,t)=0,\qquad \Phi:\mathbb R^n\times\mathbb R\longrightarrow\mathbb R^m.
 $$
+For stationary constraints, suppress $t$. If $J_c=\Phi_q$ has full row rank $m$ in a neighborhood of the configuration, the level set is locally a smooth manifold of dimension $n-m$. Redundant equations should be reduced to an independent description before using the inverses below.
 
-where $\phi_i: \mathbb{R}^n \times \mathbb{R} \to \mathbb{R}$ is a smooth function. For scleronomic (time-independent) constraints, $\phi_i = \phi_i(\mathbf{q})$.
-
-Collecting all constraints into a vector $\boldsymbol{\Phi}(\mathbf{q}) = (\phi_1, \phi_2, \ldots, \phi_m)^\top$, the constraint equations become:
-
-$$
-    \boxed{\boldsymbol{\Phi}(\mathbf{q}) = \boldsymbol{0}}
-$$
-
-The set of all configurations satisfying these constraints forms the *constraint manifold*:
-
-$$
-    \mathcal{M} = \{\mathbf{q} \in \mathbb{R}^n : \boldsymbol{\Phi}(\mathbf{q}) = \boldsymbol{0}\}
-$$
+Bilateral constraints enforce equality. Ground contact is generally unilateral: a foot may separate from the ground, and sticking requires friction conditions. Treating a foot as fixed is a declared contact-mode approximation, not a consequence of merely touching the ground.
 
 ### The Constraint Jacobian
 
-Differentiating the constraint equations with respect to time yields the velocity-level constraints:
-
+Differentiating along a trajectory gives
 $$
-    \frac{d\boldsymbol{\Phi}}{dt} = \frac{\partial \boldsymbol{\Phi}}{\partial \mathbf{q}} \dot{\mathbf{q}} = \mathbf{J}_c(\mathbf{q}) \dot{\mathbf{q}} = \boldsymbol{0}
+J_c\dot q+\Phi_t=0,\qquad
+J_c\ddot q+\gamma=0,
 $$
-
-**definition:** [Constraint Jacobian]
-The *constraint Jacobian* is the $m \times n$ matrix:
-
+where, component by component,
 $$
-    \boxed{\mathbf{J}_c(\mathbf{q}) = \frac{\partial \boldsymbol{\Phi}}{\partial \mathbf{q}} =
-    \begin{pmatrix}
-        \dfrac{\partial \phi_1}{\partial q_1} & \dfrac{\partial \phi_1}{\partial q_2} & \cdots & \dfrac{\partial \phi_1}{\partial q_n} \\[1em]
-        \dfrac{\partial \phi_2}{\partial q_1} & \dfrac{\partial \phi_2}{\partial q_2} & \cdots & \dfrac{\partial \phi_2}{\partial q_n} \\[0.5em]
-        \vdots & \vdots & \ddots & \vdots \\[0.5em]
-        \dfrac{\partial \phi_m}{\partial q_1} & \dfrac{\partial \phi_m}{\partial q_2} & \cdots & \dfrac{\partial \phi_m}{\partial q_n}
-    \end{pmatrix}}
+\gamma_i=\dot q^\top\Phi_{i,qq}\dot q
+ +2\Phi_{i,qt}\dot q+\Phi_{i,tt}.
 $$
+For stationary constraints, $\gamma=\dot J_c\dot q$. For prescribed moving constraints, the feasible velocities form an **affine set**, not generally $\ker J_c$. Differences between two feasible velocities still belong to that kernel.
 
-The constraint Jacobian $\mathbf{J}_c \in \mathbb{R}^{m \times n}$ is configuration-dependent and plays a central role in constrained dynamics.
+The acceleration equation is also affine. Even when velocity lies in the tangent space, acceleration need not: a point moving around a circle needs normal acceleration.
 
 ### Example: Closed Kinematic Chain in Golf
 
-In the golf swing, the hands gripping the club form a closed loop. Let $\mathbf{q} = (\theta_{\text{shoulder}}, \theta_{\text{elbow}}, \theta_{\text{wrist}}, \theta_{\text{club}})^\top$ represent joint angles. The loop closure constraint requires that the position computed via the left arm equals that via the right arm plus club geometry:
+Let $p_L(q_b)$ and $p_R(q_b)$ locate two hand attachment points from body coordinates $q_b$. A rigid club has position $c$, orientation $R$, and fixed local grip offsets $r_L,r_R$. Point attachment requires
+$$
+\Phi_L=p_L(q_b)-c-Rr_L=0,\qquad
+\Phi_R=p_R(q_b)-c-Rr_R=0.
+$$
+Differentiating $Rr_i$ produces a club-rotation contribution. Omitting it changes the model and gives the wrong admissible motions.
 
-$$
-    \boldsymbol{\Phi}(\mathbf{q}) = \mathbf{p}_{\text{left}}(\mathbf{q}) - \mathbf{p}_{\text{right}}(\mathbf{q}) - \mathbf{d}_{\text{grip}} = \boldsymbol{0}
-$$
-
-where $\mathbf{d}_{\text{grip}}$ accounts for grip geometry. The constraint Jacobian becomes:
-
-$$
-    \mathbf{J}_c = \frac{\partial \mathbf{p}_{\text{left}}}{\partial \mathbf{q}} - \frac{\partial \mathbf{p}_{\text{right}}}{\partial \mathbf{q}}
-$$
+These equations constrain points, not hand orientation relative to the handle. A welded grasp needs additional orientation relations; a compliant grasp needs constitutive force laws and possibly extra states. Nesbit's golf model, for example, omitted explicit hands and introduced translational wrist flexibility to avoid an indeterminate closed loop. Its methods therefore do not validate a perfectly rigid two-hand grasp [@Nesbit2005Kinematics, pp. 501]. The planar construction below states its own assumptions.
 
 ## The Null Space: Mathematical Foundations
 
 ### Definition and Basic Properties
 
-**definition:** [Null Space]
-The *null space* (or *kernel*) of the constraint Jacobian is:
-
+At a fixed configuration,
 $$
-    \boxed{\operatorname{null}(\mathbf{J}_c) = \{\dot{\mathbf{q}} \in \mathbb{R}^n : \mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{0}\}}
+\ker J_c=\{w:J_cw=0\}.
 $$
+Rank-nullity gives $\dim\ker J_c=n-\operatorname{rank}J_c$ as a linear-algebra statement. Identifying this kernel with the actual tangent space also requires a regular description of the constraint set.
 
-This is the set of all generalized velocity vectors that satisfy the velocity-level constraints.
-
-**theorem:** [Dimension of Null Space]
-If $\mathbf{J}_c \in \mathbb{R}^{m \times n}$ has full row rank (i.e., $\text{rank}(\mathbf{J}_c) = m$), then:
-
-$$
-    \dim(\operatorname{null}(\mathbf{J}_c)) = n - m
-$$
-
-The system has $n - m$ kinematic degrees of freedom.
-
-::: {.proof}
-By the rank-nullity theorem:
-
-$$
-    \dim(\operatorname{null}(\mathbf{J}_c)) + \text{rank}(\mathbf{J}_c) = n
-$$
-
-With full row rank, $\text{rank}(\mathbf{J}_c) = m$, giving $\dim(\operatorname{null}(\mathbf{J}_c)) = n - m$.
-:::
-
-::: {.callout-note title="Remark"}
-The full row rank assumption is equivalent to the constraints being *independent*. Redundant constraints (e.g., over-specified loop closures) reduce the effective rank of $\mathbf{J}_c$.
-:::
+For example, $\Phi(x,y)=x^2+y^2=0$ defines only one point. At that point $J_c=0$, so its kernel is all of $\mathbb R^2$, although no nonconstant feasible path exists. A singular Jacobian does not automatically demonstrate two physical degrees of freedom.
 
 ### Null Space Basis and Projection
 
-**definition:** [Null Space Basis Matrix]
-A matrix $N \in \mathbb{R}^{n \times (n-m)}$ whose columns form an orthonormal basis for $\operatorname{null}(\mathbf{J}_c)$ is called a *null space basis matrix*. It satisfies:
-
+Let $N(q)\in\mathbb R^{n\times k}$ have independent columns spanning $\ker J_c$, with $k=n-m$. For stationary constraints,
 $$
-    \mathbf{J}_c N = \boldsymbol{0}, \quad N^\top N = I_{n-m}
+\dot q=N(q)\nu .
 $$
+The components of $\nu$ are **reduced speeds**. Calling them $\dot z$ presupposes a coordinate chart $q=\psi(z)$ with $N=\psi_z$, or a separately declared transformation between chart velocities and speeds.
 
-The identity $N^\top N = I_{n-m}$ holds *only for an orthonormal basis* $N$ of $\operatorname{null}(\mathbf{J}_c)$. A generic null-space basis (e.g., the raw output of a symbolic kernel computation) satisfies $\mathbf{J}_c N = \mathbf{0}$ but not $N^\top N = I_{n-m}$; it must be orthonormalized first (via QR or Gram--Schmidt). The projector formula below likewise assumes orthonormal $N$.
-
-Any kinematically admissible velocity can be expressed as:
-
+The Euclidean projector onto the column space is
 $$
-    \boxed{\dot{\mathbf{q}} = N \dot{\mathbf{z}}}
+P_E=N(N^\top N)^{-1}N^\top.
 $$
-
-where $\dot{\mathbf{z}} \in \mathbb{R}^{n-m}$ are the *independent velocities* or *reduced coordinates*.
-
-**definition:** [Null Space Projector]
-The *null space projection matrix* is:
-
-$$
-    \boxed{P = N N^\top = I - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c}
-$$
-
-This is an orthogonal projector onto $\operatorname{null}(\mathbf{J}_c)$.
-
-**proposition:** [Properties of the Null Space Projector]
-The projector $P$ satisfies:
-
-1. $P^2 = P$ \quad (idempotent)
-    
-2. $P^\top = P$ \quad (symmetric)
-    
-3. $\mathbf{J}_c P = \boldsymbol{0}$ \quad (projects onto null space)
-    
-4. $\text{rank}(P) = n - m$ \quad (projects onto $(n-m)$-dimensional subspace)
+If the columns are orthonormal this reduces to $NN^\top$. Neither expression is automatically the force-to-acceleration map of a system with nonidentity inertia.
 
 ### Geometric Interpretation
 
-The null space $\operatorname{null}(\mathbf{J}_c)$ at each configuration $\mathbf{q}$ defines the *tangent space* to the constraint manifold $\mathcal{M}$:
-
+A tangent distribution can be integrable while a particular basis is not a coordinate basis. On the dimensionless coordinate plane $q_3=0$, take
 $$
-    T_\mathbf{q} \mathcal{M} = \operatorname{null}(\mathbf{J}_c(\mathbf{q}))
+n_1=(\cos q_1,\sin q_1,0)^\top,\qquad
+n_2=(-\sin q_1,\cos q_1,0)^\top.
 $$
+These are an orthonormal tangent frame. With the convention
+$[n_1,n_2]=Dn_2\,n_1-Dn_1\,n_2$, their bracket is $(-1,0,0)^\top$.
+Coordinate basis fields commute, so these columns cannot both be the derivatives of one local chart. They still span the tangent plane everywhere.
 
-This provides a beautiful geometric picture: the constraint manifold is an $(n-m)$-dimensional surface embedded in $\mathbb{R}^n$, and the null space at each point gives the directions along which the system can move while staying on this surface.
-
-[Figure: The null space $\operatorname{null}(\mathbf{J}_c)$ forms the tangent space to the constraint manifold. Constraint forces act in the orthogonal complement $\operatorname{range}(\mathbf{J}_c^\top)$.]
+This distinction matters computationally: integrating $\nu$ as if it were a vector of coordinate derivatives generally reconstructs the wrong configuration. Integrate $\dot q=N\nu$ or supply an actual chart and its velocity transformation.
 
 ## Constrained Equations of Motion
 
 ### Lagrangian Formulation With Constraints
 
-The equations of motion for a constrained mechanical system can be derived using Lagrange multipliers. Let $M(\mathbf{q})$ be the mass matrix, $\mathbf{c}(\mathbf{q}, \dot{\mathbf{q}})$ the Coriolis/centrifugal forces, $\mathbf{g}(\mathbf{q})$ the gravitational forces, and $\boldsymbol{\tau}$ the applied generalized forces. The constrained equations of motion are:
-
+Collect applied generalized forces, gravity and velocity-dependent inertial terms into $f(q,\dot q,u,t)$ so that
 $$
-    \boxed{M(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{c}(\mathbf{q}, \dot{\mathbf{q}}) + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau} + \mathbf{J}_c^\top \boldsymbol{\lambda}}
+M\ddot q=f+J_c^\top\lambda,\qquad J_c\ddot q=-\gamma .
 $$
-
-where $\boldsymbol{\lambda} \in \mathbb{R}^m$ are the Lagrange multipliers representing constraint forces.
-
-The constraint acceleration equation (obtained by differentiating $\mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{0}$):
-
+The sign convention defines $\lambda$; changing the sign of a constraint changes its multiplier, not the physical reaction $J_c^\top\lambda$. The instantaneous saddle system is
 $$
-    \mathbf{J}_c \ddot{\mathbf{q}} + \dot{\mathbf{J}}_c \dot{\mathbf{q}} = \boldsymbol{0}
+\begin{bmatrix}M&-J_c^\top\\J_c&0\end{bmatrix}
+\begin{bmatrix}\ddot q\\\lambda\end{bmatrix}
+=\begin{bmatrix}f\\-\gamma\end{bmatrix}.
 $$
+Define $W=J_cM^{-1}J_c^\top$. Positive-definite $M$ and full row rank $J_c$ make $W$ invertible. Elimination yields
+$$
+\lambda=-W^{-1}(J_cM^{-1}f+\gamma),
+$$
+$$
+\ddot q=A_cf-M^{-1}J_c^\top W^{-1}\gamma,\qquad
+A_c=M^{-1}-M^{-1}J_c^\top W^{-1}J_cM^{-1}.
+$$
+Both terms are essential. Substitution verifies $J_c\ddot q=-\gamma$; the first term alone gives zero constraint acceleration and loses curvature.
 
-Together, these form the *index-3 differential-algebraic equations* (DAEs):
-
-$$
-    \begin{pmatrix} M & -\mathbf{J}_c^\top \\ \mathbf{J}_c & \boldsymbol{0} \end{pmatrix}
-    \begin{pmatrix} \ddot{\mathbf{q}} \\ \boldsymbol{\lambda} \end{pmatrix}
-    = \begin{pmatrix} \boldsymbol{\tau} - \mathbf{c} - \mathbf{g} \\ -\dot{\mathbf{J}}_c\dot{\mathbf{q}} \end{pmatrix}
-$$
+The original first-order system with the position equation $\Phi(q)=0$ has differentiation index 3 under these regularity assumptions. Replacing it with the acceleration relation gives an index-1 formulation with algebraically solvable multipliers; eliminating them yields an ODE on the consistent state manifold. These are different formulations of the same exact motion only with consistent initialization. Numerical integration can violate both position and velocity constraints, so both residuals need monitoring or correction [@HairerManifoldNotes, sec. IV.4].
 
 ### Null Space Method for Constraint Elimination
 
-The null space method eliminates constraint forces by projecting onto $\operatorname{null}(\mathbf{J}_c)$. Premultiplying the equations of motion by $N^\top$:
-
+For stationary constraints, differentiate $\dot q=N\nu$:
 $$
-    N^\top M \ddot{\mathbf{q}} + N^\top (\mathbf{c} + \mathbf{g}) = N^\top \boldsymbol{\tau} + \underbrace{N^\top \mathbf{J}_c^\top}_{= \boldsymbol{0}} \boldsymbol{\lambda}
+\ddot q=N\dot\nu+\dot N\nu,\qquad
+\dot N=DN(q)[\dot q].
 $$
-
-Using the coordinate transformation $\dot{\mathbf{q}} = N \dot{\mathbf{z}}$ and differentiating:
-
+Premultiplication by $N^\top$ eliminates reactions:
 $$
-    \ddot{\mathbf{q}} = N \ddot{\mathbf{z}} + \dot{N} \dot{\mathbf{z}}
+M_r\dot\nu=N^\top f-N^\top M\dot N\nu,\qquad M_r=N^\top MN.
 $$
-
-Substituting yields the *reduced equations of motion*:
-
-$$
-    \boxed{\bar{M}(\mathbf{q}) \ddot{\mathbf{z}} + \bar{\mathbf{c}}(\mathbf{q}, \dot{\mathbf{z}}) + \bar{\mathbf{g}}(\mathbf{q}) = \bar{\boldsymbol{\tau}}}
-$$
-
-where:
-
-$$
-\begin{align}
-    \bar{M} &= N^\top M N \in \mathbb{R}^{(n-m) \times (n-m)} \\
-    \bar{\mathbf{c}} &= N^\top (M \dot{N} \dot{\mathbf{z}} + \mathbf{c}) \\
-    \bar{\mathbf{g}} &= N^\top \mathbf{g} \\
-    \bar{\boldsymbol{\tau}} &= N^\top \boldsymbol{\tau}
-\end{align}
-$$
-
-**theorem:** [Dimension Reduction]
-The reduced system has $n - m$ second-order ODEs compared to $n + m$ equations in the DAE formulation. The constraint forces $\boldsymbol{\lambda}$ have been completely eliminated.
+The reduced mass matrix is positive definite. This is an equation for **speed derivatives**, together with the reconstruction equation for $q$. Dropping $\dot N\nu$ loses the acceleration caused by the changing tangent frame. Differentiating $J_cN=0$ confirms that this term supplies the required normal acceleration.
 
 ### Physical Interpretation: Force Projection
 
-The null space projection separates forces into two orthogonal components:
-
+Define the velocity and force projectors
 $$
-    \boldsymbol{\tau} = \underbrace{P \boldsymbol{\tau}}_{\text{motion-producing}} + \underbrace{(I - P) \boldsymbol{\tau}}_{\text{absorbed by constraints}}
+P_v=I-M^{-1}J_c^\top W^{-1}J_c,\qquad
+P_\tau=P_v^\top=I-J_c^\top W^{-1}J_cM^{-1}.
+$$
+They satisfy $P_v^2=P_v$, $J_cP_v=0$ and $P_v^\top M=MP_v$. Thus $P_v$ is orthogonal in the mass metric. Its transpose acts on force covectors, preserving the work pairing. In general they are different matrices. Moreover,
+$$
+A_c=P_vM^{-1}=M^{-1}P_\tau
+=N(N^\top MN)^{-1}N^\top.
 $$
 
-Only the component $P\boldsymbol{\tau}$ contributes to acceleration. The remainder is balanced by constraint forces. This has profound implications for golf swing analysis: muscle forces that lie outside $\operatorname{null}(\mathbf{J}_c)$ are "wasted" in the sense that they produce no clubhead motion.
+A numerical counterexample prevents an easy mistake. Choose two translational coordinates with
+$$
+M=\begin{bmatrix}2&1\\1&3\end{bmatrix}\ {\rm kg},\quad
+J_c=\begin{bmatrix}1&1\end{bmatrix},\quad
+f=\begin{bmatrix}1\\0\end{bmatrix}\ {\rm N},\quad\gamma=0 .
+$$
+Then
+$$
+P_\tau=\frac13\begin{bmatrix}1&-1\\-2&2\end{bmatrix},\qquad
+A_c=\frac13\begin{bmatrix}1&-1\\-1&1\end{bmatrix}\ {\rm kg}^{-1}.
+$$
+The acceleration is $(1/3,-1/3)^\top\ {\rm m\,s^{-2}}$ and $\lambda=-2/3\ {\rm N}$.
+Using $M^{-1}P_Ef$ instead gives $(0.4,-0.3)^\top\ {\rm m\,s^{-2}}$, which violates $J_c\ddot q=0$.
+An ordinary Euclidean projection followed by an inertia inverse is not generally valid.
+
 
 ## Connection to Control-Affine Systems and Drift
 
 ### Control-Affine Structure
 
-The constrained equations of motion can be reformulated as a *control-affine system*. Define the state $\mathbf{x} = (\mathbf{q}^\top, \dot{\mathbf{q}}^\top)^\top \in \mathbb{R}^{2n}$ and write:
-
+Suppose $f=f_0(q,\dot q)+B(q,\dot q)u$, with stationary constraints and inputs that enter affinely. On
 $$
-    \boxed{\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \sum_{i=1}^{p} g_i(\mathbf{x}) u_i = \mathbf{f}(\mathbf{x}) + G(\mathbf{x}) \mathbf{u}}
+\mathcal X=\{(q,v):\Phi(q)=0,\ J_c(q)v=0\},
 $$
-
-where:
-- $\mathbf{f}(\mathbf{x})$: the *drift vector field* (dynamics with zero control input)
-    
-- $G(\mathbf{x}) = [g_1, g_2, \ldots, g_p]$: the *control distribution*
-    
-- $\mathbf{u} \in \mathbb{R}^p$: the control inputs (e.g., joint torques)
+the ambient representation of the state vector field is
+$$
+\begin{bmatrix}\dot q\\\dot v\end{bmatrix}
+=
+\underbrace{\begin{bmatrix}
+v\\A_cf_0-M^{-1}J_c^\top W^{-1}\gamma
+\end{bmatrix}}_{\text{drift}}
++
+\underbrace{\begin{bmatrix}0\\A_cB\end{bmatrix}}_{\text{input map}}u .
+$$
+This vector field is tangent to the **state manifold**, although its acceleration component need not lie in $\ker J_c$. A velocity-dependent $B$ remains control-affine if it is independent of $u$. Muscle activation dynamics or nonlinear actuator laws may require augmenting the state or changing the input definition.
 
 ### Drift Dynamics and the Null Space
 
-The drift $\mathbf{f}(\mathbf{x})$ represents the system's natural tendency when no active control is applied:
-
+A mass moving on a circle demonstrates the missing term. Let $M=2I\ {\rm kg}$,
+$R=1\ {\rm m}$ and
 $$
-    \mathbf{f}(\mathbf{x}) = \begin{pmatrix} \dot{\mathbf{q}} \\ -M^{-1}(\mathbf{c} + \mathbf{g} - \mathbf{J}_c^\top \boldsymbol{\lambda}_{\text{passive}}) \end{pmatrix}
+\Phi(q)=\frac{x^2+y^2-R^2}{2R}.
 $$
-
-Here $\boldsymbol{\lambda}_{\text{passive}}$ are the constraint forces required to maintain constraints under passive dynamics only.
-
-**theorem:** [Drift Projection]
-The drift dynamics, when projected onto the null space coordinates, become:
-
+At $q=(1,0)\ {\rm m}$ and $v=(0,3)\ {\rm m\,s^{-1}}$, the dimensionless Jacobian is $(1,0)$ and $\gamma=9\ {\rm m\,s^{-2}}$. Under gravity $f_0=(0,-19.62)\ {\rm N}$,
 $$
-    \dot{\mathbf{z}}_{\text{drift}} = -\bar{M}^{-1}(\bar{\mathbf{c}} + \bar{\mathbf{g}})
+\ddot q=(-9,-9.81)\ {\rm m\,s^{-2}},\qquad \lambda=-18\ {\rm N}.
 $$
+The horizontal acceleration keeps the mass on the circle. It exists even though the ideal reaction power is zero. The tangent representation gives the same result: at this point $N=(0,1)^\top$, $\nu=3\ {\rm m\,s^{-1}}$, $\dot N=(-3,0)^\top\ {\rm s^{-1}}$ and $\dot\nu=-9.81\ {\rm m\,s^{-2}}$.
 
-This is independent of constraint forces---they have been naturally eliminated through the null space formulation.
-
-The separation of drift and control has a beautiful interpretation in golf:
-- **Drift**: The passive dynamics due to gravity and centrifugal/Coriolis effects
-    
-- **Control**: Active muscle forces producing clubhead acceleration
+“Drift” means zero chosen input in the chosen model. It need not mean zero neural command, relaxed muscles or a feasible free response after a foot lifts. If the computed reaction violates a unilateral contact condition, the fixed-mode drift no longer describes the actual motion.
 
 ### The Golf Swing as a Control Problem
 
-In golf biomechanics, we can identify the control-affine structure:
+A useful golf question specifies an initial state, an impact target, a time horizon, permissible inputs and a cost. Clubhead speed alone is not the entire target: club orientation, path, strike location and contact timing can constrain the solution.
 
-$$
-    \underbrace{\ddot{\mathbf{q}}}_{\text{acceleration}} = \underbrace{-M^{-1}(\mathbf{c} + \mathbf{g})}_{\text{drift } \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}})} + \underbrace{M^{-1} P}_{\text{control effectiveness } B(\mathbf{q})} \boldsymbol{\tau}_{\text{muscle}}
-$$
-
-Here $P$ should be the **dynamically consistent (M-weighted)** null-space projector $P = I - \mathbf{J}_c^\top(\mathbf{J}_c M^{-1}\mathbf{J}_c^\top)^{-1}\mathbf{J}_c M^{-1}$ — the kinematic projector $I - \mathbf{J}_c^\top(\mathbf{J}_c\mathbf{J}_c^\top)^{-1}\mathbf{J}_c$ does **not** correctly decouple constrained dynamics. (The drift term must likewise be projected; this article's earlier reduction does this consistently via the $M$-weighted null-space basis $\bar N = N^\top M N$.)
-
-Key observations:
-1. The null space projector $P$ determines which muscle forces are *controllable*
-    
-2. Forces in $\operatorname{range}(\mathbf{J}_c^\top)$ are absorbed by constraints (joint limits, grip forces)
-    
-3. The drift term $\mathbf{a}_0$ can be exploited---elite golfers "ride" the natural dynamics
+The constrained equations connect these choices. Geometry determines admissible motion; inertia and velocity determine acceleration and reaction; actuators bound achievable changes; the objective selects among feasible trajectories. “Exploit drift” becomes a testable hypothesis only after those ingredients are declared and competing trajectories are compared under the same conditions.
 
 ### Controllability and the Null Space
 
-**definition:** [Control Distribution]
-The *effective control distribution* is:
-
+Low instantaneous input rank does not preclude control of the full state over time. Consider two unit masses with unit springs, stiffness
 $$
-    \mathcal{G}(\mathbf{q}) = \text{span}\{P(\mathbf{q}) \mathbf{b}_1, P(\mathbf{q}) \mathbf{b}_2, \ldots, P(\mathbf{q}) \mathbf{b}_p\}
+K=\begin{bmatrix}2&-1\\-1&2\end{bmatrix},
 $$
-
-where $\mathbf{b}_i$ are the directions of applied control forces.
-
-**theorem:** [Constrained Controllability]
-The constrained system is locally controllable only if:
-
+and a force $u$ on the first mass. With $x=(q_1,q_2,\dot q_1,\dot q_2)^\top$,
 $$
-    \dim(\mathcal{G}(\mathbf{q})) = n - m
+\dot x=Ax+bu,\qquad
+A=\begin{bmatrix}0&I_2\\-K&0\end{bmatrix},\quad
+b=(0,0,1,0)^\top .
 $$
+In SI units the masses are $1\ {\rm kg}$ and the spring constants $1\ {\rm N\,m^{-1}}$. The acceleration input rank is one, yet
+$$
+[b,\ Ab,\ A^2b,\ A^3b]
+=\begin{bmatrix}
+0&1&0&-2\\
+0&0&0&1\\
+1&0&-2&0\\
+0&0&1&0
+\end{bmatrix}
+$$
+has rank four and determinant of magnitude one. Coupling distributes the effect of the input over time. This is the linear state-controllability test, not an instantaneous force-rank test [@TedrakeAcrobot].
 
-That is, the projected control inputs must span the entire null space.
+A stronger check constructs an actual control. From rest, target
+$x_f=(0,1,0,0)^\top$ at $T=2\ {\rm s}$. For unconstrained real-valued inputs, set
+$$
+W_T=\int_0^T e^{As}bb^\top e^{A^\top s}\,ds,\qquad
+u_*(t)=b^\top e^{A^\top(T-t)}W_T^{-1}x_f .
+$$
+The minimum squared-force integral is $x_f^\top W_T^{-1}x_f
+=59.6394\ {\rm N^2\,s}$. Independent forward integration reaches the specified terminal state. This cost is not mechanical work or metabolic energy.
 
-In the golf swing, this has implications for:
-- Joint actuation strategy
-    
-- Timing of force application
-    
-- Exploitation of passive dynamics
+Input limits change reachability. If $|u|\le5\ {\rm N}$ over two seconds, then $\int u^2dt\le50\ {\rm N^2\,s}$, below the unconstrained minimum. Therefore that bounded actuator cannot reach this target in two seconds, despite full state controllability with unrestricted inputs. A rank result alone cannot settle a late-swing timing question.
 
 ## Computational Methods
 
 ### SVD-Based Null Space Computation
 
-The Singular Value Decomposition (SVD) provides a numerically stable method for computing the null space.
+For $J_c=U\Sigma V^\top$, retain the right singular vectors associated with zero singular values, including the structural null columns when $m<n$. A compact SVD can omit those columns; use a complete right basis or a routine that explicitly returns the null space.
 
-**theorem:** [SVD and Null Space]
-Let $\mathbf{J}_c = U \Sigma V^\top$ be the SVD of $\mathbf{J}_c$, where $\Sigma = \text{diag}(\sigma_1, \ldots, \sigma_r, 0, \ldots, 0)$ with $r = \text{rank}(\mathbf{J}_c)$. Then:
+Floating-point “zero” requires a declared tolerance. SciPy's documented default uses a threshold relative to the largest singular value, with relative factor equal to machine precision times the larger matrix dimension [@SciPyNullSpace]. That is an arithmetic default, not an uncertainty model for marker data or anatomical calibration. Normalize coordinate and constraint scales meaningfully, inspect the spectrum and test sensitivity to plausible perturbations.
 
-$$
-    N = [v_{r+1}, v_{r+2}, \ldots, v_n]
-$$
-
-where $v_i$ are the columns of $V$ corresponding to zero singular values.
-
-::: {.callout-note title="Remark"}
-**Numerical Considerations**
-
-In practice, singular values below a threshold $\epsilon \approx 10^{-10} \cdot \sigma_1$ are treated as zero due to floating-point arithmetic.
-:::
+Check $J_cN$, independence of the columns, and any intended normalization. Near a singularity, report both the residual and the rank decision. A pseudoinverse may handle redundant equations, but it does not establish regularity or repair inconsistent constraint accelerations.
 
 ### QR Decomposition Approach
 
-For sparse constraint Jacobians (common in multi-body systems), QR decomposition can be more efficient:
+A complete QR factorization of $J_c^\top$ can produce an orthonormal complement to its column space. When the rank is uncertain, pivoting and a rank criterion are needed. Do not assume that the last columns of an incomplete factorization contain the entire kernel.
 
-$$
-    \mathbf{J}_c^\top = QR = \begin{pmatrix} Q_1 & Q_2 \end{pmatrix} \begin{pmatrix} R_1 \\ \boldsymbol{0} \end{pmatrix}
-$$
-
-The null space basis is $N = Q_2$, the columns of $Q$ corresponding to zero rows in $R$.
+Different valid bases may flip signs or rotate between evaluations. Physical predictions should be invariant to the basis, but numerically differentiating an unaligned basis can create a spurious $\dot N$. Use a smooth local construction, align neighboring frames where appropriate, or solve the ambient saddle system instead. The latter still requires accurate constraint derivatives.
 
 ### Recursive Null Space Formulation
 
-For serial chains with loop closures (like the golf swing model), the null space can be computed recursively:
-
+Suppose $N_0$ spans $\ker J_0$ and new constraints add rows $J_1$. Compute a full-column-rank basis $Z$ of $\ker(J_1N_0)$ and set
 $$
-    N_{\text{chain}} = N_{\text{open}} \cdot N_{\text{closure}}
+N=N_0Z .
 $$
+Then $J_0N=0$ and $J_1N=0$. Conversely, any vector satisfying both constraints is $N_0a$ with $a\in\ker(J_1N_0)$, so this construction spans the complete combined kernel. Its dimension depends on the additional independent rank, not merely the number of appended equations.
 
-where $N_{\text{open}}$ is the null space of the open chain constraints and $N_{\text{closure}}$ accounts for loop closures.
+If the bases vary with configuration, derivatives of both factors enter $\dot N=\dot N_0Z+N_0\dot Z$. Recursion reduces algebraic size; it does not remove the moving-frame terms.
 
 ## Application: Golf Swing Multi-Body Model
 
 ### Model Description
 
-Consider a simplified golf swing model with the following segments:
-1. Pelvis (3 DOF: rotation about spine)
-    
-2. Torso (3 DOF: spinal flexion/extension, lateral bend, rotation)
-    
-3. Left arm (7 DOF: shoulder ball joint, elbow hinge, wrist)
-    
-4. Right arm (7 DOF: similar structure)
-    
-5. Club (6 DOF: position and orientation)
+Use a planar teaching model with two fixed shoulder points, two two-link arms, and a freely translating and rotating rigid club. The seven coordinates are
+$$
+q=(\theta_L,\beta_L,\theta_R,\beta_R,c_x,c_y,\varphi)^\top .
+$$
+The elbow angles $\beta_i$ are relative to the corresponding upper-arm angles. Both arms have lengths $a=0.6\ {\rm m}$ and $b=0.5\ {\rm m}$. Shoulder positions are $s_L=(-0.5,0)$ and $s_R=(0.5,0)\ {\rm m}$; club-local grip offsets are $r_L=(-0.1,0)$ and $r_R=(0.1,0)\ {\rm m}$.
 
-Total unconstrained DOF: $n = 26$
+Only point coincidence is imposed at the grips. The shoulders are fixed supports, the club is rigid, and neither wrist orientation nor a pelvis coordinate is silently added. These assumptions make the model reproducible; they deliberately omit the three-dimensional torso, legs, grip compliance, muscle physiology and shaft deformation needed for a golfer model.
 
 ### Constraint Equations
 
-**Grip constraint** (both hands on club):
-
+Write $e(\theta)=(\cos\theta,\sin\theta)^\top$. The arm endpoints are
 $$
-\begin{align}
-    \boldsymbol{\Phi}_{\text{left grip}} &= \mathbf{p}_{\text{left hand}} - \mathbf{p}_{\text{club grip upper}} = \boldsymbol{0} \quad (3 \text{ constraints}) \\
-    \boldsymbol{\Phi}_{\text{right grip}} &= \mathbf{p}_{\text{right hand}} - \mathbf{p}_{\text{club grip lower}} = \boldsymbol{0} \quad (3 \text{ constraints})
-\end{align}
+p_i=s_i+a e(\theta_i)+b e(\theta_i+\beta_i).
 $$
-
-**Ground contact** (stance):
-
+The four scalar closure equations are the two components of each
 $$
-    \boldsymbol{\Phi}_{\text{stance}} = z_{\text{pelvis}} - h_{\text{nominal}} = 0 \quad (1 \text{ constraint, simplified})
+p_i-c-R(\varphi)r_i=0,\qquad i\in\{L,R\}.
 $$
-
-Total constraints: $m = 7$ (in this simplified model)
-
-Effective DOF: $n - m = 26 - 7 = 19$
+One consistent pose is
+$$
+q\approx(0.06860223,\ 1.91063324,\ 1.41808412,\ 1.91063324,\ 0,\ 0.5,\ 0)^\top .
+$$
+Angles are in radians and translations in meters. The stored example uses full precision; rounded coordinates here incur small closure residuals.
 
 ### Constraint Jacobian Structure
 
-The constraint Jacobian has a sparse block structure:
-
+Let $S=\begin{bmatrix}0&-1\\1&0\end{bmatrix}$ and
 $$
-    \mathbf{J}_c = \begin{pmatrix}
-        \boldsymbol{0} & \boldsymbol{0} & J_{\text{left arm}} & \boldsymbol{0} & -I_3 & \boldsymbol{0} \\
-        \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & J_{\text{right arm}} & -I_3 & \boldsymbol{0} \\
-        J_{\text{stance}} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0}
-    \end{pmatrix}
+D_i=\begin{bmatrix}
+aSe(\theta_i)+bSe(\theta_i+\beta_i)&bSe(\theta_i+\beta_i)
+\end{bmatrix}.
 $$
+Then
+$$
+J_c=
+\begin{bmatrix}
+D_L&0_{2\times2}&-I_2&-R(\varphi)Sr_L\\
+0_{2\times2}&D_R&-I_2&-R(\varphi)Sr_R
+\end{bmatrix}.
+$$
+It has rank four at the stated pose, leaving three independent instantaneous speeds. Finite differences of all seven coordinates verify every block, including club rotation.
 
-This structure can be exploited for efficient null space computation.
+For a selected club point $p_H=c+R(\varphi)r_H$, with $r_H=(0.8,0)\ {\rm m}$,
+$$
+J_H=\begin{bmatrix}0_{2\times4}&I_2&R(\varphi)Sr_H\end{bmatrix}.
+$$
+Admissibility is governed by $\ker J_c$; keeping that point instantaneously stationary requires the smaller space
+$$
+\ker\begin{bmatrix}J_c\\J_H\end{bmatrix}.
+$$
+At this pose the smaller kernel is one-dimensional. Its nonzero direction includes club rotation: zero velocity of a selected point does not imply zero angular velocity of the club. Nor does instantaneous stationarity ensure that the point remains fixed over a finite interval.
 
 ### Kinematic Synergies via Null Space Analysis
 
-The null space basis vectors $\{n_1, n_2, \ldots, n_{19}\}$ reveal the *kinematic synergies*---coordinated joint motions that satisfy all constraints:
+The columns of $N$ are not uniquely determined. For an invertible matrix $Q$, $NQ$ spans the same admissible motions. With an orthonormal basis and orthogonal $Q$, even normalization is unchanged. Naming a column an “arm synergy” or “wrist synergy” therefore depends on a basis convention unless additional structure identifies it.
 
-$$
-    n_i = \begin{pmatrix} \delta\theta_{\text{pelvis}} \\ \delta\theta_{\text{torso}} \\ \delta\theta_{\text{left arm}} \\ \delta\theta_{\text{right arm}} \\ \delta\mathbf{p}_{\text{club}} \\ \delta\mathbf{R}_{\text{club}} \end{pmatrix}_i
-$$
+PCA of $NN^\top$ cannot discover preferred coordination in this setting: its eigenvalues are one on the tangent space and zero on the normal space, with no preferred directions within either degenerate eigenspace. PCA of measured, consistently scaled trajectories can describe observed covariance; it still does not establish a neural command mechanism or an optimal recruitment strategy. Data, preprocessing, task conditions and a physiological hypothesis are separate evidence requirements.
 
-Principal Component Analysis (PCA) of these synergies often reveals:
-- **X-factor**: Coordinated pelvis-torso separation
-    
-- **Arm swing synergy**: Coupled shoulder-elbow motion
-    
-- **Release mechanism**: Wrist unhinging coordinated with club rotation
 
 ## Drift-Control Separation in Golf Swing Dynamics
 
 ### The Natural Swing: Exploiting Drift
 
-Elite golfers are often described as having an "effortless" swing. From a control-theoretic perspective, this means maximally exploiting the drift dynamics:
+A model can investigate whether initial configuration and velocity make a desired impact state reachable with less actuator effort. Define that effort first: squared torque, activation, mechanical work, peak force and metabolic cost are different objectives and can favor different trajectories.
 
-$$
-    \text{Optimal swing} \approx \mathbf{f}(\mathbf{x}) + \text{minimal control corrections}
-$$
+Compare candidate motions with matched boundary conditions, duration, contact assumptions and actuator limits. Recompute reactions and task accelerations throughout. A low-input trajectory is useful evidence for that model and objective; it does not establish that an elite golfer is passive, that large reaction forces are wasteful, or that one wrist posture is universally preferable.
 
-The drift in the downswing includes:
-- Gravitational acceleration of the club
-    
-- Centrifugal "straightening" of the arm-club system
-    
-- Coriolis coupling between body rotation and arm motion
+The [muscle-to-joint torque chapter](The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html) supplies the next layer: signed moment arms, feasible force sharing and the distinction between net torque and individual muscle force. The [constraint chapter](The_Physics_of_Golf/quarto/ch07_constraint_forces.html) develops compatible motion and contact assumptions. Together these layers connect geometry to a bounded actuator model without treating either as a complete account of motor control.
 
 ### Control Authority Analysis
 
-The control effectiveness matrix $B(\mathbf{q}) = M^{-1} P$ determines how muscle forces translate to clubhead acceleration. Key insights:
-
+For a position task $p_H=h(q)$,
 $$
-    \dot{v}_{\text{clubhead}} = J_{\text{club}}(\mathbf{q}) \left[ \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}}) + B(\mathbf{q}) \boldsymbol{\tau}_{\text{muscle}} \right]
+\dot p_H=J_H\dot q,\qquad
+\ddot p_H=J_H\ddot q+\dot J_H\dot q.
 $$
+Substituting constrained dynamics gives
+$$
+\ddot p_H=
+\underbrace{J_H(A_cf_0-M^{-1}J_c^\top W^{-1}\gamma)
++\dot J_H\dot q}_{\text{task drift acceleration}}
++J_HA_cBu .
+$$
+At a fixed state, $J_HA_cB$ maps an input change to a task-acceleration change. Its singular values require input and output scaling before they can be compared meaningfully. With bounded inputs, examine the image of the actual admissible input set, not only its linear span.
 
-where $J_{\text{club}}$ is the Jacobian mapping joint velocities to clubhead velocity.
+The changing-Jacobian term is physical. A point at radius $0.5\ {\rm m}$ rotating at constant $2\ {\rm rad\,s^{-1}}$ has acceleration magnitude $2\ {\rm m\,s^{-2}}$, although angular acceleration is zero. In three dimensions,
+$$
+\ddot p_H=\ddot c+\alpha\times(Rr_H)
++\omega\times\bigl(\omega\times(Rr_H)\bigr).
+$$
+This includes tangential and centripetal acceleration. It also makes clear why a zero clubhead-velocity direction need not be a zero clubhead-acceleration direction.
 
-**proposition:** [Control Authority Near Impact]
-As the swing approaches impact, the null space dimension may change (e.g., as the wrists unhinge). This creates a window of enhanced control authority that skilled golfers exploit for last-instant adjustments.
+Finally, impact control concerns the endpoint of a trajectory. Available time, state evolution, actuator bandwidth and limits determine whether an instantaneous acceleration direction can produce a useful change before contact.
 
 ### Energy Flow Analysis
 
-The null space formulation enables tracking of energy flow:
-
+For stationary ideal constraints,
 $$
-    \frac{d}{dt}\left(\frac{1}{2} \dot{\mathbf{z}}^\top \bar{M} \dot{\mathbf{z}}\right) = \dot{\mathbf{z}}^\top \bar{\boldsymbol{\tau}} - \dot{\mathbf{z}}^\top \bar{\mathbf{g}}
+\mathcal P_c=\dot q^\top J_c^\top\lambda
+=\lambda^\top J_c\dot q=0.
 $$
+This is total reaction power on the modeled constrained system. A joint or grip can transfer power between connected bodies while contributing zero net power to their combination. Large internal loads can also matter for tissue stress and muscle recruitment, neither of which follows from the zero-net-power identity.
 
-This separates:
-- Power input from muscles: $\dot{\mathbf{z}}^\top \bar{\boldsymbol{\tau}}$
-    
-- Gravitational power: $-\dot{\mathbf{z}}^\top \bar{\mathbf{g}}$
-    
-- Energy stored/released in constraint forces: implicitly zero (orthogonal to motion)
+For time-independent kinetic and potential energy, write
+$$
+M\ddot q+C(q,\dot q)\dot q+\nabla V+d=Bu+J_c^\top\lambda,
+$$
+with $C$ consistent with the kinetic-energy identity and $d$ the declared dissipative generalized load. Then
+$$
+\frac{d}{dt}(T+V)=\dot q^\top Bu-\dot q^\top d
+$$
+under stationary ideal constraints. This accounting distinguishes actuator power, storage and dissipation; it does not infer metabolic expenditure.
+
+For moving constraints, $J_c\dot q=-\Phi_t$, so
+$$
+\mathcal P_c=-\lambda^\top\Phi_t
+$$
+need not vanish. A $2\ {\rm kg}$ mass prescribed to follow $x=t^2$ in SI units has $v=2\ {\rm m\,s^{-1}}$ and $a=2\ {\rm m\,s^{-2}}$ at $t=1\ {\rm s}$. With an applied force of $3\ {\rm N}$, the guide supplies another $1\ {\rm N}$. Applied and guide powers are $6$ and $2\ {\rm W}$, adding to the $8\ {\rm W}$ kinetic-energy rate. Ideal virtual-work behavior is compatible with actual power supplied by a moving support.
 
 ## Advanced Topics
 
 ### Configuration-Dependent Null Space Dimension
 
-In some configurations, constraints may become dependent (singular configurations):
+Within a regular fixed constraint description, rank is locally constant and so is nullity. At a rank change, a larger linearized kernel may reflect a singular description, a genuine mechanism singularity, or both. Examine feasible paths and higher-order constraints before assigning extra physical mobility.
 
-$$
-    \text{rank}(\mathbf{J}_c(\mathbf{q}^*)) < m
-$$
-
-At such configurations, $\dim(\operatorname{null}(\mathbf{J}_c))$ increases---the system gains degrees of freedom. In golf, this occurs at:
-- Full wrist cock position (gimbal lock-like behavior)
-    
-- Extreme backswing positions
-    
-- Near-singular arm configurations
+A contact change is different again. A foot lifting, a grip slipping or impact beginning changes the active equations. New contact can require an impulse and a velocity reset. A smooth fixed-mode acceleration solve does not describe that reset. Model each mode and its transition conditions explicitly.
 
 ### Velocity-Level vs. Acceleration-Level Null Spaces
 
-For rheonomic (time-dependent) constraints or when considering acceleration analysis:
-
+For prescribed moving holonomic constraints, choose a particular velocity $b(q,t)$ satisfying $J_cb=-\Phi_t$ and write
 $$
-    \mathbf{J}_c \ddot{\mathbf{q}} = -\dot{\mathbf{J}}_c \dot{\mathbf{q}} - \ddot{\boldsymbol{\Phi}}_{\text{prescribed}}
+\dot q=b+N\nu,\qquad
+\ddot q=\dot b+\dot N\nu+N\dot\nu.
 $$
+The dots here are total derivatives along the trajectory, including explicit time dependence. Projecting the dynamics gives
+$$
+(N^\top MN)\dot\nu
+=N^\top\!\left[f-M(\dot b+\dot N\nu)\right].
+$$
+The choice of $b$ is not unique; adding a tangent component changes the speed representation, not the set of physical velocities.
 
-The acceleration-level null space is still $\operatorname{null}(\mathbf{J}_c)$, but the particular solution changes.
+For a genuinely nonholonomic velocity constraint $H(q)\dot q=0$, the kernel still describes admissible velocities, but it need not be tangent to any lower-dimensional configuration manifold. Do not use a holonomic coordinate reduction without checking integrability.
+
+Also distinguish a null-space basis from a generalized-speed map. If a representation uses $\dot q=E(q)v$, the relevant constraint matrix is $H=J_cE$, and the velocity-coordinate mass matrix and force covectors must be consistent with $v$. Reactions then enter that equation through $H^\top\lambda$. Quaternion coordinate rates, for example, are not interchangeable with a three-component angular velocity. Tedrake's multibody treatment explicitly separates configuration rates and generalized velocities [@TedrakeMultibody].
 
 ### Lie Bracket Relationships
 
-The control distribution and drift interact through Lie brackets:
+For smooth control-affine vector fields, brackets describe directions produced through state-dependent combinations of flows. They help analyze accessibility when instantaneous input directions are insufficient. They must be computed on the consistent state manifold, using the complete drift, including curvature and reconstruction.
 
-$$
-    [\mathbf{f}, g_i] = \frac{\partial g_i}{\partial \mathbf{x}} \mathbf{f} - \frac{\partial \mathbf{f}}{\partial \mathbf{x}} g_i
-$$
-
-These determine:
-- Additional reachable directions (controllability)
-    
-- Coupling between passive dynamics and control
-    
-- Small-time local controllability properties
+Accessibility, local controllability, small-time local controllability and reachability under bounded unilateral inputs are distinct properties. With drift, a bracket-rank calculation alone does not generally establish all of them. The two-mass example already demonstrates the more basic point: deficient instantaneous acceleration rank is not a necessary obstruction to state controllability. Conversely, full linear controllability does not eliminate force and deadline constraints.
 
 ## Conclusions
 
-The null space of the constraint Jacobian provides a powerful framework for analyzing and simulating constrained multi-body systems like the golf swing. Key takeaways include:
+The constraint Jacobian organizes a sequence of questions. Its kernel describes locally admissible velocity under regular stationary constraints. The mass metric and differentiated constraint determine acceleration and reaction. An actuator model limits the accelerations that can be changed. Integration over time determines reachable task states, and a declared objective defines what counts as improvement.
 
-1. **Dimension reduction**: The null space projects the system onto its true kinematic degrees of freedom, eliminating constraint forces from the equations of motion.
-    
-    
-2. **Force decomposition**: Applied forces split into motion-producing (in $\operatorname{null}(\mathbf{J}_c)$) and constraint-absorbed (in $\operatorname{range}(\mathbf{J}_c^\top)$) components.
-    
-    
-3. **Control-affine structure**: The constrained dynamics naturally exhibit drift-control separation, with profound implications for understanding optimal motor control strategies.
-    
-    
-4. **Synergy identification**: Null space basis vectors reveal coordinated motion patterns---the kinematic building blocks of skilled movement.
-    
-    
-5. **Computational efficiency**: Null space methods enable simulation of complex biomechanical systems with fewer equations and better numerical properties.
-
-For golf swing analysis specifically, this framework explains how elite players achieve high clubhead speeds with apparent ease: they structure their technique to align muscle forces with the null space and exploit drift dynamics, rather than fighting against constraints.
+For golf and humanoid modeling, the value of this framework is the ability to test those connections. A claim about a grip, posture or coordination pattern should survive its own geometry, dynamics, force limits and task conditions before it becomes an instruction to a player.
 
 ## Limitations
 
-:::{.callout-warning}
-The null space framework provides elegant mathematical structure but operates under several important constraints:
+The analytic results assume smooth local models with independent constraint rows and positive-definite inertia unless explicitly extended. The examples are constructed. The planar grasp has no fitted human inertias, muscle data, ground mechanics or measured swing trajectory. Its rank and task redundancy establish properties of that construction only.
 
-1. **Assumes rigid body segments with ideal joints**: The model treats bones as rigid bodies and joints as mathematical constraints (pins, ball-joints, etc.). In reality, cartilage compliance, ligament laxity, and muscle-tendon elasticity create "soft" constraints. These create a bandwidth around the theoretical null space within which small deviations are kinematically permissible.
+::: {.callout-warning collapse="true"}
+## Critics' Comments
 
-2. **Constraint Jacobian rank can change at singular configurations**: As the system moves through its workspace, the constraint Jacobian may lose rank—some constraints become temporarily dependent. At these singular configurations, the dimensionality of the null space increases suddenly. The golf swing encounters these singularities at full wrist cock and extreme backswing positions, where the mathematical description becomes ill-conditioned and prediction becomes unreliable.
+**Does this prove an effortless swing?** No. Zero ideal reaction power is not zero muscle force or metabolic cost. The relevant optimization and physiological measurements remain separate.
 
-3. **26-DOF model is simplified—scapular gliding and spinal flexibility are approximated**: The lumped model aggregates the shoulder's 9 degrees of freedom (glenohumeral joint plus scapular gliding) into fewer effective DOFs. The spine's 24 segments are reduced to rigid torso rotation. These approximations reduce computational burden but sacrifice the detailed kinematic synergies that individual athletes exploit. Some golfers achieve asymmetric power through nuanced spinal side-bending that the simplified model cannot distinguish.
+**Does a large null space mean better control?** No. It means more first-order compatible velocity directions in a regular description. Input limits, inertia, task geometry and time determine how those directions can be used.
 
-4. **SVD-based null space computation assumes full state knowledge**: The Singular Value Decomposition method for computing the null space basis requires precise knowledge of the constraint Jacobian at each instant. Measurement noise, modeling approximation, and parameter uncertainty all degrade the rank estimates, particularly for singular values near the threshold. Small numerical errors in identifying which singular values are "zero" can significantly distort the computed null space basis.
+**Can the examples validate a golfer model?** They can catch mathematical and implementation errors. Empirical validation requires measurements, uncertainty estimates and out-of-sample comparisons for the intended physical model.
+
+**Can a pseudoinverse solve a singularity?** It can select an algebraic solution under specified conditions. It cannot decide whether a rank loss represents physical mobility, inconsistent constraints or a change in contact mode.
 :::
 
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        A simplified guide to understanding "hidden" freedom in a locked-down system.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Invisible Track</h3>
-        <p>
-          Your body and the club form a closed loop (two hands on grip). This locks up most ways you *could* move, leaving only a few specific paths open.
-        </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> A train on tracks. The train is powerful, but it can only move in one specific direction (along the rails). It physically cannot move sideways. The "Null Space" is simply the direction of the tracks—the only way you are allowed to move.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Wasted Energy</h3>
-        <p>
-          Muscle force that tries to break the lock (like pulling your hands apart) is wasted. Only force that pushes *along* the open path moves the club.
-        </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> Sliding a heavy window. If you push diagonally, half your effort is just jamming the window against the frame. If you push straight up (Null Space), 100% of your effort goes into lifting it.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Finding the Groove</h3>
-        <p>
-          Elite swings look effortless because they find this "open path" instantly. High-handicappers often fight against their own body's locking mechanism.
-        </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> Fitting a key in a lock. You can't force it; you have to find the groove. Once you're in the Null Space, the movement is smooth and unrestricted.
-        </div>
-        <div class="key-takeaway">
-          <strong>Key Takeaway:</strong> Don't fight the constraints; use them to guide the power.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Biomechanical Reality:</span>
-          <h3>The "Soft Constraint" Problem</h3>
-        </div>
-        <p class="critic-argument">
-          The mathematical model assumes the closed loop formed by the hands on the grip is a rigid constraint ($\Phi(q) = 0$). In reality, the hands are compliant: skin deforms, grip pressure varies, and the hands can slide slightly. Skeptics argue that treating this as a hard constraint creates a misleadingly sharp "Null Space." In truth, the system operates in a "fuzzy" constraint cloud where small deviations are possible, potentially altering the available degrees of freedom.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a valid physical observation. However, the <em>stiffness</em> of the constraint (bone and high-friction grip) is orders of magnitude higher than the voluntary torque capability of the wrists in orthogonal directions. While the constraint is technically "soft" (compliant), it functions as a "hard" guide for the primary motion. We model the ideal structure to identify the <em>dominant</em> kinematic pathways, acknowledging that compliance adds a layer of "stiffness orthogonal to the null space."
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Motor Control:</span>
-          <h3>Do Brains Calculate Null Spaces?</h3>
-        </div>
-        <p class="critic-argument">
-          The article presents the Null Space Projector ($P$) as a computational tool. Critics from the ecological psychology camp argue that the human brain does not perform singular value decomposition (SVD) or matrix projection in real-time. Suggesting that the brain "projects torque onto the null space" imputes a computational strategy to a biological system that likely learns these synergies through trial-and-error reinforcement learning or dynamic primitives, not linear algebra.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We agree that the brain does not explicitly compute matrix inverses. The Null Space is a <em>descriptive</em> mathematical tool for us as analysts, not a <em>prescriptive</em> algorithm for the brain. It describes the physical manifold that the brain discovers. The "path of least resistance" that a golfer learns <em>is</em> the Null Space; our mathematics simply provides a precise language to quantify what the athlete feels intuitively.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Model Fidelity:</span>
-          <h3>Is 26 DOF Enough?</h3>
-        </div>
-        <p class="critic-argument">
-          The simplified 26-DOF model aggregates complex joints like the spine and shoulder girdle into simple hinges or ball joints. Critics argue that critical "slop" or "play" in the shoulder complex (scapular gliding) and spinal warping provides essential degrees of freedom that a rigid-body chain misses. By ignoring these micro-motions, the model may overstate the constraint dimensionality reduction, missing the subtle adjustments elite golfers use to square the face.
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> All biomechanical models are approximations. While adding more DOFs (e.g., $n=100$) would increase the dimension of the null space, the <em>fundamental topology</em> of the loop closure remains. The principle of drift-control separation via projection holds regardless of $n$. We choose 26 DOF as the "minimum viable complexity" to demonstrate the phenomenon without drowning in parameter identification errors.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding by defining the boundaries of the model.
-      </div>
-    </div>
-  </div>
-</section>
-
-## Appendix {.appendix}
+## Appendix
 
 ### Proof: Orthogonality of Constraint Forces
 
-**theorem:** 
-Constraint forces $\mathbf{J}_c^\top \boldsymbol{\lambda}$ do no work on admissible motions.
-
-::: {.proof}
-For any admissible velocity $\dot{\mathbf{q}} \in \operatorname{null}(\mathbf{J}_c)$:
-
+An admissible virtual displacement at fixed time obeys $J_c\delta q=0$. Thus
 $$
-    P_{\text{constraint}} = (\mathbf{J}_c^\top \boldsymbol{\lambda})^\top \dot{\mathbf{q}} = \boldsymbol{\lambda}^\top \mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{\lambda}^\top \boldsymbol{0} = 0
+(J_c^\top\lambda)^\top\delta q
+=\lambda^\top J_c\delta q=0.
 $$
-
-:::
+This is a force–displacement duality statement. With mixed coordinates, interpreting it as an ordinary geometric angle requires a coordinate metric. Actual velocities for moving constraints need not satisfy the homogeneous virtual-displacement equation, which is why their reaction power can be nonzero.
 
 ## Derivation of the Null Space Projector
 
-Starting from the decomposition $\mathbb{R}^n = \operatorname{null}(\mathbf{J}_c) \oplus \operatorname{range}(\mathbf{J}_c^\top)$, any vector $\mathbf{v}$ can be written as:
+For a full-column-rank $N$, minimize $\|w-Na\|_2^2$ over $a$. The normal equations give $a=(N^\top N)^{-1}N^\top w$, hence $P_E=N(N^\top N)^{-1}N^\top$.
 
+For the mass metric, minimize $(w-Na)^\top M(w-Na)$. This gives
 $$
-    \mathbf{v} = \mathbf{v}_N + \mathbf{v}_R
+P_v=N(N^\top MN)^{-1}N^\top M .
 $$
+An equivalent constrained minimization over $J_cz=0$ gives
+$z=w-M^{-1}J_c^\top W^{-1}J_cw$. Equating the two forms proves the stated mass projector and, after right multiplication by $M^{-1}$, the identity for $A_c$.
 
-where $\mathbf{v}_N \in \operatorname{null}(\mathbf{J}_c)$ and $\mathbf{v}_R \in \operatorname{range}(\mathbf{J}_c^\top) = \operatorname{null}(\mathbf{J}_c)^\perp$.
-
-Since $\mathbf{v}_R = \mathbf{J}_c^\top \mathbf{w}$ for some $\mathbf{w}$, and $\mathbf{J}_c \mathbf{v}_N = \boldsymbol{0}$:
-
-$$
-    \mathbf{J}_c \mathbf{v} = \mathbf{J}_c \mathbf{J}_c^\top \mathbf{w} \implies \mathbf{w} = (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c \mathbf{v}
-$$
-
-Therefore:
-
-$$
-\begin{align}
-    \mathbf{v}_N &= \mathbf{v} - \mathbf{v}_R = \mathbf{v} - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c \mathbf{v} \\
-    &= \left(I - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c\right) \mathbf{v} = P \mathbf{v}
-\end{align}
-$$
+Consequently a force of the form $J_c^\top\mu$ has zero reduced force $N^\top J_c^\top\mu$ and zero $A_c$ acceleration contribution. This does not say the actual reaction is absent or that total acceleration is tangent: the curvature term remains.
 
 ## Summary Table of Key Equations
 
-[Table]
+| Question | Relation | Conditions and Meaning |
+|:--|:--|:--|
+| Compatible velocity | $J_c\dot q=0$ | Stationary holonomic constraint; regularity identifies the tangent space. |
+| Moving constraint | $J_c\dot q=-\Phi_t$ | Affine velocity set; its direction space is $\ker J_c$. |
+| Compatible acceleration | $J_c\ddot q=-\gamma$ | Includes curvature and prescribed time dependence. |
+| Reduced motion | $\dot q=N\nu$ | Stationary case; $\nu$ denotes speeds unless a chart is supplied. |
+| Reduced dynamics | $M_r\dot\nu=N^\top f-N^\top M\dot N\nu$ | Full-column-rank tangent frame and positive-definite inertia. |
+| Force-to-acceleration map | $A_c=N(N^\top MN)^{-1}N^\top$ | Fixed-state force contribution; total acceleration also includes constraint curvature. |
+| Task acceleration | $\ddot p_H=J_H\ddot q+\dot J_H\dot q$ | Differentiable position task; changing-Jacobian term retained. |
+| Reaction power | $\mathcal P_c=-\lambda^\top\Phi_t$ | Ideal holonomic constraint; zero for stationary constraints. |
 
 ## References
 
-1. R.M. Murray, Z. Li, and S.S. Sastry, *A Mathematical Introduction to Robotic Manipulation*, CRC Press, 1994.
+The [annotated bibliography](null-space-constraint-jacobian-bibliography.html) maps the cited passages to the claims they support and distinguishes source reading from the independent examples. It does not treat conceptual relationships as verified citation links between publications.
 
-2. A.M. Bloch, *Nonholonomic Mechanics and Control*, Springer, 2003.
-
-3. R. Featherstone, *Rigid Body Dynamics Algorithms*, Springer, 2008.
-
-4. S.M. Nesbit, "A three-dimensional kinematic and kinetic study of the golf swing," *Journal of Sports Science and Medicine*, vol. 4, pp. 499--519, 2005.
-
-5. A. Isidori, *Nonlinear Control Systems*, 3rd ed., Springer, 1995.
-
-6. W. Blajer, "A geometric unification of constrained system dynamics," *Multibody System Dynamics*, vol. 1, pp. 3--21, 1997.
-
-7. F.E. Udwadia and R.E. Kalaba, "What is the general form of the explicit equations of motion for constrained mechanical systems?" *Journal of Applied Mechanics*, vol. 69, pp. 335--339, 2002.
+::: {#refs}
+:::
 
 ## Related Articles
 
 ::: {.callout-note}
 ## See Also
 
-- **[Screw Theory Reference](screw-theory-reference.html)** — Wrenches, twists, and reciprocal screw systems in constrained multibody chains
-- **[Tangent Hyperplanes I: Geometry](tangent-hyperplanes-series/part-1-geometry.html)** — Tangent spaces as kernels of constraint gradients: the same null-space structure in geometric form
-- **[Superposition in Affine Control Systems](superposition.html)** — The fixed-state linear force-to-acceleration map that the constraint Jacobian partitions
-- **[Force and Mobility Ellipsoids](force-mobility-matrices.html)** — Mobility ellipsoids for the constrained motion directions
-- **[Degrees of Freedom and the Curse of Dimensionality](degrees-of-freedom-and-dimensionality.html)** — How constraints and structure collapse effective dimensionality
-- **[Tangent-Space Series](../pages/tangent-hyperplanes.html)** — Series hub with the full reading order and provenance notes
+- **[Screw Theory Reference](screw-theory-reference.html)** — Wrenches, twists and reciprocal systems.
+- **[Tangent Hyperplanes I: Geometry](tangent-hyperplanes-series/part-1-geometry.html)** — Tangent spaces as kernels of constraint gradients.
+- **[Superposition in Affine Control Systems](superposition.html)** — The fixed-state force-to-acceleration map.
+- **[Force and Mobility Ellipsoids](force-mobility-matrices.html)** — Interpreting directional mobility with a declared metric.
+- **[Degrees of Freedom and the Curse of Dimensionality](degrees-of-freedom-and-dimensionality.html)** — Configuration dimension and effective task dimension.
+- **[Tangent-Space Series](../pages/tangent-hyperplanes.html)** — Reading order and provenance.
 :::

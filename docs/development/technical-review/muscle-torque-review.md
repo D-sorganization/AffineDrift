@@ -362,6 +362,8 @@ open p2 TOC finding for4370. The repaired full root gate is the final local
 push gate; its exact result is recorded in the current handoff and DL-#4369.
 
 Final repaired root `muscle-torque-boundary-root.log`:5318 passed,29 skipped,
-132 deselected,59 warnings,187.39s,coverage79.35%; session78917 reaped exit0.
+132 deselected,59 warnings,187.39s,coverage79.21%; session78917 reaped exit0.
+The final coverage figure was corrected against the actual saved log during
+the nullspace review; the earlier delivery run's79.35% is a different run.
 All local verification handles are closed. Generated unrelated timestamp/format
 drift was compared semantically with HEAD before restoring only those six files.

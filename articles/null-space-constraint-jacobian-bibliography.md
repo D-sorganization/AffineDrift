@@ -1,278 +1,73 @@
-# Bibliography Data: Null Space of the Constraint Jacobian
+---
+title: "Annotated Bibliography: Null Space of the Constraint Jacobian"
+categories:
+  - theory-core
+---
 
-## A) Concept Map
+This companion supports the [constraint null-space article](null-space-constraint-jacobian.html). The reading map below identifies the passages used, their role and the limits of that evidence. It separates independent derivations from empirical observations.
 
-- **Multibody Dynamics**
+## Concept Map
 
-  - **Differential-Algebraic Equations (DAEs)**: Systems described by differential equations constrained by algebraic equations (Index-3).
-  - **Lagrange Multipliers**: ($\lambda$) Forces required to enforce kinematic constraints.
-  - **Constraint Jacobian**: ($J_c$) The mapping from generalized velocities to constraint violation rates.
+Geometry supplies the constraint set and its tangent directions. Dynamics adds inertia, force and curvature. Control adds available inputs and time. Golf inference adds a physical model, measurements and an objective. A reference supporting one layer does not automatically validate the others.
 
-- **Geometric Mechanics**
+| Topic                                              | Evidence Used                                                        | Boundary                                                                                                 |
+| :------------------------------------------------- | :------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| Generalized velocities and bilateral constraints   | Tedrake's multibody notes                                            | Supports the formulation; does not validate a golfer's contact or grip model.                            |
+| DAE index and consistent initialization            | Hairer, section IV.4                                                 | Distinguishes position, velocity and acceleration formulations under regularity assumptions.             |
+| Instantaneous input rank and state controllability | Tedrake's acrobot notes and the article's independent spring example | Unrestricted linear controllability does not imply reachability with a specified force cap and deadline. |
+| Golf grip-model assumptions                        | Nesbit's methods, printed page 501                                   | Documents a particular flexible wrist treatment, not universal rigid-grasp behavior.                     |
+| Numerical null-space rank                          | SciPy's function documentation                                       | An arithmetic threshold is not an empirical uncertainty estimate.                                        |
 
-  - **Null Space Projector**: ($P$) Operator that separates forces into motion-inducing and constraint-absorbing components.
-  - **Tangent Bundle**: ($T\mathcal{Q}$) The state space of permissible velocities at a given configuration.
-  - **Riemannian Manifold**: The configuration space equipped with the mass metric.
+## Primary Sources and Reading Boundaries
 
-- **Control Theory**
+### Multibody Formulation
 
-  - **Control-Affine Systems**: Formulating the constrained dynamics as $\dot{x} = f(x) + G(x)u$.
-  - **Drift Vector Field**: The natural evolution of the system (passive dynamics) projected onto the feasible manifold.
-  - **Controllability**: The ability to steer the system using available inputs within the null space.
+Russ Tedrake, _Underactuated Robotics_, [Multi-Body Dynamics](https://underactuated.mit.edu/multibody.html), accessed September 12, 2026.
 
-- **Computational Methods**
-  - **SVD / QR Decomposition**: Numerical techniques for computing the null space basis.
-  - **Coordinate Reduction**: Transforming DAEs into ODEs using minimal coordinates ($\dot{z}$).
+The generalized-velocity and bilateral-position passages distinguish configuration rates from velocity coordinates and give constraint-reaction equations. The article independently derives its multiplier sign, force/velocity duality and curvature term, then checks them against a direct saddle solve. Only the cited portions of the online chapter were used; this is not a review of the complete book.
 
-## B) Bibliography (YAML)
+### Differential-Algebraic Equations
 
-```yaml
-- id: murray1994mathematical
-  title: "A Mathematical Introduction to Robotic Manipulation"
-  authors:
-    - "Richard M. Murray"
-    - "Zexiang Li"
-    - "S. Shankar Sastry"
-  year: 1994
-  venue: "CRC Press"
-  scholar_url: "https://scholar.google.com/scholar?q=A+Mathematical+Introduction+to+Robotic+Manipulation+Murray"
-  clusters: ["robotics", "geometric mechanics", "control"]
-  concepts: ["constraints", "lagrange multipliers", "holonomic systems"]
-  related_ids: ["lynch2017modern", "siciliano2016springer"]
-  references_out_ids: ["lynch2017modern", "bloch2003nonholonomic"]
+Ernst Hairer, _[Solving Differential Equations on Manifolds](https://www.unige.ch/~hairer/poly-sde-mani.pdf)_, June 2011, section IV.4, printed pages 34–36 (physical PDF pages 38–40).
 
-- id: featherstone2008rigid
-  title: "Rigid Body Dynamics Algorithms"
-  authors:
-    - "Roy Featherstone"
-  year: 2008
-  venue: "Springer"
-  scholar_url: "https://scholar.google.com/scholar?q=Rigid+Body+Dynamics+Algorithms+Featherstone"
-  clusters: ["multibody dynamics", "algorithms"]
-  concepts: ["recursive algorithms", "constraints", "spatial algebra"]
-  related_ids: ["murray1994mathematical", "aghili2005unified"]
-  references_out_ids: ["aghili2005unified", "pinocchio_lib"]
+This section develops constrained mechanics through local coordinates, then distinguishes the position-level index-3, velocity-level index-2 and acceleration-level index-1 formulations. Its discussion of consistent initial conditions and numerical constraint drift supports the article's formulation boundary. Hairer uses the opposite multiplier sign; the physical reaction is consistent after translating conventions. The cover and this section were read; the entire 55-page document is not certified as reviewed.
 
-- id: udwadia2002general
-  title: "What is the general form of the explicit equations of motion for constrained mechanical systems?"
-  authors:
-    - "Firdaus E. Udwadia"
-    - "Robert E. Kalaba"
-  year: 2002
-  venue: "Journal of Applied Mechanics"
-  scholar_url: "https://scholar.google.com/scholar?q=general+form+explicit+equations+motion+constrained+mechanical+systems+Udwadia"
-  clusters: ["constrained dynamics", "analytical mechanics"]
-  concepts:
-    ["explicit equation of motion", "moore-penrose inverse", "gauss principle"]
-  related_ids: ["blajer1997geometric"]
-  references_out_ids: []
+### Controllability
 
-- id: blajer1997geometric
-  title: "A geometric unification of constrained system dynamics"
-  authors:
-    - "Wojciech Blajer"
-  year: 1997
-  venue: "Multibody System Dynamics"
-  scholar_url: "https://scholar.google.com/scholar?q=A+geometric+unification+of+constrained+system+dynamics+Blajer"
-  clusters: ["constrained dynamics", "geometric mechanics"]
-  concepts: ["projection method", "null space", "maggi equations"]
-  related_ids: ["aghili2005unified"]
-  references_out_ids: ["udwadia2002general"]
+Russ Tedrake, _Underactuated Robotics_, [The Acrobot and Cart-Pole](https://underactuated.mit.edu/acrobot.html), accessed September 12, 2026.
 
-- id: nesbit2005three
-  title: "A three dimensional kinematic and kinetic study of the golf swing"
-  authors:
-    - "Steven M. Nesbit"
-  year: 2005
-  venue: "Journal of Sports Science and Medicine"
-  scholar_url: "https://scholar.google.com/scholar?q=A+three+dimensional+kinematic+and+kinetic+study+of+the+golf+swing+Nesbit"
-  clusters: ["golf biomechanics", "inverse dynamics"]
-  concepts: ["full body model", "joint torques", "closed chain"]
-  related_ids: ["mackenzie2009three"]
-  references_out_ids: ["mackenzie2009three"]
+The passages on modal and general linear controllability supply the distinction between underactuation and state controllability. The article's two-mass spring example, Gramian calculation, forward-integrated control and force-cap impossibility certificate are independent constructions. They do not report measured human actuator limits or validate a late-swing correction strategy.
 
-- id: aghili2005unified
-  title: "A unified approach for inverse and forward dynamics of constrained systems and their application in simulation and control"
-  authors:
-    - "Farhad Aghili"
-  year: 2005
-  venue: "IEEE Transactions on Robotics"
-  scholar_url: "https://scholar.google.com/scholar?q=unified+approach+inverse+forward+dynamics+constrained+systems+Aghili"
-  clusters: ["robotics", "constrained dynamics"]
-  concepts: ["projection matrix", "constraint stabilization", "closed-loop"]
-  related_ids: ["featherstone2008rigid"]
-  references_out_ids: ["siciliano1990kinematic"]
+### Golf Model Assumptions
 
-- id: khatib1987unified
-  title: "A unified approach for motion and force control of robot manipulators: The operational space formulation"
-  authors:
-    - "Oussama Khatib"
-  year: 1987
-  venue: "IEEE Journal on Robotics and Automation"
-  scholar_url: "https://scholar.google.com/scholar?q=unified+approach+motion+force+control+robot+manipulators+Khatib"
-  clusters: ["robotics", "control"]
-  concepts: ["operational space", "null space projection", "redundancy"]
-  related_ids: ["siciliano1990kinematic"]
-  references_out_ids: ["siciliano1990kinematic"]
+Steven M. Nesbit, “[A Three Dimensional Kinematic and Kinetic Study of the Golf Swing](https://www.jssm.org/volume04/iss4/cap/jssm-04-499.pdf),” _Journal of Sports Science and Medicine_ 4 (2005), 499–519.
 
-- id: nakamura1991advanced
-  title: "Advanced Robotics: Redundancy and Optimization"
-  authors:
-    - "Yoshihiko Nakamura"
-  year: 1991
-  venue: "Addison-Wesley"
-  scholar_url: "https://scholar.google.com/scholar?q=Advanced+Robotics+Redundancy+and+Optimization+Nakamura"
-  clusters: ["robotics", "optimization"]
-  concepts: ["redundancy", "null space", "singularity"]
-  related_ids: ["khatib1987unified"]
-  references_out_ids: []
+The abstract, introduction and initial methods through physical PDF page 3 were read for the model boundary. Printed page 501 states that hands are not explicitly modeled and introduces translational wrist flexibility to address the closed-loop indeterminacy. This is evidence about that model's construction. The remaining results and figures have not been fully reviewed for this article, and the paper is not cited as proof of an optimal grip or passive swing.
 
-- id: isidori1995nonlinear
-  title: "Nonlinear Control Systems"
-  authors:
-    - "Alberto Isidori"
-  year: 1995
-  venue: "Springer"
-  scholar_url: "https://scholar.google.com/scholar?q=Nonlinear+Control+Systems+Isidori"
-  clusters: ["nonlinear control", "mathematics"]
-  concepts: ["zero dynamics", "geometric control", "invariant distributions"]
-  related_ids: ["bloch2003nonholonomic"]
-  references_out_ids: []
+### Numerical Rank
 
-- id: bloch2003nonholonomic
-  title: "Nonholonomic Mechanics and Control"
-  authors:
-    - "Anthony M. Bloch"
-  year: 2003
-  venue: "Springer"
-  scholar_url: "https://scholar.google.com/scholar?q=Nonholonomic+Mechanics+and+Control+Bloch"
-  clusters: ["geometric mechanics", "nonholonomic systems"]
-  concepts: ["lagrangian reduction", "constraints", "control theory"]
-  related_ids: ["bullo2004geometric"]
-  references_out_ids: ["bullo2004geometric"]
+The SciPy Community, “[scipy.linalg.null_space](https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.null_space.html),” SciPy 1.18.0 online manual, accessed September 12, 2026.
 
-- id: siciliano1990kinematic
-  title: "Kinematic control of redundant robot manipulators: A tutorial"
-  authors:
-    - "Bruno Siciliano"
-  year: 1990
-  venue: "Journal of Intelligent and Robotic Systems"
-  scholar_url: "https://scholar.google.com/scholar?q=Kinematic+control+of+redundant+robot+manipulators+Siciliano"
-  clusters: ["robotics", "tutorial"]
-  concepts: ["redundancy resolution", "null space", "pseudo-inverse"]
-  related_ids: ["khatib1987unified"]
-  references_out_ids: []
+The function description, parameters, returned basis and examples were read. The documented relative cutoff defines an effective numerical null space. It does not establish a physically meaningful rank threshold for mixed units, uncertain measurements or near-singular mechanisms. The article therefore requires scaling and perturbation checks in addition to an algebraic residual.
 
-- id: lynch2017modern
-  title: "Modern Robotics: Mechanics, Planning, and Control"
-  authors:
-    - "Kevin M. Lynch"
-    - "Frank C. Park"
-  year: 2017
-  venue: "Cambridge University Press"
-  scholar_url: "https://scholar.google.com/scholar?q=Modern+Robotics+Mechanics+Planning+and+Control+Lynch"
-  clusters: ["robotics", "textbook"]
-  concepts: ["screw theory", "lagrangian dynamics", "constraints"]
-  related_ids: ["murray1994mathematical"]
-  references_out_ids: []
+## Independent Verification
 
-- id: golub2013matrix
-  title: "Matrix Computations"
-  authors:
-    - "Gene H. Golub"
-    - "Charles F. Van Loan"
-  year: 2013
-  venue: "Johns Hopkins University Press"
-  scholar_url: "https://scholar.google.com/scholar?q=Matrix+Computations+Golub"
-  clusters: ["numerical analysis", "mathematics"]
-  concepts: ["svd", "qr decomposition", "least squares"]
-  related_ids: []
-  references_out_ids: []
+The [builder](https://github.com/D-sorganization/AffineDrift/blob/main/scripts/build_nullspace_examples.py) generates constructed examples, and the [tests](https://github.com/D-sorganization/AffineDrift/blob/main/tests/test_nullspace_article_rigor.py) compare them with separate checks:
 
-- id: siciliano2016springer
-  title: "Springer Handbook of Robotics"
-  authors:
-    - "Bruno Siciliano"
-    - "Oussama Khatib"
-  year: 2016
-  venue: "Springer"
-  scholar_url: "https://scholar.google.com/scholar?q=Springer+Handbook+of+Robotics+Siciliano"
-  clusters: ["robotics", "reference"]
-  concepts: ["dynamics", "control", "manipulation"]
-  related_ids: ["khatib1987unified"]
-  references_out_ids: []
+- An anisotropic mass matrix exposes the error in a Euclidean force projection.
+- A circular trajectory checks curvature acceleration and zero stationary reaction power.
+- A moving guide checks nonzero reaction power.
+- Constraint rescaling checks physical invariance despite changing multipliers.
+- A rotating tangent frame distinguishes a basis from coordinate derivatives.
+- A coupled spring system checks state controllability and an actual finite-time control.
+- A declared planar grasp checks all Jacobian columns by finite differences and separates compatible motion from selected-point stationarity.
+- A rotating point checks the changing-Jacobian acceleration term.
+- Basis rotation checks why a null-space basis alone cannot identify physiological synergies.
 
-- id: bullo2004geometric
-  title: "Geometric Control of Mechanical Systems"
-  authors:
-    - "Francesco Bullo"
-    - "Andrew D. Lewis"
-  year: 2004
-  venue: "Springer"
-  scholar_url: "https://scholar.google.com/scholar?q=Geometric+Control+of+Mechanical+Systems+Bullo"
-  clusters: ["geometric control", "mechanics"]
-  concepts: ["affine connection", "covariant derivative", "controllability"]
-  related_ids: ["bloch2003nonholonomic"]
-  references_out_ids: []
+These are mathematical and implementation controls, not empirical golfer validation.
 
-- id: mackenzie2009three
-  title: "A three-dimensional forward dynamics model of the golf swing"
-  authors:
-    - "Sasho J. MacKenzie"
-    - "Eric J. Sprigings"
-  year: 2009
-  venue: "Sports Engineering"
-  scholar_url: "https://scholar.google.com/scholar?q=A+three-dimensional+forward+dynamics+model+of+the+golf+swing+MacKenzie"
-  clusters: ["golf biomechanics", "forward dynamics"]
-  concepts: ["simulation", "flexible shaft", "optimization"]
-  related_ids: ["nesbit2005three"]
-  references_out_ids: []
+## Citation Provenance
 
-- id: pinocchio_lib
-  title: "Pinocchio: An efficient and rigid multi-body dynamics library"
-  authors:
-    - "Justin Carpentier"
-    - "et al."
-  year: 2019
-  venue: "IEEE International Conference on Robotics and Automation (ICRA)"
-  scholar_url: "https://scholar.google.com/scholar?q=Pinocchio+efficient+rigid+multi-body+dynamics+library"
-  clusters: ["software", "implementation", "multibody dynamics"]
-  concepts: ["c++", "python", "spatial algebra"]
-  related_ids: ["featherstone2008rigid"]
-  references_out_ids: []
-```
+The previous bibliography mixed conceptual associations with purported directed citation links, including links from earlier publications to later ones. Those unsupported edges and source-specific reading claims have been removed. This page does not assert a citation graph between the listed publications.
 
-## C) Reading Paths
-
-### Path 1: Fast Ramp (Conceptual Overview)
-
-_Target: Understand why the Null Space matters for golf biomechanics._
-
-1.  **Murray, Li, Sastry (1994)** (Chapter 6) - Introduction to constrained dynamics.
-2.  **Nesbit (2005)** - Applied constraints in a full-body golf model.
-3.  **Siciliano (1990)** - Tutorial on using the null space for redundancy resolution (e.g., separating "swinging" from "posture").
-4.  **Featherstone (2008)** (Chapter 8) - Efficient algorithms for closed-loop systems.
-5.  **Lynch & Park (2017)** - Modern perspective on constraints and loop closures.
-
-### Path 2: Deep Technical (Rigorous Derivation)
-
-_Target: Master the projection operators and differential geometry._
-
-1.  **Udwadia & Kalaba (2002)** - The explicit closed-form solution for constrained motion ($M\ddot{q} = \tau + \tau_c$).
-2.  **Blajer (1997)** - Unified geometric framework for eliminating Lagrange multipliers.
-3.  **Aghili (2005)** - Comprehensive treatment of inverse/forward dynamics for closed chains.
-4.  **Khatib (1987)** - The Operational Space Formulation (pioneering null space control).
-5.  **Bloch (2003)** - Nonholonomic mechanics (advanced geometric view).
-6.  **Bullo & Lewis (2004)** - Rigorous differential geometric control theory.
-7.  **Isidori (1995)** - Nonlinear control systems and zero dynamics.
-8.  **Nakamura (1991)** - Optimization of redundant manipulators via null space.
-
-### Path 3: Implementation (Solvers & Simulation)
-
-_Target: Writing the code._
-
-1.  **Golub & Van Loan (2013)** - Implementation of SVD and QR for stable null space computation.
-2.  **Pinocchio Library** - State-of-the-art C++/Python library handling constrained dynamics (using proximal formulations).
-3.  **MacKenzie (2009)** - Reference implementation for forward dynamics of the golf swing.
-4.  **SciPy.linalg** - Documentation for `null_space`, `svd`, and `qr` in Python.
-5.  **Drake (Tedrake)** - Advanced constraint handling for trajectory optimization.
+The Caltech authors' [first-edition page](https://www.cds.caltech.edu/~murray/mlswiki/index.php/First_edition) states that the public PDF of _A Mathematical Introduction to Robotic Manipulation_ was removed at the publisher's request. That book was not read in this review and is not used to substantiate a specific derivation here. Broader source coverage can be added after the relevant passages are actually inspected.
