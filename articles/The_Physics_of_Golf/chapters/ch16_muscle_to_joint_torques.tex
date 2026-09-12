@@ -190,9 +190,9 @@ A constrained whole-body model can be written in generalized-speed coordinates a
 \dot{\bm q}=\bm N(\bm q)\bm v,\qquad
 \bm M(\bm q)\dot{\bm v}+\bm h(\bm q,\bm v)
 =\bm B\bm u+\bm Q_{\rm passive}
-+\bm Q_{\rm known}+\bm J_c^T\bm\lambda.
++\bm Q_{\rm known}+\bm J_v^T\bm\lambda.
 \]
-Here $\bm h$ includes modeled inertial velocity terms and gravity; $\bm B$ places actuator inputs into generalized coordinates; and contact reactions $\bm\lambda$ must satisfy the declared contact equations and inequalities. In a muscle-driven model, replace the actuator term by $-\bm N^T\bm L^T\bm F$ together with the muscle state equations. A floating base has unactuated directions; it cannot be assigned arbitrary independent joint-torque controls.
+Here $\bm h$ includes modeled inertial velocity terms and gravity; $\bm B$ maps actuator inputs to forces conjugate to $\bm v$; and $\bm J_v$ maps $\bm v$ to the contact velocity components conjugate to $\bm\lambda$. Contact reactions must satisfy the declared contact equations and inequalities. If a coordinate-rate Jacobian $\bm J_c$ instead maps $\dot{\bm q}$ to those same velocity components, then $\bm J_v=\bm J_c\bm N$. Thus $\bm J_v^T\bm\lambda=\bm N^T\bm J_c^T\bm\lambda$ preserves contact power. In a muscle-driven model, replace the actuator term by $-\bm N^T\bm L^T\bm F$ together with the muscle state equations. A floating base has unactuated directions; it cannot be assigned arbitrary independent joint-torque controls.
 
 \subsection{Sufficiency}
 

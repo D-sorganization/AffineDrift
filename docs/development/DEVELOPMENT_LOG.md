@@ -40,9 +40,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/4369-muscle-torque-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch16_muscle_to_joint_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd`, `docs/development/technical-review/muscle-torque-review.md`, `tests/test_muscle_torque_rigor.py`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.svg`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.pdf`, `docs/development/technical-review/build_muscle_torque_figures.py`, `tests/test_audit_quarto_figure_parity.py`
 - **Started:** 2026-09-12
-- **Last verified:** 2026-09-12 (`655b6514` tested checkpoint; main93bbfd29 reconciliation changes only status records; full root5318 passed/29 skipped/132 deselected, coverage79.35%;32 focused tests, configured mypy91, Ruff and Black100 pass; full535-page book compiles; initial16 print pages and web captures00-10 read, final visual review incomplete)
+- **Last verified:** 2026-09-12 (`84640cab` integrated base plus final typography/contact refinement; root5318 passed/29 skipped/132 deselected, coverage79.35%; title636 and changed lint/Black100 pass; final HTML14 cases/68 regions/24 keyboard scrolls pass; corrected bibliography yields536-page full book with resolved citations; final visual reading remains partial)
 - **Summary:** Rewrites both editions and all11 exercise answers around signed virtual work, feasible force sharing, coupled coordinates, stiffness and power. Adds a checked feasibility/power figure and four primary-source bibliography entries. Removes unsupported anatomical/grip prescriptions and separates inverse estimates, calibration, recruitment and control hypotheses. Preserves original destinations.
-- **Next step:** Enlarge the shared figure labels and inspect the result at actual print and web reading size.
+- **Next step:** Visually review all fifteen final chapter PDF pages and the four new bibliography entries using the corrected536-page build.
 
 ### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 

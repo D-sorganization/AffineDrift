@@ -38,7 +38,8 @@ def _plot_torque_set(axis: plt.Axes) -> None:
     axis.set(
         xlabel="Coordinate 1 Torque (Nm)",
         ylabel="Coordinate 2 Torque (Nm)",
-        title="Coupled Torque Capacity",
+        title="Coupled Torque\nCapacity",
+        yticks=[0, 5, 10, 15],
         ylim=(-1, 19),
         xlim=(-9, 26),
     )
@@ -55,15 +56,15 @@ def _plot_power(axis: plt.Axes) -> None:
         xticklabels=["Speeds (2, −1)\nNet 0 W", "Speeds (2, −3)\nNet −24 W"],
         xlabel="Coordinate Speeds (rad/s)",
         ylabel="Power Delivered to Coordinate (W)",
-        title="One Muscle, Two Power Outcomes",
+        title="One Muscle,\nTwo Power Outcomes",
     )
-    axis.legend(loc="lower left", fontsize=9)
+    axis.legend(loc="lower left", fontsize=14)
 
 
 def build_figures(destination: Path) -> None:
     """Save both publication formats of the constructed mechanics figure."""
-    with plt.rc_context({"font.size": 10, "svg.fonttype": "none"}):
-        figure, axes = plt.subplots(1, 2, figsize=(10, 4.2), layout="constrained")
+    with plt.rc_context({"font.size": 16, "svg.fonttype": "none", "svg.hashsalt": "muscle"}):
+        figure, axes = plt.subplots(1, 2, figsize=(10, 5.2), layout="constrained")
         _plot_torque_set(axes[0])
         _plot_power(axes[1])
         for axis in axes:
@@ -75,6 +76,13 @@ def build_figures(destination: Path) -> None:
                 metadata={"Creator": "AffineDrift; constructed Chapter 16 examples"},
             )
         plt.close(figure)
+    svg_path = destination / "muscle_torque_feasibility.svg"
+    svg_path.write_text(
+        "\n".join(line.rstrip() for line in svg_path.read_text(encoding="utf-8").splitlines())
+        + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 if __name__ == "__main__":

@@ -221,6 +221,70 @@ PR4368 is merged through ordinary protection at
 93bbfd29d3e69147dedef153749a47a1b650dfe9 (September12,20:36:25Z).
 Every exact-head check passed for ec994491, including Linux Python, E2E and
 quality-gate. Its live deployment still requires independent verification.
-The current muscle branch integrates ec994491 at089637b4 but has not yet merged
-the new main squash. Commit the chapter checkpoint before reconciling main;
-preserve both chapter and strokes audit/handoff updates.
+The paired rewrite was committed and pushed as655b6514. Main squash93bbfd29
+was then integrated at84640cab; conflicts affected only our own status records,
+and scientific source/test bytes remained identical to the tested checkpoint.
+
+
+## Latest Typography, Contact Notation and Citation Checkpoint
+
+The figure now uses16-point labels on a10-inch canvas (approximately8.8-point
+labels at5.5-inch print width), larger legends and two-line titles. Both panels
+remain shared SVG/PDF outputs; the SVG writer removes trailing whitespace.
+The final figure was visually inspected at full size, in final web reading
+capture09, in mobile light-left/dark-right detail10, and on physical PDF page184
+(printed page154). Labels are substantially more readable without clipping the
+full figure. Horizontal scrolling retains both panels on narrow screens.
+
+Both sources now distinguish the speed-coordinate contact Jacobian J_v from
+the coordinate-rate Jacobian J_c: J_v=J_c N, hence J_v^T lambda=N^T J_c^T lambda.
+The actuator map also explicitly produces forces conjugate to generalized
+speeds. Final web reading capture12 was visually read for this clarification.
+
+Latest full root run `muscle-torque-final-root.log` exits0:5318 passed,29 skipped,
+132 deselected,59 warnings in204.43s; coverage79.35%. Changed Python lint and
+Black100 pass, title audit636 passes, and bound evidence remains current.
+Six generated outputs were restored only after verifying date-only JSON or
+newline-only changes. All local verification sessions and the browser are closed.
+
+The latest selected root website render succeeds. Final browser QA log is
+`muscle-torque-final-browser-qa.log`:170 expressions,16 displays,14 width/theme
+cases,68 regions and24 successful keyboard scrolls. Only the existing moderate
+landmark-unique axe finding remains. It generated29 NEW reading captures named
+`muscle-torque-final-reading-00.png` through28. Only09 and12 have been visually
+read from this final set; the earlier00-10 reading used the previous rendering.
+Do not conflate either partial reading with a complete final article review.
+
+The535-page full-book preview was NOT citation-complete. Although BibTeX exited0,
+its search path read stale chapter auxiliary files from the source directory,
+omitting the four new references. A first BIBINPUTS correction still searched
+that directory ahead of the current output. The successful correction runs
+BibTeX from `docs/development/technical-review` with the current directory FIRST:
+
+```powershell
+$priorBibInputs = $env:BIBINPUTS
+try {
+    $env:BIBINPUTS = '.;C:/Users/diete/Repositories/AffineDrift-technical-review/articles/The_Physics_of_Golf;'
+    bibtex muscle-torque-full-book
+} finally {
+    $env:BIBINPUTS = $priorBibInputs
+}
+```
+
+Then run two pdflatex resolution passes from the book source directory with
+jobname muscle-torque-full-book and the same absolute output directory. Logs
+`muscle-torque-final-book-pass5.log` and pass6 record the corrected build. The
+final536-page PDF has all four new bibliography entries and no undefined
+citations. The changed chapter's log has no overfull boxes; unrelated chapters
+still have overfull warnings and are not certified by this review. The chapter
+remains zero-based pages178-192 (physical pages179-193, printed149-163).
+Final PNGs are `muscle-torque-final-print-179.png` through193. Only180 and184
+have been visually read so far. Page180 visibly resolves Murray1995 correctly.
+
+Remaining work: read the complete final chapter PDF and website, inspect the
+new bibliography entries in the full-book back matter, check settled TOC
+highlight behavior, run the production route verifier, save durable review
+evidence and reconcile inventory, then open a regular PR and verify protected
+merge/publication. The broader corpus remains unfinished. Preceding strokes
+deployment34717587828 has completed build103617517729 and is running deploy
+job103620128020; this is not yet evidence of live publication.
