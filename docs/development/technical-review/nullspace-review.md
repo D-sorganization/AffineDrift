@@ -264,3 +264,24 @@ still reports only peer DL1595/3903 SHA gaps and DL3902 missing PR/verification
 metadata; these entries remain untouched. No draft PR and no hook bypass.
 Next: push this binding, inspect exact-head hosted CI, protected merge and
 verify the deployed new bibliography route as well as the revised article.
+
+
+## Hosted Related-Links Gate Repair
+
+At47b637ae, job103639254077 in run34725677352 failed the site related-coverage
+gate: the newly published bibliography needs a Related Articles section.
+The job's later summary incorrectly said internal references all valid because
+it reports a different step; the actual failing site-gate output is authoritative.
+Three contextual links now connect the derivation, superposition and muscle
+chapter. No existing scientific paragraph changes. Refresh digests only for
+this reviewed source addition, then bind the actual subsequent source commit.
+
+
+The direct script invocation first failed to import src because it lacked CI's
+PYTHONPATH. Running the same entrypoint through runpy from the repository root
+passes the complete site gate. Focused43 tests pass; render24560 succeeds.
+The new section's three links and text were checked, and both390px themes
+were visually read. The initial light screenshot captured a reveal animation;
+a1200ms settled repeat is fully legible and has no page overflow. Browser
+nullspace-links is closed. Only the reviewed companion digest changes; the
+mathematical source and all other route evidence remain intact.
