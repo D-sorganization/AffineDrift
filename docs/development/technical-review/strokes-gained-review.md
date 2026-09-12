@@ -321,3 +321,27 @@ implementation evidence from its later inventory reconciliation.
 Regular PR #4368 opened after all normal push hooks passed. It targets main
 without bypass; source/evidence checkpoint e079999a is retained in branch history.
 The SPEC row is keyed to #4368. CI and exact publication remain pending.
+
+
+## CI Numerical Precision Repair: September 12
+
+Run34714267081, Python job103608499586, failed the exact-byte reproduction
+assertion at byte1631. Full log is local scratch `strokes-ci-python-failure.log`.
+Only final exponential digits differ; E2E job103608499603 has passed. Do not
+repeat the earlier incomplete summary that all Python checks passed.
+
+The report comparator now keeps structure/types/integers/text exact and checks
+finite floating-point leaves at rtol1e-13,atol1e-14. Canonical artifact formatting
+is still checked byte-for-byte. The artifact and source builder are unchanged.
+Twelve mutation/observed-platform regression cases had RED missing-helper failures
+(`strokes-precision-red.log`), then all47 numerical tests passed; Black100 and
+Ruff pass. Updated bound evidence must be regenerated and pinned to the repair
+commit after it exists. No new article render is needed for this test-only repair;
+source/CSS hashes must still be checked against the existing rendered evidence.
+
+Muscle chapter work is saved separately at0ca919d1 on the pushed branch
+`fix/4369-muscle-torque-rigor`: eight constructed mechanics checks plus audit and
+handoff, root5305 pass and79.35% coverage. No Chapter16 public source changes yet.
+Resume that branch after merging the strokes repair through ordinary protections.
+
+Repair root suite:5309 passed,29 skipped,132 deselected,59 warnings in201.36seconds; coverage79.35%. Combined suite69 passed. Log `strokes-precision-root.log`. Ruff/Black100 and configured mypy91 pass. Six unrelated test-generated outputs were inspected and restored (date-only or formatting). Article/critique/CSS bytes still match their completed render review.

@@ -183,7 +183,7 @@ adding up. Generated trust annotations and the critique ledger were not edited.
 
 ## Presentation and Verification
 
-The numerical builder and JSON are reproducible, with 35 focused tests covering
+The numerical builder and JSON are reproducible, with 47 focused tests covering
 penalties, category cancellation, proper policy evaluation, slope reversals,
 state-dependent composition, full distributions, joint interventions and objective
 changes. The follow-up extension had a missing-function RED failure before GREEN.
@@ -196,12 +196,12 @@ check of aria-expanded alone was insufficient and was strengthened to measure
 panel height. The linked critique's five full reading captures were read; its
 four expressions and original destinations were verified.
 
-Root tests pass 5,297 cases with 29 skipped, 132 deselected, 59 warnings and
+Root tests pass 5,309 cases with 29 skipped, 132 deselected, 59 warnings and
 79.35% coverage. The numerical builder has 100% statement coverage; boundary
 checks reject malformed counted transitions, invalid costs, nonabsorbing policies
-and out-of-domain mixtures. The stored numerical artifact reproduces exactly.
+and out-of-domain mixtures. The stored numerical artifact retains its exact canonical JSON bytes and evidence hash; recomputation is compared with relative tolerance1e-13 and absolute tolerance1e-14, while structure, types, text and integer inputs remain exact.
 The combined numerical, source-mapping, inventory and deployment-boundary suite
-passes 57 cases. An earlier run exposed Playwright scratch output at the root;
+passes 69 cases. An earlier run exposed Playwright scratch output at the root;
 closing the browser and relocating its output resolved both hygiene failures.
 Ruff, Black100 over 705 files, configured CI mypy over 91 files and stricter
 mypy over both changed implementation modules pass. The title audit of 636
@@ -233,3 +233,30 @@ The complete failure/recovery history and exact reproduction commands are retain
 in `docs/development/technical-review/strokes-gained-review.md`. These are local
 review results. A protected merge and revision-matched live deployment remain
 separate requirements for a publication claim.
+
+## Cross-Platform Numerical Reproduction
+
+CI run34714267081 exposed final-digit differences in NumPy exponential results
+on Linux: one constructed benefit was0.0764450833530117 versus the stored
+Windows result0.07644508335301181. Byte equality of recomputed floating-point
+JSON was therefore an unjustified acceptance criterion. E2E job103608499603
+passed; the Python artifact check was the only failed check.
+
+The correction preserves the artifact and its formatting exactly, checks all
+keys, lengths, types, text and integer values exactly, and compares finite
+floating-point results at rtol1e-13 and atol1e-14. This is substantially tighter
+than the article's displayed precision. Twelve new regression cases first failed
+before the comparison helper existed, then passed: the observed Linux values are
+accepted, while changed numerical results, nonfinite values, altered structure
+and integer-type substitutions are rejected. All47 numerical tests pass locally.
+This changes numerical reproduction checking, not a scientific conclusion or the
+reviewed article/CSS bytes. New CI and protected publication remain outstanding.
+
+The comparison uses NumPy's documented absolute-plus-relative criterion:
+https://numpy.org/doc/stable/reference/generated/numpy.testing.assert_allclose.html
+CPU-dispatched kernels are documented at:
+https://numpy.org/doc/stable/reference/simd/index.html
+The job log establishes the actual discrepancy; the precise kernel responsible
+was not isolated, so no specific hardware cause is claimed.
+
+Final local repair validation: root5309 pass,29 skip,132 deselected,59 warnings; coverage79.35%. Ruff, Black100 (705 files) and configured mypy (91 files) pass. Article, critique and CSS hashes were independently rechecked against the stored rendered review.

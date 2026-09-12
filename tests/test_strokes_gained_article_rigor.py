@@ -65,11 +65,63 @@ def test_distribution_shape_and_mixture_domain_are_enforced(model: ModuleType) -
         model.mixture_value(3)
 
 
+def _assert_report_matches(actual: object, expected: object) -> None:
+    """Keep JSON structure exact while allowing final-digit numerical roundoff."""
+    assert type(actual) is type(expected)
+    if isinstance(expected, dict):
+        assert actual.keys() == expected.keys()
+        for key, value in expected.items():
+            _assert_report_matches(actual[key], value)
+    elif isinstance(expected, list):
+        assert len(actual) == len(expected)
+        for observed, desired in zip(actual, expected, strict=True):
+            _assert_report_matches(observed, desired)
+    elif isinstance(expected, float):
+        assert np.isfinite(actual) and np.isfinite(expected)
+        # Far tighter than the article's displayed precision; accommodates the
+        # observed Windows/Linux exp differences without weakening input checks.
+        np.testing.assert_allclose(actual, expected, rtol=1e-13, atol=1e-14)
+    else:
+        assert actual == expected
+
+
 @pytest.mark.integration
-def test_published_numerical_artifact_reproduces_exactly(model: ModuleType) -> None:
+def test_published_numerical_artifact_reproduces_with_declared_precision(model: ModuleType) -> None:
     artifact = Path("reports/technical-review/strokes-gained-numerics.json")
-    expected = (json.dumps(model.report(), indent=2) + "\n").encode("utf-8")
-    assert artifact.read_bytes() == expected
+    published = json.loads(artifact.read_bytes())
+    # Preserve the exact stored serialization separately from numerical agreement.
+    assert artifact.read_bytes() == (json.dumps(published, indent=2) + "\n").encode("utf-8")
+    computed = json.loads(json.dumps(model.report()))  # Normalize tuples to JSON arrays.
+    _assert_report_matches(published, computed)
+
+
+def test_report_comparison_accepts_observed_linux_roundoff() -> None:
+    windows = {"slope": [0.07644508335301181, 0.6585739633128318]}
+    linux = {"slope": [0.0764450833530117, 0.6585739633128317]}
+    _assert_report_matches(windows, linux)
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        {"value": [0.0764451]},
+        {"value": [float("nan")]},
+        {"value": [float("inf")]},
+        {"value": ["0.07644508335301181"]},
+        {"value": [0.07644508335301181, 0.0]},
+        {"renamed": [0.07644508335301181]},
+        {"value": [0.07644508335301181], "extra": 0},
+    ],
+)
+def test_report_comparison_rejects_changed_results_or_structure(changed: dict) -> None:
+    with pytest.raises(AssertionError):
+        _assert_report_matches(changed, {"value": [0.07644508335301181]})
+
+
+@pytest.mark.parametrize("changed", [True, 1.0, 2, "1"])
+def test_report_comparison_keeps_integer_inputs_exact(changed: object) -> None:
+    with pytest.raises(AssertionError):
+        _assert_report_matches({"count": changed}, {"count": 1})
 
 
 @pytest.mark.parametrize("values", [[4.2, 2.8, 1.5, 0], [4.2, 7, -2, 0]])
