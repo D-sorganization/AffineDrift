@@ -185,3 +185,25 @@ Latest root nullspace-readable-root.log:5334 passed,29 skipped,132 deselected,
 59 warnings in193.45s, coverage79.29%. All validation processes were reaped and
 the browser closed before committing. This checkpoint does not claim full
 route review, empirical golfer validation or completion of the corpus.
+
+
+## Completed Local Reading and Production-Route Gate
+
+All29 latest article captures and all six bibliography images in each theme
+have now been visually read. The previously truncated callout/table images
+were reopened successfully. Table contents were inspected across horizontal
+scroll positions, including the bibliography boundary column in both themes.
+An extra table probe failed because the theme toggle was outside the viewport;
+returning to the top at desktop width fixed the QA interaction. All four final
+bibliography table cases pass keyboard scrolling. Browser nullspace-final is
+closed. Production-route session48906 completed exit0: all28 records were
+individually checked HTTP200/pass, no failures/inspection errors/overflow/retries.
+Axe scanned one configuration per route (two), with zero serious/critical findings.
+
+Durable local-review reports are now in reports/technical-review/nullspace-*
+(outside generated docs). All seven source/style/test/example files match
+implementation1cfa47d45ebd14c719c0ec981e83eb53a231fb4d byte-for-byte. Static CI
+now passes at that exact head; Python/E2E were still running at the last check.
+Bind the route inventory only after these reports have an actual commit.
+Full corpus and shared issues4370/4374 remain open. No empirical or live
+publication attestation is inferred from these local results.
