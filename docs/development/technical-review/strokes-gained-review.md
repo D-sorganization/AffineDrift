@@ -2,12 +2,16 @@
 
 ## Status and Scope
 
-User-requested intermediate handoff, September 10, 2026. Governing issue #4358
-is a native child of #4009 and contributes to #4021/#4059. Worktree:
+Resumed September 12, 2026, under reopened #4358 (child of #4009;
+corpus #4021 and applied routes #4059). Worktree:
 `C:/Users/diete/Repositories/AffineDrift-technical-review`; branch
-`fix/4358-strokes-gained-rigor`. The source rewrite is saved, not publication
-ready. Full rendered review, trust-inventory reconciliation, protected delivery,
-and the remaining corpus are unfinished. Do not mark the epic complete.
+`fix/4358-strokes-delivery`, based on main
+`59b4b84790d22e45d26e222a86d5ae260954b836`. Follow-up PR not created.
+PR #4360 was converted to regular and merged as
+`e19e3ff17fd6340ae05c9362fea7c7049d4bf089` before its recorded rendered review
+and inventory reconciliation were complete. This follow-up finishes that work.
+All future PRs must be regular, per the user's explicit instruction.
+The overall corpus remains unfinished; do not mark the epic complete.
 
 The complete original article (about 5,375 words), bibliography companion, and
 linked critique were read. The replacement article is about 4,723 whitespace
@@ -140,7 +144,7 @@ actual rendered destination verification remains pending.
 ## Exact Continuation Plan
 
 1. Read AGENT_HANDOFF and the governing issue; check central inbox and claim,
-   acquire a new unique session/presence, and inspect the draft branch/PR.
+   acquire a new unique session/presence, and inspect the current branch/PR.
 2. Finish adversarial source reading and add any missing meaningful checks,
    especially full cost/continuation boundaries and stochastic-policy conditions.
 3. Render article and critique via `render_selected.py` using the root config.
@@ -158,7 +162,7 @@ actual rendered destination verification remains pending.
    through canonical tools. Do not silently close the governed critique.
 7. Update single SPEC row, DL-#4358 and handoff. Sync current main with normal
    merge/rebase rules, preserving peer changes. Never mutate Git during local QA.
-   Make the draft PR ready only after verification, then use protected squash
+   Create a regular PR after verification, then use protected squash
    delivery and verify the revision-matched live artifact before marking shipped.
 
 ## Corpus and Protected Work
@@ -173,8 +177,8 @@ handoff/DL sections untouched.
 
 ## Committed Handoff Checkpoint
 
-Implementation c46453792a2fe87cd2c3ad382090e93ee0a78836 is pushed in draft
-PR #4360. The first commit13e0a098 was normally replayed before first push onto
+Implementation c46453792a2fe87cd2c3ad382090e93ee0a78836 was first pushed in
+PR #4360, subsequently converted to regular and merged. The first commit13e0a098 was normally replayed before first push onto
 published main0c753400; the scoped article, critique, bibliography, numerical
 builder and tests did not change, while merged peer impact/acoustics work was
 preserved. Root/content checks above ran before replay; all14 focused tests
@@ -185,5 +189,79 @@ The final documentation checkpoint is identified by SELF in AGENT_HANDOFF.
 The issue lease and central presence were released successfully for takeover:
 receipts5621007068 and5621008118, September10 at15:16:52Z. This is a complete
 save-and-handoff operation, not completion of the scientific corpus review.
-Do not auto-merge draft4360 until its outstanding review and delivery work is
-finished. The full goal remains active; no new agent was spawned.
+The outstanding rendered review and evidence work is now on the follow-up
+branch; the historical merge did not prove it complete. The full goal remains active; no new agent was spawned.
+
+## September 12 Follow-Up Decisions
+
+Added the full immediate-cost, leave-distribution and continuation-value
+intervention decomposition. Old/new costs 1/1.1, distributions (.5,.5)/(.75,.25)
+and continuation values (1.5,2)/(1.3,1.9) give total costs 2.75/2.55 and a .20
+benefit. Allocation at old skill gives -.10+.125+.175; reversing the order gives
+-.10+.15+.15. Their .025 interaction is the combined benefit minus the isolated
+benefits. This is model accounting, not causal identification. Added independent
+checks for that identity and conditional Jensen's mean-preserving-spread condition;
+17 focused tests passed after a recorded missing-function RED failure.
+
+The article now states finite-mixture differentiability conditions and the
+coupling E[Y|X]=X with convex V and existing expectations. Larger variance alone
+is insufficient. No new empirical golfer claims or fitted data were introduced.
+
+Rendered inspection found reference contrast failure in dark mode, math-only
+headers reported as empty by axe, and expanded explanatory panels with zero
+height because heading wrappers broke the shared sibling selector. Once opened,
+white card backgrounds also failed dark-theme contrast. The scoped stylesheet
+uses the reading background and the panel's actual aria-hidden state; table
+headers now name the two players. Browser checks must verify actual panel height,
+not merely aria-expanded. Full reading captures must reset horizontal scroll
+positions after exercising wide tables.
+
+Initial root run: 5,274 passed, 29 skipped, 132 deselected, 59 warnings,
+coverage 79.30%; two root-hygiene failures were caused solely by the local
+Playwright CLI output directory. Ruff and Black100 (703 files) passed. The exact
+CI mypy command passed over 91 files; an earlier generic scripts-directory
+invocation was invalid because that directory is excluded by configuration.
+Content lint: 131 passed, 4 skipped. Title audit: 636 sources passed. CSS budget
+passed via python -m scripts.check_styles_budget; direct-file invocation lacked
+the package root and was corrected. Final browser and root-hygiene outcomes are
+recorded below when complete.
+
+The first actual-route gate had 28/28 HTTP200 and no inspection or axe failures,
+but all records failed on Pandoc's blocked legacy polyfill. Production already
+removes that script. Apply only strip_legacy_math_polyfill from the canonical
+production module, not its destructive docs-pruning entry point, before rerunning.
+Full manifest generation against this mixed local docs tree encounters old
+nonpublic draft HTML without H1; the focused manifest uses canonical _page_record
+for the two actual rendered routes and the production viewport contract.
+
+## Completed Local Review, September 12
+
+Final source render and production-normalized actual-route gate pass: all 28
+records HTTP200, with no console or inspection failures, no serious/critical axe
+violations, and no retries. Article:154 expressions/18 displays; all37 old IDs and
+four citation entries;126 expression/table cases and64 keyboard scrolls. Critique:
+four expressions, six display cases and two keyboard scrolls. Seven widths in both
+themes pass for each page. Expanded panel heights are checked, not inferred from
+button attributes. Full article/critique source and overlapping reading captures
+were inspected, including expanded editorial responses; final affected mobile math,
+table edges, dark references and panels were inspected again.
+
+The final gradient background defect was found visually after axe passed. Its
+correction received a fresh14-case layout/axe and12-panel capture pass; only shared
+moderate landmark-unique findings remain. Supplemental screenshot navigation once
+timed out because the theme button was offscreen; scrolling to the top before
+clicking resolved it. No product behavior was bypassed.
+
+All QA workers are reaped and browser session strokes-review is closed. The CLI
+output directory was safely moved within the worktree to
+`docs/development/technical-review/strokes-cli-20260912`; all6 root-hygiene tests
+then passed.17 focused tests passed again. Six unrelated test-generated outputs
+were restored after JSON comparison proved only date/format changes. Production
+preview on port8767 may remain idle; it is not an ongoing verification worker.
+
+The immutable review report is `reports/technical-review/strokes-complete-review.md`;
+local evidence summary is `strokes-render-verification.json`. Next: commit source,
+report and handoff; use that actual SHA for both inventory reviews and corrected
+findings, regenerate canonical evidence reports, then create a regular PR. Preserve
+the governed critique's open status. Verify protected merge and live publication
+before changing DL4358 to shipped. Continue the remaining corpus afterward.

@@ -38,6 +38,23 @@ def category_change(benchmark: tuple, player: tuple) -> dict[str, float]:
     return {"approach": approach, "putting": benefit - approach, "total": benefit}
 
 
+def intervention_change(costs: tuple, probabilities: tuple, values: tuple) -> dict[str, float]:
+    """Split a joint change by evaluating the distribution effect at old skill."""
+    if len(costs) != 2 or len(probabilities) != 2 or len(values) != 2:
+        raise ValueError("Provide old and new costs, distributions and continuation values")
+    if not np.all(np.isfinite(costs)) or np.any(np.asarray(costs) < 0):
+        raise ValueError("Mean immediate counted costs must be finite and nonnegative")
+    old = expected_value(probabilities[0], values[0])
+    distribution_only = expected_value(probabilities[1], values[0])
+    new = expected_value(probabilities[1], values[1])
+    return {
+        "total": float(costs[0] + old - costs[1] - new),
+        "immediate": float(costs[0] - costs[1]),
+        "distribution_old": old - distribution_only,
+        "continuation_new": distribution_only - new,
+    }
+
+
 def policy_value(transition: ArrayLike, costs: ArrayLike) -> NDArray[np.float64]:
     """Solve a proper finite absorbing chain's undiscounted cost-to-go."""
     matrix, cost = np.asarray(transition, dtype=float), np.asarray(costs, dtype=float)
@@ -78,6 +95,14 @@ def report() -> dict:
     players = {"A": (1.2, 1.1), "B": (1.7, 1.4), "C": (1.8, 1.75)}
     return {
         "authority": "Illustrative constructed examples; not empirical golfer estimates",
+        "joint_intervention": {
+            "mean_costs": [1, 1.1],
+            "probabilities": [[0.5, 0.5], [0.75, 0.25]],
+            "continuation_values": [[1.5, 2], [1.3, 1.9]],
+            "changes": intervention_change(
+                (1, 1.1), ([0.5, 0.5], [0.75, 0.25]), ([1.5, 2], [1.3, 1.9])
+            ),
+        },
         "penalty": {
             "values": [4.2, 2.8, 1.5, 0],
             "costs": [1, 2, 1],

@@ -100,3 +100,33 @@ def test_article_states_accounting_conditions_and_distributional_estimand() -> N
         "a causal model of the golfer's motion that does not depend on population averages"
         not in source
     )
+
+
+def test_joint_intervention_includes_cost_distribution_and_continuation(model: ModuleType) -> None:
+    result = model.intervention_change((1, 1.1), ([0.5, 0.5], [0.75, 0.25]), ([1.5, 2], [1.3, 1.9]))
+    assert result["total"] == pytest.approx(2.75 - 2.55)
+    assert result["immediate"] == pytest.approx(-0.1)
+    assert result["distribution_old"] == pytest.approx(0.125)
+    assert result["continuation_new"] == pytest.approx(0.175)
+    # Reversing the attribution order changes the components, not their sum.
+    alternative_distribution = np.dot([0.5, 0.5], [1.3, 1.9]) - np.dot([0.75, 0.25], [1.3, 1.9])
+    alternative_continuation = np.dot([0.5, 0.5], [0.2, 0.1])
+    assert alternative_distribution == pytest.approx(0.15)
+    assert result[
+        "immediate"
+    ] + alternative_distribution + alternative_continuation == pytest.approx(result["total"])
+
+
+def test_interaction_is_difference_between_combined_and_isolated_benefits() -> None:
+    before, distribution_only, skill_only, combined = 2.75, 2.725, 2.6, 2.55
+    combined_benefit = before - combined
+    separate_benefits = (before - distribution_only) + (before - skill_only)
+    assert combined_benefit - separate_benefits == pytest.approx(0.025)
+
+
+def test_mean_preserving_spread_uses_conditional_mean_and_convexity() -> None:
+    original = np.array([1.5, 2.5])
+    spread = np.array([[1, 2], [2, 3]])
+    np.testing.assert_allclose(spread.mean(axis=1), original)
+    # A strictly convex toy continuation function yields a positive increase.
+    assert np.mean(1 + 0.1 * spread**2) - np.mean(1 + 0.1 * original**2) == pytest.approx(0.025)

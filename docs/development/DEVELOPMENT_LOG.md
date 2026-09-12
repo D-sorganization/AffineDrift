@@ -34,15 +34,15 @@ reachable from any live state and `abandoned` from `parked`.
 ### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 
 - **State:** in_progress
-- **Owner:** codex (handoff requested)
+- **Owner:** codex
 - **Issue:** #4358 (epic #4009; corpus #4021; applied routes #4059)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4360 (draft; handoff checkpoint)
-- **Branch:** `fix/4358-strokes-gained-rigor`
-- **Paths:** `articles/strokes-gained-limitations.qmd`, `articles/strokes-gained-limitations-bibliography.md`, `critiques/strokes_gained_non_ergodic.md`, `references/strokes-gained-rigor.bib`, `tests/test_strokes_gained_article_rigor.py`, `docs/development/technical-review/strokes-gained-review.md`, `docs/development/technical-review/build_strokes_gained_examples.py`, `docs/development/technical-review/strokes-gained-numerics.json`
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4360 (merged; follow-up not created)
+- **Branch:** `fix/4358-strokes-delivery`
+- **Paths:** `articles/strokes-gained-limitations.qmd`, `articles/strokes-gained-limitations-bibliography.md`, `critiques/strokes_gained_non_ergodic.md`, `references/strokes-gained-rigor.bib`, `css/strokes-gained.css`, `tests/test_strokes_gained_article_rigor.py`, `docs/development/technical-review/strokes-gained-review.md`, `docs/development/technical-review/build_strokes_gained_examples.py`, `docs/development/technical-review/strokes-gained-numerics.json`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`c46453792a2fe87cd2c3ad382090e93ee0a78836`; focused 14 passed again after replay onto current main; scoped source/code preserved; pre-replay root 5269 pass/29 skip/132 deselected/59 warnings, coverage 79.29%; Ruff/Black100, title 636 and content 131 pass; normal commit/push hooks passed; rendered review pending)
-- **Summary:** Rebuilds accounting, penalties, category transfers, policy values, distributional proximity, player heterogeneity and causal limits. Complete original article/companion/critique reading; independent numerical examples saved. User requested intermediate handoff before browser and publication verification; governed critique remains open and route inventory deferred.
-- **Next step:** Render the revised article and critique under the root Quarto configuration and complete their full visual technical review.
+- **Last verified:** 2026-09-12 (`59b4b84790d22e45d26e222a86d5ae260954b836` base plus working-tree changes; focused17 pass; root5274 pass plus two generated-output hygiene failures subsequently resolved with all6 hygiene tests passing, coverage79.30%; Ruff/Black100, configured mypy91, title636, content131 pass; rendered actual-route gate28/28 passes after production polyfill normalization)
+- **Summary:** Corrects accounting and individual inference, including joint shot-cost/distribution/continuation effects and attribution-order dependence. Resumed after PR4360 merged without its pending rendered audit; repairs reference/panel dark contrast and invisible expanded text. All future PRs regular. Governed critique remains open and inventory deferred until evidence reconciliation.
+- **Next step:** Commit the verified implementation and bind both route reviews to that actual revision.
 
 ### DL-#4355 · Complete Forces, Torques and Physical Attribution
 

@@ -3,10 +3,11 @@ title: "On the Limits of Strokes-Gained Inference for Individual Golfers"
 description: "Exact strokes-gained accounting, individual scoring predictions, and the evidence needed to connect swing changes to better golf decisions."
 author: "Dieter Olson"
 date: "2025-11-28"
-date-modified: "2026-09-10"
+date-modified: "2026-09-12"
 bibliography: ../references/strokes-gained-rigor.bib
 format:
   html:
+    css: ../css/strokes-gained.css
     toc: true
     toc-depth: 3
     code-fold: false
@@ -134,6 +135,28 @@ An approach improvement can change putting strokes gained even though the golfer
 
 If an approach holes out, leaves the green, incurs a penalty, or starts another non-putting sequence, use the full transition and actual category rules. A category consisting of disconnected shot segments has several entry and exit boundaries; it cannot always be represented by a single first-putt value.
 
+### When the Intervention Changes More Than Proximity
+
+A change in technique or strategy can alter immediate counted cost, the next-state distribution, and subsequent performance together. Let $\bar c_a$ be mean immediate cost, $P_a$ the next-state distribution, and $V_i^a$ the continuation value under alternative $a\in\{0,1\}$. Define the expected cost of that alternative by
+
+$$
+F_a=\bar c_a+\mathbb E_{P_a}[V_i^a(X)].
+$$
+
+Its scoring benefit is $b_i=F_0-F_1$. Adding and subtracting $\mathbb E_{P_1}[V_i^0(X)]$ yields an exact decomposition:
+
+$$
+\begin{aligned}
+b_i={}&(\bar c_0-\bar c_1)\\
+&+\bigl(\mathbb E_{P_0}[V_i^0]-\mathbb E_{P_1}[V_i^0]\bigr)\\
+&+\mathbb E_{P_1}[V_i^0-V_i^1].
+\end{aligned}
+$$
+
+The three terms are the immediate-cost change, the distribution change evaluated using old continuation skill, and the continuation change evaluated over the new opportunities. This is an accounting decomposition of specified models, not an identification result. Evaluating the distribution change using new skill instead changes the component allocations when the effects interact, while preserving their total.
+
+For example, take old/new mean costs $1$ and $1.1$, old/new probabilities over two next states $(0.5,0.5)$ and $(0.75,0.25)$, and old/new continuation values $(1.5,2.0)$ and $(1.3,1.9)$. Expected costs are $2.75$ and $2.55$, a benefit of $0.20$. The decomposition above gives $-0.10+0.125+0.175=0.20$. Reversing the attribution order gives $-0.10+0.15+0.15=0.20$. The predicted improvement is well defined for the declared model; its division into component effects needs a stated convention.
+
 ## 4. Proximity Requires a Distribution {#gradients-of-expected-strokes-and-heterogeneous-skill-profiles}
 
 ### 4.1 A Local Derivative Has a Limited Meaning {#local-value-of-a-small-improvement}
@@ -161,6 +184,8 @@ Take illustrative remaining values $V(1)=1.1$, $V(2)=1.5$, and $V(3)=2.1$, with 
 
 Thus “proximity stayed the same” can conceal a scoring change. A change in average driving distance can similarly conceal different rough, recovery, or penalty probabilities. For a convex value function, a mean-preserving spread cannot decrease its expectation. A larger variance alone does not establish that ordering between arbitrary distributions; outside the stated condition, calculate the full expectation.
 
+One precise mean-preserving-spread condition is a coupling of old distance $X$ and new distance $Y$ with $\mathbb E[Y\mid X]=X$. If $V$ is convex on their support and the expectations exist, conditional Jensen's inequality gives $\mathbb E[V(Y)\mid X]\ge V(X)$, and averaging gives $\mathbb E[V(Y)]\ge\mathbb E[V(X)]$. This condition compares distributions, not just two reported variance numbers.
+
 ## 5. Putting Examples With Complete Accounting {#a-concrete-putting-example}
 
 ### 5.1 Probability Level Does Not Determine Slope {#simple-two-putt-model}
@@ -175,7 +200,7 @@ The model excludes three-putts and does not derive the follow-up leave distribut
 
 Suppose two constructed make curves are $p_A(x)=e^{-0.3x}$ and $p_B(x)=e^{-1.2x}$, with $x$ in metres and the rate constants in inverse metres. Golfer B has a lower make probability at every positive distance. Yet the marginal proximity benefits switch order:
 
-| Distance | $V_A'(x)$ | $V_B'(x)$ | Larger Local Benefit From Moving Closer |
+| Distance | Player A Slope $V_A'(x)$ | Player B Slope $V_B'(x)$ | Larger Local Benefit From Moving Closer |
 |---|---:|---:|---|
 | $0.5$ m | $0.2582$ strokes/m | $0.6586$ strokes/m | B |
 | $3.0$ m | $0.1220$ strokes/m | $0.0328$ strokes/m | A |
@@ -233,7 +258,7 @@ B(s)=\sum_i w_i(s)V_i^{\mathrm{obs}}(s),\qquad
 w_i(s)=\Pr(I=i\mid S=s),
 $$
 
-for the population quantity represented by that sampling scheme. It is not generally an equally weighted average over players. When differentiable,
+for the population quantity represented by that sampling scheme. It is not generally an equally weighted average over players. For a scalar state coordinate with differentiable weights and values (and a finite player mixture),
 
 $$
 B'(s)=\sum_i w_i(s)(V_i^{\mathrm{obs}})'(s)
