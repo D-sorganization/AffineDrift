@@ -450,6 +450,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             in {
                 "/articles/strokes-gained-limitations.html",
                 "/critiques/strokes_gained_non_ergodic.html",
+                "/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html",
             }
         )
     ]
@@ -466,8 +467,9 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4062"]
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4059"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4057"] -= 1
-    assert len(deferred) == 198
-    assert len(reviewed_completed_batches) == 21
+    expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"] -= 1
+    assert len(deferred) == 197
+    assert len(reviewed_completed_batches) == 22
     assert observed == expected_deferred
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()

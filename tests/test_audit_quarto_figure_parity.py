@@ -287,12 +287,27 @@ class TestAuditBookPhysicsOfGolf:
         # #4347 pairs functional control roles and a verified activation-response plot.
         # #4349 pairs a computed reduced drift field and proved optimal-control examples.
         # #4351 replaces the dimensionally incorrect hinge sketch with verified trajectories.
-        assert res.total_latex_tikz == 8
-        assert res.total_latex_includegraphics == 30
+        # #4369 replaces the muscle sketch with a shared feasibility/power figure.
+        assert res.total_latex_tikz == 7
+        assert res.total_latex_includegraphics == 31
         assert res.total_latex_fig_labels == 38
-        assert res.total_quarto_figures == 31
-        assert res.missing_figures_count == 7
+        assert res.total_quarto_figures == 32
+        assert res.missing_figures_count == 6
         assert res.is_in_full_parity is False
+        muscle = next(
+            chapter
+            for chapter in res.chapters
+            if chapter.chapter_stem == "ch16_muscle_to_joint_torques"
+        )
+        assert muscle.is_in_parity
+        assert muscle.latex_fig_labels == ["fig:muscle-jacobian"]
+        assert muscle.figures[0].graphics_target == "figures/muscle_torque_feasibility.pdf"
+        for extension in ("pdf", "svg"):
+            assert (
+                repo_root
+                / "articles/The_Physics_of_Golf/figures"
+                / f"muscle_torque_feasibility.{extension}"
+            ).is_file()
 
 
 class TestFormattingAndReporting:
