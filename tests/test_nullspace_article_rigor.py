@@ -16,6 +16,8 @@ from scripts.build_nullspace_examples import (
     spring_system,
 )
 
+GRAVITY_M_S2 = 9.81  # Declared teaching-example gravity; independent of the builder.
+
 
 def test_anisotropic_projection_matches_direct_saddle_system() -> None:
     mass, jacobian = np.array([[2.0, 1.0], [1.0, 3.0]]), np.array([[1.0, 1.0]])
@@ -50,13 +52,13 @@ def test_circle_curvature_and_power_match_analytic_trajectory() -> None:
     result = make_examples()["circle"]
     # q=(1,0), qdot=(0,3), phi=(q.q-1)/2; phi_ddot=q.a+v.v.
     acceleration = np.array(result["acceleration"])
-    np.testing.assert_allclose(acceleration, [-9, -9.81], atol=1e-13)
+    np.testing.assert_allclose(acceleration, [-9, -GRAVITY_M_S2], atol=1e-13)
     assert acceleration[0] + 9 == pytest.approx(0)
     np.testing.assert_allclose(result["reaction"], [-18], atol=1e-13)
     assert result["reaction_power"] == pytest.approx(0)
     tangent = np.array([[0.0], [1.0]])
     tangent_rate = np.array([[-3.0], [0.0]])
-    reconstructed = tangent[:, 0] * -9.81 + tangent_rate[:, 0] * 3
+    reconstructed = tangent[:, 0] * -GRAVITY_M_S2 + tangent_rate[:, 0] * 3
     np.testing.assert_allclose(acceleration, reconstructed, atol=1e-13)
 
 

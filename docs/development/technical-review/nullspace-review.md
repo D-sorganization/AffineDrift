@@ -154,3 +154,34 @@ The six unrelated generated summaries/registries were restored only after
 line-ending or parsed-JSON equality (excluding generated_on) was established.
 The repo-local shared_scripts development-log checker is absent; use the
 central Repository_Management copy, preserving known peer metadata errors.
+
+
+## Readability and Static-Check Checkpoint
+
+Latest source uses the existing css/duality-chapter.css without editing that
+shared file. Nested responsive rules previously compounded display-math scaling
+to roughly10px on mobile; inherited sizing and horizontal scrolling preserve
+legibility. Four latest light mobile equation details were visually inspected.
+Both short callouts now remain expanded: real keyboard testing found that the
+shared collapse header's role and tabindex did not implement Enter activation.
+That shared defect is tracked separately in epic child4374; no shared JS was
+changed. TOC highlighting4370 and moderate landmark-unique findings remain.
+
+Render94019 and browser56238 completed successfully:209 expressions,46 displays,
+14 width/theme cases,184 regions,46 successful keyboard scroll checks. The
+supplement verifies eight visible callout cases, four keyboard-scrollable table
+cases and eight bibliography viewport/theme cases. All29 initial article
+captures and six light bibliography captures have been read. The29 newest
+article reading images and six dark bibliography images remain unread; a
+truncated five-image tool output is not visual evidence. Production-route
+verification, full final reading and durable review/inventory binding remain.
+
+Static CI103632789676 at a8bd721056f29b236872f025e3d45a6c7d882e94 rejected two
+unnamed9.81 test literals. The test now declares its own GRAVITY_M_S2 constant,
+independent of the builder. Focused16 tests, Ruff and Black100 pass. The real
+checker applied to735 tracked Python files finds zero issues; its unfiltered
+local scan includes175 unrelated scratch findings and is not a passing result.
+Latest root nullspace-readable-root.log:5334 passed,29 skipped,132 deselected,
+59 warnings in193.45s, coverage79.29%. All validation processes were reaped and
+the browser closed before committing. This checkpoint does not claim full
+route review, empirical golfer validation or completion of the corpus.
