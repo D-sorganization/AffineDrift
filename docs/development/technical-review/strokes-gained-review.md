@@ -312,3 +312,8 @@ The first evidence commit hook reformatted the moved JSON. The numerical JSON
 now has a scoped Prettier ignore because its generator/test owns exact bytes,
 following the existing generated-report convention. Browser-summary and inventory
 formatting were accepted and their digests regenerated. No checker was disabled.
+
+Complete implementation commit: `e079999a136b5b8dc2c63c37f7c3989adb5603c0`. All declared evidence hashes were
+independently recomputed from `git show` of that revision before updating the two
+review_commit and four verification_commit fields. This separates immutable
+implementation evidence from its later inventory reconciliation.
