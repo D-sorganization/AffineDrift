@@ -38,11 +38,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Issue:** #4369 (epic #4009; corpus #4021)
 - **PR:** not created
 - **Branch:** `fix/4369-muscle-torque-rigor`
-- **Paths:** `articles/The_Physics_of_Golf/chapters/ch16_muscle_to_joint_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd`, `docs/development/technical-review/muscle-torque-review.md`, `tests/test_muscle_torque_rigor.py`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch16_muscle_to_joint_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd`, `docs/development/technical-review/muscle-torque-review.md`, `tests/test_muscle_torque_rigor.py`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.svg`, `articles/The_Physics_of_Golf/figures/muscle_torque_feasibility.pdf`, `docs/development/technical-review/build_muscle_torque_figures.py`, `tests/test_audit_quarto_figure_parity.py`
 - **Started:** 2026-09-12
-- **Last verified:** 2026-09-12 (`0ca919d1`; integrated strokes repair head ec994491 without altering Chapter16 sources; source audit checkpoint plus eight independently checked mechanics examples passing locally; Black100/Ruff pass; root5305 pass/29 skip/132 deselected/59 warnings; chapter source correction remains outstanding)
-- **Summary:** Filed eight finding groups and complete paired-review acceptance criteria. Sign/transpose, feasible force sharing, inverse estimation, physiology, biarticular power, grip/anatomy and unsupported coaching assertions need correction. Both editions disagree on parts of the elbow example. Primary sources have sign conventions that must be reconciled through explicit virtual work, not copied indiscriminately.
-- **Next step:** Complete source review and integrate the eight checked derivations, correct both editions and all exercises, then perform complete print/web QA and protected publication. PR4368 remains a separate pending delivery.
+- **Last verified:** 2026-09-12 (`089637b4` integrated base plus checkpoint working tree; full root5318 passed/29 skipped/132 deselected, coverage79.35%;32 focused tests, configured mypy91, Ruff and Black100 pass; full535-page book compiles; initial16 print pages and web captures00-10 read, final visual review incomplete)
+- **Summary:** Rewrites both editions and all11 exercise answers around signed virtual work, feasible force sharing, coupled coordinates, stiffness and power. Adds a checked feasibility/power figure and four primary-source bibliography entries. Removes unsupported anatomical/grip prescriptions and separates inverse estimates, calibration, recruitment and control hypotheses. Preserves original destinations.
+- **Next step:** Enlarge the shared figure labels and inspect the result at actual print and web reading size.
 
 ### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 
@@ -55,7 +55,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-12 (`713a4ca5eeb13e0b8d4b43a79d3832e8e73a14f4` repair committed and all bound file hashes independently verified from git;47 numerical tests and69 combined tests pass after12 RED-to-GREEN precision regressions; root5309/79.35%, Ruff/Black100/mypy91 pass; prior `e079999a136b5b8dc2c63c37f7c3989adb5603c0` complete implementation, with committed evidence bytes independently verified; root5297 pass/29 skip/132 deselected/59 warnings, coverage79.35%; focused57 pass, builder100%; Ruff/Black100, configured mypy91 and changed-module mypy2; title636, content131 pass; rendered actual-route gate28/28 passes)
 - **Summary:** Corrects accounting and individual inference, including joint shot-cost/distribution/continuation effects and attribution-order dependence. Resumed after PR4360 merged without its pending rendered audit; repairs reference/panel dark contrast and invisible expanded text. All future PRs regular. Governed critique remains open; both route reviews now bind complete review evidence outside generated docs output, with Markdown-source support matching publication precedence.
-- **Next step:** Repair confirmed Linux final-digit artifact comparison failure from run34714267081 (E2E passed), update exact evidence bindings, follow fresh PR4368 CI through protected merge, then inspect exact live-publication evidence.
+- **Next step:** PR4368 merged at93bbfd29d3e69147dedef153749a47a1b650dfe9 after every required check passed. Inspect exact live-publication evidence before marking shipped.
 
 ### DL-#4355 · Complete Forces, Torques and Physical Attribution
 

@@ -120,3 +120,18 @@ def test_positive_tendon_stiffness_does_not_guarantee_joint_stability() -> None:
     assert finite_joint_stiffness == pytest.approx(tension * length_curvature, rel=1e-6)
     assert finite_joint_stiffness == pytest.approx(-20 / 3, rel=1e-6)
     assert energies[1] > max(energies[0], energies[2])
+
+
+def test_synergist_exercise_has_a_bounded_family_and_a_capacity_limit() -> None:
+    moment_arms = np.array([[0.04, 0.02]])
+    bounds = [(0, 1000), (0, 1000)]
+    smallest = linprog([1, 0], A_eq=moment_arms, b_eq=[50], bounds=bounds)
+    largest = linprog([-1, 0], A_eq=moment_arms, b_eq=[50], bounds=bounds)
+    assert smallest.success and largest.success
+    np.testing.assert_allclose(smallest.x, [750, 1000])
+    np.testing.assert_allclose(largest.x, [1000, 500])
+    at_capacity = linprog([1, 0], A_eq=moment_arms, b_eq=[60], bounds=bounds)
+    assert at_capacity.success
+    np.testing.assert_allclose(at_capacity.x, [1000, 1000])
+    impossible = linprog([1, 0], A_eq=moment_arms, b_eq=[61], bounds=bounds)
+    assert impossible.status == 2

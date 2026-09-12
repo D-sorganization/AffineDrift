@@ -4,9 +4,7 @@
 
 Issue #4369, under epic #4009 and corpus #4021. September12,2026.
 Both original Chapter16 sources were read completely: print5283 and web4636
-approximate original whitespace words. No revised source or rendered chapter has
-yet been reviewed. The chapter is not complete. PR4368 covers the preceding
-strokes-gained review and has a Python artifact-reproduction failure in run34714267081; E2E job103608499603 has now passed. The Linux discrepancy is at the last floating-point digits, not an altered scientific result.
+approximate original whitespace words. Both editions have now been rewritten. The initial sixteen-page isolated print preview was fully read; final whole-book and web visual review remain in progress. The chapter is not complete. Preceding strokes PR4368 merged at93bbfd29 after its precision repair passed all protected checks; exact deployment verification remains pending. The earlier failed reproduction run34714267081 is retained as failure history, not current PR status.
 
 ## Original Source Findings
 
@@ -66,11 +64,13 @@ credentials. Van den Bogert2011 abstract/search result located, not full text re
 
 ## Next Actions
 
-Complete primary anatomical, force-estimation and stiffness/energy source review.
-Design independent virtual-work, transpose, feasible-force, power and stiffness
-examples and tests before implementation. Preserve all original destinations and
-paired chapter structure, with shared numerical code/figures where useful. Review
-all final PDF pages and full web reading, not only formula presence or title counts.
+Finish figure typography and review all final PDF chapter pages and the full web
+reading, then run the production route verifier and bind durable evidence. The
+paired rewrite and nine independent mechanics checks are implemented. Preserve
+original destinations and the precise primary-source reading boundaries above.
+A further source reread identified notation to clarify before publication: use
+a distinct speed-coordinate contact Jacobian in the whole-body equation and
+define its relation to the coordinate-rate contact Jacobian.
 Do not commit downloaded papers/screenshots as redistributable deliverables.
 
 ## Elbow Geometry Source: Complete Reading
@@ -141,3 +141,86 @@ and tendon-slack-length sensitivity limit inference. This is useful evidence for
 stating what was calibrated and tested; it does not validate golf grip prescriptions.
 
 Checkpoint root validation: 5305 passed,29 skipped,132 deselected,59 warnings; exit0. Log: `muscle-checkpoint-root.log`. Six unrelated generated outputs were checked and restored: date-only JSON or formatting/line endings.
+
+
+## Paired Rewrite and First Render Review
+
+September12: rewrote the full print and web sources (approximately5561 and5742
+whitespace words before final notation refinements). Preserved every original
+explicit print label and box key, plus all35 original web heading destinations.
+Added five primary-source bibliography citations through four new entries and the
+existing Holzbaur2005 entry. No invented publication year for the undated Rice
+technical page: its bibliography explicitly uses n.d. and records access date.
+
+The chapter now derives the negative-transpose map from positive tensile work;
+checks a nonsymmetric two-joint example against power; derives force-box
+feasibility, a bounded null-space family, a stiffness counterexample, coupled
+coordinate forces and biarticular power; qualifies torque-driven control and
+inverse estimates; and replaces unsupported grip/anatomy prescriptions with
+contact mechanics and a testable measurement design. All eleven exercises have
+worked answers. A ninth independent test verifies the synergist exercise's
+750-1000 N interval and its60 Nm capacity limit.
+
+The new SVG/PDF figure shows the feasible torque polygon and two different signed
+power outcomes for one muscle. Its reproducible drawing script is
+`build_muscle_torque_figures.py` in this directory. Scientific parameters are
+constructed, not fitted golfer data. The first full-size figure was visually
+inspected; typography in the scaled print figure warrants further refinement.
+
+Both book-local HTML and root-selected website HTML render successfully.
+`render_selected.py` restores the exact root configuration after the selected
+render. Only `strip_legacy_math_polyfill` normalizes generated HTML; never call
+the pruning program against the local docs tree.
+
+The initial isolated PDF had two overfull headings; explicit print-only heading
+breaks resolved them. BibTeX and two resolution passes now produce a16-page
+preview with no overfull boxes or unresolved-citation warnings. Every initial
+page was visually read. That review prompted explicit units on both force bounds,
+consistent units in the synergist answer, a speed-coordinate contact mapping,
+and darker example title bars. Final changed pages require rereading.
+
+Full textbook compilation with BibTeX and two resolution passes succeeds:
+`muscle-torque-full-book.pdf`,535 pages. This source file appears as Chapter13 in
+the print book, with the chapter at zero-based pages178-192; do not confuse the
+filename ch16, isolated preview Chapter16, root website or nested book numbering.
+Only the changed chapter is currently being audited, not all535 pages.
+
+Playwright CLI web QA completed:163 expressions,16 displays, no duplicate IDs or
+broken internal fragments, and the new image loaded with descriptive alternative
+text. All14 width/theme cases (320,375,390,768,1024,1440,1920 in light/dark) have
+no document overflow or math errors. All68 display/figure region checks and24
+keyboard-scroll checks passed. Only the existing moderate landmark-unique axe
+finding remains; no serious/critical findings. Twenty-nine full reading captures
+were produced but have NOT yet all been visually reviewed. Preserve this
+boundary; passing automation does not equal complete reading.
+
+Browser session muscle-torque-review is closed. The CLI stores scratch beneath
+this directory. The first revised root suite (`muscle-torque-revised-root.log`) finished with
+5317 passed and one failure: the figure inventory still expected eight TikZ
+figures. The actual replacement removes one TikZ sketch, adds its shared PDF/SVG
+pair and reduces the book's missing web figures from seven to six. Updated the
+explicit inventory counts and added checks for Chapter16 parity, its preserved
+figure label, PDF target and both asset files. All32 focused figure-audit and
+mechanics tests pass. The full rerun is `muscle-torque-checkpoint-green-root.log`.
+Configured CI mypy passes all91 files; Ruff and Black100 pass the three changed
+Python files. The rerun exits0:5318 passed,29 skipped,132 deselected,59 warnings in197.95s;
+coverage79.35%. Six unrelated generated outputs were restored after verifying
+JSON changes were only generated_on or text changes were only line endings.
+The complete revised web source was reread, and reading captures00-10 were
+visually inspected. Capture09 confirms the figure needs larger labels at normal
+reading size. Captures11-28 and final print pages remain unread. The captures
+also show a stale highlighted table-of-contents entry; verify with settled live
+scrolling before deciding whether this is a capture timing issue or a site defect.
+No protected PR exists for4369 yet. Remaining acceptance work: final typography,
+complete final PDF/web reading, all required checks, durable evidence, regular PR,
+protected merge and exact live-publication verification.
+
+## Preceding Delivery
+
+PR4368 is merged through ordinary protection at
+93bbfd29d3e69147dedef153749a47a1b650dfe9 (September12,20:36:25Z).
+Every exact-head check passed for ec994491, including Linux Python, E2E and
+quality-gate. Its live deployment still requires independent verification.
+The current muscle branch integrates ec994491 at089637b4 but has not yet merged
+the new main squash. Commit the chapter checkpoint before reconciling main;
+preserve both chapter and strokes audit/handoff updates.
