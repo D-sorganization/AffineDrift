@@ -31,6 +31,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adopts the maintainable Mermaid C4 architecture-map contract for AffineDrift, providing C4Context, C4Container, Feature Map, and Architecture Change Log.
 - **Next step:** Push branch, open PR referencing Fixes D-sorganization/Repository_Management#1595, and verify CI passes.
 
+### DL-#4369 · Muscle Geometry, Torque Feasibility and Inference
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4369 (epic #4009; corpus #4021)
+- **PR:** not created
+- **Branch:** `fix/4369-muscle-torque-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch16_muscle_to_joint_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd`, `docs/development/technical-review/muscle-torque-review.md`
+- **Started:** 2026-09-12
+- **Last verified:** 2026-09-12 (`fc6356be9269adc0c31e61ae87c9a0722ed71ce6`; both original sources read, no implementation changes; complete Murray1995 scanned paper read and bounded Sherman/OpenSim/Rice source comparison recorded)
+- **Summary:** Filed eight finding groups and complete paired-review acceptance criteria. Sign/transpose, feasible force sharing, inverse estimation, physiology, biarticular power, grip/anatomy and unsupported coaching assertions need correction. Both editions disagree on parts of the elbow example. Primary sources have sign conventions that must be reconciled through explicit virtual work, not copied indiscriminately.
+- **Next step:** Complete source review and independent derivations/tests, correct both editions and all exercises, then perform complete print/web QA and protected publication. PR4368 remains a separate pending delivery.
+
 ### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 
 - **State:** in_review
