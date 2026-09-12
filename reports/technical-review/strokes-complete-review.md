@@ -183,7 +183,7 @@ adding up. Generated trust annotations and the critique ledger were not edited.
 
 ## Presentation and Verification
 
-The numerical builder and JSON are reproducible, with 17 focused tests covering
+The numerical builder and JSON are reproducible, with 35 focused tests covering
 penalties, category cancellation, proper policy evaluation, slope reversals,
 state-dependent composition, full distributions, joint interventions and objective
 changes. The follow-up extension had a missing-function RED failure before GREEN.
@@ -196,12 +196,16 @@ check of aria-expanded alone was insufficient and was strengthened to measure
 panel height. The linked critique's five full reading captures were read; its
 four expressions and original destinations were verified.
 
-Root tests passed 5,274 cases with 29 skipped, 132 deselected, 59 warnings and
-79.30% coverage. Two generated-output hygiene failures were isolated to
-Playwright's scratch directory; after closing the browser and relocating that
-directory, all six hygiene tests passed. Ruff, Black100 over 703 files, configured
-CI mypy over 91 files, title audit of 636 sources and content lint (131 passed,
-4 skipped) passed. The final focused numerical run passed all 17 tests.
+Root tests pass 5,297 cases with 29 skipped, 132 deselected, 59 warnings and
+79.35% coverage. The numerical builder has 100% statement coverage; boundary
+checks reject malformed counted transitions, invalid costs, nonabsorbing policies
+and out-of-domain mixtures. The stored numerical artifact reproduces exactly.
+The combined numerical, source-mapping, inventory and deployment-boundary suite
+passes 57 cases. An earlier run exposed Playwright scratch output at the root;
+closing the browser and relocating its output resolved both hygiene failures.
+Ruff, Black100 over 705 files, configured CI mypy over 91 files and stricter
+mypy over both changed implementation modules pass. The title audit of 636
+sources and content lint (131 passed, 4 skipped) also passed.
 
 Final article checks verified 154 expressions, 18 displays, all 37 original IDs,
 four bibliography entries, 126 expression/table cases and 64 keyboard scrolls.
@@ -222,9 +226,9 @@ all have HTTP 200, no console or inspection failures, no serious/critical axe
 findings, and no retries. Raw Quarto output receives the existing production
 polyfill transform before that gate; no console error was suppressed.
 
-`docs/development/technical-review/strokes-render-verification.json` preserves the
+`reports/technical-review/strokes-render-verification.json` preserves the
 source hashes and case summaries. Numerical inputs and outputs are in the adjacent
-`strokes-gained-numerics.json`; the builder and focused test module reproduce them.
+`strokes-gained-numerics.json`; `python -m scripts.build_strokes_gained_examples` and the focused test module reproduce them.
 The complete failure/recovery history and exact reproduction commands are retained
 in `docs/development/technical-review/strokes-gained-review.md`. These are local
 review results. A protected merge and revision-matched live deployment remain

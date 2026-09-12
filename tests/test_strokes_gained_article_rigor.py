@@ -1,16 +1,75 @@
 """Independent accounting and counterexamples for the strokes-gained article."""
 
+import json
 from importlib import import_module
 from pathlib import Path
 from types import ModuleType
 
 import numpy as np
 import pytest
+from numpy.typing import ArrayLike
 
 
 @pytest.fixture
 def model() -> ModuleType:
-    return import_module("docs.development.technical-review.build_strokes_gained_examples")
+    return import_module("scripts.build_strokes_gained_examples")
+
+
+@pytest.mark.parametrize(
+    ("values", "costs", "message"),
+    [
+        ([2, 0], [1, 1], "boundary"),
+        ([[2, 0]], [1], "boundary"),
+        ([2, np.nan], [1], "finite"),
+        ([2, 0], [np.inf], "finite"),
+        ([2, 0], [-1], "nonnegative"),
+    ],
+)
+def test_invalid_counted_transitions_rejected(
+    model: ModuleType, values: ArrayLike, costs: ArrayLike, message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        model.shot_gains(values, costs)
+
+
+@pytest.mark.parametrize(
+    ("transition", "costs", "message"),
+    [
+        ([[0]], [1, 1], "match"),
+        ([], [], "match"),
+        ([[np.nan]], [1], "finite"),
+        ([[0]], [np.inf], "finite"),
+        ([[-0.1]], [1], "substochastic"),
+        ([[1.1]], [1], "substochastic"),
+        ([[0]], [-1], "nonnegative"),
+        ([[0, 1], [1, 0]], [1, 1], "spectral radius"),
+    ],
+)
+def test_nonphysical_or_nonabsorbing_policy_rejected(
+    model: ModuleType, transition: ArrayLike, costs: ArrayLike, message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        model.policy_value(transition, costs)
+
+
+@pytest.mark.parametrize("costs", [(1,), (1, -1), (1, np.nan)])
+def test_invalid_intervention_costs_rejected(model: ModuleType, costs: tuple) -> None:
+    with pytest.raises(ValueError):
+        model.intervention_change(costs, ([1], [1]), ([2], [1]))
+
+
+def test_distribution_shape_and_mixture_domain_are_enforced(model: ModuleType) -> None:
+    with pytest.raises(ValueError, match="matching vectors"):
+        model.expected_value([1], [1, 2])
+    with pytest.raises(ValueError, match="defined only"):
+        model.mixture_value(3)
+
+
+@pytest.mark.integration
+def test_published_numerical_artifact_reproduces_exactly(model: ModuleType) -> None:
+    artifact = Path("reports/technical-review/strokes-gained-numerics.json")
+    expected = (json.dumps(model.report(), indent=2) + "\n").encode("utf-8")
+    assert artifact.read_bytes() == expected
 
 
 @pytest.mark.parametrize("values", [[4.2, 2.8, 1.5, 0], [4.2, 7, -2, 0]])

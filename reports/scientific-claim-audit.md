@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 36
-- Deferred: 200
+- Reviewed: 38
+- Deferred: 198
 - Exempt: 3
 
 ## Deferred Delivery Batches
@@ -13,9 +13,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 36 routes
 - [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055): 26 routes
 - [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056): 16 routes
-- [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057): 40 routes
+- [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057): 39 routes
 - [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058): 29 routes
-- [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 18 routes
+- [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 17 routes
 - [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 14 routes
 - [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
 
@@ -26,12 +26,14 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/` | `index.qmd` | 3 |
 | `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 7 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
+| `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
 | `/books/index.html` | `books/index.qmd` | 3 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
 | `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 3 |
+| `/critiques/strokes_gained_non_ergodic.html` | `critiques/strokes_gained_non_ergodic.md` | 9 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
@@ -100,7 +102,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
 | `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | `crit-strokes-gained-non-ergodic` | 0 |
+| `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
 | `ad-route-0cd531e060c5` | `/articles/superposition.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
 | `ad-route-9d9393110de9` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
 | `ad-route-fb32e03a3315` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
@@ -232,7 +234,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-194c2778a120` | `/critiques/static_fallacy_zvcf.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-static-fallacy-zvcf` | 0 |
 | `ad-route-b8f7226e7bd1` | `/critiques/stiffness_pulse_paradox.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stiffness-pulse-paradox` | 0 |
 | `ad-route-ec8e8b52b287` | `/critiques/stretch_shortening_blindspot.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stretch-shortening-blindspot` | 0 |
-| `ad-route-7474cd7ea698` | `/critiques/strokes_gained_non_ergodic.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-strokes-gained-non-ergodic` | 0 |
+| `ad-route-7474cd7ea698` | `/critiques/strokes_gained_non_ergodic.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 1 |
 | `ad-route-703ac96df708` | `/critiques/teleological_blindness.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-teleological-blindness` | 0 |
 | `ad-route-d78b18354fdf` | `/critiques/the_effective_plant_fallacy-bibliography.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
 | `ad-route-0713399f7619` | `/critiques/the_effective_plant_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-effective-plant-fallacy` | 0 |

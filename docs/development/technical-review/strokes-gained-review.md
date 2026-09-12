@@ -265,3 +265,50 @@ report and handoff; use that actual SHA for both inventory reviews and corrected
 findings, regenerate canonical evidence reports, then create a regular PR. Preserve
 the governed critique's open status. Verify protected merge and live publication
 before changing DL4358 to shipped. Continue the remaining corpus afterward.
+
+## Evidence-Binding and Source-Mapping Correction
+
+The first evidence reconciliation revealed two real boundary constraints. The
+validator assumed every route had a .qmd source, rejecting the existing .md
+critique. A failing regression demonstrated this; the resolver now follows public
+manifest precedence (.qmd first, then an existing same-route .md). It still rejects
+unrelated source paths and does not accept Markdown when a Quarto source exists.
+
+The deployment-boundary test also correctly rejected evidence under docs/, which
+is generated output. The numerical builder moved to
+`scripts/build_strokes_gained_examples.py`; its exact numerical JSON and the browser
+verification summary moved to `reports/technical-review/`. The focused test imports
+the canonical script. No evidence exemption or pruning check was weakened. The
+partition contract now explicitly accounts for the two completed strokes routes:
+198 deferred and21 completed routes in that historical batch partition.
+
+The full standalone DL validator additionally reports a pre-existing DL1595
+missing-SHA entry alongside DL3903/3902; those peer entries remain untouched.
+The repo-local shared checker path is absent, so the authoritative checker from
+Repository_Management was used. The first commit's Prettier hook interpreted an
+unquoted underscore formula as emphasis; it was corrected with inline code before
+first push. Implementation checkpoint is7f88be5429b90428f1bb68639df56ae763f9ff57.
+
+## Final Evidence Package Validation
+
+The initial relocated-builder root run passed5279 tests at79.29% coverage.
+Because the builder now falls under the maintained scripts coverage surface,
+added boundary tests check invalid transition lengths/costs, nonabsorbing chains,
+invalid interventions and mixture domains. An exact artifact-reproduction check
+also exercises report generation. No mathematical outputs changed. Final root:
+5297 passed,29 skipped,132 deselected,59 warnings;79.35% coverage, builder100%.
+Log: `strokes-delivery-boundary-root.log`. Focused evidence/numerical suite57 pass.
+Ruff/Black100 pass; configured mypy91 and stricter changed-module mypy2 pass.
+
+Both route records alone changed among239 inventory records. Their evidence
+survives production pruning. The reviewed article, critique and CSS bytes match
+the render summary hashes. Normalize maintained text to LF before final digest
+regeneration so committed bytes and Windows working bytes agree. Six unrelated
+test outputs differ only by generated_on or newline/JSON formatting; restore only
+those proven outputs after the completed QA process is reaped. All local checks
+are complete; protected PR and revision-matched publication remain pending.
+
+The first evidence commit hook reformatted the moved JSON. The numerical JSON
+now has a scoped Prettier ignore because its generator/test owns exact bytes,
+following the existing generated-report convention. Browser-summary and inventory
+formatting were accepted and their digests regenerated. No checker was disabled.

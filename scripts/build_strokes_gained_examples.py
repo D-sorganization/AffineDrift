@@ -16,7 +16,7 @@ def shot_gains(values: ArrayLike, costs: ArrayLike) -> NDArray[np.float64]:
         raise ValueError("Values and costs must be finite")
     if np.any(strokes < 0):
         raise ValueError("Recorded costs must be nonnegative")
-    return baseline[:-1] - baseline[1:] - strokes
+    return np.asarray(baseline[:-1] - baseline[1:] - strokes, dtype=np.float64)
 
 
 def expected_value(probabilities: ArrayLike, values: ArrayLike) -> float:
@@ -31,14 +31,20 @@ def expected_value(probabilities: ArrayLike, values: ArrayLike) -> float:
     return float(weights @ outcomes)
 
 
-def category_change(benchmark: tuple, player: tuple) -> dict[str, float]:
+def category_change(
+    benchmark: tuple[float, float], player: tuple[float, float]
+) -> dict[str, float]:
     """Split a far-to-near approach change with unchanged continuation skill."""
     approach = benchmark[0] - benchmark[1]
     benefit = player[0] - player[1]
     return {"approach": approach, "putting": benefit - approach, "total": benefit}
 
 
-def intervention_change(costs: tuple, probabilities: tuple, values: tuple) -> dict[str, float]:
+def intervention_change(
+    costs: tuple[float, float],
+    probabilities: tuple[ArrayLike, ArrayLike],
+    values: tuple[ArrayLike, ArrayLike],
+) -> dict[str, float]:
     """Split a joint change by evaluating the distribution effect at old skill."""
     if len(costs) != 2 or len(probabilities) != 2 or len(values) != 2:
         raise ValueError("Provide old and new costs, distributions and continuation values")
@@ -89,7 +95,7 @@ def mixture_value(distance: float) -> float:
     return weight * (1 + 0.1 * distance) + (1 - weight) * (1.5 + 0.2 * distance)
 
 
-def report() -> dict:
+def report() -> dict[str, object]:
     """Collect exact inputs and computed values for review and reproduction."""
     benchmark = (1.5, 1.3)
     players = {"A": (1.2, 1.1), "B": (1.7, 1.4), "C": (1.8, 1.75)}
@@ -123,7 +129,7 @@ def report() -> dict:
         "policy": {
             "transition": [[0, 1], [0, 0.25]],
             "cost": [1, 1],
-            "value": policy_value([[0, 1], [0, 0.25]], [1, 1]).tolist(),
+            "value": policy_value(np.array([[0, 1], [0, 0.25]], dtype=float), [1, 1]).tolist(),
         },
         "mixture": {
             "distance": 1.5,
@@ -143,5 +149,8 @@ def report() -> dict:
 
 
 if __name__ == "__main__":
-    destination = Path(__file__).with_name("strokes-gained-numerics.json")
-    destination.write_text(json.dumps(report(), indent=2) + "\n", encoding="utf-8")
+    destination = (
+        Path(__file__).resolve().parents[1]
+        / "reports/technical-review/strokes-gained-numerics.json"
+    )
+    destination.write_bytes((json.dumps(report(), indent=2) + "\n").encode("utf-8"))
