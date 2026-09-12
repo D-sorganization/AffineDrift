@@ -446,6 +446,11 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             record["route"] == "/"
             or record["route"].startswith("/pages/")
             or record["route"].startswith("/books/")
+            or record["route"]
+            in {
+                "/articles/strokes-gained-limitations.html",
+                "/critiques/strokes_gained_non_ergodic.html",
+            }
         )
     ]
     observed: Counter[str] = Counter()
@@ -459,8 +464,10 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     expected_deferred = Counter(DEFERRED_AUDIT_SCOPE_COUNTS)
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4063"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4062"]
-    assert len(deferred) == 200
-    assert len(reviewed_completed_batches) == 19
+    expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4059"] -= 1
+    expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4057"] -= 1
+    assert len(deferred) == 198
+    assert len(reviewed_completed_batches) == 21
     assert observed == expected_deferred
     assert len(deferred) + len(reviewed_completed_batches) == sum(
         DEFERRED_AUDIT_SCOPE_COUNTS.values()

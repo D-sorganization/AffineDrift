@@ -139,13 +139,17 @@ def evidence_digests(root: Path, paths: list[str]) -> dict[str, str]:
     return {relative: digest for relative, digest in sorted(records)}
 
 
-def canonical_source_path(route: str) -> str:
-    """Map one public HTML route to its canonical Quarto source path."""
+def canonical_source_path(route: str, root: Path) -> str:
+    """Resolve Quarto or Markdown using the public manifest's source precedence."""
     if route == "/":
         return "index.qmd"
     if not route.startswith("/") or not route.endswith(".html"):
         raise ReviewEvidenceError(f"reviewed route has no canonical Quarto mapping: {route}")
-    return f"{route[1:-5]}.qmd"
+    quarto_path = f"{route[1:-5]}.qmd"
+    markdown_path = f"{route[1:-5]}.md"
+    if not (root / quarto_path).is_file() and (root / markdown_path).is_file():
+        return markdown_path
+    return quarto_path
 
 
 def included_sources(root: Path, source_path: str) -> set[str]:
@@ -216,7 +220,7 @@ def validate_review_evidence(record: dict[str, object], root: Path) -> None:
     if not isinstance(review, dict):
         raise ReviewEvidenceError(f"{route} reviewed route lacks review evidence")
     source_path = review.get("source_path")
-    if source_path != canonical_source_path(route):
+    if source_path != canonical_source_path(route, root):
         raise ReviewEvidenceError(f"{route} review source path does not match its public route")
     evidence_paths = validate_digest_map(
         root,

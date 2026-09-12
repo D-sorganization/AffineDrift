@@ -1,16 +1,127 @@
 """Independent accounting and counterexamples for the strokes-gained article."""
 
+import json
 from importlib import import_module
 from pathlib import Path
 from types import ModuleType
 
 import numpy as np
 import pytest
+from numpy.typing import ArrayLike
 
 
 @pytest.fixture
 def model() -> ModuleType:
-    return import_module("docs.development.technical-review.build_strokes_gained_examples")
+    return import_module("scripts.build_strokes_gained_examples")
+
+
+@pytest.mark.parametrize(
+    ("values", "costs", "message"),
+    [
+        ([2, 0], [1, 1], "boundary"),
+        ([[2, 0]], [1], "boundary"),
+        ([2, np.nan], [1], "finite"),
+        ([2, 0], [np.inf], "finite"),
+        ([2, 0], [-1], "nonnegative"),
+    ],
+)
+def test_invalid_counted_transitions_rejected(
+    model: ModuleType, values: ArrayLike, costs: ArrayLike, message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        model.shot_gains(values, costs)
+
+
+@pytest.mark.parametrize(
+    ("transition", "costs", "message"),
+    [
+        ([[0]], [1, 1], "match"),
+        ([], [], "match"),
+        ([[np.nan]], [1], "finite"),
+        ([[0]], [np.inf], "finite"),
+        ([[-0.1]], [1], "substochastic"),
+        ([[1.1]], [1], "substochastic"),
+        ([[0]], [-1], "nonnegative"),
+        ([[0, 1], [1, 0]], [1, 1], "spectral radius"),
+    ],
+)
+def test_nonphysical_or_nonabsorbing_policy_rejected(
+    model: ModuleType, transition: ArrayLike, costs: ArrayLike, message: str
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        model.policy_value(transition, costs)
+
+
+@pytest.mark.parametrize("costs", [(1,), (1, -1), (1, np.nan)])
+def test_invalid_intervention_costs_rejected(model: ModuleType, costs: tuple) -> None:
+    with pytest.raises(ValueError):
+        model.intervention_change(costs, ([1], [1]), ([2], [1]))
+
+
+def test_distribution_shape_and_mixture_domain_are_enforced(model: ModuleType) -> None:
+    with pytest.raises(ValueError, match="matching vectors"):
+        model.expected_value([1], [1, 2])
+    with pytest.raises(ValueError, match="defined only"):
+        model.mixture_value(3)
+
+
+def _assert_report_matches(actual: object, expected: object) -> None:
+    """Keep JSON structure exact while allowing final-digit numerical roundoff."""
+    assert type(actual) is type(expected)
+    if isinstance(expected, dict):
+        assert actual.keys() == expected.keys()
+        for key, value in expected.items():
+            _assert_report_matches(actual[key], value)
+    elif isinstance(expected, list):
+        assert len(actual) == len(expected)
+        for observed, desired in zip(actual, expected, strict=True):
+            _assert_report_matches(observed, desired)
+    elif isinstance(expected, float):
+        assert np.isfinite(actual) and np.isfinite(expected)
+        # Far tighter than the article's displayed precision; accommodates the
+        # observed Windows/Linux exp differences without weakening input checks.
+        np.testing.assert_allclose(actual, expected, rtol=1e-13, atol=1e-14)
+    else:
+        assert actual == expected
+
+
+@pytest.mark.integration
+def test_published_numerical_artifact_reproduces_with_declared_precision(model: ModuleType) -> None:
+    artifact = Path("reports/technical-review/strokes-gained-numerics.json")
+    published = json.loads(artifact.read_bytes())
+    # Preserve the exact stored serialization separately from numerical agreement.
+    assert artifact.read_bytes() == (json.dumps(published, indent=2) + "\n").encode("utf-8")
+    computed = json.loads(json.dumps(model.report()))  # Normalize tuples to JSON arrays.
+    _assert_report_matches(published, computed)
+
+
+def test_report_comparison_accepts_observed_linux_roundoff() -> None:
+    windows = {"slope": [0.07644508335301181, 0.6585739633128318]}
+    linux = {"slope": [0.0764450833530117, 0.6585739633128317]}
+    _assert_report_matches(windows, linux)
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        {"value": [0.0764451]},
+        {"value": [float("nan")]},
+        {"value": [float("inf")]},
+        {"value": ["0.07644508335301181"]},
+        {"value": [0.07644508335301181, 0.0]},
+        {"renamed": [0.07644508335301181]},
+        {"value": [0.07644508335301181], "extra": 0},
+    ],
+)
+def test_report_comparison_rejects_changed_results_or_structure(changed: dict) -> None:
+    with pytest.raises(AssertionError):
+        _assert_report_matches(changed, {"value": [0.07644508335301181]})
+
+
+@pytest.mark.parametrize("changed", [True, 1.0, 2, "1"])
+def test_report_comparison_keeps_integer_inputs_exact(changed: object) -> None:
+    with pytest.raises(AssertionError):
+        _assert_report_matches({"count": changed}, {"count": 1})
 
 
 @pytest.mark.parametrize("values", [[4.2, 2.8, 1.5, 0], [4.2, 7, -2, 0]])
@@ -100,3 +211,33 @@ def test_article_states_accounting_conditions_and_distributional_estimand() -> N
         "a causal model of the golfer's motion that does not depend on population averages"
         not in source
     )
+
+
+def test_joint_intervention_includes_cost_distribution_and_continuation(model: ModuleType) -> None:
+    result = model.intervention_change((1, 1.1), ([0.5, 0.5], [0.75, 0.25]), ([1.5, 2], [1.3, 1.9]))
+    assert result["total"] == pytest.approx(2.75 - 2.55)
+    assert result["immediate"] == pytest.approx(-0.1)
+    assert result["distribution_old"] == pytest.approx(0.125)
+    assert result["continuation_new"] == pytest.approx(0.175)
+    # Reversing the attribution order changes the components, not their sum.
+    alternative_distribution = np.dot([0.5, 0.5], [1.3, 1.9]) - np.dot([0.75, 0.25], [1.3, 1.9])
+    alternative_continuation = np.dot([0.5, 0.5], [0.2, 0.1])
+    assert alternative_distribution == pytest.approx(0.15)
+    assert result[
+        "immediate"
+    ] + alternative_distribution + alternative_continuation == pytest.approx(result["total"])
+
+
+def test_interaction_is_difference_between_combined_and_isolated_benefits() -> None:
+    before, distribution_only, skill_only, combined = 2.75, 2.725, 2.6, 2.55
+    combined_benefit = before - combined
+    separate_benefits = (before - distribution_only) + (before - skill_only)
+    assert combined_benefit - separate_benefits == pytest.approx(0.025)
+
+
+def test_mean_preserving_spread_uses_conditional_mean_and_convexity() -> None:
+    original = np.array([1.5, 2.5])
+    spread = np.array([[1, 2], [2, 3]])
+    np.testing.assert_allclose(spread.mean(axis=1), original)
+    # A strictly convex toy continuation function yields a positive increase.
+    assert np.mean(1 + 0.1 * spread**2) - np.mean(1 + 0.1 * original**2) == pytest.approx(0.025)

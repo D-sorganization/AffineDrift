@@ -1,0 +1,34 @@
+/* Preserve mathematical type size; wide expressions remain scrollable. */
+#quarto-document-content .math.display,
+#quarto-document-content .math.display mjx-container[display="true"] {
+  font-size: inherit !important;
+}
+
+/* Keep citations readable against the active reading theme. */
+#quarto-document-content #quarto-appendix.default {
+  background-color: transparent;
+}
+
+/* Semantic heading wrappers separate the buttons from their controlled panels. */
+#quarto-document-content .laymans-terms-content[aria-hidden="false"],
+#quarto-document-content .critics-comments-content[aria-hidden="false"] {
+  max-height: none;
+}
+
+/* The shared cards otherwise retain white backgrounds with dark-theme text. */
+#quarto-document-content .laymans-item,
+#quarto-document-content .critic-item,
+#quarto-document-content .author-response {
+  background-color: var(--bg-primary);
+}
+
+#quarto-document-content .critic-label,
+#quarto-document-content .author-response strong {
+  color: inherit;
+}
+
+/* Gradient backgrounds are not reliably assessed by automated contrast scans. */
+#quarto-document-content .laymans-terms,
+#quarto-document-content .critics-comments {
+  background: var(--bg-primary);
+}

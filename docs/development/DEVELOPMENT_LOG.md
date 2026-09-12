@@ -33,16 +33,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 
-- **State:** in_progress
-- **Owner:** codex (handoff requested)
+- **State:** in_review
+- **Owner:** codex
 - **Issue:** #4358 (epic #4009; corpus #4021; applied routes #4059)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4360 (draft; handoff checkpoint)
-- **Branch:** `fix/4358-strokes-gained-rigor`
-- **Paths:** `articles/strokes-gained-limitations.qmd`, `articles/strokes-gained-limitations-bibliography.md`, `critiques/strokes_gained_non_ergodic.md`, `references/strokes-gained-rigor.bib`, `tests/test_strokes_gained_article_rigor.py`, `docs/development/technical-review/strokes-gained-review.md`, `docs/development/technical-review/build_strokes_gained_examples.py`, `docs/development/technical-review/strokes-gained-numerics.json`
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4368 (regular follow-up; #4360 previously merged)
+- **Branch:** `fix/4358-strokes-delivery`
+- **Paths:** `articles/strokes-gained-limitations.qmd`, `articles/strokes-gained-limitations-bibliography.md`, `critiques/strokes_gained_non_ergodic.md`, `references/strokes-gained-rigor.bib`, `css/strokes-gained.css`, `tests/test_strokes_gained_article_rigor.py`, `docs/development/technical-review/strokes-gained-review.md`, `scripts/build_strokes_gained_examples.py`, `reports/technical-review/strokes-gained-numerics.json`, `reports/technical-review/strokes-render-verification.json`, `reports/technical-review/strokes-complete-review.md`, `scripts/claim_audit_evidence.py`, `tests/test_claim_audit_markdown_sources.py`, `tests/test_claim_audit_inventory.py`, `data/trust/claim_audit_inventory.json`, `.prettierignore`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`c46453792a2fe87cd2c3ad382090e93ee0a78836`; focused 14 passed again after replay onto current main; scoped source/code preserved; pre-replay root 5269 pass/29 skip/132 deselected/59 warnings, coverage 79.29%; Ruff/Black100, title 636 and content 131 pass; normal commit/push hooks passed; rendered review pending)
-- **Summary:** Rebuilds accounting, penalties, category transfers, policy values, distributional proximity, player heterogeneity and causal limits. Complete original article/companion/critique reading; independent numerical examples saved. User requested intermediate handoff before browser and publication verification; governed critique remains open and route inventory deferred.
-- **Next step:** Render the revised article and critique under the root Quarto configuration and complete their full visual technical review.
+- **Last verified:** 2026-09-12 (`713a4ca5eeb13e0b8d4b43a79d3832e8e73a14f4` repair committed and all bound file hashes independently verified from git;47 numerical tests and69 combined tests pass after12 RED-to-GREEN precision regressions; root5309/79.35%, Ruff/Black100/mypy91 pass; prior `e079999a136b5b8dc2c63c37f7c3989adb5603c0` complete implementation, with committed evidence bytes independently verified; root5297 pass/29 skip/132 deselected/59 warnings, coverage79.35%; focused57 pass, builder100%; Ruff/Black100, configured mypy91 and changed-module mypy2; title636, content131 pass; rendered actual-route gate28/28 passes)
+- **Summary:** Corrects accounting and individual inference, including joint shot-cost/distribution/continuation effects and attribution-order dependence. Resumed after PR4360 merged without its pending rendered audit; repairs reference/panel dark contrast and invisible expanded text. All future PRs regular. Governed critique remains open; both route reviews now bind complete review evidence outside generated docs output, with Markdown-source support matching publication precedence.
+- **Next step:** Repair confirmed Linux final-digit artifact comparison failure from run34714267081 (E2E passed), update exact evidence bindings, follow fresh PR4368 CI through protected merge, then inspect exact live-publication evidence.
 
 ### DL-#4355 · Complete Forces, Torques and Physical Attribution
 

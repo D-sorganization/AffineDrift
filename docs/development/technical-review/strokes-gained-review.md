@@ -2,12 +2,16 @@
 
 ## Status and Scope
 
-User-requested intermediate handoff, September 10, 2026. Governing issue #4358
-is a native child of #4009 and contributes to #4021/#4059. Worktree:
+Resumed September 12, 2026, under reopened #4358 (child of #4009;
+corpus #4021 and applied routes #4059). Worktree:
 `C:/Users/diete/Repositories/AffineDrift-technical-review`; branch
-`fix/4358-strokes-gained-rigor`. The source rewrite is saved, not publication
-ready. Full rendered review, trust-inventory reconciliation, protected delivery,
-and the remaining corpus are unfinished. Do not mark the epic complete.
+`fix/4358-strokes-delivery`, based on main
+`59b4b84790d22e45d26e222a86d5ae260954b836`. Follow-up PR not created.
+PR #4360 was converted to regular and merged as
+`e19e3ff17fd6340ae05c9362fea7c7049d4bf089` before its recorded rendered review
+and inventory reconciliation were complete. This follow-up finishes that work.
+All future PRs must be regular, per the user's explicit instruction.
+The overall corpus remains unfinished; do not mark the epic complete.
 
 The complete original article (about 5,375 words), bibliography companion, and
 linked critique were read. The replacement article is about 4,723 whitespace
@@ -140,7 +144,7 @@ actual rendered destination verification remains pending.
 ## Exact Continuation Plan
 
 1. Read AGENT_HANDOFF and the governing issue; check central inbox and claim,
-   acquire a new unique session/presence, and inspect the draft branch/PR.
+   acquire a new unique session/presence, and inspect the current branch/PR.
 2. Finish adversarial source reading and add any missing meaningful checks,
    especially full cost/continuation boundaries and stochastic-policy conditions.
 3. Render article and critique via `render_selected.py` using the root config.
@@ -158,7 +162,7 @@ actual rendered destination verification remains pending.
    through canonical tools. Do not silently close the governed critique.
 7. Update single SPEC row, DL-#4358 and handoff. Sync current main with normal
    merge/rebase rules, preserving peer changes. Never mutate Git during local QA.
-   Make the draft PR ready only after verification, then use protected squash
+   Create a regular PR after verification, then use protected squash
    delivery and verify the revision-matched live artifact before marking shipped.
 
 ## Corpus and Protected Work
@@ -173,8 +177,8 @@ handoff/DL sections untouched.
 
 ## Committed Handoff Checkpoint
 
-Implementation c46453792a2fe87cd2c3ad382090e93ee0a78836 is pushed in draft
-PR #4360. The first commit13e0a098 was normally replayed before first push onto
+Implementation c46453792a2fe87cd2c3ad382090e93ee0a78836 was first pushed in
+PR #4360, subsequently converted to regular and merged. The first commit13e0a098 was normally replayed before first push onto
 published main0c753400; the scoped article, critique, bibliography, numerical
 builder and tests did not change, while merged peer impact/acoustics work was
 preserved. Root/content checks above ran before replay; all14 focused tests
@@ -185,5 +189,159 @@ The final documentation checkpoint is identified by SELF in AGENT_HANDOFF.
 The issue lease and central presence were released successfully for takeover:
 receipts5621007068 and5621008118, September10 at15:16:52Z. This is a complete
 save-and-handoff operation, not completion of the scientific corpus review.
-Do not auto-merge draft4360 until its outstanding review and delivery work is
-finished. The full goal remains active; no new agent was spawned.
+The outstanding rendered review and evidence work is now on the follow-up
+branch; the historical merge did not prove it complete. The full goal remains active; no new agent was spawned.
+
+## September 12 Follow-Up Decisions
+
+Added the full immediate-cost, leave-distribution and continuation-value
+intervention decomposition. Old/new costs 1/1.1, distributions (.5,.5)/(.75,.25)
+and continuation values (1.5,2)/(1.3,1.9) give total costs 2.75/2.55 and a .20
+benefit. Allocation at old skill gives -.10+.125+.175; reversing the order gives
+-.10+.15+.15. Their .025 interaction is the combined benefit minus the isolated
+benefits. This is model accounting, not causal identification. Added independent
+checks for that identity and conditional Jensen's mean-preserving-spread condition;
+17 focused tests passed after a recorded missing-function RED failure.
+
+The article now states finite-mixture differentiability conditions and the
+coupling E[Y|X]=X with convex V and existing expectations. Larger variance alone
+is insufficient. No new empirical golfer claims or fitted data were introduced.
+
+Rendered inspection found reference contrast failure in dark mode, math-only
+headers reported as empty by axe, and expanded explanatory panels with zero
+height because heading wrappers broke the shared sibling selector. Once opened,
+white card backgrounds also failed dark-theme contrast. The scoped stylesheet
+uses the reading background and the panel's actual aria-hidden state; table
+headers now name the two players. Browser checks must verify actual panel height,
+not merely aria-expanded. Full reading captures must reset horizontal scroll
+positions after exercising wide tables.
+
+Initial root run: 5,274 passed, 29 skipped, 132 deselected, 59 warnings,
+coverage 79.30%; two root-hygiene failures were caused solely by the local
+Playwright CLI output directory. Ruff and Black100 (703 files) passed. The exact
+CI mypy command passed over 91 files; an earlier generic scripts-directory
+invocation was invalid because that directory is excluded by configuration.
+Content lint: 131 passed, 4 skipped. Title audit: 636 sources passed. CSS budget
+passed via python -m scripts.check_styles_budget; direct-file invocation lacked
+the package root and was corrected. Final browser and root-hygiene outcomes are
+recorded below when complete.
+
+The first actual-route gate had 28/28 HTTP200 and no inspection or axe failures,
+but all records failed on Pandoc's blocked legacy polyfill. Production already
+removes that script. Apply only strip_legacy_math_polyfill from the canonical
+production module, not its destructive docs-pruning entry point, before rerunning.
+Full manifest generation against this mixed local docs tree encounters old
+nonpublic draft HTML without H1; the focused manifest uses canonical _page_record
+for the two actual rendered routes and the production viewport contract.
+
+## Completed Local Review, September 12
+
+Final source render and production-normalized actual-route gate pass: all 28
+records HTTP200, with no console or inspection failures, no serious/critical axe
+violations, and no retries. Article:154 expressions/18 displays; all37 old IDs and
+four citation entries;126 expression/table cases and64 keyboard scrolls. Critique:
+four expressions, six display cases and two keyboard scrolls. Seven widths in both
+themes pass for each page. Expanded panel heights are checked, not inferred from
+button attributes. Full article/critique source and overlapping reading captures
+were inspected, including expanded editorial responses; final affected mobile math,
+table edges, dark references and panels were inspected again.
+
+The final gradient background defect was found visually after axe passed. Its
+correction received a fresh14-case layout/axe and12-panel capture pass; only shared
+moderate landmark-unique findings remain. Supplemental screenshot navigation once
+timed out because the theme button was offscreen; scrolling to the top before
+clicking resolved it. No product behavior was bypassed.
+
+All QA workers are reaped and browser session strokes-review is closed. The CLI
+output directory was safely moved within the worktree to
+`docs/development/technical-review/strokes-cli-20260912`; all6 root-hygiene tests
+then passed.17 focused tests passed again. Six unrelated test-generated outputs
+were restored after JSON comparison proved only date/format changes. Production
+preview on port8767 may remain idle; it is not an ongoing verification worker.
+
+The immutable review report is `reports/technical-review/strokes-complete-review.md`;
+local evidence summary is `strokes-render-verification.json`. Next: commit source,
+report and handoff; use that actual SHA for both inventory reviews and corrected
+findings, regenerate canonical evidence reports, then create a regular PR. Preserve
+the governed critique's open status. Verify protected merge and live publication
+before changing DL4358 to shipped. Continue the remaining corpus afterward.
+
+## Evidence-Binding and Source-Mapping Correction
+
+The first evidence reconciliation revealed two real boundary constraints. The
+validator assumed every route had a .qmd source, rejecting the existing .md
+critique. A failing regression demonstrated this; the resolver now follows public
+manifest precedence (.qmd first, then an existing same-route .md). It still rejects
+unrelated source paths and does not accept Markdown when a Quarto source exists.
+
+The deployment-boundary test also correctly rejected evidence under docs/, which
+is generated output. The numerical builder moved to
+`scripts/build_strokes_gained_examples.py`; its exact numerical JSON and the browser
+verification summary moved to `reports/technical-review/`. The focused test imports
+the canonical script. No evidence exemption or pruning check was weakened. The
+partition contract now explicitly accounts for the two completed strokes routes:
+198 deferred and21 completed routes in that historical batch partition.
+
+The full standalone DL validator additionally reports a pre-existing DL1595
+missing-SHA entry alongside DL3903/3902; those peer entries remain untouched.
+The repo-local shared checker path is absent, so the authoritative checker from
+Repository_Management was used. The first commit's Prettier hook interpreted an
+unquoted underscore formula as emphasis; it was corrected with inline code before
+first push. Implementation checkpoint is7f88be5429b90428f1bb68639df56ae763f9ff57.
+
+## Final Evidence Package Validation
+
+The initial relocated-builder root run passed5279 tests at79.29% coverage.
+Because the builder now falls under the maintained scripts coverage surface,
+added boundary tests check invalid transition lengths/costs, nonabsorbing chains,
+invalid interventions and mixture domains. An exact artifact-reproduction check
+also exercises report generation. No mathematical outputs changed. Final root:
+5297 passed,29 skipped,132 deselected,59 warnings;79.35% coverage, builder100%.
+Log: `strokes-delivery-boundary-root.log`. Focused evidence/numerical suite57 pass.
+Ruff/Black100 pass; configured mypy91 and stricter changed-module mypy2 pass.
+
+Both route records alone changed among239 inventory records. Their evidence
+survives production pruning. The reviewed article, critique and CSS bytes match
+the render summary hashes. Normalize maintained text to LF before final digest
+regeneration so committed bytes and Windows working bytes agree. Six unrelated
+test outputs differ only by generated_on or newline/JSON formatting; restore only
+those proven outputs after the completed QA process is reaped. All local checks
+are complete; protected PR and revision-matched publication remain pending.
+
+The first evidence commit hook reformatted the moved JSON. The numerical JSON
+now has a scoped Prettier ignore because its generator/test owns exact bytes,
+following the existing generated-report convention. Browser-summary and inventory
+formatting were accepted and their digests regenerated. No checker was disabled.
+
+Complete implementation commit: `e079999a136b5b8dc2c63c37f7c3989adb5603c0`. All declared evidence hashes were
+independently recomputed from `git show` of that revision before updating the two
+review_commit and four verification_commit fields. This separates immutable
+implementation evidence from its later inventory reconciliation.
+
+Regular PR #4368 opened after all normal push hooks passed. It targets main
+without bypass; source/evidence checkpoint e079999a is retained in branch history.
+The SPEC row is keyed to #4368. CI and exact publication remain pending.
+
+
+## CI Numerical Precision Repair: September 12
+
+Run34714267081, Python job103608499586, failed the exact-byte reproduction
+assertion at byte1631. Full log is local scratch `strokes-ci-python-failure.log`.
+Only final exponential digits differ; E2E job103608499603 has passed. Do not
+repeat the earlier incomplete summary that all Python checks passed.
+
+The report comparator now keeps structure/types/integers/text exact and checks
+finite floating-point leaves at rtol1e-13,atol1e-14. Canonical artifact formatting
+is still checked byte-for-byte. The artifact and source builder are unchanged.
+Twelve mutation/observed-platform regression cases had RED missing-helper failures
+(`strokes-precision-red.log`), then all47 numerical tests passed; Black100 and
+Ruff pass. Updated bound evidence must be regenerated and pinned to the repair
+commit after it exists. No new article render is needed for this test-only repair;
+source/CSS hashes must still be checked against the existing rendered evidence.
+
+Muscle chapter work is saved separately at0ca919d1 on the pushed branch
+`fix/4369-muscle-torque-rigor`: eight constructed mechanics checks plus audit and
+handoff, root5305 pass and79.35% coverage. No Chapter16 public source changes yet.
+Resume that branch after merging the strokes repair through ordinary protections.
+
+Repair root suite:5309 passed,29 skipped,132 deselected,59 warnings in201.36seconds; coverage79.35%. Combined suite69 passed. Log `strokes-precision-root.log`. Ruff/Black100 and configured mypy91 pass. Six unrelated test-generated outputs were inspected and restored (date-only or formatting). Article/critique/CSS bytes still match their completed render review.
