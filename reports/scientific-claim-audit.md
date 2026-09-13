@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 93
-- Deferred: 144
+- Reviewed: 121
+- Deferred: 116
 - Exempt: 3
 
 ## Deferred Delivery Batches
@@ -14,36 +14,63 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055): 26 routes
 - [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056): 16 routes
 - [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057): 39 routes
-- [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058): 28 routes
 
 ## Reviewed Evidence
 
 | Route | Canonical Source | Evidence Files |
 |---|---|---:|
 | `/` | `index.qmd` | 3 |
+| `/articles/affine-nature-golf-swing.html` | `articles/affine-nature-golf-swing.qmd` | 7 |
+| `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` | 1 |
+| `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
 | `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 7 |
+| `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` | 1 |
+| `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 2 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
+| `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 1 |
+| `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 1 |
 | `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 1 |
 | `/articles/impact-mechanics-and-ball-flight.html` | `articles/impact-mechanics-and-ball-flight.qmd` | 1 |
 | `/articles/impact-optimality-and-model-limits.html` | `articles/impact-optimality-and-model-limits.qmd` | 1 |
+| `/articles/intentional-constraint-collapse.html` | `articles/intentional-constraint-collapse.qmd` | 2 |
+| `/articles/inverse-dynamics-inference.html` | `articles/inverse-dynamics-inference.qmd` | 4 |
+| `/articles/inverse-dynamics.html` | `articles/inverse-dynamics.qmd` | 4 |
+| `/articles/lagrangian-reference.html` | `articles/lagrangian-reference.qmd` | 1 |
 | `/articles/launch-monitor-vendor-reference.html` | `articles/launch-monitor-vendor-reference.qmd` | 1 |
 | `/articles/markerless-mocap-camera-selection.html` | `articles/markerless-mocap-camera-selection.qmd` | 1 |
+| `/articles/nonlinear-control-insights.html` | `articles/nonlinear-control-insights.qmd` | 2 |
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
+| `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
 | `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 31 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 1 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 1 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
 | `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 1 |
+| `/articles/reference-point-problem.html` | `articles/reference-point-problem.qmd` | 1 |
+| `/articles/rotation-converter.html` | `articles/rotation-converter.qmd` | 1 |
+| `/articles/rotation-induced-spin.html` | `articles/rotation-induced-spin.qmd` | 1 |
+| `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
+| `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 1 |
+| `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 2 |
+| `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
+| `/articles/superposition.html` | `articles/superposition.qmd` | 1 |
 | `/articles/technology-club-fitting.html` | `articles/technology-club-fitting.qmd` | 1 |
 | `/articles/technology-force-measurement.html` | `articles/technology-force-measurement.qmd` | 1 |
 | `/articles/technology-heavy-hit-impact-coupling.html` | `articles/technology-heavy-hit-impact-coupling.qmd` | 3 |
 | `/articles/technology-launch-monitors.html` | `articles/technology-launch-monitors.qmd` | 1 |
 | `/articles/technology-motion-capture.html` | `articles/technology-motion-capture.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
+| `/articles/theory-part1.html` | `articles/theory-part1.qmd` | 3 |
+| `/articles/theory-part2.html` | `articles/theory-part2.qmd` | 4 |
+| `/articles/theory-part3.html` | `articles/theory-part3.qmd` | 3 |
+| `/articles/theory-part4.html` | `articles/theory-part4.qmd` | 2 |
+| `/articles/theory-part5.html` | `articles/theory-part5.qmd` | 3 |
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
+| `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
+| `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 1 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
@@ -120,43 +147,43 @@ This report records route-level audit state. Claim text and critique adjudicatio
 |---|---|---|---|---|---|---:|
 | `ad-route-8a5edab28263` | `/` | Reviewed | — | None | None | 1 |
 | `ad-route-846c879e19c9` | `/404.html` | Exempt | — | None | None | 0 |
-| `ad-route-2cd844057893` | `/articles/affine-nature-golf-swing.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-aerodynamics`, `crit-control-causality-mechanical`, `crit-drift-superposition`, `crit-effective-plant-fallacy`, `crit-geometric-stiffness-omission`, `crit-impact-evasion`, `crit-input-dependent-boundary-conditions`, `crit-muscle-physiology`, `crit-neuromuscular-control`, `crit-nullspace-interpretation`, `crit-parameter-causality-leakage`, `crit-passive-active-boundary-ambiguity`, `crit-passive-overshoot-artifact`, `crit-simulation-tautology`, `crit-static-fallacy-zvcf`, `crit-stretch-shortening-blindspot`, `crit-teleological-blindness`, `crit-ztcf-identifiability` | 0 |
-| `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-2cd844057893` | `/articles/affine-nature-golf-swing.html` | Reviewed | — | None | `crit-aerodynamics`, `crit-control-causality-mechanical`, `crit-drift-superposition`, `crit-effective-plant-fallacy`, `crit-geometric-stiffness-omission`, `crit-impact-evasion`, `crit-input-dependent-boundary-conditions`, `crit-muscle-physiology`, `crit-neuromuscular-control`, `crit-nullspace-interpretation`, `crit-parameter-causality-leakage`, `crit-passive-active-boundary-ambiguity`, `crit-passive-overshoot-artifact`, `crit-simulation-tautology`, `crit-static-fallacy-zvcf`, `crit-stretch-shortening-blindspot`, `crit-teleological-blindness`, `crit-ztcf-identifiability` | 0 |
+| `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Reviewed | — | None | None | 0 |
+| `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cb2afdfef800` | `/articles/controllability-drift-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 0 |
-| `ad-route-746e90148b98` | `/articles/degrees-of-freedom-and-dimensionality.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-double-pendulum-energy-blindness` | 0 |
+| `ad-route-746e90148b98` | `/articles/degrees-of-freedom-and-dimensionality.html` | Reviewed | — | None | None | 0 |
+| `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 0 |
 | `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
-| `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 0 |
+| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Reviewed | — | None | None | 0 |
-| `ad-route-33941e46336a` | `/articles/intentional-constraint-collapse.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-intentional-constraint-collapse`, `crit-stiffness-pulse-paradox` | 0 |
-| `ad-route-53f2549bc89f` | `/articles/inverse-dynamics-inference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-33941e46336a` | `/articles/intentional-constraint-collapse.html` | Reviewed | — | None | `crit-intentional-constraint-collapse`, `crit-stiffness-pulse-paradox` | 0 |
+| `ad-route-53f2549bc89f` | `/articles/inverse-dynamics-inference.html` | Reviewed | — | None | None | 0 |
+| `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Reviewed | — | None | None | 0 |
-| `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
+| `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Reviewed | — | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
-| `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 0 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | None | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Reviewed | — | None | None | 0 |
-| `ad-route-85ac4b6d5e6d` | `/articles/reference-point-problem.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-e7072902cc8a` | `/articles/rotation-converter.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
-| `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-85ac4b6d5e6d` | `/articles/reference-point-problem.html` | Reviewed | — | None | None | 0 |
+| `ad-route-e7072902cc8a` | `/articles/rotation-converter.html` | Reviewed | — | None | None | 0 |
+| `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Reviewed | — | None | None | 0 |
+| `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 0 |
+| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
-| `ad-route-0cd531e060c5` | `/articles/superposition.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 0 |
 | `ad-route-9d9393110de9` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
 | `ad-route-fb32e03a3315` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
 | `ad-route-722f781e687e` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
@@ -240,14 +267,14 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
-| `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
-| `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |
-| `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-input-dependent-boundary-conditions` | 0 |
-| `ad-route-125d93f57874` | `/articles/theory-part5.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
+| `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
+| `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Reviewed | — | None | None | 0 |
+| `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Reviewed | — | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |
+| `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Reviewed | — | None | `crit-input-dependent-boundary-conditions` | 0 |
+| `ad-route-125d93f57874` | `/articles/theory-part5.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Reviewed | — | None | None | 0 |
-| `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
-| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Reviewed | — | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
+| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 1 |
 | `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Reviewed | — | None | None | 1 |
 | `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 1 |
