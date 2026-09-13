@@ -373,82 +373,252 @@ export function initAnchorLinks() {
 }
 
 /**
+ * Calculate the true document-relative top offset of an element.
+ * Immune to intermediate positioned offsetParent containers (#4370).
+ *
+ * @param {HTMLElement} element
+ * @returns {number}
+ */
+export function getDocumentOffsetTop(element) {
+    if (!element) return 0;
+    if (typeof element.getBoundingClientRect === "function") {
+        const rect = element.getBoundingClientRect();
+        const scrollY =
+            window.pageYOffset ||
+            window.scrollY ||
+            document.documentElement.scrollTop ||
+            0;
+        const docTop = rect.top + scrollY;
+        // In rendered browser contexts, bounding rect reliably returns document position
+        if (rect.height > 0 || rect.width > 0 || !element.offsetParent) {
+            return docTop;
+        }
+    }
+
+    // Fallback for headless/JSDOM environments without full CSS layout:
+    const rawDescriptor = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        "offsetTop"
+    );
+    let top = 0;
+    let curr = element;
+    while (curr) {
+        if (curr._rawOffsetTop !== undefined) {
+            top += curr._rawOffsetTop;
+        } else if (rawDescriptor && rawDescriptor.get) {
+            top += rawDescriptor.get.call(curr);
+        } else {
+            top += curr.offsetTop || 0;
+        }
+        curr = curr.offsetParent;
+    }
+    return top;
+}
+
+/**
+ * Patches offsetTop on target sections so that vendor scripts (such as Quarto's
+ * updateActiveLink) that read section.offsetTop directly calculate true
+ * document-relative positions rather than parent-relative offsets when sections
+ * are nested inside positioned/contained ancestors (#4370).
+ *
+ * @param {HTMLElement[]} sections
+ */
+export function patchTocSectionsOffsetTop(sections) {
+    const rawDescriptor = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        "offsetTop"
+    );
+    for (const section of sections) {
+        if (!section || section.__hasPatchedOffsetTop) continue;
+
+        if (
+            section.offsetTop !== undefined &&
+            section._rawOffsetTop === undefined
+        ) {
+            try {
+                section._rawOffsetTop =
+                    rawDescriptor && rawDescriptor.get
+                        ? rawDescriptor.get.call(section)
+                        : section.offsetTop;
+            } catch {
+                section._rawOffsetTop = 0;
+            }
+        }
+
+        Object.defineProperty(section, "offsetTop", {
+            get() {
+                return getDocumentOffsetTop(this);
+            },
+            configurable: true,
+            enumerable: true,
+        });
+        section.__hasPatchedOffsetTop = true;
+    }
+}
+
+/**
  * Initialize ScrollSpy for Table of Contents
+ * Supports both custom #toc-list and Quarto's #TOC navigation (#4370).
  */
 export function initScrollSpy() {
-    const tocList = document.getElementById("toc-list");
-    if (!tocList) return;
-    const tocLinks = tocList.getElementsByTagName("a");
+    const tocContainer =
+        document.getElementById("toc-list") ||
+        document.getElementById("TOC") ||
+        document.querySelector('nav[role="doc-toc"]');
+    if (!tocContainer) return;
+
+    // Collect all links in TOC: both a[data-scroll-target] (Quarto) and a[href^="#"]
+    const tocLinks = Array.from(
+        tocContainer.querySelectorAll('a[data-scroll-target], a[href^="#"]')
+    );
     if (tocLinks.length === 0) return;
 
     const linkMap = new Map();
-    for (const link of Array.from(tocLinks)) {
-        const href = link.getAttribute("href");
-        if (href && href.startsWith("#")) {
-            linkMap.set(href.substring(1), link);
+    const targetSections = [];
+    const seenSectionIds = new Set();
+
+    for (const link of tocLinks) {
+        const rawTarget =
+            link.getAttribute("data-scroll-target") || link.getAttribute("href");
+        if (rawTarget && rawTarget.startsWith("#") && rawTarget.length > 1) {
+            let id;
+            try {
+                id = decodeURI(rawTarget.slice(1));
+            } catch {
+                id = rawTarget.slice(1);
+            }
+            linkMap.set(id, link);
+            if (!seenSectionIds.has(id)) {
+                seenSectionIds.add(id);
+                const el = document.getElementById(id);
+                if (el) {
+                    targetSections.push(el);
+                }
+            }
         }
     }
+
+    if (targetSections.length === 0) {
+        // Fallback: collect sections by tags and classes if direct IDs not in TOC
+        const sectionTags = document.getElementsByTagName("section");
+        const pageSectionClasses =
+            document.getElementsByClassName("page-section");
+        const fallbackSections = Array.from(
+            new Set([...sectionTags, ...pageSectionClasses])
+        ).filter((s) => s.id && linkMap.has(s.id));
+        targetSections.push(...fallbackSections);
+    }
+
+    if (targetSections.length === 0) return;
+
+    // Patch offsetTop on TOC target sections so Quarto's updateActiveLink calculates true document-relative offsets
+    patchTocSectionsOffsetTop(targetSections);
+
     let currentActiveLink = null;
 
-    // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
-    const sectionTags = document.getElementsByTagName("section");
-    const pageSectionClasses = document.getElementsByClassName("page-section");
-    const sections = Array.from(new Set([...sectionTags, ...pageSectionClasses])).filter(s => s.id);
-
-    const sectionIndexMap = new Map();
-    for (let index = 0; index < sections.length; index++) {
-        const section = sections[index];
-        sectionIndexMap.set(section.id, index);
-    }
-
-    const visibleIndices = new Set();
-
-    const observerOptions = {
-        root: null,
-        rootMargin: "-100px 0px -60% 0px",
-        threshold: 0,
+    const setActiveLink = (newActiveLink) => {
+        if (newActiveLink && newActiveLink !== currentActiveLink) {
+            if (currentActiveLink) {
+                currentActiveLink.classList.remove("active");
+                currentActiveLink.removeAttribute("aria-current");
+            }
+            newActiveLink.classList.add("active");
+            newActiveLink.setAttribute("aria-current", "location");
+            currentActiveLink = newActiveLink;
+        }
     };
 
-    const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-            const index = sectionIndexMap.get(entry.target.id);
-            if (index !== undefined) {
-                if (entry.isIntersecting) {
-                    visibleIndices.add(index);
-                } else {
-                    visibleIndices.delete(index);
+    const updateActiveLink = () => {
+        const scrollY =
+            window.pageYOffset ||
+            window.scrollY ||
+            document.documentElement.scrollTop ||
+            0;
+        const scrollHeight = Math.max(
+            document.body.scrollHeight || 0,
+            document.documentElement.scrollHeight || 0,
+            document.body.offsetHeight || 0,
+            document.documentElement.offsetHeight || 0
+        );
+        const windowHeight =
+            window.innerHeight || document.documentElement.clientHeight || 800;
+
+        let activeSection = null;
+        // If at the very bottom of the page on a scrollable document, activate the last section
+        if (
+            scrollHeight > windowHeight &&
+            windowHeight + scrollY >= scrollHeight - 20 &&
+            targetSections.length > 0
+        ) {
+            activeSection = targetSections[targetSections.length - 1];
+        } else {
+            const sectionMargin = 200; // Matches Quarto's sectionMargin
+            // Find the last section that has scrolled past the margin threshold
+            for (let i = targetSections.length - 1; i >= 0; i--) {
+                const section = targetSections[i];
+                const docTop = getDocumentOffsetTop(section);
+                if (scrollY >= docTop - sectionMargin) {
+                    activeSection = section;
+                    break;
                 }
             }
-        }
-
-        let activeId = null;
-        if (visibleIndices.size > 0) {
-            const firstVisibleIndex = Math.min(...visibleIndices);
-            if (firstVisibleIndex >= 0 && firstVisibleIndex < sections.length) {
-                activeId = sections[firstVisibleIndex].id;
+            if (!activeSection && targetSections.length > 0) {
+                activeSection = targetSections[0];
             }
         }
 
-        if (activeId) {
-            const newActiveLink = linkMap.get(activeId);
-            if (newActiveLink && newActiveLink !== currentActiveLink) {
-                if (currentActiveLink) {
-                    currentActiveLink.classList.remove("active");
-                    currentActiveLink.removeAttribute("aria-current");
-                }
-                newActiveLink.classList.add("active");
-                newActiveLink.setAttribute("aria-current", "location");
-                currentActiveLink = newActiveLink;
+        if (activeSection) {
+            const link = linkMap.get(activeSection.id);
+            if (link) {
+                setActiveLink(link);
             }
         }
-    }, observerOptions);
+    };
 
-    for (const section of sections) {
-        if (linkMap.has(section.id)) {
+    // Leading-edge throttled update on scroll and resize (16ms = ~60fps)
+    let lastScrollTime = 0;
+    let scrollTimer = null;
+    const throttledUpdate = () => {
+        const now = Date.now();
+        const remaining = 16 - (now - lastScrollTime);
+        if (remaining <= 0 || remaining > 16) {
+            if (scrollTimer) {
+                clearTimeout(scrollTimer);
+                scrollTimer = null;
+            }
+            lastScrollTime = now;
+            updateActiveLink();
+        } else if (!scrollTimer) {
+            scrollTimer = setTimeout(() => {
+                lastScrollTime = Date.now();
+                scrollTimer = null;
+                updateActiveLink();
+            }, remaining);
+        }
+    };
+
+    window.addEventListener("scroll", throttledUpdate, { passive: true });
+    window.addEventListener("resize", throttledUpdate, { passive: true });
+
+    // Initial update
+    updateActiveLink();
+
+    // Preserve IntersectionObserver for platforms that use it
+    if (typeof IntersectionObserver === "function") {
+        const observer = new IntersectionObserver(() => {
+            updateActiveLink();
+        }, {
+            root: null,
+            rootMargin: "-100px 0px -60% 0px",
+            threshold: 0,
+        });
+
+        for (const section of targetSections) {
             observer.observe(section);
         }
     }
 }
+
 
 /**
  * Initialize skip to content link for accessibility
