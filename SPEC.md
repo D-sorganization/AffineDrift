@@ -224,7 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-09-13 | #4375 | Correct the curious golfer chapter's acceleration, wrench power, forward counterfactual and evidence arguments; preserve independently checked examples; restore the companion chapter hierarchy, readable mobile equations and synchronized PDF under #4376. |
+| 2026-09-13 | #4377 | Correct the curious golfer chapter's acceleration, wrench power, forward counterfactual and evidence arguments; preserve independently checked examples; restore the companion chapter hierarchy, readable mobile equations and synchronized PDF under #4376. |
 | 2026-09-12 | #4373 | Re-derive constraint null spaces, curvature-complete drift, force/velocity duality and finite-time control with checked examples and bounded golf inference. |
 | 2026-09-12 | #4372 | Rebuild paired muscle-torque geometry, bounded feasibility, geometric stiffness and biarticular power; qualify anatomical and grip inference; preserve worked answers and bind complete rendered review evidence. |
 | 2026-09-12 | #4368 | Complete strokes-gained joint-intervention and dispersion qualifications; repair accessible table headers, expanded explanations and dark-theme reading; bind the completed route review to reproducible evidence. |

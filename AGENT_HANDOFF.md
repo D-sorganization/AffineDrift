@@ -65,8 +65,9 @@
 
 - **Current work:** issues #4375/#4376, native children of epic #4009, corpus #4021 and
   foundations #4058. Worktree `C:/Users/diete/Repositories/AffineDrift-technical-review`,
-  branch `fix/4375-curiosity-rigor`, checkpoint SELF; PR not created. DL-#4375
-  is in_progress. Complete original and revised Chapter 30 source read; the
+  branch `fix/4375-curiosity-rigor`, checkpoint SELF; regular PR4377 is open. DL-#4375/#4376
+  are in_review. Implementation f3a68326509c4ef0d97060b389b7a2531caedcf4 is pushed;
+  all seven reported source/PDF hashes independently match its Git objects. Complete original and revised Chapter 30 source read; the
   golfer/reviewer dialogue and both extended conversations remain. Source
   corrections cover acceleration, wrench/joint power, storage, forward versus
   instantaneous attribution, bounded-force couples, numerical convergence,
@@ -96,8 +97,8 @@
   size and keyboard scroll. Details, safe rebuild procedure and exact hashes:
   `reports/technical-review/companion-hierarchy-review.md` and
   `reports/technical-review/companion-hierarchy-verification.json`.
-- **Remaining release checks:** open a regular PR covering4375/4376, then
-  verify every required hosted check before protected merge. The actual local
+- **Remaining release checks:** verify all required checks on regular
+  PR4377, then use a protected merge against the exact passing head. The actual local
   production route gate passes all14 width/theme cases after the existing
   legacy-polyfill normalization, with one axe scan and zero serious/critical
   findings. Dashboard metadata is bound to the independently checked beca5d90. The figure's small mobile labels and
@@ -105,7 +106,10 @@
   Full-companion scientific review remains deferred. Do not claim that the
   corrected chapter qualifies every other chapter or the provider revision.
 - **Validation:** source/example/pin validation at beca5d90 remains recorded in
-  the previous log entry. Current two real-Pandoc tests and Ruff/Black100 pass.
+  the previous log entry. Current two real-Pandoc tests and Ruff/Black100 pass. Final metadata/inventory
+  checks pass after the five evidence-path identities were independently matched.
+  All normal commit/push hooks pass; Prettier changes were inspected for semantic
+  equivalence before restaging. No hook was bypassed.
   Root7257 passed5335 but failed two hygiene checks caused by29 browser PNGs and
   .playwright-cli at root. Those scratch files were moved into the review
   directory; all8 hygiene/hierarchy checks pass. Clean root15451 passes5337/29 skipped/132
@@ -113,10 +117,10 @@
   All render/browser handles have finished and the curiosity browser is closed.
   Idle preview8767 remains. Six generated files were restored after proven
   text/JSON equivalence. Keep browser sessions rooted in the review directory.
-- **Main integration:** the pending merge brings in the protected nullspace
+- **Main integration:** committed f3a68326 integrates the protected nullspace
   squash7f0fed760f3e1d45610f5612c900ed4c67c49302. Three documentation conflicts
   were resolved after comparison with both parents, retaining current Chapter30
-  records and both SPEC rows. This checkpoint completes that merge; do not
+  records and both SPEC rows. That merge is complete; do not
   reintroduce the nullspace implementation in a second PR.
 - **Null-space delivery:** regular PR4373 is merged and shipped. All15 checks
   passed at7b7ef6a15857d66497c61c78a2ccdf9f92f3a1f2. Exact deployment34727537466
