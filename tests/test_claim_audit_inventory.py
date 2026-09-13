@@ -16,6 +16,7 @@ from scripts.claim_audit_evidence import (
     symbol_sha256,
 )
 from scripts.claim_audit_ids import (
+    APPLIED_ARTICLE_ROUTES,
     DEFERRED_AUDIT_SCOPE_COUNTS,
     deferred_issue_url,
     deferred_issue_urls,
@@ -448,6 +449,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             or record["route"].startswith("/books/")
             or record["route"].startswith("/resources/")
             or record["route"].startswith("/repositories/")
+            or record["route"] in APPLIED_ARTICLE_ROUTES
             or record["route"]
             in {
                 "/models/models.html",
@@ -458,7 +460,6 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
                 "/models/models-pendulum.html",
                 "/models/models-opensim.html",
                 "/models/models-myosim.html",
-                "/articles/strokes-gained-limitations.html",
                 "/articles/null-space-constraint-jacobian.html",
                 "/critiques/strokes_gained_non_ergodic.html",
                 "/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html",
@@ -478,12 +479,12 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4062"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4061"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4060"]
-    expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4059"] -= 1
+    del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4059"]
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4057"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4058"] -= 1
-    assert len(deferred) == 161
-    assert len(reviewed_completed_batches) == 58
+    assert len(deferred) == 144
+    assert len(reviewed_completed_batches) == 75
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
     companion = _find_route(inventory, "/articles/null-space-constraint-jacobian-bibliography.html")
