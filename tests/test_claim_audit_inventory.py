@@ -458,6 +458,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
                 )
             )
             or record["route"].startswith("/articles/The_Geometry_of_Motion/quarto/")
+            or record["route"].startswith("/articles/The_Physics_of_Golf/quarto/")
             or record["route"] in APPLIED_ARTICLE_ROUTES
             or record["route"] in CORE_ARTICLE_ROUTES
             or record["route"]
@@ -470,7 +471,6 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
                 "/models/models-pendulum.html",
                 "/models/models-opensim.html",
                 "/models/models-myosim.html",
-                "/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html",
             }
         )
     ]
@@ -492,9 +492,9 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4057"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4056"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4055"]
-    expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"] -= 1
-    assert len(deferred) == 35
-    assert len(reviewed_completed_batches) == 184
+    del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"]
+    assert len(deferred) == 0
+    assert len(reviewed_completed_batches) == 219
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
     companion = _find_route(inventory, "/articles/null-space-constraint-jacobian-bibliography.html")
