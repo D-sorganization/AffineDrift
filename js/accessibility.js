@@ -269,6 +269,7 @@ export function initAriaLabels() {
     }
 
     // Quarto collapsible callout headers: ensure they have role="button" so aria-expanded is allowed
+    // and enable keyboard activation (Enter, Space) to match click behavior (issue #4374)
     const calloutToggles = document.querySelectorAll(".callout-header[data-bs-toggle='collapse']");
     for (const toggle of calloutToggles) {
         if (!toggle.hasAttribute("role")) {
@@ -276,6 +277,18 @@ export function initAriaLabels() {
         }
         if (!toggle.hasAttribute("tabindex")) {
             toggle.setAttribute("tabindex", "0");
+        }
+        if (!toggle.dataset.calloutKeyboardBound) {
+            toggle.dataset.calloutKeyboardBound = "true";
+            toggle.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+                    if (e.target.closest("a, button, input, textarea, select") && e.target !== toggle) {
+                        return;
+                    }
+                    e.preventDefault();
+                    toggle.click();
+                }
+            });
         }
     }
 
