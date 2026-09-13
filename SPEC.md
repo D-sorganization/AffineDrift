@@ -364,5 +364,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-13 | #4382 | Audit and promote 18 applied golf, measurement, and companion article routes with self-contained byte digests and inclusion mapping (#4059). |
 | 2026-09-13 | #4383 | Audit and promote 29 core mechanics, geometry, and control article routes with self-contained byte digests and inclusion mapping (#4058). |
 | 2026-09-13 | #4384 | Audit and promote 40 critique and defense surface routes with self-contained byte digests and inclusion mapping (#4057). |
+| 2026-09-13 | #4385 | Audit and promote 16 tangent-space technical and lay series routes with self-contained byte digests and inclusion mapping (#4056). |
 
 
