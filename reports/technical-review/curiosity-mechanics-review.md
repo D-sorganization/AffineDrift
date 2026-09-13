@@ -178,3 +178,13 @@ peer Chapter 29, and impact/acoustics #4253/#4255 remain outside this edit.
 - Six unrelated test-generated registries/summaries were restored only after
   proving exact text equivalence modulo newlines or parsed JSON equivalence
   excluding `generated_on`. No user or peer content was discarded.
+
+## Subsequent Hierarchy and Publication Checkpoint
+
+The earlier render limitations above are historical. The corrected 205-page
+PDF and all revised Chapter 30 pages have now been read, and both tracked PDF
+copies are synchronized. All 29 final web captures were read; eight settled
+width/theme cases confirm readable, keyboard-scrollable equations. See
+`companion-hierarchy-review.md` and `companion-hierarchy-verification.json` for
+the exact scope, artifact hashes, remaining presentation limits and root-test
+hygiene repair. The full-book scientific review remains incomplete.

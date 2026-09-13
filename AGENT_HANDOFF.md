@@ -63,7 +63,7 @@
 
 ## Technical Content Review
 
-- **Current work:** issue #4375, native child of epic #4009, corpus #4021 and
+- **Current work:** issues #4375/#4376, native children of epic #4009, corpus #4021 and
   foundations #4058. Worktree `C:/Users/diete/Repositories/AffineDrift-technical-review`,
   branch `fix/4375-curiosity-rigor`, checkpoint SELF; PR not created. DL-#4375
   is in_progress. Complete original and revised Chapter 30 source read; the
@@ -82,58 +82,49 @@
   revisions, states, dates and active lock are unchanged. The pins registry adds
   only this wrapper's route to the existing unqualified a1a61399 record. Its
   dashboard is regenerated; only that dashboard's two evidence digests change.
-  The original dashboard review identity is historical, not a new full-provider
-  qualification; rebind the checked metadata to the committed checkpoint before
-  closing delivery review. All other inventory records remain unchanged.
-- **Render and publication limits:** selected HTML render44787 and initial PDF
-  render63940 passed; final paired render87026 passed after source refinements.
-  The final direct Quarto PDF has 286 pages, but a hierarchy defect makes the
-  intended Chapter 30 appear as Chapter117. Physical pages265-272 were visually
-  read; pages273-281 and most web captures remain unread. The stored canonical
-  202-page PDF correctly has Chapter30 (physical188); it is restored byte-for-byte
-  from HEAD after direct Quarto rendering unexpectedly moved it out of articles/.
-  It does not yet contain these scientific corrections. Do not publish the
-  malformed direct render or claim downloadable-PDF synchronization. Issue4376
-  records the source/rebuild/web hierarchy problem with this distinction.
-- **Browser limits:** final capture job79590 generated 21 full-width reading
-  captures and mobile light/dark equation/figure captures. Parsed eight cases
-  show no page overflow or math errors, but the first light cases were observed
-  before all display math settled; narrow dark cases flag wide math containers.
-  Only reading00 and the two mobile point-transport captures were visually read.
-  The point-transport equation is too small on mobile and needs a scoped
-  readability repair plus a settled, keyboard-scroll check. A service-worker
-  update toast overlays captures; dismiss it before the definitive reading pass.
-  Original QA13973 timed out on an inappropriate MathJax state check; no page
-  failure is inferred from that harness error. The corrected job returns its
-  actual results in curiosity-browser-results.json, not merely a zero exit code.
-- **Validation:** independent examples pass; 27 companion/pin checks pass after
-  restoring the displaced PDF and repairing the citation test to distinguish
-  resolved Quarto references from bibliography keys (dangling refs still fail).
-  Changed test Ruff/Black100 and all638 title checks pass. First root70725
-  failed four checks: missing PDF twice, route reconciliation, and the citation
-  parser. Those were repaired, then the bound dashboard reports regenerated.
-  Final root25465 passes5335/29 skipped/132 deselected/59 warnings in193.66s, coverage79.29%. Metadata/inventory22 checks pass. Browser79590 is closed; all local validation handles are reaped. Idle preview8767 remains. Six generated files were restored after proven text/JSON equivalence.
-  Full-corpus completion and production/browser qualification are not claimed.
-- **Next action:** restore a reproducible companion PDF build with correct
-  chapter hierarchy and regenerate the updated Chapter30 artifact, coordinating
-  issue4376 before any cross-chapter edits. Then complete its web/PDF reading,
-  mobile equation repair, audit evidence and regular PR. Keep the whole-book
-  route deferred until every included chapter is reviewed.
-- **Null-space delivery:** regular PR4373 protected-squash-merged at
-  7f0fed760f3e1d45610f5612c900ed4c67c49302 on 2026-09-13T00:16:11Z after all
-  15 exact-head checks succeeded at7b7ef6a15857d66497c61c78a2ccdf9f92f3a1f2.
-  Exact deployment34727537466 is confirmed running; live publication is not yet
-  verified. DL-#4371 remains in_review pending delivery. Its full article and
-  bibliography local review is complete, with nine independently checked
-  evidence paths bound to fdd6effabcb6f955d2d18bc2587e1208c4cddcd2. Root5335
-  passed/29 skipped/132 deselected/59 warnings in188.68s, coverage79.29%;
-  production-style local route gate28/28 passed, with two axe route scans.
-  Durable reports and detailed failure history remain in
-  `reports/technical-review/nullspace-*` and
-  `docs/development/technical-review/nullspace-review.md`.
-  Verify every hosted live record, including the newly published bibliography,
-  then update DL-#4371 to shipped. Integrate its main squash before creating the
-  Chapter30 PR; this branch currently starts at the original PR head.
+  All five dashboard evidence paths now independently match committed beca5d90;
+  its metadata follow-up review is rebound to that source checkpoint. This does
+  not qualify the provider scientifically. All other inventory records remain unchanged.
+- **Current render checkpoint (SELF):** hierarchy #4376 is repaired with a
+  wrapper-scoped Lua filter. Actual HTML has one H1, thirty chapters and nested
+  30.1–30.3 sections; real-Pandoc tests preserve every heading ID and non-heading
+  block. The revised PDF has205 pages and Chapter30 starts at physical188.
+  Every page188–205 (full chapter, glossary, references) was visually read, and
+  both tracked PDF copies now match. All21 desktop and8 mobile web captures
+  were read. Eight settled width/theme cases have47 math expressions/four
+  displays, zero math errors and no page overflow; wide equations retain text
+  size and keyboard scroll. Details, safe rebuild procedure and exact hashes:
+  `reports/technical-review/companion-hierarchy-review.md` and
+  `reports/technical-review/companion-hierarchy-verification.json`.
+- **Remaining release checks:** open a regular PR covering4375/4376, then
+  verify every required hosted check before protected merge. The actual local
+  production route gate passes all14 width/theme cases after the existing
+  legacy-polyfill normalization, with one axe scan and zero serious/critical
+  findings. Dashboard metadata is bound to the independently checked beca5d90. The figure's small mobile labels and
+  floating site controls remain presentation limits recorded in the report.
+  Full-companion scientific review remains deferred. Do not claim that the
+  corrected chapter qualifies every other chapter or the provider revision.
+- **Validation:** source/example/pin validation at beca5d90 remains recorded in
+  the previous log entry. Current two real-Pandoc tests and Ruff/Black100 pass.
+  Root7257 passed5335 but failed two hygiene checks caused by29 browser PNGs and
+  .playwright-cli at root. Those scratch files were moved into the review
+  directory; all8 hygiene/hierarchy checks pass. Clean root15451 passes5337/29 skipped/132
+  deselected/59 warnings in192.94s, coverage79.29%.
+  All render/browser handles have finished and the curiosity browser is closed.
+  Idle preview8767 remains. Six generated files were restored after proven
+  text/JSON equivalence. Keep browser sessions rooted in the review directory.
+- **Main integration:** the pending merge brings in the protected nullspace
+  squash7f0fed760f3e1d45610f5612c900ed4c67c49302. Three documentation conflicts
+  were resolved after comparison with both parents, retaining current Chapter30
+  records and both SPEC rows. This checkpoint completes that merge; do not
+  reintroduce the nullspace implementation in a second PR.
+- **Null-space delivery:** regular PR4373 is merged and shipped. All15 checks
+  passed at7b7ef6a15857d66497c61c78a2ccdf9f92f3a1f2. Exact deployment34727537466
+  succeeded at7f0fed76; live artifact10309086348 was downloaded and all960
+  unique records/240 routes individually checked: HTTP200/pass, no failures,
+  overflow or retries. All8 article/bibliography cases pass;240 actual route
+  axe scans have zero serious/critical violations. DL-#4371 is shipped.
+  Original local scientific evidence remains bound to fdd6effabcb6f955d2d18bc2587e1208c4cddcd2.
 - **Previously published:** muscle PR4372 at3f87332512858febf2c131fbda44b62acad8d222,
   exact deployment34722147597 and live artifact10306629143: all956 unique
   records/239 routes verified HTTP200/pass, no failures/overflow/retries;
