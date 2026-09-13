@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 41
-- Deferred: 196
+- Reviewed: 62
+- Deferred: 175
 - Exempt: 3
 
 ## Deferred Delivery Batches
@@ -17,7 +17,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058): 28 routes
 - [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 17 routes
 - [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 14 routes
-- [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
 
 ## Reviewed Evidence
 
@@ -64,6 +63,27 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
+| `/resources/articles.html` | `resources/articles.qmd` | 1 |
+| `/resources/bibliography.html` | `resources/bibliography.qmd` | 1 |
+| `/resources/learning-path-biomechanics.html` | `resources/learning-path-biomechanics.qmd` | 1 |
+| `/resources/learning-path-control-theory.html` | `resources/learning-path-control-theory.qmd` | 1 |
+| `/resources/learning-path-foundations.html` | `resources/learning-path-foundations.qmd` | 1 |
+| `/resources/learning-path-golf-science.html` | `resources/learning-path-golf-science.qmd` | 1 |
+| `/resources/learning-paths.html` | `resources/learning-paths.qmd` | 1 |
+| `/resources/research-review-baseball-pitching.html` | `resources/research-review-baseball-pitching.qmd` | 1 |
+| `/resources/research-review-induced-acceleration-analysis.html` | `resources/research-review-induced-acceleration-analysis.qmd` | 2 |
+| `/resources/research-review-interaction-forces.html` | `resources/research-review-interaction-forces.qmd` | 1 |
+| `/resources/research-review-shaft-flexibility.html` | `resources/research-review-shaft-flexibility.qmd` | 1 |
+| `/resources/research-reviews.html` | `resources/research-reviews.qmd` | 1 |
+| `/resources/resources-books.html` | `resources/resources-books.qmd` | 1 |
+| `/resources/resources-datasets.html` | `resources/resources-datasets.qmd` | 1 |
+| `/resources/resources-notebooklm.html` | `resources/resources-notebooklm.qmd` | 1 |
+| `/resources/resources-papers.html` | `resources/resources-papers.qmd` | 1 |
+| `/resources/resources-researchers.html` | `resources/resources-researchers.qmd` | 1 |
+| `/resources/resources-software.html` | `resources/resources-software.qmd` | 1 |
+| `/resources/resources-videos.html` | `resources/resources-videos.qmd` | 1 |
+| `/resources/resources-websites.html` | `resources/resources-websites.qmd` | 1 |
+| `/resources/resources.html` | `resources/resources.qmd` | 1 |
 
 ## Route Inventory
 
@@ -288,24 +308,24 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-257639545452` | `/repositories/repositories-models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-9220d15a31f4` | `/repositories/repositories-pinocchio.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
 | `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-32f17d5abbca` | `/resources/articles.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-e162f8e1f669` | `/resources/learning-path-biomechanics.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-3b89c286bfae` | `/resources/learning-path-control-theory.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-0ad68343def0` | `/resources/learning-path-foundations.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-aa192df4ba01` | `/resources/learning-path-golf-science.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-da7c073ff90f` | `/resources/learning-paths.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-397b07989cb1` | `/resources/research-review-baseball-pitching.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-b34fc06b00e9` | `/resources/research-review-induced-acceleration-analysis.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-cb426ba8f0be` | `/resources/research-review-interaction-forces.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-c3b127d902e9` | `/resources/research-review-shaft-flexibility.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-709386b02ebe` | `/resources/research-reviews.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-9d49aa3310be` | `/resources/resources-books.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-7eda67a2b1fa` | `/resources/resources-datasets.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-5019066bbd63` | `/resources/resources-notebooklm.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-560f2c6efddd` | `/resources/resources-papers.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-eba20bb8729f` | `/resources/resources-researchers.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-f2c40a1afbe1` | `/resources/resources-software.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-d879d4312832` | `/resources/resources-videos.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-4b132f59bf37` | `/resources/resources-websites.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
-| `ad-route-42f21a90c505` | `/resources/resources.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-32f17d5abbca` | `/resources/articles.html` | Reviewed | — | None | None | 0 |
+| `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Reviewed | — | None | None | 0 |
+| `ad-route-e162f8e1f669` | `/resources/learning-path-biomechanics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-3b89c286bfae` | `/resources/learning-path-control-theory.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0ad68343def0` | `/resources/learning-path-foundations.html` | Reviewed | — | None | None | 0 |
+| `ad-route-aa192df4ba01` | `/resources/learning-path-golf-science.html` | Reviewed | — | None | None | 0 |
+| `ad-route-da7c073ff90f` | `/resources/learning-paths.html` | Reviewed | — | None | None | 0 |
+| `ad-route-397b07989cb1` | `/resources/research-review-baseball-pitching.html` | Reviewed | — | None | None | 0 |
+| `ad-route-b34fc06b00e9` | `/resources/research-review-induced-acceleration-analysis.html` | Reviewed | — | None | None | 0 |
+| `ad-route-cb426ba8f0be` | `/resources/research-review-interaction-forces.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c3b127d902e9` | `/resources/research-review-shaft-flexibility.html` | Reviewed | — | None | None | 0 |
+| `ad-route-709386b02ebe` | `/resources/research-reviews.html` | Reviewed | — | None | None | 0 |
+| `ad-route-9d49aa3310be` | `/resources/resources-books.html` | Reviewed | — | None | None | 0 |
+| `ad-route-7eda67a2b1fa` | `/resources/resources-datasets.html` | Reviewed | — | None | None | 0 |
+| `ad-route-5019066bbd63` | `/resources/resources-notebooklm.html` | Reviewed | — | None | None | 0 |
+| `ad-route-560f2c6efddd` | `/resources/resources-papers.html` | Reviewed | — | None | None | 0 |
+| `ad-route-eba20bb8729f` | `/resources/resources-researchers.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f2c40a1afbe1` | `/resources/resources-software.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d879d4312832` | `/resources/resources-videos.html` | Reviewed | — | None | None | 0 |
+| `ad-route-4b132f59bf37` | `/resources/resources-websites.html` | Reviewed | — | None | None | 0 |
+| `ad-route-42f21a90c505` | `/resources/resources.html` | Reviewed | — | None | None | 0 |

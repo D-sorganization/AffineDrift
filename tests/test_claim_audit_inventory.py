@@ -446,6 +446,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             record["route"] == "/"
             or record["route"].startswith("/pages/")
             or record["route"].startswith("/books/")
+            or record["route"].startswith("/resources/")
             or record["route"]
             in {
                 "/articles/strokes-gained-limitations.html",
@@ -466,12 +467,13 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     expected_deferred = Counter(DEFERRED_AUDIT_SCOPE_COUNTS)
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4063"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4062"]
+    del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4061"]
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4059"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4057"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4058"] -= 1
-    assert len(deferred) == 196
-    assert len(reviewed_completed_batches) == 23
+    assert len(deferred) == 175
+    assert len(reviewed_completed_batches) == 44
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
     companion = _find_route(inventory, "/articles/null-space-constraint-jacobian-bibliography.html")
