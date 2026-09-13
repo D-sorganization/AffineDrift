@@ -4,14 +4,13 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 176
-- Deferred: 61
+- Reviewed: 202
+- Deferred: 35
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
 - [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 35 routes
-- [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055): 26 routes
 
 ## Reviewed Evidence
 
@@ -76,6 +75,32 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/technology-heavy-hit-impact-coupling.html` | `articles/technology-heavy-hit-impact-coupling.qmd` | 3 |
 | `/articles/technology-launch-monitors.html` | `articles/technology-launch-monitors.qmd` | 1 |
 | `/articles/technology-motion-capture.html` | `articles/technology-motion-capture.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | `articles/The_Geometry_of_Motion/quarto/ch01_foundations.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | `articles/The_Geometry_of_Motion/quarto/ch02_variational.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | `articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | `articles/The_Geometry_of_Motion/quarto/ch04_contraction.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | `articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | `articles/The_Geometry_of_Motion/quarto/ch06_duality.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.html` | `articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch08_applications.html` | `articles/The_Geometry_of_Motion/quarto/ch08_applications.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.html` | `articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/index.html` | `articles/The_Geometry_of_Motion/quarto/index.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.html` | `articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/volume0.html` | `articles/The_Geometry_of_Motion/quarto/volume0.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/volume1.html` | `articles/The_Geometry_of_Motion/quarto/volume1.qmd` | 1 |
+| `/articles/The_Geometry_of_Motion/quarto/volume2.html` | `articles/The_Geometry_of_Motion/quarto/volume2.qmd` | 2 |
 | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
 | `/articles/theory-part1.html` | `articles/theory-part1.qmd` | 3 |
 | `/articles/theory-part2.html` | `articles/theory-part2.qmd` | 4 |
@@ -258,32 +283,32 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-88598cd32ba2` | `/articles/technology-heavy-hit-impact-coupling.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8a80ab38a564` | `/articles/technology-launch-monitors.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7237539d8141` | `/articles/technology-motion-capture.html` | Reviewed | — | None | None | 0 |
-| `ad-route-72a9a6bbc151` | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-121c2d553f4d` | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a4d65b536c60` | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-39e3dd6b6f46` | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-08a4d449d5e0` | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-3a38c1784447` | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-cd74d6d3f972` | `/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a4cdc131aaff` | `/articles/The_Geometry_of_Motion/quarto/ch08_applications.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-cc75ab053b10` | `/articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-55e3b9aedc22` | `/articles/The_Geometry_of_Motion/quarto/index.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-c985cb5b1549` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-646073f11ed6` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-fe1d4376452d` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-32c237b16cbe` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a1f883221333` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-d4d80522bfed` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-a421a71d601a` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-97d61eb39f96` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-5d20426d8671` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-8b8407ed5087` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-bf7e160ce952` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-57f70c446a16` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-96feb1710fe4` | `/articles/The_Geometry_of_Motion/quarto/volume0.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-555d7d5b4797` | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
-| `ad-route-df931687d016` | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 0 |
+| `ad-route-72a9a6bbc151` | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | Reviewed | — | None | None | 0 |
+| `ad-route-121c2d553f4d` | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a4d65b536c60` | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | Reviewed | — | None | None | 0 |
+| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-39e3dd6b6f46` | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | Reviewed | — | None | None | 0 |
+| `ad-route-08a4d449d5e0` | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | Reviewed | — | None | None | 0 |
+| `ad-route-3a38c1784447` | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | Reviewed | — | None | None | 0 |
+| `ad-route-cd74d6d3f972` | `/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a4cdc131aaff` | `/articles/The_Geometry_of_Motion/quarto/ch08_applications.html` | Reviewed | — | None | None | 0 |
+| `ad-route-cc75ab053b10` | `/articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-55e3b9aedc22` | `/articles/The_Geometry_of_Motion/quarto/index.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c985cb5b1549` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch01_linear_algebra.html` | Reviewed | — | None | None | 0 |
+| `ad-route-646073f11ed6` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch02_state_space.html` | Reviewed | — | None | None | 0 |
+| `ad-route-fe1d4376452d` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch03_configuration.html` | Reviewed | — | None | None | 0 |
+| `ad-route-32c237b16cbe` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a1f883221333` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch05_screw_axes.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d4d80522bfed` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch06_exponential_coordinates.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a421a71d601a` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch07_recursive_algorithms.html` | Reviewed | — | None | None | 0 |
+| `ad-route-97d61eb39f96` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch08_spatial_algebra.html` | Reviewed | — | None | None | 0 |
+| `ad-route-5d20426d8671` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch09_product_of_exponentials.html` | Reviewed | — | None | None | 0 |
+| `ad-route-8b8407ed5087` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch10_articulated_body_algorithm.html` | Reviewed | — | None | None | 0 |
+| `ad-route-bf7e160ce952` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch11_lagrangian_mechanics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-57f70c446a16` | `/articles/The_Geometry_of_Motion/quarto/vol0_ch12_machine_learning.html` | Reviewed | — | None | None | 0 |
+| `ad-route-96feb1710fe4` | `/articles/The_Geometry_of_Motion/quarto/volume0.html` | Reviewed | — | None | None | 0 |
+| `ad-route-555d7d5b4797` | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | Reviewed | — | None | None | 0 |
+| `ad-route-df931687d016` | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e6426572da2d` | `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-6c2a1c1053d6` | `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-6e5a4acf5112` | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
