@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 62
-- Deferred: 175
+- Reviewed: 76
+- Deferred: 161
 - Exempt: 3
 
 ## Deferred Delivery Batches
@@ -16,7 +16,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057): 39 routes
 - [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058): 28 routes
 - [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 17 routes
-- [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 14 routes
 
 ## Reviewed Evidence
 
@@ -41,6 +40,14 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
 | `/models/hybrid-impact-contact.html` | `models/hybrid-impact-contact.qmd` | 6 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
+| `/models/models-drake.html` | `models/models-drake.qmd` | 1 |
+| `/models/models-mujoco.html` | `models/models-mujoco.qmd` | 1 |
+| `/models/models-myosim.html` | `models/models-myosim.qmd` | 1 |
+| `/models/models-opensim.html` | `models/models-opensim.qmd` | 1 |
+| `/models/models-pendulum.html` | `models/models-pendulum.qmd` | 1 |
+| `/models/models-pinocchio.html` | `models/models-pinocchio.qmd` | 1 |
+| `/models/models-simulink.html` | `models/models-simulink.qmd` | 1 |
+| `/models/models.html` | `models/models.qmd` | 1 |
 | `/models/neural-timing-feedback.html` | `models/neural-timing-feedback.qmd` | 8 |
 | `/models/population-generalization.html` | `models/population-generalization.qmd` | 9 |
 | `/models/programming/engines.html` | `models/programming/engines.qmd` | 4 |
@@ -63,6 +70,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
+| `/repositories/repositories-2d-model.html` | `repositories/repositories-2d-model.qmd` | 1 |
+| `/repositories/repositories-3d-model.html` | `repositories/repositories-3d-model.qmd` | 1 |
+| `/repositories/repositories-drake.html` | `repositories/repositories-drake.qmd` | 1 |
+| `/repositories/repositories-models.html` | `repositories/repositories-models.qmd` | 1 |
+| `/repositories/repositories-pinocchio.html` | `repositories/repositories-pinocchio.qmd` | 1 |
+| `/repositories/repositories.html` | `repositories/repositories.qmd` | 1 |
 | `/resources/articles.html` | `resources/articles.qmd` | 1 |
 | `/resources/bibliography.html` | `resources/bibliography.qmd` | 1 |
 | `/resources/learning-path-biomechanics.html` | `resources/learning-path-biomechanics.qmd` | 1 |
@@ -270,14 +283,14 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cd5e133fe28e` | `/models/hybrid-impact-contact.html` | Reviewed | — | None | None | 0 |
 | `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | — | None | None | 0 |
-| `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-7900d4c5494f` | `/models/models-myosim.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-0daf8c7255f6` | `/models/models-opensim.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-0c35be23a4e6` | `/models/models-pendulum.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-5776cb8aebbe` | `/models/models-simulink.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-50bd3b182f9b` | `/models/models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-d6078f8dcbbd` | `/models/models-drake.html` | Reviewed | — | None | None | 0 |
+| `ad-route-e9ad98fb020a` | `/models/models-mujoco.html` | Reviewed | — | None | None | 0 |
+| `ad-route-7900d4c5494f` | `/models/models-myosim.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0daf8c7255f6` | `/models/models-opensim.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0c35be23a4e6` | `/models/models-pendulum.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d93c2572c4de` | `/models/models-pinocchio.html` | Reviewed | — | None | None | 0 |
+| `ad-route-5776cb8aebbe` | `/models/models-simulink.html` | Reviewed | — | None | None | 0 |
+| `ad-route-50bd3b182f9b` | `/models/models.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8debf6763c2e` | `/models/neural-timing-feedback.html` | Reviewed | — | None | None | 1 |
 | `ad-route-b7d4c6ec440c` | `/models/population-generalization.html` | Reviewed | — | None | None | 0 |
 | `ad-route-150009a0e003` | `/models/programming/engines.html` | Reviewed | — | None | None | 0 |
@@ -302,12 +315,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
 | `ad-route-8544bec56dfb` | `/reports/scientific-claim-audit.html` | Exempt | — | None | None | 0 |
-| `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-c28bd36edd3e` | `/repositories/repositories-3d-model.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-59ad729f0fc1` | `/repositories/repositories-drake.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-257639545452` | `/repositories/repositories-models.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-9220d15a31f4` | `/repositories/repositories-pinocchio.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
-| `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-0ab1532cc4a4` | `/repositories/repositories-2d-model.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c28bd36edd3e` | `/repositories/repositories-3d-model.html` | Reviewed | — | None | None | 0 |
+| `ad-route-59ad729f0fc1` | `/repositories/repositories-drake.html` | Reviewed | — | None | None | 0 |
+| `ad-route-257639545452` | `/repositories/repositories-models.html` | Reviewed | — | None | None | 0 |
+| `ad-route-9220d15a31f4` | `/repositories/repositories-pinocchio.html` | Reviewed | — | None | None | 0 |
+| `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Reviewed | — | None | None | 0 |
 | `ad-route-32f17d5abbca` | `/resources/articles.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e162f8e1f669` | `/resources/learning-path-biomechanics.html` | Reviewed | — | None | None | 0 |

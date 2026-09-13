@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.291                                          |
+| **Spec Version**        | 1.0.292                                          |
 | **Last Spec Update**    | 2026-09-13                                       |
 
 ## 2. Purpose & Mission
@@ -360,5 +360,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-10 | #4364 | Wire reference cluster cross-article links (closes #3900). |
 | 2026-09-10 | #3901 | Wire motor-control and neuroscience cluster cross-article links, book chapter bridges, and theoretical section references (closes #3901). |
 | 2026-09-13 | #4061 | Audit and promote 21 resource, learning-path, and research-review routes with evidence digests, dimensioned review records, and strict inclusion mapping. |
+| 2026-09-13 | #4060 | Audit and promote 14 model and repository capability routes with authority boundaries, exact source digests, and partitioned inventory tests. |
 
 

@@ -143,5 +143,7 @@ def test_nullspace_linked_bibliography_is_selected_for_production_render() -> No
     source = "articles/null-space-constraint-jacobian-bibliography.qmd"
     assert _is_site_source(REPO_ROOT / source, REPO_ROOT)
     assert (REPO_ROOT / source).is_file()
-    article = (REPO_ROOT / "articles/null-space-constraint-jacobian.qmd").read_text()
+    article = (REPO_ROOT / "articles/null-space-constraint-jacobian.qmd").read_text(
+        encoding="utf-8"
+    )
     assert "null-space-constraint-jacobian-bibliography.html" in article

@@ -447,8 +447,17 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
             or record["route"].startswith("/pages/")
             or record["route"].startswith("/books/")
             or record["route"].startswith("/resources/")
+            or record["route"].startswith("/repositories/")
             or record["route"]
             in {
+                "/models/models.html",
+                "/models/models-simulink.html",
+                "/models/models-mujoco.html",
+                "/models/models-drake.html",
+                "/models/models-pinocchio.html",
+                "/models/models-pendulum.html",
+                "/models/models-opensim.html",
+                "/models/models-myosim.html",
                 "/articles/strokes-gained-limitations.html",
                 "/articles/null-space-constraint-jacobian.html",
                 "/critiques/strokes_gained_non_ergodic.html",
@@ -468,12 +477,13 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4063"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4062"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4061"]
+    del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4060"]
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4059"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4057"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"] -= 1
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4058"] -= 1
-    assert len(deferred) == 175
-    assert len(reviewed_completed_batches) == 44
+    assert len(deferred) == 161
+    assert len(reviewed_completed_batches) == 58
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
     companion = _find_route(inventory, "/articles/null-space-constraint-jacobian-bibliography.html")
