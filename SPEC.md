@@ -362,5 +362,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-13 | #4061 | Audit and promote 21 resource, learning-path, and research-review routes with evidence digests, dimensioned review records, and strict inclusion mapping. |
 | 2026-09-13 | #4060 | Audit and promote 14 model and repository capability routes with authority boundaries, exact source digests, and partitioned inventory tests. |
 | 2026-09-13 | #4382 | Audit and promote 18 applied golf, measurement, and companion article routes with self-contained byte digests and inclusion mapping (#4059). |
+| 2026-09-13 | #4383 | Audit and promote 29 core mechanics, geometry, and control article routes with self-contained byte digests and inclusion mapping (#4058). |
 
 
