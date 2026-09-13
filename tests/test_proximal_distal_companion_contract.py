@@ -119,6 +119,10 @@ def test_reader_can_reach_evidence_technical_treatment_and_primary_sources() -> 
     assert "transmission_robustness_study.json" in source
     assert source.count("Go Deeper") >= 8
     citation_keys = set(re.findall(r"@([A-Za-z][A-Za-z0-9:_-]+)", source))
+    # Resolved Quarto cross-references are not bibliography citations; a dangling
+    # reference remains in this set and still fails the contract below.
+    cross_reference_ids = set(re.findall(r"\{#((?:eq|fig|sec|tbl)-[^\s}]+)", source))
+    citation_keys -= cross_reference_ids
     bibliography = (ROOT / "references/proximal-distal-energy.bib").read_text(encoding="utf-8")
     declared = set(re.findall(r"@[A-Za-z]+\{([^,]+),", bibliography))
     assert citation_keys <= declared
