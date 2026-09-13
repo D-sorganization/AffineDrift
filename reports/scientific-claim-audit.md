@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 121
-- Deferred: 116
+- Reviewed: 160
+- Deferred: 77
 - Exempt: 3
 
 ## Deferred Delivery Batches
@@ -13,7 +13,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 35 routes
 - [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055): 26 routes
 - [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056): 16 routes
-- [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057): 39 routes
 
 ## Reviewed Evidence
 
@@ -77,7 +76,46 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/books/index.html` | `books/index.qmd` | 3 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
 | `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 3 |
+| `/critiques/01_muscle_physiology.html` | `critiques/01_muscle_physiology.md` | 1 |
+| `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
+| `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |
+| `/critiques/04_impact_evasion.html` | `critiques/04_impact_evasion.md` | 1 |
+| `/critiques/control_causality_vs_mechanical.html` | `critiques/control_causality_vs_mechanical.md` | 1 |
+| `/critiques/coulomb_friction_violation.html` | `critiques/coulomb_friction_violation.md` | 1 |
+| `/critiques/DEFENSE_STRATEGY.html` | `critiques/DEFENSE_STRATEGY.md` | 1 |
+| `/critiques/dimensional_inconsistency_dcr.html` | `critiques/dimensional_inconsistency_dcr.md` | 1 |
+| `/critiques/double_pendulum_energy_blindness.html` | `critiques/double_pendulum_energy_blindness.md` | 1 |
+| `/critiques/drift_superposition.html` | `critiques/drift_superposition.md` | 1 |
+| `/critiques/flaccid_drift_contradiction.html` | `critiques/flaccid_drift_contradiction.md` | 1 |
+| `/critiques/geometric_stiffness_omission.html` | `critiques/geometric_stiffness_omission.md` | 1 |
+| `/critiques/hard_constraint_fallacy.html` | `critiques/hard_constraint_fallacy.md` | 1 |
+| `/critiques/index.html` | `critiques/index.qmd` | 2 |
+| `/critiques/input_dependent_boundary_conditions.html` | `critiques/input_dependent_boundary_conditions.md` | 1 |
+| `/critiques/intentional_constraint_collapse.html` | `critiques/intentional_constraint_collapse.md` | 1 |
+| `/critiques/intermediate_axis_fallacy.html` | `critiques/intermediate_axis_fallacy.md` | 1 |
+| `/critiques/lie_bracket_formalism_overreach.html` | `critiques/lie_bracket_formalism_overreach.md` | 1 |
+| `/critiques/misattribution_of_stability_gravity.html` | `critiques/misattribution_of_stability_gravity.md` | 1 |
+| `/critiques/normative_ambiguity_drift-bibliography.html` | `critiques/normative_ambiguity_drift-bibliography.md` | 1 |
+| `/critiques/normative_ambiguity_drift.html` | `critiques/normative_ambiguity_drift.md` | 1 |
+| `/critiques/nullspace_interpretation.html` | `critiques/nullspace_interpretation.md` | 1 |
+| `/critiques/parameter_causality_leakage.html` | `critiques/parameter_causality_leakage.md` | 1 |
+| `/critiques/passive_active_boundary_ambiguity.html` | `critiques/passive_active_boundary_ambiguity.md` | 1 |
+| `/critiques/passive_overshoot_artifact.html` | `critiques/passive_overshoot_artifact.md` | 1 |
+| `/critiques/planar_dcr_blindness.html` | `critiques/planar_dcr_blindness.md` | 1 |
+| `/critiques/precision_vs_gross_control-bibliography.html` | `critiques/precision_vs_gross_control-bibliography.md` | 1 |
+| `/critiques/precision_vs_gross_control.html` | `critiques/precision_vs_gross_control.md` | 1 |
+| `/critiques/sequencing_lie_bracket_fallacy.html` | `critiques/sequencing_lie_bracket_fallacy.md` | 1 |
+| `/critiques/simulation_tautology.html` | `critiques/simulation_tautology.md` | 1 |
+| `/critiques/static_fallacy_zvcf.html` | `critiques/static_fallacy_zvcf.md` | 1 |
+| `/critiques/stiffness_pulse_paradox.html` | `critiques/stiffness_pulse_paradox.md` | 1 |
+| `/critiques/stretch_shortening_blindspot.html` | `critiques/stretch_shortening_blindspot.md` | 1 |
 | `/critiques/strokes_gained_non_ergodic.html` | `critiques/strokes_gained_non_ergodic.md` | 9 |
+| `/critiques/teleological_blindness.html` | `critiques/teleological_blindness.md` | 1 |
+| `/critiques/the_effective_plant_fallacy-bibliography.html` | `critiques/the_effective_plant_fallacy-bibliography.md` | 1 |
+| `/critiques/the_effective_plant_fallacy.html` | `critiques/the_effective_plant_fallacy.md` | 1 |
+| `/critiques/tip_mass_omission.html` | `critiques/tip_mass_omission.md` | 1 |
+| `/critiques/validation_dimensionality_gap.html` | `critiques/validation_dimensionality_gap.md` | 1 |
+| `/critiques/ztcf_identifiability.html` | `critiques/ztcf_identifiability.md` | 1 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
@@ -281,46 +319,46 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-c25ee250631d` | `/books/index.html` | Reviewed | — | None | None | 1 |
 | `ad-route-de682b77b431` | `/books/roadmap.html` | Reviewed | — | None | None | 1 |
 | `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Reviewed | — | None | None | 1 |
-| `ad-route-facdfe9adc19` | `/critiques/01_muscle_physiology.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-muscle-physiology` | 0 |
-| `ad-route-f015ff569673` | `/critiques/02_aerodynamics.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-aerodynamics` | 0 |
-| `ad-route-40420c57d407` | `/critiques/03_neuromuscular_control.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-neuromuscular-control` | 0 |
-| `ad-route-d3d85eb515d8` | `/critiques/04_impact_evasion.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-impact-evasion` | 0 |
-| `ad-route-2027039c64ec` | `/critiques/control_causality_vs_mechanical.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-control-causality-mechanical` | 0 |
-| `ad-route-2eadf638653e` | `/critiques/coulomb_friction_violation.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-coulomb-friction-violation` | 0 |
-| `ad-route-89fff2c320f8` | `/critiques/DEFENSE_STRATEGY.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-f8c25ae4826b` | `/critiques/dimensional_inconsistency_dcr.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-dimensional-inconsistency-dcr` | 0 |
-| `ad-route-2e4ae737aa67` | `/critiques/double_pendulum_energy_blindness.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-double-pendulum-energy-blindness` | 0 |
-| `ad-route-28af684111a5` | `/critiques/drift_superposition.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-drift-superposition` | 0 |
-| `ad-route-613401124ddd` | `/critiques/flaccid_drift_contradiction.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-flaccid-drift-contradiction` | 0 |
-| `ad-route-723200dc583d` | `/critiques/geometric_stiffness_omission.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-geometric-stiffness-omission` | 0 |
-| `ad-route-4fcc963364b8` | `/critiques/hard_constraint_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-hard-constraint-fallacy` | 0 |
-| `ad-route-6a44de6b950d` | `/critiques/index.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-0ab621690d62` | `/critiques/input_dependent_boundary_conditions.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-input-dependent-boundary-conditions` | 0 |
-| `ad-route-79c31d3309d2` | `/critiques/intentional_constraint_collapse.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-intentional-constraint-collapse` | 0 |
-| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-intermediate-axis-fallacy` | 0 |
-| `ad-route-3ec6541286cf` | `/critiques/lie_bracket_formalism_overreach.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-lie-bracket-formalism-overreach` | 0 |
-| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-misattribution-stability-gravity` | 0 |
-| `ad-route-604586932847` | `/critiques/normative_ambiguity_drift-bibliography.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-822a7bae7977` | `/critiques/normative_ambiguity_drift.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-normative-ambiguity-drift` | 0 |
-| `ad-route-250a52029db1` | `/critiques/nullspace_interpretation.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-nullspace-interpretation` | 0 |
-| `ad-route-3b05e8994a46` | `/critiques/parameter_causality_leakage.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-parameter-causality-leakage` | 0 |
-| `ad-route-32837e271768` | `/critiques/passive_active_boundary_ambiguity.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-passive-active-boundary-ambiguity` | 0 |
-| `ad-route-c1584d69af5b` | `/critiques/passive_overshoot_artifact.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-passive-overshoot-artifact` | 0 |
-| `ad-route-0eb5bc88ea92` | `/critiques/planar_dcr_blindness.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-planar-dcr-blindness` | 0 |
-| `ad-route-7be3ea017ce6` | `/critiques/precision_vs_gross_control-bibliography.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-facc522f8b2e` | `/critiques/precision_vs_gross_control.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-precision-gross-control` | 0 |
-| `ad-route-96be3c3d79a7` | `/critiques/sequencing_lie_bracket_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
-| `ad-route-d375efd2d357` | `/critiques/simulation_tautology.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-simulation-tautology` | 0 |
-| `ad-route-194c2778a120` | `/critiques/static_fallacy_zvcf.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-static-fallacy-zvcf` | 0 |
-| `ad-route-b8f7226e7bd1` | `/critiques/stiffness_pulse_paradox.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stiffness-pulse-paradox` | 0 |
-| `ad-route-ec8e8b52b287` | `/critiques/stretch_shortening_blindspot.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-stretch-shortening-blindspot` | 0 |
+| `ad-route-facdfe9adc19` | `/critiques/01_muscle_physiology.html` | Reviewed | — | None | `crit-muscle-physiology` | 0 |
+| `ad-route-f015ff569673` | `/critiques/02_aerodynamics.html` | Reviewed | — | None | `crit-aerodynamics` | 0 |
+| `ad-route-40420c57d407` | `/critiques/03_neuromuscular_control.html` | Reviewed | — | None | `crit-neuromuscular-control` | 0 |
+| `ad-route-d3d85eb515d8` | `/critiques/04_impact_evasion.html` | Reviewed | — | None | `crit-impact-evasion` | 0 |
+| `ad-route-2027039c64ec` | `/critiques/control_causality_vs_mechanical.html` | Reviewed | — | None | `crit-control-causality-mechanical` | 0 |
+| `ad-route-2eadf638653e` | `/critiques/coulomb_friction_violation.html` | Reviewed | — | None | `crit-coulomb-friction-violation` | 0 |
+| `ad-route-89fff2c320f8` | `/critiques/DEFENSE_STRATEGY.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f8c25ae4826b` | `/critiques/dimensional_inconsistency_dcr.html` | Reviewed | — | None | `crit-dimensional-inconsistency-dcr` | 0 |
+| `ad-route-2e4ae737aa67` | `/critiques/double_pendulum_energy_blindness.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 0 |
+| `ad-route-28af684111a5` | `/critiques/drift_superposition.html` | Reviewed | — | None | `crit-drift-superposition` | 0 |
+| `ad-route-613401124ddd` | `/critiques/flaccid_drift_contradiction.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction` | 0 |
+| `ad-route-723200dc583d` | `/critiques/geometric_stiffness_omission.html` | Reviewed | — | None | `crit-geometric-stiffness-omission` | 0 |
+| `ad-route-4fcc963364b8` | `/critiques/hard_constraint_fallacy.html` | Reviewed | — | None | `crit-hard-constraint-fallacy` | 0 |
+| `ad-route-6a44de6b950d` | `/critiques/index.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0ab621690d62` | `/critiques/input_dependent_boundary_conditions.html` | Reviewed | — | None | `crit-input-dependent-boundary-conditions` | 0 |
+| `ad-route-79c31d3309d2` | `/critiques/intentional_constraint_collapse.html` | Reviewed | — | None | `crit-intentional-constraint-collapse` | 0 |
+| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy` | 0 |
+| `ad-route-3ec6541286cf` | `/critiques/lie_bracket_formalism_overreach.html` | Reviewed | — | None | `crit-lie-bracket-formalism-overreach` | 0 |
+| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Reviewed | — | None | `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-604586932847` | `/critiques/normative_ambiguity_drift-bibliography.html` | Reviewed | — | None | None | 0 |
+| `ad-route-822a7bae7977` | `/critiques/normative_ambiguity_drift.html` | Reviewed | — | None | `crit-normative-ambiguity-drift` | 0 |
+| `ad-route-250a52029db1` | `/critiques/nullspace_interpretation.html` | Reviewed | — | None | `crit-nullspace-interpretation` | 0 |
+| `ad-route-3b05e8994a46` | `/critiques/parameter_causality_leakage.html` | Reviewed | — | None | `crit-parameter-causality-leakage` | 0 |
+| `ad-route-32837e271768` | `/critiques/passive_active_boundary_ambiguity.html` | Reviewed | — | None | `crit-passive-active-boundary-ambiguity` | 0 |
+| `ad-route-c1584d69af5b` | `/critiques/passive_overshoot_artifact.html` | Reviewed | — | None | `crit-passive-overshoot-artifact` | 0 |
+| `ad-route-0eb5bc88ea92` | `/critiques/planar_dcr_blindness.html` | Reviewed | — | None | `crit-planar-dcr-blindness` | 0 |
+| `ad-route-7be3ea017ce6` | `/critiques/precision_vs_gross_control-bibliography.html` | Reviewed | — | None | None | 0 |
+| `ad-route-facc522f8b2e` | `/critiques/precision_vs_gross_control.html` | Reviewed | — | None | `crit-precision-gross-control` | 0 |
+| `ad-route-96be3c3d79a7` | `/critiques/sequencing_lie_bracket_fallacy.html` | Reviewed | — | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
+| `ad-route-d375efd2d357` | `/critiques/simulation_tautology.html` | Reviewed | — | None | `crit-simulation-tautology` | 0 |
+| `ad-route-194c2778a120` | `/critiques/static_fallacy_zvcf.html` | Reviewed | — | None | `crit-static-fallacy-zvcf` | 0 |
+| `ad-route-b8f7226e7bd1` | `/critiques/stiffness_pulse_paradox.html` | Reviewed | — | None | `crit-stiffness-pulse-paradox` | 0 |
+| `ad-route-ec8e8b52b287` | `/critiques/stretch_shortening_blindspot.html` | Reviewed | — | None | `crit-stretch-shortening-blindspot` | 0 |
 | `ad-route-7474cd7ea698` | `/critiques/strokes_gained_non_ergodic.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 1 |
-| `ad-route-703ac96df708` | `/critiques/teleological_blindness.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-teleological-blindness` | 0 |
-| `ad-route-d78b18354fdf` | `/critiques/the_effective_plant_fallacy-bibliography.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | None | 0 |
-| `ad-route-0713399f7619` | `/critiques/the_effective_plant_fallacy.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-effective-plant-fallacy` | 0 |
-| `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-tip-mass-omission` | 0 |
-| `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-validation-dimensionality-gap` | 0 |
-| `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Deferred | [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057) | None | `crit-ztcf-identifiability` | 0 |
+| `ad-route-703ac96df708` | `/critiques/teleological_blindness.html` | Reviewed | — | None | `crit-teleological-blindness` | 0 |
+| `ad-route-d78b18354fdf` | `/critiques/the_effective_plant_fallacy-bibliography.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0713399f7619` | `/critiques/the_effective_plant_fallacy.html` | Reviewed | — | None | `crit-effective-plant-fallacy` | 0 |
+| `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Reviewed | — | None | `crit-tip-mass-omission` | 0 |
+| `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Reviewed | — | None | `crit-validation-dimensionality-gap` | 0 |
+| `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Reviewed | — | None | `crit-ztcf-identifiability` | 0 |
 | `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |
