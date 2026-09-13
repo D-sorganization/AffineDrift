@@ -457,6 +457,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
                     "/articles/tangent-hyperplanes-series/",
                 )
             )
+            or record["route"].startswith("/articles/The_Geometry_of_Motion/quarto/")
             or record["route"] in APPLIED_ARTICLE_ROUTES
             or record["route"] in CORE_ARTICLE_ROUTES
             or record["route"]
@@ -490,9 +491,10 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4058"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4057"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4056"]
+    del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4055"]
     expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"] -= 1
-    assert len(deferred) == 61
-    assert len(reviewed_completed_batches) == 158
+    assert len(deferred) == 35
+    assert len(reviewed_completed_batches) == 184
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
     companion = _find_route(inventory, "/articles/null-space-constraint-jacobian-bibliography.html")
