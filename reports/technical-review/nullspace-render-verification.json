@@ -1,0 +1,3229 @@
+{
+  "reviewed_on": "2026-09-12",
+  "scope": "Local scientific and rendered review of article and bibliography; not empirical golfer validation or a publication attestation",
+  "implementation_commit": "1cfa47d45ebd14c719c0ec981e83eb53a231fb4d",
+  "source_sha256": {
+    "articles/null-space-constraint-jacobian.qmd": "9976570bd196756e3e7ea9cc72898906e12aa53e1a1b45304bb8d89ad4743fac",
+    "articles/null-space-constraint-jacobian-bibliography.md": "737e24722ce6e1b314469cfeb2c79425436d410c851f52e998f70af2a48ee507",
+    "references/nullspace-rigor.bib": "f5e937cdc8b623903b238514e6094b5f868907128fa5b9f7173153e679646fd1",
+    "css/duality-chapter.css": "77dc9e5f62e36a954f62948c8f8e5399031015a6664d146ade0d4737839094e5",
+    "scripts/build_nullspace_examples.py": "2e29151fef76a6eef6486e90d7c9f39632de3dd4cb90c2ab7527ef8b81351cdb",
+    "tests/test_nullspace_article_rigor.py": "e703a3dc5c5d798d3e430df8361bff43a9aecd02a419103978431093df299d71",
+    "reports/technical-review/nullspace-examples.json": "fb124b1b6cf5d68a75411897c96df27acfd92a0e5152040f2b4da9162df2d222"
+  },
+  "browser": {
+    "structure": {
+      "math": 209,
+      "displays": 46,
+      "ids": [
+        "title-block-header",
+        "abstract",
+        "conceptual-overview",
+        "introduction",
+        "holonomic-constraints-and-the-constraint-jacobian",
+        "constraint-formulation",
+        "the-constraint-jacobian",
+        "example-closed-kinematic-chain-in-golf",
+        "the-null-space-mathematical-foundations",
+        "definition-and-basic-properties",
+        "null-space-basis-and-projection",
+        "geometric-interpretation",
+        "constrained-equations-of-motion",
+        "lagrangian-formulation-with-constraints",
+        "null-space-method-for-constraint-elimination",
+        "physical-interpretation-force-projection",
+        "connection-to-control-affine-systems-and-drift",
+        "control-affine-structure",
+        "drift-dynamics-and-the-null-space",
+        "the-golf-swing-as-a-control-problem",
+        "controllability-and-the-null-space",
+        "computational-methods",
+        "svd-based-null-space-computation",
+        "qr-decomposition-approach",
+        "recursive-null-space-formulation",
+        "application-golf-swing-multi-body-model",
+        "model-description",
+        "constraint-equations",
+        "constraint-jacobian-structure",
+        "kinematic-synergies-via-null-space-analysis",
+        "drift-control-separation-in-golf-swing-dynamics",
+        "the-natural-swing-exploiting-drift",
+        "control-authority-analysis",
+        "energy-flow-analysis",
+        "advanced-topics",
+        "configuration-dependent-null-space-dimension",
+        "velocity-level-vs.-acceleration-level-null-spaces",
+        "lie-bracket-relationships",
+        "conclusions",
+        "limitations",
+        "appendix",
+        "proof-orthogonality-of-constraint-forces",
+        "derivation-of-the-null-space-projector",
+        "summary-table-of-key-equations",
+        "references",
+        "refs",
+        "ref-HairerManifoldNotes",
+        "ref-Nesbit2005Kinematics",
+        "ref-TedrakeMultibody",
+        "ref-TedrakeAcrobot",
+        "ref-SciPyNullSpace",
+        "related-articles"
+      ],
+      "duplicates": [],
+      "images": [],
+      "brokenFragments": []
+    },
+    "cases": [
+      {
+        "theme": "light",
+        "width": 320,
+        "scroll": 320,
+        "mathErrors": 0
+      },
+      {
+        "theme": "light",
+        "width": 375,
+        "scroll": 375,
+        "mathErrors": 0
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "scroll": 390,
+        "mathErrors": 0
+      },
+      {
+        "theme": "light",
+        "width": 768,
+        "scroll": 768,
+        "mathErrors": 0
+      },
+      {
+        "theme": "light",
+        "width": 1024,
+        "scroll": 1024,
+        "mathErrors": 0
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "scroll": 1440,
+        "mathErrors": 0
+      },
+      {
+        "theme": "light",
+        "width": 1920,
+        "scroll": 1920,
+        "mathErrors": 0
+      },
+      {
+        "theme": "dark",
+        "width": 320,
+        "scroll": 320,
+        "mathErrors": 0
+      },
+      {
+        "theme": "dark",
+        "width": 375,
+        "scroll": 375,
+        "mathErrors": 0
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "scroll": 390,
+        "mathErrors": 0
+      },
+      {
+        "theme": "dark",
+        "width": 768,
+        "scroll": 768,
+        "mathErrors": 0
+      },
+      {
+        "theme": "dark",
+        "width": 1024,
+        "scroll": 1024,
+        "mathErrors": 0
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "scroll": 1440,
+        "mathErrors": 0
+      },
+      {
+        "theme": "dark",
+        "width": 1920,
+        "scroll": 1920,
+        "mathErrors": 0
+      }
+    ],
+    "violations": [
+      {
+        "theme": "light",
+        "violations": [
+          {
+            "id": "landmark-unique",
+            "impact": "moderate",
+            "nodes": [
+              "<nav class=\"navbar navbar-expand-lg \" data-bs-theme=\"dark\" aria-label=\"Navigation\">",
+              "<span class=\"math display\" tabindex=\"0\" role=\"region\" aria-label=\"Mathematical equation\">"
+            ]
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "violations": [
+          {
+            "id": "landmark-unique",
+            "impact": "moderate",
+            "nodes": [
+              "<nav class=\"navbar navbar-expand-lg \" data-bs-theme=\"dark\" aria-label=\"Navigation\">",
+              "<span class=\"math display\" tabindex=\"0\" role=\"region\" aria-label=\"Mathematical equation\">"
+            ]
+          }
+        ]
+      }
+    ],
+    "keyboard": [
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 0,
+        "left": 9
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 3,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 7,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 11,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 13,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 14,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 15,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 16,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 17,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 18,
+        "left": 5
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 19,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 21,
+        "left": 31
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 23,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 24,
+        "left": 28
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 25,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 29,
+        "left": 10
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 30,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 31,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 32,
+        "left": 27
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 36,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 37,
+        "left": 40
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 39,
+        "left": 28
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 43,
+        "left": 9
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 0,
+        "left": 9
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 3,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 7,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 11,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 13,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 14,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 15,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 16,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 17,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 18,
+        "left": 5
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 19,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 21,
+        "left": 31
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 23,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 24,
+        "left": 28
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 25,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 29,
+        "left": 10
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 30,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 31,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 32,
+        "left": 27
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 36,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 37,
+        "left": 40
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 39,
+        "left": 28
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 43,
+        "left": 9
+      }
+    ],
+    "details": [
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 0,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 1,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 2,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 3,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 4,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 5,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 6,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 7,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 8,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 9,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 10,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 11,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 12,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 13,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 14,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 15,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 16,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 17,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 18,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 19,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 20,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 21,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 22,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 23,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 24,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 25,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 26,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 27,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 28,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 29,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 30,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 31,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 32,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 33,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 34,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 35,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 36,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 37,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 38,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 39,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 40,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 41,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 42,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 43,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 44,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "index": 45,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 0,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 278
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 1,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 2,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 3,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 470
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 4,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 5,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 6,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 7,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 415
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 8,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 9,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 10,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 11,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 494
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 12,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 13,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 348
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 14,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 474
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 15,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 346
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 16,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 408
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 17,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 373
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 18,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 274
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 19,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 329
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 20,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 21,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 300
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 22,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 23,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 405
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 24,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 297
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 25,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 432
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 26,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 27,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 28,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 29,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 279
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 30,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 516
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 31,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 342
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 32,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 296
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 33,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 34,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 35,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 36,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 393
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 37,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 312
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 38,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 39,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 297
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 40,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 41,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 42,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 43,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 278
+          }
+        ]
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 44,
+        "scrollers": []
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "index": 45,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 0,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 1,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 2,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 3,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 4,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 5,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 6,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 7,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 8,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 9,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 10,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 11,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 12,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 13,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 14,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 15,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 16,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 17,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 18,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 19,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 20,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 21,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 22,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 23,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 24,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 25,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 26,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 27,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 28,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 29,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 30,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 31,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 32,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 33,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 34,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 35,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 36,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 37,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 38,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 39,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 40,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 41,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 42,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 43,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 44,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "index": 45,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 0,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 278
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 1,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 2,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 3,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 470
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 4,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 5,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 6,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 7,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 415
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 8,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 9,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 10,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 11,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 494
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 12,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 13,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 348
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 14,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 474
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 15,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 346
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 16,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 408
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 17,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 373
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 18,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 274
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 19,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 329
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 20,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 21,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 300
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 22,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 23,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 405
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 24,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 297
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 25,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 432
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 26,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 27,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 28,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 29,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 279
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 30,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 516
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 31,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 342
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 32,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 296
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 33,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 34,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 35,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 36,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 393
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 37,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 312
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 38,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 39,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 297
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 40,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 41,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 42,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 43,
+        "scrollers": [
+          {
+            "tag": "MJX-CONTAINER",
+            "width": 269,
+            "scroll": 278
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 44,
+        "scrollers": []
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "index": 45,
+        "scrollers": []
+      }
+    ],
+    "reading": 29
+  },
+  "supplement": {
+    "records": [
+      {
+        "theme": "light",
+        "width": 1440,
+        "callout": 0,
+        "height": 191.796875,
+        "text": "Note\nIn Layman’s Terms\n\nImagine two articulated drawing arms attached to a ruler. Their joint motions must agree about where the ruler’s attachment points are going. There may be several compatible ways to move. Some move a selected point on the ruler; some rotate the ruler while leaving that point instantaneously stationary. None of this tells us how hard the motors must work. To answer that, we need the masses, velocities, applied loads and available motor forces."
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "callout": 1,
+        "height": 389.609375,
+        "text": "Warning\nCritics’ Comments\n\nDoes this prove an effortless swing? No. Zero ideal reaction power is not zero muscle force or metabolic cost. The relevant optimization and physiological measurements remain separate.\n\nDoes a large null space mean better control? No. It means more first-order compatible velocity directions in a regular description. Input limits, inertia, task geometry and time determine how those directions can be used.\n\nCan the examples validate a golfer model? They can catch mathematical and implementation errors. Empirical validation requires measurements, uncertainty estimates and out-of-sample comparisons for the intended physical model.\n\nCan a pseudoinverse solve a singularity? It can select an algebraic solution under specified conditions. It cannot decide whether a rank loss represents physical mobility, inconsistent constraints or a change in contact mode."
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "table": {
+          "width": 605,
+          "scroll": 714,
+          "left": 40
+        }
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "callout": 0,
+        "height": 387.546875,
+        "text": "Note\nIn Layman’s Terms\n\nImagine two articulated drawing arms attached to a ruler. Their joint motions must agree about where the ruler’s attachment points are going. There may be several compatible ways to move. Some move a selected point on the ruler; some rotate the ruler while leaving that point instantaneously stationary. None of this tells us how hard the motors must work. To answer that, we need the masses, velocities, applied loads and available motor forces."
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "callout": 1,
+        "height": 781.109375,
+        "text": "Warning\nCritics’ Comments\n\nDoes this prove an effortless swing? No. Zero ideal reaction power is not zero muscle force or metabolic cost. The relevant optimization and physiological measurements remain separate.\n\nDoes a large null space mean better control? No. It means more first-order compatible velocity directions in a regular description. Input limits, inertia, task geometry and time determine how those directions can be used.\n\nCan the examples validate a golfer model? They can catch mathematical and implementation errors. Empirical validation requires measurements, uncertainty estimates and out-of-sample comparisons for the intended physical model.\n\nCan a pseudoinverse solve a singularity? It can select an algebraic solution under specified conditions. It cannot decide whether a rank loss represents physical mobility, inconsistent constraints or a change in contact mode."
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "table": {
+          "width": 269,
+          "scroll": 714,
+          "left": 40
+        }
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "callout": 0,
+        "height": 191.796875,
+        "text": "Note\nIn Layman’s Terms\n\nImagine two articulated drawing arms attached to a ruler. Their joint motions must agree about where the ruler’s attachment points are going. There may be several compatible ways to move. Some move a selected point on the ruler; some rotate the ruler while leaving that point instantaneously stationary. None of this tells us how hard the motors must work. To answer that, we need the masses, velocities, applied loads and available motor forces."
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "callout": 1,
+        "height": 389.609375,
+        "text": "Warning\nCritics’ Comments\n\nDoes this prove an effortless swing? No. Zero ideal reaction power is not zero muscle force or metabolic cost. The relevant optimization and physiological measurements remain separate.\n\nDoes a large null space mean better control? No. It means more first-order compatible velocity directions in a regular description. Input limits, inertia, task geometry and time determine how those directions can be used.\n\nCan the examples validate a golfer model? They can catch mathematical and implementation errors. Empirical validation requires measurements, uncertainty estimates and out-of-sample comparisons for the intended physical model.\n\nCan a pseudoinverse solve a singularity? It can select an algebraic solution under specified conditions. It cannot decide whether a rank loss represents physical mobility, inconsistent constraints or a change in contact mode."
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "table": {
+          "width": 605,
+          "scroll": 714,
+          "left": 40
+        }
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "callout": 0,
+        "height": 387.546875,
+        "text": "Note\nIn Layman’s Terms\n\nImagine two articulated drawing arms attached to a ruler. Their joint motions must agree about where the ruler’s attachment points are going. There may be several compatible ways to move. Some move a selected point on the ruler; some rotate the ruler while leaving that point instantaneously stationary. None of this tells us how hard the motors must work. To answer that, we need the masses, velocities, applied loads and available motor forces."
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "callout": 1,
+        "height": 781.109375,
+        "text": "Warning\nCritics’ Comments\n\nDoes this prove an effortless swing? No. Zero ideal reaction power is not zero muscle force or metabolic cost. The relevant optimization and physiological measurements remain separate.\n\nDoes a large null space mean better control? No. It means more first-order compatible velocity directions in a regular description. Input limits, inertia, task geometry and time determine how those directions can be used.\n\nCan the examples validate a golfer model? They can catch mathematical and implementation errors. Empirical validation requires measurements, uncertainty estimates and out-of-sample comparisons for the intended physical model.\n\nCan a pseudoinverse solve a singularity? It can select an algebraic solution under specified conditions. It cannot decide whether a rank loss represents physical mobility, inconsistent constraints or a change in contact mode."
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "table": {
+          "width": 269,
+          "scroll": 714,
+          "left": 40
+        }
+      }
+    ],
+    "bib": [
+      {
+        "theme": "light",
+        "width": 320,
+        "overflow": false
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "overflow": false
+      },
+      {
+        "theme": "light",
+        "width": 768,
+        "overflow": false
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "overflow": false
+      },
+      {
+        "theme": "light",
+        "violations": [
+          {
+            "id": "landmark-unique",
+            "impact": "moderate"
+          }
+        ]
+      },
+      {
+        "theme": "dark",
+        "width": 320,
+        "overflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "overflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 768,
+        "overflow": false
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "overflow": false
+      },
+      {
+        "theme": "dark",
+        "violations": [
+          {
+            "id": "landmark-unique",
+            "impact": "moderate"
+          }
+        ]
+      }
+    ]
+  },
+  "bibliography_tables": [
+    {
+      "theme": "light",
+      "width": 605,
+      "scroll": 714,
+      "left": 40,
+      "viewport_width": 1440
+    },
+    {
+      "theme": "light",
+      "width": 269,
+      "scroll": 714,
+      "left": 40,
+      "viewport_width": 390
+    },
+    {
+      "theme": "dark",
+      "width": 605,
+      "scroll": 714,
+      "left": 40,
+      "viewport_width": 1440
+    },
+    {
+      "theme": "dark",
+      "width": 269,
+      "scroll": 714,
+      "left": 40,
+      "viewport_width": 390
+    }
+  ],
+  "visual_reading": {
+    "article_final_captures": 29,
+    "bibliography_light_captures": 6,
+    "bibliography_dark_captures": 6,
+    "additional_inspection": "Mobile equation details; both expanded callouts; full equation-table content across scroll positions; bibliography boundary column in both themes. Saved screenshot capture alone was never treated as reading."
+  },
+  "production_route_gate": {
+    "schema_version": "affinedrift/public-site-verification/v1",
+    "base_url": "http://127.0.0.1:8767",
+    "manifest_page_count": 2,
+    "evidence_count": 28,
+    "expected_evidence_count": 28,
+    "passed": true,
+    "failure_count": 0,
+    "navigation_retry_policy": {
+      "max_retries": 0,
+      "maximum_attempts": 1,
+      "base_delay_ms": 500,
+      "backoff": "exponential",
+      "retryable_status_codes": [502, 503, 504]
+    },
+    "axe_policy": {
+      "mode": "fail",
+      "impacts": ["serious", "critical"],
+      "scanned_route_count": 2,
+      "routes_with_violations": [],
+      "violation_count": 0
+    },
+    "navigation_attempt_count": 28,
+    "retried_evidence_count": 0,
+    "transient_response_count": 0,
+    "exhausted_retry_count": 0,
+    "results": [
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w320",
+          "width": 320,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.703125,
+            "right": 237.296875,
+            "top": 156.25,
+            "bottom": 921.25,
+            "width": 154.59375,
+            "height": 765
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w320",
+          "width": 320,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.703125,
+            "right": 237.296875,
+            "top": 156.25,
+            "bottom": 496.25,
+            "width": 154.59375,
+            "height": 340
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w320",
+          "width": 320,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.703125,
+            "right": 237.296875,
+            "top": 156.25,
+            "bottom": 921.25,
+            "width": 154.59375,
+            "height": 765
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w320",
+          "width": 320,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.703125,
+            "right": 237.296875,
+            "top": 156.25,
+            "bottom": 496.25,
+            "width": 154.59375,
+            "height": 340
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w375",
+          "width": 375,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.875,
+            "right": 292.125,
+            "top": 156.25,
+            "bottom": 666.25,
+            "width": 209.25,
+            "height": 510
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w375",
+          "width": 375,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.875,
+            "right": 292.125,
+            "top": 156.25,
+            "bottom": 411.25,
+            "width": 209.25,
+            "height": 255
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w375",
+          "width": 375,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.875,
+            "right": 292.125,
+            "top": 156.25,
+            "bottom": 666.25,
+            "width": 209.25,
+            "height": 510
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w375",
+          "width": 375,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.875,
+            "right": 292.125,
+            "top": 156.25,
+            "bottom": 411.25,
+            "width": 209.25,
+            "height": 255
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w390",
+          "width": 390,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 156.25,
+            "bottom": 623.75,
+            "width": 224.1875,
+            "height": 467.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w390",
+          "width": 390,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 156.25,
+            "bottom": 368.75,
+            "width": 224.1875,
+            "height": 212.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w390",
+          "width": 390,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 156.25,
+            "bottom": 623.75,
+            "width": 224.1875,
+            "height": 467.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w390",
+          "width": 390,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 156.25,
+            "bottom": 368.75,
+            "width": 224.1875,
+            "height": 212.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w768",
+          "width": 768,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 212.25,
+            "right": 667.75,
+            "top": 112.25,
+            "bottom": 367.25,
+            "width": 455.5,
+            "height": 255
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w768",
+          "width": 768,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 212.25,
+            "right": 667.75,
+            "top": 112.25,
+            "bottom": 239.75,
+            "width": 455.5,
+            "height": 127.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w768",
+          "width": 768,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 212.25,
+            "right": 667.75,
+            "top": 112.25,
+            "bottom": 367.25,
+            "width": 455.5,
+            "height": 255
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w768",
+          "width": 768,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 212.25,
+            "right": 667.75,
+            "top": 112.25,
+            "bottom": 239.75,
+            "width": 455.5,
+            "height": 127.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1024",
+          "width": 1024,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 354.59375,
+            "right": 801.40625,
+            "top": 117.59375,
+            "bottom": 372.59375,
+            "width": 446.8125,
+            "height": 255
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1024",
+          "width": 1024,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 354.59375,
+            "right": 801.40625,
+            "top": 117.59375,
+            "bottom": 245.09375,
+            "width": 446.8125,
+            "height": 127.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1024",
+          "width": 1024,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 354.59375,
+            "right": 801.40625,
+            "top": 117.59375,
+            "bottom": 372.59375,
+            "width": 446.8125,
+            "height": 255
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1024",
+          "width": 1024,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 354.59375,
+            "right": 801.40625,
+            "top": 117.59375,
+            "bottom": 245.09375,
+            "width": 446.8125,
+            "height": 127.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1440",
+          "width": 1440,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 896,
+            "top": 128,
+            "bottom": 353,
+            "width": 531,
+            "height": 225
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1440",
+          "width": 1440,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 896,
+            "top": 128,
+            "bottom": 218,
+            "width": 531,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1440",
+          "width": 1440,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 896,
+            "top": 128,
+            "bottom": 353,
+            "width": 531,
+            "height": 225
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1440",
+          "width": 1440,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 896,
+            "top": 128,
+            "bottom": 218,
+            "width": 531,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1920",
+          "width": 1920,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 607.25,
+            "right": 1133.75,
+            "top": 131.25,
+            "bottom": 551.25,
+            "width": 526.5,
+            "height": 420
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1920",
+          "width": 1920,
+          "height": 1100
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 607.25,
+            "right": 1133.75,
+            "top": 131.25,
+            "bottom": 311.25,
+            "width": 526.5,
+            "height": 180
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1920",
+          "width": 1920,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems With Applications to Golf Swing Biomechanics"
+          ],
+          "primaryHeadingRect": {
+            "left": 607.25,
+            "right": 1133.75,
+            "top": 131.25,
+            "bottom": 551.25,
+            "width": 526.5,
+            "height": 420
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 27564,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/null-space-constraint-jacobian-bibliography.html",
+        "pageKind": "article",
+        "viewport": {
+          "id": "w1920",
+          "width": 1920,
+          "height": 1100
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": [
+            "Annotated Bibliography: Null Space of the Constraint Jacobian"
+          ],
+          "primaryHeadingRect": {
+            "left": 607.25,
+            "right": 1133.75,
+            "top": 131.25,
+            "bottom": 311.25,
+            "width": 526.5,
+            "height": 180
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 6100,
+          "canonical": "https://affinedrift.com/articles/null-space-constraint-jacobian-bibliography.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      }
+    ]
+  },
+  "known_limits": [
+    "Shared TOC active-heading defect #4370 remains open.",
+    "Shared collapsible callout keyboard defect #4374 remains open; this article keeps its two short panels expanded.",
+    "Both custom axe theme scans report only existing moderate landmark-unique; production gate scans axe on one configuration per route.",
+    "Custom axe injection emitted CSP font-fetch messages; production route records passed without actionable console errors."
+  ]
+}

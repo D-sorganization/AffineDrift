@@ -4,8 +4,8 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 39
-- Deferred: 197
+- Reviewed: 41
+- Deferred: 196
 - Exempt: 3
 
 ## Deferred Delivery Batches
@@ -14,7 +14,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 - [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055): 26 routes
 - [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056): 16 routes
 - [#4057](https://github.com/D-sorganization/AffineDrift/issues/4057): 39 routes
-- [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058): 29 routes
+- [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058): 28 routes
 - [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 17 routes
 - [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 14 routes
 - [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 21 routes
@@ -25,6 +25,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 |---|---|---:|
 | `/` | `index.qmd` | 3 |
 | `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 7 |
+| `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
+| `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
@@ -88,7 +90,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
-| `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
+| `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
+| `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | None | 0 |
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |

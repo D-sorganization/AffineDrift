@@ -1,0 +1,80 @@
+---
+title: "Annotated Bibliography: Null Space of the Constraint Jacobian"
+categories:
+  - theory-core
+---
+
+This companion supports the [constraint null-space article](null-space-constraint-jacobian.html). The reading map below identifies the passages used, their role and the limits of that evidence. It separates independent derivations from empirical observations.
+
+## Concept Map
+
+Geometry supplies the constraint set and its tangent directions. Dynamics adds inertia, force and curvature. Control adds available inputs and time. Golf inference adds a physical model, measurements and an objective. A reference supporting one layer does not automatically validate the others.
+
+| Topic                                              | Evidence Used                                                        | Boundary                                                                                                 |
+| :------------------------------------------------- | :------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| Generalized velocities and bilateral constraints   | Tedrake's multibody notes                                            | Supports the formulation; does not validate a golfer's contact or grip model.                            |
+| DAE index and consistent initialization            | Hairer, section IV.4                                                 | Distinguishes position, velocity and acceleration formulations under regularity assumptions.             |
+| Instantaneous input rank and state controllability | Tedrake's acrobot notes and the article's independent spring example | Unrestricted linear controllability does not imply reachability with a specified force cap and deadline. |
+| Golf grip-model assumptions                        | Nesbit's methods, printed page 501                                   | Documents a particular flexible wrist treatment, not universal rigid-grasp behavior.                     |
+| Numerical null-space rank                          | SciPy's function documentation                                       | An arithmetic threshold is not an empirical uncertainty estimate.                                        |
+
+## Primary Sources and Reading Boundaries
+
+### Multibody Formulation
+
+Russ Tedrake, _Underactuated Robotics_, [Multi-Body Dynamics](https://underactuated.mit.edu/multibody.html), accessed September 12, 2026.
+
+The generalized-velocity and bilateral-position passages distinguish configuration rates from velocity coordinates and give constraint-reaction equations. The article independently derives its multiplier sign, force/velocity duality and curvature term, then checks them against a direct saddle solve. Only the cited portions of the online chapter were used; this is not a review of the complete book.
+
+### Differential-Algebraic Equations
+
+Ernst Hairer, _[Solving Differential Equations on Manifolds](https://www.unige.ch/~hairer/poly-sde-mani.pdf)_, June 2011, section IV.4, printed pages 34–36 (physical PDF pages 38–40).
+
+This section develops constrained mechanics through local coordinates, then distinguishes the position-level index-3, velocity-level index-2 and acceleration-level index-1 formulations. Its discussion of consistent initial conditions and numerical constraint drift supports the article's formulation boundary. Hairer uses the opposite multiplier sign; the physical reaction is consistent after translating conventions. The cover and this section were read; the entire 55-page document is not certified as reviewed.
+
+### Controllability
+
+Russ Tedrake, _Underactuated Robotics_, [The Acrobot and Cart-Pole](https://underactuated.mit.edu/acrobot.html), accessed September 12, 2026.
+
+The passages on modal and general linear controllability supply the distinction between underactuation and state controllability. The article's two-mass spring example, Gramian calculation, forward-integrated control and force-cap impossibility certificate are independent constructions. They do not report measured human actuator limits or validate a late-swing correction strategy.
+
+### Golf Model Assumptions
+
+Steven M. Nesbit, “[A Three Dimensional Kinematic and Kinetic Study of the Golf Swing](https://www.jssm.org/volume04/iss4/cap/jssm-04-499.pdf),” _Journal of Sports Science and Medicine_ 4 (2005), 499–519.
+
+The abstract, introduction and initial methods through physical PDF page 3 were read for the model boundary. Printed page 501 states that hands are not explicitly modeled and introduces translational wrist flexibility to address the closed-loop indeterminacy. This is evidence about that model's construction. The remaining results and figures have not been fully reviewed for this article, and the paper is not cited as proof of an optimal grip or passive swing.
+
+### Numerical Rank
+
+The SciPy Community, “[scipy.linalg.null_space](https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.null_space.html),” SciPy 1.18.0 online manual, accessed September 12, 2026.
+
+The function description, parameters, returned basis and examples were read. The documented relative cutoff defines an effective numerical null space. It does not establish a physically meaningful rank threshold for mixed units, uncertain measurements or near-singular mechanisms. The article therefore requires scaling and perturbation checks in addition to an algebraic residual.
+
+## Independent Verification
+
+The [builder](https://github.com/D-sorganization/AffineDrift/blob/main/scripts/build_nullspace_examples.py) generates constructed examples, and the [tests](https://github.com/D-sorganization/AffineDrift/blob/main/tests/test_nullspace_article_rigor.py) compare them with separate checks:
+
+- An anisotropic mass matrix exposes the error in a Euclidean force projection.
+- A circular trajectory checks curvature acceleration and zero stationary reaction power.
+- A moving guide checks nonzero reaction power.
+- Constraint rescaling checks physical invariance despite changing multipliers.
+- A rotating tangent frame distinguishes a basis from coordinate derivatives.
+- A coupled spring system checks state controllability and an actual finite-time control.
+- A declared planar grasp checks all Jacobian columns by finite differences and separates compatible motion from selected-point stationarity.
+- A rotating point checks the changing-Jacobian acceleration term.
+- Basis rotation checks why a null-space basis alone cannot identify physiological synergies.
+
+These are mathematical and implementation controls, not empirical golfer validation.
+
+## Citation Provenance
+
+The previous bibliography mixed conceptual associations with purported directed citation links, including links from earlier publications to later ones. Those unsupported edges and source-specific reading claims have been removed. This page does not assert a citation graph between the listed publications.
+
+The Caltech authors' [first-edition page](https://www.cds.caltech.edu/~murray/mlswiki/index.php/First_edition) states that the public PDF of _A Mathematical Introduction to Robotic Manipulation_ was removed at the publisher's request. That book was not read in this review and is not used to substantiate a specific derivation here. Broader source coverage can be added after the relevant passages are actually inspected.
+
+
+## Related Articles
+
+- [Constraint Null Spaces and Dynamics](null-space-constraint-jacobian.html) — The derivations and independently checked examples supported by this reading map.
+- [Superposition in Affine Control Systems](superposition.html) — Force contributions at a fixed mechanical state.
+- [From Muscle Forces to Joint Torques](The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html) — Signed moment arms, feasible force sharing and inference limits.
