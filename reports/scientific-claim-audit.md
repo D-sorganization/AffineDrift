@@ -4,13 +4,12 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 202
-- Deferred: 35
+- Reviewed: 237
+- Deferred: 0
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
-- [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 35 routes
 
 ## Reviewed Evidence
 
@@ -101,7 +100,42 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/volume0.html` | `articles/The_Geometry_of_Motion/quarto/volume0.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | `articles/The_Geometry_of_Motion/quarto/volume1.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | `articles/The_Geometry_of_Motion/quarto/volume2.qmd` | 2 |
+| `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | `articles/The_Physics_of_Golf/quarto/ch01_why_physics.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | `articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | `articles/The_Physics_of_Golf/quarto/ch05_affine_structure.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | `articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | `articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.html` | `articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.html` | `articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | `articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | `articles/The_Physics_of_Golf/quarto/ch14_complete_swing.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
+| `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | `articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | `articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.html` | `articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.html` | `articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | `articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html` | `articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | `articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | `articles/The_Physics_of_Golf/quarto/ch25_motor_learning.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.html` | `articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html` | `articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | `articles/The_Physics_of_Golf/quarto/ch28_impact_collision.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | `articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | `articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd` | 2 |
+| `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | `articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | `articles/The_Physics_of_Golf/quarto/ch32_putting.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/glossary.html` | `articles/The_Physics_of_Golf/quarto/glossary.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/index.html` | `articles/The_Physics_of_Golf/quarto/index.qmd` | 1 |
 | `/articles/theory-part1.html` | `articles/theory-part1.qmd` | 3 |
 | `/articles/theory-part2.html` | `articles/theory-part2.qmd` | 4 |
 | `/articles/theory-part3.html` | `articles/theory-part3.qmd` | 3 |
@@ -309,42 +343,42 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-96feb1710fe4` | `/articles/The_Geometry_of_Motion/quarto/volume0.html` | Reviewed | — | None | None | 0 |
 | `ad-route-555d7d5b4797` | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | Reviewed | — | None | None | 0 |
 | `ad-route-df931687d016` | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | Reviewed | — | None | None | 0 |
-| `ad-route-e6426572da2d` | `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-6c2a1c1053d6` | `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-6e5a4acf5112` | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f5006c4e6a60` | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-a5c8f4c49401` | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-40db0921f425` | `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b47203d9a15a` | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-c3f8f28d515e` | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-084d047d81cc` | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f860cf1740b2` | `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f711355c9899` | `/articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-40d07bf3aa25` | `/articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-d7bbf52529cb` | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-4b5f92354a9e` | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-17268df76f0d` | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-e6426572da2d` | `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-6c2a1c1053d6` | `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | Reviewed | — | None | None | 0 |
+| `ad-route-6e5a4acf5112` | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f5006c4e6a60` | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a5c8f4c49401` | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | Reviewed | — | None | None | 0 |
+| `ad-route-40db0921f425` | `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | Reviewed | — | None | None | 0 |
+| `ad-route-b47203d9a15a` | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c3f8f28d515e` | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | Reviewed | — | None | None | 0 |
+| `ad-route-084d047d81cc` | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f860cf1740b2` | `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f711355c9899` | `/articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.html` | Reviewed | — | None | None | 0 |
+| `ad-route-40d07bf3aa25` | `/articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d7bbf52529cb` | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | Reviewed | — | None | None | 0 |
+| `ad-route-4b5f92354a9e` | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | Reviewed | — | None | None | 0 |
+| `ad-route-17268df76f0d` | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | Reviewed | — | None | None | 0 |
+| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Reviewed | — | None | None | 0 |
 | `ad-route-a9e0bb2b2321` | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | Reviewed | — | None | None | 5 |
-| `ad-route-0c1fc851ee95` | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-80ef06755aaa` | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-ef14cf95e2cc` | `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-cb1f1f3aec30` | `/articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-671af74df048` | `/articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-58651a60328b` | `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-014de473327d` | `/articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-f03c3bac009d` | `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b22748fa703e` | `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-1476e645111e` | `/articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-cf181f62e2e9` | `/articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b334697f4c84` | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-c2474c7d87e4` | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-166fffd1b8a2` | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-9c6617aeafdc` | `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-adc9d9939455` | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
-| `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-0c1fc851ee95` | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-80ef06755aaa` | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | Reviewed | — | None | None | 0 |
+| `ad-route-ef14cf95e2cc` | `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | Reviewed | — | None | None | 0 |
+| `ad-route-cb1f1f3aec30` | `/articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.html` | Reviewed | — | None | None | 0 |
+| `ad-route-671af74df048` | `/articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.html` | Reviewed | — | None | None | 0 |
+| `ad-route-58651a60328b` | `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | Reviewed | — | None | None | 0 |
+| `ad-route-014de473327d` | `/articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f03c3bac009d` | `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | Reviewed | — | None | None | 0 |
+| `ad-route-b22748fa703e` | `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | Reviewed | — | None | None | 0 |
+| `ad-route-1476e645111e` | `/articles/The_Physics_of_Golf/quarto/ch26_remarkable_brain.html` | Reviewed | — | None | None | 0 |
+| `ad-route-cf181f62e2e9` | `/articles/The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html` | Reviewed | — | None | None | 0 |
+| `ad-route-b334697f4c84` | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c2474c7d87e4` | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | Reviewed | — | None | None | 0 |
+| `ad-route-166fffd1b8a2` | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | Reviewed | — | None | None | 0 |
+| `ad-route-9c6617aeafdc` | `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | Reviewed | — | None | None | 0 |
+| `ad-route-adc9d9939455` | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | Reviewed | — | None | None | 0 |
+| `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Reviewed | — | None | None | 0 |
+| `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Reviewed | — | None | None | 0 |
+| `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
 | `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Reviewed | — | None | None | 0 |
 | `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Reviewed | — | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |
