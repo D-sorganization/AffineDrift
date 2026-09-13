@@ -63,6 +63,13 @@
 
 ## Technical Content Review
 
+- **User-requested pause:** finish and protected-merge regular PR4377, verify
+  its merge commit is on remote main, then stop. Do not start another article
+  review or automatically continue the corpus epic. This checkpoint records
+  the pre-merge state; the authoritative merge identity is on PR4377. At a
+  future user-requested restart, inspect that PR and its deployment before
+  advancing the delivery log from in_review to shipped. The full-corpus goal
+  is unfinished and is not being declared complete.
 - **Current work:** issues #4375/#4376, native children of epic #4009, corpus #4021 and
   foundations #4058. Worktree `C:/Users/diete/Repositories/AffineDrift-technical-review`,
   branch `fix/4375-curiosity-rigor`, checkpoint SELF; regular PR4377 is open. DL-#4375/#4376
