@@ -13,7 +13,7 @@ function findFullLayoutFiles(dir, files = []) {
     const fullPath = path.join(dir, entry.name);
     const relPath = path.relative(ROOT, fullPath).replace(/\\/g, '/');
     if (entry.isDirectory()) {
-      if (['node_modules', '.git', '.quarto', 'docs', '_freeze'].includes(entry.name)) {
+      if (entry.name.startsWith('.') || ['node_modules', 'docs', '_freeze'].includes(entry.name)) {
         continue;
       }
       findFullLayoutFiles(fullPath, files);
@@ -33,7 +33,7 @@ function findStandaloneArticleFiles(dir, files = []) {
     const fullPath = path.join(dir, entry.name);
     const relPath = path.relative(ROOT, fullPath).replace(/\\/g, '/');
     if (entry.isDirectory()) {
-      if (['node_modules', '.git', '.quarto', 'docs', '_freeze', 'Drafts_Original_Articles', 'tangent-hyperplane-contraction', 'The_Physics_of_Golf', 'The_Geometry_of_Motion', 'proximal_distal_energy_transfer', 'proximal_distal_companion'].includes(entry.name)) {
+      if (entry.name.startsWith('.') || ['node_modules', 'docs', '_freeze', 'Drafts_Original_Articles', 'tangent-hyperplane-contraction', 'The_Physics_of_Golf', 'The_Geometry_of_Motion', 'proximal_distal_energy_transfer', 'proximal_distal_companion'].includes(entry.name)) {
         continue;
       }
       findStandaloneArticleFiles(fullPath, files);
