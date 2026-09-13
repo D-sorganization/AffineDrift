@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-13 | #4379 | Correct TOC highlighting for nested positioned article sections with document-relative offset calculations and Quarto scroll tracking compatibility (#4370). |
 | 2026-09-13 | #4378 | Enable keyboard activation (Enter, Space) for collapsible Quarto callout headers with idempotent listener binding and click parity (closes #4374). |
 | 2026-09-13 | #4377 | Correct the curious golfer chapter's acceleration, wrench power, forward counterfactual and evidence arguments; preserve independently checked examples; restore the companion chapter hierarchy, readable mobile equations and synchronized PDF under #4376. |
 | 2026-09-12 | #4373 | Re-derive constraint null spaces, curvature-complete drift, force/velocity duality and finite-time control with checked examples and bounded golf inference. |
