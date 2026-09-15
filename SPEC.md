@@ -368,7 +368,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-13 | #4387 | Audit and promote 26 The Geometry of Motion corpus routes with self-contained byte digests and inclusion mapping (#4055). |
 | 2026-09-13 | #4388 | Audit and promote 35 The Physics of Golf corpus routes achieving 100% reviewed coverage (#4054). |
 | 2026-09-13 | #4129 | Remove placeholder media elements from researcher resource profiles and update review evidence digest (#4129). |
-
-
-
-
+- 2026-09-14: Removed invalid pip cache from redundant issue closer workflow (#4396).
