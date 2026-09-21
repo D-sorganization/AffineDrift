@@ -18,6 +18,10 @@ const {
   scanWithAxe,
   summarizeAxeViolations,
 } = require('./public-site-axe.js');
+const {
+  isActionableConsoleError,
+  isActionablePageError,
+} = require('./public-site-browser-noise.js');
 
 const SCHEMA_VERSION = 'affinedrift/public-site-manifest/v1';
 
@@ -163,16 +167,6 @@ function parseArgs(argv) {
 function fixedElementCanObscureHeading(style) {
   const zIndex = Number.parseInt(style.zIndex, 10);
   return style.pointerEvents !== 'none' && (Number.isNaN(zIndex) || zIndex >= 0);
-}
-
-function isActionableConsoleError(message) {
-  return !message.includes('Permissions policy violation: compute-pressure');
-}
-
-function isActionablePageError(message) {
-  // Cross-origin embeds (for example YouTube iframes on resources-videos) can
-  // throw SecurityError when their scripts touch localStorage under automation.
-  return !message.includes("Failed to read the 'localStorage' property from 'Window'");
 }
 
 function headingBeginsWithinViewport(rect, viewport) {

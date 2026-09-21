@@ -25,7 +25,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Issue:** #4406 (fleet-main-health Deploy Website)
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4407
 - **Branch:** `fix/issue-4406-deploy-website-local-storage-pageerrors-local`
-- **Paths:** `scripts/verify-public-site.js`, `tests/public-site-verifier.test.js`
+- **Paths:** `scripts/verify-public-site.js`, `scripts/public-site-browser-noise.js`, `tests/public-site-verifier.test.js`
 - **Started:** 2026-09-21
 - **Last verified:** 2026-09-21 (SELF; CI artifact run 35619994945 shows one failed cell on `/resources/resources-videos.html` mobile/light from third-party YouTube iframe localStorage SecurityError; node smoke test for `isActionablePageError` passes)
 - **Summary:** Ignore non-actionable cross-origin embed pageerrors in the every-page verifier so Deploy Website stays green without weakening first-party regression detection.
