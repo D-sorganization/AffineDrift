@@ -231,7 +231,7 @@ def main() -> None:
     parser.add_argument(
         "--site-gate",
         action="store_true",
-        help="Run the cross-page site gate (#3899): link resolution, related coverage, orphans, path style, categories",
+        help="Run the cross-page site gate (#3899): link resolution, related coverage, chapter bridges, orphans, path style, categories",
     )
     args = parser.parse_args()
 

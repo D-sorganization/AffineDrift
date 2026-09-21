@@ -171,6 +171,43 @@ class TestInternalResolution:
         assert any("nope/missing.html" in e for e in report["broken-links"])
 
 
+class TestChapterBridgeCoverage:
+    def test_missing_on_this_site_fails(self, site: Path) -> None:
+        chapter = site / "articles" / "The_Physics_of_Golf" / "quarto" / "ch01.qmd"
+        write_page(chapter, "[x](../alpha.html)\n", title="Chapter 1")
+        report = run_site_gate(site, use_baseline=False)
+        assert any("missing On This Site" in e for e in report["chapter-bridges"])
+
+    def test_internal_only_bridge_fails(self, site: Path) -> None:
+        chapter = site / "articles" / "The_Physics_of_Golf" / "quarto" / "ch02.qmd"
+        write_page(
+            chapter,
+            "::: {.callout-note}\n## On This Site\n\n" "- [peer](ch01.html)\n:::\n",
+            title="Chapter 2",
+        )
+        write_page(
+            site / "articles" / "The_Physics_of_Golf" / "quarto" / "ch01.qmd",
+            "[x](../alpha.html)\n",
+            title="Chapter 1",
+        )
+        report = run_site_gate(site, use_baseline=False)
+        assert any("corpus links (<1)" in e for e in report["chapter-bridges"])
+
+    def test_corpus_bridge_passes(self, site: Path) -> None:
+        chapter = site / "articles" / "The_Physics_of_Golf" / "quarto" / "ch03.qmd"
+        write_page(
+            chapter,
+            "::: {.callout-note}\n## On This Site\n\n" "- [alpha](../../alpha.html)\n:::\n",
+            title="Chapter 3",
+        )
+        report = run_site_gate(site, use_baseline=False)
+        assert not any("ch03.qmd" in e for e in report["chapter-bridges"])
+
+    def test_content_page_is_exempt(self, site: Path) -> None:
+        report = run_site_gate(site, use_baseline=False)
+        assert not any(e.startswith("articles/alpha.qmd") for e in report["chapter-bridges"])
+
+
 class TestRelatedCoverage:
     def test_missing_related_section_fails(self, site: Path) -> None:
         report = run_site_gate(site, use_baseline=False)
