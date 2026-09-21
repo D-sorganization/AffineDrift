@@ -42,6 +42,10 @@ VOCABULARY_PATH = Path("config/categories.yml")
 BASELINE_PATH = Path("tests/link_gate_baseline.json")
 NAV_FILE = "_quarto.yml"
 RELATED_MIN_LINKS = 3
+CHAPTER_BRIDGE_MIN_LINKS = 1
+BRIDGE_SECTION_TITLE = "## On This Site"
+#: Physics of Golf chapter pages covered by the C9 bridge program (#3905).
+PHYSICS_OF_GOLF_CHAPTER_PREFIX = "articles/The_Physics_of_Golf/quarto/ch"
 HEADING_SPLIT_PATTERN = re.compile(r"^##\s", re.MULTILINE)
 INLINE_CATEGORIES_PATTERN = re.compile(r"^categories:\s*\[", re.MULTILINE)
 
@@ -76,17 +80,27 @@ def check_internal_links(root: Path, pages: list[Path]) -> list[str]:
     return errors
 
 
+def _section_after_marker(content: str, marker: str) -> str | None:
+    """Extract body content from *marker* through the next ``##`` heading."""
+    body = page_body(content)
+    start = body.find(marker)
+    if start == -1:
+        return None
+    section = body[start:]
+    next_heading = HEADING_SPLIT_PATTERN.search(section[len(marker) :])
+    if next_heading:
+        section = section[: next_heading.start() + len(marker)]
+    return section
+
+
 def _related_section(content: str) -> str | None:
     """Extract the Related Articles section content from a page body."""
-    body = page_body(content)
-    marker = body.find("## Related Articles")
-    if marker == -1:
-        return None
-    section = body[marker:]
-    next_heading = HEADING_SPLIT_PATTERN.search(section[1:])
-    if next_heading:
-        section = section[: next_heading.start() + 1]
-    return section
+    return _section_after_marker(content, "## Related Articles")
+
+
+def _on_this_site_section(content: str) -> str | None:
+    """Extract the per-chapter On this site bridge section from a page body."""
+    return _section_after_marker(content, BRIDGE_SECTION_TITLE)
 
 
 def _related_errors_for_page(root: Path, page: Path, expanded: str) -> str | None:
@@ -105,6 +119,55 @@ def _related_errors_for_page(root: Path, page: Path, expanded: str) -> str | Non
             f"links (<{RELATED_MIN_LINKS})"
         )
     return None
+
+
+def _requires_physics_of_golf_bridge(rel: str) -> bool:
+    """Return True when a rendered page must carry a C9 chapter bridge."""
+    return rel.startswith(PHYSICS_OF_GOLF_CHAPTER_PREFIX) and rel.endswith(".qmd")
+
+
+def _normalized_relative(root: Path, path: Path) -> str | None:
+    """Return a normalized POSIX path relative to *root*, or None when outside."""
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return None
+
+
+def _corpus_bridge_links(root: Path, page: Path, section: str) -> int:
+    """Count resolving links in *section* that leave book-chapter trees."""
+    resolving = 0
+    for link in extract_links(section):
+        target = _resolve_target(root, page, link.url)
+        if target is None or not _target_exists(root, target):
+            continue
+        source = target.with_suffix(".qmd") if target.suffix == ".html" else target
+        rel = _normalized_relative(root, source)
+        if rel is None or is_book_chapter(rel):
+            continue
+        resolving += 1
+    return resolving
+
+
+def check_chapter_bridge_coverage(root: Path, pages: list[Path]) -> list[str]:
+    """Require Physics of Golf chapters to carry an On this site corpus bridge."""
+    errors: list[str] = []
+    for page in pages:
+        rel = _rel(root, page)
+        if not _requires_physics_of_golf_bridge(rel):
+            continue
+        expanded = expand_includes(root, page)
+        section = _on_this_site_section(expanded)
+        if section is None:
+            errors.append(f"{rel}: missing On This Site bridge section")
+            continue
+        resolving = _corpus_bridge_links(root, page, section)
+        if resolving < CHAPTER_BRIDGE_MIN_LINKS:
+            errors.append(
+                f"{rel}: On This Site has {resolving} corpus links "
+                f"(<{CHAPTER_BRIDGE_MIN_LINKS})"
+            )
+    return errors
 
 
 def check_related_coverage(root: Path, pages: list[Path]) -> list[str]:
@@ -252,6 +315,7 @@ def run_site_gate(
         "broken-links": check_internal_links(root, pages),
         "path-style": check_path_style(root, pages),
         "related-coverage": check_related_coverage(root, pages),
+        "chapter-bridges": check_chapter_bridge_coverage(root, pages),
         "orphans": check_orphans(root, pages),
         "categories": check_categories(root, pages),
     }
