@@ -20,10 +20,10 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4406 · Deploy Website Public-Site Verification Gate
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** local
 - **Issue:** #4406 (fleet-main-health Deploy Website)
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4407
 - **Branch:** `fix/issue-4406-deploy-website-local-storage-pageerrors-local`
 - **Paths:** `scripts/verify-public-site.js`, `tests/public-site-verifier.test.js`
 - **Started:** 2026-09-21
