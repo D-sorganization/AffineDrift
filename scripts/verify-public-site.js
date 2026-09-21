@@ -169,6 +169,12 @@ function isActionableConsoleError(message) {
   return !message.includes('Permissions policy violation: compute-pressure');
 }
 
+function isActionablePageError(message) {
+  // Cross-origin embeds (for example YouTube iframes on resources-videos) can
+  // throw SecurityError when their scripts touch localStorage under automation.
+  return !message.includes("Failed to read the 'localStorage' property from 'Window'");
+}
+
 function headingBeginsWithinViewport(rect, viewport) {
   return Boolean(
     rect &&
@@ -515,7 +521,11 @@ async function verifyItem(page, item, options) {
     failures.push(`document response failed: ${response?.status() ?? navigationError ?? 'no response'}`);
   }
   failures.push(...consoleErrors.map((error) => `console: ${error}`));
-  failures.push(...pageErrors.map((error) => `pageerror: ${error}`));
+  failures.push(
+    ...pageErrors
+      .filter(isActionablePageError)
+      .map((error) => `pageerror: ${error}`),
+  );
   failures.push(...failedRequests.map((error) => `requestfailed: ${error}`));
 
   let screenshot = null;
@@ -680,6 +690,7 @@ module.exports = {
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   isActionableConsoleError,
+  isActionablePageError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,

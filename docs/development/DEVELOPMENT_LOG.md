@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4406 · Deploy Website Public-Site Verification Gate
+
+- **State:** in_progress
+- **Owner:** local
+- **Issue:** #4406 (fleet-main-health Deploy Website)
+- **PR:** not created
+- **Branch:** `fix/issue-4406-deploy-website-local-storage-pageerrors-local`
+- **Paths:** `scripts/verify-public-site.js`, `tests/public-site-verifier.test.js`
+- **Started:** 2026-09-21
+- **Last verified:** 2026-09-21 (SELF; CI artifact run 35619994945 shows one failed cell on `/resources/resources-videos.html` mobile/light from third-party YouTube iframe localStorage SecurityError; node smoke test for `isActionablePageError` passes)
+- **Summary:** Ignore non-actionable cross-origin embed pageerrors in the every-page verifier so Deploy Website stays green without weakening first-party regression detection.
+- **Next step:** Open PR with Fixes #4406, drive Deploy Website and CI Standard green, merge, and tear down the worktree.
+
 ### DL-#4375 · Curious Golfer Mechanics and Evidence Reasoning
 
 - **State:** in_review

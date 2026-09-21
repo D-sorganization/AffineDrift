@@ -1,5 +1,17 @@
 # Agent Handoff — AffineDrift
 
+## Fleet Main Health: #4406 Deploy Website
+
+- Worktree `C:/Users/diete/Repositories/agent-worktrees/issue-4406-local`, branch
+  `fix/issue-4406-deploy-website-local-storage-pageerrors-local` (base `7a0a9986`).
+- Deploy run 35619994945 failed 960/960 with one cell:
+  `/resources/resources-videos.html` mobile/light — nine third-party YouTube iframe
+  `pageerror` messages for denied `localStorage` access (artifact
+  `local-every-page.json`).
+- Fix filters those embed SecurityErrors in `scripts/verify-public-site.js` via
+  `isActionablePageError`, with Jest contract coverage in
+  `tests/public-site-verifier.test.js`.
+
 ## Cross-Article Linking Gate: #3898 / #3899
 
 - PR #4302 (branch `bot/3898-3899-link-gate`) adds `config/categories.yml`
