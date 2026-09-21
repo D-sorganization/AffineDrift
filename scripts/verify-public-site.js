@@ -18,6 +18,10 @@ const {
   scanWithAxe,
   summarizeAxeViolations,
 } = require('./public-site-axe.js');
+const {
+  isActionableConsoleError,
+  isActionablePageError,
+} = require('./public-site-browser-noise.js');
 
 const SCHEMA_VERSION = 'affinedrift/public-site-manifest/v1';
 
@@ -163,10 +167,6 @@ function parseArgs(argv) {
 function fixedElementCanObscureHeading(style) {
   const zIndex = Number.parseInt(style.zIndex, 10);
   return style.pointerEvents !== 'none' && (Number.isNaN(zIndex) || zIndex >= 0);
-}
-
-function isActionableConsoleError(message) {
-  return !message.includes('Permissions policy violation: compute-pressure');
 }
 
 function headingBeginsWithinViewport(rect, viewport) {
@@ -515,7 +515,7 @@ async function verifyItem(page, item, options) {
     failures.push(`document response failed: ${response?.status() ?? navigationError ?? 'no response'}`);
   }
   failures.push(...consoleErrors.map((error) => `console: ${error}`));
-  failures.push(...pageErrors.map((error) => `pageerror: ${error}`));
+  failures.push(...pageErrors.filter(isActionablePageError).map((error) => `pageerror: ${error}`));
   failures.push(...failedRequests.map((error) => `requestfailed: ${error}`));
 
   let screenshot = null;
@@ -680,6 +680,7 @@ module.exports = {
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   isActionableConsoleError,
+  isActionablePageError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,

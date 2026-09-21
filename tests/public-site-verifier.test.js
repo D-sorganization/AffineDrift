@@ -5,6 +5,7 @@ const {
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   isActionableConsoleError,
+  isActionablePageError,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,
@@ -153,6 +154,13 @@ describe('public-site verifier contracts (WEB-D)', () => {
       'Permissions policy violation: compute-pressure is not allowed in this document.',
     )).toBe(false);
     expect(isActionableConsoleError('ReferenceError: broken is not defined')).toBe(true);
+  });
+
+  test('filters third-party embed localStorage SecurityError but keeps real page errors', () => {
+    expect(isActionablePageError(
+      "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.",
+    )).toBe(false);
+    expect(isActionablePageError('ReferenceError: broken is not defined')).toBe(true);
   });
 
   describe('navigateWithRetry bounded transient 5xx policy (ISSUE-4104)', () => {
