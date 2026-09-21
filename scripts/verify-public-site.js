@@ -515,11 +515,7 @@ async function verifyItem(page, item, options) {
     failures.push(`document response failed: ${response?.status() ?? navigationError ?? 'no response'}`);
   }
   failures.push(...consoleErrors.map((error) => `console: ${error}`));
-  failures.push(
-    ...pageErrors
-      .filter(isActionablePageError)
-      .map((error) => `pageerror: ${error}`),
-  );
+  failures.push(...pageErrors.filter(isActionablePageError).map((error) => `pageerror: ${error}`));
   failures.push(...failedRequests.map((error) => `requestfailed: ${error}`));
 
   let screenshot = null;
