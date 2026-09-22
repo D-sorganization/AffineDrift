@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; paired plain text matches, preamble/post-preface/TOC boundaries unchanged; 638 title-case sources and citation audit pass; public Quarto build and four browser cases pass, axe clean; seven settled math expressions per case; two print pages inspected with no overflow or unresolved references)
 - **Summary:** Replaces drift-as-flaccidity, momentum-as-force and unsupported skill/control inference with a shared model-conditioned preface connecting geometry, energy, inputs, task authority and evidence.
-- **Next step:** Merge remote main into regular PR #4416 after #4414 lands, then verify its final diff and protected checks.
+- **Next step:** Pass regular PR #4416's protected checks after merging anatomy main 4ac3a34a.
 
 ### DL-#4412 · Anatomy and Joint Modeling Scientific Review
 
@@ -40,9 +40,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/technical-review-resume`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch22_anatomy_joint_modeling.tex`, `articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `tests/test_anatomy_joint_rigor.py`, `tests/test_claim_audit_inventory.py`, `reports/technical-review/anatomy-joint-review.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `docs/development/technical-review/corpus-review-index.csv`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; complete paired source review; 16 mechanics/edition/label checks and 94 combined focused checks pass; full run 5368 passed with two stale shared-bibliography digest failures subsequently repaired, 79.06% coverage; actual-preamble 18-page chapter PDF compiled and all pages visually inspected; Quarto 1.8.26 public route rendered; 4/4 public browser cases pass, axe clean)
+- **Last verified:** 2026-09-22 (protected squash 4ac3a34a; all required checks green, 5323 CI Python tests and 92.85% coverage, eight textbook builds, browser and site-wide axe checks pass; exact-main deploy 35771389008 running)
 - **Summary:** Corrects all identified Chapter 22 geometry, anatomical, work, contact and injury-inference errors, with seven worked exercises and explicit primary-source boundaries. Reopens unsupported prior acceptance; review evidence is bound to 14f1c148. CI exposed two stale figure-census assertions after removing the documented unpaired sketch; the expected counts are corrected without weakening parity checks. Protected publication remains pending.
-- **Next step:** Source 14f1c148 pushed; anatomy evidence bound and Chapter 16 additive bibliography/reading-links carry-forward verified. Pass PR #4414 checks, merge and verify exact-main publication; continue with #4413.
+- **Next step:** Verify exact-main deployment 35771389008 for protected merge 4ac3a34a, including the live anatomy route evidence.
 
 ### DL-#4406 · Deploy Website Public-Site Verification Gate
 

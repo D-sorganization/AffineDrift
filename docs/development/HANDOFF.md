@@ -2,12 +2,12 @@
 
 The user resumed the full review on September 22. Canonical continuation is in
 `AGENT_HANDOFF.md`, Technical Content Review, and `DEVELOPMENT_LOG.md`, DL-#4413.
-Anatomy PR #4414 is awaiting final protected checks. The separate
+Anatomy PR #4414 merged green as 4ac3a34a; deploy 35771389008 is running. The separate
 `fix/physics-preface-rigor` branch contains the complete paired preface revision,
 source comparison and print/browser verification. Source/report f8bda7c3 is
-committed and bound. Regular PR #4416 is open; merge remote main into it after
-#4414 lands and inspect the final diff before merging #4416. SELF records
-the PR registration without changing scientific evidence. #4415 tracks the next
+committed and bound. Regular PR #4416 is open; SELF merges anatomy's remote main
+and preserves the subsequent preface evidence after verifying main's tree equals
+97ae10e1. Pass #4416's checks, merge and verify publication. #4415 tracks the next
 paired ground-reaction chapter review. Broader
 scientific review remains active under #4009/#4021/#4054.
 

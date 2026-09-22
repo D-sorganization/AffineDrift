@@ -78,16 +78,17 @@
 - **Active:** the user resumed the complete review on September 22. Continue
   long-form scientific review with regular PRs and protected merges. Reviewed
   route metadata is not proof that the entire corpus is technically complete.
-- **Anatomy delivery:** regular PR #4414, head
-  `97ae10e17ada589b8a61e5dc19b8011f39d699f5`, corrects both Chapter 22 editions.
+- **Anatomy delivery:** regular PR #4414 merged as
+  `4ac3a34a5d0895a075105f8d0235398881613a8b` with all protected checks passing.
   Its scientific evidence binds to `14f1c1481530f8cf05d20539e18b5c2b19f836ce`.
   Five corrected findings cover geometry, anatomy, clinical inference, worked
   models and presentation. See `reports/technical-review/anatomy-joint-review.md`.
   Local checks include 16 numerical/edition tests, 94 focused checks, an
   18-page print inspection and four settled browser cases (109 equations each).
   CI exposed stale figure counts after the documented sketch removal; those
-  were corrected and 58 combined focused checks pass. Protected CI/publication
-  acceptance is pending; inspect the exact PR head before merging.
+  were corrected and 58 combined focused checks pass. CI passed 5,323 Python
+  tests with 92.85% coverage, all eight textbook builds, browser and accessibility
+  checks. Exact-main deployment 35771389008 is running; publication is pending.
 - **Current work:** #4413, regular PR #4416, branch `fix/physics-preface-rigor`, based on the
   anatomy branch while its checks finish. Source/report checkpoint
   `f8bda7c33083542bb90efaa9a2a8608e741d1a25` is committed and bound; SELF records
@@ -102,10 +103,9 @@
   Full settled scroll checks render all seven expressions without overflow or
   broken anchors. Both pages of the final isolated preface PDF were inspected;
   no overfull box or unresolved reference remains. This is not full-book QA.
-- **Next action:** finish and merge #4414, then merge remote main into the preface
-  branch and inspect #4416's final diff. The regular preface PR is open while
-  its parent checks finish; do not merge the dependent PR first. Pass its
-  checks, merge and verify exact-main
+- **Next action:** SELF merges anatomy's remote main into the preface branch.
+  Main's tree was verified identical to anatomy head 97ae10e1; conflict resolution
+  preserves the subsequent preface changes. Pass #4416's checks, merge and verify exact-main
   deployment. Next long-form target is #4415: paired ground-reaction-force
   chapter, whose print edition retains momentum, COP and inference errors.
   Preserve broad #4054/#4021/#4009 as active.
