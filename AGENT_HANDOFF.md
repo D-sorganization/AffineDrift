@@ -113,6 +113,10 @@
 - **Integration:** SELF merges protected preface main581857cb normally. Its
   complete tree was verified identical to our existing preface parent053f88a5;
   conflict resolution preserves the later GRF records and all peer sections.
+- **CI follow-up:** SELF names the existing gravity value GRAVITY_M_S2 for the
+  repository quality gate; no equations or values changed. Rebind evidence to
+  this tested checkpoint before pushing. Superposition #4418 is leased; its
+  uncommitted next-article draft is saved in local QA/superposition-4418-working.qmd.
 - **Next:** pass regular PR #4417 protected checks and merge; verify successor
   main publication before marking delivery shipped. Verify anatomy/preface publication in parallel. Preserve
   broad parent issues as active; source-only metadata does not complete a book.

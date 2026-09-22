@@ -3,9 +3,11 @@
 import numpy as np
 import pytest
 
+GRAVITY_M_S2 = 9.81
+
 
 def test_vertical_acceleration_and_net_impulse_have_consistent_signs() -> None:
-    mass, force, gravity, duration = 95.0, 1350.0, 9.81, 0.1
+    mass, force, gravity, duration = 95.0, 1350.0, GRAVITY_M_S2, 0.1
     acceleration = force / mass - gravity
     momentum_change = (force - mass * gravity) * duration
     assert acceleration == pytest.approx(4.400526315789474)
@@ -15,7 +17,7 @@ def test_vertical_acceleration_and_net_impulse_have_consistent_signs() -> None:
 
 
 def test_golfer_club_internal_forces_cancel_only_for_combined_system() -> None:
-    gravity = np.array([0.0, 0.0, -9.81])
+    gravity = np.array([0.0, 0.0, -GRAVITY_M_S2])
     body_mass, club_mass = 90.0, 0.5
     ground = np.array([200.0, -35.0, 1200.0])
     club_on_body = np.array([-20.0, 10.0, -100.0])
