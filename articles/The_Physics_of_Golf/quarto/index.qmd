@@ -8,28 +8,51 @@ categories:
 
 ## Preface {.unnumbered}
 
-This book develops a mechanics-first account of the golf swing. Its central question is how the equations of motion partition observed acceleration into state-dependent dynamics and torque-driven intervention, and how far that partition can support biomechanical interpretation.
+Every golf swing brings together muscular work, motion already acquired, stored elastic energy, and changing contact geometry. The question running through this book is how those interactions shape club delivery: what the current state makes possible, how an input changes the motion, and what evidence lets us distinguish competing explanations.
 
-The text uses golf as a concrete case study for multibody mechanics, control-affine modeling, inverse problems, and motor-control questions. It is written for readers who want technical detail but also want the physical meaning of each step made explicit.
+[]{#scope}
 
-## Scope
+The useful starting point is a specified mechanical model. We choose bodies, joints, flexible elements, ground and grip conditions, and the quantities to predict. A simple pendulum makes a few interactions visible. A whole-body model can ask more detailed questions, but it also requires more measurements and assumptions. The goal is to make each step understandable and testable, with golf as the concrete setting for multibody mechanics, control and biological inference.
 
-The chapters move from simple pendulum models to closed-chain mechanics, flexible elements, inverse dynamics, musculoskeletal considerations, and impact-related topics. Some chapters are primarily derivational; others are interpretive. Throughout the book, the strongest claims are the ones that follow directly from the model under discussion.
+## What Drift and Control Mean {#central-analytical-idea}
 
-## Central Analytical Idea
+For a model with an affine input map, a local state description takes the form
 
-The book repeatedly distinguishes two modeled contributions to motion:
+$$
+\dot x=f(x,t)+G(x,t)u.
+$$
 
-- **Drift**: the state-dependent dynamics that remain when modeled control input is set to zero.
-- **Control**: the modeled contribution of applied torques or other explicit inputs.
+Here $x$ contains the states retained by the model, $t$ is time, $u$ is its declared input, $f$ is the state derivative at zero input, and $G(x,t)u$ is the input contribution at that same state and time. Position and velocity are typical states; muscle activation, tissue deformation and shaft vibration may require others. Time-dependent loads and changing contact modes must also be specified. A smooth equation within one contact mode does not by itself describe an impact or a change of mode.
 
-That separation is useful because it forces the analysis to ask which terms are inherited from system state and which arise from deliberate intervention. It does **not** remove the need to specify assumptions carefully. Quantitative comparisons between drift and control depend on model structure, parameter identification, coordinate choice, and how constraints are represented.
+We call $f$ **drift**. It includes the kinematic rate of position change as well as the modeled zero-input dynamics. Drift and control are contributions to a state derivative; they are not two fundamentally different kinds of physical force. Whether the input is net joint torque, muscle excitation or another channel changes the meaning of zero input and may change whether the model is affine in that input at all. The relevant equations, assumptions and derivations appear in the chapters that use them.
 
-## Reader Guidance
+Setting a modeled torque input to zero is a precisely defined calculation. It does not make a golfer's muscles go limp. The retained state can still contain activation and elastic deformation, and the effective plant can retain passive forces or other specified loads. Net torque alone also cannot identify muscle recruitment or co-contraction. Earlier muscular work helped create the very state from which the calculation starts.
 
-This is not a coaching manual and it does not assume that every quantity appearing in a model can be measured directly in practice. Instead, it aims to show what the chosen equations imply, where inverse inference becomes uncertain, and where interpretation outruns available evidence.
+Momentum is a property of motion, not an additional force or energy source. A shaft or tendon can return energy previously stored in it. Ideal stationary constraints can transmit forces and redistribute energy between connected bodies while their total constraint power is zero; moving supports require their own work accounting. These distinctions let us trace work and motion through the swing without treating an accelerating segment as proof of local muscular power or treating continued motion as proof of muscular inactivity.
 
-Readers interested mainly in golf applications can proceed chapter by chapter from the beginning. Readers who want the broader mathematical background can use the companion series [The Geometry of Motion](../../The_Geometry_of_Motion/quarto/index.html).
+## From a Decomposition to a Golf Explanation
+
+At a fixed state, the affine equation separates the modeled instantaneous input contribution. A forward zero-input rollout asks a different question: what trajectory follows when the declared input remains zero over an interval? The changing state then changes the dynamics. Comparing that rollout with another trajectory requires an explicit initial state, horizon, retained loads, contact rules and output metric. Neither calculation automatically identifies the physiological cause of an observed swing.
+
+Control authority is also a task question. The ability to change clubface orientation, impact location or speed depends on available inputs, their bounds and dynamics, the remaining time, contact constraints and the chosen output. A large drift-to-control norm ratio cannot establish that every relevant correction is unavailable. Nor does it establish a universal phase in which golfers lose control, or prove why elite players perform better. Those are hypotheses requiring appropriately defined calculations and evidence.
+
+The aspects of the model are intertwined. Moving a joint center changes hand paths and force moment arms. Changing the grip changes loop closure and transmitted loads. Ground contact changes feasible body motion and reaction forces. Muscle activation and force–length–velocity behavior constrain how joint moments develop, while shaft deformation changes the state delivered to impact. A change that improves one fitted motion trace may therefore have several explanations. Comparing alternatives and propagating uncertainty are part of the mechanical argument.
+
+## How to Read This Book {#reader-guidance}
+
+The chapters build from pendulum examples and joint mechanics to constrained multibody dynamics, energy, flexible structures, muscles, inverse problems, motor control and impact. Worked models establish what follows from declared assumptions. Measurements test whether those assumptions and predictions are adequate for a task. Claims about human strategy, learning, tissue injury or coaching outcomes require evidence beyond a successful mechanical calculation.
+
+Read with three questions in view: What was specified? What was observed? What conclusion follows? The distinctions connect the equations to practical investigation. They also keep a model's limitations visible while allowing it to explain something useful. The book is intended as a technical reference and a guide to reasoning about the swing; it does not prescribe one universal technique or present modeled tissue loads as a clinical diagnosis.
+
+
+For the mathematical definitions and worked counterexamples, begin with
+[The Affine Structure](ch05_affine_structure.html) and
+[The Zero-Torque Counterfactual](ch06_zero_torque_counterfactual.html).
+[Energy Transfer](ch10_energy_transfer.html) develops the work accounting;
+[Anatomy and Joint Modeling](ch22_anatomy_joint_modeling.html) connects model
+geometry with force and clinical inference. The companion
+[The Geometry of Motion](../../The_Geometry_of_Motion/quarto/index.html)
+develops the broader mathematical setting.
 
 ## Table of Contents
 

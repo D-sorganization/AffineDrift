@@ -1,17 +1,15 @@
-# Current Technical Review Checkpoint — #4412
+# Current Technical Review Checkpoint — #4413
 
-The user resumed the full technical review on 2026-09-22. Canonical technical
-review continuation is in `AGENT_HANDOFF.md`, section Technical Content Review,
-and `docs/development/DEVELOPMENT_LOG.md`, DL-#4412. Branch
-`fix/technical-review-resume`, checkpoint SELF, regular PR #4414. The paired
-Chapter 22 scientific revision and local numerical/print/browser checks are
-complete. Source/evidence commit `14f1c1481530f8cf05d20539e18b5c2b19f836ce`
-is pushed and bound in the inventory. Chapter 16's bibliography/reading-links
-carry-forward preserves its prior scientific review. Protected checks, merge
-and exact-main publication remain pending. CI figure-census failures were
-reproduced and the counts corrected for the removed unpaired anatomy sketch. See
-`reports/technical-review/anatomy-joint-review.md` for the argument and source
-boundaries. Issue #4413 tracks the next preface review.
+The user resumed the full review on September 22. Canonical continuation is in
+`AGENT_HANDOFF.md`, Technical Content Review, and `DEVELOPMENT_LOG.md`, DL-#4413.
+Anatomy PR #4414 merged green as 4ac3a34a; deploy 35771389008 is running. The separate
+`fix/physics-preface-rigor` branch contains the complete paired preface revision,
+source comparison and print/browser verification. Source/report f8bda7c3 is
+committed and bound. Regular PR #4416 is open; SELF merges anatomy's remote main
+and preserves the subsequent preface evidence after verifying main's tree equals
+97ae10e1. Pass #4416's checks, merge and verify publication. #4415 tracks the next
+paired ground-reaction chapter review. Broader
+scientific review remains active under #4009/#4021/#4054.
 
 The following previously merged persona-work handoff is retained for its
 separate scope; it is not the active technical-review task.
