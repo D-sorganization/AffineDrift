@@ -34,7 +34,7 @@ retaining JSON evidence, source, frozen reports and current QA. Headroom continu
 to fall due activity outside these small chapter outputs. Re-run interrupted checks;
 never mark a partial check complete. Save and push checkpoints promptly.
 
-Regular PR4426 is open and attached. Drive its protected checks.
+Regular PR4426 is open and attached. All eight full textbook builds and Python3.12 tests passed. Static checks found an unnamed gravity literal in the new test; SELF extracts GRAVITY_M_S2 without numerical changes. Refresh the IAA evidence binding to this committed test revision before pushing.
 Wait for putting deployment before enabling merge. Scientific/render evidence
 is frozen at06c948b7; update publication/turnover separately. This is analytical
 chapter acceptance, not an empirical golf or full-book result. The goal is active.

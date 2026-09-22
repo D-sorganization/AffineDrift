@@ -4,6 +4,8 @@ import numpy as np
 import pytest
 from scipy.integrate import quad, solve_ivp
 
+GRAVITY_M_S2 = 9.81  # Uniform terrestrial gravity used in the illustrative rod ledger.
+
 
 def test_equal_torque_reciprocity_differs_from_normalized_coupling() -> None:
     mass = np.array([[8 / 3, 5 / 6], [5 / 6, 1 / 3]])
@@ -103,7 +105,7 @@ def test_worked_rod_ledger_closes_and_matches_endpoint_second_difference() -> No
     velocity_force = np.array(
         [-0.5 * (2 * rates[0] * rates[1] + rates[1] ** 2), 0.5 * rates[0] ** 2]
     )
-    gravity_force = 9.81 / np.sqrt(2) * np.array([2, 0.5])
+    gravity_force = GRAVITY_M_S2 / np.sqrt(2) * np.array([2, 0.5])
     forces = np.column_stack(([10, -2], velocity_force, gravity_force))
     terms = np.linalg.solve(mass, forces)
     expected = [[9, -55.97345089, 7.80380721], [-15, 170.20498331, 2.60126907]]
