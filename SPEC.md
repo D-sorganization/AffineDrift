@@ -371,4 +371,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-13 | #4129 | Remove placeholder media elements from researcher resource profiles and update review evidence digest (#4129). |
 | 2026-09-21 | #4405 | Add Physics of Golf On This Site chapter bridges, reverse article links, and chapter-bridges site gate (#3905). |
 | 2026-09-21 | #4410 | Burn down link-gate baseline from 115 entries to 0 by fixing all related-coverage and path-style violations. |
+| 2026-09-22 | #4411 | Add persona start paths to learning-paths page with content cluster and workflow mappings (#4409). |
 - 2026-09-14: Removed invalid pip cache from redundant issue closer workflow (#4396).
