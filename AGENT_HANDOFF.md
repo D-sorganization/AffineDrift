@@ -75,57 +75,39 @@
 
 ## Technical Content Review
 
-- **Active:** resumed comprehensive review under #4009/#4021. Long articles and
-  paired sources first; regular PRs only. Do not equate route metadata with
-  whole-book or corpus completion.
-- **Shipped:** anatomy #4414 at4ac3a34a and preface #4416 at581857cb passed all
-  protected checks. Successor deploy35774559003 passed960/960 live cases on main
-  581857cb; downloaded artifact10716514261 and checked all eight route cases.
-  SELF records publication in anatomy-preface-publication.json. The original
-  anatomy live check was superseded; only the successor is claimed complete.
-- **GRF delivery:** regular PR #4417 passed all protected checks and merged as
-  a6774e33 on September 22 at 20:15:56 UTC; deployment/live verification is pending.
-  Paired science/render checkpointdfe90fed, updated test checkpoint8feeaa11.
-  Six findings corrected, 13 print pages inspected,118 paired math expressions,
-  four browser cases. CI follow-ups named GRAVITY_M_S2 and corrected the Windows
-  CRLF-versus-committed-LF test digest. All seven evidence bytes now match8feeaa11;
-  29 mechanics/inventory checks,19 final boundary checks and tracked-Python
-  quality pass. No scientific content changed in those CI follow-ups.
-- **Current:** #4418 under foundations #4058; branch
-  `fix/superposition-feasible-inputs`, based on published GRF head7ee71416.
-  Source checkpointa2cb282d saves the complete reread and residual correction of the standalone
-  superposition article, retaining the earlier Newton–Euler/Lagrange/spatial/2R
-  corrections. Added feasible-reference sets, constrained inverse-mass derivation,
-  a circular-guide counterexample and task-acceleration distinction. Corrected
-  the null-space link description and three wide/doubly numbered math groups.
-- **Validation:** all11 article mechanics checks pass, including direct KKT,
-  reaction/curvature and task increments and independent general-2R body moments
-  and kinetic/potential power. Black100/Ruff/title638 and changed-file quality
-  pass. Final full-page scrolling renders416 math expressions in all four cases
-  with zero errors or broken anchors. All13 main-section mobile openings and
-  selected new-section/changed-equation views were inspected. All21 wide mobile
-  display containers scroll to their endpoints; desktop displays fit. SELF saves
-  the complete report/render record.
-  SELF binds four findings and all four evidence paths to47321eb8 after
-  verifying committed LF bytes. Route review is complete; publication is pending.
-- **PR:** regular #4419 is open. SELF integrates protected main a6774e33 by
-  ordinary merge after verifying its tree exactly equals prerequisite head
-  7ee71416. The four turnover conflicts retain the later superposition and
-  anatomy/preface publication records; the final diff excludes GRF science.
-- **Next:** verify the GRF live deployment before enabling #4419 auto-merge.
-  Keep delivery and publication gates separate.
-- **Queued:** #4420 under measurement #4059 will correct the long force-
-  measurement article. Primary-source preparation is saved in
-  docs/development/technical-review/force-measurement-preparation.md; no source
-  edits or completed review are claimed. Check claim and lease before editing.
-- **Coordination:** session `technical-review-20260922-anatomy`; #4418 lease
-  5782825163 and presencee4366cf4 expire21:40Z September22. Inbox has no reported
-  messages/conflicts but incomplete unrelated board evidence. Preserve peer
-  sections and authority pins; stage files explicitly. Old local QA is untracked.
-- **QA:** local `docs/development/technical-review/superposition-4418-*` contains
-  rendering helpers, browser metrics/captures and backups. Root render helper
-  temporarily changes \_quarto.yml and restores it; wait for it before hashes.
-  GRF records remain in reports/technical-review/ground-reaction-\*.
+- **Active:** comprehensive review #4009/#4021; long articles and paired sources
+  first, regular PRs only. The goal remains active.
+- **Shipped:** anatomy #4414 and preface #4416, verified on protected main
+  581857cb by deploy 35774559003, 960/960 live cases; eight relevant route cases
+  saved in `reports/technical-review/anatomy-preface-publication.json`.
+- **GRF delivery:** #4417 merged as a6774e33 with all protected checks green.
+  Deploy 35779150741 is running; do not claim live publication yet. Scientific
+  evidence remains bound to 8feeaa11, with paired print/web rendering recorded.
+- **Superposition delivery:** regular #4419 at f5e8dca1 integrates protected main
+  normally after exact-tree comparison with 7ee71416. Final diff excludes GRF
+  science; 19 evidence/boundary checks pass. Eleven article mechanics checks,
+  four browser cases and 416 expressions were verified. Four findings bind to
+  47321eb8. Await GRF live verification before enabling #4419 auto-merge.
+- **Current implementation:** #4420 under measurement #4059, branch
+  `fix/force-measurement-rigor`, based on published #4419 head f5e8dca1.
+  SELF saves the complete source reread and substantive corrections: wrench/COP
+  geometry and uncertainty; bridge, charge-amplifier and bandwidth physics;
+  ASTM F3109-23 public scope; pressure observability; corrected study statistics,
+  sample limits and causal inference; per-foot partition ambiguity. The prior
+  source-only acceptance is reopened, with route status deferred. Eleven new
+  checks plus eleven existing GRF checks pass; title audit passes all 638 sources.
+- **Next:** finish the article's rendered review and bind its source, numerical
+  checks, review report and render record to a committed checkpoint.
+- **Publication sequence:** finish #4417 live verification, merge #4419 through
+  protected checks, and integrate that main into #4420 normally before its PR.
+- **Coordination:** session `technical-review-20260922-anatomy`; #4420 lease
+  5783527746 and presence 64d69234 expire 22:21 UTC September 22. Inbox reports
+  no messages/conflicts but incomplete unrelated board evidence; preserve peers.
+- **Turnover:** DL-#4420/#4418/#4415; primary-source preparation is in
+  `docs/development/technical-review/force-measurement-preparation.md`.
+  Local PDFs/text/XML and browser helpers are QA material, not publication.
+  Exact evidence hashes must use committed LF bytes. Stage files explicitly;
+  many historical untracked QA files remain. Never force-push or bypass hooks.
 
 ## Protected Authority
 
