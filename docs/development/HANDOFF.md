@@ -34,7 +34,7 @@ retaining JSON evidence, source, frozen reports and current QA. Headroom continu
 to fall due activity outside these small chapter outputs. Re-run interrupted checks;
 never mark a partial check complete. Save and push checkpoints promptly.
 
-Next: publish the bound chapter as a regular PR and drive protected checks.
+Regular PR4426 is open and attached. Drive its protected checks.
 Wait for putting deployment before enabling merge. Scientific/render evidence
 is frozen at06c948b7; update publication/turnover separately. This is analytical
 chapter acceptance, not an empirical golf or full-book result. The goal is active.

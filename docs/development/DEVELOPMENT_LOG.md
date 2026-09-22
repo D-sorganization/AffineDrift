@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4425 (Physics #4054; corpus #4021; epic #4009)
-- **PR:** Pending
+- **PR:** #4426
 - **Branch:** `fix/induced-acceleration-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex`, `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd`, `tests/test_induced_acceleration_chapter_rigor.py`
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
-- **Next step:** Eight findings and12 evidence paths bound to06c948b7; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Publish a regular PR and complete protected checks; putting deploy35792227837 must finish first.
+- **Next step:** Eight findings and12 evidence paths bound to06c948b7; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Complete protected checks on regular PR4426; putting deploy35792227837 must finish first.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
