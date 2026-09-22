@@ -26,9 +26,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/zero-torque-counterfactual-rigor`
 - **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; source/render frozen at e7d8c688 and manifesto dependency verified; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
+- **Last verified:** 2026-09-22 (SELF; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
-- **Next step:** Bind both reviewed routes and dependent audit records to the final committed source/render checkpoint.
+- **Next step:** Integrate origin/main and open the regular zero-torque correction PR.
 
 ### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 
@@ -41,7 +41,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; PR4426 merged as99aa5835; deployment35796355561 pending; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
-- **Next step:** Eight findings and12 evidence paths bound to9981bddf; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Complete protected checks on regular PR4426; putting deploy35792227837 must finish first.
+- **Next step:** Verify live publication from deployment35796355561 at merged main99aa5835.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 

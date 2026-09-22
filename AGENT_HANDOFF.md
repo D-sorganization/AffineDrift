@@ -1,11 +1,12 @@
 # Agent Handoff — AffineDrift
 
-Current work: #4427, branch `fix/zero-torque-counterfactual-rigor`, commit `SELF`;
-PR not created. Three sources and complete local print/browser review saved.
-Next: bind committed evidence, restore route acceptance, and open a regular PR.
-IAA #4426 merged at99aa5835; deployment35796355561 is pending. Verify publication
-before merging the successor. Read docs/development/HANDOFF.md and the complete
-zero-torque review report. The goal remains active; no draft PRs.
+Current #4427 branch `fix/zero-torque-counterfactual-rigor`, commit `SELF`; PR not
+created. Complete three-source review is bound to e7d8c688; 51 selected tests,
+128 paired expressions, nine print pages and local browser8/8 pass. Census219
+restored. Thirteen dependency carry-forwards record historical discrepancies
+separately under #4429; manifesto units are #4428. Next integrate main and open
+a regular PR. IAA4426 merged at99aa5835; verify deployment35796355561 before
+successor merge. Full continuation in docs/development/HANDOFF.md. Goal active.
 
 ## Deferred Impact Evidence - 2026-09-22
 

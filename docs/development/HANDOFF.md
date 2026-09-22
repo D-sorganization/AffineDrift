@@ -1,36 +1,43 @@
 # Current Technical Review Checkpoint — #4427
 
-Repository/worktree: C:/Users/diete/Repositories/AffineDrift-technical-review.
-Branch `fix/zero-torque-counterfactual-rigor`; checkpoint `SELF`; PR not created.
+Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
+`fix/zero-torque-counterfactual-rigor`; commit `SELF`; PR not created.
 Issue #4427 under Physics #4054/core #4058, corpus #4021 and epic #4009.
-Complete three-source rewrite, independent mechanics, and final print/browser
-review are saved. All 128 paired expressions agree; nine print pages and all
-26/16 chapter/article displays were inspected. The two-route production gate
-passes 8/8; expanded overview passes four theme/width accessibility cases.
-All 25 chapter and eight article mobile equation scrolls reach their endpoints.
-Read reports/technical-review/zero-torque-review.md and its render-verification
-JSON for exact scope, derivation, adversarial limits and source access.
+Complete chapter print/web and canonical article rewrite is qualified and saved.
+Scientific/render evidence is frozen at e7d8c6885550ed2731843ff7d9e581d36b69788e:
+14 findings, 11 exact committed evidence paths, 128 paired math expressions,
+nine print pages, 26/16 web displays, 25/eight mobile scroll endpoints, local
+production 8/8 and expanded overview four theme/width cases pass. Both routes
+are reviewed again; the 219 original-route census is restored.
 
-Source/render checkpoint e7d8c688 is frozen. The manifesto intervention
-dependency is rebound to it after checking both evidence paths and unchanged
-manifesto source. Next carry forward 13 audit dependencies with byte comparisons
-and bind both zero-torque routes. Restore
-the 219-route census only after binding. Issue #4428 separately tracks the
-manifesto notation-units error; no full-page reacceptance is implied here.
+Thirteen site-audit dependencies are carried forward to457dbba2 after verifying
+all unrelated evidence is unchanged from the accepted03db46ff baseline. The
+changed manifesto intervention finding alone is rebound toe7d8c688. Historical
+source/finding SHA discrepancies predate this work and are explicitly listed
+in reports/technical-review/zero-torque-dependency-carry-forward.json, tracked
+as #4429 under #4063. This is not a new review of those thirteen pages.
+Manifesto notation units are separately tracked in #4428. Audit tests now check
+exact bytes and valid separate revisions rather than requiring every finding,
+source and aggregate review to share one historical SHA. Both old equality
+assertions failed on this valid dependency refresh; replacement contracts pass.
 
-IAA #4426 merged to remote main 99aa58356f45f4ff2bf15dd90dc735460dc8d3b4;
-deployment 35796355561 is still in progress. Verify its live artifact before
-merging this successor. Putting is shipped at ded63640 with live 960/960.
-After evidence binding, integrate origin/main normally, open a regular PR
-(never draft), complete checks, merge and verify publication. Goal remains active.
-Entries advanced: DL-#4427 and DL-#4425. Preserve unrelated planning records.
-Disk headroom is about 30 MB and falling externally; save checkpoints promptly.
-Many older untracked QA artifacts are present; stage only explicit task paths.
+Validation: 51 selected mechanics, ZTCF, inventory and site-audit tests pass;
+Black100 and Ruff pass for all three affected test modules; title audit638 passes.
+Use py -3.12 -X utf8 -m pytest tests/test_zero_torque_chapter_rigor.py
+tests/test_ztcf_intervention_contract.py tests/test_claim_audit_inventory.py
+tests/test_site_trust_surface_audit.py -q --no-cov. Normal hooks remain mandatory.
+No adapter, fixture, schema, existing shared CSS or predecessor science changed.
 
-Validation: eleven new mechanics tests and twelve existing ZTCF contract tests
-pass. Inventory test initially caught the expected stale article digest after
-presentation edits; regeneration repaired it; all 41 selected tests then passed.
-No adapter, fixture, schema, existing shared CSS or predecessor evidence changed.
+IAA #4426 merged to99aa58356f45f4ff2bf15dd90dc735460dc8d3b4. Deployment35796355561
+is pending; verify its live artifact before merging the successor. Putting is
+shipped atded63640 with live960/960. Next: commit bindings, normally merge current
+origin/main, push, open a regular PR, and complete protected checks/publication.
+No draft PRs. Goal remains active; entries advanced DL-#4427 and DL-#4425.
+
+Disk headroom is very low due external activity. Removed seven untracked
+counterfactual-spread draft PNGs only after confirming each final replacement;
+final QA, source and evidence remain. Many older untracked QA files exist;
+stage explicit task paths only. Preserve unrelated deferred-planning records.
 
 # Current Technical Review Checkpoint — #4425
 
