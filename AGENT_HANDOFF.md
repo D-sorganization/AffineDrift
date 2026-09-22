@@ -93,9 +93,8 @@
   corrected finding groups, independent numerical checks and final render review.
   Article-scoped CSS fixes the inaccessible expanded overview and preserves
   readable math. The report records full-paper versus abstract access limits.
-- **Next:** bind the article, CSS, tests, review and render records to this
-  completed checkpoint using committed LF bytes. Restore the zero-deferred census
-  test, regenerate the audit and validate it. Normally merge protected main before
+- **Next:** the article, CSS, tests, review and render records now bind to 99d1653c
+  using committed LF bytes. The zero-deferred census is restored. Normally merge protected main before
   opening the next regular PR. Verify superposition live publication first.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4420 lease
   5783527746 expires 22:21 UTC, presence 9730b845 expires 22:52 UTC September 22.

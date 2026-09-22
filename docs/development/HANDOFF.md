@@ -3,9 +3,10 @@
 Branch `fix/force-measurement-rigor` starts at superposition head f5e8dca1.
 SELF saves the completed force-measurement source review, eight finding groups,
 independent checks, article-scoped reading fixes and final local render evidence.
-The route remains deferred until the completed evidence is bound to this commit.
-Use committed LF blobs for every digest, restore the zero-deferred census test,
-regenerate the audit, and validate it before opening a regular PR.
+The route is now reviewed, with eight findings bound to complete checkpoint
+99d1653c. All five evidence paths match committed LF bytes.
+The zero-deferred census test is restored, the audit is regenerated, and all
+29 article/inventory checks pass. Continue to the protected delivery gates.
 
 GRF PR #4417 is shipped at main a6774e33: deploy 35779150741 and live artifact
 10718336671 passed all 960 cases. The publication record is committed here.

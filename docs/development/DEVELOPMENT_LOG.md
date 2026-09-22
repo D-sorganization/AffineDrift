@@ -26,9 +26,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/force-measurement-rigor`
 - **Paths:** `articles/technology-force-measurement.qmd`, `tests/test_force_measurement_rigor.py`, `data/trust/claim_audit_inventory.json`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; exact-commit binding next)
+- **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; eight findings bound to complete checkpoint 99d1653c with all five evidence digests checked against committed LF bytes)
 - **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
-- **Next step:** Bind the completed source, stylesheet, tests and review/render evidence to this committed checkpoint, then integrate protected main and open a regular PR.
+- **Next step:** Integrate protected main and open a regular PR; keep superposition live publication as the predecessor gate.
 
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority
