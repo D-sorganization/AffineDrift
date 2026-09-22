@@ -115,7 +115,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | `articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | `articles/The_Physics_of_Golf/quarto/ch14_complete_swing.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd` | 7 |
 | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
 | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | `articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.qmd` | 1 |
@@ -358,7 +358,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d7bbf52529cb` | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4b5f92354a9e` | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | Reviewed | — | None | None | 0 |
 | `ad-route-17268df76f0d` | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | Reviewed | — | None | None | 0 |
-| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Reviewed | — | None | None | 0 |
+| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Reviewed | — | None | None | 6 |
 | `ad-route-a9e0bb2b2321` | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | Reviewed | — | None | None | 5 |
 | `ad-route-0c1fc851ee95` | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-80ef06755aaa` | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | Reviewed | — | None | None | 0 |

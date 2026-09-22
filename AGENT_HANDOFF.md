@@ -75,52 +75,62 @@
 
 ## Technical Content Review
 
-- **Active:** the user resumed the complete review on September 22. Continue
-  long-form scientific review with regular PRs and protected merges. Reviewed
-  route metadata is not proof that the entire corpus is technically complete.
-- **Anatomy delivery:** regular PR #4414 merged as
-  `4ac3a34a5d0895a075105f8d0235398881613a8b` with all protected checks passing.
-  Its scientific evidence binds to `14f1c1481530f8cf05d20539e18b5c2b19f836ce`.
-  Five corrected findings cover geometry, anatomy, clinical inference, worked
-  models and presentation. See `reports/technical-review/anatomy-joint-review.md`.
-  Local checks include 16 numerical/edition tests, 94 focused checks, an
-  18-page print inspection and four settled browser cases (109 equations each).
-  CI exposed stale figure counts after the documented sketch removal; those
-  were corrected and 58 combined focused checks pass. CI passed 5,323 Python
-  tests with 92.85% coverage, all eight textbook builds, browser and accessibility
-  checks. Exact-main deployment 35771389008 is running; publication is pending.
-- **Current work:** #4413, regular PR #4416, branch `fix/physics-preface-rigor`, based on the
-  anatomy branch while its checks finish. Source/report checkpoint
-  `f8bda7c33083542bb90efaa9a2a8608e741d1a25` is committed and bound; SELF records
-  three corrected findings with exact source/render evidence. Paired prefaces now define the affine
-  state derivative, zero-input intervention, energy accounting and task-specific
-  authority, and connect anatomy, contact, muscle and shaft choices. Print and
-  web core prose match under Pandoc plain-text conversion. TOC, print preamble
-  and post-preface material are unchanged; old deep links are preserved.
-  See `reports/technical-review/physics-preface-review.md` and its render record.
-- **Preface validation:** 638 title-case sources and citation checks pass;
-  Quarto public rendering and all four normal browser cases pass with clean axe.
-  Full settled scroll checks render all seven expressions without overflow or
-  broken anchors. Both pages of the final isolated preface PDF were inspected;
-  no overfull box or unresolved reference remains. This is not full-book QA.
-- **Next action:** SELF merges anatomy's remote main into the preface branch.
-  Main's tree was verified identical to anatomy head 97ae10e1; conflict resolution
-  preserves the subsequent preface changes. Pass #4416's checks, merge and verify exact-main
-  deployment. Next long-form target is #4415: paired ground-reaction-force
-  chapter, whose print edition retains momentum, COP and inference errors.
-  Preserve broad #4054/#4021/#4009 as active.
-- **Evidence boundary:** Chapter 16 retains its original scientific review.
-  Its five added bibliography entries and existing reading-links block were
-  verified as the only dependencies changed since a2d482bf; its evidence now
-  binds to 14f1c148. No new Chapter 16 clinical or scientific acceptance is claimed.
-- **Previous delivery verified:** PR #4377 merge `32010d08d9980896c51f0c93ac875f23eb818556`,
-  deployment 34730740904, artifact 10309497076 inspected September 22: 960/960
-  cases pass, including all four companion-route cases. DL-#4375/#4376 are shipped.
-- **Coordination:** session `technical-review-20260922-anatomy`; #4413 lease
-  5781826002 expires 20:30Z; presence 55a179a1 expires 20:39Z September 22.
-  The inbox has reported no conflicts but incomplete unrelated board evidence.
-  Preserve peer work, immutable sources, authority pins and unrelated handoff
-  sections. Stage explicitly; extensive old untracked QA artifacts remain.
+- **Active:** the user resumed the comprehensive review September 22. Continue
+  long sources and paired editions under #4009/#4021/#4054; use regular PRs only.
+- **Anatomy:** #4414 merged green as 4ac3a34a5d0895a075105f8d0235398881613a8b.
+  All protected checks passed (5323 Python tests, 92.85% coverage, eight book
+  builds, browser/axe). Deploy 35771389008 passed its pre-deploy checks and deployed, but live
+  verification was superseded by preface main; verify both routes in successor
+  deploy 35774559003 before marking DL-#4412 shipped. Scientific checkpoint is 14f1c148.
+- **Preface:** regular PR #4416 at 053f88a55722822c5daa5d6bc785b8d3a53b15a6
+  contains the paired revision and evidence bound to f8bda7c3. Anatomy main was
+  merged normally, final diff checked and 19 evidence-boundary tests passed.
+  Merged with all protected checks green as 581857cb248164564bf66f09d9b132ce8eea6365.
+  Exact-main publication is running in deploy 35774559003.
+- **Current:** #4415, branch `fix/ground-reaction-rigor`, based on the published
+  preface branch. Scientific source e0ce6133 and complete report/render checkpoint dfe90fed are
+  pushed; regular PR #4417 is open. SELF records PR tracking; all six findings bind
+  at dfe90fed2658ab8b43b6e26a8208591aca150e9d.
+  Both original sources were read completely. Print's third-law/sign mistakes,
+  omitted club boundary, unconditional work claims, drift-only reaction,
+  shoulder-to-GRF shortcut and universal coaching waveform have been replaced.
+  Web now derives offset-surface COP, transported wrench power, conditional COM
+  work, reaction/input coupling, contact-feasibility and moving-support limits.
+  Both editions include eight worked solutions and honest validation design.
+- **Bibliography:** primary publication records correct Joo, Sturdy and Werling
+  authors in textbook and shared proximal-distal databases. This is metadata
+  correction only. Chapter 16/22 do not cite those keys; exact diffs and all their
+  other evidence were verified byte-identical. Their dependency records now bind
+  to e0ce6133 without claiming a new chapter scientific review.
+- **Validation:** 11 independent balance/KKT/wrench/contact checks plus five
+  existing chapter contract tests pass; Black100/Ruff pass. Title audit638 and
+  citation audit pass. All 13 final print pages were inspected, with no overflow
+  or unresolved references. All 118 paired math expressions match. Four public
+  browser cases pass with clean axe; settled math has no clipping, errors or
+  broken anchors after four display groups were split. Final 19 inventory and
+  deployment-boundary tests pass; the chapter route is reviewed and source-bound.
+  Publication is still pending; this is not whole-book acceptance.
+- **Integration:** SELF merges protected preface main581857cb normally. Its
+  complete tree was verified identical to our existing preface parent053f88a5;
+  conflict resolution preserves the later GRF records and all peer sections.
+- **CI follow-up:** test checkpoint8feeaa11 names the existing gravity value GRAVITY_M_S2 for the
+  repository quality gate; no equations or values changed. All 29 mechanics/inventory checks and the tracked-Python quality gate pass.
+  Evidence binds the unchanged science/render plus test naming to 8feeaa11.
+  SELF fixes a Windows CRLF-versus-committed-LF digest mismatch exposed by CI;
+  all seven evidence bytes are compared with the committed checkpoint. Superposition #4418 is leased; its
+  uncommitted next-article draft is saved in local QA/superposition-4418-working.qmd.
+- **Next:** pass regular PR #4417 protected checks and merge; verify successor
+  main publication before marking delivery shipped. Verify anatomy/preface publication in parallel. Preserve
+  broad parent issues as active; source-only metadata does not complete a book.
+- **Coordination:** session `technical-review-20260922-anatomy`; #4415 lease
+  5782334386 expires21:05Z; presence2aacab03 expires21:08Z September22. Inbox has
+  no reported conflicts but incomplete unrelated board evidence. Preserve peer
+  sections, immutable archives and authority pins. Stage explicitly: three
+  Geometry stat/line-ending entries and extensive old QA artifacts are unrelated.
+- **QA pointers:** local `docs/development/technical-review/grf-*` files,
+  `convert_grf_print.py`, `build_grf_print.py` and `grf-initial-reading.md` retain
+  preparation. Conversion preserves the print chapter/section targets and uses
+  unique heading labels. Review both canonical editions after any conversion.
 
 ## Protected Authority
 
