@@ -8,7 +8,8 @@ Chapter 22 scientific revision and local numerical/print/browser checks are
 complete. Source/evidence commit `14f1c1481530f8cf05d20539e18b5c2b19f836ce`
 is pushed and bound in the inventory. Chapter 16's bibliography/reading-links
 carry-forward preserves its prior scientific review. Protected checks, merge
-and exact-main publication remain pending. See
+and exact-main publication remain pending. CI figure-census failures were
+reproduced and the counts corrected for the removed unpaired anatomy sketch. See
 `reports/technical-review/anatomy-joint-review.md` for the argument and source
 boundaries. Issue #4413 tracks the next preface review.
 

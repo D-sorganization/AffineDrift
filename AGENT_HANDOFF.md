@@ -96,7 +96,10 @@
   public-route build and18-page chapter-only print build pass; all PDF pages
   inspected. Four production desktop/mobile light/dark cases pass, axe clean.
   Settled scrolling rendered all 109 equations in all four cases without display
-  overflow or broken anchors. Protected delivery remains.
+  overflow or broken anchors. CI at 76f0ee1f exposed stale figure census counts
+  after the documented removal of the unpaired anatomy sketch. SELF updates
+  those counts (37 figures, 6 TikZ, 5 remaining missing pairs); no gate is removed.
+  The two CI failures were reproduced locally. Protected delivery remains.
 - **Shared dependency:** Chapter16 keeps its original review date and findings.
   Every old bibliography record and seven other evidence files match
   a2d482bff6252be13cbced65cddb3b3f353027ac byte-for-byte. Its QMD differs only
