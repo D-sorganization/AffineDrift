@@ -30,8 +30,10 @@ No adapter, fixture, schema, existing shared CSS or predecessor science changed.
 
 IAA #4426 merged to99aa58356f45f4ff2bf15dd90dc735460dc8d3b4. Deployment35796355561
 is pending; verify its live artifact before merging the successor. Putting is
-shipped atded63640 with live960/960. Next: commit bindings, normally merge current
-origin/main, push, open a regular PR, and complete protected checks/publication.
+shipped atded63640 with live960/960. Normal merge of origin/main99aa5835 preserves the complete fc5745ea tree;
+the main tree equals our IAA parent03db46ff, so four turnover/index conflicts
+retain the newer zero-torque records. No source or SPEC row changes.
+Next push, open a regular PR, and complete protected checks/publication.
 No draft PRs. Goal remains active; entries advanced DL-#4427 and DL-#4425.
 
 Disk headroom is very low due external activity. Removed seven untracked

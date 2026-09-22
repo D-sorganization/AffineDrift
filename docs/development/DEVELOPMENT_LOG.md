@@ -26,9 +26,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/zero-torque-counterfactual-rigor`
 - **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
+- **Last verified:** 2026-09-22 (SELF; normal main99aa5835 integration preserves all evidence; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
-- **Next step:** Integrate origin/main and open the regular zero-torque correction PR.
+- **Next step:** Open the regular zero-torque correction PR after pushing the integrated branch.
 
 ### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 
