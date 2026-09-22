@@ -78,11 +78,12 @@
 - **Active:** resumed comprehensive review under #4009/#4021. Long articles and
   paired sources first; regular PRs only. Do not equate route metadata with
   whole-book or corpus completion.
-- **Merged:** anatomy #4414 at4ac3a34a and preface #4416 at581857cb passed all
-  protected checks. Anatomy deploy35771389008 deployed, but live verification
-  was superseded. Verify both routes in successor deploy35774559003 before
-  marking their development-log entries shipped.
-- **GRF delivery:** regular PR #4417, head7ee71416, awaits protected checks.
+- **Shipped:** anatomy #4414 at4ac3a34a and preface #4416 at581857cb passed all
+  protected checks. Successor deploy35774559003 passed960/960 live cases on main
+  581857cb; downloaded artifact10716514261 and checked all eight route cases.
+  SELF records publication in anatomy-preface-publication.json. The original
+  anatomy live check was superseded; only the successor is claimed complete.
+- **GRF delivery:** regular PR #4417, head7ee71416, has protected auto-merge enabled; browser CI remains pending.
   Paired science/render checkpointdfe90fed, updated test checkpoint8feeaa11.
   Six findings corrected, 13 print pages inspected,118 paired math expressions,
   four browser cases. CI follow-ups named GRAVITY_M_S2 and corrected the Windows
@@ -109,7 +110,7 @@
 - **PR:** regular #4419 is open; SELF records its dependency on #4417.
 - **Next:** merge #4417 after protected checks; integrate main normally into
   #4419 and verify its final diff excludes the prerequisite GRF changes. Keep delivery and publication gates
-  separate; verify earlier live routes while their successor deployment runs.
+  separate; anatomy/preface publication is now verified.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4418 lease
   5782825163 and presencee4366cf4 expire21:40Z September22. Inbox has no reported
   messages/conflicts but incomplete unrelated board evidence. Preserve peer

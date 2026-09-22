@@ -12,7 +12,9 @@ committed LF bytes. SELF records regular PR4419; merge GRF first, integrate main
 verify the final superposition-only diff.
 GRF regular PR4417 at7ee71416 awaits protected CI after a gravity-constant naming
 fix and committed-LF evidence correction. Science/rendering is unchanged.
-Anatomy and preface merged; verify their live routes in successor deploy35774559003.
+Anatomy and preface are shipped: successor deploy35774559003 passed960/960;
+eight relevant live route records were inspected and saved in
+reports/technical-review/anatomy-preface-publication.json by SELF.
 Keep the broader goal active. No whole-book/corpus completion is claimed.
 
 The following previously merged persona-work handoff is retained for its

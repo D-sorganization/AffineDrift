@@ -46,29 +46,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4413 · Physics of Golf Preface Scientific Framing
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4413 (Physics #4054; corpus #4021; epic #4009)
 - **PR:** #4416
 - **Branch:** `fix/physics-preface-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/main.tex`, `articles/The_Physics_of_Golf/quarto/index.qmd`, `reports/technical-review/physics-preface-review.md`, `reports/technical-review/physics-preface-render-verification.json`, `data/trust/claim_audit_inventory.json`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; paired plain text matches, preamble/post-preface/TOC boundaries unchanged; 638 title-case sources and citation audit pass; public Quarto build and four browser cases pass, axe clean; seven settled math expressions per case; two print pages inspected with no overflow or unresolved references)
+- **Last verified:** 2026-09-22 (SELF; protected PR merged, successful successor deployment35774559003 at main581857cb; downloaded live artifact10716514261 passes960/960 cases; all eight anatomy/preface records independently inspected, HTTP200, no page overflow, no serious/critical axe violations; prior scientific/render validation retained in review reports)
 - **Summary:** Replaces drift-as-flaccidity, momentum-as-force and unsupported skill/control inference with a shared model-conditioned preface connecting geometry, energy, inputs, task authority and evidence.
-- **Next step:** All protected checks passed; PR #4416 merged as 581857cb. Verify exact-main deployment35774559003 and the live preface route.
+- **Next step:** None for this delivery; broader corpus review continues.
+
 
 ### DL-#4412 · Anatomy and Joint Modeling Scientific Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4412 (Physics #4054; corpus #4021; epic #4009)
 - **PR:** #4414
 - **Branch:** `fix/technical-review-resume`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch22_anatomy_joint_modeling.tex`, `articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `tests/test_anatomy_joint_rigor.py`, `tests/test_claim_audit_inventory.py`, `reports/technical-review/anatomy-joint-review.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `docs/development/technical-review/corpus-review-index.csv`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (protected squash 4ac3a34a; all required checks green, 5323 CI Python tests and 92.85% coverage, eight textbook builds, browser and site-wide axe checks pass; deploy35771389008 pre-deploy checks and Pages deployment passed, but live verification was superseded by preface main)
-- **Summary:** Corrects all identified Chapter 22 geometry, anatomical, work, contact and injury-inference errors, with seven worked exercises and explicit primary-source boundaries. Reopens unsupported prior acceptance; review evidence is bound to 14f1c148. CI exposed two stale figure-census assertions after removing the documented unpaired sketch; the expected counts are corrected without weakening parity checks. Protected publication remains pending.
-- **Next step:** Verify anatomy route evidence on successor preface main581857cb in deployment35774559003; retain the incomplete original live verification honestly.
+- **Last verified:** 2026-09-22 (SELF; protected PR merged, successful successor deployment35774559003 at main581857cb; downloaded live artifact10716514261 passes960/960 cases; all eight anatomy/preface records independently inspected, HTTP200, no page overflow, no serious/critical axe violations; prior scientific/render validation retained in review reports)
+- **Summary:** Corrects all identified Chapter 22 geometry, anatomical, work, contact and injury-inference errors, with seven worked exercises and explicit primary-source boundaries. Reopens unsupported prior acceptance; review evidence is bound to 14f1c148. CI exposed two stale figure-census assertions after removing the documented unpaired sketch; the expected counts are corrected without weakening parity checks. Protected successor publication is verified.
+- **Next step:** None for this delivery; broader corpus review continues.
+
 
 ### DL-#4406 · Deploy Website Public-Site Verification Gate
 
