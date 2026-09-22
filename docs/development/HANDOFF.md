@@ -3,7 +3,14 @@
 The user resumed the full technical review on 2026-09-22. Canonical technical
 review continuation is in `AGENT_HANDOFF.md`, section Technical Content Review,
 and `docs/development/DEVELOPMENT_LOG.md`, DL-#4412. Branch
-`fix/technical-review-resume`, commit SELF, PR not created. This checkpoint completes the paired Chapter22 scientific revision and local numerical/print/public-route checks. Final evidence binding, regular PR and protected publication remain pending. See `reports/technical-review/anatomy-joint-review.md` and the canonical turnover records above. #4413 tracks the next preface review.
+`fix/technical-review-resume`, checkpoint SELF, regular PR #4414. The paired
+Chapter 22 scientific revision and local numerical/print/browser checks are
+complete. Source/evidence commit `14f1c1481530f8cf05d20539e18b5c2b19f836ce`
+is pushed and bound in the inventory. Chapter 16's bibliography/reading-links
+carry-forward preserves its prior scientific review. Protected checks, merge
+and exact-main publication remain pending. See
+`reports/technical-review/anatomy-joint-review.md` for the argument and source
+boundaries. Issue #4413 tracks the next preface review.
 
 The following previously merged persona-work handoff is retained for its
 separate scope; it is not the active technical-review task.

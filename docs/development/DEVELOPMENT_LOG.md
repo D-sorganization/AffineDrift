@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4412 · Anatomy and Joint Modeling Scientific Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4412 (Physics #4054; corpus #4021; epic #4009)
-- **PR:** not created
+- **PR:** #4414
 - **Branch:** `fix/technical-review-resume`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch22_anatomy_joint_modeling.tex`, `articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `tests/test_anatomy_joint_rigor.py`, `tests/test_claim_audit_inventory.py`, `reports/technical-review/anatomy-joint-review.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `docs/development/technical-review/corpus-review-index.csv`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; complete paired source review;16 mechanics/edition/label checks and94 combined focused checks pass; full run5368 passed with two stale shared-bibliography digest failures subsequently repaired,79.06% coverage; actual-preamble18-page chapter PDF compiled and all pages visually inspected; Quarto1.8.26 public route rendered;4/4 public browser cases pass, axe clean)
-- **Summary:** Corrects all identified Chapter22 geometry, anatomical, work, contact and injury-inference errors, with seven worked exercises and explicit primary-source boundaries. Reopens unsupported prior acceptance; final review binding and protected publication remain pending.
-- **Next step:** Commit source/evidence checkpoint, bind anatomy and additive shared-bibliography evidence, open regular PR, protected-merge and verify exact-main publication; continue with #4413.
+- **Last verified:** 2026-09-22 (SELF; complete paired source review; 16 mechanics/edition/label checks and 94 combined focused checks pass; full run 5368 passed with two stale shared-bibliography digest failures subsequently repaired, 79.06% coverage; actual-preamble 18-page chapter PDF compiled and all pages visually inspected; Quarto 1.8.26 public route rendered; 4/4 public browser cases pass, axe clean)
+- **Summary:** Corrects all identified Chapter 22 geometry, anatomical, work, contact and injury-inference errors, with seven worked exercises and explicit primary-source boundaries. Reopens unsupported prior acceptance; review evidence is bound to 14f1c148; protected publication remains pending.
+- **Next step:** Source 14f1c148 pushed; anatomy evidence bound and Chapter 16 additive bibliography/reading-links carry-forward verified. Pass PR #4414 checks, merge and verify exact-main publication; continue with #4413.
 
 ### DL-#4406 · Deploy Website Public-Site Verification Gate
 

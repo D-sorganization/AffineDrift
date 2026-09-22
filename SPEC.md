@@ -374,4 +374,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-22 | #4411 | Add persona start paths to learning-paths page with content cluster and workflow mappings (#4409). |
 - 2026-09-14: Removed invalid pip cache from redundant issue closer workflow (#4396).
 
-| 2026-09-22 | #4412 | Correct paired Chapter22 joint/anatomical models, work and clinical inference; add seven worked exercises, source evidence and numerical/print/mobile checks; reopen unsupported review acceptance. |
+| 2026-09-22 | #4414 | Correct paired Chapter22 joint/anatomical models, work and clinical inference; add seven worked exercises, source evidence and numerical/print/mobile checks; reopen unsupported review acceptance. |

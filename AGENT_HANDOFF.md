@@ -80,8 +80,10 @@
   is not complete merely because routes carry reviewed metadata.
 - **Current delivery:** #4412 under Physics #4054, corpus #4021 and epic #4009.
   Branch `fix/technical-review-resume`; taxonomy checkpoint607fae7e is pushed.
-  SELF completes the paired Chapter22 prose, derivations, citations and all seven
-  worked exercises. No PR yet. Route remains deferred until final evidence binding.
+  Source/evidence checkpoint `14f1c1481530f8cf05d20539e18b5c2b19f836ce` is pushed.
+  SELF binds both editions, report, numerical tests and settled rendering evidence
+  to that exact checkpoint; five corrected findings restore reviewed status.
+  Regular PR #4414 is open; protected merge and publication remain pending.
 - **Technical result:** correct joint constraints/rank, anatomical reductions,
   moving shoulder centers, coupled wrist energy, rigid-grip club roll, contact
   power, body counts and limits of clinical inference. The complete rationale,
@@ -93,11 +95,15 @@
   digest failures repaired and covered by that focused rerun. Quarto1.8.26
   public-route build and18-page chapter-only print build pass; all PDF pages
   inspected. Four production desktop/mobile light/dark cases pass, axe clean.
-  Final browser inspection/evidence binding and protected delivery remain.
-- **Next action:** bind the completed anatomy source and rendered verification
-  to a committed checkpoint; rebind Chapter16's shared bibliography dependency
-  with an explicit additive-only carry-forward record. Create a regular PR,
-  replace the SPEC issue placeholder with its PR number, pass protected checks,
+  Settled scrolling rendered all 109 equations in all four cases without display
+  overflow or broken anchors. Protected delivery remains.
+- **Shared dependency:** Chapter16 keeps its original review date and findings.
+  Every old bibliography record and seven other evidence files match
+  a2d482bff6252be13cbced65cddb3b3f353027ac byte-for-byte. Its QMD differs only
+  by the existing On This Site block from 7a0a9986; both link targets exist. Five
+  bibliography entries were added for Chapter22. The dependency now binds
+  to 14f1c148; this is not a new Chapter16 scientific review.
+- **Next action:** push the final PR #4414 evidence update, pass protected checks,
   merge and inspect the exact-main deployment. Then claim and address #4413
   (print/web preface discrepancy) and continue the wider corpus.
 - **Previous delivery verified:** PR4377 merge32010d08d9980896c51f0c93ac875f23eb818556,
