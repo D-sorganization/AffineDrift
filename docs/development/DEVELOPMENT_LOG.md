@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4422 · Putting Launch, Rolling, Slope and Capture
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4422 (measurement #4059; corpus #4021; epic #4009)
+- **PR:** Pending
+- **Branch:** `fix/putting-roll-rigor`
+- **Paths:** `articles/putting-roll-models.qmd`, `tests/test_putting_roll_rigor.py`, `data/trust/claim_audit_inventory.json`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; entire existing article read; 12 independent mechanics/calibration/capture checks pass; article rewrite and render review pending)
+- **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
+- **Next step:** Rewrite the article and reopen its source-only acceptance; validate all worked values and final rendered reading; deliver a regular PR after predecessor publication gates.
+
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
 - **State:** in_review

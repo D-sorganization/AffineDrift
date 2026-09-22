@@ -75,6 +75,11 @@
 
 ## Technical Content Review
 
+- **Current successor:** putting issue #4422, branch `fix/putting-roll-rigor`,
+  starts at force head 4047d917. Twelve independent checks pass; article rewrite
+  and rendered validation remain. Preparation notes and current HANDOFF lead.
+  Prior force implementation details below remain valid for PR #4421.
+
 - **Active:** comprehensive review #4009/#4021; long articles and paired sources
   first, regular PRs only. The goal remains active.
 - **Shipped:** anatomy #4414 and preface #4416, verified on protected main
