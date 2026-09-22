@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4413 · Physics of Golf Preface Scientific Framing
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4413 (Physics #4054; corpus #4021; epic #4009)
+- **PR:** not created
+- **Branch:** `fix/physics-preface-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/main.tex`, `articles/The_Physics_of_Golf/quarto/index.qmd`, `reports/technical-review/physics-preface-review.md`, `reports/technical-review/physics-preface-render-verification.json`, `data/trust/claim_audit_inventory.json`, `tests/test_claim_audit_inventory.py`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; paired plain text matches, preamble/post-preface/TOC boundaries unchanged; 638 title-case sources and citation audit pass; public Quarto build and four browser cases pass, axe clean; seven settled math expressions per case; two print pages inspected with no overflow or unresolved references)
+- **Summary:** Replaces drift-as-flaccidity, momentum-as-force and unsupported skill/control inference with a shared model-conditioned preface connecting geometry, energy, inputs, task authority and evidence.
+- **Next step:** Move the unpushed branch onto main after #4414 merges, commit source/evidence, bind review, create regular PR and verify protected publication; continue the wider corpus.
+
 ### DL-#4412 · Anatomy and Joint Modeling Scientific Review
 
 - **State:** in_review

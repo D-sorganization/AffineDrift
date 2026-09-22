@@ -4,12 +4,13 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 237
-- Deferred: 0
+- Reviewed: 236
+- Deferred: 1
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
+- [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 1 routes
 
 ## Reviewed Evidence
 
@@ -135,7 +136,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | `articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | `articles/The_Physics_of_Golf/quarto/ch32_putting.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/glossary.html` | `articles/The_Physics_of_Golf/quarto/glossary.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/index.html` | `articles/The_Physics_of_Golf/quarto/index.qmd` | 1 |
 | `/articles/theory-part1.html` | `articles/theory-part1.qmd` | 3 |
 | `/articles/theory-part2.html` | `articles/theory-part2.qmd` | 4 |
 | `/articles/theory-part3.html` | `articles/theory-part3.qmd` | 3 |
@@ -378,7 +378,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-adc9d9939455` | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | Reviewed | — | None | None | 0 |
 | `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Reviewed | — | None | None | 0 |
-| `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Reviewed | — | None | None | 0 |
+| `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
 | `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Reviewed | — | None | None | 0 |
 | `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Reviewed | — | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |

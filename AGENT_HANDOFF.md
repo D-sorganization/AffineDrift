@@ -76,49 +76,48 @@
 ## Technical Content Review
 
 - **Active:** the user resumed the complete review on September 22. Continue
-  long-form scientific review with regular PRs and protected merges. The corpus
-  is not complete merely because routes carry reviewed metadata.
-- **Current delivery:** #4412 under Physics #4054, corpus #4021 and epic #4009.
-  Branch `fix/technical-review-resume`; taxonomy checkpoint607fae7e is pushed.
-  Source/evidence checkpoint `14f1c1481530f8cf05d20539e18b5c2b19f836ce` is pushed.
-  SELF binds both editions, report, numerical tests and settled rendering evidence
-  to that exact checkpoint; five corrected findings restore reviewed status.
-  Regular PR #4414 is open; protected merge and publication remain pending.
-- **Technical result:** correct joint constraints/rank, anatomical reductions,
-  moving shoulder centers, coupled wrist energy, rigid-grip club roll, contact
-  power, body counts and limits of clinical inference. The complete rationale,
-  counterexamples and source-reading boundaries are in
-  `reports/technical-review/anatomy-joint-review.md`.
-- **Validation:**16 mechanics/edition/label checks;94 combined mechanics,
-  inventory, deployment-boundary, citation and LaTeX checks pass. Full suite:
-  5368 passed/29 skipped/132 deselected,79.06% coverage; two stale bibliography
-  digest failures repaired and covered by that focused rerun. Quarto1.8.26
-  public-route build and18-page chapter-only print build pass; all PDF pages
-  inspected. Four production desktop/mobile light/dark cases pass, axe clean.
-  Settled scrolling rendered all 109 equations in all four cases without display
-  overflow or broken anchors. CI at 76f0ee1f exposed stale figure census counts
-  after the documented removal of the unpaired anatomy sketch. SELF updates
-  those counts (37 figures, 6 TikZ, 5 remaining missing pairs); no gate is removed.
-  The two CI failures were reproduced locally. Protected delivery remains.
-- **Shared dependency:** Chapter16 keeps its original review date and findings.
-  Every old bibliography record and seven other evidence files match
-  a2d482bff6252be13cbced65cddb3b3f353027ac byte-for-byte. Its QMD differs only
-  by the existing On This Site block from 7a0a9986; both link targets exist. Five
-  bibliography entries were added for Chapter22. The dependency now binds
-  to 14f1c148; this is not a new Chapter16 scientific review.
-- **Next action:** push the final PR #4414 evidence update, pass protected checks,
-  merge and inspect the exact-main deployment. Then claim and address #4413
-  (print/web preface discrepancy) and continue the wider corpus.
-- **Previous delivery verified:** PR4377 merge32010d08d9980896c51f0c93ac875f23eb818556,
-  deployment34730740904, live artifact10309497076 inspected September22:960/960
-  cases pass; all four companion-route records pass with zero overflow and a
-  clean axe scan. DL-#4375 andDL-#4376 are shipped.
-- **Coordination:** session `technical-review-20260922-anatomy`, issue4412 lease
-  5780993804 expires19:29Z; presence11f6e93b expires20:03Z September22. Inbox has
-  no messages/conflicts but reports incomplete evidence from malformed unrelated
-  events. Preserve peer worktrees, immutable source archive, authority pins and
-  unrelated handoff sections. Explicit staging only; old untracked QA artifacts
-  are extensive. Never mutate git during validation.
+  long-form scientific review with regular PRs and protected merges. Reviewed
+  route metadata is not proof that the entire corpus is technically complete.
+- **Anatomy delivery:** regular PR #4414, head
+  `97ae10e17ada589b8a61e5dc19b8011f39d699f5`, corrects both Chapter 22 editions.
+  Its scientific evidence binds to `14f1c1481530f8cf05d20539e18b5c2b19f836ce`.
+  Five corrected findings cover geometry, anatomy, clinical inference, worked
+  models and presentation. See `reports/technical-review/anatomy-joint-review.md`.
+  Local checks include 16 numerical/edition tests, 94 focused checks, an
+  18-page print inspection and four settled browser cases (109 equations each).
+  CI exposed stale figure counts after the documented sketch removal; those
+  were corrected and 58 combined focused checks pass. Protected CI/publication
+  acceptance is pending; inspect the exact PR head before merging.
+- **Current work:** #4413, branch `fix/physics-preface-rigor`, based on the
+  anatomy branch while its checks finish. Paired prefaces now define the affine
+  state derivative, zero-input intervention, energy accounting and task-specific
+  authority, and connect anatomy, contact, muscle and shaft choices. Print and
+  web core prose match under Pandoc plain-text conversion. TOC, print preamble
+  and post-preface material are unchanged; old deep links are preserved.
+  See `reports/technical-review/physics-preface-review.md` and its render record.
+- **Preface validation:** 638 title-case sources and citation checks pass;
+  Quarto public rendering and all four normal browser cases pass with clean axe.
+  Full settled scroll checks render all seven expressions without overflow or
+  broken anchors. Both pages of the final isolated preface PDF were inspected;
+  no overfull box or unresolved reference remains. This is not full-book QA.
+- **Next action:** finish and merge #4414, then move the unpushed preface branch
+  onto remote main. Commit the preface source/report checkpoint, bind its review
+  to those exact bytes, open a regular PR, pass checks, merge and verify exact-main
+  deployment. Next long-form target is #4415: paired ground-reaction-force
+  chapter, whose print edition retains momentum, COP and inference errors.
+  Preserve broad #4054/#4021/#4009 as active.
+- **Evidence boundary:** Chapter 16 retains its original scientific review.
+  Its five added bibliography entries and existing reading-links block were
+  verified as the only dependencies changed since a2d482bf; its evidence now
+  binds to 14f1c148. No new Chapter 16 clinical or scientific acceptance is claimed.
+- **Previous delivery verified:** PR #4377 merge `32010d08d9980896c51f0c93ac875f23eb818556`,
+  deployment 34730740904, artifact 10309497076 inspected September 22: 960/960
+  cases pass, including all four companion-route cases. DL-#4375/#4376 are shipped.
+- **Coordination:** session `technical-review-20260922-anatomy`; #4413 lease
+  5781826002 expires 20:30Z; presence 55a179a1 expires 20:39Z September 22.
+  The inbox has reported no conflicts but incomplete unrelated board evidence.
+  Preserve peer work, immutable sources, authority pins and unrelated handoff
+  sections. Stage explicitly; extensive old untracked QA artifacts remain.
 
 ## Protected Authority
 
