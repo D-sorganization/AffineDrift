@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-22 | #4423 | Added repo-owned future impact-evidence planning with preserved source, Board/resource prerequisites and active numerical/theory scope. No article or empirical qualification changes. |
 | 2026-09-21 | #4407 | Filter third-party YouTube embed localStorage SecurityError pageerrors in the every-page public-site verifier (Fixes #4406). |
 | 2026-09-13 | #4379 | Correct TOC highlighting for nested positioned article sections with document-relative offset calculations and Quarto scroll tracking compatibility (#4370). |
 | 2026-09-13 | #4378 | Enable keyboard activation (Enter, Space) for collapsible Quarto callout headers with idempotent listener binding and click parity (closes #4374). |
