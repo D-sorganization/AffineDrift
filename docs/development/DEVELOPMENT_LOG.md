@@ -27,9 +27,22 @@ reachable from any live state and `abandoned` from `parked`.
 - **PR:** #4423
 - **Paths:** `docs/development/planning/`, `README.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (`3a8998a2` plus PR receipt; catalog, three heavy-hit controls and 637-file title audit pass)
+- **Last verified:** 2026-09-22 (`b09301bd` plus integration of main `9ef76c6e`; catalog, three heavy-hit controls and 637-file title audit pass)
 - **Summary:** Separates unavailable empirical/perceptual obligations from active qualified theory synthesis. Existing source issues and scientific acceptance criteria are preserved.
 - **Next step:** Publish the planning PR and link the verified scope split on #4253.
+### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4420 (measurement #4059; corpus #4021; epic #4009)
+- **PR:** #4421
+- **Branch:** `fix/force-measurement-rigor`
+- **Paths:** `articles/technology-force-measurement.qmd`, `tests/test_force_measurement_rigor.py`, `data/trust/claim_audit_inventory.json`, `tests/test_claim_audit_inventory.py`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; eight findings bound to complete checkpoint 99d1653c with all five evidence digests checked against committed LF bytes)
+- **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
+- **Next step:** Drive regular PR #4421 through protected checks; verify predecessor superposition deployment before merge.
+
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority
 
@@ -42,20 +55,20 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; protected main a6774e33 integrated after exact-tree verification against 7ee71416; final diff excludes prerequisite GRF science; complete article reread;11 independent/existing checks pass; Black100/Ruff/title638 and changed-file quality pass; final four browser cases and416 settled math expressions pass; all21 wide mobile math scrollers reach their endpoint; selected section/equation views inspected)
 - **Summary:** Retains earlier mechanics corrections and adds feasible-reference input sets, constrained inverse-mass and task maps, a circular-guide example and correct reaction/virtual-work language. Repairs three wide or spuriously numbered equation groups.
-- **Next step:** Verify GRF live publication before enabling protected auto-merge on regular PR #4419.
+- **Next step:** PR #4419 merged as 31cdc615; verify live deployment 35782578807 before marking shipped.
 
 ### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4415 (Physics #4054; corpus #4021; epic #4009)
 - **PR:** #4417
 - **Branch:** `fix/ground-reaction-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch15_ground_reaction_forces.tex`, `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `references/proximal-distal-energy.bib`, `tests/test_ground_reaction_derivations.py`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; PR #4417 passed all protected checks and merged as a6774e33; live deployment pending; CI quality gate requested GRAVITY_M_S2 naming; test checkpoint8feeaa11 preserves values/equations; SELF fixes the Windows CRLF/committed-LF digest discrepancy and verifies all seven evidence paths against the frozen checkpoint; all29 mechanics/inventory checks and tracked-Python quality gate pass; six findings previously bound to complete checkpoint dfe90fed; final 19 audit/boundary tests pass; source e0ce6133 pushed; 70 mechanics/contract/LaTeX checks and 34 mechanics/inventory checks pass, Black100/Ruff/title638/citations pass; all13 final PDF pages inspected, four public browser cases pass with clean axe, all118 paired math expressions match and render without clipping/errors; metadata-only Chapter16/22 carry-forward verified)
+- **Last verified:** 2026-09-22 (SELF; PR #4417 passed all protected checks and merged as a6774e33; deployment 35779150741 succeeded; downloaded live artifact 10718336671 passes 960/960 cases across 240 routes, and all four GRF route cases pass with zero overflow or serious/critical axe findings; CI quality gate requested GRAVITY_M_S2 naming; test checkpoint8feeaa11 preserves values/equations; SELF fixes the Windows CRLF/committed-LF digest discrepancy and verifies all seven evidence paths against the frozen checkpoint; all29 mechanics/inventory checks and tracked-Python quality gate pass; six findings previously bound to complete checkpoint dfe90fed; final 19 audit/boundary tests pass; source e0ce6133 pushed; 70 mechanics/contract/LaTeX checks and 34 mechanics/inventory checks pass, Black100/Ruff/title638/citations pass; all13 final PDF pages inspected, four public browser cases pass with clean axe, all118 paired math expressions match and render without clipping/errors; metadata-only Chapter16/22 carry-forward verified)
 - **Summary:** Reconciles paired system boundaries, momentum signs, COP/free moment, work, input-induced reactions, admissible counterfactuals, muscle inference and human evidence; adds eight worked solutions and corrects three bibliographic author lists from primary records.
-- **Next step:** Verify the live deployment of protected main a6774e33 for merged PR #4417.
+- **Next step:** None for this delivery; publication evidence is reports/technical-review/ground-reaction-publication.json.
 
 ### DL-#4413 · Physics of Golf Preface Scientific Framing
 
