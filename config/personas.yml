@@ -1,0 +1,93 @@
+# Persona start paths configuration (issue #4409).
+#
+# Each persona defines a user archetype with their primary goals,
+# mapped to content clusters (from categories.yml) and exact-commit
+# workflow pages (from models/programming/workflows.qmd).
+#
+# This file is validated by tests/test_persona_start_paths.py.
+
+personas:
+  learner:
+    name: "Learner"
+    description: "New to control theory or biomechanics, building foundational knowledge"
+    icon: "📚"
+    content_clusters:
+      - theory-core
+      - reference
+      - resources
+    workflows:
+      - installation-verification
+    primary_path: "learning-path-foundations.html"
+    goal: "Understand the mathematical and physical foundations"
+
+  researcher:
+    name: "Researcher"
+    description: "Academic or scientific focus on theory and methodology"
+    icon: "🔬"
+    content_clusters:
+      - theory-core
+      - tangent-space
+      - inverse-dynamics
+      - motor-control
+    workflows:
+      - reference-double-pendulum-analysis
+      - reference-simulation-report
+    primary_path: "learning-path-control-theory.html"
+    goal: "Deep-dive into theoretical foundations and research methods"
+
+  integrator:
+    name: "Integrator"
+    description: "Software developer integrating AffineDrift tools and APIs"
+    icon: "🔧"
+    content_clusters:
+      - tools
+      - models
+    workflows:
+      - companion-export
+      - installation-verification
+      - program-catalog-export
+    primary_path: "../models/programming/index.html"
+    goal: "Integrate computational tools into your own projects"
+
+  experimentalist:
+    name: "Experimentalist"
+    description: "Hands-on simulation, modeling, and data analysis"
+    icon: "🧪"
+    content_clusters:
+      - models
+      - inverse-dynamics
+      - motor-control
+      - impact-ball-flight
+    workflows:
+      - reference-double-pendulum-simulation
+      - reference-simulation-plot
+      - launch-monitor-import-export
+    primary_path: "../models/programming/programs.html"
+    goal: "Run simulations and analyze experimental data"
+
+  reviewer:
+    name: "Reviewer"
+    description: "Critical evaluation of claims, methodologies, and evidence"
+    icon: "🔍"
+    content_clusters:
+      - critique
+      - theory-core
+    workflows:
+      - companion-export
+      - zero-torque-counterfactual
+    primary_path: "research-reviews.html"
+    goal: "Evaluate scientific claims and contribute critical reviews"
+
+  contributor:
+    name: "Contributor"
+    description: "Contributing to the project: code, content, or community"
+    icon: "🤝"
+    content_clusters:
+      - site-information
+      - tools
+      - resources
+    workflows:
+      - program-catalog-export
+      - companion-export
+    primary_path: "../pages/collaborate.html"
+    goal: "Join the community and contribute to the project"
