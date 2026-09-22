@@ -79,15 +79,18 @@
   long sources and paired editions under #4009/#4021/#4054; use regular PRs only.
 - **Anatomy:** #4414 merged green as 4ac3a34a5d0895a075105f8d0235398881613a8b.
   All protected checks passed (5323 Python tests, 92.85% coverage, eight book
-  builds, browser/axe). Exact-main deploy 35771389008 is running; verify its live
-  evidence before marking DL-#4412 shipped. Scientific checkpoint is 14f1c148.
+  builds, browser/axe). Deploy 35771389008 passed its pre-deploy checks and deployed, but live
+  verification was superseded by preface main; verify both routes in successor
+  deploy 35774559003 before marking DL-#4412 shipped. Scientific checkpoint is 14f1c148.
 - **Preface:** regular PR #4416 at 053f88a55722822c5daa5d6bc785b8d3a53b15a6
   contains the paired revision and evidence bound to f8bda7c3. Anatomy main was
   merged normally, final diff checked and 19 evidence-boundary tests passed.
-  Protected auto-merge is enabled; monitor checks and exact-main publication.
+  Merged with all protected checks green as 581857cb248164564bf66f09d9b132ce8eea6365.
+  Exact-main publication is running in deploy 35774559003.
 - **Current:** #4415, branch `fix/ground-reaction-rigor`, based on the published
-  preface branch. Scientific source e0ce6133 is pushed; no PR yet. SELF saves
-  final render/review evidence and verifies metadata-only dependent carry-forward.
+  preface branch. Scientific source e0ce6133 and complete report/render checkpoint dfe90fed are
+  pushed; no PR yet. SELF binds all six corrected findings to exact evidence bytes
+  at dfe90fed2658ab8b43b6e26a8208591aca150e9d.
   Both original sources were read completely. Print's third-law/sign mistakes,
   omitted club boundary, unconditional work claims, drift-only reaction,
   shoulder-to-GRF shortcut and universal coaching waveform have been replaced.
@@ -104,11 +107,11 @@
   citation audit pass. All 13 final print pages were inspected, with no overflow
   or unresolved references. All 118 paired math expressions match. Four public
   browser cases pass with clean axe; settled math has no clipping, errors or
-  broken anchors after four display groups were split. The chapter route stays
-  deferred until this complete evidence checkpoint is committed and bound.
-- **Next:** bind Chapter 15 to SELF's complete source/report/render checkpoint,
-  then open a regular PR after merging remote main
-  once #4416 lands. Verify anatomy/preface publication in parallel. Preserve
+  broken anchors after four display groups were split. Final 19 inventory and
+  deployment-boundary tests pass; the chapter route is reviewed and source-bound.
+  Publication is still pending; this is not whole-book acceptance.
+- **Next:** commit/push SELF, merge remote main 581857cb normally, then open
+  the regular Chapter 15 PR and pass protected checks. Verify anatomy/preface publication in parallel. Preserve
   broad parent issues as active; source-only metadata does not complete a book.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4415 lease
   5782334386 expires21:05Z; presence2aacab03 expires21:08Z September22. Inbox has
