@@ -26,7 +26,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/zero-torque-counterfactual-rigor`
 - **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
+- **Last verified:** 2026-09-22 (SELF; source/render frozen at e7d8c688 and manifesto dependency verified; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
 - **Next step:** Bind both reviewed routes and dependent audit records to the final committed source/render checkpoint.
 

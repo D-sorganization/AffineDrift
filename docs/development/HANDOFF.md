@@ -11,9 +11,10 @@ All 25 chapter and eight article mobile equation scrolls reach their endpoints.
 Read reports/technical-review/zero-torque-review.md and its render-verification
 JSON for exact scope, derivation, adversarial limits and source access.
 
-Final evidence binding is next: commit these source/report bytes, refresh the
-manifesto intervention dependency at that commit, then carry forward 13 audit
-dependencies with byte comparisons and bind both zero-torque routes. Restore
+Source/render checkpoint e7d8c688 is frozen. The manifesto intervention
+dependency is rebound to it after checking both evidence paths and unchanged
+manifesto source. Next carry forward 13 audit dependencies with byte comparisons
+and bind both zero-torque routes. Restore
 the 219-route census only after binding. Issue #4428 separately tracks the
 manifesto notation-units error; no full-page reacceptance is implied here.
 
