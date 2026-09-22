@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/putting-roll-rigor`
 - **Paths:** `articles/putting-roll-models.qmd`, `tests/test_putting_roll_rigor.py`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; detailed render review pending)
+- **Last verified:** 2026-09-22 (SELF; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
 - **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
-- **Next step:** Complete detailed equation/overview render review and scientific evidence binding; deliver a regular PR after predecessor publication gates.
+- **Next step:** Complete scientific evidence binding to SELF, restore the reviewed census and open a regular PR; wait for force publication before merge.
 
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 

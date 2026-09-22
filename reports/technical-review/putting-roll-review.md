@@ -73,6 +73,13 @@ calibration non-identifiability, groove geometry, finite-ball free fall and
 three integrated worked putts. Black100/Ruff and eighteen inventory tests pass.
 All638 publishable-source title checks pass. The root-configuration render
 passes four production desktop/mobile and light/dark cases with no page overflow
-or serious/critical axe findings. Detailed equation and expanded-overview review
-is pending at this checkpoint. No physical experiment, whole-site scientific
+or serious/critical axe findings. All168 math expressions render in each of four cases, with zero lazy nodes,
+math errors or broken local anchors after actual expression scrolling. All28
+desktop display equations and all four tables at both horizontal endpoints were
+visually inspected. Twelve wide mobile equations and four tables reach their
+horizontal endpoints. All four expanded-overview cases pass serious/critical
+axe checks and have no truncated content. Selected light/dark desktop/mobile
+section views were inspected. The durable render report records exact scope,
+image digests and harness-only recovery steps. Internal links and the changed
+Python quality check pass. No physical experiment, whole-site scientific
 acceptance or print-edition validation is claimed.

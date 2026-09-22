@@ -2,7 +2,9 @@
 
 Branch `fix/putting-roll-rigor` begins at force head 4047d917. SELF saves
 the full putting rewrite, 15 independent passing numerical checks and four
-production browser cases. Detailed equation/overview QA is in progress. Issue #4422 is claimed under #4059/#4021/#4009.
+production browser cases. Detailed equation/overview QA passes: all168 math expressions in four cases,
+28 inspected desktop equations, all table contents, expanded accessibility and
+scroll endpoints. SELF saves the complete scientific/render checkpoint before binding. Issue #4422 is claimed under #4059/#4021/#4009.
 Lease/presence expire 23:09 UTC September 22. Inbox has no reported messages
 or conflicts but is incomplete because of unrelated malformed board records.
 See `technical-review/putting-roll-preparation.md` for derivations, source
