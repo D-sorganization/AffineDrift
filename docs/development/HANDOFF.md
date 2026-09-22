@@ -10,7 +10,8 @@ or conflicts but is incomplete because of unrelated malformed board records.
 See `technical-review/putting-roll-preparation.md` for derivations, source
 access limits and the next steps. The route is reviewed with seven findings bound to complete checkpoint
 a17f5ded. All five evidence paths match committed LF bytes; zero-deferred census
-is restored. Run final audit checks and open a regular PR.
+is restored. Final33 audit/mechanics checks pass; regular PR #4424 is open. Drive
+protected checks and wait for force publication before enabling merge.
 
 Delivery: superposition #4419 is shipped at 31cdc615; deploy 35782578807
 and live artifact 10720600549 passed 960/960 cases. Publication record saved. Force #4421 merged as 9ef76c6e after all protected checks passed. Its tree
