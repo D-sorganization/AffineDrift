@@ -83,7 +83,8 @@
   581857cb; downloaded artifact10716514261 and checked all eight route cases.
   SELF records publication in anatomy-preface-publication.json. The original
   anatomy live check was superseded; only the successor is claimed complete.
-- **GRF delivery:** regular PR #4417, head7ee71416, has protected auto-merge enabled; browser CI remains pending.
+- **GRF delivery:** regular PR #4417 passed all protected checks and merged as
+  a6774e33 on September 22 at 20:15:56 UTC; deployment/live verification is pending.
   Paired science/render checkpointdfe90fed, updated test checkpoint8feeaa11.
   Six findings corrected, 13 print pages inspected,118 paired math expressions,
   four browser cases. CI follow-ups named GRAVITY_M_S2 and corrected the Windows
@@ -107,10 +108,16 @@
   the complete report/render record.
   SELF binds four findings and all four evidence paths to47321eb8 after
   verifying committed LF bytes. Route review is complete; publication is pending.
-- **PR:** regular #4419 is open; SELF records its dependency on #4417.
-- **Next:** merge #4417 after protected checks; integrate main normally into
-  #4419 and verify its final diff excludes the prerequisite GRF changes. Keep delivery and publication gates
-  separate; anatomy/preface publication is now verified.
+- **PR:** regular #4419 is open. SELF integrates protected main a6774e33 by
+  ordinary merge after verifying its tree exactly equals prerequisite head
+  7ee71416. The four turnover conflicts retain the later superposition and
+  anatomy/preface publication records; the final diff excludes GRF science.
+- **Next:** verify the GRF live deployment before enabling #4419 auto-merge.
+  Keep delivery and publication gates separate.
+- **Queued:** #4420 under measurement #4059 will correct the long force-
+  measurement article. Primary-source preparation is saved in
+  docs/development/technical-review/force-measurement-preparation.md; no source
+  edits or completed review are claimed. Check claim and lease before editing.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4418 lease
   5782825163 and presencee4366cf4 expire21:40Z September22. Inbox has no reported
   messages/conflicts but incomplete unrelated board evidence. Preserve peer

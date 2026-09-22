@@ -1,20 +1,26 @@
 # Current Technical Review Checkpoint — #4418
 
 Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
-`DEVELOPMENT_LOG.md`, DL-#4418/#4415/#4413/#4412. Branch
-`fix/superposition-feasible-inputs`, checkpoint SELF, regular PR4419. Complete
-standalone-article reread and remaining feasible-input/contact/task corrections
-are saved in source checkpointa2cb282d with11 passing mechanics checks. SELF
-saves the final report/render record: four cases,416 expressions,21 verified
-mobile math scrollers and selected visual inspections. SELF binds four findings
-and all four evidence paths to complete checkpoint47321eb8 using verified
-committed LF bytes. SELF records regular PR4419; merge GRF first, integrate main normally and
-verify the final superposition-only diff.
-GRF regular PR4417 at7ee71416 awaits protected CI after a gravity-constant naming
-fix and committed-LF evidence correction. Science/rendering is unchanged.
-Anatomy and preface are shipped: successor deploy35774559003 passed960/960;
-eight relevant live route records were inspected and saved in
-reports/technical-review/anatomy-preface-publication.json by SELF.
+`docs/development/DEVELOPMENT_LOG.md`, DL-#4418/#4415/#4413/#4412.
+Branch `fix/superposition-feasible-inputs`, checkpoint SELF, regular PR #4419.
+The superposition reread, eleven mechanics checks and four-case render review
+are complete; four findings bind to committed LF checkpoint 47321eb8.
+
+GRF PR #4417 passed all protected checks and merged as a6774e33 on September 22
+at 20:15:56 UTC. SELF integrates that protected main by ordinary merge after
+verifying its tree exactly equals prerequisite head 7ee71416. Four turnover
+conflicts retain the later article/publication records; no scientific merge
+resolution was needed. Check the final diff and nineteen evidence/boundary
+tests, then push. Verify GRF live publication before enabling #4419 auto-merge.
+
+Anatomy and preface are shipped: successor deploy 35774559003 passed 960/960;
+eight relevant live cases are recorded in anatomy-preface-publication.json.
+Queued #4420 has detailed primary-source preparation in
+`docs/development/technical-review/force-measurement-preparation.md`, including
+both COP height-sign errors, standards, instrument physics and misattributed
+study statistics. No force-measurement source edits or completed review yet;
+check claim and post lease before implementation.
+
 Keep the broader goal active. No whole-book/corpus completion is claimed.
 
 The following previously merged persona-work handoff is retained for its
