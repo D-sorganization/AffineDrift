@@ -20,15 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4420 (measurement #4059; corpus #4021; epic #4009)
+- **PR:** #4421
 - **Branch:** `fix/force-measurement-rigor`
 - **Paths:** `articles/technology-force-measurement.qmd`, `tests/test_force_measurement_rigor.py`, `data/trust/claim_audit_inventory.json`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; eight findings bound to complete checkpoint 99d1653c with all five evidence digests checked against committed LF bytes)
 - **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
-- **Next step:** Integrate protected main and open a regular PR; keep superposition live publication as the predecessor gate.
+- **Next step:** Drive regular PR #4421 through protected checks; verify predecessor superposition deployment before merge.
 
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority

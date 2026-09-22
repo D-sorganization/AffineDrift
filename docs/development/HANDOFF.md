@@ -1,6 +1,7 @@
 # Current Technical Review Checkpoint — #4420
 
-Branch `fix/force-measurement-rigor` starts at superposition head f5e8dca1.
+Regular PR #4421 uses branch `fix/force-measurement-rigor`. Protected main
+31cdc615 is integrated by normal merge 7cac4aad, with no source changes.
 SELF saves the completed force-measurement source review, eight finding groups,
 independent checks, article-scoped reading fixes and final local render evidence.
 The route is now reviewed, with eight findings bound to complete checkpoint
@@ -11,8 +12,10 @@ The zero-deferred census test is restored, the audit is regenerated, and all
 GRF PR #4417 is shipped at main a6774e33: deploy 35779150741 and live artifact
 10718336671 passed all 960 cases. The publication record is committed here.
 Superposition PR #4419 merged as 31cdc615; deploy 35782578807 is pending.
-Protected main has the same tree as f5e8dca1. Integrate it normally after this
-checkpoint; preserve this later turnover when resolving overlapping documents.
+Protected main has the same tree as f5e8dca1; merge conflicts only repeated
+predecessor turnover and were resolved by preserving the later force review.
+Final PR diff excludes superposition science. Drive #4421 checks and wait for
+the superposition live gate before merging; then verify its own live revision.
 
 Issue #4420 is under measurement #4059, corpus #4021 and epic #4009. Lease expires
 22:21 UTC; renewed presence 9730b845 expires 22:52 UTC September 22. The inbox

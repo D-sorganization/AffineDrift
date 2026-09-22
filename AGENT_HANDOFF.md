@@ -89,13 +89,14 @@
   35782578807 is pending. Protected main has the same tree as f5e8dca1. Four
   scientific findings remain bound to 47321eb8; no evidence rebind is required.
 - **Current implementation:** #4420 under measurement #4059, branch
-  `fix/force-measurement-rigor`. SELF saves the complete article reread, eight
+  `fix/force-measurement-rigor`, regular PR #4421. SELF saves the complete article reread, eight
   corrected finding groups, independent numerical checks and final render review.
   Article-scoped CSS fixes the inaccessible expanded overview and preserves
   readable math. The report records full-paper versus abstract access limits.
 - **Next:** the article, CSS, tests, review and render records now bind to 99d1653c
-  using committed LF bytes. The zero-deferred census is restored. Normally merge protected main before
-  opening the next regular PR. Verify superposition live publication first.
+  using committed LF bytes. The zero-deferred census is restored. Protected main 31cdc615 is integrated by normal merge 7cac4aad; final diff
+  excludes superposition science. Drive #4421 checks and verify predecessor
+  superposition live publication before merging.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4420 lease
   5783527746 expires 22:21 UTC, presence 9730b845 expires 22:52 UTC September 22.
   Inbox reports no messages/conflicts but incomplete unrelated board evidence.
