@@ -1,5 +1,9 @@
 # Agent Handoff — AffineDrift
 
+Current technical review: paired IAA issue4425 is fully rewritten and locally
+rendered; immutable evidence binding remains. See docs/development/HANDOFF.md
+for exact checks, disk recovery and force/putting publication dependencies.
+
 ## Deferred Impact Evidence - 2026-09-22
 
 - Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-validation-planning`.

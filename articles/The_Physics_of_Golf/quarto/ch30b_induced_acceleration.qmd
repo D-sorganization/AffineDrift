@@ -1,21 +1,21 @@
 ---
-description: "A model-bounded guide to induced-acceleration term attribution and its limits."
+pagetitle: "Induced Acceleration Analysis"
+description: "Derive constrained acceleration attribution, physical output projection, posture-dependent coupling, and the limits of force-history and muscle-role inference."
+bibliography: ../golf_physics.bib
+css:
+  - ../../../css/articulated-body.css
+  - ../../../css/force-measurement.css
 ---
 
-
-# Induced Acceleration Analysis: Quantifying Who Moves What {#sec-30b_induced_acceleration}
-
-It is not enough to know what forces are present; one must know what each force *does*.
+# Induced Acceleration Analysis {#sec-30b_induced_acceleration}
 
 ::: {.callout-note}
 ## The Question Behind This Chapter
+A golfer's wrist can accelerate even when the net wrist moment is zero. Conversely, a large wrist moment need not produce a large increase in clubhead speed. The explanation lies in the coupled mechanics of the whole system: mass distribution, posture, current motion, external support and the point whose acceleration we ask about.
 
-In the previous chapter, we described the kinetic chain as a sequential cascade of energy from proximal segments (hips, torso) to distal segments (arms, wrists, club). A narrower, model-bounded question is: under one declared coordinate system, contact model, and force partition, how is the instantaneous clubhead acceleration ledger divided among hip torque, shoulder torque, gravity, velocity terms, constraints, and residuals? That ledger does not identify a unique cause.
+**Induced acceleration analysis** (IAA) computes how a specified force term enters a model's instantaneous acceleration. It connects the force accounting of earlier chapters to motion without mistaking a sequence of segment-speed peaks for a measured sequence of energy transfers. Its useful question is precise: at this state, in this model, how do the declared inputs and other terms combine to produce the chosen output acceleration?
 
-This chapter introduces a technique from biomechanics research called **induced acceleration analysis** (IAA). At a frozen state, a declared right-hand-side force partition can be mapped linearly through the constrained forward-dynamics operator. Its terms sum to the model's acceleration when constraints, contact reactions, and residuals are handled consistently. The terms are calculations under that convention, not observations of forces literally acting alone.
-
-Induced acceleration analysis was pioneered by @ZajacGordon1989 for studying muscle function in multi-joint movements and was extended into a comprehensive framework for walking by @Zajac2002, @Zajac2003. The technique has since been applied to throwing [@Hirashima2008kinetic, @Hirashima2007control, @HirashimaOhtsuki2008], gait pathology [@RileyKerrigan1999, @Neptune2001], sit-to-stand transfers [@Caruthers2016], cycling [@Schutte1993], and postural control [@Challis2011]. This chapter brings induced acceleration analysis into the golf swing for the first time, connecting it to the control-affine framework developed in earlier chapters.
-
+The method has a substantial biomechanics history, including the review by [@ZajacGordon1989], throwing analysis by [@Hirashima2008kinetic], and walking simulations by [@Neptune2001]. Golf also has prior acceleration-partition research: [@Takagi2021pelvis] analyzed pelvis rotation in skilled golfers. This chapter develops the mechanics and their connection to affine control; it does not claim the first application to golf.
 :::
 
 {{< include ../../../_includes/induced-acceleration-attribution-contract.qmd >}}
@@ -24,313 +24,288 @@ Induced acceleration analysis was pioneered by @ZajacGordon1989 for studying mus
 
 ### Starting From the Manipulator Equation
 
-Recall from [Chapter 4](./ch04_forces_and_torques.qmd#sec-04_forces_and_torques) that the equations of motion for an $n$-degree-of-freedom mechanical system take the form:
+[]{#instantaneous-superposition-of-accelerations}
+[]{#what-does-induced-acceleration-actually-mean}
+[]{#instantaneous-effects-what-the-current-torques-produce-right-now}
+First consider independent generalized coordinates $q$, with generalized velocity $v=\dot q$. Our sign convention puts all retained non-inertial terms on the right:
 
 $$
-\boldsymbol{M}(\boldsymbol{q}) \ddot{\boldsymbol{q}} = \boldsymbol{\tau}_{\text{muscle}} + \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}}) + \boldsymbol{g}(\boldsymbol{q})
+M(q)\ddot q=Q_u+Q_v+Q_g+Q_p+Q_e+Q_r.
 $$ {#eq-iaa_eom}
 
-where $\boldsymbol{M}(\boldsymbol{q})$ is the mass (inertia) matrix, $\boldsymbol{q}$ is the declared vector of independent generalized coordinates, $\boldsymbol{\tau}_{\text{muscle}}$ is a model-assigned generalized-force term (an anatomical muscle term only when an actuator map and identifiability contract support that label), $\boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})$ collects the declared velocity-dependent terms, and $\boldsymbol{g}(\boldsymbol{q})$ is the gravity term under the stated sign convention. Contact, passive, constraint, and residual terms must also appear when the model retains them.
+Here $Q_u$ denotes applied control, $Q_v$ the velocity-dependent inertial terms, $Q_g$ gravity, $Q_p$ passive constitutive forces, $Q_e$ specified external loads, and $Q_r$ residual forces used to reconcile model and data. These categories must not overlap. If a conventional equation uses $M\ddot q+C(q,v)v+g(q)=Bu+Q_e$, then our convention has $Q_v=-Cv$, $Q_g=-g$, and $Q_u=Bu$.
 
-The critical step is to solve for accelerations by premultiplying both sides by $\boldsymbol{M}^{-1}(\boldsymbol{q})$:
+For a regular independent-coordinate model, $M$ is symmetric positive definite. Solving the coupled system gives
 
 $$
-\boxed{\ddot{\boldsymbol{q}} = \boldsymbol{M}^{-1}(\boldsymbol{q}) \left[ \boldsymbol{\tau}_{\text{muscle}} + \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}}) + \boldsymbol{g}(\boldsymbol{q}) \right]}
+\ddot q=M^{-1}Q,\qquad Q=\sum_k Q_k.
 $$ {#eq-iaa_forward}
 
-For independent minimal coordinates with a regular kinetic-energy metric, $\boldsymbol{M}(\boldsymbol{q})$ is symmetric positive definite and invertible. Redundant coordinates or active constraints instead require a declared constrained solve; writing a bare inverse is not sufficient. At a fixed state and fixed active-set convention, the resulting force-to-acceleration map is linear in the declared right-hand-side terms.
-
-::: {.callout-important}
-## Instantaneous Superposition of Accelerations
-
-At any frozen instant in time (fixed $\boldsymbol{q}$ and $\dot{\boldsymbol{q}}$), the total acceleration $\ddot{\boldsymbol{q}}$ is the sum of the accelerations induced by each individual force source:
+Implementations should factor and solve with $M$, rather than explicitly form its inverse. The inverse notation identifies the mathematical operator. A floating base can have an invertible mass matrix even though some coordinates are unactuated; underactuation and singular inertia are different conditions.
 
 $$
-\ddot{\boldsymbol{q}} = \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{\tau}_{\text{muscle}}}_{\text{muscle-induced}} + \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})}_{\text{velocity-induced}} + \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{g}(\boldsymbol{q})}_{\text{gravity-induced}}
+\ddot q=\sum_k a_k,\qquad a_k=M^{-1}Q_k.
 $$ {#eq-iaa_superposition}
 
-Each term can be computed independently. Furthermore, the muscle torque vector can itself be decomposed into contributions from individual muscles or individual joints:
+This superposition is exact at the *same* state and parameters. It does not add together trajectories simulated under different inputs. Nor does it authorize dividing a joint torque by that joint's isolated inertia: the full coupled solve is essential.
+
+### What a Muscle Label Requires
+Net joint moments inferred from inverse dynamics are not individual muscle forces. If a muscle model supplies forces $F_i$ and generalized moment-arm columns $r_i(q)$, its actuator terms are $Q_i=r_iF_i$. Many muscle-force combinations can generate the same net moment, including antagonistic co-contraction. Optimization, activation dynamics, EMG constraints and other measurements can narrow that ambiguity, but their assumptions remain part of the result.
+
+The choice of boundary matters equally. A grip wrench is external to a club-only model and internal to a combined golfer--club model. Counting it as both a specified load and a separately solved internal reaction duplicates the same interaction. The reader must be able to trace every force to one place in the accounting.
+
+### Constraints Add a Baseline
+Suppose a smooth, fixed contact mode imposes independent acceleration constraints $A\ddot q=b$. For a stationary holonomic constraint $\phi(q)=0$, $A=\partial\phi/\partial q$ and $b=-\dot A v$. The state must already satisfy the position and velocity constraints. With the reaction convention $A^{\mathsf T}\lambda$, solve
 
 $$
-\boldsymbol{\tau}_{\text{muscle}} = \sum_{k=1}^{m} \boldsymbol{\tau}_k
+\begin{aligned}
+ M\ddot q&=Q+A^{\mathsf T}\lambda,\\
+ A\ddot q&=b.
+ \end{aligned}
 $$
 
-where $\boldsymbol{\tau}_k$ is the torque vector produced by the $k$-th muscle (or the net torque at the $k$-th joint). Since $\boldsymbol{M}^{-1}$ is linear:
+Substitution yields the Schur complement $W=AM^{-1}A^{\mathsf T}$ and
 
 $$
-\ddot{\boldsymbol{q}}_{\text{muscle}} = \sum_{k=1}^{m} \boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{\tau}_k = \sum_{k=1}^{m} \ddot{\boldsymbol{q}}_k
+\begin{aligned}
+ \lambda&=W^{-1}(b-AM^{-1}Q),\\
+ P&=M^{-1}-M^{-1}A^{\mathsf T}W^{-1}AM^{-1},\\
+ a_c&=M^{-1}A^{\mathsf T}W^{-1}b,\\
+ \ddot q&=PQ+a_c.
+ \end{aligned}
 $$
 
-Each $\ddot{\boldsymbol{q}}_k = \boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{\tau}_k$ is the term assigned to the $k$-th declared generalized-force channel. The sum recovers the declared applied-force contribution exactly. Calling a channel a muscle requires an explicit muscle-to-generalized-force map and identification evidence.
+These formulas assume positive-definite $M$ and full row rank of $A$. Redundant constraints require a consistent rank treatment, not an unexplained inverse of a singular matrix. Quaternion coordinates also require their proper velocity map; the simplifying convention $v=\dot q$ is not universal.
 
-:::
+The force-to-acceleration map is **affine**, because $a_c$ need not vanish. The correct partition is $\ddot q=\sum_k PQ_k+a_c$: count the baseline once. Each source increment satisfies $A(PQ_k)=0$, whereas $Aa_c=b$. Solving a full constrained problem for every isolated force and summing those solutions would count the curvature baseline repeatedly. Although $P$ is symmetric positive semidefinite, it is not generally an idempotent Euclidean projection; it has inverse-inertia units.
 
-::: {.callout-note}
-## What Does "Induced Acceleration" Actually Mean?
+For example, a 2 kg particle at $q=(1,0)$ m on a fixed 1 m circular guide has velocity $v=(0,3)$ m/s. Taking $A=(1,0)$, the acceleration constraint is $\ddot q_x=-9$ m/s$^2$. The solution is
 
-Imagine you could freeze time at one instant during the downswing. At that instant, multiple forces act on the golfer-club system: hip torque, shoulder torque, wrist torque, gravity, and the centrifugal and Coriolis forces arising from the current velocities.
+$$
+\ddot q=(-9,F_y/2)^{\mathsf T},\qquad \lambda=-18-F_x.
+$$
 
-Induced acceleration analysis asks how the frozen-state operator maps one declared term---say, a hip generalized-torque channel---while the state, active constraints, and partition convention are held fixed. This algebraic term is often called the "acceleration induced by the hip torque." It is not automatically the result of a realizable intervention that removes other forces; such an intervention must re-solve contact and constraints.
+The radial acceleration is present even with zero applied force, while changing $F_x$ changes the reaction. This is a bilateral guide example. A unilateral contact must also pass its reaction-sign and friction-capacity conditions. If the required contact cannot persist, the active mode must change and this frozen operator no longer describes the realizable response.
 
-This is not a thought experiment about what *would* happen over time if we only applied one force (that would be a different and much more complicated question, because the system's state would diverge). It is a precise statement about the *instantaneous* contribution of each force to the total acceleration at one frozen moment.
+### From Joint Acceleration to Clubhead Acceleration
+Let $p(q)$ be a point expressed in a fixed inertial frame and $J=\partial p/\partial q$. Then
 
-:::
+$$
+\ddot p=J\ddot q+\dot Jv
+         =\sum_k JPQ_k+Ja_c+\dot Jv.
+$$
+
+The last term is the kinematic curvature of the output map. Joint angular acceleration can be zero while a rotating clubhead has substantial centripetal acceleration. Thus a joint-coordinate ledger cannot simply be renamed a clubhead-acceleration ledger.
+
+For two force choices at the *same* state and mode, the baseline cancels: $\Delta\ddot p=JP\Delta Q$. This is often the clearest sensitivity to report. Use a feasible reference load when zero force would violate the contact conditions. For clubhead speed, project the total acceleration along its velocity: $\dot s=\hat v_p^{\mathsf T}\ddot p$ when $s=\|\dot p\|>0$. A large acceleration normal to motion bends the path without increasing speed at that instant. At zero speed this unit-tangent formula is undefined.
 
 ### Connection to the Control-Affine Framework {#sec-iaa_affine_connection}
 
-Readers who have followed the development in [Chapter 5](./ch05_affine_structure.qmd#sec-05_affine_structure) will recognize that @eq-iaa_superposition is closely related to the control-affine decomposition:
+[]{#drift-control-and-induced-acceleration}
+[]{#instantaneous-and-cumulative-terms-are-not-generally-identical-to-control-and-drift}
+[]{#a-unified-framework}
+When $Q=Q_0(q,v)+B(q)u$, the local constrained equations give
 
 $$
-\dot{\boldsymbol{x}} = \underbrace{\boldsymbol{f}(\boldsymbol{x})}_{\text{drift}} + \underbrace{\boldsymbol{G}(\boldsymbol{x}) \boldsymbol{u}}_{\text{control}}
+\frac{d}{dt}\begin{bmatrix}q\\v\end{bmatrix}
+ =\underbrace{\begin{bmatrix}v\\PQ_0+a_c\end{bmatrix}}_{f(x)}
+ +\underbrace{\begin{bmatrix}0\\PB\end{bmatrix}}_{G(x)}u.
 $$
 
-For a particular unconstrained partition, the acceleration block of the drift field may contain velocity-dependent and gravity terms, while $\boldsymbol{G}(\boldsymbol{x})\boldsymbol{u}$ maps the declared applied inputs. Passive forces, contact, constraints, internal states, and residuals remain in the complete autonomous field or constrained solve according to the declared plant. A control channel is not synonymous with a measured muscle input.
+IAA and affine control share this frozen-state input map when they describe the same plant and input. The drift includes the kinematic block $v$, all retained autonomous forces and the constraint baseline. It is not just a velocity-dependent torque. Passive tissue forces and muscle activation or tendon states can enlarge the autonomous system. A generalized-moment input is not interchangeable with neural excitation; whether the enlarged plant is affine in that excitation must be derived from its actuator equations.
 
-The connection is direct: **the biomechanics community's "induced acceleration analysis" is the instantaneous superposition that arises naturally from the control-affine structure of mechanical systems.** Both frameworks exploit the same mathematical fact---that forces map linearly to accelerations at each frozen state---but they were developed independently by different research communities. The control-affine formulation comes from nonlinear control theory @Murray1994, @BulloLewis2004, while induced acceleration analysis was developed in the biomechanics and rehabilitation literature @ZajacGordon1989, @Zajac2002.
+Contact switches, impacts and input-dependent mode changes require a hybrid or nonsmooth description. The equation above is a mode-local statement, not a global proof of control affinity through every phase of a golf swing.
 
-::: {.callout-tip}
-## Drift, Control, and Induced Acceleration
+## Dynamic Coupling and Posture {#sec-dynamic_coupling}
 
-**In the control-affine framework:**
+### Why One Torque Can Accelerate Several Coordinates
 
-- **Drift** = the complete autonomous acceleration of the declared effective plant when applied generalized control is zero, including every retained inertial, gravitational, passive, contact, constraint, and internal-state term.
-- **Control** = additional acceleration from declared applied generalized inputs
-
-**In induced acceleration analysis:**
-
-- **Velocity-dependent acceleration** = $\boldsymbol{M}^{-1} \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})$
-- **Gravity-induced acceleration** = $\boldsymbol{M}^{-1} \boldsymbol{g}(\boldsymbol{q})$
-- **Muscle-induced acceleration** = $\boldsymbol{M}^{-1} \boldsymbol{\tau}_{\text{muscle}}$
-
-These expressions coincide only for the same declared state, coordinates, actuator map, constraints, contact mode, and force partition. The complete drift is the autonomous vector field of the declared plant, not necessarily just velocity and gravity, and the control term is an applied-input contribution rather than identified muscular effort.
-
-:::
-
-## Dynamic Coupling: A Declared Joint Torque Can Affect Multiple Coordinates {#sec-dynamic_coupling}
-
-One of the most important and initially counterintuitive consequences of the equations of motion is **dynamic coupling**: a torque applied at one joint produces accelerations at *every* joint in the kinematic chain, not just the joint where the torque is applied.
-
-### Why This Happens
-
-Consider a two-joint system (shoulder and elbow) in a horizontal plane. If we apply only a shoulder flexion torque $\tau_1$ (with $\tau_2 = 0$), the induced accelerations are:
+[]{#why-this-happens}
+[]{#posture-dependence-the-same-torque-different-results}
+[]{#configuration-dependent-modeled-actuator-terms}
+Write $H=M^{-1}$ in the unconstrained case. For a two-coordinate torque increment,
 
 $$
-\begin{bmatrix} \ddot{\theta}_1 \\ \ddot{\theta}_2 \end{bmatrix} = \boldsymbol{M}^{-1}(\boldsymbol{q}) \begin{bmatrix} \tau_1 \\ 0 \end{bmatrix} = \begin{bmatrix} A_{11} \tau_1 \\ A_{21} \tau_1 \end{bmatrix}
+\delta\ddot q=H\begin{bmatrix}\delta\tau_1\\0\end{bmatrix}
+ =\begin{bmatrix}H_{11}\delta\tau_1\\H_{21}\delta\tau_1\end{bmatrix}.
 $$ {#eq-iaa_coupling}
 
-where $A_{ij}$ denotes the $(i,j)$ element of $\boldsymbol{M}^{-1}(\boldsymbol{q})$. The shoulder experiences an acceleration $A_{11} \tau_1$ (the *direct* effect), but the elbow also experiences an acceleration $A_{21} \tau_1$ (the *remote* or *induced* effect). The off-diagonal element $A_{21}$ is generally nonzero because the segments are physically linked: applying a torque at the shoulder creates a reaction force at the elbow joint, which accelerates the forearm.
+Off-diagonal entries allow remote acceleration. They are often nonzero, but physical connection does not guarantee a nonzero response at every coordinate in every posture. The analogous constrained map is $P$, and the physical point response uses $JP$.
 
-This phenomenon was articulated by @ZajacGordon1989 in a model-bounded review: interpreting a muscle-assigned term in multi-articular movement requires accounting for constraint reactions that propagate through the declared chain. A modeled actuator crossing only the shoulder can receive nonzero terms at elbow, wrist, and club coordinates through the chosen coupling operator. That calculation does not identify an anatomical source without the required actuator and measurement contract.
-
-### Posture Dependence: The Same Torque, Different Results
-
-A second important finding, emphasized in the work of @Hirashima2011application, is that the induced accelerations depend on the current posture $\boldsymbol{q}$ of the entire system, because $\boldsymbol{M}^{-1}(\boldsymbol{q})$ changes with configuration.
-
-Consider the shoulder internal rotation torque applied to a three-segment upper limb model. When the elbow is fully extended (so the entire limb forms a straight line), the principal axes of inertia of the distal chain align with the shoulder joint axes. In this configuration, the shoulder internal rotation torque produces *only* internal rotation---there is a clean one-to-one mapping from torque to acceleration.
-
-However, when the elbow is flexed at $90^{\circ}$ in the cited model, the principal axes of inertia no longer align with its joint coordinates. The same declared shoulder-torque channel then receives nonzero internal-rotation, abduction, and horizontal-extension acceleration components @Hirashima2011application. These are coordinate- and model-reported terms, not a posture-independent anatomical function.
-
-::: {.callout-important}
-## Configuration-Dependent Modeled Actuator Terms
-
-The term assigned to a modeled actuator depends on:
-
-1. The magnitude and direction of the torque vector produced by the muscle (determined by anatomy and moment arms).
-2. The current posture of the *entire* kinematic chain (which determines $\boldsymbol{M}^{-1}(\boldsymbol{q})$).
-
-Changing posture---even at remote coordinates---can change the model term. This supports a configuration-sensitivity hypothesis; it does not establish equal muscular effort across golfers, proper form, a unique cause, or an intervention effect.
-
-:::
-
-### The Induced Acceleration Index
-
-@Challis2011 formalized the configuration-dependent coupling between joints by introducing the **induced acceleration index** (IAI). For a system where joint $j$ is "active" (has an applied torque) and joint $k$ is "inactive" (has no applied torque), the IAI quantifies the potential of the active joint to accelerate the inactive joint:
+Consider two uniform planar rods, each of length 1 m and mass 1 kg, pinned at the proximal end. Their center-of-mass inertias are $1/12$ kg m$^2$. Let $q_1$ measure the first rod from vertically downward, and $q_2$ the second rod relative to the first. The mass matrix, in kg m$^2$, is
 
 $$
-\text{IAI}_{j \to k} = \left| M_{kk}^{-1} M_{kj} \right|
+M(q_2)=\begin{bmatrix}
+ 5/3+\cos q_2&1/3+\tfrac12\cos q_2\\
+ 1/3+\tfrac12\cos q_2&1/3
+ \end{bmatrix}.
+$$
+
+At $q_2=0$, a unit proximal torque increment produces $(12/7,-30/7)$ rad/s$^2$; a unit distal torque produces $(-30/7,96/7)$ rad/s$^2$. The remote gains are equal because $H$ is symmetric. At $q_2=\arccos(-2/3)$, however, the matrix is diagonal and the same proximal increment produces $(1,0)$ rad/s$^2$. Connected rods can have zero instantaneous cross-acceleration. These manufactured states establish mechanics, not an optimal golf posture.
+
+### Normalized Coupling Is Not Nonreciprocal Mobility
+
+[]{#the-induced-acceleration-index}
+Challis introduced an induced-acceleration index for joint coupling [@Challis2011]. To avoid an ambiguous inverse-element convention, we derive a specifically defined two-coordinate ratio here. Under a force increment only at coordinate 1, the unforced second row gives $M_{21}\delta\ddot q_1+M_{22}\delta\ddot q_2=0$. Therefore
+
+$$
+R_{1\to2}=\left|\frac{\delta\ddot q_2}{\delta\ddot q_1}\right|
+ =\left|\frac{H_{21}}{H_{11}}\right|
+ =\left|\frac{M_{21}}{M_{22}}\right|.
 $$ {#eq-iai}
 
-This dimensionless index depends only on the system's configuration and inertial properties, not on the magnitudes of the torques. It reveals the *structural* coupling between joints.
-
-For a declared quiet-standing model, @Challis2011 reported an ankle-to-hip index more than 12 times the reverse index. This model-reported structural ratio does not identify the primary neural control strategy or establish necessity or sufficiency.
-
-Comparable asymmetries in a golf model are a hypothesis to calculate, not a result established here. Any such result must use the normative attribution record above and must not be transferred from quiet standing to human swing technique without qualification.
-
-## Instantaneous Effects Versus Cumulative Effects {#sec-instantaneous_cumulative}
-
-One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between **instantaneous effects** and **cumulative effects**. This distinction was developed most clearly in the work of @Hirashima2008kinetic and @Hirashima2011application in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in [Chapter 5](./ch05_affine_structure.qmd#sec-05_affine_structure).
-
-### Instantaneous Effects: What the Current Torques Produce Right Now
-
-The modeled applied-input term at time $t$ is:
+The denominator is the *mass-matrix entry* $M_{22}$, not the inverse-matrix entry $H_{22}$. This ratio excludes the common acceleration baseline. With multiple unforced coordinates indexed by $\mathcal P$, use the block relation
 
 $$
-\ddot{\boldsymbol{q}}_{\text{muscle}}(t) = \boldsymbol{M}^{-1}(\boldsymbol{q}(t)) \boldsymbol{\tau}_{\text{muscle}}(t)
+\delta\ddot q_{\mathcal P}
+ =-M_{\mathcal P\mathcal P}^{-1}M_{\mathcal P1}\delta\ddot q_1.
 $$
 
-This is a frozen-state algebraic quantity. It reports the acceleration term assigned to the declared generalized input under the model and partition. It does not simulate muscles vanishing, because that intervention could change activation, passive force, constraint reactions, and contact. Direct and remote labels describe coordinate components of this term, not unique anatomical effects.
+Independent elementwise divisions generally fail because those passive coordinates couple to one another. Additional constraints require the constrained operator instead of this unrestricted block formula.
 
-### Cumulative Effects: The Legacy of Past Forces
+For the straight two-rod model, $R_{1\to2}=2.5$ and $R_{2\to1}=0.3125$. Their ratio is eight although the equal-torque cross gains are reciprocal. Different normalization denominators explain the apparent directional asymmetry. Ratios are dimensionless only for commensurate coordinates, and rescaling coordinates changes them. Mixed rotational and translational coordinates require explicit units or a justified metric. The more-than-twelvefold quiet-standing index difference reported in the abstract of [@Challis2011] should therefore remain attached to that study's definition and model; it does not establish a golf or neural-control strategy.
 
-The velocity-dependent term $\boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})$ depends on the current generalized velocities. Those velocities reflect prior dynamics, inputs, constraints, contact transitions, and initial conditions, but the frozen-state term does not uniquely apportion that history. The corresponding ledger entry is:
+### Coordinates and Physical Responses
+Under a constant invertible change $q=Tz$, virtual work and kinetic energy give
 
 $$
-\ddot{\boldsymbol{q}}_V(t) = \boldsymbol{M}^{-1}(\boldsymbol{q}(t)) \boldsymbol{V}(\boldsymbol{q}(t), \dot{\boldsymbol{q}}(t))
+M_z=T^{\mathsf T}M_qT,\quad Q_z=T^{\mathsf T}Q_q,\quad J_z=J_qT.
 $$
 
-It is often described as a **cumulative** term because it depends on the current velocity state. Model-bounded language must not relabel it as a uniquely reconstructed force history; no such identifiability contract is provided here.
+Consequently $J_zM_z^{-1}Q_z=J_qM_q^{-1}Q_q$. A consistently transformed force increment has the same acceleration at the same physical point. The analogous constrained result follows by transforming $A_z=A_qT$. Representation dependence is a reason to report coordinates and units, not a suggestion that physical predictions are arbitrary.
 
-::: {.callout-tip}
-## Instantaneous and Cumulative Terms Are Not Generally Identical to Control and Drift
+A nonlinear change needs acceleration transport. For a one-dimensional free particle described by $q=z^2$, with $z>0$,
 
-An applied-input ledger term can match the acceleration block of $\boldsymbol{G}(\boldsymbol{x})\boldsymbol{u}$ when the actuator map, coordinates, constraints, and force partition match.
+$$
+\ddot q=2z\ddot z+2\dot z^2=0,
+ \qquad \ddot z=-\dot z^2/z.
+$$
 
-Velocity and gravity terms can be components of the drift. The complete drift also retains every autonomous passive, contact, constraint, and internal-state effect in the declared effective plant.
+A velocity-dependent coordinate term appears without a physical force or particle acceleration. Complete physical outputs remain consistent when all transport terms are retained. This is one reason to avoid equating the size of a coordinate velocity term with a universal amount of mechanical assistance.
 
-The drift field is a model-defined autonomous vector field at the current state. It is not a uniquely invertible record of earlier muscle torques, gravity, or elastic recoil.
+## Instantaneous and Accumulated Effects {#sec-instantaneous_cumulative}
 
-:::
+### Integrating a Ledger Along One Trajectory
 
-### Why the Distinction Matters for the Golf Swing
+[]{#cumulative-effects-the-legacy-of-past-forces}
+If a complete acceleration partition is evaluated along one nominal motion, integration gives
 
-Fast swings can make velocity-dependent model terms large, but their magnitude relative to applied-input terms is model-, state-, coordinate-, and norm-dependent. This chapter supplies no governed human-golf attribution result satisfying the normative record.
+$$
+\dot q(t)-\dot q(t_0)=\sum_k\int_{t_0}^{t}a_k(s)\,ds
+                         +\int_{t_0}^{t}a_c(s)\,ds.
+$$
 
-A drift-control ratio is a declared magnitude ratio, not a causal certificate or an induced-acceleration partition. Establishing late-downswing dominance would require a governed computation that reports the complete attribution record, uncertainty, and residual closure.
+This is valid bookkeeping for coordinate-velocity change on smooth intervals, with any impulse jumps accounted for separately. The terms can be signed, oppose one another, or exceed the net change in magnitude. A percentage obtained by dividing by a nearly zero net acceleration is unstable and can be misleading.
 
-@Hirashima2008kinetic reported, within its baseball-pitching model and partition, large velocity-dependent terms for elbow extension and wrist flexion and different term balances proximally. These model-reported results are historical context, not cross-engine parity, human-golf evidence, or identification of individual muscle effort.
+The velocity-dependent term is an *instantaneous function of the current state*. That state reflects earlier forces and initial conditions, but it does not uniquely identify their history. For the double integrator $\ddot q=u$, starting from rest at $q=0$, both $u_1(t)=1$ and $u_2(t)=2+6t^2-6t$ reach $(q,\dot q)=(1/2,1)$ at $t=1$. Both the input integral and its first time moment agree, despite different inputs. A single state cannot distinguish them.
 
-## Lessons From Throwing: Implications for the Golf Swing {#sec-throwing_lessons}
+### Why Removing an Input Is a Different Calculation
+For a transparent nonlinear example, let $\dot x=x^2+u$, $x(0)=0$, and $u=1$. Before $t=\pi/2$, $x(t)=\tan t$. The nominal input integral is $t$ and the nominal drift integral is $\tan t-t$; they sum exactly. Removing the input yields $x(t)=0$, so the intervention difference is $\tan t$, not the input ledger entry $t$. At $t=0.5$, these are approximately 0.5463 and 0.5.
 
-The golf swing and the overarm throw share fundamental dynamical features: both are fast, multi-joint movements performed by serial kinematic chains, and both rely on proximal-to-distal energy transfer to achieve high distal segment speeds. The induced acceleration analyses of baseball pitching performed by @Hirashima2007control, @Hirashima2008kinetic, @HirashimaOhtsuki2008 provide some of the clearest demonstrations of how the kinetic chain operates at the level of individual forces and accelerations.
+The removed input changes subsequent states and hence subsequent drift. In a swing, it may also change muscle states, support reactions and contact transitions. A force-removal simulation must specify those rules and integrate the resulting system. Neither an instantaneous term nor its nominal integral supplies that simulation automatically. Describing drift as the accumulated effect of all past torques obscures this distinction.
 
-### Model-Reported Throwing Terms
+## What Throwing Studies Establish {#sec-throwing_lessons}
 
-Using a 13-degree-of-freedom trunk-and-upper-limb model, @Hirashima2008kinetic reported different balances of generalized-joint-torque and velocity-dependent terms across trunk, shoulder, elbow, and wrist coordinates. The elbow and wrist ledgers contained large velocity-dependent terms near release, while the proximal-coordinate ledgers assigned larger shares to local joint-torque terms. These are model-reported findings under the cited study's coordinates and partition. This chapter has not reproduced its engine, solver revision, residual closure, or tolerance, so the values remain unqualified here and do not identify muscle source, protective intent, or a golf-swing mechanism.
+[]{#model-reported-throwing-terms}
+[]{#the-route-of-the-kinetic-chain}
+[]{#torque-reversal-the-instantaneous-remote-effect}
+[@Hirashima2008kinetic] studied six baseball players with a 13-degree-of-freedom model comprising trunk, upper arm, forearm, and hand with ball. It partitioned reconstructed generalized-force dynamics into joint-torque, velocity-dependent and gravity terms. It reported larger joint-torque terms at proximal coordinates and substantial velocity-dependent terms in elbow extension and wrist flexion. These were estimates for net generalized moments, not separately measured muscle forces.
 
-### The Route of the Kinetic Chain
+The study also integrated nominal induced accelerations and checked reconstructed motion. Its elbow-torque reversal and distal acceleration terms illustrate coupling; they do not identify a protective neural intention. The paper explicitly discusses omitted segments and lower-body/ground interactions. Marker acquisition at 200 Hz and spline resampling at 2000 Hz are different quantities: interpolation does not supply ten times the independent measurement bandwidth.
 
-@Hirashima2008kinetic further repartitioned the velocity-dependent term by segment motion. Within that model-bounded ledger, the reported sequence was:
+These findings motivate a golf study but do not settle it. A two-handed club, compliant shaft and foot contacts change the mechanical system. Golf comparisons need matched outputs, force conventions and contact treatment; a reported pitching joint-angle term cannot stand in for clubhead tangential acceleration. The chapter supplies no numerical human-golf finding that late-swing velocity terms universally dominate.
 
-1. Trunk and shoulder joint torques accelerate the trunk and upper arm (instantaneous effect, early phase).
-2. The resulting trunk and upper arm angular velocities produce velocity-dependent torques that accelerate elbow extension (cumulative effect, mid-phase).
-3. The forearm angular velocity increases, producing additional velocity-dependent torques that accelerate both wrist flexion and (during a brief window near ball release) shoulder internal rotation (cumulative effect, late phase).
+## Walking, Muscle Function and Energy {#sec-walking_lessons}
 
-The sequence is a source-study interpretation of one force partition, not a coordinate-invariant energy-flow path or unique cause. Transferring it to golf requires a separately qualified golf model, contact treatment, output projection, and human evidence.
+### Acceleration and Energy Answer Different Questions
 
-### Torque Reversal: The Instantaneous Remote Effect
+[]{#the-foundational-walking-studies}
+[]{#soleus-versus-gastrocnemius-a-case-study-in-superposition}
+In the 1.5 m/s walking simulation of [@Neptune2001], both soleus and gastrocnemius supported and advanced the trunk during parts of stance, yet their modeled energy delivery differed: soleus delivered energy to the trunk, while gastrocnemius delivered most of its generated energy to the leg during the late-stance/pre-swing interval. Calling gastrocnemius exclusively a swing initiator would hide its simultaneous support and progression roles. The study used both acceleration and segment energetics to make these distinctions.
 
-A cited throwing model also contains a **torque-reversal** interval. Its generalized elbow-torque channel changes sign while the model assigns simultaneous elbow and wrist acceleration terms through off-diagonal coupling. The algebra does not identify which muscles generated that net torque or why.
+An acceleration vector alone does not determine energy transfer. Generalized-force power is $Q_k^{\mathsf T}v$. At a body interface, use the wrench and that body's twist at the same point and in compatible frames: $F\cdot v_P+\tau_P\cdot\omega$. An ideal fixed support can redirect momentum while doing zero work at its stationary contact point. In a multibody system, individual segments can exchange energy through internal forces even when the net internal work on the whole system cancels. Track the chosen boundary and velocities explicitly.
 
-@Hirashima2011application distinguishes this instantaneous assigned term from the velocity-dependent term. Under the model's identifiability contract it is not a unique cause, a reconstructed force history, or training guidance.
+### Clinical Examples Are Conditional Model Results
 
-An analogous wrist term in golf is an open hypothesis. It would require the complete normative record and cannot be asserted from the throwing model or from drift magnitude alone.
+[]{#clinical-applications-stiff-legged-gait}
+[]{#sit-to-stand-transfers}
+The sit-to-stand study of [@Caruthers2016] used static optimization to estimate muscle forces before induced-acceleration analysis. Its reported forward center-of-mass terms for gluteus maximus and soleus differed from the opposing quadriceps term. That is a useful example of how anatomy alone does not fix the sign of a whole-body output response. It remains conditional on the muscle estimation and model; the present chapter does not independently reproduce it.
 
-## Lessons From Walking and Clinical Biomechanics {#sec-walking_lessons}
+IAA has also been applied to stiff-legged gait [@RileyKerrigan1999]. A decomposition can help formulate patient-specific hypotheses, but a computed term does not by itself identify a treatable impairment or predict the effect of rehabilitation. Such claims require clinical evidence beyond algebraic closure. The transferable lesson for golf is to test the force-estimation and contact assumptions, not to import a walking or clinical result as a swing prescription.
 
-Foundational walking studies provide methodological examples. They do not validate an AffineDrift golf attribution, and cross-task or cross-engine states remain unsupported or unqualified unless the complete record is supplied.
+## A Worked Golf-Model Investigation {#sec-golf_implications}
 
-### The Foundational Walking Studies
+### A Fully Specified Two-Link Calculation
+Use the uniform rods defined above, with gravity $g=9.81$ m/s$^2$, no damping, no other external loads and no additional constraints. This is a toy arm--club analogue, not anthropometry. Angles remain *relative joint coordinates*; do not substitute formulas for two absolute rod angles. The right-hand-side terms are
 
-The comprehensive two-part review by @Zajac2002, @Zajac2003 established the modern framework for induced acceleration analysis in biomechanics. Their key contributions were:
+$$
+\begin{aligned}
+ Q_v&=\begin{bmatrix}
+ \tfrac12\sin q_2(2v_1v_2+v_2^2)\\-\tfrac12\sin q_2v_1^2
+ \end{bmatrix},\\
+ Q_g&=-g\begin{bmatrix}
+ \tfrac32\sin q_1+\tfrac12\sin(q_1+q_2)\\
+ \tfrac12\sin(q_1+q_2)
+ \end{bmatrix}.
+ \end{aligned}
+$$
 
-1. **Separating quantities:** Joint power, segment energy, and an acceleration term answer different questions. A forward model can compute a declared term ledger; it does not identify a causal relationship between muscle forces and movement outcomes without additional measurement and intervention evidence.
+At $q=(-45,-90)$ degrees, $v=(500,200)$ degrees/s and $Q_u=(10,-2)$ Nm, first convert angles and rates to radians. The joint acceleration contributions in rad/s$^2$ are
 
-2. **Separating modeled actuator terms:** A musculoskeletal simulation can report the term assigned to each modeled actuator for a declared output. The label remains conditional on muscle-force estimation, moment arms, constraints, contact, and residual closure.
+$$
+\begin{aligned}
+ a_u&=(9.000,-15.000)^{\mathsf T},\\
+ a_v&=(-55.973,170.205)^{\mathsf T},\\
+ a_g&=(7.804,2.601)^{\mathsf T},\\
+ \ddot q&=(-39.170,157.806)^{\mathsf T}.
+ \end{aligned}
+$$
 
-3. **Demonstrating counterintuitive muscle functions:** Muscles often accelerate segments and joints they do not cross, and their contributions to whole-body function can differ substantially from what anatomy alone would predict.
+The distal endpoint is $p=(\sin q_1+\sin(q_1+q_2),-\cos q_1-\cos(q_1+q_2))^{\mathsf T}$ m. Differentiating this map gives the following point-acceleration terms in m/s$^2$:
 
-### Soleus Versus Gastrocnemius: A Case Study in Superposition
+$$
+\begin{aligned}
+ Ja_u&=(10.607,-2.121)^{\mathsf T},\\
+ Ja_v&=(-120.353,-41.195)^{\mathsf T},\\
+ Ja_g&=(-1.839,-12.876)^{\mathsf T},\\
+ \dot Jv&=(159.394,-51.695)^{\mathsf T},\\
+ \ddot p&=(47.808,-107.887)^{\mathsf T}.
+ \end{aligned}
+$$
 
-The study by @Neptune2001 applied induced acceleration analysis to a forward dynamics simulation of normal walking, focusing on the individual contributions of the soleus (a uniarticular ankle plantar flexor) and the gastrocnemius (a biarticular ankle plantar flexor that also crosses the knee).
+The large positive horizontal curvature term and negative velocity-force term partly cancel. Omitting either changes the answer qualitatively. The gravitational point term is not simply free-fall acceleration because the proximal pin constrains the linked system. These numbers demonstrate why the output projection and complete accounting matter more than an isolated label such as proximal, distal or passive.
 
-Despite both muscles being ankle plantar flexors, their contributions to whole-body function were strikingly different:
+### From the Toy Model to Human Evidence
 
-- **Soleus**: In late stance and pre-swing, the energy generated by soleus was delivered primarily to the trunk, providing forward progression and vertical support.
+[]{#golf-questions-not-golf-findings}
+[]{#why-the-distinction-matters-for-the-golf-swing}
+The prior golf study of [@Takagi2021pelvis], published online in 2019 and in a 2021 journal issue, used 31 skilled golfers, motion capture and two force plates to partition pelvis angular acceleration. Its existence rules out a broad first-golf-application claim here. Its abstract supports this study description; this chapter does not claim to reproduce its full methods or extend its pelvis findings to the clubhead.
 
-- **Gastrocnemius**: In the same phase, nearly all the energy generated by gastrocnemius was delivered to the swing leg, initiating swing rather than propelling the trunk.
+A defensible next investigation would combine measured kinematics and support loads with a specified golfer--club model. Report the output point and frame, net-moment or muscle-force estimation, grip and foot contact assumptions, residuals and solver details. Then calculate complete acceleration terms and vary plausible inertial, kinematic, actuator and contact parameters. Sensitivity to differentiation noise is especially relevant because inverse dynamics and output acceleration use time derivatives of measured motion.
 
-The source study reported different model-assigned terms for two actuators that share a joint. Net inverse dynamics alone cannot resolve that partition; the forward-model result remains conditional on its actuator, contact, and constraint assumptions rather than uniquely revealing anatomical function.
-
-For golf, this is a reason to test actuator-map and configuration sensitivity, not evidence that similarly located muscles have identified swing roles.
-
-### Clinical Applications: Stiff-Legged Gait
-
-@RileyKerrigan1999 reported patient-varying hip-, knee-, and ankle-moment terms in a stiff-legged-gait model. This model-bounded result is not a unique cause of reduced knee flexion and does not identify a rehabilitation intervention effect without a separate identifiability contract.
-
-The decomposition can generate patient-specific hypotheses for further clinical testing. Algebraic superposition alone does not identify which impairment is primarily responsible.
-
-### Sit-to-Stand Transfers
-
-@Caruthers2016 used a three-dimensional, 46-degree-of-freedom, 194-actuator model and reported positive gluteus-maximus and soleus terms and an opposing quadriceps term for selected center-of-mass outputs. Those are model-reported contributions, not uniquely identified anatomical sources or intervention effects.
-
-## Implications for the Golf Swing {#sec-golf_implications}
-
-### Golf Questions, Not Golf Findings
-
-The literature motivates a **model-ledger problem** for golf. This chapter reports no qualified AffineDrift IAA result and provides no coaching prescription. A future study could test:
-
-1. How results change across net-joint, muscle-actuator, contact, passive, and residual partitions.
-
-2. How coordinate, frame, output-point, and posture choices change reported terms while total forward dynamics remain consistent.
-
-3. Whether a velocity-dependent term is large under preregistered norms and uncertainty, without promoting that ratio into causal, reachability, or effort language.
-
-4. Whether an intervention that changes an input while re-solving contact and constraints changes a declared performance output.
-
-### A Unified Framework
-
-The induced acceleration framework unifies the observations made throughout this book:
-
-| **This Book's Framework** | **IAA Framework** | **Physical Meaning** |
-|---|---|---|
-| Complete drift $\boldsymbol{f}(\boldsymbol{x})$ | Declared autonomous terms | Model-defined zero-input evolution |
-| Control $\boldsymbol{G}(\boldsymbol{x})\boldsymbol{u}$ | Declared applied-input term | Not identified muscle or intent |
-| Constrained forward operator | Force-to-acceleration map | Coordinate-, contact-, and model-dependent |
-| Term-magnitude comparison | Declared norm and partition | Not a causal or reachability certificate |
-| ZTCF family (Ch. [Chapter 6](./ch06_zero_torque_counterfactual.qmd#sec-zero_torque_counterfactual)) | Zero-control model counterfactual | What the declared effective plant produces under zero applied generalized control |
-
-Both frameworks can use the same frozen-state linear map, but they are not automatically equivalent. The effective plant, input definition, actuator map, constraints, contact, residual allocation, coordinates, and requested output must match before terms can be compared.
+Use closure as a necessary implementation check: the sum must match a separate complete forward solve within a stated absolute and relative tolerance. Closure alone is not validation against humans; even an inaccurate model can close algebraically. Compare predicted motion or held-out observables with independent measurements and propagate uncertainty to signed output terms. Keep uncertain terms visible rather than assigning the residual to a favored muscle or mechanism.
 
 ## Superposition and Its Limits {#sec-superposition_limits}
+Three distinct results should remain distinguishable. An *instantaneous decomposition* explains one calculated acceleration under a stated partition. A *local sensitivity* reports the change in an output for a small feasible input change at that state. A *trajectory intervention* predicts a changed motion after integrating a specified counterfactual. The first does not supply the third; the second remains local to its contact mode.
 
-A declared force partition sums at a frozen state when the constrained solve and residual closure are consistent. Its coordinate components are representation-dependent, and a forward intervention changes the state, constraints, and often contact. Therefore neither a trajectory component nor a unique cause follows from frozen-state superposition.
-
-@HirashimaOhtsuki2008 showed why isolated diagonal-inertia calculations do not reproduce the coupled model. A full constrained solve is necessary for closure, but closure alone still does not identify causal contributions; that stronger claim requires the normative identifiability and intervention contract.
-
-For golf biomechanics, any model term must be computed on the declared coupled system. Even then, the result remains a model term rather than an identified statement about what each muscle does.
+There is also a distinction between acceleration authority and energetic cost. Two postures can have different $JPB$ maps for the same generalized input while requiring different muscle forces, activation, stability margins and contact reactions. A favorable gain alone therefore does not prove reduced human effort, safety or superior technique. Those are additional outputs with additional evidence requirements.
 
 ## Summary {#sec-iaa_summary}
 
-::: {.callout-important}
-## Key Takeaways From Induced Acceleration Analysis
+[]{#key-takeaways-from-induced-acceleration-analysis}
+Induced acceleration analysis links a complete force model to a declared motion output. Its core calculation is a coupled solve at one state. Active constraints supply an affine baseline, and point acceleration adds kinematic curvature. Posture changes the coupling map; consistent coordinate transformations preserve physical output increments. Nominal integrals account for a velocity change but do not reconstruct a unique force history or replace a force-removal simulation. Muscle roles require force-estimation evidence, and energy flow requires power and boundary accounting. Together these distinctions make IAA a useful bridge between biomechanics and control theory.
 
-1. **A declared ledger can close at a frozen state:** Applied, velocity, gravity, passive, contact, constraint, and residual terms must sum under one coordinate and active-set convention.
-
-2. **Coupling is model- and coordinate-dependent:** Off-diagonal entries can map one generalized-force channel into several generalized-acceleration components; neither those components nor their labels are invariant causal truth.
-
-3. **Instantaneous is not interventional:** Frozen-state terms do not reconstruct force history, intent, necessity, sufficiency, or the outcome of removing a force.
-
-4. **Configuration sensitivity is a hypothesis generator:** Changing posture can change the declared term ledger, but does not establish proper mechanics or equal human effort.
-
-5. **Control-affine and IAA terms require a compatibility audit:** Compare them only when plant, coordinates, constraints, contact, actuator map, partition, output, and solver qualification match.
-
-:::
-
-::: {.callout-note}
 ## On This Site
 
-- **[Proximal-to-Distal Energy Transfer in the Golf Swing](../../proximal-distal-energy-transfer.html)** — Induced accelerations and proximal–distal attribution
-- **[Proximal–Distal Falsification Atlas](../../proximal-distal-falsification-atlas.html)** — Evidence boundaries for sequential energy-transfer claims
-:::
+- [Forces and Torques](ch04_forces_and_torques.html) connects generalized forces to point acceleration and power.
+- [Constraint Forces](ch07_constraint_forces.html) develops reaction recovery and contact feasibility.
+- [Superposition and Controllability](../../superposition.html) separates affine baselines, feasible increments and authority.
+- [Proximal-to-Distal Energy Transfer](../../proximal-distal-energy-transfer.html) distinguishes acceleration attribution from energy-flow claims.
 
 ## Chapter Exercises {#ex:iaa}
 
-1. For a two-segment planar model (shoulder and elbow in a horizontal plane), write out the $2 \times 2$ mass matrix $\boldsymbol{M}(\boldsymbol{q})$ and compute its inverse. Show that the off-diagonal elements of $\boldsymbol{M}^{-1}$ are generally nonzero, confirming that a shoulder torque induces elbow acceleration.
-
-2. Using the double-pendulum model from [Chapter 3](./ch03_double_pendulum.qmd#sec-03_double_pendulum), compute the velocity-dependent torque $\boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})$ and the gravity torque $\boldsymbol{g}(\boldsymbol{q})$ at a representative mid-downswing posture ($\theta_1 = -45^{\circ}, \theta_2 = -90^{\circ}$, with angular velocities $\dot{\theta}_1 = 500~\text{deg/s}, \dot{\theta}_2 = 200~\text{deg/s}$). Compute the induced accelerations from each source and verify that they sum to the total acceleration.
-
-3. The induced acceleration index (IAI) of @Challis2011 quantifies the coupling potential between joints. For a two-segment model of the golfer's lead arm and club, compute the IAI at three postures: (a) early downswing (large lag angle), (b) mid-downswing (moderate lag angle), and (c) near impact (small lag angle). Discuss how the coupling changes and what this implies for wrist release mechanics.
-
-4. Re-express the model-reported elbow result from @Hirashima2008kinetic as a term-magnitude comparison. List the additional metadata needed before comparing that result with a control-affine implementation, and explain why neither wording establishes a unique cause.
-
-5. Consider the model-reported soleus and gastrocnemius terms in @Neptune2001. Identify which parts require an actuator map, contact model, energy calculation, and residual closure. Design a golf study that tests an analogous hypothesis without importing the walking result as anatomical or coaching authority.
+1. Reproduce the two unit-torque responses at $q_2=0$ and the zero cross-response at $q_2=\arccos(-2/3)$. Compute both normalized ratios and explain why their asymmetry does not contradict the symmetric inverse mass matrix.
+1. For the circular-guide example, apply $F=(4,6)$ N. Verify $\ddot q=(-9,3)$ m/s$^2$ and $\lambda=-22$ N. Split the applied force into its two Cartesian components and show that adding two complete constrained solutions would double the radial baseline. Explain why reaction feasibility must be checked before interpreting a unilateral version of this example.
+1. Reproduce the worked two-link acceleration ledger and differentiate its endpoint map to recover all five point vectors. Compute the endpoint velocity and project each point term onto its unit tangent. State why the resulting signed speed-rate terms differ from vector magnitudes.
+1. Integrate both double-integrator input histories from $t=0$ to $t=1$. Verify the common final state using $\dot q(1)=\int_0^1u(t)dt$ and $q(1)=\int_0^1(1-t)u(t)dt$. Explain which force-history information that state fails to preserve.
+1. Design a comparison between a net-joint-moment golf model and a muscle-driven model. Specify a shared physical output, contact mode, residual convention and independent measurement. Identify which conclusions need acceleration, power, muscle-force estimation or an integrated intervention.

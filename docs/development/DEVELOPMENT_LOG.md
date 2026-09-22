@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/induced-acceleration-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex`, `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd`, `tests/test_induced_acceleration_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; both original editions read completely; eight new numerical checks and eleven existing constrained/superposition cases pass; Black100/Ruff pass; rewrite and source qualification in progress)
+- **Last verified:** 2026-09-22 (SELF; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
-- **Next step:** Complete primary-source checks, reconcile both editions, supply worked exercises and verify paired print/web output before evidence binding.
+- **Next step:** Freeze source/report/render checkpoint, verify bibliography dependency carry-forward and bind eight corrected findings; drive regular PR after force/putting delivery. Low disk headroom requires prompt checkpoints.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
@@ -59,16 +59,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4420 (measurement #4059; corpus #4021; epic #4009)
 - **PR:** #4421
 - **Branch:** `fix/force-measurement-rigor`
 - **Paths:** `articles/technology-force-measurement.qmd`, `tests/test_force_measurement_rigor.py`, `data/trust/claim_audit_inventory.json`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; eight findings bound to complete checkpoint 99d1653c with all five evidence digests checked against committed LF bytes)
+- **Last verified:** 2026-09-22 (protected merge9ef76c6e; replacement deployment35789304756 at d9a8d08e succeeded; artifact10721968227 passes all960 live cases, including four force cases with zero overflow/axe failures)
 - **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
-- **Next step:** PR #4421 merged as 9ef76c6e; its tree matches 4047d917. Verify deployment35787101015 and live article cases before marking shipped.
+- **Next step:** None for this delivery; publication receipt saved separately from frozen scientific evidence. Continue corpus review.
 
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority

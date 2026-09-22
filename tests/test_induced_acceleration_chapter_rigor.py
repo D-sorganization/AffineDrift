@@ -93,3 +93,30 @@ def test_integrated_nominal_terms_are_not_removed_input_trajectories() -> None:
     assert endpoint == pytest.approx(nominal_input_term + nominal_state_term, rel=1e-6)
     removed_input_endpoint = 0.0
     assert endpoint - removed_input_endpoint != pytest.approx(nominal_input_term)
+
+
+def test_worked_rod_ledger_closes_and_matches_endpoint_second_difference() -> None:
+    """Check the stated numbers against coupled dynamics and independent kinematics."""
+    angles = np.deg2rad([-45, -90])
+    rates = np.deg2rad([500, 200])
+    mass = np.array([[5 / 3, 1 / 3], [1 / 3, 1 / 3]])
+    velocity_force = np.array(
+        [-0.5 * (2 * rates[0] * rates[1] + rates[1] ** 2), 0.5 * rates[0] ** 2]
+    )
+    gravity_force = 9.81 / np.sqrt(2) * np.array([2, 0.5])
+    forces = np.column_stack(([10, -2], velocity_force, gravity_force))
+    terms = np.linalg.solve(mass, forces)
+    expected = [[9, -55.97345089, 7.80380721], [-15, 170.20498331, 2.60126907]]
+    assert terms == pytest.approx(np.array(expected), abs=1e-8)
+    acceleration = terms.sum(axis=1)
+    assert mass @ acceleration == pytest.approx(forces.sum(axis=1))
+
+    def endpoint(coordinates: np.ndarray) -> np.ndarray:
+        absolute_angles = np.cumsum(coordinates)
+        return np.array([np.sin(absolute_angles).sum(), -np.cos(absolute_angles).sum()])
+
+    time_step = 1e-5
+    before = endpoint(angles - rates * time_step + 0.5 * acceleration * time_step**2)
+    after = endpoint(angles + rates * time_step + 0.5 * acceleration * time_step**2)
+    numerical = (after - 2 * endpoint(angles) + before) / time_step**2
+    assert numerical == pytest.approx([47.80794080, -107.88692022], abs=1e-5)

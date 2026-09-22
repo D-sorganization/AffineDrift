@@ -86,3 +86,25 @@ low; avoid full-book rebuilds and preserve all tracked/frozen evidence.
 Predecessor regular putting PR4424 at d3bc7d76 awaits CI. Force4421 merged as
 9ef76c6e with tree equality to4047d917; deploy35787101015 remains pending.
 Superposition publication record is already saved and all960 live cases passed.
+
+## Complete Paired Rewrite Checkpoint
+
+Both editions are now reconciled. The final review report is authoritative for
+source access: Hirashima results/discussion were subsequently read; supplementary
+material remains unavailable. Neptune and Caruthers abstracts were read; details
+beyond those records were removed. Nine new tests plus11 existing numerical cases
+pass, along with14 explicit content-lint contracts. Print10pages, body parity128,
+web139expressions, four production cases and11 mobile scroll endpoints pass.
+Bibliography annotations no longer reintroduce claims qualified in the body.
+Zajac volume17 is corrected in both databases. Source/report/render checkpoint
+must precede binding and exact-byte dependency carry-forward for Chapters15/16/22.
+Root render configuration was restored after every selected render. Two print
+headings and one prose line were shortened to eliminate overfull boxes. Browser
+harness corrected colon selectors, settled scroll endpoints and dismissed the
+update notice. None of those harness corrections changes the science.
+
+Disk-full recovery removed only untracked downloaded PNG copies from six older
+CI artifact directories: first-ci-artifact, ml-ci-evidence, contraction-ci-artifact,
+muscle-live-a81f99c0, fascia-deploy-34452462094 and wrist-pr-e2e-artifact. All paths
+resolved inside this worktree and were verified untracked. JSON records retained.
+Tracked inventories and reports parse after recovery; interrupted checks rerun.
