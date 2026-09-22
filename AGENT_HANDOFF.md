@@ -81,33 +81,30 @@
   581857cb by deploy 35774559003, 960/960 live cases; eight relevant route cases
   saved in `reports/technical-review/anatomy-preface-publication.json`.
 - **GRF delivery:** #4417 merged as a6774e33 with all protected checks green.
-  Deploy 35779150741 is running; do not claim live publication yet. Scientific
-  evidence remains bound to 8feeaa11, with paired print/web rendering recorded.
-- **Superposition delivery:** regular #4419 at f5e8dca1 integrates protected main
-  normally after exact-tree comparison with 7ee71416. Final diff excludes GRF
-  science; 19 evidence/boundary checks pass. Eleven article mechanics checks,
-  four browser cases and 416 expressions were verified. Four findings bind to
-  47321eb8. Await GRF live verification before enabling #4419 auto-merge.
+  Deploy 35779150741 succeeded: live artifact 10718336671 passes all 960 cases
+  across 240 routes. All four GRF cases were independently inspected; the durable
+  publication record is reports/technical-review/ground-reaction-publication.json.
+  Scientific evidence remains bound to 8feeaa11.
+- **Superposition delivery:** regular #4419 merged as 31cdc615; deployment
+  35782578807 is pending. Protected main has the same tree as f5e8dca1. Four
+  scientific findings remain bound to 47321eb8; no evidence rebind is required.
 - **Current implementation:** #4420 under measurement #4059, branch
-  `fix/force-measurement-rigor`, based on published #4419 head f5e8dca1.
-  SELF saves the complete source reread and substantive corrections: wrench/COP
-  geometry and uncertainty; bridge, charge-amplifier and bandwidth physics;
-  ASTM F3109-23 public scope; pressure observability; corrected study statistics,
-  sample limits and causal inference; per-foot partition ambiguity. The prior
-  source-only acceptance is reopened, with route status deferred. Eleven new
-  checks plus eleven existing GRF checks pass; title audit passes all 638 sources.
-- **Next:** finish the article's rendered review and bind its source, numerical
-  checks, review report and render record to a committed checkpoint.
-- **Publication sequence:** finish #4417 live verification, merge #4419 through
-  protected checks, and integrate that main into #4420 normally before its PR.
+  `fix/force-measurement-rigor`. SELF saves the complete article reread, eight
+  corrected finding groups, independent numerical checks and final render review.
+  Article-scoped CSS fixes the inaccessible expanded overview and preserves
+  readable math. The report records full-paper versus abstract access limits.
+- **Next:** bind the article, CSS, tests, review and render records to this
+  completed checkpoint using committed LF bytes. Restore the zero-deferred census
+  test, regenerate the audit and validate it. Normally merge protected main before
+  opening the next regular PR. Verify superposition live publication first.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4420 lease
-  5783527746 and presence 64d69234 expire 22:21 UTC September 22. Inbox reports
-  no messages/conflicts but incomplete unrelated board evidence; preserve peers.
+  5783527746 expires 22:21 UTC, presence 9730b845 expires 22:52 UTC September 22.
+  Inbox reports no messages/conflicts but incomplete unrelated board evidence.
 - **Turnover:** DL-#4420/#4418/#4415; primary-source preparation is in
   `docs/development/technical-review/force-measurement-preparation.md`.
   Local PDFs/text/XML and browser helpers are QA material, not publication.
-  Exact evidence hashes must use committed LF bytes. Stage files explicitly;
-  many historical untracked QA files remain. Never force-push or bypass hooks.
+  Stage explicit paths; many historical untracked QA files remain. Never
+  force-push or bypass hooks. The broader goal remains active.
 
 ## Protected Authority
 

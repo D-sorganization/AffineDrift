@@ -3,6 +3,7 @@ title: "Force Measurement Technology: Plates, Pressure, and the Ground Reaction 
 description: "How force plates and pressure systems actually work: transducer physics, the six-component ground reaction wrench, centre-of-pressure geometry and its error behaviour, and what pressure mats cannot measure."
 author: "Dieter Olson"
 date: "2026-08-02"
+css: ../css/force-measurement.css
 categories:
 - technology
 ---
@@ -229,7 +230,7 @@ $$
 
 This is a **high-pass response** from force to voltage, with low-frequency corner $1/(2\pi\tau)$. For a force step applied after zeroing, the magnitude of the response decays as $\exp(-t/\tau)$. That droop is different from an accumulating offset caused by leakage or amplifier input current. Kistler distinguishes these mechanisms in its [time-constant explanation](https://www.kistler.com/US/en/time-constant-resistor/C00000161) and [charge-amplifier manual](https://assets.kistler.com.cn/SAPCommerce_Download_original/012-067e.pdf).
 
-For example, a 5 s constant load produces about $4.9\%$ droop with $\tau=100$ s, but about $0.5\%$ with $\tau=1000$ s in this ideal model. Requiring droop below a chosen fraction $\epsilon$ over duration $T$ gives
+For example, a 5 s constant load produces about $4.9\%$ droop with $\tau=100$ s, but about $0.5\%$ with $\tau=1000$ s in this ideal model. Requiring droop no greater than a chosen fraction $0<\epsilon<1$ over duration $T>0$ gives
 
 $$
 \tau\ge\frac{-T}{\ln(1-\epsilon)}.
@@ -299,7 +300,7 @@ Normal pressure alone does not determine tangential traction. On a planar patch,
 $$
 \begin{aligned}
 F_x&=\int_A t_x\,dA,\qquad F_y=\int_A t_y\,dA,\\
-T_z&=\int_A[(x-x_C)t_y-(y-y_C)t_x],dA.
+T_z&=\int_A[(x-x_C)t_y-(y-y_C)t_x]\,dA.
 \end{aligned}
 $$
 
@@ -481,8 +482,8 @@ These questions are intertwined because one measurement feeds the next calculati
 - AMTI. *Force measuring platform and load cell therefor using strain gages to measure shear forces*. [US 4,493,220](https://patents.google.com/patent/US4493220A/en).
 - Berme, N. (Bertec). *Multi-component force and moment measuring platform and load transducer*. [US 6,354,155](https://patents.google.com/patent/US6354155B1/en); *Force measurement system having a plurality of measurement surfaces*, [US 8,544,347](https://patents.google.com/patent/US8544347B1/en).
 - Kistler. *Force transducers for fitting in force plates*. [US 4,974,454](https://patents.google.com/patent/US4974454A/en).
-- Tekscan. *Flexible tactile sensor for measuring foot pressure distributions*. [US 5,033,291](https://patents.google.com/patent/US5033291A/en).
-- Seitz, P. (novel). *Capacitive measuring assembly for determining forces and pressures*. [US 4,836,033](https://patents.google.com/patent/US4836033A/en).
+- Tekscan. *Flexible tactile sensor for measuring foot pressure distributions and for gaskets*. [US 5,033,291](https://patents.google.com/patent/US5033291A/en).
+- Seitz, P. *Capacitive measuring assembly for determining forces and pressures*. [US 4,836,033](https://patents.google.com/patent/US4836033A/en).
 - Initial Force AS (Swing Catalyst). *Motion Analysis Apparatus*. [US 2011/0260890](https://patents.google.com/patent/US20110260890A1/en).
 - U.S. Army. *Force sensing treadmill*. [US 6,878,100](https://patents.google.com/patent/US6878100B2/en) — an example of separately instrumented support surfaces.
 

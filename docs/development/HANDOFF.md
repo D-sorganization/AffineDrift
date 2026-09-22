@@ -1,21 +1,22 @@
 # Current Technical Review Checkpoint — #4420
 
-Branch `fix/force-measurement-rigor` starts at published superposition head
-f5e8dca1. SELF saves the complete force-measurement reread and source corrections;
-the route is deferred while final render review and exact-commit binding remain.
-Eleven new instrument/mechanics checks and eleven GRF checks pass. Title audit
-passes all 638 sources. Primary-source preparation and access limits are in
-`docs/development/technical-review/force-measurement-preparation.md`.
+Branch `fix/force-measurement-rigor` starts at superposition head f5e8dca1.
+SELF saves the completed force-measurement source review, eight finding groups,
+independent checks, article-scoped reading fixes and final local render evidence.
+The route remains deferred until the completed evidence is bound to this commit.
+Use committed LF blobs for every digest, restore the zero-deferred census test,
+regenerate the audit, and validate it before opening a regular PR.
 
-Continue with browser rendering, the formal findings/report, committed LF
-source hashes and final evidence validation. Governing issue #4420 is under
-measurement #4059, corpus #4021, epic #4009. Lease/presence expire 22:21 UTC.
+GRF PR #4417 is shipped at main a6774e33: deploy 35779150741 and live artifact
+10718336671 passed all 960 cases. The publication record is committed here.
+Superposition PR #4419 merged as 31cdc615; deploy 35782578807 is pending.
+Protected main has the same tree as f5e8dca1. Integrate it normally after this
+checkpoint; preserve this later turnover when resolving overlapping documents.
 
-GRF PR #4417 merged as a6774e33; verify deploy 35779150741. Superposition PR #4419
-at f5e8dca1 awaits protected browser checks and predecessor live publication.
-Enable its protected auto-merge after that live gate, then normally merge its
-protected main into this branch before opening the next regular PR. Anatomy
-and preface are already shipped; do not alter their frozen evidence.
+Issue #4420 is under measurement #4059, corpus #4021 and epic #4009. Lease expires
+22:21 UTC; renewed presence 9730b845 expires 22:52 UTC September 22. The inbox
+reports no conflicts/messages but has unrelated malformed records. Source
+research access limits and the exact validation scope are in the review report.
 
 Active goal: continue the broader review. Updated entries: DL-#4420/#4418/#4415.
 No whole-book or corpus completion is claimed. See `AGENT_HANDOFF.md` for details.
