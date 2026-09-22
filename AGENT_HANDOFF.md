@@ -110,8 +110,10 @@
   broken anchors after four display groups were split. Final 19 inventory and
   deployment-boundary tests pass; the chapter route is reviewed and source-bound.
   Publication is still pending; this is not whole-book acceptance.
-- **Next:** commit/push SELF, merge remote main 581857cb normally, then open
-  the regular Chapter 15 PR and pass protected checks. Verify anatomy/preface publication in parallel. Preserve
+- **Integration:** SELF merges protected preface main581857cb normally. Its
+  complete tree was verified identical to our existing preface parent053f88a5;
+  conflict resolution preserves the later GRF records and all peer sections.
+- **Next:** open the regular Chapter 15 PR and pass protected checks. Verify anatomy/preface publication in parallel. Preserve
   broad parent issues as active; source-only metadata does not complete a book.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4415 lease
   5782334386 expires21:05Z; presence2aacab03 expires21:08Z September22. Inbox has

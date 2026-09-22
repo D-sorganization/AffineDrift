@@ -9,8 +9,9 @@ expressions match with no final clipping or errors. Chapters 16/22 retain their
 original review scope through the verified metadata-only carry-forward.
 Anatomy #4414 and preface #4416 merged green. Anatomy deploy35771389008 deployed
 but live verification was superseded; verify both routes on successor preface
-main581857cb, deploy35774559003. Merge remote main normally after saving SELF,
-then open a regular GRF PR. Preserve the broader active goal; this is not corpus
+main581857cb, deploy35774559003. SELF merges remote main normally after
+verifying its complete tree equals existing parent053f88a5; later GRF records
+and peer sections are retained. Open a regular GRF PR next. Preserve the broader active goal; this is not corpus
 completion.
 
 The following previously merged persona-work handoff is retained for its
